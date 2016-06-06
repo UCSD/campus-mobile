@@ -41,4 +41,4 @@ android/keystores/debug.keystore
 
 # APP SPECIFIC
 app/json/samples/
-app/AppSettings.json
+app/AppSettings.js
