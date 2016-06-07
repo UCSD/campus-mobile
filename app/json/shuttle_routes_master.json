@@ -1,0 +1,640 @@
+[
+	{
+		"color": "#008679",
+		"displayOrder": 0,
+		"id": 1,
+		"name": "Coaster",
+		"shortName": "C",
+		"scheduleLink": null,
+		"stops": [
+			{
+				"id": 44927,
+				"lat": 32.8913267115141,
+				"lon": -117.241362333298,
+				"name": "North Torrey Pines & Genesee",
+				"rtpiNumber": "85"
+			},
+			{
+				"id": 60593,
+				"lat": 32.8857949969033,
+				"lon": -117.24394261837,
+				"name": "Salk Institute Rd. ",
+				"rtpiNumber": "119"
+			},
+			{
+				"id": 45232,
+				"lat": 32.8804576774333,
+				"lon": -117.24398927116395,
+				"name": "North Torrey Pines & Muir College Dr",
+				"rtpiNumber": "86"
+			},
+			{
+				"id": 345116,
+				"lat": 32.8748476708916,
+				"lon": -117.24377632141102,
+				"name": "La Jolla Shores Dr.",
+				"rtpiNumber": "267"
+			},
+			{
+				"id": 345117,
+				"lat": 32.8749107457782,
+				"lon": -117.243744134903,
+				"name": "La Jolla Shores Dr.",
+				"rtpiNumber": "268"
+			},
+			{
+				"id": 134939,
+				"lat": 32.8716555724939,
+				"lon": -117.24369585514104,
+				"name": "North Torrey Pines Rd & Expedition W",
+				"rtpiNumber": "173"
+			},
+			{
+				"id": 44956,
+				"lat": 32.8715767259837,
+				"lon": -117.23310112953196,
+				"name": "La Jolla Village Dr & Villa La Jolla Dr",
+				"rtpiNumber": "83"
+			},
+			{
+				"id": 9158,
+				"lat": 32.874352,
+				"lon": -117.23825399999998,
+				"name": "Gilman & Osler",
+				"rtpiNumber": "88"
+			},
+			{
+				"id": 757589,
+				"lat": 32.876926,
+				"lon": -117.23799300000002,
+				"name": "Gilman & Mandeville Ln.",
+				"rtpiNumber": "413"
+			},
+			{
+				"id": 34893,
+				"lat": 32.876969,
+				"lon": -117.235547,
+				"name": "Gilman & Myers",
+				"rtpiNumber": "442"
+			},
+			{
+				"id": 28109,
+				"lat": 32.8820469288637,
+				"lon": -117.22741484642,
+				"name": "Lot P701",
+				"rtpiNumber": "91"
+			},
+			{
+				"id": 9412,
+				"lat": 32.8796592547932,
+				"lon": -117.22386360168504,
+				"name": "Thornton Hospital",
+				"rtpiNumber": "92"
+			},
+			{
+				"id": 44774,
+				"lat": 32.9021844203712,
+				"lon": -117.22520068287798,
+				"name": "Sorrento Valley Coaster Station",
+				"rtpiNumber": "93"
+			}
+		]
+	},
+	{
+		"color": "#E2002D",
+		"displayOrder": 0,
+		"id": 2,
+		"name": "Hillcrest/Campus",
+		"shortName": "H",
+		"scheduleLink": null,
+		"stops": [
+			{
+				"id": 394851,
+				"lat": 32.8797020532908,
+				"lon": -117.223890423775,
+				"name": "Thornton Hospital",
+				"rtpiNumber": "370"
+			},
+			{
+				"id": 239930,
+				"lat": 32.8770789927512,
+				"lon": -117.23813295364404,
+				"name": "Gilman & Mandeville Lane",
+				"rtpiNumber": "450"
+			},
+			{
+				"id": 434165,
+				"lat": 32.7550924416179,
+				"lon": -117.19908133149102,
+				"name": "Old Town Transit Ctr",
+				"rtpiNumber": "367"
+			},
+			{
+				"id": 11754,
+				"lat": 32.7542860204092,
+				"lon": -117.167087942362,
+				"name": "Hillcrest",
+				"rtpiNumber": "372"
+			},
+			{
+				"id": 434353,
+				"lat": 32.755143195156,
+				"lon": -117.199116200209,
+				"name": "Old Town Transit Ctr",
+				"rtpiNumber": "373"
+			},
+			{
+				"id": 34893,
+				"lat": 32.876969,
+				"lon": -117.235547,
+				"name": "Gilman & Myers",
+				"rtpiNumber": "439"
+			}
+		]
+	},
+	{
+		"color": "#3E8628",
+		"displayOrder": 0,
+		"id": 734,
+		"name": "Regents",
+		"shortName": "P",
+		"scheduleLink": null,
+		"stops": [
+			{
+				"id": 30732,
+				"lat": 32.8802449166509,
+				"lon": -117.23568141460402,
+				"name": "Price Center",
+				"rtpiNumber": "269"
+			},
+			{
+				"id": 377671,
+				"lat": 32.8808835089201,
+				"lon": -117.23006084561302,
+				"name": "Lot P510/Canyonview",
+				"rtpiNumber": "270"
+			},
+			{
+				"id": 28109,
+				"lat": 32.8820469288637,
+				"lon": -117.22741484642,
+				"name": "Lot P701",
+				"rtpiNumber": "271"
+			},
+			{
+				"id": 1542847,
+				"lat": 32.88244336663359,
+				"lon": -117.22425520420074,
+				"name": "Parking lot P702",
+				"rtpiNumber": "467"
+			},
+			{
+				"id": 28122,
+				"lat": 32.8798904750802,
+				"lon": -117.21987515687896,
+				"name": "P704 - Regents Parking Lot",
+				"rtpiNumber": "272"
+			},
+			{
+				"id": 32417,
+				"lat": 32.8806864130316,
+				"lon": -117.23068714141904,
+				"name": "Lot P510/Canyonview",
+				"rtpiNumber": "273"
+			}
+		]
+	},
+	{
+		"color": "#FCE50F",
+		"displayOrder": 0,
+		"id": 748,
+		"name": "Counter Campus Loop",
+		"shortName": "L",
+		"scheduleLink": null,
+		"stops": [
+			{
+				"id": 93814,
+				"lat": 32.8899348060715,
+				"lon": -117.24318087101,
+				"name": "Torrey Pines Center",
+				"rtpiNumber": "278"
+			},
+			{
+				"id": 493852,
+				"lat": 32.8865213919917,
+				"lon": -117.24242717027698,
+				"name": "Eleanor Roosevelt College",
+				"rtpiNumber": "384"
+			},
+			{
+				"id": 141062,
+				"lat": 32.8843084023461,
+				"lon": -117.24231719970705,
+				"name": "Pangea Parking Structure",
+				"rtpiNumber": "280"
+			},
+			{
+				"id": 141080,
+				"lat": 32.880400341648,
+				"lon": -117.24075078964302,
+				"name": "Peterson Hall",
+				"rtpiNumber": "281"
+			},
+			{
+				"id": 240096,
+				"lat": 32.8778797200211,
+				"lon": -117.243663668632,
+				"name": "Muir Apartments",
+				"rtpiNumber": "385"
+			},
+			{
+				"id": 382806,
+				"lat": 32.8752903204873,
+				"lon": -117.243284136057,
+				"name": "Pacific Hall",
+				"rtpiNumber": "283"
+			},
+			{
+				"id": 93943,
+				"lat": 32.872543,
+				"lon": -117.24142899999998,
+				"name": "Revelle Parking",
+				"rtpiNumber": "284"
+			},
+			{
+				"id": 493872,
+				"lat": 32.8730657868046,
+				"lon": -117.239286303521,
+				"name": "Che Cafe",
+				"rtpiNumber": "386"
+			},
+			{
+				"id": 9158,
+				"lat": 32.874352,
+				"lon": -117.23825399999998,
+				"name": "Gilman & Osler",
+				"rtpiNumber": "286"
+			},
+			{
+				"id": 757589,
+				"lat": 32.876926,
+				"lon": -117.23799300000002,
+				"name": "Gilman & Mandeville Ln.",
+				"rtpiNumber": "410"
+			},
+			{
+				"id": 34893,
+				"lat": 32.876969,
+				"lon": -117.235547,
+				"name": "Gilman & Myers",
+				"rtpiNumber": "441"
+			},
+			{
+				"id": 382807,
+				"lat": 32.8768896975516,
+				"lon": -117.229714840651,
+				"name": "Pepper Canyon",
+				"rtpiNumber": "289"
+			},
+			{
+				"id": 32417,
+				"lat": 32.8806864130316,
+				"lon": -117.23068714141904,
+				"name": "Lot P510/Canyonview",
+				"rtpiNumber": "290"
+			},
+			{
+				"id": 141014,
+				"lat": 32.882069,
+				"lon": -117.23324000000002,
+				"name": "Warren Apartments",
+				"rtpiNumber": "291"
+			},
+			{
+				"id": 141030,
+				"lat": 32.8844283979133,
+				"lon": -117.238547606152,
+				"name": "Hopkins Structure",
+				"rtpiNumber": "292"
+			},
+			{
+				"id": 141042,
+				"lat": 32.8888436642137,
+				"lon": -117.240346647816,
+				"name": "North Point",
+				"rtpiNumber": "293"
+			}
+		]
+	},
+	{
+		"color": "#FCE50F",
+		"displayOrder": 0,
+		"id": 749,
+		"name": "Clockwise Campus Loop",
+		"shortName": "L",
+		"scheduleLink": null,
+		"stops": [
+			{
+				"id": 93814,
+				"lat": 32.8899348060715,
+				"lon": -117.24318087101,
+				"name": "Torrey Pines Center",
+				"rtpiNumber": "294"
+			},
+			{
+				"id": 382908,
+				"lat": 32.8887658588793,
+				"lon": -117.24033638835,
+				"name": "North Point",
+				"rtpiNumber": "295"
+			},
+			{
+				"id": 757600,
+				"lat": 32.8837723212212,
+				"lon": -117.23862111568502,
+				"name": "Hopkins Structure",
+				"rtpiNumber": "411"
+			},
+			{
+				"id": 382909,
+				"lat": 32.881689,
+				"lon": -117.233019,
+				"name": "Warren Apartments",
+				"rtpiNumber": "297"
+			},
+			{
+				"id": 377671,
+				"lat": 32.8808835089201,
+				"lon": -117.23006084561302,
+				"name": "Lot P510/Canyonview",
+				"rtpiNumber": "298"
+			},
+			{
+				"id": 382910,
+				"lat": 32.8764740875543,
+				"lon": -117.23042964935304,
+				"name": "Pepper Canyon",
+				"rtpiNumber": "299"
+			},
+			{
+				"id": 34674,
+				"lat": 32.8771273490051,
+				"lon": -117.23581016063702,
+				"name": "Gilman & Myers",
+				"rtpiNumber": "440"
+			},
+			{
+				"id": 239930,
+				"lat": 32.8770789927512,
+				"lon": -117.23813295364404,
+				"name": "Gilman & Mandeville Lane",
+				"rtpiNumber": "301"
+			},
+			{
+				"id": 382911,
+				"lat": 32.874271,
+				"lon": -117.23836900000003,
+				"name": "Gilman & Osler",
+				"rtpiNumber": "302"
+			},
+			{
+				"id": 141138,
+				"lat": 32.8730488913985,
+				"lon": -117.239416390658,
+				"name": "Che Cafe",
+				"rtpiNumber": "303"
+			},
+			{
+				"id": 239948,
+				"lat": 32.872622,
+				"lon": -117.24143200000005,
+				"name": "Revelle Parking",
+				"rtpiNumber": "304"
+			},
+			{
+				"id": 93904,
+				"lat": 32.8759075482947,
+				"lon": -117.24303603172302,
+				"name": "Pacific Hall",
+				"rtpiNumber": "305"
+			},
+			{
+				"id": 141111,
+				"lat": 32.8778121420472,
+				"lon": -117.24359795451102,
+				"name": "Muir Apartments",
+				"rtpiNumber": "306"
+			},
+			{
+				"id": 382912,
+				"lat": 32.880244916651,
+				"lon": -117.24062204361002,
+				"name": "Peterson Hall",
+				"rtpiNumber": "307"
+			},
+			{
+				"id": 382913,
+				"lat": 32.8842993926061,
+				"lon": -117.24232792854298,
+				"name": "Pangea Parking Structure",
+				"rtpiNumber": "308"
+			},
+			{
+				"id": 141056,
+				"lat": 32.886531527695,
+				"lon": -117.242381572724,
+				"name": "Eleanor Roosevelt College",
+				"rtpiNumber": "309"
+			}
+		]
+	},
+	{
+		"color": "#781367",
+		"displayOrder": 0,
+		"id": 777,
+		"name": "Mesa ",
+		"shortName": "M",
+		"scheduleLink": null,
+		"stops": [
+			{
+				"id": 385744,
+				"lat": 32.874606,
+				"lon": -117.225819,
+				"name": "1 Miramar St.",
+				"rtpiNumber": "510"
+			},
+			{
+				"id": 385742,
+				"lat": 32.872437,
+				"lon": -117.222598,
+				"name": "South Mesa Housing",
+				"rtpiNumber": "511"
+			},
+			{
+				"id": 93943,
+				"lat": 32.872543,
+				"lon": -117.24142899999998,
+				"name": "Revelle Parking",
+				"rtpiNumber": "512"
+			},
+			{
+				"id": 757589,
+				"lat": 32.876926,
+				"lon": -117.23799300000002,
+				"name": "Gilman & Mandeville Ln.",
+				"rtpiNumber": "513"
+			},
+			{
+				"id": 34893,
+				"lat": 32.876969,
+				"lon": -117.235547,
+				"name": "Gilman & Myers",
+				"rtpiNumber": "514"
+			},
+			{
+				"id": 9920,
+				"lat": 32.879865,
+				"lon": -117.219948,
+				"name": "Lot P703 - Regents Parking",
+				"rtpiNumber": "515"
+			},
+			{
+				"id": 1614005,
+				"lat": 32.872709,
+				"lon": -117.22132799999996,
+				"name": "Central Mesa",
+				"rtpiNumber": "520"
+			}
+		]
+	},
+	{
+		"color": "#5D88CE",
+		"displayOrder": 0,
+		"id": 1434,
+		"name": "SIO Loop",
+		"shortName": "S",
+		"scheduleLink": null,
+		"stops": [
+			{
+				"id": 9143,
+				"lat": 32.8782441269704,
+				"lon": -117.23928967857398,
+				"name": "Mandeville Auditorium",
+				"rtpiNumber": "419"
+			},
+			{
+				"id": 382911,
+				"lat": 32.874271,
+				"lon": -117.23836900000003,
+				"name": "Gilman & Osler",
+				"rtpiNumber": "420"
+			},
+			{
+				"id": 239948,
+				"lat": 32.872622,
+				"lon": -117.24143200000005,
+				"name": "Revelle Parking",
+				"rtpiNumber": "421"
+			},
+			{
+				"id": 1174983,
+				"lat": 32.8739826393477,
+				"lon": -117.245042324066,
+				"name": "La Jolla Shores @ Inyaha Ln.",
+				"rtpiNumber": "422"
+			},
+			{
+				"id": 401340,
+				"lat": 32.8694365796419,
+				"lon": -117.24851846695005,
+				"name": "Coast Apts. - MTS",
+				"rtpiNumber": "423"
+			},
+			{
+				"id": 401341,
+				"lat": 32.8695897707807,
+				"lon": -117.25167274475098,
+				"name": "Southwest Fisheries - MTS",
+				"rtpiNumber": "424"
+			},
+			{
+				"id": 401342,
+				"lat": 32.8676388167947,
+				"lon": -117.252080440521,
+				"name": "IGPP - MTS",
+				"rtpiNumber": "425"
+			},
+			{
+				"id": 401343,
+				"lat": 32.8652777896717,
+				"lon": -117.25227355956996,
+				"name": "Vaughan Hall - MTS",
+				"rtpiNumber": "426"
+			},
+			{
+				"id": 389084,
+				"lat": 32.8641017584347,
+				"lon": -117.253797054291,
+				"name": "SIO Forum - P003",
+				"rtpiNumber": "427"
+			},
+			{
+				"id": 401344,
+				"lat": 32.8657103489624,
+				"lon": -117.25212335586502,
+				"name": "Vaughan Hall - MTS Inbound",
+				"rtpiNumber": "428"
+			},
+			{
+				"id": 401345,
+				"lat": 32.8687201822741,
+				"lon": -117.251726388931,
+				"name": "IGPP - MTS Inbound",
+				"rtpiNumber": "429"
+			},
+			{
+				"id": 383336,
+				"lat": 32.8692203093483,
+				"lon": -117.25102365016905,
+				"name": "Nierenberg Hall - Inbound",
+				"rtpiNumber": "430"
+			},
+			{
+				"id": 383337,
+				"lat": 32.866256,
+				"lon": -117.250316,
+				"name": "Birch - Inbound",
+				"rtpiNumber": "431"
+			},
+			{
+				"id": 383338,
+				"lat": 32.8690085441747,
+				"lon": -117.24681794643402,
+				"name": "Coast Apts. - Inbound",
+				"rtpiNumber": "432"
+			},
+			{
+				"id": 383339,
+				"lat": 32.8709459513782,
+				"lon": -117.243674397468,
+				"name": "Expedition Way - Inbound",
+				"rtpiNumber": "433"
+			},
+			{
+				"id": 93943,
+				"lat": 32.872543,
+				"lon": -117.24142899999998,
+				"name": "Revelle Parking",
+				"rtpiNumber": "434"
+			},
+			{
+				"id": 9158,
+				"lat": 32.874352,
+				"lon": -117.23825399999998,
+				"name": "Gilman & Osler",
+				"rtpiNumber": "435"
+			}
+		]
+
+	}
+]

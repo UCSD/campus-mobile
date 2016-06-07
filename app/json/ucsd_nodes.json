@@ -1,0 +1,86 @@
+[
+	{
+		"id": 1,
+		"name": "Torrey Pines Center",
+		"lat":"32.89033",
+		"lon":"-117.2429"
+	},
+	{
+		"id": 2,
+		"name": "North Campus",
+		"lat":"32.88611",
+		"lon":"-117.24111"
+	},
+	{
+		"id": 3,
+		"name": "Thurgood Marshall",
+		"lat":"32.88214",
+		"lon":"-117.24102"
+	},
+	{
+		"id": 4,
+		"name": "John Muir College",
+		"lat":"32.87796",
+		"lon":"-117.24092"
+	},
+	{
+		"id": 5,
+		"name": "Revelle College",
+		"lat":"32.87396",
+		"lon":"-117.24154"
+	},
+	{
+		"id": 6,
+		"name": "School of Medicine",
+		"lat":"32.87472",
+		"lon":"-117.23761"
+	},
+	{
+		"id": 7,
+		"name": "Central UCSD 1",
+		"lat":"32.87994",
+		"lon":"-117.23776"
+	},
+	{
+		"id": 8,
+		"name": "Central UCSD 2",
+		"lat":"32.88189",
+		"lon":"-117.23442"
+	},
+	{
+		"id": 9,
+		"name": "Central UCSD 3",
+		"lat":"32.87783",
+		"lon":"-117.23431"
+	},
+	{
+		"id": 10,
+		"name": "Central UCSD 4",
+		"lat":"32.87974",
+		"lon":"-117.23105"
+	},
+	{
+		"id": 11,
+		"name": "Mesa",
+		"lat":"32.87279",
+		"lon":"-117.22236"
+	},
+	{
+		"id": 12,
+		"name": "Science Research Park",
+		"lat":"32.87724",
+		"lon":"-117.22075"
+	},
+	{
+		"id": 13,
+		"name": "East Campus",
+		"lat":"32.8822",
+		"lon":"-117.22279"
+	},
+	{
+		"id": 14,
+		"name": "Scripps",
+		"lat":"32.86783",
+		"lon":"-117.25223"
+	}
+]
