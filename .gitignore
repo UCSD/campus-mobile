@@ -39,3 +39,5 @@ buck-out/
 android/app/libs
 android/keystores/debug.keystore
 
+# APP SPECIFIC
+app/AppSettings.js
