@@ -74,8 +74,8 @@ var Home = React.createClass({
 	fetchTopStoriesErrorInterval: 15 * 1000,		// Retry every 15 seconds
 	fetchTopStoriesErrorLimit: 3,
 	fetchTopStoriesErrorCounter: 0,
-	eventsDefaultResults: 4,
-	topStoriesDefaultResults: 4,
+	eventsDefaultResults: 3,
+	topStoriesDefaultResults: 3,
 	nearbyMaxResults: 5,
 	nearbyAnnotations: [],
 	regionRefreshInterval: 60 * 1000,
@@ -159,28 +159,10 @@ var Home = React.createClass({
 				{enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
 			);
 			
-			/*
-			navigator.geolocation.getCurrentPosition(
-				(position) => {
-					var initialPosition = JSON.stringify(position);
-					this.setState({initialPosition});
-				},
-				(error) => logger.custom('ERR: navigator.geolocation.getCurrentPosition2: ' + error.message),
-				{enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
-			);
-			*/
-			
 			this.geolocationWatchID = navigator.geolocation.watchPosition((currentPosition) => {
 				this.setState({currentPosition});
 			});
 			
-			/*
-			this.geolocationWatchID = navigator.geolocation.watchPosition((position) => {
-				var currentPosition = JSON.stringify(position);
-				this.setState({currentPosition});
-			});
-			*/
-
 			this.setTimeout( () => { this.updateCurrentRegion() }, 1000);
 		}
 
