@@ -347,38 +347,38 @@ var Home = React.createClass({
 											<Text style={css.wc_current_summary}>{ this.state.weatherData.currently.summary }</Text>
 										</View>
 										<View style={css.wc_toprow_right}>
-											<Image style={css.wc_toprow_icon} source={{ uri: 'weather_' + this.state.weatherData.currently.icon }} />
+											<Image style={css.wc_toprow_icon} source={{ uri: AppSettings.WEATHER_ICON_BASE_URL + this.state.weatherData.currently.icon + '.png' }} />
 										</View>
 									</View>
 
 									<View style={css.wc_botrow}>
 										<View style={css.wc_botrow_col}>
 											<Text style={css.wf_dayofweek}>{this.state.weatherData.daily.data[0].dayofweek}</Text>
-											<Image style={css.wf_icon} source={{ uri: 'weather_' + this.state.weatherData.daily.data[0].icon }} />
+											<Image style={css.wf_icon} source={{ uri: AppSettings.WEATHER_ICON_BASE_URL + this.state.weatherData.daily.data[0].icon + '.png' }} />
 											<Text style={css.wf_tempMax}>{this.state.weatherData.daily.data[0].tempMax}&deg;</Text>
 											<Text style={css.wf_tempMin}>{this.state.weatherData.daily.data[0].tempMin}&deg;</Text>
 										</View>
 										<View style={css.wc_botrow_col}>
 											<Text style={css.wf_dayofweek}>{this.state.weatherData.daily.data[1].dayofweek}</Text>
-											<Image style={css.wf_icon} source={{ uri: 'weather_' + this.state.weatherData.daily.data[1].icon }} />
+											<Image style={css.wf_icon} source={{ uri: AppSettings.WEATHER_ICON_BASE_URL + this.state.weatherData.daily.data[1].icon + '.png' }} />
 											<Text style={css.wf_tempMax}>{this.state.weatherData.daily.data[1].tempMax}&deg;</Text>
 											<Text style={css.wf_tempMin}>{this.state.weatherData.daily.data[1].tempMin}&deg;</Text>
 										</View>
 										<View style={css.wc_botrow_col}>
 											<Text style={css.wf_dayofweek}>{this.state.weatherData.daily.data[2].dayofweek}</Text>
-											<Image style={css.wf_icon} source={{ uri: 'weather_' + this.state.weatherData.daily.data[2].icon }} />
+											<Image style={css.wf_icon} source={{ uri: AppSettings.WEATHER_ICON_BASE_URL + this.state.weatherData.daily.data[2].icon + '.png' }} />
 											<Text style={css.wf_tempMax}>{this.state.weatherData.daily.data[2].tempMax}&deg;</Text>
 											<Text style={css.wf_tempMin}>{this.state.weatherData.daily.data[2].tempMin}&deg;</Text>
 										</View>
 										<View style={css.wc_botrow_col}>
 											<Text style={css.wf_dayofweek}>{this.state.weatherData.daily.data[3].dayofweek}</Text>
-											<Image style={css.wf_icon} source={{ uri: 'weather_' + this.state.weatherData.daily.data[3].icon }} />
+											<Image style={css.wf_icon} source={{ uri: AppSettings.WEATHER_ICON_BASE_URL + this.state.weatherData.daily.data[3].icon + '.png' }} />
 											<Text style={css.wf_tempMax}>{this.state.weatherData.daily.data[3].tempMax}&deg;</Text>
 											<Text style={css.wf_tempMin}>{this.state.weatherData.daily.data[3].tempMin}&deg;</Text>
 										</View>
 										<View style={css.wc_botrow_col}>
 											<Text style={css.wf_dayofweek}>{this.state.weatherData.daily.data[4].dayofweek}</Text>
-											<Image style={css.wf_icon} source={{ uri: 'weather_' + this.state.weatherData.daily.data[4].icon }} />
+											<Image style={css.wf_icon} source={{ uri: AppSettings.WEATHER_ICON_BASE_URL + this.state.weatherData.daily.data[4].icon + '.png' }} />
 											<Text style={css.wf_tempMax}>{this.state.weatherData.daily.data[4].tempMax}&deg;</Text>
 											<Text style={css.wf_tempMin}>{this.state.weatherData.daily.data[4].tempMin}&deg;</Text>
 										</View>
