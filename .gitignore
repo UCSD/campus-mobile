@@ -38,7 +38,3 @@ buck-out/
 \.buckd/
 android/app/libs
 android/keystores/debug.keystore
-
-# APP SPECIFIC
-app/json/samples/
-app/AppSettings.js

@@ -1,9 +1,6 @@
 package com.nowucsandiego;
 
 import com.facebook.react.ReactActivity;
-import com.rnfs.RNFSPackage;
-import com.idehub.GoogleAnalyticsBridge.GoogleAnalyticsBridgePackage;
-import io.realm.react.RealmReactPackage;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 
@@ -37,10 +34,7 @@ public class MainActivity extends ReactActivity {
     @Override
     protected List<ReactPackage> getPackages() {
         return Arrays.<ReactPackage>asList(
-            new MainReactPackage(),
-            new RNFSPackage(),
-            new GoogleAnalyticsBridgePackage(),
-            new RealmReactPackage()
+            new MainReactPackage()
         );
     }
 }
