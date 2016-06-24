@@ -56,6 +56,7 @@ var ucsd_node;
 
 var Home = React.createClass({
 
+
 	realm: null,
 	AppSettings: null,
 
@@ -83,6 +84,7 @@ var Home = React.createClass({
 	
 
 	getInitialState: function() {
+        logger.log('Home. get initial state');
 
 		return {
 			currentAppState: AppState.currentState,
@@ -136,7 +138,7 @@ var Home = React.createClass({
 	},
 
 	componentWillMount: function() {
-
+        logger.log("Home. Component will mount.");
 		// Realm DB Init
 		this.realm = new Realm({schema: [AppSettings.DB_SCHEMA], schemaVersion: 2});
 		this.AppSettings = this.realm.objects('AppSettings');
@@ -155,7 +157,7 @@ var Home = React.createClass({
 			
 			navigator.geolocation.getCurrentPosition(
 				(initialPosition) => this.setState({initialPosition}),
-				(error) => logger.custom('ERR: navigator.geolocation.getCurrentPosition2: ' + error.message),
+				(error) => logger.custom('ERR: navigator.geolocation.getCurrentPosition: ' + error.message),
 				{enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
 			);
 			

@@ -6,46 +6,75 @@
 import React, { Component } from 'react';
 import {
   AppRegistry,
-  StyleSheet,
-  Text,
-  View
+  Navigator,
+  Platform,
 } from 'react-native';
 
-class nowucsandiego extends Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.android.js
-        </Text>
-        <Text style={styles.instructions}>
-          Shake or press menu button for dev menu
-        </Text>
-      </View>
-    );
-  }
-}
+var Realm = require('realm');
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+var logger = require('./app/util/logger');
+var AppSettings = require('./app/AppSettings');
+var Home = require('./app/views/Home');
+
+var nowucsandiego = React.createClass({
+
+	realm: null,
+	AppSettings: null,
+
+	componentWillMount: function() {
+
+		// Realm DB Setup
+		this.realm = new Realm({schema: [AppSettings.DB_SCHEMA], schemaVersion: 2});
+		this.AppSettings = this.realm.objects('AppSettings');
+
+		if (this.AppSettings.length === 0) {
+			this.realm.write(() => {
+				this.realm.create('AppSettings', { id: 1 });
+			});
+		}
+	},
+
+  render: function() {
+
+  		console.log('test DEBUG ')
+
+	  return (
+		<Navigator initialRoute={{id: 'Home', name: 'Home'}} renderScene={this.renderScene} />
+	  );
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
+
+
+  renderScene: function(route, navigator, index, navState) {
+
+	switch (route.id) {
+	  case 'Home':          return (<Home route={route} navigator={navigator} isSimulator={this.props.isSimulator} />);
+
+	  /*
+	  case 'EventDetail':       return (<EventDetail route={route} navigator={navigator} />);
+	  case 'TopStoriesDetail':    return (<TopStoriesDetail route={route} navigator={navigator} />);
+
+	  case 'ShuttleStop':       return (<ShuttleStop route={route} navigator={navigator} isSimulator={this.props.isSimulator} />);
+	  case 'ShuttleStop2':      return (<ShuttleStop2 route={route} navigator={navigator} isSimulator={this.props.isSimulator} />);
+
+	  case 'WeatherForecast':     return (<WeatherForecast route={route} navigator={navigator} />);
+	  case 'SurfReport':        return (<SurfReport route={route} navigator={navigator} />);
+
+	  case 'DestinationSearch':     return (<DestinationSearch route={route} navigator={navigator} />);
+	  case 'DestinationDetail':     return (<DestinationDetail route={route} navigator={navigator} />);
+
+	  case 'DiningList':        return (<DiningList route={route} navigator={navigator} />);
+	  case 'DiningDetail':      return (<DiningDetail route={route} navigator={navigator} />);
+
+	  case 'ScheduleDetail':      return (<ScheduleDetail route={route} navigator={navigator} />);
+
+	  case 'NoNavigatorPage':     return (<NoNavigatorPage route={route} navigator={navigator} />);
+	  */
+
+	  default:            return (<Home route={route} navigator={navigator} />);
+	}
   },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
+
+
 });
 
 AppRegistry.registerComponent('nowucsandiego', () => nowucsandiego);
