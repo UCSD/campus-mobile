@@ -1118,7 +1118,7 @@ var Home = React.createClass({
 	},
 
 	gotoSurfReport: function() {
-		this.props.navigator.push({ component: SurfReport, title: 'Surf Report', surfData: this.state.surfData });
+		this.props.navigator.push({ id: 'SurfReport', component: SurfReport, title: 'Surf Report', surfData: this.state.surfData });
 	},
 
 	gotoShuttleStop: function(stopData) {

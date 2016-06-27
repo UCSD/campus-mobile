@@ -26,7 +26,7 @@ var DiningList = React.createClass({
 				<ScrollView contentContainerStyle={[css.scroll_main, css.whitebg]}>
 
 					<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoDiningDetail() }>
-						<Image style={css.dining_card_list_img} source={ require('image!DiningList-PH')} />
+						<Image style={css.dining_card_list_img} source={ require('image!dininglist-ph')} />
 					</TouchableHighlight>
 
 				</ScrollView>
