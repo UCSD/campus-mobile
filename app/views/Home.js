@@ -39,10 +39,7 @@ var SurfReport = 		require('./SurfReport');
 var EventDetail = 		require('./EventDetail');
 var TopStoriesDetail = 	require('./TopStoriesDetail');
 var DestinationDetail = require('./DestinationDetail');
-var DiningList = 		require('./DiningList');
 var WebWrapper = 		require('./WebWrapper');
-
-//test2
 
 // Remove after rewriting using sortRef method
 var closestShuttleStops = [];
@@ -52,7 +49,6 @@ closestShuttleStops[0].dist = 100000;
 closestShuttleStops[1].dist = 100000;
 
 var ucsd_node;
-
 
 var Home = React.createClass({
 
@@ -501,22 +497,6 @@ var Home = React.createClass({
 								{this.state.nearbyMarkersLoaded ? (
 									<ListView dataSource={this.state.nearbyMarkersPartial} renderRow={this.renderNearbyRow} style={css.flex} />
 								) : null }
-							</View>
-						</View>
-					) : null }
-
-
-					{/* DINING CARD */}
-					{AppSettings.DINING_CARD_ENABLED ? (
-						<View style={css.card_main}>
-							<View style={css.card_title_container}>
-								<Text style={css.card_title}>Dining</Text>
-							</View>
-
-							<View>
-								<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoDiningList() }>
-									<Image style={css.dining_card_placeholder_img} source={ require('image!dining_card_mockup')} />
-								</TouchableHighlight>
 							</View>
 						</View>
 					) : null }
@@ -1147,12 +1127,6 @@ var Home = React.createClass({
 	gotoScheduleDetail: function() {
 		this.props.navigator.push({ component: ScheduleDetail, title: 'Schedule' });
 	},
-
-	gotoDiningList: function() {
-		this.props.navigator.push({ component: DiningList, title: '64 Degrees' });
-	},
-
-	
 
 	
 
