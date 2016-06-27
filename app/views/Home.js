@@ -134,7 +134,7 @@ var Home = React.createClass({
 	},
 
 	componentWillMount: function() {
-        logger.log("Home. Component will mount.");
+		
 		// Realm DB Init
 		this.realm = new Realm({schema: [AppSettings.DB_SCHEMA], schemaVersion: 2});
 		this.AppSettings = this.realm.objects('AppSettings');
@@ -149,7 +149,6 @@ var Home = React.createClass({
 
 		// SHUTTLE & DESTINATION CARD
 		if (AppSettings.SHUTTLE_CARD_ENABLED || AppSettings.DESTINATION_CARD_ENABLED) {
-
 			
 			navigator.geolocation.getCurrentPosition(
 				(initialPosition) => this.setState({initialPosition}),
@@ -220,16 +219,14 @@ var Home = React.createClass({
 					) : null }
 
 
- 					
-
 					{/* SPECIAL EVENTS CARD */}
 					{AppSettings.PUSH_CARD_ENABLED ? (
 						<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ null }>
-							<Image style={[css.card_plain, css.card_special_events]} source={ require('image!special_events_placeholder') }>
+							<Image style={[css.card_plain, css.card_special_events]} source={ require('../assets/img/special_events_placeholder.jpg') }>
 								<View style={css.card_view_overlay}>
 									<Text style={css.card_overlay1_text}>#WelcomeWeek</Text>
-									<View style={css.card_overlay1_icons}><Image style={css.icon_fb} source={require('image!icon_fb')} /></View>
-									<View style={css.card_overlay1_icons}><Image style={css.icon_twitter} source={require('image!icon_twitter')} /></View>
+									<View style={css.card_overlay1_icons}><Image style={css.icon_fb} source={require('../assets/img/icon_fb.png')} /></View>
+									<View style={css.card_overlay1_icons}><Image style={css.icon_twitter} source={require('../assets/img/icon_twitter.png')} /></View>
 								</View>
 							</Image>
 						</TouchableHighlight>
@@ -243,7 +240,7 @@ var Home = React.createClass({
 								<Text style={css.card_title}>Shuttle Routes</Text>
 								<View style={css.shuttle_card_refresh_container}>
 									<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.refreshShuttleCard('manual') }>
-										<Animated.Image style={[css.shuttle_card_refresh, { transform: [{ rotate: this.shuttleReloadAnim.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '360deg']})}]}]} source={require('image!icon_refresh_grey')} />
+										<Animated.Image style={[css.shuttle_card_refresh, { transform: [{ rotate: this.shuttleReloadAnim.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '360deg']})}]}]} source={require('../assets/img/icon_refresh_grey.png')} />
 									</TouchableHighlight>
 								</View>
 							</View>
@@ -284,7 +281,7 @@ var Home = React.createClass({
 
 							{(this.state.closestStop1Loaded === false && this.state.closestStop2Loaded === false) && (!this.state.closestStop1LoadFailed || !this.state.closestStop2LoadFailed) && !this.state.gpsLoadFailed ? (
 								<View style={[css.flexcenter, css.shuttle_card_row, css.shuttle_card_loading_height]}>
-									<Animated.Image style={[css.card_loading_img, css.shuttlecard_loading, { transform: [{ rotate: this.shuttleMainReloadAnim.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '360deg']})}]}]} source={require('image!ajax-loader4')} />
+									<Animated.Image style={[css.card_loading_img, css.shuttlecard_loading, { transform: [{ rotate: this.shuttleMainReloadAnim.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '360deg']})}]}]} source={require('../assets/img/ajax-loader4.png')} />
 								</View>
 							) : null }
 
@@ -376,7 +373,7 @@ var Home = React.createClass({
 
 							{!this.state.weatherDataLoaded ? (
 								<View style={[css.flexcenter, css.weatherccard_loading_height]}>
-									<Animated.Image style={[css.card_loading_img, { transform: [{ rotate: this.weatherReloadAnim.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '360deg']})}]}]} source={require('image!ajax-loader4')} />
+									<Animated.Image style={[css.card_loading_img, { transform: [{ rotate: this.weatherReloadAnim.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '360deg']})}]}]} source={require('../assets/img/ajax-loader4.png')} />
 								</View>
 							) : null }
 
@@ -582,9 +579,6 @@ var Home = React.createClass({
 	},
 
 
-
-
-
 	// #3 - EVENTS CARD
 	fetchEvents: function() {
 
@@ -750,7 +744,7 @@ var Home = React.createClass({
 					{data.image ? (
 						<Image style={css.events_list_image} source={{ uri: data.image }} />
 					) : (
-						<Image style={css.events_list_image} source={ require('image!MobileEvents_blank')} />
+						<Image style={css.events_list_image} source={ require('../assets/img/MobileEvents_blank.jpg')} />
 					)}
 
 				</View>
@@ -872,7 +866,7 @@ var Home = React.createClass({
 		return (
 			<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoDestinationDetail(data) }>
 				<View style={css.destinationcard_marker_row}>
-					<Image style={css.destinationcard_icon_marker} source={require('image!icon_marker')} />
+					<Image style={css.destinationcard_icon_marker} source={require('../assets/img/icon_marker.png')} />
 					<Text style={css.destinationcard_marker_label}>{data.title}</Text>
 				</View>
 			</TouchableHighlight>
