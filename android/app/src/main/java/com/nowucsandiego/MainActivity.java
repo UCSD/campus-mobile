@@ -1,14 +1,13 @@
 package com.nowucsandiego;
 
 import com.facebook.react.ReactActivity;
-import com.rnfs.RNFSPackage;
-import com.idehub.GoogleAnalyticsBridge.GoogleAnalyticsBridgePackage;
 import io.realm.react.RealmReactPackage;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 
 import java.util.Arrays;
 import java.util.List;
+import com.idehub.GoogleAnalyticsBridge.GoogleAnalyticsBridgePackage;
 
 public class MainActivity extends ReactActivity {
 
@@ -38,9 +37,8 @@ public class MainActivity extends ReactActivity {
     protected List<ReactPackage> getPackages() {
         return Arrays.<ReactPackage>asList(
             new MainReactPackage(),
-            new RNFSPackage(),
-            new GoogleAnalyticsBridgePackage(),
-            new RealmReactPackage()
+            new RealmReactPackage(),
+                new GoogleAnalyticsBridgePackage()
         );
     }
 }

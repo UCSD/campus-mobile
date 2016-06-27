@@ -2,6 +2,7 @@
 
 import React from 'react';
 import {
+    Platform,
 	View,
 	Text,
 	TouchableOpacity,
@@ -16,9 +17,9 @@ var dateFormat = require('dateformat');
 var css = require('../styles/css');
 var logger = require('../util/logger');
 var general = require('../util/general');
+var surf_report_header = require('../assets/img/surf_report_header.jpg');
 
-
-var WeatherForecast = React.createClass({
+var SurfReport = React.createClass({
 
 	getInitialState: function() {
 		return {
@@ -90,8 +91,7 @@ var WeatherForecast = React.createClass({
 		return (
 			<View style={[css.main_container, css.whitebg]}>
 				<ScrollView contentContainerStyle={[css.scroll_main, css.whitebg]}>
-
-					<Image style={css.sr_image} source={ require('image!surf_report_header') } />
+					<Image style={css.sr_image} source={require('../assets/img/surf_report_header.jpg')} />
 					
 					{this.state.surfData ? (
 						<ListView dataSource={this.state.surfData} renderRow={ this.renderSurfReportRow } style={css.wf_listview} />
@@ -169,4 +169,4 @@ var WeatherForecast = React.createClass({
 
 });
 
-module.exports = WeatherForecast;
+module.exports = SurfReport;
