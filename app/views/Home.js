@@ -52,7 +52,6 @@ var ucsd_node;
 
 var Home = React.createClass({
 
-
 	realm: null,
 	AppSettings: null,
 
@@ -77,7 +76,6 @@ var Home = React.createClass({
 	nearbyAnnotations: [],
 	regionRefreshInterval: 60 * 1000,
 	copyrightYear: new Date().getFullYear(),
-	
 
 	getInitialState: function() {
         logger.log('Home. get initial state');
@@ -134,7 +132,7 @@ var Home = React.createClass({
 	},
 
 	componentWillMount: function() {
-		
+
 		// Realm DB Init
 		this.realm = new Realm({schema: [AppSettings.DB_SCHEMA], schemaVersion: 2});
 		this.AppSettings = this.realm.objects('AppSettings');
@@ -218,6 +216,7 @@ var Home = React.createClass({
 						</Modal>
 					) : null }
 
+					
 
 					{/* SPECIAL EVENTS CARD */}
 					{AppSettings.PUSH_CARD_ENABLED ? (

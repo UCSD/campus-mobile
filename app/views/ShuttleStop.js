@@ -16,7 +16,6 @@ import {
 var TimerMixin = 		require('react-timer-mixin');
 var AppSettings = 		require('../AppSettings');
 var allShuttleRoutes = 	require('../json/shuttle_routes_master.json');
-var shuttleStopImages = require('../json/shuttle_stop_images.json');
 var css = 				require('../styles/css');
 
 var general = 			require('../util/general');
@@ -31,7 +30,6 @@ var responseDataSortRef = [];
 var ShuttleStop = React.createClass({
 
 	mixins: [TimerMixin],
-
 	shuttleRefreshInterval: 30 * 1000,				// 30 seconds between shuttle api updates
 	shuttleReloadAnim: new Animated.Value(0),
 	shuttleMainReloadAnim: new Animated.Value(0),
@@ -39,15 +37,10 @@ var ShuttleStop = React.createClass({
 	map_legal_disclaimer: { bottom: 5, right: 5 },
 	delayMapViewLoad: 250,
 
-
 	getInitialState: function() {
-
 		return {
-
 			isRefreshing: false,
-
 			shuttleRefreshTimeAgo: ' ',
-
 			closestShuttlesLoaded: false,
 			closestShuttlesInactive: false,
 
@@ -72,8 +65,6 @@ var ShuttleStop = React.createClass({
 			minDelta: .01,
 			maxDelta: .02,
 
-			shuttleStopImageName: null,
-
 			initialPosition: null,
 			currentPosition: null,
 
@@ -82,25 +73,52 @@ var ShuttleStop = React.createClass({
 				coords: { latitude: '32.890378', longitude: '-117.243365' }
 				// UCSD
 				//coords: { latitude: '32.88', longitude: '-117.234' }
-				// Dabney Dr
-				//coords: { latitude: '32.910412', longitude: '-117.157814' }
-			}, 
+			},
+
+			shuttleStopImageDict: {
+				'141014': require('../assets/img/shuttle/shuttle-stop-141014.jpg'),
+				'141030': require('../assets/img/shuttle/shuttle-stop-141030.jpg'),
+				'141042': require('../assets/img/shuttle/shuttle-stop-141042.jpg'),
+				'141056': require('../assets/img/shuttle/shuttle-stop-141056.jpg'),
+				'141062': require('../assets/img/shuttle/shuttle-stop-141062.jpg'),
+				'141080': require('../assets/img/shuttle/shuttle-stop-141080.jpg'),
+				'141111': require('../assets/img/shuttle/shuttle-stop-141111.jpg'),
+				'141138': require('../assets/img/shuttle/shuttle-stop-141138.jpg'),
+				'1542847': require('../assets/img/shuttle/shuttle-stop-1542847.jpg'),
+				'1614005': require('../assets/img/shuttle/shuttle-stop-1614005.jpg'),
+				'239930': require('../assets/img/shuttle/shuttle-stop-239930.jpg'),
+				'239948': require('../assets/img/shuttle/shuttle-stop-239948.jpg'),
+				'240096': require('../assets/img/shuttle/shuttle-stop-240096.jpg'),
+				'28109': require('../assets/img/shuttle/shuttle-stop-28109.jpg'),
+				'28122': require('../assets/img/shuttle/shuttle-stop-28122.jpg'),
+				'30732': require('../assets/img/shuttle/shuttle-stop-30732.jpg'),
+				'32417': require('../assets/img/shuttle/shuttle-stop-32417.jpg'),
+				'34893': require('../assets/img/shuttle/shuttle-stop-34893.jpg'),
+				'377671': require('../assets/img/shuttle/shuttle-stop-377671.jpg'),
+				'382806': require('../assets/img/shuttle/shuttle-stop-382806.jpg'),
+				'382807': require('../assets/img/shuttle/shuttle-stop-382807.jpg'),
+				'382908': require('../assets/img/shuttle/shuttle-stop-382908.jpg'),
+				'382909': require('../assets/img/shuttle/shuttle-stop-382909.jpg'),
+				'382910': require('../assets/img/shuttle/shuttle-stop-382910.jpg'),
+				'382911': require('../assets/img/shuttle/shuttle-stop-382911.jpg'),
+				'382912': require('../assets/img/shuttle/shuttle-stop-382912.jpg'),
+				'382913': require('../assets/img/shuttle/shuttle-stop-382913.jpg'),
+				'385742': require('../assets/img/shuttle/shuttle-stop-385742.jpg'),
+				'385744': require('../assets/img/shuttle/shuttle-stop-385744.jpg'),
+				'493852': require('../assets/img/shuttle/shuttle-stop-493852.jpg'),
+				'493872': require('../assets/img/shuttle/shuttle-stop-493872.jpg'),
+				'757589': require('../assets/img/shuttle/shuttle-stop-757589.jpg'),
+				'757600': require('../assets/img/shuttle/shuttle-stop-757600.jpg'),
+				'9158': require('../assets/img/shuttle/shuttle-stop-9158.jpg'),
+				'93814': require('../assets/img/shuttle/shuttle-stop-93814.jpg'),
+				'93904': require('../assets/img/shuttle/shuttle-stop-93904.jpg'),
+				'93943': require('../assets/img/shuttle/shuttle-stop-93943.jpg'),
+				'9920': require('../assets/img/shuttle/shuttle-stop-9920.jpg'),
+			},
 		}
 	},
 
-
-
 	componentWillMount: function() {
-
-		// Verify Shuttle Stop Image Exists
-		for (var i = 0; shuttleStopImages.length > i; i++) {
-			if (shuttleStopImages[i].indexOf('shuttle-stop-' + this.state.shuttleStopID) === 0) {
-				logger.log('match on: ' + shuttleStopImages[i])
-				this.setState({ shuttleStopImageName: 'shuttle-stop-' + this.state.shuttleStopID });
-				break;
-			}
-		}
-
 		navigator.geolocation.getCurrentPosition(
 			(initialPosition) => this.setState({initialPosition}),
 			(error) => logger.log('ERR: navigator.geolocation.getCurrentPosition1: ' + error.message),
@@ -126,8 +144,6 @@ var ShuttleStop = React.createClass({
 		navigator.geolocation.clearWatch(this.watchID);
 	},
 
-
-
 	render: function() {
 		return this.renderScene();
 	},
@@ -145,8 +161,8 @@ var ShuttleStop = React.createClass({
 						title="" />
         			}>
 
-					{this.state.shuttleStopImageName ? (
-						<Image style={css.shuttlestop_image} source={{ uri: this.state.shuttleStopImageName }} />
+        			{this.state.shuttleStopImageDict[this.state.shuttleStopID] ? (
+						<Image style={css.shuttlestop_image} source={ this.state.shuttleStopImageDict[this.state.shuttleStopID] } />
 					) : null }
 					
 					<View style={css.shuttlestop_name_container}>
@@ -154,7 +170,7 @@ var ShuttleStop = React.createClass({
 
 						<View style={css.shuttlestop_refresh_container}>
 							<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.refreshShuttleArrivalsByStop2('manual') }>
-								<Animated.Image style={[css.shuttlestop_refresh, { transform: [{ rotate: this.shuttleReloadAnim.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '360deg']})}]}]} source={require('image!icon_refresh')} />
+								<Animated.Image style={[css.shuttlestop_refresh, { transform: [{ rotate: this.shuttleReloadAnim.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '360deg']})}]}]} source={require('../assets/img/icon_refresh.png')} />
 							</TouchableHighlight>
 						</View>
 					</View>
@@ -194,7 +210,7 @@ var ShuttleStop = React.createClass({
 								</View>
 							) : (
 								<View style={css.flexcenter2}>
-									<Animated.Image style={[css.shuttlestop_loading, { transform: [{ rotate: this.shuttleMainReloadAnim.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '360deg']})}]}]} source={require('image!ajax-loader4')} />
+									<Animated.Image style={[css.shuttlestop_loading, { transform: [{ rotate: this.shuttleMainReloadAnim.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '360deg']})}]}]} source={require('../assets/img/ajax-loader4.png')} />
 								</View>
 							)}
 						</View>
