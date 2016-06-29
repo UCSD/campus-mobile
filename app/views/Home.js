@@ -17,7 +17,6 @@ import {
 	Modal
 } from 'react-native';
 
-
 // Node Modules
 var TimerMixin = 		require('react-timer-mixin');
 var Realm = 			require('realm');
@@ -41,14 +40,6 @@ var TopStoriesDetail = 	require('./TopStoriesDetail');
 var DestinationDetail = require('./DestinationDetail');
 var WebWrapper = 		require('./WebWrapper');
 
-// Remove after rewriting using sortRef method
-var closestShuttleStops = [];
-closestShuttleStops[0] = {};
-closestShuttleStops[1] = {};
-closestShuttleStops[0].dist = 100000;
-closestShuttleStops[1].dist = 100000;
-
-var ucsd_node;
 
 var Home = React.createClass({
 
@@ -63,6 +54,13 @@ var Home = React.createClass({
 	shuttleCardGPSRefreshCounter: 0,
 	shuttleReloadAnim: new Animated.Value(0),
 	shuttleMainReloadAnim: new Animated.Value(0),
+
+	// Remove after rewriting using sortRef method
+	closestShuttleStops: [
+		{ dist: 100000000 },
+		{ dist: 100000000 }
+	],
+
 	weatherReloadAnim: new Animated.Value(0),
 	fetchEventsErrorInterval: 15 * 1000,			// Retry every 15 seconds
 	fetchEventsErrorLimit: 3,
@@ -216,7 +214,7 @@ var Home = React.createClass({
 						</Modal>
 					) : null }
 
-					
+
 
 					{/* SPECIAL EVENTS CARD */}
 					{AppSettings.PUSH_CARD_ENABLED ? (
@@ -245,34 +243,34 @@ var Home = React.createClass({
 							</View>
 
 							{this.state.closestStop1Loaded ? (
-								<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoShuttleStop(closestShuttleStops[0]) }>
+								<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoShuttleStop(this.closestShuttleStops[0]) }>
 									<View style={css.shuttle_card_row}>
 										<View style={css.shuttle_card_row_top}>
 											<View style={css.shuttle_card_rt_1}></View>
-											<View style={[css.shuttle_card_rt_2, { backgroundColor: closestShuttleStops[0].routeColor, borderColor: closestShuttleStops[0].routeColor }]}><Text style={css.shuttle_card_rt_2_label}>{closestShuttleStops[0].routeShortName}</Text></View>
+											<View style={[css.shuttle_card_rt_2, { backgroundColor: this.closestShuttleStops[0].routeColor, borderColor: this.closestShuttleStops[0].routeColor }]}><Text style={css.shuttle_card_rt_2_label}>{this.closestShuttleStops[0].routeShortName}</Text></View>
 											<View style={css.shuttle_card_rt_3}><Text style={css.shuttle_card_rt_3_label}>@</Text></View>
-											<View style={css.shuttle_card_rt_4}><Text style={css.shuttle_card_rt_4_label} numberOfLines={3}>{closestShuttleStops[0].stopName}</Text></View>
+											<View style={css.shuttle_card_rt_4}><Text style={css.shuttle_card_rt_4_label} numberOfLines={3}>{this.closestShuttleStops[0].stopName}</Text></View>
 											<View style={css.shuttle_card_rt_5}></View>
 										</View>
 										<View style={css.shuttle_card_row_bot}>
-											<Text style={css.shuttle_card_row_arriving}><Text style={css.grey}>Arriving in: </Text>{closestShuttleStops[0].etaMinutes}</Text>
+											<Text style={css.shuttle_card_row_arriving}><Text style={css.grey}>Arriving in: </Text>{this.closestShuttleStops[0].etaMinutes}</Text>
 										</View>
 									</View>
 								</TouchableHighlight>
 							) : null }
 
 							{this.state.closestStop2Loaded ? (
-								<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoShuttleStop(closestShuttleStops[1]) }>
+								<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoShuttleStop(this.closestShuttleStops[1]) }>
 									<View style={[css.shuttle_card_row, css.shuttle_card_row_border]}>
 										<View style={css.shuttle_card_row_top}>
 											<View style={css.shuttle_card_rt_1}></View>
-											<View style={[css.shuttle_card_rt_2, { backgroundColor: closestShuttleStops[1].routeColor, borderColor: closestShuttleStops[1].routeColor }]}><Text style={css.shuttle_card_rt_2_label}>{closestShuttleStops[1].routeShortName}</Text></View>
+											<View style={[css.shuttle_card_rt_2, { backgroundColor: this.closestShuttleStops[1].routeColor, borderColor: this.closestShuttleStops[1].routeColor }]}><Text style={css.shuttle_card_rt_2_label}>{this.closestShuttleStops[1].routeShortName}</Text></View>
 											<View style={css.shuttle_card_rt_3}><Text style={css.shuttle_card_rt_3_label}>@</Text></View>
-											<View style={css.shuttle_card_rt_4}><Text style={css.shuttle_card_rt_4_label} numberOfLines={3}>{closestShuttleStops[1].stopName}</Text></View>
+											<View style={css.shuttle_card_rt_4}><Text style={css.shuttle_card_rt_4_label} numberOfLines={3}>{this.closestShuttleStops[1].stopName}</Text></View>
 											<View style={css.shuttle_card_rt_5}></View>
 										</View>
 										<View style={css.shuttle_card_row_bot}>
-											<Text style={css.shuttle_card_row_arriving}><Text style={css.grey}>Arriving in: </Text>{closestShuttleStops[1].etaMinutes}</Text>
+											<Text style={css.shuttle_card_row_arriving}><Text style={css.grey}>Arriving in: </Text>{this.closestShuttleStops[1].etaMinutes}</Text>
 										</View>
 									</View>
 								</TouchableHighlight>
@@ -776,7 +774,7 @@ var Home = React.createClass({
 	updateCurrentRegion: function() {
 
 		var closestNode = 0;
-		var closestNodeDistance = 1000000;
+		var closestNodeDistance = 100000000;
 
 		for (var i = 0; ucsd_nodes.length > i; i++) {
 			var nodeDist = shuttle.getDistance(this.getCurrentPosition('lat'), this.getCurrentPosition('lon'), ucsd_nodes[i].lat, ucsd_nodes[i].lon);
@@ -901,8 +899,8 @@ var Home = React.createClass({
 				shuttleRefreshTimeAgo: ' '
 			});
 
-			closestShuttleStops[0].dist = 1000000000;
-			closestShuttleStops[1].dist = 1000000000;
+			this.closestShuttleStops[0].dist = 1000000000;
+			this.closestShuttleStops[1].dist = 1000000000;
 
 			for (var i = 0; shuttle_routes.length > i; i++) {
 
@@ -914,24 +912,24 @@ var Home = React.createClass({
 					var distanceFromStop = shuttle.getDistance(this.getCurrentPosition('lat'), this.getCurrentPosition('lon'), shuttleRouteStop.lat, shuttleRouteStop.lon);
 				
 					// Rewrite this later using sortRef from shuttleDetail
-					if (distanceFromStop < closestShuttleStops[0].dist) {
-						closestShuttleStops[0].stopID = shuttleRouteStop.id;
-						closestShuttleStops[0].stopName = shuttleRouteStop.name;
-						closestShuttleStops[0].dist = distanceFromStop;
-						closestShuttleStops[0].stopLat = shuttleRouteStop.lat;
-						closestShuttleStops[0].stopLon = shuttleRouteStop.lon;
-					} else if (distanceFromStop < closestShuttleStops[1].dist && closestShuttleStops[0].stopID != shuttleRouteStop.id) {
-						closestShuttleStops[1].stopID = shuttleRouteStop.id;
-						closestShuttleStops[1].stopName = shuttleRouteStop.name;
-						closestShuttleStops[1].dist = distanceFromStop;
-						closestShuttleStops[1].stopLat = shuttleRouteStop.lat;
-						closestShuttleStops[1].stopLon = shuttleRouteStop.lon;
+					if (distanceFromStop < this.closestShuttleStops[0].dist) {
+						this.closestShuttleStops[0].stopID = shuttleRouteStop.id;
+						this.closestShuttleStops[0].stopName = shuttleRouteStop.name;
+						this.closestShuttleStops[0].dist = distanceFromStop;
+						this.closestShuttleStops[0].stopLat = shuttleRouteStop.lat;
+						this.closestShuttleStops[0].stopLon = shuttleRouteStop.lon;
+					} else if (distanceFromStop < this.closestShuttleStops[1].dist && this.closestShuttleStops[0].stopID != shuttleRouteStop.id) {
+						this.closestShuttleStops[1].stopID = shuttleRouteStop.id;
+						this.closestShuttleStops[1].stopName = shuttleRouteStop.name;
+						this.closestShuttleStops[1].dist = distanceFromStop;
+						this.closestShuttleStops[1].stopLat = shuttleRouteStop.lat;
+						this.closestShuttleStops[1].stopLon = shuttleRouteStop.lon;
 					}
 				}
 			}
 
-			this.fetchShuttleArrivalsByStop(0, closestShuttleStops[0].stopID);
-			this.fetchShuttleArrivalsByStop(1, closestShuttleStops[1].stopID);
+			this.fetchShuttleArrivalsByStop(0, this.closestShuttleStops[0].stopID);
+			this.fetchShuttleArrivalsByStop(1, this.closestShuttleStops[1].stopID);
 
 			if (refreshType == 'auto') {
 				//logger.log('Queueing Shuttle Card data refresh in ' + this.shuttleCardRefreshInterval/1000 + ' seconds');
@@ -969,19 +967,19 @@ var Home = React.createClass({
 						if (shuttleStopArrival.secondsToArrival < closestShuttleETA ) {
 							closestShuttleETA = shuttleStopArrival.secondsToArrival;
 
-							closestShuttleStops[closestStopNumber].etaMinutes = shuttle.getMinutesETA(responseData[i].secondsToArrival);
-							closestShuttleStops[closestStopNumber].etaSeconds = shuttleStopArrival.secondsToArrival;
-							closestShuttleStops[closestStopNumber].routeID = shuttleStopArrival.route.id;
-							closestShuttleStops[closestStopNumber].routeName = shuttleStopArrival.route.name;
-							closestShuttleStops[closestStopNumber].routeShortName = shuttleStopArrival.route.shortName;
-							closestShuttleStops[closestStopNumber].routeColor = shuttleStopArrival.route.color;
+							this.closestShuttleStops[closestStopNumber].etaMinutes = shuttle.getMinutesETA(responseData[i].secondsToArrival);
+							this.closestShuttleStops[closestStopNumber].etaSeconds = shuttleStopArrival.secondsToArrival;
+							this.closestShuttleStops[closestStopNumber].routeID = shuttleStopArrival.route.id;
+							this.closestShuttleStops[closestStopNumber].routeName = shuttleStopArrival.route.name;
+							this.closestShuttleStops[closestStopNumber].routeShortName = shuttleStopArrival.route.shortName;
+							this.closestShuttleStops[closestStopNumber].routeColor = shuttleStopArrival.route.color;
 						}
 					}
 					
-					if (closestShuttleStops[closestStopNumber].routeShortName == "Campus Loop") {
-						closestShuttleStops[closestStopNumber].routeShortName = "L";
+					if (this.closestShuttleStops[closestStopNumber].routeShortName == "Campus Loop") {
+						this.closestShuttleStops[closestStopNumber].routeShortName = "L";
 					}
-					closestShuttleStops[closestStopNumber].routeName = closestShuttleStops[closestStopNumber].routeName.replace(/.*\) /, '').replace(/ - .*/, '');
+					this.closestShuttleStops[closestStopNumber].routeName = this.closestShuttleStops[closestStopNumber].routeName.replace(/.*\) /, '').replace(/ - .*/, '');
 
 					if (closestStopNumber == 0) {
 						this.setState({ closestStop1Loaded: true });
