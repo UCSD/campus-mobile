@@ -1,10 +1,21 @@
 /*
-	Master stylesheet for Now@UC San Diego
+	Master Stylesheet for now@ucsandiego
 
 	Device Pixel Ratios
-		Pixel Ratio 1x: 	iPhone 2G, 3G, 3GS
-		Pixel Ratio 2x: 	iPhone 4, 4s, 5, 5s, 6
-		Pixel Ratio 3x: 	iPhone 6+, 6s+
+		Ratio 1
+			mdpi Android devices (160 dpi)
+		Ratio 1.5
+			hdpi Android devices (240 dpi)
+		Ratio 2
+			iPhone 4, 4S
+			iPhone 5, 5c, 5s
+			iPhone 6
+			xhdpi Android devices (320 dpi)
+		Ratio 3
+			iPhone 6 plus
+			xxhdpi Android devices (480 dpi)
+		Ratio 3.5
+			Nexus 6
 
 	Color Palete
 		Blue: #006C92
@@ -21,19 +32,17 @@ import {
 
 var pixelRatio = PixelRatio.get();
 var windowSize = Dimensions.get('window');
-var windowMaxWidth = 414; // iPhone 6+/6s+ width
-
 var windowWidth = windowSize.width;
 var windowHeight = windowSize.height;
-var maxCardWidth = windowWidth - 2 - 12;
-var maxCardWidthWithPadding = windowWidth - 2 - 12 - 16; // border, margin, padding
+var windowDefaultWidth = 414;
 
 // Applying pixel ratio modifier helps ensure all views/layouts across devices render in similar fashion
-var prm = windowWidth / windowMaxWidth; 	// pixel ratio modifier
+var prm = windowWidth / windowDefaultWidth;
 
+var maxCardWidth = windowWidth - 2 - 12;
+var maxCardWidthWithPadding = windowWidth - 2 - 12 - 16; // border, margin, padding
 var surfCardDetailsWidth = maxCardWidthWithPadding;
 var surfCardDetailsPadding = 10 * prm;
-
 var shuttleCardRefreshIconTop = 10;
 var shuttleStopRefreshIconTop = 10;
 
@@ -44,7 +53,6 @@ if (pixelRatio === 2) {
 	shuttleCardRefreshIconTop = 12;
 	shuttleStopRefreshIconTop = 15;
 }
-
 
 var css = StyleSheet.create({
 
@@ -260,15 +268,6 @@ var css = StyleSheet.create({
 	footer_copyright: { color: '#006C92', fontSize: 16 * prm, textAlign: 'left', padding: 4 },
 
 
-
-
-
-
-
-
-
-
-
 	// MISC STYLES
 	whitebg: { backgroundColor: '#FFF' },
 	offwhitebg: { backgroundColor: '#FAFAFA' },
@@ -303,24 +302,14 @@ var css = StyleSheet.create({
 	fs22: { fontSize: 22 },
 	fs24: { fontSize: 24 },
 
-
-	// Temporary
+	// Temp
 	dining_card_placeholder_img: { width: maxCardWidth, height: maxCardWidth * 1.436 },
 	dining_card_list_img: { width: windowWidth, height: windowWidth * 2.854, marginTop: 10 },
 	dining_card_detail_img: { width: windowWidth, height: windowWidth * 1.9 },
 
-
 	schedule_card_img: { width: maxCardWidth, height: maxCardWidth * 1.1 },
 	schedule_detail_img: { width: windowWidth, height: windowWidth * 1.343 },
 	schedule_detail_bgcolor: { backgroundColor: '#e0e0e0' },
-
-
-
-
 });
 
 module.exports = css;
-
-
-
-
