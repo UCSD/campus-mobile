@@ -1076,7 +1076,7 @@ var Home = React.createClass({
 	},
 
 	gotoTopStoriesDetail: function(topStoriesData) {
-		this.props.navigator.push({ component: TopStoriesDetail, title: 'News', topStoriesData: topStoriesData });
+		this.props.navigator.push({ id: 'TopStoriesDetail', component: TopStoriesDetail, title: 'News', topStoriesData: topStoriesData });
 	},
 
 	gotoSurfReport: function() {
@@ -1084,7 +1084,7 @@ var Home = React.createClass({
 	},
 
 	gotoShuttleStop: function(stopData) {
-		this.props.navigator.push({ component: ShuttleStop, title: 'Shuttle', stopData: stopData });
+		this.props.navigator.push({ id: 'ShuttleStop', component: ShuttleStop, title: 'Shuttle', stopData: stopData });
 	},
 	
 	gotoDestinationDetail: function(destinationData) {
@@ -1095,19 +1095,19 @@ var Home = React.createClass({
 		destinationData.mkrLong = parseFloat(destinationData.mkrLong);
 
 		destinationData.distLatLon = Math.sqrt(Math.pow(Math.abs(this.getCurrentPosition('lat') - destinationData.mkrLat), 2) + Math.pow(Math.abs(this.getCurrentPosition('lon') - destinationData.mkrLong), 2));
-		this.props.navigator.push({ component: DestinationDetail, title: destinationData.title, destinationData: destinationData });
+		this.props.navigator.push({ id: 'DestinationDetail', component: DestinationDetail, title: destinationData.title, destinationData: destinationData });
 	},
 
 	gotoFeedbackForm: function() {
-		this.props.navigator.push({ component: WebWrapper, title: 'Feedback', webViewURL: AppSettings.FEEDBACK_URL });
+		this.props.navigator.push({ id: 'WebWrapper', component: WebWrapper, title: 'Feedback', webViewURL: AppSettings.FEEDBACK_URL });
 	},
 
 	gotoPrivacyPolicy: function() {
-		this.props.navigator.push({ component: WebWrapper, title: 'About', webViewURL: AppSettings.PRIVACY_POLICY_URL });
+		this.props.navigator.push({ id: 'WebWrapper', component: WebWrapper, title: 'About', webViewURL: AppSettings.PRIVACY_POLICY_URL });
 	},
 
 	gotoScheduleDetail: function() {
-		this.props.navigator.push({ component: ScheduleDetail, title: 'Schedule' });
+		this.props.navigator.push({ id: 'ScheduleDetail', component: ScheduleDetail, title: 'Schedule' });
 	},
 
 	
