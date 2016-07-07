@@ -1072,7 +1072,7 @@ var Home = React.createClass({
 
 	// #9 - NAVIGATOR
 	gotoEventDetail: function(eventData) {
-		this.props.navigator.push({ component: EventDetail, title: 'Events', eventData: eventData });
+		this.props.navigator.push({ id: 'EventDetail', component: EventDetail, title: 'Events', eventData: eventData });
 	},
 
 	gotoTopStoriesDetail: function(topStoriesData) {

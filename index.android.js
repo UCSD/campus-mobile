@@ -16,6 +16,7 @@ var logger = require('./app/util/logger');
 var AppSettings = require('./app/AppSettings');
 var Home = require('./app/views/Home');
 var SurfReport = require('./app/views/SurfReport');
+var EventDetail = require('./app/views/EventDetail');
 
 var nowucsandiego = React.createClass({
 
@@ -50,8 +51,9 @@ var nowucsandiego = React.createClass({
 	switch (route.id) {
 	  case 'Home':          return (<Home route={route} navigator={navigator} isSimulator={this.props.isSimulator} />);
       case 'SurfReport':        return (<SurfReport route={route} navigator={navigator} />);
-	  /*
+
 	  case 'EventDetail':       return (<EventDetail route={route} navigator={navigator} />);
+	  /*
 	  case 'TopStoriesDetail':    return (<TopStoriesDetail route={route} navigator={navigator} />);
 
 	  case 'ShuttleStop':       return (<ShuttleStop route={route} navigator={navigator} isSimulator={this.props.isSimulator} />);
