@@ -14,7 +14,8 @@ import {
 	ListView,
 	Animated,
 	RefreshControl,
-	Modal
+	Modal,
+	Component,
 } from 'react-native';
 
 // Node Modules
@@ -136,7 +137,7 @@ var Home = React.createClass({
 
 		// SHUTTLE & DESTINATION CARD
 		if (AppSettings.SHUTTLE_CARD_ENABLED || AppSettings.DESTINATION_CARD_ENABLED) {
-			
+
 			navigator.geolocation.getCurrentPosition(
 				(initialPosition) => this.setState({initialPosition}),
 				(error) => logger.custom('ERR: navigator.geolocation.getCurrentPosition: ' + error.message),
