@@ -8,8 +8,8 @@ import {
 	TouchableHighlight,
 } from 'react-native';
 import EventService from '../../services/eventService'
-import EventItem from './EventItem'
 import Card from '../card/Card'
+import EventList from './EventList'
 
 var css = require('../../styles/css');
 var logger = 			require('../../util/logger');
@@ -20,12 +20,11 @@ export default class EventCard extends React.Component {
     super(props);
 
     this.fetchEventsErrorInterval =  15 * 1000;			// Retry every 15 seconds
-  	this.fetchEventsErrorLimit = 3;
+		this.fetchEventsErrorLimit = 3;
   	this.fetchEventsErrorCounter = 0;
 
     this.state = {
-      eventsDataFull: [],
-      eventsDataPartial: [],
+      eventsData: [],
       eventsRenderAllRows: false,
 			eventsDataLoaded: false,
       fetchEventsErrorLimitReached: false,
@@ -41,16 +40,8 @@ export default class EventCard extends React.Component {
 		var that = this;
     EventService.FetchEvents()
 			.then((responseData) => {
-
-				var responseDataFull = responseData;
-				var responseDataPartial = responseData.slice(0, this.state.eventsDefaultResults);
-
-				var dsFull = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-				var dsPartial = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-
-				that.setState({
-					eventsDataFull: dsFull.cloneWithRows(responseDataFull),
-					eventsDataPartial: dsPartial.cloneWithRows(responseDataPartial),
+				this.setState({
+					eventsData: responseData,
 					eventsDataLoaded: true
 				});
 			})
@@ -69,39 +60,12 @@ export default class EventCard extends React.Component {
 	}
 
   render() {
-    var eventsList = [];
-    if (this.state.eventsRenderAllRows){
-      eventsList = this.state.eventsDataFull;
-    } else {
-      eventsList = this.state.eventsDataPartial;
-    }
-
     return (
 			<Card title='Events'>
         <View style={css.events_list}>
 					{this.state.eventsDataLoaded ? (
-						<ListView
-							dataSource={eventsList}
-							renderRow={ (row) => <EventItem data={row} /> }
-							style={css.wf_listview} />
-
+						<EventList data={this.state.eventData} />
 					) : null}
-
-          {this.state.eventsRenderAllRows === false ? (
-            <TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.setState({eventsRenderAllRows: true}) }>
-              <View style={css.events_more}>
-                <Text style={css.events_more_label}>Show More Events &#9660;</Text>
-              </View>
-            </TouchableHighlight>
-          ) : null }
-
-          {this.state.eventsRenderAllRows === true ? (
-            <TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.setState({eventsRenderAllRows: false}) }>
-              <View style={css.events_more}>
-                <Text style={css.events_more_label}>Show Less Events &#9650;</Text>
-              </View>
-            </TouchableHighlight>
-          ) : null }
 
           {this.state.fetchEventsErrorLimitReached ? (
             <View style={[css.flexcenter, css.pad40]}>

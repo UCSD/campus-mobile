@@ -67,7 +67,6 @@ var Home = React.createClass({
 
 	// Cards
 	cards: [],
-	eventCard: null,
 
 	getInitialState: function() {
         logger.log('Home. get initial state');
@@ -151,8 +150,7 @@ var Home = React.createClass({
 
 		// Setup CARDS
 		if (AppSettings.EVENTS_CARD_ENABLED){
-			this.eventCard = <EventCard />;
-			this.cards.push(this.eventCard);
+			this.cards.push(<EventCard navigator={this.props.navigator} />);
 		}
 
 		// LOAD CARDS
@@ -420,7 +418,7 @@ var Home = React.createClass({
 
 
 					{/* EVENTS CARD */}
-					{this.eventCard}
+					{ cards }
 
 					{/* DESTINATION CARD */}
 					{AppSettings.DESTINATION_CARD_ENABLED ? (
@@ -482,8 +480,7 @@ var Home = React.createClass({
 		this.refreshTopStoriesCard();
 
 		// Refresh other cards
-		console.log(this.cards);
-		this.eventCard = <EventCard />;
+		this.cards.forEach(c => c.refs.item0.refresh());
 	},
 
 	refreshShuttleCard: function(refreshType) {
