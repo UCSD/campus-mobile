@@ -645,7 +645,7 @@ var Home = React.createClass({
 	// #4 - NEWS CARD
 	fetchTopStories: function() {
 
-		fetch(AppSettings.NEWS_API_URL, {
+		fetch(AppSettings.TOP_STORIES_API_URL, {
 				headers: {
 					'Cache-Control': 'no-cache'
 				}
