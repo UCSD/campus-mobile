@@ -15,6 +15,11 @@ export default class EventList extends React.Component {
   constructor(props){
     super(props);
 
+		this.state = {
+			eventsRenderAllRows: false,
+			data: []
+		}
+
     this.datasource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
   }
 
@@ -26,29 +31,31 @@ export default class EventList extends React.Component {
       eventData = this.state.data.splice(0, 3);
     }
 
-    var eventDatasource = this.datasource.cloneWithRows(eventData)
+    var eventDatasource = this.datasource.cloneWithRows(eventData);
 
     return (
-      <ListView
-        dataSource={eventDatasource}
-        renderRow={ (row) => <EventItem data={row} /> }
-        style={css.wf_listview} />
+			<View>
+	      <ListView
+	        dataSource={eventDatasource}
+	        renderRow={ (row) => <EventItem data={row} /> }
+	        style={css.wf_listview} />
 
-      {this.state.eventsRenderAllRows === false ? (
-        <TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this._setState('eventsRenderAllRows', true) }>
-          <View style={css.events_more}>
-            <Text style={css.events_more_label}>Show More Events &#9660;</Text>
-          </View>
-        </TouchableHighlight>
-      ) : null }
+	      {this.state.eventsRenderAllRows === false ? (
+	        <TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this._setState('eventsRenderAllRows', true) }>
+	          <View style={css.events_more}>
+	            <Text style={css.events_more_label}>Show More Events &#9660;</Text>
+	          </View>
+	        </TouchableHighlight>
+	      ) : null }
 
-      {this.state.eventsRenderAllRows === true ? (
-        <TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this._setState('eventsRenderAllRows', false) }>
-          <View style={css.events_more}>
-            <Text style={css.events_more_label}>Show Less Events &#9650;</Text>
-          </View>
-        </TouchableHighlight>
-      ) : null }
+	      {this.state.eventsRenderAllRows === true ? (
+	        <TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this._setState('eventsRenderAllRows', false) }>
+	          <View style={css.events_more}>
+	            <Text style={css.events_more_label}>Show Less Events &#9650;</Text>
+	          </View>
+	        </TouchableHighlight>
+	      ) : null }
+			</View>
     );
   }
 }

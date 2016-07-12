@@ -418,7 +418,7 @@ var Home = React.createClass({
 
 
 					{/* EVENTS CARD */}
-					{ cards }
+					{ this.cards }
 
 					{/* DESTINATION CARD */}
 					{AppSettings.DESTINATION_CARD_ENABLED ? (
@@ -480,7 +480,7 @@ var Home = React.createClass({
 		this.refreshTopStoriesCard();
 
 		// Refresh other cards
-		this.cards.forEach(c => c.refs.item0.refresh());
+		//this.cards.forEach(c => c.refs.item0.refresh());
 	},
 
 	refreshShuttleCard: function(refreshType) {
