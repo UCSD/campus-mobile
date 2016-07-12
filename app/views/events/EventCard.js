@@ -37,8 +37,6 @@ export default class EventCard extends React.Component {
 	}
 
   refresh() {
-		console.log('refreshing');
-		var that = this;
     EventService.FetchEvents()
 			.then((responseData) => {
 				this.setState({
@@ -48,13 +46,13 @@ export default class EventCard extends React.Component {
 			})
 			.catch((error) => {
 				logger.error(error);
-				if (that.fetchEventsErrorLimit > that.fetchEventsErrorCounter) {
-					that.fetchEventsErrorCounter++;
-					logger.custom('ERR: fetchEvents1: refreshing again in ' + that.fetchEventsErrorInterval/1000 + ' sec');
-					that.refreshEventsTimer = setTimeout( () => { that.refresh() }, that.fetchEventsErrorInterval);
+				if (this.fetchEventsErrorLimit > this.fetchEventsErrorCounter) {
+					this.fetchEventsErrorCounter++;
+					logger.custom('ERR: fetchEvents1: refreshing again in ' + this.fetchEventsErrorInterval/1000 + ' sec');
+					this.refreshEventsTimer = setTimeout( () => { this.refresh() }, this.fetchEventsErrorInterval);
 				} else {
-					logger.custom('ERR: fetchEvents2: Limit exceeded - max limit:' + that.fetchEventsErrorLimit);
-					that.setState({ fetchEventsErrorLimitReached: true });
+					logger.custom('ERR: fetchEvents2: Limit exceeded - max limit:' + this.fetchEventsErrorLimit);
+					this.setState({ fetchEventsErrorLimitReached: true });
 				}
 			})
 			.done();
