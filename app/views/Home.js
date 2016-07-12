@@ -6,7 +6,6 @@ import {
 	View,
 	Text,
 	AppState,
-	Navigator,
 	TouchableHighlight,
 	ScrollView,
 	Image,
@@ -57,7 +56,6 @@ var Home = React.createClass({
 	fetchTopStoriesErrorInterval: 15 * 1000,		// Retry every 15 seconds
 	fetchTopStoriesErrorLimit: 3,
 	fetchTopStoriesErrorCounter: 0,
-	eventsDefaultResults: 3,
 	topStoriesDefaultResults: 3,
 	nearbyMaxResults: 5,
 	nearbyAnnotations: [],
