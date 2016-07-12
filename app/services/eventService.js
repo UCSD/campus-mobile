@@ -1,3 +1,6 @@
+var AppSettings = 		require('../AppSettings');
+
+
 var EventService = {
 
   FetchEvents: function() {

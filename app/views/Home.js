@@ -152,6 +152,7 @@ var Home = React.createClass({
 		// Setup CARDS
 		if (AppSettings.EVENTS_CARD_ENABLED){
 			this.eventCard = <EventCard />;
+			this.cards.push(this.eventCard);
 		}
 
 		// LOAD CARDS
@@ -419,7 +420,7 @@ var Home = React.createClass({
 
 
 					{/* EVENTS CARD */}
-					<EventCard />
+					{this.eventCard}
 
 					{/* DESTINATION CARD */}
 					{AppSettings.DESTINATION_CARD_ENABLED ? (
@@ -481,7 +482,8 @@ var Home = React.createClass({
 		this.refreshTopStoriesCard();
 
 		// Refresh other cards
-		this.cards.forEach(c => c.refresh(refreshType));
+		console.log(this.cards);
+		this.eventCard = <EventCard />;
 	},
 
 	refreshShuttleCard: function(refreshType) {

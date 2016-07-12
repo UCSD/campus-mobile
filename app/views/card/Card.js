@@ -15,9 +15,11 @@ export default class Card extends React.Component {
   }
 
   render() {
-    <View style={css.card_main}>
-      <CardHeader title={this.props.title} />
-      {this.props.children}
-    </View>
+		return (
+	    <View style={css.card_main}>
+	      <CardHeader title={this.props.title} />
+	      {this.props.children}
+	    </View>
+		);
   }
 }
