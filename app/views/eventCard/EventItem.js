@@ -14,11 +14,11 @@ var css = require('../../styles/css');
 
 export default class EventItem extends React.Component {
 
-  gotoEventDetail: function(eventData) {
+  gotoEventDetail(eventData) {
 		this.props.navigator.push({ component: EventDetail, title: 'Events', eventData: eventData });
-	},
+	}
 
-  render: function() {
+  render() {
     var data = this.props.data;
     var eventTitleStr = data.EventTitle.replace('&amp;','&');
 		var eventDescriptionStr = data.EventDescription.replace('&amp;','&').replace(/\n.*/g,'').trim();

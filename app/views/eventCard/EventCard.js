@@ -8,9 +8,11 @@ import {
 	TouchableHighlight,
 } from 'react-native';
 import EventService from '../../services/eventService'
+import EventItem from './EventItem'
 import Card from '../card/Card'
 
 var css = require('../../styles/css');
+var logger = 			require('../../util/logger');
 
 export default class EventCard extends React.Component {
 
@@ -25,12 +27,18 @@ export default class EventCard extends React.Component {
       eventsDataFull: [],
       eventsDataPartial: [],
       eventsRenderAllRows: false,
+			eventsDataLoaded: false,
       fetchEventsErrorLimitReached: false
     }
   }
 
+	componentDidMount() {
+		this.refresh();
+	}
+
   refresh() {
-    EventService.FetchEvents
+		var that = this;
+    EventService.FetchEvents()
 			.then((responseData) => {
 
 				var responseDataFull = responseData;
@@ -39,20 +47,21 @@ export default class EventCard extends React.Component {
 				var dsFull = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 				var dsPartial = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
-				this.setState({
+				that.setState({
 					eventsDataFull: dsFull.cloneWithRows(responseDataFull),
 					eventsDataPartial: dsPartial.cloneWithRows(responseDataPartial),
 					eventsDataLoaded: true
 				});
 			})
 			.catch((error) => {
-				if (this.fetchEventsErrorLimit > this.fetchEventsErrorCounter) {
-					this.fetchEventsErrorCounter++;
-					logger.custom('ERR: fetchEvents1: refreshing again in ' + this.fetchEventsErrorInterval/1000 + ' sec');
-					this.refreshEventsTimer = this.setTimeout( () => { this.refresh() }, this.fetchEventsErrorInterval);
+				logger.error(error);
+				if (that.fetchEventsErrorLimit > that.fetchEventsErrorCounter) {
+					that.fetchEventsErrorCounter++;
+					logger.custom('ERR: fetchEvents1: refreshing again in ' + that.fetchEventsErrorInterval/1000 + ' sec');
+					that.refreshEventsTimer = setTimeout( () => { that.refresh() }, that.fetchEventsErrorInterval);
 				} else {
-					logger.custom('ERR: fetchEvents2: Limit exceeded - max limit:' + this.fetchEventsErrorLimit);
-					this.setState({ fetchEventsErrorLimitReached: true });
+					logger.custom('ERR: fetchEvents2: Limit exceeded - max limit:' + that.fetchEventsErrorLimit);
+					that.setState({ fetchEventsErrorLimitReached: true });
 				}
 			})
 			.done();
@@ -67,12 +76,14 @@ export default class EventCard extends React.Component {
     }
 
     return (
-      <Card title='Campus Events'>
         <View style={css.events_list}>
-          <ListView
-            dataSource={eventsList}
-            renderRow={ (row) => <EventItem data={row} /> }
-            style={css.wf_listview} />
+					{this.state.eventsDataLoaded ? (
+						<ListView
+							dataSource={eventsList}
+							renderRow={ (row) => <EventItem data={row} /> }
+							style={css.wf_listview} />
+
+					) : null}
 
           {this.state.eventsRenderAllRows === false ? (
             <TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this._setState('eventsRenderAllRows', true) }>
@@ -96,7 +107,6 @@ export default class EventCard extends React.Component {
             </View>
           ) : null }
 					</View>
-        </Card>
       );
     }
   }
