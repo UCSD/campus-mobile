@@ -37,6 +37,7 @@ export default class EventCard extends React.Component {
 	}
 
   refresh() {
+		console.log('refreshing');
 		var that = this;
     EventService.FetchEvents()
 			.then((responseData) => {

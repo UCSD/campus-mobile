@@ -65,9 +65,6 @@ var Home = React.createClass({
 	regionRefreshInterval: 60 * 1000,
 	copyrightYear: new Date().getFullYear(),
 
-	// Cards
-	cards: [],
-
 	getInitialState: function() {
         logger.log('Home. get initial state');
 
@@ -118,6 +115,16 @@ var Home = React.createClass({
 		}
 	},
 
+	getCards: function(){
+			var cards = [];
+			// Setup CARDS
+			if (AppSettings.EVENTS_CARD_ENABLED){
+				cards.push(<EventCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  />);
+			}
+
+			return cards;
+	},
+
 	componentWillMount: function() {
 
 		// Realm DB Init
@@ -148,14 +155,8 @@ var Home = React.createClass({
 			this.setTimeout( () => { this.updateCurrentRegion() }, 1000);
 		}
 
-		// Setup CARDS
-		if (AppSettings.EVENTS_CARD_ENABLED){
-			this.cards.push(<EventCard navigator={this.props.navigator} />);
-		}
-
 		// LOAD CARDS
 		this.refreshAllCards('auto');
-
 	},
 
 	componentDidMount: function() {
@@ -418,7 +419,7 @@ var Home = React.createClass({
 
 
 					{/* EVENTS CARD */}
-					{ this.cards }
+					{ this.getCards() }
 
 					{/* DESTINATION CARD */}
 					{AppSettings.DESTINATION_CARD_ENABLED ? (
@@ -480,6 +481,9 @@ var Home = React.createClass({
 		this.refreshTopStoriesCard();
 
 		// Refresh other cards
+		if (this.refs.cards){
+			this.refs.cards.forEach(c => c.refresh());
+		}
 		//this.cards.forEach(c => c.refs.item0.refresh());
 	},
 
