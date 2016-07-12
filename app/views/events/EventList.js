@@ -27,7 +27,7 @@ export default class EventList extends React.Component {
     if (this.state.eventsRenderAllRows){
       eventData = this.props.data;
     } else {
-      eventData = this.props.data.splice(0, 3);
+      eventData = this.props.data.slice(0, 3);
     }
 
     var eventDatasource = this.datasource.cloneWithRows(eventData);
