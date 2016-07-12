@@ -17,6 +17,8 @@ import {
 	Modal
 } from 'react-native';
 
+import EventCard from 'eventCard/eventCard'
+
 // Node Modules
 var TimerMixin = 		require('react-timer-mixin');
 var Realm = 			require('realm');
@@ -53,9 +55,6 @@ var Home = React.createClass({
 	shuttleMainReloadAnim: new Animated.Value(0),
 	shuttleClosestStops: [{ dist: 100000000 },{ dist: 100000000 }],
 	weatherReloadAnim: new Animated.Value(0),
-	fetchEventsErrorInterval: 15 * 1000,			// Retry every 15 seconds
-	fetchEventsErrorLimit: 3,
-	fetchEventsErrorCounter: 0,
 	fetchTopStoriesErrorInterval: 15 * 1000,		// Retry every 15 seconds
 	fetchTopStoriesErrorLimit: 3,
 	fetchTopStoriesErrorCounter: 0,
@@ -65,6 +64,10 @@ var Home = React.createClass({
 	nearbyAnnotations: [],
 	regionRefreshInterval: 60 * 1000,
 	copyrightYear: new Date().getFullYear(),
+
+	// Cards
+	cards: [],
+	eventCard: null,
 
 	getInitialState: function() {
         logger.log('Home. get initial state');
@@ -83,16 +86,12 @@ var Home = React.createClass({
 
 			specialEventsCardEnabled: true,
 			scrollEnabled: true,
-			
+
 			weatherData: null,
 			weatherDataLoaded: false,
 
 			surfData: null,
 			surfDataLoaded: false,
-
-			eventsDataLoaded: false,
-			eventsRenderAllRows: false,
-			fetchEventsErrorLimitReached: false,
 
 			topStoriesDataLoaded: false,
 			topStoriesRenderAllRows: false,
@@ -136,25 +135,30 @@ var Home = React.createClass({
 
 		// SHUTTLE & DESTINATION CARD
 		if (AppSettings.SHUTTLE_CARD_ENABLED || AppSettings.DESTINATION_CARD_ENABLED) {
-			
+
 			navigator.geolocation.getCurrentPosition(
 				(initialPosition) => this.setState({initialPosition}),
 				(error) => logger.custom('ERR: navigator.geolocation.getCurrentPosition: ' + error.message),
 				{enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
 			);
-			
+
 			this.geolocationWatchID = navigator.geolocation.watchPosition((currentPosition) => {
 				this.setState({currentPosition});
 			});
-			
+
 			this.setTimeout( () => { this.updateCurrentRegion() }, 1000);
+		}
+
+		// Setup CARDS
+		if (AppSettings.EVENTS_CARD_ENABLED){
+			eventCard = <EventCard />;
 		}
 
 		// LOAD CARDS
 		this.refreshAllCards('auto');
 
 	},
-	
+
 	componentDidMount: function() {
 		logger.custom('View Loaded: Home');
 	},
@@ -415,48 +419,7 @@ var Home = React.createClass({
 
 
 					{/* EVENTS CARD */}
-					{AppSettings.EVENTS_CARD_ENABLED ? (
-						<View style={css.card_main}>
-							<View style={css.card_title_container}>
-								<Text style={css.card_title}>Campus Events</Text>
-							</View>
-
-							{this.state.eventsDataLoaded ? (
-								<View style={css.events_list}>
-									{this.state.eventsRenderAllRows ? (
-										<ListView dataSource={this.state.eventsDataFull} renderRow={this.renderEventsRow} style={css.wf_listview} />
-									) : (
-										<ListView dataSource={this.state.eventsDataPartial} renderRow={this.renderEventsRow} style={css.wf_listview} />
-									)}
-
-									{this.state.eventsRenderAllRows === false ? (
-										<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this._setState('eventsRenderAllRows', true) }>
-											<View style={css.events_more}>
-												<Text style={css.events_more_label}>Show More Events &#9660;</Text>
-											</View>
-										</TouchableHighlight>
-									) : null }
-
-									{this.state.eventsRenderAllRows === true ? (
-										<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this._setState('eventsRenderAllRows', false) }>
-											<View style={css.events_more}>
-												<Text style={css.events_more_label}>Show Less Events &#9650;</Text>
-											</View>
-										</TouchableHighlight>
-									) : null }
-
-								</View>
-							) : null }
-
-							{this.state.fetchEventsErrorLimitReached ? (
-								<View style={[css.flexcenter, css.pad40]}>
-									<Text>There was a problem loading Student Events</Text>
-								</View>
-							) : null }
-
-						</View>
-					) : null }
-
+					{ eventCard }
 
 					{/* DESTINATION CARD */}
 					{AppSettings.DESTINATION_CARD_ENABLED ? (
@@ -515,13 +478,15 @@ var Home = React.createClass({
 		if (!refreshType) { refreshType = 'manual'; }
 		this.refreshShuttleCard(refreshType);
 		this.refreshWeatherCard();
-		this.refreshEventsCard();
 		this.refreshTopStoriesCard();
+
+		// Refresh other cards
+		cards.forEach(c => c.refresh(refreshType));
 	},
 
 	refreshShuttleCard: function(refreshType) {
 		if (AppSettings.SHUTTLE_CARD_ENABLED) {
-			
+
 			this.setState({ gpsLoadFailed: false });
 
 			if (this.state.initialLoad) {
@@ -550,14 +515,6 @@ var Home = React.createClass({
 		}
 	},
 
-	refreshEventsCard: function() {
-		if (AppSettings.EVENTS_CARD_ENABLED) {
-			this.fetchEventsErrorCounter = 0;
-			this.fetchEventsErrorLimitReached = false;
-			this.fetchEvents();
-		}
-	},
-
 	refreshTopStoriesCard: function() {
 		if (AppSettings.TOPSTORIES_CARD_ENABLED) {
 			this.fetchTopStoriesErrorCounter = 0;
@@ -565,82 +522,6 @@ var Home = React.createClass({
 			this.fetchTopStories();
 		}
 	},
-
-
-	// #3 - EVENTS CARD
-	fetchEvents: function() {
-
-		fetch(AppSettings.EVENTS_API_URL, {
-				headers: {
-					'Cache-Control': 'no-cache'
-				}
-			})
-			.then((response) => response.json())
-			.then((responseData) => {
-
-				var responseDataFull = responseData;
-				var responseDataPartial = responseData.slice(0, this.eventsDefaultResults);
-
-				var dsFull = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-				var dsPartial = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-
-				this.setState({
-					eventsDataFull: dsFull.cloneWithRows(responseDataFull),
-					eventsDataPartial: dsPartial.cloneWithRows(responseDataPartial),
-					eventsDataLoaded: true
-				});
-			})
-			.catch((error) => {
-				if (this.fetchEventsErrorLimit > this.fetchEventsErrorCounter) {
-					this.fetchEventsErrorCounter++;
-					logger.custom('ERR: fetchEvents1: refreshing again in ' + this.fetchEventsErrorInterval/1000 + ' sec');
-					this.refreshEventsTimer = this.setTimeout( () => { this.fetchEvents() }, this.fetchEventsErrorInterval);
-				} else {
-					logger.custom('ERR: fetchEvents2: Limit exceeded - max limit:' + this.fetchEventsErrorLimit);
-					this.setState({ fetchEventsErrorLimitReached: true });
-				}
-			})
-			.done();
-	},
-
-	renderEventsRow: function(data) {
-		
-		var eventTitleStr = data.EventTitle.replace('&amp;','&');
-		var eventDescriptionStr = data.EventDescription.replace('&amp;','&').replace(/\n.*/g,'').trim();
-
-		if (eventDescriptionStr.length > 0) {
-			if (eventTitleStr.length < 25) {
-				eventDescriptionStr = eventDescriptionStr.substring(0,56) + '...';
-			} else if (eventTitleStr.length < 50) {
-				eventDescriptionStr = eventDescriptionStr.substring(0,28) + '...';
-			} else {
-				eventDescriptionStr = '';
-			}
-		}
-
-		var eventDateDay;
-		if (data.EventDate) {
-			var eventDateDayArray = data.EventDate[0].split(', ');
-			eventDateDay = eventDateDayArray[1] + ', ' + eventDateDayArray[2].substring(5,22).toLowerCase();
-		} else {
-			eventDateDay = 'Ongoing Event';
-		}
-
-		return (
-			<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoEventDetail(data) }>
-				<View style={css.events_list_row}>
-					<View style={css.events_list_left_container}>
-						<Text style={css.events_list_title}>{eventTitleStr}</Text>
-						{eventDescriptionStr ? (<Text style={css.events_list_desc}>{eventDescriptionStr}</Text>) : null }
-						<Text style={css.events_list_postdate}>{eventDateDay}</Text>
-					</View>
-
-					<Image style={css.events_list_image} source={{ uri: data.EventImage }} />
-				</View>
-			</TouchableHighlight>
-		);
-	},
-
 
 	// #4 - NEWS CARD
 	fetchTopStories: function() {
@@ -867,7 +748,7 @@ var Home = React.createClass({
 
 		// If running on Device, and no Current or Initial position exists, retry again in 5 sec
 		if (!this.props.isSimulator && (this.state.initialPosition === null && this.state.currentPosition === null)) {
-			
+
 			general.stopReloadAnimation(this.shuttleReloadAnim);
 
 			if (this.shuttleCardGPSRefreshCounter < this.shuttleCardGPSRefreshLimit) {
@@ -901,7 +782,7 @@ var Home = React.createClass({
 
 					var shuttleRouteStop = shuttleRoute.stops[n];
 					var distanceFromStop = shuttle.getDistance(this.getCurrentPosition('lat'), this.getCurrentPosition('lon'), shuttleRouteStop.lat, shuttleRouteStop.lon);
-				
+
 					// Rewrite this later using sortRef from shuttleDetail
 					if (distanceFromStop < this.shuttleClosestStops[0].dist) {
 						this.shuttleClosestStops[0].stopID = shuttleRouteStop.id;
@@ -934,7 +815,7 @@ var Home = React.createClass({
 	},
 
 	fetchShuttleArrivalsByStop: function(closestStopNumber, stopID) {
-		
+
 		var SHUTTLE_STOPS_API_URL = AppSettings.SHUTTLE_STOPS_API_URL + stopID + '/arrivals';
 
 		fetch(SHUTTLE_STOPS_API_URL, {
@@ -966,7 +847,7 @@ var Home = React.createClass({
 							this.shuttleClosestStops[closestStopNumber].routeColor = shuttleStopArrival.route.color;
 						}
 					}
-					
+
 					if (this.shuttleClosestStops[closestStopNumber].routeShortName == "Campus Loop") {
 						this.shuttleClosestStops[closestStopNumber].routeShortName = "L";
 					}
@@ -977,7 +858,7 @@ var Home = React.createClass({
 					} else if (closestStopNumber == 1) {
 						this.setState({ closestStop2Loaded: true });
 					}
-					
+
 				} else {
 					throw('invalid');
 				}
@@ -1071,10 +952,6 @@ var Home = React.createClass({
 
 
 	// #9 - NAVIGATOR
-	gotoEventDetail: function(eventData) {
-		this.props.navigator.push({ component: EventDetail, title: 'Events', eventData: eventData });
-	},
-
 	gotoTopStoriesDetail: function(topStoriesData) {
 		this.props.navigator.push({ component: TopStoriesDetail, title: 'News', topStoriesData: topStoriesData });
 	},
@@ -1086,7 +963,7 @@ var Home = React.createClass({
 	gotoShuttleStop: function(stopData) {
 		this.props.navigator.push({ component: ShuttleStop, title: 'Shuttle', stopData: stopData });
 	},
-	
+
 	gotoDestinationDetail: function(destinationData) {
 		destinationData.currentLat = this.getCurrentPosition('lat');
 		destinationData.currentLon = this.getCurrentPosition('lon');
@@ -1110,9 +987,9 @@ var Home = React.createClass({
 		this.props.navigator.push({ component: ScheduleDetail, title: 'Schedule' });
 	},
 
-	
 
-	
+
+
 	// #10 - MISC
 	_setState: function(myKey, myVal) {
 		var state = {};
