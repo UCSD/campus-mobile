@@ -9,12 +9,13 @@ import {
 } from 'react-native';
 import EventService from '../../services/eventService'
 import Card from '../card/Card'
+import CardComponent from '../card/CardComponent'
 import EventList from './EventList'
 
 var css = require('../../styles/css');
 var logger = 			require('../../util/logger');
 
-export default class EventCard extends React.Component {
+export default class EventCard extends CardComponent {
 
   constructor(props) {
     super(props);
