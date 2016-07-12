@@ -28,7 +28,8 @@ export default class EventCard extends React.Component {
       eventsDataPartial: [],
       eventsRenderAllRows: false,
 			eventsDataLoaded: false,
-      fetchEventsErrorLimitReached: false
+      fetchEventsErrorLimitReached: false,
+			eventsDefaultResults: 3
     }
   }
 
@@ -42,7 +43,7 @@ export default class EventCard extends React.Component {
 			.then((responseData) => {
 
 				var responseDataFull = responseData;
-				var responseDataPartial = responseData.slice(0, this.eventsDefaultResults);
+				var responseDataPartial = responseData.slice(0, this.state.eventsDefaultResults);
 
 				var dsFull = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 				var dsPartial = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
@@ -76,6 +77,7 @@ export default class EventCard extends React.Component {
     }
 
     return (
+			<Card title='Events'>
         <View style={css.events_list}>
 					{this.state.eventsDataLoaded ? (
 						<ListView
@@ -86,7 +88,7 @@ export default class EventCard extends React.Component {
 					) : null}
 
           {this.state.eventsRenderAllRows === false ? (
-            <TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this._setState('eventsRenderAllRows', true) }>
+            <TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.setState({eventsRenderAllRows: true}) }>
               <View style={css.events_more}>
                 <Text style={css.events_more_label}>Show More Events &#9660;</Text>
               </View>
@@ -94,7 +96,7 @@ export default class EventCard extends React.Component {
           ) : null }
 
           {this.state.eventsRenderAllRows === true ? (
-            <TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this._setState('eventsRenderAllRows', false) }>
+            <TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.setState({eventsRenderAllRows: false}) }>
               <View style={css.events_more}>
                 <Text style={css.events_more_label}>Show Less Events &#9650;</Text>
               </View>
@@ -107,6 +109,7 @@ export default class EventCard extends React.Component {
             </View>
           ) : null }
 					</View>
+					</Card>
       );
     }
   }
