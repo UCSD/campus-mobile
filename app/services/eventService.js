@@ -11,4 +11,4 @@ var EventService = {
 
 }
 
-default export EventService
+export default EventService;

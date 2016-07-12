@@ -8,7 +8,7 @@ import {
 	TouchableHighlight,
 } from 'react-native';
 import EventService from '../../services/eventService'
-import Card from '../cards/card'
+import Card from '../card/Card'
 
 var css = require('../../styles/css');
 
@@ -17,9 +17,9 @@ export default class EventCard extends React.Component {
   constructor(props) {
     super(props);
 
-    this.fetchEventsErrorInterval: 15 * 1000,			// Retry every 15 seconds
-  	this.fetchEventsErrorLimit: 3,
-  	this.fetchEventsErrorCounter: 0,
+    this.fetchEventsErrorInterval =  15 * 1000;			// Retry every 15 seconds
+  	this.fetchEventsErrorLimit = 3;
+  	this.fetchEventsErrorCounter = 0;
 
     this.state = {
       eventsDataFull: [],
@@ -71,7 +71,7 @@ export default class EventCard extends React.Component {
         <View style={css.events_list}>
           <ListView
             dataSource={eventsList}
-            renderRow={ (row) => return <EventItem data={row} /> }
+            renderRow={ (row) => <EventItem data={row} /> }
             style={css.wf_listview} />
 
           {this.state.eventsRenderAllRows === false ? (
@@ -95,8 +95,8 @@ export default class EventCard extends React.Component {
               <Text>There was a problem loading Student Events</Text>
             </View>
           ) : null }
+					</View>
         </Card>
-      )
+      );
     }
   }
-}

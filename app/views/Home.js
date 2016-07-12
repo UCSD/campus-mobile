@@ -17,7 +17,7 @@ import {
 	Modal
 } from 'react-native';
 
-import EventCard from 'eventCard/eventCard'
+import EventCard from './eventCard/EventCard'
 
 // Node Modules
 var TimerMixin = 		require('react-timer-mixin');
@@ -151,7 +151,7 @@ var Home = React.createClass({
 
 		// Setup CARDS
 		if (AppSettings.EVENTS_CARD_ENABLED){
-			eventCard = <EventCard />;
+			this.eventCard = <EventCard />;
 		}
 
 		// LOAD CARDS
@@ -419,7 +419,7 @@ var Home = React.createClass({
 
 
 					{/* EVENTS CARD */}
-					{ eventCard }
+					<EventCard />
 
 					{/* DESTINATION CARD */}
 					{AppSettings.DESTINATION_CARD_ENABLED ? (
@@ -481,7 +481,7 @@ var Home = React.createClass({
 		this.refreshTopStoriesCard();
 
 		// Refresh other cards
-		cards.forEach(c => c.refresh(refreshType));
+		this.cards.forEach(c => c.refresh(refreshType));
 	},
 
 	refreshShuttleCard: function(refreshType) {
