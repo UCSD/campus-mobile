@@ -6,6 +6,7 @@ import {
 	Text,
 	TouchableHighlight,
 } from 'react-native';
+import EventItem from './EventItem'
 
 var css = require('../../styles/css');
 

@@ -8,7 +8,6 @@ import {
 	TouchableHighlight,
 } from 'react-native';
 import EventService from '../../services/eventService'
-import EventItem from './EventItem'
 import Card from '../card/Card'
 import EventList from './EventList'
 
