@@ -17,7 +17,7 @@ import {
 	Modal
 } from 'react-native';
 
-import EventCard from './eventCard/EventCard'
+import EventCard from './events/EventCard'
 
 // Node Modules
 var TimerMixin = 		require('react-timer-mixin');
@@ -37,7 +37,6 @@ var shuttle_routes = 	require('../json/shuttle_routes_master.json');
 // Views
 var ShuttleStop = 		require('./ShuttleStop');
 var SurfReport = 		require('./SurfReport');
-var EventDetail = 		require('./EventDetail');
 var TopStoriesDetail = 	require('./TopStoriesDetail');
 var DestinationDetail = require('./DestinationDetail');
 var WebWrapper = 		require('./WebWrapper');
@@ -484,7 +483,6 @@ var Home = React.createClass({
 		if (this.refs.cards){
 			this.refs.cards.forEach(c => c.refresh());
 		}
-		//this.cards.forEach(c => c.refs.item0.refresh());
 	},
 
 	refreshShuttleCard: function(refreshType) {

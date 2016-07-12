@@ -16,8 +16,7 @@ export default class EventList extends React.Component {
     super(props);
 
 		this.state = {
-			eventsRenderAllRows: false,
-			data: []
+			eventsRenderAllRows: false
 		}
 
     this.datasource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
@@ -26,9 +25,9 @@ export default class EventList extends React.Component {
   render() {
     var eventData = [];
     if (this.state.eventsRenderAllRows){
-      eventData = this.state.data;
+      eventData = this.props.data;
     } else {
-      eventData = this.state.data.splice(0, 3);
+      eventData = this.props.data.splice(0, 3);
     }
 
     var eventDatasource = this.datasource.cloneWithRows(eventData);
@@ -37,11 +36,11 @@ export default class EventList extends React.Component {
 			<View>
 	      <ListView
 	        dataSource={eventDatasource}
-	        renderRow={ (row) => <EventItem data={row} /> }
+	        renderRow={ (row) => <EventItem data={row} navigator={this.props.navigator} /> }
 	        style={css.wf_listview} />
 
 	      {this.state.eventsRenderAllRows === false ? (
-	        <TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this._setState('eventsRenderAllRows', true) }>
+	        <TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.setState({eventsRenderAllRows: true}) }>
 	          <View style={css.events_more}>
 	            <Text style={css.events_more_label}>Show More Events &#9660;</Text>
 	          </View>
@@ -49,7 +48,7 @@ export default class EventList extends React.Component {
 	      ) : null }
 
 	      {this.state.eventsRenderAllRows === true ? (
-	        <TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this._setState('eventsRenderAllRows', false) }>
+	        <TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.setState({eventsRenderAllRows: false}) }>
 	          <View style={css.events_more}>
 	            <Text style={css.events_more_label}>Show Less Events &#9650;</Text>
 	          </View>

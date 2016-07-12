@@ -10,6 +10,7 @@ import {
 	Image,
 } from 'react-native';
 
+import EventDetail from './EventDetail'
 var css = require('../../styles/css');
 
 export default class EventItem extends React.Component {
