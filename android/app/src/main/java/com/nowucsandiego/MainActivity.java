@@ -1,6 +1,7 @@
 package com.nowucsandiego;
 
 import com.facebook.react.ReactActivity;
+import com.burnweb.rnpermissions.RNPermissionsPackage;
 import com.idehub.GoogleAnalyticsBridge.GoogleAnalyticsBridgePackage;
 import io.realm.react.RealmReactPackage;
 

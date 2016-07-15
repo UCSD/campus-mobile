@@ -57,30 +57,30 @@ if (pixelRatio === 2) {
 var css = StyleSheet.create({
 
 	// NavigatorIOS
-	navBarIOS: { flex: 1 },
+	navBarIOS: {  },
 
 	// Primary Containers
 	main_container: { flex: 1, backgroundColor: '#EAEAEA' },
 	scroll_main: {  },
-	view_default: { flex: 1 },
+	view_default: {  },
 	scroll_default: { alignItems: 'center' },
 	
 
 	// Card Styles
 	card_main: { borderWidth: 1, borderRadius: 2, borderColor: '#DDD', backgroundColor: '#F9F9F9', margin: 6, alignItems: 'flex-start', justifyContent: 'center', overflow: 'hidden' },
-	card_plain: { margin: 6, flex: 1, alignItems: 'center', justifyContent: 'center' },
+	card_plain: { margin: 6, alignItems: 'center', justifyContent: 'center' },
 	card_special_events: { width: windowWidth - 12, height: windowWidth * .597 - 12, borderRadius: 3 },
 	card_view_overlay: { position: 'absolute', flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', bottom: 0, left: 0, width: windowWidth - 12, height: 48, backgroundColor: 'rgba(60,60,60,.8)'	},
-	card_header_container: { flex: 1, borderBottomWidth: 1, borderBottomColor: '#EEE', width: maxCardWidthWithPadding },
+	card_header_container: { borderBottomWidth: 1, borderBottomColor: '#EEE', width: maxCardWidthWithPadding },
 	card_title_container: { flex: 1, flexDirection: 'row', alignItems: 'center', width: maxCardWidth, padding: 8, borderBottomWidth: 1, borderBottomColor: '#DDD' },
-		card_title: { fontSize: 26 * prm, fontWeight: '400', letterSpacing: 1, color: '#747678' },
+		card_title: { fontSize: 26 * prm, color: '#747678' },
 
 
 	// Modal Welcome Message
 	modal_container: { flex: 1, backgroundColor: 'rgba(0, 108, 147, .95)', justifyContent: 'center', padding: 35 * prm },
 	modal_text_intro: { color: '#FFF', fontSize: 30, },
 	modal_text: { color: '#FFF', marginTop: 30, fontSize: 16, lineHeight: 20, marginBottom: 30 },
-	modal_button: { flex: 1, borderWidth: 1, borderColor: '#FFF', padding: 16 * prm, backgroundColor: 'rgba(50,50,50,.75)', justifyContent: 'center' },
+	modal_button: { borderWidth: 1, borderColor: '#FFF', padding: 16 * prm, backgroundColor: 'rgba(50,50,50,.75)', justifyContent: 'center' },
 	modal_button_text: { fontSize: 24, color: '#FFF', textAlign: 'center' },
 
 
@@ -90,8 +90,9 @@ var css = StyleSheet.create({
 		shuttle_card_refresh_timeago: { fontSize: 9 * prm, color: '#999', marginTop: -1 * prm, textAlign: 'center', fontWeight: '500', backgroundColor: 'rgba(0,0,0,0)' },
 
 		shuttle_card_row: { width: maxCardWidth, overflow: 'hidden' },
+		shuttle_card_err_row: { alignItems: 'center', justifyContent: 'center', width: maxCardWidth, overflow: 'hidden' },
 		shuttle_card_row_border: { borderTopWidth: 1, borderTopColor: '#DDD' },
-		shuttle_card_row_top: { flex: 1, flexDirection: 'row', alignItems: 'stretch', justifyContent: 'center', marginVertical: 20 * prm, height: 100 * prm },
+		shuttle_card_row_top: { flex: 1, flexDirection: 'row', alignItems: 'stretch', justifyContent: 'center', marginVertical: 20 * prm, height: 83 * prm },
 			shuttle_card_rt_1: { flex: 1 },
 			shuttle_card_rt_2: { borderRadius: 49 * prm, borderWidth: 1, width: 98 * prm + 2, justifyContent: 'center' },
 			shuttle_card_rt_2_label: { textAlign: 'center', color: '#222', fontWeight: '600', fontSize: 48 * prm, backgroundColor: 'rgba(0,0,0,0)' },
@@ -124,11 +125,11 @@ var css = StyleSheet.create({
 	weatherccard_loading_height: { height: 300 * prm },
 
 	wc_main: {  },
-	wc_toprow: { flex: 1, flexDirection: 'row', height: 80, borderBottomWidth: 1, borderColor: '#EEE', justifyContent: 'center', alignItems: 'center', width: maxCardWidth, padding: 14 },
-	wc_toprow_left: { flex: 4 },
-		wc_current_temp: { fontSize: 22, fontWeight: '300' },
-		wc_current_summary: { fontSize: 15, color: '#444', paddingTop: 10, fontWeight: '300' },
-	wc_toprow_right: { flex: 1 },
+	wc_toprow: { flex: 1, flexDirection: 'row', borderBottomWidth: 1, borderColor: '#EEE', justifyContent: 'center', alignItems: 'center', width: maxCardWidth, paddingHorizontal: 14 },
+		wc_toprow_left: { flex: 4 },
+			wc_current_temp: { fontSize: 22, fontWeight: '300' },
+			wc_current_summary: { fontSize: 15, color: '#444', paddingTop: 10, fontWeight: '300' },
+		wc_toprow_right: { flex: 1 },
 	wc_toprow_icon: { width: 68 * prm, height: 68 * prm },
 
 	wc_botrow: { flex: 1, flexDirection: 'row', padding: 20 },
@@ -140,7 +141,7 @@ var css = StyleSheet.create({
 	wc_surfreport_more: { fontSize: 20, fontWeight: '300', color: '#006C92', paddingHorizontal: 14, paddingVertical: 10 },
 
 	// SURF REPORT
-	sr_listview: { flex: 1 },
+	sr_listview: {  },
 	sr_image: { width: windowWidth, height: windowWidth * .361 },
 	sr_day_row: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: 10 },
 		sr_day_row_border: { borderTopWidth: 1, borderTopColor: '#CCC' },

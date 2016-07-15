@@ -137,7 +137,7 @@ var Home = React.createClass({
 
 		// SHUTTLE & DESTINATION CARD
 		if (AppSettings.SHUTTLE_CARD_ENABLED || AppSettings.DESTINATION_CARD_ENABLED) {
-
+			
 			navigator.geolocation.getCurrentPosition(
 				(initialPosition) => this.setState({initialPosition}),
 				(error) => logger.custom('ERR: navigator.geolocation.getCurrentPosition: ' + error.message),
@@ -285,7 +285,7 @@ var Home = React.createClass({
 
 							{this.state.closestStop1Loaded === false && this.state.closestStop2Loaded === false &&
 							 this.state.closestStop1LoadFailed && this.state.closestStop2LoadFailed ? (
-								<View style={[css.flexcenter, css.shuttle_card_row, css.shuttle_card_loading_height]}>
+								<View style={css.shuttle_card_err_row}>
 									<View style={css.shuttlecard_loading_fail}>
 										<Text style={css.fs18}>No Shuttles en Route</Text>
 										<Text style={[css.pt10, css.fs12, css.dgrey]}>We were unable to locate any nearby shuttles, please try again later.</Text>
@@ -646,7 +646,7 @@ var Home = React.createClass({
 	// #4 - NEWS CARD
 	fetchTopStories: function() {
 
-		fetch(AppSettings.TOP_STORIES_API_URL, {
+		fetch(AppSettings.NEWS_API_URL, {
 				headers: {
 					'Cache-Control': 'no-cache'
 				}
