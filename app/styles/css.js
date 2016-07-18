@@ -54,6 +54,9 @@ if (pixelRatio === 2) {
 	shuttleStopRefreshIconTop = 15;
 }
 
+var ucsdblue = '#006C92';
+var ucsdgrey = '#747678';
+
 var css = StyleSheet.create({
 
 	// NavigatorIOS
@@ -82,6 +85,66 @@ var css = StyleSheet.create({
 	modal_text: { color: '#FFF', marginTop: 30, fontSize: 16, lineHeight: 20, marginBottom: 30 },
 	modal_button: { borderWidth: 1, borderColor: '#FFF', padding: 16 * prm, backgroundColor: 'rgba(50,50,50,.75)', justifyContent: 'center' },
 	modal_button_text: { fontSize: 24, color: '#FFF', textAlign: 'center' },
+
+
+	// DINING CARD
+	dining_card: { padding: 8 },
+	dining_card_map: { width: maxCardWidthWithPadding, height: maxCardWidthWithPadding * .5 },
+	dining_card_filters: { flex: 1, flexDirection: 'row', justifyContent: 'center', marginVertical: 6 },
+		dining_card_filter_button: { paddingVertical: 6, paddingHorizontal: 10, fontSize: 12, color: '#006C92', borderWidth: 1, borderColor: '#999', borderRadius: 3, backgroundColor: '#EEE', textAlign: 'center', marginHorizontal: 10 },
+	dc_locations: { flex: 1, flexDirection: 'column', borderTopWidth: 1, borderTopColor: '#DDD', paddingTop: 10 },
+		dc_locations_row: { flex: 1, flexDirection: 'row', paddingHorizontal: 4, paddingBottom: 20 },
+			dc_locations_row_left: { flex: 6, justifyContent: 'center' },
+				dc_locations_title: { fontSize: 20, fontWeight: '500', color: '#006C92' },
+				dc_locations_hours: { fontSize: 12, color: '#666', paddingTop: 1 },
+				dc_locations_description: { fontSize: 12, color: '#666', paddingTop: 1 },
+			dc_locations_row_right: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+				dc_locations_email_icon: { width: maxCardWidthWithPadding / 7 * .55, height: maxCardWidthWithPadding / 7 * .55 * .67 },
+				dc_locations_email: { fontSize: 12, textAlign: 'center', color: '#666' },
+	dining_card_more: { alignItems: 'center', justifyContent: 'center', width: maxCardWidthWithPadding, paddingHorizontal: 4, paddingTop: 8, paddingBottom: 4, borderTopWidth: 1, borderTopColor: '#DDD' },
+	dining_card_more_label: { fontSize: 20, color: '#006C92', fontWeight: '300' },
+
+
+	// DINING LIST
+	dl_market_name: { padding: 10 },
+		dl_market_name_text: { color: '#777', fontSize: 30 },
+	dl_market_scroller: {  },
+		dl_market_scroller_image: { width: 160, height: 160, borderRadius: 5, marginHorizontal: 7 },
+	dl_market_directions: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderBottomColor: '#DDD', margin: 6, padding: 6 },
+		dl_dir_label: { flex: 4, fontSize: 22, color: '#006C92' },
+		dl_dir_traveltype_container: { flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'center' },
+			dl_dir_icon: { width: 28, height: 28 },
+			dl_dir_eta: { color: ucsdblue, fontSize: 14 },
+
+	dl_market_date: { borderBottomWidth: 1, borderBottomColor: '#DDD', paddingBottom: 2, paddingTop: 16 },
+		dl_market_date_label: { fontSize: 22, color: '#444', textAlign: 'center' },
+	
+	dl_market_filters_foodtype: { flex: 1, flexDirection: 'row', justifyContent: 'center', paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: '#DDD', },
+
+
+	dl_market_filters_mealtype: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingVertical: 6 },
+		dl_mealtype_label: { flex: 1, fontSize: 20, color: '#888', textAlign: 'center' },
+
+	dl_market_menu: { marginHorizontal: 8, marginVertical: 16 },
+		dl_market_menu_row: { flex: 1, flexDirection: 'row', paddingBottom: 8 },
+			dl_menu_item_name: { fontSize: 15, color: ucsdblue },
+			dl_menu_item_price: { color: '#555', paddingLeft: 26, marginLeft: 30 },
+
+	dd_menu_item_name: { fontSize: 22, color: ucsdblue, paddingTop: 10, paddingLeft: 1 },
+
+	ddn_container: { borderWidth: 2, borderColor: '#000', margin: 6, padding: 3 },
+		ddn_header: { fontSize: 56 * prm, fontWeight: '700', backgroundColor: 'rgba(0,0,0,0)' },
+		ddn_servingsize: { fontSize: 18 },
+		ddn_amountperserving: { fontSize: 14, fontWeight: '700' },
+		ddn_dv: { fontSize: 14, fontWeight: '700', textAlign: 'right', paddingVertical: 2 },
+		ddn_bold: { fontSize: 18, fontWeight: '700' },
+		ddn_font: { fontSize: 18 },
+		ddn_row_main: { flex: 5, flexDirection: 'row', borderTopWidth: 1, borderTopColor: '#999', paddingVertical: 2 },
+		ddn_row_sub: { flex: 5, flexDirection: 'row', borderTopWidth: 1, borderTopColor: '#999', paddingVertical: 2, paddingLeft: 20 },
+		ddn_percent: { flex: 1, fontSize: 18, fontWeight: '700', textAlign: 'right' },
+		ddn_topborder1: { borderTopWidth: 8, borderTopColor: '#000', paddingVertical: 2, marginTop: 2 },
+		ddn_topborder2: { borderTopWidth: 4, borderTopColor: '#000' },
+		ddn_topborder3: { borderTopWidth: 1, borderTopColor: '#999' },
 
 
 	// SHUTTLE CARD

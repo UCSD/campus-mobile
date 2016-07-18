@@ -39,6 +39,7 @@ var SurfReport = 		require('./SurfReport');
 var EventDetail = 		require('./EventDetail');
 var TopStoriesDetail = 	require('./TopStoriesDetail');
 var DestinationDetail = require('./DestinationDetail');
+var DiningList = 		require('./DiningList');
 var WebWrapper = 		require('./WebWrapper');
 
 var Home = React.createClass({
@@ -60,15 +61,15 @@ var Home = React.createClass({
 	fetchTopStoriesErrorInterval: 15 * 1000,		// Retry every 15 seconds
 	fetchTopStoriesErrorLimit: 3,
 	fetchTopStoriesErrorCounter: 0,
-	eventsDefaultResults: 3,
-	topStoriesDefaultResults: 3,
+	eventsDefaultResults: 4,
+	topStoriesDefaultResults: 4,
+	diningDefaultResults: 3,
 	nearbyMaxResults: 5,
 	nearbyAnnotations: [],
 	regionRefreshInterval: 60 * 1000,
 	copyrightYear: new Date().getFullYear(),
 
 	getInitialState: function() {
-        logger.log('Home. get initial state');
 
 		return {
 			currentAppState: AppState.currentState,
@@ -94,6 +95,9 @@ var Home = React.createClass({
 			eventsDataLoaded: false,
 			eventsRenderAllRows: false,
 			fetchEventsErrorLimitReached: false,
+
+			diningDataLoaded: false,
+			diningRenderAllRows: false,
 
 			topStoriesDataLoaded: false,
 			topStoriesRenderAllRows: false,
@@ -135,21 +139,18 @@ var Home = React.createClass({
 		// Manage App State
 		AppState.addEventListener('change', this.handleAppStateChange);
 
-		// SHUTTLE & DESTINATION CARD
-		if (AppSettings.SHUTTLE_CARD_ENABLED || AppSettings.DESTINATION_CARD_ENABLED) {
-			
-			navigator.geolocation.getCurrentPosition(
-				(initialPosition) => this.setState({initialPosition}),
-				(error) => logger.custom('ERR: navigator.geolocation.getCurrentPosition: ' + error.message),
-				{enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
-			);
-			
-			this.geolocationWatchID = navigator.geolocation.watchPosition((currentPosition) => {
-				this.setState({currentPosition});
-			});
-			
-			this.setTimeout( () => { this.updateCurrentRegion() }, 1000);
-		}
+		// GPS
+		navigator.geolocation.getCurrentPosition(
+			(initialPosition) => this.setState({initialPosition}),
+			(error) => logger.custom('ERR: navigator.geolocation.getCurrentPosition2: ' + error.message),
+			{enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
+		);
+		
+		this.geolocationWatchID = navigator.geolocation.watchPosition((currentPosition) => {
+			this.setState({currentPosition});
+		});
+
+		this.setTimeout( () => { this.updateCurrentRegion() }, 1000);
 
 		// LOAD CARDS
 		this.refreshAllCards('auto');
@@ -161,9 +162,7 @@ var Home = React.createClass({
 	},
 
 	componentWillUnmount: function() {
-		if (AppSettings.SHUTTLE_CARD_ENABLED || AppSettings.DESTINATION_CARD_ENABLED) {
-			navigator.geolocation.clearWatch(this.geolocationWatchID);
-		}
+		navigator.geolocation.clearWatch(this.geolocationWatchID);
 		AppState.removeEventListener('change', this.handleAppStateChange);
 	},
 
@@ -488,6 +487,64 @@ var Home = React.createClass({
 					) : null }
 
 
+					{/* DINING CARD */}
+					{AppSettings.DINING_CARD_ENABLED ? (
+						<View>
+							<View style={css.card_main}>
+								<View style={css.card_title_container}>
+									<Text style={css.card_title}>Dining</Text>
+								</View>
+
+								{this.state.diningDataLoaded ? (
+									<View style={css.dining_card}>
+										<View style={css.dining_card_map}>
+											
+											{/*<MapView
+												style={css.destinationcard_map}
+												scrollEnabled={true}
+												zoomEnabled={true}
+												rotateEnabled={false}
+												showsUserLocation={true}
+												minDelta={this.nearbyMinDelta}
+												maxDelta={this.nearbyMaxDelta}
+												followUserLocation={true} />*/}
+										</View>
+										
+										<View style={css.dining_card_filters}>
+											<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.updateDiningFilters('vegetarian') }>
+												<Text style={css.dining_card_filter_button}>Vegetarian</Text>
+											</TouchableHighlight>
+
+											<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.updateDiningFilters('vegan') }>
+												<Text style={css.dining_card_filter_button}>Vegan</Text>
+											</TouchableHighlight>
+
+											<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.updateDiningFilters('glutenfree') }>
+												<Text style={css.dining_card_filter_button}>Gluten-free</Text>
+											</TouchableHighlight>
+
+											<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.updateDiningFilters('opennow') }>
+												<Text style={css.dining_card_filter_button}>Open Now</Text>
+											</TouchableHighlight>
+										</View>
+
+										<View style={css.dc_locations}>
+											<ListView dataSource={this.state.diningDataFull} renderRow={this.renderDiningRow} style={css.wf_listview} />
+										</View>
+
+										
+
+									</View>
+								) : null }
+							</View>
+
+
+
+
+						</View>
+					) : null }
+
+
 					{/* FOOTER */}
 					<View style={css.footer}>
 						<TouchableHighlight style={css.footer_link} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoFeedbackForm() }>
@@ -505,6 +562,18 @@ var Home = React.createClass({
 	},
 
 
+
+
+	openEmailLink: function(email) {
+		Linking.canOpenURL(email).then(supported => {
+			if (supported) {
+				Linking.openURL('mailto:' + email);
+			} else {
+				logger.log('openEmailLink: Unable to send email to ' + email);
+			}
+		});
+	},
+
 	// #2 - REFRESH
 	pullDownRefresh: function(refreshType) {
 		this.setState({ isRefreshing: true });
@@ -513,11 +582,14 @@ var Home = React.createClass({
 	},
 
 	refreshAllCards: function(refreshType) {
-		if (!refreshType) { refreshType = 'manual'; }
+		if (!refreshType) {
+			refreshType = 'manual';
+		}
 		this.refreshShuttleCard(refreshType);
 		this.refreshWeatherCard();
 		this.refreshEventsCard();
 		this.refreshTopStoriesCard();
+		this.fetchDiningLocations();
 	},
 
 	refreshShuttleCard: function(refreshType) {
@@ -567,6 +639,129 @@ var Home = React.createClass({
 		}
 	},
 
+	refreshDiningCard: function() {
+		if (AppSettings.DINING_CARD_ENABLED) {
+			this.fetchTest();
+		}
+	},
+
+	fetchDiningLocations: function() {
+		fetch(AppSettings.DINING_API_URL, {
+				headers: {
+					'Cache-Control': 'no-cache'
+				}
+			})
+			.then((response) => response.json())
+			.then((responseData) => {
+
+				logger.log('fetchDiningLocations:')
+				logger.log(responseData)
+
+				// Calc distance from dining locations
+				for (var i = 0; responseData.length > i; i++) {
+					responseData[i].distance = shuttle.getDistance(this.getCurrentPosition('lat'), this.getCurrentPosition('lon'), responseData[i].coords.lat, responseData[i].coords.lon);
+				}
+				
+				// Sort dining locations by distance
+				responseData.sort(this.sortNearbyMarkers);
+
+				var responseDataPartial = responseData.slice(0, this.diningDefaultResults);
+				
+				var dsFull = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+
+				this.setState({
+					diningData: responseData,
+					diningDataFull: dsFull.cloneWithRows(responseData),
+					diningDataLoaded: true
+				});
+			})
+			.catch((error) => {
+				logger.log('ERR: fetchDiningLocations: ' + error)
+			})
+			.done();
+	},
+
+
+	renderDiningRow: function(data) {
+		
+		var currentTimestamp = general.getTimestamp('yyyy-mm-dd');
+		var diningHours = '';
+		var dayOfWeek = general.getTimestamp('ddd').toLowerCase();
+
+		if (data.specialHours[currentTimestamp]) {
+			diningHours = data.specialHours[currentTimestamp];
+		} else if (data.regularHours[dayOfWeek].indexOf('closed') === 0) {
+			diningHours = 'Closed';
+		} else {
+			var openHours, openTime, closeTime;
+			openHours = data.regularHours[dayOfWeek].split('-');
+			openTime = general.militaryToAMPM(openHours[0]);
+			closeTime = general.militaryToAMPM(openHours[1]);
+			diningHours = 'Open ' + openTime + '-' + closeTime;
+		}
+
+		return (
+			<View style={css.dc_locations_row}>
+				<TouchableHighlight style={css.dc_locations_row_left} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoDiningList(data) }>
+					<View>
+						<Text style={css.dc_locations_title}>{data.name}</Text>
+						<Text style={css.dc_locations_hours}>{diningHours}</Text>
+						<Text style={css.dc_locations_description}>{data.description}</Text>
+					</View>
+				</TouchableHighlight>
+				{data.email ? (
+					<TouchableHighlight style={css.dc_locations_row_right} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.openEmailLink(data.email) }>
+						<View>
+							<Image style={css.dc_locations_email_icon} source={ require('../assets/img/icon_email.png')} />
+
+							<Text style={css.dc_locations_email}>Email</Text>
+						</View>
+					</TouchableHighlight>
+				) : (
+					<View style={css.dc_locations_row_right}></View>
+				)}
+			</View>
+		);
+	},
+
+
+	updateDiningFilters: function(filter) {
+
+		if (this.state.diningDataLoaded) {
+
+			var diningData = this.state.diningData;
+			var diningDataLength = diningData.length;
+
+			logger.log('diningDataLength: ' + diningDataLength)
+
+			for (var i = diningDataLength-1; i >= 0; i--) {
+
+				logger.log('diningData2:')
+				logger.log(diningData[i])
+
+				if (diningData[i].tags.length > 0) {
+
+					var diningTags = diningData[i].tags.split(',');
+					logger.log('diningTags:');
+					logger.log(diningTags)
+
+					for (var n = 0; diningTags.length > n; n++) {
+						if (diningTags[n] === filter) {
+							delete diningData[i];
+							break;
+						}
+					}
+				}
+				
+			}
+
+			var dsFull = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+
+			this.setState({
+				diningDataFull: dsFull.cloneWithRows(diningData),
+			});
+		}
+	},
 
 	// #3 - EVENTS CARD
 	fetchEvents: function() {
@@ -1109,6 +1304,10 @@ var Home = React.createClass({
 
 	gotoScheduleDetail: function() {
 		this.props.navigator.push({ id: 'ScheduleDetail', component: ScheduleDetail, title: 'Schedule' });
+	},
+
+	gotoDiningList: function(marketData) {
+		this.props.navigator.push({ id: 'DiningList', component: DiningList, title: marketData.name, marketData: marketData });
 	},
 
 	
