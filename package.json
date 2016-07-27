@@ -8,7 +8,7 @@
   "dependencies": {
     "dateformat": "^1.0.12",
     "react": "^15.2.0",
-    "react-native": "^0.29.0",
+    "react-native": "^0.30.0",
     "react-native-android-permissions": "0.0.6",
     "react-native-google-analytics-bridge": "^2.1.0",
     "react-timer-mixin": "0.13.3",
