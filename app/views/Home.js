@@ -521,8 +521,6 @@ var Home = React.createClass({
 	},
 
 
-
-
 	openEmailLink: function(email) {
 		Linking.canOpenURL(email).then(supported => {
 			if (supported) {
@@ -611,9 +609,6 @@ var Home = React.createClass({
 
 				responseData = responseData.GetDiningInfoResult;
 
-				logger.log('fetchDiningLocations:')
-				logger.log(responseData)
-
 				// Calc distance from dining locations
 				for (var i = 0; responseData.length > i; i++) {
 					var distance = shuttle.getDistance(this.getCurrentPosition('lat'), this.getCurrentPosition('lon'), responseData[i].coords.lat, responseData[i].coords.lon);
@@ -627,7 +622,8 @@ var Home = React.createClass({
 				// Sort dining locations by distance
 				responseData.sort(this.sortNearbyMarkers);
 
-				var responseDataPartial = responseData.slice(0, this.diningDefaultResults);
+				// remove after 'more' button functionality added
+				responseData.length = 4;
 				
 				var dsFull = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
@@ -677,7 +673,7 @@ var Home = React.createClass({
 					<View>
 						<Text style={css.dc_locations_title}>{data.name}</Text>
 						<Text style={css.dc_locations_hours}>{diningHours}</Text>
-						<Text style={css.dc_locations_description}>{data.description}</Text>
+						{/*<Text style={css.dc_locations_description}>{data.description}</Text>*/}
 					</View>
 				</TouchableHighlight>
 				{data.email ? (
