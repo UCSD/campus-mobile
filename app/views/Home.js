@@ -654,12 +654,19 @@ var Home = React.createClass({
 			.then((response) => response.json())
 			.then((responseData) => {
 
+				responseData = responseData.GetDiningInfoResult;
+
 				logger.log('fetchDiningLocations:')
 				logger.log(responseData)
 
 				// Calc distance from dining locations
 				for (var i = 0; responseData.length > i; i++) {
-					responseData[i].distance = shuttle.getDistance(this.getCurrentPosition('lat'), this.getCurrentPosition('lon'), responseData[i].coords.lat, responseData[i].coords.lon);
+					var distance = shuttle.getDistance(this.getCurrentPosition('lat'), this.getCurrentPosition('lon'), responseData[i].coords.lat, responseData[i].coords.lon);
+					if (distance) {
+						responseData[i].distance = distance;
+					} else {
+						responseData[i].distance = 100000000;
+					}
 				}
 				
 				// Sort dining locations by distance
@@ -690,6 +697,14 @@ var Home = React.createClass({
 
 		if (data.specialHours[currentTimestamp]) {
 			diningHours = data.specialHours[currentTimestamp];
+		} else {
+			diningHours = data.regularHours.join("\n");
+		}
+
+
+		/* Re-enable once dining info feed open hours are fixed
+		if (data.specialHours[currentTimestamp]) {
+			diningHours = data.specialHours[currentTimestamp];
 		} else if (data.regularHours[dayOfWeek].indexOf('closed') === 0) {
 			diningHours = 'Closed';
 		} else {
@@ -699,6 +714,7 @@ var Home = React.createClass({
 			closeTime = general.militaryToAMPM(openHours[1]);
 			diningHours = 'Open ' + openTime + '-' + closeTime;
 		}
+		*/
 
 		return (
 			<View style={css.dc_locations_row}>
@@ -727,40 +743,38 @@ var Home = React.createClass({
 
 	updateDiningFilters: function(filter) {
 
-		if (this.state.diningDataLoaded) {
+		/*
+		var diningData = this.state.diningData;
+		var diningDataLength = diningData.length;
 
-			var diningData = this.state.diningData;
-			var diningDataLength = diningData.length;
+		logger.log('diningDataLength: ' + diningDataLength)
 
-			logger.log('diningDataLength: ' + diningDataLength)
+		for (var i = 0; diningDataLength > i; i++) {
 
-			for (var i = diningDataLength-1; i >= 0; i--) {
+			var diningTags = diningData[i].tags.split(',');
+			logger.log('diningTags:');
+			logger.log(diningTags)
 
-				logger.log('diningData2:')
-				logger.log(diningData[i])
-
-				if (diningData[i].tags.length > 0) {
-
-					var diningTags = diningData[i].tags.split(',');
-					logger.log('diningTags:');
-					logger.log(diningTags)
-
-					for (var n = 0; diningTags.length > n; n++) {
-						if (diningTags[n] === filter) {
-							delete diningData[i];
-							break;
-						}
-					}
+			for (var n = 0; diningTags.length > n; n++) {
+				if (diningTags[n] === filter) {
+					logger.log('deleting diningData' + i);
+					//diningData.splice(i, 1);
+					//i--;
+					break;
 				}
-				
 			}
-
-			var dsFull = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-
-			this.setState({
-				diningDataFull: dsFull.cloneWithRows(diningData),
-			});
+			
 		}
+
+		var dsFull = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+
+		this.setState({
+			diningDataFull: dsFull.cloneWithRows(diningData),
+		});
+		*/
+
+		return null;
+
 	},
 
 	// #3 - EVENTS CARD
