@@ -13,9 +13,9 @@ import {
 } from 'react-native';
 
 
-var css = require('../styles/css');
-var logger = require('../util/logger');
-var WebWrapper = require('./WebWrapper');
+var css = require('../../styles/css');
+var logger = require('../../util/logger');
+var WebWrapper = require('../WebWrapper');
 
 var windowSize = Dimensions.get('window');
 var windowWidth = windowSize.width;
@@ -67,7 +67,7 @@ var EventDetail = React.createClass({
 		return (
 			<View style={[css.main_container, css.whitebg]}>
 				<ScrollView contentContainerStyle={css.scroll_default}>
-					
+
 					{this.state.newsImgWidth ? (
 						<Image style={{ width: this.state.newsImgWidth, height: this.state.newsImgHeight }} source={{ uri: this.props.route.eventData.EventImageLg }} />
 					) : null }
@@ -80,7 +80,7 @@ var EventDetail = React.createClass({
 						</View>
 
 						<Text style={css.eventdetail_eventdescription}>{eventDescriptionStr}</Text>
-						
+
 						{this.props.route.eventData.EventContact ? (
 							<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.openBrowserLink('mailto:' + this.props.route.eventData.EventContact) }>
 								<View style={css.eventdetail_readmore_container}>
@@ -88,7 +88,7 @@ var EventDetail = React.createClass({
 								</View>
 							</TouchableHighlight>
 						) : null }
-						
+
 						{this.props.route.eventData.EventURL ? (
 							<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoWebView(eventTitleStr, this.props.route.eventData.EventURL) }>
 								<View style={css.eventdetail_readmore_container}>
