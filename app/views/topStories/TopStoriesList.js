@@ -21,7 +21,11 @@ export default class TopStoriesList extends React.Component {
 
     this.datasource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
   }
-
+	renderRow = (row) => {
+		return (
+			<TopStoriesItem data={row} navigator={this.props.navigator} />
+		);
+	}
   render() {
     var topStoriesData = [];
     if (this.state.topStoriesRenderAllRows){
@@ -36,7 +40,7 @@ export default class TopStoriesList extends React.Component {
 			<View>
 	      <ListView
 	        dataSource={topStoriesDatasource}
-	        renderRow={ (row) => <TopStoriesItem data={row} navigator={this.props.navigator} /> }
+	        renderRow={this.renderRow}
 	        style={css.wf_listview} />
 
 	      {this.state.topStoriesRenderAllRows === false ? (
