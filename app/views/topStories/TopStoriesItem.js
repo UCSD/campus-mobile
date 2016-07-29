@@ -22,6 +22,22 @@ export default class TopStoresItem extends React.Component {
   		this.props.navigator.push({ id: 'TopStoriesDetail', component: TopStoriesDetail, title: 'News', topStoriesData: topStoriesData });
 	}
 
+	getStoryDescription(description, title){
+		var storyDescriptionStr = description.replace(/^ /g, '');
+
+		if (storyDescriptionStr.length > 0) {
+			if (title.length < 25) {
+				storyDescriptionStr = storyDescriptionStr.substring(0,56).replace(/ $/,'') + '...';
+			} else if (title.length < 50) {
+				storyDescriptionStr = storyDescriptionStr.substring(0,28).replace(/ $/,'') + '...';
+			} else {
+				storyDescriptionStr = '';
+			}
+		}
+
+		return storyDescriptionStr;
+	}
+
   render() {
     var data = this.props.data;
 
@@ -40,18 +56,7 @@ export default class TopStoresItem extends React.Component {
 
 		var storyTitle = data.title;
 
-		var storyDescriptionStr = data.description;
-		storyDescriptionStr = storyDescriptionStr.replace(/^ /g, '');
-
-		if (storyDescriptionStr.length > 0) {
-			if (storyTitle.length < 25) {
-				storyDescriptionStr = storyDescriptionStr.substring(0,56).replace(/ $/,'') + '...';
-			} else if (storyTitle.length < 50) {
-				storyDescriptionStr = storyDescriptionStr.substring(0,28).replace(/ $/,'') + '...';
-			} else {
-				storyDescriptionStr = '';
-			}
-		}
+		var storyDescriptionStr = this.getStoryDescription(data.description, data.title);
 
 		return (
 			<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoTopStoriesDetail(data) }>
