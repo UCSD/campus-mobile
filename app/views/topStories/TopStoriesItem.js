@@ -14,6 +14,8 @@ import TopStoriesDetail from './TopStoriesDetail';
 
 var css = require('../../styles/css');
 
+const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
 export default class TopStoresItem extends React.Component {
 
   gotoTopStoriesDetail(topStoriesData) {
@@ -34,7 +36,6 @@ export default class TopStoresItem extends React.Component {
 			storyDateDay = storyDateDay.substring(1,2);
 		}
 
-		var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 		var storyDateMonthStr = monthNames[storyDateMonth-1];
 
 		var storyTitle = data.title;
