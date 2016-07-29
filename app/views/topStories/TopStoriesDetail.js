@@ -11,13 +11,13 @@ import {
 	Dimensions
 } from 'react-native';
 
-var css = require('../styles/css');
-var WebWrapper = require('./WebWrapper');
+var css = require('../../styles/css');
+var WebWrapper = require('../WebWrapper');
 
 var windowSize = Dimensions.get('window');
 var windowWidth = windowSize.width;
 
-var logger = require('../util/logger');
+var logger = require('../../util/logger');
 
 var TopStoriesDetail = React.createClass({
 
@@ -63,18 +63,18 @@ var TopStoriesDetail = React.createClass({
 		var ts_days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 		var ts_day = ts_date.getDay();
 		var ts_dayofweek = ts_days[ts_day];
-		
+
 		// HH:MM
 		var ts_hours = ts_date.getHours();
 		var ts_minutes = "0" + ts_date.getMinutes();
 		var ts_seconds = "0" + ts_date.getSeconds();
-		
+
 		var ts_ampm = ts_hours >= 12 ? 'PM' : 'AM';
 		ts_hours = ts_hours % 12;
 		ts_hours = ts_hours ? ts_hours : 12;
 		var ts_hhmm = ts_hours + ':' + ts_minutes.substr(-2) + ts_ampm;
 		var ts_datestr = ts_month + ' ' + ts_dayofmonth + ', ' + ts_year;
-		
+
 		// Desc
 		var topStoriesDesc = this.props.route.topStoriesData.description;
 		topStoriesDesc = topStoriesDesc.replace(/^ /g, '');
@@ -83,7 +83,7 @@ var TopStoriesDetail = React.createClass({
 		return (
 			<View style={[css.main_container, css.whitebg]}>
 				<ScrollView contentContainerStyle={css.scroll_default}>
-					
+
 					{this.state.newsImgWidth ? (
 						<Image style={[css.eventdetail_image_tmp, { width: this.state.newsImgWidth, height: this.state.newsImgHeight }]} source={{ uri: this.props.route.topStoriesData.image_lg }} />
 					) : null }
@@ -95,7 +95,7 @@ var TopStoriesDetail = React.createClass({
 						</View>
 
 						<Text style={css.eventdetail_eventdescription}>{topStoriesDesc}</Text>
-						
+
 						{this.props.route.topStoriesData.link ? (
 							<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoWebView(this.props.route.topStoriesData.title, this.props.route.topStoriesData.link) }>
 								<View style={css.eventdetail_readmore_container}>
