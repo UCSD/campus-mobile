@@ -27,7 +27,7 @@ export default class TopStoriesList extends React.Component {
     if (this.state.topStoriesRenderAllRows){
       topStoriesData = this.props.data;
     } else {
-      topStoriesData = this.props.data.slice(0, 3);
+      topStoriesData = this.props.data.slice(0, this.props.defaultResults);
     }
 
     var topStoriesDatasource = this.datasource.cloneWithRows(topStoriesData);

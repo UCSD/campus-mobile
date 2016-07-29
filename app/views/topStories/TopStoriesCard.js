@@ -74,7 +74,7 @@ export default class TopStoresCard extends CardComponent {
 			<Card title='News'>
         <View style={css.events_list}>
           {this.state.topStoriesDataLoaded ? (
-            <TopStoriesList data={this.state.topStoriesData} navigator={this.props.navigator} />
+            <TopStoriesList data={this.state.topStoriesData} defaultResults={this.state.topStoriesDefaultResults} navigator={this.props.navigator} />
           ) : null}
 
         {this.state.fetchErrorLimitReached ? (
