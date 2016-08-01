@@ -18,6 +18,7 @@ import {
 } from 'react-native';
 
 import EventCard from './events/EventCard'
+import TopStoriesCard from './topStories/TopStoriesCard';
 
 // Node Modules
 var TimerMixin = 		require('react-timer-mixin');
@@ -37,7 +38,6 @@ var shuttle_routes = 	require('../json/shuttle_routes_master.json');
 // Views
 var ShuttleStop = 		require('./ShuttleStop');
 var SurfReport = 		require('./SurfReport');
-var TopStoriesDetail = 	require('./TopStoriesDetail');
 var DestinationDetail = require('./DestinationDetail');
 var DiningList = 		require('./DiningList');
 var WebWrapper = 		require('./WebWrapper');
@@ -55,10 +55,6 @@ var Home = React.createClass({
 	shuttleMainReloadAnim: new Animated.Value(0),
 	shuttleClosestStops: [{ dist: 100000000 },{ dist: 100000000 }],
 	weatherReloadAnim: new Animated.Value(0),
-	fetchTopStoriesErrorInterval: 15 * 1000,		// Retry every 15 seconds
-	fetchTopStoriesErrorLimit: 3,
-	fetchTopStoriesErrorCounter: 0,
-	topStoriesDefaultResults: 4,
 	diningDefaultResults: 3,
 	nearbyMaxResults: 5,
 	nearbyAnnotations: [],
@@ -90,9 +86,6 @@ var Home = React.createClass({
 
 			diningDataLoaded: false,
 			diningRenderAllRows: false,
-			topStoriesDataLoaded: false,
-			topStoriesRenderAllRows: false,
-			fetchTopStoriesErrorLimitReached: false,
 
 			shuttleRefreshTimeAgo: ' ',
 			closestStop1Loaded: false,
@@ -119,6 +112,10 @@ var Home = React.createClass({
 	getCards: function(){
 			var cards = [];
 			// Setup CARDS
+			if (AppSettings.TOPSTORIES_CARD_ENABLED){
+				cards.push(<TopStoriesCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  />);
+			}
+
 			if (AppSettings.EVENTS_CARD_ENABLED){
 				cards.push(<EventCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  />);
 			}
@@ -146,7 +143,7 @@ var Home = React.createClass({
 			(error) => logger.custom('ERR: navigator.geolocation.getCurrentPosition2: ' + error.message),
 			{enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
 		);
-		
+
 		this.geolocationWatchID = navigator.geolocation.watchPosition((currentPosition) => {
 			this.setState({currentPosition});
 		});
@@ -368,53 +365,7 @@ var Home = React.createClass({
 						</View>
 					) : null }
 
-
-					{/* TOP STORIES CARD */}
-					{AppSettings.TOPSTORIES_CARD_ENABLED ? (
-						<View style={css.card_main}>
-							<View style={css.card_title_container}>
-								<Text style={css.card_title}>News</Text>
-							</View>
-
-							{this.state.topStoriesDataLoaded ? (
-								<View style={css.events_list}>
-
-									{this.state.topStoriesRenderAllRows ? (
-										<ListView dataSource={this.state.topStoriesDataFull} renderRow={this.renderTopStoriesRow} style={css.wf_listview} />
-									) : (
-										<ListView dataSource={this.state.topStoriesDataPartial} renderRow={this.renderTopStoriesRow} style={css.wf_listview} />
-									)}
-
-									{this.state.topStoriesRenderAllRows === false ? (
-										<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this._setState('topStoriesRenderAllRows', true) }>
-											<View style={css.events_more}>
-												<Text style={css.events_more_label}>Show More News &#9660;</Text>
-											</View>
-										</TouchableHighlight>
-									) : null }
-
-									{this.state.topStoriesRenderAllRows === true ? (
-										<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this._setState('topStoriesRenderAllRows', false) }>
-											<View style={css.events_more}>
-												<Text style={css.events_more_label}>Show Less News &#9650;</Text>
-											</View>
-										</TouchableHighlight>
-									) : null }
-
-								</View>
-							) : null }
-
-							{this.state.fetchTopStoriesErrorLimitReached ? (
-								<View style={[css.flexcenter, css.pad40]}>
-									<Text>Error loading content</Text>
-								</View>
-							) : null }
-
-						</View>
-					) : null }
-
-
-					{/* EVENTS CARD */}
+					{/* EVENTS CARD & TOP STORIES CARD */}
 					{ this.getCards() }
 
 					{/* DESTINATION CARD */}
@@ -457,7 +408,7 @@ var Home = React.createClass({
 								{this.state.diningDataLoaded ? (
 									<View style={css.dining_card}>
 										<View style={css.dining_card_map}>
-											
+
 											{/*<MapView
 												style={css.destinationcard_map}
 												scrollEnabled={true}
@@ -468,7 +419,7 @@ var Home = React.createClass({
 												maxDelta={this.nearbyMaxDelta}
 												followUserLocation={true} />*/}
 										</View>
-										
+
 										<View style={css.dining_card_filters}>
 											<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.updateDiningFilters('vegetarian') }>
 												<Text style={css.dining_card_filter_button}>Vegetarian</Text>
@@ -491,7 +442,7 @@ var Home = React.createClass({
 											<ListView dataSource={this.state.diningDataFull} renderRow={this.renderDiningRow} style={css.wf_listview} />
 										</View>
 
-										
+
 
 									</View>
 								) : null }
@@ -544,7 +495,6 @@ var Home = React.createClass({
 		}
 		this.refreshShuttleCard(refreshType);
 		this.refreshWeatherCard();
-		this.refreshTopStoriesCard();
 		this.fetchDiningLocations();
 
 		// Refresh other cards
@@ -584,14 +534,6 @@ var Home = React.createClass({
 		}
 	},
 
-	refreshTopStoriesCard: function() {
-		if (AppSettings.TOPSTORIES_CARD_ENABLED) {
-			this.fetchTopStoriesErrorCounter = 0;
-			this.fetchTopStoriesErrorLimitReached = false;
-			this.fetchTopStories();
-		}
-	},
-
 	refreshDiningCard: function() {
 		if (AppSettings.DINING_CARD_ENABLED) {
 			this.fetchTest();
@@ -618,13 +560,13 @@ var Home = React.createClass({
 						responseData[i].distance = 100000000;
 					}
 				}
-				
+
 				// Sort dining locations by distance
 				responseData.sort(this.sortNearbyMarkers);
 
 				// remove after 'more' button functionality added
 				responseData.length = 4;
-				
+
 				var dsFull = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
 				this.setState({
@@ -641,7 +583,7 @@ var Home = React.createClass({
 
 
 	renderDiningRow: function(data) {
-		
+
 		var currentTimestamp = general.getTimestamp('yyyy-mm-dd');
 		var diningHours = '';
 		var dayOfWeek = general.getTimestamp('ddd').toLowerCase();
@@ -714,7 +656,7 @@ var Home = React.createClass({
 					break;
 				}
 			}
-			
+
 		}
 
 		var dsFull = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
@@ -727,106 +669,6 @@ var Home = React.createClass({
 		return null;
 
 	},
-
-
-	// #4 - NEWS CARD
-	fetchTopStories: function() {
-
-		fetch(AppSettings.NEWS_API_URL, {
-				headers: {
-					'Cache-Control': 'no-cache'
-				}
-			})
-			.then((response) => response.json())
-			.then((responseData) => {
-
-				for (var i = 0; responseData.items.length > i; i++) {
-					if (responseData.items[i].image) {
-						var image_lg = responseData.items[i].image.replace(/-150\./,'.').replace(/_teaser\./,'.');
-						if (image_lg.length > 10) {
-							responseData.items[i].image_lg = image_lg;
-						}
-					}
-				}
-
-				var responseDataFull = responseData.items;
-				var responseDataPartial = responseData.items.slice(0, this.topStoriesDefaultResults);
-
-				var dsFull = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-				var dsPartial = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-
-				this.setState({
-					topStoriesDataFull: dsFull.cloneWithRows(responseDataFull),
-					topStoriesDataPartial: dsPartial.cloneWithRows(responseDataPartial),
-					topStoriesDataLoaded: true,
-				});
-			})
-			.catch((error) => {
-				if (this.fetchTopStoriesErrorLimit > this.fetchTopStoriesErrorCounter) {
-					this.fetchTopStoriesErrorCounter++;
-					logger.custom('ERR: fetchTopStories: refreshing again in ' + this.fetchTopStoriesErrorInterval/1000/60 + 'm');
-					this.refreshTopStoriesTimer = this.setTimeout( () => { this.fetchTopStories() }, this.fetchTopStoriesErrorInterval);
-				} else {
-					logger.custom('ERR: fetchTopStories: Limit exceeded - max limit:' + this.fetchTopStoriesErrorLimit);
-					this.setState({ fetchTopStoriesErrorLimitReached: true });
-				}
-			})
-			.done();
-	},
-
-	renderTopStoriesRow: function(data) {
-
-		var storyDate = data['date'];
-		var storyDateMonth = storyDate.substring(5,7);
-		var storyDateDay = storyDate.substring(8,10);
-
-		if (storyDateMonth.substring(0,1) == '0') {
-			storyDateMonth = storyDateMonth.substring(1,2);
-		}
-		if (storyDateDay.substring(0,1) == '0') {
-			storyDateDay = storyDateDay.substring(1,2);
-		}
-
-		var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-		var storyDateMonthStr = monthNames[storyDateMonth-1];
-
-		var storyTitle = data.title;
-
-		var storyDescriptionStr = data.description;
-		storyDescriptionStr = storyDescriptionStr.replace(/^ /g, '');
-
-		if (storyDescriptionStr.length > 0) {
-			if (storyTitle.length < 25) {
-				storyDescriptionStr = storyDescriptionStr.substring(0,56).replace(/ $/,'') + '...';
-			} else if (storyTitle.length < 50) {
-				storyDescriptionStr = storyDescriptionStr.substring(0,28).replace(/ $/,'') + '...';
-			} else {
-				storyDescriptionStr = '';
-			}
-		}
-
-		return (
-			<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoTopStoriesDetail(data) }>
-				<View style={css.events_list_row}>
-					<View style={css.events_list_left_container}>
-						<Text style={css.events_list_title}>{storyTitle}</Text>
-						{storyDescriptionStr ? (
-							<Text style={css.events_list_desc}>{storyDescriptionStr}</Text>
-						) : null }
-						<Text style={css.events_list_postdate}>{storyDateMonthStr} {storyDateDay}</Text>
-					</View>
-
-					{data.image ? (
-						<Image style={css.events_list_image} source={{ uri: data.image }} />
-					) : (
-						<Image style={css.events_list_image} source={ require('../assets/img/MobileEvents_blank.jpg')} />
-					)}
-
-				</View>
-			</TouchableHighlight>
-		);
-	},
-
 
 	// #6 - NEARBY CARD
 	getCurrentPosition: function(type) {
@@ -1156,11 +998,7 @@ var Home = React.createClass({
 		}
 	},
 
-
 	// #9 - NAVIGATOR
-	gotoTopStoriesDetail: function(topStoriesData) {
-		this.props.navigator.push({ id: 'TopStoriesDetail', component: TopStoriesDetail, title: 'News', topStoriesData: topStoriesData });
-	},
 
 	gotoSurfReport: function() {
 		this.props.navigator.push({ id: 'SurfReport', component: SurfReport, title: 'Surf Report', surfData: this.state.surfData });
