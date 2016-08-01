@@ -21,9 +21,6 @@ var DiningList = React.createClass({
 
 		var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
-		logger.log('this.props.route.marketData.menuItems')
-		logger.log(this.props.route.marketData.menuItems)
-
 		return {
 			marketData: this.props.route.marketData,
 			marketDataMenuSource: ds.cloneWithRows( this.props.route.marketData.menuItems ),
@@ -44,11 +41,13 @@ var DiningList = React.createClass({
 							<Text style={css.dl_market_name_text}>{this.state.marketData.name}</Text>
 						</View>
 
-						<ScrollView style={css.dl_market_scroller} directionalLockEnabled={false} horizontal={true}>
-							{this.state.marketData.images.map(function(object, i) {
-								return (<Image style={css.dl_market_scroller_image} source={{ uri: object }} />);
-							})}
-						</ScrollView>
+						{this.state.marketData.images ? (
+							<ScrollView style={css.dl_market_scroller} directionalLockEnabled={false} horizontal={true}>
+								{this.state.marketData.images.map(function(object, i) {
+									return (<Image style={css.dl_market_scroller_image} source={{ uri: object }} />);
+								})}
+							</ScrollView>
+						) : null }
 
 						<View style={css.dl_market_directions}>
 							<Text style={css.dl_dir_label}>Directions</Text>

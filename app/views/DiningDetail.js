@@ -8,8 +8,7 @@ import {
 	Image,
 	ListView
 } from 'react-native';
-
-var css = require('../styles/css');
+ 
 var logger = require('../util/logger');
 
 var DiningDetail = React.createClass({
