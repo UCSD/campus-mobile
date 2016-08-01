@@ -1,9 +1,11 @@
 rootProject.name = 'nowucsandiego'
 
 include ':app'
-include ':react-native-android-permissions'
-project(':react-native-android-permissions').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-android-permissions/android')
+include ':react-native-permissions'
+project(':react-native-permissions').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-permissions/android')
 include ':react-native-google-analytics-bridge'
 project(':react-native-google-analytics-bridge').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-google-analytics-bridge/android')
 include ':realm'
 project(':realm').projectDir = new File(rootProject.projectDir, '../node_modules/realm/android')
+include ':react-native-permissions'
+project(':react-native-permissions').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-permissions/android')

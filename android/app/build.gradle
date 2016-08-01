@@ -88,7 +88,7 @@ android {
 
     defaultConfig {
         applicationId "com.nowucsandiego"
-        minSdkVersion 16
+        minSdkVersion 18
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -126,12 +126,12 @@ android {
 }
 
 dependencies {
-    compile project(':react-native-android-permissions')
     compile project(':react-native-google-analytics-bridge')
     compile project(':realm')
     compile fileTree(dir: "libs", include: ["*.jar"])
     compile "com.android.support:appcompat-v7:23.0.1"
     compile "com.facebook.react:react-native:+"  // From node_modules
+    compile project(':react-native-permissions') //android + ios permissions
 }
 
 

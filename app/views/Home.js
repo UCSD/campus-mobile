@@ -15,6 +15,7 @@ import {
 	RefreshControl,
 	Modal,
 	Component,
+	Alert,
 } from 'react-native';
 
 import EventCard from './events/EventCard'
@@ -41,6 +42,8 @@ var TopStoriesDetail = 	require('./TopStoriesDetail');
 var DestinationDetail = require('./DestinationDetail');
 var DiningList = 		require('./DiningList');
 var WebWrapper = 		require('./WebWrapper');
+
+const Permissions = require('react-native-permissions');
 
 var Home = React.createClass({
 
@@ -104,6 +107,7 @@ var Home = React.createClass({
 			nearbyMinDelta: .01,
 			nearbyMaxDelta: .02,
 
+			locationPermission: "undetermined",
 			currentPosition: null,
 			initialPosition: null,
 
@@ -126,8 +130,30 @@ var Home = React.createClass({
 			return cards;
 	},
 
-	componentWillMount: function() {
+	//request permission to access location
+	_requestPermission() {
+	Permissions.requestPermission('location')
+		.then(response => {
+			//returns once the user has chosen to 'allow' or to 'not allow' access
+			//response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
+			this.setState({ locationPermission: response });
+		});
+	},
+	_alertForLocationPermission() {
+		Alert.alert(
+			'Can we access your location?',
+			'We need to spy on you.',
+			[
+				{text: 'No way', onPress: () => console.log('permission denied'), style: 'cancel'},
+				this.state.locationPermission == 'undetermined'? 
+				{text: 'OK', onPress: this._requestPermission.bind(this)}
+				: {text: 'Open Settings', onPress: Permissions.openSettings}
+			]
+		);
+	},
 
+	componentWillMount: function() {
+		//this._alertForLocationPermission();
 		// Realm DB Init
 		this.realm = new Realm({schema: [AppSettings.DB_SCHEMA], schemaVersion: 2});
 		this.AppSettings = this.realm.objects('AppSettings');
@@ -140,18 +166,25 @@ var Home = React.createClass({
 		// Manage App State
 		AppState.addEventListener('change', this.handleAppStateChange);
 
-		// GPS
-		navigator.geolocation.getCurrentPosition(
-			(initialPosition) => this.setState({initialPosition}),
-			(error) => logger.custom('ERR: navigator.geolocation.getCurrentPosition2: ' + error.message),
-			{enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
-		);
-		
-		this.geolocationWatchID = navigator.geolocation.watchPosition((currentPosition) => {
-			this.setState({currentPosition});
-		});
+		// Check if we have location perms
+		if(this.state.locationPermission == 'authorized') {
+			// GPS, set currentPosition
+			navigator.geolocation.getCurrentPosition(
+				(initialPosition) => this.setState({initialPosition}),
+				(error) => logger.custom('ERR: navigator.geolocation.getCurrentPosition2: ' + error.message),
+				{enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
+			);
+			
+			this.geolocationWatchID = navigator.geolocation.watchPosition((currentPosition) => {
+				this.setState({currentPosition});
+			});
 
-		this.setTimeout( () => { this.updateCurrentRegion() }, 1000);
+			this.setTimeout( () => { this.updateCurrentRegion() }, 1000);
+		}
+		else {
+			// Some sort of degradation here
+		}
+		
 
 		// LOAD CARDS
 		this.refreshAllCards('auto');
@@ -159,13 +192,23 @@ var Home = React.createClass({
 
 	componentDidMount: function() {
 		logger.custom('View Loaded: Home');
+		// Get location permission status
+		Permissions.getPermissionStatus('location')
+		.then(response => {
+			//response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
+			this.setState({ locationPermission: response });
+		});
 	},
 
 	componentWillUnmount: function() {
-		navigator.geolocation.clearWatch(this.geolocationWatchID);
+		// Check if we have location perms
+		if(this.state.locationPermission == 'authorized') {
+			navigator.geolocation.clearWatch(this.geolocationWatchID);
+		}
 		AppState.removeEventListener('change', this.handleAppStateChange);
 	},
-
+  
+	
 	// #1 - RENDER
 	render: function() {
 		return this.renderScene();
@@ -437,8 +480,8 @@ var Home = React.createClass({
 										maxDelta={this.nearbyMaxDelta}
 										followUserLocation={true} />
 								</View>
-
-								{this.state.nearbyMarkersLoaded ? (
+								{/* Check location permission*/}
+								{this.state.nearbyMarkersLoaded && (this.state.locationPermission == 'authorized') ? (
 									<ListView dataSource={this.state.nearbyMarkersPartial} renderRow={this.renderNearbyRow} style={css.flex} />
 								) : null }
 							</View>
@@ -544,10 +587,16 @@ var Home = React.createClass({
 		if (!refreshType) {
 			refreshType = 'manual';
 		}
-		this.refreshShuttleCard(refreshType);
+		// Requires location permissions
+		// Check if we have location perms
+		if(this.state.locationPermission == 'authorized') {
+			this.fetchDiningLocations();
+			this.refreshShuttleCard(refreshType);
+		}
+		
 		this.refreshWeatherCard();
 		this.refreshTopStoriesCard();
-		this.fetchDiningLocations();
+		
 
 		// Refresh other cards
 		if (this.refs.cards){
@@ -853,6 +902,7 @@ var Home = React.createClass({
 		}
 	},
 
+	// Updates which shuttle region stop user is at?
 	updateCurrentRegion: function() {
 
 		var closestNode = 0;

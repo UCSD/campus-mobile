@@ -7,10 +7,11 @@
   },
   "dependencies": {
     "dateformat": "^1.0.12",
-    "react": "^15.2.0",
-    "react-native": "^0.30.0",
+    "react": "^15.2.1",
+    "react-native": "^0.31.0-rc.1",
     "react-native-android-permissions": "0.0.6",
     "react-native-google-analytics-bridge": "^2.1.0",
+    "react-native-permissions": "^0.2.3",
     "react-timer-mixin": "0.13.3",
     "realm": "^0.13.2"
   }
