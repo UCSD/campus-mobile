@@ -72,7 +72,7 @@ var css = StyleSheet.create({
 	// Card Styles
 	card_main: { borderWidth: 1, borderRadius: 2, borderColor: '#DDD', backgroundColor: '#F9F9F9', margin: 6, alignItems: 'flex-start', justifyContent: 'center', overflow: 'hidden' },
 	card_plain: { margin: 6, alignItems: 'center', justifyContent: 'center' },
-	card_special_events: { width: windowWidth - 12, height: windowWidth * .597 - 12, borderRadius: 3 },
+	card_special_events: { width: windowWidth - 12, height: windowWidth * .38 - 12 },
 	card_view_overlay: { position: 'absolute', flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', bottom: 0, left: 0, width: windowWidth - 12, height: 48, backgroundColor: 'rgba(60,60,60,.8)'	},
 	card_header_container: { borderBottomWidth: 1, borderBottomColor: '#EEE', width: maxCardWidthWithPadding },
 	card_title_container: { flex: 1, flexDirection: 'row', alignItems: 'center', width: maxCardWidth, padding: 8, borderBottomWidth: 1, borderBottomColor: '#DDD' },
@@ -237,10 +237,6 @@ var css = StyleSheet.create({
 
 
 	// Card Overlay
-	card_overlay1_text: { flex: 5, fontSize: 24, color: "#FAFAFA", paddingLeft: 12 },
-	card_overlay1_icons: { flex: 1 },
-	icon_fb: { width: 32, height: 32 },
-	icon_twitter: { width: 32, height: 32 },
 	events_img: { width: maxCardWidthWithPadding, height: maxCardWidthWithPadding * .23 },
 	topstories_img: { width: maxCardWidthWithPadding, height: maxCardWidthWithPadding * .1 },
 	card_text_1: { fontSize: 20, color: "#666", padding: 20, fontWeight: "bold" },

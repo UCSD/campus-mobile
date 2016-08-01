@@ -14,9 +14,25 @@ var logger = require('../util/logger');
 var WebWrapper = React.createClass({
 
 	getInitialState: function() {
+
+		logger.log('props:')
+		logger.log(this.props)
+
+		var title = this.props.route.title;
+
+		var scriptInjectStr = '';
+
+		if (title === 'Feedback') {
+			scriptInjectStr =  	'var elem = document.querySelector("#form_container h1"); elem.parentNode.removeChild(elem);';
+		} else if (title === 'Welcome Week') {
+			scriptInjectStr =  	'document.querySelector("#header").style.display = "none";'+
+								'document.querySelector(".center.content-padded").style.display = "none";'+
+								'document.querySelector("#ww-button-ucsd").style.display = "none";'+
+								'document.querySelector("#footer").style.display = "none";';
+		}
+
 		return {
-			scriptInject: 'var elem = document.querySelector("#form_container h1");' + 
-						  'elem.parentNode.removeChild(elem);'
+			scriptInject: scriptInjectStr
 		}
 	},
 
