@@ -6,12 +6,12 @@
     "start": "node node_modules/react-native/local-cli/cli.js start"
   },
   "dependencies": {
-    "dateformat": "^1.0.12",
-    "react": "^15.2.1",
-    "react-native": "^0.31.0-rc.1",
-    "react-native-google-analytics-bridge": "^2.1.0",
-    "react-native-permissions": "^0.2.3",
-    "react-timer-mixin": "0.13.3",
-    "realm": "^0.13.2"
+    "dateformat": "~1.0.12",
+    "react": "~15.2.0",
+    "react-native": "~0.30.0",
+    "react-native-google-analytics-bridge": "~3.0.0",
+    "react-native-permissions": "~0.2.3",
+    "react-timer-mixin": "~0.13.3",
+    "realm": "~0.14.0"
   }
 }
