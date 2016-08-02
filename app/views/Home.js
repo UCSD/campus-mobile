@@ -18,8 +18,10 @@ import {
 	Alert,
 } from 'react-native';
 
+// Cards
 import EventCard from './events/EventCard'
 import TopStoriesCard from './topStories/TopStoriesCard';
+import WeatherCard from './weather/WeatherCard';
 
 // Node Modules
 var TimerMixin = 		require('react-timer-mixin');
@@ -118,6 +120,10 @@ var Home = React.createClass({
 	getCards: function(){
 			var cards = [];
 			// Setup CARDS
+			if (AppSettings.WEATHER_CARD_ENABLED){
+				cards.push(<WeatherCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  />);
+			}
+
 			if (AppSettings.TOPSTORIES_CARD_ENABLED){
 				cards.push(<TopStoriesCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  />);
 			}
@@ -174,7 +180,7 @@ var Home = React.createClass({
 		else {
 			// Some sort of degradation here
 		}
-		
+
 
 		// LOAD CARDS
 		this.refreshAllCards('auto');
@@ -193,7 +199,7 @@ var Home = React.createClass({
 	},
 
 	componentDidUpdate: function() {
-		
+
 	},
 
 	_setPosition(){
@@ -212,15 +218,15 @@ var Home = React.createClass({
 
 		console.log("Set Position Permissions: " + this.state.locationPermission);
 		console.log("Position: " + this.state.initialPosition);
-		
+
 		this.geolocationWatchID = navigator.geolocation.watchPosition((currentPosition) => {
 			this.setState({currentPosition});
 		});
 
 		this.setTimeout( () => { this.updateCurrentRegion() }, 1000);
 	},
-  
-	
+
+
 	// #1 - RENDER
 	render: function() {
 		return this.renderScene();
@@ -554,7 +560,7 @@ var Home = React.createClass({
 			this.fetchDiningLocations();
 			this.refreshShuttleCard(refreshType);
 		}
-		
+
 		this.refreshWeatherCard();
 
 		// Refresh other cards
