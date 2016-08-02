@@ -68,69 +68,50 @@ var Home = React.createClass({
 
 		return {
 			currentAppState: AppState.currentState,
-			isRefreshing: false,
-
 			initialLoad: true,
-
 			modalVisible: true,
-
 			welcomeWeekEnabled: false,
-
 			currentRegion: null,
 			nearbyMarkersLoaded: false,
 			nearbyLastRefresh: null,
-
 			specialEventsCardEnabled: true,
 			scrollEnabled: true,
-
 			weatherData: null,
 			weatherDataLoaded: false,
-
 			surfData: null,
 			surfDataLoaded: false,
-
 			diningDataLoaded: false,
 			diningRenderAllRows: false,
-
 			shuttleRefreshTimeAgo: ' ',
 			closestStop1Loaded: false,
 			closestStop2Loaded: false,
 			closestStop1LoadFailed: false,
 			closestStop2LoadFailed: false,
 			gpsLoadFailed: false,
-
 			nearbyMinDelta: .01,
 			nearbyMaxDelta: .02,
-
-			locationPermission: "undetermined",
+			locationPermission: 'undetermined',
 			currentPosition: null,
-			initialPosition: null,
-
-			simulatorPosition: {
-				// TPCS
-				//coords: { latitude: 32.890378, longitude: -117.243365 }
-				// UCSD
+			defaultPosition: {
 				coords: { latitude: 32.88, longitude: -117.234 }
 			},
 		}
 	},
 
 	getCards: function(){
-			var cards = [];
-			// Setup CARDS
-			if (AppSettings.TOPSTORIES_CARD_ENABLED){
-				cards.push(<TopStoriesCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  />);
-			}
-
-			if (AppSettings.EVENTS_CARD_ENABLED){
-				cards.push(<EventCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  />);
-			}
-
-			return cards;
+		var cards = [];
+		// Setup CARDS
+		if (AppSettings.TOPSTORIES_CARD_ENABLED){
+			cards.push(<TopStoriesCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  />);
+		}
+		if (AppSettings.EVENTS_CARD_ENABLED){
+			cards.push(<EventCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  />);
+		}
+		return cards;
 	},
 
 	componentWillMount: function() {
-		//this._alertForLocationPermission();
+		
 		// Realm DB Init
 		this.realm = new Realm({schema: [AppSettings.DB_SCHEMA], schemaVersion: 2});
 		this.AppSettings = this.realm.objects('AppSettings');
@@ -148,27 +129,31 @@ var Home = React.createClass({
 			this.setState({ welcomeWeekEnabled: true });
 		}
 
-
 		// Manage App State
 		AppState.addEventListener('change', this.handleAppStateChange);
 
 		// Get location permission status
 		Permissions.getPermissionStatus('location')
 		.then(response => {
-			console.log("Mount permission: " + response);
+			logger.log("Mount permission: " + response);
 			//response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
 			this.setState({ locationPermission: response });
 
-			if(this.state.locationPermission == 'authorized' && this.state.initialPosition == null) {
+			if(this.state.locationPermission === 'authorized') {
 				this._setPosition();
 
 				// Load shuttle card
-				 this.refreshShuttleCard('manual') ;
+
+				logger.log('-----refresh shuttle card auto');
+
+				this.refreshShuttleCard('auto') ;
+
+
 			}
 		});
 
 		// Check if we have location perms
-		if(this.state.locationPermission == 'authorized') {
+		if(this.state.locationPermission === 'authorized') {
 			this._setPosition();
 		}
 		else {
@@ -186,7 +171,8 @@ var Home = React.createClass({
 
 	componentWillUnmount: function() {
 		// Check if we have location perms
-		if(this.state.locationPermission == 'authorized') {
+		// may need to revisit
+		if(this.state.locationPermission === 'authorized') {
 			navigator.geolocation.clearWatch(this.geolocationWatchID);
 		}
 		AppState.removeEventListener('change', this.handleAppStateChange);
@@ -196,25 +182,10 @@ var Home = React.createClass({
 		
 	},
 
-	_setPosition(){
-		// GPS, set currentPosition
-		navigator.geolocation.getCurrentPosition(
-			(initialPosition) => {
-				console.log("Geolocation Response: " + JSON.stringify(initialPosition));
-				this.setState({initialPosition})
-			},
-			(error) => {
-				console.log("Geolocation Error: " + JSON.stringify(error));
-				//logger.custom('ERR: navigator.geolocation.getCurrentPosition2: ' + error.message)
-			},
-			{enableHighAccuracy: true, timeout: 20000, maximumAge: 0}
-		);
-
-		console.log("Set Position Permissions: " + this.state.locationPermission);
-		console.log("Position: " + this.state.initialPosition);
+	_setPosition() {
 		
 		this.geolocationWatchID = navigator.geolocation.watchPosition((currentPosition) => {
-			this.setState({currentPosition});
+			this.setState({ currentPosition });
 		});
 
 		this.setTimeout( () => { this.updateCurrentRegion() }, 1000);
@@ -230,13 +201,7 @@ var Home = React.createClass({
 
 		return (
 			<View style={css.main_container}>
-				<ScrollView contentContainerStyle={css.scroll_main} refreshControl={
-					<RefreshControl
-						refreshing={this.state.isRefreshing}
-						onRefresh={this.pullDownRefresh}
-						tintColor="#CCC"
-						title="" />
-        			}>
+				<ScrollView contentContainerStyle={css.scroll_main}>
 
 					{this.AppSettings['0'].MODAL_ENABLED ? (
 						<Modal animationType={'none'} transparent={true} visible={this.state.modalVisible}>
@@ -314,31 +279,6 @@ var Home = React.createClass({
 										</View>
 									</View>
 								</TouchableHighlight>
-							) : null }
-
-							{(this.state.closestStop1Loaded === false && this.state.closestStop2Loaded === false) && (!this.state.closestStop1LoadFailed || !this.state.closestStop2LoadFailed) && !this.state.gpsLoadFailed ? (
-								<View style={[css.flexcenter, css.shuttle_card_row, css.shuttle_card_loading_height]}>
-									<Animated.Image style={[css.card_loading_img, css.shuttlecard_loading, { transform: [{ rotate: this.shuttleMainReloadAnim.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '360deg']})}]}]} source={require('../assets/img/ajax-loader4.png')} />
-								</View>
-							) : null }
-
-							{this.state.gpsLoadFailed ? (
-								<View style={[css.flexcenter, css.shuttle_card_row, css.shuttle_card_loading_height]}>
-									<View style={css.shuttlecard_loading_fail}>
-										<Text style={css.fs18}>Error loading Shuttle Routes.</Text>
-										<Text style={[css.pt10, css.fs12, css.dgrey]}>Please ensure Location Services are enabled for {AppSettings.APP_NAME} on your device.</Text>
-									</View>
-								</View>
-							) : null }
-
-							{this.state.closestStop1Loaded === false && this.state.closestStop2Loaded === false &&
-							 this.state.closestStop1LoadFailed && this.state.closestStop2LoadFailed ? (
-								<View style={css.shuttle_card_err_row}>
-									<View style={css.shuttlecard_loading_fail}>
-										<Text style={css.fs18}>No Shuttles en Route</Text>
-										<Text style={[css.pt10, css.fs12, css.dgrey]}>We were unable to locate any nearby shuttles, please try again later.</Text>
-									</View>
-								</View>
 							) : null }
 
 						</View>
@@ -536,18 +476,12 @@ var Home = React.createClass({
 	},
 
 	// #2 - REFRESH
-	pullDownRefresh: function(refreshType) {
-		this.setState({ isRefreshing: true });
-		this.refreshAllCards(refreshType);
-		this.setState({ isRefreshing: false });
-	},
-
 	refreshAllCards: function(refreshType) {
 		if (!refreshType) {
 			refreshType = 'manual';
 		}
-		console.log("Refresh Type: " + refreshType);
-		console.log("Refresh Permission: " + this.state.locationPermission);
+		logger.log("Refresh Type: " + refreshType);
+		logger.log("Refresh Permission: " + this.state.locationPermission);
 		// Requires location permissions
 		// Check if we have location perms
 		if(this.state.locationPermission == 'authorized') {
@@ -735,18 +669,14 @@ var Home = React.createClass({
 		if (type === 'lat') {
 			if (this.state.currentPosition) {
 				return this.state.currentPosition.coords.latitude;
-			} else if (this.state.initialPosition) {
-				return this.state.initialPosition.coords.latitude;
 			} else {
-				return this.state.simulatorPosition.coords.latitude;
+				return this.state.defaultPosition.coords.latitude;
 			}
 		} else if (type === 'lon') {
 			if (this.state.currentPosition) {
 				return this.state.currentPosition.coords.longitude;
-			} else if (this.state.initialPosition) {
-				return this.state.initialPosition.coords.longitude;
 			} else {
-				return this.state.simulatorPosition.coords.longitude;
+				return this.state.defaultPosition.coords.longitude;
 			}
 		}
 	},
@@ -856,7 +786,7 @@ var Home = React.createClass({
 	findClosestShuttleStops: function(refreshType) {
 
 		// If running on Device, and no Current or Initial position exists, retry again in 5 sec
-		if (!this.props.isSimulator && (this.state.initialPosition === null && this.state.currentPosition === null)) {
+		if (!this.props.isSimulator && this.state.currentPosition === null) {
 
 			general.stopReloadAnimation(this.shuttleReloadAnim);
 
@@ -926,7 +856,7 @@ var Home = React.createClass({
 	fetchShuttleArrivalsByStop: function(closestStopNumber, stopID) {
 
 		var SHUTTLE_STOPS_API_URL = AppSettings.SHUTTLE_STOPS_API_URL + stopID + '/arrivals';
-		console.log("Shuttle link: " + SHUTTLE_STOPS_API_URL);
+		logger.log("Shuttle link: " + SHUTTLE_STOPS_API_URL);
 		fetch(SHUTTLE_STOPS_API_URL, {
 				method: 'GET',
 				headers: {
