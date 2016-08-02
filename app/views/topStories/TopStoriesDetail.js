@@ -42,6 +42,12 @@ var TopStoriesDetail = React.createClass({
 		}
 	},
 
+	_navigate(){
+		this.props.navigator.push({
+			name: 'Home', // Matches route.name
+		});
+	},
+
 	render: function() {
 		return this.renderScene();
 	},
@@ -82,6 +88,10 @@ var TopStoriesDetail = React.createClass({
 
 		return (
 			<View style={[css.main_container, css.whitebg]}>
+				{/* Navbar */}
+				<TouchableHighlight onPress={ () => this._navigate() }>
+					<Text>GO To View</Text>
+				</TouchableHighlight>
 				<ScrollView contentContainerStyle={css.scroll_default}>
 
 					{this.state.newsImgWidth ? (

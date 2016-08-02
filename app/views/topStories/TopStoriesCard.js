@@ -17,7 +17,7 @@ import TopStoriesService from '../../services/topStoriesService';
 var css = require('../../styles/css');
 var logger = require('../../util/logger');
 
-export default class TopStoresCard extends CardComponent {
+export default class TopStoriesCard extends CardComponent {
 
   constructor(props) {
     super(props);
@@ -69,21 +69,23 @@ export default class TopStoresCard extends CardComponent {
 			.done();
 	}
 
-  render() {
-    return (
-			<Card title='News'>
-        <View style={css.events_list}>
-          {this.state.topStoriesDataLoaded ? (
-            <TopStoriesList data={this.state.topStoriesData} defaultResults={this.state.topStoriesDefaultResults} navigator={this.props.navigator} />
-          ) : null}
+	render() {
+	return (
+		<Card title='News'>
+			<View style={css.events_list}>
+				
 
-        {this.state.fetchErrorLimitReached ? (
-          <View style={[css.flexcenter, css.pad40]}>
-            <Text>There was a problem loading the news</Text>
-          </View>
-        ) : null }
-        </View>
-			</Card>
-      );
-    }
+				{this.state.topStoriesDataLoaded ? (
+				<TopStoriesList data={this.state.topStoriesData} defaultResults={this.state.topStoriesDefaultResults} navigator={this.props.navigator} />
+				) : null}
+
+				{this.state.fetchErrorLimitReached ? (
+				<View style={[css.flexcenter, css.pad40]}>
+					<Text>There was a problem loading the news</Text>
+				</View>
+				) : null }
+			</View>
+		</Card>
+		);
+	}
 }

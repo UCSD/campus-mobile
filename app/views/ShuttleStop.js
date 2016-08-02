@@ -222,7 +222,7 @@ var ShuttleStop = React.createClass({
 
 					<View>
 						<Text style={css.shuttle_stop_map_text}>Map</Text>
-
+						{/*
 						{this.state.mapViewLoadReady ? (
 							<MapView
 								style={css.shuttlestop_map}
@@ -239,7 +239,7 @@ var ShuttleStop = React.createClass({
 								minDelta={this.state.minDelta}
 								maxDelta={this.state.maxDelta}
 								showsUserLocation={true} />
-						) : null }
+						) : null }*/}
 					</View>
 
 				</ScrollView>

@@ -5,6 +5,7 @@ import {
 	Platform,
 	Alert,
 	Text,
+	TouchableHighlight,
 } from 'react-native';
 
 var Realm = require('realm');
@@ -105,7 +106,20 @@ var nowucsandiego = React.createClass({
 	renderScene: function(route, navigator, index, navState) {
 
 		switch (route.id) {
-			case 'Home':          return (<Home route={route} navigator={navigator} isSimulator={this.props.isSimulator} />);
+			case 'Home':          return (<Home route={route} navigator={navigator} isSimulator={this.props.isSimulator} 
+				/*onForward={() => {
+				var nextIndex = route.index + 1;
+					navigator.push({
+							name: 'Scene ' + nextIndex,
+							index: nextIndex,
+						});
+					}}
+					onBack={() => {
+						if (route.index > 0) {
+							navigator.pop();
+					}
+				}}*/
+				/>);
 			
 			case 'SurfReport':        return (<SurfReport route={route} navigator={navigator} />);
 
