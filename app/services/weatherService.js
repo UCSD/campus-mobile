@@ -10,7 +10,16 @@ var WeatherService = {
        }
      })
      .then((response) => response.json());
-  }
+  },
+
+  FetchSurf: function() {
+    return fetch(AppSettings.SURF_API_URL, {
+      headers: {
+        'Cache-Control': 'no-cache'
+      }
+    })
+    .then(response => response.json());
+  },
 
 }
 

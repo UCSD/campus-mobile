@@ -14,10 +14,10 @@ import {
 
 var dateFormat = require('dateformat');
 
-var css = require('../styles/css');
-var logger = require('../util/logger');
-var general = require('../util/general');
-var surf_report_header = require('../assets/img/surf_report_header.jpg');
+var css = require('../../styles/css');
+var logger = require('../../util/logger');
+var general = require('../../util/general');
+var surf_report_header = require('../../assets/img/surf_report_header.jpg');
 
 var SurfReport = React.createClass({
 
@@ -54,7 +54,7 @@ var SurfReport = React.createClass({
 				surfDataRowObj.surfDayOfWeek = dateFormat(surfDataRowObj.surfDate, 'ddd').toUpperCase();
 				surfDataRowObj.surfDayOfMonth = dateFormat(surfDataRowObj.surfDate, 'd');
 				surfDataRowObj.surfMonth = dateFormat(surfDataRowObj.surfDate, 'mmm');
-				
+
 				if (surfDataRowObj.surfTimestampNumeric === general.getTimestampNumeric()) {
 					this.surfDataArray.push(surfDataRowObj);
 				}
@@ -91,8 +91,8 @@ var SurfReport = React.createClass({
 		return (
 			<View style={[css.main_container, css.whitebg]}>
 				<ScrollView contentContainerStyle={[css.scroll_main, css.whitebg]}>
-					<Image style={css.sr_image} source={require('../assets/img/surf_report_header.jpg')} />
-					
+					<Image style={css.sr_image} source={require('../../assets/img/surf_report_header.jpg')} />
+
 					{this.state.surfData ? (
 						<ListView dataSource={this.state.surfData} renderRow={ this.renderSurfReportRow } style={css.wf_listview} />
 					) : (

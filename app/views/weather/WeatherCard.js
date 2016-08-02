@@ -14,6 +14,7 @@ import Card from '../card/Card'
 import CardComponent from '../card/CardComponent'
 
 import WeatherWeek from './WeatherWeek';
+import SurfReport from './SurfReport';
 import WeatherService from '../../services/weatherService';
 
 var css = require('../../styles/css');
@@ -65,12 +66,47 @@ export default class WeatherCard extends CardComponent {
       .done();
   }
 
+  // TODO: should probably be handled by surf screen
+  fetchSurfData() {
+
+    WeatherService.FetchSurf()
+      .then((responseData) => {
+        this.setState({
+          surfData: responseData,
+          surfDataLoaded: true,
+        });
+      })
+      .catch((error) => {
+        logger.custom('ERR: fetchSurfData: ' + error);
+      })
+      .done();
+  }
+
+  getCurrentSurfData() {
+    if (this.state.surfDataLoaded) {
+      var surfData = this.state.surfData[0].title.replace(/.* \: /g, '').replace(/ft.*/g, '').replace(/^\./g, '').replace(/^ /g, '').replace(/ $/g, '').replace(/Surf\: /g, '').trim() + "'";
+      if (surfData.length <= 6) {
+        return (surfData);
+      } else if (surfData.indexOf('none') >= 0) {
+        return '1-2\'';
+      } else {
+        return ;
+      }
+    } else {
+      return;
+    }
+  }
+
   refresh() {
     general.stopReloadAnimation(this.weatherReloadAnim);
     general.startReloadAnimation2(this.weatherReloadAnim, 150, 60000);
     this.fetchWeatherData();
-    //this.fetchSurfData();
+    this.fetchSurfData();
 	}
+
+  gotoSurfReport() {
+    this.props.navigator.push({ id: 'SurfReport', component: SurfReport, title: 'Surf Report', surfData: this.state.surfData });
+  }
 
 	render() {
 	return (

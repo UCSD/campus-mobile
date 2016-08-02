@@ -40,7 +40,6 @@ var shuttle_routes = 	require('../json/shuttle_routes_master.json');
 
 // Views
 var ShuttleStop = 		require('./ShuttleStop');
-var SurfReport = 		require('./SurfReport');
 var DestinationDetail = require('./DestinationDetail');
 var DiningList = 		require('./DiningList');
 var WebWrapper = 		require('./WebWrapper');
@@ -59,7 +58,6 @@ var Home = React.createClass({
 	shuttleReloadAnim: new Animated.Value(0),
 	shuttleMainReloadAnim: new Animated.Value(0),
 	shuttleClosestStops: [{ dist: 100000000 },{ dist: 100000000 }],
-	weatherReloadAnim: new Animated.Value(0),
 	diningDefaultResults: 3,
 	nearbyMaxResults: 5,
 	nearbyAnnotations: [],
@@ -84,12 +82,6 @@ var Home = React.createClass({
 
 			specialEventsCardEnabled: true,
 			scrollEnabled: true,
-
-			weatherData: null,
-			weatherDataLoaded: false,
-
-			surfData: null,
-			surfDataLoaded: false,
 
 			diningDataLoaded: false,
 			diningRenderAllRows: false,
@@ -350,80 +342,7 @@ var Home = React.createClass({
 						</View>
 					) : null }
 
-
-					{/* WEATHER CARD */}
-					{AppSettings.WEATHER_CARD_ENABLED ? (
-						<View style={css.card_main}>
-							<View style={css.card_title_container}>
-								<Text style={css.card_title}>Weather</Text>
-							</View>
-
-							{this.state.weatherDataLoaded ? (
-								<View style={css.wc_main}>
-
-									<View style={css.wc_toprow}>
-										<View style={css.wc_toprow_left}>
-											<Text style={css.wc_current_temp}>{ this.state.weatherData.currently.temperature }&deg; in San Diego</Text>
-											<Text style={css.wc_current_summary}>{ this.state.weatherData.currently.summary }</Text>
-										</View>
-										<View style={css.wc_toprow_right}>
-											<Image style={css.wc_toprow_icon} source={{ uri: AppSettings.WEATHER_ICON_BASE_URL + this.state.weatherData.currently.icon + '.png' }} />
-										</View>
-									</View>
-
-									<View style={css.wc_botrow}>
-										<View style={css.wc_botrow_col}>
-											<Text style={css.wf_dayofweek}>{this.state.weatherData.daily.data[0].dayofweek}</Text>
-											<Image style={css.wf_icon} source={{ uri: AppSettings.WEATHER_ICON_BASE_URL + this.state.weatherData.daily.data[0].icon + '.png' }} />
-											<Text style={css.wf_tempMax}>{this.state.weatherData.daily.data[0].tempMax}&deg;</Text>
-											<Text style={css.wf_tempMin}>{this.state.weatherData.daily.data[0].tempMin}&deg;</Text>
-										</View>
-										<View style={css.wc_botrow_col}>
-											<Text style={css.wf_dayofweek}>{this.state.weatherData.daily.data[1].dayofweek}</Text>
-											<Image style={css.wf_icon} source={{ uri: AppSettings.WEATHER_ICON_BASE_URL + this.state.weatherData.daily.data[1].icon + '.png' }} />
-											<Text style={css.wf_tempMax}>{this.state.weatherData.daily.data[1].tempMax}&deg;</Text>
-											<Text style={css.wf_tempMin}>{this.state.weatherData.daily.data[1].tempMin}&deg;</Text>
-										</View>
-										<View style={css.wc_botrow_col}>
-											<Text style={css.wf_dayofweek}>{this.state.weatherData.daily.data[2].dayofweek}</Text>
-											<Image style={css.wf_icon} source={{ uri: AppSettings.WEATHER_ICON_BASE_URL + this.state.weatherData.daily.data[2].icon + '.png' }} />
-											<Text style={css.wf_tempMax}>{this.state.weatherData.daily.data[2].tempMax}&deg;</Text>
-											<Text style={css.wf_tempMin}>{this.state.weatherData.daily.data[2].tempMin}&deg;</Text>
-										</View>
-										<View style={css.wc_botrow_col}>
-											<Text style={css.wf_dayofweek}>{this.state.weatherData.daily.data[3].dayofweek}</Text>
-											<Image style={css.wf_icon} source={{ uri: AppSettings.WEATHER_ICON_BASE_URL + this.state.weatherData.daily.data[3].icon + '.png' }} />
-											<Text style={css.wf_tempMax}>{this.state.weatherData.daily.data[3].tempMax}&deg;</Text>
-											<Text style={css.wf_tempMin}>{this.state.weatherData.daily.data[3].tempMin}&deg;</Text>
-										</View>
-										<View style={css.wc_botrow_col}>
-											<Text style={css.wf_dayofweek}>{this.state.weatherData.daily.data[4].dayofweek}</Text>
-											<Image style={css.wf_icon} source={{ uri: AppSettings.WEATHER_ICON_BASE_URL + this.state.weatherData.daily.data[4].icon + '.png' }} />
-											<Text style={css.wf_tempMax}>{this.state.weatherData.daily.data[4].tempMax}&deg;</Text>
-											<Text style={css.wf_tempMin}>{this.state.weatherData.daily.data[4].tempMin}&deg;</Text>
-										</View>
-									</View>
-
-
-									<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoSurfReport() }>
-										<View style={css.weathercard_border}>
-											<Text style={css.wc_surfreport_more}>Surf Report &raquo;</Text>
-										</View>
-									</TouchableHighlight>
-								</View>
-							) : null }
-
-
-							{!this.state.weatherDataLoaded ? (
-								<View style={[css.flexcenter, css.weatherccard_loading_height]}>
-									<Animated.Image style={[css.card_loading_img, { transform: [{ rotate: this.weatherReloadAnim.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '360deg']})}]}]} source={require('../assets/img/ajax-loader4.png')} />
-								</View>
-							) : null }
-
-						</View>
-					) : null }
-
-					{/* EVENTS CARD & TOP STORIES CARD */}
+					{/* EVENTS CARD & TOP STORIES CARD & WEATHER CARD */}
 					{ this.getCards() }
 
 					{/* DESTINATION CARD */}
@@ -561,8 +480,6 @@ var Home = React.createClass({
 			this.refreshShuttleCard(refreshType);
 		}
 
-		this.refreshWeatherCard();
-
 		// Refresh other cards
 		if (this.refs.cards){
 			this.refs.cards.forEach(c => c.refresh());
@@ -588,15 +505,6 @@ var Home = React.createClass({
 			}
 
 			this.findClosestShuttleStops(refreshType);
-		}
-	},
-
-	refreshWeatherCard: function() {
-		if (AppSettings.WEATHER_CARD_ENABLED) {
-			general.stopReloadAnimation(this.weatherReloadAnim);
-			general.startReloadAnimation2(this.weatherReloadAnim, 150, 60000);
-			this.fetchWeatherData();
-			this.fetchSurfData();
 		}
 	},
 
@@ -994,81 +902,6 @@ var Home = React.createClass({
 				general.stopReloadAnimation(this.shuttleReloadAnim);
 			})
 			.done();
-	},
-
-	// #6 - WEATHER CARD
-	fetchWeatherData: function() {
-
-		fetch(AppSettings.WEATHER_API_URL, {
-				headers: {
-					'Cache-Control': 'no-cache'
-				}
-			})
-			.then((response) => response.json())
-			.then((responseData) => {
-
-				responseData.currently.temperature = Math.round(responseData.currently.temperature);
-				responseData.daily.data = responseData.daily.data.slice(0,5);
-
-				for (var i = 0; responseData.daily.data.length > i; i++) {
-					var data = responseData.daily.data[i];
-					var wf_date = new Date(data.time * 1000);
-					var wf_days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
-					var wf_day = wf_date.getDay();
-
-					data.dayofweek = wf_days[wf_day];
-					data.tempMax = Math.round(data.temperatureMax);
-					data.tempMin = Math.round(data.temperatureMin);
-				}
-
-				this.setState({
-					weatherData: responseData,
-					weatherDataLoaded: true,
-				});
-			})
-			.catch((error) => {
-				logger.custom('ERR: fetchWeatherData: ' + error);
-			})
-			.done();
-	},
-
-	fetchSurfData: function() {
-
-		fetch(AppSettings.SURF_API_URL, {
-				headers: { 'Cache-Control': 'no-cache' }
-			})
-			.then((response) => response.json())
-			.then((responseData) => {
-				this.setState({
-					surfData: responseData,
-					surfDataLoaded: true,
-				});
-			})
-			.catch((error) => {
-				logger.custom('ERR: fetchSurfData: ' + error);
-			})
-			.done();
-	},
-
-	getCurrentSurfData: function() {
-		if (this.state.surfDataLoaded) {
-			var surfData = this.state.surfData[0].title.replace(/.* \: /g, '').replace(/ft.*/g, '').replace(/^\./g, '').replace(/^ /g, '').replace(/ $/g, '').replace(/Surf\: /g, '').trim() + "'";
-			if (surfData.length <= 6) {
-				return (surfData);
-			} else if (surfData.indexOf('none') >= 0) {
-				return '1-2\'';
-			} else {
-				return ;
-			}
-		} else {
-			return;
-		}
-	},
-
-	// #9 - NAVIGATOR
-
-	gotoSurfReport: function() {
-		this.props.navigator.push({ id: 'SurfReport', component: SurfReport, title: 'Surf Report', surfData: this.state.surfData });
 	},
 
 	gotoShuttleStop: function(stopData) {
