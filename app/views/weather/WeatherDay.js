@@ -13,7 +13,6 @@ var css = require('../../styles/css');
 
 export default class WeatherDay extends React.Component {
   render() {
-    console.log(this.props.data);
     return (
       <View style={css.wc_botrow_col}>
         <Text style={css.wf_dayofweek}>{this.props.data.dayofweek}</Text>
