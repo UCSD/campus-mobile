@@ -74,6 +74,8 @@ var Home = React.createClass({
 
 			modalVisible: true,
 
+			welcomeWeekEnabled: false,
+
 			currentRegion: null,
 			nearbyMarkersLoaded: false,
 			nearbyLastRefresh: null,
@@ -137,6 +139,15 @@ var Home = React.createClass({
 		if (this.AppSettings.MODAL_ENABLED === false) {
 			this.setState({ modalVisible: false });
 		}
+
+		// Check welcome week date range - Activate from Aug 1 to Sep 24
+		var currentYear = general.getTimestamp('yyyy');
+		var currentMonth = general.getTimestamp('m');
+		var currentDay = general.getTimestamp('d');
+		if ((currentYear == 2016) && ((currentMonth == 8) || (currentMonth == 9 && currentDay <= 24))) {
+			this.setState({ welcomeWeekEnabled: true });
+		}
+
 
 		// Manage App State
 		AppState.addEventListener('change', this.handleAppStateChange);
@@ -252,15 +263,9 @@ var Home = React.createClass({
 
 
 					{/* SPECIAL EVENTS CARD */}
-					{AppSettings.PUSH_CARD_ENABLED ? (
-						<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ null }>
-							<Image style={[css.card_plain, css.card_special_events]} source={ require('../assets/img/special_events_placeholder.jpg') }>
-								<View style={css.card_view_overlay}>
-									<Text style={css.card_overlay1_text}>#WelcomeWeek</Text>
-									<View style={css.card_overlay1_icons}><Image style={css.icon_fb} source={require('../assets/img/icon_fb.png')} /></View>
-									<View style={css.card_overlay1_icons}><Image style={css.icon_twitter} source={require('../assets/img/icon_twitter.png')} /></View>
-								</View>
-							</Image>
+					{this.state.welcomeWeekEnabled ? (
+						<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoWebView('Welcome Week', AppSettings.WELCOME_WEEK_URL) }>
+							<Image style={[css.card_plain, css.card_special_events]} source={ require('../assets/img/welcome_week.jpg') } />
 						</TouchableHighlight>
 					) : null }
 
@@ -1073,6 +1078,10 @@ var Home = React.createClass({
 
 		destinationData.distLatLon = Math.sqrt(Math.pow(Math.abs(this.getCurrentPosition('lat') - destinationData.mkrLat), 2) + Math.pow(Math.abs(this.getCurrentPosition('lon') - destinationData.mkrLong), 2));
 		this.props.navigator.push({ id: 'DestinationDetail', component: DestinationDetail, title: destinationData.title, destinationData: destinationData });
+	},
+
+	gotoWebView: function(title, url) {
+		this.props.navigator.push({ id: 'WebWrapper', component: WebWrapper, title: title, webViewURL: url });
 	},
 
 	gotoFeedbackForm: function() {
