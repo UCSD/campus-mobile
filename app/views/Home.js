@@ -152,7 +152,7 @@ var Home = React.createClass({
 
 	componentWillUnmount: function() {
 		
-		// Update to clear all other timers (setTimeout/setInterval)
+		// Update unmount function with ability to clear all other timers (setTimeout/setInterval)
 
 		navigator.geolocation.clearWatch(this.geolocationWatchID);
 		AppState.removeEventListener('change', this.handleAppStateChange);
@@ -164,12 +164,11 @@ var Home = React.createClass({
 
 	updateLocationPermission: function() {
 		// Get location permission status
-
-		logger.log('Checking permissions for Location...');
+		//logger.log('Checking permissions for Location...');
 
 		Permissions.getPermissionStatus('location')
 		.then(response => {
-			logger.log('Location permissions: ' + response);
+			//logger.log('Location permissions: ' + response);
 			
 			//response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
 			this.setState({ locationPermission: response });
