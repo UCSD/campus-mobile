@@ -11,11 +11,12 @@ import {
 import Card from '../card/Card'
 import CardComponent from '../card/CardComponent'
 import TopStoriesList from './TopStoriesList';
-
 import TopStoriesService from '../../services/topStoriesService';
 
 var css = require('../../styles/css');
 var logger = require('../../util/logger');
+var Entities = require('html-entities').AllHtmlEntities;
+var entities = new Entities();
 
 export default class TopStoriesCard extends CardComponent {
 
@@ -43,6 +44,10 @@ export default class TopStoriesCard extends CardComponent {
 		TopStoriesService.FetchTopStories()
 		.then((responseData) => {
 			for (var i = 0; responseData.items.length > i; i++) {
+
+				// Perform this on the feed level when possible
+				responseData.items[i].title = entities.decode(responseData.items[i].title);
+
 				if (responseData.items[i].image) {
 					var image_lg = responseData.items[i].image.replace(/-150\./,'.').replace(/_teaser\./,'.');
 					if (image_lg.length > 10) {
