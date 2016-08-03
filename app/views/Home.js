@@ -116,6 +116,9 @@ var Home = React.createClass({
 		var cardCounter = 0;
 		// Setup CARDS
 		// Keys need to be unique, there's probably a better solution, but this works for now
+		if (AppSettings.WEATHER_CARD_ENABLED){
+			cards.push(<WeatherCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={this._generateUUID + ':' + cardCounter++}/>);
+		}
 		if (AppSettings.TOPSTORIES_CARD_ENABLED){
 			cards.push(<TopStoriesCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={this._generateUUID + ':' + cardCounter++}/>);
 		}
@@ -126,7 +129,7 @@ var Home = React.createClass({
 	},
 
 	componentWillMount: function() {
-		
+
 		// Realm DB Init
 		this.realm = new Realm({schema: [AppSettings.DB_SCHEMA], schemaVersion: 2});
 		this.AppSettings = this.realm.objects('AppSettings');
@@ -149,7 +152,7 @@ var Home = React.createClass({
 
 		// Check Location Permissions Periodically
 		this.updateLocationPermission();
-		
+
 		this.geolocationWatchID = navigator.geolocation.watchPosition((currentPosition) => {
 			this.setState({ currentPosition });
 		});
@@ -166,7 +169,7 @@ var Home = React.createClass({
 	},
 
 	componentWillUnmount: function() {
-		
+
 		// Update unmount function with ability to clear all other timers (setTimeout/setInterval)
 
 		navigator.geolocation.clearWatch(this.geolocationWatchID);
@@ -184,7 +187,7 @@ var Home = React.createClass({
 		Permissions.getPermissionStatus('location')
 		.then(response => {
 			//logger.log('Location permissions: ' + response);
-			
+
 			//response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
 			this.setState({ locationPermission: response });
 		});
@@ -407,11 +410,10 @@ var Home = React.createClass({
 		if (!refreshType) {
 			refreshType = 'manual';
 		}
-		
+
 		// Use default location (UCSD) if location permissions disabled
 		this.fetchDiningLocations();
 		this.refreshShuttleCard(refreshType);
-		this.refreshWeatherCard();
 
 		// Refresh broken out cards
 		// Top Stories, Events
