@@ -99,14 +99,31 @@ var Home = React.createClass({
 		}
 	},
 
+	// Generates a unique ID
+	// Used for Card keys
+	_generateUUID: function(){
+		var d = new Date().getTime();
+		if(window.performance && typeof window.performance.now === "function"){
+			d += performance.now(); //use high-precision timer if available
+		}
+		var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+			var r = (d + Math.random()*16)%16 | 0;
+			d = Math.floor(d/16);
+			return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+		});
+		return uuid;
+	},
+
 	getCards: function(){
 		var cards = [];
+		var cardCounter = 0;
 		// Setup CARDS
+		// Keys need to be unique, there's probably a better solution, but this works for now
 		if (AppSettings.TOPSTORIES_CARD_ENABLED){
-			cards.push(<TopStoriesCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  />);
+			cards.push(<TopStoriesCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={this._generateUUID + ':' + cardCounter++}/>);
 		}
 		if (AppSettings.EVENTS_CARD_ENABLED){
-			cards.push(<EventCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  />);
+			cards.push(<EventCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={this._generateUUID + ':' + cardCounter++}/>);
 		}
 		return cards;
 	},
