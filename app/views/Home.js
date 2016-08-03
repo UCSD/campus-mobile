@@ -50,6 +50,7 @@ var Home = React.createClass({
 	realm: null,
 	AppSettings: null,
 	mixins: [TimerMixin],
+	permissionUpdateInterval: 5 * 1000,				// Update permissions every 5 seconds
 	shuttleCardRefreshInterval: 1 * 60 * 1000,		// Refresh ShuttleCard every 1 minute
 	shuttleCardGPSRefreshInterval: .25 * 1000,		// Look for GPS data every 250ms (1/4s) for 15s before failing
 	shuttleCardGPSRefreshLimit: 60,
@@ -61,7 +62,7 @@ var Home = React.createClass({
 	diningDefaultResults: 3,
 	nearbyMaxResults: 5,
 	nearbyAnnotations: [],
-	regionRefreshInterval: 60 * 1000,
+	regionRefreshInterval: 60 * 1000,				// Update region every 1 minute
 	copyrightYear: new Date().getFullYear(),
 
 	getInitialState: function() {
@@ -132,34 +133,14 @@ var Home = React.createClass({
 		// Manage App State
 		AppState.addEventListener('change', this.handleAppStateChange);
 
-		// Get location permission status
-		Permissions.getPermissionStatus('location')
-		.then(response => {
-			logger.log("Mount permission: " + response);
-			//response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
-			this.setState({ locationPermission: response });
-
-			if(this.state.locationPermission === 'authorized') {
-				this._setPosition();
-
-				// Load shuttle card
-
-				logger.log('-----refresh shuttle card auto');
-
-				this.refreshShuttleCard('auto') ;
-
-
-			}
+		// Check Location Permissions Periodically
+		this.updateLocationPermission();
+		
+		this.geolocationWatchID = navigator.geolocation.watchPosition((currentPosition) => {
+			this.setState({ currentPosition });
 		});
 
-		// Check if we have location perms
-		if(this.state.locationPermission === 'authorized') {
-			this._setPosition();
-		}
-		else {
-			// Some sort of degradation here
-		}
-		
+		this.setTimeout( () => { this.updateCurrentRegion() }, this.regionRefreshInterval);
 
 		// LOAD CARDS
 		this.refreshAllCards('auto');
@@ -170,11 +151,10 @@ var Home = React.createClass({
 	},
 
 	componentWillUnmount: function() {
-		// Check if we have location perms
-		// may need to revisit
-		if(this.state.locationPermission === 'authorized') {
-			navigator.geolocation.clearWatch(this.geolocationWatchID);
-		}
+		
+		// Update to clear all other timers (setTimeout/setInterval)
+
+		navigator.geolocation.clearWatch(this.geolocationWatchID);
 		AppState.removeEventListener('change', this.handleAppStateChange);
 	},
 
@@ -182,16 +162,22 @@ var Home = React.createClass({
 		
 	},
 
-	_setPosition() {
-		
-		this.geolocationWatchID = navigator.geolocation.watchPosition((currentPosition) => {
-			this.setState({ currentPosition });
+	updateLocationPermission: function() {
+		// Get location permission status
+
+		logger.log('Checking permissions for Location...');
+
+		Permissions.getPermissionStatus('location')
+		.then(response => {
+			logger.log('Location permissions: ' + response);
+			
+			//response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
+			this.setState({ locationPermission: response });
 		});
 
-		this.setTimeout( () => { this.updateCurrentRegion() }, 1000);
+		this.permissionUpdateTimer = this.setTimeout( () => { this.updateLocationPermission() }, this.permissionUpdateInterval);
 	},
-  
-	
+
 	// #1 - RENDER
 	render: function() {
 		return this.renderScene();
@@ -382,7 +368,7 @@ var Home = React.createClass({
 										followUserLocation={true} />
 								</View>*/}
 								{/* Check location permission*/}
-								{this.state.nearbyMarkersLoaded && (this.state.locationPermission == 'authorized') ? (
+								{this.state.nearbyMarkersLoaded ? (
 									<ListView dataSource={this.state.nearbyMarkersPartial} renderRow={this.renderNearbyRow} style={css.flex} />
 								) : null }
 							</View>
@@ -480,18 +466,14 @@ var Home = React.createClass({
 		if (!refreshType) {
 			refreshType = 'manual';
 		}
-		logger.log("Refresh Type: " + refreshType);
-		logger.log("Refresh Permission: " + this.state.locationPermission);
-		// Requires location permissions
-		// Check if we have location perms
-		if(this.state.locationPermission == 'authorized') {
-			this.fetchDiningLocations();
-			this.refreshShuttleCard(refreshType);
-		}
 		
+		// Use default location (UCSD) if location permissions disabled
+		this.fetchDiningLocations();
+		this.refreshShuttleCard(refreshType);
 		this.refreshWeatherCard();
 
-		// Refresh other cards
+		// Refresh broken out cards
+		// Top Stories, Events
 		if (this.refs.cards){
 			this.refs.cards.forEach(c => c.refresh());
 		}
