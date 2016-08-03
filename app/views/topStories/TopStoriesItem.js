@@ -38,8 +38,8 @@ export default class TopStoresItem extends React.Component {
 		return storyDescriptionStr;
 	}
 
-  render() {
-    var data = this.props.data;
+	render() {
+		var data = this.props.data;
 
 		var storyDate = data['date'];
 		var storyDateMonth = storyDate.substring(5,7);
@@ -57,9 +57,8 @@ export default class TopStoresItem extends React.Component {
 		var storyTitle = data.title;
 
 		var storyDescriptionStr = this.getStoryDescription(data.description, data.title);
-
 		return (
-			<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoTopStoriesDetail(data) }>
+			<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoTopStoriesDetail(data)}>
 				<View style={css.events_list_row}>
 					<View style={css.events_list_left_container}>
 						<Text style={css.events_list_title}>{storyTitle}</Text>
