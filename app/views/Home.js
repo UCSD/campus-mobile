@@ -18,8 +18,8 @@ import {
 	Alert,
 } from 'react-native';
 
-import BannerView from './banner/BannerView';
-import InfoModal from './common/InfoModal';
+import TopBannerView from './banner/TopBannerView';
+import WelcomeModal from './WelcomeModal';
 
 // Cards
 import EventCard from './events/EventCard'
@@ -28,7 +28,6 @@ import WeatherCard from './weather/WeatherCard';
 
 // Node Modules
 var TimerMixin = 		require('react-timer-mixin');
-var Realm = 			require('realm');
 
 // App Settings / Util / CSS
 var AppSettings = 		require('../AppSettings');
@@ -51,7 +50,6 @@ const Permissions = require('react-native-permissions');
 
 var Home = React.createClass({
 
-	realm: null,
 	AppSettings: null,
 	mixins: [TimerMixin],
 	permissionUpdateInterval: 5 * 1000,				// Update permissions every 5 seconds
@@ -73,8 +71,6 @@ var Home = React.createClass({
 		return {
 			currentAppState: AppState.currentState,
 			initialLoad: true,
-			modalVisible: true,
-			welcomeWeekEnabled: false,
 			currentRegion: null,
 			nearbyMarkersLoaded: false,
 			nearbyLastRefresh: null,
@@ -132,24 +128,6 @@ var Home = React.createClass({
 	},
 
 	componentWillMount: function() {
-
-		// Realm DB Init
-		this.realm = new Realm({schema: [AppSettings.DB_SCHEMA], schemaVersion: 2});
-		this.AppSettings = this.realm.objects('AppSettings');
-
-		// Hide welcome modal if previously dismissed
-		if (this.AppSettings.MODAL_ENABLED === false) {
-			this.setState({ modalVisible: false });
-		}
-
-		// Check welcome week date range - Activate from Aug 1 to Sep 24
-		var currentYear = general.getTimestamp('yyyy');
-		var currentMonth = general.getTimestamp('m');
-		var currentDay = general.getTimestamp('d');
-		if ((currentYear == 2016) && ((currentMonth == 8) || (currentMonth == 9 && currentDay <= 24))) {
-			this.setState({ welcomeWeekEnabled: true });
-		}
-
 		// Manage App State
 		AppState.addEventListener('change', this.handleAppStateChange);
 
@@ -209,23 +187,11 @@ var Home = React.createClass({
 			<View style={css.main_container}>
 				<ScrollView contentContainerStyle={css.scroll_main}>
 
-					
-					{this.AppSettings['0'].MODAL_ENABLED ? (
-						<InfoModal modalVisible={this.state.modalVisible} title={'Hello.'} onPress={ () => this.setModalVisible(false) } buttonText={'ok, let\'s go already'}>
-							Thanks for trying {AppSettings.APP_NAME}!{'\n\n'}
-							{AppSettings.APP_NAME} connects you to campus with:{'\n\n'}
-							- location-based shuttle information{'\n'}
-							- timely news and events{'\n'}
-							- nearby points of interest{'\n'}
-							- and we&apos;ll be adding new stuff all the time{'\n'}
-						</InfoModal>
-					) : null }
+					{/* WELCOME MODAL */}
+					<WelcomeModal />
 
-					{/* SPECIAL EVENTS CARD */}
-					{this.state.welcomeWeekEnabled ? (
-						<BannerView navigator={this.props.navigator} site={{ title: 'Welcome Week', url: AppSettings.WELCOME_WEEK_URL }} bannerImage={require('../assets/img/welcome_week.jpg')} />
-					) : null }
-
+					{/* SPECIAL TOP BANNER */}
+					<TopBannerView navigator={this.props.navigator} />
 
 					{/* SHUTTLE CARD */}
 					{AppSettings.SHUTTLE_CARD_ENABLED ? (
@@ -857,21 +823,11 @@ var Home = React.createClass({
 	},
 
 
-
-
 	// #10 - MISC
 	_setState: function(myKey, myVal) {
 		var state = {};
 		state[myKey] = myVal;
 		this.setState(state);
-	},
-
-	// Welcome Modal
-	setModalVisible: function(visible) {
-		this.realm.write(() => {
-			this.realm.create('AppSettings', { id: 1, MODAL_ENABLED: false }, true);
-		});
-		this.setState({ modalVisible: visible });
 	},
 
 	handleAppStateChange: function(currentAppState) {
