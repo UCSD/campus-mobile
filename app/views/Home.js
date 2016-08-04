@@ -27,7 +27,6 @@ import WeatherCard from './weather/WeatherCard';
 
 // Node Modules
 var TimerMixin = 		require('react-timer-mixin');
-var Realm = 			require('realm');
 var MapView = 			require('react-native-maps');
 
 // App Settings / Util / CSS
@@ -217,7 +216,7 @@ var Home = React.createClass({
 
 							<View style={css.destinationcard_bot_container}>
 								<View style={css.destinationcard_map_container}>
-									
+
 									{this.state.nearbyAnnotations ? (
 
 										<MapView
@@ -592,12 +591,12 @@ var Home = React.createClass({
 			}
 
 			var newAnnotations = {};
-			
+
 			newAnnotations.coords = {
 				latitude: parseFloat(ucsd_node[i].mkrLat),
 				longitude: parseFloat(ucsd_node[i].mkrLong)
 			};
-			
+
 
 			newAnnotations.latitude = parseFloat(ucsd_node[i].mkrLat);
 			newAnnotations.longitude = parseFloat(ucsd_node[i].mkrLong);
