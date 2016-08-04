@@ -1,6 +1,8 @@
 package com.nowucsandiego;
 
 import com.facebook.react.ReactActivity;
+import com.airbnb.android.react.maps.MapsPackage;
+import com.joshblour.reactnativepermissions.ReactNativePermissionsPackage;
 import com.joshblour.reactnativepermissions.ReactNativePermissionsPackage;
 //import com.burnweb.rnpermissions.RNPermissionsPackage;
 import com.idehub.GoogleAnalyticsBridge.GoogleAnalyticsBridgePackage;

@@ -9,7 +9,6 @@ import {
 	TouchableHighlight,
 	ScrollView,
 	Image,
-	MapView,
 	ListView,
 	Animated,
 	RefreshControl,
@@ -28,6 +27,8 @@ import WeatherCard from './weather/WeatherCard';
 
 // Node Modules
 var TimerMixin = 		require('react-timer-mixin');
+var Realm = 			require('realm');
+var MapView = 			require('react-native-maps');
 
 // App Settings / Util / CSS
 var AppSettings = 		require('../AppSettings');
@@ -56,13 +57,10 @@ var Home = React.createClass({
 	shuttleCardRefreshInterval: 1 * 60 * 1000,		// Refresh ShuttleCard every 1 minute
 	shuttleCardGPSRefreshInterval: .25 * 1000,		// Look for GPS data every 250ms (1/4s) for 15s before failing
 	shuttleCardGPSRefreshLimit: 60,
-	shuttleCardGPSRefreshCounter: 0,
 	shuttleReloadAnim: new Animated.Value(0),
-	shuttleMainReloadAnim: new Animated.Value(0),
 	shuttleClosestStops: [{ dist: 100000000 },{ dist: 100000000 }],
 	diningDefaultResults: 3,
 	nearbyMaxResults: 5,
-	nearbyAnnotations: [],
 	regionRefreshInterval: 60 * 1000,				// Update region every 1 minute
 	copyrightYear: new Date().getFullYear(),
 
@@ -79,52 +77,20 @@ var Home = React.createClass({
 
 			diningDataLoaded: false,
 			diningRenderAllRows: false,
-			shuttleRefreshTimeAgo: ' ',
 			closestStop1Loaded: false,
 			closestStop2Loaded: false,
 			closestStop1LoadFailed: false,
 			closestStop2LoadFailed: false,
 			gpsLoadFailed: false,
-			nearbyMinDelta: .01,
-			nearbyMaxDelta: .02,
+			nearbyAnnotations: null,
+			nearbyLatDelta: .02,
+			nearbyLonDelta: .02,
 			locationPermission: 'undetermined',
 			currentPosition: null,
 			defaultPosition: {
 				coords: { latitude: 32.88, longitude: -117.234 }
 			},
 		}
-	},
-
-	// Generates a unique ID
-	// Used for Card keys
-	_generateUUID: function(){
-		var d = new Date().getTime();
-		if(window.performance && typeof window.performance.now === "function"){
-			d += performance.now(); //use high-precision timer if available
-		}
-		var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-			var r = (d + Math.random()*16)%16 | 0;
-			d = Math.floor(d/16);
-			return (c=='x' ? r : (r&0x3|0x8)).toString(16);
-		});
-		return uuid;
-	},
-
-	getCards: function(){
-		var cards = [];
-		var cardCounter = 0;
-		// Setup CARDS
-		// Keys need to be unique, there's probably a better solution, but this works for now
-		if (AppSettings.WEATHER_CARD_ENABLED){
-			cards.push(<WeatherCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={this._generateUUID + ':' + cardCounter++}/>);
-		}
-		if (AppSettings.TOPSTORIES_CARD_ENABLED){
-			cards.push(<TopStoriesCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={this._generateUUID + ':' + cardCounter++}/>);
-		}
-		if (AppSettings.EVENTS_CARD_ENABLED){
-			cards.push(<EventCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={this._generateUUID + ':' + cardCounter++}/>);
-		}
-		return cards;
 	},
 
 	componentWillMount: function() {
@@ -138,10 +104,7 @@ var Home = React.createClass({
 			this.setState({ currentPosition });
 		});
 
-		this.setTimeout( () => { this.updateCurrentRegion() }, this.regionRefreshInterval);
-
-
-		// LOAD CARDS
+		// Load all non-broken-out Cards
 		this.refreshAllCards('auto');
 	},
 
@@ -245,28 +208,43 @@ var Home = React.createClass({
 					{/* EVENTS CARD & TOP STORIES CARD & WEATHER CARD */}
 					{ this.getCards() }
 
-					{/* DESTINATION CARD */}
-					{AppSettings.DESTINATION_CARD_ENABLED ? (
+					{/* NEARBY CARD */}
+					{AppSettings.NEARBY_CARD_ENABLED ? (
 						<View style={css.card_main}>
 							<View style={css.card_title_container}>
 								<Text style={css.card_title}>Nearby</Text>
 							</View>
 
 							<View style={css.destinationcard_bot_container}>
-							{/*}
 								<View style={css.destinationcard_map_container}>
-									<MapView
-										style={css.destinationcard_map}
-										annotations={this.nearbyAnnotations}
-										scrollEnabled={true}
-										zoomEnabled={true}
-										rotateEnabled={false}
-										showsUserLocation={true}
-										minDelta={this.nearbyMinDelta}
-										maxDelta={this.nearbyMaxDelta}
-										followUserLocation={true} />
-								</View>*/}
-								{/* Check location permission*/}
+									
+									{this.state.nearbyAnnotations ? (
+
+										<MapView
+											style={css.destinationcard_map}
+											loadingEnabled={true}
+											loadingIndicatorColor={'#666'}
+											loadingBackgroundColor={'#EEE'}
+											showsUserLocation={true}
+											mapType={'terrain'}
+											initialRegion={{
+												latitude: this.getCurrentPosition('lat'),
+												longitude: this.getCurrentPosition('lon'),
+												latitudeDelta: this.state.nearbyLatDelta,
+												longitudeDelta: this.state.nearbyLonDelta,
+											}}>
+												{this.state.nearbyAnnotations.map(marker => (
+													<MapView.Marker
+													coordinate={marker.coords}
+													title={marker.title}
+													description={marker.description}
+													/>
+												))}
+										</MapView>
+									) : null }
+
+								</View>
+
 								{this.state.nearbyMarkersLoaded ? (
 									<ListView dataSource={this.state.nearbyMarkersPartial} renderRow={this.renderNearbyRow} style={css.flex} />
 								) : null }
@@ -349,16 +327,24 @@ var Home = React.createClass({
 		);
 	},
 
-
-	openEmailLink: function(email) {
-		Linking.canOpenURL(email).then(supported => {
-			if (supported) {
-				Linking.openURL('mailto:' + email);
-			} else {
-				logger.log('openEmailLink: Unable to send email to ' + email);
-			}
-		});
+	getCards: function(){
+		var cards = [];
+		var cardCounter = 0;
+		// Setup CARDS
+		// Keys need to be unique, there's probably a better solution, but this works for now
+		if (AppSettings.WEATHER_CARD_ENABLED){
+			cards.push(<WeatherCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={this._generateUUID + ':' + cardCounter++}/>);
+		}
+		if (AppSettings.TOPSTORIES_CARD_ENABLED){
+			cards.push(<TopStoriesCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={this._generateUUID + ':' + cardCounter++}/>);
+		}
+		if (AppSettings.EVENTS_CARD_ENABLED){
+			cards.push(<EventCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={this._generateUUID + ':' + cardCounter++}/>);
+		}
+		return cards;
 	},
+
+
 
 	// #2 - REFRESH
 	refreshAllCards: function(refreshType) {
@@ -367,41 +353,32 @@ var Home = React.createClass({
 		}
 
 		// Use default location (UCSD) if location permissions disabled
-		this.fetchDiningLocations();
 		this.refreshShuttleCard(refreshType);
+		this.refreshNearbyCard();
+		this.refreshDiningCard();
 
 		// Refresh broken out cards
-		// Top Stories, Events
-		if (this.refs.cards){
+		// Top Stories, Events, Weather
+		if (this.refs.cards) {
 			this.refs.cards.forEach(c => c.refresh());
 		}
 	},
 
 	refreshShuttleCard: function(refreshType) {
 		if (AppSettings.SHUTTLE_CARD_ENABLED) {
-
-			this.setState({ gpsLoadFailed: false });
-
-			if (this.state.initialLoad) {
-				general.stopReloadAnimation(this.shuttleMainReloadAnim);
-				general.startReloadAnimation2(this.shuttleMainReloadAnim, 150, 60000);
-			} else {
-				this.setState({ initialLoad: false });
-			}
-
-			if (refreshType === 'manual') {
-				this.shuttleCardGPSRefreshCounter = 0;
-				general.stopReloadAnimation(this.shuttleReloadAnim);
-				general.startReloadAnimation(this.shuttleReloadAnim);
-			}
-
 			this.findClosestShuttleStops(refreshType);
+		}
+	},
+
+	refreshNearbyCard: function() {
+		if (AppSettings.NEARBY_CARD_ENABLED) {
+			this.updateCurrentNodeRegion();
 		}
 	},
 
 	refreshDiningCard: function() {
 		if (AppSettings.DINING_CARD_ENABLED) {
-			this.fetchTest();
+			this.fetchDiningLocations();
 		}
 	},
 
@@ -552,8 +529,8 @@ var Home = React.createClass({
 		}
 	},
 
-	// Updates which shuttle region stop user is at?
-	updateCurrentRegion: function() {
+	// Updates which predesignated node region the user is in
+	updateCurrentNodeRegion: function() {
 
 		var closestNode = 0;
 		var closestNodeDistance = 100000000;
@@ -568,17 +545,13 @@ var Home = React.createClass({
 		}
 
 		this.setState({ currentRegion: closestNode });
-		this.loadNodeRegion(closestNode);
-		this.updateCurrentRegionTimer = this.setTimeout( () => { this.updateCurrentRegion() }, this.regionRefreshInterval);
-	},
 
-	loadNodeRegion: function(nodeNumber) {
-		var NODE_MODULES_URL = AppSettings.NODE_MARKERS_BASE_URL + 'ucsd_node_' + nodeNumber + '.json';
+		var NODE_MODULES_URL = AppSettings.NODE_MARKERS_BASE_URL + 'ucsd_node_' + closestNode + '.json';
+
+		logger.log('updateCurrentNodeRegion:')
+
 		fetch(NODE_MODULES_URL, {
 				method: 'GET',
-				headers: {
-					'Cache-Control': 'no-cache'
-				}
 			})
 			.then((response) => response.json())
 			.then((responseData) => {
@@ -588,6 +561,8 @@ var Home = React.createClass({
 				logger.custom('ERR: loadNodeRegion: ' + error);
 			})
 			.done();
+
+		this.updateCurrentNodeRegionTimer = this.setTimeout( () => { this.updateCurrentNodeRegion() }, this.regionRefreshInterval);
 	},
 
 	parseNodeRegion: function(ucsd_node) {
@@ -605,26 +580,36 @@ var Home = React.createClass({
 
 		var farthestMarkerDist;
 
-		this.nearbyAnnotations = [];
+		var nearbyAnnotations = [];
 		for (var i = 0; ucsd_node.length > i && this.nearbyMaxResults > i; i++) {
 			if (this.nearbyMaxResults === i + 1) {
 				farthestMarkerDist = ucsd_node[i].distance;
 				var distLatLon = Math.sqrt(Math.pow(Math.abs(this.getCurrentPosition('lat') - ucsd_node[i].mkrLat), 2) + Math.pow(Math.abs(this.getCurrentPosition('lon') - ucsd_node[i].mkrLong), 2));
 				this.setState({
-					nearbyMinDelta: distLatLon,
-					nearbyMaxDelta: distLatLon
+					nearbyLatDelta: distLatLon * 2.5,
+					nearbyLonDelta: distLatLon * 2.5
 				});
 			}
 
 			var newAnnotations = {};
+			
+			newAnnotations.coords = {
+				latitude: parseFloat(ucsd_node[i].mkrLat),
+				longitude: parseFloat(ucsd_node[i].mkrLong)
+			};
+			
+
 			newAnnotations.latitude = parseFloat(ucsd_node[i].mkrLat);
 			newAnnotations.longitude = parseFloat(ucsd_node[i].mkrLong);
 			newAnnotations.title = ucsd_node[i].title;
-			newAnnotations.animateDrop = true;
-			this.nearbyAnnotations.push(newAnnotations);
+			newAnnotations.description = ucsd_node[i].description;
+			nearbyAnnotations.push(newAnnotations);
 		}
 
+		logger.log('updateCurrentNodeRegion: complete')
+
 		this.setState({
+			nearbyAnnotations: nearbyAnnotations,
 			nearbyMarkersFull: dsFull.cloneWithRows(nodeDataFull),
 			nearbyMarkersPartial: dsPartial.cloneWithRows(nodeDataPartial),
 			nearbyMarkersLoaded: true
@@ -823,7 +808,19 @@ var Home = React.createClass({
 	},
 
 
-	// #10 - MISC
+
+
+	// #99 - MISC
+	openEmailLink: function(email) {
+		Linking.canOpenURL(email).then(supported => {
+			if (supported) {
+				Linking.openURL('mailto:' + email);
+			} else {
+				logger.log('openEmailLink: Unable to send email to ' + email);
+			}
+		});
+	},
+
 	_setState: function(myKey, myVal) {
 		var state = {};
 		state[myKey] = myVal;
@@ -835,6 +832,21 @@ var Home = React.createClass({
 		if (currentAppState === 'active') {
 			this.refreshAllCards('auto');
 		}
+	},
+
+	// Generates a unique ID
+	// Used for Card keys
+	_generateUUID: function() {
+		var d = new Date().getTime();
+		if(window.performance && typeof window.performance.now === "function") {
+			d += performance.now(); //use high-precision timer if available
+		}
+		var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+			var r = (d + Math.random()*16)%16 | 0;
+			d = Math.floor(d/16);
+			return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+		});
+		return uuid;
 	},
 
 });
