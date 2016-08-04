@@ -19,6 +19,7 @@ import {
 } from 'react-native';
 
 import BannerView from './banner/BannerView';
+import InfoModal from './common/InfoModal';
 
 // Cards
 import EventCard from './events/EventCard'
@@ -208,29 +209,17 @@ var Home = React.createClass({
 			<View style={css.main_container}>
 				<ScrollView contentContainerStyle={css.scroll_main}>
 
+					
 					{this.AppSettings['0'].MODAL_ENABLED ? (
-						<Modal animationType={'none'} transparent={true} visible={this.state.modalVisible}>
-							<View style={css.modal_container}>
-								<Text style={css.modal_text_intro}>Hello.</Text>
-								<Text style={css.modal_text}>
-									Thanks for trying {AppSettings.APP_NAME}!{'\n\n'}
-									{AppSettings.APP_NAME} connects you to campus with:{'\n\n'}
-									- location-based shuttle information{'\n'}
-									- timely news and events{'\n'}
-									- nearby points of interest{'\n'}
-									- and we&apos;ll be adding new stuff all the time{'\n'}
-								</Text>
-
-								<TouchableHighlight underlayColor={'rgba(200,200,200,.5)'} onPress={ () => this.setModalVisible(false) }>
-									<View style={css.modal_button}>
-										<Text style={css.modal_button_text}>ok, let&apos;s go already</Text>
-									</View>
-								</TouchableHighlight>
-							</View>
-						</Modal>
+						<InfoModal modalVisible={this.state.modalVisible} title={'Hello.'} onPress={ () => this.setModalVisible(false) } buttonText={'ok, let\'s go already'}>
+							Thanks for trying {AppSettings.APP_NAME}!{'\n\n'}
+							{AppSettings.APP_NAME} connects you to campus with:{'\n\n'}
+							- location-based shuttle information{'\n'}
+							- timely news and events{'\n'}
+							- nearby points of interest{'\n'}
+							- and we&apos;ll be adding new stuff all the time{'\n'}
+						</InfoModal>
 					) : null }
-
-
 
 					{/* SPECIAL EVENTS CARD */}
 					{this.state.welcomeWeekEnabled ? (
