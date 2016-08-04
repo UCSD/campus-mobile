@@ -18,6 +18,8 @@ import {
 	Alert,
 } from 'react-native';
 
+import BannerView from './banner/BannerView';
+
 // Cards
 import EventCard from './events/EventCard'
 import TopStoriesCard from './topStories/TopStoriesCard';
@@ -232,9 +234,7 @@ var Home = React.createClass({
 
 					{/* SPECIAL EVENTS CARD */}
 					{this.state.welcomeWeekEnabled ? (
-						<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoWebView('Welcome Week', AppSettings.WELCOME_WEEK_URL) }>
-							<Image style={[css.card_plain, css.card_special_events]} source={ require('../assets/img/welcome_week.jpg') } />
-						</TouchableHighlight>
+						<BannerView navigator={this.props.navigator} site={{ title: 'Welcome Week', url: AppSettings.WELCOME_WEEK_URL }} bannerImage={require('../assets/img/welcome_week.jpg')} />
 					) : null }
 
 
@@ -849,10 +849,6 @@ var Home = React.createClass({
 
 		destinationData.distLatLon = Math.sqrt(Math.pow(Math.abs(this.getCurrentPosition('lat') - destinationData.mkrLat), 2) + Math.pow(Math.abs(this.getCurrentPosition('lon') - destinationData.mkrLong), 2));
 		this.props.navigator.push({ id: 'DestinationDetail', component: DestinationDetail, title: destinationData.title, destinationData: destinationData });
-	},
-
-	gotoWebView: function(title, url) {
-		this.props.navigator.push({ id: 'WebWrapper', component: WebWrapper, title: title, webViewURL: url });
 	},
 
 	gotoFeedbackForm: function() {
