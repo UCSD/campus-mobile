@@ -16,7 +16,7 @@ var css = require('../../styles/css');
 
 const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-export default class TopStoresItem extends React.Component {
+export default class TopStoriesItem extends React.Component {
 
   gotoTopStoriesDetail(topStoriesData) {
   		this.props.navigator.push({ id: 'TopStoriesDetail', component: TopStoriesDetail, title: 'News', topStoriesData: topStoriesData });
