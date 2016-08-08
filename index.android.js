@@ -13,13 +13,14 @@ var Realm = require('realm');
 var logger = require('./app/util/logger');
 var AppSettings = require('./app/AppSettings');
 var Home = require('./app/views/Home');
-var SurfReport = require('./app/views/SurfReport');
 var EventDetail = require('./app/views/events/EventDetail');
 var TopStoriesDetail = require('./app/views/topStories/TopStoriesDetail');
 var ShuttleStop = require('./app/views/ShuttleStop');
 var DestinationSearch = require('./app/views/DestinationSearch');
 var DestinationDetail = require('./app/views/DestinationDetail');
 const Permissions = require('react-native-permissions');
+
+import WelcomeWeekView from './app/views/welcomeWeek/WelcomeWeekView';
 
 var nowucsandiego = React.createClass({
 
@@ -142,6 +143,8 @@ var nowucsandiego = React.createClass({
 
 			case 'NoNavigatorPage':     return (<NoNavigatorPage route={route} navigator={navigator} />);
 			*/
+
+			case 'WelcomeWeekView': return(<WelcomeWeekView />);
 
 			default:            return (<Home route={route} navigator={navigator} />);
 		}

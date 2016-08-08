@@ -46,6 +46,8 @@ var WebWrapper = 		require('./WebWrapper');
 
 const Permissions = require('react-native-permissions');
 
+import WelcomeWeekView from './welcomeWeek/WelcomeWeekView';
+
 var Home = React.createClass({
 
 	realm: null,
@@ -192,8 +194,9 @@ var Home = React.createClass({
 
 
 					{/* SPECIAL EVENTS CARD */}
+					{/*<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoWebView('Welcome Week', AppSettings.WELCOME_WEEK_URL) }>*/}
 					{this.state.welcomeWeekEnabled ? (
-						<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoWebView('Welcome Week', AppSettings.WELCOME_WEEK_URL) }>
+						<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoWelcomeWeekView() }>
 							<Image style={[css.card_plain, css.card_special_events]} source={ require('../assets/img/welcome_week.jpg') } />
 						</TouchableHighlight>
 					) : null }
@@ -854,7 +857,9 @@ var Home = React.createClass({
 		this.props.navigator.push({ id: 'DiningList', component: DiningList, title: marketData.name, marketData: marketData });
 	},
 
-
+	gotoWelcomeWeekView() {
+  		this.props.navigator.push({ id: 'WelcomeWeekView', component: WelcomeWeekView, title: 'Welcome Week'});
+	},
 
 
 	// #99 - MISC
