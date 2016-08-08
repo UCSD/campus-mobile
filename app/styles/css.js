@@ -30,6 +30,15 @@ import {
 	PixelRatio
 } from 'react-native';
 
+var AppSettings = require('../AppSettings');
+var general = require('../util/general');
+
+var navBarMarginTop = 0;
+
+if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
+	navBarMarginTop = 60;
+}
+
 var pixelRatio = PixelRatio.get();
 var windowSize = Dimensions.get('window');
 var windowWidth = windowSize.width;
@@ -57,13 +66,32 @@ if (pixelRatio === 2) {
 var ucsdblue = '#006C92';
 var ucsdgrey = '#747678';
 
+
+
+
 var css = StyleSheet.create({
+
+	// Navigator
+	navBar: { backgroundColor: 'rgba(31,149,187,1)', height: 60 },
+	
+		// Nav Bar Left
+		navBarLeftButton: { color: '#FFF', fontSize: 16, margin: 10 },
+		navBarLeftMenu: { width: 20, height: 13, margin: 10 },
+
+		// Nav Bar Title
+		navBarTitle: { marginTop: 7, color: '#FFF', fontSize: 18 },
+
+		// Nav Bar Right
+		navBarRightButton: { color: '#FFF', fontSize: 16, marginVertical: 10, paddingRight: 10 },
+		navBarRightHome: { flexDirection: 'row', marginTop: 8 },
+		navBarRightSearch: { width: 19, height: 18 },
+		navBarRightOptions: { width: 5, height: 18, marginHorizontal: 12 },
 
 	// NavigatorIOS
 	navBarIOS: {  },
 
 	// Primary Containers
-	main_container: { flex: 1, backgroundColor: '#EAEAEA' },
+	main_container: { flex: 1, backgroundColor: '#EAEAEA', marginTop: navBarMarginTop },
 	scroll_main: {  },
 	view_default: {  },
 	scroll_default: { alignItems: 'center' },

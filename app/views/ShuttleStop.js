@@ -4,6 +4,7 @@ import React from 'react';
 import {
 	View,
 	Text,
+	Navigator,
 	TouchableHighlight,
 	ScrollView,
 	Image,
@@ -25,7 +26,6 @@ var shuttle = 			require('../util/shuttle');
 var responseDataRef = [];
 var responseDataSort = [];
 var responseDataSortRef = [];
-
 
 var ShuttleStop = React.createClass({
 
@@ -145,7 +145,18 @@ var ShuttleStop = React.createClass({
 	},
 
 	render: function() {
-		return this.renderScene();
+		if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
+			return (
+				<Navigator
+					renderScene={this.renderScene}
+					navigator={this.props.navigator}
+					navigationBar={
+						<Navigator.NavigationBar style={css.navBar} routeMapper={NavigationBarRouteMapper} />
+					}/>
+			);
+		} else {
+			this.renderScene();
+		}
 	},
 
 	renderScene: function(route, navigator) {
@@ -368,5 +379,29 @@ var ShuttleStop = React.createClass({
 	},
 
 });
+
+var NavigationBarRouteMapper = {
+	LeftButton: function(route, navigator, index, navState) {
+		return (
+			<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => navigator.parentNavigator.pop()}>
+				<Text style={css.navBarLeftButton}>
+					&lt; Back
+				</Text>
+			</TouchableHighlight>
+		);
+	},
+
+	RightButton: function(route, navigator, index, navState) {
+		return null;
+	},
+
+	Title: function(route, navigator, index, navState) {
+		return (
+			<Text style={css.navBarTitle}>
+				Shuttle Stop
+			</Text>
+		);
+	}
+};
 
 module.exports = ShuttleStop;
