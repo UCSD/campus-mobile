@@ -1,3 +1,9 @@
+/*
+ * This file will be the starting off point for iOS and Android
+ *  - commonization is now complete for iOS, index.ios.js has been removed
+ *  - commonization is still underway for Android, index.android.js should still be used for the time being
+ */
+
 'use strict';
 
 import React from 'react';
