@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 
 import TopStoriesService from '../../services/topStoriesService';
-import WelcomeWeekList from './WelcomeWeekList';
+//import WelcomeWeekList from './WelcomeWeekList';
 
 var logger = require('../../util/logger');
 
