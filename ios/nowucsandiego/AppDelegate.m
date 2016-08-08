@@ -22,7 +22,7 @@
 	BOOL isSimulator = NO;
 	#if TARGET_IPHONE_SIMULATOR
 		isSimulator = YES;
-		jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/index.bundle?platform=ios&dev=false"];
+		jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/index.ios.bundle?platform=ios&dev=false"];
 	#else
 		jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
 	#endif
