@@ -3,12 +3,41 @@ var React = require('react-native');
 var {
 	Animated,
 	Easing,
+	Platform
 } = React;
 
 var dateFormat = require('dateformat');
 
+console.log('Platform.OS: ' + Platform.OS)
+
 module.exports = {
 	
+	platformIOS: function() {
+		if (Platform.OS === 'ios') {
+			console.log('ios--------')
+			return true;
+		} else {
+			return false;
+		}
+	},
+
+	platformAndroid: function() {
+
+		console.log('----------')
+
+		if (Platform.OS === 'android') {
+			console.log('android--------')
+			return true;
+		} else {
+			console.log('notandroid--------')
+			return false;
+		}
+	},
+
+	getPlatform: function() {
+		return Platform.OS;
+	},
+
 	startReloadAnimation2: function(anim, toVal, duration) {
 		Animated.timing(anim, { toValue: toVal, duration: duration, easing: Easing.linear }).start();
 	},

@@ -15,6 +15,7 @@ import {
 	Modal,
 	Component,
 	Alert,
+	Navigator,
 } from 'react-native';
 
 import TopBannerView from './banner/TopBannerView';
@@ -47,6 +48,8 @@ var DiningList = 		require('./DiningList');
 var WebWrapper = 		require('./WebWrapper');
 
 const Permissions = require('react-native-permissions');
+
+import WelcomeWeekView from './welcomeWeek/WelcomeWeekView';
 
 var Home = React.createClass({
 
@@ -140,7 +143,15 @@ var Home = React.createClass({
 
 	// #1 - RENDER
 	render: function() {
-		return this.renderScene();
+		if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
+			return (
+				<Navigator renderScene={this.renderScene} navigationBar={
+					<Navigator.NavigationBar style={css.navBar} routeMapper={NavigationBarRouteMapper} />
+				} />
+			);
+		} else {
+			return this.renderScene();
+		}
 	},
 
 	renderScene: function(route, navigator, index, navState) {
@@ -776,7 +787,7 @@ var Home = React.createClass({
 	},
 
 	gotoShuttleStop: function(stopData) {
-		this.props.navigator.push({ id: 'ShuttleStop', component: ShuttleStop, title: 'Shuttle', stopData: stopData });
+		this.props.navigator.push({ id: 'ShuttleStop', name: 'Shuttle Stop', component: ShuttleStop, title: 'Shuttle', stopData: stopData });
 	},
 
 	gotoDestinationDetail: function(destinationData) {
@@ -787,7 +798,7 @@ var Home = React.createClass({
 		destinationData.mkrLong = parseFloat(destinationData.mkrLong);
 
 		destinationData.distLatLon = Math.sqrt(Math.pow(Math.abs(this.getCurrentPosition('lat') - destinationData.mkrLat), 2) + Math.pow(Math.abs(this.getCurrentPosition('lon') - destinationData.mkrLong), 2));
-		this.props.navigator.push({ id: 'DestinationDetail', component: DestinationDetail, title: destinationData.title, destinationData: destinationData });
+		this.props.navigator.push({ id: 'DestinationDetail', name: destinationData.title, component: DestinationDetail, title: destinationData.title, destinationData: destinationData });
 	},
 
 	gotoFeedbackForm: function() {
@@ -806,7 +817,9 @@ var Home = React.createClass({
 		this.props.navigator.push({ id: 'DiningList', component: DiningList, title: marketData.name, marketData: marketData });
 	},
 
-
+	gotoWelcomeWeekView() {
+  		this.props.navigator.push({ id: 'WelcomeWeekView', component: WelcomeWeekView, title: 'Welcome Week'});
+	},
 
 
 	// #99 - MISC
@@ -849,5 +862,24 @@ var Home = React.createClass({
 	},
 
 });
+
+
+
+// NAVIGATOR BAR
+var NavigationBarRouteMapper = {
+
+	LeftButton: function(route, navigator, index, navState) {
+		return null;
+	},
+
+	Title: function(route, navigator, index, navState) {
+		return (<Text style={css.navBarTitle}>now@ucsandiego</Text>);
+	},
+
+	RightButton: function(route, navigator, index, navState) {
+		return null;
+	},
+
+};
 
 module.exports = Home;
