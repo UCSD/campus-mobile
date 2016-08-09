@@ -12,14 +12,21 @@ var logger = 		require('./app/util/logger');
 var general = 		require('./app/util/general');
 var AppSettings = 	require('./app/AppSettings');
 
-var Home, EventDetail, TopStoriesDetail, ShuttleStop, ShuttleStop2, WeatherForecast, SurfReport, DestinationSearch;
+
+
+var Home, EventDetail, TopStoriesDetail, ShuttleStop, WebView, DestinationDetail;
 
 Home = require('./app/views/Home');
 
 if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
+	ShuttleStop = 			require('./app/views/ShuttleStop');
 	
-	// SHUTTLE
-	ShuttleStop = 				require('./app/views/ShuttleStop');
+	/*EventDetail = 			require('./app/views/EventDetail');
+	TopStoriesDetail = 		require('./app/views/TopStoriesDetail');
+	DestinationDetail = 	require('./app/views/DestinationDetail');
+	WebView = 				require('./app/views/WebView');
+	DiningList = 			require('./app/views/DiningSearch');
+	*/
 }
 
 
@@ -51,8 +58,13 @@ var nowucsandiego = React.createClass({
 	renderScene: function(route, navigator, index, navState) {
 
 		switch (route.id) {
-			case 'Home': 					return (<Home route={route} navigator={navigator} isSimulator={this.props.isSimulator} />);
-			case 'ShuttleStop': 			return (<ShuttleStop route={route} navigator={navigator} isSimulator={this.props.isSimulator} />);
+			case 'Home': 					return (<Home route={route} navigator={navigator} />);
+			case 'ShuttleStop': 			return (<ShuttleStop route={route} navigator={navigator} />);
+			/*case 'EventDetail': 			return (<EventDetail route={route} navigator={navigator} />);
+			case 'TopStoriesDetail': 		return (<TopStoriesDetail route={route} navigator={navigator} />);
+			case 'DestinationDetail': 		return (<DestinationDetail route={route} navigator={navigator} />);
+			case 'DiningList': 				return (<DiningList route={route} navigator={navigator} />);
+			*/
 			default: 						return (<Home route={route} navigator={navigator} />);
 		}
 	},

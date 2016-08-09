@@ -29,6 +29,7 @@ import WeatherCard from './weather/WeatherCard';
 // Node Modules
 var TimerMixin = 		require('react-timer-mixin');
 var MapView = 			require('react-native-maps');
+const Permissions = 	require('react-native-permissions');
 
 // App Settings / Util / CSS
 var AppSettings = 		require('../AppSettings');
@@ -42,12 +43,12 @@ var ucsd_nodes = 		require('../json/ucsd_nodes.json');
 var shuttle_routes = 	require('../json/shuttle_routes_master.json');
 
 // Views
+//if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
 var ShuttleStop = 		require('./ShuttleStop');
 var DestinationDetail = require('./DestinationDetail');
 var DiningList = 		require('./DiningList');
 var WebWrapper = 		require('./WebWrapper');
 
-const Permissions = require('react-native-permissions');
 
 import WelcomeWeekView from './welcomeWeek/WelcomeWeekView';
 

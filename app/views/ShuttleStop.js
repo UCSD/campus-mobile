@@ -167,7 +167,7 @@ var ShuttleStop = React.createClass({
 					}/>
 			);
 		} else {
-			this.renderScene();
+			return this.renderScene();
 		}
 	},
 
