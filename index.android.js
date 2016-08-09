@@ -8,8 +8,6 @@ import {
 	TouchableHighlight,
 } from 'react-native';
 
-var Realm = require('realm');
-
 var logger = require('./app/util/logger');
 var AppSettings = require('./app/AppSettings');
 var Home = require('./app/views/Home');
@@ -23,9 +21,6 @@ const Permissions = require('react-native-permissions');
 import WelcomeWeekView from './app/views/welcomeWeek/WelcomeWeekView';
 
 var nowucsandiego = React.createClass({
-
-	realm: null,
-	AppSettings: null,
 
 	getInitialState() {
 		return {
@@ -44,19 +39,6 @@ var nowucsandiego = React.createClass({
 				this._alertForLocationPermission();
 			}
 		});
-	},
-
-	componentWillMount: function() {
-		//this._alertForLocationPermission()
-		// Realm DB Setup
-		this.realm = new Realm({schema: [AppSettings.DB_SCHEMA], schemaVersion: 2});
-		this.AppSettings = this.realm.objects('AppSettings');
-
-		if (this.AppSettings.length === 0) {
-			this.realm.write(() => {
-				this.realm.create('AppSettings', { id: 1 });
-			});
-		}
 	},
 
 	//request permission to access location

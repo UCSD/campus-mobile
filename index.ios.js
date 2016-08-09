@@ -8,8 +8,6 @@ import {
 	StatusBar
 } from 'react-native';
 
-var Realm = 		require('realm');
-
 var logger = 		require('./app/util/logger');
 var general = 		require('./app/util/general');
 var AppSettings = 	require('./app/AppSettings');
@@ -26,25 +24,6 @@ if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
 
 
 var nowucsandiego = React.createClass({
-
-	realm: null,
-	AppSettings: null,
-
-	migrationGeneric: function(oldRealm, newRealm) {},
-
-	componentWillMount: function() {
-
-		// Realm DB Init
-		logger.log('Realm Schema Version: ' + Realm.schemaVersion(Realm.defaultPath));
-		this.realm = new Realm({ schema: [AppSettings.DB_SCHEMA], schemaVersion: 2, migration: this.migrationGeneric });
-		this.AppSettings = this.realm.objects('AppSettings');
-
-		if (this.AppSettings.length === 0) {
-			this.realm.write(() => {
-				this.realm.create('AppSettings', { id: 1 });
-			});
-		}
-	},
 
 	render: function() {
 
