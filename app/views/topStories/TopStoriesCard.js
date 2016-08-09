@@ -32,7 +32,7 @@ export default class TopStoriesCard extends CardComponent {
 			topStoriesRenderAllRows: false,
 			topStoriesDataLoaded: false,
 			fetchErrorLimitReached: false,
-			topStoriesDefaultResults: 4
+			topStoriesDefaultResults: 3
 		}
 	}
 

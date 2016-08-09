@@ -15,13 +15,13 @@ var css = require('../../styles/css');
 
 export default class EventItem extends React.Component {
 
-  gotoEventDetail(eventData) {
+	gotoEventDetail(eventData) {
 		this.props.navigator.push({ component: EventDetail, title: 'Events', eventData: eventData });
 	}
 
-  render() {
-    var data = this.props.data;
-    var eventTitleStr = data.EventTitle.replace('&amp;','&');
+	render() {
+		var data = this.props.data;
+		var eventTitleStr = data.EventTitle.replace('&amp;','&');
 		var eventDescriptionStr = data.EventDescription.replace('&amp;','&').replace(/\n.*/g,'').trim();
 
 		if (eventDescriptionStr.length > 0) {
@@ -42,18 +42,18 @@ export default class EventItem extends React.Component {
 			eventDateDay = 'Ongoing Event';
 		}
 
-    return (
-      <TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoEventDetail(data) }>
-        <View style={css.events_list_row}>
-          <View style={css.events_list_left_container}>
-            <Text style={css.events_list_title}>{eventTitleStr}</Text>
-            {eventDescriptionStr ? (<Text style={css.events_list_desc}>{this.props.description}</Text>) : null }
-            <Text style={css.events_list_postdate}>{eventDateDay}</Text>
-          </View>
+		return (
+			<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoEventDetail(data) }>
+				<View style={css.events_list_row}>
+					<View style={css.events_list_left_container}>
+						<Text style={css.events_list_title}>{eventTitleStr}</Text>
+						{eventDescriptionStr ? (<Text style={css.events_list_desc}>{eventDescriptionStr}</Text>) : null }
+						<Text style={css.events_list_postdate}>{eventDateDay}</Text>
+					</View>
 
-          <Image style={css.events_list_image} source={{ uri: data.EventImage }} />
-        </View>
-      </TouchableHighlight>
-    )
-  }
+					<Image style={css.events_list_image} source={{ uri: data.EventImage }} />
+				</View>
+			</TouchableHighlight>
+		)
+	}
 }
