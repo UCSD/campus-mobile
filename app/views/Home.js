@@ -154,6 +154,7 @@ var Home = React.createClass({
 
 			//response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
 			this.setState({ locationPermission: response });
+			//this.refreshAllCards('auto'); // Should only be refreshing cards that rely on location perm
 		});
 
 		this.permissionUpdateTimer = this.setTimeout( () => { this.updateLocationPermission() }, this.permissionUpdateInterval);
