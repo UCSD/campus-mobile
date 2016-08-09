@@ -31,14 +31,14 @@ Reference the folder ./app/json/samples/ for samples.
 		APP_NAME: 					'now@ucsandiego',
 		GOOGLE_ANALYTICS_ID: 		'UA-XXXXXXXX-X',	// Update with your Google Analytics ID
 		DEBUG_ENABLED: 				true,
+		NAVIGATOR_ENABLED: 			true,		// IOS setting only - if true, use Navigator instead of Navigator IOS. Navigator will always be used for Android
 		
 		/* CARDS */
-		PUSH_CARD_ENABLED: 			false,
 		SHUTTLE_CARD_ENABLED: 		true,
 		WEATHER_CARD_ENABLED: 		true,
 		EVENTS_CARD_ENABLED: 		true,
 		TOPSTORIES_CARD_ENABLED: 	true,
-		DESTINATION_CARD_ENABLED: 	true,
+		NEARBY_CARD_ENABLED: 		true,
 		DINING_CARD_ENABLED: 		false,
 	
 		/* APIS / ENDPOINTS */
@@ -50,19 +50,10 @@ Reference the folder ./app/json/samples/ for samples.
 		NODE_MARKERS_BASE_URL: 		'http://www.sample.com/node_marker_1.json', 	// see ./app/json/samples/node_marker_1.json
 		FEEDBACK_URL: 				'http://www.sample.com/feedback.html',
 		PRIVACY_POLICY_URL: 		'http://www.sample.com/privacy_policy.html', 
-		
-		
-	
-		DB_SCHEMA: {
-			name: 'AppSettings',
-			primaryKey: 'id',
-			properties: {
-				/* PRIMARY KEY */
-				id: 							{ type: 'int',  default: 1 },
-				/* PERSISTENT VALS */
-				MODAL_ENABLED: 					{ type: 'bool', default: true },
-			}
-		}
+		DINING_API_URL: 			'http://www.sample.com/dining-feed.json',
+		WEATHER_ICON_BASE_URL: 		'http://www.sample.com/weather-icons/',
+		WELCOME_WEEK_URL: 			'http://www.sample.com/welcome-week/',
+
 	};
 	/***** ./app/AppSettings.js END *****/
 
