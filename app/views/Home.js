@@ -57,8 +57,6 @@ var Home = React.createClass({
 	mixins: [TimerMixin],
 	permissionUpdateInterval: 5 * 1000,				// Update permissions every 5 seconds
 	shuttleCardRefreshInterval: 1 * 60 * 1000,		// Refresh ShuttleCard every 1 minute
-	shuttleCardGPSRefreshInterval: .25 * 1000,		// Look for GPS data every 250ms (1/4s) for 15s before failing
-	shuttleCardGPSRefreshLimit: 60,
 	shuttleReloadAnim: new Animated.Value(0),
 	shuttleClosestStops: [{ dist: 100000000 },{ dist: 100000000 }],
 	diningDefaultResults: 3,
@@ -76,14 +74,12 @@ var Home = React.createClass({
 			nearbyLastRefresh: null,
 			specialEventsCardEnabled: true,
 			scrollEnabled: true,
-
 			diningDataLoaded: false,
 			diningRenderAllRows: false,
 			closestStop1Loaded: false,
 			closestStop2Loaded: false,
 			closestStop1LoadFailed: false,
 			closestStop2LoadFailed: false,
-			gpsLoadFailed: false,
 			nearbyAnnotations: null,
 			nearbyLatDelta: .02,
 			nearbyLonDelta: .02,
@@ -652,71 +648,49 @@ var Home = React.createClass({
 	// SHUTTLE_CARD
 	findClosestShuttleStops: function(refreshType) {
 
-		// If running on Device, and no Current or Initial position exists, retry again in 5 sec
-		if (!this.props.isSimulator && this.state.currentPosition === null) {
+		this.setState({
+			closestStop1LoadFailed: false,
+			closestStop2LoadFailed: false
+		});
 
-			general.stopReloadAnimation(this.shuttleReloadAnim);
+		this.shuttleClosestStops[0].dist = 1000000000;
+		this.shuttleClosestStops[1].dist = 1000000000;
 
-			if (this.shuttleCardGPSRefreshCounter < this.shuttleCardGPSRefreshLimit) {
-				this.shuttleCardGPSRefreshCounter++;
-				//logger.log('Queueing Shuttle Card refresh (for GPS) in ' + this.shuttleCardGPSRefreshInterval/1000 + ' seconds');
-				this.refreshShuttleCardTimer = this.setTimeout( () => { this.refreshShuttleCard('auto') }, this.shuttleCardGPSRefreshInterval);
-			} else {
-				//logger.log('Failed to obtain GPS data, setting closestStop1LoadFailed: true');
-				this.setState({ gpsLoadFailed: true });
-			}
+		for (var i = 0; shuttle_routes.length > i; i++) {
 
-		} else {
+			var shuttleRoute = shuttle_routes[i];
 
-			this.shuttleCardGPSRefreshCounter = 0;
-			this.shuttleRefreshTimestamp = general.getCurrentTimestamp();
+			for (var n = 0; shuttleRoute.stops.length > n; n++) {
 
-			this.setState({
-				closestStop1LoadFailed: false,
-				closestStop2LoadFailed: false,
-				shuttleRefreshTimeAgo: ' '
-			});
+				var shuttleRouteStop = shuttleRoute.stops[n];
+				var distanceFromStop = shuttle.getDistance(this.getCurrentPosition('lat'), this.getCurrentPosition('lon'), shuttleRouteStop.lat, shuttleRouteStop.lon);
 
-			this.shuttleClosestStops[0].dist = 1000000000;
-			this.shuttleClosestStops[1].dist = 1000000000;
-
-			for (var i = 0; shuttle_routes.length > i; i++) {
-
-				var shuttleRoute = shuttle_routes[i];
-
-				for (var n = 0; shuttleRoute.stops.length > n; n++) {
-
-					var shuttleRouteStop = shuttleRoute.stops[n];
-					var distanceFromStop = shuttle.getDistance(this.getCurrentPosition('lat'), this.getCurrentPosition('lon'), shuttleRouteStop.lat, shuttleRouteStop.lon);
-
-					// Rewrite this later using sortRef from shuttleDetail
-					if (distanceFromStop < this.shuttleClosestStops[0].dist) {
-						this.shuttleClosestStops[0].stopID = shuttleRouteStop.id;
-						this.shuttleClosestStops[0].stopName = shuttleRouteStop.name;
-						this.shuttleClosestStops[0].dist = distanceFromStop;
-						this.shuttleClosestStops[0].stopLat = shuttleRouteStop.lat;
-						this.shuttleClosestStops[0].stopLon = shuttleRouteStop.lon;
-					} else if (distanceFromStop < this.shuttleClosestStops[1].dist && this.shuttleClosestStops[0].stopID != shuttleRouteStop.id) {
-						this.shuttleClosestStops[1].stopID = shuttleRouteStop.id;
-						this.shuttleClosestStops[1].stopName = shuttleRouteStop.name;
-						this.shuttleClosestStops[1].dist = distanceFromStop;
-						this.shuttleClosestStops[1].stopLat = shuttleRouteStop.lat;
-						this.shuttleClosestStops[1].stopLon = shuttleRouteStop.lon;
-					}
+				// Rewrite this later using sortRef from shuttleDetail
+				if (distanceFromStop < this.shuttleClosestStops[0].dist) {
+					this.shuttleClosestStops[0].stopID = shuttleRouteStop.id;
+					this.shuttleClosestStops[0].stopName = shuttleRouteStop.name;
+					this.shuttleClosestStops[0].dist = distanceFromStop;
+					this.shuttleClosestStops[0].stopLat = shuttleRouteStop.lat;
+					this.shuttleClosestStops[0].stopLon = shuttleRouteStop.lon;
+				} else if (distanceFromStop < this.shuttleClosestStops[1].dist && this.shuttleClosestStops[0].stopID != shuttleRouteStop.id) {
+					this.shuttleClosestStops[1].stopID = shuttleRouteStop.id;
+					this.shuttleClosestStops[1].stopName = shuttleRouteStop.name;
+					this.shuttleClosestStops[1].dist = distanceFromStop;
+					this.shuttleClosestStops[1].stopLat = shuttleRouteStop.lat;
+					this.shuttleClosestStops[1].stopLon = shuttleRouteStop.lon;
 				}
 			}
+		}
 
-			this.fetchShuttleArrivalsByStop(0, this.shuttleClosestStops[0].stopID);
-			this.fetchShuttleArrivalsByStop(1, this.shuttleClosestStops[1].stopID);
+		this.fetchShuttleArrivalsByStop(0, this.shuttleClosestStops[0].stopID);
+		this.fetchShuttleArrivalsByStop(1, this.shuttleClosestStops[1].stopID);
 
-			if (refreshType == 'auto') {
-				//logger.log('Queueing Shuttle Card data refresh in ' + this.shuttleCardRefreshInterval/1000 + ' seconds');
-				this.refreshShuttleCardTimer = this.setTimeout( () => { this.refreshShuttleCard('auto') }, this.shuttleCardRefreshInterval);
-			} else {
-				// If manual refresh, reset the Auto refresh timer
-				this.clearTimeout(this.refreshShuttleCardTimer);
-				this.refreshShuttleCardTimer = this.setTimeout( () => { this.refreshShuttleCard('auto') }, this.shuttleCardRefreshInterval);
-			}
+		if (refreshType == 'auto') {
+			this.refreshShuttleCardTimer = this.setTimeout( () => { this.refreshShuttleCard('auto') }, this.shuttleCardRefreshInterval);
+		} else {
+			// If manual refresh, reset the Auto refresh timer
+			this.clearTimeout(this.refreshShuttleCardTimer);
+			this.refreshShuttleCardTimer = this.setTimeout( () => { this.refreshShuttleCard('auto') }, this.shuttleCardRefreshInterval);
 		}
 	},
 
