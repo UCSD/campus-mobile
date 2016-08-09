@@ -12,6 +12,7 @@ import {
 	Animated,
 	Easing,
 	RefreshControl,
+	BackAndroid,
 } from 'react-native';
 
 var TimerMixin = 		require('react-timer-mixin');
@@ -26,6 +27,8 @@ var shuttle = 			require('../util/shuttle');
 var responseDataRef = [];
 var responseDataSort = [];
 var responseDataSortRef = [];
+
+var navRef;
 
 var ShuttleStop = React.createClass({
 
@@ -133,10 +136,18 @@ var ShuttleStop = React.createClass({
 
 		this.fetchShuttleArrivalsByStop('auto');
 		this.mapViewTimeout = this.setTimeout( () => { this.loadMapView() }, this.delayMapViewLoad);
+
 	},
 
 	componentDidMount: function() {
 		logger.custom('View Loaded: Shuttle Stop');
+		
+		// Listen to back button on Android
+		BackAndroid.addEventListener('hardwareBackPress', () => {
+			navRef.parentNavigator.pop();
+			return true;
+		});
+		
 	},
 
 	componentWillUnmount: function() {
@@ -148,6 +159,7 @@ var ShuttleStop = React.createClass({
 		if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
 			return (
 				<Navigator
+					ref={(nav) => { navRef = nav; }}
 					renderScene={this.renderScene}
 					navigator={this.props.navigator}
 					navigationBar={
@@ -198,7 +210,7 @@ var ShuttleStop = React.createClass({
 										<View style={css.shuttle_stop_arrivals_row}>
 											<View style={[css.shuttle_stop_rt_2, { backgroundColor: responseDataRef[responseDataSortRef[0].key].route.color, borderColor: responseDataRef[responseDataSortRef[0].key].route.color }]}><Text style={css.shuttle_stop_rt_2_label}>{responseDataRef[responseDataSortRef[0].key].route.shortName}</Text></View>
 											<Text style={css.shuttle_stop_arrivals_row_route_name}>{responseDataRef[responseDataSortRef[0].key].route.name}</Text>
-											<Text style={css.shuttle_sotp_arrivals_row_eta_text}>{responseDataRef[responseDataSortRef[0].key].etaMinutes}</Text>
+											<Text style={css.shuttle_stop_arrivals_row_eta_text}>{responseDataRef[responseDataSortRef[0].key].etaMinutes}</Text>
 										</View>
 									) : null }
 
