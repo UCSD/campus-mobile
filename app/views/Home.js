@@ -18,6 +18,9 @@ import {
 	Navigator,
 } from 'react-native';
 
+import TopBannerView from './banner/TopBannerView';
+import WelcomeModal from './WelcomeModal';
+
 // Cards
 import EventCard from './events/EventCard'
 import TopStoriesCard from './topStories/TopStoriesCard';
@@ -25,7 +28,6 @@ import WeatherCard from './weather/WeatherCard';
 
 // Node Modules
 var TimerMixin = 		require('react-timer-mixin');
-var Realm = 			require('realm');
 var MapView = 			require('react-native-maps');
 
 // App Settings / Util / CSS
@@ -51,7 +53,6 @@ import WelcomeWeekView from './welcomeWeek/WelcomeWeekView';
 
 var Home = React.createClass({
 
-	realm: null,
 	AppSettings: null,
 	mixins: [TimerMixin],
 	permissionUpdateInterval: 5 * 1000,				// Update permissions every 5 seconds
@@ -69,8 +70,7 @@ var Home = React.createClass({
 
 		return {
 			currentAppState: AppState.currentState,
-			modalVisible: true,
-			welcomeWeekEnabled: false,
+			initialLoad: true,
 			currentRegion: null,
 			nearbyMarkersLoaded: false,
 			nearbyLastRefresh: null,
@@ -96,24 +96,6 @@ var Home = React.createClass({
 	},
 
 	componentWillMount: function() {
-
-		// Realm DB Init
-		this.realm = new Realm({schema: [AppSettings.DB_SCHEMA], schemaVersion: 2});
-		this.AppSettings = this.realm.objects('AppSettings');
-
-		// Hide welcome modal if previously dismissed
-		if (this.AppSettings.MODAL_ENABLED === false) {
-			this.setState({ modalVisible: false });
-		}
-
-		// Check welcome week date range - Activate from Aug 1 to Sep 24
-		var currentYear = general.getTimestamp('yyyy');
-		var currentMonth = general.getTimestamp('m');
-		var currentDay = general.getTimestamp('d');
-		if ((currentYear == 2016) && ((currentMonth == 8) || (currentMonth == 9 && currentDay <= 24))) {
-			this.setState({ welcomeWeekEnabled: true });
-		}
-
 		// Manage App State
 		AppState.addEventListener('change', this.handleAppStateChange);
 
@@ -179,38 +161,11 @@ var Home = React.createClass({
 			<View style={css.main_container}>
 				<ScrollView contentContainerStyle={css.scroll_main}>
 
-					{this.AppSettings['0'].MODAL_ENABLED ? (
-						<Modal animationType={'none'} transparent={true} visible={this.state.modalVisible}>
-							<View style={css.modal_container}>
-								<Text style={css.modal_text_intro}>Hello.</Text>
-								<Text style={css.modal_text}>
-									Thanks for trying {AppSettings.APP_NAME}!{'\n\n'}
-									{AppSettings.APP_NAME} connects you to campus with:{'\n\n'}
-									- location-based shuttle information{'\n'}
-									- timely news and events{'\n'}
-									- nearby points of interest{'\n'}
-									- and we&apos;ll be adding new stuff all the time{'\n'}
-								</Text>
+					{/* WELCOME MODAL */}
+					<WelcomeModal />
 
-								<TouchableHighlight underlayColor={'rgba(200,200,200,.5)'} onPress={ () => this.setModalVisible(false) }>
-									<View style={css.modal_button}>
-										<Text style={css.modal_button_text}>ok, let&apos;s go already</Text>
-									</View>
-								</TouchableHighlight>
-							</View>
-						</Modal>
-					) : null }
-
-
-
-					{/* SPECIAL EVENTS CARD */}
-					{/*<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoWebView('Welcome Week', AppSettings.WELCOME_WEEK_URL) }>*/}
-					{this.state.welcomeWeekEnabled ? (
-						<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoWelcomeWeekView() }>
-							<Image style={[css.card_plain, css.card_special_events]} source={ require('../assets/img/welcome_week.jpg') } />
-						</TouchableHighlight>
-					) : null }
-
+					{/* SPECIAL TOP BANNER */}
+					<TopBannerView navigator={this.props.navigator} />
 
 					{/* SHUTTLE CARD */}
 					{AppSettings.SHUTTLE_CARD_ENABLED ? (
@@ -273,7 +228,7 @@ var Home = React.createClass({
 
 							<View style={css.destinationcard_bot_container}>
 								<View style={css.destinationcard_map_container}>
-									
+
 									{this.state.nearbyAnnotations ? (
 
 										<MapView
@@ -648,12 +603,12 @@ var Home = React.createClass({
 			}
 
 			var newAnnotations = {};
-			
+
 			newAnnotations.coords = {
 				latitude: parseFloat(ucsd_node[i].mkrLat),
 				longitude: parseFloat(ucsd_node[i].mkrLong)
 			};
-			
+
 
 			newAnnotations.latitude = parseFloat(ucsd_node[i].mkrLat);
 			newAnnotations.longitude = parseFloat(ucsd_node[i].mkrLong);
@@ -847,10 +802,6 @@ var Home = React.createClass({
 		this.props.navigator.push({ id: 'DestinationDetail', name: destinationData.title, component: DestinationDetail, title: destinationData.title, destinationData: destinationData });
 	},
 
-	gotoWebView: function(title, url) {
-		this.props.navigator.push({ id: 'WebWrapper', component: WebWrapper, title: title, webViewURL: url });
-	},
-
 	gotoFeedbackForm: function() {
 		this.props.navigator.push({ id: 'WebWrapper', component: WebWrapper, title: 'Feedback', webViewURL: AppSettings.FEEDBACK_URL });
 	},
@@ -887,14 +838,6 @@ var Home = React.createClass({
 		var state = {};
 		state[myKey] = myVal;
 		this.setState(state);
-	},
-
-	// Welcome Modal
-	setModalVisible: function(visible) {
-		this.realm.write(() => {
-			this.realm.create('AppSettings', { id: 1, MODAL_ENABLED: false }, true);
-		});
-		this.setState({ modalVisible: visible });
 	},
 
 	handleAppStateChange: function(currentAppState) {
