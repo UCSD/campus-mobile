@@ -218,7 +218,7 @@ var css = StyleSheet.create({
 	// WEATHER CARD
 	weathercard_more: { justifyContent: 'center', width: windowWidth - 30, padding: 10 * prm, fontSize: 24 * prm, fontWeight: '500', color: '#006C92' },
 	weathercard_border: { borderTopWidth: 1, borderTopColor: '#CCC', width: maxCardWidth },
-	weatherccard_loading_height: { height: 300 * prm },
+	weatherccard_loading_height: { height: 270 * prm },
 
 	wc_main: {  },
 	wc_toprow: { flex: 1, flexDirection: 'row', borderBottomWidth: 1, borderColor: '#EEE', justifyContent: 'center', alignItems: 'center', width: maxCardWidth, paddingHorizontal: 14 },
@@ -370,11 +370,13 @@ var css = StyleSheet.create({
 	mgrey: { color: '#999' },
 	lgrey: { color: '#CCC' },
 	flex: { flex: 1 },
+	center: { alignItems: 'center', justifyContent: 'center', width: maxCardWidth },
+	cardcenter: { alignItems: 'center', justifyContent: 'center', width: maxCardWidth },
 	flexcenter: { flex: 1, alignItems: 'center', justifyContent: 'center', width: maxCardWidth },
 	flexcenter2: { flex: 1, alignItems: 'center', justifyContent: 'center', width: maxCardWidthWithPadding },
 	flexcenter3: { flex: 1, alignItems: 'center', justifyContent: 'center', width: windowWidth },
 
-	card_loading_img: { width: 72, height: 72 },
+	card_loading_img: { width: 64, height: 64 },
 
 	bold: { fontWeight: '700' },
 

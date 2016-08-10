@@ -25,7 +25,6 @@ var AppSettings = require('../../AppSettings');
 export default class WeatherCard extends CardComponent {
   constructor(props) {
     super(props);
-    this.weatherReloadAnim = new Animated.Value(0);
     this.state = {
       weatherData: null,
       weatherDataLoaded: false,
@@ -98,8 +97,6 @@ export default class WeatherCard extends CardComponent {
   }
 
   refresh() {
-    general.stopReloadAnimation(this.weatherReloadAnim);
-    general.startReloadAnimation2(this.weatherReloadAnim, 150, 60000);
     this.fetchWeatherData();
     this.fetchSurfData();
 	}
@@ -134,8 +131,8 @@ export default class WeatherCard extends CardComponent {
         </View>
       ) : null }
       {!this.state.weatherDataLoaded ? (
-        <View style={[css.flexcenter, css.weatherccard_loading_height]}>
-          <Animated.Image style={[css.card_loading_img, { transform: [{ rotate: this.weatherReloadAnim.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '360deg']})}]}]} source={require('../../assets/img/ajax-loader4.png')} />
+        <View style={[css.cardcenter, css.weatherccard_loading_height]}>
+          <Image style={css.card_loading_img} source={ require('../../assets/img/blue-sun-loader-128.gif')} />
         </View>
       ) : null }
 		</Card>
