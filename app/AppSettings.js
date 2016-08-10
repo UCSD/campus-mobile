@@ -5,8 +5,9 @@ module.exports = {
 	/* APP CONFIG */
 	APP_NAME: 					'now@ucsandiego',
 	GOOGLE_ANALYTICS_ID: 		'UA-81825078-1',
-	DEBUG_ENABLED: 				true,
-	NAVIGATOR_ENABLED: 			false,		// IOS setting only - if true, use Navigator instead of Navigator IOS. Navigator will always be used for Android
+	DEBUG_ENABLED: 				true,				// Disables all logger functions (i.e. logger.log) if set to false (console.log is unaffected)
+	NAVIGATOR_ENABLED: 			false,				// IOS setting only - if true, app uses Navigator instead of Navigator IOS
+													// Navigator will always be used for Android
 	
 	/* CARDS */
 	SHUTTLE_CARD_ENABLED: 		false,
