@@ -8,13 +8,10 @@ var {
 
 var dateFormat = require('dateformat');
 
-console.log('Platform.OS: ' + Platform.OS)
-
 module.exports = {
 	
 	platformIOS: function() {
 		if (Platform.OS === 'ios') {
-			console.log('ios--------')
 			return true;
 		} else {
 			return false;
@@ -22,14 +19,9 @@ module.exports = {
 	},
 
 	platformAndroid: function() {
-
-		console.log('----------')
-
 		if (Platform.OS === 'android') {
-			console.log('android--------')
 			return true;
 		} else {
-			console.log('notandroid--------')
 			return false;
 		}
 	},

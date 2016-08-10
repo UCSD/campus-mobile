@@ -120,7 +120,7 @@ var ShuttleStop = React.createClass({
 				'9920': require('../assets/img/shuttle/shuttle-stop-9920.jpg'),
 			},
 
-			renderPlaceholderOnly: false,
+			//renderPlaceholderOnly: false,
 		}
 	},
 
@@ -169,12 +169,12 @@ var ShuttleStop = React.createClass({
 	},
 
 	render: function() {
-		console.log("Re-render " + this.state.renderPlaceholderOnly);
+		/*
 		// Render placeholder while waiting
 		if (this.state.renderPlaceholderOnly) {
 			return this._renderPlaceholderView();
 		}
-		else {
+		else {*/
 			if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
 				return (
 					<Navigator
@@ -187,7 +187,7 @@ var ShuttleStop = React.createClass({
 			} else {
 				return this.renderScene();
 			}
-		}
+		//}
 		
 	},
 
