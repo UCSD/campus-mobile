@@ -12,7 +12,6 @@ import {
 	Animated,
 	Easing,
 	RefreshControl,
-	BackAndroid,
 } from 'react-native';
 
 var TimerMixin = 		require('react-timer-mixin');
@@ -29,6 +28,8 @@ var responseDataSort = [];
 var responseDataSortRef = [];
 
 var navRef;
+var stateCount = 0;
+
 
 var ShuttleStop = React.createClass({
 
@@ -68,8 +69,8 @@ var ShuttleStop = React.createClass({
 			minDelta: .01,
 			maxDelta: .02,
 
-			initialPosition: null,
-			currentPosition: null,
+			initialPosition: this.props.route.currentPosition,
+			currentPosition: this.props.route.currentPosition,
 
 			simulatorPosition: {
 				// TPCS
@@ -118,36 +119,48 @@ var ShuttleStop = React.createClass({
 				'93943': require('../assets/img/shuttle/shuttle-stop-93943.jpg'),
 				'9920': require('../assets/img/shuttle/shuttle-stop-9920.jpg'),
 			},
+
+			renderPlaceholderOnly: false,
 		}
 	},
 
 	componentWillMount: function() {
-		navigator.geolocation.getCurrentPosition(
-			(initialPosition) => this.setState({initialPosition}),
-			(error) => logger.log('ERR: navigator.geolocation.getCurrentPosition1: ' + error.message),
-			{enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
-		);
-
 		this.watchID = navigator.geolocation.watchPosition((currentPosition) => {
+			console.log("setState("+ stateCount++ +"): watchPosition");
 			this.setState({currentPosition});
 		});
 
-		general.startReloadAnimation2(this.shuttleMainReloadAnim, 175, 60000);
+		//general.startReloadAnimation2(this.shuttleMainReloadAnim, 175, 60000);
 
-		this.fetchShuttleArrivalsByStop('auto');
-		this.mapViewTimeout = this.setTimeout( () => { this.loadMapView() }, this.delayMapViewLoad);
+		//this.fetchShuttleArrivalsByStop('auto');
+		// Initial shuttle info render passed from home
+		this._processShuttleArrivals(this.props.route.shuttleData);
+		//this.mapViewTimeout = this.setTimeout( () => { this.loadMapView() }, this.delayMapViewLoad);
 
 	},
 
 	componentDidMount: function() {
 		logger.custom('View Loaded: Shuttle Stop');
-		
-		// Listen to back button on Android
-		BackAndroid.addEventListener('hardwareBackPress', () => {
-			navRef.parentNavigator.pop();
-			return true;
-		});
-		
+
+
+		// Stop placeholder render
+		// Revisit at a later time
+		/*
+		InteractionManager.runAfterInteractions(() => {
+			// later record end time
+			endTime = new Date();
+
+			// time difference in ms
+			var timeDiff = endTime - startTime;
+
+			console.log("Time for full load: " + timeDiff + "ms");
+
+			this.setState({renderPlaceholderOnly: false});
+			console.log("interaction man\n");
+
+			// Poll for new data
+			this.refreshShuttleDataTimer = this.setTimeout( () => { this.fetchShuttleArrivalsByStop('auto') }, this.shuttleRefreshInterval);
+		});*/
 	},
 
 	componentWillUnmount: function() {
@@ -156,20 +169,58 @@ var ShuttleStop = React.createClass({
 	},
 
 	render: function() {
-		if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
-			return (
-				<Navigator
-					ref={(nav) => { navRef = nav; }}
-					renderScene={this.renderScene}
-					navigator={this.props.navigator}
-					navigationBar={
-						<Navigator.NavigationBar style={css.navBar} routeMapper={NavigationBarRouteMapper} />
-					}/>
-			);
-		} else {
-			this.renderScene();
+		console.log("Re-render " + this.state.renderPlaceholderOnly);
+		// Render placeholder while waiting
+		if (this.state.renderPlaceholderOnly) {
+			return this._renderPlaceholderView();
 		}
+		else {
+			if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
+				return (
+					<Navigator
+						renderScene={this.renderScene}
+						navigator={this.props.navigator}
+						navigationBar={
+							<Navigator.NavigationBar style={css.navBar} routeMapper={NavigationBarRouteMapper} />
+						}/>
+				);
+			} else {
+				return this.renderScene();
+			}
+		}
+		
 	},
+
+	/* Revisit after welcome week deadline
+	   skeleton render for smoother transition
+	_renderPlaceholderView: function() {
+		return (
+			<View style={[css.main_container, css.offwhitebg]}>
+
+				<ScrollView contentContainerStyle={css.scroll_default}>
+
+        			{this.state.shuttleStopImageDict[this.state.shuttleStopID] ? (
+						<Image style={css.shuttlestop_image} source={ this.state.shuttleStopImageDict[this.state.shuttleStopID] } />
+					) : null }
+					
+					<View style={css.shuttlestop_name_container}>
+						<Text style={css.shuttlestop_name_text}>{this.state.shuttleStopName}</Text>
+					</View>
+
+					
+					<View style={css.shuttle_stop_arrivals_container}>
+						<Text style={css.shuttle_stop_next_arrivals_text}>There are no active shuttles at this time</Text>
+					</View>
+
+					<View>
+						<Text style={css.shuttle_stop_map_text}>Map</Text>
+					</View>
+
+				</ScrollView>
+			</View>
+			
+		);
+	},*/
 
 	renderScene: function(route, navigator) {
 
@@ -303,6 +354,7 @@ var ShuttleStop = React.createClass({
 		}
 	},
 
+	// TODO: use setState less, revisit when we have maps working
 	loadMapView: function() {
 		var distLatLon = Math.sqrt(Math.pow(Math.abs(this.getCurrentPosition('lat') - this.state.shuttleStopLat), 2) + Math.pow(Math.abs(this.getCurrentPosition('lon') - this.state.shuttleStopLon), 2));
 
@@ -315,15 +367,9 @@ var ShuttleStop = React.createClass({
 	},
 
 	fetchShuttleArrivalsByStop: function(fetchType) {
-		
 		responseDataSort = [];
 		
 		this.shuttleRefreshTimestamp = general.getCurrentTimestamp();
-		
-		this.setState({
-			closestShuttlesInactive: false,
-			shuttleRefreshTimeAgo: ' '
-		});
 
 		if (this.state.closestShuttlesLoaded) {
 			general.startReloadAnimation(this.shuttleReloadAnim);
@@ -340,55 +386,47 @@ var ShuttleStop = React.createClass({
 			})
 			.then((response) => response.json())
 			.then((responseData) => {
-
-				if (responseData.length > 0) {
-
-					this.setState({ closestShuttlesInactive: false });
-
-					for (var i = 0; responseData.length > i; i++) {
-						responseData[i].etaMinutes = shuttle.getMinutesETA(responseData[i].secondsToArrival);
-						responseData[i].route.name = responseData[i].route.name.replace(/.*\) /, '').replace(/ - .*/, '');
-						if (responseData[i].route.shortName == "Campus Loop") {
-							responseData[i].route.shortName = "L";
-						}
-					}
-
-					// Sort the results by lowest ETA
-					for (var key in responseData) {
-						responseDataSort.push({key:key, secondsToArrival:responseData[key].secondsToArrival});
-					}
-
-					responseDataSort.sort(function(x,y) { return x.secondsToArrival - y.secondsToArrival } );
-
-					responseDataRef = responseData;
-					responseDataSortRef = responseDataSort;
-
-					this.setState({ closestShuttlesLoaded: true });
-					general.stopReloadAnimation(this.shuttleReloadAnim);
-
-					if (fetchType == 'auto') {
-						//logger.log('Queueing shuttle arrival data refresh in ' + this.shuttleRefreshInterval/1000 + ' seconds');
-						this.refreshShuttleDataTimer = this.setTimeout( () => { this.fetchShuttleArrivalsByStop('auto') }, this.shuttleRefreshInterval);
-					}
-
-				} else {
-					throw('invalid');
-				}
+				this._processShuttleArrivals(responseData);
 			})
 			.catch((error) => {
 
 				logger.log('ERR2: fetchShuttleArrivalsByStopDetail: ' + error);
 
 				this.setState({ closestShuttlesInactive: true });
-				general.stopReloadAnimation(this.shuttleReloadAnim);
+				//general.stopReloadAnimation(this.shuttleReloadAnim);
 
-				if (fetchType == 'auto') {
-					//logger.log('Queueing shuttle arrival data refresh in ' + this.shuttleRefreshInterval/1000 + ' seconds');
-					this.refreshShuttleDataTimer = this.setTimeout( () => { this.fetchShuttleArrivalsByStop('auto') }, this.shuttleRefreshInterval);
-				}
 			})
 			.done();
 	},
+
+	_processShuttleArrivals: function(data) {
+		if (data.length > 0) {
+
+			for (var i = 0; data.length > i; i++) {
+				data[i].etaMinutes = shuttle.getMinutesETA(data[i].secondsToArrival);
+				data[i].route.name = data[i].route.name.replace(/.*\) /, '').replace(/ - .*/, '');
+				if (data[i].route.shortName == "Campus Loop") {
+					data[i].route.shortName = "L";
+				}
+			}
+
+			// Sort the results by lowest ETA
+			for (var key in data) {
+				responseDataSort.push({key:key, secondsToArrival:data[key].secondsToArrival});
+			}
+
+			responseDataSort.sort(function(x,y) { return x.secondsToArrival - y.secondsToArrival } );
+
+			responseDataRef = data;
+			responseDataSortRef = responseDataSort;
+
+			console.log("setState("+ stateCount++ +"): fetchShuttleArrivalsByStop:fetch");
+
+			this.setState({ closestShuttlesLoaded: true, closestShuttlesInactive: false});
+		} else {
+			throw('invalid');
+		}
+	}
 
 });
 

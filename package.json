@@ -9,7 +9,7 @@
     "dateformat": "~1.0.12",
     "html-entities": "~1.2.0",
     "react": "~15.2.1",
-    "react-native": "~0.30.0",
+    "react-native": "~0.31.0",
     "react-native-google-analytics-bridge": "~3.0.0",
     "react-native-maps": "^0.7.1",
     "react-native-permissions": "~0.2.4",

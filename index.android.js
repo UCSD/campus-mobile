@@ -6,6 +6,7 @@ import {
 	Alert,
 	Text,
 	TouchableHighlight,
+	BackAndroid,
 } from 'react-native';
 
 var Realm = require('realm');
@@ -31,6 +32,7 @@ var nowucsandiego = React.createClass({
 		return {
 			cameraPermission: "undetermined",
 			locationPermission: "undetermined",
+			pauseRefresh: false,
 		};
 	},
 
@@ -44,10 +46,28 @@ var nowucsandiego = React.createClass({
 				this._alertForLocationPermission();
 			}
 		});
+
+		// Listen to route focus changes
+		this.refs.navRef.navigationContext.addListener('willfocus', (event) => {
+			const route = event.data.route;
+
+			// Make sure renders/card refreshes are only happening when in home route
+			if(route.name === "Home") {
+				this.setState({pauseRefresh: false});
+			}
+			else {
+				this.setState({pauseRefresh: true});
+			}
+		});
+
+		// Listen to back button on Android
+		BackAndroid.addEventListener('hardwareBackPress', () => {
+			this.refs.navRef.pop();
+			return true;
+		});
 	},
 
 	componentWillMount: function() {
-		//this._alertForLocationPermission()
 		// Realm DB Setup
 		this.realm = new Realm({schema: [AppSettings.DB_SCHEMA], schemaVersion: 2});
 		this.AppSettings = this.realm.objects('AppSettings');
@@ -99,7 +119,7 @@ var nowucsandiego = React.createClass({
 		console.log('test DEBUG ')
 
 		return (//<Text>Hello world!</Text>
-			<Navigator initialRoute={{id: 'Home', name: 'Home'}} renderScene={this.renderScene} />
+			<Navigator ref="navRef" initialRoute={{id: 'Home', name: 'Home'}} renderScene={this.renderScene} />
 		);
 	},
 
@@ -107,7 +127,7 @@ var nowucsandiego = React.createClass({
 	renderScene: function(route, navigator, index, navState) {
 
 		switch (route.id) {
-			case 'Home':          return (<Home route={route} navigator={navigator} isSimulator={this.props.isSimulator} 
+			case 'Home':          return (<Home route={route} navigator={navigator} isSimulator={this.props.isSimulator} pauseRefresh={this.state.pauseRefresh}
 				/*onForward={() => {
 				var nextIndex = route.index + 1;
 					navigator.push({
