@@ -17,9 +17,14 @@
 		Ratio 3.5
 			Nexus 6
 
-	Color Palete
-		Blue: #006C92
-		Grey: #747678
+	UCSD Branding Guidelines - Primary Colors
+		New
+		Blue:   #182B49
+		Yellow: #C69214
+
+		Old
+		Blue: 	#006C92
+		Grey: 	#747678
 */
 'use strict';
 
