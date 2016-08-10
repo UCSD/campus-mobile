@@ -10,12 +10,12 @@ module.exports = {
 													// Navigator will always be used for Android
 	
 	/* CARDS */
-	SHUTTLE_CARD_ENABLED: 		false,
+	SHUTTLE_CARD_ENABLED: 		true,
 	WEATHER_CARD_ENABLED: 		true,
-	EVENTS_CARD_ENABLED: 		false,
-	TOPSTORIES_CARD_ENABLED: 	false,
-	NEARBY_CARD_ENABLED: 		false,
-	DINING_CARD_ENABLED: 		false,
+	EVENTS_CARD_ENABLED: 		true,
+	TOPSTORIES_CARD_ENABLED: 	true,
+	NEARBY_CARD_ENABLED: 		true,
+	DINING_CARD_ENABLED: 		true,
 
 	/* APIS / ENDPOINTS */
 	WEATHER_API_URL: 			'https://e29re7itnc.execute-api.us-west-2.amazonaws.com/prod/forecast',
