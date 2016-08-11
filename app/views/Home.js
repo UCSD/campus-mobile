@@ -101,9 +101,10 @@ var Home = React.createClass({
 		// Check Location Permissions Periodically
 		this.updateLocationPermission();
 
+		/*
 		this.geolocationWatchID = navigator.geolocation.watchPosition((currentPosition) => {
 			this.setState({ currentPosition });
-		});
+		});*/
 
 		// Load all non-broken-out Cards
 		this.refreshAllCards('auto');
@@ -128,7 +129,7 @@ var Home = React.createClass({
 
 	updateLocationPermission: function() {
 		// Get location permission status
-
+		console.log("home permission");
 		Permissions.getPermissionStatus('location')
 		.then(response => {
 			//logger.log('Location permissions: ' + response);
@@ -137,7 +138,7 @@ var Home = React.createClass({
 			this.setState({ locationPermission: response });
 			//this.refreshAllCards('auto'); // Should only be refreshing cards that rely on location perm
 
-			if(this.state.currentPosition === null) {
+			if(this.state.currentPosition === null && response === "authorized") {
 				navigator.geolocation.getCurrentPosition(
 					(initialPosition) => {
 						//logger.custom("getCurrentPosition");
@@ -146,10 +147,39 @@ var Home = React.createClass({
 					(error) => logger.log('ERR: navigator.geolocation.getCurrentPosition1: ' + error.message),
 					{enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
 				);
+				this.geolocationWatchID = navigator.geolocation.watchPosition((currentPosition) => {
+					this.setState({ currentPosition });
+				});
+			}
+			else {
+				this._alertForLocationPermission()
 			}
 		});
 
 		this.permissionUpdateTimer = this.setTimeout( () => { this.updateLocationPermission() }, this.permissionUpdateInterval);
+	},
+
+	_alertForLocationPermission() {
+		Alert.alert(
+			'Can we access your location?',
+			'We need to spy on you.',
+			[
+				{text: 'No way', onPress: () => console.log('permission denied'), style: 'cancel'},
+				//this.state.locationPermission == 'undetermined'? 
+				{text: 'OK', onPress: this._requestPermission.bind(this)}
+				//: {text: 'Open Settings', onPress: Permissions.openSettings}
+			]
+		)
+	},
+
+	//request permission to access location
+	_requestPermission() {
+	Permissions.requestPermission('location')
+		.then(response => {
+			//returns once the user has chosen to 'allow' or to 'not allow' access
+			//response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
+			this.setState({ locationPermission: response })
+		});
 	},
 
 	// #1 - RENDER
