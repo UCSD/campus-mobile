@@ -20,6 +20,7 @@ import {
 
 import TopBannerView from './banner/TopBannerView';
 import WelcomeModal from './WelcomeModal';
+import NavigationBarWithRouteMapper from './NavigationBarWithRouteMapper';
 
 // Cards
 import EventCard from './events/EventCard'
@@ -66,7 +67,6 @@ var Home = React.createClass({
 	copyrightYear: new Date().getFullYear(),
 
 	getInitialState: function() {
-
 		return {
 			currentAppState: AppState.currentState,
 			initialLoad: true,
@@ -89,11 +89,14 @@ var Home = React.createClass({
 			defaultPosition: {
 				coords: { latitude: 32.88, longitude: -117.234 }
 			},
+			shuttleData: null,
 		}
 	},
 
 	componentWillMount: function() {
+		
 		// Manage App State
+
 		AppState.addEventListener('change', this.handleAppStateChange);
 
 		// Check Location Permissions Periodically
@@ -112,20 +115,20 @@ var Home = React.createClass({
 	},
 
 	componentWillUnmount: function() {
-
 		// Update unmount function with ability to clear all other timers (setTimeout/setInterval)
-
 		navigator.geolocation.clearWatch(this.geolocationWatchID);
 		AppState.removeEventListener('change', this.handleAppStateChange);
 	},
 
-	componentDidUpdate: function() {
-
+	shouldComponentUpdate: function() {
+		if(this.props.pauseRefresh) {
+			return false;
+		}
+		return true;
 	},
 
 	updateLocationPermission: function() {
 		// Get location permission status
-		//logger.log('Checking permissions for Location...');
 
 		Permissions.getPermissionStatus('location')
 		.then(response => {
@@ -134,6 +137,17 @@ var Home = React.createClass({
 			//response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
 			this.setState({ locationPermission: response });
 			//this.refreshAllCards('auto'); // Should only be refreshing cards that rely on location perm
+
+			if(this.state.currentPosition === null) {
+				navigator.geolocation.getCurrentPosition(
+					(initialPosition) => {
+						//logger.custom("getCurrentPosition");
+						this.setState({currentPosition: initialPosition});
+					},
+					(error) => logger.log('ERR: navigator.geolocation.getCurrentPosition1: ' + error.message),
+					{enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
+				);
+			}
 		});
 
 		this.permissionUpdateTimer = this.setTimeout( () => { this.updateLocationPermission() }, this.permissionUpdateInterval);
@@ -143,9 +157,11 @@ var Home = React.createClass({
 	render: function() {
 		if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
 			return (
-				<Navigator renderScene={this.renderScene} navigationBar={
-					<Navigator.NavigationBar style={css.navBar} routeMapper={NavigationBarRouteMapper} />
-				} />
+				<NavigationBarWithRouteMapper
+					route={this.props.route}
+					renderScene={this.renderScene} 
+					navigator={this.props.navigator}
+				/>
 			);
 		} else {
 			return this.renderScene();
@@ -177,7 +193,7 @@ var Home = React.createClass({
 							</View>
 
 							{this.state.closestStop1Loaded ? (
-								<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoShuttleStop(this.shuttleClosestStops[0]) }>
+								<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoShuttleStop(this.shuttleClosestStops[0], this.state.shuttleData) }>
 									<View style={css.shuttle_card_row}>
 										<View style={css.shuttle_card_row_top}>
 											<View style={css.shuttle_card_rt_1}></View>
@@ -194,7 +210,7 @@ var Home = React.createClass({
 							) : null }
 
 							{this.state.closestStop2Loaded ? (
-								<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoShuttleStop(this.shuttleClosestStops[1]) }>
+								<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoShuttleStop(this.shuttleClosestStops[1], this.state.shuttleData) }>
 									<View style={[css.shuttle_card_row, css.shuttle_card_row_border]}>
 										<View style={css.shuttle_card_row_top}>
 											<View style={css.shuttle_card_rt_1}></View>
@@ -338,6 +354,7 @@ var Home = React.createClass({
 	},
 
 	getCards: function(){
+		//logger.custom("Home:getCards");
 		var cards = [];
 		var cardCounter = 0;
 		// Setup CARDS
@@ -358,6 +375,9 @@ var Home = React.createClass({
 
 	// #2 - REFRESH
 	refreshAllCards: function(refreshType) {
+		if(this.props.pauseRefresh) {
+			return;
+		}
 		if (!refreshType) {
 			refreshType = 'manual';
 		}
@@ -375,7 +395,7 @@ var Home = React.createClass({
 	},
 
 	refreshShuttleCard: function(refreshType) {
-		if (AppSettings.SHUTTLE_CARD_ENABLED) {
+		if (AppSettings.SHUTTLE_CARD_ENABLED && !this.props.pauseRefresh) {
 			this.findClosestShuttleStops(refreshType);
 		}
 	},
@@ -435,7 +455,6 @@ var Home = React.createClass({
 
 
 	renderDiningRow: function(data) {
-
 		var currentTimestamp = general.getTimestamp('yyyy-mm-dd');
 		var diningHours = '';
 		var dayOfWeek = general.getTimestamp('ddd').toLowerCase();
@@ -541,7 +560,7 @@ var Home = React.createClass({
 
 	// Updates which predesignated node region the user is in
 	updateCurrentNodeRegion: function() {
-
+		if(this.props.pauseRefresh) return;
 		var closestNode = 0;
 		var closestNodeDistance = 100000000;
 
@@ -689,16 +708,17 @@ var Home = React.createClass({
 		this.fetchShuttleArrivalsByStop(1, this.shuttleClosestStops[1].stopID);
 
 		if (refreshType == 'auto') {
-			this.refreshShuttleCardTimer = this.setTimeout( () => { this.refreshShuttleCard('auto') }, this.shuttleCardRefreshInterval);
+			//logger.log('Queueing Shuttle Card data refresh in ' + this.shuttleCardRefreshInterval/1000 + ' seconds');
+			//this.refreshShuttleCardTimer = this.setTimeout( () => { this.refreshShuttleCard('auto') }, this.shuttleCardRefreshInterval); //why is this doubled
 		} else {
 			// If manual refresh, reset the Auto refresh timer
 			this.clearTimeout(this.refreshShuttleCardTimer);
-			this.refreshShuttleCardTimer = this.setTimeout( () => { this.refreshShuttleCard('auto') }, this.shuttleCardRefreshInterval);
+			//this.refreshShuttleCardTimer = this.setTimeout( () => { this.refreshShuttleCard('auto') }, this.shuttleCardRefreshInterval); //why
 		}
+		this.refreshShuttleCardTimer = this.setTimeout( () => { this.refreshShuttleCard('auto') }, this.shuttleCardRefreshInterval);
 	},
 
 	fetchShuttleArrivalsByStop: function(closestStopNumber, stopID) {
-
 		var SHUTTLE_STOPS_API_URL = AppSettings.SHUTTLE_STOPS_API_URL + stopID + '/arrivals';
 		logger.log("Shuttle link: " + SHUTTLE_STOPS_API_URL);
 		fetch(SHUTTLE_STOPS_API_URL, {
@@ -710,9 +730,8 @@ var Home = React.createClass({
 			})
 			.then((response) => response.json())
 			.then((responseData) => {
-
 				if (responseData.length > 0 && responseData[0].secondsToArrival) {
-
+					this.setState({shuttleData : responseData});
 					var closestShuttleETA = 999999;
 
 					for (var i = 0; responseData.length > i; i++) {
@@ -764,8 +783,8 @@ var Home = React.createClass({
 			.done();
 	},
 
-	gotoShuttleStop: function(stopData) {
-		this.props.navigator.push({ id: 'ShuttleStop', name: 'Shuttle Stop', component: ShuttleStop, title: 'Shuttle', stopData: stopData });
+	gotoShuttleStop: function(stopData, shuttleData) {
+		this.props.navigator.push({ id: 'ShuttleStop', name: 'Shuttle Stop', component: ShuttleStop, title: 'Shuttle',stopData: stopData, currentPosition: this.state.currentPosition, shuttleData: shuttleData });
 	},
 
 	gotoDestinationDetail: function(destinationData) {
@@ -811,6 +830,7 @@ var Home = React.createClass({
 		});
 	},
 
+	// Is this even used??
 	_setState: function(myKey, myVal) {
 		var state = {};
 		state[myKey] = myVal;
@@ -819,7 +839,7 @@ var Home = React.createClass({
 
 	handleAppStateChange: function(currentAppState) {
 		this.setState({ currentAppState, });
-		if (currentAppState === 'active') {
+		if (currentAppState === 'active' && !this.props.pauseRefresh) {
 			this.refreshAllCards('auto');
 		}
 	},
@@ -840,24 +860,5 @@ var Home = React.createClass({
 	},
 
 });
-
-
-
-// NAVIGATOR BAR
-var NavigationBarRouteMapper = {
-
-	LeftButton: function(route, navigator, index, navState) {
-		return null;
-	},
-
-	Title: function(route, navigator, index, navState) {
-		return (<Text style={css.navBarTitle}>now@ucsandiego</Text>);
-	},
-
-	RightButton: function(route, navigator, index, navState) {
-		return null;
-	},
-
-};
 
 module.exports = Home;

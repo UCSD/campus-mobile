@@ -8,8 +8,10 @@ import {
 	Image,
 	LinkingIOS,
 	TouchableHighlight,
-	Dimensions
+	Dimensions,
+	Navigator,
 } from 'react-native';
+import NavigationBarWithRouteMapper from '../NavigationBarWithRouteMapper';
 
 var css = require('../../styles/css');
 var WebWrapper = require('../WebWrapper');
@@ -18,6 +20,7 @@ var windowSize = Dimensions.get('window');
 var windowWidth = windowSize.width;
 
 var logger = require('../../util/logger');
+var general = require('../../util/general');
 
 var TopStoriesDetail = React.createClass({
 
@@ -42,14 +45,18 @@ var TopStoriesDetail = React.createClass({
 		}
 	},
 
-	_navigate(){
-		this.props.navigator.push({
-			name: 'Home', // Matches route.name
-		});
-	},
-
 	render: function() {
-		return this.renderScene();
+		if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
+			return (
+				<NavigationBarWithRouteMapper
+					route={this.props.route}
+					renderScene={this.renderScene}
+					navigator={this.props.navigator}
+				/>
+			);
+		} else {
+			return this.renderScene();
+		}
 	},
 
 	renderScene: function() {
@@ -88,10 +95,6 @@ var TopStoriesDetail = React.createClass({
 
 		return (
 			<View style={[css.main_container, css.whitebg]}>
-				{/* Navbar */}
-				<TouchableHighlight onPress={ () => this._navigate() }>
-					<Text>GO To View</Text>
-				</TouchableHighlight>
 				<ScrollView contentContainerStyle={css.scroll_default}>
 
 					{this.state.newsImgWidth ? (
