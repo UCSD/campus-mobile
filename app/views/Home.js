@@ -93,14 +93,15 @@ var Home = React.createClass({
 	},
 
 	componentWillMount: function() {
+		
 		// Manage App State
+
 		AppState.addEventListener('change', this.handleAppStateChange);
 
 		// Check Location Permissions Periodically
 		this.updateLocationPermission();
 
 		this.geolocationWatchID = navigator.geolocation.watchPosition((currentPosition) => {
-			logger.custom("Postion: " + JSON.stringify(currentPosition));
 			this.setState({ currentPosition });
 		});
 
@@ -153,6 +154,7 @@ var Home = React.createClass({
 
 	// #1 - RENDER
 	render: function() {
+
 		if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
 			return (
 				<Navigator renderScene={this.renderScene} navigationBar={
@@ -779,7 +781,6 @@ var Home = React.createClass({
 
 	gotoShuttleStop: function(stopData, shuttleData) {
 		this.props.navigator.push({ id: 'ShuttleStop', name: 'Shuttle Stop', component: ShuttleStop, title: 'Shuttle', stopData: stopData, currentPosition: this.state.currentPosition, shuttleData: shuttleData });
-		this.setState({pauseRefresh: true})
 	},
 
 	gotoDestinationDetail: function(destinationData) {

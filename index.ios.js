@@ -32,8 +32,33 @@ if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
 
 var nowucsandiego = React.createClass({
 
-	render: function() {
+	getInitialState() {
+		return {
+			pauseRefresh: false,
+		};
+	},
+	/*
+	//check the status of a single permission
+	componentDidMount: function() {
 
+		// Listen to route focus changes
+		this.refs.navRef.navigationContext.addListener('didfocus', (event) => {
+			const route = event.data.route;
+			console.log("IOS unFOCUS: " + route.name);
+
+			// Make sure renders/card refreshes are only happening when in home route
+			// For some reason route name for home is undefined?
+			if(route.name === undefined) {
+				console.log("no pause");
+				this.setState({pauseRefresh: false});
+			}
+			else {
+				this.setState({pauseRefresh: true});
+			}
+		});
+	},*/
+
+	render: function() {
 		StatusBar.setBarStyle('light-content');
 
 		if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
@@ -43,13 +68,20 @@ var nowucsandiego = React.createClass({
 		} else {
 			return (
 				<NavigatorIOS
-					initialRoute={{ component: Home, title: AppSettings.APP_NAME, passProps: { isSimulator: this.props.isSimulator }}}
+					initialRoute={{ 
+						component: Home, 
+						title: AppSettings.APP_NAME, 
+						passProps: { isSimulator: this.props.isSimulator, 
+						pauseRefresh: this.state.pauseRefresh,},
+						backButtonTitle: "Back",}}
 					style={{flex: 1}}
 					tintColor='#FFFFFF'
 					barTintColor='#006C92'
 					titleTextColor='#FFFFFF'
 					navigationBarHidden={false}
-					translucent={true} />
+					translucent={true} 
+					ref="navRef"
+					/>
 			);
 		}
 
@@ -58,14 +90,14 @@ var nowucsandiego = React.createClass({
 	renderScene: function(route, navigator, index, navState) {
 
 		switch (route.id) {
-			case 'Home': 					return (<Home route={route} navigator={navigator} />);
-			case 'ShuttleStop': 			return (<ShuttleStop route={route} navigator={navigator} />);
+			case 'Home': 				return (<Home route={route} navigator={navigator} pauseRefresh={this.state.pauseRefresh} />);
+			case 'ShuttleStop': 			return (<ShuttleStop route={route} navigator={navigator} pauseRefresh={this.state.pauseRefresh} />);
 			/*case 'EventDetail': 			return (<EventDetail route={route} navigator={navigator} />);
 			case 'TopStoriesDetail': 		return (<TopStoriesDetail route={route} navigator={navigator} />);
 			case 'DestinationDetail': 		return (<DestinationDetail route={route} navigator={navigator} />);
 			case 'DiningList': 				return (<DiningList route={route} navigator={navigator} />);
 			*/
-			default: 						return (<Home route={route} navigator={navigator} />);
+			default: 				return (<Home route={route} navigator={navigator} pauseRefresh={this.state.pauseRefresh} />);
 		}
 	},
 
