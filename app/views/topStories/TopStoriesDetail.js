@@ -130,7 +130,7 @@ var TopStoriesDetail = React.createClass({
 	},
 
 	gotoWebView: function(storyName, storyURL) {
-		this.props.navigator.push({ component: WebWrapper, title: storyName, webViewURL: storyURL });
+		this.props.navigator.push({ id: 'TopStoriesDetail', name: 'TopStoriesDetail', title: storyName, component: WebWrapper });
 	},
 
 });

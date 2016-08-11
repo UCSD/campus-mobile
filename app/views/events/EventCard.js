@@ -7,6 +7,7 @@ import {
 	Text,
 	TouchableHighlight,
 } from 'react-native';
+
 import EventService from '../../services/eventService'
 import Card from '../card/Card'
 import CardComponent from '../card/CardComponent'
@@ -69,8 +70,8 @@ export default class EventCard extends CardComponent {
 
 				{this.state.fetchEventsErrorLimitReached ? (
 					<View style={[css.flexcenter, css.pad40]}>
-					<Text>There was a problem loading Student Events</Text>
-				</View>
+						<Text>There was a problem loading events, try back soon.</Text>
+					</View>
 				) : null }
 			</View>
 		</Card>
