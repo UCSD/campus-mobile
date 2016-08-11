@@ -16,7 +16,7 @@ var css = require('../../styles/css');
 export default class EventItem extends React.Component {
 
 	gotoEventDetail(eventData) {
-		this.props.navigator.push({ component: EventDetail, title: 'Events', eventData: eventData });
+		this.props.navigator.push({ id: 'EventDetail', component: EventDetail, title: 'Events', eventData: eventData });
 	}
 
 	render() {

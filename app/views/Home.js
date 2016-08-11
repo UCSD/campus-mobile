@@ -50,7 +50,6 @@ var DestinationDetail = require('./DestinationDetail');
 var DiningList = 		require('./DiningList');
 var WebWrapper = 		require('./WebWrapper');
 
-
 import WelcomeWeekView from './welcomeWeek/WelcomeWeekView';
 
 var Home = React.createClass({
@@ -155,17 +154,7 @@ var Home = React.createClass({
 
 	// #1 - RENDER
 	render: function() {
-		if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
-			return (
-				<NavigationBarWithRouteMapper
-					route={this.props.route}
-					renderScene={this.renderScene} 
-					navigator={this.props.navigator}
-				/>
-			);
-		} else {
-			return this.renderScene();
-		}
+		return this.renderScene();
 	},
 
 	renderScene: function(route, navigator, index, navState) {
@@ -178,7 +167,7 @@ var Home = React.createClass({
 					<WelcomeModal />
 
 					{/* SPECIAL TOP BANNER */}
-					<TopBannerView navigator={this.props.navigator} />
+					<TopBannerView navigator={navigator} onPress={ () => this.gotoWelcomeWeekView() }/>
 
 					{/* SHUTTLE CARD */}
 					{AppSettings.SHUTTLE_CARD_ENABLED ? (
@@ -815,6 +804,7 @@ var Home = React.createClass({
 	},
 
 	gotoWelcomeWeekView() {
+		console.log("Pushing route: WelcomeWeekView");
   		this.props.navigator.push({ id: 'WelcomeWeekView', component: WelcomeWeekView, title: 'Welcome Week'});
 	},
 

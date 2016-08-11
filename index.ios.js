@@ -17,6 +17,7 @@ var AppSettings = 	require('./app/AppSettings');
 var Home, EventDetail, TopStoriesDetail, ShuttleStop, WebView, DestinationDetail;
 
 Home = require('./app/views/Home');
+import NavigationBarWithRouteMapper from './app/views/NavigationBarWithRouteMapper';
 
 if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
 	ShuttleStop = 			require('./app/views/ShuttleStop');
@@ -63,7 +64,11 @@ var nowucsandiego = React.createClass({
 
 		if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
 			return (
-				<Navigator initialRoute={{id: 'Home', name: 'Home'}} renderScene={this.renderScene} />
+				<NavigationBarWithRouteMapper
+				ref="navRef"
+				route={{id: 'Home', name: 'Home', title: 'now@ucsandiego'}}
+				renderScene={this.renderScene}
+			/>
 			);
 		} else {
 			return (

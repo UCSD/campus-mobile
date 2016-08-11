@@ -46,17 +46,7 @@ var EventDetail = React.createClass({
 	},
 
 	render: function() {
-		if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
-			return (
-				<NavigationBarWithRouteMapper
-					route={this.props.route}
-					renderScene={this.renderScene}
-					navigator={this.props.navigator}
-				/>
-			);
-		} else {
-			return this.renderScene();
-		}
+		return this.renderScene();
 	},
 
 	renderScene: function() {

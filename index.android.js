@@ -123,6 +123,7 @@ var nowucsandiego = React.createClass({
 
 
 	renderScene: function(route, navigator, index, navState) {
+		console.log("Changing route: " + route.id);
 		switch (route.id) {
 			case 'Home':          return (<Home route={route} navigator={navigator} isSimulator={this.props.isSimulator} pauseRefresh={this.state.pauseRefresh}
 				/*onForward={() => {
@@ -161,7 +162,7 @@ var nowucsandiego = React.createClass({
 			case 'NoNavigatorPage':     return (<NoNavigatorPage route={route} navigator={navigator} />);
 			*/
 
-			case 'WelcomeWeekView': return(<WelcomeWeekView />);
+			case 'WelcomeWeekView': return(<WelcomeWeekView route={route} navigator={navigator} />);
 
 			default:            return (<Home route={route} navigator={navigator} />);
 		}

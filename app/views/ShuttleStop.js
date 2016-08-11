@@ -396,8 +396,6 @@ var ShuttleStop = React.createClass({
 			responseDataRef = data;
 			responseDataSortRef = responseDataSort;
 
-			console.log("setState("+ stateCount++ +"): fetchShuttleArrivalsByStop:fetch");
-
 			this.setState({ closestShuttlesLoaded: true, closestShuttlesInactive: false});
 		} else {
 			throw('invalid');
