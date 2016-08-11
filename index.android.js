@@ -18,6 +18,7 @@ var ShuttleStop = require('./app/views/ShuttleStop');
 var DestinationSearch = require('./app/views/DestinationSearch');
 var DestinationDetail = require('./app/views/DestinationDetail');
 const Permissions = require('react-native-permissions');
+var SurfReport = require('./app/views/weather/SurfReport');
 
 import WelcomeWeekView from './app/views/welcomeWeek/WelcomeWeekView';
 var general = require('./app/util/general');
@@ -35,14 +36,17 @@ var nowucsandiego = React.createClass({
 
 	//check the status of a single permission
 	componentDidMount() {
+		console.log("Mounted");
+		/*
 		Permissions.getPermissionStatus('location')
 		.then(response => {
+			console.log("Permission: " + response);
 			//response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
 			//this.setState({ locationPermission: response })
 			if(response != 'authorized') {
 				this._alertForLocationPermission();
 			}
-		});
+		});*/
 
 		// Listen to route focus changes
 		// Should be a better way to do this...
@@ -122,9 +126,8 @@ var nowucsandiego = React.createClass({
 	renderScene: function(route, navigator, index, navState) {
 		console.log("Changing route: " + route.id);
 
-		//pauseRefresh={this.state.pauseRefresh}
 		switch (route.id) {
-			case 'Home': 				return (<Home route={route} navigator={navigator} />);
+			case 'Home': 				return (<Home route={route} navigator={navigator} pauseRefresh={this.state.pauseRefresh}/>);
 			case 'ShuttleStop': 		return (<ShuttleStop route={route} navigator={navigator} />);
 			case 'SurfReport': 			return (<SurfReport route={route} navigator={navigator} />);
 			case 'TopStoriesDetail': 	return (<TopStoriesDetail route={route} navigator={navigator} />);
