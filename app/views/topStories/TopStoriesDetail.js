@@ -9,17 +9,16 @@ import {
 	LinkingIOS,
 	TouchableHighlight,
 	Dimensions,
-	Navigator,
 } from 'react-native';
 import NavigationBarWithRouteMapper from '../NavigationBarWithRouteMapper';
 
-var css = require('../../styles/css');
 var WebWrapper = require('../WebWrapper');
 
 var windowSize = Dimensions.get('window');
 var windowWidth = windowSize.width;
 
 var AppSettings = require('../../AppSettings');
+var css = require('../../styles/css');
 var logger = require('../../util/logger');
 var general = require('../../util/general');
 
@@ -130,7 +129,7 @@ var TopStoriesDetail = React.createClass({
 	},
 
 	gotoWebView: function(storyName, storyURL) {
-		this.props.navigator.push({ id: 'TopStoriesDetail', name: 'TopStoriesDetail', title: storyName, component: WebWrapper });
+		this.props.navigator.push({ id: 'TopStoriesDetail', name: 'TopStoriesDetail', title: storyName, component: WebWrapper, webViewURL: storyURL });
 	},
 
 });

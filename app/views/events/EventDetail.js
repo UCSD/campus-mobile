@@ -2,7 +2,6 @@
 
 import React from 'react';
 import {
-    Platform,
 	View,
 	Text,
 	ScrollView,
@@ -13,15 +12,15 @@ import {
 } from 'react-native';
 import NavigationBarWithRouteMapper from '../NavigationBarWithRouteMapper';
 
-var AppSettings = require('../../AppSettings');
-var css = require('../../styles/css');
-var logger = require('../../util/logger');
-var general = require('../../util/general');
-
 var WebWrapper = require('../WebWrapper');
 
 var windowSize = Dimensions.get('window');
 var windowWidth = windowSize.width;
+
+var AppSettings = require('../../AppSettings');
+var css = require('../../styles/css');
+var logger = require('../../util/logger');
+var general = require('../../util/general');
 
 var EventDetail = React.createClass({
 
@@ -33,6 +32,7 @@ var EventDetail = React.createClass({
 	},
 
 	componentWillMount: function() {
+
 		logger.custom('View Loaded: Event Detail');
 
 		if (this.props.route.eventData.EventImageLg) {
@@ -46,7 +46,17 @@ var EventDetail = React.createClass({
 	},
 
 	render: function() {
-		return this.renderScene();
+		if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
+			return (
+				<NavigationBarWithRouteMapper
+					route={this.props.route}
+					renderScene={this.renderScene}
+					navigator={this.props.navigator}
+				/>
+			);
+		} else {
+			return this.renderScene();
+		}
 	},
 
 	renderScene: function() {
@@ -111,7 +121,7 @@ var EventDetail = React.createClass({
 	},
 
 	gotoWebView: function(eventName, eventURL) {
-		this.props.navigator.push({ component: WebWrapper, title: eventName, webViewURL: eventURL });
+		this.props.navigator.push({ id: 'EventDetail', name: 'EventDetail', title: eventName, component: WebWrapper, webViewURL: eventURL });
 	},
 
 });
