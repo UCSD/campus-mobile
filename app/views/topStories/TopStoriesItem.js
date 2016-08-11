@@ -39,6 +39,7 @@ export default class TopStoriesItem extends React.Component {
 	}
 
 	render() {
+		console.log("Top Stories Props: " + this.props.navigator);
 		var data = this.props.data;
 
 		var storyDate = data['date'];

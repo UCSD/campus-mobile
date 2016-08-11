@@ -167,7 +167,7 @@ var Home = React.createClass({
 					<WelcomeModal />
 
 					{/* SPECIAL TOP BANNER */}
-					<TopBannerView navigator={navigator} onPress={ () => this.gotoWelcomeWeekView() }/>
+					<TopBannerView navigator={this.props.navigator}/>
 
 					{/* SHUTTLE CARD */}
 					{AppSettings.SHUTTLE_CARD_ENABLED ? (

@@ -67,7 +67,7 @@ export default class WelcomeWeekView extends Component {
 	 * Invoked before render
 	**/
 	componentWillMount() {
-		
+		console.log("Mount me pls");
 	}
 
 	/**
@@ -112,7 +112,7 @@ export default class WelcomeWeekView extends Component {
 		// Fetch data from API
 		TopStoriesService.FetchTopStories()
 		.then((responseData) => {
-			console.log(JSON.stringify(collegeNames));
+			//console.log(JSON.stringify(collegeNames));
 
 			var colleges = collegeNames, // Probably going to get from proper feed
 			length = collegeNames.length,
@@ -132,7 +132,7 @@ export default class WelcomeWeekView extends Component {
 				college = colleges[i];
 
 				sectionIDs.push(college.id);
-				console.log("College: " + colleges[i].name);
+				//console.log("College: " + colleges[i].name);
 				dataBlob[college.id] = colleges[i].name;
 
 				if( i === 0 ) {
@@ -177,11 +177,20 @@ export default class WelcomeWeekView extends Component {
 	}
 
 	render() {
+		console.log("Render welcome");
 		if (!this.state.loaded) {
 			return this.renderLoadingView();
 		}
 
 		return this.renderListView();
+	}
+
+	renderScene() {
+		return (
+			<View>
+				<Text>IM dumb</Text>
+			</View>
+		);
 	}
 
 	renderLoadingView() {
