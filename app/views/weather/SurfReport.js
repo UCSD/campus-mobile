@@ -11,10 +11,12 @@ import {
 	ListView,
 	Date,
 } from 'react-native';
+import NavigationBarWithRouteMapper from '../NavigationBarWithRouteMapper';
 
 var dateFormat = require('dateformat');
 
 var css = require('../../styles/css');
+var AppSettings = require('../../AppSettings');
 var logger = require('../../util/logger');
 var general = require('../../util/general');
 var surf_report_header = require('../../assets/img/surf_report_header.jpg');
@@ -84,7 +86,17 @@ var SurfReport = React.createClass({
 	},
 
 	render: function() {
-		return this.renderScene();
+		if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
+			return (
+				<NavigationBarWithRouteMapper
+					route={this.props.route}
+					renderScene={this.renderScene}
+					navigator={this.props.navigator}
+				/>
+			);
+		} else {
+			return this.renderScene();
+		}
 	},
 
 	renderScene: function() {

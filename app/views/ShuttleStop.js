@@ -245,7 +245,7 @@ var ShuttleStop = React.createClass({
 										<View style={css.shuttle_stop_arrivals_row}>
 											<View style={[css.shuttle_stop_rt_2, { backgroundColor: responseDataRef[responseDataSortRef[1].key].route.color, borderColor: responseDataRef[responseDataSortRef[1].key].route.color }]}><Text style={css.shuttle_stop_rt_2_label}>{responseDataRef[responseDataSortRef[1].key].route.shortName}</Text></View>
 											<Text style={css.shuttle_stop_arrivals_row_route_name}>{responseDataRef[responseDataSortRef[1].key].route.name}</Text>
-											<Text style={css.shuttle_sotp_arrivals_row_eta_text}>{responseDataRef[responseDataSortRef[1].key].etaMinutes}</Text>
+											<Text style={css.shuttle_stop_arrivals_row_eta_text}>{responseDataRef[responseDataSortRef[1].key].etaMinutes}</Text>
 										</View>
 									) : null }
 
@@ -253,7 +253,7 @@ var ShuttleStop = React.createClass({
 										<View style={css.shuttle_stop_arrivals_row}>
 											<View style={[css.shuttle_stop_rt_2, { backgroundColor: responseDataRef[responseDataSortRef[2].key].route.color, borderColor: responseDataRef[responseDataSortRef[2].key].route.color }]}><Text style={css.shuttle_stop_rt_2_label}>{responseDataRef[responseDataSortRef[2].key].route.shortName}</Text></View>
 											<Text style={css.shuttle_stop_arrivals_row_route_name}>{responseDataRef[responseDataSortRef[2].key].route.name}</Text>
-											<Text style={css.shuttle_sotp_arrivals_row_eta_text}>{responseDataRef[responseDataSortRef[2].key].etaMinutes}</Text>
+											<Text style={css.shuttle_stop_arrivals_row_eta_text}>{responseDataRef[responseDataSortRef[2].key].etaMinutes}</Text>
 										</View>
 									) : null }
 
@@ -270,9 +270,10 @@ var ShuttleStop = React.createClass({
 						</View>
 					)}
 
+					{/*
 					<View>
 						<Text style={css.shuttle_stop_map_text}>Map</Text>
-						{/*
+						
 						{this.state.mapViewLoadReady ? (
 							<MapView
 								style={css.shuttlestop_map}
@@ -289,8 +290,9 @@ var ShuttleStop = React.createClass({
 								minDelta={this.state.minDelta}
 								maxDelta={this.state.maxDelta}
 								showsUserLocation={true} />
-						) : null }*/}
+						) : null }
 					</View>
+					*/}
 
 				</ScrollView>
 			</View>
@@ -343,11 +345,13 @@ var ShuttleStop = React.createClass({
 	},
 
 	fetchShuttleArrivalsByStop: function(fetchType) {
+
 		responseDataSort = [];
 		
 		this.shuttleRefreshTimestamp = general.getCurrentTimestamp();
 
 		if (this.state.closestShuttlesLoaded) {
+			general.stopReloadAnimation(this.shuttleReloadAnim);
 			general.startReloadAnimation(this.shuttleReloadAnim);
 		}
 
@@ -362,6 +366,7 @@ var ShuttleStop = React.createClass({
 			})
 			.then((response) => response.json())
 			.then((responseData) => {
+				general.stopReloadAnimation(this.shuttleReloadAnim);
 				this._processShuttleArrivals(responseData);
 			})
 			.catch((error) => {
@@ -369,7 +374,7 @@ var ShuttleStop = React.createClass({
 				logger.log('ERR2: fetchShuttleArrivalsByStopDetail: ' + error);
 
 				this.setState({ closestShuttlesInactive: true });
-				//general.stopReloadAnimation(this.shuttleReloadAnim);
+				general.stopReloadAnimation(this.shuttleReloadAnim);
 
 			})
 			.done();

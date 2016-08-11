@@ -11,12 +11,13 @@ import {
 } from 'react-native';
 
 import EventDetail from './EventDetail'
+
 var css = require('../../styles/css');
 
 export default class EventItem extends React.Component {
 
 	gotoEventDetail(eventData) {
-		this.props.navigator.push({ id: 'EventDetail', component: EventDetail, title: 'Events', eventData: eventData });
+		this.props.navigator.push({ id: 'Events', name: 'Events', title: 'Events', component: EventDetail, eventData: eventData });
 	}
 
 	render() {

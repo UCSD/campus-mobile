@@ -47,7 +47,17 @@ var TopStoriesDetail = React.createClass({
 	},
 
 	render: function() {
-		return this.renderScene();
+		if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
+			return (
+				<NavigationBarWithRouteMapper
+					route={this.props.route}
+					renderScene={this.renderScene}
+					navigator={this.props.navigator}
+				/>
+			);
+		} else {
+			return this.renderScene();
+		}
 	},
 
 	renderScene: function() {
@@ -120,7 +130,7 @@ var TopStoriesDetail = React.createClass({
 	},
 
 	gotoWebView: function(storyName, storyURL) {
-		this.props.navigator.push({ component: WebWrapper, title: storyName, webViewURL: storyURL });
+		this.props.navigator.push({ id: 'TopStoriesDetail', name: 'TopStoriesDetail', title: storyName, component: WebWrapper });
 	},
 
 });
