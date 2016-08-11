@@ -19,6 +19,7 @@ var WebWrapper = require('../WebWrapper');
 var windowSize = Dimensions.get('window');
 var windowWidth = windowSize.width;
 
+var AppSettings = require('../../AppSettings');
 var logger = require('../../util/logger');
 var general = require('../../util/general');
 
