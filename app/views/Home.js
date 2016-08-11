@@ -284,6 +284,7 @@ var Home = React.createClass({
 												followUserLocation={true} />*/}
 										</View>
 
+										{/*
 										<View style={css.dining_card_filters}>
 											<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.updateDiningFilters('vegetarian') }>
 												<Text style={css.dining_card_filter_button}>Vegetarian</Text>
@@ -301,6 +302,7 @@ var Home = React.createClass({
 												<Text style={css.dining_card_filter_button}>Open Now</Text>
 											</TouchableHighlight>
 										</View>
+										*/}
 
 										<View style={css.dc_locations}>
 											<ListView dataSource={this.state.diningDataFull} renderRow={this.renderDiningRow} style={css.wf_listview} />
@@ -415,7 +417,7 @@ var Home = React.createClass({
 				responseData.sort(this.sortNearbyMarkers);
 
 				// remove after 'more' button functionality added
-				responseData.length = 4;
+				//responseData.length = 4;
 
 				var dsFull = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 

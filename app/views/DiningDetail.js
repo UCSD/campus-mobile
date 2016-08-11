@@ -10,6 +10,7 @@ import {
 } from 'react-native';
  
 var logger = require('../util/logger');
+var css = require('../styles/css');
 
 var DiningDetail = React.createClass({
 
@@ -24,14 +25,7 @@ var DiningDetail = React.createClass({
 			Fiber: 			25g
 			Protein: 		50g
 		*/
-		this.props.route.menuItem.nutrition.totalFatPct = Math.round(this.props.route.menuItem.nutrition.totalFat / 65 * 100);
-		this.props.route.menuItem.nutrition.saturatedFatPct = Math.round(this.props.route.menuItem.nutrition.saturatedFat / 20 * 100);
-		this.props.route.menuItem.nutrition.cholesterolPct = Math.round(this.props.route.menuItem.nutrition.cholesterol / 300 * 100);
-		this.props.route.menuItem.nutrition.sodiumPct = Math.round(this.props.route.menuItem.nutrition.sodium / 2400 * 100);
-		this.props.route.menuItem.nutrition.totalCarbohydratePct = Math.round(this.props.route.menuItem.nutrition.totalCarbohydrate / 300 * 100);
-		this.props.route.menuItem.nutrition.dietaryFiberPct = Math.round(this.props.route.menuItem.nutrition.dietaryFiber / 25 * 100);
-		this.props.route.menuItem.nutrition.proteinPct = Math.round(this.props.route.menuItem.nutrition.protein / 50 * 100);
-
+		
 		return {
 			menuItem: this.props.route.menuItem
 		};
@@ -47,7 +41,7 @@ var DiningDetail = React.createClass({
 				<ScrollView contentContainerStyle={[css.scroll_main, css.whitebg]}>
 
 					<View style={css.dl_market_name}>
-						<Text style={css.dl_market_name_text}>{this.state.menuItem.station}</Text>
+						{this.state.menuItem.station ? (<Text style={css.dl_market_name_text}>{this.state.menuItem.station}</Text>) : null }
 						<Text style={css.dd_menu_item_name}>{this.state.menuItem.name}</Text>
 					</View>
 
@@ -58,17 +52,17 @@ var DiningDetail = React.createClass({
 						<View style={css.ddn_row_main}><Text style={css.ddn_font}><Text style={css.bold}>Calories</Text> {this.state.menuItem.nutrition.calories}</Text></View>
 						<View style={css.ddn_topborder2}><Text style={css.ddn_dv}>% Daily Values*</Text></View>
 						
-						<View style={css.ddn_row_main}><Text style={css.ddn_font}><Text style={css.bold}>Total Fat</Text> 10g</Text><Text style={css.ddn_percent}>15%</Text></View>
-							<View style={css.ddn_row_sub}><Text style={css.ddn_font}>Saturated Fat {this.state.menuItem.nutrition.saturatedFat}g</Text><Text style={css.ddn_percent}>25%</Text></View>
-							<View style={css.ddn_row_sub}><Text style={css.ddn_font}>Trans Fat {this.state.menuItem.nutrition.transFat}g</Text><Text style={css.ddn_percent}></Text></View>
+						<View style={css.ddn_row_main}><Text style={css.ddn_font}><Text style={css.bold}>Total Fat</Text> {this.state.menuItem.nutrition.totalFat}</Text><Text style={css.ddn_percent}>{this.state.menuItem.nutrition.totalFatDV}</Text></View>
+							<View style={css.ddn_row_sub}><Text style={css.ddn_font}>Saturated Fat {this.state.menuItem.nutrition.saturatedFat}</Text><Text style={css.ddn_percent}>{this.state.menuItem.nutrition.saturatedFatDV}</Text></View>
+							<View style={css.ddn_row_sub}><Text style={css.ddn_font}>Trans Fat {this.state.menuItem.nutrition.transFat}</Text><Text style={css.ddn_percent}>{this.state.menuItem.nutrition.transFatDV}</Text></View>
 
-						<View style={css.ddn_row_main}><Text style={css.ddn_font}><Text style={css.bold}>Cholesterol</Text> {this.state.menuItem.nutrition.cholesterol}mg</Text><Text style={css.ddn_percent}>{this.state.menuItem.nutrition.cholesterolPct}%</Text></View>
-						<View style={css.ddn_row_main}><Text style={css.ddn_font}><Text style={css.bold}>Sodium</Text> {this.state.menuItem.nutrition.sodium}g</Text><Text style={css.ddn_percent}>{this.state.menuItem.nutrition.sodiumPct}%</Text></View>
-						<View style={css.ddn_row_main}><Text style={css.ddn_font}><Text style={css.bold}>Total Carbohydrate</Text> {this.state.menuItem.nutrition.totalCarbohydrate}g</Text><Text style={css.ddn_percent}>{this.state.menuItem.nutrition.totalCarbohydratePct}%</Text></View>
-							<View style={css.ddn_row_sub}><Text style={css.ddn_font}>Dietary Fiber {this.state.menuItem.nutrition.dietaryFiber}g</Text><Text style={css.ddn_percent}>{this.state.menuItem.nutrition.dietaryFiberPct}%</Text></View>
-							<View style={css.ddn_row_sub}><Text style={css.ddn_font}>Sugars {this.state.menuItem.nutrition.sugars}g</Text><Text style={css.ddn_percent}></Text></View>
+						<View style={css.ddn_row_main}><Text style={css.ddn_font}><Text style={css.bold}>Cholesterol</Text> {this.state.menuItem.nutrition.cholesterol}</Text><Text style={css.ddn_percent}>{this.state.menuItem.nutrition.cholesterolDV}</Text></View>
+						<View style={css.ddn_row_main}><Text style={css.ddn_font}><Text style={css.bold}>Sodium</Text> {this.state.menuItem.nutrition.sodium}</Text><Text style={css.ddn_percent}>{this.state.menuItem.nutrition.sodiumDV}</Text></View>
+						<View style={css.ddn_row_main}><Text style={css.ddn_font}><Text style={css.bold}>Total Carbohydrate</Text> {this.state.menuItem.nutrition.totalCarbohydrate}</Text><Text style={css.ddn_percent}>{this.state.menuItem.nutrition.totalCarbohydrateDV}</Text></View>
+							<View style={css.ddn_row_sub}><Text style={css.ddn_font}>Dietary Fiber {this.state.menuItem.nutrition.dietaryFiber}</Text><Text style={css.ddn_percent}>{this.state.menuItem.nutrition.dietaryFiberDV}</Text></View>
+							<View style={css.ddn_row_sub}><Text style={css.ddn_font}>Sugars {this.state.menuItem.nutrition.sugars}</Text><Text style={css.ddn_percent}></Text></View>
 
-						<View style={css.ddn_row_main}><Text style={css.ddn_font}><Text style={css.bold}>Protein</Text> {this.state.menuItem.nutrition.protein}g</Text><Text style={css.ddn_percent}>{this.state.menuItem.nutrition.proteinPct}%</Text></View>
+						<View style={css.ddn_row_main}><Text style={css.ddn_font}><Text style={css.bold}>Protein</Text> {this.state.menuItem.nutrition.protein}</Text><Text style={css.ddn_percent}>{this.state.menuItem.nutrition.proteinDV}</Text></View>
 
 						<View style={css.ddn_topborder1}><Text style={css.ddn_dv_amountperserving}>*Percent Daily Values are based on a 2,000 calorie diet.</Text></View>
 					</View>
