@@ -12,6 +12,7 @@ import {
 	Animated,
 	Easing,
 	RefreshControl,
+	InteractionManager
 } from 'react-native';
 
 var TimerMixin = 		require('react-timer-mixin');
@@ -27,9 +28,7 @@ var responseDataRef = [];
 var responseDataSort = [];
 var responseDataSortRef = [];
 
-var navRef;
-var stateCount = 0;
-
+import NavigationBarWithRouteMapper from './NavigationBarWithRouteMapper';
 
 var ShuttleStop = React.createClass({
 
@@ -126,7 +125,6 @@ var ShuttleStop = React.createClass({
 
 	componentWillMount: function() {
 		this.watchID = navigator.geolocation.watchPosition((currentPosition) => {
-			console.log("setState("+ stateCount++ +"): watchPosition");
 			this.setState({currentPosition});
 		});
 
@@ -134,33 +132,20 @@ var ShuttleStop = React.createClass({
 
 		//this.fetchShuttleArrivalsByStop('auto');
 		// Initial shuttle info render passed from home
-		this._processShuttleArrivals(this.props.route.shuttleData);
+		//this._processShuttleArrivals(this.props.route.shuttleData);
 		//this.mapViewTimeout = this.setTimeout( () => { this.loadMapView() }, this.delayMapViewLoad);
 
 	},
 
 	componentDidMount: function() {
 		logger.custom('View Loaded: Shuttle Stop');
-
-
 		// Stop placeholder render
 		// Revisit at a later time
-		/*
 		InteractionManager.runAfterInteractions(() => {
-			// later record end time
-			endTime = new Date();
-
-			// time difference in ms
-			var timeDiff = endTime - startTime;
-
-			console.log("Time for full load: " + timeDiff + "ms");
-
-			this.setState({renderPlaceholderOnly: false});
-			console.log("interaction man\n");
-
+			this.fetchShuttleArrivalsByStop('auto');
 			// Poll for new data
 			this.refreshShuttleDataTimer = this.setTimeout( () => { this.fetchShuttleArrivalsByStop('auto') }, this.shuttleRefreshInterval);
-		});*/
+		});
 	},
 
 	componentWillUnmount: function() {
@@ -177,12 +162,11 @@ var ShuttleStop = React.createClass({
 		else {*/
 			if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
 				return (
-					<Navigator
+					<NavigationBarWithRouteMapper
+						route={this.props.route}
 						renderScene={this.renderScene}
 						navigator={this.props.navigator}
-						navigationBar={
-							<Navigator.NavigationBar style={css.navBar} routeMapper={NavigationBarRouteMapper} />
-						}/>
+					/>
 				);
 			} else {
 				return this.renderScene();
@@ -430,6 +414,7 @@ var ShuttleStop = React.createClass({
 
 });
 
+/*
 var NavigationBarRouteMapper = {
 	LeftButton: function(route, navigator, index, navState) {
 		return (
@@ -448,10 +433,10 @@ var NavigationBarRouteMapper = {
 	Title: function(route, navigator, index, navState) {
 		return (
 			<Text style={css.navBarTitle}>
-				Shuttle Stop
+				route.name
 			</Text>
 		);
 	}
-};
+};*/
 
 module.exports = ShuttleStop;

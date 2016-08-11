@@ -20,6 +20,7 @@ import {
 
 import TopBannerView from './banner/TopBannerView';
 import WelcomeModal from './WelcomeModal';
+import NavigationBarWithRouteMapper from './NavigationBarWithRouteMapper';
 
 // Cards
 import EventCard from './events/EventCard'
@@ -154,12 +155,13 @@ var Home = React.createClass({
 
 	// #1 - RENDER
 	render: function() {
-
 		if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
 			return (
-				<Navigator renderScene={this.renderScene} navigationBar={
-					<Navigator.NavigationBar style={css.navBar} routeMapper={NavigationBarRouteMapper} />
-				} />
+				<NavigationBarWithRouteMapper
+					route={this.props.route}
+					renderScene={this.renderScene} 
+					navigator={this.props.navigator}
+				/>
 			);
 		} else {
 			return this.renderScene();
@@ -780,7 +782,7 @@ var Home = React.createClass({
 	},
 
 	gotoShuttleStop: function(stopData, shuttleData) {
-		this.props.navigator.push({ id: 'ShuttleStop', name: 'Shuttle Stop', component: ShuttleStop, title: 'Shuttle', stopData: stopData, currentPosition: this.state.currentPosition, shuttleData: shuttleData });
+		this.props.navigator.push({ id: 'ShuttleStop', name: 'Shuttle Stop', component: ShuttleStop, title: 'Shuttle',stopData: stopData, currentPosition: this.state.currentPosition, shuttleData: shuttleData });
 	},
 
 	gotoDestinationDetail: function(destinationData) {
@@ -856,24 +858,5 @@ var Home = React.createClass({
 	},
 
 });
-
-
-
-// NAVIGATOR BAR
-var NavigationBarRouteMapper = {
-
-	LeftButton: function(route, navigator, index, navState) {
-		return null;
-	},
-
-	Title: function(route, navigator, index, navState) {
-		return (<Text style={css.navBarTitle}>now@ucsandiego</Text>);
-	},
-
-	RightButton: function(route, navigator, index, navState) {
-		return null;
-	},
-
-};
 
 module.exports = Home;
