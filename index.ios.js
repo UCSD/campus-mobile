@@ -7,23 +7,24 @@ import {
 	Navigator,
 	StatusBar
 } from 'react-native';
+import NavigationBarWithRouteMapper from './app/views/NavigationBarWithRouteMapper';
 
 var logger = 		require('./app/util/logger');
 var general = 		require('./app/util/general');
 var AppSettings = 	require('./app/AppSettings');
 
 
-
-var Home, EventDetail, TopStoriesDetail, SurfReport, ShuttleStop, WebView, DestinationDetail;
+var Home, EventDetail, TopStoriesDetail, SurfReport, ShuttleStop, WebWrapper, DestinationDetail;
 
 Home = require('./app/views/Home');
-import NavigationBarWithRouteMapper from './app/views/NavigationBarWithRouteMapper';
+
 
 if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
 	ShuttleStop = 			require('./app/views/ShuttleStop');
 	SurfReport = 			require('./app/views/weather/SurfReport');
 	TopStoriesDetail = 		require('./app/views/topStories/TopStoriesDetail');
 	EventDetail = 			require('./app/views/events/EventDetail');
+	WebWrapper = 			require('./app/views/WebWrapper');
 
 	/*
 	DestinationDetail = 	require('./app/views/DestinationDetail');
@@ -97,11 +98,12 @@ var nowucsandiego = React.createClass({
 	renderScene: function(route, navigator, index, navState) {
 
 		switch (route.id) {
-			case 'Home': 				return (<Home route={route} navigator={navigator} pauseRefresh={this.state.pauseRefresh} />);
-			case 'ShuttleStop': 		return (<ShuttleStop route={route} navigator={navigator} pauseRefresh={this.state.pauseRefresh} />);
-			case 'SurfReport': 			return (<SurfReport route={route} navigator={navigator} pauseRefresh={this.state.pauseRefresh} />);
+			case 'Home': 				return (<Home route={route} navigator={navigator} />);
+			case 'ShuttleStop': 		return (<ShuttleStop route={route} navigator={navigator} />);
+			case 'SurfReport': 			return (<SurfReport route={route} navigator={navigator} />);
 			case 'TopStoriesDetail': 	return (<TopStoriesDetail route={route} navigator={navigator} />);
 			case 'EventDetail': 		return (<EventDetail route={route} navigator={navigator} />);
+			case 'WebWrapper': 			return (<WebWrapper route={route} navigator={navigator} />);
 
 			/*
 			case 'DestinationDetail': 		return (<DestinationDetail route={route} navigator={navigator} />);
