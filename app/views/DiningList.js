@@ -19,11 +19,36 @@ var DiningList = React.createClass({
 
 	getInitialState: function() {
 
+		var breakfastItems = [],
+			lunchItems = [],
+			dinnerItems = [];
+
 		var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+
+		var marketData = this.props.route.marketData;
+
+		for (var i = 0; marketData.menuItems.length > i; i++) {
+			var menuItem = marketData.menuItems[i];
+			var menuItemTags = menuItem.tags;
+
+			if (menuItemTags.indexOf('Breakfast') >= 0) {
+				breakfastItems.push(menuItem);
+			}
+			if (menuItemTags.indexOf('Lunch') >= 0) {
+				lunchItems.push(menuItem);
+			}
+			if (menuItemTags.indexOf('Dinner') >= 0) {
+				dinnerItems.push(menuItem);
+			}
+		}
 
 		return {
 			marketData: this.props.route.marketData,
-			marketDataMenuSource: ds.cloneWithRows( this.props.route.marketData.menuItems ),
+			marketDataFull: ds.cloneWithRows( this.props.route.marketData.menuItems ),
+			menuItemsBreakfast: ds.cloneWithRows( breakfastItems ),
+			menuItemsLunch: ds.cloneWithRows( lunchItems ),
+			menuItemsDinner: ds.cloneWithRows( dinnerItems ),
+			
 		};
 	},
 
@@ -38,7 +63,7 @@ var DiningList = React.createClass({
 					<View style={css.dl_container}>
 
 						<View style={css.dl_market_name}>
-							<Text style={css.dl_market_name_text}>{this.state.marketData.name}</Text>
+							<Text style={css.dl_market_name_text}>{this.state.marketData.name} test</Text>
 						</View>
 
 						{this.state.marketData.images ? (
@@ -52,12 +77,12 @@ var DiningList = React.createClass({
 						<View style={css.dl_market_directions}>
 							<Text style={css.dl_dir_label}>Directions</Text>
 							<View style={css.dl_dir_traveltype_container}>
-								<Image style={css.dl_dir_icon} source={{ uri: 'icon_walk' }} />
+								<Image style={css.dl_dir_icon} source={ require('../assets/img/icon_walk.png')} />
 								<Text style={css.dl_dir_eta}>25 mins</Text>
 							</View>
 
 							<View style={css.dl_dir_traveltype_container}>
-								<Image style={css.dl_dir_icon} source={{ uri: 'icon_bike' }} />
+								<Image style={css.dl_dir_icon} source={ require('../assets/img/icon_bike.png')} />
 								<Text style={css.dl_dir_eta}>15 mins</Text>
 							</View>
 						</View>
@@ -87,7 +112,7 @@ var DiningList = React.createClass({
 						</View>
 
 						<View style={css.dl_market_menu}>
-							<ListView dataSource={this.state.marketDataMenuSource} renderRow={ (data) => {
+							<ListView dataSource={this.state.marketDataFull} renderRow={ (data) => {
 								return (
 									<TouchableHighlight style={css.dl_market_menu_row} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoDiningDetail(data) }>
 										<Text style={css.dl_menu_item_name}>{data.name}<Text style={css.dl_menu_item_price}> (${data.price})</Text></Text>
