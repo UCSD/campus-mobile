@@ -20,6 +20,8 @@ var DestinationDetail = require('./app/views/DestinationDetail');
 const Permissions = require('react-native-permissions');
 
 import WelcomeWeekView from './app/views/welcomeWeek/WelcomeWeekView';
+var general = require('./app/util/general');
+import NavigationBarWithRouteMapper from './app/views/NavigationBarWithRouteMapper';
 
 var nowucsandiego = React.createClass({
 
@@ -43,11 +45,13 @@ var nowucsandiego = React.createClass({
 		});
 
 		// Listen to route focus changes
-		this.refs.navRef.navigationContext.addListener('willfocus', (event) => {
+		// Should be a better way to do this...
+		this.refs.navRef.refs.navRef.navigationContext.addListener('willfocus', (event) => {
 			const route = event.data.route;
+			console.log("Willfocus: " + JSON.stringify(route.id));
 
 			// Make sure renders/card refreshes are only happening when in home route
-			if(route.name === "Home") {
+			if(route.id === "Home") {
 				this.setState({pauseRefresh: false});
 			}
 			else {
@@ -57,8 +61,15 @@ var nowucsandiego = React.createClass({
 
 		// Listen to back button on Android
 		BackAndroid.addEventListener('hardwareBackPress', () => {
-			this.refs.navRef.pop();
-			return true;
+			//console.log("Backbutton: " + this.refs.navRef.navigationContext.route);
+			if(this._notInHome()) {
+				this.refs.navRef.refs.navRef.pop();
+				return true;
+			}
+			else {
+				BackAndroid.exitApp();
+				return false;
+			}
 		});
 	},
 
@@ -101,14 +112,17 @@ var nowucsandiego = React.createClass({
 		//this._alertForLocationPermission()
 		console.log('test DEBUG ')
 
-		return (//<Text>Hello world!</Text>
-			<Navigator ref="navRef" initialRoute={{id: 'Home', name: 'Home'}} renderScene={this.renderScene} />
+		return (
+			<NavigationBarWithRouteMapper
+				ref="navRef"
+				route={{id: 'Home', name: 'Home', title: 'now@ucsandiego'}}
+				renderScene={this.renderScene}
+			/>
 		);
 	},
 
 
 	renderScene: function(route, navigator, index, navState) {
-
 		switch (route.id) {
 			case 'Home':          return (<Home route={route} navigator={navigator} isSimulator={this.props.isSimulator} pauseRefresh={this.state.pauseRefresh}
 				/*onForward={() => {
@@ -153,6 +167,10 @@ var nowucsandiego = React.createClass({
 		}
 	},
 
+	// Probably have a better way to do this in the future
+	_notInHome: function() {
+		return this.state.pauseRefresh;
+	}
 
 });
 

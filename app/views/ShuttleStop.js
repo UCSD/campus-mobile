@@ -160,17 +160,9 @@ var ShuttleStop = React.createClass({
 			return this._renderPlaceholderView();
 		}
 		else {*/
-			if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
-				return (
-					<NavigationBarWithRouteMapper
-						route={this.props.route}
-						renderScene={this.renderScene}
-						navigator={this.props.navigator}
-					/>
-				);
-			} else {
+
 				return this.renderScene();
-			}
+
 		//}
 		
 	},

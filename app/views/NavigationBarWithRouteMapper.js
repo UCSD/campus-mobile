@@ -3,6 +3,7 @@ import {
 	Navigator,
 	Text,
 	TouchableHighlight,
+	View,
 } from 'react-native';
 
 var css = require('../styles/css');
@@ -15,9 +16,9 @@ export default class NavigationBarWithRouteMapper extends React.Component {
 	render() {
 		return(
 			<Navigator
+				ref="navRef"
 				initialRoute={this.props.route}
 				renderScene={this.props.renderScene}
-				navigator={this.props.navigator}
 				navigationBar={
 					<Navigator.NavigationBar 
 					style={css.navBar} 
@@ -27,11 +28,13 @@ export default class NavigationBarWithRouteMapper extends React.Component {
 								return null;
 							}
 							return (
-								<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => navigator.parentNavigator.pop()}>
+								<View>
+								<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => navigator.pop()}>
 									<Text style={css.navBarLeftButton}>
 										&lt; Back
 									</Text>
 								</TouchableHighlight>
+								</View>
 							);
 						},
 
@@ -41,9 +44,11 @@ export default class NavigationBarWithRouteMapper extends React.Component {
 
 						Title: function(route, navigator, index, navState) {
 							return (
+								<View>
 								<Text style={css.navBarTitle}>
 									{route.title}
 								</Text>
+								</View>
 							);
 						}}
 					} />

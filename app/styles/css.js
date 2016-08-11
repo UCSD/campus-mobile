@@ -77,14 +77,19 @@ var ucsdgrey = '#747678';
 var css = StyleSheet.create({
 
 	// Navigator
-	navBar: { backgroundColor: 'rgba(31,149,187,1)', height: 60 },
+	navBar: { 
+		flex: 1,
+		flexDirection: 'row',
+		justifyContent: 'center',
+		alignItems: 'flex-start', 
+		backgroundColor: 'rgba(31,149,187,1)', height: 60 },
 	
 		// Nav Bar Left
 		navBarLeftButton: { color: '#FFF', fontSize: 16, margin: 10 },
 		navBarLeftMenu: { width: 20, height: 13, margin: 10 },
 
 		// Nav Bar Title
-		navBarTitle: { marginTop: 7, color: '#FFF', fontSize: 18 },
+		navBarTitle: { marginBottom:10, textAlign:'center', color: '#FFF', fontSize: 18 },
 
 		// Nav Bar Right
 		navBarRightButton: { color: '#FFF', fontSize: 16, marginVertical: 10, paddingRight: 10 },
