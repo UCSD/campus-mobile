@@ -566,8 +566,6 @@ var Home = React.createClass({
 
 		var NODE_MODULES_URL = AppSettings.NODE_MARKERS_BASE_URL + 'ucsd_node_' + closestNode + '.json';
 
-		logger.log('updateCurrentNodeRegion:')
-
 		fetch(NODE_MODULES_URL, {
 				method: 'GET',
 			})
