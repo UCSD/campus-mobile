@@ -41,7 +41,7 @@ var general = require('../util/general');
 var navBarMarginTop = 0;
 
 if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
-	navBarMarginTop = 60;
+	navBarMarginTop = 50;
 }
 
 var pixelRatio = PixelRatio.get();
@@ -71,6 +71,9 @@ if (pixelRatio === 2) {
 var ucsdblue = '#006C92';
 var ucsdgrey = '#747678';
 
+var navMarginTop = 7;
+
+
 
 
 
@@ -82,14 +85,14 @@ var css = StyleSheet.create({
 		flexDirection: 'row',
 		justifyContent: 'center',
 		alignItems: 'flex-start', 
-		backgroundColor: 'rgba(31,149,187,1)', height: 60 },
+		backgroundColor: 'rgba(31,149,187,1)', height: 50 },
 	
 		// Nav Bar Left
-		navBarLeftButton: { color: '#FFF', fontSize: 16, margin: 10 },
+		navBarLeftButton: { color: '#FFF', fontSize: 16, marginLeft: 8, marginTop: 3 },
 		navBarLeftMenu: { width: 20, height: 13, margin: 10 },
 
 		// Nav Bar Title
-		navBarTitle: { marginBottom:10, textAlign:'center', color: '#FFF', fontSize: 18 },
+		navBarTitle: { color: '#FFF', fontSize: 18 },
 
 		// Nav Bar Right
 		navBarRightButton: { color: '#FFF', fontSize: 16, marginVertical: 10, paddingRight: 10 },
