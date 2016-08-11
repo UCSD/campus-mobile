@@ -11,7 +11,7 @@
     "react": "~15.2.1",
     "react-native": "~0.31.0",
     "react-native-google-analytics-bridge": "~3.0.0",
-    "react-native-maps": "^0.7.1",
+    "react-native-maps": "lelandrichardson/react-native-maps#064ef0cde13c4ec7499662efe30ecf86de0f1646",
     "react-native-permissions": "~0.2.4",
     "react-timer-mixin": "~0.13.3"
   }
