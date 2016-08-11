@@ -109,9 +109,6 @@ var nowucsandiego = React.createClass({
 	},
 
 	render: function() {
-		//this._alertForLocationPermission()
-		console.log('test DEBUG ')
-
 		return (
 			<NavigationBarWithRouteMapper
 				ref="navRef"
@@ -124,47 +121,18 @@ var nowucsandiego = React.createClass({
 
 	renderScene: function(route, navigator, index, navState) {
 		console.log("Changing route: " + route.id);
+
+		//pauseRefresh={this.state.pauseRefresh}
 		switch (route.id) {
-			case 'Home':          return (<Home route={route} navigator={navigator} isSimulator={this.props.isSimulator} pauseRefresh={this.state.pauseRefresh}
-				/*onForward={() => {
-				var nextIndex = route.index + 1;
-					navigator.push({
-							name: 'Scene ' + nextIndex,
-							index: nextIndex,
-						});
-					}}
-					onBack={() => {
-						if (route.index > 0) {
-							navigator.pop();
-					}
-				}}*/
-				/>);
-			
-			case 'SurfReport':        return (<SurfReport route={route} navigator={navigator} />);
-
-			case 'EventDetail':       return (<EventDetail route={route} navigator={navigator} />);
-
-			case 'TopStoriesDetail':    return (<TopStoriesDetail route={route} navigator={navigator} />);
-
-			case 'ShuttleStop':       return (<ShuttleStop route={route} navigator={navigator} isSimulator={this.props.isSimulator} />);
-			//case 'ShuttleStop2':      return (<ShuttleStop2 route={route} navigator={navigator} isSimulator={this.props.isSimulator} />);
-
-			case 'WeatherForecast':     return (<WeatherForecast route={route} navigator={navigator} />);
-
-			case 'DestinationSearch':     return (<DestinationSearch route={route} navigator={navigator} />);
-			case 'DestinationDetail':     return (<DestinationDetail route={route} navigator={navigator} />);
-			/*
-			case 'DiningList':        return (<DiningList route={route} navigator={navigator} />);
-			case 'DiningDetail':      return (<DiningDetail route={route} navigator={navigator} />);
-
-			case 'ScheduleDetail':      return (<ScheduleDetail route={route} navigator={navigator} />);
-
-			case 'NoNavigatorPage':     return (<NoNavigatorPage route={route} navigator={navigator} />);
-			*/
-
-			case 'WelcomeWeekView': return(<WelcomeWeekView route={route} navigator={navigator} />);
-
-			default:            return (<Home route={route} navigator={navigator} />);
+			case 'Home': 				return (<Home route={route} navigator={navigator} />);
+			case 'ShuttleStop': 		return (<ShuttleStop route={route} navigator={navigator} />);
+			case 'SurfReport': 			return (<SurfReport route={route} navigator={navigator} />);
+			case 'TopStoriesDetail': 	return (<TopStoriesDetail route={route} navigator={navigator} />);
+			case 'EventDetail': 		return (<EventDetail route={route} navigator={navigator} />);
+			case 'WebWrapper': 			return (<WebWrapper route={route} navigator={navigator} />);
+			case 'WelcomeWeekView': 	return(<WelcomeWeekView route={route} navigator={navigator} />);
+			case 'DestinationDetail': 	return (<DestinationDetail route={route} navigator={navigator} />);
+			default: 					return (<Home route={route} navigator={navigator} />);
 		}
 	},
 

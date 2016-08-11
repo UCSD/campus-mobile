@@ -8,16 +8,15 @@ import {
 	StatusBar
 } from 'react-native';
 import NavigationBarWithRouteMapper from './app/views/NavigationBarWithRouteMapper';
+import WelcomeWeekView from './app/views/welcomeWeek/WelcomeWeekView';
 
 var logger = 		require('./app/util/logger');
 var general = 		require('./app/util/general');
 var AppSettings = 	require('./app/AppSettings');
 
-
-var Home, EventDetail, TopStoriesDetail, SurfReport, ShuttleStop, WebWrapper, DestinationDetail;
+var Home, ShuttleStop, SurfReport, EventDetail, TopStoriesDetail, WebWrapper, DestinationDetail;
 
 Home = require('./app/views/Home');
-
 
 if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
 	ShuttleStop = 			require('./app/views/ShuttleStop');
@@ -25,12 +24,7 @@ if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
 	TopStoriesDetail = 		require('./app/views/topStories/TopStoriesDetail');
 	EventDetail = 			require('./app/views/events/EventDetail');
 	WebWrapper = 			require('./app/views/WebWrapper');
-
-	/*
 	DestinationDetail = 	require('./app/views/DestinationDetail');
-	WebView = 				require('./app/views/WebView');
-	DiningList = 			require('./app/views/DiningSearch');
-	*/
 }
 
 
@@ -104,12 +98,9 @@ var nowucsandiego = React.createClass({
 			case 'TopStoriesDetail': 	return (<TopStoriesDetail route={route} navigator={navigator} />);
 			case 'EventDetail': 		return (<EventDetail route={route} navigator={navigator} />);
 			case 'WebWrapper': 			return (<WebWrapper route={route} navigator={navigator} />);
-
-			/*
-			case 'DestinationDetail': 		return (<DestinationDetail route={route} navigator={navigator} />);
-			case 'DiningList': 				return (<DiningList route={route} navigator={navigator} />);
-			*/
-			default: 				return (<Home route={route} navigator={navigator} pauseRefresh={this.state.pauseRefresh} />);
+			case 'WelcomeWeekView': 	return (<WelcomeWeekView route={route} navigator={navigator} />);
+			case 'DestinationDetail': 	return (<DestinationDetail route={route} navigator={navigator} />);
+			default: 					return (<Home route={route} navigator={navigator} />);
 		}
 	},
 

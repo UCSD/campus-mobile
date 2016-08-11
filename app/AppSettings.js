@@ -15,7 +15,6 @@ module.exports = {
 	EVENTS_CARD_ENABLED: 		true,
 	TOPSTORIES_CARD_ENABLED: 	true,
 	NEARBY_CARD_ENABLED: 		true,
-	DINING_CARD_ENABLED: 		false,
 
 	/* APIS / ENDPOINTS */
 	WEATHER_API_URL: 			'https://e29re7itnc.execute-api.us-west-2.amazonaws.com/prod/forecast',

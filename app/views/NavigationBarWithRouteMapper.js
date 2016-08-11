@@ -29,11 +29,11 @@ export default class NavigationBarWithRouteMapper extends React.Component {
 							}
 							return (
 								<View>
-								<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => navigator.pop()}>
-									<Text style={css.navBarLeftButton}>
-										&lt; Back
-									</Text>
-								</TouchableHighlight>
+									<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => navigator.pop()}>
+										<Text style={css.navBarLeftButton}>
+											&lt; Back
+										</Text>
+									</TouchableHighlight>
 								</View>
 							);
 						},
@@ -44,10 +44,10 @@ export default class NavigationBarWithRouteMapper extends React.Component {
 
 						Title: function(route, navigator, index, navState) {
 							return (
-								<View>
-								<Text style={css.navBarTitle}>
-									{route.title}
-								</Text>
+								<View style={css.navBarTitleWrapper}>
+									<Text style={css.navBarTitle}>
+										{route.title}
+									</Text>
 								</View>
 							);
 						}}
