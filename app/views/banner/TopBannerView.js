@@ -58,7 +58,6 @@ export default class TopBannerView extends React.Component {
 	}
 
 	gotoWelcomeWeekView() {
-		console.log("Pushing route: WelcomeWeekView from topbanner");
 		this.props.navigator.push({ id: 'WelcomeWeekView', component: WelcomeWeekView, title: 'Welcome Week'});
 	}
 }
