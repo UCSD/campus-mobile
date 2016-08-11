@@ -31,7 +31,6 @@ export default class TopBannerView extends React.Component {
 	}
 
 	render() {
-		console.log("TopBanner Props: " + this.props.navigator);
 		let shouldShowWelcomeBanner = false;
 		// Check welcome week date range - Activate from Aug 1 to Sep 24
 		var currentYear = general.getTimestamp('yyyy');
@@ -58,6 +57,6 @@ export default class TopBannerView extends React.Component {
 	}
 
 	gotoWelcomeWeekView() {
-		this.props.navigator.push({ id: 'WelcomeWeekView', component: WelcomeWeekView, title: 'Welcome Week'});
+		this.props.navigator.push({ id: 'WelcomeWeekView', title: 'Welcome Week', name: 'Welcome Week', component: WelcomeWeekView });
 	}
 }

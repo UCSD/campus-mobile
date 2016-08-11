@@ -596,8 +596,6 @@ var Home = React.createClass({
 
 		var NODE_MODULES_URL = AppSettings.NODE_MARKERS_BASE_URL + 'ucsd_node_' + closestNode + '.json';
 
-		logger.log('updateCurrentNodeRegion:')
-
 		fetch(NODE_MODULES_URL, {
 				method: 'GET',
 			})
@@ -646,15 +644,12 @@ var Home = React.createClass({
 				longitude: parseFloat(ucsd_node[i].mkrLong)
 			};
 
-
 			newAnnotations.latitude = parseFloat(ucsd_node[i].mkrLat);
 			newAnnotations.longitude = parseFloat(ucsd_node[i].mkrLong);
 			newAnnotations.title = ucsd_node[i].title;
 			newAnnotations.description = ucsd_node[i].description;
 			nearbyAnnotations.push(newAnnotations);
 		}
-
-		logger.log('updateCurrentNodeRegion: complete')
 
 		this.setState({
 			nearbyAnnotations: nearbyAnnotations,
