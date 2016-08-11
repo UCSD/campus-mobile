@@ -111,7 +111,7 @@ var EventDetail = React.createClass({
 	},
 
 	gotoWebView: function(eventName, eventURL) {
-		this.props.navigator.push({ id: 'EventDetail', name: 'EventDetail', title: eventName, component: WebWrapper, webViewURL: eventURL });
+		this.props.navigator.push({ id: 'WebWrapper', name: 'WebWrapper', title: eventName, component: WebWrapper, webViewURL: eventURL });
 	},
 
 });
