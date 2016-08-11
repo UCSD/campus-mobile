@@ -11,10 +11,13 @@ import {
 	TouchableHighlight,
 	Dimensions
 } from 'react-native';
+import NavigationBarWithRouteMapper from '../NavigationBarWithRouteMapper';
 
-
+var AppSettings = require('../../AppSettings');
 var css = require('../../styles/css');
 var logger = require('../../util/logger');
+var general = require('../../util/general');
+
 var WebWrapper = require('../WebWrapper');
 
 var windowSize = Dimensions.get('window');
@@ -43,7 +46,17 @@ var EventDetail = React.createClass({
 	},
 
 	render: function() {
-		return this.renderScene();
+		if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
+			return (
+				<NavigationBarWithRouteMapper
+					route={this.props.route}
+					renderScene={this.renderScene}
+					navigator={this.props.navigator}
+				/>
+			);
+		} else {
+			return this.renderScene();
+		}
 	},
 
 	renderScene: function() {
