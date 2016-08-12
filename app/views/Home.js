@@ -809,7 +809,7 @@ var Home = React.createClass({
 		destinationData.mkrLong = parseFloat(destinationData.mkrLong);
 
 		destinationData.distLatLon = Math.sqrt(Math.pow(Math.abs(this.getCurrentPosition('lat') - destinationData.mkrLat), 2) + Math.pow(Math.abs(this.getCurrentPosition('lon') - destinationData.mkrLong), 2));
-		this.props.navigator.push({ id: 'DestinationDetail', name: destinationData.title, component: DestinationDetail, title: destinationData.title, destinationData: destinationData });
+		this.props.navigator.push({ id: 'DestinationDetail', name: 'Nearby', title: 'Nearby', component: DestinationDetail, destinationData: destinationData });
 	},
 
 	gotoFeedbackForm: function() {
