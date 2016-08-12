@@ -166,7 +166,7 @@ var Home = React.createClass({
 			[
 				{text: 'No way', onPress: () => console.log('permission denied'), style: 'cancel'},
 				//this.state.locationPermission == 'undetermined'? 
-				{text: 'OK', onPress: this._requestPermission.bind(this)}
+				{text: 'OK', onPress: this._requestPermission}
 				//: {text: 'Open Settings', onPress: Permissions.openSettings}
 			]
 		)
