@@ -17,6 +17,7 @@ var TopStoriesDetail = require('./app/views/topStories/TopStoriesDetail');
 var ShuttleStop = require('./app/views/ShuttleStop');
 var DestinationSearch = require('./app/views/DestinationSearch');
 var DestinationDetail = require('./app/views/DestinationDetail');
+var WebWrapper = require('./app/views/WebWrapper');
 const Permissions = require('react-native-permissions');
 var SurfReport = require('./app/views/weather/SurfReport');
 
@@ -133,7 +134,7 @@ var nowucsandiego = React.createClass({
 			case 'TopStoriesDetail': 	return (<TopStoriesDetail route={route} navigator={navigator} />);
 			case 'EventDetail': 		return (<EventDetail route={route} navigator={navigator} />);
 			case 'WebWrapper': 			return (<WebWrapper route={route} navigator={navigator} />);
-			case 'WelcomeWeekView': 	return(<WelcomeWeekView route={route} navigator={navigator} />);
+			case 'WelcomeWeekView': 	return (<WelcomeWeekView route={route} navigator={navigator} />);
 			case 'DestinationDetail': 	return (<DestinationDetail route={route} navigator={navigator} />);
 			default: 					return (<Home route={route} navigator={navigator} />);
 		}
