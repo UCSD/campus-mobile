@@ -32,16 +32,20 @@ var TopStoriesDetail = React.createClass({
 	},
 
 	componentWillMount: function() {
-
 		logger.custom('View Loaded: News Detail');
-
 		if (this.props.route.topStoriesData.image_lg) {
-			Image.getSize(this.props.route.topStoriesData.image_lg, (width, height) => {
-				this.setState({
-					newsImgWidth: windowWidth,
-					newsImgHeight: height * (windowWidth / width)
-				});
-			});
+			Image.getSize(
+				this.props.route.topStoriesData.image_lg,
+				(width, height) => {
+					this.setState({
+						newsImgWidth: windowWidth,
+						newsImgHeight: height * (windowWidth / width)
+					});
+				},
+				(error) => {
+					logger.log('ERR: componentWillMount: ' + error)
+				}
+			);
 		}
 	},
 
@@ -88,7 +92,7 @@ var TopStoriesDetail = React.createClass({
 				<ScrollView contentContainerStyle={css.scroll_default}>
 
 					{this.state.newsImgWidth ? (
-						<Image style={[css.eventdetail_image_tmp, { width: this.state.newsImgWidth, height: this.state.newsImgHeight }]} source={{ uri: this.props.route.topStoriesData.image_lg }} />
+						<Image style={{ width: this.state.newsImgWidth, height: this.state.newsImgHeight }} source={{ uri: this.props.route.topStoriesData.image_lg }} />
 					) : null }
 
 					<View style={css.news_detail_container}>
@@ -119,7 +123,7 @@ var TopStoriesDetail = React.createClass({
 	},
 
 	gotoWebView: function(storyName, storyURL) {
-		this.props.navigator.push({ id: 'TopStoriesDetail', name: 'TopStoriesDetail', title: storyName, component: WebWrapper, webViewURL: storyURL });
+		this.props.navigator.push({ id: 'WebWrapper', name: 'WebWrapper', title: 'News', component: WebWrapper, webViewURL: storyURL });
 	},
 
 });

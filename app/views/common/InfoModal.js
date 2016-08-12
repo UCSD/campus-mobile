@@ -20,7 +20,7 @@ export default class InfoModal extends React.Component {
   }
   render() {
     return(
-      <Modal animationType={'none'} transparent={true} visible={this.props.modalVisible}>
+      <Modal animationType={'none'} transparent={true} visible={this.props.modalVisible} onRequestClose={() => {this.props.onRequestClose}}>
         <View style={css.modal_container}>
           <Text style={css.modal_text_intro}>{this.props.title}</Text>
           <Text style={css.modal_text}>

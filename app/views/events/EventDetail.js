@@ -36,12 +36,18 @@ var EventDetail = React.createClass({
 		logger.custom('View Loaded: Event Detail');
 
 		if (this.props.route.eventData.EventImageLg) {
-			Image.getSize(this.props.route.eventData.EventImageLg, (width, height) => {
-				this.setState({
-					newsImgWidth: windowWidth,
-					newsImgHeight: height * (windowWidth / width)
-				});
-			});
+			Image.getSize(
+				this.props.route.eventData.EventImageLg,
+				(width, height) => {
+					this.setState({
+						newsImgWidth: windowWidth,
+						newsImgHeight: height * (windowWidth / width)
+					});
+				},
+				(error) => {
+					logger.log('ERR: componentWillMount: ' + error)
+				}
+			);
 		}
 	},
 
@@ -111,7 +117,7 @@ var EventDetail = React.createClass({
 	},
 
 	gotoWebView: function(eventName, eventURL) {
-		this.props.navigator.push({ id: 'EventDetail', name: 'EventDetail', title: eventName, component: WebWrapper, webViewURL: eventURL });
+		this.props.navigator.push({ id: 'WebWrapper', name: 'WebWrapper', title: eventName, component: WebWrapper, webViewURL: eventURL });
 	},
 
 });
