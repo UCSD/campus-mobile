@@ -137,19 +137,20 @@ var Home = React.createClass({
 			//response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
 			this.setState({ locationPermission: response });
 			//this.refreshAllCards('auto'); // Should only be refreshing cards that rely on location perm
-
-			if(this.state.currentPosition === null && response === "authorized") {
-				navigator.geolocation.getCurrentPosition(
-					(initialPosition) => {
-						//logger.custom("getCurrentPosition");
-						this.setState({currentPosition: initialPosition});
-					},
-					(error) => logger.log('ERR: navigator.geolocation.getCurrentPosition1: ' + error.message),
-					{enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
-				);
-				this.geolocationWatchID = navigator.geolocation.watchPosition((currentPosition) => {
-					this.setState({ currentPosition });
-				});
+			if(response === "authorized") {
+				if(this.state.currentPosition === null ) {
+					navigator.geolocation.getCurrentPosition(
+						(initialPosition) => {
+							//logger.custom("getCurrentPosition");
+							this.setState({currentPosition: initialPosition});
+						},
+						(error) => logger.log('ERR: navigator.geolocation.getCurrentPosition1: ' + error.message),
+						{enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
+					);
+					this.geolocationWatchID = navigator.geolocation.watchPosition((currentPosition) => {
+						this.setState({ currentPosition });
+					});
+				}
 			}
 			else {
 				this._alertForLocationPermission()
