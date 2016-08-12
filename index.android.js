@@ -36,18 +36,6 @@ var nowucsandiego = React.createClass({
 
 	//check the status of a single permission
 	componentDidMount() {
-		console.log("Mounted");
-		/*
-		Permissions.getPermissionStatus('location')
-		.then(response => {
-			console.log("Permission: " + response);
-			//response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
-			//this.setState({ locationPermission: response })
-			if(response != 'authorized') {
-				this._alertForLocationPermission();
-			}
-		});*/
-
 		// Listen to route focus changes
 		// Should be a better way to do this...
 		this.refs.navRef.refs.navRef.navigationContext.addListener('willfocus', (event) => {
@@ -75,41 +63,6 @@ var nowucsandiego = React.createClass({
 				return false;
 			}
 		});
-	},
-
-	//request permission to access location
-	_requestPermission() {
-	Permissions.requestPermission('location')
-		.then(response => {
-			//returns once the user has chosen to 'allow' or to 'not allow' access
-			//response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
-			this.setState({ locationPermission: response })
-		});
-	},
-
-	//check the status of multiple permissions
-	_checkCameraAndLocation() {
-		Permissions.checkMultiplePermissions(['camera', 'photo'])
-			.then(response => {
-				//response is an object mapping type to permission
-				this.setState({ 
-				cameraPermission: response.camera,
-				locationPermission: response.location,
-			})
-		});
-	},
-
-	_alertForLocationPermission() {
-		Alert.alert(
-			'Can we access your location?',
-			'We need to spy on you.',
-			[
-				{text: 'No way', onPress: () => console.log('permission denied'), style: 'cancel'},
-				//this.state.locationPermission == 'undetermined'? 
-				{text: 'OK', onPress: this._requestPermission.bind(this)}
-				//: {text: 'Open Settings', onPress: Permissions.openSettings}
-			]
-		)
 	},
 
 	render: function() {
