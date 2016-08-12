@@ -278,9 +278,10 @@ var Home = React.createClass({
 											}}>
 												{this.state.nearbyAnnotations.map(marker => (
 													<MapView.Marker
-													coordinate={marker.coords}
-													title={marker.title}
-													description={marker.description}
+														coordinate={marker.coords}
+														title={marker.title}
+														description={marker.description}
+														key={marker.title}
 													/>
 												))}
 										</MapView>
