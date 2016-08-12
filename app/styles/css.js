@@ -39,9 +39,14 @@ var AppSettings = require('../AppSettings');
 var general = require('../util/general');
 
 var navBarMarginTop = 0;
+var navBarTitleMarginTop = 5;
 
-if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
-	navBarMarginTop = 50;
+if (general.platformAndroid()) {
+	navBarMarginTop = 57;
+	navBarTitleMarginTop = 0;
+} else if (AppSettings.NAVIGATOR_ENABLED) {
+	navBarMarginTop = 64;
+	navBarTitleMarginTop = 0;
 }
 
 var pixelRatio = PixelRatio.get();
@@ -80,25 +85,21 @@ var navMarginTop = 7;
 var css = StyleSheet.create({
 
 	// Navigator
-	navBar: { 
-		flex: 1,
-		flexDirection: 'row',
-		justifyContent: 'center',
-		alignItems: 'flex-start', 
-		backgroundColor: 'rgba(31,149,187,1)', height: 50 },
+	navBar: { flex: 1, backgroundColor: 'rgba(31,149,187,1)' },
 	
 		// Nav Bar Left
-		navBarLeftButton: { color: '#FFF', fontSize: 16, marginLeft: 8, marginTop: 3 },
-		navBarLeftMenu: { width: 20, height: 13, margin: 10 },
+		navBarLeftButtonContainer: { flex: 1, alignItems: 'center', justifyContent: 'center', width: windowWidth * .166, marginBottom: 1 },
+			navBarLeftButton: { color: '#FFF', fontSize: 18, textAlign: 'center' },
 
 		// Nav Bar Title
-		navBarTitle: { color: '#FFF', fontSize: 18 },
+		navBarTitleContainer: { flex: 1, alignItems: 'center', justifyContent: 'center', width: windowWidth * .666, marginTop: navBarTitleMarginTop },
+			navBarTitle: { color: '#FFF', fontSize: 18, textAlign: 'center' },
 
 		// Nav Bar Right
-		navBarRightButton: { color: '#FFF', fontSize: 16, marginVertical: 10, paddingRight: 10 },
-		navBarRightHome: { flexDirection: 'row', marginTop: 8 },
-		navBarRightSearch: { width: 19, height: 18 },
-		navBarRightOptions: { width: 5, height: 18, marginHorizontal: 12 },
+		navBarRightButtonContainer: { flex: 1, alignItems: 'center', justifyContent: 'center', width: windowWidth * .166 },
+
+
+
 
 	// NavigatorIOS
 	navBarIOS: {  },
@@ -262,8 +263,8 @@ var css = StyleSheet.create({
 	// DESTINATION CARD
 	destinationcard_title: { flex: 1, alignSelf: 'stretch', fontSize: 28, color: '#7d7e80', padding: 6 },
 	destinationcard_bot_container: { padding: 8 },
-	destinationcard_map_container: { width: maxCardWidthWithPadding, height: maxCardWidthWithPadding * .6, borderBottomWidth: 1, borderBottomColor: '#EAEAEA', paddingBottom: 16, marginBottom: 8 },
-	destinationcard_map: { flex: 1, borderWidth: 1, borderColor: '#DDD' },
+	destinationcard_map_container: { borderBottomWidth: 1, borderBottomColor: '#EAEAEA', paddingBottom: 16, marginBottom: 8 },
+		destinationcard_map: { borderWidth: 1, borderColor: 'red', width: maxCardWidthWithPadding, height: maxCardWidthWithPadding * .6 },
 	destinationcard_marker_row: { flex: 1, flexDirection: 'row', justifyContent: 'center', width: windowWidth - 30, padding: 6, marginTop: 0 },
 	destinationcard_icon_marker: { width: 18, height: 18 * 1.375, alignItems: 'flex-start', justifyContent: 'center' },
 	destinationcard_marker_label: { flex: 1, fontSize: 20, paddingLeft: 8, paddingTop: 0, color: '#006C92', justifyContent: 'center' },
