@@ -36,12 +36,18 @@ var EventDetail = React.createClass({
 		logger.custom('View Loaded: Event Detail');
 
 		if (this.props.route.eventData.EventImageLg) {
-			Image.getSize(this.props.route.eventData.EventImageLg, (width, height) => {
-				this.setState({
-					newsImgWidth: windowWidth,
-					newsImgHeight: height * (windowWidth / width)
-				});
-			});
+			Image.getSize(
+				this.props.route.eventData.EventImageLg,
+				(width, height) => {
+					this.setState({
+						newsImgWidth: windowWidth,
+						newsImgHeight: height * (windowWidth / width)
+					});
+				},
+				(error) => {
+					logger.log('ERR: componentWillMount: ' + error)
+				}
+			);
 		}
 	},
 
