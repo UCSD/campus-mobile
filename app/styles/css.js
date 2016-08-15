@@ -42,7 +42,7 @@ var navBarMarginTop = 0;
 var navBarTitleMarginTop = 5;
 
 if (general.platformAndroid()) {
-	navBarMarginTop = 57;
+	navBarMarginTop = 54;//57;
 	navBarTitleMarginTop = 0;
 } else if (AppSettings.NAVIGATOR_ENABLED) {
 	navBarMarginTop = 64;

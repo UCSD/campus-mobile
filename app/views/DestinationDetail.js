@@ -4,7 +4,8 @@ import React from 'react';
 import {
 	View,
 	WebView,
-	Text
+	Text,
+	Dimensions
 } from 'react-native';
 
 var css = require('../styles/css');
@@ -28,10 +29,15 @@ var DestionationDetail2 = React.createClass({
 	},
 
 	renderScene: function(route, navigator) {
+		// Fix for android not displaying webview, might depreciate if react-native
+		// fixes issue with 100% height websites
+		var heightInjection = "var el = document.getElementsByTagName('body')[0];"
+ 		heightInjection += "el.style.height = '" + (Dimensions.get('window').height - 80) + "px';"
 		return (
 			<View style={[css.main_container, css.offwhitebg]}>
 				<WebView
-					injectedJavaScript={ this.state.scriptInject }
+					injectedJavaScript={ this.state.scriptInject + heightInjection }
+					javaScriptEnabled={true}
 					ref={'webview'}
 					style={css.destination_detail_map}
 					startInLoadingState={true}
