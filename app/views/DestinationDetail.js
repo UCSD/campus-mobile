@@ -9,13 +9,6 @@ import {
 
 var css = require('../styles/css');
 var logger = require('../util/logger');
-/*
-<div jstcache="1352" class="ml-snackbar-link-unsupported-error ml-snackbar-without-action" style="
-	display: none;
-"> <span class="ml-snackbar-text">This link is not supported in the mobile web version of Google Maps.</span> </div>
-
-<span class="ml-directions-travel-mode-time ml-directions-travel-mode-car">1 min</span>
-*/
 
 var DestionationDetail2 = React.createClass({
 
@@ -31,9 +24,6 @@ var DestionationDetail2 = React.createClass({
 	},
 
 	render: function() {
-
-		logger.log('url2: ' + this.state.google_maps_url);
-
 		return this.renderScene();
 	},
 
