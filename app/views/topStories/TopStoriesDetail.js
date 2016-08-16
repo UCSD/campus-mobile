@@ -27,24 +27,31 @@ var TopStoriesDetail = React.createClass({
 	getInitialState: function() {
 		return {
 			newsImgWidth: null,
-			newsImgHeight: null
+			newsImgHeight: null,
+			newsImageURL: null,
 		}
 	},
 
 	componentWillMount: function() {
+
 		logger.custom('View Loaded: News Detail');
-		if (this.props.route.topStoriesData.image_lg) {
+
+		var imageURL = (this.props.route.topStoriesData.image_lg) ? this.props.route.topStoriesData.image_lg : this.props.route.topStoriesData.image;
+		imageURL = imageURL.replace(/-thumb/g,'');
+
+		logger.log('imageURL: ' + imageURL)
+
+		if (imageURL) {
 			Image.getSize(
-				this.props.route.topStoriesData.image_lg,
+				imageURL,
 				(width, height) => {
 					this.setState({
+						newsImageURL: imageURL,
 						newsImgWidth: windowWidth,
-						newsImgHeight: height * (windowWidth / width)
+						newsImgHeight: Math.round(height * (windowWidth / width))
 					});
 				},
-				(error) => {
-					logger.log('ERR: componentWillMount: ' + error)
-				}
+				(error) => { logger.log('ERR: componentWillMount: ' + error) }
 			);
 		}
 	},
@@ -91,8 +98,8 @@ var TopStoriesDetail = React.createClass({
 			<View style={[css.main_container, css.whitebg]}>
 				<ScrollView contentContainerStyle={css.scroll_default}>
 
-					{this.state.newsImgWidth ? (
-						<Image style={{ width: this.state.newsImgWidth, height: this.state.newsImgHeight }} source={{ uri: this.props.route.topStoriesData.image_lg }} />
+					{this.state.newsImageURL ? (
+						<Image style={{ width: this.state.newsImgWidth, height: this.state.newsImgHeight }} source={{ uri: this.state.newsImageURL }} />
 					) : null }
 
 					<View style={css.news_detail_container}>
