@@ -247,6 +247,13 @@ var Home = React.createClass({
 								</TouchableHighlight>
 							) : null }
 
+							{!this.state.closestStop1Loaded && !this.state.closestStop2Loaded ? (
+								<View style={[css.shuttle_card_row_center, css.shuttle_card_loader]}>
+									<Image style={css.card_loading_img} source={ require('../assets/img/loader_dots.gif')} />
+								</View>
+							) : null }
+
+
 						</View>
 					) : null }
 
@@ -345,16 +352,9 @@ var Home = React.createClass({
 										<View style={css.dc_locations}>
 											<ListView dataSource={this.state.diningDataFull} renderRow={this.renderDiningRow} style={css.wf_listview} />
 										</View>
-
-
-
 									</View>
 								) : null }
 							</View>
-
-
-
-
 						</View>
 					) : null }
 
@@ -376,7 +376,6 @@ var Home = React.createClass({
 	},
 
 	getCards: function(){
-		//logger.custom("Home:getCards");
 		var cards = [];
 		var cardCounter = 0;
 		// Setup CARDS
@@ -737,7 +736,7 @@ var Home = React.createClass({
 
 	fetchShuttleArrivalsByStop: function(closestStopNumber, stopID) {
 		var SHUTTLE_STOPS_API_URL = AppSettings.SHUTTLE_STOPS_API_URL + stopID + '/arrivals';
-		logger.log("Shuttle link: " + SHUTTLE_STOPS_API_URL);
+		
 		fetch(SHUTTLE_STOPS_API_URL, {
 				method: 'GET',
 				headers: {
@@ -779,7 +778,7 @@ var Home = React.createClass({
 					}
 
 				} else {
-					throw('invalid');
+					throw('Invalid response');
 				}
 
 				general.stopReloadAnimation(this.shuttleReloadAnim);

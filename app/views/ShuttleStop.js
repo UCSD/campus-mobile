@@ -128,8 +128,6 @@ var ShuttleStop = React.createClass({
 			this.setState({currentPosition});
 		});
 
-		//general.startReloadAnimation2(this.shuttleMainReloadAnim, 175, 60000);
-
 		//this.fetchShuttleArrivalsByStop('auto');
 		// Initial shuttle info render passed from home
 		//this._processShuttleArrivals(this.props.route.shuttleData);
@@ -154,17 +152,7 @@ var ShuttleStop = React.createClass({
 	},
 
 	render: function() {
-		/*
-		// Render placeholder while waiting
-		if (this.state.renderPlaceholderOnly) {
-			return this._renderPlaceholderView();
-		}
-		else {*/
-
-				return this.renderScene();
-
-		//}
-		
+		return this.renderScene();
 	},
 
 	/* Revisit after welcome week deadline
@@ -208,8 +196,9 @@ var ShuttleStop = React.createClass({
 						refreshing={this.state.isRefreshing}
 						onRefresh={this.refreshShuttleArrivalsByStop}
 						tintColor="#CCC"
-						title="" />
-        			}>
+						title=""
+					/>
+        		}>
 
         			{this.state.shuttleStopImageDict[this.state.shuttleStopID] ? (
 						<Image style={css.shuttlestop_image} source={ this.state.shuttleStopImageDict[this.state.shuttleStopID] } />
@@ -219,7 +208,7 @@ var ShuttleStop = React.createClass({
 						<Text style={css.shuttlestop_name_text}>{this.state.shuttleStopName}</Text>
 
 						<View style={css.shuttlestop_refresh_container}>
-							<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.refreshShuttleArrivalsByStop2('manual') }>
+							<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.refreshShuttleArrivalsByStop('manual') }>
 								<Animated.Image style={[css.shuttlestop_refresh, { transform: [{ rotate: this.shuttleReloadAnim.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '360deg']})}]}]} source={require('../assets/img/icon_refresh.png')} />
 							</TouchableHighlight>
 						</View>
@@ -259,8 +248,8 @@ var ShuttleStop = React.createClass({
 
 								</View>
 							) : (
-								<View style={css.flexcenter2}>
-									<Animated.Image style={[css.shuttlestop_loading, { transform: [{ rotate: this.shuttleMainReloadAnim.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '360deg']})}]}]} source={require('../assets/img/ajax-loader4.png')} />
+								<View style={[css.flexcenter2, css.mar30]}>
+									<Image style={css.card_loading_img} source={ require('../assets/img/loader_dots.gif')} />
 								</View>
 							)}
 						</View>
@@ -302,15 +291,8 @@ var ShuttleStop = React.createClass({
 
 
 	refreshShuttleArrivalsByStop: function(refreshType) {
-		this.setState({ isRefreshing: true });
-		this.fetchShuttleArrivalsByStop(refreshType);
-		this.setState({ isRefreshing: false });
-	},
-
-	refreshShuttleArrivalsByStop2: function(refreshType) {
 		this.fetchShuttleArrivalsByStop(refreshType);
 	},
-
 
 	getCurrentPosition: function(type) {
 		if (type === 'latitude' || type === 'lat') {
@@ -403,35 +385,10 @@ var ShuttleStop = React.createClass({
 
 			this.setState({ closestShuttlesLoaded: true, closestShuttlesInactive: false});
 		} else {
-			throw('invalid');
+			throw('Invalid data');
 		}
 	}
 
 });
-
-/*
-var NavigationBarRouteMapper = {
-	LeftButton: function(route, navigator, index, navState) {
-		return (
-			<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => navigator.parentNavigator.pop()}>
-				<Text style={css.navBarLeftButton}>
-					&lt; Back
-				</Text>
-			</TouchableHighlight>
-		);
-	},
-
-	RightButton: function(route, navigator, index, navState) {
-		return null;
-	},
-
-	Title: function(route, navigator, index, navState) {
-		return (
-			<Text style={css.navBarTitle}>
-				route.name
-			</Text>
-		);
-	}
-};*/
 
 module.exports = ShuttleStop;

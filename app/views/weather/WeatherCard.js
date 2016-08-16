@@ -132,7 +132,7 @@ export default class WeatherCard extends CardComponent {
       ) : null }
       {!this.state.weatherDataLoaded ? (
         <View style={[css.cardcenter, css.weatherccard_loading_height]}>
-          <Image style={css.card_loading_img} source={ require('../../assets/img/blue-sun-loader-128.gif')} />
+          <Image style={css.card_loading_img} source={ require('../../assets/img/loader_dots.gif')} />
         </View>
       ) : null }
 		</Card>

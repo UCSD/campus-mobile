@@ -27,7 +27,8 @@ var EventDetail = React.createClass({
 	getInitialState: function() {
 		return {
 			newsImgWidth: null,
-			newsImgHeight: null
+			newsImgHeight: null,
+			eventImageURL: null,
 		}
 	},
 
@@ -35,18 +36,19 @@ var EventDetail = React.createClass({
 
 		logger.custom('View Loaded: Event Detail');
 
-		if (this.props.route.eventData.EventImageLg) {
+		var imageURL = (this.props.route.eventData.EventImageLg) ? this.props.route.eventData.EventImageLg : this.props.route.eventData.EventImage;
+
+		if (imageURL) {
 			Image.getSize(
-				this.props.route.eventData.EventImageLg,
+				imageURL,
 				(width, height) => {
 					this.setState({
+						eventImageURL: imageURL,
 						newsImgWidth: windowWidth,
-						newsImgHeight: height * (windowWidth / width)
+						newsImgHeight: Math.round(height * (windowWidth / width))
 					});
 				},
-				(error) => {
-					logger.log('ERR: componentWillMount: ' + error)
-				}
+				(error) => { logger.log('ERR: componentWillMount: ' + error) }
 			);
 		}
 	},
@@ -77,8 +79,8 @@ var EventDetail = React.createClass({
 			<View style={[css.main_container, css.whitebg]}>
 				<ScrollView contentContainerStyle={css.scroll_default}>
 
-					{this.state.newsImgWidth ? (
-						<Image style={{ width: this.state.newsImgWidth, height: this.state.newsImgHeight }} source={{ uri: this.props.route.eventData.EventImageLg }} />
+					{this.state.eventImageURL ? (
+						<Image style={{ width: this.state.newsImgWidth, height: this.state.newsImgHeight }} source={{ uri: this.state.eventImageURL }} />
 					) : null }
 
 					<View style={css.news_detail_container}>
