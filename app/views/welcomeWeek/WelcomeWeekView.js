@@ -24,12 +24,13 @@ import css from '../../styles/css';
 var logger = require('../../util/logger');
 
 const collegeNames = [
-	{ name: "ERC"}, 
-	{ name: "Marshall"},
-	{ name: "Muir"},
-	{ name: "Revelle"},
-	{ name: "Sixth"},
-	{ name: "Warren"},
+	{ name: 'Roosevelt' },
+	{ name: 'Marshall' },
+	{ name: 'Muir' },
+	{ name: 'Revelle' },
+	{ name: 'Sixth' },
+	{ name: 'Warren' },
+	{ name: 'Village' },
 ];
 
 export default class WelcomeWeekView extends Component {
@@ -135,8 +136,7 @@ export default class WelcomeWeekView extends Component {
 
 			this.setState({
 				dataSource : this.state.dataSource.cloneWithRowsAndSections(dataBlob, sectionIDs, rowIDs),
-				loaded     : true,
-				refreshing: false
+				loaded: true,
 			});
 		})
 		.catch((error) => {
@@ -150,7 +150,9 @@ export default class WelcomeWeekView extends Component {
 				this.setState({ fetchErrorLimitReached: true });
 			}
 		})
-		.done();   
+		.done( () => {
+			this.setState({ refreshing: false });
+		});
 	}
 
 	render() {
@@ -181,6 +183,7 @@ export default class WelcomeWeekView extends Component {
 		return (
 			<View style={css.main_container}>
 				<ListView
+					style={css.listview_main}
 					dataSource = {this.state.dataSource}
 					renderRow  = {this._renderRow}
 					renderSectionHeader = {this._renderSectionHeader}

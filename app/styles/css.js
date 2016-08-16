@@ -107,6 +107,7 @@ var css = StyleSheet.create({
 	// Primary Containers
 	main_container: { flex: 1, backgroundColor: '#EAEAEA', marginTop: navBarMarginTop },
 	scroll_main: {  },
+	listview_main: { marginTop: 64 },
 	view_default: {  },
 	scroll_default: { alignItems: 'center' },
 	
