@@ -196,8 +196,9 @@ var ShuttleStop = React.createClass({
 						refreshing={this.state.isRefreshing}
 						onRefresh={this.refreshShuttleArrivalsByStop}
 						tintColor="#CCC"
-						title="" />
-        			}>
+						title=""
+					/>
+        		}>
 
         			{this.state.shuttleStopImageDict[this.state.shuttleStopID] ? (
 						<Image style={css.shuttlestop_image} source={ this.state.shuttleStopImageDict[this.state.shuttleStopID] } />
