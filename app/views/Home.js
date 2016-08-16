@@ -247,6 +247,13 @@ var Home = React.createClass({
 								</TouchableHighlight>
 							) : null }
 
+							{!this.state.closestStop1Loaded && !this.state.closestStop2Loaded ? (
+								<View style={[css.shuttle_card_row_center, css.shuttle_card_loader]}>
+									<Image style={css.card_loading_img} source={ require('../assets/img/loader_dots.gif')} />
+								</View>
+							) : null }
+
+
 						</View>
 					) : null }
 

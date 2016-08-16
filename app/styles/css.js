@@ -196,6 +196,8 @@ var css = StyleSheet.create({
 
 		shuttle_card_row: { width: maxCardWidth, overflow: 'hidden' },
 		shuttle_card_err_row: { alignItems: 'center', justifyContent: 'center', width: maxCardWidth, overflow: 'hidden' },
+		shuttle_card_row_center: { alignItems: 'center', justifyContent: 'center', width: maxCardWidth, overflow: 'hidden' },
+		shuttle_card_loader: { height: 350 * prm },
 		shuttle_card_row_border: { borderTopWidth: 1, borderTopColor: '#DDD' },
 		shuttle_card_row_top: { flex: 1, flexDirection: 'row', alignItems: 'stretch', justifyContent: 'center', marginVertical: 20 * prm, height: 83 * prm },
 			shuttle_card_rt_1: { flex: 1 },
