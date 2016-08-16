@@ -37,7 +37,7 @@ export default class EventList extends React.Component {
 	      <ListView
 	        dataSource={eventDatasource}
 	        renderRow={ (row) => <EventItem data={row} navigator={this.props.navigator} /> }
-	        style={css.wf_listview} />
+	        />
 
 	      {this.state.eventsRenderAllRows === false ? (
 	        <TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.setState({eventsRenderAllRows: true}) }>

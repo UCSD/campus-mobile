@@ -11,20 +11,22 @@ import {
 	TouchableOpacity,
 	StyleSheet,
 	ScrollView,
+	Image,
 } from 'react-native';
 
-import TopStoriesService from '../../services/topStoriesService';
-//import WelcomeWeekList from './WelcomeWeekList';
+import WelcomeWeekService from '../../services/welcomeWeekService';
+
+import css from '../../styles/css'; 
 
 var logger = require('../../util/logger');
 
 const collegeNames = [
-	{ name: "ERC", id: "ERC:vinavfnjrfbzr" }, 
-	{ name: "Marshall", id: "Marshall:vinavfnjrfbzr" },
-	{ name: "Muir", id: "Muir:vinavfnjrfbzr" },
-	{ name: "Revelle", id: "Revelle:vinavfnjrfbzr" },
-	{ name: "Sixth", id: "Sixth:vinavfnjrfbzr" },
-	{ name: "Warren", id: "Warren:vinavfnjrfbzr" },
+	{ name: "ERC"}, 
+	{ name: "Marshall"},
+	{ name: "Muir"},
+	{ name: "Revelle"},
+	{ name: "Sixth"},
+	{ name: "Warren"},
 ];
 
 export default class WelcomeWeekView extends Component {
@@ -45,7 +47,6 @@ export default class WelcomeWeekView extends Component {
 		}
 
 		var getRowData = (dataBlob, sectionID, rowID) => {
-			console.log("Blob:\n" + JSON.stringify(dataBlob));
 			return dataBlob[sectionID + ':' + rowID];
 		}
 
@@ -67,7 +68,7 @@ export default class WelcomeWeekView extends Component {
 	 * Invoked before render
 	**/
 	componentWillMount() {
-		console.log("Mount me pls");
+
 	}
 
 	/**
@@ -93,68 +94,34 @@ export default class WelcomeWeekView extends Component {
 
 	}
 
-	// Generates a unique ID
-	// Used for Card keys
-	_generateUUID() {
-		var d = new Date().getTime();
-		if(window.performance && typeof window.performance.now === "function") {
-			d += performance.now(); //use high-precision timer if available
-		}
-		var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-			var r = (d + Math.random()*16)%16 | 0;
-			d = Math.floor(d/16);
-			return (c=='x' ? r : (r&0x3|0x8)).toString(16);
-		});
-		return uuid;
-	}
-
 	_fetchData () {
 		// Fetch data from API
-		TopStoriesService.FetchTopStories()
+		WelcomeWeekService.FetchEvents()
 		.then((responseData) => {
-			//console.log(JSON.stringify(collegeNames));
-
-			var colleges = collegeNames, // Probably going to get from proper feed
-			length = collegeNames.length,
-			dataBlob = {},
+			var dataBlob = {},
 			sectionIDs = [],
 			rowIDs = [],
 			college,
-			events,
-			eventLength,
-			event,
-			i,
-			j;
+			i, j;
 
-			//colleges[0]['events'] = responseData; // temp
+			// Loop through each college
+			for(i = 0; i < collegeNames.length; i++) {
+				college = collegeNames[i];
 
-			for(i = 0; i < length; i++) {
-				college = colleges[i];
-
-				sectionIDs.push(college.id);
-				//console.log("College: " + colleges[i].name);
-				dataBlob[college.id] = colleges[i].name;
-
-				if( i === 0 ) {
-					events = responseData['items'];
-				}
-				//events = college.events;
-				else {
-					rowIDs[i] = "blah";
-					continue;
-				}
-				eventLength = events.length;
-
+				sectionIDs.push(college.name);
+				dataBlob[college.name] = college.name;
 				rowIDs[i] = [];
 
-				for(j = 0; j < eventLength; j++) {
-					event = events[j];
-					eventID = this._generateUUID(); // Might need different way to make ids, maybe req id from feeds?
-					rowIDs[i].push(eventID);
-
-					dataBlob[college.id + ':' + eventID] = event;
+				// Loop through remaining events
+				for(j = 0; j < responseData.length; ++j) {
+					// Remove event from responses
+					// Add to row data
+					if(responseData[j].EventCollege === college.name) {
+						rowIDs[i].push(responseData[j].EventID);
+						dataBlob[college.name + ':' + responseData[j].EventID] = responseData.splice(j, 1)[0];
+						--j;
+					}
 				}
-
 			}
 
 			this.setState({
@@ -185,14 +152,6 @@ export default class WelcomeWeekView extends Component {
 		return this.renderListView();
 	}
 
-	renderScene() {
-		return (
-			<View>
-				<Text>IM dumb</Text>
-			</View>
-		);
-	}
-
 	renderLoadingView() {
 		return (
 			<View>
@@ -203,34 +162,36 @@ export default class WelcomeWeekView extends Component {
 
 	renderListView() {
 		return (
-			<View style={styles.container}>
-				<View style={styles.header}>
-					<Text style={styles.headerText}>Welcome Week</Text>
-				</View>
+			<View style={css.main_container}>
 				<ListView
 					dataSource = {this.state.dataSource}
-					style      = {styles.listview}
 					renderRow  = {this._renderRow}
 					renderSectionHeader = {this._renderSectionHeader}
+					enableEmptySections = {true}
 				/>
 			</View>
 		);
 	}
 
 	_renderRow(rowData, sectionID, rowID) {
-		var title;
-		console.log("renderRow: " + sectionID + ":" + rowID);
-		if(rowData === undefined) {
-			title = "Placeholder";
-		}
-		else {
-			title = rowData.title;
-		}
+		var title, image, description, date;
+		title = rowData.EventTitle;
+		image = rowData.EventImage;
+		description = rowData.EventDescription;
+		date = rowData.EventDate;
 
 		return (
-			<TouchableOpacity onPress={() => this.onPressRow(rowData, sectionID)}>
-				<View style={styles.rowStyle}>
-					<Text style={styles.rowText}>{title}</Text>        
+			<TouchableOpacity underlayColor={'rgba(200,200,200,.1)'} onPress={() => this.onPressRow(rowData, sectionID)}>
+				<View style={css.welcome_list_row}>
+					<View style={css.welcome_list_left_container}>
+						<Text style={css.welcome_list_title}>{title}</Text> 
+						<Text style={css.welcome_list_desc}>{description}</Text>
+						<Text style={css.welcome_list_postdate}>{date}</Text> 
+					</View>      
+				
+					<View style={css.welcome_list_right_container}>
+						<Image style={css.events_list_image} source={{ uri: image }} />
+					</View>
 				</View>
 			</TouchableOpacity>
 		);
@@ -238,62 +199,9 @@ export default class WelcomeWeekView extends Component {
 
 	_renderSectionHeader(sectionData, sectionID) {
 		return (
-			<View>
-				<Text style={styles.text}>{sectionData}</Text>
+			<View style={css.welcome_list_section}>
+				<Text style={css.welcome_list_sectionText}>{sectionData}</Text>
 			</View>
 		); 
 	}
 }
-
-var styles = StyleSheet.create({
-    container: {
-        flex: 1
-    },
-    activityIndicator: {
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    header: {
-        height: 60,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#3F51B5',
-        flexDirection: 'column',
-        paddingTop: 25
-    },
-    headerText: {
-        fontWeight: 'bold',
-        fontSize: 20,
-        color: 'white'
-    },
-    text: {
-        color: 'white',
-        backgroundColor: '#3F51B5',
-        paddingHorizontal: 8,
-        fontSize: 16
-    },
-    rowStyle: {
-        paddingVertical: 20,
-        paddingLeft: 16,
-        borderTopColor: 'white',
-        borderLeftColor: 'white',
-        borderRightColor: 'white',
-        borderBottomColor: '#E0E0E0',
-        borderWidth: 1
-    },
-    rowText: {
-        color: '#212121',
-        fontSize: 16
-    },
-    subText: {
-        fontSize: 14,
-        color: '#757575'
-    },
-    section: {
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'flex-start',
-        padding: 6,
-        backgroundColor: '#2196F3'
-    }
-});
