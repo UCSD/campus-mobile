@@ -222,30 +222,20 @@ var css = StyleSheet.create({
 			events_list_title: { fontSize: 17 * prm, color: '#000', fontWeight: '400' },
 			events_list_desc: { fontSize: 14 * prm, color: '#666', paddingTop: 8 * prm },
 			events_list_postdate: { fontSize: 11 * prm, color: '#006C92', paddingTop: 8 * prm },
-		events_list_image: { width: 130 * prm, height: 87 * prm, marginLeft: 14, borderWidth: 1, borderColor: '#CCC' },
+		events_list_image: { width: 130 * prm, height: 87 * prm, marginRight: 14, borderWidth: 1, borderColor: '#CCC' },
 	events_more: { alignItems: 'center', justifyContent: 'center', width: maxCardWidthWithPadding, paddingHorizontal: 4, paddingTop: 8, paddingBottom: 4 },
 	events_more_label: { fontSize: 20, color: '#006C92', fontWeight: '300' },
 
 	// WELCOME WEEK STYLE
 	welcome_list: { width: maxCardWidth, padding: 8 },
 	welcome_list_row: { flex: 1, flexDirection: 'row', paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: 'white', overflow: 'hidden', paddingLeft: 16, borderTopColor: 'white', justifyContent: 'center', alignItems: 'center'},
-		welcome_list_sectionText: {
-			fontSize: 18,
-			color: 'white'
-		},
-		welcome_list_section: {
-			flexDirection: 'column',
-			justifyContent: 'center',
-			alignItems: 'flex-start',
-			padding: 6,
-			backgroundColor: '#666'
-		},
-		welcome_list_left_container: { flex: .5 },
-			welcome_list_title: { fontSize: 17 * prm, color: '#000', fontWeight: '400' },
-			welcome_list_desc: { fontSize: 14 * prm, color: '#666', paddingTop: 8 * prm },
-			welcome_list_postdate: { fontSize: 11 * prm, color: '#006C92', paddingTop: 8 * prm },
-		welcome_list_right_container: { flex: .5 },
-			welcome_list_image: { width: 130 * prm, height: 87 * prm, marginLeft: 14, borderWidth: 1, borderColor: '#CCC' },
+		welcome_list_sectionText: { fontSize: 18, color: '#FFF' },
+		welcome_list_section: { flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start', padding: 6, backgroundColor: '#666' },
+		welcome_list_left_container: { flex: 1, marginRight: 14 },
+			welcome_list_title: { fontSize: 17 * prm, color: '#000' },
+			welcome_list_desc: { fontSize: 14 * prm, color: '#666', paddingTop: 3, paddingBottom: 6 },
+			welcome_list_postdate: { fontSize: 11 * prm, color: '#006C92' },
+		welcome_list_image: { width: 130 * prm, height: 87 * prm, marginLeft: 14, borderWidth: 1, borderColor: '#CCC' },
 
 
 	// WEATHER CARD
