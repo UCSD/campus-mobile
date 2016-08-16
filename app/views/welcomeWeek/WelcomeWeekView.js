@@ -12,6 +12,9 @@ import {
 	StyleSheet,
 	ScrollView,
 	Image,
+	InteractionManager,
+	RefreshControl,
+	ActivityIndicator,
 } from 'react-native';
 
 import WelcomeWeekService from '../../services/welcomeWeekService';
@@ -55,6 +58,7 @@ export default class WelcomeWeekView extends Component {
 			fetchErrorLimitReached: false,
 			
 			loaded : false,
+			refreshing: false,
 			dataSource : new ListView.DataSource({
 				getSectionData : getSectionData,
 				getRowData : getRowData,
@@ -75,7 +79,10 @@ export default class WelcomeWeekView extends Component {
 	 * Invoked after render
 	**/
 	componentDidMount() {
-		this._fetchData();
+		InteractionManager.runAfterInteractions(() => {
+			this._fetchData();
+			//this.refreshShuttleDataTimer = this.setTimeout( () => { this.fetchShuttleArrivalsByStop('auto') }, this.shuttleRefreshInterval);
+		});
 	}
 
 	/**
@@ -95,6 +102,8 @@ export default class WelcomeWeekView extends Component {
 	}
 
 	_fetchData () {
+		this.setState({refreshing: true});
+
 		// Fetch data from API
 		WelcomeWeekService.FetchEvents()
 		.then((responseData) => {
@@ -126,7 +135,8 @@ export default class WelcomeWeekView extends Component {
 
 			this.setState({
 				dataSource : this.state.dataSource.cloneWithRowsAndSections(dataBlob, sectionIDs, rowIDs),
-				loaded     : true
+				loaded     : true,
+				refreshing: false
 			});
 		})
 		.catch((error) => {
@@ -154,8 +164,15 @@ export default class WelcomeWeekView extends Component {
 
 	renderLoadingView() {
 		return (
-			<View>
-				<Text>IM LOADING</Text>
+			<View style={css.main_container}>
+				<ActivityIndicator
+					animating={this.state.animating}
+					style={{alignItems: 'center',
+						justifyContent: 'center',
+						padding: 8, 
+						height: 80}}
+					size="large"
+				/>
 			</View>
 		);
 	}
@@ -168,6 +185,12 @@ export default class WelcomeWeekView extends Component {
 					renderRow  = {this._renderRow}
 					renderSectionHeader = {this._renderSectionHeader}
 					enableEmptySections = {true}
+					refreshControl={
+						<RefreshControl
+							refreshing={this.state.refreshing}
+							onRefresh={this._fetchData.bind(this)}
+						/>
+					}
 				/>
 			</View>
 		);
