@@ -24,12 +24,13 @@ import css from '../../styles/css';
 var logger = require('../../util/logger');
 
 const collegeNames = [
-	{ name: "ERC"}, 
-	{ name: "Marshall"},
-	{ name: "Muir"},
-	{ name: "Revelle"},
-	{ name: "Sixth"},
-	{ name: "Warren"},
+	{ name: 'Roosevelt' },
+	{ name: 'Marshall' },
+	{ name: 'Muir' },
+	{ name: 'Revelle' },
+	{ name: 'Sixth' },
+	{ name: 'Warren' },
+	{ name: 'Village' },
 ];
 
 export default class WelcomeWeekView extends Component {
@@ -135,8 +136,7 @@ export default class WelcomeWeekView extends Component {
 
 			this.setState({
 				dataSource : this.state.dataSource.cloneWithRowsAndSections(dataBlob, sectionIDs, rowIDs),
-				loaded     : true,
-				refreshing: false
+				loaded: true,
 			});
 		})
 		.catch((error) => {
@@ -150,7 +150,9 @@ export default class WelcomeWeekView extends Component {
 				this.setState({ fetchErrorLimitReached: true });
 			}
 		})
-		.done();   
+		.done( () => {
+			this.setState({ refreshing: false });
+		});
 	}
 
 	render() {
@@ -181,6 +183,7 @@ export default class WelcomeWeekView extends Component {
 		return (
 			<View style={css.main_container}>
 				<ListView
+					style={css.listview_main}
 					dataSource = {this.state.dataSource}
 					renderRow  = {this._renderRow}
 					renderSectionHeader = {this._renderSectionHeader}
@@ -197,11 +200,12 @@ export default class WelcomeWeekView extends Component {
 	}
 
 	_renderRow(rowData, sectionID, rowID) {
-		var title, image, description, date;
-		title = rowData.EventTitle;
-		image = rowData.EventImage;
-		description = rowData.EventDescription;
-		date = rowData.EventDate;
+		var title = 		rowData.EventTitle,
+			image = 		rowData.EventImage,
+			description = 	rowData.EventDescription,
+			date = 			rowData.EventDate;
+
+		description = description.replace(/\?.*/g,'?').replace(/!.*/g,'!').replace(/\..*/g,'.').replace(/\(.*/g,'');
 
 		return (
 			<TouchableOpacity underlayColor={'rgba(200,200,200,.1)'} onPress={() => this.gotoWelcomeWeekDetail(rowData)}>
@@ -210,11 +214,9 @@ export default class WelcomeWeekView extends Component {
 						<Text style={css.welcome_list_title}>{title}</Text> 
 						<Text style={css.welcome_list_desc}>{description}</Text>
 						<Text style={css.welcome_list_postdate}>{date}</Text> 
-					</View>      
-				
-					<View style={css.welcome_list_right_container}>
-						<Image style={css.events_list_image} source={{ uri: image }} />
 					</View>
+				
+					<Image style={css.events_list_image} source={{ uri: image }} />
 				</View>
 			</TouchableOpacity>
 		);
