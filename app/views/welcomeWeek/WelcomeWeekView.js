@@ -18,7 +18,7 @@ import {
 } from 'react-native';
 
 import WelcomeWeekService from '../../services/welcomeWeekService';
-
+import WelcomeWeekDetail from './WelcomeWeekDetail'
 import css from '../../styles/css'; 
 
 var logger = require('../../util/logger');
@@ -204,7 +204,7 @@ export default class WelcomeWeekView extends Component {
 		date = rowData.EventDate;
 
 		return (
-			<TouchableOpacity underlayColor={'rgba(200,200,200,.1)'} onPress={() => this.onPressRow(rowData, sectionID)}>
+			<TouchableOpacity underlayColor={'rgba(200,200,200,.1)'} onPress={() => this.gotoWelcomeWeekDetail(rowData)}>
 				<View style={css.welcome_list_row}>
 					<View style={css.welcome_list_left_container}>
 						<Text style={css.welcome_list_title}>{title}</Text> 
@@ -226,5 +226,9 @@ export default class WelcomeWeekView extends Component {
 				<Text style={css.welcome_list_sectionText}>{sectionData}</Text>
 			</View>
 		); 
+	}
+
+	_gotoWelcomeWeekDetail(rowData) {
+		this.props.navigator.push({ id: 'WelcomeWeekDetail', name: 'WelcomeWeekDetail', title: 'Event Details', component: WelcomeWeekDetail, eventData: rowData });
 	}
 }
