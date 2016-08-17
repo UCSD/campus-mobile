@@ -50,7 +50,6 @@ var DestinationDetail = require('./DestinationDetail');
 var DiningList = 		require('./DiningList');
 var WebWrapper = 		require('./WebWrapper');
 
-import WelcomeWeekView from './welcomeWeek/WelcomeWeekView';
 
 //
 var Home = React.createClass({

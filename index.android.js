@@ -1,87 +1,108 @@
+'use strict';
+
 import React, { Component } from 'react';
 import {
 	AppRegistry,
-	Navigator,
-	Platform,
-	Alert,
-	Text,
-	TouchableHighlight,
+	NavigatorIOS,
 	BackAndroid,
+	StatusBar
 } from 'react-native';
 
-var logger = require('./app/util/logger');
-var AppSettings = require('./app/AppSettings');
-var Home = require('./app/views/Home');
-var EventDetail = require('./app/views/events/EventDetail');
-var TopStoriesDetail = require('./app/views/topStories/TopStoriesDetail');
-var ShuttleStop = require('./app/views/ShuttleStop');
-var DestinationSearch = require('./app/views/DestinationSearch');
-var DestinationDetail = require('./app/views/DestinationDetail');
-var WebWrapper = require('./app/views/WebWrapper');
-const Permissions = require('react-native-permissions');
-var SurfReport = require('./app/views/weather/SurfReport');
+// SETUP / UTIL / NAV
+var AppSettings = 			require('./app/AppSettings'),
+	general = 				require('./app/util/general'),
+	logger = 				require('./app/util/logger'),
+
+// VIEWS
+	Home = 					require('./app/views/Home'),
+	ShuttleStop = 			require('./app/views/ShuttleStop'),
+	SurfReport = 			require('./app/views/weather/SurfReport'),
+	TopStoriesDetail = 		require('./app/views/topStories/TopStoriesDetail'),
+	EventDetail = 			require('./app/views/events/EventDetail'),
+	WebWrapper = 			require('./app/views/WebWrapper'),
+	DestinationDetail = 	require('./app/views/DestinationDetail');
 
 import WelcomeWeekView from './app/views/welcomeWeek/WelcomeWeekView';
-var general = require('./app/util/general');
+
+// NAV
 import NavigationBarWithRouteMapper from './app/views/NavigationBarWithRouteMapper';
+
 
 var nowucsandiego = React.createClass({
 
 	getInitialState() {
 		return {
-			cameraPermission: "undetermined",
-			locationPermission: "undetermined",
 			pauseRefresh: false,
 		};
 	},
 
-	//check the status of a single permission
 	componentDidMount() {
-		// Listen to route focus changes
-		// Should be a better way to do this...
-		this.refs.navRef.refs.navRef.navigationContext.addListener('willfocus', (event) => {
-			const route = event.data.route;
-			console.log("Willfocus: " + JSON.stringify(route.id));
+		if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
+			// Listen to route focus changes
+			// Should be a better way to do this...
+			this.refs.navRef.refs.navRef.navigationContext.addListener('willfocus', (event) => {
+				const route = event.data.route;
+				console.log("Willfocus: " + JSON.stringify(route.id));
 
-			// Make sure renders/card refreshes are only happening when in home route
-			if(route.id === "Home") {
-				this.setState({pauseRefresh: false});
-			}
-			else {
-				this.setState({pauseRefresh: true});
-			}
-		});
+				// Make sure renders/card refreshes are only happening when in home route
+				if (route.id === "Home") {
+					this.setState({ pauseRefresh: false });
+				} else {
+					this.setState({ pauseRefresh: true });
+				}
+			});
 
-		// Listen to back button on Android
-		BackAndroid.addEventListener('hardwareBackPress', () => {
-			//console.log("Backbutton: " + this.refs.navRef.navigationContext.route);
-			if(this._notInHome()) {
-				this.refs.navRef.refs.navRef.pop();
-				return true;
-			}
-			else {
-				BackAndroid.exitApp();
-				return false;
-			}
-		});
+			// Listen to back button on Android
+			BackAndroid.addEventListener('hardwareBackPress', () => {
+				//console.log("Backbutton: " + this.refs.navRef.navigationContext.route);
+				if(this.state.pauseRefresh) {
+					this.refs.navRef.refs.navRef.pop();
+					return true;
+				} else {
+					BackAndroid.exitApp();
+					return false;
+				}
+			});
+		}
 	},
 
 	render: function() {
-		return (
-			<NavigationBarWithRouteMapper
-				ref="navRef"
-				route={{id: 'Home', name: 'Home', title: 'now@ucsandiego'}}
-				renderScene={this.renderScene}
-			/>
-		);
+		if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
+			return (
+				<NavigationBarWithRouteMapper
+					ref="navRef"
+					route={{id: 'Home', name: 'Home', title: 'now@ucsandiego'}}
+					renderScene={this.renderScene}
+				/>
+			);
+		} else {
+			StatusBar.setBarStyle('light-content');
+			return (
+				<NavigatorIOS
+					initialRoute={{ 
+						component: Home, 
+						title: AppSettings.APP_NAME, 
+						passProps: {
+							isSimulator: this.props.isSimulator,
+							pauseRefresh: this.state.pauseRefresh
+						},
+						backButtonTitle: "Back"
+					}}
+					style={{flex: 1}}
+					tintColor='#FFFFFF'
+					barTintColor='#006C92'
+					titleTextColor='#FFFFFF'
+					navigationBarHidden={false}
+					translucent={true} 
+					ref="navRef"
+				/>
+			);
+		}
 	},
 
-
 	renderScene: function(route, navigator, index, navState) {
-		console.log("Changing route: " + route.id);
-
 		switch (route.id) {
-			case 'Home': 				return (<Home route={route} navigator={navigator} pauseRefresh={this.state.pauseRefresh}/>);
+			case 'Home': 				return (<Home route={route} navigator={navigator} />);
 			case 'ShuttleStop': 		return (<ShuttleStop route={route} navigator={navigator} />);
 			case 'SurfReport': 			return (<SurfReport route={route} navigator={navigator} />);
 			case 'TopStoriesDetail': 	return (<TopStoriesDetail route={route} navigator={navigator} />);
@@ -92,11 +113,6 @@ var nowucsandiego = React.createClass({
 			default: 					return (<Home route={route} navigator={navigator} />);
 		}
 	},
-
-	// Probably have a better way to do this in the future
-	_notInHome: function() {
-		return this.state.pauseRefresh;
-	}
 
 });
 

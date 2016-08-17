@@ -183,7 +183,7 @@ export default class WelcomeWeekView extends Component {
 		return (
 			<View style={css.main_container}>
 				<ListView
-					style={css.listview_main}
+					style={css.welcome_listview}
 					dataSource = {this.state.dataSource}
 					renderRow  = {this._renderRow}
 					renderSectionHeader = {this._renderSectionHeader}
