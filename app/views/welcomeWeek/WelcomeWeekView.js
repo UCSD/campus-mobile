@@ -185,7 +185,7 @@ export default class WelcomeWeekView extends Component {
 				<ListView
 					style={css.listview_main}
 					dataSource = {this.state.dataSource}
-					renderRow  = {this._renderRow}
+					renderRow  = {this._renderRow.bind(this)}
 					renderSectionHeader = {this._renderSectionHeader}
 					enableEmptySections = {true}
 					refreshControl={
@@ -208,7 +208,7 @@ export default class WelcomeWeekView extends Component {
 		description = description.replace(/\?.*/g,'?').replace(/!.*/g,'!').replace(/\..*/g,'.').replace(/\(.*/g,'');
 
 		return (
-			<TouchableOpacity underlayColor={'rgba(200,200,200,.1)'} onPress={() => this.gotoWelcomeWeekDetail(rowData)}>
+			<TouchableOpacity underlayColor={'rgba(200,200,200,.1)'} onPress={() => this._gotoWelcomeWeekDetail(rowData)}>
 				<View style={css.welcome_list_row}>
 					<View style={css.welcome_list_left_container}>
 						<Text style={css.welcome_list_title}>{title}</Text> 
