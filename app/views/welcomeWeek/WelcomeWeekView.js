@@ -18,8 +18,8 @@ import {
 } from 'react-native';
 
 import WelcomeWeekService from '../../services/welcomeWeekService';
-import EventDetail from '../events/EventDetail'
-
+import EventDetail from '../events/EventDetail';
+import WelcomeWeekDetail from './WelcomeWeekDetail';
 import css from '../../styles/css'; 
 
 var logger = require('../../util/logger');
@@ -185,7 +185,7 @@ export default class WelcomeWeekView extends Component {
 				<ListView
 					style={css.welcome_listview}
 					dataSource = {this.state.dataSource}
-					renderRow  = {this._renderRow}
+					renderRow  = {this._renderRow.bind(this)}
 					renderSectionHeader = {this._renderSectionHeader}
 					enableEmptySections = {true}
 					refreshControl={
@@ -233,5 +233,4 @@ export default class WelcomeWeekView extends Component {
 	gotoEventDetail(eventData) {
 		this.props.navigator.push({ id: 'EventDetail', name: 'EventDetail', title: 'Welcome Week', component: EventDetail, eventData: eventData });
 	}
-
 }
