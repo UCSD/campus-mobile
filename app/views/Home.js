@@ -94,6 +94,8 @@ var Home = React.createClass({
 
 	componentWillMount: function() {
 		
+		logger.log('Home: componentWillMount');
+
 		// Manage App State
 
 		AppState.addEventListener('change', this.handleAppStateChange);
@@ -148,6 +150,7 @@ var Home = React.createClass({
 						{enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
 					);
 					this.geolocationWatchID = navigator.geolocation.watchPosition((currentPosition) => {
+						logger.log('currentPosition: ' + currentPosition)
 						this.setState({ currentPosition });
 					});
 				}
@@ -162,12 +165,11 @@ var Home = React.createClass({
 
 	_alertForLocationPermission() {
 		Alert.alert(
-			'Can we access your location?',
-			'We need to spy on you.',
+			'Allow this app to access your location?',
 			[
-				{text: 'No way', onPress: () => console.log('permission denied'), style: 'cancel'},
+				{text: 'No', onPress: () => logger.log('_alertForLocationPermission: location access denied'), style: 'cancel'},
 				//this.state.locationPermission == 'undetermined'? 
-				{text: 'OK', onPress: this._requestPermission}
+				{text: 'Yes', onPress: this._requestPermission}
 				//: {text: 'Open Settings', onPress: Permissions.openSettings}
 			]
 		)
@@ -185,6 +187,7 @@ var Home = React.createClass({
 
 	// #1 - RENDER
 	render: function() {
+		logger.log('Home: render');
 		return this.renderScene();
 	},
 
@@ -684,6 +687,8 @@ var Home = React.createClass({
 
 	// SHUTTLE_CARD
 	findClosestShuttleStops: function(refreshType) {
+
+		logger.log('Home: findClosestShuttleStops');
 
 		this.setState({
 			closestStop1LoadFailed: false,
