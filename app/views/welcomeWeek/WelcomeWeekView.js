@@ -83,7 +83,6 @@ export default class WelcomeWeekView extends Component {
 	componentDidMount() {
 		InteractionManager.runAfterInteractions(() => {
 			this._fetchData();
-			//this.refreshShuttleDataTimer = this.setTimeout( () => { this.fetchShuttleArrivalsByStop('auto') }, this.shuttleRefreshInterval);
 		});
 	}
 
@@ -139,6 +138,7 @@ export default class WelcomeWeekView extends Component {
 			this.setState({
 				dataSource : this.state.dataSource.cloneWithRowsAndSections(dataBlob, sectionIDs, rowIDs),
 				loaded: true,
+				refreshing: false,
 			});
 		})
 		.catch((error) => {
@@ -151,9 +151,6 @@ export default class WelcomeWeekView extends Component {
 				logger.log('ERR: fetchTopStories: Limit exceeded - max limit:' + this.fetchErrorLimit);
 				this.setState({ fetchErrorLimitReached: true });
 			}
-		})
-		.done( () => {
-			this.setState({ refreshing: false });
 		});
 	}
 
