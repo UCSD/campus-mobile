@@ -57,6 +57,8 @@ var windowWidth = windowSize.width;
 var windowHeight = windowSize.height;
 var windowDefaultWidth = 414;
 
+var welcome_ai_marginTop = (windowHeight / 2) - navBarMarginTop;
+
 // Applying pixel ratio modifier helps ensure all views/layouts across devices render in similar fashion
 var prm = Math.round(windowWidth / windowDefaultWidth);
 
@@ -230,6 +232,7 @@ var css = StyleSheet.create({
 
 	// WELCOME WEEK STYLE
 	welcome_listview: { marginTop: welcomeWeekListMarginTop },
+	welcome_ai: { alignItems: 'center', justifyContent: 'center', marginTop: welcome_ai_marginTop },
 	welcome_list_row: { flex: 1, flexDirection: 'row', paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: 'white', overflow: 'hidden', paddingLeft: 16, borderTopColor: 'white', justifyContent: 'center', alignItems: 'center'},
 		welcome_list_sectionText: { fontSize: 18, color: '#FFF' },
 		welcome_list_section: { flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start', padding: 6, backgroundColor: '#666' },

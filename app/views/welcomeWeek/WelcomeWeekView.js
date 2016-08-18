@@ -169,10 +169,7 @@ export default class WelcomeWeekView extends Component {
 			<View style={css.main_container}>
 				<ActivityIndicator
 					animating={this.state.animating}
-					style={{alignItems: 'center',
-						justifyContent: 'center',
-						padding: 8, 
-						height: 80}}
+					style={css.welcome_ai}
 					size="large"
 				/>
 			</View>
