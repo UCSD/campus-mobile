@@ -7,6 +7,7 @@ import {
 	BackAndroid,
 	StatusBar
 } from 'react-native';
+import TimerMixin from 'react-timer-mixin';
 
 // SETUP / UTIL / NAV
 var AppSettings = 			require('./app/AppSettings'),
@@ -27,11 +28,34 @@ import WelcomeWeekView from './app/views/welcomeWeek/WelcomeWeekView';
 // NAV
 import NavigationBarWithRouteMapper from './app/views/NavigationBarWithRouteMapper';
 
+/**
+ * Timeout that allows for pause and resume
+**/
+function Timer(callback, delay) {
+	var timerId, start, remaining = delay;
+
+	this.pause = function() {
+		console.log("paws");
+		clearTimeout(timerId);
+		remaining -= new Date() - start;
+	};
+
+	this.resume = function() {
+		start = new Date();
+		clearTimeout(timerId);
+		timerId = setTimeout(callback, remaining);
+	};
+
+	this.resume();
+}
 
 var nowucsandiego = React.createClass({
 
+	mixins: [TimerMixin],
+
 	getInitialState() {
 		return {
+			timers: [],
 			pauseRefresh: false,
 		};
 	},
@@ -46,8 +70,10 @@ var nowucsandiego = React.createClass({
 
 				// Make sure renders/card refreshes are only happening when in home route
 				if (route.id === "Home") {
+					this._resumeTimeout();
 					this.setState({ pauseRefresh: false });
 				} else {
+					this._pauseTimeout();
 					this.setState({ pauseRefresh: true });
 				}
 			});
@@ -64,6 +90,32 @@ var nowucsandiego = React.createClass({
 				}
 			});
 		}
+	},
+
+	componentWillUnmount() {
+		this._pauseTimeout();
+		this.setState({timers: []});
+	},
+
+	newTimeout: function(callback, delay) {
+		this.state.timers.push(new Timer(callback, delay));
+
+		// remove finished timers
+		if(this.state.timers.length > 3) {
+			this.state.timers.shift();
+		}
+	},
+
+	_pauseTimeout: function() {
+		this.state.timers.forEach(function(entry) {
+			entry.pause();
+		})
+	},
+
+	_resumeTimeout: function() {
+		this.state.timers.forEach(function(entry) {
+			entry.resume();
+		})
 	},
 
 	render: function() {
@@ -101,8 +153,9 @@ var nowucsandiego = React.createClass({
 	},
 
 	renderScene: function(route, navigator, index, navState) {
+
 		switch (route.id) {
-			case 'Home': 				return (<Home route={route} navigator={navigator} />);
+			case 'Home': return (<Home route={route} navigator={navigator} new_timeout={this.newTimeout}/>);
 			case 'ShuttleStop': 		return (<ShuttleStop route={route} navigator={navigator} />);
 			case 'SurfReport': 			return (<SurfReport route={route} navigator={navigator} />);
 			case 'TopStoriesDetail': 	return (<TopStoriesDetail route={route} navigator={navigator} />);
@@ -110,7 +163,7 @@ var nowucsandiego = React.createClass({
 			case 'WebWrapper': 			return (<WebWrapper route={route} navigator={navigator} />);
 			case 'WelcomeWeekView': 	return (<WelcomeWeekView route={route} navigator={navigator} />);
 			case 'DestinationDetail': 	return (<DestinationDetail route={route} navigator={navigator} />);
-			default: 					return (<Home route={route} navigator={navigator} />);
+			default: 					return (<Home route={route} navigator={navigator} new_timeout={this.newTimeout}/>);
 		}
 	},
 

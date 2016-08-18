@@ -29,6 +29,7 @@ import WeatherCard from './weather/WeatherCard';
 
 // Node Modules
 import TimerMixin from 'react-timer-mixin';
+
 var MapView = 			require('react-native-maps');
 const Permissions = 	require('react-native-permissions');
 
@@ -50,39 +51,17 @@ var DestinationDetail = require('./DestinationDetail');
 var DiningList = 		require('./DiningList');
 var WebWrapper = 		require('./WebWrapper');
 
-
-function Timer(callback, delay) {
-    var timerId, start, remaining = delay;
-
-    this.pause = function() {
-        console.log("Trying to paws");
-        clearTimeout(timerId);
-        remaining -= new Date() - start;
-    };
-
-    this.resume = function() {
-        start = new Date();
-        clearTimeout(timerId);
-        timerId = setTimeout(callback, remaining);
-    };
-
-    this.resume();
-}
-
-var timer1, timer2, timer3;
-
-//
 var Home = React.createClass({
 
 	AppSettings: null,
 	mixins: [TimerMixin],
 	permissionUpdateInterval: 5 * 1000,				// Update permissions every 5 seconds
-	shuttleCardRefreshInterval: 1 * 60 * 1000,		// Refresh ShuttleCard every 1 minute
+	shuttleCardRefreshInterval: 1 * 5 * 1000,		// Refresh ShuttleCard every 1 minute
 	shuttleReloadAnim: new Animated.Value(0),
 	shuttleClosestStops: [{ dist: 100000000 },{ dist: 100000000 }],
 	diningDefaultResults: 3,
 	nearbyMaxResults: 5,
-	regionRefreshInterval: 60 * 1000,				// Update region every 1 minute
+	regionRefreshInterval: 5*1000,//60 * 1000,				// Update region every 1 minute
 	copyrightYear: new Date().getFullYear(),
 
 	getInitialState: function() {
@@ -179,8 +158,7 @@ var Home = React.createClass({
 			
 		});
 
-		timer1 = new Timer(() => { this.updateLocationPermission() }, this.permissionUpdateInterval);
-		//timer1.pause();
+		this.props.new_timeout(() => { this.updateLocationPermission() }, this.permissionUpdateInterval);
 		//timer1 = this.setTimeout( () => { this.updateLocationPermission() }, this.permissionUpdateInterval);
 	},
 
@@ -222,7 +200,7 @@ var Home = React.createClass({
 					<WelcomeModal />
 
 					{/* SPECIAL TOP BANNER */}
-					<TopBannerView navigator={this.props.navigator} timer1={timer1}/>
+					<TopBannerView navigator={this.props.navigator}/>
 
 					{/* SHUTTLE CARD */}
 					{AppSettings.SHUTTLE_CARD_ENABLED ? (
@@ -632,8 +610,8 @@ var Home = React.createClass({
 				logger.custom('ERR: loadNodeRegion: ' + error);
 			})
 			.done();
-
-		timer2 = new Timer(() => { this.updateCurrentNodeRegion() }, this.regionRefreshInterval);
+		console.log("Timer updateCurrentNodeRegion");
+		this.props.new_timeout(() => { this.updateCurrentNodeRegion() }, this.regionRefreshInterval);
 		//this.updateCurrentNodeRegionTimer = this.setTimeout( () => { this.updateCurrentNodeRegion() }, this.regionRefreshInterval);
 	},
 
@@ -755,7 +733,8 @@ var Home = React.createClass({
 			this.clearTimeout(this.refreshShuttleCardTimer);
 			//this.refreshShuttleCardTimer = this.setTimeout( () => { this.refreshShuttleCard('auto') }, this.shuttleCardRefreshInterval); //why
 		}
-		timer3 = new Timer(() => { this.refreshShuttleCard('auto') }, this.shuttleCardRefreshInterval);
+		console.log("Timer findClosestShuttleStops");
+		this.props.new_timeout(() => { this.refreshShuttleCard('auto') }, this.shuttleCardRefreshInterval);
 		//this.refreshShuttleCardTimer = this.setTimeout( () => { this.refreshShuttleCard('auto') }, this.shuttleCardRefreshInterval);
 	},
 

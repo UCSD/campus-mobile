@@ -57,8 +57,6 @@ export default class TopBannerView extends React.Component {
 	}
 
 	gotoWelcomeWeekView() {
-		console.log("Timer: " + JSON.stringify(this.props.timer1));
-		//this.props.timer1.pause();
 		this.props.navigator.push({ id: 'WelcomeWeekView', title: 'Welcome Week', name: 'Welcome Week', component: WelcomeWeekView });
 	}
 }
