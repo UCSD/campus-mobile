@@ -56,12 +56,12 @@ var Home = React.createClass({
 	AppSettings: null,
 	mixins: [TimerMixin],
 	permissionUpdateInterval: 5 * 1000,				// Update permissions every 5 seconds
-	shuttleCardRefreshInterval: 1 * 5 * 1000,		// Refresh ShuttleCard every 1 minute
+	shuttleCardRefreshInterval: 1 * 60 * 1000,		// Refresh ShuttleCard every 1 minute
 	shuttleReloadAnim: new Animated.Value(0),
 	shuttleClosestStops: [{ dist: 100000000 },{ dist: 100000000 }],
 	diningDefaultResults: 3,
 	nearbyMaxResults: 5,
-	regionRefreshInterval: 5*1000,//60 * 1000,				// Update region every 1 minute
+	regionRefreshInterval: 60*1000,//60 * 1000,				// Update region every 1 minute
 	copyrightYear: new Date().getFullYear(),
 
 	getInitialState: function() {
@@ -116,7 +116,6 @@ var Home = React.createClass({
 	},
 
 	componentWillUnmount: function() {
-		console.log("Home unmounts");
 		// Update unmount function with ability to clear all other timers (setTimeout/setInterval)
 		navigator.geolocation.clearWatch(this.geolocationWatchID);
 		AppState.removeEventListener('change', this.handleAppStateChange);
@@ -131,7 +130,6 @@ var Home = React.createClass({
 
 	updateLocationPermission: function() {
 		// Get location permission status
-		console.log("home permission");
 		Permissions.getPermissionStatus('location')
 		.then(response => {
 			//logger.log('Location permissions: ' + response);
@@ -613,7 +611,6 @@ var Home = React.createClass({
 				logger.custom('ERR: loadNodeRegion: ' + error);
 			})
 			.done();
-		console.log("Timer updateCurrentNodeRegion");
 		this.props.new_timeout(() => { this.updateCurrentNodeRegion() }, this.regionRefreshInterval);
 		//this.updateCurrentNodeRegionTimer = this.setTimeout( () => { this.updateCurrentNodeRegion() }, this.regionRefreshInterval);
 	},
@@ -738,7 +735,6 @@ var Home = React.createClass({
 			this.clearTimeout(this.refreshShuttleCardTimer);
 			//this.refreshShuttleCardTimer = this.setTimeout( () => { this.refreshShuttleCard('auto') }, this.shuttleCardRefreshInterval); //why
 		}
-		console.log("Timer findClosestShuttleStops");
 		this.props.new_timeout(() => { this.refreshShuttleCard('auto') }, this.shuttleCardRefreshInterval);
 		//this.refreshShuttleCardTimer = this.setTimeout( () => { this.refreshShuttleCard('auto') }, this.shuttleCardRefreshInterval);
 	},
