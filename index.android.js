@@ -35,7 +35,6 @@ function Timer(callback, delay) {
 	var timerId, start, remaining = delay;
 
 	this.pause = function() {
-		console.log("paws");
 		clearTimeout(timerId);
 		remaining -= new Date() - start;
 	};
@@ -90,6 +89,19 @@ var nowucsandiego = React.createClass({
 				}
 			});
 		}
+		else {
+			this.refs.navRef.navigationContext.addListener('didfocus', (event) => {
+				const route = event.data.route;
+
+				// Make sure renders/card refreshes are only happening when in home route
+				if (route.id === undefined) { //undefined is foxusing "Home"... weird I know
+					this._resumeTimeout();
+					this.setState({ pauseRefresh: false });
+				} else {
+					this._pauseTimeout();
+				}
+			});
+		}
 	},
 
 	componentWillUnmount() {
@@ -136,7 +148,8 @@ var nowucsandiego = React.createClass({
 						title: AppSettings.APP_NAME, 
 						passProps: {
 							isSimulator: this.props.isSimulator,
-							pauseRefresh: this.state.pauseRefresh
+							pauseRefresh: this.state.pauseRefresh,
+							new_timeout: this.newTimeout,
 						},
 						backButtonTitle: "Back"
 					}}

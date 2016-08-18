@@ -55,7 +55,7 @@ var Home = React.createClass({
 
 	AppSettings: null,
 	mixins: [TimerMixin],
-	permissionUpdateInterval: 5 * 1000,				// Update permissions every 5 seconds
+	permissionUpdateInterval: 60 * 1000,				// Update permissions every 60 seconds
 	shuttleCardRefreshInterval: 1 * 60 * 1000,		// Refresh ShuttleCard every 1 minute
 	shuttleReloadAnim: new Animated.Value(0),
 	shuttleClosestStops: [{ dist: 100000000 },{ dist: 100000000 }],
@@ -99,8 +99,24 @@ var Home = React.createClass({
 
 		AppState.addEventListener('change', this.handleAppStateChange);
 
-		// Check Location Permissions Periodically
-		this.updateLocationPermission();
+		if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
+			// Check Location Permissions Periodically
+			this.updateLocationPermission();
+		}
+
+		else {
+			navigator.geolocation.getCurrentPosition(
+				(initialPosition) => {
+					//logger.custom("getCurrentPosition");
+					this.setState({currentPosition: initialPosition});
+				},
+				(error) => logger.log('ERR: navigator.geolocation.getCurrentPosition1: ' + error.message),
+				{enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
+			);
+			this.geolocationWatchID = navigator.geolocation.watchPosition((currentPosition) => {
+				this.setState({ currentPosition });
+			});
+		}
 
 		/*
 		this.geolocationWatchID = navigator.geolocation.watchPosition((currentPosition) => {
@@ -148,7 +164,6 @@ var Home = React.createClass({
 						{enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
 					);
 					this.geolocationWatchID = navigator.geolocation.watchPosition((currentPosition) => {
-						logger.log('currentPosition: ' + currentPosition)
 						this.setState({ currentPosition });
 					});
 				}

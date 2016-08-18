@@ -28,17 +28,18 @@ import WelcomeWeekView from './app/views/welcomeWeek/WelcomeWeekView';
 // NAV
 import NavigationBarWithRouteMapper from './app/views/NavigationBarWithRouteMapper';
 
+/**
+ * Timeout that allows for pause and resume
+**/
 function Timer(callback, delay) {
 	var timerId, start, remaining = delay;
 
 	this.pause = function() {
-		console.log("paws");
 		clearTimeout(timerId);
 		remaining -= new Date() - start;
 	};
 
 	this.resume = function() {
-		console.log("resume: " + remaining);
 		start = new Date();
 		clearTimeout(timerId);
 		timerId = setTimeout(callback, remaining);
@@ -53,8 +54,8 @@ var nowucsandiego = React.createClass({
 
 	getInitialState() {
 		return {
-			pauseRefresh: false,
 			timers: [],
+			pauseRefresh: false,
 		};
 	},
 
@@ -88,6 +89,24 @@ var nowucsandiego = React.createClass({
 				}
 			});
 		}
+		else {
+			this.refs.navRef.navigationContext.addListener('didfocus', (event) => {
+				const route = event.data.route;
+
+				// Make sure renders/card refreshes are only happening when in home route
+				if (route.id === undefined) { //undefined is foxusing "Home"... weird I know
+					this._resumeTimeout();
+					this.setState({ pauseRefresh: false });
+				} else {
+					this._pauseTimeout();
+				}
+			});
+		}
+	},
+
+	componentWillUnmount() {
+		this._pauseTimeout();
+		this.setState({timers: []});
 	},
 
 	newTimeout: function(callback, delay) {
@@ -129,7 +148,8 @@ var nowucsandiego = React.createClass({
 						title: AppSettings.APP_NAME, 
 						passProps: {
 							isSimulator: this.props.isSimulator,
-							pauseRefresh: this.state.pauseRefresh
+							pauseRefresh: this.state.pauseRefresh,
+							new_timeout: this.newTimeout,
 						},
 						backButtonTitle: "Back"
 					}}
@@ -146,8 +166,9 @@ var nowucsandiego = React.createClass({
 	},
 
 	renderScene: function(route, navigator, index, navState) {
+
 		switch (route.id) {
-			case 'Home': 				return (<Home route={route} navigator={navigator} new_timeout={this.newTimeout}/>);
+			case 'Home': return (<Home route={route} navigator={navigator} new_timeout={this.newTimeout}/>);
 			case 'ShuttleStop': 		return (<ShuttleStop route={route} navigator={navigator} />);
 			case 'SurfReport': 			return (<SurfReport route={route} navigator={navigator} />);
 			case 'TopStoriesDetail': 	return (<TopStoriesDetail route={route} navigator={navigator} />);
