@@ -27,8 +27,6 @@ module.exports = {
 	PRIVACY_POLICY_URL: 		'http://www.ucsd.edu/_about/legal/uc-san-diego-website-privacy-policy.html',
 	NODE_MARKERS_BASE_URL: 		'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/nearby_markers/',
 	WEATHER_ICON_BASE_URL: 		'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/images/v1/weather-icons/',
-
-	WELCOME_WEEK_API_URL: 		'https://s3-us-west-2.amazonaws.com/ucsd-mobile/v1/welcome_week_events.json',
-	//WELCOME_WEEK_API_URL: 	'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/welcome_week_events.json',
+	WELCOME_WEEK_API_URL: 		'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/welcome_week_events.json',
 
 };
