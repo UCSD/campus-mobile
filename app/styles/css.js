@@ -40,12 +40,14 @@ var general = require('../util/general');
 
 var navBarMarginTop = 0;
 var navBarTitleMarginTop = 5;
+var welcomeWeekListMarginTop = 64;
 
 if (general.platformAndroid()) {
-	navBarMarginTop = 54;//57;
+	navBarMarginTop = 54;
 	navBarTitleMarginTop = 0;
-} else if (AppSettings.NAVIGATOR_ENABLED) {
+} else if (general.platformIOS() && AppSettings.NAVIGATOR_ENABLED) {
 	navBarMarginTop = 64;
+	welcomeWeekListMarginTop = 0;
 	navBarTitleMarginTop = 0;
 }
 
@@ -227,7 +229,7 @@ var css = StyleSheet.create({
 	events_more_label: { fontSize: 20, color: '#006C92', fontWeight: '300' },
 
 	// WELCOME WEEK STYLE
-	welcome_list: { width: maxCardWidth, padding: 8 },
+	welcome_listview: { marginTop: welcomeWeekListMarginTop },
 	welcome_list_row: { flex: 1, flexDirection: 'row', paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: 'white', overflow: 'hidden', paddingLeft: 16, borderTopColor: 'white', justifyContent: 'center', alignItems: 'center'},
 		welcome_list_sectionText: { fontSize: 18, color: '#FFF' },
 		welcome_list_section: { flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start', padding: 6, backgroundColor: '#666' },

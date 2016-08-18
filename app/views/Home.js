@@ -50,7 +50,6 @@ var DestinationDetail = require('./DestinationDetail');
 var DiningList = 		require('./DiningList');
 var WebWrapper = 		require('./WebWrapper');
 
-import WelcomeWeekView from './welcomeWeek/WelcomeWeekView';
 
 function Timer(callback, delay) {
     var timerId, start, remaining = delay;

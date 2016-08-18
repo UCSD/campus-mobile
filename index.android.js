@@ -23,10 +23,9 @@ var AppSettings = 			require('./app/AppSettings'),
 	DestinationDetail = 	require('./app/views/DestinationDetail');
 
 import WelcomeWeekView from './app/views/welcomeWeek/WelcomeWeekView';
-import WelcomeWeekDetail from './app/views/welcomeWeek/WelcomeWeekDetail';
+
 // NAV
 import NavigationBarWithRouteMapper from './app/views/NavigationBarWithRouteMapper';
-
 
 
 var nowucsandiego = React.createClass({
@@ -46,10 +45,9 @@ var nowucsandiego = React.createClass({
 				console.log("Willfocus: " + JSON.stringify(route.id));
 
 				// Make sure renders/card refreshes are only happening when in home route
-				if(route.id === "Home") {
+				if (route.id === "Home") {
 					this.setState({ pauseRefresh: false });
-				}
-				else {
+				} else {
 					this.setState({ pauseRefresh: true });
 				}
 			});
@@ -69,8 +67,6 @@ var nowucsandiego = React.createClass({
 	},
 
 	render: function() {
-		StatusBar.setBarStyle('light-content');
-
 		if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
 			return (
 				<NavigationBarWithRouteMapper
@@ -80,14 +76,18 @@ var nowucsandiego = React.createClass({
 				/>
 			);
 		} else {
+			StatusBar.setBarStyle('light-content');
 			return (
 				<NavigatorIOS
 					initialRoute={{ 
 						component: Home, 
 						title: AppSettings.APP_NAME, 
-						passProps: { isSimulator: this.props.isSimulator, 
-						pauseRefresh: this.state.pauseRefresh,},
-						backButtonTitle: "Back",}}
+						passProps: {
+							isSimulator: this.props.isSimulator,
+							pauseRefresh: this.state.pauseRefresh
+						},
+						backButtonTitle: "Back"
+					}}
 					style={{flex: 1}}
 					tintColor='#FFFFFF'
 					barTintColor='#006C92'
@@ -98,11 +98,9 @@ var nowucsandiego = React.createClass({
 				/>
 			);
 		}
-
 	},
 
 	renderScene: function(route, navigator, index, navState) {
-
 		switch (route.id) {
 			case 'Home': 				return (<Home route={route} navigator={navigator} />);
 			case 'ShuttleStop': 		return (<ShuttleStop route={route} navigator={navigator} />);
@@ -111,12 +109,10 @@ var nowucsandiego = React.createClass({
 			case 'EventDetail': 		return (<EventDetail route={route} navigator={navigator} />);
 			case 'WebWrapper': 			return (<WebWrapper route={route} navigator={navigator} />);
 			case 'WelcomeWeekView': 	return (<WelcomeWeekView route={route} navigator={navigator} />);
-			case 'WelcomeWeekDetail': 	return (<WelcomeWeekDetail route={route} navigator={navigator} />);
 			case 'DestinationDetail': 	return (<DestinationDetail route={route} navigator={navigator} />);
 			default: 					return (<Home route={route} navigator={navigator} />);
 		}
 	},
-
 
 });
 

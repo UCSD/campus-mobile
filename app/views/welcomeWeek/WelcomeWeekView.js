@@ -18,7 +18,8 @@ import {
 } from 'react-native';
 
 import WelcomeWeekService from '../../services/welcomeWeekService';
-import WelcomeWeekDetail from './WelcomeWeekDetail'
+import EventDetail from '../events/EventDetail';
+import WelcomeWeekDetail from './WelcomeWeekDetail';
 import css from '../../styles/css'; 
 
 var logger = require('../../util/logger');
@@ -109,10 +110,11 @@ export default class WelcomeWeekView extends Component {
 		WelcomeWeekService.FetchEvents()
 		.then((responseData) => {
 			var dataBlob = {},
-			sectionIDs = [],
-			rowIDs = [],
-			college,
-			i, j;
+				sectionIDs = [],
+				rowIDs = [],
+				college,
+				i,
+				j;
 
 			// Loop through each college
 			for(i = 0; i < collegeNames.length; i++) {
@@ -156,11 +158,9 @@ export default class WelcomeWeekView extends Component {
 	}
 
 	render() {
-		console.log("Render welcome");
 		if (!this.state.loaded) {
 			return this.renderLoadingView();
 		}
-
 		return this.renderListView();
 	}
 
@@ -183,7 +183,7 @@ export default class WelcomeWeekView extends Component {
 		return (
 			<View style={css.main_container}>
 				<ListView
-					style={css.listview_main}
+					style={css.welcome_listview}
 					dataSource = {this.state.dataSource}
 					renderRow  = {this._renderRow.bind(this)}
 					renderSectionHeader = {this._renderSectionHeader}
@@ -208,7 +208,7 @@ export default class WelcomeWeekView extends Component {
 		description = description.replace(/\?.*/g,'?').replace(/!.*/g,'!').replace(/\..*/g,'.').replace(/\(.*/g,'');
 
 		return (
-			<TouchableOpacity underlayColor={'rgba(200,200,200,.1)'} onPress={() => this._gotoWelcomeWeekDetail(rowData)}>
+			<TouchableOpacity underlayColor={'rgba(200,200,200,.1)'} onPress={() => this.gotoEventDetail(rowData)}>
 				<View style={css.welcome_list_row}>
 					<View style={css.welcome_list_left_container}>
 						<Text style={css.welcome_list_title}>{title}</Text> 
@@ -230,7 +230,7 @@ export default class WelcomeWeekView extends Component {
 		); 
 	}
 
-	_gotoWelcomeWeekDetail(rowData) {
-		this.props.navigator.push({ id: 'WelcomeWeekDetail', name: 'WelcomeWeekDetail', title: 'Event Details', component: WelcomeWeekDetail, eventData: rowData });
+	gotoEventDetail(eventData) {
+		this.props.navigator.push({ id: 'EventDetail', name: 'EventDetail', title: 'Welcome Week', component: EventDetail, eventData: eventData });
 	}
 }

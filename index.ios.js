@@ -1,31 +1,31 @@
 'use strict';
 
-import React from 'react';
+import React, { Component } from 'react';
 import {
 	AppRegistry,
 	NavigatorIOS,
-	Navigator,
+	BackAndroid,
 	StatusBar
 } from 'react-native';
-import NavigationBarWithRouteMapper from './app/views/NavigationBarWithRouteMapper';
+
+// SETUP / UTIL / NAV
+var AppSettings = 			require('./app/AppSettings'),
+	general = 				require('./app/util/general'),
+	logger = 				require('./app/util/logger'),
+
+// VIEWS
+	Home = 					require('./app/views/Home'),
+	ShuttleStop = 			require('./app/views/ShuttleStop'),
+	SurfReport = 			require('./app/views/weather/SurfReport'),
+	TopStoriesDetail = 		require('./app/views/topStories/TopStoriesDetail'),
+	EventDetail = 			require('./app/views/events/EventDetail'),
+	WebWrapper = 			require('./app/views/WebWrapper'),
+	DestinationDetail = 	require('./app/views/DestinationDetail');
+
 import WelcomeWeekView from './app/views/welcomeWeek/WelcomeWeekView';
 
-var logger = 		require('./app/util/logger');
-var general = 		require('./app/util/general');
-var AppSettings = 	require('./app/AppSettings');
-
-var Home, ShuttleStop, SurfReport, EventDetail, TopStoriesDetail, WebWrapper, DestinationDetail;
-
-Home = require('./app/views/Home');
-
-if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
-	ShuttleStop = 			require('./app/views/ShuttleStop');
-	SurfReport = 			require('./app/views/weather/SurfReport');
-	TopStoriesDetail = 		require('./app/views/topStories/TopStoriesDetail');
-	EventDetail = 			require('./app/views/events/EventDetail');
-	WebWrapper = 			require('./app/views/WebWrapper');
-	DestinationDetail = 	require('./app/views/DestinationDetail');
-}
+// NAV
+import NavigationBarWithRouteMapper from './app/views/NavigationBarWithRouteMapper';
 
 
 var nowucsandiego = React.createClass({
@@ -36,9 +36,37 @@ var nowucsandiego = React.createClass({
 		};
 	},
 
-	render: function() {
-		StatusBar.setBarStyle('light-content');
+	componentDidMount() {
+		if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
+			// Listen to route focus changes
+			// Should be a better way to do this...
+			this.refs.navRef.refs.navRef.navigationContext.addListener('willfocus', (event) => {
+				const route = event.data.route;
+				console.log("Willfocus: " + JSON.stringify(route.id));
 
+				// Make sure renders/card refreshes are only happening when in home route
+				if (route.id === "Home") {
+					this.setState({ pauseRefresh: false });
+				} else {
+					this.setState({ pauseRefresh: true });
+				}
+			});
+
+			// Listen to back button on Android
+			BackAndroid.addEventListener('hardwareBackPress', () => {
+				//console.log("Backbutton: " + this.refs.navRef.navigationContext.route);
+				if(this.state.pauseRefresh) {
+					this.refs.navRef.refs.navRef.pop();
+					return true;
+				} else {
+					BackAndroid.exitApp();
+					return false;
+				}
+			});
+		}
+	},
+
+	render: function() {
 		if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
 			return (
 				<NavigationBarWithRouteMapper
@@ -48,14 +76,18 @@ var nowucsandiego = React.createClass({
 				/>
 			);
 		} else {
+			StatusBar.setBarStyle('light-content');
 			return (
 				<NavigatorIOS
 					initialRoute={{ 
 						component: Home, 
 						title: AppSettings.APP_NAME, 
-						passProps: { isSimulator: this.props.isSimulator, 
-						pauseRefresh: this.state.pauseRefresh,},
-						backButtonTitle: "Back",}}
+						passProps: {
+							isSimulator: this.props.isSimulator,
+							pauseRefresh: this.state.pauseRefresh
+						},
+						backButtonTitle: "Back"
+					}}
 					style={{flex: 1}}
 					tintColor='#FFFFFF'
 					barTintColor='#006C92'
@@ -66,11 +98,9 @@ var nowucsandiego = React.createClass({
 				/>
 			);
 		}
-
 	},
 
 	renderScene: function(route, navigator, index, navState) {
-
 		switch (route.id) {
 			case 'Home': 				return (<Home route={route} navigator={navigator} />);
 			case 'ShuttleStop': 		return (<ShuttleStop route={route} navigator={navigator} />);
@@ -83,7 +113,6 @@ var nowucsandiego = React.createClass({
 			default: 					return (<Home route={route} navigator={navigator} />);
 		}
 	},
-
 
 });
 
