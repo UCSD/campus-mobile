@@ -28,7 +28,8 @@ import TopStoriesCard from './topStories/TopStoriesCard';
 import WeatherCard from './weather/WeatherCard';
 
 // Node Modules
-var TimerMixin = 		require('react-timer-mixin');
+import TimerMixin from 'react-timer-mixin';
+
 var MapView = 			require('react-native-maps');
 const Permissions = 	require('react-native-permissions');
 
@@ -50,19 +51,17 @@ var DestinationDetail = require('./DestinationDetail');
 var DiningList = 		require('./DiningList');
 var WebWrapper = 		require('./WebWrapper');
 
-
-//
 var Home = React.createClass({
 
 	AppSettings: null,
 	mixins: [TimerMixin],
 	permissionUpdateInterval: 5 * 1000,				// Update permissions every 5 seconds
-	shuttleCardRefreshInterval: 1 * 60 * 1000,		// Refresh ShuttleCard every 1 minute
+	shuttleCardRefreshInterval: 1 * 5 * 1000,		// Refresh ShuttleCard every 1 minute
 	shuttleReloadAnim: new Animated.Value(0),
 	shuttleClosestStops: [{ dist: 100000000 },{ dist: 100000000 }],
 	diningDefaultResults: 3,
 	nearbyMaxResults: 5,
-	regionRefreshInterval: 60 * 1000,				// Update region every 1 minute
+	regionRefreshInterval: 5*1000,//60 * 1000,				// Update region every 1 minute
 	copyrightYear: new Date().getFullYear(),
 
 	getInitialState: function() {
@@ -117,6 +116,7 @@ var Home = React.createClass({
 	},
 
 	componentWillUnmount: function() {
+		console.log("Home unmounts");
 		// Update unmount function with ability to clear all other timers (setTimeout/setInterval)
 		navigator.geolocation.clearWatch(this.geolocationWatchID);
 		AppState.removeEventListener('change', this.handleAppStateChange);
@@ -158,9 +158,11 @@ var Home = React.createClass({
 			else {
 				this._alertForLocationPermission()
 			}
+			
 		});
 
-		this.permissionUpdateTimer = this.setTimeout( () => { this.updateLocationPermission() }, this.permissionUpdateInterval);
+		this.props.new_timeout(() => { this.updateLocationPermission() }, this.permissionUpdateInterval);
+		//timer1 = this.setTimeout( () => { this.updateLocationPermission() }, this.permissionUpdateInterval);
 	},
 
 	_alertForLocationPermission() {
@@ -611,8 +613,9 @@ var Home = React.createClass({
 				logger.custom('ERR: loadNodeRegion: ' + error);
 			})
 			.done();
-
-		this.updateCurrentNodeRegionTimer = this.setTimeout( () => { this.updateCurrentNodeRegion() }, this.regionRefreshInterval);
+		console.log("Timer updateCurrentNodeRegion");
+		this.props.new_timeout(() => { this.updateCurrentNodeRegion() }, this.regionRefreshInterval);
+		//this.updateCurrentNodeRegionTimer = this.setTimeout( () => { this.updateCurrentNodeRegion() }, this.regionRefreshInterval);
 	},
 
 	parseNodeRegion: function(ucsd_node) {
@@ -735,7 +738,9 @@ var Home = React.createClass({
 			this.clearTimeout(this.refreshShuttleCardTimer);
 			//this.refreshShuttleCardTimer = this.setTimeout( () => { this.refreshShuttleCard('auto') }, this.shuttleCardRefreshInterval); //why
 		}
-		this.refreshShuttleCardTimer = this.setTimeout( () => { this.refreshShuttleCard('auto') }, this.shuttleCardRefreshInterval);
+		console.log("Timer findClosestShuttleStops");
+		this.props.new_timeout(() => { this.refreshShuttleCard('auto') }, this.shuttleCardRefreshInterval);
+		//this.refreshShuttleCardTimer = this.setTimeout( () => { this.refreshShuttleCard('auto') }, this.shuttleCardRefreshInterval);
 	},
 
 	fetchShuttleArrivalsByStop: function(closestStopNumber, stopID) {
@@ -832,11 +837,6 @@ var Home = React.createClass({
 
 	gotoDiningList: function(marketData) {
 		this.props.navigator.push({ id: 'DiningList', component: DiningList, title: marketData.name, marketData: marketData });
-	},
-
-	gotoWelcomeWeekView() {
-		console.log("Pushing route: WelcomeWeekView");
-  		this.props.navigator.push({ id: 'WelcomeWeekView', component: WelcomeWeekView, title: 'Welcome Week'});
 	},
 
 
