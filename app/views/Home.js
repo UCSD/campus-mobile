@@ -53,7 +53,6 @@ var WebWrapper = 		require('./WebWrapper');
 
 var Home = React.createClass({
 
-	AppSettings: null,
 	mixins: [TimerMixin],
 	permissionUpdateInterval: 60 * 1000,				// Update permissions every 60 seconds
 	shuttleCardRefreshInterval: 1 * 60 * 1000,		// Refresh ShuttleCard every 1 minute
@@ -93,10 +92,7 @@ var Home = React.createClass({
 
 	componentWillMount: function() {
 		
-		logger.log('Home: componentWillMount');
-
 		// Manage App State
-
 		AppState.addEventListener('change', this.handleAppStateChange);
 
 		if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
@@ -106,22 +102,14 @@ var Home = React.createClass({
 
 		else {
 			navigator.geolocation.getCurrentPosition(
-				(initialPosition) => {
-					//logger.custom("getCurrentPosition");
-					this.setState({currentPosition: initialPosition});
-				},
-				(error) => logger.log('ERR: navigator.geolocation.getCurrentPosition1: ' + error.message),
+				(initialPosition) => { this.setState({currentPosition: initialPosition}) },
+				(error) => logger.log('ERR: navigator.geolocation.getCurrentPosition: ' + error.message),
 				{enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
 			);
 			this.geolocationWatchID = navigator.geolocation.watchPosition((currentPosition) => {
 				this.setState({ currentPosition });
 			});
 		}
-
-		/*
-		this.geolocationWatchID = navigator.geolocation.watchPosition((currentPosition) => {
-			this.setState({ currentPosition });
-		});*/
 
 		// Load all non-broken-out Cards
 		this.refreshAllCards('auto');
@@ -138,22 +126,21 @@ var Home = React.createClass({
 	},
 
 	shouldComponentUpdate: function() {
-		if(this.props.pauseRefresh) {
+		if (this.props.pauseRefresh) {
 			return false;
+		} else {
+			return true;
 		}
-		return true;
 	},
 
 	updateLocationPermission: function() {
-		// Get location permission status
+		// Get location permission status on Android
 		Permissions.getPermissionStatus('location')
 		.then(response => {
-			//logger.log('Location permissions: ' + response);
-
 			//response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
 			this.setState({ locationPermission: response });
-			//this.refreshAllCards('auto'); // Should only be refreshing cards that rely on location perm
-			if(response === "authorized") {
+			
+			if (response === "authorized") {
 				if(this.state.currentPosition === null ) {
 					navigator.geolocation.getCurrentPosition(
 						(initialPosition) => {
@@ -167,15 +154,12 @@ var Home = React.createClass({
 						this.setState({ currentPosition });
 					});
 				}
-			}
-			else {
+			} else {
 				this._alertForLocationPermission()
 			}
-			
 		});
 
 		this.props.new_timeout(() => { this.updateLocationPermission() }, this.permissionUpdateInterval);
-		//timer1 = this.setTimeout( () => { this.updateLocationPermission() }, this.permissionUpdateInterval);
 	},
 
 	_alertForLocationPermission() {
@@ -183,14 +167,11 @@ var Home = React.createClass({
 			'Allow this app to access your location?',
 			[
 				{text: 'No', onPress: () => logger.log('_alertForLocationPermission: location access denied'), style: 'cancel'},
-				//this.state.locationPermission == 'undetermined'? 
 				{text: 'Yes', onPress: this._requestPermission}
-				//: {text: 'Open Settings', onPress: Permissions.openSettings}
 			]
 		)
 	},
 
-	//request permission to access location
 	_requestPermission() {
 	Permissions.requestPermission('location')
 		.then(response => {

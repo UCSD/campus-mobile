@@ -168,7 +168,7 @@ var nowucsandiego = React.createClass({
 	renderScene: function(route, navigator, index, navState) {
 
 		switch (route.id) {
-			case 'Home': return (<Home route={route} navigator={navigator} new_timeout={this.newTimeout}/>);
+			case 'Home': 				return (<Home route={route} navigator={navigator} new_timeout={this.newTimeout}/>);
 			case 'ShuttleStop': 		return (<ShuttleStop route={route} navigator={navigator} />);
 			case 'SurfReport': 			return (<SurfReport route={route} navigator={navigator} />);
 			case 'TopStoriesDetail': 	return (<TopStoriesDetail route={route} navigator={navigator} />);
