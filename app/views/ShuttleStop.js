@@ -348,6 +348,7 @@ var ShuttleStop = React.createClass({
 			})
 			.then((response) => response.json())
 			.then((responseData) => {
+				console.log("Fetch: " + JSON.stringify(responseData));
 				general.stopReloadAnimation(this.shuttleReloadAnim);
 				this._processShuttleArrivals(responseData);
 			})
