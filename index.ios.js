@@ -131,6 +131,11 @@ var nowucsandiego = React.createClass({
 	},
 
 	render: function() {
+
+		if (general.platformIOS()) {
+			StatusBar.setBarStyle('light-content');
+		}
+
 		if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
 			return (
 				<NavigationBarWithRouteMapper
@@ -140,7 +145,6 @@ var nowucsandiego = React.createClass({
 				/>
 			);
 		} else {
-			StatusBar.setBarStyle('light-content');
 			return (
 				<NavigatorIOS
 					initialRoute={{ 
