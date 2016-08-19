@@ -8,12 +8,12 @@ import {
 	TouchableHighlight,
 	ScrollView,
 	Image,
-	MapView,
 	Animated,
 	Easing,
 	RefreshControl,
 	InteractionManager
 } from 'react-native';
+var MapView = require('react-native-maps');
 
 var TimerMixin = 		require('react-timer-mixin');
 var AppSettings = 		require('../AppSettings');
@@ -124,9 +124,7 @@ var ShuttleStop = React.createClass({
 	},
 
 	componentWillMount: function() {
-		this.watchID = navigator.geolocation.watchPosition((currentPosition) => {
-			this.setState({currentPosition});
-		});
+		
 
 		//this.fetchShuttleArrivalsByStop('auto');
 		// Initial shuttle info render passed from home
@@ -141,8 +139,14 @@ var ShuttleStop = React.createClass({
 		// Revisit at a later time
 		InteractionManager.runAfterInteractions(() => {
 			this.fetchShuttleArrivalsByStop('auto');
+			 this.loadMapView();
+
 			// Poll for new data
 			this.refreshShuttleDataTimer = this.setTimeout( () => { this.fetchShuttleArrivalsByStop('auto') }, this.shuttleRefreshInterval);
+			this.mapViewTimeout = this.setTimeout( () => { this.loadMapView() }, this.delayMapViewLoad);
+			this.watchID = navigator.geolocation.watchPosition((currentPosition) => {
+			this.setState({currentPosition});
+		});
 		});
 	},
 
@@ -187,7 +191,6 @@ var ShuttleStop = React.createClass({
 	},*/
 
 	renderScene: function(route, navigator) {
-
 		return (
 			<View style={[css.main_container, css.offwhitebg]}>
 
@@ -259,30 +262,29 @@ var ShuttleStop = React.createClass({
 						</View>
 					)}
 
-					{/*
-					<View>
-						<Text style={css.shuttle_stop_map_text}>Map</Text>
-						
-						{this.state.mapViewLoadReady ? (
-							<MapView
-								style={css.shuttlestop_map}
-								annotations={[{
-									latitude: this.state.shuttleStopLat,
-									longitude: this.state.shuttleStopLon,
-									title: this.state.shuttleStopName,
-								}]}
-								region={this.state.region}
-								legalLabelInsets={this.map_legal_disclaimer}
-								scrollEnabled={true}
-								zoomEnabled={true}
-								rotateEnabled={false}
-								minDelta={this.state.minDelta}
-								maxDelta={this.state.maxDelta}
-								showsUserLocation={true} />
-						) : null }
-					</View>
-					*/}
+					<View style={css.destinationcard_map_container}>
+						<MapView
+							style={css.shuttlestop_map}
+							loadingEnabled={true}
+							loadingIndicatorColor={'#666'}
+							loadingBackgroundColor={'#EEE'}
+							showsUserLocation={true}
+							initialRegion={{
+								latitude: Number(this.getCurrentPosition('lat')),
+								longitude: Number(this.getCurrentPosition('lon')),
+								latitudeDelta: this.state.minDelta,
+								longitudeDelta: this.state.minDelta,
+							}}>
 
+							<MapView.Marker
+								coordinate={{latitude: this.state.shuttleStopLat,
+									longitude: this.state.shuttleStopLon}}
+								title={this.state.shuttleStopName}
+								description={this.state.shuttleStopName}
+								key={this.state.shuttleStopName}
+							/>
+						</MapView>
+					</View>
 				</ScrollView>
 			</View>
 			
@@ -316,6 +318,8 @@ var ShuttleStop = React.createClass({
 
 	// TODO: use setState less, revisit when we have maps working
 	loadMapView: function() {
+		// If 
+
 		var distLatLon = Math.sqrt(Math.pow(Math.abs(this.getCurrentPosition('lat') - this.state.shuttleStopLat), 2) + Math.pow(Math.abs(this.getCurrentPosition('lon') - this.state.shuttleStopLon), 2));
 
 		this.setState({

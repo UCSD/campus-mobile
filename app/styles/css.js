@@ -231,7 +231,7 @@ var css = StyleSheet.create({
 	events_more_label: { fontSize: 20, color: '#006C92', fontWeight: '300' },
 
 	// WELCOME WEEK STYLE
-	welcome_listview: { marginTop: welcomeWeekListMarginTop },
+	welcome_listview: { },//marginTop: welcomeWeekListMarginTop },
 	welcome_ai: { alignItems: 'center', justifyContent: 'center', marginTop: welcome_ai_marginTop },
 	welcome_list_row: { flex: 1, flexDirection: 'row', paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: 'white', overflow: 'hidden', paddingLeft: 16, borderTopColor: 'white', justifyContent: 'center', alignItems: 'center'},
 		welcome_list_sectionText: { fontSize: 18, color: '#FFF' },
