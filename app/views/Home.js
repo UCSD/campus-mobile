@@ -109,10 +109,11 @@ var Home = React.createClass({
 			this.geolocationWatchID = navigator.geolocation.watchPosition((currentPosition) => {
 				this.setState({ currentPosition });
 			});
+			// Load all non-broken-out Cards
+			this.refreshAllCards('auto');
 		}
 
-		// Load all non-broken-out Cards
-		this.refreshAllCards('auto');
+		
 	},
 
 	componentDidMount: function() {
@@ -154,8 +155,10 @@ var Home = React.createClass({
 						this.setState({ currentPosition });
 					});
 				}
+				// Load all non-broken-out Cards
+				this.refreshAllCards('auto');
 			} else {
-				this._alertForLocationPermission()
+				this._alertForLocationPermission();
 			}
 		});
 
@@ -165,6 +168,7 @@ var Home = React.createClass({
 	_alertForLocationPermission() {
 		Alert.alert(
 			'Allow this app to access your location?',
+			'We need access so you can get nearby information.',
 			[
 				{text: 'No', onPress: () => logger.log('_alertForLocationPermission: location access denied'), style: 'cancel'},
 				{text: 'Yes', onPress: this._requestPermission}
