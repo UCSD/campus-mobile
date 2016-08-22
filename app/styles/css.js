@@ -359,6 +359,8 @@ var css = StyleSheet.create({
 		shuttle_map_img: { width: windowWidth, height: windowWidth * 1.474, marginBottom: 12 },
 		shuttle_progress_img: { width: windowWidth, height: windowWidth * 1.426, marginBottom: 12 },
 
+		shuttlestop_aa: { marginRight: 20, marginVertical: 50 },
+
 	shuttle_stop_no_arrivals: { fontSize: 16, color: '#555' },
 
 	// Weather Styles
@@ -396,7 +398,7 @@ var css = StyleSheet.create({
 	mgrey: { color: '#999' },
 	lgrey: { color: '#CCC' },
 	flex: { flex: 1 },
-	center: { alignItems: 'center', justifyContent: 'center', width: maxCardWidth },
+	center: { alignItems: 'center', justifyContent: 'center' },
 	cardcenter: { alignItems: 'center', justifyContent: 'center', width: maxCardWidth },
 	flexcenter: { flex: 1, alignItems: 'center', justifyContent: 'center', width: maxCardWidth },
 	flexcenter2: { flex: 1, alignItems: 'center', justifyContent: 'center', width: maxCardWidthWithPadding },

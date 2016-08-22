@@ -11,7 +11,8 @@ import {
 	Animated,
 	Easing,
 	RefreshControl,
-	InteractionManager
+	InteractionManager,
+	ActivityIndicator
 } from 'react-native';
 var MapView = require('react-native-maps');
 
@@ -145,8 +146,8 @@ var ShuttleStop = React.createClass({
 			this.refreshShuttleDataTimer = this.setTimeout( () => { this.fetchShuttleArrivalsByStop('auto') }, this.shuttleRefreshInterval);
 			this.mapViewTimeout = this.setTimeout( () => { this.loadMapView() }, this.delayMapViewLoad);
 			this.watchID = navigator.geolocation.watchPosition((currentPosition) => {
-			this.setState({currentPosition});
-		});
+				this.setState({currentPosition});
+			});
 		});
 	},
 
@@ -206,7 +207,7 @@ var ShuttleStop = React.createClass({
         			{this.state.shuttleStopImageDict[this.state.shuttleStopID] ? (
 						<Image style={css.shuttlestop_image} source={ this.state.shuttleStopImageDict[this.state.shuttleStopID] } />
 					) : null }
-					
+
 					<View style={css.shuttlestop_name_container}>
 						<Text style={css.shuttlestop_name_text}>{this.state.shuttleStopName}</Text>
 
@@ -218,13 +219,10 @@ var ShuttleStop = React.createClass({
 					</View>
 
 					{this.state.closestShuttlesInactive == false ? (
-						<View style={css.shuttle_stop_arrivals_container}>
-
-							<Text style={css.shuttle_stop_next_arrivals_text}>Next Arrivals</Text>
-							
+						<View>
 							{this.state.closestShuttlesLoaded ? (
-								<View>
-
+								<View style={css.shuttle_stop_arrivals_container}>
+									<Text style={css.shuttle_stop_next_arrivals_text}>Next Arrivals</Text>
 									{responseDataRef.length >= 1 ? (
 										<View style={css.shuttle_stop_arrivals_row}>
 											<View style={[css.shuttle_stop_rt_2, { backgroundColor: responseDataRef[responseDataSortRef[0].key].route.color, borderColor: responseDataRef[responseDataSortRef[0].key].route.color }]}><Text style={css.shuttle_stop_rt_2_label}>{responseDataRef[responseDataSortRef[0].key].route.shortName}</Text></View>
@@ -248,12 +246,9 @@ var ShuttleStop = React.createClass({
 											<Text style={css.shuttle_stop_arrivals_row_eta_text}>{responseDataRef[responseDataSortRef[2].key].etaMinutes}</Text>
 										</View>
 									) : null }
-
 								</View>
 							) : (
-								<View style={[css.flexcenter2, css.mar30]}>
-									<Image style={css.card_loading_img} source={ require('../assets/img/loader_dots.gif')} />
-								</View>
+								<ActivityIndicator style={css.shuttlestop_aa} size="small" />
 							)}
 						</View>
 					) : (
@@ -261,11 +256,12 @@ var ShuttleStop = React.createClass({
 							<Text style={css.shuttle_stop_next_arrivals_text}>There are no active shuttles at this time</Text>
 						</View>
 					)}
+					
 
 					<View style={css.destinationcard_map_container}>
 						<MapView
 							style={css.shuttlestop_map}
-							loadingEnabled={true}
+							loadingEnabled={false}
 							loadingIndicatorColor={'#666'}
 							loadingBackgroundColor={'#EEE'}
 							showsUserLocation={true}
