@@ -66,17 +66,11 @@ var ShuttleStop = React.createClass({
 
 			mapDeltaViewLoader: false,
 			mapViewLoadReady: false,
-			minDelta: .01,
-			maxDelta: .02,
+			mapDelta: .01,
 
-			initialPosition: this.props.route.currentPosition,
 			currentPosition: this.props.route.currentPosition,
-
-			simulatorPosition: {
-				// TPCS
-				coords: { latitude: '32.890378', longitude: '-117.243365' }
-				// UCSD
-				//coords: { latitude: '32.88', longitude: '-117.234' }
+			defaultPosition: {
+				coords: { latitude: '32.88', longitude: '-117.234' }
 			},
 
 			shuttleStopImageDict: {
@@ -257,29 +251,27 @@ var ShuttleStop = React.createClass({
 						</View>
 					)}
 					
-					<View style={css.destinationcard_map_container}>
-						<MapView
-							style={css.shuttlestop_map}
-							loadingEnabled={false}
-							loadingIndicatorColor={'#666'}
-							loadingBackgroundColor={'#EEE'}
-							showsUserLocation={true}
-							initialRegion={{
-								latitude: Number(this.getCurrentPosition('lat')),
-								longitude: Number(this.getCurrentPosition('lon')),
-								latitudeDelta: this.state.minDelta,
-								longitudeDelta: this.state.minDelta,
-							}}>
+					<MapView
+						style={css.shuttlestop_map}
+						loadingEnabled={false}
+						loadingIndicatorColor={'#666'}
+						loadingBackgroundColor={'#EEE'}
+						showsUserLocation={true}
+						initialRegion={{
+							latitude: Number(this.getCurrentPosition('lat')),
+							longitude: Number(this.getCurrentPosition('lon')),
+							latitudeDelta: this.state.mapDelta,
+							longitudeDelta: this.state.mapDelta,
+						}}>
 
-							<MapView.Marker
-								coordinate={{latitude: this.state.shuttleStopLat,
-									longitude: this.state.shuttleStopLon}}
-								title={this.state.shuttleStopName}
-								description={this.state.shuttleStopName}
-								key={this.state.shuttleStopName}
-							/>
-						</MapView>
-					</View>
+						<MapView.Marker
+							coordinate={{latitude: this.state.shuttleStopLat,
+								longitude: this.state.shuttleStopLon}}
+							title={this.state.shuttleStopName}
+							description={this.state.shuttleStopName}
+							key={this.state.shuttleStopName}
+						/>
+					</MapView>
 				</ScrollView>
 			</View>
 			
@@ -292,36 +284,27 @@ var ShuttleStop = React.createClass({
 	},
 
 	getCurrentPosition: function(type) {
-		if (type === 'latitude' || type === 'lat') {
+		if (type === 'lat') {
 			if (this.state.currentPosition) {
 				return this.state.currentPosition.coords.latitude;
-			} else if (this.state.initialPosition) {
-				return this.state.initialPosition.coords.latitude;
 			} else {
-				return this.state.simulatorPosition.coords.latitude;
+				return this.state.defaultPosition.coords.latitude;
 			}
-		} else if (type === 'longitude' || type === 'lon') {
+		} else if (type === 'lon') {
 			if (this.state.currentPosition) {
 				return this.state.currentPosition.coords.longitude;
-			} else if (this.state.initialPosition) {
-				return this.state.initialPosition.coords.longitude;
 			} else {
-				return this.state.simulatorPosition.coords.longitude;
+				return this.state.defaultPosition.coords.longitude;
 			}
 		}
 	},
 
 	// TODO: use setState less, revisit when we have maps working
 	loadMapView: function() {
-		// If 
-
 		var distLatLon = Math.sqrt(Math.pow(Math.abs(this.getCurrentPosition('lat') - this.state.shuttleStopLat), 2) + Math.pow(Math.abs(this.getCurrentPosition('lon') - this.state.shuttleStopLon), 2));
-
 		this.setState({
-			minDelta: distLatLon * 2.5,
-			maxDelta: distLatLon * 3
+			mapDelta: distLatLon * 3
 		});
-
 		this.setState({ mapViewLoadReady: true });
 	},
 
