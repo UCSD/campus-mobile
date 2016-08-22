@@ -45,17 +45,20 @@ function Timer(callback, delay) {
 		timerId = setTimeout(callback, remaining);
 	};
 
+	this.getID = function() {
+		return timerId;
+	};
+
 	this.resume();
 }
+var timers = {};
 
 var nowucsandiego = React.createClass({
 
 	mixins: [TimerMixin],
 
 	getInitialState() {
-		return {
-			timers: []
-		};
+		return {};
 	},
 
 	componentDidMount() {
@@ -64,7 +67,6 @@ var nowucsandiego = React.createClass({
 			// Should be a better way to do this...
 			this.refs.navRef.refs.navRef.navigationContext.addListener('willfocus', (event) => {
 				const route = event.data.route;
-				console.log("Willfocus: " + JSON.stringify(route.id));
 
 				// Make sure renders/card refreshes are only happening when in home route
 				if (route.id === "Home") {
@@ -111,28 +113,22 @@ var nowucsandiego = React.createClass({
 
 	componentWillUnmount() {
 		this._pauseTimeout();
-		this.setState({timers: []});
 	},
 
-	newTimeout: function(callback, delay) {
-		this.state.timers.push(new Timer(callback, delay));
-
-		// remove finished timers
-		if(this.state.timers.length > 3) {
-			this.state.timers.shift();
-		}
+	newTimeout: function(key, callback, delay) {
+		timers[key] = (new Timer(callback, delay));
 	},
 
 	_pauseTimeout: function() {
-		this.state.timers.forEach(function(entry) {
-			entry.pause();
-		})
+		for (var key in timers) {
+			timers[key].pause();
+		}
 	},
 
 	_resumeTimeout: function() {
-		this.state.timers.forEach(function(entry) {
-			entry.resume();
-		})
+		for (var key in timers) {
+			timers[key].resume();
+		}
 	},
 
 	render: function() {

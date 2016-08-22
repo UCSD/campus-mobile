@@ -257,7 +257,6 @@ var ShuttleStop = React.createClass({
 						</View>
 					)}
 					
-
 					<View style={css.destinationcard_map_container}>
 						<MapView
 							style={css.shuttlestop_map}

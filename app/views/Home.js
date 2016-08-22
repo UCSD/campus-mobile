@@ -132,6 +132,7 @@ var Home = React.createClass({
 	},
 
 	updateLocationPermission: function() {
+		console.log("Perm");
 		// Get location permission status on Android
 		Permissions.getPermissionStatus('location')
 		.then(response => {
@@ -160,7 +161,7 @@ var Home = React.createClass({
 			}
 		});
 
-		this.props.new_timeout(() => { this.updateLocationPermission() }, this.permissionUpdateInterval);
+		this.props.new_timeout("location", () => { this.updateLocationPermission() }, this.permissionUpdateInterval);
 	},
 
 	// Custom message, optional
@@ -261,7 +262,7 @@ var Home = React.createClass({
 					{/* EVENTS CARD & TOP STORIES CARD & WEATHER CARD */}
 					{ this.getCards() }
 
-					{/* NEARBY CARD */}
+					{/* NEARBY CARD 
 					{AppSettings.NEARBY_CARD_ENABLED ? (
 						<View style={css.card_main}>
 							<View style={css.card_title_container}>
@@ -304,7 +305,7 @@ var Home = React.createClass({
 								) : null }
 							</View>
 						</View>
-					) : null }
+					) : null }*/}
 
 
 					{/* DINING CARD */}
@@ -330,7 +331,7 @@ var Home = React.createClass({
 												followUserLocation={true} />*/}
 										</View>
 
-										{/*
+										
 										<View style={css.dining_card_filters}>
 											<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.updateDiningFilters('vegetarian') }>
 												<Text style={css.dining_card_filter_button}>Vegetarian</Text>
@@ -348,7 +349,7 @@ var Home = React.createClass({
 												<Text style={css.dining_card_filter_button}>Open Now</Text>
 											</TouchableHighlight>
 										</View>
-										*/}
+										
 
 										<View style={css.dc_locations}>
 											<ListView dataSource={this.state.diningDataFull} renderRow={this.renderDiningRow} style={css.wf_listview} />
@@ -606,7 +607,7 @@ var Home = React.createClass({
 				logger.custom('ERR: loadNodeRegion: ' + error);
 			})
 			.done();
-		this.props.new_timeout(() => { this.updateCurrentNodeRegion() }, this.regionRefreshInterval);
+		this.props.new_timeout("node", () => { this.updateCurrentNodeRegion() }, this.regionRefreshInterval);
 		//this.updateCurrentNodeRegionTimer = this.setTimeout( () => { this.updateCurrentNodeRegion() }, this.regionRefreshInterval);
 	},
 
@@ -730,7 +731,7 @@ var Home = React.createClass({
 			this.clearTimeout(this.refreshShuttleCardTimer);
 			//this.refreshShuttleCardTimer = this.setTimeout( () => { this.refreshShuttleCard('auto') }, this.shuttleCardRefreshInterval); //why
 		}
-		this.props.new_timeout(() => { this.refreshShuttleCard('auto') }, this.shuttleCardRefreshInterval);
+		this.props.new_timeout("shuttle", () => { this.refreshShuttleCard('auto') }, this.shuttleCardRefreshInterval);
 		//this.refreshShuttleCardTimer = this.setTimeout( () => { this.refreshShuttleCard('auto') }, this.shuttleCardRefreshInterval);
 	},
 

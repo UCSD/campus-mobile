@@ -155,6 +155,7 @@ export default class WelcomeWeekView extends Component {
 	}
 
 	render() {
+		console.log("Welcome render");
 		if (!this.state.loaded) {
 			return this.renderLoadingView();
 		}
