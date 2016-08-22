@@ -54,8 +54,7 @@ var nowucsandiego = React.createClass({
 
 	getInitialState() {
 		return {
-			timers: [],
-			pauseRefresh: false,
+			timers: []
 		};
 	},
 
@@ -70,22 +69,22 @@ var nowucsandiego = React.createClass({
 				// Make sure renders/card refreshes are only happening when in home route
 				if (route.id === "Home") {
 					this._resumeTimeout();
-					this.setState({ pauseRefresh: false });
 				} else {
 					this._pauseTimeout();
-					this.setState({ pauseRefresh: true });
 				}
 			});
 
 			// Listen to back button on Android
 			BackAndroid.addEventListener('hardwareBackPress', () => {
-				//console.log("Backbutton: " + this.refs.navRef.navigationContext.route);
-				if(this.state.pauseRefresh) {
-					this.refs.navRef.refs.navRef.pop();
-					return true;
-				} else {
+				var route = this.refs.navRef.refs.navRef.getCurrentRoutes().pop();
+
+				if(route.id === "Home") {
 					BackAndroid.exitApp();
 					return false;
+					
+				} else {
+					this.refs.navRef.refs.navRef.pop();
+					return true;
 				}
 			});
 		}
@@ -97,7 +96,6 @@ var nowucsandiego = React.createClass({
 				// Make sure renders/card refreshes are only happening when in home route
 				if (route.id === undefined) { //undefined is foxusing "Home"... weird I know
 					this._resumeTimeout();
-					this.setState({ pauseRefresh: false });
 				} else {
 					this._pauseTimeout();
 				}
@@ -159,7 +157,6 @@ var nowucsandiego = React.createClass({
 						title: AppSettings.APP_NAME, 
 						passProps: {
 							isSimulator: this.props.isSimulator,
-							pauseRefresh: this.state.pauseRefresh,
 							new_timeout: this.newTimeout,
 						},
 						backButtonTitle: "Back"

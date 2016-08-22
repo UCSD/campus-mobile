@@ -127,11 +127,7 @@ var Home = React.createClass({
 	},
 
 	shouldComponentUpdate: function() {
-		if (this.props.pauseRefresh) {
-			return false;
-		} else {
-			return true;
-		}
+		return true;
 	},
 
 	updateLocationPermission: function() {
@@ -400,9 +396,6 @@ var Home = React.createClass({
 
 	// #2 - REFRESH
 	refreshAllCards: function(refreshType) {
-		if(this.props.pauseRefresh) {
-			return;
-		}
 		if (!refreshType) {
 			refreshType = 'manual';
 		}
@@ -420,7 +413,7 @@ var Home = React.createClass({
 	},
 
 	refreshShuttleCard: function(refreshType) {
-		if (AppSettings.SHUTTLE_CARD_ENABLED && !this.props.pauseRefresh) {
+		if (AppSettings.SHUTTLE_CARD_ENABLED) {
 			this.findClosestShuttleStops(refreshType);
 		}
 	},
@@ -585,7 +578,6 @@ var Home = React.createClass({
 
 	// Updates which predesignated node region the user is in
 	updateCurrentNodeRegion: function() {
-		if(this.props.pauseRefresh) return;
 		var closestNode = 0;
 		var closestNodeDistance = 100000000;
 
@@ -858,7 +850,7 @@ var Home = React.createClass({
 
 	handleAppStateChange: function(currentAppState) {
 		this.setState({ currentAppState, });
-		if (currentAppState === 'active' && !this.props.pauseRefresh) {
+		if (currentAppState === 'active') {
 			this.refreshAllCards('auto');
 		}
 	},
