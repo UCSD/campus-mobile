@@ -158,13 +158,15 @@ var Home = React.createClass({
 				// Load all non-broken-out Cards
 				this.refreshAllCards('auto');
 			} else {
-				this._alertForLocationPermission();
+				this._requestPermission();
+				//this._alertForLocationPermission();
 			}
 		});
 
 		this.props.new_timeout(() => { this.updateLocationPermission() }, this.permissionUpdateInterval);
 	},
 
+	// Custom message, optional
 	_alertForLocationPermission() {
 		Alert.alert(
 			'Allow this app to access your location?',

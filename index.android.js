@@ -99,7 +99,6 @@ var nowucsandiego = React.createClass({
 					this._resumeTimeout();
 					this.setState({ pauseRefresh: false });
 				} else {
-					route.backButtonTitle = "Ivan";
 					this._pauseTimeout();
 				}
 			});
