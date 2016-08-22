@@ -261,7 +261,7 @@ var ShuttleStop = React.createClass({
 							<Text style={css.shuttle_stop_next_arrivals_text}>There are no active shuttles at this time</Text>
 						</View>
 					)}
-
+					
 					<View style={css.destinationcard_map_container}>
 						<MapView
 							style={css.shuttlestop_map}
