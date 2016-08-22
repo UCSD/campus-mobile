@@ -90,6 +90,7 @@ var nowucsandiego = React.createClass({
 			});
 		}
 		else {
+			// Pause/resume timeouts
 			this.refs.navRef.navigationContext.addListener('didfocus', (event) => {
 				const route = event.data.route;
 
@@ -98,8 +99,15 @@ var nowucsandiego = React.createClass({
 					this._resumeTimeout();
 					this.setState({ pauseRefresh: false });
 				} else {
+					route.backButtonTitle = "Ivan";
 					this._pauseTimeout();
 				}
+			});
+
+			// Make all back buttons use text "Back"
+			this.refs.navRef.navigationContext.addListener('willfocus', (event) => {
+				const route = event.data.route;
+				route.backButtonTitle = "Back";
 			});
 		}
 	},
@@ -131,6 +139,11 @@ var nowucsandiego = React.createClass({
 	},
 
 	render: function() {
+
+		if (general.platformIOS()) {
+			StatusBar.setBarStyle('light-content');
+		}
+
 		if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
 			return (
 				<NavigationBarWithRouteMapper
@@ -140,7 +153,6 @@ var nowucsandiego = React.createClass({
 				/>
 			);
 		} else {
-			StatusBar.setBarStyle('light-content');
 			return (
 				<NavigatorIOS
 					initialRoute={{ 
@@ -168,7 +180,7 @@ var nowucsandiego = React.createClass({
 	renderScene: function(route, navigator, index, navState) {
 
 		switch (route.id) {
-			case 'Home': return (<Home route={route} navigator={navigator} new_timeout={this.newTimeout}/>);
+			case 'Home': 				return (<Home route={route} navigator={navigator} new_timeout={this.newTimeout}/>);
 			case 'ShuttleStop': 		return (<ShuttleStop route={route} navigator={navigator} />);
 			case 'SurfReport': 			return (<SurfReport route={route} navigator={navigator} />);
 			case 'TopStoriesDetail': 	return (<TopStoriesDetail route={route} navigator={navigator} />);
