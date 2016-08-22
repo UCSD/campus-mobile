@@ -262,7 +262,7 @@ var Home = React.createClass({
 					{/* EVENTS CARD & TOP STORIES CARD & WEATHER CARD */}
 					{ this.getCards() }
 
-					{/* NEARBY CARD 
+					{/* NEARBY CARD */}
 					{AppSettings.NEARBY_CARD_ENABLED ? (
 						<View style={css.card_main}>
 							<View style={css.card_title_container}>
@@ -305,7 +305,7 @@ var Home = React.createClass({
 								) : null }
 							</View>
 						</View>
-					) : null }*/}
+					) : null }
 
 
 					{/* DINING CARD */}
