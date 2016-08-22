@@ -90,6 +90,7 @@ var nowucsandiego = React.createClass({
 			});
 		}
 		else {
+			// Pause/resume timeouts
 			this.refs.navRef.navigationContext.addListener('didfocus', (event) => {
 				const route = event.data.route;
 
@@ -98,8 +99,15 @@ var nowucsandiego = React.createClass({
 					this._resumeTimeout();
 					this.setState({ pauseRefresh: false });
 				} else {
+					route.backButtonTitle = "Ivan";
 					this._pauseTimeout();
 				}
+			});
+
+			// Make all back buttons use text "Back"
+			this.refs.navRef.navigationContext.addListener('willfocus', (event) => {
+				const route = event.data.route;
+				route.backButtonTitle = "Back";
 			});
 		}
 	},
