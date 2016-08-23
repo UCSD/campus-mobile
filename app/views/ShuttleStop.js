@@ -11,7 +11,8 @@ import {
 	Animated,
 	Easing,
 	RefreshControl,
-	InteractionManager
+	InteractionManager,
+	ActivityIndicator
 } from 'react-native';
 var MapView = require('react-native-maps');
 
@@ -66,17 +67,11 @@ var ShuttleStop = React.createClass({
 
 			mapDeltaViewLoader: false,
 			mapViewLoadReady: false,
-			minDelta: .01,
-			maxDelta: .02,
+			mapDelta: .01,
 
-			initialPosition: this.props.route.currentPosition,
 			currentPosition: this.props.route.currentPosition,
-
-			simulatorPosition: {
-				// TPCS
-				coords: { latitude: '32.890378', longitude: '-117.243365' }
-				// UCSD
-				//coords: { latitude: '32.88', longitude: '-117.234' }
+			defaultPosition: {
+				coords: { latitude: '32.88', longitude: '-117.234' }
 			},
 
 			shuttleStopImageDict: {
@@ -146,8 +141,8 @@ var ShuttleStop = React.createClass({
 			this.refreshShuttleDataTimer = this.setTimeout( () => { this.fetchShuttleArrivalsByStop('auto') }, this.shuttleRefreshInterval);
 			this.mapViewTimeout = this.setTimeout( () => { this.loadMapView() }, this.delayMapViewLoad);
 			this.watchID = navigator.geolocation.watchPosition((currentPosition) => {
-			this.setState({currentPosition});
-		});
+				this.setState({currentPosition});
+			});
 			this.setState({loaded: true});
 		});
 	},
@@ -215,7 +210,7 @@ var ShuttleStop = React.createClass({
         			{this.state.shuttleStopImageDict[this.state.shuttleStopID] ? (
 						<Image style={css.shuttlestop_image} source={ this.state.shuttleStopImageDict[this.state.shuttleStopID] } />
 					) : null }
-					
+
 					<View style={css.shuttlestop_name_container}>
 						<Text style={css.shuttlestop_name_text}>{this.state.shuttleStopName}</Text>
 
@@ -227,13 +222,10 @@ var ShuttleStop = React.createClass({
 					</View>
 
 					{this.state.closestShuttlesInactive == false ? (
-						<View style={css.shuttle_stop_arrivals_container}>
-
-							<Text style={css.shuttle_stop_next_arrivals_text}>Next Arrivals</Text>
-							
+						<View>
 							{this.state.closestShuttlesLoaded ? (
-								<View>
-
+								<View style={css.shuttle_stop_arrivals_container}>
+									<Text style={css.shuttle_stop_next_arrivals_text}>Next Arrivals</Text>
 									{responseDataRef.length >= 1 ? (
 										<View style={css.shuttle_stop_arrivals_row}>
 											<View style={[css.shuttle_stop_rt_2, { backgroundColor: responseDataRef[responseDataSortRef[0].key].route.color, borderColor: responseDataRef[responseDataSortRef[0].key].route.color }]}><Text style={css.shuttle_stop_rt_2_label}>{responseDataRef[responseDataSortRef[0].key].route.shortName}</Text></View>
@@ -257,12 +249,9 @@ var ShuttleStop = React.createClass({
 											<Text style={css.shuttle_stop_arrivals_row_eta_text}>{responseDataRef[responseDataSortRef[2].key].etaMinutes}</Text>
 										</View>
 									) : null }
-
 								</View>
 							) : (
-								<View style={[css.flexcenter2, css.mar30]}>
-									<Image style={css.card_loading_img} source={ require('../assets/img/loader_dots.gif')} />
-								</View>
+								<ActivityIndicator style={css.shuttlestop_aa} size="small" />
 							)}
 						</View>
 					) : (
@@ -297,7 +286,6 @@ var ShuttleStop = React.createClass({
 							</MapView>
 						</View>
 						) : null}
-					
 				</ScrollView>
 			</View>
 			
@@ -310,36 +298,27 @@ var ShuttleStop = React.createClass({
 	},
 
 	getCurrentPosition: function(type) {
-		if (type === 'latitude' || type === 'lat') {
+		if (type === 'lat') {
 			if (this.state.currentPosition) {
 				return this.state.currentPosition.coords.latitude;
-			} else if (this.state.initialPosition) {
-				return this.state.initialPosition.coords.latitude;
 			} else {
-				return this.state.simulatorPosition.coords.latitude;
+				return this.state.defaultPosition.coords.latitude;
 			}
-		} else if (type === 'longitude' || type === 'lon') {
+		} else if (type === 'lon') {
 			if (this.state.currentPosition) {
 				return this.state.currentPosition.coords.longitude;
-			} else if (this.state.initialPosition) {
-				return this.state.initialPosition.coords.longitude;
 			} else {
-				return this.state.simulatorPosition.coords.longitude;
+				return this.state.defaultPosition.coords.longitude;
 			}
 		}
 	},
 
 	// TODO: use setState less, revisit when we have maps working
 	loadMapView: function() {
-		// If 
-
 		var distLatLon = Math.sqrt(Math.pow(Math.abs(this.getCurrentPosition('lat') - this.state.shuttleStopLat), 2) + Math.pow(Math.abs(this.getCurrentPosition('lon') - this.state.shuttleStopLon), 2));
-
 		this.setState({
-			minDelta: distLatLon * 2.5,
-			maxDelta: distLatLon * 3
+			mapDelta: distLatLon * 3
 		});
-
 		this.setState({ mapViewLoadReady: true });
 	},
 
@@ -365,17 +344,14 @@ var ShuttleStop = React.createClass({
 			})
 			.then((response) => response.json())
 			.then((responseData) => {
-				console.log("Fetch: " + JSON.stringify(responseData));
+				//logger.log("Fetch: " + JSON.stringify(responseData));
 				general.stopReloadAnimation(this.shuttleReloadAnim);
 				this._processShuttleArrivals(responseData);
 			})
 			.catch((error) => {
-
 				logger.log('ERR2: fetchShuttleArrivalsByStopDetail: ' + error);
-
 				this.setState({ closestShuttlesInactive: true });
 				general.stopReloadAnimation(this.shuttleReloadAnim);
-
 			})
 			.done();
 	},
