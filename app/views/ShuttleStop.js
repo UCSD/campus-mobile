@@ -42,6 +42,7 @@ var ShuttleStop = React.createClass({
 
 	getInitialState: function() {
 		return {
+			loaded: false,
 			isRefreshing: false,
 			shuttleRefreshTimeAgo: ' ',
 			closestShuttlesLoaded: false,
@@ -147,20 +148,28 @@ var ShuttleStop = React.createClass({
 			this.watchID = navigator.geolocation.watchPosition((currentPosition) => {
 			this.setState({currentPosition});
 		});
+			this.setState({loaded: true});
 		});
 	},
 
 	componentWillUnmount: function() {
+		console.log("unmount shuttle");
 		this.clearTimeout(this.mapViewTimeout);
 		navigator.geolocation.clearWatch(this.watchID);
+		this.setState({ mapViewLoadReady: false });
+		this.forceUpdate();
 	},
 
 	render: function() {
+		console.log("render shuttle");
+		if(!this.state.loaded) {
+			return this._renderPlaceholderView();
+		}
 		return this.renderScene();
 	},
 
 	/* Revisit after welcome week deadline
-	   skeleton render for smoother transition
+	   skeleton render for smoother transition*/
 	_renderPlaceholderView: function() {
 		return (
 			<View style={[css.main_container, css.offwhitebg]}>
@@ -188,7 +197,7 @@ var ShuttleStop = React.createClass({
 			</View>
 			
 		);
-	},*/
+	},
 
 	renderScene: function(route, navigator) {
 		return (
@@ -262,29 +271,33 @@ var ShuttleStop = React.createClass({
 						</View>
 					)}
 					
-					<View style={css.destinationcard_map_container}>
-						<MapView
-							style={css.shuttlestop_map}
-							loadingEnabled={true}
-							loadingIndicatorColor={'#666'}
-							loadingBackgroundColor={'#EEE'}
-							showsUserLocation={true}
-							initialRegion={{
-								latitude: Number(this.getCurrentPosition('lat')),
-								longitude: Number(this.getCurrentPosition('lon')),
-								latitudeDelta: this.state.minDelta,
-								longitudeDelta: this.state.minDelta,
-							}}>
+					{this.state.mapViewLoadReady ? (
+						<View style={css.destinationcard_map_container}>
+							<MapView
+								style={css.shuttlestop_map}
+								cacheEnabled={true}
+								loadingEnabled={true}
+								loadingIndicatorColor={'#666'}
+								loadingBackgroundColor={'#EEE'}
+								showsUserLocation={true}
+								initialRegion={{
+									latitude: Number(this.getCurrentPosition('lat')),
+									longitude: Number(this.getCurrentPosition('lon')),
+									latitudeDelta: this.state.minDelta,
+									longitudeDelta: this.state.minDelta,
+								}}>
 
-							<MapView.Marker
-								coordinate={{latitude: this.state.shuttleStopLat,
-									longitude: this.state.shuttleStopLon}}
-								title={this.state.shuttleStopName}
-								description={this.state.shuttleStopName}
-								key={this.state.shuttleStopName}
-							/>
-						</MapView>
-					</View>
+								<MapView.Marker
+									coordinate={{latitude: this.state.shuttleStopLat,
+										longitude: this.state.shuttleStopLon}}
+									title={this.state.shuttleStopName}
+									description={this.state.shuttleStopName}
+									key={this.state.shuttleStopName}
+								/>
+							</MapView>
+						</View>
+						) : null}
+					
 				</ScrollView>
 			</View>
 			
