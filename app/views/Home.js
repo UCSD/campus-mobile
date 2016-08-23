@@ -55,13 +55,13 @@ var WebWrapper = 		require('./WebWrapper');
 var Home = React.createClass({
 
 	mixins: [TimerMixin],
-	permissionUpdateInterval: 60 * 1000,				// Update permissions every 60 seconds
-	shuttleCardRefreshInterval: 1 * 60 * 1000,		// Refresh ShuttleCard every 1 minute
+	permissionUpdateInterval: 1 * 60 * 1000,
+	shuttleCardRefreshInterval: 1 * 60 * 1000,
 	shuttleReloadAnim: new Animated.Value(0),
 	shuttleClosestStops: [{ dist: 100000000 },{ dist: 100000000 }],
 	diningDefaultResults: 3,
 	nearbyMaxResults: 5,
-	regionRefreshInterval: 60*1000,//60 * 1000,				// Update region every 1 minute
+	regionRefreshInterval: 5 * 60 * 1000,
 	copyrightYear: new Date().getFullYear(),
 	nodePreviousLat: null,
 	nodePreviousLon: null,
@@ -592,17 +592,18 @@ var Home = React.createClass({
 	// Updates which predesignated node region the user is in
 	updateCurrentNodeRegion: function() {
 
-		// Determine if location has changed since last run, skip if not
-		if ((this.getCurrentPosition('lat') != this.nodePreviousLat) &&
-			(this.getCurrentPosition('lon') != this.nodePreviousLon)) {
+		var currentLat = this.getCurrentPosition('lat');
+		var currentLon = this.getCurrentPosition('lon');
 
-			logger.log('updateCurrentNodeRegion')
+		// Determine if location has changed since last run, skip if not
+		if ((this.getCurrentPosition('lat') !== this.nodePreviousLat) ||
+			(this.getCurrentPosition('lon') !== this.nodePreviousLon)) {
 
 			var closestNode = 0;
 			var closestNodeDistance = 100000000;
 
 			for (var i = 0; ucsd_nodes.length > i; i++) {
-				var nodeDist = shuttle.getDistance(this.getCurrentPosition('lat'), this.getCurrentPosition('lon'), ucsd_nodes[i].lat, ucsd_nodes[i].lon);
+				var nodeDist = shuttle.getDistance(currentLat, currentLon, ucsd_nodes[i].lat, ucsd_nodes[i].lon);
 
 				if (nodeDist < closestNodeDistance) {
 					closestNodeDistance = nodeDist;
@@ -626,7 +627,6 @@ var Home = React.createClass({
 				})
 				.done();
 		}
-
 		this.nodePreviousLat = this.getCurrentPosition('lat');
 		this.nodePreviousLon = this.getCurrentPosition('lon');
 		this.props.new_timeout("node", () => { this.updateCurrentNodeRegion() }, this.regionRefreshInterval);
@@ -653,8 +653,8 @@ var Home = React.createClass({
 				farthestMarkerDist = ucsd_node[i].distance;
 				var distLatLon = Math.sqrt(Math.pow(Math.abs(this.getCurrentPosition('lat') - ucsd_node[i].mkrLat), 2) + Math.pow(Math.abs(this.getCurrentPosition('lon') - ucsd_node[i].mkrLong), 2));
 				this.setState({
-					nearbyLatDelta: distLatLon * 2.5,
-					nearbyLonDelta: distLatLon * 2.5
+					nearbyLatDelta: distLatLon * 1.5,
+					nearbyLonDelta: distLatLon * 1.5
 				});
 			}
 
