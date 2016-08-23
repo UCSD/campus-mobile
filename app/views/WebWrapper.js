@@ -14,10 +14,6 @@ var logger = require('../util/logger');
 var WebWrapper = React.createClass({
 
 	getInitialState: function() {
-
-		logger.log('props:')
-		logger.log(this.props)
-
 		var title = this.props.route.title;
 
 		var scriptInjectStr = '';

@@ -265,7 +265,6 @@ var ShuttleStop = React.createClass({
 						<View style={css.destinationcard_map_container}>
 							<MapView
 								style={css.shuttlestop_map}
-								cacheEnabled={true}
 								loadingEnabled={true}
 								loadingIndicatorColor={'#666'}
 								loadingBackgroundColor={'#EEE'}

@@ -22,6 +22,7 @@ import {
 import TopBannerView from './banner/TopBannerView';
 import WelcomeModal from './WelcomeModal';
 import NavigationBarWithRouteMapper from './NavigationBarWithRouteMapper';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 // Cards
 import EventCard from './events/EventCard'
@@ -51,6 +52,9 @@ var ShuttleStop = 		require('./ShuttleStop');
 var DestinationDetail = require('./DestinationDetail');
 var DiningList = 		require('./DiningList');
 var WebWrapper = 		require('./WebWrapper');
+
+var fiveRandomColors = general.getRandomColorArray(5);
+var nearbyCounter = 0;
 
 var Home = React.createClass({
 
@@ -196,11 +200,7 @@ var Home = React.createClass({
 	},
 
 	renderScene: function(route, navigator, index, navState) {
-		var fiveRandomColors = [];
-
-		for(var i = 0; i < 5; ++i) {
-			fiveRandomColors.push(this._getRandomColor());
-		}
+		nearbyCounter = 0;
 
 		return (
 			<View style={css.main_container}>
@@ -286,6 +286,8 @@ var Home = React.createClass({
 										<MapView
 											style={css.destinationcard_map}
 											cacheEnabled={this.state.cacheMap}
+											scrollEnabled={!this.state.cacheMap}
+											zoomEnabled={!this.state.cacheMap}
 											loadingEnabled={true}
 											loadingIndicatorColor={'#666'}
 											loadingBackgroundColor={'#EEE'}
@@ -694,7 +696,7 @@ var Home = React.createClass({
 		return (
 			<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoDestinationDetail(data) }>
 				<View style={css.destinationcard_marker_row}>
-					<Image style={css.destinationcard_icon_marker} source={require('../assets/img/icon_marker.png')} />
+					<Icon name="map-marker" size={30} color={fiveRandomColors[nearbyCounter++]} />
 					<Text style={css.destinationcard_marker_label}>{data.title}</Text>
 				</View>
 			</TouchableHighlight>
@@ -892,12 +894,6 @@ var Home = React.createClass({
 		});
 		return uuid;
 	},
-
-	// Generates random color hex
-	_getRandomColor: function() {
-		return '#'+Math.floor(Math.random()*16777215).toString(16);
-	}
-
 });
 
 module.exports = Home;
