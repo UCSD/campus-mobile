@@ -74,7 +74,6 @@ var Home = React.createClass({
 		return {
 			currentAppState: AppState.currentState,
 			initialLoad: true,
-			currentRegion: null,
 			nearbyMarkersLoaded: false,
 			nearbyLastRefresh: null,
 			specialEventsCardEnabled: true,
@@ -612,8 +611,6 @@ var Home = React.createClass({
 					closestNode = ucsd_nodes[i].id;
 				}
 			}
-
-			this.setState({ currentRegion: closestNode });
 
 			var NODE_MODULES_URL = AppSettings.NODE_MARKERS_BASE_URL + 'ucsd_node_' + closestNode + '.json';
 
