@@ -63,6 +63,8 @@ var Home = React.createClass({
 	nearbyMaxResults: 5,
 	regionRefreshInterval: 60*1000,//60 * 1000,				// Update region every 1 minute
 	copyrightYear: new Date().getFullYear(),
+	nodePreviousLat: null,
+	nodePreviousLon: null,
 
 	getInitialState: function() {
 		return {
@@ -589,35 +591,45 @@ var Home = React.createClass({
 
 	// Updates which predesignated node region the user is in
 	updateCurrentNodeRegion: function() {
-		var closestNode = 0;
-		var closestNodeDistance = 100000000;
 
-		for (var i = 0; ucsd_nodes.length > i; i++) {
-			var nodeDist = shuttle.getDistance(this.getCurrentPosition('lat'), this.getCurrentPosition('lon'), ucsd_nodes[i].lat, ucsd_nodes[i].lon);
+		// Determine if location has changed since last run, skip if not
+		if ((this.getCurrentPosition('lat') != this.nodePreviousLat) &&
+			(this.getCurrentPosition('lon') != this.nodePreviousLon)) {
 
-			if (nodeDist < closestNodeDistance) {
-				closestNodeDistance = nodeDist;
-				closestNode = ucsd_nodes[i].id;
+			logger.log('updateCurrentNodeRegion')
+
+			var closestNode = 0;
+			var closestNodeDistance = 100000000;
+
+			for (var i = 0; ucsd_nodes.length > i; i++) {
+				var nodeDist = shuttle.getDistance(this.getCurrentPosition('lat'), this.getCurrentPosition('lon'), ucsd_nodes[i].lat, ucsd_nodes[i].lon);
+
+				if (nodeDist < closestNodeDistance) {
+					closestNodeDistance = nodeDist;
+					closestNode = ucsd_nodes[i].id;
+				}
 			}
+
+			this.setState({ currentRegion: closestNode });
+
+			var NODE_MODULES_URL = AppSettings.NODE_MARKERS_BASE_URL + 'ucsd_node_' + closestNode + '.json';
+
+			fetch(NODE_MODULES_URL, {
+					method: 'GET',
+				})
+				.then((response) => response.json())
+				.then((responseData) => {
+					this.parseNodeRegion(responseData);
+				})
+				.catch((error) => {
+					logger.custom('ERR: loadNodeRegion: ' + error);
+				})
+				.done();
 		}
 
-		this.setState({ currentRegion: closestNode });
-
-		var NODE_MODULES_URL = AppSettings.NODE_MARKERS_BASE_URL + 'ucsd_node_' + closestNode + '.json';
-
-		fetch(NODE_MODULES_URL, {
-				method: 'GET',
-			})
-			.then((response) => response.json())
-			.then((responseData) => {
-				this.parseNodeRegion(responseData);
-			})
-			.catch((error) => {
-				logger.custom('ERR: loadNodeRegion: ' + error);
-			})
-			.done();
+		this.nodePreviousLat = this.getCurrentPosition('lat');
+		this.nodePreviousLon = this.getCurrentPosition('lon');
 		this.props.new_timeout("node", () => { this.updateCurrentNodeRegion() }, this.regionRefreshInterval);
-		//this.updateCurrentNodeRegionTimer = this.setTimeout( () => { this.updateCurrentNodeRegion() }, this.regionRefreshInterval);
 	},
 
 	parseNodeRegion: function(ucsd_node) {
