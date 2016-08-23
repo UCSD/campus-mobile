@@ -88,6 +88,7 @@ var Home = React.createClass({
 				coords: { latitude: 32.88, longitude: -117.234 }
 			},
 			shuttleData: null,
+			cacheMap: false,
 		}
 	},
 
@@ -99,6 +100,7 @@ var Home = React.createClass({
 		if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
 			// Check Location Permissions Periodically
 			this.updateLocationPermission();
+			this.setState({cacheMap: true});
 		}
 
 		else {
@@ -276,7 +278,7 @@ var Home = React.createClass({
 
 										<MapView
 											style={css.destinationcard_map}
-											cacheEnabled={true}
+											cacheEnabled={this.state.cacheMap}
 											loadingEnabled={true}
 											loadingIndicatorColor={'#666'}
 											loadingBackgroundColor={'#EEE'}
