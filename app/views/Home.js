@@ -194,6 +194,11 @@ var Home = React.createClass({
 	},
 
 	renderScene: function(route, navigator, index, navState) {
+		var fiveRandomColors = [];
+
+		for(var i = 0; i < 5; ++i) {
+			fiveRandomColors.push(this._getRandomColor());
+		}
 
 		return (
 			<View style={css.main_container}>
@@ -290,8 +295,9 @@ var Home = React.createClass({
 												latitudeDelta: this.state.nearbyLatDelta,
 												longitudeDelta: this.state.nearbyLonDelta,
 											}}>
-												{this.state.nearbyAnnotations.map(marker => (
+												{this.state.nearbyAnnotations.map((marker, index) => (
 													<MapView.Marker
+														pinColor={fiveRandomColors[index]}
 														coordinate={marker.coords}
 														title={marker.title}
 														description={marker.description}
@@ -874,6 +880,11 @@ var Home = React.createClass({
 		});
 		return uuid;
 	},
+
+	// Generates random color hex
+	_getRandomColor: function() {
+		return '#'+Math.floor(Math.random()*16777215).toString(16);
+	}
 
 });
 
