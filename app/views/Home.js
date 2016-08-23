@@ -284,6 +284,8 @@ var Home = React.createClass({
 										<MapView
 											style={css.destinationcard_map}
 											cacheEnabled={this.state.cacheMap}
+											scrollEnabled={!this.state.cacheMap}
+											zoomEnabled={!this.state.cacheMap}
 											loadingEnabled={true}
 											loadingIndicatorColor={'#666'}
 											loadingBackgroundColor={'#EEE'}
