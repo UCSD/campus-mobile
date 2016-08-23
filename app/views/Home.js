@@ -59,13 +59,14 @@ var nearbyCounter = 0;
 var Home = React.createClass({
 
 	mixins: [TimerMixin],
-	permissionUpdateInterval: 1 * 60 * 1000,
 	shuttleCardRefreshInterval: 1 * 60 * 1000,
+	permissionUpdateInterval: 1 * 65 * 1000,
+	regionRefreshInterval: 1 * 70 * 1000,
+
 	shuttleReloadAnim: new Animated.Value(0),
 	shuttleClosestStops: [{ dist: 100000000 },{ dist: 100000000 }],
 	diningDefaultResults: 3,
 	nearbyMaxResults: 5,
-	regionRefreshInterval: 5 * 60 * 1000,
 	copyrightYear: new Date().getFullYear(),
 	nodePreviousLat: null,
 	nodePreviousLon: null,
