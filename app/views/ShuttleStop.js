@@ -260,7 +260,7 @@ var ShuttleStop = React.createClass({
 						</View>
 					)}
 					
-					{/*
+					
 					{this.state.mapViewLoadReady ? (
 						<View style={css.destinationcard_map_container}>
 							<MapView
@@ -286,7 +286,7 @@ var ShuttleStop = React.createClass({
 								/>
 							</MapView>
 						</View>
-						) : null}*/}
+						) : null}
 				</ScrollView>
 			</View>
 			
@@ -320,7 +320,14 @@ var ShuttleStop = React.createClass({
 		this.setState({
 			mapDelta: distLatLon * 3
 		});
-		this.setState({ mapViewLoadReady: true });
+
+		if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
+			this.setState({ mapViewLoadReady: false });
+		}
+		else {
+			this.setState({ mapViewLoadReady: true });
+		}
+		
 	},
 
 	fetchShuttleArrivalsByStop: function(fetchType) {
