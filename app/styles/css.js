@@ -350,7 +350,7 @@ var css = StyleSheet.create({
 			shuttle_stop_rt_2: { borderRadius: 18 * prm, width: 36 * prm, height: 36 * prm, justifyContent: 'center' },
 				shuttle_stop_rt_2_label: { textAlign: 'center', fontWeight: '600', fontSize: 19 * prm, backgroundColor: 'rgba(0,0,0,0)' },
 			shuttle_stop_arrivals_row_route_name: { flex: 2, fontSize: 17 * prm, color: '#555', paddingLeft: 10 * prm },
-			shuttle_stop_arrivals_row_eta_text: { flex: 1, fontSize: 26 * prm, color: '#333', paddingLeft: 16 * prm },
+			shuttle_stop_arrivals_row_eta_text: { flex: 1, fontSize: 20 * prm, color: '#333', paddingLeft: 16 * prm, paddingRight: 16 * prm  },
 		
 		shuttlestop_loading: { width: 48, height: 48, marginHorizontal: 40, marginVertical: 50 * prm },
 
