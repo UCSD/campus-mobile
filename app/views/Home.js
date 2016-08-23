@@ -655,8 +655,8 @@ var Home = React.createClass({
 				farthestMarkerDist = ucsd_node[i].distance;
 				var distLatLon = Math.sqrt(Math.pow(Math.abs(this.getCurrentPosition('lat') - ucsd_node[i].mkrLat), 2) + Math.pow(Math.abs(this.getCurrentPosition('lon') - ucsd_node[i].mkrLong), 2));
 				this.setState({
-					nearbyLatDelta: distLatLon * 1.5,
-					nearbyLonDelta: distLatLon * 1.5
+					nearbyLatDelta: distLatLon * 2,
+					nearbyLonDelta: distLatLon * 2
 				});
 			}
 
