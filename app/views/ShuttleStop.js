@@ -260,6 +260,7 @@ var ShuttleStop = React.createClass({
 						</View>
 					)}
 					
+					{/*
 					{this.state.mapViewLoadReady ? (
 						<View style={css.destinationcard_map_container}>
 							<MapView
@@ -285,7 +286,7 @@ var ShuttleStop = React.createClass({
 								/>
 							</MapView>
 						</View>
-						) : null}
+						) : null}*/}
 				</ScrollView>
 			</View>
 			
