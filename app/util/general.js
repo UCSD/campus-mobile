@@ -89,6 +89,18 @@ module.exports = {
 		} else {
 			return (militaryTimeHH + militaryTimeAMPM);
 		}
-	}
+	},
 
+	getRandomColorArray:function(length) {
+		var randomColors = [];
+		for(var i = 0; i < length; ++i) {
+			randomColors.push(this.getRandomColor());
+		}
+		return randomColors;
+	},
+
+	// Generates random color hex
+	getRandomColor: function() {
+		return '#' + ("000000" + Math.random().toString(16).slice(2, 8).toUpperCase()).slice(-6);
+	}
 };
