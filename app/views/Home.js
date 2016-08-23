@@ -276,6 +276,7 @@ var Home = React.createClass({
 
 										<MapView
 											style={css.destinationcard_map}
+											cacheEnabled={true}
 											loadingEnabled={true}
 											loadingIndicatorColor={'#666'}
 											loadingBackgroundColor={'#EEE'}
