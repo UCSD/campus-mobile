@@ -272,8 +272,8 @@ var ShuttleStop = React.createClass({
 								initialRegion={{
 									latitude: Number(this.getCurrentPosition('lat')),
 									longitude: Number(this.getCurrentPosition('lon')),
-									latitudeDelta: this.state.minDelta,
-									longitudeDelta: this.state.minDelta,
+									latitudeDelta: this.state.mapDelta,
+									longitudeDelta: this.state.mapDelta,
 								}}>
 
 								<MapView.Marker
