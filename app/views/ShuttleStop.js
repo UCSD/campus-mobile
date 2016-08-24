@@ -262,30 +262,28 @@ var ShuttleStop = React.createClass({
 					
 					
 					{this.state.mapViewLoadReady ? (
-						<View style={css.destinationcard_map_container}>
-							<MapView
-								style={css.shuttlestop_map}
-								loadingEnabled={true}
-								loadingIndicatorColor={'#666'}
-								loadingBackgroundColor={'#EEE'}
-								showsUserLocation={true}
-								initialRegion={{
-									latitude: Number(this.getCurrentPosition('lat')),
-									longitude: Number(this.getCurrentPosition('lon')),
-									latitudeDelta: this.state.mapDelta,
-									longitudeDelta: this.state.mapDelta,
-								}}>
+						<MapView
+							style={css.shuttlestop_map}
+							loadingEnabled={true}
+							loadingIndicatorColor={'#666'}
+							loadingBackgroundColor={'#EEE'}
+							showsUserLocation={true}
+							initialRegion={{
+								latitude: Number(this.getCurrentPosition('lat')),
+								longitude: Number(this.getCurrentPosition('lon')),
+								latitudeDelta: this.state.mapDelta,
+								longitudeDelta: this.state.mapDelta,
+							}}>
 
-								<MapView.Marker
-									coordinate={{latitude: this.state.shuttleStopLat,
-										longitude: this.state.shuttleStopLon}}
-									title={this.state.shuttleStopName}
-									description={this.state.shuttleStopName}
-									key={this.state.shuttleStopName}
-								/>
-							</MapView>
-						</View>
-						) : null}
+							<MapView.Marker
+								coordinate={{latitude: this.state.shuttleStopLat,
+									longitude: this.state.shuttleStopLon}}
+								title={this.state.shuttleStopName}
+								description={this.state.shuttleStopName}
+								key={this.state.shuttleStopName}
+							/>
+						</MapView>
+					) : null }
 				</ScrollView>
 			</View>
 			
