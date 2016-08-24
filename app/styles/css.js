@@ -336,7 +336,7 @@ var css = StyleSheet.create({
 
 
 	// SHUTTLE STOP
-	shuttlestop_image: { width: windowWidth, height: Math.floor(windowWidth * .533) },
+	shuttlestop_image: { width: windowWidth, height: Math.round(windowWidth * .533) },
 	shuttlestop_name_container: { flex: 1, flexDirection: 'row', alignItems: 'center', width: windowWidth, paddingVertical: 14 * prm, paddingHorizontal: 20 * prm, backgroundColor: '#006C92' },
 		shuttlestop_name_text: { width: windowWidth * .9 - 40, color: '#FFF', fontSize: 24, fontWeight: '300' },
 		
