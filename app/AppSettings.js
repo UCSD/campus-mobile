@@ -4,8 +4,8 @@ module.exports = {
 
 	/* APP CONFIG */
 	APP_NAME: 					'now@ucsandiego',
-	GOOGLE_ANALYTICS_ID: 		'UA-81825078-1',
-	DEBUG_ENABLED: 				true,				// Disables all logger functions (i.e. logger.log) if set to false (console.log is unaffected)
+	GOOGLE_ANALYTICS_ID: 		'UA-59591330-3',
+	DEBUG_ENABLED: 				false,				// Disables all logger functions (i.e. logger.log) if set to false (console.log is unaffected)
 	NAVIGATOR_ENABLED: 			false,				// IOS setting only - if true, app uses Navigator instead of Navigator IOS
 													// Navigator will always be used for Android
 	
@@ -27,7 +27,6 @@ module.exports = {
 	PRIVACY_POLICY_URL: 		'http://www.ucsd.edu/_about/legal/uc-san-diego-website-privacy-policy.html',
 	NODE_MARKERS_BASE_URL: 		'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/nearby_markers/',
 	WEATHER_ICON_BASE_URL: 		'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/images/v1/weather-icons/',
-	//WELCOME_WEEK_API_URL: 	'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/welcome_week_events.json',
-	WELCOME_WEEK_API_URL: 		'https://s3-us-west-2.amazonaws.com/ucsd-mobile/test/welcome_week_events.json',
+	WELCOME_WEEK_API_URL: 		'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/welcome_week_events.json',
 
 };
