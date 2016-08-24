@@ -6,7 +6,7 @@ import {
 	Text,
 	ScrollView,
 	Image,
-	LinkingIOS,
+	Linking,
 	TouchableHighlight,
 	Dimensions
 } from 'react-native';
@@ -115,7 +115,7 @@ var EventDetail = React.createClass({
 	},
 
 	openBrowserLink: function(linkURL) {
-		LinkingIOS.openURL(linkURL);
+		Linking.openURL(linkURL);
 	},
 
 	gotoWebView: function(eventName, eventURL) {

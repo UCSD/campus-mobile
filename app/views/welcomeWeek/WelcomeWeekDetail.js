@@ -6,7 +6,7 @@ import {
 	Text,
 	ScrollView,
 	Image,
-	LinkingIOS,
+	Linking,
 	TouchableHighlight,
 	Dimensions
 } from 'react-native';
@@ -109,7 +109,7 @@ export default class WelcomeWeekDetail extends React.Component {
 	}
 
 	_openBrowserLink(linkURL) {
-		LinkingIOS.openURL(linkURL);
+		Linking.openURL(linkURL);
 	}
 
 	_gotoWebView(eventName, eventURL) {

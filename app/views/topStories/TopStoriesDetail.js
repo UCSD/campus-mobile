@@ -6,7 +6,7 @@ import {
 	Text,
 	ScrollView,
 	Image,
-	LinkingIOS,
+	Linking,
 	TouchableHighlight,
 	Dimensions,
 } from 'react-native';
@@ -123,7 +123,7 @@ var TopStoriesDetail = React.createClass({
 	},
 
 	openBrowserLink: function(linkURL) {
-		LinkingIOS.openURL(linkURL);
+		Linking.openURL(linkURL);
 	},
 
 	gotoWebView: function(storyName, storyURL) {
