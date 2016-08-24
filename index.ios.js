@@ -5,7 +5,8 @@ import {
 	AppRegistry,
 	NavigatorIOS,
 	BackAndroid,
-	StatusBar
+	StatusBar,
+	AppState
 } from 'react-native';
 import TimerMixin from 'react-timer-mixin';
 
@@ -61,6 +62,10 @@ var nowucsandiego = React.createClass({
 		return {};
 	},
 
+	componentWillMount() {
+		AppState.addEventListener('change', this.handleAppStateChange);
+	},
+
 	componentDidMount() {
 		if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
 			// Listen to route focus changes
@@ -112,6 +117,7 @@ var nowucsandiego = React.createClass({
 	},
 
 	componentWillUnmount() {
+		AppState.removeEventListener('change', this.handleAppStateChange);
 		this._pauseTimeout();
 	},
 
@@ -184,6 +190,14 @@ var nowucsandiego = React.createClass({
 		}
 	},
 
+	handleAppStateChange(currentAppState) {
+		if (currentAppState === 'active') {
+			this._resumeTimeout();
+		}
+		else if(currentAppState === 'background') {
+			this._pauseTimeout();
+		}
+	},
 });
 
 AppRegistry.registerComponent('nowucsandiego', () => nowucsandiego);
