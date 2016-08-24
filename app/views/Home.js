@@ -286,7 +286,7 @@ var Home = React.createClass({
 											loadingIndicatorColor={'#666'}
 											loadingBackgroundColor={'#EEE'}
 											showsUserLocation={true}
-											mapType={'terrain'}
+											mapType={'standard'}
 											initialRegion={{
 												latitude: this.getCurrentPosition('lat'),
 												longitude: this.getCurrentPosition('lon'),
