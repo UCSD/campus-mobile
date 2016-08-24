@@ -263,6 +263,7 @@ var ShuttleStop = React.createClass({
 							loadingIndicatorColor={'#666'}
 							loadingBackgroundColor={'#EEE'}
 							showsUserLocation={true}
+							mapType={'standard'}
 							initialRegion={{
 								latitude: Number(this.getCurrentPosition('lat')),
 								longitude: Number(this.getCurrentPosition('lon')),
