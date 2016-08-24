@@ -201,19 +201,30 @@ export default class WelcomeWeekView extends Component {
 
 		description = description.replace(/\?.*/g,'?').replace(/!.*/g,'!').replace(/\..*/g,'.').replace(/\(.*/g,'');
 
-		return (
-			<TouchableOpacity underlayColor={'rgba(200,200,200,.1)'} onPress={() => this.gotoEventDetail(rowData)}>
+		if (date[0] === 'NA') {
+			return (
 				<View style={css.welcome_list_row}>
 					<View style={css.welcome_list_left_container}>
 						<Text style={css.welcome_list_title}>{title}</Text> 
 						<Text style={css.welcome_list_desc}>{description}</Text>
-						<Text style={css.welcome_list_postdate}>{date}</Text> 
 					</View>
-				
 					<Image style={css.events_list_image} source={{ uri: image }} />
 				</View>
-			</TouchableOpacity>
-		);
+			);
+		} else {
+			return (
+				<TouchableOpacity underlayColor={'rgba(200,200,200,.1)'} onPress={() => this.gotoEventDetail(rowData)}>
+					<View style={css.welcome_list_row}>
+						<View style={css.welcome_list_left_container}>
+							<Text style={css.welcome_list_title}>{title}</Text> 
+							<Text style={css.welcome_list_desc}>{description}</Text>
+							<Text style={css.welcome_list_postdate}>{date}</Text>
+						</View>
+						<Image style={css.events_list_image} source={{ uri: image }} />
+					</View>
+				</TouchableOpacity>
+			);
+		}
 	}
 
 	_renderSectionHeader(sectionData, sectionID) {
