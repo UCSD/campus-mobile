@@ -126,8 +126,6 @@ var Home = React.createClass({
 	},
 
 	componentWillUnmount: function() {
-		console.log("Home unmount");
-
 		// Update unmount function with ability to clear all other timers (setTimeout/setInterval)
 		navigator.geolocation.clearWatch(this.geolocationWatchID);
 	},
@@ -137,7 +135,6 @@ var Home = React.createClass({
 	},
 
 	updateLocationPermission: function() {
-		console.log("Perm");
 		// Get location permission status on Android
 		Permissions.getPermissionStatus('location')
 		.then(response => {
@@ -743,14 +740,16 @@ var Home = React.createClass({
 
 		if (refreshType == 'auto') {
 			//logger.log('Queueing Shuttle Card data refresh in ' + this.shuttleCardRefreshInterval/1000 + ' seconds');
-			//this.refreshShuttleCardTimer = this.setTimeout( () => { this.refreshShuttleCard('auto') }, this.shuttleCardRefreshInterval); //why is this doubled
 		} else {
 			// If manual refresh, reset the Auto refresh timer
 			this.clearTimeout(this.refreshShuttleCardTimer);
-			//this.refreshShuttleCardTimer = this.setTimeout( () => { this.refreshShuttleCard('auto') }, this.shuttleCardRefreshInterval); //why
 		}
-		this.props.new_timeout("shuttle", () => { this.refreshShuttleCard('auto') }, this.shuttleCardRefreshInterval);
-		//this.refreshShuttleCardTimer = this.setTimeout( () => { this.refreshShuttleCard('auto') }, this.shuttleCardRefreshInterval);
+		if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
+			//do nothing
+		}
+		else {
+			this.props.new_timeout("shuttle", () => { this.refreshShuttleCard('auto') }, this.shuttleCardRefreshInterval);
+		}
 	},
 
 	fetchShuttleArrivalsByStop: function(closestStopNumber, stopID) {
