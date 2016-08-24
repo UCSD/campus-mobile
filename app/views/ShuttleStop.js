@@ -114,19 +114,14 @@ var ShuttleStop = React.createClass({
 				'93943': require('../assets/img/shuttle/shuttle-stop-93943.jpg'),
 				'9920': require('../assets/img/shuttle/shuttle-stop-9920.jpg'),
 			},
-
-			//renderPlaceholderOnly: false,
 		}
 	},
 
 	componentWillMount: function() {
-		
-
 		//this.fetchShuttleArrivalsByStop('auto');
 		// Initial shuttle info render passed from home
 		//this._processShuttleArrivals(this.props.route.shuttleData);
 		//this.mapViewTimeout = this.setTimeout( () => { this.loadMapView() }, this.delayMapViewLoad);
-
 	},
 
 	componentDidMount: function() {
