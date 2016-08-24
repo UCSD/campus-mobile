@@ -73,7 +73,6 @@ var Home = React.createClass({
 
 	getInitialState: function() {
 		return {
-			currentAppState: AppState.currentState,
 			initialLoad: true,
 			nearbyMarkersLoaded: false,
 			nearbyLastRefresh: null,
@@ -99,9 +98,6 @@ var Home = React.createClass({
 	},
 
 	componentWillMount: function() {
-		
-		// Manage App State
-		AppState.addEventListener('change', this.handleAppStateChange);
 
 		if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
 			// Check Location Permissions Periodically
@@ -122,7 +118,7 @@ var Home = React.createClass({
 			this.refreshAllCards('auto');
 		}
 
-		
+				
 	},
 
 	componentDidMount: function() {
@@ -130,9 +126,10 @@ var Home = React.createClass({
 	},
 
 	componentWillUnmount: function() {
+		console.log("Home unmount");
+
 		// Update unmount function with ability to clear all other timers (setTimeout/setInterval)
 		navigator.geolocation.clearWatch(this.geolocationWatchID);
-		AppState.removeEventListener('change', this.handleAppStateChange);
 	},
 
 	shouldComponentUpdate: function() {
@@ -869,13 +866,6 @@ var Home = React.createClass({
 		var state = {};
 		state[myKey] = myVal;
 		this.setState(state);
-	},
-
-	handleAppStateChange: function(currentAppState) {
-		this.setState({ currentAppState, });
-		if (currentAppState === 'active') {
-			this.refreshAllCards('auto');
-		}
 	},
 
 	// Generates a unique ID
