@@ -59,7 +59,9 @@ var nowucsandiego = React.createClass({
 	mixins: [TimerMixin],
 
 	getInitialState() {
-		return {};
+		return {
+			inHome: true,
+		};
 	},
 
 	componentWillMount() {
@@ -75,8 +77,10 @@ var nowucsandiego = React.createClass({
 
 				// Make sure renders/card refreshes are only happening when in home route
 				if (route.id === "Home") {
+					this.setState({inHome: true});
 					this._resumeTimeout();
 				} else {
+					this.setState({inHome: false});
 					this._pauseTimeout();
 				}
 			});
@@ -102,8 +106,10 @@ var nowucsandiego = React.createClass({
 
 				// Make sure renders/card refreshes are only happening when in home route
 				if (route.id === undefined) { //undefined is foxusing "Home"... weird I know
+					this.setState({inHome: true});
 					this._resumeTimeout();
 				} else {
+					this.setState({inHome: false});
 					this._pauseTimeout();
 				}
 			});
@@ -192,7 +198,9 @@ var nowucsandiego = React.createClass({
 
 	handleAppStateChange(currentAppState) {
 		if (currentAppState === 'active') {
-			this._resumeTimeout();
+			if(this.state.inHome) {
+				this._resumeTimeout();
+			}
 		}
 		else if(currentAppState === 'background') {
 			this._pauseTimeout();
