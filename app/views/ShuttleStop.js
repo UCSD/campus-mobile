@@ -149,18 +149,11 @@ var ShuttleStop = React.createClass({
 	},
 
 	render: function() {
-
-		return this.renderScene();
-
-		/*
-		if(!this.state.loaded) {
-			logger.log('Placeholder view: ' + general.getDateNow())
-			return this._renderPlaceholderView();
-		} else {
-			logger.log('Regular view: ' + general.getDateNow())
+		if(this.state.loaded) {
 			return this.renderScene();
+		} else {
+			return this._renderPlaceholderView();
 		}
-		*/
 	},
 
 	/* Revisit after welcome week deadline
