@@ -130,7 +130,6 @@ var ShuttleStop = React.createClass({
 		// Revisit at a later time
 		InteractionManager.runAfterInteractions(() => {
 			this.fetchShuttleArrivalsByStop('auto');
-			 this.loadMapView();
 
 			// Poll for new data
 			this.refreshShuttleDataTimer = this.setTimeout( () => { this.fetchShuttleArrivalsByStop('auto') }, this.shuttleRefreshInterval);
