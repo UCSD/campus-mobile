@@ -119,7 +119,14 @@ var EventDetail = React.createClass({
 	},
 
 	gotoWebView: function(eventName, eventURL) {
-		this.props.navigator.push({ id: 'WebWrapper', name: 'WebWrapper', title: eventName, component: WebWrapper, webViewURL: eventURL });
+		//this.props.navigator.push({ id: 'WebWrapper', name: 'WebWrapper', title: eventName, component: WebWrapper, webViewURL: eventURL });
+		Linking.canOpenURL(eventURL).then(supported => {
+		if (!supported) {
+			console.log('Can\'t handle url: ' + eventURL);
+		} else {
+			return Linking.openURL(eventURL);
+		}
+		}).catch(err => console.error('An error with opening EventDetail occurred', err));
 	},
 
 });

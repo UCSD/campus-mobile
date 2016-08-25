@@ -127,7 +127,14 @@ var TopStoriesDetail = React.createClass({
 	},
 
 	gotoWebView: function(storyName, storyURL) {
-		this.props.navigator.push({ id: 'WebWrapper', name: 'WebWrapper', title: 'News', component: WebWrapper, webViewURL: storyURL });
+		//this.props.navigator.push({ id: 'WebWrapper', name: 'WebWrapper', title: 'News', component: WebWrapper, webViewURL: storyURL });
+		Linking.canOpenURL(storyURL).then(supported => {
+		if (!supported) {
+			console.log('Can\'t handle url: ' + storyURL);
+		} else {
+			return Linking.openURL(storyURL);
+		}
+		}).catch(err => console.error('An error with opening TopStoriesDetail occurred', err));
 	},
 
 });
