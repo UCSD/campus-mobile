@@ -10,6 +10,7 @@ import {
 	Image,
 	ListView,
 	Date,
+	ActivityIndicator,
 } from 'react-native';
 import NavigationBarWithRouteMapper from '../NavigationBarWithRouteMapper';
 
@@ -26,6 +27,7 @@ var SurfReport = React.createClass({
 	getInitialState: function() {
 		return {
 			surfData: null,
+			surfDataNoResults: null,
 		}
 	},
 
@@ -62,16 +64,16 @@ var SurfReport = React.createClass({
 				}
 			}
 
-			// Sort the result rows so we can break different days into groups
-			this.surfDataArray.sort(this.compare);
-
-			this.surfRowPreviousTimestamp = null;
-			this.surfRowCurrentTimestamp = null;
-
-			this.setState({
-				surfData: dsFull.cloneWithRows(this.surfDataArray),
-			});
-
+			// If no results for today, set surfDataNoResults true, and display a message
+			if (this.surfDataArray.length === 0) {
+				this.setState({ surfDataNoResults: true });
+			} else {
+				// Sort the result rows so we can break different days into groups
+				this.surfDataArray.sort(this.compare);
+				this.surfRowPreviousTimestamp = null;
+				this.surfRowCurrentTimestamp = null;
+				this.setState({ surfData: dsFull.cloneWithRows(this.surfDataArray) });
+			}
 		}
 	},
 
@@ -104,15 +106,15 @@ var SurfReport = React.createClass({
 			<View style={[css.main_container, css.whitebg]}>
 				<ScrollView contentContainerStyle={[css.scroll_main, css.whitebg]}>
 					<Image style={css.sr_image} source={require('../../assets/img/surf_report_header.jpg')} />
-
 					{this.state.surfData ? (
 						<ListView dataSource={this.state.surfData} renderRow={ this.renderSurfReportRow } style={css.wf_listview} />
-					) : (
-						<View style={css.flexcenter3}>
-							<Image style={css.shuttlecard_loading} source={{ uri: "https://s3-us-west-2.amazonaws.com/ucsd-images/ajax-loader.gif" }} />
-						</View>
-					)}
-
+					) : null }
+					{!this.state.surfData && !this.state.surfDataNoResults ? (
+						<ActivityIndicator style={[css.center, css.mar40]} size="large" />
+					) : null }
+					{this.state.surfDataNoResults ? (
+						<Text style={[css.center, css.pad40]}>There is no surf data available at this time.{'\n'}Please check back later.</Text>
+					) : null }
 				</ScrollView>
 			</View>
 		);

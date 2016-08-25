@@ -114,19 +114,14 @@ var ShuttleStop = React.createClass({
 				'93943': require('../assets/img/shuttle/shuttle-stop-93943.jpg'),
 				'9920': require('../assets/img/shuttle/shuttle-stop-9920.jpg'),
 			},
-
-			//renderPlaceholderOnly: false,
 		}
 	},
 
 	componentWillMount: function() {
-		
-
 		//this.fetchShuttleArrivalsByStop('auto');
 		// Initial shuttle info render passed from home
 		//this._processShuttleArrivals(this.props.route.shuttleData);
 		//this.mapViewTimeout = this.setTimeout( () => { this.loadMapView() }, this.delayMapViewLoad);
-
 	},
 
 	componentDidMount: function() {
@@ -262,30 +257,29 @@ var ShuttleStop = React.createClass({
 					
 					
 					{this.state.mapViewLoadReady ? (
-						<View style={css.destinationcard_map_container}>
-							<MapView
-								style={css.shuttlestop_map}
-								loadingEnabled={true}
-								loadingIndicatorColor={'#666'}
-								loadingBackgroundColor={'#EEE'}
-								showsUserLocation={true}
-								initialRegion={{
-									latitude: Number(this.getCurrentPosition('lat')),
-									longitude: Number(this.getCurrentPosition('lon')),
-									latitudeDelta: this.state.minDelta,
-									longitudeDelta: this.state.minDelta,
-								}}>
+						<MapView
+							style={css.shuttlestop_map}
+							loadingEnabled={true}
+							loadingIndicatorColor={'#666'}
+							loadingBackgroundColor={'#EEE'}
+							showsUserLocation={true}
+							mapType={'standard'}
+							initialRegion={{
+								latitude: Number(this.getCurrentPosition('lat')),
+								longitude: Number(this.getCurrentPosition('lon')),
+								latitudeDelta: this.state.mapDelta,
+								longitudeDelta: this.state.mapDelta,
+							}}>
 
-								<MapView.Marker
-									coordinate={{latitude: this.state.shuttleStopLat,
-										longitude: this.state.shuttleStopLon}}
-									title={this.state.shuttleStopName}
-									description={this.state.shuttleStopName}
-									key={this.state.shuttleStopName}
-								/>
-							</MapView>
-						</View>
-						) : null}
+							<MapView.Marker
+								coordinate={{latitude: this.state.shuttleStopLat,
+									longitude: this.state.shuttleStopLon}}
+								title={this.state.shuttleStopName}
+								description={this.state.shuttleStopName}
+								key={this.state.shuttleStopName}
+							/>
+						</MapView>
+					) : null }
 				</ScrollView>
 			</View>
 			
