@@ -70,6 +70,7 @@ var Home = React.createClass({
 	copyrightYear: new Date().getFullYear(),
 	nodePreviousLat: null,
 	nodePreviousLon: null,
+	geolocationWatchID: null,
 
 	getInitialState: function() {
 		return {
@@ -116,16 +117,16 @@ var Home = React.createClass({
 			});
 			// Load all non-broken-out Cards
 			this.refreshAllCards('auto');
-		}
-
-				
+		}	
 	},
 
 	componentDidMount: function() {
 		logger.custom('View Loaded: Home');
+		console.log("mount");
 	},
 
 	componentWillUnmount: function() {
+		console.log("unmount")
 		// Update unmount function with ability to clear all other timers (setTimeout/setInterval)
 		navigator.geolocation.clearWatch(this.geolocationWatchID);
 	},
@@ -143,14 +144,6 @@ var Home = React.createClass({
 			
 			if (response === "authorized") {
 				if(this.state.currentPosition === null ) {
-					navigator.geolocation.getCurrentPosition(
-						(initialPosition) => {
-							//logger.custom("getCurrentPosition");
-							this.setState({currentPosition: initialPosition});
-						},
-						(error) => logger.log('ERR: navigator.geolocation.getCurrentPosition1: ' + error.message),
-						{enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
-					);
 					this.geolocationWatchID = navigator.geolocation.watchPosition((currentPosition) => {
 						this.setState({ currentPosition });
 					});
