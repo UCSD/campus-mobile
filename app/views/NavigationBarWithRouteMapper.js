@@ -21,17 +21,18 @@ export default class NavigationBarWithRouteMapper extends React.Component {
 				renderScene={this.props.renderScene}
 				navigationBar={
 					<Navigator.NavigationBar 
-						style={css.navBar} 
+						style={css.navBar}
+						navigationStyles={Navigator.NavigationBar.StylesIOS}
 						routeMapper={{
 							LeftButton: function(route, navigator, index, navState) {
 								if (route.id === 'Home') {
 									return null;
 								} else {
 									return (
-										<View style={css.navBarLeftButtonContainer}>
+										<View>
 											<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => navigator.pop()}>
 												<Text style={css.navBarLeftButton}>
-													&lt; Back
+													&nbsp;&lt; Back
 												</Text>
 											</TouchableHighlight>
 										</View>
@@ -41,7 +42,7 @@ export default class NavigationBarWithRouteMapper extends React.Component {
 
 							Title: function(route, navigator, index, navState) {
 								return (
-									<View style={css.navBarTitleContainer}>
+									<View>
 										<Text style={css.navBarTitle}>
 											{route.title}
 										</Text>
@@ -50,7 +51,7 @@ export default class NavigationBarWithRouteMapper extends React.Component {
 							},
 
 							RightButton: function(route, navigator, index, navState) {
-								<View style={css.navBarRightButtonContainer}>
+								<View>
 								</View>
 							}
 						}}
