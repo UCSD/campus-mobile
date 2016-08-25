@@ -1,10 +1,8 @@
 <resources>
-    <color name="background">#006C92 </color>
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <!--<item name="android:windowBackground">@drawable/splashscreen</item>-->
-        <item name="android:windowBackground">@color/background</item>
     </style>
 
 </resources>
