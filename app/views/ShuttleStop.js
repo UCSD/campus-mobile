@@ -130,7 +130,6 @@ var ShuttleStop = React.createClass({
 		// Revisit at a later time
 		InteractionManager.runAfterInteractions(() => {
 			this.fetchShuttleArrivalsByStop('auto');
-			 this.loadMapView();
 
 			// Poll for new data
 			this.refreshShuttleDataTimer = this.setTimeout( () => { this.fetchShuttleArrivalsByStop('auto') }, this.shuttleRefreshInterval);
@@ -143,7 +142,6 @@ var ShuttleStop = React.createClass({
 	},
 
 	componentWillUnmount: function() {
-		console.log("unmount shuttle");
 		this.clearTimeout(this.mapViewTimeout);
 		navigator.geolocation.clearWatch(this.watchID);
 		this.setState({ mapViewLoadReady: false });
@@ -151,11 +149,11 @@ var ShuttleStop = React.createClass({
 	},
 
 	render: function() {
-		console.log("render shuttle");
-		if(!this.state.loaded) {
+		if(this.state.loaded) {
+			return this.renderScene();
+		} else {
 			return this._renderPlaceholderView();
 		}
-		return this.renderScene();
 	},
 
 	/* Revisit after welcome week deadline

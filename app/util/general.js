@@ -54,6 +54,10 @@ module.exports = {
 		return(dateFormat(Date.now(), format));
 	},
 
+	getDateNow: function() {
+		return (Date.now());
+	},
+
 	militaryToAMPM: function(militaryTime) {
 		var militaryTime, militaryTimeHH, militaryTimeMM, militaryTimeAMPM;
 		militaryTime = militaryTime.replace(/^0/,'');
