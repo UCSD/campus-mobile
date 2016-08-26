@@ -38,20 +38,16 @@ import {
 var AppSettings = require('../AppSettings');
 var general = require('../util/general');
 
-var navBarMarginTop = 64;
+var navBarMarginTop = 0;
 var navBarTitleMarginTop = 5;
 var welcome_lv_marginTop = 0;
 
-/* Unneeded since we're appplying ios navbar style
-if (general.platformAndroid()) {
-	navBarMarginTop = 54;
-	navBarTitleMarginTop = 0;
-} else if (general.platformIOS() && AppSettings.NAVIGATOR_ENABLED) {
+if (general.platformAndroid() || (general.platformIOS() && AppSettings.NAVIGATOR_ENABLED)) {
 	navBarMarginTop = 64;
 	navBarTitleMarginTop = 0;
 } else if (general.platformIOS()) {
 	welcome_lv_marginTop = 64;
-}*/
+}
 
 var pixelRatio = PixelRatio.get();
 var windowSize = Dimensions.get('window');
