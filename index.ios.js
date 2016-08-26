@@ -46,6 +46,11 @@ function Timer(callback, delay) {
 		timerId = setTimeout(callback, remaining);
 	};
 
+	this.do = function() {
+		clearTimeout(timerId);
+		callback();
+	}
+
 	this.getID = function() {
 		return timerId;
 	};
@@ -143,6 +148,12 @@ var nowucsandiego = React.createClass({
 		}
 	},
 
+	doTimeout: function() {
+		for (var key in timers) {
+			timers[key].do();
+		}
+	},
+
 	render: function() {
 
 		if (general.platformIOS()) {
@@ -166,6 +177,7 @@ var nowucsandiego = React.createClass({
 						passProps: {
 							isSimulator: this.props.isSimulator,
 							new_timeout: this.newTimeout,
+							do_timeout: this.doTimeout
 						},
 						backButtonTitle: "Back"
 					}}
@@ -184,7 +196,7 @@ var nowucsandiego = React.createClass({
 	renderScene: function(route, navigator, index, navState) {
 
 		switch (route.id) {
-			case 'Home': 				return (<Home route={route} navigator={navigator} new_timeout={this.newTimeout}/>);
+			case 'Home': 				return (<Home route={route} navigator={navigator} new_timeout={this.newTimeout} do_timeout={this.doTimeout}/>);
 			case 'ShuttleStop': 		return (<ShuttleStop route={route} navigator={navigator} />);
 			case 'SurfReport': 			return (<SurfReport route={route} navigator={navigator} />);
 			case 'TopStoriesDetail': 	return (<TopStoriesDetail route={route} navigator={navigator} />);
@@ -192,7 +204,7 @@ var nowucsandiego = React.createClass({
 			case 'WebWrapper': 			return (<WebWrapper route={route} navigator={navigator} />);
 			case 'WelcomeWeekView': 	return (<WelcomeWeekView route={route} navigator={navigator} />);
 			case 'DestinationDetail': 	return (<DestinationDetail route={route} navigator={navigator} />);
-			default: 					return (<Home route={route} navigator={navigator} new_timeout={this.newTimeout}/>);
+			default: 					return (<Home route={route} navigator={navigator} new_timeout={this.newTimeout} do_timeout={this.doTimeout}/>);
 		}
 	},
 

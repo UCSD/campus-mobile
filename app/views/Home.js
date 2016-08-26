@@ -97,6 +97,7 @@ var Home = React.createClass({
 			shuttleData: null,
 			cacheMap: false,
 			loaded:false,
+			refreshing:false,
 		}
 	},
 
@@ -198,7 +199,14 @@ var Home = React.createClass({
 
 		return (
 			<View style={css.main_container}>
-				<ScrollView contentContainerStyle={css.scroll_main}>
+				<ScrollView contentContainerStyle={css.scroll_main} refreshControl={
+					<RefreshControl
+						refreshing={this.state.refreshing}
+						onRefresh={this._handleRefresh}
+						tintColor="#CCC"
+						title=""
+					/>
+				}>
 
 					{/* WELCOME MODAL */}
 					<WelcomeModal />
@@ -279,10 +287,6 @@ var Home = React.createClass({
 
 										<MapView
 											style={css.destinationcard_map}
-											{/*
-											cacheEnabled={this.state.cacheMap}
-											scrollEnabled={!this.state.cacheMap}
-											zoomEnabled={!this.state.cacheMap}*/}
 											loadingEnabled={true}
 											loadingIndicatorColor={'#666'}
 											loadingBackgroundColor={'#EEE'}
@@ -882,6 +886,12 @@ var Home = React.createClass({
 		});
 		return uuid;
 	},
+
+	_handleRefresh: function() {
+		this.props.do_timeout();
+		this.refreshAllCards('auto');
+		this.setState({refreshing: false});
+	}
 });
 
 module.exports = Home;
