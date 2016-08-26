@@ -17,6 +17,7 @@ import {
 	Alert,
 	Navigator,
 	ActivityIndicator,
+	InteractionManager
 } from 'react-native';
 
 import TopBannerView from './banner/TopBannerView';
@@ -95,6 +96,7 @@ var Home = React.createClass({
 			},
 			shuttleData: null,
 			cacheMap: false,
+			loaded:false,
 		}
 	},
 
@@ -123,6 +125,11 @@ var Home = React.createClass({
 	componentDidMount: function() {
 		logger.custom('View Loaded: Home');
 		console.log("mount");
+
+		InteractionManager.runAfterInteractions(() => {
+			
+			this.setTimeout(() => {this.setState({loaded: true});}, 2000);
+		});
 	},
 
 	componentWillUnmount: function() {
@@ -268,13 +275,14 @@ var Home = React.createClass({
 							<View style={css.destinationcard_bot_container}>
 								<View style={css.destinationcard_map_container}>
 
-									{this.state.nearbyAnnotations ? (
+									{this.state.nearbyAnnotations && this.state.loaded ? (
 
 										<MapView
 											style={css.destinationcard_map}
+											{/*
 											cacheEnabled={this.state.cacheMap}
 											scrollEnabled={!this.state.cacheMap}
-											zoomEnabled={!this.state.cacheMap}
+											zoomEnabled={!this.state.cacheMap}*/}
 											loadingEnabled={true}
 											loadingIndicatorColor={'#666'}
 											loadingBackgroundColor={'#EEE'}
