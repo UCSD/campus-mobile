@@ -7,7 +7,8 @@ import {
 	TouchableHighlight,
 	ScrollView,
 	Image,
-	ListView
+	ListView,
+	ActivityIndicator,
 } from 'react-native';
 
 var css = require('../styles/css');
@@ -45,9 +46,12 @@ var DiningList = React.createClass({
 		return {
 			marketData: this.props.route.marketData,
 			marketDataFull: ds.cloneWithRows( this.props.route.marketData.menuItems ),
+
+			menuItemsActive: null,
 			menuItemsBreakfast: ds.cloneWithRows( breakfastItems ),
 			menuItemsLunch: ds.cloneWithRows( lunchItems ),
 			menuItemsDinner: ds.cloneWithRows( dinnerItems ),
+			
 			mealFilter: null,
 		};
 	},
@@ -61,15 +65,15 @@ var DiningList = React.createClass({
 		
 		if ( (currentHour < 10) || (currentHour === 10 && currentMinute <= 30) ) {
 			// Breakfast <= 10:30 AM
-			this.setState({ mealFilter: 'breakfast' });
+			this.setMealFilter('breakfast');
 		} else if (currentHour <= 16) {
 			// Lunch 10:31 AM - 4:59 PM
-			this.setState({ mealFilter: 'lunch' });
+			this.setMealFilter('lunch');
 		} else {
 			// Dinner 5:00pm - 12:00AM
-			this.setState({ mealFilter: 'dinner' });
+			this.setMealFilter('dinner');
 		}
-		
+
 	},
 
 	render: function() {
@@ -133,14 +137,14 @@ var DiningList = React.createClass({
 
 						<View style={css.dl_market_filters_mealtype}>
 							{this.state.mealFilter === 'breakfast' ? (
-								<TouchableHighlight style={css.dl_meal_button} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { this.setState({ mealFilter: 'breakfast' })}}>
+								<TouchableHighlight style={css.dl_meal_button} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { this.setMealFilter('breakfast')}}>
 									<View style={css.dl_meal_button}>
 										<View style={css.dl_mealtype_circle_active}></View>
 										<Text style={css.dl_mealtype_label_active}>Breakfast</Text>
 									</View>
 								</TouchableHighlight>
 							) : (
-								<TouchableHighlight style={css.dl_meal_button} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { this.setState({ mealFilter: 'breakfast' })}}>
+								<TouchableHighlight style={css.dl_meal_button} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { this.setMealFilter('breakfast')}}>
 									<View style={css.dl_meal_button}>
 										<View style={css.dl_mealtype_circle}></View>
 										<Text style={css.dl_mealtype_label}>Breakfast</Text>
@@ -148,14 +152,14 @@ var DiningList = React.createClass({
 								</TouchableHighlight>
 							)}
 							{this.state.mealFilter === 'lunch' ? (
-								<TouchableHighlight style={css.dl_meal_button} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { this.setState({ mealFilter: 'lunch' })}}>
+								<TouchableHighlight style={css.dl_meal_button} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { this.setMealFilter('lunch')}}>
 									<View style={css.dl_meal_button}>
 										<View style={css.dl_mealtype_circle_active}></View>
 										<Text style={css.dl_mealtype_label_active}>Lunch</Text>
 									</View>
 								</TouchableHighlight>
 							) : (
-								<TouchableHighlight style={css.dl_meal_button} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { this.setState({ mealFilter: 'lunch' })}}>
+								<TouchableHighlight style={css.dl_meal_button} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { this.setMealFilter('lunch')}}>
 									<View style={css.dl_meal_button}>
 										<View style={css.dl_mealtype_circle}></View>
 										<Text style={css.dl_mealtype_label}>Lunch</Text>
@@ -163,14 +167,14 @@ var DiningList = React.createClass({
 								</TouchableHighlight>
 							)}
 							{this.state.mealFilter === 'dinner' ? (
-								<TouchableHighlight style={css.dl_meal_button} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { this.setState({ mealFilter: 'dinner' })}}>
+								<TouchableHighlight style={css.dl_meal_button} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { this.setMealFilter('dinner')}}>
 									<View style={css.dl_meal_button}>
 										<View style={css.dl_mealtype_circle_active}></View>
 										<Text style={css.dl_mealtype_label_active}>Dinner</Text>
 									</View>
 								</TouchableHighlight>
 							) : (
-								<TouchableHighlight style={css.dl_meal_button} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { this.setState({ mealFilter: 'dinner' })}}>
+								<TouchableHighlight style={css.dl_meal_button} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { this.setMealFilter('dinner')}}>
 									<View style={css.dl_meal_button}>
 										<View style={css.dl_mealtype_circle}></View>
 										<Text style={css.dl_mealtype_label}>Dinner</Text>
@@ -179,14 +183,21 @@ var DiningList = React.createClass({
 							)}
 						</View>
 
-						<View style={css.dl_market_menu}>
-							<ListView dataSource={this.state.marketDataFull} renderRow={ (data) => {
-								return (
-									<TouchableHighlight style={css.dl_market_menu_row} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoDiningDetail(data) }>
-										<Text style={css.dl_menu_item_name}>{data.name}<Text style={css.dl_menu_item_price}> (${data.price})</Text></Text>
-									</TouchableHighlight>
-								)}} />
-						</View>
+						{this.state.menuItemsActive ? (
+							<View style={css.dl_market_menu}>
+								<ListView dataSource={this.state.menuItemsActive} renderRow={ (data) => {
+									return (
+										<TouchableHighlight style={css.dl_market_menu_row} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoDiningDetail(data) }>
+											<Text style={css.dl_menu_item_name}>{data.name}<Text style={css.dl_menu_item_price}> (${data.price})</Text></Text>
+										</TouchableHighlight>
+									)
+								}} />
+							</View>
+						) : (
+							<View style={[css.center, css.shuttle_card_loader]}>
+								<ActivityIndicator style={css.shuttle_card_aa} size="large" />
+							</View>
+						)}
 
 					</View>
 				</ScrollView>
@@ -194,8 +205,19 @@ var DiningList = React.createClass({
 		);
 	},
 
-	updateMealSelection: function(meal) {
-		return;
+	setMealFilter: function(meal) {
+		var dsClone;
+		if (meal === 'breakfast') {
+			dsClone = this.state.menuItemsBreakfast;
+		} else if (meal === 'lunch') {
+			dsClone = this.state.menuItemsLunch;
+		} else {
+			dsClone = this.state.menuItemsDinner;
+		}
+		this.setState({
+			mealFilter: meal,
+			menuItemsActive: dsClone,
+		});
 	},
 
 	updateDiningFilters: function(filter) {
