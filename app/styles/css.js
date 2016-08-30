@@ -131,7 +131,7 @@ var css = StyleSheet.create({
 
 	// DINING CARD
 	dining_card: { padding: 8 },
-	dining_card_map: { width: maxCardWidthWithPadding }, //, height: maxCardWidthWithPadding * .5 },
+	dining_card_map: { width: maxCardWidthWithPadding },
 	dining_card_filters: { flexDirection: 'row', justifyContent: 'center', marginBottom: 6 },
 		dining_card_filter_button: { paddingVertical: 6, paddingHorizontal: 10, fontSize: 12, color: ucsdblue, borderWidth: 1, borderColor: '#999', borderRadius: 3, backgroundColor: '#EEE', textAlign: 'center', marginHorizontal: 10 },
 	dc_locations: { flex: 1, flexDirection: 'column' },
@@ -166,9 +166,13 @@ var css = StyleSheet.create({
 	dl_market_filters_foodtype: { flex: 1, flexDirection: 'row', justifyContent: 'center', paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: '#DDD', },
 
 
-	dl_market_filters_mealtype: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingVertical: 6 },
-		dl_mealtype_label: { flex: 1, fontSize: 20, color: '#888', textAlign: 'center' },
-		dl_mealtype_active: { borderWidth: 1, borderColor: '#555', borderRadius: 8, width: 16, height: 16, backgroundColor: ucsdblue },
+	dl_market_filters_mealtype: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingVertical: 6 },
+		dl_meal_button: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
+			dl_mealtype_circle: { borderWidth: 1, borderColor: '#CCC', borderRadius: 8, width: 16, height: 16, backgroundColor: '#CCC', marginRight: 5 },
+			dl_mealtype_circle_active: { borderWidth: 1, borderColor: '#BBB', borderRadius: 8, width: 16, height: 16, backgroundColor: ucsdblue, marginRight: 5 },
+			dl_mealtype_label: { fontSize: 20, color: '#888' },
+			dl_mealtype_label_active: { fontSize: 20, color: ucsdblue },
+
 
 	dl_market_menu: { marginHorizontal: 8, marginVertical: 16 },
 		dl_market_menu_row: { flex: 1, flexDirection: 'row', paddingBottom: 8 },

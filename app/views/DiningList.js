@@ -48,8 +48,28 @@ var DiningList = React.createClass({
 			menuItemsBreakfast: ds.cloneWithRows( breakfastItems ),
 			menuItemsLunch: ds.cloneWithRows( lunchItems ),
 			menuItemsDinner: ds.cloneWithRows( dinnerItems ),
-			
+			mealFilter: null,
 		};
+	},
+
+	componentWillMount: function() {
+
+		// Default to Breakfast, Lunch, Dinner based on time of day
+		// TODO: Rework based on open hours once the feed is improved
+		var currentHour = general.getTimestamp('H');
+		var currentMinute = general.getTimestamp('M');
+		
+		if ( (currentHour < 10) || (currentHour === 10 && currentMinute <= 30) ) {
+			// Breakfast <= 10:30 AM
+			this.setState({ mealFilter: 'breakfast' });
+		} else if (currentHour <= 16) {
+			// Lunch 10:31 AM - 4:59 PM
+			this.setState({ mealFilter: 'lunch' });
+		} else {
+			// Dinner 5:00pm - 12:00AM
+			this.setState({ mealFilter: 'dinner' });
+		}
+		
 	},
 
 	render: function() {
@@ -76,15 +96,20 @@ var DiningList = React.createClass({
 
 						<View style={css.dl_market_directions}>
 							<Text style={css.dl_dir_label}>Directions</Text>
-							<View style={css.dl_dir_traveltype_container}>
-								<Image style={css.dl_dir_icon} source={ require('../assets/img/icon_walk.png')} />
-								<Text style={css.dl_dir_eta}>25 mins</Text>
-							</View>
 
-							<View style={css.dl_dir_traveltype_container}>
-								<Image style={css.dl_dir_icon} source={ require('../assets/img/icon_bike.png')} />
-								<Text style={css.dl_dir_eta}>15 mins</Text>
-							</View>
+							<TouchableHighlight style={css.dl_dir_traveltype_container} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { return }}>
+								<View style={css.dl_dir_traveltype_container}>
+									<Image style={css.dl_dir_icon} source={ require('../assets/img/icon_walk.png')} />
+									<Text style={css.dl_dir_eta}>25 mins</Text>
+								</View>
+							</TouchableHighlight>
+
+							<TouchableHighlight style={css.dl_dir_traveltype_container} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { return }}>
+								<View style={css.dl_dir_traveltype_container}>
+									<Image style={css.dl_dir_icon} source={ require('../assets/img/icon_bike.png')} />
+									<Text style={css.dl_dir_eta}>15 mins</Text>
+								</View>
+							</TouchableHighlight>
 						</View>
 
 						<View style={css.dl_market_date}>
@@ -105,10 +130,53 @@ var DiningList = React.createClass({
 							</TouchableHighlight>
 						</View>
 
+
 						<View style={css.dl_market_filters_mealtype}>
-							<Text style={css.dl_mealtype_label}>Breakfast</Text>
-							<Text style={css.dl_mealtype_label}>Lunch</Text>
-							<Text style={css.dl_mealtype_label}>Dinner</Text>
+							{this.state.mealFilter === 'breakfast' ? (
+								<TouchableHighlight style={css.dl_meal_button} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { this.setState({ mealFilter: 'breakfast' })}}>
+									<View style={css.dl_meal_button}>
+										<View style={css.dl_mealtype_circle_active}></View>
+										<Text style={css.dl_mealtype_label_active}>Breakfast</Text>
+									</View>
+								</TouchableHighlight>
+							) : (
+								<TouchableHighlight style={css.dl_meal_button} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { this.setState({ mealFilter: 'breakfast' })}}>
+									<View style={css.dl_meal_button}>
+										<View style={css.dl_mealtype_circle}></View>
+										<Text style={css.dl_mealtype_label}>Breakfast</Text>
+									</View>
+								</TouchableHighlight>
+							)}
+							{this.state.mealFilter === 'lunch' ? (
+								<TouchableHighlight style={css.dl_meal_button} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { this.setState({ mealFilter: 'lunch' })}}>
+									<View style={css.dl_meal_button}>
+										<View style={css.dl_mealtype_circle_active}></View>
+										<Text style={css.dl_mealtype_label_active}>Lunch</Text>
+									</View>
+								</TouchableHighlight>
+							) : (
+								<TouchableHighlight style={css.dl_meal_button} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { this.setState({ mealFilter: 'lunch' })}}>
+									<View style={css.dl_meal_button}>
+										<View style={css.dl_mealtype_circle}></View>
+										<Text style={css.dl_mealtype_label}>Lunch</Text>
+									</View>
+								</TouchableHighlight>
+							)}
+							{this.state.mealFilter === 'dinner' ? (
+								<TouchableHighlight style={css.dl_meal_button} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { this.setState({ mealFilter: 'dinner' })}}>
+									<View style={css.dl_meal_button}>
+										<View style={css.dl_mealtype_circle_active}></View>
+										<Text style={css.dl_mealtype_label_active}>Dinner</Text>
+									</View>
+								</TouchableHighlight>
+							) : (
+								<TouchableHighlight style={css.dl_meal_button} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { this.setState({ mealFilter: 'dinner' })}}>
+									<View style={css.dl_meal_button}>
+										<View style={css.dl_mealtype_circle}></View>
+										<Text style={css.dl_mealtype_label}>Dinner</Text>
+									</View>
+								</TouchableHighlight>
+							)}
 						</View>
 
 						<View style={css.dl_market_menu}>
@@ -126,17 +194,28 @@ var DiningList = React.createClass({
 		);
 	},
 
+	updateMealSelection: function(meal) {
+		return;
+	},
+
 	updateDiningFilters: function(filter) {
 		logger.log('updateDiningFilters: ' + filter)
 
 	},
 
 	gotoDiningDetail: function(data) {
-		logger.log('data:')
-		logger.log(data)
-
-		//this.props.navigator.push({ id: 'DiningDetail', name: 'test' });
 		this.props.navigator.push({ id: 'DiningDetail', name: data.name, title: data.name, menuItem: data, component: DiningDetail });
+	},
+
+	gotoDestinationDetail: function(destinationData) {
+		destinationData.currentLat = this.getCurrentPosition('lat');
+		destinationData.currentLon = this.getCurrentPosition('lon');
+
+		destinationData.mkrLat = parseFloat(destinationData.mkrLat);
+		destinationData.mkrLong = parseFloat(destinationData.mkrLong);
+
+		destinationData.distLatLon = Math.sqrt(Math.pow(Math.abs(this.getCurrentPosition('lat') - destinationData.mkrLat), 2) + Math.pow(Math.abs(this.getCurrentPosition('lon') - destinationData.mkrLong), 2));
+		this.props.navigator.push({ id: 'DestinationDetail', name: 'Nearby', title: 'Nearby', component: DestinationDetail, destinationData: destinationData });
 	},
 
 });
