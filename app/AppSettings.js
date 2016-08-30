@@ -5,17 +5,17 @@ module.exports = {
 	/* APP CONFIG */
 	APP_NAME: 					'now@ucsandiego',
 	GOOGLE_ANALYTICS_ID: 		'UA-81825078-1',
-	DEBUG_ENABLED: 				false,				// Disables all logger functions (i.e. logger.log) if set to false (console.log is unaffected)
+	DEBUG_ENABLED: 				true,				// Disables all logger functions (i.e. logger.log) if set to false (console.log is unaffected)
 	NAVIGATOR_ENABLED: 			false,				// IOS setting only - if true, app uses Navigator instead of Navigator IOS
 													// Navigator will always be used for Android
 	
 	/* CARDS */
-	WELCOME_WEEK_ENABLED: 		true,
-	SHUTTLE_CARD_ENABLED: 		true,
-	WEATHER_CARD_ENABLED: 		true,
-	EVENTS_CARD_ENABLED: 		true,
-	TOPSTORIES_CARD_ENABLED: 	true,
-	NEARBY_CARD_ENABLED: 		true,
+	WELCOME_WEEK_ENABLED: 		false,
+	SHUTTLE_CARD_ENABLED: 		false,
+	WEATHER_CARD_ENABLED: 		false,
+	EVENTS_CARD_ENABLED: 		false,
+	TOPSTORIES_CARD_ENABLED: 	false,
+	NEARBY_CARD_ENABLED: 		false,
 	DINING_CARD_ENABLED: 		true,
 
 	/* APIS / ENDPOINTS */
