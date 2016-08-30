@@ -212,7 +212,9 @@ var Home = React.createClass({
 					<WelcomeModal />
 
 					{/* SPECIAL TOP BANNER */}
-					<TopBannerView navigator={this.props.navigator}/>
+					{AppSettings.WELCOME_WEEK_ENABLED ? (
+						<TopBannerView navigator={this.props.navigator}/>
+					) : null }
 
 					{/* SHUTTLE CARD */}
 					{AppSettings.SHUTTLE_CARD_ENABLED ? (
@@ -343,31 +345,15 @@ var Home = React.createClass({
 												followUserLocation={true} />*/}
 										</View>
 
-										
-										<View style={css.dining_card_filters}>
-											<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.updateDiningFilters('vegetarian') }>
-												<Text style={css.dining_card_filter_button}>Vegetarian</Text>
-											</TouchableHighlight>
-
-											<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.updateDiningFilters('vegan') }>
-												<Text style={css.dining_card_filter_button}>Vegan</Text>
-											</TouchableHighlight>
-
-											<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.updateDiningFilters('glutenfree') }>
-												<Text style={css.dining_card_filter_button}>Gluten-free</Text>
-											</TouchableHighlight>
-
-											<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.updateDiningFilters('opennow') }>
-												<Text style={css.dining_card_filter_button}>Open Now</Text>
-											</TouchableHighlight>
-										</View>
-										
-
 										<View style={css.dc_locations}>
 											<ListView dataSource={this.state.diningDataFull} renderRow={this.renderDiningRow} style={css.wf_listview} />
 										</View>
 									</View>
-								) : null }
+								) : (
+									<View style={[css.shuttle_card_row_center, css.shuttle_card_loader]}>
+										<ActivityIndicator style={css.shuttle_card_aa} size="large" />
+									</View>
+								)}
 							</View>
 						</View>
 					) : null }

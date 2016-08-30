@@ -63,7 +63,7 @@ var DiningList = React.createClass({
 					<View style={css.dl_container}>
 
 						<View style={css.dl_market_name}>
-							<Text style={css.dl_market_name_text}>{this.state.marketData.name} test</Text>
+							<Text style={css.dl_market_name_text}>{this.state.marketData.name}</Text>
 						</View>
 
 						{this.state.marketData.images ? (
