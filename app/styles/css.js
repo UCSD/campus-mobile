@@ -152,21 +152,20 @@ var css = StyleSheet.create({
 	// DINING LIST
 	dl_market_name: { padding: 10 },
 		dl_market_name_text: { color: '#777', fontSize: 30 },
-	dl_market_scroller: {  },
-		dl_market_scroller_image: { width: 160, height: 160, borderRadius: 5, marginHorizontal: 7 },
+	dl_market_scroller: { height: 154 },
+		dl_market_scroller_image: { width: 154, height: 154, borderRadius: 5, marginHorizontal: 7 },
 	dl_market_directions: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderBottomColor: '#DDD', margin: 6, padding: 6 },
 		dl_dir_label: { flex: 4, fontSize: 22, color: ucsdblue },
 		dl_dir_traveltype_container: { flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'center' },
 			dl_dir_icon: { width: 28, height: 28 },
 			dl_dir_eta: { color: ucsdblue, fontSize: 14 },
 
-	dl_market_date: { borderBottomWidth: 1, borderBottomColor: '#DDD', paddingBottom: 2, paddingTop: 16 },
+	dl_market_date: { borderBottomWidth: 1, borderBottomColor: '#DDD', paddingTop: 16 },
 		dl_market_date_label: { fontSize: 22, color: '#444', textAlign: 'center' },
 	
-	dl_market_filters_foodtype: { flex: 1, flexDirection: 'row', justifyContent: 'center', paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: '#DDD', },
+	dl_market_filters_foodtype: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginVertical: 8 },
 
-
-	dl_market_filters_mealtype: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingVertical: 6 },
+	dl_market_filters_mealtype: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderTopWidth: 1, borderTopColor: '#DDD', paddingTop: 10 },
 		dl_meal_button: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
 			dl_mealtype_circle: { borderWidth: 1, borderColor: '#CCC', borderRadius: 8, width: 16, height: 16, backgroundColor: '#CCC', marginRight: 5 },
 			dl_mealtype_circle_active: { borderWidth: 1, borderColor: '#BBB', borderRadius: 8, width: 16, height: 16, backgroundColor: ucsdblue, marginRight: 5 },
@@ -175,7 +174,7 @@ var css = StyleSheet.create({
 
 
 	dl_market_menu: { marginHorizontal: 8, marginVertical: 16 },
-		dl_market_menu_row: { flex: 1, flexDirection: 'row', paddingBottom: 8 },
+		dl_market_menu_row: { flexDirection: 'row', paddingBottom: 8 },
 			dl_menu_item_name: { fontSize: 15, color: ucsdblue },
 			dl_menu_item_price: { color: '#555', paddingLeft: 26, marginLeft: 30 },
 

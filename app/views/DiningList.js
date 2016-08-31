@@ -18,11 +18,11 @@ var DiningDetail = require('./DiningDetail');
 
 var DiningList = React.createClass({
 
-	getInitialState: function() {
+	breakfastItems: [],
+	lunchItems: [],
+	dinnerItems: [],
 
-		var breakfastItems = [],
-			lunchItems = [],
-			dinnerItems = [];
+	getInitialState: function() {
 
 		var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
@@ -33,13 +33,13 @@ var DiningList = React.createClass({
 			var menuItemTags = menuItem.tags;
 
 			if (menuItemTags.indexOf('Breakfast') >= 0) {
-				breakfastItems.push(menuItem);
+				this.breakfastItems.push(menuItem);
 			}
 			if (menuItemTags.indexOf('Lunch') >= 0) {
-				lunchItems.push(menuItem);
+				this.lunchItems.push(menuItem);
 			}
 			if (menuItemTags.indexOf('Dinner') >= 0) {
-				dinnerItems.push(menuItem);
+				this.dinnerItems.push(menuItem);
 			}
 		}
 
@@ -48,9 +48,9 @@ var DiningList = React.createClass({
 			marketDataFull: ds.cloneWithRows( this.props.route.marketData.menuItems ),
 
 			menuItemsActive: null,
-			menuItemsBreakfast: ds.cloneWithRows( breakfastItems ),
-			menuItemsLunch: ds.cloneWithRows( lunchItems ),
-			menuItemsDinner: ds.cloneWithRows( dinnerItems ),
+			menuItemsBreakfast: ds.cloneWithRows( this.breakfastItems ),
+			menuItemsLunch: ds.cloneWithRows( this.lunchItems ),
+			menuItemsDinner: ds.cloneWithRows( this.dinnerItems ),
 			
 			mealFilter: null,
 		};
@@ -93,7 +93,7 @@ var DiningList = React.createClass({
 						{this.state.marketData.images ? (
 							<ScrollView style={css.dl_market_scroller} directionalLockEnabled={false} horizontal={true}>
 								{this.state.marketData.images.map(function(object, i) {
-									return (<Image style={css.dl_market_scroller_image} source={{ uri: object }} />);
+									return (<Image style={css.dl_market_scroller_image} resizeMode={'cover'} source={{ uri: object }} />);
 								})}
 							</ScrollView>
 						) : null }
@@ -121,15 +121,15 @@ var DiningList = React.createClass({
 						</View>
 
 						<View style={css.dl_market_filters_foodtype}>
-							<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.updateDiningFilters('vegetarian') }>
+							<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.setTypeFilter('VT') }>
 								<Text style={css.dining_card_filter_button}>Vegetarian</Text>
 							</TouchableHighlight>
 
-							<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.updateDiningFilters('vegan') }>
+							<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.setTypeFilter('VG') }>
 								<Text style={css.dining_card_filter_button}>Vegan</Text>
 							</TouchableHighlight>
 
-							<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.updateDiningFilters('glutenfree') }>
+							<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.setTypeFilter('GF') }>
 								<Text style={css.dining_card_filter_button}>Gluten-free</Text>
 							</TouchableHighlight>
 						</View>
@@ -220,9 +220,26 @@ var DiningList = React.createClass({
 		});
 	},
 
-	updateDiningFilters: function(filter) {
-		logger.log('updateDiningFilters: ' + filter)
+	setTypeFilter: function(type) {
+		var menuItemsArray = [],
+			menuItemsActivated = [];
 
+		if (this.state.mealFilter === 'breakfast') {
+			menuItemsArray = this.breakfastItems;
+		} else if (this.state.mealFilter === 'lunch') {
+			menuItemsArray = this.lunchItems;
+		} else {
+			menuItemsArray = this.dinnerItems;
+		}
+
+		for (var i = 0; menuItemsArray.length > i; i++) {
+			if (menuItemsArray[i].tags.indexOf(type) >= 0) {
+				menuItemsActivated.push(menuItemsArray[i]);
+			}
+		}
+
+		var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+		this.setState({ menuItemsActive: ds.cloneWithRows( menuItemsActivated ) });
 	},
 
 	gotoDiningDetail: function(data) {
