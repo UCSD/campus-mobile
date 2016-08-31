@@ -135,7 +135,7 @@ var css = StyleSheet.create({
 	dining_card_filters: { flexDirection: 'row', justifyContent: 'center', marginBottom: 6 },
 		dining_card_filter_button: { paddingVertical: 6, paddingHorizontal: 10, fontSize: 12, color: ucsdblue, borderWidth: 1, borderColor: '#999', borderRadius: 3, backgroundColor: '#EEE', textAlign: 'center', marginHorizontal: 10 },
 	dc_locations: { flex: 1, flexDirection: 'column' },
-		dc_locations_row: { flexDirection: 'row', paddingBottom: 10, paddingTop: 10, borderBottomWidth: 1, borderBottomColor: '#DDD' },
+		dc_locations_row: { flexDirection: 'row', paddingBottom: 10, paddingTop: 10, borderBottomWidth: 1, borderBottomColor: '#EEE' },
 			dc_locations_row_left: { flex: 6, justifyContent: 'center' },
 				dc_locations_title: { fontSize: 20, fontWeight: '500', color: ucsdblue },
 				dc_locations_hours: { fontSize: 12, color: '#666', paddingTop: 1 },
@@ -160,7 +160,7 @@ var css = StyleSheet.create({
 			dl_dir_icon: { width: 28, height: 28 },
 			dl_dir_eta: { color: ucsdblue, fontSize: 14 },
 
-	dl_market_date: { borderBottomWidth: 1, borderBottomColor: '#DDD', paddingTop: 16 },
+	dl_market_date: { borderBottomWidth: 1, borderBottomColor: '#DDD', paddingTop: 16, paddingBottom: 6 },
 		dl_market_date_label: { fontSize: 22, color: '#444', textAlign: 'center' },
 	
 	dl_market_filters_foodtype: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginVertical: 8 },

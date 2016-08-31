@@ -3,10 +3,12 @@ var React = require('react-native');
 var {
 	Animated,
 	Easing,
-	Platform
+	Platform,
+	Linking,
 } = React;
 
 var dateFormat = require('dateformat');
+var logger = require('./logger');
 
 module.exports = {
 	
@@ -28,6 +30,16 @@ module.exports = {
 
 	getPlatform: function() {
 		return Platform.OS;
+	},
+
+	openURL: function(url) {
+		Linking.canOpenURL(url).then(supported => {
+			if (!supported) {
+				logger.log('ERR: openURL: Unable to handle url: ' + url);
+			} else {
+				return Linking.openURL(url);
+			}
+		}).catch(err => logger.log('ERR: openURL: ' + err));
 	},
 
 	startReloadAnimation2: function(anim, toVal, duration) {

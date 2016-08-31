@@ -9,6 +9,7 @@ import {
 	Image,
 	ListView,
 	ActivityIndicator,
+	Linking,
 } from 'react-native';
 
 var css = require('../styles/css');
@@ -17,12 +18,16 @@ var general = require('../util/general');
 var DiningDetail = require('./DiningDetail');
 
 var DiningList = React.createClass({
-
+/*
 	breakfastItems: [],
 	lunchItems: [],
 	dinnerItems: [],
-
+*/
 	getInitialState: function() {
+
+		var breakfastItems = [],
+			lunchItems = [],
+			dinnerItems = [];
 
 		var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
@@ -30,27 +35,38 @@ var DiningList = React.createClass({
 
 		for (var i = 0; marketData.menuItems.length > i; i++) {
 			var menuItem = marketData.menuItems[i];
-			var menuItemTags = menuItem.tags;
+			var menuItemTags = menuItem.tags.toLowerCase();
 
-			if (menuItemTags.indexOf('Breakfast') >= 0) {
-				this.breakfastItems.push(menuItem);
+			logger.log('menuItem')
+			logger.log(menuItem)
+
+			logger.log('menuItemTags')
+			logger.log(menuItemTags)
+
+
+			if (menuItemTags.indexOf('breakfast') >= 0) {
+				breakfastItems.push(menuItem);
 			}
-			if (menuItemTags.indexOf('Lunch') >= 0) {
-				this.lunchItems.push(menuItem);
+			if (menuItemTags.indexOf('lunch') >= 0) {
+				lunchItems.push(menuItem);
 			}
-			if (menuItemTags.indexOf('Dinner') >= 0) {
-				this.dinnerItems.push(menuItem);
+			if (menuItemTags.indexOf('dinner') >= 0) {
+				dinnerItems.push(menuItem);
+			}
+			if (menuItemTags.indexOf('all') >= 0) {
+				breakfastItems.push(menuItem);
+				lunchItems.push(menuItem);
+				dinnerItems.push(menuItem);
 			}
 		}
 
 		return {
 			marketData: this.props.route.marketData,
-			marketDataFull: ds.cloneWithRows( this.props.route.marketData.menuItems ),
 
 			menuItemsActive: null,
-			menuItemsBreakfast: ds.cloneWithRows( this.breakfastItems ),
-			menuItemsLunch: ds.cloneWithRows( this.lunchItems ),
-			menuItemsDinner: ds.cloneWithRows( this.dinnerItems ),
+			menuItemsBreakfast: breakfastItems,
+			menuItemsLunch: lunchItems,
+			menuItemsDinner: dinnerItems,
 			
 			mealFilter: null,
 		};
@@ -80,6 +96,8 @@ var DiningList = React.createClass({
 		return this.renderScene();
 	},
 
+	//general.openURL('http://maps.apple.com/?saddr=32.88,-117.234&daddr=32.8903614,-117.2452594&dirflg=w')
+
 	renderScene: function() {
 		return (
 			<View style={[css.main_container, css.whitebg]}>
@@ -101,19 +119,21 @@ var DiningList = React.createClass({
 						<View style={css.dl_market_directions}>
 							<Text style={css.dl_dir_label}>Directions</Text>
 
-							<TouchableHighlight style={css.dl_dir_traveltype_container} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { return }}>
+							<TouchableHighlight style={css.dl_dir_traveltype_container} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { this.getDirectionsURL('walk') }}>
 								<View style={css.dl_dir_traveltype_container}>
 									<Image style={css.dl_dir_icon} source={ require('../assets/img/icon_walk.png')} />
 									<Text style={css.dl_dir_eta}>25 mins</Text>
 								</View>
 							</TouchableHighlight>
 
-							<TouchableHighlight style={css.dl_dir_traveltype_container} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { return }}>
-								<View style={css.dl_dir_traveltype_container}>
-									<Image style={css.dl_dir_icon} source={ require('../assets/img/icon_bike.png')} />
-									<Text style={css.dl_dir_eta}>15 mins</Text>
-								</View>
-							</TouchableHighlight>
+							{general.platformAndroid() ? (
+								<TouchableHighlight style={css.dl_dir_traveltype_container} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { this.getDirectionsURL('bike') }}>
+									<View style={css.dl_dir_traveltype_container}>
+										<Image style={css.dl_dir_icon} source={ require('../assets/img/icon_bike.png')} />
+										<Text style={css.dl_dir_eta}>15 mins</Text>
+									</View>
+								</TouchableHighlight>
+							) : null }
 						</View>
 
 						<View style={css.dl_market_date}>
@@ -206,7 +226,10 @@ var DiningList = React.createClass({
 	},
 
 	setMealFilter: function(meal) {
+
+		var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 		var dsClone;
+
 		if (meal === 'breakfast') {
 			dsClone = this.state.menuItemsBreakfast;
 		} else if (meal === 'lunch') {
@@ -216,7 +239,7 @@ var DiningList = React.createClass({
 		}
 		this.setState({
 			mealFilter: meal,
-			menuItemsActive: dsClone,
+			menuItemsActive: ds.cloneWithRows( dsClone ),
 		});
 	},
 
@@ -225,11 +248,11 @@ var DiningList = React.createClass({
 			menuItemsActivated = [];
 
 		if (this.state.mealFilter === 'breakfast') {
-			menuItemsArray = this.breakfastItems;
+			menuItemsArray = this.state.breakfastItems;
 		} else if (this.state.mealFilter === 'lunch') {
-			menuItemsArray = this.lunchItems;
+			menuItemsArray = this.state.lunchItems;
 		} else {
-			menuItemsArray = this.dinnerItems;
+			menuItemsArray = this.state.dinnerItems;
 		}
 
 		for (var i = 0; menuItemsArray.length > i; i++) {
