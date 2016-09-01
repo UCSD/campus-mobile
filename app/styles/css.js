@@ -158,7 +158,7 @@ var css = StyleSheet.create({
 	dl_market_directions: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderBottomColor: '#DDD', margin: 6, padding: 6 },
 		dl_dir_label: { flex: 4, fontSize: 22, color: ucsdblue },
 		dl_dir_traveltype_container: { flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'center' },
-			dl_dir_icon: { width: 32, height: 32 },
+			dl_dir_icon: { width: 28, height: 28 },
 			dl_dir_eta: { color: ucsdblue, fontSize: 11, fontWeight: 'bold' },
 	dl_noresults: { color: '#444', fontSize: 15 },
 	dl_market_date: { borderBottomWidth: 1, borderBottomColor: '#DDD', paddingTop: 16, paddingBottom: 6 },

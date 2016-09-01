@@ -119,14 +119,13 @@ var DiningList = React.createClass({
 									<Text style={css.dl_dir_eta}>WALK</Text>
 								</View>
 							</TouchableHighlight>
-							{general.platformAndroid() ? (
-								<TouchableHighlight style={css.dl_dir_traveltype_container} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { this.getDirectionsURL('bike') }}>
-									<View style={css.dl_dir_traveltype_container}>
-										<Image style={css.dl_dir_icon} source={ require('../assets/img/icon_bike.png')} />
-										<Text style={css.dl_dir_eta}>BIKE</Text>
-									</View>
-								</TouchableHighlight>
-							) : null }
+
+							<TouchableHighlight style={css.dl_dir_traveltype_container} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { this.getDirectionsURL('drive') }}>
+								<View style={css.dl_dir_traveltype_container}>
+									<Image style={css.dl_dir_icon} source={ require('../assets/img/icon_car.png')} />
+									<Text style={css.dl_dir_eta}>DRIVE</Text>
+								</View>
+							</TouchableHighlight>
 						</View>
 
 						<View style={css.dl_market_date}>
@@ -230,14 +229,18 @@ var DiningList = React.createClass({
 		var directionsURL;
 
 		if (general.platformIOS()) {
-			// Apple maps does not support biking directions
-			directionsURL = 'http://maps.apple.com/?saddr=' + this.state.currentCoords.lat + ',' + this.state.currentCoords.lon + '&daddr=' + this.state.marketData.coords.lat + ',' + this.state.marketData.coords.lon + '&dirflg=w';
-		} else {
-			if (method === 'bike') {
-				directionsURL = 'https://www.google.com/maps/dir/32.88,-117.234/32.884189,-117.233393/@32.88,-117.234,18z/data=!4m2!4m1!3e1';
+			if (method === 'walk') {
+				directionsURL = 'http://maps.apple.com/?saddr=' + this.state.currentCoords.lat + ',' + this.state.currentCoords.lon + '&daddr=' + this.state.marketData.coords.lat + ',' + this.state.marketData.coords.lon + '&dirflg=w';
 			} else {
-				// Default to walking directions
-				directionsURL = 'https://www.google.com/maps/dir/' + this.state.currentCoords.lat + ',' + this.state.currentCoords.lon + '/' + this.state.marketData.coords.lat + ',' + this.state.marketData.coords.lon + '/@' + this.state.currentCoords.lat + ',' + this.state.currentCoords.lon + ',18z/data=!4m2!4m1!3e2';
+				// Default to driving directions
+				directionsURL = 'http://maps.apple.com/?saddr=' + this.state.currentCoords.lat + ',' + this.state.currentCoords.lon + '&daddr=' + this.state.marketData.coords.lat + ',' + this.state.marketData.coords.lon + '&dirflg=d';
+			}
+		} else {
+			if (method === 'walk') {
+				directionsURL = 'https://www.google.com/maps/dir/' + this.state.currentCoords.lat + ',' + this.state.currentCoords.lon + '/' + this.state.marketData.coords.lat + ',' + this.state.marketData.coords.lon + '/@' + this.state.currentCoords.lat + ',' + this.state.currentCoords.lon + ',18z/data=!4m2!4m1!3e1';
+			} else {
+				// Default to driving directions
+				directionsURL = 'https://www.google.com/maps/dir/' + this.state.currentCoords.lat + ',' + this.state.currentCoords.lon + '/' + this.state.marketData.coords.lat + ',' + this.state.marketData.coords.lon + '/@' + this.state.currentCoords.lat + ',' + this.state.currentCoords.lon + ',18z/data=!4m2!4m1!3e0';
 			}
 		}
 
