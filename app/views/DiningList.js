@@ -33,9 +33,6 @@ var DiningList = React.createClass({
 
 		var marketData = this.props.route.marketData;
 
-		logger.log('marketData:')
-		logger.log(marketData)
-
 		for (var i = 0; marketData.menuItems.length > i; i++) {
 			var menuItem = marketData.menuItems[i];
 			var menuItemTags = menuItem.tags.toLowerCase();
@@ -229,7 +226,7 @@ var DiningList = React.createClass({
 
 		var directionsURL;
 
-		if (general.platformAndroid()) {
+		if (general.platformIOS()) {
 			// Apple maps does not support biking directions
 			directionsURL = 'http://maps.apple.com/?saddr=' + this.state.currentCoords.lat + ',' + this.state.currentCoords.lon + '&daddr=' + this.state.marketData.coords.lat + ',' + this.state.marketData.coords.lon + '&dirflg=w';
 		} else {
