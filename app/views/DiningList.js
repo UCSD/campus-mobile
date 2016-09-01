@@ -33,16 +33,12 @@ var DiningList = React.createClass({
 
 		var marketData = this.props.route.marketData;
 
+		logger.log('marketData:')
+		logger.log(marketData)
+
 		for (var i = 0; marketData.menuItems.length > i; i++) {
 			var menuItem = marketData.menuItems[i];
 			var menuItemTags = menuItem.tags.toLowerCase();
-
-			logger.log('menuItem')
-			logger.log(menuItem)
-
-			logger.log('menuItemTags')
-			logger.log(menuItemTags)
-
 
 			if (menuItemTags.indexOf('breakfast') >= 0) {
 				breakfastItems.push(menuItem);
@@ -64,11 +60,14 @@ var DiningList = React.createClass({
 			marketData: this.props.route.marketData,
 
 			menuItemsActive: null,
+			menuItemsActiveCount: null,
 			menuItemsBreakfast: breakfastItems,
 			menuItemsLunch: lunchItems,
 			menuItemsDinner: dinnerItems,
 			
 			mealFilter: null,
+
+			currentCoords: this.props.route.currentCoords,
 		};
 	},
 
@@ -122,15 +121,14 @@ var DiningList = React.createClass({
 							<TouchableHighlight style={css.dl_dir_traveltype_container} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { this.getDirectionsURL('walk') }}>
 								<View style={css.dl_dir_traveltype_container}>
 									<Image style={css.dl_dir_icon} source={ require('../assets/img/icon_walk.png')} />
-									<Text style={css.dl_dir_eta}>25 mins</Text>
+									<Text style={css.dl_dir_eta}>WALK</Text>
 								</View>
 							</TouchableHighlight>
-
 							{general.platformAndroid() ? (
 								<TouchableHighlight style={css.dl_dir_traveltype_container} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { this.getDirectionsURL('bike') }}>
 									<View style={css.dl_dir_traveltype_container}>
 										<Image style={css.dl_dir_icon} source={ require('../assets/img/icon_bike.png')} />
-										<Text style={css.dl_dir_eta}>15 mins</Text>
+										<Text style={css.dl_dir_eta}>BIKE</Text>
 									</View>
 								</TouchableHighlight>
 							) : null }
@@ -205,13 +203,17 @@ var DiningList = React.createClass({
 
 						{this.state.menuItemsActive ? (
 							<View style={css.dl_market_menu}>
-								<ListView dataSource={this.state.menuItemsActive} renderRow={ (data) => {
-									return (
-										<TouchableHighlight style={css.dl_market_menu_row} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoDiningDetail(data) }>
-											<Text style={css.dl_menu_item_name}>{data.name}<Text style={css.dl_menu_item_price}> (${data.price})</Text></Text>
-										</TouchableHighlight>
-									)
-								}} />
+								{this.state.menuItemsActiveCount === 0 ? (
+									<Text style={css.dl_noresults}>No results found matching your criteria.</Text>
+								) : (
+									<ListView dataSource={this.state.menuItemsActive} renderRow={ (data) => {
+										return (
+											<TouchableHighlight style={css.dl_market_menu_row} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoDiningDetail(data) }>
+												<Text style={css.dl_menu_item_name}>{data.name}<Text style={css.dl_menu_item_price}> (${data.price})</Text></Text>
+											</TouchableHighlight>
+										)
+									}} />
+								)}
 							</View>
 						) : (
 							<View style={[css.center, css.shuttle_card_loader]}>
@@ -223,6 +225,25 @@ var DiningList = React.createClass({
 				</ScrollView>
 			</View>
 		);
+	},
+
+	getDirectionsURL: function(method) {
+
+		var directionsURL;
+
+		if (general.platformAndroid()) {
+			// Apple maps does not support biking directions
+			directionsURL = 'http://maps.apple.com/?saddr=' + this.state.currentCoords.lat + ',' + this.state.currentCoords.lon + '&daddr=' + this.state.marketData.coords.lat + ',' + this.state.marketData.coords.lon + '&dirflg=w';
+		} else {
+			if (method === 'bike') {
+				directionsURL = 'https://www.google.com/maps/dir/32.88,-117.234/32.884189,-117.233393/@32.88,-117.234,18z/data=!4m2!4m1!3e1';
+			} else {
+				// Default to walking directions
+				directionsURL = 'https://www.google.com/maps/dir/' + this.state.currentCoords.lat + ',' + this.state.currentCoords.lon + '/' + this.state.marketData.coords.lat + ',' + this.state.marketData.coords.lon + '/@' + this.state.currentCoords.lat + ',' + this.state.currentCoords.lon + ',18z/data=!4m2!4m1!3e2';
+			}
+		}
+
+		general.openURL(url);
 	},
 
 	setMealFilter: function(meal) {
@@ -240,6 +261,7 @@ var DiningList = React.createClass({
 		this.setState({
 			mealFilter: meal,
 			menuItemsActive: ds.cloneWithRows( dsClone ),
+			menuItemsActiveCount: dsClone.length,
 		});
 	},
 
@@ -248,11 +270,15 @@ var DiningList = React.createClass({
 			menuItemsActivated = [];
 
 		if (this.state.mealFilter === 'breakfast') {
-			menuItemsArray = this.state.breakfastItems;
+			menuItemsArray = this.state.menuItemsBreakfast;
 		} else if (this.state.mealFilter === 'lunch') {
-			menuItemsArray = this.state.lunchItems;
+			menuItemsArray = this.state.menuItemsLunch;
 		} else {
-			menuItemsArray = this.state.dinnerItems;
+			menuItemsArray = this.state.menuItemsDinner;
+		}
+
+		if (!menuItemsArray) {
+			menuItemsArray = [];
 		}
 
 		for (var i = 0; menuItemsArray.length > i; i++) {
@@ -262,22 +288,14 @@ var DiningList = React.createClass({
 		}
 
 		var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-		this.setState({ menuItemsActive: ds.cloneWithRows( menuItemsActivated ) });
+		this.setState({
+			menuItemsActive: ds.cloneWithRows( menuItemsActivated ),
+			menuItemsActiveCount: menuItemsActivated.length,
+		});
 	},
 
 	gotoDiningDetail: function(data) {
 		this.props.navigator.push({ id: 'DiningDetail', name: data.name, title: data.name, menuItem: data, component: DiningDetail });
-	},
-
-	gotoDestinationDetail: function(destinationData) {
-		destinationData.currentLat = this.getCurrentPosition('lat');
-		destinationData.currentLon = this.getCurrentPosition('lon');
-
-		destinationData.mkrLat = parseFloat(destinationData.mkrLat);
-		destinationData.mkrLong = parseFloat(destinationData.mkrLong);
-
-		destinationData.distLatLon = Math.sqrt(Math.pow(Math.abs(this.getCurrentPosition('lat') - destinationData.mkrLat), 2) + Math.pow(Math.abs(this.getCurrentPosition('lon') - destinationData.mkrLong), 2));
-		this.props.navigator.push({ id: 'DestinationDetail', name: 'Nearby', title: 'Nearby', component: DestinationDetail, destinationData: destinationData });
 	},
 
 });

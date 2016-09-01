@@ -849,7 +849,7 @@ var Home = React.createClass({
 		logger.log('marketData0: ')
 		logger.log(marketData)
 
-		this.props.navigator.push({ id: 'DiningList', component: DiningList, title: marketData.name, marketData: marketData });
+		this.props.navigator.push({ id: 'DiningList', component: DiningList, title: marketData.name, marketData: marketData, currentCoords: { lat: this.getCurrentPosition('lat'), lon: this.getCurrentPosition('lon') } });
 	},
 
 
