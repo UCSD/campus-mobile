@@ -105,7 +105,7 @@ var DiningList = React.createClass({
 						{this.state.marketData.images ? (
 							<ScrollView style={css.dl_market_scroller} directionalLockEnabled={false} horizontal={true}>
 								{this.state.marketData.images.map(function(object, i) {
-									return (<Image style={css.dl_market_scroller_image} resizeMode={'cover'} source={{ uri: object }} />);
+									return (<Image key={i} style={css.dl_market_scroller_image} resizeMode={'cover'} source={{ uri: object }} />);
 								})}
 							</ScrollView>
 						) : null }
@@ -201,13 +201,16 @@ var DiningList = React.createClass({
 								{this.state.menuItemsActiveCount === 0 ? (
 									<Text style={css.dl_noresults}>No results found matching your criteria.</Text>
 								) : (
-									<ListView dataSource={this.state.menuItemsActive} renderRow={ (data) => {
-										return (
-											<TouchableHighlight style={css.dl_market_menu_row} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoDiningDetail(data) }>
-												<Text style={css.dl_menu_item_name}>{data.name}<Text style={css.dl_menu_item_price}> (${data.price})</Text></Text>
-											</TouchableHighlight>
-										)
-									}} />
+									<ListView
+										dataSource={this.state.menuItemsActive}
+										renderRow={ (rowData, sectionID, rowID, highlightRow) => {
+											return (
+												<TouchableHighlight key={rowID} style={css.dl_market_menu_row} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoDiningDetail(rowData) }>
+													<Text style={css.dl_menu_item_name}>{rowData.name}<Text style={css.dl_menu_item_price}> (${rowData.price})</Text></Text>
+												</TouchableHighlight>
+											)
+										}}
+									/>
 								)}
 							</View>
 						) : (

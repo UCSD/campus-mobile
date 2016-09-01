@@ -37,6 +37,7 @@ import {
 
 var AppSettings = require('../AppSettings');
 var general = require('../util/general');
+var logger = require('../util/logger');
 
 var navBarMarginTop = 0;
 var navBarTitleMarginTop = 5;
@@ -53,12 +54,12 @@ var pixelRatio = PixelRatio.get();
 var windowSize = Dimensions.get('window');
 var windowWidth = windowSize.width;
 var windowHeight = windowSize.height;
-var windowDefaultWidth = 414;
+var maxAppWidth = 414;
 
 var welcome_ai_marginTop = (windowHeight / 2) - navBarMarginTop;
 
 // Applying pixel ratio modifier helps ensure all views/layouts across devices render in similar fashion
-var prm = Math.round(windowWidth / windowDefaultWidth);
+var prm = 1; //Math.round(windowWidth / maxAppWidth);
 
 var maxCardWidth = windowWidth - 2 - 12;
 var maxCardWidthWithPadding = windowWidth - 2 - 12 - 16; // border, margin, padding
