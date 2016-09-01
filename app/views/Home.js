@@ -269,6 +269,42 @@ var Home = React.createClass({
 						</View>
 					) : null }
 
+					{/* DINING CARD */}
+					{AppSettings.DINING_CARD_ENABLED ? (
+						<View>
+							<View style={css.card_main}>
+								<View style={css.card_title_container}>
+									<Text style={css.card_title}>Dining</Text>
+								</View>
+
+								{this.state.diningDataLoaded ? (
+									<View style={css.dining_card}>
+										<View style={css.dining_card_map}>
+
+											{/*<MapView
+												style={css.destinationcard_map}
+												scrollEnabled={true}
+												zoomEnabled={true}
+												rotateEnabled={false}
+												showsUserLocation={true}
+												minDelta={this.nearbyMinDelta}
+												maxDelta={this.nearbyMaxDelta}
+												followUserLocation={true} />*/}
+										</View>
+
+										<View style={css.dc_locations}>
+											<ListView dataSource={this.state.diningDataFull} renderRow={this.renderDiningRow} style={css.wf_listview} />
+										</View>
+									</View>
+								) : (
+									<View style={[css.shuttle_card_row_center, css.shuttle_card_loader]}>
+										<ActivityIndicator style={css.shuttle_card_aa} size="large" />
+									</View>
+								)}
+							</View>
+						</View>
+					) : null }
+
 					{/* EVENTS CARD & TOP STORIES CARD & WEATHER CARD */}
 					{ this.getCards() }
 
@@ -317,44 +353,6 @@ var Home = React.createClass({
 							</View>
 						</View>
 					) : null }
-
-
-					{/* DINING CARD */}
-					{AppSettings.DINING_CARD_ENABLED ? (
-						<View>
-							<View style={css.card_main}>
-								<View style={css.card_title_container}>
-									<Text style={css.card_title}>Dining</Text>
-								</View>
-
-								{this.state.diningDataLoaded ? (
-									<View style={css.dining_card}>
-										<View style={css.dining_card_map}>
-
-											{/*<MapView
-												style={css.destinationcard_map}
-												scrollEnabled={true}
-												zoomEnabled={true}
-												rotateEnabled={false}
-												showsUserLocation={true}
-												minDelta={this.nearbyMinDelta}
-												maxDelta={this.nearbyMaxDelta}
-												followUserLocation={true} />*/}
-										</View>
-
-										<View style={css.dc_locations}>
-											<ListView dataSource={this.state.diningDataFull} renderRow={this.renderDiningRow} style={css.wf_listview} />
-										</View>
-									</View>
-								) : (
-									<View style={[css.shuttle_card_row_center, css.shuttle_card_loader]}>
-										<ActivityIndicator style={css.shuttle_card_aa} size="large" />
-									</View>
-								)}
-							</View>
-						</View>
-					) : null }
-
 
 					{/* FOOTER */}
 					<View style={css.footer}>
