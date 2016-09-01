@@ -95,8 +95,6 @@ var DiningList = React.createClass({
 		return this.renderScene();
 	},
 
-	//general.openURL('http://maps.apple.com/?saddr=32.88,-117.234&daddr=32.8903614,-117.2452594&dirflg=w')
-
 	renderScene: function() {
 		return (
 			<View style={[css.main_container, css.whitebg]}>
@@ -243,7 +241,7 @@ var DiningList = React.createClass({
 			}
 		}
 
-		general.openURL(url);
+		general.openURL(directionsURL);
 	},
 
 	setMealFilter: function(meal) {
