@@ -17,12 +17,11 @@ import {
 	ActivityIndicator,
 } from 'react-native';
 
-import WelcomeWeekService from '../../services/welcomeWeekService';
-import EventDetail from '../events/EventDetail';
-import WelcomeWeekDetail from './WelcomeWeekDetail';
-import css from '../../styles/css'; 
+import WelcomeWeekService from '../services/welcomeWeekService';
+import EventDetail from './events/EventDetail';
+import css from '../styles/css'; 
 
-var logger = require('../../util/logger');
+var logger = require('../util/logger');
 
 const collegeNames = [
 	{ name: 'Roosevelt' },
@@ -34,7 +33,7 @@ const collegeNames = [
 	{ name: 'Village' },
 ];
 
-export default class WelcomeWeekView extends Component {
+export default class WelcomeWeek extends Component {
 	
 	/**
 	 * Represents view for Welcome Week events
@@ -236,6 +235,6 @@ export default class WelcomeWeekView extends Component {
 	}
 
 	gotoEventDetail(eventData) {
-		this.props.navigator.push({ id: 'EventDetail', name: 'EventDetail', title: eventData.EventTitle, component: EventDetail, eventData: eventData });
+		this.props.navigator.push({ id: 'EventDetail', name: 'EventDetail', title: 'Welcome Week', component: EventDetail, eventData: eventData });
 	}
 }
