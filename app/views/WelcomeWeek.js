@@ -200,6 +200,10 @@ export default class WelcomeWeek extends Component {
 
 		description = description.replace(/\?.*/g,'?').replace(/!.*/g,'!').replace(/\..*/g,'.').replace(/\(.*/g,'');
 
+		if (description.length > 90) {
+			description = description.substring(0, 90) + '..';
+		}
+
 		if (date[0] === 'NA') {
 			return (
 				<View style={css.welcome_list_row}>
