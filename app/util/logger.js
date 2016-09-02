@@ -22,4 +22,9 @@ module.exports = {
 		GoogleAnalytics.trackScreenView(msg);
 	},
 
+	ga: function(msg) {
+		this.log(msg);
+		GoogleAnalytics.trackScreenView(msg);
+	},
+
 };
