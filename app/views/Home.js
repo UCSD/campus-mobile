@@ -125,7 +125,7 @@ var Home = React.createClass({
 	},
 
 	componentDidMount: function() {
-		logger.custom('View Loaded: Home');
+		logger.ga('View Loaded: Home');
 		InteractionManager.runAfterInteractions(() => {
 			this.setTimeout(() => {this.setState({loaded: true});}, 2000);
 		});
@@ -611,7 +611,7 @@ var Home = React.createClass({
 					this.parseNodeRegion(responseData);
 				})
 				.catch((error) => {
-					logger.custom('ERR: loadNodeRegion: ' + error);
+					logger.error('ERR: loadNodeRegion: ' + error);
 				})
 				.done();
 		}
@@ -798,7 +798,7 @@ var Home = React.createClass({
 			})
 			.catch((error) => {
 
-				logger.custom('ERR: fetchShuttleArrivalsByStop: ' + error + ' (stop: ' + closestStopNumber + ')');
+				logger.error('ERR: fetchShuttleArrivalsByStop: ' + error + ' (stop: ' + closestStopNumber + ')');
 
 				if (closestStopNumber == 0) {
 					this.setState({ closestStop1LoadFailed: true });

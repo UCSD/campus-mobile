@@ -33,7 +33,7 @@ var TopStoriesDetail = React.createClass({
 	},
 
 	componentWillMount: function() {
-		logger.custom('View Loaded: News Detail');
+		logger.ga('View Loaded: News Detail');
 
 		var imageURL = (this.props.route.topStoriesData.image_lg) ? this.props.route.topStoriesData.image_lg : this.props.route.topStoriesData.image;
 		imageURL = imageURL.replace(/-thumb/g,'');

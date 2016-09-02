@@ -50,10 +50,10 @@ export default class EventCard extends CardComponent {
 			logger.error(error);
 			if (this.fetchEventsErrorLimit > this.fetchEventsErrorCounter) {
 				this.fetchEventsErrorCounter++;
-				logger.custom('ERR: fetchEvents1: refreshing again in ' + this.fetchEventsErrorInterval/1000 + ' sec');
+				logger.error('ERR: fetchEvents1: refreshing again in ' + this.fetchEventsErrorInterval/1000 + ' sec');
 				this.refreshEventsTimer = setTimeout( () => { this.refresh() }, this.fetchEventsErrorInterval);
 			} else {
-				logger.custom('ERR: fetchEvents2: Limit exceeded - max limit:' + this.fetchEventsErrorLimit);
+				logger.error('ERR: fetchEvents2: Limit exceeded - max limit:' + this.fetchEventsErrorLimit);
 				this.setState({ fetchEventsErrorLimitReached: true });
 			}
 		})

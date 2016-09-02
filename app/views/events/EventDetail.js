@@ -32,7 +32,7 @@ export default class EventDetail extends React.Component {
 
 	componentWillMount() {
 
-		logger.custom('View Loaded: Event Detail');
+		logger.ga('View Loaded: Event Detail');
 
 		var imageURL = (this.props.route.eventData.EventImageLg) ? this.props.route.eventData.EventImageLg : this.props.route.eventData.EventImage;
 
