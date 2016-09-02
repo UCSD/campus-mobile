@@ -80,6 +80,7 @@ export default class WelcomeWeek extends Component {
 	 * Invoked after render
 	**/
 	componentDidMount() {
+		logger.ga('View Loaded: Welcome Week');
 		InteractionManager.runAfterInteractions(() => {
 			this._fetchData();
 		});
@@ -90,7 +91,6 @@ export default class WelcomeWeek extends Component {
 	 * @return bool whether the component should re-render.
 	**/
 	shouldComponentUpdate(nextProps, nextState) {
-		console.log('shouldComponentUpdate WelcomeView');
 		return true;
 	}
 
