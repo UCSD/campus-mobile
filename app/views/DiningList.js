@@ -113,14 +113,14 @@ var DiningList = React.createClass({
 						<View style={css.dl_market_directions}>
 							<Text style={css.dl_dir_label}>Directions</Text>
 
-							<TouchableHighlight style={css.dl_dir_traveltype_container} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { this.getDirectionsURL('walk') }}>
+							<TouchableHighlight style={css.dl_dir_traveltype_container} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { this.gotoNavigationApp('walk') }}>
 								<View style={css.dl_dir_traveltype_container}>
 									<Image style={css.dl_dir_icon} source={ require('../assets/img/icon_walk.png')} />
 									<Text style={css.dl_dir_eta}>WALK</Text>
 								</View>
 							</TouchableHighlight>
 
-							<TouchableHighlight style={css.dl_dir_traveltype_container} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { this.getDirectionsURL('drive') }}>
+							<TouchableHighlight style={css.dl_dir_traveltype_container} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { this.gotoNavigationApp('drive') }}>
 								<View style={css.dl_dir_traveltype_container}>
 									<Image style={css.dl_dir_icon} source={ require('../assets/img/icon_car.png')} />
 									<Text style={css.dl_dir_eta}>DRIVE</Text>
@@ -224,26 +224,8 @@ var DiningList = React.createClass({
 		);
 	},
 
-	getDirectionsURL: function(method) {
-
-		var directionsURL;
-
-		if (general.platformIOS()) {
-			if (method === 'walk') {
-				directionsURL = 'http://maps.apple.com/?saddr=' + this.state.currentCoords.lat + ',' + this.state.currentCoords.lon + '&daddr=' + this.state.marketData.coords.lat + ',' + this.state.marketData.coords.lon + '&dirflg=w';
-			} else {
-				// Default to driving directions
-				directionsURL = 'http://maps.apple.com/?saddr=' + this.state.currentCoords.lat + ',' + this.state.currentCoords.lon + '&daddr=' + this.state.marketData.coords.lat + ',' + this.state.marketData.coords.lon + '&dirflg=d';
-			}
-		} else {
-			if (method === 'walk') {
-				directionsURL = 'https://www.google.com/maps/dir/' + this.state.currentCoords.lat + ',' + this.state.currentCoords.lon + '/' + this.state.marketData.coords.lat + ',' + this.state.marketData.coords.lon + '/@' + this.state.currentCoords.lat + ',' + this.state.currentCoords.lon + ',18z/data=!4m2!4m1!3e1';
-			} else {
-				// Default to driving directions
-				directionsURL = 'https://www.google.com/maps/dir/' + this.state.currentCoords.lat + ',' + this.state.currentCoords.lon + '/' + this.state.marketData.coords.lat + ',' + this.state.marketData.coords.lon + '/@' + this.state.currentCoords.lat + ',' + this.state.currentCoords.lon + ',18z/data=!4m2!4m1!3e0';
-			}
-		}
-
+	gotoNavigationApp: function(method) {
+		var directionsURL = general.getDirectionsURL(method, this.state.currentCoords.lat, this.state.currentCoords.lon, this.state.marketData.coords.lat, this.state.marketData.coords.lon);
 		general.openURL(directionsURL);
 	},
 
