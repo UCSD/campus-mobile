@@ -10,6 +10,7 @@ import {
 	ScrollView,
 	Image,
 	ListView,
+	Linking,
 	Animated,
 	RefreshControl,
 	Modal,
@@ -125,16 +126,12 @@ var Home = React.createClass({
 
 	componentDidMount: function() {
 		logger.custom('View Loaded: Home');
-		console.log("mount");
-
 		InteractionManager.runAfterInteractions(() => {
-			
 			this.setTimeout(() => {this.setState({loaded: true});}, 2000);
 		});
 	},
 
 	componentWillUnmount: function() {
-		console.log("unmount")
 		// Update unmount function with ability to clear all other timers (setTimeout/setInterval)
 		navigator.geolocation.clearWatch(this.geolocationWatchID);
 	},
@@ -212,7 +209,9 @@ var Home = React.createClass({
 					<WelcomeModal />
 
 					{/* SPECIAL TOP BANNER */}
-					<TopBannerView navigator={this.props.navigator}/>
+					{AppSettings.WELCOME_WEEK_ENABLED ? (
+						<TopBannerView navigator={this.props.navigator}/>
+					) : null }
 
 					{/* SHUTTLE CARD */}
 					{AppSettings.SHUTTLE_CARD_ENABLED ? (
@@ -270,6 +269,42 @@ var Home = React.createClass({
 						</View>
 					) : null }
 
+					{/* DINING CARD */}
+					{AppSettings.DINING_CARD_ENABLED ? (
+						<View>
+							<View style={css.card_main}>
+								<View style={css.card_title_container}>
+									<Text style={css.card_title}>Dining</Text>
+								</View>
+
+								{this.state.diningDataLoaded ? (
+									<View style={css.dining_card}>
+										<View style={css.dining_card_map}>
+
+											{/*<MapView
+												style={css.destinationcard_map}
+												scrollEnabled={true}
+												zoomEnabled={true}
+												rotateEnabled={false}
+												showsUserLocation={true}
+												minDelta={this.nearbyMinDelta}
+												maxDelta={this.nearbyMaxDelta}
+												followUserLocation={true} />*/}
+										</View>
+
+										<View style={css.dc_locations}>
+											<ListView dataSource={this.state.diningDataFull} renderRow={this.renderDiningRow} style={css.wf_listview} />
+										</View>
+									</View>
+								) : (
+									<View style={[css.shuttle_card_row_center, css.shuttle_card_loader]}>
+										<ActivityIndicator style={css.shuttle_card_aa} size="large" />
+									</View>
+								)}
+							</View>
+						</View>
+					) : null }
+
 					{/* EVENTS CARD & TOP STORIES CARD & WEATHER CARD */}
 					{ this.getCards() }
 
@@ -318,60 +353,6 @@ var Home = React.createClass({
 							</View>
 						</View>
 					) : null }
-
-
-					{/* DINING CARD */}
-					{AppSettings.DINING_CARD_ENABLED ? (
-						<View>
-							<View style={css.card_main}>
-								<View style={css.card_title_container}>
-									<Text style={css.card_title}>Dining</Text>
-								</View>
-
-								{this.state.diningDataLoaded ? (
-									<View style={css.dining_card}>
-										<View style={css.dining_card_map}>
-
-											{/*<MapView
-												style={css.destinationcard_map}
-												scrollEnabled={true}
-												zoomEnabled={true}
-												rotateEnabled={false}
-												showsUserLocation={true}
-												minDelta={this.nearbyMinDelta}
-												maxDelta={this.nearbyMaxDelta}
-												followUserLocation={true} />*/}
-										</View>
-
-										
-										<View style={css.dining_card_filters}>
-											<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.updateDiningFilters('vegetarian') }>
-												<Text style={css.dining_card_filter_button}>Vegetarian</Text>
-											</TouchableHighlight>
-
-											<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.updateDiningFilters('vegan') }>
-												<Text style={css.dining_card_filter_button}>Vegan</Text>
-											</TouchableHighlight>
-
-											<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.updateDiningFilters('glutenfree') }>
-												<Text style={css.dining_card_filter_button}>Gluten-free</Text>
-											</TouchableHighlight>
-
-											<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.updateDiningFilters('opennow') }>
-												<Text style={css.dining_card_filter_button}>Open Now</Text>
-											</TouchableHighlight>
-										</View>
-										
-
-										<View style={css.dc_locations}>
-											<ListView dataSource={this.state.diningDataFull} renderRow={this.renderDiningRow} style={css.wf_listview} />
-										</View>
-									</View>
-								) : null }
-							</View>
-						</View>
-					) : null }
-
 
 					{/* FOOTER */}
 					<View style={css.footer}>
@@ -455,27 +436,35 @@ var Home = React.createClass({
 
 				responseData = responseData.GetDiningInfoResult;
 
-				// Calc distance from dining locations
+				var responseDataFinal = [];
+
 				for (var i = 0; responseData.length > i; i++) {
-					var distance = shuttle.getDistance(this.getCurrentPosition('lat'), this.getCurrentPosition('lon'), responseData[i].coords.lat, responseData[i].coords.lon);
+					if (responseData[i].menuItems.length > 0) {
+						responseDataFinal.push(responseData[i]);
+					}
+				}
+
+				// Calc distance from dining locations
+				for (var i = 0; responseDataFinal.length > i; i++) {
+					var distance = shuttle.getDistance(this.getCurrentPosition('lat'), this.getCurrentPosition('lon'), responseDataFinal[i].coords.lat, responseDataFinal[i].coords.lon);
 					if (distance) {
-						responseData[i].distance = distance;
+						responseDataFinal[i].distance = distance;
 					} else {
-						responseData[i].distance = 100000000;
+						responseDataFinal[i].distance = 100000000;
 					}
 				}
 
 				// Sort dining locations by distance
-				responseData.sort(this.sortNearbyMarkers);
+				responseDataFinal.sort(this.sortNearbyMarkers);
 
 				// remove after 'more' button functionality added
-				//responseData.length = 4;
+				//responseDataFinal.length = 4;
 
 				var dsFull = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
 				this.setState({
-					diningData: responseData,
-					diningDataFull: dsFull.cloneWithRows(responseData),
+					diningData: responseDataFinal,
+					diningDataFull: dsFull.cloneWithRows(responseDataFinal),
 					diningDataLoaded: true
 				});
 			})
@@ -522,7 +511,7 @@ var Home = React.createClass({
 					</View>
 				</TouchableHighlight>
 				{data.email ? (
-					<TouchableHighlight style={css.dc_locations_row_right} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.openEmailLink(data.email) }>
+					<TouchableHighlight style={css.dc_locations_row_right} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => general.openURL('mailto:' + data.email) }>
 						<View>
 							<Image style={css.dc_locations_email_icon} source={ require('../assets/img/icon_email.png')} />
 
@@ -850,27 +839,15 @@ var Home = React.createClass({
 	},
 
 	gotoDiningList: function(marketData) {
-		this.props.navigator.push({ id: 'DiningList', component: DiningList, title: marketData.name, marketData: marketData });
+
+		logger.log('marketData0: ')
+		logger.log(marketData)
+
+		this.props.navigator.push({ id: 'DiningList', component: DiningList, title: marketData.name, marketData: marketData, currentCoords: { lat: this.getCurrentPosition('lat'), lon: this.getCurrentPosition('lon') } });
 	},
 
 
 	// #99 - MISC
-	openEmailLink: function(email) {
-		Linking.canOpenURL(email).then(supported => {
-			if (supported) {
-				Linking.openURL('mailto:' + email);
-			} else {
-				logger.log('openEmailLink: Unable to send email to ' + email);
-			}
-		});
-	},
-
-	// Is this even used??
-	_setState: function(myKey, myVal) {
-		var state = {};
-		state[myKey] = myVal;
-		this.setState(state);
-	},
 
 	// Generates a unique ID
 	// Used for Card keys

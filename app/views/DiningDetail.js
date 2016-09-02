@@ -54,7 +54,9 @@ var DiningDetail = React.createClass({
 						
 						<View style={css.ddn_row_main}><Text style={css.ddn_font}><Text style={css.bold}>Total Fat</Text> {this.state.menuItem.nutrition.totalFat}</Text><Text style={css.ddn_percent}>{this.state.menuItem.nutrition.totalFatDV}</Text></View>
 							<View style={css.ddn_row_sub}><Text style={css.ddn_font}>Saturated Fat {this.state.menuItem.nutrition.saturatedFat}</Text><Text style={css.ddn_percent}>{this.state.menuItem.nutrition.saturatedFatDV}</Text></View>
-							<View style={css.ddn_row_sub}><Text style={css.ddn_font}>Trans Fat {this.state.menuItem.nutrition.transFat}</Text><Text style={css.ddn_percent}>{this.state.menuItem.nutrition.transFatDV}</Text></View>
+							<View style={css.ddn_row_sub}><Text style={css.ddn_font}>Trans Fat {this.state.menuItem.nutrition.transFat}</Text><Text style={css.ddn_percent}>
+								{this.state.menuItem.nutrition.transFatDV !== '%' ? this.state.menuItem.nutrition.transFatDV : null }
+							</Text></View>
 
 						<View style={css.ddn_row_main}><Text style={css.ddn_font}><Text style={css.bold}>Cholesterol</Text> {this.state.menuItem.nutrition.cholesterol}</Text><Text style={css.ddn_percent}>{this.state.menuItem.nutrition.cholesterolDV}</Text></View>
 						<View style={css.ddn_row_main}><Text style={css.ddn_font}><Text style={css.bold}>Sodium</Text> {this.state.menuItem.nutrition.sodium}</Text><Text style={css.ddn_percent}>{this.state.menuItem.nutrition.sodiumDV}</Text></View>
