@@ -43,6 +43,7 @@ var css = 				require('../styles/css');
 var general = 			require('../util/general');
 var logger = 			require('../util/logger');
 var shuttle = 			require('../util/shuttle');
+import storage from 	'../util/storage';
 
 // UCSD Nodes / Shuttles
 var ucsd_nodes = 		require('../json/ucsd_nodes.json');
@@ -102,6 +103,8 @@ var Home = React.createClass({
 	},
 
 	componentWillMount: function() {
+
+		storage.test();
 
 		if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
 			// Check Location Permissions Periodically
@@ -176,7 +179,7 @@ var Home = React.createClass({
 	},
 
 	_requestPermission() {
-	Permissions.requestPermission('location')
+		Permissions.requestPermission('location')
 		.then(response => {
 			//returns once the user has chosen to 'allow' or to 'not allow' access
 			//response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'

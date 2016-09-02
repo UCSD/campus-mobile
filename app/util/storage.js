@@ -1,30 +1,33 @@
 'use strict';
-var AppSettings = require('../AppSettings');
-var GoogleAnalytics = require('react-native-google-analytics-bridge');
-GoogleAnalytics.setTrackerId(AppSettings.GOOGLE_ANALYTICS_ID);
 
-module.exports = {
+import React from 'react';
+import {
+	AsyncStorage
+} from 'react-native';
 
-	log: function(msg) {
-		if (AppSettings.DEBUG_ENABLED) {
-			console.log(msg);
+var logger = require('./logger');
+
+var storage = {
+
+	save(key, val) {
+		try {
+			await AsyncStorage.setItem(key, val);
+		} catch (error) {
+			logger.error('ERR: storage.save: ' + error);
 		}
-	},
+	}
 
-	error: function(msg) {
-		if (AppSettings.DEBUG_ENABLED) {
-			console.error(msg);
+	get() {
+		try {
+			const value = await AsyncStorage.getItem(key);
+
+			logger.log('value: ' + value);
+
+		} catch (error) {
+			logger.error('ERR: storage.get: ' + error);
 		}
-	},
+	}
 
-	custom: function(msg) {
-		this.log(msg);
-		GoogleAnalytics.trackScreenView(msg);
-	},
+}
 
-	ga: function(msg) {
-		this.log(msg);
-		GoogleAnalytics.trackScreenView(msg);
-	},
-
-};
+export default storage;
