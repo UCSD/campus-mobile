@@ -43,7 +43,6 @@ var css = 				require('../styles/css');
 var general = 			require('../util/general');
 var logger = 			require('../util/logger');
 var shuttle = 			require('../util/shuttle');
-import storage from 	'../util/storage';
 
 // UCSD Nodes / Shuttles
 var ucsd_nodes = 		require('../json/ucsd_nodes.json');
