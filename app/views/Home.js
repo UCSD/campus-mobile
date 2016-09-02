@@ -104,8 +104,6 @@ var Home = React.createClass({
 
 	componentWillMount: function() {
 
-		storage.test();
-
 		if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
 			// Check Location Permissions Periodically
 			this.updateLocationPermission();
