@@ -100,14 +100,6 @@ var EventDetail = React.createClass({
 							</TouchableHighlight>
 						) : null }
 
-						{this.props.route.eventData.EventURL ? (
-							<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoWebView(eventTitleStr, this.props.route.eventData.EventURL) }>
-								<View style={css.eventdetail_readmore_container}>
-									<Text style={css.eventdetail_readmore_text}>Visit the official site</Text>
-								</View>
-							</TouchableHighlight>
-						) : null }
-
 					</View>
 				</ScrollView>
 			</View>
