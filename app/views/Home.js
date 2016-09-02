@@ -51,7 +51,6 @@ var shuttle_routes = 	require('../json/shuttle_routes_master.json');
 // Views
 //if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
 var ShuttleStop = 		require('./ShuttleStop');
-var DestinationDetail = require('./DestinationDetail');
 var DiningList = 		require('./DiningList');
 var WebWrapper = 		require('./WebWrapper');
 
@@ -680,7 +679,7 @@ var Home = React.createClass({
 
 	renderNearbyRow: function(data) {
 		return (
-			<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoDestinationDetail(data) }>
+			<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoNavigationApp(data) }>
 				<View style={css.destinationcard_marker_row}>
 					<Icon name="map-marker" size={30} color={fiveRandomColors[nearbyCounter++]} />
 					<Text style={css.destinationcard_marker_label}>{data.title}</Text>
@@ -815,7 +814,7 @@ var Home = React.createClass({
 		this.props.navigator.push({ id: 'ShuttleStop', name: 'Shuttle Stop', component: ShuttleStop, title: 'Shuttle',stopData: stopData, currentPosition: this.state.currentPosition, shuttleData: shuttleData });
 	},
 
-	gotoDestinationDetail: function(destinationData) {
+	gotoNavigationApp: function(destinationData) {
 		var destinationURL = general.getDirectionsURL('walk', this.getCurrentPosition('lat'), this.getCurrentPosition('lon'), destinationData.mkrLat, destinationData.mkrLong );
 		general.openURL(destinationURL);
 	},
