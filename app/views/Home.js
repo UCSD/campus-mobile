@@ -833,10 +833,6 @@ var Home = React.createClass({
 	},
 
 	gotoDiningList: function(marketData) {
-
-		logger.log('marketData0: ')
-		logger.log(marketData)
-
 		this.props.navigator.push({ id: 'DiningList', component: DiningList, title: marketData.name, marketData: marketData, currentCoords: { lat: this.getCurrentPosition('lat'), lon: this.getCurrentPosition('lon') } });
 	},
 
