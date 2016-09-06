@@ -236,6 +236,6 @@ export default class WelcomeWeekView extends Component {
 	}
 
 	gotoEventDetail(eventData) {
-		this.props.navigator.push({ id: 'EventDetail', name: 'EventDetail', title: eventData.EventTitle, component: EventDetail, eventData: eventData });
+		this.props.navigator.push({ id: 'EventDetail', name: 'EventDetail', title: "Event", component: EventDetail, eventData: eventData });
 	}
 }
