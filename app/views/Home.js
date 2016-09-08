@@ -144,6 +144,12 @@ var Home = React.createClass({
 	},
 
 	updateLocationPermission: function() {
+		this.getLocationPermission();
+
+		this.props.new_timeout("location", () => { this.updateLocationPermission() }, this.permissionUpdateInterval);
+	},
+
+	getLocationPermission: function() {
 		// Get location permission status on Android
 		Permissions.getPermissionStatus('location')
 		.then(response => {
@@ -163,8 +169,6 @@ var Home = React.createClass({
 				//this._alertForLocationPermission();
 			}
 		});
-
-		this.props.new_timeout("location", () => { this.updateLocationPermission() }, this.permissionUpdateInterval);
 	},
 
 	// Custom message, optional
@@ -262,7 +266,10 @@ var Home = React.createClass({
 
 							{!this.state.closestStop1Loaded && !this.state.closestStop2Loaded ? (
 								<View style={[css.shuttle_card_row_center, css.shuttle_card_loader]}>
-									<ActivityIndicator style={css.shuttle_card_aa} size="large" />
+									{this.state.locationPermission === 'authorized' ? 
+										(<ActivityIndicator style={css.shuttle_card_aa} size="large" />):
+										(<Text>Unable to fetch shuttle data without location permissions. </Text>)
+									}
 								</View>
 							) : null }
 
@@ -427,9 +434,16 @@ var Home = React.createClass({
 	},
 
 	refreshShuttleCard: function(refreshType) {
-		if (AppSettings.SHUTTLE_CARD_ENABLED) {
-			this.findClosestShuttleStops(refreshType);
-		}
+		if (AppSettings.SHUTTLE_CARD_ENABLED ) {
+			// Refresh normally
+			if(this.state.locationPermission === 'authorized') {
+				this.findClosestShuttleStops(refreshType);
+			}
+			// Try to get location permission
+			else {
+				this.getLocationPermission();
+			}
+		}	
 	},
 
 	refreshNearbyCard: function() {
