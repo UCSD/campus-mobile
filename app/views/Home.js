@@ -435,9 +435,11 @@ var Home = React.createClass({
 
 	refreshShuttleCard: function(refreshType) {
 		if (AppSettings.SHUTTLE_CARD_ENABLED ) {
+			// Refresh normally
 			if(this.state.locationPermission === 'authorized') {
 				this.findClosestShuttleStops(refreshType);
 			}
+			// Try to get location permission
 			else {
 				this.getLocationPermission();
 			}
