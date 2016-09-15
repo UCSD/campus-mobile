@@ -110,16 +110,21 @@ var Home = React.createClass({
 		}
 
 		else {
+			this.setState({locationPermission: 'authorized'});
 			navigator.geolocation.getCurrentPosition(
 				(initialPosition) => { this.setState({currentPosition: initialPosition}) },
 				(error) => logger.log('ERR: navigator.geolocation.getCurrentPosition: ' + error.message),
 				{enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
 			);
 			this.geolocationWatchID = navigator.geolocation.watchPosition((currentPosition) => {
+				let lastPos = this.state.currentPosition;
 				this.setState({ currentPosition });
+
+				// Initial refresh
+				if(lastPos === null ) {
+					this.refreshAllCards('auto');
+				}
 			});
-			// Load all non-broken-out Cards
-			this.refreshAllCards('auto');
 		}	
 	},
 
@@ -159,11 +164,20 @@ var Home = React.createClass({
 			if (response === "authorized") {
 				if(this.state.currentPosition === null ) {
 					this.geolocationWatchID = navigator.geolocation.watchPosition((currentPosition) => {
+						let lastPos = this.state.currentPosition;
 						this.setState({ currentPosition });
+
+						// Initial refresh
+						if(lastPos === null ) {
+							this.refreshAllCards('auto');
+						}
 					});
 				}
-				// Load all non-broken-out Cards
-				this.refreshAllCards('auto');
+				else {
+					// Load all non-broken-out Cars
+					this.refreshAllCards('auto');
+				}
+				
 			} else {
 				this._requestPermission();
 				//this._alertForLocationPermission();

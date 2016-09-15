@@ -128,8 +128,8 @@ export default class WelcomeWeekView extends Component {
 					// Remove event from responses
 					// Add to row data
 					if(responseData[j].EventCollege === college.name) {
-						rowIDs[i].push(responseData[j].EventID);
-						dataBlob[college.name + ':' + responseData[j].EventID] = responseData.splice(j, 1)[0];
+						rowIDs[i].push(responseData[j].wtsEventID);
+						dataBlob[college.name + ':' + responseData[j].wtsEventID] = responseData.splice(j, 1)[0];
 						--j;
 					}
 				}
