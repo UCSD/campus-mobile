@@ -125,7 +125,7 @@ var ShuttleStop = React.createClass({
 	},
 
 	componentDidMount: function() {
-		logger.ga('View Loaded: Shuttle Stop');
+		logger.custom('View Loaded: Shuttle Stop');
 		// Stop placeholder render
 		// Revisit at a later time
 		InteractionManager.runAfterInteractions(() => {

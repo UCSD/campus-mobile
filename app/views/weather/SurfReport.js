@@ -33,7 +33,7 @@ var SurfReport = React.createClass({
 
 	componentWillMount: function() {
 
-		logger.ga('View Loaded: Surf Report');
+		logger.custom('View Loaded: Surf Report');
 
 		var dsFull = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 

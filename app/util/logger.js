@@ -17,7 +17,7 @@ module.exports = {
 		}
 	},
 
-	ga: function(msg) {
+	custom: function(msg) {
 		this.log(msg);
 		GoogleAnalytics.trackScreenView(msg);
 	},

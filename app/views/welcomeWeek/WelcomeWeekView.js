@@ -17,11 +17,12 @@ import {
 	ActivityIndicator,
 } from 'react-native';
 
-import WelcomeWeekService from '../services/welcomeWeekService';
-import EventDetail from './events/EventDetail';
-import css from '../styles/css'; 
+import WelcomeWeekService from '../../services/welcomeWeekService';
+import EventDetail from '../events/EventDetail';
+import WelcomeWeekDetail from './WelcomeWeekDetail';
+import css from '../../styles/css'; 
 
-var logger = require('../util/logger');
+var logger = require('../../util/logger');
 
 const collegeNames = [
 	{ name: 'Roosevelt' },
@@ -33,7 +34,7 @@ const collegeNames = [
 	{ name: 'Village' },
 ];
 
-export default class WelcomeWeek extends Component {
+export default class WelcomeWeekView extends Component {
 	
 	/**
 	 * Represents view for Welcome Week events
@@ -80,7 +81,6 @@ export default class WelcomeWeek extends Component {
 	 * Invoked after render
 	**/
 	componentDidMount() {
-		logger.ga('View Loaded: Welcome Week');
 		InteractionManager.runAfterInteractions(() => {
 			this._fetchData();
 		});
@@ -91,6 +91,7 @@ export default class WelcomeWeek extends Component {
 	 * @return bool whether the component should re-render.
 	**/
 	shouldComponentUpdate(nextProps, nextState) {
+		console.log('shouldComponentUpdate WelcomeView');
 		return true;
 	}
 
@@ -200,10 +201,6 @@ export default class WelcomeWeek extends Component {
 
 		description = description.replace(/\?.*/g,'?').replace(/!.*/g,'!').replace(/\..*/g,'.').replace(/\(.*/g,'');
 
-		if (description.length > 90) {
-			description = description.substring(0, 90) + '..';
-		}
-
 		if (date[0] === 'NA') {
 			return (
 				<View style={css.welcome_list_row}>
@@ -239,6 +236,6 @@ export default class WelcomeWeek extends Component {
 	}
 
 	gotoEventDetail(eventData) {
-		this.props.navigator.push({ id: 'EventDetail', name: 'EventDetail', title: 'Welcome Week', component: EventDetail, eventData: eventData });
+		this.props.navigator.push({ id: 'EventDetail', name: 'EventDetail', title: "Event", component: EventDetail, eventData: eventData });
 	}
 }

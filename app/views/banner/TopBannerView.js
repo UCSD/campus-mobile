@@ -10,12 +10,12 @@ import {
 } from 'react-native';
 
 import BannerView from './BannerView';
-import WelcomeWeek from '../WelcomeWeek';
+import WelcomeWeekView from '../welcomeWeek/WelcomeWeekView';
 import TimerMixin from 'react-timer-mixin';
 
-var css = require('../../styles/css');
-var general = require('../../util/general');
-var AppSettings = require('../../AppSettings');
+var css =             require('../../styles/css');
+var general = 			  require('../../util/general');
+var AppSettings = 		require('../../AppSettings');
 
 // Manages the top 'hero' banner & decides what if anything to show
 // Currently decides based on static dates but an API would be great for breaking info
@@ -63,12 +63,12 @@ export default class TopBannerView extends Timer(React.Component) {
 		// Always use TimerMixin with requestAnimationFrame, setTimeout and
 		// setInterval
 		this.requestAnimationFrame(() => {
-			this.gotoWelcomeWeek();
+			this.gotoWelcomeWeekView();
 		});
 	}
 
-	gotoWelcomeWeek() {
-		this.props.navigator.push({ id: 'WelcomeWeek', title: 'Welcome Week', name: 'Welcome Week', component: WelcomeWeek });
+	gotoWelcomeWeekView() {
+		this.props.navigator.push({ id: 'WelcomeWeekView', title: 'Welcome Week', name: 'Welcome Week', component: WelcomeWeekView });
 	}
 }
 */
@@ -114,12 +114,12 @@ var TopBannerView = React.createClass({
 		// Always use TimerMixin with requestAnimationFrame, setTimeout and
 		// setInterval
 		this.requestAnimationFrame(() => {
-			this.gotoWelcomeWeek();
+			this.gotoWelcomeWeekView();
 		});
 	},
 
-	gotoWelcomeWeek() {
-		this.props.navigator.push({ id: 'WelcomeWeek', title: 'Welcome Week', name: 'Welcome Week', component: WelcomeWeek });
+	gotoWelcomeWeekView() {
+		this.props.navigator.push({ id: 'WelcomeWeekView', title: 'Welcome Week', name: 'Welcome Week', component: WelcomeWeekView });
 	}
 });
 module.exports = TopBannerView;

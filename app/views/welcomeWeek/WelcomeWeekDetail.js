@@ -10,8 +10,6 @@ import {
 	TouchableHighlight,
 	Dimensions
 } from 'react-native';
-import NavigationBarWithRouteMapper from '../NavigationBarWithRouteMapper';
-
 var WebWrapper = require('../WebWrapper');
 
 var windowSize = Dimensions.get('window');
@@ -20,22 +18,18 @@ var windowWidth = windowSize.width;
 var AppSettings = require('../../AppSettings');
 var css = require('../../styles/css');
 var logger = require('../../util/logger');
-var general = require('../../util/general');
 
-var EventDetail = React.createClass({
-
-	getInitialState: function() {
-		return {
-			newsImgWidth: null,
-			newsImgHeight: null,
+export default class WelcomeWeekDetail extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			eventImageWidth: null,
+			eventImageHeight: null,
 			eventImageURL: null,
 		}
-	},
+	}
 
-	componentWillMount: function() {
-
-		logger.custom('View Loaded: Event Detail');
-
+	componentWillMount() {
 		var imageURL = (this.props.route.eventData.EventImageLg) ? this.props.route.eventData.EventImageLg : this.props.route.eventData.EventImage;
 
 		if (imageURL) {
@@ -44,20 +38,20 @@ var EventDetail = React.createClass({
 				(width, height) => {
 					this.setState({
 						eventImageURL: imageURL,
-						newsImgWidth: windowWidth,
-						newsImgHeight: Math.round(height * (windowWidth / width))
+						eventImageWidth: windowWidth,
+						eventImageHeight: Math.round(height * (windowWidth / width))
 					});
 				},
 				(error) => { logger.log('ERR: componentWillMount: ' + error) }
 			);
 		}
-	},
+	}
 
-	render: function() {
-		return this.renderScene();
-	},
+	render() {
+		return this._renderScene();
+	}
 
-	renderScene: function() {
+	_renderScene() {
 
 		var eventTitleStr = this.props.route.eventData.EventTitle.replace('&amp;','&');
 		var eventDescriptionStr = this.props.route.eventData.EventDescription.replace('&amp;','&').trim();
@@ -80,7 +74,7 @@ var EventDetail = React.createClass({
 				<ScrollView contentContainerStyle={css.scroll_default}>
 
 					{this.state.eventImageURL ? (
-						<Image style={{ width: this.state.newsImgWidth, height: this.state.newsImgHeight }} source={{ uri: this.state.eventImageURL }} />
+						<Image style={{ width: this.state.eventImageWidth, height: this.state.eventImageHeight }} source={{ uri: this.state.eventImageURL }} />
 					) : null }
 
 					<View style={css.news_detail_container}>
@@ -112,23 +106,13 @@ var EventDetail = React.createClass({
 				</ScrollView>
 			</View>
 		);
-	},
+	}
 
-	openBrowserLink: function(linkURL) {
+	_openBrowserLink(linkURL) {
 		Linking.openURL(linkURL);
-	},
+	}
 
-	gotoWebView: function(eventName, eventURL) {
-		//this.props.navigator.push({ id: 'WebWrapper', name: 'WebWrapper', title: eventName, component: WebWrapper, webViewURL: eventURL });
-		Linking.canOpenURL(eventURL).then(supported => {
-		if (!supported) {
-			console.log('Can\'t handle url: ' + eventURL);
-		} else {
-			return Linking.openURL(eventURL);
-		}
-		}).catch(err => console.error('An error with opening EventDetail occurred', err));
-	},
-
-});
-
-module.exports = EventDetail;
+	_gotoWebView(eventName, eventURL) {
+		this.props.navigator.push({ id: 'WebWrapper', name: 'WebWrapper', title: eventName, component: WebWrapper, webViewURL: eventURL });
+	}
+}

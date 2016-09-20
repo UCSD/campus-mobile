@@ -37,7 +37,6 @@ import {
 
 var AppSettings = require('../AppSettings');
 var general = require('../util/general');
-var logger = require('../util/logger');
 
 var navBarMarginTop = 0;
 var navBarTitleMarginTop = 5;
@@ -54,12 +53,12 @@ var pixelRatio = PixelRatio.get();
 var windowSize = Dimensions.get('window');
 var windowWidth = windowSize.width;
 var windowHeight = windowSize.height;
-var maxAppWidth = 414;
+var windowDefaultWidth = 414;
 
 var welcome_ai_marginTop = (windowHeight / 2) - navBarMarginTop;
 
 // Applying pixel ratio modifier helps ensure all views/layouts across devices render in similar fashion
-var prm = 1; //Math.round(windowWidth / maxAppWidth);
+var prm = Math.round(windowWidth / windowDefaultWidth);
 
 var maxCardWidth = windowWidth - 2 - 12;
 var maxCardWidthWithPadding = windowWidth - 2 - 12 - 16; // border, margin, padding
@@ -119,7 +118,7 @@ var css = StyleSheet.create({
 	card_view_overlay: { position: 'absolute', flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', bottom: 0, left: 0, width: windowWidth - 12, height: 48, backgroundColor: 'rgba(60,60,60,.8)'	},
 	card_header_container: { borderBottomWidth: 1, borderBottomColor: '#EEE', width: maxCardWidthWithPadding },
 	card_title_container: { flexDirection: 'row', alignItems: 'center', width: maxCardWidth, padding: 8, borderBottomWidth: 1, borderBottomColor: '#DDD' },
-		card_title: { fontSize: 26 * prm, color: ucsdgrey },
+		card_title: { fontSize: 26 * prm, color: '#747678' },
 
 
 	// Modal Welcome Message
@@ -132,50 +131,44 @@ var css = StyleSheet.create({
 
 	// DINING CARD
 	dining_card: { padding: 8 },
-	dining_card_map: { width: maxCardWidthWithPadding },
+	dining_card_map: { width: maxCardWidthWithPadding }, //, height: maxCardWidthWithPadding * .5 },
 	dining_card_filters: { flexDirection: 'row', justifyContent: 'center', marginBottom: 6 },
-		dining_card_filter_button: { paddingVertical: 6, paddingHorizontal: 10, fontSize: 12, color: ucsdblue, borderWidth: 1, borderColor: '#999', borderRadius: 3, backgroundColor: '#EEE', textAlign: 'center', marginHorizontal: 10 },
+		dining_card_filter_button: { paddingVertical: 6, paddingHorizontal: 10, fontSize: 12, color: '#006C92', borderWidth: 1, borderColor: '#999', borderRadius: 3, backgroundColor: '#EEE', textAlign: 'center', marginHorizontal: 10 },
 	dc_locations: { flex: 1, flexDirection: 'column' },
-		dc_locations_row: { flexDirection: 'row', paddingBottom: 10, paddingTop: 10, borderBottomWidth: 1, borderBottomColor: '#EEE' },
+		dc_locations_row: { flexDirection: 'row', paddingBottom: 10, paddingTop: 10, borderBottomWidth: 1, borderBottomColor: '#DDD' },
 			dc_locations_row_left: { flex: 6, justifyContent: 'center' },
-				dc_locations_title: { fontSize: 20, fontWeight: '500', color: ucsdblue },
+				dc_locations_title: { fontSize: 20, fontWeight: '500', color: '#006C92' },
 				dc_locations_hours: { fontSize: 12, color: '#666', paddingTop: 1 },
 				dc_locations_description: { fontSize: 12, color: '#666', paddingTop: 6 },
 			dc_locations_row_right: { flex: 1, alignItems: 'center', justifyContent: 'center' },
 				dc_locations_email_icon: { width: maxCardWidthWithPadding / 7 * .55, height: maxCardWidthWithPadding / 7 * .55 * .67 },
 				dc_locations_email: { fontSize: 12, textAlign: 'center', color: '#666' },
 	dining_card_more: { alignItems: 'center', justifyContent: 'center', width: maxCardWidthWithPadding, paddingHorizontal: 4, paddingTop: 8, paddingBottom: 4, borderTopWidth: 1, borderTopColor: '#DDD' },
-	dining_card_more_label: { fontSize: 20, color: ucsdblue, fontWeight: '300' },
-
-
+	dining_card_more_label: { fontSize: 20, color: '#006C92', fontWeight: '300' },
 
 
 	// DINING LIST
 	dl_market_name: { padding: 10 },
 		dl_market_name_text: { color: '#777', fontSize: 30 },
-	dl_market_scroller: { height: 154 },
-		dl_market_scroller_image: { width: 154, height: 154, borderRadius: 5, marginHorizontal: 7 },
+	dl_market_scroller: {  },
+		dl_market_scroller_image: { width: 160, height: 160, borderRadius: 5, marginHorizontal: 7 },
 	dl_market_directions: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderBottomColor: '#DDD', margin: 6, padding: 6 },
-		dl_dir_label: { flex: 4, fontSize: 22, color: ucsdblue },
+		dl_dir_label: { flex: 4, fontSize: 22, color: '#006C92' },
 		dl_dir_traveltype_container: { flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'center' },
 			dl_dir_icon: { width: 28, height: 28 },
-			dl_dir_eta: { color: ucsdblue, fontSize: 11, fontWeight: 'bold' },
-	dl_noresults: { color: '#444', fontSize: 15 },
-	dl_market_date: { borderBottomWidth: 1, borderBottomColor: '#DDD', paddingTop: 16, paddingBottom: 6 },
+			dl_dir_eta: { color: ucsdblue, fontSize: 14 },
+
+	dl_market_date: { borderBottomWidth: 1, borderBottomColor: '#DDD', paddingBottom: 2, paddingTop: 16 },
 		dl_market_date_label: { fontSize: 22, color: '#444', textAlign: 'center' },
 	
-	dl_market_filters_foodtype: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginVertical: 8 },
+	dl_market_filters_foodtype: { flex: 1, flexDirection: 'row', justifyContent: 'center', paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: '#DDD', },
 
-	dl_market_filters_mealtype: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderTopWidth: 1, borderTopColor: '#DDD', paddingTop: 10 },
-		dl_meal_button: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
-			dl_mealtype_circle: { borderWidth: 1, borderColor: '#CCC', borderRadius: 8, width: 16, height: 16, backgroundColor: '#CCC', marginRight: 5 },
-			dl_mealtype_circle_active: { borderWidth: 1, borderColor: '#BBB', borderRadius: 8, width: 16, height: 16, backgroundColor: ucsdblue, marginRight: 5 },
-			dl_mealtype_label: { fontSize: 20, color: '#888' },
-			dl_mealtype_label_active: { fontSize: 20, color: ucsdblue },
 
+	dl_market_filters_mealtype: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingVertical: 6 },
+		dl_mealtype_label: { flex: 1, fontSize: 20, color: '#888', textAlign: 'center' },
 
 	dl_market_menu: { marginHorizontal: 8, marginVertical: 16 },
-		dl_market_menu_row: { flexDirection: 'row', paddingBottom: 8 },
+		dl_market_menu_row: { flex: 1, flexDirection: 'row', paddingBottom: 8 },
 			dl_menu_item_name: { fontSize: 15, color: ucsdblue },
 			dl_menu_item_price: { color: '#555', paddingLeft: 26, marginLeft: 30 },
 
@@ -227,10 +220,10 @@ var css = StyleSheet.create({
 		events_list_left_container: { flex: 1 },
 			events_list_title: { fontSize: 17 * prm, color: '#000', fontWeight: '400' },
 			events_list_desc: { fontSize: 14 * prm, color: '#666', paddingTop: 8 * prm },
-			events_list_postdate: { fontSize: 11 * prm, color: ucsdblue, paddingTop: 8 * prm },
+			events_list_postdate: { fontSize: 11 * prm, color: '#006C92', paddingTop: 8 * prm },
 		events_list_image: { width: 130 * prm, height: 87 * prm, marginRight: 14, borderWidth: 1, borderColor: '#CCC' },
 	events_more: { alignItems: 'center', justifyContent: 'center', width: maxCardWidthWithPadding, paddingHorizontal: 4, paddingTop: 8, paddingBottom: 4 },
-	events_more_label: { fontSize: 20, color: ucsdblue, fontWeight: '300' },
+	events_more_label: { fontSize: 20, color: '#006C92', fontWeight: '300' },
 
 	// WELCOME WEEK STYLE
 	welcome_listview: { marginTop: welcome_lv_marginTop },
@@ -241,12 +234,12 @@ var css = StyleSheet.create({
 		welcome_list_left_container: { flex: 1, marginRight: 14 },
 			welcome_list_title: { fontSize: 17 * prm, color: '#000' },
 			welcome_list_desc: { fontSize: 14 * prm, color: '#666', paddingTop: 3, paddingBottom: 6 },
-			welcome_list_postdate: { fontSize: 11 * prm, color: ucsdblue },
+			welcome_list_postdate: { fontSize: 11 * prm, color: '#006C92' },
 		welcome_list_image: { width: 130 * prm, height: 87 * prm, marginLeft: 14, borderWidth: 1, borderColor: '#CCC' },
 
 
 	// WEATHER CARD
-	weathercard_more: { justifyContent: 'center', width: windowWidth - 30, padding: 10 * prm, fontSize: 24 * prm, fontWeight: '500', color: ucsdblue },
+	weathercard_more: { justifyContent: 'center', width: windowWidth - 30, padding: 10 * prm, fontSize: 24 * prm, fontWeight: '500', color: '#006C92' },
 	weathercard_border: { borderTopWidth: 1, borderTopColor: '#CCC', width: maxCardWidth },
 	weatherccard_loading_height: { height: 270 * prm },
 
@@ -264,7 +257,7 @@ var css = StyleSheet.create({
 			wf_icon: { height: 33 * prm, width: 33 * prm },
 			wf_tempMax: { fontSize: 14, fontWeight: '300', color: '#000', paddingTop: 10 },
 			wf_tempMin: { fontSize: 14, fontWeight: '300', color: '#666', paddingTop: 10 },
-	wc_surfreport_more: { fontSize: 20, fontWeight: '300', color: ucsdblue, paddingHorizontal: 14, paddingVertical: 10 },
+	wc_surfreport_more: { fontSize: 20, fontWeight: '300', color: '#006C92', paddingHorizontal: 14, paddingVertical: 10 },
 
 	// SURF REPORT
 	sr_listview: {  },
@@ -288,7 +281,7 @@ var css = StyleSheet.create({
 		destinationcard_map: { borderWidth: 1, borderColor: '#DDD', width: maxCardWidthWithPadding, height: maxCardWidthWithPadding * .6 },
 	destinationcard_marker_row: { flex: 1, flexDirection: 'row', justifyContent: 'center', width: windowWidth - 30, padding: 6, marginTop: 0 },
 	destinationcard_icon_marker: { width: 18, height: 18 * 1.375, alignItems: 'flex-start', justifyContent: 'center' },
-	destinationcard_marker_label: { flex: 1, fontSize: 20, paddingLeft: 8, paddingTop: 0, color: ucsdblue, justifyContent: 'center' },
+	destinationcard_marker_label: { flex: 1, fontSize: 20, paddingLeft: 8, paddingTop: 0, color: '#006C92', justifyContent: 'center' },
 
 
 	// DestinationSearch
@@ -313,7 +306,7 @@ var css = StyleSheet.create({
 		eventdetail_image2_sm: { width: 100, height: 100, borderColor: 'blue', borderWidth: 1 },
 		eventdetail_image2_lg: { width: 200, height: 200 },
 		news_detail_container: { width: windowWidth, paddingHorizontal: 18 * prm, paddingVertical: 14 * prm },
-			eventdetail_eventname: { fontWeight: '400', fontSize: 22 * prm, color: ucsdblue },
+			eventdetail_eventname: { fontWeight: '400', fontSize: 22 * prm, color: '#006C92' },
 			eventdetail_eventlocation: { fontSize: 16 * prm, color: '#333' },
 			eventdetail_eventdate: { fontSize: 11 * prm, color: '#333', paddingTop: 14 * prm },
 			eventdetail_eventdescription: { lineHeight: 18 * prm, color: '#111', fontSize: 14 * prm, paddingTop: 14 * prm },
@@ -341,7 +334,7 @@ var css = StyleSheet.create({
 
 	// SHUTTLE STOP
 	shuttlestop_image: { width: windowWidth, height: Math.round(windowWidth * .533) },
-	shuttlestop_name_container: { flex: 1, flexDirection: 'row', alignItems: 'center', width: windowWidth, paddingVertical: 14 * prm, paddingHorizontal: 20 * prm, backgroundColor: ucsdblue },
+	shuttlestop_name_container: { flex: 1, flexDirection: 'row', alignItems: 'center', width: windowWidth, paddingVertical: 14 * prm, paddingHorizontal: 20 * prm, backgroundColor: '#006C92' },
 		shuttlestop_name_text: { width: windowWidth * .9 - 40, color: '#FFF', fontSize: 24, fontWeight: '300' },
 		
 		shuttlestop_refresh_container: { position: 'absolute', alignItems: 'center', top: shuttleStopRefreshIconTop, right: 8, width: 55 * prm },
@@ -388,9 +381,9 @@ var css = StyleSheet.create({
 	footer: { flex: 1, flexDirection: 'row', paddingBottom: 10 },
 	footer_link: { flex: 15 },
 	
-	footer_about: { color: ucsdblue, fontSize: 16 * prm, textAlign: 'right', padding: 4 },
+	footer_about: { color: '#006C92', fontSize: 16 * prm, textAlign: 'right', padding: 4 },
 	footer_spacer: { flex: 1, color: '#888', padding: 4, fontSize: 16 * prm, textAlign: 'center' },
-	footer_copyright: { color: ucsdblue, fontSize: 16 * prm, textAlign: 'left', padding: 4 },
+	footer_copyright: { color: '#006C92', fontSize: 16 * prm, textAlign: 'left', padding: 4 },
 
 
 	// MISC STYLES

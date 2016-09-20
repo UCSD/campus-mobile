@@ -21,9 +21,10 @@ var AppSettings = 			require('./app/AppSettings'),
 	SurfReport = 			require('./app/views/weather/SurfReport'),
 	TopStoriesDetail = 		require('./app/views/topStories/TopStoriesDetail'),
 	EventDetail = 			require('./app/views/events/EventDetail'),
-	WebWrapper = 			require('./app/views/WebWrapper');
+	WebWrapper = 			require('./app/views/WebWrapper'),
+	DestinationDetail = 	require('./app/views/DestinationDetail');
 
-import WelcomeWeek from './app/views/WelcomeWeek';
+import WelcomeWeekView from './app/views/welcomeWeek/WelcomeWeekView';
 
 // NAV
 import NavigationBarWithRouteMapper from './app/views/NavigationBarWithRouteMapper';
@@ -201,7 +202,8 @@ var nowucsandiego = React.createClass({
 			case 'TopStoriesDetail': 	return (<TopStoriesDetail route={route} navigator={navigator} />);
 			case 'EventDetail': 		return (<EventDetail route={route} navigator={navigator} />);
 			case 'WebWrapper': 			return (<WebWrapper route={route} navigator={navigator} />);
-			case 'WelcomeWeek': 		return (<WelcomeWeek route={route} navigator={navigator} />);
+			case 'WelcomeWeekView': 	return (<WelcomeWeekView route={route} navigator={navigator} />);
+			case 'DestinationDetail': 	return (<DestinationDetail route={route} navigator={navigator} />);
 			default: 					return (<Home route={route} navigator={navigator} new_timeout={this.newTimeout} do_timeout={this.doTimeout}/>);
 		}
 	},

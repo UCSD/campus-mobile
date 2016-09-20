@@ -10,7 +10,6 @@ import {
 	ScrollView,
 	Image,
 	ListView,
-	Linking,
 	Animated,
 	RefreshControl,
 	Modal,
@@ -51,6 +50,7 @@ var shuttle_routes = 	require('../json/shuttle_routes_master.json');
 // Views
 //if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
 var ShuttleStop = 		require('./ShuttleStop');
+var DestinationDetail = require('./DestinationDetail');
 var DiningList = 		require('./DiningList');
 var WebWrapper = 		require('./WebWrapper');
 
@@ -129,13 +129,17 @@ var Home = React.createClass({
 	},
 
 	componentDidMount: function() {
-		logger.ga('View Loaded: Home');
+		logger.custom('View Loaded: Home');
+		console.log("mount");
+
 		InteractionManager.runAfterInteractions(() => {
+			
 			this.setTimeout(() => {this.setState({loaded: true});}, 2000);
 		});
 	},
 
 	componentWillUnmount: function() {
+		console.log("unmount")
 		// Update unmount function with ability to clear all other timers (setTimeout/setInterval)
 		navigator.geolocation.clearWatch(this.geolocationWatchID);
 	},
@@ -194,7 +198,7 @@ var Home = React.createClass({
 	},
 
 	_requestPermission() {
-		Permissions.requestPermission('location')
+	Permissions.requestPermission('location')
 		.then(response => {
 			//returns once the user has chosen to 'allow' or to 'not allow' access
 			//response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
@@ -226,9 +230,7 @@ var Home = React.createClass({
 					<WelcomeModal />
 
 					{/* SPECIAL TOP BANNER */}
-					{AppSettings.WELCOME_WEEK_ENABLED ? (
-						<TopBannerView navigator={this.props.navigator}/>
-					) : null }
+					<TopBannerView navigator={this.props.navigator}/>
 
 					{/* SHUTTLE CARD */}
 					{AppSettings.SHUTTLE_CARD_ENABLED ? (
@@ -289,42 +291,6 @@ var Home = React.createClass({
 						</View>
 					) : null }
 
-					{/* DINING CARD */}
-					{AppSettings.DINING_CARD_ENABLED ? (
-						<View>
-							<View style={css.card_main}>
-								<View style={css.card_title_container}>
-									<Text style={css.card_title}>Dining</Text>
-								</View>
-
-								{this.state.diningDataLoaded ? (
-									<View style={css.dining_card}>
-										<View style={css.dining_card_map}>
-
-											{/*<MapView
-												style={css.destinationcard_map}
-												scrollEnabled={true}
-												zoomEnabled={true}
-												rotateEnabled={false}
-												showsUserLocation={true}
-												minDelta={this.nearbyMinDelta}
-												maxDelta={this.nearbyMaxDelta}
-												followUserLocation={true} />*/}
-										</View>
-
-										<View style={css.dc_locations}>
-											<ListView dataSource={this.state.diningDataFull} renderRow={this.renderDiningRow} style={css.wf_listview} />
-										</View>
-									</View>
-								) : (
-									<View style={[css.shuttle_card_row_center, css.shuttle_card_loader]}>
-										<ActivityIndicator style={css.shuttle_card_aa} size="large" />
-									</View>
-								)}
-							</View>
-						</View>
-					) : null }
-
 					{/* EVENTS CARD & TOP STORIES CARD & WEATHER CARD */}
 					{ this.getCards() }
 
@@ -374,6 +340,60 @@ var Home = React.createClass({
 						</View>
 					) : null }
 
+
+					{/* DINING CARD */}
+					{AppSettings.DINING_CARD_ENABLED ? (
+						<View>
+							<View style={css.card_main}>
+								<View style={css.card_title_container}>
+									<Text style={css.card_title}>Dining</Text>
+								</View>
+
+								{this.state.diningDataLoaded ? (
+									<View style={css.dining_card}>
+										<View style={css.dining_card_map}>
+
+											{/*<MapView
+												style={css.destinationcard_map}
+												scrollEnabled={true}
+												zoomEnabled={true}
+												rotateEnabled={false}
+												showsUserLocation={true}
+												minDelta={this.nearbyMinDelta}
+												maxDelta={this.nearbyMaxDelta}
+												followUserLocation={true} />*/}
+										</View>
+
+										
+										<View style={css.dining_card_filters}>
+											<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.updateDiningFilters('vegetarian') }>
+												<Text style={css.dining_card_filter_button}>Vegetarian</Text>
+											</TouchableHighlight>
+
+											<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.updateDiningFilters('vegan') }>
+												<Text style={css.dining_card_filter_button}>Vegan</Text>
+											</TouchableHighlight>
+
+											<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.updateDiningFilters('glutenfree') }>
+												<Text style={css.dining_card_filter_button}>Gluten-free</Text>
+											</TouchableHighlight>
+
+											<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.updateDiningFilters('opennow') }>
+												<Text style={css.dining_card_filter_button}>Open Now</Text>
+											</TouchableHighlight>
+										</View>
+										
+
+										<View style={css.dc_locations}>
+											<ListView dataSource={this.state.diningDataFull} renderRow={this.renderDiningRow} style={css.wf_listview} />
+										</View>
+									</View>
+								) : null }
+							</View>
+						</View>
+					) : null }
+
+
 					{/* FOOTER */}
 					<View style={css.footer}>
 						<TouchableHighlight style={css.footer_link} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoFeedbackForm() }>
@@ -398,11 +418,11 @@ var Home = React.createClass({
 		if (AppSettings.WEATHER_CARD_ENABLED){
 			cards.push(<WeatherCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={this._generateUUID + ':' + cardCounter++}/>);
 		}
-		if (AppSettings.EVENTS_CARD_ENABLED){
-			cards.push(<EventCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={this._generateUUID + ':' + cardCounter++}/>);
-		}
 		if (AppSettings.TOPSTORIES_CARD_ENABLED){
 			cards.push(<TopStoriesCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={this._generateUUID + ':' + cardCounter++}/>);
+		}
+		if (AppSettings.EVENTS_CARD_ENABLED){
+			cards.push(<EventCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={this._generateUUID + ':' + cardCounter++}/>);
 		}
 		return cards;
 	},
@@ -463,35 +483,27 @@ var Home = React.createClass({
 
 				responseData = responseData.GetDiningInfoResult;
 
-				var responseDataFinal = [];
-
-				for (var i = 0; responseData.length > i; i++) {
-					if (responseData[i].menuItems.length > 0) {
-						responseDataFinal.push(responseData[i]);
-					}
-				}
-
 				// Calc distance from dining locations
-				for (var i = 0; responseDataFinal.length > i; i++) {
-					var distance = shuttle.getDistance(this.getCurrentPosition('lat'), this.getCurrentPosition('lon'), responseDataFinal[i].coords.lat, responseDataFinal[i].coords.lon);
+				for (var i = 0; responseData.length > i; i++) {
+					var distance = shuttle.getDistance(this.getCurrentPosition('lat'), this.getCurrentPosition('lon'), responseData[i].coords.lat, responseData[i].coords.lon);
 					if (distance) {
-						responseDataFinal[i].distance = distance;
+						responseData[i].distance = distance;
 					} else {
-						responseDataFinal[i].distance = 100000000;
+						responseData[i].distance = 100000000;
 					}
 				}
 
 				// Sort dining locations by distance
-				responseDataFinal.sort(this.sortNearbyMarkers);
+				responseData.sort(this.sortNearbyMarkers);
 
 				// remove after 'more' button functionality added
-				//responseDataFinal.length = 4;
+				//responseData.length = 4;
 
 				var dsFull = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
 				this.setState({
-					diningData: responseDataFinal,
-					diningDataFull: dsFull.cloneWithRows(responseDataFinal),
+					diningData: responseData,
+					diningDataFull: dsFull.cloneWithRows(responseData),
 					diningDataLoaded: true
 				});
 			})
@@ -538,7 +550,7 @@ var Home = React.createClass({
 					</View>
 				</TouchableHighlight>
 				{data.email ? (
-					<TouchableHighlight style={css.dc_locations_row_right} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => general.openURL('mailto:' + data.email) }>
+					<TouchableHighlight style={css.dc_locations_row_right} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.openEmailLink(data.email) }>
 						<View>
 							<Image style={css.dc_locations_email_icon} source={ require('../assets/img/icon_email.png')} />
 
@@ -638,7 +650,7 @@ var Home = React.createClass({
 					this.parseNodeRegion(responseData);
 				})
 				.catch((error) => {
-					logger.error('ERR: loadNodeRegion: ' + error);
+					logger.custom('ERR: loadNodeRegion: ' + error);
 				})
 				.done();
 		}
@@ -707,7 +719,7 @@ var Home = React.createClass({
 
 	renderNearbyRow: function(data) {
 		return (
-			<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoNavigationApp(data) }>
+			<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoDestinationDetail(data) }>
 				<View style={css.destinationcard_marker_row}>
 					<Icon name="map-marker" size={30} color={fiveRandomColors[nearbyCounter++]} />
 					<Text style={css.destinationcard_marker_label}>{data.title}</Text>
@@ -825,7 +837,7 @@ var Home = React.createClass({
 			})
 			.catch((error) => {
 
-				logger.error('ERR: fetchShuttleArrivalsByStop: ' + error + ' (stop: ' + closestStopNumber + ')');
+				logger.custom('ERR: fetchShuttleArrivalsByStop: ' + error + ' (stop: ' + closestStopNumber + ')');
 
 				if (closestStopNumber == 0) {
 					this.setState({ closestStop1LoadFailed: true });
@@ -842,9 +854,15 @@ var Home = React.createClass({
 		this.props.navigator.push({ id: 'ShuttleStop', name: 'Shuttle Stop', component: ShuttleStop, title: 'Shuttle',stopData: stopData, currentPosition: this.state.currentPosition, shuttleData: shuttleData });
 	},
 
-	gotoNavigationApp: function(destinationData) {
-		var destinationURL = general.getDirectionsURL('walk', this.getCurrentPosition('lat'), this.getCurrentPosition('lon'), destinationData.mkrLat, destinationData.mkrLong );
-		general.openURL(destinationURL);
+	gotoDestinationDetail: function(destinationData) {
+		destinationData.currentLat = this.getCurrentPosition('lat');
+		destinationData.currentLon = this.getCurrentPosition('lon');
+
+		destinationData.mkrLat = parseFloat(destinationData.mkrLat);
+		destinationData.mkrLong = parseFloat(destinationData.mkrLong);
+
+		destinationData.distLatLon = Math.sqrt(Math.pow(Math.abs(this.getCurrentPosition('lat') - destinationData.mkrLat), 2) + Math.pow(Math.abs(this.getCurrentPosition('lon') - destinationData.mkrLong), 2));
+		this.props.navigator.push({ id: 'DestinationDetail', name: 'Nearby', title: 'Nearby', component: DestinationDetail, destinationData: destinationData });
 	},
 
 	gotoFeedbackForm: function() {
@@ -860,11 +878,27 @@ var Home = React.createClass({
 	},
 
 	gotoDiningList: function(marketData) {
-		this.props.navigator.push({ id: 'DiningList', component: DiningList, title: marketData.name, marketData: marketData, currentCoords: { lat: this.getCurrentPosition('lat'), lon: this.getCurrentPosition('lon') } });
+		this.props.navigator.push({ id: 'DiningList', component: DiningList, title: marketData.name, marketData: marketData });
 	},
 
 
 	// #99 - MISC
+	openEmailLink: function(email) {
+		Linking.canOpenURL(email).then(supported => {
+			if (supported) {
+				Linking.openURL('mailto:' + email);
+			} else {
+				logger.log('openEmailLink: Unable to send email to ' + email);
+			}
+		});
+	},
+
+	// Is this even used??
+	_setState: function(myKey, myVal) {
+		var state = {};
+		state[myKey] = myVal;
+		this.setState(state);
+	},
 
 	// Generates a unique ID
 	// Used for Card keys

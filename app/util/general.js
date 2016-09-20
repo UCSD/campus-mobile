@@ -3,12 +3,10 @@ var React = require('react-native');
 var {
 	Animated,
 	Easing,
-	Platform,
-	Linking,
+	Platform
 } = React;
 
 var dateFormat = require('dateformat');
-var logger = require('./logger');
 
 module.exports = {
 	
@@ -30,39 +28,6 @@ module.exports = {
 
 	getPlatform: function() {
 		return Platform.OS;
-	},
-
-	openURL: function(url) {
-		Linking.canOpenURL(url).then(supported => {
-			if (!supported) {
-				logger.log('ERR: openURL: Unable to handle url: ' + url);
-			} else {
-				return Linking.openURL(url);
-			}
-		}).catch(err => logger.log('ERR: openURL: ' + err));
-	},
-
-	getDirectionsURL: function(method, startLat, startLon, stopLat, stopLon) {
-
-		var directionsURL;
-
-		if (this.platformIOS()) {
-			if (method === 'walk') {
-				directionsURL = 'http://maps.apple.com/?saddr=' + startLat + ',' + startLon + '&daddr=' + stopLat + ',' + stopLon + '&dirflg=w';
-			} else {
-				// Default to driving directions
-				directionsURL = 'http://maps.apple.com/?saddr=' + startLat + ',' + startLon + '&daddr=' + stopLat + ',' + stopLon + '&dirflg=d';
-			}
-		} else {
-			if (method === 'walk') {
-				directionsURL = 'https://www.google.com/maps/dir/' + startLat + ',' + startLon + '/' + stopLat + ',' + stopLon + '/@' + startLat + ',' + startLon + ',18z/data=!4m2!4m1!3e1';
-			} else {
-				// Default to driving directions
-				directionsURL = 'https://www.google.com/maps/dir/' + startLat + ',' + startLon + '/' + stopLat + ',' + stopLon + '/@' + startLat + ',' + startLon + ',18z/data=!4m2!4m1!3e0';
-			}
-		}
-
-		return directionsURL;
 	},
 
 	startReloadAnimation2: function(anim, toVal, duration) {
