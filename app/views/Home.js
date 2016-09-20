@@ -110,16 +110,21 @@ var Home = React.createClass({
 		}
 
 		else {
+			this.setState({locationPermission: 'authorized'});
 			navigator.geolocation.getCurrentPosition(
 				(initialPosition) => { this.setState({currentPosition: initialPosition}) },
 				(error) => logger.log('ERR: navigator.geolocation.getCurrentPosition: ' + error.message),
 				{enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
 			);
 			this.geolocationWatchID = navigator.geolocation.watchPosition((currentPosition) => {
+				let lastPos = this.state.currentPosition;
 				this.setState({ currentPosition });
+
+				// Initial refresh
+				if(lastPos === null ) {
+					this.refreshAllCards('auto');
+				}
 			});
-			// Load all non-broken-out Cards
-			this.refreshAllCards('auto');
 		}	
 	},
 
@@ -140,6 +145,12 @@ var Home = React.createClass({
 	},
 
 	updateLocationPermission: function() {
+		this.getLocationPermission();
+
+		this.props.new_timeout("location", () => { this.updateLocationPermission() }, this.permissionUpdateInterval);
+	},
+
+	getLocationPermission: function() {
 		// Get location permission status on Android
 		Permissions.getPermissionStatus('location')
 		.then(response => {
@@ -149,18 +160,25 @@ var Home = React.createClass({
 			if (response === "authorized") {
 				if(this.state.currentPosition === null ) {
 					this.geolocationWatchID = navigator.geolocation.watchPosition((currentPosition) => {
+						let lastPos = this.state.currentPosition;
 						this.setState({ currentPosition });
+
+						// Initial refresh
+						if(lastPos === null ) {
+							this.refreshAllCards('auto');
+						}
 					});
 				}
-				// Load all non-broken-out Cards
-				this.refreshAllCards('auto');
+				else {
+					// Load all non-broken-out Cars
+					this.refreshAllCards('auto');
+				}
+				
 			} else {
 				this._requestPermission();
 				//this._alertForLocationPermission();
 			}
 		});
-
-		this.props.new_timeout("location", () => { this.updateLocationPermission() }, this.permissionUpdateInterval);
 	},
 
 	// Custom message, optional
@@ -260,7 +278,10 @@ var Home = React.createClass({
 
 							{!this.state.closestStop1Loaded && !this.state.closestStop2Loaded ? (
 								<View style={[css.shuttle_card_row_center, css.shuttle_card_loader]}>
-									<ActivityIndicator style={css.shuttle_card_aa} size="large" />
+									{this.state.locationPermission === 'authorized' ? 
+										(<ActivityIndicator style={css.shuttle_card_aa} size="large" />):
+										(<Text>Unable to fetch shuttle data without location permissions. </Text>)
+									}
 								</View>
 							) : null }
 
@@ -407,9 +428,16 @@ var Home = React.createClass({
 	},
 
 	refreshShuttleCard: function(refreshType) {
-		if (AppSettings.SHUTTLE_CARD_ENABLED) {
-			this.findClosestShuttleStops(refreshType);
-		}
+		if (AppSettings.SHUTTLE_CARD_ENABLED ) {
+			// Refresh normally
+			if(this.state.locationPermission === 'authorized') {
+				this.findClosestShuttleStops(refreshType);
+			}
+			// Try to get location permission
+			else {
+				this.getLocationPermission();
+			}
+		}	
 	},
 
 	refreshNearbyCard: function() {
