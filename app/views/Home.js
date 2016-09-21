@@ -395,11 +395,11 @@ var Home = React.createClass({
 		if (AppSettings.WEATHER_CARD_ENABLED){
 			cards.push(<WeatherCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={this._generateUUID + ':' + cardCounter++}/>);
 		}
-		if (AppSettings.TOPSTORIES_CARD_ENABLED){
-			cards.push(<TopStoriesCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={this._generateUUID + ':' + cardCounter++}/>);
-		}
 		if (AppSettings.EVENTS_CARD_ENABLED){
 			cards.push(<EventCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={this._generateUUID + ':' + cardCounter++}/>);
+		}
+		if (AppSettings.TOPSTORIES_CARD_ENABLED){
+			cards.push(<TopStoriesCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={this._generateUUID + ':' + cardCounter++}/>);
 		}
 		return cards;
 	},
