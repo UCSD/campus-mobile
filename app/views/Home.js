@@ -130,16 +130,12 @@ var Home = React.createClass({
 
 	componentDidMount: function() {
 		logger.custom('View Loaded: Home');
-		console.log("mount");
-
 		InteractionManager.runAfterInteractions(() => {
-			
 			this.setTimeout(() => {this.setState({loaded: true});}, 2000);
 		});
 	},
 
 	componentWillUnmount: function() {
-		console.log("unmount")
 		// Update unmount function with ability to clear all other timers (setTimeout/setInterval)
 		navigator.geolocation.clearWatch(this.geolocationWatchID);
 	},
