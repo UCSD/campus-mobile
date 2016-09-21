@@ -50,7 +50,6 @@ var shuttle_routes = 	require('../json/shuttle_routes_master.json');
 // Views
 //if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
 var ShuttleStop = 		require('./ShuttleStop');
-var DestinationDetail = require('./DestinationDetail');
 var DiningList = 		require('./DiningList');
 var WebWrapper = 		require('./WebWrapper');
 
