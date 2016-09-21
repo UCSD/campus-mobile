@@ -388,9 +388,9 @@ var css = StyleSheet.create({
 	footer: { flex: 1, flexDirection: 'row', paddingBottom: 10 },
 	footer_link: { flex: 15 },
 	
-	footer_about: { color: ucsdblue, fontSize: 16 * prm, textAlign: 'right', padding: 4 },
+	footer_about: { color: ucsdblue, fontSize: 16 * prm, textAlign: 'center', padding: 4 },
 	footer_spacer: { flex: 1, color: '#888', padding: 4, fontSize: 16 * prm, textAlign: 'center' },
-	footer_copyright: { color: ucsdblue, fontSize: 16 * prm, textAlign: 'left', padding: 4 },
+	footer_copyright: { color: ucsdblue, fontSize: 16 * prm, textAlign: 'center', padding: 4 },
 
 
 	// MISC STYLES
