@@ -286,6 +286,42 @@ var Home = React.createClass({
 						</View>
 					) : null }
 
+					{/* DINING CARD */}
+					{AppSettings.DINING_CARD_ENABLED ? (
+						<View>
+							<View style={css.card_main}>
+								<View style={css.card_title_container}>
+									<Text style={css.card_title}>Dining</Text>
+								</View>
+
+								{this.state.diningDataLoaded ? (
+									<View style={css.dining_card}>
+										<View style={css.dining_card_map}>
+
+											{/*<MapView
+												style={css.destinationcard_map}
+												scrollEnabled={true}
+												zoomEnabled={true}
+												rotateEnabled={false}
+												showsUserLocation={true}
+												minDelta={this.nearbyMinDelta}
+												maxDelta={this.nearbyMaxDelta}
+												followUserLocation={true} />*/}
+										</View>
+
+										<View style={css.dc_locations}>
+											<ListView dataSource={this.state.diningDataFull} renderRow={this.renderDiningRow} style={css.wf_listview} />
+										</View>
+									</View>
+								) : (
+									<View style={[css.shuttle_card_row_center, css.shuttle_card_loader]}>
+										<ActivityIndicator style={css.shuttle_card_aa} size="large" />
+									</View>
+								)}
+							</View>
+						</View>
+					) : null }
+
 					{/* EVENTS CARD & TOP STORIES CARD & WEATHER CARD */}
 					{ this.getCards() }
 
@@ -334,60 +370,6 @@ var Home = React.createClass({
 							</View>
 						</View>
 					) : null }
-
-
-					{/* DINING CARD */}
-					{AppSettings.DINING_CARD_ENABLED ? (
-						<View>
-							<View style={css.card_main}>
-								<View style={css.card_title_container}>
-									<Text style={css.card_title}>Dining</Text>
-								</View>
-
-								{this.state.diningDataLoaded ? (
-									<View style={css.dining_card}>
-										<View style={css.dining_card_map}>
-
-											{/*<MapView
-												style={css.destinationcard_map}
-												scrollEnabled={true}
-												zoomEnabled={true}
-												rotateEnabled={false}
-												showsUserLocation={true}
-												minDelta={this.nearbyMinDelta}
-												maxDelta={this.nearbyMaxDelta}
-												followUserLocation={true} />*/}
-										</View>
-
-										
-										<View style={css.dining_card_filters}>
-											<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.updateDiningFilters('vegetarian') }>
-												<Text style={css.dining_card_filter_button}>Vegetarian</Text>
-											</TouchableHighlight>
-
-											<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.updateDiningFilters('vegan') }>
-												<Text style={css.dining_card_filter_button}>Vegan</Text>
-											</TouchableHighlight>
-
-											<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.updateDiningFilters('glutenfree') }>
-												<Text style={css.dining_card_filter_button}>Gluten-free</Text>
-											</TouchableHighlight>
-
-											<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.updateDiningFilters('opennow') }>
-												<Text style={css.dining_card_filter_button}>Open Now</Text>
-											</TouchableHighlight>
-										</View>
-										
-
-										<View style={css.dc_locations}>
-											<ListView dataSource={this.state.diningDataFull} renderRow={this.renderDiningRow} style={css.wf_listview} />
-										</View>
-									</View>
-								) : null }
-							</View>
-						</View>
-					) : null }
-
 
 					{/* FOOTER */}
 					<View style={css.footer}>
@@ -520,7 +502,6 @@ var Home = React.createClass({
 			diningHours = data.regularHours.join("\n");
 		}
 
-
 		/* Re-enable once dining info feed open hours are fixed
 		if (data.specialHours[currentTimestamp]) {
 			diningHours = data.specialHours[currentTimestamp];
@@ -544,17 +525,7 @@ var Home = React.createClass({
 						{/*<Text style={css.dc_locations_description}>{data.description}</Text>*/}
 					</View>
 				</TouchableHighlight>
-				{data.email ? (
-					<TouchableHighlight style={css.dc_locations_row_right} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.openEmailLink(data.email) }>
-						<View>
-							<Image style={css.dc_locations_email_icon} source={ require('../assets/img/icon_email.png')} />
-
-							<Text style={css.dc_locations_email}>Email</Text>
-						</View>
-					</TouchableHighlight>
-				) : (
-					<View style={css.dc_locations_row_right}></View>
-				)}
+				<View style={css.dc_locations_row_right}></View>
 			</View>
 		);
 	},
