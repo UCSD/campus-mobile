@@ -715,7 +715,7 @@ var Home = React.createClass({
 
 	renderNearbyRow: function(data) {
 		return (
-			<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoDestinationDetail(data) }>
+			<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoNavigationApp(data) }>
 				<View style={css.destinationcard_marker_row}>
 					<Icon name="map-marker" size={30} color={fiveRandomColors[nearbyCounter++]} />
 					<Text style={css.destinationcard_marker_label}>{data.title}</Text>
@@ -850,15 +850,9 @@ var Home = React.createClass({
 		this.props.navigator.push({ id: 'ShuttleStop', name: 'Shuttle Stop', component: ShuttleStop, title: 'Shuttle',stopData: stopData, currentPosition: this.state.currentPosition, shuttleData: shuttleData });
 	},
 
-	gotoDestinationDetail: function(destinationData) {
-		destinationData.currentLat = this.getCurrentPosition('lat');
-		destinationData.currentLon = this.getCurrentPosition('lon');
-
-		destinationData.mkrLat = parseFloat(destinationData.mkrLat);
-		destinationData.mkrLong = parseFloat(destinationData.mkrLong);
-
-		destinationData.distLatLon = Math.sqrt(Math.pow(Math.abs(this.getCurrentPosition('lat') - destinationData.mkrLat), 2) + Math.pow(Math.abs(this.getCurrentPosition('lon') - destinationData.mkrLong), 2));
-		this.props.navigator.push({ id: 'DestinationDetail', name: 'Nearby', title: 'Nearby', component: DestinationDetail, destinationData: destinationData });
+	gotoNavigationApp: function(destinationData) {
+		var destinationURL = general.getDirectionsURL('walk', this.getCurrentPosition('lat'), this.getCurrentPosition('lon'), destinationData.mkrLat, destinationData.mkrLong );
+		general.openURL(destinationURL);
 	},
 
 	gotoFeedbackForm: function() {
