@@ -397,7 +397,7 @@ var Home = React.createClass({
 					{/* FOOTER */}
 					<View style={css.footer}>
 						<TouchableHighlight style={css.footer_link} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoFeedbackForm() }>
-							<Text style={css.footer_about}>About this app</Text>
+							<Text style={css.footer_about}>Feedback</Text>
 						</TouchableHighlight>
 						<Text style={css.footer_spacer}>|</Text>
 						<TouchableHighlight style={css.footer_link}>
