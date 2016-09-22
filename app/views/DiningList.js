@@ -124,13 +124,6 @@ var DiningList = React.createClass({
 									<Text style={css.dl_dir_eta}>WALK</Text>
 								</View>
 							</TouchableHighlight>
-
-							<TouchableHighlight style={css.dl_dir_traveltype_container} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { this.gotoNavigationApp('drive') }}>
-								<View style={css.dl_dir_traveltype_container}>
-									<Image style={css.dl_dir_icon} source={ require('../assets/img/icon_car.png')} />
-									<Text style={css.dl_dir_eta}>DRIVE</Text>
-								</View>
-							</TouchableHighlight>
 						</View>
 
 						<View style={css.dl_market_date}>

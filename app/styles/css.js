@@ -156,7 +156,7 @@ var css = StyleSheet.create({
 	dl_market_scroller: { height: 154 },
 		dl_market_scroller_image: { width: 154, height: 154, borderRadius: 5, marginHorizontal: 7 },
 	dl_market_directions: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderBottomColor: '#DDD', margin: 6, padding: 6 },
-		dl_dir_label: { flex: 4, fontSize: 22, color: ucsdblue },
+		dl_dir_label: { flex: 5, fontSize: 22, color: ucsdblue },
 		dl_dir_traveltype_container: { flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'center' },
 			dl_dir_icon: { width: 28, height: 28 },
 			dl_dir_eta: { color: ucsdblue, fontSize: 11, fontWeight: 'bold' },
