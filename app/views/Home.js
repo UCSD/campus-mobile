@@ -35,6 +35,7 @@ import TimerMixin from 'react-timer-mixin';
 
 var MapView = 			require('react-native-maps');
 const Permissions = 	require('react-native-permissions');
+const GoogleAPIAvailability = 	require('react-native-google-api-availability-bridge');
 
 // App Settings / Util / CSS
 var AppSettings = 		require('../AppSettings');
@@ -62,6 +63,7 @@ var Home = React.createClass({
 	shuttleCardRefreshInterval: 1 * 60 * 1000,
 	permissionUpdateInterval: 1 * 65 * 1000,
 	regionRefreshInterval: 1 * 70 * 1000,
+	playInterval: 24 * 60 * 60 * 1000,
 
 	shuttleReloadAnim: new Animated.Value(0),
 	shuttleClosestStops: [{ dist: 100000000 },{ dist: 100000000 }],
@@ -97,6 +99,7 @@ var Home = React.createClass({
 			cacheMap: false,
 			loaded:false,
 			refreshing:false,
+			updatedGoogle: true,
 		}
 	},
 
@@ -105,6 +108,7 @@ var Home = React.createClass({
 		if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
 			// Check Location Permissions Periodically
 			this.updateLocationPermission();
+			this.updateGooglePlay();
 			this.setState({cacheMap: true});
 		}
 
@@ -147,6 +151,15 @@ var Home = React.createClass({
 		this.getLocationPermission();
 
 		this.props.new_timeout("location", () => { this.updateLocationPermission() }, this.permissionUpdateInterval);
+	},
+
+	updateGooglePlay: function() {
+		GoogleAPIAvailability.checkGooglePlayServices((result) => {
+			if(result === 'update') {
+				this.setState({updatedGoogle: false})
+			}
+		});
+		this.props.new_timeout("play", () => { this.updateGooglePlay() }, this.playInterval);
 	},
 
 	getLocationPermission: function() {
@@ -335,7 +348,7 @@ var Home = React.createClass({
 							<View style={css.destinationcard_bot_container}>
 								<View style={css.destinationcard_map_container}>
 
-									{this.state.nearbyAnnotations && this.state.loaded ? (
+									{this.state.nearbyAnnotations && this.state.loaded && this.state.updatedGoogle ? (
 
 										<MapView
 											style={css.destinationcard_map}
@@ -361,6 +374,17 @@ var Home = React.createClass({
 												))}
 										</MapView>
 									) : null }
+
+									{!this.state.updatedGoogle ? (
+										<View>
+										<Text>Please update Google Play Services and restart app to view map.</Text>
+										<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => GoogleAPIAvailability.openGooglePlayUpdate()}>
+											<View style={css.eventdetail_readmore_container}>
+												<Text style={css.eventdetail_readmore_text}>Update</Text>
+											</View>
+										</TouchableHighlight>
+										</View>
+										) : null}
 
 								</View>
 
