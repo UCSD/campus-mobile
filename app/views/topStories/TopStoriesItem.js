@@ -69,9 +69,9 @@ export default class TopStoriesItem extends React.Component {
 					</View>
 
 					{data.image ? (
-						<Image style={css.events_list_image} source={{ uri: data.image }} />
+						<Image style={css.news_list_image} source={{ uri: data.image }} />
 					) : (
-						<Image style={css.events_list_image} source={ require('../../assets/img/MobileEvents_blank.jpg')} />
+						<Image style={css.news_list_image} source={ require('../../assets/img/MobileEvents_blank.jpg')} />
 					)}
 
 				</View>
