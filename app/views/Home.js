@@ -132,7 +132,7 @@ var Home = React.createClass({
 	},
 
 	componentDidMount: function() {
-		logger.custom('View Loaded: Home');
+		logger.ga('View Loaded: Home');
 		InteractionManager.runAfterInteractions(() => {
 			this.setTimeout(() => {this.setState({loaded: true});}, 2000);
 		});
@@ -497,8 +497,8 @@ var Home = React.createClass({
 				// Sort dining locations by distance
 				responseData.sort(this.sortNearbyMarkers);
 
-				// remove after 'more' button functionality added
-				//responseData.length = 4;
+				// remove after 'View All' button functionality added
+				responseData.length = 3;
 
 				var dsFull = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
@@ -546,10 +546,14 @@ var Home = React.createClass({
 					<View>
 						<Text style={css.dc_locations_title}>{data.name}</Text>
 						<Text style={css.dc_locations_hours}>{diningHours}</Text>
-						{/*<Text style={css.dc_locations_description}>{data.description}</Text>*/}
 					</View>
 				</TouchableHighlight>
-				<View style={css.dc_locations_row_right}></View>
+				<TouchableHighlight style={css.dc_locations_row_right} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoNavigationApp(data.coords.lat, data.coords.lon) }>
+					<View style={css.dl_dir_traveltype_container}>
+						<Image style={css.dl_dir_icon} source={ require('../assets/img/icon_walk.png')} />
+						<Text style={css.dl_dir_eta}>Walk</Text>
+					</View>
+				</TouchableHighlight>
 			</View>
 		);
 	},
@@ -709,7 +713,7 @@ var Home = React.createClass({
 
 	renderNearbyRow: function(data) {
 		return (
-			<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoNavigationApp(data) }>
+			<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoNavigationApp(data.mkrLat, data.mkrLong) }>
 				<View style={css.destinationcard_marker_row}>
 					<Icon name="map-marker" size={30} color={fiveRandomColors[nearbyCounter++]} />
 					<Text style={css.destinationcard_marker_label}>{data.title}</Text>
@@ -844,8 +848,8 @@ var Home = React.createClass({
 		this.props.navigator.push({ id: 'ShuttleStop', name: 'Shuttle Stop', component: ShuttleStop, title: 'Shuttle',stopData: stopData, currentPosition: this.state.currentPosition, shuttleData: shuttleData });
 	},
 
-	gotoNavigationApp: function(destinationData) {
-		var destinationURL = general.getDirectionsURL('walk', this.getCurrentPosition('lat'), this.getCurrentPosition('lon'), destinationData.mkrLat, destinationData.mkrLong );
+	gotoNavigationApp: function(destinationLat, destinationLon) {
+		var destinationURL = general.getDirectionsURL('walk', this.getCurrentPosition('lat'), this.getCurrentPosition('lon'), destinationLat, destinationLon );
 		general.openURL(destinationURL);
 	},
 

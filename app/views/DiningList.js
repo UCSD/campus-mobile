@@ -121,14 +121,7 @@ var DiningList = React.createClass({
 							<TouchableHighlight style={css.dl_dir_traveltype_container} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { this.gotoNavigationApp('walk') }}>
 								<View style={css.dl_dir_traveltype_container}>
 									<Image style={css.dl_dir_icon} source={ require('../assets/img/icon_walk.png')} />
-									<Text style={css.dl_dir_eta}>WALK</Text>
-								</View>
-							</TouchableHighlight>
-
-							<TouchableHighlight style={css.dl_dir_traveltype_container} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { this.gotoNavigationApp('drive') }}>
-								<View style={css.dl_dir_traveltype_container}>
-									<Image style={css.dl_dir_icon} source={ require('../assets/img/icon_car.png')} />
-									<Text style={css.dl_dir_eta}>DRIVE</Text>
+									<Text style={css.dl_dir_eta}>Walk</Text>
 								</View>
 							</TouchableHighlight>
 						</View>
