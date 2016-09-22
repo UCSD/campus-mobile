@@ -473,8 +473,8 @@ var Home = React.createClass({
 				// Sort dining locations by distance
 				responseData.sort(this.sortNearbyMarkers);
 
-				// remove after 'more' button functionality added
-				//responseData.length = 4;
+				// remove after 'View All' button functionality added
+				responseData.length = 3;
 
 				var dsFull = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
