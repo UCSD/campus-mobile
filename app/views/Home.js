@@ -128,7 +128,7 @@ var Home = React.createClass({
 	},
 
 	componentDidMount: function() {
-		logger.custom('View Loaded: Home');
+		logger.ga('View Loaded: Home');
 		InteractionManager.runAfterInteractions(() => {
 			this.setTimeout(() => {this.setState({loaded: true});}, 2000);
 		});

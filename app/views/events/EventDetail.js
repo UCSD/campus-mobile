@@ -34,7 +34,7 @@ var EventDetail = React.createClass({
 
 	componentWillMount: function() {
 
-		logger.custom('View Loaded: Event Detail');
+		logger.ga('View Loaded: Event Detail');
 
 		var imageURL = (this.props.route.eventData.EventImageLg) ? this.props.route.eventData.EventImageLg : this.props.route.eventData.EventImage;
 
