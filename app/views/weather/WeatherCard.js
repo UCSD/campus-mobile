@@ -61,7 +61,7 @@ export default class WeatherCard extends CardComponent {
 		});
 	  })
 	  .catch((error) => {
-		logger.custom('ERR: fetchWeatherData: ' + error);
+		logger.log('ERR: fetchWeatherData: ' + error);
 	  })
 	  .done();
   }
@@ -77,7 +77,7 @@ export default class WeatherCard extends CardComponent {
 		});
 	  })
 	  .catch((error) => {
-		logger.custom('ERR: fetchSurfData: ' + error);
+		logger.log('ERR: fetchSurfData: ' + error);
 	  })
 	  .done();
   }

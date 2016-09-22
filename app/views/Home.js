@@ -616,7 +616,7 @@ var Home = React.createClass({
 					this.parseNodeRegion(responseData);
 				})
 				.catch((error) => {
-					logger.custom('ERR: loadNodeRegion: ' + error);
+					logger.log('ERR: loadNodeRegion: ' + error);
 				})
 				.done();
 		}
@@ -803,7 +803,7 @@ var Home = React.createClass({
 			})
 			.catch((error) => {
 
-				logger.custom('ERR: fetchShuttleArrivalsByStop: ' + error + ' (stop: ' + closestStopNumber + ')');
+				logger.log('ERR: fetchShuttleArrivalsByStop: ' + error + ' (stop: ' + closestStopNumber + ')');
 
 				if (closestStopNumber == 0) {
 					this.setState({ closestStop1LoadFailed: true });

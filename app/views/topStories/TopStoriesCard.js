@@ -64,10 +64,10 @@ export default class TopStoriesCard extends CardComponent {
 			logger.error(error);
 			if (this.fetchErrorLimit > this.fetchErrorCounter) {
 				this.fetchErrorCounter++;
-				logger.custom('ERR: fetchTopStories: refreshing again in ' + this.fetchErrorInterval/1000 + ' sec');
+				logger.log('ERR: fetchTopStories: refreshing again in ' + this.fetchErrorInterval/1000 + ' sec');
 				this.refreshTimer = setTimeout( () => { this.refresh() }, this.fetchErrorInterval);
 			} else {
-				logger.custom('ERR: fetchTopStories: Limit exceeded - max limit:' + this.fetchErrorLimit);
+				logger.log('ERR: fetchTopStories: Limit exceeded - max limit:' + this.fetchErrorLimit);
 				this.setState({ fetchErrorLimitReached: true });
 			}
 		})
