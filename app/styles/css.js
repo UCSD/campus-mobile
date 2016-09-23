@@ -232,6 +232,13 @@ var css = StyleSheet.create({
 		news_list_image: { width: 130 * prm, height: 87 * prm, marginRight: 4, marginLeft: 10, borderWidth: 1, borderColor: '#CCC' },
 	events_more: { alignItems: 'center', justifyContent: 'center', width: maxCardWidthWithPadding, paddingHorizontal: 4, paddingTop: 8, paddingBottom: 4 },
 	events_more_label: { fontSize: 20, color: ucsdblue, fontWeight: '300' },
+	events_card_container: { flex: 1, flexDirection: 'row', padding: 14, borderBottomWidth: 1, borderBottomColor: '#EEE', alignItems: 'center' },
+		events_card_title_container: { flexDirection: 'row', alignItems: 'center', width: maxCardWidth, padding: 8, borderBottomWidth: 1, borderBottomColor: '#DDD' },
+			events_card_title: { flex:1, flexWrap: 'wrap', fontSize: 17 * prm, color: '#000', fontWeight: '400' },
+		events_card_left_container: { flex: 10 },
+			events_card_desc: { flexWrap: 'wrap', fontSize: 14 * prm, color: '#666', paddingTop: 8 * prm },
+			events_card_postdate: { fontSize: 11 * prm, color: ucsdblue, paddingTop: 8 * prm },
+		events_card_image: { flex: 1, width: 130 * prm, height: 73 * prm, marginRight: 4, marginLeft: 10, borderWidth: 1, borderColor: '#CCC'},
 
 	// WELCOME WEEK STYLE
 	welcome_listview: { marginTop: welcome_lv_marginTop },

@@ -7,7 +7,8 @@ import {
 	Text,
 	TouchableHighlight,
 } from 'react-native';
-import EventItem from './EventItem'
+import EventItem from './EventItem';
+import EventListView from './EventListView';
 
 var css = require('../../styles/css');
 
@@ -37,21 +38,16 @@ export default class EventList extends React.Component {
 					dataSource={eventDatasource}
 					renderRow={ (row) => <EventItem data={row} navigator={this.props.navigator} /> }
 				/>
-
-				{this.state.eventsRenderAllRows ? (
-					<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.setState({eventsRenderAllRows: false}) }>
-						<View style={css.events_more}>
-							<Text style={css.events_more_label}>Show Less Events &#9650;</Text>
-						</View>
-					</TouchableHighlight>
-				) : (
-					<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.setState({eventsRenderAllRows: true}) }>
-						<View style={css.events_more}>
-							<Text style={css.events_more_label}>Show More Events &#9660;</Text>
-						</View>
-					</TouchableHighlight>
-				)}
+				<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoEventListView() }>
+					<View style={css.events_more}>
+						<Text style={css.events_more_label}>View More Events</Text>
+					</View>
+				</TouchableHighlight>
 			</View>
 		);
+	}
+
+	gotoEventListView() {
+		this.props.navigator.push({ id: 'EventListView', title: 'Events', name: 'Events', component: EventListView, data: this.props.data });
 	}
 }

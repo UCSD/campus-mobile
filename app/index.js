@@ -24,6 +24,9 @@ var AppSettings = 			require('./AppSettings'),
 	WebWrapper = 			require('./views/WebWrapper');
 
 import WelcomeWeekView from './views/welcomeWeek/WelcomeWeekView';
+import EventListView from './views/events/EventListView';
+import TopStoriesListView from './views/topStories/TopStoriesListView';
+
 
 // NAV
 import NavigationBarWithRouteMapper from './views/NavigationBarWithRouteMapper';
@@ -202,6 +205,8 @@ var nowucsandiego = React.createClass({
 			case 'EventDetail': 		return (<EventDetail route={route} navigator={navigator} />);
 			case 'WebWrapper': 			return (<WebWrapper route={route} navigator={navigator} />);
 			case 'WelcomeWeekView': 	return (<WelcomeWeekView route={route} navigator={navigator} />);
+			case 'EventListView': 	return (<EventListView route={route} navigator={navigator} />);
+			case 'TopStoriesListView': 	return (<TopStoriesListView route={route} navigator={navigator} />);
 			default: 					return (<Home route={route} navigator={navigator} new_timeout={this.newTimeout} do_timeout={this.doTimeout}/>);
 		}
 	},

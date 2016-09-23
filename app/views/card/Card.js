@@ -14,9 +14,13 @@ export default class Card extends React.Component {
     return;
   }
 
+  setNativeProps(props) {
+    this._card.setNativeProps(props);
+  }
+
   render() {
 	return (
-		<View style={css.card_main}>
+		<View style={css.card_main} ref={(i) => this._card = i}>
 			<CardHeader title={this.props.title} />
 			{this.props.children}
 		</View>

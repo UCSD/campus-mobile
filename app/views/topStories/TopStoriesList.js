@@ -7,6 +7,7 @@ import {
 	TouchableHighlight,
 } from 'react-native';
 import TopStoriesItem from './TopStoriesItem';
+import TopStoriesListView from './TopStoriesListView';
 
 var css = require('../../styles/css');
 
@@ -45,24 +46,16 @@ export default class TopStoriesList extends React.Component {
 					dataSource={topStoriesDatasource}
 					renderRow={this._renderRow}
 					style={css.wf_listview} />
-
-					{this.state.topStoriesRenderAllRows === false ? (
-						<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.setState({topStoriesRenderAllRows: true}) }>
-							<View style={css.events_more}>
-								<Text style={css.events_more_label}>Show More News &#9660;</Text>
-							</View>
-						</TouchableHighlight>
-					) : null }
-
-					{this.state.topStoriesRenderAllRows === true ? (
-					<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.setState({topStoriesRenderAllRows: false}) }>
-					
+				<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoTopStoriesListView() }>
 					<View style={css.events_more}>
-						<Text style={css.events_more_label}>Show Less News &#9650;</Text>
+						<Text style={css.events_more_label}>View More News</Text>
 					</View>
 				</TouchableHighlight>
-				) : null }
 			</View>
 		);
+	}
+
+	gotoTopStoriesListView() {
+		this.props.navigator.push({ id: 'TopStoriesListView', title: 'News', name: 'News', component: TopStoriesListView, data: this.props.data });
 	}
 }
