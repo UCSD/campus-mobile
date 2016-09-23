@@ -40,7 +40,7 @@ export default class EventList extends React.Component {
 				/>
 				<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoEventListView() }>
 					<View style={css.events_more}>
-						<Text style={css.events_more_label}>View More Events</Text>
+						<Text style={css.events_more_label}>View All Events</Text>
 					</View>
 				</TouchableHighlight>
 			</View>

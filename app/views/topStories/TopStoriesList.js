@@ -48,7 +48,7 @@ export default class TopStoriesList extends React.Component {
 					style={css.wf_listview} />
 				<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoTopStoriesListView() }>
 					<View style={css.events_more}>
-						<Text style={css.events_more_label}>View More News</Text>
+						<Text style={css.events_more_label}>View All News</Text>
 					</View>
 				</TouchableHighlight>
 			</View>
