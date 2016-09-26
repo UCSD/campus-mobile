@@ -53,6 +53,10 @@ var TopStoriesDetail = React.createClass({
 		}
 	},
 
+	componentDidMount: function() {
+		logger.ga('View Loaded: TopStories Detail: ' + this.props.route.topStoriesData.title );
+	},
+
 	render: function() {
 		return this.renderScene();
 	},

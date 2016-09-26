@@ -93,6 +93,10 @@ var DiningList = React.createClass({
 
 	},
 
+	componentDidMount: function() {
+		logger.ga('View Loaded: DiningList');
+	},
+
 	render: function() {
 		return this.renderScene();
 	},

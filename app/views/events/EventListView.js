@@ -13,6 +13,7 @@ import EventItem from './EventItem';
 import EventItemCard from './EventItemCard';
 
 var css = require('../../styles/css');
+var logger = require('../../util/logger');
 
 export default class EventListView extends React.Component {
 
@@ -23,6 +24,8 @@ export default class EventListView extends React.Component {
 	}
 
 	componentDidMount() {
+		logger.ga('View Loaded: EventList');
+
 		InteractionManager.runAfterInteractions(() => {
 			this.setState({loaded: true})
 		});
