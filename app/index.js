@@ -19,6 +19,8 @@ var AppSettings = 			require('./AppSettings'),
 	Home = 					require('./views/Home'),
 	ShuttleStop = 			require('./views/ShuttleStop'),
 	SurfReport = 			require('./views/weather/SurfReport'),
+	DiningList = 			require('./views/DiningList'),
+	DiningDetail = 			require('./views/DiningDetail'),
 	TopStoriesDetail = 		require('./views/topStories/TopStoriesDetail'),
 	EventDetail = 			require('./views/events/EventDetail'),
 	WebWrapper = 			require('./views/WebWrapper');
@@ -201,11 +203,13 @@ var nowucsandiego = React.createClass({
 			case 'Home': 				return (<Home route={route} navigator={navigator} new_timeout={this.newTimeout} do_timeout={this.doTimeout}/>);
 			case 'ShuttleStop': 		return (<ShuttleStop route={route} navigator={navigator} />);
 			case 'SurfReport': 			return (<SurfReport route={route} navigator={navigator} />);
+			case 'DiningList': 			return (<DiningList route={route} navigator={navigator} />);
+			case 'DiningDetail': 		return (<DiningDetail route={route} navigator={navigator} />);
 			case 'TopStoriesDetail': 	return (<TopStoriesDetail route={route} navigator={navigator} />);
 			case 'EventDetail': 		return (<EventDetail route={route} navigator={navigator} />);
 			case 'WebWrapper': 			return (<WebWrapper route={route} navigator={navigator} />);
 			case 'WelcomeWeekView': 	return (<WelcomeWeekView route={route} navigator={navigator} />);
-			case 'EventListView': 	return (<EventListView route={route} navigator={navigator} />);
+			case 'EventListView': 		return (<EventListView route={route} navigator={navigator} />);
 			case 'TopStoriesListView': 	return (<TopStoriesListView route={route} navigator={navigator} />);
 			default: 					return (<Home route={route} navigator={navigator} new_timeout={this.newTimeout} do_timeout={this.doTimeout}/>);
 		}
