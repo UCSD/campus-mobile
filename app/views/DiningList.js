@@ -79,8 +79,8 @@ var DiningList = React.createClass({
 		// TODO: Rework based on open hours once the feed is improved
 		var currentHour = general.getTimestamp('H');
 		var currentMinute = general.getTimestamp('M');
-		
-		if ( (currentHour < 10) || (currentHour === 10 && currentMinute <= 30) ) {
+
+		if ( (currentHour < 10) || (currentHour == 10 && currentMinute <= 30) ) {
 			// Breakfast <= 10:30 AM
 			this.setMealFilter('breakfast');
 		} else if (currentHour <= 16) {
