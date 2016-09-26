@@ -19,6 +19,11 @@ var DiningDetail = require('./DiningDetail');
 
 var DiningList = React.createClass({
 	
+	mealFilter: null,
+	vegetarianFilterEnabled: false,
+	veganFilterEnabled: false,
+	glutenfreeFilterEnabled: false,
+
 	getInitialState: function() {
 
 		var breakfastItems = [],
@@ -57,8 +62,6 @@ var DiningList = React.createClass({
 			menuItemsBreakfast: breakfastItems,
 			menuItemsLunch: lunchItems,
 			menuItemsDinner: dinnerItems,
-			
-			mealFilter: null,
 
 			currentCoords: this.props.route.currentCoords,
 		};
@@ -80,16 +83,27 @@ var DiningList = React.createClass({
 		var currentHour = general.getTimestamp('H');
 		var currentMinute = general.getTimestamp('M');
 
+		var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+		var dsClone;
+
 		if ( (currentHour < 10) || (currentHour == 10 && currentMinute <= 30) ) {
 			// Breakfast <= 10:30 AM
-			this.setMealFilter('breakfast');
+			this.mealFilter = 'breakfast';
+			dsClone = this.state.menuItemsBreakfast;
 		} else if (currentHour <= 16) {
 			// Lunch 10:31 AM - 4:59 PM
-			this.setMealFilter('lunch');
+			this.mealFilter = 'lunch';
+			dsClone = this.state.menuItemsLunch;
 		} else {
 			// Dinner 5:00pm - 12:00AM
-			this.setMealFilter('dinner');
+			this.mealFilter = 'dinner';
+			dsClone = this.state.menuItemsDinner;
 		}
+
+		this.setState({
+			menuItemsActive: ds.cloneWithRows( dsClone ),
+			menuItemsActiveCount: dsClone.length,
+		});
 
 	},
 
@@ -132,21 +146,33 @@ var DiningList = React.createClass({
 
 						<View style={css.dl_market_filters_foodtype}>
 							<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.setTypeFilter('VT') }>
-								<Text style={css.dining_card_filter_button}>Vegetarian</Text>
+								{this.vegetarianFilterEnabled ? (
+									<Text style={css.dining_card_filter_button_active}>Vegetarian</Text>
+								) : (
+									<Text style={css.dining_card_filter_button}>Vegetarian</Text>
+								)}
 							</TouchableHighlight>
 
 							<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.setTypeFilter('VG') }>
-								<Text style={css.dining_card_filter_button}>Vegan</Text>
+								{this.veganFilterEnabled ? (
+									<Text style={css.dining_card_filter_button_active}>Vegan</Text>
+								) : (
+									<Text style={css.dining_card_filter_button}>Vegan</Text>
+								)}
 							</TouchableHighlight>
-
+							
 							<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.setTypeFilter('GF') }>
-								<Text style={css.dining_card_filter_button}>Gluten-free</Text>
+								{this.glutenfreeFilterEnabled ? (
+									<Text style={css.dining_card_filter_button_active}>Gluten-free</Text>
+								) : (
+									<Text style={css.dining_card_filter_button}>Gluten-free</Text>
+								)}
 							</TouchableHighlight>
 						</View>
 
 
 						<View style={css.dl_market_filters_mealtype}>
-							{this.state.mealFilter === 'breakfast' ? (
+							{this.mealFilter === 'breakfast' ? (
 								<TouchableHighlight style={css.dl_meal_button} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { this.setMealFilter('breakfast')}}>
 									<View style={css.dl_meal_button}>
 										<View style={css.dl_mealtype_circle_active}></View>
@@ -161,7 +187,7 @@ var DiningList = React.createClass({
 									</View>
 								</TouchableHighlight>
 							)}
-							{this.state.mealFilter === 'lunch' ? (
+							{this.mealFilter === 'lunch' ? (
 								<TouchableHighlight style={css.dl_meal_button} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { this.setMealFilter('lunch')}}>
 									<View style={css.dl_meal_button}>
 										<View style={css.dl_mealtype_circle_active}></View>
@@ -176,7 +202,7 @@ var DiningList = React.createClass({
 									</View>
 								</TouchableHighlight>
 							)}
-							{this.state.mealFilter === 'dinner' ? (
+							{this.mealFilter === 'dinner' ? (
 								<TouchableHighlight style={css.dl_meal_button} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { this.setMealFilter('dinner')}}>
 									<View style={css.dl_meal_button}>
 										<View style={css.dl_mealtype_circle_active}></View>
@@ -228,31 +254,41 @@ var DiningList = React.createClass({
 	},
 
 	setMealFilter: function(meal) {
-
-		var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-		var dsClone;
-
-		if (meal === 'breakfast') {
-			dsClone = this.state.menuItemsBreakfast;
-		} else if (meal === 'lunch') {
-			dsClone = this.state.menuItemsLunch;
-		} else {
-			dsClone = this.state.menuItemsDinner;
-		}
-		this.setState({
-			mealFilter: meal,
-			menuItemsActive: ds.cloneWithRows( dsClone ),
-			menuItemsActiveCount: dsClone.length,
-		});
+		this.mealFilter = meal;
+		this.parseMenuFilters();
 	},
 
 	setTypeFilter: function(type) {
+		if (type === 'VT') {
+			if (this.vegetarianFilterEnabled) {
+				this.vegetarianFilterEnabled = false;
+			} else {
+				this.vegetarianFilterEnabled = true;
+			}
+		} else if (type === 'VG') {
+			if (this.veganFilterEnabled) {
+				this.veganFilterEnabled = false;
+			} else {
+				this.veganFilterEnabled = true;
+			}
+		} else if (type === 'GF') {
+			if (this.glutenfreeFilterEnabled) {
+				this.glutenfreeFilterEnabled = false;
+			} else {
+				this.glutenfreeFilterEnabled = true;
+			}
+		}
+		this.parseMenuFilters();
+	},
+
+	parseMenuFilters: function() {
+
 		var menuItemsArray = [],
 			menuItemsActivated = [];
 
-		if (this.state.mealFilter === 'breakfast') {
+		if (this.mealFilter === 'breakfast') {
 			menuItemsArray = this.state.menuItemsBreakfast;
-		} else if (this.state.mealFilter === 'lunch') {
+		} else if (this.mealFilter === 'lunch') {
 			menuItemsArray = this.state.menuItemsLunch;
 		} else {
 			menuItemsArray = this.state.menuItemsDinner;
@@ -260,15 +296,51 @@ var DiningList = React.createClass({
 
 		if (!menuItemsArray) {
 			menuItemsArray = [];
-		}
-
-		for (var i = 0; menuItemsArray.length > i; i++) {
-			if (menuItemsArray[i].tags.indexOf(type) >= 0) {
-				menuItemsActivated.push(menuItemsArray[i]);
+		} else if (this.vegetarianFilterEnabled || this.veganFilterEnabled || this.glutenfreeFilterEnabled) {
+			for (var i = 0; menuItemsArray.length > i; i++) {
+				if (this.vegetarianFilterEnabled && this.veganFilterEnabled && this.glutenfreeFilterEnabled) {
+				   if (menuItemsArray[i].tags.indexOf('VT') >= 0 && menuItemsArray[i].tags.indexOf('VG') >= 0 && menuItemsArray[i].tags.indexOf('GF') >= 0) {
+						menuItemsActivated.push(menuItemsArray[i]);
+					}
+					continue;
+				}
+				if (this.vegetarianFilterEnabled && this.veganFilterEnabled) {
+					if (menuItemsArray[i].tags.indexOf('VT') >= 0 && menuItemsArray[i].tags.indexOf('VG') >= 0) {
+						menuItemsActivated.push(menuItemsArray[i]);
+					}
+					continue;
+				}
+				if (this.vegetarianFilterEnabled && this.glutenfreeFilterEnabled) {
+					if (menuItemsArray[i].tags.indexOf('VT') >= 0 && menuItemsArray[i].tags.indexOf('GF') >= 0) {
+						menuItemsActivated.push(menuItemsArray[i]);
+					}
+					continue;
+				}
+				if (this.veganFilterEnabled && this.glutenfreeFilterEnabled) {
+					if (menuItemsArray[i].tags.indexOf('VG') >= 0 && menuItemsArray[i].tags.indexOf('GF') >= 0) {
+						menuItemsActivated.push(menuItemsArray[i]);
+					}
+					continue;
+				}
+				if (this.vegetarianFilterEnabled && menuItemsArray[i].tags.indexOf('VT') >= 0) {
+					menuItemsActivated.push(menuItemsArray[i]);
+					continue;
+				}
+				if (this.veganFilterEnabled && menuItemsArray[i].tags.indexOf('VG') >= 0) {
+					menuItemsActivated.push(menuItemsArray[i]);
+					continue;
+				}
+				if (this.glutenfreeFilterEnabled && menuItemsArray[i].tags.indexOf('GF') >= 0) {
+					menuItemsActivated.push(menuItemsArray[i]);
+					continue;
+				}
 			}
+		} else {
+			menuItemsActivated = menuItemsArray;
 		}
 
 		var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+
 		this.setState({
 			menuItemsActive: ds.cloneWithRows( menuItemsActivated ),
 			menuItemsActiveCount: menuItemsActivated.length,
