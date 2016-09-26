@@ -53,6 +53,10 @@ var EventDetail = React.createClass({
 		}
 	},
 
+	componentDidMount: function() {
+		logger.ga('View Loaded: Event: ' +  this.props.route.eventData.EventTitle.replace('&amp;','&'));
+	},
+
 	render: function() {
 		return this.renderScene();
 	},

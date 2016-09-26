@@ -10,6 +10,7 @@ import TopStoriesItem from './TopStoriesItem';
 import TopStoriesListView from './TopStoriesListView';
 
 var css = require('../../styles/css');
+var logger = require('../../util/logger');
 
 export default class TopStoriesList extends React.Component {
 
@@ -21,6 +22,10 @@ export default class TopStoriesList extends React.Component {
 		};
 
 		this.datasource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+	}
+
+	componentDidMount() {
+		logger.ga('View Loaded: TopStoriesList' );
 	}
 
 	_renderRow = (row, sectionID, rowID) => {

@@ -64,7 +64,7 @@ export default class TopStoriesItem extends React.Component {
 		var storyDescriptionStr = this.getStoryDescription(data.description, data.title);
 
 		return (
-			<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoWebView(this.props.data.title, this.props.data.link)}>
+			<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoTopStoriesDetail(this.props.data)}>
 				<View style={css.card_main}>
 					<View style={css.events_card_title_container}>
 						<Text style={css.events_card_title}>{storyTitle}</Text>

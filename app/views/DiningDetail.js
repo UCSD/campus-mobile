@@ -31,6 +31,10 @@ var DiningDetail = React.createClass({
 		};
 	},
 
+	componentDidMount: function() {
+		logger.ga('View Loaded: Dining Detail' );
+	},
+
 	render: function() {
 		return this.renderScene();
 	},
