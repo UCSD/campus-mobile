@@ -18,7 +18,7 @@ module.exports = {
 	DINING_CARD_ENABLED: 		true,
 
 	/* APIS / ENDPOINTS */
-	WEATHER_API_URL: 			'https://e29re7itnc.execute-api.us-west-2.amazonaws.com/prod/forecast',
+	WEATHER_API_URL: 			'https://w3wyps9yje.execute-api.us-west-2.amazonaws.com/prod/forecast',
 	SURF_API_URL: 				'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/surffeed.json',
 	TOP_STORIES_API_URL: 		'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/allstories.json',
 	EVENTS_API_URL: 			'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/student_events.json',
