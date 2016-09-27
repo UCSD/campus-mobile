@@ -11,6 +11,7 @@ import {
 import Card from '../card/Card';
 import CardComponent from '../card/CardComponent';
 import ShuttleService from '../../services/shuttleService';
+import ShuttleOverview from './ShuttleOverview';
 
 var css = require('../../styles/css');
 var logger = require('../../util/logger');
@@ -31,7 +32,7 @@ export default class ShuttleCard extends CardComponent {
 			closestStop2Loaded: false,
 			closestStop1LoadFailed: false,
 			closestStop2LoadFailed: false,
-			shuttleData: null,
+			shuttleData: [],
 			defaultPosition: {
 				coords: { latitude: 32.88, longitude: -117.234 }
 			},
@@ -40,6 +41,12 @@ export default class ShuttleCard extends CardComponent {
 
 	componentDidMount() {
 		this.refresh();
+	}
+
+	componentWillReceiveProps(nextProps) {
+		if (nextProps.location !== this.props.location) {
+			this.refresh(); //refresh with new location
+		}
 	}
 
   refresh = () => {
@@ -54,7 +61,12 @@ export default class ShuttleCard extends CardComponent {
 	return (
 		<Card title='Shuttle' cardRefresh={this.refresh} isRefreshing={this.state.isRefreshing}>
       <View>
-        <Text>TEST</Text>
+				{this.state.closestStop1Loaded ? (
+					<ShuttleOverview stopData={this.shuttleClosestStops[0]} shuttleData={this.state.shuttleData[0]} />
+				) : null }
+				{this.state.closestStop2Loaded ? (
+					<ShuttleOverview stopData={this.shuttleClosestStops[1]} shuttleData={this.state.shuttleData[1]} />
+				) : null }
       </View>
 		</Card>
 	  );
