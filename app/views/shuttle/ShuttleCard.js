@@ -13,6 +13,7 @@ import Card from '../card/Card';
 import CardComponent from '../card/CardComponent';
 import ShuttleService from '../../services/shuttleService';
 import ShuttleOverview from './ShuttleOverview';
+import ShuttleStop from '../ShuttleStop';
 
 var css = require('../../styles/css');
 var logger = require('../../util/logger');
@@ -104,10 +105,10 @@ export default class ShuttleCard extends CardComponent {
 			<Card title='Shuttle' cardRefresh={this.refresh} isRefreshing={this.state.isRefreshing}>
 	      <View>
 					{this.state.closestStop1Loaded ? (
-						<ShuttleOverview stopData={this.shuttleClosestStops[0]} shuttleData={this.state.shuttleData[0]} />
+						<ShuttleOverview onPress={this.gotoShuttleStop} stopData={this.shuttleClosestStops[0]} shuttleData={this.state.shuttleData[0]} />
 					) : null }
 					{this.state.closestStop2Loaded ? (
-						<ShuttleOverview stopData={this.shuttleClosestStops[1]} shuttleData={this.state.shuttleData[1]} />
+						<ShuttleOverview onPress={this.gotoShuttleStop} stopData={this.shuttleClosestStops[1]} shuttleData={this.state.shuttleData[1]} />
 					) : null }
 	      </View>
 			</Card>

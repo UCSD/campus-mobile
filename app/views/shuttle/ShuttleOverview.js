@@ -17,7 +17,7 @@ export default class ShuttleOverview extends React.Component {
       return null;
     }
     return (
-      <TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoShuttleStop(this.props.stopData, this.props.shuttleData) }>
+      <TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => this.props.onPress(this.props.stopData, this.props.shuttleData) }>
         <View style={css.shuttle_card_row}>
           <View style={css.shuttle_card_row_top}>
             <View style={css.shuttle_card_rt_1}></View>
