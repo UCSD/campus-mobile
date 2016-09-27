@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.facebook.react.ReactApplication;
 import com.ivanwu.googleapiavailabilitybridge.ReactNativeGooglePlayServicesPackage;
+import com.microsoft.codepush.react.CodePush;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -19,6 +20,12 @@ import java.util.List;
 public class MainApplication extends Application implements ReactApplication {
 
   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
+
+    @Override
+    protected String getJSBundleFile() {
+      return CodePush.getJSBundleFile();
+    }
+
     @Override
     protected boolean getUseDeveloperSupport() {
       return BuildConfig.DEBUG;
@@ -29,6 +36,7 @@ public class MainApplication extends Application implements ReactApplication {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
             new ReactNativeGooglePlayServicesPackage(),
+            new CodePush(getResources().getString(R.string.reactNativeCodePush_androidDeploymentKey), getApplicationContext(), BuildConfig.DEBUG),
           new GoogleAnalyticsBridgePackage(),
           new ReactNativePermissionsPackage(),
           new MapsPackage()

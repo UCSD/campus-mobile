@@ -1,3 +1,4 @@
 <resources>
+    <string moduleConfig="true" name="reactNativeCodePush_androidDeploymentKey">_nHMKi3OJLlUaFAQaV-tXogjGFJX4156BLzTb</string>
 	<string name="app_name">now@ucsd</string>
 </resources>

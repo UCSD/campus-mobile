@@ -10,6 +10,7 @@
     "html-entities": "~1.2.0",
     "react": "~15.3.2",
     "react-native": "~0.34.0",
+    "react-native-code-push": "^1.14.6-beta",
     "react-native-google-analytics-bridge": "~3.0.0",
     "react-native-google-api-availability-bridge": "^1.1.4",
     "react-native-maps": "0.8.2",
