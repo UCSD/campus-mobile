@@ -53,8 +53,12 @@ export default class ShuttleCard extends CardComponent {
 					(nextProps.location.coords.latitude !== this.props.location.coords.latitude
 						|| nextProps.location.coords.longitude !== this.props.location.coords.longitude)
 				)) {
-			console.log(nextProps.location, this.props.location);
-			this.refreshWithLocation(nextProps.location); //refresh with new location
+
+			// do not attempt to do refresh location if we are currently in a refresh
+			if (!this.state.isRefreshing) {
+				logger.log(nextProps.location);
+				this.refreshWithLocation(nextProps.location); //refresh with new location
+			}
 		}
 	}
 
