@@ -45,13 +45,11 @@ var general = 			require('../util/general');
 var logger = 			require('../util/logger');
 var shuttle = 			require('../util/shuttle');
 
-// UCSD Nodes / Shuttles
+// UCSD Nodes
 var ucsd_nodes = 		require('../json/ucsd_nodes.json');
-var shuttle_routes = 	require('../json/shuttle_routes_master.json');
 
 // Views
 //if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
-var ShuttleStop = 		require('./ShuttleStop');
 var DiningList = 		require('./DiningList');
 var WebWrapper = 		require('./WebWrapper');
 
@@ -61,13 +59,10 @@ var nearbyCounter = 0;
 var Home = React.createClass({
 
 	mixins: [TimerMixin],
-	shuttleCardRefreshInterval: 1 * 60 * 1000,
 	permissionUpdateInterval: 1 * 65 * 1000,
 	regionRefreshInterval: 1 * 70 * 1000,
 	playInterval: 24 * 60 * 60 * 1000,
 
-	shuttleReloadAnim: new Animated.Value(0),
-	shuttleClosestStops: [{ dist: 100000000 },{ dist: 100000000 }],
 	diningDefaultResults: 3,
 	nearbyMaxResults: 5,
 	copyrightYear: new Date().getFullYear(),
@@ -84,10 +79,6 @@ var Home = React.createClass({
 			scrollEnabled: true,
 			diningDataLoaded: false,
 			diningRenderAllRows: false,
-			closestStop1Loaded: false,
-			closestStop2Loaded: false,
-			closestStop1LoadFailed: false,
-			closestStop2LoadFailed: false,
 			nearbyAnnotations: null,
 			nearbyLatDelta: .02,
 			nearbyLonDelta: .02,
@@ -96,7 +87,6 @@ var Home = React.createClass({
 			defaultPosition: {
 				coords: { latitude: 32.88, longitude: -117.234 }
 			},
-			shuttleData: null,
 			cacheMap: false,
 			loaded:false,
 			refreshing:false,
@@ -241,65 +231,6 @@ var Home = React.createClass({
 					{/* SPECIAL TOP BANNER */}
 					<TopBannerView navigator={this.props.navigator}/>
 
-					{/* SHUTTLE CARD */}
-					{AppSettings.SHUTTLE_CARD_ENABLED ? (
-						<View style={css.card_main}>
-							<View style={css.card_title_container}>
-								<Text style={css.card_title}>Shuttle Routes</Text>
-								<View style={css.shuttle_card_refresh_container}>
-									<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.refreshShuttleCard('manual') }>
-										<Animated.Image style={[css.shuttle_card_refresh, { transform: [{ rotate: this.shuttleReloadAnim.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '360deg']})}]}]} source={require('../assets/img/icon_refresh_grey.png')} />
-									</TouchableHighlight>
-								</View>
-							</View>
-
-							{this.state.closestStop1Loaded ? (
-								<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoShuttleStop(this.shuttleClosestStops[0], this.state.shuttleData) }>
-									<View style={css.shuttle_card_row}>
-										<View style={css.shuttle_card_row_top}>
-											<View style={css.shuttle_card_rt_1}></View>
-											<View style={[css.shuttle_card_rt_2, { backgroundColor: this.shuttleClosestStops[0].routeColor, borderColor: this.shuttleClosestStops[0].routeColor }]}><Text style={css.shuttle_card_rt_2_label}>{this.shuttleClosestStops[0].routeShortName}</Text></View>
-											<View style={css.shuttle_card_rt_3}><Text style={css.shuttle_card_rt_3_label}>@</Text></View>
-											<View style={css.shuttle_card_rt_4}><Text style={css.shuttle_card_rt_4_label} numberOfLines={3}>{this.shuttleClosestStops[0].stopName}</Text></View>
-											<View style={css.shuttle_card_rt_5}></View>
-										</View>
-										<View style={css.shuttle_card_row_bot}>
-											<Text style={css.shuttle_card_row_arriving}><Text style={css.grey}>Arriving in: </Text>{this.shuttleClosestStops[0].etaMinutes}</Text>
-										</View>
-									</View>
-								</TouchableHighlight>
-							) : null }
-
-							{this.state.closestStop2Loaded ? (
-								<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoShuttleStop(this.shuttleClosestStops[1], this.state.shuttleData) }>
-									<View style={[css.shuttle_card_row, css.shuttle_card_row_border]}>
-										<View style={css.shuttle_card_row_top}>
-											<View style={css.shuttle_card_rt_1}></View>
-											<View style={[css.shuttle_card_rt_2, { backgroundColor: this.shuttleClosestStops[1].routeColor, borderColor: this.shuttleClosestStops[1].routeColor }]}><Text style={css.shuttle_card_rt_2_label}>{this.shuttleClosestStops[1].routeShortName}</Text></View>
-											<View style={css.shuttle_card_rt_3}><Text style={css.shuttle_card_rt_3_label}>@</Text></View>
-											<View style={css.shuttle_card_rt_4}><Text style={css.shuttle_card_rt_4_label} numberOfLines={3}>{this.shuttleClosestStops[1].stopName}</Text></View>
-											<View style={css.shuttle_card_rt_5}></View>
-										</View>
-										<View style={css.shuttle_card_row_bot}>
-											<Text style={css.shuttle_card_row_arriving}><Text style={css.grey}>Arriving in: </Text>{this.shuttleClosestStops[1].etaMinutes}</Text>
-										</View>
-									</View>
-								</TouchableHighlight>
-							) : null }
-
-							{!this.state.closestStop1Loaded && !this.state.closestStop2Loaded ? (
-								<View style={[css.shuttle_card_row_center, css.shuttle_card_loader]}>
-									{this.state.locationPermission === 'authorized' ?
-										(<ActivityIndicator style={css.shuttle_card_aa} size="large" />):
-										(<Text>Unable to fetch shuttle data without location permissions. </Text>)
-									}
-								</View>
-							) : null }
-
-
-						</View>
-					) : null }
-
 					{/* DINING CARD */}
 					{AppSettings.DINING_CARD_ENABLED ? (
 						<View>
@@ -327,7 +258,7 @@ var Home = React.createClass({
 						</View>
 					) : null }
 
-					{/* EVENTS CARD & TOP STORIES CARD & WEATHER CARD */}
+					{/* SHUTTLE_CARD & EVENTS CARD & TOP STORIES CARD & WEATHER CARD */}
 					{ this.getCards() }
 
 					{/* NEARBY CARD */}
@@ -431,28 +362,21 @@ var Home = React.createClass({
 			refreshType = 'manual';
 		}
 
+		if (AppSettings.SHUTTLE_CARD_ENABLED ) {
+			// if we don't have location permissions, try to get them
+			if(this.state.locationPermission !== 'authorized') {
+				this.getLocationPermission();
+			}
+		}
+
 		// Use default location (UCSD) if location permissions disabled
-		this.refreshShuttleCard(refreshType);
 		this.refreshNearbyCard();
 		this.refreshDiningCard();
 
 		// Refresh broken out cards
-		// Top Stories, Events, Weather
+		// Shuttle, Top Stories, Events, Weather
 		if (this.refs.cards) {
 			this.refs.cards.forEach(c => c.refresh());
-		}
-	},
-
-	refreshShuttleCard: function(refreshType) {
-		if (AppSettings.SHUTTLE_CARD_ENABLED ) {
-			// Refresh normally
-			if(this.state.locationPermission === 'authorized') {
-				this.findClosestShuttleStops(refreshType);
-			}
-			// Try to get location permission
-			else {
-				this.getLocationPermission();
-			}
 		}
 	},
 
@@ -723,132 +647,6 @@ var Home = React.createClass({
 				</View>
 			</TouchableHighlight>
 		);
-	},
-
-
-	// SHUTTLE_CARD
-	findClosestShuttleStops: function(refreshType) {
-
-		logger.log('Home: findClosestShuttleStops');
-
-		this.setState({
-			closestStop1LoadFailed: false,
-			closestStop2LoadFailed: false
-		});
-
-		this.shuttleClosestStops[0].dist = 1000000000;
-		this.shuttleClosestStops[1].dist = 1000000000;
-
-		for (var i = 0; shuttle_routes.length > i; i++) {
-
-			var shuttleRoute = shuttle_routes[i];
-
-			for (var n = 0; shuttleRoute.stops.length > n; n++) {
-
-				var shuttleRouteStop = shuttleRoute.stops[n];
-				var distanceFromStop = shuttle.getDistance(this.getCurrentPosition('lat'), this.getCurrentPosition('lon'), shuttleRouteStop.lat, shuttleRouteStop.lon);
-
-				// Rewrite this later using sortRef from shuttleDetail
-				if (distanceFromStop < this.shuttleClosestStops[0].dist) {
-					this.shuttleClosestStops[0].stopID = shuttleRouteStop.id;
-					this.shuttleClosestStops[0].stopName = shuttleRouteStop.name;
-					this.shuttleClosestStops[0].dist = distanceFromStop;
-					this.shuttleClosestStops[0].stopLat = shuttleRouteStop.lat;
-					this.shuttleClosestStops[0].stopLon = shuttleRouteStop.lon;
-				} else if (distanceFromStop < this.shuttleClosestStops[1].dist && this.shuttleClosestStops[0].stopID != shuttleRouteStop.id) {
-					this.shuttleClosestStops[1].stopID = shuttleRouteStop.id;
-					this.shuttleClosestStops[1].stopName = shuttleRouteStop.name;
-					this.shuttleClosestStops[1].dist = distanceFromStop;
-					this.shuttleClosestStops[1].stopLat = shuttleRouteStop.lat;
-					this.shuttleClosestStops[1].stopLon = shuttleRouteStop.lon;
-				}
-			}
-		}
-
-		this.fetchShuttleArrivalsByStop(0, this.shuttleClosestStops[0].stopID);
-		this.fetchShuttleArrivalsByStop(1, this.shuttleClosestStops[1].stopID);
-
-		if (refreshType == 'auto') {
-			//logger.log('Queueing Shuttle Card data refresh in ' + this.shuttleCardRefreshInterval/1000 + ' seconds');
-		} else {
-			// If manual refresh, reset the Auto refresh timer
-			this.clearTimeout(this.refreshShuttleCardTimer);
-		}
-		if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
-			//do nothing
-		}
-		else {
-			this.props.new_timeout("shuttle", () => { this.refreshShuttleCard('auto') }, this.shuttleCardRefreshInterval);
-		}
-	},
-
-	fetchShuttleArrivalsByStop: function(closestStopNumber, stopID) {
-		var SHUTTLE_STOPS_API_URL = AppSettings.SHUTTLE_STOPS_API_URL + stopID + '/arrivals';
-
-		fetch(SHUTTLE_STOPS_API_URL, {
-				method: 'GET',
-				headers: {
-					'Accept' : 'application/json',
-					'Cache-Control': 'no-cache'
-				}
-			})
-			.then((response) => response.json())
-			.then((responseData) => {
-				if (responseData.length > 0 && responseData[0].secondsToArrival) {
-					this.setState({shuttleData : responseData});
-					var closestShuttleETA = 999999;
-
-					for (var i = 0; responseData.length > i; i++) {
-
-						var shuttleStopArrival = responseData[i];
-
-						if (shuttleStopArrival.secondsToArrival < closestShuttleETA ) {
-							closestShuttleETA = shuttleStopArrival.secondsToArrival;
-
-							this.shuttleClosestStops[closestStopNumber].etaMinutes = shuttle.getMinutesETA(responseData[i].secondsToArrival);
-							this.shuttleClosestStops[closestStopNumber].etaSeconds = shuttleStopArrival.secondsToArrival;
-							this.shuttleClosestStops[closestStopNumber].routeID = shuttleStopArrival.route.id;
-							this.shuttleClosestStops[closestStopNumber].routeName = shuttleStopArrival.route.name;
-							this.shuttleClosestStops[closestStopNumber].routeShortName = shuttleStopArrival.route.shortName;
-							this.shuttleClosestStops[closestStopNumber].routeColor = shuttleStopArrival.route.color;
-						}
-					}
-
-					if (this.shuttleClosestStops[closestStopNumber].routeShortName == "Campus Loop") {
-						this.shuttleClosestStops[closestStopNumber].routeShortName = "L";
-					}
-					this.shuttleClosestStops[closestStopNumber].routeName = this.shuttleClosestStops[closestStopNumber].routeName.replace(/.*\) /, '').replace(/ - .*/, '');
-
-					if (closestStopNumber == 0) {
-						this.setState({ closestStop1Loaded: true });
-					} else if (closestStopNumber == 1) {
-						this.setState({ closestStop2Loaded: true });
-					}
-
-				} else {
-					throw('Invalid response');
-				}
-
-				general.stopReloadAnimation(this.shuttleReloadAnim);
-
-			})
-			.catch((error) => {
-
-				logger.log('ERR: fetchShuttleArrivalsByStop: ' + error + ' (stop: ' + closestStopNumber + ')');
-
-				if (closestStopNumber == 0) {
-					this.setState({ closestStop1LoadFailed: true });
-				} else if (closestStopNumber == 1) {
-					this.setState({ closestStop2LoadFailed: true });
-				}
-
-				general.stopReloadAnimation(this.shuttleReloadAnim);
-			})
-			.done();
-	},
-
-	gotoShuttleStop: function(stopData, shuttleData) {
-		this.props.navigator.push({ id: 'ShuttleStop', name: 'Shuttle Stop', component: ShuttleStop, title: 'Shuttle',stopData: stopData, currentPosition: this.state.currentPosition, shuttleData: shuttleData });
 	},
 
 	gotoNavigationApp: function(destinationLat, destinationLon) {
