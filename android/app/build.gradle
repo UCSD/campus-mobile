@@ -99,10 +99,10 @@ android {
     }
     signingConfigs {
         release {
-            storeFile file("ivan-key.keystore")
-            storePassword "mkLOL888!"
-            keyAlias "ivan"
-            keyPassword "mkLOL888!"
+            storeFile file(MYAPP_RELEASE_STORE_FILE)
+            storePassword MYAPP_RELEASE_STORE_PASSWORD
+            keyAlias MYAPP_RELEASE_KEY_ALIAS
+            keyPassword MYAPP_RELEASE_KEY_PASSWORD
         }
     }
     splits {
