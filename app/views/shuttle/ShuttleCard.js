@@ -175,7 +175,7 @@ export default class ShuttleCard extends CardComponent {
 			})
 			.catch((error) => {
 
-				logger.custom('ERR: fetchShuttleArrivalsByStop: ' + error + ' (stop: ' + closestStopNumber + ')');
+				logger.error('ERR: fetchShuttleArrivalsByStop: ' + error + ' (stop: ' + closestStopNumber + ')');
 
 				if (closestStopNumber == 0) {
 					this.setState({ closestStop1LoadFailed: true });

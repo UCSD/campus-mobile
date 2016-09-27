@@ -29,6 +29,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import EventCard from './events/EventCard'
 import TopStoriesCard from './topStories/TopStoriesCard';
 import WeatherCard from './weather/WeatherCard';
+import ShuttleCard from './shuttle/ShuttleCard';
 
 // Node Modules
 import TimerMixin from 'react-timer-mixin';
@@ -128,7 +129,7 @@ var Home = React.createClass({
 					this.refreshAllCards('auto');
 				}
 			});
-		}	
+		}
 	},
 
 	componentDidMount: function() {
@@ -168,7 +169,7 @@ var Home = React.createClass({
 		.then(response => {
 			//response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
 			this.setState({ locationPermission: response });
-			
+
 			if (response === "authorized") {
 				if(this.state.currentPosition === null ) {
 					this.geolocationWatchID = navigator.geolocation.watchPosition((currentPosition) => {
@@ -185,7 +186,7 @@ var Home = React.createClass({
 					// Load all non-broken-out Cars
 					this.refreshAllCards('auto');
 				}
-				
+
 			} else {
 				this._requestPermission();
 				//this._alertForLocationPermission();
@@ -288,7 +289,7 @@ var Home = React.createClass({
 
 							{!this.state.closestStop1Loaded && !this.state.closestStop2Loaded ? (
 								<View style={[css.shuttle_card_row_center, css.shuttle_card_loader]}>
-									{this.state.locationPermission === 'authorized' ? 
+									{this.state.locationPermission === 'authorized' ?
 										(<ActivityIndicator style={css.shuttle_card_aa} size="large" />):
 										(<Text>Unable to fetch shuttle data without location permissions. </Text>)
 									}
@@ -407,6 +408,9 @@ var Home = React.createClass({
 		var cardCounter = 0;
 		// Setup CARDS
 		// Keys need to be unique, there's probably a better solution, but this works for now
+		if (AppSettings.SHUTTLE_CARD_ENABLED) {
+			cards.push(<ShuttleCard navigator={this.props.navigator} location={this.state.currentPosition} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={this._generateUUID + ':' + cardCounter++} />);
+		}
 		if (AppSettings.WEATHER_CARD_ENABLED){
 			cards.push(<WeatherCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={this._generateUUID + ':' + cardCounter++}/>);
 		}
@@ -449,7 +453,7 @@ var Home = React.createClass({
 			else {
 				this.getLocationPermission();
 			}
-		}	
+		}
 	},
 
 	refreshNearbyCard: function() {
@@ -780,7 +784,7 @@ var Home = React.createClass({
 
 	fetchShuttleArrivalsByStop: function(closestStopNumber, stopID) {
 		var SHUTTLE_STOPS_API_URL = AppSettings.SHUTTLE_STOPS_API_URL + stopID + '/arrivals';
-		
+
 		fetch(SHUTTLE_STOPS_API_URL, {
 				method: 'GET',
 				headers: {
