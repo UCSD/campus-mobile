@@ -311,15 +311,6 @@ var Home = React.createClass({
 									<View style={css.dining_card}>
 										<View style={css.dining_card_map}>
 
-											{/*<MapView
-												style={css.destinationcard_map}
-												scrollEnabled={true}
-												zoomEnabled={true}
-												rotateEnabled={false}
-												showsUserLocation={true}
-												minDelta={this.nearbyMinDelta}
-												maxDelta={this.nearbyMaxDelta}
-												followUserLocation={true} />*/}
 										</View>
 
 										<View style={css.dc_locations}>
@@ -483,28 +474,33 @@ var Home = React.createClass({
 			.then((responseData) => {
 
 				responseData = responseData.GetDiningInfoResult;
+				var responseDataFinal = [];
+
+				// Push dining locations with food entries to final list
+				for (var i = 0; responseData.length > i; i++) {
+					if (responseData[i].menuItems.length > 0) {
+						responseDataFinal.push(responseData[i]);
+					}
+				}
 
 				// Calc distance from dining locations
-				for (var i = 0; responseData.length > i; i++) {
-					var distance = shuttle.getDistance(this.getCurrentPosition('lat'), this.getCurrentPosition('lon'), responseData[i].coords.lat, responseData[i].coords.lon);
+				for (var i = 0; responseDataFinal.length > i; i++) {
+					var distance = shuttle.getDistance(this.getCurrentPosition('lat'), this.getCurrentPosition('lon'), responseDataFinal[i].coords.lat, responseDataFinal[i].coords.lon);
 					if (distance) {
-						responseData[i].distance = distance;
+						responseDataFinal[i].distance = distance;
 					} else {
-						responseData[i].distance = 100000000;
+						responseDataFinal[i].distance = 100000000;
 					}
 				}
 
 				// Sort dining locations by distance
-				responseData.sort(this.sortNearbyMarkers);
-
-				// remove after 'View All' button functionality added
-				responseData.length = 3;
+				responseDataFinal.sort(this.sortNearbyMarkers);
 
 				var dsFull = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
 				this.setState({
-					diningData: responseData,
-					diningDataFull: dsFull.cloneWithRows(responseData),
+					diningData: responseDataFinal,
+					diningDataFull: dsFull.cloneWithRows(responseDataFinal),
 					diningDataLoaded: true
 				});
 			})
@@ -548,12 +544,15 @@ var Home = React.createClass({
 						<Text style={css.dc_locations_hours}>{diningHours}</Text>
 					</View>
 				</TouchableHighlight>
-				<TouchableHighlight style={css.dc_locations_row_right} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoNavigationApp(data.coords.lat, data.coords.lon) }>
-					<View style={css.dl_dir_traveltype_container}>
-						<Image style={css.dl_dir_icon} source={ require('../assets/img/icon_walk.png')} />
-						<Text style={css.dl_dir_eta}>Walk</Text>
-					</View>
-				</TouchableHighlight>
+
+				{data.coords.lat != 0 ? (
+					<TouchableHighlight style={css.dc_locations_row_right} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoNavigationApp(data.coords.lat, data.coords.lon) }>
+						<View style={css.dl_dir_traveltype_container}>
+							<Image style={css.dl_dir_icon} source={ require('../assets/img/icon_walk.png')} />
+							<Text style={css.dl_dir_eta}>Walk</Text>
+						</View>
+					</TouchableHighlight>
+				) : null }
 			</View>
 		);
 	},
