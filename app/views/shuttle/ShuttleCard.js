@@ -25,7 +25,9 @@ export default class ShuttleCard extends CardComponent {
   constructor(props) {
 		super(props);
 
+		this.shuttleCardRefreshInterval = 1 * 60 * 1000;
 		this.shuttleClosestStops = [{ dist: 100000000 },{ dist: 100000000 }];
+		this.refreshShuttleCardTimer = null;
 
     this.state = {
 			isRefreshing: false,
@@ -41,9 +43,11 @@ export default class ShuttleCard extends CardComponent {
   }
 
 	componentDidMount() {
+		console.log('mounted ' + new Date());
 		if (this.props.location){
 			this.refresh();
 		}
+		this.setupAutoRefresh();
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -57,22 +61,33 @@ export default class ShuttleCard extends CardComponent {
 			// do not attempt to do refresh location if we are currently in a refresh
 			if (!this.state.isRefreshing) {
 				logger.log(nextProps.location);
-				this.refreshWithLocation(nextProps.location); //refresh with new location
+				this.refreshWithLocation('manual', nextProps.location); //refresh with new location
 			}
 		}
 	}
 
-	refreshWithLocation = (location) => {
-		if (!this.state.isRefreshing) {
+	setupAutoRefresh = () => {
+		if (this.refreshShuttleCardTimer) {
+			clearInterval(this.refreshShuttleCardTimer);
+		}
+		// refresh the shuttle card occasionally
+		this.refreshShuttleCardTimer = setInterval(_ => {
+			console.log('auto refresh ' + new Date());
+			this.refreshWithLocation('auto', this.props.location);
+		}, this.shuttleCardRefreshInterval);
+	}
+
+	refreshWithLocation = (type, location) => {
+		if (!this.state.isRefreshing && location) {
 			this.setState({ isRefreshing: true });
 
-			this.findClosestShuttleStops('auto', location);
+			this.findClosestShuttleStops(type, location);
 		}
 	}
 
   refresh = () => {
 		if (this.props.location) {
-			this.refreshWithLocation(this.props.location);
+			this.refreshWithLocation('manual', this.props.location);
 		}
   }
 
@@ -141,19 +156,12 @@ export default class ShuttleCard extends CardComponent {
 		this.fetchShuttleArrivalsByStop(0, this.shuttleClosestStops[0].stopID);
 		this.fetchShuttleArrivalsByStop(1, this.shuttleClosestStops[1].stopID);
 
-		// TODO: refresh timer
-		// if (refreshType == 'auto') {
-		// 	//logger.log('Queueing Shuttle Card data refresh in ' + this.shuttleCardRefreshInterval/1000 + ' seconds');
-		// } else {
-		// 	// If manual refresh, reset the Auto refresh timer
-		// 	this.clearTimeout(this.refreshShuttleCardTimer);
-		// }
-		// if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
-		// 	//do nothing
-		// }
-		// else {
-		// 	this.props.new_timeout("shuttle", () => { this.refreshShuttleCard('auto') }, this.shuttleCardRefreshInterval);
-		// }
+		if (refreshType == 'auto') {
+			//logger.log('Queueing Shuttle Card data refresh in ' + this.shuttleCardRefreshInterval/1000 + ' seconds');
+		} else {
+			// If manual refresh, reset the Auto refresh timer
+			this.setupAutoRefresh();
+		}
 	}
 
 	fetchShuttleArrivalsByStop = (closestStopNumber, stopID) => {
