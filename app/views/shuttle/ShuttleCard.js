@@ -5,6 +5,7 @@ import {
 	View,
 	ListView,
 	Text,
+	ActivityIndicator,
 	TouchableHighlight,
 } from 'react-native';
 
@@ -40,40 +41,62 @@ export default class ShuttleCard extends CardComponent {
   }
 
 	componentDidMount() {
-		this.refresh();
+		if (this.props.location){
+			this.refresh();
+		}
 	}
 
 	componentWillReceiveProps(nextProps) {
-		if (nextProps.location !== this.props.location) {
-			this.refresh(); //refresh with new location
+		// if we have a new location, refresh using that location
+		if (!this.props.location
+				|| (nextProps.location &&
+					(nextProps.location.coords.latitude !== this.props.location.coords.latitude
+						|| nextProps.location.coords.longitude !== this.props.location.coords.longitude)
+				)) {
+			console.log(nextProps.location, this.props.location);
+			this.refreshWithLocation(nextProps.location); //refresh with new location
+		}
+	}
+
+	refreshWithLocation = (location) => {
+		if (!this.state.isRefreshing) {
+			this.setState({ isRefreshing: true });
+
+			this.findClosestShuttleStops('auto', location);
 		}
 	}
 
   refresh = () => {
-		if (!this.state.isRefreshing) {
-			this.setState({ isRefreshing: true });
-
-			this.findClosestShuttleStops('auto');
+		if (this.props.location) {
+			this.refreshWithLocation(this.props.location);
 		}
   }
 
   render() {
-	return (
-		<Card title='Shuttle' cardRefresh={this.refresh} isRefreshing={this.state.isRefreshing}>
-      <View>
-				{this.state.closestStop1Loaded ? (
-					<ShuttleOverview stopData={this.shuttleClosestStops[0]} shuttleData={this.state.shuttleData[0]} />
-				) : null }
-				{this.state.closestStop2Loaded ? (
-					<ShuttleOverview stopData={this.shuttleClosestStops[1]} shuttleData={this.state.shuttleData[1]} />
-				) : null }
-      </View>
-		</Card>
+		if (!this.state.closestStop1Loaded && !this.state.closestStop2Loaded)  {
+			return (
+				<View style={[css.shuttle_card_row_center, css.shuttle_card_loader]}>
+					<ActivityIndicator style={css.shuttle_card_aa} size="large" />
+				</View>
+			)
+		}
+
+		return (
+			<Card title='Shuttle' cardRefresh={this.refresh} isRefreshing={this.state.isRefreshing}>
+	      <View>
+					{this.state.closestStop1Loaded ? (
+						<ShuttleOverview stopData={this.shuttleClosestStops[0]} shuttleData={this.state.shuttleData[0]} />
+					) : null }
+					{this.state.closestStop2Loaded ? (
+						<ShuttleOverview stopData={this.shuttleClosestStops[1]} shuttleData={this.state.shuttleData[1]} />
+					) : null }
+	      </View>
+			</Card>
 	  );
 	}
 
 	// SHUTTLE_CARD
-	findClosestShuttleStops = (refreshType) => {
+	findClosestShuttleStops = (refreshType, location) => {
 
 		logger.log('Home: findClosestShuttleStops');
 
@@ -92,7 +115,7 @@ export default class ShuttleCard extends CardComponent {
 			for (var n = 0; shuttleRoute.stops.length > n; n++) {
 
 				var shuttleRouteStop = shuttleRoute.stops[n];
-				var distanceFromStop = shuttle.getDistance(this.getCurrentPosition('lat'), this.getCurrentPosition('lon'), shuttleRouteStop.lat, shuttleRouteStop.lon);
+				var distanceFromStop = shuttle.getDistance(location.coords.latitude, location.coords.longitude, shuttleRouteStop.lat, shuttleRouteStop.lon);
 
 				// Rewrite this later using sortRef from shuttleDetail
 				if (distanceFromStop < this.shuttleClosestStops[0].dist) {
@@ -127,22 +150,6 @@ export default class ShuttleCard extends CardComponent {
 		// else {
 		// 	this.props.new_timeout("shuttle", () => { this.refreshShuttleCard('auto') }, this.shuttleCardRefreshInterval);
 		// }
-	}
-
-	getCurrentPosition = (type) => {
-		if (type === 'lat') {
-			if (this.props.location) {
-				return this.props.location.coords.latitude;
-			} else {
-				return this.state.defaultPosition.coords.latitude;
-			}
-		} else if (type === 'lon') {
-			if (this.props.location) {
-				return this.props.location.coords.longitude;
-			} else {
-				return this.state.defaultPosition.coords.longitude;
-			}
-		}
 	}
 
 	fetchShuttleArrivalsByStop = (closestStopNumber, stopID) => {

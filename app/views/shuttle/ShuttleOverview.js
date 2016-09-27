@@ -13,7 +13,6 @@ var logger = require('../../util/logger');
 // overview of a specific shuttle route
 export default class ShuttleOverview extends React.Component {
   render() {
-    console.log(this.props.stopData);
     if (!this.props.stopData) {
       return null;
     }
