@@ -13,7 +13,7 @@
     "react-native-google-analytics-bridge": "3.0.0",
     "react-native-google-api-availability-bridge": "1.1.4",
     "react-native-maps": "0.8.2",
-    "react-native-permissions": "0.2.4",
+    "react-native-permissions": "0.2.5",
     "react-native-vector-icons": "2.0.3",
     "react-timer-mixin": "0.13.3"
   }
