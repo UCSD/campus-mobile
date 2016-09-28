@@ -140,5 +140,15 @@ module.exports = {
 	// Generates random color hex
 	getRandomColor: function() {
 		return '#' + ("000000" + Math.random().toString(16).slice(2, 8).toUpperCase()).slice(-6);
+	},
+	
+	sortNearbyMarkers: function(a, b) {
+		if (a.distance < b.distance) {
+			return -1;
+		} else if (a.distance > b.distance) {
+			return 1;
+		} else {
+			return 0;
+		}
 	}
 };
