@@ -8,7 +8,6 @@
  */
 
 #import "AppDelegate.h"
-#import "CodePush.h"
 #include <asl.h>
 #import "RCTLog.h"
 #import "RCTUtils.h"
