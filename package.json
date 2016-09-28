@@ -1,20 +1,20 @@
 {
   "name": "nowucsandiego",
-  "version": "2.0.0",
+  "version": "2.2",
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start"
   },
   "dependencies": {
-    "dateformat": "~1.0.12",
-    "html-entities": "~1.2.0",
-    "react": "~15.3.2",
-    "react-native": "~0.34.0",
-    "react-native-google-analytics-bridge": "~3.0.0",
-    "react-native-google-api-availability-bridge": "^1.1.4",
+    "dateformat": "1.0.12",
+    "html-entities": "1.2.0",
+    "react": "15.3.2",
+    "react-native": "0.34.0",
+    "react-native-google-analytics-bridge": "3.0.0",
+    "react-native-google-api-availability-bridge": "1.1.4",
     "react-native-maps": "0.8.2",
     "react-native-permissions": "0.2.4",
-    "react-native-vector-icons": "^2.0.3",
-    "react-timer-mixin": "~0.13.3"
+    "react-native-vector-icons": "2.0.3",
+    "react-timer-mixin": "0.13.3"
   }
 }
