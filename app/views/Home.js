@@ -23,18 +23,17 @@ import {
 import TopBannerView from './banner/TopBannerView';
 import WelcomeModal from './WelcomeModal';
 import NavigationBarWithRouteMapper from './NavigationBarWithRouteMapper';
-import Icon from 'react-native-vector-icons/FontAwesome';
 
 // Cards
 import EventCard from './events/EventCard'
 import TopStoriesCard from './topStories/TopStoriesCard';
 import WeatherCard from './weather/WeatherCard';
 import ShuttleCard from './shuttle/ShuttleCard';
+import NearbyCard from './nearby/NearbyCard';
 
 // Node Modules
 import TimerMixin from 'react-timer-mixin';
 
-var MapView = 			require('react-native-maps');
 const Permissions = 	require('react-native-permissions');
 const GoogleAPIAvailability = 	require('react-native-google-api-availability-bridge');
 
@@ -45,43 +44,28 @@ var general = 			require('../util/general');
 var logger = 			require('../util/logger');
 var shuttle = 			require('../util/shuttle');
 
-// UCSD Nodes
-var ucsd_nodes = 		require('../json/ucsd_nodes.json');
-
 // Views
 //if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
 var DiningList = 		require('./DiningList');
 var WebWrapper = 		require('./WebWrapper');
-
-var fiveRandomColors = general.getRandomColorArray(5);
-var nearbyCounter = 0;
 
 var Home = React.createClass({
 
 	mixins: [TimerMixin],
 	permissionUpdateInterval: 1 * 65 * 1000,
 	regionRefreshInterval: 1 * 70 * 1000,
-	playInterval: 24 * 60 * 60 * 1000,
-
 	diningDefaultResults: 3,
-	nearbyMaxResults: 5,
 	copyrightYear: new Date().getFullYear(),
-	nodePreviousLat: null,
-	nodePreviousLon: null,
 	geolocationWatchID: null,
 
 	getInitialState: function() {
 		return {
 			initialLoad: true,
-			nearbyMarkersLoaded: false,
 			nearbyLastRefresh: null,
 			specialEventsCardEnabled: true,
 			scrollEnabled: true,
 			diningDataLoaded: false,
 			diningRenderAllRows: false,
-			nearbyAnnotations: null,
-			nearbyLatDelta: .02,
-			nearbyLonDelta: .02,
 			locationPermission: 'undetermined',
 			currentPosition: null,
 			defaultPosition: {
@@ -150,7 +134,6 @@ var Home = React.createClass({
 				this.setState({updatedGoogle: false})
 			}
 		});
-		this.props.new_timeout("play", () => { this.updateGooglePlay() }, this.playInterval);
 	},
 
 	getLocationPermission: function() {
@@ -212,8 +195,6 @@ var Home = React.createClass({
 	},
 
 	renderScene: function(route, navigator, index, navState) {
-		nearbyCounter = 0;
-
 		return (
 			<View style={css.main_container}>
 				<ScrollView contentContainerStyle={css.scroll_main} refreshControl={
@@ -262,61 +243,7 @@ var Home = React.createClass({
 					{ this.getCards() }
 
 					{/* NEARBY CARD */}
-					{AppSettings.NEARBY_CARD_ENABLED ? (
-						<View style={css.card_main}>
-							<View style={css.card_title_container}>
-								<Text style={css.card_title}>Nearby</Text>
-							</View>
-
-							<View style={css.destinationcard_bot_container}>
-								<View style={css.destinationcard_map_container}>
-
-									{this.state.nearbyAnnotations && this.state.loaded && this.state.updatedGoogle ? (
-
-										<MapView
-											style={css.destinationcard_map}
-											loadingEnabled={true}
-											loadingIndicatorColor={'#666'}
-											loadingBackgroundColor={'#EEE'}
-											showsUserLocation={true}
-											mapType={'standard'}
-											initialRegion={{
-												latitude: this.getCurrentPosition('lat'),
-												longitude: this.getCurrentPosition('lon'),
-												latitudeDelta: this.state.nearbyLatDelta,
-												longitudeDelta: this.state.nearbyLonDelta,
-											}}>
-												{this.state.nearbyAnnotations.map((marker, index) => (
-													<MapView.Marker
-														pinColor={fiveRandomColors[index]}
-														coordinate={marker.coords}
-														title={marker.title}
-														description={marker.description}
-														key={marker.title}
-													/>
-												))}
-										</MapView>
-									) : null }
-
-									{!this.state.updatedGoogle ? (
-										<View>
-										<Text>Please update Google Play Services and restart app to view map.</Text>
-										<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => GoogleAPIAvailability.openGooglePlayUpdate()}>
-											<View style={css.eventdetail_readmore_container}>
-												<Text style={css.eventdetail_readmore_text}>Update</Text>
-											</View>
-										</TouchableHighlight>
-										</View>
-										) : null}
-
-								</View>
-
-								{this.state.nearbyMarkersLoaded ? (
-									<ListView dataSource={this.state.nearbyMarkersPartial} renderRow={this.renderNearbyRow} style={css.flex} />
-								) : null }
-							</View>
-						</View>
-					) : null }
+					
 
 					{/* FOOTER */}
 					<View style={css.footer}>
@@ -351,6 +278,9 @@ var Home = React.createClass({
 		if (AppSettings.TOPSTORIES_CARD_ENABLED){
 			cards.push(<TopStoriesCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={this._generateUUID + ':' + cardCounter++}/>);
 		}
+		if (AppSettings.NEARBY_CARD_ENABLED){
+			cards.push(<NearbyCard navigator={this.props.navigator} getCurrentPosition={(latlon) => this.getCurrentPosition(latlon)} updatedGoogle={this.state.updatedGoogle}ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={this._generateUUID + ':' + cardCounter++}/>);
+		}
 		return cards;
 	},
 
@@ -370,19 +300,12 @@ var Home = React.createClass({
 		}
 
 		// Use default location (UCSD) if location permissions disabled
-		this.refreshNearbyCard();
 		this.refreshDiningCard();
 
 		// Refresh broken out cards
-		// Shuttle, Top Stories, Events, Weather
+		// Shuttle, Top Stories, Events, Weather, Nearby
 		if (this.refs.cards) {
 			this.refs.cards.forEach(c => c.refresh());
-		}
-	},
-
-	refreshNearbyCard: function() {
-		if (AppSettings.NEARBY_CARD_ENABLED) {
-			this.updateCurrentNodeRegion();
 		}
 	},
 
@@ -533,104 +456,15 @@ var Home = React.createClass({
 			if (this.state.currentPosition) {
 				return this.state.currentPosition.coords.latitude;
 			} else {
-				return this.state.defaultPosition.coords.latitude;
+				return null;
 			}
 		} else if (type === 'lon') {
 			if (this.state.currentPosition) {
 				return this.state.currentPosition.coords.longitude;
 			} else {
-				return this.state.defaultPosition.coords.longitude;
+				return null;
 			}
 		}
-	},
-
-	// Updates which predesignated node region the user is in
-	updateCurrentNodeRegion: function() {
-
-		var currentLat = this.getCurrentPosition('lat');
-		var currentLon = this.getCurrentPosition('lon');
-
-		// Determine if location has changed since last run, skip if not
-		if ((this.getCurrentPosition('lat') !== this.nodePreviousLat) ||
-			(this.getCurrentPosition('lon') !== this.nodePreviousLon)) {
-
-			var closestNode = 0;
-			var closestNodeDistance = 100000000;
-
-			for (var i = 0; ucsd_nodes.length > i; i++) {
-				var nodeDist = shuttle.getDistance(currentLat, currentLon, ucsd_nodes[i].lat, ucsd_nodes[i].lon);
-
-				if (nodeDist < closestNodeDistance) {
-					closestNodeDistance = nodeDist;
-					closestNode = ucsd_nodes[i].id;
-				}
-			}
-
-			var NODE_MODULES_URL = AppSettings.NODE_MARKERS_BASE_URL + 'ucsd_node_' + closestNode + '.json';
-
-			fetch(NODE_MODULES_URL, {
-					method: 'GET',
-				})
-				.then((response) => response.json())
-				.then((responseData) => {
-					this.parseNodeRegion(responseData);
-				})
-				.catch((error) => {
-					logger.log('ERR: loadNodeRegion: ' + error);
-				})
-				.done();
-		}
-		this.nodePreviousLat = this.getCurrentPosition('lat');
-		this.nodePreviousLon = this.getCurrentPosition('lon');
-		this.props.new_timeout("node", () => { this.updateCurrentNodeRegion() }, this.regionRefreshInterval);
-	},
-
-	parseNodeRegion: function(ucsd_node) {
-		// Calc distance from markers
-		for (var i = 0; ucsd_node.length > i; i++) {
-			ucsd_node[i].distance = shuttle.getDistance(this.getCurrentPosition('lat'), this.getCurrentPosition('lon'), ucsd_node[i].mkrLat, ucsd_node[i].mkrLong);
-		}
-
-		ucsd_node.sort(this.sortNearbyMarkers);
-		var nodeDataFull = ucsd_node;
-		var nodeDataPartial = ucsd_node.slice(0, this.nearbyMaxResults);
-
-		var dsFull = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-		var dsPartial = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-
-		var farthestMarkerDist;
-
-		var nearbyAnnotations = [];
-		for (var i = 0; ucsd_node.length > i && this.nearbyMaxResults > i; i++) {
-			if (this.nearbyMaxResults === i + 1) {
-				farthestMarkerDist = ucsd_node[i].distance;
-				var distLatLon = Math.sqrt(Math.pow(Math.abs(this.getCurrentPosition('lat') - ucsd_node[i].mkrLat), 2) + Math.pow(Math.abs(this.getCurrentPosition('lon') - ucsd_node[i].mkrLong), 2));
-				this.setState({
-					nearbyLatDelta: distLatLon * 2,
-					nearbyLonDelta: distLatLon * 2
-				});
-			}
-
-			var newAnnotations = {};
-
-			newAnnotations.coords = {
-				latitude: parseFloat(ucsd_node[i].mkrLat),
-				longitude: parseFloat(ucsd_node[i].mkrLong)
-			};
-
-			newAnnotations.latitude = parseFloat(ucsd_node[i].mkrLat);
-			newAnnotations.longitude = parseFloat(ucsd_node[i].mkrLong);
-			newAnnotations.title = ucsd_node[i].title;
-			newAnnotations.description = ucsd_node[i].description;
-			nearbyAnnotations.push(newAnnotations);
-		}
-
-		this.setState({
-			nearbyAnnotations: nearbyAnnotations,
-			nearbyMarkersFull: dsFull.cloneWithRows(nodeDataFull),
-			nearbyMarkersPartial: dsPartial.cloneWithRows(nodeDataPartial),
-			nearbyMarkersLoaded: true
-		});
 	},
 
 	sortNearbyMarkers: function(a, b) {
@@ -641,22 +475,6 @@ var Home = React.createClass({
 		} else {
 			return 0;
 		}
-	},
-
-	renderNearbyRow: function(data) {
-		return (
-			<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoNavigationApp(data.mkrLat, data.mkrLong) }>
-				<View style={css.destinationcard_marker_row}>
-					<Icon name="map-marker" size={30} color={fiveRandomColors[nearbyCounter++]} />
-					<Text style={css.destinationcard_marker_label}>{data.title}</Text>
-				</View>
-			</TouchableHighlight>
-		);
-	},
-
-	gotoNavigationApp: function(destinationLat, destinationLon) {
-		var destinationURL = general.getDirectionsURL('walk', this.getCurrentPosition('lat'), this.getCurrentPosition('lon'), destinationLat, destinationLon );
-		general.openURL(destinationURL);
 	},
 
 	gotoFeedbackForm: function() {
