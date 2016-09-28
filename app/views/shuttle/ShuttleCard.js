@@ -30,7 +30,7 @@ export default class ShuttleCard extends CardComponent {
 		this.shuttleClosestStops = [{ dist: 100000000 },{ dist: 100000000 }];
 		this.refreshShuttleCardTimer = null;
 
-    this.state = {
+		this.state = {
 			isRefreshing: false,
 			closestStop1Loaded: false,
 			closestStop2Loaded: false,
@@ -40,11 +40,11 @@ export default class ShuttleCard extends CardComponent {
 			defaultPosition: {
 				coords: { latitude: 32.88, longitude: -117.234 }
 			},
-    };
-  }
+    	};
+	}
 
 	componentDidMount() {
-		console.log('mounted ' + new Date());
+		logger.log('mounted ' + new Date());
 		if (this.props.location){
 			this.refresh();
 		}
@@ -67,13 +67,17 @@ export default class ShuttleCard extends CardComponent {
 		}
 	}
 
+	componentWillUnmount() {
+		clearInterval(this.refreshShuttleCardTimer);
+	}
+
 	setupAutoRefresh = () => {
 		if (this.refreshShuttleCardTimer) {
 			clearInterval(this.refreshShuttleCardTimer);
 		}
 		// refresh the shuttle card occasionally
 		this.refreshShuttleCardTimer = setInterval(_ => {
-			console.log('auto refresh ' + new Date());
+			logger.log('auto refresh ' + new Date());
 			this.refreshWithLocation('auto', this.props.location);
 		}, this.shuttleCardRefreshInterval);
 	}
@@ -86,11 +90,11 @@ export default class ShuttleCard extends CardComponent {
 		}
 	}
 
-  refresh = () => {
+	refresh = () => {
 		if (this.props.location) {
 			this.refreshWithLocation('manual', this.props.location);
 		}
-  }
+	}
 
   render() {
 		if (!this.state.closestStop1Loaded && !this.state.closestStop2Loaded)  {
