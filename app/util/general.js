@@ -41,23 +41,24 @@ module.exports = {
 		}).catch(err => logger.log('ERR: openURL: ' + err));
 	},
 
-	getDirectionsURL: function(method, startLat, startLon, stopLat, stopLon) {
+	getDirectionsURL: function(method, stopLat, stopLon) {
 
 		var directionsURL;
 
 		if (this.platformIOS()) {
 			if (method === 'walk') {
-				directionsURL = 'http://maps.apple.com/?saddr=' + startLat + ',' + startLon + '&daddr=' + stopLat + ',' + stopLon + '&dirflg=w';
+				directionsURL = 'http://maps.apple.com/?saddr=Current%20Location&daddr=' + stopLat + ',' + stopLon + '&dirflg=w';
 			} else {
 				// Default to driving directions
-				directionsURL = 'http://maps.apple.com/?saddr=' + startLat + ',' + startLon + '&daddr=' + stopLat + ',' + stopLon + '&dirflg=d';
+				directionsURL = 'http://maps.apple.com/?saddr=Current%20Location&daddr=' + stopLat + ',' + stopLon + '&dirflg=d';
 			}
 		} else {
 			if (method === 'walk') {
-				directionsURL = 'https://www.google.com/maps/dir/' + startLat + ',' + startLon + '/' + stopLat + ',' + stopLon + '/@' + startLat + ',' + startLon + ',18z/data=!4m2!4m1!3e1';
+				//directionsURL = 'https://www.google.com/maps/dir/' + startLat + ',' + startLon + '/' + stopLat + ',' + stopLon + '/@' + startLat + ',' + startLon + ',18z/data=!4m2!4m1!3e1';
+				directionsURL = 'https://www.google.com/maps/dir/Current+Location/' + stopLat + ',' + stopLon + '/@' + startLat + ',' + startLon + ',18z/data=!4m2!4m1!3e1';
 			} else {
 				// Default to driving directions
-				directionsURL = 'https://www.google.com/maps/dir/' + startLat + ',' + startLon + '/' + stopLat + ',' + stopLon + '/@' + startLat + ',' + startLon + ',18z/data=!4m2!4m1!3e0';
+				directionsURL = 'https://www.google.com/maps/dir/Current+Location/' + stopLat + ',' + stopLon + '/@' + startLat + ',' + startLon + ',18z/data=!4m2!4m1!3e0';
 			}
 		}
 
