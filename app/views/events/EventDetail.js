@@ -118,7 +118,7 @@ var EventDetail = React.createClass({
 		//this.props.navigator.push({ id: 'WebWrapper', name: 'WebWrapper', title: eventName, component: WebWrapper, webViewURL: eventURL });
 		Linking.canOpenURL(eventURL).then(supported => {
 		if (!supported) {
-			console.log('Can\'t handle url: ' + eventURL);
+			logger.log('Can\'t handle url: ' + eventURL);
 		} else {
 			return Linking.openURL(eventURL);
 		}

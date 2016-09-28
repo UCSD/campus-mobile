@@ -134,7 +134,7 @@ var TopStoriesDetail = React.createClass({
 		//this.props.navigator.push({ id: 'WebWrapper', name: 'WebWrapper', title: 'News', component: WebWrapper, webViewURL: storyURL });
 		Linking.canOpenURL(storyURL).then(supported => {
 		if (!supported) {
-			console.log('Can\'t handle url: ' + storyURL);
+			logger.log('Can\'t handle url: ' + storyURL);
 		} else {
 			return Linking.openURL(storyURL);
 		}
