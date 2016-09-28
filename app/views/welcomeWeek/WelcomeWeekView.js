@@ -91,7 +91,7 @@ export default class WelcomeWeekView extends Component {
 	 * @return bool whether the component should re-render.
 	**/
 	shouldComponentUpdate(nextProps, nextState) {
-		console.log('shouldComponentUpdate WelcomeView');
+		logger.log('shouldComponentUpdate WelcomeView');
 		return true;
 	}
 
