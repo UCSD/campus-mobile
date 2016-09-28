@@ -22,7 +22,7 @@ var css = require('../../styles/css');
 var logger = require('../../util/logger');
 var general = require('../../util/general');
 
-var TopStoriesDetail = React.createClass({
+var NewsDetail = React.createClass({
 
 	getInitialState: function() {
 		return {
@@ -35,7 +35,7 @@ var TopStoriesDetail = React.createClass({
 	componentWillMount: function() {
 		logger.ga('View Loaded: News Detail');
 
-		var imageURL = (this.props.route.topStoriesData.image_lg) ? this.props.route.topStoriesData.image_lg : this.props.route.topStoriesData.image;
+		var imageURL = (this.props.route.newsData.image_lg) ? this.props.route.newsData.image_lg : this.props.route.newsData.image;
 		imageURL = imageURL.replace(/-thumb/g,'');
 
 		if (imageURL) {
@@ -54,7 +54,7 @@ var TopStoriesDetail = React.createClass({
 	},
 
 	componentDidMount: function() {
-		logger.ga('View Loaded: TopStories Detail: ' + this.props.route.topStoriesData.title );
+		logger.ga('View Loaded: News Detail: ' + this.props.route.newsData.title );
 	},
 
 	render: function() {
@@ -63,7 +63,7 @@ var TopStoriesDetail = React.createClass({
 
 	renderScene: function() {
 
-		var ts_date = new Date(this.props.route.topStoriesData['date']);
+		var ts_date = new Date(this.props.route.newsData['date']);
 
 		// Year
 		var ts_year = ts_date.getFullYear();
@@ -91,9 +91,9 @@ var TopStoriesDetail = React.createClass({
 		var ts_datestr = ts_month + ' ' + ts_dayofmonth + ', ' + ts_year;
 
 		// Desc
-		var topStoriesDesc = this.props.route.topStoriesData.description;
-		topStoriesDesc = topStoriesDesc.replace(/^ /g, '');
-		topStoriesDesc = topStoriesDesc.replace(/\?\?\?/g, '');
+		var newsDesc = this.props.route.newsData.description;
+		newsDesc = newsDesc.replace(/^ /g, '');
+		newsDesc = newsDesc.replace(/\?\?\?/g, '');
 
 		return (
 			<View style={[css.main_container, css.whitebg]}>
@@ -105,14 +105,14 @@ var TopStoriesDetail = React.createClass({
 
 					<View style={css.news_detail_container}>
 						<View style={css.eventdetail_top_right_container}>
-							<Text style={css.eventdetail_eventname}>{this.props.route.topStoriesData.title}</Text>
+							<Text style={css.eventdetail_eventname}>{this.props.route.newsData.title}</Text>
 							<Text style={css.eventdetail_eventdate}>{ts_datestr}</Text>
 						</View>
 
-						<Text style={css.eventdetail_eventdescription}>{topStoriesDesc}</Text>
+						<Text style={css.eventdetail_eventdescription}>{newsDesc}</Text>
 
-						{this.props.route.topStoriesData.link ? (
-							<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoWebView(this.props.route.topStoriesData.title, this.props.route.topStoriesData.link) }>
+						{this.props.route.newsData.link ? (
+							<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoWebView(this.props.route.newsData.title, this.props.route.newsData.link) }>
 								<View style={css.eventdetail_readmore_container}>
 									<Text style={css.eventdetail_readmore_text}>Read the full article</Text>
 								</View>
@@ -138,9 +138,9 @@ var TopStoriesDetail = React.createClass({
 		} else {
 			return Linking.openURL(storyURL);
 		}
-		}).catch(err => console.error('An error with opening TopStoriesDetail occurred', err));
+		}).catch(err => console.error('An error with opening NewsDetail occurred', err));
 	},
 
 });
 
-module.exports = TopStoriesDetail;
+module.exports = NewsDetail;

@@ -10,16 +10,16 @@ import {
 	Image,
 } from 'react-native';
 
-import TopStoriesDetail from './TopStoriesDetail';
+import NewsDetail from './NewsDetail';
 
 var css = require('../../styles/css');
 
 const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-export default class TopStoriesItem extends React.Component {
+export default class NewsItem extends React.Component {
 
-	gotoTopStoriesDetail(topStoriesData) {
-  		this.props.navigator.push({ id: 'TopStoriesDetail', name: 'News', title: 'News', component: TopStoriesDetail, topStoriesData: topStoriesData });
+	gotoNewsDetail(newsData) {
+  		this.props.navigator.push({ id: 'NewsDetail', name: 'News', title: 'News', component: NewsDetail, newsData: newsData });
 	}
 
 	getStoryDescription(description, title){
@@ -58,7 +58,7 @@ export default class TopStoriesItem extends React.Component {
 
 		var storyDescriptionStr = this.getStoryDescription(data.description, data.title);
 		return (
-			<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoTopStoriesDetail(data)}>
+			<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoNewsDetail(data)}>
 				<View style={css.events_list_row}>
 					<View style={css.events_list_left_container}>
 						<Text style={css.events_list_title}>{storyTitle}</Text>

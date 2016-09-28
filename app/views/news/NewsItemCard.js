@@ -11,17 +11,17 @@ import {
 	Linking
 } from 'react-native';
 
-import TopStoriesDetail from './TopStoriesDetail'
+import NewsDetail from './NewsDetail'
 import Card from '../card/Card'
 
 var css = require('../../styles/css');
 
 const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-export default class TopStoriesItem extends React.Component {
+export default class NewsItem extends React.Component {
 
-	gotoTopStoriesDetail(topStoriesData) {
-  		this.props.navigator.push({ id: 'TopStoriesDetail', name: 'News', title: 'News', component: TopStoriesDetail, topStoriesData: topStoriesData });
+	gotoNewsDetail(newsData) {
+  		this.props.navigator.push({ id: 'NewsDetail', name: 'News', title: 'News', component: NewsDetail, newsData: newsData });
 	}
 
 	gotoWebView(storyName, storyURL) {
@@ -32,7 +32,7 @@ export default class TopStoriesItem extends React.Component {
 		} else {
 			return Linking.openURL(storyURL);
 		}
-		}).catch(err => console.error('An error with opening TopStoriesDetail occurred', err));
+		}).catch(err => console.error('An error with opening NewsDetail occurred', err));
 	}
 
 	getStoryDescription(description, title){
@@ -64,7 +64,7 @@ export default class TopStoriesItem extends React.Component {
 		var storyDescriptionStr = this.getStoryDescription(data.description, data.title);
 
 		return (
-			<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoTopStoriesDetail(this.props.data)}>
+			<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoNewsDetail(this.props.data)}>
 				<View style={css.card_main}>
 					<View style={css.events_card_title_container}>
 						<Text style={css.events_card_title}>{storyTitle}</Text>

@@ -1,10 +1,10 @@
 var AppSettings = 		require('../AppSettings');
 
 
-var TopStoriesService = {
+var NewsService = {
 
-  FetchTopStories: function() {
-    return fetch(AppSettings.TOP_STORIES_API_URL, {
+  FetchNews: function() {
+    return fetch(AppSettings.NEWS_API_URL, {
        headers: {
          'Cache-Control': 'no-cache'
        }
@@ -14,4 +14,4 @@ var TopStoriesService = {
 
 }
 
-export default TopStoriesService;
+export default NewsService;

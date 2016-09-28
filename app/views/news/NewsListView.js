@@ -9,12 +9,12 @@ import {
 	ActivityIndicator,
 	InteractionManager,
 } from 'react-native';
-import TopStoriesItem from './TopStoriesItem';
-import TopStoriesItemCard from './TopStoriesItemCard';
+import NewsItem from './NewsItem';
+import NewsItemCard from './NewsItemCard';
 
 var css = require('../../styles/css');
 
-export default class EventListView extends React.Component {
+export default class NewsListView extends React.Component {
 
 	constructor(props){
 		super(props);
@@ -56,7 +56,7 @@ export default class EventListView extends React.Component {
 				<ListView
 					style={css.welcome_listview}
 					dataSource={eventDatasource}
-					renderRow={ (row) => <TopStoriesItemCard data={row} navigator={this.props.navigator} /> }
+					renderRow={ (row) => <NewsItemCard data={row} navigator={this.props.navigator} /> }
 				/>
 			</View>
 		);

@@ -10,15 +10,15 @@ import {
 
 import Card from '../card/Card'
 import CardComponent from '../card/CardComponent'
-import TopStoriesList from './TopStoriesList';
-import TopStoriesService from '../../services/topStoriesService';
+import NewsList from './NewsList';
+import NewsService from '../../services/newsService';
 
 var css = require('../../styles/css');
 var logger = require('../../util/logger');
 var Entities = require('html-entities').AllHtmlEntities;
 var entities = new Entities();
 
-export default class TopStoriesCard extends CardComponent {
+export default class NewsCard extends CardComponent {
 
 	constructor(props) {
 		super(props);
@@ -28,11 +28,11 @@ export default class TopStoriesCard extends CardComponent {
 		this.fetchErrorCounter = 0;
 
 		this.state = {
-			topStoriesData: [],
-			topStoriesRenderAllRows: false,
-			topStoriesDataLoaded: false,
+			newsData: [],
+			newsRenderAllRows: false,
+			newsDataLoaded: false,
 			fetchErrorLimitReached: false,
-			topStoriesDefaultResults: 3
+			newsDefaultResults: 3
 		}
 	}
 
@@ -41,7 +41,7 @@ export default class TopStoriesCard extends CardComponent {
 	}
 
 	refresh() {
-		TopStoriesService.FetchTopStories()
+		NewsService.FetchNews()
 		.then((responseData) => {
 			for (var i = 0; responseData.items.length > i; i++) {
 
@@ -56,18 +56,18 @@ export default class TopStoriesCard extends CardComponent {
 				}
 			}
 			this.setState({
-				topStoriesData: responseData.items,
-				topStoriesDataLoaded: true
+				newsData: responseData.items,
+				newsDataLoaded: true
 			});
 		})
 		.catch((error) => {
 			logger.error(error);
 			if (this.fetchErrorLimit > this.fetchErrorCounter) {
 				this.fetchErrorCounter++;
-				logger.log('ERR: fetchTopStories: refreshing again in ' + this.fetchErrorInterval/1000 + ' sec');
+				logger.log('ERR: fetchNews: refreshing again in ' + this.fetchErrorInterval/1000 + ' sec');
 				this.refreshTimer = setTimeout( () => { this.refresh() }, this.fetchErrorInterval);
 			} else {
-				logger.log('ERR: fetchTopStories: Limit exceeded - max limit:' + this.fetchErrorLimit);
+				logger.log('ERR: fetchNews: Limit exceeded - max limit:' + this.fetchErrorLimit);
 				this.setState({ fetchErrorLimitReached: true });
 			}
 		})
@@ -78,8 +78,8 @@ export default class TopStoriesCard extends CardComponent {
 		return (
 			<Card title='News'>
 				<View style={css.events_list}>
-					{this.state.topStoriesDataLoaded ? (
-						<TopStoriesList data={this.state.topStoriesData} defaultResults={this.state.topStoriesDefaultResults} navigator={this.props.navigator} />
+					{this.state.newsDataLoaded ? (
+						<NewsList data={this.state.newsData} defaultResults={this.state.newsDefaultResults} navigator={this.props.navigator} />
 					) : null}
 
 					{this.state.fetchErrorLimitReached ? (

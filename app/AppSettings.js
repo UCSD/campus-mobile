@@ -13,14 +13,14 @@ module.exports = {
 	SHUTTLE_CARD_ENABLED: 		true,
 	WEATHER_CARD_ENABLED: 		true,
 	EVENTS_CARD_ENABLED: 		true,
-	TOPSTORIES_CARD_ENABLED: 	true,
+	NEWS_CARD_ENABLED: 	true,
 	NEARBY_CARD_ENABLED: 		true,
 	DINING_CARD_ENABLED: 		true,
 
 	/* APIS / ENDPOINTS */
 	WEATHER_API_URL: 			'https://w3wyps9yje.execute-api.us-west-2.amazonaws.com/prod/forecast',
 	SURF_API_URL: 				'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/surffeed.json',
-	TOP_STORIES_API_URL: 		'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/allstories.json',
+	NEWS_API_URL: 				'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/allstories.json',
 	EVENTS_API_URL: 			'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/student_events.json',
 	SHUTTLE_STOPS_API_URL: 		'https://ies4wyrlx9.execute-api.us-west-2.amazonaws.com/prod/stops/',
 	DINING_API_URL: 			'https://s3-us-west-2.amazonaws.com/ucsd-mobile/v1/dining-feed.json',

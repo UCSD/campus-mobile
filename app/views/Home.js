@@ -26,7 +26,7 @@ import NavigationBarWithRouteMapper from './NavigationBarWithRouteMapper';
 
 // Cards
 import EventCard from './events/EventCard'
-import TopStoriesCard from './topStories/TopStoriesCard';
+import NewsCard from './news/NewsCard';
 import WeatherCard from './weather/WeatherCard';
 import ShuttleCard from './shuttle/ShuttleCard';
 import NearbyCard from './nearby/NearbyCard';
@@ -239,10 +239,8 @@ var Home = React.createClass({
 						</View>
 					) : null }
 
-					{/* SHUTTLE_CARD & EVENTS CARD & TOP STORIES CARD & WEATHER CARD */}
+					{/* SHUTTLE_CARD & EVENTS CARD & NEWS CARD & WEATHER CARD & NEARBY CARD*/}
 					{ this.getCards() }
-
-					{/* NEARBY CARD */}
 					
 
 					{/* FOOTER */}
@@ -275,8 +273,8 @@ var Home = React.createClass({
 		if (AppSettings.EVENTS_CARD_ENABLED){
 			cards.push(<EventCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={this._generateUUID + ':' + cardCounter++}/>);
 		}
-		if (AppSettings.TOPSTORIES_CARD_ENABLED){
-			cards.push(<TopStoriesCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={this._generateUUID + ':' + cardCounter++}/>);
+		if (AppSettings.NEWS_CARD_ENABLED){
+			cards.push(<NewsCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={this._generateUUID + ':' + cardCounter++}/>);
 		}
 		if (AppSettings.NEARBY_CARD_ENABLED){
 			cards.push(<NearbyCard navigator={this.props.navigator} getCurrentPosition={(latlon) => this.getCurrentPosition(latlon)} updatedGoogle={this.state.updatedGoogle}ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={this._generateUUID + ':' + cardCounter++}/>);
@@ -303,7 +301,7 @@ var Home = React.createClass({
 		this.refreshDiningCard();
 
 		// Refresh broken out cards
-		// Shuttle, Top Stories, Events, Weather, Nearby
+		// Shuttle, News, Events, Weather, Nearby
 		if (this.refs.cards) {
 			this.refs.cards.forEach(c => c.refresh());
 		}
