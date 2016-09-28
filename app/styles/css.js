@@ -280,9 +280,9 @@ var css = StyleSheet.create({
 	destinationcard_bot_container: { padding: 8 },
 	destinationcard_map_container: { borderBottomWidth: 1, borderBottomColor: '#EAEAEA', paddingBottom: 16, marginBottom: 8 },
 		destinationcard_map: { borderWidth: 1, borderColor: '#DDD', width: maxCardWidthWithPadding, height: round(maxCardWidthWithPadding * .6) },
-	destinationcard_marker_row: { flex: 1, flexDirection: 'row', justifyContent: 'center', width: windowWidth - 30, padding: 6, marginTop: 0 },
+	destinationcard_marker_row: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: windowWidth - 30, padding: 6, marginTop: 0 },
 	destinationcard_icon_marker: { width: 18, height: round(18 * 1.375), alignItems: 'flex-start', justifyContent: 'center' },
-	destinationcard_marker_label: { flex: 1, fontSize: round(20 * prm), paddingLeft: 8, paddingTop: 0, color: ucsdblue, justifyContent: 'center' },
+	destinationcard_marker_label: { flex: 1, fontSize: round(18 * prm), paddingLeft: 8, paddingTop: 0, color: ucsdblue, justifyContent: 'center' },
 
 
 	// DestinationSearch
