@@ -41,13 +41,12 @@ var logger = require('../util/logger');
 
 var navBarMarginTop = 0;
 var navBarTitleMarginTop = 5;
-var welcome_lv_marginTop = 0;
 
-if (general.platformAndroid() || (general.platformIOS() && AppSettings.NAVIGATOR_ENABLED)) {
+if (general.platformAndroid()) {
 	navBarMarginTop = 64;
 	navBarTitleMarginTop = 0;
 } else if (general.platformIOS()) {
-	welcome_lv_marginTop = 64;
+	
 }
 
 var pixelRatio = PixelRatio.get();
@@ -228,7 +227,7 @@ var css = StyleSheet.create({
 		events_card_image: { flex: 1, width: round(130 * prm), height: round(73 * prm), marginRight: 4, marginLeft: 10, borderWidth: 1, borderColor: '#CCC'},
 
 	// WELCOME WEEK STYLE
-	welcome_listview: { marginTop: welcome_lv_marginTop },
+	welcome_listview: {  },
 	welcome_ai: { alignItems: 'center', justifyContent: 'center', marginTop: welcome_ai_marginTop },
 	welcome_list_row: { flex: 1, flexDirection: 'row', paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: 'white', overflow: 'hidden', paddingLeft: 16, borderTopColor: 'white', justifyContent: 'center', alignItems: 'center'},
 		welcome_list_sectionText: { fontSize: round(18 * prm), color: '#FFF' },
