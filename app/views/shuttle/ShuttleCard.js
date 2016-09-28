@@ -97,26 +97,26 @@ export default class ShuttleCard extends CardComponent {
 	}
 
   render() {
-		if (!this.state.closestStop1Loaded && !this.state.closestStop2Loaded)  {
-			return (
-				<View style={[css.shuttle_card_row_center, css.shuttle_card_loader]}>
-					<ActivityIndicator style={css.shuttle_card_aa} size="large" />
-				</View>
-			)
-		}
 
 		return (
 			<Card title='Shuttle' cardRefresh={this.refresh} isRefreshing={this.state.isRefreshing}>
-	      <View>
+			{(!this.state.closestStop1Loaded && !this.state.closestStop2Loaded) ? (
+				<View style={[css.shuttle_card_row_center, css.shuttle_card_loader]}>
+					<ActivityIndicator style={css.shuttle_card_aa} size="large" />
+				</View>
+				) : (
+				 <View>
 					{this.state.closestStop1Loaded ? (
 						<ShuttleOverview onPress={this.gotoShuttleStop} stopData={this.shuttleClosestStops[0]} shuttleData={this.state.shuttleData[0]} />
 					) : null }
 					{this.state.closestStop2Loaded ? (
 						<ShuttleOverview onPress={this.gotoShuttleStop} stopData={this.shuttleClosestStops[1]} shuttleData={this.state.shuttleData[1]} />
 					) : null }
-	      </View>
+      			</View>
+				)
+			}
 			</Card>
-	  );
+		);
 	}
 
 	// SHUTTLE_CARD
