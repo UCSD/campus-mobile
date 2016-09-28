@@ -21,7 +21,7 @@ export default class Card extends React.Component {
   render() {
 	return (
 		<View style={css.card_main} ref={(i) => this._card = i}>
-			<CardHeader title={this.props.title} />
+			<CardHeader title={this.props.title} cardRefresh={this.props.cardRefresh} isRefreshing={this.props.isRefreshing} />
 			{this.props.children}
 		</View>
 		);
