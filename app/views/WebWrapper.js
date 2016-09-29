@@ -19,7 +19,9 @@ var WebWrapper = React.createClass({
 		var scriptInjectStr = '';
 
 		if (title === 'Feedback') {
-			scriptInjectStr =  	'var elem = document.querySelector("#form_container h1"); elem.parentNode.removeChild(elem);';
+			scriptInjectStr =  'var elem = document.querySelector("#form_container h1"); elem.parentNode.removeChild(elem);';
+			scriptInjectStr += 'document.documentElement.style.background = "white";';
+			scriptInjectStr += 'document.querySelector("#form_container").style.boxShadow=null;'
 		} else if (title === 'Welcome Week') {
 			scriptInjectStr =  	'document.querySelector("#header").style.display = "none";'+
 								'document.querySelector(".center.content-padded").style.display = "none";'+
