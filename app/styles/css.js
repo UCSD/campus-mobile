@@ -386,6 +386,11 @@ var css = StyleSheet.create({
 	footer_spacer: { flex: 1, color: '#888', padding: 4, fontSize: round(16 * prm), textAlign: 'center' },
 	footer_copyright: { color: ucsdblue, fontSize: round(16 * prm), textAlign: 'center', padding: 4 },
 
+	// Feedback
+	feedback_container: { flex:1, width: maxCardWidthWithPadding, padding: 16, },
+	feedback_label: { flex:1, fontSize: round(20 * prm), },
+	feedback_text: { flex:1, alignItems: 'center', width: maxCardWidth - 32 },
+	feedback_submit: { fontSize: round(40 * prm), textAlign: 'center' },
 
 	// MISC STYLES
 	whitebg: { backgroundColor: '#FFF' },

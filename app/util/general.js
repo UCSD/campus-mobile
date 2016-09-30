@@ -55,10 +55,10 @@ module.exports = {
 		} else {
 			if (method === 'walk') {
 				//directionsURL = 'https://www.google.com/maps/dir/' + startLat + ',' + startLon + '/' + stopLat + ',' + stopLon + '/@' + startLat + ',' + startLon + ',18z/data=!4m2!4m1!3e1';
-				directionsURL = 'https://www.google.com/maps/dir/Current+Location/' + stopLat + ',' + stopLon + '/@' + startLat + ',' + startLon + ',18z/data=!4m2!4m1!3e1';
+				directionsURL = 'https://maps.google.com/maps?saddr=Current+Location&daddr=' + stopLat + ',' + stopLon + '&dirflg=w';
 			} else {
 				// Default to driving directions
-				directionsURL = 'https://www.google.com/maps/dir/Current+Location/' + stopLat + ',' + stopLon + '/@' + startLat + ',' + startLon + ',18z/data=!4m2!4m1!3e0';
+				directionsURL = 'https://maps.google.com/maps?saddr=Current+Location&daddr=' + stopLat + ',' + stopLon + '&dirflg=d';
 			}
 		}
 
