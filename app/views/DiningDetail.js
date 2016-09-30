@@ -56,7 +56,7 @@ var DiningDetail = React.createClass({
 		}
 
 		return {
-			marketData: this.props.route.marketData,
+			marketData: marketData,
 
 			menuItemsActive: null,
 			menuItemsActiveCount: null,
@@ -109,7 +109,7 @@ var DiningDetail = React.createClass({
 	},
 
 	componentDidMount: function() {
-		logger.ga('View Loaded: DiningList');
+		logger.ga('View Loaded: Dining Detail: ' + this.state.marketData.name);
 	},
 
 	render: function() {
@@ -145,107 +145,111 @@ var DiningDetail = React.createClass({
 							</TouchableHighlight>
 						</View>
 
-						<View style={css.dl_market_date}>
-							<Text style={css.dl_market_date_label}>Menu for {general.getTimestamp('mmmm d, yyyy')}</Text>
-						</View>
+						{this.state.marketData.name.indexOf('Market') === -1 ? (
+							<View>
+								<View style={css.dl_market_date}>
+									<Text style={css.dl_market_date_label}>Menu for {general.getTimestamp('mmmm d, yyyy')}</Text>
+								</View>
 
-						<View style={css.dl_market_filters_foodtype}>
-							<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.setTypeFilter('VT') }>
-								{this.vegetarianFilterEnabled ? (
-									<Text style={css.dining_card_filter_button_active}>Vegetarian</Text>
+								<View style={css.dl_market_filters_foodtype}>
+									<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.setTypeFilter('VT') }>
+										{this.vegetarianFilterEnabled ? (
+											<Text style={css.dining_card_filter_button_active}>Vegetarian</Text>
+										) : (
+											<Text style={css.dining_card_filter_button}>Vegetarian</Text>
+										)}
+									</TouchableHighlight>
+
+									<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.setTypeFilter('VG') }>
+										{this.veganFilterEnabled ? (
+											<Text style={css.dining_card_filter_button_active}>Vegan</Text>
+										) : (
+											<Text style={css.dining_card_filter_button}>Vegan</Text>
+										)}
+									</TouchableHighlight>
+									
+									<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.setTypeFilter('GF') }>
+										{this.glutenfreeFilterEnabled ? (
+											<Text style={css.dining_card_filter_button_active}>Gluten-free</Text>
+										) : (
+											<Text style={css.dining_card_filter_button}>Gluten-free</Text>
+										)}
+									</TouchableHighlight>
+								</View>
+
+
+								<View style={css.dl_market_filters_mealtype}>
+									{this.mealFilter === 'breakfast' ? (
+										<TouchableHighlight style={css.dl_meal_button} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { this.setMealFilter('breakfast')}}>
+											<View style={css.dl_meal_button}>
+												<View style={css.dl_mealtype_circle_active}></View>
+												<Text style={css.dl_mealtype_label_active}>Breakfast</Text>
+											</View>
+										</TouchableHighlight>
+									) : (
+										<TouchableHighlight style={css.dl_meal_button} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { this.setMealFilter('breakfast')}}>
+											<View style={css.dl_meal_button}>
+												<View style={css.dl_mealtype_circle}></View>
+												<Text style={css.dl_mealtype_label}>Breakfast</Text>
+											</View>
+										</TouchableHighlight>
+									)}
+									{this.mealFilter === 'lunch' ? (
+										<TouchableHighlight style={css.dl_meal_button} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { this.setMealFilter('lunch')}}>
+											<View style={css.dl_meal_button}>
+												<View style={css.dl_mealtype_circle_active}></View>
+												<Text style={css.dl_mealtype_label_active}>Lunch</Text>
+											</View>
+										</TouchableHighlight>
+									) : (
+										<TouchableHighlight style={css.dl_meal_button} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { this.setMealFilter('lunch')}}>
+											<View style={css.dl_meal_button}>
+												<View style={css.dl_mealtype_circle}></View>
+												<Text style={css.dl_mealtype_label}>Lunch</Text>
+											</View>
+										</TouchableHighlight>
+									)}
+									{this.mealFilter === 'dinner' ? (
+										<TouchableHighlight style={css.dl_meal_button} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { this.setMealFilter('dinner')}}>
+											<View style={css.dl_meal_button}>
+												<View style={css.dl_mealtype_circle_active}></View>
+												<Text style={css.dl_mealtype_label_active}>Dinner</Text>
+											</View>
+										</TouchableHighlight>
+									) : (
+										<TouchableHighlight style={css.dl_meal_button} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { this.setMealFilter('dinner')}}>
+											<View style={css.dl_meal_button}>
+												<View style={css.dl_mealtype_circle}></View>
+												<Text style={css.dl_mealtype_label}>Dinner</Text>
+											</View>
+										</TouchableHighlight>
+									)}
+								</View>
+
+								{this.state.menuItemsActive ? (
+									<View style={css.dl_market_menu}>
+										{this.state.menuItemsActiveCount === 0 ? (
+											<Text style={css.dl_noresults}>No results found matching your criteria.</Text>
+										) : (
+											<ListView
+												dataSource={this.state.menuItemsActive}
+												renderRow={ (rowData, sectionID, rowID, highlightRow) => {
+													return (
+														<TouchableHighlight key={rowID} style={css.dl_market_menu_row} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoDiningNutrition(rowData) }>
+															<Text style={css.dl_menu_item_name}>{rowData.name}<Text style={css.dl_menu_item_price}> (${rowData.price})</Text></Text>
+														</TouchableHighlight>
+													)
+												}}
+											/>
+										)}
+									</View>
 								) : (
-									<Text style={css.dining_card_filter_button}>Vegetarian</Text>
-								)}
-							</TouchableHighlight>
-
-							<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.setTypeFilter('VG') }>
-								{this.veganFilterEnabled ? (
-									<Text style={css.dining_card_filter_button_active}>Vegan</Text>
-								) : (
-									<Text style={css.dining_card_filter_button}>Vegan</Text>
-								)}
-							</TouchableHighlight>
-							
-							<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.setTypeFilter('GF') }>
-								{this.glutenfreeFilterEnabled ? (
-									<Text style={css.dining_card_filter_button_active}>Gluten-free</Text>
-								) : (
-									<Text style={css.dining_card_filter_button}>Gluten-free</Text>
-								)}
-							</TouchableHighlight>
-						</View>
-
-
-						<View style={css.dl_market_filters_mealtype}>
-							{this.mealFilter === 'breakfast' ? (
-								<TouchableHighlight style={css.dl_meal_button} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { this.setMealFilter('breakfast')}}>
-									<View style={css.dl_meal_button}>
-										<View style={css.dl_mealtype_circle_active}></View>
-										<Text style={css.dl_mealtype_label_active}>Breakfast</Text>
+									<View style={[css.center, css.shuttle_card_loader]}>
+										<ActivityIndicator style={css.shuttle_card_aa} size="large" />
 									</View>
-								</TouchableHighlight>
-							) : (
-								<TouchableHighlight style={css.dl_meal_button} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { this.setMealFilter('breakfast')}}>
-									<View style={css.dl_meal_button}>
-										<View style={css.dl_mealtype_circle}></View>
-										<Text style={css.dl_mealtype_label}>Breakfast</Text>
-									</View>
-								</TouchableHighlight>
-							)}
-							{this.mealFilter === 'lunch' ? (
-								<TouchableHighlight style={css.dl_meal_button} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { this.setMealFilter('lunch')}}>
-									<View style={css.dl_meal_button}>
-										<View style={css.dl_mealtype_circle_active}></View>
-										<Text style={css.dl_mealtype_label_active}>Lunch</Text>
-									</View>
-								</TouchableHighlight>
-							) : (
-								<TouchableHighlight style={css.dl_meal_button} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { this.setMealFilter('lunch')}}>
-									<View style={css.dl_meal_button}>
-										<View style={css.dl_mealtype_circle}></View>
-										<Text style={css.dl_mealtype_label}>Lunch</Text>
-									</View>
-								</TouchableHighlight>
-							)}
-							{this.mealFilter === 'dinner' ? (
-								<TouchableHighlight style={css.dl_meal_button} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { this.setMealFilter('dinner')}}>
-									<View style={css.dl_meal_button}>
-										<View style={css.dl_mealtype_circle_active}></View>
-										<Text style={css.dl_mealtype_label_active}>Dinner</Text>
-									</View>
-								</TouchableHighlight>
-							) : (
-								<TouchableHighlight style={css.dl_meal_button} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { this.setMealFilter('dinner')}}>
-									<View style={css.dl_meal_button}>
-										<View style={css.dl_mealtype_circle}></View>
-										<Text style={css.dl_mealtype_label}>Dinner</Text>
-									</View>
-								</TouchableHighlight>
-							)}
-						</View>
-
-						{this.state.menuItemsActive ? (
-							<View style={css.dl_market_menu}>
-								{this.state.menuItemsActiveCount === 0 ? (
-									<Text style={css.dl_noresults}>No results found matching your criteria.</Text>
-								) : (
-									<ListView
-										dataSource={this.state.menuItemsActive}
-										renderRow={ (rowData, sectionID, rowID, highlightRow) => {
-											return (
-												<TouchableHighlight key={rowID} style={css.dl_market_menu_row} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoDiningNutrition(rowData) }>
-													<Text style={css.dl_menu_item_name}>{rowData.name}<Text style={css.dl_menu_item_price}> (${rowData.price})</Text></Text>
-												</TouchableHighlight>
-											)
-										}}
-									/>
 								)}
 							</View>
-						) : (
-							<View style={[css.center, css.shuttle_card_loader]}>
-								<ActivityIndicator style={css.shuttle_card_aa} size="large" />
-							</View>
-						)}
+						) : null }
 
 					</View>
 				</ScrollView>
