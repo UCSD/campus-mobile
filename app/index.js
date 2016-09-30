@@ -28,6 +28,7 @@ var AppSettings = 			require('./AppSettings'),
 import WelcomeWeekView from './views/welcomeWeek/WelcomeWeekView';
 import EventListView from './views/events/EventListView';
 import NewsListView from './views/news/NewsListView';
+import FeedbackView from './views/FeedbackView';
 
 // NAV
 import NavigationBarWithRouteMapper from './views/NavigationBarWithRouteMapper';
@@ -210,6 +211,7 @@ var nowucsandiego = React.createClass({
 			case 'WelcomeWeekView': 	return (<WelcomeWeekView route={route} navigator={navigator} />);
 			case 'EventListView': 		return (<EventListView route={route} navigator={navigator} />);
 			case 'NewsListView': 	return (<NewsListView route={route} navigator={navigator} />);
+			case 'FeedbackView': 	return (<FeedbackView route={route} navigator={navigator} />);
 			default: 					return (<Home route={route} navigator={navigator} new_timeout={this.newTimeout} do_timeout={this.doTimeout}/>);
 		}
 	},

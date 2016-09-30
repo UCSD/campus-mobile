@@ -23,6 +23,7 @@ import {
 import TopBannerView from './banner/TopBannerView';
 import WelcomeModal from './WelcomeModal';
 import NavigationBarWithRouteMapper from './NavigationBarWithRouteMapper';
+import FeedbackView from './FeedbackView';
 
 // Cards
 import EventCard from './events/EventCard'
@@ -476,7 +477,9 @@ var Home = React.createClass({
 	},
 
 	gotoFeedbackForm: function() {
-		this.props.navigator.push({ id: 'WebWrapper', component: WebWrapper, title: 'Feedback', webViewURL: AppSettings.FEEDBACK_URL });
+		//this.props.navigator.push({ id: 'WebWrapper', component: WebWrapper, title: 'Feedback', webViewURL: AppSettings.FEEDBACK_URL });
+		this.props.navigator.push({ id: 'FeedbackView', component: FeedbackView, title: 'Feedback' });
+		
 	},
 
 	gotoPrivacyPolicy: function() {
