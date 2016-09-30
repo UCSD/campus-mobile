@@ -388,8 +388,8 @@ var css = StyleSheet.create({
 
 	// Feedback
 	feedback_container: { flex:1, width: maxCardWidthWithPadding, padding: 16, },
-	feedback_label: { flex:1, fontSize: round(20 * prm), },
-	feedback_text: { flex:1, alignItems: 'center', width: maxCardWidth - 32 },
+	feedback_label: { flex:1, fontSize: round(20 * prm), height: 40},
+	feedback_text: { flex:1, alignItems: 'center', width: maxCardWidth - 32, height: round(50*prm) },
 	feedback_submit: { fontSize: round(40 * prm), textAlign: 'center' },
 
 	// MISC STYLES

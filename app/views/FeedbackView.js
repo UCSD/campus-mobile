@@ -99,27 +99,29 @@ export default class FeedbackView extends Component {
 	renderFormView() {
 		return (
 			<View style={css.main_container}>
+				<ScrollView>
 				<Card title="Your thoughts matter!">
 					<View style={css.feedback_container}>
 
-						<Text style={css.feedback_label}>Comments*</Text>
 						<TextInput 
 							multiline={true}
 							onChangeText={(text) => this.setState({commentsText: text})}
-							placeholder="Please tell us what you think."
-							placeholderTextColor={
-								(this.state.commentsText == "") ? "grey" : null
-							}
+							placeholder="Please tell us what you think*"
+							style={css.feedback_text}
 						/>
 
-						<Text style={css.feedback_label}>Name</Text>
+
 						<TextInput 
 							onChangeText={(text) => this.setState({nameText: text})}
+							placeholder="Name"
+							style={css.feedback_text}
 						/>
 						
-						<Text style={css.feedback_label}>Email</Text>
+
 						<TextInput 
 							onChangeText={(text) => this.setState({emailText: text})}
+							placeholder="Email"
+							style={css.feedback_text}
 						/>
 
 						<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => this.postFeedback()}>
@@ -129,6 +131,7 @@ export default class FeedbackView extends Component {
 						</TouchableHighlight>
 					</View>
 				</Card>
+				</ScrollView>
 			</View>
 		);
 	}
