@@ -330,8 +330,9 @@ var Home = React.createClass({
 					responseDataPartial = [];
 
 				// Push dining locations with food entries to final list
+				// if 'Market' is in the name of the location, allow even with no menu items
 				for (var i = 0; responseData.length > i; i++) {
-					if (responseData[i].menuItems.length > 0) {
+					if (responseData[i].menuItems.length > 0 || responseData[i].name.indexOf('Market') >= 0) {
 						responseDataFinal.push(responseData[i]);
 					}
 				}
@@ -349,8 +350,6 @@ var Home = React.createClass({
 				// Sort dining locations by distance
 				responseDataFinal.sort(this.sortNearbyMarkers);
 				responseDataPartial = responseDataFinal.slice(0, this.diningDefaultResults);
-
-
 
 				var dsFull = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 

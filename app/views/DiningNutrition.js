@@ -32,7 +32,7 @@ var DiningNutrition = React.createClass({
 	},
 
 	componentDidMount: function() {
-		logger.ga('View Loaded: Dining Detail' );
+		logger.ga('View Loaded: Dining Nutrition: ' + this.state.menuItem.name );
 	},
 
 	render: function() {
