@@ -122,7 +122,7 @@ var EventDetail = React.createClass({
 		} else {
 			return Linking.openURL(eventURL);
 		}
-		}).catch(err => console.error('An error with opening EventDetail occurred', err));
+		}).catch(err => logger.log('An error with opening EventDetail occurred', err));
 	},
 
 });

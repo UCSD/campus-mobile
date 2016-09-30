@@ -21,7 +21,8 @@ var AppSettings = 			require('./AppSettings'),
 	SurfReport = 			require('./views/weather/SurfReport'),
 	DiningList = 			require('./views/DiningList'),
 	DiningDetail = 			require('./views/DiningDetail'),
-	NewsDetail = 		require('./views/news/NewsDetail'),
+	DiningNutrition = 		require('./views/DiningNutrition'),
+	NewsDetail = 			require('./views/news/NewsDetail'),
 	EventDetail = 			require('./views/events/EventDetail'),
 	WebWrapper = 			require('./views/WebWrapper');
 
@@ -204,6 +205,7 @@ var nowucsandiego = React.createClass({
 			case 'SurfReport': 			return (<SurfReport route={route} navigator={navigator} />);
 			case 'DiningList': 			return (<DiningList route={route} navigator={navigator} />);
 			case 'DiningDetail': 		return (<DiningDetail route={route} navigator={navigator} />);
+			case 'DiningNutrition': 	return (<DiningNutrition route={route} navigator={navigator} />);
 			case 'NewsDetail': 			return (<NewsDetail route={route} navigator={navigator} />);
 			case 'EventDetail': 		return (<EventDetail route={route} navigator={navigator} />);
 			case 'WebWrapper': 			return (<WebWrapper route={route} navigator={navigator} />);

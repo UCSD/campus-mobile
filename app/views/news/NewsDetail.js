@@ -138,7 +138,7 @@ var NewsDetail = React.createClass({
 		} else {
 			return Linking.openURL(storyURL);
 		}
-		}).catch(err => console.error('An error with opening NewsDetail occurred', err));
+		}).catch(err => logger.log('An error with opening NewsDetail occurred', err));
 	},
 
 });
