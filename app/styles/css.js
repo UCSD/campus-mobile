@@ -100,7 +100,7 @@ var css = StyleSheet.create({
 	main_container: { flex: 1, backgroundColor: '#EAEAEA', marginTop: navBarMarginTop },
 	scroll_main: {  },
 	listview_main: { marginTop: 64 },
-	view_default: {  },
+	view_default: { paddingHorizontal: round(8 * prm) },
 	scroll_default: { alignItems: 'center' },
 
 	// Card Styles

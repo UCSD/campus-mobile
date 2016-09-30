@@ -13,7 +13,7 @@ module.exports = {
 	SHUTTLE_CARD_ENABLED: 		true,
 	WEATHER_CARD_ENABLED: 		true,
 	EVENTS_CARD_ENABLED: 		true,
-	NEWS_CARD_ENABLED: 	true,
+	NEWS_CARD_ENABLED: 			true,
 	NEARBY_CARD_ENABLED: 		true,
 	DINING_CARD_ENABLED: 		true,
 

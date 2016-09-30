@@ -28,11 +28,11 @@ export default class NewsItem extends React.Component {
 		//this.props.navigator.push({ id: 'WebWrapper', name: 'WebWrapper', title: 'News', component: WebWrapper, webViewURL: storyURL });
 		Linking.canOpenURL(storyURL).then(supported => {
 		if (!supported) {
-			console.log('Can\'t handle url: ' + storyURL);
+			logger.log('Can\'t handle url: ' + storyURL);
 		} else {
 			return Linking.openURL(storyURL);
 		}
-		}).catch(err => console.error('An error with opening NewsDetail occurred', err));
+		}).catch(err => logger.log('An error with opening NewsDetail occurred', err));
 	}
 
 	getStoryDescription(description, title){

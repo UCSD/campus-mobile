@@ -39,16 +39,16 @@ const Permissions = 	require('react-native-permissions');
 const GoogleAPIAvailability = 	require('react-native-google-api-availability-bridge');
 
 // App Settings / Util / CSS
-var AppSettings = 		require('../AppSettings');
-var css = 				require('../styles/css');
-var general = 			require('../util/general');
-var logger = 			require('../util/logger');
-var shuttle = 			require('../util/shuttle');
+var AppSettings = 	require('../AppSettings');
+var css = 			require('../styles/css');
+var general = 		require('../util/general');
+var logger = 		require('../util/logger');
+var shuttle = 		require('../util/shuttle');
 
 // Views
-//if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
-var DiningList = 		require('./DiningList');
-var WebWrapper = 		require('./WebWrapper');
+var DiningList = 	require('./DiningList');
+var DiningDetail = 	require('./DiningDetail');
+var WebWrapper = 	require('./WebWrapper');
 
 var Home = React.createClass({
 
@@ -223,13 +223,15 @@ var Home = React.createClass({
 
 								{this.state.diningDataLoaded ? (
 									<View style={css.dining_card}>
-										<View style={css.dining_card_map}>
-
-										</View>
-
+										<View style={css.dining_card_map}></View>
 										<View style={css.dc_locations}>
-											<ListView dataSource={this.state.diningDataFull} renderRow={this.renderDiningRow} style={css.wf_listview} />
+											<ListView dataSource={this.state.diningDataPartial} renderRow={this.renderDiningRow} style={css.wf_listview} />
 										</View>
+										<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoDiningList(this.state.diningData) }>
+											<View style={css.events_more}>
+												<Text style={css.events_more_label}>View All Locations</Text>
+											</View>
+										</TouchableHighlight>
 									</View>
 								) : (
 									<View style={[css.shuttle_card_row_center, css.shuttle_card_loader]}>
@@ -324,7 +326,8 @@ var Home = React.createClass({
 			.then((responseData) => {
 
 				responseData = responseData.GetDiningInfoResult;
-				var responseDataFinal = [];
+				var responseDataFinal = [],
+					responseDataPartial = [];
 
 				// Push dining locations with food entries to final list
 				for (var i = 0; responseData.length > i; i++) {
@@ -345,17 +348,15 @@ var Home = React.createClass({
 
 				// Sort dining locations by distance
 				responseDataFinal.sort(this.sortNearbyMarkers);
+				responseDataPartial = responseDataFinal.slice(0, this.diningDefaultResults);
 
-				// Remove after adding View All
-				if (responseDataFinal.length > 3) {
-					responseDataFinal.length = 3;
-				}
+
 
 				var dsFull = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
 				this.setState({
 					diningData: responseDataFinal,
-					diningDataFull: dsFull.cloneWithRows(responseDataFinal),
+					diningDataPartial: dsFull.cloneWithRows(responseDataPartial),
 					diningDataLoaded: true
 				});
 			})
@@ -377,23 +378,9 @@ var Home = React.createClass({
 			diningHours = data.regularHours.join("\n");
 		}
 
-		/* Re-enable once dining info feed open hours are fixed
-		if (data.specialHours[currentTimestamp]) {
-			diningHours = data.specialHours[currentTimestamp];
-		} else if (data.regularHours[dayOfWeek].indexOf('closed') === 0) {
-			diningHours = 'Closed';
-		} else {
-			var openHours, openTime, closeTime;
-			openHours = data.regularHours[dayOfWeek].split('-');
-			openTime = general.militaryToAMPM(openHours[0]);
-			closeTime = general.militaryToAMPM(openHours[1]);
-			diningHours = 'Open ' + openTime + '-' + closeTime;
-		}
-		*/
-
 		return (
 			<View style={css.dc_locations_row}>
-				<TouchableHighlight style={css.dc_locations_row_left} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoDiningList(data) }>
+				<TouchableHighlight style={css.dc_locations_row_left} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoDiningDetail(data) }>
 					<View>
 						<Text style={css.dc_locations_title}>{data.name}</Text>
 						<Text style={css.dc_locations_hours}>{diningHours}</Text>
@@ -401,7 +388,7 @@ var Home = React.createClass({
 				</TouchableHighlight>
 
 				{data.coords.lat != 0 ? (
-					<TouchableHighlight style={css.dc_locations_row_right} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoNavigationApp(data.coords.lat, data.coords.lon) }>
+					<TouchableHighlight style={css.dc_locations_row_right} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => general.gotoNavigationApp('walk', data.coords.lat, data.coords.lon) }>
 						<View style={css.dl_dir_traveltype_container}>
 							<Image style={css.dl_dir_icon} source={ require('../assets/img/icon_walk.png')} />
 							<Text style={css.dl_dir_eta}>Walk</Text>
@@ -410,43 +397,6 @@ var Home = React.createClass({
 				) : null }
 			</View>
 		);
-	},
-
-
-	updateDiningFilters: function(filter) {
-
-		/*
-		var diningData = this.state.diningData;
-		var diningDataLength = diningData.length;
-
-		logger.log('diningDataLength: ' + diningDataLength)
-
-		for (var i = 0; diningDataLength > i; i++) {
-
-			var diningTags = diningData[i].tags.split(',');
-			logger.log('diningTags:');
-			logger.log(diningTags)
-
-			for (var n = 0; diningTags.length > n; n++) {
-				if (diningTags[n] === filter) {
-					logger.log('deleting diningData' + i);
-					//diningData.splice(i, 1);
-					//i--;
-					break;
-				}
-			}
-
-		}
-
-		var dsFull = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-
-		this.setState({
-			diningDataFull: dsFull.cloneWithRows(diningData),
-		});
-		*/
-
-		return null;
-
 	},
 
 	// #6 - NEARBY CARD
@@ -490,8 +440,11 @@ var Home = React.createClass({
 		this.props.navigator.push({ id: 'ScheduleDetail', component: ScheduleDetail, title: 'Schedule' });
 	},
 
-	gotoDiningList: function(marketData) {
-		this.props.navigator.push({ id: 'DiningList', component: DiningList, title: marketData.name, marketData: marketData });
+	gotoDiningDetail: function(marketData) {
+		this.props.navigator.push({ id: 'DiningDetail', component: DiningDetail, title: marketData.name, marketData: marketData });
+	},
+	gotoDiningList(diningData) {
+		this.props.navigator.push({ id: 'DiningList', title: 'Dining', name: 'Dining', component: DiningList, data: diningData });
 	},
 
 

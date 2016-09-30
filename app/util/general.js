@@ -65,6 +65,11 @@ module.exports = {
 		return directionsURL;
 	},
 
+	gotoNavigationApp(method, destinationLat, destinationLon) {
+		var destinationURL = this.getDirectionsURL('walk', destinationLat, destinationLon );
+		this.openURL(destinationURL);
+	},
+
 	startReloadAnimation2: function(anim, toVal, duration) {
 		Animated.timing(anim, { toValue: toVal, duration: duration, easing: Easing.linear }).start();
 	},
