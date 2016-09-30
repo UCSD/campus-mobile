@@ -17,17 +17,13 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+
 	NSURL *jsCodeLocation;
 	
 	BOOL isSimulator = NO;
 	#if TARGET_IPHONE_SIMULATOR
 		isSimulator = YES;
-		
-#ifdef DEBUG
-    jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/index.ios.bundle?platform=ios&dev=false"];
-#else
-    jsCodeLocation = [CodePush bundleURL];
-#endif
+		jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/index.ios.bundle?platform=ios&dev=false"];
 	#else
 		jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
 	#endif
