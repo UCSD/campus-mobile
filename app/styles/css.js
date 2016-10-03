@@ -387,10 +387,10 @@ var css = StyleSheet.create({
 	footer_copyright: { color: ucsdblue, fontSize: round(16 * prm), textAlign: 'center', padding: 4 },
 
 	// Feedback
-	feedback_container: { flex:1, width: maxCardWidthWithPadding, padding: 16, },
-	feedback_label: { flex:1, fontSize: round(20 * prm), height: 40},
-	feedback_text: { flex:1, alignItems: 'center', width: maxCardWidth - 32, height: round(50*prm) },
-	feedback_submit: { fontSize: round(40 * prm), textAlign: 'center' },
+	feedback_container: { flex:1, alignItems: 'flex-start', flexDirection: 'column', width: maxCardWidthWithPadding, padding: 16, },
+	feedback_label: { flex: 2, flexWrap: "wrap", fontSize: round(20 * prm), height: round(80*prm)},
+	feedback_text: { flex:1, fontSize: round(20 * prm), alignItems: 'center', width: maxCardWidth - 32, height: round(50*prm) },
+	feedback_submit: { flex:1, fontSize: round(40 * prm), textAlign: 'center' },
 
 	// MISC STYLES
 	whitebg: { backgroundColor: '#FFF' },

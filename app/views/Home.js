@@ -428,7 +428,6 @@ var Home = React.createClass({
 	gotoFeedbackForm: function() {
 		//this.props.navigator.push({ id: 'WebWrapper', component: WebWrapper, title: 'Feedback', webViewURL: AppSettings.FEEDBACK_URL });
 		this.props.navigator.push({ id: 'FeedbackView', component: FeedbackView, title: 'Feedback' });
-		
 	},
 
 	gotoPrivacyPolicy: function() {
