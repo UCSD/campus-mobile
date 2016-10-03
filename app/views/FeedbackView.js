@@ -76,7 +76,7 @@ export default class FeedbackView extends Component {
 		if (!this.state.loaded) {
 			return this.renderLoadingView();
 		} 
-		else if(!this.state.submit) {
+		else if(this.state.submit) {
 			return this.renderFormView();
 		}
 		else {
@@ -102,7 +102,7 @@ export default class FeedbackView extends Component {
 				<ScrollView>
 				<Card title="Your thoughts matter!">
 					<View style={css.feedback_container}>
-						<Text style={css.feedback_label}>New featurings will be added regularly, please let us know what you would like to see. {"\n"}</Text>
+						<Text style={css.feedback_label}>New features will be added regularly, please let us know what you would like to see. {"\n"}</Text>
 
 						<TextInput 
 							multiline={true}
@@ -142,7 +142,9 @@ export default class FeedbackView extends Component {
 			<View style={css.main_container}>
 				<ScrollView>
 				<Card title="Your thoughts matter!">
-					<Text style={css.feedback_label}>Thank you for your feedback!</Text>
+					<View style={css.feedback_container}>
+						<Text style={css.feedback_label}>Thank you for your feedback!</Text>
+					</View>
 				</Card>
 				</ScrollView>
 			</View>
