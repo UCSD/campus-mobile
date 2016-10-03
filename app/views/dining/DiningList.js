@@ -11,17 +11,17 @@ import {
 	Image,
 } from 'react-native';
 
-var css = require('../styles/css');
-var logger = require('../util/logger');
-var general = require('../util/general');
+var css = require('../../styles/css');
+var logger = require('../../util/logger');
+var general = require('../../util/general');
 
 var DiningDetail = require('./DiningDetail');
 
 var DiningList = React.createClass({
 
-	
-
 	getInitialState: function() {
+
+		logger.log('t3--------------')
 		return {
 			loaded: false
 		};
@@ -56,6 +56,9 @@ var DiningList = React.createClass({
 
 	renderListView: function() {
 		var diningData = this.props.route.data;
+
+		logger.log('diningData3')
+		logger.log(diningData)
 		var datasource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 		var diningDatasource = datasource.cloneWithRows(diningData);
 		return (
@@ -67,27 +70,20 @@ var DiningList = React.createClass({
 
 	renderDiningRow: function(data) {
 		var currentTimestamp = general.getTimestamp('yyyy-mm-dd');
-		var diningHours = '';
 		var dayOfWeek = general.getTimestamp('ddd').toLowerCase();
-
-		if (data.specialHours[currentTimestamp]) {
-			diningHours = data.specialHours[currentTimestamp];
-		} else {
-			diningHours = data.regularHours.join("\n");
-		}
 
 		return (
 			<View style={css.dc_locations_row}>
 				<TouchableHighlight style={css.dc_locations_row_left} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoDiningDetail(data) }>
 					<View>
 						<Text style={css.dc_locations_title}>{data.name}</Text>
-						<Text style={css.dc_locations_hours}>{diningHours}</Text>
+						<Text style={css.dc_locations_hours}>{data.regularHours}</Text>
 					</View>
 				</TouchableHighlight>
 				{data.coords.lat != 0 ? (
 					<TouchableHighlight style={css.dc_locations_row_right} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => general.gotoNavigationApp('walk', data.coords.lat, data.coords.lon) }>
 						<View style={css.dl_dir_traveltype_container}>
-							<Image style={css.dl_dir_icon} source={ require('../assets/img/icon_walk.png')} />
+							<Image style={css.dl_dir_icon} source={ require('../../assets/img/icon_walk.png')} />
 							<Text style={css.dl_dir_eta}>Walk</Text>
 						</View>
 					</TouchableHighlight>

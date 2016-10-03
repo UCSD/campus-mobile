@@ -9,8 +9,8 @@ import {
 	ListView
 } from 'react-native';
  
-var logger = require('../util/logger');
-var css = require('../styles/css');
+var logger = require('../../util/logger');
+var css = require('../../styles/css');
 
 var DiningNutrition = React.createClass({
 
