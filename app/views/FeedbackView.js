@@ -76,7 +76,7 @@ export default class FeedbackView extends Component {
 		if (!this.state.loaded) {
 			return this.renderLoadingView();
 		} 
-		else if(this.state.submit) {
+		else if(!this.state.submit) {
 			return this.renderFormView();
 		}
 		else {
