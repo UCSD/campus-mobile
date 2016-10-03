@@ -335,7 +335,7 @@ var css = StyleSheet.create({
 
 	// SHUTTLE STOP
 	shuttlestop_image: { width: windowWidth, height: round(windowWidth * .533) },
-	shuttlestop_name_container: { flex: 1, flexDirection: 'row', alignItems: 'center', width: windowWidth, paddingVertical: round(14 * prm), paddingHorizontal: round(20 * prm), backgroundColor: ucsdblue },
+	shuttlestop_name_container: { height: round(48 * prm), flex: 1, flexDirection: 'row', alignItems: 'center', width: windowWidth, paddingVertical: round(14 * prm), paddingHorizontal: round(20 * prm), backgroundColor: ucsdblue },
 		shuttlestop_name_text: { width: round(windowWidth * .9 - 40), color: '#FFF', fontSize: round(24 * prm), fontWeight: '300' },
 		
 		shuttlestop_refresh_container: { position: 'absolute', alignItems: 'center', top: shuttleStopRefreshIconTop, right: 8, width: round(55 * prm) },
@@ -352,6 +352,7 @@ var css = StyleSheet.create({
 		
 		shuttlestop_loading: { width: 48, height: 48, marginHorizontal: 40, marginVertical: round(50 * prm) },
 
+		shuttle_stop_map_container: { margin: 1 },
 		shuttle_stop_map_text: { fontSize: round(20 * prm), fontWeight: '300', paddingTop: 16, color: '#222', paddingLeft: round(20 * prm), paddingBottom: 8 },
 		shuttlestop_map: { width: windowWidth, height: round(windowWidth * .8) },
 		shuttle_map_img: { width: windowWidth, height: round(windowWidth * 1.474), marginBottom: 12 },
