@@ -46,8 +46,8 @@ var logger = 		require('../util/logger');
 var shuttle = 		require('../util/shuttle');
 
 // Views
-var DiningList = 	require('./DiningList');
-var DiningDetail = 	require('./DiningDetail');
+var DiningDetail = 	require('./dining/DiningDetail');
+var DiningList = 	require('./dining/DiningList');
 var WebWrapper = 	require('./WebWrapper');
 
 var Home = React.createClass({
@@ -234,15 +234,15 @@ var Home = React.createClass({
 										</TouchableHighlight>
 									</View>
 								) : (
-									<View style={[css.shuttle_card_row_center, css.shuttle_card_loader]}>
-										<ActivityIndicator style={css.shuttle_card_aa} size="large" />
+									<View style={[css.card_row_center, css.card_loader]}>
+										<ActivityIndicator size="large" />
 									</View>
 								)}
 							</View>
 						</View>
 					) : null }
 
-					{/* SHUTTLE_CARD & EVENTS CARD & NEWS CARD & WEATHER CARD & NEARBY CARD*/}
+					{/* SHUTTLE_CARD & EVENTS CARD & NEWS CARD & WEATHER CARD & NEARBY CARD */}
 					{ this.getCards() }
 					
 
@@ -262,7 +262,7 @@ var Home = React.createClass({
 		);
 	},
 
-	getCards: function(){
+	getCards: function() {
 		var cards = [];
 		var cardCounter = 0;
 		// Setup CARDS
@@ -326,35 +326,25 @@ var Home = React.createClass({
 			.then((responseData) => {
 
 				responseData = responseData.GetDiningInfoResult;
-				var responseDataFinal = [],
-					responseDataPartial = [];
-
-				// Push dining locations with food entries to final list
-				// if 'Market' is in the name of the location, allow even with no menu items
-				for (var i = 0; responseData.length > i; i++) {
-					if (responseData[i].menuItems.length > 0 || responseData[i].name.indexOf('Market') >= 0) {
-						responseDataFinal.push(responseData[i]);
-					}
-				}
 
 				// Calc distance from dining locations
-				for (var i = 0; responseDataFinal.length > i; i++) {
-					var distance = shuttle.getDistance(this.getCurrentPosition('lat'), this.getCurrentPosition('lon'), responseDataFinal[i].coords.lat, responseDataFinal[i].coords.lon);
+				for (var i = 0; responseData.length > i; i++) {
+					var distance = shuttle.getDistance(this.getCurrentPosition('lat'), this.getCurrentPosition('lon'), responseData[i].coords.lat, responseData[i].coords.lon);
 					if (distance) {
-						responseDataFinal[i].distance = distance;
+						responseData[i].distance = distance;
 					} else {
-						responseDataFinal[i].distance = 100000000;
+						responseData[i].distance = 100000000;
 					}
 				}
 
 				// Sort dining locations by distance
-				responseDataFinal.sort(this.sortNearbyMarkers);
-				responseDataPartial = responseDataFinal.slice(0, this.diningDefaultResults);
+				responseData.sort(this.sortNearbyMarkers);
+				var responseDataPartial = responseData.slice(0, this.diningDefaultResults);
 
 				var dsFull = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
 				this.setState({
-					diningData: responseDataFinal,
+					diningData: responseData,
 					diningDataPartial: dsFull.cloneWithRows(responseDataPartial),
 					diningDataLoaded: true
 				});
@@ -367,22 +357,16 @@ var Home = React.createClass({
 
 
 	renderDiningRow: function(data) {
-		var currentTimestamp = general.getTimestamp('yyyy-mm-dd');
-		var diningHours = '';
-		var dayOfWeek = general.getTimestamp('ddd').toLowerCase();
 
-		if (data.specialHours[currentTimestamp]) {
-			diningHours = data.specialHours[currentTimestamp];
-		} else {
-			diningHours = data.regularHours.join("\n");
-		}
+		var currentTimestamp = general.getTimestamp('yyyy-mm-dd');
+		var dayOfWeek = general.getTimestamp('ddd').toLowerCase();
 
 		return (
 			<View style={css.dc_locations_row}>
 				<TouchableHighlight style={css.dc_locations_row_left} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoDiningDetail(data) }>
 					<View>
 						<Text style={css.dc_locations_title}>{data.name}</Text>
-						<Text style={css.dc_locations_hours}>{diningHours}</Text>
+						<Text style={css.dc_locations_hours}>{data.regularHours}</Text>
 					</View>
 				</TouchableHighlight>
 
@@ -440,7 +424,7 @@ var Home = React.createClass({
 	},
 
 	gotoDiningDetail: function(marketData) {
-		this.props.navigator.push({ id: 'DiningDetail', component: DiningDetail, title: marketData.name, marketData: marketData });
+		this.props.navigator.push({ id: 'DiningDetail', component: DiningDetail, title: 'Dining', marketData: marketData });
 	},
 	gotoDiningList(diningData) {
 		this.props.navigator.push({ id: 'DiningList', title: 'Dining', name: 'Dining', component: DiningList, data: diningData });

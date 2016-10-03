@@ -139,9 +139,9 @@ var css = StyleSheet.create({
 
 	// DINING LIST
 	dl_market_name: { padding: round(10 * prm) },
-		dl_market_name_text: { color: '#777', fontSize: round(30 * prm) },
-	dl_market_scroller: { height: round(154 * prm) },
-		dl_market_scroller_image: { width: round(154 * prm), height: round(154 * prm), borderRadius: round(5 * prm), marginHorizontal: round(7 * prm) },
+		dl_market_name_text: { color: '#777', fontSize: round(26 * prm) },
+	dl_market_scroller: { height: round(120 * prm) },
+		dl_market_scroller_image: { width: round(120 * prm), height: round(120 * prm), borderRadius: round(5 * prm), marginHorizontal: round(7 * prm), borderWidth: 1, borderColor: '#CCC' },
 	dl_market_directions: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderBottomColor: '#DDD', margin: round(6 * prm), padding: round(6 * prm) },
 		dl_dir_label: { flex: 5, fontSize: round(22 * prm), color: ucsdblue },
 		dl_dir_traveltype_container: { flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'center' },
@@ -180,7 +180,8 @@ var css = StyleSheet.create({
 		ddn_topborder1: { borderTopWidth: 8, borderTopColor: '#000', paddingVertical: 2, marginTop: 2 },
 		ddn_topborder2: { borderTopWidth: 4, borderTopColor: '#000' },
 		ddn_topborder3: { borderTopWidth: 1, borderTopColor: '#999' },
-
+		dd_menu_container: { justifyContent: 'center', alignItems: 'center', backgroundColor: '#17AADF', borderRadius: 3, margin: round(20 * prm), padding: round(10 * prm) },
+		dd_menu_text: { fontSize: round(16 * prm), color: '#FFF' },
 
 	// SHUTTLE CARD
 	shuttle_card_refresh_container: { position: 'absolute', alignItems: 'center', top: shuttleCardRefreshIconTop, right: round(4 * prm), width: round(50 * prm) },
@@ -206,6 +207,9 @@ var css = StyleSheet.create({
 		shuttlecard_loading: { marginHorizontal: 40, marginVertical: round(156 * prm) },
 		shuttlecard_loading_fail: { marginHorizontal: round(16 * prm), marginTop: round(40 * prm), marginBottom: round(60 * prm) },
 
+	// CARD GENERIC
+	card_row_center: { alignItems: 'center', justifyContent: 'center', width: maxCardWidth, overflow: 'hidden' },
+	card_loader: { height: round(278 * prm) },
 
 	// EVENTS / TOP STORIES CARD
 	events_list: { width: maxCardWidth, padding: 8 },
