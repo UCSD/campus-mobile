@@ -144,8 +144,6 @@ var ShuttleStop = React.createClass({
 	componentWillUnmount: function() {
 		this.clearTimeout(this.mapViewTimeout);
 		navigator.geolocation.clearWatch(this.watchID);
-		this.setState({ mapViewLoadReady: false });
-		this.forceUpdate();
 	},
 
 	render: function() {
@@ -255,6 +253,7 @@ var ShuttleStop = React.createClass({
 					
 					
 					{this.state.mapViewLoadReady ? (
+						<View style={css.shuttle_stop_map_container}>
 						<MapView
 							style={css.shuttlestop_map}
 							loadingEnabled={true}
@@ -277,6 +276,7 @@ var ShuttleStop = React.createClass({
 								key={this.state.shuttleStopName}
 							/>
 						</MapView>
+						</View>
 					) : null }
 				</ScrollView>
 			</View>
@@ -312,7 +312,7 @@ var ShuttleStop = React.createClass({
 			mapDelta: distLatLon * 3
 		});
 
-		if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
+		if (AppSettings.NAVIGATOR_ENABLED) {
 			this.setState({ mapViewLoadReady: false });
 		}
 		else {

@@ -76,7 +76,7 @@ export default class FeedbackView extends Component {
 		if (!this.state.loaded) {
 			return this.renderLoadingView();
 		} 
-		else if(!this.state.submit) {
+		else if(this.state.submit) {
 			return this.renderFormView();
 		}
 		else {
@@ -102,11 +102,12 @@ export default class FeedbackView extends Component {
 				<ScrollView>
 				<Card title="Your thoughts matter!">
 					<View style={css.feedback_container}>
+						<Text style={css.feedback_label}>New featurings will be added regularly, please let us know what you would like to see. {"\n"}</Text>
 
 						<TextInput 
 							multiline={true}
 							onChangeText={(text) => this.setState({commentsText: text})}
-							placeholder="Please tell us what you think*"
+							placeholder="Tell us what you think*"
 							style={css.feedback_text}
 						/>
 
@@ -139,35 +140,45 @@ export default class FeedbackView extends Component {
 	renderSubmitView() {
 		return (
 			<View style={css.main_container}>
-				<Text style={css.feedback_submit}>Thank you for your feedback!</Text>
+				<ScrollView>
+				<Card title="Your thoughts matter!">
+					<Text style={css.feedback_label}>Thank you for your feedback!</Text>
+				</Card>
+				</ScrollView>
 			</View>
 		);
 	}
 
 	postFeedback() {
 
-		var formData  = new FormData();
-		formData.append('element_1', this.state.commentsText);
-		formData.append('element_2', this.state.nameText);
-		formData.append('element_3', this.state.emailText);
-		formData.append('form_id','175631');
-		formData.append('submit_form','1');
-		formData.append('page_number','1');
-		formData.append('submit_form','Submit');
+		if(this.state.commentsText !== "") {
+			var formData  = new FormData();
+			formData.append('element_1', this.state.commentsText);
+			formData.append('element_2', this.state.nameText);
+			formData.append('element_3', this.state.emailText);
+			formData.append('form_id','175631');
+			formData.append('submit_form','1');
+			formData.append('page_number','1');
+			formData.append('submit_form','Submit');
 
-		fetch('https://eforms.ucsd.edu/view.php?id=175631', {
-			method: 'POST',
-			body: formData
-		})
-		.then((response) => {
-			this.setState({ submit: true });
-		})
-		.then((responseJson) => {
-			//console.log(responseJson);
-		})
-		.catch((error) => {
-			//console.error(error);
-		});
+			fetch('https://eforms.ucsd.edu/view.php?id=175631', {
+				method: 'POST',
+				body: formData
+			})
+			.then((response) => {
+				this.setState({ submit: true });
+			})
+			.then((responseJson) => {
+				//console.log(responseJson);
+			})
+			.catch((error) => {
+				//console.error(error);
+			});
+		}
+		else {
+			return;
+		}
+		
 	}
 
 }

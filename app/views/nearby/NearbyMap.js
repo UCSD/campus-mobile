@@ -48,7 +48,7 @@ export default class NearbyMap extends React.Component {
 									coordinate={marker.coords}
 									title={marker.title}
 									description={marker.description}
-									key={marker.title}
+									key={index}
 								/>
 							))}
 					</MapView>

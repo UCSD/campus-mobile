@@ -339,7 +339,7 @@ var css = StyleSheet.create({
 
 	// SHUTTLE STOP
 	shuttlestop_image: { width: windowWidth, height: round(windowWidth * .533) },
-	shuttlestop_name_container: { flex: 1, flexDirection: 'row', alignItems: 'center', width: windowWidth, paddingVertical: round(14 * prm), paddingHorizontal: round(20 * prm), backgroundColor: ucsdblue },
+	shuttlestop_name_container: { height: round(48 * prm), flex: 1, flexDirection: 'row', alignItems: 'center', width: windowWidth, paddingVertical: round(14 * prm), paddingHorizontal: round(20 * prm), backgroundColor: ucsdblue },
 		shuttlestop_name_text: { width: round(windowWidth * .9 - 40), color: '#FFF', fontSize: round(24 * prm), fontWeight: '300' },
 		
 		shuttlestop_refresh_container: { position: 'absolute', alignItems: 'center', top: shuttleStopRefreshIconTop, right: 8, width: round(55 * prm) },
@@ -356,6 +356,7 @@ var css = StyleSheet.create({
 		
 		shuttlestop_loading: { width: 48, height: 48, marginHorizontal: 40, marginVertical: round(50 * prm) },
 
+		shuttle_stop_map_container: { margin: 1 },
 		shuttle_stop_map_text: { fontSize: round(20 * prm), fontWeight: '300', paddingTop: 16, color: '#222', paddingLeft: round(20 * prm), paddingBottom: 8 },
 		shuttlestop_map: { width: windowWidth, height: round(windowWidth * .8) },
 		shuttle_map_img: { width: windowWidth, height: round(windowWidth * 1.474), marginBottom: 12 },
@@ -391,10 +392,10 @@ var css = StyleSheet.create({
 	footer_copyright: { color: ucsdblue, fontSize: round(16 * prm), textAlign: 'center', padding: 4 },
 
 	// Feedback
-	feedback_container: { flex:1, width: maxCardWidthWithPadding, padding: 16, },
-	feedback_label: { flex:1, fontSize: round(20 * prm), height: 40},
-	feedback_text: { flex:1, alignItems: 'center', width: maxCardWidth - 32, height: round(50*prm) },
-	feedback_submit: { fontSize: round(40 * prm), textAlign: 'center' },
+	feedback_container: { flex:1, alignItems: 'flex-start', flexDirection: 'column', width: maxCardWidthWithPadding, padding: 16, },
+	feedback_label: { flex: 2, flexWrap: "wrap", fontSize: round(20 * prm), height: round(80*prm)},
+	feedback_text: { flex:1, fontSize: round(20 * prm), alignItems: 'center', width: maxCardWidth - 32, height: round(50*prm) },
+	feedback_submit: { flex:1, fontSize: round(40 * prm), textAlign: 'center' },
 
 	// MISC STYLES
 	whitebg: { backgroundColor: '#FFF' },
