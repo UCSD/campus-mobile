@@ -139,7 +139,8 @@ var css = StyleSheet.create({
 
 	// DINING LIST
 	dl_market_name: { padding: round(10 * prm) },
-		dl_market_name_text: { color: '#777', fontSize: round(26 * prm) },
+		dl_market_name_text: { color: '#555', fontSize: round(26 * prm) },
+		dl_market_desc_text: { color: '#888', paddingTop: round(10 * prm), fontSize: round(14 * prm) },
 	dl_market_scroller: { height: round(120 * prm) },
 		dl_market_scroller_image: { width: round(120 * prm), height: round(120 * prm), borderRadius: round(5 * prm), marginHorizontal: round(7 * prm), borderWidth: 1, borderColor: '#BBB' },
 	dl_market_directions: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderBottomColor: '#DDD', margin: round(6 * prm), padding: round(6 * prm) },

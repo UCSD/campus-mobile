@@ -121,6 +121,9 @@ var DiningDetail = React.createClass({
 
 						<View style={css.dl_market_name}>
 							<Text style={css.dl_market_name_text}>{this.state.marketData.name}</Text>
+							{this.state.marketData.description ? (
+								<Text style={css.dl_market_desc_text}>{this.state.marketData.description}</Text>
+							) : null }
 						</View>
 
 						{this.state.marketData.images ? (
@@ -251,7 +254,7 @@ var DiningDetail = React.createClass({
 								) : null }
 
 								{this.state.menuItemsCount === 0 && this.state.marketData.menuWebsite ? (
-									<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoWebView(this.state.marketData.menuWebsite) }>
+									<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoMenuWebsite(this.state.marketData.menuWebsite) }>
 										<View style={css.dd_menu_container}>
 											<Text style={css.dd_menu_text}>View Menu</Text>
 										</View>
@@ -364,8 +367,8 @@ var DiningDetail = React.createClass({
 		this.props.navigator.push({ id: 'DiningNutrition', name: data.name, title: 'Nutrition', menuItem: data, component: DiningNutrition });
 	},
 
-	gotoWebView: function(url) {
-		this.props.navigator.push({ id: 'WebWrapper', name: 'WebWrapper', title: 'Menu', component: WebWrapper, webViewURL: url });
+	gotoMenuWebsite: function(url) {
+		general.openURL(url);
 	}
 
 });
