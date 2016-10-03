@@ -213,6 +213,11 @@ var Home = React.createClass({
 					{/* SPECIAL TOP BANNER */}
 					<TopBannerView navigator={this.props.navigator}/>
 
+
+
+					{/* SHUTTLE_CARD & EVENTS CARD & NEWS CARD & WEATHER CARD */}
+					{ this.getCards() }
+
 					{/* DINING CARD */}
 					{AppSettings.DINING_CARD_ENABLED ? (
 						<View>
@@ -241,10 +246,9 @@ var Home = React.createClass({
 							</View>
 						</View>
 					) : null }
-
-					{/* SHUTTLE_CARD & EVENTS CARD & NEWS CARD & WEATHER CARD & NEARBY CARD */}
-					{ this.getCards() }
 					
+					{/* NEARBY CARD */}
+					{ this.getNearbyCard() }
 
 					{/* FOOTER */}
 					<View style={css.footer}>
@@ -265,25 +269,35 @@ var Home = React.createClass({
 	getCards: function() {
 		var cards = [];
 		var cardCounter = 0;
-		// Setup CARDS
+		// Setup Cards
 		// Keys need to be unique, there's probably a better solution, but this works for now
+		if (AppSettings.WEATHER_CARD_ENABLED) {
+			cards.push(<WeatherCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={this._generateUUID + ':' + cardCounter++}/>);
+		}
 		if (AppSettings.SHUTTLE_CARD_ENABLED) {
 			cards.push(<ShuttleCard navigator={this.props.navigator} location={this.state.currentPosition} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={this._generateUUID + ':' + cardCounter++} />);
 		}
-		if (AppSettings.WEATHER_CARD_ENABLED){
-			cards.push(<WeatherCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={this._generateUUID + ':' + cardCounter++}/>);
-		}
-		if (AppSettings.EVENTS_CARD_ENABLED){
+		if (AppSettings.EVENTS_CARD_ENABLED) {
 			cards.push(<EventCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={this._generateUUID + ':' + cardCounter++}/>);
 		}
-		if (AppSettings.NEWS_CARD_ENABLED){
+		if (AppSettings.NEWS_CARD_ENABLED) {
 			cards.push(<NewsCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={this._generateUUID + ':' + cardCounter++}/>);
-		}
-		if (AppSettings.NEARBY_CARD_ENABLED){
-			cards.push(<NearbyCard navigator={this.props.navigator} getCurrentPosition={(latlon) => this.getCurrentPosition(latlon)} updatedGoogle={this.state.updatedGoogle}ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={this._generateUUID + ':' + cardCounter++}/>);
 		}
 		return cards;
 	},
+
+	// Replace with dining card breakout in v2.4
+	getNearbyCard: function() {
+		var cards = [];
+		var cardCounter = 10;
+		// Setup Cards
+		// Keys need to be unique, there's probably a better solution, but this works for now
+		if (AppSettings.NEARBY_CARD_ENABLED) {
+			cards.push(<NearbyCard navigator={this.props.navigator} getCurrentPosition={(latlon) => this.getCurrentPosition(latlon)} updatedGoogle={this.state.updatedGoogle} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={this._generateUUID + ':' + cardCounter++}/>);
+		}
+		return cards;
+	},
+
 
 
 

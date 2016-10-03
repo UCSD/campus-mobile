@@ -141,7 +141,7 @@ var css = StyleSheet.create({
 	dl_market_name: { padding: round(10 * prm) },
 		dl_market_name_text: { color: '#777', fontSize: round(26 * prm) },
 	dl_market_scroller: { height: round(120 * prm) },
-		dl_market_scroller_image: { width: round(120 * prm), height: round(120 * prm), borderRadius: round(5 * prm), marginHorizontal: round(7 * prm), borderWidth: 1, borderColor: '#CCC' },
+		dl_market_scroller_image: { width: round(120 * prm), height: round(120 * prm), borderRadius: round(5 * prm), marginHorizontal: round(7 * prm), borderWidth: 1, borderColor: '#BBB' },
 	dl_market_directions: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderBottomColor: '#DDD', margin: round(6 * prm), padding: round(6 * prm) },
 		dl_dir_label: { flex: 5, fontSize: round(22 * prm), color: ucsdblue },
 		dl_dir_traveltype_container: { flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'center' },
