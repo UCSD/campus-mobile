@@ -55,7 +55,7 @@ var Home = React.createClass({
 	mixins: [TimerMixin],
 	permissionUpdateInterval: 1 * 65 * 1000,
 	regionRefreshInterval: 1 * 70 * 1000,
-	diningDefaultResults: 3,
+	diningDefaultResults: 4,
 	copyrightYear: new Date().getFullYear(),
 	geolocationWatchID: null,
 

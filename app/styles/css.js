@@ -210,7 +210,7 @@ var css = StyleSheet.create({
 
 	// CARD GENERIC
 	card_row_center: { alignItems: 'center', justifyContent: 'center', width: maxCardWidth, overflow: 'hidden' },
-	card_loader: { height: round(278 * prm) },
+	card_loader: { height: round(368 * prm) },
 
 	// EVENTS / TOP STORIES CARD
 	events_list: { width: maxCardWidth, padding: 8 },

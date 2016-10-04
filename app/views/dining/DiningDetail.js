@@ -124,6 +124,9 @@ var DiningDetail = React.createClass({
 							{this.state.marketData.description ? (
 								<Text style={css.dl_market_desc_text}>{this.state.marketData.description}</Text>
 							) : null }
+							{this.state.marketData.regularHours ? (
+								<Text style={css.dl_market_desc_text}>{this.state.marketData.regularHours}</Text>
+							) : null }
 						</View>
 
 						{this.state.marketData.images ? (
