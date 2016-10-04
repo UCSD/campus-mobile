@@ -80,7 +80,7 @@ var DiningList = React.createClass({
 						<Text style={css.dc_locations_hours}>{data.regularHours}</Text>
 					</View>
 				</TouchableHighlight>
-				{data.coords.lat != 0 ? (
+				{data.coords.lat !== 0 && data.coords.lon !== 0 ? (
 					<TouchableHighlight style={css.dc_locations_row_right} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => general.gotoNavigationApp('walk', data.coords.lat, data.coords.lon) }>
 						<View style={css.dl_dir_traveltype_container}>
 							<Image style={css.dl_dir_icon} source={ require('../../assets/img/icon_walk.png')} />

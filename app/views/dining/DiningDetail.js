@@ -136,17 +136,19 @@ var DiningDetail = React.createClass({
 								})}
 							</ScrollView>
 						) : null }
+						
+						{this.state.marketData.coords.lat !== 0 && this.state.marketData.coords.lon !== 0 ? (
+							<View style={css.dl_market_directions}>
+								<Text style={css.dl_dir_label}>Directions</Text>
 
-						<View style={css.dl_market_directions}>
-							<Text style={css.dl_dir_label}>Directions</Text>
-
-							<TouchableHighlight style={css.dl_dir_traveltype_container} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { general.gotoNavigationApp('walk', this.state.marketData.coords.lat, this.state.marketData.coords.lon) }}>
-								<View style={css.dl_dir_traveltype_container}>
-									<Image style={css.dl_dir_icon} source={ require('../../assets/img/icon_walk.png')} />
-									<Text style={css.dl_dir_eta}>Walk</Text>
-								</View>
-							</TouchableHighlight>
-						</View>
+								<TouchableHighlight style={css.dl_dir_traveltype_container} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { general.gotoNavigationApp('walk', this.state.marketData.coords.lat, this.state.marketData.coords.lon) }}>
+									<View style={css.dl_dir_traveltype_container}>
+										<Image style={css.dl_dir_icon} source={ require('../../assets/img/icon_walk.png')} />
+										<Text style={css.dl_dir_eta}>Walk</Text>
+									</View>
+								</TouchableHighlight>
+							</View>
+						) : null }
 
 						{this.state.menuItemsCount > 0 || this.state.marketData.menuWebsite ? (
 							<View>
