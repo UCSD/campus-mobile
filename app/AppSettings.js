@@ -21,7 +21,7 @@ module.exports = {
 	WEATHER_API_URL: 			'https://w3wyps9yje.execute-api.us-west-2.amazonaws.com/prod/forecast',
 	SURF_API_URL: 				'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/surffeed.json',
 	NEWS_API_URL: 				'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/allstories.json',
-	EVENTS_API_URL: 			'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/student_events.json',
+	EVENTS_API_URL: 			'https://cdmet2w0jh.execute-api.us-west-2.amazonaws.com/prod/events-service',
 	SHUTTLE_STOPS_API_URL: 		'https://ies4wyrlx9.execute-api.us-west-2.amazonaws.com/prod/stops/',
 	DINING_API_URL: 			'https://s3-us-west-2.amazonaws.com/ucsd-mobile/v1/dining-feed-v2.json',
 	FEEDBACK_URL: 				'https://eforms.ucsd.edu/view.php?id=175631',
