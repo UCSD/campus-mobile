@@ -349,6 +349,9 @@ var Home = React.createClass({
 					} else {
 						responseData[i].distance = 100000000;
 					}
+
+					responseData[i].distanceMiles = general.convertMetersToMiles(distance);
+					responseData[i].distanceMilesStr = general.getDistanceMilesStr(responseData[i].distanceMiles);
 				}
 
 				// Sort dining locations by distance
@@ -388,7 +391,7 @@ var Home = React.createClass({
 					<TouchableHighlight style={css.dc_locations_row_right} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => general.gotoNavigationApp('walk', data.coords.lat, data.coords.lon) }>
 						<View style={css.dl_dir_traveltype_container}>
 							<Image style={css.dl_dir_icon} source={ require('../assets/img/icon_walk.png')} />
-							<Text style={css.dl_dir_eta}>Walk</Text>
+							<Text style={css.dl_dir_eta}>{data.distanceMilesStr}</Text>
 						</View>
 					</TouchableHighlight>
 				) : null }

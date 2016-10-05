@@ -31,6 +31,14 @@ module.exports = {
 		return Platform.OS;
 	},
 
+	convertMetersToMiles(meters) {
+		return (meters / 1609.344);
+	},
+
+	getDistanceMilesStr(miles) {
+		return (miles.toFixed(1) + ' mi');
+	},
+
 	openURL: function(url) {
 		Linking.canOpenURL(url).then(supported => {
 			if (!supported) {

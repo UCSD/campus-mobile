@@ -12,18 +12,6 @@ Math.degrees = function(radians) {
 
 module.exports = {
 
-	convertMetersToFeetOrMiles: function(meters) {
-		// Convert meters to feet -- if over 530 feet (>= .1 miles) convert to miles
-		var distanceFeet = Math.round(meters * 3.2808);
-		
-		if (distanceFeet >= 530) {
-			var distanceMiles = distanceFeet * 0.000189394;
-			return (distanceMiles.toFixed(1) + " miles");
-		} else {
-			return (distanceFeet + " feet");
-		}
-	},
-
 	getDistance: function(lat1, long1, lat2, long2) {
 
 		if (lat1 && long1 && lat2 && long2) {
