@@ -149,7 +149,7 @@ var css = StyleSheet.create({
 			dl_dir_icon: { width: round(28 * prm), height: round(28 * prm) },
 			dl_dir_eta: { color: ucsdblue, fontSize: round(11 * prm), fontWeight: '600' },
 	dl_noresults: { color: '#444', fontSize: round(15 * prm) },
-	dl_market_date: { borderBottomWidth: 1, borderBottomColor: '#DDD', paddingBottom: round(6 * prm) },
+	dl_market_date: { borderBottomWidth: 1, borderBottomColor: '#EEE', paddingBottom: round(12 * prm), paddingTop: round(6 * prm) },
 		dl_market_date_label: { fontSize: round(22 * prm), color: '#444', textAlign: 'center' },
 	
 	dl_market_filters_foodtype: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginVertical: round(8 * prm) },
