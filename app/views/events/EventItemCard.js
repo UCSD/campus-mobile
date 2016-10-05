@@ -27,8 +27,8 @@ export default class EventItem extends React.Component {
 		eventTitleStr = eventTitleStr.trim();
 		var eventDescriptionStr = data.EventDescription.replace('&amp;','&').replace(/\n.*/g,'').trim();
 
-		var eventDescriptionStrTrimmed = eventDescriptionStr.substring(0,150);
-		if(eventDescriptionStr.length > 150) {
+		var eventDescriptionStrTrimmed = eventDescriptionStr.substring(0,115);
+		if(eventDescriptionStr.length > 115) {
 			eventDescriptionStrTrimmed += '...';
 		}
 

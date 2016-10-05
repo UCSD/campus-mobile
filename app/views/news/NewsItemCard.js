@@ -38,7 +38,7 @@ export default class NewsItem extends React.Component {
 	getStoryDescription(description, title){
 		var storyDescriptionStr = description.replace(/^ /g, '');
 
-		storyDescriptionStr = storyDescriptionStr.substring(0,150).replace(/ $/,'') + '...';
+		storyDescriptionStr = storyDescriptionStr.substring(0,115).replace(/ $/,'') + '...';
 
 		return storyDescriptionStr;
 	}
@@ -75,9 +75,9 @@ export default class NewsItem extends React.Component {
 							<Text style={css.events_card_postdate}>{storyDateMonthStr} {storyDateDay}</Text>
 						</View>
 						{data.image ? (
-							<Image style={css.events_card_image} source={{ uri: data.image }} />
+							<Image style={css.news_card_image} source={{ uri: data.image }} />
 						) : (
-							<Image style={css.events_card_image} source={ require('../../assets/img/MobileEvents_blank.jpg')} />
+							<Image style={css.news_card_image} source={ require('../../assets/img/MobileEvents_blank.jpg')} />
 						)}
 					</View>
 				</View>

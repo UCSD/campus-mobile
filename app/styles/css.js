@@ -128,7 +128,7 @@ var css = StyleSheet.create({
 	dc_locations: { flex: 1, flexDirection: 'column' },
 		dc_locations_row: { flexDirection: 'row', paddingBottom: 10, paddingTop: 10, borderBottomWidth: 1, borderBottomColor: '#EEE' },
 			dc_locations_row_left: { flex: 6, justifyContent: 'center' },
-				dc_locations_title: { fontSize: round(20 * prm), fontWeight: '500', color: ucsdblue },
+				dc_locations_title: { fontSize: round(20 * prm), color: ucsdblue },
 				dc_locations_hours: { fontSize: round(12 * prm), color: '#666', paddingTop: 1 },
 				dc_locations_description: { fontSize: round(12 * prm), color: '#666', paddingTop: 6 },
 			dc_locations_row_right: { flex: 1, alignItems: 'center', justifyContent: 'center' },
@@ -137,7 +137,7 @@ var css = StyleSheet.create({
 	dining_card_more: { alignItems: 'center', justifyContent: 'center', width: maxCardWidthWithPadding, paddingHorizontal: 4, paddingTop: 8, paddingBottom: 4, borderTopWidth: 1, borderTopColor: '#DDD' },
 	dining_card_more_label: { fontSize: round(20 * prm), color: ucsdblue, fontWeight: '300' },
 
-	// DINING LIST
+	// DINING DETAIL
 	dl_market_name: { padding: round(10 * prm) },
 		dl_market_name_text: { color: '#555', fontSize: round(26 * prm) },
 		dl_market_desc_text: { color: '#888', paddingTop: round(6 * prm), fontSize: round(14 * prm) },
@@ -212,7 +212,7 @@ var css = StyleSheet.create({
 	card_row_center: { alignItems: 'center', justifyContent: 'center', width: maxCardWidth, overflow: 'hidden' },
 	card_loader: { height: round(368 * prm) },
 
-	// EVENTS / TOP STORIES CARD
+	// EVENTS / NEWS CARD
 	events_list: { width: maxCardWidth, padding: 8 },
 	events_list_row: { flex: 1, flexDirection: 'row', paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: '#EEE', overflow: 'hidden' },
 		events_list_left_container: { flex: 1 },
@@ -220,7 +220,7 @@ var css = StyleSheet.create({
 			events_list_desc: { fontSize: round(14 * prm), color: '#666', paddingTop: round(8 * prm) },
 			events_list_postdate: { fontSize: round(11 * prm), color: ucsdblue, paddingTop: round(8 * prm) },
 		events_list_image: { width: round(130 * prm), height: round(73 * prm), marginRight: 4, marginLeft: 10, borderWidth: 1, borderColor: '#CCC' },
-		news_list_image: { width: round(130 * prm), height: round(87 * prm), marginRight: 4, marginLeft: 10, borderWidth: 1, borderColor: '#CCC' },
+		news_list_image: { width: round(130 * prm), marginRight: 4, marginLeft: 10, borderWidth: 1, borderColor: '#CCC' },
 	events_more: { alignItems: 'center', justifyContent: 'center', width: maxCardWidthWithPadding, paddingHorizontal: 4, paddingTop: 8, paddingBottom: 4 },
 	events_more_label: { fontSize: round(20 * prm), color: ucsdblue, fontWeight: '300' },
 	events_card_container: { flex: 1, flexDirection: 'row', padding: 14, borderBottomWidth: 1, borderBottomColor: '#EEE', alignItems: 'center' },
@@ -229,7 +229,8 @@ var css = StyleSheet.create({
 		events_card_left_container: { flex: 10 },
 			events_card_desc: { flexWrap: 'wrap', fontSize: round(14 * prm), color: '#666', paddingTop: round(8 * prm) },
 			events_card_postdate: { fontSize: round(11 * prm), color: ucsdblue, paddingTop: round(8 * prm) },
-		events_card_image: { flex: 1, width: round(130 * prm), height: round(73 * prm), marginRight: 4, marginLeft: 10, borderWidth: 1, borderColor: '#CCC'},
+		news_card_image: { width: round(130 * prm), minHeight: round(100 * prm), marginRight: round(4 * prm), marginLeft: round(10 * prm), borderWidth: 1, borderColor: '#CCC'},
+		events_card_image: { width: round(130 * prm), height: round(73 * prm), marginRight: round(4 * prm), marginLeft: round(10 * prm), borderWidth: 1, borderColor: '#CCC'},
 
 	// WELCOME WEEK STYLE
 	welcome_listview: {  },
