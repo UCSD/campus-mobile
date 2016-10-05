@@ -427,6 +427,7 @@ var css = StyleSheet.create({
 	mar30: { margin: 30 },
 	mar40: { margin: 40 },
 	pt10:  { paddingTop: 10 },
+	pl10: { paddingLeft: 10 },
 
 	fs10: { fontSize: round(10 * prm) },
 	fs12: { fontSize: round(12 * prm) },

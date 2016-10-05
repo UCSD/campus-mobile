@@ -56,15 +56,10 @@ var DiningList = React.createClass({
 
 	renderListView: function() {
 		var diningData = this.props.route.data;
-
-		logger.log('diningData3')
-		logger.log(diningData)
 		var datasource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 		var diningDatasource = datasource.cloneWithRows(diningData);
 		return (
-			<View style={[css.main_container, css.view_default]}>
-				<ListView dataSource={diningDatasource} renderRow={this.renderDiningRow} />
-			</View>
+			<ListView dataSource={diningDatasource} renderRow={this.renderDiningRow} />
 		);
 	},
 
@@ -73,7 +68,7 @@ var DiningList = React.createClass({
 		var dayOfWeek = general.getTimestamp('ddd').toLowerCase();
 
 		return (
-			<View style={css.dc_locations_row}>
+			<View style={[css.dc_locations_row, css.pl10]}>
 				<TouchableHighlight style={css.dc_locations_row_left} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoDiningDetail(data) }>
 					<View>
 						<Text style={css.dc_locations_title}>{data.name}</Text>
