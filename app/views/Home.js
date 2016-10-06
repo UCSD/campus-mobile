@@ -32,6 +32,11 @@ import WeatherCard from './weather/WeatherCard';
 import ShuttleCard from './shuttle/ShuttleCard';
 import NearbyCard from './nearby/NearbyCard';
 
+import YesNoCard from './survey/YesNoCard';
+import MultipleChoiceCard from './survey/MultipleChoiceCard';
+import IntervalCard from './survey/IntervalCard';
+import TextInputCard from './survey/TextInputCard';
+
 // Node Modules
 import TimerMixin from 'react-timer-mixin';
 
@@ -207,6 +212,11 @@ var Home = React.createClass({
 					/>
 				}>
 
+					<YesNoCard />
+					<MultipleChoiceCard />
+					<IntervalCard />
+					<TextInputCard />
+					
 					{/* WELCOME MODAL */}
 					<WelcomeModal />
 
