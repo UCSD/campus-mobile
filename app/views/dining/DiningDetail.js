@@ -61,8 +61,6 @@ var DiningDetail = React.createClass({
 			}
 		}
 
-		logger.log('menuItemsCount: ' + menuItemsCount)
-		logger.log('menuSite: ' + marketData.menuWebsite)
 		return {
 			marketData: marketData,
 			menuItemsActive: null,
@@ -261,7 +259,11 @@ var DiningDetail = React.createClass({
 								{this.state.menuItemsCount === 0 && this.state.marketData.menuWebsite ? (
 									<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoMenuWebsite(this.state.marketData.menuWebsite) }>
 										<View style={css.dd_menu_container}>
-											<Text style={css.dd_menu_text}>View Menu</Text>
+											{this.state.marketData.name.indexOf('Market') >= 0 ? (
+												<Text style={css.dd_menu_text}>View To Go Menu</Text>
+											) : (
+												<Text style={css.dd_menu_text}>View Menu</Text>
+											)}
 										</View>
 									</TouchableHighlight>
 								) : null }
