@@ -96,38 +96,36 @@ export default class ShuttleCard extends CardComponent {
 		}
 	}
 
-  render() {
-
+	render() {
 		return (
 			<Card title='Shuttle' cardRefresh={this.refresh} isRefreshing={this.state.isRefreshing}>
-			{(!this.state.closestStop1Loaded && !this.state.closestStop2Loaded) ? (
-				<View style={[css.shuttle_card_row_center, css.shuttle_card_loader]}>
-					<ActivityIndicator style={css.shuttle_card_aa} size="large" />
-				</View>
-				) : (
-				 <View>
-					{this.state.closestStop1Loaded ? (
-						<ShuttleOverview onPress={this.gotoShuttleStop} stopData={this.shuttleClosestStops[0]} shuttleData={this.state.shuttleData[0]} />
-					) : null }
-					{this.state.closestStop2Loaded ? (
-						<ShuttleOverview onPress={this.gotoShuttleStop} stopData={this.shuttleClosestStops[1]} shuttleData={this.state.shuttleData[1]} />
-					) : null }
-      			</View>
-				)
-			}
+				{!this.state.closestStop1Loaded && !this.state.closestStop2Loaded && !this.state.closestStop1LoadFailed && !this.state.closestStop2LoadFailed ? (
+					<View style={[css.shuttle_card_row_center, css.shuttle_card_loader]}>
+						<ActivityIndicator style={css.shuttle_card_aa} size="large" />
+					</View>
+				) : null }
+
+				{this.state.closestStop1Loaded && !this.state.closestStop1LoadFailed ? (
+					<ShuttleOverview onPress={this.gotoShuttleStop} stopData={this.shuttleClosestStops[0]} shuttleData={this.state.shuttleData[0]} />
+				) : null }
+
+				{this.state.closestStop2Loaded && !this.state.closestStop2LoadFailed ? (
+					<ShuttleOverview onPress={this.gotoShuttleStop} stopData={this.shuttleClosestStops[1]} shuttleData={this.state.shuttleData[1]} />
+				) : null }
+			
+				{this.state.closestStop1LoadFailed && this.state.closestStop2LoadFailed ? (
+					<View style={css.shuttlecard_loading_fail}>
+						<Text style={css.fs18}>No Shuttles en Route</Text>
+						<Text style={[css.pt10, css.fs12, css.dgrey]}>We were unable to locate any nearby shuttles, please try again later.</Text>
+					</View>
+				) : null }
 			</Card>
 		);
 	}
 
+
 	// SHUTTLE_CARD
 	findClosestShuttleStops = (refreshType, location) => {
-
-		logger.log('Home: findClosestShuttleStops');
-
-		this.setState({
-			closestStop1LoadFailed: false,
-			closestStop2LoadFailed: false
-		});
 
 		this.shuttleClosestStops[0].dist = 1000000000;
 		this.shuttleClosestStops[1].dist = 1000000000;
@@ -173,6 +171,7 @@ export default class ShuttleCard extends CardComponent {
 			ShuttleService.FetchShuttleArrivalsByStop(stopID)
 			.then((responseData) => {
 				if (responseData.length > 0 && responseData[0].secondsToArrival) {
+
 					this.setState({shuttleData : responseData});
 					var closestShuttleETA = 999999;
 
@@ -198,9 +197,15 @@ export default class ShuttleCard extends CardComponent {
 					this.shuttleClosestStops[closestStopNumber].routeName = this.shuttleClosestStops[closestStopNumber].routeName.replace(/.*\) /, '').replace(/ - .*/, '');
 
 					if (closestStopNumber == 0) {
-						this.setState({ closestStop1Loaded: true });
+						this.setState({
+							closestStop1Loaded: true,
+							closestStop1LoadFailed: false
+						});
 					} else if (closestStopNumber == 1) {
-						this.setState({ closestStop2Loaded: true });
+						this.setState({
+							closestStop2Loaded: true,
+							closestStop2LoadFailed: false
+						});
 					}
 
 				} else {
