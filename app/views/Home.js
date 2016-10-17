@@ -428,10 +428,6 @@ var Home = React.createClass({
 		this.props.navigator.push({ id: 'FeedbackView', component: FeedbackView, title: 'Feedback' });
 	},
 
-	gotoPrivacyPolicy: function() {
-		this.props.navigator.push({ id: 'WebWrapper', component: WebWrapper, title: 'About', webViewURL: AppSettings.PRIVACY_POLICY_URL });
-	},
-
 	gotoScheduleDetail: function() {
 		this.props.navigator.push({ id: 'ScheduleDetail', component: ScheduleDetail, title: 'Schedule' });
 	},
