@@ -213,8 +213,6 @@ var Home = React.createClass({
 					{/* SPECIAL TOP BANNER */}
 					<TopBannerView navigator={this.props.navigator}/>
 
-
-
 					{/* SHUTTLE_CARD & EVENTS CARD & NEWS CARD & WEATHER CARD */}
 					{ this.getCards() }
 
@@ -427,7 +425,6 @@ var Home = React.createClass({
 	},
 
 	gotoFeedbackForm: function() {
-		//this.props.navigator.push({ id: 'WebWrapper', component: WebWrapper, title: 'Feedback', webViewURL: AppSettings.FEEDBACK_URL });
 		this.props.navigator.push({ id: 'FeedbackView', component: FeedbackView, title: 'Feedback' });
 	},
 
@@ -442,6 +439,7 @@ var Home = React.createClass({
 	gotoDiningDetail: function(marketData) {
 		this.props.navigator.push({ id: 'DiningDetail', component: DiningDetail, title: 'Dining', marketData: marketData });
 	},
+	
 	gotoDiningList(diningData) {
 		this.props.navigator.push({ id: 'DiningList', title: 'Dining', name: 'Dining', component: DiningList, data: diningData });
 	},
