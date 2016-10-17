@@ -435,32 +435,14 @@ var Home = React.createClass({
 	gotoDiningDetail: function(marketData) {
 		this.props.navigator.push({ id: 'DiningDetail', component: DiningDetail, title: 'Dining', marketData: marketData });
 	},
-	
+
 	gotoDiningList(diningData) {
 		this.props.navigator.push({ id: 'DiningList', title: 'Dining', name: 'Dining', component: DiningList, data: diningData });
 	},
 
 
-	// #99 - MISC
-	openEmailLink: function(email) {
-		Linking.canOpenURL(email).then(supported => {
-			if (supported) {
-				Linking.openURL('mailto:' + email);
-			} else {
-				logger.log('openEmailLink: Unable to send email to ' + email);
-			}
-		});
-	},
-
-	// Is this even used??
-	_setState: function(myKey, myVal) {
-		var state = {};
-		state[myKey] = myVal;
-		this.setState(state);
-	},
-
-	// Generates a unique ID
-	// Used for Card keys
+	
+	// Generates a unique ID used for Card keys
 	_generateUUID: function() {
 		var d = new Date().getTime();
 		if(window.performance && typeof window.performance.now === "function") {
