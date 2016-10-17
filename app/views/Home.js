@@ -33,6 +33,7 @@ import ShuttleCard from './shuttle/ShuttleCard';
 import NearbyCard from './nearby/NearbyCard';
 
 // Node Modules
+import TimerMixin from 'react-timer-mixin';
 const Permissions = require('react-native-permissions');
 const GoogleAPIAvailability = require('react-native-google-api-availability-bridge');
 
@@ -49,6 +50,7 @@ const DiningList = require('./dining/DiningList');
 
 var Home = React.createClass({
 
+	mixins: [TimerMixin],
 	permissionUpdateInterval: 1 * 65 * 1000,
 	diningDefaultResults: 4,
 	copyrightYear: new Date().getFullYear(),
