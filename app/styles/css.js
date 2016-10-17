@@ -220,7 +220,7 @@ var css = StyleSheet.create({
 			events_list_desc: { fontSize: round(14 * prm), color: '#666', paddingTop: round(8 * prm) },
 			events_list_postdate: { fontSize: round(11 * prm), color: ucsdblue, paddingTop: round(8 * prm) },
 		events_list_image: { width: round(130 * prm), height: round(73 * prm), marginRight: 4, marginLeft: 10, borderWidth: 1, borderColor: '#CCC' },
-		news_list_image: { width: round(130 * prm), marginRight: 4, marginLeft: 10, borderWidth: 1, borderColor: '#CCC' },
+		news_list_image: { width: round(130 * prm), height: round(100 * prm), marginRight: 4, marginLeft: 10, borderWidth: 1, borderColor: '#CCC' },
 	events_more: { alignItems: 'center', justifyContent: 'center', width: maxCardWidthWithPadding, paddingHorizontal: 4, paddingTop: 8, paddingBottom: 4 },
 	events_more_label: { fontSize: round(20 * prm), color: ucsdblue, fontWeight: '300' },
 	events_card_container: { flex: 1, flexDirection: 'row', padding: 14, borderBottomWidth: 1, borderBottomColor: '#EEE', alignItems: 'center' },
@@ -229,7 +229,7 @@ var css = StyleSheet.create({
 		events_card_left_container: { flex: 10 },
 			events_card_desc: { flexWrap: 'wrap', fontSize: round(14 * prm), color: '#666', paddingTop: round(8 * prm) },
 			events_card_postdate: { fontSize: round(11 * prm), color: ucsdblue, paddingTop: round(8 * prm) },
-		news_card_image: { width: round(130 * prm), minHeight: round(100 * prm), marginRight: round(4 * prm), marginLeft: round(10 * prm), borderWidth: 1, borderColor: '#CCC'},
+		news_card_image: { width: round(130 * prm), height: round(100 * prm), marginRight: round(4 * prm), marginLeft: round(10 * prm), borderWidth: 1, borderColor: '#CCC'},
 		events_card_image: { width: round(130 * prm), height: round(73 * prm), marginRight: round(4 * prm), marginLeft: round(10 * prm), borderWidth: 1, borderColor: '#CCC'},
 
 	// WELCOME WEEK STYLE
