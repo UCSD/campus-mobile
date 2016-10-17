@@ -54,7 +54,6 @@ var Home = React.createClass({
 
 	mixins: [TimerMixin],
 	permissionUpdateInterval: 1 * 65 * 1000,
-	regionRefreshInterval: 1 * 70 * 1000,
 	diningDefaultResults: 4,
 	copyrightYear: new Date().getFullYear(),
 	geolocationWatchID: null,
@@ -62,16 +61,11 @@ var Home = React.createClass({
 	getInitialState: function() {
 		return {
 			initialLoad: true,
-			nearbyLastRefresh: null,
-			specialEventsCardEnabled: true,
 			scrollEnabled: true,
 			diningDataLoaded: false,
 			diningRenderAllRows: false,
 			locationPermission: 'undetermined',
 			currentPosition: null,
-			defaultPosition: {
-				coords: { latitude: 32.88, longitude: -117.234 }
-			},
 			cacheMap: false,
 			loaded:false,
 			refreshing:false,
@@ -125,7 +119,6 @@ var Home = React.createClass({
 
 	updateLocationPermission: function() {
 		this.getLocationPermission();
-
 		this.props.new_timeout("location", () => { this.updateLocationPermission() }, this.permissionUpdateInterval);
 	},
 
