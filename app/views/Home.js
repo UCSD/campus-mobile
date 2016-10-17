@@ -189,7 +189,6 @@ var Home = React.createClass({
 		});
 	},
 
-	// #1 - RENDER
 	render: function() {
 		logger.log('Home: render');
 		return this.renderScene();
@@ -296,10 +295,6 @@ var Home = React.createClass({
 		return cards;
 	},
 
-
-
-
-	// #2 - REFRESH
 	refreshAllCards: function(refreshType) {
 		if (!refreshType) {
 			refreshType = 'manual';
@@ -397,7 +392,6 @@ var Home = React.createClass({
 		);
 	},
 
-	// #6 - NEARBY CARD
 	getCurrentPosition: function(type) {
 		if (type === 'lat') {
 			if (this.state.currentPosition) {
@@ -441,7 +435,6 @@ var Home = React.createClass({
 	},
 
 
-	
 	// Generates a unique ID used for Card keys
 	_generateUUID: function() {
 		var d = new Date().getTime();
