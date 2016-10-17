@@ -33,26 +33,22 @@ import ShuttleCard from './shuttle/ShuttleCard';
 import NearbyCard from './nearby/NearbyCard';
 
 // Node Modules
-import TimerMixin from 'react-timer-mixin';
-
-const Permissions = 	require('react-native-permissions');
-const GoogleAPIAvailability = 	require('react-native-google-api-availability-bridge');
+const Permissions = require('react-native-permissions');
+const GoogleAPIAvailability = require('react-native-google-api-availability-bridge');
 
 // App Settings / Util / CSS
-var AppSettings = 	require('../AppSettings');
-var css = 			require('../styles/css');
-var general = 		require('../util/general');
-var logger = 		require('../util/logger');
-var shuttle = 		require('../util/shuttle');
+const AppSettings = require('../AppSettings');
+const css = require('../styles/css');
+const general = require('../util/general');
+const logger = require('../util/logger');
+const shuttle = require('../util/shuttle');
 
 // Views
-var DiningDetail = 	require('./dining/DiningDetail');
-var DiningList = 	require('./dining/DiningList');
-var WebWrapper = 	require('./WebWrapper');
+const DiningDetail = require('./dining/DiningDetail');
+const DiningList = require('./dining/DiningList');
 
 var Home = React.createClass({
 
-	mixins: [TimerMixin],
 	permissionUpdateInterval: 1 * 65 * 1000,
 	diningDefaultResults: 4,
 	copyrightYear: new Date().getFullYear(),
