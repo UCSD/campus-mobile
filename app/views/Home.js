@@ -17,7 +17,6 @@ import {
 	Alert,
 	Navigator,
 	ActivityIndicator,
-	InteractionManager
 } from 'react-native';
 
 import TopBannerView from './banner/TopBannerView';
@@ -65,7 +64,6 @@ var Home = React.createClass({
 			locationPermission: 'undetermined',
 			currentPosition: null,
 			cacheMap: false,
-			loaded:false,
 			refreshing:false,
 			updatedGoogle: true,
 		}
@@ -101,9 +99,6 @@ var Home = React.createClass({
 
 	componentDidMount: function() {
 		logger.ga('View Loaded: Home');
-		InteractionManager.runAfterInteractions(() => {
-			this.setTimeout(() => {this.setState({loaded: true});}, 2000);
-		});
 	},
 
 	componentWillUnmount: function() {
