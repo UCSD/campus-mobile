@@ -90,8 +90,14 @@ module.exports = {
 		Animated.timing(anim, { toValue: 0, duration: 0 }).start();
 	},
 
-	getCurrentTimestamp: function() {
-		return (Math.floor(Date.now() / 1000));
+	getCurrentTimestamp: function(type) {
+		if (type === 'int') {
+			return Math.round(Date.now() / 1000);
+		} else if (type === 'str') {
+			return Math.round(Date.now() / 1000).toString()
+		} else {
+			return;
+		}
 	},
 
 	getTimestampNumeric: function() {

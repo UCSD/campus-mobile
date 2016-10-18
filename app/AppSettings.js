@@ -29,4 +29,8 @@ module.exports = {
 	WEATHER_ICON_BASE_URL: 		'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/images/v1/weather-icons/',
 	WELCOME_WEEK_API_URL: 		'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/welcome_week_events.json',
 
+	/* API TTL (seconds) */
+	WEATHER_API_TTL: 			3600,
+	SURF_API_TTL: 				3600,
+
 };
