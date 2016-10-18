@@ -325,7 +325,7 @@ var ShuttleStop = React.createClass({
 
 		responseDataSort = [];
 		
-		this.shuttleRefreshTimestamp = general.getCurrentTimestamp('int');
+		this.shuttleRefreshTimestamp = general.getCurrentTimestamp();
 
 		if (this.state.closestShuttlesLoaded) {
 			general.stopReloadAnimation(this.shuttleReloadAnim);

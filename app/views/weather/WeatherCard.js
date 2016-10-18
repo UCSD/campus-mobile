@@ -25,7 +25,7 @@ var general = require('../../util/general');
 var AppSettings = require('../../AppSettings');
 
 export default class WeatherCard extends CardComponent {
-	
+
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -74,7 +74,7 @@ export default class WeatherCard extends CardComponent {
 	checkWeatherDataCache() {
 		AsyncStorage.getItem('weatherDataTimestamp').then((timestamp) => {
 			if (timestamp) {
-				var time_elapsed = general.getCurrentTimestamp('int') - parseInt(timestamp);
+				var time_elapsed = general.getCurrentTimestamp() - parseInt(timestamp);
 				if (time_elapsed >= AppSettings.WEATHER_API_TTL) {
 					this.fetchWeatherData();
 				} else {
@@ -114,7 +114,7 @@ export default class WeatherCard extends CardComponent {
 			}
 
 			AsyncStorage.setItem('weatherData', JSON.stringify(responseData));
-			AsyncStorage.setItem('weatherDataTimestamp', general.getCurrentTimestamp('str'));
+			AsyncStorage.setItem('weatherDataTimestamp', general.getCurrentTimestamp().toString());
 
 			this.setState({
 				weatherData: responseData,
@@ -130,13 +130,12 @@ export default class WeatherCard extends CardComponent {
 	checkSurfDataCache() {
 		AsyncStorage.getItem('surfDataTimestamp').then((timestamp) => {
 			if (timestamp) {
-				var time_elapsed = general.getCurrentTimestamp('int') - parseInt(timestamp);
+				var time_elapsed = general.getCurrentTimestamp() - parseInt(timestamp);
 				if (time_elapsed >= AppSettings.SURF_API_TTL) {
 					this.fetchSurfData();
 				} else {
 					AsyncStorage.getItem('surfData').then((result) => {
 						if (result) {
-							console.log('surf async')
 							this.setState({
 								surfData: JSON.parse(result),
 								surfDataLoaded: true,
@@ -157,10 +156,8 @@ export default class WeatherCard extends CardComponent {
 		WeatherService.FetchSurf()
 		.then((responseData) => {
 
-			console.log('fetch surf')
-
 			AsyncStorage.setItem('surfData', JSON.stringify(responseData));
-			AsyncStorage.setItem('surfDataTimestamp', general.getCurrentTimestamp('str'));
+			AsyncStorage.setItem('surfDataTimestamp', general.getCurrentTimestamp().toString());
 
 			this.setState({
 				surfData: responseData,
