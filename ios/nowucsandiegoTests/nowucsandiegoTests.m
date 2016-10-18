@@ -14,7 +14,7 @@
 #import "RCTRootView.h"
 
 #define TIMEOUT_SECONDS 600
-#define TEXT_TO_LOOK_FOR @"Welcome to React Native!"
+#define TEXT_TO_LOOK_FOR @"Feedback"
 
 @interface nowucsandiegoTests : XCTestCase
 
@@ -35,7 +35,7 @@
   return NO;
 }
 
-- (void)testRendersWelcomeScreen
+- (void)testRendersFeedbackFooter
 {
   UIViewController *vc = [[[[UIApplication sharedApplication] delegate] window] rootViewController];
   NSDate *date = [NSDate dateWithTimeIntervalSinceNow:TIMEOUT_SECONDS];
