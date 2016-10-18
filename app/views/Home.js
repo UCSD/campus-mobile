@@ -111,10 +111,6 @@ var Home = React.createClass({
 		navigator.geolocation.clearWatch(this.geolocationWatchID);
 	},
 
-	shouldComponentUpdate: function() {
-		return true;
-	},
-
 	updateLocationPermission: function() {
 		this.getLocationPermission();
 		this.props.new_timeout("location", () => { this.updateLocationPermission() }, this.permissionUpdateInterval);
