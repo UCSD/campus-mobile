@@ -78,6 +78,7 @@
   },
 
   "rules": {
+    "indent": ["error", "tab"],      // indent tabs
     "comma-dangle": 0,               // disallow trailing commas in object literals
     "no-cond-assign": 1,             // disallow assignment in conditional expressions
     "no-console": 0,                 // disallow use of console (off by default in the node environment)
@@ -180,6 +181,7 @@
   // Stylistic Issues
   // These rules are purely matters of style and are quite subjective.
 
+    "prefer-template": 1,            // use template instead of string concatination
     "key-spacing": 0,
     "keyword-spacing": 1,            // enforce spacing before and after keywords
     "jsx-quotes": [1, "prefer-double"],
@@ -224,6 +226,7 @@
     "no-bitwise": 1,                 // disallow use of bitwise operators (off by default)
     "no-plusplus": 0,                // disallow use of unary operators, ++ and -- (off by default)
 
+    "react/require-extension": "off", // doesn't work on windows
     "react/display-name": 0,
     "react/jsx-boolean-value": 0,
     "react/jsx-no-duplicate-props": 2,
@@ -235,6 +238,7 @@
     "react/no-string-refs": 1,
     "react/no-unknown-property": 0,
     "react/prop-types": 0,
+    "react/prefer-es6-class": 0,    // TODO: eventually we should prefer ES6
     "react/react-in-jsx-scope": 1,
     "react/self-closing-comp": 1,
     "react/wrap-multilines": 0,
