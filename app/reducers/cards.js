@@ -1,5 +1,11 @@
 
+const AppSettings = require('../AppSettings');
+
 var initialState = {
+  'weather': AppSettings.WEATHER_CARD_ENABLED,
+  'shuttle': AppSettings.SHUTTLE_CARD_ENABLED,
+  'events': AppSettings.EVENTS_CARD_ENABLED,
+  'news': AppSettings.NEWS_CARD_ENABLED
 }
 
 function cards(state = initialState, action) {
