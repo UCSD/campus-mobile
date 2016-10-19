@@ -18,6 +18,7 @@ import {
 	Navigator,
 	ActivityIndicator,
 } from 'react-native';
+import { connect } from 'react-redux';
 
 import TopBannerView from './banner/TopBannerView';
 import WelcomeModal from './WelcomeModal';
@@ -438,4 +439,11 @@ var Home = React.createClass({
 	}
 });
 
-module.exports = Home;
+function mapStateToProps(state, props) {
+	return {
+		...props,
+		cards: state.cards
+	};
+}
+
+module.exports = connect(mapStateToProps)(Home);
