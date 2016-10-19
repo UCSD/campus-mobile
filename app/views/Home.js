@@ -251,16 +251,16 @@ var Home = React.createClass({
 		// Setup Cards
 		// Keys need to be unique, there's probably a better solution, but this works for now
 		if (AppSettings.WEATHER_CARD_ENABLED) {
-			cards.push(<WeatherCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={this._generateUUID + ':' + cardCounter++}/>);
+			cards.push(<WeatherCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key='weather' />);
 		}
 		if (AppSettings.SHUTTLE_CARD_ENABLED) {
-			cards.push(<ShuttleCard navigator={this.props.navigator} location={this.state.currentPosition} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={this._generateUUID + ':' + cardCounter++} />);
+			cards.push(<ShuttleCard navigator={this.props.navigator} location={this.state.currentPosition} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key='shuttle' />);
 		}
 		if (AppSettings.EVENTS_CARD_ENABLED) {
-			cards.push(<EventCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={this._generateUUID + ':' + cardCounter++}/>);
+			cards.push(<EventCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key='events' />);
 		}
 		if (AppSettings.NEWS_CARD_ENABLED) {
-			cards.push(<NewsCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={this._generateUUID + ':' + cardCounter++}/>);
+			cards.push(<NewsCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key='news' />);
 		}
 		return cards;
 	},
@@ -272,7 +272,7 @@ var Home = React.createClass({
 		// Setup Cards
 		// Keys need to be unique, there's probably a better solution, but this works for now
 		if (AppSettings.NEARBY_CARD_ENABLED) {
-			cards.push(<NearbyCard navigator={this.props.navigator} getCurrentPosition={(latlon) => this.getCurrentPosition(latlon)} updatedGoogle={this.state.updatedGoogle} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={this._generateUUID + ':' + cardCounter++}/>);
+			cards.push(<NearbyCard navigator={this.props.navigator} getCurrentPosition={(latlon) => this.getCurrentPosition(latlon)} updatedGoogle={this.state.updatedGoogle} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={'nearby'}/>);
 		}
 		return cards;
 	},
