@@ -226,7 +226,7 @@ var Home = React.createClass({
 							</View>
 						</View>
 					) : null }
-					
+
 					{/* NEARBY CARD */}
 					{ this.getNearbyCard() }
 
@@ -441,7 +441,6 @@ var Home = React.createClass({
 
 function mapStateToProps(state, props) {
 	return {
-		...props,
 		cards: state.cards
 	};
 }
