@@ -251,16 +251,16 @@ var Home = React.createClass({
 		var cardCounter = 0;
 		// Setup Cards
 		// Keys need to be unique, there's probably a better solution, but this works for now
-		if (AppSettings.WEATHER_CARD_ENABLED) {
+		if (this.props.cards['weather']) {
 			cards.push(<WeatherCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={this._generateUUID + ':' + cardCounter++}/>);
 		}
-		if (AppSettings.SHUTTLE_CARD_ENABLED) {
+		if (this.props.cards['shuttle']) {
 			cards.push(<ShuttleCard navigator={this.props.navigator} location={this.state.currentPosition} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={this._generateUUID + ':' + cardCounter++} />);
 		}
-		if (AppSettings.EVENTS_CARD_ENABLED) {
+		if (this.props.cards['events']) {
 			cards.push(<EventCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={this._generateUUID + ':' + cardCounter++}/>);
 		}
-		if (AppSettings.NEWS_CARD_ENABLED) {
+		if (this.props.cards['news']) {
 			cards.push(<NewsCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={this._generateUUID + ':' + cardCounter++}/>);
 		}
 		return cards;
