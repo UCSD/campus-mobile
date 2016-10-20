@@ -31,6 +31,11 @@ import WeatherCard from './weather/WeatherCard';
 import ShuttleCard from './shuttle/ShuttleCard';
 import NearbyCard from './nearby/NearbyCard';
 
+import YesNoCard from './survey/YesNoCard';
+import MultipleChoiceCard from './survey/MultipleChoiceCard';
+import IntervalCard from './survey/IntervalCard';
+import TextInputCard from './survey/TextInputCard';
+
 // Node Modules
 import TimerMixin from 'react-timer-mixin';
 const Permissions = require('react-native-permissions');
@@ -187,7 +192,7 @@ var Home = React.createClass({
 						title=""
 					/>
 				}>
-
+					
 					{/* WELCOME MODAL */}
 					<WelcomeModal />
 
