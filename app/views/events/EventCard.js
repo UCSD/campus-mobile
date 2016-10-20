@@ -48,7 +48,6 @@ export default class EventCard extends CardComponent {
 			
 		})
 		.catch((error) => {
-			console.log("Ivan: " + error);
 			logger.error(error);
 			if (this.fetchEventsErrorLimit > this.fetchEventsErrorCounter) {
 				this.fetchEventsErrorCounter++;
