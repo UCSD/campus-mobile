@@ -111,6 +111,13 @@ var css = StyleSheet.create({
 	card_header_container: { borderBottomWidth: 1, borderBottomColor: '#EEE', width: maxCardWidthWithPadding },
 	card_title_container: { flexDirection: 'row', alignItems: 'center', width: maxCardWidth, padding: 8, borderBottomWidth: 1, borderBottomColor: '#DDD' },
 		card_title: { fontSize: round(26 * prm), color: ucsdgrey },
+	card_row_container: { flex:1, width: maxCardWidthWithPadding, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: 8, paddingBottom: 0 },
+	card__container: { flex:1, width: maxCardWidthWithPadding, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingTop: 8 },
+	card_footer_container: { flex:1, width: maxCardWidthWithPadding, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: 8 },
+		card_button_container: { flex:1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#F9F9F9', },
+			card_button_text: { flex:1, fontSize: round(20 * prm), alignItems: 'center', textAlign: 'center' },
+	card_text_container: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: maxCardWidth, padding: 8, borderBottomWidth: 1, borderBottomColor: '#DDD' },
+
 
 	// Modal Welcome Message
 	modal_container: { flex: 1, backgroundColor: 'rgba(0, 108, 147, .95)', justifyContent: 'center', padding: round(35 * prm) },

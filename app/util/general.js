@@ -107,6 +107,7 @@ module.exports = {
 	},
 
 	militaryToAMPM: function(militaryTime) {
+		militaryTime = militaryTime.substring(0, 5).replace(':','');;
 		var militaryTime, militaryTimeHH, militaryTimeMM, militaryTimeAMPM;
 		militaryTime = militaryTime.replace(/^0/,'');
 

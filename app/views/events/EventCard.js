@@ -45,6 +45,7 @@ export default class EventCard extends CardComponent {
 				eventsData: responseData,
 				eventsDataLoaded: true
 			});
+			
 		})
 		.catch((error) => {
 			logger.error(error);

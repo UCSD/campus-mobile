@@ -13,6 +13,7 @@ import {
 import EventDetail from './EventDetail'
 
 var css = require('../../styles/css');
+var general = require('../../util/general');
 
 export default class EventItem extends React.Component {
 
@@ -22,8 +23,8 @@ export default class EventItem extends React.Component {
 
 	render() {
 		var data = this.props.data;
-		var eventTitleStr = data.EventTitle.replace('&amp;','&');
-		var eventDescriptionStr = data.EventDescription.replace('&amp;','&').replace(/\n.*/g,'').trim();
+		var eventTitleStr = data.title;//data.EventTitle.replace('&amp;','&');
+		var eventDescriptionStr = data.description;//data.EventDescription.replace('&amp;','&').replace(/\n.*/g,'').trim();
 
 		if (eventDescriptionStr.length > 0) {
 			if (eventTitleStr.length < 25) {
@@ -35,13 +36,7 @@ export default class EventItem extends React.Component {
 			}
 		}
 
-		var eventDateDay;
-		if (data.EventDate) {
-			var eventDateDayArray = data.EventDate[0].split(', ');
-			eventDateDay = eventDateDayArray[1] + ', ' + eventDateDayArray[2].substring(5,22).toLowerCase();
-		} else {
-			eventDateDay = 'Ongoing Event';
-		}
+		var eventDateDay = data.eventdate + '\n' + general.militaryToAMPM(data.starttime) + ' to ' + general.militaryToAMPM(data.endtime);
 
 		return (
 			<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoEventDetail(data) }>
@@ -52,7 +47,7 @@ export default class EventItem extends React.Component {
 						<Text style={css.events_list_postdate}>{eventDateDay}</Text>
 					</View>
 
-					<Image style={css.events_list_image} source={{ uri: data.EventImage }} />
+					<Image style={css.events_list_image} source={{ uri: data.imagethumb }} />
 				</View>
 			</TouchableHighlight>
 		)

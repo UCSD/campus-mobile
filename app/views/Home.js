@@ -32,6 +32,11 @@ import WeatherCard from './weather/WeatherCard';
 import ShuttleCard from './shuttle/ShuttleCard';
 import NearbyCard from './nearby/NearbyCard';
 
+import YesNoCard from './survey/YesNoCard';
+import MultipleChoiceCard from './survey/MultipleChoiceCard';
+import IntervalCard from './survey/IntervalCard';
+import TextInputCard from './survey/TextInputCard';
+
 // Node Modules
 import TimerMixin from 'react-timer-mixin';
 const Permissions = require('react-native-permissions');
@@ -252,16 +257,16 @@ var Home = React.createClass({
 		// Setup Cards
 		// Keys need to be unique, there's probably a better solution, but this works for now
 		if (this.props.cards['weather']) {
-			cards.push(<WeatherCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={this._generateUUID + ':' + cardCounter++}/>);
+			cards.push(<WeatherCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key='weather' />);
 		}
 		if (this.props.cards['shuttle']) {
-			cards.push(<ShuttleCard navigator={this.props.navigator} location={this.state.currentPosition} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={this._generateUUID + ':' + cardCounter++} />);
+			cards.push(<ShuttleCard navigator={this.props.navigator} location={this.state.currentPosition} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key='shuttle' />);
 		}
 		if (this.props.cards['events']) {
-			cards.push(<EventCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={this._generateUUID + ':' + cardCounter++}/>);
+			cards.push(<EventCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key='events' />);
 		}
 		if (this.props.cards['news']) {
-			cards.push(<NewsCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={this._generateUUID + ':' + cardCounter++}/>);
+			cards.push(<NewsCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key='news' />);
 		}
 		return cards;
 	},
@@ -273,7 +278,7 @@ var Home = React.createClass({
 		// Setup Cards
 		// Keys need to be unique, there's probably a better solution, but this works for now
 		if (AppSettings.NEARBY_CARD_ENABLED) {
-			cards.push(<NearbyCard navigator={this.props.navigator} getCurrentPosition={(latlon) => this.getCurrentPosition(latlon)} updatedGoogle={this.state.updatedGoogle} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={this._generateUUID + ':' + cardCounter++}/>);
+			cards.push(<NearbyCard navigator={this.props.navigator} getCurrentPosition={(latlon) => this.getCurrentPosition(latlon)} updatedGoogle={this.state.updatedGoogle} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={'nearby'}/>);
 		}
 		return cards;
 	},
@@ -415,21 +420,6 @@ var Home = React.createClass({
 
 	gotoDiningList(diningData) {
 		this.props.navigator.push({ id: 'DiningList', title: 'Dining', name: 'Dining', component: DiningList, data: diningData });
-	},
-
-
-	// Generates a unique ID used for Card keys
-	_generateUUID: function() {
-		var d = new Date().getTime();
-		if(window.performance && typeof window.performance.now === "function") {
-			d += performance.now(); //use high-precision timer if available
-		}
-		var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-			var r = (d + Math.random()*16)%16 | 0;
-			d = Math.floor(d/16);
-			return (c=='x' ? r : (r&0x3|0x8)).toString(16);
-		});
-		return uuid;
 	},
 
 	_handleRefresh: function() {
