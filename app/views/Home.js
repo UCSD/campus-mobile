@@ -141,17 +141,21 @@ var Home = React.createClass({
 		// Get location permission status on Android
 		Permissions.getPermissionStatus('location')
 		.then(response => {
+			console.log("response  " + response);
 			//response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
 			this.setState({ locationPermission: response });
 
 			if (response === "authorized") {
+				console.log("authorized");
 				if(this.state.currentPosition === null ) {
+					console.log("initial position");
 					this.geolocationWatchID = navigator.geolocation.watchPosition((currentPosition) => {
 						let lastPos = this.state.currentPosition;
 						this.setState({ currentPosition });
-
+						console.log("watching");
 						// Initial refresh
 						if(lastPos === null ) {
+							console.log("refresh");
 							this.refreshAllCards('auto');
 						}
 					});
@@ -183,9 +187,7 @@ var Home = React.createClass({
 	_requestPermission() {
 	Permissions.requestPermission('location')
 		.then(response => {
-			//returns once the user has chosen to 'allow' or to 'not allow' access
-			//response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
-			this.setState({ locationPermission: response })
+			this.getLocationPermission();
 		});
 	},
 
