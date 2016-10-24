@@ -186,7 +186,7 @@ var Home = React.createClass({
 	renderScene: function(route, navigator, index, navState) {
 		return (
 			<View style={css.main_container}>
-				<MenuContext>
+				<MenuContext style={{flex:1}}>
 				<ScrollView contentContainerStyle={css.scroll_main} refreshControl={
 					<RefreshControl
 						refreshing={this.state.refreshing}
