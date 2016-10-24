@@ -33,7 +33,6 @@ import FeedbackView from './views/FeedbackView';
 
 // NAV
 import NavigationBarWithRouteMapper from './views/NavigationBarWithRouteMapper';
-var util = require("util");
 /**
  * Timeout that allows for pause and resume
 **/
