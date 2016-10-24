@@ -33,7 +33,7 @@ import FeedbackView from './views/FeedbackView';
 
 // NAV
 import NavigationBarWithRouteMapper from './views/NavigationBarWithRouteMapper';
-
+var util = require("util");
 /**
  * Timeout that allows for pause and resume
 **/
@@ -83,6 +83,7 @@ var nowucsandiego = React.createClass({
 			// Listen to route focus changes
 			// Should be a better way to do this...
 			this.refs.navRef.refs.navRef.navigationContext.addListener('willfocus', (event) => {
+				
 				const route = event.data.route;
 
 				// Make sure renders/card refreshes are only happening when in home route
@@ -97,9 +98,10 @@ var nowucsandiego = React.createClass({
 
 			// Listen to back button on Android
 			BackAndroid.addEventListener('hardwareBackPress', () => {
-				var route = this.refs.navRef.refs.navRef.getCurrentRoutes().pop();
+				//console.log(util.inspect(this.refs.navRef.refs.navRef.getCurrentRoutes()));
+				//var route = this.refs.navRef.refs.navRef.getCurrentRoutes()[0];
 
-				if(route.id === "Home") {
+				if(this.state.inHome) {
 					BackAndroid.exitApp();
 					return false;
 					
