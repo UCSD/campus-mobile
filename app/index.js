@@ -100,7 +100,7 @@ var nowucsandiego = React.createClass({
 				var route = this.refs.navRef.refs.navRef.getCurrentRoutes().pop();
 
 				if(route.id === "Home") {
-					//BackAndroid.exitApp();
+					BackAndroid.exitApp();
 					return false;
 					
 				} else {
