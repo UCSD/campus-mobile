@@ -136,7 +136,6 @@ var Home = React.createClass({
 					this.geolocationWatchID = navigator.geolocation.watchPosition((currentPosition) => {
 						let lastPos = this.state.currentPosition;
 						this.setState({ currentPosition });
-
 						// Initial refresh
 						if(lastPos === null ) {
 							this.refreshAllCards('auto');
@@ -150,7 +149,6 @@ var Home = React.createClass({
 
 			} else {
 				this._requestPermission();
-				//this._alertForLocationPermission();
 			}
 		});
 	},
@@ -170,9 +168,7 @@ var Home = React.createClass({
 	_requestPermission() {
 	Permissions.requestPermission('location')
 		.then(response => {
-			//returns once the user has chosen to 'allow' or to 'not allow' access
-			//response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
-			this.setState({ locationPermission: response })
+			this.getLocationPermission();
 		});
 	},
 
