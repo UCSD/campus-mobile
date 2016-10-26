@@ -17,7 +17,7 @@ var width = Dimensions.get('window').width;
 var third = Math.round(width/3);
 var tenth = Math.round(width/20);
 
-var util = require("util");
+//var util = require("util");
 
 export default class DismissibleCard extends React.Component {
 
