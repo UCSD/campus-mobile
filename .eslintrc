@@ -242,6 +242,7 @@
     "react/react-in-jsx-scope": 1,
     "react/self-closing-comp": 1,
     "react/wrap-multilines": 0,
+    "react/jsx-indent": [2, "tab"],
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
   }
 }
