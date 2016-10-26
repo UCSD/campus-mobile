@@ -243,6 +243,7 @@
     "react/self-closing-comp": 1,
     "react/wrap-multilines": 0,
     "react/jsx-indent": [2, "tab"],
+    "react/jsx-indent-props": [1, "tab"],
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
   }
 }

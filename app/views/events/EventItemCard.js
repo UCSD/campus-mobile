@@ -1,41 +1,36 @@
-'use strict'
-
-import React from 'react'
+import React from 'react';
 import {
-	StyleSheet,
 	View,
 	Text,
-	Navigator,
 	TouchableHighlight,
 	Image,
 } from 'react-native';
 
-import EventDetail from './EventDetail'
-import Card from '../card/Card'
+import EventDetail from './EventDetail';
 
-var css = require('../../styles/css');
-var general = require('../../util/general')
+const css = require('../../styles/css');
+const general = require('../../util/general');
 
 export default class EventItem extends React.Component {
 
 	gotoEventDetail(eventData) {
-		this.props.navigator.push({ id: 'EventDetail', name: 'EventDetail', title: 'Events', component: EventDetail, eventData: eventData });
+		this.props.navigator.push({ id: 'EventDetail', name: 'EventDetail', title: 'Events', component: EventDetail, eventData });
 	}
 
 	render() {
-		var data = this.props.data;
-		var eventTitleStr = data.title;//EventTitle.replace('&amp;','&');
+		const data = this.props.data;
+		let eventTitleStr = data.title;// EventTitle.replace('&amp;','&');
 		eventTitleStr = eventTitleStr.trim();
-		var eventDescriptionStr = data.description;//EventDescription.replace('&amp;','&').replace(/\n.*/g,'').trim();
-
-		if(eventDescriptionStr) {
-			var eventDescriptionStrTrimmed = eventDescriptionStr.substring(0,150);
-			if(eventDescriptionStr.length > 150) {
+		const eventDescriptionStr = data.description;// EventDescription.replace('&amp;','&').replace(/\n.*/g,'').trim();
+		let eventDescriptionStrTrimmed;
+		if (eventDescriptionStr) {
+			eventDescriptionStrTrimmed = eventDescriptionStr.substring(0,150);
+			if (eventDescriptionStr.length > 150) {
 				eventDescriptionStrTrimmed += '...';
 			}
 		}
 
-		var eventDateDay = data.eventdate + '\n' + general.militaryToAMPM(data.starttime) + ' to ' + general.militaryToAMPM(data.endtime);
+		const eventDateDay = data.eventdate + '\n' + general.militaryToAMPM(data.starttime) + ' to ' + general.militaryToAMPM(data.endtime);
 		/*
 		if (data.EventDate) {
 			var eventDateDayArray = data.EventDate[0].split(', ');
@@ -45,7 +40,7 @@ export default class EventItem extends React.Component {
 		}*/
 
 		return (
-			<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoEventDetail(data) }>
+			<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => this.gotoEventDetail(data)}>
 				<View style={css.card_main}>
 					<View style={css.events_card_title_container}>
 						<Text style={css.events_card_title}>{eventTitleStr}</Text>
@@ -59,6 +54,6 @@ export default class EventItem extends React.Component {
 					</View>
 				</View>
 			</TouchableHighlight>
-		)
+		);
 	}
 }
