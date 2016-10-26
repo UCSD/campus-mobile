@@ -181,7 +181,7 @@
   // Stylistic Issues
   // These rules are purely matters of style and are quite subjective.
 
-    "prefer-template": 1,            // use template instead of string concatination
+    "prefer-template": 0,            // use template instead of string concatination
     "key-spacing": 0,
     "keyword-spacing": 1,            // enforce spacing before and after keywords
     "jsx-quotes": [1, "prefer-double"],
