@@ -10,18 +10,20 @@ module.exports = {
 													// Navigator will always be used for Android
 	
 	/* CARDS */
-	SHUTTLE_CARD_ENABLED: 		true,
 	WEATHER_CARD_ENABLED: 		true,
+	SHUTTLE_CARD_ENABLED: 		true,
 	EVENTS_CARD_ENABLED: 		true,
 	NEWS_CARD_ENABLED: 			true,
-	NEARBY_CARD_ENABLED: 		true,
 	DINING_CARD_ENABLED: 		true,
+	NEARBY_CARD_ENABLED: 		true,
+	QUICKLINKS_CARD_ENABLED: 	true,
 
 	/* APIS / ENDPOINTS */
 	WEATHER_API_URL: 			'https://w3wyps9yje.execute-api.us-west-2.amazonaws.com/prod/forecast',
 	SURF_API_URL: 				'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/surffeed.json',
 	NEWS_API_URL: 				'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/allstories.json',
 	EVENTS_API_URL: 			'https://evv6vpvob6.execute-api.us-west-2.amazonaws.com/prod/',
+	QUICKLINKS_API_URL:  		'https://s3-us-west-2.amazonaws.com/ucsd-mobile/dev/ucsd-quicklinks.json',
 	SHUTTLE_STOPS_API_URL: 		'https://ies4wyrlx9.execute-api.us-west-2.amazonaws.com/prod/stops/',
 	DINING_API_URL: 			'https://pg83tslbyi.execute-api.us-west-2.amazonaws.com/prod',
 	FEEDBACK_URL: 				'https://eforms.ucsd.edu/view.php?id=175631',
@@ -32,5 +34,6 @@ module.exports = {
 	/* API TTL (seconds) */
 	WEATHER_API_TTL: 			3600,
 	SURF_API_TTL: 				3600,
+	QUICKLINKS_API_TTL: 		86400, 
 
 };
