@@ -33,6 +33,9 @@ import FeedbackView from './views/FeedbackView';
 
 // NAV
 import NavigationBarWithRouteMapper from './views/NavigationBarWithRouteMapper';
+
+import codePush from "react-native-code-push";
+
 /**
  * Timeout that allows for pause and resume
 **/
@@ -231,4 +234,5 @@ var nowucsandiego = React.createClass({
 	},
 });
 
+nowucsandiego = codePush(nowucsandiego);
 module.exports = nowucsandiego;
