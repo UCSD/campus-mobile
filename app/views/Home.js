@@ -18,7 +18,6 @@ import {
 	Navigator,
 	ActivityIndicator,
 } from 'react-native';
-import { MenuContext } from 'react-native-popup-menu';
 import { connect } from 'react-redux';
 
 import TopBannerView from './banner/TopBannerView';
@@ -138,7 +137,6 @@ var Home = React.createClass({
 					this.geolocationWatchID = navigator.geolocation.watchPosition((currentPosition) => {
 						let lastPos = this.state.currentPosition;
 						this.setState({ currentPosition });
-
 						// Initial refresh
 						if(lastPos === null ) {
 							this.refreshAllCards('auto');
@@ -152,7 +150,6 @@ var Home = React.createClass({
 
 			} else {
 				this._requestPermission();
-				//this._alertForLocationPermission();
 			}
 		});
 	},
@@ -172,9 +169,7 @@ var Home = React.createClass({
 	_requestPermission() {
 	Permissions.requestPermission('location')
 		.then(response => {
-			//returns once the user has chosen to 'allow' or to 'not allow' access
-			//response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
-			this.setState({ locationPermission: response })
+			this.getLocationPermission();
 		});
 	},
 
@@ -186,7 +181,6 @@ var Home = React.createClass({
 	renderScene: function(route, navigator, index, navState) {
 		return (
 			<View style={css.main_container}>
-				<MenuContext style={{flex:1}}>
 				<ScrollView contentContainerStyle={css.scroll_main} refreshControl={
 					<RefreshControl
 						refreshing={this.state.refreshing}
@@ -249,7 +243,6 @@ var Home = React.createClass({
 					</View>
 
 				</ScrollView>
-			</MenuContext>
 			</View>
 		);
 	},
@@ -281,7 +274,7 @@ var Home = React.createClass({
 		// Setup Cards
 		// Keys need to be unique, there's probably a better solution, but this works for now
 		if (AppSettings.NEARBY_CARD_ENABLED) {
-			cards.push(<NearbyCard navigator={this.props.navigator} getCurrentPosition={(latlon) => this.getCurrentPosition(latlon)} updatedGoogle={this.state.updatedGoogle} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={'nearby'}/>);
+			cards.push(<NearbyCard navigator={this.props.navigator} getCurrentPosition={(latlon) => this.getCurrentPosition(latlon)} updatedGoogle={this.state.updatedGoogle} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key={'nearby'}/>);
 		}
 		return cards;
 	},

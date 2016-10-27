@@ -1,5 +1,3 @@
-'use strict';
-
 import React from 'react';
 import {
 	View,
@@ -10,14 +8,14 @@ import {
 	TouchableHighlight,
 	Dimensions
 } from 'react-native';
-var WebWrapper = require('../WebWrapper');
 
-var windowSize = Dimensions.get('window');
-var windowWidth = windowSize.width;
+const WebWrapper = require('../WebWrapper');
 
-var AppSettings = require('../../AppSettings');
-var css = require('../../styles/css');
-var logger = require('../../util/logger');
+const windowSize = Dimensions.get('window');
+const windowWidth = windowSize.width;
+
+const css = require('../../styles/css');
+const logger = require('../../util/logger');
 
 export default class WelcomeWeekDetail extends React.Component {
 	constructor(props) {
@@ -26,11 +24,11 @@ export default class WelcomeWeekDetail extends React.Component {
 			eventImageWidth: null,
 			eventImageHeight: null,
 			eventImageURL: null,
-		}
+		};
 	}
 
 	componentWillMount() {
-		var imageURL = (this.props.route.eventData.EventImageLg) ? this.props.route.eventData.EventImageLg : this.props.route.eventData.EventImage;
+		const imageURL = (this.props.route.eventData.EventImageLg) ? this.props.route.eventData.EventImageLg : this.props.route.eventData.EventImage;
 
 		if (imageURL) {
 			Image.getSize(
@@ -42,27 +40,22 @@ export default class WelcomeWeekDetail extends React.Component {
 						eventImageHeight: Math.round(height * (windowWidth / width))
 					});
 				},
-				(error) => { logger.log('ERR: componentWillMount: ' + error) }
+				(error) => { logger.log('ERR: componentWillMount: ' + error); }
 			);
 		}
 	}
 
-	render() {
-		return this._renderScene();
-	}
-
 	_renderScene() {
-
-		var eventTitleStr = this.props.route.eventData.EventTitle.replace('&amp;','&');
-		var eventDescriptionStr = this.props.route.eventData.EventDescription.replace('&amp;','&').trim();
-		var eventDateStr = '';
-		var eventDateArray = this.props.route.eventData.EventDate;
+		const eventTitleStr = this.props.route.eventData.EventTitle.replace('&amp;','&');
+		const eventDescriptionStr = this.props.route.eventData.EventDescription.replace('&amp;','&').trim();
+		let eventDateStr = '';
+		const eventDateArray = this.props.route.eventData.EventDate;
 
 		if (eventDateArray) {
-			for (var i = 0; eventDateArray.length > i; i++) {
+			for (let i = 0; eventDateArray.length > i; i++) {
 				eventDateStr += eventDateArray[i].replace(/AM/g,'am').replace(/PM/g,'pm');
 				if (eventDateArray.length !== i + 1) {
-					 eventDateStr += '\n';
+					eventDateStr += '\n';
 				}
 			}
 		} else {
@@ -87,7 +80,7 @@ export default class WelcomeWeekDetail extends React.Component {
 						<Text style={css.eventdetail_eventdescription}>{eventDescriptionStr}</Text>
 
 						{this.props.route.eventData.EventContact ? (
-							<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.openBrowserLink('mailto:' + this.props.route.eventData.EventContact) }>
+							<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => this.openBrowserLink('mailto:' + this.props.route.eventData.EventContact)}>
 								<View style={css.eventdetail_readmore_container}>
 									<Text style={css.eventdetail_readmore_text}>Email: {this.props.route.eventData.EventContact}</Text>
 								</View>
@@ -106,5 +99,9 @@ export default class WelcomeWeekDetail extends React.Component {
 
 	_gotoWebView(eventName, eventURL) {
 		this.props.navigator.push({ id: 'WebWrapper', name: 'WebWrapper', title: eventName, component: WebWrapper, webViewURL: eventURL });
+	}
+
+	render() {
+		return this._renderScene();
 	}
 }

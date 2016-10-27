@@ -2,7 +2,7 @@
 
 import React from 'react';
 import {
-    Platform,
+	Platform,
 	View,
 	Text,
 	TouchableOpacity,
@@ -12,6 +12,7 @@ import {
 	Date,
 	ActivityIndicator,
 } from 'react-native';
+
 import NavigationBarWithRouteMapper from '../NavigationBarWithRouteMapper';
 
 var dateFormat = require('dateformat');

@@ -1,5 +1,3 @@
-'use strict';
-
 import React from 'react';
 import {
 	View,
@@ -10,33 +8,28 @@ import {
 	TouchableHighlight,
 	Dimensions
 } from 'react-native';
-import NavigationBarWithRouteMapper from '../NavigationBarWithRouteMapper';
 
-var WebWrapper = require('../WebWrapper');
+const windowSize = Dimensions.get('window');
+const windowWidth = windowSize.width;
 
-var windowSize = Dimensions.get('window');
-var windowWidth = windowSize.width;
+const css = require('../../styles/css');
+const logger = require('../../util/logger');
+const general = require('../../util/general');
 
-var AppSettings = require('../../AppSettings');
-var css = require('../../styles/css');
-var logger = require('../../util/logger');
-var general = require('../../util/general');
+const EventDetail = React.createClass({
 
-var EventDetail = React.createClass({
-
-	getInitialState: function() {
+	getInitialState() {
 		return {
 			newsImgWidth: null,
 			newsImgHeight: null,
 			eventImageURL: null,
-		}
+		};
 	},
 
-	componentWillMount: function() {
-
+	componentWillMount() {
 		logger.ga('View Loaded: Event Detail');
-		
-		var imageURL = this.props.route.eventData.imagehq;
+
+		const imageURL = this.props.route.eventData.imagehq;
 
 		if (imageURL) {
 			Image.getSize(
@@ -48,24 +41,35 @@ var EventDetail = React.createClass({
 						newsImgHeight: Math.round(height * (windowWidth / width))
 					});
 				},
-				(error) => { logger.log('ERR: componentWillMount: ' + error) }
+				(error) => { logger.log('ERR: componentWillMount: ' + error); }
 			);
 		}
 	},
 
-	componentDidMount: function() {
-		logger.ga('View Loaded: Event: ' +  this.props.route.eventData.title);//this.props.route.eventData.EventTitle.replace('&amp;','&'));
+	componentDidMount() {
+		logger.ga('View Loaded: Event: ' + this.props.route.eventData.title);// this.props.route.eventData.EventTitle.replace('&amp;','&'));
 	},
 
-	render: function() {
-		return this.renderScene();
+	openBrowserLink(linkURL) {
+		Linking.openURL(linkURL);
 	},
 
-	renderScene: function() {
-		var data = this.props.route.eventData;
-		var eventTitleStr = data.title;//EventTitle.replace('&amp;','&');
-		var eventDescriptionStr = data.description;//EventDescription.replace('&amp;','&').trim();
-		var eventDateStr = data.eventdate + '\n' + general.militaryToAMPM(data.starttime) + ' to ' + general.militaryToAMPM(data.endtime);//'';
+	gotoWebView(eventName, eventURL) {
+		// this.props.navigator.push({ id: 'WebWrapper', name: 'WebWrapper', title: eventName, component: WebWrapper, webViewURL: eventURL });
+		Linking.canOpenURL(eventURL).then(supported => {
+			if (!supported) {
+				logger.log('Can\'t handle url: ' + eventURL);
+			} else {
+				return Linking.openURL(eventURL);
+			}
+		}).catch(err => logger.log('An error with opening EventDetail occurred', err));
+	},
+
+	renderScene() {
+		const data = this.props.route.eventData;
+		const eventTitleStr = data.title;// EventTitle.replace('&amp;','&');
+		const eventDescriptionStr = data.description;// EventDescription.replace('&amp;','&').trim();
+		const eventDateStr = data.eventdate + '\n' + general.militaryToAMPM(data.starttime) + ' to ' + general.militaryToAMPM(data.endtime);// '';
 		/*
 		var eventDateArray = this.props.route.eventData.EventDate;
 
@@ -98,7 +102,7 @@ var EventDetail = React.createClass({
 						<Text style={css.eventdetail_eventdescription}>{eventDescriptionStr}</Text>
 
 						{this.props.route.eventData.contact_info ? (
-							<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.openBrowserLink('mailto:' + data.EventContact) }>
+							<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => this.openBrowserLink('mailto:' + data.EventContact)}>
 								<View style={css.eventdetail_readmore_container}>
 									<Text style={css.eventdetail_readmore_text}>Email: {data.contact_info}</Text>
 								</View>
@@ -111,21 +115,9 @@ var EventDetail = React.createClass({
 		);
 	},
 
-	openBrowserLink: function(linkURL) {
-		Linking.openURL(linkURL);
+	render() {
+		return this.renderScene();
 	},
-
-	gotoWebView: function(eventName, eventURL) {
-		//this.props.navigator.push({ id: 'WebWrapper', name: 'WebWrapper', title: eventName, component: WebWrapper, webViewURL: eventURL });
-		Linking.canOpenURL(eventURL).then(supported => {
-		if (!supported) {
-			logger.log('Can\'t handle url: ' + eventURL);
-		} else {
-			return Linking.openURL(eventURL);
-		}
-		}).catch(err => logger.log('An error with opening EventDetail occurred', err));
-	},
-
 });
 
 module.exports = EventDetail;

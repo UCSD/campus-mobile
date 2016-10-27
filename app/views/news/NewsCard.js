@@ -1,29 +1,26 @@
-'use strict'
-
-import React from 'react'
+import React from 'react';
 import {
 	View,
-	ListView,
 	Text,
-	TouchableHighlight,
 } from 'react-native';
 
-import Card from '../card/Card'
-import CardComponent from '../card/CardComponent'
+import Card from '../card/Card';
+import CardComponent from '../card/CardComponent';
 import NewsList from './NewsList';
 import NewsService from '../../services/newsService';
 
-var css = require('../../styles/css');
-var logger = require('../../util/logger');
-var Entities = require('html-entities').AllHtmlEntities;
-var entities = new Entities();
+const css = require('../../styles/css');
+const logger = require('../../util/logger');
+const Entities = require('html-entities').AllHtmlEntities;
+
+const entities = new Entities();
 
 export default class NewsCard extends CardComponent {
 
 	constructor(props) {
 		super(props);
 
-		this.fetchErrorInterval =  15 * 1000;			// Retry every 15 seconds
+		this.fetchErrorInterval = 15 * 1000;			// Retry every 15 seconds
 		this.fetchErrorLimit = 3;
 		this.fetchErrorCounter = 0;
 
@@ -33,7 +30,7 @@ export default class NewsCard extends CardComponent {
 			newsDataLoaded: false,
 			fetchErrorLimitReached: false,
 			newsDefaultResults: 3
-		}
+		};
 	}
 
 	componentDidMount() {
@@ -43,13 +40,12 @@ export default class NewsCard extends CardComponent {
 	refresh() {
 		NewsService.FetchNews()
 		.then((responseData) => {
-			for (var i = 0; responseData.items.length > i; i++) {
-
+			for (let i = 0; responseData.items.length > i; i++) {
 				// Perform this on the feed level when possible
 				responseData.items[i].title = entities.decode(responseData.items[i].title);
 
 				if (responseData.items[i].image) {
-					var image_lg = responseData.items[i].image.replace(/-150\./,'.').replace(/_teaser\./,'.');
+					const image_lg = responseData.items[i].image.replace(/-150\./,'.').replace(/_teaser\./,'.');
 					if (image_lg.length > 10) {
 						responseData.items[i].image_lg = image_lg;
 					}
@@ -64,8 +60,8 @@ export default class NewsCard extends CardComponent {
 			logger.error(error);
 			if (this.fetchErrorLimit > this.fetchErrorCounter) {
 				this.fetchErrorCounter++;
-				logger.log('ERR: fetchNews: refreshing again in ' + this.fetchErrorInterval/1000 + ' sec');
-				this.refreshTimer = setTimeout( () => { this.refresh() }, this.fetchErrorInterval);
+				logger.log('ERR: fetchNews: refreshing again in ' + (this.fetchErrorInterval / 1000) + ' sec');
+				this.refreshTimer = setTimeout( () => { this.refresh(); }, this.fetchErrorInterval);
 			} else {
 				logger.log('ERR: fetchNews: Limit exceeded - max limit:' + this.fetchErrorLimit);
 				this.setState({ fetchErrorLimitReached: true });

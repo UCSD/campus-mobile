@@ -322,7 +322,7 @@ var DiningDetail = React.createClass({
 		} else if (this.vegetarianFilterEnabled || this.veganFilterEnabled || this.glutenfreeFilterEnabled) {
 			for (var i = 0; menuItemsArray.length > i; i++) {
 				if (this.vegetarianFilterEnabled && this.veganFilterEnabled && this.glutenfreeFilterEnabled) {
-				   if (menuItemsArray[i].tags.indexOf('VT') >= 0 && menuItemsArray[i].tags.indexOf('VG') >= 0 && menuItemsArray[i].tags.indexOf('GF') >= 0) {
+					if (menuItemsArray[i].tags.indexOf('VT') >= 0 && menuItemsArray[i].tags.indexOf('VG') >= 0 && menuItemsArray[i].tags.indexOf('GF') >= 0) {
 						menuItemsActivated.push(menuItemsArray[i]);
 					}
 					continue;

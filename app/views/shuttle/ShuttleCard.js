@@ -23,7 +23,7 @@ var shuttle_routes = 	require('../../json/shuttle_routes_master.json');
 
 export default class ShuttleCard extends CardComponent {
 
-  constructor(props) {
+	constructor(props) {
 		super(props);
 
 		this.shuttleCardRefreshInterval = 1 * 60 * 1000;
@@ -40,7 +40,7 @@ export default class ShuttleCard extends CardComponent {
 			defaultPosition: {
 				coords: { latitude: 32.88, longitude: -117.234 }
 			},
-    	};
+		};
 	}
 
 	componentDidMount() {

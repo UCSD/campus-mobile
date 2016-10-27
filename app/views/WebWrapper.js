@@ -19,11 +19,11 @@ var WebWrapper = React.createClass({
 		var scriptInjectStr = '';
 
 		if (title === 'Feedback') {
-			scriptInjectStr =  'var elem = document.querySelector("#form_container h1"); elem.parentNode.removeChild(elem);';
-			scriptInjectStr += 'document.documentElement.style.background = "white";';
-			scriptInjectStr += 'document.querySelector("#form_container").style.boxShadow=null;'
+			scriptInjectStr =	'var elem = document.querySelector("#form_container h1"); elem.parentNode.removeChild(elem);';
+			scriptInjectStr += 	'document.documentElement.style.background = "white";';
+			scriptInjectStr += 	'document.querySelector("#form_container").style.boxShadow=null;'
 		} else if (title === 'Welcome Week') {
-			scriptInjectStr =  	'document.querySelector("#header").style.display = "none";'+
+			scriptInjectStr =	'document.querySelector("#header").style.display = "none";'+
 								'document.querySelector(".center.content-padded").style.display = "none";'+
 								'document.querySelector("#ww-button-ucsd").style.display = "none";'+
 								'document.querySelector("#footer").style.display = "none";';
@@ -46,7 +46,7 @@ var WebWrapper = React.createClass({
 					ref={'webview'}
 					style={css.webview_container}
 					startInLoadingState={true}
-					source={{uri: this.props.route.webViewURL }}  />
+					source={{uri: this.props.route.webViewURL }} />
 			</View>
 		);
 	},
