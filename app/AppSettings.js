@@ -1,5 +1,3 @@
-'use strict';
-
 module.exports = {
 
 	/* APP CONFIG */
@@ -8,7 +6,7 @@ module.exports = {
 	DEBUG_ENABLED: 				false,				// Disables all logger functions (i.e. logger.log) if set to false (console.log is unaffected)
 	NAVIGATOR_ENABLED: 			false,				// IOS setting only - if true, app uses Navigator instead of Navigator IOS
 													// Navigator will always be used for Android
-	
+
 	/* CARDS */
 	WEATHER_CARD_ENABLED: 		true,
 	SHUTTLE_CARD_ENABLED: 		true,
@@ -36,6 +34,6 @@ module.exports = {
 	/* API TTL (seconds) */
 	WEATHER_API_TTL: 			3600,
 	SURF_API_TTL: 				3600,
-	QUICKLINKS_API_TTL: 		86400, 
+	QUICKLINKS_API_TTL: 		86400,
 
 };
