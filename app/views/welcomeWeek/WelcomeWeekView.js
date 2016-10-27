@@ -40,7 +40,7 @@ export default class WelcomeWeekView extends Component {
 	constructor(props) {
 		super(props);
 
-		this.fetchErrorInterval =  15 * 1000;			// Retry every 15 seconds
+		this.fetchErrorInterval = 15 * 1000;			// Retry every 15 seconds
 		this.fetchErrorLimit = 3;
 		this.fetchErrorCounter = 0;
 

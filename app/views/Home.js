@@ -273,7 +273,7 @@ var Home = React.createClass({
 		// Setup Cards
 		// Keys need to be unique, there's probably a better solution, but this works for now
 		if (AppSettings.NEARBY_CARD_ENABLED) {
-			cards.push(<NearbyCard navigator={this.props.navigator} getCurrentPosition={(latlon) => this.getCurrentPosition(latlon)} updatedGoogle={this.state.updatedGoogle} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]}  key={'nearby'}/>);
+			cards.push(<NearbyCard navigator={this.props.navigator} getCurrentPosition={(latlon) => this.getCurrentPosition(latlon)} updatedGoogle={this.state.updatedGoogle} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key={'nearby'}/>);
 		}
 		return cards;
 	},

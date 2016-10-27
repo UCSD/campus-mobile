@@ -14,16 +14,17 @@ import {
 	InteractionManager,
 	ActivityIndicator
 } from 'react-native';
+
 var MapView = require('react-native-maps');
 
-var TimerMixin = 		require('react-timer-mixin');
-var AppSettings = 		require('../AppSettings');
-var allShuttleRoutes = 	require('../json/shuttle_routes_master.json');
-var css = 				require('../styles/css');
+var TimerMixin = require('react-timer-mixin');
+var AppSettings = require('../AppSettings');
+var allShuttleRoutes = require('../json/shuttle_routes_master.json');
+var css = require('../styles/css');
 
-var general = 			require('../util/general');
-var logger = 			require('../util/logger');
-var shuttle = 			require('../util/shuttle');
+var general = require('../util/general');
+var logger = require('../util/logger');
+var shuttle = require('../util/shuttle');
 
 var responseDataRef = [];
 var responseDataSort = [];
@@ -154,15 +155,15 @@ var ShuttleStop = React.createClass({
 		}
 	},
 
-	/* Revisit after welcome week deadline
-	   skeleton render for smoother transition*/
+	// Revisit after welcome week deadline
+	// skeleton render for smoother transition
 	_renderPlaceholderView: function() {
 		return (
 			<View style={[css.main_container, css.offwhitebg]}>
 
 				<ScrollView contentContainerStyle={css.scroll_default}>
 
-        			{this.state.shuttleStopImageDict[this.state.shuttleStopID] ? (
+					{this.state.shuttleStopImageDict[this.state.shuttleStopID] ? (
 						<Image style={css.shuttlestop_image} source={ this.state.shuttleStopImageDict[this.state.shuttleStopID] } />
 					) : null }
 					
@@ -196,9 +197,9 @@ var ShuttleStop = React.createClass({
 						tintColor="#CCC"
 						title=""
 					/>
-        		}>
+				}>
 
-        			{this.state.shuttleStopImageDict[this.state.shuttleStopID] ? (
+					{this.state.shuttleStopImageDict[this.state.shuttleStopID] ? (
 						<Image style={css.shuttlestop_image} source={ this.state.shuttleStopImageDict[this.state.shuttleStopID] } />
 					) : null }
 

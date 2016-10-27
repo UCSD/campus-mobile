@@ -39,14 +39,13 @@ export default class DismissibleCard extends React.Component {
 				console.log("grant: " + util.inspect(gesture));
 			},
 			onPanResponderMove: (e, gesture) => {
-				if(gesture.dx > tenth && gesture.vx > gesture.vy) {
+				if (gesture.dx > tenth && gesture.vx > gesture.vy) {
 					panning = true;
 
 					Animated.event([null, {
-					dx: this.state.pan.x, // x,y are Animated.Value
+						dx: this.state.pan.x, // x,y are Animated.Value
 					}])(e, gesture);
-				}
-				else {
+				} else {
 
 				}
 			},
@@ -60,8 +59,8 @@ export default class DismissibleCard extends React.Component {
 				}
 				else {
 					Animated.spring(
-					this.state.pan,         // Auto-multiplexed
-					{toValue: {x: 0, friction: 3}} // Back to zero
+						this.state.pan, // Auto-multiplexed
+						{toValue: {x: 0, friction: 3}} // Back to zero
 					).start();
 				}	
 			},
@@ -111,7 +110,7 @@ export default class DismissibleCard extends React.Component {
 	dismissCard() {
 		Animated.timing(
 			this.state.fadeAnim,
-			{toValue: 0}            
-		).start(()=>  this.setState({ isDismissed: true }));
+			{toValue: 0}
+		).start(() => this.setState({ isDismissed: true }));
 	}
 }

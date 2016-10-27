@@ -5,13 +5,12 @@ import {
 } from 'react-native';
 
 import TimerMixin from 'react-timer-mixin';
-
 import BannerView from './BannerView';
 import WelcomeWeekView from '../welcomeWeek/WelcomeWeekView';
 
-const css =             require('../../styles/css');
-const general = 			  require('../../util/general');
-const AppSettings = 		require('../../AppSettings');
+const css = require('../../styles/css');
+const general = require('../../util/general');
+const AppSettings = require('../../AppSettings');
 
 // Manages the top 'hero' banner & decides what if anything to show
 // Currently decides based on static dates but an API would be great for breaking info
@@ -118,4 +117,5 @@ const TopBannerView = React.createClass({
 		this.props.navigator.push({ id: 'WelcomeWeekView', title: 'Welcome Week', name: 'Welcome Week', component: WelcomeWeekView });
 	}
 });
+
 module.exports = TopBannerView;

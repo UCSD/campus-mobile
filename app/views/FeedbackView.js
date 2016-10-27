@@ -154,7 +154,7 @@ export default class FeedbackView extends Component {
 	postFeedback() {
 
 		if(this.state.commentsText !== "") {
-			var formData  = new FormData();
+			var formData = new FormData();
 			formData.append('element_1', this.state.commentsText);
 			formData.append('element_2', this.state.nameText);
 			formData.append('element_3', this.state.emailText);

@@ -19,7 +19,7 @@
 
 	UCSD Branding Guidelines - Primary Colors
 		New
-		Blue:   #182B49
+		Blue:	#182B49
 		Yellow: #C69214
 
 		Old
@@ -94,11 +94,11 @@ var css = StyleSheet.create({
 		navBarRightButtonContainer: { flex: 1, alignItems: 'center', justifyContent: 'center', width: round(windowWidth * .166) },
 
 	// NavigatorIOS
-	navBarIOS: {  },
+	navBarIOS: {},
 
 	// Primary Containers
 	main_container: { flex: 1, backgroundColor: '#EAEAEA', marginTop: navBarMarginTop },
-	scroll_main: {  },
+	scroll_main: {},
 	listview_main: { marginTop: 64 },
 	view_default: { paddingHorizontal: round(8 * prm) },
 	scroll_default: { alignItems: 'center' },
@@ -240,7 +240,7 @@ var css = StyleSheet.create({
 		events_card_image: { width: round(130 * prm), height: round(73 * prm), marginRight: round(4 * prm), marginLeft: round(10 * prm), borderWidth: 1, borderColor: '#CCC'},
 
 	// WELCOME WEEK STYLE
-	welcome_listview: {  },
+	welcome_listview: {},
 	welcome_ai: { alignItems: 'center', justifyContent: 'center', marginTop: welcome_ai_marginTop },
 	welcome_list_row: { flex: 1, flexDirection: 'row', paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: 'white', overflow: 'hidden', paddingLeft: 16, borderTopColor: 'white', justifyContent: 'center', alignItems: 'center'},
 		welcome_list_sectionText: { fontSize: round(18 * prm), color: '#FFF' },
@@ -257,7 +257,7 @@ var css = StyleSheet.create({
 	weathercard_border: { borderTopWidth: 1, borderTopColor: '#CCC', width: maxCardWidth },
 	weatherccard_loading_height: { height: round(270 * prm) },
 
-	wc_main: {  },
+	wc_main: {},
 	wc_toprow: { flex: 1, flexDirection: 'row', borderBottomWidth: 1, borderColor: '#EEE', justifyContent: 'center', alignItems: 'center', width: maxCardWidth, paddingHorizontal: 14 },
 		wc_toprow_left: { flex: 4 },
 			wc_current_temp: { fontSize: round(22 * prm), fontWeight: '300' },
@@ -274,7 +274,7 @@ var css = StyleSheet.create({
 	wc_surfreport_more: { fontSize: round(20 * prm), fontWeight: '300', color: ucsdblue, paddingHorizontal: 14, paddingVertical: 10 },
 
 	// SURF REPORT
-	sr_listview: {  },
+	sr_listview: {},
 	sr_image: { width: windowWidth, height: round(windowWidth * .361) },
 	sr_day_row: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: 10 },
 		sr_day_row_border: { borderTopWidth: 1, borderTopColor: '#CCC' },
@@ -361,7 +361,7 @@ var css = StyleSheet.create({
 			shuttle_stop_rt_2: { borderRadius: round(18 * prm), width: round(36 * prm), height: round(36 * prm), justifyContent: 'center' },
 				shuttle_stop_rt_2_label: { textAlign: 'center', fontWeight: '600', fontSize: round(19 * prm), backgroundColor: 'rgba(0,0,0,0)' },
 			shuttle_stop_arrivals_row_route_name: { flex: 2, fontSize: round(17 * prm), color: '#555', paddingLeft: round(10 * prm) },
-			shuttle_stop_arrivals_row_eta_text: { flex: 1, fontSize: round(20 * prm), color: '#333', paddingLeft: round(16 * prm), paddingRight: round(16 * prm)  },
+			shuttle_stop_arrivals_row_eta_text: { flex: 1, fontSize: round(20 * prm), color: '#333', paddingLeft: round(16 * prm), paddingRight: round(16 * prm) },
 		
 		shuttlestop_loading: { width: 48, height: 48, marginHorizontal: 40, marginVertical: round(50 * prm) },
 
@@ -433,7 +433,7 @@ var css = StyleSheet.create({
 	mar20: { margin: 20 },
 	mar30: { margin: 30 },
 	mar40: { margin: 40 },
-	pt10:  { paddingTop: 10 },
+	pt10: { paddingTop: 10 },
 	pl10: { paddingLeft: 10 },
 
 	fs10: { fontSize: round(10 * prm) },
