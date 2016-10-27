@@ -1,29 +1,21 @@
-'use strict'
-
-import React from 'react'
+import React from 'react';
 import {
-	StyleSheet,
 	View,
 	Text,
-	Navigator,
 	TouchableHighlight,
 	Image,
 } from 'react-native';
 
 import NewsDetail from './NewsDetail';
 
-var css = require('../../styles/css');
+const css = require('../../styles/css');
 
-const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 export default class NewsItem extends React.Component {
 
-	gotoNewsDetail(newsData) {
-  		this.props.navigator.push({ id: 'NewsDetail', name: 'News', title: 'News', component: NewsDetail, newsData: newsData });
-	}
-
-	getStoryDescription(description, title){
-		var storyDescriptionStr = description.replace(/^ /g, '');
+	getStoryDescription(description, title) {
+		let storyDescriptionStr = description.replace(/^ /g, '');
 
 		if (storyDescriptionStr.length > 0) {
 			if (title.length < 25) {
@@ -38,27 +30,31 @@ export default class NewsItem extends React.Component {
 		return storyDescriptionStr;
 	}
 
+	gotoNewsDetail(newsData) {
+		this.props.navigator.push({ id: 'NewsDetail', name: 'News', title: 'News', component: NewsDetail, newsData });
+	}
+
 	render() {
-		var data = this.props.data;
+		const data = this.props.data;
 
-		var storyDate = data['date'];
-		var storyDateMonth = storyDate.substring(5,7);
-		var storyDateDay = storyDate.substring(8,10);
+		const storyDate = data.date;
+		let storyDateMonth = storyDate.substring(5,7);
+		let storyDateDay = storyDate.substring(8,10);
 
-		if (storyDateMonth.substring(0,1) == '0') {
+		if (storyDateMonth.substring(0,1) === '0') {
 			storyDateMonth = storyDateMonth.substring(1,2);
 		}
-		if (storyDateDay.substring(0,1) == '0') {
+		if (storyDateDay.substring(0,1) === '0') {
 			storyDateDay = storyDateDay.substring(1,2);
 		}
 
-		var storyDateMonthStr = monthNames[storyDateMonth-1];
+		const storyDateMonthStr = monthNames[storyDateMonth - 1];
 
-		var storyTitle = data.title;
+		const storyTitle = data.title;
 
-		var storyDescriptionStr = this.getStoryDescription(data.description, data.title);
+		const storyDescriptionStr = this.getStoryDescription(data.description, data.title);
 		return (
-			<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoNewsDetail(data)}>
+			<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => this.gotoNewsDetail(data)}>
 				<View style={css.events_list_row}>
 					<View style={css.events_list_left_container}>
 						<Text style={css.events_list_title}>{storyTitle}</Text>
@@ -71,7 +67,7 @@ export default class NewsItem extends React.Component {
 					{data.image ? (
 						<Image style={css.news_list_image} source={{ uri: data.image }} />
 					) : (
-						<Image style={css.news_list_image} source={ require('../../assets/img/MobileEvents_blank.jpg')} />
+						<Image style={css.news_list_image} source={require('../../assets/img/MobileEvents_blank.jpg')} />
 					)}
 
 				</View>

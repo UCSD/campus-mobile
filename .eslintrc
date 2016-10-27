@@ -181,7 +181,7 @@
   // Stylistic Issues
   // These rules are purely matters of style and are quite subjective.
 
-    "prefer-template": 1,            // use template instead of string concatination
+    "prefer-template": 0,            // use template instead of string concatination
     "key-spacing": 0,
     "keyword-spacing": 1,            // enforce spacing before and after keywords
     "jsx-quotes": [1, "prefer-double"],
@@ -242,6 +242,8 @@
     "react/react-in-jsx-scope": 1,
     "react/self-closing-comp": 1,
     "react/wrap-multilines": 0,
+    "react/jsx-indent": [2, "tab"],
+    "react/jsx-indent-props": [1, "tab"],
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
   }
 }

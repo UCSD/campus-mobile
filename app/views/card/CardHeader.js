@@ -1,5 +1,4 @@
-'use strict'
-import React from 'react'
+import React from 'react';
 import {
 	View,
 	Text,
@@ -7,9 +6,10 @@ import {
 	ActivityIndicator,
 	TouchableHighlight,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
 
-var css = require('../../styles/css');
+// import Icon from 'react-native-vector-icons/FontAwesome';
+
+const css = require('../../styles/css');
 
 export default class CardHeader extends React.Component {
 	render() {
@@ -18,9 +18,9 @@ export default class CardHeader extends React.Component {
 			refresh = this.props.isRefreshing ?
 				<ActivityIndicator animating={true} />
 				:
-				<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={this.props.cardRefresh}>
-					<Image style={css.shuttle_card_refresh} source={require('../../assets/img/icon_refresh_grey.png')} />
-				</TouchableHighlight>
+					<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={this.props.cardRefresh}>
+						<Image style={css.shuttle_card_refresh} source={require('../../assets/img/icon_refresh_grey.png')} />
+					</TouchableHighlight>;
 		}
 		return (
 			<View style={css.card_title_container}>
@@ -32,4 +32,4 @@ export default class CardHeader extends React.Component {
 		);
 	}
 }
-//{refresh} <Icon name="caret-down" size={20} color={"#747678"}/>
+// {refresh} <Icon name="caret-down" size={20} color={"#747678"}/>
