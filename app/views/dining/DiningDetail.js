@@ -32,7 +32,7 @@ var DiningDetail = React.createClass({
 			lunchItems = [],
 			dinnerItems = [],
 			ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
-			marketData = this.props.route.marketData,
+			marketData = this.props.route.data,
 			menuItemsCount = 0;
 
 		if (marketData.menuItems) {

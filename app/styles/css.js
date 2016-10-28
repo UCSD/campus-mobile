@@ -144,6 +144,9 @@ var css = StyleSheet.create({
 	dining_card_more: { alignItems: 'center', justifyContent: 'center', width: maxCardWidthWithPadding, paddingHorizontal: 4, paddingTop: 8, paddingBottom: 4, borderTopWidth: 1, borderTopColor: '#DDD' },
 	dining_card_more_label: { fontSize: round(20 * prm), color: ucsdblue, fontWeight: '300' },
 
+	// DINING LIST VIEW
+	dining_listview: { padding: 8 },
+
 	// DINING DETAIL
 	dl_market_name: { padding: round(10 * prm) },
 		dl_market_name_text: { color: '#555', fontSize: round(26 * prm) },
