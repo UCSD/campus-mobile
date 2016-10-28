@@ -35,6 +35,7 @@ import FeedbackView from './views/FeedbackView';
 import NavigationBarWithRouteMapper from './views/NavigationBarWithRouteMapper';
 
 import codePush from "react-native-code-push";
+let codePushOptions = { checkFrequency: codePush.CheckFrequency.ON_APP_RESUME, installMode: codePush.InstallMode.ON_NEXT_RESUME };
 
 /**
  * Timeout that allows for pause and resume
@@ -234,5 +235,5 @@ var nowucsandiego = React.createClass({
 	},
 });
 
-nowucsandiego = codePush(nowucsandiego);
+nowucsandiego = codePush(codePushOptions)(nowucsandiego);
 module.exports = nowucsandiego;
