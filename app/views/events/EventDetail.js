@@ -27,8 +27,6 @@ const EventDetail = React.createClass({
 	},
 
 	componentWillMount() {
-		logger.ga('View Loaded: Event Detail');
-
 		const imageURL = this.props.route.eventData.imagehq;
 
 		if (imageURL) {
@@ -47,7 +45,7 @@ const EventDetail = React.createClass({
 	},
 
 	componentDidMount() {
-		logger.ga('View Loaded: Event: ' + this.props.route.eventData.title);// this.props.route.eventData.EventTitle.replace('&amp;','&'));
+		logger.ga('View Loaded: Event Detail: ' + this.props.route.eventData.title);
 	},
 
 	openBrowserLink(linkURL) {
