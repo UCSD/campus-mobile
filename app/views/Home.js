@@ -26,10 +26,11 @@ import NavigationBarWithRouteMapper from './NavigationBarWithRouteMapper';
 import FeedbackView from './FeedbackView';
 
 // Cards
-import EventCard from './events/EventCard'
-import NewsCard from './news/NewsCard';
 import WeatherCard from './weather/WeatherCard';
 import ShuttleCard from './shuttle/ShuttleCard';
+import EventCard from './events/EventCard'
+import NewsCard from './news/NewsCard';
+import DiningCard from './dining/DiningCard';
 import NearbyCard from './nearby/NearbyCard';
 
 import YesNoCard from './survey/YesNoCard';
@@ -57,7 +58,6 @@ var Home = React.createClass({
 
 	mixins: [TimerMixin],
 	permissionUpdateInterval: 1 * 65 * 1000,
-	diningDefaultResults: 4,
 	copyrightYear: new Date().getFullYear(),
 	geolocationWatchID: null,
 
@@ -65,8 +65,6 @@ var Home = React.createClass({
 		return {
 			initialLoad: true,
 			scrollEnabled: true,
-			diningDataLoaded: false,
-			diningRenderAllRows: false,
 			locationPermission: 'undetermined',
 			currentPosition: null,
 			cacheMap: false,
@@ -182,12 +180,7 @@ var Home = React.createClass({
 		return (
 			<View style={css.main_container}>
 				<ScrollView contentContainerStyle={css.scroll_main} refreshControl={
-					<RefreshControl
-						refreshing={this.state.refreshing}
-						onRefresh={this._handleRefresh}
-						tintColor="#CCC"
-						title=""
-					/>
+					<RefreshControl refreshing={this.state.refreshing} onRefresh={this._handleRefresh} tintColor='#CCC' title='' />
 				}>
 
 					{/* WELCOME MODAL */}
@@ -196,40 +189,8 @@ var Home = React.createClass({
 					{/* SPECIAL TOP BANNER */}
 					<TopBannerView navigator={this.props.navigator}/>
 
-					{/* SHUTTLE_CARD & EVENTS CARD & NEWS CARD & WEATHER CARD */}
+					{/* LOAD PRIMARY CARDS */}
 					{ this.getCards() }
-
-					{/* DINING CARD */}
-					{AppSettings.DINING_CARD_ENABLED ? (
-						<View>
-							<View style={css.card_main}>
-								<View style={css.card_title_container}>
-									<Text style={css.card_title}>Dining</Text>
-								</View>
-
-								{this.state.diningDataLoaded ? (
-									<View style={css.dining_card}>
-										<View style={css.dining_card_map}></View>
-										<View style={css.dc_locations}>
-											<ListView dataSource={this.state.diningDataPartial} renderRow={this.renderDiningRow} style={css.wf_listview} />
-										</View>
-										<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoDiningList(this.state.diningData) }>
-											<View style={css.events_more}>
-												<Text style={css.events_more_label}>View All Locations</Text>
-											</View>
-										</TouchableHighlight>
-									</View>
-								) : (
-									<View style={[css.card_row_center, css.card_loader]}>
-										<ActivityIndicator size="large" />
-									</View>
-								)}
-							</View>
-						</View>
-					) : null }
-
-					{/* NEARBY CARD */}
-					{ this.getNearbyCard() }
 
 					{/* FOOTER */}
 					<View style={css.footer}>
@@ -250,8 +211,8 @@ var Home = React.createClass({
 	getCards: function() {
 		var cards = [];
 		var cardCounter = 0;
+		
 		// Setup Cards
-		// Keys need to be unique, there's probably a better solution, but this works for now
 		if (this.props.cards['weather']) {
 			cards.push(<WeatherCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key='weather' />);
 		}
@@ -264,17 +225,11 @@ var Home = React.createClass({
 		if (this.props.cards['news']) {
 			cards.push(<NewsCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key='news' />);
 		}
-		return cards;
-	},
-
-	// Replace with dining card breakout in v2.4
-	getNearbyCard: function() {
-		var cards = [];
-		var cardCounter = 10;
-		// Setup Cards
-		// Keys need to be unique, there's probably a better solution, but this works for now
+		if (AppSettings.DINING_CARD_ENABLED) {
+			cards.push(<DiningCard navigator={this.props.navigator} location={this.state.currentPosition} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key={'dining'} />);
+		}
 		if (AppSettings.NEARBY_CARD_ENABLED) {
-			cards.push(<NearbyCard navigator={this.props.navigator} getCurrentPosition={(latlon) => this.getCurrentPosition(latlon)} updatedGoogle={this.state.updatedGoogle} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key={'nearby'}/>);
+			cards.push(<NearbyCard navigator={this.props.navigator} getCurrentPosition={(latlon) => this.getCurrentPosition(latlon)} updatedGoogle={this.state.updatedGoogle} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key={'nearby'} />);
 		}
 		return cards;
 	},
@@ -291,89 +246,10 @@ var Home = React.createClass({
 			}
 		}
 
-		// Use default location (UCSD) if location permissions disabled
-		this.refreshDiningCard();
-
-		// Refresh broken out cards
-		// Shuttle, News, Events, Weather, Nearby
+		// Refresh cards
 		if (this.refs.cards) {
 			this.refs.cards.forEach(c => c.refresh());
 		}
-	},
-
-	refreshDiningCard: function() {
-		if (AppSettings.DINING_CARD_ENABLED) {
-			this.fetchDiningLocations();
-		}
-	},
-
-	fetchDiningLocations: function() {
-		fetch(AppSettings.DINING_API_URL, {
-				headers: {
-					'Cache-Control': 'no-cache'
-				}
-			})
-			.then((response) => response.json())
-			.then((responseData) => {
-
-				responseData = responseData.GetDiningInfoResult;
-
-				// Calc distance from dining locations
-				for (var i = 0; responseData.length > i; i++) {
-					var distance = shuttle.getDistance(this.getCurrentPosition('lat'), this.getCurrentPosition('lon'), responseData[i].coords.lat, responseData[i].coords.lon);
-					if (distance) {
-						responseData[i].distance = distance;
-					} else {
-						responseData[i].distance = 100000000;
-					}
-
-					responseData[i].distanceMiles = general.convertMetersToMiles(distance);
-					responseData[i].distanceMilesStr = general.getDistanceMilesStr(responseData[i].distanceMiles);
-				}
-
-				// Sort dining locations by distance
-				responseData.sort(this.sortNearbyMarkers);
-				var responseDataPartial = responseData.slice(0, this.diningDefaultResults);
-
-				var dsFull = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-
-				this.setState({
-					diningData: responseData,
-					diningDataPartial: dsFull.cloneWithRows(responseDataPartial),
-					diningDataLoaded: true
-				});
-			})
-			.catch((error) => {
-				logger.log('ERR: fetchDiningLocations: ' + error)
-			})
-			.done();
-	},
-
-
-	renderDiningRow: function(data) {
-
-		var currentTimestamp = general.getTimestamp('yyyy-mm-dd');
-		var dayOfWeek = general.getTimestamp('ddd').toLowerCase();
-
-		return (
-			<View style={css.dc_locations_row}>
-				<TouchableHighlight style={css.dc_locations_row_left} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoDiningDetail(data) }>
-					<View>
-						<Text style={css.dc_locations_title}>{data.name}</Text>
-						<Text style={css.dc_locations_hours}>{data.regularHours}</Text>
-					</View>
-				</TouchableHighlight>
-
-				{data.coords.lat != 0 ? (
-					<TouchableHighlight style={css.dc_locations_row_right} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => general.gotoNavigationApp('walk', data.coords.lat, data.coords.lon) }>
-						<View style={css.dl_dir_traveltype_container}>
-							<Image style={css.dl_dir_icon} source={ require('../assets/img/icon_walk.png')} />
-							<Text style={css.dl_dir_eta}>{data.distanceMilesStr}</Text>
-						</View>
-					</TouchableHighlight>
-				) : null }
-			</View>
-		);
 	},
 
 	getCurrentPosition: function(type) {
@@ -404,18 +280,6 @@ var Home = React.createClass({
 
 	gotoFeedbackForm: function() {
 		this.props.navigator.push({ id: 'FeedbackView', component: FeedbackView, title: 'Feedback' });
-	},
-
-	gotoScheduleDetail: function() {
-		this.props.navigator.push({ id: 'ScheduleDetail', component: ScheduleDetail, title: 'Schedule' });
-	},
-
-	gotoDiningDetail: function(marketData) {
-		this.props.navigator.push({ id: 'DiningDetail', component: DiningDetail, title: 'Dining', marketData: marketData });
-	},
-
-	gotoDiningList(diningData) {
-		this.props.navigator.push({ id: 'DiningList', title: 'Dining', name: 'Dining', component: DiningList, data: diningData });
 	},
 
 	_handleRefresh: function() {
