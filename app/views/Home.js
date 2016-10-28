@@ -18,6 +18,7 @@ import {
 	Navigator,
 	ActivityIndicator,
 } from 'react-native';
+import { connect } from 'react-redux';
 
 import TopBannerView from './banner/TopBannerView';
 import WelcomeModal from './WelcomeModal';
@@ -188,7 +189,7 @@ var Home = React.createClass({
 						title=""
 					/>
 				}>
-					
+
 					{/* WELCOME MODAL */}
 					<WelcomeModal />
 
@@ -226,7 +227,7 @@ var Home = React.createClass({
 							</View>
 						</View>
 					) : null }
-					
+
 					{/* NEARBY CARD */}
 					{ this.getNearbyCard() }
 
@@ -251,16 +252,16 @@ var Home = React.createClass({
 		var cardCounter = 0;
 		// Setup Cards
 		// Keys need to be unique, there's probably a better solution, but this works for now
-		if (AppSettings.WEATHER_CARD_ENABLED) {
+		if (this.props.cards['weather']) {
 			cards.push(<WeatherCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key='weather' />);
 		}
-		if (AppSettings.SHUTTLE_CARD_ENABLED) {
+		if (this.props.cards['shuttle']) {
 			cards.push(<ShuttleCard navigator={this.props.navigator} location={this.state.currentPosition} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key='shuttle' />);
 		}
-		if (AppSettings.EVENTS_CARD_ENABLED) {
+		if (this.props.cards['events']) {
 			cards.push(<EventCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key='events' />);
 		}
-		if (AppSettings.NEWS_CARD_ENABLED) {
+		if (this.props.cards['news']) {
 			cards.push(<NewsCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key='news' />);
 		}
 		return cards;
@@ -424,4 +425,10 @@ var Home = React.createClass({
 	}
 });
 
-module.exports = Home;
+function mapStateToProps(state, props) {
+	return {
+		cards: state.cards
+	};
+}
+
+module.exports = connect(mapStateToProps)(Home);

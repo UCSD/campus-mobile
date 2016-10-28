@@ -98,7 +98,7 @@ export default class ShuttleCard extends CardComponent {
 
 	render() {
 		return (
-			<Card title='Shuttle' cardRefresh={this.refresh} isRefreshing={this.state.isRefreshing}>
+			<Card id='shuttle' title='Shuttle' cardRefresh={this.refresh} isRefreshing={this.state.isRefreshing}>
 				{!this.state.closestStop1Loaded && !this.state.closestStop2Loaded && !this.state.closestStop1LoadFailed && !this.state.closestStop2LoadFailed ? (
 					<View style={[css.shuttle_card_row_center, css.shuttle_card_loader]}>
 						<ActivityIndicator style={css.shuttle_card_aa} size="large" />
@@ -112,7 +112,7 @@ export default class ShuttleCard extends CardComponent {
 				{this.state.closestStop2Loaded && !this.state.closestStop2LoadFailed ? (
 					<ShuttleOverview onPress={this.gotoShuttleStop} stopData={this.shuttleClosestStops[1]} shuttleData={this.state.shuttleData[1]} />
 				) : null }
-			
+
 				{this.state.closestStop1LoadFailed && this.state.closestStop2LoadFailed ? (
 					<View style={css.shuttlecard_loading_fail}>
 						<Text style={css.fs18}>No Shuttles en Route</Text>

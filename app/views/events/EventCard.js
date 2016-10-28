@@ -58,7 +58,7 @@ export default class EventCard extends CardComponent {
 
 	render() {
 		return (
-			<Card title="Events">
+			<Card id='events' title="Events">
 				<View style={css.events_list}>
 					{this.state.eventsDataLoaded ? (
 						<EventList data={this.state.eventsData} navigator={this.props.navigator} />
@@ -73,4 +73,4 @@ export default class EventCard extends CardComponent {
 			</Card>
 		);
 	}
-	}
+}

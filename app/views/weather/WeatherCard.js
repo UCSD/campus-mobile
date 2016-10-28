@@ -41,7 +41,7 @@ export default class WeatherCard extends CardComponent {
 
 	render() {
 		return (
-			<Card title='Weather'>
+			<Card id='weather' title='Weather'>
 				{this.state.weatherDataLoaded ? (
 					<View style={css.wc_main}>
 						<View style={css.wc_toprow}>
