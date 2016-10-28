@@ -30,7 +30,17 @@ export default class DiningCard extends CardComponent {
 	}
 
 	componentDidMount() {
-		this.refresh();
+		this.refresh(this.props.location);
+	}
+
+	componentWillReceiveProps(nextProps) {
+		// if we have a new location, refresh using that location
+		if (!this.props.location
+				|| (nextProps.location &&
+					(nextProps.location.coords.latitude !== this.props.location.coords.latitude
+						|| nextProps.location.coords.longitude !== this.props.location.coords.longitude))) {
+			this.refresh(nextProps.location);
+		}
 	}
 
 	render() {
@@ -53,26 +63,29 @@ export default class DiningCard extends CardComponent {
 		);
 	}
 
-	refresh() {
+	refresh(location) {
 		DiningService.FetchDining()
 		.then((responseData) => {
+
 			responseData = responseData.GetDiningInfoResult;
 
-			// Calc distance from dining locations
-			for (var i = 0; responseData.length > i; i++) {
-				var distance = shuttle.getDistance(this.props.location.coords.latitude, this.props.location.coords.longitude, responseData[i].coords.lat, responseData[i].coords.lon);
-				if (distance) {
-					responseData[i].distance = distance;
-				} else {
-					responseData[i].distance = 100000000;
+			if (location) {
+				// Calc distance from dining locations
+				for (var i = 0; responseData.length > i; i++) {
+					var distance = shuttle.getDistance(location.coords.latitude, location.coords.longitude, responseData[i].coords.lat, responseData[i].coords.lon);
+					if (distance) {
+						responseData[i].distance = distance;
+					} else {
+						responseData[i].distance = 100000000;
+					}
+
+					responseData[i].distanceMiles = general.convertMetersToMiles(distance);
+					responseData[i].distanceMilesStr = general.getDistanceMilesStr(responseData[i].distanceMiles);
 				}
 
-				responseData[i].distanceMiles = general.convertMetersToMiles(distance);
-				responseData[i].distanceMilesStr = general.getDistanceMilesStr(responseData[i].distanceMiles);
+				// Sort dining locations by distance
+				responseData.sort(this.sortNearbyMarkers);
 			}
-
-			// Sort dining locations by distance
-			responseData.sort(this.sortNearbyMarkers);
 
 			this.setState({
 				diningData: responseData,
@@ -80,7 +93,7 @@ export default class DiningCard extends CardComponent {
 			});
 		})
 		.catch((error) => {
-			logger.log('ERR: fetchDiningLocations: ' + error)
+			console.log('ERR: fetchDiningLocations: ' + error)
 		})
 		.done();
 	}

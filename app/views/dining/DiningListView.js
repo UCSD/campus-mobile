@@ -26,7 +26,7 @@ export default class DiningListView extends React.Component {
 		const diningDatasource = this.datasource.cloneWithRows(diningData);
 
 		return (
-			<View style={css.main_container}>
+			<View style={css.view_all_container}>
 				<ListView style={css.dining_listview} dataSource={diningDatasource} renderRow={
 					(row) => <DiningItem data={row} navigator={this.props.navigator} />
 				}/>
