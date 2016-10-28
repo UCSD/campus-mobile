@@ -9,28 +9,25 @@
 	// From project folder run:
 	npm install
 
-	// Link third party modules with rnpm
-	rnpm link
-
 ### Availabile Cards
 * TopBanner
     * For upcoming current events
 * Dining
-    * 3 nearest HDH dining options
-        * Working on 3rd party options
+    * Dining Locations
+    * All Dining Locations view
 * Shuttle
     * Clockwise/CC Loop arrival times of nearest stop
     * Shuttle stop info view link
 * Weather
-    * 5 day weather report
+    * 5 day forecast
     * Surf report view link
 * Events
-    * 3 upcoming events
-    * Full event list view link
+    * Upcoming Events
+    * All Events view
     * http://studentevents.ucsd.edu/all/
 * News
-    * 3 latest news articles
-    * Full News list view link
+    * Latest News
+    * All News view
     * http://ucsdnews.ucsd.edu/rss/all
         * Waiting on proper news feed 
 * Nearby
