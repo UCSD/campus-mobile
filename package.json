@@ -16,6 +16,7 @@
     "react-native-maps": "0.11.0",
     "react-native-permissions": "0.2.5",
     "react-native-vector-icons": "2.0.3",
+    "redux": "3.6.0",
     "react-redux": "4.4.5",
     "react-timer-mixin": "0.13.3",
     "redux-logger": "2.7.0",
