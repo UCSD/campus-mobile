@@ -1,7 +1,7 @@
-var AppSettings = require('../AppSettings');
+const AppSettings = require('../AppSettings');
 
-var NewsService = {
-	FetchNews: function() {
+const NewsService = {
+	FetchNews() {
 		return fetch(AppSettings.NEWS_API_URL, {
 			headers: {
 				'Cache-Control': 'no-cache'
@@ -9,6 +9,6 @@ var NewsService = {
 		})
 		.then((response) => response.json());
 	}
-}
+};
 
 export default NewsService;

@@ -1,52 +1,43 @@
-'use strict';
-
 import React from 'react';
 import {
-	Platform,
 	View,
 	Text,
-	TouchableOpacity,
 	ScrollView,
 	Image,
 	ListView,
-	Date,
 	ActivityIndicator,
 } from 'react-native';
 
 import NavigationBarWithRouteMapper from '../NavigationBarWithRouteMapper';
 
-var dateFormat = require('dateformat');
+const dateFormat = require('dateformat');
 
-var css = require('../../styles/css');
-var AppSettings = require('../../AppSettings');
-var logger = require('../../util/logger');
-var general = require('../../util/general');
-var surf_report_header = require('../../assets/img/surf_report_header.jpg');
+const css = require('../../styles/css');
+const AppSettings = require('../../AppSettings');
+const logger = require('../../util/logger');
+const general = require('../../util/general');
 
-var SurfReport = React.createClass({
+const SurfReport = React.createClass({
 
-	getInitialState: function() {
+	getInitialState() {
 		return {
 			surfData: null,
 			surfDataNoResults: null,
-		}
+		};
 	},
 
-	componentWillMount: function() {
-
+	componentWillMount() {
 		logger.ga('View Loaded: Surf Report');
 
-		var dsFull = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+		const dsFull = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
 		if (this.props.route.surfData) {
-
 			this.surfDataArray = [];
 
-			for (var i = 0; this.props.route.surfData.length > i; i++) {
+			for (let i = 0; this.props.route.surfData.length > i; i++) {
+				const surfDataRow = this.props.route.surfData[i];
 
-				var surfDataRow = this.props.route.surfData[i];
-
-				var surfDataRowObj = {};
+				const surfDataRowObj = {};
 
 				surfDataRowObj.surfTitle = surfDataRow.title.replace(/ \: .*/g, '');
 				surfDataRowObj.surfHeight = surfDataRow.title.replace(/.* \: /g, '').replace(/ft.*/g, '').replace(/^\./g, '').replace(/^ /g, '').replace(/ $/g, '').replace(/Surf\: /g, '') + ' ft';
@@ -78,7 +69,7 @@ var SurfReport = React.createClass({
 		}
 	},
 
-	compare: function(a, b) {
+	compare(a, b) {
 		if (a.surfTimestampNumeric < b.surfTimestampNumeric) {
 			return -1;
 		} else if (a.surfTimestampNumeric > b.surfTimestampNumeric) {
@@ -88,7 +79,7 @@ var SurfReport = React.createClass({
 		}
 	},
 
-	render: function() {
+	render() {
 		if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
 			return (
 				<NavigationBarWithRouteMapper
@@ -102,13 +93,13 @@ var SurfReport = React.createClass({
 		}
 	},
 
-	renderScene: function() {
+	renderScene() {
 		return (
 			<View style={[css.main_container, css.whitebg]}>
 				<ScrollView contentContainerStyle={[css.scroll_main, css.whitebg]}>
 					<Image style={css.sr_image} source={require('../../assets/img/surf_report_header.jpg')} />
 					{this.state.surfData ? (
-						<ListView dataSource={this.state.surfData} renderRow={ this.renderSurfReportRow } style={css.wf_listview} />
+						<ListView dataSource={this.state.surfData} renderRow={this.renderSurfReportRow} style={css.wf_listview} />
 					) : null }
 					{!this.state.surfData && !this.state.surfDataNoResults ? (
 						<ActivityIndicator style={[css.center, css.mar40]} size="large" />
@@ -121,8 +112,7 @@ var SurfReport = React.createClass({
 		);
 	},
 
-	renderSurfReportRow: function(data) {
-
+	renderSurfReportRow(data) {
 		this.surfRowCurrentTimestamp = data.surfTimestampNumeric;
 
 		if (this.surfRowPreviousTimestamp === null) {
@@ -147,7 +137,7 @@ var SurfReport = React.createClass({
 			this.surfRowPreviousTimestamp = data.surfTimestampNumeric;
 			return (
 				<View style={css.sr_day_row}>
-					<View style={css.sr_day_date_container}></View>
+					<View style={css.sr_day_date_container} />
 					<View style={css.sr_day_details_container}>
 						<View style={css.sr_day_details_container_inner}>
 							<Text style={css.sr_day_details_title}>{data.surfTitle}</Text>
@@ -167,18 +157,18 @@ var SurfReport = React.createClass({
 					</View>
 
 					<View style={css.sr_day_details_container}>
-					<View style={css.sr_day_details_container_inner}>
-						<Text style={css.sr_day_details_title}>{data.surfTitle}</Text>
-						<Text style={css.sr_day_details_height}>{data.surfHeight}</Text>
-						{data.surfDesc ? (<Text style={css.sr_day_details_desc}>{data.surfDesc}</Text>) : null }
-					</View>
+						<View style={css.sr_day_details_container_inner}>
+							<Text style={css.sr_day_details_title}>{data.surfTitle}</Text>
+							<Text style={css.sr_day_details_height}>{data.surfHeight}</Text>
+							{data.surfDesc ? (<Text style={css.sr_day_details_desc}>{data.surfDesc}</Text>) : null }
+						</View>
 					</View>
 				</View>
 			);
 		}
 	},
 
-	capitalizeFirstLetter: function(string) {
+	capitalizeFirstLetter(string) {
 		return string.charAt(0).toUpperCase() + string.slice(1);
 	},
 
