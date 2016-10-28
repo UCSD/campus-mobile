@@ -1,7 +1,7 @@
-var AppSettings = require('../AppSettings');
+const AppSettings = require('../AppSettings');
 
-var WelcomeWeekService = {
-	FetchEvents: function() {
+const WelcomeWeekService = {
+	FetchEvents() {
 		return fetch(AppSettings.WELCOME_WEEK_API_URL, {
 			headers: {
 				'Cache-Control': 'no-cache'
@@ -9,6 +9,6 @@ var WelcomeWeekService = {
 		})
 		.then((response) => response.json());
 	}
-}
+};
 
 export default WelcomeWeekService;

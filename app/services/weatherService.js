@@ -1,7 +1,7 @@
-var AppSettings = require('../AppSettings');
+const AppSettings = require('../AppSettings');
 
-var WeatherService = {
-	FetchWeather: function() {
+const WeatherService = {
+	FetchWeather() {
 		return fetch(AppSettings.WEATHER_API_URL, {
 			headers: {
 				'Cache-Control': 'no-cache'
@@ -10,7 +10,7 @@ var WeatherService = {
 		.then((response) => response.json());
 	},
 
-	FetchSurf: function() {
+	FetchSurf() {
 		return fetch(AppSettings.SURF_API_URL, {
 			headers: {
 				'Cache-Control': 'no-cache'
@@ -18,6 +18,6 @@ var WeatherService = {
 		})
 		.then(response => response.json());
 	},
-}
+};
 
 export default WeatherService;

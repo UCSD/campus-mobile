@@ -1,15 +1,12 @@
-import React from 'react'
+import React from 'react';
 import {
 	View,
-	ListView,
 	Text,
 	Image,
-	TouchableHighlight,
-	Animated,
 } from 'react-native';
 
-var AppSettings = require('../../AppSettings');
-var css = require('../../styles/css');
+const AppSettings = require('../../AppSettings');
+const css = require('../../styles/css');
 
 export default class WeatherDay extends React.Component {
 	render() {
