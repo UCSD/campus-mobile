@@ -9,6 +9,7 @@ import {
 import NewsItemCard from './NewsItemCard';
 
 const css = require('../../styles/css');
+const logger = require('../../util/logger');
 
 export default class NewsListView extends React.Component {
 
@@ -19,6 +20,8 @@ export default class NewsListView extends React.Component {
 	}
 
 	componentDidMount() {
+		logger.ga('View Loaded: News List View');
+
 		InteractionManager.runAfterInteractions(() => {
 			this.setState({ loaded: true });
 		});

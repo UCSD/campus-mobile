@@ -5,15 +5,11 @@
 
 import React, { Component } from 'react';
 import {
-	ListView,
 	Text,
 	View,
-	TouchableOpacity,
-	StyleSheet,
 	ScrollView,
 	TouchableHighlight,
 	InteractionManager,
-	RefreshControl,
 	ActivityIndicator,
 	TextInput
 } from 'react-native';
@@ -24,7 +20,7 @@ import Card from './card/Card';
 const logger = require('../util/logger');
 
 export default class FeedbackView extends Component {
-	
+
 	/**
 	 * Represents view for Welcome Week events
 	 * @param { Object[] } props - An array of properties passed in
@@ -32,9 +28,9 @@ export default class FeedbackView extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			commentsText: "",
-			nameText: "",
-			emailText: "",
+			commentsText: '',
+			nameText: '',
+			emailText: '',
 			loaded: false,
 			submit: false
 		};
@@ -61,7 +57,7 @@ export default class FeedbackView extends Component {
 	 * @return bool whether the component should re-render.
 	**/
 	shouldComponentUpdate(nextProps, nextState) {
-		logger.ga("View Loaded: Feedback");
+		logger.ga('View Loaded: Feedback');
 		return true;
 	}
 
@@ -75,8 +71,8 @@ export default class FeedbackView extends Component {
 	render() {
 		if (!this.state.loaded) {
 			return this.renderLoadingView();
-		} 
-		else if(!this.state.submit) {
+		}
+		else if (!this.state.submit) {
 			return this.renderFormView();
 		}
 		else {
@@ -100,38 +96,36 @@ export default class FeedbackView extends Component {
 		return (
 			<View style={css.main_container}>
 				<ScrollView>
-				<Card title="Your thoughts matter!">
-					<View style={css.feedback_container}>
-						<Text style={css.feedback_label}>New features will be added regularly, please let us know what you would like to see. {"\n"}</Text>
+					<Card title="Your thoughts matter!">
+						<View style={css.feedback_container}>
+							<Text style={css.feedback_label}>New features will be added regularly, please let us know what you would like to see. {'\n'}</Text>
 
-						<TextInput 
-							multiline={true}
-							onChangeText={(text) => this.setState({commentsText: text})}
-							placeholder="Tell us what you think*"
-							style={css.feedback_text}
-						/>
+							<TextInput
+								multiline={true}
+								onChangeText={(text) => this.setState({ commentsText: text })}
+								placeholder="Tell us what you think*"
+								style={css.feedback_text}
+							/>
 
+							<TextInput
+								onChangeText={(text) => this.setState({ nameText: text })}
+								placeholder="Name"
+								style={css.feedback_text}
+							/>
 
-						<TextInput 
-							onChangeText={(text) => this.setState({nameText: text})}
-							placeholder="Name"
-							style={css.feedback_text}
-						/>
-						
+							<TextInput
+								onChangeText={(text) => this.setState({ emailText: text })}
+								placeholder="Email"
+								style={css.feedback_text}
+							/>
 
-						<TextInput 
-							onChangeText={(text) => this.setState({emailText: text})}
-							placeholder="Email"
-							style={css.feedback_text}
-						/>
-
-						<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => this.postFeedback()}>
-							<View style={css.eventdetail_readmore_container}>
-								<Text style={css.eventdetail_readmore_text}>Submit</Text>
-							</View>
-						</TouchableHighlight>
-					</View>
-				</Card>
+							<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => this.postFeedback()}>
+								<View style={css.eventdetail_readmore_container}>
+									<Text style={css.eventdetail_readmore_text}>Submit</Text>
+								</View>
+							</TouchableHighlight>
+						</View>
+					</Card>
 				</ScrollView>
 			</View>
 		);
@@ -141,20 +135,19 @@ export default class FeedbackView extends Component {
 		return (
 			<View style={css.main_container}>
 				<ScrollView>
-				<Card title="Your thoughts matter!">
-					<View style={css.feedback_container}>
-						<Text style={css.feedback_label}>Thank you for your feedback!</Text>
-					</View>
-				</Card>
+					<Card title="Your thoughts matter!">
+						<View style={css.feedback_container}>
+							<Text style={css.feedback_label}>Thank you for your feedback!</Text>
+						</View>
+					</Card>
 				</ScrollView>
 			</View>
 		);
 	}
 
 	postFeedback() {
-
-		if(this.state.commentsText !== "") {
-			var formData = new FormData();
+		if (this.state.commentsText !== '') {
+			const formData = new FormData();
 			formData.append('element_1', this.state.commentsText);
 			formData.append('element_2', this.state.nameText);
 			formData.append('element_3', this.state.emailText);
@@ -171,16 +164,14 @@ export default class FeedbackView extends Component {
 				this.setState({ submit: true });
 			})
 			.then((responseJson) => {
-				//console.log(responseJson);
+				// console.log(responseJson);
 			})
 			.catch((error) => {
-				//console.error(error);
+				// console.error(error);
 			});
 		}
 		else {
 			return;
 		}
-		
 	}
-
 }

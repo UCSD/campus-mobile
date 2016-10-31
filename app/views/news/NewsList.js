@@ -23,10 +23,6 @@ export default class NewsList extends React.Component {
 		this.datasource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 	}
 
-	componentDidMount() {
-		logger.ga('View Loaded: NewsList' );
-	}
-
 	gotoNewsListView() {
 		this.props.navigator.push({ id: 'NewsListView', title: 'News', name: 'News', component: NewsListView, data: this.props.data });
 	}

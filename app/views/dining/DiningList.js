@@ -1,95 +1,37 @@
-'use strict';
-
-import React from 'react'
+import React from 'react';
 import {
 	View,
 	ListView,
 	Text,
 	TouchableHighlight,
-	ActivityIndicator,
-	InteractionManager,
-	Image,
 } from 'react-native';
 
-var css = require('../../styles/css');
-var logger = require('../../util/logger');
-var general = require('../../util/general');
+import DiningItem from './DiningItem';
 
-var DiningDetail = require('./DiningDetail');
+const css = require('../../styles/css');
 
-var DiningList = React.createClass({
+export default class DiningList extends React.Component {
 
-	getInitialState: function() {
-
-		logger.log('t3--------------')
-		return {
-			loaded: false
-		};
-	},
-
-	componentDidMount() {
-		logger.ga('View Loaded: Dining: View All Locations2');
-
-		InteractionManager.runAfterInteractions(() => {
-			this.setState({loaded: true})
-		});
-	},
-
-	render: function() {
-		if (!this.state.loaded) {
-			return this.renderLoadingView();
-		}
-		return this.renderListView();
-	},
-
-	renderLoadingView: function() {
-		return (
-			<View style={css.main_container}>
-				<ActivityIndicator
-					animating={this.state.animating}
-					style={css.welcome_ai}
-					size="large"
-				/>
-			</View>
-		);
-	},
-
-	renderListView: function() {
-		var diningData = this.props.route.data;
-		var datasource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-		var diningDatasource = datasource.cloneWithRows(diningData);
-		return (
-			<ListView dataSource={diningDatasource} renderRow={this.renderDiningRow} />
-		);
-	},
-
-	renderDiningRow: function(data) {
-		var currentTimestamp = general.getTimestamp('yyyy-mm-dd');
-		var dayOfWeek = general.getTimestamp('ddd').toLowerCase();
-
-		return (
-			<View style={[css.dc_locations_row, css.pl10]}>
-				<TouchableHighlight style={css.dc_locations_row_left} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoDiningDetail(data) }>
-					<View>
-						<Text style={css.dc_locations_title}>{data.name}</Text>
-						<Text style={css.dc_locations_hours}>{data.regularHours}</Text>
-					</View>
-				</TouchableHighlight>
-				{data.coords.lat !== 0 && data.coords.lon !== 0 ? (
-					<TouchableHighlight style={css.dc_locations_row_right} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => general.gotoNavigationApp('walk', data.coords.lat, data.coords.lon) }>
-						<View style={css.dl_dir_traveltype_container}>
-							<Image style={css.dl_dir_icon} source={ require('../../assets/img/icon_walk.png')} />
-							<Text style={css.dl_dir_eta}>{data.distanceMilesStr}</Text>
-						</View>
-					</TouchableHighlight>
-				) : null }
-			</View>
-		);
-	},
-
-	gotoDiningDetail: function(marketData) {
-		this.props.navigator.push({ id: 'DiningDetail', component: DiningDetail, title: marketData.name, marketData: marketData });
+	constructor(props) {
+		super(props);
+		this.datasource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 	}
-});
 
-module.exports = DiningList;
+	render() {
+		let diningData = [];
+
+		if (this.props.limitResults) {
+			diningData = this.props.data.slice(0, this.props.limitResults);
+		} else {
+			diningData = this.props.data;
+		}
+		
+		const diningDatasource = this.datasource.cloneWithRows(diningData);
+
+		return (
+			<ListView dataSource={diningDatasource} renderRow={
+				(row) => <DiningItem data={row} navigator={this.props.navigator} />
+			}/>
+		);
+	}
+}

@@ -29,10 +29,16 @@ var AppSettings = 			require('./AppSettings'),
 import WelcomeWeekView from './views/welcomeWeek/WelcomeWeekView';
 import EventListView from './views/events/EventListView';
 import NewsListView from './views/news/NewsListView';
+import DiningListView from './views/dining/DiningListView';
 import FeedbackView from './views/FeedbackView';
 
 // NAV
 import NavigationBarWithRouteMapper from './views/NavigationBarWithRouteMapper';
+
+// REDUX
+import { Provider } from 'react-redux';
+import configureStore from './store/configureStore';
+
 /**
  * Timeout that allows for pause and resume
 **/
@@ -66,6 +72,7 @@ var timers = {};
 var nowucsandiego = React.createClass({
 
 	mixins: [TimerMixin],
+	store: configureStore(),
 
 	getInitialState() {
 		return {
@@ -82,7 +89,7 @@ var nowucsandiego = React.createClass({
 			// Listen to route focus changes
 			// Should be a better way to do this...
 			this.refs.navRef.refs.navRef.navigationContext.addListener('willfocus', (event) => {
-				
+
 				const route = event.data.route;
 
 				// Make sure renders/card refreshes are only happening when in home route
@@ -103,7 +110,7 @@ var nowucsandiego = React.createClass({
 				if(this.state.inHome) {
 					BackAndroid.exitApp();
 					return false;
-					
+
 				} else {
 					this.refs.navRef.refs.navRef.pop();
 					return true;
@@ -168,33 +175,37 @@ var nowucsandiego = React.createClass({
 
 		if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
 			return (
-				<NavigationBarWithRouteMapper
-					ref="navRef"
-					route={{id: 'Home', name: 'Home', title: 'now@ucsandiego'}}
-					renderScene={this.renderScene}
-				/>
+				<Provider store={this.store}>
+					<NavigationBarWithRouteMapper
+						ref="navRef"
+						route={{id: 'Home', name: 'Home', title: 'now@ucsandiego'}}
+						renderScene={this.renderScene}
+					/>
+				</Provider>
 			);
 		} else {
 			return (
-				<NavigatorIOS
-					initialRoute={{ 
-						component: Home, 
-						title: AppSettings.APP_NAME, 
-						passProps: {
-							isSimulator: this.props.isSimulator,
-							new_timeout: this.newTimeout,
-							do_timeout: this.doTimeout
-						},
-						backButtonTitle: "Back"
-					}}
-					style={{flex: 1}}
-					tintColor='#FFFFFF'
-					barTintColor='#006C92'
-					titleTextColor='#FFFFFF'
-					navigationBarHidden={false}
-					translucent={true} 
-					ref="navRef"
-				/>
+				<Provider store={this.store}>
+					<NavigatorIOS
+						initialRoute={{
+							component: Home,
+							title: AppSettings.APP_NAME,
+							passProps: {
+								isSimulator: this.props.isSimulator,
+								new_timeout: this.newTimeout,
+								do_timeout: this.doTimeout
+							},
+							backButtonTitle: "Back"
+						}}
+						style={{flex: 1}}
+						tintColor='#FFFFFF'
+						barTintColor='#006C92'
+						titleTextColor='#FFFFFF'
+						navigationBarHidden={false}
+						translucent={true}
+						ref="navRef"
+					/>
+				</Provider>
 			);
 		}
 	},
@@ -205,7 +216,7 @@ var nowucsandiego = React.createClass({
 			case 'Home': 				return (<Home route={route} navigator={navigator} new_timeout={this.newTimeout} do_timeout={this.doTimeout}/>);
 			case 'ShuttleStop': 		return (<ShuttleStop route={route} navigator={navigator} />);
 			case 'SurfReport': 			return (<SurfReport route={route} navigator={navigator} />);
-			case 'DiningList': 			return (<DiningList route={route} navigator={navigator} />);
+			case 'DiningListView': 		return (<DiningListView route={route} navigator={navigator} />);
 			case 'DiningDetail': 		return (<DiningDetail route={route} navigator={navigator} />);
 			case 'DiningNutrition': 	return (<DiningNutrition route={route} navigator={navigator} />);
 			case 'NewsDetail': 			return (<NewsDetail route={route} navigator={navigator} />);
@@ -213,8 +224,8 @@ var nowucsandiego = React.createClass({
 			case 'WebWrapper': 			return (<WebWrapper route={route} navigator={navigator} />);
 			case 'WelcomeWeekView': 	return (<WelcomeWeekView route={route} navigator={navigator} />);
 			case 'EventListView': 		return (<EventListView route={route} navigator={navigator} />);
-			case 'NewsListView': 	return (<NewsListView route={route} navigator={navigator} />);
-			case 'FeedbackView': 	return (<FeedbackView route={route} navigator={navigator} />);
+			case 'NewsListView': 		return (<NewsListView route={route} navigator={navigator} />);
+			case 'FeedbackView': 		return (<FeedbackView route={route} navigator={navigator} />);
 			default: 					return (<Home route={route} navigator={navigator} new_timeout={this.newTimeout} do_timeout={this.doTimeout}/>);
 		}
 	},

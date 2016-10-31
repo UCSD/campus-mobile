@@ -32,7 +32,7 @@ var DiningDetail = React.createClass({
 			lunchItems = [],
 			dinnerItems = [],
 			ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
-			marketData = this.props.route.marketData,
+			marketData = this.props.route.data,
 			menuItemsCount = 0;
 
 		if (marketData.menuItems) {
@@ -142,7 +142,9 @@ var DiningDetail = React.createClass({
 								<TouchableHighlight style={css.dl_dir_traveltype_container} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { general.gotoNavigationApp('walk', this.state.marketData.coords.lat, this.state.marketData.coords.lon) }}>
 									<View style={css.dl_dir_traveltype_container}>
 										<Image style={css.dl_dir_icon} source={ require('../../assets/img/icon_walk.png')} />
-										<Text style={css.dl_dir_eta}>{this.state.marketData.distanceMilesStr}</Text>
+										{this.state.marketData.distanceMilesStr ? (
+											<Text style={css.dl_dir_eta}>{this.state.marketData.distanceMilesStr}</Text>
+										) : null }
 									</View>
 								</TouchableHighlight>
 							</View>

@@ -72,7 +72,7 @@ export default class NewsCard extends CardComponent {
 
 	render() {
 		return (
-			<Card title="News">
+			<Card id='news' title='News'>
 				<View style={css.events_list}>
 					{this.state.newsDataLoaded ? (
 						<NewsList data={this.state.newsData} defaultResults={this.state.newsDefaultResults} navigator={this.props.navigator} />

@@ -1,28 +1,24 @@
-'use strict'
-
-import React from 'react'
+import React from 'react';
 import {
 	View,
-	ListView,
 	Text,
 	Image,
 	TouchableHighlight,
-	Animated,
 	ActivityIndicator,
 	AsyncStorage,
 } from 'react-native';
 
-import Card from '../card/Card'
-import CardComponent from '../card/CardComponent'
+import Card from '../card/Card';
+import CardComponent from '../card/CardComponent';
 
 import WeatherWeek from './WeatherWeek';
 import SurfReport from './SurfReport';
 import WeatherService from '../../services/weatherService';
 
-var css = require('../../styles/css');
-var logger = require('../../util/logger');
-var general = require('../../util/general');
-var AppSettings = require('../../AppSettings');
+const css = require('../../styles/css');
+const logger = require('../../util/logger');
+const general = require('../../util/general');
+const AppSettings = require('../../AppSettings');
 
 export default class WeatherCard extends CardComponent {
 
@@ -31,7 +27,7 @@ export default class WeatherCard extends CardComponent {
 		this.state = {
 			weatherData: null,
 			weatherDataLoaded: false,
-		}
+		};
 	}
 
 	componentWillMount() {
@@ -41,7 +37,7 @@ export default class WeatherCard extends CardComponent {
 
 	render() {
 		return (
-			<Card title='Weather'>
+			<Card id='weather' title='Weather'>
 				{this.state.weatherDataLoaded ? (
 					<View style={css.wc_main}>
 						<View style={css.wc_toprow}>
@@ -56,7 +52,7 @@ export default class WeatherCard extends CardComponent {
 
 						<WeatherWeek weatherData={this.state.weatherData} />
 
-						<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoSurfReport() }>
+						<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => this.gotoSurfReport()}>
 							<View style={css.weathercard_border}>
 								<Text style={css.wc_surfreport_more}>Surf Report &raquo;</Text>
 							</View>
@@ -74,7 +70,7 @@ export default class WeatherCard extends CardComponent {
 	checkWeatherDataCache() {
 		AsyncStorage.getItem('weatherDataTimestamp').then((timestamp) => {
 			if (timestamp) {
-				var time_elapsed = general.getCurrentTimestamp() - parseInt(timestamp);
+				const time_elapsed = general.getCurrentTimestamp() - parseInt(timestamp, 10);
 				if (time_elapsed >= AppSettings.WEATHER_API_TTL) {
 					this.fetchWeatherData();
 				} else {
@@ -98,15 +94,14 @@ export default class WeatherCard extends CardComponent {
 	fetchWeatherData() {
 		WeatherService.FetchWeather()
 		.then((responseData) => {
-
 			responseData.currently.temperature = Math.round(responseData.currently.temperature);
 			responseData.daily.data = responseData.daily.data.slice(0,5);
 
-			for (var i = 0; responseData.daily.data.length > i; i++) {
-				var data = responseData.daily.data[i];
-				var wf_date = new Date(data.time * 1000);
-				var wf_days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
-				var wf_day = wf_date.getDay();
+			for (let i = 0; responseData.daily.data.length > i; i++) {
+				const data = responseData.daily.data[i];
+				const wf_date = new Date(data.time * 1000);
+				const wf_days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+				const wf_day = wf_date.getDay();
 
 				data.dayofweek = wf_days[wf_day];
 				data.tempMax = Math.round(data.temperatureMax);
@@ -130,7 +125,7 @@ export default class WeatherCard extends CardComponent {
 	checkSurfDataCache() {
 		AsyncStorage.getItem('surfDataTimestamp').then((timestamp) => {
 			if (timestamp) {
-				var time_elapsed = general.getCurrentTimestamp() - parseInt(timestamp);
+				const time_elapsed = general.getCurrentTimestamp() - parseInt(timestamp, 10);
 				if (time_elapsed >= AppSettings.SURF_API_TTL) {
 					this.fetchSurfData();
 				} else {
@@ -155,7 +150,6 @@ export default class WeatherCard extends CardComponent {
 	fetchSurfData() {
 		WeatherService.FetchSurf()
 		.then((responseData) => {
-
 			AsyncStorage.setItem('surfData', JSON.stringify(responseData));
 			AsyncStorage.setItem('surfDataTimestamp', general.getCurrentTimestamp().toString());
 
@@ -172,13 +166,13 @@ export default class WeatherCard extends CardComponent {
 
 	getCurrentSurfData() {
 		if (this.state.surfDataLoaded) {
-			var surfData = this.state.surfData[0].title.replace(/.* \: /g, '').replace(/ft.*/g, '').replace(/^\./g, '').replace(/^ /g, '').replace(/ $/g, '').replace(/Surf\: /g, '').trim() + "'";
+			const surfData = this.state.surfData[0].title.replace(/.* \: /g, '').replace(/ft.*/g, '').replace(/^\./g, '').replace(/^ /g, '').replace(/ $/g, '').replace(/Surf\: /g, '').trim() + "'";
 			if (surfData.length <= 6) {
 				return (surfData);
 			} else if (surfData.indexOf('none') >= 0) {
 				return '1-2\'';
 			} else {
-				return ;
+				return;
 			}
 		} else {
 			return;

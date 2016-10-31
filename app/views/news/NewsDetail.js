@@ -26,8 +26,6 @@ const NewsDetail = React.createClass({
 	},
 
 	componentWillMount() {
-		logger.ga('View Loaded: News Detail');
-
 		let imageURL = (this.props.route.newsData.image_lg) ? this.props.route.newsData.image_lg : this.props.route.newsData.image;
 		imageURL = imageURL.replace(/-thumb/g,'');
 

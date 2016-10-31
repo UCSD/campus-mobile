@@ -98,9 +98,11 @@ var css = StyleSheet.create({
 
 	// Primary Containers
 	main_container: { flex: 1, backgroundColor: '#EAEAEA', marginTop: navBarMarginTop },
+	view_all_container: { flex: 1, backgroundColor: '#FFF', marginTop: navBarMarginTop },
 	scroll_main: {},
 	listview_main: { marginTop: 64 },
 	view_default: { paddingHorizontal: round(8 * prm) },
+	
 	scroll_default: { alignItems: 'center' },
 
 	// Card Styles
@@ -133,7 +135,7 @@ var css = StyleSheet.create({
 		dining_card_filter_button: { paddingVertical: 8, paddingHorizontal: 14, fontSize: round(14 * prm), color: ucsdblue, borderWidth: 1, borderColor: '#999', borderRadius: 3, backgroundColor: '#EEE', textAlign: 'center', marginHorizontal: 14 },
 		dining_card_filter_button_active: { paddingVertical: 8, paddingHorizontal: 14, fontSize: round(14 * prm), color: '#EEE', borderWidth: 1, borderColor: '#999', borderRadius: 3, backgroundColor: ucsdblue, textAlign: 'center', marginHorizontal: 14, overflow: 'hidden' },
 	dc_locations: { flex: 1, flexDirection: 'column' },
-		dc_locations_row: { flexDirection: 'row', paddingBottom: 10, paddingTop: 10, borderBottomWidth: 1, borderBottomColor: '#EEE' },
+		dc_locations_row: { flexDirection: 'row', paddingBottom: 10, paddingTop: 10, borderBottomWidth: 1, borderBottomColor: '#DDD' },
 			dc_locations_row_left: { flex: 6, justifyContent: 'center' },
 				dc_locations_title: { fontSize: round(20 * prm), color: ucsdblue },
 				dc_locations_hours: { fontSize: round(12 * prm), color: '#666', paddingTop: 1 },
@@ -143,6 +145,9 @@ var css = StyleSheet.create({
 				dc_locations_email: { fontSize: round(12 * prm), textAlign: 'center', color: '#666' },
 	dining_card_more: { alignItems: 'center', justifyContent: 'center', width: maxCardWidthWithPadding, paddingHorizontal: 4, paddingTop: 8, paddingBottom: 4, borderTopWidth: 1, borderTopColor: '#DDD' },
 	dining_card_more_label: { fontSize: round(20 * prm), color: ucsdblue, fontWeight: '300' },
+
+	// DINING LIST VIEW
+	dining_listview: { padding: 8 },
 
 	// DINING DETAIL
 	dl_market_name: { padding: round(10 * prm) },
