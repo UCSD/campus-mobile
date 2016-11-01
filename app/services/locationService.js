@@ -1,5 +1,5 @@
 
-export function getLocation() {
+export function getPosition() {
 	return new Promise((resolve, reject) => {
 		navigator.geolocation.getCurrentPosition(
 				(position) => { resolve(position); },
@@ -9,4 +9,6 @@ export function getLocation() {
 }
 
 export function getPermission() {
+	return new Promise((resolve, reject) => {
+	});
 }
