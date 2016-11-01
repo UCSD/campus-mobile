@@ -239,13 +239,6 @@ var Home = React.createClass({
 			refreshType = 'manual';
 		}
 
-		if (AppSettings.SHUTTLE_CARD_ENABLED ) {
-			// if we don't have location permissions, try to get them
-			if(this.state.locationPermission !== 'authorized') {
-				this.getLocationPermission();
-			}
-		}
-
 		// Refresh cards
 		if (this.refs.cards) {
 			this.refs.cards.forEach(c => c.refresh());
