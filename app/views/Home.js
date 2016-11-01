@@ -39,8 +39,6 @@ import IntervalCard from './survey/IntervalCard';
 import TextInputCard from './survey/TextInputCard';
 
 // Node Modules
-import TimerMixin from 'react-timer-mixin';
-const Permissions = require('react-native-permissions');
 const GoogleAPIAvailability = require('react-native-google-api-availability-bridge');
 
 // App Settings / Util / CSS
@@ -56,17 +54,12 @@ const DiningList = require('./dining/DiningList');
 
 var Home = React.createClass({
 
-	mixins: [TimerMixin],
-	permissionUpdateInterval: 1 * 65 * 1000,
 	copyrightYear: new Date().getFullYear(),
-	geolocationWatchID: null,
 
 	getInitialState: function() {
 		return {
 			initialLoad: true,
 			scrollEnabled: true,
-			locationPermission: 'undetermined',
-			currentPosition: null,
 			cacheMap: false,
 			refreshing:false,
 			updatedGoogle: true,
@@ -74,30 +67,9 @@ var Home = React.createClass({
 	},
 
 	componentWillMount: function() {
-
-		if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
-			// Check Location Permissions Periodically
-			this.updateLocationPermission();
+		if (general.platformAndroid()) {
 			this.updateGooglePlay();
 			this.setState({cacheMap: true});
-		}
-
-		else {
-			this.setState({locationPermission: 'authorized'});
-			navigator.geolocation.getCurrentPosition(
-				(initialPosition) => { this.setState({currentPosition: initialPosition}) },
-				(error) => logger.log('ERR: navigator.geolocation.getCurrentPosition: ' + error.message),
-				{enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
-			);
-			this.geolocationWatchID = navigator.geolocation.watchPosition((currentPosition) => {
-				let lastPos = this.state.currentPosition;
-				this.setState({ currentPosition });
-
-				// Initial refresh
-				if(lastPos === null ) {
-					this.refreshAllCards('auto');
-				}
-			});
 		}
 	},
 
@@ -105,69 +77,11 @@ var Home = React.createClass({
 		logger.ga('View Loaded: Home');
 	},
 
-	componentWillUnmount: function() {
-		// Update unmount function with ability to clear all other timers (setTimeout/setInterval)
-		navigator.geolocation.clearWatch(this.geolocationWatchID);
-	},
-
-	updateLocationPermission: function() {
-		this.getLocationPermission();
-		this.props.new_timeout("location", () => { this.updateLocationPermission() }, this.permissionUpdateInterval);
-	},
-
 	updateGooglePlay: function() {
 		GoogleAPIAvailability.checkGooglePlayServices((result) => {
 			if(result === 'update') {
 				this.setState({updatedGoogle: false})
 			}
-		});
-	},
-
-	getLocationPermission: function() {
-		// Get location permission status on Android
-		Permissions.getPermissionStatus('location')
-		.then(response => {
-			//response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
-			this.setState({ locationPermission: response });
-
-			if (response === "authorized") {
-				if(this.state.currentPosition === null ) {
-					this.geolocationWatchID = navigator.geolocation.watchPosition((currentPosition) => {
-						let lastPos = this.state.currentPosition;
-						this.setState({ currentPosition });
-						// Initial refresh
-						if(lastPos === null ) {
-							this.refreshAllCards('auto');
-						}
-					});
-				}
-				else {
-					// Load all non-broken-out Cars
-					this.refreshAllCards('auto');
-				}
-
-			} else {
-				this._requestPermission();
-			}
-		});
-	},
-
-	// Custom message, optional
-	_alertForLocationPermission() {
-		Alert.alert(
-			'Allow this app to access your location?',
-			'We need access so you can get nearby information.',
-			[
-				{text: 'No', onPress: () => logger.log('_alertForLocationPermission: location access denied'), style: 'cancel'},
-				{text: 'Yes', onPress: this._requestPermission}
-			]
-		)
-	},
-
-	_requestPermission() {
-	Permissions.requestPermission('location')
-		.then(response => {
-			this.getLocationPermission();
 		});
 	},
 
@@ -211,13 +125,13 @@ var Home = React.createClass({
 	getCards: function() {
 		var cards = [];
 		var cardCounter = 0;
-		
+
 		// Setup Cards
 		if (this.props.cards['weather']) {
 			cards.push(<WeatherCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key='weather' />);
 		}
 		if (this.props.cards['shuttle']) {
-			cards.push(<ShuttleCard navigator={this.props.navigator} location={this.state.currentPosition} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key='shuttle' />);
+			cards.push(<ShuttleCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key='shuttle' />);
 		}
 		if (this.props.cards['events']) {
 			cards.push(<EventCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key='events' />);
@@ -226,10 +140,10 @@ var Home = React.createClass({
 			cards.push(<NewsCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key='news' />);
 		}
 		if (AppSettings.DINING_CARD_ENABLED) {
-			cards.push(<DiningCard navigator={this.props.navigator} location={this.state.currentPosition} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key={'dining'} />);
+			cards.push(<DiningCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key={'dining'} />);
 		}
 		if (AppSettings.NEARBY_CARD_ENABLED) {
-			cards.push(<NearbyCard navigator={this.props.navigator} getCurrentPosition={(latlon) => this.getCurrentPosition(latlon)} updatedGoogle={this.state.updatedGoogle} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key={'nearby'} />);
+			cards.push(<NearbyCard navigator={this.props.navigator} updatedGoogle={this.state.updatedGoogle} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key={'nearby'} />);
 		}
 		return cards;
 	},
@@ -242,22 +156,6 @@ var Home = React.createClass({
 		// Refresh cards
 		if (this.refs.cards) {
 			this.refs.cards.forEach(c => c.refresh());
-		}
-	},
-
-	getCurrentPosition: function(type) {
-		if (type === 'lat') {
-			if (this.state.currentPosition) {
-				return this.state.currentPosition.coords.latitude;
-			} else {
-				return null;
-			}
-		} else if (type === 'lon') {
-			if (this.state.currentPosition) {
-				return this.state.currentPosition.coords.longitude;
-			} else {
-				return null;
-			}
 		}
 	},
 
@@ -284,7 +182,7 @@ var Home = React.createClass({
 
 function mapStateToProps(state, props) {
 	return {
-		cards: state.cards
+		cards: state.cards,
 	};
 }
 
