@@ -1,32 +1,54 @@
 import React from 'react';
 import {
-	Alert
+	Alert,
+	Text
 } from 'react-native';
 import { connect } from 'react-redux';
 import TimerMixin from 'react-timer-mixin';
 import Permissions from 'react-native-permissions';
-import { refreshLocation } from '../actions/location';
+import { updateLocation, setPermission } from '../actions/location';
+
+const logger = require('../util/logger');
 
 const GeoLocationContainer = React.createClass({
 	mixins: [TimerMixin],
+	permissionUpdateInterval: 1000, // 1 * 65 * 1000,
 
 	componentDidMount() {
+		// fire immediately
 		this.setTimeout(
+			this.getPermission,
+			100
+		);
+
+		// fire on interval
+		this.setInterval(
       this.updateLocation,
       this.permissionUpdateInterval
     );
 	},
 
-	permissionUpdateInterval: 1 * 65 * 1000,
+	getPermission() {
+		Permissions.requestPermission('location')
+			.then(response => {
+				// dispatch response
+				logger.log(response);
+				this.props.dispatch(setPermission(response));
+
+				// if authorized, act
+				if (response === 'authorized') {
+					this.updateLocation();
+				}
+			})
+			.catch(logger.error);
+	},
 
 	updateLocation() {
-		// Get location permission status on Android
-		Permissions.getPermissionStatus('location')
-			.then(response => {
-				if (response === 'authorized') {
-					refreshLocation();
-				}
-			});
+		const { dispatch, permission } = this.props;
+		if (permission !== 'authorized') return;
+
+		// request update
+		dispatch(updateLocation());
 	},
 
 	alertForLocationPermission() {
@@ -35,14 +57,23 @@ const GeoLocationContainer = React.createClass({
 			'We need access so you can get nearby information.',
 			[
 				{ text: 'No', onPress: () => {} },
-				{ text: 'Yes', onPress: this._requestPermission }
+				{ text: 'Yes', onPress: this.getPermission() }
 			]
 		);
 	},
 
 	render() {
-		return null;
+		return (
+			<Text>Permission: {this.props.permission}, Location: {this.props.position.coords.latitude}, {this.props.position.coords.longitude}</Text>
+		);
 	}
 });
 
-module.exports = connect()(GeoLocationContainer);
+function mapStateToProps(state, props) {
+	return {
+		position: state.location.position,
+		permission: state.location.permission
+	};
+}
+
+module.exports = connect(mapStateToProps)(GeoLocationContainer);
