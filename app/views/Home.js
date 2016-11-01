@@ -174,7 +174,6 @@ var Home = React.createClass({
 	},
 
 	_handleRefresh: function() {
-		this.props.do_timeout();
 		this.refreshAllCards('auto');
 		this.setState({refreshing: false});
 	}
