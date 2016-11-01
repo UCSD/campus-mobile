@@ -1,17 +1,28 @@
 
-import { LocationService } from '../services/locationService';
+import * as LocationService from '../services/locationService';
+import logger from '../util/logger';
 
-function setLocation(location) {
-	return {
-		type: 'SET_LOCATION',
-		location
+function updateLocation() {
+	return (dispatch) => {
+		LocationService.getPosition()
+			.then((position) => {
+				dispatch({
+					type: 'SET_POSITION',
+					position
+				});
+			})
+			.catch(logger.error);
 	};
 }
 
-function requestPermission() {
+function setPermission(permission) {
+	return {
+		type: 'SET_PERMISSION',
+		permission
+	};
 }
 
 module.exports = {
-	setLocation,
-	requestPermission
+	updateLocation,
+	setPermission
 };
