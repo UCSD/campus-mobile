@@ -6,7 +6,8 @@ import {
 	NavigatorIOS,
 	BackAndroid,
 	StatusBar,
-	AppState
+	AppState,
+	View
 } from 'react-native';
 import TimerMixin from 'react-timer-mixin';
 
@@ -178,37 +179,41 @@ var nowucsandiego = React.createClass({
 		if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
 			return (
 				<Provider store={this.store}>
-					<GeoLocationContainer />
-					<NavigationBarWithRouteMapper
-						ref="navRef"
-						route={{id: 'Home', name: 'Home', title: 'now@ucsandiego'}}
-						renderScene={this.renderScene}
-					/>
+					<View style={{ flex: 1 }}>
+						<GeoLocationContainer />
+						<NavigationBarWithRouteMapper
+							ref="navRef"
+							route={{ id: 'Home', name: 'Home', title: 'now@ucsandiego' }}
+							renderScene={this.renderScene}
+						/>
+					</View>
 				</Provider>
 			);
 		} else {
 			return (
 				<Provider store={this.store}>
-					<GeoLocationContainer />
-					<NavigatorIOS
-						initialRoute={{
-							component: Home,
-							title: AppSettings.APP_NAME,
-							passProps: {
-								isSimulator: this.props.isSimulator,
-								new_timeout: this.newTimeout,
-								do_timeout: this.doTimeout
-							},
-							backButtonTitle: "Back"
-						}}
-						style={{flex: 1}}
-						tintColor='#FFFFFF'
-						barTintColor='#006C92'
-						titleTextColor='#FFFFFF'
-						navigationBarHidden={false}
-						translucent={true}
-						ref="navRef"
-					/>
+					<View style={{ flex: 1 }}>
+						<GeoLocationContainer />
+						<NavigatorIOS
+							initialRoute={{
+								component: Home,
+								title: AppSettings.APP_NAME,
+								passProps: {
+									isSimulator: this.props.isSimulator,
+									new_timeout: this.newTimeout,
+									do_timeout: this.doTimeout
+								},
+								backButtonTitle: 'Back'
+							}}
+							style={{ flex: 1 }}
+							tintColor='#FFFFFF'
+							barTintColor='#006C92'
+							titleTextColor='#FFFFFF'
+							navigationBarHidden={false}
+							translucent={true}
+							ref="navRef"
+						/>
+					</View>
 				</Provider>
 			);
 		}
