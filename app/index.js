@@ -26,6 +26,8 @@ var AppSettings = 			require('./AppSettings'),
 	EventDetail = 			require('./views/events/EventDetail'),
 	WebWrapper = 			require('./views/WebWrapper');
 
+import GeoLocationContainer from './containers/geoLocationContainer';
+
 import WelcomeWeekView from './views/welcomeWeek/WelcomeWeekView';
 import EventListView from './views/events/EventListView';
 import NewsListView from './views/news/NewsListView';
@@ -176,6 +178,7 @@ var nowucsandiego = React.createClass({
 		if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
 			return (
 				<Provider store={this.store}>
+					<GeoLocationContainer />
 					<NavigationBarWithRouteMapper
 						ref="navRef"
 						route={{id: 'Home', name: 'Home', title: 'now@ucsandiego'}}
@@ -186,6 +189,7 @@ var nowucsandiego = React.createClass({
 		} else {
 			return (
 				<Provider store={this.store}>
+					<GeoLocationContainer />
 					<NavigatorIOS
 						initialRoute={{
 							component: Home,
