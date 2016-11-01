@@ -1,15 +1,17 @@
 
 const initialState = {
-	currentPosition: null,
-	permission: false,
+	position: {
+		coords: { latitude: 32.88, longitude: -117.234 }
+	},
+	permission: 'undetermined',
 };
 
 function location(state = initialState, action) {
 	const newState = { ...state };
 
 	switch (action.type) {
-	case 'SET_LOCATION':
-		newState.location = action.location;
+	case 'SET_POSITION':
+		newState.position = action.position;
 		return newState;
 
 	case 'SET_PERMISSION':
