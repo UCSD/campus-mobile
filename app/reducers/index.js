@@ -1,7 +1,9 @@
-var { combineReducers } = require('redux');
+import { combineReducers } from 'redux';
 
-var cardsReducer = require('./cards');
+import cardsReducer from './cards';
+import locationReducer from './location';
 
 module.exports = combineReducers({
-  cards: cardsReducer
+	cards: cardsReducer,
+	location: locationReducer
 });
