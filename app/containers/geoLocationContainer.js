@@ -12,35 +12,56 @@ const logger = require('../util/logger');
 
 const GeoLocationContainer = React.createClass({
 	mixins: [TimerMixin],
-	permissionUpdateInterval: 1000, // 1 * 65 * 1000,
 
 	componentDidMount() {
-		// fire immediately
-		this.setTimeout(
-			this.getPermission,
-			100
-		);
+		// TODO: only fire on app load....
+		if (this.props.permission === 'undetermined') {
+			// fire immediately on different thread
+			this.setTimeout(
+				this.getSoftPermission,
+				100
+			);
+		}
+	},
 
-		// fire on interval
-		this.setInterval(
-      this.updateLocation,
-      this.permissionUpdateInterval
-    );
+	getSoftPermission() {
+		logger.log('calling alert');
+		Alert.alert(
+			'Allow this app to access your location?',
+			'We need access so you can get nearby information.',
+			[
+				{ text: 'No', onPress: () => {} },
+				{ text: 'Yes', onPress: this.getPermission }
+			]
+		);
 	},
 
 	getPermission() {
 		Permissions.requestPermission('location')
 			.then(response => {
 				// dispatch response
-				logger.log(response);
 				this.props.dispatch(setPermission(response));
 
 				// if authorized, act
 				if (response === 'authorized') {
-					this.updateLocation();
+					this.startLocationWatch();
 				}
 			})
 			.catch(logger.error);
+	},
+
+	locationWatch: null,
+	permissionUpdateInterval: 5000, // 1 * 65 * 1000,
+
+	startLocationWatch() {
+		// fire immediately
+		this.props.dispatch(updateLocation());
+
+		// fire on interval
+		this.locationWatch = this.setInterval(
+      this.updateLocation,
+      this.permissionUpdateInterval
+    );
 	},
 
 	updateLocation() {
@@ -51,20 +72,18 @@ const GeoLocationContainer = React.createClass({
 		dispatch(updateLocation());
 	},
 
-	alertForLocationPermission() {
-		Alert.alert(
-			'Allow this app to access your location?',
-			'We need access so you can get nearby information.',
-			[
-				{ text: 'No', onPress: () => {} },
-				{ text: 'Yes', onPress: this.getPermission() }
-			]
-		);
-	},
-
 	render() {
+		if (this.props.permission !== 'authorized') {
+			return (
+				<Text>Permission: {this.props.permission}</Text>
+			);
+		}
+
 		return (
-			<Text>Permission: {this.props.permission}, Location: {this.props.position.coords.latitude}, {this.props.position.coords.longitude}</Text>
+			<Text>
+				Location: {this.props.position.coords.latitude}, {this.props.position.coords.longitude}
+				Timestamp: {this.props.position.timestamp}
+			</Text>
 		);
 	}
 });
