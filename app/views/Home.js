@@ -38,6 +38,9 @@ import MultipleChoiceCard from './survey/MultipleChoiceCard';
 import IntervalCard from './survey/IntervalCard';
 import TextInputCard from './survey/TextInputCard';
 
+// actions
+import { updateLocation } from '../actions/location';
+
 // Node Modules
 const GoogleAPIAvailability = require('react-native-google-api-availability-bridge');
 
@@ -153,6 +156,11 @@ var Home = React.createClass({
 			refreshType = 'manual';
 		}
 
+		// Refresh location
+		if (this.props.locationPermission === 'authorized') {
+			this.props.dispatch(updateLocation());
+		}
+
 		// Refresh cards
 		if (this.refs.cards) {
 			this.refs.cards.forEach(c => c.refresh());
@@ -182,6 +190,7 @@ var Home = React.createClass({
 function mapStateToProps(state, props) {
 	return {
 		cards: state.cards,
+		locationPermission: state.location.permission
 	};
 }
 
