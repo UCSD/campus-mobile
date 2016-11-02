@@ -161,6 +161,7 @@ class ShuttleCard extends CardComponent {
 	}
 
 	fetchShuttleArrivalsByStop = (closestStopNumber, stopID) => {
+		logger.log(`fetching for stopID: ${stopID}`);
 		ShuttleService.FetchShuttleArrivalsByStop(stopID)
 		.then((responseData) => {
 			if (responseData.length > 0 && responseData[0].secondsToArrival) {
