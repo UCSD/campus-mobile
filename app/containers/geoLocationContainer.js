@@ -9,6 +9,7 @@ import Permissions from 'react-native-permissions';
 import { updateLocation, setPermission } from '../actions/location';
 
 const logger = require('../util/logger');
+const AppSettings = require('../AppSettings');
 
 const GeoLocationContainer = React.createClass({
 	mixins: [TimerMixin],
@@ -73,6 +74,8 @@ const GeoLocationContainer = React.createClass({
 	},
 
 	render() {
+		if (!AppSettings.DEBUG_ENABLED) return null;
+
 		if (this.props.permission !== 'authorized') {
 			return (
 				<Text>Permission: {this.props.permission}</Text>
