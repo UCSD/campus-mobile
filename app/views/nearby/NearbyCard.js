@@ -57,8 +57,8 @@ class NearbyCard extends CardComponent {
 
 	// Updates which predesignated node region the user is in
 	refresh() {
-		const currentLat = this.props.currentPosition.coords.latitude;
-		const currentLon = this.props.currentPosition.coords.longitude;
+		const currentLat = this.props.location.coords.latitude;
+		const currentLon = this.props.location.coords.longitude;
 
 		// Determine if location has changed since last run, skip if con
 		if ((currentLat !== this.state.nodePreviousLat) || (currentLon !== this.state.nodePreviousLon)) {
@@ -99,9 +99,12 @@ class NearbyCard extends CardComponent {
 	}
 
 	parseNodeRegion(ucsd_node) {
+		const currentLat = this.props.location.coords.latitude;
+		const currentLon = this.props.location.coords.longitude;
+
 		// Calc distance from markers
 		for (let i = 0; ucsd_node.length > i; i++) {
-			ucsd_node[i].distance = shuttle.getDistance(this.props.currentLocation.coords.latitude, this.props.coords.longitude, ucsd_node[i].mkrLat, ucsd_node[i].mkrLong);
+			ucsd_node[i].distance = shuttle.getDistance(currentLat, currentLon, ucsd_node[i].mkrLat, ucsd_node[i].mkrLong);
 		}
 
 		ucsd_node.sort(general.sortNearbyMarkers);
@@ -114,7 +117,7 @@ class NearbyCard extends CardComponent {
 		const nearbyAnnotations = [];
 		for (let i = 0; ucsd_node.length > i && this.state.nearbyMaxResults > i; i++) {
 			if (this.state.nearbyMaxResults === i + 1) {
-				const distLatLon = Math.sqrt(Math.pow(Math.abs(this.props.getCurrentPosition('lat') - ucsd_node[i].mkrLat), 2) + Math.pow(Math.abs(this.props.getCurrentPosition('lon') - ucsd_node[i].mkrLong), 2));
+				const distLatLon = Math.sqrt(Math.pow(Math.abs(currentLat - ucsd_node[i].mkrLat), 2) + Math.pow(Math.abs(currentLon - ucsd_node[i].mkrLong), 2));
 				this.setState({
 					nearbyLatDelta: distLatLon * 2,
 					nearbyLonDelta: distLatLon * 2
@@ -150,7 +153,7 @@ class NearbyCard extends CardComponent {
 					<NearbyMap
 						nearbyAnnotations={this.state.nearbyAnnotations}
 						updatedGoogle={this.props.updatedGoogle}
-						location={this.props.currentPosition}
+						location={this.props.location}
 						nearbyLonDelta={this.state.nearbyLonDelta}
 						nearbyLatDelta={this.state.nearbyLatDelta}
 						colors={fiveRandomColors}
@@ -160,7 +163,6 @@ class NearbyCard extends CardComponent {
 							<NearbyList
 								data={this.state.nearbyMarkersPartial}
 								colors={fiveRandomColors}
-								getCurrentPosition={(latlon) => this.props.getCurrentPosition(latlon)}
 								navigator={this.props.navigator}
 							/>
 						) : null}
@@ -173,7 +175,7 @@ class NearbyCard extends CardComponent {
 
 function mapStateToProps(state, props) {
 	return {
-		currentPosition: state.location.position
+		location: state.location.position
 	};
 }
 
