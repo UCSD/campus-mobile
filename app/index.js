@@ -6,7 +6,6 @@ import {
 	NavigatorIOS,
 	BackAndroid,
 	StatusBar,
-	AppState,
 	View
 } from 'react-native';
 
@@ -49,10 +48,6 @@ var nowucsandiego = React.createClass({
 		return {
 			inHome: true,
 		};
-	},
-
-	componentWillMount() {
-		AppState.addEventListener('change', this.handleAppStateChange);
 	},
 
 	componentDidMount() {
@@ -105,10 +100,6 @@ var nowucsandiego = React.createClass({
 				route.backButtonTitle = "Back";
 			});
 		}
-	},
-
-	componentWillUnmount() {
-		AppState.removeEventListener('change', this.handleAppStateChange);
 	},
 
 	render: function() {
