@@ -66,10 +66,8 @@ var nowucsandiego = React.createClass({
 				// Make sure renders/card refreshes are only happening when in home route
 				if (route.id === "Home") {
 					this.setState({inHome: true});
-					this._resumeTimeout();
 				} else {
 					this.setState({inHome: false});
-					this._pauseTimeout();
 				}
 			});
 
