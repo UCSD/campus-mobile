@@ -93,9 +93,7 @@ class DiningCard extends CardComponent {
 				diningDataLoaded: true
 			});
 		})
-		.catch((error) => {
-			console.log('ERR: fetchDiningLocations: ' + error)
-		})
+		.catch(logger.error)
 		.done();
 	}
 
