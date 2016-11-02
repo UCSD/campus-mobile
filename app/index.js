@@ -9,7 +9,6 @@ import {
 	AppState,
 	View
 } from 'react-native';
-import TimerMixin from 'react-timer-mixin';
 
 // SETUP / UTIL / NAV
 var AppSettings = 			require('./AppSettings'),
@@ -42,39 +41,8 @@ import NavigationBarWithRouteMapper from './views/NavigationBarWithRouteMapper';
 import { Provider } from 'react-redux';
 import configureStore from './store/configureStore';
 
-/**
- * Timeout that allows for pause and resume
-**/
-function Timer(callback, delay) {
-	var timerId, start, remaining = delay;
-
-	this.pause = function() {
-		clearTimeout(timerId);
-		remaining -= new Date() - start;
-	};
-
-	this.resume = function() {
-		start = new Date();
-		clearTimeout(timerId);
-		timerId = setTimeout(callback, remaining);
-	};
-
-	this.do = function() {
-		clearTimeout(timerId);
-		callback();
-	}
-
-	this.getID = function() {
-		return timerId;
-	};
-
-	this.resume();
-}
-var timers = {};
-
 var nowucsandiego = React.createClass({
 
-	mixins: [TimerMixin],
 	store: configureStore(),
 
 	getInitialState() {
@@ -128,10 +96,8 @@ var nowucsandiego = React.createClass({
 				// Make sure renders/card refreshes are only happening when in home route
 				if (route.id === undefined) { //undefined is foxusing "Home"... weird I know
 					this.setState({inHome: true});
-					this._resumeTimeout();
 				} else {
 					this.setState({inHome: false});
-					this._pauseTimeout();
 				}
 			});
 
@@ -145,29 +111,6 @@ var nowucsandiego = React.createClass({
 
 	componentWillUnmount() {
 		AppState.removeEventListener('change', this.handleAppStateChange);
-		this._pauseTimeout();
-	},
-
-	newTimeout: function(key, callback, delay) {
-		timers[key] = (new Timer(callback, delay));
-	},
-
-	_pauseTimeout: function() {
-		for (var key in timers) {
-			timers[key].pause();
-		}
-	},
-
-	_resumeTimeout: function() {
-		for (var key in timers) {
-			timers[key].resume();
-		}
-	},
-
-	doTimeout: function() {
-		for (var key in timers) {
-			timers[key].do();
-		}
 	},
 
 	render: function() {
@@ -199,9 +142,7 @@ var nowucsandiego = React.createClass({
 								component: Home,
 								title: AppSettings.APP_NAME,
 								passProps: {
-									isSimulator: this.props.isSimulator,
-									new_timeout: this.newTimeout,
-									do_timeout: this.doTimeout
+									isSimulator: this.props.isSimulator
 								},
 								backButtonTitle: 'Back'
 							}}
@@ -222,7 +163,7 @@ var nowucsandiego = React.createClass({
 	renderScene: function(route, navigator, index, navState) {
 
 		switch (route.id) {
-			case 'Home': 				return (<Home route={route} navigator={navigator} new_timeout={this.newTimeout} do_timeout={this.doTimeout}/>);
+			case 'Home': 				return (<Home route={route} navigator={navigator}/>);
 			case 'ShuttleStop': 		return (<ShuttleStop route={route} navigator={navigator} />);
 			case 'SurfReport': 			return (<SurfReport route={route} navigator={navigator} />);
 			case 'DiningListView': 		return (<DiningListView route={route} navigator={navigator} />);
@@ -235,20 +176,9 @@ var nowucsandiego = React.createClass({
 			case 'EventListView': 		return (<EventListView route={route} navigator={navigator} />);
 			case 'NewsListView': 		return (<NewsListView route={route} navigator={navigator} />);
 			case 'FeedbackView': 		return (<FeedbackView route={route} navigator={navigator} />);
-			default: 					return (<Home route={route} navigator={navigator} new_timeout={this.newTimeout} do_timeout={this.doTimeout}/>);
+			default: 					return (<Home route={route} navigator={navigator} />);
 		}
-	},
-
-	handleAppStateChange(currentAppState) {
-		if (currentAppState === 'active') {
-			if(this.state.inHome) {
-				this._resumeTimeout();
-			}
-		}
-		else if(currentAppState === 'background') {
-			this._pauseTimeout();
-		}
-	},
+	}
 });
 
 module.exports = nowucsandiego;
