@@ -11,7 +11,12 @@ function updateLocation() {
 					position
 				});
 			})
-			.catch(logger.error);
+			.catch((error) => {
+				// ignore timeout error
+				if (error.code === 3) return;
+
+				logger.error(error);
+			});
 	};
 }
 
