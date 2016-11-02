@@ -1,14 +1,18 @@
-var AppSettings = require('../AppSettings');
+const AppSettings = require('../AppSettings');
 
 var DiningService = {
-	FetchDining: function() {
+	FetchDining() {
 		return fetch(AppSettings.DINING_API_URL, {
 			headers: {
 				'Cache-Control': 'no-cache'
 			}
 		})
-		.then((response) => response.json());
+		.then((response) => response.json())
+		.then((data) => {
+			if (data.errorMessage) throw (data.errorMessage);
+			return data;
+		});
 	}
-}
+};
 
 export default DiningService;
