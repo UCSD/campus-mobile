@@ -3,6 +3,7 @@ import {
 	View,
 	ListView,
 } from 'react-native';
+import { connect } from 'react-redux';
 
 import Card from '../card/Card';
 import CardComponent from '../card/CardComponent';
@@ -20,7 +21,7 @@ const ucsd_nodes = 		require('../../json/ucsd_nodes.json');
 
 const fiveRandomColors = general.getRandomColorArray(5);
 
-export default class NearbyCard extends CardComponent {
+class NearbyCard extends CardComponent {
 
 	constructor(props) {
 		super(props);
@@ -56,12 +57,11 @@ export default class NearbyCard extends CardComponent {
 
 	// Updates which predesignated node region the user is in
 	refresh() {
-		const currentLat = this.props.getCurrentPosition('lat');
-		const currentLon = this.props.getCurrentPosition('lon');
+		const currentLat = this.props.currentPosition.coords.latitude;
+		const currentLon = this.props.currentPosition.coords.longitude;
 
 		// Determine if location has changed since last run, skip if con
-		if ((this.props.getCurrentPosition('lat') !== this.state.nodePreviousLat) ||
-			(this.props.getCurrentPosition('lon') !== this.state.nodePreviousLon)) {
+		if ((currentLat !== this.state.nodePreviousLat) || (currentLon !== this.state.nodePreviousLon)) {
 			let closestNode = 0;
 			let closestNodeDistance = 100000000;
 
@@ -89,8 +89,8 @@ export default class NearbyCard extends CardComponent {
 			.done();
 
 			this.setState({
-				nodePreviousLat: this.props.getCurrentPosition('lat'),
-				nodePreviousLon: this.props.getCurrentPosition('lon')
+				nodePreviousLat: currentLat,
+				nodePreviousLon: currentLon
 			});
 		}
 		else {
@@ -101,7 +101,7 @@ export default class NearbyCard extends CardComponent {
 	parseNodeRegion(ucsd_node) {
 		// Calc distance from markers
 		for (let i = 0; ucsd_node.length > i; i++) {
-			ucsd_node[i].distance = shuttle.getDistance(this.props.getCurrentPosition('lat'), this.props.getCurrentPosition('lon'), ucsd_node[i].mkrLat, ucsd_node[i].mkrLong);
+			ucsd_node[i].distance = shuttle.getDistance(this.props.currentLocation.coords.latitude, this.props.coords.longitude, ucsd_node[i].mkrLat, ucsd_node[i].mkrLong);
 		}
 
 		ucsd_node.sort(general.sortNearbyMarkers);
@@ -150,7 +150,7 @@ export default class NearbyCard extends CardComponent {
 					<NearbyMap
 						nearbyAnnotations={this.state.nearbyAnnotations}
 						updatedGoogle={this.props.updatedGoogle}
-						getCurrentPosition={(latlon) => this.props.getCurrentPosition(latlon)}
+						location={this.props.currentPosition}
 						nearbyLonDelta={this.state.nearbyLonDelta}
 						nearbyLatDelta={this.state.nearbyLatDelta}
 						colors={fiveRandomColors}
@@ -170,3 +170,11 @@ export default class NearbyCard extends CardComponent {
 		);
 	}
 }
+
+function mapStateToProps(state, props) {
+	return {
+		currentPosition: state.location.position
+	};
+}
+
+module.exports = connect(mapStateToProps)(NearbyCard);

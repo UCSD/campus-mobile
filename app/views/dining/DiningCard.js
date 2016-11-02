@@ -4,6 +4,7 @@ import {
 	Text,
 	TouchableHighlight,
 } from 'react-native';
+import { connect } from 'react-redux';
 
 import Card from '../card/Card';
 import CardComponent from '../card/CardComponent';
@@ -16,7 +17,7 @@ const logger = require('../../util/logger');
 const shuttle = require('../../util/shuttle');
 const general = require('../../util/general');
 
-export default class DiningCard extends CardComponent {
+class DiningCard extends CardComponent {
 
 	constructor(props) {
 		super(props);
@@ -102,3 +103,10 @@ export default class DiningCard extends CardComponent {
 		this.props.navigator.push({ id: 'DiningListView', name: 'DiningListView', title: 'Dining',  component: DiningListView, data: this.state.diningData });
 	}
 }
+function mapStateToProps(state, props) {
+	return {
+		location: state.location.position
+	};
+}
+
+module.exports = connect(mapStateToProps)(DiningCard);

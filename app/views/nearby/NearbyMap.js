@@ -21,7 +21,7 @@ export default class NearbyMap extends React.Component {
 	render() {
 		return (
 			<View style={css.destinationcard_map_container}>
-				{this.props.nearbyAnnotations && this.props.updatedGoogle && this.props.getCurrentPosition('lat') ? (
+				{this.props.nearbyAnnotations && this.props.updatedGoogle && this.props.location ? (
 
 					<MapView
 						style={css.destinationcard_map}
@@ -31,8 +31,8 @@ export default class NearbyMap extends React.Component {
 						showsUserLocation={true}
 						mapType={'standard'}
 						initialRegion={{
-							latitude: this.props.getCurrentPosition('lat'),
-							longitude: this.props.getCurrentPosition('lon'),
+							latitude: this.props.location.coords.latitude,
+							longitude: this.props.location.coords.longitude,
 							latitudeDelta: this.props.nearbyLatDelta,
 							longitudeDelta: this.props.nearbyLonDelta,
 						}}
@@ -61,6 +61,6 @@ export default class NearbyMap extends React.Component {
 					) : null}
 
 			</View>
-			);
+		);
 	}
 }

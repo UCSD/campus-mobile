@@ -4,6 +4,7 @@ import {
 	Text,
 	ActivityIndicator,
 } from 'react-native';
+import { connect } from 'react-redux';
 
 import Card from '../card/Card';
 import CardComponent from '../card/CardComponent';
@@ -17,7 +18,7 @@ const shuttle = require('../../util/shuttle');
 
 const shuttle_routes = 	require('../../json/shuttle_routes_master.json');
 
-export default class ShuttleCard extends CardComponent {
+class ShuttleCard extends CardComponent {
 
 	constructor(props) {
 		super(props);
@@ -223,3 +224,11 @@ export default class ShuttleCard extends CardComponent {
 		this.props.navigator.push({ id: 'ShuttleStop', name: 'Shuttle Stop', component: ShuttleStop, title: 'Shuttle',stopData, currentPosition: this.state.currentPosition, shuttleData });
 	}
 }
+
+function mapStateToProps(state, props) {
+	return {
+		location: state.location.position
+	};
+}
+
+module.exports = connect(mapStateToProps)(ShuttleCard);
