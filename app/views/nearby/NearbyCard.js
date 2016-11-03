@@ -189,7 +189,7 @@ class NearbyCard extends CardComponent {
 function mapStateToProps(state, props) {
 	return {
 		location: state.location.position,
-		locationPermission: state.location.permisison
+		locationPermission: state.location.permission
 	};
 }
 

@@ -117,7 +117,7 @@ class DiningCard extends CardComponent {
 function mapStateToProps(state, props) {
 	return {
 		location: state.location.position,
-		locationPermisson: state.location.permission
+		locationPermission: state.location.permission
 	};
 }
 
