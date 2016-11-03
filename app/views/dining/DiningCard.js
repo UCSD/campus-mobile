@@ -11,6 +11,7 @@ import CardComponent from '../card/CardComponent';
 import DiningService from '../../services/diningService';
 import DiningList from './DiningList';
 import DiningListView from './DiningListView';
+import LocationRequiredContent from '../common/LocationRequiredContent';
 
 const css = require('../../styles/css');
 const logger = require('../../util/logger');
@@ -46,21 +47,33 @@ class DiningCard extends CardComponent {
 
 	render() {
 		return (
-			<Card title="Dining">
-				{this.state.diningDataLoaded ? (
-					<View style={css.dining_card}>
-						<View style={css.dining_card_map}></View>
-						<View style={css.dc_locations}>
-							<DiningList data={this.state.diningData} navigator={this.props.navigator} limitResults={this.diningCardMaxResults} />
-						</View>
-						<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoDiningListView(this.state.diningData) }>
-							<View style={css.events_more}>
-								<Text style={css.events_more_label}>View All Locations</Text>
-							</View>
-						</TouchableHighlight>
-					</View>
-				) : null }
+			<Card id="dining" title="Dining">
+				{ this.renderContent() }
 			</Card>
+		);
+	}
+
+	renderContent() {
+		if (this.props.locationPermission !== 'authorized') {
+			return <LocationRequiredContent />;
+		}
+
+		if (!this.state.diningDataLoaded) {
+			return null;
+		}
+
+		return (
+			<View style={css.dining_card}>
+				<View style={css.dining_card_map}></View>
+				<View style={css.dc_locations}>
+					<DiningList data={this.state.diningData} navigator={this.props.navigator} limitResults={this.diningCardMaxResults} />
+				</View>
+				<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => this.gotoDiningListView(this.state.diningData)}>
+					<View style={css.events_more}>
+						<Text style={css.events_more_label}>View All Locations</Text>
+					</View>
+				</TouchableHighlight>
+			</View>
 		);
 	}
 
@@ -103,7 +116,8 @@ class DiningCard extends CardComponent {
 }
 function mapStateToProps(state, props) {
 	return {
-		location: state.location.position
+		location: state.location.position,
+		locationPermisson: state.location.permission
 	};
 }
 

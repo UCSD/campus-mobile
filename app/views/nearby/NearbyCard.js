@@ -9,6 +9,7 @@ import Card from '../card/Card';
 import CardComponent from '../card/CardComponent';
 import NearbyList from './NearbyList';
 import NearbyMap from './NearbyMap';
+import LocationRequiredContent from '../common/LocationRequiredContent';
 
 const css = require('../../styles/css');
 const logger = require('../../util/logger');
@@ -148,34 +149,47 @@ class NearbyCard extends CardComponent {
 
 	render() {
 		return (
-			<Card title="Nearby">
-				<View>
-					<NearbyMap
-						nearbyAnnotations={this.state.nearbyAnnotations}
-						updatedGoogle={this.props.updatedGoogle}
-						location={this.props.location}
-						nearbyLonDelta={this.state.nearbyLonDelta}
-						nearbyLatDelta={this.state.nearbyLatDelta}
-						colors={fiveRandomColors}
-					/>
-					<View style={css.events_list}>
-						{this.state.nearbyMarkersLoaded ? (
-							<NearbyList
-								data={this.state.nearbyMarkersPartial}
-								colors={fiveRandomColors}
-								navigator={this.props.navigator}
-							/>
-						) : null}
-					</View>
-				</View>
+			<Card id="nearby" title="Nearby">
+				{ this.renderContent() }
 			</Card>
+		);
+	}
+
+	renderContent() {
+		if (this.props.locationPermission !== 'authorized') {
+			return <LocationRequiredContent />;
+		}
+
+		if (!this.state.nearbyMarkersLoaded) {
+			return null;
+		}
+
+		return (
+			<View>
+				<NearbyMap
+					nearbyAnnotations={this.state.nearbyAnnotations}
+					updatedGoogle={this.props.updatedGoogle}
+					location={this.props.location}
+					nearbyLonDelta={this.state.nearbyLonDelta}
+					nearbyLatDelta={this.state.nearbyLatDelta}
+					colors={fiveRandomColors}
+				/>
+				<View style={css.events_list}>
+					<NearbyList
+						data={this.state.nearbyMarkersPartial}
+						colors={fiveRandomColors}
+						navigator={this.props.navigator}
+					/>
+				</View>
+			</View>
 		);
 	}
 }
 
 function mapStateToProps(state, props) {
 	return {
-		location: state.location.position
+		location: state.location.position,
+		locationPermission: state.location.permisison
 	};
 }
 
