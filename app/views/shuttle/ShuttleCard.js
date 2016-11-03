@@ -11,6 +11,7 @@ import CardComponent from '../card/CardComponent';
 import ShuttleService from '../../services/shuttleService';
 import ShuttleOverview from './ShuttleOverview';
 import ShuttleStop from '../ShuttleStop';
+import LocationRequiredContent from '../common/LocationRequiredContent';
 
 const css = require('../../styles/css');
 const logger = require('../../util/logger');
@@ -79,6 +80,7 @@ class ShuttleCard extends CardComponent {
 	}
 
 	refreshWithLocation = (type, location) => {
+		logger.log(this.state);
 		if (!this.state.isRefreshing && location) {
 			this.setState({ isRefreshing: true });
 
@@ -93,32 +95,56 @@ class ShuttleCard extends CardComponent {
 	}
 
 	render() {
+		logger.log(this.state);
 		return (
-			<Card id='shuttle' title='Shuttle' cardRefresh={this.refresh} isRefreshing={this.state.isRefreshing}>
-				{!this.state.closestStop1Loaded && !this.state.closestStop2Loaded && !this.state.closestStop1LoadFailed && !this.state.closestStop2LoadFailed ? (
-					<View style={[css.shuttle_card_row_center, css.shuttle_card_loader]}>
-						<ActivityIndicator style={css.shuttle_card_aa} size="large" />
-					</View>
-				) : null }
-
-				{this.state.closestStop1Loaded && !this.state.closestStop1LoadFailed ? (
-					<ShuttleOverview onPress={this.gotoShuttleStop} stopData={this.shuttleClosestStops[0]} shuttleData={this.state.shuttleData[0]} />
-				) : null }
-
-				{this.state.closestStop2Loaded && !this.state.closestStop2LoadFailed ? (
-					<ShuttleOverview onPress={this.gotoShuttleStop} stopData={this.shuttleClosestStops[1]} shuttleData={this.state.shuttleData[1]} />
-				) : null }
-
-				{this.state.closestStop1LoadFailed && this.state.closestStop2LoadFailed ? (
-					<View style={css.shuttlecard_loading_fail}>
-						<Text style={css.fs18}>No Shuttles en Route</Text>
-						<Text style={[css.pt10, css.fs12, css.dgrey]}>We were unable to locate any nearby shuttles, please try again later.</Text>
-					</View>
-				) : null }
+			<Card id="shuttle" title="Shuttle" cardRefresh={this.refresh} isRefreshing={this.state.isRefreshing}>
+				{ this.renderContent() }
 			</Card>
 		);
 	}
 
+	renderContent() {
+		// no permission to get location
+		if (this.props.locationPermission !== 'authorized') {
+			return (<LocationRequiredContent />);
+		}
+
+		// stops haven't loaded yet
+		if (!this.state.closestStop1Loaded && !this.state.closestStop2Loaded) {
+			return (
+				<View style={[css.shuttle_card_row_center, css.shuttle_card_loader]}>
+					<ActivityIndicator style={css.shuttle_card_aa} size="large" />
+				</View>
+			);
+		}
+
+		// both stops failed to load
+		if (this.state.closestStop1LoadFailed && this.state.closestStop2LoadFailed) {
+			return (
+				<View style={css.shuttlecard_loading_fail}>
+					<Text style={css.fs18}>No Shuttles en Route</Text>
+					<Text style={[css.pt10, css.fs12, css.dgrey]}>We were unable to locate any nearby shuttles, please try again later.</Text>
+				</View>
+			);
+		}
+
+		// return loaded rows
+		const rows = [];
+		if (this.state.closestStop1Loaded) { rows.push(this.renderOverview(0)); }
+		if (this.state.closestStop2Loaded) { rows.push(this.renderOverview(1)); }
+		return rows;
+	}
+
+	renderOverview(i) {
+		return (
+			<ShuttleOverview
+				key={i}
+				onPress={this.gotoShuttleStop}
+				stopData={this.shuttleClosestStops[i]}
+				shuttleData={this.state.shuttleData[i]}
+			/>
+		);
+	}
 
 	// SHUTTLE_CARD
 	findClosestShuttleStops = (refreshType, location) => {
@@ -222,13 +248,21 @@ class ShuttleCard extends CardComponent {
 	}
 
 	gotoShuttleStop = (stopData, shuttleData) => {
-		this.props.navigator.push({ id: 'ShuttleStop', name: 'Shuttle Stop', component: ShuttleStop, title: 'Shuttle',stopData, currentPosition: this.state.currentPosition, shuttleData });
+		this.props.navigator.push({
+			id: 'ShuttleStop',
+			name: 'Shuttle Stop',
+			component: ShuttleStop,
+			title: 'Shuttle',
+			stopData,
+			currentPosition: this.props.location,
+			shuttleData });
 	}
 }
 
 function mapStateToProps(state, props) {
 	return {
-		location: state.location.position
+		location: state.location.position,
+		locationPermission: state.location.permission
 	};
 }
 
