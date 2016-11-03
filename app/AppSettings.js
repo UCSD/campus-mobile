@@ -5,15 +5,6 @@ module.exports = {
 	GOOGLE_ANALYTICS_ID: 		'UA-59591330-3',
 	DEBUG_ENABLED: 				false, // Disables all logger functions (i.e. logger.log) if set to false (console.log is unaffected)
 
-	/* CARDS */
-	WEATHER_CARD_ENABLED: 		true,
-	SHUTTLE_CARD_ENABLED: 		true,
-	EVENTS_CARD_ENABLED: 		true,
-	NEWS_CARD_ENABLED: 			true,
-	DINING_CARD_ENABLED: 		true,
-	NEARBY_CARD_ENABLED: 		true,
-	QUICKLINKS_CARD_ENABLED: 	true,
-
 	/* APIs / FEEDS */
 	WEATHER_API_URL: 			'https://w3wyps9yje.execute-api.us-west-2.amazonaws.com/prod/forecast',
 	SURF_API_URL: 				'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/surffeed.json',
