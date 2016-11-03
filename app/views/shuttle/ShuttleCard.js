@@ -80,7 +80,6 @@ class ShuttleCard extends CardComponent {
 	}
 
 	refreshWithLocation = (type, location) => {
-		logger.log(this.state);
 		if (!this.state.isRefreshing && location) {
 			this.setState({ isRefreshing: true });
 
