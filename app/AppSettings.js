@@ -3,9 +3,7 @@ module.exports = {
 	/* APP CONFIG */
 	APP_NAME: 					'now@ucsandiego',
 	GOOGLE_ANALYTICS_ID: 		'UA-59591330-3',
-	DEBUG_ENABLED: 				false,				// Disables all logger functions (i.e. logger.log) if set to false (console.log is unaffected)
-	NAVIGATOR_ENABLED: 			false,				// IOS setting only - if true, app uses Navigator instead of Navigator IOS
-													// Navigator will always be used for Android
+	DEBUG_ENABLED: 				false, // Disables all logger functions (i.e. logger.log) if set to false (console.log is unaffected)
 
 	/* CARDS */
 	WEATHER_CARD_ENABLED: 		true,

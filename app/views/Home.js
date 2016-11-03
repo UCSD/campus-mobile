@@ -75,14 +75,12 @@ var Home = React.createClass({
 
 	componentWillMount: function() {
 
-		if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
+		if (general.platformAndroid()) {
 			// Check Location Permissions Periodically
 			this.updateLocationPermission();
 			this.updateGooglePlay();
 			this.setState({cacheMap: true});
-		}
-
-		else {
+		} else {
 			this.setState({locationPermission: 'authorized'});
 			navigator.geolocation.getCurrentPosition(
 				(initialPosition) => { this.setState({currentPosition: initialPosition}) },

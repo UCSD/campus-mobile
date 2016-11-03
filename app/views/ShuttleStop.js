@@ -309,12 +309,7 @@ const ShuttleStop = React.createClass({
 			mapDelta: distLatLon * 3
 		});
 
-		if (AppSettings.NAVIGATOR_ENABLED) {
-			this.setState({ mapViewLoadReady: false });
-		}
-		else {
-			this.setState({ mapViewLoadReady: true });
-		}
+		this.setState({ mapViewLoadReady: true });
 	},
 
 	fetchShuttleArrivalsByStop(fetchType) {
