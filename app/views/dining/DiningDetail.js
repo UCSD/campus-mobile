@@ -125,6 +125,9 @@ var DiningDetail = React.createClass({
 							{this.state.marketData.regularHours ? (
 								<Text style={css.dl_market_desc_text}>{this.state.marketData.regularHours}</Text>
 							) : null }
+							{this.state.marketData.specialHours ? (
+								<Text style={css.dl_market_desc_text}>Special Hours:{"\n"}{this.state.marketData.specialHours}</Text>
+							) : null }
 						</View>
 
 						{this.state.marketData.images ? (
