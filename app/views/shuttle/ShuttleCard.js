@@ -94,7 +94,6 @@ class ShuttleCard extends CardComponent {
 	}
 
 	render() {
-		logger.log(this.state);
 		return (
 			<Card id="shuttle" title="Shuttle" cardRefresh={this.refresh} isRefreshing={this.state.isRefreshing}>
 				{ this.renderContent() }
