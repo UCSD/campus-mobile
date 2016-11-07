@@ -142,10 +142,10 @@ var Home = React.createClass({
 		if (this.props.cards['news']) {
 			cards.push(<NewsCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key='news' />);
 		}
-		if (AppSettings.DINING_CARD_ENABLED) {
+		if (this.props.cards['dining']) {
 			cards.push(<DiningCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key={'dining'} />);
 		}
-		if (AppSettings.NEARBY_CARD_ENABLED) {
+		if (this.props.cards['nearby']) {
 			cards.push(<NearbyCard navigator={this.props.navigator} updatedGoogle={this.state.updatedGoogle} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key={'nearby'} />);
 		}
 		return cards;

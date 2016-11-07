@@ -1,11 +1,13 @@
-
-const AppSettings = require('../AppSettings');
+// NOTE: AppSettings.XX_CARD_ENABLED is being deprecated to pave the way for more dynamic cards
 
 var initialState = {
-  'weather': AppSettings.WEATHER_CARD_ENABLED,
-  'shuttle': AppSettings.SHUTTLE_CARD_ENABLED,
-  'events': AppSettings.EVENTS_CARD_ENABLED,
-  'news': AppSettings.NEWS_CARD_ENABLED
+  'weather': true,
+  'shuttle': true,
+  'events': true,
+  'news': true,
+  'dining': true,
+  'nearby': true,
+  'quicklinks': true,
 }
 
 function cards(state = initialState, action) {

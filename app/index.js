@@ -51,7 +51,7 @@ var nowucsandiego = React.createClass({
 	},
 
 	componentDidMount() {
-		if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
+		if (general.platformAndroid()) {
 			// Listen to route focus changes
 			// Should be a better way to do this...
 			this.refs.navRef.refs.navRef.navigationContext.addListener('willfocus', (event) => {
@@ -80,8 +80,7 @@ var nowucsandiego = React.createClass({
 					return true;
 				}
 			});
-		}
-		else {
+		} else {
 			// Pause/resume timeouts
 			this.refs.navRef.navigationContext.addListener('didfocus', (event) => {
 				const route = event.data.route;
@@ -108,7 +107,7 @@ var nowucsandiego = React.createClass({
 			StatusBar.setBarStyle('light-content');
 		}
 
-		if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
+		if (general.platformAndroid()) {
 			return (
 				<Provider store={this.store}>
 					<View style={{ flex: 1 }}>

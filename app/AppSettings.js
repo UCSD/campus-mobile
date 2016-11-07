@@ -3,18 +3,7 @@ module.exports = {
 	/* APP CONFIG */
 	APP_NAME: 					'now@ucsandiego',
 	GOOGLE_ANALYTICS_ID: 		'UA-59591330-3',
-	DEBUG_ENABLED: 				false,				// Disables all logger functions (i.e. logger.log) if set to false (console.log is unaffected)
-	NAVIGATOR_ENABLED: 			false,				// IOS setting only - if true, app uses Navigator instead of Navigator IOS
-													// Navigator will always be used for Android
-
-	/* CARDS */
-	WEATHER_CARD_ENABLED: 		true,
-	SHUTTLE_CARD_ENABLED: 		true,
-	EVENTS_CARD_ENABLED: 		true,
-	NEWS_CARD_ENABLED: 			true,
-	DINING_CARD_ENABLED: 		true,
-	NEARBY_CARD_ENABLED: 		true,
-	QUICKLINKS_CARD_ENABLED: 	true,
+	DEBUG_ENABLED: 				false, // Disables all logger functions (i.e. logger.log) if set to false (console.log is unaffected)
 
 	/* APIs / FEEDS */
 	WEATHER_API_URL: 			'https://w3wyps9yje.execute-api.us-west-2.amazonaws.com/prod/forecast',
@@ -22,7 +11,7 @@ module.exports = {
 	EVENTS_API_URL: 			'https://evv6vpvob6.execute-api.us-west-2.amazonaws.com/prod/',
 	NEWS_API_URL: 				'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/allstories.json',
 	SHUTTLE_STOPS_API_URL: 		'https://ies4wyrlx9.execute-api.us-west-2.amazonaws.com/prod/stops/',
-	DINING_API_URL: 			'https://pg83tslbyi.execute-api.us-west-2.amazonaws.com/prod',
+	DINING_API_URL: 			'https://pg83tslbyi.execute-api.us-west-2.amazonaws.com/prod/v2/dining/locations',
 	QUICKLINKS_API_URL: 		'https://s3-us-west-2.amazonaws.com/ucsd-mobile/dev/ucsd-quicklinks.json',
 
 	/* RESOURCES */

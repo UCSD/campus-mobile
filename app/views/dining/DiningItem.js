@@ -25,6 +25,9 @@ export default class DiningItem extends React.Component {
 					<View>
 						<Text style={css.dc_locations_title}>{data.name}</Text>
 						<Text style={css.dc_locations_hours}>{data.regularHours}</Text>
+						{data.specialHours ? (
+							<Text style={css.dc_locations_spec_hours}>Special Hours:{"\n"}{data.specialHours}</Text>
+						) : null }
 					</View>
 				</TouchableHighlight>
 

@@ -80,7 +80,7 @@ const SurfReport = React.createClass({
 	},
 
 	render() {
-		if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
+		if (general.platformAndroid()) {
 			return (
 				<NavigationBarWithRouteMapper
 					route={this.props.route}

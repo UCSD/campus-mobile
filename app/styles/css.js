@@ -139,6 +139,7 @@ var css = StyleSheet.create({
 			dc_locations_row_left: { flex: 6, justifyContent: 'center' },
 				dc_locations_title: { fontSize: round(20 * prm), color: ucsdblue },
 				dc_locations_hours: { fontSize: round(12 * prm), color: '#666', paddingTop: 1 },
+				dc_locations_spec_hours: { fontSize: round(12 * prm), color: '#666', paddingTop: 4 },
 				dc_locations_description: { fontSize: round(12 * prm), color: '#666', paddingTop: 6 },
 			dc_locations_row_right: { flex: 1, alignItems: 'center', justifyContent: 'center' },
 				dc_locations_email_icon: { width: round(maxCardWidthWithPadding / 7 * .55), height: round(maxCardWidthWithPadding / 7 * .55 * .67) },
@@ -152,7 +153,7 @@ var css = StyleSheet.create({
 	// DINING DETAIL
 	dl_market_name: { padding: round(10 * prm) },
 		dl_market_name_text: { color: '#555', fontSize: round(26 * prm) },
-		dl_market_desc_text: { color: '#888', paddingTop: round(6 * prm), fontSize: round(14 * prm) },
+		dl_market_desc_text: { color: '#666', paddingTop: round(6 * prm), fontSize: round(14 * prm) },
 	dl_market_scroller: { height: round(140 * prm) },
 		dl_market_scroller_image: { width: round(140 * prm), height: round(140 * prm), borderRadius: round(5 * prm), marginHorizontal: round(7 * prm) },
 	dl_market_directions: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderBottomColor: '#EEE', margin: round(6 * prm), padding: round(6 * prm) },
