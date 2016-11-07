@@ -29,6 +29,8 @@ const GeoLocationContainer = React.createClass({
 						this.getSoftPermission,
 						100
 					);
+				} else {
+
 				}
 			});
 	},
@@ -64,16 +66,16 @@ const GeoLocationContainer = React.createClass({
 
 	startLocationWatch() {
 		// fire immediately
-		this.props.dispatch(updateLocation());
+		this.tryUpdateLocation();
 
 		// fire on interval
 		this.locationWatch = this.setInterval(
-      this.updateLocation,
+      this.tryUpdateLocation,
       this.permissionUpdateInterval
     );
 	},
 
-	updateLocation() {
+	tryUpdateLocation() {
 		const { dispatch, permission } = this.props;
 		if (permission !== 'authorized') return;
 
