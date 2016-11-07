@@ -15,14 +15,22 @@ const GeoLocationContainer = React.createClass({
 	mixins: [TimerMixin],
 
 	componentDidMount() {
-		// TODO: only fire on app load....
-		if (this.props.permission === 'undetermined') {
-			// fire immediately on different thread
-			this.setTimeout(
-				this.getSoftPermission,
-				100
-			);
-		}
+		const { dispatch } = this.props;
+
+		// preload permission and dispatch immediately
+		Permissions.getPermissionStatus('location')
+			.then(response => {
+				dispatch(setPermission(response));
+
+				// make soft request
+				if (response === 'undetermined') {
+					// fire immediately on different thread
+					this.setTimeout(
+						this.getSoftPermission,
+						100
+					);
+				}
+			});
 	},
 
 	getSoftPermission() {
