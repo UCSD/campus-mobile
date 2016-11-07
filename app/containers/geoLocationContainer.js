@@ -29,10 +29,11 @@ const GeoLocationContainer = React.createClass({
 						this.getSoftPermission,
 						100
 					);
-				} else {
-
 				}
 			});
+
+		// start watch regardless
+		this.startLocationWatch();
 	},
 
 	getSoftPermission() {
@@ -77,6 +78,7 @@ const GeoLocationContainer = React.createClass({
 
 	tryUpdateLocation() {
 		const { dispatch, permission } = this.props;
+		// never call service if we don't have permission
 		if (permission !== 'authorized') return;
 
 		// request update
