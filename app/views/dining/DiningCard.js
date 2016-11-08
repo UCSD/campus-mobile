@@ -98,7 +98,7 @@ class DiningCard extends CardComponent {
 				}
 
 				// Sort dining locations by distance
-				responseData.sort(this.sortNearbyMarkers);
+				responseData.sort(general.sortNearbyMarkers);
 			}
 
 			this.setState({

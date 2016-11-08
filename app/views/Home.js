@@ -167,16 +167,6 @@ var Home = React.createClass({
 		}
 	},
 
-	sortNearbyMarkers: function(a, b) {
-		if (a.distance < b.distance) {
-			return -1;
-		} else if (a.distance > b.distance) {
-			return 1;
-		} else {
-			return 0;
-		}
-	},
-
 	gotoFeedbackForm: function() {
 		this.props.navigator.push({ id: 'FeedbackView', component: FeedbackView, title: 'Feedback' });
 	},
