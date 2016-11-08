@@ -4,7 +4,7 @@ const logger = require('../util/logger');
 const positionOptions = {
 	enableHighAccuracy: false,
 	timeout: 1000,
-	maximumAge: 0
+	maximumAge: 1000
 };
 
 export function getPosition() {
