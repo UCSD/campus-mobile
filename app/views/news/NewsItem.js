@@ -9,25 +9,24 @@ import {
 import NewsDetail from './NewsDetail';
 
 const css = require('../../styles/css');
+const moment = require('moment');
 
 const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 export default class NewsItem extends React.Component {
 
 	getStoryDescription(description, title) {
-		let storyDescriptionStr = description.replace(/^ /g, '');
-
-		if (storyDescriptionStr.length > 0) {
+		let newsDescription = description.replace(/^ /g, '');
+		if (newsDescription.length > 0) {
 			if (title.length < 25) {
-				storyDescriptionStr = storyDescriptionStr.substring(0,56).replace(/ $/,'') + '...';
+				newsDescription = newsDescription.substring(0,56).replace(/ $/,'') + '...';
 			} else if (title.length < 50) {
-				storyDescriptionStr = storyDescriptionStr.substring(0,28).replace(/ $/,'') + '...';
+				newsDescription = newsDescription.substring(0,28).replace(/ $/,'') + '...';
 			} else {
-				storyDescriptionStr = '';
+				newsDescription = '';
 			}
 		}
-
-		return storyDescriptionStr;
+		return newsDescription;
 	}
 
 	gotoNewsDetail(newsData) {
@@ -36,32 +35,17 @@ export default class NewsItem extends React.Component {
 
 	render() {
 		const data = this.props.data;
-
-		const storyDate = data.date;
-		let storyDateMonth = storyDate.substring(5,7);
-		let storyDateDay = storyDate.substring(8,10);
-
-		if (storyDateMonth.substring(0,1) === '0') {
-			storyDateMonth = storyDateMonth.substring(1,2);
-		}
-		if (storyDateDay.substring(0,1) === '0') {
-			storyDateDay = storyDateDay.substring(1,2);
-		}
-
-		const storyDateMonthStr = monthNames[storyDateMonth - 1];
-
-		const storyTitle = data.title;
-
-		const storyDescriptionStr = this.getStoryDescription(data.description, data.title);
+		const newsDate = moment(data.date).format('MMM Do, YYYY');
+		const newsDescription = this.getStoryDescription(data.description, data.title);
 		return (
 			<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => this.gotoNewsDetail(data)}>
 				<View style={css.events_list_row}>
 					<View style={css.events_list_left_container}>
-						<Text style={css.events_list_title}>{storyTitle}</Text>
-						{storyDescriptionStr ? (
-							<Text style={css.events_list_desc}>{storyDescriptionStr}</Text>
+						<Text style={css.events_list_title}>{data.title}</Text>
+						{newsDescription ? (
+							<Text style={css.events_list_desc}>{newsDescription}</Text>
 						) : null }
-						<Text style={css.events_list_postdate}>{storyDateMonthStr} {storyDateDay}</Text>
+						<Text style={css.events_list_postdate}>{newsDate}</Text>
 					</View>
 
 					{data.image ? (

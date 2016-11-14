@@ -14,6 +14,7 @@ const windowWidth = windowSize.width;
 
 const css = require('../../styles/css');
 const logger = require('../../util/logger');
+const moment = require('moment');
 
 const NewsDetail = React.createClass({
 
@@ -64,20 +65,7 @@ const NewsDetail = React.createClass({
 	},
 
 	renderScene() {
-		const ts_date = new Date(this.props.route.newsData.date);
-
-		// TODO: really this whole thing should be replace with momentjs
-
-		// Year
-		const ts_year = ts_date.getFullYear();
-
-		// Month
-		const ts_months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-		let ts_month = ts_date.getMonth();
-		const ts_dayofmonth = ts_date.getDate();
-		ts_month = ts_months[ts_month];
-
-		const ts_datestr = ts_month + ' ' + ts_dayofmonth + ', ' + ts_year;
+		const newsDate = moment(this.props.route.newsData.date).format('MMM Do, YYYY');
 
 		// Desc
 		let newsDesc = this.props.route.newsData.description;
@@ -95,7 +83,7 @@ const NewsDetail = React.createClass({
 					<View style={css.news_detail_container}>
 						<View style={css.eventdetail_top_right_container}>
 							<Text style={css.eventdetail_eventname}>{this.props.route.newsData.title}</Text>
-							<Text style={css.eventdetail_eventdate}>{ts_datestr}</Text>
+							<Text style={css.eventdetail_eventdate}>{newsDate}</Text>
 						</View>
 
 						<Text style={css.eventdetail_eventdescription}>{newsDesc}</Text>
