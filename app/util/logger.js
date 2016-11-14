@@ -6,14 +6,14 @@ GoogleAnalytics.setTrackerId(AppSettings.GOOGLE_ANALYTICS_ID);
 module.exports = {
 
 	log(msg) {
-		if (AppSettings.DEBUG_ENABLED) {
-			console.log(msg);
-		}
+		console.log(msg);
 	},
 
 	error(msg) {
 		if (AppSettings.DEBUG_ENABLED) {
 			console.error(msg);
+		} else {
+			console.log(msg);
 		}
 	},
 

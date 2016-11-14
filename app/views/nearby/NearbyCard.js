@@ -3,11 +3,13 @@ import {
 	View,
 	ListView,
 } from 'react-native';
+import { connect } from 'react-redux';
 
 import Card from '../card/Card';
 import CardComponent from '../card/CardComponent';
 import NearbyList from './NearbyList';
 import NearbyMap from './NearbyMap';
+import LocationRequiredContent from '../common/LocationRequiredContent';
 
 const css = require('../../styles/css');
 const logger = require('../../util/logger');
@@ -20,7 +22,7 @@ const ucsd_nodes = 		require('../../json/ucsd_nodes.json');
 
 const fiveRandomColors = general.getRandomColorArray(5);
 
-export default class NearbyCard extends CardComponent {
+class NearbyCard extends CardComponent {
 
 	constructor(props) {
 		super(props);
@@ -56,12 +58,11 @@ export default class NearbyCard extends CardComponent {
 
 	// Updates which predesignated node region the user is in
 	refresh() {
-		const currentLat = this.props.getCurrentPosition('lat');
-		const currentLon = this.props.getCurrentPosition('lon');
+		const currentLat = this.props.location.coords.latitude;
+		const currentLon = this.props.location.coords.longitude;
 
 		// Determine if location has changed since last run, skip if con
-		if ((this.props.getCurrentPosition('lat') !== this.state.nodePreviousLat) ||
-			(this.props.getCurrentPosition('lon') !== this.state.nodePreviousLon)) {
+		if ((currentLat !== this.state.nodePreviousLat) || (currentLon !== this.state.nodePreviousLon)) {
 			let closestNode = 0;
 			let closestNodeDistance = 100000000;
 
@@ -89,8 +90,8 @@ export default class NearbyCard extends CardComponent {
 			.done();
 
 			this.setState({
-				nodePreviousLat: this.props.getCurrentPosition('lat'),
-				nodePreviousLon: this.props.getCurrentPosition('lon')
+				nodePreviousLat: currentLat,
+				nodePreviousLon: currentLon
 			});
 		}
 		else {
@@ -99,9 +100,12 @@ export default class NearbyCard extends CardComponent {
 	}
 
 	parseNodeRegion(ucsd_node) {
+		const currentLat = this.props.location.coords.latitude;
+		const currentLon = this.props.location.coords.longitude;
+
 		// Calc distance from markers
 		for (let i = 0; ucsd_node.length > i; i++) {
-			ucsd_node[i].distance = shuttle.getDistance(this.props.getCurrentPosition('lat'), this.props.getCurrentPosition('lon'), ucsd_node[i].mkrLat, ucsd_node[i].mkrLong);
+			ucsd_node[i].distance = shuttle.getDistance(currentLat, currentLon, ucsd_node[i].mkrLat, ucsd_node[i].mkrLong);
 		}
 
 		ucsd_node.sort(general.sortNearbyMarkers);
@@ -114,7 +118,7 @@ export default class NearbyCard extends CardComponent {
 		const nearbyAnnotations = [];
 		for (let i = 0; ucsd_node.length > i && this.state.nearbyMaxResults > i; i++) {
 			if (this.state.nearbyMaxResults === i + 1) {
-				const distLatLon = Math.sqrt(Math.pow(Math.abs(this.props.getCurrentPosition('lat') - ucsd_node[i].mkrLat), 2) + Math.pow(Math.abs(this.props.getCurrentPosition('lon') - ucsd_node[i].mkrLong), 2));
+				const distLatLon = Math.sqrt(Math.pow(Math.abs(currentLat - ucsd_node[i].mkrLat), 2) + Math.pow(Math.abs(currentLon - ucsd_node[i].mkrLong), 2));
 				this.setState({
 					nearbyLatDelta: distLatLon * 2,
 					nearbyLonDelta: distLatLon * 2
@@ -145,28 +149,48 @@ export default class NearbyCard extends CardComponent {
 
 	render() {
 		return (
-			<Card title="Nearby">
-				<View>
-					<NearbyMap
-						nearbyAnnotations={this.state.nearbyAnnotations}
-						updatedGoogle={this.props.updatedGoogle}
-						getCurrentPosition={(latlon) => this.props.getCurrentPosition(latlon)}
-						nearbyLonDelta={this.state.nearbyLonDelta}
-						nearbyLatDelta={this.state.nearbyLatDelta}
-						colors={fiveRandomColors}
-					/>
-					<View style={css.events_list}>
-						{this.state.nearbyMarkersLoaded ? (
-							<NearbyList
-								data={this.state.nearbyMarkersPartial}
-								colors={fiveRandomColors}
-								getCurrentPosition={(latlon) => this.props.getCurrentPosition(latlon)}
-								navigator={this.props.navigator}
-							/>
-						) : null}
-					</View>
-				</View>
+			<Card id="nearby" title="Nearby">
+				{ this.renderContent() }
 			</Card>
 		);
 	}
+
+	renderContent() {
+		if (this.props.locationPermission !== 'authorized') {
+			return <LocationRequiredContent />;
+		}
+
+		if (!this.state.nearbyMarkersLoaded) {
+			return null;
+		}
+
+		return (
+			<View>
+				<NearbyMap
+					nearbyAnnotations={this.state.nearbyAnnotations}
+					updatedGoogle={this.props.updatedGoogle}
+					location={this.props.location}
+					nearbyLonDelta={this.state.nearbyLonDelta}
+					nearbyLatDelta={this.state.nearbyLatDelta}
+					colors={fiveRandomColors}
+				/>
+				<View style={css.events_list}>
+					<NearbyList
+						data={this.state.nearbyMarkersPartial}
+						colors={fiveRandomColors}
+						navigator={this.props.navigator}
+					/>
+				</View>
+			</View>
+		);
+	}
 }
+
+function mapStateToProps(state, props) {
+	return {
+		location: state.location.position,
+		locationPermission: state.location.permission
+	};
+}
+
+module.exports = connect(mapStateToProps)(NearbyCard);

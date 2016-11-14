@@ -15,27 +15,56 @@ export default class NearbyMap extends React.Component {
 	constructor(props) {
 		super(props);
 
-		this.state = {};
+		// setup our inital map values
+		this.state = {
+			region: {
+				latitude: this.props.location.coords.latitude,
+				longitude: this.props.location.coords.longitude,
+				latitudeDelta: this.props.nearbyLatDelta,
+				longitudeDelta: this.props.nearbyLonDelta
+			}
+		};
+	}
+
+	componentWillReceiveProps(nextProps) {
+		// if we have a new location, refresh region using that location
+		if (!this.props.location
+				|| (nextProps.location &&
+					(nextProps.location.coords.latitude !== this.props.location.coords.latitude
+						|| nextProps.location.coords.longitude !== this.props.location.coords.longitude))) {
+			this.refreshRegion(nextProps.location);
+		}
+	}
+
+	onRegionChange(region) {
+		this.setState({ region });
+	}
+
+	refreshRegion(location) {
+		this.map.animateToRegion(//new MapView.AnimatedRegion(
+			{
+				latitude: location.coords.latitude,
+				longitude: location.coords.longitude,
+				latitudeDelta: this.props.nearbyLatDelta,
+				longitudeDelta: this.props.nearbyLonDelta,
+			});
 	}
 
 	render() {
 		return (
 			<View style={css.destinationcard_map_container}>
-				{this.props.nearbyAnnotations && this.props.updatedGoogle && this.props.getCurrentPosition('lat') ? (
+				{this.props.nearbyAnnotations && this.props.updatedGoogle && this.props.location ? (
 
 					<MapView
+						ref={ref => { this.map = ref; }}
 						style={css.destinationcard_map}
 						loadingEnabled={true}
 						loadingIndicatorColor={'#666'}
 						loadingBackgroundColor={'#EEE'}
 						showsUserLocation={true}
 						mapType={'standard'}
-						initialRegion={{
-							latitude: this.props.getCurrentPosition('lat'),
-							longitude: this.props.getCurrentPosition('lon'),
-							latitudeDelta: this.props.nearbyLatDelta,
-							longitudeDelta: this.props.nearbyLonDelta,
-						}}
+						initalRegionregion={this.state.region}
+						onRegionChange={region => this.onRegionChange(region)}
 					>
 						{this.props.nearbyAnnotations.map((marker, index) => (
 							<MapView.Marker
@@ -61,6 +90,6 @@ export default class NearbyMap extends React.Component {
 					) : null}
 
 			</View>
-			);
+		);
 	}
 }

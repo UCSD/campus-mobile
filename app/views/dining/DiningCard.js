@@ -4,19 +4,21 @@ import {
 	Text,
 	TouchableHighlight,
 } from 'react-native';
+import { connect } from 'react-redux';
 
 import Card from '../card/Card';
 import CardComponent from '../card/CardComponent';
 import DiningService from '../../services/diningService';
 import DiningList from './DiningList';
 import DiningListView from './DiningListView';
+import LocationRequiredContent from '../common/LocationRequiredContent';
 
 const css = require('../../styles/css');
 const logger = require('../../util/logger');
 const shuttle = require('../../util/shuttle');
 const general = require('../../util/general');
 
-export default class DiningCard extends CardComponent {
+class DiningCard extends CardComponent {
 
 	constructor(props) {
 		super(props);
@@ -45,21 +47,33 @@ export default class DiningCard extends CardComponent {
 
 	render() {
 		return (
-			<Card title="Dining">
-				{this.state.diningDataLoaded ? (
-					<View style={css.dining_card}>
-						<View style={css.dining_card_map}></View>
-						<View style={css.dc_locations}>
-							<DiningList data={this.state.diningData} navigator={this.props.navigator} limitResults={this.diningCardMaxResults} />
-						</View>
-						<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoDiningListView(this.state.diningData) }>
-							<View style={css.events_more}>
-								<Text style={css.events_more_label}>View All Locations</Text>
-							</View>
-						</TouchableHighlight>
-					</View>
-				) : null }
+			<Card id="dining" title="Dining">
+				{ this.renderContent() }
 			</Card>
+		);
+	}
+
+	renderContent() {
+		if (this.props.locationPermission !== 'authorized') {
+			return <LocationRequiredContent />;
+		}
+
+		if (!this.state.diningDataLoaded) {
+			return null;
+		}
+
+		return (
+			<View style={css.dining_card}>
+				<View style={css.dining_card_map}></View>
+				<View style={css.dc_locations}>
+					<DiningList data={this.state.diningData} navigator={this.props.navigator} limitResults={this.diningCardMaxResults} />
+				</View>
+				<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => this.gotoDiningListView(this.state.diningData)}>
+					<View style={css.events_more}>
+						<Text style={css.events_more_label}>View All Locations</Text>
+					</View>
+				</TouchableHighlight>
+			</View>
 		);
 	}
 
@@ -84,7 +98,7 @@ export default class DiningCard extends CardComponent {
 				}
 
 				// Sort dining locations by distance
-				responseData.sort(this.sortNearbyMarkers);
+				responseData.sort(general.sortNearbyMarkers);
 			}
 
 			this.setState({
@@ -92,9 +106,7 @@ export default class DiningCard extends CardComponent {
 				diningDataLoaded: true
 			});
 		})
-		.catch((error) => {
-			console.log('ERR: fetchDiningLocations: ' + error)
-		})
+		.catch(logger.error)
 		.done();
 	}
 
@@ -102,3 +114,11 @@ export default class DiningCard extends CardComponent {
 		this.props.navigator.push({ id: 'DiningListView', name: 'DiningListView', title: 'Dining',  component: DiningListView, data: this.state.diningData });
 	}
 }
+function mapStateToProps(state, props) {
+	return {
+		location: state.location.position,
+		locationPermission: state.location.permission
+	};
+}
+
+module.exports = connect(mapStateToProps)(DiningCard);

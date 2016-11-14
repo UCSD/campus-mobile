@@ -6,9 +6,8 @@ import {
 	NavigatorIOS,
 	BackAndroid,
 	StatusBar,
-	AppState
+	View
 } from 'react-native';
-import TimerMixin from 'react-timer-mixin';
 
 // SETUP / UTIL / NAV
 var AppSettings = 			require('./AppSettings'),
@@ -26,6 +25,8 @@ var AppSettings = 			require('./AppSettings'),
 	EventDetail = 			require('./views/events/EventDetail'),
 	WebWrapper = 			require('./views/WebWrapper');
 
+import GeoLocationContainer from './containers/geoLocationContainer';
+
 import WelcomeWeekView from './views/welcomeWeek/WelcomeWeekView';
 import EventListView from './views/events/EventListView';
 import NewsListView from './views/news/NewsListView';
@@ -39,49 +40,14 @@ import NavigationBarWithRouteMapper from './views/NavigationBarWithRouteMapper';
 import { Provider } from 'react-redux';
 import configureStore from './store/configureStore';
 
-/**
- * Timeout that allows for pause and resume
-**/
-function Timer(callback, delay) {
-	var timerId, start, remaining = delay;
-
-	this.pause = function() {
-		clearTimeout(timerId);
-		remaining -= new Date() - start;
-	};
-
-	this.resume = function() {
-		start = new Date();
-		clearTimeout(timerId);
-		timerId = setTimeout(callback, remaining);
-	};
-
-	this.do = function() {
-		clearTimeout(timerId);
-		callback();
-	}
-
-	this.getID = function() {
-		return timerId;
-	};
-
-	this.resume();
-}
-var timers = {};
-
 var nowucsandiego = React.createClass({
 
-	mixins: [TimerMixin],
 	store: configureStore(),
 
 	getInitialState() {
 		return {
 			inHome: true,
 		};
-	},
-
-	componentWillMount() {
-		AppState.addEventListener('change', this.handleAppStateChange);
 	},
 
 	componentDidMount() {
@@ -95,10 +61,8 @@ var nowucsandiego = React.createClass({
 				// Make sure renders/card refreshes are only happening when in home route
 				if (route.id === "Home") {
 					this.setState({inHome: true});
-					this._resumeTimeout();
 				} else {
 					this.setState({inHome: false});
-					this._pauseTimeout();
 				}
 			});
 
@@ -124,10 +88,8 @@ var nowucsandiego = React.createClass({
 				// Make sure renders/card refreshes are only happening when in home route
 				if (route.id === undefined) { //undefined is foxusing "Home"... weird I know
 					this.setState({inHome: true});
-					this._resumeTimeout();
 				} else {
 					this.setState({inHome: false});
-					this._pauseTimeout();
 				}
 			});
 
@@ -136,33 +98,6 @@ var nowucsandiego = React.createClass({
 				const route = event.data.route;
 				route.backButtonTitle = "Back";
 			});
-		}
-	},
-
-	componentWillUnmount() {
-		AppState.removeEventListener('change', this.handleAppStateChange);
-		this._pauseTimeout();
-	},
-
-	newTimeout: function(key, callback, delay) {
-		timers[key] = (new Timer(callback, delay));
-	},
-
-	_pauseTimeout: function() {
-		for (var key in timers) {
-			timers[key].pause();
-		}
-	},
-
-	_resumeTimeout: function() {
-		for (var key in timers) {
-			timers[key].resume();
-		}
-	},
-
-	doTimeout: function() {
-		for (var key in timers) {
-			timers[key].do();
 		}
 	},
 
@@ -175,35 +110,39 @@ var nowucsandiego = React.createClass({
 		if (general.platformAndroid()) {
 			return (
 				<Provider store={this.store}>
-					<NavigationBarWithRouteMapper
-						ref="navRef"
-						route={{id: 'Home', name: 'Home', title: 'now@ucsandiego'}}
-						renderScene={this.renderScene}
-					/>
+					<View style={{ flex: 1 }}>
+						<GeoLocationContainer />
+						<NavigationBarWithRouteMapper
+							ref="navRef"
+							route={{ id: 'Home', name: 'Home', title: 'now@ucsandiego' }}
+							renderScene={this.renderScene}
+						/>
+					</View>
 				</Provider>
 			);
 		} else {
 			return (
 				<Provider store={this.store}>
-					<NavigatorIOS
-						initialRoute={{
-							component: Home,
-							title: AppSettings.APP_NAME,
-							passProps: {
-								isSimulator: this.props.isSimulator,
-								new_timeout: this.newTimeout,
-								do_timeout: this.doTimeout
-							},
-							backButtonTitle: "Back"
-						}}
-						style={{flex: 1}}
-						tintColor='#FFFFFF'
-						barTintColor='#006C92'
-						titleTextColor='#FFFFFF'
-						navigationBarHidden={false}
-						translucent={true}
-						ref="navRef"
-					/>
+					<View style={{ flex: 1 }}>
+						<GeoLocationContainer />
+						<NavigatorIOS
+							initialRoute={{
+								component: Home,
+								title: AppSettings.APP_NAME,
+								passProps: {
+									isSimulator: this.props.isSimulator
+								},
+								backButtonTitle: 'Back'
+							}}
+							style={{ flex: 1 }}
+							tintColor='#FFFFFF'
+							barTintColor='#006C92'
+							titleTextColor='#FFFFFF'
+							navigationBarHidden={false}
+							translucent={true}
+							ref="navRef"
+						/>
+					</View>
 				</Provider>
 			);
 		}
@@ -212,7 +151,7 @@ var nowucsandiego = React.createClass({
 	renderScene: function(route, navigator, index, navState) {
 
 		switch (route.id) {
-			case 'Home': 				return (<Home route={route} navigator={navigator} new_timeout={this.newTimeout} do_timeout={this.doTimeout}/>);
+			case 'Home': 				return (<Home route={route} navigator={navigator}/>);
 			case 'ShuttleStop': 		return (<ShuttleStop route={route} navigator={navigator} />);
 			case 'SurfReport': 			return (<SurfReport route={route} navigator={navigator} />);
 			case 'DiningListView': 		return (<DiningListView route={route} navigator={navigator} />);
@@ -225,20 +164,9 @@ var nowucsandiego = React.createClass({
 			case 'EventListView': 		return (<EventListView route={route} navigator={navigator} />);
 			case 'NewsListView': 		return (<NewsListView route={route} navigator={navigator} />);
 			case 'FeedbackView': 		return (<FeedbackView route={route} navigator={navigator} />);
-			default: 					return (<Home route={route} navigator={navigator} new_timeout={this.newTimeout} do_timeout={this.doTimeout}/>);
+			default: 					return (<Home route={route} navigator={navigator} />);
 		}
-	},
-
-	handleAppStateChange(currentAppState) {
-		if (currentAppState === 'active') {
-			if(this.state.inHome) {
-				this._resumeTimeout();
-			}
-		}
-		else if(currentAppState === 'background') {
-			this._pauseTimeout();
-		}
-	},
+	}
 });
 
 module.exports = nowucsandiego;
