@@ -336,6 +336,8 @@ var css = StyleSheet.create({
 			eventdetail_readmore_text: { fontSize: round(16 * prm), color: '#FFF' },
 			eventdetail_link: { fontSize: round(16 * prm), fontWeight: '600', color: '#FFF', backgroundColor: '#17AADF', borderWidth: 0, borderRadius: 3 },
 
+	// Nearby Map
+	nearby_map_container : { width: windowWidth, height: windowHeight },
 
 
 	// SPECIAL EVENTS CARD

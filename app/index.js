@@ -31,6 +31,7 @@ import EventListView from './views/events/EventListView';
 import NewsListView from './views/news/NewsListView';
 import DiningListView from './views/dining/DiningListView';
 import FeedbackView from './views/FeedbackView';
+import NearbyMapView from './views/nearby/NearbyMapView';
 
 // NAV
 import NavigationBarWithRouteMapper from './views/NavigationBarWithRouteMapper';
@@ -209,33 +210,32 @@ var nowucsandiego = React.createClass({
 		}
 	},
 
-	renderScene: function(route, navigator, index, navState) {
-
+	renderScene(route, navigator, index, navState) {
 		switch (route.id) {
-			case 'Home': 				return (<Home route={route} navigator={navigator} new_timeout={this.newTimeout} do_timeout={this.doTimeout}/>);
-			case 'ShuttleStop': 		return (<ShuttleStop route={route} navigator={navigator} />);
-			case 'SurfReport': 			return (<SurfReport route={route} navigator={navigator} />);
-			case 'DiningListView': 		return (<DiningListView route={route} navigator={navigator} />);
-			case 'DiningDetail': 		return (<DiningDetail route={route} navigator={navigator} />);
-			case 'DiningNutrition': 	return (<DiningNutrition route={route} navigator={navigator} />);
-			case 'NewsDetail': 			return (<NewsDetail route={route} navigator={navigator} />);
-			case 'EventDetail': 		return (<EventDetail route={route} navigator={navigator} />);
-			case 'WebWrapper': 			return (<WebWrapper route={route} navigator={navigator} />);
-			case 'WelcomeWeekView': 	return (<WelcomeWeekView route={route} navigator={navigator} />);
-			case 'EventListView': 		return (<EventListView route={route} navigator={navigator} />);
-			case 'NewsListView': 		return (<NewsListView route={route} navigator={navigator} />);
-			case 'FeedbackView': 		return (<FeedbackView route={route} navigator={navigator} />);
-			default: 					return (<Home route={route} navigator={navigator} new_timeout={this.newTimeout} do_timeout={this.doTimeout}/>);
+		case 'Home': 				return (<NearbyMapView route={route} navigator={navigator} new_timeout={this.newTimeout} do_timeout={this.doTimeout} />);
+		case 'ShuttleStop': 		return (<ShuttleStop route={route} navigator={navigator} />);
+		case 'SurfReport': 			return (<SurfReport route={route} navigator={navigator} />);
+		case 'DiningListView': 		return (<DiningListView route={route} navigator={navigator} />);
+		case 'DiningDetail': 		return (<DiningDetail route={route} navigator={navigator} />);
+		case 'DiningNutrition': 	return (<DiningNutrition route={route} navigator={navigator} />);
+		case 'NewsDetail': 			return (<NewsDetail route={route} navigator={navigator} />);
+		case 'EventDetail': 		return (<EventDetail route={route} navigator={navigator} />);
+		case 'WebWrapper': 			return (<WebWrapper route={route} navigator={navigator} />);
+		case 'WelcomeWeekView': 	return (<WelcomeWeekView route={route} navigator={navigator} />);
+		case 'EventListView': 		return (<EventListView route={route} navigator={navigator} />);
+		case 'NewsListView': 		return (<NewsListView route={route} navigator={navigator} />);
+		case 'FeedbackView': 		return (<FeedbackView route={route} navigator={navigator} />);
+		default: 					return (<Home route={route} navigator={navigator} new_timeout={this.newTimeout} do_timeout={this.doTimeout} />);
 		}
 	},
 
 	handleAppStateChange(currentAppState) {
 		if (currentAppState === 'active') {
-			if(this.state.inHome) {
+			if (this.state.inHome) {
 				this._resumeTimeout();
 			}
 		}
-		else if(currentAppState === 'background') {
+		else if (currentAppState === 'background') {
 			this._pauseTimeout();
 		}
 	},
