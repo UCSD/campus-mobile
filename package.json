@@ -21,6 +21,7 @@
     "react-timer-mixin": "0.13.3",
     "redux-logger": "2.7.0",
     "redux-thunk": "2.1.0",
+    "redux-persist": "3.5.0",
     "react-native-vector-icons": "2.1.0",
     "react-timer-mixin": "0.13.3"
   },

@@ -42,11 +42,11 @@ import configureStore from './store/configureStore';
 
 var nowucsandiego = React.createClass({
 
-	store: configureStore(),
-
 	getInitialState() {
 		return {
+			store: configureStore({}, () => this.setState({ isLoading: false })),
 			inHome: true,
+			isLoading: true,
 		};
 	},
 
@@ -101,7 +101,10 @@ var nowucsandiego = React.createClass({
 		}
 	},
 
-	render: function() {
+	render: function () {
+		if (this.state.isLoading) {
+      return null;
+    }
 
 		if (general.platformIOS()) {
 			StatusBar.setBarStyle('light-content');
@@ -109,7 +112,7 @@ var nowucsandiego = React.createClass({
 
 		if (general.platformAndroid()) {
 			return (
-				<Provider store={this.store}>
+				<Provider store={this.state.store}>
 					<View style={{ flex: 1 }}>
 						<GeoLocationContainer />
 						<NavigationBarWithRouteMapper
@@ -122,7 +125,7 @@ var nowucsandiego = React.createClass({
 			);
 		} else {
 			return (
-				<Provider store={this.store}>
+				<Provider store={this.state.store}>
 					<View style={{ flex: 1 }}>
 						<GeoLocationContainer />
 						<NavigatorIOS
