@@ -15,6 +15,7 @@ const windowWidth = windowSize.width;
 const css = require('../../styles/css');
 const logger = require('../../util/logger');
 const general = require('../../util/general');
+const moment = require('moment');
 
 const EventDetail = React.createClass({
 
@@ -67,20 +68,7 @@ const EventDetail = React.createClass({
 		const data = this.props.route.eventData;
 		const eventTitleStr = data.title;// EventTitle.replace('&amp;','&');
 		const eventDescriptionStr = data.description;// EventDescription.replace('&amp;','&').trim();
-		const eventDateStr = data.eventdate + '\n' + general.militaryToAMPM(data.starttime) + ' to ' + general.militaryToAMPM(data.endtime);// '';
-		/*
-		var eventDateArray = this.props.route.eventData.EventDate;
-
-		if (eventDateArray) {
-			for (var i = 0; eventDateArray.length > i; i++) {
-				eventDateStr += eventDateArray[i].replace(/AM/g,'am').replace(/PM/g,'pm');
-				if (eventDateArray.length !== i + 1) {
-					 eventDateStr += '\n';
-				}
-			}
-		} else {
-			eventDateStr = 'Ongoing Event';
-		}*/
+		const eventDateStr = moment(data.eventdate).format("MMM Do") + ', ' + general.militaryToAMPM(data.starttime) + ' - ' + general.militaryToAMPM(data.endtime);
 
 		return (
 			<View style={[css.main_container, css.whitebg]}>

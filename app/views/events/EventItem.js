@@ -10,6 +10,7 @@ import EventDetail from './EventDetail';
 
 const css = require('../../styles/css');
 const general = require('../../util/general');
+const moment = require('moment');
 
 export default class EventItem extends React.Component {
 
@@ -32,7 +33,7 @@ export default class EventItem extends React.Component {
 			}
 		}
 
-		const eventDateDay = data.eventdate + '\n' + general.militaryToAMPM(data.starttime) + ' to ' + general.militaryToAMPM(data.endtime);
+		const eventDateDay = moment(data.eventdate).format("MMM Do") + ', ' + general.militaryToAMPM(data.starttime) + ' - ' + general.militaryToAMPM(data.endtime);
 
 		return (
 			<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => this.gotoEventDetail(data)}>
