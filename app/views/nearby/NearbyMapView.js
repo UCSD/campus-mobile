@@ -74,6 +74,13 @@ export default class NearbyMapView extends React.Component {
 		});
 	}
 
+	updateSelectedResult = (index) => {
+		const newSelect = this.state.searchResults[index];
+		this.setState({
+			selectedResult: newSelect
+		});
+	}
+
 	render() {
 		if (this.state.initialRegion) {
 			return (
@@ -132,7 +139,7 @@ export default class NearbyMapView extends React.Component {
 					>
 						{(this.state.searchResults) ? (
 							<View>
-								<ResultsList results={this.state.searchResults} />
+								<ResultsList results={this.state.searchResults} onSelect={(index) => this.updateSelectedResult(index)} />
 							</View>
 							) : (null)}
 					</SlidingUpPanel>
@@ -150,10 +157,10 @@ const HandlerOne = ({ props }) => (
 	</View>
 );
 
-const ResultsList = ({ results }) => (
+const ResultsList = ({ results, onSelect }) => (
 	<View>
 		{results.map((result, index) => (
-			<TouchableHighlight key={index} underlayColor={'rgba(200,200,200,.1)'} onPress={() => gotoNavigationApp(result.mkrLat, result.mkrLong)}>
+			<TouchableHighlight key={index} underlayColor={'rgba(200,200,200,.1)'} onPress={() => onSelect(index)}>
 				<View style={css.destinationcard_marker_row}>
 					<Icon name="map-marker" size={30} />
 					<Text style={css.destinationcard_marker_label}>{result.title}</Text>
