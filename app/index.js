@@ -34,6 +34,7 @@ import EventListView from './views/events/EventListView';
 import NewsListView from './views/news/NewsListView';
 import DiningListView from './views/dining/DiningListView';
 import FeedbackView from './views/FeedbackView';
+import NearbyMapView from './views/nearby/NearbyMapView';
 
 // NAV
 import NavigationBarWithRouteMapper from './views/NavigationBarWithRouteMapper';
@@ -154,8 +155,7 @@ var nowucsandiego = React.createClass({
 		}
 	},
 
-	renderScene: function(route, navigator, index, navState) {
-
+	renderScene(route, navigator, index, navState) {
 		switch (route.id) {
 			case 'Home': 				return (<Home route={route} navigator={navigator}/>);
 			case 'ShuttleStop': 		return (<ShuttleStop route={route} navigator={navigator} />);
@@ -170,6 +170,7 @@ var nowucsandiego = React.createClass({
 			case 'EventListView': 		return (<EventListView route={route} navigator={navigator} />);
 			case 'NewsListView': 		return (<NewsListView route={route} navigator={navigator} />);
 			case 'FeedbackView': 		return (<FeedbackView route={route} navigator={navigator} />);
+			case 'NearbyMapView': 	return (<NearbyMapView route={route} navigator={navigator}/>);
 			default: 					return (<Home route={route} navigator={navigator} />);
 		}
 	}
