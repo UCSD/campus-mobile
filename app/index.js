@@ -43,6 +43,7 @@ import configureStore from './store/configureStore';
 var nowucsandiego = React.createClass({
 
 	getInitialState() {
+		// TODO: hide regular screens until store is hydrated
 		return {
 			store: configureStore({}, () => this.setState({ isLoading: false })),
 			inHome: true,
@@ -102,53 +103,46 @@ var nowucsandiego = React.createClass({
 	},
 
 	render: function () {
-		if (this.state.isLoading) {
-      return null;
-    }
-
+		let navigator;
 		if (general.platformIOS()) {
 			StatusBar.setBarStyle('light-content');
+
+			navigator = (<NavigatorIOS
+				initialRoute={{
+					component: Home,
+					title: AppSettings.APP_NAME,
+					passProps: {
+						isSimulator: this.props.isSimulator
+					},
+					backButtonTitle: 'Back'
+				}}
+				style={{ flex: 1 }}
+				tintColor='#FFFFFF'
+				barTintColor='#006C92'
+				titleTextColor='#FFFFFF'
+				navigationBarHidden={false}
+				translucent={true}
+				ref="navRef"
+			/>);
+		} else {
+			// android we will use NavigationBarWithRouteMapper
+			navigator = (
+				<NavigationBarWithRouteMapper
+					ref="navRef"
+					route={{ id: 'Home', name: 'Home', title: 'now@ucsandiego' }}
+					renderScene={this.renderScene}
+				/>
+			);
 		}
 
-		if (general.platformAndroid()) {
-			return (
-				<Provider store={this.state.store}>
-					<View style={{ flex: 1 }}>
-						<GeoLocationContainer />
-						<NavigationBarWithRouteMapper
-							ref="navRef"
-							route={{ id: 'Home', name: 'Home', title: 'now@ucsandiego' }}
-							renderScene={this.renderScene}
-						/>
-					</View>
-				</Provider>
-			);
-		} else {
-			return (
-				<Provider store={this.state.store}>
-					<View style={{ flex: 1 }}>
-						<GeoLocationContainer />
-						<NavigatorIOS
-							initialRoute={{
-								component: Home,
-								title: AppSettings.APP_NAME,
-								passProps: {
-									isSimulator: this.props.isSimulator
-								},
-								backButtonTitle: 'Back'
-							}}
-							style={{ flex: 1 }}
-							tintColor='#FFFFFF'
-							barTintColor='#006C92'
-							titleTextColor='#FFFFFF'
-							navigationBarHidden={false}
-							translucent={true}
-							ref="navRef"
-						/>
-					</View>
-				</Provider>
-			);
-		}
+		return (
+			<Provider store={this.state.store}>
+				<View style={{ flex: 1 }}>
+					<GeoLocationContainer />
+					{navigator}
+				</View>
+			</Provider>
+		);
 	},
 
 	renderScene: function(route, navigator, index, navState) {
