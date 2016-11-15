@@ -6,6 +6,7 @@ import {
 	TouchableHighlight,
 	Text
 } from 'react-native';
+import { connect } from 'react-redux';
 
 import SlidingUpPanel from 'react-native-sliding-up-panel';
 import SearchBar from './SearchBar';
@@ -25,13 +26,18 @@ var deviceWidth = Dimensions.get('window').width;
 var MAXIMUM_HEIGHT = deviceHeight - 100;
 var MINUMUM_HEIGHT = 80;
 
-export default class NearbyMapView extends React.Component {
+class NearbyMapView extends React.Component {
 
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			initialRegion: null,
+			initialRegion: {
+				latitude: this.props.location.coords.latitude,
+				longitude: this.props.location.coords.longitude,
+				latitudeDelta: 0.02,
+				longitudeDelta: 0.02
+			},
 			searchResults: null,
 			selectedResult: null,
 			sliding: false,
@@ -39,20 +45,7 @@ export default class NearbyMapView extends React.Component {
 	}
 
 	componentWillMount() {
-		navigator.geolocation.getCurrentPosition(
-			(position) => {
-				this.setState({
-					initialRegion: {
-						latitude: position.coords.latitude,
-						longitude: position.coords.longitude,
-						latitudeDelta: 0.02,
-						longitudeDelta: 0.02
-					}
-				});
-			},
-			null,
-			{ enableHighAccuracy: true, timeout: 20000, distanceFilter: 20 }
-		);
+
 	}
 
 	getContainerHeight = (height) => {
@@ -94,7 +87,7 @@ export default class NearbyMapView extends React.Component {
 						ref={(MapRef) => {
 							if ( MapRef != null && this.state.searchResults ) {
 								let markers = [];
-								markers.push({ latitude: this.state.initialRegion.latitude, longitude: this.state.initialRegion.longitude });
+								markers.push({ latitude: this.props.location.coords.latitude, longitude: this.props.location.coords.longitude });
 								markers.push({ latitude: this.state.selectedResult.mkrLat, longitude: this.state.selectedResult.mkrLong });
 
 								MapRef.fitToCoordinates(
@@ -187,3 +180,12 @@ const gotoNavigationApp = (destinationLat, destinationLon) => {
 	const destinationURL = general.getDirectionsURL('walk', destinationLat, destinationLon );
 	general.openURL(destinationURL);
 };
+
+function mapStateToProps(state, props) {
+	return {
+		location: state.location.position,
+		locationPermission: state.location.permission
+	};
+}
+
+module.exports = connect(mapStateToProps)(NearbyMapView);
