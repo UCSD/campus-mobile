@@ -212,7 +212,7 @@ var nowucsandiego = React.createClass({
 
 	renderScene(route, navigator, index, navState) {
 		switch (route.id) {
-		case 'Home': 				return (<NearbyMapView route={route} navigator={navigator} new_timeout={this.newTimeout} do_timeout={this.doTimeout} />);
+		case 'Home': 				return (<Home route={route} navigator={navigator} new_timeout={this.newTimeout} do_timeout={this.doTimeout} />);
 		case 'ShuttleStop': 		return (<ShuttleStop route={route} navigator={navigator} />);
 		case 'SurfReport': 			return (<SurfReport route={route} navigator={navigator} />);
 		case 'DiningListView': 		return (<DiningListView route={route} navigator={navigator} />);
@@ -225,6 +225,7 @@ var nowucsandiego = React.createClass({
 		case 'EventListView': 		return (<EventListView route={route} navigator={navigator} />);
 		case 'NewsListView': 		return (<NewsListView route={route} navigator={navigator} />);
 		case 'FeedbackView': 		return (<FeedbackView route={route} navigator={navigator} />);
+		case 'NearbyMapView': return (<NearbyMapView route={route} navigator={navigator} />);
 		default: 					return (<Home route={route} navigator={navigator} new_timeout={this.newTimeout} do_timeout={this.doTimeout} />);
 		}
 	},

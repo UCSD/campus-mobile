@@ -2,12 +2,15 @@ import React from 'react';
 import {
 	View,
 	ListView,
+	TouchableHighlight,
+	Text
 } from 'react-native';
 
 import Card from '../card/Card';
 import CardComponent from '../card/CardComponent';
 import NearbyList from './NearbyList';
 import NearbyMap from './NearbyMap';
+import NearbyMapView from './NearbyMapView';
 
 const css = require('../../styles/css');
 const logger = require('../../util/logger');
@@ -52,6 +55,10 @@ export default class NearbyCard extends CardComponent {
 		else {
 			return false;
 		}
+	}
+
+	gotoNearbyMapView() {
+		this.props.navigator.push({ id: 'NearbyMapView', title: 'Search', name: 'NearbyMapView', component: NearbyMapView });
 	}
 
 	// Updates which predesignated node region the user is in
@@ -164,6 +171,11 @@ export default class NearbyCard extends CardComponent {
 								navigator={this.props.navigator}
 							/>
 						) : null}
+						<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => this.gotoNearbyMapView()}>
+							<View style={css.events_more}>
+								<Text style={css.events_more_label}>Search Map</Text>
+							</View>
+						</TouchableHighlight>
 					</View>
 				</View>
 			</Card>
