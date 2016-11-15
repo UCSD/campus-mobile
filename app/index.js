@@ -12,10 +12,10 @@ import {
 // SETUP / UTIL / NAV
 var AppSettings = 			require('./AppSettings'),
 	general = 				require('./util/general'),
-	logger = 				require('./util/logger'),
+	logger = 				require('./util/logger');
 
 // VIEWS
-	Home = 					require('./views/Home'),
+var Home = 					require('./views/Home'),
 	ShuttleStop = 			require('./views/ShuttleStop'),
 	SurfReport = 			require('./views/weather/SurfReport'),
 	DiningList = 			require('./views/dining/DiningList'),
@@ -25,8 +25,10 @@ var AppSettings = 			require('./AppSettings'),
 	EventDetail = 			require('./views/events/EventDetail'),
 	WebWrapper = 			require('./views/WebWrapper');
 
+// GPS
 import GeoLocationContainer from './containers/geoLocationContainer';
 
+// VIEWS
 import WelcomeWeekView from './views/welcomeWeek/WelcomeWeekView';
 import EventListView from './views/events/EventListView';
 import NewsListView from './views/news/NewsListView';
@@ -39,6 +41,33 @@ import NavigationBarWithRouteMapper from './views/NavigationBarWithRouteMapper';
 // REDUX
 import { Provider } from 'react-redux';
 import configureStore from './store/configureStore';
+
+// CODE PUSH
+import codePush from "react-native-code-push";
+let codePushOptions = { checkFrequency: codePush.CheckFrequency.ON_APP_RESUME, installMode: codePush.InstallMode.ON_NEXT_RESUME };
+
+// Timeout that allows for pause and resume
+function Timer(callback, delay) {
+	var timerId, start, remaining = delay;
+
+	this.pause = function() {
+		clearTimeout(timerId);
+		remaining -= new Date() - start;
+	};
+
+	this.resume = function() {
+		start = new Date();
+		clearTimeout(timerId);
+		timerId = setTimeout(callback, remaining);
+	};
+
+	this.do = function() {
+		clearTimeout(timerId);
+		callback();
+	}
+}
+
+
 
 var nowucsandiego = React.createClass({
 
@@ -169,4 +198,5 @@ var nowucsandiego = React.createClass({
 	}
 });
 
+nowucsandiego = codePush(codePushOptions)(nowucsandiego);
 module.exports = nowucsandiego;
