@@ -79,6 +79,7 @@ export default class NearbyMapView extends React.Component {
 		this.setState({
 			selectedResult: newSelect
 		});
+		this.panel.collapsePanel();
 	}
 
 	render() {
@@ -113,6 +114,9 @@ export default class NearbyMapView extends React.Component {
 						mapType={'standard'}
 						followsUserLocation={true}
 						initialRegion={this.state.initialRegion}
+						onCalloutPress={
+							() => gotoNavigationApp(this.state.selectedResult.mkrLat, this.state.selectedResult.mkrLong)
+						}
 					>
 						{(this.state.searchResults && !this.state.sliding) ? (
 							<MapView.Marker
@@ -123,7 +127,16 @@ export default class NearbyMapView extends React.Component {
 								title={this.state.selectedResult.title}
 								description={this.state.selectedResult.description}
 								identifier={this.state.selectedResult.title}
-							/>
+							>
+								{/*<MapView.Callout style={{ width: 100 }} >
+									<View style={{ flex: 1, alignItems: 'flex-start', flexDirection: 'row' }}>
+										<Text style={{width: 70}} >{this.state.selectedResult.title}</Text>
+										<TouchableHighlight style={{ width: 30 }} >
+											<Icon name="location-arrow" size={20} />
+										</TouchableHighlight>
+									</View>
+								</MapView.Callout>*/}
+							</MapView.Marker>
 							) : (null)}
 					</MapView>
 					<SlidingUpPanel
