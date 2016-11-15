@@ -46,29 +46,6 @@ import configureStore from './store/configureStore';
 import codePush from "react-native-code-push";
 let codePushOptions = { checkFrequency: codePush.CheckFrequency.ON_APP_RESUME, installMode: codePush.InstallMode.ON_NEXT_RESUME };
 
-// Timeout that allows for pause and resume
-function Timer(callback, delay) {
-	var timerId, start, remaining = delay;
-
-	this.pause = function() {
-		clearTimeout(timerId);
-		remaining -= new Date() - start;
-	};
-
-	this.resume = function() {
-		start = new Date();
-		clearTimeout(timerId);
-		timerId = setTimeout(callback, remaining);
-	};
-
-	this.do = function() {
-		clearTimeout(timerId);
-		callback();
-	}
-}
-
-
-
 var nowucsandiego = React.createClass({
 
 	store: configureStore(),
