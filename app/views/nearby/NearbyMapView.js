@@ -72,13 +72,14 @@ class NearbyMapView extends React.Component {
 		this.setState({
 			selectedResult: newSelect
 		});
-		this.panel.collapsePanel();
+		//this.panel.collapsePanel();
 	}
 
 	render() {
+		console.log('render map');
 		if (this.state.initialRegion) {
 			return (
-				<View style={[css.main_container, css.whitebg]}>
+				<View>
 					<SearchBar
 						placeholder={'Search'}
 						update={this.setPanelContent}
@@ -86,6 +87,7 @@ class NearbyMapView extends React.Component {
 					<MapView
 						ref={(MapRef) => {
 							if ( MapRef != null && this.state.searchResults ) {
+								/*
 								let markers = [];
 								markers.push({ latitude: this.props.location.coords.latitude, longitude: this.props.location.coords.longitude });
 								markers.push({ latitude: this.state.selectedResult.mkrLat, longitude: this.state.selectedResult.mkrLong });
@@ -96,7 +98,24 @@ class NearbyMapView extends React.Component {
 										edgePadding: { top: 100, right: 100, bottom: 1000, left: 100 },
 										animated: true,
 									}
-								);
+								);*/
+								let midLat = (this.props.location.coords.latitude + this.state.selectedResult.mkrLat)/2;
+								let midLong = (this.props.location.coords.longitude + this.state.selectedResult.mkrLong)/2;
+								let minLat = (this.props.location.coords.latitude < this.state.selectedResult.mkrLat) ? this.props.location.coords.latitude : this.state.selectedResult.mkrLat;
+								let minLong = (this.props.location.coords.longitude < this.state.selectedResult.mkrLong) ? this.props.location.coords.longitude : this.state.selectedResult.mkrLong;
+								let maxLat = (this.props.location.coords.latitude > this.state.selectedResult.mkrLat) ? this.props.location.coords.latitude : this.state.selectedResult.mkrLat;
+								let maxLong = (this.props.location.coords.longitude > this.state.selectedResult.mkrLong) ? this.props.location.coords.longitude : this.state.selectedResult.mkrLong;
+								let deltaLat = maxLat - minLat + .002;
+								let deltaLong = maxLong - minLong + .002;
+
+								let midRegion = {
+									latitude: midLat,
+									longitude: midLong,
+									latitudeDelta: deltaLat,
+									longitudeDelta: deltaLong,
+								};
+								console.log(JSON.stringify(midRegion));
+								MapRef.animateToRegion(midRegion, 1000);
 							}
 						}}
 						style={css.nearby_map_container}
@@ -108,7 +127,8 @@ class NearbyMapView extends React.Component {
 						followsUserLocation={true}
 						initialRegion={this.state.initialRegion}
 						onCalloutPress={
-							() => gotoNavigationApp(this.state.selectedResult.mkrLat, this.state.selectedResult.mkrLong)
+							() => console.log('press me baby')
+							//() => gotoNavigationApp(this.state.selectedResult.mkrLat, this.state.selectedResult.mkrLong)
 						}
 					>
 						{(this.state.searchResults && !this.state.sliding) ? (
@@ -132,6 +152,12 @@ class NearbyMapView extends React.Component {
 							</MapView.Marker>
 							) : (null)}
 					</MapView>
+					{(this.state.searchResults) ? (
+							<View>
+								<ResultsList results={this.state.searchResults} onSelect={(index) => this.updateSelectedResult(index)} />
+							</View>
+							) : (null)}
+					{/*
 					<SlidingUpPanel
 						ref={panel => { this.panel = panel; }}
 						containerMaximumHeight={MAXIMUM_HEIGHT}
@@ -148,7 +174,7 @@ class NearbyMapView extends React.Component {
 								<ResultsList results={this.state.searchResults} onSelect={(index) => this.updateSelectedResult(index)} />
 							</View>
 							) : (null)}
-					</SlidingUpPanel>
+					</SlidingUpPanel>*/}
 				</View>
 			);
 		} else {
