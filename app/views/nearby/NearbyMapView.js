@@ -1,7 +1,6 @@
 import React from 'react';
 import {
 	View,
-	ListView,
 	Dimensions,
 	TouchableHighlight,
 	Text
@@ -9,27 +8,27 @@ import {
 import { connect } from 'react-redux';
 
 import SlidingUpPanel from 'react-native-sliding-up-panel';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import SearchBar from './SearchBar';
 import SearchMap from './SearchMap';
 import SearchResults from './SearchResults';
 import NearbyService from '../../services/nearbyService';
-import Icon from 'react-native-vector-icons/FontAwesome';
 
 const css = require('../../styles/css');
 const logger = require('../../util/logger');
 const shuttle = require('../../util/shuttle');
 const AppSettings = 		require('../../AppSettings');
 const general = require('../../util/general');
-const MapView = require('react-native-maps');
 
-const navBarMarginTop = 0;
+let navBarMarginTop = 64;
+let searchMargin = navBarMarginTop;
 
 if (general.platformAndroid()) {
 	navBarMarginTop = 64;
+	searchMargin /= 2;
 }
 
 const deviceHeight = Dimensions.get('window').height;
-const deviceWidth = Dimensions.get('window').width;
 
 const MAXIMUM_HEIGHT = deviceHeight - navBarMarginTop;
 const MINUMUM_HEIGHT = navBarMarginTop;
@@ -90,7 +89,7 @@ class NearbyMapView extends React.Component {
 				<View style={css.view_all_container}>
 					<SearchBar
 						update={this.updateSearch}
-						style={{ marginTop:25, marginBottom:25 }}
+						style={{ marginTop:searchMargin, marginBottom:searchMargin }}
 					/>
 					<SearchMap
 						location={this.props.location}
@@ -131,42 +130,6 @@ const HandlerOne = ({ props }) => (
 		<Text >Search Results</Text>
 	</View>
 );
-
-const ResultsList = ({ results, onSelect }) => (
-	<View>
-		<View>
-		{results.map((result, index) => (
-			<TouchableHighlight key={index} underlayColor={'rgba(200,200,200,.1)'} onPress={() => onSelect(index)}>
-				<View style={css.destinationcard_marker_row}>
-					<Icon name="map-marker" size={30} />
-					<Text style={css.destinationcard_marker_label}>{result.title}</Text>
-				</View>
-			</TouchableHighlight>
-		))}
-		</View>
-		<View style={{ flexDirection: 'row', alignItems: 'center' }}>
-			<TouchableHighlight 
-				underlayColor={'rgba(200,200,200,.1)'} 
-				onPress={() => onSelect(index)}
-				style={{ flex: 1, alignItems: 'center' }}
-			>
-				<Icon name="long-arrow-left" size={30} />
-			</TouchableHighlight>
-			<TouchableHighlight 
-				underlayColor={'rgba(200,200,200,.1)'} 
-				onPress={() => onSelect(index)}
-				style={{ flex: 1, alignItems: 'center' }}
-			>
-				<Icon name="long-arrow-right" size={30} />
-			</TouchableHighlight>
-		</View>
-	</View>
-);
-
-const gotoNavigationApp = (destinationLat, destinationLon) => {
-	const destinationURL = general.getDirectionsURL('walk', destinationLat, destinationLon );
-	general.openURL(destinationURL);
-};
 
 function mapStateToProps(state, props) {
 	return {

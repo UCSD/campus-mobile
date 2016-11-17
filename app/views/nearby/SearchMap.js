@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import MapView from 'react-native-maps';
-import css from '../../styles/css';
+import general from '../../util/general';
 
 const SearchMap = ({ location, selectedResult, hideMarker, style }) => (
 	<MapView
@@ -37,7 +37,9 @@ const SearchMap = ({ location, selectedResult, hideMarker, style }) => (
 			latitudeDelta: 0.02,
 			longitudeDelta: 0.02
 		}}
-
+		onCalloutPress={
+			() => gotoNavigationApp(selectedResult.mkrLat, selectedResult.mkrLong)
+		}
 	>
 		{(selectedResult && !hideMarker) ? (
 			<MapView.Marker
@@ -72,6 +74,11 @@ SearchMap.defaultProps = {
 	location: null,
 	selectedResult: null,
 	hideMarker: false
+};
+
+const gotoNavigationApp = (destinationLat, destinationLon) => {
+	const destinationURL = general.getDirectionsURL('walk', destinationLat, destinationLon );
+	general.openURL(destinationURL);
 };
 
 export default SearchMap;
