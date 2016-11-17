@@ -15,7 +15,7 @@ import LocationRequiredContent from '../common/LocationRequiredContent';
 
 const css = require('../../styles/css');
 const logger = require('../../util/logger');
-const shuttle = require('../../util/shuttle');
+const map = require('../../util/map');
 const general = require('../../util/general');
 
 class DiningCard extends CardComponent {
@@ -86,7 +86,7 @@ class DiningCard extends CardComponent {
 			if (location) {
 				// Calc distance from dining locations
 				for (var i = 0; responseData.length > i; i++) {
-					var distance = shuttle.getDistance(location.coords.latitude, location.coords.longitude, responseData[i].coords.lat, responseData[i].coords.lon);
+					var distance = map.getDistance(location.coords.latitude, location.coords.longitude, responseData[i].coords.lat, responseData[i].coords.lon);
 					if (distance) {
 						responseData[i].distance = distance;
 					} else {
