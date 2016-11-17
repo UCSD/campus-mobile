@@ -1,7 +1,6 @@
 import React from 'react';
 import {
 	View,
-	ListView,
 	TouchableHighlight,
 	Text
 } from 'react-native';
@@ -9,12 +8,11 @@ import { connect } from 'react-redux';
 
 import Card from '../card/Card';
 import CardComponent from '../card/CardComponent';
-import NearbyList from './NearbyList';
-import NearbyMap from './NearbyMap';
 import LocationRequiredContent from '../common/LocationRequiredContent';
 import SearchBar from './SearchBar';
 import SearchMap from './SearchMap';
 import SearchResults from './SearchResults';
+import NearbyMapView from './NearbyMapView';
 
 import NearbyService from '../../services/nearbyService';
 
@@ -63,6 +61,10 @@ class SearchCard extends CardComponent {
 		});
 	}
 
+	gotoNearbyMapView() {
+		this.props.navigator.push({ id: 'NearbyMapView', title: 'Search', name: 'NearbyMapView', component: NearbyMapView });
+	}
+
 	render() {
 		return (
 			<Card id="map" title="Map">
@@ -83,6 +85,7 @@ class SearchCard extends CardComponent {
 				<SearchMap
 					location={this.props.location}
 					selectedResult={this.state.selectedResult}
+					style={css.nearby_map_container}
 				/>
 				{(this.state.searchResults) ? (
 					<SearchResults
@@ -90,6 +93,11 @@ class SearchCard extends CardComponent {
 						onSelect={(index) => this.updateSelectedResult(index)}
 					/>
 				) : (null)}
+				<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => this.gotoNearbyMapView()}>
+					<View style={css.events_more}>
+						<Text style={css.events_more_label}>View Full Map</Text>
+					</View>
+				</TouchableHighlight>
 			</View>
 		);
 	}

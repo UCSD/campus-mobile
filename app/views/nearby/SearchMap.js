@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import MapView from 'react-native-maps';
 import css from '../../styles/css';
 
-const SearchMap = ({ location, selectedResult, hideMarker }) => (
+const SearchMap = ({ location, selectedResult, hideMarker, style }) => (
 	<MapView
 		ref={(MapRef) => {
 			if ( MapRef != null && selectedResult != null ) {
@@ -25,7 +25,7 @@ const SearchMap = ({ location, selectedResult, hideMarker }) => (
 				MapRef.animateToRegion(midRegion, 1000);
 			}
 		}}
-		style={css.nearby_map_container}
+		style={style}
 		loadingEnabled={true}
 		loadingIndicatorColor={'#666'}
 		loadingBackgroundColor={'#EEE'}
@@ -65,10 +65,12 @@ const SearchMap = ({ location, selectedResult, hideMarker }) => (
 SearchMap.propTypes = {
 	location: PropTypes.object,
 	selectedResult: PropTypes.object,
-	hideMarker: PropTypes.boolean,
+	hideMarker: PropTypes.bool,
 };
 
 SearchMap.defaultProps = {
+	location: null,
+	selectedResult: null,
 	hideMarker: false
 };
 

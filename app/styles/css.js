@@ -338,7 +338,7 @@ var css = StyleSheet.create({
 
 	// Nearby Map
 	nearby_map_container : { width: windowWidth, height: round(maxCardWidthWithPadding * .8) },
-
+	search_map_container : { width: windowWidth, height: windowHeight - 2*navBarMarginTop },
 
 	// SPECIAL EVENTS CARD
 	special_events_main: { flex: 1 },

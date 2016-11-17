@@ -10,6 +10,8 @@ import { connect } from 'react-redux';
 
 import SlidingUpPanel from 'react-native-sliding-up-panel';
 import SearchBar from './SearchBar';
+import SearchMap from './SearchMap';
+import SearchResults from './SearchResults';
 import NearbyService from '../../services/nearbyService';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -20,11 +22,17 @@ const AppSettings = 		require('../../AppSettings');
 const general = require('../../util/general');
 const MapView = require('react-native-maps');
 
-var deviceHeight = Dimensions.get('window').height;
-var deviceWidth = Dimensions.get('window').width;
+const navBarMarginTop = 0;
 
-var MAXIMUM_HEIGHT = deviceHeight - 100;
-var MINUMUM_HEIGHT = 80;
+if (general.platformAndroid()) {
+	navBarMarginTop = 64;
+}
+
+const deviceHeight = Dimensions.get('window').height;
+const deviceWidth = Dimensions.get('window').width;
+
+const MAXIMUM_HEIGHT = deviceHeight - navBarMarginTop;
+const MINUMUM_HEIGHT = navBarMarginTop;
 
 class NearbyMapView extends React.Component {
 
@@ -54,7 +62,7 @@ class NearbyMapView extends React.Component {
 		});
 	}
 
-	setPanelContent = (text) => {
+	updateSearch = (text) => {
 		NearbyService.FetchSearchResults(text).then((result) => {
 			if (result.results) {
 				this.setState({
@@ -72,92 +80,24 @@ class NearbyMapView extends React.Component {
 		this.setState({
 			selectedResult: newSelect
 		});
-		//this.panel.collapsePanel();
+		this.panel.collapsePanel();
 	}
 
 	render() {
 		console.log('render map');
 		if (this.state.initialRegion) {
 			return (
-				<View>
+				<View style={css.view_all_container}>
 					<SearchBar
-						placeholder={'Search'}
-						update={this.setPanelContent}
+						update={this.updateSearch}
+						style={{ marginTop:25, marginBottom:25 }}
 					/>
-					<MapView
-						ref={(MapRef) => {
-							if ( MapRef != null && this.state.searchResults ) {
-								/*
-								let markers = [];
-								markers.push({ latitude: this.props.location.coords.latitude, longitude: this.props.location.coords.longitude });
-								markers.push({ latitude: this.state.selectedResult.mkrLat, longitude: this.state.selectedResult.mkrLong });
-
-								MapRef.fitToCoordinates(
-									markers,
-									{
-										edgePadding: { top: 100, right: 100, bottom: 1000, left: 100 },
-										animated: true,
-									}
-								);*/
-								let midLat = (this.props.location.coords.latitude + this.state.selectedResult.mkrLat)/2;
-								let midLong = (this.props.location.coords.longitude + this.state.selectedResult.mkrLong)/2;
-								let minLat = (this.props.location.coords.latitude < this.state.selectedResult.mkrLat) ? this.props.location.coords.latitude : this.state.selectedResult.mkrLat;
-								let minLong = (this.props.location.coords.longitude < this.state.selectedResult.mkrLong) ? this.props.location.coords.longitude : this.state.selectedResult.mkrLong;
-								let maxLat = (this.props.location.coords.latitude > this.state.selectedResult.mkrLat) ? this.props.location.coords.latitude : this.state.selectedResult.mkrLat;
-								let maxLong = (this.props.location.coords.longitude > this.state.selectedResult.mkrLong) ? this.props.location.coords.longitude : this.state.selectedResult.mkrLong;
-								let deltaLat = maxLat - minLat + .002;
-								let deltaLong = maxLong - minLong + .002;
-
-								let midRegion = {
-									latitude: midLat,
-									longitude: midLong,
-									latitudeDelta: deltaLat,
-									longitudeDelta: deltaLong,
-								};
-								console.log(JSON.stringify(midRegion));
-								MapRef.animateToRegion(midRegion, 1000);
-							}
-						}}
-						style={css.nearby_map_container}
-						loadingEnabled={true}
-						loadingIndicatorColor={'#666'}
-						loadingBackgroundColor={'#EEE'}
-						showsUserLocation={true}
-						mapType={'standard'}
-						followsUserLocation={true}
-						initialRegion={this.state.initialRegion}
-						onCalloutPress={
-							() => console.log('press me baby')
-							//() => gotoNavigationApp(this.state.selectedResult.mkrLat, this.state.selectedResult.mkrLong)
-						}
-					>
-						{(this.state.searchResults && !this.state.sliding) ? (
-							<MapView.Marker
-								coordinate={{
-									latitude: this.state.selectedResult.mkrLat,
-									longitude: this.state.selectedResult.mkrLong
-								}}
-								title={this.state.selectedResult.title}
-								description={this.state.selectedResult.description}
-								identifier={this.state.selectedResult.title}
-							>
-								{/*<MapView.Callout style={{ width: 100 }} >
-									<View style={{ flex: 1, alignItems: 'flex-start', flexDirection: 'row' }}>
-										<Text style={{width: 70}} >{this.state.selectedResult.title}</Text>
-										<TouchableHighlight style={{ width: 30 }} >
-											<Icon name="location-arrow" size={20} />
-										</TouchableHighlight>
-									</View>
-								</MapView.Callout>*/}
-							</MapView.Marker>
-							) : (null)}
-					</MapView>
-					{(this.state.searchResults) ? (
-							<View>
-								<ResultsList results={this.state.searchResults} onSelect={(index) => this.updateSelectedResult(index)} />
-							</View>
-							) : (null)}
-					{/*
+					<SearchMap
+						location={this.props.location}
+						selectedResult={this.state.selectedResult}
+						style={css.search_map_container}
+						hideMarker={this.state.sliding}
+					/>
 					<SlidingUpPanel
 						ref={panel => { this.panel = panel; }}
 						containerMaximumHeight={MAXIMUM_HEIGHT}
@@ -171,10 +111,13 @@ class NearbyMapView extends React.Component {
 					>
 						{(this.state.searchResults) ? (
 							<View>
-								<ResultsList results={this.state.searchResults} onSelect={(index) => this.updateSelectedResult(index)} />
+								<SearchResults
+									results={this.state.searchResults}
+									onSelect={(index) => this.updateSelectedResult(index)}
+								/>
 							</View>
 							) : (null)}
-					</SlidingUpPanel>*/}
+					</SlidingUpPanel>
 				</View>
 			);
 		} else {
@@ -191,6 +134,7 @@ const HandlerOne = ({ props }) => (
 
 const ResultsList = ({ results, onSelect }) => (
 	<View>
+		<View>
 		{results.map((result, index) => (
 			<TouchableHighlight key={index} underlayColor={'rgba(200,200,200,.1)'} onPress={() => onSelect(index)}>
 				<View style={css.destinationcard_marker_row}>
@@ -199,6 +143,23 @@ const ResultsList = ({ results, onSelect }) => (
 				</View>
 			</TouchableHighlight>
 		))}
+		</View>
+		<View style={{ flexDirection: 'row', alignItems: 'center' }}>
+			<TouchableHighlight 
+				underlayColor={'rgba(200,200,200,.1)'} 
+				onPress={() => onSelect(index)}
+				style={{ flex: 1, alignItems: 'center' }}
+			>
+				<Icon name="long-arrow-left" size={30} />
+			</TouchableHighlight>
+			<TouchableHighlight 
+				underlayColor={'rgba(200,200,200,.1)'} 
+				onPress={() => onSelect(index)}
+				style={{ flex: 1, alignItems: 'center' }}
+			>
+				<Icon name="long-arrow-right" size={30} />
+			</TouchableHighlight>
+		</View>
 	</View>
 );
 

@@ -2,8 +2,8 @@ import React, { PropTypes } from 'react';
 import { TextInput, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const SearchBar = ({ placeholder, update }) => (
-	<View style={{ flex:1, flexDirection: 'row', alignItems: 'center' }}>
+const SearchBar = ({ placeholder, update, style }) => (
+	<View style={[{ flex:1, flexDirection: 'row', alignItems: 'center' }, style]}>
 		<TextInput
 			placeholder={placeholder}
 			autoCorrect={false}
