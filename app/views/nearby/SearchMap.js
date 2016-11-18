@@ -1,7 +1,12 @@
 import React, { PropTypes } from 'react';
+import { Text, TouchableHighlight, View } from 'react-native';
 import MapView from 'react-native-maps';
+import Icon from 'react-native-vector-icons/FontAwesome';
+
 import general from '../../util/general';
 
+// NOTE: For some reason MapView-onCalloutPress only works for Android and
+// TouchableHighlight-onPress only works for iOS...which is why it's in two places
 const SearchMap = ({ location, selectedResult, hideMarker, style }) => (
 	<MapView
 		ref={(MapRef) => {
@@ -43,6 +48,11 @@ const SearchMap = ({ location, selectedResult, hideMarker, style }) => (
 	>
 		{(selectedResult && !hideMarker) ? (
 			<MapView.Marker
+				ref={(MarkRef) => {
+					if (MarkRef != null) {
+						//MarkRef.showCallout();
+					}
+				}}
 				coordinate={{
 					latitude: selectedResult.mkrLat,
 					longitude: selectedResult.mkrLong
@@ -51,14 +61,18 @@ const SearchMap = ({ location, selectedResult, hideMarker, style }) => (
 				description={selectedResult.description}
 				identifier={selectedResult.title}
 			>
-				{/*<MapView.Callout style={{ width: 100 }} >
-					<View style={{ flex: 1, alignItems: 'flex-start', flexDirection: 'row' }}>
-						<Text style={{width: 70}} >{this.state.selectedResult.title}</Text>
-						<TouchableHighlight style={{ width: 30 }} >
-							<Icon name="location-arrow" size={20} />
-						</TouchableHighlight>
-					</View>
-				</MapView.Callout>*/}
+				<MapView.Callout style={{ width: 100 }} >
+					<TouchableHighlight
+						onPress={
+							() => gotoNavigationApp(selectedResult.mkrLat, selectedResult.mkrLong)
+						}
+					>
+						<View style={{ flex: 1, alignItems: 'center', flexDirection: 'row', flexWrap: 'wrap' }}>
+							<Text style={{ flex: 0.8 }}>{selectedResult.title}</Text>
+							<Icon style={{ flex:0.2 }} name={'location-arrow'} size={20} />
+						</View>
+					</TouchableHighlight>
+				</MapView.Callout>
 			</MapView.Marker>
 			) : (null)}
 	</MapView>

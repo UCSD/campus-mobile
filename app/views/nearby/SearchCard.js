@@ -30,10 +30,20 @@ class SearchCard extends CardComponent {
 		this.state = {
 			selectedResult: null,
 			searchResults: null,
+			selectedInvalidated: true
 		};
 	}
 
 	componentDidMount() {
+	}
+
+	shouldComponentUpdate() {
+		if (this.state.selectedInvalidated) {
+			this.state.selectedInvalidated = false;
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	updateSearch = (text) => {
@@ -46,7 +56,8 @@ class SearchCard extends CardComponent {
 
 				this.setState({
 					searchResults: result.results,
-					selectedResult: result.results[0]
+					selectedResult: result.results[0],
+					selectedInvalidated: true
 				});
 			} else {
 				// handle no results
@@ -57,7 +68,8 @@ class SearchCard extends CardComponent {
 	updateSelectedResult = (index) => {
 		const newSelect = this.state.searchResults[index];
 		this.setState({
-			selectedResult: newSelect
+			selectedResult: newSelect,
+			selectedInvalidated: true
 		});
 	}
 

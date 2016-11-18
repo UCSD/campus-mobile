@@ -3,7 +3,7 @@ import { TouchableHighlight, View, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import css from '../../styles/css';
 
-const ResultsList = ({ results, onSelect }) => (
+const SearchResults = ({ results, onSelect }) => (
 	<View>
 		{results.map((result, index) => (
 			<TouchableHighlight
@@ -20,11 +20,10 @@ const ResultsList = ({ results, onSelect }) => (
 	</View>
 );
 
-ResultsList.propTypes = {
-	results: PropTypes.object,
+SearchResults.propTypes = {
 	onSelect: React.PropTypes.func
 };
 
-ResultsList.defaultProps = {};
+SearchResults.defaultProps = {};
 
-export default ResultsList;
+export default SearchResults;
