@@ -336,7 +336,9 @@ var css = StyleSheet.create({
 			eventdetail_readmore_text: { fontSize: round(16 * prm), color: '#FFF' },
 			eventdetail_link: { fontSize: round(16 * prm), fontWeight: '600', color: '#FFF', backgroundColor: '#17AADF', borderWidth: 0, borderRadius: 3 },
 
-
+	// Nearby Map
+	nearby_map_container : { width: windowWidth, height: round(maxCardWidthWithPadding * .8) },
+	search_map_container : { width: windowWidth, height: windowHeight - 2*navBarMarginTop },
 
 	// SPECIAL EVENTS CARD
 	special_events_main: { flex: 1 },

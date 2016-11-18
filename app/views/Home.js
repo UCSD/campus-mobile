@@ -32,6 +32,7 @@ import EventCard from './events/EventCard'
 import NewsCard from './news/NewsCard';
 import DiningCard from './dining/DiningCard';
 import NearbyCard from './nearby/NearbyCard';
+import SearchCard from './nearby/SearchCard';
 
 import YesNoCard from './survey/YesNoCard';
 import MultipleChoiceCard from './survey/MultipleChoiceCard';
@@ -146,8 +147,9 @@ var Home = React.createClass({
 			cards.push(<NewsCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key='news' />);
 		}
 		if (this.props.cards['nearby']) {
-			cards.push(<NearbyCard navigator={this.props.navigator} updatedGoogle={this.state.updatedGoogle} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key={'nearby'} />);
+			//cards.push(<NearbyCard navigator={this.props.navigator} updatedGoogle={this.state.updatedGoogle} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key={'nearby'} />);
 		}
+		cards.push(<SearchCard navigator={this.props.navigator} updatedGoogle={this.state.updatedGoogle} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key={'search'} />);
 		return cards;
 	},
 

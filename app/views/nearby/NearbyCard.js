@@ -2,6 +2,8 @@ import React from 'react';
 import {
 	View,
 	ListView,
+	TouchableHighlight,
+	Text
 } from 'react-native';
 import { connect } from 'react-redux';
 
@@ -10,6 +12,7 @@ import CardComponent from '../card/CardComponent';
 import NearbyList from './NearbyList';
 import NearbyMap from './NearbyMap';
 import LocationRequiredContent from '../common/LocationRequiredContent';
+import NearbyMapView from './NearbyMapView';
 
 const css = require('../../styles/css');
 const logger = require('../../util/logger');
@@ -54,6 +57,10 @@ class NearbyCard extends CardComponent {
 		else {
 			return false;
 		}
+	}
+
+	gotoNearbyMapView() {
+		this.props.navigator.push({ id: 'NearbyMapView', title: 'Search', name: 'NearbyMapView', component: NearbyMapView });
 	}
 
 	// Updates which predesignated node region the user is in
@@ -175,11 +182,21 @@ class NearbyCard extends CardComponent {
 					colors={fiveRandomColors}
 				/>
 				<View style={css.events_list}>
-					<NearbyList
-						data={this.state.nearbyMarkersPartial}
-						colors={fiveRandomColors}
-						navigator={this.props.navigator}
-					/>
+					<View style={css.events_list}>
+						{this.state.nearbyMarkersLoaded ? (
+							<NearbyList
+								data={this.state.nearbyMarkersPartial}
+								colors={fiveRandomColors}
+								getCurrentPosition={(latlon) => this.props.getCurrentPosition(latlon)}
+								navigator={this.props.navigator}
+							/>
+						) : null}
+						<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => this.gotoNearbyMapView()}>
+							<View style={css.events_more}>
+								<Text style={css.events_more_label}>Search Map</Text>
+							</View>
+						</TouchableHighlight>
+					</View>
 				</View>
 			</View>
 		);
