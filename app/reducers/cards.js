@@ -6,7 +6,7 @@ var initialState = {
   'events': true,
   'news': true,
   'dining': true,
-  'nearby': true,
+  'mapsearch': true,
   'quicklinks': true,
 }
 
