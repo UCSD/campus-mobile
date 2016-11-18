@@ -36,7 +36,7 @@ const SearchMap = ({ location, selectedResult, hideMarker, style }) => (
 		loadingBackgroundColor={'#EEE'}
 		showsUserLocation={true}
 		mapType={'standard'}
-		initialRegion={{
+		region={{
 			latitude: location.coords.latitude,
 			longitude: location.coords.longitude,
 			latitudeDelta: 0.02,
