@@ -31,7 +31,7 @@ import ShuttleCard from './shuttle/ShuttleCard';
 import EventCard from './events/EventCard'
 import NewsCard from './news/NewsCard';
 import DiningCard from './dining/DiningCard';
-import SearchCard from './nearby/SearchCard';
+import SearchCard from './mapsearch/SearchCard';
 
 import YesNoCard from './survey/YesNoCard';
 import MultipleChoiceCard from './survey/MultipleChoiceCard';

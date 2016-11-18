@@ -34,7 +34,7 @@ import EventListView from './views/events/EventListView';
 import NewsListView from './views/news/NewsListView';
 import DiningListView from './views/dining/DiningListView';
 import FeedbackView from './views/FeedbackView';
-import NearbyMapView from './views/nearby/NearbyMapView';
+import NearbyMapView from './views/mapsearch/NearbyMapView';
 
 // NAV
 import NavigationBarWithRouteMapper from './views/NavigationBarWithRouteMapper';
