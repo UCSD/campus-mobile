@@ -78,6 +78,6 @@
 
 ![Alt text](/../screenshots/screenshots/nearby.png?raw=true "Nearby Places")
 
-![Alt text](/../screenshots/screenshots/shuttle_detail.png?raw=true "Shuttle Detail)
+![Alt text](/../screenshots/screenshots/shuttle_detail.png?raw=true "Shuttle Detail")
 
 ![Alt text](/../screenshots/screenshots/all_events.png?raw=true "All Events")
