@@ -63,3 +63,21 @@
 * Codepush
 * Tablet support
 * SSO
+
+
+### Screenshots
+![Alt text](/../screenshots/screenshots/splash.png?raw=true "Splash Screen")
+
+![Alt text](/../screenshots/screenshots/weather.png?raw=true "Weather")
+
+![Alt text](/../screenshots/screenshots/events.png?raw=true "Events")
+
+![Alt text](/../screenshots/screenshots/news.png?raw=true "News")
+
+![Alt text](/../screenshots/screenshots/dining.png?raw=true "Dining")
+
+![Alt text](/../screenshots/screenshots/nearby.png?raw=true "Nearby Places")
+
+![Alt text](/../screenshots/screenshots/shuttle_detail.png?raw=true "Shuttle Detail)
+
+![Alt text](/../screenshots/screenshots/all_events.png?raw=true "All Events")
