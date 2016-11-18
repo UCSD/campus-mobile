@@ -16,8 +16,8 @@ import LocationRequiredContent from '../common/LocationRequiredContent';
 const css = require('../../styles/css');
 const logger = require('../../util/logger');
 const shuttle = require('../../util/shuttle');
-
-const shuttle_routes = 	require('../../json/shuttle_routes_master.json');
+const map = require('../../util/map');
+const shuttle_routes = require('../../json/shuttle_routes_master.json');
 
 class ShuttleCard extends CardComponent {
 
@@ -154,7 +154,7 @@ class ShuttleCard extends CardComponent {
 
 			for (let n = 0; shuttleRoute.stops.length > n; n++) {
 				const shuttleRouteStop = shuttleRoute.stops[n];
-				const distanceFromStop = shuttle.getDistance(location.coords.latitude, location.coords.longitude, shuttleRouteStop.lat, shuttleRouteStop.lon);
+				const distanceFromStop = map.getDistance(location.coords.latitude, location.coords.longitude, shuttleRouteStop.lat, shuttleRouteStop.lon);
 
 				// Rewrite this later using sortRef from shuttleDetail
 				if (distanceFromStop < this.shuttleClosestStops[0].dist) {

@@ -16,8 +16,8 @@ import NearbyMapView from './NearbyMapView';
 
 const css = require('../../styles/css');
 const logger = require('../../util/logger');
-const shuttle = require('../../util/shuttle');
-const AppSettings = 		require('../../AppSettings');
+const map = require('../../util/map');
+const AppSettings = require('../../AppSettings');
 const general = require('../../util/general');
 
 // UCSD Nodes
@@ -74,7 +74,7 @@ class NearbyCard extends CardComponent {
 			let closestNodeDistance = 100000000;
 
 			for (let i = 0; ucsd_nodes.length > i; i++) {
-				const nodeDist = shuttle.getDistance(currentLat, currentLon, ucsd_nodes[i].lat, ucsd_nodes[i].lon);
+				const nodeDist = map.getDistance(currentLat, currentLon, ucsd_nodes[i].lat, ucsd_nodes[i].lon);
 
 				if (nodeDist < closestNodeDistance) {
 					closestNodeDistance = nodeDist;
@@ -112,7 +112,7 @@ class NearbyCard extends CardComponent {
 
 		// Calc distance from markers
 		for (let i = 0; ucsd_node.length > i; i++) {
-			ucsd_node[i].distance = shuttle.getDistance(currentLat, currentLon, ucsd_node[i].mkrLat, ucsd_node[i].mkrLong);
+			ucsd_node[i].distance = map.getDistance(currentLat, currentLon, ucsd_node[i].mkrLat, ucsd_node[i].mkrLong);
 		}
 
 		ucsd_node.sort(general.sortNearbyMarkers);

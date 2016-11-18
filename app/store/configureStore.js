@@ -1,28 +1,32 @@
+import { AsyncStorage } from 'react-native';
 import { createStore, applyMiddleware } from 'redux';
-
-import rootReducer from '../reducers';
+import { persistStore, autoRehydrate } from 'redux-persist';
 import thunkMiddleware from 'redux-thunk';
 import createLogger from 'redux-logger';
 
+import rootReducer from '../reducers';
+
 const loggerMiddleware = createLogger();
 
-export default function configureStore(initialState) {
- 	const store = createStore(
-    rootReducer,
-    applyMiddleware(
-      thunkMiddleware, // lets us dispatch() functions
-      loggerMiddleware // neat middleware that logs actions
-    ),
-    initialState
-  );
+export default function configureStore(initialState, onComplete: ?() => void) {
+	const store = createStore(
+		rootReducer,
+		applyMiddleware(
+			thunkMiddleware, // lets us dispatch() functions
+			loggerMiddleware // neat middleware that logs actions
+		),
+		autoRehydrate()
+	);
 
 	if (module.hot) {
-    // Enable Webpack hot module replacement for reducers
+		// Enable Webpack hot module replacement for reducers
 		module.hot.accept('../reducers', () => {
 			const nextRootReducer = require('../reducers');
+
 			store.replaceReducer(nextRootReducer);
 		});
 	}
 
+	persistStore(store, { storage: AsyncStorage }, onComplete);
 	return store;
 }
