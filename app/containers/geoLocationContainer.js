@@ -22,11 +22,10 @@ const GeoLocationContainer = React.createClass({
 			.then(response => {
 				dispatch(setPermission(response));
 
-				// make soft request
 				if (response === 'undetermined') {
 					// fire immediately on different thread
 					this.setTimeout(
-						this.getSoftPermission,
+						this.getPermission(),
 						100
 					);
 				}
