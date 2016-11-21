@@ -34,6 +34,7 @@ import EventListView from './views/events/EventListView';
 import NewsListView from './views/news/NewsListView';
 import DiningListView from './views/dining/DiningListView';
 import FeedbackView from './views/FeedbackView';
+import PreferencesView from './views/preferences/PreferencesView';
 import NearbyMapView from './views/mapsearch/NearbyMapView';
 
 // NAV
@@ -109,6 +110,15 @@ var nowucsandiego = React.createClass({
 		}
 	},
 
+	_handleNavigationRequest() {
+		// TODO: works on iOS
+		this.refs.navRef.push({
+			id: 'PreferencesView',
+			component: PreferencesView,
+			title: 'Preferences'
+		});
+	},
+
 	render: function () {
 		let navigator;
 		if (general.platformIOS()) {
@@ -121,7 +131,9 @@ var nowucsandiego = React.createClass({
 					passProps: {
 						isSimulator: this.props.isSimulator
 					},
-					backButtonTitle: 'Back'
+					backButtonTitle: 'Back',
+					rightButtonTitle: 'Setup',
+					onRightButtonPress: () => this._handleNavigationRequest(),
 				}}
 				style={{ flex: 1 }}
 				tintColor='#FFFFFF'
@@ -155,6 +167,7 @@ var nowucsandiego = React.createClass({
 	renderScene(route, navigator, index, navState) {
 		switch (route.id) {
 		case 'Home': 				return (<Home route={route} navigator={navigator} new_timeout={this.newTimeout} do_timeout={this.doTimeout} />);
+		case 'PreferencesView': return (<PreferencesView route={route} navigator={navigator} />);
 		case 'ShuttleStop': 		return (<ShuttleStop route={route} navigator={navigator} />);
 		case 'SurfReport': 			return (<SurfReport route={route} navigator={navigator} />);
 		case 'DiningListView': 		return (<DiningListView route={route} navigator={navigator} />);
