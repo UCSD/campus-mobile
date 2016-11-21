@@ -8,10 +8,9 @@ import {
 import { connect } from 'react-redux';
 
 import { setCardState } from '../../actions';
+import Card from '../card/Card';
 
-// import css from '../styles/css';
-//
-// const logger = require('../util/logger');
+import css from '../../styles/css';
 
 // View for user to manage preferences, including which cards are visible
 export default class PreferencesView extends Component {
@@ -24,8 +23,8 @@ export default class PreferencesView extends Component {
 		return Object.keys(this.props.cards).map(key => {
 			const cardActive = this.props.cards[key];
 			return (
-				<View style={{ flex: 1 }}>
-					<View style={{ flexDirection: 'row', flex: 1, justifyContent: 'space-between' }}>
+				<View>
+					<View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
 						<View>
 							<Text>{key}</Text>
 						</View>
@@ -44,8 +43,14 @@ export default class PreferencesView extends Component {
 	render() {
 		return (
 			<View style={{ flex: 1 }}>
-				<ScrollView style={{ flex: 1 }}>
-					{this._renderCards()}
+				<ScrollView>
+					<Card id="cards" title="Cards">
+						<View style={css.card__container}>
+							<View style={{ flex: 1, flexDirection: 'column' }}>
+								{this._renderCards()}
+							</View>
+						</View>
+					</Card>
 				</ScrollView>
 			</View>
 		);
