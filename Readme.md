@@ -9,25 +9,28 @@
 	// From project folder run:
 	npm install
 
+	// Link third party modules with rnpm
+	rnpm link
+
 ### Availabile Cards
 * TopBanner
     * For upcoming current events
 * Dining
-    * Dining Locations
-    * All Dining Locations view
+    * 3 nearest HDH dining options
+        * Working on 3rd party options
 * Shuttle
     * Clockwise/CC Loop arrival times of nearest stop
     * Shuttle stop info view link
 * Weather
-    * 5 day forecast
+    * 5 day weather report
     * Surf report view link
 * Events
-    * Upcoming Events
-    * All Events view
+    * 3 upcoming events
+    * Full event list view link
     * http://studentevents.ucsd.edu/all/
 * News
-    * Latest News
-    * All News view
+    * 3 latest news articles
+    * Full News list view link
     * http://ucsdnews.ucsd.edu/rss/all
         * Waiting on proper news feed 
 * Nearby
@@ -60,3 +63,21 @@
 * Codepush
 * Tablet support
 * SSO
+
+
+### Screenshots
+![Alt text](/../screenshots/screenshots/splash.png?raw=true "Splash Screen")
+
+![Alt text](/../screenshots/screenshots/weather.png?raw=true "Weather")
+
+![Alt text](/../screenshots/screenshots/events.png?raw=true "Events")
+
+![Alt text](/../screenshots/screenshots/news.png?raw=true "News")
+
+![Alt text](/../screenshots/screenshots/dining.png?raw=true "Dining")
+
+![Alt text](/../screenshots/screenshots/nearby.png?raw=true "Nearby Places")
+
+![Alt text](/../screenshots/screenshots/shuttle_detail.png?raw=true "Shuttle Detail")
+
+![Alt text](/../screenshots/screenshots/all_events.png?raw=true "All Events")
