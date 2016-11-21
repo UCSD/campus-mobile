@@ -46,7 +46,7 @@ import configureStore from './store/configureStore';
 
 // CODE PUSH
 import codePush from "react-native-code-push";
-let codePushOptions = { checkFrequency: codePush.CheckFrequency.ON_APP_RESUME, installMode: codePush.InstallMode.ON_NEXT_RESUME };
+let codePushOptions = { checkFrequency: codePush.CheckFrequency.ON_APP_RESUME, installMode: codePush.InstallMode.ON_NEXT_RESTART };
 
 var nowucsandiego = React.createClass({
 
