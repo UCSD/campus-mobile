@@ -1,5 +1,5 @@
 /*
-	Master Stylesheet for now@ucsandiego
+	Master Stylesheet
 
 	Device Pixel Ratios
 		Ratio 1
@@ -221,9 +221,19 @@ var css = StyleSheet.create({
 		shuttlecard_loading: { marginHorizontal: 40, marginVertical: round(156 * prm) },
 		shuttlecard_loading_fail: { marginHorizontal: round(16 * prm), marginTop: round(40 * prm), marginBottom: round(60 * prm) },
 
+	// QUICKLINKS CARD
+	quicklinks_card: { padding: 8 },
+	quicklinks_locations: { flex: 1, flexDirection: 'column' },
+	quicklinks_row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderBottomWidth: 1, borderBottomColor: '#EEE', paddingVertical: 10 },
+		quicklinks_icon: { height: round(42 * prm), width: round(38 * prm) },
+		quicklinks_name: { flex: 5, color: '#444', fontSize: round(16 * prm), paddingHorizontal: round(8 * prm) },
+		quicklinks_goto: { flex: 1 },
+
 	// CARD GENERIC
 	card_row_center: { alignItems: 'center', justifyContent: 'center', width: maxCardWidth, overflow: 'hidden' },
 	card_loader: { height: round(368 * prm) },
+	card_more: { alignItems: 'center', justifyContent: 'center', width: maxCardWidthWithPadding, paddingHorizontal: 4, paddingTop: 8, paddingBottom: 4 },
+	card_more_label: { fontSize: round(20 * prm), color: ucsdblue, fontWeight: '300' },
 
 	// EVENTS / NEWS CARD
 	events_list: { width: maxCardWidth, padding: 8 },
