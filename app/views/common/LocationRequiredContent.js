@@ -2,15 +2,31 @@ import React from 'react';
 import {
 	Text,
 	View,
-	StyleSheet
+	StyleSheet,
+	TouchableHighlight,
+	Dimensions
 } from 'react-native';
+import { openSettings } from 'react-native-permissions';
+
+const deviceWidth = Dimensions.get('window').width;
 
 export default function LocationRequiredContent() {
 	return (
 		<View style={styles.view}>
 			<Text style={styles.text}>
-				Please enable location services.
+				Unable to access location services, please check settings.
 			</Text>
+			<TouchableHighlight
+				onPress={
+					() => openSettings()
+				}
+			>
+				<View style={styles.settings_view}>
+					<Text style={styles.settings_text}>
+						Open Settings
+					</Text>
+				</View>
+			</TouchableHighlight>
 		</View>
 	);
 }
@@ -19,9 +35,18 @@ const styles = StyleSheet.create({
 	view: {
 		flex: 1,
 		alignItems: 'center',
-		justifyContent: 'center',
-		padding: 8
+		padding: 8,
+		width: deviceWidth
 	},
-	text: {
+	settings_view: {
+		justifyContent: 'center',
+		alignItems: 'center',
+		backgroundColor: '#17AADF',
+		borderRadius: 3,
+		marginTop: 20,
+		padding: 10
+	},
+	settings_text: {
+		color: '#FFF'
 	}
 });
