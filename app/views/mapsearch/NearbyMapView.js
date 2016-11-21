@@ -25,7 +25,7 @@ let searchMargin = navBarMarginTop;
 
 if (general.platformAndroid()) {
 	navBarMarginTop = 64;
-	searchMargin /= 2;
+	searchMargin = 0;
 }
 
 const deviceHeight = Dimensions.get('window').height;
@@ -87,10 +87,15 @@ class NearbyMapView extends React.Component {
 		if (this.state.initialRegion) {
 			return (
 				<View style={css.view_all_container}>
-					<SearchBar
-						update={this.updateSearch}
-						style={{ marginTop:searchMargin, marginBottom:searchMargin }}
-					/>
+					<View
+						style={{
+							marginTop:searchMargin,
+						}}
+					>
+						<SearchBar
+							update={this.updateSearch}
+						/>
+					</View>
 					<SearchMap
 						location={this.props.location}
 						selectedResult={this.state.selectedResult}
