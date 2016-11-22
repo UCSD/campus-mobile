@@ -30,6 +30,7 @@ import GeoLocationContainer from './containers/geoLocationContainer';
 
 // VIEWS
 import WelcomeWeekView from './views/welcomeWeek/WelcomeWeekView';
+import QuicklinksListView from './views/quicklinks/QuicklinksListView';
 import EventListView from './views/events/EventListView';
 import NewsListView from './views/news/NewsListView';
 import DiningListView from './views/dining/DiningListView';
@@ -46,7 +47,7 @@ import configureStore from './store/configureStore';
 
 // CODE PUSH
 import codePush from "react-native-code-push";
-let codePushOptions = { checkFrequency: codePush.CheckFrequency.ON_APP_RESUME, installMode: codePush.InstallMode.ON_NEXT_RESUME };
+let codePushOptions = { checkFrequency: codePush.CheckFrequency.ON_APP_RESUME, installMode: codePush.InstallMode.ON_NEXT_RESTART };
 
 var nowucsandiego = React.createClass({
 
@@ -178,9 +179,10 @@ var nowucsandiego = React.createClass({
 		case 'WebWrapper': 			return (<WebWrapper route={route} navigator={navigator} />);
 		case 'WelcomeWeekView': 	return (<WelcomeWeekView route={route} navigator={navigator} />);
 		case 'EventListView': 		return (<EventListView route={route} navigator={navigator} />);
+		case 'QuicklinksListView': 	return (<QuicklinksListView route={route} navigator={navigator} />);
 		case 'NewsListView': 		return (<NewsListView route={route} navigator={navigator} />);
 		case 'FeedbackView': 		return (<FeedbackView route={route} navigator={navigator} />);
-		case 'NearbyMapView': return (<NearbyMapView route={route} navigator={navigator} />);
+		case 'NearbyMapView': 		return (<NearbyMapView route={route} navigator={navigator} />);
 		default: 					return (<Home route={route} navigator={navigator} new_timeout={this.newTimeout} do_timeout={this.doTimeout} />);
 		}
 	}

@@ -29,6 +29,7 @@ import FeedbackView from './FeedbackView';
 import WeatherCard from './weather/WeatherCard';
 import ShuttleCard from './shuttle/ShuttleCard';
 import EventCard from './events/EventCard'
+import QuicklinksCard from './quicklinks/QuicklinksCard'
 import NewsCard from './news/NewsCard';
 import DiningCard from './dining/DiningCard';
 import SearchCard from './mapsearch/SearchCard';
@@ -142,6 +143,9 @@ var Home = React.createClass({
 		if (this.props.cards['events']) {
 			cards.push(<EventCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key='events' />);
 		}
+		if (this.props.cards['quicklinks']) {
+			cards.push(<QuicklinksCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key='quicklinks' />);
+		}		
 		if (this.props.cards['news']) {
 			cards.push(<NewsCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key='news' />);
 		}

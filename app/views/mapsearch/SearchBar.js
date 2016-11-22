@@ -16,7 +16,7 @@ const SearchBar = ({ placeholder, update, style }) => (
 		/>
 		<Icon
 			style={{ flex: 0.1, padding: 8 }}
-			name="search" size={25}
+			name="search" size={20}
 		/>
 	</View>
 );
