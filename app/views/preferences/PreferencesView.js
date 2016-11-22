@@ -42,8 +42,8 @@ export default class PreferencesView extends Component {
 
 	render() {
 		return (
-			<View style={{ flex: 1, backgroundColor: 'white' }}>
-				<ScrollView>
+			<View style={[css.main_container, css.offwhitebg]}>
+				<ScrollView contentContainerStyle={css.scroll_default}>
 					<Card id="cards" title="Cards">
 						<View style={css.card__container}>
 							<View style={{ flex: 1, flexDirection: 'column' }}>
