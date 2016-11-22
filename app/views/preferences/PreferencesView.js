@@ -3,6 +3,7 @@ import {
 	View,
 	Text,
 	Switch,
+	StyleSheet,
 	ScrollView
 } from 'react-native';
 import { connect } from 'react-redux';
@@ -23,12 +24,12 @@ export default class PreferencesView extends Component {
 		return Object.keys(this.props.cards).map(key => {
 			const cardActive = this.props.cards[key];
 			return (
-				<View key={key}>
-					<View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-						<View>
+				<View key={key} style={styles.cardContainer}>
+					<View style={styles.spacedRow}>
+						<View style={styles.centerAlign}>
 							<Text>{key}</Text>
 						</View>
-						<View>
+						<View style={styles.centerAlign}>
 							<Switch
 								onValueChange={(value) => this._setCardState(key, value)}
 								value={cardActive}
@@ -45,8 +46,8 @@ export default class PreferencesView extends Component {
 			<View style={[css.main_container, css.offwhitebg]}>
 				<ScrollView contentContainerStyle={css.scroll_default}>
 					<Card id="cards" title="Cards">
-						<View style={css.card__container}>
-							<View style={{ flex: 1, flexDirection: 'column' }}>
+						<View style={css.card_content_full_width}>
+							<View style={styles.column}>
 								{this._renderCards()}
 							</View>
 						</View>
@@ -56,6 +57,25 @@ export default class PreferencesView extends Component {
 		);
 	}
 }
+
+const styles = StyleSheet.create({
+	cardContainer: {
+		padding: 10,
+		borderTopWidth: 1,
+		borderTopColor: '#EEE'
+	},
+	spacedRow: {
+		flexDirection: 'row',
+		justifyContent: 'space-between'
+	},
+	centerAlign: {
+		alignSelf: 'center',
+	},
+	column: {
+		flex: 1,
+		flexDirection: 'column',
+	}
+});
 
 function mapStateToProps(state, props) {
 	return {
