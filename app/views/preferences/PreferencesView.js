@@ -23,7 +23,7 @@ export default class PreferencesView extends Component {
 		return Object.keys(this.props.cards).map(key => {
 			const cardActive = this.props.cards[key];
 			return (
-				<View>
+				<View key={key}>
 					<View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
 						<View>
 							<Text>{key}</Text>
@@ -42,7 +42,7 @@ export default class PreferencesView extends Component {
 
 	render() {
 		return (
-			<View style={{ flex: 1 }}>
+			<View style={{ flex: 1, backgroundColor: 'white' }}>
 				<ScrollView>
 					<Card id="cards" title="Cards">
 						<View style={css.card__container}>
