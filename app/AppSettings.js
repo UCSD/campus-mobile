@@ -12,7 +12,7 @@ module.exports = {
 	EVENTS_API_URL: 			'https://evv6vpvob6.execute-api.us-west-2.amazonaws.com/prod/',
 	DINING_API_URL: 			'https://pg83tslbyi.execute-api.us-west-2.amazonaws.com/prod/v2/dining/locations',
 	NEWS_API_URL: 				'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/allstories.json',
-	QUICKLINKS_API_URL: 		'https://s3-us-west-2.amazonaws.com/ucsd-mobile/dev/ucsd-quicklinks.json',
+	QUICKLINKS_API_URL: 		'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/quick_links/ucsd-quicklinks.json',
 
 	/* RESOURCES */
 	FEEDBACK_URL: 				'https://eforms.ucsd.edu/view.php?id=175631',
