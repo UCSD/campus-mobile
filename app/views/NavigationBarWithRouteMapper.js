@@ -6,6 +6,7 @@ import {
 	View,
 } from 'react-native';
 
+import Icon from 'react-native-vector-icons/FontAwesome';
 import PreferencesView from './preferences/PreferencesView';
 
 const css = require('../styles/css');
@@ -55,7 +56,7 @@ export default class NavigationBarWithRouteMapper extends React.Component {
 
 								// for the home view, show the preferences button
 								return (
-									<View>
+									<View style={[css.navBarLeftButtonContainer, { paddingBottom: 10 }]}>
 										<TouchableHighlight
 											underlayColor={'rgba(200,200,200,.1)'}
 											onPress={() => {
@@ -66,9 +67,7 @@ export default class NavigationBarWithRouteMapper extends React.Component {
 												});
 											}}
 										>
-											<Text style={css.navBarLeftButton}>
-												Setup
-											</Text>
+											<Icon style={css.navBarLeftButton} name="cog" />
 										</TouchableHighlight>
 									</View>
 								);
