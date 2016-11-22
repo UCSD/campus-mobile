@@ -132,7 +132,7 @@ var nowucsandiego = React.createClass({
 						isSimulator: this.props.isSimulator
 					},
 					backButtonTitle: 'Back',
-					rightButtonTitle: 'Setup',
+					rightButtonSystemIcon: 'organize',
 					onRightButtonPress: () => this._handleNavigationRequest(),
 				}}
 				style={{ flex: 1 }}
