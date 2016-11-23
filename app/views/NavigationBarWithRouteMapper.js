@@ -6,21 +6,20 @@ import {
 	View,
 } from 'react-native';
 
-var css = require('../styles/css');
+import Icon from 'react-native-vector-icons/FontAwesome';
+import PreferencesView from './preferences/PreferencesView';
+
+const css = require('../styles/css');
 
 export default class NavigationBarWithRouteMapper extends React.Component {
-	constructor(props) {
-		super(props);
-	}
-
 	render() {
-		return(
+		return (
 			<Navigator
 				ref="navRef"
 				initialRoute={this.props.route}
 				renderScene={this.props.renderScene}
 				navigationBar={
-					<Navigator.NavigationBar 
+					<Navigator.NavigationBar
 						style={css.navBar}
 						navigationStyles={Navigator.NavigationBar.StylesIOS}
 						routeMapper={{
@@ -51,8 +50,27 @@ export default class NavigationBarWithRouteMapper extends React.Component {
 							},
 
 							RightButton: function(route, navigator, index, navState) {
-								<View>
-								</View>
+								if (route.id !== 'Home') {
+									return null;
+								}
+
+								// for the home view, show the preferences button
+								return (
+									<View style={[css.navBarLeftButtonContainer, { paddingBottom: 10 }]}>
+										<TouchableHighlight
+											underlayColor={'rgba(200,200,200,.1)'}
+											onPress={() => {
+												navigator.push({
+													id: 'PreferencesView',
+													component: PreferencesView,
+													title: 'Preferences'
+												});
+											}}
+										>
+											<Icon style={css.navBarLeftButton} name="cog" />
+										</TouchableHighlight>
+									</View>
+								);
 							}
 						}}
 					/>
@@ -60,4 +78,4 @@ export default class NavigationBarWithRouteMapper extends React.Component {
 			/>
 		);
 	}
-};
+}

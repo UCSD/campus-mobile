@@ -46,7 +46,7 @@ if (general.platformAndroid()) {
 	navBarMarginTop = 64;
 	navBarTitleMarginTop = 0;
 } else if (general.platformIOS()) {
-	
+
 }
 
 var pixelRatio = PixelRatio.get();
@@ -102,7 +102,7 @@ var css = StyleSheet.create({
 	scroll_main: {},
 	listview_main: { marginTop: 64 },
 	view_default: { paddingHorizontal: round(8 * prm) },
-	
+
 	scroll_default: { alignItems: 'center' },
 
 	// Card Styles
@@ -119,7 +119,7 @@ var css = StyleSheet.create({
 		card_button_container: { flex:1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#F9F9F9', },
 			card_button_text: { flex:1, fontSize: round(20 * prm), alignItems: 'center', textAlign: 'center' },
 	card_text_container: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: maxCardWidth, padding: 8, borderBottomWidth: 1, borderBottomColor: '#DDD' },
-
+	card_content_full_width: { width: maxCardWidth, overflow: 'hidden' },
 
 	// Modal Welcome Message
 	modal_container: { flex: 1, backgroundColor: 'rgba(0, 108, 147, .95)', justifyContent: 'center', padding: round(35 * prm) },
@@ -164,7 +164,7 @@ var css = StyleSheet.create({
 	dl_noresults: { color: '#444', fontSize: round(15 * prm) },
 	dl_market_date: { borderBottomWidth: 1, borderBottomColor: '#EEE', paddingBottom: round(12 * prm), paddingTop: round(6 * prm) },
 		dl_market_date_label: { fontSize: round(22 * prm), color: '#444', textAlign: 'center' },
-	
+
 	dl_market_filters_foodtype: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginVertical: round(8 * prm) },
 
 	dl_market_filters_mealtype: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderTopWidth: 1, borderTopColor: '#EEE', paddingTop: round(10 * prm) },
@@ -330,7 +330,7 @@ var css = StyleSheet.create({
 
 	// EVENT DETAIL
 	eventdetail_top_container: { flex: 1, flexDirection: 'row', width: windowWidth, padding: 8 },
-		
+
 		eventdetail_image: { width: windowWidth, height: round(windowWidth * .5) },
 		eventdetail_image2: { width: 50, height: 50 },
 		eventdetail_image2_sm: { width: 100, height: 100, borderColor: 'blue', borderWidth: 1 },
@@ -368,7 +368,7 @@ var css = StyleSheet.create({
 	shuttlestop_image: { width: windowWidth, height: round(windowWidth * .533) },
 	shuttlestop_name_container: { height: round(48 * prm), flex: 1, flexDirection: 'row', alignItems: 'center', width: windowWidth, paddingVertical: round(14 * prm), paddingHorizontal: round(20 * prm), backgroundColor: ucsdblue },
 		shuttlestop_name_text: { width: round(windowWidth * .9 - 40), color: '#FFF', fontSize: round(24 * prm), fontWeight: '300' },
-		
+
 		shuttlestop_refresh_container: { position: 'absolute', alignItems: 'center', top: shuttleStopRefreshIconTop, right: 8, width: round(55 * prm) },
 			shuttlestop_refresh: { width: round(26 * prm), height: round(26 * prm) },
 			shuttlestop_refresh_timeago: { fontSize: round(10 * prm), color: '#FFF', marginTop: round(1 * prm), textAlign: 'center', fontWeight: '600', backgroundColor: 'rgba(0,0,0,0)' },
@@ -380,7 +380,7 @@ var css = StyleSheet.create({
 				shuttle_stop_rt_2_label: { textAlign: 'center', fontWeight: '600', fontSize: round(19 * prm), backgroundColor: 'rgba(0,0,0,0)' },
 			shuttle_stop_arrivals_row_route_name: { flex: 2, fontSize: round(17 * prm), color: '#555', paddingLeft: round(10 * prm) },
 			shuttle_stop_arrivals_row_eta_text: { flex: 1, fontSize: round(20 * prm), color: '#333', paddingLeft: round(16 * prm), paddingRight: round(16 * prm) },
-		
+
 		shuttlestop_loading: { width: 48, height: 48, marginHorizontal: 40, marginVertical: round(50 * prm) },
 
 		shuttle_stop_map_container: { margin: 1 },
@@ -413,7 +413,7 @@ var css = StyleSheet.create({
 	// Footer
 	footer: { flex: 1, flexDirection: 'row', paddingBottom: 10 },
 	footer_link: { flex: 15 },
-	
+
 	footer_about: { color: ucsdblue, fontSize: round(16 * prm), textAlign: 'center', padding: 4 },
 	footer_spacer: { flex: 1, color: '#888', padding: 4, fontSize: round(16 * prm), textAlign: 'center' },
 	footer_copyright: { color: ucsdblue, fontSize: round(16 * prm), textAlign: 'center', padding: 4 },
