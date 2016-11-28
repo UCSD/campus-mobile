@@ -363,6 +363,9 @@ var css = StyleSheet.create({
 	load_icon: { width: round(48 * prm), height: round(48 * prm) },
 
 
+	// Settings
+	preferencesContainer: { padding: 10, borderTopWidth: 1, borderTopColor: '#EEE' },
+	prefCardTitle: { fontSize: 16, color: '#333' },
 
 	// SHUTTLE STOP
 	shuttlestop_image: { width: windowWidth, height: round(windowWidth * .533) },
@@ -442,6 +445,10 @@ var css = StyleSheet.create({
 	flexcenter: { flex: 1, alignItems: 'center', justifyContent: 'center', width: maxCardWidth },
 	flexcenter2: { flex: 1, alignItems: 'center', justifyContent: 'center', width: maxCardWidthWithPadding },
 	flexcenter3: { flex: 1, alignItems: 'center', justifyContent: 'center', width: windowWidth },
+
+	spacedRow: { flexDirection: 'row', justifyContent: 'space-between' },
+	centerAlign: { alignSelf: 'center' },
+	column: { flex: 1, flexDirection: 'column' },
 
 	card_loading_img: { width: 64, height: 64 },
 

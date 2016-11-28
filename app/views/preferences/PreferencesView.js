@@ -24,12 +24,12 @@ export default class PreferencesView extends Component {
 		return Object.keys(this.props.cards).map(key => {
 			const cardActive = this.props.cards[key];
 			return (
-				<View key={key} style={styles.cardContainer}>
-					<View style={styles.spacedRow}>
-						<View style={styles.centerAlign}>
-							<Text>{key}</Text>
+				<View key={key} style={css.preferencesContainer}>
+					<View style={css.spacedRow}>
+						<View style={css.centerAlign}>
+							<Text style={css.prefCardTitle}>{key}</Text>
 						</View>
-						<View style={styles.centerAlign}>
+						<View style={css.centerAlign}>
 							<Switch
 								onValueChange={(value) => this._setCardState(key, value)}
 								value={cardActive}
@@ -47,7 +47,7 @@ export default class PreferencesView extends Component {
 				<ScrollView contentContainerStyle={css.scroll_default}>
 					<Card id="cards" title="Cards">
 						<View style={css.card_content_full_width}>
-							<View style={styles.column}>
+							<View style={css.column}>
 								{this._renderCards()}
 							</View>
 						</View>
@@ -57,25 +57,6 @@ export default class PreferencesView extends Component {
 		);
 	}
 }
-
-const styles = StyleSheet.create({
-	cardContainer: {
-		padding: 10,
-		borderTopWidth: 1,
-		borderTopColor: '#EEE'
-	},
-	spacedRow: {
-		flexDirection: 'row',
-		justifyContent: 'space-between'
-	},
-	centerAlign: {
-		alignSelf: 'center',
-	},
-	column: {
-		flex: 1,
-		flexDirection: 'column',
-	}
-});
 
 function mapStateToProps(state, props) {
 	return {
