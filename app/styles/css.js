@@ -407,8 +407,11 @@ var css = StyleSheet.create({
 
 	// LocationRequiredContent
 	lrc_container: { flex: 1, alignItems: 'center', padding: 8, width: windowWidth },
-	lrc_settings_view: { justifyContent: 'center', alignItems: 'center', backgroundColor: '#17AADF', borderRadius: 3, marginTop: 20, padding: 10 },
-	lrc_settings_text: { color: '#FFF' },
+	lrc_text_row: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingTop: round(10 * prm) },
+	lrc_text: { fontSize: 14, color: '#777', paddingLeft: round(6 * prm) },
+	lrc_button: { justifyContent: 'center', alignItems: 'center', backgroundColor: '#17AADF', borderRadius: 3, marginTop: 14, padding: 10 },
+	lrc_button_text: { color: '#FFF' },
+	
 
 	// Destination Styles
 	destination_search_img: { width: windowWidth, height: round(windowWidth * .158) },
