@@ -1,13 +1,13 @@
 // NOTE: AppSettings.XX_CARD_ENABLED is being deprecated to pave the way for more dynamic cards
 
 const initialState = {
-	'weather': true,
-	'shuttle': true,
-	'events': true,
-	'news': true,
-	'dining': true,
-	'mapsearch': true,
-	'quicklinks': true,
+	'Weather': true,
+	'Shuttle': true,
+	'Dining': true,
+	'Events': true,
+	'Quick Links': true,
+	'News': true,
+	'Map': true,
 };
 
 function cards(state = initialState, action) {

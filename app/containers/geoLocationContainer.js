@@ -23,11 +23,7 @@ const GeoLocationContainer = React.createClass({
 				dispatch(setPermission(response));
 
 				if (response === 'undetermined') {
-					// fire immediately on different thread
-					this.setTimeout(
-						this.getPermission(),
-						100
-					);
+					this.getPermission();
 				}
 			});
 
@@ -70,9 +66,9 @@ const GeoLocationContainer = React.createClass({
 
 		// fire on interval
 		this.locationWatch = this.setInterval(
-      this.tryUpdateLocation,
-      this.permissionUpdateInterval
-    );
+			this.tryUpdateLocation,
+			this.permissionUpdateInterval
+		);
 	},
 
 	tryUpdateLocation() {

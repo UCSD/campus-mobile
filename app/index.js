@@ -116,7 +116,7 @@ var nowucsandiego = React.createClass({
 		this.refs.navRef.push({
 			id: 'PreferencesView',
 			component: PreferencesView,
-			title: 'Preferences'
+			title: 'Settings'
 		});
 	},
 
@@ -133,7 +133,7 @@ var nowucsandiego = React.createClass({
 						isSimulator: this.props.isSimulator
 					},
 					backButtonTitle: 'Back',
-					rightButtonSystemIcon: 'organize',
+					rightButtonIcon: require('./assets/img/icon_gear.png'),
 					onRightButtonPress: () => this._handleNavigationRequest(),
 				}}
 				style={{ flex: 1 }}
@@ -168,7 +168,7 @@ var nowucsandiego = React.createClass({
 	renderScene(route, navigator, index, navState) {
 		switch (route.id) {
 		case 'Home': 				return (<Home route={route} navigator={navigator} new_timeout={this.newTimeout} do_timeout={this.doTimeout} />);
-		case 'PreferencesView': return (<PreferencesView route={route} navigator={navigator} />);
+		case 'PreferencesView': 	return (<PreferencesView route={route} navigator={navigator} />);
 		case 'ShuttleStop': 		return (<ShuttleStop route={route} navigator={navigator} />);
 		case 'SurfReport': 			return (<SurfReport route={route} navigator={navigator} />);
 		case 'DiningListView': 		return (<DiningListView route={route} navigator={navigator} />);

@@ -354,6 +354,11 @@ var css = StyleSheet.create({
 	special_events_main: { flex: 1 },
 	special_events_webview: { },
 
+	// Map
+	map_searchbar_container: { flex:1, flexDirection: 'row', alignItems: 'center' },
+	map_searchbar_input: { flex: 9, height: 50, paddingLeft: round(8 * prm)},
+	map_searchbar_icon: { flex: 1, padding: round(8 * prm) },
+
 
 	// Events styles
 	events_main: { flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center' },
@@ -363,6 +368,9 @@ var css = StyleSheet.create({
 	load_icon: { width: round(48 * prm), height: round(48 * prm) },
 
 
+	// Settings
+	preferencesContainer: { padding: 10, borderTopWidth: 1, borderTopColor: '#EEE' },
+	prefCardTitle: { fontSize: 16, color: '#333' },
 
 	// SHUTTLE STOP
 	shuttlestop_image: { width: windowWidth, height: round(windowWidth * .533) },
@@ -397,6 +405,13 @@ var css = StyleSheet.create({
 	weather_main: { flex: 1, paddingBottom: 12 },
 	weather_webview: { backgroundColor: '#EAEAEA', paddingBottom:40 },
 
+	// LocationRequiredContent
+	lrc_container: { flex: 1, alignItems: 'center', padding: 8, width: windowWidth },
+	lrc_text_row: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingTop: round(10 * prm) },
+	lrc_text: { fontSize: 14, color: '#777', paddingLeft: round(6 * prm) },
+	lrc_button: { justifyContent: 'center', alignItems: 'center', backgroundColor: '#17AADF', borderRadius: 3, marginTop: 14, padding: 10 },
+	lrc_button_text: { color: '#FFF' },
+	
 
 	// Destination Styles
 	destination_search_img: { width: windowWidth, height: round(windowWidth * .158) },
@@ -438,6 +453,10 @@ var css = StyleSheet.create({
 	flexcenter: { flex: 1, alignItems: 'center', justifyContent: 'center', width: maxCardWidth },
 	flexcenter2: { flex: 1, alignItems: 'center', justifyContent: 'center', width: maxCardWidthWithPadding },
 	flexcenter3: { flex: 1, alignItems: 'center', justifyContent: 'center', width: windowWidth },
+
+	spacedRow: { flexDirection: 'row', justifyContent: 'space-between' },
+	centerAlign: { alignSelf: 'center' },
+	column: { flex: 1, flexDirection: 'column' },
 
 	card_loading_img: { width: 64, height: 64 },
 
