@@ -397,6 +397,10 @@ var css = StyleSheet.create({
 	weather_main: { flex: 1, paddingBottom: 12 },
 	weather_webview: { backgroundColor: '#EAEAEA', paddingBottom:40 },
 
+	// LocationRequiredContent
+	lrc_container: { flex: 1, alignItems: 'center', padding: 8, width: windowWidth },
+	lrc_settings_view: { justifyContent: 'center', alignItems: 'center', backgroundColor: '#17AADF', borderRadius: 3, marginTop: 20, padding: 10 },
+	lrc_settings_text: { color: '#FFF' },
 
 	// Destination Styles
 	destination_search_img: { width: windowWidth, height: round(windowWidth * .158) },
