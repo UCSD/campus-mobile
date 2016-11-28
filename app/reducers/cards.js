@@ -3,11 +3,11 @@
 const initialState = {
 	'Weather': true,
 	'Shuttle': true,
-	'Events': true,
-	'News': true,
 	'Dining': true,
-	'Map': true,
+	'Events': true,
 	'Quick Links': true,
+	'News': true,
+	'Map': true,
 };
 
 function cards(state = initialState, action) {
