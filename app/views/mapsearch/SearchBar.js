@@ -2,8 +2,10 @@ import React, { PropTypes } from 'react';
 import { TextInput, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+const css = require('../../styles/css');
+
 const SearchBar = ({ placeholder, update, style }) => (
-	<View style={[{ flex:1, flexDirection: 'row', alignItems: 'center' }, style]}>
+	<View style={[css.map_searchbar_container, style]}>
 		<TextInput
 			placeholder={placeholder}
 			autoCorrect={false}
@@ -11,12 +13,14 @@ const SearchBar = ({ placeholder, update, style }) => (
 			onSubmitEditing={(event) => update(event.nativeEvent.text)}
 			clearButtonMode={'while-editing'}
 			selectTextOnFocus={true}
-			style={{ height: 50, flex: 0.9 }}
+			style={css.map_searchbar_input}
 			underlineColorAndroid={'rgba(0,0,0,0)'}
 		/>
 		<Icon
-			style={{ flex: 0.1, padding: 8 }}
-			name="search" size={20}
+			style={css.map_searchbar_icon}
+			name='search'
+			size={20}
+			color={'rgba(0,0,0,.5)'}
 		/>
 	</View>
 );

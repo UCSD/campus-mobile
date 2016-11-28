@@ -354,6 +354,11 @@ var css = StyleSheet.create({
 	special_events_main: { flex: 1 },
 	special_events_webview: { },
 
+	// Map
+	map_searchbar_container: { flex:1, flexDirection: 'row', alignItems: 'center' },
+	map_searchbar_input: { flex: 9, height: 50, paddingLeft: round(8 * prm)},
+	map_searchbar_icon: { flex: 1, padding: round(8 * prm) },
+
 
 	// Events styles
 	events_main: { flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center' },
