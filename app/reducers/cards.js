@@ -15,13 +15,13 @@ function cards(state = initialState, action) {
 	switch (action.type) {
 		case 'SHOW_CARD':
 			var newState = {...state};
-			if (!newState[action.id])
+			if (newState[action.id] && !newState[action.id].active)
 				newState[action.id].active = true;
 			return newState;
 
 		case 'HIDE_CARD':
 			var newState = {...state};
-			if (newState[action.id])
+			if (newState[action.id] && newState[action.id].active)
 				newState[action.id].active = false;
 			return newState;
 
