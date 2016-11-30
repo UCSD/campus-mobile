@@ -131,25 +131,25 @@ var Home = React.createClass({
 		var cardCounter = 0;
 
 		// Setup Cards
-		if (this.props.cards['weather']) {
+		if (this.props.cards['weather'].active) {
 			cards.push(<WeatherCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key={'weather'} />);
 		}
-		if (this.props.cards['shuttle']) {
+		if (this.props.cards['shuttle'].active) {
 			cards.push(<ShuttleCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key={'shuttle'} />);
 		}
-		if (this.props.cards['dining']) {
+		if (this.props.cards['dining'].active) {
 			cards.push(<DiningCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key={'dining'} />);
 		}
-		if (this.props.cards['events']) {
+		if (this.props.cards['events'].active) {
 			cards.push(<EventCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key={'events'} />);
 		}
-		if (this.props.cards['quicklinks']) {
+		if (this.props.cards['quicklinks'].active) {
 			cards.push(<QuicklinksCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key={'quicklinks'} />);
 		}		
-		if (this.props.cards['news']) {
+		if (this.props.cards['news'].active) {
 			cards.push(<NewsCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key={'news'} />);
 		}
-		if (this.props.cards['map']) {
+		if (this.props.cards['map'].active) {
 			cards.push(<SearchCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key={'map'} />);
 		}
 		return cards;
