@@ -22,16 +22,19 @@ export default class PreferencesView extends Component {
 	// render out all the cards, currently showing or not
 	_renderCards = () => {
 		return Object.keys(this.props.cards).map(key => {
-			const cardActive = this.props.cards[key];
+
+			const cardActive = this.props.cards[key].active;
+			const cardName = this.props.cards[key].name;
+
 			return (
 				<View key={key} style={css.preferencesContainer}>
 					<View style={css.spacedRow}>
 						<View style={css.centerAlign}>
-							<Text style={css.prefCardTitle}>{key}</Text>
+							<Text style={css.prefCardTitle}>{cardName}</Text>
 						</View>
 						<View style={css.centerAlign}>
 							<Switch
-								onValueChange={(value) => this._setCardState(key, value)}
+								onValueChange={(value) => { this._setCardState(key, value) }}
 								value={cardActive}
 							/>
 						</View>
