@@ -106,11 +106,6 @@ class SearchCard extends CardComponent {
 						onSelect={(index) => this.updateSelectedResult(index)}
 					/>
 				) : (null)}
-				<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => this.gotoNearbyMapView()}>
-					<View style={css.card_more}>
-						<Text style={css.card_more_label}>View Full Map</Text>
-					</View>
-				</TouchableHighlight>
 			</View>
 		);
 	}
