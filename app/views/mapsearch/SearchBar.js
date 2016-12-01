@@ -9,8 +9,9 @@ const SearchBar = ({ placeholder, update, style }) => (
 		<TextInput
 			placeholder={placeholder}
 			autoCorrect={false}
-			onEndEditing={(event) => update(event.nativeEvent.text)}
 			onSubmitEditing={(event) => update(event.nativeEvent.text)}
+			blurOnSubmit={true}
+			returnKeyType="search"
 			clearButtonMode={'while-editing'}
 			selectTextOnFocus={true}
 			style={css.map_searchbar_input}
@@ -18,7 +19,7 @@ const SearchBar = ({ placeholder, update, style }) => (
 		/>
 		<Icon
 			style={css.map_searchbar_icon}
-			name='search'
+			name="search"
 			size={20}
 			color={'rgba(0,0,0,.5)'}
 		/>

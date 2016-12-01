@@ -21,7 +21,7 @@ const SearchResults = ({ results, onSelect }) => (
 );
 
 SearchResults.propTypes = {
-	onSelect: React.PropTypes.func
+	onSelect: PropTypes.func
 };
 
 SearchResults.defaultProps = {};

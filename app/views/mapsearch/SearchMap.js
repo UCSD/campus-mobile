@@ -49,6 +49,7 @@ const SearchMap = ({ location, selectedResult, hideMarker, style }) => (
 		{(selectedResult && !hideMarker) ? (
 			<MapView.Marker
 				ref={(MarkRef) => {
+					//console.log("MARKER: " + selectedResult.title);
 					if (MarkRef != null) {
 						//MarkRef.showCallout();
 					}
