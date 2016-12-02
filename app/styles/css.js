@@ -190,7 +190,7 @@ var css = StyleSheet.create({
 	ddn_topborder1: { borderTopWidth: 8, borderTopColor: '#000', paddingVertical: 2, marginTop: 2 },
 	ddn_topborder2: { borderTopWidth: 4, borderTopColor: '#000' },
 	ddn_topborder3: { borderTopWidth: 1, borderTopColor: '#999' },
-	dd_menu_container: { justifyContent: 'center', alignItems: 'center', backgroundColor: '#17AADF', borderRadius: 3, margin: round(20 * prm), padding: round(10 * prm) },
+	dd_menu_container: { justifyContent: 'center', alignItems: 'center', backgroundColor: campus_primary, borderRadius: 3, margin: round(20 * prm), padding: round(10 * prm) },
 	dd_menu_text: { fontSize: round(16 * prm), color: '#FFF' },
 
 	// SHUTTLE CARD
@@ -338,9 +338,9 @@ var css = StyleSheet.create({
 	eventdetail_eventdescription: { lineHeight: round(18 * prm), color: '#111', fontSize: round(14 * prm), paddingTop: round(14 * prm) },
 	eventdetail_eventcontact: { fontSize: round(16 * prm), fontWeight: '600', color: '#333', paddingTop: 16 },
 
-	eventdetail_readmore_container: { justifyContent: 'center', alignItems: 'center', backgroundColor: '#17AADF', borderRadius: 3, marginTop: 20, padding: 10 },
+	eventdetail_readmore_container: { justifyContent: 'center', alignItems: 'center', backgroundColor: campus_primary, borderRadius: 3, marginTop: 20, padding: 10 },
 	eventdetail_readmore_text: { fontSize: round(16 * prm), color: '#FFF' },
-	eventdetail_link: { fontSize: round(16 * prm), fontWeight: '600', color: '#FFF', backgroundColor: '#17AADF', borderWidth: 0, borderRadius: 3 },
+	eventdetail_link: { fontSize: round(16 * prm), fontWeight: '600', color: '#FFF', backgroundColor: campus_primary, borderWidth: 0, borderRadius: 3 },
 
 	// Nearby Map
 	nearby_map_container : { width: windowWidth, height: round(maxCardWidthWithPadding * .8) },
@@ -405,7 +405,7 @@ var css = StyleSheet.create({
 	lrc_container: { flex: 1, alignItems: 'center', padding: 8, width: windowWidth },
 	lrc_text_row: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingTop: round(10 * prm) },
 	lrc_text: { fontSize: 14, color: '#777', paddingLeft: round(6 * prm) },
-	lrc_button: { justifyContent: 'center', alignItems: 'center', backgroundColor: '#17AADF', borderRadius: 3, marginTop: 14, padding: 10 },
+	lrc_button: { justifyContent: 'center', alignItems: 'center', backgroundColor: campus_primary, borderRadius: 3, marginTop: 14, padding: 10 },
 	lrc_button_text: { color: '#FFF' },
 
 
