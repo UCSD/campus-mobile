@@ -11,8 +11,7 @@
 	var CODEPUSH_ANDROID_KEY_PROD = 'Android Production Key Here';
 
 	var GOOGLE_ANALYTICS_ID = 'Google Analytics ID Here';
-	var GOOGLE_MAPS_API_KEY = '';
-
+	var GOOGLE_MAPS_API_KEY = 'Google Maps API Key Here';
 
 	exports.APP_NAME = APP_NAME;
 	exports.APP_SHORTNAME = APP_SHORTNAME;
