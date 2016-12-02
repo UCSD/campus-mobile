@@ -17,14 +17,10 @@
 		Ratio 3.5
 			Nexus 6
 
-	UCSD Branding Guidelines - Primary Colors
+	Campus Branding Guidelines - Primary Colors
 		New
 		Blue:	#182B49
 		Yellow: #C69214
-
-		Old
-		Blue: 	#006C92
-		Grey: 	#747678
 */
 'use strict';
 
@@ -75,8 +71,7 @@ if (pixelRatio === 2) {
 	shuttleStopRefreshIconTop = 15;
 }
 
-var ucsdblue = '#006C92';
-var ucsdgrey = '#747678';
+var campus_primary = '#182B49';
 
 var navMarginTop = 7;
 
@@ -113,7 +108,7 @@ var css = StyleSheet.create({
 	card_view_overlay: { position: 'absolute', flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', bottom: 0, left: 0, width: windowWidth - 12, height: 48, backgroundColor: 'rgba(60,60,60,.8)'	},
 	card_header_container: { borderBottomWidth: 1, borderBottomColor: '#EEE', width: maxCardWidthWithPadding },
 	card_title_container: { flexDirection: 'row', alignItems: 'center', width: maxCardWidth, padding: 8, borderBottomWidth: 1, borderBottomColor: '#DDD' },
-	card_title: { fontSize: round(26 * prm), color: ucsdgrey },
+	card_title: { fontSize: round(26 * prm), color: '#747678' },
 	card_row_container: { flex:1, width: maxCardWidthWithPadding, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: 8, paddingBottom: 0 },
 	card__container: { flex:1, width: maxCardWidthWithPadding, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingTop: 8 },
 	card_footer_container: { flex:1, width: maxCardWidthWithPadding, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: 8 },
@@ -133,12 +128,12 @@ var css = StyleSheet.create({
 	dining_card: { padding: 8 },
 	dining_card_map: { width: maxCardWidthWithPadding },
 	dining_card_filters: { flexDirection: 'row', justifyContent: 'center', marginBottom: 6 },
-	dining_card_filter_button: { paddingVertical: 8, paddingHorizontal: 14, fontSize: round(14 * prm), color: ucsdblue, borderWidth: 1, borderColor: '#999', borderRadius: 3, backgroundColor: '#EEE', textAlign: 'center', marginHorizontal: 14 },
-	dining_card_filter_button_active: { paddingVertical: 8, paddingHorizontal: 14, fontSize: round(14 * prm), color: '#EEE', borderWidth: 1, borderColor: '#999', borderRadius: 3, backgroundColor: ucsdblue, textAlign: 'center', marginHorizontal: 14, overflow: 'hidden' },
+	dining_card_filter_button: { paddingVertical: 8, paddingHorizontal: 14, fontSize: round(14 * prm), color: campus_primary, borderWidth: 1, borderColor: '#999', borderRadius: 3, backgroundColor: '#EEE', textAlign: 'center', marginHorizontal: 14 },
+	dining_card_filter_button_active: { paddingVertical: 8, paddingHorizontal: 14, fontSize: round(14 * prm), color: '#EEE', borderWidth: 1, borderColor: '#999', borderRadius: 3, backgroundColor: campus_primary, textAlign: 'center', marginHorizontal: 14, overflow: 'hidden' },
 	dc_locations: { flex: 1, flexDirection: 'column' },
 	dc_locations_row: { flexDirection: 'row', paddingBottom: 10, paddingTop: 10, borderBottomWidth: 1, borderBottomColor: '#DDD' },
 	dc_locations_row_left: { flex: 6, justifyContent: 'center' },
-	dc_locations_title: { fontSize: round(20 * prm), color: ucsdblue },
+	dc_locations_title: { fontSize: round(20 * prm), color: campus_primary },
 	dc_locations_hours: { fontSize: round(12 * prm), color: '#666', paddingTop: 1 },
 	dc_locations_spec_hours: { fontSize: round(12 * prm), color: '#666', paddingTop: 4 },
 	dc_locations_description: { fontSize: round(12 * prm), color: '#666', paddingTop: 6 },
@@ -146,7 +141,7 @@ var css = StyleSheet.create({
 	dc_locations_email_icon: { width: round(maxCardWidthWithPadding / 7 * .55), height: round(maxCardWidthWithPadding / 7 * .55 * .67) },
 	dc_locations_email: { fontSize: round(12 * prm), textAlign: 'center', color: '#666' },
 	dining_card_more: { alignItems: 'center', justifyContent: 'center', width: maxCardWidthWithPadding, paddingHorizontal: 4, paddingTop: 8, paddingBottom: 4, borderTopWidth: 1, borderTopColor: '#DDD' },
-	dining_card_more_label: { fontSize: round(20 * prm), color: ucsdblue, fontWeight: '300' },
+	dining_card_more_label: { fontSize: round(20 * prm), color: campus_primary, fontWeight: '300' },
 
 	// DINING LIST VIEW
 	dining_listview: { padding: 8 },
@@ -158,10 +153,10 @@ var css = StyleSheet.create({
 	dl_market_scroller: { height: round(140 * prm) },
 	dl_market_scroller_image: { width: round(140 * prm), height: round(140 * prm), borderRadius: round(5 * prm), marginHorizontal: round(7 * prm) },
 	dl_market_directions: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderBottomColor: '#EEE', margin: round(6 * prm), padding: round(6 * prm) },
-	dl_dir_label: { flex: 5, fontSize: round(22 * prm), color: ucsdblue },
+	dl_dir_label: { flex: 5, fontSize: round(22 * prm), color: campus_primary },
 	dl_dir_traveltype_container: { flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'center' },
 	dl_dir_icon: { width: round(28 * prm), height: round(28 * prm) },
-	dl_dir_eta: { color: ucsdblue, fontSize: round(11 * prm), fontWeight: '600' },
+	dl_dir_eta: { color: campus_primary, fontSize: round(11 * prm), fontWeight: '600' },
 	dl_noresults: { color: '#444', fontSize: round(15 * prm) },
 	dl_market_date: { borderBottomWidth: 1, borderBottomColor: '#EEE', paddingBottom: round(12 * prm), paddingTop: round(6 * prm) },
 	dl_market_date_label: { fontSize: round(22 * prm), color: '#444', textAlign: 'center' },
@@ -171,16 +166,16 @@ var css = StyleSheet.create({
 	dl_market_filters_mealtype: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderTopWidth: 1, borderTopColor: '#EEE', paddingTop: round(10 * prm) },
 	dl_meal_button: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
 	dl_mealtype_circle: { borderWidth: 1, borderColor: '#CCC', borderRadius: round(8 * prm), width: round(16 * prm), height: round(16 * prm), backgroundColor: '#CCC', marginRight: round(5 * prm) },
-	dl_mealtype_circle_active: { borderWidth: 1, borderColor: '#BBB', borderRadius: 8, width: round(16 * prm), height: round(16 * prm), backgroundColor: ucsdblue, marginRight: round(5 * prm) },
+	dl_mealtype_circle_active: { borderWidth: 1, borderColor: '#BBB', borderRadius: 8, width: round(16 * prm), height: round(16 * prm), backgroundColor: campus_primary, marginRight: round(5 * prm) },
 	dl_mealtype_label: { fontSize: round(20 * prm), color: '#888' },
-	dl_mealtype_label_active: { fontSize: round(20 * prm), color: ucsdblue },
+	dl_mealtype_label_active: { fontSize: round(20 * prm), color: campus_primary },
 	dl_market_menu: { marginHorizontal: round(8 * prm), marginVertical: round(16 * prm) },
 	dl_market_menu_row: { flexDirection: 'row', paddingBottom: round(8 * prm) },
-	dl_menu_item_name: { fontSize: round(15 * prm), color: ucsdblue },
+	dl_menu_item_name: { fontSize: round(15 * prm), color: campus_primary },
 	dl_menu_item_price: { color: '#555', paddingLeft: round(26 * prm), marginLeft: round(30 * prm) },
 
 	// DINING DETAIL
-	dd_menu_item_name: { fontSize: round(22 * prm), color: ucsdblue, paddingTop: 10, paddingLeft: 1 },
+	dd_menu_item_name: { fontSize: round(22 * prm), color: campus_primary, paddingTop: 10, paddingLeft: 1 },
 
 	ddn_container: { borderWidth: 2, borderColor: '#000', margin: 6, padding: 3 },
 	ddn_header: { fontSize: round(50 * prm), fontWeight: '700', backgroundColor: 'rgba(0,0,0,0)' },
@@ -234,7 +229,7 @@ var css = StyleSheet.create({
 	card_row_center: { alignItems: 'center', justifyContent: 'center', width: maxCardWidth, overflow: 'hidden' },
 	card_loader: { height: round(368 * prm) },
 	card_more: { alignItems: 'center', justifyContent: 'center', width: maxCardWidthWithPadding, paddingHorizontal: 4, paddingTop: 8, paddingBottom: 4 },
-	card_more_label: { fontSize: round(20 * prm), color: ucsdblue, fontWeight: '300' },
+	card_more_label: { fontSize: round(20 * prm), color: campus_primary, fontWeight: '300' },
 
 	// EVENTS / NEWS CARD
 	events_list: { width: maxCardWidth, padding: 8 },
@@ -242,17 +237,17 @@ var css = StyleSheet.create({
 	events_list_left_container: { flex: 1 },
 	events_list_title: { fontSize: round(17 * prm), color: '#000', fontWeight: '400' },
 	events_list_desc: { fontSize: round(14 * prm), color: '#666', paddingTop: round(8 * prm) },
-	events_list_postdate: { fontSize: round(11 * prm), color: ucsdblue, paddingTop: round(8 * prm) },
+	events_list_postdate: { fontSize: round(11 * prm), color: campus_primary, paddingTop: round(8 * prm) },
 	events_list_image: { width: round(130 * prm), height: round(73 * prm), marginRight: 4, marginLeft: 10, borderWidth: 1, borderColor: '#CCC' },
 	news_list_image: { width: round(130 * prm), height: round(100 * prm), marginRight: 4, marginLeft: 10, borderWidth: 1, borderColor: '#CCC' },
 	events_more: { alignItems: 'center', justifyContent: 'center', width: maxCardWidthWithPadding, paddingHorizontal: 4, paddingTop: 8, paddingBottom: 4 },
-	events_more_label: { fontSize: round(20 * prm), color: ucsdblue, fontWeight: '300' },
+	events_more_label: { fontSize: round(20 * prm), color: campus_primary, fontWeight: '300' },
 	events_card_container: { flex: 1, flexDirection: 'row', padding: 14, borderBottomWidth: 1, borderBottomColor: '#EEE', alignItems: 'center' },
 	events_card_title_container: { flexDirection: 'row', alignItems: 'center', width: maxCardWidth, padding: 8, borderBottomWidth: 1, borderBottomColor: '#DDD' },
 	events_card_title: { flex:1, flexWrap: 'wrap', fontSize: round(17 * prm), color: '#000', fontWeight: '400' },
 	events_card_left_container: { flex: 10 },
 	events_card_desc: { flexWrap: 'wrap', fontSize: round(14 * prm), color: '#666', paddingTop: round(8 * prm) },
-	events_card_postdate: { fontSize: round(11 * prm), color: ucsdblue, paddingTop: round(8 * prm) },
+	events_card_postdate: { fontSize: round(11 * prm), color: campus_primary, paddingTop: round(8 * prm) },
 	news_card_image: { width: round(130 * prm), height: round(100 * prm), marginRight: round(4 * prm), marginLeft: round(10 * prm), borderWidth: 1, borderColor: '#CCC'},
 	events_card_image: { width: round(130 * prm), height: round(73 * prm), marginRight: round(4 * prm), marginLeft: round(10 * prm), borderWidth: 1, borderColor: '#CCC'},
 
@@ -265,12 +260,12 @@ var css = StyleSheet.create({
 	welcome_list_left_container: { flex: 1, marginRight: 14 },
 	welcome_list_title: { fontSize: round(17 * prm), color: '#000' },
 	welcome_list_desc: { fontSize: round(14 * prm), color: '#666', paddingTop: 3, paddingBottom: 6 },
-	welcome_list_postdate: { fontSize: round(11 * prm), color: ucsdblue },
+	welcome_list_postdate: { fontSize: round(11 * prm), color: campus_primary },
 	welcome_list_image: { width: round(130 * prm), height: round(87 * prm), marginLeft: 14, borderWidth: 1, borderColor: '#CCC' },
 
 
 	// WEATHER CARD
-	weathercard_more: { justifyContent: 'center', width: windowWidth - 30, padding: round(10 * prm), fontSize: round(24 * prm), fontWeight: '500', color: ucsdblue },
+	weathercard_more: { justifyContent: 'center', width: windowWidth - 30, padding: round(10 * prm), fontSize: round(24 * prm), fontWeight: '500', color: campus_primary },
 	weathercard_border: { borderTopWidth: 1, borderTopColor: '#CCC', width: maxCardWidth },
 	weatherccard_loading_height: { height: round(270 * prm) },
 
@@ -288,7 +283,7 @@ var css = StyleSheet.create({
 	wf_icon: { height: round(33 * prm), width: round(33 * prm) },
 	wf_tempMax: { fontSize: round(14 * prm), fontWeight: '300', color: '#000', paddingTop: 10 },
 	wf_tempMin: { fontSize: round(14 * prm), fontWeight: '300', color: '#666', paddingTop: 10 },
-	wc_surfreport_more: { fontSize: round(20 * prm), fontWeight: '300', color: ucsdblue, paddingHorizontal: 14, paddingVertical: 10 },
+	wc_surfreport_more: { fontSize: round(20 * prm), fontWeight: '300', color: campus_primary, paddingHorizontal: 14, paddingVertical: 10 },
 
 	// SURF REPORT
 	sr_listview: {},
@@ -312,7 +307,7 @@ var css = StyleSheet.create({
 	destinationcard_map: { borderWidth: 1, borderColor: '#DDD', width: maxCardWidthWithPadding, height: round(maxCardWidthWithPadding * .6) },
 	destinationcard_marker_row: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: windowWidth - 30, padding: 6, marginTop: 0 },
 	destinationcard_icon_marker: { width: 18, height: round(18 * 1.375), alignItems: 'flex-start', justifyContent: 'center' },
-	destinationcard_marker_label: { flex: 1, fontSize: round(18 * prm), paddingLeft: 8, paddingTop: 0, color: ucsdblue, justifyContent: 'center' },
+	destinationcard_marker_label: { flex: 1, fontSize: round(18 * prm), paddingLeft: 8, paddingTop: 0, color: campus_primary, justifyContent: 'center' },
 
 
 	// DestinationSearch
@@ -337,7 +332,7 @@ var css = StyleSheet.create({
 	eventdetail_image2_sm: { width: 100, height: 100, borderColor: 'blue', borderWidth: 1 },
 	eventdetail_image2_lg: { width: 200, height: 200 },
 	news_detail_container: { width: windowWidth, paddingHorizontal: round(18 * prm), paddingVertical: round(14 * prm) },
-	eventdetail_eventname: { fontWeight: '400', fontSize: round(22 * prm), color: ucsdblue },
+	eventdetail_eventname: { fontWeight: '400', fontSize: round(22 * prm), color: campus_primary },
 	eventdetail_eventlocation: { fontSize: round(16 * prm), color: '#333' },
 	eventdetail_eventdate: { fontSize: round(11 * prm), color: '#333', paddingTop: round(14 * prm) },
 	eventdetail_eventdescription: { lineHeight: round(18 * prm), color: '#111', fontSize: round(14 * prm), paddingTop: round(14 * prm) },
@@ -375,7 +370,7 @@ var css = StyleSheet.create({
 
 	// SHUTTLE STOP
 	shuttlestop_image: { width: windowWidth, height: round(windowWidth * .533) },
-	shuttlestop_name_container: { height: round(48 * prm), flex: 1, flexDirection: 'row', alignItems: 'center', width: windowWidth, paddingVertical: round(14 * prm), paddingHorizontal: round(20 * prm), backgroundColor: ucsdblue },
+	shuttlestop_name_container: { height: round(48 * prm), flex: 1, flexDirection: 'row', alignItems: 'center', width: windowWidth, paddingVertical: round(14 * prm), paddingHorizontal: round(20 * prm), backgroundColor: campus_primary },
 	shuttlestop_name_text: { width: round(windowWidth * .9 - 40), color: '#FFF', fontSize: round(24 * prm), fontWeight: '300' },
 
 	shuttlestop_refresh_container: { position: 'absolute', alignItems: 'center', top: shuttleStopRefreshIconTop, right: 8, width: round(55 * prm) },
@@ -430,9 +425,9 @@ var css = StyleSheet.create({
 	footer: { flex: 1, flexDirection: 'row', paddingBottom: 10 },
 	footer_link: { flex: 15 },
 
-	footer_about: { color: ucsdblue, fontSize: round(16 * prm), textAlign: 'center', padding: 4 },
+	footer_about: { color: campus_primary, fontSize: round(16 * prm), textAlign: 'center', padding: 4 },
 	footer_spacer: { flex: 1, color: '#888', padding: 4, fontSize: round(16 * prm), textAlign: 'center' },
-	footer_copyright: { color: ucsdblue, fontSize: round(16 * prm), textAlign: 'center', padding: 4 },
+	footer_copyright: { color: campus_primary, fontSize: round(16 * prm), textAlign: 'center', padding: 4 },
 
 	// Feedback
 	feedback_container: { flex:1, alignItems: 'flex-start', flexDirection: 'column', width: maxCardWidthWithPadding, padding: 16, },
