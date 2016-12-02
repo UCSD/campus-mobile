@@ -1,20 +1,7 @@
-/*
-Script to replace the CodePush key for iOS and Android.
-
-Create a folder in your home direct ".nowapp"
-Create a file "env.js" with the following content:
-    var CODEPUSH_KEY_STAGING = 'staging key here';
-    var CODEPUSH_KEY_PRODUCTION = 'production key here';
-
-    exports.CODEPUSH_KEY = CODEPUSH_KEY_STAGING;
-    //exports.CODEPUSH_KEY = CODEPUSH_KEY_PRODUCTION;
-
-*/
-
-var fs = require('fs')
+var fs = require('fs');
 var myEnv = require(getUserHome() + '/.nowapp/env');
 
-var ANDROID_FILE_PATH = '../android/app/src/main/res/values/strings.xml'
+var ANDROID_FILE_PATH = '../android/app/src/main/res/values/strings.xml';
 var ANDROID_STRING_TO_REPLACE = 'CODEPUSH_ANDROID_DEPLOYMENT_KEY';
 
 var IOS_FILE_PATH = '../ios/nowucsandiego/Info.plist';
