@@ -63,11 +63,7 @@ const SearchMap = ({ location, selectedResult, hideMarker, style }) => (
 				identifier={selectedResult.title}
 			>
 				<MapView.Callout style={{ width: 100 }} >
-					<TouchableHighlight
-						onPress={
-							() => gotoNavigationApp(selectedResult.mkrLat, selectedResult.mkrLong)
-						}
-					>
+					<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => gotoNavigationApp(selectedResult.mkrLat, selectedResult.mkrLong)}>
 						<View style={{ flex: 1, alignItems: 'center', flexDirection: 'row', flexWrap: 'wrap' }}>
 							<Text style={{ flex: 0.8 }}>{selectedResult.title}</Text>
 							<Icon style={{ flex:0.2 }} name={'location-arrow'} size={20} />
