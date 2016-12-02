@@ -9,10 +9,11 @@ import {
 	View
 } from 'react-native';
 
-// SETUP / UTIL / NAV
+// SETUP / UTIL / NAV / STYLES
 var AppSettings = 			require('./AppSettings'),
 	general = 				require('./util/general'),
-	logger = 				require('./util/logger');
+	logger = 				require('./util/logger'),
+	css = 					require('./styles/css');
 
 // VIEWS
 var Home = 					require('./views/Home'),
@@ -136,12 +137,13 @@ var nowucsandiego = React.createClass({
 					rightButtonIcon: require('./assets/img/icon_gear.png'),
 					onRightButtonPress: () => this._handleNavigationRequest(),
 				}}
-				style={{ flex: 1 }}
+				style={css.flex}
+				itemWrapperStyle={css.navBarIOSWrapperStyle}
 				tintColor='#FFFFFF'
-				barTintColor='#006C92'
+				barTintColor='#182B49'
 				titleTextColor='#FFFFFF'
 				navigationBarHidden={false}
-				translucent={true}
+				translucent={false}
 				ref="navRef"
 			/>);
 		} else {
@@ -157,7 +159,7 @@ var nowucsandiego = React.createClass({
 
 		return (
 			<Provider store={this.state.store}>
-				<View style={{ flex: 1 }}>
+				<View style={css.flex}>
 					<GeoLocationContainer />
 					{navigator}
 				</View>
