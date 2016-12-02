@@ -149,7 +149,7 @@ var nowucsandiego = React.createClass({
 			navigator = (
 				<NavigationBarWithRouteMapper
 					ref="navRef"
-					route={{ id: 'Home', name: 'Home', title: 'now@ucsandiego' }}
+					route={{ id: 'Home', name: 'Home', title: AppSettings.APP_NAME }}
 					renderScene={this.renderScene}
 				/>
 			);
