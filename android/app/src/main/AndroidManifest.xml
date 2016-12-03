@@ -32,7 +32,7 @@
       <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
       <meta-data
           android:name="com.google.android.geo.API_KEY"
-          android:value="AIzaSyBWlLqjH3CNWrBo1gszFLoMkoyb-w8GQ5U"/>
+          android:value="GOOGLE_MAPS_API_KEY"/>
     </application>
 
 </manifest>
