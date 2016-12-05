@@ -198,7 +198,7 @@ var css = StyleSheet.create({
 	shuttle_card_refresh: { width: round(24 * prm), height: round(24 * prm) },
 	shuttle_card_refresh_timeago: { fontSize: round(9 * prm), color: '#999', marginTop: round(-1 * prm), textAlign: 'center', fontWeight: '500', backgroundColor: 'rgba(0,0,0,0)' },
 
-	shuttle_card_row: { width: maxCardWidth, overflow: 'hidden' },
+	shuttle_card_row: { width: maxCardWidth, overflow: 'hidden', borderBottomWidth: 1, borderBottomColor: '#DDD' },
 	shuttle_card_err_row: { alignItems: 'center', justifyContent: 'center', width: maxCardWidth, overflow: 'hidden' },
 	shuttle_card_row_center: { alignItems: 'center', justifyContent: 'center', width: maxCardWidth, overflow: 'hidden' },
 	shuttle_card_loader: { height: round(350 * prm) },
