@@ -30,7 +30,8 @@ class SearchCard extends CardComponent {
 		this.state = {
 			selectedResult: null,
 			searchResults: null,
-			selectedInvalidated: true
+			selectedInvalidated: true,
+			refreshing: false
 		};
 	}
 
@@ -38,8 +39,12 @@ class SearchCard extends CardComponent {
 	}
 
 	shouldComponentUpdate() {
-		if (this.state.selectedInvalidated) {
+		console.log('Refrishing: ' + this.props.locationPermission);
+
+		if (this.state.selectedInvalidated && this.props.locationPermission === 'authorized') {
 			this.state.selectedInvalidated = false;
+			return true;
+		} else if (this.state.selectedInvalidated) {
 			return true;
 		} else {
 			return false;
@@ -86,7 +91,6 @@ class SearchCard extends CardComponent {
 	}
 
 	renderContent() {
-		console.log('UPDATING' + JSON.stringify(this.props.location));
 		if (this.props.locationPermission !== 'authorized') {
 			return <LocationRequiredContent />;
 		}
