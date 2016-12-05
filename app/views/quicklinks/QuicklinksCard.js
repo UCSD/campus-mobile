@@ -59,7 +59,7 @@ export default class QuicklinksCard extends CardComponent {
 			});
 		})
 		.catch((error) => {
-			console.log('ERR: QuicklinksService: ' + error)
+			logger.log('ERR: QuicklinksService: ' + error)
 		})
 		.done();
 	}

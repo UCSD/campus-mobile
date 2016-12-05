@@ -86,7 +86,7 @@ class SearchCard extends CardComponent {
 	}
 
 	renderContent() {
-		console.log('UPDATING' + JSON.stringify(this.props.location));
+		logger.log('UPDATING' + JSON.stringify(this.props.location));
 		if (this.props.locationPermission !== 'authorized') {
 			return <LocationRequiredContent />;
 		}

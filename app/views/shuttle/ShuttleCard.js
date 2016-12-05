@@ -42,7 +42,6 @@ class ShuttleCard extends CardComponent {
 	}
 
 	componentDidMount() {
-		logger.log('mounted ' + new Date());
 		if (this.props.location) {
 			this.refresh();
 		}
@@ -58,7 +57,6 @@ class ShuttleCard extends CardComponent {
 				)) {
 			// do not attempt to do refresh location if we are currently in a refresh
 			if (!this.state.isRefreshing) {
-				logger.log(nextProps.location);
 				this.refreshWithLocation('manual', nextProps.location); // refresh with new location
 			}
 		}
@@ -74,7 +72,6 @@ class ShuttleCard extends CardComponent {
 		}
 		// refresh the shuttle card occasionally
 		this.refreshShuttleCardTimer = setInterval(_ => {
-			logger.log('auto refresh ' + new Date());
 			this.refreshWithLocation('auto', this.props.location);
 		}, this.shuttleCardRefreshInterval);
 	}
@@ -185,7 +182,8 @@ class ShuttleCard extends CardComponent {
 	}
 
 	fetchShuttleArrivalsByStop = (closestStopNumber, stopID) => {
-		logger.log(`fetching for stopID: ${stopID}`);
+		logger.log('fetchShuttleArrivalsByStop: stopID: ' + stopID);
+
 		ShuttleService.FetchShuttleArrivalsByStop(stopID)
 		.then((responseData) => {
 			if (responseData.length > 0 && responseData[0].secondsToArrival) {
