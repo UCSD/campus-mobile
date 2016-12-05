@@ -2,7 +2,7 @@ module.exports = {
 
 	/* APP CONFIG */
 	APP_NAME: 					'now-mobile',
-	GOOGLE_ANALYTICS_ID: 		'YOUR_GA_ID',
+	GOOGLE_ANALYTICS_ID: 		'GOOGLE_ANALYTICS_ID_PH',
 	DEBUG_ENABLED: 				false, // Disables all logger functions (i.e. logger.log) if set to false (console.log is unaffected)
 
 	/* APIs / FEEDS */
