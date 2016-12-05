@@ -123,6 +123,12 @@ var nowucsandiego = React.createClass({
 
 	render: function () {
 		let navigator;
+		let geolocation = null;
+		
+		if (!this.state.isLoading) {
+			geolocation = (<GeoLocationContainer />);
+		}
+
 		if (general.platformIOS()) {
 			StatusBar.setBarStyle('light-content');
 
@@ -160,7 +166,7 @@ var nowucsandiego = React.createClass({
 		return (
 			<Provider store={this.state.store}>
 				<View style={css.flex}>
-					<GeoLocationContainer />
+					{geolocation}
 					{navigator}
 				</View>
 			</Provider>

@@ -1,7 +1,8 @@
 import React from 'react';
 import {
 	Alert,
-	Text
+	Text,
+	AppState,
 } from 'react-native';
 import { connect } from 'react-redux';
 import TimerMixin from 'react-timer-mixin';
@@ -13,22 +14,40 @@ const AppSettings = require('../AppSettings');
 
 const GeoLocationContainer = React.createClass({
 	mixins: [TimerMixin],
+	locationWatch: null,
+	permissionUpdateInterval: 5000,
 
 	componentDidMount() {
+		this.checkLocationPermission();
+		// start watch regardless
+		this.startLocationWatch();
+
+		AppState.addEventListener('change', this._handleAppStateChange);
+	},
+
+	componentWillUnmount: function() {
+		AppState.removeEventListener('change', this._handleAppStateChange);
+	},
+
+	checkLocationPermission() {
 		const { dispatch } = this.props;
 
 		// preload permission and dispatch immediately
 		Permissions.getPermissionStatus('location')
-			.then(response => {
-				dispatch(setPermission(response));
+		.then(response => {
+			dispatch(setPermission(response));
 
-				if (response === 'undetermined') {
-					this.getPermission();
-				}
-			});
+			if (response === 'undetermined') {
+				this.getPermission();
+			}
+		});
+	},
 
-		// start watch regardless
-		this.startLocationWatch();
+	_handleAppStateChange: function(currentAppState) {
+		this.setState({ currentAppState, });
+		if (currentAppState === 'active') {
+			this.checkLocationPermission();
+		}
 	},
 
 	getSoftPermission() {
@@ -45,20 +64,18 @@ const GeoLocationContainer = React.createClass({
 
 	getPermission() {
 		Permissions.requestPermission('location')
-			.then(response => {
-				// dispatch response
-				this.props.dispatch(setPermission(response));
+		.then(response => {
+			// dispatch response
+			this.props.dispatch(setPermission(response));
 
-				// if authorized, act
-				if (response === 'authorized') {
-					this.startLocationWatch();
-				}
-			})
-			.catch(logger.error);
+			// if authorized, act
+			if (response === 'authorized') {
+				this.startLocationWatch();
+			}
+		})
+		.catch(logger.error);
 	},
 
-	locationWatch: null,
-	permissionUpdateInterval: 5000, // 1 * 65 * 1000,
 
 	startLocationWatch() {
 		// fire immediately
