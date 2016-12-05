@@ -60,7 +60,7 @@ var Home = React.createClass({
 
 	copyrightYear: new Date().getFullYear(),
 
-	getInitialState: function() {
+	getInitialState() {
 		return {
 			initialLoad: true,
 			scrollEnabled: true,
@@ -70,31 +70,31 @@ var Home = React.createClass({
 		}
 	},
 
-	componentWillMount: function() {
+	componentWillMount() {
 		if (general.platformAndroid()) {
 			this.updateGooglePlay();
 			this.setState({cacheMap: true});
 		}
 	},
 
-	componentDidMount: function() {
+	componentDidMount() {
 		logger.ga('View Loaded: Home');
 	},
 
-	updateGooglePlay: function() {
+	updateGooglePlay() {
 		GoogleAPIAvailability.checkGooglePlayServices((result) => {
 			if(result === 'update') {
-				this.setState({updatedGoogle: false})
+				this.setState({ updatedGoogle: false });
 			}
 		});
 	},
 
-	render: function() {
+	render() {
 		logger.log('Home: render');
 		return this.renderScene();
 	},
 
-	renderScene: function(route, navigator, index, navState) {
+	renderScene(route, navigator, index, navState) {
 		return (
 			<View style={css.main_container}>
 				<ScrollView contentContainerStyle={css.scroll_main} refreshControl={
@@ -126,7 +126,7 @@ var Home = React.createClass({
 		);
 	},
 
-	getCards: function() {
+	getCards() {
 		var cards = [];
 		var cardCounter = 0;
 
@@ -145,7 +145,7 @@ var Home = React.createClass({
 		}
 		if (this.props.cards['quicklinks'].active) {
 			cards.push(<QuicklinksCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key={'quicklinks'} />);
-		}		
+		}
 		if (this.props.cards['news'].active) {
 			cards.push(<NewsCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key={'news'} />);
 		}
@@ -155,7 +155,7 @@ var Home = React.createClass({
 		return cards;
 	},
 
-	refreshAllCards: function(refreshType) {
+	refreshAllCards(refreshType) {
 		if (!refreshType) {
 			refreshType = 'manual';
 		}
@@ -171,11 +171,11 @@ var Home = React.createClass({
 		}
 	},
 
-	gotoFeedbackForm: function() {
+	gotoFeedbackForm() {
 		this.props.navigator.push({ id: 'FeedbackView', component: FeedbackView, title: 'Feedback' });
 	},
 
-	_handleRefresh: function() {
+	_handleRefresh() {
 		this.refreshAllCards('auto');
 		this.setState({refreshing: false});
 	}
