@@ -70,8 +70,7 @@ if (REPLACEMENT_TYPE === 'Production' || REPLACEMENT_TYPE === 'Staging' || REPLA
 
 } else {
 	console.log('Error: Replacement type not specififed');
-	console.log('Sample Usage: replace_codepush_keys.js [replacement type]');
-	console.log('Replacement Types: Production, Staging, Placeholder');
+	console.log('Sample Usage: replace_codepush_keys.js [Production|Staging|Placeholder]');
 }
 
 function getUserHome() {

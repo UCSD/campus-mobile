@@ -1,4 +1,4 @@
-// Usage: replace_codepush_key.js [Production|Staging|Placeholder]
+// Usage: replace_google_maps_api_key.js [Production|Staging|Placeholder]
 
 var REPLACEMENT_TYPE = process.argv[2];
 

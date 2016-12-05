@@ -1,4 +1,4 @@
-// Usage: replace_codepush_key.js [Production|Staging|Placeholder]
+// Usage: replace_app_name.js [Production|Staging|Placeholder]
 
 var REPLACEMENT_TYPE = process.argv[2];
 
