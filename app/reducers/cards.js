@@ -1,13 +1,13 @@
 // NOTE: AppSettings.XX_CARD_ENABLED is being deprecated to pave the way for more dynamic cards
 
 var initialState = {
-	'weather': 		{ active: true, order: 1, name: 'Weather' },
-	'shuttle': 		{ active: true, order: 2, name: 'Shuttle' },
-	'dining': 		{ active: true, order: 3, name: 'Dining' },
-	'events': 		{ active: true, order: 4, name: 'Events' },
-	'quicklinks': 	{ active: true, order: 5, name: 'Quick Links' },
-	'news': 		{ active: true, order: 6, name: 'News' },
-	'map': 			{ active: true, order: 7, name: 'Map' }
+	'weather': 		{ active: true, order: 1, name: 'Weather', component: 'WeatherCard' },
+	'shuttle': 		{ active: true, order: 2, name: 'Shuttle', component: 'ShuttleCard' },
+	'dining': 		{ active: true, order: 3, name: 'Dining', component: 'DiningCard' },
+	'events': 		{ active: true, order: 4, name: 'Events', component: 'EventsCard' },
+	'quicklinks': 	{ active: true, order: 5, name: 'Quick Links', component: 'QuicklinksCard' },
+	'news': 		{ active: true, order: 6, name: 'News', component: 'NewsCard' },
+	'map': 			{ active: true, order: 7, name: 'Map', component: 'SearchCard' }
 };
 
 function cards(state = initialState, action) {
