@@ -91,7 +91,7 @@ android {
         applicationId "com.nowucsandiego"
         minSdkVersion 18
         targetSdkVersion 23
-        versionCode 7
+        versionCode 8
         versionName "2.4"
         ndk {
             abiFilters "armeabi-v7a", "x86"

@@ -30,7 +30,8 @@ class SearchCard extends CardComponent {
 		this.state = {
 			selectedResult: null,
 			searchResults: null,
-			selectedInvalidated: true
+			selectedInvalidated: true,
+			refreshing: false
 		};
 	}
 
@@ -38,20 +39,16 @@ class SearchCard extends CardComponent {
 	}
 
 	shouldComponentUpdate() {
-		/*
-		if (this.state.selectedInvalidated) {
+		console.log('Refrishing: ' + this.props.locationPermission);
+
+		if (this.state.selectedInvalidated && this.props.locationPermission === 'authorized') {
 			this.state.selectedInvalidated = false;
+			return true;
+		} else if (this.state.selectedInvalidated) {
 			return true;
 		} else {
 			return false;
-		}*/
-		return true;
-	}
-
-	refresh() {
-		this.setState({
-			selectedInvalidated: true
-		});
+		}
 	}
 
 	updateSearch = (text) => {
@@ -94,7 +91,6 @@ class SearchCard extends CardComponent {
 	}
 
 	renderContent() {
-		console.log('UPDATING' + JSON.stringify(this.props.location));
 		if (this.props.locationPermission !== 'authorized') {
 			return <LocationRequiredContent />;
 		}
@@ -114,18 +110,12 @@ class SearchCard extends CardComponent {
 						onSelect={(index) => this.updateSelectedResult(index)}
 					/>
 				) : (null)}
-				<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => this.gotoNearbyMapView()}>
-					<View style={css.card_more}>
-						<Text style={css.card_more_label}>View Full Map</Text>
-					</View>
-				</TouchableHighlight>
 			</View>
 		);
 	}
 }
 
 function mapStateToProps(state, props) {
-	console.log('MAPPING' + JSON.stringify(state.location.position));
 	return {
 		location: state.location.position,
 		locationPermission: state.location.permission

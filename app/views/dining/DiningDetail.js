@@ -12,6 +12,8 @@ import {
 	Linking,
 } from 'react-native';
 
+import Icon from 'react-native-vector-icons/Ionicons';
+
 var css = require('../../styles/css');
 var logger = require('../../util/logger');
 var general = require('../../util/general');
@@ -144,7 +146,7 @@ var DiningDetail = React.createClass({
 
 								<TouchableHighlight style={css.dl_dir_traveltype_container} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { general.gotoNavigationApp('walk', this.state.marketData.coords.lat, this.state.marketData.coords.lon) }}>
 									<View style={css.dl_dir_traveltype_container}>
-										<Image style={css.dl_dir_icon} source={ require('../../assets/img/icon_walk.png')} />
+										<Icon name='md-walk' size={32} color='#182B49' />
 										{this.state.marketData.distanceMilesStr ? (
 											<Text style={css.dl_dir_eta}>{this.state.marketData.distanceMilesStr}</Text>
 										) : null }

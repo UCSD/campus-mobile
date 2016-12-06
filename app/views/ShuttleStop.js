@@ -333,12 +333,11 @@ const ShuttleStop = React.createClass({
 		})
 		.then((response) => response.json())
 		.then((responseData) => {
-			// logger.log("Fetch: " + JSON.stringify(responseData));
 			general.stopReloadAnimation(this.shuttleReloadAnim);
 			this._processShuttleArrivals(responseData);
 		})
 		.catch((error) => {
-			logger.log('ERR2: fetchShuttleArrivalsByStopDetail: ' + error);
+			logger.log('ERR: fetchShuttleArrivalsByStop: ' + error);
 			this.setState({ closestShuttlesInactive: true });
 			general.stopReloadAnimation(this.shuttleReloadAnim);
 		})
