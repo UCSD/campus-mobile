@@ -42,22 +42,11 @@ import NearbyMapView from './views/mapsearch/NearbyMapView';
 // NAV
 import NavigationBarWithRouteMapper from './views/NavigationBarWithRouteMapper';
 
-// REDUX
-import { Provider } from 'react-redux';
-import configureStore from './store/configureStore';
-
-// CODE PUSH
-import codePush from "react-native-code-push";
-let codePushOptions = { checkFrequency: codePush.CheckFrequency.ON_APP_RESUME, installMode: codePush.InstallMode.ON_NEXT_RESTART };
-
 var nowucsandiego = React.createClass({
 
 	getInitialState() {
-		// TODO: hide regular screens until store is hydrated
 		return {
-			store: configureStore({}, () => this.setState({ isLoading: false })),
 			inHome: true,
-			isLoading: true,
 		};
 	},
 
@@ -123,11 +112,6 @@ var nowucsandiego = React.createClass({
 
 	render: function () {
 		let navigator;
-		let geolocation = null;
-		
-		if (!this.state.isLoading) {
-			geolocation = (<GeoLocationContainer />);
-		}
 
 		if (general.platformIOS()) {
 			StatusBar.setBarStyle('light-content');
@@ -164,12 +148,10 @@ var nowucsandiego = React.createClass({
 		}
 
 		return (
-			<Provider store={this.state.store}>
-				<View style={css.flex}>
-					{geolocation}
-					{navigator}
-				</View>
-			</Provider>
+			<View style={css.flex}>
+				<GeoLocationContainer />
+				{navigator}
+			</View>
 		);
 	},
 
@@ -196,5 +178,4 @@ var nowucsandiego = React.createClass({
 	}
 });
 
-nowucsandiego = codePush(codePushOptions)(nowucsandiego);
 module.exports = nowucsandiego;
