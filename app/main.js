@@ -42,7 +42,7 @@ import NearbyMapView from './views/mapsearch/NearbyMapView';
 // NAV
 import NavigationBarWithRouteMapper from './views/NavigationBarWithRouteMapper';
 
-var nowucsandiego = React.createClass({
+var Main = React.createClass({
 
 	getInitialState() {
 		return {
@@ -178,4 +178,4 @@ var nowucsandiego = React.createClass({
 	}
 });
 
-module.exports = nowucsandiego;
+module.exports = Main;

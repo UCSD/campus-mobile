@@ -1,4 +1,5 @@
 import React from 'react';
+import { View } from 'react-native';
 
 // CODE PUSH
 import codePush from 'react-native-code-push';
@@ -7,7 +8,7 @@ import codePush from 'react-native-code-push';
 import { Provider } from 'react-redux';
 import configureStore from './store/configureStore';
 
-import nowucsandiego from './index';
+import Main from './main';
 
 const codePushOptions = { checkFrequency: codePush.CheckFrequency.ON_APP_RESUME, installMode: codePush.InstallMode.ON_NEXT_RESTART };
 
@@ -21,10 +22,10 @@ class NowSetup extends React.Component {
 		};
 	}
 	render() {
-		let mainApp = null;
+		let mainApp = <View />;
 
 		if (!this.state.isLoading) {
-			mainApp = <nowucsandiego />;
+			mainApp = <Main />;
 		}
 		return (
 			<Provider store={this.state.store}>
