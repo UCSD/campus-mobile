@@ -8,6 +8,7 @@ import {
 	StatusBar,
 	View
 } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 // SETUP / UTIL / NAV / STYLES
 var AppSettings = 			require('./AppSettings'),
@@ -61,7 +62,17 @@ var nowucsandiego = React.createClass({
 		};
 	},
 
+	componentWillMount() {
+		// Get icon image bc NavigatorIOS needs it
+		if (general.platformIOS()) {
+			Icon.getImageSource('cog', 25).then((source) => {
+				this.setState({ gearIcon: source });
+			});
+		}
+	},
+
 	componentDidMount() {
+		/*
 		if (general.platformAndroid()) {
 			// Listen to route focus changes
 			// Should be a better way to do this...
@@ -109,12 +120,12 @@ var nowucsandiego = React.createClass({
 				const route = event.data.route;
 				route.backButtonTitle = "Back";
 			});
-		}
+		}*/
 	},
 
 	_handleNavigationRequest() {
 		// TODO: works on iOS
-		this.refs.navRef.push({
+		this.navRef.push({
 			id: 'PreferencesView',
 			component: PreferencesView,
 			title: 'Settings'
@@ -124,12 +135,13 @@ var nowucsandiego = React.createClass({
 	render: function () {
 		let navigator;
 		let geolocation = null;
-		
+
 		if (!this.state.isLoading) {
 			geolocation = (<GeoLocationContainer />);
 		}
 
-		if (general.platformIOS()) {
+		if (general.platformIOS() && this.state.gearIcon) {
+
 			StatusBar.setBarStyle('light-content');
 
 			navigator = (<NavigatorIOS
@@ -140,7 +152,7 @@ var nowucsandiego = React.createClass({
 						isSimulator: this.props.isSimulator
 					},
 					backButtonTitle: 'Back',
-					rightButtonIcon: require('./assets/img/icon_gear.png'),
+					rightButtonIcon: this.state.gearIcon,
 					onRightButtonPress: () => this._handleNavigationRequest(),
 				}}
 				style={css.flex}
@@ -150,17 +162,55 @@ var nowucsandiego = React.createClass({
 				titleTextColor='#FFFFFF'
 				navigationBarHidden={false}
 				translucent={false}
-				ref="navRef"
+				ref={(navRef) => {
+					if (navRef) {
+						// Make all back buttons use text "Back"
+						navRef.navigationContext.addListener('willfocus', (event) => {
+							const route = event.data.route;
+							route.backButtonTitle = 'Back';
+						});
+						this.navRef = navRef;
+					}
+				}}
 			/>);
-		} else {
+		} else if (general.platformAndroid()) {
 			// android we will use NavigationBarWithRouteMapper
 			navigator = (
 				<NavigationBarWithRouteMapper
-					ref="navRef"
+					ref={(navRef) => {
+						if (navRef) {
+							// Listen to route focus changes
+							// Should be a better way to do this...
+							navRef.refs.navRef.navigationContext.addListener('willfocus', (event) => {
+								const route = event.data.route;
+
+								// Make sure renders/card refreshes are only happening when in home route
+								if (route.id === 'Home') {
+									this.setState({ inHome: true });
+								} else {
+									this.setState({ inHome: false });
+								}
+							});
+
+							// Listen to back button on Android
+							BackAndroid.addEventListener('hardwareBackPress', () => {
+								if (this.state.inHome) {
+									BackAndroid.exitApp();
+									return false;
+								} else {
+									navRef.refs.navRef.pop();
+									return true;
+								}
+							});
+							this.navRef = navRef;
+						}
+					}}
 					route={{ id: 'Home', name: 'Home', title: AppSettings.APP_NAME }}
 					renderScene={this.renderScene}
 				/>
 			);
+		} else {
+			navigator = null;
 		}
 
 		return (
