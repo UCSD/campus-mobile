@@ -3,6 +3,8 @@ import { TextInput, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 const css = require('../../styles/css');
+const general = require('../../util/general');
+const PRM = general.getPRM();
 
 const SearchBar = ({ placeholder, update, style }) => (
 	<View style={[css.map_searchbar_container, style]}>
@@ -20,7 +22,7 @@ const SearchBar = ({ placeholder, update, style }) => (
 		<Icon
 			style={css.map_searchbar_icon}
 			name="search"
-			size={20}
+			size={general.round(24 * PRM)}
 			color={'rgba(0,0,0,.5)'}
 		/>
 	</View>

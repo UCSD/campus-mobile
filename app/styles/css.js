@@ -351,9 +351,9 @@ var css = StyleSheet.create({
 	special_events_webview: { },
 
 	// Map
-	map_searchbar_container: { flex:1, flexDirection: 'row', alignItems: 'center' },
-	map_searchbar_input: { flex: 9, height: 50, paddingLeft: round(8 * prm)},
-	map_searchbar_icon: { flex: 1, padding: round(8 * prm) },
+	map_searchbar_container: { width: maxCardWidth },
+	map_searchbar_input: { flex: 1,  height: round(44 * prm), padding: round(8 * prm), paddingLeft: round(40 * prm), backgroundColor: 'rgba(0,0,0,0)', zIndex: 10, color: '#555', fontSize: round(20 * prm) },
+	map_searchbar_icon: { position: 'absolute', top: round(9 * prm), left: round(8 * prm) },
 
 
 	// Events styles
