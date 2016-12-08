@@ -354,6 +354,9 @@ var css = StyleSheet.create({
 	map_searchbar_container: { width: maxCardWidth },
 	map_searchbar_input: { flex: 1,  height: round(44 * prm), padding: round(8 * prm), paddingLeft: round(40 * prm), backgroundColor: 'rgba(0,0,0,0)', zIndex: 10, color: '#555', fontSize: round(20 * prm) },
 	map_searchbar_icon: { position: 'absolute', top: round(9 * prm), left: round(8 * prm) },
+	map_searchinfo: { padding: round(16 * prm) },
+	map_searchinfo_title: { fontSize: round(18 * prm), fontWeight: '500', color: '#222', paddingBottom: round(4 * prm) },
+	map_searchinfo_desc: { fontSize: round(16 * prm), color: '#444', lineHeight: round(24 * prm) },
 
 
 	// Events styles

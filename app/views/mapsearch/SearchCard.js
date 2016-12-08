@@ -19,7 +19,7 @@ import NearbyService from '../../services/nearbyService';
 const css = require('../../styles/css');
 const logger = require('../../util/logger');
 const shuttle = require('../../util/shuttle');
-const AppSettings = 		require('../../AppSettings');
+const AppSettings = require('../../AppSettings');
 const general = require('../../util/general');
 
 class SearchCard extends CardComponent {
@@ -62,10 +62,11 @@ class SearchCard extends CardComponent {
 				this.setState({
 					searchResults: result.results,
 					selectedResult: result.results[0],
-					selectedInvalidated: true
+					selectedInvalidated: true,
 				});
 			} else {
 				// handle no results
+				
 			}
 		});
 	}
@@ -104,12 +105,26 @@ class SearchCard extends CardComponent {
 					selectedResult={this.state.selectedResult}
 					style={css.nearby_map_container}
 				/>
-				{(this.state.searchResults) ? (
+				{this.state.searchResults ? (
 					<SearchResults
 						results={this.state.searchResults}
 						onSelect={(index) => this.updateSelectedResult(index)}
 					/>
-				) : (null)}
+				) : null }
+
+				<View style={css.map_searchinfo}>
+					<Text style={css.map_searchinfo_title}>Search {AppSettings.APP_CAMPUS_NAME} for:</Text>
+					<Text style={css.map_searchinfo_desc}>
+						- Buildings / Classrooms / Lecture Halls{'\n'}
+						- Campus Services{'\n'}
+						- Entertainment{'\n'}
+						- Information Centers{'\n'}
+						- Transportation / Parking{'\n'}
+						- Student Services
+					</Text>
+				</View>
+				
+
 			</View>
 		);
 	}
