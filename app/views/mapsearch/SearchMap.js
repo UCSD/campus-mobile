@@ -31,6 +31,7 @@ const SearchMap = ({ location, selectedResult, hideMarker, style }) => (
 			}
 		}}
 		style={style}
+		scrollEnabled={false}
 		loadingEnabled={true}
 		loadingIndicatorColor={'#666'}
 		loadingBackgroundColor={'#EEE'}
