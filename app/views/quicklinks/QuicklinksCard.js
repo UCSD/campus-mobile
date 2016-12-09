@@ -33,7 +33,7 @@ export default class QuicklinksCard extends CardComponent {
 
 	render() {
 		return (
-			<Card title="Quick Links">
+			<Card title="Links">
 				{this.state.quicklinksDataLoaded ? (
 					<View style={css.quicklinks_card}>
 						<View style={css.quicklinks_locations}>
