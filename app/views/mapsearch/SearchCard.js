@@ -32,7 +32,8 @@ class SearchCard extends CardComponent {
 			selectedResult: null,
 			searchResults: null,
 			selectedInvalidated: true,
-			loading: false
+			loading: false,
+			searched: false,
 		};
 	}
 
@@ -41,8 +42,6 @@ class SearchCard extends CardComponent {
 
 	// Override default method because MapView re-render causes re-zoom
 	shouldComponentUpdate() {
-		console.log('Refrishing: ' + this.props.locationPermission);
-
 		if (this.state.selectedInvalidated && this.props.locationPermission === 'authorized') {
 			this.state.selectedInvalidated = false;
 			return true;
@@ -70,10 +69,17 @@ class SearchCard extends CardComponent {
 					selectedResult: result.results[0],
 					selectedInvalidated: true,
 					loading: false,
+					searched: true
 				});
 			} else {
-				// handle no results
-				
+				// Handle no results
+				this.setState({
+					searchResults: null,
+					selectedResult: null,
+					selectedInvalidated: true,
+					loading: false,
+					searched: true
+				});
 			}
 		});
 	}
@@ -114,8 +120,7 @@ class SearchCard extends CardComponent {
 					selectedResult={this.state.selectedResult}
 					style={css.nearby_map_container}
 				/>
-				
-				{this.state.searchResults ? (
+				{this.state.searched ? (
 					<SearchResults
 						results={this.state.searchResults}
 						onSelect={(index) => this.updateSelectedResult(index)}
