@@ -92,6 +92,13 @@ module.exports = {
 		return (windowWidth / appDefaultWidth);
 	},
 
+	getMaxCardWidth() {
+		const windowSize = Dimensions.get('window');
+		const windowWidth = windowSize.width;
+
+		return windowWidth - 2 - 12;
+	},
+
 	getCurrentTimestamp() {
 		return Math.round(Date.now() / 1000);
 	},
