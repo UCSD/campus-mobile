@@ -12,6 +12,9 @@ var ANDROID_STRINGS_PATH = '../android/app/src/main/res/values/strings.xml';
 var APP_NAME = myEnv.APP_NAME;
 var APP_NAME_PH = myEnv.APP_NAME_PH;
 
+var APP_CAMPUS_NAME = myEnv.APP_CAMPUS_NAME;
+var APP_CAMPUS_NAME_PH = myEnv.APP_CAMPUS_NAME_PH;
+
 var APP_SHORTNAME = myEnv.APP_SHORTNAME;
 var APP_SHORTNAME_PH = myEnv.APP_SHORTNAME_PH;
 
@@ -23,9 +26,9 @@ if (REPLACEMENT_TYPE === 'Production' || REPLACEMENT_TYPE === 'Staging' || REPLA
 		} else {
 			var result;
 			if (REPLACEMENT_TYPE === 'Production' || REPLACEMENT_TYPE === 'Staging') {
-				result = data.replace(APP_NAME_PH, APP_NAME);
+				result = data.replace(APP_NAME_PH, APP_NAME).replace(APP_CAMPUS_NAME_PH, APP_CAMPUS_NAME);
 			} else if (REPLACEMENT_TYPE === 'Placeholder') {
-				result = data.replace(APP_NAME, APP_NAME_PH);
+				result = data.replace(APP_NAME, APP_NAME_PH).replace(APP_CAMPUS_NAME, APP_CAMPUS_NAME_PH);
 			}
 			fs.writeFile(APP_SETTINGS_PATH, result, 'utf8', function(err) {
 				if (err) {

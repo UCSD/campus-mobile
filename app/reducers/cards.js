@@ -5,7 +5,7 @@ var initialState = {
 	'shuttle': 		{ active: true, order: 2, name: 'Shuttle', component: 'ShuttleCard' },
 	'dining': 		{ active: true, order: 3, name: 'Dining', component: 'DiningCard' },
 	'events': 		{ active: true, order: 4, name: 'Events', component: 'EventsCard' },
-	'quicklinks': 	{ active: true, order: 5, name: 'Quick Links', component: 'QuicklinksCard' },
+	'quicklinks': 	{ active: true, order: 5, name: 'Links', component: 'QuicklinksCard' },
 	'news': 		{ active: true, order: 6, name: 'News', component: 'NewsCard' },
 	'map': 			{ active: true, order: 7, name: 'Map', component: 'SearchCard' }
 };
