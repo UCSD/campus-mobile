@@ -112,7 +112,7 @@ class SearchCard extends CardComponent {
 					/>
 				) : null }
 
-				<View style={css.map_searchinfo}>
+				{/*<View style={css.map_searchinfo}>
 					<Text style={css.map_searchinfo_title}>Search {AppSettings.APP_CAMPUS_NAME} for:</Text>
 					<Text style={css.map_searchinfo_desc}>
 						- Buildings / Classrooms / Lecture Halls{'\n'}
@@ -122,7 +122,7 @@ class SearchCard extends CardComponent {
 						- Transportation / Parking{'\n'}
 						- Student Services
 					</Text>
-				</View>
+				</View>*/}
 				
 
 			</View>
