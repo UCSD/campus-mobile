@@ -21,22 +21,22 @@
 
 	NSURL *jsCodeLocation;
 	
-	BOOL isSimulator = NO;
-	#if TARGET_IPHONE_SIMULATOR
+  BOOL isSimulator = NO;
+  #if TARGET_IPHONE_SIMULATOR
 		isSimulator = YES;
-		
-#ifdef DEBUG
-    jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/index.ios.bundle?platform=ios&dev=false"];
-#else
-    jsCodeLocation = [CodePush bundleURL];
-#endif
-	#else
-		jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
-	#endif
+  #endif
+  
+  #ifdef DEBUG
+		jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/index.ios.bundle?platform=ios&dev=false"];
+  #else
+		jsCodeLocation = [CodePush bundleURL];
+		//jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
+  #endif
+
 	
 	RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
 																											moduleName:@"nowucsandiego"
-																							 initialProperties:@{@"isSimulator":@(isSimulator)}
+																							 initialProperties:nil
 																									 launchOptions:launchOptions];
 	
 	// Get launch image
