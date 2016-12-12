@@ -438,6 +438,7 @@ var css = StyleSheet.create({
 	feedback_label: { flex: 2, flexWrap: "wrap", fontSize: round(20 * prm), height: round(80*prm)},
 	feedback_text: { flex:1, fontSize: round(20 * prm), alignItems: 'center', width: maxCardWidth - 32, height: round(50*prm) },
 	feedback_submit: { flex:1, fontSize: round(40 * prm), textAlign: 'center' },
+	feedback_appInfo: { position: 'absolute', bottom: 0, right: 0, color: '#BBB', fontSize: 9, padding: 4 },
 
 	// MISC STYLES
 	whitebg: { backgroundColor: '#FFF' },

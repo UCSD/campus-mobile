@@ -18,6 +18,7 @@ import css from '../styles/css';
 import Card from './card/Card';
 
 const logger = require('../util/logger');
+const AppSettings = require('../AppSettings');
 
 export default class FeedbackView extends Component {
 
@@ -27,12 +28,19 @@ export default class FeedbackView extends Component {
 	**/
 	constructor(props) {
 		super(props);
+
+		this.appInfo = AppSettings.APP_VERSION;
+		if (AppSettings.APP_CODEPUSH_VERSION) {
+			this.appInfo += '-cp' + AppSettings.APP_CODEPUSH_VERSION;
+		}
+
 		this.state = {
 			commentsText: '',
 			nameText: '',
 			emailText: '',
 			loaded: false,
-			submit: false
+			submit: false,
+			appInfo: '',
 		};
 	}
 
@@ -40,7 +48,6 @@ export default class FeedbackView extends Component {
 	 * Invoked before render
 	**/
 	componentWillMount() {
-
 	}
 
 	/**
@@ -127,6 +134,7 @@ export default class FeedbackView extends Component {
 						</View>
 					</Card>
 				</ScrollView>
+				<Text style={css.feedback_appInfo}>v{this.appInfo}</Text>
 			</View>
 		);
 	}
