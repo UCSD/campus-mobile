@@ -22,7 +22,7 @@ const SearchBar = ({ placeholder, update, loading, style }) => (
 		<TextInput
 			placeholder={placeholder}
 			autoCorrect={false}
-			onSubmitEditing={(event) => update(event.nativeEvent.text)}
+			onSubmitEditing={(event) => update(event.nativeEvent.text.trim())}
 			blurOnSubmit={true}
 			returnKeyType="search"
 			clearButtonMode={'while-editing'}
