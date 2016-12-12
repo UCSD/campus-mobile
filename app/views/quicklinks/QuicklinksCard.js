@@ -65,6 +65,6 @@ export default class QuicklinksCard extends CardComponent {
 	}
 
 	gotoQuicklinksListView() {
-		this.props.navigator.push({ id: 'QuicklinksListView', name: 'QuicklinksListView', title: 'Quick Links',  component: QuicklinksListView, data: this.state.quicklinksData });
+		this.props.navigator.push({ id: 'QuicklinksListView', name: 'QuicklinksListView', title: 'Links',  component: QuicklinksListView, data: this.state.quicklinksData });
 	}
 }

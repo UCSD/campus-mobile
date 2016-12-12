@@ -21,19 +21,10 @@
 
 	NSURL *jsCodeLocation;
 	
-  BOOL isSimulator = NO;
-  #if TARGET_IPHONE_SIMULATOR
-		isSimulator = YES;
-  #endif
+  //jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/index.ios.bundle?platform=ios&dev=false"];
+	jsCodeLocation = [CodePush bundleURL];
+	//jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
   
-  #ifdef DEBUG
-		jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/index.ios.bundle?platform=ios&dev=false"];
-  #else
-		jsCodeLocation = [CodePush bundleURL];
-		//jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
-  #endif
-
-	
 	RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
 																											moduleName:@"nowucsandiego"
 																							 initialProperties:nil
