@@ -2,7 +2,8 @@ import React from 'react';
 import {
 	View,
 	TouchableHighlight,
-	Text
+	Text,
+	ActivityIndicator,
 } from 'react-native';
 import { connect } from 'react-redux';
 
@@ -31,20 +32,20 @@ class SearchCard extends CardComponent {
 			selectedResult: null,
 			searchResults: null,
 			selectedInvalidated: true,
-			refreshing: false
+			loading: false,
+			searched: false,
 		};
 	}
 
 	componentDidMount() {
 	}
 
+	// Override default method because MapView re-render causes re-zoom
 	shouldComponentUpdate() {
-		console.log('Refrishing: ' + this.props.locationPermission);
-
 		if (this.state.selectedInvalidated && this.props.locationPermission === 'authorized') {
 			this.state.selectedInvalidated = false;
 			return true;
-		} else if (this.state.selectedInvalidated) {
+		} else if (this.state.selectedInvalidated || this.state.loading) {
 			return true;
 		} else {
 			return false;
@@ -52,6 +53,10 @@ class SearchCard extends CardComponent {
 	}
 
 	updateSearch = (text) => {
+		this.setState({
+			loading: true
+		});
+
 		NearbyService.FetchSearchResults(text).then((result) => {
 			if (result.results) {
 				// Cutoff excess
@@ -63,10 +68,18 @@ class SearchCard extends CardComponent {
 					searchResults: result.results,
 					selectedResult: result.results[0],
 					selectedInvalidated: true,
+					loading: false,
+					searched: true
 				});
 			} else {
-				// handle no results
-				
+				// Handle no results
+				this.setState({
+					searchResults: null,
+					selectedResult: null,
+					selectedInvalidated: true,
+					loading: false,
+					searched: true
+				});
 			}
 		});
 	}
@@ -99,32 +112,22 @@ class SearchCard extends CardComponent {
 			<View>
 				<SearchBar
 					update={this.updateSearch}
+					loading={this.state.loading}
 				/>
+
 				<SearchMap
 					location={this.props.location}
 					selectedResult={this.state.selectedResult}
 					style={css.nearby_map_container}
 				/>
-				{this.state.searchResults ? (
+				{this.state.searched ? (
 					<SearchResults
 						results={this.state.searchResults}
 						onSelect={(index) => this.updateSelectedResult(index)}
 					/>
-				) : null }
-
-				{/*<View style={css.map_searchinfo}>
-					<Text style={css.map_searchinfo_title}>Search {AppSettings.APP_CAMPUS_NAME} for:</Text>
-					<Text style={css.map_searchinfo_desc}>
-						- Buildings / Classrooms / Lecture Halls{'\n'}
-						- Campus Services{'\n'}
-						- Entertainment{'\n'}
-						- Information Centers{'\n'}
-						- Transportation / Parking{'\n'}
-						- Student Services
-					</Text>
-				</View>*/}
-				
-
+				) : (
+					null
+				) }
 			</View>
 		);
 	}
