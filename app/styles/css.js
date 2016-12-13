@@ -78,15 +78,10 @@ var navMarginTop = 7;
 var css = StyleSheet.create({
 
 	// Navigator
-	navBar: { flex: 1, backgroundColor: 'rgba(24,43,73,1)' },
-	// Nav Bar Left
-	navBarLeftButtonContainer: { flex: 1, alignItems: 'center', justifyContent: 'center', width: round(windowWidth * .166), marginBottom: 1 },
-	navBarLeftButton: { color: '#FFF', fontSize: round(18 * prm), textAlign: 'center' },
-	// Nav Bar Title
-	navBarTitleContainer: { flex: 1, alignItems: 'center', justifyContent: 'center', width: round(windowWidth * .666), marginTop: navBarTitleMarginTop },
-	navBarTitle: { color: '#FFF', fontSize: round(18 * prm), textAlign: 'center' },
-	// Nav Bar Right
-	navBarRightButtonContainer: { flex: 1, alignItems: 'center', justifyContent: 'center', width: round(windowWidth * .166) },
+	navigator: { flex: 1, backgroundColor: 'rgba(24,43,73,1)', alignItems: 'center', justifyContent: 'center' },
+	navigatorLeft: { color: '#FFF', fontSize: round(34 * prm), marginHorizontal: round(10 * prm) },
+	navigatorTitle: { color: '#FFF', fontSize: round(22 * prm), textAlign: 'center' },
+	navigatorRight: { color: '#FFF', fontSize: round(26 * prm), marginHorizontal: round(10 * prm), marginVertical: round(4 * prm), marginTop: 2 },
 
 	// NavigatorIOS
 	navBarIOS: {},
