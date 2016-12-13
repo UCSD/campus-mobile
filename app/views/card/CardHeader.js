@@ -2,34 +2,47 @@ import React from 'react';
 import {
 	View,
 	Text,
-	Image,
-	ActivityIndicator,
-	TouchableHighlight,
 } from 'react-native';
 
-// import Icon from 'react-native-vector-icons/FontAwesome';
+import Menu, {
+	MenuContext,
+	MenuOptions,
+	MenuOption,
+	MenuTrigger,
+} from 'react-native-popup-menu';
+
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const css = require('../../styles/css');
 
 export default class CardHeader extends React.Component {
 	render() {
-		let refresh;
-		if (this.props.cardRefresh) {
-			refresh = this.props.isRefreshing ?
-				<ActivityIndicator animating={true} />
-				:
-					<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={this.props.cardRefresh}>
-						<Image style={css.shuttle_card_refresh} source={require('../../assets/img/icon_refresh_grey.png')} />
-					</TouchableHighlight>;
-		}
+		const menu = (
+			<MenuContext style={{ flexDirection: 'column', paddingRight: 10 }}>
+				<Menu onSelect={value => alert(`Selected number: ${value}`)}>
+					<MenuTrigger>
+						<View style={{ alignSelf: 'flex-end', paddingTop: 5 }}>
+							<Icon size={20} name="ellipsis-v" />
+						</View>
+					</MenuTrigger>
+					<MenuOptions>
+						<MenuOption value={1} text="One" />
+						<MenuOption value={2}>
+							<Text style={{ color: 'red' }}>Two</Text>
+						</MenuOption>
+					</MenuOptions>
+				</Menu>
+			</MenuContext>
+		);
 		return (
 			<View style={css.card_title_container}>
-				<Text style={css.card_title}>{this.props.title}</Text>
-				<View style={css.shuttle_card_refresh_container}>
-					{refresh}
+				<View>
+					<Text style={css.card_title}>{this.props.title}</Text>
+				</View>
+				<View style={{ flex: 1, justifyContent: 'center' }}>
+					{menu}
 				</View>
 			</View>
 		);
 	}
 }
-// {refresh} <Icon name="caret-down" size={20} color={"#747678"}/>
