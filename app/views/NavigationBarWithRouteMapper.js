@@ -37,30 +37,30 @@ export default class NavigationBarWithRouteMapper extends React.Component {
 
 							Title: function(route, navigator, index, navState) {
 								return (
-										<Text style={css.navigatorTitle}>{route.title}</Text>
+									<Text style={css.navigatorTitle}>{route.title}</Text>
 								);
 							},
 
 							RightButton: function(route, navigator, index, navState) {
 								if (route.id !== 'Home') {
-									//return null;
+									return null;
+								} else {
+									// for the home view, show the preferences button
+									return (
+										<TouchableHighlight
+											underlayColor={'rgba(200,200,200,.1)'}
+											onPress={() => {
+												navigator.push({
+													id: 'PreferencesView',
+													component: PreferencesView,
+													title: 'Preferences'
+												});
+											}}
+										>
+											<Icon style={css.navigatorRight} name='cog' />
+										</TouchableHighlight>
+									);
 								}
-
-								// for the home view, show the preferences button
-								return (
-									<TouchableHighlight
-										underlayColor={'rgba(200,200,200,.1)'}
-										onPress={() => {
-											navigator.push({
-												id: 'PreferencesView',
-												component: PreferencesView,
-												title: 'Preferences'
-											});
-										}}
-									>
-										<Icon style={css.navigatorRight} name='cog' />
-									</TouchableHighlight>
-								);
 							}
 						}}
 					/>
