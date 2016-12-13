@@ -351,8 +351,8 @@ var css = StyleSheet.create({
 	special_events_webview: { },
 
 	// Map
-	map_searchbar_container: { width: maxCardWidth },
-	map_searchbar_input: { flex: 1,  height: round(44 * prm), padding: round(8 * prm), paddingLeft: round(40 * prm), backgroundColor: 'rgba(0,0,0,0)', zIndex: 10, color: '#555', fontSize: round(20 * prm) },
+	map_searchbar_container: { width: maxCardWidth, height: round(44 * prm), borderWidth: 0 },
+	map_searchbar_input: { height: round(44 * prm), padding: round(8 * prm), paddingLeft: round(40 * prm), backgroundColor: 'rgba(0,0,0,0)', zIndex: 10, color: '#555', fontSize: round(20 * prm) },
 	map_searchbar_icon: { position: 'absolute', top: round(9 * prm), left: round(8 * prm) },
 	map_searchbar_ai: { position: 'absolute', top: round(12 * prm), left: round(8 * prm) },
 	map_searchinfo: { padding: round(16 * prm) },
