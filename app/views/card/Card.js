@@ -41,7 +41,7 @@ class Card extends React.Component {
 						<Text>Hide Card</Text>
 					</MenuOption>
 					<MenuOption value={2}>
-						<Text style={{ color: 'red' }}>Two</Text>
+						<Text style={{ color: 'red' }}>Feedback (TODO)</Text>
 					</MenuOption>
 				</MenuOptions>
 			</Menu>
