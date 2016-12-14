@@ -38,10 +38,7 @@ class Card extends React.Component {
 				</MenuTrigger>
 				<MenuOptions>
 					<MenuOption onSelect={() => { this.props.dispatch(hideCard(this.props.id)); }}>
-						<Text>Hide Card</Text>
-					</MenuOption>
-					<MenuOption value={2}>
-						<Text style={{ color: 'red' }}>Feedback (TODO)</Text>
+						<Text style={styles.hideOption}>Hide Card</Text>
 					</MenuOption>
 				</MenuOptions>
 			</Menu>
@@ -64,6 +61,10 @@ const styles = StyleSheet.create({
 		justifyContent: 'flex-end',
 		alignItems: 'center',
 		alignSelf: 'stretch',
+	},
+	hideOption: {
+		margin: 10,
+		fontSize: 16
 	},
 	menu_trigger: {
 		padding: 15,
