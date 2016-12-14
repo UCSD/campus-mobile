@@ -48,7 +48,7 @@ export default class PreferencesView extends Component {
 		return (
 			<View style={[css.main_container, css.offwhitebg]}>
 				<ScrollView contentContainerStyle={css.scroll_default}>
-					<Card id="cards" title="Cards">
+					<Card id="cards" title="Cards" hideMenu={true}>
 						<View style={css.card_content_full_width}>
 							<View style={css.column}>
 								{this._renderCards()}
