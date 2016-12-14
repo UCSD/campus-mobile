@@ -17,37 +17,31 @@ import { connect } from 'react-redux';
 import { hideCard } from '../../actions/cards';
 
 class CardHeader extends React.Component {
-	menuOptionSelected = (index) => {
-		if (index === 1) {
-			// hide card
-		} else if (index === 2) {
-			// feedback
-		}
+	_renderMenu = () => {
+		// we can hide the menu if we don't want it, like for non-hideable cards
+		if (this.props.hideMenu) return;
 
-		alert('selected ' + index);
+		return (
+			<Menu style={styles.menu} onSelect={value => this.menuOptionSelected(value)}>
+				<MenuTrigger style={styles.menu_trigger}>
+					<Icon size={20} name="ellipsis-v" />
+				</MenuTrigger>
+				<MenuOptions>
+					<MenuOption onSelect={() => { this.props.dispatch(hideCard(this.props.id)); }}>
+						<Text>Hide Card</Text>
+					</MenuOption>
+					<MenuOption value={2}>
+						<Text style={{ color: 'red' }}>Two</Text>
+					</MenuOption>
+				</MenuOptions>
+			</Menu>
+		);
 	}
 	render() {
-		const menu = (
-			<MenuContext>
-				<Menu style={styles.menu} onSelect={value => this.menuOptionSelected(value)}>
-					<MenuTrigger style={styles.menu_trigger}>
-						<Icon size={20} name="ellipsis-v" />
-					</MenuTrigger>
-					<MenuOptions>
-						<MenuOption value={1}>
-							<Text>Hide Card</Text>
-						</MenuOption>
-						<MenuOption value={2}>
-							<Text style={{ color: 'red' }}>Two</Text>
-						</MenuOption>
-					</MenuOptions>
-				</Menu>
-			</MenuContext>
-		);
 		return (
 			<View style={styles.container}>
 				<Text style={styles.title}>{this.props.title}</Text>
-				{menu}
+				{this._renderMenu()}
 			</View>
 		);
 	}
