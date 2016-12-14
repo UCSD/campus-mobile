@@ -4,6 +4,7 @@
 
 	// Modify These Values
 	var APP_NAME = 'your-app-name';
+	var APP_CAMPUS_NAME = 'your-campus-name';
 	var APP_SHORTNAME = 'your-app-shortname';	// Text shown under your App Icon
 
 	var CODEPUSH_IOS_KEY_PROD = 'iOS Production Key Here';
@@ -17,6 +18,7 @@
 
 	// Placeholder Values (Do Not Modify)
 	var APP_NAME_PH = 'now-mobile';
+	var APP_CAMPUS_NAME = 'APP_CAMPUS_NAME_PH';
 	var APP_SHORTNAME_PH = 'nowmobile';
 	var CODEPUSH_IOS_KEY_PH = 'CODEPUSH_IOS_DEPLOYMENT_KEY';
 	var CODEPUSH_ANDROID_KEY_PH = 'CODEPUSH_ANDROID_DEPLOYMENT_KEY';
@@ -26,6 +28,7 @@
 
 	// Exports (Do Not Modify)
 	exports.APP_NAME = APP_NAME;
+	exports.APP_CAMPUS_NAME = APP_CAMPUS_NAME;
 	exports.APP_SHORTNAME = APP_SHORTNAME;
 
 	exports.CODEPUSH_IOS_KEY_PROD = CODEPUSH_IOS_KEY_PROD;
@@ -37,6 +40,7 @@
 	exports.GOOGLE_MAPS_API_KEY = GOOGLE_MAPS_API_KEY;
 
 	exports.APP_NAME_PH = APP_NAME_PH;
+	exports.APP_CAMPUS_NAME_PH = APP_CAMPUS_NAME_PH;
 	exports.APP_SHORTNAME_PH = APP_SHORTNAME_PH;
 	exports.CODEPUSH_IOS_KEY_PH = CODEPUSH_IOS_KEY_PH;
 	exports.CODEPUSH_ANDROID_KEY_PH = CODEPUSH_ANDROID_KEY_PH;

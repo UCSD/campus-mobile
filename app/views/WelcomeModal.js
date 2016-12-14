@@ -42,7 +42,7 @@ export default class WelcomeModal extends React.Component {
 				- live shuttle information and maps{'\n'}
 				- menus and dining info{'\n'}
 				- timely news and events{'\n'}
-				- quick links to MyTritonlink and other apps{'\n'}
+				- links to campus services and apps{'\n'}
 				- and we&apos;ll be adding new stuff all the time{'\n'}
 			</InfoModal>
 		);

@@ -78,15 +78,10 @@ var navMarginTop = 7;
 var css = StyleSheet.create({
 
 	// Navigator
-	navBar: { flex: 1, backgroundColor: 'rgba(24,43,73,1)' },
-	// Nav Bar Left
-	navBarLeftButtonContainer: { flex: 1, alignItems: 'center', justifyContent: 'center', width: round(windowWidth * .166), marginBottom: 1 },
-	navBarLeftButton: { color: '#FFF', fontSize: round(18 * prm), textAlign: 'center' },
-	// Nav Bar Title
-	navBarTitleContainer: { flex: 1, alignItems: 'center', justifyContent: 'center', width: round(windowWidth * .666), marginTop: navBarTitleMarginTop },
-	navBarTitle: { color: '#FFF', fontSize: round(18 * prm), textAlign: 'center' },
-	// Nav Bar Right
-	navBarRightButtonContainer: { flex: 1, alignItems: 'center', justifyContent: 'center', width: round(windowWidth * .166) },
+	navigator: { flex: 1, backgroundColor: 'rgba(24,43,73,1)', alignItems: 'center', justifyContent: 'center' },
+	navigatorLeft: { color: '#FFF', fontSize: round(34 * prm), marginHorizontal: round(10 * prm) },
+	navigatorTitle: { color: '#FFF', fontSize: round(22 * prm), textAlign: 'center' },
+	navigatorRight: { color: '#FFF', fontSize: round(26 * prm), marginHorizontal: round(10 * prm), marginVertical: round(4 * prm), marginTop: 2 },
 
 	// NavigatorIOS
 	navBarIOS: {},
@@ -351,9 +346,13 @@ var css = StyleSheet.create({
 	special_events_webview: { },
 
 	// Map
-	map_searchbar_container: { flex:1, flexDirection: 'row', alignItems: 'center' },
-	map_searchbar_input: { flex: 9, height: 50, paddingLeft: round(8 * prm)},
-	map_searchbar_icon: { flex: 1, padding: round(8 * prm) },
+	map_searchbar_container: { width: maxCardWidth, height: round(44 * prm), borderWidth: 0 },
+	map_searchbar_input: { height: round(44 * prm), padding: round(8 * prm), paddingLeft: round(40 * prm), backgroundColor: 'rgba(0,0,0,0)', zIndex: 10, color: '#555', fontSize: round(20 * prm) },
+	map_searchbar_icon: { position: 'absolute', top: round(9 * prm), left: round(8 * prm) },
+	map_searchbar_ai: { position: 'absolute', top: round(12 * prm), left: round(8 * prm) },
+	map_searchinfo: { padding: round(16 * prm) },
+	map_searchinfo_title: { fontSize: round(18 * prm), fontWeight: '500', color: '#222', paddingBottom: round(4 * prm) },
+	map_searchinfo_desc: { fontSize: round(16 * prm), color: '#444', lineHeight: round(24 * prm) },
 
 
 	// Events styles
@@ -434,6 +433,7 @@ var css = StyleSheet.create({
 	feedback_label: { flex: 2, flexWrap: "wrap", fontSize: round(20 * prm), height: round(80*prm)},
 	feedback_text: { flex:1, fontSize: round(20 * prm), alignItems: 'center', width: maxCardWidth - 32, height: round(50*prm) },
 	feedback_submit: { flex:1, fontSize: round(40 * prm), textAlign: 'center' },
+	feedback_appInfo: { position: 'absolute', bottom: 0, right: 0, color: '#BBB', fontSize: 9, padding: 4 },
 
 	// MISC STYLES
 	whitebg: { backgroundColor: '#FFF' },

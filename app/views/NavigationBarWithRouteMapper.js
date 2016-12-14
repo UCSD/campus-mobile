@@ -20,7 +20,7 @@ export default class NavigationBarWithRouteMapper extends React.Component {
 				renderScene={this.props.renderScene}
 				navigationBar={
 					<Navigator.NavigationBar
-						style={css.navBar}
+						style={css.navigator}
 						navigationStyles={Navigator.NavigationBar.StylesIOS}
 						routeMapper={{
 							LeftButton: function(route, navigator, index, navState) {
@@ -28,35 +28,25 @@ export default class NavigationBarWithRouteMapper extends React.Component {
 									return null;
 								} else {
 									return (
-										<View>
-											<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => navigator.pop()}>
-												<Text style={css.navBarLeftButton}>
-													&nbsp;&lt; Back
-												</Text>
-											</TouchableHighlight>
-										</View>
+										<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => navigator.pop()}>
+											<Icon style={css.navigatorLeft} name='angle-left' />
+										</TouchableHighlight>
 									);
 								}
 							},
 
 							Title: function(route, navigator, index, navState) {
 								return (
-									<View>
-										<Text style={css.navBarTitle}>
-											{route.title}
-										</Text>
-									</View>
+									<Text style={css.navigatorTitle}>{route.title}</Text>
 								);
 							},
 
 							RightButton: function(route, navigator, index, navState) {
 								if (route.id !== 'Home') {
 									return null;
-								}
-
-								// for the home view, show the preferences button
-								return (
-									<View style={[css.navBarLeftButtonContainer, { paddingBottom: 10 }]}>
+								} else {
+									// for the home view, show the preferences button
+									return (
 										<TouchableHighlight
 											underlayColor={'rgba(200,200,200,.1)'}
 											onPress={() => {
@@ -67,10 +57,10 @@ export default class NavigationBarWithRouteMapper extends React.Component {
 												});
 											}}
 										>
-											<Icon style={css.navBarLeftButton} name="cog" />
+											<Icon style={css.navigatorRight} name='cog' />
 										</TouchableHighlight>
-									</View>
-								);
+									);
+								}
 							}
 						}}
 					/>

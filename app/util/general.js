@@ -3,6 +3,7 @@ import {
 	Easing,
 	Platform,
 	Linking,
+	Dimensions,
 } from 'react-native';
 
 const dateFormat = require('dateformat');
@@ -78,6 +79,24 @@ module.exports = {
 
 	stopReloadAnimation(anim) {
 		Animated.timing(anim, { toValue: 0, duration: 0 }).start();
+	},
+
+	round(number) {
+		return Math.round(number);
+	},
+
+	getPRM() {
+		const windowWidth = Dimensions.get('window').width;
+		const windowHeight = Dimensions.get('window').height;
+		const appDefaultWidth = 414;
+		return (windowWidth / appDefaultWidth);
+	},
+
+	getMaxCardWidth() {
+		const windowSize = Dimensions.get('window');
+		const windowWidth = windowSize.width;
+
+		return windowWidth - 2 - 12;
 	},
 
 	getCurrentTimestamp() {

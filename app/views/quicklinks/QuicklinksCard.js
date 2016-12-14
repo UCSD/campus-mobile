@@ -33,7 +33,7 @@ export default class QuicklinksCard extends CardComponent {
 
 	render() {
 		return (
-			<Card title="Quick Links">
+			<Card title="Links">
 				{this.state.quicklinksDataLoaded ? (
 					<View style={css.quicklinks_card}>
 						<View style={css.quicklinks_locations}>
@@ -65,6 +65,6 @@ export default class QuicklinksCard extends CardComponent {
 	}
 
 	gotoQuicklinksListView() {
-		this.props.navigator.push({ id: 'QuicklinksListView', name: 'QuicklinksListView', title: 'Quick Links',  component: QuicklinksListView, data: this.state.quicklinksData });
+		this.props.navigator.push({ id: 'QuicklinksListView', name: 'QuicklinksListView', title: 'Links',  component: QuicklinksListView, data: this.state.quicklinksData });
 	}
 }

@@ -132,9 +132,6 @@ var Main = React.createClass({
 				initialRoute={{
 					component: Home,
 					title: AppSettings.APP_NAME,
-					passProps: {
-						isSimulator: this.props.isSimulator
-					},
 					backButtonTitle: 'Back',
 					rightButtonIcon: this.state.gearIcon,
 					onRightButtonPress: () => this._handleNavigationRequest(),
