@@ -27,6 +27,6 @@ export default function configureStore(initialState, onComplete: ?() => void) {
 		});
 	}
 
-	persistStore(store, { storage: AsyncStorage }, onComplete);
+	persistStore(store, { storage: AsyncStorage, whitelist: [ 'cards' ] }, onComplete);
 	return store;
 }
