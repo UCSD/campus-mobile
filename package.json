@@ -3,7 +3,10 @@
   "version": "2.3.0",
   "private": true,
   "scripts": {
-    "start": "node node_modules/react-native/local-cli/cli.js start"
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "insert-production-values": "node scripts/replace_all.js production",
+    "insert-staging-values": "node scripts/replace_all.js staging",
+    "insert-placeholder-values": "node scripts/replace_all.js placeholder"
   },
   "dependencies": {
     "dateformat": "1.0.12",
