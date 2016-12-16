@@ -1,4 +1,9 @@
-// Usage: replace_all.js [Production|Staging|Placeholder]
+/* 	
+	Usage:
+	npm run-script insert-production-values
+	npm run-script insert-staging-values
+	npm run-script insert-placeholder-values
+*/
 var fs = require('fs');
 var REPLACEMENT_TYPE = process.argv[2];
 var myEnv = require(getUserHome() + '/.nowapp/env.js');
