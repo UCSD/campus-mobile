@@ -1,4 +1,4 @@
 import React, { AppRegistry } from 'react-native';
-import nowucsandiego from './app';
+import NowSetup from './app/setup';
 
-AppRegistry.registerComponent('nowucsandiego', () => nowucsandiego);
+AppRegistry.registerComponent('nowucsandiego', () => NowSetup);

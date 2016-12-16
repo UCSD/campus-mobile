@@ -19,6 +19,7 @@ import {
 	ActivityIndicator,
 } from 'react-native';
 import { connect } from 'react-redux';
+import { MenuContext } from 'react-native-popup-menu';
 
 import TopBannerView from './banner/TopBannerView';
 import WelcomeModal from './WelcomeModal';
@@ -97,6 +98,7 @@ var Home = React.createClass({
 	renderScene(route, navigator, index, navState) {
 		return (
 			<View style={css.main_container}>
+				<MenuContext style={{ flex:1 }}>
 				<ScrollView contentContainerStyle={css.scroll_main} refreshControl={
 					<RefreshControl refreshing={this.state.refreshing} onRefresh={this._handleRefresh} tintColor='#CCC' title='' />
 				}>
@@ -122,6 +124,7 @@ var Home = React.createClass({
 					</View>
 
 				</ScrollView>
+				</MenuContext>
 			</View>
 		);
 	},
