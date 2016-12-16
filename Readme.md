@@ -6,42 +6,39 @@
 
 ## Installation
 
-	// From project folder run:
+	// From your project folder run:
 	npm install
-
-	// Link third party modules with rnpm
-	rnpm link
 
 ### Availabile Cards
 * TopBanner
     * For upcoming current events
-* Dining
-    * 3 nearest HDH dining options
-        * Working on 3rd party options
-* Shuttle
-    * Clockwise/CC Loop arrival times of nearest stop
-    * Shuttle stop info view link
-* Weather
+* Weather & Surf
     * 5 day weather report
-    * Surf report view link
+    * Surf report link
+* Shuttle
+    * Nearest shuttle stops and arrival times
+    * Shuttle stop info to view all shuttles en route
+* Dining
+    * Nearest dining options with menu and nutritional information
+    * View all dining link
 * Events
-    * 3 upcoming events
-    * Full event list view link
-    * http://studentevents.ucsd.edu/all/
+    * Upcoming events
+    * View all events link
+* Quick Links
+    * A list of helpful links from our legacy app
+    * View all quick links link
 * News
-    * 3 latest news articles
-    * Full News list view link
-    * http://ucsdnews.ucsd.edu/rss/all
-        * Waiting on proper news feed 
-* Nearby
-    * MapView with current location + 5 closest POI
-    * List of 5 closest POI with google/apple map directions
+    * Latest news articles
+    * View all news link
+* Maps
+    * Searchable campus map
+    * View all link
 
 ### Future
 #### Cards
-* WebReg
-* Scheduling
+* Class Schedule
 * Survey
+* WebReg
 
 #### Extra
 * Functionality
@@ -49,21 +46,16 @@
     * Re-order cards
     * Push Notifications
     * 2-factor authentication
-* User Settings
-    * Theme customization
 * Library
 * Calendar
 * Cape
-* Tours
 * Chatbot
-* Searchable Map
 * Movie showtimes
 
 #### Technical
-* Codepush
 * Tablet support
 * SSO
-
+* Personalization
 
 ### Screenshots
 ![Alt text](/../screenshots/screenshots/splash.png?raw=true "Splash Screen")

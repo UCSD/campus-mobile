@@ -1,38 +1,30 @@
-'use strict';
-
-import React from 'react'
+import React from 'react';
 import {
 	View,
 	ListView,
-	Text,
-	TouchableHighlight,
 	ActivityIndicator,
 	InteractionManager,
 } from 'react-native';
-import NewsItem from './NewsItem';
+
 import NewsItemCard from './NewsItemCard';
 
-var css = require('../../styles/css');
+const css = require('../../styles/css');
+const logger = require('../../util/logger');
 
 export default class NewsListView extends React.Component {
 
-	constructor(props){
+	constructor(props) {
 		super(props);
-		this.state = {loaded: false};
-		this.datasource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+		this.state = { loaded: false };
+		this.datasource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 	}
 
 	componentDidMount() {
-		InteractionManager.runAfterInteractions(() => {
-			this.setState({loaded: true})
-		});
-	}
+		logger.ga('View Loaded: News List View');
 
-	render() {
-		if (!this.state.loaded) {
-			return this.renderLoadingView();
-		}
-		return this.renderListView();
+		InteractionManager.runAfterInteractions(() => {
+			this.setState({ loaded: true });
+		});
 	}
 
 	renderLoadingView() {
@@ -48,17 +40,24 @@ export default class NewsListView extends React.Component {
 	}
 
 	renderListView() {
-		var eventData = this.props.route.data;
-		var eventDatasource = this.datasource.cloneWithRows(eventData);
+		const eventData = this.props.route.data;
+		const eventDatasource = this.datasource.cloneWithRows(eventData);
 
 		return (
 			<View style={css.main_container}>
 				<ListView
 					style={css.welcome_listview}
 					dataSource={eventDatasource}
-					renderRow={ (row) => <NewsItemCard data={row} navigator={this.props.navigator} /> }
+					renderRow={(row) => <NewsItemCard data={row} navigator={this.props.navigator} />}
 				/>
 			</View>
 		);
+	}
+
+	render() {
+		if (!this.state.loaded) {
+			return this.renderLoadingView();
+		}
+		return this.renderListView();
 	}
 }

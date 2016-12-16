@@ -1,33 +1,25 @@
-'use strict';
-var React = require('react-native');
-var {
+import {
 	Animated,
 	Easing,
 	Platform,
 	Linking,
-} = React;
+	Dimensions,
+} from 'react-native';
 
-var dateFormat = require('dateformat');
+const dateFormat = require('dateformat');
+const logger = require('./logger');
 
 module.exports = {
-	
-	platformIOS: function() {
-		if (Platform.OS === 'ios') {
-			return true;
-		} else {
-			return false;
-		}
+
+	platformIOS() {
+		return Platform.OS === 'ios';
 	},
 
-	platformAndroid: function() {
-		if (Platform.OS === 'android') {
-			return true;
-		} else {
-			return false;
-		}
+	platformAndroid() {
+		return Platform.OS === 'android';
 	},
 
-	getPlatform: function() {
+	getPlatform() {
 		return Platform.OS;
 	},
 
@@ -39,7 +31,7 @@ module.exports = {
 		return (miles.toFixed(1) + ' mi');
 	},
 
-	openURL: function(url) {
+	openURL(url) {
 		Linking.canOpenURL(url).then(supported => {
 			if (!supported) {
 				logger.log('ERR: openURL: Unable to handle url: ' + url);
@@ -49,9 +41,8 @@ module.exports = {
 		}).catch(err => logger.log('ERR: openURL: ' + err));
 	},
 
-	getDirectionsURL: function(method, stopLat, stopLon) {
-
-		var directionsURL;
+	getDirectionsURL(method, stopLat, stopLon) {
+		let directionsURL;
 
 		if (this.platformIOS()) {
 			if (method === 'walk') {
@@ -62,7 +53,7 @@ module.exports = {
 			}
 		} else {
 			if (method === 'walk') {
-				//directionsURL = 'https://www.google.com/maps/dir/' + startLat + ',' + startLon + '/' + stopLat + ',' + stopLon + '/@' + startLat + ',' + startLon + ',18z/data=!4m2!4m1!3e1';
+				// directionsURL = 'https://www.google.com/maps/dir/' + startLat + ',' + startLon + '/' + stopLat + ',' + stopLon + '/@' + startLat + ',' + startLon + ',18z/data=!4m2!4m1!3e1';
 				directionsURL = 'https://maps.google.com/maps?saddr=Current+Location&daddr=' + stopLat + ',' + stopLon + '&dirflg=w';
 			} else {
 				// Default to driving directions
@@ -74,40 +65,62 @@ module.exports = {
 	},
 
 	gotoNavigationApp(method, destinationLat, destinationLon) {
-		var destinationURL = this.getDirectionsURL('walk', destinationLat, destinationLon );
+		const destinationURL = this.getDirectionsURL('walk', destinationLat, destinationLon );
 		this.openURL(destinationURL);
 	},
 
-	startReloadAnimation2: function(anim, toVal, duration) {
-		Animated.timing(anim, { toValue: toVal, duration: duration, easing: Easing.linear }).start();
+	startReloadAnimation2(anim, toVal, duration) {
+		Animated.timing(anim, { toValue: toVal, duration, easing: Easing.linear }).start();
 	},
 
-	startReloadAnimation: function(anim) {
+	startReloadAnimation(anim) {
 		Animated.timing(anim, { toValue: 100, duration: 60000, easing: Easing.linear }).start();
 	},
 
-	stopReloadAnimation: function(anim) {
+	stopReloadAnimation(anim) {
 		Animated.timing(anim, { toValue: 0, duration: 0 }).start();
 	},
 
-	getCurrentTimestamp: function() {
-		return (Math.floor(Date.now() / 1000));
+	round(number) {
+		return Math.round(number);
 	},
 
-	getTimestampNumeric: function() {
-		return(dateFormat(Date.now(), 'yyyymmdd'));
+	getPRM() {
+		const windowWidth = Dimensions.get('window').width;
+		const windowHeight = Dimensions.get('window').height;
+		const appDefaultWidth = 414;
+		return (windowWidth / appDefaultWidth);
 	},
 
-	getTimestamp: function(format) {
-		return(dateFormat(Date.now(), format));
+	getMaxCardWidth() {
+		const windowSize = Dimensions.get('window');
+		const windowWidth = windowSize.width;
+
+		return windowWidth - 2 - 12;
 	},
 
-	getDateNow: function() {
+	getCurrentTimestamp() {
+		return Math.round(Date.now() / 1000);
+	},
+
+	getTimestampNumeric() {
+		return (dateFormat(Date.now(), 'yyyymmdd'));
+	},
+
+	getTimestamp(format) {
+		return (dateFormat(Date.now(), format));
+	},
+
+	getDateNow() {
 		return (Date.now());
 	},
 
-	militaryToAMPM: function(militaryTime) {
-		var militaryTime, militaryTimeHH, militaryTimeMM, militaryTimeAMPM;
+	militaryToAMPM(time) {
+		let militaryTime = time.substring(0, 5).replace(':','');
+		let militaryTimeHH,
+			militaryTimeMM,
+			militaryTimeAMPM;
+
 		militaryTime = militaryTime.replace(/^0/,'');
 
 		if (militaryTime.length === 3) {
@@ -128,11 +141,11 @@ module.exports = {
 			militaryTimeHH -= 12;
 		}
 
-		if (militaryTimeHH == '0') {
+		if (militaryTimeHH === '0') {
 			militaryTimeHH = '12';
 		}
 
-		if (militaryTimeMM == '00') {
+		if (militaryTimeMM === '00') {
 			militaryTimeMM = '';
 		}
 
@@ -143,20 +156,20 @@ module.exports = {
 		}
 	},
 
-	getRandomColorArray:function(length) {
-		var randomColors = [];
-		for(var i = 0; i < length; ++i) {
+	getRandomColorArray(length) {
+		const randomColors = [];
+		for (let i = 0; i < length; ++i) {
 			randomColors.push(this.getRandomColor());
 		}
 		return randomColors;
 	},
 
 	// Generates random color hex
-	getRandomColor: function() {
-		return '#' + ("000000" + Math.random().toString(16).slice(2, 8).toUpperCase()).slice(-6);
+	getRandomColor() {
+		return '#' + ('000000' + Math.random().toString(16).slice(2, 8).toUpperCase()).slice(-6);
 	},
-	
-	sortNearbyMarkers: function(a, b) {
+
+	sortNearbyMarkers(a, b) {
 		if (a.distance < b.distance) {
 			return -1;
 		} else if (a.distance > b.distance) {

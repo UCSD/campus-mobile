@@ -1,29 +1,27 @@
-'use strict'
-
-import React from 'react'
+import React from 'react';
 import {
-	StyleSheet,
 	View,
 	Text,
-	Navigator,
 	TouchableHighlight,
 	Image,
 } from 'react-native';
 
-import EventDetail from './EventDetail'
+import EventDetail from './EventDetail';
 
-var css = require('../../styles/css');
+const css = require('../../styles/css');
+const general = require('../../util/general');
+const moment = require('moment');
 
 export default class EventItem extends React.Component {
 
 	gotoEventDetail(eventData) {
-		this.props.navigator.push({ id: 'EventDetail', name: 'EventDetail', title: 'Events', component: EventDetail, eventData: eventData });
+		this.props.navigator.push({ id: 'EventDetail', name: 'EventDetail', title: 'Events', component: EventDetail, eventData });
 	}
 
 	render() {
-		var data = this.props.data;
-		var eventTitleStr = data.EventTitle.replace('&amp;','&');
-		var eventDescriptionStr = data.EventDescription.replace('&amp;','&').replace(/\n.*/g,'').trim();
+		const data = this.props.data;
+		const eventTitleStr = data.title;// data.EventTitle.replace('&amp;','&');
+		let eventDescriptionStr = data.description;// data.EventDescription.replace('&amp;','&').replace(/\n.*/g,'').trim();
 
 		if (eventDescriptionStr.length > 0) {
 			if (eventTitleStr.length < 25) {
@@ -35,16 +33,10 @@ export default class EventItem extends React.Component {
 			}
 		}
 
-		var eventDateDay;
-		if (data.EventDate) {
-			var eventDateDayArray = data.EventDate[0].split(', ');
-			eventDateDay = eventDateDayArray[1] + ', ' + eventDateDayArray[2].substring(5,22).toLowerCase();
-		} else {
-			eventDateDay = 'Ongoing Event';
-		}
+		const eventDateDay = moment(data.eventdate).format("MMM Do") + ', ' + general.militaryToAMPM(data.starttime) + ' - ' + general.militaryToAMPM(data.endtime);
 
 		return (
-			<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoEventDetail(data) }>
+			<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => this.gotoEventDetail(data)}>
 				<View style={css.events_list_row}>
 					<View style={css.events_list_left_container}>
 						<Text style={css.events_list_title}>{eventTitleStr}</Text>
@@ -52,9 +44,9 @@ export default class EventItem extends React.Component {
 						<Text style={css.events_list_postdate}>{eventDateDay}</Text>
 					</View>
 
-					<Image style={css.events_list_image} source={{ uri: data.EventImage }} />
+					<Image style={css.events_list_image} source={{ uri: data.imagethumb }} />
 				</View>
 			</TouchableHighlight>
-		)
+		);
 	}
 }

@@ -8,6 +8,7 @@
  */
 
 #import "AppDelegate.h"
+#import "CodePush.h"
 #include <asl.h>
 #import "RCTLog.h"
 #import "RCTUtils.h"
@@ -20,17 +21,13 @@
 
 	NSURL *jsCodeLocation;
 	
-	BOOL isSimulator = NO;
-	#if TARGET_IPHONE_SIMULATOR
-		isSimulator = YES;
-		jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/index.ios.bundle?platform=ios&dev=false"];
-	#else
-		jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
-	#endif
-	
+  //jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/index.ios.bundle?platform=ios&dev=false"];
+	jsCodeLocation = [CodePush bundleURL];
+	//jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
+  
 	RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
 																											moduleName:@"nowucsandiego"
-																							 initialProperties:@{@"isSimulator":@(isSimulator)}
+																							 initialProperties:nil
 																									 launchOptions:launchOptions];
 	
 	// Get launch image

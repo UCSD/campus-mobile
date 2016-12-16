@@ -3,18 +3,38 @@
   "version": "2.3.0",
   "private": true,
   "scripts": {
-    "start": "node node_modules/react-native/local-cli/cli.js start"
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "insert-production-values": "node scripts/replace_all.js production",
+    "insert-staging-values": "node scripts/replace_all.js staging",
+    "insert-placeholder-values": "node scripts/replace_all.js placeholder"
   },
   "dependencies": {
     "dateformat": "1.0.12",
     "html-entities": "1.2.0",
+    "moment": "2.15.2",
     "react": "15.3.2",
-    "react-native": "0.34.0",
-    "react-native-google-analytics-bridge": "3.0.0",
+    "react-native": "0.35.0",
+    "react-native-code-push": "^1.15.0-beta",
+    "react-native-google-analytics-bridge": "3.1.0",
     "react-native-google-api-availability-bridge": "1.1.4",
-    "react-native-maps": "0.10.2",
+    "react-native-maps": "0.11.0",
     "react-native-permissions": "0.2.5",
-    "react-native-vector-icons": "2.0.3",
-    "react-timer-mixin": "0.13.3"
+    "react-native-sliding-up-panel": "^1.1.11",
+    "react-native-vector-icons": "2.1.0",
+    "react-redux": "4.4.5",
+    "react-timer-mixin": "0.13.3",
+    "redux": "3.6.0",
+    "redux-logger": "2.7.0",
+    "redux-thunk": "2.1.0",
+    "redux-persist": "3.5.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^6.1.2",
+    "eslint": "^3.2.2",
+    "eslint-config-airbnb": "^10.0.0",
+    "eslint-plugin-flowtype": "^2.4.1",
+    "eslint-plugin-import": "^1.12.0",
+    "eslint-plugin-jsx-a11y": "^2.0.1",
+    "eslint-plugin-react": "^6.0.0"
   }
 }

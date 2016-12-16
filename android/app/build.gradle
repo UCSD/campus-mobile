@@ -66,6 +66,7 @@ import com.android.build.OutputFile
  */
 
 apply from: "../../node_modules/react-native/react.gradle"
+apply from: "../../node_modules/react-native-code-push/android/codepush.gradle"
 
 /**
  * Set this to true to create two separate APKs instead of one:
@@ -90,8 +91,8 @@ android {
         applicationId "com.nowucsandiego"
         minSdkVersion 18
         targetSdkVersion 23
-        versionCode 6
-        versionName "2.3"
+        versionCode 8
+        versionName "2.4"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
@@ -137,6 +138,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-code-push')
     compile project(':react-native-google-api-availability-bridge')
     compile project(':react-native-vector-icons')
     compile project(':react-native-maps')

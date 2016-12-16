@@ -1,19 +1,11 @@
-'use strict'
-
-import React from 'react'
+import React from 'react';
 import {
-	View,
-	TouchableHighlight,
-	Image,
-	Text,
-	Modal,
 	AsyncStorage
 } from 'react-native';
 
 import InfoModal from './common/InfoModal';
 
-var css = require('../styles/css');
-var AppSettings = require('../AppSettings');
+const AppSettings = require('../AppSettings');
 
 // Handles showing a welcome modal to first time visitors
 export default class WelcomeModal extends React.Component {
@@ -24,7 +16,7 @@ export default class WelcomeModal extends React.Component {
 			modalVisible: false
 		};
 	}
-	
+
 	componentWillMount() {
 		AsyncStorage.getItem('MODAL_ENABLED').then((value) => {
 			if (value === 'false') {
@@ -43,13 +35,14 @@ export default class WelcomeModal extends React.Component {
 	}
 
 	render() {
-		return(
-			<InfoModal modalVisible={this.state.modalVisible} title={'Hello.'} onPress={ () => this.setModalVisible('false') } buttonText={'ok, let\'s go already'}>
+		return (
+			<InfoModal modalVisible={this.state.modalVisible} title={'Hello.'} onPress={() => this.setModalVisible('false')} buttonText={'ok, let\'s go already'}>
 				Thanks for trying {AppSettings.APP_NAME}!{'\n\n'}
 				{AppSettings.APP_NAME} connects you to campus with:{'\n\n'}
-				- location-based shuttle information{'\n'}
+				- live shuttle information and maps{'\n'}
+				- menus and dining info{'\n'}
 				- timely news and events{'\n'}
-				- nearby points of interest{'\n'}
+				- links to campus services and apps{'\n'}
 				- and we&apos;ll be adding new stuff all the time{'\n'}
 			</InfoModal>
 		);

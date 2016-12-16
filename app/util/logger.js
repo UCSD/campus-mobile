@@ -1,23 +1,23 @@
-'use strict';
-var AppSettings = require('../AppSettings');
-var GoogleAnalytics = require('react-native-google-analytics-bridge');
+const AppSettings = require('../AppSettings');
+const GoogleAnalytics = require('react-native-google-analytics-bridge');
+
 GoogleAnalytics.setTrackerId(AppSettings.GOOGLE_ANALYTICS_ID);
 
 module.exports = {
 
-	log: function(msg) {
+	log(msg) {
+		console.log(msg);
+	},
+
+	error(msg) {
 		if (AppSettings.DEBUG_ENABLED) {
+			console.error(msg);
+		} else {
 			console.log(msg);
 		}
 	},
 
-	error: function(msg) {
-		if (AppSettings.DEBUG_ENABLED) {
-			console.error(msg);
-		}
-	},
-
-	ga: function(msg) {
+	ga(msg) {
 		this.log(msg);
 		GoogleAnalytics.trackScreenView(msg);
 	},

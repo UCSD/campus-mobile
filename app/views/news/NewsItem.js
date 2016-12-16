@@ -1,77 +1,57 @@
-'use strict'
-
-import React from 'react'
+import React from 'react';
 import {
-	StyleSheet,
 	View,
 	Text,
-	Navigator,
 	TouchableHighlight,
 	Image,
 } from 'react-native';
 
 import NewsDetail from './NewsDetail';
 
-var css = require('../../styles/css');
+const css = require('../../styles/css');
+const moment = require('moment');
 
-const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 export default class NewsItem extends React.Component {
 
-	gotoNewsDetail(newsData) {
-  		this.props.navigator.push({ id: 'NewsDetail', name: 'News', title: 'News', component: NewsDetail, newsData: newsData });
-	}
-
-	getStoryDescription(description, title){
-		var storyDescriptionStr = description.replace(/^ /g, '');
-
-		if (storyDescriptionStr.length > 0) {
+	getStoryDescription(description, title) {
+		let newsDescription = description.replace(/^ /g, '');
+		if (newsDescription.length > 0) {
 			if (title.length < 25) {
-				storyDescriptionStr = storyDescriptionStr.substring(0,56).replace(/ $/,'') + '...';
+				newsDescription = newsDescription.substring(0,56).replace(/ $/,'') + '...';
 			} else if (title.length < 50) {
-				storyDescriptionStr = storyDescriptionStr.substring(0,28).replace(/ $/,'') + '...';
+				newsDescription = newsDescription.substring(0,28).replace(/ $/,'') + '...';
 			} else {
-				storyDescriptionStr = '';
+				newsDescription = '';
 			}
 		}
+		return newsDescription;
+	}
 
-		return storyDescriptionStr;
+	gotoNewsDetail(newsData) {
+		this.props.navigator.push({ id: 'NewsDetail', name: 'News', title: 'News', component: NewsDetail, newsData });
 	}
 
 	render() {
-		var data = this.props.data;
-
-		var storyDate = data['date'];
-		var storyDateMonth = storyDate.substring(5,7);
-		var storyDateDay = storyDate.substring(8,10);
-
-		if (storyDateMonth.substring(0,1) == '0') {
-			storyDateMonth = storyDateMonth.substring(1,2);
-		}
-		if (storyDateDay.substring(0,1) == '0') {
-			storyDateDay = storyDateDay.substring(1,2);
-		}
-
-		var storyDateMonthStr = monthNames[storyDateMonth-1];
-
-		var storyTitle = data.title;
-
-		var storyDescriptionStr = this.getStoryDescription(data.description, data.title);
+		const data = this.props.data;
+		const newsDate = moment(data.date).format('MMM Do, YYYY');
+		const newsDescription = this.getStoryDescription(data.description, data.title);
 		return (
-			<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoNewsDetail(data)}>
+			<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => this.gotoNewsDetail(data)}>
 				<View style={css.events_list_row}>
 					<View style={css.events_list_left_container}>
-						<Text style={css.events_list_title}>{storyTitle}</Text>
-						{storyDescriptionStr ? (
-							<Text style={css.events_list_desc}>{storyDescriptionStr}</Text>
+						<Text style={css.events_list_title}>{data.title}</Text>
+						{newsDescription ? (
+							<Text style={css.events_list_desc}>{newsDescription}</Text>
 						) : null }
-						<Text style={css.events_list_postdate}>{storyDateMonthStr} {storyDateDay}</Text>
+						<Text style={css.events_list_postdate}>{newsDate}</Text>
 					</View>
 
 					{data.image ? (
 						<Image style={css.news_list_image} source={{ uri: data.image }} />
 					) : (
-						<Image style={css.news_list_image} source={ require('../../assets/img/MobileEvents_blank.jpg')} />
+						<Image style={css.news_list_image} source={require('../../assets/img/MobileEvents_blank.jpg')} />
 					)}
 
 				</View>

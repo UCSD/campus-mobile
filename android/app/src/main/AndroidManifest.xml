@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.nowucsandiego"
-    android:versionCode="6"
-    android:versionName="2.3">
+    android:versionCode="8"
+    android:versionName="2.4">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
@@ -32,7 +32,7 @@
       <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
       <meta-data
           android:name="com.google.android.geo.API_KEY"
-          android:value="AIzaSyBWlLqjH3CNWrBo1gszFLoMkoyb-w8GQ5U"/>
+          android:value="GOOGLE_MAPS_API_KEY"/>
     </application>
 
 </manifest>

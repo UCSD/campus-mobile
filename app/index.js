@@ -6,17 +6,18 @@ import {
 	NavigatorIOS,
 	BackAndroid,
 	StatusBar,
-	AppState
+	View
 } from 'react-native';
-import TimerMixin from 'react-timer-mixin';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
-// SETUP / UTIL / NAV
+// SETUP / UTIL / NAV / STYLES
 var AppSettings = 			require('./AppSettings'),
 	general = 				require('./util/general'),
 	logger = 				require('./util/logger'),
+	css = 					require('./styles/css');
 
 // VIEWS
-	Home = 					require('./views/Home'),
+var Home = 					require('./views/Home'),
 	ShuttleStop = 			require('./views/ShuttleStop'),
 	SurfReport = 			require('./views/weather/SurfReport'),
 	DiningList = 			require('./views/dining/DiningList'),
@@ -26,72 +27,64 @@ var AppSettings = 			require('./AppSettings'),
 	EventDetail = 			require('./views/events/EventDetail'),
 	WebWrapper = 			require('./views/WebWrapper');
 
+// GPS
+import GeoLocationContainer from './containers/geoLocationContainer';
+
+// VIEWS
 import WelcomeWeekView from './views/welcomeWeek/WelcomeWeekView';
+import QuicklinksListView from './views/quicklinks/QuicklinksListView';
 import EventListView from './views/events/EventListView';
 import NewsListView from './views/news/NewsListView';
+import DiningListView from './views/dining/DiningListView';
 import FeedbackView from './views/FeedbackView';
+import PreferencesView from './views/preferences/PreferencesView';
+import NearbyMapView from './views/mapsearch/NearbyMapView';
 
 // NAV
 import NavigationBarWithRouteMapper from './views/NavigationBarWithRouteMapper';
-/**
- * Timeout that allows for pause and resume
-**/
-function Timer(callback, delay) {
-	var timerId, start, remaining = delay;
 
-	this.pause = function() {
-		clearTimeout(timerId);
-		remaining -= new Date() - start;
-	};
+// REDUX
+import { Provider } from 'react-redux';
+import configureStore from './store/configureStore';
 
-	this.resume = function() {
-		start = new Date();
-		clearTimeout(timerId);
-		timerId = setTimeout(callback, remaining);
-	};
-
-	this.do = function() {
-		clearTimeout(timerId);
-		callback();
-	}
-
-	this.getID = function() {
-		return timerId;
-	};
-
-	this.resume();
-}
-var timers = {};
+// CODE PUSH
+import codePush from "react-native-code-push";
+let codePushOptions = { checkFrequency: codePush.CheckFrequency.ON_APP_RESUME, installMode: codePush.InstallMode.ON_NEXT_RESTART };
 
 var nowucsandiego = React.createClass({
 
-	mixins: [TimerMixin],
-
 	getInitialState() {
+		// TODO: hide regular screens until store is hydrated
 		return {
+			store: configureStore({}, () => this.setState({ isLoading: false })),
 			inHome: true,
+			isLoading: true,
 		};
 	},
 
 	componentWillMount() {
-		AppState.addEventListener('change', this.handleAppStateChange);
+		// Get icon image bc NavigatorIOS needs it
+		if (general.platformIOS()) {
+			Icon.getImageSource('cog', 25).then((source) => {
+				this.setState({ gearIcon: source });
+			});
+		}
 	},
 
 	componentDidMount() {
-		if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
+		/*
+		if (general.platformAndroid()) {
 			// Listen to route focus changes
 			// Should be a better way to do this...
 			this.refs.navRef.refs.navRef.navigationContext.addListener('willfocus', (event) => {
-				
+
 				const route = event.data.route;
 
 				// Make sure renders/card refreshes are only happening when in home route
 				if (route.id === "Home") {
 					this.setState({inHome: true});
-					this._resumeTimeout();
 				} else {
 					this.setState({inHome: false});
-					this._pauseTimeout();
 				}
 			});
 
@@ -103,14 +96,13 @@ var nowucsandiego = React.createClass({
 				if(this.state.inHome) {
 					BackAndroid.exitApp();
 					return false;
-					
+
 				} else {
 					this.refs.navRef.refs.navRef.pop();
 					return true;
 				}
 			});
-		}
-		else {
+		} else {
 			// Pause/resume timeouts
 			this.refs.navRef.navigationContext.addListener('didfocus', (event) => {
 				const route = event.data.route;
@@ -118,10 +110,8 @@ var nowucsandiego = React.createClass({
 				// Make sure renders/card refreshes are only happening when in home route
 				if (route.id === undefined) { //undefined is foxusing "Home"... weird I know
 					this.setState({inHome: true});
-					this._resumeTimeout();
 				} else {
 					this.setState({inHome: false});
-					this._pauseTimeout();
 				}
 			});
 
@@ -130,105 +120,128 @@ var nowucsandiego = React.createClass({
 				const route = event.data.route;
 				route.backButtonTitle = "Back";
 			});
+		}*/
+	},
+
+	_handleNavigationRequest() {
+		// TODO: works on iOS
+		this.navRef.push({
+			id: 'PreferencesView',
+			component: PreferencesView,
+			title: 'Settings'
+		});
+	},
+
+	render: function () {
+		let navigator;
+		let geolocation = null;
+
+		if (!this.state.isLoading) {
+			geolocation = (<GeoLocationContainer />);
 		}
-	},
 
-	componentWillUnmount() {
-		AppState.removeEventListener('change', this.handleAppStateChange);
-		this._pauseTimeout();
-	},
+		if (general.platformIOS() && this.state.gearIcon) {
 
-	newTimeout: function(key, callback, delay) {
-		timers[key] = (new Timer(callback, delay));
-	},
-
-	_pauseTimeout: function() {
-		for (var key in timers) {
-			timers[key].pause();
-		}
-	},
-
-	_resumeTimeout: function() {
-		for (var key in timers) {
-			timers[key].resume();
-		}
-	},
-
-	doTimeout: function() {
-		for (var key in timers) {
-			timers[key].do();
-		}
-	},
-
-	render: function() {
-
-		if (general.platformIOS()) {
 			StatusBar.setBarStyle('light-content');
-		}
 
-		if (general.platformAndroid() || AppSettings.NAVIGATOR_ENABLED) {
-			return (
+			navigator = (<NavigatorIOS
+				initialRoute={{
+					component: Home,
+					title: AppSettings.APP_NAME,
+					backButtonTitle: 'Back',
+					rightButtonIcon: this.state.gearIcon,
+					onRightButtonPress: () => this._handleNavigationRequest(),
+				}}
+				style={css.flex}
+				itemWrapperStyle={css.navBarIOSWrapperStyle}
+				tintColor='#FFFFFF'
+				barTintColor='#182B49'
+				titleTextColor='#FFFFFF'
+				navigationBarHidden={false}
+				translucent={false}
+				ref={(navRef) => {
+					if (navRef) {
+						// Make all back buttons use text "Back"
+						navRef.navigationContext.addListener('willfocus', (event) => {
+							const route = event.data.route;
+							route.backButtonTitle = 'Back';
+						});
+						this.navRef = navRef;
+					}
+				}}
+			/>);
+		} else if (general.platformAndroid()) {
+			// android we will use NavigationBarWithRouteMapper
+			navigator = (
 				<NavigationBarWithRouteMapper
-					ref="navRef"
-					route={{id: 'Home', name: 'Home', title: 'now@ucsandiego'}}
+					ref={(navRef) => {
+						if (navRef) {
+							// Listen to route focus changes
+							// Should be a better way to do this...
+							navRef.refs.navRef.navigationContext.addListener('willfocus', (event) => {
+								const route = event.data.route;
+
+								// Make sure renders/card refreshes are only happening when in home route
+								if (route.id === 'Home') {
+									this.setState({ inHome: true });
+								} else {
+									this.setState({ inHome: false });
+								}
+							});
+
+							// Listen to back button on Android
+							BackAndroid.addEventListener('hardwareBackPress', () => {
+								if (this.state.inHome) {
+									BackAndroid.exitApp();
+									return false;
+								} else {
+									navRef.refs.navRef.pop();
+									return true;
+								}
+							});
+							this.navRef = navRef;
+						}
+					}}
+					route={{ id: 'Home', name: 'Home', title: AppSettings.APP_NAME }}
 					renderScene={this.renderScene}
 				/>
 			);
 		} else {
-			return (
-				<NavigatorIOS
-					initialRoute={{ 
-						component: Home, 
-						title: AppSettings.APP_NAME, 
-						passProps: {
-							isSimulator: this.props.isSimulator,
-							new_timeout: this.newTimeout,
-							do_timeout: this.doTimeout
-						},
-						backButtonTitle: "Back"
-					}}
-					style={{flex: 1}}
-					tintColor='#FFFFFF'
-					barTintColor='#006C92'
-					titleTextColor='#FFFFFF'
-					navigationBarHidden={false}
-					translucent={true} 
-					ref="navRef"
-				/>
-			);
+			navigator = null;
 		}
+
+		return (
+			<Provider store={this.state.store}>
+				<View style={css.flex}>
+					{geolocation}
+					{navigator}
+				</View>
+			</Provider>
+		);
 	},
 
-	renderScene: function(route, navigator, index, navState) {
-
+	renderScene(route, navigator, index, navState) {
 		switch (route.id) {
-			case 'Home': 				return (<Home route={route} navigator={navigator} new_timeout={this.newTimeout} do_timeout={this.doTimeout}/>);
-			case 'ShuttleStop': 		return (<ShuttleStop route={route} navigator={navigator} />);
-			case 'SurfReport': 			return (<SurfReport route={route} navigator={navigator} />);
-			case 'DiningList': 			return (<DiningList route={route} navigator={navigator} />);
-			case 'DiningDetail': 		return (<DiningDetail route={route} navigator={navigator} />);
-			case 'DiningNutrition': 	return (<DiningNutrition route={route} navigator={navigator} />);
-			case 'NewsDetail': 			return (<NewsDetail route={route} navigator={navigator} />);
-			case 'EventDetail': 		return (<EventDetail route={route} navigator={navigator} />);
-			case 'WebWrapper': 			return (<WebWrapper route={route} navigator={navigator} />);
-			case 'WelcomeWeekView': 	return (<WelcomeWeekView route={route} navigator={navigator} />);
-			case 'EventListView': 		return (<EventListView route={route} navigator={navigator} />);
-			case 'NewsListView': 	return (<NewsListView route={route} navigator={navigator} />);
-			case 'FeedbackView': 	return (<FeedbackView route={route} navigator={navigator} />);
-			default: 					return (<Home route={route} navigator={navigator} new_timeout={this.newTimeout} do_timeout={this.doTimeout}/>);
+		case 'Home': 				return (<Home route={route} navigator={navigator} new_timeout={this.newTimeout} do_timeout={this.doTimeout} />);
+		case 'PreferencesView': 	return (<PreferencesView route={route} navigator={navigator} />);
+		case 'ShuttleStop': 		return (<ShuttleStop route={route} navigator={navigator} />);
+		case 'SurfReport': 			return (<SurfReport route={route} navigator={navigator} />);
+		case 'DiningListView': 		return (<DiningListView route={route} navigator={navigator} />);
+		case 'DiningDetail': 		return (<DiningDetail route={route} navigator={navigator} />);
+		case 'DiningNutrition': 	return (<DiningNutrition route={route} navigator={navigator} />);
+		case 'NewsDetail': 			return (<NewsDetail route={route} navigator={navigator} />);
+		case 'EventDetail': 		return (<EventDetail route={route} navigator={navigator} />);
+		case 'WebWrapper': 			return (<WebWrapper route={route} navigator={navigator} />);
+		case 'WelcomeWeekView': 	return (<WelcomeWeekView route={route} navigator={navigator} />);
+		case 'EventListView': 		return (<EventListView route={route} navigator={navigator} />);
+		case 'QuicklinksListView': 	return (<QuicklinksListView route={route} navigator={navigator} />);
+		case 'NewsListView': 		return (<NewsListView route={route} navigator={navigator} />);
+		case 'FeedbackView': 		return (<FeedbackView route={route} navigator={navigator} />);
+		case 'NearbyMapView': 		return (<NearbyMapView route={route} navigator={navigator} />);
+		default: 					return (<Home route={route} navigator={navigator} new_timeout={this.newTimeout} do_timeout={this.doTimeout} />);
 		}
-	},
-
-	handleAppStateChange(currentAppState) {
-		if (currentAppState === 'active') {
-			if(this.state.inHome) {
-				this._resumeTimeout();
-			}
-		}
-		else if(currentAppState === 'background') {
-			this._pauseTimeout();
-		}
-	},
+	}
 });
 
+nowucsandiego = codePush(codePushOptions)(nowucsandiego);
 module.exports = nowucsandiego;

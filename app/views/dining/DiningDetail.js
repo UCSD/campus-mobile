@@ -12,6 +12,8 @@ import {
 	Linking,
 } from 'react-native';
 
+import Icon from 'react-native-vector-icons/Ionicons';
+
 var css = require('../../styles/css');
 var logger = require('../../util/logger');
 var general = require('../../util/general');
@@ -32,7 +34,7 @@ var DiningDetail = React.createClass({
 			lunchItems = [],
 			dinnerItems = [],
 			ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
-			marketData = this.props.route.marketData,
+			marketData = this.props.route.data,
 			menuItemsCount = 0;
 
 		if (marketData.menuItems) {
@@ -125,6 +127,9 @@ var DiningDetail = React.createClass({
 							{this.state.marketData.regularHours ? (
 								<Text style={css.dl_market_desc_text}>{this.state.marketData.regularHours}</Text>
 							) : null }
+							{this.state.marketData.specialHours ? (
+								<Text style={css.dl_market_desc_text}>Special Hours:{"\n"}{this.state.marketData.specialHours}</Text>
+							) : null }
 						</View>
 
 						{this.state.marketData.images ? (
@@ -141,8 +146,10 @@ var DiningDetail = React.createClass({
 
 								<TouchableHighlight style={css.dl_dir_traveltype_container} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => { general.gotoNavigationApp('walk', this.state.marketData.coords.lat, this.state.marketData.coords.lon) }}>
 									<View style={css.dl_dir_traveltype_container}>
-										<Image style={css.dl_dir_icon} source={ require('../../assets/img/icon_walk.png')} />
-										<Text style={css.dl_dir_eta}>{this.state.marketData.distanceMilesStr}</Text>
+										<Icon name='md-walk' size={32} color='#182B49' />
+										{this.state.marketData.distanceMilesStr ? (
+											<Text style={css.dl_dir_eta}>{this.state.marketData.distanceMilesStr}</Text>
+										) : null }
 									</View>
 								</TouchableHighlight>
 							</View>
@@ -322,7 +329,7 @@ var DiningDetail = React.createClass({
 		} else if (this.vegetarianFilterEnabled || this.veganFilterEnabled || this.glutenfreeFilterEnabled) {
 			for (var i = 0; menuItemsArray.length > i; i++) {
 				if (this.vegetarianFilterEnabled && this.veganFilterEnabled && this.glutenfreeFilterEnabled) {
-				   if (menuItemsArray[i].tags.indexOf('VT') >= 0 && menuItemsArray[i].tags.indexOf('VG') >= 0 && menuItemsArray[i].tags.indexOf('GF') >= 0) {
+					if (menuItemsArray[i].tags.indexOf('VT') >= 0 && menuItemsArray[i].tags.indexOf('VG') >= 0 && menuItemsArray[i].tags.indexOf('GF') >= 0) {
 						menuItemsActivated.push(menuItemsArray[i]);
 					}
 					continue;

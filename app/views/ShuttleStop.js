@@ -1,37 +1,31 @@
-'use strict';
-
 import React from 'react';
 import {
 	View,
 	Text,
-	Navigator,
 	TouchableHighlight,
 	ScrollView,
 	Image,
 	Animated,
-	Easing,
 	RefreshControl,
 	InteractionManager,
 	ActivityIndicator
 } from 'react-native';
-var MapView = require('react-native-maps');
 
-var TimerMixin = 		require('react-timer-mixin');
-var AppSettings = 		require('../AppSettings');
-var allShuttleRoutes = 	require('../json/shuttle_routes_master.json');
-var css = 				require('../styles/css');
+const MapView = require('react-native-maps');
 
-var general = 			require('../util/general');
-var logger = 			require('../util/logger');
-var shuttle = 			require('../util/shuttle');
+const TimerMixin = require('react-timer-mixin');
+const AppSettings = require('../AppSettings');
+const css = require('../styles/css');
 
-var responseDataRef = [];
-var responseDataSort = [];
-var responseDataSortRef = [];
+const general = require('../util/general');
+const logger = require('../util/logger');
+const shuttle = require('../util/shuttle');
 
-import NavigationBarWithRouteMapper from './NavigationBarWithRouteMapper';
+let responseDataRef = [];
+let responseDataSort = [];
+let responseDataSortRef = [];
 
-var ShuttleStop = React.createClass({
+const ShuttleStop = React.createClass({
 
 	mixins: [TimerMixin],
 	shuttleRefreshInterval: 30 * 1000,				// 30 seconds between shuttle api updates
@@ -41,7 +35,7 @@ var ShuttleStop = React.createClass({
 	map_legal_disclaimer: { bottom: 5, right: 5 },
 	delayMapViewLoad: 250,
 
-	getInitialState: function() {
+	getInitialState() {
 		return {
 			loaded: false,
 			isRefreshing: false,
@@ -67,7 +61,7 @@ var ShuttleStop = React.createClass({
 
 			mapDeltaViewLoader: false,
 			mapViewLoadReady: false,
-			mapDelta: .01,
+			mapDelta: 0.01,
 
 			currentPosition: this.props.route.currentPosition,
 			defaultPosition: {
@@ -114,17 +108,17 @@ var ShuttleStop = React.createClass({
 				'93943': require('../assets/img/shuttle/shuttle-stop-93943.jpg'),
 				'9920': require('../assets/img/shuttle/shuttle-stop-9920.jpg'),
 			},
-		}
+		};
 	},
 
-	componentWillMount: function() {
-		//this.fetchShuttleArrivalsByStop('auto');
+	componentWillMount() {
+		// this.fetchShuttleArrivalsByStop('auto');
 		// Initial shuttle info render passed from home
-		//this._processShuttleArrivals(this.props.route.shuttleData);
-		//this.mapViewTimeout = this.setTimeout( () => { this.loadMapView() }, this.delayMapViewLoad);
+		// this._processShuttleArrivals(this.props.route.shuttleData);
+		// this.mapViewTimeout = this.setTimeout( () => { this.loadMapView() }, this.delayMapViewLoad);
 	},
 
-	componentDidMount: function() {
+	componentDidMount() {
 		logger.ga('View Loaded: Shuttle Stop');
 		// Stop placeholder render
 		// Revisit at a later time
@@ -132,45 +126,45 @@ var ShuttleStop = React.createClass({
 			this.fetchShuttleArrivalsByStop('auto');
 
 			// Poll for new data
-			this.refreshShuttleDataTimer = this.setTimeout( () => { this.fetchShuttleArrivalsByStop('auto') }, this.shuttleRefreshInterval);
-			this.mapViewTimeout = this.setTimeout( () => { this.loadMapView() }, this.delayMapViewLoad);
+			this.refreshShuttleDataTimer = this.setTimeout( () => { this.fetchShuttleArrivalsByStop('auto'); }, this.shuttleRefreshInterval);
+			this.mapViewTimeout = this.setTimeout( () => { this.loadMapView(); }, this.delayMapViewLoad);
 			this.watchID = navigator.geolocation.watchPosition((currentPosition) => {
-				this.setState({currentPosition});
+				this.setState({ currentPosition });
 			});
-			this.setState({loaded: true});
+			this.setState({ loaded: true });
 		});
 	},
 
-	componentWillUnmount: function() {
+	componentWillUnmount() {
 		this.clearTimeout(this.mapViewTimeout);
 		navigator.geolocation.clearWatch(this.watchID);
 	},
 
-	render: function() {
-		if(this.state.loaded) {
+	render() {
+		if (this.state.loaded) {
 			return this.renderScene();
 		} else {
 			return this._renderPlaceholderView();
 		}
 	},
 
-	/* Revisit after welcome week deadline
-	   skeleton render for smoother transition*/
-	_renderPlaceholderView: function() {
+	// Revisit after welcome week deadline
+	// skeleton render for smoother transition
+	_renderPlaceholderView() {
 		return (
 			<View style={[css.main_container, css.offwhitebg]}>
 
 				<ScrollView contentContainerStyle={css.scroll_default}>
 
-        			{this.state.shuttleStopImageDict[this.state.shuttleStopID] ? (
-						<Image style={css.shuttlestop_image} source={ this.state.shuttleStopImageDict[this.state.shuttleStopID] } />
+					{this.state.shuttleStopImageDict[this.state.shuttleStopID] ? (
+						<Image style={css.shuttlestop_image} source={this.state.shuttleStopImageDict[this.state.shuttleStopID]} />
 					) : null }
-					
+
 					<View style={css.shuttlestop_name_container}>
 						<Text style={css.shuttlestop_name_text}>{this.state.shuttleStopName}</Text>
 					</View>
 
-					
+
 					<View style={css.shuttle_stop_arrivals_container}>
 						<Text style={css.shuttle_stop_next_arrivals_text}>There are no active shuttles at this time</Text>
 					</View>
@@ -181,38 +175,41 @@ var ShuttleStop = React.createClass({
 
 				</ScrollView>
 			</View>
-			
+
 		);
 	},
 
-	renderScene: function(route, navigator) {
+	renderScene(route, navigator) {
 		return (
 			<View style={[css.main_container, css.offwhitebg]}>
 
-				<ScrollView contentContainerStyle={css.scroll_default} refreshControl={
-					<RefreshControl
-						refreshing={this.state.isRefreshing}
-						onRefresh={this.refreshShuttleArrivalsByStop}
-						tintColor="#CCC"
-						title=""
-					/>
-        		}>
+				<ScrollView
+					contentContainerStyle={css.scroll_default}
+					refreshControl={
+						<RefreshControl
+							refreshing={this.state.isRefreshing}
+							onRefresh={this.refreshShuttleArrivalsByStop}
+							tintColor="#CCC"
+							title=""
+						/>
+					}
+				>
 
-        			{this.state.shuttleStopImageDict[this.state.shuttleStopID] ? (
-						<Image style={css.shuttlestop_image} source={ this.state.shuttleStopImageDict[this.state.shuttleStopID] } />
+					{this.state.shuttleStopImageDict[this.state.shuttleStopID] ? (
+						<Image style={css.shuttlestop_image} source={this.state.shuttleStopImageDict[this.state.shuttleStopID]} />
 					) : null }
 
 					<View style={css.shuttlestop_name_container}>
 						<Text style={css.shuttlestop_name_text}>{this.state.shuttleStopName}</Text>
 
 						<View style={css.shuttlestop_refresh_container}>
-							<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.refreshShuttleArrivalsByStop('manual') }>
-								<Animated.Image style={[css.shuttlestop_refresh, { transform: [{ rotate: this.shuttleReloadAnim.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '360deg']})}]}]} source={require('../assets/img/icon_refresh.png')} />
+							<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => this.refreshShuttleArrivalsByStop('manual')}>
+								<Animated.Image style={[css.shuttlestop_refresh, { transform: [{ rotate: this.shuttleReloadAnim.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '360deg'] }) }] }]} source={require('../assets/img/icon_refresh.png')} />
 							</TouchableHighlight>
 						</View>
 					</View>
 
-					{this.state.closestShuttlesInactive == false ? (
+					{this.state.closestShuttlesInactive === false ? (
 						<View>
 							{this.state.closestShuttlesLoaded ? (
 								<View style={css.shuttle_stop_arrivals_container}>
@@ -250,46 +247,46 @@ var ShuttleStop = React.createClass({
 							<Text style={css.shuttle_stop_next_arrivals_text}>There are no active shuttles at this time</Text>
 						</View>
 					)}
-					
-					
+
+
 					{this.state.mapViewLoadReady ? (
 						<View style={css.shuttle_stop_map_container}>
-						<MapView
-							style={css.shuttlestop_map}
-							loadingEnabled={true}
-							loadingIndicatorColor={'#666'}
-							loadingBackgroundColor={'#EEE'}
-							showsUserLocation={true}
-							mapType={'standard'}
-							initialRegion={{
-								latitude: Number(this.getCurrentPosition('lat')),
-								longitude: Number(this.getCurrentPosition('lon')),
-								latitudeDelta: this.state.mapDelta,
-								longitudeDelta: this.state.mapDelta,
-							}}>
-
-							<MapView.Marker
-								coordinate={{latitude: this.state.shuttleStopLat,
-									longitude: this.state.shuttleStopLon}}
-								title={this.state.shuttleStopName}
-								description={this.state.shuttleStopName}
-								key={this.state.shuttleStopName}
-							/>
-						</MapView>
+							<MapView
+								style={css.shuttlestop_map}
+								loadingEnabled={true}
+								loadingIndicatorColor={'#666'}
+								loadingBackgroundColor={'#EEE'}
+								showsUserLocation={true}
+								mapType={'standard'}
+								initialRegion={{
+									latitude: Number(this.getCurrentPosition('lat')),
+									longitude: Number(this.getCurrentPosition('lon')),
+									latitudeDelta: this.state.mapDelta,
+									longitudeDelta: this.state.mapDelta,
+								}}
+							>
+								<MapView.Marker
+									coordinate={{ latitude: this.state.shuttleStopLat,
+										longitude: this.state.shuttleStopLon }}
+									title={this.state.shuttleStopName}
+									description={this.state.shuttleStopName}
+									key={this.state.shuttleStopName}
+								/>
+							</MapView>
 						</View>
 					) : null }
 				</ScrollView>
 			</View>
-			
+
 		);
 	},
 
 
-	refreshShuttleArrivalsByStop: function(refreshType) {
+	refreshShuttleArrivalsByStop(refreshType) {
 		this.fetchShuttleArrivalsByStop(refreshType);
 	},
 
-	getCurrentPosition: function(type) {
+	getCurrentPosition(type) {
 		if (type === 'lat') {
 			if (this.state.currentPosition) {
 				return this.state.currentPosition.coords.latitude;
@@ -306,25 +303,18 @@ var ShuttleStop = React.createClass({
 	},
 
 	// TODO: use setState less, revisit when we have maps working
-	loadMapView: function() {
-		var distLatLon = Math.sqrt(Math.pow(Math.abs(this.getCurrentPosition('lat') - this.state.shuttleStopLat), 2) + Math.pow(Math.abs(this.getCurrentPosition('lon') - this.state.shuttleStopLon), 2));
+	loadMapView() {
+		const distLatLon = Math.sqrt(Math.pow(Math.abs(this.getCurrentPosition('lat') - this.state.shuttleStopLat), 2) + Math.pow(Math.abs(this.getCurrentPosition('lon') - this.state.shuttleStopLon), 2));
 		this.setState({
 			mapDelta: distLatLon * 3
 		});
 
-		if (AppSettings.NAVIGATOR_ENABLED) {
-			this.setState({ mapViewLoadReady: false });
-		}
-		else {
-			this.setState({ mapViewLoadReady: true });
-		}
-		
+		this.setState({ mapViewLoadReady: true });
 	},
 
-	fetchShuttleArrivalsByStop: function(fetchType) {
-
+	fetchShuttleArrivalsByStop(fetchType) {
 		responseDataSort = [];
-		
+
 		this.shuttleRefreshTimestamp = general.getCurrentTimestamp();
 
 		if (this.state.closestShuttlesLoaded) {
@@ -332,53 +322,51 @@ var ShuttleStop = React.createClass({
 			general.startReloadAnimation(this.shuttleReloadAnim);
 		}
 
-		var SHUTTLE_STOPS_API_URL = AppSettings.SHUTTLE_STOPS_API_URL + this.state.shuttleStopID + '/arrivals';
+		const SHUTTLE_STOPS_API_URL = AppSettings.SHUTTLE_STOPS_API_URL + this.state.shuttleStopID + '/arrivals';
 
 		fetch(SHUTTLE_STOPS_API_URL, {
-				method: 'GET',
-				headers: {
-					'Accept' : 'application/json',
-					'Cache-Control': 'no-cache'
-				}
-			})
-			.then((response) => response.json())
-			.then((responseData) => {
-				//logger.log("Fetch: " + JSON.stringify(responseData));
-				general.stopReloadAnimation(this.shuttleReloadAnim);
-				this._processShuttleArrivals(responseData);
-			})
-			.catch((error) => {
-				logger.log('ERR2: fetchShuttleArrivalsByStopDetail: ' + error);
-				this.setState({ closestShuttlesInactive: true });
-				general.stopReloadAnimation(this.shuttleReloadAnim);
-			})
-			.done();
+			method: 'GET',
+			headers: {
+				'Accept' : 'application/json',
+				'Cache-Control': 'no-cache'
+			}
+		})
+		.then((response) => response.json())
+		.then((responseData) => {
+			general.stopReloadAnimation(this.shuttleReloadAnim);
+			this._processShuttleArrivals(responseData);
+		})
+		.catch((error) => {
+			logger.log('ERR: fetchShuttleArrivalsByStop: ' + error);
+			this.setState({ closestShuttlesInactive: true });
+			general.stopReloadAnimation(this.shuttleReloadAnim);
+		})
+		.done();
 	},
 
-	_processShuttleArrivals: function(data) {
+	_processShuttleArrivals(data) {
 		if (data.length > 0) {
-
-			for (var i = 0; data.length > i; i++) {
+			for (let i = 0; data.length > i; i++) {
 				data[i].etaMinutes = shuttle.getMinutesETA(data[i].secondsToArrival);
 				data[i].route.name = data[i].route.name.replace(/.*\) /, '').replace(/ - .*/, '');
-				if (data[i].route.shortName == "Campus Loop") {
-					data[i].route.shortName = "L";
+				if (data[i].route.shortName === 'Campus Loop') {
+					data[i].route.shortName = 'L';
 				}
 			}
 
 			// Sort the results by lowest ETA
-			for (var key in data) {
-				responseDataSort.push({key:key, secondsToArrival:data[key].secondsToArrival});
+			for (let key in data) {
+				responseDataSort.push({ key, secondsToArrival:data[key].secondsToArrival });
 			}
 
-			responseDataSort.sort(function(x,y) { return x.secondsToArrival - y.secondsToArrival } );
+			responseDataSort.sort((x,y) => x.secondsToArrival - y.secondsToArrival);
 
 			responseDataRef = data;
 			responseDataSortRef = responseDataSort;
 
-			this.setState({ closestShuttlesLoaded: true, closestShuttlesInactive: false});
+			this.setState({ closestShuttlesLoaded: true, closestShuttlesInactive: false });
 		} else {
-			throw('Invalid data');
+			throw new Error('Invalid data');
 		}
 	}
 
