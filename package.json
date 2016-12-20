@@ -6,7 +6,8 @@
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "insert-production-values": "node scripts/replace_all.js production",
     "insert-staging-values": "node scripts/replace_all.js staging",
-    "insert-placeholder-values": "node scripts/replace_all.js placeholder"
+    "insert-placeholder-values": "node scripts/replace_all.js placeholder",
+    "apply-ga-bridge-fix": "node scripts/apply_google_analytics_bridge_fix.js"
   },
   "dependencies": {
     "dateformat": "1.0.12",
