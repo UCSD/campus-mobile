@@ -9,30 +9,42 @@
 	// From your project folder run:
 	npm install
 
+## Building
+
+### Android
+[Lovely script](https://github.com/UCSD/now-mobile-build-scripts) made by @a6wu to make everything easier
+
+	// From an empty directory
+	//Build APK one liner:
+	git clone https://github.com/UCSD/now-mobile-build-scripts.git && cd now-mobile-build-scripts && npm install && node build-apk.js
+
+	//Build APK and install on device one liner:
+	git clone https://github.com/UCSD/now-mobile-build-scripts.git && cd now-mobile-build-scripts && npm install && node build-apk.js && adb install ./bld/android/app/build/outputs/apk/app-release.apk
+
 ### Availabile Cards
 * TopBanner
-    * For upcoming current events
+	* For upcoming current events
 * Weather & Surf
-    * 5 day weather report
-    * Surf report link
+	* 5 day weather report
+	* Surf report link
 * Shuttle
-    * Nearest shuttle stops and arrival times
-    * Shuttle stop info to view all shuttles en route
+	* Nearest shuttle stops and arrival times
+	* Shuttle stop info to view all shuttles en route
 * Dining
-    * Nearest dining options with menu and nutritional information
-    * View all dining link
+	* Nearest dining options with menu and nutritional information
+	* View all dining link
 * Events
-    * Upcoming events
-    * View all events link
+	* Upcoming events
+	* View all events link
 * Quick Links
-    * A list of helpful links from our legacy app
-    * View all quick links link
+	* A list of helpful links from our legacy app
+	* View all quick links link
 * News
-    * Latest news articles
-    * View all news link
+	* Latest news articles
+	* View all news link
 * Maps
-    * Searchable campus map
-    * View all link
+	* Searchable campus map
+	* View all link
 
 ### Future
 #### Cards
@@ -42,10 +54,10 @@
 
 #### Extra
 * Functionality
-    * Add/Remove Cards
-    * Re-order cards
-    * Push Notifications
-    * 2-factor authentication
+	* Add/Remove Cards
+	* Re-order cards
+	* Push Notifications
+	* 2-factor authentication
 * Library
 * Calendar
 * Cape
