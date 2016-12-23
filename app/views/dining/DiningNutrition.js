@@ -16,7 +16,7 @@ var DiningNutrition = React.createClass({
 
 	getInitialState: function() {
 		/*
-			FDA Daily Nutritional Allowances
+			FDA Daily Nutritional Allowances 2016
 			Fat: 			65g
 			Saturated Fat: 	20g
 			Cholesterol: 	300mg
@@ -36,10 +36,6 @@ var DiningNutrition = React.createClass({
 	},
 
 	render: function() {
-		return this.renderScene();
-	},
-
-	renderScene: function() {
 		return (
 			<View style={[css.main_container, css.whitebg]}>
 				<ScrollView contentContainerStyle={[css.scroll_main, css.whitebg]}>

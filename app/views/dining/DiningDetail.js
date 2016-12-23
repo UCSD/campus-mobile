@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Ionicons';
+import { Actions } from 'react-native-router-flux';
 
 var css = require('../../styles/css');
 var logger = require('../../util/logger');
@@ -34,7 +35,7 @@ var DiningDetail = React.createClass({
 			lunchItems = [],
 			dinnerItems = [],
 			ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
-			marketData = this.props.route.data,
+			marketData = this.props.data,
 			menuItemsCount = 0;
 
 		if (marketData.menuItems) {
@@ -378,7 +379,7 @@ var DiningDetail = React.createClass({
 	},
 
 	gotoDiningNutrition: function(data) {
-		this.props.navigator.push({ id: 'DiningNutrition', name: data.name, title: 'Nutrition', menuItem: data, component: DiningNutrition });
+		Actions.DiningNutrition({ menuItem: data });
 	},
 
 	gotoMenuWebsite: function(url) {

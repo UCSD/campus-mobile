@@ -5,6 +5,7 @@ import {
 	TouchableHighlight,
 } from 'react-native';
 import { connect } from 'react-redux';
+import { Actions } from 'react-native-router-flux';
 
 import Card from '../card/Card';
 import CardComponent from '../card/CardComponent';
@@ -111,7 +112,7 @@ class DiningCard extends CardComponent {
 	}
 
 	gotoDiningListView() {
-		this.props.navigator.push({ id: 'DiningListView', name: 'DiningListView', title: 'Dining',  component: DiningListView, data: this.state.diningData });
+		Actions.DiningListView({ data: this.state.diningData });
 	}
 }
 function mapStateToProps(state, props) {

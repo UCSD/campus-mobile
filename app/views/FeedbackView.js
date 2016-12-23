@@ -54,6 +54,8 @@ export default class FeedbackView extends Component {
 	 * Invoked after render
 	**/
 	componentDidMount() {
+		logger.ga('View Loaded: Feedback');
+		
 		InteractionManager.runAfterInteractions(() => {
 			this.setState({ loaded: true });
 		});
@@ -64,7 +66,6 @@ export default class FeedbackView extends Component {
 	 * @return bool whether the component should re-render.
 	**/
 	shouldComponentUpdate(nextProps, nextState) {
-		logger.ga('View Loaded: Feedback');
 		return true;
 	}
 
@@ -72,17 +73,14 @@ export default class FeedbackView extends Component {
 	 * Invoked before component is unmounted from DOM
 	**/
 	componentWillUnmount() {
-
 	}
 
 	render() {
 		if (!this.state.loaded) {
 			return this.renderLoadingView();
-		}
-		else if (!this.state.submit) {
+		} else if (!this.state.submit) {
 			return this.renderFormView();
-		}
-		else {
+		} else {
 			return this.renderSubmitView();
 		}
 	}

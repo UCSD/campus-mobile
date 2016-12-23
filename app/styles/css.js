@@ -38,12 +38,8 @@ var logger = require('../util/logger');
 var navBarMarginTop = 0;
 var navBarTitleMarginTop = 5;
 
-if (general.platformAndroid()) {
-	navBarMarginTop = 64;
-	navBarTitleMarginTop = 0;
-} else if (general.platformIOS()) {
-
-}
+navBarMarginTop = 64;
+navBarTitleMarginTop = 0;
 
 var pixelRatio = PixelRatio.get();
 var windowSize = Dimensions.get('window');
@@ -78,10 +74,12 @@ var navMarginTop = 7;
 var css = StyleSheet.create({
 
 	// Navigator
-	navigator: { flex: 1, backgroundColor: 'rgba(24,43,73,1)', alignItems: 'center', justifyContent: 'center' },
-	navigatorLeft: { color: '#FFF', fontSize: round(34 * prm), marginHorizontal: round(10 * prm) },
-	navigatorTitle: { color: '#FFF', fontSize: round(22 * prm), textAlign: 'center' },
-	navigatorRight: { color: '#FFF', fontSize: round(26 * prm), marginHorizontal: round(10 * prm), marginVertical: round(4 * prm), marginTop: 2 },
+	navigator: { color: '#FFF', backgroundColor: 'rgba(24,43,73,1)' },
+	navigatorTitle: { color: '#FFF' },
+barButtonIconStyle:{
+    tintColor:'rgb(255,255,255)'
+},
+
 
 	// NavigatorIOS
 	navBarIOS: {},

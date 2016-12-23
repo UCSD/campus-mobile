@@ -40,7 +40,7 @@ export default class NewsListView extends React.Component {
 	}
 
 	renderListView() {
-		const eventData = this.props.route.data;
+		const eventData = this.props.data;
 		const eventDatasource = this.datasource.cloneWithRows(eventData);
 
 		return (

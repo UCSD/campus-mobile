@@ -8,6 +8,7 @@ import {
 
 import DiningDetail from './DiningDetail';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { Actions } from 'react-native-router-flux';
 
 const css = require('../../styles/css');
 const general = require('../../util/general');
@@ -47,6 +48,6 @@ export default class DiningItem extends React.Component {
 	}
 
 	gotoDiningDetail(diningData) {
-		this.props.navigator.push({ id: 'DiningDetail', name: 'DiningDetail', title: 'Dining', component: DiningDetail, data: diningData });
+		Actions.DiningDetail({ data: diningData });
 	}
 }

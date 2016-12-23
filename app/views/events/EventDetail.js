@@ -28,7 +28,7 @@ const EventDetail = React.createClass({
 	},
 
 	componentWillMount() {
-		const imageURL = this.props.route.eventData.imagehq;
+		const imageURL = this.props.eventData.imagehq;
 
 		if (imageURL) {
 			Image.getSize(
@@ -46,7 +46,7 @@ const EventDetail = React.createClass({
 	},
 
 	componentDidMount() {
-		logger.ga('View Loaded: Event Detail: ' + this.props.route.eventData.title);
+		logger.ga('View Loaded: Event Detail: ' + this.props.eventData.title);
 	},
 
 	openBrowserLink(linkURL) {
@@ -64,10 +64,10 @@ const EventDetail = React.createClass({
 		}).catch(err => logger.log('An error with opening EventDetail occurred', err));
 	},
 
-	renderScene() {
-		const data = this.props.route.eventData;
-		const eventTitleStr = data.title;// EventTitle.replace('&amp;','&');
-		const eventDescriptionStr = data.description;// EventDescription.replace('&amp;','&').trim();
+	render() {
+		const data = this.props.eventData;
+		const eventTitleStr = data.title;
+		const eventDescriptionStr = data.description;
 		const eventDateStr = moment(data.eventdate).format("MMM Do") + ', ' + general.militaryToAMPM(data.starttime) + ' - ' + general.militaryToAMPM(data.endtime);
 
 		return (
@@ -87,7 +87,7 @@ const EventDetail = React.createClass({
 
 						<Text style={css.eventdetail_eventdescription}>{eventDescriptionStr}</Text>
 
-						{this.props.route.eventData.contact_info ? (
+						{this.props.eventData.contact_info ? (
 							<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => this.openBrowserLink('mailto:' + data.EventContact)}>
 								<View style={css.eventdetail_readmore_container}>
 									<Text style={css.eventdetail_readmore_text}>Email: {data.contact_info}</Text>
@@ -101,9 +101,6 @@ const EventDetail = React.createClass({
 		);
 	},
 
-	render() {
-		return this.renderScene();
-	},
 });
 
 module.exports = EventDetail;

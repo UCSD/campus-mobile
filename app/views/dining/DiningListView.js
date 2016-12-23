@@ -22,7 +22,7 @@ export default class DiningListView extends React.Component {
 	}
 
 	render() {
-		const diningData = this.props.route.data;
+		const diningData = this.props.data;
 		const diningDatasource = this.datasource.cloneWithRows(diningData);
 
 		return (
