@@ -18,11 +18,11 @@ import ShuttleStop from './views/shuttle/ShuttleStop';
 import DiningList from './views/dining/DiningList';
 import DiningDetail from './views/dining/DiningDetail';
 import DiningNutrition from './views/dining/DiningNutrition';
+import EventListView from './views/events/EventListView';
 import EventDetail from './views/events/EventDetail';
 import WebWrapper from './views/WebWrapper';
 import WelcomeWeekView from './views/welcomeWeek/WelcomeWeekView';
 import QuicklinksListView from './views/quicklinks/QuicklinksListView';
-import EventListView from './views/events/EventListView';
 import NewsDetail from './views/news/NewsDetail';
 import NewsListView from './views/news/NewsListView';
 import DiningListView from './views/dining/DiningListView';
@@ -40,11 +40,11 @@ const scenes = Actions.create(
 		<Scene key='DiningDetail' component={DiningDetail} title='Dining' />
 		<Scene key='DiningNutrition' component={DiningNutrition} title='Nutrition' />
 		<Scene key='DiningListView' component={DiningListView} title='Dining' />
+		<Scene key='EventListView' component={EventListView} title='Events' />
 		<Scene key='EventDetail' component={EventDetail} title='Events' />
-		<Scene key='WebWrapper' component={WebWrapper} title='WebWrapper' />
+		<Scene key='WebWrapper' component={WebWrapper} title=' ' />
 		<Scene key='WelcomeWeekView' component={WelcomeWeekView} title='Welcome Week' />
 		<Scene key='QuicklinksListView' component={QuicklinksListView} title='Links' />
-		<Scene key='EventListView' component={EventListView} title='Events' />
 		<Scene key='NewsDetail' component={NewsDetail} title='News' />
 		<Scene key='NewsListView' component={NewsListView} title='News' />
 		<Scene key='FeedbackView' component={FeedbackView} title='Feedback' />
@@ -65,7 +65,7 @@ export default class Main extends Component {
 					scenes={scenes}
 					navigationBarStyle={css.navigator}
 					titleStyle={css.navigatorTitle}
-					barButtonIconStyle={css.barButtonIconStyle}
+					barButtonIconStyle={css.navigatorLeftIcon}
 				/>
 			</View>			
 		);

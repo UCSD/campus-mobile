@@ -74,11 +74,9 @@ var navMarginTop = 7;
 var css = StyleSheet.create({
 
 	// Navigator
-	navigator: { color: '#FFF', backgroundColor: 'rgba(24,43,73,1)' },
+	navigator: { backgroundColor: 'rgba(24,43,73,1)' },
 	navigatorTitle: { color: '#FFF' },
-barButtonIconStyle:{
-    tintColor:'rgb(255,255,255)'
-},
+	navigatorLeftIcon: { tintColor:'rgb(255,255,255)' },
 
 
 	// NavigatorIOS
