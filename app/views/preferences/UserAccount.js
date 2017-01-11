@@ -29,7 +29,7 @@ export default class UserAccount extends Component {
 	_renderAccountInfo = () => {
 		// show the account info of logged in user, or not logged in
 		if (this.props.user.isLoggedIn) {
-			return this._renderAccountContainer('Cal Doval');
+			return this._renderAccountContainer('User Info TBD');
 		} else {
 			return this._renderAccountContainer('Tap to Log In');
 		}
