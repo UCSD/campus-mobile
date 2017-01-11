@@ -1,5 +1,8 @@
-const cardsActions = require('./cards')
+import cardsActions from './cards';
+import userActions from './user';
+
 
 module.exports = {
-  ...cardsActions
+	...cardsActions,
+	...userActions,
 };
