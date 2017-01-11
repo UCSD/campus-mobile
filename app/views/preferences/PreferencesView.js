@@ -8,9 +8,10 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 
+import UserAccount from './UserAccount';
+
 import { setCardState } from '../../actions';
 import Card from '../card/Card';
-
 import css from '../../styles/css';
 
 // View for user to manage preferences, including which cards are visible
@@ -48,6 +49,7 @@ export default class PreferencesView extends Component {
 		return (
 			<View style={[css.main_container, css.offwhitebg]}>
 				<ScrollView contentContainerStyle={css.scroll_default}>
+					<UserAccount />
 					<Card id="cards" title="Cards" hideMenu={true}>
 						<View style={css.card_content_full_width}>
 							<View style={css.column}>
