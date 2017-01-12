@@ -32,4 +32,8 @@ module.exports = {
 	DINING_API_TTL: 			60,
 	QUICKLINKS_API_TTL: 		86400,
 
+	USER_LOGIN: {
+		ENABLED: false,
+		METHOD: 'openid',
+	}
 };
