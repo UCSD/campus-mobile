@@ -2,23 +2,25 @@ import React from 'react';
 import {
 	View,
 	Dimensions,
-	TouchableHighlight,
-	Text
+	ScrollView,
+	Text,
+	StyleSheet,
 } from 'react-native';
 import { connect } from 'react-redux';
 
-import SlidingUpPanel from 'react-native-sliding-up-panel';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import SearchBar from './SearchBar';
 import SearchMap from './SearchMap';
 import SearchResults from './SearchResults';
+import SearchHistoryCard from './SearchHistoryCard';
 import NearbyService from '../../services/nearbyService';
 
 const css = require('../../styles/css');
 const logger = require('../../util/logger');
 const shuttle = require('../../util/shuttle');
 const AppSettings = 		require('../../AppSettings');
-const general = require('../../util/general');
+
+import general, { getPRM } from '../../util/general';
 
 let navBarMarginTop = 64;
 let searchMargin = navBarMarginTop;
@@ -29,6 +31,7 @@ if (general.platformAndroid()) {
 }
 
 const deviceHeight = Dimensions.get('window').height;
+const deviceWidth = Dimensions.get('window').width;
 
 const MAXIMUM_HEIGHT = deviceHeight - navBarMarginTop;
 const MINUMUM_HEIGHT = navBarMarginTop;
@@ -39,15 +42,13 @@ class NearbyMapView extends React.Component {
 		super(props);
 
 		this.state = {
-			initialRegion: {
-				latitude: this.props.location.coords.latitude,
-				longitude: this.props.location.coords.longitude,
-				latitudeDelta: 0.02,
-				longitudeDelta: 0.02
-			},
+			searchInput: null,
 			searchResults: null,
 			selectedResult: null,
 			sliding: false,
+			typing: false,
+			allowScroll: false,
+			iconStatus: 'menu'
 		};
 	}
 
@@ -55,19 +56,51 @@ class NearbyMapView extends React.Component {
 
 	}
 
-	getContainerHeight = (height) => {
+	shouldComponentUpdate(nextProps, nextState) {
+		// return true;
+		// Don't re-render if location hasn't changed
+		if (((this.props.location.coords.latitude !== nextProps.location.coords.latitude) &&
+			(this.props.location.coords.longitude !== nextProps.location.coords.longitude)) ||
+			(this.state.selectedResult !== nextState.selectedResult) ||
+			(this.state.iconStatus !== nextState.iconStatus)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	pressIcon = () => {
+		if (this.state.iconStatus === 'back') {
+			this.setState({
+				iconStatus: 'menu'
+			});
+			this.scrollRef.scrollTo(0);
+			// this.barRef.clear();
+			this.barRef.blur();
+		}
+	}
+
+	pressHistory = (text) => {
+		this.pressIcon();
+		this.updateSearch(text);
+	}
+
+	focusSearch = () => {
 		this.setState({
-			containerHeight : height
+			iconStatus: 'back'
 		});
+		this.scrollRef.scrollTo(deviceHeight);
 	}
 
 	updateSearch = (text) => {
 		NearbyService.FetchSearchResults(text).then((result) => {
 			if (result.results) {
 				this.setState({
+					searchInput: text,
 					searchResults: result.results,
 					selectedResult: result.results[0]
 				});
+				this.scrollRef.scrollTo(0);
 			} else {
 				// handle no results
 			}
@@ -79,49 +112,63 @@ class NearbyMapView extends React.Component {
 		this.setState({
 			selectedResult: newSelect
 		});
-		this.panel.collapsePanel();
+		this.scrollRef.scrollTo(0);
 	}
 
 	render() {
-		console.log('render map');
-		if (this.state.initialRegion) {
+		if (this.props.location.coords) {
 			return (
-				<View style={css.view_all_container}>
+				<View style={css.main_container}>
 					<View
 						style={{
-							marginTop:searchMargin,
+							zIndex: 1
 						}}
 					>
 						<SearchBar
 							update={this.updateSearch}
+							onFocus={this.focusSearch}
+							pressIcon={this.pressIcon}
+							iconStatus={this.state.iconStatus}
+							searchInput={this.state.searchInput}
+							reff={
+								(ref) => { this.barRef = ref; }
+							}
 						/>
 					</View>
-					<SearchMap
-						location={this.props.location}
-						selectedResult={this.state.selectedResult}
-						style={css.search_map_container}
-						hideMarker={this.state.sliding}
-					/>
-					<SlidingUpPanel
-						ref={panel => { this.panel = panel; }}
-						containerMaximumHeight={MAXIMUM_HEIGHT}
-						containerBackgroundColor={'white'}
-						handlerHeight={MINUMUM_HEIGHT}
-						allowStayMiddle={true}
-						handlerDefaultView={<HandlerOne />}
-						getContainerHeight={this.getContainerHeight}
-						onStart={() => this.setState({ sliding: true })}
-						onEnd={() => this.setState({ sliding: false })}
+					<ScrollView
+						ref={
+							(ref) => {
+								this.scrollRef = ref;
+							}
+						}
+						showsVerticalScrollIndicator={false}
+						scrollEnabled={this.state.allowScroll}
 					>
-						{(this.state.searchResults) ? (
-							<View>
-								<SearchResults
-									results={this.state.searchResults}
-									onSelect={(index) => this.updateSelectedResult(index)}
-								/>
-							</View>
-							) : (null)}
-					</SlidingUpPanel>
+						<SearchMap
+							location={this.props.location}
+							selectedResult={this.state.selectedResult}
+							style={styles.map_container}
+							hideMarker={this.state.sliding}
+						/>
+						<View
+							style={styles.bottomContainer}
+						>
+							<View
+								style={styles.spacer}
+							/>
+							{(this.state.searchResults) ? (
+								<View>
+									<SearchResults
+										results={this.state.searchResults}
+										onSelect={(index) => this.updateSelectedResult(index)}
+									/>
+								</View>
+								) : (null)}
+							<SearchHistoryCard
+								pressHistory={this.pressHistory}
+							/>
+						</View>
+					</ScrollView>
 				</View>
 			);
 		} else {
@@ -129,12 +176,6 @@ class NearbyMapView extends React.Component {
 		}
 	}
 }
-
-const HandlerOne = ({ props }) => (
-	<View>
-		<Text >Search Results</Text>
-	</View>
-);
 
 function mapStateToProps(state, props) {
 	return {
@@ -144,3 +185,9 @@ function mapStateToProps(state, props) {
 }
 
 module.exports = connect(mapStateToProps)(NearbyMapView);
+
+const styles = StyleSheet.create({
+	bottomContainer: { minHeight: deviceHeight },
+	map_container : { flex: 1, width: deviceWidth, height: deviceHeight },
+	spacer: { height: Math.round(44 * getPRM()) + 10 },
+});
