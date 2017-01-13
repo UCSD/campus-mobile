@@ -137,6 +137,7 @@ class NearbyMapView extends React.Component {
 			return (
 				<View style={css.main_container}>
 					<View
+						// Only necessary for ios?
 						style={{
 							zIndex: 1
 						}}
@@ -230,6 +231,6 @@ const styles = StyleSheet.create({
 	bottomBarText: { textAlign: 'center', },
 	
 	bottomContainer: { minHeight: deviceHeight },
-	map_container : { flex: 1, width: deviceWidth, height: deviceHeight - Math.round(44 * getPRM()) },
+	map_container : { flex: 1, width: deviceWidth, height: deviceHeight - Math.round(44 * getPRM()), },
 	spacer: { height: Math.round(44 * getPRM()) + 12 },
 });
