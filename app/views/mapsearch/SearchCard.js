@@ -41,8 +41,12 @@ class SearchCard extends CardComponent {
 	}
 
 	// Override default method because MapView re-render causes re-zoom
-	shouldComponentUpdate() {
-		if (this.state.selectedInvalidated && this.props.locationPermission === 'authorized') {
+	shouldComponentUpdate(nextProps, nextState) {
+		if (this.props.locationPermission !== nextProps.locationPermission) {
+			console.log("UPDATE: " + nextProps.locationPermission);
+			return true;
+		}
+		else if (this.state.selectedInvalidated && this.props.locationPermission === 'authorized') {
 			this.state.selectedInvalidated = false;
 			return true;
 		} else if (this.state.selectedInvalidated || this.state.loading) {
@@ -105,6 +109,15 @@ class SearchCard extends CardComponent {
 	}
 
 	renderContent() {
+		return (
+			<TouchableHighlight
+				onPress={
+					() => this.gotoNearbyMapView()
+				}
+			>
+				<Text>GOTO MAP</Text>
+			</TouchableHighlight>
+			);
 		if (this.props.locationPermission !== 'authorized') {
 			return <LocationRequiredContent />;
 		}
