@@ -38,6 +38,8 @@ const deviceWidth = Dimensions.get('window').width;
 const MAXIMUM_HEIGHT = deviceHeight - navBarMarginTop;
 const MINUMUM_HEIGHT = navBarMarginTop;
 
+const shuttle_stops = require('../../json/shuttle_stops_master_map.json');
+
 class NearbyMapView extends React.Component {
 
 	constructor(props) {
@@ -167,6 +169,7 @@ class NearbyMapView extends React.Component {
 							selectedResult={this.state.selectedResult}
 							style={styles.map_container}
 							hideMarker={this.state.sliding}
+							shuttle={shuttle_stops}
 						/>
 						<View
 							style={styles.bottomContainer}

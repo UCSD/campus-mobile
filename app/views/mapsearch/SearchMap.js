@@ -7,7 +7,7 @@ import general from '../../util/general';
 
 // NOTE: For some reason MapView-onCalloutPress only works for Android and
 // TouchableHighlight-onPress only works for iOS...which is why it's in two places
-const SearchMap = ({ location, selectedResult, hideMarker, style }) => (
+const SearchMap = ({ location, selectedResult, hideMarker, style, shuttle }) => (
 	<MapView
 		ref={(MapRef) => {
 			if ( MapRef != null && selectedResult != null ) {
@@ -72,6 +72,38 @@ const SearchMap = ({ location, selectedResult, hideMarker, style }) => (
 				</MapView.Callout>
 			</MapView.Marker>
 			) : (null)}
+
+		{
+			Object.keys(shuttle).map((key, index) => {
+				const stop = shuttle[key];
+				return (
+					<MapView.Marker
+						ref={(MarkRef) => {
+							//console.log("MARKER: " + selectedResult.title);
+							if (MarkRef != null) {
+								//MarkRef.showCallout();
+							}
+						}}
+						coordinate={{
+							latitude: stop.lat,
+							longitude: stop.lon
+						}}
+						title={stop.name}
+						identifier={stop.name}
+					>
+						<Icon style={{ flex:0.2 }} name={'bus'} size={20} />
+						<MapView.Callout style={{ width: 100 }} >
+							<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => gotoNavigationApp(selectedResult.mkrLat, selectedResult.mkrLong)}>
+								<View style={{ flex: 1, alignItems: 'center', flexDirection: 'column', flexWrap: 'wrap' }}>
+									<Text>{stop.name}</Text>
+									<Text>{'< 2min'}</Text>
+								</View>
+							</TouchableHighlight>
+						</MapView.Callout>
+					</MapView.Marker>
+				);
+			})
+		}
 	</MapView>
 );
 
