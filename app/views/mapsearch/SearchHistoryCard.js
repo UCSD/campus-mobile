@@ -13,7 +13,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { getPRM, getMaxCardWidth } from '../../util/general';
 
 const PRM = getPRM();
-const windowWidth = Dimensions.get('window').width;
+const deviceHeight = Dimensions.get('window').height;
 
 const history = ['physics', 'wlh', 'geisel', 'solis', 'peterson'];
 const historyDataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
@@ -81,7 +81,7 @@ SearchHistoryCard.defaultProps = {
 
 const styles = StyleSheet.create({
 	list_container: { width: getMaxCardWidth(), padding: 8 },
-	card_main: { backgroundColor: '#FFFFFF', margin: 6, alignItems: 'flex-start', justifyContent: 'center', },
+	card_main: { backgroundColor: '#FFFFFF', margin: 6, alignItems: 'flex-start', justifyContent: 'center', maxHeight: Math.round(deviceHeight/2) },
 	list_row: { flex: 1, flexDirection: 'row', paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: '#EEE', overflow: 'hidden' },
 	icon_container: { alignItems: 'center', flex: 0.1 },
 	text_container: { flex: 0.9 }

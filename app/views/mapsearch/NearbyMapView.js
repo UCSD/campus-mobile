@@ -5,8 +5,10 @@ import {
 	ScrollView,
 	Text,
 	StyleSheet,
+	TouchableOpacity
 } from 'react-native';
 import { connect } from 'react-redux';
+import ElevatedView from 'react-native-elevated-view';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 import SearchBar from './SearchBar';
@@ -47,8 +49,9 @@ class NearbyMapView extends React.Component {
 			selectedResult: null,
 			sliding: false,
 			typing: false,
-			allowScroll: false,
-			iconStatus: 'menu'
+			allowScroll: true,
+			iconStatus: 'menu',
+			showBar: true,
 		};
 	}
 
@@ -62,7 +65,8 @@ class NearbyMapView extends React.Component {
 		if (((this.props.location.coords.latitude !== nextProps.location.coords.latitude) &&
 			(this.props.location.coords.longitude !== nextProps.location.coords.longitude)) ||
 			(this.state.selectedResult !== nextState.selectedResult) ||
-			(this.state.iconStatus !== nextState.iconStatus)) {
+			(this.state.iconStatus !== nextState.iconStatus) ||
+			(this.state.showBar !== nextState.showBar)) {
 			return true;
 		} else {
 			return false;
@@ -72,9 +76,10 @@ class NearbyMapView extends React.Component {
 	pressIcon = () => {
 		if (this.state.iconStatus === 'back') {
 			this.setState({
-				iconStatus: 'menu'
+				iconStatus: 'menu',
+				showBar: true
 			});
-			this.scrollRef.scrollTo(0);
+			this.scrollRef.scrollTo({ x: 0, y: 0, animated: true });
 			// this.barRef.clear();
 			this.barRef.blur();
 		}
@@ -85,11 +90,20 @@ class NearbyMapView extends React.Component {
 		this.updateSearch(text);
 	}
 
-	focusSearch = () => {
+	gotoResults = () => {
 		this.setState({
-			iconStatus: 'back'
+			iconStatus: 'back',
+			showBar: false
 		});
-		this.scrollRef.scrollTo(deviceHeight);
+		this.scrollRef.scrollTo({ x: 0, y: deviceHeight - Math.round(44 * getPRM()) + 6, animated: true });
+	}
+
+	focusSearch = () => {
+		this.scrollRef.scrollTo({ x: 0, y: (2 * deviceHeight) - Math.round(2 * 44 * getPRM()) - 12, animated: true });
+		this.setState({
+			iconStatus: 'back',
+			showBar: false
+		});
 	}
 
 	updateSearch = (text) => {
@@ -98,9 +112,10 @@ class NearbyMapView extends React.Component {
 				this.setState({
 					searchInput: text,
 					searchResults: result.results,
-					selectedResult: result.results[0]
+					selectedResult: result.results[0],
+					showBar: true
 				});
-				this.scrollRef.scrollTo(0);
+				this.scrollRef.scrollTo({ x: 0, y: 0, animated: true });
 			} else {
 				// handle no results
 			}
@@ -110,9 +125,11 @@ class NearbyMapView extends React.Component {
 	updateSelectedResult = (index) => {
 		const newSelect = this.state.searchResults[index];
 		this.setState({
-			selectedResult: newSelect
+			iconStatus: 'menu',
+			selectedResult: newSelect,
+			showBar: true
 		});
-		this.scrollRef.scrollTo(0);
+		this.scrollRef.scrollTo({ x: 0, y: 0, animated: true });
 	}
 
 	render() {
@@ -156,19 +173,40 @@ class NearbyMapView extends React.Component {
 							<View
 								style={styles.spacer}
 							/>
-							{(this.state.searchResults) ? (
-								<View>
-									<SearchResults
-										results={this.state.searchResults}
-										onSelect={(index) => this.updateSelectedResult(index)}
-									/>
-								</View>
-								) : (null)}
+							<SearchResults
+								results={this.state.searchResults}
+								onSelect={(index) => this.updateSelectedResult(index)}
+							/>
+							<View
+								style={styles.spacer}
+							/>
 							<SearchHistoryCard
 								pressHistory={this.pressHistory}
 							/>
+							<View
+								style={styles.spacer}
+							/>
 						</View>
 					</ScrollView>
+					{(this.state.showBar) ? (
+							<ElevatedView
+								style={styles.bottomBarContainer}
+								elevation={5}
+							>
+								<TouchableOpacity
+									onPress={
+										this.gotoResults
+									}
+								>
+									<Text
+										style={styles.bottomBarText}
+									>
+										See More Results
+									</Text>
+								</TouchableOpacity>
+							</ElevatedView>
+							) : (null)
+						}
 				</View>
 			);
 		} else {
@@ -187,7 +225,11 @@ function mapStateToProps(state, props) {
 module.exports = connect(mapStateToProps)(NearbyMapView);
 
 const styles = StyleSheet.create({
+	bottomBarContainer: { flex: 1, alignItems: 'center', justifyContent: 'center', position: 'absolute', bottom: 0, width: deviceWidth, height: Math.round(44 * getPRM()), borderWidth: 0, backgroundColor: 'white', },
+	bottomBarContent: { flex:1, alignItems:'center', justifyContent:'center' },
+	bottomBarText: { textAlign: 'center', },
+	
 	bottomContainer: { minHeight: deviceHeight },
-	map_container : { flex: 1, width: deviceWidth, height: deviceHeight },
-	spacer: { height: Math.round(44 * getPRM()) + 10 },
+	map_container : { flex: 1, width: deviceWidth, height: deviceHeight - Math.round(44 * getPRM()) },
+	spacer: { height: Math.round(44 * getPRM()) + 12 },
 });
