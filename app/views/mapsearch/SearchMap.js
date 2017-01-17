@@ -76,6 +76,12 @@ const SearchMap = ({ location, selectedResult, hideMarker, style, shuttle }) => 
 		{
 			Object.keys(shuttle).map((key, index) => {
 				const stop = shuttle[key];
+				if ((Object.keys(stop.routes).length === 0 && stop.routes.constructor === Object) ||
+					// Hide Airport stops
+					stop.routes['89']) {
+					return null;
+				}
+
 				return (
 					<MapView.Marker
 						ref={(MarkRef) => {

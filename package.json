@@ -22,6 +22,7 @@
     "react-native-maps": "0.11.0",
     "react-native-permissions": "0.2.5",
     "react-native-popup-menu": "^0.6.1",
+    "react-native-side-menu": "^0.20.1",
     "react-native-vector-icons": "2.1.0",
     "react-redux": "4.4.5",
     "react-timer-mixin": "0.13.3",

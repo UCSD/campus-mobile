@@ -5,17 +5,20 @@ import {
 	ScrollView,
 	Text,
 	StyleSheet,
-	TouchableOpacity
+	TouchableOpacity,
+	Switch
 } from 'react-native';
 import { connect } from 'react-redux';
 import ElevatedView from 'react-native-elevated-view';
-
+import SideMenu from 'react-native-side-menu';
 import Icon from 'react-native-vector-icons/FontAwesome';
+
 import SearchBar from './SearchBar';
 import SearchMap from './SearchMap';
 import SearchResults from './SearchResults';
 import SearchHistoryCard from './SearchHistoryCard';
 import NearbyService from '../../services/nearbyService';
+
 
 const css = require('../../styles/css');
 const logger = require('../../util/logger');
@@ -39,6 +42,7 @@ const MAXIMUM_HEIGHT = deviceHeight - navBarMarginTop;
 const MINUMUM_HEIGHT = navBarMarginTop;
 
 const shuttle_stops = require('../../json/shuttle_stops_master_map.json');
+const shuttle_routes = require('../../json/shuttle_routes_master_map.json');
 
 class NearbyMapView extends React.Component {
 
@@ -54,21 +58,30 @@ class NearbyMapView extends React.Component {
 			allowScroll: true,
 			iconStatus: 'menu',
 			showBar: true,
+			showMenu: false,
 		};
 	}
 
 	componentWillMount() {
-
+		Object.keys(shuttle_routes).map((key, index) => {
+			this.setState({ ['route' + key] : true });
+			return null;
+		});
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
 		// return true;
 		// Don't re-render if location hasn't changed
-		if (((this.props.location.coords.latitude !== nextProps.location.coords.latitude) &&
+		if (((this.props.location.coords.latitude !== nextProps.location.coords.latitude) ||
 			(this.props.location.coords.longitude !== nextProps.location.coords.longitude)) ||
+			this.state !== nextState) {
+			/*
 			(this.state.selectedResult !== nextState.selectedResult) ||
 			(this.state.iconStatus !== nextState.iconStatus) ||
-			(this.state.showBar !== nextState.showBar)) {
+			(this.state.showBar !== nextState.showBar) ||
+			(this.state.showMenu !== nextState.showMenu) ||
+			(this.state.route1 !== nextState.route1)) {*/
+
 			return true;
 		} else {
 			return false;
@@ -84,6 +97,9 @@ class NearbyMapView extends React.Component {
 			this.scrollRef.scrollTo({ x: 0, y: 0, animated: true });
 			// this.barRef.clear();
 			this.barRef.blur();
+		} else if (this.state.iconStatus === 'menu') {
+			console.log("Hello");
+			this.updateMenuState(true);
 		}
 	}
 
@@ -134,84 +150,136 @@ class NearbyMapView extends React.Component {
 		this.scrollRef.scrollTo({ x: 0, y: 0, animated: true });
 	}
 
+	updateMenuState = (showMenu) => {
+		this.setState({ showMenu, });
+	}
+
+	toggleRoute = (value, key) => {
+		if (value === false) {
+			// Delete route from every stop
+			Object.keys(shuttle_routes[key].stops).map((key2, index2) => {
+				console.log("Deleting");
+				if (shuttle_stops[key2])
+					delete shuttle_stops[key2].routes[key];
+				return null;
+			});
+		} else {
+			// Add route to every stop
+			Object.keys(shuttle_routes[key].stops).map((key2, index2) => {
+				console.log("Adding " + key2);
+				//console.log(JSON.stringify(shuttle_stops[key2]));
+				if (shuttle_stops[key2])
+					shuttle_stops[key2].routes[key] = shuttle_routes[key];
+				return null;
+			});
+		}
+		this.setState({ ['route' + key] : value });
+	}
+
 	render() {
+		const menu = (
+			<ScrollView scrollsToTop={false} style={styles.menu}>
+				<View>
+					{
+						// Create switch for every shuttle route
+						Object.keys(shuttle_routes).map((key, index) => (
+							<View>
+								<Text>{shuttle_routes[key].name.trim()}</Text>
+								<Switch
+									onValueChange={(val) => this.toggleRoute(val, key)}
+									value={this.state['route' + key]}
+								/>
+							</View>
+							)
+						)
+					}
+				</View>
+			</ScrollView>
+		);
+
 		if (this.props.location.coords) {
 			return (
-				<View style={css.main_container}>
-					<View
-						// Only necessary for ios?
-						style={{
-							zIndex: 1
-						}}
-					>
-						<SearchBar
-							update={this.updateSearch}
-							onFocus={this.focusSearch}
-							pressIcon={this.pressIcon}
-							iconStatus={this.state.iconStatus}
-							searchInput={this.state.searchInput}
-							reff={
-								(ref) => { this.barRef = ref; }
-							}
-						/>
-					</View>
-					<ScrollView
-						ref={
-							(ref) => {
-								this.scrollRef = ref;
-							}
-						}
-						showsVerticalScrollIndicator={false}
-						scrollEnabled={this.state.allowScroll}
-					>
-						<SearchMap
-							location={this.props.location}
-							selectedResult={this.state.selectedResult}
-							style={styles.map_container}
-							hideMarker={this.state.sliding}
-							shuttle={shuttle_stops}
-						/>
+				<SideMenu
+					menu={menu}
+					isOpen={this.state.showMenu}
+					onChange={(isOpen) => this.updateMenuState(isOpen)}
+				>
+					<View style={css.main_container}>
 						<View
-							style={styles.bottomContainer}
+							// Only necessary for ios?
+							style={{
+								zIndex: 1
+							}}
 						>
-							<View
-								style={styles.spacer}
-							/>
-							<SearchResults
-								results={this.state.searchResults}
-								onSelect={(index) => this.updateSelectedResult(index)}
-							/>
-							<View
-								style={styles.spacer}
-							/>
-							<SearchHistoryCard
-								pressHistory={this.pressHistory}
-							/>
-							<View
-								style={styles.spacer}
+							<SearchBar
+								update={this.updateSearch}
+								onFocus={this.focusSearch}
+								pressIcon={this.pressIcon}
+								iconStatus={this.state.iconStatus}
+								searchInput={this.state.searchInput}
+								reff={
+									(ref) => { this.barRef = ref; }
+								}
 							/>
 						</View>
-					</ScrollView>
-					{(this.state.showBar) ? (
-							<ElevatedView
-								style={styles.bottomBarContainer}
-								elevation={5}
+						<ScrollView
+							ref={
+								(ref) => {
+									this.scrollRef = ref;
+								}
+							}
+							showsVerticalScrollIndicator={false}
+							scrollEnabled={this.state.allowScroll}
+						>
+							<SearchMap
+								location={this.props.location}
+								selectedResult={this.state.selectedResult}
+								style={styles.map_container}
+								hideMarker={this.state.sliding}
+								shuttle={shuttle_stops}
+							/>
+							<View
+								style={styles.bottomContainer}
 							>
-								<TouchableOpacity
-									onPress={
-										this.gotoResults
-									}
+								<View
+									style={styles.spacer}
+								/>
+								<SearchResults
+									results={this.state.searchResults}
+									onSelect={(index) => this.updateSelectedResult(index)}
+								/>
+								<View
+									style={styles.spacer}
+								/>
+								<SearchHistoryCard
+									pressHistory={this.pressHistory}
+								/>
+								<View
+									style={styles.spacer}
+								/>
+							</View>
+						</ScrollView>
+						{(this.state.showBar) ? (
+								<ElevatedView
+									style={styles.bottomBarContainer}
+									elevation={5}
 								>
-									<Text
-										style={styles.bottomBarText}
+									<TouchableOpacity
+										onPress={
+											this.gotoResults
+										}
 									>
-										See More Results
-									</Text>
-								</TouchableOpacity>
-							</ElevatedView>
-							) : (null)
-						}
-				</View>
+										<Text
+											style={styles.bottomBarText}
+										>
+											See More Results
+										</Text>
+									</TouchableOpacity>
+								</ElevatedView>
+								) : (null)
+							}
+					</View>
+				</SideMenu>
 			);
 		} else {
 			return null;
