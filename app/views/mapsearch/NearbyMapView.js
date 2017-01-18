@@ -98,7 +98,6 @@ class NearbyMapView extends React.Component {
 			// this.barRef.clear();
 			this.barRef.blur();
 		} else if (this.state.iconStatus === 'menu') {
-			console.log("Hello");
 			this.updateMenuState(true);
 		}
 	}
@@ -196,6 +195,7 @@ class NearbyMapView extends React.Component {
 				</View>
 			</ScrollView>
 		);
+		console.log("SHOWBAR: " + this.state.showBar);
 
 		if (this.props.location.coords) {
 			return (
@@ -260,24 +260,24 @@ class NearbyMapView extends React.Component {
 							</View>
 						</ScrollView>
 						{(this.state.showBar) ? (
-								<ElevatedView
-									style={styles.bottomBarContainer}
-									elevation={5}
+							<ElevatedView
+								style={styles.bottomBarContainer}
+								elevation={5}
+							>
+								<TouchableOpacity
+									onPress={
+										this.gotoResults
+									}
 								>
-									<TouchableOpacity
-										onPress={
-											this.gotoResults
-										}
+									<Text
+										style={styles.bottomBarText}
 									>
-										<Text
-											style={styles.bottomBarText}
-										>
-											See More Results
-										</Text>
-									</TouchableOpacity>
-								</ElevatedView>
-								) : (null)
-							}
+										See More Results
+									</Text>
+								</TouchableOpacity>
+							</ElevatedView>
+							) : (null)
+						}
 					</View>
 				</SideMenu>
 			);
@@ -297,10 +297,10 @@ function mapStateToProps(state, props) {
 module.exports = connect(mapStateToProps)(NearbyMapView);
 
 const styles = StyleSheet.create({
-	bottomBarContainer: { flex: 1, alignItems: 'center', justifyContent: 'center', position: 'absolute', bottom: 0, width: deviceWidth, height: Math.round(44 * getPRM()), borderWidth: 0, backgroundColor: 'white', },
+	bottomBarContainer: { zIndex: 1, flex: 1, alignItems: 'center', justifyContent: 'center', position: 'absolute', bottom: Math.round(44 * getPRM()) + 24, width: deviceWidth, height: Math.round(44 * getPRM()), borderWidth: 0, backgroundColor: 'white', },
 	bottomBarContent: { flex:1, alignItems:'center', justifyContent:'center' },
 	bottomBarText: { textAlign: 'center', },
-	
+
 	bottomContainer: { minHeight: deviceHeight },
 	map_container : { flex: 1, width: deviceWidth, height: deviceHeight - Math.round(44 * getPRM()), },
 	spacer: { height: Math.round(44 * getPRM()) + 12 },
