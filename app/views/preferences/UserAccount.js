@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {
 	View,
 	Text,
+	Linking,
 	TouchableOpacity,
 } from 'react-native';
 
@@ -14,9 +15,24 @@ import css from '../../styles/css';
 
 // View for user to manage account, sign-in or out
 export default class UserAccount extends Component {
+	_performUserAuthAction = () => {
+		// TODO: for now, assume they want to log in
+		// TODO: create nonce
+		const clientId = 'nowimplicit';
+		const authUrl = [
+			'https://auth-dev.ucdavis.edu/identity/connect/authorize',
+			'?response_type=id_token token',
+			// '&response_mode=form_post',
+			`&client_id=${clientId}`,
+			'&redirect_uri=nowmobile://cb',
+			'&nonce=1234'
+		].join('');
+
+		Linking.openURL(authUrl).catch(err => console.error('An error occurred', err));
+	}
 	_renderAccountContainer = (mainText) => {
 		return (
-			<TouchableOpacity style={css.spacedRow} onPress={() => {}}>
+			<TouchableOpacity style={css.spacedRow} onPress={this._performUserAuthAction}>
 				<View style={css.centerAlign}>
 					<Text style={css.prefCardTitle}>{mainText}</Text>
 				</View>
