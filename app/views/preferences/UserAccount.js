@@ -15,16 +15,40 @@ import css from '../../styles/css';
 
 // View for user to manage account, sign-in or out
 export default class UserAccount extends Component {
+	componentDidMount() {
+		console.log('listener added');
+		Linking.addEventListener('url', this._handleOpenURL);
+	}
+	componentWillUnmount() {
+		console.log('unmounted');
+		Linking.removeEventListener('url', this._handleOpenURL);
+	}
+	_handleOpenURL(event) {
+		console.log('OPENING URL');
+		console.log(event.url);
+
+		// TODO: get access_token, POST to userinfo endpoint to get back user info
+		if (event.url.startsWith('nowmobile://cb')) {
+			// only handle callback URLs, in case we deep link for other things
+			const accessRegex = event.url.match(/access_token=([^&]*)/);
+
+			if (accessRegex) {
+				const access_token = accessRegex[1]; // just get the value from the match group
+
+				// fetch('https://auth-dev.ucdavis.edu/identity/connect/userinfo')
+			}
+		}
+	}
 	_performUserAuthAction = () => {
 		// TODO: for now, assume they want to log in
-		// TODO: create nonce
+		// TODO: nonce I don't think is needed, but we might want state to verify origination
 		const clientId = 'nowimplicit';
 		const authUrl = [
 			'https://auth-dev.ucdavis.edu/identity/connect/authorize',
-			'?response_type=id_token token',
-			// '&response_mode=form_post',
+			'?response_type=id_token+token',
 			`&client_id=${clientId}`,
 			'&redirect_uri=nowmobile://cb',
+			'&scope=openid+profile+email',
 			'&nonce=1234'
 		].join('');
 
