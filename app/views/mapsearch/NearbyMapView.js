@@ -155,9 +155,8 @@ class NearbyMapView extends React.Component {
 
 	toggleRoute = (value, key) => {
 		if (value === false) {
-			// Delete route from every stop
+			// Remove route from every stop
 			Object.keys(shuttle_routes[key].stops).map((key2, index2) => {
-				console.log("Deleting");
 				if (shuttle_stops[key2])
 					delete shuttle_stops[key2].routes[key];
 				return null;
@@ -165,8 +164,6 @@ class NearbyMapView extends React.Component {
 		} else {
 			// Add route to every stop
 			Object.keys(shuttle_routes[key].stops).map((key2, index2) => {
-				console.log("Adding " + key2);
-				//console.log(JSON.stringify(shuttle_stops[key2]));
 				if (shuttle_stops[key2])
 					shuttle_stops[key2].routes[key] = shuttle_routes[key];
 				return null;
@@ -195,7 +192,6 @@ class NearbyMapView extends React.Component {
 				</View>
 			</ScrollView>
 		);
-		console.log("SHOWBAR: " + this.state.showBar);
 
 		if (this.props.location.coords) {
 			return (
