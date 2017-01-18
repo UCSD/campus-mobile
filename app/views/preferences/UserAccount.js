@@ -26,30 +26,48 @@ export default class UserAccount extends Component {
 	_handleOpenURL(event) {
 		console.log('OPENING URL');
 		console.log(event.url);
+		const openIdSettings = Settings.USER_LOGIN.OPTIONS;
 
 		// TODO: get access_token, POST to userinfo endpoint to get back user info
-		if (event.url.startsWith('nowmobile://cb')) {
+		if (event.url.startsWith(openIdSettings.REDIRECT_URL)) {
 			// only handle callback URLs, in case we deep link for other things
 			const accessRegex = event.url.match(/access_token=([^&]*)/);
+			const stateRegex = event.url.match(/state=([^&]*)/);
 
-			if (accessRegex) {
+			if (accessRegex && stateRegex) {
+				// first, verify the state regex is what we expected
+				if (stateRegex[1] !== openIdSettings.STATE) {
+					return; // just don't handle the event, though maybe log error?
+				}
+
 				const access_token = accessRegex[1]; // just get the value from the match group
 
-				// fetch('https://auth-dev.ucdavis.edu/identity/connect/userinfo')
+				fetch(openIdSettings.USER_INFO_URL, {
+					method: 'POST',
+					headers: {
+						'Authorization': `Bearer ${access_token}`,
+					},
+				})
+				.then(result => result.json())
+				.then(userInfo => {
+					console.log(userInfo);
+				})
+				.catch(error => {}); // TODO: notify user if logon failed
 			}
 		}
 	}
 	_performUserAuthAction = () => {
 		// TODO: for now, assume they want to log in
-		// TODO: nonce I don't think is needed, but we might want state to verify origination
-		const clientId = 'nowimplicit';
+		const openIdSettings = Settings.USER_LOGIN.OPTIONS;
+
 		const authUrl = [
-			'https://auth-dev.ucdavis.edu/identity/connect/authorize',
+			`${openIdSettings.AUTH_URL}`,
 			'?response_type=id_token+token',
-			`&client_id=${clientId}`,
-			'&redirect_uri=nowmobile://cb',
+			`&client_id=${openIdSettings.CLIENT_ID}`,
+			`&redirect_uri=${openIdSettings.REDIRECT_URL}`,
 			'&scope=openid+profile+email',
-			'&nonce=1234'
+			`&state=${openIdSettings.STATE}`,
+			`&nonce=${Math.random().toString(36).slice(2)}`
 		].join('');
 
 		Linking.openURL(authUrl).catch(err => console.error('An error occurred', err));

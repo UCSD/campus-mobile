@@ -35,5 +35,12 @@ module.exports = {
 	USER_LOGIN: {
 		ENABLED: true,
 		METHOD: 'openid',
+		OPTIONS: {
+			CLIENT_ID: 'nowimplicit',
+			AUTH_URL: 'https://auth-dev.ucdavis.edu/identity/connect/authorize',
+			USER_INFO_URL: 'https://auth-dev.ucdavis.edu/identity/connect/userinfo',
+			REDIRECT_URL: 'nowmobile://cb',
+			STATE: 'M9NGbE6bnUV18FflfVeZ2U0j94'
+		}
 	}
 };
