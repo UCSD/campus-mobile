@@ -13,12 +13,14 @@ import ElevatedView from 'react-native-elevated-view';
 import SideMenu from 'react-native-side-menu';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+import SearchSideMenu from './SearchSideMenu';
 import SearchBar from './SearchBar';
 import SearchMap from './SearchMap';
 import SearchResults from './SearchResults';
 import SearchHistoryCard from './SearchHistoryCard';
 import NearbyService from '../../services/nearbyService';
 
+import { toggleRoute } from '../../actions/shuttle';
 
 const css = require('../../styles/css');
 const logger = require('../../util/logger');
@@ -59,6 +61,7 @@ class NearbyMapView extends React.Component {
 			iconStatus: 'menu',
 			showBar: true,
 			showMenu: false,
+			toggled: false,
 		};
 	}
 
@@ -112,7 +115,7 @@ class NearbyMapView extends React.Component {
 			iconStatus: 'back',
 			showBar: false
 		});
-		this.scrollRef.scrollTo({ x: 0, y: deviceHeight - Math.round(44 * getPRM()) + 6, animated: true });
+		this.scrollRef.scrollTo({ x: 0, y: (deviceHeight - Math.round(44 * getPRM())) + 6, animated: true });
 	}
 
 	focusSearch = () => {
@@ -154,49 +157,22 @@ class NearbyMapView extends React.Component {
 	}
 
 	toggleRoute = (value, key) => {
-		if (value === false) {
-			// Remove route from every stop
-			Object.keys(shuttle_routes[key].stops).map((key2, index2) => {
-				if (shuttle_stops[key2])
-					delete shuttle_stops[key2].routes[key];
-				return null;
-			});
-		} else {
-			// Add route to every stop
-			Object.keys(shuttle_routes[key].stops).map((key2, index2) => {
-				if (shuttle_stops[key2])
-					shuttle_stops[key2].routes[key] = shuttle_routes[key];
-				return null;
-			});
-		}
-		this.setState({ ['route' + key] : value });
+		this.props.dispatch(toggleRoute(key));
+
+		this.setState({ toggled: !this.state.toggled });
 	}
 
 	render() {
-		const menu = (
-			<ScrollView scrollsToTop={false} style={styles.menu}>
-				<View>
-					{
-						// Create switch for every shuttle route
-						Object.keys(shuttle_routes).map((key, index) => (
-							<View>
-								<Text>{shuttle_routes[key].name.trim()}</Text>
-								<Switch
-									onValueChange={(val) => this.toggleRoute(val, key)}
-									value={this.state['route' + key]}
-								/>
-							</View>
-							)
-						)
-					}
-				</View>
-			</ScrollView>
-		);
-
 		if (this.props.location.coords) {
 			return (
 				<SideMenu
-					menu={menu}
+					menu={
+						<SearchSideMenu
+							shuttle_routes={shuttle_routes}
+							onToggle={this.toggleRoute}
+							toggles={this.props.toggles}
+						/>
+					}
 					isOpen={this.state.showMenu}
 					onChange={(isOpen) => this.updateMenuState(isOpen)}
 				>
@@ -232,7 +208,7 @@ class NearbyMapView extends React.Component {
 								selectedResult={this.state.selectedResult}
 								style={styles.map_container}
 								hideMarker={this.state.sliding}
-								shuttle={shuttle_stops}
+								shuttle={this.props.shuttle_stops}
 							/>
 							<View
 								style={styles.bottomContainer}
@@ -286,7 +262,10 @@ class NearbyMapView extends React.Component {
 function mapStateToProps(state, props) {
 	return {
 		location: state.location.position,
-		locationPermission: state.location.permission
+		locationPermission: state.location.permission,
+		toggles: state.shuttle.toggles,
+		shuttle_routes: state.shuttle.routes,
+		shuttle_stops: state.shuttle.stops,
 	};
 }
 

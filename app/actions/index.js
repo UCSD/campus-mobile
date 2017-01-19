@@ -1,5 +1,7 @@
-const cardsActions = require('./cards')
+const cardsActions = require('./cards');
+const shuttleActions = require('./shuttle');
 
 module.exports = {
-  ...cardsActions
+	...cardsActions,
+	...shuttleActions
 };
