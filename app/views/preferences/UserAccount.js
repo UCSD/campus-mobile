@@ -10,10 +10,13 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 import { connect } from 'react-redux';
 import { userLoggedIn, userLoggedOut } from '../../actions';
+import getAuthenticationService from '../../services/authenticationService';
 
 import Settings from '../../AppSettings';
 import Card from '../card/Card';
 import css from '../../styles/css';
+
+const authenticationService = getAuthenticationService();
 
 // View for user to manage account, sign-in or out
 class UserAccount extends Component {
@@ -24,55 +27,25 @@ class UserAccount extends Component {
 		Linking.removeEventListener('url', this._handleOpenURL);
 	}
 	_handleOpenURL = (event) => {
-		const openIdSettings = Settings.USER_LOGIN.OPTIONS;
+		// only handle proper auth redirection urls
+		if (!authenticationService) return;
+		if (!event.url.startsWith(Settings.USER_LOGIN.OPTIONS.REDIRECT_URL)) return;
 
-		// only handle callback URLs, in case we deep link for other things
-		if (event.url.startsWith(openIdSettings.REDIRECT_URL)) {
-			// get access_token, POST to userinfo endpoint to get back user info
-			const accessRegex = event.url.match(/access_token=([^&]*)/);
-			const stateRegex = event.url.match(/state=([^&]*)/);
-
-			if (accessRegex && stateRegex) {
-				// first, verify the state regex is what we expected
-				if (stateRegex[1] !== openIdSettings.STATE) {
-					return; // just don't handle the event, though maybe log error?
-				}
-
-				const access_token = accessRegex[1]; // just get the value from the match group
-
-				fetch(openIdSettings.USER_INFO_URL, {
-					method: 'POST',
-					headers: {
-						'Authorization': `Bearer ${access_token}`,
-					},
-				})
-				.then(result => result.json())
-				.then(userInfo => {
-					// now we have user info, save in redux and we are set
-					this.props.dispatch(userLoggedIn({
-						profile: userInfo
-					}));
-				})
-				.catch(error => {}); // TODO: notify user if logon failed?
-			}
-		}
+		authenticationService.handleAuthenticationCallback(event)
+		.then(userInfo => {
+			// now we have user info, save in redux and we are set
+			this.props.dispatch(userLoggedIn({
+				profile: userInfo
+			}));
+		})
+		.catch(error => {}); // TODO: notify user if logon failed?
 	}
 	_performUserAuthAction = () => {
 		if (this.props.user.isLoggedIn) {
 			this.props.dispatch(userLoggedOut()); // log out user, destroy profile/auth info
 		} else {
 			// if the are not logged in, log them in
-			const openIdSettings = Settings.USER_LOGIN.OPTIONS;
-
-			const authUrl = [
-				`${openIdSettings.AUTH_URL}`,
-				'?response_type=id_token+token',
-				`&client_id=${openIdSettings.CLIENT_ID}`,
-				`&redirect_uri=${openIdSettings.REDIRECT_URL}`,
-				'&scope=openid+profile+email',
-				`&state=${openIdSettings.STATE}`,
-				`&nonce=${Math.random().toString(36).slice(2)}`
-			].join('');
+			const authUrl = authenticationService.createAuthenticationUrl();
 
 			Linking.openURL(authUrl).catch(err => console.error('An error occurred', err));
 		}

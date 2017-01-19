@@ -33,7 +33,7 @@ module.exports = {
 	QUICKLINKS_API_TTL: 		86400,
 
 	USER_LOGIN: {
-		ENABLED: true,
+		ENABLED: false,
 		METHOD: 'openid',
 		OPTIONS: {
 			CLIENT_ID: 'nowimplicit',
