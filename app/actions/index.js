@@ -1,6 +1,5 @@
 import cardsActions from './cards';
-import userActions from './user';
-
+import * as userActions from './user'; // ES6 way
 
 module.exports = {
 	...cardsActions,
