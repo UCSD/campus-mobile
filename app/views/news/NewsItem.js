@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 
 import NewsDetail from './NewsDetail';
+import { Actions } from 'react-native-router-flux';
 
 const css = require('../../styles/css');
 const moment = require('moment');
@@ -30,7 +31,7 @@ export default class NewsItem extends React.Component {
 	}
 
 	gotoNewsDetail(newsData) {
-		this.props.navigator.push({ id: 'NewsDetail', name: 'News', title: 'News', component: NewsDetail, newsData });
+		Actions.NewsDetail({ newsData });
 	}
 
 	render() {

@@ -5,6 +5,7 @@ import {
 	TouchableHighlight,
 } from 'react-native';
 
+import { Actions } from 'react-native-router-flux';
 import Card from '../card/Card';
 import CardComponent from '../card/CardComponent';
 import QuicklinksService from '../../services/quicklinksService';
@@ -18,9 +19,7 @@ export default class QuicklinksCard extends CardComponent {
 
 	constructor(props) {
 		super(props);
-
 		this.quicklinksCardMaxResults = 4;
-
 		this.state = {
 			quicklinksDataLoaded: false,
 			quicklinksRenderAllRows: false,
@@ -65,6 +64,6 @@ export default class QuicklinksCard extends CardComponent {
 	}
 
 	gotoQuicklinksListView() {
-		this.props.navigator.push({ id: 'QuicklinksListView', name: 'QuicklinksListView', title: 'Links',  component: QuicklinksListView, data: this.state.quicklinksData });
+		Actions.QuicklinksListView({ data: this.state.quicklinksData });
 	}
 }

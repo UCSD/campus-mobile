@@ -14,12 +14,12 @@ import {
 const MapView = require('react-native-maps');
 
 const TimerMixin = require('react-timer-mixin');
-const AppSettings = require('../AppSettings');
-const css = require('../styles/css');
+const AppSettings = require('../../AppSettings');
+const css = require('../../styles/css');
 
-const general = require('../util/general');
-const logger = require('../util/logger');
-const shuttle = require('../util/shuttle');
+const general = require('../../util/general');
+const logger = require('../../util/logger');
+const shuttle = require('../../util/shuttle');
 
 let responseDataRef = [];
 let responseDataSort = [];
@@ -43,79 +43,75 @@ const ShuttleStop = React.createClass({
 			closestShuttlesLoaded: false,
 			closestShuttlesInactive: false,
 
-			shuttleStopID: this.props.route.stopData.stopID,
-			shuttleStopName: this.props.route.stopData.stopName,
-			shuttleStopLat: this.props.route.stopData.stopLat,
-			shuttleStopLon: this.props.route.stopData.stopLon,
+			shuttleStopID: this.props.stopData.stopID,
+			shuttleStopName: this.props.stopData.stopName,
+			shuttleStopLat: this.props.stopData.stopLat,
+			shuttleStopLon: this.props.stopData.stopLon,
 
 			region: {
-				latitude: this.props.route.stopData.stopLat,
-				longitude: this.props.route.stopData.stopLon,
+				latitude: this.props.stopData.stopLat,
+				longitude: this.props.stopData.stopLon,
 			},
 
 			shuttleStopMarker: [{
-				latitude: this.props.route.stopData.stopLat,
-				longitude: this.props.route.stopData.stopLon,
-				title: this.props.route.stopData.stopName,
+				latitude: this.props.stopData.stopLat,
+				longitude: this.props.stopData.stopLon,
+				title: this.props.stopData.stopName,
 			}],
 
 			mapDeltaViewLoader: false,
 			mapViewLoadReady: false,
 			mapDelta: 0.01,
 
-			currentPosition: this.props.route.currentPosition,
+			currentPosition: this.props.currentPosition,
 			defaultPosition: {
 				coords: { latitude: '32.88', longitude: '-117.234' }
 			},
 
 			shuttleStopImageDict: {
-				'141014': require('../assets/img/shuttle/shuttle-stop-141014.jpg'),
-				'141030': require('../assets/img/shuttle/shuttle-stop-141030.jpg'),
-				'141042': require('../assets/img/shuttle/shuttle-stop-141042.jpg'),
-				'141056': require('../assets/img/shuttle/shuttle-stop-141056.jpg'),
-				'141062': require('../assets/img/shuttle/shuttle-stop-141062.jpg'),
-				'141080': require('../assets/img/shuttle/shuttle-stop-141080.jpg'),
-				'141111': require('../assets/img/shuttle/shuttle-stop-141111.jpg'),
-				'141138': require('../assets/img/shuttle/shuttle-stop-141138.jpg'),
-				'1542847': require('../assets/img/shuttle/shuttle-stop-1542847.jpg'),
-				'1614005': require('../assets/img/shuttle/shuttle-stop-1614005.jpg'),
-				'239930': require('../assets/img/shuttle/shuttle-stop-239930.jpg'),
-				'239948': require('../assets/img/shuttle/shuttle-stop-239948.jpg'),
-				'240096': require('../assets/img/shuttle/shuttle-stop-240096.jpg'),
-				'28109': require('../assets/img/shuttle/shuttle-stop-28109.jpg'),
-				'28122': require('../assets/img/shuttle/shuttle-stop-28122.jpg'),
-				'30732': require('../assets/img/shuttle/shuttle-stop-30732.jpg'),
-				'32417': require('../assets/img/shuttle/shuttle-stop-32417.jpg'),
-				'34893': require('../assets/img/shuttle/shuttle-stop-34893.jpg'),
-				'377671': require('../assets/img/shuttle/shuttle-stop-377671.jpg'),
-				'382806': require('../assets/img/shuttle/shuttle-stop-382806.jpg'),
-				'382807': require('../assets/img/shuttle/shuttle-stop-382807.jpg'),
-				'382908': require('../assets/img/shuttle/shuttle-stop-382908.jpg'),
-				'382909': require('../assets/img/shuttle/shuttle-stop-382909.jpg'),
-				'382910': require('../assets/img/shuttle/shuttle-stop-382910.jpg'),
-				'382911': require('../assets/img/shuttle/shuttle-stop-382911.jpg'),
-				'382912': require('../assets/img/shuttle/shuttle-stop-382912.jpg'),
-				'382913': require('../assets/img/shuttle/shuttle-stop-382913.jpg'),
-				'385742': require('../assets/img/shuttle/shuttle-stop-385742.jpg'),
-				'385744': require('../assets/img/shuttle/shuttle-stop-385744.jpg'),
-				'493852': require('../assets/img/shuttle/shuttle-stop-493852.jpg'),
-				'493872': require('../assets/img/shuttle/shuttle-stop-493872.jpg'),
-				'757589': require('../assets/img/shuttle/shuttle-stop-757589.jpg'),
-				'757600': require('../assets/img/shuttle/shuttle-stop-757600.jpg'),
-				'9158': require('../assets/img/shuttle/shuttle-stop-9158.jpg'),
-				'93814': require('../assets/img/shuttle/shuttle-stop-93814.jpg'),
-				'93904': require('../assets/img/shuttle/shuttle-stop-93904.jpg'),
-				'93943': require('../assets/img/shuttle/shuttle-stop-93943.jpg'),
-				'9920': require('../assets/img/shuttle/shuttle-stop-9920.jpg'),
+				'141014': require('../../assets/img/shuttle/shuttle-stop-141014.jpg'),
+				'141030': require('../../assets/img/shuttle/shuttle-stop-141030.jpg'),
+				'141042': require('../../assets/img/shuttle/shuttle-stop-141042.jpg'),
+				'141056': require('../../assets/img/shuttle/shuttle-stop-141056.jpg'),
+				'141062': require('../../assets/img/shuttle/shuttle-stop-141062.jpg'),
+				'141080': require('../../assets/img/shuttle/shuttle-stop-141080.jpg'),
+				'141111': require('../../assets/img/shuttle/shuttle-stop-141111.jpg'),
+				'141138': require('../../assets/img/shuttle/shuttle-stop-141138.jpg'),
+				'1542847': require('../../assets/img/shuttle/shuttle-stop-1542847.jpg'),
+				'1614005': require('../../assets/img/shuttle/shuttle-stop-1614005.jpg'),
+				'239930': require('../../assets/img/shuttle/shuttle-stop-239930.jpg'),
+				'239948': require('../../assets/img/shuttle/shuttle-stop-239948.jpg'),
+				'240096': require('../../assets/img/shuttle/shuttle-stop-240096.jpg'),
+				'28109': require('../../assets/img/shuttle/shuttle-stop-28109.jpg'),
+				'28122': require('../../assets/img/shuttle/shuttle-stop-28122.jpg'),
+				'30732': require('../../assets/img/shuttle/shuttle-stop-30732.jpg'),
+				'32417': require('../../assets/img/shuttle/shuttle-stop-32417.jpg'),
+				'34893': require('../../assets/img/shuttle/shuttle-stop-34893.jpg'),
+				'377671': require('../../assets/img/shuttle/shuttle-stop-377671.jpg'),
+				'382806': require('../../assets/img/shuttle/shuttle-stop-382806.jpg'),
+				'382807': require('../../assets/img/shuttle/shuttle-stop-382807.jpg'),
+				'382908': require('../../assets/img/shuttle/shuttle-stop-382908.jpg'),
+				'382909': require('../../assets/img/shuttle/shuttle-stop-382909.jpg'),
+				'382910': require('../../assets/img/shuttle/shuttle-stop-382910.jpg'),
+				'382911': require('../../assets/img/shuttle/shuttle-stop-382911.jpg'),
+				'382912': require('../../assets/img/shuttle/shuttle-stop-382912.jpg'),
+				'382913': require('../../assets/img/shuttle/shuttle-stop-382913.jpg'),
+				'385742': require('../../assets/img/shuttle/shuttle-stop-385742.jpg'),
+				'385744': require('../../assets/img/shuttle/shuttle-stop-385744.jpg'),
+				'493852': require('../../assets/img/shuttle/shuttle-stop-493852.jpg'),
+				'493872': require('../../assets/img/shuttle/shuttle-stop-493872.jpg'),
+				'757589': require('../../assets/img/shuttle/shuttle-stop-757589.jpg'),
+				'757600': require('../../assets/img/shuttle/shuttle-stop-757600.jpg'),
+				'9158': require('../../assets/img/shuttle/shuttle-stop-9158.jpg'),
+				'93814': require('../../assets/img/shuttle/shuttle-stop-93814.jpg'),
+				'93904': require('../../assets/img/shuttle/shuttle-stop-93904.jpg'),
+				'93943': require('../../assets/img/shuttle/shuttle-stop-93943.jpg'),
+				'9920': require('../../assets/img/shuttle/shuttle-stop-9920.jpg'),
 			},
 		};
 	},
 
 	componentWillMount() {
-		// this.fetchShuttleArrivalsByStop('auto');
-		// Initial shuttle info render passed from home
-		// this._processShuttleArrivals(this.props.route.shuttleData);
-		// this.mapViewTimeout = this.setTimeout( () => { this.loadMapView() }, this.delayMapViewLoad);
 	},
 
 	componentDidMount() {
@@ -204,7 +200,7 @@ const ShuttleStop = React.createClass({
 
 						<View style={css.shuttlestop_refresh_container}>
 							<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => this.refreshShuttleArrivalsByStop('manual')}>
-								<Animated.Image style={[css.shuttlestop_refresh, { transform: [{ rotate: this.shuttleReloadAnim.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '360deg'] }) }] }]} source={require('../assets/img/icon_refresh.png')} />
+								<Animated.Image style={[css.shuttlestop_refresh, { transform: [{ rotate: this.shuttleReloadAnim.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '360deg'] }) }] }]} source={require('../../assets/img/icon_refresh.png')} />
 							</TouchableHighlight>
 						</View>
 					</View>

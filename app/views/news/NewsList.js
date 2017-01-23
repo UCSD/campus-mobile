@@ -5,6 +5,8 @@ import {
 	Text,
 	TouchableHighlight,
 } from 'react-native';
+
+import { Actions } from 'react-native-router-flux';
 import NewsItem from './NewsItem';
 import NewsListView from './NewsListView';
 
@@ -24,7 +26,7 @@ export default class NewsList extends React.Component {
 	}
 
 	gotoNewsListView() {
-		this.props.navigator.push({ id: 'NewsListView', title: 'News', name: 'News', component: NewsListView, data: this.props.data });
+		Actions.NewsListView({ data: this.props.data });
 	}
 
 	_renderRow = (row, sectionID, rowID) =>

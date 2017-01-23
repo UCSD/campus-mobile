@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import EventItem from './EventItem';
 import EventListView from './EventListView';
+import { Actions } from 'react-native-router-flux';
 
 const css = require('../../styles/css');
 
@@ -21,7 +22,7 @@ export default class EventList extends React.Component {
 	}
 
 	gotoEventListView() {
-		this.props.navigator.push({ id: 'EventListView', title: 'Events', name: 'Events', component: EventListView, data: this.props.data });
+		Actions.EventListView({ data: this.props.data });
 	}
 
 	render() {

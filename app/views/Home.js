@@ -18,8 +18,10 @@ import {
 	Navigator,
 	ActivityIndicator,
 } from 'react-native';
+
 import { connect } from 'react-redux';
 import { MenuContext } from 'react-native-popup-menu';
+import { Actions } from 'react-native-router-flux';
 
 import TopBannerView from './banner/TopBannerView';
 import WelcomeModal from './WelcomeModal';
@@ -114,7 +116,7 @@ var Home = React.createClass({
 
 					{/* FOOTER */}
 					<View style={css.footer}>
-						<TouchableHighlight style={css.footer_link} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoFeedbackForm() }>
+						<TouchableHighlight style={css.footer_link} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoFeedbackView() }>
 							<Text style={css.footer_about}>Feedback</Text>
 						</TouchableHighlight>
 						<Text style={css.footer_spacer}>|</Text>
@@ -174,8 +176,8 @@ var Home = React.createClass({
 		}
 	},
 
-	gotoFeedbackForm() {
-		this.props.navigator.push({ id: 'FeedbackView', component: FeedbackView, title: 'Feedback' });
+	gotoFeedbackView() {
+		Actions.FeedbackView();
 	},
 
 	_handleRefresh() {

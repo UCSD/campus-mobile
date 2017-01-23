@@ -7,16 +7,13 @@ import {
 } from 'react-native';
 
 import EventDetail from './EventDetail';
+import { Actions } from 'react-native-router-flux';
 
 const css = require('../../styles/css');
 const general = require('../../util/general');
 const moment = require('moment');
 
 export default class EventItem extends React.Component {
-
-	gotoEventDetail(eventData) {
-		this.props.navigator.push({ id: 'EventDetail', name: 'EventDetail', title: 'Events', component: EventDetail, eventData });
-	}
 
 	render() {
 		const data = this.props.data;
@@ -49,4 +46,9 @@ export default class EventItem extends React.Component {
 			</TouchableHighlight>
 		);
 	}
+
+	gotoEventDetail(eventData) {
+		Actions.EventDetail({ eventData });
+	}
+
 }

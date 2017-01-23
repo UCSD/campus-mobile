@@ -22,7 +22,7 @@ export default class QuicklinksListView extends React.Component {
 	}
 
 	render() {
-		const quicklinksData = this.props.route.data;
+		const quicklinksData = this.props.data;
 		const quicklinksDatasource = this.datasource.cloneWithRows(quicklinksData);
 
 		return (
