@@ -27,7 +27,7 @@ var DiningNutrition = React.createClass({
 		*/
 		
 		return {
-			menuItem: this.props.route.menuItem
+			menuItem: this.props.menuItem
 		};
 	},
 
