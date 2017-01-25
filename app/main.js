@@ -1,7 +1,7 @@
 'use strict';
 
 import React, { Component } from 'react';
-import { StatusBar,	View } from 'react-native';
+import { StatusBar,	View, Text } from 'react-native';
 import { Actions, Router, Scene } from 'react-native-router-flux';
 
 import AppSettings from './AppSettings';
@@ -30,10 +30,22 @@ import FeedbackView from './views/FeedbackView';
 import PreferencesView from './views/preferences/PreferencesView';
 import NearbyMapView from './views/mapsearch/NearbyMapView';
 
+import TabIcons from './navigation/TabIcons';
+
 // SCENES
 const scenes = Actions.create(
 	<Scene key='root'>
-		<Scene key='Home' component={Home} title='now-mobile' initial={true} />
+
+		{general.platformIOS() ? (
+			<Scene key='tabbar' tabs tabBarStyle={css.tabBarStyle} tabBarSelectedItemStyle={css.tabBarSelectedItemStyle}>
+				<Scene component={Home} key='homeTab' initial={true} title='UC San Diego' icon={TabIcons} />
+				<Scene component={NearbyMapView} key='mapTab' title='Map' icon={TabIcons} />
+				<Scene component={PreferencesView} key='preferencesTab' title='Settings' icon={TabIcons}  />
+			</Scene>
+		) : null }
+		
+		<Scene key='Home' component={Home} title='UC San Diego' />
+		<Scene key='PreferencesView' component={PreferencesView} title='Settings' />
 		<Scene key='SurfReport' component={SurfReport} title='Surf Report' />
 		<Scene key='ShuttleStop' component={ShuttleStop} title='Shuttle' />
 		<Scene key='DiningList' component={DiningList} title='Dining' />
@@ -48,8 +60,8 @@ const scenes = Actions.create(
 		<Scene key='NewsDetail' component={NewsDetail} title='News' />
 		<Scene key='NewsListView' component={NewsListView} title='News' />
 		<Scene key='FeedbackView' component={FeedbackView} title='Feedback' />
-		<Scene key='PreferencesView' component={PreferencesView} title='Settings' />
 		<Scene key='NearbyMapView' component={NearbyMapView} title='Map' />
+
 	</Scene>
 );
 

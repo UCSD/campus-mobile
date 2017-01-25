@@ -35,11 +35,9 @@ var AppSettings = require('../AppSettings');
 var general = require('../util/general');
 var logger = require('../util/logger');
 
-var navBarMarginTop = 0;
-var navBarTitleMarginTop = 5;
-
-navBarMarginTop = 64;
-navBarTitleMarginTop = 0;
+var navBarMarginTop = 64;
+var navBarTitleMarginTop = 0;
+var tabBarHeight = 48;
 
 var pixelRatio = PixelRatio.get();
 var windowSize = Dimensions.get('window');
@@ -76,15 +74,20 @@ var css = StyleSheet.create({
 	// Navigator
 	navigator: { backgroundColor: 'rgba(24,43,73,1)' },
 	navigatorTitle: { color: '#FFF' },
-	navigatorLeftIcon: { tintColor:'rgb(255,255,255)' },
+	navigatorLeftIcon: { tintColor:'#FFF' },
+
+	// TabBar
+	tabBarStyle: { borderTopWidth: 1, borderColor: '#CCC', backgroundColor: '#FFF', height: tabBarHeight },
+    tabBarSelectedItemStyle: {  },
+    tabContainer: { flex: 1, flexDirection: 'column', marginTop: 4 },
+    tabIcon: { color: '#AAA', alignSelf: 'center' },
+    tabText: { fontSize: 11, fontWeight: '700', color: '#AAA', textAlign: 'center' },
 
 
-	// NavigatorIOS
-	navBarIOS: {},
-	navBarIOSWrapperStyle: { paddingBottom: 64 },
+
 
 	// Primary Containers
-	main_container: { flex: 1, backgroundColor: '#EAEAEA', marginTop: navBarMarginTop },
+	main_container: { flex: 1, backgroundColor: '#EAEAEA', marginTop: navBarMarginTop, marginBottom: tabBarHeight },
 	view_all_container: { flex: 1, backgroundColor: '#FFF', marginTop: navBarMarginTop },
 	scroll_main: {},
 	listview_main: { marginTop: 64 },
@@ -432,6 +435,7 @@ var css = StyleSheet.create({
 	feedback_appInfo: { position: 'absolute', bottom: 0, right: 0, color: '#BBB', fontSize: 9, padding: 4 },
 
 	// MISC STYLES
+	campus_primary: { color: campus_primary },
 	whitebg: { backgroundColor: '#FFF' },
 	offwhitebg: { backgroundColor: '#FAFAFA' },
 	greybg: { backgroundColor: "#E2E2E2" },
