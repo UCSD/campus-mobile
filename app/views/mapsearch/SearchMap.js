@@ -100,10 +100,9 @@ const SearchMap = ({ location, selectedResult, hideMarker, style, shuttle, vehic
 					>
 						<Icon style={{ flex:0.2 }} name={'flag'} size={20} />
 						<MapView.Callout style={{ width: 100 }} >
-							<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => gotoNavigationApp(selectedResult.mkrLat, selectedResult.mkrLong)}>
+							<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'}>
 								<View style={{ flex: 1, alignItems: 'center', flexDirection: 'column', flexWrap: 'wrap' }}>
 									<Text>{stop.name}</Text>
-									<Text>{'< 2min'}</Text>
 								</View>
 							</TouchableHighlight>
 						</MapView.Callout>
@@ -131,7 +130,7 @@ const SearchMap = ({ location, selectedResult, hideMarker, style, shuttle, vehic
 					>
 						<Icon style={{ flex:0.2 }} name={'bus'} size={20} />
 						<MapView.Callout style={{ width: 100 }} >
-							<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => gotoNavigationApp(selectedResult.mkrLat, selectedResult.mkrLong)}>
+							<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'}>
 								<View style={{ flex: 1, alignItems: 'center', flexDirection: 'column', flexWrap: 'wrap' }}>
 									<Text>{vehicle.name}</Text>
 								</View>

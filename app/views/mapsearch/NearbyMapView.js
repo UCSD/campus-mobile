@@ -70,7 +70,7 @@ class NearbyMapView extends React.Component {
 
 	componentWillMount() {
 		Object.keys(shuttle_routes).forEach((key, index) => {
-			this.setState({ ['route' + key] : true });
+			this.setState({ ['route' + key] : false });
 		});
 	}
 
