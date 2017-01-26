@@ -113,6 +113,11 @@ var css = StyleSheet.create({
 	card_button_text: { flex:1, fontSize: round(20 * prm), alignItems: 'center', textAlign: 'center' },
 	card_text_container: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: maxCardWidth, padding: 8, borderBottomWidth: 1, borderBottomColor: '#DDD' },
 	card_content_full_width: { width: maxCardWidth, overflow: 'hidden' },
+	card_menu: { flex: 1, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', alignSelf: 'stretch' },
+	card_hide_option: { margin: 10, fontSize: 16 },
+	card_menu_trigger: { paddingTop: 9, paddingBottom: 6, paddingLeft: 12, paddingRight: 10, color: '#747678' },
+	card_container_main: { flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#DDD', alignSelf: 'stretch' },
+	card_title_main: { fontSize: 26, color: '#747678', paddingLeft: 10, paddingVertical: 6 },
 
 	// Modal Welcome Message
 	modal_container: { flex: 1, backgroundColor: 'rgba(0, 108, 147, .95)', justifyContent: 'center', padding: round(35 * prm) },

@@ -1,20 +1,9 @@
 import React from 'react';
-import {
-	View,
-	Text,
-	StyleSheet
-} from 'react-native';
-
-import Menu, {
-	MenuOptions,
-	MenuOption,
-	MenuTrigger,
-} from 'react-native-popup-menu';
-
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { View, Text } from 'react-native';
+import Menu, { MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu';
+import Icon from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux';
 import { hideCard } from '../../actions/cards';
-
 import CardHeader from './CardHeader';
 
 const css = require('../../styles/css');
@@ -32,13 +21,13 @@ class Card extends React.Component {
 		if (this.props.hideMenu) return;
 
 		return (
-			<Menu style={styles.menu} onSelect={value => this.menuOptionSelected(value)}>
-				<MenuTrigger style={styles.menu_trigger}>
-					<Icon size={20} name="ellipsis-v" />
+			<Menu style={css.card_menu} onSelect={value => this.menuOptionSelected(value)}>
+				<MenuTrigger>
+					<Icon size={28} style={css.card_menu_trigger} name="md-more" />
 				</MenuTrigger>
 				<MenuOptions>
 					<MenuOption onSelect={() => { this.props.dispatch(hideCard(this.props.id)); }}>
-						<Text style={styles.hideOption}>Hide Card</Text>
+						<Text style={css.card_hide_option}>Hide Card</Text>
 					</MenuOption>
 				</MenuOptions>
 			</Menu>
@@ -53,22 +42,5 @@ class Card extends React.Component {
 		);
 	}
 }
-
-const styles = StyleSheet.create({
-	menu: {
-		flex: 1,
-		flexDirection: 'row',
-		justifyContent: 'flex-end',
-		alignItems: 'center',
-		alignSelf: 'stretch',
-	},
-	hideOption: {
-		margin: 10,
-		fontSize: 16
-	},
-	menu_trigger: {
-		padding: 15,
-	}
-});
 
 export default connect()(Card);
