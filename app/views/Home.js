@@ -25,8 +25,8 @@ import { Actions } from 'react-native-router-flux';
 
 import TopBannerView from './banner/TopBannerView';
 import WelcomeModal from './WelcomeModal';
-import NavigationBarWithRouteMapper from './NavigationBarWithRouteMapper';
 import FeedbackView from './FeedbackView';
+import PreferencesView from './preferences/PreferencesView';
 
 // Cards
 import WeatherCard from './weather/WeatherCard';

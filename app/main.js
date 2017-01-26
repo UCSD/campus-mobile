@@ -35,15 +35,13 @@ import TabIcons from './navigation/TabIcons';
 // SCENES
 const scenes = Actions.create(
 	<Scene key='root'>
-
-		{general.platformIOS() ? (
-			<Scene key='tabbar' tabs tabBarStyle={css.tabBarStyle} tabBarSelectedItemStyle={css.tabBarSelectedItemStyle}>
-				<Scene component={Home} key='homeTab' initial={true} title='UC San Diego' icon={TabIcons} />
-				<Scene component={NearbyMapView} key='mapTab' title='Map' icon={TabIcons} />
-				<Scene component={PreferencesView} key='preferencesTab' title='Settings' icon={TabIcons}  />
-			</Scene>
-		) : null }
 		
+		<Scene key='tabbar' tabs tabBarStyle={general.platformIOS() ? css.tabBarIOS : css.tabBarAndroid}>
+			<Scene component={Home} key='homeTab' initial={true} title={AppSettings.APP_CAMPUS_NAME} icon={TabIcons} />
+			<Scene component={NearbyMapView} key='mapTab' title='Map' icon={TabIcons} />
+			<Scene component={PreferencesView} key='preferencesTab' title='Settings' icon={TabIcons}  />
+		</Scene>
+
 		<Scene key='Home' component={Home} title='UC San Diego' />
 		<Scene key='PreferencesView' component={PreferencesView} title='Settings' />
 		<Scene key='SurfReport' component={SurfReport} title='Surf Report' />
@@ -61,7 +59,6 @@ const scenes = Actions.create(
 		<Scene key='NewsListView' component={NewsListView} title='News' />
 		<Scene key='FeedbackView' component={FeedbackView} title='Feedback' />
 		<Scene key='NearbyMapView' component={NearbyMapView} title='Map' />
-
 	</Scene>
 );
 

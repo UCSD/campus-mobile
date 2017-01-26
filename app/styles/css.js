@@ -35,7 +35,6 @@ var AppSettings = require('../AppSettings');
 var general = require('../util/general');
 var logger = require('../util/logger');
 
-var navBarMarginTop = 64;
 var navBarTitleMarginTop = 0;
 var tabBarHeight = 48;
 
@@ -45,7 +44,7 @@ var windowWidth = windowSize.width;
 var windowHeight = windowSize.height;
 var maxAppWidth = 414;
 
-var welcome_ai_marginTop = (windowHeight / 2) - navBarMarginTop;
+var welcome_ai_marginTop = (windowHeight / 2); // fixme
 
 // Applying pixel ratio modifier helps ensure all views/layouts across devices render in similar fashion
 var prm = windowWidth / maxAppWidth;
@@ -65,6 +64,13 @@ if (pixelRatio === 2) {
 	shuttleStopRefreshIconTop = 15;
 }
 
+// IOS / Android Custom
+var IOSMarginTop = 64,
+	AndroidMarginTop = 110,
+	IOSMarginBottom = 46,
+	AndroidMarginBottom = 0;
+
+// Campus Branding
 var campus_primary = '#182B49';
 
 var navMarginTop = 7;
@@ -75,22 +81,19 @@ var css = StyleSheet.create({
 	navigator: { backgroundColor: 'rgba(24,43,73,1)' },
 	navigatorTitle: { color: '#FFF' },
 	navigatorLeftIcon: { tintColor:'#FFF' },
-
+	
 	// TabBar
-	tabBarStyle: { borderTopWidth: 1, borderColor: '#CCC', backgroundColor: '#FFF', height: tabBarHeight },
-    tabBarSelectedItemStyle: {  },
-    tabContainer: { flex: 1, flexDirection: 'column', marginTop: 4 },
-    tabIcon: { color: '#AAA', alignSelf: 'center' },
-    tabText: { fontSize: 11, fontWeight: '700', color: '#AAA', textAlign: 'center' },
-
-
-
+	tabBarIOS: { borderTopWidth: 1, borderColor: '#DADADA', backgroundColor: '#FFF', height: 46 },
+	tabBarAndroid: { top: 64, borderBottomWidth: 1, borderColor: '#DADADA', backgroundColor: '#FFF', height: 46 },
+	tabContainer: { width: 70, borderBottomWidth: 6, paddingTop: 6, borderBottomColor: 'rgba(0,0,0,0)' },
+	tabContainerBottom: { borderBottomColor: campus_primary },
+	tabIcon: { color: '#AAA', alignSelf: 'center', paddingBottom: 2, backgroundColor: 'rgba(0,0,0,0)' },
 
 	// Primary Containers
-	main_container: { flex: 1, backgroundColor: '#EAEAEA', marginTop: navBarMarginTop, marginBottom: tabBarHeight },
-	view_all_container: { flex: 1, backgroundColor: '#FFF', marginTop: navBarMarginTop },
+	main_container: { flex: 1, backgroundColor: '#EAEAEA', marginTop: general.platformIOS() ? IOSMarginTop : AndroidMarginTop, marginBottom: general.platformIOS() ? IOSMarginBottom : AndroidMarginBottom },
+	view_all_container: { flex: 1, backgroundColor: '#FFF', marginTop: general.platformIOS() ? IOSMarginTop : AndroidMarginTop, marginBottom: general.platformIOS() ? IOSMarginBottom : AndroidMarginBottom },
 	scroll_main: {},
-	listview_main: { marginTop: 64 },
+	listview_main: { marginTop: general.platformIOS() ? IOSMarginTop : AndroidMarginTop, },
 	view_default: { paddingHorizontal: round(8 * prm) },
 
 	scroll_default: { alignItems: 'center' },
