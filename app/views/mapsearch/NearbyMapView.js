@@ -12,6 +12,7 @@ import { connect } from 'react-redux';
 import ElevatedView from 'react-native-elevated-view';
 import SideMenu from 'react-native-side-menu';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import MapView from 'react-native-maps';
 
 import SearchSideMenu from './SearchSideMenu';
 import SearchBar from './SearchBar';
@@ -19,6 +20,7 @@ import SearchMap from './SearchMap';
 import SearchResults from './SearchResults';
 import SearchHistoryCard from './SearchHistoryCard';
 import NearbyService from '../../services/nearbyService';
+import ShuttleLocationContainer from '../../containers/shuttleLocationContainer';
 
 import { toggleRoute } from '../../actions/shuttle';
 
@@ -62,18 +64,52 @@ class NearbyMapView extends React.Component {
 			showBar: true,
 			showMenu: false,
 			toggled: false,
+			vehicles: {}
 		};
 	}
 
 	componentWillMount() {
-		Object.keys(shuttle_routes).map((key, index) => {
+		Object.keys(shuttle_routes).forEach((key, index) => {
 			this.setState({ ['route' + key] : true });
-			return null;
+		});
+	}
+
+	componentWillReceiveProps(nextProps) {
+		// Loop thru every vehicle
+		Object.keys(nextProps.vehicles).forEach((key, index) => {
+			if (this.state.vehicles[key]) {
+				nextProps.vehicles[key].forEach((nextVehicle) => {
+					this.state.vehicles[key].forEach((currVehicle) => {
+						if (nextVehicle.id === currVehicle.id &&
+							(nextVehicle.lat !== currVehicle.lat || nextVehicle.lon !== currVehicle.lon)) {
+							currVehicle.animated.timing({
+								latitude: nextVehicle.lat,
+								longitude: nextVehicle.lon,
+								duration: 500
+							}).start();
+						}
+					});
+				});
+			} else {
+				// Make Animated values
+				nextProps.vehicles[key].forEach((nextVehicle) => {
+					nextVehicle.animated = new MapView.AnimatedRegion({
+						latitude: nextVehicle.lat,
+						longitude: nextVehicle.lon,
+					});
+				});
+
+				const newVehicles = this.state.vehicles;
+				newVehicles[key] = nextProps.vehicles[key];
+
+				this.setState({
+					vehicles: newVehicles
+				});
+			}
 		});
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
-		// return true;
 		// Don't re-render if location hasn't changed
 		if (((this.props.location.coords.latitude !== nextProps.location.coords.latitude) ||
 			(this.props.location.coords.longitude !== nextProps.location.coords.longitude)) ||
@@ -156,10 +192,15 @@ class NearbyMapView extends React.Component {
 		this.setState({ showMenu, });
 	}
 
-	toggleRoute = (value, key) => {
-		this.props.dispatch(toggleRoute(key));
+	toggleRoute = (value, route) => {
+		this.props.dispatch(toggleRoute(route));
 
-		this.setState({ toggled: !this.state.toggled });
+		const vehicles = this.state.vehicles;
+		delete vehicles[route];
+
+		this.setState({
+			toggled: !this.state.toggled,
+			vehicles });
 	}
 
 	render() {
@@ -209,6 +250,7 @@ class NearbyMapView extends React.Component {
 								style={styles.map_container}
 								hideMarker={this.state.sliding}
 								shuttle={this.props.shuttle_stops}
+								vehicles={this.state.vehicles}
 							/>
 							<View
 								style={styles.bottomContainer}
@@ -251,6 +293,7 @@ class NearbyMapView extends React.Component {
 							) : (null)
 						}
 					</View>
+					<ShuttleLocationContainer />
 				</SideMenu>
 			);
 		} else {
@@ -266,6 +309,7 @@ function mapStateToProps(state, props) {
 		toggles: state.shuttle.toggles,
 		shuttle_routes: state.shuttle.routes,
 		shuttle_stops: state.shuttle.stops,
+		vehicles: state.shuttle.vehicles,
 	};
 }
 

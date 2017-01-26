@@ -7,7 +7,7 @@ import general from '../../util/general';
 
 // NOTE: For some reason MapView-onCalloutPress only works for Android and
 // TouchableHighlight-onPress only works for iOS...which is why it's in two places
-const SearchMap = ({ location, selectedResult, hideMarker, style, shuttle }) => (
+const SearchMap = ({ location, selectedResult, hideMarker, style, shuttle, vehicles }) => (
 	<MapView
 		ref={(MapRef) => {
 			if ( MapRef != null && selectedResult != null ) {
@@ -74,6 +74,7 @@ const SearchMap = ({ location, selectedResult, hideMarker, style, shuttle }) => 
 			) : (null)}
 
 		{
+			// Create MapView.Marker for each shuttle stop
 			Object.keys(shuttle).map((key, index) => {
 				const stop = shuttle[key];
 				if ((Object.keys(stop.routes).length === 0 && stop.routes.constructor === Object) ||
@@ -97,7 +98,7 @@ const SearchMap = ({ location, selectedResult, hideMarker, style, shuttle }) => 
 						title={stop.name}
 						identifier={stop.name}
 					>
-						<Icon style={{ flex:0.2 }} name={'bus'} size={20} />
+						<Icon style={{ flex:0.2 }} name={'flag'} size={20} />
 						<MapView.Callout style={{ width: 100 }} >
 							<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => gotoNavigationApp(selectedResult.mkrLat, selectedResult.mkrLong)}>
 								<View style={{ flex: 1, alignItems: 'center', flexDirection: 'column', flexWrap: 'wrap' }}>
@@ -107,6 +108,37 @@ const SearchMap = ({ location, selectedResult, hideMarker, style, shuttle }) => 
 							</TouchableHighlight>
 						</MapView.Callout>
 					</MapView.Marker>
+				);
+			})
+		}
+
+		{
+			// Create MapView.Marker for each vehicle
+			Object.keys(vehicles).map((key, index) => {
+				const vehicleArray = vehicles[key];
+
+				return vehicleArray.map((vehicle) => (
+					<MapView.Marker.Animated
+						ref={(MarkRef) => {
+							// console.log("MARKER: " + selectedResult.title);
+							if (MarkRef != null) {
+								// MarkRef.showCallout();
+							}
+						}}
+						coordinate={vehicle.animated}
+						title={vehicle.name}
+						identifier={vehicle.name}
+					>
+						<Icon style={{ flex:0.2 }} name={'bus'} size={20} />
+						<MapView.Callout style={{ width: 100 }} >
+							<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => gotoNavigationApp(selectedResult.mkrLat, selectedResult.mkrLong)}>
+								<View style={{ flex: 1, alignItems: 'center', flexDirection: 'column', flexWrap: 'wrap' }}>
+									<Text>{vehicle.name}</Text>
+								</View>
+							</TouchableHighlight>
+						</MapView.Callout>
+					</MapView.Marker.Animated>
+					)
 				);
 			})
 		}
