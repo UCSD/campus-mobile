@@ -60,7 +60,7 @@ class NearbyMapView extends React.Component {
 			selectedResult: null,
 			sliding: false,
 			typing: false,
-			allowScroll: false,
+			allowScroll: true,
 			iconStatus: 'menu',
 			showBar: false,
 			showMenu: false,
@@ -228,9 +228,7 @@ class NearbyMapView extends React.Component {
 					<View style={css.main_container}>
 						<View
 							// Only necessary for ios?
-							style={{
-								zIndex: 1
-							}}
+							style={iosAndroidStyle}
 						>
 							<SearchBar
 								update={this.updateSearch}
@@ -279,9 +277,6 @@ class NearbyMapView extends React.Component {
 										data={this.props.search_history}
 									/>
 									) : (null)}
-								<View
-									style={styles.spacer}
-								/>
 							</View>
 						</ScrollView>
 						{(this.state.showBar) ? (
@@ -334,5 +329,8 @@ const styles = StyleSheet.create({
 
 	bottomContainer: { minHeight: deviceHeight },
 	map_container : { flex: 1, width: deviceWidth, height: deviceHeight - Math.round(44 * getPRM()), },
-	spacer: { height: Math.round(44 * getPRM()) + 12 },
+	spacer: { height: Math.round(44 * getPRM()), margin: 6 },
 });
+
+const iosAndroidStyle = (general.platformAndroid()) ? (null) : (
+	{ zIndex: 1 });
