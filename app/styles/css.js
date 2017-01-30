@@ -25,20 +25,12 @@
 'use strict';
 
 import React from 'react';
-import {
-	StyleSheet,
-	Dimensions,
-	PixelRatio
-} from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 
 var AppSettings = require('../AppSettings');
 var general = require('../util/general');
 var logger = require('../util/logger');
 
-var navBarTitleMarginTop = 0;
-var tabBarHeight = 48;
-
-var pixelRatio = PixelRatio.get();
 var windowSize = Dimensions.get('window');
 var windowWidth = windowSize.width;
 var windowHeight = windowSize.height;
@@ -51,26 +43,11 @@ var prm = windowWidth / maxAppWidth;
 
 var maxCardWidth = windowWidth - 2 - 12;
 var maxCardWidthWithPadding = windowWidth - 2 - 12 - 16; // border, margin, padding
-var surfCardDetailsWidth = maxCardWidthWithPadding;
-var surfCardDetailsPadding = 10 * prm;
-var shuttleCardRefreshIconTop = 10;
-var shuttleStopRefreshIconTop = 10;
-
-if (pixelRatio === 2) {
-	shuttleCardRefreshIconTop = 11;
-	shuttleStopRefreshIconTop = 15;
-} else if (pixelRatio === 3) {
-	shuttleCardRefreshIconTop = 12;
-	shuttleStopRefreshIconTop = 15;
-}
-
 
 // IOS / Android Custom
-
 var NavigatorIOSHeight = 58,
 	NavigatorAndroidHeight = 44,
 	TabBarHeight = 46;
-
 
 var IOSMarginTop = NavigatorIOSHeight,
 	AndroidMarginTop = NavigatorAndroidHeight + TabBarHeight,
@@ -204,10 +181,6 @@ var css = StyleSheet.create({
 	dd_menu_text: { fontSize: round(16 * prm), color: '#FFF' },
 
 	// SHUTTLE CARD
-	shuttle_card_refresh_container: { position: 'absolute', alignItems: 'center', top: shuttleCardRefreshIconTop, right: round(4 * prm), width: round(50 * prm) },
-	shuttle_card_refresh: { width: round(24 * prm), height: round(24 * prm) },
-	shuttle_card_refresh_timeago: { fontSize: round(9 * prm), color: '#999', marginTop: round(-1 * prm), textAlign: 'center', fontWeight: '500', backgroundColor: 'rgba(0,0,0,0)' },
-
 	shuttle_card_row: { width: maxCardWidth, overflow: 'hidden', borderBottomWidth: 1, borderBottomColor: '#DDD' },
 	shuttle_card_err_row: { alignItems: 'center', justifyContent: 'center', width: maxCardWidth, overflow: 'hidden' },
 	shuttle_card_row_center: { alignItems: 'center', justifyContent: 'center', width: maxCardWidth, overflow: 'hidden' },
@@ -384,12 +357,12 @@ var css = StyleSheet.create({
 
 	// SHUTTLE STOP
 	shuttlestop_image: { width: windowWidth, height: round(windowWidth * .533) },
-	shuttlestop_name_container: { height: round(48 * prm), flex: 1, flexDirection: 'row', alignItems: 'center', width: windowWidth, paddingVertical: round(14 * prm), paddingHorizontal: round(20 * prm), backgroundColor: campus_primary },
-	shuttlestop_name_text: { width: round(windowWidth * .9 - 40), color: '#FFF', fontSize: round(24 * prm), fontWeight: '300' },
+	
+	shuttlestop_name_container: { height: round(48 * prm), flex: 1, flexDirection: 'row', alignItems: 'center', width: windowWidth, paddingVertical: round(10 * prm), paddingHorizontal: round(14 * prm), backgroundColor: campus_primary },
+	shuttlestop_name_text: { flex: 5, color: '#FFF', fontSize: round(24 * prm), fontWeight: '300' },
+	shuttlestop_refresh_container: { flex: 1, alignItems: 'flex-end' },
 
-	shuttlestop_refresh_container: { position: 'absolute', alignItems: 'center', top: shuttleStopRefreshIconTop, right: 8, width: round(55 * prm) },
 	shuttlestop_refresh: { width: round(26 * prm), height: round(26 * prm) },
-	shuttlestop_refresh_timeago: { fontSize: round(10 * prm), color: '#FFF', marginTop: round(1 * prm), textAlign: 'center', fontWeight: '600', backgroundColor: 'rgba(0,0,0,0)' },
 
 	shuttle_stop_arrivals_container: { width: windowWidth, paddingLeft: round(20 * prm), paddingVertical: round(16 * prm) },
 	shuttle_stop_next_arrivals_text: { fontSize: round(20 * prm), fontWeight: '300', color: '#222', paddingTop: 8, paddingBottom: 16 },
