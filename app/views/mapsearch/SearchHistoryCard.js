@@ -34,6 +34,7 @@ const SearchHistoryCard = ({ data, pressHistory }) => (
 
 const SearchHistoryList = ({ historyData, pressHistory }) => (
 	<ListView
+		showsVerticalScrollIndicator={false}
 		dataSource={historyData}
 		renderRow={
 			(row, sectionID, rowID) =>

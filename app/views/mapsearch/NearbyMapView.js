@@ -164,6 +164,7 @@ class NearbyMapView extends React.Component {
 	}
 
 	updateSearch = (text) => {
+		this.pressIcon();
 		NearbyService.FetchSearchResults(text).then((result) => {
 			if (result.results) {
 				this.setState({

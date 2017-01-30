@@ -43,15 +43,15 @@ const SearchMap = ({ location, selectedResult, hideMarker, style, shuttle, vehic
 			longitudeDelta: 0.02
 		}}
 		onCalloutPress={
-			() => gotoNavigationApp(selectedResult.mkrLat, selectedResult.mkrLong)
+			() => console.log('Pressed callout') // gotoNavigationApp(selectedResult.mkrLat, selectedResult.mkrLong)
 		}
 	>
 		{(selectedResult && !hideMarker) ? (
 			<MapView.Marker
 				ref={(MarkRef) => {
-					//console.log("MARKER: " + selectedResult.title);
+					// console.log("MARKER: " + selectedResult.title);
 					if (MarkRef != null) {
-						//MarkRef.showCallout();
+						// MarkRef.showCallout();
 					}
 				}}
 				coordinate={{
@@ -86,9 +86,9 @@ const SearchMap = ({ location, selectedResult, hideMarker, style, shuttle, vehic
 				return (
 					<MapView.Marker
 						ref={(MarkRef) => {
-							//console.log("MARKER: " + selectedResult.title);
+							// console.log("MARKER: " + selectedResult.title);
 							if (MarkRef != null) {
-								//MarkRef.showCallout();
+								// MarkRef.showCallout();
 							}
 						}}
 						coordinate={{
@@ -98,7 +98,7 @@ const SearchMap = ({ location, selectedResult, hideMarker, style, shuttle, vehic
 						title={stop.name}
 						identifier={stop.name}
 					>
-						<Icon style={{ flex:0.2 }} name={'flag'} size={20} />
+						<Icon style={{ flex:0.2 }} name={'stop-circle-o'} size={20} />
 						<MapView.Callout style={{ width: 100 }} >
 							<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'}>
 								<View style={{ flex: 1, alignItems: 'center', flexDirection: 'column', flexWrap: 'wrap' }}>
