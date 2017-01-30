@@ -75,9 +75,9 @@ export default class Main extends Component {
 				<GeoLocationContainer />
 				<Router
 					scenes={scenes}
-					navigationBarStyle={css.navigator}
-					titleStyle={css.navigatorTitle}
-					barButtonIconStyle={css.navigatorIconStyle}
+					navigationBarStyle={general.platformIOS() ? css.navIOS : css.navAndroid}
+					titleStyle={general.platformIOS() ? css.navIOSTitle : css.navAndroidTitle}
+					barButtonIconStyle={general.platformIOS() ? css.navIOSIconStyle : css.navAndroidIconStyle}
 				/>
 			</View>			
 		);
