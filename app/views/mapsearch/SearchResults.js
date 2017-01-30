@@ -73,8 +73,8 @@ const SearchResultsItem = ({ data, onSelect, index }) => (
 );
 
 const styles = StyleSheet.create({
-	list_container: { flex:1, width: getMaxCardWidth(), padding: 8 },
-	card_main: { flex: 1, backgroundColor: '#FFFFFF', margin: 6, alignItems: 'flex-start', justifyContent: 'center', height: deviceHeight - (84 + (44 * getPRM())) },
+	list_container: { flex:1, width: getMaxCardWidth(), padding: 8, height: deviceHeight - (84 + (44 * getPRM())) },
+	card_main: { flex: 1, backgroundColor: '#FFFFFF', margin: 6, alignItems: 'flex-start', justifyContent: 'center', },
 	touch: { backgroundColor: '#FFF' },
 	no_result: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', padding: 6, marginTop: 0 },
 	list_row: { flex: 1, flexDirection: 'row', paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: '#EEE', overflow: 'hidden' },

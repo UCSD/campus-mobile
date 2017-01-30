@@ -62,7 +62,7 @@ class NearbyMapView extends React.Component {
 			typing: false,
 			allowScroll: false,
 			iconStatus: 'menu',
-			showBar: true,
+			showBar: false,
 			showMenu: false,
 			toggled: false,
 			vehicles: {}
