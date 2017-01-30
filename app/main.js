@@ -62,11 +62,14 @@ const scenes = Actions.create(
 	</Scene>
 );
 
+
 export default class Main extends Component {
+
 	render() {
 		if (general.platformIOS()) {
 			StatusBar.setBarStyle('light-content');
 		}
+
 		return (
 			<View style={css.flex}>
 				<GeoLocationContainer />
@@ -74,7 +77,7 @@ export default class Main extends Component {
 					scenes={scenes}
 					navigationBarStyle={css.navigator}
 					titleStyle={css.navigatorTitle}
-					barButtonIconStyle={css.navigatorLeftIcon}
+					barButtonIconStyle={css.navigatorIconStyle}
 				/>
 			</View>			
 		);

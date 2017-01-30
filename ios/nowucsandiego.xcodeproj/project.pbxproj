@@ -31,6 +31,7 @@
 		77700FB11CF6306300858039 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77700FB01CF6306300858039 /* CoreData.framework */; };
 		77700FB31CF630B400858039 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77700FB21CF630B400858039 /* SystemConfiguration.framework */; };
 		77700FB51CF630D900858039 /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 77700FB41CF630D900858039 /* libsqlite3.0.tbd */; };
+		77DDD2EE1E3FB4D4001807C7 /* rotisserif.otf in Resources */ = {isa = PBXBuildFile; fileRef = 77DDD2ED1E3FB4D4001807C7 /* rotisserif.otf */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		854EC2E51BA148A1BF37FF26 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D8B33C59148A4EE8831BAF31 /* Entypo.ttf */; };
 		96DF7E91BE2E4041B13863CF /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7B84191D0F934E8DAEBA3116 /* MaterialIcons.ttf */; };
@@ -188,6 +189,7 @@
 		77700FB01CF6306300858039 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		77700FB21CF630B400858039 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		77700FB41CF630D900858039 /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
+		77DDD2ED1E3FB4D4001807C7 /* rotisserif.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = rotisserif.otf; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		7B84191D0F934E8DAEBA3116 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		7F6F9F099A754C1A857A3AB2 /* libReactNativePermissions.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libReactNativePermissions.a; sourceTree = "<group>"; };
@@ -331,6 +333,7 @@
 		13B07FAE1A68108700A75B9A /* nowucsandiego */ = {
 			isa = PBXGroup;
 			children = (
+				77DDD2EF1E3FB72D001807C7 /* Resources */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -363,6 +366,22 @@
 				77700FA61CF6302100858039 /* libRCTGoogleAnalyticsBridge.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		77DDD2EF1E3FB72D001807C7 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				77DDD2F01E3FB736001807C7 /* Fonts */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		77DDD2F01E3FB736001807C7 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				77DDD2ED1E3FB4D4001807C7 /* rotisserif.otf */,
+			);
+			name = Fonts;
 			sourceTree = "<group>";
 		};
 		77E386EA1D6CF6F300B0579E /* Products */ = {
@@ -723,6 +742,7 @@
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				854EC2E51BA148A1BF37FF26 /* Entypo.ttf in Resources */,
 				2B11251D41CE4527895D8734 /* EvilIcons.ttf in Resources */,
+				77DDD2EE1E3FB4D4001807C7 /* rotisserif.otf in Resources */,
 				22122D8E43FB40C297E4B417 /* FontAwesome.ttf in Resources */,
 				E630C14D953D493D9CA70361 /* Foundation.ttf in Resources */,
 				2BC7FE3A36A9424288504EA5 /* Ionicons.ttf in Resources */,

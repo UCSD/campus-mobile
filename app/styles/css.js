@@ -65,26 +65,24 @@ if (pixelRatio === 2) {
 }
 
 // IOS / Android Custom
-var IOSMarginTop = 64,
-	AndroidMarginTop = 110,
+var IOSMarginTop = 58,
+	AndroidMarginTop = 104,
 	IOSMarginBottom = 46,
 	AndroidMarginBottom = 0;
 
 // Campus Branding
 var campus_primary = '#182B49';
 
-var navMarginTop = 7;
-
 var css = StyleSheet.create({
 
 	// Navigator
-	navigator: { backgroundColor: 'rgba(24,43,73,1)' },
-	navigatorTitle: { color: '#FFF' },
-	navigatorLeftIcon: { tintColor:'#FFF' },
+	navigator: { backgroundColor: 'rgba(24,43,73,1)', height: 58 },
+	navigatorTitle: { color: '#FFF', fontSize: 28, marginTop: -10, fontFamily: 'RotisSerif', letterSpacing: -1 },
+	navigatorIconStyle: { tintColor:'#FFF', marginTop: -2 },
 	
 	// TabBar
 	tabBarIOS: { borderTopWidth: 1, borderColor: '#DADADA', backgroundColor: '#FFF', height: 46 },
-	tabBarAndroid: { top: 64, borderBottomWidth: 1, borderColor: '#DADADA', backgroundColor: '#FFF', height: 46 },
+	tabBarAndroid: { top: 58, borderBottomWidth: 1, borderColor: '#DADADA', backgroundColor: '#FFF', height: 46 },
 	tabContainer: { width: 70, borderBottomWidth: 6, paddingTop: 6, borderBottomColor: 'rgba(0,0,0,0)' },
 	tabContainerBottom: { borderBottomColor: campus_primary },
 	tabIcon: { color: '#AAA', alignSelf: 'center', paddingBottom: 2, backgroundColor: 'rgba(0,0,0,0)' },
