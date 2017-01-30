@@ -23,6 +23,7 @@ import NearbyService from '../../services/nearbyService';
 import ShuttleLocationContainer from '../../containers/shuttleLocationContainer';
 
 import { toggleRoute } from '../../actions/shuttle';
+import { saveSearch } from '../../actions/map';
 
 const css = require('../../styles/css');
 const logger = require('../../util/logger');
@@ -59,7 +60,7 @@ class NearbyMapView extends React.Component {
 			selectedResult: null,
 			sliding: false,
 			typing: false,
-			allowScroll: true,
+			allowScroll: false,
 			iconStatus: 'menu',
 			showBar: true,
 			showMenu: false,
@@ -171,7 +172,8 @@ class NearbyMapView extends React.Component {
 					selectedResult: result.results[0],
 					showBar: true
 				});
-				this.scrollRef.scrollTo({ x: 0, y: 0, animated: true });
+				this.scrollRef.scrollTo({ x: 0, y: 0, animated: true }); // Scroll back to map
+				this.props.dispatch(saveSearch(text));  // Save search term
 			} else {
 				// handle no results
 			}
@@ -267,6 +269,7 @@ class NearbyMapView extends React.Component {
 								/>
 								<SearchHistoryCard
 									pressHistory={this.pressHistory}
+									data={this.props.search_history}
 								/>
 								<View
 									style={styles.spacer}
@@ -310,6 +313,7 @@ function mapStateToProps(state, props) {
 		shuttle_routes: state.shuttle.routes,
 		shuttle_stops: state.shuttle.stops,
 		vehicles: state.shuttle.vehicles,
+		search_history: state.map.history,
 	};
 }
 

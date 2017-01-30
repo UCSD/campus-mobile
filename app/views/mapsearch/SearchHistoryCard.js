@@ -25,7 +25,7 @@ const SearchHistoryCard = ({ data, pressHistory }) => (
 	>
 		<View style={styles.list_container}>
 			<SearchHistoryList
-				historyData={historyDataSource.cloneWithRows(history)}
+				historyData={historyDataSource.cloneWithRows(data)}
 				pressHistory={pressHistory}
 			/>
 		</View>
@@ -80,8 +80,8 @@ SearchHistoryCard.defaultProps = {
 };
 
 const styles = StyleSheet.create({
-	list_container: { width: getMaxCardWidth(), padding: 8 },
-	card_main: { backgroundColor: '#FFFFFF', margin: 6, alignItems: 'flex-start', justifyContent: 'center', maxHeight: Math.round(deviceHeight/2) },
+	list_container: { width: getMaxCardWidth(), padding: 8, maxHeight: Math.round(deviceHeight / 2) },
+	card_main: { backgroundColor: '#FFFFFF', margin: 6, alignItems: 'flex-start', justifyContent: 'center',  },
 	list_row: { flex: 1, flexDirection: 'row', paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: '#EEE', overflow: 'hidden' },
 	icon_container: { alignItems: 'center', flex: 0.1 },
 	text_container: { flex: 0.9 }
