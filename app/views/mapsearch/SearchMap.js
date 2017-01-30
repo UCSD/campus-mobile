@@ -61,6 +61,7 @@ const SearchMap = ({ location, selectedResult, hideMarker, style, shuttle, vehic
 				title={selectedResult.title}
 				description={selectedResult.description}
 				identifier={selectedResult.title}
+				key={selectedResult.title}
 			>
 				<MapView.Callout style={{ width: 100 }} >
 					<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => gotoNavigationApp(selectedResult.mkrLat, selectedResult.mkrLong)}>
@@ -97,6 +98,7 @@ const SearchMap = ({ location, selectedResult, hideMarker, style, shuttle, vehic
 						}}
 						title={stop.name}
 						identifier={stop.name}
+						key={stop.name + key}
 					>
 						<Icon style={{ flex:0.2 }} name={'stop-circle-o'} size={20} />
 						<MapView.Callout style={{ width: 100 }} >
@@ -127,6 +129,7 @@ const SearchMap = ({ location, selectedResult, hideMarker, style, shuttle, vehic
 						coordinate={vehicle.animated}
 						title={vehicle.name}
 						identifier={vehicle.name}
+						key={vehicle.name}
 					>
 						<Icon style={{ flex:0.2 }} name={'bus'} size={20} />
 						<MapView.Callout style={{ width: 100 }} >

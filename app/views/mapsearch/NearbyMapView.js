@@ -221,6 +221,7 @@ class NearbyMapView extends React.Component {
 							toggles={this.props.toggles}
 						/>
 					}
+					edgeHitWidth={0}
 					isOpen={this.state.showMenu}
 					onChange={(isOpen) => this.updateMenuState(isOpen)}
 				>
@@ -272,10 +273,12 @@ class NearbyMapView extends React.Component {
 								<View
 									style={styles.spacer}
 								/>
-								<SearchHistoryCard
-									pressHistory={this.pressHistory}
-									data={this.props.search_history}
-								/>
+								{(this.props.search_history.length !== 0) ? (
+									<SearchHistoryCard
+										pressHistory={this.pressHistory}
+										data={this.props.search_history}
+									/>
+									) : (null)}
 								<View
 									style={styles.spacer}
 								/>

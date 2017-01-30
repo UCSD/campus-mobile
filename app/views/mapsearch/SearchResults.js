@@ -29,9 +29,7 @@ const SearchResultsCard = ({ results, onSelect }) => (
 						onSelect={onSelect}
 					/>
 				) : (
-					<Text style={styles.no_result}>
-						No results found, please try a different search term.
-					</Text>
+					null
 				)
 			}
 		</View>

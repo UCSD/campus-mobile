@@ -15,7 +15,7 @@ const SearchSideMenu = ({ onToggle, toggles, shuttle_routes }) => (
 			{
 				// Create switch for every shuttle route
 				Object.keys(shuttle_routes).map((key, index) => (
-					<View>
+					<View key={key+index}>
 						<Text>{shuttle_routes[key].name.trim()}</Text>
 						<Switch
 							onValueChange={(val) => onToggle(val, key)}
@@ -30,7 +30,6 @@ const SearchSideMenu = ({ onToggle, toggles, shuttle_routes }) => (
 );
 
 SearchSideMenu.propTypes = {
-	onToggle: PropTypes.function,
 	toggles: PropTypes.object,
 	shuttle_routes: PropTypes.object,
 };
