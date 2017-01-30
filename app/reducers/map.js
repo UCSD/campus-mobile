@@ -1,6 +1,6 @@
 
 const initialState = {
-	history: ['physics', 'wlh', 'geisel', 'solis', 'petersonz'],
+	history: [],
 };
 
 function map(state = initialState, action) {
@@ -11,7 +11,7 @@ function map(state = initialState, action) {
 		// Check if in history already, if yes move up
 		const termIndex = newState.history.indexOf(action.term);
 		if ( termIndex !== -1) {
-			newState.history = [newState.history.splice(termIndex, 1), ...newState.history];
+			newState.history = [...newState.history.splice(termIndex, 1), ...newState.history];
 		} else {
 			newState.history = [action.term, ...newState.history];
 		}

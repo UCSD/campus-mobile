@@ -173,10 +173,14 @@ class NearbyMapView extends React.Component {
 					selectedResult: result.results[0],
 					showBar: true
 				});
-				this.scrollRef.scrollTo({ x: 0, y: 0, animated: true }); // Scroll back to map
 				this.props.dispatch(saveSearch(text));  // Save search term
 			} else {
-				// handle no results
+				this.setState({
+					searchInput: 'No Results, please try a different term',
+					searchResults: null,
+					selectedResult: null,
+					showBar: false
+				});
 			}
 		});
 	}
