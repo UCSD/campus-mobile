@@ -114,17 +114,6 @@ var Home = React.createClass({
 					{/* LOAD PRIMARY CARDS */}
 					{ this.getCards() }
 
-					{/* FOOTER */}
-					<View style={css.footer}>
-						<TouchableHighlight style={css.footer_link} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoFeedbackView() }>
-							<Text style={css.footer_about}>Feedback</Text>
-						</TouchableHighlight>
-						<Text style={css.footer_spacer}>|</Text>
-						<TouchableHighlight style={css.footer_link}>
-							<Text style={css.footer_copyright}>&copy; {this.copyrightYear} UC Regents</Text>
-						</TouchableHighlight>
-					</View>
-
 				</ScrollView>
 				</MenuContext>
 			</View>
