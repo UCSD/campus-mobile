@@ -169,6 +169,12 @@ module.exports = {
 		return '#' + ('000000' + Math.random().toString(16).slice(2, 8).toUpperCase()).slice(-6);
 	},
 
+	dynamicSort(property) {
+		return function(a, b) {
+			return (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+		}
+	},
+
 	sortNearbyMarkers(a, b) {
 		if (a.distance < b.distance) {
 			return -1;

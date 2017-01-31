@@ -18,14 +18,7 @@ export default class QuicklinksList extends React.Component {
 	}
 
 	render() {
-		let quicklinksData = [];
-
-		if (this.props.limitResults) {
-			quicklinksData = this.props.data.slice(0, this.props.limitResults);
-		} else {
-			quicklinksData = this.props.data;
-		}
-		
+		let quicklinksData = this.props.data;
 		const quicklinksDatasource = this.datasource.cloneWithRows(quicklinksData);
 
 		return (
@@ -33,5 +26,11 @@ export default class QuicklinksList extends React.Component {
 				(row) => <QuicklinksItem data={row} navigator={this.props.navigator} />
 			}/>
 		);
+	}
+
+	dynamicSort(property) {
+		return function(a, b) {
+			return (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+		}
 	}
 }
