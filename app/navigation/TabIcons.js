@@ -2,7 +2,6 @@ import React, { PropTypes } from 'react';
 import { Text, View } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-//import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AppSettings from '../AppSettings';
 import general from '../util/general';
 import css from '../styles/css'
@@ -23,9 +22,9 @@ const TabIcons = function(props) {
 		tabIconText = 'Home';
 		tabIconName = 'home';
 	} else if (props.title === 'Map') {
-		tabIconPack = 'MaterialIcons';
+		tabIconPack = 'FontAwesome';
 		tabIconText = 'Map';
-		tabIconName = 'location';
+		tabIconName = 'map';
 	} else if (props.title === 'Feedback') {
 		tabIconPack = 'MaterialIcons';
 		tabIconName = 'contact-mail';
@@ -40,7 +39,6 @@ const TabIcons = function(props) {
 		<View style={[css.tabContainer, props.selected ? css.tabContainerBottom : null ]}>
 			{tabIconPack === 'FontAwesome' ? (<FontAwesome style={[ css.tabIcon, props.selected ? css.campus_primary : null ]} name={tabIconName} size={32} />) : null }
 			{tabIconPack === 'MaterialIcons' ? (<MaterialIcons style={[ css.tabIcon, props.selected ? css.campus_primary : null ]} name={tabIconName} size={32} />) : null }
-
 		</View>
 	);
 }
