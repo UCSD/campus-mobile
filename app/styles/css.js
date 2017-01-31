@@ -89,7 +89,7 @@ var css = StyleSheet.create({
 	card_main: { borderWidth: 1, borderRadius: 2, borderColor: '#DDD', backgroundColor: '#F9F9F9', margin: 6, alignItems: 'flex-start', justifyContent: 'center', overflow: 'hidden' },
 	card_plain: { margin: 6, alignItems: 'center', justifyContent: 'center' },
 	card_special_events: { width: windowWidth - 12, height: round(windowWidth * .38 - 12) },
-	card_view_overlay: { position: 'absolute', flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', bottom: 0, left: 0, width: windowWidth - 12, height: 48, backgroundColor: 'rgba(60,60,60,.8)'	},
+	card_view_overlay: { position: 'absolute', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', bottom: 0, left: 0, width: windowWidth - 12, height: 48, backgroundColor: 'rgba(60,60,60,.8)'	},
 	card_header_container: { borderBottomWidth: 1, borderBottomColor: '#EEE', width: maxCardWidthWithPadding },
 	card_title_container: { flexDirection: 'row', alignItems: 'center', width: maxCardWidth, padding: 8, borderBottomWidth: 1, borderBottomColor: '#DDD' },
 	card_row_container: { flex:1, width: maxCardWidthWithPadding, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: 8, paddingBottom: 0 },
@@ -112,12 +112,11 @@ var css = StyleSheet.create({
 	modal_button_text: { fontSize: round(24 * prm), color: '#FFF', textAlign: 'center' },
 
 	// DINING CARD
-	dining_card: { padding: 8 },
-	dining_card_map: { width: maxCardWidthWithPadding },
+	dining_card: { width: maxCardWidth, padding: 8 },
 	dining_card_filters: { flexDirection: 'row', justifyContent: 'center', marginBottom: 6 },
 	dining_card_filter_button: { paddingVertical: 8, paddingHorizontal: 14, fontSize: round(14 * prm), color: campus_primary, borderWidth: 1, borderColor: '#999', borderRadius: 3, backgroundColor: '#EEE', textAlign: 'center', marginHorizontal: 14 },
 	dining_card_filter_button_active: { paddingVertical: 8, paddingHorizontal: 14, fontSize: round(14 * prm), color: '#EEE', borderWidth: 1, borderColor: '#999', borderRadius: 3, backgroundColor: campus_primary, textAlign: 'center', marginHorizontal: 14, overflow: 'hidden' },
-	dc_locations: { flex: 1, flexDirection: 'column' },
+	dc_locations: { flexDirection: 'column' },
 	dc_locations_row: { flexDirection: 'row', paddingBottom: 10, paddingTop: 10, borderBottomWidth: 1, borderBottomColor: '#DDD' },
 	dc_locations_row_left: { flex: 6, justifyContent: 'center' },
 	dc_locations_title: { fontSize: round(20 * prm), color: campus_primary },
@@ -201,7 +200,7 @@ var css = StyleSheet.create({
 	shuttlecard_loading_fail: { marginHorizontal: round(16 * prm), marginTop: round(40 * prm), marginBottom: round(60 * prm) },
 
 	// QUICKLINKS CARD
-	quicklinks_card: { padding: 8 },
+	quicklinks_card: { width: maxCardWidth, padding: 8 },
 	quicklinks_locations: { flex: 1, flexDirection: 'column' },
 	quicklinks_row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderBottomWidth: 1, borderBottomColor: '#EEE', paddingVertical: 10 },
 	quicklinks_icon: { height: round(42 * prm), width: round(38 * prm) },
@@ -253,14 +252,14 @@ var css = StyleSheet.create({
 	weatherccard_loading_height: { height: round(270 * prm) },
 
 	wc_main: {},
-	wc_toprow: { flex: 1, flexDirection: 'row', borderBottomWidth: 1, borderColor: '#EEE', justifyContent: 'center', alignItems: 'center', width: maxCardWidth, paddingHorizontal: 14 },
+	wc_toprow: { flexDirection: 'row', borderBottomWidth: 1, borderColor: '#EEE', justifyContent: 'center', alignItems: 'center', width: maxCardWidth, paddingHorizontal: 14 },
 	wc_toprow_left: { flex: 4 },
 	wc_current_temp: { fontSize: round(22 * prm), fontWeight: '300' },
 	wc_current_summary: { fontSize: round(15 * prm), color: '#444', paddingTop: 10, fontWeight: '300' },
 	wc_toprow_right: { flex: 1 },
 	wc_toprow_icon: { width: round(68 * prm), height: round(68 * prm) },
 
-	wc_botrow: { flex: 1, flexDirection: 'row', padding: 20 },
+	wc_botrow: { flexDirection: 'row', padding: 20 },
 	wc_botrow_col: { flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center' },
 	wf_dayofweek: { fontSize: round(14 * prm), fontWeight: '300', color: '#444', paddingBottom: 10},
 	wf_icon: { height: round(33 * prm), width: round(33 * prm) },

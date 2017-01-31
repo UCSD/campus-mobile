@@ -14,7 +14,7 @@
     "html-entities": "1.2.0",
     "moment": "2.15.2",
     "react": "15.3.2",
-    "react-native": "0.35.0",
+    "react-native": "^0.36.0",
     "react-native-code-push": "1.15.0-beta",
     "react-native-google-analytics-bridge": "3.1.0",
     "react-native-google-api-availability-bridge": "1.1.4",

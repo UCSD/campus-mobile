@@ -65,7 +65,6 @@ class DiningCard extends CardComponent {
 
 		return (
 			<View style={css.dining_card}>
-				<View style={css.dining_card_map}></View>
 				<View style={css.dc_locations}>
 					<DiningList data={this.state.diningData} navigator={this.props.navigator} limitResults={this.diningCardMaxResults} />
 				</View>
