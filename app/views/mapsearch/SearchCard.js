@@ -109,7 +109,7 @@ class SearchCard extends CardComponent {
 			return <LocationRequiredContent />;
 		}
 		return (
-			<View>
+			<View style={css.card}>
 				<SearchBar
 					update={this.updateSearch}
 					loading={this.state.loading}
