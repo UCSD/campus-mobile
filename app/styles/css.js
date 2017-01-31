@@ -408,14 +408,6 @@ var css = StyleSheet.create({
 	// WebView
 	webview_container: { width: windowWidth, height: windowHeight - 60 },
 
-	// Footer
-	footer: { flex: 1, flexDirection: 'row', paddingBottom: 10 },
-	footer_link: { flex: 15 },
-
-	footer_about: { color: campus_primary, fontSize: round(16 * prm), textAlign: 'center', padding: 4 },
-	footer_spacer: { flex: 1, color: '#888', padding: 4, fontSize: round(16 * prm), textAlign: 'center' },
-	footer_copyright: { color: campus_primary, fontSize: round(16 * prm), textAlign: 'center', padding: 4 },
-
 	// Feedback
 	feedback_container: { flex:1, alignItems: 'flex-start', flexDirection: 'column', width: maxCardWidthWithPadding, padding: 16, },
 	feedback_label: { flex: 2, flexWrap: "wrap", fontSize: round(20 * prm), height: round(80*prm)},

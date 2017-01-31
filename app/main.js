@@ -39,6 +39,7 @@ const scenes = Actions.create(
 		<Scene key='tabbar' tabs tabBarStyle={general.platformIOS() ? css.tabBarIOS : css.tabBarAndroid}>
 			<Scene component={Home} key='homeTab' initial={true} title={AppSettings.APP_CAMPUS_NAME} icon={TabIcons} />
 			<Scene component={NearbyMapView} key='mapTab' title='Map' icon={TabIcons} />
+			<Scene component={FeedbackView} key='feedbackTab' title='Feedback' icon={TabIcons} />
 			<Scene component={PreferencesView} key='preferencesTab' title='Settings' icon={TabIcons}  />
 		</Scene>
 
