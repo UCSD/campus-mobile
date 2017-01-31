@@ -6,7 +6,7 @@ import {
 	Text,
 	StyleSheet,
 	TouchableOpacity,
-	Switch
+	Platform
 } from 'react-native';
 import { connect } from 'react-redux';
 import ElevatedView from 'react-native-elevated-view';
@@ -226,21 +226,16 @@ class NearbyMapView extends React.Component {
 					onChange={(isOpen) => this.updateMenuState(isOpen)}
 				>
 					<View style={css.main_container}>
-						<View
-							// Only necessary for ios?
-							style={iosAndroidStyle}
-						>
-							<SearchBar
-								update={this.updateSearch}
-								onFocus={this.focusSearch}
-								pressIcon={this.pressIcon}
-								iconStatus={this.state.iconStatus}
-								searchInput={this.state.searchInput}
-								reff={
-									(ref) => { this.barRef = ref; }
-								}
-							/>
-						</View>
+						<SearchBar
+							update={this.updateSearch}
+							onFocus={this.focusSearch}
+							pressIcon={this.pressIcon}
+							iconStatus={this.state.iconStatus}
+							searchInput={this.state.searchInput}
+							reff={
+								(ref) => { this.barRef = ref; }
+							}
+						/>
 						<ScrollView
 							ref={
 								(ref) => {
@@ -331,6 +326,3 @@ const styles = StyleSheet.create({
 	map_container : { flex: 1, width: deviceWidth, height: deviceHeight - Math.round(44 * getPRM()), },
 	spacer: { height: Math.round(44 * getPRM()), margin: 6 },
 });
-
-const iosAndroidStyle = (general.platformAndroid()) ? (null) : (
-	{ zIndex: 1 });

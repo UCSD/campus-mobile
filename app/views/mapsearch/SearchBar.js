@@ -21,7 +21,7 @@ const windowWidth = Dimensions.get('window').width;
 const SearchBar = ({ reff, placeholder, update, iconStatus, style, onFocus, pressIcon, searchInput }) => (
 	<ElevatedView
 		style={[styles.map_searchbar_container, style]}
-		elevation={2}
+		elevation={2} // zIndex style and elevation has to match
 	>
 		<TouchableOpacity
 			style={styles.icon_container}
@@ -94,7 +94,7 @@ SearchBar.defaultProps = {
 };
 
 const styles = StyleSheet.create({
-	map_searchbar_container: { margin: 6, flexDirection: 'row', position: 'absolute', width: windowWidth - 12, height: Math.round(44 * PRM), borderWidth: 0, backgroundColor: 'white', },
+	map_searchbar_container: { zIndex: 2, margin: 6, flexDirection: 'row', position: 'absolute', width: windowWidth - 12, height: Math.round(44 * PRM), borderWidth: 0, backgroundColor: 'white', },
 	map_searchbar_input: { flex: 1, height: Math.round(44 * PRM), padding: Math.round(8 * PRM), color: '#555', fontSize: Math.round(20 * PRM) },
 	//map_searchbar_icon: { position: 'absolute', top: Math.round(9 * PRM), left: Math.round(8 * PRM) },
 	map_searchbar_icon: { top: Math.round(9 * PRM), left: Math.round(8 * PRM) },
