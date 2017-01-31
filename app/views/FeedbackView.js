@@ -77,7 +77,9 @@ export default class FeedbackView extends Component {
 			<View style={css.main_container}>
 				<ScrollView>
 					<View style={css.feedback_container}>
-						<Text style={css.feedback_label}>New features will be added regularly, please let us know what you would like to see. {'\n'}</Text>
+						<Text style={css.feedback_label}>
+							Help us make the UCSD app better. Submit your thoughts and suggestions.{'\n'}
+						</Text>
 
 						<TextInput
 							multiline={true}

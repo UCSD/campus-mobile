@@ -24,7 +24,7 @@ const TabIcons = function(props) {
 	} else if (props.title === 'Map') {
 		tabIconPack = 'FontAwesome';
 		tabIconText = 'Map';
-		tabIconName = 'map';
+		tabIconName = 'map-o';
 	} else if (props.title === 'Feedback') {
 		tabIconPack = 'MaterialIcons';
 		tabIconName = 'contact-mail';
