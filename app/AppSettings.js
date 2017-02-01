@@ -32,4 +32,15 @@ module.exports = {
 	DINING_API_TTL: 			60,
 	QUICKLINKS_API_TTL: 		86400,
 
+	USER_LOGIN: {
+		ENABLED: false,
+		METHOD: 'openid',
+		OPTIONS: {
+			CLIENT_ID: 'nowimplicit',
+			AUTH_URL: 'https://auth-dev.ucdavis.edu/identity/connect/authorize',
+			USER_INFO_URL: 'https://auth-dev.ucdavis.edu/identity/connect/userinfo',
+			REDIRECT_URL: 'nowmobile://cb',
+			STATE: 'M9NGbE6bnUV18FflfVeZ2U0j94'
+		}
+	}
 };

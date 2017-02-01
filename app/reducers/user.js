@@ -1,0 +1,34 @@
+import { LOGGED_IN, LOGGED_OUT } from '../actions/user';
+
+export type State = {
+	isLoggedIn: boolean;
+	auth: ?Object;
+	profile: ?Object;
+};
+
+const initialState = {
+	isLoggedIn: false,
+	auth: null,
+	profile: null,
+};
+
+function user(state: State = initialState, action): State {
+	if (action.type === LOGGED_IN) {
+		const { auth, profile } = action.data;
+		return {
+			...state,
+			isLoggedIn: true,
+			auth,
+			profile,
+		};
+	}
+	if (action.type === LOGGED_OUT) {
+		return {
+			...state,
+			...initialState,
+		};
+	}
+	return state;
+}
+
+module.exports = user;
