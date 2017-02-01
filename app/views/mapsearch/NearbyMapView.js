@@ -331,7 +331,7 @@ const navMargin = Platform.select({
 
 const styles = StyleSheet.create({
 	main_container: { width: deviceWidth, height: deviceHeight - 64 - statusBarHeight, backgroundColor: '#EAEAEA', marginTop: navMargin },
-	bottomBarContainer: { zIndex: 5, alignItems: 'center', justifyContent: 'center', position: 'absolute', bottom: navMargin, width: deviceWidth, height: Math.round(44 * getPRM()), borderWidth: 0, backgroundColor: 'white', },
+	bottomBarContainer: { zIndex: 5, alignItems: 'center', justifyContent: 'center', position: 'absolute', bottom: 0, width: deviceWidth, height: Math.round(44 * getPRM()), borderWidth: 0, backgroundColor: 'white', },
 	bottomBarContent: { flex:1, alignItems:'center', justifyContent:'center' },
 	bottomBarText: { textAlign: 'center', },
 
