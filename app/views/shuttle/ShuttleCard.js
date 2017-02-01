@@ -5,12 +5,13 @@ import {
 	ActivityIndicator,
 } from 'react-native';
 import { connect } from 'react-redux';
+import { Actions } from 'react-native-router-flux';
 
 import Card from '../card/Card';
 import CardComponent from '../card/CardComponent';
 import ShuttleService from '../../services/shuttleService';
 import ShuttleOverview from './ShuttleOverview';
-import ShuttleStop from '../ShuttleStop';
+import ShuttleStop from './ShuttleStop';
 import LocationRequiredContent from '../common/LocationRequiredContent';
 
 const css = require('../../styles/css');
@@ -244,14 +245,7 @@ class ShuttleCard extends CardComponent {
 	}
 
 	gotoShuttleStop = (stopData, shuttleData) => {
-		this.props.navigator.push({
-			id: 'ShuttleStop',
-			name: 'Shuttle Stop',
-			component: ShuttleStop,
-			title: 'Shuttle',
-			stopData,
-			currentPosition: this.props.location,
-			shuttleData });
+		Actions.ShuttleStop({ stopData, currentPosition: this.props.location, shuttleData });
 	}
 }
 

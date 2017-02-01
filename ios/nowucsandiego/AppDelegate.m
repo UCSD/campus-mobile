@@ -29,9 +29,14 @@
 
 	NSURL *jsCodeLocation;
 	
-  //jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/index.ios.bundle?platform=ios&dev=false"];
-	jsCodeLocation = [CodePush bundleURL];
-	//jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
+  // SIMULATOR
+  jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/index.ios.bundle?platform=ios&dev=false"];
+  
+  // DEVICE
+  //jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
+  
+  // CODEPUSH
+  //jsCodeLocation = [CodePush bundleURL];
   
 	RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
 																											moduleName:@"nowucsandiego"

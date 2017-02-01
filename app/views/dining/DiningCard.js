@@ -5,6 +5,7 @@ import {
 	TouchableHighlight,
 } from 'react-native';
 import { connect } from 'react-redux';
+import { Actions } from 'react-native-router-flux';
 
 import Card from '../card/Card';
 import CardComponent from '../card/CardComponent';
@@ -64,7 +65,6 @@ class DiningCard extends CardComponent {
 
 		return (
 			<View style={css.dining_card}>
-				<View style={css.dining_card_map}></View>
 				<View style={css.dc_locations}>
 					<DiningList data={this.state.diningData} navigator={this.props.navigator} limitResults={this.diningCardMaxResults} />
 				</View>
@@ -111,7 +111,7 @@ class DiningCard extends CardComponent {
 	}
 
 	gotoDiningListView() {
-		this.props.navigator.push({ id: 'DiningListView', name: 'DiningListView', title: 'Dining',  component: DiningListView, data: this.state.diningData });
+		Actions.DiningListView({ data: this.state.diningData });
 	}
 }
 function mapStateToProps(state, props) {

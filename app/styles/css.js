@@ -25,92 +25,85 @@
 'use strict';
 
 import React from 'react';
-import {
-	StyleSheet,
-	Dimensions,
-	PixelRatio
-} from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 
 var AppSettings = require('../AppSettings');
 var general = require('../util/general');
 var logger = require('../util/logger');
 
-var navBarMarginTop = 0;
-var navBarTitleMarginTop = 5;
-
-if (general.platformAndroid()) {
-	navBarMarginTop = 64;
-	navBarTitleMarginTop = 0;
-} else if (general.platformIOS()) {
-
-}
-
-var pixelRatio = PixelRatio.get();
 var windowSize = Dimensions.get('window');
 var windowWidth = windowSize.width;
 var windowHeight = windowSize.height;
 var maxAppWidth = 414;
 
-var welcome_ai_marginTop = (windowHeight / 2) - navBarMarginTop;
+var welcome_ai_marginTop = (windowHeight / 2); // fixme
 
 // Applying pixel ratio modifier helps ensure all views/layouts across devices render in similar fashion
 var prm = windowWidth / maxAppWidth;
 
 var maxCardWidth = windowWidth - 2 - 12;
 var maxCardWidthWithPadding = windowWidth - 2 - 12 - 16; // border, margin, padding
-var surfCardDetailsWidth = maxCardWidthWithPadding;
-var surfCardDetailsPadding = 10 * prm;
-var shuttleCardRefreshIconTop = 10;
-var shuttleStopRefreshIconTop = 10;
 
-if (pixelRatio === 2) {
-	shuttleCardRefreshIconTop = 11;
-	shuttleStopRefreshIconTop = 15;
-} else if (pixelRatio === 3) {
-	shuttleCardRefreshIconTop = 12;
-	shuttleStopRefreshIconTop = 15;
-}
+// IOS / Android Custom
+var NavigatorIOSHeight = 58,
+	NavigatorAndroidHeight = 44,
+	TabBarHeight = 46;
 
+var IOSMarginTop = NavigatorIOSHeight,
+	AndroidMarginTop = NavigatorAndroidHeight + TabBarHeight,
+	IOSMarginBottom = TabBarHeight,
+	AndroidMarginBottom = 0;
+
+// Campus Branding
 var campus_primary = '#182B49';
-
-var navMarginTop = 7;
 
 var css = StyleSheet.create({
 
 	// Navigator
-	navigator: { flex: 1, backgroundColor: 'rgba(24,43,73,1)', alignItems: 'center', justifyContent: 'center' },
-	navigatorLeft: { color: '#FFF', fontSize: round(34 * prm), marginHorizontal: round(10 * prm) },
-	navigatorTitle: { color: '#FFF', fontSize: round(22 * prm), textAlign: 'center' },
-	navigatorRight: { color: '#FFF', fontSize: round(26 * prm), marginHorizontal: round(10 * prm), marginVertical: round(4 * prm), marginTop: 2 },
+	navIOS: { backgroundColor: 'rgba(24,43,73,1)', height: NavigatorIOSHeight },
+	navAndroid: { backgroundColor: 'rgba(24,43,73,1)', height: NavigatorAndroidHeight },
 
-	// NavigatorIOS
-	navBarIOS: {},
-	navBarIOSWrapperStyle: { paddingBottom: 64 },
+	navIOSTitle: { color: '#FFF', fontSize: 28, marginTop: -10, fontFamily: 'RotisSerif', letterSpacing: -1 },
+	navAndroidTitle: { color: '#FFF', fontSize: 28, marginTop: -10, fontFamily: 'RotisSerif', letterSpacing: -1 },
+
+	navIOSIconStyle: { tintColor:'#FFF', marginTop: -2 },
+	navAndroidIconStyle: { tintColor:'#FFF', marginTop: -6 },
+
+	// TabBar
+	tabBarIOS: { borderTopWidth: 1, borderColor: '#DADADA', backgroundColor: '#FFF', height: TabBarHeight },
+	tabBarAndroid: { top: NavigatorAndroidHeight, borderBottomWidth: 1, borderColor: '#DADADA', backgroundColor: '#FFF', height: TabBarHeight },
+	tabContainer: { width: 70, borderBottomWidth: 6, paddingTop: 6, borderBottomColor: 'rgba(0,0,0,0)' },
+	tabContainerBottom: { borderBottomColor: campus_primary },
+	tabIcon: { color: '#AAA', alignSelf: 'center', paddingBottom: 2, backgroundColor: 'rgba(0,0,0,0)' },
 
 	// Primary Containers
-	main_container: { flex: 1, backgroundColor: '#EAEAEA', marginTop: navBarMarginTop },
-	view_all_container: { flex: 1, backgroundColor: '#FFF', marginTop: navBarMarginTop },
+	main_container: { flex: 1, backgroundColor: '#EAEAEA', marginTop: general.platformIOS() ? IOSMarginTop : AndroidMarginTop, marginBottom: general.platformIOS() ? IOSMarginBottom : AndroidMarginBottom },
+	view_all_container: { flex: 1, backgroundColor: '#FFF', marginTop: general.platformIOS() ? IOSMarginTop : AndroidMarginTop, marginBottom: general.platformIOS() ? IOSMarginBottom : AndroidMarginBottom },
 	scroll_main: {},
-	listview_main: { marginTop: 64 },
+	listview_main: { marginTop: general.platformIOS() ? IOSMarginTop : AndroidMarginTop, },
 	view_default: { paddingHorizontal: round(8 * prm) },
 
 	scroll_default: { alignItems: 'center' },
 
 	// Card Styles
+	card: { width: maxCardWidth, padding: 8 },
 	card_main: { borderWidth: 1, borderRadius: 2, borderColor: '#DDD', backgroundColor: '#F9F9F9', margin: 6, alignItems: 'flex-start', justifyContent: 'center', overflow: 'hidden' },
 	card_plain: { margin: 6, alignItems: 'center', justifyContent: 'center' },
 	card_special_events: { width: windowWidth - 12, height: round(windowWidth * .38 - 12) },
-	card_view_overlay: { position: 'absolute', flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', bottom: 0, left: 0, width: windowWidth - 12, height: 48, backgroundColor: 'rgba(60,60,60,.8)'	},
+	card_view_overlay: { position: 'absolute', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', bottom: 0, left: 0, width: windowWidth - 12, height: 48, backgroundColor: 'rgba(60,60,60,.8)'	},
 	card_header_container: { borderBottomWidth: 1, borderBottomColor: '#EEE', width: maxCardWidthWithPadding },
 	card_title_container: { flexDirection: 'row', alignItems: 'center', width: maxCardWidth, padding: 8, borderBottomWidth: 1, borderBottomColor: '#DDD' },
-	card_title: { fontSize: round(26 * prm), color: '#747678' },
 	card_row_container: { flex:1, width: maxCardWidthWithPadding, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: 8, paddingBottom: 0 },
-	card_container: { flex:1, width: maxCardWidthWithPadding, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingTop: 8 },
 	card_footer_container: { flex:1, width: maxCardWidthWithPadding, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: 8 },
 	card_button_container: { flex:1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#F9F9F9', },
 	card_button_text: { flex:1, fontSize: round(20 * prm), alignItems: 'center', textAlign: 'center' },
 	card_text_container: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: maxCardWidth, padding: 8, borderBottomWidth: 1, borderBottomColor: '#DDD' },
 	card_content_full_width: { width: maxCardWidth, overflow: 'hidden' },
+	card_menu: { flex: 1, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', alignSelf: 'stretch' },
+	card_hide_option: { margin: 10, fontSize: 16 },
+	card_menu_trigger: { paddingTop: 9, paddingBottom: 6, paddingLeft: 12, paddingRight: 10, color: '#747678' },
+	card_container_main: { flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#DDD', alignSelf: 'stretch' },
+	card_title_main: { fontSize: 26, color: '#747678', paddingLeft: 10, paddingVertical: 6 },
 
 	// Modal Welcome Message
 	modal_container: { flex: 1, backgroundColor: 'rgba(0, 108, 147, .95)', justifyContent: 'center', padding: round(35 * prm) },
@@ -120,12 +113,11 @@ var css = StyleSheet.create({
 	modal_button_text: { fontSize: round(24 * prm), color: '#FFF', textAlign: 'center' },
 
 	// DINING CARD
-	dining_card: { padding: 8 },
-	dining_card_map: { width: maxCardWidthWithPadding },
+	dining_card: { width: maxCardWidth, padding: 8 },
 	dining_card_filters: { flexDirection: 'row', justifyContent: 'center', marginBottom: 6 },
 	dining_card_filter_button: { paddingVertical: 8, paddingHorizontal: 14, fontSize: round(14 * prm), color: campus_primary, borderWidth: 1, borderColor: '#999', borderRadius: 3, backgroundColor: '#EEE', textAlign: 'center', marginHorizontal: 14 },
 	dining_card_filter_button_active: { paddingVertical: 8, paddingHorizontal: 14, fontSize: round(14 * prm), color: '#EEE', borderWidth: 1, borderColor: '#999', borderRadius: 3, backgroundColor: campus_primary, textAlign: 'center', marginHorizontal: 14, overflow: 'hidden' },
-	dc_locations: { flex: 1, flexDirection: 'column' },
+	dc_locations: { flexDirection: 'column' },
 	dc_locations_row: { flexDirection: 'row', paddingBottom: 10, paddingTop: 10, borderBottomWidth: 1, borderBottomColor: '#DDD' },
 	dc_locations_row_left: { flex: 6, justifyContent: 'center' },
 	dc_locations_title: { fontSize: round(20 * prm), color: campus_primary },
@@ -189,22 +181,18 @@ var css = StyleSheet.create({
 	dd_menu_text: { fontSize: round(16 * prm), color: '#FFF' },
 
 	// SHUTTLE CARD
-	shuttle_card_refresh_container: { position: 'absolute', alignItems: 'center', top: shuttleCardRefreshIconTop, right: round(4 * prm), width: round(50 * prm) },
-	shuttle_card_refresh: { width: round(24 * prm), height: round(24 * prm) },
-	shuttle_card_refresh_timeago: { fontSize: round(9 * prm), color: '#999', marginTop: round(-1 * prm), textAlign: 'center', fontWeight: '500', backgroundColor: 'rgba(0,0,0,0)' },
-
 	shuttle_card_row: { width: maxCardWidth, overflow: 'hidden', borderBottomWidth: 1, borderBottomColor: '#DDD' },
 	shuttle_card_err_row: { alignItems: 'center', justifyContent: 'center', width: maxCardWidth, overflow: 'hidden' },
 	shuttle_card_row_center: { alignItems: 'center', justifyContent: 'center', width: maxCardWidth, overflow: 'hidden' },
 	shuttle_card_loader: { height: round(350 * prm) },
 	shuttle_card_row_border: { borderTopWidth: 1, borderTopColor: '#DDD' },
-	shuttle_card_row_top: { flex: 1, flexDirection: 'row', alignItems: 'stretch', justifyContent: 'center', marginVertical: round(20 * prm), height: round(83 * prm) },
+	shuttle_card_row_top: { flexDirection: 'row', alignItems: 'stretch', justifyContent: 'center', marginVertical: round(20 * prm), height: round(83 * prm) },
 	shuttle_card_rt_1: { flex: 1 },
-	shuttle_card_rt_2: { borderRadius: round(50 * prm), width: round(100 * prm), justifyContent: 'center' },
+	shuttle_card_rt_2: { borderRadius: round(50 * prm), width: round(83 * prm), justifyContent: 'center' },
 	shuttle_card_rt_2_label: { textAlign: 'center', color: '#222', fontWeight: '600', fontSize: round(48 * prm), backgroundColor: 'rgba(0,0,0,0)' },
 	shuttle_card_rt_3: { flex: 3, justifyContent: 'center' },
 	shuttle_card_rt_3_label: { textAlign: 'center', color: '#8f9092', fontSize: round(30 * prm), fontWeight: '300', backgroundColor: 'rgba(0,0,0,0)' },
-	shuttle_card_rt_4: { borderRadius: round(49 * prm), borderWidth: 1, backgroundColor: '#FFF', borderColor: '#CCC', width: round(100 * prm), justifyContent: 'center' },
+	shuttle_card_rt_4: { borderRadius: round(48 * prm), borderWidth: 1, backgroundColor: '#FFF', borderColor: '#CCC', width: round(83 * prm), justifyContent: 'center' },
 	shuttle_card_rt_4_label: { padding: 5, textAlign: 'center', color: '#8f9092', fontWeight: '500', fontSize: round(16 * prm), backgroundColor: 'rgba(0,0,0,0)' },
 	shuttle_card_rt_5: { flex: 1 },
 	shuttle_card_row_bot: { flex: 1, alignItems: 'center', paddingBottom: 20 },
@@ -213,7 +201,7 @@ var css = StyleSheet.create({
 	shuttlecard_loading_fail: { marginHorizontal: round(16 * prm), marginTop: round(40 * prm), marginBottom: round(60 * prm) },
 
 	// QUICKLINKS CARD
-	quicklinks_card: { padding: 8 },
+	quicklinks_card: { width: maxCardWidth, padding: 8 },
 	quicklinks_locations: { flex: 1, flexDirection: 'column' },
 	quicklinks_row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderBottomWidth: 1, borderBottomColor: '#EEE', paddingVertical: 10 },
 	quicklinks_icon: { height: round(42 * prm), width: round(38 * prm) },
@@ -265,14 +253,14 @@ var css = StyleSheet.create({
 	weatherccard_loading_height: { height: round(270 * prm) },
 
 	wc_main: {},
-	wc_toprow: { flex: 1, flexDirection: 'row', borderBottomWidth: 1, borderColor: '#EEE', justifyContent: 'center', alignItems: 'center', width: maxCardWidth, paddingHorizontal: 14 },
+	wc_toprow: { flexDirection: 'row', borderBottomWidth: 1, borderColor: '#EEE', justifyContent: 'center', alignItems: 'center', width: maxCardWidth, paddingHorizontal: 14 },
 	wc_toprow_left: { flex: 4 },
 	wc_current_temp: { fontSize: round(22 * prm), fontWeight: '300' },
 	wc_current_summary: { fontSize: round(15 * prm), color: '#444', paddingTop: 10, fontWeight: '300' },
 	wc_toprow_right: { flex: 1 },
 	wc_toprow_icon: { width: round(68 * prm), height: round(68 * prm) },
 
-	wc_botrow: { flex: 1, flexDirection: 'row', padding: 20 },
+	wc_botrow: { flexDirection: 'row', padding: 20 },
 	wc_botrow_col: { flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center' },
 	wf_dayofweek: { fontSize: round(14 * prm), fontWeight: '300', color: '#444', paddingBottom: 10},
 	wf_icon: { height: round(33 * prm), width: round(33 * prm) },
@@ -369,12 +357,12 @@ var css = StyleSheet.create({
 
 	// SHUTTLE STOP
 	shuttlestop_image: { width: windowWidth, height: round(windowWidth * .533) },
-	shuttlestop_name_container: { height: round(48 * prm), flex: 1, flexDirection: 'row', alignItems: 'center', width: windowWidth, paddingVertical: round(14 * prm), paddingHorizontal: round(20 * prm), backgroundColor: campus_primary },
-	shuttlestop_name_text: { width: round(windowWidth * .9 - 40), color: '#FFF', fontSize: round(24 * prm), fontWeight: '300' },
+	
+	shuttlestop_name_container: { height: round(48 * prm), flex: 1, flexDirection: 'row', alignItems: 'center', width: windowWidth, paddingVertical: round(10 * prm), paddingHorizontal: round(14 * prm), backgroundColor: campus_primary },
+	shuttlestop_name_text: { flex: 5, color: '#FFF', fontSize: round(24 * prm), fontWeight: '300' },
+	shuttlestop_refresh_container: { flex: 1, alignItems: 'flex-end' },
 
-	shuttlestop_refresh_container: { position: 'absolute', alignItems: 'center', top: shuttleStopRefreshIconTop, right: 8, width: round(55 * prm) },
 	shuttlestop_refresh: { width: round(26 * prm), height: round(26 * prm) },
-	shuttlestop_refresh_timeago: { fontSize: round(10 * prm), color: '#FFF', marginTop: round(1 * prm), textAlign: 'center', fontWeight: '600', backgroundColor: 'rgba(0,0,0,0)' },
 
 	shuttle_stop_arrivals_container: { width: windowWidth, paddingLeft: round(20 * prm), paddingVertical: round(16 * prm) },
 	shuttle_stop_next_arrivals_text: { fontSize: round(20 * prm), fontWeight: '300', color: '#222', paddingTop: 8, paddingBottom: 16 },
@@ -420,14 +408,6 @@ var css = StyleSheet.create({
 	// WebView
 	webview_container: { width: windowWidth, height: windowHeight - 60 },
 
-	// Footer
-	footer: { flex: 1, flexDirection: 'row', paddingBottom: 10 },
-	footer_link: { flex: 15 },
-
-	footer_about: { color: campus_primary, fontSize: round(16 * prm), textAlign: 'center', padding: 4 },
-	footer_spacer: { flex: 1, color: '#888', padding: 4, fontSize: round(16 * prm), textAlign: 'center' },
-	footer_copyright: { color: campus_primary, fontSize: round(16 * prm), textAlign: 'center', padding: 4 },
-
 	// Feedback
 	feedback_container: { flex:1, alignItems: 'flex-start', flexDirection: 'column', width: maxCardWidthWithPadding, padding: 16, },
 	feedback_label: { flex: 2, flexWrap: "wrap", fontSize: round(20 * prm), height: round(80*prm)},
@@ -436,6 +416,7 @@ var css = StyleSheet.create({
 	feedback_appInfo: { position: 'absolute', bottom: 0, right: 0, color: '#BBB', fontSize: 9, padding: 4 },
 
 	// MISC STYLES
+	campus_primary: { color: campus_primary },
 	whitebg: { backgroundColor: '#FFF' },
 	offwhitebg: { backgroundColor: '#FAFAFA' },
 	greybg: { backgroundColor: "#E2E2E2" },

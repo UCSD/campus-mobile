@@ -5,6 +5,7 @@ import {
 	TouchableHighlight,
 } from 'react-native';
 
+import { Actions } from 'react-native-router-flux';
 import Card from '../card/Card';
 import CardComponent from '../card/CardComponent';
 import QuicklinksService from '../../services/quicklinksService';
@@ -12,15 +13,14 @@ import QuicklinksList from './QuicklinksList';
 import QuicklinksListView from './QuicklinksListView';
 
 const css = require('../../styles/css');
+const general = require('../../util/general');
 const logger = require('../../util/logger');
 
 export default class QuicklinksCard extends CardComponent {
 
 	constructor(props) {
 		super(props);
-
 		this.quicklinksCardMaxResults = 4;
-
 		this.state = {
 			quicklinksDataLoaded: false,
 			quicklinksRenderAllRows: false,
@@ -37,7 +37,7 @@ export default class QuicklinksCard extends CardComponent {
 				{this.state.quicklinksDataLoaded ? (
 					<View style={css.quicklinks_card}>
 						<View style={css.quicklinks_locations}>
-							<QuicklinksList data={this.state.quicklinksData} navigator={this.props.navigator} limitResults={this.quicklinksCardMaxResults} />
+							<QuicklinksList data={this.state.quicklinksDataCustom} navigator={this.props.navigator} />
 						</View>
 						<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoQuicklinksListView(this.state.quicklinksData) }>
 							<View style={css.card_more}>
@@ -55,6 +55,7 @@ export default class QuicklinksCard extends CardComponent {
 		.then((responseData) => {
 			this.setState({
 				quicklinksData: responseData,
+				quicklinksDataCustom: responseData.slice().sort(general.dynamicSort('card-order')).slice(0, this.quicklinksCardMaxResults),
 				quicklinksDataLoaded: true
 			});
 		})
@@ -65,6 +66,6 @@ export default class QuicklinksCard extends CardComponent {
 	}
 
 	gotoQuicklinksListView() {
-		this.props.navigator.push({ id: 'QuicklinksListView', name: 'QuicklinksListView', title: 'Links',  component: QuicklinksListView, data: this.state.quicklinksData });
+		Actions.QuicklinksListView({ data: this.state.quicklinksData });
 	}
 }

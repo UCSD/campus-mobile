@@ -27,7 +27,7 @@ const NewsDetail = React.createClass({
 	},
 
 	componentWillMount() {
-		let imageURL = (this.props.route.newsData.image_lg) ? this.props.route.newsData.image_lg : this.props.route.newsData.image;
+		let imageURL = (this.props.newsData.image_lg) ? this.props.newsData.image_lg : this.props.newsData.image;
 		imageURL = imageURL.replace(/-thumb/g,'');
 
 		if (imageURL) {
@@ -46,7 +46,7 @@ const NewsDetail = React.createClass({
 	},
 
 	componentDidMount() {
-		logger.ga('View Loaded: News Detail: ' + this.props.route.newsData.title );
+		logger.ga('View Loaded: News Detail: ' + this.props.newsData.title );
 	},
 
 	openBrowserLink(linkURL) {
@@ -54,7 +54,6 @@ const NewsDetail = React.createClass({
 	},
 
 	gotoWebView(storyName, storyURL) {
-		// this.props.navigator.push({ id: 'WebWrapper', name: 'WebWrapper', title: 'News', component: WebWrapper, webViewURL: storyURL });
 		Linking.canOpenURL(storyURL).then(supported => {
 			if (!supported) {
 				logger.log('Can\'t handle url: ' + storyURL);
@@ -64,11 +63,11 @@ const NewsDetail = React.createClass({
 		}).catch(err => logger.log('An error with opening NewsDetail occurred', err));
 	},
 
-	renderScene() {
-		const newsDate = moment(this.props.route.newsData.date).format('MMM Do, YYYY');
+	render() {
+		const newsDate = moment(this.props.newsData.date).format('MMM Do, YYYY');
 
 		// Desc
-		let newsDesc = this.props.route.newsData.description;
+		let newsDesc = this.props.newsData.description;
 		newsDesc = newsDesc.replace(/^ /g, '');
 		newsDesc = newsDesc.replace(/\?\?\?/g, '');
 
@@ -82,14 +81,14 @@ const NewsDetail = React.createClass({
 
 					<View style={css.news_detail_container}>
 						<View style={css.eventdetail_top_right_container}>
-							<Text style={css.eventdetail_eventname}>{this.props.route.newsData.title}</Text>
+							<Text style={css.eventdetail_eventname}>{this.props.newsData.title}</Text>
 							<Text style={css.eventdetail_eventdate}>{newsDate}</Text>
 						</View>
 
 						<Text style={css.eventdetail_eventdescription}>{newsDesc}</Text>
 
-						{this.props.route.newsData.link ? (
-							<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => this.gotoWebView(this.props.route.newsData.title, this.props.route.newsData.link)}>
+						{this.props.newsData.link ? (
+							<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => this.gotoWebView(this.props.newsData.title, this.props.newsData.link)}>
 								<View style={css.eventdetail_readmore_container}>
 									<Text style={css.eventdetail_readmore_text}>Read the full article</Text>
 								</View>
@@ -101,10 +100,6 @@ const NewsDetail = React.createClass({
 				</ScrollView>
 			</View>
 		);
-	},
-
-	render() {
-		return this.renderScene();
 	},
 
 });

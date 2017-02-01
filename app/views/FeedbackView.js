@@ -1,8 +1,3 @@
-/**
- * View for Welcome Week events
- * Triggered by onPress from Special Events Card in Home.js
-**/
-
 import React, { Component } from 'react';
 import {
 	Text,
@@ -15,17 +10,12 @@ import {
 } from 'react-native';
 
 import css from '../styles/css';
-import Card from './card/Card';
 
 const logger = require('../util/logger');
 const AppSettings = require('../AppSettings');
 
 export default class FeedbackView extends Component {
 
-	/**
-	 * Represents view for Welcome Week events
-	 * @param { Object[] } props - An array of properties passed in
-	**/
 	constructor(props) {
 		super(props);
 
@@ -44,16 +34,9 @@ export default class FeedbackView extends Component {
 		};
 	}
 
-	/**
-	 * Invoked before render
-	**/
-	componentWillMount() {
-	}
-
-	/**
-	 * Invoked after render
-	**/
 	componentDidMount() {
+		logger.ga('View Loaded: Feedback');
+		
 		InteractionManager.runAfterInteractions(() => {
 			this.setState({ loaded: true });
 		});
@@ -64,25 +47,15 @@ export default class FeedbackView extends Component {
 	 * @return bool whether the component should re-render.
 	**/
 	shouldComponentUpdate(nextProps, nextState) {
-		logger.ga('View Loaded: Feedback');
 		return true;
-	}
-
-	/**
-	 * Invoked before component is unmounted from DOM
-	**/
-	componentWillUnmount() {
-
 	}
 
 	render() {
 		if (!this.state.loaded) {
 			return this.renderLoadingView();
-		}
-		else if (!this.state.submit) {
+		} else if (!this.state.submit) {
 			return this.renderFormView();
-		}
-		else {
+		} else {
 			return this.renderSubmitView();
 		}
 	}
@@ -103,36 +76,36 @@ export default class FeedbackView extends Component {
 		return (
 			<View style={css.main_container}>
 				<ScrollView>
-					<Card title="Your thoughts matter!">
-						<View style={css.feedback_container}>
-							<Text style={css.feedback_label}>New features will be added regularly, please let us know what you would like to see. {'\n'}</Text>
+					<View style={css.feedback_container}>
+						<Text style={css.feedback_label}>
+							Help us make the UCSD app better. Submit your thoughts and suggestions.{'\n'}
+						</Text>
 
-							<TextInput
-								multiline={true}
-								onChangeText={(text) => this.setState({ commentsText: text })}
-								placeholder="Tell us what you think*"
-								style={css.feedback_text}
-							/>
+						<TextInput
+							multiline={true}
+							onChangeText={(text) => this.setState({ commentsText: text })}
+							placeholder="Tell us what you think*"
+							style={css.feedback_text}
+						/>
 
-							<TextInput
-								onChangeText={(text) => this.setState({ nameText: text })}
-								placeholder="Name"
-								style={css.feedback_text}
-							/>
+						<TextInput
+							onChangeText={(text) => this.setState({ nameText: text })}
+							placeholder="Name"
+							style={css.feedback_text}
+						/>
 
-							<TextInput
-								onChangeText={(text) => this.setState({ emailText: text })}
-								placeholder="Email"
-								style={css.feedback_text}
-							/>
+						<TextInput
+							onChangeText={(text) => this.setState({ emailText: text })}
+							placeholder="Email"
+							style={css.feedback_text}
+						/>
 
-							<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => this.postFeedback()}>
-								<View style={css.eventdetail_readmore_container}>
-									<Text style={css.eventdetail_readmore_text}>Submit</Text>
-								</View>
-							</TouchableHighlight>
-						</View>
-					</Card>
+						<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => this.postFeedback()}>
+							<View style={css.eventdetail_readmore_container}>
+								<Text style={css.eventdetail_readmore_text}>Submit</Text>
+							</View>
+						</TouchableHighlight>
+					</View>
 				</ScrollView>
 				<Text style={css.feedback_appInfo}>v{this.appInfo}</Text>
 			</View>
@@ -143,11 +116,9 @@ export default class FeedbackView extends Component {
 		return (
 			<View style={css.main_container}>
 				<ScrollView>
-					<Card title="Your thoughts matter!">
-						<View style={css.feedback_container}>
-							<Text style={css.feedback_label}>Thank you for your feedback!</Text>
-						</View>
-					</Card>
+					<View style={css.feedback_container}>
+						<Text style={css.feedback_label}>Thank you for your feedback!</Text>
+					</View>
 				</ScrollView>
 			</View>
 		);

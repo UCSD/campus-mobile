@@ -11,6 +11,8 @@ import {
 import Card from '../card/Card';
 import CardComponent from '../card/CardComponent';
 
+import { Actions } from 'react-native-router-flux';
+
 import WeatherWeek from './WeatherWeek';
 import SurfReport from './SurfReport';
 import WeatherService from '../../services/weatherService';
@@ -180,6 +182,6 @@ export default class WeatherCard extends CardComponent {
 	}
 
 	gotoSurfReport() {
-		this.props.navigator.push({ id: 'SurfReport', component: SurfReport, title: 'Surf Report', surfData: this.state.surfData });
+		Actions.SurfReport({ surfData: this.state.surfData });
 	}
 }

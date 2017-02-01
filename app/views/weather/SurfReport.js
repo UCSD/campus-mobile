@@ -8,8 +8,6 @@ import {
 	ActivityIndicator,
 } from 'react-native';
 
-import NavigationBarWithRouteMapper from '../NavigationBarWithRouteMapper';
-
 const dateFormat = require('dateformat');
 
 const css = require('../../styles/css');
@@ -31,11 +29,11 @@ const SurfReport = React.createClass({
 
 		const dsFull = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
-		if (this.props.route.surfData) {
+		if (this.props.surfData) {
 			this.surfDataArray = [];
 
-			for (let i = 0; this.props.route.surfData.length > i; i++) {
-				const surfDataRow = this.props.route.surfData[i];
+			for (let i = 0; this.props.surfData.length > i; i++) {
+				const surfDataRow = this.props.surfData[i];
 
 				const surfDataRowObj = {};
 
@@ -80,20 +78,6 @@ const SurfReport = React.createClass({
 	},
 
 	render() {
-		if (general.platformAndroid()) {
-			return (
-				<NavigationBarWithRouteMapper
-					route={this.props.route}
-					renderScene={this.renderScene}
-					navigator={this.props.navigator}
-				/>
-			);
-		} else {
-			return this.renderScene();
-		}
-	},
-
-	renderScene() {
 		return (
 			<View style={[css.main_container, css.whitebg]}>
 				<ScrollView contentContainerStyle={[css.scroll_main, css.whitebg]}>

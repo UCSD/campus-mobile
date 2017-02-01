@@ -18,13 +18,15 @@ import {
 	Navigator,
 	ActivityIndicator,
 } from 'react-native';
+
 import { connect } from 'react-redux';
 import { MenuContext } from 'react-native-popup-menu';
+import { Actions } from 'react-native-router-flux';
 
 import TopBannerView from './banner/TopBannerView';
 import WelcomeModal from './WelcomeModal';
-import NavigationBarWithRouteMapper from './NavigationBarWithRouteMapper';
 import FeedbackView from './FeedbackView';
+import PreferencesView from './preferences/PreferencesView';
 
 // Cards
 import WeatherCard from './weather/WeatherCard';
@@ -112,17 +114,6 @@ var Home = React.createClass({
 					{/* LOAD PRIMARY CARDS */}
 					{ this.getCards() }
 
-					{/* FOOTER */}
-					<View style={css.footer}>
-						<TouchableHighlight style={css.footer_link} underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoFeedbackForm() }>
-							<Text style={css.footer_about}>Feedback</Text>
-						</TouchableHighlight>
-						<Text style={css.footer_spacer}>|</Text>
-						<TouchableHighlight style={css.footer_link}>
-							<Text style={css.footer_copyright}>&copy; {this.copyrightYear} UC Regents</Text>
-						</TouchableHighlight>
-					</View>
-
 				</ScrollView>
 				</MenuContext>
 			</View>
@@ -174,8 +165,8 @@ var Home = React.createClass({
 		}
 	},
 
-	gotoFeedbackForm() {
-		this.props.navigator.push({ id: 'FeedbackView', component: FeedbackView, title: 'Feedback' });
+	gotoFeedbackView() {
+		Actions.FeedbackView();
 	},
 
 	_handleRefresh() {

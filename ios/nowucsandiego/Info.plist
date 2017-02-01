@@ -52,6 +52,7 @@
 	<string></string>
 	<key>UIAppFonts</key>
 	<array>
+		<string>RotisSerif.ttf</string>
 		<string>Entypo.ttf</string>
 		<string>EvilIcons.ttf</string>
 		<string>FontAwesome.ttf</string>
