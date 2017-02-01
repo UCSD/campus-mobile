@@ -6,7 +6,8 @@ import {
 	Text,
 	StyleSheet,
 	TouchableOpacity,
-	Platform
+	Platform,
+	StatusBar
 } from 'react-native';
 import { connect } from 'react-redux';
 import ElevatedView from 'react-native-elevated-view';
@@ -42,6 +43,10 @@ if (general.platformAndroid()) {
 
 const deviceHeight = Dimensions.get('window').height;
 const deviceWidth = Dimensions.get('window').width;
+const statusBarHeight = Platform.select({
+	ios: 0,
+	android: StatusBar.currentHeight,
+});
 
 const MAXIMUM_HEIGHT = deviceHeight - navBarMarginTop;
 const MINUMUM_HEIGHT = navBarMarginTop;
@@ -60,7 +65,7 @@ class NearbyMapView extends React.Component {
 			selectedResult: null,
 			sliding: false,
 			typing: false,
-			allowScroll: true,
+			allowScroll: false,
 			iconStatus: 'menu',
 			showBar: false,
 			showMenu: false,
@@ -132,7 +137,7 @@ class NearbyMapView extends React.Component {
 		if (this.state.iconStatus === 'back') {
 			this.setState({
 				iconStatus: 'menu',
-				showBar: true
+				showBar: (this.state.searchResults !== null)
 			});
 			this.scrollRef.scrollTo({ x: 0, y: 0, animated: true });
 			// this.barRef.clear();
@@ -142,21 +147,16 @@ class NearbyMapView extends React.Component {
 		}
 	}
 
-	pressHistory = (text) => {
-		this.pressIcon();
-		this.updateSearch(text);
-	}
-
 	gotoResults = () => {
 		this.setState({
 			iconStatus: 'back',
 			showBar: false
 		});
-		this.scrollRef.scrollTo({ x: 0, y: (deviceHeight - Math.round(44 * getPRM())) + 6, animated: true });
+		this.scrollRef.scrollTo({ x: 0, y: deviceHeight - 64 - statusBarHeight, animated: true });
 	}
 
 	focusSearch = () => {
-		this.scrollRef.scrollTo({ x: 0, y: (2 * deviceHeight) - Math.round(2 * 44 * getPRM()) - 12, animated: true });
+		this.scrollRef.scrollTo({ x: 0, y: 2 * (deviceHeight - 64 - statusBarHeight), animated: true });
 		this.setState({
 			iconStatus: 'back',
 			showBar: false
@@ -164,23 +164,28 @@ class NearbyMapView extends React.Component {
 	}
 
 	updateSearch = (text) => {
-		this.pressIcon();
 		NearbyService.FetchSearchResults(text).then((result) => {
 			if (result.results) {
 				this.setState({
 					searchInput: text,
 					searchResults: result.results,
 					selectedResult: result.results[0],
-					showBar: true
+					showBar: true,
+					iconStatus: 'menu',
 				});
 				this.props.dispatch(saveSearch(text));  // Save search term
+				this.scrollRef.scrollTo({ x: 0, y: 0, animated: true });
+				this.barRef.blur();
 			} else {
 				this.setState({
 					searchInput: 'No Results, please try a different term',
 					searchResults: null,
 					selectedResult: null,
-					showBar: false
+					showBar: false,
+					iconStatus: 'menu',
 				});
+				this.scrollRef.scrollTo({ x: 0, y: 0, animated: true });
+				this.barRef.blur();
 			}
 		});
 	}
@@ -211,6 +216,7 @@ class NearbyMapView extends React.Component {
 	}
 
 	render() {
+		console.log("ivan: " + deviceHeight + " prm: " + (44*getPRM()));
 		if (this.props.location.coords) {
 			return (
 				<SideMenu
@@ -221,7 +227,7 @@ class NearbyMapView extends React.Component {
 							toggles={this.props.toggles}
 						/>
 					}
-					edgeHitWidth={0}
+					edgeHitWidth={0} //Disable open sidemenu from swipe
 					isOpen={this.state.showMenu}
 					onChange={(isOpen) => this.updateMenuState(isOpen)}
 				>
@@ -245,30 +251,31 @@ class NearbyMapView extends React.Component {
 							showsVerticalScrollIndicator={false}
 							scrollEnabled={this.state.allowScroll}
 						>
-							<SearchMap
-								location={this.props.location}
-								selectedResult={this.state.selectedResult}
-								style={styles.map_container}
-								hideMarker={this.state.sliding}
-								shuttle={this.props.shuttle_stops}
-								vehicles={this.state.vehicles}
-							/>
 							<View
-								style={styles.bottomContainer}
+								style={styles.section}
 							>
-								<View
-									style={styles.spacer}
+								<SearchMap
+									location={this.props.location}
+									selectedResult={this.state.selectedResult}
+									hideMarker={this.state.sliding}
+									shuttle={this.props.shuttle_stops}
+									vehicles={this.state.vehicles}
 								/>
+							</View>
+							<View
+								style={styles.section}
+							>
 								<SearchResults
 									results={this.state.searchResults}
 									onSelect={(index) => this.updateSelectedResult(index)}
 								/>
-								<View
-									style={styles.spacer}
-								/>
+							</View>
+							<View
+								style={styles.section}
+							>
 								{(this.props.search_history.length !== 0) ? (
 									<SearchHistoryCard
-										pressHistory={this.pressHistory}
+										pressHistory={this.updateSearch}
 										data={this.props.search_history}
 									/>
 									) : (null)}
@@ -317,12 +324,17 @@ function mapStateToProps(state, props) {
 
 module.exports = connect(mapStateToProps)(NearbyMapView);
 
+const navMargin = Platform.select({
+	ios: 64,
+	android: 0
+});
+
 const styles = StyleSheet.create({
-	bottomBarContainer: { zIndex: 1, flex: 1, alignItems: 'center', justifyContent: 'center', position: 'absolute', bottom: Math.round(44 * getPRM()) + 24, width: deviceWidth, height: Math.round(44 * getPRM()), borderWidth: 0, backgroundColor: 'white', },
+	main_container: { width: deviceWidth, height: deviceHeight - 64 - statusBarHeight, backgroundColor: '#EAEAEA', marginTop: navMargin },
+	bottomBarContainer: { zIndex: 5, alignItems: 'center', justifyContent: 'center', position: 'absolute', bottom: navMargin, width: deviceWidth, height: Math.round(44 * getPRM()), borderWidth: 0, backgroundColor: 'white', },
 	bottomBarContent: { flex:1, alignItems:'center', justifyContent:'center' },
 	bottomBarText: { textAlign: 'center', },
 
-	bottomContainer: { minHeight: deviceHeight },
-	map_container : { flex: 1, width: deviceWidth, height: deviceHeight - Math.round(44 * getPRM()), },
-	spacer: { height: Math.round(44 * getPRM()), margin: 6 },
+	section: { height: deviceHeight - 64 - statusBarHeight },
 });
+

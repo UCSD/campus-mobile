@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import { Text, TouchableHighlight, View } from 'react-native';
+import { Text, TouchableHighlight, View, StyleSheet } from 'react-native';
 import MapView from 'react-native-maps';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -30,7 +30,7 @@ const SearchMap = ({ location, selectedResult, hideMarker, style, shuttle, vehic
 				MapRef.animateToRegion(midRegion, 1000);
 			}
 		}}
-		style={style}
+		style={styles.map_container}
 		loadingEnabled={true}
 		loadingIndicatorColor={'#666'}
 		loadingBackgroundColor={'#EEE'}
@@ -163,5 +163,9 @@ const gotoNavigationApp = (destinationLat, destinationLon) => {
 	const destinationURL = general.getDirectionsURL('walk', destinationLat, destinationLon );
 	general.openURL(destinationURL);
 };
+
+const styles = StyleSheet.create({
+	map_container : { ...StyleSheet.absoluteFillObject },
+});
 
 export default SearchMap;
