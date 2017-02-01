@@ -7,7 +7,7 @@ var initialState = {
 	'events': 		{ active: true, order: 4, name: 'Events', component: 'EventsCard' },
 	'quicklinks': 	{ active: true, order: 5, name: 'Links', component: 'QuicklinksCard' },
 	'news': 		{ active: true, order: 6, name: 'News', component: 'NewsCard' },
-	'map': 			{ active: true, order: 7, name: 'Map', component: 'SearchCard' }
+	// 'map': 			{ active: true, order: 7, name: 'Map', component: 'SearchCard' }
 };
 
 function cards(state = initialState, action) {

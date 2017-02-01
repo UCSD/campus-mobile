@@ -143,9 +143,10 @@ var Home = React.createClass({
 		if (this.props.cards['news'].active) {
 			cards.push(<NewsCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key={'news'} />);
 		}
+		/*
 		if (this.props.cards['map'].active) {
 			cards.push(<SearchCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key={'map'} />);
-		}
+		}*/
 		return cards;
 	},
 
