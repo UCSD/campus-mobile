@@ -47,7 +47,7 @@ var maxCardWidthWithPadding = windowWidth - 2 - 12 - 16; // border, margin, padd
 // IOS / Android Custom
 var NavigatorIOSHeight = 58,
 	NavigatorAndroidHeight = 44,
-	TabBarHeight = 46;
+	TabBarHeight = 40;
 
 var IOSMarginTop = NavigatorIOSHeight,
 	AndroidMarginTop = NavigatorAndroidHeight + TabBarHeight,
@@ -72,9 +72,9 @@ var css = StyleSheet.create({
 	// TabBar
 	tabBarIOS: { borderTopWidth: 1, borderColor: '#DADADA', backgroundColor: '#FFF', height: TabBarHeight },
 	tabBarAndroid: { top: NavigatorAndroidHeight, borderBottomWidth: 1, borderColor: '#DADADA', backgroundColor: '#FFF', height: TabBarHeight },
-	tabContainer: { width: 70, borderBottomWidth: 6, paddingTop: 6, borderBottomColor: 'rgba(0,0,0,0)' },
+	tabContainer: { width: 70, paddingVertical: 8 },
 	tabContainerBottom: { borderBottomColor: campus_primary },
-	tabIcon: { color: '#AAA', alignSelf: 'center', paddingBottom: 2, backgroundColor: 'rgba(0,0,0,0)' },
+	tabIcon: { color: '#999', alignSelf: 'center', backgroundColor: 'rgba(0,0,0,0)', opacity: .95 },
 
 	// Primary Containers
 	main_container: { flex: 1, backgroundColor: '#EAEAEA', marginTop: general.platformIOS() ? IOSMarginTop : AndroidMarginTop, marginBottom: general.platformIOS() ? IOSMarginBottom : AndroidMarginBottom },
