@@ -29,6 +29,13 @@ class Card extends React.Component {
 					<MenuOption onSelect={() => { this.props.dispatch(hideCard(this.props.id)); }}>
 						<Text style={css.card_hide_option}>Hide Card</Text>
 					</MenuOption>
+					{
+						(this.props.cardRefresh) ? (
+							<MenuOption onSelect={() => { this.props.cardRefresh() }}>
+								<Text style={css.card_hide_option}>Refresh</Text>
+							</MenuOption>
+						) : (null)
+					}
 				</MenuOptions>
 			</Menu>
 		);
