@@ -3,6 +3,7 @@ import {
 	View,
 	Text,
 	ActivityIndicator,
+	StyleSheet
 } from 'react-native';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
@@ -13,6 +14,7 @@ import ShuttleService from '../../services/shuttleService';
 import ShuttleOverview from './ShuttleOverview';
 import ShuttleStop from './ShuttleStop';
 import LocationRequiredContent from '../common/LocationRequiredContent';
+import general, { getPRM, getMaxCardWidth, round } from '../../util/general';
 
 const css = require('../../styles/css');
 const logger = require('../../util/logger');
@@ -108,8 +110,8 @@ class ShuttleCard extends CardComponent {
 		// stops haven't loaded yet
 		if (!this.state.closestStop1Loaded && !this.state.closestStop2Loaded) {
 			return (
-				<View style={[css.shuttle_card_row_center, css.shuttle_card_loader]}>
-					<ActivityIndicator style={css.shuttle_card_aa} size="large" />
+				<View style={[styles.shuttle_card_row_center, styles.shuttle_card_loader]}>
+					<ActivityIndicator size="large" />
 				</View>
 			);
 		}
@@ -117,9 +119,9 @@ class ShuttleCard extends CardComponent {
 		// both stops failed to load
 		if (this.state.closestStop1LoadFailed && this.state.closestStop2LoadFailed) {
 			return (
-				<View style={css.shuttlecard_loading_fail}>
-					<Text style={css.fs18}>No Shuttles en Route</Text>
-					<Text style={[css.pt10, css.fs12, css.dgrey]}>We were unable to locate any nearby shuttles, please try again later.</Text>
+				<View style={styles.shuttlecard_loading_fail}>
+					<Text style={styles.fs18}>No Shuttles en Route</Text>
+					<Text style={[styles.pt10, styles.fs12, styles.dgrey]}>We were unable to locate any nearby shuttles, please try again later.</Text>
 				</View>
 			);
 		}
@@ -127,7 +129,7 @@ class ShuttleCard extends CardComponent {
 		// return loaded rows
 		const rows = [];
 		if (this.state.closestStop1Loaded) { rows.push(this.renderOverview(0)); }
-		if (this.state.closestStop2Loaded) { rows.push(this.renderOverview(1)); }
+		// if (this.state.closestStop2Loaded) { rows.push(this.renderOverview(1)); }
 		return rows;
 	}
 
@@ -137,7 +139,7 @@ class ShuttleCard extends CardComponent {
 				key={i}
 				onPress={this.gotoShuttleStop}
 				stopData={this.shuttleClosestStops[i]}
-				shuttleData={this.state.shuttleData[i]}
+				shuttleData={this.shuttleClosestStops[i].arrivals}
 			/>
 		);
 	}
@@ -189,6 +191,19 @@ class ShuttleCard extends CardComponent {
 		.then((responseData) => {
 			if (responseData.length > 0 && responseData[0].secondsToArrival) {
 				this.setState({ shuttleData : responseData });
+
+				// Sort arrivals by arrival time
+				responseData.sort((a, b) => {
+					const timeA = a.secondsToArrival;
+					const timeB = b.secondsToArrival;
+
+					if (timeA < timeB) return -1;
+					if (timeA > timeB) return 1;
+					return 0;
+				});
+
+				console.log("ivan: " + JSON.stringify(responseData));
+				this.shuttleClosestStops[closestStopNumber].arrivals = responseData.slice(1);
 				let closestShuttleETA = 999999;
 
 				for (let i = 0; responseData.length > i; i++) {
@@ -257,3 +272,18 @@ function mapStateToProps(state, props) {
 }
 
 module.exports = connect(mapStateToProps)(ShuttleCard);
+
+// There's gotta be a better way to do this...find a way to get rid of magic numbers
+const nextArrivals = ((2 * round(36 * getPRM())) + 32) + round(20 * getPRM()); // Two rows + text
+const cardHeader = 26; // font + padding
+const cardBody = (round(83 * getPRM()) + (2 * round(20 * getPRM()))) + (round(26 * getPRM()) + 20) ; // top + margin + font + padding
+
+const styles = StyleSheet.create({
+	shuttle_card_row_center: { alignItems: 'center', justifyContent: 'center', width: getMaxCardWidth(), overflow: 'hidden' },
+	shuttle_card_loader: { height: nextArrivals + cardHeader + cardBody },
+	shuttlecard_loading_fail: { marginHorizontal: round(16 * getPRM()), marginTop: round(40 * getPRM()), marginBottom: round(60 * getPRM()) },
+	fs18: { fontSize: round(18 * getPRM()) },
+	pt10: { paddingTop: 10 },
+	fs12: { fontSize: round(12 * getPRM()) },
+	dgrey: { color: '#333' },
+});
