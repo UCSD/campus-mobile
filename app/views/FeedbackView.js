@@ -6,13 +6,18 @@ import {
 	TouchableHighlight,
 	InteractionManager,
 	ActivityIndicator,
-	TextInput
+	TextInput,
+	StyleSheet,
+	Platform,
+	Dimensions
 } from 'react-native';
 
-import css from '../styles/css';
+import { getPRM, getMaxCardWidth, round, getCampusPrimary } from '../util/general';
 
+const css = require('../styles/css');
 const logger = require('../util/logger');
 const AppSettings = require('../AppSettings');
+const deviceWidth = Dimensions.get('window').width;
 
 export default class FeedbackView extends Component {
 
@@ -36,7 +41,7 @@ export default class FeedbackView extends Component {
 
 	componentDidMount() {
 		logger.ga('View Loaded: Feedback');
-		
+
 		InteractionManager.runAfterInteractions(() => {
 			this.setState({ loaded: true });
 		});
@@ -50,81 +55,7 @@ export default class FeedbackView extends Component {
 		return true;
 	}
 
-	render() {
-		if (!this.state.loaded) {
-			return this.renderLoadingView();
-		} else if (!this.state.submit) {
-			return this.renderFormView();
-		} else {
-			return this.renderSubmitView();
-		}
-	}
-
-	renderLoadingView() {
-		return (
-			<View style={css.main_container}>
-				<ActivityIndicator
-					animating={this.state.animating}
-					style={css.welcome_ai}
-					size="large"
-				/>
-			</View>
-		);
-	}
-
-	renderFormView() {
-		return (
-			<View style={css.main_container}>
-				<ScrollView>
-					<View style={css.feedback_container}>
-						<Text style={css.feedback_label}>
-							Help us make the UCSD app better. Submit your thoughts and suggestions.{'\n'}
-						</Text>
-
-						<TextInput
-							multiline={true}
-							onChangeText={(text) => this.setState({ commentsText: text })}
-							placeholder="Tell us what you think*"
-							style={css.feedback_text}
-						/>
-
-						<TextInput
-							onChangeText={(text) => this.setState({ nameText: text })}
-							placeholder="Name"
-							style={css.feedback_text}
-						/>
-
-						<TextInput
-							onChangeText={(text) => this.setState({ emailText: text })}
-							placeholder="Email"
-							style={css.feedback_text}
-						/>
-
-						<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => this.postFeedback()}>
-							<View style={css.eventdetail_readmore_container}>
-								<Text style={css.eventdetail_readmore_text}>Submit</Text>
-							</View>
-						</TouchableHighlight>
-					</View>
-				</ScrollView>
-				<Text style={css.feedback_appInfo}>v{this.appInfo}</Text>
-			</View>
-		);
-	}
-
-	renderSubmitView() {
-		return (
-			<View style={css.main_container}>
-				<ScrollView>
-					<View style={css.feedback_container}>
-						<Text style={css.feedback_label}>Thank you for your feedback!</Text>
-					</View>
-				</ScrollView>
-			</View>
-		);
-	}
-
-	postFeedback() {
+	_postFeedback() {
 		if (this.state.commentsText !== '') {
 			const formData = new FormData();
 			formData.append('element_1', this.state.commentsText);
@@ -153,4 +84,99 @@ export default class FeedbackView extends Component {
 			return;
 		}
 	}
+
+	_renderLoadingView() {
+		return (
+			<View style={css.main_container}>
+				<ActivityIndicator
+					animating={true}
+					style={styles.loading_icon}
+					size="large"
+				/>
+			</View>
+		);
+	}
+
+	_renderFormView() {
+		return (
+			<View style={css.main_container}>
+				<ScrollView>
+					<View style={styles.feedback_container}>
+						<Text style={styles.feedback_label}>
+							Help us make the UCSD app better. Submit your thoughts and suggestions.{'\n'}
+						</Text>
+
+						<View style={styles.feedback_text_container}>
+							<TextInput
+								multiline={true}
+								onChangeText={(text) => this.setState({ commentsText: text })}
+								placeholder="Tell us what you think*"
+								style={styles.feedback_text}
+							/>
+						</View>
+
+						<View style={styles.text_container}>
+							<TextInput
+								onChangeText={(text) => this.setState({ nameText: text })}
+								placeholder="Name"
+								style={styles.feedback_text}
+							/>
+						</View>
+
+						<View style={styles.text_container}>
+							<TextInput
+								onChangeText={(text) => this.setState({ emailText: text })}
+								placeholder="Email"
+								style={styles.feedback_text}
+							/>
+						</View>
+
+						<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => this._postFeedback()}>
+							<View style={styles.submit_container}>
+								<Text style={styles.submit_text}>Submit</Text>
+							</View>
+						</TouchableHighlight>
+					</View>
+				</ScrollView>
+				<Text style={styles.feedback_appInfo}>v{this.appInfo}</Text>
+			</View>
+		);
+	}
+
+	_renderSubmitView() {
+		return (
+			<View style={css.main_container}>
+				<ScrollView>
+					<View style={styles.feedback_container}>
+						<Text style={styles.feedback_label}>Thank you for your feedback!</Text>
+					</View>
+				</ScrollView>
+			</View>
+		);
+	}
+
+	render() {
+		return this._renderFormView();
+		if (!this.state.loaded) {
+			return this._renderLoadingView();
+		} else if (!this.state.submit) {
+			return this._renderFormView();
+		} else {
+			return this._renderSubmitView();
+		}
+	}
 }
+
+const styles = StyleSheet.create({
+	loading_icon: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+	feedback_container: { flex:1, alignItems: 'flex-start', flexDirection: 'column' },
+	feedback_label: { flex: 1, flexWrap: 'wrap', fontSize: round(20 * getPRM()), height: round(80 * getPRM()), padding: 8 },
+	feedback_text: { backgroundColor: '#FFF', flex:1, fontSize: round(20 * getPRM()), alignItems: 'center', padding: 8, },
+	feedback_appInfo: { position: 'absolute', bottom: 0, right: 0, color: '#BBB', fontSize: 9, padding: 4 },
+
+	submit_container: { width: deviceWidth, justifyContent: 'center', alignItems: 'center', backgroundColor: getCampusPrimary(), borderRadius: 3, padding: 10 },
+	submit_text: { fontSize: round(16 * getPRM()), color: '#FFF' },
+
+	feedback_text_container: { width: deviceWidth, height: round(100 * getPRM()), borderColor: '#DADADA', borderBottomWidth: 1, },
+	text_container: { width: deviceWidth, height: round(50 * getPRM()), borderColor: '#DADADA', borderBottomWidth: 1, },
+});

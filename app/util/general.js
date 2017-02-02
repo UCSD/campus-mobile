@@ -99,6 +99,10 @@ module.exports = {
 		return windowWidth - 2 - 12;
 	},
 
+	getCampusPrimary() {
+		return '#182B49';
+	},
+
 	getCurrentTimestamp() {
 		return Math.round(Date.now() / 1000);
 	},
