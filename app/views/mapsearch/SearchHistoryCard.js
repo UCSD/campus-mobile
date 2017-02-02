@@ -15,7 +15,6 @@ import { getPRM, getMaxCardWidth } from '../../util/general';
 const PRM = getPRM();
 const deviceHeight = Dimensions.get('window').height;
 
-const history = ['physics', 'wlh', 'geisel', 'solis', 'peterson'];
 const historyDataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
 const SearchHistoryCard = ({ data, pressHistory }) => (
