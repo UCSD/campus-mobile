@@ -25,7 +25,7 @@
 'use strict';
 
 import React from 'react';
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet, Dimensions, StatusBar } from 'react-native';
 
 var AppSettings = require('../AppSettings');
 var general = require('../util/general');
@@ -47,6 +47,7 @@ var maxCardWidthWithPadding = windowWidth - 2 - 12 - 16; // border, margin, padd
 // IOS / Android Custom
 var NavigatorIOSHeight = 58,
 	NavigatorAndroidHeight = 44,
+	StatusBarAndroidHeight = general.platformAndroid() ? StatusBar.currentHeight : 0,
 	TabBarHeight = 40;
 
 var IOSMarginTop = NavigatorIOSHeight,

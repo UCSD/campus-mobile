@@ -69,6 +69,9 @@ export default class Main extends Component {
 	render() {
 		if (general.platformIOS()) {
 			StatusBar.setBarStyle('light-content');
+		} else if (general.platformAndroid()) {
+			StatusBar.setBackgroundColor('#101d32', false);
+			
 		}
 
 		return (
