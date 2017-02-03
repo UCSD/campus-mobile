@@ -4,6 +4,24 @@ const AppSettings = require('../AppSettings');
 const dateFormat = require('dateformat');
 
 const WeatherService = {
+
+	// Powered by Dark Sky API
+	/*
+		Expected weatherData JSON
+		{
+			currently: {
+				temperature,
+				summary,
+				icon
+			}
+			daily: {
+				dayofweek,
+				icon,
+				tempMax,
+				tempMin
+			}
+		}
+	*/
 	FetchWeather() {
 		return fetch(AppSettings.WEATHER_API_URL, {
 			headers: {

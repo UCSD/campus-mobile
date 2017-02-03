@@ -19,6 +19,22 @@ import {
 
 import AppSettings from '../../AppSettings';
 
+/*
+	Expected weatherData JSON
+	{
+		currently: {
+			temperature,
+			summary,
+			icon
+		}
+		daily: {
+			dayofweek,
+			icon,
+			tempMax,
+			tempMin
+		}
+	}
+*/
 const WeatherCard = ({ weatherData, gotoSurfReport }) => (
 	<Card id="weather" title="Weather">
 		{weatherData ? (
