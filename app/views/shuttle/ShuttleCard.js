@@ -108,7 +108,8 @@ class ShuttleCard extends CardComponent {
 		}
 
 		// stops haven't loaded yet
-		if (!this.state.closestStop1Loaded && !this.state.closestStop2Loaded) {
+		if ((!this.state.closestStop1Loaded && !this.state.closestStop2Loaded) ||
+			this.state.isRefreshing) {
 			return (
 				<View style={[styles.shuttle_card_row_center, styles.shuttle_card_loader]}>
 					<ActivityIndicator size="large" />
@@ -202,7 +203,6 @@ class ShuttleCard extends CardComponent {
 					return 0;
 				});
 
-				console.log("ivan: " + JSON.stringify(responseData));
 				this.shuttleClosestStops[closestStopNumber].arrivals = responseData.slice(1);
 				let closestShuttleETA = 999999;
 

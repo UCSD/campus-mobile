@@ -27,6 +27,6 @@ export default function configureStore(initialState, onComplete: ?() => void) {
 		});
 	}
 
-	persistStore(store, { storage: AsyncStorage, whitelist: ['cards', 'shuttle', 'map', 'user'] }, onComplete);
+	persistStore(store, { storage: AsyncStorage, whitelist: ['cards', 'shuttle', 'map', 'user', 'weather', 'surf'] }, onComplete);
 	return store;
 }

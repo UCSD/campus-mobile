@@ -5,6 +5,8 @@ import locationReducer from './location';
 import shuttleReducer from './shuttle';
 import mapReducer from './map';
 import userReducer from './user';
+import weatherReducer from './weather';
+import surfReducer from './surf';
 
 module.exports = combineReducers({
 	cards: cardsReducer,
@@ -12,4 +14,6 @@ module.exports = combineReducers({
 	shuttle: shuttleReducer,
 	map: mapReducer,
 	user: userReducer,
+	weather: weatherReducer,
+	surf: surfReducer,
 });
