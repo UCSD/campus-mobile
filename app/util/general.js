@@ -92,6 +92,14 @@ module.exports = {
 		return (windowWidth / appDefaultWidth);
 	},
 
+	doPRM(num) {
+		const windowWidth = Dimensions.get('window').width;
+		const appDefaultWidth = 414;
+		const prm = (windowWidth / appDefaultWidth);
+
+		return Math.round(num * prm);
+	},
+
 	getMaxCardWidth() {
 		const windowSize = Dimensions.get('window');
 		const windowWidth = windowSize.width;
