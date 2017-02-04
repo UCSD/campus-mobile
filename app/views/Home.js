@@ -30,7 +30,7 @@ import PreferencesView from './preferences/PreferencesView';
 
 // Cards
 import WeatherCardContainer from './weather/WeatherCardContainer';
-import ShuttleCard from './shuttle/ShuttleCard';
+import ShuttleCardContainer from './shuttle/ShuttleCardContainer';
 import EventCard from './events/EventCard'
 import QuicklinksCard from './quicklinks/QuicklinksCard'
 import NewsCard from './news/NewsCard';
@@ -129,7 +129,7 @@ var Home = React.createClass({
 			cards.push(<WeatherCardContainer navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key={'weather'} />);
 		}
 		if (this.props.cards['shuttle'].active) {
-			cards.push(<ShuttleCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key={'shuttle'} />);
+			cards.push(<ShuttleCardContainer navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key={'shuttle'} />);
 		}
 		if (this.props.cards['dining'].active) {
 			cards.push(<DiningCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key={'dining'} />);

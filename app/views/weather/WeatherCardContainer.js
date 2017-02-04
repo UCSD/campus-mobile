@@ -7,13 +7,9 @@ import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 
 import CardComponent from '../card/CardComponent';
-
 import { updateWeather } from '../../actions/weather';
-
 import WeatherCard from './WeatherCard';
-
 import logger from '../../util/logger';
-
 import AppSettings from '../../AppSettings';
 
 class WeatherCardContainer extends CardComponent {
@@ -34,7 +30,7 @@ class WeatherCardContainer extends CardComponent {
 
 		// check TTL and refresh weather data if needed
 		if (currentAppState === 'active') {
-			const nowTime = new Date.getTime();
+			const nowTime = new Date().getTime();
 			const timeDiff = nowTime - this.props.weatherLastUpdated;
 			const weatherTTL = AppSettings.WEATHER_API_TTL * 1000; // convert secs to ms
 

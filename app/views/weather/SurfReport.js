@@ -36,7 +36,7 @@ class SurfReport extends React.Component {
 
 		// check TTL and refresh surf data if needed
 		if (currentAppState === 'active') {
-			const nowTime = new Date.getTime();
+			const nowTime = new Date().getTime();
 			const timeDiff = nowTime - this.props.surfLastUpdated;
 			const surfTTL = AppSettings.SURF_API_TTL * 1000; // convert secs to ms
 

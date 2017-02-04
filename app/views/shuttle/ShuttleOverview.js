@@ -49,27 +49,27 @@ export default class ShuttleOverview extends React.Component {
 
 const arrivalDataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
-const ShuttleOverview = ({ onPress, stopData, shuttleData }) => (
+const ShuttleOverview = ({ onPress, arrivalData }) => (
 	<View>
 		<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => onPress(stopData, shuttleData)}>
 			<View style={css.shuttle_card_row}>
 				<View style={css.shuttle_card_row_top}>
 					<View style={css.shuttle_card_rt_1} />
-					<View style={[css.shuttle_card_rt_2, { backgroundColor: stopData.routeColor, borderColor: stopData.routeColor }]}>
-						<Text style={css.shuttle_card_rt_2_label}>{stopData.routeShortName}</Text>
+					<View style={[css.shuttle_card_rt_2, { backgroundColor: arrivalData[0].route.color, borderColor: arrivalData[0].route.color }]}>
+						<Text style={css.shuttle_card_rt_2_label}>{arrivalData[0].route.shortName}</Text>
 					</View>
 					<View style={css.shuttle_card_rt_3}>
 						<Text style={css.shuttle_card_rt_3_label}>@</Text>
 					</View>
 					<View style={css.shuttle_card_rt_4}>
-						<Text style={css.shuttle_card_rt_4_label} numberOfLines={3}>{stopData.stopName}</Text>
+						<Text style={css.shuttle_card_rt_4_label} numberOfLines={3}>{arrivalData[0].route.name}</Text>
 					</View>
 					<View style={css.shuttle_card_rt_5} />
 				</View>
 				<View style={css.shuttle_card_row_bot}>
 					<Text style={css.shuttle_card_row_arriving}>
 						<Text style={css.grey}>Arriving in: </Text>
-						{stopData.etaMinutes}
+						{getMinutesETA(arrivalData[0].route.secondsToArrival)}
 					</Text>
 				</View>
 			</View>
@@ -81,7 +81,7 @@ const ShuttleOverview = ({ onPress, stopData, shuttleData }) => (
 			style={styles.next_rows}
 		>
 			<ShuttleSmallList
-				arrivalData={arrivalDataSource.cloneWithRows(shuttleData)}
+				arrivalData={arrivalDataSource.cloneWithRows(arrivalData)}
 			/>
 		</View>
 	</View>

@@ -12,6 +12,7 @@ const initialState = {
 	routes: shuttle_routes,
 	stops: shuttle_stops_no_routes,
 	vehicles: {},
+	closestStop: -1,
 };
 
 function shuttle(state = initialState, action) {
@@ -39,12 +40,23 @@ function shuttle(state = initialState, action) {
 		}
 
 		return newState;
-	case 'SET_VEHICLES':
+	case 'SET_VEHICLES': {
 		const veh = Object.assign({}, newState.vehicles);
 		veh[action.route] = action.vehicles;
 		newState.vehicles = veh;
 
 		return newState;
+	}
+	case 'SET_CLOSEST_STOP':
+		newState.closestStop = action.closestStop;
+		return newState;
+	case 'SET_ARRIVALS': {
+		const stops = Object.assign({}, newState.stops);
+		stops[action.stop].arrivals = action.arrivalData;
+		newState.stops = stops;
+
+		return newState;
+	}
 	default:
 		return state;
 	}
