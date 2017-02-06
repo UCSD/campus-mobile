@@ -136,6 +136,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-permissions')
     compile project(':react-native-code-push')
     compile project(':react-native-google-api-availability-bridge')
     compile project(':react-native-vector-icons')
