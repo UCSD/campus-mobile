@@ -13,8 +13,6 @@
     "dateformat": "1.0.12",
     "html-entities": "1.2.0",
     "moment": "2.15.2",
-    "react": "15.3.2",
-    "react-native": "^0.36.0",
     "react": "15.4.2",
     "react-native": "0.39.0",
     "react-native-code-push": "1.15.0-beta",
