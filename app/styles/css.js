@@ -359,7 +359,7 @@ var css = StyleSheet.create({
 	// SHUTTLE STOP
 	shuttlestop_image: { width: windowWidth, height: round(windowWidth * .533) },
 	
-	shuttlestop_name_container: { height: round(48 * prm), flex: 1, flexDirection: 'row', alignItems: 'center', width: windowWidth, paddingVertical: round(10 * prm), paddingHorizontal: round(14 * prm), backgroundColor: campus_primary },
+	shuttlestop_name_container: { flexDirection: 'row', alignItems: 'center', width: windowWidth, paddingVertical: round(10 * prm), paddingHorizontal: round(14 * prm), backgroundColor: campus_primary },
 	shuttlestop_name_text: { flex: 5, color: '#FFF', fontSize: round(24 * prm), fontWeight: '300' },
 	shuttlestop_refresh_container: { flex: 1, alignItems: 'flex-end' },
 
