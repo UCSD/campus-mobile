@@ -216,7 +216,7 @@ class NearbyMapView extends React.Component {
 	}
 
 	render() {
-		console.log("ivan: " + deviceHeight + " prm: " + (44*getPRM()));
+		logger.log("ivan: " + deviceHeight + " prm: " + (44*getPRM()));
 		if (this.props.location.coords) {
 			return (
 				<SideMenu

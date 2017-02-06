@@ -6,7 +6,8 @@ module.exports = {
 	APP_NAME: 					'now-mobile',
 	APP_CAMPUS_NAME: 			'APP_CAMPUS_NAME_PH',
 	GOOGLE_ANALYTICS_ID: 		'GOOGLE_ANALYTICS_ID_PH',
-	DEBUG_ENABLED: 				false, // Disables all logger functions (i.e. logger.log) if set to false (console.log is unaffected)
+	DEBUG_ENABLED: 				false, // Disables all logger functions (i.e. logger.log, logger.error).
+									   // Use console.log/error as necessary but do not commit code using console.log/error
 
 	/* APIs / FEEDS */
 	WEATHER_API_URL: 			'https://w3wyps9yje.execute-api.us-west-2.amazonaws.com/prod/forecast',

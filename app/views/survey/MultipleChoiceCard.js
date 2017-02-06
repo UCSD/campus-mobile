@@ -8,6 +8,7 @@ import {
 import DismissibleCard from '../card/DismissibleCard';
 
 const css = require('../../styles/css');
+const logger = require('../../util/logger');
 
 export default class MultipleChoiceCard extends React.Component {
 
@@ -23,7 +24,7 @@ export default class MultipleChoiceCard extends React.Component {
 					<TouchableHighlight style={css.card_button_container} underlayColor="#DDD" onPress={() => this._card.dismissCard()}>
 						<Text style={css.card_button_text}>Yes</Text>
 					</TouchableHighlight>
-					<TouchableHighlight style={css.card_button_container} underlayColor="#DDD" onPress={() => console.log('No')}>
+					<TouchableHighlight style={css.card_button_container} underlayColor="#DDD" onPress={() => logger.log('No')}>
 						<Text style={css.card_button_text}>No</Text>
 					</TouchableHighlight>
 				</View>
@@ -31,7 +32,7 @@ export default class MultipleChoiceCard extends React.Component {
 					<TouchableHighlight style={css.card_button_container} underlayColor="#DDD" onPress={() => this._card.dismissCard()}>
 						<Text style={css.card_button_text}>Maybe</Text>
 					</TouchableHighlight>
-					<TouchableHighlight style={css.card_button_container} underlayColor="#DDD" onPress={() => console.log('No')}>
+					<TouchableHighlight style={css.card_button_container} underlayColor="#DDD" onPress={() => logger.log('No')}>
 						<Text style={css.card_button_text}>Surprise Me</Text>
 					</TouchableHighlight>
 				</View>

@@ -9,6 +9,7 @@ import Card from '../card/Card';
 import ShuttleOverview from './ShuttleOverview';
 import LocationRequiredContent from '../common/LocationRequiredContent';
 import { getPRM, getMaxCardWidth, round } from '../../util/general';
+import logger from '../../util/logger';
 
 const ShuttleCard = ({ arrivalData, permission, gotoShuttleStop }) => {
 	let content;
@@ -22,7 +23,7 @@ const ShuttleCard = ({ arrivalData, permission, gotoShuttleStop }) => {
 			</View>
 		);
 	} else {
-		console.log("ivan " + JSON.stringify(arrivalData));
+		logger.log("ivan " + JSON.stringify(arrivalData));
 		content =  (
 			<ShuttleOverview
 				onPress={() => gotoShuttleStop()}

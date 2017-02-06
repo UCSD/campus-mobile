@@ -43,7 +43,7 @@ class SearchCard extends CardComponent {
 	// Override default method because MapView re-render causes re-zoom
 	shouldComponentUpdate(nextProps, nextState) {
 		if (this.props.locationPermission !== nextProps.locationPermission) {
-			console.log("UPDATE: " + nextProps.locationPermission);
+			//logger.log("UPDATE: " + nextProps.locationPermission);
 			return true;
 		}
 		else if (this.state.selectedInvalidated && this.props.locationPermission === 'authorized') {
