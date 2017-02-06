@@ -10,23 +10,23 @@ import ShuttleOverview from './ShuttleOverview';
 import LocationRequiredContent from '../common/LocationRequiredContent';
 import { getPRM, getMaxCardWidth, round } from '../../util/general';
 
-const ShuttleCard = ({ arrivalData, permission, gotoShuttleStop }) => {
+const ShuttleCard = ({ stopData, permission, gotoShuttleStop, stopID }) => {
 	let content;
 	// no permission to get location
 	if (permission !== 'authorized') {
 		content = (<LocationRequiredContent />);
-	} else if (!arrivalData) {
+	} else if (stopID === -1) {
 		content =  (
 			<View style={[styles.shuttle_card_row_center, styles.shuttle_card_loader]}>
 				<ActivityIndicator size="large" />
 			</View>
 		);
 	} else {
-		console.log("ivan " + JSON.stringify(arrivalData));
 		content =  (
 			<ShuttleOverview
-				onPress={() => gotoShuttleStop()}
-				arrivalData={arrivalData}
+				onPress={() => gotoShuttleStop(stopID)}
+				stopData={stopData}
+				stopID={stopID}
 			/>);
 	}
 
