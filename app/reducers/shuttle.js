@@ -1,5 +1,4 @@
 const shuttle_routes = require('../json/shuttle_routes_master_map.json');
-const shuttle_stops = require('../json/shuttle_stops_master_map.json');
 const shuttle_stops_no_routes = require('../json/shuttle_stops_master_map_no_routes.json');
 
 const initialToggles = {};

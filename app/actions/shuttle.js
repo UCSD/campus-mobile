@@ -2,7 +2,7 @@ import logger from '../util/logger';
 import ShuttleService from '../services/shuttleService';
 import { getDistance } from '../util/map';
 
-const shuttle_routes = require('../json/shuttle_routes_master.json');
+const shuttleStopMap = require('../json/shuttle_stops_master_map_no_routes');
 
 function toggleRoute(route) {
 	return {
@@ -28,34 +28,19 @@ function updateVehicles(route) {
 }
 
 function updateClosestStop(location) {
-	const closestDist = 1000000000;
+	let closestDist = 1000000000;
 	let closestStop = -1;
 
-	for (let i = 0; shuttle_routes.length > i; i++) {
-		const shuttleRoute = shuttle_routes[i];
+	Object.keys(shuttleStopMap).forEach((stopID, index) => {
+		const stop = shuttleStopMap[stopID];
+		const distanceFromStop = getDistance(location.coords.latitude, location.coords.longitude, stop.lat, stop.lon);
 
-		for (let n = 0; shuttleRoute.stops.length > n; n++) {
-			const shuttleRouteStop = shuttleRoute.stops[n];
-			const distanceFromStop = getDistance(location.coords.latitude, location.coords.longitude, shuttleRouteStop.lat, shuttleRouteStop.lon);
-
-			// Rewrite this later using sortRef from shuttleDetail
-			if (distanceFromStop < closestDist) {
-				closestStop = shuttleRouteStop.id;
-				/*
-				this.shuttleClosestStops[0].stopID = shuttleRouteStop.id;
-				this.shuttleClosestStops[0].stopName = shuttleRouteStop.name;
-				this.shuttleClosestStops[0].dist = distanceFromStop;
-				this.shuttleClosestStops[0].stopLat = shuttleRouteStop.lat;
-				this.shuttleClosestStops[0].stopLon = shuttleRouteStop.lon;*/
-			} /* else if (distanceFromStop < this.shuttleClosestStops[1].dist && this.shuttleClosestStops[0].stopID !== shuttleRouteStop.id) {
-				this.shuttleClosestStops[1].stopID = shuttleRouteStop.id;
-				this.shuttleClosestStops[1].stopName = shuttleRouteStop.name;
-				this.shuttleClosestStops[1].dist = distanceFromStop;
-				this.shuttleClosestStops[1].stopLat = shuttleRouteStop.lat;
-				this.shuttleClosestStops[1].stopLon = shuttleRouteStop.lon;
-			}*/
+		if (distanceFromStop < closestDist) {
+			closestStop = stopID;
+			closestDist = distanceFromStop;
 		}
-	}
+	});
+
 	return (dispatch) => {
 		dispatch({
 			type: 'SET_CLOSEST_STOP',
@@ -69,6 +54,16 @@ function updateArrivals(stop) {
 	return (dispatch) => {
 		ShuttleService.FetchShuttleArrivalsByStop(stop)
 			.then((arrivalData) => {
+				// Sort Arrival data by arrival time, should be on lambda
+				arrivalData.sort((a, b) => {
+					const aSecs = a.secondsToArrival;
+					const bSecs = b.secondsToArrival;
+
+					if ( aSecs < bSecs ) return -1;
+					if ( aSecs > bSecs) return 1;
+					return 0;
+				});
+
 				dispatch({
 					type: 'SET_ARRIVALS',
 					stop,
