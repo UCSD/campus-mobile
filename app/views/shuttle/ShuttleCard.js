@@ -16,7 +16,7 @@ const ShuttleCard = ({ stopData, permission, gotoShuttleStop, stopID }) => {
 	// no permission to get location
 	if (permission !== 'authorized') {
 		content = (<LocationRequiredContent />);
-	} else if (stopID === -1) {
+	} else if (stopID === -1 || !stopData[stopID].arrivals) {
 		content =  (
 			<View style={[styles.shuttle_card_row_center, styles.shuttle_card_loader]}>
 				<ActivityIndicator size="large" />
