@@ -4,6 +4,7 @@ import MapView from 'react-native-maps';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import general from '../../util/general';
+import logger from '../../util/logger';
 
 // NOTE: For some reason MapView-onCalloutPress only works for Android and
 // TouchableHighlight-onPress only works for iOS...which is why it's in two places
@@ -43,13 +44,13 @@ const SearchMap = ({ location, selectedResult, hideMarker, style, shuttle, vehic
 			longitudeDelta: 0.02
 		}}
 		onCalloutPress={
-			() => console.log('Pressed callout') // gotoNavigationApp(selectedResult.mkrLat, selectedResult.mkrLong)
+			() => logger.log('Pressed callout') // gotoNavigationApp(selectedResult.mkrLat, selectedResult.mkrLong)
 		}
 	>
 		{(selectedResult && !hideMarker) ? (
 			<MapView.Marker
 				ref={(MarkRef) => {
-					// console.log("MARKER: " + selectedResult.title);
+					// logger.log("MARKER: " + selectedResult.title);
 					if (MarkRef != null) {
 						// MarkRef.showCallout();
 					}
@@ -87,7 +88,7 @@ const SearchMap = ({ location, selectedResult, hideMarker, style, shuttle, vehic
 				return (
 					<MapView.Marker
 						ref={(MarkRef) => {
-							// console.log("MARKER: " + selectedResult.title);
+							// logger.log("MARKER: " + selectedResult.title);
 							if (MarkRef != null) {
 								// MarkRef.showCallout();
 							}
@@ -121,7 +122,7 @@ const SearchMap = ({ location, selectedResult, hideMarker, style, shuttle, vehic
 				return vehicleArray.map((vehicle) => (
 					<MapView.Marker.Animated
 						ref={(MarkRef) => {
-							// console.log("MARKER: " + selectedResult.title);
+							// logger.log("MARKER: " + selectedResult.title);
 							if (MarkRef != null) {
 								// MarkRef.showCallout();
 							}

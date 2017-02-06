@@ -13,6 +13,7 @@ import { userLoggedIn, userLoggedOut } from '../../actions';
 import getAuthenticationService from '../../services/authenticationService';
 
 import Settings from '../../AppSettings';
+import logger from '../../util/logger';
 import Card from '../card/Card';
 import css from '../../styles/css';
 
@@ -47,7 +48,7 @@ class UserAccount extends Component {
 			// if the are not logged in, log them in
 			const authUrl = authenticationService.createAuthenticationUrl();
 
-			Linking.openURL(authUrl).catch(err => console.error('An error occurred', err));
+			Linking.openURL(authUrl).catch(err => logger.error('An error occurred', err));
 		}
 	}
 	_renderAccountContainer = (mainText) => {

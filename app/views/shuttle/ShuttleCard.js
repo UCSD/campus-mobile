@@ -9,6 +9,7 @@ import Card from '../card/Card';
 import ShuttleOverview from './ShuttleOverview';
 import LocationRequiredContent from '../common/LocationRequiredContent';
 import { getPRM, getMaxCardWidth, round } from '../../util/general';
+import logger from '../../util/logger';
 
 const ShuttleCard = ({ stopData, permission, gotoShuttleStop, stopID }) => {
 	let content;

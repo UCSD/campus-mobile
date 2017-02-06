@@ -74,10 +74,10 @@ export default class FeedbackView extends Component {
 				this.setState({ submit: true });
 			})
 			.then((responseJson) => {
-				// console.log(responseJson);
+				// logger.log(responseJson);
 			})
 			.catch((error) => {
-				// console.error(error);
+				// logger.error(error);
 			});
 		}
 		else {
