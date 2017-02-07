@@ -60,6 +60,8 @@ const WeatherService = {
 		// Should also be on lambda
 		.then((surfData) => {
 			const surfDataArray = [];
+			const startOfDay = new Date();
+			startOfDay.setHours(0,0,0,0);
 
 			for (let i = 0; surfData.length > i; i++) {
 				const surfDataRow = surfData[i];
@@ -110,7 +112,19 @@ const WeatherService = {
 						return 0;
 					}
 				});
-				return surfDataArray;
+
+				// Create map
+				const surfDataMap = {};
+				surfDataArray.forEach((element) => {
+					const dateKey = element.surfDayOfWeek + ', ' + element.surfDayOfMonth + ' ' + element.surfMonth;
+					if (surfDataMap[dateKey]) {
+						surfDataMap[dateKey].push(element);
+					} else {
+						surfDataMap[dateKey] = [element];
+					}
+				});
+
+				return surfDataMap;
 			}
 		});
 	},

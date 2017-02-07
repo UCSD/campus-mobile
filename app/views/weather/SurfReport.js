@@ -15,7 +15,9 @@ const css = require('../../styles/css');
 const AppSettings = require('../../AppSettings');
 const logger = require('../../util/logger');
 
-const surfDataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+const surfDataSource = new ListView.DataSource({
+	rowHasChanged: (r1, r2) => r1 !== r2,
+	sectionHeaderHasChanged: (s1, s2) => s1 !== s2 });
 const surfHeader = require('../../assets/img/surf_report_header.jpg');
 
 class SurfReport extends React.Component {
@@ -63,7 +65,7 @@ const SurfView = ({ surfData }) => (
 			/>
 			{surfData ? (
 				<SurfList
-					surfData={surfDataSource.cloneWithRows(surfData)}
+					surfData={surfDataSource.cloneWithRowsAndSections(surfData)}
 				/>
 			) : null }
 			{!surfData ? (
@@ -78,21 +80,25 @@ const SurfList = ({ surfData }) => (
 		dataSource={surfData}
 		style={css.wf_listview}
 		renderRow={
-			(row, sectionID, rowID) =>
+			(row, sectionID, rowID) => (
 				<SurfItem
 					data={row}
 				/>
+			)
 		}
+		renderSectionHeader={(sectionData, day) => (
+			<Text
+				style={[css.sr_dayofweek,
+					{ padding: 10 }]}
+			>
+				{day}
+			</Text>
+		)}
 	/>
 );
 
 const SurfItem = ({ data }) => (
 	<View style={css.sr_day_row}>
-		<View style={css.sr_day_date_container}>
-			<Text style={css.sr_dayofweek}>{data.surfDayOfWeek}</Text>
-			<Text style={css.sr_dayandmonth}>{data.surfDayOfMonth} {data.surfMonth}</Text>
-		</View>
-
 		<View style={css.sr_day_details_container}>
 			<View style={css.sr_day_details_container_inner}>
 				<Text style={css.sr_day_details_title}>{data.surfTitle}</Text>
