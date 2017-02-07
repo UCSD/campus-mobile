@@ -13,21 +13,6 @@ const logger = require('../../util/logger');
 class ShuttleCardContainer extends CardComponent {
 	componentDidMount() {
 		logger.ga('Card Mounted: Shuttle');
-
-		AppState.addEventListener('change', this._handleAppStateChange);
-	}
-
-	componentWillUnmount() {
-		AppState.removeEventListener('change', this._handleAppStateChange);
-	}
-
-	_handleAppStateChange = (currentAppState) => {
-		this.setState({ currentAppState });
-
-		// check TTL and refresh weather data if needed
-		if (currentAppState === 'active') {
-
-		}
 	}
 
 	render() {
@@ -56,15 +41,8 @@ function mapStateToProps(state, props) {
 	};
 }
 
-const mapDispatchToProps = (dispatch) => (
-	{
-
-	}
-);
-
 const ActualShuttleCard = connect(
 	mapStateToProps,
-	mapDispatchToProps
 )(ShuttleCardContainer);
 
 export default ActualShuttleCard;
