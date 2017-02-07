@@ -1,5 +1,3 @@
-'use strict';
-
 import React, { Component } from 'react';
 import { StatusBar,	View, Text } from 'react-native';
 import { Actions, Router, Scene } from 'react-native-router-flux';
@@ -71,7 +69,6 @@ export default class Main extends Component {
 			StatusBar.setBarStyle('light-content');
 		} else if (general.platformAndroid()) {
 			StatusBar.setBackgroundColor('#101d32', false);
-			
 		}
 
 		return (
@@ -83,7 +80,7 @@ export default class Main extends Component {
 					titleStyle={general.platformIOS() ? css.navIOSTitle : css.navAndroidTitle}
 					barButtonIconStyle={general.platformIOS() ? css.navIOSIconStyle : css.navAndroidIconStyle}
 				/>
-			</View>			
+			</View>
 		);
 	}
 }

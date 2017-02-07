@@ -22,7 +22,6 @@
 		Blue:	#182B49
 		Yellow: #C69214
 */
-'use strict';
 
 import React from 'react';
 import { StyleSheet, Dimensions, StatusBar } from 'react-native';
