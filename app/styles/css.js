@@ -115,7 +115,7 @@ var css = StyleSheet.create({
 	// DINING CARD
 	dining_card: { width: maxCardWidth, padding: 8 },
 	dining_card_filters: { flexDirection: 'row', justifyContent: 'center', marginBottom: 6 },
-	dining_card_filter_button: { paddingVertical: 8, paddingHorizontal: 14, fontSize: round(14 * prm), color: campus_primary, borderWidth: 1, borderColor: '#999', borderRadius: 3, backgroundColor: '#EEE', textAlign: 'center', marginHorizontal: 14 },
+	dining_card_filter_button: { paddingVertical: 8, paddingHorizontal: 14, fontSize: round(14 * prm), color: '#888', borderWidth: 1, borderColor: '#999', borderRadius: 3, backgroundColor: '#EEE', textAlign: 'center', marginHorizontal: 14 },
 	dining_card_filter_button_active: { paddingVertical: 8, paddingHorizontal: 14, fontSize: round(14 * prm), color: '#EEE', borderWidth: 1, borderColor: '#999', borderRadius: 3, backgroundColor: campus_primary, textAlign: 'center', marginHorizontal: 14, overflow: 'hidden' },
 	dc_locations: { flexDirection: 'column' },
 	dc_locations_row: { flexDirection: 'row', paddingBottom: 10, paddingTop: 10, borderBottomWidth: 1, borderBottomColor: '#DDD' },
@@ -150,12 +150,13 @@ var css = StyleSheet.create({
 
 	dl_market_filters_foodtype: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginVertical: round(8 * prm) },
 
-	dl_market_filters_mealtype: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderTopWidth: 1, borderTopColor: '#EEE', paddingTop: round(10 * prm) },
-	dl_meal_button: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
+	dl_market_filters_mealtype: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderTopWidth: 1, borderTopColor: '#EEE', },
+	dl_meal_button: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: round(40 * prm), },
+	dl_meal_button_active: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: round(40 * prm), },
 	dl_mealtype_circle: { borderWidth: 1, borderColor: '#CCC', borderRadius: round(8 * prm), width: round(16 * prm), height: round(16 * prm), backgroundColor: '#CCC', marginRight: round(5 * prm) },
 	dl_mealtype_circle_active: { borderWidth: 1, borderColor: '#BBB', borderRadius: 8, width: round(16 * prm), height: round(16 * prm), backgroundColor: campus_primary, marginRight: round(5 * prm) },
-	dl_mealtype_label: { fontSize: round(20 * prm), color: '#888' },
-	dl_mealtype_label_active: { fontSize: round(20 * prm), color: campus_primary },
+	dl_mealtype_label: { fontSize: round(20 * prm), color: '#888', },
+	dl_mealtype_label_active: { fontSize: round(20 * prm), color: campus_primary, },
 	dl_market_menu: { marginHorizontal: round(8 * prm), marginVertical: round(16 * prm) },
 	dl_market_menu_row: { flexDirection: 'row', paddingBottom: round(8 * prm) },
 	dl_menu_item_name: { fontSize: round(15 * prm), color: campus_primary },
@@ -202,7 +203,7 @@ var css = StyleSheet.create({
 
 	// QUICKLINKS CARD
 	quicklinks_card: { width: maxCardWidth, padding: 8 },
-	quicklinks_locations: { flex: 1, flexDirection: 'column' },
+	quicklinks_locations: { height: 4 * (round(42 * prm) + 20), flexDirection: 'column' },
 	quicklinks_row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderBottomWidth: 1, borderBottomColor: '#EEE', paddingVertical: 10 },
 	quicklinks_icon: { height: round(42 * prm), width: round(38 * prm) },
 	quicklinks_name: { flex: 5, color: '#444', fontSize: round(16 * prm), paddingHorizontal: round(8 * prm) },

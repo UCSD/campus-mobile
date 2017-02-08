@@ -4,6 +4,7 @@ import * as shuttleActions from './shuttle';
 import * as mapActions from './map';
 import * as weatherActions from './weather';
 import * as surfActions from './surf';
+import * as diningActions from './dining';
 
 module.exports = {
 	...cardsActions,
@@ -12,4 +13,5 @@ module.exports = {
 	...userActions,
 	...weatherActions,
 	...surfActions,
+	...diningActions,
 };
