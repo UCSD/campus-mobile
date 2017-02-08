@@ -1,8 +1,8 @@
 module.exports = {
 
 	/* APP CONFIG */
-	APP_VERSION: 				'2.4',
-	APP_CODEPUSH_VERSION: 		'3',
+	APP_VERSION: 				'5.0',
+	APP_CODEPUSH_VERSION: 		'1',
 	APP_NAME: 					'campus-mobile',
 	APP_CAMPUS_NAME: 			'APP_CAMPUS_NAME_PH',
 	GOOGLE_ANALYTICS_ID: 		'GOOGLE_ANALYTICS_ID_PH',
