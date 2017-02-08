@@ -1,178 +1,103 @@
 import React from 'react';
 import {
-	StyleSheet,
 	View,
-	Text,
-	AppState,
-	TouchableHighlight,
 	ScrollView,
-	Image,
-	ListView,
-	Animated,
-	RefreshControl,
-	Modal,
-	Component,
-	Alert,
-	Navigator,
-	ActivityIndicator,
 } from 'react-native';
 
 import { connect } from 'react-redux';
 import { MenuContext } from 'react-native-popup-menu';
-import { Actions } from 'react-native-router-flux';
+import { checkGooglePlayServices } from 'react-native-google-api-availability-bridge';
 
 import TopBannerView from './banner/TopBannerView';
 import WelcomeModal from './WelcomeModal';
-import FeedbackView from './FeedbackView';
-import PreferencesView from './preferences/PreferencesView';
 
 // Cards
 import WeatherCardContainer from './weather/WeatherCardContainer';
 import ShuttleCardContainer from './shuttle/ShuttleCardContainer';
-import EventCard from './events/EventCard'
-import QuicklinksCard from './quicklinks/QuicklinksCard'
+import EventCard from './events/EventCard';
+import QuicklinksCard from './quicklinks/QuicklinksCard';
 import NewsCard from './news/NewsCard';
 import DiningCard from './dining/DiningCard';
-import SearchCard from './mapsearch/SearchCard';
 
-import YesNoCard from './survey/YesNoCard';
-import MultipleChoiceCard from './survey/MultipleChoiceCard';
-import IntervalCard from './survey/IntervalCard';
-import TextInputCard from './survey/TextInputCard';
-
-// actions
-import { updateLocation } from '../actions/location';
-
-// Node Modules
-const GoogleAPIAvailability = require('react-native-google-api-availability-bridge');
+import { platformAndroid } from '../util/general';
 
 // App Settings / Util / CSS
-const AppSettings = require('../AppSettings');
 const css = require('../styles/css');
-const general = require('../util/general');
 const logger = require('../util/logger');
-const shuttle = require('../util/shuttle');
 
-// Views
-const DiningDetail = require('./dining/DiningDetail');
-const DiningList = require('./dining/DiningList');
-
-var Home = React.createClass({
-
-	copyrightYear: new Date().getFullYear(),
-
-	getInitialState() {
-		return {
-			initialLoad: true,
-			scrollEnabled: true,
-			cacheMap: false,
-			refreshing:false,
+class Home extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
 			updatedGoogle: true,
-		}
-	},
+		};
+	}
 
 	componentWillMount() {
-		if (general.platformAndroid()) {
+		if (platformAndroid()) {
 			this.updateGooglePlay();
-			this.setState({cacheMap: true});
 		}
-	},
+	}
 
 	componentDidMount() {
 		logger.ga('View Loaded: Home');
-	},
+		this._cards = [];
+	}
 
-	updateGooglePlay() {
-		GoogleAPIAvailability.checkGooglePlayServices((result) => {
-			if(result === 'update') {
+	_getCards = () => {
+		const activeCards = [];
+
+		// Setup Cards
+		if (this.props.cards.weather.active) {
+			activeCards.push(<WeatherCardContainer key={'weather'} />);
+		}
+		if (this.props.cards.shuttle.active) {
+			activeCards.push(<ShuttleCardContainer key={'shuttle'} />);
+		}
+		if (this.props.cards.dining.active) {
+			activeCards.push(<DiningCard key={'dining'} />);
+		}
+		if (this.props.cards.events.active) {
+			activeCards.push(<EventCard key={'events'} />);
+		}
+		if (this.props.cards.quicklinks.active) {
+			activeCards.push(<QuicklinksCard key={'quicklinks'} />);
+		}
+		if (this.props.cards.news.active) {
+			activeCards.push(<NewsCard key={'news'} />);
+		}
+		return activeCards;
+	}
+
+	updateGooglePlay = () => {
+		checkGooglePlayServices((result) => {
+			if (result === 'update') {
 				this.setState({ updatedGoogle: false });
 			}
 		});
-	},
+	}
 
 	render() {
-		logger.log('Home: render');
-		return this.renderScene();
-	},
-
-	renderScene(route, navigator, index, navState) {
 		return (
-			<View style={css.main_container}>
-				<MenuContext style={{ flex:1 }}>
-				<ScrollView contentContainerStyle={css.scroll_main} refreshControl={
-					<RefreshControl refreshing={this.state.refreshing} onRefresh={this._handleRefresh} tintColor='#CCC' title='' />
-				}>
+			<MenuContext style={{ flex:1 }}>
+				<View style={css.main_container}>
+					<ScrollView
+						contentContainerStyle={css.scroll_main}
+					>
+						{/* WELCOME MODAL */}
+						<WelcomeModal />
 
-					{/* WELCOME MODAL */}
-					<WelcomeModal />
+						{/* SPECIAL TOP BANNER */}
+						<TopBannerView />
 
-					{/* SPECIAL TOP BANNER */}
-					<TopBannerView navigator={this.props.navigator}/>
-
-					{/* LOAD PRIMARY CARDS */}
-					{ this.getCards() }
-
-				</ScrollView>
-				</MenuContext>
-			</View>
+						{/* LOAD PRIMARY CARDS */}
+						{ this._getCards() }
+					</ScrollView>
+				</View>
+			</MenuContext>
 		);
-	},
-
-	getCards() {
-		var cards = [];
-		var cardCounter = 0;
-
-		// Setup Cards
-		if (this.props.cards['weather'].active) {
-			cards.push(<WeatherCardContainer navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key={'weather'} />);
-		}
-		if (this.props.cards['shuttle'].active) {
-			cards.push(<ShuttleCardContainer navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key={'shuttle'} />);
-		}
-		if (this.props.cards['dining'].active) {
-			cards.push(<DiningCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key={'dining'} />);
-		}
-		if (this.props.cards['events'].active) {
-			cards.push(<EventCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key={'events'} />);
-		}
-		if (this.props.cards['quicklinks'].active) {
-			cards.push(<QuicklinksCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key={'quicklinks'} />);
-		}
-		if (this.props.cards['news'].active) {
-			cards.push(<NewsCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key={'news'} />);
-		}
-		/*
-		if (this.props.cards['map'].active) {
-			cards.push(<SearchCard navigator={this.props.navigator} ref={(c) => this.cards ? this.cards.push(c) : this.cards = [c]} key={'map'} />);
-		}*/
-		return cards;
-	},
-
-	refreshAllCards(refreshType) {
-		if (!refreshType) {
-			refreshType = 'manual';
-		}
-
-		// Refresh location
-		if (this.props.locationPermission === 'authorized') {
-			this.props.dispatch(updateLocation());
-		}
-
-		// Refresh cards
-		if (this.refs.cards) {
-			this.refs.cards.forEach(c => c.refresh());
-		}
-	},
-
-	gotoFeedbackView() {
-		Actions.FeedbackView();
-	},
-
-	_handleRefresh() {
-		this.refreshAllCards('auto');
-		this.setState({refreshing: false});
 	}
-});
+}
 
 function mapStateToProps(state, props) {
 	return {

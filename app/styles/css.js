@@ -102,7 +102,7 @@ var css = StyleSheet.create({
 	card_menu: { flex: 1, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', alignSelf: 'stretch' },
 	card_hide_option: { margin: 10, fontSize: 16 },
 	card_menu_trigger: { paddingTop: 9, paddingBottom: 6, paddingLeft: 12, paddingRight: 10, color: '#747678' },
-	card_container_main: { flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#DDD', alignSelf: 'stretch' },
+	card_container_main: { flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: '#DDD', alignSelf: 'stretch' },
 	card_title_main: { fontSize: 26, color: '#747678', paddingLeft: 10, paddingVertical: 6 },
 
 	// Modal Welcome Message
