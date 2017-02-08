@@ -12,7 +12,7 @@ import Main from './main';
 
 const codePushOptions = { checkFrequency: codePush.CheckFrequency.ON_APP_RESUME, installMode: codePush.InstallMode.ON_NEXT_RESTART };
 
-class NowSetup extends React.Component {
+class CampusMobileSetup extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -35,5 +35,5 @@ class NowSetup extends React.Component {
 	}
 }
 
-NowSetup = codePush(codePushOptions)(NowSetup);
-module.exports = NowSetup;
+CampusMobileSetup = codePush(codePushOptions)(CampusMobileSetup);
+module.exports = CampusMobileSetup;

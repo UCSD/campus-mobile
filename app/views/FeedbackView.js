@@ -138,7 +138,6 @@ export default class FeedbackView extends Component {
 						</TouchableHighlight>
 					</View>
 				</ScrollView>
-				<Text style={styles.feedback_appInfo}>v{this.appInfo}</Text>
 			</View>
 		);
 	}

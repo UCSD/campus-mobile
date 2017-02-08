@@ -63,8 +63,8 @@ var css = StyleSheet.create({
 	navIOS: { backgroundColor: 'rgba(24,43,73,1)', height: NavigatorIOSHeight },
 	navAndroid: { backgroundColor: 'rgba(24,43,73,1)', height: NavigatorAndroidHeight },
 
-	navIOSTitle: { color: '#FFF', fontSize: 28, marginTop: -10, fontFamily: 'RotisSerif', letterSpacing: -1 },
-	navAndroidTitle: { color: '#FFF', fontSize: 28, marginTop: -10, fontFamily: 'RotisSerif', letterSpacing: -1 },
+	navIOSTitle: { color: '#FFF', fontSize: 28, marginTop: -10, /*fontFamily: 'RotisSerif',*/ letterSpacing: -1 },
+	navAndroidTitle: { color: '#FFF', fontSize: 28, marginTop: -10, /*fontFamily: 'RotisSerif',*/ letterSpacing: -1 },
 
 	navIOSIconStyle: { tintColor:'#FFF', marginTop: -2 },
 	navAndroidIconStyle: { tintColor:'#FFF', marginTop: -6 },
@@ -135,8 +135,8 @@ var css = StyleSheet.create({
 
 	// DINING DETAIL
 	dl_market_name: { padding: round(10 * prm) },
-	dl_market_name_text: { color: '#555', fontSize: round(26 * prm) },
-	dl_market_desc_text: { color: '#666', paddingTop: round(6 * prm), fontSize: round(14 * prm) },
+	dl_market_name_text: { color: '#333', fontSize: round(26 * prm) },
+	dl_market_desc_text: { color: '#555', paddingTop: round(6 * prm), fontSize: round(14 * prm) },
 	dl_market_scroller: { height: round(140 * prm) },
 	dl_market_scroller_image: { width: round(140 * prm), height: round(140 * prm), borderRadius: round(5 * prm), marginHorizontal: round(7 * prm) },
 	dl_market_directions: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderBottomColor: '#EEE', margin: round(6 * prm), padding: round(6 * prm) },

@@ -3,7 +3,7 @@ module.exports = {
 	/* APP CONFIG */
 	APP_VERSION: 				'2.4',
 	APP_CODEPUSH_VERSION: 		'3',
-	APP_NAME: 					'now-mobile',
+	APP_NAME: 					'campus-mobile',
 	APP_CAMPUS_NAME: 			'APP_CAMPUS_NAME_PH',
 	GOOGLE_ANALYTICS_ID: 		'GOOGLE_ANALYTICS_ID_PH',
 	DEBUG_ENABLED: 				false, // Disables all logger functions (i.e. logger.log, logger.error).
