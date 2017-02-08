@@ -63,8 +63,8 @@ var css = StyleSheet.create({
 	navIOS: { backgroundColor: 'rgba(24,43,73,1)', height: NavigatorIOSHeight },
 	navAndroid: { backgroundColor: 'rgba(24,43,73,1)', height: NavigatorAndroidHeight },
 
-	navIOSTitle: { color: '#FFF', fontSize: 28, marginTop: -10, fontFamily: 'RotisSerif', letterSpacing: -1 },
-	navAndroidTitle: { color: '#FFF', fontSize: 28, marginTop: -10, fontFamily: 'RotisSerif', letterSpacing: -1 },
+	navIOSTitle: { color: '#FFF', fontSize: 28, marginTop: -10, /*fontFamily: 'RotisSerif',*/ letterSpacing: -1 },
+	navAndroidTitle: { color: '#FFF', fontSize: 28, marginTop: -10, /*fontFamily: 'RotisSerif',*/ letterSpacing: -1 },
 
 	navIOSIconStyle: { tintColor:'#FFF', marginTop: -2 },
 	navAndroidIconStyle: { tintColor:'#FFF', marginTop: -6 },
