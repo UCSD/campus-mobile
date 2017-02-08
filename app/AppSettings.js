@@ -37,10 +37,10 @@ module.exports = {
 		ENABLED: false,
 		METHOD: 'openid',
 		OPTIONS: {
-			CLIENT_ID: 'nowimplicit',
+			CLIENT_ID: 'campusimplicit',
 			AUTH_URL: 'https://auth-dev.ucdavis.edu/identity/connect/authorize',
 			USER_INFO_URL: 'https://auth-dev.ucdavis.edu/identity/connect/userinfo',
-			REDIRECT_URL: 'nowmobile://cb',
+			REDIRECT_URL: 'campusmobile://cb',
 			STATE: 'M9NGbE6bnUV18FflfVeZ2U0j94'
 		}
 	}
