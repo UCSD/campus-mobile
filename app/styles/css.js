@@ -202,7 +202,7 @@ var css = StyleSheet.create({
 
 	// QUICKLINKS CARD
 	quicklinks_card: { width: maxCardWidth, padding: 8 },
-	quicklinks_locations: { flex: 1, flexDirection: 'column' },
+	quicklinks_locations: { flexDirection: 'column' },
 	quicklinks_row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderBottomWidth: 1, borderBottomColor: '#EEE', paddingVertical: 10 },
 	quicklinks_icon: { height: round(42 * prm), width: round(38 * prm) },
 	quicklinks_name: { flex: 5, color: '#444', fontSize: round(16 * prm), paddingHorizontal: round(8 * prm) },

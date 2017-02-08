@@ -28,7 +28,7 @@ export default class QuicklinksCard extends CardComponent {
 	}
 
 	componentDidMount() {
-		this.refresh(this.props.location);
+		this.refresh();
 	}
 
 	render() {
@@ -37,7 +37,7 @@ export default class QuicklinksCard extends CardComponent {
 				{this.state.quicklinksDataLoaded ? (
 					<View style={css.quicklinks_card}>
 						<View style={css.quicklinks_locations}>
-							<QuicklinksList data={this.state.quicklinksDataCustom} navigator={this.props.navigator} />
+							<QuicklinksList data={this.state.quicklinksDataCustom} />
 						</View>
 						<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoQuicklinksListView(this.state.quicklinksData) }>
 							<View style={css.card_more}>
@@ -50,7 +50,7 @@ export default class QuicklinksCard extends CardComponent {
 		);
 	}
 
-	refresh(location) {
+	refresh() {
 		QuicklinksService.FetchQuicklinks()
 		.then((responseData) => {
 			this.setState({

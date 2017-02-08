@@ -22,9 +22,13 @@ export default class QuicklinksList extends React.Component {
 		const quicklinksDatasource = this.datasource.cloneWithRows(quicklinksData);
 
 		return (
-			<ListView dataSource={quicklinksDatasource} renderRow={
-				(row) => <QuicklinksItem data={row} navigator={this.props.navigator} />
-			}/>
+			<ListView 
+				dataSource={quicklinksDatasource} 
+				renderRow={
+					(row) => <QuicklinksItem data={row} />
+				}
+				scrollEnabled={false}
+			/>
 		);
 	}
 
