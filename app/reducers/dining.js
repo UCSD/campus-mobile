@@ -8,7 +8,11 @@ function dining(state = initialState, action) {
 
 	switch (action.type) {
 	case 'SET_DINING': {
-		newState.data = action.dining;
+		newState.data = action.sortedData;
+
+		return newState;
+	}
+	case 'SET_DINING_UPDATE': {
 		newState.lastUpdated = new Date().getTime();
 
 		return newState;
