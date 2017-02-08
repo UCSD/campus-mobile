@@ -8,7 +8,7 @@ import {
 import Card from '../card/Card';
 import ShuttleOverview from './ShuttleOverview';
 import LocationRequiredContent from '../common/LocationRequiredContent';
-import { getPRM, getMaxCardWidth, round } from '../../util/general';
+import { doPRM, getMaxCardWidth } from '../../util/general';
 import logger from '../../util/logger';
 
 const ShuttleCard = ({ stopData, permission, gotoShuttleStop, stopID }) => {
@@ -16,7 +16,7 @@ const ShuttleCard = ({ stopData, permission, gotoShuttleStop, stopID }) => {
 	// no permission to get location
 	if (permission !== 'authorized') {
 		content = (<LocationRequiredContent />);
-	} else if (stopID === -1 || !stopData[stopID].arrivals) {
+	} else if (stopID === -1 || !stopData || !stopData[stopID].arrivals) {
 		content =  (
 			<View style={[styles.shuttle_card_row_center, styles.shuttle_card_loader]}>
 				<ActivityIndicator size="large" />
@@ -52,16 +52,16 @@ const ShuttleCard = ({ stopData, permission, gotoShuttleStop, stopID }) => {
 export default ShuttleCard;
 
 // There's gotta be a better way to do this...find a way to get rid of magic numbers
-const nextArrivals = ((2 * round(36 * getPRM())) + 32) + round(20 * getPRM()); // Two rows + text
+const nextArrivals = ((2 * doPRM(36)) + 32) + doPRM(20); // Two rows + text
 const cardHeader = 26; // font + padding
-const cardBody = (round(83 * getPRM()) + (2 * round(20 * getPRM()))) + (round(26 * getPRM()) + 20); // top + margin + font + padding
+const cardBody = doPRM(83) + (2 * doPRM(20)) + doPRM(26) + 20; // top + margin + font + padding
 
 const styles = StyleSheet.create({
 	shuttle_card_row_center: { alignItems: 'center', justifyContent: 'center', width: getMaxCardWidth(), overflow: 'hidden' },
 	shuttle_card_loader: { height: nextArrivals + cardHeader + cardBody },
-	shuttlecard_loading_fail: { marginHorizontal: round(16 * getPRM()), marginTop: round(40 * getPRM()), marginBottom: round(60 * getPRM()) },
-	fs18: { fontSize: round(18 * getPRM()) },
+	shuttlecard_loading_fail: { marginHorizontal: doPRM(16), marginTop: doPRM(40), marginBottom: doPRM(60) },
+	fs18: { fontSize: doPRM(18) },
 	pt10: { paddingTop: 10 },
-	fs12: { fontSize: round(12 * getPRM()) },
+	fs12: { fontSize: doPRM(12) },
 	dgrey: { color: '#333' },
 });
