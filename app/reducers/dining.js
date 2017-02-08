@@ -13,7 +13,7 @@ function dining(state = initialState, action) {
 		return newState;
 	}
 	case 'SET_DINING_UPDATE': {
-		newState.lastUpdated = new Date().getTime();
+		newState.lastUpdated = action.nowTime;
 
 		return newState;
 	}
