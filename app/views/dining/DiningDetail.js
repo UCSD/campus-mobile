@@ -168,7 +168,7 @@ const DiningMenu = ({ data, filters, addFilter, activeMeal }) => (
 				/>
 				<MenuList
 					filters={filters}
-					data={data}
+					data={data.menuItems}
 					activeMeal={activeMeal}
 				/>
 			</View>
