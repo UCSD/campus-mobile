@@ -1,5 +1,3 @@
-## now@ucsandiego.app
-
 ## License
 
 	MIT
@@ -16,18 +14,9 @@
 
 Most likely being caused by the google-play version conflict between react-native-maps and react-native-google-analytics-bridge
 
-Fix:
+To fix this issue, run the following command from your project folder:
 
-Open node_modules/react-native-maps/android/build.gradle
-
-Update so file looks like this
-
-	...
-	dependencies {
-		compile 'com.facebook.react:react-native:+'
-		compile "com.google.android.gms:play-services-base:**+**"
-		compile "com.google.android.gms:play-services-maps:**+**"
-	}
+npm run-script apply-ga-bridge-fix
 
 
 ## Building
@@ -57,7 +46,7 @@ Update so file looks like this
 * Events
 	* Upcoming events
 	* View all events link
-* Quick Links
+* Links
 	* A list of helpful links from our legacy app
 	* View all quick links link
 * News
@@ -70,12 +59,11 @@ Update so file looks like this
 ### Future
 #### Cards
 * Class Schedule
-* Survey
+* Surveys
 * WebReg
 
 #### Extra
 * Functionality
-	* Add/Remove Cards
 	* Re-order cards
 	* Push Notifications
 	* 2-factor authentication
