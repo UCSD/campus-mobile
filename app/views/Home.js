@@ -16,7 +16,7 @@ import ShuttleCardContainer from './shuttle/ShuttleCardContainer';
 import EventCardContainer from './events/EventCardContainer';
 import QuicklinksCard from './quicklinks/QuicklinksCard';
 import NewsCard from './news/NewsCard';
-import DiningCard from './dining/DiningCard';
+import DiningCardContainer from './dining/DiningCardContainer';
 
 import { platformAndroid } from '../util/general';
 
@@ -54,7 +54,7 @@ class Home extends React.Component {
 			activeCards.push(<ShuttleCardContainer key={'shuttle'} />);
 		}
 		if (this.props.cards.dining.active) {
-			activeCards.push(<DiningCard key={'dining'} />);
+			activeCards.push(<DiningCardContainer key={'dining'} />);
 		}
 		if (this.props.cards.events.active) {
 			activeCards.push(<EventCardContainer key={'events'} />);
