@@ -22,14 +22,14 @@ npm run-script apply-ga-bridge-fix
 ## Building
 
 ### Android
-[Lovely script](https://github.com/UCSD/now-mobile-build-scripts) made by @a6wu to make everything easier
+[Lovely script](https://github.com/UCSD/campus-mobile-build-scripts) made by @a6wu to make everything easier
 
 	// From an empty directory
 	//Build APK one liner:
-	git clone https://github.com/UCSD/now-mobile-build-scripts.git && cd now-mobile-build-scripts && npm install && node build-apk.js
+	git clone https://github.com/UCSD/campus-mobile-build-scripts.git && cd campus-mobile-build-scripts && npm install && node build-apk.js
 
 	//Build APK and install on device one liner:
-	git clone https://github.com/UCSD/now-mobile-build-scripts.git && cd now-mobile-build-scripts && npm install && node build-apk.js && adb install ./bld/android/app/build/outputs/apk/app-release.apk
+	git clone https://github.com/UCSD/campus-mobile-build-scripts.git && cd campus-mobile-build-scripts && npm install && node build-apk.js && adb install ./bld/android/app/build/outputs/apk/app-release.apk
 
 ### Availabile Cards
 * TopBanner
