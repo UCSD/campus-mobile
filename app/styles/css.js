@@ -220,7 +220,7 @@ var css = StyleSheet.create({
 	events_list_row: { flexDirection: 'row', paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: '#EEE', },
 	events_list_left_container: { flex: 1 },
 	events_list_title: { fontSize: round(17 * prm), color: '#000', fontWeight: '400' },
-	events_list_desc: { fontSize: round(14 * prm), color: '#666', paddingTop: round(8 * prm) },
+	events_list_desc: { fontSize: round(14 * prm), color: '#666', paddingTop: round(8 * prm), height: (3 * (round(14 * prm))) + (2 * (round(8 * prm))) },
 	events_list_postdate: { fontSize: round(11 * prm), color: campus_primary, paddingTop: round(8 * prm) },
 	events_list_image: { width: round(130 * prm), height: round(73 * prm), marginRight: 4, marginLeft: 10, borderWidth: 1, borderColor: '#CCC' },
 	news_list_image: { width: round(130 * prm), height: round(100 * prm), marginRight: 4, marginLeft: 10, borderWidth: 1, borderColor: '#CCC' },

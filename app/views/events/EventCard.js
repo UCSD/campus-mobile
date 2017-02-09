@@ -1,67 +1,15 @@
 import React from 'react';
 import {
-	AppState,
 	View,
 	Text,
 	TouchableHighlight
 } from 'react-native';
 
 import { Actions } from 'react-native-router-flux';
-import { connect } from 'react-redux';
 
 import Card from '../card/Card';
-import CardComponent from '../card/CardComponent';
-import { updateEvents } from '../../actions/events';
 import EventList from './EventList';
-import logger from '../../util/logger';
 import css from '../../styles/css';
-
-class EventCardContainer extends CardComponent {
-	componentDidMount() {
-		logger.ga('Card Mounted: Events');
-
-		this.props.updateEvents();
-		AppState.addEventListener('change', this._handleAppStateChange);
-	}
-
-	componentWillUnmount() {
-		AppState.removeEventListener('change', this._handleAppStateChange);
-	}
-
-	_handleAppStateChange = (currentAppState) => {
-		this.setState({ currentAppState });
-		this.props.updateEvents();
-	}
-
-	render() {
-		return (
-			<EventCard
-				data={this.props.eventsData}
-			/>
-		);
-	}
-}
-
-const mapStateToProps = (state) => (
-	{
-		eventsData: state.events.data,
-	}
-);
-
-const mapDispatchToProps = (dispatch) => (
-	{
-		updateEvents: () => {
-			dispatch(updateEvents());
-		}
-	}
-);
-
-const ActualEventCard = connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(EventCardContainer);
-
-export default ActualEventCard;
 
 const EventCard = ({ data }) => (
 	<Card id="events" title="Events">
@@ -87,3 +35,5 @@ const EventCard = ({ data }) => (
 		</View>
 	</Card>
 );
+
+export default EventCard;

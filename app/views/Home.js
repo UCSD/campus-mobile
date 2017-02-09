@@ -13,7 +13,7 @@ import TopBannerView from './banner/TopBannerView';
 // Cards
 import WeatherCardContainer from './weather/WeatherCardContainer';
 import ShuttleCardContainer from './shuttle/ShuttleCardContainer';
-import EventCard from './events/EventCard';
+import EventCardContainer from './events/EventCardContainer';
 import QuicklinksCard from './quicklinks/QuicklinksCard';
 import NewsCard from './news/NewsCard';
 import DiningCard from './dining/DiningCard';
@@ -57,7 +57,7 @@ class Home extends React.Component {
 			activeCards.push(<DiningCard key={'dining'} />);
 		}
 		if (this.props.cards.events.active) {
-			activeCards.push(<EventCard key={'events'} />);
+			activeCards.push(<EventCardContainer key={'events'} />);
 		}
 		if (this.props.cards.quicklinks.active) {
 			activeCards.push(<QuicklinksCard key={'quicklinks'} />);
