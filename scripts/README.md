@@ -1,6 +1,6 @@
-1) Create a folder in your home directory ".nowapp"
+1) Create a folder in your home directory ".campusapp"
 
-2) In your ".nowapp" folder, create a file "env.js" with the following content:
+2) In your ".campusapp" folder, create a file "env.js" with the following content:
 
 	// Modify These Values
 	var APP_NAME = 'your-app-name';
@@ -17,9 +17,9 @@
 	
 
 	// Placeholder Values (Do Not Modify)
-	var APP_NAME_PH = 'now-mobile';
+	var APP_NAME_PH = 'campus-mobile';
 	var APP_CAMPUS_NAME_PH = 'APP_CAMPUS_NAME_PH';
-	var APP_SHORTNAME_PH = 'nowmobile';
+	var APP_SHORTNAME_PH = 'campusmobile';
 	var CODEPUSH_IOS_KEY_PH = 'CODEPUSH_IOS_DEPLOYMENT_KEY';
 	var CODEPUSH_ANDROID_KEY_PH = 'CODEPUSH_ANDROID_DEPLOYMENT_KEY';
 	var GOOGLE_ANALYTICS_ID_PH = 'GOOGLE_ANALYTICS_ID_PH';

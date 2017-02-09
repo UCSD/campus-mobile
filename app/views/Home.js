@@ -9,7 +9,6 @@ import { MenuContext } from 'react-native-popup-menu';
 import { checkGooglePlayServices } from 'react-native-google-api-availability-bridge';
 
 import TopBannerView from './banner/TopBannerView';
-import WelcomeModal from './WelcomeModal';
 
 // Cards
 import WeatherCardContainer from './weather/WeatherCardContainer';
@@ -81,16 +80,11 @@ class Home extends React.Component {
 		return (
 			<MenuContext style={{ flex:1 }}>
 				<View style={css.main_container}>
-					<ScrollView
-						contentContainerStyle={css.scroll_main}
-					>
-						{/* WELCOME MODAL */}
-						<WelcomeModal />
-
+					<ScrollView contentContainerStyle={css.scroll_main}>
 						{/* SPECIAL TOP BANNER */}
 						<TopBannerView />
 
-						{/* LOAD PRIMARY CARDS */}
+						{/* LOAD CARDS */}
 						{ this._getCards() }
 					</ScrollView>
 				</View>

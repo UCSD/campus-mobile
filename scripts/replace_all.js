@@ -6,10 +6,10 @@
 */
 var fs = require('fs');
 var REPLACEMENT_TYPE = process.argv[2];
-var myEnv = require(getUserHome() + '/.nowapp/env.js');
+var myEnv = require(getUserHome() + '/.campusapp/env.js');
 
 var APP_SETTINGS_PATH = './app/AppSettings.js';
-var IOS_INFO_PLIST_PATH = './ios/nowucsandiego/Info.plist';
+var IOS_INFO_PLIST_PATH = './ios/CampusMobile/Info.plist';
 var ANDROID_STRINGS_PATH = './android/app/src/main/res/values/strings.xml';
 var ANDROID_MANIFEST_PATH = './android/app/src/main/AndroidManifest.xml';
 
