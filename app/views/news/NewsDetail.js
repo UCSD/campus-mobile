@@ -26,9 +26,12 @@ const NewsDetail = ({ data }) => {
 
 				{data.image_lg ? (
 					<Image
-						style={{ flex:1 }}
 						source={{ uri: data.image_lg }}
-						resizeMode={Image.resizeMode.contain}
+						style={{
+							width: Dimensions.get('window').width,
+							height: 200
+						}}
+						resizeMode={'contain'}
 					/>
 				) : null }
 

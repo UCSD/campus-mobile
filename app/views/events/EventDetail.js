@@ -6,6 +6,7 @@ import {
 	Image,
 	Linking,
 	TouchableHighlight,
+	Dimensions
 } from 'react-native';
 
 import moment from 'moment';
@@ -19,13 +20,16 @@ const EventDetail = ({ data }) => {
 
 	return (
 		<View style={[css.main_container, css.whitebg]}>
-			<ScrollView contentContainerStyle={css.scroll_default}>
+			<ScrollView>
 
 				{data.imagehq ? (
 					<Image
-						style={{ flex:1 }}
 						source={{ uri: data.imagehq }}
-						resizeMode={Image.resizeMode.contain}
+						style={{
+							width: Dimensions.get('window').width,
+							height: 200
+						}}
+						resizeMode={'contain'}
 					/>
 				) : null }
 
