@@ -31,13 +31,13 @@ const GeoLocationContainer = React.createClass({
 
 	checkLocationPermission() {
 		const { dispatch } = this.props;
-
+		
 		// preload permission and dispatch immediately
 		Permissions.getPermissionStatus('location')
 		.then(response => {
 			dispatch(setPermission(response));
-
-			if (response === 'undetermined') {
+			console.log('ivan: ' + response);
+			if (response !== 'authorized') {
 				this.getPermission();
 			}
 		});

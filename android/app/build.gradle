@@ -88,7 +88,7 @@ android {
     buildToolsVersion "23.0.1"
 
     defaultConfig {
-        applicationId "com.campusmobile"
+        applicationId "edu.ucsd"
         minSdkVersion 16
         targetSdkVersion 22
         versionCode 1
@@ -127,10 +127,10 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-permissions')
     compile project(':react-native-google-analytics-bridge')
     compile project(':react-native-code-push')
     compile project(':react-native-google-api-availability-bridge')
-    compile project(':react-native-permissions')
     compile project(':react-native-maps')
     compile project(':react-native-vector-icons')
     compile fileTree(dir: "libs", include: ["*.jar"])

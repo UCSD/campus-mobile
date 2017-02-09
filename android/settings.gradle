@@ -1,12 +1,12 @@
 rootProject.name = 'CampusMobile'
+include ':react-native-permissions'
+project(':react-native-permissions').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-permissions/android')
 include ':react-native-google-analytics-bridge'
 project(':react-native-google-analytics-bridge').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-google-analytics-bridge/android')
 include ':react-native-code-push'
 project(':react-native-code-push').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-code-push/android/app')
 include ':react-native-google-api-availability-bridge'
 project(':react-native-google-api-availability-bridge').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-google-api-availability-bridge/android')
-include ':react-native-permissions'
-project(':react-native-permissions').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-permissions/android')
 include ':react-native-maps'
 project(':react-native-maps').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-maps/android')
 include ':react-native-vector-icons'
