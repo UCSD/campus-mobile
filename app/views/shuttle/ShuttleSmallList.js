@@ -11,7 +11,6 @@ import { getMinutesETA } from '../../util/shuttle';
 
 const arrivalDataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
-
 const ShuttleSmallList = ({ arrivalData, style, rows, scrollEnabled }) => (
 	<View
 		style={style}

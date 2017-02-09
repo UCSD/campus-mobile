@@ -2,51 +2,33 @@ import React from 'react';
 import {
 	View,
 	ListView,
-	Text,
-	TouchableHighlight,
 } from 'react-native';
+
 import EventItem from './EventItem';
-import EventListView from './EventListView';
-import { Actions } from 'react-native-router-flux';
+import { doPRM } from '../../util/general';
 
-const css = require('../../styles/css');
+const eventDataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
-export default class EventList extends React.Component {
+const EventList = ({ data, rows, scrollEnabled }) => (
+	<View
+		style={{ height: getRowHeight(rows) }}
+	>
+		<ListView
+			scrollEnabled={scrollEnabled}
+			dataSource={eventDataSource.cloneWithRows(data)}
+			renderRow={(row) => (
+				<EventItem data={row} />
+			)}
+		/>
+	</View>
+);
 
-	constructor(props) {
-		super(props);
-		this.state = {
-			eventsRenderAllRows: false
-		};
-		this.datasource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-	}
+function getRowHeight(rows) {
+	// titleFont + 3*(descFont + descPad) + dateFont + datePad
+	const rowHeight =  doPRM(17) + (3 * (doPRM(14) + doPRM(8))) + doPRM(11) + doPRM(8);
+	const padding = 28; // rowPad
 
-	gotoEventListView() {
-		Actions.EventListView({ data: this.props.data });
-	}
-
-	render() {
-		let eventData = [];
-		if (this.state.eventsRenderAllRows) {
-			eventData = this.props.data;
-		} else {
-			eventData = this.props.data.slice(0, 3);
-		}
-
-		const eventDatasource = this.datasource.cloneWithRows(eventData);
-
-		return (
-			<View>
-				<ListView
-					dataSource={eventDatasource}
-					renderRow={(row) => <EventItem data={row} navigator={this.props.navigator} />}
-				/>
-				<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => this.gotoEventListView()}>
-					<View style={css.events_more}>
-						<Text style={css.events_more_label}>View All Events</Text>
-					</View>
-				</TouchableHighlight>
-			</View>
-		);
-	}
+	return rows * (rowHeight + padding);
 }
+
+export default EventList;

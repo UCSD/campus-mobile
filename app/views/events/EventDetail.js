@@ -6,101 +6,63 @@ import {
 	Image,
 	Linking,
 	TouchableHighlight,
-	Dimensions
 } from 'react-native';
 
-const windowSize = Dimensions.get('window');
-const windowWidth = windowSize.width;
+import moment from 'moment';
 
-const css = require('../../styles/css');
-const logger = require('../../util/logger');
-const general = require('../../util/general');
-const moment = require('moment');
+import css from '../../styles/css';
+import logger from '../../util/logger';
+import general from '../../util/general';
 
-const EventDetail = React.createClass({
+const EventDetail = ({ data }) => {
+	logger.ga('View Loaded: Event Detail: ' + data.title);
 
-	getInitialState() {
-		return {
-			newsImgWidth: null,
-			newsImgHeight: null,
-			eventImageURL: null,
-		};
-	},
+	return (
+		<View style={[css.main_container, css.whitebg]}>
+			<ScrollView contentContainerStyle={css.scroll_default}>
 
-	componentWillMount() {
-		const imageURL = this.props.eventData.imagehq;
+				{data.imagehq ? (
+					<Image
+						style={{ flex:1 }}
+						source={{ uri: data.imagehq }}
+						resizeMode={Image.resizeMode.contain}
+					/>
+				) : null }
 
-		if (imageURL) {
-			Image.getSize(
-				imageURL,
-				(width, height) => {
-					this.setState({
-						eventImageURL: imageURL,
-						newsImgWidth: windowWidth,
-						newsImgHeight: Math.round(height * (windowWidth / width))
-					});
-				},
-				(error) => { logger.log('ERR: componentWillMount: ' + error); }
-			);
-		}
-	},
+				<View style={css.news_detail_container}>
+					<View style={css.eventdetail_top_right_container}>
+						<Text style={css.eventdetail_eventname}>
+							{data.title}
+						</Text>
+						<Text style={css.eventdetail_eventlocation}>
+							{data.location}
+						</Text>
+						<Text style={css.eventdetail_eventdate}>
+							{moment(data.eventdate).format('MMM Do') + ', ' + general.militaryToAMPM(data.starttime) + ' - ' + general.militaryToAMPM(data.endtime)}
+						</Text>
+					</View>
 
-	componentDidMount() {
-		logger.ga('View Loaded: Event Detail: ' + this.props.eventData.title);
-	},
+					<Text style={css.eventdetail_eventdescription}>
+						{data.description}
+					</Text>
 
-	openBrowserLink(linkURL) {
-		Linking.openURL(linkURL);
-	},
-
-	gotoWebView(eventName, eventURL) {
-		// this.props.navigator.push({ id: 'WebWrapper', name: 'WebWrapper', title: eventName, component: WebWrapper, webViewURL: eventURL });
-		Linking.canOpenURL(eventURL).then(supported => {
-			if (!supported) {
-				logger.log('Can\'t handle url: ' + eventURL);
-			} else {
-				return Linking.openURL(eventURL);
-			}
-		}).catch(err => logger.log('An error with opening EventDetail occurred', err));
-	},
-
-	render() {
-		const data = this.props.eventData;
-		const eventTitleStr = data.title;
-		const eventDescriptionStr = data.description;
-		const eventDateStr = moment(data.eventdate).format("MMM Do") + ', ' + general.militaryToAMPM(data.starttime) + ' - ' + general.militaryToAMPM(data.endtime);
-
-		return (
-			<View style={[css.main_container, css.whitebg]}>
-				<ScrollView contentContainerStyle={css.scroll_default}>
-
-					{this.state.eventImageURL ? (
-						<Image style={{ width: this.state.newsImgWidth, height: this.state.newsImgHeight }} source={{ uri: this.state.eventImageURL }} />
+					{data.contact_info ? (
+						<TouchableHighlight
+							underlayColor={'rgba(200,200,200,.1)'}
+							onPress={() => Linking.openURL('mailto:' + data.contact_info + '?')}
+						>
+							<View style={css.eventdetail_readmore_container}>
+								<Text style={css.eventdetail_readmore_text}>
+									Email: {data.contact_info}
+								</Text>
+							</View>
+						</TouchableHighlight>
 					) : null }
 
-					<View style={css.news_detail_container}>
-						<View style={css.eventdetail_top_right_container}>
-							<Text style={css.eventdetail_eventname}>{eventTitleStr}</Text>
-							<Text style={css.eventdetail_eventlocation}>{data.location}</Text>
-							<Text style={css.eventdetail_eventdate}>{eventDateStr}</Text>
-						</View>
+				</View>
+			</ScrollView>
+		</View>
+	);
+};
 
-						<Text style={css.eventdetail_eventdescription}>{eventDescriptionStr}</Text>
-
-						{this.props.eventData.contact_info ? (
-							<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => this.openBrowserLink('mailto:' + data.EventContact)}>
-								<View style={css.eventdetail_readmore_container}>
-									<Text style={css.eventdetail_readmore_text}>Email: {data.contact_info}</Text>
-								</View>
-							</TouchableHighlight>
-						) : null }
-
-					</View>
-				</ScrollView>
-			</View>
-		);
-	},
-
-});
-
-module.exports = EventDetail;
+export default EventDetail;

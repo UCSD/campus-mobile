@@ -217,7 +217,7 @@ var css = StyleSheet.create({
 
 	// EVENTS / NEWS CARD
 	events_list: { width: maxCardWidth, padding: 8 },
-	events_list_row: { flex: 1, flexDirection: 'row', paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: '#EEE', overflow: 'hidden' },
+	events_list_row: { flexDirection: 'row', paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: '#EEE', },
 	events_list_left_container: { flex: 1 },
 	events_list_title: { fontSize: round(17 * prm), color: '#000', fontWeight: '400' },
 	events_list_desc: { fontSize: round(14 * prm), color: '#666', paddingTop: round(8 * prm) },
@@ -226,7 +226,7 @@ var css = StyleSheet.create({
 	news_list_image: { width: round(130 * prm), height: round(100 * prm), marginRight: 4, marginLeft: 10, borderWidth: 1, borderColor: '#CCC' },
 	events_more: { alignItems: 'center', justifyContent: 'center', width: maxCardWidthWithPadding, paddingHorizontal: 4, paddingTop: 8, paddingBottom: 4 },
 	events_more_label: { fontSize: round(20 * prm), color: campus_primary, fontWeight: '300' },
-	events_card_container: { flex: 1, flexDirection: 'row', padding: 14, borderBottomWidth: 1, borderBottomColor: '#EEE', alignItems: 'center' },
+	events_card_container: { flexDirection: 'row', padding: 14, borderBottomWidth: 1, borderBottomColor: '#EEE', alignItems: 'center' },
 	events_card_title_container: { flexDirection: 'row', alignItems: 'center', width: maxCardWidth, padding: 8, borderBottomWidth: 1, borderBottomColor: '#DDD' },
 	events_card_title: { flex:1, flexWrap: 'wrap', fontSize: round(17 * prm), color: '#000', fontWeight: '400' },
 	events_card_left_container: { flex: 10 },

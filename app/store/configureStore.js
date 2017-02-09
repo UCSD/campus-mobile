@@ -13,7 +13,7 @@ export default function configureStore(initialState, onComplete: ?() => void) {
 		rootReducer,
 		applyMiddleware(
 			thunkMiddleware, // lets us dispatch() functions
-			loggerMiddleware // neat middleware that logs actions
+			//loggerMiddleware // neat middleware that logs actions
 		),
 		autoRehydrate()
 	);
@@ -27,6 +27,6 @@ export default function configureStore(initialState, onComplete: ?() => void) {
 		});
 	}
 
-	persistStore(store, { storage: AsyncStorage, whitelist: ['cards', 'shuttle', 'map', 'user', 'weather', 'surf', 'dining'] }, onComplete);
+	persistStore(store, { storage: AsyncStorage, whitelist: ['cards', 'shuttle', 'map', 'user', 'weather', 'surf', 'dining', 'events'] }, onComplete);
 	return store;
 }
