@@ -7,66 +7,28 @@ import {
 
 import { Actions } from 'react-native-router-flux';
 import Card from '../card/Card';
-import CardComponent from '../card/CardComponent';
-import QuicklinksService from '../../services/quicklinksService';
 import QuicklinksList from './QuicklinksList';
-import QuicklinksListView from './QuicklinksListView';
 
 const css = require('../../styles/css');
-const general = require('../../util/general');
-const logger = require('../../util/logger');
 
-export default class QuicklinksCard extends CardComponent {
-
-	constructor(props) {
-		super(props);
-		this.quicklinksCardMaxResults = 4;
-		this.state = {
-			quicklinksDataLoaded: false,
-			quicklinksRenderAllRows: false,
-		};
-	}
-
-	componentDidMount() {
-		this.refresh();
-	}
-
-	render() {
-
-		return (
-			<Card title="Links">
-				{this.state.quicklinksDataLoaded ? (
-					<View style={css.quicklinks_card}>
-						<View style={css.quicklinks_locations}>
-							<QuicklinksList data={this.state.quicklinksDataCustom} />
-						</View>
-						<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={ () => this.gotoQuicklinksListView(this.state.quicklinksData) }>
-							<View style={css.card_more}>
-								<Text style={css.card_more_label}>View All</Text>
-							</View>
-						</TouchableHighlight>
+const QuicklinksCard = ({ data }) => (
+	<Card title="Links">
+		{data ? (
+			<View style={css.quicklinks_card}>
+				<View style={css.quicklinks_locations}>
+					<QuicklinksList
+						data={data}
+						scrollEnabled={false}
+					/>
+				</View>
+				<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => Actions.QuicklinksListView({ data })}>
+					<View style={css.card_more}>
+						<Text style={css.card_more_label}>View All</Text>
 					</View>
-				) : null }
-			</Card>
-		);
-	}
+				</TouchableHighlight>
+			</View>
+		) : null }
+	</Card>
+);
 
-	refresh() {
-		QuicklinksService.FetchQuicklinks()
-		.then((responseData) => {
-			this.setState({
-				quicklinksData: responseData,
-				quicklinksDataCustom: responseData.slice().sort(general.dynamicSort('card-order')).slice(0, this.quicklinksCardMaxResults),
-				quicklinksDataLoaded: true
-			});
-		})
-		.catch((error) => {
-			logger.log('ERR: QuicklinksService: ' + error)
-		})
-		.done();
-	}
-
-	gotoQuicklinksListView() {
-		Actions.QuicklinksListView({ data: this.state.quicklinksData });
-	}
-}
+export default QuicklinksCard;

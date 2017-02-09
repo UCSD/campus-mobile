@@ -17,7 +17,6 @@ const logger = require('../../util/logger');
 const moment = require('moment');
 
 const NewsDetail = ({ data }) => {
-	console.log('ivan' + JSON.stringify(data));
 	logger.ga('View Loaded: News Detail: ' + data.title );
 
 	return (

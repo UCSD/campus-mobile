@@ -7,6 +7,7 @@ import * as surfActions from './surf';
 import * as diningActions from './dining';
 import * as eventsActions from './events';
 import * as newsActions from './news';
+import * as linksActions from './links';
 
 module.exports = {
 	...cardsActions,
@@ -18,4 +19,5 @@ module.exports = {
 	...diningActions,
 	...eventsActions,
 	...newsActions,
+	...linksActions,
 };

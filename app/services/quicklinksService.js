@@ -1,7 +1,7 @@
-var AppSettings = require('../AppSettings');
+const AppSettings = require('../AppSettings');
 
-var QuicklinksService = {
-	FetchQuicklinks: function() {
+const QuicklinksService = {
+	FetchQuicklinks() {
 		return fetch(AppSettings.QUICKLINKS_API_URL, {
 			headers: {
 				'Cache-Control': 'no-cache'
@@ -9,6 +9,6 @@ var QuicklinksService = {
 		})
 		.then((response) => response.json());
 	}
-}
+};
 
 export default QuicklinksService;
