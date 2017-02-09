@@ -9,6 +9,7 @@ import weatherReducer from './weather';
 import surfReducer from './surf';
 import diningReducer from './dining';
 import eventsReducer from './events';
+import newsReducer from './news';
 
 module.exports = combineReducers({
 	cards: cardsReducer,
@@ -20,4 +21,5 @@ module.exports = combineReducers({
 	surf: surfReducer,
 	dining: diningReducer,
 	events: eventsReducer,
+	news: newsReducer,
 });

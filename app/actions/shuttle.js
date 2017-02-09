@@ -54,21 +54,23 @@ function updateArrivals(stop) {
 	return (dispatch) => {
 		ShuttleService.FetchShuttleArrivalsByStop(stop)
 			.then((arrivalData) => {
-				// Sort Arrival data by arrival time, should be on lambda
-				arrivalData.sort((a, b) => {
-					const aSecs = a.secondsToArrival;
-					const bSecs = b.secondsToArrival;
+				if (arrivalData && arrivalData.length !== 0) {
+					// Sort Arrival data by arrival time, should be on lambda
+					arrivalData.sort((a, b) => {
+						const aSecs = a.secondsToArrival;
+						const bSecs = b.secondsToArrival;
 
-					if ( aSecs < bSecs ) return -1;
-					if ( aSecs > bSecs) return 1;
-					return 0;
-				});
+						if ( aSecs < bSecs ) return -1;
+						if ( aSecs > bSecs) return 1;
+						return 0;
+					});
 
-				dispatch({
-					type: 'SET_ARRIVALS',
-					stop,
-					arrivalData
-				});
+					dispatch({
+						type: 'SET_ARRIVALS',
+						stop,
+						arrivalData
+					});
+				}
 			})
 			.catch((error) => {
 				logger.error(error);

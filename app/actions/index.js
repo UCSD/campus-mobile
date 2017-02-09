@@ -6,6 +6,7 @@ import * as weatherActions from './weather';
 import * as surfActions from './surf';
 import * as diningActions from './dining';
 import * as eventsActions from './events';
+import * as newsActions from './news';
 
 module.exports = {
 	...cardsActions,
@@ -16,4 +17,5 @@ module.exports = {
 	...surfActions,
 	...diningActions,
 	...eventsActions,
+	...newsActions,
 };

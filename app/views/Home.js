@@ -15,7 +15,7 @@ import WeatherCardContainer from './weather/WeatherCardContainer';
 import ShuttleCardContainer from './shuttle/ShuttleCardContainer';
 import EventCardContainer from './events/EventCardContainer';
 import QuicklinksCard from './quicklinks/QuicklinksCard';
-import NewsCard from './news/NewsCard';
+import NewsCardContainer from './news/NewsCardContainer';
 import DiningCardContainer from './dining/DiningCardContainer';
 
 import { platformAndroid } from '../util/general';
@@ -63,7 +63,7 @@ class Home extends React.Component {
 			activeCards.push(<QuicklinksCard key={'quicklinks'} />);
 		}
 		if (this.props.cards.news.active) {
-			activeCards.push(<NewsCard key={'news'} />);
+			activeCards.push(<NewsCardContainer key={'news'} />);
 		}
 		return activeCards;
 	}
