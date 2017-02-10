@@ -1,6 +1,7 @@
 
 const initialState = {
 	history: [],
+	results: null
 };
 
 function map(state = initialState, action) {
@@ -15,6 +16,11 @@ function map(state = initialState, action) {
 		} else {
 			newState.history = [action.term, ...newState.history];
 		}
+
+		return newState;
+	}
+	case 'SET_SEARCH_RESULTS': {
+		newState.results = action.results;
 
 		return newState;
 	}

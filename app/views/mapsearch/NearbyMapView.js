@@ -20,26 +20,17 @@ import SearchBar from './SearchBar';
 import SearchMap from './SearchMap';
 import SearchResults from './SearchResults';
 import SearchHistoryCard from './SearchHistoryCard';
-import NearbyService from '../../services/nearbyService';
 import ShuttleLocationContainer from '../../containers/shuttleLocationContainer';
 
 import { toggleRoute } from '../../actions/shuttle';
-import { saveSearch } from '../../actions/map';
+import { fetchSearch } from '../../actions/map';
 
 const css = require('../../styles/css');
 const logger = require('../../util/logger');
 const shuttle = require('../../util/shuttle');
-const AppSettings = 		require('../../AppSettings');
+const AppSettings = require('../../AppSettings');
 
 import general, { getPRM } from '../../util/general';
-
-let navBarMarginTop = 64;
-let searchMargin = navBarMarginTop;
-
-if (general.platformAndroid()) {
-	navBarMarginTop = 64;
-	searchMargin = 0;
-}
 
 const deviceHeight = Dimensions.get('window').height;
 const deviceWidth = Dimensions.get('window').width;
@@ -48,10 +39,6 @@ const statusBarHeight = Platform.select({
 	android: StatusBar.currentHeight,
 });
 
-const MAXIMUM_HEIGHT = deviceHeight - navBarMarginTop;
-const MINUMUM_HEIGHT = navBarMarginTop;
-
-const shuttle_stops = require('../../json/shuttle_stops_master_map.json');
 const shuttle_routes = require('../../json/shuttle_routes_master_map.json');
 
 class NearbyMapView extends React.Component {
@@ -61,11 +48,10 @@ class NearbyMapView extends React.Component {
 
 		this.state = {
 			searchInput: null,
-			searchResults: null,
-			selectedResult: null,
+			selectedResult: 0,
 			sliding: false,
 			typing: false,
-			allowScroll: false,
+			allowScroll: true,
 			iconStatus: 'menu',
 			showBar: false,
 			showMenu: false,
@@ -137,7 +123,7 @@ class NearbyMapView extends React.Component {
 		if (this.state.iconStatus === 'back') {
 			this.setState({
 				iconStatus: 'menu',
-				showBar: (this.state.searchResults !== null)
+				showBar: (this.props.search_results !== null)
 			});
 			this.scrollRef.scrollTo({ x: 0, y: 0, animated: true });
 			// this.barRef.clear();
@@ -164,34 +150,19 @@ class NearbyMapView extends React.Component {
 	}
 
 	updateSearch = (text) => {
-		NearbyService.FetchSearchResults(text).then((result) => {
-			if (result.results) {
-				this.setState({
-					searchInput: text,
-					searchResults: result.results,
-					selectedResult: result.results[0],
-					showBar: true,
-					iconStatus: 'menu',
-				});
-				this.props.dispatch(saveSearch(text));  // Save search term
-				this.scrollRef.scrollTo({ x: 0, y: 0, animated: true });
-				this.barRef.blur();
-			} else {
-				this.setState({
-					searchInput: 'No Results, please try a different term',
-					searchResults: null,
-					selectedResult: null,
-					showBar: false,
-					iconStatus: 'menu',
-				});
-				this.scrollRef.scrollTo({ x: 0, y: 0, animated: true });
-				this.barRef.blur();
-			}
+		this.props.fetchSearch(text);
+		this.scrollRef.scrollTo({ x: 0, y: 0, animated: true });
+		this.barRef.blur();
+
+		this.setState({
+			searchInput: text,
+			showBar: true,
+			iconStatus: 'menu',
 		});
 	}
 
 	updateSelectedResult = (index) => {
-		const newSelect = this.state.searchResults[index];
+		const newSelect = index;
 		this.setState({
 			iconStatus: 'menu',
 			selectedResult: newSelect,
@@ -226,7 +197,7 @@ class NearbyMapView extends React.Component {
 							toggles={this.props.toggles}
 						/>
 					}
-					edgeHitWidth={0} //Disable open sidemenu from swipe
+					edgeHitWidth={0} // Disable open sidemenu from swipe
 					isOpen={this.state.showMenu}
 					onChange={(isOpen) => this.updateMenuState(isOpen)}
 				>
@@ -255,7 +226,11 @@ class NearbyMapView extends React.Component {
 							>
 								<SearchMap
 									location={this.props.location}
-									selectedResult={this.state.selectedResult}
+									selectedResult={
+										(this.props.search_results) ? (
+											this.props.search_results[this.state.selectedResult]
+										) : null
+									}
 									hideMarker={this.state.sliding}
 									shuttle={this.props.shuttle_stops}
 									vehicles={this.state.vehicles}
@@ -265,7 +240,7 @@ class NearbyMapView extends React.Component {
 								style={styles.section}
 							>
 								<SearchResults
-									results={this.state.searchResults}
+									results={this.props.search_results}
 									onSelect={(index) => this.updateSelectedResult(index)}
 								/>
 							</View>
@@ -309,8 +284,8 @@ class NearbyMapView extends React.Component {
 	}
 }
 
-function mapStateToProps(state, props) {
-	return {
+const mapStateToProps = (state, props) => (
+	{
 		location: state.location.position,
 		locationPermission: state.location.permission,
 		toggles: state.shuttle.toggles,
@@ -318,10 +293,19 @@ function mapStateToProps(state, props) {
 		shuttle_stops: state.shuttle.stops,
 		vehicles: state.shuttle.vehicles,
 		search_history: state.map.history,
-	};
-}
+		search_results: state.map.results
+	}
+);
 
-module.exports = connect(mapStateToProps)(NearbyMapView);
+const mapDispatchToProps = (dispatch, ownProps) => (
+	{
+		fetchSearch: (term, location) => {
+			dispatch(fetchSearch(term, location));
+		}
+	}
+);
+
+module.exports = connect(mapStateToProps, mapDispatchToProps)(NearbyMapView);
 
 const navMargin = Platform.select({
 	ios: 64,

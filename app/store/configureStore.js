@@ -3,10 +3,16 @@ import { createStore, applyMiddleware } from 'redux';
 import { persistStore, autoRehydrate } from 'redux-persist';
 import thunkMiddleware from 'redux-thunk';
 import createLogger from 'redux-logger';
+import createFilter from 'redux-persist-transform-filter';
 
 import rootReducer from '../reducers';
 
 const loggerMiddleware = createLogger();
+
+const saveMapFilter = createFilter(
+	'map',
+	['history']
+);
 
 export default function configureStore(initialState, onComplete: ?() => void) {
 	const store = createStore(
@@ -27,6 +33,12 @@ export default function configureStore(initialState, onComplete: ?() => void) {
 		});
 	}
 
-	persistStore(store, { storage: AsyncStorage, whitelist: ['cards', 'shuttle', 'map', 'user', 'weather', 'surf', 'dining', 'events', 'news', 'links'] }, onComplete);
+	persistStore(store,
+		{
+			storage: AsyncStorage,
+			transforms: [saveMapFilter],
+		},
+		onComplete
+	);
 	return store;
 }
