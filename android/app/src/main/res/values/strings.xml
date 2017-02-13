@@ -1,4 +1,4 @@
 <resources>
-    <string moduleConfig="true" name="reactNativeCodePush_androidDeploymentKey"></string>
-    <string name="app_name">CampusMobile</string>
+    <string moduleConfig="true" name="reactNativeCodePush_androidDeploymentKey">CODEPUSH_ANDROID_KEY_PH</string>
+    <string name="app_name">APP_SHORTNAME_PH</string>
 </resources>
