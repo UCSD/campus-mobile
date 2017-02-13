@@ -19,8 +19,8 @@ const SearchMap = ({ location, selectedResult, hideMarker, style, shuttle, vehic
 				const minLong = (location.coords.longitude < selectedResult.mkrLong) ? location.coords.longitude : selectedResult.mkrLong;
 				const maxLat = (location.coords.latitude > selectedResult.mkrLat) ? location.coords.latitude : selectedResult.mkrLat;
 				const maxLong = (location.coords.longitude > selectedResult.mkrLong) ? location.coords.longitude : selectedResult.mkrLong;
-				const deltaLat = (maxLat - minLat) + 0.002;
-				const deltaLong = (maxLong - minLong) + 0.002;
+				const deltaLat = (maxLat - minLat) + 0.01;
+				const deltaLong = (maxLong - minLong) + 0.01;
 
 				const midRegion = {
 					latitude: midLat,

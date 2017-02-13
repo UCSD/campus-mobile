@@ -11,6 +11,7 @@ Math.degrees = function (radians) {
 module.exports = {
 
 	getDistance(lat1, lon1, lat2, lon2) {
+
 		if (lat1 && lon1 && lat2 && lon2) {
 			const Phi1 = Math.radians(lat1);
 			const Phi2 = Math.radians(lat2);
@@ -25,7 +26,7 @@ module.exports = {
 		}
 	},
 
-	getMidpointCoords: function(lat1, lon1, lat2, lon2) {
+	getMidpointCoords(lat1, lon1, lat2, lon2) {
 		if (lat1 && lon1 && lat2 && lon2) {
 			lat1 = Math.radians(lat1);
 			lon1 = Math.radians(lon1);
