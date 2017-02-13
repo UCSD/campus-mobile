@@ -8,16 +8,14 @@ import {
 	ActivityIndicator,
 	TextInput,
 	StyleSheet,
-	Platform,
-	Dimensions
+	Alert,
 } from 'react-native';
 
-import { getPRM, getMaxCardWidth, round, getCampusPrimary } from '../util/general';
+import { getPRM, round, getCampusPrimary } from '../util/general';
 
 const css = require('../styles/css');
 const logger = require('../util/logger');
 const AppSettings = require('../AppSettings');
-const deviceWidth = Dimensions.get('window').width;
 
 export default class FeedbackView extends Component {
 
@@ -65,7 +63,17 @@ export default class FeedbackView extends Component {
 				body: formData
 			})
 			.then((response) => {
-				this.setState({ submit: true });
+				Alert.alert(
+					'Thank you!',
+					'We will take your feedback into consideration as we continue developing and improving the app.',
+				);
+
+				this.setState({
+					submit: true,
+					commentsText: '',
+					nameText: '',
+					emailText: '',
+				});
 			})
 			.then((responseJson) => {
 				// logger.log(responseJson);
@@ -104,24 +112,30 @@ export default class FeedbackView extends Component {
 						<View style={styles.feedback_text_container}>
 							<TextInput
 								multiline={true}
+								value={this.state.commentsText}
 								onChangeText={(text) => this.setState({ commentsText: text })}
 								placeholder="Tell us what you think*"
+								underlineColorAndroid={'transparent'}
 								style={styles.feedback_text}
 							/>
 						</View>
 
 						<View style={styles.text_container}>
 							<TextInput
+								value={this.state.nameText}
 								onChangeText={(text) => this.setState({ nameText: text })}
 								placeholder="Name"
+								underlineColorAndroid={'transparent'}
 								style={styles.feedback_text}
 							/>
 						</View>
 
 						<View style={styles.text_container}>
 							<TextInput
+								value={this.state.emailText}
 								onChangeText={(text) => this.setState({ emailText: text })}
 								placeholder="Email"
+								underlineColorAndroid={'transparent'}
 								style={styles.feedback_text}
 							/>
 						</View>
@@ -137,26 +151,12 @@ export default class FeedbackView extends Component {
 		);
 	}
 
-	_renderSubmitView() {
-		return (
-			<View style={css.main_container}>
-				<ScrollView>
-					<View style={styles.feedback_container}>
-						<Text style={styles.feedback_label}>Thank you for your feedback!</Text>
-					</View>
-				</ScrollView>
-			</View>
-		);
-	}
-
 	render() {
-		return this._renderFormView();
+		// return this._renderSubmitView();
 		if (!this.state.loaded) {
 			return this._renderLoadingView();
-		} else if (!this.state.submit) {
-			return this._renderFormView();
 		} else {
-			return this._renderSubmitView();
+			return this._renderFormView();
 		}
 	}
 }
