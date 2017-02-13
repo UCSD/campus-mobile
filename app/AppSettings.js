@@ -30,12 +30,12 @@ module.exports = {
 	WEATHER_ICON_BASE_URL: 		'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/images/v1/weather-icons/',
 
 	/* API TTL (seconds) */
-	WEATHER_API_TTL: 			3600,
-	SURF_API_TTL: 				3600,
-	SHUTTLE_STOPS_API_TTL: 		3600,
-	EVENTS_API_TTL: 			3600,
-	DINING_API_TTL: 			3600,
-	QUICKLINKS_API_TTL: 		86400,
+	WEATHER_API_TTL: 			1800,		// 30 minutes
+	SURF_API_TTL: 				1800,		// 30 minutes
+	EVENTS_API_TTL: 			3600,		// 1 hour
+	NEWS_API_TTL: 				3600,		// 1 hour
+	DINING_API_TTL: 			21600,		// 6 hours
+	QUICKLINKS_API_TTL: 		604800,		// 1 week
 
 	USER_LOGIN: {
 		ENABLED: false,
