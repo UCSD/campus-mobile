@@ -20,6 +20,7 @@ import SearchBar from './SearchBar';
 import SearchMap from './SearchMap';
 import SearchResults from './SearchResults';
 import SearchHistoryCard from './SearchHistoryCard';
+import SearchSuggest from './SearchSuggest';
 import ShuttleLocationContainer from '../../containers/shuttleLocationContainer';
 
 import { toggleRoute } from '../../actions/shuttle';
@@ -51,7 +52,7 @@ class NearbyMapView extends React.Component {
 			selectedResult: 0,
 			sliding: false,
 			typing: false,
-			allowScroll: true,
+			allowScroll: false,
 			iconStatus: 'menu',
 			showBar: false,
 			showMenu: false,
@@ -105,7 +106,8 @@ class NearbyMapView extends React.Component {
 		// Don't re-render if location hasn't changed
 		if (((this.props.location.coords.latitude !== nextProps.location.coords.latitude) ||
 			(this.props.location.coords.longitude !== nextProps.location.coords.longitude)) ||
-			this.state !== nextState) {
+			this.state !== nextState ||
+			this.props.search_results !== nextProps.search_results) {
 			/*
 			(this.state.selectedResult !== nextState.selectedResult) ||
 			(this.state.iconStatus !== nextState.iconStatus) ||
@@ -151,6 +153,18 @@ class NearbyMapView extends React.Component {
 
 	updateSearch = (text) => {
 		this.props.fetchSearch(text);
+		this.scrollRef.scrollTo({ x: 0, y: 0, animated: true });
+		this.barRef.blur();
+
+		this.setState({
+			searchInput: text,
+			showBar: true,
+			iconStatus: 'menu',
+		});
+	}
+
+	updateSearchSuggest = (text) => {
+		this.props.fetchSearch(text, this.props.location);
 		this.scrollRef.scrollTo({ x: 0, y: 0, animated: true });
 		this.barRef.blur();
 
@@ -247,6 +261,9 @@ class NearbyMapView extends React.Component {
 							<View
 								style={styles.section}
 							>
+								<SearchSuggest
+									onPress={this.updateSearchSuggest}
+								/>
 								{(this.props.search_history.length !== 0) ? (
 									<SearchHistoryCard
 										pressHistory={this.updateSearch}
@@ -255,7 +272,7 @@ class NearbyMapView extends React.Component {
 									) : (null)}
 							</View>
 						</ScrollView>
-						{(this.state.showBar) ? (
+						{(this.state.showBar && this.props.search_results) ? (
 							<ElevatedView
 								style={styles.bottomBarContainer}
 								elevation={5}
