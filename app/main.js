@@ -33,7 +33,6 @@ import TabIcons from './navigation/TabIcons';
 // SCENES
 const scenes = Actions.create(
 	<Scene key='root'>
-		
 		<Scene key='tabbar' tabs tabBarStyle={general.platformIOS() ? css.tabBarIOS : css.tabBarAndroid}>
 			<Scene component={Home} key='homeTab' initial={true} title={AppSettings.APP_NAME} icon={TabIcons} />
 			<Scene component={NearbyMapView} key='mapTab' title='Map' icon={TabIcons} />
@@ -63,7 +62,6 @@ const scenes = Actions.create(
 
 
 export default class Main extends Component {
-
 	render() {
 		if (general.platformIOS()) {
 			StatusBar.setBarStyle('light-content');

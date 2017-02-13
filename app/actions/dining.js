@@ -23,7 +23,7 @@ function updateDining(location) {
 			);
 		} else {
 			// Fetch for new data then sort
-			DiningService.FetchDining(location)
+			DiningService.FetchDining()
 				.then((dining) => {
 					dispatch({
 						type: 'SET_DINING_UPDATE',
