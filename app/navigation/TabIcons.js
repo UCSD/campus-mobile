@@ -18,7 +18,7 @@ const TabIcons = function(props) {
 		tabIconText,
 		tabIconName;
 
-	if (props.title === AppSettings.APP_CAMPUS_NAME) {
+	if (props.title === AppSettings.APP_NAME) {
 		tabIconPack = 'Entypo';
 		tabIconText = 'Home';
 		tabIconName = 'home';

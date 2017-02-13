@@ -35,13 +35,13 @@ const scenes = Actions.create(
 	<Scene key='root'>
 		
 		<Scene key='tabbar' tabs tabBarStyle={general.platformIOS() ? css.tabBarIOS : css.tabBarAndroid}>
-			<Scene component={Home} key='homeTab' initial={true} title={AppSettings.APP_CAMPUS_NAME} icon={TabIcons} />
+			<Scene component={Home} key='homeTab' initial={true} title={AppSettings.APP_NAME} icon={TabIcons} />
 			<Scene component={NearbyMapView} key='mapTab' title='Map' icon={TabIcons} />
 			<Scene component={FeedbackView} key='feedbackTab' title='Feedback' icon={TabIcons} />
 			<Scene component={PreferencesView} key='preferencesTab' title='Settings' icon={TabIcons}  />
 		</Scene>
 
-		<Scene key='Home' component={Home} title={AppSettings.APP_CAMPUS_NAME} />
+		<Scene key='Home' component={Home} title={AppSettings.APP_NAME} />
 		<Scene key='PreferencesView' component={PreferencesView} title='Settings' />
 		<Scene key='SurfReport' component={SurfReport} title='Surf Report' />
 		<Scene key='ShuttleStop' component={ShuttleStop} title='Shuttle' />
