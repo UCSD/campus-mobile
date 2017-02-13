@@ -9,17 +9,19 @@ import { Actions } from 'react-native-router-flux';
 
 import Card from '../card/Card';
 import NewsList from './NewsList';
+import css from '../../styles/css';
+import { doPRM } from '../../util/general';
 
-const css = require('../../styles/css');
+const defaultRows = 3;
 
 const NewsCard = ({ data }) => (
 	<Card id="news" title="News">
-		<View style={css.events_list}>
+		<View style={[css.events_list, { height: getRowHeight(defaultRows) }]}>
 			{data ? (
 				<View>
 					<NewsList
 						data={data}
-						rows={3}
+						rows={defaultRows}
 						scrollEnabled={false}
 					/>
 					<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => Actions.NewsListView({ data })}>
@@ -37,5 +39,13 @@ const NewsCard = ({ data }) => (
 		</View>
 	</Card>
 );
+
+function getRowHeight(rows) {
+	// titleFont + 3*(descFont + descPad) + dateFont + datePad
+	const rowHeight =  doPRM(17) + (3 * (doPRM(14) + doPRM(8))) + doPRM(11) + doPRM(8);
+	const padding = 28; // rowPad
+
+	return rows * (rowHeight + padding);
+}
 
 export default NewsCard;
