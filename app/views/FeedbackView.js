@@ -24,18 +24,12 @@ export default class FeedbackView extends Component {
 	constructor(props) {
 		super(props);
 
-		this.appInfo = AppSettings.APP_VERSION;
-		if (AppSettings.APP_CODEPUSH_VERSION) {
-			this.appInfo += '-cp' + AppSettings.APP_CODEPUSH_VERSION;
-		}
-
 		this.state = {
 			commentsText: '',
 			nameText: '',
 			emailText: '',
 			loaded: false,
 			submit: false,
-			appInfo: '',
 		};
 	}
 
@@ -103,7 +97,8 @@ export default class FeedbackView extends Component {
 				<ScrollView>
 					<View style={styles.feedback_container}>
 						<Text style={styles.feedback_label}>
-							Help us make the UCSD app better. Submit your thoughts and suggestions.{'\n'}
+							Help us make the {AppSettings.APP_NAME} app better.{'\n'}
+							Submit your thoughts and suggestions.
 						</Text>
 
 						<View style={styles.feedback_text_container}>
@@ -168,14 +163,13 @@ export default class FeedbackView extends Component {
 
 const styles = StyleSheet.create({
 	loading_icon: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-	feedback_container: { flex:1, alignItems: 'flex-start', flexDirection: 'column' },
-	feedback_label: { flex: 1, flexWrap: 'wrap', fontSize: round(20 * getPRM()), height: round(80 * getPRM()), padding: 8 },
-	feedback_text: { backgroundColor: '#FFF', flex:1, fontSize: round(20 * getPRM()), alignItems: 'center', padding: 8, },
-	feedback_appInfo: { position: 'absolute', bottom: 0, right: 0, color: '#BBB', fontSize: 9, padding: 4 },
+	feedback_container: { flexDirection: 'column', marginHorizontal: 8, marginTop: 8 },
+	feedback_label: { flex: 1, flexWrap: 'wrap', fontSize: round(19 * getPRM()), paddingBottom: 16, lineHeight: 24 },
+	feedback_text: { backgroundColor: '#FFF', flex:1, fontSize: round(20 * getPRM()), alignItems: 'center', padding: 8 },
 
-	submit_container: { width: deviceWidth, justifyContent: 'center', alignItems: 'center', backgroundColor: getCampusPrimary(), borderRadius: 3, padding: 10 },
+	submit_container: { justifyContent: 'center', alignItems: 'center', backgroundColor: getCampusPrimary(), borderRadius: 3, padding: 10 },
 	submit_text: { fontSize: round(16 * getPRM()), color: '#FFF' },
 
-	feedback_text_container: { width: deviceWidth, height: round(100 * getPRM()), borderColor: '#DADADA', borderBottomWidth: 1, },
-	text_container: { width: deviceWidth, height: round(50 * getPRM()), borderColor: '#DADADA', borderBottomWidth: 1, },
+	feedback_text_container: { flex: 1, height: round(100 * getPRM()), borderColor: '#DADADA', borderBottomWidth: 1, marginBottom: 8 },
+	text_container: { height: round(50 * getPRM()), borderColor: '#DADADA', borderBottomWidth: 1, marginBottom: 8 },
 });

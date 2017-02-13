@@ -1,5 +1,5 @@
 const APP_VERSION = 			'5.0',
-	  APP_NAME = 				'campus-mobile',
+	  APP_NAME = 				'APP_NAME_PH',
 	  API_TRACKING = 			'version=' + APP_NAME + '_' + APP_VERSION;
 
 module.exports = {
@@ -16,7 +16,7 @@ module.exports = {
 	/* APIs / FEEDS */
 	WEATHER_API_URL: 			'https://w3wyps9yje.execute-api.us-west-2.amazonaws.com/prod/forecast?' + API_TRACKING,
 	SURF_API_URL: 				'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/surffeed.json?' + API_TRACKING,
-	SHUTTLE_STOPS_API_URL: 		'https://ies4wyrlx9.execute-api.us-west-2.amazonaws.com/prod/stops/?' + API_TRACKING,
+	SHUTTLE_STOPS_API_URL: 		'https://ies4wyrlx9.execute-api.us-west-2.amazonaws.com/prod/stops/',
 	DINING_API_URL: 			'https://pg83tslbyi.execute-api.us-west-2.amazonaws.com/prod/v2/dining/locations?' + API_TRACKING,
 	EVENTS_API_URL: 			'https://evv6vpvob6.execute-api.us-west-2.amazonaws.com/prod/?' + API_TRACKING,
 	QUICKLINKS_API_URL: 		'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/quick_links/ucsd-quicklinks-v2.json?' + API_TRACKING,
@@ -30,12 +30,12 @@ module.exports = {
 	WEATHER_ICON_BASE_URL: 		'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/images/v1/weather-icons/',
 
 	/* API TTL (seconds) */
-	WEATHER_API_TTL: 			3600,
-	SURF_API_TTL: 				3600,
-	SHUTTLE_STOPS_API_TTL: 		3600,
-	EVENTS_API_TTL: 			3600,
-	DINING_API_TTL: 			3600,
-	QUICKLINKS_API_TTL: 		86400,
+	WEATHER_API_TTL: 			1800,		// 30 minutes
+	SURF_API_TTL: 				1800,		// 30 minutes
+	EVENTS_API_TTL: 			3600,		// 1 hour
+	NEWS_API_TTL: 				3600,		// 1 hour
+	DINING_API_TTL: 			21600,		// 6 hours
+	QUICKLINKS_API_TTL: 		604800,		// 1 week
 
 	USER_LOGIN: {
 		ENABLED: false,

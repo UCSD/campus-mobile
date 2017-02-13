@@ -41,7 +41,7 @@ const scenes = Actions.create(
 			<Scene component={PreferencesView} key='preferencesTab' title='Settings' icon={TabIcons}  />
 		</Scene>
 
-		<Scene key='Home' component={Home} title='UC San Diego' />
+		<Scene key='Home' component={Home} title={AppSettings.APP_CAMPUS_NAME} />
 		<Scene key='PreferencesView' component={PreferencesView} title='Settings' />
 		<Scene key='SurfReport' component={SurfReport} title='Surf Report' />
 		<Scene key='ShuttleStop' component={ShuttleStop} title='Shuttle' />

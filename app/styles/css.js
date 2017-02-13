@@ -78,7 +78,7 @@ var css = StyleSheet.create({
 
 	// Primary Containers
 	main_container: { flex: 1, backgroundColor: '#EAEAEA', marginTop: general.platformIOS() ? IOSMarginTop : AndroidMarginTop, marginBottom: general.platformIOS() ? IOSMarginBottom : AndroidMarginBottom },
-	view_all_container: { flex: 1, backgroundColor: '#FFF', marginTop: general.platformIOS() ? IOSMarginTop : AndroidMarginTop, marginBottom: general.platformIOS() ? IOSMarginBottom : AndroidMarginBottom },
+	view_all_container: { flex: 1, backgroundColor: '#FFF', paddingHorizontal: 12, marginTop: general.platformIOS() ? IOSMarginTop : AndroidMarginTop, marginBottom: general.platformIOS() ? IOSMarginBottom : AndroidMarginBottom },
 	scroll_main: {},
 	listview_main: { marginTop: general.platformIOS() ? IOSMarginTop : AndroidMarginTop, },
 	view_default: { paddingHorizontal: round(8 * prm) },
