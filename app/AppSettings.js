@@ -1,5 +1,5 @@
 const APP_VERSION = 			'5.0',
-	  APP_NAME = 				'APP_CAMPUS_NAME_PH',
+	  APP_NAME = 				'APP_NAME_PH',
 	  API_TRACKING = 			'version=' + APP_NAME + '_' + APP_VERSION;
 
 module.exports = {
