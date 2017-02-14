@@ -6,12 +6,13 @@ module.exports = {
 	APP_CODEPUSH_VERSION: 		'1',
 	GOOGLE_ANALYTICS_ID: 		'GOOGLE_ANALYTICS_ID_PH',
 	DEBUG_ENABLED: 				false, 	// Disables all logger functions (i.e. logger.log, logger.error).
-									   	// Use console.log/error as necessary but do not commit code using console.log/error
+	// Use console.log/error as necessary but do not commit code using console.log/error
 
 	/* APIs / FEEDS */
 	WEATHER_API_URL: 			'https://w3wyps9yje.execute-api.us-west-2.amazonaws.com/prod/forecast?',
 	SURF_API_URL: 				'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/surffeed.json',
 	SHUTTLE_STOPS_API_URL: 		'https://ies4wyrlx9.execute-api.us-west-2.amazonaws.com/prod/stops/',
+	SHUTTLE_VEHICLES_API_URL: 		'https://87t4myy3wj.execute-api.us-west-2.amazonaws.com/dev?route=',
 	DINING_API_URL: 			'https://pg83tslbyi.execute-api.us-west-2.amazonaws.com/prod/v2/dining/locations',
 	EVENTS_API_URL: 			'https://evv6vpvob6.execute-api.us-west-2.amazonaws.com/prod/',
 	QUICKLINKS_API_URL: 		'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/quick_links/ucsd-quicklinks-v2.json',

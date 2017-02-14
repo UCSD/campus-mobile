@@ -1,15 +1,14 @@
 import {
 	SHUTTLE_ROUTES_MASTER,
-	SHUTTLE_STOPS_MASTER_NO_ROUTES
+	SHUTTLE_STOPS_MASTER_NO_ROUTES,
+	SHUTTLE_STOPS_API_URL,
+	SHUTTLE_VEHICLES_API_URL
 } from '../AppSettings';
-
-const stopURL = 'https://ies4wyrlx9.execute-api.us-west-2.amazonaws.com/prod/stops/';
-const vehicleURL = 'https://87t4myy3wj.execute-api.us-west-2.amazonaws.com/dev?route=';
 
 const ShuttleService = {
 	FetchShuttleArrivalsByStop(stopID) {
-		const SHUTTLE_STOPS_API_URL = stopURL + stopID + '/arrivals';
-		return fetch(SHUTTLE_STOPS_API_URL, {
+		const stopURL = SHUTTLE_STOPS_API_URL + stopID + '/arrivals';
+		return fetch(stopURL, {
 			method: 'GET',
 			headers: {
 				'Accept' : 'application/json',
@@ -19,7 +18,7 @@ const ShuttleService = {
 		.then((response) => response.json());
 	},
 	FetchVehiclesByRoute(routeID) {
-		return fetch(vehicleURL + routeID, {
+		return fetch(SHUTTLE_VEHICLES_API_URL + routeID, {
 			method: 'GET',
 			headers: {
 				'Accept': 'application/json',
