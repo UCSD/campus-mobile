@@ -1,17 +1,32 @@
-// Converts from degrees to radians
+/**
+ * Converts from degrees to radians
+ * @param {number} degrees - The quantity in degrees
+ * @return {number} The quantity, now in radians
+ */
 Math.radians = function (degrees) {
 	return (degrees * Math.PI) / 180;
 };
 
-// Converts from radians to degrees
+/**
+ * Converts from radians to degrees
+ * @param {number} radians - The quantity in radians
+ * @return {number} The quantity, now in degrees
+ */
 Math.degrees = function (radians) {
 	return (radians * 180) / Math.PI;
 };
 
 module.exports = {
 
+	/**
+	 * Gets the surface distance between two Earth coordinates in meters
+	 * @param {number} lat1 - The latitude of the first point
+	 * @param {number} lon1 - The longitude of the first point
+	 * @param {number} lat2 - The latitude of the second point
+	 * @param {number} lon2 - The longitude of the second point
+	 * @return {number|null} Null if any of the inputs were null. Otherwise, the distance in meters (rounded down the nearest integer)
+	 */
 	getDistance(lat1, lon1, lat2, lon2) {
-
 		if (lat1 && lon1 && lat2 && lon2) {
 			const Phi1 = Math.radians(lat1);
 			const Phi2 = Math.radians(lat2);
@@ -26,6 +41,14 @@ module.exports = {
 		}
 	},
 
+	/**
+	 * Gets the coordinates of the midpoint between two coordinates
+	 * @param {number} lat1 - The latitude of the first point
+	 * @param {number} lon1 - The longitude of the first point
+	 * @param {number} lat2 - The latitude of the second point
+	 * @param {number} lon2 - The longitude of the second point
+	 * @returns {number[]} The midpoint coordinates stored in a 2-length array with the form {latitude, longitude}
+	 */
 	getMidpointCoords(lat1, lon1, lat2, lon2) {
 		if (lat1 && lon1 && lat2 && lon2) {
 			lat1 = Math.radians(lat1);

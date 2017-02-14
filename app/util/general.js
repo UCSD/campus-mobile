@@ -23,14 +23,31 @@ module.exports = {
 		return Platform.OS;
 	},
 
+	/**
+	 * Converts a numerical quantity from meters to miles
+	 * @param {number} meters - The quantity to convert
+	 * @returns {number} The quantity now converted into miles
+	 */
 	convertMetersToMiles(meters) {
 		return (meters / 1609.344);
 	},
 
+	/**
+	 * Gets a string representation of a given quantity of miles (up to and including a single decimal place)
+	 * @param {number} miles - The quantity to convert to a string
+	 * @returns {number} The miles quantity now as a string
+	 */
 	getDistanceMilesStr(miles) {
 		return (miles.toFixed(1) + ' mi');
 	},
 
+	/**
+	 * Attempts to open the provided URL for displaying to the user
+	 * @param {string} url - The URL to open
+	 * @returns {boolean|undefined} If the URL cannot be opened, this logs to console. Otherwise, returns true.
+	 * False can only be returned if the ability to open a URL changes between the check and the opening itself.
+	 * @todo Develop a more explicit/consistent return for this method
+	 */
 	openURL(url) {
 		Linking.canOpenURL(url).then(supported => {
 			if (!supported) {
@@ -41,6 +58,13 @@ module.exports = {
 		}).catch(err => logger.log('ERR: openURL: ' + err));
 	},
 
+	/**
+	 * Gets the URL for obtaining directions to a given location via a given transportation method
+	 * @param {string} method - Can be "walk" or anything else. Anything else will result in a URL for driving.
+	 * @param {string|number} stopLat - The latitude of the destination
+	 * @param {string|number} stopLon - The longitude of the destination
+	 * @return {string} A platform-specific URL for obtaining the directions
+	 */
 	getDirectionsURL(method, stopLat, stopLon) {
 		let directionsURL;
 
@@ -107,6 +131,10 @@ module.exports = {
 		return windowWidth - 2 - 12;
 	},
 
+	/**
+	 * Gets the UCSD campus primary color in hexidecimal form
+	 * @returns {string} The string "#182B49" which represents a dark blue color
+	 */
 	getCampusPrimary() {
 		return '#182B49';
 	},
@@ -176,7 +204,10 @@ module.exports = {
 		return randomColors;
 	},
 
-	// Generates random color hex
+	/**
+	 * Generates random color hex
+	 * @returns {string} A randomly generated hex color code
+	 */
 	getRandomColor() {
 		return '#' + ('000000' + Math.random().toString(16).slice(2, 8).toUpperCase()).slice(-6);
 	},
