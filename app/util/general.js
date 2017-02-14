@@ -11,14 +11,26 @@ const logger = require('./logger');
 
 module.exports = {
 
+	/**
+	 * Gets whether or not the current platform the app is running on is IOS
+	 * @returns {boolean} True if the platform is IOS, false otherwise
+	 */
 	platformIOS() {
 		return Platform.OS === 'ios';
 	},
 
+	/**
+	 * Gets whether or not the current platform the app is running on is Android
+	 * @returns {boolean} True if the platform is Android, false otherwise
+	 */
 	platformAndroid() {
 		return Platform.OS === 'android';
 	},
 
+	/**
+	 * Gets the current platform ths app is running on
+	 * @returns {string} The platform name
+	 */
 	getPlatform() {
 		return Platform.OS;
 	},

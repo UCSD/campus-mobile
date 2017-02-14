@@ -16,7 +16,7 @@ module.exports = {
 	/**
 	 * Send an error message to the console
 	 * If debugging is enabled, the message is sent as an error (e.g. stderr)
-	 * @param {string} msg The error message to log
+	 * @param {string} msg - The error message to log
 	 */
 	error(msg) {
 		if (AppSettings.DEBUG_ENABLED) {
@@ -26,6 +26,10 @@ module.exports = {
 		}
 	},
 
+	/**
+	 * Sends a log message to Google Analytics as well as the local console
+	 * @param {string} msg - The message to to log
+	 */
 	ga(msg) {
 		this.log(msg);
 		GoogleAnalytics.trackScreenView(msg);
