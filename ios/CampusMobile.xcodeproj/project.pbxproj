@@ -407,7 +407,6 @@
 		13B07FAE1A68108700A75B9A /* CampusMobile */ = {
 			isa = PBXGroup;
 			children = (
-				77EF97661E536BE300F3B4AE /* Resources */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -478,21 +477,6 @@
 				77D8D15F1E4A5A6000E63DDF /* libRCTGoogleAnalyticsBridge.a */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		77EF97661E536BE300F3B4AE /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				77EF977F1E536BEA00F3B4AE /* Fonts */,
-			);
-			name = Resources;
-			sourceTree = "<group>";
-		};
-		77EF977F1E536BEA00F3B4AE /* Fonts */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Fonts;
 			sourceTree = "<group>";
 		};
 		78C398B11ACF4ADC00677621 /* Products */ = {
