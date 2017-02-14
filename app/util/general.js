@@ -1,3 +1,8 @@
+/**
+ * A module containing general helper functions
+ * @module general
+ */
+
 import {
 	Animated,
 	Easing,
@@ -12,7 +17,8 @@ const logger = require('./logger');
 module.exports = {
 
 	/**
-	 * Gets whether or not the current platform the app is running on is IOS
+	 * @function platformIOS
+	 * @description Gets whether or not the current platform the app is running on is IOS
 	 * @returns {boolean} True if the platform is IOS, false otherwise
 	 */
 	platformIOS() {
@@ -20,7 +26,8 @@ module.exports = {
 	},
 
 	/**
-	 * Gets whether or not the current platform the app is running on is Android
+	 * @function platformAndroid
+	 * @description Gets whether or not the current platform the app is running on is Android
 	 * @returns {boolean} True if the platform is Android, false otherwise
 	 */
 	platformAndroid() {
@@ -28,7 +35,8 @@ module.exports = {
 	},
 
 	/**
-	 * Gets the current platform ths app is running on
+	 * @function getPlatform
+	 * @description Gets the current platform ths app is running on
 	 * @returns {string} The platform name
 	 */
 	getPlatform() {
@@ -36,7 +44,8 @@ module.exports = {
 	},
 
 	/**
-	 * Converts a numerical quantity from meters to miles
+	 * @function convertMetersToMiles
+	 * @description Converts a numerical quantity from meters to miles
 	 * @param {number} meters - The quantity to convert
 	 * @returns {number} The quantity now converted into miles
 	 */
@@ -45,7 +54,8 @@ module.exports = {
 	},
 
 	/**
-	 * Gets a string representation of a given quantity of miles (up to and including a single decimal place)
+	 * @function getDistanceMilesStr
+	 * @description Gets a string representation of a given quantity of miles (up to and including a single decimal place)
 	 * @param {number} miles - The quantity to convert to a string
 	 * @returns {number} The miles quantity now as a string
 	 */
@@ -54,7 +64,8 @@ module.exports = {
 	},
 
 	/**
-	 * Attempts to open the provided URL for displaying to the user
+	 * @function openURL
+	 * @description Attempts to open the provided URL for displaying to the user
 	 * @param {string} url - The URL to open
 	 * @returns {boolean|undefined} If the URL cannot be opened, this logs to console. Otherwise, returns true.
 	 * False can only be returned if the ability to open a URL changes between the check and the opening itself.
@@ -71,7 +82,8 @@ module.exports = {
 	},
 
 	/**
-	 * Gets the URL for obtaining directions to a given location via a given transportation method
+	 * @function getDirectionsURL
+	 * @description Gets the URL for obtaining directions to a given location via a given transportation method
 	 * @param {string} method - Can be "walk" or anything else. Anything else will result in a URL for driving.
 	 * @param {string|number} stopLat - The latitude of the destination
 	 * @param {string|number} stopLon - The longitude of the destination
@@ -144,6 +156,7 @@ module.exports = {
 	},
 
 	/**
+	 * @function getCampusPrimary
 	 * Gets the UCSD campus primary color in hexidecimal form
 	 * @returns {string} The string "#182B49" which represents a dark blue color
 	 */
@@ -217,7 +230,8 @@ module.exports = {
 	},
 
 	/**
-	 * Generates random color hex
+	 * @function getRandomColor
+	 * @description Generates random color hex
 	 * @returns {string} A randomly generated hex color code
 	 */
 	getRandomColor() {

@@ -13,6 +13,7 @@
   "dependencies": {
     "dateformat": "1.0.12",
     "html-entities": "1.2.0",
+    "jsdoc": "^3.4.3",
     "moment": "2.15.2",
     "react": "15.4.2",
     "react-native": "0.39.0",
