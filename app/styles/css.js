@@ -64,10 +64,14 @@ var css = StyleSheet.create({
 	navAndroid: { backgroundColor: 'rgba(24,43,73,1)', height: NavigatorAndroidHeight },
 
 	navIOSTitle: { color: '#FFF', fontSize: 28, marginTop: -10, /*fontFamily: 'RotisSerif',*/ letterSpacing: -1 },
+	navIOSTitleTest: { color: 'red', fontSize: 28, marginTop: -10, /*fontFamily: 'RotisSerif',*/ letterSpacing: -1 },
 	navAndroidTitle: { color: '#FFF', fontSize: 28, marginTop: -10, /*fontFamily: 'RotisSerif',*/ letterSpacing: -1 },
 
 	navIOSIconStyle: { tintColor:'#FFF', marginTop: -2 },
+	navBackButtonTextIOS: { color: '#FFF', marginTop: -2 },
 	navAndroidIconStyle: { tintColor:'#FFF', marginTop: -6 },
+	navBackButtonTextAndroid: { color: '#FFF', marginTop: -6 },
+
 
 	// TabBar
 	tabBarIOS: { borderTopWidth: 1, borderColor: '#DADADA', backgroundColor: '#FFF', height: TabBarHeight },
