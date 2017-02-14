@@ -1,8 +1,13 @@
+/**
+ * A module containing shuttle-related helper functions
+ * @module util/shuttle
+ */
 module.exports = {
 
 	/**
 	 * Gets the minutes of "estimated time of arrival" from an amount of seconds
-	 * @param {number} secondToArrival - The number of seconds until arrival
+	 * @function getMinutesETA
+	 * @param {number} secondToArrival The number of seconds until arrival
 	 * @returns {string} A user-friendly respresentation of the number of minutes
 	 */
 	getMinutesETA(secondsToArrival) {

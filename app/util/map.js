@@ -16,14 +16,19 @@ Math.degrees = function (radians) {
 	return (radians * 180) / Math.PI;
 };
 
+/**
+ * A module containing map-related helper functions
+ * @module util/map
+ */
 module.exports = {
 
 	/**
 	 * Gets the surface distance between two Earth coordinates in meters
-	 * @param {number} lat1 - The latitude of the first point
-	 * @param {number} lon1 - The longitude of the first point
-	 * @param {number} lat2 - The latitude of the second point
-	 * @param {number} lon2 - The longitude of the second point
+	 * @function getDistance
+	 * @param {number} lat1 The latitude of the first point
+	 * @param {number} lon1 The longitude of the first point
+	 * @param {number} lat2 The latitude of the second point
+	 * @param {number} lon2 The longitude of the second point
 	 * @return {number|null} Null if any of the inputs were null. Otherwise, the distance in meters (rounded down the nearest integer)
 	 */
 	getDistance(lat1, lon1, lat2, lon2) {
@@ -43,10 +48,11 @@ module.exports = {
 
 	/**
 	 * Gets the coordinates of the midpoint between two coordinates
-	 * @param {number} lat1 - The latitude of the first point
-	 * @param {number} lon1 - The longitude of the first point
-	 * @param {number} lat2 - The latitude of the second point
-	 * @param {number} lon2 - The longitude of the second point
+	 * @function getMidpointCoords
+	 * @param {number} lat1 The latitude of the first point
+	 * @param {number} lon1 The longitude of the first point
+	 * @param {number} lat2 The latitude of the second point
+	 * @param {number} lon2 The longitude of the second point
 	 * @returns {number[]} The midpoint coordinates stored in a 2-length array with the form {latitude, longitude}
 	 */
 	getMidpointCoords(lat1, lon1, lat2, lon2) {
