@@ -24,7 +24,7 @@ module.exports = {
 
 	/**
 	 * Gets the surface distance between two Earth coordinates in meters
-	 * @function getDistance
+	 * @function
 	 * @param {number} lat1 The latitude of the first point
 	 * @param {number} lon1 The longitude of the first point
 	 * @param {number} lat2 The latitude of the second point
@@ -48,7 +48,7 @@ module.exports = {
 
 	/**
 	 * Gets the coordinates of the midpoint between two coordinates
-	 * @function getMidpointCoords
+	 * @function
 	 * @param {number} lat1 The latitude of the first point
 	 * @param {number} lon1 The longitude of the first point
 	 * @param {number} lat2 The latitude of the second point

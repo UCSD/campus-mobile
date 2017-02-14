@@ -6,7 +6,7 @@ module.exports = {
 
 	/**
 	 * Gets the minutes of "estimated time of arrival" from an amount of seconds
-	 * @function getMinutesETA
+	 * @function
 	 * @param {number} secondToArrival The number of seconds until arrival
 	 * @returns {string} A user-friendly respresentation of the number of minutes
 	 */

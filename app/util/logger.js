@@ -11,7 +11,7 @@ module.exports = {
 
 	/**
 	 * Send a log message to the console
-	 * @function log
+	 * @function
 	 * @param {string} msg The message to log
 	 */
 	log(msg) {
@@ -21,7 +21,7 @@ module.exports = {
 	/**
 	 * Send an error message to the console
 	 * If debugging is enabled, the message is sent as an error (e.g. stderr)
-	 * @function error
+	 * @function
 	 * @param {string} msg The error message to log
 	 */
 	error(msg) {
@@ -34,7 +34,7 @@ module.exports = {
 
 	/**
 	 * Sends a log message to Google Analytics as well as the local console
-	 * @function ga
+	 * @function
 	 * @param {string} msg The message to to log
 	 */
 	ga(msg) {
