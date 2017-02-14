@@ -2,7 +2,6 @@ import React from 'react';
 import {
 	View,
 	Text,
-	ActivityIndicator,
 	Image,
 	AppState,
 	ScrollView,
@@ -15,22 +14,13 @@ import MapView from 'react-native-maps';
 
 import ShuttleSmallList from './ShuttleSmallList';
 import { updateArrivals } from '../../actions/shuttle';
-
-import LocationRequiredContent from '../common/LocationRequiredContent';
-import general, { getPRM, getMaxCardWidth, round } from '../../util/general';
-import { getMinutesETA } from '../../util/shuttle';
-
 import ShuttleImageDict from './ShuttleImageDict';
 
 const stopUpdateInterval = 6000;
-const shuttleStopMap = require('../../json/shuttle_stops_master_map_no_routes');
-
 const deviceWidth = Dimensions.get('window').width;
 
 const css = require('../../styles/css');
 const logger = require('../../util/logger');
-const shuttle = require('../../util/shuttle');
-const map = require('../../util/map');
 
 const ShuttleStopContainer = React.createClass({
 	mixins: [TimerMixin],
@@ -93,7 +83,7 @@ const ShuttleStopContainer = React.createClass({
 					) : null }
 
 					<View style={css.shuttlestop_name_container}>
-						<Text style={css.shuttlestop_name_text}>{shuttleStopMap[stopID].name}</Text>
+						<Text style={css.shuttlestop_name_text}>{stops[stopID].name}</Text>
 					</View>
 
 					{ (stops[stopID].arrivals) ? (

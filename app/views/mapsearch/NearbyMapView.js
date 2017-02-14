@@ -26,11 +26,8 @@ import ShuttleLocationContainer from '../../containers/shuttleLocationContainer'
 import { toggleRoute } from '../../actions/shuttle';
 import { fetchSearch } from '../../actions/map';
 
-const css = require('../../styles/css');
-const logger = require('../../util/logger');
-const shuttle = require('../../util/shuttle');
-const AppSettings = require('../../AppSettings');
-
+import css from '../../styles/css';
+import logger from '../../util/logger';
 import general, { getPRM } from '../../util/general';
 
 const deviceHeight = Dimensions.get('window').height;
@@ -39,8 +36,6 @@ const statusBarHeight = Platform.select({
 	ios: 0,
 	android: StatusBar.currentHeight,
 });
-
-const shuttle_routes = require('../../json/shuttle_routes_master_map.json');
 
 class NearbyMapView extends React.Component {
 
@@ -62,9 +57,13 @@ class NearbyMapView extends React.Component {
 	}
 
 	componentWillMount() {
-		Object.keys(shuttle_routes).forEach((key, index) => {
+		Object.keys(this.props.shuttle_routes).forEach((key, index) => {
 			this.setState({ ['route' + key] : false });
 		});
+	}
+
+	componentDidMount() {
+		logger.ga('View mounted: Full Map View');
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -190,7 +189,7 @@ class NearbyMapView extends React.Component {
 	}
 
 	toggleRoute = (value, route) => {
-		this.props.dispatch(toggleRoute(route));
+		this.props.toggle(route);
 
 		const vehicles = this.state.vehicles;
 		delete vehicles[route];
@@ -206,7 +205,7 @@ class NearbyMapView extends React.Component {
 				<SideMenu
 					menu={
 						<SearchSideMenu
-							shuttle_routes={shuttle_routes}
+							shuttle_routes={this.props.shuttle_routes}
 							onToggle={this.toggleRoute}
 							toggles={this.props.toggles}
 						/>
@@ -318,6 +317,9 @@ const mapDispatchToProps = (dispatch, ownProps) => (
 	{
 		fetchSearch: (term, location) => {
 			dispatch(fetchSearch(term, location));
+		},
+		toggle: (route) => {
+			dispatch(toggleRoute(route));
 		}
 	}
 );

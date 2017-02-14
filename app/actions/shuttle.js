@@ -1,8 +1,49 @@
 import logger from '../util/logger';
 import ShuttleService from '../services/shuttleService';
 import { getDistance } from '../util/map';
+import { SHUTTLE_MASTER_TTL } from '../AppSettings';
 
-const shuttleStopMap = require('../json/shuttle_stops_master_map_no_routes');
+// const shuttleStopMap = require('../json/shuttle_stops_master_map_no_routes');
+
+function updateMaster() {
+	return (dispatch, getState) => {
+		const { lastUpdated, routes, stops } = getState().shuttle;
+		const nowTime = new Date().getTime();
+		const timeDiff = nowTime - lastUpdated;
+		const shuttleTTL = SHUTTLE_MASTER_TTL * 1000;
+
+		if (timeDiff < shuttleTTL && routes && stops) {
+			// Do nothing, don't need to update
+		} else {
+			// Fetch for new data
+			ShuttleService.FetchMasterStopsNoRoutes()
+				.then((stopsData) => {
+					ShuttleService.FetchMasterRoutes()
+						.then((routesData) => {
+							// Set toggles
+							const initialToggles = {};
+							Object.keys(routesData).forEach((key, index) => {
+								initialToggles[key] = false;
+							});
+
+							dispatch({
+								type: 'SET_SHUTTLE_MASTER',
+								stops: stopsData,
+								routes: routesData,
+								toggles: initialToggles,
+								nowTime
+							});
+						})
+						.catch((error) => {
+							logger.error(error);
+						});
+				})
+				.catch((error) => {
+					logger.error(error);
+				});
+		}
+	};
+}
 
 function toggleRoute(route) {
 	return {
@@ -28,20 +69,22 @@ function updateVehicles(route) {
 }
 
 function updateClosestStop(location) {
-	let closestDist = 1000000000;
-	let closestStop = -1;
+	return (dispatch, getState) => {
+		const { stops } = getState().shuttle;
 
-	Object.keys(shuttleStopMap).forEach((stopID, index) => {
-		const stop = shuttleStopMap[stopID];
-		const distanceFromStop = getDistance(location.coords.latitude, location.coords.longitude, stop.lat, stop.lon);
+		let closestDist = 1000000000;
+		let closestStop = -1;
 
-		if (distanceFromStop < closestDist) {
-			closestStop = stopID;
-			closestDist = distanceFromStop;
-		}
-	});
+		Object.keys(stops).forEach((stopID, index) => {
+			const stop = stops[stopID];
+			const distanceFromStop = getDistance(location.coords.latitude, location.coords.longitude, stop.lat, stop.lon);
 
-	return (dispatch) => {
+			if (distanceFromStop < closestDist) {
+				closestStop = stopID;
+				closestDist = distanceFromStop;
+			}
+		});
+
 		dispatch({
 			type: 'SET_CLOSEST_STOP',
 			closestStop
@@ -83,4 +126,5 @@ module.exports = {
 	updateVehicles,
 	updateClosestStop,
 	updateArrivals,
+	updateMaster,
 };

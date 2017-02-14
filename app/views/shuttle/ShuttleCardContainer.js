@@ -1,10 +1,8 @@
 import React from 'react';
-import {
-	AppState
-} from 'react-native';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 
+import { updateMaster } from '../../actions/shuttle';
 import CardComponent from '../card/CardComponent';
 import ShuttleCard from './ShuttleCard';
 
@@ -13,6 +11,7 @@ const logger = require('../../util/logger');
 class ShuttleCardContainer extends CardComponent {
 	componentDidMount() {
 		logger.ga('Card Mounted: Shuttle');
+		this.props.updateMaster();
 	}
 
 	render() {
@@ -41,8 +40,17 @@ function mapStateToProps(state, props) {
 	};
 }
 
+function mapDispatchtoProps(dispatch) {
+	return {
+		updateMaster: () => {
+			dispatch(updateMaster());
+		}
+	};
+}
+
 const ActualShuttleCard = connect(
 	mapStateToProps,
+	mapDispatchtoProps
 )(ShuttleCardContainer);
 
 export default ActualShuttleCard;
