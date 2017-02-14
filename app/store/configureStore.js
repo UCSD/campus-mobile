@@ -6,8 +6,7 @@ import createLogger from 'redux-logger';
 import createFilter from 'redux-persist-transform-filter';
 
 import rootReducer from '../reducers';
-
-const loggerMiddleware = createLogger();
+import { DEBUG_ENABLED } from '../AppSettings';
 
 const saveMapFilter = createFilter(
 	'map',
@@ -15,12 +14,17 @@ const saveMapFilter = createFilter(
 );
 
 export default function configureStore(initialState, onComplete: ?() => void) {
+	const middlewares = [thunkMiddleware]; // lets us dispatch() functions
+
+	if ( DEBUG_ENABLED ) {
+		// neat middleware that logs actions
+		const loggerMiddleware = createLogger();
+		middlewares.push(loggerMiddleware);
+	}
+
 	const store = createStore(
 		rootReducer,
-		applyMiddleware(
-			thunkMiddleware, // lets us dispatch() functions
-			//loggerMiddleware // neat middleware that logs actions
-		),
+		applyMiddleware(...middlewares),
 		autoRehydrate()
 	);
 

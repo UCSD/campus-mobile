@@ -29,9 +29,7 @@ import PreferencesView from './views/preferences/PreferencesView';
 import NearbyMapView from './views/mapsearch/NearbyMapView';
 import TabIcons from './navigation/TabIcons';
 
-
 export default class Main extends Component {
-
 	render() {
 		if (general.platformIOS()) {
 			StatusBar.setBarStyle('light-content');
