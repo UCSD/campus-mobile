@@ -63,11 +63,14 @@ var css = StyleSheet.create({
 	navIOS: { backgroundColor: 'rgba(24,43,73,1)', height: NavigatorIOSHeight },
 	navAndroid: { backgroundColor: 'rgba(24,43,73,1)', height: NavigatorAndroidHeight },
 
-	navIOSTitle: { color: '#FFF', fontSize: 28, marginTop: -10, /*fontFamily: 'RotisSerif',*/ letterSpacing: -1 },
-	navAndroidTitle: { color: '#FFF', fontSize: 28, marginTop: -10, /*fontFamily: 'RotisSerif',*/ letterSpacing: -1 },
-
+	navIOSTitle: { color: '#FFF', fontSize: 24, marginTop: -8, fontWeight: '300' },
+	navAndroidTitle: { color: '#FFF', fontSize: 24, marginTop: -8, fontWeight: '300' },
+	navCampusLogoTitle: { resizeMode: 'contain', height: 26, marginTop: 24, alignSelf: 'center' },
 	navIOSIconStyle: { tintColor:'#FFF', marginTop: -2 },
+	navBackButtonTextIOS: { color: '#FFF', marginTop: -2, fontWeight: '300' },
 	navAndroidIconStyle: { tintColor:'#FFF', marginTop: -6 },
+	navBackButtonTextAndroid: { color: '#FFF', marginTop: -6, fontWeight: '300' },
+
 
 	// TabBar
 	tabBarIOS: { borderTopWidth: 1, borderColor: '#DADADA', backgroundColor: '#FFF', height: TabBarHeight },
