@@ -63,7 +63,7 @@ const ShuttleStopContainer = React.createClass({
 							arrivalData={stops[stopID].arrivals}
 							style={{ width: deviceWidth }}
 							rows={3}
-							scrollEnabled={true}
+							scrollEnabled={false}
 						/>
 					) : (
 						<View style={css.shuttle_stop_arrivals_container}>
