@@ -43,7 +43,6 @@ function fetchSearch(term, location) {
 }
 
 function _sortResults(location, results) {
-	console.log('ivan' + JSON.stringify(results));
 	// Calc distance from dining locations
 	return new Promise((resolve, reject) => {
 		for (let i = 0; results.length > i; i++) {
