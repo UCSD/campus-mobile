@@ -31,6 +31,9 @@ npm run-script apply-ga-bridge-fix
 	//Build APK and install on device one liner:
 	git clone https://github.com/UCSD/campus-mobile-build-scripts.git && cd campus-mobile-build-scripts && npm install && node build-apk.js && adb install ./bld/android/app/build/outputs/apk/app-release.apk
 
+## Documentation (Work in Progress)
+[Index](https://htmlpreview.github.io/?https://raw.githubusercontent.com/UCSD/campus-mobile/dev/out/index.html)
+
 ### Availabile Cards
 * TopBanner
 	* For upcoming current events
