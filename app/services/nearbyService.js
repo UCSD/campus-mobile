@@ -3,7 +3,6 @@ import { MAP_SEARCH_API_URL } from '../AppSettings';
 
 const NearbyService = {
 	FetchSearchResults(search) {
-		console.log('ivan ' + MAP_SEARCH_API_URL + search);
 		return fetch(MAP_SEARCH_API_URL + search, {
 			method: 'GET',
 			headers: {

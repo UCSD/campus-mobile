@@ -22,32 +22,26 @@ const historyDataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r
 const suggestions = [
 	{
 		name: 'Parking',
-		query: 'Parking',
 		icon: 'local-parking',
 	},
 	{
 		name: 'Hydration',
-		query: 'Hydration Station',
 		icon: 'local-drink',
 	},
 	{
 		name: 'Dining',
-		query: 'Dining',
 		icon: 'local-dining',
 	},
 	{
 		name: 'Market',
-		query: 'Market',
 		icon: 'local-grocery-store',
 	},
 	{
 		name: 'Parking',
-		query: 'Parking',
 		icon: 'local-parking',
 	},
 	{
 		name: 'Hydration',
-		query: 'Hydration Station',
 		icon: 'local-drink',
 	},
 ];
