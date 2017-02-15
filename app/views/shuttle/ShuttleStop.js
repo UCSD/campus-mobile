@@ -3,9 +3,7 @@ import {
 	View,
 	Text,
 	Image,
-	AppState,
 	ScrollView,
-	RefreshControl,
 	Dimensions,
 } from 'react-native';
 import { connect } from 'react-redux';
@@ -28,24 +26,6 @@ const ShuttleStopContainer = React.createClass({
 	componentDidMount() {
 		logger.ga('View Mounted: Shuttle Stop');
 		this.startShuttleWatch();
-		/*
-		InteractionManager.runAfterInteractions(() => {
-			this.setState({ loaded: true })
-		}
-		*/
-	},
-
-	componentWillUnmount() {
-		AppState.removeEventListener('change', this._handleAppStateChange);
-	},
-
-	_handleAppStateChange(currentAppState) {
-		this.setState({ currentAppState });
-
-		// check TTL and refresh weather data if needed
-		if (currentAppState === 'active') {
-
-		}
 	},
 
 	startShuttleWatch() {
@@ -69,14 +49,6 @@ const ShuttleStopContainer = React.createClass({
 
 				<ScrollView
 					contentContainerStyle={css.scroll_default}
-					refreshControl={
-						<RefreshControl
-							refreshing={false}
-							onRefresh={this.refreshShuttleArrivalsByStop}
-							tintColor="#CCC"
-							title=""
-						/>
-					}
 				>
 					{ShuttleImageDict[stopID] ? (
 						<Image style={css.shuttlestop_image} source={ShuttleImageDict[stopID]} />
