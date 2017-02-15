@@ -65,7 +65,7 @@ var css = StyleSheet.create({
 
 	navIOSTitle: { color: '#FFF', fontSize: 24, marginTop: -8, fontWeight: '300' },
 	navAndroidTitle: { color: '#FFF', fontSize: 24, marginTop: -8, fontWeight: '300' },
-	navCampusLogoTitle: { resizeMode: 'contain', height: 26, marginTop: 24, alignSelf: 'center' },
+	navCampusLogoTitle: { resizeMode: 'contain', height: 26, marginTop: general.platformIOS() ? 26 : 12, alignSelf: 'center' },
 	navIOSIconStyle: { tintColor:'#FFF', marginTop: -2 },
 	navBackButtonTextIOS: { color: '#FFF', marginTop: -2, fontWeight: '300' },
 	navAndroidIconStyle: { tintColor:'#FFF', marginTop: -6 },
