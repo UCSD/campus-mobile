@@ -76,74 +76,78 @@ const SearchMap = ({ location, selectedResult, hideMarker, style, shuttle, vehic
 			) : (null)}
 
 		{
-			// Create MapView.Marker for each shuttle stop
-			Object.keys(shuttle).map((key, index) => {
-				const stop = shuttle[key];
-				if ((Object.keys(stop.routes).length === 0 && stop.routes.constructor === Object) ||
-					// Hide Airport stops
-					stop.routes['89']) {
-					return null;
-				}
+			(shuttle && vehicles) ? (
+				// Create MapView.Marker for each shuttle stop
+				Object.keys(shuttle).map((key, index) => {
+					const stop = shuttle[key];
+					if ((Object.keys(stop.routes).length === 0 && stop.routes.constructor === Object) ||
+						// Hide Airport stops
+						stop.routes['89']) {
+						return null;
+					}
 
-				return (
-					<MapView.Marker
-						ref={(MarkRef) => {
-							// logger.log("MARKER: " + selectedResult.title);
-							if (MarkRef != null) {
-								// MarkRef.showCallout();
-							}
-						}}
-						coordinate={{
-							latitude: stop.lat,
-							longitude: stop.lon
-						}}
-						title={stop.name}
-						identifier={stop.name}
-						key={stop.name + key}
-					>
-						<Icon style={{ flex:0.2 }} name={'stop-circle-o'} size={20} />
-						<MapView.Callout style={{ width: 100 }} >
-							<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'}>
-								<View style={{ flex: 1, alignItems: 'center', flexDirection: 'column', flexWrap: 'wrap' }}>
-									<Text>{stop.name}</Text>
-								</View>
-							</TouchableHighlight>
-						</MapView.Callout>
-					</MapView.Marker>
-				);
-			})
+					return (
+						<MapView.Marker
+							ref={(MarkRef) => {
+								// logger.log("MARKER: " + selectedResult.title);
+								if (MarkRef != null) {
+									// MarkRef.showCallout();
+								}
+							}}
+							coordinate={{
+								latitude: stop.lat,
+								longitude: stop.lon
+							}}
+							title={stop.name}
+							identifier={stop.name}
+							key={stop.name + key}
+						>
+							<Icon name={'stop-circle-o'} size={20} />
+							<MapView.Callout style={{ width: 100 }} >
+								<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'}>
+									<View style={{ flex: 1, alignItems: 'center', flexDirection: 'column', flexWrap: 'wrap' }}>
+										<Text>{stop.name}</Text>
+									</View>
+								</TouchableHighlight>
+							</MapView.Callout>
+						</MapView.Marker>
+					);
+				})
+			) : (null)
 		}
 
 		{
-			// Create MapView.Marker for each vehicle
-			Object.keys(vehicles).map((key, index) => {
-				const vehicleArray = vehicles[key];
+			(shuttle && vehicles) ? (
+				// Create MapView.Marker for each vehicle
+				Object.keys(vehicles).map((key, index) => {
+					const vehicleArray = vehicles[key];
 
-				return vehicleArray.map((vehicle) => (
-					<MapView.Marker.Animated
-						ref={(MarkRef) => {
-							// logger.log("MARKER: " + selectedResult.title);
-							if (MarkRef != null) {
-								// MarkRef.showCallout();
-							}
-						}}
-						coordinate={vehicle.animated}
-						title={vehicle.name}
-						identifier={vehicle.name}
-						key={vehicle.name}
-					>
-						<Icon style={{ flex:0.2 }} name={'bus'} size={20} />
-						<MapView.Callout style={{ width: 100 }} >
-							<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'}>
-								<View style={{ flex: 1, alignItems: 'center', flexDirection: 'column', flexWrap: 'wrap' }}>
-									<Text>{vehicle.name}</Text>
-								</View>
-							</TouchableHighlight>
-						</MapView.Callout>
-					</MapView.Marker.Animated>
-					)
-				);
-			})
+					return vehicleArray.map((vehicle) => (
+						<MapView.Marker.Animated
+							ref={(MarkRef) => {
+								// logger.log("MARKER: " + selectedResult.title);
+								if (MarkRef != null) {
+									// MarkRef.showCallout();
+								}
+							}}
+							coordinate={vehicle.animated}
+							title={vehicle.name}
+							identifier={vehicle.name}
+							key={vehicle.name}
+						>
+							<Icon name={'bus'} size={20} />
+							<MapView.Callout style={{ width: 100 }} >
+								<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'}>
+									<View style={{ flex: 1, alignItems: 'center', flexDirection: 'column', flexWrap: 'wrap' }}>
+										<Text>{vehicle.name}</Text>
+									</View>
+								</TouchableHighlight>
+							</MapView.Callout>
+						</MapView.Marker.Animated>
+						)
+					);
+				})
+			) : (null)
 		}
 	</MapView>
 );
