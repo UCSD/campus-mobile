@@ -8,7 +8,7 @@
     "insert-production-values": "node scripts/replace_all.js production",
     "insert-staging-values": "node scripts/replace_all.js staging",
     "insert-placeholder-values": "node scripts/replace_all.js placeholder",
-    "apply-ga-bridge-fix": "node scripts/apply_google_analytics_bridge_fix.js",
+    "apply-fixes": "node scripts/apply-fixes.js",
     "generate-docs": "./node_modules/.bin/jsdoc -c jsdoc.conf.json -t ./node_modules/ink-docstrap/template -R Readme.md -r ./app/util"
   },
   "dependencies": {
