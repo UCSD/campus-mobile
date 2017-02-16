@@ -5,19 +5,7 @@
 ## Installation
 
 	// From your project folder run:
-	npm install
-
-## Bugs
-
-### Android
-#### App crashing immediately after build?
-
-Most likely being caused by the google-play version conflict between react-native-maps and react-native-google-analytics-bridge
-
-To fix this issue, run the following command from your project folder:
-
-npm run-script apply-ga-bridge-fix
-
+	npm install && npm run-script apply-fixes
 
 ## Building
 

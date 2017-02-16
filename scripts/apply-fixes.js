@@ -1,18 +1,23 @@
 /* 	
 	Usage:
-	npm run-script apply-ga-bridge-fix
+	npm run-script apply-fixes
 */
-var fs = require('fs');
+const fs = require('fs');
 
-var GA_BRIDGE_FIX_PATH = './node_modules/react-native-google-analytics-bridge/android/build.gradle';
-var GA_BRIDGE_ERR = 'com.google.android.gms:play-services-analytics:+';
-var GA_BRIDGE_FIX = 'com.google.android.gms:play-services-analytics:9.4.0';
+const GA_BRIDGE_FIX_PATH = './node_modules/react-native-google-analytics-bridge/android/build.gradle';
+const CORE_FIX_PATH = './node_modules/react-native/Libraries/Core/InitializeCore.js';
+const GA_BRIDGE_ERR = 'com.google.android.gms:play-services-analytics:+';
+const GA_BRIDGE_FIX = 'com.google.android.gms:play-services-analytics:9.4.0';
+const CORE_ERR = 'function handleError(e, isFatal)';
+const CORE_FIX = 'var handleError = function(e, isFatal)';
 
-// AppSettings.js
 makeReplacements(GA_BRIDGE_FIX_PATH, [
-	{ gaInitial: GA_BRIDGE_ERR, gaFixed: GA_BRIDGE_FIX },
+	{ gaInitial: GA_BRIDGE_ERR, gaFixed: GA_BRIDGE_FIX }
 ]);
 
+makeReplacements(CORE_FIX_PATH, [
+	{ gaInitial: CORE_ERR, gaFixed: CORE_FIX }
+]);
 
 function makeReplacements(FILE_PATH, REPLACEMENTS) {
 	fs.readFile(FILE_PATH, 'utf8', function(err, data) {
