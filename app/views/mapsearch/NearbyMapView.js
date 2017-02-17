@@ -30,7 +30,7 @@ import { fetchSearch } from '../../actions/map';
 
 import css from '../../styles/css';
 import logger from '../../util/logger';
-import general, { getPRM } from '../../util/general';
+import { getPRM, gotoNavigationApp } from '../../util/general';
 
 const deviceHeight = Dimensions.get('window').height;
 const deviceWidth = Dimensions.get('window').width;
@@ -51,6 +51,8 @@ class NearbyMapView extends React.Component {
 			allowScroll: false,
 			iconStatus: 'menu',
 			showBar: false,
+			showShuttle: true,
+			showNav: false,
 			showMenu: false,
 			toggled: false,
 			vehicles: {},
@@ -132,7 +134,9 @@ class NearbyMapView extends React.Component {
 		if (this.state.iconStatus === 'back') {
 			this.setState({
 				iconStatus: 'menu',
-				showBar: (this.props.search_results !== null)
+				showBar: (this.props.search_results !== null),
+				showShuttle: true,
+				showNav: true,
 			});
 			this.scrollRef.scrollTo({ x: 0, y: 0, animated: true });
 			// this.barRef.clear();
@@ -147,7 +151,9 @@ class NearbyMapView extends React.Component {
 	gotoResults = () => {
 		this.setState({
 			iconStatus: 'back',
-			showBar: false
+			showBar: false,
+			showShuttle: false,
+			showNav: false
 		});
 		this.scrollRef.scrollTo({ x: 0, y: deviceHeight - 64 - statusBarHeight, animated: true });
 	}
@@ -156,14 +162,18 @@ class NearbyMapView extends React.Component {
 		this.scrollRef.scrollTo({ x: 0, y: 2 * (deviceHeight - 64 - statusBarHeight), animated: true });
 		this.setState({
 			iconStatus: 'back',
-			showBar: false
+			showBar: false,
+			showShuttle: false,
+			showNav: false,
 		});
 	}
 
 	gotoShuttleSettings = () => {
 		this.setState({
 			iconStatus: 'back',
-			showBar: false
+			showBar: false,
+			showShuttle: false,
+			showNav: false,
 		});
 		this.scrollRef.scrollTo({ x: 0, y: 3 * (deviceHeight - 64 - statusBarHeight), animated: true });
 	}
@@ -177,6 +187,8 @@ class NearbyMapView extends React.Component {
 			searchInput: text,
 			showBar: true,
 			iconStatus: 'menu',
+			showShuttle: true,
+			showNav: true,
 		});
 	}
 
@@ -189,6 +201,8 @@ class NearbyMapView extends React.Component {
 			searchInput: text,
 			showBar: true,
 			iconStatus: 'menu',
+			showShuttle: true,
+			showNav: true,
 		});
 	}
 
@@ -197,7 +211,9 @@ class NearbyMapView extends React.Component {
 		this.setState({
 			iconStatus: 'menu',
 			selectedResult: newSelect,
-			showBar: true
+			showBar: true,
+			showShuttle: true,
+			showNav: true,
 		});
 		this.scrollRef.scrollTo({ x: 0, y: 0, animated: true });
 	}
@@ -218,6 +234,7 @@ class NearbyMapView extends React.Component {
 	}
 
 	render() {
+		console.log(JSON.stringify(this.props.search_results));
 		if (this.props.location.coords) {
 			return (
 				<SideMenu
@@ -233,12 +250,34 @@ class NearbyMapView extends React.Component {
 					onChange={(isOpen) => this.updateMenuState(isOpen)}
 				>
 					<View style={css.main_container}>
-						<TouchableOpacity
-							style={{ justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: 6 + Math.round(44 * getPRM()), right: 6, zIndex: 5, width: 50, height: 50, borderRadius: 50 / 2, backgroundColor: '#2196F3' }}
-							onPress={this.gotoShuttleSettings}
-						>
-							<Icon name={'bus'} size={20} color={'white'} />
-						</TouchableOpacity>
+						{
+							(this.props.search_results && this.state.showNav) ? (
+								<ElevatedView
+									style={{ zIndex: 2, justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: (2 * (6 + Math.round(44 * getPRM()))) + 6, right: 6, width: 50, height: 50, borderRadius: 50 / 2, backgroundColor: '#2196F3' }}
+									elevation={2} // zIndex style and elevation has to match
+								>
+									<TouchableOpacity
+										onPress={() => gotoNavigationApp(this.props.search_results[this.state.selectedResult].mkrLat, this.props.search_results[this.state.selectedResult].mkrLong)}
+									>
+										<Icon name={'location-arrow'} size={20} color={'white'} />
+									</TouchableOpacity>
+								</ElevatedView>
+							) : null
+						}
+						{
+							(this.state.showShuttle) ? (
+								<ElevatedView
+									style={{ zIndex: 2, justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: 6 + Math.round(44 * getPRM()), right: 6, width: 50, height: 50, borderRadius: 50 / 2, backgroundColor: '#4CAF50' }}
+									elevation={2} // zIndex style and elevation has to match
+								>
+									<TouchableOpacity
+										onPress={this.gotoShuttleSettings}
+									>
+										<Icon name={'bus'} size={20} color={'white'} />
+									</TouchableOpacity>
+								</ElevatedView>
+							) : (null)
+						}
 						<SearchBar
 							update={this.updateSearch}
 							onFocus={this.focusSearch}
