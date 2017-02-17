@@ -46,7 +46,7 @@ class NearbyMapView extends React.Component {
 			searchInput: null,
 			selectedResult: 0,
 			typing: false,
-			allowScroll: false,
+			allowScroll: true,
 			iconStatus: 'search',
 			showBar: false,
 			showShuttle: true,
@@ -233,7 +233,6 @@ class NearbyMapView extends React.Component {
 	}
 
 	render() {
-		console.log(JSON.stringify(this.props.search_results));
 		if (this.props.location.coords) {
 			return (
 				<View style={css.main_container}>
@@ -249,7 +248,7 @@ class NearbyMapView extends React.Component {
 									<Icon name={'location-arrow'} size={20} color={'white'} />
 								</TouchableOpacity>
 							</ElevatedView>
-						) : null
+						) : (<ElevatedView />) // Android bug - breaks view if this is null...on RN39...check if this bug still exists in RN40 or if this can be changed to null
 					}
 					{
 						(this.state.showShuttle) ? (
@@ -263,7 +262,7 @@ class NearbyMapView extends React.Component {
 									<Icon name={'bus'} size={20} color={'white'} />
 								</TouchableOpacity>
 							</ElevatedView>
-						) : (null)
+						) : (<ElevatedView />) // Android bug
 					}
 					<SearchBar
 						update={this.updateSearch}
