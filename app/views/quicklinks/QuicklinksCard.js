@@ -9,6 +9,8 @@ import { Actions } from 'react-native-router-flux';
 import Card from '../card/Card';
 import QuicklinksList from './QuicklinksList';
 
+import general from '../../util/general';
+
 const css = require('../../styles/css');
 
 const QuicklinksCard = ({ data }) => (
@@ -17,7 +19,7 @@ const QuicklinksCard = ({ data }) => (
 			<View style={css.quicklinks_card}>
 				<View style={css.quicklinks_locations}>
 					<QuicklinksList
-						data={data}
+						data={data.slice().sort(general.dynamicSort('card-order'))} // Try to get rid of this sort eventually?
 						scrollEnabled={false}
 					/>
 				</View>
