@@ -7,7 +7,8 @@ import {
 	StyleSheet,
 	TouchableOpacity,
 	Platform,
-	StatusBar
+	StatusBar,
+	BackAndroid
 } from 'react-native';
 import { connect } from 'react-redux';
 import ElevatedView from 'react-native-elevated-view';
@@ -21,6 +22,7 @@ import SearchMap from './SearchMap';
 import SearchResults from './SearchResults';
 import SearchHistoryCard from './SearchHistoryCard';
 import SearchSuggest from './SearchSuggest';
+import SearchShuttleMenu from './SearchShuttleMenu';
 import ShuttleLocationContainer from '../../containers/shuttleLocationContainer';
 
 import { toggleRoute } from '../../actions/shuttle';
@@ -52,7 +54,7 @@ class NearbyMapView extends React.Component {
 			showBar: false,
 			showMenu: false,
 			toggled: false,
-			vehicles: {}
+			vehicles: {},
 		};
 	}
 
@@ -64,6 +66,8 @@ class NearbyMapView extends React.Component {
 
 	componentDidMount() {
 		logger.ga('View mounted: Full Map View');
+
+		BackAndroid.addEventListener('hardwareBackPress', this.pressIcon);
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -74,6 +78,7 @@ class NearbyMapView extends React.Component {
 					this.state.vehicles[key].forEach((currVehicle) => {
 						if (nextVehicle.id === currVehicle.id &&
 							(nextVehicle.lat !== currVehicle.lat || nextVehicle.lon !== currVehicle.lon)) {
+							// Animate vehicle movement
 							currVehicle.animated.timing({
 								latitude: nextVehicle.lat,
 								longitude: nextVehicle.lon,
@@ -120,6 +125,10 @@ class NearbyMapView extends React.Component {
 		}
 	}
 
+	componentWillUnmount() {
+		BackAndroid.removeEventListener('hardwareBackPress', this.pressIcon);
+	}
+
 	pressIcon = () => {
 		if (this.state.iconStatus === 'back') {
 			this.setState({
@@ -129,8 +138,10 @@ class NearbyMapView extends React.Component {
 			this.scrollRef.scrollTo({ x: 0, y: 0, animated: true });
 			// this.barRef.clear();
 			this.barRef.blur();
+			return true;
 		} else if (this.state.iconStatus === 'menu') {
 			this.updateMenuState(true);
+			return false;
 		}
 	}
 
@@ -148,6 +159,14 @@ class NearbyMapView extends React.Component {
 			iconStatus: 'back',
 			showBar: false
 		});
+	}
+
+	gotoShuttleSettings = () => {
+		this.setState({
+			iconStatus: 'back',
+			showBar: false
+		});
+		this.scrollRef.scrollTo({ x: 0, y: 3 * (deviceHeight - 64 - statusBarHeight), animated: true });
 	}
 
 	updateSearch = (text) => {
@@ -215,6 +234,12 @@ class NearbyMapView extends React.Component {
 					onChange={(isOpen) => this.updateMenuState(isOpen)}
 				>
 					<View style={css.main_container}>
+						<TouchableOpacity
+							style={{ justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: 6, right: 6, zIndex: 5, width: 50, height: 50, borderRadius: 50 / 2, backgroundColor: '#2196F3' }}
+							onPress={this.gotoShuttleSettings}
+						>
+							<Icon name={'bus'} size={20} color={'white'} />
+						</TouchableOpacity>
 						<SearchBar
 							update={this.updateSearch}
 							onFocus={this.focusSearch}
@@ -269,6 +294,15 @@ class NearbyMapView extends React.Component {
 										data={this.props.search_history}
 									/>
 									) : (null)}
+							</View>
+							<View
+								style={styles.section}
+							>
+								<SearchShuttleMenu
+									shuttle_routes={this.props.shuttle_routes}
+									onToggle={this.toggleRoute}
+									toggles={this.props.toggles}
+								/>
 							</View>
 						</ScrollView>
 						{(this.state.showBar && this.props.search_results) ? (
