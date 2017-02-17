@@ -10,8 +10,8 @@ UC San Diego uses this platform for its campus mobile app on iOS and Android.
 
 - Follow the [Getting Started guide](https://facebook.github.io/react-native/docs/getting-started.html) for React Native 
 - From the project folder, run:
-	npm install
-	npm run-script apply-fixes
+	- npm install
+	- npm run-script apply-fixes
 - For iOS, from the project folder, run: react-native run-ios
 - For Android, from the project folder, run: react-native run-android
 
