@@ -9,13 +9,11 @@ UC San Diego uses this platform for its campus mobile app on iOS and Android.
 ## Getting Started
 
 - Follow the [Getting Started guide](https://facebook.github.io/react-native/docs/getting-started.html) for React Native 
-- From the project folder, run: npm install && npm run-script apply-fixes
+- From the project folder, run:
+	npm install
+	npm run-script apply-fixes
 - For iOS, from the project folder, run: react-native run-ios
 - For Android, from the project folder, run: react-native run-android
-
-For Android, the google-play version of the react-native-maps and react-native-google-analytics-bridge modules may be in conflict. This will cause the Android app to crash immediately after launch. To fix this, run the following from the project folder:
-
-npm run-script-ga-bridge-fix
 
 ## Documentation
 
