@@ -17,7 +17,7 @@ module.exports = {
 	EVENTS_API_URL: 				'https://evv6vpvob6.execute-api.us-west-2.amazonaws.com/prod/',
 	QUICKLINKS_API_URL: 			'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/quick_links/ucsd-quicklinks-v2.json',
 	NEWS_API_URL: 					'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/allstories.json',
-	MAP_SEARCH_API_URL: 			'https://vkil1id5r5.execute-api.us-west-2.amazonaws.com/dev/map/search?region=0&query=',
+	MAP_SEARCH_API_URL: 			'https://vkil1id5r5.execute-api.us-west-2.amazonaws.com/dev2/map/search?region=0&query=',
 	WELCOME_WEEK_API_URL: 			'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/welcome_week_events.json',
 
 	/* RESOURCES */
