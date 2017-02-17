@@ -12,11 +12,9 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import ElevatedView from 'react-native-elevated-view';
-import SideMenu from 'react-native-side-menu';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MapView from 'react-native-maps';
 
-import SearchSideMenu from './SearchSideMenu';
 import SearchBar from './SearchBar';
 import SearchMap from './SearchMap';
 import SearchResults from './SearchResults';
@@ -49,7 +47,7 @@ class NearbyMapView extends React.Component {
 			selectedResult: 0,
 			typing: false,
 			allowScroll: false,
-			iconStatus: 'menu',
+			iconStatus: 'search',
 			showBar: false,
 			showShuttle: true,
 			showNav: false,
@@ -105,6 +103,12 @@ class NearbyMapView extends React.Component {
 				});
 			}
 		});
+
+		if (this.state.iconStatus === 'load' && nextProps.search_results) {
+			this.setState({
+				iconStatus: 'search'
+			});
+		}
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
@@ -133,7 +137,7 @@ class NearbyMapView extends React.Component {
 	pressIcon = () => {
 		if (this.state.iconStatus === 'back') {
 			this.setState({
-				iconStatus: 'menu',
+				iconStatus: 'search',
 				showBar: (this.props.search_results !== null),
 				showShuttle: true,
 				showNav: true,
@@ -142,8 +146,7 @@ class NearbyMapView extends React.Component {
 			// this.barRef.clear();
 			this.barRef.blur();
 			return true;
-		} else if (this.state.iconStatus === 'menu') {
-			this.updateMenuState(true);
+		} else {
 			return false;
 		}
 	}
@@ -186,7 +189,7 @@ class NearbyMapView extends React.Component {
 		this.setState({
 			searchInput: text,
 			showBar: true,
-			iconStatus: 'menu',
+			iconStatus: 'load',
 			showShuttle: true,
 			showNav: true,
 		});
@@ -200,7 +203,7 @@ class NearbyMapView extends React.Component {
 		this.setState({
 			searchInput: text,
 			showBar: true,
-			iconStatus: 'menu',
+			iconStatus: 'load',
 			showShuttle: true,
 			showNav: true,
 		});
@@ -209,17 +212,13 @@ class NearbyMapView extends React.Component {
 	updateSelectedResult = (index) => {
 		const newSelect = index;
 		this.setState({
-			iconStatus: 'menu',
+			iconStatus: 'search',
 			selectedResult: newSelect,
 			showBar: true,
 			showShuttle: true,
 			showNav: true,
 		});
 		this.scrollRef.scrollTo({ x: 0, y: 0, animated: true });
-	}
-
-	updateMenuState = (showMenu) => {
-		this.setState({ showMenu, });
 	}
 
 	toggleRoute = (value, route) => {
@@ -237,133 +236,120 @@ class NearbyMapView extends React.Component {
 		console.log(JSON.stringify(this.props.search_results));
 		if (this.props.location.coords) {
 			return (
-				<SideMenu
-					menu={
-						<SearchSideMenu
-							shuttle_routes={this.props.shuttle_routes}
-							onToggle={this.toggleRoute}
-							toggles={this.props.toggles}
-						/>
-					}
-					edgeHitWidth={0} // Disable open sidemenu from swipe
-					isOpen={this.state.showMenu}
-					onChange={(isOpen) => this.updateMenuState(isOpen)}
-				>
-					<View style={css.main_container}>
-						{
-							(this.props.search_results && this.state.showNav) ? (
-								<ElevatedView
-									style={{ zIndex: 2, justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: (2 * (6 + Math.round(44 * getPRM()))) + 6, right: 6, width: 50, height: 50, borderRadius: 50 / 2, backgroundColor: '#2196F3' }}
-									elevation={2} // zIndex style and elevation has to match
-								>
-									<TouchableOpacity
-										onPress={() => gotoNavigationApp(this.props.search_results[this.state.selectedResult].mkrLat, this.props.search_results[this.state.selectedResult].mkrLong)}
-									>
-										<Icon name={'location-arrow'} size={20} color={'white'} />
-									</TouchableOpacity>
-								</ElevatedView>
-							) : null
-						}
-						{
-							(this.state.showShuttle) ? (
-								<ElevatedView
-									style={{ zIndex: 2, justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: 6 + Math.round(44 * getPRM()), right: 6, width: 50, height: 50, borderRadius: 50 / 2, backgroundColor: '#4CAF50' }}
-									elevation={2} // zIndex style and elevation has to match
-								>
-									<TouchableOpacity
-										onPress={this.gotoShuttleSettings}
-									>
-										<Icon name={'bus'} size={20} color={'white'} />
-									</TouchableOpacity>
-								</ElevatedView>
-							) : (null)
-						}
-						<SearchBar
-							update={this.updateSearch}
-							onFocus={this.focusSearch}
-							pressIcon={this.pressIcon}
-							iconStatus={this.state.iconStatus}
-							searchInput={this.state.searchInput}
-							reff={
-								(ref) => { this.barRef = ref; }
-							}
-						/>
-						<ScrollView
-							ref={
-								(ref) => {
-									this.scrollRef = ref;
-								}
-							}
-							showsVerticalScrollIndicator={false}
-							scrollEnabled={this.state.allowScroll}
-						>
-							<View
-								style={styles.section}
-							>
-								<SearchMap
-									location={this.props.location}
-									selectedResult={
-										(this.props.search_results) ? (
-											this.props.search_results[this.state.selectedResult]
-										) : null
-									}
-									shuttle={this.props.shuttle_stops}
-									vehicles={this.state.vehicles}
-								/>
-							</View>
-							<View
-								style={styles.section}
-							>
-								<SearchResults
-									results={this.props.search_results}
-									onSelect={(index) => this.updateSelectedResult(index)}
-								/>
-							</View>
-							<View
-								style={styles.section}
-							>
-								<SearchSuggest
-									onPress={this.updateSearchSuggest}
-								/>
-								{(this.props.search_history.length !== 0) ? (
-									<SearchHistoryCard
-										pressHistory={this.updateSearch}
-										data={this.props.search_history}
-									/>
-									) : (null)}
-							</View>
-							<View
-								style={styles.section}
-							>
-								<SearchShuttleMenu
-									shuttle_routes={this.props.shuttle_routes}
-									onToggle={this.toggleRoute}
-									toggles={this.props.toggles}
-								/>
-							</View>
-						</ScrollView>
-						{(this.state.showBar && this.props.search_results) ? (
+				<View style={css.main_container}>
+					{
+						(this.props.search_results && this.state.showNav) ? (
 							<ElevatedView
-								style={styles.bottomBarContainer}
-								elevation={5}
+								style={{ zIndex: 2, justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: (2 * (6 + Math.round(44 * getPRM()))) + 6, right: 6, width: 50, height: 50, borderRadius: 50 / 2, backgroundColor: '#2196F3' }}
+								elevation={2} // zIndex style and elevation has to match
 							>
 								<TouchableOpacity
-									onPress={
-										this.gotoResults
-									}
+									onPress={() => gotoNavigationApp(this.props.search_results[this.state.selectedResult].mkrLat, this.props.search_results[this.state.selectedResult].mkrLong)}
 								>
-									<Text
-										style={styles.bottomBarText}
-									>
-										See More Results
-									</Text>
+									<Icon name={'location-arrow'} size={20} color={'white'} />
 								</TouchableOpacity>
 							</ElevatedView>
-							) : (null)
+						) : null
+					}
+					{
+						(this.state.showShuttle) ? (
+							<ElevatedView
+								style={{ zIndex: 2, justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: 6 + Math.round(44 * getPRM()), right: 6, width: 50, height: 50, borderRadius: 50 / 2, backgroundColor: '#4CAF50' }}
+								elevation={2} // zIndex style and elevation has to match
+							>
+								<TouchableOpacity
+									onPress={this.gotoShuttleSettings}
+								>
+									<Icon name={'bus'} size={20} color={'white'} />
+								</TouchableOpacity>
+							</ElevatedView>
+						) : (null)
+					}
+					<SearchBar
+						update={this.updateSearch}
+						onFocus={this.focusSearch}
+						pressIcon={this.pressIcon}
+						iconStatus={this.state.iconStatus}
+						searchInput={this.state.searchInput}
+						reff={
+							(ref) => { this.barRef = ref; }
 						}
-					</View>
-					<ShuttleLocationContainer />
-				</SideMenu>
+					/>
+					<ScrollView
+						ref={
+							(ref) => {
+								this.scrollRef = ref;
+							}
+						}
+						showsVerticalScrollIndicator={false}
+						scrollEnabled={this.state.allowScroll}
+					>
+						<View
+							style={styles.section}
+						>
+							<SearchMap
+								location={this.props.location}
+								selectedResult={
+									(this.props.search_results) ? (
+										this.props.search_results[this.state.selectedResult]
+									) : null
+								}
+								shuttle={this.props.shuttle_stops}
+								vehicles={this.state.vehicles}
+							/>
+						</View>
+						<View
+							style={styles.section}
+						>
+							<SearchResults
+								results={this.props.search_results}
+								onSelect={(index) => this.updateSelectedResult(index)}
+							/>
+						</View>
+						<View
+							style={styles.section}
+						>
+							<SearchSuggest
+								onPress={this.updateSearchSuggest}
+							/>
+							{(this.props.search_history.length !== 0) ? (
+								<SearchHistoryCard
+									pressHistory={this.updateSearch}
+									data={this.props.search_history}
+								/>
+								) : (null)}
+						</View>
+						<View
+							style={styles.section}
+						>
+							<SearchShuttleMenu
+								shuttle_routes={this.props.shuttle_routes}
+								onToggle={this.toggleRoute}
+								toggles={this.props.toggles}
+							/>
+						</View>
+					</ScrollView>
+					{(this.state.showBar && this.props.search_results) ? (
+						<ElevatedView
+							style={styles.bottomBarContainer}
+							elevation={5}
+						>
+							<TouchableOpacity
+								onPress={
+									this.gotoResults
+								}
+							>
+								<Text
+									style={styles.bottomBarText}
+								>
+									See More Results
+								</Text>
+							</TouchableOpacity>
+						</ElevatedView>
+						) : (null)
+					}
+				<ShuttleLocationContainer />
+				</View>
 			);
 		} else {
 			return null;
