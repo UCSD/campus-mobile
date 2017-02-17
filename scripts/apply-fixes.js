@@ -4,19 +4,20 @@
 */
 const fs = require('fs');
 
-const GA_BRIDGE_FIX_PATH = './node_modules/react-native-google-analytics-bridge/android/build.gradle';
-const CORE_FIX_PATH = './node_modules/react-native/Libraries/Core/InitializeCore.js';
-const GA_BRIDGE_ERR = 'com.google.android.gms:play-services-analytics:+';
-const GA_BRIDGE_FIX = 'com.google.android.gms:play-services-analytics:9.4.0';
-const CORE_ERR = 'function handleError(e, isFatal)';
-const CORE_FIX = 'var handleError = function(e, isFatal)';
+const MAPS_FIX_PATH = './node_modules/react-native-maps/android/build.gradle';
+const MAPS_ERR = "9.8.0";
+const MAPS_FIX = "+";
 
-makeReplacements(GA_BRIDGE_FIX_PATH, [
-	{ gaInitial: GA_BRIDGE_ERR, gaFixed: GA_BRIDGE_FIX }
+const CORE_FIX_PATH = './node_modules/react-native/Libraries/Core/InitializeCore.js';
+const CORE_ERR = "function handleError\\(e, isFatal\\)";
+const CORE_FIX = "var handleError = function(e, isFatal)";
+
+makeReplacements(MAPS_FIX_PATH, [
+	{ initial: MAPS_ERR, fixed: MAPS_FIX }
 ]);
 
 makeReplacements(CORE_FIX_PATH, [
-	{ gaInitial: CORE_ERR, gaFixed: CORE_FIX }
+	{ initial: CORE_ERR, fixed: CORE_FIX }
 ]);
 
 function makeReplacements(FILE_PATH, REPLACEMENTS) {
@@ -26,7 +27,7 @@ function makeReplacements(FILE_PATH, REPLACEMENTS) {
 		} else {
 
 			for (var i = 0; REPLACEMENTS.length > i; i++) {
-				data = data.replace(REPLACEMENTS[i].gaInitial, REPLACEMENTS[i].gaFixed);
+				data = data.replace(new RegExp(REPLACEMENTS[i].initial, 'g'), REPLACEMENTS[i].fixed);
 			}
 
 			fs.writeFile(FILE_PATH, data, 'utf8', function(err) {
