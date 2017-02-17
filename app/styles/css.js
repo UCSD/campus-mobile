@@ -294,8 +294,8 @@ var css = StyleSheet.create({
 	destinationcard_map: { borderWidth: 1, borderColor: '#DDD', width: maxCardWidthWithPadding, height: round(maxCardWidthWithPadding * .6) },
 	destinationcard_marker_row: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: windowWidth - 30, padding: 6, marginTop: 0 },
 	destinationcard_icon_marker: { width: 18, height: round(18 * 1.375), alignItems: 'flex-start', justifyContent: 'center' },
-	destinationcard_marker_label: { flex: 1, fontSize: round(18 * prm), paddingLeft: 8, paddingTop: 0, color: campus_primary, justifyContent: 'center' },
-
+	destinationcard_marker_label: { flex: 2, fontSize: round(18 * prm), paddingLeft: 8, paddingTop: 0, color: campus_primary, justifyContent: 'center' },
+	destinationcard_marker_dist_label: { flex: 1, textAlign: 'right', fontSize: round(18 * prm), paddingLeft: 8, paddingTop: 0, color: campus_primary, justifyContent: 'center' },
 
 	// DestinationSearch
 	dsearch_container: { flex: 1, backgroundColor: 'rgba(31,149,187,1)', width: windowWidth },

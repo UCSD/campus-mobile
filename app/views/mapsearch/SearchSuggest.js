@@ -29,20 +29,12 @@ const suggestions = [
 		icon: 'local-drink',
 	},
 	{
-		name: 'Dining',
-		icon: 'local-dining',
+		name: 'Mail',
+		icon: 'local-post-office',
 	},
 	{
-		name: 'Market',
-		icon: 'local-grocery-store',
-	},
-	{
-		name: 'Parking',
-		icon: 'local-parking',
-	},
-	{
-		name: 'Hydration',
-		icon: 'local-drink',
+		name: 'ATM',
+		icon: 'local-atm',
 	},
 ];
 
