@@ -117,11 +117,10 @@ module.exports = {
 	 * @param {string} method Currently not used, can be anything
 	 * @param {string|number} destinationLat The destination's latitude
 	 * @param {string|number} destinationLon The destination's longitude
-	 * @todo Either use the "method" parameter or remove it from the declaration
 	 */
-	gotoNavigationApp(method, destinationLat, destinationLon) {
-		const destinationURL = this.getDirectionsURL('walk', destinationLat, destinationLon );
-		this.openURL(destinationURL);
+	gotoNavigationApp(destinationLat, destinationLon) {
+		const destinationURL = module.exports.getDirectionsURL('walk', destinationLat, destinationLon );
+		module.exports.openURL(destinationURL);
 	},
 
 	/**
