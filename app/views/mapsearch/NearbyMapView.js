@@ -47,7 +47,6 @@ class NearbyMapView extends React.Component {
 		this.state = {
 			searchInput: null,
 			selectedResult: 0,
-			sliding: false,
 			typing: false,
 			allowScroll: false,
 			iconStatus: 'menu',
@@ -235,7 +234,7 @@ class NearbyMapView extends React.Component {
 				>
 					<View style={css.main_container}>
 						<TouchableOpacity
-							style={{ justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: 6, right: 6, zIndex: 5, width: 50, height: 50, borderRadius: 50 / 2, backgroundColor: '#2196F3' }}
+							style={{ justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: 6 + Math.round(44 * getPRM()), right: 6, zIndex: 5, width: 50, height: 50, borderRadius: 50 / 2, backgroundColor: '#2196F3' }}
 							onPress={this.gotoShuttleSettings}
 						>
 							<Icon name={'bus'} size={20} color={'white'} />
@@ -269,7 +268,6 @@ class NearbyMapView extends React.Component {
 											this.props.search_results[this.state.selectedResult]
 										) : null
 									}
-									hideMarker={this.state.sliding}
 									shuttle={this.props.shuttle_stops}
 									vehicles={this.state.vehicles}
 								/>
