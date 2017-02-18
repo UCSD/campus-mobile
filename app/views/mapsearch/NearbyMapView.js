@@ -347,7 +347,7 @@ class NearbyMapView extends React.Component {
 						</ElevatedView>
 						) : (null)
 					}
-				<ShuttleLocationContainer />
+					<ShuttleLocationContainer />
 				</View>
 			);
 		} else {
