@@ -46,7 +46,7 @@ class NearbyMapView extends React.Component {
 			searchInput: null,
 			selectedResult: 0,
 			typing: false,
-			allowScroll: true,
+			allowScroll: false,
 			iconStatus: 'search',
 			showBar: false,
 			showShuttle: true,
@@ -239,7 +239,7 @@ class NearbyMapView extends React.Component {
 					{
 						(this.props.search_results && this.state.showNav) ? (
 							<ElevatedView
-								style={{ zIndex: 2, justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: (2 * (6 + Math.round(44 * getPRM()))) + 6, right: 6, width: 50, height: 50, borderRadius: 50 / 2, backgroundColor: '#2196F3' }}
+								style={{ zIndex: 2, justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: (2 * (6 + Math.round(44 * getPRM()))) + 12, right: 6, width: 50, height: 50, borderRadius: 50 / 2, backgroundColor: '#2196F3' }}
 								elevation={2} // zIndex style and elevation has to match
 							>
 								<TouchableOpacity
@@ -334,6 +334,7 @@ class NearbyMapView extends React.Component {
 							elevation={5}
 						>
 							<TouchableOpacity
+								style={styles.bottomBarContent}
 								onPress={
 									this.gotoResults
 								}
@@ -390,7 +391,7 @@ const navMargin = Platform.select({
 const styles = StyleSheet.create({
 	main_container: { width: deviceWidth, height: deviceHeight - 64 - statusBarHeight, backgroundColor: '#EAEAEA', marginTop: navMargin },
 	bottomBarContainer: { zIndex: 5, alignItems: 'center', justifyContent: 'center', position: 'absolute', bottom: 0, width: deviceWidth, height: Math.round(44 * getPRM()), borderWidth: 0, backgroundColor: 'white', },
-	bottomBarContent: { flex:1, alignItems:'center', justifyContent:'center' },
+	bottomBarContent: { flex: 1, justifyContent: 'center', alignSelf: 'stretch' },
 	bottomBarText: { textAlign: 'center', },
 
 	section: { height: deviceHeight - 64 - statusBarHeight },
