@@ -57,12 +57,20 @@ const MenuList = ({ shuttles, onToggle, toggles }) => (
 );
 
 const MenuItem = ({ data, index, onToggle, state }) => (
-	<View>
-		<Text>{data.name.trim()}</Text>
-		<Switch
-			onValueChange={(val) => onToggle(val, data.id)}
-			value={state}
-		/>
+	<View style={styles.list_row}>
+		<Text
+			style={{ flex: 3 }}
+		>
+			{data.name.trim()}
+		</Text>
+		<View
+			style={styles.switch_container}
+		>
+			<Switch
+				onValueChange={(val) => onToggle(val, data.id)}
+				value={state}
+			/>
+		</View>
 	</View>
 );
 
@@ -77,9 +85,8 @@ const listHeight = deviceHeight - (statusBarHeight + navHeight + doPRM(44) + 16 
 const styles = StyleSheet.create({
 	list_container: { width: getMaxCardWidth(), padding: 8, maxHeight: listHeight, },
 	card_main: { top: Math.round(44 * getPRM()) + 6, backgroundColor: '#FFFFFF', margin: 6, alignItems: 'flex-start', justifyContent: 'center', },
-	touch: { backgroundColor: '#FFF' },
-	no_result: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', padding: 6, marginTop: 0 },
-	list_row: { flexDirection: 'row', paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: '#EEE', overflow: 'hidden',  },
+	list_row: { alignItems: 'center', flexDirection: 'row', paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: '#EEE', overflow: 'hidden',  },
+	switch_container: { flex: 1, alignItems: 'flex-end' },
 });
 
 export default SearchShuttleMenu;

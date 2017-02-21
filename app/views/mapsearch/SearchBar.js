@@ -51,7 +51,6 @@ const SearchIcon = ({ iconStatus }) => {
 	case 'load':
 		return (
 			<ActivityIndicator
-				style={styles.map_searchbar_ai}
 				size="small"
 			/>
 		);
