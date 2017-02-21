@@ -4,7 +4,6 @@ import { persistStore, autoRehydrate } from 'redux-persist';
 import thunkMiddleware from 'redux-thunk';
 import createLogger from 'redux-logger';
 import createFilter from 'redux-persist-transform-filter';
-import createBlacklistFilter from 'redux-persist-transform-filter';
 
 import rootReducer from '../reducers';
 import { DEBUG_ENABLED } from '../AppSettings';
@@ -14,9 +13,15 @@ const saveMapFilter = createFilter(
 	['history']
 );
 // empty vehicles
-const saveMapBlacklistFilter = createBlacklistFilter(
-  'shuttle',
-  ['vehicles']
+const saveShuttleFilter = createFilter(
+	'shuttle',
+	[
+		'toggles',
+		'routes',
+		'stops',
+		'closestStop',
+		'lastUpdated'
+	]
 );
 
 
@@ -47,7 +52,7 @@ export default function configureStore(initialState, onComplete: ?() => void) {
 	persistStore(store,
 		{
 			storage: AsyncStorage,
-			transforms: [saveMapFilter, saveMapBlacklistFilter],
+			transforms: [saveMapFilter, saveShuttleFilter],
 		},
 		onComplete
 	);
