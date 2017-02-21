@@ -9,12 +9,11 @@ import {
 import MapView from 'react-native-maps';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import general from '../../util/general';
 import logger from '../../util/logger';
 
 // NOTE: For some reason MapView-onCalloutPress only works for Android and
 // TouchableHighlight-onPress only works for iOS...which is why it's in two places
-const SearchMap = ({ location, selectedResult, hideMarker, style, shuttle, vehicles }) => (
+const SearchMap = ({ location, selectedResult, style, shuttle, vehicles }) => (
 	<MapView
 		ref={(MapRef) => {
 			if ( MapRef != null && selectedResult != null ) {
@@ -50,7 +49,7 @@ const SearchMap = ({ location, selectedResult, hideMarker, style, shuttle, vehic
 			longitudeDelta: 0.02
 		}}
 		onCalloutPress={
-			() => logger.log('Pressed callout') // gotoNavigationApp(selectedResult.mkrLat, selectedResult.mkrLong)
+			() => logger.log('Pressed callout')
 		}
 	>
 		{
@@ -61,25 +60,12 @@ const SearchMap = ({ location, selectedResult, hideMarker, style, shuttle, vehic
 
 					return vehicleArray.map((vehicle) => (
 						<MapView.Marker.Animated
-							ref={(MarkRef) => {
-								// logger.log("MARKER: " + selectedResult.title);
-								if (MarkRef != null) {
-									// MarkRef.showCallout();
-								}
-							}}
 							coordinate={vehicle.animated}
 							title={vehicle.name}
 							identifier={vehicle.name}
 							key={vehicle.name}
 						>
-							<Icon name={'bus'} size={20} />
-							<MapView.Callout style={{ width: 100 }} >
-								<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'}>
-									<View style={{ flex: 1, alignItems: 'center', flexDirection: 'column', flexWrap: 'wrap' }}>
-										<Text>{vehicle.name}</Text>
-									</View>
-								</TouchableHighlight>
-							</MapView.Callout>
+							<Icon name={'bus'} size={20} color={'#182B49'} />
 						</MapView.Marker.Animated>
 						)
 					);
@@ -97,61 +83,20 @@ const SearchMap = ({ location, selectedResult, hideMarker, style, shuttle, vehic
 						return null;
 					}
 
-					return Platform.select({
-						// Need this until callout bug is fixed
-						ios: (
-							<MapView.Marker
-								ref={(MarkRef) => {
-									// logger.log("MARKER: " + selectedResult.title);
-									if (MarkRef != null) {
-										// MarkRef.showCallout();
-									}
-								}}
-								coordinate={{
-									latitude: stop.lat,
-									longitude: stop.lon
-								}}
-								title={stop.name}
-								identifier={stop.name}
-								key={stop.name + key}
-								pinColor={'#4CAF50'}
-							>
-								<MapView.Callout style={{ width: 100 }} >
-									<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'}>
-										<View style={{ flex: 1, alignItems: 'center', flexDirection: 'column', flexWrap: 'wrap' }}>
-											<Text>{stop.name}</Text>
-										</View>
-									</TouchableHighlight>
-								</MapView.Callout>
-							</MapView.Marker>
-						),
-						android: (
-							<MapView.Marker
-								ref={(MarkRef) => {
-									// logger.log("MARKER: " + selectedResult.title);
-									if (MarkRef != null) {
-										// MarkRef.showCallout();
-									}
-								}}
-								coordinate={{
-									latitude: stop.lat,
-									longitude: stop.lon
-								}}
-								title={stop.name}
-								identifier={stop.name}
-								key={stop.name + key}
-							>
-								<Icon name={'stop-circle-o'} size={20} />
-								<MapView.Callout style={{ width: 100 }} >
-									<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'}>
-										<View style={{ flex: 1, alignItems: 'center', flexDirection: 'column', flexWrap: 'wrap' }}>
-											<Text>{stop.name}</Text>
-										</View>
-									</TouchableHighlight>
-								</MapView.Callout>
-							</MapView.Marker>
-						)
-					});
+					return (
+						<MapView.Marker
+							coordinate={{
+								latitude: stop.lat,
+								longitude: stop.lon
+							}}
+							title={stop.name}
+							identifier={stop.name}
+							key={stop.name + key}
+							pinColor={'#346994'}
+						>
+							<Icon style={{ textAlign: 'center', height: 10, width: 10, borderWidth: 1, borderRadius: 5, borderColor: '#346994' }} name={'circle'} color={'white'} size={10} />
+						</MapView.Marker>
+					);
 				})
 			) : (null)
 		}
@@ -170,16 +115,9 @@ const SearchMap = ({ location, selectedResult, hideMarker, style, shuttle, vehic
 						longitude: selectedResult.mkrLong
 					}}
 					title={selectedResult.title}
-					description={selectedResult.description}
 					identifier={selectedResult.title}
 					key={selectedResult.title}
-				>
-					<MapView.Callout style={{ width: 100 }} >
-						<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', flexDirection: 'row', flexWrap: 'wrap' }}>
-							<Text>{selectedResult.title}</Text>
-						</View>
-					</MapView.Callout>
-				</MapView.Marker>
+				/>
 			) : (null)
 		}
 	</MapView>
@@ -188,13 +126,11 @@ const SearchMap = ({ location, selectedResult, hideMarker, style, shuttle, vehic
 SearchMap.propTypes = {
 	location: PropTypes.object,
 	selectedResult: PropTypes.object,
-	hideMarker: PropTypes.bool,
 };
 
 SearchMap.defaultProps = {
 	location: null,
 	selectedResult: null,
-	hideMarker: false
 };
 
 const styles = StyleSheet.create({

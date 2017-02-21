@@ -253,7 +253,7 @@ class NearbyMapView extends React.Component {
 					{
 						(this.state.showShuttle) ? (
 							<ElevatedView
-								style={{ zIndex: 2, justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: 6 + Math.round(44 * getPRM()), right: 6, width: 50, height: 50, borderRadius: 50 / 2, backgroundColor: '#4CAF50' }}
+								style={{ zIndex: 2, justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: 6 + Math.round(44 * getPRM()), right: 6, width: 50, height: 50, borderRadius: 50 / 2, backgroundColor: '#346994' }}
 								elevation={2} // zIndex style and elevation has to match
 							>
 								<TouchableOpacity
