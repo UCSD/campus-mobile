@@ -132,6 +132,7 @@ class NearbyMapView extends React.Component {
 
 	componentWillUnmount() {
 		BackAndroid.removeEventListener('hardwareBackPress', this.pressIcon);
+		clearTimeout(this.timer);
 	}
 
 	pressIcon = () => {
@@ -192,7 +193,19 @@ class NearbyMapView extends React.Component {
 			iconStatus: 'load',
 			showShuttle: true,
 			showNav: true,
+			selectedResult: 0
 		});
+
+		this.timer = setTimeout(this.searchTimeout, 5000);
+	}
+
+	searchTimeout = () => {
+		if (!this.props.search_results) {
+			this.setState({
+				searchInput: 'No Results Found',
+				iconStatus: 'search'
+			});
+		}
 	}
 
 	updateSearchSuggest = (text) => {
@@ -206,6 +219,7 @@ class NearbyMapView extends React.Component {
 			iconStatus: 'load',
 			showShuttle: true,
 			showNav: true,
+			selectedResult: 0
 		});
 	}
 
