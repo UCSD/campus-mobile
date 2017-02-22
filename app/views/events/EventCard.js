@@ -33,9 +33,7 @@ const EventCard = ({ data }) => (
 					</TouchableHighlight>
 				</View>
 			) : (
-				<View style={[css.flexcenter, css.pad40]}>
-					<Text>There was a problem loading events, try back soon.</Text>
-				</View>
+				<Text style={css.content_load_err}>There was a problem loading events.</Text>
 			)}
 		</View>
 	</Card>

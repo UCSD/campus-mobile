@@ -32,11 +32,8 @@ const NewsCard = ({ data }) => (
 						</View>
 					</TouchableHighlight>
 				</View>
-			) :
-			(
-				<View style={[css.flexcenter, css.pad40]}>
-					<Text>There was a problem loading the news</Text>
-				</View>
+			) : (
+				<Text style={css.content_load_err}>There was a problem loading the news.</Text>
 			)}
 		</View>
 	</Card>

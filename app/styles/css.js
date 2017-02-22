@@ -8,27 +8,32 @@
 		102 - Tab Bar
 
 	200 - Primary Containers
-
+	
 	300 - Cards
 		301 - Card Container
-		310 - Weather Card
-		311 - Shuttle Card
-		312 - Dining Card
-		313 - Events & News Cards
-		314 - Links Card
-
-	400 - Custom Views
-		401 - 
-
-		410 - Dining List
-		411 - Dining Detail
-
-
+		302 - Weather Card
+		303 - Shuttle Card
+		304 - Dining Card
+		305 - Events & News Cards
+		306 - Links Card
+	
+	400 - Views
+		401 - Surf Report
+		402 - Shuttle Stop
+		403 - Dining List
+		404 - Dining Detail
+		405 - Welcome Week
+		406 - Event & News Detail
+		407 - WebView
+		408 - Feedback
+		409 - Preferences View
+	
+	500 - Modules
+		501 - Map Search
+		502 - Search Results
+		503 - LocationRequiredContent
+	
 	900 - Misc
-
-
-
-
 */
 
 import React from 'react';
@@ -114,7 +119,7 @@ var css = StyleSheet.create({
 	card_more: { alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4, paddingTop: 8, paddingBottom: 4 },
 	card_more_label: { fontSize: 20, color: campus_primary, fontWeight: '300' },
 
-	// 310 - Weather Card
+	// 302 - Weather Card
 	weathercard_more: { justifyContent: 'center', width: windowWidth - 30, padding: 10, fontSize: 24, fontWeight: '500', color: campus_primary },
 	weathercard_border: { borderTopWidth: 1, borderTopColor: '#CCC', width: maxCardWidth },
 	weatherccard_loading_height: { height: 270 },
@@ -133,7 +138,7 @@ var css = StyleSheet.create({
 	wf_tempMin: { fontSize: 14, fontWeight: '300', color: '#666', paddingTop: 10 },
 	wc_surfreport_more: { fontSize: 20, fontWeight: '300', color: campus_primary, paddingHorizontal: 14, paddingVertical: 10 },
 
-	// 311 - Shuttle Card
+	// 303 - Shuttle Card
 	shuttle_card_row: { width: maxCardWidth, overflow: 'hidden', borderBottomWidth: 1, borderBottomColor: '#DDD' },
 	shuttle_card_err_row: { alignItems: 'center', justifyContent: 'center', width: maxCardWidth, overflow: 'hidden' },
 	shuttle_card_row_center: { alignItems: 'center', justifyContent: 'center', width: maxCardWidth, overflow: 'hidden' },
@@ -153,7 +158,7 @@ var css = StyleSheet.create({
 	shuttlecard_loading: { marginHorizontal: 40, marginVertical: 156 },
 	shuttlecard_loading_fail: { marginHorizontal: 16, marginTop: 40, marginBottom: 60 },
 
-	// 312 - Dining Card
+	// 304 - Dining Card
 	dining_card: { width: maxCardWidth, padding: 8 },
 	dining_card_filters: { flexDirection: 'row', justifyContent: 'center', marginBottom: 6 },
 	dining_card_filter_button: { paddingVertical: 8, paddingHorizontal: 14, fontSize: 14, color: '#888', borderWidth: 1, borderColor: '#999', borderRadius: 3, backgroundColor: '#EEE', textAlign: 'center', marginHorizontal: 14 },
@@ -169,7 +174,7 @@ var css = StyleSheet.create({
 	dining_card_more: { alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4, paddingTop: 8, paddingBottom: 4, borderTopWidth: 1, borderTopColor: '#DDD' },
 	dining_card_more_label: { fontSize: 20, color: campus_primary, fontWeight: '300' },
 
-	// 313 - Events & News Cards
+	// 305 - Events & News Cards
 	events_list: { alignSelf: 'stretch', padding: 8 },
 	events_list_row: { flexDirection: 'row', paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: '#EEE', },
 	events_list_left_container: { flex: 1 },
@@ -188,8 +193,9 @@ var css = StyleSheet.create({
 	events_card_postdate: { fontSize: 11, color: campus_primary, paddingTop: 8 },
 	news_card_image: { width: 130, height: 100, marginRight: 4, marginLeft: 10, borderWidth: 1, borderColor: '#CCC'},
 	events_card_image: { width: 130, height: 73, marginRight: 4, marginLeft: 10, borderWidth: 1, borderColor: '#CCC'},
+	content_load_err: { padding: 30, fontSize:16, alignSelf: 'center'  },
 
-	// 314 - Links Card
+	// 306 - Links Card
 	quicklinks_card: { alignSelf: 'stretch', padding: 8 },
 	quicklinks_locations: { height: 256, flexDirection: 'column', overflow: 'hidden' },
 	quicklinks_row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderBottomWidth: 1, borderBottomColor: '#EEE', paddingVertical: 10 },
@@ -359,26 +365,12 @@ var css = StyleSheet.create({
 	center: { alignItems: 'center', justifyContent: 'center' },
 	cardcenter: { alignItems: 'center', justifyContent: 'center', width: maxCardWidth },
 	flexcenter: { flex: 1, alignItems: 'center', justifyContent: 'center', width: maxCardWidth },
-
 	spacedRow: { flexDirection: 'row', justifyContent: 'space-between' },
 	centerAlign: { alignSelf: 'center' },
 	column: { flex: 1, flexDirection: 'column' },
-
-	card_loading_img: { width: 64, height: 64 },
-
 	bold: { fontWeight: '700' },
-
-	pad10: { padding: 10 },
-	pad20: { padding: 20 },
-	pad30: { padding: 30 },
 	pad40: { padding: 40 },
-	mar10: { margin: 10 },
-	mar20: { margin: 20 },
-	mar30: { margin: 30 },
-	mar40: { margin: 40 },
 	pt10: { paddingTop: 10 },
-	pl10: { paddingLeft: 10 },
-
 	fs12: { fontSize: 12 },
 	fs18: { fontSize: 18 },
 
