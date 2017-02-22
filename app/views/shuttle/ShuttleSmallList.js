@@ -6,7 +6,6 @@ import {
 	ListView
 } from 'react-native';
 
-import { getPRM, round } from '../../util/general';
 import { getMinutesETA } from '../../util/shuttle';
 
 const arrivalDataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
@@ -40,8 +39,9 @@ const ShuttleSmallRow = ({ arrival }) => (
 	<View style={styles.shuttle_stop_arrivals_row}>
 		<View style={[styles.shuttle_stop_rt_2, { backgroundColor: arrival.route.color, borderColor: arrival.route.color }]}>
 			<Text style={styles.shuttle_stop_rt_2_label}>
-				{(arrival.route.shortName === 'Campus Loop') ?
-					('L') : (arrival.route.shortName)
+				{
+					// THIS SHOULDN'T BE NEEDED, complain to syncromatics
+					arrival.route.shortName.replace(/[()]/g, '').substring(0, 1) // Limits shortName to one char
 				}
 			</Text>
 		</View>
@@ -56,19 +56,19 @@ const ShuttleSmallRow = ({ arrival }) => (
 );
 
 function getRowHeight(rows) {
-	const rowHeight = round(36 * getPRM());
+	const rowHeight = 36;
 	const padding = 16;
 
 	return rows * (rowHeight + padding);
 }
 
 const styles = StyleSheet.create({
-	shuttle_stop_next_arrivals_text: { fontSize: round(20 * getPRM()), fontWeight: '300', color: '#222', padding: 8 },
+	shuttle_stop_next_arrivals_text: { fontSize: 20, fontWeight: '300', color: '#222', padding: 8 },
 	shuttle_stop_arrivals_row: { flexDirection: 'row', padding: 8, alignItems: 'center', justifyContent: 'flex-start' },
-	shuttle_stop_rt_2: { borderRadius: round(18 * getPRM()), width: round(36 * getPRM()), height: round(36 * getPRM()), justifyContent: 'center' },
-	shuttle_stop_rt_2_label: { textAlign: 'center', fontWeight: '600', fontSize: round(19 * getPRM()), backgroundColor: 'rgba(0,0,0,0)' },
-	shuttle_stop_arrivals_row_route_name: { flex: 2, fontSize: round(17 * getPRM()), color: '#555', paddingLeft: round(10 * getPRM()) },
-	shuttle_stop_arrivals_row_eta_text: { flex: 1, fontSize: round(20 * getPRM()), color: '#333', paddingLeft: round(16 * getPRM()), paddingRight: round(16 * getPRM()) },
+	shuttle_stop_rt_2: { borderRadius: 18, width: 36, height: 36, justifyContent: 'center' },
+	shuttle_stop_rt_2_label: { textAlign: 'center', fontWeight: '600', fontSize: 19, backgroundColor: 'rgba(0,0,0,0)' },
+	shuttle_stop_arrivals_row_route_name: { flex: 2, fontSize: 17, color: '#555', paddingLeft: 10 },
+	shuttle_stop_arrivals_row_eta_text: { flex: 1, fontSize: 20, color: '#333', paddingLeft: 16, paddingRight: 16 },
 });
 
 export default ShuttleSmallList;

@@ -21,7 +21,8 @@ const ShuttleOverview = ({ onPress, stopData, stopID }) => (
 							<Text style={css.shuttle_card_rt_2_label}>
 								{
 									// THIS SHOULDN'T BE NEEDED, complain to syncromatics
-									(stopData[stopID].arrivals[0].route.shortName === 'Campus Loop') ? ('L') : (stopData[stopID].arrivals[0].route.shortName)
+									// (stopData[stopID].arrivals[0].route.shortName === 'Campus Loop') ? ('L') : (stopData[stopID].arrivals[0].route.shortName)
+									stopData[stopID].arrivals[0].route.shortName.replace(/[()]/g, '').substring(0, 1) // Limits shortName to one char
 								}
 							</Text>
 						</View>
@@ -39,6 +40,12 @@ const ShuttleOverview = ({ onPress, stopData, stopID }) => (
 						<View style={css.shuttle_card_rt_5} />
 					</View>
 					<View style={css.shuttle_card_row_bot}>
+						<Text
+							style={css.shuttle_card_row_name}
+							numberOfLines={1}
+						>
+							{stopData[stopID].arrivals[0].route.name}
+						</Text>
 						<Text style={css.shuttle_card_row_arriving}>
 							<Text style={css.grey}>Arriving in: </Text>
 							{getMinutesETA(stopData[stopID].arrivals[0].secondsToArrival)}
