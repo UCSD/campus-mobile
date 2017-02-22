@@ -3,11 +3,37 @@
 
 	Section List
 	------------------------------------------
-	1.0 - Navigation
-		1.1 - Navigator
-		1.2 - Tab Bar
+	100 - Navigation
+		101 - Navigator
+		102 - Tab Bar
 
-
+	200 - Primary Containers
+	
+	300 - Cards
+		301 - Card Container
+		302 - Weather Card
+		303 - Shuttle Card
+		304 - Dining Card
+		305 - Events & News Cards
+		306 - Links Card
+	
+	400 - Views
+		401 - Surf Report
+		402 - Shuttle Stop
+		403 - Dining List
+		404 - Dining Detail
+		405 - Welcome Week
+		406 - Event & News Detail
+		407 - WebView
+		408 - Feedback
+		409 - Preferences View
+	
+	500 - Modules
+		501 - Map Search
+		502 - Search Results
+		503 - LocationRequiredContent
+	
+	900 - Misc
 */
 
 import React from 'react';
@@ -19,11 +45,7 @@ var windowSize = Dimensions.get('window');
 var windowWidth = windowSize.width;
 var windowHeight = windowSize.height;
 
-var welcome_ai_marginTop = (windowHeight / 2); // fixme
-
-
 var maxCardWidth = windowWidth - 2 - 12;
-var maxCardWidthWithPadding = windowWidth - 2 - 12 - 16; // border, margin, padding
 
 // IOS / Android Custom
 var NavigatorIOSHeight = 58,
@@ -43,9 +65,9 @@ var css = StyleSheet.create({
 
 
 	/********************************************
-	 *  1.0 - Navigation
+	 *  100 - Navigation
 	 ********************************************/
-	// 1.1 - Navigator
+	// 101 - Navigator
 	navIOS: { backgroundColor: 'rgba(24,43,73,1)', height: NavigatorIOSHeight },
 	navAndroid: { backgroundColor: 'rgba(24,43,73,1)', height: NavigatorAndroidHeight },
 	navIOSTitle: { color: '#FFF', fontSize: 24, marginTop: -8, fontWeight: '300' },
@@ -55,7 +77,7 @@ var css = StyleSheet.create({
 	navBackButtonTextIOS: { color: '#FFF', marginTop: -2, fontWeight: '300' },
 	navAndroidIconStyle: { tintColor:'#FFF', marginTop: -6 },
 	navBackButtonTextAndroid: { color: '#FFF', marginTop: -6, fontWeight: '300' },
-	// 1.2 - Tab Bar
+	// 102 - Tab Bar
 	tabBarIOS: { borderTopWidth: 1, borderColor: '#DADADA', backgroundColor: '#FFF', height: TabBarHeight },
 	tabBarAndroid: { top: NavigatorAndroidHeight, borderBottomWidth: 1, borderColor: '#DADADA', backgroundColor: '#FFF', height: TabBarHeight },
 	tabContainer: { width: 70, paddingVertical: 8 },
@@ -63,17 +85,20 @@ var css = StyleSheet.create({
 	tabIcon: { color: '#999', alignSelf: 'center', backgroundColor: 'rgba(0,0,0,0)', opacity: .95 },
 
 
-
-
-	// Primary Containers
+	/********************************************
+	 *  200 - Primary Containers
+	 ********************************************/
 	main_container: { backgroundColor: '#EAEAEA', marginTop: general.platformIOS() ? IOSMarginTop : AndroidMarginTop, marginBottom: general.platformIOS() ? IOSMarginBottom : AndroidMarginBottom },
 	view_all_container: { backgroundColor: '#FFF', paddingHorizontal: 12, marginTop: general.platformIOS() ? IOSMarginTop : AndroidMarginTop, marginBottom: general.platformIOS() ? IOSMarginBottom : AndroidMarginBottom },
 	listview_main: { marginTop: general.platformIOS() ? IOSMarginTop : AndroidMarginTop, },
 	view_default: { paddingHorizontal: 8 },
-
 	scroll_default: { alignItems: 'center' },
 
-	// Card Styles
+
+	/********************************************
+	 *  300 - Cards
+	 ********************************************/
+	 // 301 - Card Container
 	card_main: { borderWidth: 1, borderRadius: 2, borderColor: '#DDD', backgroundColor: '#F9F9F9', margin: 6, alignItems: 'flex-start', justifyContent: 'center', overflow: 'hidden' },
 	card_plain: { margin: 6, alignItems: 'center', justifyContent: 'center' },
 	card_special_events: {  },
@@ -87,78 +112,33 @@ var css = StyleSheet.create({
 	card_menu: { flexGrow: 1, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', alignSelf: 'stretch' },
 	card_hide_option: { margin: 10, fontSize: 16 },
 	card_menu_trigger: { paddingTop: 9, paddingBottom: 6, paddingLeft: 12, paddingRight: 10, color: '#747678' },
-
 	card_container_main: { flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: '#DDD', alignSelf: 'stretch' },
 	card_title_main: { fontSize: 26, color: '#747678', paddingLeft: 10, paddingVertical: 6 },
+	card_row_center: { alignItems: 'center', justifyContent: 'center', width: maxCardWidth, overflow: 'hidden' },
+	card_loader: { height: 368 },
+	card_more: { alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4, paddingTop: 8, paddingBottom: 4 },
+	card_more_label: { fontSize: 20, color: campus_primary, fontWeight: '300' },
 
-	// DINING CARD
-	dining_card: { width: maxCardWidth, padding: 8 },
-	dining_card_filters: { flexDirection: 'row', justifyContent: 'center', marginBottom: 6 },
-	dining_card_filter_button: { paddingVertical: 8, paddingHorizontal: 14, fontSize: 14, color: '#888', borderWidth: 1, borderColor: '#999', borderRadius: 3, backgroundColor: '#EEE', textAlign: 'center', marginHorizontal: 14 },
-	dining_card_filter_button_active: { paddingVertical: 8, paddingHorizontal: 14, fontSize: 14, color: '#EEE', borderWidth: 1, borderColor: '#999', borderRadius: 3, backgroundColor: campus_primary, textAlign: 'center', marginHorizontal: 14, overflow: 'hidden' },
-	dc_locations: { flexDirection: 'column' },
-	dc_locations_row: { flexDirection: 'row', paddingBottom: 10, paddingTop: 10, borderBottomWidth: 1, borderBottomColor: '#DDD' },
-	dc_locations_row_left: { flex: 6, justifyContent: 'center' },
-	dc_locations_title: { fontSize: 20, color: campus_primary },
-	dc_locations_hours: { fontSize: 12, color: '#666', paddingTop: 1 },
-	dc_locations_spec_hours: { fontSize: 12, color: '#666', paddingTop: 4 },
-	dc_locations_description: { fontSize: 12, color: '#666', paddingTop: 6 },
-	dc_locations_row_right: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-	dining_card_more: { alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4, paddingTop: 8, paddingBottom: 4, borderTopWidth: 1, borderTopColor: '#DDD' },
-	dining_card_more_label: { fontSize: 20, color: campus_primary, fontWeight: '300' },
+	// 302 - Weather Card
+	weathercard_more: { justifyContent: 'center', width: windowWidth - 30, padding: 10, fontSize: 24, fontWeight: '500', color: campus_primary },
+	weathercard_border: { borderTopWidth: 1, borderTopColor: '#CCC', width: maxCardWidth },
+	weatherccard_loading_height: { height: 270 },
+	wc_main: {},
+	wc_toprow: { flexDirection: 'row', borderBottomWidth: 1, borderColor: '#EEE', justifyContent: 'center', alignItems: 'center', width: maxCardWidth, paddingHorizontal: 14 },
+	wc_toprow_left: { flex: 4 },
+	wc_current_temp: { fontSize: 22, fontWeight: '300' },
+	wc_current_summary: { fontSize: 15, color: '#444', paddingTop: 10, fontWeight: '300' },
+	wc_toprow_right: { flex: 1 },
+	wc_toprow_icon: { width: 68, height: 68 },
+	wc_botrow: { flexDirection: 'row', padding: 20 },
+	wc_botrow_col: { flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center' },
+	wf_dayofweek: { fontSize: 14, fontWeight: '300', color: '#444', paddingBottom: 10},
+	wf_icon: { height: 33, width: 33 },
+	wf_tempMax: { fontSize: 14, fontWeight: '300', color: '#000', paddingTop: 10 },
+	wf_tempMin: { fontSize: 14, fontWeight: '300', color: '#666', paddingTop: 10 },
+	wc_surfreport_more: { fontSize: 20, fontWeight: '300', color: campus_primary, paddingHorizontal: 14, paddingVertical: 10 },
 
-	// DINING LIST VIEW
-	dining_listview: { padding: 8 },
-
-	// DINING DETAIL
-	dl_market_name: { padding: 10 },
-	dl_market_name_text: { color: '#333', fontSize: 26 },
-	dl_market_desc_text: { color: '#555', paddingTop: 6, fontSize: 14 },
-	dl_market_scroller: { height: 140 },
-	dl_market_scroller_image: { width: 140, height: 140, borderRadius: 5, marginHorizontal: 7 },
-	dl_market_directions: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderBottomColor: '#EEE', margin: 6, padding: 6 },
-	dl_dir_label: { flex: 5, fontSize: 22, color: campus_primary },
-	dl_dir_traveltype_container: { flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'center' },
-	dl_dir_icon: { width: 28, height: 28 },
-	dl_dir_eta: { color: campus_primary, fontSize: 11, fontWeight: '600' },
-	dl_noresults: { color: '#444', fontSize: 15 },
-	dl_market_date: { borderBottomWidth: 1, borderBottomColor: '#EEE', paddingBottom: 12, paddingTop: 6 },
-	dl_market_date_label: { fontSize: 22, color: '#444', textAlign: 'center' },
-
-	dl_market_filters_foodtype: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginVertical: 8 },
-
-	dl_market_filters_mealtype: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderTopWidth: 1, borderTopColor: '#EEE', },
-	dl_meal_button: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 40, },
-	dl_meal_button_active: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 40, },
-	dl_mealtype_circle: { borderWidth: 1, borderColor: '#CCC', borderRadius: 8, width: 16, height: 16, backgroundColor: '#CCC', marginRight: 5 },
-	dl_mealtype_circle_active: { borderWidth: 1, borderColor: '#BBB', borderRadius: 8, width: 16, height: 16, backgroundColor: campus_primary, marginRight: 5 },
-	dl_mealtype_label: { fontSize: 20, color: '#888', },
-	dl_mealtype_label_active: { fontSize: 20, color: campus_primary, },
-	dl_market_menu: { marginHorizontal: 8, marginVertical: 16 },
-	dl_market_menu_row: { flexDirection: 'row', paddingBottom: 8 },
-	dl_menu_item_name: { fontSize: 15, color: campus_primary },
-	dl_menu_item_price: { color: '#555', paddingLeft: 26, marginLeft: 30 },
-
-	// DINING DETAIL
-	dd_menu_item_name: { fontSize: 22, color: campus_primary, paddingTop: 10, paddingLeft: 1 },
-
-	ddn_container: { borderWidth: 2, borderColor: '#000', margin: 6, padding: 3 },
-	ddn_header: { fontSize: 50, fontWeight: '700', backgroundColor: 'rgba(0,0,0,0)' },
-	ddn_servingsize: { fontSize: 18 },
-	ddn_amountperserving: { fontSize: 14, fontWeight: '700' },
-	ddn_dv: { fontSize: 14, fontWeight: '700', textAlign: 'right', paddingVertical: 2 },
-	ddn_bold: { fontSize: 18, fontWeight: '700' },
-	ddn_font: { fontSize: 18 },
-	ddn_row_main: { flex: 5, flexDirection: 'row', borderTopWidth: 1, borderTopColor: '#999', paddingVertical: 2 },
-	ddn_row_sub: { flex: 5, flexDirection: 'row', borderTopWidth: 1, borderTopColor: '#999', paddingVertical: 2, paddingLeft: 20 },
-	ddn_percent: { flex: 1, fontSize: 18, fontWeight: '700', textAlign: 'right' },
-	ddn_topborder1: { borderTopWidth: 8, borderTopColor: '#000', paddingVertical: 2, marginTop: 2 },
-	ddn_topborder2: { borderTopWidth: 4, borderTopColor: '#000' },
-	ddn_topborder3: { borderTopWidth: 1, borderTopColor: '#999' },
-	dd_menu_container: { justifyContent: 'center', alignItems: 'center', backgroundColor: campus_primary, borderRadius: 3, margin: 20, padding: 10 },
-	dd_menu_text: { fontSize: 16, color: '#FFF' },
-
-	// SHUTTLE CARD
+	// 303 - Shuttle Card
 	shuttle_card_row: { width: maxCardWidth, overflow: 'hidden', borderBottomWidth: 1, borderBottomColor: '#DDD' },
 	shuttle_card_err_row: { alignItems: 'center', justifyContent: 'center', width: maxCardWidth, overflow: 'hidden' },
 	shuttle_card_row_center: { alignItems: 'center', justifyContent: 'center', width: maxCardWidth, overflow: 'hidden' },
@@ -178,20 +158,23 @@ var css = StyleSheet.create({
 	shuttlecard_loading: { marginHorizontal: 40, marginVertical: 156 },
 	shuttlecard_loading_fail: { marginHorizontal: 16, marginTop: 40, marginBottom: 60 },
 
-	// QUICKLINKS CARD
-	quicklinks_card: { alignSelf: 'stretch', padding: 8 },
-	quicklinks_locations: { height: 188, flexDirection: 'column' },
-	quicklinks_row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderBottomWidth: 1, borderBottomColor: '#EEE', paddingVertical: 10 },
-	quicklinks_icon: { height: 42, width: 38 },
-	quicklinks_name: { flexGrow: 5, color: '#444', fontSize: 16, paddingHorizontal: 8 },
+	// 304 - Dining Card
+	dining_card: { width: maxCardWidth, padding: 8 },
+	dining_card_filters: { flexDirection: 'row', justifyContent: 'center', marginBottom: 6 },
+	dining_card_filter_button: { paddingVertical: 8, paddingHorizontal: 14, fontSize: 14, color: '#888', borderWidth: 1, borderColor: '#999', borderRadius: 3, backgroundColor: '#EEE', textAlign: 'center', marginHorizontal: 14 },
+	dining_card_filter_button_active: { paddingVertical: 8, paddingHorizontal: 14, fontSize: 14, color: '#EEE', borderWidth: 1, borderColor: '#999', borderRadius: 3, backgroundColor: campus_primary, textAlign: 'center', marginHorizontal: 14, overflow: 'hidden' },
+	dc_locations: { flexDirection: 'column' },
+	dc_locations_row: { flexDirection: 'row', paddingBottom: 10, paddingTop: 10, borderBottomWidth: 1, borderBottomColor: '#DDD' },
+	dc_locations_row_left: { flex: 6, justifyContent: 'center' },
+	dc_locations_title: { fontSize: 20, color: campus_primary },
+	dc_locations_hours: { fontSize: 12, color: '#666', paddingTop: 1 },
+	dc_locations_spec_hours: { fontSize: 12, color: '#666', paddingTop: 4 },
+	dc_locations_description: { fontSize: 12, color: '#666', paddingTop: 6 },
+	dc_locations_row_right: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+	dining_card_more: { alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4, paddingTop: 8, paddingBottom: 4, borderTopWidth: 1, borderTopColor: '#DDD' },
+	dining_card_more_label: { fontSize: 20, color: campus_primary, fontWeight: '300' },
 
-	// CARD GENERIC
-	card_row_center: { alignItems: 'center', justifyContent: 'center', width: maxCardWidth, overflow: 'hidden' },
-	card_loader: { height: 368 },
-	card_more: { alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4, paddingTop: 8, paddingBottom: 4 },
-	card_more_label: { fontSize: 20, color: campus_primary, fontWeight: '300' },
-
-	// EVENTS / NEWS CARD
+	// 305 - Events & News Cards
 	events_list: { alignSelf: 'stretch', padding: 8 },
 	events_list_row: { flexDirection: 'row', paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: '#EEE', },
 	events_list_left_container: { flex: 1 },
@@ -210,42 +193,20 @@ var css = StyleSheet.create({
 	events_card_postdate: { fontSize: 11, color: campus_primary, paddingTop: 8 },
 	news_card_image: { width: 130, height: 100, marginRight: 4, marginLeft: 10, borderWidth: 1, borderColor: '#CCC'},
 	events_card_image: { width: 130, height: 73, marginRight: 4, marginLeft: 10, borderWidth: 1, borderColor: '#CCC'},
+	content_load_err: { padding: 30, fontSize:16, alignSelf: 'center'  },
 
-	// WELCOME WEEK STYLE
-	welcome_listview: {},
-	welcome_ai: { alignItems: 'center', justifyContent: 'center', marginTop: welcome_ai_marginTop },
-	welcome_list_row: { flexDirection: 'row', paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: 'white', overflow: 'hidden', paddingLeft: 16, borderTopColor: 'white', justifyContent: 'center', alignItems: 'center'},
-	welcome_list_sectionText: { fontSize: 18, color: '#FFF' },
-	welcome_list_section: { flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start', padding: 6, backgroundColor: '#666' },
-	welcome_list_left_container: { flexGrow: 1, marginRight: 14 },
-	welcome_list_title: { fontSize: 17, color: '#000' },
-	welcome_list_desc: { fontSize: 14, color: '#666', paddingTop: 3, paddingBottom: 6 },
-	welcome_list_postdate: { fontSize: 11, color: campus_primary },
-	welcome_list_image: { width: 130, height: 87, marginLeft: 14, borderWidth: 1, borderColor: '#CCC' },
+	// 306 - Links Card
+	quicklinks_card: { alignSelf: 'stretch', padding: 8 },
+	quicklinks_locations: { height: 256, flexDirection: 'column', overflow: 'hidden' },
+	quicklinks_row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderBottomWidth: 1, borderBottomColor: '#EEE', paddingVertical: 10 },
+	quicklinks_icon: { height: 42, width: 38 },
+	quicklinks_name: { flexGrow: 5, color: '#444', fontSize: 16, paddingHorizontal: 8 },
 
 
-	// WEATHER CARD
-	weathercard_more: { justifyContent: 'center', width: windowWidth - 30, padding: 10, fontSize: 24, fontWeight: '500', color: campus_primary },
-	weathercard_border: { borderTopWidth: 1, borderTopColor: '#CCC', width: maxCardWidth },
-	weatherccard_loading_height: { height: 270 },
-
-	wc_main: {},
-	wc_toprow: { flexDirection: 'row', borderBottomWidth: 1, borderColor: '#EEE', justifyContent: 'center', alignItems: 'center', width: maxCardWidth, paddingHorizontal: 14 },
-	wc_toprow_left: { flex: 4 },
-	wc_current_temp: { fontSize: 22, fontWeight: '300' },
-	wc_current_summary: { fontSize: 15, color: '#444', paddingTop: 10, fontWeight: '300' },
-	wc_toprow_right: { flex: 1 },
-	wc_toprow_icon: { width: 68, height: 68 },
-
-	wc_botrow: { flexDirection: 'row', padding: 20 },
-	wc_botrow_col: { flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center' },
-	wf_dayofweek: { fontSize: 14, fontWeight: '300', color: '#444', paddingBottom: 10},
-	wf_icon: { height: 33, width: 33 },
-	wf_tempMax: { fontSize: 14, fontWeight: '300', color: '#000', paddingTop: 10 },
-	wf_tempMin: { fontSize: 14, fontWeight: '300', color: '#666', paddingTop: 10 },
-	wc_surfreport_more: { fontSize: 20, fontWeight: '300', color: campus_primary, paddingHorizontal: 14, paddingVertical: 10 },
-
-	// SURF REPORT
+	/********************************************
+	 *  400 - Views
+	 ********************************************/
+	// 401 - Surf Report
 	sr_listview: {},
 	sr_image: { width: windowWidth, height: round(windowWidth * .361) },
 	sr_day_row: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: 10 },
@@ -257,58 +218,8 @@ var css = StyleSheet.create({
 	sr_day_details_title: { fontSize: 18, color: '#000' },
 	sr_day_details_height: { fontSize: 16, color: '#333', paddingTop: 4 },
 	sr_day_details_desc: { fontSize: 13, color: '#777', paddingTop: 4 },
-
-
-
-	// SEARCH RESULTS
-	destinationcard_marker_label: { flex: 2, fontSize: 18, paddingLeft: 8, paddingTop: 0, color: campus_primary, justifyContent: 'center' },
-	destinationcard_marker_dist_label: { flex: 1, textAlign: 'right', fontSize: 18, paddingLeft: 8, paddingTop: 0, color: campus_primary, justifyContent: 'center' },
-
-
-	// EVENT DETAIL
-
-	news_detail_container: { width: windowWidth, paddingHorizontal: 18, paddingVertical: 14 },
-
-	eventdetail_top_container: { flexDirection: 'row', width: windowWidth, padding: 8 },
 	
-	eventdetail_eventname: { fontWeight: '400', fontSize: 22, color: campus_primary },
-	eventdetail_eventlocation: { fontSize: 16, color: '#333' },
-	eventdetail_eventdate: { fontSize: 11, color: '#333', paddingTop: 14 },
-	eventdetail_eventdescription: { lineHeight: 18, color: '#111', fontSize: 14, paddingTop: 14 },
-	eventdetail_eventcontact: { fontSize: 16, fontWeight: '600', color: '#333', paddingTop: 16 },
-
-	eventdetail_readmore_container: { justifyContent: 'center', alignItems: 'center', backgroundColor: campus_primary, borderRadius: 3, marginTop: 20, padding: 10 },
-	eventdetail_readmore_text: { fontSize: 16, color: '#FFF' },
-	eventdetail_link: { fontSize: 16, fontWeight: '600', color: '#FFF', backgroundColor: campus_primary, borderWidth: 0, borderRadius: 3 },
-
-
-	// SPECIAL EVENTS CARD
-	special_events_main: { flex: 1 },
-	special_events_webview: { },
-
-	// Map
-	map_searchbar_container: { width: maxCardWidth, height: 44, borderWidth: 0 },
-	map_searchbar_input: { height: 44, padding: 8, paddingLeft: 40, backgroundColor: 'rgba(0,0,0,0)', zIndex: 10, color: '#555', fontSize: 20 },
-	map_searchbar_icon: { position: 'absolute', top: 9, left: 8 },
-	map_searchbar_ai: { position: 'absolute', top: 12, left: 8 },
-	map_searchinfo: { padding: 16 },
-	map_searchinfo_title: { fontSize: 18, fontWeight: '500', color: '#222', paddingBottom: 4 },
-	map_searchinfo_desc: { fontSize: 16, color: '#444', lineHeight: 24 },
-
-
-	// Events styles
-	events_main: { flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center' },
-	events_listing_img: { width: windowWidth - 12, height: round(windowWidth * 1.267 - 12), margin: 6 },
-
-	// Refresh loader
-	load_icon: { width: 48, height: 48 },
-
-
-	// Settings
-	preferencesContainer: { padding: 10, borderTopWidth: 1, borderTopColor: '#EEE' },
-	prefCardTitle: { fontSize: 16, color: '#333' },
-
-	// SHUTTLE STOP
+	// 402 - Shuttle Stop
 	shuttlestop_image: { width: windowWidth, height: round(windowWidth * .533) },
 	shuttlestop_name_container: { flexDirection: 'row', alignItems: 'center', width: windowWidth, paddingVertical: 10, paddingHorizontal: 14, backgroundColor: campus_primary },
 	shuttlestop_name_text: { flex: 5, color: '#FFF', fontSize: 24, fontWeight: '300' },
@@ -330,11 +241,108 @@ var css = StyleSheet.create({
 	shuttlestop_aa: { marginRight: 20, marginVertical: 50 },
 	shuttle_stop_no_arrivals: { fontSize: 16, color: '#555' },
 
-	// Weather Styles
-	weather_main: { flex: 1, paddingBottom: 12 },
-	weather_webview: { backgroundColor: '#EAEAEA', paddingBottom:40 },
+	// 403 - Dining List
+	dining_listview: { padding: 8 },
+	dl_market_name: { padding: 10 },
+	dl_market_name_text: { color: '#333', fontSize: 26 },
+	dl_market_desc_text: { color: '#555', paddingTop: 6, fontSize: 14 },
+	dl_market_scroller: { height: 140 },
+	dl_market_scroller_image: { width: 140, height: 140, borderRadius: 5, marginHorizontal: 7 },
+	dl_market_directions: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderBottomColor: '#EEE', margin: 6, padding: 6 },
+	dl_dir_label: { flex: 5, fontSize: 22, color: campus_primary },
+	dl_dir_traveltype_container: { flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'center' },
+	dl_dir_icon: { width: 28, height: 28 },
+	dl_dir_eta: { color: campus_primary, fontSize: 11, fontWeight: '600' },
+	dl_noresults: { color: '#444', fontSize: 15 },
+	dl_market_date: { borderBottomWidth: 1, borderBottomColor: '#EEE', paddingBottom: 12, paddingTop: 6 },
+	dl_market_date_label: { fontSize: 22, color: '#444', textAlign: 'center' },
+	dl_market_filters_foodtype: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginVertical: 8 },
+	dl_market_filters_mealtype: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderTopWidth: 1, borderTopColor: '#EEE', },
+	dl_meal_button: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 40, },
+	dl_meal_button_active: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 40, },
+	dl_mealtype_circle: { borderWidth: 1, borderColor: '#CCC', borderRadius: 8, width: 16, height: 16, backgroundColor: '#CCC', marginRight: 5 },
+	dl_mealtype_circle_active: { borderWidth: 1, borderColor: '#BBB', borderRadius: 8, width: 16, height: 16, backgroundColor: campus_primary, marginRight: 5 },
+	dl_mealtype_label: { fontSize: 20, color: '#888', },
+	dl_mealtype_label_active: { fontSize: 20, color: campus_primary, },
+	dl_market_menu: { marginHorizontal: 8, marginVertical: 16 },
+	dl_market_menu_row: { flexDirection: 'row', paddingBottom: 8 },
+	dl_menu_item_name: { fontSize: 15, color: campus_primary },
+	dl_menu_item_price: { color: '#555', paddingLeft: 26, marginLeft: 30 },
 
-	// LocationRequiredContent
+	// 404 - Dining Detail
+	dd_menu_item_name: { fontSize: 22, color: campus_primary, paddingTop: 10, paddingLeft: 1 },
+	ddn_container: { borderWidth: 2, borderColor: '#000', margin: 6, padding: 3 },
+	ddn_header: { fontSize: 50, fontWeight: '700', backgroundColor: 'rgba(0,0,0,0)' },
+	ddn_servingsize: { fontSize: 18 },
+	ddn_amountperserving: { fontSize: 14, fontWeight: '700' },
+	ddn_dv: { fontSize: 14, fontWeight: '700', textAlign: 'right', paddingVertical: 2 },
+	ddn_bold: { fontSize: 18, fontWeight: '700' },
+	ddn_font: { fontSize: 18 },
+	ddn_row_main: { flex: 5, flexDirection: 'row', borderTopWidth: 1, borderTopColor: '#999', paddingVertical: 2 },
+	ddn_row_sub: { flex: 5, flexDirection: 'row', borderTopWidth: 1, borderTopColor: '#999', paddingVertical: 2, paddingLeft: 20 },
+	ddn_percent: { flex: 1, fontSize: 18, fontWeight: '700', textAlign: 'right' },
+	ddn_topborder1: { borderTopWidth: 8, borderTopColor: '#000', paddingVertical: 2, marginTop: 2 },
+	ddn_topborder2: { borderTopWidth: 4, borderTopColor: '#000' },
+	ddn_topborder3: { borderTopWidth: 1, borderTopColor: '#999' },
+	dd_menu_container: { justifyContent: 'center', alignItems: 'center', backgroundColor: campus_primary, borderRadius: 3, margin: 20, padding: 10 },
+	dd_menu_text: { fontSize: 16, color: '#FFF' },
+
+	// 405 - Welcome Week
+	welcome_listview: {},
+	welcome_ai: { alignItems: 'center', justifyContent: 'center', marginTop: windowHeight / 2 },
+	welcome_list_row: { flexDirection: 'row', paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: 'white', overflow: 'hidden', paddingLeft: 16, borderTopColor: 'white', justifyContent: 'center', alignItems: 'center'},
+	welcome_list_sectionText: { fontSize: 18, color: '#FFF' },
+	welcome_list_section: { flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start', padding: 6, backgroundColor: '#666' },
+	welcome_list_left_container: { flexGrow: 1, marginRight: 14 },
+	welcome_list_title: { fontSize: 17, color: '#000' },
+	welcome_list_desc: { fontSize: 14, color: '#666', paddingTop: 3, paddingBottom: 6 },
+	welcome_list_postdate: { fontSize: 11, color: campus_primary },
+	welcome_list_image: { width: 130, height: 87, marginLeft: 14, borderWidth: 1, borderColor: '#CCC' },
+
+	// 406 - Event & News Detail
+	news_detail_container: { width: windowWidth, paddingHorizontal: 18, paddingVertical: 14 },
+	eventdetail_top_container: { flexDirection: 'row', width: windowWidth, padding: 8 },
+	eventdetail_eventname: { fontWeight: '400', fontSize: 22, color: campus_primary },
+	eventdetail_eventlocation: { fontSize: 16, color: '#333' },
+	eventdetail_eventdate: { fontSize: 11, color: '#333', paddingTop: 14 },
+	eventdetail_eventdescription: { lineHeight: 18, color: '#111', fontSize: 14, paddingTop: 14 },
+	eventdetail_eventcontact: { fontSize: 16, fontWeight: '600', color: '#333', paddingTop: 16 },
+	eventdetail_readmore_container: { justifyContent: 'center', alignItems: 'center', backgroundColor: campus_primary, borderRadius: 3, marginTop: 20, padding: 10 },
+	eventdetail_readmore_text: { fontSize: 16, color: '#FFF' },
+	eventdetail_link: { fontSize: 16, fontWeight: '600', color: '#FFF', backgroundColor: campus_primary, borderWidth: 0, borderRadius: 3 },
+
+	// 407 - WebView
+	webview_container: { width: windowWidth, height: windowHeight - 60 },
+
+	// 408 - Feedback
+	feedback_container: { alignItems: 'flex-start', flexDirection: 'column', padding: 16, },
+	feedback_label: { flex: 2, flexWrap: 'wrap', fontSize: 20, height: 80 },
+	feedback_text: { flex: 1, fontSize: 20, alignItems: 'center', width: maxCardWidth - 32, height: 50 },
+	feedback_submit: { flex:1, fontSize: 40, textAlign: 'center' },
+	feedback_appInfo: { position: 'absolute', bottom: 0, right: 0, color: '#BBB', fontSize: 9, padding: 4 },
+
+	// 409 - Preferences View
+	preferencesContainer: { padding: 10, borderTopWidth: 1, borderTopColor: '#EEE' },
+	prefCardTitle: { fontSize: 16, color: '#333' },
+
+
+	/********************************************
+	 *  500 - Modules
+	 ********************************************/
+	// 501 - Map Search
+	map_searchbar_container: { width: maxCardWidth, height: 44, borderWidth: 0 },
+	map_searchbar_input: { height: 44, padding: 8, paddingLeft: 40, backgroundColor: 'rgba(0,0,0,0)', zIndex: 10, color: '#555', fontSize: 20 },
+	map_searchbar_icon: { position: 'absolute', top: 9, left: 8 },
+	map_searchbar_ai: { position: 'absolute', top: 12, left: 8 },
+	map_searchinfo: { padding: 16 },
+	map_searchinfo_title: { fontSize: 18, fontWeight: '500', color: '#222', paddingBottom: 4 },
+	map_searchinfo_desc: { fontSize: 16, color: '#444', lineHeight: 24 },
+
+	// 502 - Search Results
+	destinationcard_marker_label: { flex: 2, fontSize: 18, paddingLeft: 8, paddingTop: 0, color: campus_primary, justifyContent: 'center' },
+	destinationcard_marker_dist_label: { flex: 1, textAlign: 'right', fontSize: 18, paddingLeft: 8, paddingTop: 0, color: campus_primary, justifyContent: 'center' },
+
+	// 503 - LocationRequiredContent
 	lrc_container: { flex: 1, alignItems: 'center', padding: 8, width: windowWidth },
 	lrc_text_row: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingTop: 10 },
 	lrc_text: { fontSize: 14, color: '#777', paddingLeft: 6 },
@@ -342,26 +350,9 @@ var css = StyleSheet.create({
 	lrc_button_text: { color: '#FFF' },
 
 
-	// Destination Styles
-	destination_search_img: { width: windowWidth, height: round(windowWidth * .158) },
-	destination_suggestions_img: { width: windowWidth, height: round(windowWidth * .559) },
-	destination_results_img: { width: windowWidth, height: round(windowWidth * 1.864) },
-
-	// Destination Detail
-	destination_detail_sc: { },
-	destination_detail_map: { width: windowWidth, height: windowHeight - 60 },
-
-	// WebView
-	webview_container: { width: windowWidth, height: windowHeight - 60 },
-
-	// Feedback
-	feedback_container: { alignItems: 'flex-start', flexDirection: 'column', padding: 16, },
-	feedback_label: { flex: 2, flexWrap: 'wrap', fontSize: 20, height: 80 },
-	feedback_text: { flex: 1, fontSize: 20, alignItems: 'center', width: maxCardWidth - 32, height: 50 },
-	feedback_submit: { flex:1, fontSize: 40, textAlign: 'center' },
-	feedback_appInfo: { position: 'absolute', bottom: 0, right: 0, color: '#BBB', fontSize: 9, padding: 4 },
-
-	// MISC STYLES
+	/********************************************
+	 *  900 - Misc
+	 ********************************************/
 	campus_primary: { color: campus_primary },
 	whitebg: { backgroundColor: '#FFF' },
 	offwhitebg: { backgroundColor: '#FAFAFA' },
@@ -374,26 +365,12 @@ var css = StyleSheet.create({
 	center: { alignItems: 'center', justifyContent: 'center' },
 	cardcenter: { alignItems: 'center', justifyContent: 'center', width: maxCardWidth },
 	flexcenter: { flex: 1, alignItems: 'center', justifyContent: 'center', width: maxCardWidth },
-
 	spacedRow: { flexDirection: 'row', justifyContent: 'space-between' },
 	centerAlign: { alignSelf: 'center' },
 	column: { flex: 1, flexDirection: 'column' },
-
-	card_loading_img: { width: 64, height: 64 },
-
 	bold: { fontWeight: '700' },
-
-	pad10: { padding: 10 },
-	pad20: { padding: 20 },
-	pad30: { padding: 30 },
 	pad40: { padding: 40 },
-	mar10: { margin: 10 },
-	mar20: { margin: 20 },
-	mar30: { margin: 30 },
-	mar40: { margin: 40 },
 	pt10: { paddingTop: 10 },
-	pl10: { paddingLeft: 10 },
-
 	fs12: { fontSize: 12 },
 	fs18: { fontSize: 18 },
 
