@@ -180,7 +180,7 @@ var css = StyleSheet.create({
 
 	// QUICKLINKS CARD
 	quicklinks_card: { alignSelf: 'stretch', padding: 8 },
-	quicklinks_locations: { height: 188, flexDirection: 'column' },
+	quicklinks_locations: { height: 256, flexDirection: 'column', overflow: 'hidden' },
 	quicklinks_row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderBottomWidth: 1, borderBottomColor: '#EEE', paddingVertical: 10 },
 	quicklinks_icon: { height: 42, width: 38 },
 	quicklinks_name: { flexGrow: 5, color: '#444', fontSize: 16, paddingHorizontal: 8 },
