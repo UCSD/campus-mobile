@@ -25,7 +25,7 @@ There are tons of improvements/enhancements so don't worry about running out of 
 
 ### Find something to do
 - Documenting components/functions (Please follow [jsdoc](http://usejsdoc.org/) style)
-- We're still working on it, but we will begin submitting and tagging more github issues. Look for tags: documentation, good beginner, help wanted
+- We're still working on it, but we will begin submitting and tagging more github issues. Look for tags: documentation, beginner, feature request
 - Still can't find something you would like to work on? Suggest something! This app is far from being complete and we will do our best to take every suggestion into consideration while developing.
 
 At this point, you're ready to make your changes! Feel free to ask for help; everyone is a beginner at first :smile_cat:
