@@ -10,7 +10,6 @@ import { Actions } from 'react-native-router-flux';
 import Card from '../card/Card';
 import EventList from './EventList';
 import css from '../../styles/css';
-import { doPRM } from '../../util/general';
 
 const defaultRows = 3;
 

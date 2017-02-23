@@ -5,7 +5,6 @@ import {
 } from 'react-native';
 
 import NewsItem from './NewsItem';
-import { doPRM } from '../../util/general';
 
 const newsDataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 

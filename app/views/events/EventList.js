@@ -5,7 +5,6 @@ import {
 } from 'react-native';
 
 import EventItem from './EventItem';
-import { doPRM } from '../../util/general';
 
 const eventDataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
