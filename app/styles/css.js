@@ -154,6 +154,7 @@ var css = StyleSheet.create({
 	shuttle_card_rt_4_label: { padding: 5, textAlign: 'center', color: '#8f9092', fontWeight: '500', fontSize: 16, backgroundColor: 'rgba(0,0,0,0)' },
 	shuttle_card_rt_5: { flexGrow: 1 },
 	shuttle_card_row_bot: { alignItems: 'center', paddingBottom: 20 },
+	shuttle_card_row_name: { fontSize: 17, color: '#666' },
 	shuttle_card_row_arriving: { fontSize: 26, color: '#333' },
 	shuttlecard_loading: { marginHorizontal: 40, marginVertical: 156 },
 	shuttlecard_loading_fail: { marginHorizontal: 16, marginTop: 40, marginBottom: 60 },
