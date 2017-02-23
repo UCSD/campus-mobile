@@ -177,16 +177,15 @@ var css = StyleSheet.create({
 
 	// 305 - Events & News Cards
 	events_list: { alignSelf: 'stretch', padding: 8 },
-	events_list_row: { paddingHorizontal: 8, paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: '#EEE', },
+	events_list_row: { paddingHorizontal: 0, paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: '#EEE', },
 	events_list_title: { fontSize: 17, color: '#000', alignSelf: 'stretch' },
 	events_list_info: { flexDirection: 'row', paddingVertical: 8 },
 	events_list_info_left: { flex: 1 },
 	events_list_image: { width: 120, height: 70, marginLeft: 10, borderWidth: 1, borderColor: '#EEE' },
-
 	events_list_desc: { fontSize: 14, color: '#666' },
 	events_list_postdate: { fontSize: 11, color: campus_primary, paddingTop: 8 },
 	
-	news_list_image: { width: 130, height: 100, marginRight: 4, marginLeft: 10, borderWidth: 1, borderColor: '#CCC' },
+	
 	events_more: { alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4, paddingTop: 8, paddingBottom: 4 },
 	events_more_label: { fontSize: 20, color: campus_primary, fontWeight: '300' },
 	events_card_container: { flexDirection: 'row', padding: 14, borderBottomWidth: 1, borderBottomColor: '#EEE', alignItems: 'center' },
