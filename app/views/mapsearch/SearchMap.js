@@ -1,15 +1,9 @@
 import React, { PropTypes } from 'react';
 import {
-	Text,
-	TouchableHighlight,
-	View,
 	StyleSheet,
-	Platform
 } from 'react-native';
 import MapView from 'react-native-maps';
 import Icon from 'react-native-vector-icons/FontAwesome';
-
-import logger from '../../util/logger';
 
 // NOTE: For some reason MapView-onCalloutPress only works for Android and
 // TouchableHighlight-onPress only works for iOS...which is why it's in two places
@@ -48,9 +42,6 @@ const SearchMap = ({ location, selectedResult, style, shuttle, vehicles }) => (
 			latitudeDelta: 0.02,
 			longitudeDelta: 0.02
 		}}
-		onCalloutPress={
-			() => logger.log('Pressed callout')
-		}
 	>
 		{
 			(shuttle && (Object.keys(vehicles).length !== 0)) ? (
@@ -104,12 +95,6 @@ const SearchMap = ({ location, selectedResult, style, shuttle, vehicles }) => (
 		{
 			(selectedResult) ? (
 				<MapView.Marker
-					ref={(MarkRef) => {
-						// logger.log("MARKER: " + selectedResult.title);
-						if (MarkRef != null) {
-							// MarkRef.showCallout();
-						}
-					}}
 					coordinate={{
 						latitude: selectedResult.mkrLat,
 						longitude: selectedResult.mkrLong
