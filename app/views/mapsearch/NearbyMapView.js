@@ -254,7 +254,7 @@ class NearbyMapView extends React.Component {
 	}
 
 	render() {
-		if (this.state.updatedGoogle) {
+		if (!this.state.updatedGoogle) {
 			return (
 				<View style={css.main_container}>
 					<Text>Please update Google Play Services and restart app to view map.</Text>
