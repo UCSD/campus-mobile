@@ -16,7 +16,7 @@ const css = require('../../styles/css');
 const defaultRows = 4;
 
 const QuicklinksCard = ({ data }) => (
-	<Card title="Links">
+	<Card title="Links" id="quicklinks">
 		{data ? (
 			<View style={css.quicklinks_card}>
 				<View style={css.quicklinks_locations}>
