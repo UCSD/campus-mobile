@@ -14,6 +14,7 @@ import { connect } from 'react-redux';
 import ElevatedView from 'react-native-elevated-view';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MapView from 'react-native-maps';
+import { checkGooglePlayServices, openGooglePlayUpdate } from 'react-native-google-api-availability-bridge';
 
 import SearchBar from './SearchBar';
 import SearchMap from './SearchMap';
@@ -54,12 +55,18 @@ class NearbyMapView extends React.Component {
 			showMenu: false,
 			toggled: false,
 			vehicles: {},
+			updatedGoogle: false,
 		};
 	}
 
 	componentWillMount() {
 		Object.keys(this.props.shuttle_routes).forEach((key, index) => {
 			this.setState({ ['route' + key] : false });
+		});
+		checkGooglePlayServices((result) => {
+			if (result !== 'update') {
+				this.setState({ updatedGoogle: true });
+			}
 		});
 	}
 
@@ -247,6 +254,18 @@ class NearbyMapView extends React.Component {
 	}
 
 	render() {
+		if (this.state.updatedGoogle) {
+			return (
+				<View style={css.main_container}>
+					<Text>Please update Google Play Services and restart app to view map.</Text>
+					<TouchableOpacity underlayColor={'rgba(200,200,200,.1)'} onPress={() => openGooglePlayUpdate()}>
+						<View style={css.eventdetail_readmore_container}>
+							<Text style={css.eventdetail_readmore_text}>Update</Text>
+						</View>
+					</TouchableOpacity>
+				</View>
+			);
+		}
 		if (this.props.location.coords) {
 			return (
 				<View style={css.main_container}>
