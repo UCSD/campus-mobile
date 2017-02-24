@@ -90,6 +90,7 @@ var css = StyleSheet.create({
 	 ********************************************/
 	main_container: { backgroundColor: '#EAEAEA', marginTop: general.platformIOS() ? IOSMarginTop : AndroidMarginTop, marginBottom: general.platformIOS() ? IOSMarginBottom : AndroidMarginBottom },
 	view_all_container: { backgroundColor: '#FFF', paddingHorizontal: 12, marginTop: general.platformIOS() ? IOSMarginTop : AndroidMarginTop, marginBottom: general.platformIOS() ? IOSMarginBottom : AndroidMarginBottom },
+	view_container: { backgroundColor: '#FFF', marginTop: general.platformIOS() ? IOSMarginTop : AndroidMarginTop, marginBottom: general.platformIOS() ? IOSMarginBottom : AndroidMarginBottom },
 	listview_main: { marginTop: general.platformIOS() ? IOSMarginTop : AndroidMarginTop, },
 	view_default: { paddingHorizontal: 8 },
 	scroll_default: { alignItems: 'center' },
