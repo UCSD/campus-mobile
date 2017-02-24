@@ -1,6 +1,6 @@
 // NOTE: AppSettings.XX_CARD_ENABLED is being deprecated to pave the way for more dynamic cards
 
-var initialState = {
+const initialState = {
 	'weather': 		{ active: true, order: 1, name: 'Weather', component: 'WeatherCard' },
 	'shuttle': 		{ active: true, order: 2, name: 'Shuttle', component: 'ShuttleCard' },
 	'dining': 		{ active: true, order: 3, name: 'Dining', component: 'DiningCard' },
@@ -11,36 +11,33 @@ var initialState = {
 };
 
 function cards(state = initialState, action) {
+	const newState = { ...state };
 
 	switch (action.type) {
-		case 'SHOW_CARD':
-			var newState = {...state};
-			if (newState[action.id] && !newState[action.id].active)
-				newState[action.id].active = true;
+	case 'SHOW_CARD': {
+		if (newState[action.id] && !newState[action.id].active) {
+			newState[action.id].active = true;
+		}
+		return newState;
+	}
+	case 'HIDE_CARD':
+		if (newState[action.id] && newState[action.id].active) {
+			newState[action.id].active = false;
+		}
+		return newState;
+	case 'ADD_CARD':
+		// check for duplicate, early exit
+		if (newState[action.id]) {
 			return newState;
+		}
 
-		case 'HIDE_CARD':
-			var newState = {...state};
-			if (newState[action.id] && newState[action.id].active)
-				newState[action.id].active = false;
-			return newState;
-
-		case 'ADD_CARD':
-			var newState = {...state};
-			// check for duplicate, early exit
-			if (newState[action.id])
-				return newState;
-
-			newState[action.id] = true;
-			return newState;
-
-		case 'DELETE_CARD':
-			var newState = {...state};
-			delete newState[action.id];
-			return newState;
+		newState[action.id] = true;
+		return newState;
+	case 'DELETE_CARD':
+		delete newState[action.id];
+		return newState;
 	}
 	return state;
-
 }
 
-module.exports = cards
+module.exports = cards;
