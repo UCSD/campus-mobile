@@ -29,7 +29,8 @@ import { fetchSearch } from '../../actions/map';
 
 import css from '../../styles/css';
 import logger from '../../util/logger';
-import { getPRM, gotoNavigationApp } from '../../util/general';
+
+import { getPRM, gotoNavigationApp, platformAndroid } from '../../util/general';
 
 const deviceHeight = Dimensions.get('window').height;
 const deviceWidth = Dimensions.get('window').width;
@@ -63,11 +64,13 @@ class NearbyMapView extends React.Component {
 		Object.keys(this.props.shuttle_routes).forEach((key, index) => {
 			this.setState({ ['route' + key] : false });
 		});
-		checkGooglePlayServices((result) => {
-			if (result !== 'update') {
-				this.setState({ updatedGoogle: true });
-			}
-		});
+		if (platformAndroid()) {
+			checkGooglePlayServices((result) => {
+				if (result !== 'update') {
+					this.setState({ updatedGoogle: true });
+				}
+			});
+		}
 	}
 
 	componentDidMount() {
@@ -254,7 +257,7 @@ class NearbyMapView extends React.Component {
 	}
 
 	render() {
-		if (!this.state.updatedGoogle) {
+		if (platformAndroid() && !this.state.updatedGoogle) {
 			return (
 				<View style={css.main_container}>
 					<Text>Please update Google Play Services and restart app to view map.</Text>
