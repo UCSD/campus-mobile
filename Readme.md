@@ -9,7 +9,7 @@ UC San Diego uses this platform for its campus mobile app on iOS and Android.
 
 ## Getting Started
 
-- Follow the [Getting Started guide](https://facebook.github.io/react-native/docs/getting-started.html) for React Native 
+- Follow the [Getting Started guide](https://facebook.github.io/react-native/docs/getting-started.html) for React Native
 - From the project folder, run:
 	- npm install
 	- npm run-script apply-fixes
@@ -35,7 +35,7 @@ Review the [modules documentation](https://htmlpreview.github.io/?https://raw.gi
 
 TODO: add content
 
-## Availabile Cards
+## Available Cards
 * TopBanner
 	* For upcoming current events
 * Weather & Surf
