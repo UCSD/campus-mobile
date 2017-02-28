@@ -56,7 +56,7 @@ class NearbyMapView extends React.Component {
 			showMenu: false,
 			toggled: false,
 			vehicles: {},
-			updatedGoogle: false,
+			updatedGoogle: true,
 		};
 	}
 
@@ -66,8 +66,8 @@ class NearbyMapView extends React.Component {
 		});
 		if (platformAndroid()) {
 			checkGooglePlayServices((result) => {
-				if (result !== 'update') {
-					this.setState({ updatedGoogle: true });
+				if (result === 'update') {
+					this.setState({ updatedGoogle: false });
 				}
 			});
 		}
