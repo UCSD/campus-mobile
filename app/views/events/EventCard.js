@@ -16,7 +16,7 @@ const defaultRows = 3;
 const EventCard = ({ data }) => (
 	<Card id="events" title="Events">
 		<View style={css.events_list}>
-			{data ? (
+			{data && data.length > 0 ? (
 				<View>
 					<EventList
 						data={data}
