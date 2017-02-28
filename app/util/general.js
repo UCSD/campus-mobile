@@ -258,43 +258,47 @@ module.exports = {
 	 * @returns {string} The time in AM-PM form
 	 */
 	militaryToAMPM(time) {
-		let militaryTime = time.substring(0, 5).replace(':','');
-		let militaryTimeHH,
-			militaryTimeMM,
-			militaryTimeAMPM;
+		if (time) {
+			let militaryTime = time.substring(0, 5).replace(':','');
+			let militaryTimeHH,
+				militaryTimeMM,
+				militaryTimeAMPM;
 
-		militaryTime = militaryTime.replace(/^0/,'');
+			militaryTime = militaryTime.replace(/^0/,'');
 
-		if (militaryTime.length === 3) {
-			militaryTimeHH = militaryTime.substring(0,1);
-			militaryTimeMM = militaryTime.substring(1,3);
-		} else if (militaryTime.length === 4) {
-			militaryTimeHH = militaryTime.substring(0,2);
-			militaryTimeMM = militaryTime.substring(2,4);
-		}
+			if (militaryTime.length === 3) {
+				militaryTimeHH = militaryTime.substring(0,1);
+				militaryTimeMM = militaryTime.substring(1,3);
+			} else if (militaryTime.length === 4) {
+				militaryTimeHH = militaryTime.substring(0,2);
+				militaryTimeMM = militaryTime.substring(2,4);
+			}
 
-		if (militaryTimeHH < 12) {
-			militaryTimeAMPM = 'am';
+			if (militaryTimeHH < 12) {
+				militaryTimeAMPM = 'am';
+			} else {
+				militaryTimeAMPM = 'pm';
+			}
+
+			if (militaryTimeHH > 12) {
+				militaryTimeHH -= 12;
+			}
+
+			if (militaryTimeHH === '0') {
+				militaryTimeHH = '12';
+			}
+
+			if (militaryTimeMM === '00') {
+				militaryTimeMM = '';
+			}
+
+			if (militaryTimeMM.length > 0) {
+				return (militaryTimeHH + ':' + militaryTimeMM + militaryTimeAMPM);
+			} else {
+				return (militaryTimeHH + militaryTimeAMPM);
+			}
 		} else {
-			militaryTimeAMPM = 'pm';
-		}
-
-		if (militaryTimeHH > 12) {
-			militaryTimeHH -= 12;
-		}
-
-		if (militaryTimeHH === '0') {
-			militaryTimeHH = '12';
-		}
-
-		if (militaryTimeMM === '00') {
-			militaryTimeMM = '';
-		}
-
-		if (militaryTimeMM.length > 0) {
-			return (militaryTimeHH + ':' + militaryTimeMM + militaryTimeAMPM);
-		} else {
-			return (militaryTimeHH + militaryTimeAMPM);
+			return '';
 		}
 	},
 
