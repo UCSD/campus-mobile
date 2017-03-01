@@ -3,7 +3,7 @@ const logger = require('../util/logger');
 
 const positionOptions = {
 	enableHighAccuracy: false,
-	timeout: 1000, // 5000
+	timeout: 5000,
 	maximumAge: 1000
 };
 
