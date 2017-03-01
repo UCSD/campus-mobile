@@ -11,7 +11,7 @@ function updateDining(location) {
 		const timeDiff = nowTime - lastUpdated;
 		const diningTTL = DINING_API_TTL * 1000;
 
-		if (timeDiff < diningTTL && data) {
+		if (timeDiff < diningTTL && data && location) {
 			// Sort with current data
 			_sortDining(location, getState().dining.data).then(
 				(sortedData) => {
@@ -29,14 +29,22 @@ function updateDining(location) {
 						type: 'SET_DINING_UPDATE',
 						nowTime
 					});
-					_sortDining(location, dining).then(
-						(sortedData) => {
-							dispatch({
-								type: 'SET_DINING',
-								sortedData
-							});
-						}
-					);
+
+					if (location) {
+						_sortDining(location, dining).then(
+							(sortedData) => {
+								dispatch({
+									type: 'SET_DINING',
+									data: sortedData
+								});
+							}
+						);
+					} else {
+						dispatch({
+							type: 'SET_DINING',
+							data: dining
+						});
+					}
 				})
 				.catch((error) => {
 					logger.error(error);

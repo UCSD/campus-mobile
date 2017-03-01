@@ -20,7 +20,7 @@ const DiningCard = ({ data, rows, permission }) => {
 	// no permission to get location
 	if (permission !== 'authorized') {
 		content = (<LocationRequiredContent />);
-	} else if (data === null) {
+	} else if (data === null || data.length === 0) {
 		content =  (
 			<View style={[styles.card_row_center, styles.card_loader]}>
 				<ActivityIndicator size="large" />
