@@ -11,16 +11,22 @@ function updateDining(location) {
 		const timeDiff = nowTime - lastUpdated;
 		const diningTTL = DINING_API_TTL * 1000;
 
-		if (timeDiff < diningTTL && data && location) {
-			// Sort with current data
-			_sortDining(location, getState().dining.data).then(
-				(sortedData) => {
-					dispatch({
-						type: 'SET_DINING',
-						sortedData
-					});
-				}
-			);
+		if (timeDiff < diningTTL && data) {
+			if (location) {
+				_sortDining(location, data).then(
+					(sortedData) => {
+						dispatch({
+							type: 'SET_DINING',
+							data: sortedData
+						});
+					}
+				);
+			} else {
+				dispatch({
+					type: 'SET_DINING',
+					data
+				});
+			}
 		} else {
 			// Fetch for new data then sort
 			DiningService.FetchDining()
@@ -56,21 +62,25 @@ function updateDining(location) {
 function _sortDining(location, diningData) {
 	// Calc distance from dining locations
 	return new Promise((resolve, reject) => {
-		for (let i = 0; diningData.length > i; i++) {
-			const distance = getDistance(location.coords.latitude, location.coords.longitude, diningData[i].coords.lat, diningData[i].coords.lon);
-			if (distance) {
-				diningData[i].distance = distance;
-			} else {
-				diningData[i].distance = 100000000;
+		if (diningData) {
+			for (let i = 0; diningData.length > i; i++) {
+				const distance = getDistance(location.coords.latitude, location.coords.longitude, diningData[i].coords.lat, diningData[i].coords.lon);
+				if (distance) {
+					diningData[i].distance = distance;
+				} else {
+					diningData[i].distance = 100000000;
+				}
+
+				diningData[i].distanceMiles = convertMetersToMiles(distance);
+				diningData[i].distanceMilesStr = getDistanceMilesStr(diningData[i].distanceMiles);
 			}
 
-			diningData[i].distanceMiles = convertMetersToMiles(distance);
-			diningData[i].distanceMilesStr = getDistanceMilesStr(diningData[i].distanceMiles);
+			// Sort dining locations by distance
+			diningData.sort(sortNearbyMarkers);
+			resolve(diningData);
+		} else {
+			reject(null);
 		}
-
-		// Sort dining locations by distance
-		diningData.sort(sortNearbyMarkers);
-		resolve(diningData);
 	});
 }
 
