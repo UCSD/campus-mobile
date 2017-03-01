@@ -61,9 +61,6 @@ class NearbyMapView extends React.Component {
 	}
 
 	componentWillMount() {
-		Object.keys(this.props.shuttle_routes).forEach((key, index) => {
-			this.setState({ ['route' + key] : false });
-		});
 		if (platformAndroid()) {
 			checkGooglePlayServices((result) => {
 				if (result === 'update') {
