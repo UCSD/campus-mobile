@@ -90,11 +90,10 @@ const navHeight = Platform.select({
 const listHeight = deviceHeight - (statusBarHeight + navHeight + doPRM(44) + 16 + 40); // 18 + 64 + (44 * getPRM()));
 
 const styles = StyleSheet.create({
-	list_container: { width: getMaxCardWidth(), padding: 8, maxHeight: listHeight, },
+	list_container: { width: getMaxCardWidth(), maxHeight: listHeight, },
 	card_main: { top: Math.round(44 * getPRM()) + 6, backgroundColor: '#FFFFFF', margin: 6, alignItems: 'flex-start', justifyContent: 'center', },
 	touch: { backgroundColor: '#FFF' },
-	no_result: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', padding: 6, marginTop: 0 },
-	list_row: { flexDirection: 'row', paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: '#EEE', overflow: 'hidden',  },
+	list_row: { flexDirection: 'row', paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: '#EEE', overflow: 'hidden', paddingLeft: 8, paddingRight: 8 },
 });
 
 export default SearchResultsCard;
