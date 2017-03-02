@@ -81,7 +81,7 @@ class Home extends React.Component {
 		return (
 			<MenuContext style={{ flex:1 }}>
 				<View style={css.main_container}>
-					<ScrollView contentContainerStyle={css.scroll_main}>
+					<ScrollView>
 						{/* SPECIAL TOP BANNER */}
 						<TopBannerView />
 
