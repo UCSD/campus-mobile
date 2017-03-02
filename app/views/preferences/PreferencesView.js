@@ -12,7 +12,7 @@ import css from '../../styles/css';
 export default class PreferencesView extends Component {
 	render() {
 		return (
-			<View style={[css.main_container, css.offwhitebg]}>
+			<View style={css.main_container}>
 				<ScrollView contentContainerStyle={css.scroll_default}>
 					<UserAccount />
 					<CardPreferences />
