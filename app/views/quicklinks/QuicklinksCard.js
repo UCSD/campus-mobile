@@ -27,7 +27,7 @@ const QuicklinksCard = ({ data }) => (
 				</View>
 				<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => Actions.QuicklinksListView({ data })}>
 					<View style={css.card_more}>
-						<Text style={css.card_more_label}>View All</Text>
+						<Text style={css.card_more_label}>View All Links</Text>
 					</View>
 				</TouchableHighlight>
 			</View>
