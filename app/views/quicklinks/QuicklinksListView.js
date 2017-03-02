@@ -15,6 +15,7 @@ const QuicklinksListView = ({ data }) => {
 		<View style={css.view_container}>
 			<QuicklinksList
 				data={data}
+				listType={'full'}
 				scrollEnabled={true}
 			/>
 		</View>

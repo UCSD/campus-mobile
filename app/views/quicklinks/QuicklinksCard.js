@@ -22,6 +22,7 @@ const QuicklinksCard = ({ data }) => (
 				<View style={css.quicklinks_locations}>
 					<QuicklinksList
 						data={data.slice().sort(general.dynamicSort('card-order')).slice(0,defaultRows)} // Try to get rid of this sort eventually?
+						listType={'card'}
 						scrollEnabled={false}
 					/>
 				</View>
