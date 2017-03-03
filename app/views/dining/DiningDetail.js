@@ -160,7 +160,7 @@ const DiningMenu = ({ data, filters, addFilter, activeMeal }) => (
 				</View>
 			</TouchableHighlight>
 		) : (
-			<View>
+			<View style={css.dd_dining_menu}>
 				<MenuFilters
 					filters={filters}
 					addFilter={addFilter}
