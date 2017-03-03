@@ -155,11 +155,17 @@ var css = StyleSheet.create({
 	shuttle_card_rt_4: { borderRadius: 48, borderWidth: 1, backgroundColor: '#FFF', borderColor: '#CCC', width: 83, justifyContent: 'center' },
 	shuttle_card_rt_4_label: { padding: 5, textAlign: 'center', color: '#8f9092', fontWeight: '500', fontSize: 16, backgroundColor: 'rgba(0,0,0,0)' },
 	shuttle_card_rt_5: { flexGrow: 1 },
-	shuttle_card_row_bot: { alignItems: 'center', paddingBottom: 20 },
+	shuttle_card_row_bot: { alignItems: 'center', paddingBottom: 10, paddingHorizontal: 8 },
 	shuttle_card_row_name: { fontSize: 17, color: '#666' },
 	shuttle_card_row_arriving: { fontSize: 26, color: '#333' },
 	shuttlecard_loading: { marginHorizontal: 40, marginVertical: 156 },
 	shuttlecard_loading_fail: { marginHorizontal: 16, marginTop: 40, marginBottom: 60 },
+	sc_next_arrivals_text: { fontSize: 20, fontWeight: '300', color: '#222', padding: 8 },
+	sc_arrivals_row: { flexDirection: 'row', marginBottom: 8, marginHorizontal: 8, alignItems: 'center', justifyContent: 'flex-start' },
+	sc_rt_2: { borderRadius: 18, width: 36, height: 36, justifyContent: 'center' },
+	sc_rt_2_label: { textAlign: 'center', fontWeight: '600', fontSize: 19, backgroundColor: 'rgba(0,0,0,0)' },
+	sc_arrivals_row_route_name: { flex: 4.5, fontSize: 17, color: '#666', marginLeft: 10 },
+	sc_arrivals_row_eta_text: { flex: 1, fontSize: 17, color: '#333', marginLeft: 10 },
 
 	// 304 - Dining Card
 	dining_card: { width: maxCardWidth, padding: 8 },
