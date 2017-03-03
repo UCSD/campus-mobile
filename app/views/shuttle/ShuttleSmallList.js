@@ -39,10 +39,7 @@ const ShuttleSmallRow = ({ arrival }) => (
 	<View style={css.sc_arrivals_row}>
 		<View style={[css.sc_rt_2, { backgroundColor: arrival.route.color, borderColor: arrival.route.color }]}>
 			<Text style={css.sc_rt_2_label}>
-				{
-					// THIS SHOULDN'T BE NEEDED, complain to syncromatics
-					arrival.route.shortName.replace(/[()]/g, '').substring(0, 1) // Limits shortName to one char
-				}
+				{arrival.route.shortName}
 			</Text>
 		</View>
 		<Text
@@ -61,6 +58,5 @@ function getRowHeight(rows) {
 
 	return rows * (rowHeight + padding);
 }
-
 
 export default ShuttleSmallList;
