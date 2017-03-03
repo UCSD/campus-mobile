@@ -265,9 +265,6 @@ class NearbyMapView extends React.Component {
 	}
 
 	render() {
-		console.log('ivan: ' + this.props.search_results);
-		console.log('ivan: ' + this.state.showNav);
-		console.log('ivan3: ' + (this.state.showNav && this.props.search_results !== null));
 		if (platformAndroid() && !this.state.updatedGoogle) {
 			return (
 				<View style={css.main_container}>
