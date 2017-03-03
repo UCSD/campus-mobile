@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
 	//map_searchbar_icon: { position: 'absolute', top: Math.round(9 * PRM), left: Math.round(8 * PRM) },
 	map_searchbar_icon: { top: Math.round(9 * PRM), left: Math.round(8 * PRM) },
 	map_searchbar_ai: { position: 'absolute', top: Math.round(12 * PRM), left: Math.round(8 * PRM) },
-	icon_container: { alignSelf: 'center', margin: Math.round(8 * PRM), }
+	icon_container: { height: Math.round(44 * PRM), justifyContent: 'center', alignSelf: 'center', margin: Math.round(8 * PRM), }
 });
 
 export default SearchBar;
