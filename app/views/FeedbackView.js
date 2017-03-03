@@ -102,51 +102,58 @@ export default class FeedbackView extends Component {
 	_renderFormView() {
 		return (
 			<View style={css.main_container}>
-				<ScrollView>
-					<View style={styles.feedback_container}>
-						<Text style={styles.feedback_label}>
-							Help us make the {AppSettings.APP_NAME} app better.{'\n'}
-							Submit your thoughts and suggestions.
-						</Text>
+				<View style={styles.feedback_container}>
+					<Text style={styles.feedback_label}>
+						Help us make the {AppSettings.APP_NAME} app better.{'\n'}
+						Submit your thoughts and suggestions.
+					</Text>
 
-						<View style={styles.feedback_text_container}>
-							<TextInput
-								multiline={true}
-								value={this.state.commentsText}
-								onChangeText={(text) => this.setState({ commentsText: text })}
-								placeholder="Tell us what you think*"
-								underlineColorAndroid={'transparent'}
-								style={styles.feedback_text}
-							/>
-						</View>
-
-						<View style={styles.text_container}>
-							<TextInput
-								value={this.state.nameText}
-								onChangeText={(text) => this.setState({ nameText: text })}
-								placeholder="Name"
-								underlineColorAndroid={'transparent'}
-								style={styles.feedback_text}
-							/>
-						</View>
-
-						<View style={styles.text_container}>
-							<TextInput
-								value={this.state.emailText}
-								onChangeText={(text) => this.setState({ emailText: text })}
-								placeholder="Email"
-								underlineColorAndroid={'transparent'}
-								style={styles.feedback_text}
-							/>
-						</View>
-
-						<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => this._postFeedback()}>
-							<View style={styles.submit_container}>
-								<Text style={styles.submit_text}>Submit</Text>
-							</View>
-						</TouchableHighlight>
+					<View style={styles.feedback_text_container}>
+						<TextInput
+							ref={(ref) => { this._feedback = ref; }}
+							multiline={true}
+							blurOnSubmit={true}
+							value={this.state.commentsText}
+							onChangeText={(text) => this.setState({ commentsText: text })}
+							placeholder="Tell us what you think*"
+							underlineColorAndroid={'transparent'}
+							style={styles.feedback_text}
+							returnKeyType={'next'}
+							onSubmitEditing={() => this._name.focus()}
+						/>
 					</View>
-				</ScrollView>
+
+					<View style={styles.text_container}>
+						<TextInput
+							ref={(ref) => { this._name = ref; }}
+							value={this.state.nameText}
+							onChangeText={(text) => this.setState({ nameText: text })}
+							placeholder="Name"
+							underlineColorAndroid={'transparent'}
+							style={styles.feedback_text}
+							returnKeyType={'next'}
+							onSubmitEditing={() => this._email.focus()}
+						/>
+					</View>
+
+					<View style={styles.text_container}>
+						<TextInput
+							ref={(ref) => { this._email = ref; }}
+							value={this.state.emailText}
+							onChangeText={(text) => this.setState({ emailText: text })}
+							placeholder="Email"
+							underlineColorAndroid={'transparent'}
+							style={styles.feedback_text}
+							returnKeyType={'done'}
+						/>
+					</View>
+
+					<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => this._postFeedback()}>
+						<View style={styles.submit_container}>
+							<Text style={styles.submit_text}>Submit</Text>
+						</View>
+					</TouchableHighlight>
+				</View>
 			</View>
 		);
 	}
@@ -164,12 +171,12 @@ export default class FeedbackView extends Component {
 const styles = StyleSheet.create({
 	loading_icon: { flex: 1, alignItems: 'center', justifyContent: 'center' },
 	feedback_container: { flexDirection: 'column', marginHorizontal: 8, marginTop: 8 },
-	feedback_label: { flex: 1, flexWrap: 'wrap', fontSize: round(19 * getPRM()), paddingBottom: 16, lineHeight: 24 },
+	feedback_label: { flexWrap: 'wrap', fontSize: round(19 * getPRM()), paddingBottom: 16, lineHeight: 24 },
 	feedback_text: { backgroundColor: '#FFF', flex:1, fontSize: round(20 * getPRM()), alignItems: 'center', padding: 8 },
 
 	submit_container: { justifyContent: 'center', alignItems: 'center', backgroundColor: getCampusPrimary(), borderRadius: 3, padding: 10 },
 	submit_text: { fontSize: round(16 * getPRM()), color: '#FFF' },
 
-	feedback_text_container: { flex: 1, height: round(100 * getPRM()), borderColor: '#DADADA', borderBottomWidth: 1, marginBottom: 8 },
+	feedback_text_container: { height: round(100 * getPRM()), borderColor: '#DADADA', borderBottomWidth: 1, marginBottom: 8 },
 	text_container: { height: round(50 * getPRM()), borderColor: '#DADADA', borderBottomWidth: 1, marginBottom: 8 },
 });
