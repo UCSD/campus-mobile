@@ -210,6 +210,7 @@ var css = StyleSheet.create({
 	quicklinks_row_container: { borderBottomWidth: 1, borderBottomColor: '#EEE', paddingVertical: 10 },
 	quicklinks_row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
 	quicklinks_icon: { height: 42, width: 38 },
+	quicklinks_icon_fa: { padding: 8 },
 	quicklinks_name: { flexGrow: 5, color: '#444', fontSize: 16, paddingHorizontal: 8 },
 
 
