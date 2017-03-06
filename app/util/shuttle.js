@@ -14,7 +14,7 @@ module.exports = {
 		if (secondsToArrival < 1) {
 			return ('Arrived');
 		} else if (secondsToArrival < 60) {
-			return ('<1 m');
+			return ('<1m');
 		} else {
 			let secondsToArrivalDec = secondsToArrival;
 			let minsToArrival = 1;
