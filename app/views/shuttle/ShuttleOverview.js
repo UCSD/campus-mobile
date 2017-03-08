@@ -49,7 +49,7 @@ const ShuttleOverview = ({ onPress, stopData, stopID }) => (
 					</View>
 				</View>
 				<ShuttleSmallList
-					arrivalData={stopData[stopID].arrivals.slice(0,2)}
+					arrivalData={stopData[stopID].arrivals.slice(1,3)}
 					rows={2}
 					scrollEnabled={false}
 				/>

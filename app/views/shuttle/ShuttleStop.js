@@ -60,7 +60,7 @@ const ShuttleStopContainer = React.createClass({
 
 					{ (stops[stopID].arrivals) ? (
 						<ShuttleSmallList
-							arrivalData={stops[stopID].arrivals}
+							arrivalData={stops[stopID].arrivals.slice(0,3)}
 							style={{ width: deviceWidth }}
 							rows={3}
 							scrollEnabled={false}
