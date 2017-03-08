@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import {
 	Text,
 	View,
-	ScrollView,
 	TouchableHighlight,
 	InteractionManager,
 	ActivityIndicator,
@@ -111,20 +110,6 @@ export default class FeedbackView extends Component {
 							Submit your thoughts and suggestions.
 						</Text>
 
-						<View style={styles.feedback_text_container}>
-							<TextInput
-								ref={(ref) => { this._feedback = ref; }}
-								multiline={true}
-								blurOnSubmit={true}
-								value={this.state.commentsText}
-								onChangeText={(text) => this.setState({ commentsText: text })}
-								placeholder="Tell us what you think*"
-								underlineColorAndroid={'transparent'}
-								style={styles.feedback_text}
-								returnKeyType={'next'}
-								onSubmitEditing={() => this._name.focus()}
-							/>
-						</View>
 
 						<View style={styles.text_container}>
 							<TextInput
@@ -147,8 +132,23 @@ export default class FeedbackView extends Component {
 								placeholder="Email"
 								underlineColorAndroid={'transparent'}
 								style={styles.feedback_text}
-								returnKeyType={'send'}
+								returnKeyType={'next'}
 								keyboardType={'email-address'}
+								onSubmitEditing={() => this._feedback.focus()}
+							/>
+						</View>
+
+						<View style={styles.feedback_text_container}>
+							<TextInput
+								ref={(ref) => { this._feedback = ref; }}
+								multiline={true}
+								blurOnSubmit={true}
+								value={this.state.commentsText}
+								onChangeText={(text) => this.setState({ commentsText: text })}
+								placeholder="Tell us what you think*"
+								underlineColorAndroid={'transparent'}
+								style={styles.feedback_text}
+								returnKeyType={'send'}
 								onSubmitEditing={() => this._postFeedback()}
 							/>
 						</View>
