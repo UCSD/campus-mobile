@@ -4,6 +4,7 @@ import {
 	Platform,
 	Linking,
 	Dimensions,
+	Keyboard,
 } from 'react-native';
 
 const dateFormat = require('dateformat');
@@ -355,5 +356,13 @@ module.exports = {
 		} else {
 			return 0;
 		}
-	}
+	},
+
+	/**
+	 * Hides the keyboard
+	 * @function
+	 */
+	hideKeyboard() {
+		Keyboard.dismiss();
+	},
 };

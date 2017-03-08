@@ -9,11 +9,13 @@ import {
 	TextInput,
 	StyleSheet,
 	Alert,
+	TouchableWithoutFeedback,
 } from 'react-native';
 
 import { getPRM, round, getCampusPrimary } from '../util/general';
 
 const css = require('../styles/css');
+const general = require('../util/general');
 const logger = require('../util/logger');
 const AppSettings = require('../AppSettings');
 
@@ -101,60 +103,59 @@ export default class FeedbackView extends Component {
 
 	_renderFormView() {
 		return (
-			<View style={css.main_container}>
-				<View style={styles.feedback_container}>
-					<Text style={styles.feedback_label}>
-						Help us make the {AppSettings.APP_NAME} app better.{'\n'}
-						Submit your thoughts and suggestions.
-					</Text>
+			<TouchableWithoutFeedback onPress={() => general.hideKeyboard()}>
+				<View style={css.main_container}>
+					<View style={styles.feedback_container}>
+						<Text style={styles.feedback_label}>
+							Help us make the {AppSettings.APP_NAME} app better.{'\n'}
+							Submit your thoughts and suggestions.
+						</Text>
 
-					<View style={styles.feedback_text_container}>
-						<TextInput
-							ref={(ref) => { this._feedback = ref; }}
-							multiline={true}
-							blurOnSubmit={true}
-							value={this.state.commentsText}
-							onChangeText={(text) => this.setState({ commentsText: text })}
-							placeholder="Tell us what you think*"
-							underlineColorAndroid={'transparent'}
-							style={styles.feedback_text}
-							returnKeyType={'next'}
-							onSubmitEditing={() => this._name.focus()}
-						/>
-					</View>
-
-					<View style={styles.text_container}>
-						<TextInput
-							ref={(ref) => { this._name = ref; }}
-							value={this.state.nameText}
-							onChangeText={(text) => this.setState({ nameText: text })}
-							placeholder="Name"
-							underlineColorAndroid={'transparent'}
-							style={styles.feedback_text}
-							returnKeyType={'next'}
-							onSubmitEditing={() => this._email.focus()}
-						/>
-					</View>
-
-					<View style={styles.text_container}>
-						<TextInput
-							ref={(ref) => { this._email = ref; }}
-							value={this.state.emailText}
-							onChangeText={(text) => this.setState({ emailText: text })}
-							placeholder="Email"
-							underlineColorAndroid={'transparent'}
-							style={styles.feedback_text}
-							returnKeyType={'done'}
-						/>
-					</View>
-
-					<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => this._postFeedback()}>
-						<View style={styles.submit_container}>
-							<Text style={styles.submit_text}>Submit</Text>
+						<View style={styles.feedback_text_container}>
+							<TextInput
+								ref={(ref) => { this._feedback = ref; }}
+								multiline={true}
+								blurOnSubmit={true}
+								value={this.state.commentsText}
+								onChangeText={(text) => this.setState({ commentsText: text })}
+								placeholder="Tell us what you think*"
+								underlineColorAndroid={'transparent'}
+								style={styles.feedback_text}
+								returnKeyType={'next'}
+								onSubmitEditing={() => this._name.focus()}
+							/>
 						</View>
-					</TouchableHighlight>
+
+						<View style={styles.text_container}>
+							<TextInput
+								ref={(ref) => { this._name = ref; }}
+								value={this.state.nameText}
+								onChangeText={(text) => this.setState({ nameText: text })}
+								placeholder="Name"
+								underlineColorAndroid={'transparent'}
+								style={styles.feedback_text}
+								returnKeyType={'next'}
+								onSubmitEditing={() => this._email.focus()}
+							/>
+						</View>
+
+						<View style={styles.text_container}>
+							<TextInput
+								ref={(ref) => { this._email = ref; }}
+								value={this.state.emailText}
+								onChangeText={(text) => this.setState({ emailText: text })}
+								placeholder="Email"
+								underlineColorAndroid={'transparent'}
+								style={styles.feedback_text}
+								returnKeyType={'send'}
+								keyboardType={'email-address'}
+								onSubmitEditing={() => this._postFeedback()}
+							/>
+						</View>
+
+					</View>
 				</View>
-			</View>
+			</TouchableWithoutFeedback>
 		);
 	}
 
