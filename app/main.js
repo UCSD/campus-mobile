@@ -1,6 +1,14 @@
 import React, { Component } from 'react';
-import { View, StatusBar, Image, Alert, BackAndroid } from 'react-native';
+import {
+	View,
+	StatusBar,
+	Image,
+	Alert,
+	BackAndroid,
+	Keyboard
+} from 'react-native';
 import { Scene, Router } from 'react-native-router-flux';
+import { connect } from 'react-redux';
 
 import AppSettings from './AppSettings';
 import css from './styles/css';
@@ -29,7 +37,13 @@ import PreferencesView from './views/preferences/PreferencesView';
 import NearbyMapView from './views/mapsearch/NearbyMapView';
 import TabIcons from './navigation/TabIcons';
 
+const RouterWithRedux = connect()(Router);
+
 export default class Main extends Component {
+
+	componentWillReceiveProps() {
+		Keyboard.dismiss();
+	}
 
 	campusLogo() {
 		return (<Image source={require('./assets/img/UCSanDiegoLogo-White.png')} style={css.navCampusLogoTitle} />);
@@ -57,7 +71,7 @@ export default class Main extends Component {
 		return (
 			<View style={css.flex}>
 				<GeoLocationContainer />
-				<Router
+				<RouterWithRedux
 					navigationBarStyle={general.platformIOS() ? css.navIOS : css.navAndroid}
 					titleStyle={general.platformIOS() ? css.navIOSTitle : css.navAndroidTitle}
 					barButtonIconStyle={general.platformIOS() ? css.navIOSIconStyle : css.navAndroidIconStyle}
@@ -88,7 +102,7 @@ export default class Main extends Component {
 							<Scene key="tab4" title="Settings" component={PreferencesView} icon={TabIcons} />
 						</Scene>
 					</Scene>
-				</Router>
+				</RouterWithRedux>
 			</View>
 		);
 	}
