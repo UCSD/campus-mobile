@@ -28,7 +28,7 @@ const TabIcons = function(props) {
 		tabIconName = 'location';
 	} else if (props.title === 'Feedback') {
 		tabIconPack = 'Entypo';
-		tabIconName = 'chat';
+		tabIconName = 'new-message';
 		tabIconText = 'Feedback';
 	} else if (props.title === 'Settings') {
 		tabIconPack = 'FontAwesome';
