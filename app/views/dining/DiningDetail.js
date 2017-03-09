@@ -131,7 +131,6 @@ const DiningDirections = ({ latitude, longitude, distance }) => (
 			<View style={css.dl_market_directions}>
 				<Text style={css.dl_dir_label}>Directions</Text>
 				<TouchableHighlight
-					style={css.dl_dir_traveltype_container}
 					underlayColor={'rgba(200,200,200,.1)'}
 					onPress={() => general.gotoNavigationApp(latitude, longitude)}
 				>
