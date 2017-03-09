@@ -128,22 +128,23 @@ const DiningImages = ({ images }) => (
 const DiningDirections = ({ latitude, longitude, distance }) => (
 	<View>
 		{latitude !== 0 && longitude !== 0 ? (
-			<View style={css.dl_market_directions}>
-				<Text style={css.dl_dir_label}>Directions</Text>
-				<TouchableHighlight
-					underlayColor={'rgba(200,200,200,.1)'}
-					onPress={() => general.gotoNavigationApp(latitude, longitude)}
-				>
-					<View style={css.dl_dir_traveltype_container}>
-						<Icon name="md-walk" size={32} color="#182B49" />
-						{distance ? (
-							<Text style={css.dl_dir_eta}>{distance}</Text>
-						) : null }
-					</View>
-				</TouchableHighlight>
-			</View>
+			<TouchableHighlight
+				underlayColor={'rgba(200,200,200,.1)'}
+				onPress={() => general.gotoNavigationApp(latitude, longitude)}
+			>
+				<View style={css.dl_market_directions}>
+					<Text style={css.dl_dir_label}>Directions</Text>
+					
+						<View style={css.dl_dir_traveltype_container}>
+							<Icon name="md-walk" size={32} color="#182B49" />
+							{distance ? (
+								<Text style={css.dl_dir_eta}>{distance}</Text>
+							) : null }
+						</View>
+				</View>
+			</TouchableHighlight>
 		) : null }
-	</View>
+		</View>
 );
 
 const DiningMenu = ({ data, filters, addFilter, activeMeal }) => (

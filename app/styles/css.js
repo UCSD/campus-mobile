@@ -259,7 +259,7 @@ var css = StyleSheet.create({
 	dl_market_desc_text: { color: '#555', paddingTop: 6, fontSize: 14 },
 	dl_market_scroller: { height: 140 },
 	dl_market_scroller_image: { width: 140, height: 140, borderRadius: 5, marginHorizontal: 7 },
-	dl_market_directions: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderBottomColor: '#EEE', margin: 6, padding: 6, minHeight: 54 },
+	dl_market_directions: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderBottomColor: '#EEE', margin: 6, padding: 6 },
 	dl_dir_label: { flex: 5, fontSize: 22, color: campus_primary },
 	dl_dir_traveltype_container: { flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'center' },
 	dl_dir_icon: { width: 28, height: 28 },
