@@ -24,6 +24,11 @@ function map(state = initialState, action) {
 
 		return newState;
 	}
+	case 'CLEAR_SEARCH_RESULTS': {
+		newState.results = null;
+
+		return newState;
+	}
 	default:
 		return state;
 	}

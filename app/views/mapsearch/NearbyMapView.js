@@ -28,7 +28,7 @@ import SearchShuttleMenu from './SearchShuttleMenu';
 import ShuttleLocationContainer from '../../containers/shuttleLocationContainer';
 
 import { toggleRoute } from '../../actions/shuttle';
-import { fetchSearch } from '../../actions/map';
+import { clearSearch, fetchSearch } from '../../actions/map';
 
 import css from '../../styles/css';
 import logger from '../../util/logger';
@@ -80,6 +80,11 @@ class NearbyMapView extends React.Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
+		// Clear search results when navigating away
+		if (nextProps.scene.key !== this.props.scene.key) {
+			this.props.clearSearch();
+		}
+
 		// Loop thru every vehicle
 		Object.keys(nextProps.vehicles).forEach((key, index) => {
 			if (this.state.vehicles[key]) {
@@ -143,6 +148,7 @@ class NearbyMapView extends React.Component {
 	componentWillUnmount() {
 		BackAndroid.removeEventListener('hardwareBackPress', this.pressIcon);
 		clearTimeout(this.timer);
+		this.props.clearSearch();
 	}
 
 	pressIcon = () => {
@@ -375,12 +381,16 @@ const mapStateToProps = (state, props) => (
 		shuttle_stops: state.shuttle.stops,
 		vehicles: state.shuttle.vehicles,
 		search_history: state.map.history,
-		search_results: state.map.results
+		search_results: state.map.results,
+		scene: state.routes.scene
 	}
 );
 
 const mapDispatchToProps = (dispatch, ownProps) => (
 	{
+		clearSearch: () => {
+			dispatch(clearSearch());
+		},
 		fetchSearch: (term, location) => {
 			dispatch(fetchSearch(term, location));
 		},

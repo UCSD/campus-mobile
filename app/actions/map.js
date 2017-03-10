@@ -9,6 +9,12 @@ function saveSearch(term) {
 	};
 }
 
+function clearSearch() {
+	return ({
+		type: 'CLEAR_SEARCH_RESULTS'
+	});
+}
+
 function fetchSearch(term, location) {
 	return (dispatch, getState) => {
 		NearbyService.FetchSearchResults(term)
@@ -64,5 +70,6 @@ function _sortResults(location, results) {
 
 module.exports = {
 	saveSearch,
+	clearSearch,
 	fetchSearch,
 };

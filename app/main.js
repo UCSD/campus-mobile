@@ -40,11 +40,6 @@ import TabIcons from './navigation/TabIcons';
 const RouterWithRedux = connect()(Router);
 
 export default class Main extends Component {
-
-	componentWillReceiveProps() {
-		Keyboard.dismiss();
-	}
-
 	campusLogo() {
 		return (<Image source={require('./assets/img/UCSanDiegoLogo-White.png')} style={css.navCampusLogoTitle} />);
 	}
