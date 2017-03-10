@@ -83,6 +83,7 @@ class NearbyMapView extends React.Component {
 		// Clear search results when navigating away
 		if (nextProps.scene.key !== this.props.scene.key) {
 			this.props.clearSearch();
+			this.setState({ searchInput: null });
 		}
 
 		// Loop thru every vehicle
