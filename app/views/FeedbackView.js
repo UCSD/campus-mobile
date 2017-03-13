@@ -168,8 +168,7 @@ class FeedbackView extends Component {
 								placeholder="Tell us what you think*"
 								underlineColorAndroid={'transparent'}
 								style={[styles.feedback_text, { height: Math.max(50, this.state.commentsHeight) }]}
-								returnKeyType={'send'}
-								onSubmitEditing={() => this._postFeedback()}
+								returnKeyType={'done'}
 							/>
 							<TouchableOpacity
 								style={styles.feedback_button_container}
