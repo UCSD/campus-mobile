@@ -1,5 +1,6 @@
 import NearbyService from '../services/nearbyService';
 import { convertMetersToMiles, getDistanceMilesStr, sortNearbyMarkers } from '../util/general';
+import logger from '../util/logger';
 import { getDistance } from '../util/map';
 
 function saveSearch(term) {
@@ -19,32 +20,38 @@ function fetchSearch(term, location) {
 	return (dispatch, getState) => {
 		NearbyService.FetchSearchResults(term)
 			.then((results) => {
-				if (location) {
-					if (results) {
-						// Sort results by closest
-						_sortResults(location, results).then(() =>
-						{
-							dispatch({
-								type: 'SET_SEARCH_RESULTS',
-								results
+				if (results && Object.keys(results).length !== 0) {
+					if (location) {
+						if (results) {
+							// Sort results by closest
+							_sortResults(location, results).then(() =>
+							{
+								dispatch({
+									type: 'SET_SEARCH_RESULTS',
+									results
+								});
 							});
-							return Promise.resolve();
+						}
+					} else {
+						dispatch({
+							type: 'SET_SEARCH_RESULTS',
+							results
 						});
+
+						// Save search to history if it was useful
+						if (results) {
+							dispatch(saveSearch(term));
+						}
 					}
-				} else {
+				}
+				else {
 					dispatch({
 						type: 'SET_SEARCH_RESULTS',
-						results
+						results: null
 					});
-
-					// Save search to history if it was useful
-					if (results) {
-						dispatch(saveSearch(term));
-					}
-					return Promise.resolve();
 				}
 			})
-			.catch((error) => Promise.reject());
+			.catch((error) => logger.log('Error fetching search for: ' + term));
 	};
 }
 

@@ -11,8 +11,6 @@ import {
 	BackAndroid
 } from 'react-native';
 import { connect } from 'react-redux';
-import ElevatedView from 'react-native-elevated-view';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import MapView from 'react-native-maps';
 import { checkGooglePlayServices, openGooglePlayUpdate } from 'react-native-google-api-availability-bridge';
 
@@ -33,7 +31,7 @@ import { clearSearch, fetchSearch } from '../../actions/map';
 import css from '../../styles/css';
 import logger from '../../util/logger';
 
-import { getPRM, gotoNavigationApp, platformAndroid } from '../../util/general';
+import { gotoNavigationApp, platformAndroid } from '../../util/general';
 
 const deviceHeight = Dimensions.get('window').height;
 const deviceWidth = Dimensions.get('window').width;
