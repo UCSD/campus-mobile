@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import {
 	Text,
 	View,
-	TouchableHighlight,
 	InteractionManager,
 	ActivityIndicator,
 	TextInput,
@@ -10,15 +9,14 @@ import {
 	Alert,
 	TouchableWithoutFeedback,
 } from 'react-native';
+import { connect } from 'react-redux';
 
-import { getPRM, round, getCampusPrimary } from '../util/general';
+import { getPRM, round, getCampusPrimary, hideKeyboard } from '../util/general';
+import logger from '../util/logger';
+import css from '../styles/css';
+import AppSettings from '../AppSettings';
 
-const css = require('../styles/css');
-const general = require('../util/general');
-const logger = require('../util/logger');
-const AppSettings = require('../AppSettings');
-
-export default class FeedbackView extends Component {
+class FeedbackView extends Component {
 
 	constructor(props) {
 		super(props);
@@ -38,6 +36,17 @@ export default class FeedbackView extends Component {
 		InteractionManager.runAfterInteractions(() => {
 			this.setState({ loaded: true });
 		});
+	}
+
+	componentWillReceiveProps(nextProps) {
+		// Clear search results when navigating away
+		if (nextProps.scene.key !== this.props.scene.key) {
+			this.setState({
+				commentsText: '',
+				nameText: '',
+				emailText: '',
+			});
+		}
 	}
 
 	/**
@@ -102,7 +111,7 @@ export default class FeedbackView extends Component {
 
 	_renderFormView() {
 		return (
-			<TouchableWithoutFeedback onPress={() => general.hideKeyboard()}>
+			<TouchableWithoutFeedback onPress={() => hideKeyboard()}>
 				<View style={css.main_container}>
 					<View style={styles.feedback_container}>
 						<Text style={styles.feedback_label}>
@@ -181,3 +190,11 @@ const styles = StyleSheet.create({
 	feedback_text_container: { height: round(100 * getPRM()), borderColor: '#DADADA', borderBottomWidth: 1, marginBottom: 8 },
 	text_container: { height: round(50 * getPRM()), borderColor: '#DADADA', borderBottomWidth: 1, marginBottom: 8 },
 });
+
+const mapStateToProps = (state, props) => (
+	{
+		scene: state.routes.scene
+	}
+);
+
+module.exports = connect(mapStateToProps)(FeedbackView);
