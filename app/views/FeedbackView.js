@@ -8,10 +8,12 @@ import {
 	StyleSheet,
 	Alert,
 	TouchableWithoutFeedback,
+	TouchableOpacity
 } from 'react-native';
 import { connect } from 'react-redux';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
-import { getPRM, round, getCampusPrimary, hideKeyboard } from '../util/general';
+import { hideKeyboard } from '../util/general';
 import logger from '../util/logger';
 import css from '../styles/css';
 import AppSettings from '../AppSettings';
@@ -25,6 +27,7 @@ class FeedbackView extends Component {
 			commentsText: '',
 			nameText: '',
 			emailText: '',
+			commentsHeight: 0,
 			loaded: false,
 			submit: false,
 		};
@@ -83,6 +86,7 @@ class FeedbackView extends Component {
 					commentsText: '',
 					nameText: '',
 					emailText: '',
+					commentsHeight: 0
 				});
 			})
 			.then((responseJson) => {
@@ -111,7 +115,9 @@ class FeedbackView extends Component {
 
 	_renderFormView() {
 		return (
-			<TouchableWithoutFeedback onPress={() => hideKeyboard()}>
+			<TouchableWithoutFeedback
+				onPress={() => hideKeyboard()}
+			>
 				<View style={css.main_container}>
 					<View style={styles.feedback_container}>
 						<Text style={styles.feedback_label}>
@@ -153,13 +159,28 @@ class FeedbackView extends Component {
 								multiline={true}
 								blurOnSubmit={true}
 								value={this.state.commentsText}
-								onChangeText={(text) => this.setState({ commentsText: text })}
+								onChange={(event) => {
+									this.setState({
+										commentsText: event.nativeEvent.text,
+										commentsHeight: event.nativeEvent.contentSize.height,
+									});
+								}}
 								placeholder="Tell us what you think*"
 								underlineColorAndroid={'transparent'}
-								style={styles.feedback_text}
+								style={[styles.feedback_text, { height: Math.max(50, this.state.commentsHeight) }]}
 								returnKeyType={'send'}
 								onSubmitEditing={() => this._postFeedback()}
 							/>
+							<TouchableOpacity
+								style={styles.feedback_button_container}
+								onPress={() => this._postFeedback()}
+							>
+								<Icon
+									color="#2196F3"
+									size={20}
+									name="send"
+								/>
+							</TouchableOpacity>
 						</View>
 
 					</View>
@@ -181,14 +202,12 @@ class FeedbackView extends Component {
 const styles = StyleSheet.create({
 	loading_icon: { flex: 1, alignItems: 'center', justifyContent: 'center' },
 	feedback_container: { flexDirection: 'column', marginHorizontal: 8, marginTop: 8 },
-	feedback_label: { flexWrap: 'wrap', fontSize: round(19 * getPRM()), paddingBottom: 16, lineHeight: 24 },
-	feedback_text: { backgroundColor: '#FFF', flex:1, fontSize: round(20 * getPRM()), alignItems: 'center', padding: 8 },
+	feedback_label: { flexWrap: 'wrap', fontSize: 20, paddingBottom: 16, lineHeight: 24 },
+	feedback_text: { backgroundColor: '#FFF', flex:1, fontSize: 20, alignItems: 'center', padding: 8 },
+	feedback_button_container: { alignSelf: 'flex-end', justifyContent: 'center', alignItems: 'center', backgroundColor: 'white', width: 50, height: 50 },
 
-	submit_container: { justifyContent: 'center', alignItems: 'center', backgroundColor: getCampusPrimary(), borderRadius: 3, padding: 10 },
-	submit_text: { fontSize: round(16 * getPRM()), color: '#FFF' },
-
-	feedback_text_container: { height: round(100 * getPRM()), borderColor: '#DADADA', borderBottomWidth: 1, marginBottom: 8 },
-	text_container: { height: round(50 * getPRM()), borderColor: '#DADADA', borderBottomWidth: 1, marginBottom: 8 },
+	feedback_text_container: { flexDirection: 'row', borderColor: '#DADADA', borderBottomWidth: 1, marginBottom: 8, backgroundColor: 'white' },
+	text_container: { height: 50, borderColor: '#DADADA', borderBottomWidth: 1, marginBottom: 8 },
 });
 
 const mapStateToProps = (state, props) => (
