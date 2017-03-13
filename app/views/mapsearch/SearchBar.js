@@ -1,19 +1,15 @@
 import React, { PropTypes } from 'react';
 import {
 	TextInput,
-	View,
 	ActivityIndicator,
 	StyleSheet,
 	Dimensions,
-	TouchableHighlight,
 	TouchableOpacity
 } from 'react-native';
 
 import ElevatedView from 'react-native-elevated-view';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { getPRM, getMaxCardWidth } from '../../util/general';
-
-const css = require('../../styles/css');
+import { getPRM } from '../../util/general';
 
 const PRM = getPRM();
 const windowWidth = Dimensions.get('window').width;
@@ -42,6 +38,7 @@ const SearchBar = ({ reff, placeholder, update, iconStatus, style, onFocus, pres
 			underlineColorAndroid={'rgba(0,0,0,0)'}
 			onFocus={(event) => onFocus()}
 			defaultValue={searchInput}
+			maxLength={35}
 		/>
 	</ElevatedView>
 );
