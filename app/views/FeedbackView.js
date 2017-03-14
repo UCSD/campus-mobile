@@ -13,7 +13,7 @@ import {
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import { hideKeyboard } from '../util/general';
+import { hideKeyboard, getCampusPrimary } from '../util/general';
 import logger from '../util/logger';
 import css from '../styles/css';
 import AppSettings from '../AppSettings';
@@ -62,6 +62,8 @@ class FeedbackView extends Component {
 
 	_postFeedback() {
 		if (this.state.commentsText !== '') {
+			this.setState({ loaded: false });
+
 			const formData = new FormData();
 			formData.append('element_1', this.state.commentsText);
 			formData.append('element_2', this.state.nameText);
@@ -76,6 +78,7 @@ class FeedbackView extends Component {
 				body: formData
 			})
 			.then((response) => {
+				// Clear fields and alert user
 				Alert.alert(
 					'Thank you!',
 					'We will take your feedback into consideration as we continue developing and improving the app.',
@@ -86,14 +89,16 @@ class FeedbackView extends Component {
 					commentsText: '',
 					nameText: '',
 					emailText: '',
-					commentsHeight: 0
+					commentsHeight: 0,
+					loaded: true
 				});
+				return response.json();
 			})
 			.then((responseJson) => {
 				// logger.log(responseJson);
 			})
 			.catch((error) => {
-				// logger.error(error);
+				logger.error('Error submitting Feedback: ' + error);
 			});
 		}
 		else {
@@ -125,34 +130,6 @@ class FeedbackView extends Component {
 							Submit your thoughts and suggestions.
 						</Text>
 
-
-						<View style={styles.text_container}>
-							<TextInput
-								ref={(ref) => { this._name = ref; }}
-								value={this.state.nameText}
-								onChangeText={(text) => this.setState({ nameText: text })}
-								placeholder="Name"
-								underlineColorAndroid={'transparent'}
-								style={styles.feedback_text}
-								returnKeyType={'next'}
-								onSubmitEditing={() => this._email.focus()}
-							/>
-						</View>
-
-						<View style={styles.text_container}>
-							<TextInput
-								ref={(ref) => { this._email = ref; }}
-								value={this.state.emailText}
-								onChangeText={(text) => this.setState({ emailText: text })}
-								placeholder="Email"
-								underlineColorAndroid={'transparent'}
-								style={styles.feedback_text}
-								returnKeyType={'next'}
-								keyboardType={'email-address'}
-								onSubmitEditing={() => this._feedback.focus()}
-							/>
-						</View>
-
 						<View style={styles.feedback_text_container}>
 							<TextInput
 								ref={(ref) => { this._feedback = ref; }}
@@ -169,18 +146,29 @@ class FeedbackView extends Component {
 								underlineColorAndroid={'transparent'}
 								style={[styles.feedback_text, { height: Math.max(50, this.state.commentsHeight) }]}
 								returnKeyType={'done'}
+								maxLength={500}
 							/>
-							<TouchableOpacity
-								style={styles.feedback_button_container}
-								onPress={() => this._postFeedback()}
-							>
-								<Icon
-									color="#2196F3"
-									size={20}
-									name="send"
-								/>
-							</TouchableOpacity>
 						</View>
+
+						<View style={styles.text_container}>
+							<TextInput
+								ref={(ref) => { this._email = ref; }}
+								value={this.state.emailText}
+								onChangeText={(text) => this.setState({ emailText: text })}
+								placeholder="Email"
+								underlineColorAndroid={'transparent'}
+								style={styles.feedback_text}
+								returnKeyType={'done'}
+								keyboardType={'email-address'}
+								maxLength={100}
+							/>
+						</View>
+
+						<TouchableOpacity underlayColor={'rgba(200,200,200,.1)'} onPress={() => this._postFeedback()}>
+							<View style={styles.submit_container}>
+								<Text style={styles.submit_text}>Submit</Text>
+							</View>
+						</TouchableOpacity>
 
 					</View>
 				</View>
@@ -201,9 +189,11 @@ class FeedbackView extends Component {
 const styles = StyleSheet.create({
 	loading_icon: { flex: 1, alignItems: 'center', justifyContent: 'center' },
 	feedback_container: { flexDirection: 'column', marginHorizontal: 8, marginTop: 8 },
-	feedback_label: { flexWrap: 'wrap', fontSize: 20, paddingBottom: 16, lineHeight: 24 },
-	feedback_text: { backgroundColor: '#FFF', flex:1, fontSize: 20, alignItems: 'center', padding: 8 },
-	feedback_button_container: { alignSelf: 'flex-end', justifyContent: 'center', alignItems: 'center', backgroundColor: 'white', width: 50, height: 50 },
+	feedback_label: { flexWrap: 'wrap', fontSize: 18, paddingBottom: 16, lineHeight: 24 },
+	feedback_text: { backgroundColor: '#FFF', flex:1, fontSize: 18, alignItems: 'center', padding: 8 },
+
+	submit_container: { justifyContent: 'center', alignItems: 'center', backgroundColor: getCampusPrimary(), borderRadius: 3, padding: 10 },
+	submit_text: { fontSize: 16, color: '#FFF' },
 
 	feedback_text_container: { flexDirection: 'row', borderColor: '#DADADA', borderBottomWidth: 1, marginBottom: 8, backgroundColor: 'white' },
 	text_container: { height: 50, borderColor: '#DADADA', borderBottomWidth: 1, marginBottom: 8 },
