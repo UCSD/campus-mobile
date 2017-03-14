@@ -11,6 +11,7 @@ import {
 
 import moment from 'moment';
 
+import SafeImage from '../common/SafeImage';
 import css from '../../styles/css';
 import logger from '../../util/logger';
 import general from '../../util/general';
@@ -23,7 +24,7 @@ const EventDetail = ({ data }) => {
 			<ScrollView>
 
 				{data.imagehq ? (
-					<Image
+					<SafeImage
 						source={{ uri: data.imagehq }}
 						style={{
 							width: Dimensions.get('window').width,
