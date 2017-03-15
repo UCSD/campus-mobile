@@ -10,6 +10,7 @@
 #import "AppDelegate.h"
 #import "CodePush.h"
 
+#import "RCTUtils.h"
 #import "RCTBundleURLProvider.h"
 #import "RCTRootView.h"
 
@@ -18,20 +19,40 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   NSURL *jsCodeLocation;
-
   
 #ifdef DEBUG
-    jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index.ios" fallbackResource:nil];
+		jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index.ios" fallbackResource:nil];
 #else
-    jsCodeLocation = [CodePush bundleURL];
+		jsCodeLocation = [CodePush bundleURL];
 #endif
-
+  
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
                                                       moduleName:@"CampusMobile"
                                                initialProperties:nil
                                                    launchOptions:launchOptions];
-  rootView.backgroundColor = [[UIColor alloc] initWithRed:1.0f green:1.0f blue:1.0f alpha:1];
-
+  
+  rootView.backgroundColor = [[UIColor alloc] initWithRed:0.0941f green:0.1686f blue:0.2862f alpha:1];
+  
+  // Get launch image
+  NSString *launchImageName = nil;
+  if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+    CGFloat height = MAX(RCTScreenSize().width, RCTScreenSize().height);
+    if (height == 480) 		launchImageName = @"splashscreen_640x960.png";
+    else if (height == 568) launchImageName = @"splashscreen_640x1136.png";
+    else if (height == 667) launchImageName = @"splashscreen_750x1334.png";
+    else if (height == 736) launchImageName = @"splashscreen_1242x212208.png";
+    else					launchImageName = @"splashscreen_640x1136.png";
+  }
+  
+  // Create loading view
+  UIImage *image = [UIImage imageNamed:launchImageName];
+  if (image) {
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:(CGRect){CGPointZero, RCTScreenSize()}];
+    imageView.contentMode = UIViewContentModeBottom;
+    imageView.image = image;
+    rootView.loadingView = imageView;
+  }
+  
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
   UIViewController *rootViewController = [UIViewController new];
   rootViewController.view = rootView;
@@ -41,3 +62,4 @@
 }
 
 @end
+

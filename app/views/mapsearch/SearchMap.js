@@ -1,14 +1,13 @@
 import React, { PropTypes } from 'react';
-import { Text, TouchableHighlight, View, StyleSheet } from 'react-native';
+import {
+	StyleSheet,
+} from 'react-native';
 import MapView from 'react-native-maps';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import general from '../../util/general';
-import logger from '../../util/logger';
-
 // NOTE: For some reason MapView-onCalloutPress only works for Android and
 // TouchableHighlight-onPress only works for iOS...which is why it's in two places
-const SearchMap = ({ location, selectedResult, hideMarker, style, shuttle, vehicles }) => (
+const SearchMap = ({ location, selectedResult, style, shuttle, vehicles }) => (
 	<MapView
 		ref={(MapRef) => {
 			if ( MapRef != null && selectedResult != null ) {
@@ -19,8 +18,8 @@ const SearchMap = ({ location, selectedResult, hideMarker, style, shuttle, vehic
 				const minLong = (location.coords.longitude < selectedResult.mkrLong) ? location.coords.longitude : selectedResult.mkrLong;
 				const maxLat = (location.coords.latitude > selectedResult.mkrLat) ? location.coords.latitude : selectedResult.mkrLat;
 				const maxLong = (location.coords.longitude > selectedResult.mkrLong) ? location.coords.longitude : selectedResult.mkrLong;
-				const deltaLat = (maxLat - minLat) + 0.01;
-				const deltaLong = (maxLong - minLong) + 0.01;
+				const deltaLat = (maxLat - minLat) + 0.02;
+				const deltaLong = (maxLong - minLong) + 0.02;
 
 				const midRegion = {
 					latitude: midLat,
@@ -37,113 +36,74 @@ const SearchMap = ({ location, selectedResult, hideMarker, style, shuttle, vehic
 		loadingBackgroundColor={'#EEE'}
 		showsUserLocation={true}
 		mapType={'standard'}
-		region={{
+		initialRegion={{
 			latitude: location.coords.latitude,
 			longitude: location.coords.longitude,
 			latitudeDelta: 0.02,
 			longitudeDelta: 0.02
 		}}
-		onCalloutPress={
-			() => logger.log('Pressed callout') // gotoNavigationApp(selectedResult.mkrLat, selectedResult.mkrLong)
-		}
 	>
-		{(selectedResult && !hideMarker) ? (
-			<MapView.Marker
-				ref={(MarkRef) => {
-					// logger.log("MARKER: " + selectedResult.title);
-					if (MarkRef != null) {
-						// MarkRef.showCallout();
-					}
-				}}
-				coordinate={{
-					latitude: selectedResult.mkrLat,
-					longitude: selectedResult.mkrLong
-				}}
-				title={selectedResult.title}
-				description={selectedResult.description}
-				identifier={selectedResult.title}
-				key={selectedResult.title}
-			>
-				<MapView.Callout style={{ width: 100 }} >
-					<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => gotoNavigationApp(selectedResult.mkrLat, selectedResult.mkrLong)}>
-						<View style={{ flex: 1, alignItems: 'center', flexDirection: 'row', flexWrap: 'wrap' }}>
-							<Text style={{ flex: 0.8 }}>{selectedResult.title}</Text>
-							<Icon style={{ flex:0.2 }} name={'location-arrow'} size={20} />
-						</View>
-					</TouchableHighlight>
-				</MapView.Callout>
-			</MapView.Marker>
-			) : (null)}
-
 		{
-			// Create MapView.Marker for each shuttle stop
-			Object.keys(shuttle).map((key, index) => {
-				const stop = shuttle[key];
-				if ((Object.keys(stop.routes).length === 0 && stop.routes.constructor === Object) ||
-					// Hide Airport stops
-					stop.routes['89']) {
-					return null;
-				}
+			(shuttle && (Object.keys(vehicles).length !== 0)) ? (
+				// Create MapView.Marker for each vehicle
+				Object.keys(vehicles).map((key, index) => {
+					const vehicleArray = vehicles[key];
 
-				return (
-					<MapView.Marker
-						ref={(MarkRef) => {
-							// logger.log("MARKER: " + selectedResult.title);
-							if (MarkRef != null) {
-								// MarkRef.showCallout();
-							}
-						}}
-						coordinate={{
-							latitude: stop.lat,
-							longitude: stop.lon
-						}}
-						title={stop.name}
-						identifier={stop.name}
-						key={stop.name + key}
-					>
-						<Icon style={{ flex:0.2 }} name={'stop-circle-o'} size={20} />
-						<MapView.Callout style={{ width: 100 }} >
-							<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'}>
-								<View style={{ flex: 1, alignItems: 'center', flexDirection: 'column', flexWrap: 'wrap' }}>
-									<Text>{stop.name}</Text>
-								</View>
-							</TouchableHighlight>
-						</MapView.Callout>
-					</MapView.Marker>
-				);
-			})
+					return vehicleArray.map((vehicle) => (
+						<MapView.Marker.Animated
+							coordinate={vehicle.animated}
+							title={vehicle.name}
+							identifier={vehicle.name}
+							key={vehicle.name}
+						>
+							<Icon name={'bus'} size={20} color={'#182B49'} />
+						</MapView.Marker.Animated>
+						)
+					);
+				})
+			) : (null)
+		}
+		{
+			(shuttle && (Object.keys(vehicles).length !== 0)) ? (
+				// Create MapView.Marker for each shuttle stop
+				Object.keys(shuttle).map((key, index) => {
+					const stop = shuttle[key];
+					if ((Object.keys(stop.routes).length === 0 && stop.routes.constructor === Object) ||
+						// Hide Airport stops
+						stop.routes['89']) {
+						return null;
+					}
+
+					return (
+						<MapView.Marker
+							coordinate={{
+								latitude: stop.lat,
+								longitude: stop.lon
+							}}
+							title={stop.name}
+							identifier={stop.name}
+							key={stop.name + key}
+							pinColor={'#346994'}
+						>
+							<Icon style={{ textAlign: 'center', height: 10, width: 10, borderWidth: 1, borderRadius: 5, borderColor: '#346994' }} name={'circle'} color={'white'} size={10} />
+						</MapView.Marker>
+					);
+				})
+			) : (null)
 		}
 
 		{
-			// Create MapView.Marker for each vehicle
-			Object.keys(vehicles).map((key, index) => {
-				const vehicleArray = vehicles[key];
-
-				return vehicleArray.map((vehicle) => (
-					<MapView.Marker.Animated
-						ref={(MarkRef) => {
-							// logger.log("MARKER: " + selectedResult.title);
-							if (MarkRef != null) {
-								// MarkRef.showCallout();
-							}
-						}}
-						coordinate={vehicle.animated}
-						title={vehicle.name}
-						identifier={vehicle.name}
-						key={vehicle.name}
-					>
-						<Icon style={{ flex:0.2 }} name={'bus'} size={20} />
-						<MapView.Callout style={{ width: 100 }} >
-							<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'}>
-								<View style={{ flex: 1, alignItems: 'center', flexDirection: 'column', flexWrap: 'wrap' }}>
-									<Text>{vehicle.name}</Text>
-								</View>
-							</TouchableHighlight>
-						</MapView.Callout>
-					</MapView.Marker.Animated>
-					)
-				);
-			})
+			(selectedResult) ? (
+				<MapView.Marker
+					coordinate={{
+						latitude: selectedResult.mkrLat,
+						longitude: selectedResult.mkrLong
+					}}
+					title={selectedResult.title}
+					identifier={selectedResult.title}
+					key={selectedResult.title}
+				/>
+			) : (null)
 		}
 	</MapView>
 );
@@ -151,18 +111,11 @@ const SearchMap = ({ location, selectedResult, hideMarker, style, shuttle, vehic
 SearchMap.propTypes = {
 	location: PropTypes.object,
 	selectedResult: PropTypes.object,
-	hideMarker: PropTypes.bool,
 };
 
 SearchMap.defaultProps = {
 	location: null,
 	selectedResult: null,
-	hideMarker: false
-};
-
-const gotoNavigationApp = (destinationLat, destinationLon) => {
-	const destinationURL = general.getDirectionsURL('walk', destinationLat, destinationLon );
-	general.openURL(destinationURL);
 };
 
 const styles = StyleSheet.create({

@@ -2,11 +2,8 @@ import React from 'react';
 import {
 	View,
 	Text,
-	ActivityIndicator,
 	Image,
-	AppState,
 	ScrollView,
-	RefreshControl,
 	Dimensions,
 } from 'react-native';
 import { connect } from 'react-redux';
@@ -15,22 +12,13 @@ import MapView from 'react-native-maps';
 
 import ShuttleSmallList from './ShuttleSmallList';
 import { updateArrivals } from '../../actions/shuttle';
-
-import LocationRequiredContent from '../common/LocationRequiredContent';
-import general, { getPRM, getMaxCardWidth, round } from '../../util/general';
-import { getMinutesETA } from '../../util/shuttle';
-
 import ShuttleImageDict from './ShuttleImageDict';
 
 const stopUpdateInterval = 6000;
-const shuttleStopMap = require('../../json/shuttle_stops_master_map_no_routes');
-
 const deviceWidth = Dimensions.get('window').width;
 
 const css = require('../../styles/css');
 const logger = require('../../util/logger');
-const shuttle = require('../../util/shuttle');
-const map = require('../../util/map');
 
 const ShuttleStopContainer = React.createClass({
 	mixins: [TimerMixin],
@@ -38,24 +26,6 @@ const ShuttleStopContainer = React.createClass({
 	componentDidMount() {
 		logger.ga('View Mounted: Shuttle Stop');
 		this.startShuttleWatch();
-		/*
-		InteractionManager.runAfterInteractions(() => {
-			this.setState({ loaded: true })
-		}
-		*/
-	},
-
-	componentWillUnmount() {
-		AppState.removeEventListener('change', this._handleAppStateChange);
-	},
-
-	_handleAppStateChange(currentAppState) {
-		this.setState({ currentAppState });
-
-		// check TTL and refresh weather data if needed
-		if (currentAppState === 'active') {
-
-		}
 	},
 
 	startShuttleWatch() {
@@ -79,21 +49,13 @@ const ShuttleStopContainer = React.createClass({
 
 				<ScrollView
 					contentContainerStyle={css.scroll_default}
-					refreshControl={
-						<RefreshControl
-							refreshing={false}
-							onRefresh={this.refreshShuttleArrivalsByStop}
-							tintColor="#CCC"
-							title=""
-						/>
-					}
 				>
 					{ShuttleImageDict[stopID] ? (
 						<Image style={css.shuttlestop_image} source={ShuttleImageDict[stopID]} />
 					) : null }
 
 					<View style={css.shuttlestop_name_container}>
-						<Text style={css.shuttlestop_name_text}>{shuttleStopMap[stopID].name}</Text>
+						<Text style={css.shuttlestop_name_text}>{stops[stopID].name}</Text>
 					</View>
 
 					{ (stops[stopID].arrivals) ? (
@@ -101,7 +63,7 @@ const ShuttleStopContainer = React.createClass({
 							arrivalData={stops[stopID].arrivals}
 							style={{ width: deviceWidth }}
 							rows={3}
-							scrollEnabled={true}
+							scrollEnabled={false}
 						/>
 					) : (
 						<View style={css.shuttle_stop_arrivals_container}>

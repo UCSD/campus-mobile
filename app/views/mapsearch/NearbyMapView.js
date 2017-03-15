@@ -7,31 +7,28 @@ import {
 	StyleSheet,
 	TouchableOpacity,
 	Platform,
-	StatusBar
+	StatusBar,
+	BackAndroid
 } from 'react-native';
 import { connect } from 'react-redux';
 import ElevatedView from 'react-native-elevated-view';
-import SideMenu from 'react-native-side-menu';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MapView from 'react-native-maps';
 
-import SearchSideMenu from './SearchSideMenu';
 import SearchBar from './SearchBar';
 import SearchMap from './SearchMap';
 import SearchResults from './SearchResults';
 import SearchHistoryCard from './SearchHistoryCard';
 import SearchSuggest from './SearchSuggest';
+import SearchShuttleMenu from './SearchShuttleMenu';
 import ShuttleLocationContainer from '../../containers/shuttleLocationContainer';
 
 import { toggleRoute } from '../../actions/shuttle';
 import { fetchSearch } from '../../actions/map';
 
-const css = require('../../styles/css');
-const logger = require('../../util/logger');
-const shuttle = require('../../util/shuttle');
-const AppSettings = require('../../AppSettings');
-
-import general, { getPRM } from '../../util/general';
+import css from '../../styles/css';
+import logger from '../../util/logger';
+import { getPRM, gotoNavigationApp } from '../../util/general';
 
 const deviceHeight = Dimensions.get('window').height;
 const deviceWidth = Dimensions.get('window').width;
@@ -39,8 +36,6 @@ const statusBarHeight = Platform.select({
 	ios: 0,
 	android: StatusBar.currentHeight,
 });
-
-const shuttle_routes = require('../../json/shuttle_routes_master_map.json');
 
 class NearbyMapView extends React.Component {
 
@@ -50,21 +45,28 @@ class NearbyMapView extends React.Component {
 		this.state = {
 			searchInput: null,
 			selectedResult: 0,
-			sliding: false,
 			typing: false,
 			allowScroll: false,
-			iconStatus: 'menu',
+			iconStatus: 'search',
 			showBar: false,
+			showShuttle: true,
+			showNav: false,
 			showMenu: false,
 			toggled: false,
-			vehicles: {}
+			vehicles: {},
 		};
 	}
 
 	componentWillMount() {
-		Object.keys(shuttle_routes).forEach((key, index) => {
+		Object.keys(this.props.shuttle_routes).forEach((key, index) => {
 			this.setState({ ['route' + key] : false });
 		});
+	}
+
+	componentDidMount() {
+		logger.ga('View mounted: Full Map View');
+
+		BackAndroid.addEventListener('hardwareBackPress', this.pressIcon);
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -75,6 +77,7 @@ class NearbyMapView extends React.Component {
 					this.state.vehicles[key].forEach((currVehicle) => {
 						if (nextVehicle.id === currVehicle.id &&
 							(nextVehicle.lat !== currVehicle.lat || nextVehicle.lon !== currVehicle.lon)) {
+							// Animate vehicle movement
 							currVehicle.animated.timing({
 								latitude: nextVehicle.lat,
 								longitude: nextVehicle.lon,
@@ -100,6 +103,12 @@ class NearbyMapView extends React.Component {
 				});
 			}
 		});
+
+		if (this.state.iconStatus === 'load' && nextProps.search_results) {
+			this.setState({
+				iconStatus: 'search'
+			});
+		}
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
@@ -121,24 +130,34 @@ class NearbyMapView extends React.Component {
 		}
 	}
 
+	componentWillUnmount() {
+		BackAndroid.removeEventListener('hardwareBackPress', this.pressIcon);
+		clearTimeout(this.timer);
+	}
+
 	pressIcon = () => {
 		if (this.state.iconStatus === 'back') {
 			this.setState({
-				iconStatus: 'menu',
-				showBar: (this.props.search_results !== null)
+				iconStatus: 'search',
+				showBar: (this.props.search_results !== null),
+				showShuttle: true,
+				showNav: true,
 			});
 			this.scrollRef.scrollTo({ x: 0, y: 0, animated: true });
 			// this.barRef.clear();
 			this.barRef.blur();
-		} else if (this.state.iconStatus === 'menu') {
-			this.updateMenuState(true);
+			return true;
+		} else {
+			return false;
 		}
 	}
 
 	gotoResults = () => {
 		this.setState({
 			iconStatus: 'back',
-			showBar: false
+			showBar: false,
+			showShuttle: false,
+			showNav: false
 		});
 		this.scrollRef.scrollTo({ x: 0, y: deviceHeight - 64 - statusBarHeight, animated: true });
 	}
@@ -147,8 +166,20 @@ class NearbyMapView extends React.Component {
 		this.scrollRef.scrollTo({ x: 0, y: 2 * (deviceHeight - 64 - statusBarHeight), animated: true });
 		this.setState({
 			iconStatus: 'back',
-			showBar: false
+			showBar: false,
+			showShuttle: false,
+			showNav: false,
 		});
+	}
+
+	gotoShuttleSettings = () => {
+		this.setState({
+			iconStatus: 'back',
+			showBar: false,
+			showShuttle: false,
+			showNav: false,
+		});
+		this.scrollRef.scrollTo({ x: 0, y: 3 * (deviceHeight - 64 - statusBarHeight), animated: true });
 	}
 
 	updateSearch = (text) => {
@@ -159,8 +190,22 @@ class NearbyMapView extends React.Component {
 		this.setState({
 			searchInput: text,
 			showBar: true,
-			iconStatus: 'menu',
+			iconStatus: 'load',
+			showShuttle: true,
+			showNav: true,
+			selectedResult: 0
 		});
+
+		this.timer = setTimeout(this.searchTimeout, 5000);
+	}
+
+	searchTimeout = () => {
+		if (!this.props.search_results) {
+			this.setState({
+				searchInput: 'No Results Found',
+				iconStatus: 'search'
+			});
+		}
 	}
 
 	updateSearchSuggest = (text) => {
@@ -171,26 +216,27 @@ class NearbyMapView extends React.Component {
 		this.setState({
 			searchInput: text,
 			showBar: true,
-			iconStatus: 'menu',
+			iconStatus: 'load',
+			showShuttle: true,
+			showNav: true,
+			selectedResult: 0
 		});
 	}
 
 	updateSelectedResult = (index) => {
 		const newSelect = index;
 		this.setState({
-			iconStatus: 'menu',
+			iconStatus: 'search',
 			selectedResult: newSelect,
-			showBar: true
+			showBar: true,
+			showShuttle: true,
+			showNav: true,
 		});
 		this.scrollRef.scrollTo({ x: 0, y: 0, animated: true });
 	}
 
-	updateMenuState = (showMenu) => {
-		this.setState({ showMenu, });
-	}
-
 	toggleRoute = (value, route) => {
-		this.props.dispatch(toggleRoute(route));
+		this.props.toggle(route);
 
 		const vehicles = this.state.vehicles;
 		delete vehicles[route];
@@ -203,97 +249,121 @@ class NearbyMapView extends React.Component {
 	render() {
 		if (this.props.location.coords) {
 			return (
-				<SideMenu
-					menu={
-						<SearchSideMenu
-							shuttle_routes={shuttle_routes}
-							onToggle={this.toggleRoute}
-							toggles={this.props.toggles}
-						/>
-					}
-					edgeHitWidth={0} // Disable open sidemenu from swipe
-					isOpen={this.state.showMenu}
-					onChange={(isOpen) => this.updateMenuState(isOpen)}
-				>
-					<View style={css.main_container}>
-						<SearchBar
-							update={this.updateSearch}
-							onFocus={this.focusSearch}
-							pressIcon={this.pressIcon}
-							iconStatus={this.state.iconStatus}
-							searchInput={this.state.searchInput}
-							reff={
-								(ref) => { this.barRef = ref; }
-							}
-						/>
-						<ScrollView
-							ref={
-								(ref) => {
-									this.scrollRef = ref;
-								}
-							}
-							showsVerticalScrollIndicator={false}
-							scrollEnabled={this.state.allowScroll}
-						>
-							<View
-								style={styles.section}
-							>
-								<SearchMap
-									location={this.props.location}
-									selectedResult={
-										(this.props.search_results) ? (
-											this.props.search_results[this.state.selectedResult]
-										) : null
-									}
-									hideMarker={this.state.sliding}
-									shuttle={this.props.shuttle_stops}
-									vehicles={this.state.vehicles}
-								/>
-							</View>
-							<View
-								style={styles.section}
-							>
-								<SearchResults
-									results={this.props.search_results}
-									onSelect={(index) => this.updateSelectedResult(index)}
-								/>
-							</View>
-							<View
-								style={styles.section}
-							>
-								<SearchSuggest
-									onPress={this.updateSearchSuggest}
-								/>
-								{(this.props.search_history.length !== 0) ? (
-									<SearchHistoryCard
-										pressHistory={this.updateSearch}
-										data={this.props.search_history}
-									/>
-									) : (null)}
-							</View>
-						</ScrollView>
-						{(this.state.showBar && this.props.search_results) ? (
+				<View style={css.main_container}>
+					{
+						(this.props.search_results && this.state.showNav) ? (
 							<ElevatedView
-								style={styles.bottomBarContainer}
-								elevation={5}
+								style={{ zIndex: 2, justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: (2 * (6 + Math.round(44 * getPRM()))) + 12, right: 6, width: 50, height: 50, borderRadius: 50 / 2, backgroundColor: '#2196F3' }}
+								elevation={2} // zIndex style and elevation has to match
 							>
 								<TouchableOpacity
-									onPress={
-										this.gotoResults
-									}
+									onPress={() => gotoNavigationApp(this.props.search_results[this.state.selectedResult].mkrLat, this.props.search_results[this.state.selectedResult].mkrLong)}
 								>
-									<Text
-										style={styles.bottomBarText}
-									>
-										See More Results
-									</Text>
+									<Icon name={'location-arrow'} size={20} color={'white'} />
 								</TouchableOpacity>
 							</ElevatedView>
-							) : (null)
+						) : (<ElevatedView />) // Android bug - breaks view if this is null...on RN39...check if this bug still exists in RN40 or if this can be changed to null
+					}
+					{
+						(this.state.showShuttle) ? (
+							<ElevatedView
+								style={{ zIndex: 2, justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: 6 + Math.round(44 * getPRM()), right: 6, width: 50, height: 50, borderRadius: 50 / 2, backgroundColor: '#346994' }}
+								elevation={2} // zIndex style and elevation has to match
+							>
+								<TouchableOpacity
+									onPress={this.gotoShuttleSettings}
+								>
+									<Icon name={'bus'} size={20} color={'white'} />
+								</TouchableOpacity>
+							</ElevatedView>
+						) : (<ElevatedView />) // Android bug
+					}
+					<SearchBar
+						update={this.updateSearch}
+						onFocus={this.focusSearch}
+						pressIcon={this.pressIcon}
+						iconStatus={this.state.iconStatus}
+						searchInput={this.state.searchInput}
+						reff={
+							(ref) => { this.barRef = ref; }
 						}
-					</View>
+					/>
+					<ScrollView
+						ref={
+							(ref) => {
+								this.scrollRef = ref;
+							}
+						}
+						showsVerticalScrollIndicator={false}
+						scrollEnabled={this.state.allowScroll}
+					>
+						<View
+							style={styles.section}
+						>
+							<SearchMap
+								location={this.props.location}
+								selectedResult={
+									(this.props.search_results) ? (
+										this.props.search_results[this.state.selectedResult]
+									) : null
+								}
+								shuttle={this.props.shuttle_stops}
+								vehicles={this.state.vehicles}
+							/>
+						</View>
+						<View
+							style={styles.section}
+						>
+							<SearchResults
+								results={this.props.search_results}
+								onSelect={(index) => this.updateSelectedResult(index)}
+							/>
+						</View>
+						<View
+							style={styles.section}
+						>
+							<SearchSuggest
+								onPress={this.updateSearchSuggest}
+							/>
+							{(this.props.search_history.length !== 0) ? (
+								<SearchHistoryCard
+									pressHistory={this.updateSearch}
+									data={this.props.search_history}
+								/>
+								) : (null)}
+						</View>
+						<View
+							style={styles.section}
+						>
+							<SearchShuttleMenu
+								shuttle_routes={this.props.shuttle_routes}
+								onToggle={this.toggleRoute}
+								toggles={this.props.toggles}
+							/>
+						</View>
+					</ScrollView>
+					{(this.state.showBar && this.props.search_results) ? (
+						<ElevatedView
+							style={styles.bottomBarContainer}
+							elevation={5}
+						>
+							<TouchableOpacity
+								style={styles.bottomBarContent}
+								onPress={
+									this.gotoResults
+								}
+							>
+								<Text
+									style={styles.bottomBarText}
+								>
+									See More Results
+								</Text>
+							</TouchableOpacity>
+						</ElevatedView>
+						) : (null)
+					}
 					<ShuttleLocationContainer />
-				</SideMenu>
+				</View>
 			);
 		} else {
 			return null;
@@ -318,6 +388,9 @@ const mapDispatchToProps = (dispatch, ownProps) => (
 	{
 		fetchSearch: (term, location) => {
 			dispatch(fetchSearch(term, location));
+		},
+		toggle: (route) => {
+			dispatch(toggleRoute(route));
 		}
 	}
 );
@@ -332,7 +405,7 @@ const navMargin = Platform.select({
 const styles = StyleSheet.create({
 	main_container: { width: deviceWidth, height: deviceHeight - 64 - statusBarHeight, backgroundColor: '#EAEAEA', marginTop: navMargin },
 	bottomBarContainer: { zIndex: 5, alignItems: 'center', justifyContent: 'center', position: 'absolute', bottom: 0, width: deviceWidth, height: Math.round(44 * getPRM()), borderWidth: 0, backgroundColor: 'white', },
-	bottomBarContent: { flex:1, alignItems:'center', justifyContent:'center' },
+	bottomBarContent: { flex: 1, justifyContent: 'center', alignSelf: 'stretch' },
 	bottomBarText: { textAlign: 'center', },
 
 	section: { height: deviceHeight - 64 - statusBarHeight },

@@ -2,27 +2,35 @@ import React from 'react';
 import {
 	View,
 	ActivityIndicator,
-	StyleSheet
+	StyleSheet,
+	Text
 } from 'react-native';
 
 import Card from '../card/Card';
 import ShuttleOverview from './ShuttleOverview';
 import LocationRequiredContent from '../common/LocationRequiredContent';
 import { doPRM, getMaxCardWidth } from '../../util/general';
-import logger from '../../util/logger';
 
 const ShuttleCard = ({ stopData, permission, gotoShuttleStop, stopID }) => {
 	let content;
 	// no permission to get location
 	if (permission !== 'authorized') {
 		content = (<LocationRequiredContent />);
-	} else if (stopID === -1 || !stopData || !stopData[stopID].arrivals) {
+	} else if (stopID === -1 && (!stopData || !stopData[stopID] || !stopData[stopID].arrivals || stopData[stopID].arrivals.length === 0)) {
 		content =  (
 			<View style={[styles.shuttle_card_row_center, styles.shuttle_card_loader]}>
 				<ActivityIndicator size="large" />
 			</View>
 		);
-	} else {
+	} else if (stopID !== -1 && (!stopData || !stopData[stopID] || !stopData[stopID].arrivals || stopData[stopID].arrivals.length === 0)) {
+		content = (
+			<View style={[styles.shuttle_card_row_center, styles.shuttle_card_loader]}>
+				<Text style={styles.fs18}>No Shuttles en Route</Text>
+				<Text style={[styles.pt10, styles.fs12, styles.dgrey]}>We were unable to locate any nearby shuttles, please try again later.</Text>
+			</View>
+		);
+	}
+	else {
 		content =  (
 			<ShuttleOverview
 				onPress={() => gotoShuttleStop(stopID)}

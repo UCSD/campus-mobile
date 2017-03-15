@@ -1,23 +1,23 @@
-const shuttle_routes = require('../json/shuttle_routes_master_map.json');
-const shuttle_stops_no_routes = require('../json/shuttle_stops_master_map_no_routes.json');
-
-const initialToggles = {};
-Object.keys(shuttle_routes).forEach((key, index) => {
-	initialToggles[key] = false;
-});
-
 const initialState = {
-	toggles: initialToggles,
-	routes: shuttle_routes,
-	stops: shuttle_stops_no_routes,
+	toggles: null,
+	routes: null,// shuttle_routes,
+	stops: null,// shuttle_stops_no_routes,
 	vehicles: {},
 	closestStop: -1,
+	lastUpdated: new Date().getTime(),
 };
 
 function shuttle(state = initialState, action) {
 	const newState = { ...state };
 
 	switch (action.type) {
+	case 'SET_SHUTTLE_MASTER':
+		newState.routes = action.routes;
+		newState.stops = action.stops;
+		newState.toggles = action.toggles;
+		newState.lastUpdated = action.nowTime;
+
+		return newState;
 	case 'TOGGLE_ROUTE':
 		newState.toggles[action.route] = !state.toggles[action.route];
 

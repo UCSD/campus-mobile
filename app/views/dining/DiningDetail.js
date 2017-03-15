@@ -133,7 +133,7 @@ const DiningDirections = ({ latitude, longitude, distance }) => (
 				<TouchableHighlight
 					style={css.dl_dir_traveltype_container}
 					underlayColor={'rgba(200,200,200,.1)'}
-					onPress={() => general.gotoNavigationApp('walk', latitude, longitude)}
+					onPress={() => general.gotoNavigationApp(latitude, longitude)}
 				>
 					<View style={css.dl_dir_traveltype_container}>
 						<Icon name="md-walk" size={32} color="#182B49" />

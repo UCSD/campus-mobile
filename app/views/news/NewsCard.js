@@ -16,9 +16,11 @@ const defaultRows = 3;
 
 const NewsCard = ({ data }) => (
 	<Card id="news" title="News">
-		<View style={[css.events_list, { height: getRowHeight(defaultRows) }]}>
+		<View style={css.events_list}>
 			{data ? (
-				<View>
+				<View
+					style={{ height: getRowHeight(defaultRows) }}
+				>
 					<NewsList
 						data={data}
 						rows={defaultRows}
@@ -30,11 +32,8 @@ const NewsCard = ({ data }) => (
 						</View>
 					</TouchableHighlight>
 				</View>
-			) :
-			(
-				<View style={[css.flexcenter, css.pad40]}>
-					<Text>There was a problem loading the news</Text>
-				</View>
+			) : (
+				<Text style={css.content_load_err}>There was a problem loading the news.</Text>
 			)}
 		</View>
 	</Card>
@@ -44,8 +43,9 @@ function getRowHeight(rows) {
 	// titleFont + 3*(descFont + descPad) + dateFont + datePad
 	const rowHeight =  doPRM(17) + (3 * (doPRM(14) + doPRM(8))) + doPRM(11) + doPRM(8);
 	const padding = 28; // rowPad
+	const viewMore = doPRM(20);
 
-	return rows * (rowHeight + padding);
+	return (rows * (rowHeight + padding)) + (padding / 2) + viewMore;
 }
 
 export default NewsCard;

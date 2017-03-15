@@ -1,28 +1,28 @@
-## License
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+# Campus Mobile app
 
-	MIT
+The campus mobile app platform enables the university to deliver relevant information to students, staff, and visitors, taking the context of time and location into consideration. The platform uses [React Native](https://facebook.github.io/react-native/) and implements a card based UI.
 
-## Installation
+The goal of this platform is to provide a responsive and intuitive native mobile interactions for a personalized campus experience.
 
-	// From your project folder run:
-	npm install
+UC San Diego uses this platform for its campus mobile app on iOS and Android.
 
-## Bugs
+## Getting Started
 
-### Android
-#### App crashing immediately after build?
+- Follow the [Getting Started guide](https://facebook.github.io/react-native/docs/getting-started.html) for React Native
+- From the project folder, run:
+	- npm install
+	- npm run-script apply-fixes
+- For iOS, from the project folder, run: react-native run-ios
+- For Android, from the project folder, run: react-native run-android
 
-Most likely being caused by the google-play version conflict between react-native-maps and react-native-google-analytics-bridge
+## Documentation
 
-To fix this issue, run the following command from your project folder:
+Review the [modules documentation](https://htmlpreview.github.io/?https://raw.githubusercontent.com/UCSD/campus-mobile/dev/out/index.html)
 
-npm run-script apply-ga-bridge-fix
+## Building for Android
 
-
-## Building
-
-### Android
-[Lovely script](https://github.com/UCSD/campus-mobile-build-scripts) made by @a6wu to make everything easier
+[Utility script](https://github.com/UCSD/campus-mobile-build-scripts) to create an APK. This build script exists in a repository separate from the campus mobile app repository.
 
 	// From an empty directory
 	//Build APK one liner:
@@ -31,7 +31,11 @@ npm run-script apply-ga-bridge-fix
 	//Build APK and install on device one liner:
 	git clone https://github.com/UCSD/campus-mobile-build-scripts.git && cd campus-mobile-build-scripts && npm install && node build-apk.js && adb install ./bld/android/app/build/outputs/apk/app-release.apk
 
-### Availabile Cards
+## Building for iOS
+
+TODO: add content
+
+## Available Cards
 * TopBanner
 	* For upcoming current events
 * Weather & Surf
@@ -56,30 +60,8 @@ npm run-script apply-ga-bridge-fix
 	* Searchable campus map
 	* View all link
 
-### Future
-#### Cards
-* Class Schedule
-* Surveys
-* WebReg
 
-#### Extra
-* Functionality
-	* Re-order cards
-	* Push Notifications
-	* 2-factor authentication
-* Library
-* Calendar
-* Cape
-* Chatbot
-* Movie showtimes
-
-#### Technical
-* Tablet support
-* SSO
-* Personalization
-
-
-### Screenshots
+## Screenshots
 ![Alt text](/../screenshots/screenshots/splash.png?raw=true "Splash Screen")
 
 ![Alt text](/../screenshots/screenshots/weather.png?raw=true "Weather")
@@ -95,3 +77,8 @@ npm run-script apply-ga-bridge-fix
 ![Alt text](/../screenshots/screenshots/shuttle_detail.png?raw=true "Shuttle Detail")
 
 ![Alt text](/../screenshots/screenshots/all_events.png?raw=true "All Events")
+
+
+## License
+
+	MIT

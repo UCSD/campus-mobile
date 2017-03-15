@@ -12,6 +12,18 @@ const saveMapFilter = createFilter(
 	'map',
 	['history']
 );
+// empty vehicles
+const saveShuttleFilter = createFilter(
+	'shuttle',
+	[
+		'toggles',
+		'routes',
+		'stops',
+		'closestStop',
+		'lastUpdated'
+	]
+);
+
 
 export default function configureStore(initialState, onComplete: ?() => void) {
 	const middlewares = [thunkMiddleware]; // lets us dispatch() functions
@@ -40,7 +52,7 @@ export default function configureStore(initialState, onComplete: ?() => void) {
 	persistStore(store,
 		{
 			storage: AsyncStorage,
-			transforms: [saveMapFilter],
+			transforms: [saveMapFilter, saveShuttleFilter],
 		},
 		onComplete
 	);

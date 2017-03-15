@@ -4,6 +4,7 @@ import {
 	ScrollView,
 } from 'react-native';
 
+import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import { MenuContext } from 'react-native-popup-menu';
 import { checkGooglePlayServices } from 'react-native-google-api-availability-bridge';
