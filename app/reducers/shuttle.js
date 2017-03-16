@@ -19,8 +19,10 @@ function shuttle(state = initialState, action) {
 
 		return newState;
 	case 'TOGGLE_ROUTE':
-		newState.toggles[action.route] = !state.toggles[action.route];
+		newState.toggles = action.toggles;
+		newState.stops = action.stops;
 
+		/*
 		if (newState.toggles[action.route] === false) {
 			// Remove route from every stop
 			Object.keys(newState.routes[action.route].stops).forEach((key2, index2) => {
@@ -36,11 +38,11 @@ function shuttle(state = initialState, action) {
 					newState.stops[key2].routes[action.route] = newState.routes[action.route];
 				}
 			});
-		}
+		}*/
 
 		return newState;
 	case 'SET_VEHICLES': {
-		const veh = Object.assign({}, newState.vehicles);
+		const veh = {};
 		veh[action.route] = action.vehicles;
 		newState.vehicles = veh;
 

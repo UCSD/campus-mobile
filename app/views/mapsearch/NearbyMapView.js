@@ -55,7 +55,6 @@ class NearbyMapView extends React.Component {
 			showShuttle: true,
 			showNav: false,
 			showMenu: false,
-			toggled: false,
 			vehicles: {},
 			updatedGoogle: true,
 		};
@@ -85,36 +84,38 @@ class NearbyMapView extends React.Component {
 		}
 
 		// Loop thru every vehicle
-		Object.keys(nextProps.vehicles).forEach((key, index) => {
-			if (this.state.vehicles[key]) {
-				nextProps.vehicles[key].forEach((nextVehicle) => {
-					this.state.vehicles[key].forEach((currVehicle) => {
-						if (nextVehicle.id === currVehicle.id &&
-							(nextVehicle.lat !== currVehicle.lat || nextVehicle.lon !== currVehicle.lon)) {
-							// Animate vehicle movement
-							currVehicle.animated.timing({
-								latitude: nextVehicle.lat,
-								longitude: nextVehicle.lon,
-								duration: 500
-							}).start();
-						}
+		Object.keys(nextProps.toggles).forEach((route) => {
+			if (nextProps.toggles[route] === true && nextProps.vehicles[route]) {
+				if (this.state.vehicles[route]) {
+					nextProps.vehicles[route].forEach((nextVehicle) => {
+						this.state.vehicles[route].forEach((currVehicle) => {
+							if (nextVehicle.id === currVehicle.id &&
+								(nextVehicle.lat !== currVehicle.lat || nextVehicle.lon !== currVehicle.lon)) {
+								// Animate vehicle movement
+								currVehicle.animated.timing({
+									latitude: nextVehicle.lat,
+									longitude: nextVehicle.lon,
+									duration: 500
+								}).start();
+							}
+						});
 					});
-				});
-			} else {
-				// Make Animated values
-				nextProps.vehicles[key].forEach((nextVehicle) => {
-					nextVehicle.animated = new MapView.AnimatedRegion({
-						latitude: nextVehicle.lat,
-						longitude: nextVehicle.lon,
+				} else {
+					// Make Animated values
+					nextProps.vehicles[route].forEach((nextVehicle) => {
+						nextVehicle.animated = new MapView.AnimatedRegion({
+							latitude: nextVehicle.lat,
+							longitude: nextVehicle.lon,
+						});
 					});
-				});
 
-				const newVehicles = this.state.vehicles;
-				newVehicles[key] = nextProps.vehicles[key];
+					const newVehicles = this.state.vehicles;
+					newVehicles[route] = nextProps.vehicles[route];
 
-				this.setState({
-					vehicles: newVehicles
-				});
+					this.setState({
+						vehicles: newVehicles
+					});
+				}
 			}
 		});
 
@@ -258,15 +259,13 @@ class NearbyMapView extends React.Component {
 		this.scrollRef.scrollTo({ x: 0, y: 0, animated: true });
 	}
 
-	toggleRoute = (value, route) => {
+	toggleRoute = (route) => {
+		this.pressIcon();
 		this.props.toggle(route);
+		// const vehicles = this.state.vehicles;
+		// delete vehicles[route];
 
-		const vehicles = this.state.vehicles;
-		delete vehicles[route];
-
-		this.setState({
-			toggled: !this.state.toggled,
-			vehicles });
+		this.setState({	vehicles: {} });
 	}
 
 	render() {
