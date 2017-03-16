@@ -37,6 +37,20 @@
 				</ul>
 			</li>
 			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="module.exports.html">module.exports</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="global.html#componentDidMount">componentDidMount</a></li><li><a href="global.html#componentWillMount">componentWillMount</a></li><li><a href="global.html#componentWillUnmount">componentWillUnmount</a></li><li><a href="global.html#shouldComponentUpdate">shouldComponentUpdate</a></li>
+				</ul>
+			</li>
+			
 		</ul>
         
             <div class="col-sm-3 col-md-3">
@@ -86,17 +100,29 @@
 
 
     <section class="readme-section">
-        <article><h2>License</h2><pre class="prettyprint source"><code>MIT</code></pre><h2>Installation</h2><pre class="prettyprint source"><code>// From your project folder run:
-npm install</code></pre><h2>Bugs</h2><h3>Android</h3><h4>App crashing immediately after build?</h4><p>Most likely being caused by the google-play version conflict between react-native-maps and react-native-google-analytics-bridge</p>
-<p>To fix this issue, run the following command from your project folder:</p>
-<p>npm run-script apply-ga-bridge-fix</p>
-<h2>Building</h2><h3>Android</h3><p><a href="https://github.com/UCSD/campus-mobile-build-scripts">Lovely script</a> made by @a6wu to make everything easier</p>
+        <article><p><a href="http://makeapullrequest.com"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" alt="PRs Welcome"></a></p>
+<h1>Campus Mobile app</h1><p>The campus mobile app platform enables the university to deliver relevant information to students, staff, and visitors, taking the context of time and location into consideration. The platform uses <a href="https://facebook.github.io/react-native/">React Native</a> and implements a card based UI.</p>
+<p>The goal of this platform is to provide a responsive and intuitive native mobile interactions for a personalized campus experience.</p>
+<p>UC San Diego uses this platform for its campus mobile app on iOS and Android.</p>
+<h2>Getting Started</h2><ul>
+<li>Follow the <a href="https://facebook.github.io/react-native/docs/getting-started.html">Getting Started guide</a> for React Native</li>
+<li>From the project folder, run:<ul>
+<li>npm install</li>
+<li>npm run-script apply-fixes</li>
+</ul>
+</li>
+<li>For iOS, from the project folder, run: react-native run-ios</li>
+<li>For Android, from the project folder, run: react-native run-android</li>
+</ul>
+<h2>Documentation</h2><p>Review the <a href="https://htmlpreview.github.io/?https://raw.githubusercontent.com/UCSD/campus-mobile/dev/out/index.html">modules documentation</a></p>
+<h2>Building for Android</h2><p><a href="https://github.com/UCSD/campus-mobile-build-scripts">Utility script</a> to create an APK. This build script exists in a repository separate from the campus mobile app repository.</p>
 <pre class="prettyprint source"><code>// From an empty directory
 //Build APK one liner:
 git clone https://github.com/UCSD/campus-mobile-build-scripts.git && cd campus-mobile-build-scripts && npm install && node build-apk.js
 
 //Build APK and install on device one liner:
-git clone https://github.com/UCSD/campus-mobile-build-scripts.git && cd campus-mobile-build-scripts && npm install && node build-apk.js && adb install ./bld/android/app/build/outputs/apk/app-release.apk</code></pre><h3>Availabile Cards</h3><ul>
+git clone https://github.com/UCSD/campus-mobile-build-scripts.git && cd campus-mobile-build-scripts && npm install && node build-apk.js && adb install ./bld/android/app/build/outputs/apk/app-release.apk</code></pre><h2>Building for iOS</h2><p>TODO: add content</p>
+<h2>Available Cards</h2><ul>
 <li>TopBanner<ul>
 <li>For upcoming current events</li>
 </ul>
@@ -137,37 +163,15 @@ git clone https://github.com/UCSD/campus-mobile-build-scripts.git && cd campus-m
 </ul>
 </li>
 </ul>
-<h3>Future</h3><h4>Cards</h4><ul>
-<li>Class Schedule</li>
-<li>Surveys</li>
-<li>WebReg</li>
-</ul>
-<h4>Extra</h4><ul>
-<li>Functionality<ul>
-<li>Re-order cards</li>
-<li>Push Notifications</li>
-<li>2-factor authentication</li>
-</ul>
-</li>
-<li>Library</li>
-<li>Calendar</li>
-<li>Cape</li>
-<li>Chatbot</li>
-<li>Movie showtimes</li>
-</ul>
-<h4>Technical</h4><ul>
-<li>Tablet support</li>
-<li>SSO</li>
-<li>Personalization</li>
-</ul>
-<h3>Screenshots</h3><p><img src="/../screenshots/screenshots/splash.png?raw=true" alt="Alt text" title="Splash Screen"></p>
+<h2>Screenshots</h2><p><img src="/../screenshots/screenshots/splash.png?raw=true" alt="Alt text" title="Splash Screen"></p>
 <p><img src="/../screenshots/screenshots/weather.png?raw=true" alt="Alt text" title="Weather"></p>
 <p><img src="/../screenshots/screenshots/events.png?raw=true" alt="Alt text" title="Events"></p>
 <p><img src="/../screenshots/screenshots/news.png?raw=true" alt="Alt text" title="News"></p>
 <p><img src="/../screenshots/screenshots/dining.png?raw=true" alt="Alt text" title="Dining"></p>
 <p><img src="/../screenshots/screenshots/nearby.png?raw=true" alt="Alt text" title="Nearby Places"></p>
 <p><img src="/../screenshots/screenshots/shuttle_detail.png?raw=true" alt="Alt text" title="Shuttle Detail"></p>
-<p><img src="/../screenshots/screenshots/all_events.png?raw=true" alt="Alt text" title="All Events"></p></article>
+<p><img src="/../screenshots/screenshots/all_events.png?raw=true" alt="Alt text" title="All Events"></p>
+<h2>License</h2><pre class="prettyprint source"><code>MIT</code></pre></article>
     </section>
 
 
@@ -217,7 +221,7 @@ git clone https://github.com/UCSD/campus-mobile-build-scripts.git && cd campus-m
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on Tue Feb 14th 2017
+		on Wed Mar 15th 2017
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
