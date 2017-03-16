@@ -36,7 +36,7 @@
   },
   "babel": {
     "babelrc": false,
-	"presets": ["react"],
-	"plugins": ["transform-object-rest-spread", "transform-class-properties"]
+    "presets": ["react"],
+    "plugins": ["transform-object-rest-spread", "transform-class-properties"]
   }
 }
