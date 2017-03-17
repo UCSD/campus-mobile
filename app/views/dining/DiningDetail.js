@@ -128,28 +128,27 @@ const DiningImages = ({ images }) => (
 const DiningDirections = ({ latitude, longitude, distance }) => (
 	<View>
 		{latitude !== 0 && longitude !== 0 ? (
-			<View style={css.dl_market_directions}>
-				<Text style={css.dl_dir_label}>Directions</Text>
-				<TouchableHighlight
-					style={css.dl_dir_traveltype_container}
-					underlayColor={'rgba(200,200,200,.1)'}
-					onPress={() => general.gotoNavigationApp(latitude, longitude)}
-				>
+			<TouchableHighlight
+				underlayColor={'rgba(200,200,200,.1)'}
+				onPress={() => general.gotoNavigationApp(latitude, longitude)}
+			>
+				<View style={css.dl_market_directions}>
+					<Text style={css.dl_dir_label}>Directions</Text>
 					<View style={css.dl_dir_traveltype_container}>
 						<Icon name="md-walk" size={32} color="#182B49" />
 						{distance ? (
 							<Text style={css.dl_dir_eta}>{distance}</Text>
 						) : null }
 					</View>
-				</TouchableHighlight>
-			</View>
+				</View>
+			</TouchableHighlight>
 		) : null }
 	</View>
 );
 
-const DiningMenu = ({ data, filters, addFilter, activeMeal }) => (
-	<View>
-		{(!data.menuItems && data.menuWebsite) ? (
+const DiningMenu = ({ data, filters, addFilter, activeMeal }) => {
+	if (!data.menuItems && data.menuWebsite) {
+		return (
 			<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => general.openURL(data.menuWebsite)}>
 				<View style={css.dd_menu_container}>
 					{data.name.indexOf('Market') >= 0 ? (
@@ -159,8 +158,10 @@ const DiningMenu = ({ data, filters, addFilter, activeMeal }) => (
 					)}
 				</View>
 			</TouchableHighlight>
-		) : (
-			<View>
+		);
+	} else if (data.menuItems) {
+		return (
+			<View style={css.dd_dining_menu}>
 				<MenuFilters
 					filters={filters}
 					addFilter={addFilter}
@@ -172,9 +173,11 @@ const DiningMenu = ({ data, filters, addFilter, activeMeal }) => (
 					activeMeal={activeMeal}
 				/>
 			</View>
-		)}
-	</View>
-);
+		);
+	} else {
+		return null;
+	}
+};
 
 const DiningMenuHeader = () => (
 	<View style={css.dl_market_date}>
@@ -265,33 +268,37 @@ const TypeButton = ({ name, type, active, addFilter }) => (
 );
 
 const MenuList = ({ data, filters, activeMeal }) => {
-	let menuItems = [];
+	if (data) {
+		let menuItems = [];
 
-	// Active Meal filter
-	menuItems = data.filter((item) => {
-		const itemTags = item.tags.toLowerCase();
-		return ((itemTags.indexOf(activeMeal.toLowerCase()) >= 0) || (itemTags.indexOf(('ALL DAY').toLowerCase()) >= 0));
-	});
-
-	// Food Type filters
-	filters.forEach((tag) => {
-		menuItems = menuItems.filter((item) => {
+		// Active Meal filter
+		menuItems = data.filter((item) => {
 			const itemTags = item.tags.toLowerCase();
-			return (itemTags.indexOf(tag.toLowerCase()) >= 0);
+			return ((itemTags.indexOf(activeMeal.toLowerCase()) >= 0) || (itemTags.indexOf(('ALL DAY').toLowerCase()) >= 0));
 		});
-	});
 
-	return (
-		<ListView
-			dataSource={menuDataSource.cloneWithRows(menuItems)}
-			renderRow={(rowData, sectionID, rowID, highlightRow) => (
-				<MenuItem
-					key={rowID}
-					data={rowData}
-				/>
-			)}
-		/>
-	);
+		// Food Type filters
+		filters.forEach((tag) => {
+			menuItems = menuItems.filter((item) => {
+				const itemTags = item.tags.toLowerCase();
+				return (itemTags.indexOf(tag.toLowerCase()) >= 0);
+			});
+		});
+
+		return (
+			<ListView
+				dataSource={menuDataSource.cloneWithRows(menuItems)}
+				renderRow={(rowData, sectionID, rowID, highlightRow) => (
+					<MenuItem
+						key={rowID}
+						data={rowData}
+					/>
+				)}
+			/>
+		);
+	} else {
+		return null;
+	}
 };
 
 const MenuItem = ({ data }) => (

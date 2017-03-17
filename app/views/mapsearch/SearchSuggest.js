@@ -44,7 +44,7 @@ const SearchSuggest = ({ onPress }) => (
 		elevation={2}
 	>
 		<View style={styles.list_container}>
-			<SearchHistoryList
+			<SearchSuggestList
 				historyData={historyDataSource.cloneWithRows(suggestions)}
 				onPress={onPress}
 			/>
@@ -52,15 +52,16 @@ const SearchSuggest = ({ onPress }) => (
 	</ElevatedView>
 );
 
-const SearchHistoryList = ({ historyData, onPress }) => (
+const SearchSuggestList = ({ historyData, onPress }) => (
 	<ListView
 		showsVerticalScrollIndicator={false}
 		showsHorizontalScrollIndicator={false}
 		dataSource={historyData}
 		horizontal={true}
+		keyboardShouldPersistTaps={true}
 		renderRow={
 			(row, sectionID, rowID) =>
-				<SearchHistoryItem
+				<SearchSuggestItem
 					data={row}
 					onPress={onPress}
 				/>
@@ -73,7 +74,7 @@ const SearchHistoryList = ({ historyData, onPress }) => (
 // local-parking
 // local-grocery-store
 
-const SearchHistoryItem = ({ data, onPress }) => (
+const SearchSuggestItem = ({ data, onPress }) => (
 	<TouchableOpacity
 		underlayColor={'rgba(200,200,200,.1)'}
 		onPress={() => {

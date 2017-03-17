@@ -1,19 +1,15 @@
 import React, { PropTypes } from 'react';
 import {
 	TextInput,
-	View,
 	ActivityIndicator,
 	StyleSheet,
 	Dimensions,
-	TouchableHighlight,
 	TouchableOpacity
 } from 'react-native';
 
 import ElevatedView from 'react-native-elevated-view';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { getPRM, getMaxCardWidth } from '../../util/general';
-
-const css = require('../../styles/css');
+import { getPRM } from '../../util/general';
 
 const PRM = getPRM();
 const windowWidth = Dimensions.get('window').width;
@@ -42,6 +38,7 @@ const SearchBar = ({ reff, placeholder, update, iconStatus, style, onFocus, pres
 			underlineColorAndroid={'rgba(0,0,0,0)'}
 			onFocus={(event) => onFocus()}
 			defaultValue={searchInput}
+			maxLength={35}
 		/>
 	</ElevatedView>
 );
@@ -98,7 +95,7 @@ const styles = StyleSheet.create({
 	//map_searchbar_icon: { position: 'absolute', top: Math.round(9 * PRM), left: Math.round(8 * PRM) },
 	map_searchbar_icon: { top: Math.round(9 * PRM), left: Math.round(8 * PRM) },
 	map_searchbar_ai: { position: 'absolute', top: Math.round(12 * PRM), left: Math.round(8 * PRM) },
-	icon_container: { alignSelf: 'center', margin: Math.round(8 * PRM), }
+	icon_container: { height: Math.round(44 * PRM), justifyContent: 'center', alignSelf: 'center', margin: Math.round(8 * PRM), }
 });
 
 export default SearchBar;

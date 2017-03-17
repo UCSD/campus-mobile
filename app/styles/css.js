@@ -27,6 +27,7 @@
 		407 - WebView
 		408 - Feedback
 		409 - Preferences View
+		410 - Links View
 	
 	500 - Modules
 		501 - Map Search
@@ -88,8 +89,9 @@ var css = StyleSheet.create({
 	/********************************************
 	 *  200 - Primary Containers
 	 ********************************************/
-	main_container: { backgroundColor: '#EAEAEA', marginTop: general.platformIOS() ? IOSMarginTop : AndroidMarginTop, marginBottom: general.platformIOS() ? IOSMarginBottom : AndroidMarginBottom },
+	main_container: { flexGrow: 1, backgroundColor: '#EAEAEA', marginTop: general.platformIOS() ? IOSMarginTop : AndroidMarginTop, marginBottom: general.platformIOS() ? IOSMarginBottom : AndroidMarginBottom },
 	view_all_container: { backgroundColor: '#FFF', paddingHorizontal: 12, marginTop: general.platformIOS() ? IOSMarginTop : AndroidMarginTop, marginBottom: general.platformIOS() ? IOSMarginBottom : AndroidMarginBottom },
+	view_container: { backgroundColor: '#FFF', marginTop: general.platformIOS() ? IOSMarginTop : AndroidMarginTop, marginBottom: general.platformIOS() ? IOSMarginBottom : AndroidMarginBottom },
 	listview_main: { marginTop: general.platformIOS() ? IOSMarginTop : AndroidMarginTop, },
 	view_default: { paddingHorizontal: 8 },
 	scroll_default: { alignItems: 'center' },
@@ -146,24 +148,30 @@ var css = StyleSheet.create({
 	shuttle_card_row_border: { borderTopWidth: 1, borderTopColor: '#DDD' },
 	shuttle_card_row_top: { flexDirection: 'row', alignItems: 'stretch', justifyContent: 'center', marginVertical: 20, height: 83 },
 	shuttle_card_rt_1: { flexGrow: 1 },
-	shuttle_card_rt_2: { borderRadius: 50, width: 83, justifyContent: 'center' },
+	shuttle_card_rt_2: { borderRadius: 50, width: 83, justifyContent: 'center', overflow: 'hidden' },
 	shuttle_card_rt_2_label: { textAlign: 'center', color: '#222', fontWeight: '600', fontSize: 48, backgroundColor: 'rgba(0,0,0,0)' },
 	shuttle_card_rt_3: { flexGrow: 3, justifyContent: 'center' },
 	shuttle_card_rt_3_label: { textAlign: 'center', color: '#8f9092', fontSize: 30, fontWeight: '300', backgroundColor: 'rgba(0,0,0,0)' },
 	shuttle_card_rt_4: { borderRadius: 48, borderWidth: 1, backgroundColor: '#FFF', borderColor: '#CCC', width: 83, justifyContent: 'center' },
 	shuttle_card_rt_4_label: { padding: 5, textAlign: 'center', color: '#8f9092', fontWeight: '500', fontSize: 16, backgroundColor: 'rgba(0,0,0,0)' },
 	shuttle_card_rt_5: { flexGrow: 1 },
-	shuttle_card_row_bot: { alignItems: 'center', paddingBottom: 20 },
+	shuttle_card_row_bot: { alignItems: 'center', paddingBottom: 10, paddingHorizontal: 8 },
 	shuttle_card_row_name: { fontSize: 17, color: '#666' },
 	shuttle_card_row_arriving: { fontSize: 26, color: '#333' },
 	shuttlecard_loading: { marginHorizontal: 40, marginVertical: 156 },
 	shuttlecard_loading_fail: { marginHorizontal: 16, marginTop: 40, marginBottom: 60 },
+	sc_next_arrivals_text: { fontSize: 20, fontWeight: '300', color: '#222', padding: 8 },
+	sc_arrivals_row: { flexDirection: 'row', marginBottom: 8, marginHorizontal: 8, alignItems: 'center', justifyContent: 'flex-start' },
+	sc_rt_2: { borderRadius: 18, width: 36, height: 36, justifyContent: 'center', overflow: 'hidden' },
+	sc_rt_2_label: { textAlign: 'center', fontWeight: '600', fontSize: 19, backgroundColor: 'rgba(0,0,0,0)' },
+	sc_arrivals_row_route_name: { flex: 4.5, fontSize: 17, color: '#666', marginLeft: 10 },
+	sc_arrivals_row_eta_text: { flex: 1, fontSize: 17, color: '#333', marginLeft: 10 },
 
 	// 304 - Dining Card
 	dining_card: { width: maxCardWidth, padding: 8 },
 	dining_card_filters: { flexDirection: 'row', justifyContent: 'center', marginBottom: 6 },
-	dining_card_filter_button: { paddingVertical: 8, paddingHorizontal: 14, fontSize: 14, color: '#888', borderWidth: 1, borderColor: '#999', borderRadius: 3, backgroundColor: '#EEE', textAlign: 'center', marginHorizontal: 14 },
-	dining_card_filter_button_active: { paddingVertical: 8, paddingHorizontal: 14, fontSize: 14, color: '#EEE', borderWidth: 1, borderColor: '#999', borderRadius: 3, backgroundColor: campus_primary, textAlign: 'center', marginHorizontal: 14, overflow: 'hidden' },
+	dining_card_filter_button: { paddingVertical: 8, paddingHorizontal: 14, fontSize: 14, color: '#888', borderWidth: 1, borderColor: '#CCC', borderRadius: 3, backgroundColor: '#EEE', textAlign: 'center', marginHorizontal: 8 },
+	dining_card_filter_button_active: { paddingVertical: 8, paddingHorizontal: 14, fontSize: 14, color: '#EEE', borderWidth: 1, borderColor: '#CCC', borderRadius: 3, backgroundColor: campus_primary, textAlign: 'center', marginHorizontal: 8, overflow: 'hidden' },
 	dc_locations: { flexDirection: 'column' },
 	dc_locations_row: { flexDirection: 'row', paddingBottom: 10, paddingTop: 10, borderBottomWidth: 1, borderBottomColor: '#DDD' },
 	dc_locations_row_left: { flex: 6, justifyContent: 'center' },
@@ -177,13 +185,13 @@ var css = StyleSheet.create({
 
 	// 305 - Events & News Cards
 	events_list: { alignSelf: 'stretch', padding: 8 },
-	events_list_row: { flexDirection: 'row', paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: '#EEE', },
-	events_list_left_container: { flex: 1 },
-	events_list_title: { fontSize: 17, color: '#000' },
-	events_list_desc: { fontSize: 14, color: '#666', paddingTop: 8, height: 58 },
+	events_list_row: { paddingHorizontal: 0, paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: '#EEE', },
+	events_list_title: { fontSize: 17, color: '#000', alignSelf: 'stretch' },
+	events_list_info: { flexDirection: 'row', paddingVertical: 8 },
+	events_list_info_left: { flex: 1 },
+	events_list_image: { width: 120, height: 70, marginLeft: 10, borderWidth: 1, borderColor: '#EEE' },
+	events_list_desc: { fontSize: 14, color: '#666' },
 	events_list_postdate: { fontSize: 11, color: campus_primary, paddingTop: 8 },
-	events_list_image: { width: 130, height: 73, marginRight: 4, marginLeft: 10, borderWidth: 1, borderColor: '#CCC' },
-	news_list_image: { width: 130, height: 100, marginRight: 4, marginLeft: 10, borderWidth: 1, borderColor: '#CCC' },
 	events_more: { alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4, paddingTop: 8, paddingBottom: 4 },
 	events_more_label: { fontSize: 20, color: campus_primary, fontWeight: '300' },
 	events_card_container: { flexDirection: 'row', padding: 14, borderBottomWidth: 1, borderBottomColor: '#EEE', alignItems: 'center' },
@@ -198,9 +206,11 @@ var css = StyleSheet.create({
 
 	// 306 - Links Card
 	quicklinks_card: { alignSelf: 'stretch', padding: 8 },
-	quicklinks_locations: { height: 256, flexDirection: 'column', overflow: 'hidden' },
-	quicklinks_row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderBottomWidth: 1, borderBottomColor: '#EEE', paddingVertical: 10 },
+	quicklinks_locations: { flexDirection: 'column' },
+	quicklinks_row_container: { borderBottomWidth: 1, borderBottomColor: '#EEE', paddingVertical: 10 },
+	quicklinks_row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
 	quicklinks_icon: { height: 42, width: 38 },
+	quicklinks_icon_fa: { padding: 8 },
 	quicklinks_name: { flexGrow: 5, color: '#444', fontSize: 16, paddingHorizontal: 8 },
 
 
@@ -259,7 +269,7 @@ var css = StyleSheet.create({
 	dl_market_date_label: { fontSize: 22, color: '#444', textAlign: 'center' },
 	dl_market_filters_foodtype: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginVertical: 8 },
 	dl_market_filters_mealtype: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderTopWidth: 1, borderTopColor: '#EEE', },
-	dl_meal_button: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 40, },
+	dl_meal_button: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 40, },
 	dl_meal_button_active: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 40, },
 	dl_mealtype_circle: { borderWidth: 1, borderColor: '#CCC', borderRadius: 8, width: 16, height: 16, backgroundColor: '#CCC', marginRight: 5 },
 	dl_mealtype_circle_active: { borderWidth: 1, borderColor: '#BBB', borderRadius: 8, width: 16, height: 16, backgroundColor: campus_primary, marginRight: 5 },
@@ -286,6 +296,7 @@ var css = StyleSheet.create({
 	ddn_topborder2: { borderTopWidth: 4, borderTopColor: '#000' },
 	ddn_topborder3: { borderTopWidth: 1, borderTopColor: '#999' },
 	dd_menu_container: { justifyContent: 'center', alignItems: 'center', backgroundColor: campus_primary, borderRadius: 3, margin: 20, padding: 10 },
+	dd_dining_menu: { marginHorizontal: 8 },
 	dd_menu_text: { fontSize: 16, color: '#FFF' },
 
 	// 405 - Welcome Week
@@ -325,6 +336,9 @@ var css = StyleSheet.create({
 	// 409 - Preferences View
 	preferencesContainer: { padding: 10, borderTopWidth: 1, borderTopColor: '#EEE' },
 	prefCardTitle: { fontSize: 16, color: '#333' },
+
+	// 410 - Links View
+	links_row_full: { paddingHorizontal: 12 },
 
 
 	/********************************************
