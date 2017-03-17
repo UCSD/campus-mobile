@@ -10,52 +10,63 @@ import CardComponent from '../card/CardComponent';
 import { updateWeather } from '../../actions/weather';
 import WeatherCard from './WeatherCard';
 import logger from '../../util/logger';
-import AppSettings from '../../AppSettings';
 
+/**
+ * Container component for [WeatherCard]{@link WeatherCard}
+ * @extends CardComponent
+**/
 class WeatherCardContainer extends CardComponent {
+	/**
+	 * Lifecycle function
+	 * Logs to google analytics, attempts to update weather, start AppState listener
+	 * @returns {void}
+	**/
 	componentDidMount() {
 		logger.log('Card Mounted: Weather');
-
 		this.props.updateWeather();
-
 		AppState.addEventListener('change', this._handleAppStateChange);
 	}
 
+	/**
+	 * Lifecycle function
+	 * Removes AppState listener
+	 * @returns {void}
+	**/
 	componentWillUnmount() {
 		AppState.removeEventListener('change', this._handleAppStateChange);
 	}
 
+	/**
+	 * Callback function for AppState listener
+	 * Tries to update weather when app is active
+	 * @callback WeatherCardContainer~_handleAppStateChange
+	 * @param {string} currentAppState - 'active', 'background', 'inactive'
+	 * @returns {void}
+	**/
 	_handleAppStateChange = (currentAppState) => {
-		this.setState({ currentAppState });
-
-		// check TTL and refresh weather data if needed
 		if (currentAppState === 'active') {
-			const nowTime = new Date().getTime();
-			const timeDiff = nowTime - this.props.weatherLastUpdated;
-			const weatherTTL = AppSettings.WEATHER_API_TTL * 1000; // convert secs to ms
-
-			if (timeDiff > weatherTTL) {
-				this.props.updateWeather();
-			}
+			this.props.updateWeather();
 		}
 	}
 
+	/**
+	 * Lifecycle functions
+	 * Renders WeatherCard, passing in data and goto
+	 * @returns {JSX} WeatherCard component
+	**/
 	render() {
-		return (<WeatherCard
-			weatherData={this.props.weatherData}
-			gotoSurfReport={this.gotoSurfReport}
-		/>);
-	}
-
-	gotoSurfReport() {
-		Actions.SurfReport();
+		return (
+			<WeatherCard
+				weatherData={this.props.weatherData}
+				gotoSurfReport={() => Actions.SurfReport()}
+			/>
+		);
 	}
 }
 
 const mapStateToProps = (state) => (
 	{
 		weatherData: state.weather.data,
-		weatherLastUpdated: state.weather.lastUpdated,
 	}
 );
 

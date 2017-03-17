@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import {
 	View,
 	Text,
@@ -19,22 +19,24 @@ import {
 
 import AppSettings from '../../AppSettings';
 
-/*
-	Expected weatherData JSON
-	{
-		currently: {
-			temperature,
-			summary,
-			icon
-		}
-		daily: {
-			dayofweek,
-			icon,
-			tempMax,
-			tempMin
-		}
-	}
-*/
+/**
+ * Presentational Component for WeatherCard
+ * @param  {Object} weatherData Weather data
+ * @param {Object} weatherData.currently Weather data for today
+ * @param {Number} weatherData.currently.temperature Current temperature
+ * @param {String} weatherData.currently.summary short descriptor for weather conditions
+ * @param {String} weatherData.currently.icon Part of icon filename
+ * @param {Object[]} weatherData.daily Weather data for next 5 days
+ * @param {String} weatherData.daily[].dayofweek 3-letter representation for day of the week
+ * @param {String} weatherData.daily[].icon Part of icon filename
+ * @param {Number} weatherData.daily[].tempMax Max temperature for day
+ * @param {Number} weatherData.daily[].tempMin Min temperature for day
+ * @param {Function} gotoSurfReport Navigates to SurfReport
+ * @return {JSX} Presentational Component for WeatherCard
+ *
+ * @todo Provide icon default using non-image urls?
+ * @todo Get rid of PRM
+ */
 const WeatherCard = ({ weatherData, gotoSurfReport }) => (
 	<Card id="weather" title="Weather">
 		{weatherData ? (
@@ -56,7 +58,7 @@ const WeatherCard = ({ weatherData, gotoSurfReport }) => (
 					</View>
 				</View>
 
-				<WeatherWeek weatherData={weatherData} />
+				<WeatherWeek weatherData={weatherData.daily} />
 
 				<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => gotoSurfReport()}>
 					<View style={styles.wc_border}>
@@ -71,6 +73,11 @@ const WeatherCard = ({ weatherData, gotoSurfReport }) => (
 		)}
 	</Card>
 );
+
+WeatherCard.propTypes = {
+	weatherData: PropTypes.object,
+	gotoSurfReport: PropTypes.func
+};
 
 const styles = StyleSheet.create({
 	wc_toprow: { flexDirection: 'row', borderBottomWidth: 1, borderColor: '#EEE', justifyContent: 'center', alignItems: 'center', width: getMaxCardWidth(), paddingHorizontal: 14 },

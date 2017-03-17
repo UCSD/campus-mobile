@@ -32,11 +32,6 @@ const collegeNames = [
 ];
 
 export default class WelcomeWeekView extends Component {
-
-	/**
-	 * Represents view for Welcome Week events
-	 * @param { Object[] } props - An array of properties passed in
-	**/
 	constructor(props) {
 		super(props);
 
@@ -63,34 +58,21 @@ export default class WelcomeWeekView extends Component {
 		};
 	}
 
-	/**
-	 * Invoked before render
-	**/
 	componentWillMount() {
 
 	}
 
-	/**
-	 * Invoked after render
-	**/
 	componentDidMount() {
 		InteractionManager.runAfterInteractions(() => {
 			this._fetchData();
 		});
 	}
 
-	/**
-	 * Called after state change
-	 * @return bool whether the component should re-render.
-	**/
 	shouldComponentUpdate(nextProps, nextState) {
 		logger.log('shouldComponentUpdate WelcomeView');
 		return true;
 	}
 
-	/**
-	 * Invoked before component is unmounted from DOM
-	**/
 	componentWillUnmount() {
 
 	}

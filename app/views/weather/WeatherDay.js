@@ -5,9 +5,20 @@ import {
 	Image,
 } from 'react-native';
 
-const AppSettings = require('../../AppSettings');
-const css = require('../../styles/css');
+import AppSettings from '../../AppSettings';
+import css from '../../styles/css';
 
+/**
+ * Presentational Component for WeatherDay
+ * @param  {Object} data Weather data
+ * @param {String} data.dayofweek 3-letter representation for day of the week
+ * @param {String} data.icon Part of icon filename
+ * @param {Number} data.tempMax Max temperature for day
+ * @param {Number} data.tempMin Min temperature for day
+ * @return {JSX} Presentational Component for WeatherCard
+ *
+ * @todo Provide icon default using non-image urls?
+ */
 const WeatherDay = ({ data }) => (
 	<View style={css.wc_botrow_col}>
 		<Text style={css.wf_dayofweek}>
