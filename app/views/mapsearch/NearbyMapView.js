@@ -11,10 +11,12 @@ import {
 	BackAndroid
 } from 'react-native';
 import { connect } from 'react-redux';
-import ElevatedView from 'react-native-elevated-view';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import MapView from 'react-native-maps';
+import { checkGooglePlayServices, openGooglePlayUpdate } from 'react-native-google-api-availability-bridge';
 
+import SearchResultsBar from './SearchResultsBar';
+import SearchNavButton from './SearchNavButton';
+import SearchShuttleButton from './SearchShuttleButton';
 import SearchBar from './SearchBar';
 import SearchMap from './SearchMap';
 import SearchResults from './SearchResults';
@@ -24,11 +26,12 @@ import SearchShuttleMenu from './SearchShuttleMenu';
 import ShuttleLocationContainer from '../../containers/shuttleLocationContainer';
 
 import { toggleRoute } from '../../actions/shuttle';
-import { fetchSearch } from '../../actions/map';
+import { clearSearch, fetchSearch } from '../../actions/map';
 
 import css from '../../styles/css';
 import logger from '../../util/logger';
-import { getPRM, gotoNavigationApp } from '../../util/general';
+
+import { gotoNavigationApp, platformAndroid } from '../../util/general';
 
 const deviceHeight = Dimensions.get('window').height;
 const deviceWidth = Dimensions.get('window').width;
@@ -54,13 +57,18 @@ class NearbyMapView extends React.Component {
 			showMenu: false,
 			toggled: false,
 			vehicles: {},
+			updatedGoogle: true,
 		};
 	}
 
 	componentWillMount() {
-		Object.keys(this.props.shuttle_routes).forEach((key, index) => {
-			this.setState({ ['route' + key] : false });
-		});
+		if (platformAndroid()) {
+			checkGooglePlayServices((result) => {
+				if (result === 'update') {
+					this.setState({ updatedGoogle: false });
+				}
+			});
+		}
 	}
 
 	componentDidMount() {
@@ -70,6 +78,12 @@ class NearbyMapView extends React.Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
+		// Clear search results when navigating away
+		if (nextProps.scene.key !== this.props.scene.key) {
+			this.props.clearSearch();
+			this.setState({ searchInput: null });
+		}
+
 		// Loop thru every vehicle
 		Object.keys(nextProps.vehicles).forEach((key, index) => {
 			if (this.state.vehicles[key]) {
@@ -133,6 +147,7 @@ class NearbyMapView extends React.Component {
 	componentWillUnmount() {
 		BackAndroid.removeEventListener('hardwareBackPress', this.pressIcon);
 		clearTimeout(this.timer);
+		this.props.clearSearch();
 	}
 
 	pressIcon = () => {
@@ -180,6 +195,14 @@ class NearbyMapView extends React.Component {
 			showNav: false,
 		});
 		this.scrollRef.scrollTo({ x: 0, y: 3 * (deviceHeight - 64 - statusBarHeight), animated: true });
+	}
+
+	gotoNavigationApp = () => {
+		if (this.props.search_results && this.state.showNav) {
+			gotoNavigationApp(this.props.search_results[this.state.selectedResult].mkrLat, this.props.search_results[this.state.selectedResult].mkrLong);
+		} else {
+			// Do nothing, this shouldn't be reached
+		}
 	}
 
 	updateSearch = (text) => {
@@ -247,37 +270,29 @@ class NearbyMapView extends React.Component {
 	}
 
 	render() {
+		if (platformAndroid() && !this.state.updatedGoogle) {
+			return (
+				<View style={css.main_container}>
+					<Text>Please update Google Play Services and restart app to view map.</Text>
+					<TouchableOpacity underlayColor={'rgba(200,200,200,.1)'} onPress={() => openGooglePlayUpdate()}>
+						<View style={css.eventdetail_readmore_container}>
+							<Text style={css.eventdetail_readmore_text}>Update</Text>
+						</View>
+					</TouchableOpacity>
+				</View>
+			);
+		}
 		if (this.props.location.coords) {
 			return (
 				<View style={css.main_container}>
-					{
-						(this.props.search_results && this.state.showNav) ? (
-							<ElevatedView
-								style={{ zIndex: 2, justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: (2 * (6 + Math.round(44 * getPRM()))) + 12, right: 6, width: 50, height: 50, borderRadius: 50 / 2, backgroundColor: '#2196F3' }}
-								elevation={2} // zIndex style and elevation has to match
-							>
-								<TouchableOpacity
-									onPress={() => gotoNavigationApp(this.props.search_results[this.state.selectedResult].mkrLat, this.props.search_results[this.state.selectedResult].mkrLong)}
-								>
-									<Icon name={'location-arrow'} size={20} color={'white'} />
-								</TouchableOpacity>
-							</ElevatedView>
-						) : (<ElevatedView />) // Android bug - breaks view if this is null...on RN39...check if this bug still exists in RN40 or if this can be changed to null
-					}
-					{
-						(this.state.showShuttle) ? (
-							<ElevatedView
-								style={{ zIndex: 2, justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: 6 + Math.round(44 * getPRM()), right: 6, width: 50, height: 50, borderRadius: 50 / 2, backgroundColor: '#346994' }}
-								elevation={2} // zIndex style and elevation has to match
-							>
-								<TouchableOpacity
-									onPress={this.gotoShuttleSettings}
-								>
-									<Icon name={'bus'} size={20} color={'white'} />
-								</TouchableOpacity>
-							</ElevatedView>
-						) : (<ElevatedView />) // Android bug
-					}
+					<SearchNavButton
+						visible={(this.state.showNav && this.props.search_results !== null)}
+						onPress={this.gotoNavigationApp}
+					/>
+					<SearchShuttleButton
+						visible={this.state.showShuttle}
+						onPress={this.gotoShuttleSettings}
+					/>
 					<SearchBar
 						update={this.updateSearch}
 						onFocus={this.focusSearch}
@@ -296,6 +311,7 @@ class NearbyMapView extends React.Component {
 						}
 						showsVerticalScrollIndicator={false}
 						scrollEnabled={this.state.allowScroll}
+						keyboardShouldPersistTaps={true}
 					>
 						<View
 							style={styles.section}
@@ -342,26 +358,10 @@ class NearbyMapView extends React.Component {
 							/>
 						</View>
 					</ScrollView>
-					{(this.state.showBar && this.props.search_results) ? (
-						<ElevatedView
-							style={styles.bottomBarContainer}
-							elevation={5}
-						>
-							<TouchableOpacity
-								style={styles.bottomBarContent}
-								onPress={
-									this.gotoResults
-								}
-							>
-								<Text
-									style={styles.bottomBarText}
-								>
-									See More Results
-								</Text>
-							</TouchableOpacity>
-						</ElevatedView>
-						) : (null)
-					}
+					<SearchResultsBar
+						visible={(this.state.showBar && this.props.search_results !== null)}
+						onPress={this.gotoResults}
+					/>
 					<ShuttleLocationContainer />
 				</View>
 			);
@@ -380,12 +380,16 @@ const mapStateToProps = (state, props) => (
 		shuttle_stops: state.shuttle.stops,
 		vehicles: state.shuttle.vehicles,
 		search_history: state.map.history,
-		search_results: state.map.results
+		search_results: state.map.results,
+		scene: state.routes.scene
 	}
 );
 
 const mapDispatchToProps = (dispatch, ownProps) => (
 	{
+		clearSearch: () => {
+			dispatch(clearSearch());
+		},
 		fetchSearch: (term, location) => {
 			dispatch(fetchSearch(term, location));
 		},
@@ -404,10 +408,6 @@ const navMargin = Platform.select({
 
 const styles = StyleSheet.create({
 	main_container: { width: deviceWidth, height: deviceHeight - 64 - statusBarHeight, backgroundColor: '#EAEAEA', marginTop: navMargin },
-	bottomBarContainer: { zIndex: 5, alignItems: 'center', justifyContent: 'center', position: 'absolute', bottom: 0, width: deviceWidth, height: Math.round(44 * getPRM()), borderWidth: 0, backgroundColor: 'white', },
-	bottomBarContent: { flex: 1, justifyContent: 'center', alignSelf: 'stretch' },
-	bottomBarText: { textAlign: 'center', },
-
 	section: { height: deviceHeight - 64 - statusBarHeight },
 });
 

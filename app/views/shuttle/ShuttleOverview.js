@@ -19,11 +19,7 @@ const ShuttleOverview = ({ onPress, stopData, stopID }) => (
 						<View style={css.shuttle_card_rt_1} />
 						<View style={[css.shuttle_card_rt_2, { backgroundColor: stopData[stopID].arrivals[0].route.color, borderColor: stopData[stopID].arrivals[0].route.color }]}>
 							<Text style={css.shuttle_card_rt_2_label}>
-								{
-									// THIS SHOULDN'T BE NEEDED, complain to syncromatics
-									// (stopData[stopID].arrivals[0].route.shortName === 'Campus Loop') ? ('L') : (stopData[stopID].arrivals[0].route.shortName)
-									stopData[stopID].arrivals[0].route.shortName.replace(/[()]/g, '').substring(0, 1) // Limits shortName to one char
-								}
+								{stopData[stopID].arrivals[0].route.shortName}
 							</Text>
 						</View>
 						<View style={css.shuttle_card_rt_3}>
@@ -53,7 +49,7 @@ const ShuttleOverview = ({ onPress, stopData, stopID }) => (
 					</View>
 				</View>
 				<ShuttleSmallList
-					arrivalData={stopData[stopID].arrivals.slice(1)}
+					arrivalData={stopData[stopID].arrivals.slice(1,3)}
 					rows={2}
 					scrollEnabled={false}
 				/>

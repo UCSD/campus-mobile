@@ -12,9 +12,10 @@ const QuicklinksListView = ({ data }) => {
 	logger.ga('View Loaded: Quicklinks List View');
 
 	return (
-		<View style={css.view_all_container}>
+		<View style={css.view_container}>
 			<QuicklinksList
 				data={data}
+				listType={'full'}
 				scrollEnabled={true}
 			/>
 		</View>

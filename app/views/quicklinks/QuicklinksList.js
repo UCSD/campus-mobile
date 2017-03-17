@@ -7,11 +7,11 @@ import QuicklinksItem from './QuicklinksItem';
 
 const linksDataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
-const QuicklinksList = ({ data, scrollEnabled }) => (
+const QuicklinksList = ({ data, scrollEnabled, listType }) => (
 	<ListView
 		dataSource={linksDataSource.cloneWithRows(data)}
 		renderRow={
-			(row) => <QuicklinksItem data={row} />
+			(row) => <QuicklinksItem data={row} listType={listType} />
 		}
 		scrollEnabled={scrollEnabled}
 	/>

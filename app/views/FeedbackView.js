@@ -2,22 +2,23 @@ import React, { Component } from 'react';
 import {
 	Text,
 	View,
-	ScrollView,
-	TouchableHighlight,
 	InteractionManager,
 	ActivityIndicator,
 	TextInput,
 	StyleSheet,
 	Alert,
+	TouchableWithoutFeedback,
+	TouchableOpacity
 } from 'react-native';
+import { connect } from 'react-redux';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
-import { getPRM, round, getCampusPrimary } from '../util/general';
+import { hideKeyboard, getCampusPrimary } from '../util/general';
+import logger from '../util/logger';
+import css from '../styles/css';
+import AppSettings from '../AppSettings';
 
-const css = require('../styles/css');
-const logger = require('../util/logger');
-const AppSettings = require('../AppSettings');
-
-export default class FeedbackView extends Component {
+class FeedbackView extends Component {
 
 	constructor(props) {
 		super(props);
@@ -26,6 +27,7 @@ export default class FeedbackView extends Component {
 			commentsText: '',
 			nameText: '',
 			emailText: '',
+			commentsHeight: 0,
 			loaded: false,
 			submit: false,
 		};
@@ -39,6 +41,17 @@ export default class FeedbackView extends Component {
 		});
 	}
 
+	componentWillReceiveProps(nextProps) {
+		// Clear search results when navigating away
+		if (nextProps.scene.key !== this.props.scene.key) {
+			this.setState({
+				commentsText: '',
+				nameText: '',
+				emailText: '',
+			});
+		}
+	}
+
 	/**
 	 * Called after state change
 	 * @return bool whether the component should re-render.
@@ -49,6 +62,8 @@ export default class FeedbackView extends Component {
 
 	_postFeedback() {
 		if (this.state.commentsText !== '') {
+			this.setState({ loaded: false });
+
 			const formData = new FormData();
 			formData.append('element_1', this.state.commentsText);
 			formData.append('element_2', this.state.nameText);
@@ -63,6 +78,7 @@ export default class FeedbackView extends Component {
 				body: formData
 			})
 			.then((response) => {
+				// Clear fields and alert user
 				Alert.alert(
 					'Thank you!',
 					'We will take your feedback into consideration as we continue developing and improving the app.',
@@ -73,13 +89,16 @@ export default class FeedbackView extends Component {
 					commentsText: '',
 					nameText: '',
 					emailText: '',
+					commentsHeight: 0,
+					loaded: true
 				});
+				return response.json();
 			})
 			.then((responseJson) => {
 				// logger.log(responseJson);
 			})
 			.catch((error) => {
-				// logger.error(error);
+				logger.error('Error submitting Feedback: ' + error);
 			});
 		}
 		else {
@@ -101,8 +120,10 @@ export default class FeedbackView extends Component {
 
 	_renderFormView() {
 		return (
-			<View style={css.main_container}>
-				<ScrollView>
+			<TouchableWithoutFeedback
+				onPress={() => hideKeyboard()}
+			>
+				<View style={css.main_container}>
 					<View style={styles.feedback_container}>
 						<Text style={styles.feedback_label}>
 							Help us make the {AppSettings.APP_NAME} app better.{'\n'}
@@ -111,43 +132,47 @@ export default class FeedbackView extends Component {
 
 						<View style={styles.feedback_text_container}>
 							<TextInput
+								ref={(ref) => { this._feedback = ref; }}
 								multiline={true}
+								blurOnSubmit={true}
 								value={this.state.commentsText}
-								onChangeText={(text) => this.setState({ commentsText: text })}
+								onChange={(event) => {
+									this.setState({
+										commentsText: event.nativeEvent.text,
+										commentsHeight: event.nativeEvent.contentSize.height,
+									});
+								}}
 								placeholder="Tell us what you think*"
 								underlineColorAndroid={'transparent'}
-								style={styles.feedback_text}
+								style={[styles.feedback_text, { height: Math.max(50, this.state.commentsHeight) }]}
+								returnKeyType={'done'}
+								maxLength={500}
 							/>
 						</View>
 
 						<View style={styles.text_container}>
 							<TextInput
-								value={this.state.nameText}
-								onChangeText={(text) => this.setState({ nameText: text })}
-								placeholder="Name"
-								underlineColorAndroid={'transparent'}
-								style={styles.feedback_text}
-							/>
-						</View>
-
-						<View style={styles.text_container}>
-							<TextInput
+								ref={(ref) => { this._email = ref; }}
 								value={this.state.emailText}
 								onChangeText={(text) => this.setState({ emailText: text })}
 								placeholder="Email"
 								underlineColorAndroid={'transparent'}
 								style={styles.feedback_text}
+								returnKeyType={'done'}
+								keyboardType={'email-address'}
+								maxLength={100}
 							/>
 						</View>
 
-						<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => this._postFeedback()}>
+						<TouchableOpacity underlayColor={'rgba(200,200,200,.1)'} onPress={() => this._postFeedback()}>
 							<View style={styles.submit_container}>
 								<Text style={styles.submit_text}>Submit</Text>
 							</View>
-						</TouchableHighlight>
+						</TouchableOpacity>
+
 					</View>
-				</ScrollView>
-			</View>
+				</View>
+			</TouchableWithoutFeedback>
 		);
 	}
 
@@ -164,12 +189,20 @@ export default class FeedbackView extends Component {
 const styles = StyleSheet.create({
 	loading_icon: { flex: 1, alignItems: 'center', justifyContent: 'center' },
 	feedback_container: { flexDirection: 'column', marginHorizontal: 8, marginTop: 8 },
-	feedback_label: { flex: 1, flexWrap: 'wrap', fontSize: round(19 * getPRM()), paddingBottom: 16, lineHeight: 24 },
-	feedback_text: { backgroundColor: '#FFF', flex:1, fontSize: round(20 * getPRM()), alignItems: 'center', padding: 8 },
+	feedback_label: { flexWrap: 'wrap', fontSize: 18, paddingBottom: 16, lineHeight: 24 },
+	feedback_text: { backgroundColor: '#FFF', flex:1, fontSize: 18, alignItems: 'center', padding: 8 },
 
 	submit_container: { justifyContent: 'center', alignItems: 'center', backgroundColor: getCampusPrimary(), borderRadius: 3, padding: 10 },
-	submit_text: { fontSize: round(16 * getPRM()), color: '#FFF' },
+	submit_text: { fontSize: 16, color: '#FFF' },
 
-	feedback_text_container: { flex: 1, height: round(100 * getPRM()), borderColor: '#DADADA', borderBottomWidth: 1, marginBottom: 8 },
-	text_container: { height: round(50 * getPRM()), borderColor: '#DADADA', borderBottomWidth: 1, marginBottom: 8 },
+	feedback_text_container: { flexDirection: 'row', borderColor: '#DADADA', borderBottomWidth: 1, marginBottom: 8, backgroundColor: 'white' },
+	text_container: { height: 50, borderColor: '#DADADA', borderBottomWidth: 1, marginBottom: 8 },
 });
+
+const mapStateToProps = (state, props) => (
+	{
+		scene: state.routes.scene
+	}
+);
+
+module.exports = connect(mapStateToProps)(FeedbackView);

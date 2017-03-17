@@ -15,9 +15,11 @@ function updateLocation() {
 				dispatch(updateDining(position));
 			})
 			.catch((error) => {
-				// ignore timeout error
-				if (error.code === 3) return;
-
+				// ignore timeout error, but still update dining
+				if (error.code === 3) {
+					dispatch(updateDining());
+					return;
+				}
 				logger.error(error);
 			});
 	};

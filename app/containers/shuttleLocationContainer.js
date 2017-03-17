@@ -47,13 +47,15 @@ const ShuttleLocationContainer = React.createClass({
 	tryUpdateLocation() {
 		const { dispatch, toggles } = this.props;
 
-		// Update vehicles for every route that is turned on
-		Object.keys(toggles).forEach((key, index) => {
-			// Update vehicle info if route is turned on
-			if (toggles[key]) {
-				dispatch(updateVehicles(key));
-			}
-		});
+		if (toggles) {
+			// Update vehicles for every route that is turned on
+			Object.keys(toggles).forEach((key, index) => {
+				// Update vehicle info if route is turned on
+				if (toggles[key]) {
+					dispatch(updateVehicles(key));
+				}
+			});
+		}
 	},
 
 	render() {

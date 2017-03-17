@@ -3,28 +3,25 @@ import {
 	View,
 	Text,
 	ScrollView,
-	Image,
 	Linking,
 	TouchableHighlight,
 	Dimensions,
 } from 'react-native';
+import moment from 'moment';
 
-const windowSize = Dimensions.get('window');
-const windowWidth = windowSize.width;
-
-const css = require('../../styles/css');
-const logger = require('../../util/logger');
-const moment = require('moment');
+import SafeImage from '../common/SafeImage';
+import css from '../../styles/css';
+import logger from '../../util/logger';
 
 const NewsDetail = ({ data }) => {
-	logger.ga('View Loaded: News Detail: ' + data.title );
+	logger.ga('View Loaded: News Detail: ' + data.title);
 
 	return (
 		<View style={[css.main_container, css.whitebg]}>
 			<ScrollView contentContainerStyle={css.scroll_default}>
 
 				{data.image_lg ? (
-					<Image
+					<SafeImage
 						source={{ uri: data.image_lg }}
 						style={{
 							width: Dimensions.get('window').width,

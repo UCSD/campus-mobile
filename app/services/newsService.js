@@ -17,7 +17,7 @@ const NewsService = {
 				news.items[i].title = entities.decode(news.items[i].title);
 
 				if (news.items[i].image) {
-					const image_lg = news.items[i].image.replace(/-150\./,'.').replace(/_teaser\./,'.');
+					const image_lg = news.items[i].image.replace(/_teaser\./,'.');
 					image_lg.replace(/-thumb/g,'');
 					if (image_lg.length > 10) {
 						news.items[i].image_lg = image_lg;
