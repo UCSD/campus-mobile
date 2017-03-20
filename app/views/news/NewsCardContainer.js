@@ -4,10 +4,11 @@ import {
 } from 'react-native';
 
 import { connect } from 'react-redux';
+import moment from 'moment';
 
+import DataListCard from '../common/DataListCard';
 import CardComponent from '../card/CardComponent';
 import { updateNews } from '../../actions/news';
-import NewsCard from './NewsCard';
 import logger from '../../util/logger';
 
 class NewsCardContainer extends CardComponent {
@@ -28,9 +29,18 @@ class NewsCardContainer extends CardComponent {
 	}
 
 	render() {
+		const { newsData } = this.props;
+		if (newsData) {
+			newsData.forEach((element) => {
+				element.subtext = moment(element.date).format('MMM Do, YYYY');
+			});
+		}
+
 		return (
-			<NewsCard
-				data={this.props.newsData}
+			<DataListCard
+				title="News"
+				data={newsData}
+				item={'NewsItem'}
 			/>
 		);
 	}

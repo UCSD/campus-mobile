@@ -3,8 +3,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 
+import DataListCard from '../common/DataListCard';
 import CardComponent from '../card/CardComponent';
-import DiningCard from './DiningCard';
 
 const logger = require('../../util/logger');
 
@@ -15,12 +15,12 @@ class DiningCardContainer extends CardComponent {
 
 	render() {
 		const { diningData, locationPermission } = this.props;
-
+		// todo: use location permission
 		return (
-			<DiningCard
+			<DataListCard
+				title="Dining"
 				data={diningData}
-				rows={4}
-				permission={locationPermission}
+				item={'DiningItem'}
 			/>
 		);
 	}

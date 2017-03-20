@@ -1,17 +1,17 @@
 import React from 'react';
-import {
-	View,
-	Text,
-	TouchableHighlight,
-	Image,
-} from 'react-native';
-
 import { Actions } from 'react-native-router-flux';
 
-const css = require('../../styles/css');
-const general = require('../../util/general');
-const moment = require('moment');
+import DataItem from '../common/DataItem';
 
+const EventItem = ({ data, card }) => (
+	<DataItem
+		data={data}
+		card={card}
+		onPress={() => Actions.EventDetail({ data })}
+	/>
+);
+
+/*
 const EventItem = ({ data }) => (
 	<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => Actions.EventDetail({ data })}>
 		<View style={css.events_list_row}>
@@ -40,6 +40,6 @@ const EventItem = ({ data }) => (
 			</View>
 		</View>
 	</TouchableHighlight>
-);
+);*/
 
 export default EventItem;

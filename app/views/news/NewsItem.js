@@ -1,16 +1,17 @@
 import React from 'react';
-import {
-	View,
-	Text,
-	TouchableHighlight,
-	Image,
-} from 'react-native';
 
 import { Actions } from 'react-native-router-flux';
 
-const css = require('../../styles/css');
-const moment = require('moment');
+import DataItem from '../common/DataItem';
 
+const NewsItem = ({ data, card }) => (
+	<DataItem
+		data={data}
+		card={card}
+		onPress={() => Actions.NewsDetail({ data })}
+	/>
+);
+/*
 const NewsItem = ({ data }) => (
 	<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => Actions.NewsDetail({ data })}>
 		<View style={css.events_list_row}>
@@ -29,7 +30,6 @@ const NewsItem = ({ data }) => (
 							style={css.events_list_desc}
 							numberOfLines={3}
 						>
-							{/* TODO: Remove trim once feed is fixed */}
 							{data.description.trim()}
 							}
 						</Text>
@@ -46,5 +46,5 @@ const NewsItem = ({ data }) => (
 		</View>
 	</TouchableHighlight>
 );
-
+*/
 export default NewsItem;

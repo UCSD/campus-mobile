@@ -4,11 +4,13 @@ import {
 } from 'react-native';
 
 import { connect } from 'react-redux';
+import moment from 'moment';
 
 import CardComponent from '../card/CardComponent';
 import { updateEvents } from '../../actions/events';
-import EventCard from './EventCard';
+import DataListCard from '../common/DataListCard';
 import logger from '../../util/logger';
+import { militaryToAMPM } from '../../util/general';
 
 class EventCardContainer extends CardComponent {
 	componentDidMount() {
@@ -28,9 +30,19 @@ class EventCardContainer extends CardComponent {
 	}
 
 	render() {
+		const { eventsData } = this.props;
+		if (eventsData) {
+			eventsData.forEach((element) => {
+				element.subtext = moment(element.eventdate).format('MMM Do') + ', ' + militaryToAMPM(element.starttime) + ' - ' + militaryToAMPM(element.endtime);
+				element.image = element.imagethumb;
+			});
+		}
+
 		return (
-			<EventCard
-				data={this.props.eventsData}
+			<DataListCard
+				title="Events"
+				data={eventsData}
+				item={'EventItem'}
 			/>
 		);
 	}
