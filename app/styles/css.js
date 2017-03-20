@@ -173,7 +173,7 @@ var css = StyleSheet.create({
 	dining_card_filter_button: { paddingVertical: 8, paddingHorizontal: 14, fontSize: 14, color: '#888', borderWidth: 1, borderColor: '#CCC', borderRadius: 3, backgroundColor: '#EEE', textAlign: 'center', marginHorizontal: 8 },
 	dining_card_filter_button_active: { paddingVertical: 8, paddingHorizontal: 14, fontSize: 14, color: '#EEE', borderWidth: 1, borderColor: '#CCC', borderRadius: 3, backgroundColor: campus_primary, textAlign: 'center', marginHorizontal: 8, overflow: 'hidden' },
 	dc_locations: { flexDirection: 'column' },
-	dc_locations_row: { flexDirection: 'row', paddingBottom: 10, paddingTop: 10, borderBottomWidth: 1, borderBottomColor: '#DDD' },
+	dc_locations_row: { backgroundColor: '#F9F9F9', flexDirection: 'row', paddingBottom: 10, paddingTop: 10, borderBottomWidth: 1, borderBottomColor: '#DDD' },
 	dc_locations_row_left: { flex: 6, justifyContent: 'center' },
 	dc_locations_title: { fontSize: 20, color: campus_primary },
 	dc_locations_hours: { fontSize: 12, color: '#666', paddingTop: 1 },
@@ -207,7 +207,7 @@ var css = StyleSheet.create({
 	// 306 - Links Card
 	quicklinks_card: { alignSelf: 'stretch', padding: 8 },
 	quicklinks_locations: { flexDirection: 'column' },
-	quicklinks_row_container: { borderBottomWidth: 1, borderBottomColor: '#EEE', paddingVertical: 10 },
+	quicklinks_row_container: { borderBottomWidth: 1, backgroundColor: '#F9F9F9', borderBottomColor: '#EEE', paddingVertical: 10 },
 	quicklinks_row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
 	quicklinks_icon: { height: 42, width: 38 },
 	quicklinks_icon_fa: { padding: 8 },

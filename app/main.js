@@ -36,6 +36,7 @@ import FeedbackView from './views/FeedbackView';
 import PreferencesView from './views/preferences/PreferencesView';
 import NearbyMapView from './views/mapsearch/NearbyMapView';
 import TabIcons from './navigation/TabIcons';
+import DataListViewAll from './views/common/DataListViewAll';
 
 const RouterWithRedux = connect()(Router);
 
@@ -83,14 +84,12 @@ export default class Main extends Component {
 								<Scene key="DiningList" component={DiningList} title="Dining" />
 								<Scene key="DiningDetail" component={DiningDetail} title="Dining" />
 								<Scene key="DiningNutrition" component={DiningNutrition} title="Nutrition" />
-								<Scene key="DiningListView" component={DiningListView} title="Dining" />
-								<Scene key="EventListView" component={EventListView} title="Events" />
 								<Scene key="EventDetail" component={EventDetail} title="Events" />
 								<Scene key="WebWrapper" component={WebWrapper} />
 								<Scene key="WelcomeWeekView" component={WelcomeWeekView} title="Welcome Week" />
 								<Scene key="QuicklinksListView" component={QuicklinksListView} title="Links" />
 								<Scene key="NewsDetail" component={NewsDetail} title="News" />
-								<Scene key="NewsListView" component={NewsListView} title="News" />
+								<Scene key="DataListViewAll" component={DataListViewAll} />
 							</Scene>
 							<Scene key="tab2" title="Map" component={NearbyMapView} icon={TabIcons} />
 							<Scene key="tab3" title="Feedback" component={FeedbackView} icon={TabIcons} />
