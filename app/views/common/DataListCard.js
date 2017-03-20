@@ -19,16 +19,17 @@ const defaultRows = 3;
  * @param  {String} title Card header
  * @param {Object[]} data contains data for row items
  * @param {String} item String name for row item, passing string here instead of actual component cuz of Actions
+ * @param {Number} rows number of rows to display on card
  * @return {JSX}
  */
-const DataListCard = ({ title, data, item }) => (
+const DataListCard = ({ title, data, item, rows }) => (
 	<Card id={title} title={title}>
 		<View style={styles.list}>
 			{data ? (
 				<View>
 					<DataListView
 						data={data}
-						rows={defaultRows}
+						rows={rows || defaultRows}
 						scrollEnabled={false}
 						item={item}
 						card={false}
