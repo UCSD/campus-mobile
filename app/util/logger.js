@@ -1,7 +1,7 @@
-const AppSettings = require('../AppSettings');
-const GoogleAnalytics = require('react-native-google-analytics-bridge');
+import { GOOGLE_ANALYTICS_ID, DEBUG_ENABLED } from '../AppSettings';
+import { GoogleAnalyticsTracker } from 'react-native-google-analytics-bridge';
 
-GoogleAnalytics.setTrackerId(AppSettings.GOOGLE_ANALYTICS_ID);
+let tracker = new GoogleAnalyticsTracker(GOOGLE_ANALYTICS_ID);
 
 /**
  * A module containing logging helper functions
@@ -25,7 +25,7 @@ module.exports = {
 	 * @param {string} msg The error message to log
 	 */
 	error(msg) {
-		if (AppSettings.DEBUG_ENABLED) {
+		if (DEBUG_ENABLED) {
 			console.error(msg);
 		} else {
 			console.log(msg);
@@ -39,7 +39,7 @@ module.exports = {
 	 */
 	ga(msg) {
 		this.log(msg);
-		GoogleAnalytics.trackScreenView(msg);
+		tracker.trackScreenView(msg);
 	},
 
 };
