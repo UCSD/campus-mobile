@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import {
 	View
 } from 'react-native';
@@ -28,6 +28,12 @@ const DataListViewAll = ({ title, data, item }) => {
 			/>
 		</View>
 	);
+};
+
+DataListViewAll.propTypes = {
+	title: PropTypes.string,
+	data: PropTypes.array.isRequired,
+	item: PropTypes.string.isRequired
 };
 
 export default DataListViewAll;

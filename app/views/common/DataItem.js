@@ -14,7 +14,7 @@ import {
 
 /**
  * Generic row item
- * @param  {Object[]} data
+ * @param  {Object} data
  * @param {Boolean} card Display using card style
  * @param {Function} onPress
  * @return {JSX}
@@ -72,6 +72,16 @@ const DataItem = ({ data, card, onPress }) => (
 		}
 	</View>
 );
+
+DataItem.propTypes = {
+	data: PropTypes.object.isRequired,
+	card: PropTypes.bool,
+	onPress: PropTypes.func,
+};
+
+DataItem.defaultProps = {
+	card: false
+};
 
 const styles = StyleSheet.create({
 	card_main: { borderWidth: 1, borderRadius: 2, borderColor: '#DDD', backgroundColor: '#F9F9F9', margin: 6, alignItems: 'flex-start', justifyContent: 'center', overflow: 'hidden' },

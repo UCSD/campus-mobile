@@ -12,8 +12,6 @@ import DataListView from './DataListView';
 import Card from '../card/Card';
 import { getCampusPrimary } from '../../util/general';
 
-const defaultRows = 3;
-
 /**
  * Generic component for list type cards
  * @param  {String} title Card header
@@ -29,7 +27,7 @@ const DataListCard = ({ title, data, item, rows }) => (
 				<View>
 					<DataListView
 						data={data}
-						rows={rows || defaultRows}
+						rows={rows}
 						scrollEnabled={false}
 						item={item}
 						card={false}
@@ -51,6 +49,17 @@ const DataListCard = ({ title, data, item, rows }) => (
 		</View>
 	</Card>
 );
+
+DataListCard.propTypes = {
+	title: PropTypes.string.isRequired,
+	data: PropTypes.array.isRequired,
+	item: PropTypes.string.isRequired,
+	rows: PropTypes.number,
+};
+
+DataListCard.defaultProps = {
+	rows: 3
+};
 
 const styles = StyleSheet.create({
 	list: { alignSelf: 'stretch', padding: 8 },

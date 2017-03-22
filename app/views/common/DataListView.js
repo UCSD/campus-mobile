@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import {
 	ListView,
+	StyleSheet,
 } from 'react-native';
 
 import EventItem from '../events/EventItem';
@@ -50,5 +51,19 @@ const DataListView = ({ style, data, rows, scrollEnabled, item, card }) => (
 		}}
 	/>
 );
+
+DataListView.propTypes = {
+	style: PropTypes.number, // Stylesheet is a number for some reason?
+	data: PropTypes.array.isRequired,
+	rows: PropTypes.number,
+	scrollEnabled: PropTypes.bool,
+	item: PropTypes.string.isRequired,
+	card: PropTypes.bool,
+};
+
+DataListView.defaultProps = {
+	scrollEnabled: false,
+	card: false
+};
 
 export default DataListView;
