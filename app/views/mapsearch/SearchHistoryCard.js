@@ -35,7 +35,7 @@ const SearchHistoryList = ({ historyData, pressHistory }) => (
 	<ListView
 		showsVerticalScrollIndicator={false}
 		dataSource={historyData}
-		keyboardShouldPersistTaps={true}
+		keyboardShouldPersistTaps='always'
 		renderRow={
 			(row, sectionID, rowID) =>
 				<SearchHistoryItem

@@ -58,7 +58,7 @@ const SearchSuggestList = ({ historyData, onPress }) => (
 		showsHorizontalScrollIndicator={false}
 		dataSource={historyData}
 		horizontal={true}
-		keyboardShouldPersistTaps={true}
+		keyboardShouldPersistTaps='always'
 		renderRow={
 			(row, sectionID, rowID) =>
 				<SearchSuggestItem
