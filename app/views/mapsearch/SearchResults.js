@@ -12,6 +12,7 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ElevatedView from 'react-native-elevated-view';
 
+import YesNoCard from '../survey/YesNoCard';
 import css from '../../styles/css';
 import { doPRM, getPRM, getMaxCardWidth } from '../../util/general';
 
@@ -22,24 +23,33 @@ const statusBarHeight = Platform.select({
 });
 const resultsDataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
+// todo: un-hardcode this
 const SearchResultsCard = ({ results, onSelect }) => (
-	<ElevatedView
-		style={styles.card_main}
-		elevation={2}
-	>
-		<View style={styles.list_container}>
-			{results ?
-				(
-					<SearchResultsList
-						results={resultsDataSource.cloneWithRows(results)}
-						onSelect={onSelect}
-					/>
-				) : (
-					null
-				)
-			}
-		</View>
-	</ElevatedView>
+	<View>
+		<YesNoCard
+			style={styles.survey_card}
+			question={'Are these results accurate?'}
+			id={264935}
+			data={{ query: 'APM', selected: 'Applied Physics and Mathematics (APM)' }}
+		/>
+		<ElevatedView
+			style={styles.card_main}
+			elevation={2}
+		>
+			<View style={styles.list_container}>
+				{results ?
+					(
+						<SearchResultsList
+							results={resultsDataSource.cloneWithRows(results)}
+							onSelect={onSelect}
+						/>
+					) : (
+						null
+					)
+				}
+			</View>
+		</ElevatedView>
+	</View>
 );
 
 SearchResultsCard.propTypes = {
@@ -86,12 +96,13 @@ const navHeight = Platform.select({
 	android: 44
 });
 
-// device - (statusBar + navHeight + searchBar + listPadding + tabBar)
-const listHeight = deviceHeight - (statusBarHeight + navHeight + doPRM(44) + 16 + 40); // 18 + 64 + (44 * getPRM()));
+// device - (statusBar + navHeight + searchBar + listPadding + tabBar) - surveyCard
+const listHeight = deviceHeight - (statusBarHeight + navHeight + doPRM(44) + 16 + 40) - 80;
 
 const styles = StyleSheet.create({
+	survey_card: { top: Math.round(44 * getPRM()) + 6 },
 	list_container: { width: getMaxCardWidth(), maxHeight: listHeight, },
-	card_main: { top: Math.round(44 * getPRM()) + 6, backgroundColor: '#FFFFFF', margin: 6, alignItems: 'flex-start', justifyContent: 'center', },
+	card_main: { top: 36, backgroundColor: '#FFFFFF', margin: 6, alignItems: 'flex-start', justifyContent: 'center', },
 	touch: { backgroundColor: '#FFF' },
 	list_row: { flexDirection: 'row', paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: '#EEE', overflow: 'hidden', paddingLeft: 8, paddingRight: 8 },
 });

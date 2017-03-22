@@ -12,6 +12,7 @@ import eventsReducer from './events';
 import newsReducer from './news';
 import linksReducer from './links';
 import routesReducer from './routes';
+import surveyReducer from './survey';
 
 module.exports = combineReducers({
 	cards: cardsReducer,
@@ -26,4 +27,5 @@ module.exports = combineReducers({
 	news: newsReducer,
 	links: linksReducer,
 	routes: routesReducer,
+	survey: surveyReducer
 });

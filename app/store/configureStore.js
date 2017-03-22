@@ -4,9 +4,13 @@ import { persistStore, autoRehydrate } from 'redux-persist';
 import thunkMiddleware from 'redux-thunk';
 import createLogger from 'redux-logger';
 import createFilter from 'redux-persist-transform-filter';
+import createSagaMiddleware from 'redux-saga';
 
+import rootSaga from '../sagas/rootSaga';
 import rootReducer from '../reducers';
 import { DEBUG_ENABLED } from '../AppSettings';
+
+const sagaMiddleware = createSagaMiddleware();
 
 const saveMapFilter = createFilter(
 	'map',
@@ -26,7 +30,7 @@ const saveShuttleFilter = createFilter(
 
 
 export default function configureStore(initialState, onComplete: ?() => void) {
-	const middlewares = [thunkMiddleware]; // lets us dispatch() functions
+	const middlewares = [sagaMiddleware, thunkMiddleware]; // lets us dispatch() functions
 
 	if ( DEBUG_ENABLED ) {
 		// neat middleware that logs actions
@@ -39,6 +43,8 @@ export default function configureStore(initialState, onComplete: ?() => void) {
 		applyMiddleware(...middlewares),
 		autoRehydrate()
 	);
+
+	sagaMiddleware.run(rootSaga);
 
 	if (module.hot) {
 		// Enable Webpack hot module replacement for reducers

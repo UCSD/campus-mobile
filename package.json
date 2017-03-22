@@ -33,6 +33,7 @@
     "redux-logger": "2.7.0",
     "redux-persist": "3.5.0",
     "redux-persist-transform-filter": "0.0.6",
+    "redux-saga": "0.14.3",
     "redux-thunk": "2.1.0"
   },
   "devDependencies": {
