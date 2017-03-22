@@ -8,16 +8,8 @@ const MAPS_FIX_PATH = './node_modules/react-native-maps/android/build.gradle';
 const MAPS_ERR = "9.8.0";
 const MAPS_FIX = "+";
 
-const CORE_FIX_PATH = './node_modules/react-native/Libraries/Core/InitializeCore.js';
-const CORE_ERR = "function handleError\\(e, isFatal\\)";
-const CORE_FIX = "var handleError = function(e, isFatal)";
-
 makeReplacements(MAPS_FIX_PATH, [
 	{ initial: MAPS_ERR, fixed: MAPS_FIX }
-]);
-
-makeReplacements(CORE_FIX_PATH, [
-	{ initial: CORE_ERR, fixed: CORE_FIX }
 ]);
 
 function makeReplacements(FILE_PATH, REPLACEMENTS) {
