@@ -12,12 +12,15 @@
     "generate-docs": "./node_modules/.bin/jsdoc -c jsdoc.conf.json"
   },
   "dependencies": {
+    "buffer": "5.0.5",
     "dateformat": "1.0.12",
+    "events": "1.1.1",
     "html-entities": "1.2.0",
     "moment": "2.15.2",
     "react": "15.4.2",
     "react-native": "0.39.0",
     "react-native-code-push": "1.15.0-beta",
+    "react-native-cookies": "^2.0.0",
     "react-native-elevated-view": "0.0.1",
     "react-native-google-analytics-bridge": "3.1.0",
     "react-native-google-api-availability-bridge": "1.1.4",
@@ -34,7 +37,9 @@
     "redux-persist": "3.5.0",
     "redux-persist-transform-filter": "0.0.6",
     "redux-saga": "0.14.3",
-    "redux-thunk": "2.1.0"
+    "redux-thunk": "2.1.0",
+    "timers": "0.1.1",
+    "xml2js": "0.4.17"
   },
   "devDependencies": {
     "babel-eslint": "^6.1.2",
