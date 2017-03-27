@@ -10,30 +10,22 @@ UC San Diego uses this platform for its campus mobile app on iOS and Android.
 ## Getting Started
 
 - Follow the [Getting Started guide](https://facebook.github.io/react-native/docs/getting-started.html) for React Native
-- From the project folder, run:
-	- npm install
-	- npm run-script apply-fixes
-- For iOS, from the project folder, run: react-native run-ios
-- For Android, from the project folder, run: react-native run-android
+
+- Install From the project folder, run:
+	npm install
+	npm run-script apply-fixes
+
+## Building for Android
+
+	react-native run-android
+
+## Building for iOS
+
+	react-native run-ios
 
 ## Documentation
 
 Review the [modules documentation](https://htmlpreview.github.io/?https://raw.githubusercontent.com/UCSD/campus-mobile/dev/out/index.html)
-
-## Building for Android
-
-[Utility script](https://github.com/UCSD/campus-mobile-build-scripts) to create an APK. This build script exists in a repository separate from the campus mobile app repository.
-
-	// From an empty directory
-	//Build APK one liner:
-	git clone https://github.com/UCSD/campus-mobile-build-scripts.git && cd campus-mobile-build-scripts && npm install && node build-apk.js
-
-	//Build APK and install on device one liner:
-	git clone https://github.com/UCSD/campus-mobile-build-scripts.git && cd campus-mobile-build-scripts && npm install && node build-apk.js && adb install ./bld/android/app/build/outputs/apk/app-release.apk
-
-## Building for iOS
-
-TODO: add content
 
 ## Available Cards
 * TopBanner
@@ -43,7 +35,7 @@ TODO: add content
 	* Surf report link
 * Shuttle
 	* Nearest shuttle stops and arrival times
-	* Shuttle stop info to view all shuttles en route
+	* Shuttle stop details
 * Dining
 	* Nearest dining options with menu and nutritional information
 	* View all dining link
