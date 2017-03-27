@@ -1,4 +1,3 @@
-
 function hideCard(id) {
 	return {
 		type: 'HIDE_CARD',
@@ -7,7 +6,6 @@ function hideCard(id) {
 }
 
 function showCard(id) {
-	console.log('show card');
 	return {
 		type: 'SHOW_CARD',
 		id

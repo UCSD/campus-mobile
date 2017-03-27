@@ -7,14 +7,12 @@ import WeatherDay from './WeatherDay';
 
 const css = require('../../styles/css');
 
-export default class WeatherWeek extends React.Component {
-	render() {
-		return (
-			<View style={css.wc_botrow}>
-				{this.props.weatherData.daily.data.map((val,index) =>
-					<WeatherDay key={index} data={val} />
-				)}
-			</View>
-		);
-	}
-}
+const WeatherWeek = ({ weatherData }) => (
+	<View style={css.wc_botrow}>
+		{weatherData.daily.data.map((val,index) =>
+			<WeatherDay key={index} data={val} />
+		)}
+	</View>
+);
+
+export default WeatherWeek;

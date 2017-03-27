@@ -2,75 +2,38 @@ import React from 'react';
 import {
 	View,
 	Text,
+	TouchableHighlight
 } from 'react-native';
 
-import EventService from '../../services/eventService';
+import { Actions } from 'react-native-router-flux';
+
 import Card from '../card/Card';
-import CardComponent from '../card/CardComponent';
 import EventList from './EventList';
+import css from '../../styles/css';
 
-const css = require('../../styles/css');
-const logger = require('../../util/logger');
+const defaultRows = 3;
 
-export default class EventCard extends CardComponent {
-
-	constructor(props) {
-		super(props);
-
-		this.fetchEventsErrorInterval =	15 * 1000;			// Retry every 15 seconds
-		this.fetchEventsErrorLimit = 3;
-		this.fetchEventsErrorCounter = 0;
-
-		this.state = {
-			eventsData: [],
-			eventsRenderAllRows: false,
-			eventsDataLoaded: false,
-			fetchEventsErrorLimitReached: false,
-			eventsDefaultResults: 5
-		};
-	}
-
-	componentDidMount() {
-		this.refresh();
-	}
-
-	refresh() {
-		EventService.FetchEvents()
-		.then((responseData) => {
-			this.setState({
-				eventsData: responseData,
-				eventsDataLoaded: true
-			});
-		})
-		.catch((error) => {
-			logger.error(error);
-			if (this.fetchEventsErrorLimit > this.fetchEventsErrorCounter) {
-				this.fetchEventsErrorCounter++;
-				logger.log('ERR: fetchEvents1: refreshing again in ' + (this.fetchEventsErrorInterval / 1000) + ' sec');
-				this.refreshEventsTimer = setTimeout( () => { this.refresh(); }, this.fetchEventsErrorInterval);
-			} else {
-				logger.log('ERR: fetchEvents2: Limit exceeded - max limit:' + this.fetchEventsErrorLimit);
-				this.setState({ fetchEventsErrorLimitReached: true });
-			}
-		})
-		.done();
-	}
-
-	render() {
-		return (
-			<Card id='events' title="Events">
-				<View style={css.events_list}>
-					{this.state.eventsDataLoaded ? (
-						<EventList data={this.state.eventsData} navigator={this.props.navigator} />
-					) : null}
-
-					{this.state.fetchEventsErrorLimitReached ? (
-						<View style={[css.flexcenter, css.pad40]}>
-							<Text>There was a problem loading events, try back soon.</Text>
+const EventCard = ({ data }) => (
+	<Card id="events" title="Events">
+		<View style={css.events_list}>
+			{data && data.length > 0 ? (
+				<View>
+					<EventList
+						data={data}
+						rows={defaultRows}
+						scrollEnabled={false}
+					/>
+					<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => Actions.EventListView({ data })}>
+						<View style={css.events_more}>
+							<Text style={css.events_more_label}>View All Events</Text>
 						</View>
-					) : null }
+					</TouchableHighlight>
 				</View>
-			</Card>
-		);
-	}
-}
+			) : (
+				<Text style={css.content_load_err}>There was a problem loading events.</Text>
+			)}
+		</View>
+	</Card>
+);
+
+export default EventCard;

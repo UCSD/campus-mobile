@@ -1,5 +1,3 @@
-'use strict'
-
 import React from 'react'
 import {
 	View,
@@ -13,6 +11,7 @@ import {
 import CardHeader from './CardHeader'
  
 var css = require('../../styles/css');
+var logger = require('../../util/logger');
 var width = Dimensions.get('window').width;
 var third = Math.round(width/3);
 var tenth = Math.round(width/20);
@@ -31,12 +30,12 @@ export default class DismissibleCard extends React.Component {
 		/*
 		this.state.panResponder = PanResponder.create({
 			onStartShouldSetPanResponder: (e, gesture) => {
-				console.log("start: " + util.inspect(e.nativeEvent));
+				//logger.log("start: " + util.inspect(e.nativeEvent));
 				return true;
 			},
 			onShouldBlockNativeResponder: (e, gesture) => true,
 			onPanResponderGrant: (e, gesture) => {
-				console.log("grant: " + util.inspect(gesture));
+				//logger.log("grant: " + util.inspect(gesture));
 			},
 			onPanResponderMove: (e, gesture) => {
 				if (gesture.dx > tenth && gesture.vx > gesture.vy) {

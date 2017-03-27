@@ -6,56 +6,45 @@ import {
 	Image,
 } from 'react-native';
 
-import NewsDetail from './NewsDetail';
+import { Actions } from 'react-native-router-flux';
 
 const css = require('../../styles/css');
 const moment = require('moment');
 
-const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const NewsItem = ({ data }) => (
+	<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => Actions.NewsDetail({ data })}>
+		<View style={css.events_list_row}>
+			<Text
+				style={css.events_list_title}
+				numberOfLines={1}
+			>
+				{data.title}
+			</Text>
 
-export default class NewsItem extends React.Component {
-
-	getStoryDescription(description, title) {
-		let newsDescription = description.replace(/^ /g, '');
-		if (newsDescription.length > 0) {
-			if (title.length < 25) {
-				newsDescription = newsDescription.substring(0,56).replace(/ $/,'') + '...';
-			} else if (title.length < 50) {
-				newsDescription = newsDescription.substring(0,28).replace(/ $/,'') + '...';
-			} else {
-				newsDescription = '';
-			}
-		}
-		return newsDescription;
-	}
-
-	gotoNewsDetail(newsData) {
-		this.props.navigator.push({ id: 'NewsDetail', name: 'News', title: 'News', component: NewsDetail, newsData });
-	}
-
-	render() {
-		const data = this.props.data;
-		const newsDate = moment(data.date).format('MMM Do, YYYY');
-		const newsDescription = this.getStoryDescription(data.description, data.title);
-		return (
-			<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => this.gotoNewsDetail(data)}>
-				<View style={css.events_list_row}>
-					<View style={css.events_list_left_container}>
-						<Text style={css.events_list_title}>{data.title}</Text>
-						{newsDescription ? (
-							<Text style={css.events_list_desc}>{newsDescription}</Text>
-						) : null }
-						<Text style={css.events_list_postdate}>{newsDate}</Text>
-					</View>
-
-					{data.image ? (
-						<Image style={css.news_list_image} source={{ uri: data.image }} />
-					) : (
-						<Image style={css.news_list_image} source={require('../../assets/img/MobileEvents_blank.jpg')} />
-					)}
-
+			<View style={css.events_list_info}>
+				<View style={css.events_list_info_left}>
+				
+					{data.description ? (
+						<Text
+							style={css.events_list_desc}
+							numberOfLines={3}
+						>
+							{/* TODO: Remove trim once feed is fixed */}
+							{data.description.trim()}
+							}
+						</Text>
+					) : null }
+					<Text style={css.events_list_postdate}>{moment(data.date).format('MMM Do, YYYY')}</Text>
 				</View>
-			</TouchableHighlight>
-		);
-	}
-}
+
+				{data.image ? (
+					<Image style={css.events_list_image} source={{ uri: data.image }} />
+				) : (
+					<Image style={css.events_list_image} source={require('../../assets/img/MobileEvents_blank.jpg')} />
+				)}
+			</View>
+		</View>
+	</TouchableHighlight>
+);
+
+export default NewsItem;

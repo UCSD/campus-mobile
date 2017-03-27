@@ -1,6 +1,7 @@
-
 import * as LocationService from '../services/locationService';
 import logger from '../util/logger';
+import { updateClosestStop } from './shuttle';
+import { updateDining } from './dining';
 
 function updateLocation() {
 	return (dispatch) => {
@@ -10,11 +11,15 @@ function updateLocation() {
 					type: 'SET_POSITION',
 					position
 				});
+				dispatch(updateClosestStop(position));
+				dispatch(updateDining(position));
 			})
 			.catch((error) => {
-				// ignore timeout error
-				if (error.code === 3) return;
-
+				// ignore timeout error, but still update dining
+				if (error.code === 3) {
+					dispatch(updateDining());
+					return;
+				}
 				logger.error(error);
 			});
 	};

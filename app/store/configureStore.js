@@ -3,18 +3,40 @@ import { createStore, applyMiddleware } from 'redux';
 import { persistStore, autoRehydrate } from 'redux-persist';
 import thunkMiddleware from 'redux-thunk';
 import createLogger from 'redux-logger';
+import createFilter from 'redux-persist-transform-filter';
 
 import rootReducer from '../reducers';
+import { DEBUG_ENABLED } from '../AppSettings';
 
-const loggerMiddleware = createLogger();
+const saveMapFilter = createFilter(
+	'map',
+	['history']
+);
+// empty vehicles
+const saveShuttleFilter = createFilter(
+	'shuttle',
+	[
+		'toggles',
+		'routes',
+		'stops',
+		'closestStop',
+		'lastUpdated'
+	]
+);
+
 
 export default function configureStore(initialState, onComplete: ?() => void) {
+	const middlewares = [thunkMiddleware]; // lets us dispatch() functions
+
+	if ( DEBUG_ENABLED ) {
+		// neat middleware that logs actions
+		const loggerMiddleware = createLogger();
+		middlewares.push(loggerMiddleware);
+	}
+
 	const store = createStore(
 		rootReducer,
-		applyMiddleware(
-			thunkMiddleware, // lets us dispatch() functions
-			loggerMiddleware // neat middleware that logs actions
-		),
+		applyMiddleware(...middlewares),
 		autoRehydrate()
 	);
 
@@ -27,6 +49,12 @@ export default function configureStore(initialState, onComplete: ?() => void) {
 		});
 	}
 
-	persistStore(store, { storage: AsyncStorage }, onComplete);
+	persistStore(store,
+		{
+			storage: AsyncStorage,
+			transforms: [saveMapFilter, saveShuttleFilter],
+		},
+		onComplete
+	);
 	return store;
 }

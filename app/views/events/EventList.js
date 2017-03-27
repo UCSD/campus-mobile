@@ -2,50 +2,20 @@ import React from 'react';
 import {
 	View,
 	ListView,
-	Text,
-	TouchableHighlight,
 } from 'react-native';
+
 import EventItem from './EventItem';
-import EventListView from './EventListView';
 
-const css = require('../../styles/css');
+const eventDataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
-export default class EventList extends React.Component {
+const EventList = ({ data, rows, scrollEnabled }) => (
+	<ListView
+		scrollEnabled={scrollEnabled}
+		dataSource={eventDataSource.cloneWithRows(data.slice(0,rows))}
+		renderRow={(row) => (
+			<EventItem data={row} />
+		)}
+	/>
+);
 
-	constructor(props) {
-		super(props);
-		this.state = {
-			eventsRenderAllRows: false
-		};
-		this.datasource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-	}
-
-	gotoEventListView() {
-		this.props.navigator.push({ id: 'EventListView', title: 'Events', name: 'Events', component: EventListView, data: this.props.data });
-	}
-
-	render() {
-		let eventData = [];
-		if (this.state.eventsRenderAllRows) {
-			eventData = this.props.data;
-		} else {
-			eventData = this.props.data.slice(0, 3);
-		}
-
-		const eventDatasource = this.datasource.cloneWithRows(eventData);
-
-		return (
-			<View>
-				<ListView
-					dataSource={eventDatasource}
-					renderRow={(row) => <EventItem data={row} navigator={this.props.navigator} />}
-				/>
-				<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => this.gotoEventListView()}>
-					<View style={css.events_more}>
-						<Text style={css.events_more_label}>View All Events</Text>
-					</View>
-				</TouchableHighlight>
-			</View>
-		);
-	}
-}
+export default EventList;

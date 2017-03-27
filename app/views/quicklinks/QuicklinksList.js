@@ -1,37 +1,20 @@
 import React from 'react';
 import {
-	View,
 	ListView,
-	Text,
-	TouchableHighlight,
 } from 'react-native';
 
 import QuicklinksItem from './QuicklinksItem';
 
-const css = require('../../styles/css');
+const linksDataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
-export default class QuicklinksList extends React.Component {
-
-	constructor(props) {
-		super(props);
-		this.datasource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-	}
-
-	render() {
-		let quicklinksData = [];
-
-		if (this.props.limitResults) {
-			quicklinksData = this.props.data.slice(0, this.props.limitResults);
-		} else {
-			quicklinksData = this.props.data;
+const QuicklinksList = ({ data, scrollEnabled, listType }) => (
+	<ListView
+		dataSource={linksDataSource.cloneWithRows(data)}
+		renderRow={
+			(row) => <QuicklinksItem data={row} listType={listType} />
 		}
-		
-		const quicklinksDatasource = this.datasource.cloneWithRows(quicklinksData);
+		scrollEnabled={scrollEnabled}
+	/>
+);
 
-		return (
-			<ListView dataSource={quicklinksDatasource} renderRow={
-				(row) => <QuicklinksItem data={row} navigator={this.props.navigator} />
-			}/>
-		);
-	}
-}
+export default QuicklinksList;

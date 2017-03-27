@@ -1,36 +1,25 @@
 import React from 'react';
 import {
 	View,
-	ListView,
 } from 'react-native';
 
-import QuicklinksItem from './QuicklinksItem';
+import QuicklinksList from './QuicklinksList';
 
 const css = require('../../styles/css');
 const logger = require('../../util/logger');
 
-export default class QuicklinksListView extends React.Component {
+const QuicklinksListView = ({ data }) => {
+	logger.ga('View Loaded: Quicklinks List View');
 
-	constructor(props) {
-		super(props);
-		this.state = { loaded: false };
-		this.datasource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-	}
+	return (
+		<View style={css.view_container}>
+			<QuicklinksList
+				data={data}
+				listType={'full'}
+				scrollEnabled={true}
+			/>
+		</View>
+	);
+};
 
-	componentDidMount() {
-		logger.ga('View Loaded: Quicklinks List View');
-	}
-
-	render() {
-		const quicklinksData = this.props.route.data;
-		const quicklinksDatasource = this.datasource.cloneWithRows(quicklinksData);
-
-		return (
-			<View style={css.view_all_container}>
-				<ListView style={css.dining_listview} dataSource={quicklinksDatasource} renderRow={
-					(row) => <QuicklinksItem data={row} navigator={this.props.navigator} />
-				}/>
-			</View>
-		);
-	}
-}
+export default QuicklinksListView;

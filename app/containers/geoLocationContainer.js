@@ -36,8 +36,7 @@ const GeoLocationContainer = React.createClass({
 		Permissions.getPermissionStatus('location')
 		.then(response => {
 			dispatch(setPermission(response));
-
-			if (response === 'undetermined') {
+			if (response !== 'authorized') {
 				this.getPermission();
 			}
 		});

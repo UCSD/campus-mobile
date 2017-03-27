@@ -2,36 +2,43 @@ import React from 'react';
 import {
 	View,
 	Dimensions,
-	TouchableHighlight,
-	Text
+	ScrollView,
+	Text,
+	StyleSheet,
+	TouchableOpacity,
+	Platform,
+	StatusBar,
+	BackAndroid
 } from 'react-native';
 import { connect } from 'react-redux';
+import MapView from 'react-native-maps';
+import { checkGooglePlayServices, openGooglePlayUpdate } from 'react-native-google-api-availability-bridge';
 
-import SlidingUpPanel from 'react-native-sliding-up-panel';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import SearchResultsBar from './SearchResultsBar';
+import SearchNavButton from './SearchNavButton';
+import SearchShuttleButton from './SearchShuttleButton';
 import SearchBar from './SearchBar';
 import SearchMap from './SearchMap';
 import SearchResults from './SearchResults';
-import NearbyService from '../../services/nearbyService';
+import SearchHistoryCard from './SearchHistoryCard';
+import SearchSuggest from './SearchSuggest';
+import SearchShuttleMenu from './SearchShuttleMenu';
+import ShuttleLocationContainer from '../../containers/shuttleLocationContainer';
 
-const css = require('../../styles/css');
-const logger = require('../../util/logger');
-const shuttle = require('../../util/shuttle');
-const AppSettings = 		require('../../AppSettings');
-const general = require('../../util/general');
+import { toggleRoute } from '../../actions/shuttle';
+import { clearSearch, fetchSearch } from '../../actions/map';
 
-let navBarMarginTop = 64;
-let searchMargin = navBarMarginTop;
+import css from '../../styles/css';
+import logger from '../../util/logger';
 
-if (general.platformAndroid()) {
-	navBarMarginTop = 64;
-	searchMargin = 0;
-}
+import { gotoNavigationApp, platformAndroid } from '../../util/general';
 
 const deviceHeight = Dimensions.get('window').height;
-
-const MAXIMUM_HEIGHT = deviceHeight - navBarMarginTop;
-const MINUMUM_HEIGHT = navBarMarginTop;
+const deviceWidth = Dimensions.get('window').width;
+const statusBarHeight = Platform.select({
+	ios: 0,
+	android: StatusBar.currentHeight,
+});
 
 class NearbyMapView extends React.Component {
 
@@ -39,89 +46,323 @@ class NearbyMapView extends React.Component {
 		super(props);
 
 		this.state = {
-			initialRegion: {
-				latitude: this.props.location.coords.latitude,
-				longitude: this.props.location.coords.longitude,
-				latitudeDelta: 0.02,
-				longitudeDelta: 0.02
-			},
-			searchResults: null,
-			selectedResult: null,
-			sliding: false,
+			searchInput: null,
+			selectedResult: 0,
+			typing: false,
+			allowScroll: false,
+			iconStatus: 'search',
+			showBar: false,
+			showShuttle: true,
+			showNav: false,
+			showMenu: false,
+			toggled: false,
+			vehicles: {},
+			updatedGoogle: true,
 		};
 	}
 
 	componentWillMount() {
-
+		if (platformAndroid()) {
+			checkGooglePlayServices((result) => {
+				if (result === 'update') {
+					this.setState({ updatedGoogle: false });
+				}
+			});
+		}
 	}
 
-	getContainerHeight = (height) => {
+	componentDidMount() {
+		logger.ga('View mounted: Full Map View');
+
+		BackAndroid.addEventListener('hardwareBackPress', this.pressIcon);
+	}
+
+	componentWillReceiveProps(nextProps) {
+		// Clear search results when navigating away
+		if (nextProps.scene.key !== this.props.scene.key) {
+			this.props.clearSearch();
+			this.setState({ searchInput: null });
+		}
+
+		// Loop thru every vehicle
+		Object.keys(nextProps.vehicles).forEach((key, index) => {
+			if (this.state.vehicles[key]) {
+				nextProps.vehicles[key].forEach((nextVehicle) => {
+					this.state.vehicles[key].forEach((currVehicle) => {
+						if (nextVehicle.id === currVehicle.id &&
+							(nextVehicle.lat !== currVehicle.lat || nextVehicle.lon !== currVehicle.lon)) {
+							// Animate vehicle movement
+							currVehicle.animated.timing({
+								latitude: nextVehicle.lat,
+								longitude: nextVehicle.lon,
+								duration: 500
+							}).start();
+						}
+					});
+				});
+			} else {
+				// Make Animated values
+				nextProps.vehicles[key].forEach((nextVehicle) => {
+					nextVehicle.animated = new MapView.AnimatedRegion({
+						latitude: nextVehicle.lat,
+						longitude: nextVehicle.lon,
+					});
+				});
+
+				const newVehicles = this.state.vehicles;
+				newVehicles[key] = nextProps.vehicles[key];
+
+				this.setState({
+					vehicles: newVehicles
+				});
+			}
+		});
+
+		if (this.state.iconStatus === 'load' && nextProps.search_results) {
+			this.setState({
+				iconStatus: 'search'
+			});
+		}
+	}
+
+	shouldComponentUpdate(nextProps, nextState) {
+		// Don't re-render if location hasn't changed
+		if (((this.props.location.coords.latitude !== nextProps.location.coords.latitude) ||
+			(this.props.location.coords.longitude !== nextProps.location.coords.longitude)) ||
+			this.state !== nextState ||
+			this.props.search_results !== nextProps.search_results) {
+			/*
+			(this.state.selectedResult !== nextState.selectedResult) ||
+			(this.state.iconStatus !== nextState.iconStatus) ||
+			(this.state.showBar !== nextState.showBar) ||
+			(this.state.showMenu !== nextState.showMenu) ||
+			(this.state.route1 !== nextState.route1)) {*/
+
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	componentWillUnmount() {
+		BackAndroid.removeEventListener('hardwareBackPress', this.pressIcon);
+		clearTimeout(this.timer);
+		this.props.clearSearch();
+	}
+
+	pressIcon = () => {
+		if (this.state.iconStatus === 'back') {
+			this.setState({
+				iconStatus: 'search',
+				showBar: (this.props.search_results !== null),
+				showShuttle: true,
+				showNav: true,
+			});
+			this.scrollRef.scrollTo({ x: 0, y: 0, animated: true });
+			// this.barRef.clear();
+			this.barRef.blur();
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	gotoResults = () => {
 		this.setState({
-			containerHeight : height
+			iconStatus: 'back',
+			showBar: false,
+			showShuttle: false,
+			showNav: false
+		});
+		this.scrollRef.scrollTo({ x: 0, y: deviceHeight - 64 - statusBarHeight, animated: true });
+	}
+
+	focusSearch = () => {
+		this.scrollRef.scrollTo({ x: 0, y: 2 * (deviceHeight - 64 - statusBarHeight), animated: true });
+		this.setState({
+			iconStatus: 'back',
+			showBar: false,
+			showShuttle: false,
+			showNav: false,
 		});
 	}
 
+	gotoShuttleSettings = () => {
+		this.setState({
+			iconStatus: 'back',
+			showBar: false,
+			showShuttle: false,
+			showNav: false,
+		});
+		this.scrollRef.scrollTo({ x: 0, y: 3 * (deviceHeight - 64 - statusBarHeight), animated: true });
+	}
+
+	gotoNavigationApp = () => {
+		if (this.props.search_results && this.state.showNav) {
+			gotoNavigationApp(this.props.search_results[this.state.selectedResult].mkrLat, this.props.search_results[this.state.selectedResult].mkrLong);
+		} else {
+			// Do nothing, this shouldn't be reached
+		}
+	}
+
 	updateSearch = (text) => {
-		NearbyService.FetchSearchResults(text).then((result) => {
-			if (result.results) {
-				this.setState({
-					searchResults: result.results,
-					selectedResult: result.results[0]
-				});
-			} else {
-				// handle no results
-			}
+		this.props.fetchSearch(text);
+		this.scrollRef.scrollTo({ x: 0, y: 0, animated: true });
+		this.barRef.blur();
+
+		this.setState({
+			searchInput: text,
+			showBar: true,
+			iconStatus: 'load',
+			showShuttle: true,
+			showNav: true,
+			selectedResult: 0
+		});
+
+		this.timer = setTimeout(this.searchTimeout, 5000);
+	}
+
+	searchTimeout = () => {
+		if (!this.props.search_results) {
+			this.setState({
+				searchInput: 'No Results Found',
+				iconStatus: 'search'
+			});
+		}
+	}
+
+	updateSearchSuggest = (text) => {
+		this.props.fetchSearch(text, this.props.location);
+		this.scrollRef.scrollTo({ x: 0, y: 0, animated: true });
+		this.barRef.blur();
+
+		this.setState({
+			searchInput: text,
+			showBar: true,
+			iconStatus: 'load',
+			showShuttle: true,
+			showNav: true,
+			selectedResult: 0
 		});
 	}
 
 	updateSelectedResult = (index) => {
-		const newSelect = this.state.searchResults[index];
+		const newSelect = index;
 		this.setState({
-			selectedResult: newSelect
+			iconStatus: 'search',
+			selectedResult: newSelect,
+			showBar: true,
+			showShuttle: true,
+			showNav: true,
 		});
-		this.panel.collapsePanel();
+		this.scrollRef.scrollTo({ x: 0, y: 0, animated: true });
+	}
+
+	toggleRoute = (value, route) => {
+		this.props.toggle(route);
+
+		const vehicles = this.state.vehicles;
+		delete vehicles[route];
+
+		this.setState({
+			toggled: !this.state.toggled,
+			vehicles });
 	}
 
 	render() {
-		console.log('render map');
-		if (this.state.initialRegion) {
+		if (platformAndroid() && !this.state.updatedGoogle) {
 			return (
-				<View style={css.view_all_container}>
-					<View
-						style={{
-							marginTop:searchMargin,
-						}}
-					>
-						<SearchBar
-							update={this.updateSearch}
-						/>
-					</View>
-					<SearchMap
-						location={this.props.location}
-						selectedResult={this.state.selectedResult}
-						style={css.search_map_container}
-						hideMarker={this.state.sliding}
+				<View style={css.main_container}>
+					<Text>Please update Google Play Services and restart app to view map.</Text>
+					<TouchableOpacity underlayColor={'rgba(200,200,200,.1)'} onPress={() => openGooglePlayUpdate()}>
+						<View style={css.eventdetail_readmore_container}>
+							<Text style={css.eventdetail_readmore_text}>Update</Text>
+						</View>
+					</TouchableOpacity>
+				</View>
+			);
+		}
+		if (this.props.location.coords) {
+			return (
+				<View style={css.main_container}>
+					<SearchNavButton
+						visible={(this.state.showNav && this.props.search_results !== null)}
+						onPress={this.gotoNavigationApp}
 					/>
-					<SlidingUpPanel
-						ref={panel => { this.panel = panel; }}
-						containerMaximumHeight={MAXIMUM_HEIGHT}
-						containerBackgroundColor={'white'}
-						handlerHeight={MINUMUM_HEIGHT}
-						allowStayMiddle={true}
-						handlerDefaultView={<HandlerOne />}
-						getContainerHeight={this.getContainerHeight}
-						onStart={() => this.setState({ sliding: true })}
-						onEnd={() => this.setState({ sliding: false })}
+					<SearchShuttleButton
+						visible={this.state.showShuttle}
+						onPress={this.gotoShuttleSettings}
+					/>
+					<SearchBar
+						update={this.updateSearch}
+						onFocus={this.focusSearch}
+						pressIcon={this.pressIcon}
+						iconStatus={this.state.iconStatus}
+						searchInput={this.state.searchInput}
+						reff={
+							(ref) => { this.barRef = ref; }
+						}
+					/>
+					<ScrollView
+						ref={
+							(ref) => {
+								this.scrollRef = ref;
+							}
+						}
+						showsVerticalScrollIndicator={false}
+						scrollEnabled={this.state.allowScroll}
+						keyboardShouldPersistTaps={true}
 					>
-						{(this.state.searchResults) ? (
-							<View>
-								<SearchResults
-									results={this.state.searchResults}
-									onSelect={(index) => this.updateSelectedResult(index)}
+						<View
+							style={styles.section}
+						>
+							<SearchMap
+								location={this.props.location}
+								selectedResult={
+									(this.props.search_results) ? (
+										this.props.search_results[this.state.selectedResult]
+									) : null
+								}
+								shuttle={this.props.shuttle_stops}
+								vehicles={this.state.vehicles}
+							/>
+						</View>
+						<View
+							style={styles.section}
+						>
+							<SearchResults
+								results={this.props.search_results}
+								onSelect={(index) => this.updateSelectedResult(index)}
+							/>
+						</View>
+						<View
+							style={styles.section}
+						>
+							<SearchSuggest
+								onPress={this.updateSearchSuggest}
+							/>
+							{(this.props.search_history.length !== 0) ? (
+								<SearchHistoryCard
+									pressHistory={this.updateSearch}
+									data={this.props.search_history}
 								/>
-							</View>
-							) : (null)}
-					</SlidingUpPanel>
+								) : (null)}
+						</View>
+						<View
+							style={styles.section}
+						>
+							<SearchShuttleMenu
+								shuttle_routes={this.props.shuttle_routes}
+								onToggle={this.toggleRoute}
+								toggles={this.props.toggles}
+							/>
+						</View>
+					</ScrollView>
+					<SearchResultsBar
+						visible={(this.state.showBar && this.props.search_results !== null)}
+						onPress={this.gotoResults}
+					/>
+					<ShuttleLocationContainer />
 				</View>
 			);
 		} else {
@@ -130,17 +371,43 @@ class NearbyMapView extends React.Component {
 	}
 }
 
-const HandlerOne = ({ props }) => (
-	<View>
-		<Text >Search Results</Text>
-	</View>
+const mapStateToProps = (state, props) => (
+	{
+		location: state.location.position,
+		locationPermission: state.location.permission,
+		toggles: state.shuttle.toggles,
+		shuttle_routes: state.shuttle.routes,
+		shuttle_stops: state.shuttle.stops,
+		vehicles: state.shuttle.vehicles,
+		search_history: state.map.history,
+		search_results: state.map.results,
+		scene: state.routes.scene
+	}
 );
 
-function mapStateToProps(state, props) {
-	return {
-		location: state.location.position,
-		locationPermission: state.location.permission
-	};
-}
+const mapDispatchToProps = (dispatch, ownProps) => (
+	{
+		clearSearch: () => {
+			dispatch(clearSearch());
+		},
+		fetchSearch: (term, location) => {
+			dispatch(fetchSearch(term, location));
+		},
+		toggle: (route) => {
+			dispatch(toggleRoute(route));
+		}
+	}
+);
 
-module.exports = connect(mapStateToProps)(NearbyMapView);
+module.exports = connect(mapStateToProps, mapDispatchToProps)(NearbyMapView);
+
+const navMargin = Platform.select({
+	ios: 64,
+	android: 0
+});
+
+const styles = StyleSheet.create({
+	main_container: { width: deviceWidth, height: deviceHeight - 64 - statusBarHeight, backgroundColor: '#EAEAEA', marginTop: navMargin },
+	section: { height: deviceHeight - 64 - statusBarHeight },
+});
+

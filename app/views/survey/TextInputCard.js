@@ -9,6 +9,7 @@ import {
 import DismissibleCard from '../card/DismissibleCard';
 
 const css = require('../../styles/css');
+const logger = require('../../util/logger');
 
 export default class TextInputCard extends React.Component {
 
@@ -28,7 +29,7 @@ export default class TextInputCard extends React.Component {
 					/>
 				</View>
 				<View style={css.card_footer_container}>
-					<TouchableHighlight style={css.card_button_container} underlayColor="#DDD" onPress={() => console.log('No')}>
+					<TouchableHighlight style={css.card_button_container} underlayColor="#DDD" onPress={() => logger.log('No')}>
 						<Text style={css.card_button_text}>Submit</Text>
 					</TouchableHighlight>
 				</View>

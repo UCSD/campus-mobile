@@ -3,19 +3,21 @@ const logger = require('../util/logger');
 
 const positionOptions = {
 	enableHighAccuracy: false,
-	timeout: 1000,
+	timeout: 5000,
 	maximumAge: 1000
 };
 
 export function getPosition() {
 	return new Promise((resolve, reject) => {
 		navigator.geolocation.getCurrentPosition(
-				(position) => {
-					logger.log(position);
-					resolve(position); },
-				(error) => { reject(error); },
-				positionOptions
-			);
+			(position) => {
+				resolve(position); },
+			(error) => {
+				logger.log('getPosition Error: ' + JSON.stringify(error));
+				reject(error);
+			},
+			positionOptions
+		);
 	});
 }
 
