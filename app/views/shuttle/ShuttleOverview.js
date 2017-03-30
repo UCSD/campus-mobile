@@ -17,7 +17,7 @@ const ShuttleOverview = ({ onPress, stopData }) => {
 	if (stopData.arrivals && stopData.arrivals.length > 0) {
 		return (
 			<View
-				style={{ backgroundColor: 'white' }}
+				style={{ backgroundColor: '#F9F9F9' }}
 			>
 			<ElevatedView
 				style={{ margin: 6, backgroundColor: 'white' }}
@@ -54,7 +54,6 @@ const ShuttleOverview = ({ onPress, stopData }) => {
 									{stopData.arrivals[0].route.name}
 								</Text>
 								<Text style={css.shuttle_card_row_arriving}>
-									<Text style={css.grey}>Arriving in: </Text>
 									{getMinutesETA(stopData.arrivals[0].secondsToArrival)}
 								</Text>
 							</View>
@@ -72,7 +71,7 @@ const ShuttleOverview = ({ onPress, stopData }) => {
 	} else {
 		return (
 			<View
-				style={{ backgroundColor: 'white' }}
+				style={{ backgroundColor: '#F9F9F9' }}
 			>
 			<ElevatedView
 				style={{ margin: 6, backgroundColor: 'white' }}
@@ -121,7 +120,7 @@ const ShuttleOverview = ({ onPress, stopData }) => {
 			</View>
 		);
 	}
-}
+};
 
 export default ShuttleOverview;
 
