@@ -7,9 +7,11 @@ import {
 	Dimensions,
 	ListView,
 	StatusBar,
-	Platform
+	Platform,
+	TouchableOpacity
 } from 'react-native';
 import ElevatedView from 'react-native-elevated-view';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 import { doPRM, getPRM, getMaxCardWidth } from '../../util/general';
 
@@ -57,21 +59,24 @@ const MenuList = ({ shuttles, onToggle, toggles }) => (
 );
 
 const MenuItem = ({ data, index, onToggle, state }) => (
-	<View style={styles.list_row}>
-		<Text
-			style={{ flex: 3 }}
-		>
+	<TouchableOpacity
+		onPress={() => onToggle(data.id)}
+		value={state}
+		style={styles.list_row}
+	>
+		<Text style={{ flex: 4 }}>
 			{data.name.trim()}
 		</Text>
-		<View
-			style={styles.switch_container}
-		>
-			<Switch
-				onValueChange={(val) => onToggle(val, data.id)}
-				value={state}
-			/>
-		</View>
-	</View>
+		{
+			(state) ? (
+				<Icon
+					style={{ flex: 1 }}
+					name="check"
+					size={20}
+				/>
+			) : (null)
+		}
+	</TouchableOpacity>
 );
 
 const navHeight = Platform.select({

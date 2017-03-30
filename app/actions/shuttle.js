@@ -46,9 +46,38 @@ function updateMaster() {
 }
 
 function toggleRoute(route) {
-	return {
-		type: 'TOGGLE_ROUTE',
-		route
+	return (dispatch, getState) => {
+		const { toggles, stops, routes } = getState().shuttle;
+
+		Object.keys(toggles).forEach((element) => {
+			// Toggle off any non-selected route
+			if (Number(element) !== Number(route)) {
+				if (toggles[element] === true) {
+					// Remove route from every stop
+					Object.keys(routes[element].stops).forEach((key2, index2) => {
+						if (stops[key2]) {
+							delete stops[key2].routes[element];
+						}
+					});
+				}
+				toggles[element] = false;
+			} else {
+				Object.keys(routes[element].stops).forEach((key2, index2) => {
+					if (stops[key2]) {
+						stops[key2].routes[element] = routes[element];
+					}
+				});
+
+				toggles[element] = true;
+			}
+		});
+
+		dispatch({
+			type: 'TOGGLE_ROUTE',
+			toggles,
+			route,
+			stops
+		});
 	};
 }
 
