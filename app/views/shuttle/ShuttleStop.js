@@ -25,7 +25,7 @@ const ShuttleStopContainer = React.createClass({
 
 	componentDidMount() {
 		logger.ga('View Mounted: Shuttle Stop');
-		this.startShuttleWatch();
+		// this.startShuttleWatch();
 	},
 
 	startShuttleWatch() {

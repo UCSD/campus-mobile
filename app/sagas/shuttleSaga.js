@@ -23,7 +23,7 @@ function* addStop(action) {
 	}
 
 	yield put({ type: 'CHANGED_STOPS', savedStops });
-	yield fork(fetchStop, action.stopID);
+	yield fork(fetchArrival, action.stopID);
 }
 
 function* removeStop(action) {
@@ -41,24 +41,46 @@ function* removeStop(action) {
 	yield put({ type: 'CHANGED_STOPS', savedStops });
 }
 
-function* fetchStop(stopID) {
+function* fetchArrival(stopID) {
 	const shuttle = yield select(getShuttle);
 	const stops = shuttle.stops;
 
 	try {
 		const arrivals = yield call(fetchShuttleArrivalsByStop, stopID);
 
+		// Sort arrivals, should be on lambda?
+		arrivals.sort((a, b) => {
+			const aSecs = a.secondsToArrival;
+			const bSecs = b.secondsToArrival;
+
+			if ( aSecs < bSecs ) return -1;
+			if ( aSecs > bSecs) return 1;
+			return 0;
+		});
+
 		stops[stopID].arrivals = arrivals;
 
 		yield put({ type: 'SET_ARRIVALS', stops });
 	} catch (error) {
-		console.log('ivanerr: ' + error);
+		console.log('Error fetching arrival for ' + stopID + ': ' + error);
+	}
+}
+
+function* watchArrivals() {
+	while (true) {
+		const { savedStops } = yield select(getShuttle);
+		for (let i = 0; i < savedStops.length; ++i) {
+			const stopID = savedStops[i].id;
+			yield call(fetchArrival, stopID);
+		}
+		yield delay(60000); // wait 60s before pinging again
 	}
 }
 
 function* shuttleSaga() {
 	yield takeLatest('ADD_STOP', addStop);
 	yield takeLatest('REMOVE_STOP', removeStop);
+	yield call(watchArrivals);
 }
 
 export default shuttleSaga;

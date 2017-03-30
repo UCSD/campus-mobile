@@ -56,12 +56,10 @@ function shuttle(state = initialState, action) {
 		// const stops = Object.assign({}, newState.stops);
 		// stops[action.stop].arrivals = action.arrivalData;
 		newState.stops = action.stops;
-
 		return newState;
 	}
 	case 'UPDATED_STOPS': {
 		newState.savedStops = action.savedStops;
-
 		return newState;
 	}
 	default:

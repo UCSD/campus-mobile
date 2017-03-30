@@ -16,8 +16,11 @@ const css = require('../../styles/css');
 const ShuttleOverview = ({ onPress, stopData }) => {
 	if (stopData.arrivals && stopData.arrivals.length > 0) {
 		return (
+			<View
+				style={{ backgroundColor: 'white' }}
+			>
 			<ElevatedView
-				style={{ margin: 0, backgroundColor: 'white' }}
+				style={{ margin: 6, backgroundColor: 'white' }}
 				elevation={2}
 			>
 				<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => onPress()}>
@@ -64,11 +67,15 @@ const ShuttleOverview = ({ onPress, stopData }) => {
 					</View>
 				</TouchableHighlight>
 			</ElevatedView>
+			</View>
 		);
 	} else {
 		return (
+			<View
+				style={{ backgroundColor: 'white' }}
+			>
 			<ElevatedView
-				style={{ margin: 0, backgroundColor: 'white' }}
+				style={{ margin: 6, backgroundColor: 'white' }}
 				elevation={2}
 			>
 				<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => onPress()}>
@@ -111,6 +118,7 @@ const ShuttleOverview = ({ onPress, stopData }) => {
 					</View>
 				</TouchableHighlight>
 			</ElevatedView>
+			</View>
 		);
 	}
 }

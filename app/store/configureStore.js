@@ -24,7 +24,8 @@ const saveShuttleFilter = createFilter(
 		'routes',
 		'stops',
 		'closestStop',
-		'lastUpdated'
+		'lastUpdated',
+		'savedStops',
 	]
 );
 
@@ -44,8 +45,6 @@ export default function configureStore(initialState, onComplete: ?() => void) {
 		autoRehydrate()
 	);
 
-	sagaMiddleware.run(rootSaga);
-
 	if (module.hot) {
 		// Enable Webpack hot module replacement for reducers
 		module.hot.accept('../reducers', () => {
@@ -60,7 +59,10 @@ export default function configureStore(initialState, onComplete: ?() => void) {
 			storage: AsyncStorage,
 			transforms: [saveMapFilter, saveShuttleFilter],
 		},
-		onComplete
+		() => {
+			onComplete();
+			sagaMiddleware.run(rootSaga);
+		}
 	);
 	return store;
 }
