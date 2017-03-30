@@ -10,7 +10,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 const resultsDataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
-const ShuttleStopsListView = ({ shuttle_stops, gotoStopsList }) => (
+const ShuttleStopsListView = ({ shuttle_stops, addStop }) => (
 	<ListView
 		dataSource={resultsDataSource.cloneWithRows(shuttle_stops)}
 		renderRow={
@@ -18,15 +18,15 @@ const ShuttleStopsListView = ({ shuttle_stops, gotoStopsList }) => (
 				<MenuItem
 					data={row}
 					index={rowID}
-					gotoStopsList={gotoStopsList}
+					addStop={addStop}
 				/>
 		}
 	/>
 );
 
-const MenuItem = ({ data, index, gotoStopsList }) => (
+const MenuItem = ({ data, index, addStop }) => (
 	<TouchableOpacity
-		onPress={() => gotoStopsList(data.stops)}
+		onPress={() => addStop(data.id)}
 		style={styles.list_row}
 	>
 		<Text style={{ flex: 4 }}>

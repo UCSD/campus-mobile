@@ -37,6 +37,8 @@ import PreferencesView from './views/preferences/PreferencesView';
 import NearbyMapView from './views/mapsearch/NearbyMapView';
 import TabIcons from './navigation/TabIcons';
 import DataListViewAll from './views/common/DataListViewAll';
+import ShuttleRoutesListView from './views/shuttle/ShuttleRoutesListView';
+import ShuttleStopsListView from './views/shuttle/ShuttleStopsListView';
 
 const RouterWithRedux = connect()(Router);
 
@@ -90,6 +92,8 @@ export default class Main extends Component {
 								<Scene key="QuicklinksListView" component={QuicklinksListView} title="Links" />
 								<Scene key="NewsDetail" component={NewsDetail} title="News" />
 								<Scene key="DataListViewAll" component={DataListViewAll} />
+								<Scene key="ShuttleRoutesListView" component={ShuttleRoutesListView} />
+								<Scene key="ShuttleStopsListView" component={ShuttleStopsListView} />
 							</Scene>
 							<Scene key="tab2" title="Map" component={NearbyMapView} icon={TabIcons} />
 							<Scene key="tab3" title="Feedback" component={FeedbackView} icon={TabIcons} />

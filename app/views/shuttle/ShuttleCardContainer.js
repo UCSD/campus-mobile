@@ -6,7 +6,7 @@ import { updateMaster } from '../../actions/shuttle';
 import CardComponent from '../card/CardComponent';
 import ShuttleCard from './ShuttleCard';
 
-const logger = require('../../util/logger');
+import logger from '../../util/logger';
 
 class ShuttleCardContainer extends CardComponent {
 	componentDidMount() {
@@ -15,18 +15,28 @@ class ShuttleCardContainer extends CardComponent {
 	}
 
 	render() {
-		const { closestStop, stopData, locationPermission } = this.props;
+		const { stopsData, locationPermission, savedStops } = this.props;
 
 		return (<ShuttleCard
-			stopData={stopData}
+			savedStops={savedStops}
+			stopsData={stopsData}
 			permission={locationPermission}
-			gotoShuttleStop={this.gotoShuttleStop}
-			stopID={closestStop}
+			gotoRoutesList={this.gotoRoutesList}
 		/>);
 	}
 
-	gotoShuttleStop = (stopID) => {
-		Actions.ShuttleStop({ stopID });
+	gotoRoutesList = () => {
+		const { shuttle_routes } = this.props;
+		Actions.ShuttleRoutesListView({ shuttle_routes, gotoStopsList: this.gotoStopsList });
+	}
+
+	gotoStopsList = (stops) => {
+		Actions.ShuttleStopsListView({ shuttle_stops: stops, addStop: this.addStop });
+	}
+
+	addStop = (stopID) => {
+		this.props.addStop(stopID); // dispatch saga
+		Actions.popTo('Home'); // pop back to home
 	}
 }
 
@@ -35,8 +45,11 @@ function mapStateToProps(state, props) {
 		location: state.location.position,
 		locationPermission: state.location.permission,
 		closestStop: state.shuttle.closestStop,
-		stopData: state.shuttle.stops,
+		stopsData: state.shuttle.stops,
 		arrivalData: (state.shuttle.closestStop !== -1) ? (state.shuttle.stops[state.shuttle.closestStop].arrivals) : (null),
+		shuttle_routes: state.shuttle.routes,
+		shuttle_stops: state.shuttle.stops,
+		savedStops: state.shuttle.savedStops,
 	};
 }
 
@@ -44,6 +57,12 @@ function mapDispatchtoProps(dispatch) {
 	return {
 		updateMaster: () => {
 			dispatch(updateMaster());
+		},
+		addStop: (stopID) => {
+			dispatch({ type: 'ADD_STOP', stopID });
+		},
+		removeStop: (stopID) => {
+			dispatch({ type: 'REMOVE_STOP', stopID });
 		}
 	};
 }

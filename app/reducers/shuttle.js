@@ -2,6 +2,7 @@ const initialState = {
 	toggles: null,
 	routes: null,// shuttle_routes,
 	stops: null,// shuttle_stops_no_routes,
+	savedStops: [],
 	vehicles: {},
 	closestStop: -1,
 	lastUpdated: new Date().getTime(),
@@ -50,9 +51,14 @@ function shuttle(state = initialState, action) {
 		newState.closestStop = action.closestStop;
 		return newState;
 	case 'SET_ARRIVALS': {
-		const stops = Object.assign({}, newState.stops);
-		stops[action.stop].arrivals = action.arrivalData;
-		newState.stops = stops;
+		// const stops = Object.assign({}, newState.stops);
+		// stops[action.stop].arrivals = action.arrivalData;
+		newState.stops = action.stops;
+
+		return newState;
+	}
+	case 'UPDATED_STOPS': {
+		newState.savedStops = action.savedStops;
 
 		return newState;
 	}

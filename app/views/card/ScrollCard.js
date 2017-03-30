@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import Menu, { MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux';
@@ -8,7 +8,7 @@ import CardHeader from './CardHeader';
 
 const css = require('../../styles/css');
 
-class Card extends React.Component {
+class ScrollCard extends React.Component {
 	setNativeProps(props) {
 		this._card.setNativeProps(props);
 	}
@@ -42,12 +42,23 @@ class Card extends React.Component {
 	}
 	render() {
 		return (
-			<View style={css.card_main} ref={(i) => { this._card = i; }}>
-				<CardHeader id={this.props.id} title={this.props.title} menu={this._renderMenu()} />
-				{this.props.children}
+			<View>
+				<View style={styles.card_main} ref={(i) => { this._card = i; }}>
+					<CardHeader id={this.props.id} title={this.props.title} menu={this._renderMenu()} />
+				</View>
+				<ScrollView
+					horizontal={true}
+					overScrollMode={'always'}
+				>
+					{this.props.children}
+				</ScrollView>
 			</View>
 		);
 	}
 }
 
-export default connect()(Card);
+export default connect()(ScrollCard);
+
+const styles = StyleSheet.create({
+	card_main: { borderWidth: 1, borderBottomWidth: 0, borderRadius: 2, borderColor: '#DDD', backgroundColor: '#F9F9F9', margin: 6, marginBottom: 0, alignItems: 'flex-start', justifyContent: 'center', overflow: 'hidden' },
+});

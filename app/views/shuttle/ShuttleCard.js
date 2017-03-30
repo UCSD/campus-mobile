@@ -3,20 +3,20 @@ import {
 	View,
 	ActivityIndicator,
 	StyleSheet,
-	Text
+	Text,
 } from 'react-native';
 
-import Card from '../card/Card';
-import ShuttleOverview from './ShuttleOverview';
+import ScrollCard from '../card/ScrollCard';
+import ShuttleOverviewList from './ShuttleOverviewList';
 import LocationRequiredContent from '../common/LocationRequiredContent';
 import { doPRM, getMaxCardWidth } from '../../util/general';
 
-const ShuttleCard = ({ stopData, permission, gotoShuttleStop, stopID }) => {
+const ShuttleCard = ({ stopsData, savedStops, permission, gotoRoutesList }) => {
 	let content;
 	// no permission to get location
 	if (permission !== 'authorized') {
 		content = (<LocationRequiredContent />);
-	} else if (stopID === -1 && (!stopData || !stopData[stopID] || !stopData[stopID].arrivals || stopData[stopID].arrivals.length === 0)) {
+	} /*else if (stopID === -1 && (!stopData || !stopData[stopID] || !stopData[stopID].arrivals || stopData[stopID].arrivals.length === 0)) {
 		content =  (
 			<View style={[styles.shuttle_card_row_center, styles.shuttle_card_loader]}>
 				<ActivityIndicator size="large" />
@@ -29,20 +29,21 @@ const ShuttleCard = ({ stopData, permission, gotoShuttleStop, stopID }) => {
 				<Text style={[styles.pt10, styles.fs12, styles.dgrey]}>We were unable to locate any nearby shuttles, please try again later.</Text>
 			</View>
 		);
-	}
+	}*/
 	else {
 		content =  (
-			<ShuttleOverview
-				onPress={() => gotoShuttleStop(stopID)}
-				stopData={stopData}
-				stopID={stopID}
-			/>);
+			<ShuttleOverviewList
+				stopsData={stopsData}
+				savedStops={savedStops}
+				gotoRoutesList={gotoRoutesList}
+			/>
+		);
 	}
 
 	return (
-		<Card id="shuttle" title="Shuttle" cardRefresh={this.refresh} isRefreshing={false}>
+		<ScrollCard id="shuttle" title="Shuttle" cardRefresh={this.refresh} isRefreshing={false}>
 			{content}
-		</Card>
+		</ScrollCard>
 	);
 
 	/*
@@ -65,7 +66,7 @@ const cardHeader = 26; // font + padding
 const cardBody = doPRM(83) + (2 * doPRM(20)) + doPRM(26) + 20; // top + margin + font + padding
 
 const styles = StyleSheet.create({
-	shuttle_card_row_center: { alignItems: 'center', justifyContent: 'center', width: getMaxCardWidth(), overflow: 'hidden' },
+	shuttle_card_row_center: { alignItems: 'center', justifyContent: 'center', width: getMaxCardWidth() },
 	shuttle_card_loader: { height: nextArrivals + cardHeader + cardBody },
 	shuttlecard_loading_fail: { marginHorizontal: doPRM(16), marginTop: doPRM(40), marginBottom: doPRM(60) },
 	fs18: { fontSize: doPRM(18) },

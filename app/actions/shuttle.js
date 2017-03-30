@@ -1,5 +1,5 @@
 import logger from '../util/logger';
-import ShuttleService from '../services/shuttleService';
+import { fetchMasterStopsNoRoutes, fetchMasterRoutes, fetchVehiclesByRoute } from '../services/shuttleService';
 import { getDistance } from '../util/map';
 import { SHUTTLE_MASTER_TTL } from '../AppSettings';
 
@@ -16,9 +16,9 @@ function updateMaster() {
 			// Do nothing, don't need to update
 		} else {
 			// Fetch for new data
-			ShuttleService.FetchMasterStopsNoRoutes()
+			fetchMasterStopsNoRoutes()
 				.then((stopsData) => {
-					ShuttleService.FetchMasterRoutes()
+					fetchMasterRoutes()
 						.then((routesData) => {
 							// Set toggles
 							const initialToggles = {};
@@ -54,7 +54,7 @@ function toggleRoute(route) {
 
 function updateVehicles(route) {
 	return (dispatch) => {
-		ShuttleService.FetchVehiclesByRoute(route)
+		fetchVehiclesByRoute(route)
 			.then((vehicles) => {
 				dispatch({
 					type: 'SET_VEHICLES',
@@ -89,10 +89,11 @@ function updateClosestStop(location) {
 			type: 'SET_CLOSEST_STOP',
 			closestStop
 		});
-		dispatch(updateArrivals(closestStop));
+		// dispatch(updateArrivals(closestStop));
 	};
 }
 
+/*
 function updateArrivals(stop) {
 	return (dispatch) => {
 		ShuttleService.FetchShuttleArrivalsByStop(stop)
@@ -120,11 +121,12 @@ function updateArrivals(stop) {
 			});
 	};
 }
+*/
 
 module.exports = {
 	toggleRoute,
 	updateVehicles,
 	updateClosestStop,
-	updateArrivals,
+	// updateArrivals,
 	updateMaster,
 };
