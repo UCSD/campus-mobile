@@ -58,7 +58,7 @@ function shuttle(state = initialState, action) {
 		newState.stops = action.stops;
 		return newState;
 	}
-	case 'UPDATED_STOPS': {
+	case 'CHANGED_STOPS': {
 		newState.savedStops = action.savedStops;
 		return newState;
 	}

@@ -4,14 +4,17 @@ import {
 	ActivityIndicator,
 	StyleSheet,
 	Text,
+	TouchableHighlight
 } from 'react-native';
+import { Actions } from 'react-native-router-flux';
 
+import ShuttleOverview from './ShuttleOverview';
 import ScrollCard from '../card/ScrollCard';
 import ShuttleOverviewList from './ShuttleOverviewList';
 import LocationRequiredContent from '../common/LocationRequiredContent';
-import { doPRM, getMaxCardWidth } from '../../util/general';
+import { doPRM, getMaxCardWidth, getCampusPrimary } from '../../util/general';
 
-const ShuttleCard = ({ stopsData, savedStops, permission, gotoRoutesList }) => {
+const ShuttleCard = ({ stopsData, savedStops, permission, gotoRoutesList, gotoSavedList, removeStop, moveStopUp, moveStopDown }) => {
 	let content;
 	// no permission to get location
 	if (permission !== 'authorized') {
@@ -35,27 +38,55 @@ const ShuttleCard = ({ stopsData, savedStops, permission, gotoRoutesList }) => {
 			<ShuttleOverviewList
 				stopsData={stopsData}
 				savedStops={savedStops}
-				gotoRoutesList={gotoRoutesList}
 			/>
 		);
 	}
 
-	return (
-		<ScrollCard id="shuttle" title="Shuttle" cardRefresh={this.refresh} isRefreshing={false}>
-			{content}
-		</ScrollCard>
-	);
+	const extraActions = [
+		{
+			name: 'Remove stop',
+			action: removeStop
+		},
+		{
+			name: 'Manage stops',
+			action: gotoSavedList
+		},
+		{
+			name: 'Move left',
+			action: moveStopUp
+		},
+		{
+			name: 'Move right',
+			action: moveStopDown
+		},
+	];
 
-	/*
-	// both stops failed to load
-	if (this.state.closestStop1LoadFailed && this.state.closestStop2LoadFailed) {
-		return (
-			<View style={styles.shuttlecard_loading_fail}>
-				<Text style={styles.fs18}>No Shuttles en Route</Text>
-				<Text style={[styles.pt10, styles.fs12, styles.dgrey]}>We were unable to locate any nearby shuttles, please try again later.</Text>
-			</View>
-		);
-	}*/
+	return (
+		<View>
+			<ScrollCard
+				id="shuttle"
+				title="Shuttle"
+				scrollData={savedStops}
+				renderRow={
+					(row, sectionID, rowID) =>
+						<ShuttleOverview
+							onPress={() => Actions.ShuttleStop({ stopID: row.id })}
+							stopData={stopsData[row.id]}
+						/>
+				}
+				actionButton={
+					<TouchableHighlight
+						style={styles.add_container}
+						underlayColor={'rgba(200,200,200,.1)'}
+						onPress={() => gotoRoutesList()}
+					>
+						<Text style={styles.add_label}>Add a Stop</Text>
+					</TouchableHighlight>
+				}
+				extraActions={extraActions}
+			/>
+		</View>
+	);
 };
 
 export default ShuttleCard;
@@ -66,6 +97,8 @@ const cardHeader = 26; // font + padding
 const cardBody = doPRM(83) + (2 * doPRM(20)) + doPRM(26) + 20; // top + margin + font + padding
 
 const styles = StyleSheet.create({
+	add_container: { width: getMaxCardWidth(), backgroundColor: '#F9F9F9', alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4, paddingTop: 8, paddingBottom: 4, margin: 7, marginTop: 0, borderTopWidth: 1, borderTopColor: '#DDD' },
+	add_label: { fontSize: 20, color: getCampusPrimary(), fontWeight: '300' },
 	shuttle_card_row_center: { alignItems: 'center', justifyContent: 'center', width: getMaxCardWidth() },
 	shuttle_card_loader: { height: nextArrivals + cardHeader + cardBody },
 	shuttlecard_loading_fail: { marginHorizontal: doPRM(16), marginTop: doPRM(40), marginBottom: doPRM(60) },

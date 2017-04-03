@@ -15,7 +15,7 @@ const ShuttleRoutesListView = ({ shuttle_routes, gotoStopsList }) => (
 		dataSource={resultsDataSource.cloneWithRows(shuttle_routes)}
 		renderRow={
 			(row, sectionID, rowID) =>
-				<MenuItem
+				<RouteItem
 					data={row}
 					index={rowID}
 					gotoStopsList={gotoStopsList}
@@ -24,7 +24,7 @@ const ShuttleRoutesListView = ({ shuttle_routes, gotoStopsList }) => (
 	/>
 );
 
-const MenuItem = ({ data, index, gotoStopsList }) => (
+const RouteItem = ({ data, index, gotoStopsList }) => (
 	<TouchableOpacity
 		onPress={() => gotoStopsList(data.stops)}
 		style={styles.list_row}

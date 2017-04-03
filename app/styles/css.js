@@ -142,7 +142,7 @@ var css = StyleSheet.create({
 	wc_surfreport_more: { fontSize: 20, fontWeight: '300', color: campus_primary, paddingHorizontal: 14, paddingVertical: 10 },
 
 	// 303 - Shuttle Card
-	shuttle_card_row: { width: maxCardWidth - 50, borderBottomWidth: 1, borderBottomColor: '#DDD' },
+	shuttle_card_row: { width: maxCardWidth, borderBottomWidth: 1, borderBottomColor: '#DDD' },
 	shuttle_card_err_row: { alignItems: 'center', justifyContent: 'center', width: maxCardWidth, },
 	shuttle_card_row_center: { alignItems: 'center', justifyContent: 'center', width: maxCardWidth, },
 	shuttle_card_loader: { height: 350 },
