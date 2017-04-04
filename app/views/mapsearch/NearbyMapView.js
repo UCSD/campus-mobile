@@ -311,7 +311,7 @@ class NearbyMapView extends React.Component {
 						}
 						showsVerticalScrollIndicator={false}
 						scrollEnabled={this.state.allowScroll}
-						keyboardShouldPersistTaps={true}
+						keyboardShouldPersistTaps='always'
 					>
 						<View
 							style={styles.section}
