@@ -3,10 +3,8 @@ import {
 	View,
 	Text,
 	TouchableHighlight,
+	ActivityIndicator
 } from 'react-native';
-
-import Icon from 'react-native-vector-icons/FontAwesome';
-import ElevatedView from 'react-native-elevated-view';
 
 import ShuttleSmallList from './ShuttleSmallList';
 import { getMinutesETA } from '../../util/shuttle';
@@ -61,53 +59,35 @@ const ShuttleOverview = ({ onPress, stopData }) => {
 		);
 	} else {
 		return (
-			<View
-				style={{ backgroundColor: '#F9F9F9' }}
-			>
-			<ElevatedView
-				style={{ margin: 6, backgroundColor: 'white' }}
-				elevation={2}
-			>
-				<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => onPress()}>
-					<View>
-						<View style={css.shuttle_card_row}>
-							<View style={css.shuttle_card_row_top}>
-								<View style={css.shuttle_card_rt_1} />
-								<View style={[css.shuttle_card_rt_2, { backgroundColor: 'grey', borderColor: 'grey' }]}>
-									<Icon
-										name="ban"
-										size={20}
-									/>
-								</View>
-								<View style={css.shuttle_card_rt_3}>
-									<Text style={css.shuttle_card_rt_3_label}>@</Text>
-								</View>
-								<View style={css.shuttle_card_rt_4}>
-									<Text
-										style={css.shuttle_card_rt_4_label}
-										numberOfLines={3}
-									>
-										{stopData.name}
-									</Text>
-								</View>
-								<View style={css.shuttle_card_rt_5} />
-							</View>
-							<View style={css.shuttle_card_row_bot}>
-								<Text
-									style={css.shuttle_card_row_name}
-									numberOfLines={1}
-								>
-									Nobody is coming for you.
-								</Text>
-								<Text style={css.shuttle_card_row_arriving}>
-									<Text style={css.grey}>Arriving in: </Text>
-									Never o' clock
-								</Text>
-							</View>
+			<View>
+				<View style={css.shuttle_card_row}>
+					<View style={css.shuttle_card_row_top}>
+						<View style={css.shuttle_card_rt_1} />
+						<View style={css.shuttle_card_rt_2}>
+							<ActivityIndicator
+								animating={true}
+								size="small"
+							/>
 						</View>
+						<View style={css.shuttle_card_rt_3}>
+							<Text style={css.shuttle_card_rt_3_label}>@</Text>
+						</View>
+						<View style={css.shuttle_card_rt_4}>
+							<Text
+								style={css.shuttle_card_rt_4_label}
+								numberOfLines={3}
+							>
+								{stopData.name}
+							</Text>
+						</View>
+						<View style={css.shuttle_card_rt_5} />
 					</View>
-				</TouchableHighlight>
-			</ElevatedView>
+					<View style={css.shuttle_card_row_bot} />
+				</View>
+				<ShuttleSmallList
+					rows={2}
+					scrollEnabled={false}
+				/>
 			</View>
 		);
 	}

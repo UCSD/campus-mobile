@@ -20,17 +20,21 @@ const ShuttleSmallList = ({ arrivalData, style, rows, scrollEnabled }) => (
 		<View
 			style={{ height: getRowHeight(rows) }}
 		>
-			<ListView
-				scrollEnabled={scrollEnabled}
-				showsVerticalScrollIndicator={false}
-				dataSource={arrivalDataSource.cloneWithRows(arrivalData)}
-				renderRow={
-					(row, sectionID, rowID) =>
-						<ShuttleSmallRow
-							arrival={row}
-						/>
-				}
-			/>
+			{
+				(arrivalData) ? (
+					<ListView
+						scrollEnabled={scrollEnabled}
+						showsVerticalScrollIndicator={false}
+						dataSource={arrivalDataSource.cloneWithRows(arrivalData)}
+						renderRow={
+							(row, sectionID, rowID) =>
+								<ShuttleSmallRow
+									arrival={row}
+								/>
+						}
+					/>
+				) : (null)
+			}
 		</View>
 	</View>
 );

@@ -14,7 +14,7 @@ import ShuttleOverviewList from './ShuttleOverviewList';
 import LocationRequiredContent from '../common/LocationRequiredContent';
 import { doPRM, getMaxCardWidth, getCampusPrimary } from '../../util/general';
 
-const ShuttleCard = ({ stopsData, savedStops, permission, gotoRoutesList, gotoSavedList, removeStop, moveStopUp, moveStopDown }) => {
+const ShuttleCard = ({ stopsData, savedStops, permission, gotoRoutesList, gotoSavedList, removeStop }) => {
 	let content;
 	// no permission to get location
 	if (permission !== 'authorized') {
@@ -50,14 +50,6 @@ const ShuttleCard = ({ stopsData, savedStops, permission, gotoRoutesList, gotoSa
 		{
 			name: 'Manage stops',
 			action: gotoSavedList
-		},
-		{
-			name: 'Move left',
-			action: moveStopUp
-		},
-		{
-			name: 'Move right',
-			action: moveStopDown
 		},
 	];
 

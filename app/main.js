@@ -37,6 +37,7 @@ import TabIcons from './navigation/TabIcons';
 import DataListViewAll from './views/common/DataListViewAll';
 import ShuttleRoutesListView from './views/shuttle/ShuttleRoutesListView';
 import ShuttleStopsListView from './views/shuttle/ShuttleStopsListView';
+import ShuttleSavedListView from './views/shuttle/ShuttleSavedListView';
 
 const RouterWithRedux = connect()(Router);
 
@@ -74,6 +75,7 @@ const scenes = Actions.create(
 				<Scene key="DataListViewAll" component={DataListViewAll} />
 				<Scene key="ShuttleRoutesListView" component={ShuttleRoutesListView} />
 				<Scene key="ShuttleStopsListView" component={ShuttleStopsListView} />
+				<Scene key="ShuttleSavedListView" component={ShuttleSavedListView} />
 			</Scene>
 			<Scene key="tab2" title="Map" component={NearbyMapView} icon={TabIcons} />
 			<Scene key="tab3" title="Feedback" component={FeedbackView} icon={TabIcons} />

@@ -29,6 +29,7 @@
     "react-native-popup-menu": "0.6.1",
     "react-native-router-flux": "3.38.0",
     "react-native-side-menu": "0.20.1",
+    "react-native-sortable-list": "0.0.7",
     "react-native-vector-icons": "3.0.0",
     "react-redux": "4.4.5",
     "react-timer-mixin": "0.13.3",

@@ -43,29 +43,24 @@ function* removeStop(action) {
 	yield put({ type: 'CHANGED_STOPS', savedStops });
 }
 
-function* moveStopUp(action) {
-	if (action.stopIndex > 0) {
-		const shuttle = yield select(getShuttle);
-		const savedStops = shuttle.savedStops.slice();
-		const tempStop = savedStops[action.stopIndex];
-		savedStops[action.stopIndex] = savedStops[action.stopIndex - 1];
-		savedStops[action.stopIndex - 1] = tempStop;
+function* orderStops(action) {
+	const shuttle = yield select(getShuttle);
+	const savedStops = shuttle.savedStops.slice();
+	const { newOrder } = action;
+	const newStops = yield call(doOrder, savedStops, newOrder);
 
-		yield put({ type: 'CHANGED_STOPS', savedStops });
-	}
+	yield put({ type: 'CHANGED_STOPS', savedStops: newStops });
 }
 
-function* moveStopDown(action) {
-	if (action.stopIndex > 0) {
-		const shuttle = yield select(getShuttle);
-		const savedStops = shuttle.savedStops.slice();
-		const tempStop = savedStops[action.stopIndex];
-		savedStops[action.stopIndex] = savedStops[action.stopIndex + 1];
-		savedStops[action.stopIndex + 1] = tempStop;
+function doOrder(savedStops, newOrder) {
+	const newStops = [];
 
-		yield put({ type: 'CHANGED_STOPS', savedStops });
+	for (let i = 0; i < newOrder.length; ++i) {
+		newStops.push(savedStops[newOrder[i]]);
 	}
+	return newStops;
 }
+
 
 function* fetchArrival(stopID) {
 	const shuttle = yield select(getShuttle);
@@ -106,8 +101,7 @@ function* watchArrivals() {
 function* shuttleSaga() {
 	yield takeLatest('ADD_STOP', addStop);
 	yield takeLatest('REMOVE_STOP', removeStop);
-	yield takeLatest('MOVE_STOP_UP', moveStopUp);
-	yield takeLatest('MOVE_STOP_DOWN', moveStopDown);
+	yield takeLatest('ORDER_STOPS', orderStops);
 	yield call(watchArrivals);
 }
 

@@ -24,8 +24,6 @@ class ShuttleCardContainer extends CardComponent {
 			gotoSavedList={this.gotoSavedList}
 			gotoRoutesList={this.gotoRoutesList}
 			removeStop={this.props.removeStop}
-			moveStopUp={this.props.moveStopUp}
-			moveStopDown={this.props.moveStopDown}
 		/>);
 	}
 
@@ -39,8 +37,7 @@ class ShuttleCardContainer extends CardComponent {
 	}
 
 	gotoSavedList = () => {
-		const { savedStops } = this.props;
-		Actions.ShuttleSavedListView({ savedStops });
+		Actions.ShuttleSavedListView();
 	}
 
 	addStop = (stopID) => {
@@ -72,12 +69,6 @@ function mapDispatchtoProps(dispatch) {
 		},
 		removeStop: (stopIndex) => {
 			dispatch({ type: 'REMOVE_STOP', stopIndex });
-		},
-		moveStopUp: (stopIndex) => {
-			dispatch({ type: 'MOVE_STOP_UP' });
-		},
-		moveStopDown: (stopIndex) => {
-			dispatch({ type: 'MOVE_STOP_DOWN' });
 		}
 	};
 }
