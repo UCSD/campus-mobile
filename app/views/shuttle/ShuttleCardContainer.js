@@ -15,15 +15,21 @@ class ShuttleCardContainer extends CardComponent {
 	}
 
 	render() {
-		const { stopsData, locationPermission, savedStops } = this.props;
+		const { stopsData, locationPermission, savedStops, removeStop, closestStop } = this.props;
+
+		const displayStops = savedStops.slice();
+		if (closestStop) {
+			displayStops.unshift(closestStop);
+		}
 
 		return (<ShuttleCard
-			savedStops={savedStops}
+			savedStops={displayStops}
 			stopsData={stopsData}
 			permission={locationPermission}
 			gotoSavedList={this.gotoSavedList}
 			gotoRoutesList={this.gotoRoutesList}
-			removeStop={this.props.removeStop}
+			removeStop={removeStop}
+			closestStop={closestStop}
 		/>);
 	}
 
@@ -52,7 +58,6 @@ function mapStateToProps(state, props) {
 		locationPermission: state.location.permission,
 		closestStop: state.shuttle.closestStop,
 		stopsData: state.shuttle.stops,
-		arrivalData: (state.shuttle.closestStop !== -1) ? (state.shuttle.stops[state.shuttle.closestStop].arrivals) : (null),
 		shuttle_routes: state.shuttle.routes,
 		shuttle_stops: state.shuttle.stops,
 		savedStops: state.shuttle.savedStops,

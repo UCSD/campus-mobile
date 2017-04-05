@@ -78,6 +78,7 @@ class ScrollCard extends React.Component {
 					onScroll={this.handleScroll}
 					scrollEventThrottle={69}
 					dataSource={scrollDataSource.cloneWithRows(this.props.scrollData)}
+					enableEmptySections={true}
 					renderRow={this.props.renderRow}
 				/>
 			);

@@ -102,14 +102,14 @@ function updateClosestStop(location) {
 		const { stops } = getState().shuttle;
 
 		let closestDist = 1000000000;
-		let closestStop = -1;
+		let closestStop;
 
 		Object.keys(stops).forEach((stopID, index) => {
 			const stop = stops[stopID];
 			const distanceFromStop = getDistance(location.coords.latitude, location.coords.longitude, stop.lat, stop.lon);
 
 			if (distanceFromStop < closestDist) {
-				closestStop = stopID;
+				closestStop = stop;
 				closestDist = distanceFromStop;
 			}
 		});
@@ -118,7 +118,6 @@ function updateClosestStop(location) {
 			type: 'SET_CLOSEST_STOP',
 			closestStop
 		});
-		// dispatch(updateArrivals(closestStop));
 	};
 }
 

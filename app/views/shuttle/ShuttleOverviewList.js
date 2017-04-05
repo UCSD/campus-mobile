@@ -12,7 +12,7 @@ const stopsDataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 
 
 const ShuttleOverviewList = ({ savedStops, stopsData, gotoRoutesList }) => {
 	let list;
-	if (savedStops !== {}) {
+	if (savedStops.length > 1) {
 		list = (
 			<ListView
 				style={{ flexDirection: 'row' }}

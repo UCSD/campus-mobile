@@ -5,13 +5,14 @@ import {
 	TouchableHighlight,
 	ActivityIndicator
 } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome'
 
 import ShuttleSmallList from './ShuttleSmallList';
 import { getMinutesETA } from '../../util/shuttle';
 
 const css = require('../../styles/css');
 
-const ShuttleOverview = ({ onPress, stopData }) => {
+const ShuttleOverview = ({ onPress, stopData, closest }) => {
 	if (stopData.arrivals && stopData.arrivals.length > 0) {
 		return (
 			<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => onPress()}>
@@ -25,7 +26,15 @@ const ShuttleOverview = ({ onPress, stopData }) => {
 								</Text>
 							</View>
 							<View style={css.shuttle_card_rt_3}>
-								<Text style={css.shuttle_card_rt_3_label}>@</Text>
+								<Text style={css.shuttle_card_rt_3_label}>
+									{
+										(closest) ? (
+											<Icon
+												name="location-arrow"
+												size={20}
+											/>) : ('@')
+									}
+								</Text>
 							</View>
 							<View style={css.shuttle_card_rt_4}>
 								<Text
@@ -84,10 +93,6 @@ const ShuttleOverview = ({ onPress, stopData }) => {
 					</View>
 					<View style={css.shuttle_card_row_bot} />
 				</View>
-				<ShuttleSmallList
-					rows={2}
-					scrollEnabled={false}
-				/>
 			</View>
 		);
 	}

@@ -31,15 +31,6 @@ function* removeStop(action) {
 	const savedStops = shuttle.savedStops.slice();
 	savedStops.splice(action.stopIndex, 1);
 
-	/*
-	for (let i = 0;  i < savedStops.length; ++i) {
-		// Found stop, remove and exit
-		if (savedStops[i].id === action.stopID) {
-			savedStops.splice(i, 1);
-			break;
-		}
-	}*/
-
 	yield put({ type: 'CHANGED_STOPS', savedStops });
 }
 
@@ -60,7 +51,6 @@ function doOrder(savedStops, newOrder) {
 	}
 	return newStops;
 }
-
 
 function* fetchArrival(stopID) {
 	const shuttle = yield select(getShuttle);
@@ -89,10 +79,14 @@ function* fetchArrival(stopID) {
 
 function* watchArrivals() {
 	while (true) {
-		const { savedStops } = yield select(getShuttle);
+		const { savedStops, closestStop } = yield select(getShuttle);
+		// Fetch arrivals for all saved stops
 		for (let i = 0; i < savedStops.length; ++i) {
 			const stopID = savedStops[i].id;
 			yield call(fetchArrival, stopID);
+		}
+		if (closestStop) {
+			yield call(fetchArrival, closestStop.id); // Fetch arrival for closest stop
 		}
 		yield delay(60000); // wait 60s before pinging again
 	}

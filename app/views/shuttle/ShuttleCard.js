@@ -14,7 +14,7 @@ import ShuttleOverviewList from './ShuttleOverviewList';
 import LocationRequiredContent from '../common/LocationRequiredContent';
 import { doPRM, getMaxCardWidth, getCampusPrimary } from '../../util/general';
 
-const ShuttleCard = ({ stopsData, savedStops, permission, gotoRoutesList, gotoSavedList, removeStop }) => {
+const ShuttleCard = ({ stopsData, savedStops, permission, gotoRoutesList, gotoSavedList, removeStop, closestStop }) => {
 	let content;
 	// no permission to get location
 	if (permission !== 'authorized') {
@@ -54,30 +54,29 @@ const ShuttleCard = ({ stopsData, savedStops, permission, gotoRoutesList, gotoSa
 	];
 
 	return (
-		<View>
-			<ScrollCard
-				id="shuttle"
-				title="Shuttle"
-				scrollData={savedStops}
-				renderRow={
-					(row, sectionID, rowID) =>
-						<ShuttleOverview
-							onPress={() => Actions.ShuttleStop({ stopID: row.id })}
-							stopData={stopsData[row.id]}
-						/>
-				}
-				actionButton={
-					<TouchableHighlight
-						style={styles.add_container}
-						underlayColor={'rgba(200,200,200,.1)'}
-						onPress={() => gotoRoutesList()}
-					>
-						<Text style={styles.add_label}>Add a Stop</Text>
-					</TouchableHighlight>
-				}
-				extraActions={extraActions}
-			/>
-		</View>
+		<ScrollCard
+			id="shuttle"
+			title="Shuttle"
+			scrollData={savedStops}
+			renderRow={
+				(row) =>
+					<ShuttleOverview
+						onPress={() => Actions.ShuttleStop({ stopID: row.id })}
+						stopData={stopsData[row.id]}
+						closest={row.id === closestStop.id}
+					/>
+			}
+			actionButton={
+				<TouchableHighlight
+					style={styles.add_container}
+					underlayColor={'rgba(200,200,200,.1)'}
+					onPress={() => gotoRoutesList()}
+				>
+					<Text style={styles.add_label}>Add a Stop</Text>
+				</TouchableHighlight>
+			}
+			extraActions={extraActions}
+		/>
 	);
 };
 
