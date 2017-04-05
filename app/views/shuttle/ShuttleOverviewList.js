@@ -5,7 +5,7 @@ import {
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 
-import ShuttleOverview from './ShuttleOverviewIvan';
+import ShuttleOverview from './ShuttleOverview';
 import { getMaxCardWidth } from '../../util/general';
 
 const stopsDataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
