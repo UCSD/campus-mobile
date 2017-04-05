@@ -5,7 +5,6 @@ import {
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 
-import ShuttleAddCard from './ShuttleAddCard';
 import ShuttleOverview from './ShuttleOverviewIvan';
 import { getMaxCardWidth } from '../../util/general';
 
@@ -37,9 +36,6 @@ const ShuttleOverviewList = ({ savedStops, stopsData, gotoRoutesList }) => {
 	return (
 		<View style={{ flexDirection: 'row' }}>
 			{list}
-			<ShuttleAddCard
-				onPress={gotoRoutesList}
-			/>
 		</View>
 	);
 };
