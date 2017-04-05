@@ -89,11 +89,11 @@ class ScrollCard extends React.Component {
 					<CardHeader id={this.props.id} title={this.props.title} menu={this._renderMenu()} />
 					{list}
 					{this.props.actionButton}
-					<PageIndicator
-						numDots={this.state.numDots}
-						dotIndex={this.state.dotIndex}
-					/>
 				</View>
+				<PageIndicator
+					numDots={this.state.numDots}
+					dotIndex={this.state.dotIndex}
+				/>
 			</View>
 		);
 	}
@@ -102,13 +102,14 @@ class ScrollCard extends React.Component {
 const PageIndicator = ({ numDots, dotIndex }) => {
 	const dots = [];
 	for (let i = 0; i < numDots; ++i) {
-		const dotColor = (dotIndex === i) ? ('#C6C6C6') : ('#DDDDDD');
+		//const dotColor = (dotIndex === i) ? ('#C6C6C6') : ('#DDDDDD');
+		const dotName = (dotIndex === i) ? ('circle') : ('circle-thin');
 		const dot = (
 			<Icon
-				color={dotColor}
-				style={{ padding: 6 }}
-				name="circle"
-				size={20}
+				color="#DDD"
+				style={{ padding: 6, paddingTop: 3 }}
+				name={dotName}
+				size={10}
 				key={'dot' + i}
 			/>
 		);
