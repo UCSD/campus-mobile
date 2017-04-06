@@ -36,11 +36,26 @@ class ShuttleCardContainer extends CardComponent {
 
 	gotoRoutesList = () => {
 		const { shuttle_routes } = this.props;
-		Actions.ShuttleRoutesListView({ shuttle_routes, gotoStopsList: this.gotoStopsList });
+		// Sort routes by alphabet
+		const alphaRoutes = [];
+		Object.keys(shuttle_routes)
+			.sort((a, b) => shuttle_routes[a].name.trim().localeCompare(shuttle_routes[b].name.trim()))
+				.forEach((key) => {
+					alphaRoutes.push(shuttle_routes[key]);
+				});
+		Actions.ShuttleRoutesListView({ shuttle_routes: alphaRoutes, gotoStopsList: this.gotoStopsList });
 	}
 
 	gotoStopsList = (stops) => {
-		Actions.ShuttleStopsListView({ shuttle_stops: stops, addStop: this.addStop });
+		// Sort stops by alphabet
+		const alphaStops = [];
+		Object.keys(stops)
+			.sort((a, b) => stops[a].name.trim().localeCompare(stops[b].name.trim()))
+				.forEach((key) => {
+					alphaStops.push(stops[key]);
+				});
+
+		Actions.ShuttleStopsListView({ shuttle_stops: alphaStops, addStop: this.addStop });
 	}
 
 	gotoSavedList = () => {
