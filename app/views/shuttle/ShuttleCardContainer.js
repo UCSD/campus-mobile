@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
+import Toast from 'react-native-simple-toast';
 
 import { updateMaster } from '../../actions/shuttle';
 import CardComponent from '../card/CardComponent';
@@ -47,6 +48,7 @@ class ShuttleCardContainer extends CardComponent {
 	}
 
 	addStop = (stopID) => {
+		Toast.show('Stop added!');
 		this.props.addStop(stopID); // dispatch saga
 		Actions.popTo('Home'); // pop back to home
 	}
