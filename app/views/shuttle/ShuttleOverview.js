@@ -26,10 +26,7 @@ const ShuttleOverview = ({ onPress, stopData, closest }) => {
 								</Text>
 							</View>
 							<View style={css.shuttle_card_rt_3}>
-								{
-									(closest) ? (
-										<BlueDot />) : (<Text style={css.shuttle_card_rt_3_label}>@</Text>)
-								}
+								<Text style={css.shuttle_card_rt_3_label}>@</Text>
 							</View>
 							<View style={css.shuttle_card_rt_4}>
 								<Text
@@ -52,6 +49,10 @@ const ShuttleOverview = ({ onPress, stopData, closest }) => {
 								{getMinutesETA(stopData.arrivals[0].secondsToArrival)}
 							</Text>
 						</View>
+						{
+							(closest) ? (
+								<BlueDot style={{ right: 0, bottom: 0, position: 'absolute' }} />) : (null)
+						}
 					</View>
 					<ShuttleSmallList
 						arrivalData={stopData.arrivals.slice(1,3)}

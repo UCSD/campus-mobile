@@ -151,7 +151,7 @@ var css = StyleSheet.create({
 	shuttle_card_rt_1: { flexGrow: 1 },
 	shuttle_card_rt_2: { borderRadius: 50, width: 83, justifyContent: 'center', overflow: 'hidden' },
 	shuttle_card_rt_2_label: { textAlign: 'center', color: '#222', fontWeight: '600', fontSize: 48, backgroundColor: 'rgba(0,0,0,0)' },
-	shuttle_card_rt_3: { flexGrow: 3, justifyContent: 'center' },
+	shuttle_card_rt_3: { flexGrow: 3, justifyContent: 'center', alignItems: 'center' },
 	shuttle_card_rt_3_label: { textAlign: 'center', color: '#8f9092', fontSize: 30, fontWeight: '300', backgroundColor: 'rgba(0,0,0,0)' },
 	shuttle_card_rt_4: { borderRadius: 48, borderWidth: 1, backgroundColor: '#FFF', borderColor: '#CCC', width: 83, justifyContent: 'center' },
 	shuttle_card_rt_4_label: { padding: 5, textAlign: 'center', color: '#8f9092', fontWeight: '500', fontSize: 16, backgroundColor: 'rgba(0,0,0,0)' },
