@@ -35,12 +35,18 @@ function* removeStop(action) {
 }
 
 function* orderStops(action) {
-	const shuttle = yield select(getShuttle);
-	const savedStops = shuttle.savedStops.slice();
-	const { newOrder } = action;
-	const newStops = yield call(doOrder, savedStops, newOrder);
+	try {
+		const { newOrder } = action;
+		if (newOrder && newOrder.length > 0) {
+			const shuttle = yield select(getShuttle);
+			const savedStops = shuttle.savedStops.slice();
+			const newStops = yield call(doOrder, savedStops, newOrder);
 
-	yield put({ type: 'CHANGED_STOPS', savedStops: newStops });
+			yield put({ type: 'CHANGED_STOPS', savedStops: newStops });
+		}
+	} catch (error) {
+		console.log('Error re-ordering stops: ' + error);
+	}
 }
 
 function doOrder(savedStops, newOrder) {
