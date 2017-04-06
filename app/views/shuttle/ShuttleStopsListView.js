@@ -17,10 +17,9 @@ const ShuttleStopsListView = ({ shuttle_stops, addStop }) => (
 		style={[css.main_container, css.scroll_main, css.whitebg]}
 		dataSource={resultsDataSource.cloneWithRows(shuttle_stops)}
 		renderRow={
-			(row, sectionID, rowID) =>
+			(row) =>
 				<MenuItem
 					data={row}
-					index={rowID}
 					addStop={addStop}
 				/>
 		}
@@ -53,7 +52,7 @@ const MenuItem = ({ data, index, addStop }) => (
 
 const styles = StyleSheet.create({
 	touchable: { flex: 1 },
-	list_row: { alignItems: 'center', flexDirection: 'row', padding: 7, paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: '#EEE', overflow: 'hidden' },
+	list_row: { flex: 1, alignItems: 'center', flexDirection: 'row', padding: 7, paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: '#EEE' },
 });
 
 export default ShuttleStopsListView;
