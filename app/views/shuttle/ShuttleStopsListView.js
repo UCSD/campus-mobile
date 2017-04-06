@@ -18,7 +18,7 @@ const ShuttleStopsListView = ({ shuttle_stops, addStop }) => (
 		dataSource={resultsDataSource.cloneWithRows(shuttle_stops)}
 		renderRow={
 			(row) =>
-				<MenuItem
+				<StopItem
 					data={row}
 					addStop={addStop}
 				/>
@@ -26,7 +26,7 @@ const ShuttleStopsListView = ({ shuttle_stops, addStop }) => (
 	/>
 );
 
-const MenuItem = ({ data, index, addStop }) => (
+const StopItem = ({ data, addStop }) => (
 	<View
 		style={styles.list_row}
 	>
@@ -34,25 +34,25 @@ const MenuItem = ({ data, index, addStop }) => (
 			onPress={() => addStop(data.id)}
 			style={styles.touchable}
 		>
-			<Text style={{ flex: 4 }}>
+			<Text
+				style={{ flex: 1 }}
+			>
 				{data.name.trim()}
 			</Text>
-			{
-				(false) ? (
-					<Icon
-						style={{ flex: 1 }}
-						name="check"
-						size={20}
-					/>
-				) : (null)
-			}
+			<Icon
+				style={styles.icon}
+				color="#747678"
+				name="chevron-right"
+				size={20}
+			/>
 		</TouchableOpacity>
 	</View>
 );
 
 const styles = StyleSheet.create({
-	touchable: { flex: 1 },
-	list_row: { flex: 1, alignItems: 'center', flexDirection: 'row', padding: 7, paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: '#EEE' },
+	icon: { alignSelf: 'flex-end' },
+	touchable: { flex: 1, flexDirection: 'row', alignItems: 'center' },
+	list_row: { flex: 1, height: 60, padding: 7, paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: '#EEE', overflow: 'hidden' },
 });
 
 export default ShuttleStopsListView;
