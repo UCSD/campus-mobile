@@ -4,6 +4,7 @@ import {
 	Text,
 	StyleSheet,
 	ListView,
+	View
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -27,26 +28,31 @@ const ShuttleRoutesListView = ({ shuttle_routes, gotoStopsList }) => (
 );
 
 const RouteItem = ({ data, index, gotoStopsList }) => (
-	<TouchableOpacity
-		onPress={() => gotoStopsList(data.stops)}
+	<View
 		style={styles.list_row}
 	>
-		<Text style={{ flex: 4 }}>
-			{data.name.trim()}
-		</Text>
-		{
-			(false) ? (
-				<Icon
-					style={{ flex: 1 }}
-					name="check"
-					size={20}
-				/>
-			) : (null)
-		}
-	</TouchableOpacity>
+		<TouchableOpacity
+			onPress={() => gotoStopsList(data.stops)}
+			style={styles.touchable}
+		>
+			<Text style={{ flex: 4 }}>
+				{data.name.trim()}
+			</Text>
+			{
+				(false) ? (
+					<Icon
+						style={{ flex: 1 }}
+						name="check"
+						size={20}
+					/>
+				) : (null)
+			}
+		</TouchableOpacity>
+	</View>
 );
 
 const styles = StyleSheet.create({
+	touchable: { flex: 1 },
 	list_row: { alignItems: 'center', flexDirection: 'row', padding: 7, paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: '#EEE', overflow: 'hidden' },
 });
 
