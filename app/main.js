@@ -73,9 +73,9 @@ const scenes = Actions.create(
 				<Scene key="QuicklinksListView" component={QuicklinksListView} title="Links" />
 				<Scene key="NewsDetail" component={NewsDetail} title="News" />
 				<Scene key="DataListViewAll" component={DataListViewAll} />
-				<Scene key="ShuttleRoutesListView" component={ShuttleRoutesListView} />
-				<Scene key="ShuttleStopsListView" component={ShuttleStopsListView} />
-				<Scene key="ShuttleSavedListView" component={ShuttleSavedListView} />
+				<Scene key="ShuttleRoutesListView" component={ShuttleRoutesListView} title="Choose Route" />
+				<Scene key="ShuttleStopsListView" component={ShuttleStopsListView} title="Choose Stop" />
+				<Scene key="ShuttleSavedListView" component={ShuttleSavedListView} title="Manage Stops" />
 			</Scene>
 			<Scene key="tab2" title="Map" component={NearbyMapView} icon={TabIcons} />
 			<Scene key="tab3" title="Feedback" component={FeedbackView} icon={TabIcons} />
