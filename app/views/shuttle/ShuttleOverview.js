@@ -5,8 +5,8 @@ import {
 	TouchableHighlight,
 	ActivityIndicator
 } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome'
 
+import BlueDot from '../common/BlueDot';
 import ShuttleSmallList from './ShuttleSmallList';
 import { getMinutesETA } from '../../util/shuttle';
 
@@ -26,15 +26,10 @@ const ShuttleOverview = ({ onPress, stopData, closest }) => {
 								</Text>
 							</View>
 							<View style={css.shuttle_card_rt_3}>
-								<Text style={css.shuttle_card_rt_3_label}>
-									{
-										(closest) ? (
-											<Icon
-												name="location-arrow"
-												size={20}
-											/>) : ('@')
-									}
-								</Text>
+								{
+									(closest) ? (
+										<BlueDot />) : (<Text style={css.shuttle_card_rt_3_label}>@</Text>)
+								}
 							</View>
 							<View style={css.shuttle_card_rt_4}>
 								<Text
@@ -79,7 +74,10 @@ const ShuttleOverview = ({ onPress, stopData, closest }) => {
 							/>
 						</View>
 						<View style={css.shuttle_card_rt_3}>
-							<Text style={css.shuttle_card_rt_3_label}>@</Text>
+							{
+								(closest) ? (
+									<BlueDot />) : (<Text style={css.shuttle_card_rt_3_label}>@</Text>)
+							}
 						</View>
 						<View style={css.shuttle_card_rt_4}>
 							<Text
