@@ -19,6 +19,7 @@
     "moment": "2.15.2",
     "react": "15.4.2",
     "react-native": "0.39.0",
+    "react-native-animatable": "1.1.1",
     "react-native-code-push": "1.15.0-beta",
     "react-native-cookies": "^2.0.0",
     "react-native-elevated-view": "0.0.1",
