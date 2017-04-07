@@ -31,7 +31,7 @@ const StopItem = ({ data, addStop }) => (
 		style={styles.list_row}
 	>
 		<TouchableOpacity
-			onPress={() => addStop(data.id)}
+			onPress={() => addStop(data.id, data.name.trim())}
 			style={styles.touchable}
 		>
 			<Text style={styles.row_name}>
