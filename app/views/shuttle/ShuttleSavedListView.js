@@ -19,7 +19,10 @@ const savedDataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 
 
 class ShuttleSavedListView extends React.Component {
 	componentWillMount() {
-		const { savedStops } = this.props;
+		const savedStops = this.props.savedStops.slice();
+		const { closestStop } = this.props;
+		
+		savedStops.splice(closestStop.savedIndex, 0, closestStop);
 		const savedObject = {};
 		for (let i = 0; i < savedStops.length; ++i) {
 			savedObject[i] = savedStops[i];
@@ -59,7 +62,9 @@ const SavedItem = ({ data, active }) => (
 			size={20}
 		/>
 		<Text style={{ margin: 7 }}>
-			{data.name.trim()}
+			{
+				(data.closest) ? ('Closest Stop') : (data.name.trim())
+			}
 		</Text>
 	</TouchableOpacity>
 );
@@ -67,6 +72,7 @@ const SavedItem = ({ data, active }) => (
 function mapStateToProps(state, props) {
 	return {
 		savedStops: state.shuttle.savedStops,
+		closestStop: state.shuttle.closestStop
 	};
 }
 
