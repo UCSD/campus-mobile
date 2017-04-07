@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet, ListView } from 'react-native';
 import Menu, { MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import FAIcon from 'react-native-vector-icons/FontAwesome';
+import IonIcon from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux';
 import { hideCard } from '../../actions/cards';
 import CardHeader from './CardHeader';
@@ -45,7 +46,7 @@ class ScrollCard extends React.Component {
 		return (
 			<Menu style={css.card_menu} onSelect={value => this.menuOptionSelected(value)}>
 				<MenuTrigger>
-					<Icon size={22} style={css.card_menu_trigger} name="ellipsis-v" />
+					<IonIcon size={28} style={css.card_menu_trigger} name='md-more' />
 				</MenuTrigger>
 				<MenuOptions>
 					<MenuOption onSelect={() => { this.props.dispatch(hideCard(this.props.id)); }}>
@@ -105,8 +106,8 @@ const PageIndicator = ({ numDots, dotIndex }) => {
 	for (let i = 0; i < numDots; ++i) {
 		const dotName = (dotIndex === i) ? ('circle') : ('circle-thin');
 		const dot = (
-			<Icon
-				color="#A3A3A3"
+			<FAIcon
+				color='#A3A3A3'
 				style={{ padding: 6, paddingTop: 3 }}
 				name={dotName}
 				size={10}
