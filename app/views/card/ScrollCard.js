@@ -103,11 +103,10 @@ class ScrollCard extends React.Component {
 const PageIndicator = ({ numDots, dotIndex }) => {
 	const dots = [];
 	for (let i = 0; i < numDots; ++i) {
-		//const dotColor = (dotIndex === i) ? ('#C6C6C6') : ('#DDDDDD');
 		const dotName = (dotIndex === i) ? ('circle') : ('circle-thin');
 		const dot = (
 			<Icon
-				color="#DDD"
+				color="#A3A3A3"
 				style={{ padding: 6, paddingTop: 3 }}
 				name={dotName}
 				size={10}
