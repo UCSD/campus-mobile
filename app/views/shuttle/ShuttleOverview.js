@@ -46,7 +46,8 @@ const ShuttleOverview = ({ onPress, stopData, closest }) => {
 								{stopData.arrivals[0].route.name}
 							</Text>
 							<Text style={css.shuttle_card_row_arriving}>
-								{getMinutesETA(stopData.arrivals[0].secondsToArrival)}
+								{stopData.arrivals[0].secondsToArrival <= 0 ? 'Arrived' : null}
+								{stopData.arrivals[0].secondsToArrival > 0 ? 'Arriving in: ' + getMinutesETA(stopData.arrivals[0].secondsToArrival) : null}
 							</Text>
 						</View>
 						{
