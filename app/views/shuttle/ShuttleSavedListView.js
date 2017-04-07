@@ -8,7 +8,7 @@ import {
 	TouchableOpacity
 } from 'react-native';
 import SortableList from 'react-native-sortable-list';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import { connect } from 'react-redux';
 
 import css from '../../styles/css';
@@ -55,7 +55,7 @@ const SavedItem = ({ data, active }) => (
 		style={styles.list_row}
 	>
 		<Icon
-			name="ellipsis-v"
+			name="drag-handle"
 			size={20}
 		/>
 		<Text style={{ margin: 7 }}>
