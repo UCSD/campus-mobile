@@ -36,9 +36,7 @@ const RouteItem = ({ data, gotoStopsList }) => (
 			onPress={() => gotoStopsList(data.stops)}
 			style={styles.touchable}
 		>
-			<Text
-				style={{ flex: 1 }}
-			>
+			<Text style={styles.row_name}>
 				{data.name.trim()}
 			</Text>
 			<Icon
@@ -54,6 +52,7 @@ const RouteItem = ({ data, gotoStopsList }) => (
 const styles = StyleSheet.create({
 	icon: { alignSelf: 'flex-end' },
 	touchable: { flex: 1, flexDirection: 'row', alignItems: 'center' },
+	row_name: { flex: 1, paddingRight: 10 },
 	list_row: { flex: 1, height: 60, padding: 7, paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: '#EEE', overflow: 'hidden' },
 });
 
