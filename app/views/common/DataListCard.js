@@ -44,7 +44,7 @@ const DataListCard = ({ title, data, item, rows }) => (
 					</TouchableHighlight>
 				</View>
 			) : (
-				<Text style={styles.content_load_err}>There was a problem loading the news.</Text>
+				<Text style={styles.content_load_err}>There was a problem loading the your content.</Text>
 			)}
 		</View>
 	</Card>
