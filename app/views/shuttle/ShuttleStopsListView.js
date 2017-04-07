@@ -39,7 +39,7 @@ const StopItem = ({ data, addStop }) => (
 			</Text>
 			<Icon
 				style={styles.icon}
-				color="#747678"
+				color="rgba(116,118,120,.6)"
 				name="chevron-right"
 				size={20}
 			/>
