@@ -39,7 +39,7 @@ const DataListCard = ({ title, data, item, rows }) => (
 						)}
 					>
 						<View style={styles.more}>
-							<Text style={styles.more_label}>View All</Text>
+							<Text style={styles.more_label}>View All {title}</Text>
 						</View>
 					</TouchableHighlight>
 				</View>
