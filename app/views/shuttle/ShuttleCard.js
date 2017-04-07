@@ -44,13 +44,9 @@ const ShuttleCard = ({ stopsData, savedStops, permission, gotoRoutesList, gotoSa
 
 	const extraActions = [
 		{
-			name: 'Remove stop',
-			action: removeStop
-		},
-		{
 			name: 'Manage stops',
 			action: gotoSavedList
-		},
+		}
 	];
 
 	return (
