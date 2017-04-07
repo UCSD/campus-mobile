@@ -50,10 +50,9 @@ const ShuttleOverview = ({ onPress, stopData, closest }) => {
 								{stopData.arrivals[0].secondsToArrival > 0 ? 'Arriving in: ' + getMinutesETA(stopData.arrivals[0].secondsToArrival) : null}
 							</Text>
 						</View>
-						{
-							(closest) ? (
-								<BlueDot style={{ right: 0, bottom: 0, position: 'absolute' }} />) : (null)
-						}
+						{ (closest) ? (
+							<BlueDot dotSize={20} dotStyle={{ right: 2, bottom: 2, position: 'absolute' }} />
+						) : null }
 					</View>
 					<ShuttleSmallList
 						arrivalData={stopData.arrivals.slice(1,3)}
