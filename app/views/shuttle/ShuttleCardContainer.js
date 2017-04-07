@@ -63,7 +63,7 @@ class ShuttleCardContainer extends CardComponent {
 	}
 
 	addStop = (stopID) => {
-		Toast.show('Stop added!');
+		Toast.show('Stop added.');
 		this.props.addStop(stopID); // dispatch saga
 		Actions.popTo('Home'); // pop back to home
 	}
