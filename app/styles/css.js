@@ -165,8 +165,8 @@ var css = StyleSheet.create({
 	sc_arrivals_row: { flexDirection: 'row', marginBottom: 8, marginHorizontal: 8, alignItems: 'center', justifyContent: 'flex-start' },
 	sc_rt_2: { borderRadius: 18, width: 36, height: 36, justifyContent: 'center', overflow: 'hidden' },
 	sc_rt_2_label: { textAlign: 'center', fontWeight: '600', fontSize: 19, backgroundColor: 'rgba(0,0,0,0)' },
-	sc_arrivals_row_route_name: { flex: 4.5, fontSize: 17, color: '#666', marginLeft: 10 },
-	sc_arrivals_row_eta_text: { flex: 1, fontSize: 17, color: '#333', marginLeft: 10 },
+	sc_arrivals_row_route_name: { flexGrow: 4, fontSize: 17, color: '#666', marginLeft: 10 },
+	sc_arrivals_row_eta_text: { flexGrow: 1, fontSize: 17, color: '#333', marginLeft: 10, textAlign: 'right' },
 
 	// 304 - Dining Card
 	dining_card: { width: maxCardWidth, padding: 8 },
