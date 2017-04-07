@@ -9,29 +9,41 @@ function* addStop(action) {
 	const shuttle = yield select(getShuttle);
 	const savedStops = shuttle.savedStops.slice(); // copy array
 	const stops = Object.assign({}, shuttle.stops);
+	const closestStop = Object.assign({}, shuttle.closestStop);
 	let contains = false;
 
+	// Make sure stop hasn't already been saved
 	for (let i = 0;  i < savedStops.length; ++i) {
 		if (savedStops[i].id === action.stopID) {
 			contains = true;
 			break;
 		}
 	}
-
 	if (!contains) {
 		savedStops.unshift(stops[action.stopID]);
 	}
 
+	// Updated closestStop index
+	++closestStop.savedIndex;
+
 	yield put({ type: 'CHANGED_STOPS', savedStops });
+	yield put({ type: 'SET_CLOSEST_STOP', closestStop });
 	yield fork(fetchArrival, action.stopID);
 }
 
 function* removeStop(action) {
 	const shuttle = yield select(getShuttle);
 	const savedStops = shuttle.savedStops.slice();
+	const closestStop = Object.assign({}, shuttle.closestStop);
+
+	// Remove stop from saved array
 	savedStops.splice(action.stopIndex, 1);
 
+	// Update closestStop index
+	--closestStop.savedIndex;
+
 	yield put({ type: 'CHANGED_STOPS', savedStops });
+	yield put({ type: 'SET_CLOSEST_STOP', closestStop });
 }
 
 function* orderStops(action) {
@@ -40,22 +52,35 @@ function* orderStops(action) {
 		if (newOrder && newOrder.length > 0) {
 			const shuttle = yield select(getShuttle);
 			const savedStops = shuttle.savedStops.slice();
-			const newStops = yield call(doOrder, savedStops, newOrder);
+			const closestStop = Object.assign({}, shuttle.closestStop);
+			const { newStops, newClosest } = yield call(doOrder, savedStops, newOrder, closestStop);
 
 			yield put({ type: 'CHANGED_STOPS', savedStops: newStops });
+			yield put({ type: 'SET_CLOSEST_STOP', closestStop: newClosest });
 		}
 	} catch (error) {
 		console.log('Error re-ordering stops: ' + error);
 	}
 }
 
-function doOrder(savedStops, newOrder) {
+function doOrder(savedStops, newOrder, closestStop) {
 	const newStops = [];
-
+	const oldSavedIndex = Number(closestStop.savedIndex);
+	let index;
 	for (let i = 0; i < newOrder.length; ++i) {
-		newStops.push(savedStops[newOrder[i]]);
+		if (Number(newOrder[i]) === oldSavedIndex) {
+			// Update closest stop index
+			closestStop.savedIndex = i;
+		} else {
+			if (oldSavedIndex < newOrder[i]) {
+				index = newOrder[i] - 1;
+			} else {
+				index = newOrder[i];
+			}
+			newStops.push(savedStops[index]);
+		}
 	}
-	return newStops;
+	return { newStops, newClosest: closestStop };
 }
 
 function* fetchArrival(stopID) {

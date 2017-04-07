@@ -12,8 +12,7 @@ import css from '../../styles/css';
 
 const resultsDataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
-const ShuttleRoutesListView = ({ shuttle_routes, gotoStopsList }) => {
-	return (
+const ShuttleRoutesListView = ({ shuttle_routes, gotoStopsList }) => (
 		<ListView
 			style={[css.main_container, css.scroll_main, css.whitebg]}
 			dataSource={resultsDataSource.cloneWithRows(shuttle_routes)}
@@ -26,7 +25,6 @@ const ShuttleRoutesListView = ({ shuttle_routes, gotoStopsList }) => {
 			}
 		/>
 	);
-};
 
 const RouteItem = ({ data, gotoStopsList }) => (
 	<View
