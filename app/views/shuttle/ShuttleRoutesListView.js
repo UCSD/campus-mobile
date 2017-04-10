@@ -13,18 +13,18 @@ import css from '../../styles/css';
 const resultsDataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
 const ShuttleRoutesListView = ({ shuttle_routes, gotoStopsList }) => (
-		<ListView
-			style={[css.main_container, css.scroll_main, css.whitebg]}
-			dataSource={resultsDataSource.cloneWithRows(shuttle_routes)}
-			renderRow={
-				(row) =>
-					<RouteItem
-						data={row}
-						gotoStopsList={gotoStopsList}
-					/>
-			}
-		/>
-	);
+	<ListView
+		style={[css.main_container, css.scroll_main, css.whitebg]}
+		dataSource={resultsDataSource.cloneWithRows(shuttle_routes)}
+		renderRow={
+			(row) =>
+				<RouteItem
+					data={row}
+					gotoStopsList={gotoStopsList}
+				/>
+		}
+	/>
+);
 
 const RouteItem = ({ data, gotoStopsList }) => (
 	<View

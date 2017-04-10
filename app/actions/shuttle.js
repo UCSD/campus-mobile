@@ -111,7 +111,7 @@ function updateClosestStop(location) {
 		}
 
 		Object.keys(stops).forEach((stopID, index) => {
-			const stop = stops[stopID];
+			const stop = Object.assign({}, stops[stopID]);
 			const distanceFromStop = getDistance(location.coords.latitude, location.coords.longitude, stop.lat, stop.lon);
 
 			if (distanceFromStop < closestDist) {

@@ -8,12 +8,15 @@ import {
 
 import BlueDot from '../common/BlueDot';
 import ShuttleSmallList from './ShuttleSmallList';
+import LocationRequiredContent from '../common/LocationRequiredContent';
 import { getMinutesETA } from '../../util/shuttle';
 
 const css = require('../../styles/css');
 
 const ShuttleOverview = ({ onPress, stopData, closest }) => {
-	if (stopData.arrivals && stopData.arrivals.length > 0) {
+	if (closest && !stopData) {
+		return (<LocationRequiredContent />);
+	} else if (stopData.arrivals && stopData.arrivals.length > 0) {
 		return (
 			<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => onPress()}>
 				<View>

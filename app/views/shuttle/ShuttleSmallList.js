@@ -27,11 +27,12 @@ const ShuttleSmallList = ({ arrivalData, style, rows, scrollEnabled }) => (
 						showsVerticalScrollIndicator={false}
 						dataSource={arrivalDataSource.cloneWithRows(arrivalData)}
 						renderRow={
-							(row, sectionID, rowID) =>
+							(row) =>
 								<ShuttleSmallRow
 									arrival={row}
 								/>
 						}
+						enableEmptySections={true}
 					/>
 				) : (null)
 			}
