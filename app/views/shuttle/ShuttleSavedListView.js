@@ -2,11 +2,12 @@ import React from 'react';
 import {
 	Text,
 	StyleSheet,
-	ListView,
 	Dimensions,
 	Animated,
 	Platform,
-	Easing
+	Easing,
+	TouchableOpacity,
+	Alert
 } from 'react-native';
 import SortableList from 'react-native-sortable-list';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -21,20 +22,42 @@ class ShuttleSavedListView extends React.Component {
 	componentWillMount() {
 		const savedStops = this.props.savedStops.slice();
 		const { closestStop } = this.props;
+		savedStops.splice(closestStop.savedIndex, 0, closestStop); // insert closest
 
-		savedStops.splice(closestStop.savedIndex, 0, closestStop);
-		const savedObject = {};
-		for (let i = 0; i < savedStops.length; ++i) {
-			savedObject[i] = savedStops[i];
-		}
+		const savedObject = this.arrayToObject(savedStops);
 		this.setState({ savedObject });
 	}
 
-	shouldComponentUpdate() {
-		return false; // stop list from re-rendering
+	componentWillReceiveProps(nextProps) {
+		if (this.props.savedStops.length !== nextProps.savedStops.length) {
+			const savedStops = nextProps.savedStops.slice();
+			const { closestStop } = nextProps;
+			savedStops.splice(closestStop.savedIndex, 0, closestStop); // insert closest
+
+			const savedObject = this.arrayToObject(savedStops);
+			console.log(JSON.stringify(savedObject));
+			this.setState({ savedObject });
+		}
+	}
+
+	shouldComponentUpdate(nextProps, nextState) {
+		if (this.props.savedStops.length !== nextProps.savedStops.length) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	arrayToObject(array) {
+		const savedObject = {};
+		for (let i = 0; i < array.length; ++i) {
+			savedObject[i] = array[i];
+		}
+		return savedObject;
 	}
 
 	render() {
+		const { removeStop } = this.props;
 		return (
 			<SortableList
 				style={[css.main_container, css.scroll_main, css.whitebg]}
@@ -44,6 +67,7 @@ class ShuttleSavedListView extends React.Component {
 						<SavedItem
 							data={data}
 							active={active}
+							removeStop={removeStop}
 						/>
 				}
 				onChangeOrder={(nextOrder) => { this._order = nextOrder; }}
@@ -101,6 +125,17 @@ class SavedItem extends React.Component {
 		}
 	}
 
+	_handleRemove = (stopID) => {
+		Alert.alert(
+			'Remove Stop',
+			'Are you sure you want to remove ' + this.props.data.name.trim() + '?',
+			[
+				{ text: 'Yes', onPress: () => this.props.removeStop(stopID) },
+				{ text: 'No' }
+			]
+		);
+	}
+
 	render() {
 		const { data } = this.props;
 		return (
@@ -111,11 +146,24 @@ class SavedItem extends React.Component {
 					name="drag-handle"
 					size={20}
 				/>
-				<Text style={{ margin: 7 }}>
+				<Text style={styles.name_text}>
 					{
 						(data.closest) ? ('Closest Stop') : (data.name.trim())
 					}
 				</Text>
+				{
+					(data.closest) ? (null) :
+					(
+						<TouchableOpacity
+							onPress={() => this._handleRemove(data.id)}
+						>
+							<Icon
+								name="cancel"
+								size={20}
+							/>
+						</TouchableOpacity>
+					)
+				}
 			</Animated.View>
 		);
 	}
@@ -132,6 +180,9 @@ function mapDispatchtoProps(dispatch) {
 	return {
 		orderStops: (newOrder) => {
 			dispatch({ type: 'ORDER_STOPS', newOrder });
+		},
+		removeStop: (stopID) => {
+			dispatch({ type: 'REMOVE_STOP', stopID });
 		}
 	};
 }
@@ -151,6 +202,7 @@ const styles = StyleSheet.create({
 			},
 		})
 	},
+	name_text: { flex: 1, margin: 7 },
 });
 
 export default connect(

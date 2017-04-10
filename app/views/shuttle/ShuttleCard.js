@@ -11,7 +11,7 @@ import ScrollCard from '../card/ScrollCard';
 
 import { doPRM, getMaxCardWidth, getCampusPrimary } from '../../util/general';
 
-const ShuttleCard = ({ stopsData, savedStops, gotoRoutesList, gotoSavedList, removeStop }) => {
+const ShuttleCard = ({ stopsData, savedStops, gotoRoutesList, gotoSavedList }) => {
 	const extraActions = [
 		{
 			name: 'Manage Stops',
