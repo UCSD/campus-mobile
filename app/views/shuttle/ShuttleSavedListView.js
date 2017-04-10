@@ -5,7 +5,9 @@ import {
 	StyleSheet,
 	ListView,
 	Dimensions,
-	TouchableOpacity
+	Animated,
+	Platform,
+	Easing
 } from 'react-native';
 import SortableList from 'react-native-sortable-list';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -53,21 +55,65 @@ class ShuttleSavedListView extends React.Component {
 	}
 }
 
-const SavedItem = ({ data, active }) => (
-	<TouchableOpacity
-		style={styles.list_row}
-	>
-		<Icon
-			name="drag-handle"
-			size={20}
-		/>
-		<Text style={{ margin: 7 }}>
-			{
-				(data.closest) ? ('Closest Stop') : (data.name.trim())
-			}
-		</Text>
-	</TouchableOpacity>
-);
+class SavedItem extends React.Component {
+
+	constructor(props) {
+		super(props);
+
+		this._active = new Animated.Value(0);
+
+		this._style = {
+			...Platform.select({
+				ios: {
+					shadowOpacity: this._active.interpolate({
+						inputRange: [0, 1],
+						outputRange: [0, 0.2],
+					}),
+					shadowRadius: this._active.interpolate({
+						inputRange: [0, 1],
+						outputRange: [2, 10],
+					}),
+				},
+
+				android: {
+					elevation: this._active.interpolate({
+						inputRange: [0, 1],
+						outputRange: [2, 6],
+					}),
+				},
+			})
+		};
+	}
+
+	componentWillReceiveProps(nextProps) {
+		if (this.props.active !== nextProps.active) {
+			Animated.timing(this._active, {
+				duration: 300,
+				easing: Easing.bounce,
+				toValue: Number(nextProps.active),
+			}).start();
+		}
+	}
+
+	render() {
+		const { data } = this.props;
+		return (
+			<Animated.View
+				style={[styles.list_row, this._style]}
+			>
+				<Icon
+					name="drag-handle"
+					size={20}
+				/>
+				<Text style={{ margin: 7 }}>
+					{
+						(data.closest) ? ('Closest Stop') : (data.name.trim())
+					}
+				</Text>
+			</Animated.View>
+		);
+	}
+}
 
 function mapStateToProps(state, props) {
 	return {
@@ -85,7 +131,20 @@ function mapDispatchtoProps(dispatch) {
 }
 
 const styles = StyleSheet.create({
-	list_row: { backgroundColor: '#FFF', flexDirection: 'row', alignItems: 'center', width: deviceWidth, padding: 7, borderBottomWidth: 1, borderBottomColor: '#EEE'  },
+	list_row: { backgroundColor: '#FFF', flexDirection: 'row', alignItems: 'center', width: deviceWidth, padding: 7, borderBottomWidth: 1, borderBottomColor: '#EEE' ,
+		...Platform.select({
+			ios: {
+				shadowOpacity: 0,
+				shadowOffset: { height: 2, width: 2 },
+				shadowRadius: 0,
+			},
+
+			android: {
+				elevation: 0,
+				marginHorizontal: 30,
+			},
+		})
+	},
 });
 
 export default connect(
