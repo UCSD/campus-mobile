@@ -16,7 +16,7 @@ const BlueDot = ({ dotSize, dotStyle }) => {
 				iterationCount='infinite'
 			/>
 			<View style={{ position: 'absolute', top: ((dotSize - innerWhiteDotSize) / 2), left: ((dotSize - innerWhiteDotSize) / 2), width: innerWhiteDotSize, height: innerWhiteDotSize, borderRadius: innerWhiteDotSize / 2, borderColor: 'white', borderWidth: innerWhiteDotSize / 2, zIndex: 3 }} />
-			<View style={{ position: 'absolute', top: ((dotSize - innerBlueDotSize) / 2), left: ((dotSize - innerBlueDotSize) / 2), width: innerBlueDotSize, height: innerBlueDotSize, borderRadius: innerBlueDotSize / 2, borderColor: '#03A9F4', borderWidth: innerBlueDotSize / 2, zIndex: 3 }} />
+			<View style={{ position: 'absolute', top: ((dotSize - innerBlueDotSize) / 2), left: ((dotSize - innerBlueDotSize) / 2), width: innerBlueDotSize, height: innerBlueDotSize, borderRadius: innerBlueDotSize / 2, borderColor: '#03A9F4', borderWidth: innerBlueDotSize / 2, zIndex: 4 }} />
 		</View>
 	);
 };
