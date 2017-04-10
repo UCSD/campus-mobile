@@ -21,6 +21,7 @@ module.exports = {
     WELCOME_WEEK_API_URL: 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/welcome_week_events.json',
 
     /* RESOURCES */
+    SHUTTLE_SCHEDULE_URL: 'https://transportation.ucsd.edu/shuttles/',
     FEEDBACK_URL: 'https://eforms.ucsd.edu/view.php?id=175631',
     NODE_MARKERS_BASE_URL: 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/nearby_markers/',
     WEATHER_ICON_BASE_URL: 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/images/v1/weather-icons/',
