@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-	View,
 	Text,
 	StyleSheet,
 	ListView,
@@ -17,13 +16,12 @@ import css from '../../styles/css';
 
 
 const deviceWidth = Dimensions.get('window').width;
-const savedDataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
 class ShuttleSavedListView extends React.Component {
 	componentWillMount() {
 		const savedStops = this.props.savedStops.slice();
 		const { closestStop } = this.props;
-		
+
 		savedStops.splice(closestStop.savedIndex, 0, closestStop);
 		const savedObject = {};
 		for (let i = 0; i < savedStops.length; ++i) {
@@ -76,6 +74,14 @@ class SavedItem extends React.Component {
 				},
 
 				android: {
+					marginTop: this._active.interpolate({
+						inputRange: [0, 1],
+						outputRange: [0, 10],
+					}),
+					marginBottom: this._active.interpolate({
+						inputRange: [0, 1],
+						outputRange: [0, 10],
+					}),
 					elevation: this._active.interpolate({
 						inputRange: [0, 1],
 						outputRange: [2, 6],
@@ -136,12 +142,12 @@ const styles = StyleSheet.create({
 			ios: {
 				shadowOpacity: 0,
 				shadowOffset: { height: 2, width: 2 },
-				shadowRadius: 0,
+				shadowRadius: 2,
 			},
 
 			android: {
+				margin: 0,
 				elevation: 0,
-				marginHorizontal: 30,
 			},
 		})
 	},
