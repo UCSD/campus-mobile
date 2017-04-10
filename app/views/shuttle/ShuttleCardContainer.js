@@ -19,7 +19,6 @@ class ShuttleCardContainer extends CardComponent {
 		const { stopsData, savedStops, removeStop, closestStop } = this.props;
 
 		const displayStops = savedStops.slice();
-		console.log('render');
 		if (closestStop) {
 			displayStops.splice(closestStop.savedIndex, 0, closestStop);
 		}

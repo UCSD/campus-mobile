@@ -101,6 +101,7 @@ function updateClosestStop(location) {
 	return (dispatch, getState) => {
 		const shuttle = getState().shuttle;
 		const stops = Object.assign({}, shuttle.stops);
+		const currClosestStop = shuttle.closestStop;
 
 		let closestDist = 1000000000;
 		let closestStop;
@@ -122,10 +123,17 @@ function updateClosestStop(location) {
 		closestStop.closest = true;
 		closestStop.savedIndex = closestSavedIndex;
 
-		dispatch({
-			type: 'SET_CLOSEST_STOP',
-			closestStop
-		});
+		if (currClosestStop === null || currClosestStop.id !== closestStop.id) {
+			dispatch({
+				type: 'SET_CLOSEST_STOP',
+				closestStop
+			});
+
+			dispatch({
+				type: 'FETCH_ARRIVAL',
+				stopID: closestStop.id
+			});
+		}
 	};
 }
 

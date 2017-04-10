@@ -116,6 +116,11 @@ function* fetchArrival(stopID) {
 	}
 }
 
+// Manual fetch arrivals
+function* fetchArrivalMan(action) {
+	yield call(fetchArrival, action.stopID);
+}
+
 function* watchArrivals() {
 	while (true) {
 		const { savedStops, closestStop } = yield select(getShuttle);
@@ -135,6 +140,7 @@ function* shuttleSaga() {
 	yield takeLatest('ADD_STOP', addStop);
 	yield takeLatest('REMOVE_STOP', removeStop);
 	yield takeLatest('ORDER_STOPS', orderStops);
+	yield takeLatest('FETCH_ARRIVAL', fetchArrivalMan);
 	yield call(watchArrivals);
 }
 
