@@ -31,7 +31,7 @@ const StopItem = ({ data, addStop }) => (
 		style={styles.list_row}
 	>
 		<TouchableOpacity
-			onPress={() => addStop(data.id)}
+			onPress={() => addStop(data.id, data.name.trim())}
 			style={styles.touchable}
 		>
 			<Text style={styles.row_name}>
@@ -39,7 +39,7 @@ const StopItem = ({ data, addStop }) => (
 			</Text>
 			<Icon
 				style={styles.icon}
-				color="#747678"
+				color="rgba(116,118,120,.6)"
 				name="chevron-right"
 				size={20}
 			/>

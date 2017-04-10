@@ -1,41 +1,24 @@
 import React from 'react';
 import { View } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import * as Animatable from 'react-native-animatable';
 
-const BlueDot = ({ style }) => (
-	<View
-		style={style}
-	>
-		<View
-			style={{ height: 40 }}
-		>
+const BlueDot = ({ dotSize, dotStyle }) => {
+	const innerWhiteDotSize = dotSize * 0.6,
+		innerBlueDotSize = dotSize * 0.5;
+
+	return (
+		<View style={dotStyle}>
 			<Animatable.View
+				style={{ width: dotSize, height: dotSize, borderRadius: dotSize / 2, borderColor: '#B3E5FC', borderWidth: dotSize / 2, zIndex: 2 }}
 				ref={c => { this._view = c; }}
-				animation="zoomIn"
-				easing="ease"
-				iterationCount="infinite"
-			>
-				<Icon
-					color="#B3E5FC"
-					name="circle"
-					size={40}
-				/>
-			</Animatable.View>
-			<Icon
-				style={{ top: 11, left: 9, position: 'absolute', backgroundColor : 'transparent' }}
-				color="#FFF"
-				name="circle"
-				size={18}
+				animation='zoomIn'
+				easing='ease'
+				iterationCount='infinite'
 			/>
-			<Icon
-				style={{ top: 13, left: 11, position: 'absolute', backgroundColor : 'transparent' }}
-				color="#03A9F4"
-				name="circle"
-				size={14}
-			/>
+			<View style={{ position: 'absolute', top: ((dotSize - innerWhiteDotSize) / 2), left: ((dotSize - innerWhiteDotSize) / 2), width: innerWhiteDotSize, height: innerWhiteDotSize, borderRadius: innerWhiteDotSize / 2, borderColor: 'white', borderWidth: innerWhiteDotSize / 2, zIndex: 3 }} />
+			<View style={{ position: 'absolute', top: ((dotSize - innerBlueDotSize) / 2), left: ((dotSize - innerBlueDotSize) / 2), width: innerBlueDotSize, height: innerBlueDotSize, borderRadius: innerBlueDotSize / 2, borderColor: '#03A9F4', borderWidth: innerBlueDotSize / 2, zIndex: 3 }} />
 		</View>
-	</View>
-);
+	);
+};
 
 export default BlueDot;

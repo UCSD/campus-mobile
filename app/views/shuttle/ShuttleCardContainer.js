@@ -61,7 +61,8 @@ class ShuttleCardContainer extends CardComponent {
 		Actions.ShuttleSavedListView();
 	}
 
-	addStop = (stopID) => {
+	addStop = (stopID, stopName) => {
+		logger.ga('Shuttle: Added stop "' + stopName + '"');
 		Toast.show('Stop added.');
 		this.props.addStop(stopID); // dispatch saga
 		Actions.popTo('Home'); // pop back to home

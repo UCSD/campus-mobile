@@ -87,15 +87,18 @@ class ScrollCard extends React.Component {
 
 		return (
 			<View>
-				<View style={styles.card_main} ref={(i) => { this._card = i; }}>
+				<View style={[styles.card_main, this.state.numDots <= 1 ? styles.card_main_marginBottom : null ]} ref={(i) => { this._card = i; }}>
 					<CardHeader id={this.props.id} title={this.props.title} menu={this._renderMenu()} />
 					{list}
 					{this.props.actionButton}
 				</View>
-				<PageIndicator
-					numDots={this.state.numDots}
-					dotIndex={this.state.dotIndex}
-				/>
+
+				{ this.state.numDots > 1 ? (
+					<PageIndicator
+						numDots={this.state.numDots}
+						dotIndex={this.state.dotIndex}
+					/>
+				) : null }
 			</View>
 		);
 	}
@@ -130,4 +133,5 @@ export default connect()(ScrollCard);
 
 const styles = StyleSheet.create({
 	card_main: { borderWidth: 1, borderBottomWidth: 0, borderRadius: 2, borderColor: '#DDD', backgroundColor: '#F9F9F9', margin: 6, marginBottom: 0, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
+	card_main_marginBottom: { marginBottom: 6 },
 });

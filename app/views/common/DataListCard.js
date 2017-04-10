@@ -4,7 +4,6 @@ import {
 	Text,
 	TouchableHighlight,
 	StyleSheet,
-	ActivityIndicator
 } from 'react-native';
 
 import { Actions } from 'react-native-router-flux';
@@ -40,14 +39,12 @@ const DataListCard = ({ title, data, item, rows }) => (
 						)}
 					>
 						<View style={styles.more}>
-							<Text style={styles.more_label}>View All</Text>
+							<Text style={styles.more_label}>View All {title}</Text>
 						</View>
 					</TouchableHighlight>
 				</View>
 			) : (
-				<ActivityIndicator
-					size="large"
-				/>
+				<Text style={styles.content_load_err}>There was a problem loading the your content.</Text>
 			)}
 		</View>
 	</Card>
