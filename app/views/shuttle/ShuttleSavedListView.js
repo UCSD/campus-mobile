@@ -12,6 +12,7 @@ import {
 import SortableList from 'react-native-sortable-list';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { connect } from 'react-redux';
+import Toast from 'react-native-simple-toast';
 
 import css from '../../styles/css';
 
@@ -126,6 +127,9 @@ class SavedItem extends React.Component {
 	}
 
 	_handleRemove = (stopID) => {
+		this.props.removeStop(stopID);
+		Toast.show(this.props.data.name.trim() + ' removed.');
+		/*
 		Alert.alert(
 			'Remove Stop',
 			'Are you sure you want to remove ' + this.props.data.name.trim() + '?',
@@ -133,7 +137,7 @@ class SavedItem extends React.Component {
 				{ text: 'Yes', onPress: () => this.props.removeStop(stopID) },
 				{ text: 'No' }
 			]
-		);
+		);*/
 	}
 
 	render() {
