@@ -12,6 +12,7 @@ import LocationRequiredContent from '../common/LocationRequiredContent';
 import { getMinutesETA } from '../../util/shuttle';
 import { openURL } from '../../util/general';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
+import AppSettings from '../../AppSettings';
 
 const css = require('../../styles/css');
 
@@ -102,7 +103,7 @@ const ShuttleOverview = ({ onPress, stopData, closest }) => {
 						Sorry, no buses appear to be en route{ stopData && stopData.name ? ' to ' + stopData.name : null }.
 					</Text>
 
-					<TouchableOpacity onPress={() => openURL(AppSettings.SHUTTLE_SCHEDULE)}>
+					<TouchableOpacity onPress={() => openURL(AppSettings.SHUTTLE_SCHEDULE_URL)}>
 						<View style={css.sc_bus_schedule_container}>
 							<FAIcon name='bus' size={18} color={'#182B49'} />
 							<Text style={css.sc_bus_schedule_text}>Check Bus Schedule</Text>
