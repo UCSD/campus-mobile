@@ -23,16 +23,16 @@ const BlueDot = ({ style }) => (
 				/>
 			</Animatable.View>
 			<Icon
-				style={{ top: 8, left: 6, position: 'absolute', backgroundColor : 'transparent' }}
+				style={{ top: 11, left: 9, position: 'absolute', backgroundColor : 'transparent' }}
 				color="#FFF"
 				name="circle"
-				size={24}
+				size={18}
 			/>
 			<Icon
-				style={{ top: 10, left: 8, position: 'absolute', backgroundColor : 'transparent' }}
+				style={{ top: 13, left: 11, position: 'absolute', backgroundColor : 'transparent' }}
 				color="#03A9F4"
 				name="circle"
-				size={20}
+				size={14}
 			/>
 		</View>
 	</View>
