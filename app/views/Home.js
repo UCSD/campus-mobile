@@ -8,6 +8,7 @@ import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import { MenuContext } from 'react-native-popup-menu';
 import { checkGooglePlayServices } from 'react-native-google-api-availability-bridge';
+import CookieManager from 'react-native-cookies';
 
 import TopBannerView from './banner/TopBannerView';
 
@@ -24,6 +25,8 @@ import { platformAndroid } from '../util/general';
 // App Settings / Util / CSS
 const css = require('../styles/css');
 const logger = require('../util/logger');
+
+import getAPIToken, { invokeAPI } from '../services/ssoService';
 
 class Home extends React.Component {
 	constructor(props) {
@@ -42,11 +45,33 @@ class Home extends React.Component {
 	componentDidMount() {
 		logger.ga('View Loaded: Home');
 		this._cards = [];
+
+		// caching was caused by the server setting the session cookie.
+		// iOS/Android handles cookies automatically so it was used with every fetch call
+		// investigate side effects?
+		// Should be fine if only called on logout?
+		/*
+		CookieManager.clearAll((err, res) => {
+			console.log('cookies cleared!');
+			console.log(err);
+			console.log(res);
+
+			CookieManager.get('https://wso2is-qa.ucsd.edu/ecptoken/token', (err2, res2) => {
+				console.log(err2);
+				console.log('cookieget: ' + JSON.stringify(res2));
+
+				const username = 'student2';
+				const password = 'qwertyuiop';
+				getAPIToken(username, password).then((apiToken) => {
+					console.log(JSON.stringify(apiToken));
+					//invokeAPI(apiToken).then((result) => console.log(JSON.stringify(result)));
+				});
+			});
+		});*/
 	}
 
 	_getCards = () => {
 		const activeCards = [];
-
 		// Setup Cards
 		if (this.props.cards.weather.active) {
 			activeCards.push(<WeatherCardContainer key={'weather'} />);
@@ -78,26 +103,32 @@ class Home extends React.Component {
 	}
 
 	render() {
-		return (
-			<MenuContext style={{ flex:1 }}>
-				<View style={css.main_container}>
-					<ScrollView>
-						{/* SPECIAL TOP BANNER */}
-						<TopBannerView />
+		// Prevent home from re-rendering when not in home
+		if (this.props.scene.sceneKey !== 'Home' && this.props.scene.sceneKey !== 'tabbar') {
+			return null;
+		} else {
+			return (
+				<MenuContext style={{ flex:1 }}>
+					<View style={css.main_container}>
+						<ScrollView>
+							{/* SPECIAL TOP BANNER */}
+							<TopBannerView />
 
-						{/* LOAD CARDS */}
-						{ this._getCards() }
-					</ScrollView>
-				</View>
-			</MenuContext>
-		);
+							{/* LOAD CARDS */}
+							{ this._getCards() }
+						</ScrollView>
+					</View>
+				</MenuContext>
+			);
+		}
 	}
 }
 
 function mapStateToProps(state, props) {
 	return {
 		cards: state.cards,
-		locationPermission: state.location.permission
+		locationPermission: state.location.permission,
+		scene: state.routes.scene
 	};
 }
 
