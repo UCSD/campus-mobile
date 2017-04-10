@@ -36,11 +36,19 @@ function* removeStop(action) {
 	const savedStops = shuttle.savedStops.slice();
 	const closestStop = Object.assign({}, shuttle.closestStop);
 
+	let i;
 	// Remove stop from saved array
-	savedStops.splice(action.stopIndex, 1);
+	for (i = 0; i < savedStops.length; ++i) {
+		if (savedStops[i].id === action.stopID) {
+			savedStops.splice(i, 1);
+			break;
+		}
+	}
 
 	// Update closestStop index
-	--closestStop.savedIndex;
+	if (i < closestStop.savedIndex) {
+		--closestStop.savedIndex;
+	}
 
 	yield put({ type: 'CHANGED_STOPS', savedStops });
 	yield put({ type: 'SET_CLOSEST_STOP', closestStop });

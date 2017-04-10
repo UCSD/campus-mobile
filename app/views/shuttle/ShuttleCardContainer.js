@@ -86,9 +86,6 @@ function mapDispatchtoProps(dispatch) {
 		},
 		addStop: (stopID) => {
 			dispatch({ type: 'ADD_STOP', stopID });
-		},
-		removeStop: (stopIndex) => {
-			dispatch({ type: 'REMOVE_STOP', stopIndex });
 		}
 	};
 }
