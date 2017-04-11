@@ -139,15 +139,6 @@ class SavedItem extends React.Component {
 	_handleRemove = (stopID) => {
 		this.props.removeStop(stopID);
 		Toast.show(this.props.data.name.trim() + ' removed.');
-		/*
-		Alert.alert(
-			'Remove Stop',
-			'Are you sure you want to remove ' + this.props.data.name.trim() + '?',
-			[
-				{ text: 'Yes', onPress: () => this.props.removeStop(stopID) },
-				{ text: 'No' }
-			]
-		);*/
 	}
 
 	render() {

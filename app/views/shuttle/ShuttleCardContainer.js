@@ -1,4 +1,5 @@
 import React from 'react';
+import { Alert } from 'react-native';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import Toast from 'react-native-simple-toast';
@@ -33,15 +34,26 @@ class ShuttleCardContainer extends CardComponent {
 	}
 
 	gotoRoutesList = () => {
-		const { shuttle_routes } = this.props;
-		// Sort routes by alphabet
-		const alphaRoutes = [];
-		Object.keys(shuttle_routes)
-			.sort((a, b) => shuttle_routes[a].name.trim().localeCompare(shuttle_routes[b].name.trim()))
-				.forEach((key) => {
-					alphaRoutes.push(shuttle_routes[key]);
-				});
-		Actions.ShuttleRoutesListView({ shuttle_routes: alphaRoutes, gotoStopsList: this.gotoStopsList });
+		if (this.props.savedStops.length < 10) {
+			const { shuttle_routes } = this.props;
+			// Sort routes by alphabet
+			const alphaRoutes = [];
+			Object.keys(shuttle_routes)
+				.sort((a, b) => shuttle_routes[a].name.trim().localeCompare(shuttle_routes[b].name.trim()))
+					.forEach((key) => {
+						alphaRoutes.push(shuttle_routes[key]);
+					});
+			Actions.ShuttleRoutesListView({ shuttle_routes: alphaRoutes, gotoStopsList: this.gotoStopsList });
+		} else {
+			Alert.alert(
+				'Add Stop',
+				'Unable to add more than 10 stops, please remove a stop before trying.',
+				[
+					{ text: 'Manage Stops', onPress: () => this.gotoSavedList() },
+					{ text: 'Cancel' }
+				]
+			);
+		}
 	}
 
 	gotoStopsList = (stops) => {
