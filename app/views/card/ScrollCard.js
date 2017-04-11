@@ -25,6 +25,10 @@ class ScrollCard extends React.Component {
 		this._card.setNativeProps(props);
 	}
 
+	componentDidMount() {
+		this._listview.scrollTo({ x: this.props.lastScroll, animated: false });
+	}
+
 	refresh(refreshType) {
 		return;
 	}
@@ -35,6 +39,9 @@ class ScrollCard extends React.Component {
 	}
 
 	handleScroll = (event) => {
+		if (this.props.updateScroll) {
+			this.props.updateScroll(event.nativeEvent.contentOffset.x);
+		}
 		const dotIndex = Math.floor(event.nativeEvent.contentOffset.x / getMaxCardWidth());
 		this.setState({ dotIndex });
 	}
@@ -71,6 +78,7 @@ class ScrollCard extends React.Component {
 		if (this.props.scrollData !== {}) {
 			list = (
 				<ListView
+					ref={c => { this._listview = c; }}
 					style={{ flexDirection: 'row' }}
 					onContentSizeChange={this.countDots}
 					pagingEnabled

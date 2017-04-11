@@ -17,7 +17,7 @@ class ShuttleCardContainer extends CardComponent {
 	}
 
 	render() {
-		const { stopsData, savedStops, removeStop, closestStop } = this.props;
+		const { stopsData, savedStops, removeStop, closestStop, updateScroll, lastScroll } = this.props;
 
 		const displayStops = savedStops.slice();
 		if (closestStop) {
@@ -30,6 +30,8 @@ class ShuttleCardContainer extends CardComponent {
 			gotoSavedList={this.gotoSavedList}
 			gotoRoutesList={this.gotoRoutesList}
 			removeStop={removeStop}
+			updateScroll={updateScroll}
+			lastScroll={lastScroll}
 		/>);
 	}
 
@@ -87,6 +89,7 @@ function mapStateToProps(state, props) {
 		shuttle_routes: state.shuttle.routes,
 		shuttle_stops: state.shuttle.stops,
 		savedStops: state.shuttle.savedStops,
+		lastScroll: state.shuttle.lastScroll
 	};
 }
 
@@ -97,6 +100,9 @@ function mapDispatchtoProps(dispatch) {
 		},
 		addStop: (stopID) => {
 			dispatch({ type: 'ADD_STOP', stopID });
+		},
+		updateScroll: (scrollX) => {
+			dispatch({ type: 'UPDATE_SCROLL', scrollX });
 		}
 	};
 }

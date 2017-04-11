@@ -28,6 +28,7 @@ function* addStop(action) {
 
 	yield put({ type: 'CHANGED_STOPS', savedStops });
 	yield put({ type: 'SET_CLOSEST_STOP', closestStop });
+	yield call(resetScroll);
 	yield fork(fetchArrival, action.stopID);
 }
 
@@ -52,6 +53,7 @@ function* removeStop(action) {
 
 	yield put({ type: 'CHANGED_STOPS', savedStops });
 	yield put({ type: 'SET_CLOSEST_STOP', closestStop });
+	yield call(resetScroll);
 }
 
 function* orderStops(action) {
@@ -62,6 +64,7 @@ function* orderStops(action) {
 
 			yield put({ type: 'CHANGED_STOPS', savedStops: newStops });
 			yield put({ type: 'SET_CLOSEST_STOP', closestStop: newClosest });
+			yield call(resetScroll);
 		}
 	} catch (error) {
 		console.log('Error re-ordering stops: ' + error);
@@ -82,6 +85,14 @@ function doOrder(newOrder) {
 		}
 	}
 	return { newStops, newClosest: closestStop };
+}
+
+function* resetScroll() {
+	yield put({ type: 'SET_SCROLL', lastScroll: 0 });
+}
+
+function* setScroll(action) {
+	yield put({ type: 'SET_SCROLL', lastScroll: action.scrollX });
 }
 
 function* fetchArrival(stopID) {
@@ -134,6 +145,7 @@ function* shuttleSaga() {
 	yield takeLatest('REMOVE_STOP', removeStop);
 	yield takeLatest('ORDER_STOPS', orderStops);
 	yield takeLatest('FETCH_ARRIVAL', fetchArrivalMan);
+	yield takeLatest('UPDATE_SCROLL', setScroll);
 	yield call(watchArrivals);
 }
 

@@ -6,6 +6,7 @@ const initialState = {
 	vehicles: {},
 	closestStop: null,
 	lastUpdated: new Date().getTime(),
+	lastScroll: 0
 };
 
 function shuttle(state = initialState, action) {
@@ -60,6 +61,10 @@ function shuttle(state = initialState, action) {
 	}
 	case 'CHANGED_STOPS': {
 		newState.savedStops = action.savedStops;
+		return newState;
+	}
+	case 'SET_SCROLL': {
+		newState.lastScroll = action.lastScroll;
 		return newState;
 	}
 	default:

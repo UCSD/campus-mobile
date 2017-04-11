@@ -11,7 +11,7 @@ import ScrollCard from '../card/ScrollCard';
 
 import { doPRM, getMaxCardWidth, getCampusPrimary } from '../../util/general';
 
-const ShuttleCard = ({ stopsData, savedStops, gotoRoutesList, gotoSavedList }) => {
+const ShuttleCard = ({ stopsData, savedStops, gotoRoutesList, gotoSavedList, updateScroll, lastScroll }) => {
 	const extraActions = [
 		{
 			name: 'Manage Stops',
@@ -42,6 +42,8 @@ const ShuttleCard = ({ stopsData, savedStops, gotoRoutesList, gotoSavedList }) =
 				</TouchableHighlight>
 			}
 			extraActions={extraActions}
+			updateScroll={updateScroll}
+			lastScroll={lastScroll}
 		/>
 	);
 };
