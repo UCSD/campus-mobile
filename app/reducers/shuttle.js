@@ -50,7 +50,7 @@ function shuttle(state = initialState, action) {
 		return newState;
 	}
 	case 'SET_CLOSEST_STOP':
-		newState.closestStop = action.closestStop;
+		newState.closestStop = Object.assign({}, action.closestStop);
 		return newState;
 	case 'SET_ARRIVALS': {
 		// const stops = Object.assign({}, newState.stops);

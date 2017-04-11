@@ -58,10 +58,7 @@ function* orderStops(action) {
 	try {
 		const { newOrder } = action;
 		if (newOrder && newOrder.length > 0) {
-			const shuttle = yield select(getShuttle);
-			const savedStops = shuttle.savedStops.slice();
-			const closestStop = Object.assign({}, shuttle.closestStop);
-			const { newStops, newClosest } = yield call(doOrder, savedStops, newOrder, closestStop);
+			const { newStops, newClosest } = yield call(doOrder, newOrder);
 
 			yield put({ type: 'CHANGED_STOPS', savedStops: newStops });
 			yield put({ type: 'SET_CLOSEST_STOP', closestStop: newClosest });
@@ -71,21 +68,17 @@ function* orderStops(action) {
 	}
 }
 
-function doOrder(savedStops, newOrder, closestStop) {
+function doOrder(newOrder) {
 	const newStops = [];
-	const oldSavedIndex = Number(closestStop.savedIndex);
-	let index;
+	let closestStop;
+
 	for (let i = 0; i < newOrder.length; ++i) {
-		if (Number(newOrder[i]) === oldSavedIndex) {
+		if (newOrder[i].closest) {
 			// Update closest stop index
-			closestStop.savedIndex = i;
+			newOrder[i].savedIndex = i;
+			closestStop = newOrder[i];
 		} else {
-			if (oldSavedIndex < newOrder[i]) {
-				index = newOrder[i] - 1;
-			} else {
-				index = newOrder[i];
-			}
-			newStops.push(savedStops[index]);
+			newStops.push(newOrder[i]);
 		}
 	}
 	return { newStops, newClosest: closestStop };

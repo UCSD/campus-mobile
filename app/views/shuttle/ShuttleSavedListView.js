@@ -6,8 +6,7 @@ import {
 	Animated,
 	Platform,
 	Easing,
-	TouchableOpacity,
-	Alert
+	TouchableOpacity
 } from 'react-native';
 import SortableList from 'react-native-sortable-list';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -24,7 +23,6 @@ class ShuttleSavedListView extends React.Component {
 		const savedStops = this.props.savedStops.slice();
 		const { closestStop } = this.props;
 		savedStops.splice(closestStop.savedIndex, 0, closestStop); // insert closest
-
 		const savedObject = this.arrayToObject(savedStops);
 		this.setState({ savedObject });
 	}
@@ -34,9 +32,8 @@ class ShuttleSavedListView extends React.Component {
 			const savedStops = nextProps.savedStops.slice();
 			const { closestStop } = nextProps;
 			savedStops.splice(closestStop.savedIndex, 0, closestStop); // insert closest
-
+			console.log(JSON.stringify(savedStops));
 			const savedObject = this.arrayToObject(savedStops);
-			console.log(JSON.stringify(savedObject));
 			this.setState({ savedObject });
 		}
 	}
@@ -49,12 +46,25 @@ class ShuttleSavedListView extends React.Component {
 		}
 	}
 
+	getOrderedArray = () => {
+		const orderArray = [];
+		for (let i = 0; i < this._order.length; ++i) {
+			orderArray.push(this.state.savedObject[this._order[i]]);
+		}
+		return orderArray;
+	}
+
 	arrayToObject(array) {
 		const savedObject = {};
 		for (let i = 0; i < array.length; ++i) {
 			savedObject[i] = array[i];
 		}
 		return savedObject;
+	}
+
+	_handleRelease = () => {
+		const orderedStops = this.getOrderedArray();
+		this.props.orderStops(orderedStops);
 	}
 
 	render() {
@@ -72,7 +82,7 @@ class ShuttleSavedListView extends React.Component {
 						/>
 				}
 				onChangeOrder={(nextOrder) => { this._order = nextOrder; }}
-				onReleaseRow={(key) => this.props.orderStops(this._order)}
+				onReleaseRow={(key) => this._handleRelease()}
 			/>
 		);
 	}
