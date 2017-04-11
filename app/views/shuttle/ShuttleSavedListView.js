@@ -138,7 +138,7 @@ class SavedItem extends React.Component {
 
 	_handleRemove = (stopID) => {
 		this.props.removeStop(stopID);
-		Toast.show(this.props.data.name.trim() + ' removed.');
+		Toast.showWithGravity(this.props.data.name.trim() + ' removed.', Toast.SHORT, Toast.CENTER);
 	}
 
 	render() {
