@@ -63,8 +63,10 @@ class ShuttleSavedListView extends React.Component {
 	}
 
 	_handleRelease = () => {
-		const orderedStops = this.getOrderedArray();
-		this.props.orderStops(orderedStops);
+		if (this._order) {
+			const orderedStops = this.getOrderedArray();
+			this.props.orderStops(orderedStops);
+		}
 	}
 
 	render() {
