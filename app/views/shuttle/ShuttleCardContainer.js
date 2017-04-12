@@ -48,8 +48,8 @@ class ShuttleCardContainer extends CardComponent {
 			Actions.ShuttleRoutesListView({ shuttle_routes: alphaRoutes, gotoStopsList: this.gotoStopsList });
 		} else {
 			Alert.alert(
-				'Add Stop',
-				'Unable to add more than 10 stops, please remove a stop before trying.',
+				'Add a Stop',
+				'Unable to add more than 10 stops, please remove a stop and try again.',
 				[
 					{ text: 'Manage Stops', onPress: () => this.gotoSavedList() },
 					{ text: 'Cancel' }
