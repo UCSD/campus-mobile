@@ -75,10 +75,12 @@ class ShuttleCardContainer extends CardComponent {
 		Object.keys(stops)
 			.sort((a, b) => stops[a].name.trim().localeCompare(stops[b].name.trim()))
 				.forEach((key) => {
-					if (this.isSaved(stops[key])) {
-						stops[key].saved = true;
+					const stop = Object.assign({}, stops[key]);
+
+					if (this.isSaved(stop)) {
+						stop.saved = true;
 					}
-					alphaStops.push(stops[key]);
+					alphaStops.push(stop);
 				});
 
 		Actions.ShuttleStopsListView({ shuttle_stops: alphaStops, addStop: this.addStop });
