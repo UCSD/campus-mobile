@@ -58,12 +58,26 @@ class ShuttleCardContainer extends CardComponent {
 		}
 	}
 
+	isSaved = (stop) => {
+		const { savedStops } = this.props;
+
+		for (let i = 0; i < savedStops.length; ++i) {
+			if (savedStops[i].id === stop.id) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	gotoStopsList = (stops) => {
 		// Sort stops by alphabet
 		const alphaStops = [];
 		Object.keys(stops)
 			.sort((a, b) => stops[a].name.trim().localeCompare(stops[b].name.trim()))
 				.forEach((key) => {
+					if (this.isSaved(stops[key])) {
+						stops[key].saved = true;
+					}
 					alphaStops.push(stops[key]);
 				});
 

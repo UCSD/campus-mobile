@@ -33,8 +33,9 @@ const StopItem = ({ data, addStop }) => (
 		<TouchableOpacity
 			onPress={() => addStop(data.id, data.name.trim())}
 			style={styles.touchable}
+			disabled={(data.saved === true)}
 		>
-			<Text style={styles.row_name}>
+			<Text style={(data.saved) ? (styles.row_name_disabled) : (styles.row_name)}>
 				{data.name.trim()}
 			</Text>
 			<Icon
@@ -51,6 +52,7 @@ const styles = StyleSheet.create({
 	icon: { alignSelf: 'flex-end' },
 	touchable: { flex: 1, flexDirection: 'row', alignItems: 'center' },
 	row_name: { flex: 1, paddingRight: 10 },
+	row_name_disabled: { color: '#DDD', flex: 1, paddingRight: 10 },
 	list_row: { flex: 1, height: 60, padding: 7, paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: '#EEE', overflow: 'hidden' },
 });
 
