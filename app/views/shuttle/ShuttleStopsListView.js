@@ -17,18 +17,12 @@ const ShuttleStopsListView = ({ shuttle_stops, addStop }) => (
 		style={[css.main_container, css.scroll_main, css.whitebg]}
 		dataSource={resultsDataSource.cloneWithRows(shuttle_stops)}
 		renderRow={
-			(row) => {
-				if (row.saved === true) {
-					return null;
-				} else {
-					return (
-						<StopItem
-							data={row}
-							addStop={addStop}
-						/>
-					);
-				}
-			}
+			(row) => (
+				<StopItem
+					data={row}
+					addStop={addStop}
+				/>
+			)
 		}
 	/>
 );
