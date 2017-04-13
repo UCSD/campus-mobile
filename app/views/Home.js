@@ -42,6 +42,27 @@ class Home extends React.Component {
 	componentDidMount() {
 		logger.ga('View Loaded: Home');
 		this._cards = [];
+
+		if (this._scrollview) {
+			this._scrollview.scrollTo({ y: this.props.lastScroll, animated: false });
+		}
+	}
+
+	componentDidUpdate(prevProps, prevState) {
+		// Handle scroll when switching into Home View but it doesn't re-mount
+		if (prevProps.scene.sceneKey !== 'Home' &&
+			prevProps.scene.sceneKey !== 'tabbar' &&
+			this.props.scene.sceneKey === 'Home') {
+			if (this._scrollview) {
+				this._scrollview.scrollTo({ y: this.props.lastScroll, animated: false });
+			}
+		}
+	}
+
+	handleScroll = (event) => {
+		if (this.props.updateScroll) {
+			this.props.updateScroll(event.nativeEvent.contentOffset.y);
+		}
 	}
 
 	_getCards = () => {
@@ -84,7 +105,11 @@ class Home extends React.Component {
 			return (
 				<MenuContext style={{ flex:1 }}>
 					<View style={css.main_container}>
-						<ScrollView>
+						<ScrollView
+							ref={c => { this._scrollview = c; }}
+							onScroll={this.handleScroll}
+							scrollEventThrottle={69}
+						>
 							{/* SPECIAL TOP BANNER */}
 							<TopBannerView />
 
@@ -102,8 +127,17 @@ function mapStateToProps(state, props) {
 	return {
 		cards: state.cards,
 		locationPermission: state.location.permission,
-		scene: state.routes.scene
+		scene: state.routes.scene,
+		lastScroll: state.home.lastScroll
 	};
 }
 
-module.exports = connect(mapStateToProps)(Home);
+function mapDispatchtoProps(dispatch) {
+	return {
+		updateScroll: (scrollY) => {
+			dispatch({ type: 'UPDATE_HOME_SCROLL', scrollY });
+		}
+	};
+}
+
+module.exports = connect(mapStateToProps, mapDispatchtoProps)(Home);

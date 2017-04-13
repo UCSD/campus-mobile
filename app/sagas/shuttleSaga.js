@@ -88,11 +88,11 @@ function doOrder(newOrder) {
 }
 
 function* resetScroll() {
-	yield put({ type: 'SET_SCROLL', lastScroll: 0 });
+	yield put({ type: 'SET_SHUTTLE_SCROLL', lastScroll: 0 });
 }
 
 function* setScroll(action) {
-	yield put({ type: 'SET_SCROLL', lastScroll: action.scrollX });
+	yield put({ type: 'SET_SHUTTLE_SCROLL', lastScroll: action.scrollX });
 }
 
 function* fetchArrival(stopID) {
@@ -145,7 +145,7 @@ function* shuttleSaga() {
 	yield takeLatest('REMOVE_STOP', removeStop);
 	yield takeLatest('ORDER_STOPS', orderStops);
 	yield takeLatest('FETCH_ARRIVAL', fetchArrivalMan);
-	yield takeLatest('UPDATE_SCROLL', setScroll);
+	yield takeLatest('UPDATE_SHUTTLE_SCROLL', setScroll);
 	yield call(watchArrivals);
 }
 
