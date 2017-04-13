@@ -35,7 +35,7 @@ const DataListCard = ({ title, data, item, rows }) => (
 					<TouchableHighlight
 						underlayColor={'rgba(200,200,200,.1)'}
 						onPress={() => (
-							Actions.DataListViewAll({ title, data, item }) // Actions doesn't like being passed JSX
+							Actions.DataListViewAll({ title, data, item, card: (item !== 'DiningItem') }) // Actions doesn't like being passed JSX
 						)}
 					>
 						<View style={styles.more}>
