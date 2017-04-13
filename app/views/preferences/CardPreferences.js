@@ -14,7 +14,8 @@ import css from '../../styles/css';
 // View for user to manage preferences, including which cards are visible
 export default class CardPreferences extends Component {
 	_setCardState = (card, state) => {
-		this.props.dispatch(setCardState(card, state));
+		this.props.setCardState(card, state);
+		this.props.updateScroll(); // reset homeview scroll
 	}
 
 	// render out all the cards, currently showing or not
@@ -32,7 +33,7 @@ export default class CardPreferences extends Component {
 						</View>
 						<View style={css.centerAlign}>
 							<Switch
-								onValueChange={(value) => { this._setCardState(key, value) }}
+								onValueChange={(value) => { this._setCardState(key, value); }}
 								value={cardActive}
 							/>
 						</View>
@@ -61,4 +62,15 @@ function mapStateToProps(state, props) {
 	};
 }
 
-module.exports = connect(mapStateToProps)(CardPreferences);
+function mapDispatchtoProps(dispatch) {
+	return {
+		setCardState: (card, state) => {
+			dispatch(setCardState(card, state));
+		},
+		updateScroll: () => {
+			dispatch({ type: 'UPDATE_HOME_SCROLL', scrollY: 0 });
+		}
+	};
+}
+
+module.exports = connect(mapStateToProps, mapDispatchtoProps)(CardPreferences);
