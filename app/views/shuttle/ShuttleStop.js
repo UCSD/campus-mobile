@@ -15,7 +15,6 @@ import { updateArrivals } from '../../actions/shuttle';
 import ShuttleImageDict from './ShuttleImageDict';
 
 const stopUpdateInterval = 6000;
-const deviceWidth = Dimensions.get('window').width;
 
 const css = require('../../styles/css');
 const logger = require('../../util/logger');
@@ -61,7 +60,6 @@ const ShuttleStopContainer = React.createClass({
 					{ (stops[stopID].arrivals) ? (
 						<ShuttleSmallList
 							arrivalData={stops[stopID].arrivals.slice(0,3)}
-							style={{ width: deviceWidth }}
 							rows={3}
 							scrollEnabled={false}
 						/>
