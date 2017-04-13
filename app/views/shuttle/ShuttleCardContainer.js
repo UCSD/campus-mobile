@@ -118,7 +118,7 @@ function mapDispatchtoProps(dispatch) {
 			dispatch({ type: 'ADD_STOP', stopID });
 		},
 		updateScroll: (scrollX) => {
-			dispatch({ type: 'UPDATE_SCROLL', scrollX });
+			dispatch({ type: 'UPDATE_SHUTTLE_SCROLL', scrollX });
 		}
 	};
 }

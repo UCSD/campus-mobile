@@ -63,7 +63,7 @@ function shuttle(state = initialState, action) {
 		newState.savedStops = action.savedStops;
 		return newState;
 	}
-	case 'SET_SCROLL': {
+	case 'SET_SHUTTLE_SCROLL': {
 		newState.lastScroll = action.lastScroll;
 		return newState;
 	}
