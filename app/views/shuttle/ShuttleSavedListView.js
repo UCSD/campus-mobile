@@ -6,7 +6,8 @@ import {
 	Animated,
 	Platform,
 	Easing,
-	TouchableOpacity
+	TouchableOpacity,
+	View
 } from 'react-native';
 import SortableList from 'react-native-sortable-list';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -164,10 +165,14 @@ class SavedItem extends React.Component {
 						<TouchableOpacity
 							onPress={() => this._handleRemove(data.id)}
 						>
-							<Icon
-								name="cancel"
-								size={20}
-							/>
+							<View
+								style={styles.cancel_container}
+							>
+								<Icon
+									name="cancel"
+									size={20}
+								/>
+							</View>
 						</TouchableOpacity>
 					)
 				}
@@ -210,6 +215,7 @@ const styles = StyleSheet.create({
 		})
 	},
 	name_text: { flex: 1, margin: 7 },
+	cancel_container: { justifyContent: 'center', alignItems: 'center', width: 40, height: 40 }
 });
 
 export default connect(
