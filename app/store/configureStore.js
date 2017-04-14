@@ -33,7 +33,7 @@ const saveShuttleFilter = createFilter(
 // Migration
 const manifest = {
 	1: (state) => ({ ...state }),
-	2: (state) => ({ ...state, shuttle: Object.assign({}, state.shuttle, { savedStops: [] }) }),
+	2: (state) => ({ ...state, shuttle: Object.assign({}, state.shuttle, { savedStops: [], stops: {}, lastUpdated: 0 }) }),
 };
 
 // reducerKey is the key of the reducer you want to store the state version in

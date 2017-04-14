@@ -17,7 +17,9 @@ import AppSettings from '../../AppSettings';
 const css = require('../../styles/css');
 
 const ShuttleOverview = ({ onPress, stopData, closest }) => {
-	if (closest && !stopData) {
+	if (!stopData) {
+		return null;
+	} else if (closest && !stopData) {
 		return (<LocationRequiredContent />);
 	} else if (stopData.arrivals && stopData.arrivals.length > 0) {
 		return (

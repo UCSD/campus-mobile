@@ -5,7 +5,7 @@ const initialState = {
 	savedStops: [],
 	vehicles: {},
 	closestStop: null,
-	lastUpdated: new Date().getTime(),
+	lastUpdated: 0,
 	lastScroll: 0
 };
 
