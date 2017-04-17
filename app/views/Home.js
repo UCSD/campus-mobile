@@ -46,7 +46,36 @@ class Home extends React.Component {
 
 	_getCards = () => {
 		const activeCards = [];
+		let card;
 
+		for (let i = 0; i < this.props.cardOrder.length; ++i) {
+			const key = this.props.cardOrder[i];
+
+			if (this.props.cards[key].active) {
+				switch (key) {
+				case 'weather':
+					card = (<WeatherCardContainer key={'weather'} />);
+					break;
+				case 'shuttle':
+					card = (<ShuttleCardContainer key={'shuttle'} />);
+					break;
+				case 'dining':
+					card = (<DiningCardContainer key={'dining'} />);
+					break;
+				case 'events':
+					card = (<EventCardContainer key={'events'} />);
+					break;
+				case 'quicklinks':
+					card = (<QuicklinksCardContainer key={'quicklinks'} />);
+					break;
+				case 'news':
+					card = (<NewsCardContainer key={'news'} />);
+					break;
+				}
+				activeCards.push(card);
+			}
+		}
+		/*
 		// Setup Cards
 		if (this.props.cards.weather.active) {
 			activeCards.push(<WeatherCardContainer key={'weather'} />);
@@ -66,6 +95,7 @@ class Home extends React.Component {
 		if (this.props.cards.news.active) {
 			activeCards.push(<NewsCardContainer key={'news'} />);
 		}
+		*/
 		return activeCards;
 	}
 
@@ -96,7 +126,8 @@ class Home extends React.Component {
 
 function mapStateToProps(state, props) {
 	return {
-		cards: state.cards,
+		cards: state.cards.cards,
+		cardOrder: state.cards.cardOrder,
 		locationPermission: state.location.permission
 	};
 }
