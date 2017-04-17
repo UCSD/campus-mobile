@@ -1,8 +1,10 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 import Menu, { MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux';
+import ElevatedView from 'react-native-elevated-view';
+
 import { hideCard } from '../../actions/cards';
 import CardHeader from './CardHeader';
 
@@ -42,12 +44,20 @@ class Card extends React.Component {
 	}
 	render() {
 		return (
-			<View style={css.card_main} ref={(i) => { this._card = i; }}>
+			<ElevatedView
+				style={styles.card_main}
+				ref={(i) => { this._card = i; }}
+				elevation={3}
+			>
 				<CardHeader id={this.props.id} title={this.props.title} menu={this._renderMenu()} />
 				{this.props.children}
-			</View>
+			</ElevatedView>
 		);
 	}
 }
+
+const styles = StyleSheet.create({
+	card_main: { backgroundColor: '#F9F9F9', margin: 6, alignItems: 'flex-start', justifyContent: 'center' },
+});
 
 export default connect()(Card);
