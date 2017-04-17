@@ -36,7 +36,6 @@ function mapStateToProps(state, props) {
 		locationPermission: state.location.permission,
 		closestStop: state.shuttle.closestStop,
 		stopData: state.shuttle.stops,
-		arrivalData: (state.shuttle.closestStop !== -1) ? (state.shuttle.stops[state.shuttle.closestStop].arrivals) : (null),
 	};
 }
 

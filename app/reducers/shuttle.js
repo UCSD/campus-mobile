@@ -3,7 +3,7 @@ const initialState = {
 	routes: null,// shuttle_routes,
 	stops: null,// shuttle_stops_no_routes,
 	vehicles: {},
-	closestStop: -1,
+	closestStop: null,
 	lastUpdated: new Date().getTime(),
 };
 
