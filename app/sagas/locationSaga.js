@@ -53,8 +53,8 @@ function* getClosestStop(location) {
 	return closestStop;
 }
 
-function* homeSaga() {
+function* locationSaga() {
 	yield call(watchLocation);
 }
 
-export default homeSaga;
+export default locationSaga;

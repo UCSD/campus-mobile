@@ -17,6 +17,7 @@ import { getCampusPrimary } from '../../util/general';
  * @param {Object[]} data contains data for row items
  * @param {String} item String name for row item, passing string here instead of actual component cuz of Actions
  * @param {Number} rows number of rows to display on card
+ * @param {Function} cardSort array sorting function
  * @return {JSX} Generic component for list type cards
  */
 const DataListCard = ({ title, data, item, rows, cardSort }) => {
