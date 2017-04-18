@@ -5,15 +5,11 @@ import {
 	ScrollView,
 	Image,
 	ListView,
-	AppState
 } from 'react-native';
 
-import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
-import { updateSurf } from '../../actions/surf';
 
 const css = require('../../styles/css');
-const AppSettings = require('../../AppSettings');
 const logger = require('../../util/logger');
 
 const surfDataSource = new ListView.DataSource({
@@ -21,40 +17,13 @@ const surfDataSource = new ListView.DataSource({
 	sectionHeaderHasChanged: (s1, s2) => s1 !== s2 });
 const surfHeader = require('../../assets/img/surf_report_header.jpg');
 
-class SurfReport extends React.Component {
-	componentDidMount() {
-		logger.log('View Mounted: Surf');
+const SurfReport = ({ surfData }) => {
+	logger.log('View Mounted: Surf');
 
-		this.props.updateSurf();
-
-		AppState.addEventListener('change', this._handleAppStateChange);
-	}
-
-	componentWillUnmount() {
-		AppState.removeEventListener('change', this._handleAppStateChange);
-	}
-
-	_handleAppStateChange = (currentAppState) => {
-		this.setState({ currentAppState });
-
-		// check TTL and refresh surf data if needed
-		if (currentAppState === 'active') {
-			const nowTime = new Date().getTime();
-			const timeDiff = nowTime - this.props.surfLastUpdated;
-			const surfTTL = AppSettings.SURF_API_TTL * 1000; // convert secs to ms
-
-			if (timeDiff > surfTTL) {
-				this.props.updateSurf();
-			}
-		}
-	}
-
-	render() {
-		return (<SurfView
-			surfData={this.props.surfData}
-		/>);
-	}
-}
+	return (<SurfView
+		surfData={surfData}
+	/>);
+};
 
 // This stuff should be moved to different files, but we should be redoing this view soon
 const SurfView = ({ surfData }) => (
@@ -117,17 +86,8 @@ const mapStateToProps = (state) => (
 	}
 );
 
-const mapDispatchToProps = (dispatch) => (
-	{
-		updateSurf: () => {
-			dispatch(updateSurf());
-		}
-	}
-);
-
 const ActualSurfReport = connect(
-	mapStateToProps,
-	mapDispatchToProps
+	mapStateToProps
 )(SurfReport);
 
 export default ActualSurfReport;
