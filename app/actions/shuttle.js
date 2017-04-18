@@ -84,7 +84,6 @@ function updateClosestStop(location) {
 				closestDist = distanceFromStop;
 			}
 		});
-
 		dispatch({
 			type: 'SET_CLOSEST_STOP',
 			closestStop

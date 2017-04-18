@@ -34,7 +34,7 @@ function mapStateToProps(state, props) {
 	return {
 		location: state.location.position,
 		locationPermission: state.location.permission,
-		closestStop: state.shuttle.closestStop,
+		closestStop: state.shuttle.closestStop.id,
 		stopData: state.shuttle.stops,
 	};
 }

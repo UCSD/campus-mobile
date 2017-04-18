@@ -66,7 +66,6 @@ export default class Main extends Component {
 
 		return (
 			<View style={css.flex}>
-				<GeoLocationContainer />
 				<RouterWithRedux
 					navigationBarStyle={general.platformIOS() ? css.navIOS : css.navAndroid}
 					titleStyle={general.platformIOS() ? css.navIOSTitle : css.navAndroidTitle}
