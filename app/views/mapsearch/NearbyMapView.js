@@ -206,20 +206,22 @@ class NearbyMapView extends React.Component {
 	}
 
 	updateSearch = (text) => {
-		this.props.fetchSearch(text);
-		this.scrollRef.scrollTo({ x: 0, y: 0, animated: true });
-		this.barRef.blur();
+		if (text && text.trim() !== '') {
+			this.props.fetchSearch(text);
+			this.scrollRef.scrollTo({ x: 0, y: 0, animated: true });
+			this.barRef.blur();
 
-		this.setState({
-			searchInput: text,
-			showBar: true,
-			iconStatus: 'load',
-			showShuttle: true,
-			showNav: true,
-			selectedResult: 0
-		});
+			this.setState({
+				searchInput: text,
+				showBar: true,
+				iconStatus: 'load',
+				showShuttle: true,
+				showNav: true,
+				selectedResult: 0
+			});
 
-		this.timer = setTimeout(this.searchTimeout, 5000);
+			this.timer = setTimeout(this.searchTimeout, 5000);
+		}
 	}
 
 	searchTimeout = () => {
