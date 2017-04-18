@@ -29,15 +29,19 @@ class QuicklinksCardContainer extends CardComponent {
 	}
 
 	render() {
-		return (
-			<DataListCard
-				title="Links"
-				data={this.props.linksData}
-				rows={4}
-				item={'QuicklinksItem'}
-				cardSort={general.dynamicSort('card-order')}
-			/>
-		);
+		if (this.props.linksData) {
+			return (
+				<DataListCard
+					title="Links"
+					data={this.props.linksData}
+					rows={4}
+					item={'QuicklinksItem'}
+					cardSort={general.dynamicSort('card-order')}
+				/>
+			);
+		} else {
+			return null;
+		}
 	}
 }
 
