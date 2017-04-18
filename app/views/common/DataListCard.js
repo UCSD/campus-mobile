@@ -4,13 +4,14 @@ import {
 	Text,
 	TouchableHighlight,
 	StyleSheet,
+	ActivityIndicator
 } from 'react-native';
 
 import { Actions } from 'react-native-router-flux';
 
 import DataListView from './DataListView';
 import Card from '../card/Card';
-import { getCampusPrimary } from '../../util/general';
+import { getCampusPrimary, getMaxCardWidth } from '../../util/general';
 
 /**
  * @param  {String} title Card header
@@ -22,7 +23,7 @@ import { getCampusPrimary } from '../../util/general';
  */
 const DataListCard = ({ title, data, item, rows, cardSort }) => {
 	let sortedData = data;
-	if (cardSort) {
+	if (cardSort && sortedData) {
 		sortedData = sortedData.slice().sort(cardSort);
 	}
 
@@ -50,7 +51,9 @@ const DataListCard = ({ title, data, item, rows, cardSort }) => {
 						</TouchableHighlight>
 					</View>
 				) : (
-					<Text style={styles.content_load_err}>There was a problem loading the news.</Text>
+					<View style={[styles.cardcenter, styles.wc_loading_height]}>
+						<ActivityIndicator size="large" />
+					</View>
 				)}
 			</View>
 		</Card>
@@ -59,7 +62,7 @@ const DataListCard = ({ title, data, item, rows, cardSort }) => {
 
 DataListCard.propTypes = {
 	title: PropTypes.string.isRequired,
-	data: PropTypes.array.isRequired,
+	data: PropTypes.array,
 	item: PropTypes.string.isRequired,
 	rows: PropTypes.number,
 	cardSort: PropTypes.func,
@@ -74,6 +77,7 @@ const styles = StyleSheet.create({
 	content_load_err: { padding: 30, fontSize:16, alignSelf: 'center'  },
 	more: { alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4, paddingTop: 8, paddingBottom: 4 },
 	more_label: { fontSize: 20, color: getCampusPrimary(), fontWeight: '300' },
+	cardcenter: { alignItems: 'center', justifyContent: 'center', width: getMaxCardWidth() },
 });
 
 export default DataListCard;
