@@ -2,6 +2,7 @@ import React from 'react';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 
+import SurfButton from './SurfButton';
 import WeatherCard from './WeatherCard';
 import logger from '../../util/logger';
 
@@ -13,7 +14,7 @@ const WeatherCardContainer = ({ weatherData }) => {
 	return (
 		<WeatherCard
 			weatherData={weatherData}
-			gotoSurfReport={() => Actions.SurfReport()}
+			actionButton={<SurfButton />}
 		/>
 	);
 };

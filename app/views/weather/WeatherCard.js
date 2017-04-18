@@ -3,7 +3,6 @@ import {
 	View,
 	Text,
 	Image,
-	TouchableHighlight,
 	ActivityIndicator,
 	StyleSheet,
 } from 'react-native';
@@ -12,9 +11,7 @@ import Card from '../card/Card';
 
 import WeatherWeek from './WeatherWeek';
 import {
-	doPRM,
 	getMaxCardWidth,
-	getCampusPrimary
 } from '../../util/general';
 
 import AppSettings from '../../AppSettings';
@@ -31,13 +28,13 @@ import AppSettings from '../../AppSettings';
  * @param {String} weatherData.daily[].icon Part of icon filename
  * @param {Number} weatherData.daily[].tempMax Max temperature for day
  * @param {Number} weatherData.daily[].tempMin Min temperature for day
- * @param {Function} gotoSurfReport Navigates to SurfReport
+ * @param {JSX} Optional button component
  * @return {JSX} Presentational Component for WeatherCard
  *
  * @todo Provide icon default using non-image urls?
  * @todo Get rid of PRM
  */
-const WeatherCard = ({ weatherData, gotoSurfReport }) => (
+const WeatherCard = ({ weatherData, actionButton }) => (
 	<Card id="weather" title="Weather">
 		{weatherData ? (
 			<View>
@@ -59,12 +56,7 @@ const WeatherCard = ({ weatherData, gotoSurfReport }) => (
 				</View>
 
 				<WeatherWeek weatherData={weatherData.daily} />
-
-				<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => gotoSurfReport()}>
-					<View style={styles.wc_border}>
-						<Text style={styles.wc_surfreport_more}>Surf Report &raquo;</Text>
-					</View>
-				</TouchableHighlight>
+				{actionButton}
 			</View>
 		) : (
 			<View style={[styles.cardcenter, styles.wc_loading_height]}>
@@ -76,20 +68,18 @@ const WeatherCard = ({ weatherData, gotoSurfReport }) => (
 
 WeatherCard.propTypes = {
 	weatherData: PropTypes.object,
-	gotoSurfReport: PropTypes.func
+	actionButton: PropTypes.element
 };
 
 const styles = StyleSheet.create({
 	wc_toprow: { flexDirection: 'row', borderBottomWidth: 1, borderColor: '#EEE', justifyContent: 'center', alignItems: 'center', width: getMaxCardWidth(), paddingHorizontal: 14 },
 	wc_toprow_left: { flex: 4 },
-	wc_current_temp: { fontSize: doPRM(22), fontWeight: '300' },
-	wc_current_summary: { fontSize: doPRM(15), color: '#444', paddingTop: 10, fontWeight: '300' },
+	wc_current_temp: { fontSize: 22, fontWeight: '300' },
+	wc_current_summary: { fontSize: 15, color: '#444', paddingTop: 10, fontWeight: '300' },
 	wc_toprow_right: { flex: 1 },
-	wc_toprow_icon: { width: doPRM(68), height: doPRM(68) },
-	wc_border: { borderTopWidth: 1, borderTopColor: '#CCC', width: getMaxCardWidth() },
-	wc_surfreport_more: { fontSize: doPRM(20), fontWeight: '300', color: getCampusPrimary(), paddingHorizontal: 14, paddingVertical: 10 },
+	wc_toprow_icon: { width: 68, height: 68 },
 	cardcenter: { alignItems: 'center', justifyContent: 'center', width: getMaxCardWidth() },
-	wc_loading_height: { height: doPRM(270) },
+	wc_loading_height: { height: 270 },
 });
 
 export default WeatherCard;
