@@ -21,16 +21,12 @@ import GeoLocationContainer from './containers/geoLocationContainer';
 import Home from './views/Home';
 import SurfReport from './views/weather/SurfReport';
 import ShuttleStop from './views/shuttle/ShuttleStop';
-import DiningList from './views/dining/DiningList';
 import DiningDetail from './views/dining/DiningDetail';
 import DiningNutrition from './views/dining/DiningNutrition';
-import EventListView from './views/events/EventListView';
 import EventDetail from './views/events/EventDetail';
 import WebWrapper from './views/WebWrapper';
 import WelcomeWeekView from './views/welcomeWeek/WelcomeWeekView';
-import QuicklinksListView from './views/quicklinks/QuicklinksListView';
 import NewsDetail from './views/news/NewsDetail';
-import DiningListView from './views/dining/DiningListView';
 import FeedbackView from './views/FeedbackView';
 import PreferencesView from './views/preferences/PreferencesView';
 import NearbyMapView from './views/mapsearch/NearbyMapView';
@@ -79,13 +75,11 @@ export default class Main extends Component {
 								<Scene key="Home" component={Home} renderTitle={() => this.campusLogo()} />
 								<Scene key="SurfReport" component={SurfReport} title="Surf Report" />
 								<Scene key="ShuttleStop" component={ShuttleStop} title="Shuttle" />
-								<Scene key="DiningList" component={DiningList} title="Dining" />
 								<Scene key="DiningDetail" component={DiningDetail} title="Dining" />
 								<Scene key="DiningNutrition" component={DiningNutrition} title="Nutrition" />
 								<Scene key="EventDetail" component={EventDetail} title="Events" />
 								<Scene key="WebWrapper" component={WebWrapper} />
 								<Scene key="WelcomeWeekView" component={WelcomeWeekView} title="Welcome Week" />
-								<Scene key="QuicklinksListView" component={QuicklinksListView} title="Links" />
 								<Scene key="NewsDetail" component={NewsDetail} title="News" />
 								<Scene key="DataListViewAll" component={DataListViewAll} />
 							</Scene>

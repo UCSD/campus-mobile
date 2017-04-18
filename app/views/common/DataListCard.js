@@ -13,48 +13,55 @@ import Card from '../card/Card';
 import { getCampusPrimary } from '../../util/general';
 
 /**
- * Generic component for list type cards
  * @param  {String} title Card header
  * @param {Object[]} data contains data for row items
  * @param {String} item String name for row item, passing string here instead of actual component cuz of Actions
  * @param {Number} rows number of rows to display on card
- * @return {JSX}
+ * @return {JSX} Generic component for list type cards
  */
-const DataListCard = ({ title, data, item, rows }) => (
-	<Card id={title} title={title}>
-		<View style={styles.list}>
-			{data ? (
-				<View>
-					<DataListView
-						data={data}
-						rows={rows}
-						scrollEnabled={false}
-						item={item}
-						card={false}
-					/>
-					<TouchableHighlight
-						underlayColor={'rgba(200,200,200,.1)'}
-						onPress={() => (
-							Actions.DataListViewAll({ title, data, item }) // Actions doesn't like being passed JSX
-						)}
-					>
-						<View style={styles.more}>
-							<Text style={styles.more_label}>View All</Text>
-						</View>
-					</TouchableHighlight>
-				</View>
-			) : (
-				<Text style={styles.content_load_err}>There was a problem loading the news.</Text>
-			)}
-		</View>
-	</Card>
-);
+const DataListCard = ({ title, data, item, rows, cardSort }) => {
+	let sortedData = data;
+	if (cardSort) {
+		sortedData = sortedData.slice().sort(cardSort);
+	}
+
+	return (
+		<Card id={title} title={title}>
+			<View style={styles.list}>
+				{data ? (
+					<View>
+						<DataListView
+							data={sortedData}
+							rows={rows}
+							scrollEnabled={false}
+							item={item}
+							card={false}
+						/>
+						<TouchableHighlight
+							underlayColor={'rgba(200,200,200,.1)'}
+							onPress={() => (
+								Actions.DataListViewAll({ title, data, item }) // Actions doesn't like being passed JSX
+							)}
+						>
+							<View style={styles.more}>
+								<Text style={styles.more_label}>View All</Text>
+							</View>
+						</TouchableHighlight>
+					</View>
+				) : (
+					<Text style={styles.content_load_err}>There was a problem loading the news.</Text>
+				)}
+			</View>
+		</Card>
+	);
+};
 
 DataListCard.propTypes = {
 	title: PropTypes.string.isRequired,
 	data: PropTypes.array.isRequired,
 	item: PropTypes.string.isRequired,
 	rows: PropTypes.number,
+	cardSort: PropTypes.func,
 };
 
 DataListCard.defaultProps = {

@@ -5,9 +5,10 @@ import {
 
 import { connect } from 'react-redux';
 
+import DataListCard from '../common/DataListCard';
 import CardComponent from '../card/CardComponent';
 import { updateLinks } from '../../actions/links';
-import QuicklinksCard from './QuicklinksCard';
+import general from '../../util/general';
 import logger from '../../util/logger';
 
 class QuicklinksCardContainer extends CardComponent {
@@ -29,8 +30,12 @@ class QuicklinksCardContainer extends CardComponent {
 
 	render() {
 		return (
-			<QuicklinksCard
+			<DataListCard
+				title="Links"
 				data={this.props.linksData}
+				rows={4}
+				item={'QuicklinksItem'}
+				cardSort={general.dynamicSort('card-order')}
 			/>
 		);
 	}

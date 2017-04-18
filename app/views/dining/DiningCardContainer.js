@@ -14,7 +14,7 @@ class DiningCardContainer extends CardComponent {
 	}
 
 	render() {
-		const { diningData, locationPermission } = this.props;
+		const { diningData } = this.props;
 		// todo: use location permission
 		return (
 			<DataListCard
@@ -23,10 +23,6 @@ class DiningCardContainer extends CardComponent {
 				item={'DiningItem'}
 			/>
 		);
-	}
-
-	gotoDiningListView = () => {
-		Actions.DiningListView({ data: this.props.diningData });
 	}
 }
 
