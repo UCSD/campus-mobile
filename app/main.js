@@ -30,7 +30,6 @@ import WebWrapper from './views/WebWrapper';
 import WelcomeWeekView from './views/welcomeWeek/WelcomeWeekView';
 import QuicklinksListView from './views/quicklinks/QuicklinksListView';
 import NewsDetail from './views/news/NewsDetail';
-import NewsListView from './views/news/NewsListView';
 import DiningListView from './views/dining/DiningListView';
 import FeedbackView from './views/FeedbackView';
 import PreferencesView from './views/preferences/PreferencesView';
