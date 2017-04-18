@@ -10,7 +10,9 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 const SearchMap = ({ location, selectedResult, style, shuttle, vehicles }) => (
 	<MapView
 		ref={(MapRef) => {
-			if ( MapRef != null && selectedResult != null ) {
+			if ( MapRef != null && selectedResult != null && this._lastResult !== selectedResult) {
+				this._lastResult = selectedResult; // Make sure not to re-zoom if already did so for this result
+
 				// Calculate center region and animate to it
 				const midLat = (location.coords.latitude + selectedResult.mkrLat) / 2;
 				const midLong = (location.coords.longitude + selectedResult.mkrLong) / 2;
