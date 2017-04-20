@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Device from 'react-native-device-info';
 
 import { hideKeyboard, getCampusPrimary } from '../util/general';
 import logger from '../util/logger';
@@ -68,6 +69,23 @@ class FeedbackView extends Component {
 			formData.append('element_1', this.state.commentsText);
 			formData.append('element_2', this.state.nameText);
 			formData.append('element_3', this.state.emailText);
+			formData.append(
+				'element_4',
+				'Device Manufacturer: ' + Device.getManufacturer() + '\n' +
+				'Device Brand: ' + Device.getBrand() + '\n' +
+				'Device Model: ' + Device.getModel() + '\n' +
+				'Device ID: ' + Device.getDeviceId() + '\n' +
+				'System Name: ' + Device.getSystemName() + '\n' +
+				'System Version: ' + Device.getSystemVersion() + '\n' +
+				'Bundle ID: ' + Device.getBundleId() + '\n' +
+				'App Version: ' + Device.getVersion() + '\n' +
+				'Build Number: ' + Device.getBuildNumber() + '\n' +
+				'Device Name: ' + Device.getDeviceName() + '\n' +
+				'User Agent: ' + Device.getUserAgent() + '\n' +
+				'Device Locale: ' + Device.getDeviceLocale() + '\n' +
+				'Device Country: ' + Device.getDeviceCountry() + '\n' +
+				'Timezone: ' + Device.getTimezone()
+			);
 			formData.append('form_id','175631');
 			formData.append('submit_form','1');
 			formData.append('page_number','1');
