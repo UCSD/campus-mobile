@@ -26,7 +26,7 @@ import SearchShuttleMenu from './SearchShuttleMenu';
 import ShuttleLocationContainer from '../../containers/shuttleLocationContainer';
 
 import { toggleRoute } from '../../actions/shuttle';
-import { clearSearch, fetchSearch } from '../../actions/map';
+import { clearSearch, fetchSearch, removeHistory } from '../../actions/map';
 
 import css from '../../styles/css';
 import logger from '../../util/logger';
@@ -130,7 +130,8 @@ class NearbyMapView extends React.Component {
 		if (((this.props.location.coords.latitude !== nextProps.location.coords.latitude) ||
 			(this.props.location.coords.longitude !== nextProps.location.coords.longitude)) ||
 			this.state !== nextState ||
-			this.props.search_results !== nextProps.search_results) {
+			this.props.search_results !== nextProps.search_results ||
+			this.props.search_history.length !== nextProps.search_history.length) {
 			/*
 			(this.state.selectedResult !== nextState.selectedResult) ||
 			(this.state.iconStatus !== nextState.iconStatus) ||
@@ -346,6 +347,7 @@ class NearbyMapView extends React.Component {
 							{(this.props.search_history.length !== 0) ? (
 								<SearchHistoryCard
 									pressHistory={this.updateSearch}
+									removeHistory={this.props.removeHistory}
 									data={this.props.search_history}
 								/>
 								) : (null)}
@@ -397,6 +399,9 @@ const mapDispatchToProps = (dispatch, ownProps) => (
 		},
 		toggle: (route) => {
 			dispatch(toggleRoute(route));
+		},
+		removeHistory: (index) => {
+			dispatch(removeHistory(index));
 		}
 	}
 );

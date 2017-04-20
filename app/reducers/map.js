@@ -19,6 +19,10 @@ function map(state = initialState, action) {
 
 		return newState;
 	}
+	case 'UPDATE_HISTORY': {
+		newState.history = action.history;
+		return newState;
+	}
 	case 'SET_SEARCH_RESULTS': {
 		newState.results = action.results;
 
