@@ -39,6 +39,7 @@
 
 import React from 'react';
 import { StyleSheet, Dimensions, StatusBar } from 'react-native';
+import AppSettings from '../AppSettings';
 
 var general = require('../util/general');
 
@@ -60,10 +61,10 @@ var IOSMarginTop = NavigatorIOSHeight,
 	AndroidMarginBottom = 0;
 
 // Campus Branding
-var campus_primary = '#182B49';
+var CAMPUS_PRIMARY = AppSettings.CAMPUS_PRIMARY;
+var CAMPUS_SECONDARY = AppSettings.CAMPUS_SECONDARY;
 
 var css = StyleSheet.create({
-
 
 	/********************************************
 	 *  100 - Navigation
@@ -82,7 +83,7 @@ var css = StyleSheet.create({
 	tabBarIOS: { borderTopWidth: 1, borderColor: '#DADADA', backgroundColor: '#FFF', height: TabBarHeight },
 	tabBarAndroid: { top: NavigatorAndroidHeight, borderBottomWidth: 1, borderColor: '#DADADA', backgroundColor: '#FFF', height: TabBarHeight },
 	tabContainer: { width: 70, paddingVertical: 8 },
-	tabContainerBottom: { borderBottomColor: campus_primary },
+	tabContainerBottom: { borderBottomColor: CAMPUS_PRIMARY },
 	tabIcon: { color: '#999', alignSelf: 'center', backgroundColor: 'rgba(0,0,0,0)', opacity: .95 },
 
 
@@ -119,10 +120,10 @@ var css = StyleSheet.create({
 	card_row_center: { alignItems: 'center', justifyContent: 'center', width: maxCardWidth, overflow: 'hidden' },
 	card_loader: { height: 368 },
 	card_more: { alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4, paddingTop: 8, paddingBottom: 4 },
-	card_more_label: { fontSize: 20, color: campus_primary, fontWeight: '300' },
+	card_more_label: { fontSize: 20, color: CAMPUS_PRIMARY, fontWeight: '300' },
 
 	// 302 - Weather Card
-	weathercard_more: { justifyContent: 'center', width: windowWidth - 30, padding: 10, fontSize: 24, fontWeight: '500', color: campus_primary },
+	weathercard_more: { justifyContent: 'center', width: windowWidth - 30, padding: 10, fontSize: 24, fontWeight: '500', color: CAMPUS_PRIMARY },
 	weathercard_border: { borderTopWidth: 1, borderTopColor: '#CCC', width: maxCardWidth },
 	weatherccard_loading_height: { height: 270 },
 	wc_main: {},
@@ -138,7 +139,7 @@ var css = StyleSheet.create({
 	wf_icon: { height: 33, width: 33 },
 	wf_tempMax: { fontSize: 14, fontWeight: '300', color: '#000', paddingTop: 10 },
 	wf_tempMin: { fontSize: 14, fontWeight: '300', color: '#666', paddingTop: 10 },
-	wc_surfreport_more: { fontSize: 20, fontWeight: '300', color: campus_primary, paddingHorizontal: 14, paddingVertical: 10 },
+	wc_surfreport_more: { fontSize: 20, fontWeight: '300', color: CAMPUS_PRIMARY, paddingHorizontal: 14, paddingVertical: 10 },
 
 	// 303 - Shuttle Card
 	shuttle_card_row: { width: maxCardWidth, overflow: 'hidden', borderBottomWidth: 1, borderBottomColor: '#DDD' },
@@ -171,17 +172,17 @@ var css = StyleSheet.create({
 	dining_card: { width: maxCardWidth, padding: 8 },
 	dining_card_filters: { flexDirection: 'row', justifyContent: 'center', marginBottom: 6 },
 	dining_card_filter_button: { paddingVertical: 8, paddingHorizontal: 14, fontSize: 14, color: '#888', borderWidth: 1, borderColor: '#CCC', borderRadius: 3, backgroundColor: '#EEE', textAlign: 'center', marginHorizontal: 8 },
-	dining_card_filter_button_active: { paddingVertical: 8, paddingHorizontal: 14, fontSize: 14, color: '#EEE', borderWidth: 1, borderColor: '#CCC', borderRadius: 3, backgroundColor: campus_primary, textAlign: 'center', marginHorizontal: 8, overflow: 'hidden' },
+	dining_card_filter_button_active: { paddingVertical: 8, paddingHorizontal: 14, fontSize: 14, color: '#EEE', borderWidth: 1, borderColor: '#CCC', borderRadius: 3, backgroundColor: CAMPUS_PRIMARY, textAlign: 'center', marginHorizontal: 8, overflow: 'hidden' },
 	dc_locations: { flexDirection: 'column' },
 	dc_locations_row: { backgroundColor: '#F9F9F9', flexDirection: 'row', paddingBottom: 10, paddingTop: 10, borderBottomWidth: 1, borderBottomColor: '#DDD' },
 	dc_locations_row_left: { flex: 6, justifyContent: 'center' },
-	dc_locations_title: { fontSize: 20, color: campus_primary },
+	dc_locations_title: { fontSize: 20, color: CAMPUS_PRIMARY },
 	dc_locations_hours: { fontSize: 12, color: '#666', paddingTop: 1 },
 	dc_locations_spec_hours: { fontSize: 12, color: '#666', paddingTop: 4 },
 	dc_locations_description: { fontSize: 12, color: '#666', paddingTop: 6 },
 	dc_locations_row_right: { flex: 1, alignItems: 'center', justifyContent: 'center' },
 	dining_card_more: { alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4, paddingTop: 8, paddingBottom: 4, borderTopWidth: 1, borderTopColor: '#DDD' },
-	dining_card_more_label: { fontSize: 20, color: campus_primary, fontWeight: '300' },
+	dining_card_more_label: { fontSize: 20, color: CAMPUS_PRIMARY, fontWeight: '300' },
 
 	// 305 - Events & News Cards
 	events_list: { alignSelf: 'stretch', padding: 8 },
@@ -191,15 +192,15 @@ var css = StyleSheet.create({
 	events_list_info_left: { flex: 1 },
 	events_list_image: { width: 120, height: 70, marginLeft: 10, borderWidth: 1, borderColor: '#EEE' },
 	events_list_desc: { fontSize: 14, color: '#666' },
-	events_list_postdate: { fontSize: 11, color: campus_primary, paddingTop: 8 },
+	events_list_postdate: { fontSize: 11, color: CAMPUS_PRIMARY, paddingTop: 8 },
 	events_more: { alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4, paddingTop: 8, paddingBottom: 4 },
-	events_more_label: { fontSize: 20, color: campus_primary, fontWeight: '300' },
+	events_more_label: { fontSize: 20, color: CAMPUS_PRIMARY, fontWeight: '300' },
 	events_card_container: { flexDirection: 'row', padding: 14, borderBottomWidth: 1, borderBottomColor: '#EEE', alignItems: 'center' },
 	events_card_title_container: { flexDirection: 'row', alignItems: 'center', width: maxCardWidth, padding: 8, borderBottomWidth: 1, borderBottomColor: '#DDD' },
 	events_card_title: { flex:1, flexWrap: 'wrap', fontSize: 17, color: '#000' },
 	events_card_left_container: { flex: 10 },
 	events_card_desc: { flexWrap: 'wrap', fontSize: 14, color: '#666', paddingTop: 8 },
-	events_card_postdate: { fontSize: 11, color: campus_primary, paddingTop: 8 },
+	events_card_postdate: { fontSize: 11, color: CAMPUS_PRIMARY, paddingTop: 8 },
 	news_card_image: { width: 130, height: 100, marginRight: 4, marginLeft: 10, borderWidth: 1, borderColor: '#CCC'},
 	events_card_image: { width: 130, height: 73, marginRight: 4, marginLeft: 10, borderWidth: 1, borderColor: '#CCC'},
 	content_load_err: { padding: 30, fontSize:16, alignSelf: 'center'  },
@@ -232,7 +233,7 @@ var css = StyleSheet.create({
 	
 	// 402 - Shuttle Stop
 	shuttlestop_image: { width: windowWidth, height: round(windowWidth * .533) },
-	shuttlestop_name_container: { flexDirection: 'row', alignItems: 'center', width: windowWidth, paddingVertical: 10, paddingHorizontal: 14, backgroundColor: campus_primary },
+	shuttlestop_name_container: { flexDirection: 'row', alignItems: 'center', width: windowWidth, paddingVertical: 10, paddingHorizontal: 14, backgroundColor: CAMPUS_PRIMARY },
 	shuttlestop_name_text: { flex: 5, color: '#FFF', fontSize: 24, fontWeight: '300' },
 	shuttlestop_refresh_container: { flex: 1, alignItems: 'flex-end' },
 	shuttlestop_refresh: { width: 26, height: 26 },
@@ -260,10 +261,10 @@ var css = StyleSheet.create({
 	dl_market_scroller: { height: 140 },
 	dl_market_scroller_image: { width: 140, height: 140, borderRadius: 5, marginHorizontal: 7 },
 	dl_market_directions: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderBottomColor: '#EEE', margin: 6, padding: 6 },
-	dl_dir_label: { flex: 5, fontSize: 22, color: campus_primary },
+	dl_dir_label: { flex: 5, fontSize: 22, color: CAMPUS_PRIMARY },
 	dl_dir_traveltype_container: { flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'center' },
 	dl_dir_icon: { width: 28, height: 28 },
-	dl_dir_eta: { color: campus_primary, fontSize: 11, fontWeight: '600' },
+	dl_dir_eta: { color: CAMPUS_PRIMARY, fontSize: 11, fontWeight: '600' },
 	dl_noresults: { color: '#444', fontSize: 15 },
 	dl_market_date: { borderBottomWidth: 1, borderBottomColor: '#EEE', paddingBottom: 12, paddingTop: 6 },
 	dl_market_date_label: { fontSize: 22, color: '#444', textAlign: 'center' },
@@ -272,16 +273,16 @@ var css = StyleSheet.create({
 	dl_meal_button: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 40, },
 	dl_meal_button_active: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 40, },
 	dl_mealtype_circle: { borderWidth: 1, borderColor: '#CCC', borderRadius: 8, width: 16, height: 16, backgroundColor: '#CCC', marginRight: 5 },
-	dl_mealtype_circle_active: { borderWidth: 1, borderColor: '#BBB', borderRadius: 8, width: 16, height: 16, backgroundColor: campus_primary, marginRight: 5 },
+	dl_mealtype_circle_active: { borderWidth: 1, borderColor: '#BBB', borderRadius: 8, width: 16, height: 16, backgroundColor: CAMPUS_PRIMARY, marginRight: 5 },
 	dl_mealtype_label: { fontSize: 20, color: '#888', },
-	dl_mealtype_label_active: { fontSize: 20, color: campus_primary, },
+	dl_mealtype_label_active: { fontSize: 20, color: CAMPUS_PRIMARY, },
 	dl_market_menu: { marginHorizontal: 8, marginVertical: 16 },
 	dl_market_menu_row: { flexDirection: 'row', paddingBottom: 8 },
-	dl_menu_item_name: { fontSize: 15, color: campus_primary },
+	dl_menu_item_name: { fontSize: 15, color: CAMPUS_PRIMARY },
 	dl_menu_item_price: { color: '#555', paddingLeft: 26, marginLeft: 30 },
 
 	// 404 - Dining Detail
-	dd_menu_item_name: { fontSize: 22, color: campus_primary, paddingTop: 10, paddingLeft: 1 },
+	dd_menu_item_name: { fontSize: 22, color: CAMPUS_PRIMARY, paddingTop: 10, paddingLeft: 1 },
 	ddn_container: { borderWidth: 2, borderColor: '#000', margin: 6, padding: 3 },
 	ddn_header: { fontSize: 50, fontWeight: '700', backgroundColor: 'rgba(0,0,0,0)' },
 	ddn_servingsize: { fontSize: 18 },
@@ -295,7 +296,7 @@ var css = StyleSheet.create({
 	ddn_topborder1: { borderTopWidth: 8, borderTopColor: '#000', paddingVertical: 2, marginTop: 2 },
 	ddn_topborder2: { borderTopWidth: 4, borderTopColor: '#000' },
 	ddn_topborder3: { borderTopWidth: 1, borderTopColor: '#999' },
-	dd_menu_container: { justifyContent: 'center', alignItems: 'center', backgroundColor: campus_primary, borderRadius: 3, margin: 20, padding: 10 },
+	dd_menu_container: { justifyContent: 'center', alignItems: 'center', backgroundColor: CAMPUS_PRIMARY, borderRadius: 3, margin: 20, padding: 10 },
 	dd_dining_menu: { marginHorizontal: 8 },
 	dd_menu_text: { fontSize: 16, color: '#FFF' },
 
@@ -308,20 +309,20 @@ var css = StyleSheet.create({
 	welcome_list_left_container: { flexGrow: 1, marginRight: 14 },
 	welcome_list_title: { fontSize: 17, color: '#000' },
 	welcome_list_desc: { fontSize: 14, color: '#666', paddingTop: 3, paddingBottom: 6 },
-	welcome_list_postdate: { fontSize: 11, color: campus_primary },
+	welcome_list_postdate: { fontSize: 11, color: CAMPUS_PRIMARY },
 	welcome_list_image: { width: 130, height: 87, marginLeft: 14, borderWidth: 1, borderColor: '#CCC' },
 
 	// 406 - Event & News Detail
 	news_detail_container: { width: windowWidth, paddingHorizontal: 18, paddingVertical: 14 },
 	eventdetail_top_container: { flexDirection: 'row', width: windowWidth, padding: 8 },
-	eventdetail_eventname: { fontWeight: '400', fontSize: 22, color: campus_primary },
+	eventdetail_eventname: { fontWeight: '400', fontSize: 22, color: CAMPUS_PRIMARY },
 	eventdetail_eventlocation: { fontSize: 16, color: '#333' },
 	eventdetail_eventdate: { fontSize: 11, color: '#333', paddingTop: 14 },
 	eventdetail_eventdescription: { lineHeight: 18, color: '#111', fontSize: 14, paddingTop: 14 },
 	eventdetail_eventcontact: { fontSize: 16, fontWeight: '600', color: '#333', paddingTop: 16 },
-	eventdetail_readmore_container: { justifyContent: 'center', alignItems: 'center', backgroundColor: campus_primary, borderRadius: 3, marginTop: 20, padding: 10 },
+	eventdetail_readmore_container: { justifyContent: 'center', alignItems: 'center', backgroundColor: CAMPUS_PRIMARY, borderRadius: 3, marginTop: 20, padding: 10 },
 	eventdetail_readmore_text: { fontSize: 16, color: '#FFF' },
-	eventdetail_link: { fontSize: 16, fontWeight: '600', color: '#FFF', backgroundColor: campus_primary, borderWidth: 0, borderRadius: 3 },
+	eventdetail_link: { fontSize: 16, fontWeight: '600', color: '#FFF', backgroundColor: CAMPUS_PRIMARY, borderWidth: 0, borderRadius: 3 },
 
 	// 407 - WebView
 	webview_container: { width: windowWidth, height: windowHeight - 60 },
@@ -354,21 +355,21 @@ var css = StyleSheet.create({
 	map_searchinfo_desc: { fontSize: 16, color: '#444', lineHeight: 24 },
 
 	// 502 - Search Results
-	destinationcard_marker_label: { flex: 2, fontSize: 18, paddingLeft: 8, paddingTop: 0, color: campus_primary, justifyContent: 'center' },
-	destinationcard_marker_dist_label: { flex: 1, textAlign: 'right', fontSize: 18, paddingLeft: 8, paddingTop: 0, color: campus_primary, justifyContent: 'center' },
+	destinationcard_marker_label: { flex: 2, fontSize: 18, paddingLeft: 8, paddingTop: 0, color: CAMPUS_PRIMARY, justifyContent: 'center' },
+	destinationcard_marker_dist_label: { flex: 1, textAlign: 'right', fontSize: 18, paddingLeft: 8, paddingTop: 0, color: CAMPUS_PRIMARY, justifyContent: 'center' },
 
 	// 503 - LocationRequiredContent
 	lrc_container: { flex: 1, alignItems: 'center', padding: 8, width: windowWidth },
 	lrc_text_row: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingTop: 10 },
 	lrc_text: { fontSize: 14, color: '#777', paddingLeft: 6 },
-	lrc_button: { justifyContent: 'center', alignItems: 'center', backgroundColor: campus_primary, borderRadius: 3, marginTop: 14, padding: 10 },
+	lrc_button: { justifyContent: 'center', alignItems: 'center', backgroundColor: CAMPUS_PRIMARY, borderRadius: 3, marginTop: 14, padding: 10 },
 	lrc_button_text: { color: '#FFF' },
 
 
 	/********************************************
 	 *  900 - Misc
 	 ********************************************/
-	campus_primary: { color: campus_primary },
+	CAMPUS_PRIMARY: { color: CAMPUS_PRIMARY },
 	whitebg: { backgroundColor: '#FFF' },
 	offwhitebg: { backgroundColor: '#FAFAFA' },
 	greybg: { backgroundColor: '#E2E2E2' },
