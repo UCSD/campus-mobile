@@ -10,6 +10,18 @@ function saveSearch(term) {
 	};
 }
 
+function removeHistory(index) {
+	return (dispatch, getState) => {
+		const { history } = getState().map;
+		const newHistory = history.slice();
+		newHistory.splice(index, 1);
+		dispatch({
+			type: 'UPDATE_HISTORY',
+			history: newHistory
+		});
+	};
+}
+
 function clearSearch() {
 	return ({
 		type: 'CLEAR_SEARCH_RESULTS'
@@ -77,6 +89,7 @@ function _sortResults(location, results) {
 
 module.exports = {
 	saveSearch,
+	removeHistory,
 	clearSearch,
 	fetchSearch,
 };
