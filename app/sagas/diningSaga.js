@@ -59,7 +59,7 @@ function _sortDining(position, diningData) {
 			}
 
 			// Sort dining locations by distance
-			diningData.sort(sortNearbyMarkers);
+			// diningData.sort(sortNearbyMarkers); disabling sort by dist for now
 			resolve(diningData);
 		} else {
 			reject(null);
