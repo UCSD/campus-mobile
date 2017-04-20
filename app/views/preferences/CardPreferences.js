@@ -70,7 +70,6 @@ export default class CardPreferences extends Component {
 						}
 						onChangeOrder={(nextOrder) => { this._order = nextOrder; }}
 						onReleaseRow={(key) => this._handleRelease()}
-						onActivateRow={(key) => console.log('Press: ' + key)}
 					/>
 				</View>
 			</Card>
@@ -175,7 +174,7 @@ class PrefItem extends React.Component {
 }
 
 const styles = StyleSheet.create({
-	list_row: { backgroundColor: '#FFF', flexDirection: 'row', alignItems: 'center', width: getMaxCardWidth(), padding: 7, borderBottomWidth: 1, borderBottomColor: '#EEE' ,
+	list_row: { backgroundColor: '#F9F9F9', flexDirection: 'row', alignItems: 'center', width: getMaxCardWidth(), padding: 7, borderBottomWidth: 1, borderBottomColor: '#EEE' ,
 		...Platform.select({
 			ios: {
 				shadowOpacity: 0,
