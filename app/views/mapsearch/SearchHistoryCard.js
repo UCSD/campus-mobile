@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 
 import ElevatedView from 'react-native-elevated-view';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import { getPRM, getMaxCardWidth } from '../../util/general';
 
 const PRM = getPRM();
@@ -17,7 +17,7 @@ const deviceHeight = Dimensions.get('window').height;
 
 const historyDataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
-const SearchHistoryCard = ({ data, pressHistory }) => (
+const SearchHistoryCard = ({ data, pressHistory, removeHistory }) => (
 	<ElevatedView
 		style={styles.card_main}
 		elevation={2}
@@ -26,29 +26,31 @@ const SearchHistoryCard = ({ data, pressHistory }) => (
 			<SearchHistoryList
 				historyData={historyDataSource.cloneWithRows(data)}
 				pressHistory={pressHistory}
+				removeHistory={removeHistory}
 			/>
 		</View>
 	</ElevatedView>
 );
 
-const SearchHistoryList = ({ historyData, pressHistory }) => (
+const SearchHistoryList = ({ historyData, pressHistory, removeHistory }) => (
 	<ListView
 		showsVerticalScrollIndicator={false}
 		dataSource={historyData}
-		keyboardShouldPersistTaps='always'
+		keyboardShouldPersistTaps="always"
 		renderRow={
 			(row, sectionID, rowID) =>
 				<SearchHistoryItem
 					data={row}
+					index={rowID}
 					pressHistory={pressHistory}
+					removeHistory={removeHistory}
 				/>
 		}
 	/>
 );
 
-const SearchHistoryItem = ({ data, pressHistory }) => (
+const SearchHistoryItem = ({ data, index, pressHistory, removeHistory }) => (
 	<TouchableOpacity
-		underlayColor={'rgba(200,200,200,.1)'}
 		onPress={() => {
 			pressHistory(data);
 		}}
@@ -68,6 +70,18 @@ const SearchHistoryItem = ({ data, pressHistory }) => (
 			>
 				<Text>{data}</Text>
 			</View>
+			<TouchableOpacity
+				onPress={() => {
+					removeHistory(index);
+				}}
+				style={styles.icon_container}
+			>
+				<Icon
+					name="cancel"
+					size={Math.round(24 * PRM)}
+					color={'rgba(0,0,0,.5)'}
+				/>
+			</TouchableOpacity>
 		</View>
 	</TouchableOpacity>
 );
@@ -84,8 +98,8 @@ const styles = StyleSheet.create({
 	list_container: { width: getMaxCardWidth(), padding: 8, maxHeight: Math.round(deviceHeight / 2) },
 	card_main: { top: Math.round(44 * getPRM()) + 6, backgroundColor: '#FFFFFF', margin: 6, alignItems: 'flex-start', justifyContent: 'center',  },
 	list_row: { flex: 1, flexDirection: 'row', paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: '#EEE', overflow: 'hidden' },
-	icon_container: { alignItems: 'center', flex: 0.1 },
-	text_container: { flex: 0.9 }
+	icon_container: { alignItems: 'center', width: 30 },
+	text_container: { flex: 1 }
 });
 
 export default SearchHistoryCard;
