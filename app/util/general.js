@@ -5,8 +5,11 @@ import {
 	Keyboard,
 } from 'react-native';
 
+import AppSettings from '../AppSettings';
+
 const dateFormat = require('dateformat');
 const logger = require('./logger');
+
 
 /**
  * A module containing general helper functions
@@ -168,10 +171,18 @@ module.exports = {
 
 	/**
 	 * Gets the UCSD campus primary color in hexidecimal form
-	 * @returns {string} The string "#182B49" which represents a dark blue color
+	 * @returns {string}
 	 */
 	getCampusPrimary() {
-		return '#182B49';
+		return AppSettings.CAMPUS_PRIMARY;
+	},
+
+	/**
+	 * Gets the UCSD campus secondary color in hexidecimal form
+	 * @returns {string}
+	 */
+	getCampusSecondary() {
+		return AppSettings.CAMPUS_SECONDARY;
 	},
 
 	/**
