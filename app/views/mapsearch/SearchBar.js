@@ -14,34 +14,50 @@ import { getPRM } from '../../util/general';
 const PRM = getPRM();
 const windowWidth = Dimensions.get('window').width;
 
-const SearchBar = ({ reff, placeholder, update, iconStatus, style, onFocus, pressIcon, searchInput }) => (
-	<ElevatedView
-		style={[styles.map_searchbar_container, style]}
-		elevation={2} // zIndex style and elevation has to match
-	>
-		<TouchableOpacity
-			style={styles.icon_container}
-			onPress={(event) => pressIcon()}
-		>
-			<SearchIcon iconStatus={iconStatus} />
-		</TouchableOpacity>
-		<TextInput
-			ref={reff}
-			placeholder={placeholder}
-			autoCorrect={false}
-			onSubmitEditing={(event) => update(event.nativeEvent.text.trim())}
-			blurOnSubmit={true}
-			returnKeyType="search"
-			clearButtonMode={'while-editing'}
-			selectTextOnFocus={true}
-			style={styles.map_searchbar_input}
-			underlineColorAndroid={'rgba(0,0,0,0)'}
-			onFocus={(event) => onFocus()}
-			defaultValue={searchInput}
-			maxLength={35}
-		/>
-	</ElevatedView>
-);
+class SearchBar extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			text: ''
+		};
+	}
+
+	render() {
+		const { reff, placeholder, update, iconStatus, style, onFocus, pressIcon, searchInput } = this.props;
+
+		return (
+			<ElevatedView
+				style={[styles.map_searchbar_container, style]}
+				elevation={2} // zIndex style and elevation has to match
+			>
+				<TouchableOpacity
+					style={styles.icon_container}
+					onPress={(event) => pressIcon()}
+				>
+					<SearchIcon iconStatus={iconStatus} />
+				</TouchableOpacity>
+				<TextInput
+					ref={reff}
+					placeholder={placeholder}
+					autoCorrect={false}
+					onSubmitEditing={(event) => update(event.nativeEvent.text.trim())}
+					onChangeText={(text) => this.setState({ text })}
+					blurOnSubmit={true}
+					returnKeyType="search"
+					clearButtonMode={'while-editing'}
+					selectTextOnFocus={true}
+					style={styles.map_searchbar_input}
+					underlineColorAndroid={'rgba(0,0,0,0)'}
+					onFocus={(event) => onFocus()}
+					onBlur={() => this.setState({ text: searchInput })}
+					defaultValue={searchInput}
+					value={this.state.text}
+					maxLength={35}
+				/>
+			</ElevatedView>
+		);
+	}
+}
 
 const SearchIcon = ({ iconStatus }) => {
 	switch (iconStatus) {
@@ -90,12 +106,12 @@ SearchBar.defaultProps = {
 };
 
 const styles = StyleSheet.create({
-	map_searchbar_container: { zIndex: 2, margin: 6, flexDirection: 'row', position: 'absolute', width: windowWidth - 12, height: Math.round(44 * PRM), borderWidth: 0, backgroundColor: 'white', },
-	map_searchbar_input: { flex: 1, height: Math.round(44 * PRM), padding: Math.round(8 * PRM), color: '#555', fontSize: Math.round(20 * PRM) },
+	map_searchbar_container: { zIndex: 2, margin: 6, flexDirection: 'row', position: 'absolute', width: windowWidth - 12, height: 44, borderWidth: 0, backgroundColor: 'white', },
+	map_searchbar_input: { flex: 1, height: 44, padding: 8, color: '#555', fontSize: 20 },
 	//map_searchbar_icon: { position: 'absolute', top: Math.round(9 * PRM), left: Math.round(8 * PRM) },
-	map_searchbar_icon: { top: Math.round(9 * PRM), left: Math.round(8 * PRM) },
-	map_searchbar_ai: { position: 'absolute', top: Math.round(12 * PRM), left: Math.round(8 * PRM) },
-	icon_container: { height: Math.round(44 * PRM), justifyContent: 'center', alignSelf: 'center', margin: Math.round(8 * PRM), }
+	map_searchbar_icon: { top: 9, left: 8 },
+	map_searchbar_ai: { position: 'absolute', top: 12, left: 8 },
+	icon_container: { height: 44, justifyContent: 'center', alignSelf: 'center', margin: 8, }
 });
 
 export default SearchBar;

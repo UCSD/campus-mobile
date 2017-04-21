@@ -97,12 +97,12 @@ const navHeight = Platform.select({
 });
 
 // device - (statusBar + navHeight + searchBar + listPadding + tabBar) - surveyCard
-const listHeight = deviceHeight - (statusBarHeight + navHeight + doPRM(44) + 16 + 40) - 80;
+const listHeight = deviceHeight - (statusBarHeight + navHeight + 44 + 16 + 40) - 80;
 
 const styles = StyleSheet.create({
-	survey_card: { top: Math.round(44 * getPRM()) + 6 },
+	survey_card: { top: 44 + 6 },
 	list_container: { width: getMaxCardWidth(), maxHeight: listHeight, },
-	card_main: { top: 36, backgroundColor: '#FFFFFF', margin: 6, alignItems: 'flex-start', justifyContent: 'center', },
+	card_main: { top: 44, backgroundColor: '#FFFFFF', margin: 6, alignItems: 'flex-start', justifyContent: 'center', },
 	touch: { backgroundColor: '#FFF' },
 	list_row: { flexDirection: 'row', paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: '#EEE', overflow: 'hidden', paddingLeft: 8, paddingRight: 8 },
 });

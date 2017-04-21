@@ -101,7 +101,7 @@ const SearchSuggestItem = ({ data, onPress }) => (
 
 const styles = StyleSheet.create({
 	list_container: { width: getMaxCardWidth(), paddingTop: 8, paddingBottom: 8, height: Math.round(deviceWidth / 4) + 12 + 4 },
-	card_main: { top: Math.round(44 * getPRM()) + 6, backgroundColor: '#FFFFFF', margin: 6, alignItems: 'center', justifyContent: 'center',  },
+	card_main: { top: 44 + 6, backgroundColor: '#FFFFFF', margin: 6, alignItems: 'center', justifyContent: 'center',  },
 	list_row: { flex: 1, alignItems: 'center', flexDirection: 'column', paddingVertical: 14, width: Math.round((deviceWidth - 12) / 4), },
 	icon_container: { justifyContent: 'center', alignItems: 'center', width: 50, height: 50, borderRadius: 50 / 2, backgroundColor: '#db3236' },
 	icon_label: { fontSize: 12, margin: 2, color: '#9E9E9E' },

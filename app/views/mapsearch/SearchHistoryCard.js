@@ -96,7 +96,7 @@ SearchHistoryCard.defaultProps = {
 
 const styles = StyleSheet.create({
 	list_container: { width: getMaxCardWidth(), padding: 8, maxHeight: Math.round(deviceHeight / 2) },
-	card_main: { top: Math.round(44 * getPRM()) + 6, backgroundColor: '#FFFFFF', margin: 6, alignItems: 'flex-start', justifyContent: 'center',  },
+	card_main: { top: 44 + 6, backgroundColor: '#FFFFFF', margin: 6, alignItems: 'flex-start', justifyContent: 'center',  },
 	list_row: { flex: 1, flexDirection: 'row', paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: '#EEE', overflow: 'hidden' },
 	icon_container: { alignItems: 'center', width: 30 },
 	text_container: { flex: 1 }
