@@ -49,7 +49,9 @@ class Card extends React.Component {
 				ref={(i) => { this._card = i; }}
 				elevation={3}
 			>
-				<CardHeader id={this.props.id} title={this.props.title} menu={this._renderMenu()} />
+				{(this.props.title || this.props.header) ? (
+					<CardHeader id={this.props.id} title={this.props.title} menu={this._renderMenu()} image={this.props.header} />
+				) : (null)}
 				{this.props.children}
 			</ElevatedView>
 		);

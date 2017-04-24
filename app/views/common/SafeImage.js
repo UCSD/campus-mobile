@@ -11,12 +11,17 @@ class SafeImage extends React.Component {
 		};
 	}
 
+	_handleError = (error) => {
+		console.log('Error loading image: ' + error);
+		this.setState({ validImage: false });
+	}
+
 	render() {
 		if (this.props.source && this.props.source.uri && this.state.validImage) {
 			return (
 				<Image
 					{...this.props}
-					onError={() => this.setState({ validImage: false })}
+					onError={this._handleError}
 				/>
 			);
 		} else {
