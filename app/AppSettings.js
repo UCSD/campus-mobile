@@ -2,7 +2,7 @@ module.exports = {
 
     /* APP CONFIG */
     APP_NAME: 'Campus Mobile',
-    APP_VERSION: '5.0',
+    APP_VERSION: '5.1',
     APP_CODEPUSH_VERSION: '1',
     GOOGLE_ANALYTICS_ID: 'UA-59591330-4',
     DEBUG_ENABLED: false, // Enable or disable logger.log, logger.error from displaying
