@@ -234,7 +234,7 @@ function mapDispatchtoProps(dispatch) {
 }
 
 const styles = StyleSheet.create({
-	list_row: { backgroundColor: '#FFF', flexDirection: 'row', alignItems: 'center', width: deviceWidth, borderBottomWidth: 1, borderBottomColor: '#EEE' ,
+	list_row: { backgroundColor: '#FFF', flexDirection: 'row', alignItems: 'center', width: deviceWidth, borderBottomWidth: 1, borderBottomColor: '#EEE' , height: 50,
 		...Platform.select({
 			ios: {
 				shadowOpacity: 0,
