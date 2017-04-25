@@ -87,7 +87,7 @@ class ShuttleCardContainer extends CardComponent {
 	}
 
 	gotoSavedList = () => {
-		Actions.ShuttleSavedListView();
+		Actions.ShuttleSavedListView({ gotoRoutesList: this.gotoRoutesList });
 	}
 
 	addStop = (stopID, stopName) => {

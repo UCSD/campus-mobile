@@ -9,7 +9,7 @@ function* addStop(action) {
 	const shuttle = yield select(getShuttle);
 	const savedStops = shuttle.savedStops.slice(); // copy array
 	const stops = Object.assign({}, shuttle.stops);
-	const closestStop = Object.assign({}, shuttle.closestStop);
+	const closestStop = (shuttle.closestStop) ? Object.assign({}, shuttle.closestStop) : null;
 	let contains = false;
 
 	// Make sure stop hasn't already been saved
@@ -24,10 +24,12 @@ function* addStop(action) {
 	}
 
 	// Updated closestStop index
-	++closestStop.savedIndex;
+	if (closestStop) {
+		++closestStop.savedIndex;
+		yield put({ type: 'SET_CLOSEST_STOP', closestStop });
+	}
 
 	yield put({ type: 'CHANGED_STOPS', savedStops });
-	yield put({ type: 'SET_CLOSEST_STOP', closestStop });
 	yield call(resetScroll);
 	yield fork(fetchArrival, action.stopID);
 }
@@ -35,7 +37,7 @@ function* addStop(action) {
 function* removeStop(action) {
 	const shuttle = yield select(getShuttle);
 	const savedStops = shuttle.savedStops.slice();
-	const closestStop = Object.assign({}, shuttle.closestStop);
+	const closestStop = (shuttle.closestStop) ? Object.assign({}, shuttle.closestStop) : null;
 
 	let i;
 	// Remove stop from saved array
@@ -46,13 +48,15 @@ function* removeStop(action) {
 		}
 	}
 
-	// Update closestStop index
-	if (i < closestStop.savedIndex) {
-		--closestStop.savedIndex;
+	if (closestStop) {
+		// Update closestStop index
+		if (i < closestStop.savedIndex) {
+			--closestStop.savedIndex;
+		}
+		yield put({ type: 'SET_CLOSEST_STOP', closestStop });
 	}
 
 	yield put({ type: 'CHANGED_STOPS', savedStops });
-	yield put({ type: 'SET_CLOSEST_STOP', closestStop });
 	yield call(resetScroll);
 }
 

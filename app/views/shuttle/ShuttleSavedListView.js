@@ -15,7 +15,7 @@ import { connect } from 'react-redux';
 import Toast from 'react-native-simple-toast';
 
 import css from '../../styles/css';
-
+import { getCampusPrimary } from '../../util/general';
 
 const deviceWidth = Dimensions.get('window').width;
 
@@ -23,17 +23,21 @@ class ShuttleSavedListView extends React.Component {
 	componentWillMount() {
 		const savedStops = this.props.savedStops.slice();
 		const { closestStop } = this.props;
-		savedStops.splice(closestStop.savedIndex, 0, closestStop); // insert closest
+		if (closestStop) {
+			savedStops.splice(closestStop.savedIndex, 0, closestStop); // insert closest
+		}
 		const savedObject = this.arrayToObject(savedStops);
 		this.setState({ savedObject });
 	}
 
 	componentWillReceiveProps(nextProps) {
+
 		if (this.props.savedStops.length !== nextProps.savedStops.length) {
 			const savedStops = nextProps.savedStops.slice();
 			const { closestStop } = nextProps;
-			savedStops.splice(closestStop.savedIndex, 0, closestStop); // insert closest
-			console.log(JSON.stringify(savedStops));
+			if (closestStop) {
+				savedStops.splice(closestStop.savedIndex, 0, closestStop); // insert closest
+			}
 			const savedObject = this.arrayToObject(savedStops);
 			this.setState({ savedObject });
 		}
@@ -72,22 +76,52 @@ class ShuttleSavedListView extends React.Component {
 
 	render() {
 		const { removeStop } = this.props;
-		return (
-			<SortableList
-				style={[css.main_container, css.scroll_main, css.whitebg]}
-				data={this.state.savedObject}
-				renderRow={
-					({ data, active, disabled }) =>
-						<SavedItem
-							data={data}
-							active={active}
-							removeStop={removeStop}
-						/>
-				}
-				onChangeOrder={(nextOrder) => { this._order = nextOrder; }}
-				onReleaseRow={(key) => this._handleRelease()}
-			/>
-		);
+
+		if (Object.keys(this.state.savedObject).length < 1) {
+			return (
+				<View
+					style={[css.main_container, css.whitebg]}
+				>
+					<Text
+						style={styles.add_notice}
+					>
+						To manage your shuttle stops please add a stop.
+					</Text>
+					<TouchableOpacity
+						style={styles.add_container}
+						onPress={() => this.props.gotoRoutesList()}
+					>
+						<Text style={styles.add_text}>Add a Stop</Text>
+					</TouchableOpacity>
+				</View>
+			);
+		} else {
+			return (
+				<View
+					style={[css.main_container, css.whitebg]}
+				>
+					<SortableList
+						data={this.state.savedObject}
+						renderRow={
+							({ data, active, disabled }) =>
+								<SavedItem
+									data={data}
+									active={active}
+									removeStop={removeStop}
+								/>
+						}
+						onChangeOrder={(nextOrder) => { this._order = nextOrder; }}
+						onReleaseRow={(key) => this._handleRelease()}
+					/>
+					<TouchableOpacity
+						style={styles.add_container}
+						onPress={() => this.props.gotoRoutesList()}
+					>
+						<Text style={styles.add_text}>Add a Stop</Text>
+					</TouchableOpacity>
+				</View>
+			);
+		}
 	}
 }
 
@@ -200,7 +234,7 @@ function mapDispatchtoProps(dispatch) {
 }
 
 const styles = StyleSheet.create({
-	list_row: { backgroundColor: '#FFF', flexDirection: 'row', alignItems: 'center', width: deviceWidth, padding: 7, borderBottomWidth: 1, borderBottomColor: '#EEE' ,
+	list_row: { backgroundColor: '#FFF', flexDirection: 'row', alignItems: 'center', width: deviceWidth, borderBottomWidth: 1, borderBottomColor: '#EEE' ,
 		...Platform.select({
 			ios: {
 				shadowOpacity: 0,
@@ -215,7 +249,10 @@ const styles = StyleSheet.create({
 		})
 	},
 	name_text: { flex: 1, margin: 7 },
-	cancel_container: { justifyContent: 'center', alignItems: 'center', width: 40, height: 40 }
+	cancel_container: { justifyContent: 'center', alignItems: 'center', width: 50, height: 50 },
+	add_notice: { lineHeight: 28, fontSize: 15, color: '#444', textAlign: 'center' },
+	add_container: { flexDirection: 'row', margin: 7, justifyContent: 'center', alignItems: 'center' },
+	add_text: { flexGrow: 1, color: getCampusPrimary(), fontSize: 20, paddingLeft: 8, textAlign: 'center' },
 });
 
 export default connect(
