@@ -67,7 +67,10 @@ function* orderStops(action) {
 			const { newStops, newClosest } = yield call(doOrder, newOrder);
 
 			yield put({ type: 'CHANGED_STOPS', savedStops: newStops });
-			yield put({ type: 'SET_CLOSEST_STOP', closestStop: newClosest });
+
+			if (newClosest) {
+				yield put({ type: 'SET_CLOSEST_STOP', closestStop: newClosest });
+			}
 			yield call(resetScroll);
 		}
 	} catch (error) {
@@ -77,7 +80,7 @@ function* orderStops(action) {
 
 function doOrder(newOrder) {
 	const newStops = [];
-	let closestStop;
+	let closestStop = null;
 
 	for (let i = 0; i < newOrder.length; ++i) {
 		if (newOrder[i].closest) {
