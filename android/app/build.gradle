@@ -92,7 +92,7 @@ android {
         applicationId "edu.ucsd"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 12
+        versionCode 20
         versionName "5.1"
         ndk {
             abiFilters "armeabi-v7a", "x86"
