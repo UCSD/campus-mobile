@@ -87,12 +87,6 @@ class ShuttleSavedListView extends React.Component {
 					>
 						To manage your shuttle stops please add a stop.
 					</Text>
-					<TouchableOpacity
-						style={styles.add_container}
-						onPress={() => this.props.gotoRoutesList()}
-					>
-						<Text style={styles.add_text}>Add a Stop</Text>
-					</TouchableOpacity>
 				</View>
 			);
 		} else {
@@ -113,12 +107,6 @@ class ShuttleSavedListView extends React.Component {
 						onChangeOrder={(nextOrder) => { this._order = nextOrder; }}
 						onReleaseRow={(key) => this._handleRelease()}
 					/>
-					<TouchableOpacity
-						style={styles.add_container}
-						onPress={() => this.props.gotoRoutesList()}
-					>
-						<Text style={styles.add_text}>Add a Stop</Text>
-					</TouchableOpacity>
 				</View>
 			);
 		}
