@@ -197,7 +197,7 @@ class SavedItem extends React.Component {
 					(data.closest) ? (null) :
 					(
 						<TouchableOpacity
-							onPress={() => this._handleRemove(data.id)}
+							onPressOut={() => this._handleRemove(data.id)}
 						>
 							<View
 								style={styles.cancel_container}
