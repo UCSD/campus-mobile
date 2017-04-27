@@ -2,7 +2,7 @@ import { put, takeLatest, call, select } from 'redux-saga/effects';
 import logger from '../util/logger';
 import DiningService from '../services/diningService';
 import { DINING_API_TTL } from '../AppSettings';
-import { convertMetersToMiles, getDistanceMilesStr, sortNearbyMarkers } from '../util/general';
+import { convertMetersToMiles, getDistanceMilesStr, dynamicSort } from '../util/general';
 import { getDistance } from '../util/map';
 
 const getDining = (state) => (state.dining);
@@ -16,12 +16,13 @@ function* updateDining(action) {
 	const diningTTL = DINING_API_TTL * 1000;
 
 	if (timeDiff < diningTTL && data) {
+		var diningData = yield call(_sortDining, data);
 		if (position) {
-			const diningData = yield call(_sortDining, position, data);
-			yield put({ type: 'SET_DINING', data: diningData });
+			diningData = yield call(_setDiningDistance, position, diningData);
 		}
+		yield put({ type: 'SET_DINING', data: diningData });
 	} else {
-		// Fetch for new data then sort
+		// Fetch for new data then sort and set distance
 		const diningData = yield call(fetchDining, position);
 		yield put({ type: 'SET_DINING', data: diningData });
 		yield put({ type: 'SET_DINING_UPDATE', nowTime });
@@ -31,18 +32,30 @@ function* updateDining(action) {
 function fetchDining(position) {
 	return DiningService.FetchDining()
 		.then((dining) => {
+			var diningData = _sortDining(dining);
 			if (position) {
-				return _sortDining(position, dining);
-			} else {
-				return dining;
+				diningData = _setDiningDistance(position, diningData);
 			}
+			return dining;
 		})
 		.catch((error) => {
 			logger.error(error);
 		});
 }
 
-function _sortDining(position, diningData) {
+function _sortDining(diningData) {
+	// Sort dining locations by name
+	return new Promise((resolve, reject) => {
+		if (diningData) {
+			diningData.sort(dynamicSort('name'));
+			resolve(diningData);
+		} else {
+			reject(null);
+		}
+	});
+}
+
+function _setDiningDistance(position, diningData) {
 	// Calc distance from dining locations
 	return new Promise((resolve, reject) => {
 		if (diningData) {
@@ -57,9 +70,6 @@ function _sortDining(position, diningData) {
 				diningData[i].distanceMiles = convertMetersToMiles(distance);
 				diningData[i].distanceMilesStr = getDistanceMilesStr(diningData[i].distanceMiles);
 			}
-
-			// Sort dining locations by distance
-			// diningData.sort(sortNearbyMarkers); disabling sort by dist for now
 			resolve(diningData);
 		} else {
 			reject(null);
