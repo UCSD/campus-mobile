@@ -18,6 +18,7 @@ import EventCardContainer from './events/EventCardContainer';
 import QuicklinksCardContainer from './quicklinks/QuicklinksCardContainer';
 import NewsCardContainer from './news/NewsCardContainer';
 import DiningCardContainer from './dining/DiningCardContainer';
+import ConferenceCardContainer from './conference/ConferenceCardContainer';
 
 import { platformAndroid } from '../util/general';
 
@@ -68,6 +69,8 @@ class Home extends React.Component {
 	_getCards = () => {
 		const activeCards = [];
 		let card;
+
+		activeCards.push(<ConferenceCardContainer key={'conference'} />);
 
 		for (let i = 0; i < this.props.cardOrder.length; ++i) {
 			const key = this.props.cardOrder[i];

@@ -10,5 +10,5 @@ export function fetchSchedule() {
 		}
 	})
 	.then((response) => response.json())
-	.then((responseData) => responseData);
+	.then((responseData) => responseData.schedule); // TODO, figure out final form of JSON
 }

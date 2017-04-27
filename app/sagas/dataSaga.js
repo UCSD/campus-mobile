@@ -2,10 +2,11 @@ import { delay } from 'redux-saga';
 import { put, call, select } from 'redux-saga/effects';
 import WeatherService from '../services/weatherService';
 import { fetchSchedule } from '../services/conferenceService';
-import { WEATHER_API_TTL, SURF_API_TTL } from '../AppSettings';
+import { WEATHER_API_TTL, SURF_API_TTL, CONFERENCE_TTL } from '../AppSettings';
 
 const getWeather = (state) => (state.weather);
 const getSurf = (state) => (state.surf);
+const getConference = (state) => (state.conference);
 
 function* watchData() {
 	while (true) {
@@ -49,17 +50,17 @@ function* updateSurf() {
 }
 
 function* updateConference() {
-	/*const { lastUpdated, data } = yield select(getSurf);
+	const { lastUpdated, data } = yield select(getConference);
 	const nowTime = new Date().getTime();
 	const timeDiff = nowTime - lastUpdated;
-	const ttl = SURF_API_TTL * 1000;
+	const ttl = CONFERENCE_TTL * 1000;
 
 	if (timeDiff < ttl && data) {
 		// Do nothing, no need to fetch new data
-	} else {*/
+	} else {
 		const schedule = yield call(fetchSchedule);
 		yield put({ type: 'SET_CONFERENCE_SCHEDULE', schedule });
-	// }
+	}
 }
 
 function* dataSaga() {
