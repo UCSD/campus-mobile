@@ -13,11 +13,8 @@ import newsReducer from './news';
 import linksReducer from './links';
 import routesReducer from './routes';
 import surveyReducer from './survey';
-<<<<<<< HEAD
 import conferenceReducer from './conference';
-=======
 import homeReducer from './home';
->>>>>>> v5.1-hotfix
 
 module.exports = combineReducers({
 	cards: cardsReducer,
@@ -33,9 +30,6 @@ module.exports = combineReducers({
 	links: linksReducer,
 	routes: routesReducer,
 	survey: surveyReducer,
-<<<<<<< HEAD
-	conference: conferenceReducer
-=======
-	home: homeReducer
->>>>>>> v5.1-hotfix
+	conference: conferenceReducer,
+	home: homeReducer,
 });
