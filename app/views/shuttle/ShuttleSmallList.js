@@ -10,9 +10,9 @@ import css from '../../styles/css';
 
 const arrivalDataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
-const ShuttleSmallList = ({ arrivalData, style, rows, scrollEnabled }) => (
+const ShuttleSmallList = ({ arrivalData, rows, scrollEnabled }) => (
 	<View
-		style={style}
+		style={css.sc_small_list_container}
 	>
 		<Text style={css.sc_next_arrivals_text}>
 			Next Arrivals
@@ -20,17 +20,22 @@ const ShuttleSmallList = ({ arrivalData, style, rows, scrollEnabled }) => (
 		<View
 			style={{ height: getRowHeight(rows) }}
 		>
-			<ListView
-				scrollEnabled={scrollEnabled}
-				showsVerticalScrollIndicator={false}
-				dataSource={arrivalDataSource.cloneWithRows(arrivalData)}
-				renderRow={
-					(row, sectionID, rowID) =>
-						<ShuttleSmallRow
-							arrival={row}
-						/>
-				}
-			/>
+			{
+				(arrivalData) ? (
+					<ListView
+						scrollEnabled={scrollEnabled}
+						showsVerticalScrollIndicator={false}
+						dataSource={arrivalDataSource.cloneWithRows(arrivalData)}
+						renderRow={
+							(row) =>
+								<ShuttleSmallRow
+									arrival={row}
+								/>
+						}
+						enableEmptySections={true}
+					/>
+				) : (null)
+			}
 		</View>
 	</View>
 );

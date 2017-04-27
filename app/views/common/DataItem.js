@@ -84,7 +84,7 @@ DataItem.defaultProps = {
 };
 
 const styles = StyleSheet.create({
-	card_main: { borderWidth: 1, borderRadius: 2, borderColor: '#DDD', backgroundColor: '#F9F9F9', margin: 6, alignItems: 'flex-start', justifyContent: 'center', overflow: 'hidden' },
+	card_main: { borderWidth: 1, borderRadius: 2, borderColor: '#DDD', backgroundColor: '#F9F9F9', alignItems: 'flex-start', justifyContent: 'center', overflow: 'hidden' },
 	events_card_title_container: { flexDirection: 'row', alignItems: 'center', width: getMaxCardWidth(), padding: 8, borderBottomWidth: 1, borderBottomColor: '#DDD' },
 	events_card_title: { flex:1, flexWrap: 'wrap', fontSize: 17, color: '#000' },
 	events_card_container: { flexDirection: 'row', padding: 14, borderBottomWidth: 1, borderBottomColor: '#EEE', alignItems: 'center' },

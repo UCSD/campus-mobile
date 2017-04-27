@@ -1,7 +1,7 @@
 import { delay } from 'redux-saga';
 import { call, fork, put, select, takeLatest } from 'redux-saga/effects';
 
-import ShuttleService from '../services/shuttleService';
+import { fetchShuttleArrivalsByStop } from '../services/shuttleService';
 
 const getShuttle = (state) => (state.shuttle);
 
@@ -9,7 +9,7 @@ function* addStop(action) {
 	const shuttle = yield select(getShuttle);
 	const savedStops = shuttle.savedStops.slice(); // copy array
 	const stops = Object.assign({}, shuttle.stops);
-	const closestStop = Object.assign({}, shuttle.closestStop);
+	const closestStop = (shuttle.closestStop) ? Object.assign({}, shuttle.closestStop) : null;
 	let contains = false;
 
 	// Make sure stop hasn't already been saved
@@ -24,10 +24,12 @@ function* addStop(action) {
 	}
 
 	// Updated closestStop index
-	++closestStop.savedIndex;
+	if (closestStop) {
+		++closestStop.savedIndex;
+		yield put({ type: 'SET_CLOSEST_STOP', closestStop });
+	}
 
 	yield put({ type: 'CHANGED_STOPS', savedStops });
-	yield put({ type: 'SET_CLOSEST_STOP', closestStop });
 	yield call(resetScroll);
 	yield fork(fetchArrival, action.stopID);
 }
@@ -35,7 +37,7 @@ function* addStop(action) {
 function* removeStop(action) {
 	const shuttle = yield select(getShuttle);
 	const savedStops = shuttle.savedStops.slice();
-	const closestStop = Object.assign({}, shuttle.closestStop);
+	const closestStop = (shuttle.closestStop) ? Object.assign({}, shuttle.closestStop) : null;
 
 	let i;
 	// Remove stop from saved array
@@ -46,13 +48,15 @@ function* removeStop(action) {
 		}
 	}
 
-	// Update closestStop index
-	if (i < closestStop.savedIndex) {
-		--closestStop.savedIndex;
+	if (closestStop) {
+		// Update closestStop index
+		if (i < closestStop.savedIndex) {
+			--closestStop.savedIndex;
+		}
+		yield put({ type: 'SET_CLOSEST_STOP', closestStop });
 	}
 
 	yield put({ type: 'CHANGED_STOPS', savedStops });
-	yield put({ type: 'SET_CLOSEST_STOP', closestStop });
 	yield call(resetScroll);
 }
 
@@ -63,7 +67,9 @@ function* orderStops(action) {
 			const { newStops, newClosest } = yield call(doOrder, newOrder);
 
 			yield put({ type: 'CHANGED_STOPS', savedStops: newStops });
-			yield put({ type: 'SET_CLOSEST_STOP', closestStop: newClosest });
+			if (newClosest) {
+				yield put({ type: 'SET_CLOSEST_STOP', closestStop: newClosest });
+			}
 			yield call(resetScroll);
 		}
 	} catch (error) {
@@ -73,7 +79,7 @@ function* orderStops(action) {
 
 function doOrder(newOrder) {
 	const newStops = [];
-	let closestStop;
+	let closestStop = null;
 
 	for (let i = 0; i < newOrder.length; ++i) {
 		if (newOrder[i].closest) {
@@ -96,10 +102,11 @@ function* setScroll(action) {
 }
 
 function* fetchArrival(stopID) {
+	const shuttle = yield select(getShuttle);
+	const stops = Object.assign({}, shuttle.stops);
+
 	try {
-		const shuttle = yield select(getShuttle);
-		const stops = Object.assign({}, shuttle.stops);
-		const arrivals = yield call(ShuttleService.FetchShuttleArrivalsByStop, stopID);
+		const arrivals = yield call(fetchShuttleArrivalsByStop, stopID);
 
 		// Sort arrivals, should be on lambda?
 		arrivals.sort((a, b) => {
@@ -126,12 +133,12 @@ function* fetchArrivalMan(action) {
 
 function* watchArrivals() {
 	while (true) {
-		const { closestStop } = yield select(getShuttle);
+		const { savedStops, closestStop } = yield select(getShuttle);
 		// Fetch arrivals for all saved stops
-		/*for (let i = 0; i < savedStops.length; ++i) {
+		for (let i = 0; i < savedStops.length; ++i) {
 			const stopID = savedStops[i].id;
 			yield call(fetchArrival, stopID);
-		}*/
+		}
 		if (closestStop) {
 			yield call(fetchArrival, closestStop.id); // Fetch arrival for closest stop
 		}
@@ -140,11 +147,11 @@ function* watchArrivals() {
 }
 
 function* shuttleSaga() {
-	/*yield takeLatest('ADD_STOP', addStop);
+	yield takeLatest('ADD_STOP', addStop);
 	yield takeLatest('REMOVE_STOP', removeStop);
 	yield takeLatest('ORDER_STOPS', orderStops);
 	yield takeLatest('FETCH_ARRIVAL', fetchArrivalMan);
-	yield takeLatest('UPDATE_SHUTTLE_SCROLL', setScroll);*/
+	yield takeLatest('UPDATE_SHUTTLE_SCROLL', setScroll);
 	yield call(watchArrivals);
 }
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, StatusBar } from 'react-native';
 
 // CODE PUSH
 import codePush from 'react-native-code-push';
@@ -9,6 +9,7 @@ import { Provider } from 'react-redux';
 import configureStore from './store/configureStore';
 
 import Main from './main';
+import general from './util/general';
 
 const codePushOptions = { checkFrequency: codePush.CheckFrequency.ON_APP_RESUME, installMode: codePush.InstallMode.ON_NEXT_RESTART };
 
@@ -22,16 +23,25 @@ class CampusMobileSetup extends React.Component {
 		};
 	}
 	render() {
+		if (general.platformIOS()) {
+			StatusBar.setBarStyle('light-content');
+		} else if (general.platformAndroid()) {
+			StatusBar.setBackgroundColor('#101d32', false);
+		}
+
 		let mainApp = <View />;
 
-		if (!this.state.isLoading) {
-			mainApp = <Main />;
+		if (this.state.isLoading) {
+			return (
+				<View />
+			);
+		} else {
+			return (
+				<Provider store={this.state.store}>
+					<Main />
+				</Provider>
+			);
 		}
-		return (
-			<Provider store={this.state.store}>
-				{mainApp}
-			</Provider>
-		);
 	}
 }
 
