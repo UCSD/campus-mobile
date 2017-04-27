@@ -120,13 +120,7 @@ function updateClosestStop(location) {
 				closestDist = distanceFromStop;
 			}
 		});
-<<<<<<< HEAD
-		dispatch({
-			type: 'SET_CLOSEST_STOP',
-			closestStop
-		});
-		dispatch(updateArrivals(closestStop));
-=======
+		
 		closestStop.closest = true;
 		closestStop.savedIndex = closestSavedIndex;
 
@@ -141,7 +135,6 @@ function updateClosestStop(location) {
 				stopID: closestStop.id
 			});
 		}
->>>>>>> v5.1-hotfix
 	};
 }
 
