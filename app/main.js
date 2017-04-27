@@ -34,6 +34,7 @@ import TabIcons from './navigation/TabIcons';
 import DataListViewAll from './views/common/DataListViewAll';
 import ConferenceFullScheduleView from './views/conference/ConferenceFullScheduleView';
 import ConferenceMyScheduleView from './views/conference/ConferenceMyScheduleView';
+import ConferenceDetailView from './views/conference/ConferenceDetailView';
 
 const RouterWithRedux = connect()(Router);
 
@@ -100,6 +101,7 @@ export default class Main extends Component {
 										<Scene key="ConferenceMyScheduleView" component={ConferenceMyScheduleView} />
 									</Scene>
 								</Scene>
+								<Scene key="ConferenceDetailView" component={ConferenceDetailView} />
 							</Scene>
 							<Scene key="tab2" title="Map" component={NearbyMapView} icon={TabIcons} />
 							<Scene key="tab3" title="Feedback" component={FeedbackView} icon={TabIcons} />

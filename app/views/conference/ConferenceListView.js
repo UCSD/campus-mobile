@@ -9,6 +9,7 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import moment from 'moment';
 import { connect } from 'react-redux';
+import { Actions } from 'react-native-router-flux';
 
 import logger from '../../util/logger';
 import css from '../../styles/css';
@@ -102,6 +103,7 @@ const ConferenceItem = ({ conferenceData, saved, add, remove }) => (
 	>
 		<TouchableOpacity
 			style={styles.titleContainer}
+			onPress={() => Actions.ConferenceDetailView({ data: conferenceData })}
 		>
 			<Text
 				style={styles.titleText}
