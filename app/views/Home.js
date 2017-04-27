@@ -99,7 +99,6 @@ class Home extends React.Component {
 				activeCards.push(card);
 			}
 		}
-
 		return activeCards;
 	}
 
@@ -139,10 +138,11 @@ class Home extends React.Component {
 
 function mapStateToProps(state, props) {
 	return {
-		cards: state.cards,
+		cards: state.cards.cards,
+		cardOrder: state.cards.cardOrder,
 		locationPermission: state.location.permission,
 		scene: state.routes.scene,
-		lastScroll: state.home.lastScroll
+		lastScroll: state.home.lastScroll,
 	};
 }
 
