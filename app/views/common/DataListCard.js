@@ -21,7 +21,6 @@ import { getCampusPrimary, getMaxCardWidth } from '../../util/general';
  * @param {Function} cardSort array sorting function
  * @return {JSX} Generic component for list type cards
  */
-<<<<<<< HEAD
 const DataListCard = ({ title, data, item, rows, cardSort }) => {
 	let sortedData = data;
 	if (cardSort && sortedData) {
@@ -64,40 +63,6 @@ const DataListCard = ({ title, data, item, rows, cardSort }) => {
 DataListCard.propTypes = {
 	title: PropTypes.string.isRequired,
 	data: PropTypes.array,
-=======
-const DataListCard = ({ title, data, item, rows }) => (
-	<Card id={title} title={title}>
-		<View style={styles.list}>
-			{data ? (
-				<View>
-					<DataListView
-						data={data}
-						rows={rows}
-						scrollEnabled={false}
-						item={item}
-						card={false}
-					/>
-					<TouchableHighlight
-						underlayColor={'rgba(200,200,200,.1)'}
-						onPress={() => (
-							Actions.DataListViewAll({ title, data, item, card: (item !== 'DiningItem') }) // Actions doesn't like being passed JSX
-						)}
-					>
-						<View style={styles.more}>
-							<Text style={styles.more_label}>View All {title}</Text>
-						</View>
-					</TouchableHighlight>
-				</View>
-			) : (
-				<Text style={styles.content_load_err}>There was a problem loading your content.</Text>
-			)}
-		</View>
-	</Card>
-);
-
-DataListCard.propTypes = {
-	title: PropTypes.string.isRequired,
->>>>>>> v5.1-hotfix
 	item: PropTypes.string.isRequired,
 	rows: PropTypes.number,
 	cardSort: PropTypes.func,
