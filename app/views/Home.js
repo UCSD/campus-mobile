@@ -67,7 +67,6 @@ class Home extends React.Component {
 
 	_getCards = () => {
 		const activeCards = [];
-<<<<<<< HEAD
 		let card;
 
 		for (let i = 0; i < this.props.cardOrder.length; ++i) {
@@ -97,29 +96,7 @@ class Home extends React.Component {
 				activeCards.push(card);
 			}
 		}
-		/*
-=======
->>>>>>> v5.1-hotfix
-		// Setup Cards
-		if (this.props.cards.weather.active) {
-			activeCards.push(<WeatherCardContainer key={'weather'} />);
-		}
-		if (this.props.cards.shuttle.active) {
-			activeCards.push(<ShuttleCardContainer key={'shuttle'} />);
-		}
-		if (this.props.cards.dining.active) {
-			activeCards.push(<DiningCardContainer key={'dining'} />);
-		}
-		if (this.props.cards.events.active) {
-			activeCards.push(<EventCardContainer key={'events'} />);
-		}
-		if (this.props.cards.quicklinks.active) {
-			activeCards.push(<QuicklinksCardContainer key={'quicklinks'} />);
-		}
-		if (this.props.cards.news.active) {
-			activeCards.push(<NewsCardContainer key={'news'} />);
-		}
-		*/
+
 		return activeCards;
 	}
 
@@ -159,11 +136,6 @@ class Home extends React.Component {
 
 function mapStateToProps(state, props) {
 	return {
-<<<<<<< HEAD
-		cards: state.cards.cards,
-		cardOrder: state.cards.cardOrder,
-		locationPermission: state.location.permission
-=======
 		cards: state.cards,
 		locationPermission: state.location.permission,
 		scene: state.routes.scene,
@@ -176,7 +148,6 @@ function mapDispatchtoProps(dispatch) {
 		updateScroll: (scrollY) => {
 			dispatch({ type: 'UPDATE_HOME_SCROLL', scrollY });
 		}
->>>>>>> v5.1-hotfix
 	};
 }
 
