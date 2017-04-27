@@ -5,12 +5,8 @@ const initialState = {
 	savedStops: [],
 	vehicles: {},
 	closestStop: null,
-<<<<<<< HEAD
-	lastUpdated: new Date().getTime(),
-=======
 	lastUpdated: 0,
 	lastScroll: 0
->>>>>>> v5.1-hotfix
 };
 
 function shuttle(state = initialState, action) {
@@ -58,12 +54,6 @@ function shuttle(state = initialState, action) {
 		newState.closestStop = Object.assign({}, action.closestStop);
 		return newState;
 	case 'SET_ARRIVALS': {
-<<<<<<< HEAD
-		//const stops = Object.assign({}, newState.stops);
-		//stops[action.stop].arrivals = action.arrivalData;
-		newState.stops = Object.assign({}, action.stops);
-
-=======
 		// const stops = Object.assign({}, newState.stops);
 		// stops[action.stop].arrivals = action.arrivalData;
 		newState.stops = action.stops;
@@ -75,7 +65,6 @@ function shuttle(state = initialState, action) {
 	}
 	case 'SET_SHUTTLE_SCROLL': {
 		newState.lastScroll = action.lastScroll;
->>>>>>> v5.1-hotfix
 		return newState;
 	}
 	default:
