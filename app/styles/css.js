@@ -171,7 +171,7 @@ var css = StyleSheet.create({
 	sc_no_shuttle_container: { width: maxCardWidth, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 30, paddingVertical: 20 },
 	sc_no_shuttle_text: { lineHeight: 28, fontSize: 15, color: '#444', textAlign: 'center' },
 	sc_bus_schedule_container: { flexDirection: 'row', marginTop: 10, justifyContent: 'center', alignItems: 'center' },
-	sc_bus_schedule_text: { flexGrow: 1, color: campus_primary, fontSize: 20, paddingLeft: 8 },
+	sc_bus_schedule_text: { flexGrow: 1, color: CAMPUS_PRIMARY, fontSize: 20, paddingLeft: 8 },
 	sc_small_list_container: { width: maxCardWidth, overflow: 'hidden' },
 
 	// 304 - Dining Card
