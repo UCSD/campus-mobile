@@ -58,11 +58,8 @@ class Card extends React.Component {
 	}
 }
 
-<<<<<<< HEAD
 const styles = StyleSheet.create({
 	card_main: { backgroundColor: '#F9F9F9', margin: 6, alignItems: 'flex-start', justifyContent: 'center' },
 });
 
-=======
->>>>>>> v5.1-hotfix
 export default connect()(Card);
