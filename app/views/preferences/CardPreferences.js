@@ -92,6 +92,7 @@ function mapDispatchtoProps(dispatch) {
 		},
 		setCardState: (id, state) => {
 			dispatch({ type: 'UPDATE_CARD_STATE', id, state });
+		},
 		updateScroll: () => {
 			dispatch({ type: 'UPDATE_HOME_SCROLL', scrollY: 0 });
 		}
