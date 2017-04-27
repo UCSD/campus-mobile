@@ -17,8 +17,6 @@ class ConferenceCardContainer extends CardComponent {
 				title="Events"
 				schedule={this.props.scheduleData}
 				saved={this.props.saved}
-				add={this.props.addConference}
-				remove={this.props.removeConference}
 			/>
 		);
 	}
@@ -32,14 +30,7 @@ const mapStateToProps = (state) => (
 );
 
 const mapDispatchToProps = (dispatch) => (
-	{
-		addConference: (id) => {
-			dispatch({ type: 'ADD_CONFERENCE', id });
-		},
-		removeConference: (id) => {
-			dispatch({ type: 'REMOVE_CONFERENCE', id });
-		}
-	}
+	{}
 );
 
 const ActualConferenceCard = connect(

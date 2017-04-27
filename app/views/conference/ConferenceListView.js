@@ -18,12 +18,12 @@ const dataSource = new ListView.DataSource({
 	sectionHeaderHasChanged: (s1, s2) => s1 !== s2
 });
 
-const ConferenceListViewAll = ({ style, scrollEnabled, rows, personal, scheduleData, saved, addConference, removeConference }) => {
+const ConferenceListView = ({ style, scrollEnabled, rows, personal, scheduleData, saved, addConference, removeConference }) => {
 	return (
 		<ListView
 			style={style}
 			scrollEnabled={scrollEnabled}
-			dataSource={dataSource.cloneWithRowsAndSections(convertArrayToMap(filterPersonal(scheduleData, saved, personal)))}
+			dataSource={dataSource.cloneWithRowsAndSections(convertArrayToMap(adjustData(scheduleData, saved, personal, rows)))}
 			renderRow={(rowData, sectionID, rowID, highlightRow) => (
 				<ConferenceItem
 					conferenceData={rowData}
@@ -41,15 +41,33 @@ const ConferenceListViewAll = ({ style, scrollEnabled, rows, personal, scheduleD
 	);
 };
 
-function filterPersonal(scheduleArray, savedArray, personal) {
-	if (!personal) {
-		return scheduleArray;
+function adjustData(scheduleArray, savedArray, personal, rows) {
+	// Filter out saved items
+	if (!personal || !savedArray) {
+		if (!rows) {
+			return scheduleArray;
+		} else {
+			const trimmed = {};
+			const keys = Object.keys(scheduleArray);
+
+			for (let i = 0; i < rows; ++i) {
+				trimmed[keys[i]] = scheduleArray[keys[i]];
+			}
+			return trimmed;
+		}
 	} else {
 		const filtered = {};
 
-		for (let i = 0; i < savedArray.length; ++i) {
-			const key = savedArray[i];
-			filtered[key] = scheduleArray[key];
+		if (rows) {
+			for (let i = 0; i < savedArray.length && i < rows; ++i) {
+				const key = savedArray[i];
+				filtered[key] = scheduleArray[key];
+			}
+		} else {
+			for (let i = 0; i < savedArray.length; ++i) {
+				const key = savedArray[i];
+				filtered[key] = scheduleArray[key];
+			}
 		}
 		return filtered;
 	}
@@ -134,10 +152,10 @@ const mapDispatchToProps = (dispatch) => (
 	}
 );
 
-const ActualConferenceCard = connect(
+const ActualConferenceListView = connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(ConferenceListViewAll);
+)(ConferenceListView);
 
 const styles = StyleSheet.create({
 	row: { flexDirection: 'row', height: 50, backgroundColor: '#FFFFFF', borderBottomWidth: 1, borderColor: '#DDD' },
@@ -146,4 +164,4 @@ const styles = StyleSheet.create({
 	starButton: { height: 50, width: 50, justifyContent: 'center', alignItems: 'center' }
 });
 
-export default ActualConferenceCard;
+export default ActualConferenceListView;
