@@ -23,6 +23,7 @@ module.exports = {
     NEWS_API_URL: 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/allstories.json',
     MAP_SEARCH_API_URL: 'https://xgu9qa7gx4.execute-api.us-west-2.amazonaws.com/prod/v2/map/search?region=0&query=',
     WELCOME_WEEK_API_URL: 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/welcome_week_events.json',
+    CAMPUS_LISA_URL: 'https://14qttlbk64.execute-api.us-west-2.amazonaws.com/dev',
 
     /* RESOURCES */
     FEEDBACK_URL: 'https://eforms.ucsd.edu/view.php?id=175631',
@@ -40,6 +41,7 @@ module.exports = {
     DINING_API_TTL: 21600, // 6 hours
     QUICKLINKS_API_TTL: 604800, // 1 week
     SHUTTLE_MASTER_TTL: 86400,
+    CONFERENCE_TTL: 3600, // 1 hour
 
     USER_LOGIN: {
         ENABLED: false,

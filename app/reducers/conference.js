@@ -1,6 +1,7 @@
 const initialState = {
 	data: null,
 	lastUpdated: null,
+	saved: [],
 };
 
 function conference(state = initialState, action) {
@@ -10,7 +11,11 @@ function conference(state = initialState, action) {
 	case 'SET_CONFERENCE_SCHEDULE': {
 		newState.data = action.schedule;
 		newState.lastUpdated = new Date().getTime();
-		console.log(JSON.stringify(newState.data));
+
+		return newState;
+	}
+	case 'CHANGED_CONFERENCE_SAVED': {
+		newState.saved = action.saved;
 		return newState;
 	}
 	default:

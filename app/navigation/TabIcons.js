@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import { View } from 'react-native';
+import { View, Text } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Entypo from 'react-native-vector-icons/Entypo';
 
@@ -32,6 +32,18 @@ const TabIcons = function (props) {
 		tabIconPack = 'FontAwesome';
 		tabIconName = 'gear';
 		tabIconText = 'Settings';
+	} else if (props.title === 'Full') {
+		return (
+			<Text>
+				Full
+			</Text>
+		);
+	} else if (props.title === 'Mine') {
+		return (
+			<Text>
+				Mine
+			</Text>
+		);
 	}
 
 	return (

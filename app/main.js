@@ -5,7 +5,7 @@ import {
 	Image,
 	Alert,
 	BackAndroid,
-	Keyboard
+	Keyboard,
 } from 'react-native';
 import { Scene, Router } from 'react-native-router-flux';
 import { connect } from 'react-redux';
@@ -32,10 +32,20 @@ import PreferencesView from './views/preferences/PreferencesView';
 import NearbyMapView from './views/mapsearch/NearbyMapView';
 import TabIcons from './navigation/TabIcons';
 import DataListViewAll from './views/common/DataListViewAll';
+import ConferenceFullScheduleView from './views/conference/ConferenceFullScheduleView';
+import ConferenceMyScheduleView from './views/conference/ConferenceMyScheduleView';
 
 const RouterWithRedux = connect()(Router);
 
 export default class Main extends Component {
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			hideTabs: false
+		};
+	}
+
 	campusLogo() {
 		return (<Image source={require('./assets/img/UCSanDiegoLogo-White.png')} style={css.navCampusLogoTitle} />);
 	}
@@ -70,7 +80,7 @@ export default class Main extends Component {
 					onExitApp={this._exitHandler}
 				>
 					<Scene key="root">
-						<Scene key="tabbar" initial tabs tabBarStyle={general.platformIOS() ? css.tabBarIOS : css.tabBarAndroid}>
+						<Scene key="tabbar" tabs hideOnChildTabs initial tabBarStyle={general.platformIOS() ? css.tabBarIOS : css.tabBarAndroid}>
 							<Scene key="tab1" title={AppSettings.APP_NAME} initial icon={TabIcons}>
 								<Scene key="Home" component={Home} renderTitle={() => this.campusLogo()} />
 								<Scene key="SurfReport" component={SurfReport} title="Surf Report" />
@@ -82,6 +92,14 @@ export default class Main extends Component {
 								<Scene key="WelcomeWeekView" component={WelcomeWeekView} title="Welcome Week" />
 								<Scene key="NewsDetail" component={NewsDetail} title="News" />
 								<Scene key="DataListViewAll" component={DataListViewAll} />
+								<Scene key="ConferenceBar" tabs tabBarStyle={general.platformIOS() ? css.tabBarIOS : css.tabBarAndroid}>
+									<Scene key="con1" initial icon={TabIcons} title="Full">
+										<Scene key="ConferenceFullScheduleView" component={ConferenceFullScheduleView} />
+									</Scene>
+									<Scene key="con2" icon={TabIcons} title="Mine">
+										<Scene key="ConferenceMyScheduleView" component={ConferenceMyScheduleView} />
+									</Scene>
+								</Scene>
 							</Scene>
 							<Scene key="tab2" title="Map" component={NearbyMapView} icon={TabIcons} />
 							<Scene key="tab3" title="Feedback" component={FeedbackView} icon={TabIcons} />

@@ -3,19 +3,20 @@ import {
 	View,
 	Text
 } from 'react-native';
+import { Actions } from 'react-native-router-flux';
 
 import Card from '../card/Card';
 import BannerCard from '../common/BannerCard';
 
 const toggle = true;
 
-const ConferenceCard = () => (
+const ConferenceCard = ({ schedule }) => (
 	<View>
 		{ toggle ?
 			(
 				<BannerCard
 					image={'https://thumbs.dreamstime.com/z/computer-banner-680247.jpg'}
-					onPress={() => console.log('banner pressed')}
+					onPress={() => Actions.ConferenceBar({ schedule })}
 				/>
 			) :
 			(
