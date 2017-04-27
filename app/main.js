@@ -79,42 +79,6 @@ const scenes = Actions.create(
 	</Scene>
 );
 
-<<<<<<< HEAD
-		return (
-			<View style={css.flex}>
-				<RouterWithRedux
-					navigationBarStyle={general.platformIOS() ? css.navIOS : css.navAndroid}
-					titleStyle={general.platformIOS() ? css.navIOSTitle : css.navAndroidTitle}
-					barButtonIconStyle={general.platformIOS() ? css.navIOSIconStyle : css.navAndroidIconStyle}
-					backButtonTextStyle={general.platformIOS() ? css.navBackButtonTextIOS : css.navBackButtonTextAndroid}
-					backTitle="Back"
-					onExitApp={this._exitHandler}
-				>
-					<Scene key="root">
-						<Scene key="tabbar" initial tabs tabBarStyle={general.platformIOS() ? css.tabBarIOS : css.tabBarAndroid}>
-							<Scene key="tab1" title={AppSettings.APP_NAME} initial icon={TabIcons}>
-								<Scene key="Home" component={Home} renderTitle={() => this.campusLogo()} />
-								<Scene key="SurfReport" component={SurfReport} title="Surf Report" />
-								<Scene key="ShuttleStop" component={ShuttleStop} title="Shuttle" />
-								<Scene key="DiningDetail" component={DiningDetail} title="Dining" />
-								<Scene key="DiningNutrition" component={DiningNutrition} title="Nutrition" />
-								<Scene key="EventDetail" component={EventDetail} title="Events" />
-								<Scene key="WebWrapper" component={WebWrapper} />
-								<Scene key="WelcomeWeekView" component={WelcomeWeekView} title="Welcome Week" />
-								<Scene key="NewsDetail" component={NewsDetail} title="News" />
-								<Scene key="DataListViewAll" component={DataListViewAll} />
-							</Scene>
-							<Scene key="tab2" title="Map" component={NearbyMapView} icon={TabIcons} />
-							<Scene key="tab3" title="Feedback" component={FeedbackView} icon={TabIcons} />
-							<Scene key="tab4" title="Settings" component={PreferencesView} icon={TabIcons} />
-						</Scene>
-					</Scene>
-				</RouterWithRedux>
-			</View>
-		);
-	}
-}
-=======
 const Main = () => (
 	<View style={css.flex}>
 		<GeoLocationContainer />
@@ -131,4 +95,3 @@ const Main = () => (
 );
 
 export default Main;
->>>>>>> v5.1-hotfix
