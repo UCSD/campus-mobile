@@ -100,19 +100,12 @@ class ShuttleCardContainer extends CardComponent {
 
 function mapStateToProps(state, props) {
 	return {
-<<<<<<< HEAD
-		location: state.location.position,
-		locationPermission: state.location.permission,
-		closestStop: state.shuttle.closestStop.id,
-		stopData: state.shuttle.stops,
-=======
 		closestStop: state.shuttle.closestStop,
 		stopsData: state.shuttle.stops,
 		shuttle_routes: state.shuttle.routes,
 		shuttle_stops: state.shuttle.stops,
 		savedStops: state.shuttle.savedStops,
 		lastScroll: state.shuttle.lastScroll
->>>>>>> v5.1-hotfix
 	};
 }
 
