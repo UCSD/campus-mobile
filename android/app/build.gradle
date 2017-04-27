@@ -137,11 +137,8 @@ android {
 }
 
 dependencies {
-<<<<<<< HEAD
     compile project(':react-native-device-info')
-=======
     compile project(':react-native-cookies')
->>>>>>> v5.1-hotfix
     compile project(':react-native-vector-icons')
     compile project(':react-native-permissions')
     compile project(':react-native-google-analytics-bridge')
