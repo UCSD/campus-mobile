@@ -1,5 +1,5 @@
 import logger from '../util/logger';
-import ShuttleService from '../services/shuttleService';
+import { fetchMasterStopsNoRoutes, fetchMasterRoutes, fetchVehiclesByRoute } from '../services/shuttleService';
 import { getDistance } from '../util/map';
 import { SHUTTLE_MASTER_TTL } from '../AppSettings';
 
@@ -16,9 +16,9 @@ function updateMaster() {
 			// Do nothing, don't need to update
 		} else {
 			// Fetch for new data
-			ShuttleService.FetchMasterStopsNoRoutes()
+			fetchMasterStopsNoRoutes()
 				.then((stopsData) => {
-					ShuttleService.FetchMasterRoutes()
+					fetchMasterRoutes()
 						.then((routesData) => {
 							// Set toggles
 							const initialToggles = {};
@@ -46,15 +46,44 @@ function updateMaster() {
 }
 
 function toggleRoute(route) {
-	return {
-		type: 'TOGGLE_ROUTE',
-		route
+	return (dispatch, getState) => {
+		const { toggles, stops, routes } = getState().shuttle;
+
+		Object.keys(toggles).forEach((element) => {
+			// Toggle off any non-selected route
+			if (Number(element) !== Number(route)) {
+				if (toggles[element] === true) {
+					// Remove route from every stop
+					Object.keys(routes[element].stops).forEach((key2, index2) => {
+						if (stops[key2]) {
+							delete stops[key2].routes[element];
+						}
+					});
+				}
+				toggles[element] = false;
+			} else {
+				Object.keys(routes[element].stops).forEach((key2, index2) => {
+					if (stops[key2]) {
+						stops[key2].routes[element] = routes[element];
+					}
+				});
+
+				toggles[element] = true;
+			}
+		});
+
+		dispatch({
+			type: 'TOGGLE_ROUTE',
+			toggles,
+			route,
+			stops
+		});
 	};
 }
 
 function updateVehicles(route) {
 	return (dispatch) => {
-		ShuttleService.FetchVehiclesByRoute(route)
+		fetchVehiclesByRoute(route)
 			.then((vehicles) => {
 				dispatch({
 					type: 'SET_VEHICLES',
@@ -70,28 +99,53 @@ function updateVehicles(route) {
 
 function updateClosestStop(location) {
 	return (dispatch, getState) => {
-		const { stops } = getState().shuttle;
+		const shuttle = getState().shuttle;
+		const stops = Object.assign({}, shuttle.stops);
+		const currClosestStop = shuttle.closestStop;
 
 		let closestDist = 1000000000;
-		let closestStop = -1;
+		let closestStop;
+		let closestSavedIndex = 0;
+
+		if (shuttle.closestStop && shuttle.closestStop.savedIndex) {
+			closestSavedIndex = shuttle.closestStop.savedIndex;
+		}
 
 		Object.keys(stops).forEach((stopID, index) => {
-			const stop = stops[stopID];
+			const stop = Object.assign({}, stops[stopID]);
 			const distanceFromStop = getDistance(location.coords.latitude, location.coords.longitude, stop.lat, stop.lon);
 
 			if (distanceFromStop < closestDist) {
-				closestStop = stopID;
+				closestStop = stop;
 				closestDist = distanceFromStop;
 			}
 		});
+<<<<<<< HEAD
 		dispatch({
 			type: 'SET_CLOSEST_STOP',
 			closestStop
 		});
 		dispatch(updateArrivals(closestStop));
+=======
+		closestStop.closest = true;
+		closestStop.savedIndex = closestSavedIndex;
+
+		if (currClosestStop === null || currClosestStop.id !== closestStop.id) {
+			dispatch({
+				type: 'SET_CLOSEST_STOP',
+				closestStop
+			});
+
+			dispatch({
+				type: 'FETCH_ARRIVAL',
+				stopID: closestStop.id
+			});
+		}
+>>>>>>> v5.1-hotfix
 	};
 }
 
+/*
 function updateArrivals(stop) {
 	return (dispatch) => {
 		ShuttleService.FetchShuttleArrivalsByStop(stop)
@@ -119,11 +173,12 @@ function updateArrivals(stop) {
 			});
 	};
 }
+*/
 
 module.exports = {
 	toggleRoute,
 	updateVehicles,
 	updateClosestStop,
-	updateArrivals,
+	// updateArrivals,
 	updateMaster,
 };

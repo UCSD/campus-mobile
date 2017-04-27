@@ -19,6 +19,7 @@ import { getMaxCardWidth } from '../../util/general';
 
 // View for user to manage preferences, including which cards are visible
 export default class CardPreferences extends Component {
+<<<<<<< HEAD
 	componentWillMount() {
 		this.setState({ cardObject: this.getCardObject() });
 	}
@@ -51,6 +52,36 @@ export default class CardPreferences extends Component {
 			const orderedCards = this.getOrderedArray();
 			this.props.orderCards(orderedCards);
 		}
+=======
+	_setCardState = (card, state) => {
+		this.props.setCardState(card, state);
+		this.props.updateScroll(); // reset homeview scroll
+	}
+
+	// render out all the cards, currently showing or not
+	_renderCards = () => {
+		return Object.keys(this.props.cards).map(key => {
+
+			const cardActive = this.props.cards[key].active;
+			const cardName = this.props.cards[key].name;
+
+			return (
+				<View key={key} style={css.preferencesContainer}>
+					<View style={css.spacedRow}>
+						<View style={css.centerAlign}>
+							<Text style={css.prefCardTitle}>{cardName}</Text>
+						</View>
+						<View style={css.centerAlign}>
+							<Switch
+								onValueChange={(value) => { this._setCardState(key, value); }}
+								value={cardActive}
+							/>
+						</View>
+					</View>
+				</View>
+			);
+		});
+>>>>>>> v5.1-hotfix
 	}
 
 	render() {
@@ -86,15 +117,24 @@ function mapStateToProps(state, props) {
 
 function mapDispatchtoProps(dispatch) {
 	return {
+<<<<<<< HEAD
 		orderCards: (newOrder) => {
 			dispatch({ type: 'ORDER_CARDS', newOrder });
 		},
 		setCardState: (id, state) => {
 			dispatch({ type: 'UPDATE_CARD_STATE', id, state });
+=======
+		setCardState: (card, state) => {
+			dispatch(setCardState(card, state));
+		},
+		updateScroll: () => {
+			dispatch({ type: 'UPDATE_HOME_SCROLL', scrollY: 0 });
+>>>>>>> v5.1-hotfix
 		}
 	};
 }
 
+<<<<<<< HEAD
 class PrefItem extends React.Component {
 
 	constructor(props) {
@@ -192,4 +232,6 @@ const styles = StyleSheet.create({
 	list_container: { width: getMaxCardWidth() }
 });
 
+=======
+>>>>>>> v5.1-hotfix
 module.exports = connect(mapStateToProps, mapDispatchtoProps)(CardPreferences);

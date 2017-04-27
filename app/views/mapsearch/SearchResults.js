@@ -12,7 +12,6 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ElevatedView from 'react-native-elevated-view';
 
-import YesNoCard from '../survey/YesNoCard';
 import css from '../../styles/css';
 import { doPRM, getPRM, getMaxCardWidth } from '../../util/general';
 
@@ -23,15 +22,8 @@ const statusBarHeight = Platform.select({
 });
 const resultsDataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
-// todo: un-hardcode this
 const SearchResultsCard = ({ results, onSelect }) => (
 	<View>
-		<YesNoCard
-			style={styles.survey_card}
-			question={'Are these results accurate?'}
-			id={264935}
-			data={{ query: 'APM', selected: 'Applied Physics and Mathematics (APM)' }}
-		/>
 		<ElevatedView
 			style={styles.card_main}
 			elevation={2}

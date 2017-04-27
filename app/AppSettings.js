@@ -2,7 +2,7 @@ module.exports = {
 
     /* APP CONFIG */
     APP_NAME: 'Campus Mobile',
-    APP_VERSION: '5.0',
+    APP_VERSION: '5.1',
     APP_CODEPUSH_VERSION: '1',
     GOOGLE_ANALYTICS_ID: 'UA-59591330-4',
     DEBUG_ENABLED: false, // Enable or disable logger.log, logger.error from displaying
@@ -25,6 +25,7 @@ module.exports = {
     WELCOME_WEEK_API_URL: 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/welcome_week_events.json',
 
     /* RESOURCES */
+    SHUTTLE_SCHEDULE_URL: 'https://transportation.ucsd.edu/shuttles/',
     FEEDBACK_URL: 'https://eforms.ucsd.edu/view.php?id=175631',
     NODE_MARKERS_BASE_URL: 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/nearby_markers/',
     WEATHER_ICON_BASE_URL: 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/images/v1/weather-icons/',

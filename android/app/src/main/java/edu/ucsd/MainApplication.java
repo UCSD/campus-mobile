@@ -4,7 +4,11 @@ import android.app.Application;
 import android.util.Log;
 
 import com.facebook.react.ReactApplication;
+<<<<<<< HEAD
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
+=======
+import com.psykar.cookiemanager.CookieManagerPackage;
+>>>>>>> v5.1-hotfix
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.joshblour.reactnativepermissions.ReactNativePermissionsPackage;
 import com.idehub.GoogleAnalyticsBridge.GoogleAnalyticsBridgePackage;
@@ -38,7 +42,11 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+<<<<<<< HEAD
             new RNDeviceInfo(),
+=======
+            new CookieManagerPackage(),
+>>>>>>> v5.1-hotfix
             new VectorIconsPackage(),
             new ReactNativePermissionsPackage(),
             new GoogleAnalyticsBridgePackage(),

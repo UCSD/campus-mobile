@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import {
-	View
+	View,
+	StyleSheet
 } from 'react-native';
 
 import DataListView from './DataListView';
@@ -14,17 +15,17 @@ import logger from '../../util/logger';
  * @param  {String} item String name of row item
  * @return {JSX}
  */
-const DataListViewAll = ({ title, data, item }) => {
+const DataListViewAll = ({ title, data, item, card }) => {
 	logger.ga('View Loaded: ' + title + ' ListView');
-
+	console.log('card: ' + card);
 	return (
-		<View style={css.main_container}>
+		<View style={[css.main_container, css.white_bg]}>
 			<DataListView
-				style={css.welcome_listview}
+				style={(card) ? (styles.list_card) : (styles.list)}
 				data={data}
 				scrollEnabled={true}
 				item={item}
-				card={true}
+				card={card}
 			/>
 		</View>
 	);
@@ -35,5 +36,10 @@ DataListViewAll.propTypes = {
 	data: PropTypes.array.isRequired,
 	item: PropTypes.string.isRequired
 };
+
+const styles = StyleSheet.create({
+	list: { padding: 6, backgroundColor: '#F9F9F9' },
+	list_card: { margin: 6 }
+});
 
 export default DataListViewAll;

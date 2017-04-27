@@ -4,48 +4,57 @@ import {
 	Text,
 	StyleSheet,
 	ListView,
+	View
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
+import css from '../../styles/css';
 
 const resultsDataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
-const ShuttleStopsListView = ({ shuttle_stops, gotoStopsList }) => (
+const ShuttleStopsListView = ({ shuttle_stops, addStop }) => (
 	<ListView
+		style={[css.main_container, css.scroll_main, css.whitebg]}
 		dataSource={resultsDataSource.cloneWithRows(shuttle_stops)}
 		renderRow={
-			(row, sectionID, rowID) =>
-				<MenuItem
+			(row) => (
+				<StopItem
 					data={row}
-					index={rowID}
-					gotoStopsList={gotoStopsList}
+					addStop={addStop}
 				/>
+			)
 		}
 	/>
 );
 
-const MenuItem = ({ data, index, gotoStopsList }) => (
-	<TouchableOpacity
-		onPress={() => gotoStopsList(data.stops)}
+const StopItem = ({ data, addStop }) => (
+	<View
 		style={styles.list_row}
 	>
-		<Text style={{ flex: 4 }}>
-			{data.name.trim()}
-		</Text>
-		{
-			(false) ? (
-				<Icon
-					style={{ flex: 1 }}
-					name="check"
-					size={20}
-				/>
-			) : (null)
-		}
-	</TouchableOpacity>
+		<TouchableOpacity
+			onPress={() => addStop(data.id, data.name.trim())}
+			style={styles.touchable}
+			disabled={(data.saved === true)}
+		>
+			<Text style={(data.saved === true) ? (styles.row_name_disabled) : (styles.row_name)}>
+				{data.name.trim()}
+			</Text>
+			<Icon
+				style={styles.icon}
+				color="rgba(116,118,120,.6)"
+				name="chevron-right"
+				size={20}
+			/>
+		</TouchableOpacity>
+	</View>
 );
 
 const styles = StyleSheet.create({
-	list_row: { alignItems: 'center', flexDirection: 'row', paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: '#EEE', overflow: 'hidden',  },
+	icon: { alignSelf: 'flex-end' },
+	touchable: { flex: 1, flexDirection: 'row', alignItems: 'center' },
+	row_name: { flex: 1, paddingRight: 10 },
+	row_name_disabled: { color: '#DDD', flex: 1, paddingRight: 10 },
+	list_row: { flex: 1, height: 60, padding: 7, paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: '#EEE', overflow: 'hidden' },
 });
 
 export default ShuttleStopsListView;

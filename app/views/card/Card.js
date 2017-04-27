@@ -33,7 +33,7 @@ class Card extends React.Component {
 					</MenuOption>
 					{
 						(this.props.cardRefresh) ? (
-							<MenuOption onSelect={() => { this.props.cardRefresh() }}>
+							<MenuOption onSelect={() => { this.props.cardRefresh(); }}>
 								<Text style={css.card_hide_option}>Refresh</Text>
 							</MenuOption>
 						) : (null)
@@ -58,8 +58,11 @@ class Card extends React.Component {
 	}
 }
 
+<<<<<<< HEAD
 const styles = StyleSheet.create({
 	card_main: { backgroundColor: '#F9F9F9', margin: 6, alignItems: 'flex-start', justifyContent: 'center' },
 });
 
+=======
+>>>>>>> v5.1-hotfix
 export default connect()(Card);

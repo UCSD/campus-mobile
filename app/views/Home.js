@@ -42,10 +42,32 @@ class Home extends React.Component {
 	componentDidMount() {
 		logger.ga('View Loaded: Home');
 		this._cards = [];
+
+		if (this._scrollview) {
+			this._scrollview.scrollTo({ y: this.props.lastScroll, animated: false });
+		}
+	}
+
+	componentDidUpdate(prevProps, prevState) {
+		// Handle scroll when switching into Home View but it doesn't re-mount
+		if (prevProps.scene.sceneKey !== 'Home' &&
+			prevProps.scene.sceneKey !== 'tabbar' &&
+			this.props.scene.sceneKey === 'Home') {
+			if (this._scrollview) {
+				this._scrollview.scrollTo({ y: this.props.lastScroll, animated: false });
+			}
+		}
+	}
+
+	handleScroll = (event) => {
+		if (this.props.updateScroll) {
+			this.props.updateScroll(event.nativeEvent.contentOffset.y);
+		}
 	}
 
 	_getCards = () => {
 		const activeCards = [];
+<<<<<<< HEAD
 		let card;
 
 		for (let i = 0; i < this.props.cardOrder.length; ++i) {
@@ -76,6 +98,8 @@ class Home extends React.Component {
 			}
 		}
 		/*
+=======
+>>>>>>> v5.1-hotfix
 		// Setup Cards
 		if (this.props.cards.weather.active) {
 			activeCards.push(<WeatherCardContainer key={'weather'} />);
@@ -108,28 +132,52 @@ class Home extends React.Component {
 	}
 
 	render() {
-		return (
-			<MenuContext style={{ flex:1 }}>
-				<View style={css.main_container}>
-					<ScrollView>
-						{/* SPECIAL TOP BANNER */}
-						<TopBannerView />
+		// Prevent home from re-rendering when not in home
+		if (this.props.scene.sceneKey !== 'Home' && this.props.scene.sceneKey !== 'tabbar') {
+			return null;
+		} else {
+			return (
+				<MenuContext style={{ flex:1 }}>
+					<View style={css.main_container}>
+						<ScrollView
+							ref={c => { this._scrollview = c; }}
+							onScroll={this.handleScroll}
+							scrollEventThrottle={69}
+						>
+							{/* SPECIAL TOP BANNER */}
+							<TopBannerView />
 
-						{/* LOAD CARDS */}
-						{ this._getCards() }
-					</ScrollView>
-				</View>
-			</MenuContext>
-		);
+							{/* LOAD CARDS */}
+							{ this._getCards() }
+						</ScrollView>
+					</View>
+				</MenuContext>
+			);
+		}
 	}
 }
 
 function mapStateToProps(state, props) {
 	return {
+<<<<<<< HEAD
 		cards: state.cards.cards,
 		cardOrder: state.cards.cardOrder,
 		locationPermission: state.location.permission
+=======
+		cards: state.cards,
+		locationPermission: state.location.permission,
+		scene: state.routes.scene,
+		lastScroll: state.home.lastScroll
 	};
 }
 
-module.exports = connect(mapStateToProps)(Home);
+function mapDispatchtoProps(dispatch) {
+	return {
+		updateScroll: (scrollY) => {
+			dispatch({ type: 'UPDATE_HOME_SCROLL', scrollY });
+		}
+>>>>>>> v5.1-hotfix
+	};
+}
+
+module.exports = connect(mapStateToProps, mapDispatchtoProps)(Home);
