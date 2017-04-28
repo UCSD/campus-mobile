@@ -6,6 +6,7 @@ import {
 	Alert,
 	BackAndroid,
 	Keyboard,
+	StyleSheet,
 } from 'react-native';
 import { Scene, Router } from 'react-native-router-flux';
 import { connect } from 'react-redux';
@@ -81,7 +82,11 @@ export default class Main extends Component {
 					onExitApp={this._exitHandler}
 				>
 					<Scene key="root">
-						<Scene key="tabbar" tabs hideOnChildTabs initial tabBarStyle={general.platformIOS() ? css.tabBarIOS : css.tabBarAndroid}>
+						<Scene
+							key="tabbar"
+							tabs hideOnChildTabs initial
+							tabBarStyle={general.platformIOS() ? css.tabBarIOS : css.tabBarAndroid}
+						>
 							<Scene key="tab1" title={AppSettings.APP_NAME} initial icon={TabIcons}>
 								<Scene key="Home" component={Home} renderTitle={() => this.campusLogo()} />
 								<Scene key="SurfReport" component={SurfReport} title="Surf Report" />
@@ -93,7 +98,12 @@ export default class Main extends Component {
 								<Scene key="WelcomeWeekView" component={WelcomeWeekView} title="Welcome Week" />
 								<Scene key="NewsDetail" component={NewsDetail} title="News" />
 								<Scene key="DataListViewAll" component={DataListViewAll} />
-								<Scene key="ConferenceBar" tabs tabBarStyle={general.platformIOS() ? css.tabBarIOS : css.tabBarAndroid}>
+								<Scene
+									key="ConferenceBar"
+									tabs
+									tabBarStyle={general.platformIOS() ? css.tabBarIOS : css.tabBarAndroid}
+									tabBarSelectedItemStyle={styles.selectedTab}
+								>
 									<Scene key="con1" initial icon={TabIcons} title="Full">
 										<Scene key="ConferenceFullScheduleView" component={ConferenceFullScheduleView} />
 									</Scene>
@@ -113,3 +123,7 @@ export default class Main extends Component {
 		);
 	}
 }
+
+const styles = StyleSheet.create({
+	selectedTab: { backgroundColor: '#DDD' }
+});
