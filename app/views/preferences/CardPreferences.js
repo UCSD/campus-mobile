@@ -25,6 +25,7 @@ export default class CardPreferences extends Component {
 
 	setCardState = (id, state) => {
 		this.props.setCardState(id, state);
+		this.props.updateScroll(); // reset homeview scroll
 	}
 
 	getCardObject = () => {
@@ -91,6 +92,9 @@ function mapDispatchtoProps(dispatch) {
 		},
 		setCardState: (id, state) => {
 			dispatch({ type: 'UPDATE_CARD_STATE', id, state });
+		},
+		updateScroll: () => {
+			dispatch({ type: 'UPDATE_HOME_SCROLL', scrollY: 0 });
 		}
 	};
 }

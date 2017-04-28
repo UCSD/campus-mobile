@@ -2,9 +2,11 @@ const initialState = {
 	toggles: null,
 	routes: null,// shuttle_routes,
 	stops: null,// shuttle_stops_no_routes,
+	savedStops: [],
 	vehicles: {},
 	closestStop: null,
-	lastUpdated: new Date().getTime(),
+	lastUpdated: 0,
+	lastScroll: 0
 };
 
 function shuttle(state = initialState, action) {
@@ -19,8 +21,10 @@ function shuttle(state = initialState, action) {
 
 		return newState;
 	case 'TOGGLE_ROUTE':
-		newState.toggles[action.route] = !state.toggles[action.route];
+		newState.toggles = action.toggles;
+		newState.stops = action.stops;
 
+		/*
 		if (newState.toggles[action.route] === false) {
 			// Remove route from every stop
 			Object.keys(newState.routes[action.route].stops).forEach((key2, index2) => {
@@ -36,11 +40,11 @@ function shuttle(state = initialState, action) {
 					newState.stops[key2].routes[action.route] = newState.routes[action.route];
 				}
 			});
-		}
+		}*/
 
 		return newState;
 	case 'SET_VEHICLES': {
-		const veh = Object.assign({}, newState.vehicles);
+		const veh = {};
 		veh[action.route] = action.vehicles;
 		newState.vehicles = veh;
 
@@ -50,10 +54,17 @@ function shuttle(state = initialState, action) {
 		newState.closestStop = Object.assign({}, action.closestStop);
 		return newState;
 	case 'SET_ARRIVALS': {
-		//const stops = Object.assign({}, newState.stops);
-		//stops[action.stop].arrivals = action.arrivalData;
-		newState.stops = Object.assign({}, action.stops);
-
+		// const stops = Object.assign({}, newState.stops);
+		// stops[action.stop].arrivals = action.arrivalData;
+		newState.stops = action.stops;
+		return newState;
+	}
+	case 'CHANGED_STOPS': {
+		newState.savedStops = action.savedStops;
+		return newState;
+	}
+	case 'SET_SHUTTLE_SCROLL': {
+		newState.lastScroll = action.lastScroll;
 		return newState;
 	}
 	default:

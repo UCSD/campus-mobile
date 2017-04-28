@@ -1,10 +1,11 @@
 import { AsyncStorage } from 'react-native';
-import { createStore, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware, compose } from 'redux';
 import { persistStore, autoRehydrate } from 'redux-persist';
 import thunkMiddleware from 'redux-thunk';
 import createLogger from 'redux-logger';
 import createFilter from 'redux-persist-transform-filter';
 import createSagaMiddleware from 'redux-saga';
+import createMigration from 'redux-persist-migrate';
 
 import rootSaga from '../sagas/rootSaga';
 import rootReducer from '../reducers';
@@ -24,10 +25,22 @@ const saveShuttleFilter = createFilter(
 		'routes',
 		'stops',
 		'closestStop',
-		'lastUpdated'
+		'lastUpdated',
+		'savedStops',
 	]
 );
 
+// Migration
+const manifest = {
+	1: (state) => ({ ...state }),
+	2: (state) => ({ ...state, shuttle: Object.assign({}, state.shuttle, { savedStops: [], stops: {}, lastUpdated: 0 }) }),
+	3: (state) => ({ ...state, shuttle: Object.assign({}, state.shuttle, { savedStops: [], stops: {}, lastUpdated: 0, closestStop: null }) }),
+};
+
+// reducerKey is the key of the reducer you want to store the state version in
+// in this example after migrations run `state.app.version` will equal `2`
+const reducerKey = 'home';
+const migration = createMigration(manifest, reducerKey);
 
 export default function configureStore(initialState, onComplete: ?() => void) {
 	const middlewares = [sagaMiddleware, thunkMiddleware]; // lets us dispatch() functions
@@ -38,13 +51,13 @@ export default function configureStore(initialState, onComplete: ?() => void) {
 		middlewares.push(loggerMiddleware);
 	}
 
+	const enhancer =  compose(migration, autoRehydrate());
+
 	const store = createStore(
 		rootReducer,
 		applyMiddleware(...middlewares),
-		autoRehydrate()
+		enhancer
 	);
-
-	sagaMiddleware.run(rootSaga);
 
 	if (module.hot) {
 		// Enable Webpack hot module replacement for reducers
@@ -60,7 +73,10 @@ export default function configureStore(initialState, onComplete: ?() => void) {
 			storage: AsyncStorage,
 			transforms: [saveMapFilter, saveShuttleFilter],
 		},
-		onComplete
+		() => {
+			onComplete();
+			sagaMiddleware.run(rootSaga);
+		}
 	);
 	return store;
 }

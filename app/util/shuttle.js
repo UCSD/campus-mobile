@@ -11,10 +11,10 @@ module.exports = {
 	 * @returns {string} A user-friendly respresentation of the number of minutes
 	 */
 	getMinutesETA(secondsToArrival) {
-		if (secondsToArrival < 1) {
+		if (secondsToArrival <= 0) {
 			return ('Arrived');
 		} else if (secondsToArrival < 60) {
-			return ('<1m');
+			return ('1 min');
 		} else {
 			let secondsToArrivalDec = secondsToArrival;
 			let minsToArrival = 1;
@@ -24,7 +24,7 @@ module.exports = {
 				minsToArrival++;
 			}
 
-			return (minsToArrival + 'm');
+			return (minsToArrival + ' min');
 		}
 	},
 };

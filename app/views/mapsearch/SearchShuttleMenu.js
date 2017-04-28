@@ -7,9 +7,11 @@ import {
 	Dimensions,
 	ListView,
 	StatusBar,
-	Platform
+	Platform,
+	TouchableOpacity
 } from 'react-native';
 import ElevatedView from 'react-native-elevated-view';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 import { doPRM, getPRM, getMaxCardWidth } from '../../util/general';
 
@@ -57,21 +59,21 @@ const MenuList = ({ shuttles, onToggle, toggles }) => (
 );
 
 const MenuItem = ({ data, index, onToggle, state }) => (
-	<View style={styles.list_row}>
-		<Text
-			style={{ flex: 3 }}
-		>
+	<TouchableOpacity
+		onPress={() => onToggle(data.id)}
+		value={state}
+		style={styles.list_row}
+	>
+		<Text style={{ flex: 4 }}>
 			{data.name.trim()}
 		</Text>
-		<View
-			style={styles.switch_container}
-		>
-			<Switch
-				onValueChange={(val) => onToggle(val, data.id)}
-				value={state}
-			/>
-		</View>
-	</View>
+		<Icon
+			style={styles.radio_icon}
+			name={state ? 'ios-radio-button-on' : 'ios-radio-button-off'}
+			size={20}
+			color={'#182B49'}
+		/>
+	</TouchableOpacity>
 );
 
 const navHeight = Platform.select({
@@ -83,10 +85,11 @@ const navHeight = Platform.select({
 const listHeight = deviceHeight - (statusBarHeight + navHeight + doPRM(44) + 16 + 40); // 18 + 64 + (44 * getPRM()));
 
 const styles = StyleSheet.create({
-	list_container: { width: getMaxCardWidth(), padding: 8, maxHeight: listHeight, },
+	list_container: { width: getMaxCardWidth(), maxHeight: listHeight },
 	card_main: { top: Math.round(44 * getPRM()) + 6, backgroundColor: '#FFFFFF', margin: 6, alignItems: 'flex-start', justifyContent: 'center', },
-	list_row: { alignItems: 'center', flexDirection: 'row', paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: '#EEE', overflow: 'hidden',  },
+	list_row: { alignItems: 'center', justifyContent: 'center', flexDirection: 'row', paddingVertical: 14, paddingHorizontal: 8, borderBottomWidth: 1, borderBottomColor: '#EEE', overflow: 'hidden',  },
 	switch_container: { flex: 1, alignItems: 'flex-end' },
+	radio_icon: { alignSelf: 'flex-end', marginLeft: 10 },
 });
 
 export default SearchShuttleMenu;

@@ -33,7 +33,7 @@ class Card extends React.Component {
 					</MenuOption>
 					{
 						(this.props.cardRefresh) ? (
-							<MenuOption onSelect={() => { this.props.cardRefresh() }}>
+							<MenuOption onSelect={() => { this.props.cardRefresh(); }}>
 								<Text style={css.card_hide_option}>Refresh</Text>
 							</MenuOption>
 						) : (null)
