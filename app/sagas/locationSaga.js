@@ -37,9 +37,15 @@ function getPermission(type) {
 function* getClosestStop(location) {
 	const shuttle = yield select(getShuttle);
 	const stops = shuttle.stops;
+	const currClosestStop = shuttle.closestStop;
 
 	let closestDist = 1000000000;
 	let closestStop;
+	let closestSavedIndex = 0;
+
+	if (currClosestStop && currClosestStop.savedIndex) {
+		closestSavedIndex = currClosestStop.savedIndex;
+	}
 
 	Object.keys(stops).forEach((stopID, index) => {
 		const stop = stops[stopID];
@@ -50,6 +56,9 @@ function* getClosestStop(location) {
 			closestDist = distanceFromStop;
 		}
 	});
+	closestStop.closest = true;
+	closestStop.savedIndex = closestSavedIndex;
+
 	return closestStop;
 }
 

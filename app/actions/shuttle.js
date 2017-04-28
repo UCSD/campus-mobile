@@ -96,7 +96,7 @@ function updateVehicles(route) {
 			});
 	};
 }
-
+/*
 function updateClosestStop(location) {
 	return (dispatch, getState) => {
 		const shuttle = getState().shuttle;
@@ -123,6 +123,7 @@ function updateClosestStop(location) {
 		
 		closestStop.closest = true;
 		closestStop.savedIndex = closestSavedIndex;
+		console.log('savedIndex' + closestSavedIndex);
 
 		if (currClosestStop === null || currClosestStop.id !== closestStop.id) {
 			dispatch({
@@ -136,7 +137,7 @@ function updateClosestStop(location) {
 			});
 		}
 	};
-}
+}*/
 
 /*
 function updateArrivals(stop) {
@@ -171,7 +172,7 @@ function updateArrivals(stop) {
 module.exports = {
 	toggleRoute,
 	updateVehicles,
-	updateClosestStop,
+	// updateClosestStop,
 	// updateArrivals,
 	updateMaster,
 };
