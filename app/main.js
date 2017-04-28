@@ -36,6 +36,9 @@ import DataListViewAll from './views/common/DataListViewAll';
 import ConferenceFullScheduleView from './views/conference/ConferenceFullScheduleView';
 import ConferenceMyScheduleView from './views/conference/ConferenceMyScheduleView';
 import ConferenceDetailView from './views/conference/ConferenceDetailView';
+import ShuttleRoutesListView from './views/shuttle/ShuttleRoutesListView';
+import ShuttleStopsListView from './views/shuttle/ShuttleStopsListView';
+import ShuttleSavedListView from './views/shuttle/ShuttleSavedListView';
 
 const RouterWithRedux = connect()(Router);
 
@@ -98,6 +101,9 @@ export default class Main extends Component {
 								<Scene key="WelcomeWeekView" component={WelcomeWeekView} title="Welcome Week" />
 								<Scene key="NewsDetail" component={NewsDetail} title="News" />
 								<Scene key="DataListViewAll" component={DataListViewAll} />
+								<Scene key="ShuttleRoutesListView" component={ShuttleRoutesListView} title="Choose Route" />
+								<Scene key="ShuttleStopsListView" component={ShuttleStopsListView} title="Choose Stop" />
+								<Scene key="ShuttleSavedListView" component={ShuttleSavedListView} title="Manage Stops" />
 								<Scene
 									key="ConferenceBar"
 									tabs
