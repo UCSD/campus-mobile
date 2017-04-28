@@ -60,6 +60,11 @@ function* updateConference() {
 	} else {
 		const schedule = yield call(fetchSchedule);
 		yield put({ type: 'SET_CONFERENCE_SCHEDULE', schedule });
+
+		// Schedule has probably changed, so clear saved
+		if (data && Object.keys(data).length !== Object.keys(schedule)) {
+			yield put({ type: 'CHANGED_CONFERENCE_SAVED', saved: [] });
+		}
 	}
 }
 
