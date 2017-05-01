@@ -19,28 +19,27 @@ const dataSource = new ListView.DataSource({
 	sectionHeaderHasChanged: (s1, s2) => s1 !== s2
 });
 
-const ConferenceListView = ({ style, scrollEnabled, rows, personal, scheduleData, saved, addConference, removeConference }) => {
-	return (
-		<ListView
-			style={style}
-			scrollEnabled={scrollEnabled}
-			dataSource={dataSource.cloneWithRowsAndSections(convertArrayToMap(adjustData(scheduleData, saved, personal, rows)))}
-			renderRow={(rowData, sectionID, rowID, highlightRow) => (
-				<ConferenceItem
-					conferenceData={rowData}
-					saved={isSaved(saved, rowData.id)}
-					add={addConference}
-					remove={removeConference}
-				/>
-			)}
-			renderSectionHeader={(sectionData, sectionID) => (
-				<ConferenceHeader
-					timestamp={sectionID}
-				/>
-			)}
-		/>
-	);
-};
+const ConferenceListView = ({ style, scrollEnabled, rows, personal, disabled, scheduleData, saved, addConference, removeConference }) => (
+	<ListView
+		style={style}
+		scrollEnabled={scrollEnabled}
+		dataSource={dataSource.cloneWithRowsAndSections(convertArrayToMap(adjustData(scheduleData, saved, personal, rows)))}
+		renderRow={(rowData, sectionID, rowID, highlightRow) => (
+			<ConferenceItem
+				conferenceData={rowData}
+				saved={isSaved(saved, rowData.id)}
+				add={addConference}
+				remove={removeConference}
+				disabled={disabled}
+			/>
+		)}
+		renderSectionHeader={(sectionData, sectionID) => (
+			<ConferenceHeader
+				timestamp={sectionID}
+			/>
+		)}
+	/>
+);
 
 function adjustData(scheduleArray, savedArray, personal, rows) {
 	// Filter out saved items
@@ -97,7 +96,7 @@ function convertArrayToMap(scheduleArray) {
 	return scheduleMap;
 }
 
-const ConferenceItem = ({ conferenceData, saved, add, remove }) => (
+const ConferenceItem = ({ conferenceData, saved, add, remove, disabled }) => (
 	<View
 		style={styles.row}
 	>
@@ -111,18 +110,20 @@ const ConferenceItem = ({ conferenceData, saved, add, remove }) => (
 				{conferenceData['talk-title']}
 			</Text>
 		</TouchableOpacity>
-		<TouchableOpacity
-			style={styles.starButton}
-			onPress={
-				() => ((saved) ? (remove(conferenceData.id)) : (add(conferenceData.id)))
-			}
-		>
-			<Icon
-				name="star"
-				size={28}
-				color={(saved) ? 'yellow' : 'gray'}
-			/>
-		</TouchableOpacity>
+		{ (disabled) ? (null) : (
+			<TouchableOpacity
+				style={styles.starButton}
+				onPress={
+					() => ((saved) ? (remove(conferenceData.id)) : (add(conferenceData.id)))
+				}
+			>
+				<Icon
+					name="star"
+					size={28}
+					color={(saved) ? 'yellow' : 'gray'}
+				/>
+			</TouchableOpacity>
+		) }
 	</View>
 );
 
@@ -131,7 +132,10 @@ const ConferenceHeader = ({ timestamp }) => (
 		style={styles.header}
 	>
 		<Text>
-			{moment(Number(timestamp)).format('MMM Do YYYY, h:mm a')}
+			{moment(Number(timestamp)).format('MMM Do YYYY')}
+		</Text>
+		<Text>
+			{moment(Number(timestamp)).format('h:mm a')}
 		</Text>
 	</View>
 );
@@ -160,8 +164,9 @@ const ActualConferenceListView = connect(
 )(ConferenceListView);
 
 const styles = StyleSheet.create({
+	header: { padding: 7, backgroundColor: '#DDD' },
 	row: { flexDirection: 'row', height: 50, backgroundColor: '#FFFFFF', borderBottomWidth: 1, borderColor: '#DDD' },
-	titleContainer: { flex: 1 },
+	titleContainer: { flex: 1, padding: 7, justifyContent: 'center' },
 	titleText: {},
 	starButton: { height: 50, width: 50, justifyContent: 'center', alignItems: 'center' }
 });

@@ -11,8 +11,6 @@ import BannerCard from '../common/BannerCard';
 import ConferenceListView from './ConferenceListView';
 import { getMaxCardWidth } from '../../util/general';
 
-const toggle = false;
-
 const ConferenceCard = ({ schedule, saved }) => (
 	<View>
 		{ (saved.length < 1) ?
@@ -34,6 +32,7 @@ const ConferenceCard = ({ schedule, saved }) => (
 							scrollEnabled={false}
 							personal={true}
 							rows={4}
+							disabled={true}
 						/>
 						<TouchableOpacity
 							onPress={() => Actions.ConferenceBar()}
