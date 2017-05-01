@@ -4,7 +4,8 @@ import {
 	Text,
 	ListView,
 	StyleSheet,
-	TouchableOpacity
+	TouchableOpacity,
+	Dimensions
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import moment from 'moment';
@@ -14,31 +15,58 @@ import { Actions } from 'react-native-router-flux';
 import logger from '../../util/logger';
 import css from '../../styles/css';
 
+const deviceWidth = Dimensions.get('window').width;
+
 const dataSource = new ListView.DataSource({
 	rowHasChanged: (r1, r2) => r1 !== r2,
 	sectionHeaderHasChanged: (s1, s2) => s1 !== s2
 });
 
+// Side by listviews to simulate side headers...
 const ConferenceListView = ({ style, scrollEnabled, rows, personal, disabled, scheduleData, saved, addConference, removeConference }) => (
-	<ListView
-		style={style}
-		scrollEnabled={scrollEnabled}
-		dataSource={dataSource.cloneWithRowsAndSections(convertArrayToMap(adjustData(scheduleData, saved, personal, rows)))}
-		renderRow={(rowData, sectionID, rowID, highlightRow) => (
-			<ConferenceItem
-				conferenceData={rowData}
-				saved={isSaved(saved, rowData.id)}
-				add={addConference}
-				remove={removeConference}
-				disabled={disabled}
-			/>
-		)}
-		renderSectionHeader={(sectionData, sectionID) => (
-			<ConferenceHeader
-				timestamp={sectionID}
-			/>
-		)}
-	/>
+	<View style={{ flex: 1, flexDirection: 'row' }}>
+		<ListView
+			style={style}
+			ref={c => { this._headerList = c; }}
+			scrollEnabled={false}
+			showsVerticalScrollIndicator={false}
+			dataSource={dataSource.cloneWithRowsAndSections(convertArrayToMap(adjustData(scheduleData, saved, personal, rows), true))}
+			renderRow={(rowData, sectionID, rowID, highlightRow) => (
+				<EmptyItem
+					conferenceData={rowData}
+					saved={isSaved(saved, rowData.id)}
+					add={addConference}
+					remove={removeConference}
+					disabled={disabled}
+				/>
+			)}
+			renderSectionHeader={(sectionData, sectionID) => (
+				<ConferenceHeader
+					timestamp={sectionID}
+				/>
+			)}
+			enableEmptySections={true}
+		/>
+		<ListView
+			style={style}
+			contentContainerStyle={{ alignItems: 'center', justifyContent: 'center' }}
+			scrollEnabled={scrollEnabled}
+			dataSource={dataSource.cloneWithRowsAndSections(convertArrayToMap(adjustData(scheduleData, saved, personal, rows)))}
+			renderRow={(rowData, sectionID, rowID, highlightRow) => (
+				<ConferenceItem
+					conferenceData={rowData}
+					saved={isSaved(saved, rowData.id)}
+					add={addConference}
+					remove={removeConference}
+					disabled={disabled}
+				/>
+			)}
+			onScroll={(event) => {
+				const scrollY = event.nativeEvent.contentOffset.y;
+				this._headerList.scrollTo({ y: scrollY, animated: false });
+			}}
+		/>
+	</View>
 );
 
 function adjustData(scheduleArray, savedArray, personal, rows) {
@@ -82,7 +110,7 @@ function isSaved(savedArray, id) {
 	return false;
 }
 
-function convertArrayToMap(scheduleArray) {
+function convertArrayToMap(scheduleArray, header = false) {
 	const scheduleMap = {};
 
 	Object.keys(scheduleArray).forEach((key) => {
@@ -93,6 +121,13 @@ function convertArrayToMap(scheduleArray) {
 		}
 		scheduleMap[session['time-start']].push(session);
 	});
+
+	// Remove an item from section so spacing lines up
+	if (header) {
+		Object.keys(scheduleMap).forEach((key) => {
+			scheduleMap[key].pop();
+		});
+	}
 	return scheduleMap;
 }
 
@@ -106,6 +141,7 @@ const ConferenceItem = ({ conferenceData, saved, add, remove, disabled }) => (
 		>
 			<Text
 				style={styles.titleText}
+				numberOfLines={2}
 			>
 				{conferenceData['talk-title']}
 			</Text>
@@ -127,12 +163,16 @@ const ConferenceItem = ({ conferenceData, saved, add, remove, disabled }) => (
 	</View>
 );
 
+const EmptyItem = () => (
+	<View style={styles.emptyRow} />
+);
+
 const ConferenceHeader = ({ timestamp }) => (
 	<View
 		style={styles.header}
 	>
 		<Text>
-			{moment(Number(timestamp)).format('MMM Do YYYY')}
+			{moment(Number(timestamp)).format('MMM Do')}
 		</Text>
 		<Text>
 			{moment(Number(timestamp)).format('h:mm a')}
@@ -164,8 +204,9 @@ const ActualConferenceListView = connect(
 )(ConferenceListView);
 
 const styles = StyleSheet.create({
-	header: { padding: 7, backgroundColor: '#DDD' },
-	row: { flexDirection: 'row', height: 50, backgroundColor: '#FFFFFF', borderBottomWidth: 1, borderColor: '#DDD' },
+	header: { maxWidth: 150, height: 50, flex: 1, padding: 7, backgroundColor: '#DDD', borderBottomWidth: 1, borderColor: '#FFF' },
+	emptyRow: { maxWidth: 150, flexDirection: 'row', height: 50, backgroundColor: '#FFFFFF', borderBottomWidth: 1, borderColor: '#FFF' },
+	row: { maxWidth: 500, alignSelf: 'flex-end', flexDirection: 'row', height: 50, backgroundColor: '#FFFFFF', borderBottomWidth: 1, borderColor: '#DDD' },
 	titleContainer: { flex: 1, padding: 7, justifyContent: 'center' },
 	titleText: {},
 	starButton: { height: 50, width: 50, justifyContent: 'center', alignItems: 'center' }
