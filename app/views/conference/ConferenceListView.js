@@ -27,18 +27,15 @@ const ConferenceListView = ({ style, scrollEnabled, rows, personal, disabled, sc
 	<View style={{ flex: 1, flexDirection: 'row' }}>
 		<ListView
 			style={style}
-			ref={c => { this._headerList = c; }}
+			ref={c => {
+				// Null check here bc ref gets called with null val when there are saved items
+				c ? (this._headerList = c) : (null);
+			}}
 			scrollEnabled={false}
 			showsVerticalScrollIndicator={false}
 			dataSource={dataSource.cloneWithRowsAndSections(convertArrayToMap(adjustData(scheduleData, saved, personal, rows), true))}
 			renderRow={(rowData, sectionID, rowID, highlightRow) => (
-				<EmptyItem
-					conferenceData={rowData}
-					saved={isSaved(saved, rowData.id)}
-					add={addConference}
-					remove={removeConference}
-					disabled={disabled}
-				/>
+				<EmptyItem />
 			)}
 			renderSectionHeader={(sectionData, sectionID) => (
 				<ConferenceHeader
