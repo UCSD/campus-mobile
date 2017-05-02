@@ -12,13 +12,17 @@ class ConferenceCardContainer extends CardComponent {
 	}
 
 	render() {
-		return (
-			<ConferenceCard
-				title="Events"
-				conference={this.props.conferenceData}
-				saved={this.props.saved}
-			/>
-		);
+		if (this.props.conferenceData) {
+			return (
+				<ConferenceCard
+					title="Events"
+					conference={this.props.conferenceData}
+					saved={this.props.saved}
+				/>
+			);
+		} else {
+			return null;
+		}
 	}
 }
 
