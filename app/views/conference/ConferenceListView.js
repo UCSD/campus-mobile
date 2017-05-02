@@ -19,13 +19,13 @@ const dataSource = new ListView.DataSource({
 	sectionHeaderHasChanged: (s1, s2) => s1 !== s2
 });
 
-const ConferenceListView = ({ style, scrollEnabled, rows, personal, disabled, scheduleData, saved, addConference, removeConference }) => (
+const ConferenceListView = ({ style, scrollEnabled, rows, personal, disabled, conferenceData, saved, addConference, removeConference }) => (
 	<ListView
 		style={style}
 		contentContainerStyle={{ alignItems: 'center', justifyContent: 'center' }}
 		scrollEnabled={scrollEnabled}
 		stickySectionHeadersEnabled={false}
-		dataSource={dataSource.cloneWithRowsAndSections(convertArrayToMap(adjustData(scheduleData, saved, personal, rows)))}
+		dataSource={dataSource.cloneWithRowsAndSections(convertArrayToMap(adjustData(conferenceData.schedule, saved, personal, rows)))}
 		renderRow={(rowData, sectionID, rowID, highlightRow) => {
 			// Don't render first row bc rendered by header
 			if (Number(rowID) !== 0) {
@@ -176,7 +176,7 @@ const ConferenceHeader = ({ timestamp }) => (
 
 const mapStateToProps = (state) => (
 	{
-		scheduleData: state.conference.data,
+		conferenceData: state.conference.data,
 		saved: state.conference.saved
 	}
 );

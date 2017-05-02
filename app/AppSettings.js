@@ -23,7 +23,9 @@ module.exports = {
     NEWS_API_URL: 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/allstories.json',
     MAP_SEARCH_API_URL: 'https://xgu9qa7gx4.execute-api.us-west-2.amazonaws.com/prod/v2/map/search?region=0&query=',
     WELCOME_WEEK_API_URL: 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/welcome_week_events.json',
-    CAMPUS_LISA_URL: 'https://14qttlbk64.execute-api.us-west-2.amazonaws.com/dev',
+    //CAMPUS_LISA_URL: 'https://14qttlbk64.execute-api.us-west-2.amazonaws.com/dev',
+    CAMPUS_LISA_URL: 'https://s3-us-west-2.amazonaws.com/ucsd-mobile/test/CLISA_dev_test_2.json',  // Placeholder for v5.2
+    
 
     /* RESOURCES */
     SHUTTLE_SCHEDULE_URL: 'https://transportation.ucsd.edu/shuttles/',

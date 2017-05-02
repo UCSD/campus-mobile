@@ -1,7 +1,7 @@
 import { delay } from 'redux-saga';
 import { put, call, select } from 'redux-saga/effects';
 import WeatherService from '../services/weatherService';
-import { fetchSchedule } from '../services/conferenceService';
+import { fetchConference } from '../services/conferenceService';
 import { WEATHER_API_TTL, SURF_API_TTL, CONFERENCE_TTL } from '../AppSettings';
 
 const getWeather = (state) => (state.weather);
@@ -58,11 +58,11 @@ function* updateConference() {
 	if (timeDiff < ttl && data) {
 		// Do nothing, no need to fetch new data
 	} else {
-		const schedule = yield call(fetchSchedule);
-		yield put({ type: 'SET_CONFERENCE_SCHEDULE', schedule });
+		const conference = yield call(fetchConference);
+		yield put({ type: 'SET_CONFERENCE', conference });
 
 		// Schedule has probably changed, so clear saved
-		if (data && Object.keys(data).length !== Object.keys(schedule)) {
+		if (data && Object.keys(data).length !== Object.keys(conference)) {
 			yield put({ type: 'CHANGED_CONFERENCE_SAVED', saved: [] });
 		}
 	}

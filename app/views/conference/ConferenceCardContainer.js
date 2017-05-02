@@ -15,7 +15,7 @@ class ConferenceCardContainer extends CardComponent {
 		return (
 			<ConferenceCard
 				title="Events"
-				schedule={this.props.scheduleData}
+				conference={this.props.conferenceData}
 				saved={this.props.saved}
 			/>
 		);
@@ -24,7 +24,7 @@ class ConferenceCardContainer extends CardComponent {
 
 const mapStateToProps = (state) => (
 	{
-		scheduleData: state.conference.data,
+		conferenceData: state.conference.data,
 		saved: state.conference.saved
 	}
 );

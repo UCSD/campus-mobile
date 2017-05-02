@@ -22,6 +22,7 @@ class SafeImage extends React.Component {
 				<Image
 					{...this.props}
 					onError={this._handleError}
+					resizeMode={'contain'}
 				/>
 			);
 		} else {
