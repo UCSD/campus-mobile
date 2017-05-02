@@ -14,6 +14,7 @@ function* watchData() {
 			yield call(updateWeather);
 			yield call(updateSurf);
 			yield call(updateConference);
+			yield put({ type: 'UPDATE_DINING' });
 		} catch (err) {
 			console.log(err);
 		}

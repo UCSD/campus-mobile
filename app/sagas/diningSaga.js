@@ -16,7 +16,7 @@ function* updateDining(action) {
 	const diningTTL = DINING_API_TTL * 1000;
 
 	if (timeDiff < diningTTL && data) {
-		var diningData = yield call(_sortDining, data);
+		let diningData = yield call(_sortDining, data);
 		if (position) {
 			diningData = yield call(_setDiningDistance, position, diningData);
 		}
@@ -32,11 +32,11 @@ function* updateDining(action) {
 function fetchDining(position) {
 	return DiningService.FetchDining()
 		.then((dining) => {
-			var diningData = _sortDining(dining);
+			let diningData = _sortDining(dining);
 			if (position) {
 				diningData = _setDiningDistance(position, diningData);
 			}
-			return dining;
+			return diningData;
 		})
 		.catch((error) => {
 			logger.error(error);
