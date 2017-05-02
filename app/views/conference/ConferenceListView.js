@@ -13,60 +13,54 @@ import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 
 import logger from '../../util/logger';
-import css from '../../styles/css';
-
-const deviceWidth = Dimensions.get('window').width;
 
 const dataSource = new ListView.DataSource({
 	rowHasChanged: (r1, r2) => r1 !== r2,
 	sectionHeaderHasChanged: (s1, s2) => s1 !== s2
 });
 
-// Side by listviews to simulate side headers...
 const ConferenceListView = ({ style, scrollEnabled, rows, personal, disabled, conferenceData, saved, addConference, removeConference }) => (
-	<View style={{ flex: 1, flexDirection: 'row' }}>
-		<ListView
-			style={style}
-			ref={c => { this._headerList = c; }}
-			scrollEnabled={false}
-			showsVerticalScrollIndicator={false}
-			dataSource={dataSource.cloneWithRowsAndSections(convertArrayToMap(adjustData(conferenceData.schedule, saved, personal, rows), true))}
-			renderRow={(rowData, sectionID, rowID, highlightRow) => (
-				<EmptyItem
-					conferenceData={rowData}
-					saved={isSaved(saved, rowData.id)}
-					add={addConference}
-					remove={removeConference}
-					disabled={disabled}
-				/>
-			)}
-			renderSectionHeader={(sectionData, sectionID) => (
+	<ListView
+		style={style}
+		contentContainerStyle={{ alignItems: 'center', justifyContent: 'center' }}
+		scrollEnabled={scrollEnabled}
+		stickySectionHeadersEnabled={false}
+		dataSource={dataSource.cloneWithRowsAndSections(convertArrayToMap(adjustData(conferenceData.schedule, saved, personal, rows)))}
+		renderRow={(rowData, sectionID, rowID, highlightRow) => {
+			// Don't render first row bc rendered by header
+			if (Number(rowID) !== 0) {
+				return (
+					<View style={styles.rowContainer}>
+						<EmptyItem />
+						<ConferenceItem
+							conferenceData={rowData}
+							saved={isSaved(saved, rowData.id)}
+							add={addConference}
+							remove={removeConference}
+							disabled={disabled}
+						/>
+					</View>
+				);
+			} else {
+				return null;
+			}
+		}}
+		renderSectionHeader={(sectionData, sectionID) => (
+			// Render header along with first row
+			<View style={styles.rowContainer}>
 				<ConferenceHeader
 					timestamp={sectionID}
 				/>
-			)}
-			enableEmptySections={true}
-		/>
-		<ListView
-			style={style}
-			contentContainerStyle={{ alignItems: 'center', justifyContent: 'center' }}
-			scrollEnabled={scrollEnabled}
-			dataSource={dataSource.cloneWithRowsAndSections(convertArrayToMap(adjustData(conferenceData.schedule, saved, personal, rows)))}
-			renderRow={(rowData, sectionID, rowID, highlightRow) => (
 				<ConferenceItem
-					conferenceData={rowData}
-					saved={isSaved(saved, rowData.id)}
+					conferenceData={sectionData[0]}
+					saved={isSaved(saved, sectionData[0].id)}
 					add={addConference}
 					remove={removeConference}
 					disabled={disabled}
 				/>
-			)}
-			onScroll={(event) => {
-				const scrollY = event.nativeEvent.contentOffset.y;
-				this._headerList.scrollTo({ y: scrollY, animated: false });
-			}}
-		/>
-	</View>
+			</View>
+		)}
+	/>
 );
 
 function adjustData(scheduleArray, savedArray, personal, rows) {
@@ -204,9 +198,10 @@ const ActualConferenceListView = connect(
 )(ConferenceListView);
 
 const styles = StyleSheet.create({
-	header: { maxWidth: 150, height: 50, flex: 1, padding: 7, backgroundColor: '#DDD', borderBottomWidth: 1, borderColor: '#FFF' },
-	emptyRow: { maxWidth: 150, flexDirection: 'row', height: 50, backgroundColor: '#FFFFFF', borderBottomWidth: 1, borderColor: '#FFF' },
-	row: { maxWidth: 500, alignSelf: 'flex-end', flexDirection: 'row', height: 50, backgroundColor: '#FFFFFF', borderBottomWidth: 1, borderColor: '#DDD' },
+	header: { height: 50, flex: 1, paddingLeft: 7, paddingTop: 7, backgroundColor: '#DDD', borderBottomWidth: 1, borderColor: '#FFF' },
+	rowContainer: { flex: 1, flexDirection: 'row' },
+	emptyRow: { flex: 1, flexDirection: 'row', height: 50, backgroundColor: '#FFFFFF', borderBottomWidth: 1, borderColor: '#FFF' },
+	row: { flex: 3, flexDirection: 'row', height: 50, backgroundColor: '#FFFFFF', borderBottomWidth: 1, borderColor: '#DDD' },
 	titleContainer: { flex: 1, padding: 7, justifyContent: 'center' },
 	titleText: {},
 	starButton: { height: 50, width: 50, justifyContent: 'center', alignItems: 'center' }
