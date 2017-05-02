@@ -8,7 +8,7 @@ import {
 	Keyboard,
 	StyleSheet,
 } from 'react-native';
-import { Scene, Router } from 'react-native-router-flux';
+import { Scene, Router, Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 
 import AppSettings from './AppSettings';
@@ -40,9 +40,14 @@ import ShuttleRoutesListView from './views/shuttle/ShuttleRoutesListView';
 import ShuttleStopsListView from './views/shuttle/ShuttleStopsListView';
 import ShuttleSavedListView from './views/shuttle/ShuttleSavedListView';
 
+function mapStateToProps(state, props) {
+	return {
+		scene: state.routes.scene,
+	};
+}
 const RouterWithRedux = connect()(Router);
 
-export default class Main extends Component {
+class Main extends Component {
 	constructor(props) {
 		super(props);
 
@@ -55,16 +60,17 @@ export default class Main extends Component {
 		return (<Image source={require('./assets/img/UCSanDiegoLogo-White.png')} style={css.navCampusLogoTitle} />);
 	}
 
+	shouldComponentUpdate() {
+		return false;
+	}
+
 	_exitHandler = () => {
-		Alert.alert(
-			'Exit',
-			'Are you sure you want to exit this app?',
-			[
-				{ text: 'Cancel', onPress: () => {} },
-				{ text: 'Yes', onPress: () => BackAndroid.exitApp() }
-			]
-		);
-		return true;
+		if (this.props.scene.sceneKey !== 'Home' && this.props.scene.sceneKey !== 'tabbar') {
+			Actions.tab1();
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	render() {
@@ -133,3 +139,5 @@ export default class Main extends Component {
 const styles = StyleSheet.create({
 	selectedTab: { backgroundColor: '#DDD' }
 });
+
+export default connect(mapStateToProps)(Main);
