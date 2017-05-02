@@ -166,10 +166,7 @@ const ConferenceHeader = ({ timestamp }) => (
 		style={styles.header}
 	>
 		<Text>
-			{moment(Number(timestamp)).format('MMM Do')}
-		</Text>
-		<Text>
-			{moment(Number(timestamp)).format('h:mm a')}
+			{moment(Number(timestamp)).format('h:mm')}
 		</Text>
 	</View>
 );
