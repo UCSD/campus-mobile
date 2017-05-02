@@ -5,7 +5,7 @@ const getConference = (state) => (state.conference);
 function* addConference(action) {
 	const conference = yield select(getConference);
 	const saved = conference.saved.slice(); // copy array
-	const schedule = conference.data;
+	const schedule = conference.data.schedule;
 	let contains = false;
 	let addIndex = 0;
 	// Make sure stop hasn't already been saved

@@ -1,6 +1,6 @@
 import { CAMPUS_LISA_URL } from '../AppSettings';
 
-export function fetchSchedule() {
+export function fetchConference() {
 	return fetch(CAMPUS_LISA_URL, {
 		method: 'get',
 		dataType: 'json',
@@ -10,5 +10,5 @@ export function fetchSchedule() {
 		}
 	})
 	.then((response) => response.json())
-	.then((responseData) => responseData.schedule); // TODO, figure out final form of JSON
+	.then((responseData) => responseData.conference); // TODO, figure out final form of JSON
 }

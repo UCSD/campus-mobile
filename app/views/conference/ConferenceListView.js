@@ -23,14 +23,14 @@ const dataSource = new ListView.DataSource({
 });
 
 // Side by listviews to simulate side headers...
-const ConferenceListView = ({ style, scrollEnabled, rows, personal, disabled, scheduleData, saved, addConference, removeConference }) => (
+const ConferenceListView = ({ style, scrollEnabled, rows, personal, disabled, conferenceData, saved, addConference, removeConference }) => (
 	<View style={{ flex: 1, flexDirection: 'row' }}>
 		<ListView
 			style={style}
 			ref={c => { this._headerList = c; }}
 			scrollEnabled={false}
 			showsVerticalScrollIndicator={false}
-			dataSource={dataSource.cloneWithRowsAndSections(convertArrayToMap(adjustData(scheduleData, saved, personal, rows), true))}
+			dataSource={dataSource.cloneWithRowsAndSections(convertArrayToMap(adjustData(conferenceData.schedule, saved, personal, rows), true))}
 			renderRow={(rowData, sectionID, rowID, highlightRow) => (
 				<EmptyItem
 					conferenceData={rowData}
@@ -51,7 +51,7 @@ const ConferenceListView = ({ style, scrollEnabled, rows, personal, disabled, sc
 			style={style}
 			contentContainerStyle={{ alignItems: 'center', justifyContent: 'center' }}
 			scrollEnabled={scrollEnabled}
-			dataSource={dataSource.cloneWithRowsAndSections(convertArrayToMap(adjustData(scheduleData, saved, personal, rows)))}
+			dataSource={dataSource.cloneWithRowsAndSections(convertArrayToMap(adjustData(conferenceData.schedule, saved, personal, rows)))}
 			renderRow={(rowData, sectionID, rowID, highlightRow) => (
 				<ConferenceItem
 					conferenceData={rowData}
@@ -182,7 +182,7 @@ const ConferenceHeader = ({ timestamp }) => (
 
 const mapStateToProps = (state) => (
 	{
-		scheduleData: state.conference.data,
+		conferenceData: state.conference.data,
 		saved: state.conference.saved
 	}
 );

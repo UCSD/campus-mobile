@@ -8,8 +8,8 @@ function conference(state = initialState, action) {
 	const newState = { ...state };
 
 	switch (action.type) {
-	case 'SET_CONFERENCE_SCHEDULE': {
-		newState.data = action.schedule;
+	case 'SET_CONFERENCE': {
+		newState.data = action.conference;
 		newState.lastUpdated = new Date().getTime();
 
 		return newState;

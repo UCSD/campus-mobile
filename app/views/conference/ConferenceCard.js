@@ -11,19 +11,19 @@ import BannerCard from '../common/BannerCard';
 import ConferenceListView from './ConferenceListView';
 import { getMaxCardWidth } from '../../util/general';
 
-const ConferenceCard = ({ schedule, saved }) => (
+const ConferenceCard = ({ conference, saved }) => (
 	<View>
 		{ (saved.length < 1) ?
 			(
 				<BannerCard
-					image={'https://thumbs.dreamstime.com/z/computer-banner-680247.jpg'}
+					image={conference['conference-logo-lg']}
 					onPress={() => Actions.ConferenceBar()}
 				/>
 			) :
 			(
 				<Card
-					title="Conference"
-					header={'http://ucsdnews.ucsd.edu/news_uploads/2017_04_21_vinetz_teaser.jpg'}
+					title={conference.name}
+					header={conference['conference-logo-lg']}
 				>
 					<View
 						style={{ flex: 1, width: getMaxCardWidth() }}
