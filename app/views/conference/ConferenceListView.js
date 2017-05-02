@@ -148,9 +148,9 @@ const ConferenceItem = ({ conferenceData, saved, add, remove, disabled }) => (
 				}
 			>
 				<Icon
-					name="star"
+					name={ saved ? 'star' : 'star-border' }
 					size={28}
-					color={(saved) ? 'yellow' : 'gray'}
+					color={ saved ? 'yellow' : 'grey' }
 				/>
 			</TouchableOpacity>
 		) }
