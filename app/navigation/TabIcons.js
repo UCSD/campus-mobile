@@ -34,13 +34,13 @@ const TabIcons = function (props) {
 		tabIconText = 'Settings';
 	} else if (props.title === 'Full') {
 		return (
-			<Text>
+			<Text style={props.selected ? css.CAMPUS_PRIMARY : { opacity: 0.5 }}>
 				Full
 			</Text>
 		);
 	} else if (props.title === 'Mine') {
 		return (
-			<Text>
+			<Text style={props.selected ? css.CAMPUS_PRIMARY : { opacity: 0.5 }}>
 				Mine
 			</Text>
 		);
@@ -48,8 +48,8 @@ const TabIcons = function (props) {
 
 	return (
 		<View style={[css.tabContainer, props.selected ? css.tabContainerBottom : null]}>
-			{tabIconPack === 'FontAwesome' ? (<FontAwesome style={[css.tabIcon, props.selected ? css.campus_primary : null]} name={tabIconName} size={24} />) : null }
-			{tabIconPack === 'Entypo' ? (<Entypo style={[css.tabIcon, props.selected ? css.campus_primary : null]} name={tabIconName} size={24} />) : null }
+			{tabIconPack === 'FontAwesome' ? (<FontAwesome style={[css.tabIcon, props.selected ? css.CAMPUS_PRIMARY : null]} name={tabIconName} size={24} />) : null }
+			{tabIconPack === 'Entypo' ? (<Entypo style={[css.tabIcon, props.selected ? css.CAMPUS_PRIMARY : null]} name={tabIconName} size={24} />) : null }
 		</View>
 	);
 };

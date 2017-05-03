@@ -114,7 +114,6 @@ class Main extends Component {
 									key="ConferenceBar"
 									tabs
 									tabBarStyle={general.platformIOS() ? css.tabBarIOS : css.tabBarAndroid}
-									tabBarSelectedItemStyle={styles.selectedTab}
 								>
 									<Scene key="con1" initial icon={TabIcons} title="Full">
 										<Scene key="ConferenceFullScheduleView" component={ConferenceFullScheduleView} />
@@ -135,9 +134,5 @@ class Main extends Component {
 		);
 	}
 }
-
-const styles = StyleSheet.create({
-	selectedTab: { backgroundColor: '#DDD' }
-});
 
 export default connect(mapStateToProps)(Main);
