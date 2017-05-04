@@ -88,13 +88,12 @@ const navHeight = Platform.select({
 	android: 44
 });
 
-// device - (statusBar + navHeight + searchBar + listPadding + tabBar) - surveyCard
-const listHeight = deviceHeight - (statusBarHeight + navHeight + 44 + 16 + 40) - 80;
+// device - (statusBar + navHeight + searchBar + listPadding + tabBar)
+const listHeight = deviceHeight - (statusBarHeight + navHeight + 44 + 16 + 40);
 
 const styles = StyleSheet.create({
-	survey_card: { top: 44 + 6 },
 	list_container: { width: getMaxCardWidth(), maxHeight: listHeight, },
-	card_main: { top: 44, backgroundColor: '#FFFFFF', margin: 6, alignItems: 'flex-start', justifyContent: 'center', },
+	card_main: { top: 44 + 6, backgroundColor: '#FFFFFF', margin: 6, alignItems: 'flex-start', justifyContent: 'center', },
 	touch: { backgroundColor: '#FFF' },
 	list_row: { flexDirection: 'row', paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: '#EEE', overflow: 'hidden', paddingLeft: 8, paddingRight: 8 },
 });
