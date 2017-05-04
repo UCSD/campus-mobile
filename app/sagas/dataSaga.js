@@ -1,12 +1,21 @@
 import { delay } from 'redux-saga';
 import { put, call, select } from 'redux-saga/effects';
+import { Image } from 'react-native';
+
 import WeatherService from '../services/weatherService';
 import { fetchConference } from '../services/conferenceService';
-import { WEATHER_API_TTL, SURF_API_TTL, CONFERENCE_TTL } from '../AppSettings';
+import LinksService from '../services/quicklinksService';
+import {
+	WEATHER_API_TTL,
+	SURF_API_TTL,
+	CONFERENCE_TTL,
+	QUICKLINKS_API_TTL
+} from '../AppSettings';
 
 const getWeather = (state) => (state.weather);
 const getSurf = (state) => (state.surf);
 const getConference = (state) => (state.conference);
+const getLinks = (state) => (state.links);
 
 function* watchData() {
 	while (true) {
@@ -14,6 +23,7 @@ function* watchData() {
 			yield call(updateWeather);
 			yield call(updateSurf);
 			yield call(updateConference);
+			yield call(updateLinks);
 			yield put({ type: 'UPDATE_DINING' });
 		} catch (err) {
 			console.log(err);
@@ -67,6 +77,35 @@ function* updateConference() {
 			yield put({ type: 'CHANGED_CONFERENCE_SAVED', saved: [] });
 		}
 	}
+}
+
+function* updateLinks() {
+	const { lastUpdated, data } = yield select(getLinks);
+	const nowTime = new Date().getTime();
+	const timeDiff = nowTime - lastUpdated;
+	const linksTTL = QUICKLINKS_API_TTL * 1000;
+
+	if ((timeDiff < linksTTL) && data) {
+		// Do nothing, no need to fetch new data
+	} else {
+		// Fetch for new data
+		const links = yield call(LinksService.FetchQuicklinks);
+		yield put({ type: 'SET_LINKS', links });
+
+		if (links) {
+			prefetchLinkImages(links);
+		}
+	}
+}
+
+function prefetchLinkImages(links) {
+	links.forEach((item) => {
+		const imageUrl = item.icon;
+		// Check if actually a url and not icon name
+		if (imageUrl.indexOf('fontawesome:') !== 0) {
+			Image.prefetch(imageUrl);
+		}
+	});
 }
 
 function* dataSaga() {
