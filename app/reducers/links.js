@@ -1,6 +1,6 @@
 const initialState = {
 	data: null,
-	lastUpdated: new Date().getTime(),
+	lastUpdated: 0,
 };
 
 function links(state = initialState, action) {
@@ -9,11 +9,7 @@ function links(state = initialState, action) {
 	switch (action.type) {
 	case 'SET_LINKS': {
 		newState.data = action.links;
-
-		return newState;
-	}
-	case 'SET_LINKS_UPDATE': {
-		newState.lastUpdated = action.nowTime;
+		newState.lastUpdated = new Date().getTime();
 
 		return newState;
 	}

@@ -11,13 +11,13 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 const css = require('../../styles/css');
 const general = require('../../util/general');
 
-var ListStyle = function(listType) {
+const ListStyle = function (listType) {
 	if (listType === 'full') {
 		return css.links_row_full;
 	} else {
 		return null;
 	}
-}
+};
 
 const QuicklinksItem = ({ data, listType }) => (
 	<View style={css.quicklinks_row_container}>
