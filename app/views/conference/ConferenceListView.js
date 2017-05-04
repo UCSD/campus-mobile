@@ -5,14 +5,11 @@ import {
 	ListView,
 	StyleSheet,
 	TouchableOpacity,
-	Dimensions
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
-
-import logger from '../../util/logger';
 
 const dataSource = new ListView.DataSource({
 	rowHasChanged: (r1, r2) => r1 !== r2,
@@ -129,6 +126,7 @@ const ConferenceItem = ({ conferenceData, saved, add, remove, disabled }) => (
 	<View
 		style={styles.row}
 	>
+		<CircleBorder />
 		<TouchableOpacity
 			style={styles.titleContainer}
 			onPress={() => Actions.ConferenceDetailView({ data: conferenceData })}
@@ -139,6 +137,11 @@ const ConferenceItem = ({ conferenceData, saved, add, remove, disabled }) => (
 			>
 				{conferenceData['talk-title']}
 			</Text>
+			<Text
+				style={styles.labelText}
+			>
+				{conferenceData.label} {(Number(conferenceData['end-time']) - Number(conferenceData['time-start'])) / (60 * 1000)} min
+			</Text>
 		</TouchableOpacity>
 		{ (disabled) ? (null) : (
 			<TouchableOpacity
@@ -148,9 +151,9 @@ const ConferenceItem = ({ conferenceData, saved, add, remove, disabled }) => (
 				}
 			>
 				<Icon
-					name={ saved ? 'star' : 'star-border' }
+					name={saved ? 'star' : 'star-border'}
 					size={28}
-					color={ saved ? 'yellow' : 'grey' }
+					color={saved ? 'yellow' : 'grey'}
 				/>
 			</TouchableOpacity>
 		) }
@@ -165,9 +168,16 @@ const ConferenceHeader = ({ timestamp }) => (
 	<View
 		style={styles.header}
 	>
-		<Text>
+		<Text style={styles.headerText}>
 			{moment(Number(timestamp)).format('h:mm')}
 		</Text>
+	</View>
+);
+
+const CircleBorder = () => (
+	<View style={styles.borderContainer}>
+		<View style={styles.line} />
+		<View style={styles.circle} />
 	</View>
 );
 
@@ -194,14 +204,21 @@ const ActualConferenceListView = connect(
 	mapDispatchToProps
 )(ConferenceListView);
 
+const rowHeight = 70;
+
 const styles = StyleSheet.create({
-	header: { height: 50, flex: 1, paddingLeft: 7, paddingTop: 7, backgroundColor: '#DDD', borderBottomWidth: 1, borderColor: '#FFF' },
+	header: { justifyContent: 'center', alignItems: 'center', height: rowHeight, flex: 1, paddingLeft: 7, paddingTop: 7, backgroundColor: '#F9F9F9', borderBottomWidth: 1, borderColor: '#F9F9F9' },
+	headerText: { color: '#034262' },
 	rowContainer: { flex: 1, flexDirection: 'row' },
-	emptyRow: { flex: 1, flexDirection: 'row', height: 50, backgroundColor: '#FFFFFF', borderBottomWidth: 1, borderColor: '#FFF' },
-	row: { flex: 3, flexDirection: 'row', height: 50, backgroundColor: '#FFFFFF', borderBottomWidth: 1, borderColor: '#DDD' },
+	emptyRow: { flex: 1, flexDirection: 'row', paddingLeft: 7, height: rowHeight, backgroundColor: '#F9F9F9', borderBottomWidth: 1, borderColor: '#F9F9F9' },
+	row: { flex: 3, flexDirection: 'row', height: rowHeight, backgroundColor: '#F9F9F9', },
 	titleContainer: { flex: 1, padding: 7, justifyContent: 'center' },
-	titleText: {},
-	starButton: { height: 50, width: 50, justifyContent: 'center', alignItems: 'center' }
+	titleText: { fontSize: 18, color: '#034262' },
+	labelText: { color: '#747678' },
+	starButton: { height: rowHeight, width: rowHeight, justifyContent: 'center', alignItems: 'center' },
+	borderContainer: { marginLeft: 7, marginRight: 7, alignItems: 'center' },
+	line: { height: rowHeight, borderLeftWidth: 1, borderColor: '#747678' },
+	circle: { position: 'absolute', top: 30, height: 10, width: 10, borderRadius: 5, borderWidth: 1, borderColor: '#747678', backgroundColor: '#F9F9F9' }
 });
 
 export default ActualConferenceListView;
