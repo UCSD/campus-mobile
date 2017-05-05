@@ -19,7 +19,7 @@ const dataSource = new ListView.DataSource({
 const ConferenceListView = ({ style, scrollEnabled, rows, personal, disabled, conferenceData, saved, addConference, removeConference }) => (
 	<ListView
 		style={style}
-		contentContainerStyle={{ alignItems: 'center', justifyContent: 'center' }}
+		contentContainerStyle={{ alignItems: 'center', justifyContent: 'center', borderBottomColor: '#DDD', borderBottomWidth: 1 }}
 		scrollEnabled={scrollEnabled}
 		stickySectionHeadersEnabled={false}
 		dataSource={dataSource.cloneWithRowsAndSections(convertArrayToMap(adjustData(conferenceData.schedule, saved, personal, rows)))}
