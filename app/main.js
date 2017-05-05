@@ -116,13 +116,13 @@ class Main extends Component {
 									tabBarStyle={general.platformIOS() ? css.tabBarIOS : css.tabBarAndroid}
 								>
 									<Scene key="con1" initial icon={TabIcons} title="Full">
-										<Scene key="ConferenceFullScheduleView" component={ConferenceFullScheduleView} />
+										<Scene key="ConferenceFullScheduleView" component={ConferenceFullScheduleView} title="Campus LISA" />
 									</Scene>
 									<Scene key="con2" icon={TabIcons} title="Mine">
-										<Scene key="ConferenceMyScheduleView" component={ConferenceMyScheduleView} />
+										<Scene key="ConferenceMyScheduleView" component={ConferenceMyScheduleView} title="Campus LISA" />
 									</Scene>
 								</Scene>
-								<Scene key="ConferenceDetailView" component={ConferenceDetailView} />
+								<Scene key="ConferenceDetailView" component={ConferenceDetailView} title="Campus LISA" />
 							</Scene>
 							<Scene key="tab2" title="Map" component={NearbyMapView} icon={TabIcons} />
 							<Scene key="tab3" title="Feedback" component={FeedbackView} icon={TabIcons} />
