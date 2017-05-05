@@ -2,7 +2,8 @@ import React from 'react';
 import {
 	View,
 	Text,
-	TouchableOpacity
+	TouchableOpacity,
+	StyleSheet,
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 
@@ -47,5 +48,10 @@ const ConferenceCard = ({ conference, saved }) => (
 		}
 	</View>
 );
+
+const styles = StyleSheet.create({
+	promoCardContainer: { height: ((getMaxCardWidth() / 800) * 200), width: getMaxCardWidth(), borderWidth: 2 },
+	bannerCardContainer: { padding: 8 },
+});
 
 export default ConferenceCard;
