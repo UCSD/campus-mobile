@@ -4,6 +4,7 @@ import { Image } from 'react-native';
 
 import WeatherService from '../services/weatherService';
 import { fetchConference } from '../services/conferenceService';
+import { fetchSurveys } from '../services/surveyService';
 import LinksService from '../services/quicklinksService';
 import {
 	WEATHER_API_TTL,
@@ -16,6 +17,7 @@ const getWeather = (state) => (state.weather);
 const getSurf = (state) => (state.surf);
 const getConference = (state) => (state.conference);
 const getLinks = (state) => (state.links);
+const getSurvey = (state) => (state.survey);
 
 function* watchData() {
 	while (true) {
@@ -24,6 +26,7 @@ function* watchData() {
 			yield call(updateSurf);
 			yield call(updateConference);
 			yield call(updateLinks);
+			yield call(updateSurveys);
 			yield put({ type: 'UPDATE_DINING' });
 		} catch (err) {
 			console.log(err);
@@ -96,6 +99,14 @@ function* updateLinks() {
 			prefetchLinkImages(links);
 		}
 	}
+}
+
+function* updateSurveys() {
+	const { allIds } = yield select(getSurvey);
+
+	// Fetch for new surveys
+	const surveys = yield call(fetchSurveys);
+	yield put({ type: 'SET_SURVEYS', surveys });
 }
 
 function prefetchLinkImages(links) {
