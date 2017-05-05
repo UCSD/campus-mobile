@@ -4,6 +4,8 @@ import Menu, { MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-m
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux';
+import ElevatedView from 'react-native-elevated-view';
+
 import { hideCard } from '../../actions/cards';
 import CardHeader from './CardHeader';
 import { getMaxCardWidth } from '../../util/general';
@@ -42,7 +44,7 @@ class ScrollCard extends React.Component {
 		if (this.props.updateScroll) {
 			this.props.updateScroll(event.nativeEvent.contentOffset.x);
 		}
-		const dotIndex = Math.floor(event.nativeEvent.contentOffset.x / getMaxCardWidth());
+		const dotIndex = Math.floor(event.nativeEvent.contentOffset.x / (getMaxCardWidth() - 12)); // minus padding
 		this.setState({ dotIndex });
 	}
 
@@ -79,7 +81,7 @@ class ScrollCard extends React.Component {
 			list = (
 				<ListView
 					ref={c => { this._listview = c; }}
-					style={{ flexDirection: 'row' }}
+					style={styles.listStyle}
 					onContentSizeChange={this.countDots}
 					pagingEnabled
 					horizontal
@@ -95,11 +97,15 @@ class ScrollCard extends React.Component {
 
 		return (
 			<View>
-				<View style={[styles.card_main, this.state.numDots <= 1 ? styles.card_main_marginBottom : null ]} ref={(i) => { this._card = i; }}>
+				<ElevatedView
+					elevation={3}
+					style={[styles.card_main, this.state.numDots <= 1 ? styles.card_main_marginBottom : null]}
+					ref={(i) => { this._card = i; }}
+				>
 					<CardHeader id={this.props.id} title={this.props.title} menu={this._renderMenu()} />
 					{list}
 					{this.props.actionButton}
-				</View>
+				</ElevatedView>
 
 				{ this.state.numDots > 1 ? (
 					<PageIndicator
@@ -119,7 +125,7 @@ const PageIndicator = ({ numDots, dotIndex }) => {
 		const dot = (
 			<FAIcon
 				color='#A3A3A3'
-				style={{ padding: 6, paddingTop: 3 }}
+				style={styles.dotStyle}
 				name={dotName}
 				size={10}
 				key={'dot' + i}
@@ -130,7 +136,7 @@ const PageIndicator = ({ numDots, dotIndex }) => {
 
 	return (
 		<View
-			style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}
+			style={styles.dotsContainer}
 		>
 			{dots}
 		</View>
@@ -140,6 +146,9 @@ const PageIndicator = ({ numDots, dotIndex }) => {
 export default connect()(ScrollCard);
 
 const styles = StyleSheet.create({
-	card_main: { borderWidth: 1, borderBottomWidth: 0, borderRadius: 2, borderColor: '#DDD', backgroundColor: '#F9F9F9', margin: 6, marginBottom: 0, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
+	card_main: { backgroundColor: '#F9F9F9', margin: 6, marginBottom: 0, alignItems: 'center', justifyContent: 'center', },
 	card_main_marginBottom: { marginBottom: 6 },
+	dotStyle: { padding: 6, paddingTop: 3, backgroundColor:'transparent' },
+	dotsContainer: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
+	listStyle: { flexDirection: 'row' },
 });
