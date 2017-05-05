@@ -6,7 +6,7 @@ import ConferenceListView from './ConferenceListView';
 
 const ConferenceFullScheduleView = () => (
 	<View
-		style={css.main_container}
+		style={[css.main_container, css.whitebg]}
 	>
 		<ConferenceListView
 			scrollEnabled={true}
