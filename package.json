@@ -17,7 +17,7 @@
     "html-entities": "1.2.0",
     "moment": "2.15.2",
     "react": "15.4.2",
-    "react-native": "git://github.com/i8wu/react-native.git#21cb88c4d3c5db4408569362d49cfd1c8d0b76bd",
+    "react-native": "0.42.3",
     "react-native-animatable": "1.1.1",
     "react-native-code-push": "1.17.3-beta",
     "react-native-cookies": "^2.0.0",
