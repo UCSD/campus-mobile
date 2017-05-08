@@ -2,7 +2,6 @@ import React from 'react';
 import {
 	View,
 	Text,
-	TouchableOpacity,
 	StyleSheet,
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
@@ -11,6 +10,7 @@ import Card from '../card/Card';
 import BannerCard from '../common/BannerCard';
 import ConferenceListView from './ConferenceListView';
 import { getMaxCardWidth, getCampusPrimary } from '../../util/general';
+import Touchable from '../common/Touchable';
 
 const ConferenceCard = ({ conference, saved }) => (
 	<View>
@@ -35,7 +35,7 @@ const ConferenceCard = ({ conference, saved }) => (
 							rows={4}
 							disabled={true}
 						/>
-						<TouchableOpacity
+						<Touchable
 							onPress={() => Actions.ConferenceBar()}
 						>
 							<View style={styles.more}>
@@ -43,7 +43,7 @@ const ConferenceCard = ({ conference, saved }) => (
 									See My Schedule
 								</Text>
 							</View>
-						</TouchableOpacity>
+						</Touchable>
 					</View>
 				</Card>
 			)
@@ -52,8 +52,6 @@ const ConferenceCard = ({ conference, saved }) => (
 );
 
 const styles = StyleSheet.create({
-	promoCardContainer: { height: ((getMaxCardWidth() / 800) * 200), width: getMaxCardWidth(), borderWidth: 2 },
-	bannerCardContainer: { padding: 8 },
 	more: { alignItems: 'center', justifyContent: 'center', padding: 6 },
 	more_label: { fontSize: 20, color: getCampusPrimary(), fontWeight: '300' },
 });
