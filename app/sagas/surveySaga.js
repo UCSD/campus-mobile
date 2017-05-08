@@ -3,14 +3,16 @@ import { call, put, takeLatest } from 'redux-saga/effects';
 
 import postSurvey from '../services/surveyService';
 
-// 264935
 function* submitSurvey(action) {
+	yield put({ type: 'SURVEY_DONE', id: action.id });
+
+	// Keep trying to post answer, until success
 	while (true) {
 		try {
-			yield call(postSurvey, action.id, action.answer, action.data);
-			yield put({ type: 'SURVEY_RECEIVED', id: action.id });
+			const post = yield call(postSurvey, action.id, action.answer, action.data);
+			return post;
 		} catch (error) {
-			yield call(delay, 5000); // Retry in 5s
+			delay(5000); // wait 5s
 		}
 	}
 }
