@@ -160,13 +160,18 @@ module.exports = {
 
 	/**
 	 * Gets the maximum width for a card occupying a screen/window
-	 * @returns {number} The maximum width in pixels
+	 * @returns {number} The maximum width in points
 	 */
 	getMaxCardWidth() {
-		const windowSize = Dimensions.get('window');
-		const windowWidth = windowSize.width;
+		return Dimensions.get('window').width - 2 - 12;
+	},
 
-		return windowWidth - 2 - 12;
+	/**
+	 * Gets the screen width of the users device
+	 * @returns {number} The screen width in points
+	 */
+	getScreenWidth() {
+		return Dimensions.get('window').width;
 	},
 
 	/**
