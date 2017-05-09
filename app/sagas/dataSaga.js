@@ -4,7 +4,7 @@ import { Image } from 'react-native';
 
 import WeatherService from '../services/weatherService';
 import { fetchConference } from '../services/conferenceService';
-import { fetchSurveys } from '../services/surveyService';
+import { fetchSurveyIds, fetchSurveyById } from '../services/surveyService';
 import LinksService from '../services/quicklinksService';
 import {
 	WEATHER_API_TTL,
@@ -31,7 +31,7 @@ function* watchData() {
 		} catch (err) {
 			console.log(err);
 		}
-		yield delay(60000); // wait 5s
+		yield delay(60000); // wait 1min
 	}
 }
 
@@ -102,11 +102,23 @@ function* updateLinks() {
 }
 
 function* updateSurveys() {
+	// TODO: SurveyTTL
 	const { allIds } = yield select(getSurvey);
 
-	// Fetch for new surveys
-	const surveys = yield call(fetchSurveys);
-	yield put({ type: 'SET_SURVEYS', surveys });
+	// Fetch for all survey ids
+	const surveyIds = yield call(fetchSurveyIds);
+
+	if (surveyIds && surveyIds.length > allIds.length) {
+		// Fetch each new survey
+		for (let i = 0; i < surveyIds.length; ++i) {
+			const id = surveyIds[i];
+			if (allIds.indexOf(id) < 0) {
+				const survey = yield call(fetchSurveyById, id);
+				yield put({ type: 'SET_SURVEY', id, survey });
+			}
+		}
+		yield put({ type: 'SET_SURVEY_IDS', surveyIds });
+	}
 }
 
 function prefetchLinkImages(links) {

@@ -1,7 +1,7 @@
 import { delay } from 'redux-saga';
 import { call, put, takeLatest } from 'redux-saga/effects';
 
-import postSurvey from '../services/surveyService';
+import { postSurvey } from '../services/surveyService';
 
 function* submitSurvey(action) {
 	yield put({ type: 'SURVEY_DONE', id: action.id });
