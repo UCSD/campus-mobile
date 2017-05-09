@@ -133,23 +133,24 @@ const ConferenceItem = ({ conferenceData, saved, add, remove, disabled }) => (
 				onPress={() => Actions.ConferenceDetailView({ data: conferenceData })}
 				
 			>
-
-				{conferenceData['talk-title'] ? (
-					<Text
-						style={styles.titleText}
-						numberOfLines={2}
-					>
-						{conferenceData['talk-title']}
-					</Text>
-				) : null }
-
-				<Text style={styles.labelText}>
-					{ conferenceData.label ? (
-						<Text style={styles.labelTrack}>{conferenceData.label} - </Text>
+				<View>
+					{conferenceData['talk-title'] ? (
+						<Text
+							style={styles.titleText}
+							numberOfLines={2}
+						>
+							{conferenceData['talk-title']}
+						</Text>
 					) : null }
 
-					{(Number(conferenceData['end-time']) - Number(conferenceData['time-start'])) / (60 * 1000)} min
-				</Text>
+					<Text style={styles.labelText}>
+						{ conferenceData.label ? (
+							<Text style={styles.labelTrack}>{conferenceData.label} - </Text>
+						) : null }
+
+						{(Number(conferenceData['end-time']) - Number(conferenceData['time-start'])) / (60 * 1000)} min
+					</Text>
+				</View>
 			</Touchable>
 		</View>
 

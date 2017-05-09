@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-	TouchableOpacity,
 	StyleSheet,
 	View,
 	Text,
@@ -8,35 +7,38 @@ import {
 
 import Card from '../card/Card';
 import SafeImage from './SafeImage';
+import Touchable from '../common/Touchable';
 import { getMaxCardWidth, getCampusPrimary } from '../../util/general';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const BannerCard = ({ image, onPress }) => (
 	<Card>
 		<View style={styles.closeContainer}>
-			<TouchableOpacity
-				activeOpacity={0.6}
-				style={{flexDirection: 'row'}}
+			<Touchable
 				onPress={() => null}
 			>	
-				<Text style={styles.closeText}>Close</Text>
-				<Icon size={13} color={'grey'} name={'md-close-circle'} style={styles.closeIcon} />
-			</TouchableOpacity>
+				<View style={{flexDirection: 'row'}}>
+					<Text style={styles.closeText}>Close</Text>
+					<Icon size={13} color={'grey'} name={'md-close-circle'} style={styles.closeIcon} />
+				</View>
+			</Touchable>
 		</View>
 
 
-		<TouchableOpacity
+		<Touchable
 			activeOpacity={0.6}
 			onPress={() => onPress()}
 		>
-			<SafeImage
-				source={{ uri: image }}
-				style={styles.image}
-			/>
-			<View style={styles.more}>
-				<Text style={styles.more_label}>See Full Schedule</Text>
+			<View>
+				<SafeImage
+					source={{ uri: image }}
+					style={styles.image}
+				/>
+				<View style={styles.more}>
+					<Text style={styles.more_label}>See Full Schedule</Text>
+				</View>
 			</View>
-		</TouchableOpacity>
+		</Touchable>
 	</Card>
 );
 
