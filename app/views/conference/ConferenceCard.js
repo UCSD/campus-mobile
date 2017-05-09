@@ -18,7 +18,7 @@ const ConferenceCard = ({ conference, saved }) => (
 			(
 				<BannerCard
 					image={conference['conference-logo-lg']}
-					onPress={() => Actions.ConferenceBar()}
+					onPress={() => Actions.ConferenceView()}
 				/>
 			) :
 			(
@@ -36,7 +36,7 @@ const ConferenceCard = ({ conference, saved }) => (
 							disabled={true}
 						/>
 						<Touchable
-							onPress={() => Actions.ConferenceBar()}
+							onPress={() => Actions.ConferenceView()}
 						>
 							<View style={styles.more}>
 								<Text style={styles.more_label}>

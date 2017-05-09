@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import css from '../../styles/css';
 import ConferenceListView from './ConferenceListView';
 
-const ConferenceMyScheduleView = ({ schedule, saved, add, remove }) => (
+const ConferenceMyScheduleView = () => (
 	<View
 		style={[css.main_container, css.whitebg]}
 	>

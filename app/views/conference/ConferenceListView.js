@@ -19,7 +19,7 @@ const dataSource = new ListView.DataSource({
 
 const ConferenceListView = ({ style, scrollEnabled, rows, personal, disabled, conferenceData, saved, addConference, removeConference }) => (
 	<ListView
-		style={[style, personal ? styles.cardWidth : styles.fullWidth ]}
+		style={style}
 		scrollEnabled={scrollEnabled}
 		stickySectionHeadersEnabled={false}
 		dataSource={dataSource.cloneWithRowsAndSections(convertArrayToMap(adjustData(conferenceData.schedule, saved, personal, rows)))}
@@ -127,11 +127,11 @@ const ConferenceItem = ({ conferenceData, saved, add, remove, disabled }) => (
 		style={styles.itemRow}
 	>
 		<CircleBorder />
-		
+
 		<View style={styles.titleContainer}>
 			<Touchable
 				onPress={() => Actions.ConferenceDetailView({ data: conferenceData })}
-				
+
 			>
 
 				{conferenceData['talk-title'] ? (
@@ -226,7 +226,7 @@ const styles = StyleSheet.create({
 	header: { justifyContent: 'flex-start', alignItems: 'center', width: 45, backgroundColor: '#F9F9F9', borderBottomWidth: 1, borderColor: '#F9F9F9' },
 	headerText: { textAlign: 'right', alignSelf: 'stretch', color: '#000', fontSize: 12, marginTop: 7 },
 	emptyRow: { width: 45, flexDirection: 'row',  backgroundColor: '#F9F9F9', borderBottomWidth: 1, borderColor: '#F9F9F9' },
-	
+
 	titleContainer: { flex: 1, marginTop: 3 },
 	titleText: { alignSelf: 'stretch', fontSize: 18, color: '#000' },
 	labelText: { fontSize: 13, paddingTop: 4 },
