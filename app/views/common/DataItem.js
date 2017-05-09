@@ -58,7 +58,6 @@ const DataItem = ({ data, card, onPress }) => (
 										numberOfLines={3}
 									>
 										{data.description.trim()}
-										}
 									</Text>
 								) : null }
 								<Text style={styles.events_list_postdate}>{data.subtext}</Text>

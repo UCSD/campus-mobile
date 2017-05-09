@@ -5,7 +5,6 @@ import {
 	ScrollView,
 	Image,
 	Linking,
-	TouchableHighlight,
 	Dimensions
 } from 'react-native';
 
@@ -29,9 +28,6 @@ const ConferenceDetailView = ({ data }) => {
 						</Text>
 						<Text style={css.eventdetail_eventlocation}>
 							{data.location}
-						</Text>
-						<Text style={css.eventdetail_eventdate}>
-							{moment(Number(data['time-start'])).format('MMM Do YYYY, h:mm a')}
 						</Text>
 						<Text style={css.eventdetail_eventdate}>
 							{moment(Number(data['time-start'])).format('MMM Do YYYY, h:mm a')}

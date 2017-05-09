@@ -17,7 +17,7 @@ const BannerCard = ({ image, onPress }) => (
 			<TouchableOpacity
 				activeOpacity={0.6}
 				style={{flexDirection: 'row'}}
-				onPress={() => onPress()}
+				onPress={() => null}
 			>	
 				<Text style={styles.closeText}>Close</Text>
 				<Icon size={13} color={'grey'} name={'md-close-circle'} style={styles.closeIcon} />

@@ -4,12 +4,13 @@ import {
 	Text,
 	ListView,
 	StyleSheet,
-	TouchableOpacity,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
+import Touchable from '../common/Touchable';
+import { getMaxCardWidth, getScreenWidth } from '../../util/general';
 
 const dataSource = new ListView.DataSource({
 	rowHasChanged: (r1, r2) => r1 !== r2,
@@ -18,8 +19,7 @@ const dataSource = new ListView.DataSource({
 
 const ConferenceListView = ({ style, scrollEnabled, rows, personal, disabled, conferenceData, saved, addConference, removeConference }) => (
 	<ListView
-		style={style}
-		contentContainerStyle={{ alignItems: 'center', justifyContent: 'center', borderBottomColor: '#DDD', borderBottomWidth: 1 }}
+		style={[style, personal ? styles.cardWidth : styles.fullWidth ]}
 		scrollEnabled={scrollEnabled}
 		stickySectionHeadersEnabled={false}
 		dataSource={dataSource.cloneWithRowsAndSections(convertArrayToMap(adjustData(conferenceData.schedule, saved, personal, rows)))}
@@ -124,38 +124,51 @@ function convertArrayToMap(scheduleArray, header = false) {
 
 const ConferenceItem = ({ conferenceData, saved, add, remove, disabled }) => (
 	<View
-		style={styles.row}
+		style={styles.itemRow}
 	>
 		<CircleBorder />
-		<TouchableOpacity
-			style={styles.titleContainer}
-			onPress={() => Actions.ConferenceDetailView({ data: conferenceData })}
-		>
-			<Text
-				style={styles.titleText}
-				numberOfLines={2}
+		
+		<View style={styles.titleContainer}>
+			<Touchable
+				onPress={() => Actions.ConferenceDetailView({ data: conferenceData })}
+				
 			>
-				{conferenceData['talk-title']}
-			</Text>
-			<Text
-				style={styles.labelText}
-			>
-				{conferenceData.label} {(Number(conferenceData['end-time']) - Number(conferenceData['time-start'])) / (60 * 1000)} min
-			</Text>
-		</TouchableOpacity>
-		{ (disabled) ? (null) : (
-			<TouchableOpacity
-				style={styles.starButton}
-				onPress={
-					() => ((saved) ? (remove(conferenceData.id)) : (add(conferenceData.id)))
-				}
-			>
-				<Icon
-					name={saved ? 'star' : 'star-border'}
-					size={28}
-					color={saved ? 'yellow' : 'grey'}
-				/>
-			</TouchableOpacity>
+
+				{conferenceData['talk-title'] ? (
+					<Text
+						style={styles.titleText}
+						numberOfLines={2}
+					>
+						{conferenceData['talk-title']}
+					</Text>
+				) : null }
+
+				<Text style={styles.labelText}>
+					{ conferenceData.label ? (
+						<Text style={styles.labelTrack}>{conferenceData.label} - </Text>
+					) : null }
+
+					{(Number(conferenceData['end-time']) - Number(conferenceData['time-start'])) / (60 * 1000)} min
+				</Text>
+			</Touchable>
+		</View>
+
+		{ (disabled) ? (
+			<View style={styles.starButton} />
+		) : (
+			<View style={styles.starButton}>
+				<Touchable
+					onPress={
+						() => ((saved) ? (remove(conferenceData.id)) : (add(conferenceData.id)))
+					}
+				>
+					<Icon
+						name={saved ? 'star' : 'star-border'}
+						size={28}
+						color={saved ? 'yellow' : 'grey'}
+					/>
+				</Touchable>
+			</View>
 		) }
 	</View>
 );
@@ -204,21 +217,24 @@ const ActualConferenceListView = connect(
 	mapDispatchToProps
 )(ConferenceListView);
 
-const rowHeight = 70;
-
 const styles = StyleSheet.create({
-	header: { justifyContent: 'center', alignItems: 'center', height: rowHeight, flex: 1, paddingLeft: 7, paddingTop: 7, backgroundColor: '#F9F9F9', borderBottomWidth: 1, borderColor: '#F9F9F9' },
-	headerText: { color: '#034262' },
-	rowContainer: { flex: 1, flexDirection: 'row' },
-	emptyRow: { flex: 1, flexDirection: 'row', paddingLeft: 7, height: rowHeight, backgroundColor: '#F9F9F9', borderBottomWidth: 1, borderColor: '#F9F9F9' },
-	row: { flex: 3, flexDirection: 'row', height: rowHeight, backgroundColor: '#F9F9F9', },
-	titleContainer: { flex: 1, padding: 7, justifyContent: 'center' },
-	titleText: { fontSize: 18, color: '#034262' },
-	labelText: { color: '#747678' },
-	starButton: { height: rowHeight, width: rowHeight, justifyContent: 'center', alignItems: 'center' },
-	borderContainer: { marginLeft: 7, marginRight: 7, alignItems: 'center' },
-	line: { height: rowHeight, borderLeftWidth: 1, borderColor: '#747678' },
-	circle: { position: 'absolute', top: 30, height: 10, width: 10, borderRadius: 5, borderWidth: 1, borderColor: '#747678', backgroundColor: '#F9F9F9' }
+	rowContainer: { flexDirection: 'row', height: 70 },
+	fullWidth: { width: getScreenWidth() },
+	cardWidth: { width: getMaxCardWidth() },
+	itemRow: { flexGrow: 1, flexDirection: 'row', backgroundColor: '#F9F9F9' },
+
+	header: { justifyContent: 'flex-start', alignItems: 'center', width: 45, backgroundColor: '#F9F9F9', borderBottomWidth: 1, borderColor: '#F9F9F9' },
+	headerText: { textAlign: 'right', alignSelf: 'stretch', color: '#000', fontSize: 12, marginTop: 7 },
+	emptyRow: { width: 45, flexDirection: 'row',  backgroundColor: '#F9F9F9', borderBottomWidth: 1, borderColor: '#F9F9F9' },
+	
+	titleContainer: { flex: 1, marginTop: 3 },
+	titleText: { alignSelf: 'stretch', fontSize: 18, color: '#000' },
+	labelText: { fontSize: 13, paddingTop: 4 },
+	starButton: { width: 50, justifyContent: 'flex-start', alignItems: 'center' },
+	borderContainer: { width: 1, alignSelf: 'stretch', marginHorizontal: 20, alignItems: 'flex-start' },
+	line: { flexGrow: 1, borderLeftWidth: 1, borderColor: '#AAA', paddingBottom: 20 },
+	circle: { position: 'absolute', top: 11, left: -2.5, height: 6, width: 6, borderRadius: 3, borderWidth: 1, borderColor: '#AAA', backgroundColor: '#F9F9F9' },
+	bottomBorder: { borderBottomWidth: 1, borderBottomColor: '#DDD' },
 });
 
 export default ActualConferenceListView;
