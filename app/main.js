@@ -33,8 +33,7 @@ import PreferencesView from './views/preferences/PreferencesView';
 import NearbyMapView from './views/mapsearch/NearbyMapView';
 import TabIcons from './navigation/TabIcons';
 import DataListViewAll from './views/common/DataListViewAll';
-import ConferenceFullScheduleView from './views/conference/ConferenceFullScheduleView';
-import ConferenceMyScheduleView from './views/conference/ConferenceMyScheduleView';
+import ConferenceView from './views/conference/ConferenceView';
 import ConferenceDetailView from './views/conference/ConferenceDetailView';
 import ShuttleRoutesListView from './views/shuttle/ShuttleRoutesListView';
 import ShuttleStopsListView from './views/shuttle/ShuttleStopsListView';
@@ -110,19 +109,8 @@ class Main extends Component {
 								<Scene key="ShuttleRoutesListView" component={ShuttleRoutesListView} title="Choose Route" />
 								<Scene key="ShuttleStopsListView" component={ShuttleStopsListView} title="Choose Stop" />
 								<Scene key="ShuttleSavedListView" component={ShuttleSavedListView} title="Manage Stops" />
-								<Scene
-									key="ConferenceBar"
-									tabs
-									tabBarStyle={general.platformIOS() ? css.tabBarIOS : css.tabBarAndroid}
-								>
-									<Scene key="con1" initial icon={TabIcons} title="Full">
-										<Scene key="ConferenceFullScheduleView" component={ConferenceFullScheduleView} title="Campus LISA" />
-									</Scene>
-									<Scene key="con2" icon={TabIcons} title="Mine">
-										<Scene key="ConferenceMyScheduleView" component={ConferenceMyScheduleView} title="Campus LISA" />
-									</Scene>
-								</Scene>
-								<Scene key="ConferenceDetailView" component={ConferenceDetailView} title="Campus LISA" />
+								<Scene key="ConferenceView" component={ConferenceView} title="Campus LISA" hideTabBar />
+								<Scene key="ConferenceDetailView" component={ConferenceDetailView} title="Campus LISA" hideTabBar />
 							</Scene>
 							<Scene key="tab2" title="Map" component={NearbyMapView} icon={TabIcons} />
 							<Scene key="tab3" title="Feedback" component={FeedbackView} icon={TabIcons} />
