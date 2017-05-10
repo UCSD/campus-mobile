@@ -17,48 +17,60 @@ const dataSource = new ListView.DataSource({
 	sectionHeaderHasChanged: (s1, s2) => s1 !== s2
 });
 
-const ConferenceListView = ({ style, scrollEnabled, rows, personal, disabled, conferenceData, saved, addConference, removeConference }) => (
-	<ListView
-		style={[style, rows ? styles.cardWidth : styles.fullWidth]}
-		scrollEnabled={scrollEnabled}
-		stickySectionHeadersEnabled={false}
-		dataSource={dataSource.cloneWithRowsAndSections(convertArrayToMap(adjustData(conferenceData.schedule, saved, personal, rows)))}
-		renderRow={(rowData, sectionID, rowID, highlightRow) => {
-			// Don't render first row bc rendered by header
-			if (Number(rowID) !== 0) {
-				return (
+const ConferenceListView = ({ style, scrollEnabled, rows, personal, disabled, conferenceData, saved, addConference, removeConference }) => {
+	if (personal && saved && saved.length === 0) {
+		return (
+			<View style={[style, rows ? styles.cardWidth : styles.fullWidth]}>
+				<Text style={styles.noSavedSessions}>
+					Click the star icon next to a session to save it to your list.
+				</Text>
+			</View>
+		);
+	} else {
+		return (
+			<ListView
+				style={[style, rows ? styles.cardWidth : styles.fullWidth]}
+				scrollEnabled={scrollEnabled}
+				stickySectionHeadersEnabled={false}
+				dataSource={dataSource.cloneWithRowsAndSections(convertArrayToMap(adjustData(conferenceData.schedule, saved, personal, rows)))}
+				renderRow={(rowData, sectionID, rowID, highlightRow) => {
+					// Don't render first row bc rendered by header
+					if (Number(rowID) !== 0) {
+						return (
+							<View style={styles.rowContainer}>
+								<EmptyItem />
+								<ConferenceItem
+									conferenceData={rowData}
+									saved={isSaved(saved, rowData.id)}
+									add={addConference}
+									remove={removeConference}
+									disabled={disabled}
+								/>
+							</View>
+						);
+					} else {
+						return null;
+					}
+				}}
+				renderSectionHeader={(sectionData, sectionID) => (
+					// Render header along with first row
 					<View style={styles.rowContainer}>
-						<EmptyItem />
+						<ConferenceHeader
+							timestamp={sectionID}
+						/>
 						<ConferenceItem
-							conferenceData={rowData}
-							saved={isSaved(saved, rowData.id)}
+							conferenceData={sectionData[0]}
+							saved={isSaved(saved, sectionData[0].id)}
 							add={addConference}
 							remove={removeConference}
 							disabled={disabled}
 						/>
 					</View>
-				);
-			} else {
-				return null;
-			}
-		}}
-		renderSectionHeader={(sectionData, sectionID) => (
-			// Render header along with first row
-			<View style={styles.rowContainer}>
-				<ConferenceHeader
-					timestamp={sectionID}
-				/>
-				<ConferenceItem
-					conferenceData={sectionData[0]}
-					saved={isSaved(saved, sectionData[0].id)}
-					add={addConference}
-					remove={removeConference}
-					disabled={disabled}
-				/>
-			</View>
-		)}
-	/>
-);
+				)}
+			/>
+		);
+	}
+}
 
 function adjustData(scheduleArray, savedArray, personal, rows) {
 	// Filter out saved items
@@ -226,11 +238,9 @@ const styles = StyleSheet.create({
 	fullWidth: { width: getScreenWidth() },
 	cardWidth: { width: getMaxCardWidth() },
 	itemRow: { flexGrow: 1, flexDirection: 'row', backgroundColor: '#F9F9F9' },
-
 	header: { justifyContent: 'flex-start', alignItems: 'center', width: 45, backgroundColor: '#F9F9F9', borderBottomWidth: 1, borderColor: '#F9F9F9' },
 	headerText: { textAlign: 'right', alignSelf: 'stretch', color: '#000', fontSize: 12, marginTop: 7 },
 	emptyRow: { width: 45, flexDirection: 'row',  backgroundColor: '#F9F9F9', borderBottomWidth: 1, borderColor: '#F9F9F9' },
-	
 	titleContainer: { flex: 1, marginTop: 3 },
 	titleText: { alignSelf: 'stretch', fontSize: 18, color: '#000' },
 	labelText: { fontSize: 13, paddingTop: 4 },
@@ -239,6 +249,7 @@ const styles = StyleSheet.create({
 	line: { flexGrow: 1, borderLeftWidth: 1, borderColor: '#AAA', paddingBottom: 20 },
 	circle: { position: 'absolute', top: 11, left: -2.5, height: 6, width: 6, borderRadius: 3, borderWidth: 1, borderColor: '#AAA', backgroundColor: '#F9F9F9' },
 	bottomBorder: { borderBottomWidth: 1, borderBottomColor: '#DDD' },
+	noSavedSessions: { fontSize: 18, textAlign: 'center', padding: 40, lineHeight: 30 },
 });
 
 export default ActualConferenceListView;
