@@ -40,7 +40,7 @@ const ConferenceCard = ({ conference, saved }) => (
 						>
 							<View style={styles.more}>
 								<Text style={styles.more_label}>
-									See My Schedule
+									See Full Schedule
 								</Text>
 							</View>
 						</Touchable>
