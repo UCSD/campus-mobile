@@ -134,56 +134,62 @@ function convertArrayToMap(scheduleArray, header = false) {
 	return scheduleMap;
 }
 
-const ConferenceItem = ({ conferenceData, saved, add, remove, disabled }) => (
-	<View
-		style={styles.itemRow}
-	>
-		<CircleBorder />
-		
-		<View style={styles.titleContainer}>
-			<Touchable
-				onPress={() => Actions.ConferenceDetailView({ data: conferenceData })}
-			>
-				<View>
-					{conferenceData['talk-title'] ? (
-						<Text
-							style={styles.titleText}
-							numberOfLines={2}
-						>
-							{conferenceData['talk-title']}
-						</Text>
-					) : null }
+const ConferenceItem = ({ conferenceData, saved, add, remove, disabled }) => {
 
-					<Text style={styles.labelText}>
-						{ conferenceData.label ? (
-							<Text style={styles.labelTrack}>{conferenceData.label} - </Text>
+
+
+
+	return (
+		<View
+			style={styles.itemRow}
+		>
+			<CircleBorder />
+			
+			<View style={styles.titleContainer}>
+				<Touchable
+					onPress={() => Actions.ConferenceDetailView({ data: conferenceData })}
+				>
+					<View>
+						{conferenceData['talk-title'] ? (
+							<Text
+								style={styles.titleText}
+								numberOfLines={2}
+							>
+								{conferenceData['talk-title']}
+							</Text>
 						) : null }
 
-						{(Number(conferenceData['end-time']) - Number(conferenceData['time-start'])) / (60 * 1000)} min
-					</Text>
-				</View>
-			</Touchable>
-		</View>
+						<Text style={styles.labelText}>
+							{ conferenceData.label ? (
+								<Text style={styles.labelTrack}>{conferenceData.label} - </Text>
+							) : null }
 
-		{ (disabled) ? (
-			<View style={styles.starButton} />
-		) : (
-			<View style={styles.starButton}>
-				<Touchable
-					onPress={
-						() => ((saved) ? (remove(conferenceData.id)) : (add(conferenceData.id)))
-					}
-				>
-					<Icon
-						name={saved ? 'star' : 'star-border'}
-						size={28}
-						color={saved ? 'yellow' : 'grey'}
-					/>
+							{getSessionLength(conferenceData['time-start'], conferenceData['end-time'])}
+						</Text>
+					</View>
 				</Touchable>
 			</View>
-		) }
-	</View>
-);
+
+			{ (disabled) ? (
+				<View style={styles.starButton} />
+			) : (
+				<View style={styles.starButton}>
+					<Touchable
+						onPress={
+							() => ((saved) ? (remove(conferenceData.id)) : (add(conferenceData.id)))
+						}
+					>
+						<Icon
+							name={saved ? 'star' : 'star-border'}
+							size={28}
+							color={saved ? 'yellow' : 'grey'}
+						/>
+					</Touchable>
+				</View>
+			) }
+		</View>
+	);
+}
 
 const EmptyItem = () => (
 	<View style={styles.emptyRow} />
@@ -205,6 +211,23 @@ const CircleBorder = () => (
 		<View style={styles.circle} />
 	</View>
 );
+
+const getSessionLength = (startTime, endTime) => {
+	var durationStr = '',
+		durationHours = 0,
+		durationMinutes = (Number(endTime) - Number(startTime)) / (60 * 1000);
+	while (durationMinutes >= 60) {
+		durationMinutes-=60;
+		durationHours+=1;
+	}
+	if (durationHours) {
+		durationStr += durationHours + ' hour' + (durationHours > 1 ? 's ' : ' ');
+	}
+	if (durationMinutes) {
+		durationStr += durationMinutes + ' min' + (durationMinutes > 1 ? 's' : '');
+	}
+	return (durationStr.trim());
+}
 
 const mapStateToProps = (state) => (
 	{
