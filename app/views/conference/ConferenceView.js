@@ -10,7 +10,7 @@ import {
 import logger from '../../util/logger';
 import css from '../../styles/css';
 import ConferenceListView from './ConferenceListView';
-import { platformIOS } from '../../util/general';
+import { platformIOS, getScreenHeight } from '../../util/general';
 
 export default class ConferenceView extends Component {
 
@@ -40,6 +40,7 @@ export default class ConferenceView extends Component {
 				style={[css.main_container, styles.greybg]}
 			>
 				<ConferenceListView
+					style={styles.conferenceListView}
 					scrollEnabled={true}
 					personal={this.state.personal}
 				/>
@@ -84,14 +85,17 @@ const FakeTabBar = ({ personal, handleFullPress, handleMinePress }) => (
 
 const NavigatorIOSHeight = 58,
 	  NavigatorAndroidHeight = 44,
-	  TabBarHeight = 40;
+	  TabBarHeight = 40,
+	  ListViewHeight = platformIOS() ? (getScreenHeight() - NavigatorIOSHeight - (TabBarHeight * 2)) :
+	  								   (getScreenHeight() - NavigatorAndroidHeight - (TabBarHeight * 2));
 
 const styles = StyleSheet.create({
+	conferenceListView: { marginBottom: TabBarHeight },
 	greybg: { backgroundColor: '#F9F9F9' },
 	buttonContainer: { flex: 1, flexDirection: 'row' },
 	button: { flex: 1, alignItems: 'center', justifyContent: 'center' },
 	selectedText: { fontSize: 18 },
 	plainText: { fontSize: 18, opacity: 0.5 },
-	tabBarIOS: { marginTop: -NavigatorIOSHeight, borderTopWidth: 1, borderColor: '#DADADA', backgroundColor: '#FFF', height: TabBarHeight },
-	tabBarAndroid: { position: 'absolute', top: NavigatorAndroidHeight, borderBottomWidth: 1, borderColor: '#DADADA', backgroundColor: '#FFF', height: TabBarHeight },
+	tabBarIOS: { marginTop: -TabBarHeight, borderTopWidth: 1, borderColor: '#DADADA', backgroundColor: '#FFF', height: TabBarHeight },
+	tabBarAndroid: { borderBottomWidth: 1, borderColor: '#DADADA', backgroundColor: '#FFF', height: TabBarHeight },
 });

@@ -10,7 +10,7 @@ import moment from 'moment';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import Touchable from '../common/Touchable';
-import { getMaxCardWidth, getScreenWidth } from '../../util/general';
+import { getMaxCardWidth, getScreenWidth, getScreenHeight } from '../../util/general';
 
 const dataSource = new ListView.DataSource({
 	rowHasChanged: (r1, r2) => r1 !== r2,
@@ -19,7 +19,7 @@ const dataSource = new ListView.DataSource({
 
 const ConferenceListView = ({ style, scrollEnabled, rows, personal, disabled, conferenceData, saved, addConference, removeConference }) => (
 	<ListView
-		style={[style, personal ? styles.cardWidth : styles.fullWidth ]}
+		style={[style, rows ? styles.cardWidth : styles.fullWidth]}
 		scrollEnabled={scrollEnabled}
 		stickySectionHeadersEnabled={false}
 		dataSource={dataSource.cloneWithRowsAndSections(convertArrayToMap(adjustData(conferenceData.schedule, saved, personal, rows)))}
@@ -132,22 +132,24 @@ const ConferenceItem = ({ conferenceData, saved, add, remove, disabled }) => (
 			<Touchable
 				onPress={() => Actions.ConferenceDetailView({ data: conferenceData })}
 			>
-				{conferenceData['talk-title'] ? (
-					<Text
-						style={styles.titleText}
-						numberOfLines={2}
-					>
-						{conferenceData['talk-title']}
-					</Text>
-				) : null }
-
-				<Text style={styles.labelText}>
-					{ conferenceData.label ? (
-						<Text style={styles.labelTrack}>{conferenceData.label} - </Text>
+				<View>
+					{conferenceData['talk-title'] ? (
+						<Text
+							style={styles.titleText}
+							numberOfLines={2}
+						>
+							{conferenceData['talk-title']}
+						</Text>
 					) : null }
 
-					{(Number(conferenceData['end-time']) - Number(conferenceData['time-start'])) / (60 * 1000)} min
-				</Text>
+					<Text style={styles.labelText}>
+						{ conferenceData.label ? (
+							<Text style={styles.labelTrack}>{conferenceData.label} - </Text>
+						) : null }
+
+						{(Number(conferenceData['end-time']) - Number(conferenceData['time-start'])) / (60 * 1000)} min
+					</Text>
+				</View>
 			</Touchable>
 		</View>
 
@@ -214,6 +216,10 @@ const ActualConferenceListView = connect(
 	mapStateToProps,
 	mapDispatchToProps
 )(ConferenceListView);
+
+const NavigatorIOSHeight = 58,
+	  NavigatorAndroidHeight = 44,
+	  TabBarHeight = 40;
 
 const styles = StyleSheet.create({
 	rowContainer: { flexDirection: 'row', height: 70 },
