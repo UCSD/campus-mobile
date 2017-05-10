@@ -34,6 +34,7 @@ const ConferenceCard = ({ conference, saved }) => (
 							personal={true}
 							rows={4}
 							disabled={true}
+							style={styles.conferenceListView}
 						/>
 						<Touchable
 							onPress={() => Actions.ConferenceView()}
@@ -54,6 +55,7 @@ const ConferenceCard = ({ conference, saved }) => (
 const styles = StyleSheet.create({
 	more: { alignItems: 'center', justifyContent: 'center', padding: 6 },
 	more_label: { fontSize: 20, color: getCampusPrimary(), fontWeight: '300' },
+	conferenceListView: { borderBottomWidth: 1, borderBottomColor: '#DDD' },
 });
 
 export default ConferenceCard;
