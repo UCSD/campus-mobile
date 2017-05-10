@@ -175,6 +175,14 @@ module.exports = {
 	},
 
 	/**
+	 * Gets the screen height of the users device
+	 * @returns {number} The screen height in points
+	 */
+	getScreenHeight() {
+		return Dimensions.get('window').height;
+	},
+
+	/**
 	 * Gets the UCSD campus primary color in hexidecimal form
 	 * @returns {string}
 	 */

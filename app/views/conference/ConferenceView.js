@@ -10,7 +10,7 @@ import {
 import logger from '../../util/logger';
 import css from '../../styles/css';
 import ConferenceListView from './ConferenceListView';
-
+import { platformIOS } from '../../util/general';
 
 export default class ConferenceView extends Component {
 
@@ -54,14 +54,7 @@ export default class ConferenceView extends Component {
 }
 
 const FakeTabBar = ({ personal, handleFullPress, handleMinePress }) => (
-	<View
-		style={
-			Platform.select({
-				ios: styles.tabBarIOS,
-				android: styles.tabBarAndroid
-			})
-		}
-	>
+	<View style={ platformIOS ? styles.tabBarIOS : styles.tabBarAndroid }>
 		<View
 			style={styles.buttonContainer}
 		>
@@ -89,8 +82,9 @@ const FakeTabBar = ({ personal, handleFullPress, handleMinePress }) => (
 	</View>
 );
 
-const NavigatorAndroidHeight = 44;
-const TabBarHeight = 40;
+const NavigatorIOSHeight = 58,
+	  NavigatorAndroidHeight = 44,
+	  TabBarHeight = 40;
 
 const styles = StyleSheet.create({
 	greybg: { backgroundColor: '#F9F9F9' },
@@ -98,6 +92,6 @@ const styles = StyleSheet.create({
 	button: { flex: 1, alignItems: 'center', justifyContent: 'center' },
 	selectedText: { fontSize: 18 },
 	plainText: { fontSize: 18, opacity: 0.5 },
-	tabBarIOS: { borderTopWidth: 1, borderColor: '#DADADA', backgroundColor: '#FFF', height: TabBarHeight },
-	tabBarAndroid: { top: NavigatorAndroidHeight, borderBottomWidth: 1, borderColor: '#DADADA', backgroundColor: '#FFF', height: TabBarHeight },
+	tabBarIOS: { marginTop: -NavigatorIOSHeight, borderTopWidth: 1, borderColor: '#DADADA', backgroundColor: '#FFF', height: TabBarHeight },
+	tabBarAndroid: { position: 'absolute', top: NavigatorAndroidHeight, borderBottomWidth: 1, borderColor: '#DADADA', backgroundColor: '#FFF', height: TabBarHeight },
 });

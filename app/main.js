@@ -109,8 +109,8 @@ class Main extends Component {
 								<Scene key="ShuttleRoutesListView" component={ShuttleRoutesListView} title="Choose Route" />
 								<Scene key="ShuttleStopsListView" component={ShuttleStopsListView} title="Choose Stop" />
 								<Scene key="ShuttleSavedListView" component={ShuttleSavedListView} title="Manage Stops" />
-								<Scene key="ConferenceView" component={ConferenceView} title="Campus LISA" hideTabBar />
-								<Scene key="ConferenceDetailView" component={ConferenceDetailView} title="Campus LISA" hideTabBar />
+								<Scene key="ConferenceView" component={ConferenceView} title="Campus LISA" />
+								<Scene key="ConferenceDetailView" component={ConferenceDetailView} title="Campus LISA" />
 							</Scene>
 							<Scene key="tab2" title="Map" component={NearbyMapView} icon={TabIcons} />
 							<Scene key="tab3" title="Feedback" component={FeedbackView} icon={TabIcons} />
