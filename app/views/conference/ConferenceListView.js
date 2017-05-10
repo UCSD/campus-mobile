@@ -5,12 +5,12 @@ import {
 	ListView,
 	StyleSheet,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import Touchable from '../common/Touchable';
-import { getMaxCardWidth, getScreenWidth, getScreenHeight } from '../../util/general';
+import { getMaxCardWidth, getScreenWidth, getScreenHeight, platformIOS } from '../../util/general';
 
 const dataSource = new ListView.DataSource({
 	rowHasChanged: (r1, r2) => r1 !== r2,
@@ -135,10 +135,6 @@ function convertArrayToMap(scheduleArray, header = false) {
 }
 
 const ConferenceItem = ({ conferenceData, saved, add, remove, disabled }) => {
-
-
-
-
 	return (
 		<View
 			style={styles.itemRow}
@@ -170,23 +166,32 @@ const ConferenceItem = ({ conferenceData, saved, add, remove, disabled }) => {
 				</Touchable>
 			</View>
 
-			{ (disabled) ? (
-				<View style={styles.starButton} />
-			) : (
+			{ (!disabled) ? (
 				<View style={styles.starButton}>
 					<Touchable
 						onPress={
 							() => ((saved) ? (remove(conferenceData.id)) : (add(conferenceData.id)))
 						}
 					>
-						<Icon
-							name={saved ? 'star' : 'star-border'}
-							size={28}
-							color={saved ? 'yellow' : 'grey'}
-						/>
+						<View style={styles.starButtonInner}>
+							<Icon
+								name={ 'ios-star-outline'}
+								size={32}
+								color={'#999'}
+								style={styles.starOuterIcon}
+							/>
+							{ saved ? (
+								<Icon
+									name={ 'ios-star'}
+									size={26}
+									color={'yellow'}
+									style={styles.starInnerIcon}
+								/>
+							) : null }
+						</View>
 					</Touchable>
 				</View>
-			) }
+			) : null }
 		</View>
 	);
 }
@@ -267,7 +272,12 @@ const styles = StyleSheet.create({
 	titleContainer: { flex: 1, marginTop: 3 },
 	titleText: { alignSelf: 'stretch', fontSize: 18, color: '#000' },
 	labelText: { fontSize: 13, paddingTop: 4 },
-	starButton: { width: 50, justifyContent: 'flex-start', alignItems: 'center' },
+
+	starButton: { width: 50,  },
+	starButtonInner: { justifyContent: 'flex-start', alignItems: 'center' },
+	starOuterIcon: { position: platformIOS() ? 'absolute' : 'relative', zIndex: 10, backgroundColor: 'rgba(0,0,0,0)' },
+	starInnerIcon: { position: 'absolute', zIndex: platformIOS() ? 5 : 15, marginTop: 3 },
+
 	borderContainer: { width: 1, alignSelf: 'stretch', marginHorizontal: 20, alignItems: 'flex-start' },
 	line: { flexGrow: 1, borderLeftWidth: 1, borderColor: '#AAA', paddingBottom: 20 },
 	circle: { position: 'absolute', top: 11, left: -2.5, height: 6, width: 6, borderRadius: 3, borderWidth: 1, borderColor: '#AAA', backgroundColor: '#F9F9F9' },
