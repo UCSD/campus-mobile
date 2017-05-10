@@ -142,7 +142,7 @@ function* watchArrivals() {
 		if (closestStop) {
 			yield call(fetchArrival, closestStop.id); // Fetch arrival for closest stop
 		}
-		yield delay(SHUTTLE_API_TTL); // wait 60s before pinging again
+		yield delay(SHUTTLE_API_TTL);
 	}
 }
 
