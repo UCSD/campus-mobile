@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
 			},
 		})
 	},
-	name_text: { flex: 1, margin: 7 },
+	name_text: { flex: 1, margin: 7, fontSize: 18 },
 	list_container: { width: getMaxCardWidth() }
 });
 

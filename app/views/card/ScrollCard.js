@@ -52,6 +52,18 @@ class ScrollCard extends React.Component {
 		// we can hide the menu if we don't want it, like for non-hideable cards
 		if (this.props.hideMenu) return;
 
+		let extraActions;
+		if (this.props.extraActions) {
+			extraActions = this.props.extraActions.map((action) => (
+				<MenuOption
+					onSelect={() => action.action(this.state.dotIndex)}
+					key={action.name}
+				>
+					<Text style={css.card_hide_option}>{action.name}</Text>
+				</MenuOption>
+			));
+		}
+
 		return (
 			<Menu style={css.card_menu} onSelect={value => this.menuOptionSelected(value)}>
 				<MenuTrigger>
@@ -61,16 +73,7 @@ class ScrollCard extends React.Component {
 					<MenuOption onSelect={() => { this.props.dispatch(hideCard(this.props.id)); }}>
 						<Text style={css.card_hide_option}>Hide Card</Text>
 					</MenuOption>
-					{
-						this.props.extraActions.map((action) => (
-							<MenuOption
-								onSelect={() => action.action(this.state.dotIndex)}
-								key={action.name}
-							>
-								<Text style={css.card_hide_option}>{action.name}</Text>
-							</MenuOption>
-						))
-					}
+					{ extraActions }
 				</MenuOptions>
 			</Menu>
 		);

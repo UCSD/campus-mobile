@@ -10,16 +10,18 @@ const initialState = {
 	isLoggedIn: false,
 	auth: null,
 	profile: null,
+	username: null,
 };
 
 function user(state: State = initialState, action): State {
 	if (action.type === LOGGED_IN) {
-		const { auth, profile } = action.data;
+		//const { auth, profile } = action.data;
 		return {
 			...state,
 			isLoggedIn: true,
-			auth,
-			profile,
+			username: action.user
+			//auth,
+			//profile,
 		};
 	}
 	if (action.type === LOGGED_OUT) {
