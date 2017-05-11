@@ -232,6 +232,29 @@ module.exports = {
 	},
 
 	/**
+	 * Gets the humanized duration in hours and minutes from two unix timestamps
+	 * @param {string|number} startTime Unix time of the start period
+	 * @param {string|number} endTime Unix time of the end period
+	 * @returns {string} A humanized string indicating an hours & minutes duration in time (i.e. '3 hours 15 mins')
+	 */
+	getHumanizedDuration(startTime, endTime) {
+		var durationStr = '',
+			durationHours = 0,
+			durationMinutes = (Number(endTime) - Number(startTime)) / (60 * 1000);
+		while (durationMinutes >= 60) {
+			durationMinutes-=60;
+			durationHours+=1;
+		}
+		if (durationHours) {
+			durationStr += durationHours + ' hour' + (durationHours > 1 ? 's ' : ' ');
+		}
+		if (durationMinutes) {
+			durationStr += durationMinutes + ' min' + (durationMinutes > 1 ? 's' : '');
+		}
+		return (durationStr.trim());
+	},
+
+	/**
 	 * Converts a time string provided in military form to AM-PM form
 	 * @param {string} time The time in military form
 	 * @returns {string} The time in AM-PM form

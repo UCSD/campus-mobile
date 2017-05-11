@@ -5,7 +5,8 @@ import {
 	ScrollView,
 	Image,
 	Linking,
-	Dimensions
+	Dimensions,
+	StyleSheet,
 } from 'react-native';
 
 import moment from 'moment';
@@ -13,7 +14,7 @@ import moment from 'moment';
 import SafeImage from '../common/SafeImage';
 import css from '../../styles/css';
 import logger from '../../util/logger';
-import general from '../../util/general';
+import { getHumanizedDuration } from '../../util/general';
 
 const ConferenceDetailView = ({ data }) => {
 	logger.ga('View Loaded: Event Detail: ' + data.title);
@@ -23,6 +24,12 @@ const ConferenceDetailView = ({ data }) => {
 			<ScrollView>
 				<View style={css.news_detail_container}>
 					<View style={css.eventdetail_top_right_container}>
+						<Text style={styles.labelText}>
+							{ data.label ? (
+								<Text>{data.label} - </Text>
+							) : null }
+							{getHumanizedDuration(data['time-start'], data['end-time'])}
+						</Text>
 						<Text style={css.eventdetail_eventname}>
 							{data['talk-title']}
 						</Text>
@@ -43,5 +50,9 @@ const ConferenceDetailView = ({ data }) => {
 		</View>
 	);
 };
+
+const styles = StyleSheet.create({
+	labelText: { fontSize: 13, paddingTop: 4 },
+});
 
 export default ConferenceDetailView;

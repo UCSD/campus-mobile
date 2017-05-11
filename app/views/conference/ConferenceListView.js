@@ -10,7 +10,7 @@ import moment from 'moment';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import Touchable from '../common/Touchable';
-import { getMaxCardWidth, getScreenWidth, getScreenHeight, platformIOS } from '../../util/general';
+import { getMaxCardWidth, getScreenWidth, getScreenHeight, platformIOS, getHumanizedDuration } from '../../util/general';
 
 const dataSource = new ListView.DataSource({
 	rowHasChanged: (r1, r2) => r1 !== r2,
@@ -157,10 +157,9 @@ const ConferenceItem = ({ conferenceData, saved, add, remove, disabled }) => {
 
 						<Text style={styles.labelText}>
 							{ conferenceData.label ? (
-								<Text style={styles.labelTrack}>{conferenceData.label} - </Text>
+								<Text>{conferenceData.label} - </Text>
 							) : null }
-
-							{getSessionLength(conferenceData['time-start'], conferenceData['end-time'])}
+							{getHumanizedDuration(conferenceData['time-start'], conferenceData['end-time'])}
 						</Text>
 					</View>
 				</Touchable>
@@ -216,23 +215,6 @@ const CircleBorder = () => (
 		<View style={styles.circle} />
 	</View>
 );
-
-const getSessionLength = (startTime, endTime) => {
-	var durationStr = '',
-		durationHours = 0,
-		durationMinutes = (Number(endTime) - Number(startTime)) / (60 * 1000);
-	while (durationMinutes >= 60) {
-		durationMinutes-=60;
-		durationHours+=1;
-	}
-	if (durationHours) {
-		durationStr += durationHours + ' hour' + (durationHours > 1 ? 's ' : ' ');
-	}
-	if (durationMinutes) {
-		durationStr += durationMinutes + ' min' + (durationMinutes > 1 ? 's' : '');
-	}
-	return (durationStr.trim());
-}
 
 const mapStateToProps = (state) => (
 	{
