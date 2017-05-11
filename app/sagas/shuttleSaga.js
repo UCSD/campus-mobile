@@ -1,7 +1,7 @@
 import { delay } from 'redux-saga';
 import { call, fork, put, select, takeLatest } from 'redux-saga/effects';
-
 import { fetchShuttleArrivalsByStop } from '../services/shuttleService';
+import { SHUTTLE_API_TTL } from '../AppSettings';
 
 const getShuttle = (state) => (state.shuttle);
 
@@ -142,7 +142,7 @@ function* watchArrivals() {
 		if (closestStop) {
 			yield call(fetchArrival, closestStop.id); // Fetch arrival for closest stop
 		}
-		yield delay(60000); // wait 60s before pinging again
+		yield delay(SHUTTLE_API_TTL);
 	}
 }
 

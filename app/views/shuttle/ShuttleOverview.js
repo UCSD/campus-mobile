@@ -2,8 +2,7 @@ import React from 'react';
 import {
 	View,
 	Text,
-	TouchableOpacity,
-	ActivityIndicator
+	ActivityIndicator,
 } from 'react-native';
 
 import BlueDot from '../common/BlueDot';
@@ -13,6 +12,7 @@ import { getMinutesETA } from '../../util/shuttle';
 import { openURL } from '../../util/general';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 import AppSettings from '../../AppSettings';
+import Touchable from '../common/Touchable';
 
 const css = require('../../styles/css');
 
@@ -23,7 +23,7 @@ const ShuttleOverview = ({ onPress, stopData, closest }) => {
 		return (<LocationRequiredContent />);
 	} else if (stopData.arrivals && stopData.arrivals.length > 0) {
 		return (
-			<TouchableOpacity onPress={() => onPress()}>
+			<Touchable onPress={() => onPress()}>
 				<View>
 					<View style={css.shuttle_card_row}>
 						<View style={css.shuttle_card_row_top}>
@@ -68,7 +68,7 @@ const ShuttleOverview = ({ onPress, stopData, closest }) => {
 						scrollEnabled={false}
 					/>
 				</View>
-			</TouchableOpacity>
+			</Touchable>
 		);
 	} else {
 		return (
@@ -105,12 +105,12 @@ const ShuttleOverview = ({ onPress, stopData, closest }) => {
 						Sorry, no buses appear to be en route{ stopData && stopData.name ? ' to ' + stopData.name : null }.
 					</Text>
 
-					<TouchableOpacity onPress={() => openURL(AppSettings.SHUTTLE_SCHEDULE_URL)}>
+					<Touchable onPress={() => openURL(AppSettings.SHUTTLE_SCHEDULE_URL)}>
 						<View style={css.sc_bus_schedule_container}>
 							<FAIcon name='bus' size={18} color={'#182B49'} />
 							<Text style={css.sc_bus_schedule_text}>Check Bus Schedule</Text>
 						</View>
-					</TouchableOpacity>
+					</Touchable>
 				</View>
 			</View>
 		);

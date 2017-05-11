@@ -5,60 +5,72 @@ import {
 	ListView,
 	StyleSheet,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import Touchable from '../common/Touchable';
-import { getMaxCardWidth, getScreenWidth } from '../../util/general';
+import { getMaxCardWidth, getScreenWidth, getScreenHeight, platformIOS, getHumanizedDuration } from '../../util/general';
 
 const dataSource = new ListView.DataSource({
 	rowHasChanged: (r1, r2) => r1 !== r2,
 	sectionHeaderHasChanged: (s1, s2) => s1 !== s2
 });
 
-const ConferenceListView = ({ style, scrollEnabled, rows, personal, disabled, conferenceData, saved, addConference, removeConference }) => (
-	<ListView
-		style={style}
-		scrollEnabled={scrollEnabled}
-		stickySectionHeadersEnabled={false}
-		dataSource={dataSource.cloneWithRowsAndSections(convertArrayToMap(adjustData(conferenceData.schedule, saved, personal, rows)))}
-		renderRow={(rowData, sectionID, rowID, highlightRow) => {
-			// Don't render first row bc rendered by header
-			if (Number(rowID) !== 0) {
-				return (
+const ConferenceListView = ({ style, scrollEnabled, rows, personal, disabled, conferenceData, saved, addConference, removeConference }) => {
+	if (personal && saved && saved.length === 0) {
+		return (
+			<View style={[style, rows ? styles.cardWidth : styles.fullWidth]}>
+				<Text style={styles.noSavedSessions}>
+					Click the star icon next to a session to save it to your list.
+				</Text>
+			</View>
+		);
+	} else {
+		return (
+			<ListView
+				style={[style, rows ? styles.cardWidth : styles.fullWidth]}
+				scrollEnabled={scrollEnabled}
+				stickySectionHeadersEnabled={false}
+				dataSource={dataSource.cloneWithRowsAndSections(convertArrayToMap(adjustData(conferenceData.schedule, saved, personal, rows)))}
+				renderRow={(rowData, sectionID, rowID, highlightRow) => {
+					// Don't render first row bc rendered by header
+					if (Number(rowID) !== 0) {
+						return (
+							<View style={styles.rowContainer}>
+								<EmptyItem />
+								<ConferenceItem
+									conferenceData={rowData}
+									saved={isSaved(saved, rowData.id)}
+									add={addConference}
+									remove={removeConference}
+									disabled={disabled}
+								/>
+							</View>
+						);
+					} else {
+						return null;
+					}
+				}}
+				renderSectionHeader={(sectionData, sectionID) => (
+					// Render header along with first row
 					<View style={styles.rowContainer}>
-						<EmptyItem />
+						<ConferenceHeader
+							timestamp={sectionID}
+						/>
 						<ConferenceItem
-							conferenceData={rowData}
-							saved={isSaved(saved, rowData.id)}
+							conferenceData={sectionData[0]}
+							saved={isSaved(saved, sectionData[0].id)}
 							add={addConference}
 							remove={removeConference}
 							disabled={disabled}
 						/>
 					</View>
-				);
-			} else {
-				return null;
-			}
-		}}
-		renderSectionHeader={(sectionData, sectionID) => (
-			// Render header along with first row
-			<View style={styles.rowContainer}>
-				<ConferenceHeader
-					timestamp={sectionID}
-				/>
-				<ConferenceItem
-					conferenceData={sectionData[0]}
-					saved={isSaved(saved, sectionData[0].id)}
-					add={addConference}
-					remove={removeConference}
-					disabled={disabled}
-				/>
-			</View>
-		)}
-	/>
-);
+				)}
+			/>
+		);
+	}
+}
 
 function adjustData(scheduleArray, savedArray, personal, rows) {
 	// Filter out saved items
@@ -122,56 +134,66 @@ function convertArrayToMap(scheduleArray, header = false) {
 	return scheduleMap;
 }
 
-const ConferenceItem = ({ conferenceData, saved, add, remove, disabled }) => (
-	<View
-		style={styles.itemRow}
-	>
-		<CircleBorder />
-
-		<View style={styles.titleContainer}>
-			<Touchable
-				onPress={() => Actions.ConferenceDetailView({ data: conferenceData })}
-
-			>
-
-				{conferenceData['talk-title'] ? (
-					<Text
-						style={styles.titleText}
-						numberOfLines={2}
-					>
-						{conferenceData['talk-title']}
-					</Text>
-				) : null }
-
-				<Text style={styles.labelText}>
-					{ conferenceData.label ? (
-						<Text style={styles.labelTrack}>{conferenceData.label} - </Text>
-					) : null }
-
-					{(Number(conferenceData['end-time']) - Number(conferenceData['time-start'])) / (60 * 1000)} min
-				</Text>
-			</Touchable>
-		</View>
-
-		{ (disabled) ? (
-			<View style={styles.starButton} />
-		) : (
-			<View style={styles.starButton}>
+const ConferenceItem = ({ conferenceData, saved, add, remove, disabled }) => {
+	return (
+		<View
+			style={styles.itemRow}
+		>
+			<CircleBorder />
+			
+			<View style={styles.titleContainer}>
 				<Touchable
-					onPress={
-						() => ((saved) ? (remove(conferenceData.id)) : (add(conferenceData.id)))
-					}
+					onPress={() => Actions.ConferenceDetailView({ data: conferenceData })}
 				>
-					<Icon
-						name={saved ? 'star' : 'star-border'}
-						size={28}
-						color={saved ? 'yellow' : 'grey'}
-					/>
+					<View>
+						{conferenceData['talk-title'] ? (
+							<Text
+								style={styles.titleText}
+								numberOfLines={2}
+							>
+								{conferenceData['talk-title']}
+							</Text>
+						) : null }
+
+						<Text style={styles.labelText}>
+							{ conferenceData.label ? (
+								<Text>{conferenceData.label} - </Text>
+							) : null }
+							{getHumanizedDuration(conferenceData['time-start'], conferenceData['end-time'])}
+						</Text>
+					</View>
 				</Touchable>
 			</View>
-		) }
-	</View>
-);
+
+			{ (!disabled) ? (
+				<View style={styles.starButton}>
+					<Touchable
+						onPress={
+							() => ((saved) ? (remove(conferenceData.id)) : (add(conferenceData.id)))
+						}
+					>
+						<View style={styles.starButtonInner}>
+							<Icon
+								name={ 'ios-star-outline'}
+								size={32}
+								color={'#999'}
+								style={styles.starOuterIcon}
+							/>
+							{ saved ? (
+								<Icon
+									name={ 'ios-star'}
+									size={26}
+									color={'yellow'}
+									style={styles.starInnerIcon}
+								/>
+							) : null }
+						</View>
+					</Touchable>
+				</View>
+			) : null }
+		</View>
+	);
+}
 
 const EmptyItem = () => (
 	<View style={styles.emptyRow} />
@@ -217,24 +239,32 @@ const ActualConferenceListView = connect(
 	mapDispatchToProps
 )(ConferenceListView);
 
+const NavigatorIOSHeight = 58,
+	  NavigatorAndroidHeight = 44,
+	  TabBarHeight = 40;
+
 const styles = StyleSheet.create({
 	rowContainer: { flexDirection: 'row', height: 70 },
 	fullWidth: { width: getScreenWidth() },
 	cardWidth: { width: getMaxCardWidth() },
 	itemRow: { flexGrow: 1, flexDirection: 'row', backgroundColor: '#F9F9F9' },
-
 	header: { justifyContent: 'flex-start', alignItems: 'center', width: 45, backgroundColor: '#F9F9F9', borderBottomWidth: 1, borderColor: '#F9F9F9' },
 	headerText: { textAlign: 'right', alignSelf: 'stretch', color: '#000', fontSize: 12, marginTop: 7 },
 	emptyRow: { width: 45, flexDirection: 'row',  backgroundColor: '#F9F9F9', borderBottomWidth: 1, borderColor: '#F9F9F9' },
-
 	titleContainer: { flex: 1, marginTop: 3 },
 	titleText: { alignSelf: 'stretch', fontSize: 18, color: '#000' },
 	labelText: { fontSize: 13, paddingTop: 4 },
-	starButton: { width: 50, justifyContent: 'flex-start', alignItems: 'center' },
+
+	starButton: { width: 50,  },
+	starButtonInner: { justifyContent: 'flex-start', alignItems: 'center' },
+	starOuterIcon: { position: platformIOS() ? 'absolute' : 'relative', zIndex: 10, backgroundColor: 'rgba(0,0,0,0)' },
+	starInnerIcon: { position: 'absolute', zIndex: platformIOS() ? 5 : 15, marginTop: 3 },
+
 	borderContainer: { width: 1, alignSelf: 'stretch', marginHorizontal: 20, alignItems: 'flex-start' },
 	line: { flexGrow: 1, borderLeftWidth: 1, borderColor: '#AAA', paddingBottom: 20 },
 	circle: { position: 'absolute', top: 11, left: -2.5, height: 6, width: 6, borderRadius: 3, borderWidth: 1, borderColor: '#AAA', backgroundColor: '#F9F9F9' },
 	bottomBorder: { borderBottomWidth: 1, borderBottomColor: '#DDD' },
+	noSavedSessions: { fontSize: 18, textAlign: 'center', padding: 40, lineHeight: 30 },
 });
 
 export default ActualConferenceListView;

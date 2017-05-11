@@ -10,7 +10,7 @@ import {
 import logger from '../../util/logger';
 import css from '../../styles/css';
 import ConferenceListView from './ConferenceListView';
-
+import { platformIOS } from '../../util/general';
 
 export default class ConferenceView extends Component {
 
@@ -40,6 +40,7 @@ export default class ConferenceView extends Component {
 				style={[css.main_container, styles.greybg]}
 			>
 				<ConferenceListView
+					style={styles.conferenceListView}
 					scrollEnabled={true}
 					personal={this.state.personal}
 				/>
@@ -54,14 +55,7 @@ export default class ConferenceView extends Component {
 }
 
 const FakeTabBar = ({ personal, handleFullPress, handleMinePress }) => (
-	<View
-		style={
-			Platform.select({
-				ios: styles.tabBarIOS,
-				android: styles.tabBarAndroid
-			})
-		}
-	>
+	<View style={ platformIOS ? styles.tabBarIOS : styles.tabBarAndroid }>
 		<View
 			style={styles.buttonContainer}
 		>
@@ -89,15 +83,17 @@ const FakeTabBar = ({ personal, handleFullPress, handleMinePress }) => (
 	</View>
 );
 
-const NavigatorAndroidHeight = 44;
-const TabBarHeight = 40;
+const NavigatorIOSHeight = 58,
+	  NavigatorAndroidHeight = 44,
+	  TabBarHeight = 40;
 
 const styles = StyleSheet.create({
+	conferenceListView: { marginBottom: TabBarHeight, flexGrow: 1 },
 	greybg: { backgroundColor: '#F9F9F9' },
 	buttonContainer: { flex: 1, flexDirection: 'row' },
 	button: { flex: 1, alignItems: 'center', justifyContent: 'center' },
 	selectedText: { fontSize: 18 },
 	plainText: { fontSize: 18, opacity: 0.5 },
-	tabBarIOS: { borderTopWidth: 1, borderColor: '#DADADA', backgroundColor: '#FFF', height: TabBarHeight },
-	tabBarAndroid: { top: NavigatorAndroidHeight, borderBottomWidth: 1, borderColor: '#DADADA', backgroundColor: '#FFF', height: TabBarHeight },
+	tabBarIOS: { marginTop: -TabBarHeight, borderTopWidth: 1, borderColor: '#DADADA', backgroundColor: '#FFF', height: TabBarHeight },
+	tabBarAndroid: { borderBottomWidth: 1, borderColor: '#DADADA', backgroundColor: '#FFF', height: TabBarHeight },
 });
