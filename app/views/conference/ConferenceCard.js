@@ -17,14 +17,14 @@ const ConferenceCard = ({ conference, saved }) => (
 		{ (saved.length < 1) ?
 			(
 				<BannerCard
-					image={conference['conference-logo-lg']}
+					image={conference.logo}
 					onPress={() => Actions.ConferenceView()}
 				/>
 			) :
 			(
 				<Card
 					title={conference.name}
-					header={conference['conference-logo-lg']}
+					header={conference.logo}
 				>
 					<View
 						style={{ flex: 1, width: getMaxCardWidth() }}
