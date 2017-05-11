@@ -20,6 +20,7 @@ import NewsCardContainer from './news/NewsCardContainer';
 import DiningCardContainer from './dining/DiningCardContainer';
 import ConferenceCardContainer from './conference/ConferenceCardContainer';
 import SurveyCardContainer from './survey/SurveyCardContainer';
+import ScheduleCard from './schedule/ScheduleCard';
 
 import { platformAndroid } from '../util/general';
 
@@ -71,7 +72,10 @@ class Home extends React.Component {
 		const activeCards = [];
 		let card;
 
-		activeCards.push(<SurveyCardContainer key={'survey'} />);
+		/*if (this.props.loggedIn) {
+			activeCards.push(<ScheduleCard key={'schedule'} />);
+		}
+		activeCards.push(<SurveyCardContainer key={'survey'} />);*/
 		activeCards.push(<ConferenceCardContainer key={'conference'} />);
 
 		for (let i = 0; i < this.props.cardOrder.length; ++i) {
@@ -145,6 +149,7 @@ function mapStateToProps(state, props) {
 		locationPermission: state.location.permission,
 		scene: state.routes.scene,
 		lastScroll: state.home.lastScroll,
+		loggedIn: state.user.isLoggedIn
 	};
 }
 
