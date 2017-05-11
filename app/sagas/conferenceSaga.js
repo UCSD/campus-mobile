@@ -15,7 +15,7 @@ function* addConference(action) {
 			break;
 		}
 		// figure out where to insert with respect to start time
-		if (schedule[action.id]['time-start'] > schedule[saved[i]]['time-start']) {
+		if (schedule[action.id]['start-time'] > schedule[saved[i]]['start-time']) {
 			addIndex = i + 1;
 		}
 	}

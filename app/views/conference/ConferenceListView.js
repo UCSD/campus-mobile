@@ -118,11 +118,11 @@ function convertArrayToMap(scheduleArray, header = false) {
 
 	Object.keys(scheduleArray).forEach((key) => {
 		const session = scheduleArray[key];
-		if (!scheduleMap[session['time-start']]) {
+		if (!scheduleMap[session['start-time']]) {
 			// Create an entry in the map for the timestamp if it hasn't yet been created
-			scheduleMap[session['time-start']] = [];
+			scheduleMap[session['start-time']] = [];
 		}
-		scheduleMap[session['time-start']].push(session);
+		scheduleMap[session['start-time']].push(session);
 	});
 
 	// Remove an item from section so spacing lines up
@@ -159,7 +159,10 @@ const ConferenceItem = ({ conferenceData, saved, add, remove, disabled }) => {
 							{ conferenceData.label ? (
 								<Text>{conferenceData.label} - </Text>
 							) : null }
-							{getHumanizedDuration(conferenceData['time-start'], conferenceData['end-time'])}
+							{ conferenceData['talk-type'] === 'Keynote' ? (
+								<Text>{conferenceData['talk-type']} - </Text>
+							) : null }
+							{getHumanizedDuration(conferenceData['start-time'], conferenceData['end-time'])}
 						</Text>
 					</View>
 				</Touchable>
