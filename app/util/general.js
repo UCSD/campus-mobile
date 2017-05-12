@@ -4,11 +4,12 @@ import {
 	Dimensions,
 	Keyboard,
 } from 'react-native';
-
-import AppSettings from '../AppSettings';
-
-const dateFormat = require('dateformat');
-const logger = require('./logger');
+import {
+	COLOR_PRIMARY,
+	COLOR_SECONDARY,
+} from '../styles/ColorConstants';
+import dateFormat from 'dateformat';
+import logger from './logger';
 
 
 /**
@@ -187,7 +188,7 @@ module.exports = {
 	 * @returns {string}
 	 */
 	getCampusPrimary() {
-		return AppSettings.CAMPUS_PRIMARY;
+		return COLOR_PRIMARY;
 	},
 
 	/**
@@ -195,7 +196,7 @@ module.exports = {
 	 * @returns {string}
 	 */
 	getCampusSecondary() {
-		return AppSettings.CAMPUS_SECONDARY;
+		return COLOR_SECONDARY;
 	},
 
 	/**
