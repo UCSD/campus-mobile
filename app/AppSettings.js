@@ -8,10 +8,6 @@ module.exports = {
 	DEBUG_ENABLED: false, // Enable or disable logger.log, logger.error from displaying
 	// Use console.log as necessary for testing, but commit code with logger.log
 
-	/* APP THEME */
-	CAMPUS_PRIMARY: '#182B49',
-	CAMPUS_SECONDARY: '#747678',
-
 	/* APIs / FEEDS */
 	WEATHER_API_URL: 'https://w3wyps9yje.execute-api.us-west-2.amazonaws.com/prod/forecast?',
 	SURF_API_URL: 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/surffeed.json',
