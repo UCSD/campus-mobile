@@ -6,6 +6,8 @@ module.exports = {
 	COLOR_DGREY: '#747678',
 	COLOR_MGREY: '#EAEAEA',
 	COLOR_LGREY: '#F9F9F9',
+	COLOR_WHITE: '#FFFFFF',
+	COLOR_BLACK: '#000000',
 	COLOR_TRANSPARENT: 'rgba(0,0,0,0)',
 
 };
