@@ -6,11 +6,11 @@ import {
 	TouchableOpacity,
 	Text
 } from 'react-native';
-
 import logger from '../../util/logger';
 import css from '../../styles/css';
 import ConferenceListView from './ConferenceListView';
 import { platformIOS } from '../../util/general';
+import { TAB_BAR_HEIGHT } from '../../styles/LayoutConstants';
 
 export default class ConferenceView extends Component {
 
@@ -83,17 +83,13 @@ const FakeTabBar = ({ personal, handleFullPress, handleMinePress }) => (
 	</View>
 );
 
-const NavigatorIOSHeight = 58,
-	  NavigatorAndroidHeight = 44,
-	  TabBarHeight = 40;
-
 const styles = StyleSheet.create({
-	conferenceListView: { marginBottom: TabBarHeight, flexGrow: 1 },
+	conferenceListView: { marginBottom: TAB_BAR_HEIGHT, flexGrow: 1 },
 	greybg: { backgroundColor: '#F9F9F9' },
 	buttonContainer: { flex: 1, flexDirection: 'row' },
 	button: { flex: 1, alignItems: 'center', justifyContent: 'center' },
 	selectedText: { fontSize: 18 },
 	plainText: { fontSize: 18, opacity: 0.5 },
-	tabBarIOS: { marginTop: -TabBarHeight, borderTopWidth: 1, borderColor: '#DADADA', backgroundColor: '#FFF', height: TabBarHeight },
-	tabBarAndroid: { borderBottomWidth: 1, borderColor: '#DADADA', backgroundColor: '#FFF', height: TabBarHeight },
+	tabBarIOS: { marginTop: -TAB_BAR_HEIGHT, borderTopWidth: 1, borderColor: '#DADADA', backgroundColor: '#FFF', height: TAB_BAR_HEIGHT },
+	tabBarAndroid: { borderBottomWidth: 1, borderColor: '#DADADA', backgroundColor: '#FFF', height: TAB_BAR_HEIGHT },
 });

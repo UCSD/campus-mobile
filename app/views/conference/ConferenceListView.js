@@ -10,7 +10,8 @@ import moment from 'moment';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import Touchable from '../common/Touchable';
-import { getMaxCardWidth, getScreenWidth, getScreenHeight, platformIOS, getHumanizedDuration } from '../../util/general';
+import { platformIOS, getHumanizedDuration } from '../../util/general';
+import { MAX_CARD_WIDTH, WINDOW_WIDTH } from '../../styles/LayoutConstants';
 
 const dataSource = new ListView.DataSource({
 	rowHasChanged: (r1, r2) => r1 !== r2,
@@ -242,14 +243,10 @@ const ActualConferenceListView = connect(
 	mapDispatchToProps
 )(ConferenceListView);
 
-const NavigatorIOSHeight = 58,
-	  NavigatorAndroidHeight = 44,
-	  TabBarHeight = 40;
-
 const styles = StyleSheet.create({
 	rowContainer: { flexDirection: 'row', height: 70 },
-	fullWidth: { width: getScreenWidth() },
-	cardWidth: { width: getMaxCardWidth() },
+	fullWidth: { width: WINDOW_WIDTH },
+	cardWidth: { width: MAX_CARD_WIDTH },
 	itemRow: { flexGrow: 1, flexDirection: 'row', backgroundColor: '#F9F9F9' },
 	header: { justifyContent: 'flex-start', alignItems: 'center', width: 45, backgroundColor: '#F9F9F9', borderBottomWidth: 1, borderColor: '#F9F9F9' },
 	headerText: { textAlign: 'right', alignSelf: 'stretch', color: '#000', fontSize: 12, marginTop: 7 },
@@ -257,12 +254,10 @@ const styles = StyleSheet.create({
 	titleContainer: { flex: 1, marginTop: 3 },
 	titleText: { alignSelf: 'stretch', fontSize: 18, color: '#000' },
 	labelText: { fontSize: 13, paddingTop: 4 },
-
-	starButton: { width: 50,  },
+	starButton: { width: 50 },
 	starButtonInner: { justifyContent: 'flex-start', alignItems: 'center' },
 	starOuterIcon: { position: platformIOS() ? 'absolute' : 'relative', zIndex: 10, backgroundColor: 'rgba(0,0,0,0)' },
 	starInnerIcon: { position: 'absolute', zIndex: platformIOS() ? 5 : 15, marginTop: 3 },
-
 	borderContainer: { width: 1, alignSelf: 'stretch', marginHorizontal: 20, alignItems: 'flex-start' },
 	line: { flexGrow: 1, borderLeftWidth: 1, borderColor: '#AAA', paddingBottom: 20 },
 	circle: { position: 'absolute', top: 11, left: -2.5, height: 6, width: 6, borderRadius: 3, borderWidth: 1, borderColor: '#AAA', backgroundColor: '#F9F9F9' },
