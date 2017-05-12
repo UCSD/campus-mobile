@@ -17,7 +17,7 @@ class Touchable extends React.Component {
 				);
 			} else {
 				return (
-					<TouchableOpacity onPress={this.props.onPress} activeOpacity={.6} style={this.props.customStyle}>
+					<TouchableOpacity onPress={this.props.onPress} activeOpacity={.7} style={this.props.customStyle}>
 						{this.props.children}
 					</TouchableOpacity>
 				);
