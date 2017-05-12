@@ -19,8 +19,8 @@ import QuicklinksCardContainer from './quicklinks/QuicklinksCardContainer';
 import NewsCardContainer from './news/NewsCardContainer';
 import DiningCardContainer from './dining/DiningCardContainer';
 import ConferenceCardContainer from './conference/ConferenceCardContainer';
-import SurveyCardContainer from './survey/SurveyCardContainer';
-import ScheduleCard from './schedule/ScheduleCard';
+//import SurveyCardContainer from './survey/SurveyCardContainer';
+//import ScheduleCard from './schedule/ScheduleCard';
 
 import { platformAndroid } from '../util/general';
 
