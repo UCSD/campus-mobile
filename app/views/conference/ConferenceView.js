@@ -66,7 +66,7 @@ const FakeTabBar = ({ personal, handleFullPress, handleMinePress }) => (
 				<Text
 					style={personal ? styles.plainText : styles.selectedText}
 				>
-					Full
+					Full Schedule
 				</Text>
 			</Touchable>
 			<Touchable
@@ -76,7 +76,7 @@ const FakeTabBar = ({ personal, handleFullPress, handleMinePress }) => (
 				<Text
 					style={personal ? styles.selectedText : styles.plainText}
 				>
-					Mine
+					My Schedule
 				</Text>
 			</Touchable>
 		</View>
