@@ -3,14 +3,14 @@ import {
 	View,
 	StyleSheet,
 	Platform,
-	TouchableOpacity,
-	Text
+	Text,
 } from 'react-native';
 import logger from '../../util/logger';
 import css from '../../styles/css';
 import ConferenceListView from './ConferenceListView';
 import { platformIOS } from '../../util/general';
 import { TAB_BAR_HEIGHT } from '../../styles/LayoutConstants';
+import Touchable from '../common/Touchable';
 
 export default class ConferenceView extends Component {
 
@@ -59,7 +59,7 @@ const FakeTabBar = ({ personal, handleFullPress, handleMinePress }) => (
 		<View
 			style={styles.buttonContainer}
 		>
-			<TouchableOpacity
+			<Touchable
 				style={styles.button}
 				onPress={() => handleFullPress()}
 			>
@@ -68,8 +68,8 @@ const FakeTabBar = ({ personal, handleFullPress, handleMinePress }) => (
 				>
 					Full
 				</Text>
-			</TouchableOpacity>
-			<TouchableOpacity
+			</Touchable>
+			<Touchable
 				style={styles.button}
 				onPress={() => handleMinePress()}
 			>
@@ -78,7 +78,7 @@ const FakeTabBar = ({ personal, handleFullPress, handleMinePress }) => (
 				>
 					Mine
 				</Text>
-			</TouchableOpacity>
+			</Touchable>
 		</View>
 	</View>
 );
