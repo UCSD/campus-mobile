@@ -9,8 +9,15 @@ import logger from '../../util/logger';
 import css from '../../styles/css';
 import ConferenceListView from './ConferenceListView';
 import { platformIOS } from '../../util/general';
+import {
+	COLOR_PRIMARY,
+	COLOR_MGREY,
+	COLOR_LGREY,
+	COLOR_WHITE,
+} from '../../styles/ColorConstants';
 import { TAB_BAR_HEIGHT } from '../../styles/LayoutConstants';
 import Touchable from '../common/Touchable';
+
 
 export default class ConferenceView extends Component {
 
@@ -60,7 +67,7 @@ const FakeTabBar = ({ personal, handleFullPress, handleMinePress }) => (
 			style={styles.buttonContainer}
 		>
 			<Touchable
-				style={styles.button}
+				style={[styles.button, { backgroundColor: personal ? COLOR_WHITE : COLOR_PRIMARY }]}
 				onPress={() => handleFullPress()}
 			>
 				<Text
@@ -70,7 +77,7 @@ const FakeTabBar = ({ personal, handleFullPress, handleMinePress }) => (
 				</Text>
 			</Touchable>
 			<Touchable
-				style={styles.button}
+				style={[styles.button, { backgroundColor: personal ? COLOR_PRIMARY : COLOR_WHITE }]}
 				onPress={() => handleMinePress()}
 			>
 				<Text
@@ -85,11 +92,12 @@ const FakeTabBar = ({ personal, handleFullPress, handleMinePress }) => (
 
 const styles = StyleSheet.create({
 	conferenceListView: { marginBottom: TAB_BAR_HEIGHT, flexGrow: 1 },
-	greybg: { backgroundColor: '#F9F9F9' },
+	greybg: { backgroundColor: COLOR_LGREY },
 	buttonContainer: { flex: 1, flexDirection: 'row' },
 	button: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-	selectedText: { fontSize: 18 },
+	buttonSelected: { backgroundColor: COLOR_PRIMARY },
+	selectedText: { fontSize: 18, color: COLOR_WHITE },
 	plainText: { fontSize: 18, opacity: 0.5 },
-	tabBarIOS: { marginTop: -TAB_BAR_HEIGHT, borderTopWidth: 1, borderColor: '#DADADA', backgroundColor: '#FFF', height: TAB_BAR_HEIGHT },
-	tabBarAndroid: { borderBottomWidth: 1, borderColor: '#DADADA', backgroundColor: '#FFF', height: TAB_BAR_HEIGHT },
+	tabBarIOS: { marginTop: -TAB_BAR_HEIGHT, borderTopWidth: 1, borderColor: '#DADADA', backgroundColor: COLOR_WHITE, height: TAB_BAR_HEIGHT },
+	tabBarAndroid: { borderBottomWidth: 1, borderColor: '#DADADA', backgroundColor: COLOR_WHITE, height: TAB_BAR_HEIGHT },
 });
