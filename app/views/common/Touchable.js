@@ -11,13 +11,13 @@ class Touchable extends React.Component {
 		if (this.props.onPress && this.props.children) {
 			if (platformAndroid()) {
 				return (
-					<TouchableNativeFeedback onPress={this.props.onPress} style={this.props.customStyle}>
+					<TouchableNativeFeedback onPress={this.props.onPress} style={this.props.style}>
 						{this.props.children}
 					</TouchableNativeFeedback>
 				);
 			} else {
 				return (
-					<TouchableOpacity onPress={this.props.onPress} activeOpacity={.7} style={this.props.customStyle}>
+					<TouchableOpacity onPress={this.props.onPress} activeOpacity={.7} style={this.props.style}>
 						{this.props.children}
 					</TouchableOpacity>
 				);
