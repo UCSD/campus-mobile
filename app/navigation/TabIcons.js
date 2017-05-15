@@ -33,18 +33,6 @@ const TabIcons = function (props) {
 		tabIconPack = 'FontAwesome';
 		tabIconName = 'gear';
 		tabIconText = 'Settings';
-	} else if (props.title === 'Full') {
-		return (
-			<Text style={props.selected ? { color: COLOR_PRIMARY } : { opacity: 0.5 }}>
-				Full
-			</Text>
-		);
-	} else if (props.title === 'Mine') {
-		return (
-			<Text style={props.selected ? { color: COLOR_PRIMARY } : { opacity: 0.5 }}>
-				Mine
-			</Text>
-		);
 	}
 
 	return (
