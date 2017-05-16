@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import {
 	View,
 	StyleSheet,
-	Platform,
 	Text,
 } from 'react-native';
 import logger from '../../util/logger';
@@ -11,7 +10,6 @@ import ConferenceListView from './ConferenceListView';
 import { platformIOS } from '../../util/general';
 import {
 	COLOR_PRIMARY,
-	COLOR_MGREY,
 	COLOR_LGREY,
 	COLOR_WHITE,
 } from '../../styles/ColorConstants';
@@ -62,7 +60,7 @@ export default class ConferenceView extends Component {
 }
 
 const FakeTabBar = ({ personal, handleFullPress, handleMinePress }) => (
-	<View style={ platformIOS ? styles.tabBarIOS : styles.tabBarAndroid }>
+	<View style={platformIOS ? styles.tabBarIOS : styles.tabBarAndroid}>
 		<View
 			style={styles.buttonContainer}
 		>
@@ -91,13 +89,13 @@ const FakeTabBar = ({ personal, handleFullPress, handleMinePress }) => (
 );
 
 const styles = StyleSheet.create({
-	conferenceListView: { marginBottom: TAB_BAR_HEIGHT, flexGrow: 1 },
+	conferenceListView: { flexGrow: 1 },
 	greybg: { backgroundColor: COLOR_LGREY },
 	buttonContainer: { flex: 1, flexDirection: 'row' },
 	button: { flex: 1, alignItems: 'center', justifyContent: 'center' },
 	buttonSelected: { backgroundColor: COLOR_PRIMARY },
 	selectedText: { fontSize: 18, color: COLOR_WHITE },
 	plainText: { fontSize: 18, opacity: 0.5 },
-	tabBarIOS: { marginTop: -TAB_BAR_HEIGHT, borderTopWidth: 1, borderColor: '#DADADA', backgroundColor: COLOR_WHITE, height: TAB_BAR_HEIGHT },
+	tabBarIOS: { borderTopWidth: 1, borderColor: '#DADADA', backgroundColor: COLOR_WHITE, height: TAB_BAR_HEIGHT },
 	tabBarAndroid: { borderBottomWidth: 1, borderColor: '#DADADA', backgroundColor: COLOR_WHITE, height: TAB_BAR_HEIGHT },
 });

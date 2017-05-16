@@ -71,7 +71,7 @@ const ConferenceListView = ({ style, scrollEnabled, rows, personal, disabled, co
 			/>
 		);
 	}
-}
+};
 
 function adjustData(scheduleArray, savedArray, personal, rows) {
 	// Filter out saved items
@@ -141,7 +141,6 @@ const ConferenceItem = ({ conferenceData, saved, add, remove, disabled }) => {
 			style={styles.itemRow}
 		>
 			<CircleBorder />
-			
 			<View style={styles.titleContainer}>
 				<Touchable
 					onPress={() => Actions.ConferenceDetailView({ data: conferenceData })}
@@ -178,14 +177,14 @@ const ConferenceItem = ({ conferenceData, saved, add, remove, disabled }) => {
 					>
 						<View style={styles.starButtonInner}>
 							<Icon
-								name={ 'ios-star-outline'}
+								name={'ios-star-outline'}
 								size={32}
 								color={'#999'}
 								style={styles.starOuterIcon}
 							/>
 							{ saved ? (
 								<Icon
-									name={ 'ios-star'}
+									name={'ios-star'}
 									size={26}
 									color={'yellow'}
 									style={styles.starInnerIcon}
@@ -197,7 +196,7 @@ const ConferenceItem = ({ conferenceData, saved, add, remove, disabled }) => {
 			) : null }
 		</View>
 	);
-}
+};
 
 const EmptyItem = () => (
 	<View style={styles.emptyRow} />
@@ -262,7 +261,7 @@ const styles = StyleSheet.create({
 	line: { flexGrow: 1, borderLeftWidth: 1, borderColor: '#AAA', paddingBottom: 20 },
 	circle: { position: 'absolute', top: 11, left: -2.5, height: 6, width: 6, borderRadius: 3, borderWidth: 1, borderColor: '#AAA', backgroundColor: '#F9F9F9' },
 	bottomBorder: { borderBottomWidth: 1, borderBottomColor: '#DDD' },
-	noSavedSessions: { fontSize: 18, textAlign: 'center', padding: 40, lineHeight: 30 },
+	noSavedSessions: { flexGrow: 1, fontSize: 18, textAlign: 'center', padding: 40, lineHeight: 30 },
 });
 
 export default ActualConferenceListView;
