@@ -28,7 +28,7 @@ const dataSource = new ListView.DataSource({
 const ConferenceListView = ({ style, scrollEnabled, rows, personal, disabled, conferenceData, saved, addConference, removeConference }) => {
 	if (personal && saved && saved.length === 0) {
 		return (
-			<View style={[style, rows ? styles.cardWidth : styles.fullWidth]}>
+			<View style={[style, rows ? styles.card : styles.full]}>
 				<Text style={styles.noSavedSessions}>
 					Click the star icon next to a session to save it to your list.
 				</Text>
