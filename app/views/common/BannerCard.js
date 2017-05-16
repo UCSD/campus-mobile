@@ -43,7 +43,7 @@ const BannerCard = ({ image, onPress }) => (
 );
 
 const styles = StyleSheet.create({
-	image: { height: ((getMaxCardWidth() / 840) * 240), width: getMaxCardWidth(), marginTop: 22 },
+	image: { height: ((getMaxCardWidth() / 1242) * 440), width: getMaxCardWidth(), marginTop: 22 },
 	closeContainer: { justifyContent: 'center', alignItems: 'center', zIndex: 10, position: 'absolute', top: 3, right: 3 },
 	closeText: { color: 'grey', fontSize: 10, marginBottom: 2 },
 	closeIcon: { color: 'grey', marginLeft: 2 },
