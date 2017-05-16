@@ -11,7 +11,14 @@ import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import Touchable from '../common/Touchable';
 import { platformIOS, getHumanizedDuration } from '../../util/general';
-import { MAX_CARD_WIDTH, WINDOW_WIDTH } from '../../styles/LayoutConstants';
+import {
+	MAX_CARD_WIDTH,
+	WINDOW_WIDTH,
+	WINDOW_HEIGHT,
+	NAVIGATOR_IOS_HEIGHT,
+	NAVIGATOR_ANDROID_HEIGHT,
+	TAB_BAR_HEIGHT,
+} from '../../styles/LayoutConstants';
 
 const dataSource = new ListView.DataSource({
 	rowHasChanged: (r1, r2) => r1 !== r2,
@@ -30,7 +37,7 @@ const ConferenceListView = ({ style, scrollEnabled, rows, personal, disabled, co
 	} else {
 		return (
 			<ListView
-				style={[style, rows ? styles.cardWidth : styles.fullWidth]}
+				style={[style, rows ? styles.card : styles.full]}
 				scrollEnabled={scrollEnabled}
 				stickySectionHeadersEnabled={false}
 				dataSource={dataSource.cloneWithRowsAndSections(convertArrayToMap(adjustData(conferenceData.schedule, saved, personal, rows)))}
@@ -244,8 +251,8 @@ const ActualConferenceListView = connect(
 
 const styles = StyleSheet.create({
 	rowContainer: { flexDirection: 'row', height: 70 },
-	fullWidth: { width: WINDOW_WIDTH },
-	cardWidth: { width: MAX_CARD_WIDTH },
+	full: { width: WINDOW_WIDTH, height: platformIOS ? (WINDOW_HEIGHT - NAVIGATOR_IOS_HEIGHT - TAB_BAR_HEIGHT) : (WINDOW_HEIGHT - NAVIGATOR_ANDROID_HEIGHT - TAB_BAR_HEIGHT) },
+	card: { width: MAX_CARD_WIDTH },
 	itemRow: { flexGrow: 1, flexDirection: 'row', backgroundColor: '#F9F9F9' },
 	header: { justifyContent: 'flex-start', alignItems: 'center', width: 45, backgroundColor: '#F9F9F9', borderBottomWidth: 1, borderColor: '#F9F9F9' },
 	headerText: { textAlign: 'right', alignSelf: 'stretch', color: '#000', fontSize: 12, marginTop: 7 },
