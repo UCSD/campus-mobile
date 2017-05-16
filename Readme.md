@@ -27,48 +27,17 @@ UC San Diego uses this platform for its campus mobile app on iOS and Android.
 
 Review the [modules documentation](https://htmlpreview.github.io/?https://raw.githubusercontent.com/UCSD/campus-mobile/dev/out/index.html)
 
-## Available Cards
-* TopBanner
-	* For upcoming current events
-* Weather & Surf
-	* 5 day weather report
-	* Surf report link
-* Shuttle
-	* Nearest shuttle stops and arrival times
-	* Shuttle stop details
-* Dining
-	* Nearest dining options with menu and nutritional information
-	* View all dining link
-* Events
-	* Upcoming events
-	* View all events link
-* Links
-	* A list of helpful links from our legacy app
-	* View all quick links link
-* News
-	* Latest news articles
-	* View all news link
-* Maps
-	* Searchable campus map
-	* View all link
-
 
 ## Screenshots
-![Alt text](/../screenshots/screenshots/splash.png?raw=true "Splash Screen")
-
-![Alt text](/../screenshots/screenshots/weather.png?raw=true "Weather")
-
-![Alt text](/../screenshots/screenshots/events.png?raw=true "Events")
-
-![Alt text](/../screenshots/screenshots/news.png?raw=true "News")
-
-![Alt text](/../screenshots/screenshots/dining.png?raw=true "Dining")
-
-![Alt text](/../screenshots/screenshots/nearby.png?raw=true "Nearby Places")
-
-![Alt text](/../screenshots/screenshots/shuttle_detail.png?raw=true "Shuttle Detail")
-
-![Alt text](/../screenshots/screenshots/all_events.png?raw=true "All Events")
+![Alt text](/../screenshots/screenshots/v5.0/ios/weather_card.png?raw=true "Weather")
+![Alt text](/../screenshots/screenshots/v5.0/ios/shuttle_card.png?raw=true "Shuttle")
+![Alt text](/../screenshots/screenshots/v5.0/ios/shuttle_detail.png?raw=true "Shuttle Detail")
+![Alt text](/../screenshots/screenshots/v5.0/ios/map.png?raw=true "Map")
+![Alt text](/../screenshots/screenshots/v5.0/ios/dining_card.png?raw=true "Dining")
+![Alt text](/../screenshots/screenshots/v5.0/ios/dining_detail.png?raw=true "Dining Detail")
+![Alt text](/../screenshots/screenshots/v5.0/ios/news_card.png?raw=true "News")
+![Alt text](/../screenshots/screenshots/v5.0/ios/events_card.png?raw=true "Events")
+![Alt text](/../screenshots/screenshots/v5.0/ios/links_card.png?raw=true "Links")
 
 
 ## License
