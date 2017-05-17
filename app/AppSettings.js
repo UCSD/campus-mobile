@@ -40,7 +40,7 @@ module.exports = {
 	QUICKLINKS_API_TTL: 604800, // 1 week
 	SHUTTLE_API_TTL: 6, // 6 seconds
 	SHUTTLE_MASTER_TTL: 86400, // 1 day
-	CONFERENCE_TTL: 3600, // 1 hour
+	CONFERENCE_TTL: 21600, // 6 hours
 
 	USER_LOGIN: {
 		ENABLED: false,
