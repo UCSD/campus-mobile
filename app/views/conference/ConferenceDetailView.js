@@ -3,23 +3,19 @@ import {
 	View,
 	Text,
 	ScrollView,
-	Image,
-	Linking,
-	Dimensions,
 	StyleSheet,
 } from 'react-native';
-
+import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
-import SafeImage from '../common/SafeImage';
 import Touchable from '../common/Touchable';
 import css from '../../styles/css';
 import logger from '../../util/logger';
-import { connect } from 'react-redux';
+
 import { getHumanizedDuration, getCampusPrimary, platformIOS } from '../../util/general';
 
 const ConferenceDetailView = ({ data, saved, add, remove }) => {
-	logger.ga('View Loaded: Event Detail: ' + data['talk-title']);
+	logger.ga('View Loaded: Conference Detail: ' + data['talk-title']);
 
 	return (
 		<View style={[css.main_container, css.whitebg]}>
@@ -29,7 +25,7 @@ const ConferenceDetailView = ({ data, saved, add, remove }) => {
 					<View style={styles.starButton}>
 						<Touchable
 							onPress={
-								() => ((saved) ? (remove(data.id)) : (add(data.id)))
+								() => (isSaved(saved, data.id) ? (remove(data.id)) : (add(data.id)))
 							}
 						>
 							<View style={styles.starButtonInner}>
@@ -39,7 +35,7 @@ const ConferenceDetailView = ({ data, saved, add, remove }) => {
 									color={'#999'}
 									style={styles.starOuterIcon}
 								/>
-								{ saved ? (
+								{ isSaved(saved, data.id)  ? (
 									<Icon
 										name={'ios-star'}
 										size={26}
@@ -89,27 +85,23 @@ const ConferenceDetailView = ({ data, saved, add, remove }) => {
 	);
 };
 
+function isSaved(savedArray, id) {
+	for ( let i = 0; i < savedArray.length; ++i) {
+		if (savedArray[i] === id) {
+			return true;
+		}
+	}
+	return false;
+}
+
 const mapStateToProps = (state) => (
 	{
-		conferenceData: state.conference.data,
 		saved: state.conference.saved
 	}
 );
 
-const mapDispatchToProps = (dispatch) => (
-	{
-		addConference: (id) => {
-			dispatch({ type: 'ADD_CONFERENCE', id });
-		},
-		removeConference: (id) => {
-			dispatch({ type: 'REMOVE_CONFERENCE', id });
-		}
-	}
-);
-
 const ActualConferenceDetailView = connect(
-	mapStateToProps,
-	mapDispatchToProps,
+	mapStateToProps
 )(ConferenceDetailView);
 
 const styles = StyleSheet.create({
@@ -128,4 +120,4 @@ const styles = StyleSheet.create({
 	starInnerIcon: { position: 'absolute', zIndex: platformIOS() ? 5 : 15, marginTop: 3 },
 });
 
-export default ConferenceDetailView;
+export default ActualConferenceDetailView;

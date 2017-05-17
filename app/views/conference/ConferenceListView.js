@@ -150,7 +150,7 @@ const ConferenceItem = ({ conferenceData, saved, add, remove, disabled }) => {
 			<CircleBorder />
 			<View style={styles.titleContainer}>
 				<Touchable
-					onPress={() => Actions.ConferenceDetailView({ data: conferenceData, saved: saved })}
+					onPress={() => Actions.ConferenceDetailView({ data: conferenceData, add, remove })}
 				>
 					<View>
 						{conferenceData['talk-title'] ? (
