@@ -9,20 +9,49 @@ import {
 	StyleSheet,
 } from 'react-native';
 
+import Icon from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
-
 import SafeImage from '../common/SafeImage';
+import Touchable from '../common/Touchable';
 import css from '../../styles/css';
 import logger from '../../util/logger';
-import { getHumanizedDuration, getCampusPrimary } from '../../util/general';
+import { getHumanizedDuration, getCampusPrimary, platformIOS } from '../../util/general';
 
-const ConferenceDetailView = ({ data }) => {
+const ConferenceDetailView = ({ data, saved }) => {
 	logger.ga('View Loaded: Event Detail: ' + data['talk-title']);
+
+	console.log('saved: ' + saved)
 
 	return (
 		<View style={[css.main_container, css.whitebg]}>
 			<ScrollView>
 				<View style={css.news_detail_container}>
+
+					<View style={styles.starButton}>
+						<Touchable
+							onPress={
+								() => ((saved) ? (remove(conferenceData.id)) : (add(conferenceData.id)))
+							}
+						>
+							<View style={styles.starButtonInner}>
+								<Icon
+									name={'ios-star-outline'}
+									size={32}
+									color={'#999'}
+									style={styles.starOuterIcon}
+								/>
+								{ saved ? (
+									<Icon
+										name={'ios-star'}
+										size={26}
+										color={'yellow'}
+										style={styles.starInnerIcon}
+									/>
+								) : null }
+							</View>
+						</Touchable>
+					</View>
+
 					<Text style={styles.labelText}>
 						{ data.label ? (
 							<Text>{data.label} - </Text>
@@ -71,6 +100,10 @@ const styles = StyleSheet.create({
 	speakerName: { fontSize: 14, fontWeight: 'bold', color: getCampusPrimary(), marginTop: 10 },
 	speakerPosition: { fontSize: 10, marginTop: 2 },
 	speakerSubTalkTitle: { fontSize: 10, marginTop: 2 },
+	starButton: { width: 50, position: 'absolute', top: 2, right: -5, zIndex: 10 },
+	starButtonInner: { justifyContent: 'flex-start', alignItems: 'center' },
+	starOuterIcon: { position: platformIOS() ? 'absolute' : 'relative', zIndex: 10, backgroundColor: 'rgba(0,0,0,0)' },
+	starInnerIcon: { position: 'absolute', zIndex: platformIOS() ? 5 : 15, marginTop: 3 },
 });
 
 export default ConferenceDetailView;
