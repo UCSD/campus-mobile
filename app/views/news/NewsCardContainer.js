@@ -38,6 +38,7 @@ class NewsCardContainer extends CardComponent {
 
 		return (
 			<DataListCard
+				id="news"
 				title="News"
 				data={newsData}
 				item={'NewsItem'}

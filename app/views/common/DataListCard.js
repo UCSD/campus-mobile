@@ -21,14 +21,14 @@ import { getCampusPrimary, getMaxCardWidth } from '../../util/general';
  * @param {Function} cardSort array sorting function
  * @return {JSX} Generic component for list type cards
  */
-const DataListCard = ({ title, data, item, rows, cardSort }) => {
+const DataListCard = ({ id, title, data, item, rows, cardSort }) => {
 	let sortedData = data;
 	if (cardSort && sortedData) {
 		sortedData = sortedData.slice().sort(cardSort);
 	}
 
 	return (
-		<Card id={title} title={title}>
+		<Card id={id} title={title}>
 			<View style={styles.list}>
 				{data ? (
 					<View>
