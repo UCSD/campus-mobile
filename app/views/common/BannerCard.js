@@ -11,12 +11,12 @@ import Touchable from '../common/Touchable';
 import { getMaxCardWidth, getCampusPrimary } from '../../util/general';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const BannerCard = ({ image, onPress }) => (
+const BannerCard = ({ image, onPress, onClose }) => (
 	<Card>
 		<View style={styles.closeContainer}>
 			<Touchable
-				onPress={() => null}
-			>	
+				onPress={() => onClose()}
+			>
 				<View style={{flexDirection: 'row'}}>
 					<Text style={styles.closeText}>Close</Text>
 					<Icon size={13} color={'grey'} name={'md-close-circle'} style={styles.closeIcon} />

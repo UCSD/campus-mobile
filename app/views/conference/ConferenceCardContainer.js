@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import CardComponent from '../card/CardComponent';
 import ConferenceCard from './ConferenceCard';
 import logger from '../../util/logger';
+import { hideCard } from '../../actions/cards';
 
 class ConferenceCardContainer extends CardComponent {
 	componentDidMount() {
@@ -18,6 +19,7 @@ class ConferenceCardContainer extends CardComponent {
 					title="Events"
 					conference={this.props.conferenceData}
 					saved={this.props.saved}
+					hideCard={this.props.hideCard}
 				/>
 			);
 		} else {
@@ -34,7 +36,11 @@ const mapStateToProps = (state) => (
 );
 
 const mapDispatchToProps = (dispatch) => (
-	{}
+	{
+		hideCard: (id) => {
+			dispatch(hideCard(id));
+		}
+	}
 );
 
 const ActualConferenceCard = connect(

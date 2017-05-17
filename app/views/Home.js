@@ -76,13 +76,15 @@ class Home extends React.Component {
 			activeCards.push(<ScheduleCard key={'schedule'} />);
 		}
 		activeCards.push(<SurveyCardContainer key={'survey'} />);*/
-		activeCards.push(<ConferenceCardContainer key={'conference'} />);
 
 		for (let i = 0; i < this.props.cardOrder.length; ++i) {
 			const key = this.props.cardOrder[i];
 
 			if (this.props.cards[key].active) {
 				switch (key) {
+				case 'conference':
+					card = <ConferenceCardContainer key={'conference'} />;
+					break;
 				case 'weather':
 					card = (<WeatherCardContainer key={'weather'} />);
 					break;
