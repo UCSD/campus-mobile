@@ -47,15 +47,19 @@ const ConferenceDetailView = ({ data, saved, add, remove }) => {
 						</Touchable>
 					</View>
 
-					<Text style={styles.labelText}>
+					<View style={styles.labelView}>
 						{ data.label ? (
-							<Text>{data.label} - </Text>
+							<Text style={[styles.labelText, { color: data['label-theme'] ? data['label-theme'] : COLOR_BLACK }]}>{data.label}</Text>
 						) : null }
 						{ data['talk-type'] === 'Keynote' ? (
-							<Text>{data['talk-type']} - </Text>
+							<Text style={styles.labelText}>{data['talk-type']}</Text>
 						) : null }
-						{getHumanizedDuration(data['start-time'], data['end-time'])}
-					</Text>
+						{ data.label || data['talk-type'] === 'Keynote' ? (
+							<Text style={styles.labelText}> - </Text>
+						) : null }
+						<Text style={styles.labelText}>{getHumanizedDuration(data['start-time'], data['end-time'])}</Text>
+					</View>
+
 					<Text style={styles.sessionName}>
 						{data['talk-title']}
 					</Text>
@@ -105,7 +109,8 @@ const ActualConferenceDetailView = connect(
 )(ConferenceDetailView);
 
 const styles = StyleSheet.create({
-	labelText: { fontSize: 12 },
+	labelView: { flexDirection: 'row', paddingTop: 4 },
+	labelText: { fontSize: 13 },
 	sessionName: { fontSize: 22, color: getCampusPrimary(), paddingTop: 6 },
 	sessionInfo: { fontSize: 12, paddingTop: 6  },
 	sessionDesc: { lineHeight: 18, color: '#111', fontSize: 14, paddingTop: 14 },

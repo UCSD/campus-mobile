@@ -19,6 +19,7 @@ import {
 	NAVIGATOR_ANDROID_HEIGHT,
 	TAB_BAR_HEIGHT,
 } from '../../styles/LayoutConstants';
+import { COLOR_BLACK } from '../../styles/ColorConstants';
 
 const dataSource = new ListView.DataSource({
 	rowHasChanged: (r1, r2) => r1 !== r2,
@@ -162,15 +163,18 @@ const ConferenceItem = ({ conferenceData, saved, add, remove, disabled }) => {
 							</Text>
 						) : null }
 
-						<Text style={styles.labelText}>
+						<View style={styles.labelView}>
 							{ conferenceData.label ? (
-								<Text>{conferenceData.label} - </Text>
+								<Text style={[styles.labelText, { color: conferenceData['label-theme'] ? conferenceData['label-theme'] : COLOR_BLACK }]}>{conferenceData.label}</Text>
 							) : null }
 							{ conferenceData['talk-type'] === 'Keynote' ? (
-								<Text>{conferenceData['talk-type']} - </Text>
+								<Text style={styles.labelText}>{conferenceData['talk-type']}</Text>
 							) : null }
-							{getHumanizedDuration(conferenceData['start-time'], conferenceData['end-time'])}
-						</Text>
+							{ conferenceData.label || conferenceData['talk-type'] === 'Keynote' ? (
+								<Text style={styles.labelText}> - </Text>
+							) : null }
+							<Text style={styles.labelText}>{getHumanizedDuration(conferenceData['start-time'], conferenceData['end-time'])}</Text>
+						</View>
 					</View>
 				</Touchable>
 			</View>
@@ -250,7 +254,7 @@ const ActualConferenceListView = connect(
 )(ConferenceListView);
 
 const styles = StyleSheet.create({
-	rowContainer: { flexDirection: 'row', height: 70 },
+	rowContainer: { flexDirection: 'row', height: 76 },
 	full: { width: WINDOW_WIDTH, height: platformIOS ? (WINDOW_HEIGHT - NAVIGATOR_IOS_HEIGHT - TAB_BAR_HEIGHT) : (WINDOW_HEIGHT - NAVIGATOR_ANDROID_HEIGHT - TAB_BAR_HEIGHT) },
 	card: { width: MAX_CARD_WIDTH },
 	itemRow: { flexGrow: 1, flexDirection: 'row', backgroundColor: '#F9F9F9' },
@@ -259,7 +263,8 @@ const styles = StyleSheet.create({
 	emptyRow: { width: 45, flexDirection: 'row',  backgroundColor: '#F9F9F9', borderBottomWidth: 1, borderColor: '#F9F9F9' },
 	titleContainer: { flex: 1, marginTop: 3 },
 	titleText: { alignSelf: 'stretch', fontSize: 18, color: '#000' },
-	labelText: { fontSize: 13, paddingTop: 4 },
+	labelView: { flexDirection: 'row', paddingTop: 4 },
+	labelText: { fontSize: 13 },
 	starButton: { width: 50 },
 	starButtonInner: { justifyContent: 'flex-start', alignItems: 'center' },
 	starOuterIcon: { position: platformIOS() ? 'absolute' : 'relative', zIndex: 10, backgroundColor: 'rgba(0,0,0,0)' },
