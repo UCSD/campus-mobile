@@ -15,12 +15,11 @@ import SafeImage from '../common/SafeImage';
 import Touchable from '../common/Touchable';
 import css from '../../styles/css';
 import logger from '../../util/logger';
+import { connect } from 'react-redux';
 import { getHumanizedDuration, getCampusPrimary, platformIOS } from '../../util/general';
 
-const ConferenceDetailView = ({ data, saved }) => {
+const ConferenceDetailView = ({ data, saved, add, remove }) => {
 	logger.ga('View Loaded: Event Detail: ' + data['talk-title']);
-
-	console.log('saved: ' + saved)
 
 	return (
 		<View style={[css.main_container, css.whitebg]}>
@@ -30,7 +29,7 @@ const ConferenceDetailView = ({ data, saved }) => {
 					<View style={styles.starButton}>
 						<Touchable
 							onPress={
-								() => ((saved) ? (remove(conferenceData.id)) : (add(conferenceData.id)))
+								() => ((saved) ? (remove(data.id)) : (add(data.id)))
 							}
 						>
 							<View style={styles.starButtonInner}>
@@ -89,6 +88,29 @@ const ConferenceDetailView = ({ data, saved }) => {
 		</View>
 	);
 };
+
+const mapStateToProps = (state) => (
+	{
+		conferenceData: state.conference.data,
+		saved: state.conference.saved
+	}
+);
+
+const mapDispatchToProps = (dispatch) => (
+	{
+		addConference: (id) => {
+			dispatch({ type: 'ADD_CONFERENCE', id });
+		},
+		removeConference: (id) => {
+			dispatch({ type: 'REMOVE_CONFERENCE', id });
+		}
+	}
+);
+
+const ActualConferenceDetailView = connect(
+	mapStateToProps,
+	mapDispatchToProps,
+)(ConferenceDetailView);
 
 const styles = StyleSheet.create({
 	labelText: { fontSize: 12 },
