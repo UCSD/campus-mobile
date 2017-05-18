@@ -41,7 +41,7 @@ const ConferenceListView = ({ style, scrollEnabled, rows, personal, disabled, co
 				style={[style, rows ? styles.card : styles.full]}
 				scrollEnabled={scrollEnabled}
 				stickySectionHeadersEnabled={false}
-				dataSource={dataSource.cloneWithRowsAndSections(convertArrayToMap(adjustData(conferenceData.schedule, saved, personal, rows)))}
+				dataSource={dataSource.cloneWithRowsAndSections(convertToTimeMap(conferenceData.schedule, adjustData(conferenceData.uids, saved, personal, rows)))}
 				renderRow={(rowData, sectionID, rowID, highlightRow) => {
 					// Don't render first row bc rendered by header
 					if (Number(rowID) !== 0) {
@@ -81,32 +81,32 @@ const ConferenceListView = ({ style, scrollEnabled, rows, personal, disabled, co
 	}
 };
 
-function adjustData(scheduleArray, savedArray, personal, rows) {
+function adjustData(scheduleIdArray, savedArray, personal, rows) {
 	// Filter out saved items
 	if (!personal || !savedArray) {
+		const keys = scheduleIdArray;
 		if (!rows) {
-			return scheduleArray;
+			return scheduleIdArray;
 		} else {
-			const trimmed = {};
-			const keys = Object.keys(scheduleArray);
+			const trimmed = [];
 
 			for (let i = 0; i < rows; ++i) {
-				trimmed[keys[i]] = scheduleArray[keys[i]];
+				trimmed.push(keys[i]);
 			}
 			return trimmed;
 		}
 	} else {
-		const filtered = {};
+		const filtered = [];
 
 		if (rows) {
 			for (let i = 0; i < savedArray.length && i < rows; ++i) {
 				const key = savedArray[i];
-				filtered[key] = scheduleArray[key];
+				filtered.push(key);
 			}
 		} else {
 			for (let i = 0; i < savedArray.length; ++i) {
 				const key = savedArray[i];
-				filtered[key] = scheduleArray[key];
+				filtered.push(key);
 			}
 		}
 		return filtered;
@@ -122,25 +122,25 @@ function isSaved(savedArray, id) {
 	return false;
 }
 
-function convertArrayToMap(scheduleArray, header = false) {
-	const scheduleMap = {};
+function convertToTimeMap(scheduleMap, scheduleArray, header = false) {
+	const timeMap = {};
 
-	Object.keys(scheduleArray).forEach((key) => {
-		const session = scheduleArray[key];
-		if (!scheduleMap[session['start-time']]) {
+	scheduleArray.forEach((key) => {
+		const session = scheduleMap[key];
+		if (!timeMap[session['start-time']]) {
 			// Create an entry in the map for the timestamp if it hasn't yet been created
-			scheduleMap[session['start-time']] = [];
+			timeMap[session['start-time']] = [];
 		}
-		scheduleMap[session['start-time']].push(session);
+		timeMap[session['start-time']].push(session);
 	});
 
 	// Remove an item from section so spacing lines up
 	if (header) {
-		Object.keys(scheduleMap).forEach((key) => {
-			scheduleMap[key].pop();
+		Object.keys(timeMap).forEach((key) => {
+			timeMap[key].pop();
 		});
 	}
-	return scheduleMap;
+	return timeMap;
 }
 
 const ConferenceItem = ({ conferenceData, saved, add, remove, disabled }) => {
