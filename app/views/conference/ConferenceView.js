@@ -12,8 +12,14 @@ import {
 	COLOR_PRIMARY,
 	COLOR_LGREY,
 	COLOR_WHITE,
+	COLOR_MGREY,
 } from '../../styles/ColorConstants';
-import { TAB_BAR_HEIGHT } from '../../styles/LayoutConstants';
+import {
+	TAB_BAR_HEIGHT,
+	WINDOW_WIDTH,
+	NAVIGATOR_HEIGHT,
+	IOS_MARGIN_BOTTOM,
+} from '../../styles/LayoutConstants';
 import Touchable from '../common/Touchable';
 
 
@@ -42,7 +48,7 @@ export default class ConferenceView extends Component {
 	render() {
 		return (
 			<View
-				style={[css.main_container, styles.greybg]}
+				style={[styles.main_container, styles.greybg]}
 			>
 				<ConferenceListView
 					style={styles.conferenceListView}
@@ -60,12 +66,12 @@ export default class ConferenceView extends Component {
 }
 
 const FakeTabBar = ({ personal, handleFullPress, handleMinePress }) => (
-	<View style={platformIOS ? styles.tabBarIOS : styles.tabBarAndroid}>
+	<View style={styles.tabBar}>
 		<View
 			style={styles.buttonContainer}
 		>
 			<Touchable
-				style={[styles.button, { backgroundColor: personal ? COLOR_WHITE : COLOR_PRIMARY }]}
+				style={personal ? styles.plainButton : styles.selectedButton}
 				onPress={() => handleFullPress()}
 			>
 				<Text
@@ -75,7 +81,7 @@ const FakeTabBar = ({ personal, handleFullPress, handleMinePress }) => (
 				</Text>
 			</Touchable>
 			<Touchable
-				style={[styles.button, { backgroundColor: personal ? COLOR_PRIMARY : COLOR_WHITE }]}
+				style={personal ? styles.selectedButton : styles.plainButton}
 				onPress={() => handleMinePress()}
 			>
 				<Text
@@ -89,13 +95,13 @@ const FakeTabBar = ({ personal, handleFullPress, handleMinePress }) => (
 );
 
 const styles = StyleSheet.create({
-	conferenceListView: { flexGrow: 1 },
+	main_container: { flex: 1, backgroundColor: COLOR_MGREY, marginTop: NAVIGATOR_HEIGHT },
+	conferenceListView: { flex: 1 },
 	greybg: { backgroundColor: COLOR_LGREY },
-	buttonContainer: { flex: 1, flexDirection: 'row' },
-	button: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-	buttonSelected: { backgroundColor: COLOR_PRIMARY },
-	selectedText: { fontSize: 18, color: COLOR_WHITE },
-	plainText: { fontSize: 18, opacity: 0.5 },
-	tabBarIOS: { borderTopWidth: 1, borderColor: '#DADADA', backgroundColor: COLOR_WHITE, height: TAB_BAR_HEIGHT },
-	tabBarAndroid: { borderBottomWidth: 1, borderColor: '#DADADA', backgroundColor: COLOR_WHITE, height: TAB_BAR_HEIGHT },
+	buttonContainer: { flex: 1, flexDirection: 'row', alignItems: 'center' },
+	selectedButton: { flex: 1, height: TAB_BAR_HEIGHT, alignItems: 'center', justifyContent: 'center', backgroundColor: COLOR_PRIMARY },
+	plainButton: { flex: 1, height: TAB_BAR_HEIGHT, alignItems: 'center', justifyContent: 'center', backgroundColor: COLOR_WHITE },
+	selectedText: { textAlign: 'center', fontSize: 18, color: 'white' },
+	plainText: { textAlign: 'center', fontSize: 18, opacity: 0.5 },
+	tabBar: { borderTopWidth: 1, borderColor: '#DADADA', backgroundColor: COLOR_WHITE, height: TAB_BAR_HEIGHT },
 });

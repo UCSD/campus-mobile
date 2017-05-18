@@ -143,71 +143,68 @@ function convertToTimeMap(scheduleMap, scheduleArray, header = false) {
 	return timeMap;
 }
 
-const ConferenceItem = ({ conferenceData, saved, add, remove, disabled }) => {
-	return (
-		<View
-			style={styles.itemRow}
-		>
-			<CircleBorder />
-			<View style={styles.titleContainer}>
-				<Touchable
-					onPress={() => Actions.ConferenceDetailView({ data: conferenceData, add, remove })}
-				>
-					<View>
-						{conferenceData['talk-title'] ? (
-							<Text
-								style={styles.titleText}
-								numberOfLines={2}
-							>
-								{conferenceData['talk-title']}
-							</Text>
+const ConferenceItem = ({ conferenceData, saved, add, remove, disabled }) => (
+	<View
+		style={styles.itemRow}
+	>
+		<CircleBorder />
+		<View style={styles.titleContainer}>
+			<Touchable
+				onPress={() => Actions.ConferenceDetailView({ data: conferenceData, add, remove })}
+			>
+				<View>
+					{conferenceData['talk-title'] ? (
+						<Text
+							style={styles.titleText}
+							numberOfLines={2}
+						>
+							{conferenceData['talk-title']}
+						</Text>
+					) : null }
+
+					<View style={styles.labelView}>
+						{ conferenceData.label ? (
+							<Text style={[styles.labelText, { color: conferenceData['label-theme'] ? conferenceData['label-theme'] : COLOR_BLACK }]}>{conferenceData.label}</Text>
 						) : null }
-
-						<View style={styles.labelView}>
-							{ conferenceData.label ? (
-								<Text style={[styles.labelText, { color: conferenceData['label-theme'] ? conferenceData['label-theme'] : COLOR_BLACK }]}>{conferenceData.label}</Text>
-							) : null }
-							{ conferenceData['talk-type'] === 'Keynote' ? (
-								<Text style={styles.labelText}>{conferenceData['talk-type']}</Text>
-							) : null }
-							{ conferenceData.label || conferenceData['talk-type'] === 'Keynote' ? (
-								<Text style={styles.labelText}> - </Text>
-							) : null }
-							<Text style={styles.labelText}>{getHumanizedDuration(conferenceData['start-time'], conferenceData['end-time'])}</Text>
-						</View>
+						{ conferenceData['talk-type'] === 'Keynote' ? (
+							<Text style={styles.labelText}>{conferenceData['talk-type']}</Text>
+						) : null }
+						{ conferenceData.label || conferenceData['talk-type'] === 'Keynote' ? (
+							<Text style={styles.labelText}> - </Text>
+						) : null }
+						<Text style={styles.labelText}>{getHumanizedDuration(conferenceData['start-time'], conferenceData['end-time'])}</Text>
 					</View>
-				</Touchable>
-			</View>
-
-			{ (!disabled) ? (
-				<View style={styles.starButton}>
-					<Touchable
-						onPress={
-							() => ((saved) ? (remove(conferenceData.id)) : (add(conferenceData.id)))
-						}
-					>
-						<View style={styles.starButtonInner}>
-							<Icon
-								name={'ios-star-outline'}
-								size={32}
-								color={'#999'}
-								style={styles.starOuterIcon}
-							/>
-							{ saved ? (
-								<Icon
-									name={'ios-star'}
-									size={26}
-									color={'yellow'}
-									style={styles.starInnerIcon}
-								/>
-							) : null }
-						</View>
-					</Touchable>
 				</View>
-			) : null }
+			</Touchable>
 		</View>
-	);
-};
+
+		{ (!disabled) ? (
+			<Touchable
+				style={styles.starButton}
+				onPress={
+					() => ((saved) ? (remove(conferenceData.id)) : (add(conferenceData.id)))
+				}
+			>
+				<View style={styles.starButtonInner}>
+					<Icon
+						name={'ios-star-outline'}
+						size={32}
+						color={'#999'}
+						style={styles.starOuterIcon}
+					/>
+					{ saved ? (
+						<Icon
+							name={'ios-star'}
+							size={26}
+							color={'yellow'}
+							style={styles.starInnerIcon}
+						/>
+					) : null }
+				</View>
+			</Touchable>
+		) : null }
+	</View>
+);
 
 const EmptyItem = () => (
 	<View style={styles.emptyRow} />
@@ -255,20 +252,20 @@ const ActualConferenceListView = connect(
 
 const styles = StyleSheet.create({
 	rowContainer: { flexDirection: 'row', height: 76 },
-	full: { width: WINDOW_WIDTH, height: platformIOS ? (WINDOW_HEIGHT - NAVIGATOR_IOS_HEIGHT - TAB_BAR_HEIGHT) : (WINDOW_HEIGHT - NAVIGATOR_ANDROID_HEIGHT - TAB_BAR_HEIGHT) },
+	full: { width: WINDOW_WIDTH, height: platformIOS() ? (WINDOW_HEIGHT - NAVIGATOR_IOS_HEIGHT - TAB_BAR_HEIGHT) : (WINDOW_HEIGHT - NAVIGATOR_ANDROID_HEIGHT - TAB_BAR_HEIGHT) },
 	card: { width: MAX_CARD_WIDTH },
 	itemRow: { flexGrow: 1, flexDirection: 'row', backgroundColor: '#F9F9F9' },
 	header: { justifyContent: 'flex-start', alignItems: 'center', width: 45, backgroundColor: '#F9F9F9', borderBottomWidth: 1, borderColor: '#F9F9F9' },
 	headerText: { textAlign: 'right', alignSelf: 'stretch', color: '#000', fontSize: 12, marginTop: 7 },
 	emptyRow: { width: 45, flexDirection: 'row',  backgroundColor: '#F9F9F9', borderBottomWidth: 1, borderColor: '#F9F9F9' },
-	titleContainer: { flex: 1, marginTop: 3 },
+	titleContainer: { flex: 1, marginTop: 3, justifyContent: 'center' },
 	titleText: { alignSelf: 'stretch', fontSize: 18, color: '#000' },
 	labelView: { flexDirection: 'row', paddingTop: 4 },
 	labelText: { fontSize: 13 },
-	starButton: { width: 50 },
-	starButtonInner: { justifyContent: 'flex-start', alignItems: 'center' },
-	starOuterIcon: { position: platformIOS() ? 'absolute' : 'relative', zIndex: 10, backgroundColor: 'rgba(0,0,0,0)' },
-	starInnerIcon: { position: 'absolute', zIndex: platformIOS() ? 5 : 15, marginTop: 3 },
+	starButton: { justifyContent: 'center', width: 50 },
+	starButtonInner: { alignItems: 'center' },
+	//starOuterIcon: { position: platformIOS() ? 'absolute' : 'relative', zIndex: 10, backgroundColor: 'rgba(0,0,0,0)' },
+	starInnerIcon: { position: 'absolute', backgroundColor: 'transparent', marginTop: 3 }, //, zIndex: platformIOS() ? 5 : 15, marginTop: 3 },
 	borderContainer: { width: 1, alignSelf: 'stretch', marginHorizontal: 20, alignItems: 'flex-start' },
 	line: { flexGrow: 1, borderLeftWidth: 1, borderColor: '#AAA', paddingBottom: 20 },
 	circle: { position: 'absolute', top: 11, left: -2.5, height: 6, width: 6, borderRadius: 3, borderWidth: 1, borderColor: '#AAA', backgroundColor: '#F9F9F9' },
