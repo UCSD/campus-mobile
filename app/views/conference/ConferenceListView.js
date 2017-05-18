@@ -41,7 +41,7 @@ const ConferenceListView = ({ style, scrollEnabled, rows, personal, disabled, co
 				style={[style, rows ? styles.card : styles.full]}
 				scrollEnabled={scrollEnabled}
 				stickySectionHeadersEnabled={false}
-				dataSource={dataSource.cloneWithRowsAndSections(convertToTimeMap(conferenceData.schedule, adjustData(conferenceData.uids, saved, personal, rows)))}
+				dataSource={dataSource.cloneWithRowsAndSections(convertToTimeMap(conferenceData.schedule, adjustData(conferenceData.schedule, conferenceData.uids, saved, personal, rows)))}
 				renderRow={(rowData, sectionID, rowID, highlightRow) => {
 					// Don't render first row bc rendered by header
 					if (Number(rowID) !== 0) {
@@ -81,7 +81,7 @@ const ConferenceListView = ({ style, scrollEnabled, rows, personal, disabled, co
 	}
 };
 
-function adjustData(scheduleIdArray, savedArray, personal, rows) {
+function adjustData(scheduleIdMap, scheduleIdArray, savedArray, personal, rows) {
 	// Filter out saved items
 	if (!personal || !savedArray) {
 		const keys = scheduleIdArray;
@@ -96,17 +96,37 @@ function adjustData(scheduleIdArray, savedArray, personal, rows) {
 			return trimmed;
 		}
 	} else {
-		const filtered = [];
+		let filtered = [];
+		for (let i = 0; i < savedArray.length; ++i) {
+			const key = savedArray[i];
+			filtered.push(key);
+		}
 
+		// Displaying for homecard
+		// Remove passed sessions
 		if (rows) {
-			for (let i = 0; i < savedArray.length && i < rows; ++i) {
-				const key = savedArray[i];
-				filtered.push(key);
-			}
-		} else {
-			for (let i = 0; i < savedArray.length; ++i) {
-				const key = savedArray[i];
-				filtered.push(key);
+			const now = 1498681800000;//Date.now();
+			if (filtered.length > rows) {
+				const temp = filtered.slice();
+				for (let j = 0; j < filtered.length; ++j) {
+					const key = filtered[j];
+					const itemTime = scheduleIdMap[key]['start-time'];
+
+					if (now > itemTime) {
+						const index = temp.indexOf(key);
+						temp.splice(index, 1);
+					}
+
+					if (temp.length <= rows) {
+						break;
+					}
+				}
+				console.log(temp);
+				if (temp.length > rows) {
+					filtered = temp.slice(0, rows);
+				} else {
+					filtered = temp;
+				}
 			}
 		}
 		return filtered;
