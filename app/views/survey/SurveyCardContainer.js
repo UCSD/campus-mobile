@@ -3,9 +3,8 @@ import { connect } from 'react-redux';
 import Toast from 'react-native-simple-toast';
 
 import YesNoCard from './YesNoCard';
-import CardComponent from '../card/CardComponent';
 
-class SurveyCardContainer extends CardComponent {
+class SurveyCardContainer extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {

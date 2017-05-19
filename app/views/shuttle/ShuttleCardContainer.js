@@ -5,12 +5,11 @@ import { Actions } from 'react-native-router-flux';
 import Toast from 'react-native-simple-toast';
 
 import { updateMaster } from '../../actions/shuttle';
-import CardComponent from '../card/CardComponent';
 import ShuttleCard from './ShuttleCard';
 
 import logger from '../../util/logger';
 
-class ShuttleCardContainer extends CardComponent {
+class ShuttleCardContainer extends React.Component {
 	componentDidMount() {
 		logger.ga('Card Mounted: Shuttle');
 		this.props.updateMaster();
