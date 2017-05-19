@@ -208,7 +208,7 @@ class FeedbackView extends Component {
 
 const styles = StyleSheet.create({
 	loading_icon: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-	feedback_container: { flexDirection: 'column', marginHorizontal: 8, marginTop: 8 },
+	feedback_container: { flex: 1, flexDirection: 'column', marginHorizontal: 8, marginTop: 8 },
 	feedback_label: { flexWrap: 'wrap', fontSize: 18, margin: 8, lineHeight: 24 },
 	feedback_text: { flex: 1, backgroundColor: '#FFF', fontSize: 18, alignItems: 'center', padding: 8, margin: 8, minHeight: 50 },
 	email_text: { backgroundColor: '#FFF', fontSize: 18, alignItems: 'center', padding: 8, margin: 8, minHeight: 50 },
