@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 
 import SafeImage from '../common/SafeImage';
 import {
+	COLOR_MGREY,
 	COLOR_DGREY
 } from '../../styles/ColorConstants';
 
@@ -29,7 +30,7 @@ const CardHeader = ({ title, menu, image }) => (
 );
 
 const styles = StyleSheet.create({
-	headerContainer: { flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: COLOR_DGREY },
+	headerContainer: { flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: COLOR_MGREY },
 	titleText: { flexGrow: 1, fontSize: 26, color: COLOR_DGREY, paddingLeft: 10, paddingVertical: 6 },
 	titleImage: { height: 40, width: 132, margin: 3 },
 	filler: { flexGrow: 1 },

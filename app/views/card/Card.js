@@ -3,37 +3,48 @@ import { StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 import ElevatedView from 'react-native-elevated-view';
 
+import { hideCard } from '../../actions/cards'; // TODO: Use saga
 import {
 	COLOR_LGREY
 } from '../../styles/ColorConstants';
 import CardHeader from './CardHeader';
 import CardMenu from './CardMenu';
 
-const Card = ({ hideMenu, cardRefresh, id, title, header, children }) => (
+const Card = ({ hideMenu, cardRefresh, id, title, header, hide, children }) => (
 	<ElevatedView
 		style={styles.mainContainer}
 		ref={(i) => { this._card = i; }}
 		elevation={3}
 	>
-		{(this.props.title || this.props.header) ? (
+		{(title || header) ? (
 			<CardHeader
-				id={this.props.id}
-				title={this.props.title}
+				id={id}
+				title={title}
 				menu={
 					<CardMenu
 						hideMenu={hideMenu}
 						cardRefresh={cardRefresh}
+						hideCard={hide}
+						id={id}
 					/>
 				}
-				image={this.props.header}
+				image={header}
 			/>
 		) : (null)}
-		{this.props.children}
+		{children}
 	</ElevatedView>
+);
+
+const mapDispatchToProps = (dispatch) => (
+	{
+		hide: (id) => {
+			dispatch(hideCard(id));
+		}
+	}
 );
 
 const styles = StyleSheet.create({
 	mainContainer: { backgroundColor: COLOR_LGREY, margin: 6, alignItems: 'flex-start', justifyContent: 'center' },
 });
 
-export default connect()(Card);
+export default connect(null, mapDispatchToProps)(Card);
