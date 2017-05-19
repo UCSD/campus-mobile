@@ -105,7 +105,7 @@ function adjustData(scheduleIdMap, scheduleIdArray, savedArray, personal, rows) 
 		// Displaying for homecard
 		// Remove passed sessions
 		if (rows) {
-			const now = 1498681800000;//Date.now();
+			const now = Date.now();
 			if (filtered.length > rows) {
 				const temp = filtered.slice();
 				for (let j = 0; j < filtered.length; ++j) {
@@ -121,7 +121,7 @@ function adjustData(scheduleIdMap, scheduleIdArray, savedArray, personal, rows) 
 						break;
 					}
 				}
-				console.log(temp);
+
 				if (temp.length > rows) {
 					filtered = temp.slice(0, rows);
 				} else {
