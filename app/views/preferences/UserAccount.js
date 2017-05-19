@@ -18,7 +18,9 @@ import Settings from '../../AppSettings';
 import logger from '../../util/logger';
 import { getMaxCardWidth } from '../../util/general';
 import Card from '../card/Card';
-import css from '../../styles/css';
+import {
+	COLOR_DGREY
+} from '../../styles/ColorConstants';
 
 const authenticationService = getAuthenticationService();
 
@@ -63,18 +65,16 @@ class UserAccount extends Component {
 		this.props.doLogout();
 	}
 
-	_renderAccountContainer = (mainText) => {
-		return (
-			<TouchableOpacity style={css.spacedRow} onPress={this._performUserAuthAction}>
-				<View style={css.centerAlign}>
-					<Text style={css.prefCardTitle}>{mainText}</Text>
-				</View>
-				<View style={css.centerAlign}>
-					<Icon name="user" />
-				</View>
-			</TouchableOpacity>
-		);
-	}
+	_renderAccountContainer = (mainText) => (
+		<TouchableOpacity
+			style={styles.spacedRow}
+			onPress={this._performUserAuthAction}
+		>
+			<Text style={styles.accountText}>{mainText}</Text>
+			<Icon name="user" />
+		</TouchableOpacity>
+	);
+
 	_renderAccountInfo = () => {
 		// show the account info of logged in user, or not logged in
 		if (this.props.user.isLoggedIn) {
@@ -178,8 +178,8 @@ const styles = StyleSheet.create({
 	infoContainer: { flexGrow: 1, flexDirection: 'row', margin: 7 },
 	loginContainer: { flexGrow: 1, margin: 7 },
 	input: { flexGrow: 1, height: 50 },
-	loginButton: { flexGrow: 1, height: 50, backgroundColor: '#034262', alignItems: 'center', justifyContent: 'center' },
-	loginText: { fontSize: 18, color: '#F9F9F9' }
+	spacedRow: { flexDirection: 'row', justifyContent: 'space-between' },
+	accountText: { textAlign: 'center', fontSize: 16, color: COLOR_DGREY },
 });
 
 module.exports = connect(mapStateToProps, mapDispatchToProps)(UserAccount);

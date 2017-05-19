@@ -14,8 +14,11 @@ import SortableList from 'react-native-sortable-list';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import Card from '../card/Card';
-import css from '../../styles/css';
 import { getMaxCardWidth } from '../../util/general';
+import {
+	COLOR_LGREY,
+	COLOR_MGREY
+} from '../../styles/ColorConstants';
 
 // View for user to manage preferences, including which cards are visible
 export default class CardPreferences extends Component {
@@ -182,7 +185,7 @@ class PrefItem extends React.Component {
 }
 
 const styles = StyleSheet.create({
-	list_row: { backgroundColor: '#F9F9F9', flexDirection: 'row', alignItems: 'center', width: getMaxCardWidth(), padding: 7, borderBottomWidth: 1, borderBottomColor: '#EEE' ,
+	list_row: { backgroundColor: COLOR_LGREY, flexDirection: 'row', alignItems: 'center', width: getMaxCardWidth(), padding: 7, borderBottomWidth: 1, borderBottomColor: COLOR_MGREY ,
 		...Platform.select({
 			ios: {
 				shadowOpacity: 0,
@@ -197,7 +200,7 @@ const styles = StyleSheet.create({
 		})
 	},
 	name_text: { flex: 1, margin: 7, fontSize: 18 },
-	list_container: { width: getMaxCardWidth() }
+	list_container: { width: getMaxCardWidth() },
 });
 
 module.exports = connect(mapStateToProps, mapDispatchtoProps)(CardPreferences);
