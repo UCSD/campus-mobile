@@ -2,17 +2,25 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
 import SafeImage from '../common/SafeImage';
+import {
+	COLOR_DGREY
+} from '../../styles/ColorConstants';
 
+/*
+	CardHeader component that will display image over text if given
+ */
 const CardHeader = ({ title, menu, image }) => (
-	<View style={styles.header_container}>
+	<View style={styles.headerContainer}>
 		{ image ?
 			(
 				<SafeImage
 					source={{ uri: image }}
-					style={styles.header_image}
+					style={styles.titleImage}
 				/>
 			) : (
-				<Text style={styles.header_text}>{title}</Text>
+				<Text style={styles.titleText}>
+					{title}
+				</Text>
 			)
 		}
 		<View style={styles.filler} />
@@ -21,9 +29,9 @@ const CardHeader = ({ title, menu, image }) => (
 );
 
 const styles = StyleSheet.create({
-	header_container: { flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: '#DDD' },
-	header_text: { flexGrow: 1, fontSize: 26, color: '#747678', paddingLeft: 10, paddingVertical: 6 },
-	header_image: { height: 40, width: 132, margin: 3 },
+	headerContainer: { flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: COLOR_DGREY },
+	titleText: { flexGrow: 1, fontSize: 26, color: COLOR_DGREY, paddingLeft: 10, paddingVertical: 6 },
+	titleImage: { height: 40, width: 132, margin: 3 },
 	filler: { flexGrow: 1 },
 });
 

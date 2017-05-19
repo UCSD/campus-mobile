@@ -3,7 +3,12 @@ import {
 	Animated,
 	StyleSheet
 } from 'react-native';
+
 import CardHeader from './CardHeader';
+import {
+	COLOR_DGREY,
+	COLOR_LGREY
+} from '../../styles/ColorConstants';
 
 export default class DismissibleCard extends React.Component {
 
@@ -100,5 +105,5 @@ export default class DismissibleCard extends React.Component {
 }
 
 const styles = StyleSheet.create({
-	card_main: { borderWidth: 1, borderRadius: 2, borderColor: '#DDD', backgroundColor: '#FFF', margin: 6, alignItems: 'flex-start', justifyContent: 'center', overflow: 'hidden' },
+	card_main: { borderWidth: 1, borderRadius: 2, borderColor: COLOR_DGREY, backgroundColor: COLOR_LGREY, margin: 6, alignItems: 'flex-start', justifyContent: 'center', overflow: 'hidden' },
 });
