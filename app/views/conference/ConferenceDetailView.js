@@ -8,11 +8,19 @@ import {
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
+
 import Touchable from '../common/Touchable';
 import css from '../../styles/css';
 import logger from '../../util/logger';
-
-import { getHumanizedDuration, getCampusPrimary, platformIOS } from '../../util/general';
+import { getHumanizedDuration, platformIOS } from '../../util/general';
+import {
+	COLOR_DGREY,
+	COLOR_PRIMARY,
+	COLOR_BLACK
+} from '../../styles/ColorConstants';
+import {
+	WINDOW_WIDTH
+} from '../../styles/LayoutConstants';
 
 const ConferenceDetailView = ({ data, saved, add, remove }) => {
 	logger.ga('View Loaded: Conference Detail: ' + data['talk-title']);
@@ -20,8 +28,7 @@ const ConferenceDetailView = ({ data, saved, add, remove }) => {
 	return (
 		<View style={[css.main_container, css.whitebg]}>
 			<ScrollView>
-				<View style={css.news_detail_container}>
-
+				<View style={styles.detailContainer}>
 					<View style={styles.starButton}>
 						<Touchable
 							onPress={
@@ -32,14 +39,13 @@ const ConferenceDetailView = ({ data, saved, add, remove }) => {
 								<Icon
 									name={'ios-star-outline'}
 									size={32}
-									color={'#999'}
 									style={styles.starOuterIcon}
 								/>
 								{ isSaved(saved, data.id)  ? (
 									<Icon
 										name={'ios-star'}
 										size={26}
-										color={'yellow'}
+										color={'yellow'} // TODO: USE Color Constant when avail
 										style={styles.starInnerIcon}
 									/>
 								) : null }
@@ -109,19 +115,20 @@ const ActualConferenceDetailView = connect(
 )(ConferenceDetailView);
 
 const styles = StyleSheet.create({
+	detailContainer: { width: WINDOW_WIDTH, paddingHorizontal: 18, paddingVertical: 14 },
 	labelView: { flexDirection: 'row', paddingTop: 4 },
 	labelText: { fontSize: 13 },
-	sessionName: { fontSize: 22, color: getCampusPrimary(), paddingTop: 6 },
+	sessionName: { fontSize: 22, color: COLOR_PRIMARY, paddingTop: 6 },
 	sessionInfo: { fontSize: 12, paddingTop: 6  },
-	sessionDesc: { lineHeight: 18, color: '#111', fontSize: 14, paddingTop: 14 },
+	sessionDesc: { lineHeight: 18, color: COLOR_DGREY, fontSize: 14, paddingTop: 14 },
 	hostedBy: { fontSize: 10, fontWeight: 'bold', marginTop: 20 },
 	speakerContainer: { marginTop: 2 },
-	speakerName: { fontSize: 14, fontWeight: 'bold', color: getCampusPrimary(), marginTop: 10 },
+	speakerName: { fontSize: 14, fontWeight: 'bold', color: COLOR_PRIMARY, marginTop: 10 },
 	speakerPosition: { fontSize: 10, marginTop: 2 },
 	speakerSubTalkTitle: { fontSize: 10, marginTop: 2 },
 	starButton: { width: 50, position: 'absolute', top: 2, right: -5, zIndex: 10 },
 	starButtonInner: { justifyContent: 'flex-start', alignItems: 'center' },
-	starOuterIcon: { position: platformIOS() ? 'absolute' : 'relative', zIndex: 10, backgroundColor: 'rgba(0,0,0,0)' },
+	starOuterIcon: { color: COLOR_DGREY, position: platformIOS() ? 'absolute' : 'relative', zIndex: 10, backgroundColor: 'transparent' },
 	starInnerIcon: { position: 'absolute', zIndex: platformIOS() ? 5 : 15, marginTop: 3 },
 });
 

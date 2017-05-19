@@ -4,27 +4,24 @@ import {
 	StyleSheet,
 	Text,
 } from 'react-native';
+
 import logger from '../../util/logger';
-import css from '../../styles/css';
 import ConferenceListView from './ConferenceListView';
-import { platformIOS } from '../../util/general';
 import {
 	COLOR_PRIMARY,
 	COLOR_LGREY,
+	COLOR_DGREY,
 	COLOR_WHITE,
 	COLOR_MGREY,
 } from '../../styles/ColorConstants';
 import {
 	TAB_BAR_HEIGHT,
-	WINDOW_WIDTH,
 	NAVIGATOR_HEIGHT,
-	IOS_MARGIN_BOTTOM,
 } from '../../styles/LayoutConstants';
 import Touchable from '../common/Touchable';
 
 
 export default class ConferenceView extends Component {
-
 	constructor(props) {
 		super(props);
 
@@ -103,5 +100,5 @@ const styles = StyleSheet.create({
 	plainButton: { flex: 1, height: TAB_BAR_HEIGHT, alignItems: 'center', justifyContent: 'center', backgroundColor: COLOR_WHITE },
 	selectedText: { textAlign: 'center', fontSize: 18, color: 'white' },
 	plainText: { textAlign: 'center', fontSize: 18, opacity: 0.5 },
-	tabBar: { borderTopWidth: 1, borderColor: '#DADADA', backgroundColor: COLOR_WHITE, height: TAB_BAR_HEIGHT },
+	tabBar: { borderTopWidth: 1, borderColor: COLOR_DGREY, backgroundColor: COLOR_WHITE, height: TAB_BAR_HEIGHT },
 });

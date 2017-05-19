@@ -11,7 +11,9 @@ import BannerCard from '../common/BannerCard';
 import ConferenceListView from './ConferenceListView';
 import { getMaxCardWidth, getCampusPrimary } from '../../util/general';
 import Touchable from '../common/Touchable';
-
+import {
+	COLOR_DGREY
+} from '../../styles/ColorConstants';
 
 const ConferenceCard = ({ conference, saved, hideCard }) => (
 	<View>
@@ -58,7 +60,7 @@ const ConferenceCard = ({ conference, saved, hideCard }) => (
 const styles = StyleSheet.create({
 	more: { alignItems: 'center', justifyContent: 'center', padding: 6 },
 	more_label: { fontSize: 20, color: getCampusPrimary(), fontWeight: '300' },
-	conferenceListView: { borderBottomWidth: 1, borderBottomColor: '#DDD' },
+	conferenceListView: { borderBottomWidth: 1, borderBottomColor: COLOR_DGREY },
 });
 
 export default ConferenceCard;

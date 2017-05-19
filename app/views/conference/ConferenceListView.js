@@ -19,7 +19,11 @@ import {
 	NAVIGATOR_ANDROID_HEIGHT,
 	TAB_BAR_HEIGHT,
 } from '../../styles/LayoutConstants';
-import { COLOR_BLACK } from '../../styles/ColorConstants';
+import {
+	COLOR_DGREY,
+	COLOR_LGREY,
+	COLOR_BLACK
+} from '../../styles/ColorConstants';
 
 const dataSource = new ListView.DataSource({
 	rowHasChanged: (r1, r2) => r1 !== r2,
@@ -209,8 +213,7 @@ const ConferenceItem = ({ conferenceData, saved, add, remove, disabled }) => (
 					<Icon
 						name={'ios-star-outline'}
 						size={32}
-						color={'#999'}
-						style={styles.starOuterIcon}
+						style={styles.starOuterIcon} // TODO: USE Color Constant when avail
 					/>
 					{ saved ? (
 						<Icon
@@ -274,22 +277,21 @@ const styles = StyleSheet.create({
 	rowContainer: { flexDirection: 'row', height: 76 },
 	full: { width: WINDOW_WIDTH, height: platformIOS() ? (WINDOW_HEIGHT - NAVIGATOR_IOS_HEIGHT - TAB_BAR_HEIGHT) : (WINDOW_HEIGHT - NAVIGATOR_ANDROID_HEIGHT - TAB_BAR_HEIGHT) },
 	card: { width: MAX_CARD_WIDTH },
-	itemRow: { flexGrow: 1, flexDirection: 'row', backgroundColor: '#F9F9F9' },
-	header: { justifyContent: 'flex-start', alignItems: 'center', width: 45, backgroundColor: '#F9F9F9', borderBottomWidth: 1, borderColor: '#F9F9F9' },
-	headerText: { textAlign: 'right', alignSelf: 'stretch', color: '#000', fontSize: 12, marginTop: 7 },
-	emptyRow: { width: 45, flexDirection: 'row',  backgroundColor: '#F9F9F9', borderBottomWidth: 1, borderColor: '#F9F9F9' },
+	itemRow: { flexGrow: 1, flexDirection: 'row', backgroundColor: COLOR_LGREY },
+	header: { justifyContent: 'flex-start', alignItems: 'center', width: 45, backgroundColor: COLOR_LGREY, borderBottomWidth: 1, borderColor: COLOR_LGREY },
+	headerText: { textAlign: 'right', alignSelf: 'stretch', color: COLOR_BLACK, fontSize: 12, marginTop: 7 },
+	emptyRow: { width: 45, flexDirection: 'row',  backgroundColor: COLOR_LGREY, borderBottomWidth: 1, borderColor: COLOR_LGREY },
 	titleContainer: { flex: 1, marginTop: 3, justifyContent: 'center' },
-	titleText: { alignSelf: 'stretch', fontSize: 18, color: '#000' },
+	titleText: { alignSelf: 'stretch', fontSize: 18, color: COLOR_BLACK },
 	labelView: { flexDirection: 'row', paddingTop: 4 },
 	labelText: { fontSize: 13 },
 	starButton: { justifyContent: 'center', width: 50 },
 	starButtonInner: { alignItems: 'center' },
-	//starOuterIcon: { position: platformIOS() ? 'absolute' : 'relative', zIndex: 10, backgroundColor: 'rgba(0,0,0,0)' },
-	starInnerIcon: { position: 'absolute', backgroundColor: 'transparent', marginTop: 3 }, //, zIndex: platformIOS() ? 5 : 15, marginTop: 3 },
+	starOuterIcon: { color: COLOR_DGREY },
+	starInnerIcon: { position: 'absolute', backgroundColor: 'transparent', marginTop: 3 },
 	borderContainer: { width: 1, alignSelf: 'stretch', marginHorizontal: 20, alignItems: 'flex-start' },
-	line: { flexGrow: 1, borderLeftWidth: 1, borderColor: '#AAA', paddingBottom: 20 },
-	circle: { position: 'absolute', top: 11, left: -2.5, height: 6, width: 6, borderRadius: 3, borderWidth: 1, borderColor: '#AAA', backgroundColor: '#F9F9F9' },
-	bottomBorder: { borderBottomWidth: 1, borderBottomColor: '#DDD' },
+	line: { flexGrow: 1, borderLeftWidth: 1, borderColor: COLOR_DGREY, paddingBottom: 20 },
+	circle: { position: 'absolute', top: 11, left: -2.5, height: 6, width: 6, borderRadius: 3, borderWidth: 1, borderColor: COLOR_DGREY, backgroundColor: COLOR_LGREY },
 	noSavedSessions: { flexGrow: 1, fontSize: 18, textAlign: 'center', padding: 40, lineHeight: 30 },
 });
 
