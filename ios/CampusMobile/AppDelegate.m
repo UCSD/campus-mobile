@@ -31,7 +31,7 @@
                                                initialProperties:nil
                                                    launchOptions:launchOptions];
   
-  rootView.backgroundColor = [[UIColor alloc] initWithRed:0.0941f green:0.1686f blue:0.2862f alpha:1];
+  rootView.backgroundColor = [[UIColor alloc] initWithRed:0.0118f green:0.2588f blue:0.3843f alpha:1];
   
   // Get launch image
   NSString *launchImageName = nil;

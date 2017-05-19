@@ -3,35 +3,63 @@ import {
 	View,
 	Text,
 	ScrollView,
-	Image,
-	Linking,
-	Dimensions,
 	StyleSheet,
 } from 'react-native';
-
+import { connect } from 'react-redux';
+import Icon from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
-
-import SafeImage from '../common/SafeImage';
+import Touchable from '../common/Touchable';
 import css from '../../styles/css';
 import logger from '../../util/logger';
-import { getHumanizedDuration, getCampusPrimary } from '../../util/general';
 
-const ConferenceDetailView = ({ data }) => {
-	logger.ga('View Loaded: Event Detail: ' + data['talk-title']);
+import { getHumanizedDuration, getCampusPrimary, platformIOS } from '../../util/general';
+
+const ConferenceDetailView = ({ data, saved, add, remove }) => {
+	logger.ga('View Loaded: Conference Detail: ' + data['talk-title']);
 
 	return (
 		<View style={[css.main_container, css.whitebg]}>
 			<ScrollView>
 				<View style={css.news_detail_container}>
-					<Text style={styles.labelText}>
+
+					<View style={styles.starButton}>
+						<Touchable
+							onPress={
+								() => (isSaved(saved, data.id) ? (remove(data.id)) : (add(data.id)))
+							}
+						>
+							<View style={styles.starButtonInner}>
+								<Icon
+									name={'ios-star-outline'}
+									size={32}
+									color={'#999'}
+									style={styles.starOuterIcon}
+								/>
+								{ isSaved(saved, data.id)  ? (
+									<Icon
+										name={'ios-star'}
+										size={26}
+										color={'yellow'}
+										style={styles.starInnerIcon}
+									/>
+								) : null }
+							</View>
+						</Touchable>
+					</View>
+
+					<View style={styles.labelView}>
 						{ data.label ? (
-							<Text>{data.label} - </Text>
+							<Text style={[styles.labelText, { color: data['label-theme'] ? data['label-theme'] : COLOR_BLACK }]}>{data.label}</Text>
 						) : null }
 						{ data['talk-type'] === 'Keynote' ? (
-							<Text>{data['talk-type']} - </Text>
+							<Text style={styles.labelText}>{data['talk-type']}</Text>
 						) : null }
-						{getHumanizedDuration(data['start-time'], data['end-time'])}
-					</Text>
+						{ data.label || data['talk-type'] === 'Keynote' ? (
+							<Text style={styles.labelText}> - </Text>
+						) : null }
+						<Text style={styles.labelText}>{getHumanizedDuration(data['start-time'], data['end-time'])}</Text>
+					</View>
+
 					<Text style={styles.sessionName}>
 						{data['talk-title']}
 					</Text>
@@ -61,8 +89,28 @@ const ConferenceDetailView = ({ data }) => {
 	);
 };
 
+function isSaved(savedArray, id) {
+	for ( let i = 0; i < savedArray.length; ++i) {
+		if (savedArray[i] === id) {
+			return true;
+		}
+	}
+	return false;
+}
+
+const mapStateToProps = (state) => (
+	{
+		saved: state.conference.saved
+	}
+);
+
+const ActualConferenceDetailView = connect(
+	mapStateToProps
+)(ConferenceDetailView);
+
 const styles = StyleSheet.create({
-	labelText: { fontSize: 12 },
+	labelView: { flexDirection: 'row', paddingTop: 4 },
+	labelText: { fontSize: 13 },
 	sessionName: { fontSize: 22, color: getCampusPrimary(), paddingTop: 6 },
 	sessionInfo: { fontSize: 12, paddingTop: 6  },
 	sessionDesc: { lineHeight: 18, color: '#111', fontSize: 14, paddingTop: 14 },
@@ -71,6 +119,10 @@ const styles = StyleSheet.create({
 	speakerName: { fontSize: 14, fontWeight: 'bold', color: getCampusPrimary(), marginTop: 10 },
 	speakerPosition: { fontSize: 10, marginTop: 2 },
 	speakerSubTalkTitle: { fontSize: 10, marginTop: 2 },
+	starButton: { width: 50, position: 'absolute', top: 2, right: -5, zIndex: 10 },
+	starButtonInner: { justifyContent: 'flex-start', alignItems: 'center' },
+	starOuterIcon: { position: platformIOS() ? 'absolute' : 'relative', zIndex: 10, backgroundColor: 'rgba(0,0,0,0)' },
+	starInnerIcon: { position: 'absolute', zIndex: platformIOS() ? 5 : 15, marginTop: 3 },
 });
 
-export default ConferenceDetailView;
+export default ActualConferenceDetailView;

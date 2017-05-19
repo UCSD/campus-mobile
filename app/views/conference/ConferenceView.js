@@ -2,15 +2,26 @@ import React, { Component } from 'react';
 import {
 	View,
 	StyleSheet,
-	Platform,
-	TouchableOpacity,
-	Text
+	Text,
 } from 'react-native';
-
 import logger from '../../util/logger';
 import css from '../../styles/css';
 import ConferenceListView from './ConferenceListView';
 import { platformIOS } from '../../util/general';
+import {
+	COLOR_PRIMARY,
+	COLOR_LGREY,
+	COLOR_WHITE,
+	COLOR_MGREY,
+} from '../../styles/ColorConstants';
+import {
+	TAB_BAR_HEIGHT,
+	WINDOW_WIDTH,
+	NAVIGATOR_HEIGHT,
+	IOS_MARGIN_BOTTOM,
+} from '../../styles/LayoutConstants';
+import Touchable from '../common/Touchable';
+
 
 export default class ConferenceView extends Component {
 
@@ -37,7 +48,7 @@ export default class ConferenceView extends Component {
 	render() {
 		return (
 			<View
-				style={[css.main_container, styles.greybg]}
+				style={[styles.main_container, styles.greybg]}
 			>
 				<ConferenceListView
 					style={styles.conferenceListView}
@@ -55,45 +66,42 @@ export default class ConferenceView extends Component {
 }
 
 const FakeTabBar = ({ personal, handleFullPress, handleMinePress }) => (
-	<View style={ platformIOS ? styles.tabBarIOS : styles.tabBarAndroid }>
+	<View style={styles.tabBar}>
 		<View
 			style={styles.buttonContainer}
 		>
-			<TouchableOpacity
-				style={styles.button}
+			<Touchable
+				style={personal ? styles.plainButton : styles.selectedButton}
 				onPress={() => handleFullPress()}
 			>
 				<Text
 					style={personal ? styles.plainText : styles.selectedText}
 				>
-					Full
+					Full Schedule
 				</Text>
-			</TouchableOpacity>
-			<TouchableOpacity
-				style={styles.button}
+			</Touchable>
+			<Touchable
+				style={personal ? styles.selectedButton : styles.plainButton}
 				onPress={() => handleMinePress()}
 			>
 				<Text
 					style={personal ? styles.selectedText : styles.plainText}
 				>
-					Mine
+					My Schedule
 				</Text>
-			</TouchableOpacity>
+			</Touchable>
 		</View>
 	</View>
 );
 
-const NavigatorIOSHeight = 58,
-	  NavigatorAndroidHeight = 44,
-	  TabBarHeight = 40;
-
 const styles = StyleSheet.create({
-	conferenceListView: { marginBottom: TabBarHeight, flexGrow: 1 },
-	greybg: { backgroundColor: '#F9F9F9' },
-	buttonContainer: { flex: 1, flexDirection: 'row' },
-	button: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-	selectedText: { fontSize: 18 },
-	plainText: { fontSize: 18, opacity: 0.5 },
-	tabBarIOS: { marginTop: -TabBarHeight, borderTopWidth: 1, borderColor: '#DADADA', backgroundColor: '#FFF', height: TabBarHeight },
-	tabBarAndroid: { borderBottomWidth: 1, borderColor: '#DADADA', backgroundColor: '#FFF', height: TabBarHeight },
+	main_container: { flex: 1, backgroundColor: COLOR_MGREY, marginTop: NAVIGATOR_HEIGHT },
+	conferenceListView: { flex: 1 },
+	greybg: { backgroundColor: COLOR_LGREY },
+	buttonContainer: { flex: 1, flexDirection: 'row', alignItems: 'center' },
+	selectedButton: { flex: 1, height: TAB_BAR_HEIGHT, alignItems: 'center', justifyContent: 'center', backgroundColor: COLOR_PRIMARY },
+	plainButton: { flex: 1, height: TAB_BAR_HEIGHT, alignItems: 'center', justifyContent: 'center', backgroundColor: COLOR_WHITE },
+	selectedText: { textAlign: 'center', fontSize: 18, color: 'white' },
+	plainText: { textAlign: 'center', fontSize: 18, opacity: 0.5 },
+	tabBar: { borderTopWidth: 1, borderColor: '#DADADA', backgroundColor: COLOR_WHITE, height: TAB_BAR_HEIGHT },
 });

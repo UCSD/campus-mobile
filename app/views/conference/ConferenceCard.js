@@ -12,19 +12,22 @@ import ConferenceListView from './ConferenceListView';
 import { getMaxCardWidth, getCampusPrimary } from '../../util/general';
 import Touchable from '../common/Touchable';
 
-const ConferenceCard = ({ conference, saved }) => (
+
+const ConferenceCard = ({ conference, saved, hideCard }) => (
 	<View>
 		{ (saved.length < 1) ?
 			(
 				<BannerCard
 					image={conference.logo}
 					onPress={() => Actions.ConferenceView()}
+					onClose={() => hideCard('conference')}
 				/>
 			) :
 			(
 				<Card
 					title={conference.name}
 					header={conference.logo}
+					id="conference"
 				>
 					<View
 						style={{ flex: 1, width: getMaxCardWidth() }}

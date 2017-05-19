@@ -18,6 +18,7 @@ class DiningCardContainer extends CardComponent {
 		// todo: use location permission
 		return (
 			<DataListCard
+				id="dining"
 				title="Dining"
 				data={diningData}
 				item={'DiningItem'}

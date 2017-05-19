@@ -19,8 +19,8 @@ import QuicklinksCardContainer from './quicklinks/QuicklinksCardContainer';
 import NewsCardContainer from './news/NewsCardContainer';
 import DiningCardContainer from './dining/DiningCardContainer';
 import ConferenceCardContainer from './conference/ConferenceCardContainer';
-import SurveyCardContainer from './survey/SurveyCardContainer';
-import ScheduleCard from './schedule/ScheduleCard';
+//import SurveyCardContainer from './survey/SurveyCardContainer';
+//import ScheduleCard from './schedule/ScheduleCard';
 
 import { platformAndroid } from '../util/general';
 
@@ -76,13 +76,15 @@ class Home extends React.Component {
 			activeCards.push(<ScheduleCard key={'schedule'} />);
 		}
 		activeCards.push(<SurveyCardContainer key={'survey'} />);*/
-		activeCards.push(<ConferenceCardContainer key={'conference'} />);
 
 		for (let i = 0; i < this.props.cardOrder.length; ++i) {
 			const key = this.props.cardOrder[i];
 
 			if (this.props.cards[key].active) {
 				switch (key) {
+				case 'conference':
+					card = <ConferenceCardContainer key={'conference'} />;
+					break;
 				case 'weather':
 					card = (<WeatherCardContainer key={'weather'} />);
 					break;

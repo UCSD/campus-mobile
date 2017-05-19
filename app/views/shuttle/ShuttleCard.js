@@ -58,7 +58,6 @@ const cardBody = doPRM(83) + (2 * doPRM(20)) + doPRM(26) + 20; // top + margin +
 const styles = StyleSheet.create({
 	add_container: { width: getMaxCardWidth(), backgroundColor: '#F9F9F9', alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4, paddingVertical: 8, borderTopWidth: 1, borderBottomWidth: 1, borderColor: '#DDD' },
 	add_label: { fontSize: 20, color: getCampusPrimary(), fontWeight: '300' },
-	shuttle_card_row_center: { alignItems: 'center', justifyContent: 'center', width: getMaxCardWidth() },
 	shuttle_card_loader: { height: nextArrivals + cardHeader + cardBody },
 	shuttlecard_loading_fail: { marginHorizontal: doPRM(16), marginTop: doPRM(40), marginBottom: doPRM(60) },
 	fs18: { fontSize: doPRM(18) },

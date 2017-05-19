@@ -20,7 +20,11 @@ import { getMaxCardWidth } from '../../util/general';
 // View for user to manage preferences, including which cards are visible
 export default class CardPreferences extends Component {
 	componentWillMount() {
-		this.setState({ cardObject: this.getCardObject() });
+		this.setState({ cardObject: this.getCardObject(this.props.cards, this.props.cardOrder) });
+	}
+
+	componentWillReceiveProps(nextProps) {
+		this.setState({ cardObject: this.getCardObject(nextProps.cards, nextProps.cardOrder) });
 	}
 
 	setCardState = (id, state) => {
@@ -28,13 +32,13 @@ export default class CardPreferences extends Component {
 		this.props.updateScroll(); // reset homeview scroll
 	}
 
-	getCardObject = () => {
+	getCardObject = (cards, cardOrder) => {
 		const cardArray = [];
 		const cardObject = {};
-		for (let i = 0; i < this.props.cardOrder.length; ++i) {
-			const key = this.props.cardOrder[i];
-			cardArray.push(this.props.cards[key]);
-			cardObject[i] = this.props.cards[key];
+		for (let i = 0; i < cardOrder.length; ++i) {
+			const key = cardOrder[i];
+			cardArray.push(cards[key]);
+			cardObject[i] = cards[key];
 		}
 		return cardObject;
 	}

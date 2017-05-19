@@ -5,6 +5,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 
 import AppSettings from '../AppSettings';
 import css from '../styles/css';
+import { COLOR_PRIMARY } from '../styles/ColorConstants';
 
 const propTypes = {
 	selected: PropTypes.bool,
@@ -32,24 +33,12 @@ const TabIcons = function (props) {
 		tabIconPack = 'FontAwesome';
 		tabIconName = 'gear';
 		tabIconText = 'Settings';
-	} else if (props.title === 'Full') {
-		return (
-			<Text style={props.selected ? css.CAMPUS_PRIMARY : { opacity: 0.5 }}>
-				Full
-			</Text>
-		);
-	} else if (props.title === 'Mine') {
-		return (
-			<Text style={props.selected ? css.CAMPUS_PRIMARY : { opacity: 0.5 }}>
-				Mine
-			</Text>
-		);
 	}
 
 	return (
 		<View style={[css.tabContainer, props.selected ? css.tabContainerBottom : null]}>
-			{tabIconPack === 'FontAwesome' ? (<FontAwesome style={[css.tabIcon, props.selected ? css.CAMPUS_PRIMARY : null]} name={tabIconName} size={24} />) : null }
-			{tabIconPack === 'Entypo' ? (<Entypo style={[css.tabIcon, props.selected ? css.CAMPUS_PRIMARY : null]} name={tabIconName} size={24} />) : null }
+			{tabIconPack === 'FontAwesome' ? (<FontAwesome style={[css.tabIcon, props.selected ? { color: COLOR_PRIMARY } : null]} name={tabIconName} size={24} />) : null }
+			{tabIconPack === 'Entypo' ? (<Entypo style={[css.tabIcon, props.selected ? { color: COLOR_PRIMARY } : null]} name={tabIconName} size={24} />) : null }
 		</View>
 	);
 };

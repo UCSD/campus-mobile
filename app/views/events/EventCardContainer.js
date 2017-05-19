@@ -40,6 +40,7 @@ class EventCardContainer extends CardComponent {
 
 		return (
 			<DataListCard
+				id="events"
 				title="Events"
 				data={eventsData}
 				item={'EventItem'}

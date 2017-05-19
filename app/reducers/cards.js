@@ -2,6 +2,7 @@
 
 const initialState = {
 	cards: {
+		conference: 		{ id: 'conference', active: true, name: 'Conference', component: 'ConferenceCard' },
 		weather: 		{ id: 'weather', active: true, name: 'Weather', component: 'WeatherCard' },
 		shuttle: 		{ id: 'shuttle', active: true, name: 'Shuttle', component: 'ShuttleCard' },
 		dining: 		{ id: 'dining', active: true, name: 'Dining', component: 'DiningCard' },
@@ -9,8 +10,7 @@ const initialState = {
 		quicklinks: 	{ id: 'quicklinks', active: true, name: 'Links', component: 'QuicklinksCard' },
 		news: 		{ id: 'news', active: true, name: 'News', component: 'NewsCard' },
 	},
-	cardOrder: ['weather', 'shuttle', 'dining', 'events', 'quicklinks', 'news'],
-	// 'map': 			{ active: true, order: 7, name: 'Map', component: 'SearchCard' }
+	cardOrder: ['conference', 'weather', 'shuttle', 'dining', 'events', 'quicklinks', 'news'],
 };
 
 function cards(state = initialState, action) {
@@ -23,13 +23,25 @@ function cards(state = initialState, action) {
 		return newState;
 	case 'SHOW_CARD': {
 		if (newState.cards[action.id] && !newState.cards[action.id].active) {
-			newState.cards[action.id] = Object.assign({}, newState.cards[action.id], { active: true });
+			return {
+				...state,
+				cards: {
+					...state.cards,
+					[action.id]: { ...state.cards[action.id], active: true }
+				}
+			};
 		}
 		return newState;
 	}
 	case 'HIDE_CARD':
 		if (newState.cards[action.id] && newState.cards[action.id].active) {
-			newState.cards[action.id] = Object.assign({}, newState.cards[action.id], { active: false });
+			return {
+				...state,
+				cards: {
+					...state.cards,
+					[action.id]: { ...state.cards[action.id], active: false }
+				}
+			};
 		}
 		return newState;
 	case 'SET_CARD_ORDER':
