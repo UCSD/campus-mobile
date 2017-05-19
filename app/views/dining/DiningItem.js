@@ -2,38 +2,60 @@ import React from 'react';
 import {
 	View,
 	Text,
-	TouchableHighlight,
+	StyleSheet,
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Actions } from 'react-native-router-flux';
 
-const css = require('../../styles/css');
+import Touchable from '../common/Touchable';
+import {
+	COLOR_PRIMARY,
+	COLOR_LGREY,
+	COLOR_MGREY,
+	COLOR_DGREY
+} from '../../styles/ColorConstants';
+
 const general = require('../../util/general');
 
 const DiningItem = ({ data }) => (
-	<View style={css.dc_locations_row}>
-		<TouchableHighlight style={css.dc_locations_row_left} underlayColor={'rgba(200,200,200,.1)'} onPress={() => Actions.DiningDetail({ data })}>
+	<View style={styles.rowContainer}>
+		<Touchable
+			style={styles.rowContainerLeft}
+			onPress={() => Actions.DiningDetail({ data })}
+		>
 			<View>
-				<Text style={css.dc_locations_title}>{data.name}</Text>
-				<Text style={css.dc_locations_hours}>{data.regularHours}</Text>
+				<Text style={styles.titleText}>{data.name}</Text>
+				<Text style={styles.hoursText}>{data.regularHours}</Text>
 				{data.specialHours ? (
-					<Text style={css.dc_locations_spec_hours}>Special Hours:{'\n'}{data.specialHours}</Text>
+					<Text style={styles.specialText}>Special Hours:{'\n'}{data.specialHours}</Text>
 				) : null }
 			</View>
-		</TouchableHighlight>
+		</Touchable>
 
 		{data.coords.lat !== 0 ? (
-			<TouchableHighlight style={css.dc_locations_row_right} underlayColor={'rgba(200,200,200,.1)'} onPress={() => general.gotoNavigationApp(data.coords.lat, data.coords.lon)}>
-				<View style={css.dl_dir_traveltype_container}>
-					<Icon name="md-walk" size={32} color="#182B49" />
+			<Touchable
+				style={styles.rowContainerRight}
+				onPress={() => general.gotoNavigationApp(data.coords.lat, data.coords.lon)}
+			>
+				<View style={styles.dl_dir_traveltype_container}>
+					<Icon name="md-walk" size={32} color={COLOR_PRIMARY} />
 					{data.distanceMilesStr ? (
-						<Text style={css.dl_dir_eta}>{data.distanceMilesStr}</Text>
+						<Text style={styles.dl_dir_eta}>{data.distanceMilesStr}</Text>
 					) : null }
 				</View>
-			</TouchableHighlight>
+			</Touchable>
 		) : null }
 	</View>
 );
+
+const styles = StyleSheet.create({
+	rowContainer: { backgroundColor: COLOR_LGREY, flexDirection: 'row', paddingBottom: 10, paddingTop: 10, borderBottomWidth: 1, borderBottomColor: COLOR_MGREY },
+	rowContainerLeft: { flex: 6, justifyContent: 'center' },
+	titleText: { fontSize: 20, color: COLOR_PRIMARY },
+	hoursText: { fontSize: 12, color: COLOR_DGREY, paddingTop: 1 },
+	specialText: { fontSize: 12, color: COLOR_DGREY, paddingTop: 4 },
+	rowContainerRight: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+});
 
 export default DiningItem;
