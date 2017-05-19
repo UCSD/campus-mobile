@@ -8,7 +8,6 @@ import logger from '../../util/logger';
 
 const NewsCardContainer = ({ newsData }) => {
 	logger.ga('Card Mounted: News');
-	const { newsData } = this.props;
 	if (newsData) {
 		newsData.forEach((element) => {
 			element.subtext = moment(element.date).format('MMM Do, YYYY');
