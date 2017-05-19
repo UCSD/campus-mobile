@@ -9,11 +9,7 @@ function news(state = initialState, action) {
 	switch (action.type) {
 	case 'SET_NEWS': {
 		newState.data = action.news;
-
-		return newState;
-	}
-	case 'SET_NEWS_UPDATE': {
-		newState.lastUpdated = action.nowTime;
+		newState.lastUpdated = new Date().getTime();
 
 		return newState;
 	}

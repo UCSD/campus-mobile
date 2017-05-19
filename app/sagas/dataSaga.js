@@ -7,12 +7,14 @@ import { fetchConference } from '../services/conferenceService';
 import { fetchSurveyIds, fetchSurveyById } from '../services/surveyService';
 import LinksService from '../services/quicklinksService';
 import EventService from '../services/eventService';
+import NewsService from '../services/newsService';
 import {
 	WEATHER_API_TTL,
 	SURF_API_TTL,
 	CONFERENCE_TTL,
 	QUICKLINKS_API_TTL,
-	EVENTS_API_TTL
+	EVENTS_API_TTL,
+	NEWS_API_TTL
 } from '../AppSettings';
 
 const getWeather = (state) => (state.weather);
@@ -21,6 +23,7 @@ const getConference = (state) => (state.conference);
 const getLinks = (state) => (state.links);
 const getSurvey = (state) => (state.survey);
 const getEvents = (state) => (state.events);
+const getNews = (state) => (state.news);
 
 function* watchData() {
 	while (true) {
@@ -30,6 +33,7 @@ function* watchData() {
 			yield call(updateConference);
 			yield call(updateLinks);
 			yield call(updateEvents);
+			yield call(updateNews);
 			yield call(updateSurveys);
 			yield put({ type: 'UPDATE_DINING' });
 		} catch (err) {
@@ -117,6 +121,21 @@ function* updateEvents() {
 		// Fetch for new data
 		const events = yield call(EventService.FetchEvents);
 		yield put({ type: 'SET_EVENTS', events });
+	}
+}
+
+function* updateNews() {
+	const { lastUpdated, data } = yield select(getNews);
+	const nowTime = new Date().getTime();
+	const timeDiff = nowTime - lastUpdated;
+	const ttl = NEWS_API_TTL * 1000;
+
+	if (timeDiff < ttl && data) {
+		// Do nothing, no need to fetch new data
+	} else {
+		// Fetch for new data
+		const news = yield call(NewsService.FetchNews);
+		yield put({ type: 'SET_NEWS', news });
 	}
 }
 
