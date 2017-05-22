@@ -17,7 +17,7 @@ function* watchLocation() {
 				yield put({ type: 'SET_POSITION', position });
 				const closestStop = yield call(getClosestStop, position); // CHANGE TO SAGA
 				yield put({ type: 'SET_CLOSEST_STOP', closestStop });
-				yield put({ type: 'UPDATE_DINING', position });
+				// yield put({ type: 'UPDATE_DINING', position });
 			} else {
 				const perm = yield call(getPermission, 'location');
 				yield put({ type: 'SET_PERMISSION', permission: perm });

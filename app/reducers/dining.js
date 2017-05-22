@@ -1,6 +1,6 @@
 const initialState = {
 	data: null,
-	lastUpdated: new Date().getTime(),
+	lastUpdated: 0,
 };
 
 function dining(state = initialState, action) {
@@ -9,11 +9,7 @@ function dining(state = initialState, action) {
 	switch (action.type) {
 	case 'SET_DINING': {
 		newState.data = action.data;
-
-		return newState;
-	}
-	case 'SET_DINING_UPDATE': {
-		newState.lastUpdated = action.nowTime;
+		newState.lastUpdated = new Date().getTime();
 
 		return newState;
 	}

@@ -51,6 +51,17 @@ class Home extends React.Component {
 		}
 	}
 
+	// Don't re-render from scroll update
+	shouldComponentUpdate(prevProps, prevState) {
+		if (prevProps.scene.sceneKey !== 'Home' &&
+			prevProps.scene.sceneKey !== 'tabbar' &&
+			this.props.scene.sceneKey === 'Home') {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	componentDidUpdate(prevProps, prevState) {
 		// Handle scroll when switching into Home View but it doesn't re-mount
 		if (prevProps.scene.sceneKey !== 'Home' &&
@@ -69,6 +80,7 @@ class Home extends React.Component {
 	}
 
 	_getCards = () => {
+		console.log('hello');
 		const activeCards = [];
 		let card;
 
