@@ -1,10 +1,10 @@
 import React, { PropTypes } from 'react';
 import {
 	View,
+	StyleSheet
 } from 'react-native';
 
 import WeatherDay from './WeatherDay';
-import css from '../../styles/css';
 
 /**
  * Presentational Component for WeatherWeek row
@@ -16,7 +16,7 @@ import css from '../../styles/css';
  * @return {JSX} Presentational Component for WeatherCard
  */
 const WeatherWeek = ({ weatherData }) => (
-	<View style={css.wc_botrow}>
+	<View style={styles.weekContainer}>
 		{weatherData.data.map((val,index) =>
 			<WeatherDay key={index} data={val} />
 		)}
@@ -26,5 +26,9 @@ const WeatherWeek = ({ weatherData }) => (
 WeatherWeek.propTypes = {
 	weatherData: PropTypes.object,
 };
+
+const styles = StyleSheet.create({
+	weekContainer: { flexDirection: 'row', padding: 20 },
+});
 
 export default WeatherWeek;

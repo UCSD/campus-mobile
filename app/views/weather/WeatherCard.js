@@ -11,9 +11,12 @@ import Card from '../card/Card';
 
 import WeatherWeek from './WeatherWeek';
 import {
-	getMaxCardWidth,
-} from '../../util/general';
-
+	COLOR_MGREY,
+	COLOR_DGREY,
+} from '../../styles/ColorConstants';
+import {
+	MAX_CARD_WIDTH
+} from '../../styles/LayoutConstants';
 import AppSettings from '../../AppSettings';
 
 /**
@@ -38,18 +41,18 @@ const WeatherCard = ({ weatherData, actionButton }) => (
 	<Card id="weather" title="Weather">
 		{weatherData ? (
 			<View>
-				<View style={styles.wc_toprow}>
-					<View style={styles.wc_toprow_left}>
-						<Text style={styles.wc_current_temp}>
+				<View style={styles.topRowContainer}>
+					<View style={styles.topLeftContainer}>
+						<Text style={styles.tempText}>
 							{ weatherData.currently.temperature }&deg; in San Diego
 						</Text>
-						<Text style={styles.wc_current_summary}>
+						<Text style={styles.summaryText}>
 							{ weatherData.currently.summary }
 						</Text>
 					</View>
-					<View style={styles.wc_toprow_right}>
+					<View style={styles.topRightContainer}>
 						<Image
-							style={styles.wc_toprow_icon}
+							style={styles.topIcon}
 							source={{ uri: AppSettings.WEATHER_ICON_BASE_URL + weatherData.currently.icon + '.png' }}
 						/>
 					</View>
@@ -59,7 +62,7 @@ const WeatherCard = ({ weatherData, actionButton }) => (
 				{actionButton}
 			</View>
 		) : (
-			<View style={[styles.cardcenter, styles.wc_loading_height]}>
+			<View style={styles.loadingContainer}>
 				<ActivityIndicator size="large" />
 			</View>
 		)}
@@ -72,14 +75,13 @@ WeatherCard.propTypes = {
 };
 
 const styles = StyleSheet.create({
-	wc_toprow: { flexDirection: 'row', borderBottomWidth: 1, borderColor: '#EEE', justifyContent: 'center', alignItems: 'center', width: getMaxCardWidth(), paddingHorizontal: 14 },
-	wc_toprow_left: { flex: 4 },
-	wc_current_temp: { fontSize: 22, fontWeight: '300' },
-	wc_current_summary: { fontSize: 15, color: '#444', paddingTop: 10, fontWeight: '300' },
-	wc_toprow_right: { flex: 1 },
-	wc_toprow_icon: { width: 68, height: 68 },
-	cardcenter: { alignItems: 'center', justifyContent: 'center', width: getMaxCardWidth() },
-	wc_loading_height: { height: 270 },
+	topRowContainer: { flexDirection: 'row', borderBottomWidth: 1, borderColor: COLOR_MGREY, justifyContent: 'center', alignItems: 'center', width: MAX_CARD_WIDTH, paddingHorizontal: 14 },
+	topLeftContainer: { flex: 4 },
+	tempText: { fontSize: 22, fontWeight: '300' },
+	summaryText: { fontSize: 15, color: COLOR_DGREY, paddingTop: 10, fontWeight: '300' },
+	topRightContainer: { flex: 1 },
+	topIcon: { width: 68, height: 68 },
+	loadingContainer: { alignItems: 'center', justifyContent: 'center', width: MAX_CARD_WIDTH },
 });
 
 export default WeatherCard;
