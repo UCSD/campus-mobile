@@ -4,6 +4,7 @@ import FAIcon from 'react-native-vector-icons/FontAwesome';
 import { connect } from 'react-redux';
 import ElevatedView from 'react-native-elevated-view';
 
+import { hideCard } from '../../actions/cards'; // TODO: Use saga
 import CardHeader from './CardHeader';
 import CardMenu from './CardMenu';
 import { getMaxCardWidth } from '../../util/general';
@@ -80,9 +81,10 @@ class ScrollCard extends React.Component {
 						title={this.props.title}
 						menu={
 							<CardMenu
-								hideMenu={this.propshideMenu}
+								hideCard={this.props.hide}
 								cardRefresh={this.props.cardRefresh}
 								extraActions={this.props.extraActions}
+								id={this.props.id}
 							/>
 						}
 					/>
@@ -125,7 +127,15 @@ const PageIndicator = ({ numDots, dotIndex }) => {
 	);
 };
 
-export default connect()(ScrollCard);
+const mapDispatchToProps = (dispatch) => (
+	{
+		hide: (id) => {
+			dispatch(hideCard(id));
+		}
+	}
+);
+
+export default connect(null, mapDispatchToProps)(ScrollCard);
 
 const styles = StyleSheet.create({
 	card_main: { backgroundColor: COLOR_LGREY, margin: 6, marginBottom: 0, alignItems: 'center', justifyContent: 'center', },
