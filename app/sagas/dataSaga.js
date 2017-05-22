@@ -69,15 +69,24 @@ function* updateConference() {
 	const timeDiff = nowTime - lastUpdated;
 	const ttl = CONFERENCE_TTL * 1000;
 
-	if (timeDiff < ttl && data) {
-		// Do nothing, no need to fetch new data
-	} else {
+	if (timeDiff > ttl) {
 		const conference = yield call(fetchConference);
 		yield put({ type: 'SET_CONFERENCE', conference });
 
 		// Schedule has probably changed, so clear saved
-		if (data && Object.keys(data).length !== Object.keys(conference)) {
+		if (data && Object.keys(data).length !== Object.keys(conference.conference.schedule)) {
 			yield put({ type: 'CHANGED_CONFERENCE_SAVED', saved: [] });
+		}
+
+		if (conference.conference['end-time'] < nowTime) {
+			// Turn off card
+			// TODO: some logic to disable card too
+			yield put({ type: 'UPDATE_CARD_STATE', id: 'conference', state: false });
+		} else if (conference.conference['start-time'] > nowTime) {
+			// clear saved
+			yield put({ type: 'CHANGED_CONFERENCE_SAVED', saved: [] });
+			// turn on card
+			yield put({ type: 'UPDATE_CARD_STATE', id: 'conference', state: true });
 		}
 	}
 }
@@ -86,9 +95,9 @@ function* updateLinks() {
 	const { lastUpdated, data } = yield select(getLinks);
 	const nowTime = new Date().getTime();
 	const timeDiff = nowTime - lastUpdated;
-	const linksTTL = QUICKLINKS_API_TTL * 1000;
+	const ttl = QUICKLINKS_API_TTL * 1000;
 
-	if ((timeDiff < linksTTL) && data) {
+	if ((timeDiff < ttl) && data) {
 		// Do nothing, no need to fetch new data
 	} else {
 		// Fetch for new data
