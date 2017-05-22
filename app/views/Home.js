@@ -53,9 +53,7 @@ class Home extends React.Component {
 
 	// Don't re-render from scroll update
 	shouldComponentUpdate(prevProps, prevState) {
-		if (prevProps.scene.sceneKey !== 'Home' &&
-			prevProps.scene.sceneKey !== 'tabbar' &&
-			this.props.scene.sceneKey === 'Home') {
+		if (this.props.lastScroll === prevProps.lastScroll) {
 			return true;
 		} else {
 			return false;
@@ -160,10 +158,9 @@ function mapStateToProps(state, props) {
 	return {
 		cards: state.cards.cards,
 		cardOrder: state.cards.cardOrder,
-		locationPermission: state.location.permission,
 		scene: state.routes.scene,
 		lastScroll: state.home.lastScroll,
-		loggedIn: state.user.isLoggedIn
+		// loggedIn: state.user.isLoggedIn
 	};
 }
 
