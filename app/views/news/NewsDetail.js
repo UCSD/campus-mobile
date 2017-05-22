@@ -4,56 +4,66 @@ import {
 	Text,
 	ScrollView,
 	Linking,
-	TouchableHighlight,
 	Dimensions,
+	StyleSheet
 } from 'react-native';
 import moment from 'moment';
 
 import SafeImage from '../common/SafeImage';
 import css from '../../styles/css';
 import logger from '../../util/logger';
+import Touchable from '../common/Touchable';
+import {
+	COLOR_PRIMARY,
+	COLOR_WHITE
+} from '../../styles/ColorConstants';
+import {
+	WINDOW_WIDTH,
+} from '../../styles/LayoutConstants';
 
 const NewsDetail = ({ data }) => {
 	logger.ga('View Loaded: News Detail: ' + data.title);
 
 	return (
-		<View style={[css.main_container, css.whitebg]}>
-			<ScrollView contentContainerStyle={css.scroll_default}>
+		<ScrollView style={[css.main_container, css.whitebg]}>
+			{data.image_lg ? (
+				<SafeImage
+					source={{ uri: data.image_lg }}
+					style={{
+						width: Dimensions.get('window').width,
+						height: 200
+					}}
+					resizeMode={'contain'}
+				/>
+			) : null }
 
-				{data.image_lg ? (
-					<SafeImage
-						source={{ uri: data.image_lg }}
-						style={{
-							width: Dimensions.get('window').width,
-							height: 200
-						}}
-						resizeMode={'contain'}
-					/>
+			<View style={styles.detailContainer}>
+				<Text style={styles.titleText}>{data.title}</Text>
+				<Text style={styles.dateText}>
+					{moment(styles.date).format('MMM Do, YYYY')}
+				</Text>
+				<Text style={styles.descText}>{data.description}</Text>
+				{data.link ? (
+					<Touchable
+						onPress={() => Linking.openURL(data.link)}
+						style={styles.touchable}
+					>
+						<Text style={styles.readMoreText}>Read the full article</Text>
+					</Touchable>
 				) : null }
 
-				<View style={css.news_detail_container}>
-					<View style={css.eventdetail_top_right_container}>
-						<Text style={css.eventdetail_eventname}>{data.title}</Text>
-						<Text style={css.eventdetail_eventdate}>
-							{moment(data.date).format('MMM Do, YYYY')}
-						</Text>
-					</View>
-
-					<Text style={css.eventdetail_eventdescription}>{data.description}</Text>
-
-					{data.link ? (
-						<TouchableHighlight underlayColor={'rgba(200,200,200,.1)'} onPress={() => Linking.openURL(data.link)}>
-							<View style={css.eventdetail_readmore_container}>
-								<Text style={css.eventdetail_readmore_text}>Read the full article</Text>
-							</View>
-						</TouchableHighlight>
-					) : null }
-
-				</View>
-
-			</ScrollView>
-		</View>
+			</View>
+		</ScrollView>
 	);
 };
+
+const styles = StyleSheet.create({
+	detailContainer: { width: WINDOW_WIDTH, paddingHorizontal: 18, paddingVertical: 14 },
+	titleText: { fontWeight: '400', fontSize: 22, color: COLOR_PRIMARY },
+	dateText: { fontSize: 11, color: '#333', paddingTop: 14 },
+	descText: { lineHeight: 18, color: '#111', fontSize: 14, paddingTop: 14 },
+	touchable: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR_PRIMARY, borderRadius: 3, marginTop: 20, padding: 10 },
+	readMoreText: { fontSize: 16, color: COLOR_WHITE },
+});
 
 export default NewsDetail;
