@@ -15,7 +15,9 @@ import logger from '../../util/logger';
 import Touchable from '../common/Touchable';
 import {
 	COLOR_PRIMARY,
-	COLOR_WHITE
+	COLOR_WHITE,
+	COLOR_DGREY,
+	COLOR_BLACK
 } from '../../styles/ColorConstants';
 import {
 	WINDOW_WIDTH,
@@ -60,8 +62,8 @@ const NewsDetail = ({ data }) => {
 const styles = StyleSheet.create({
 	detailContainer: { width: WINDOW_WIDTH, paddingHorizontal: 18, paddingVertical: 14 },
 	titleText: { fontWeight: '400', fontSize: 22, color: COLOR_PRIMARY },
-	dateText: { fontSize: 11, color: '#333', paddingTop: 14 },
-	descText: { lineHeight: 18, color: '#111', fontSize: 14, paddingTop: 14 },
+	dateText: { fontSize: 11, color: COLOR_DGREY, paddingTop: 14 },
+	descText: { lineHeight: 18, color: COLOR_BLACK, fontSize: 14, paddingTop: 14 },
 	touchable: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR_PRIMARY, borderRadius: 3, marginTop: 20, padding: 10 },
 	readMoreText: { fontSize: 16, color: COLOR_WHITE },
 });
