@@ -4,7 +4,6 @@ import {
 	Text,
 	ScrollView,
 	Linking,
-	Dimensions,
 	StyleSheet
 } from 'react-native';
 import moment from 'moment';
@@ -31,10 +30,7 @@ const NewsDetail = ({ data }) => {
 			{data.image_lg ? (
 				<SafeImage
 					source={{ uri: data.image_lg }}
-					style={{
-						width: Dimensions.get('window').width,
-						height: 200
-					}}
+					style={styles.image}
 					resizeMode={'contain'}
 				/>
 			) : null }
@@ -60,6 +56,7 @@ const NewsDetail = ({ data }) => {
 };
 
 const styles = StyleSheet.create({
+	image: { width: WINDOW_WIDTH, height: 200 },
 	detailContainer: { width: WINDOW_WIDTH, paddingHorizontal: 18, paddingVertical: 14 },
 	titleText: { fontWeight: '400', fontSize: 22, color: COLOR_PRIMARY },
 	dateText: { fontSize: 11, color: COLOR_DGREY, paddingTop: 14 },
