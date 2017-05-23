@@ -2,7 +2,7 @@
 
 const initialState = {
 	cards: {
-		conference: 		{ id: 'conference', active: false, name: 'Conference', component: 'ConferenceCard' },
+		conference: 		{ id: 'conference', active: false, autoActivated: false, name: 'Conference', component: 'ConferenceCard' },
 		weather: 		{ id: 'weather', active: true, name: 'Weather', component: 'WeatherCard' },
 		shuttle: 		{ id: 'shuttle', active: true, name: 'Shuttle', component: 'ShuttleCard' },
 		dining: 		{ id: 'dining', active: true, name: 'Dining', component: 'DiningCard' },
@@ -19,6 +19,10 @@ function cards(state = initialState, action) {
 	switch (action.type) {
 	case 'SET_CARD_STATE':
 		newState.cards[action.id] = Object.assign({}, newState.cards[action.id], { active: action.active });
+
+		return newState;
+	case 'SET_AUTOACTIVATED_STATE':
+		newState.cards[action.id] = Object.assign({}, newState.cards[action.id], { autoActivated: action.active });
 
 		return newState;
 	case 'SHOW_CARD': {

@@ -78,12 +78,15 @@ function* updateConference() {
 		if (conference['start-time'] <= nowTime &&
 			conference['end-time'] >= nowTime) {
 			// set new conf data
-			if (data === null || conference.name !== data.name) {
+
+			if (cards.conference.autoActivated === false) {
 				// Initialize Conference for first time use
 				// wipe saved data
 				yield put({ type: 'CHANGED_CONFERENCE_SAVED', saved: [] });
 				// set active to true
 				yield put({ type: 'UPDATE_CARD_STATE', id: 'conference', state: true });
+				// set autoActivated to true
+				yield put({ type: 'UPDATE_AUTOACTIVATED_STATE', id: 'conference', state: true });
 			} else if (cards.conference.active) {
 				// wipe saved data if needed
 				// TODO: actual comparator instead of length equality?
@@ -94,25 +97,18 @@ function* updateConference() {
 				// do nothing since card is turned off
 			}
 		} else {
-			// set active to false
-			yield put({ type: 'UPDATE_CARD_STATE', id: 'conference', state: false });
-		}
-		/*
-		// Schedule has probably changed, so clear saved
-		if (data && Object.keys(data).length !== Object.keys(conference.schedule)) {
-			yield put({ type: 'CHANGED_CONFERENCE_SAVED', saved: [] });
-		}
 
-		if (conference['end-time'] < nowTime) {
-			// Turn off card
-			// TODO: some logic to disable card too
-			yield put({ type: 'UPDATE_CARD_STATE', id: 'conference', state: false });
-		} else if (conference['start-time'] > nowTime) {
-			// clear saved
-			yield put({ type: 'CHANGED_CONFERENCE_SAVED', saved: [] });
-			// turn on card
-			yield put({ type: 'UPDATE_CARD_STATE', id: 'conference', state: true });
-		}*/
+			// Deactivate card one time when the conference is over
+			if (cards.conference.autoActivated) {
+				// set active to false
+				yield put({ type: 'UPDATE_CARD_STATE', id: 'conference', state: false });
+				// set autoActivated to false
+				yield put({ type: 'UPDATE_AUTOACTIVATED_STATE', id: 'conference', state: false });
+			} else {
+				// Auto-activated false, but manually re-enabled by user
+				// Conference is over, do nothing
+			}
+		}
 	}
 }
 
