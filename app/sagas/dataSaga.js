@@ -87,7 +87,7 @@ function* updateConference() {
 			} else if (cards.conference.active) {
 				// wipe saved data if needed
 				// TODO: actual comparator instead of length equality?
-				if (data && Object.keys(data.schedule).length !== Object.keys(conference.schedule)) {
+				if (data && Object.keys(data.schedule).length !== Object.keys(conference.schedule).length) {
 					yield put({ type: 'CHANGED_CONFERENCE_SAVED', saved: [] });
 				}
 			} else {
