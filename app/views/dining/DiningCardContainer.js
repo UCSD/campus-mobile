@@ -16,7 +16,7 @@ const DiningCardContainer = ({ diningData }) => {
 	);
 };
 
-function mapStateToProps(state, props) {
+function mapStateToProps(state) {
 	return {
 		diningData: state.dining.data,
 	};

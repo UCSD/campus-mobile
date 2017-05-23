@@ -47,16 +47,8 @@ class Home extends React.Component {
 		this._cards = [];
 
 		if (this._scrollview) {
+			console.log('scroll');
 			this._scrollview.scrollTo({ y: this.props.lastScroll, animated: false });
-		}
-	}
-
-	// Don't re-render from scroll update
-	shouldComponentUpdate(prevProps, prevState) {
-		if (this.props.lastScroll === prevProps.lastScroll) {
-			return true;
-		} else {
-			return false;
 		}
 	}
 
@@ -78,7 +70,6 @@ class Home extends React.Component {
 	}
 
 	_getCards = () => {
-		console.log('hello');
 		const activeCards = [];
 		let card;
 
