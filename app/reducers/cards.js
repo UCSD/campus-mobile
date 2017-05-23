@@ -2,7 +2,7 @@
 
 const initialState = {
 	cards: {
-		conference: 		{ id: 'conference', active: true, name: 'Conference', component: 'ConferenceCard' },
+		conference: 		{ id: 'conference', active: false, name: 'Conference', component: 'ConferenceCard' },
 		weather: 		{ id: 'weather', active: true, name: 'Weather', component: 'WeatherCard' },
 		shuttle: 		{ id: 'shuttle', active: true, name: 'Shuttle', component: 'ShuttleCard' },
 		dining: 		{ id: 'dining', active: true, name: 'Dining', component: 'DiningCard' },
