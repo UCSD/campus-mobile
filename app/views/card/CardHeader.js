@@ -23,7 +23,7 @@ const CardHeader = ({ title, menu, image }) => (
 const styles = StyleSheet.create({
 	header_container: { flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: '#DDD' },
 	header_text: { flexGrow: 1, fontSize: 26, color: '#747678', paddingLeft: 10, paddingVertical: 6 },
-	header_image: { height: 40, width: 132, margin: 3 },
+	header_image: { height: 38, width: 156, margin: 3 },
 	filler: { flexGrow: 1 },
 });
 
