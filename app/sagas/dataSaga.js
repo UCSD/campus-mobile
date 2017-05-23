@@ -18,6 +18,7 @@ const getSurf = (state) => (state.surf);
 const getConference = (state) => (state.conference);
 const getLinks = (state) => (state.links);
 const getSurvey = (state) => (state.survey);
+const getCards = (state) => (state.cards);
 
 function* watchData() {
 	while (true) {
@@ -65,6 +66,7 @@ function* updateSurf() {
 
 function* updateConference() {
 	const { lastUpdated, data } = yield select(getConference);
+	const { cards } = yield select(getCards);
 	const nowTime = new Date().getTime();
 	const timeDiff = nowTime - lastUpdated;
 	const ttl = CONFERENCE_TTL * 1000;
@@ -73,21 +75,44 @@ function* updateConference() {
 		const conference = yield call(fetchConference);
 		yield put({ type: 'SET_CONFERENCE', conference });
 
+		if (conference['start-time'] <= nowTime &&
+			conference['end-time'] >= nowTime) {
+			// set new conf data
+			if (data === null || conference.name !== data.name) {
+				// Initialize Conference for first time use
+				// wipe saved data
+				yield put({ type: 'CHANGED_CONFERENCE_SAVED', saved: [] });
+				// set active to true
+				yield put({ type: 'UPDATE_CARD_STATE', id: 'conference', state: true });
+			} else if (cards.conference.active) {
+				// wipe saved data if needed
+				// TODO: actual comparator instead of length equality?
+				if (data && Object.keys(data.schedule).length !== Object.keys(conference.schedule)) {
+					yield put({ type: 'CHANGED_CONFERENCE_SAVED', saved: [] });
+				}
+			} else {
+				// do nothing since card is turned off
+			}
+		} else {
+			// set active to false
+			yield put({ type: 'UPDATE_CARD_STATE', id: 'conference', state: false });
+		}
+		/*
 		// Schedule has probably changed, so clear saved
-		if (data && Object.keys(data).length !== Object.keys(conference.conference.schedule)) {
+		if (data && Object.keys(data).length !== Object.keys(conference.schedule)) {
 			yield put({ type: 'CHANGED_CONFERENCE_SAVED', saved: [] });
 		}
 
-		if (conference.conference['end-time'] < nowTime) {
+		if (conference['end-time'] < nowTime) {
 			// Turn off card
 			// TODO: some logic to disable card too
 			yield put({ type: 'UPDATE_CARD_STATE', id: 'conference', state: false });
-		} else if (conference.conference['start-time'] > nowTime) {
+		} else if (conference['start-time'] > nowTime) {
 			// clear saved
 			yield put({ type: 'CHANGED_CONFERENCE_SAVED', saved: [] });
 			// turn on card
 			yield put({ type: 'UPDATE_CARD_STATE', id: 'conference', state: true });
-		}
+		}*/
 	}
 }
 
