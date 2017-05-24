@@ -13,7 +13,7 @@ export function getPosition() {
 			(position) => {
 				resolve(position); },
 			(error) => {
-				logger.log('getPosition Error: ' + JSON.stringify(error));
+				//logger.log('getPosition Error: ' + JSON.stringify(error));
 				reject(error);
 			},
 			positionOptions
