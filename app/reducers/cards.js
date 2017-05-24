@@ -22,7 +22,7 @@ function cards(state = initialState, action) {
 
 		return newState;
 	case 'SET_AUTOACTIVATED_STATE':
-		newState.cards[action.id] = Object.assign({}, newState.cards[action.id], { autoActivated: action.active });
+		newState.cards[action.id] = Object.assign({}, newState.cards[action.id], { autoActivated: action.autoActivated });
 
 		return newState;
 	case 'SHOW_CARD': {

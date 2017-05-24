@@ -77,15 +77,13 @@ function* updateConference() {
 
 		if (conference['start-time'] <= nowTime &&
 			conference['end-time'] >= nowTime) {
-			// set new conf data
-
+			// Inside active conference window
 			if (cards.conference.autoActivated === false) {
 				// Initialize Conference for first time use
 				// wipe saved data
 				yield put({ type: 'CHANGED_CONFERENCE_SAVED', saved: [] });
-				// set active to true
+				// set active and autoActivated to true
 				yield put({ type: 'UPDATE_CARD_STATE', id: 'conference', state: true });
-				// set autoActivated to true
 				yield put({ type: 'UPDATE_AUTOACTIVATED_STATE', id: 'conference', state: true });
 			} else if (cards.conference.active) {
 				// wipe saved data if needed
@@ -97,12 +95,11 @@ function* updateConference() {
 				// do nothing since card is turned off
 			}
 		} else {
-
+			// Outside active conference window
 			// Deactivate card one time when the conference is over
 			if (cards.conference.autoActivated) {
-				// set active to false
+				// set active and autoActivated to false
 				yield put({ type: 'UPDATE_CARD_STATE', id: 'conference', state: false });
-				// set autoActivated to false
 				yield put({ type: 'UPDATE_AUTOACTIVATED_STATE', id: 'conference', state: false });
 			} else {
 				// Auto-activated false, but manually re-enabled by user
