@@ -75,6 +75,10 @@ function* updateConference() {
 		const conference = yield call(fetchConference);
 		yield put({ type: 'SET_CONFERENCE', conference });
 
+		if (conference) {
+			prefetchConferenceImages(conference);
+		}
+
 		if (conference['start-time'] <= nowTime &&
 			conference['end-time'] >= nowTime) {
 			// Inside active conference window
@@ -146,6 +150,11 @@ function* updateSurveys() {
 		}
 		yield put({ type: 'SET_SURVEY_IDS', surveyIds });
 	}
+}
+
+function prefetchConferenceImages(conference) {
+	Image.prefetch(conference['logo']);
+	Image.prefetch(conference['logo-sm']);
 }
 
 function prefetchLinkImages(links) {
