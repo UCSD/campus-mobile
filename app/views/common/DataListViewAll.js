@@ -8,6 +8,9 @@ import DataListView from './DataListView';
 
 import css from '../../styles/css';
 import logger from '../../util/logger';
+import {
+	COLOR_LGREY
+} from '../../styles/ColorConstants';
 
 /**
  * @param  {String} title Nav header
@@ -21,7 +24,7 @@ const DataListViewAll = ({ title, data, item, card }) => {
 	return (
 		<View style={[css.main_container, css.white_bg]}>
 			<DataListView
-				style={(card) ? (styles.list_card) : (styles.list)}
+				style={(card) ? (styles.cardList) : (styles.list)}
 				data={data}
 				scrollEnabled={true}
 				item={item}
@@ -38,8 +41,8 @@ DataListViewAll.propTypes = {
 };
 
 const styles = StyleSheet.create({
-	list: { padding: 6, backgroundColor: '#F9F9F9' },
-	list_card: { margin: 6 }
+	list: { padding: 6, backgroundColor: COLOR_LGREY },
+	cardList: { margin: 6 }
 });
 
 export default DataListViewAll;

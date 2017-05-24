@@ -4,51 +4,53 @@ import {
 	View,
 	Text,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 import Card from '../card/Card';
 import SafeImage from './SafeImage';
 import Touchable from '../common/Touchable';
-import { getMaxCardWidth, getCampusPrimary } from '../../util/general';
-import Icon from 'react-native-vector-icons/Ionicons';
+import {
+	MAX_CARD_WIDTH
+} from '../../styles/LayoutConstants';
+import {
+	COLOR_PRIMARY,
+	COLOR_DGREY
+} from '../../styles/ColorConstants';
 
 const BannerCard = ({ image, onPress, onClose }) => (
 	<Card>
-		<View style={styles.closeContainer}>
-			<Touchable
-				onPress={() => onClose()}
-			>
-				<View style={{flexDirection: 'row'}}>
-					<Text style={styles.closeText}>Close</Text>
-					<Icon size={13} color={'grey'} name={'md-close-circle'} style={styles.closeIcon} />
-				</View>
-			</Touchable>
-		</View>
-
-
 		<Touchable
-			activeOpacity={0.6}
+			onPress={() => onClose()}
+			style={styles.closeContainer}
+		>
+			<Text style={styles.closeText}>Close</Text>
+			<Icon
+				size={13}
+				name={'md-close-circle'}
+				style={styles.closeIcon}
+			/>
+		</Touchable>
+		<Touchable
 			onPress={() => onPress()}
 		>
-			<View>
-				<SafeImage
-					source={{ uri: image }}
-					style={styles.image}
-				/>
-				<View style={styles.more}>
-					<Text style={styles.more_label}>See Full Schedule</Text>
-				</View>
+			<SafeImage
+				source={{ uri: image }}
+				style={styles.image}
+			/>
+			<View style={styles.more}>
+				<Text style={styles.moreText}>See Full Schedule</Text>
 			</View>
 		</Touchable>
 	</Card>
 );
 
 const styles = StyleSheet.create({
-	image: { height: ((getMaxCardWidth() / 1242) * 440), width: getMaxCardWidth(), marginTop: 22 },
-	closeContainer: { justifyContent: 'center', alignItems: 'center', zIndex: 10, position: 'absolute', top: 3, right: 3 },
-	closeText: { color: 'grey', fontSize: 10, marginBottom: 2 },
-	closeIcon: { color: 'grey', marginLeft: 2 },
+	image: { height: ((MAX_CARD_WIDTH / 1242) * 440), width: MAX_CARD_WIDTH, marginTop: 22 },
+	closeContainer: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', zIndex: 10, position: 'absolute', top: 3, right: 3 },
+	closeText: { color: COLOR_DGREY, fontSize: 10, marginBottom: 2 },
+	closeIcon: { color: COLOR_DGREY, marginLeft: 2 },
 	more: { alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4, paddingTop: 6, paddingBottom: 4 },
-	more_label: { fontSize: 20, color: getCampusPrimary(), fontWeight: '300' },
+	moreText: { fontSize: 20, color: COLOR_PRIMARY, fontWeight: '300' },
 
 });
 

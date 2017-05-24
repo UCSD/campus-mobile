@@ -2,7 +2,6 @@ import React, { PropTypes } from 'react';
 import {
 	View,
 	Text,
-	TouchableHighlight,
 	StyleSheet,
 	ActivityIndicator
 } from 'react-native';
@@ -11,7 +10,13 @@ import { Actions } from 'react-native-router-flux';
 
 import DataListView from './DataListView';
 import Card from '../card/Card';
-import { getCampusPrimary, getMaxCardWidth } from '../../util/general';
+import Touchable from './Touchable';
+import {
+	MAX_CARD_WIDTH
+} from '../../styles/LayoutConstants';
+import {
+	COLOR_PRIMARY
+} from '../../styles/ColorConstants';
 
 /**
  * @param  {String} title Card header
@@ -39,8 +44,7 @@ const DataListCard = ({ id, title, data, item, rows, cardSort }) => {
 							item={item}
 							card={false}
 						/>
-						<TouchableHighlight
-							underlayColor={'rgba(200,200,200,.1)'}
+						<Touchable
 							onPress={() => (
 								Actions.DataListViewAll({ title, data, item }) // Actions doesn't like being passed JSX
 							)}
@@ -48,7 +52,7 @@ const DataListCard = ({ id, title, data, item, rows, cardSort }) => {
 							<View style={styles.more}>
 								<Text style={styles.more_label}>View All</Text>
 							</View>
-						</TouchableHighlight>
+						</Touchable>
 					</View>
 				) : (
 					<View style={[styles.cardcenter, styles.wc_loading_height]}>
@@ -76,8 +80,8 @@ const styles = StyleSheet.create({
 	list: { alignSelf: 'stretch', padding: 8 },
 	content_load_err: { padding: 30, fontSize:16, alignSelf: 'center'  },
 	more: { alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4, paddingTop: 8, paddingBottom: 4 },
-	more_label: { fontSize: 20, color: getCampusPrimary(), fontWeight: '300' },
-	cardcenter: { alignItems: 'center', justifyContent: 'center', width: getMaxCardWidth() },
+	more_label: { fontSize: 20, color: COLOR_PRIMARY, fontWeight: '300' },
+	cardcenter: { alignItems: 'center', justifyContent: 'center', width: MAX_CARD_WIDTH },
 });
 
 export default DataListCard;

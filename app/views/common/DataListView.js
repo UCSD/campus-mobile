@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react';
 import {
 	ListView,
-	StyleSheet,
 } from 'react-native';
 
 import EventItem from '../events/EventItem';
