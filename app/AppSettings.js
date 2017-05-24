@@ -5,8 +5,6 @@ module.exports = {
 	APP_VERSION: '5.2',
 	APP_CODEPUSH_VERSION: '1',
 	GOOGLE_ANALYTICS_ID: 'UA-59591330-4',
-	DEBUG_ENABLED: false, // Enable or disable logger.log, logger.error from displaying
-	// Use console.log as necessary for testing, but commit code with logger.log
 
 	/* APIs / FEEDS */
 	WEATHER_API_URL: 'https://w3wyps9yje.execute-api.us-west-2.amazonaws.com/prod/forecast?',

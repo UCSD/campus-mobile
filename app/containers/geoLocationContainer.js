@@ -10,7 +10,6 @@ import Permissions from 'react-native-permissions';
 import { updateLocation, setPermission } from '../actions/location';
 
 const logger = require('../util/logger');
-const AppSettings = require('../AppSettings');
 
 const GeoLocationContainer = React.createClass({
 	mixins: [TimerMixin],
@@ -50,7 +49,6 @@ const GeoLocationContainer = React.createClass({
 	},
 
 	getSoftPermission() {
-		logger.log('calling alert');
 		Alert.alert(
 			'Allow this app to access your location?',
 			'We need access so you can get nearby information.',
@@ -97,8 +95,8 @@ const GeoLocationContainer = React.createClass({
 	},
 
 	render() {
-		if (!AppSettings.DEBUG_ENABLED) return null;
-
+		return null;
+		/*
 		if (this.props.permission !== 'authorized') {
 			return (
 				<Text>Permission: {this.props.permission}</Text>
@@ -111,6 +109,7 @@ const GeoLocationContainer = React.createClass({
 				Timestamp: {this.props.position.timestamp}
 			</Text>
 		);
+		*/
 	}
 });
 
