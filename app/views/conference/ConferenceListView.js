@@ -279,7 +279,7 @@ const styles = StyleSheet.create({
 	headerText: { textAlign: 'right', alignSelf: 'stretch', color: '#000', fontSize: 12, marginTop: 7 },
 	emptyRow: { width: 45, flexDirection: 'row',  backgroundColor: '#F9F9F9', borderBottomWidth: 1, borderColor: '#F9F9F9' },
 	titleContainer: { flex: 1, marginTop: 3, justifyContent: 'center' },
-	titleText: { alignSelf: 'stretch', fontSize: 18, color: '#000' },
+	titleText: { alignSelf: 'stretch', fontSize: 17, color: '#000' },
 	labelView: { flexDirection: 'row', paddingTop: 4 },
 	labelText: { fontSize: 13 },
 	starButton: { justifyContent: 'center', width: 50 },
