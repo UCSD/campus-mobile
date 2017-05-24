@@ -3,8 +3,6 @@ import {
 	View,
 	ScrollView,
 } from 'react-native';
-
-import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import { MenuContext } from 'react-native-popup-menu';
 import { checkGooglePlayServices } from 'react-native-google-api-availability-bridge';
@@ -21,10 +19,8 @@ import ConferenceCardContainer from './conference/ConferenceCardContainer';
 //import ScheduleCard from './schedule/ScheduleCard';
 
 import { platformAndroid } from '../util/general';
-
-// App Settings / Util / CSS
-const css = require('../styles/css');
-const logger = require('../util/logger');
+import css from '../styles/css';
+import logger from '../util/logger';
 
 class Home extends React.Component {
 	constructor(props) {
@@ -45,7 +41,6 @@ class Home extends React.Component {
 		this._cards = [];
 
 		if (this._scrollview) {
-			console.log('scroll');
 			this._scrollview.scrollTo({ y: this.props.lastScroll, animated: false });
 		}
 	}
