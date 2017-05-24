@@ -8,11 +8,16 @@ import {
 
 import { getData } from './scheduleData';
 import ScrollCard from '../card/ScrollCard';
-import { getMaxCardWidth } from '../../util/general';
 import logger from '../../util/logger';
+import {
+	MAX_CARD_WIDTH
+} from '../../styles/LayoutConstants';
+import {
+	COLOR_LGREY,
+	COLOR_DGREY
+} from '../../styles/ColorConstants';
 
 const scheduleData = getData();
-
 const daytaSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
 const ScheduleCard = () => {
@@ -115,11 +120,11 @@ const DaySpacer = () => (
 );
 
 const styles = StyleSheet.create({
-	spacer: { height: 1, width: getMaxCardWidth(), backgroundColor: '#EAEAEA' },
-	dayText: { fontSize: 18, color: '#034262' },
-	courseText: { fontSize: 18, color: '#034262' },
-	subText: { fontSize: 13, color: '#034262', opacity: 0.69 },
-	dayContainer: { width: getMaxCardWidth() + 2, padding: 7 },
+	spacer: { height: 1, width: MAX_CARD_WIDTH, backgroundColor: COLOR_LGREY },
+	dayText: { fontSize: 18, color: COLOR_DGREY },
+	courseText: { fontSize: 18, color: COLOR_DGREY },
+	subText: { fontSize: 13, color: COLOR_DGREY, opacity: 0.69 },
+	dayContainer: { width: MAX_CARD_WIDTH + 2, padding: 7 },
 	dayRow: { height: 70, justifyContent: 'center' },
 });
 
