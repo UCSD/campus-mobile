@@ -9,8 +9,6 @@ import { connect } from 'react-redux';
 import { MenuContext } from 'react-native-popup-menu';
 import { checkGooglePlayServices } from 'react-native-google-api-availability-bridge';
 
-import TopBannerView from './banner/TopBannerView';
-
 // Cards
 import WeatherCardContainer from './weather/WeatherCardContainer';
 import ShuttleCardContainer from './shuttle/ShuttleCardContainer';
@@ -132,9 +130,6 @@ class Home extends React.Component {
 							onScroll={this.handleScroll}
 							scrollEventThrottle={69}
 						>
-							{/* SPECIAL TOP BANNER */}
-							<TopBannerView />
-
 							{/* LOAD CARDS */}
 							{ this._getCards() }
 						</ScrollView>
