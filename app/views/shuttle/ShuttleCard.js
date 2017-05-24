@@ -8,8 +8,15 @@ import { Actions } from 'react-native-router-flux';
 
 import ShuttleOverview from './ShuttleOverview';
 import ScrollCard from '../card/ScrollCard';
-
-import { doPRM, getMaxCardWidth, getCampusPrimary } from '../../util/general';
+import Touchable from '../common/Touchable'
+import {
+	COLOR_PRIMARY,
+	COLOR_MGREY,
+	COLOR_LGREY
+} from '../../styles/ColorConstants';
+import {
+	MAX_CARD_WIDTH
+} from '../../styles/LayoutConstants';
 
 const ShuttleCard = ({ stopsData, savedStops, gotoRoutesList, gotoSavedList, updateScroll, lastScroll }) => {
 	const extraActions = [
@@ -33,13 +40,12 @@ const ShuttleCard = ({ stopsData, savedStops, gotoRoutesList, gotoSavedList, upd
 					/>
 			}
 			actionButton={
-				<TouchableHighlight
-					style={styles.add_container}
-					underlayColor={'rgba(200,200,200,.1)'}
+				<Touchable
+					style={styles.addButton}
 					onPress={() => gotoRoutesList()}
 				>
-					<Text style={styles.add_label}>Add a Stop</Text>
-				</TouchableHighlight>
+					<Text style={styles.addText}>Add a Stop</Text>
+				</Touchable>
 			}
 			extraActions={extraActions}
 			updateScroll={updateScroll}
@@ -50,18 +56,7 @@ const ShuttleCard = ({ stopsData, savedStops, gotoRoutesList, gotoSavedList, upd
 
 export default ShuttleCard;
 
-// There's gotta be a better way to do this...find a way to get rid of magic numbers
-const nextArrivals = ((2 * doPRM(36)) + 32) + doPRM(20); // Two rows + text
-const cardHeader = 26; // font + padding
-const cardBody = doPRM(83) + (2 * doPRM(20)) + doPRM(26) + 20; // top + margin + font + padding
-
 const styles = StyleSheet.create({
-	add_container: { width: getMaxCardWidth(), backgroundColor: '#F9F9F9', alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4, paddingVertical: 8, borderTopWidth: 1, borderBottomWidth: 1, borderColor: '#DDD' },
-	add_label: { fontSize: 20, color: getCampusPrimary(), fontWeight: '300' },
-	shuttle_card_loader: { height: nextArrivals + cardHeader + cardBody },
-	shuttlecard_loading_fail: { marginHorizontal: doPRM(16), marginTop: doPRM(40), marginBottom: doPRM(60) },
-	fs18: { fontSize: doPRM(18) },
-	pt10: { paddingTop: 10 },
-	fs12: { fontSize: doPRM(12) },
-	dgrey: { color: '#333' },
+	addButton: { width: MAX_CARD_WIDTH, backgroundColor: COLOR_LGREY, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4, paddingVertical: 8, borderTopWidth: 1, borderBottomWidth: 1, borderColor: COLOR_MGREY },
+	addText: { fontSize: 20, color: COLOR_PRIMARY, fontWeight: '300' },
 });

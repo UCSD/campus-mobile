@@ -6,7 +6,9 @@ import {
 import { Actions } from 'react-native-router-flux';
 
 import ShuttleOverview from './ShuttleOverview';
-import { getMaxCardWidth } from '../../util/general';
+import {
+	MAX_CARD_WIDTH
+} from '../../styles/LayoutConstants';
 
 const stopsDataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
@@ -20,7 +22,7 @@ const ShuttleOverviewList = ({ savedStops, stopsData, gotoRoutesList }) => {
 				showsVerticalScrollIndicator={false}
 				showsHorizontalScrollIndicator={false}
 				horizontal={true}
-				snapToInterval={getMaxCardWidth() - 50 - 12}
+				snapToInterval={MAX_CARD_WIDTH - 50 - 12}
 				dataSource={stopsDataSource.cloneWithRows(savedStops)}
 				renderRow={
 					(row, sectionID, rowID) =>
