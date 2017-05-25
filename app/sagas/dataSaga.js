@@ -73,41 +73,38 @@ function* updateConference() {
 
 	if (timeDiff > ttl) {
 		const conference = yield call(fetchConference);
-		yield put({ type: 'SET_CONFERENCE', conference });
-
+		
 		if (conference) {
+			yield put({ type: 'SET_CONFERENCE', conference });
 			prefetchConferenceImages(conference);
-		}
-
-		if (conference['start-time'] <= nowTime &&
-			conference['end-time'] >= nowTime) {
-			// Inside active conference window
-			if (cards.conference.autoActivated === false) {
-				// Initialize Conference for first time use
-				// wipe saved data
-				yield put({ type: 'CHANGED_CONFERENCE_SAVED', saved: [] });
-				// set active and autoActivated to true
-				yield put({ type: 'UPDATE_CARD_STATE', id: 'conference', state: true });
-				yield put({ type: 'UPDATE_AUTOACTIVATED_STATE', id: 'conference', state: true });
-			} else if (cards.conference.active) {
-				// remove any saved items that no longer exist
-				if (data) {
-					const stillsExists = yield call(savedExists, conference.uids, data.saved);
+			if (conference['start-time'] <= nowTime &&
+				conference['end-time'] >= nowTime) {
+				// Inside active conference window
+				if (cards.conference.autoActivated === false) {
+					// Initialize Conference for first time use
+					// wipe saved data
 					yield put({ type: 'CHANGED_CONFERENCE_SAVED', saved: [] });
+					// set active and autoActivated to true
+					yield put({ type: 'UPDATE_CARD_STATE', id: 'conference', state: true });
+					yield put({ type: 'UPDATE_AUTOACTIVATED_STATE', id: 'conference', state: true });
+				} else if (cards.conference.active) {
+					// remove any saved items that no longer exist
+					if (data) {
+						const stillsExists = yield call(savedExists, conference.uids, saved);
+					} else {
+						// do nothing since card is turned off
+					}
+			} else {
+				// Outside active conference window
+				// Deactivate card one time when the conference is over
+				if (cards.conference.autoActivated) {
+					// set active and autoActivated to false
+					yield put({ type: 'UPDATE_CARD_STATE', id: 'conference', state: false });
+					yield put({ type: 'UPDATE_AUTOACTIVATED_STATE', id: 'conference', state: false });
+				} else {
+					// Auto-activated false, but manually re-enabled by user
+					// Conference is over, do nothing
 				}
-			} else {
-				// do nothing since card is turned off
-			}
-		} else {
-			// Outside active conference window
-			// Deactivate card one time when the conference is over
-			if (cards.conference.autoActivated) {
-				// set active and autoActivated to false
-				yield put({ type: 'UPDATE_CARD_STATE', id: 'conference', state: false });
-				yield put({ type: 'UPDATE_AUTOACTIVATED_STATE', id: 'conference', state: false });
-			} else {
-				// Auto-activated false, but manually re-enabled by user
-				// Conference is over, do nothing
 			}
 		}
 	}
@@ -154,7 +151,7 @@ function* updateSurveys() {
 
 function savedExists(scheduleIds, savedArray) {
 	const existsArray = [];
-	for (let i = 0; i < savedArray.length) {
+	for (let i = 0; i < savedArray.length; ++i) {
 		if (scheduleIds.includes(savedArray[i])) {
 			existsArray.push(savedArray[i]);
 		}
