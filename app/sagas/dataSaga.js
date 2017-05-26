@@ -75,7 +75,6 @@ function* updateConference() {
 		const conference = yield call(fetchConference);
 
 		if (conference) {
-			yield put({ type: 'SET_CONFERENCE', conference });
 			prefetchConferenceImages(conference);
 			if (conference['start-time'] <= nowTime &&
 				conference['end-time'] >= nowTime) {
@@ -84,6 +83,7 @@ function* updateConference() {
 					// Initialize Conference for first time use
 					// wipe saved data
 					yield put({ type: 'CHANGED_CONFERENCE_SAVED', saved: [] });
+					yield put({ type: 'SET_CONFERENCE', conference });
 					// set active and autoActivated to true
 					yield put({ type: 'UPDATE_CARD_STATE', id: 'conference', state: true });
 					yield put({ type: 'UPDATE_AUTOACTIVATED_STATE', id: 'conference', state: true });
@@ -92,9 +92,11 @@ function* updateConference() {
 					if (saved.length > 0) {
 						const stillsExists = yield call(savedExists, conference.uids, saved);
 						yield put({ type: 'CHANGED_CONFERENCE_SAVED', saved: stillsExists });
+						yield put({ type: 'SET_CONFERENCE', conference });
 					}
 				}
 			} else {
+				yield put({ type: 'SET_CONFERENCE', conference });
 				// Outside active conference window
 				// Deactivate card one time when the conference is over
 				if (cards.conference.autoActivated) {
