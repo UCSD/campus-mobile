@@ -65,7 +65,7 @@ function* updateSurf() {
 }
 
 function* updateConference() {
-	const { lastUpdated, data } = yield select(getConference);
+	const { lastUpdated, data, saved } = yield select(getConference);
 	const { cards } = yield select(getCards);
 	const nowTime = new Date().getTime();
 	const timeDiff = nowTime - lastUpdated;
@@ -77,7 +77,6 @@ function* updateConference() {
 		if (conference) {
 			yield put({ type: 'SET_CONFERENCE', conference });
 			prefetchConferenceImages(conference);
-
 			if (conference['start-time'] <= nowTime &&
 				conference['end-time'] >= nowTime) {
 				// Inside active conference window
@@ -89,14 +88,12 @@ function* updateConference() {
 					yield put({ type: 'UPDATE_CARD_STATE', id: 'conference', state: true });
 					yield put({ type: 'UPDATE_AUTOACTIVATED_STATE', id: 'conference', state: true });
 				} else if (cards.conference.active) {
-					// wipe saved data if needed
-					// TODO: actual comparator instead of length equality?
-					//if (data && Object.keys(data.schedule).length !== Object.keys(conference.schedule).length) {
-					//	yield put({ type: 'CHANGED_CONFERENCE_SAVED', saved: [] });
-					//}
-				} else {
-					// do nothing since card is turned off
-				}
+					// remove any saved items that no longer exist
+					if (data) {
+						const stillsExists = yield call(savedExists, conference.uids, saved);
+					} else {
+						// do nothing since card is turned off
+					}
 			} else {
 				// Outside active conference window
 				// Deactivate card one time when the conference is over
@@ -150,6 +147,16 @@ function* updateSurveys() {
 		}
 		yield put({ type: 'SET_SURVEY_IDS', surveyIds });
 	}
+}
+
+function savedExists(scheduleIds, savedArray) {
+	const existsArray = [];
+	for (let i = 0; i < savedArray.length; ++i) {
+		if (scheduleIds.includes(savedArray[i])) {
+			existsArray.push(savedArray[i]);
+		}
+	}
+	return existsArray;
 }
 
 function prefetchConferenceImages(conference) {
