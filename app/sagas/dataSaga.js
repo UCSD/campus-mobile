@@ -94,6 +94,7 @@ function* updateConference() {
 					} else {
 						// do nothing since card is turned off
 					}
+				}
 			} else {
 				// Outside active conference window
 				// Deactivate card one time when the conference is over
