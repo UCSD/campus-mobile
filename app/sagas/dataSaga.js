@@ -91,6 +91,7 @@ function* updateConference() {
 					// remove any saved items that no longer exist
 					if (data) {
 						const stillsExists = yield call(savedExists, conference.uids, saved);
+						yield put({ type: 'CHANGED_CONFERENCE_SAVED', saved: stillsExists });
 					} else {
 						// do nothing since card is turned off
 					}
