@@ -73,7 +73,7 @@ function* updateConference() {
 
 	if (timeDiff > ttl) {
 		const conference = yield call(fetchConference);
-		
+
 		if (conference) {
 			yield put({ type: 'SET_CONFERENCE', conference });
 			prefetchConferenceImages(conference);
@@ -89,11 +89,9 @@ function* updateConference() {
 					yield put({ type: 'UPDATE_AUTOACTIVATED_STATE', id: 'conference', state: true });
 				} else if (cards.conference.active) {
 					// remove any saved items that no longer exist
-					if (data) {
+					if (saved.length > 0) {
 						const stillsExists = yield call(savedExists, conference.uids, saved);
 						yield put({ type: 'CHANGED_CONFERENCE_SAVED', saved: stillsExists });
-					} else {
-						// do nothing since card is turned off
 					}
 				}
 			} else {
