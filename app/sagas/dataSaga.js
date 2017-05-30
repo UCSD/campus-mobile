@@ -32,7 +32,7 @@ function* watchData() {
 		} catch (err) {
 			console.log(err);
 		}
-		yield delay(60000); // wait 1min
+		yield delay(1000); // wait 1min
 	}
 }
 
@@ -92,11 +92,10 @@ function* updateConference() {
 					if (saved.length > 0) {
 						const stillsExists = yield call(savedExists, conference.uids, saved);
 						yield put({ type: 'CHANGED_CONFERENCE_SAVED', saved: stillsExists });
-						yield put({ type: 'SET_CONFERENCE', conference });
 					}
+					yield put({ type: 'SET_CONFERENCE', conference });
 				}
 			} else {
-				yield put({ type: 'SET_CONFERENCE', conference });
 				// Outside active conference window
 				// Deactivate card one time when the conference is over
 				if (cards.conference.autoActivated) {
