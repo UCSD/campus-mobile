@@ -10,7 +10,8 @@ import {
 	WEATHER_API_TTL,
 	SURF_API_TTL,
 	CONFERENCE_TTL,
-	QUICKLINKS_API_TTL
+	QUICKLINKS_API_TTL,
+	DATA_SAGA_TTL,
 } from '../AppSettings';
 
 const getWeather = (state) => (state.weather);
@@ -32,7 +33,7 @@ function* watchData() {
 		} catch (err) {
 			console.log(err);
 		}
-		yield delay(1000); // wait 1min
+		yield delay(DATA_SAGA_TTL);
 	}
 }
 
