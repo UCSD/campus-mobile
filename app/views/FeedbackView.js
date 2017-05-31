@@ -117,7 +117,7 @@ class FeedbackView extends Component {
 				// logger.log(responseJson);
 			})
 			.catch((error) => {
-				logger.error('Error submitting Feedback: ' + error);
+				logger.log('Error submitting Feedback: ' + error);
 			});
 		}
 		else {
