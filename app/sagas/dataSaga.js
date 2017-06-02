@@ -14,7 +14,7 @@ import {
 	CONFERENCE_TTL,
 	QUICKLINKS_API_TTL,
 	EVENTS_API_TTL,
-	NEWS_API_TTL
+	NEWS_API_TTL,
 	DATA_SAGA_TTL,
 } from '../AppSettings';
 
