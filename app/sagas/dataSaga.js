@@ -33,7 +33,7 @@ function* watchData() {
 		} catch (err) {
 			console.log(err);
 		}
-		yield delay(DATA_SAGA_TTL);
+		yield delay(DATA_SAGA_TTL * 1000);
 	}
 }
 
