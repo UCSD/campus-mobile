@@ -1,3 +1,4 @@
+
 import React, { Component } from 'react';
 import {
 	Text,
@@ -36,8 +37,6 @@ class FeedbackView extends Component {
 			commentsHeight: 0,
 			loaded: false,
 			submit: false,
-			labelText: 'Help us make the ' + AppSettings.APP_NAME +
-				' app better. Submit your thoughts and suggestions.'
 		};
 	}
 
@@ -123,7 +122,7 @@ class FeedbackView extends Component {
 				// logger.log(responseJson);
 			})
 			.catch((error) => {
-				logger.error('Error submitting Feedback: ' + error);
+				logger.log('Error submitting Feedback: ' + error);
 			});
 		}
 		else {

@@ -9,7 +9,6 @@ import createMigration from 'redux-persist-migrate';
 
 import rootSaga from '../sagas/rootSaga';
 import rootReducer from '../reducers';
-import { DEBUG_ENABLED } from '../AppSettings';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -46,11 +45,11 @@ const migration = createMigration(manifest, reducerKey);
 export default function configureStore(initialState, onComplete: ?() => void) {
 	const middlewares = [sagaMiddleware, thunkMiddleware]; // lets us dispatch() functions
 
-	if ( DEBUG_ENABLED ) {
-		// neat middleware that logs actions
-		const loggerMiddleware = createLogger();
-		middlewares.push(loggerMiddleware);
-	}
+	/*
+	// neat middleware that logs actions
+	const loggerMiddleware = createLogger();
+	middlewares.push(loggerMiddleware);
+	*/
 
 	const enhancer =  compose(migration, autoRehydrate());
 

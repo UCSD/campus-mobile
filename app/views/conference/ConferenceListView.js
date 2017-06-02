@@ -282,7 +282,7 @@ const styles = StyleSheet.create({
 	headerText: { textAlign: 'right', alignSelf: 'stretch', color: COLOR_BLACK, fontSize: 12, marginTop: 7 },
 	emptyRow: { width: 45, flexDirection: 'row',  backgroundColor: COLOR_LGREY, borderBottomWidth: 1, borderColor: COLOR_LGREY },
 	titleContainer: { flex: 1, marginTop: 3, justifyContent: 'center' },
-	titleText: { alignSelf: 'stretch', fontSize: 18, color: COLOR_BLACK },
+	titleText: { alignSelf: 'stretch', fontSize: 17, color: COLOR_BLACK },
 	labelView: { flexDirection: 'row', paddingTop: 4 },
 	labelText: { fontSize: 13 },
 	starButton: { justifyContent: 'center', width: 50 },

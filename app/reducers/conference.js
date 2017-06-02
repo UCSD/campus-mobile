@@ -1,6 +1,6 @@
 const initialState = {
 	data: null,
-	lastUpdated: null,
+	lastUpdated: 0,
 	saved: [],
 };
 

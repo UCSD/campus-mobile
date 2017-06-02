@@ -28,7 +28,7 @@ const ConferenceCard = ({ conference, saved, hideCard }) => (
 			(
 				<Card
 					title={conference.name}
-					header={conference.logo}
+					header={conference['logo-sm']}
 					id="conference"
 				>
 					<View

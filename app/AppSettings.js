@@ -5,8 +5,6 @@ module.exports = {
 	APP_VERSION: '5.2',
 	APP_CODEPUSH_VERSION: '1',
 	GOOGLE_ANALYTICS_ID: 'UA-59591330-4',
-	DEBUG_ENABLED: false, // Enable or disable logger.log, logger.error from displaying
-	// Use console.log as necessary for testing, but commit code with logger.log
 
 	/* APIs / FEEDS */
 	WEATHER_API_URL: 'https://w3wyps9yje.execute-api.us-west-2.amazonaws.com/prod/forecast?',
@@ -19,8 +17,7 @@ module.exports = {
 	NEWS_API_URL: 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/allstories.json',
 	MAP_SEARCH_API_URL: 'https://xgu9qa7gx4.execute-api.us-west-2.amazonaws.com/prod/v2/map/search?region=0&query=',
 	WELCOME_WEEK_API_URL: 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/welcome_week_events.json',
-	//CAMPUS_LISA_URL: 'https://14qttlbk64.execute-api.us-west-2.amazonaws.com/dev',
-	CAMPUS_LISA_URL: 'https://s3-us-west-2.amazonaws.com/ucsd-mobile/test/CLISA_dev_test_3.json',  // Placeholder for v5.2
+	CAMPUS_LISA_URL: 'https://95dscnn6od.execute-api.us-west-2.amazonaws.com/prod/v1/schedule',
 
 	/* RESOURCES */
 	SHUTTLE_SCHEDULE_URL: 'https://transportation.ucsd.edu/shuttles/',
@@ -31,7 +28,7 @@ module.exports = {
 	SHUTTLE_STOPS_MASTER: 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/shuttle_stops_master_map.json',
 	SHUTTLE_STOPS_MASTER_NO_ROUTES: 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/shuttle_stops_master_map_no_routes.json',
 
-	/* API TTL (seconds) */
+	/* TTLs */
 	WEATHER_API_TTL: 1800, // 30 minutes
 	SURF_API_TTL: 1800, // 30 minutes
 	EVENTS_API_TTL: 3600, // 1 hour
@@ -41,6 +38,7 @@ module.exports = {
 	SHUTTLE_API_TTL: 6, // 6 seconds
 	SHUTTLE_MASTER_TTL: 86400, // 1 day
 	CONFERENCE_TTL: 21600, // 6 hours
+	DATA_SAGA_TTL: 60, // 1 minute
 
 	USER_LOGIN: {
 		ENABLED: false,
