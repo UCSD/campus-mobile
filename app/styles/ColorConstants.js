@@ -11,4 +11,5 @@ module.exports = {
 	COLOR_TRANSPARENT: 'rgba(0,0,0,0)',
 	COLOR_LBLUE: '#B3E5FC',
 	COLOR_MBLUE: '#03A9F4',
+	COLOR_YELLOW: '#F3E500',
 };

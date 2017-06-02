@@ -22,7 +22,8 @@ import {
 import {
 	COLOR_DGREY,
 	COLOR_LGREY,
-	COLOR_BLACK
+	COLOR_BLACK,
+	COLOR_YELLOW
 } from '../../styles/ColorConstants';
 
 const dataSource = new ListView.DataSource({
@@ -219,7 +220,6 @@ const ConferenceItem = ({ conferenceData, saved, add, remove, disabled }) => (
 						<Icon
 							name={'ios-star'}
 							size={26}
-							color={'yellow'}
 							style={styles.starInnerIcon}
 						/>
 					) : null }
@@ -288,7 +288,7 @@ const styles = StyleSheet.create({
 	starButton: { justifyContent: 'center', width: 50 },
 	starButtonInner: { alignItems: 'center' },
 	starOuterIcon: { color: COLOR_DGREY },
-	starInnerIcon: { position: 'absolute', backgroundColor: 'transparent', marginTop: 3 },
+	starInnerIcon: { position: 'absolute', backgroundColor: 'transparent', marginTop: 3, color: COLOR_YELLOW },
 	borderContainer: { width: 1, alignSelf: 'stretch', marginHorizontal: 20, alignItems: 'flex-start' },
 	line: { flexGrow: 1, borderLeftWidth: 1, borderColor: COLOR_DGREY, paddingBottom: 20 },
 	circle: { position: 'absolute', top: 11, left: -2.5, height: 6, width: 6, borderRadius: 3, borderWidth: 1, borderColor: COLOR_DGREY, backgroundColor: COLOR_LGREY },
