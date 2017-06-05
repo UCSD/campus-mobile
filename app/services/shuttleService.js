@@ -17,6 +17,7 @@ export function fetchShuttleArrivalsByStop(stopID) {
 	.then((response) => response.json())
 	.catch((err) => {
 		console.log('Error fetching arrivals for stop ' + stopID + ' ' + err);
+		return null;
 	});
 }
 

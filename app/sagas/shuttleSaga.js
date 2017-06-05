@@ -108,19 +108,21 @@ function* fetchArrival(stopID) {
 	try {
 		const arrivals = yield call(fetchShuttleArrivalsByStop, stopID);
 
-		// Sort arrivals, should be on lambda?
-		arrivals.sort((a, b) => {
-			const aSecs = a.secondsToArrival;
-			const bSecs = b.secondsToArrival;
+		if (arrivals) {
+			// Sort arrivals, should be on lambda?
+			arrivals.sort((a, b) => {
+				const aSecs = a.secondsToArrival;
+				const bSecs = b.secondsToArrival;
 
-			if ( aSecs < bSecs ) return -1;
-			if ( aSecs > bSecs) return 1;
-			return 0;
-		});
+				if ( aSecs < bSecs ) return -1;
+				if ( aSecs > bSecs) return 1;
+				return 0;
+			});
 
-		stops[stopID].arrivals = arrivals;
+			stops[stopID].arrivals = arrivals;
 
-		yield put({ type: 'SET_ARRIVALS', stops });
+			yield put({ type: 'SET_ARRIVALS', stops });
+		}
 	} catch (error) {
 		console.log('Error fetching arrival for ' + stopID + ': ' + error);
 	}
