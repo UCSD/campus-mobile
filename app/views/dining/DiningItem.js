@@ -5,12 +5,14 @@ import {
 	StyleSheet,
 } from 'react-native';
 
+import DiningHours from './DiningHours';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Actions } from 'react-native-router-flux';
 
 import Touchable from '../common/Touchable';
 import {
 	COLOR_PRIMARY,
+	COLOR_BLACK,
 	COLOR_LGREY,
 	COLOR_MGREY,
 	COLOR_DGREY
@@ -26,10 +28,10 @@ const DiningItem = ({ data }) => (
 		>
 			<View>
 				<Text style={styles.titleText}>{data.name}</Text>
-				<Text style={styles.hoursText}>{data.regularHours}</Text>
-				{data.specialHours ? (
-					<Text style={styles.specialText}>Special Hours:{'\n'}{data.specialHours}</Text>
-				) : null }
+				<DiningHours
+					regularHours={data.regularHours}
+					specialHours={data.specialHours}
+				/>
 			</View>
 		</Touchable>
 
@@ -50,12 +52,11 @@ const DiningItem = ({ data }) => (
 );
 
 const styles = StyleSheet.create({
-	rowContainer: { backgroundColor: COLOR_LGREY, flexDirection: 'row', paddingBottom: 10, paddingTop: 10, borderBottomWidth: 1, borderBottomColor: COLOR_MGREY },
+	rowContainer: { backgroundColor: COLOR_LGREY, flexDirection: 'row', padding: 10, borderBottomWidth: 1, borderBottomColor: COLOR_MGREY },
 	rowContainerLeft: { flex: 6, justifyContent: 'center' },
 	titleText: { fontSize: 20, color: COLOR_PRIMARY },
-	hoursText: { fontSize: 12, color: COLOR_DGREY, paddingTop: 1 },
-	specialText: { fontSize: 12, color: COLOR_DGREY, paddingTop: 4 },
-	rowContainerRight: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+	descriptionText: { fontSize: 12, color: COLOR_DGREY, paddingTop: 1 },
+	rowContainerRight: { flex: 1, alignItems: 'flex-end', justifyContent: 'center' },
 });
 
 export default DiningItem;

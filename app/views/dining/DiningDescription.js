@@ -4,10 +4,7 @@ import {
 	Text,
 	StyleSheet
 } from 'react-native';
-
-import {
-	COLOR_DGREY
-} from '../../styles/ColorConstants';
+import DiningHours from './DiningHours';
 
 const DiningDescription = ({ name, description, regularHours, specialHours }) => (
 	<View style={styles.descriptionContainer}>
@@ -15,9 +12,12 @@ const DiningDescription = ({ name, description, regularHours, specialHours }) =>
 		{description ? (
 			<Text style={styles.subText}>{description}</Text>
 		) : null }
-		{regularHours ? (
-			<Text style={styles.subText}>{regularHours}</Text>
-		) : null }
+		
+		<DiningHours
+			regularHours={regularHours}
+			specialHours={specialHours}
+			customStyle={styles.diningHours}
+		/>
 		{specialHours ? (
 			<Text style={styles.subText}>Special Hours:{'\n'}{specialHours}</Text>
 		) : null }
@@ -26,8 +26,9 @@ const DiningDescription = ({ name, description, regularHours, specialHours }) =>
 
 const styles = StyleSheet.create({
 	descriptionContainer: { padding: 10 },
-	nameText: { color: COLOR_DGREY, fontSize: 26 },
-	subText: { color: COLOR_DGREY, paddingTop: 6, fontSize: 14 },
+	nameText: { fontSize: 26 },
+	subText: { paddingTop: 6 },
+	diningHours: { paddingTop: 6 },
 });
 
 export default DiningDescription;

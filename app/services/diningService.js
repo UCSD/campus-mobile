@@ -12,7 +12,7 @@ const DiningService = {
 			if (data.errorMessage) {
 				throw (data.errorMessage);
 			} else {
-				return data.GetDiningInfoResult;
+				return data;
 			}
 		});
 	}
