@@ -32,7 +32,7 @@
     "react-native-side-menu": "0.20.1",
     "react-native-simple-toast": "0.0.5",
     "react-native-sortable-list": "0.0.11",
-    "react-native-vector-icons": "4.0.0",
+    "react-native-vector-icons": "4.2.0",
     "react-redux": "4.4.5",
     "react-timer-mixin": "0.13.3",
     "redux": "3.6.0",
