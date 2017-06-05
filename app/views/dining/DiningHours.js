@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+	View,
 	Text,
 	StyleSheet,
 } from 'react-native';
@@ -44,17 +45,18 @@ const DiningHours = ({ regularHours, specialHours, customStyle }) => {
 			}
 		}
 
-		if (open) {
-			return (
-				<Text style={[styles.hoursMain, customStyle]}>Open now: <Text style={styles.hoursOpen}>{openStr} - {closeStr}</Text></Text>
-			);
-		} else {
-			return (
-				<Text style={[styles.hoursMain, styles.hoursClosed, customStyle]}>Closed. {openHours ? (
-					<Text style={styles.hoursOpen}>Hours {openStr} - {closeStr}</Text>
-				) : null}</Text>
-			);
-		}
+		return (
+			<View style={[styles.hoursContainer, customStyle]}>
+				{open ? (
+					<Text style={styles.hoursMain}>Open now: </Text>
+				) : (
+					<Text style={styles.hoursClosed}>Closed. </Text>
+				)}
+				{openHours && openStr && closeStr ? (
+					<Text style={styles.hoursOpen}>Hours <Text style={styles.hoursBold}>{openStr} - {closeStr}</Text></Text>
+				) : null }
+			</View>
+		);
 	}
 }
 
@@ -79,9 +81,11 @@ function formatTime(time, ampm) {
 }
 
 const styles = StyleSheet.create({
-	hoursMain: { paddingTop: 2 },
-	hoursOpen: { fontWeight: '500' },
+	hoursMain: { },
+	hoursOpen: { },
+	hoursBold: { fontWeight: '500' },
 	hoursClosed: { fontWeight: '500', color: '#D32322' },
+	hoursContainer: { flexDirection: 'row', alignItems: 'center' },
 });
 
 export default DiningHours;

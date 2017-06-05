@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
 	descriptionContainer: { padding: 10 },
 	nameText: { fontSize: 26 },
 	subText: { paddingTop: 6 },
-	diningHours: { paddingTop: 6 },
+	diningHours: { paddingTop: 10 },
 });
 
 export default DiningDescription;
