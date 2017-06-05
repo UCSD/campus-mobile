@@ -32,6 +32,7 @@
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		696A8EABA3114AA78FC811D7 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 51026162A45F46EA8ACAE0DF /* MaterialIcons.ttf */; };
 		6F934550823F4CFD86B25746 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F7254090E6674745978B1B33 /* EvilIcons.ttf */; };
+		77ECC3611EE5D683008210F8 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 438ACEC02613496CA7B66FAC /* MaterialCommunityIcons.ttf */; };
 		77FB3C831E4A5B3900A80D5E /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77FB3C821E4A5B3900A80D5E /* CoreData.framework */; };
 		77FB3C9D1E4A5B4300A80D5E /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77FB3C9C1E4A5B4300A80D5E /* SystemConfiguration.framework */; };
 		77FB3C9F1E4A5B5000A80D5E /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 77FB3C9E1E4A5B5000A80D5E /* libsqlite3.0.tbd */; };
@@ -1066,6 +1067,7 @@
 				B038C13A14254577953C72B8 /* FontAwesome.ttf in Resources */,
 				40A90CF67B5B4716BEF1A51D /* Foundation.ttf in Resources */,
 				2AC9B1390FDA44F4AAE36696 /* Ionicons.ttf in Resources */,
+				77ECC3611EE5D683008210F8 /* MaterialCommunityIcons.ttf in Resources */,
 				696A8EABA3114AA78FC811D7 /* MaterialIcons.ttf in Resources */,
 				17B8CEC0F8F8468B833E8FEC /* Octicons.ttf in Resources */,
 				4C589EA5405841C194902100 /* SimpleLineIcons.ttf in Resources */,
