@@ -1,13 +1,16 @@
 import React from 'react';
 import {
 	Image,
+	ActivityIndicator,
+	StyleSheet
 } from 'react-native';
 
 class SafeImage extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			validImage: true
+			validImage: true,
+			loading: true
 		};
 	}
 
@@ -22,13 +25,23 @@ class SafeImage extends React.Component {
 				<Image
 					{...this.props}
 					onError={this._handleError}
+					onLoadEnd={() => this.setState({ loading: false })}
 					resizeMode={'contain'}
-				/>
+				>
+					<ActivityIndicator
+						style={styles.spinner}
+						animating={this.state.loading}
+					/>
+				</Image>
 			);
 		} else {
 			return null;
 		}
 	}
 }
+
+const styles = StyleSheet.create({
+	spinner: { alignItems: 'center', justifyContent: 'center' }
+});
 
 export default SafeImage;
