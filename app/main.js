@@ -97,18 +97,18 @@ class Main extends Component {
 						>
 							<Scene key="tab1" title={AppSettings.APP_NAME} initial icon={TabIcons}>
 								<Scene key="Home" component={Home} renderTitle={() => this.campusLogo()} />
-								<Scene key="SurfReport" component={SurfReport} title="Surf Report" />
-								<Scene key="ShuttleStop" component={ShuttleStop} title="Shuttle" />
-								<Scene key="DiningDetail" component={DiningDetail} title="Dining" />
-								<Scene key="DiningNutrition" component={DiningNutrition} title="Nutrition" />
-								<Scene key="EventDetail" component={EventDetail} title="Events" />
-								<Scene key="WebWrapper" component={WebWrapper} />
-								<Scene key="WelcomeWeekView" component={WelcomeWeekView} title="Welcome Week" />
-								<Scene key="NewsDetail" component={NewsDetail} title="News" />
-								<Scene key="DataListViewAll" component={DataListViewAll} />
-								<Scene key="ShuttleRoutesListView" component={ShuttleRoutesListView} title="Choose Route" />
-								<Scene key="ShuttleStopsListView" component={ShuttleStopsListView} title="Choose Stop" />
-								<Scene key="ShuttleSavedListView" component={ShuttleSavedListView} title="Manage Stops" />
+								<Scene key="SurfReport" component={SurfReport} title="Surf Report" hideTabBar />
+								<Scene key="ShuttleStop" component={ShuttleStop} title="Shuttle" hideTabBar />
+								<Scene key="DiningDetail" component={DiningDetail} title="Dining" hideTabBar />
+								<Scene key="DiningNutrition" component={DiningNutrition} title="Nutrition" hideTabBar />
+								<Scene key="EventDetail" component={EventDetail} title="Events" hideTabBar />
+								<Scene key="WebWrapper" component={WebWrapper} hideTabBar />
+								<Scene key="WelcomeWeekView" component={WelcomeWeekView} title="Welcome Week" hideTabBar />
+								<Scene key="NewsDetail" component={NewsDetail} title="News" hideTabBar />
+								<Scene key="DataListViewAll" component={DataListViewAll} hideTabBar />
+								<Scene key="ShuttleRoutesListView" component={ShuttleRoutesListView} title="Choose Route" hideTabBar />
+								<Scene key="ShuttleStopsListView" component={ShuttleStopsListView} title="Choose Stop" hideTabBar />
+								<Scene key="ShuttleSavedListView" component={ShuttleSavedListView} title="Manage Stops" hideTabBar />
 								<Scene key="ConferenceView" component={ConferenceView} title="Campus LISA" hideTabBar />
 								<Scene key="ConferenceDetailView" component={ConferenceDetailView} title="Campus LISA" hideTabBar />
 							</Scene>

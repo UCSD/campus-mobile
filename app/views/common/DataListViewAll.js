@@ -5,12 +5,15 @@ import {
 } from 'react-native';
 
 import DataListView from './DataListView';
-
-import css from '../../styles/css';
 import logger from '../../util/logger';
 import {
-	COLOR_LGREY
+	COLOR_LGREY,
+	COLOR_MGREY
 } from '../../styles/ColorConstants';
+import {
+	MARGIN_TOP,
+	MARGIN_BOTTOM
+} from '../../styles/LayoutConstants';
 
 /**
  * @param  {String} title Nav header
@@ -22,7 +25,7 @@ const DataListViewAll = ({ title, data, item, card }) => {
 	logger.ga('View Loaded: ' + title + ' ListView');
 	console.log('card: ' + card);
 	return (
-		<View style={[css.main_container, css.white_bg]}>
+		<View style={styles.main_container}>
 			<DataListView
 				style={(card) ? (styles.cardList) : (styles.list)}
 				data={data}
@@ -41,6 +44,7 @@ DataListViewAll.propTypes = {
 };
 
 const styles = StyleSheet.create({
+	main_container: { flexGrow: 1, backgroundColor: COLOR_MGREY, marginTop: MARGIN_TOP },
 	list: { padding: 6, backgroundColor: COLOR_LGREY },
 	cardList: { margin: 6 }
 });

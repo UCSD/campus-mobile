@@ -11,24 +11,25 @@ import {
 import moment from 'moment';
 
 import SafeImage from '../common/SafeImage';
-import css from '../../styles/css';
 import logger from '../../util/logger';
 import general from '../../util/general';
 import {
 	COLOR_PRIMARY,
 	COLOR_WHITE,
 	COLOR_DGREY,
-	COLOR_BLACK
+	COLOR_BLACK,
+	COLOR_MGREY,
 } from '../../styles/ColorConstants';
 import {
 	WINDOW_WIDTH,
+	MARGIN_TOP,
 } from '../../styles/LayoutConstants';
 
 const EventDetail = ({ data }) => {
 	logger.ga('View Loaded: Event Detail: ' + data.title);
 
 	return (
-		<ScrollView style={[css.main_container, css.whitebg]}>
+		<ScrollView style={styles.main_container}>
 
 			{data.imagehq ? (
 				<SafeImage
@@ -70,6 +71,7 @@ const EventDetail = ({ data }) => {
 };
 
 const styles = StyleSheet.create({
+	main_container: { flexGrow: 1, backgroundColor: COLOR_MGREY, marginTop: MARGIN_TOP },
 	image: { width: WINDOW_WIDTH, height: 200 },
 	detailContainer: { width: WINDOW_WIDTH, paddingHorizontal: 18, paddingVertical: 14 },
 	nameText: { fontWeight: '400', fontSize: 22, color: COLOR_PRIMARY },
