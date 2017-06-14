@@ -6,7 +6,9 @@ import {
 	StyleSheet,
 	Platform,
 	Animated,
-	Easing
+	Easing,
+	TouchableWithoutFeedback,
+	PanResponder
 } from 'react-native';
 
 import { connect } from 'react-redux';
@@ -69,12 +71,20 @@ export default class CardPreferences extends Component {
 						scrollEnabled={false}
 						data={this.state.cardObject}
 						renderRow={
-							({ data, active, disabled }) =>
-								<PrefItem
-									data={data}
-									active={active}
-									updateState={this.setCardState}
-								/>
+							({ data, active, disabled }) => {
+								// Hide conference option if there is no conferenceData
+								if (data.id === 'conference' && !this.props.conferenceData) {
+									return null;
+								} else {
+									return (
+										<PrefItem
+											data={data}
+											active={active}
+											updateState={this.setCardState}
+										/>
+									);
+								}
+							}
 						}
 						onChangeOrder={(nextOrder) => { this._order = nextOrder; }}
 						onReleaseRow={(key) => this._handleRelease()}
@@ -88,7 +98,8 @@ export default class CardPreferences extends Component {
 function mapStateToProps(state, props) {
 	return {
 		cards: state.cards.cards,
-		cardOrder: state.cards.cardOrder
+		cardOrder: state.cards.cardOrder,
+		conferenceData: state.conference.data,
 	};
 }
 
@@ -158,10 +169,9 @@ class PrefItem extends React.Component {
 		}
 	}
 
-	_handleToggle = (value) => {
+	_handleToggle = () => {
 		const { data, updateState } = this.props;
-		this.setState({ switchState: value });
-		updateState(data.id, value);
+		updateState(data.id, this.state.switchState);
 	}
 
 	render() {
@@ -171,21 +181,85 @@ class PrefItem extends React.Component {
 				style={[styles.list_row, this._style]}
 			>
 				<Icon
+					style={{ padding: 7 }}
 					name="drag-handle"
 					size={20}
 				/>
 				<Text style={styles.name_text}>{data.name}</Text>
-				<Switch
-					onValueChange={(value) => { this._handleToggle(value); }}
-					value={this.state.switchState}
-				/>
+				<View
+					style={{ width: 50, height: 50, justifyContent: 'center', alignItems: 'center' }}
+				>
+					<NoTouchy
+						style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+						onPress={() => this.setState({ switchState: !this.state.switchState })}
+					>
+						<Switch
+							onValueChange={(value) => this._handleToggle()}
+							value={this.state.switchState}
+						/>
+					</NoTouchy>
+				</View>
 			</Animated.View>
 		);
 	}
 }
 
+class NoTouchy extends Component {
+	componentWillMount() {
+		this._panResponder = PanResponder.create({
+			// Ask to be the responder:
+			onStartShouldSetPanResponder: (evt, gestureState) => true,
+			onStartShouldSetPanResponderCapture: (evt, gestureState) => true,
+			onMoveShouldSetPanResponder: (evt, gestureState) => true,
+			onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
+			onResponderTerminationRequest: (evt, gestureState) => false,
+
+			onPanResponderGrant: (evt, gestureState) => {
+			// The gesture has started. Show visual feedback so the user knows
+			// what is happening!
+				if (this.props.onPress) {
+					this.props.onPress();
+				}
+
+			// gestureState.d{x,y} will be set to zero now
+			},
+			onPanResponderMove: (evt, gestureState) => {
+			// The most recent move distance is gestureState.move{X,Y}
+
+			// The accumulated gesture distance since becoming responder is
+			// gestureState.d{x,y}
+			},
+			onPanResponderTerminationRequest: (evt, gestureState) => true,
+			onPanResponderRelease: (evt, gestureState) => {
+			// The user has released all touches while this view is the
+			// responder. This typically means a gesture has succeeded
+			},
+			onPanResponderTerminate: (evt, gestureState) => {
+			// Another component has become the responder, so this gesture
+			// should be cancelled
+			},
+			onShouldBlockNativeResponder: (evt, gestureState) => {
+				// Returns whether this component should block native components from becoming the JS
+				// responder. Returns true by default. Is currently only supported on android.
+				return true;
+			},
+		});
+	}
+
+	render() {
+		return (
+			<View
+				{...this._panResponder.panHandlers}
+				style={this.props.style}
+			>
+				{this.props.children}
+			</View>
+		);
+	}
+}
+
 const styles = StyleSheet.create({
-	list_row: { backgroundColor: COLOR_LGREY, flexDirection: 'row', alignItems: 'center', width: getMaxCardWidth(), padding: 7, borderBottomWidth: 1, borderBottomColor: COLOR_MGREY ,
+	list_row: { backgroundColor: COLOR_LGREY, flexDirection: 'row', alignItems: 'center', width: getMaxCardWidth(), borderBottomWidth: 1, borderBottomColor: COLOR_MGREY ,
 		...Platform.select({
 			ios: {
 				shadowOpacity: 0,
