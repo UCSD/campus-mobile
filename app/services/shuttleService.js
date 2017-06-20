@@ -4,6 +4,7 @@ import {
 	SHUTTLE_STOPS_API_URL,
 	SHUTTLE_VEHICLES_API_URL
 } from '../AppSettings';
+import logger from '../util/logger';
 
 export function fetchShuttleArrivalsByStop(stopID) {
 	const stopURL = SHUTTLE_STOPS_API_URL + stopID + '/arrivals';
@@ -28,7 +29,11 @@ export function fetchVehiclesByRoute(routeID) {
 			'Cache-Control': 'no-cache'
 		}
 	})
-	.then((response) => response.json());
+	.then((response) => response.json())
+	.catch((err) => {
+		console.log('Error fetching vehicles for route ' + routeID + ' ' + err);
+		return null;
+	});
 }
 
 export function fetchMasterStopsNoRoutes() {
@@ -37,7 +42,11 @@ export function fetchMasterStopsNoRoutes() {
 			'Cache-Control': 'no-cache'
 		}
 	})
-	.then((response) => response.json());
+	.then((response) => response.json())
+	.catch((err) => {
+		console.log('Error fetchMasterStopsNoRoutes' + err);
+		return null;
+	});
 }
 
 export function fetchMasterRoutes() {
@@ -46,5 +55,9 @@ export function fetchMasterRoutes() {
 			'Cache-Control': 'no-cache'
 		}
 	})
-	.then((response) => response.json());
+	.then((response) => response.json())
+	.catch((err) => {
+		console.log('Error fetchMasterRoutes' + err);
+		return null;
+	});
 }

@@ -7,7 +7,11 @@ const QuicklinksService = {
 				'Cache-Control': 'no-cache'
 			}
 		})
-		.then((response) => response.json());
+		.then((response) => response.json())
+		.catch((err) => {
+			console.log('Error fetching quicklinks' + err);
+			return null;
+		});
 	}
 };
 

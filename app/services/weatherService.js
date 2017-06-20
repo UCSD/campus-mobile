@@ -46,6 +46,10 @@ const WeatherService = {
 			}
 
 			return responseData;
+		})
+		.catch((err) => {
+			console.log('Error fetching weather: ' + err);
+			return null;
 		});
 	},
 
@@ -122,10 +126,13 @@ const WeatherService = {
 					} else {
 						surfDataMap[dateKey] = [element];
 					}
-				});
-
+				})
 				return surfDataMap;
 			}
+		})
+		.catch((err) => {
+			console.log('Error fetching surf: ' + err);
+			return null;
 		});
 	},
 };

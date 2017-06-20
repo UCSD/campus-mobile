@@ -25,7 +25,11 @@ const NewsService = {
 				}
 			}
 			return news.items;
-		}));
+		}))
+		.catch((err) => {
+			console.log('Error fetching news' + err);
+			return null;
+		});
 	}
 };
 
