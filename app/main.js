@@ -26,7 +26,6 @@ import DiningDetail from './views/dining/DiningDetail';
 import DiningNutrition from './views/dining/DiningNutrition';
 import EventDetail from './views/events/EventDetail';
 import WebWrapper from './views/WebWrapper';
-import WelcomeWeekView from './views/welcomeWeek/WelcomeWeekView';
 import NewsDetail from './views/news/NewsDetail';
 import FeedbackView from './views/FeedbackView';
 import PreferencesView from './views/preferences/PreferencesView';
@@ -103,7 +102,6 @@ class Main extends Component {
 								<Scene key="DiningNutrition" component={DiningNutrition} title="Nutrition" />
 								<Scene key="EventDetail" component={EventDetail} title="Events" />
 								<Scene key="WebWrapper" component={WebWrapper} />
-								<Scene key="WelcomeWeekView" component={WelcomeWeekView} title="Welcome Week" />
 								<Scene key="NewsDetail" component={NewsDetail} title="News" />
 								<Scene key="DataListViewAll" component={DataListViewAll} />
 								<Scene key="ShuttleRoutesListView" component={ShuttleRoutesListView} title="Choose Route" />
