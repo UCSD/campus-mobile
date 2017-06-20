@@ -39,18 +39,18 @@ function fetchDining(position) {
 			return diningData;
 		})
 		.catch((error) => {
-			logger.error(error);
+			logger.log(error);
 		});
 }
 
 function _sortDining(diningData) {
 	// Sort dining locations by name
 	return new Promise((resolve, reject) => {
-		if (diningData) {
+		if (Array.isArray(diningData)) {
 			diningData.sort(dynamicSort('name'));
 			resolve(diningData);
 		} else {
-			reject(null);
+			reject('Error _sortDining, diningData is not an array(' + diningData + ')');
 		}
 	});
 }
