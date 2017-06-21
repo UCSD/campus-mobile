@@ -20,7 +20,9 @@ function* updateDining(action) {
 		if (position) {
 			diningData = yield call(_setDiningDistance, position, diningData);
 		}
-		yield put({ type: 'SET_DINING', data: diningData });
+		if (diningData) {
+			yield put({ type: 'SET_DINING', data: diningData });
+		}
 	} else {
 		// Fetch for new data then sort and set distance
 		const diningData = yield call(fetchDining, position);
