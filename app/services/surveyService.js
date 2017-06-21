@@ -19,7 +19,7 @@ export function postSurvey(id, answer, data) {
 			}
 		})
 		.catch((error) => {
-			logger.error('Error submitting survey(' + id + '): ' + error);
+			logger.log('Error submitting survey(' + id + '): ' + error);
 			resolve(false);
 		});
 	});*/
