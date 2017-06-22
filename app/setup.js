@@ -20,7 +20,7 @@ class CampusMobileSetup extends React.Component {
 		super(props);
 
 		this.state = {
-			store: configureStore({}, this.finishLoading()),
+			store: configureStore({}, this.finishLoading),
 			isLoading: true,
 		};
 	}
