@@ -30,7 +30,7 @@ class NewsCardContainer extends CardComponent {
 
 	render() {
 		const { newsData } = this.props;
-		if (newsData) {
+		if (Array.isArray(newsData)) {
 			newsData.forEach((element) => {
 				element.subtext = moment(element.date).format('MMM Do, YYYY');
 			});

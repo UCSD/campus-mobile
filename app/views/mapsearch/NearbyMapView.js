@@ -85,7 +85,7 @@ class NearbyMapView extends React.Component {
 
 		// Loop thru every vehicle
 		Object.keys(nextProps.toggles).forEach((route) => {
-			if (nextProps.toggles[route] === true && nextProps.vehicles[route]) {
+			if (nextProps.toggles[route] === true && Array.isArray(nextProps.vehicles[route])) {
 				if (this.state.vehicles[route]) {
 					nextProps.vehicles[route].forEach((nextVehicle) => {
 						this.state.vehicles[route].forEach((currVehicle) => {

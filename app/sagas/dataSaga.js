@@ -171,13 +171,15 @@ function prefetchConferenceImages(conference) {
 }
 
 function prefetchLinkImages(links) {
-	links.forEach((item) => {
-		const imageUrl = item.icon;
-		// Check if actually a url and not icon name
-		if (imageUrl.indexOf('fontawesome:') !== 0) {
-			Image.prefetch(imageUrl);
-		}
-	});
+	if (Array.isArray(links)) {
+		links.forEach((item) => {
+			const imageUrl = item.icon;
+			// Check if actually a url and not icon name
+			if (imageUrl.indexOf('fontawesome:') !== 0) {
+				Image.prefetch(imageUrl);
+			}
+		});
+	}
 }
 
 function* dataSaga() {

@@ -145,20 +145,22 @@ function isSaved(savedArray, id) {
 function convertToTimeMap(scheduleMap, scheduleArray, header = false) {
 	const timeMap = {};
 
-	scheduleArray.forEach((key) => {
-		const session = scheduleMap[key];
-		if (!timeMap[session['start-time']]) {
-			// Create an entry in the map for the timestamp if it hasn't yet been created
-			timeMap[session['start-time']] = [];
-		}
-		timeMap[session['start-time']].push(session);
-	});
-
-	// Remove an item from section so spacing lines up
-	if (header) {
-		Object.keys(timeMap).forEach((key) => {
-			timeMap[key].pop();
+	if (Array.isArray(scheduleArray)) {
+		scheduleArray.forEach((key) => {
+			const session = scheduleMap[key];
+			if (!timeMap[session['start-time']]) {
+				// Create an entry in the map for the timestamp if it hasn't yet been created
+				timeMap[session['start-time']] = [];
+			}
+			timeMap[session['start-time']].push(session);
 		});
+
+		// Remove an item from section so spacing lines up
+		if (header) {
+			Object.keys(timeMap).forEach((key) => {
+				timeMap[key].pop();
+			});
+		}
 	}
 	return timeMap;
 }

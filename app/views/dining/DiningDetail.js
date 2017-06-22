@@ -268,7 +268,7 @@ const TypeButton = ({ name, type, active, addFilter }) => (
 );
 
 const MenuList = ({ data, filters, activeMeal }) => {
-	if (data) {
+	if (Array.isArray(data) && Array.isArray(filters)) {
 		let menuItems = [];
 
 		// Active Meal filter
