@@ -27,7 +27,8 @@ function updateNews() {
 					}
 				})
 				.catch((error) => {
-					logger.error(error);
+					logger.log('Error fetching news: ' + error);
+					return null;
 				});
 		}
 	};

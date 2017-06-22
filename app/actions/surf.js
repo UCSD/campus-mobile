@@ -11,7 +11,8 @@ function updateSurf() {
 				});
 			})
 			.catch((error) => {
-				logger.error(error);
+				logger.log('Error fetching Surf: ' + error);
+				return null;
 			});
 	};
 }

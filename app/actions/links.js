@@ -27,7 +27,8 @@ function updateLinks() {
 					}
 				})
 				.catch((error) => {
-					logger.error(error);
+					logger.log('Error fetching links: ' + error);
+					return null;
 				});
 		}
 	};

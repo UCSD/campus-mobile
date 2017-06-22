@@ -53,7 +53,8 @@ function updateDining(location) {
 					}
 				})
 				.catch((error) => {
-					logger.error(error);
+					logger.log('Error fetching dining: ' + error);
+					return null;
 				});
 		}
 	};

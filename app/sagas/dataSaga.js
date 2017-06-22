@@ -47,7 +47,9 @@ function* updateWeather() {
 		// Do nothing, no need to fetch new data
 	} else {
 		const weather = yield call(WeatherService.FetchWeather);
-		yield put({ type: 'SET_WEATHER', weather });
+		if (weather) {
+			yield put({ type: 'SET_WEATHER', weather });
+		}
 	}
 }
 
@@ -61,7 +63,9 @@ function* updateSurf() {
 		// Do nothing, no need to fetch new data
 	} else {
 		const surf = yield call(WeatherService.FetchSurf);
-		yield put({ type: 'SET_SURF', surf });
+		if (surf) {
+			yield put({ type: 'SET_SURF', surf });
+		}
 	}
 }
 
@@ -123,9 +127,9 @@ function* updateLinks() {
 	} else {
 		// Fetch for new data
 		const links = yield call(LinksService.FetchQuicklinks);
-		yield put({ type: 'SET_LINKS', links });
 
 		if (links) {
+			yield put({ type: 'SET_LINKS', links });
 			prefetchLinkImages(links);
 		}
 	}
