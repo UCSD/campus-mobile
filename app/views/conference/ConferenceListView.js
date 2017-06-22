@@ -27,7 +27,7 @@ const dataSource = new ListView.DataSource({
 });
 
 const ConferenceListView = ({ style, scrollEnabled, rows, personal, disabled, conferenceData, saved, addConference, removeConference }) => {
-	if (personal && saved && saved.length === 0) {
+	if (personal && Array.isArray(saved) && saved.length === 0) {
 		return (
 			<View style={[style, rows ? styles.card : styles.full]}>
 				<Text style={styles.noSavedSessions}>
@@ -83,7 +83,7 @@ const ConferenceListView = ({ style, scrollEnabled, rows, personal, disabled, co
 
 function adjustData(scheduleIdMap, scheduleIdArray, savedArray, personal, rows) {
 	// Filter out saved items
-	if (!personal || !savedArray) {
+	if (!personal || !Array.isArray(savedArray)) {
 		const keys = scheduleIdArray;
 		if (!rows) {
 			return scheduleIdArray;
@@ -134,12 +134,15 @@ function adjustData(scheduleIdMap, scheduleIdArray, savedArray, personal, rows) 
 }
 
 function isSaved(savedArray, id) {
-	for ( let i = 0; i < savedArray.length; ++i) {
-		if (savedArray[i] === id) {
-			return true;
+	if (Array.isArray(savedArray)) {
+		for ( let i = 0; i < savedArray.length; ++i) {
+			if (savedArray[i] === id) {
+				return true;
+			}
 		}
+	} else {
+		return false;
 	}
-	return false;
 }
 
 function convertToTimeMap(scheduleMap, scheduleArray, header = false) {

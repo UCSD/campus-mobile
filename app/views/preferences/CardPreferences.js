@@ -35,10 +35,13 @@ export default class CardPreferences extends Component {
 	getCardObject = (cards, cardOrder) => {
 		const cardArray = [];
 		const cardObject = {};
-		for (let i = 0; i < cardOrder.length; ++i) {
-			const key = cardOrder[i];
-			cardArray.push(cards[key]);
-			cardObject[i] = cards[key];
+
+		if (Array.isArray(cardOrder)) {
+			for (let i = 0; i < cardOrder.length; ++i) {
+				const key = cardOrder[i];
+				cardArray.push(cards[key]);
+				cardObject[i] = cards[key];
+			}
 		}
 		return cardObject;
 	}
@@ -52,7 +55,7 @@ export default class CardPreferences extends Component {
 	}
 
 	_handleRelease = () => {
-		if (this._order) {
+		if (Array.isArray(this._order)) {
 			const orderedCards = this.getOrderedArray();
 			this.props.orderCards(orderedCards);
 		}

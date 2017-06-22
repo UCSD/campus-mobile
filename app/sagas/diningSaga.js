@@ -60,7 +60,7 @@ function _sortDining(diningData) {
 function _setDiningDistance(position, diningData) {
 	// Calc distance from dining locations
 	return new Promise((resolve, reject) => {
-		if (diningData) {
+		if (Array.isArray(diningData)) {
 			for (let i = 0; diningData.length > i; i++) {
 				const distance = getDistance(position.coords.latitude, position.coords.longitude, diningData[i].coords.lat, diningData[i].coords.lon);
 				if (distance) {

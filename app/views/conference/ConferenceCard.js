@@ -15,7 +15,7 @@ import Touchable from '../common/Touchable';
 
 const ConferenceCard = ({ conference, saved, hideCard }) => (
 	<View>
-		{ (saved.length < 1) ?
+		{ (Array.isArray(saved) && saved.length < 1) ?
 			(
 				<BannerCard
 					image={conference.logo}

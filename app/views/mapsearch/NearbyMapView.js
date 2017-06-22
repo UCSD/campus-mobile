@@ -343,7 +343,7 @@ class NearbyMapView extends React.Component {
 							<SearchSuggest
 								onPress={this.updateSearchSuggest}
 							/>
-							{(this.props.search_history.length !== 0) ? (
+							{(Array.isArray(this.props.search_history) && (this.props.search_history.length !== 0)) ? (
 								<SearchHistoryCard
 									pressHistory={this.updateSearch}
 									removeHistory={this.props.removeHistory}
