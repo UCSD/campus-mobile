@@ -36,7 +36,7 @@ class ShuttleCardContainer extends CardComponent {
 	}
 
 	gotoRoutesList = () => {
-		if (this.props.savedStops.length < 10) {
+		if (Array.isArray(this.props.savedStops) && this.props.savedStops.length < 10) {
 			const { shuttle_routes } = this.props;
 			// Sort routes by alphabet
 			const alphaRoutes = [];
@@ -61,9 +61,11 @@ class ShuttleCardContainer extends CardComponent {
 	isSaved = (stop) => {
 		const { savedStops } = this.props;
 
-		for (let i = 0; i < savedStops.length; ++i) {
-			if (savedStops[i].id === stop.id) {
-				return true;
+		if (Array.isArray(savedStops)) {
+			for (let i = 0; i < savedStops.length; ++i) {
+				if (savedStops[i].id === stop.id) {
+					return true;
+				}
 			}
 		}
 		return false;

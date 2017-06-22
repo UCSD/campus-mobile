@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import {
 	AppState,
 } from 'react-native';
@@ -31,7 +31,7 @@ class EventCardContainer extends CardComponent {
 
 	render() {
 		const { eventsData } = this.props;
-		if (eventsData) {
+		if (Array.isArray(eventsData)) {
 			eventsData.forEach((element) => {
 				element.subtext = moment(element.eventdate).format('MMM Do') + ', ' + militaryToAMPM(element.starttime) + ' - ' + militaryToAMPM(element.endtime);
 				element.image = element.imagethumb;
@@ -48,6 +48,10 @@ class EventCardContainer extends CardComponent {
 		);
 	}
 }
+
+EventCardContainer.propTypes = {
+	eventsData: PropTypes.array
+};
 
 const mapStateToProps = (state) => (
 	{

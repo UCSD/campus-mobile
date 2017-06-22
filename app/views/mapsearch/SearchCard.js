@@ -62,7 +62,7 @@ class SearchCard extends CardComponent {
 		});
 
 		NearbyService.FetchSearchResults(text).then((result) => {
-			if (result.results) {
+			if (Array.isArray(result.results)) {
 				// Cutoff excess
 				if (result.results.length > 5) {
 					result.results = result.results.slice(0, 5);
