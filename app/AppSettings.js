@@ -4,7 +4,7 @@ module.exports = {
 	APP_NAME: 'Campus Mobile',
 	APP_VERSION: '5.2',
 	APP_CODEPUSH_VERSION: '1',
-	GOOGLE_ANALYTICS_ID: 'UA-59591330-4',
+	GOOGLE_ANALYTICS_ID: 'UA-XXXXXXXX-X',
 
 	/* APIs / FEEDS */
 	WEATHER_API_URL: 'https://w3wyps9yje.execute-api.us-west-2.amazonaws.com/prod/forecast?',
