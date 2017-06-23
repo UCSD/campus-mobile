@@ -12,6 +12,7 @@ import configureStore from './store/configureStore';
 
 import Main from './main';
 import general from './util/general';
+import logger from './util/logger';
 
 const codePushOptions = { checkFrequency: codePush.CheckFrequency.ON_APP_RESUME, installMode: codePush.InstallMode.ON_NEXT_RESTART };
 
@@ -31,14 +32,22 @@ class CampusMobileSetup extends React.Component {
 		const errorHandler = (e, isFatal) => {
 			if (isFatal) {
 				AsyncStorage.clear();
+
+				var errorStr = 'Crash: ' + e.name + ': ' + e.message,
+					errorStack;
+
+				try {
+					errorStack = e.stack.replace(/.*\n/,'').replace(/\n.*/g, '').trim();
+					errorStr += ' ' + errorStack;
+				} catch (stackErr) {
+					logger.log('Error: ' + stackErr);
+				}
+
+				logger.trackException(errorStr, isFatal);
+
 				Alert.alert(
 					'Unexpected error occurred',
 					'Please try restarting the app. If the app is still crashing, please keep an eye out for an update or try again later.',
-					/*`
-					Error: ${(isFatal) ? 'Fatal:' : ''} ${e.name} ${e.message}
-
-					We will need to restart the app.
-					`,*/
 					[{
 						text: 'Okay',
 						onPress: () => {

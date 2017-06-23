@@ -12,7 +12,7 @@ const NewsService = {
 		})
 		.then((response) => (response.json())
 		.then((news) => {
-			if (Array.isArray(news)) {
+			if (Array.isArray(news.items)) {
 				for (let i = 0; news.items.length > i; i++) {
 					// Perform this on the feed level when possible
 					news.items[i].title = entities.decode(news.items[i].title);
