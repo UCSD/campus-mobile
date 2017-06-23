@@ -45,7 +45,8 @@ function* removeStop(action) {
 		const closestStop = (shuttle.closestStop) ? Object.assign({}, shuttle.closestStop) : null;
 
 		// Remove stop from saved array
-		for (let i = 0; i < savedStops.length; ++i) {
+		let i; // being used in this scope, don't move into for condition
+		for (i = 0; i < savedStops.length; ++i) {
 			if (savedStops[i].id === action.stopID) {
 				savedStops.splice(i, 1);
 				break;
