@@ -27,7 +27,8 @@ function updateEvents() {
 					}
 				})
 				.catch((error) => {
-					logger.error(error);
+					logger.log('Error fetching events: ' + error);
+					return null;
 				});
 		}
 	};

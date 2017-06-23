@@ -20,7 +20,8 @@ function updateWeather() {
 				});
 			})
 			.catch((error) => {
-				logger.error(error);
+				logger.log('Error fetching Weather: ' + error);
+				return null;
 			});
 		}
 	};

@@ -70,7 +70,10 @@ const GeoLocationContainer = React.createClass({
 				this.startLocationWatch();
 			}
 		})
-		.catch(logger.error);
+		.catch((error) => {
+			logger.log('Error requesting Permission: ' + error);
+			return null;
+		});
 	},
 
 

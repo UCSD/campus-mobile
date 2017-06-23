@@ -13,7 +13,8 @@ const EventService = {
 			}
 		})
 		.then((response) => response.json())
-		.then((responseData) => responseData);
+		.then((responseData) => responseData)
+		.catch((err) => console.log('Error fetching events: ' + err));
 	}
 
 };

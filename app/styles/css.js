@@ -22,7 +22,6 @@
 		402 - Shuttle Stop
 		403 - Dining List
 		404 - Dining Detail
-		405 - Welcome Week
 		406 - Event & News Detail
 		407 - WebView
 		408 - Feedback
@@ -307,18 +306,6 @@ var css = StyleSheet.create({
 	dd_menu_container: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR_PRIMARY, borderRadius: 3, margin: 20, padding: 10 },
 	dd_dining_menu: { marginHorizontal: 8 },
 	dd_menu_text: { fontSize: 16, color: COLOR_WHITE },
-
-	// 405 - Welcome Week
-	welcome_listview: {},
-	welcome_ai: { alignItems: 'center', justifyContent: 'center', marginTop: WINDOW_HEIGHT / 2 },
-	welcome_list_row: { flexDirection: 'row', paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: 'white', overflow: 'hidden', paddingLeft: 16, borderTopColor: 'white', justifyContent: 'center', alignItems: 'center'},
-	welcome_list_sectionText: { fontSize: 18, color: COLOR_WHITE },
-	welcome_list_section: { flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start', padding: 6, backgroundColor: '#666' },
-	welcome_list_left_container: { flexGrow: 1, marginRight: 14 },
-	welcome_list_title: { fontSize: 17, color: COLOR_BLACK },
-	welcome_list_desc: { fontSize: 14, color: '#666', paddingTop: 3, paddingBottom: 6 },
-	welcome_list_postdate: { fontSize: 11, color: COLOR_PRIMARY },
-	welcome_list_image: { width: 130, height: 87, marginLeft: 14, borderWidth: 1, borderColor: '#CCC' },
 
 	// 406 - Event & News Detail
 	news_detail_container: { width: WINDOW_WIDTH, paddingHorizontal: 18, paddingVertical: 14 },

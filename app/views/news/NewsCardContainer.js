@@ -8,17 +8,19 @@ import logger from '../../util/logger';
 
 const NewsCardContainer = ({ newsData }) => {
 	logger.ga('Card Mounted: News');
-	if (newsData) {
+
+	let data = null;
+	if (Array.isArray(newsData)) {
 		newsData.forEach((element) => {
 			element.subtext = moment(element.date).format('MMM Do, YYYY');
 		});
+		data = newsData;
 	}
-
 	return (
 		<DataListCard
 			id="news"
 			title="News"
-			data={newsData}
+			data={data}
 			item={'NewsItem'}
 		/>
 	);

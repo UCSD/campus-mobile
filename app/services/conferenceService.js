@@ -10,5 +10,6 @@ export function fetchConference() {
 		}
 	})
 	.then((response) => response.json())
-	.then((responseData) => responseData.conference); // TODO, figure out final form of JSON
+	.then((responseData) => responseData.conference)
+	.catch((err) => console.log('Error fetching conference: ' + err)); // TODO, figure out final form of JSON
 }

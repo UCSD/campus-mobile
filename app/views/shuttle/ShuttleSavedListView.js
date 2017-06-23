@@ -36,7 +36,8 @@ class ShuttleSavedListView extends React.Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		if (this.props.savedStops.length !== nextProps.savedStops.length) {
+		if (Array.isArray(this.props.savedStops) && Array.isArray(nextProps.savedStops) &&
+			this.props.savedStops.length !== nextProps.savedStops.length) {
 			const savedStops = nextProps.savedStops.slice();
 			const { closestStop } = nextProps;
 			if (closestStop) {
@@ -48,7 +49,8 @@ class ShuttleSavedListView extends React.Component {
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
-		if (this.props.savedStops.length !== nextProps.savedStops.length) {
+		if (Array.isArray(this.props.savedStops) && Array.isArray(nextProps.savedStops) &&
+			this.props.savedStops.length !== nextProps.savedStops.length) {
 			return true;
 		} else {
 			return false;
@@ -57,16 +59,20 @@ class ShuttleSavedListView extends React.Component {
 
 	getOrderedArray = () => {
 		const orderArray = [];
-		for (let i = 0; i < this._order.length; ++i) {
-			orderArray.push(this.state.savedObject[this._order[i]]);
+		if (Array.isArray(this._order)) {
+			for (let i = 0; i < this._order.length; ++i) {
+				orderArray.push(this.state.savedObject[this._order[i]]);
+			}
 		}
 		return orderArray;
 	}
 
 	arrayToObject(array) {
 		const savedObject = {};
-		for (let i = 0; i < array.length; ++i) {
-			savedObject[i] = array[i];
+		if (Array.isArray(array)) {
+			for (let i = 0; i < array.length; ++i) {
+				savedObject[i] = array[i];
+			}
 		}
 		return savedObject;
 	}

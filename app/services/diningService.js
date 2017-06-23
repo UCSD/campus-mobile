@@ -14,7 +14,8 @@ const DiningService = {
 			} else {
 				return data;
 			}
-		});
+		})
+		.catch((err) => console.log('Error fetching dining: ' + err));
 	}
 };
 

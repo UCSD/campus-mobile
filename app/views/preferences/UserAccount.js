@@ -53,7 +53,7 @@ class UserAccount extends Component {
 			// if the are not logged in, log them in
 			const authUrl = authenticationService.createAuthenticationUrl();
 
-			Linking.openURL(authUrl).catch(err => logger.error('An error occurred', err));
+			Linking.openURL(authUrl).catch(err => logger.log('An error occurred performing UserAuthAction: ', err));
 		}
 	}
 

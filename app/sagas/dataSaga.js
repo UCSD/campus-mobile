@@ -55,7 +55,9 @@ function* updateWeather() {
 		// Do nothing, no need to fetch new data
 	} else {
 		const weather = yield call(WeatherService.FetchWeather);
-		yield put({ type: 'SET_WEATHER', weather });
+		if (weather) {
+			yield put({ type: 'SET_WEATHER', weather });
+		}
 	}
 }
 
@@ -69,18 +71,20 @@ function* updateSurf() {
 		// Do nothing, no need to fetch new data
 	} else {
 		const surf = yield call(WeatherService.FetchSurf);
-		yield put({ type: 'SET_SURF', surf });
+		if (surf) {
+			yield put({ type: 'SET_SURF', surf });
+		}
 	}
 }
 
 function* updateConference() {
-	const { lastUpdated, data, saved } = yield select(getConference);
+	const { lastUpdated, saved } = yield select(getConference);
 	const { cards } = yield select(getCards);
 	const nowTime = new Date().getTime();
 	const timeDiff = nowTime - lastUpdated;
 	const ttl = CONFERENCE_TTL * 1000;
 
-	if (timeDiff > ttl) {
+	if (timeDiff > ttl && Array.isArray(saved)) {
 		const conference = yield call(fetchConference);
 
 		if (conference) {
@@ -131,9 +135,9 @@ function* updateLinks() {
 	} else {
 		// Fetch for new data
 		const links = yield call(LinksService.FetchQuicklinks);
-		yield put({ type: 'SET_LINKS', links });
 
 		if (links) {
+			yield put({ type: 'SET_LINKS', links });
 			prefetchLinkImages(links);
 		}
 	}
@@ -176,7 +180,7 @@ function* updateSurveys() {
 	// Fetch for all survey ids
 	const surveyIds = yield call(fetchSurveyIds);
 
-	if (surveyIds && surveyIds.length > allIds.length) {
+	if (Array.isArray(surveyIds) && Array.isArray(surveyIds) && surveyIds.length > allIds.length) {
 		// Fetch each new survey
 		for (let i = 0; i < surveyIds.length; ++i) {
 			const id = surveyIds[i];
@@ -191,9 +195,11 @@ function* updateSurveys() {
 
 function savedExists(scheduleIds, savedArray) {
 	const existsArray = [];
-	for (let i = 0; i < savedArray.length; ++i) {
-		if (scheduleIds.includes(savedArray[i])) {
-			existsArray.push(savedArray[i]);
+	if (Array.isArray(savedArray)) {
+		for (let i = 0; i < savedArray.length; ++i) {
+			if (scheduleIds.includes(savedArray[i])) {
+				existsArray.push(savedArray[i]);
+			}
 		}
 	}
 	return existsArray;
@@ -205,13 +211,15 @@ function prefetchConferenceImages(conference) {
 }
 
 function prefetchLinkImages(links) {
-	links.forEach((item) => {
-		const imageUrl = item.icon;
-		// Check if actually a url and not icon name
-		if (imageUrl.indexOf('fontawesome:') !== 0) {
-			Image.prefetch(imageUrl);
-		}
-	});
+	if (Array.isArray(links)) {
+		links.forEach((item) => {
+			const imageUrl = item.icon;
+			// Check if actually a url and not icon name
+			if (imageUrl.indexOf('fontawesome:') !== 0) {
+				Image.prefetch(imageUrl);
+			}
+		});
+	}
 }
 
 function* dataSaga() {
