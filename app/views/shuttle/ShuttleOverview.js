@@ -30,7 +30,7 @@ const ShuttleOverview = ({ onPress, stopData, closest }) => {
 		return null;
 	} else if (closest && !stopData) {
 		return (<LocationRequiredContent />);
-	} else if (stopData.arrivals && (stopData.arrivals.length > 0)) {
+	} else if (Array.isArray(stopData.arrivals) && stopData.arrivals.length > 0) {
 		return (
 			<Touchable onPress={() => onPress()}>
 				<View style={styles.bigContainer}>

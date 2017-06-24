@@ -1,5 +1,7 @@
 import React from 'react';
-import { View, StatusBar } from 'react-native';
+import { View, StatusBar, Alert, AsyncStorage } from 'react-native';
+import { setJSExceptionHandler } from 'react-native-exception-handler';
+import RNExitApp from 'react-native-exit-app';
 
 // CODE PUSH
 import codePush from 'react-native-code-push';
@@ -10,6 +12,7 @@ import configureStore from './store/configureStore';
 
 import Main from './main';
 import general from './util/general';
+import logger from './util/logger';
 
 const codePushOptions = { checkFrequency: codePush.CheckFrequency.ON_APP_RESUME, installMode: codePush.InstallMode.ON_NEXT_RESTART };
 
@@ -18,10 +21,48 @@ class CampusMobileSetup extends React.Component {
 		super(props);
 
 		this.state = {
-			store: configureStore({}, () => this.setState({ isLoading: false })),
+			store: configureStore({}, this.finishLoading),
 			isLoading: true,
 		};
 	}
+
+	finishLoading = () => {
+		this.setState({ isLoading: false });
+
+		const errorHandler = (e, isFatal) => {
+			if (isFatal) {
+				AsyncStorage.clear();
+
+				var errorStr = 'Crash: ' + e.name + ': ' + e.message,
+					errorStack;
+
+				try {
+					errorStack = e.stack.replace(/.*\n/,'').replace(/\n.*/g, '').trim();
+					errorStr += ' ' + errorStack;
+				} catch (stackErr) {
+					logger.log('Error: ' + stackErr);
+				}
+
+				logger.trackException(errorStr, isFatal);
+
+				Alert.alert(
+					'Unexpected error occurred',
+					'Please try restarting the app. If the app is still crashing, please keep an eye out for an update or try again later.',
+					[{
+						text: 'Okay',
+						onPress: () => {
+							RNExitApp.exitApp();
+						}
+					}]
+				);
+			} else {
+				console.log(e); // So that we can see it in the ADB logs in case of Android if needed
+			}
+		};
+
+		setJSExceptionHandler(errorHandler, true);
+	}
+
 	render() {
 		if (general.platformIOS()) {
 			StatusBar.setBarStyle('light-content');

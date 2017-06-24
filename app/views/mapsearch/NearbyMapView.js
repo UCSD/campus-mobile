@@ -85,7 +85,7 @@ class NearbyMapView extends React.Component {
 
 		// Loop thru every vehicle
 		Object.keys(nextProps.toggles).forEach((route) => {
-			if (nextProps.toggles[route] === true && nextProps.vehicles[route]) {
+			if (nextProps.toggles[route] === true && Array.isArray(nextProps.vehicles[route])) {
 				if (this.state.vehicles[route]) {
 					nextProps.vehicles[route].forEach((nextVehicle) => {
 						this.state.vehicles[route].forEach((currVehicle) => {
@@ -343,7 +343,7 @@ class NearbyMapView extends React.Component {
 							<SearchSuggest
 								onPress={this.updateSearchSuggest}
 							/>
-							{(this.props.search_history.length !== 0) ? (
+							{(Array.isArray(this.props.search_history) && (this.props.search_history.length !== 0)) ? (
 								<SearchHistoryCard
 									pressHistory={this.updateSearch}
 									removeHistory={this.props.removeHistory}

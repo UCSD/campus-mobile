@@ -70,35 +70,36 @@ class Home extends React.Component {
 			activeCards.push(<ScheduleCard key={'schedule'} />);
 		}
 		activeCards.push(<SurveyCardContainer key={'survey'} />);*/
+		if (Array.isArray(this.props.cardOrder)) {
+			for (let i = 0; i < this.props.cardOrder.length; ++i) {
+				const key = this.props.cardOrder[i];
 
-		for (let i = 0; i < this.props.cardOrder.length; ++i) {
-			const key = this.props.cardOrder[i];
-
-			if (this.props.cards[key].active) {
-				switch (key) {
-				case 'conference':
-					card = <ConferenceCardContainer key={'conference'} />;
-					break;
-				case 'weather':
-					card = (<WeatherCardContainer key={'weather'} />);
-					break;
-				case 'shuttle':
-					card = (<ShuttleCardContainer key={'shuttle'} />);
-					break;
-				case 'dining':
-					card = (<DiningCardContainer key={'dining'} />);
-					break;
-				case 'events':
-					card = (<EventCardContainer key={'events'} />);
-					break;
-				case 'quicklinks':
-					card = (<QuicklinksCardContainer key={'quicklinks'} />);
-					break;
-				case 'news':
-					card = (<NewsCardContainer key={'news'} />);
-					break;
+				if (this.props.cards[key].active) {
+					switch (key) {
+					case 'conference':
+						card = <ConferenceCardContainer key={'conference'} />;
+						break;
+					case 'weather':
+						card = (<WeatherCardContainer key={'weather'} />);
+						break;
+					case 'shuttle':
+						card = (<ShuttleCardContainer key={'shuttle'} />);
+						break;
+					case 'dining':
+						card = (<DiningCardContainer key={'dining'} />);
+						break;
+					case 'events':
+						card = (<EventCardContainer key={'events'} />);
+						break;
+					case 'quicklinks':
+						card = (<QuicklinksCardContainer key={'quicklinks'} />);
+						break;
+					case 'news':
+						card = (<NewsCardContainer key={'news'} />);
+						break;
+					}
+					activeCards.push(card);
 				}
-				activeCards.push(card);
 			}
 		}
 		return activeCards;

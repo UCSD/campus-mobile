@@ -5,7 +5,7 @@ const getCards = (state) => (state.cards);
 function* orderCards(action) {
 	try {
 		const { newOrder } = action;
-		if (newOrder && newOrder.length > 0) {
+		if (Array.isArray(newOrder) && newOrder.length > 0) {
 			yield put({ type: 'SET_CARD_ORDER', cardOrder: newOrder });
 		}
 	} catch (error) {

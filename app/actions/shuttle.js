@@ -35,11 +35,13 @@ function updateMaster() {
 							});
 						})
 						.catch((error) => {
-							logger.error(error);
+							logger.log('Error fetching MasterRoutes: ' + error);
+							return null;
 						});
 				})
 				.catch((error) => {
-					logger.error(error);
+					logger.log('Error fetching MasterStopsNoRoutes: ' + error);
+					return null;
 				});
 		}
 	};
@@ -92,7 +94,8 @@ function updateVehicles(route) {
 				});
 			})
 			.catch((error) => {
-				logger.error(error);
+				logger.log('Error fetching Vehicles By Route: ' + error);
+				return null;
 			});
 	};
 }
@@ -163,7 +166,8 @@ function updateArrivals(stop) {
 				}
 			})
 			.catch((error) => {
-				logger.error(error);
+				logger.log('Error fetching ShuttleArrivalsByStop: ' + error);
+				return null;
 			});
 	};
 }

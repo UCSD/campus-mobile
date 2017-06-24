@@ -20,7 +20,8 @@ function updateLocation() {
 					dispatch(updateDining());
 					return;
 				}
-				logger.error(error);
+				logger.log('Error fetching location: ' + error);
+				return null;
 			});
 	};
 }

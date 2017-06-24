@@ -96,9 +96,11 @@ const ConferenceDetailView = ({ data, saved, add, remove }) => {
 };
 
 function isSaved(savedArray, id) {
-	for ( let i = 0; i < savedArray.length; ++i) {
-		if (savedArray[i] === id) {
-			return true;
+	if (Array.isArray(savedArray)) {
+		for ( let i = 0; i < savedArray.length; ++i) {
+			if (savedArray[i] === id) {
+				return true;
+			}
 		}
 	}
 	return false;
