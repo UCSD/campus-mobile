@@ -137,6 +137,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-keychain')
     compile project(':react-native-exit-app')
     compile project(':react-native-device-info')
     compile project(':react-native-cookies')

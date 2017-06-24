@@ -42,6 +42,7 @@
 		9D41EEE0777A48D58B46B7B3 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 09B033EA52B4477EB56B9BD1 /* Zocial.ttf */; };
 		A2803A699B484E538CC04625 /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 57CFEB6444DC4677BF1A6FB4 /* libRNDeviceInfo.a */; };
 		A51B64909F824363A7000E16 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B6E16EA9C16C40E98CEDDECF /* Entypo.ttf */; };
+		A62747CCACBA436E8CD8EC91 /* libRNKeychain.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 15FAAD4827B242F08094EB9C /* libRNKeychain.a */; };
 		B038C13A14254577953C72B8 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7EBAB6CB20F44CE9ACEB2432 /* FontAwesome.ttf */; };
 		D4630D4FAAB243909328449B /* libAirMaps.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D6F67199F8CA4B4D9433DED4 /* libAirMaps.a */; };
 		D479B584928944A1B4DA2B7A /* libLRDRCTSimpleToast.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1062771EF3AA479291C7BFA9 /* libLRDRCTSimpleToast.a */; };
@@ -288,6 +289,13 @@
 			remoteGlobalIDString = 58B5119B1A9E6C1200147676;
 			remoteInfo = RCTText;
 		};
+		F9A432BE1EFDFA9600CB22CB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4A2723B48DD84562B8D18F1D /* RNKeychain.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5D82366F1B0CE05B005A9EF3;
+			remoteInfo = RNKeychain;
+		};
 		F9F391DB1E4E2932004E5113 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B17CBA6DFA004A9BB841180C /* RNVectorIcons.xcodeproj */;
@@ -320,12 +328,14 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = CampusMobile/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = CampusMobile/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
+		15FAAD4827B242F08094EB9C /* libRNKeychain.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNKeychain.a; sourceTree = "<group>"; };
 		209446A1B48243E4908C1EE6 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		24B29F3C33224E7493514346 /* libRNCookieManagerIOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNCookieManagerIOS.a; sourceTree = "<group>"; };
 		31AE55DB6DB24D3DBD92AE7B /* libReactNativePermissions.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libReactNativePermissions.a; sourceTree = "<group>"; };
 		345816380C0240E591958654 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		419EFBF27EDA4088A87FA053 /* libRNVectorIcons.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNVectorIcons.a; sourceTree = "<group>"; };
 		438ACEC02613496CA7B66FAC /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
+		4A2723B48DD84562B8D18F1D /* RNKeychain.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNKeychain.xcodeproj; path = "../node_modules/react-native-keychain/RNKeychain.xcodeproj"; sourceTree = "<group>"; };
 		4B4881D3DE59480091E5F03B /* CodePush.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = CodePush.xcodeproj; path = "../node_modules/react-native-code-push/ios/CodePush.xcodeproj"; sourceTree = "<group>"; };
 		4ECA210109384D878FA379CF /* libCodePush.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libCodePush.a; sourceTree = "<group>"; };
 		51026162A45F46EA8ACAE0DF /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
@@ -391,6 +401,7 @@
 				E91CC56C5BA449EDA2B60F56 /* libRNCookieManagerIOS.a in Frameworks */,
 				A2803A699B484E538CC04625 /* libRNDeviceInfo.a in Frameworks */,
 				7F675770ECCB4CE4855E32D3 /* libRNExitApp.a in Frameworks */,
+				A62747CCACBA436E8CD8EC91 /* libRNKeychain.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -636,6 +647,7 @@
 				E26D9F18FF744B2398E81C7F /* RNCookieManagerIOS.xcodeproj */,
 				EE97A121B45144E095B3DC46 /* RNDeviceInfo.xcodeproj */,
 				CB8D6C96DB384AA1957B551C /* RNExitApp.xcodeproj */,
+				4A2723B48DD84562B8D18F1D /* RNKeychain.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -668,6 +680,14 @@
 			children = (
 				13B07F961A680F5B00A75B9A /* CampusMobile.app */,
 				00E356EE1AD99517003FC87E /* CampusMobileTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F9A4329B1EFDFA9600CB22CB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F9A432BF1EFDFA9600CB22CB /* libRNKeychain.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -824,6 +844,10 @@
 				{
 					ProductGroup = 77E020A61EFC418700A9941B /* Products */;
 					ProjectRef = CB8D6C96DB384AA1957B551C /* RNExitApp.xcodeproj */;
+				},
+				{
+					ProductGroup = F9A4329B1EFDFA9600CB22CB /* Products */;
+					ProjectRef = 4A2723B48DD84562B8D18F1D /* RNKeychain.xcodeproj */;
 				},
 				{
 					ProductGroup = F9F391C11E4E2932004E5113 /* Products */;
@@ -1070,6 +1094,13 @@
 			remoteRef = 832341B41AAA6A8300B99B32 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		F9A432BF1EFDFA9600CB22CB /* libRNKeychain.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNKeychain.a;
+			remoteRef = F9A432BE1EFDFA9600CB22CB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		F9F391DC1E4E2932004E5113 /* libRNVectorIcons.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1184,6 +1215,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1201,6 +1233,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1225,6 +1258,7 @@
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-device-info/RNDeviceInfo",
 					"$(SRCROOT)/../node_modules/react-native-device-info/RNDeviceInfo",
+					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
 				);
 				INFOPLIST_FILE = CampusMobile/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -1253,6 +1287,7 @@
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-device-info/RNDeviceInfo",
 					"$(SRCROOT)/../node_modules/react-native-device-info/RNDeviceInfo",
+					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
 				);
 				INFOPLIST_FILE = CampusMobile/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
