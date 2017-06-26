@@ -3,9 +3,6 @@ import { View, StatusBar, Alert, AsyncStorage } from 'react-native';
 import { setJSExceptionHandler } from 'react-native-exception-handler';
 import RNExitApp from 'react-native-exit-app';
 
-// CODE PUSH
-import codePush from 'react-native-code-push';
-
 // REDUX
 import { Provider } from 'react-redux';
 import configureStore from './store/configureStore';
@@ -13,8 +10,6 @@ import configureStore from './store/configureStore';
 import Main from './main';
 import general from './util/general';
 import logger from './util/logger';
-
-const codePushOptions = { checkFrequency: codePush.CheckFrequency.ON_APP_RESUME, installMode: codePush.InstallMode.ON_NEXT_RESTART };
 
 class CampusMobileSetup extends React.Component {
 	constructor(props) {
@@ -33,8 +28,8 @@ class CampusMobileSetup extends React.Component {
 			if (isFatal) {
 				AsyncStorage.clear();
 
-				var errorStr = 'Crash: ' + e.name + ': ' + e.message,
-					errorStack;
+				let errorStr = 'Crash: ' + e.name + ': ' + e.message;
+				let errorStack;
 
 				try {
 					errorStack = e.stack.replace(/.*\n/,'').replace(/\n.*/g, '').trim();
@@ -86,5 +81,4 @@ class CampusMobileSetup extends React.Component {
 	}
 }
 
-CampusMobileSetup = codePush(codePushOptions)(CampusMobileSetup);
 module.exports = CampusMobileSetup;
