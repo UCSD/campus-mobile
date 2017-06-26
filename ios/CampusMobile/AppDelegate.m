@@ -8,7 +8,6 @@
  */
 
 #import "AppDelegate.h"
-#import "CodePush.h"
 
 #import "RCTUtils.h"
 #import "RCTBundleURLProvider.h"
@@ -18,13 +17,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  NSURL *jsCodeLocation;
-  
-#ifdef DEBUG
-		jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index.ios" fallbackResource:nil];
-#else
-		jsCodeLocation = [CodePush bundleURL];
-#endif
+  NSURL *jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index.ios" fallbackResource:nil];
   
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
                                                       moduleName:@"CampusMobile"
