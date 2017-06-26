@@ -155,7 +155,7 @@ function* watchArrivals() {
 				yield call(fetchArrival, closestStop.id); // Fetch arrival for closest stop
 			}
 		}
-		yield delay(SHUTTLE_API_TTL);
+		yield delay(SHUTTLE_API_TTL * 1000);
 	}
 }
 
