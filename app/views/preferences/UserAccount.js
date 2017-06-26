@@ -9,17 +9,21 @@ import {
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
+import * as Keychain from 'react-native-keychain';
 
 import { connect } from 'react-redux';
 import { userLoggedIn, userLoggedOut } from '../../actions';
 import getAuthenticationService from '../../services/authenticationService';
 
+import Touchable from '../common/Touchable';
 import Settings from '../../AppSettings';
 import logger from '../../util/logger';
 import { getMaxCardWidth } from '../../util/general';
 import Card from '../card/Card';
 import {
-	COLOR_DGREY
+	COLOR_DGREY,
+	COLOR_PRIMARY,
+	COLOR_WHITE,
 } from '../../styles/ColorConstants';
 
 const authenticationService = getAuthenticationService();
@@ -27,6 +31,11 @@ const authenticationService = getAuthenticationService();
 // View for user to manage account, sign-in or out
 class UserAccount extends Component {
 	componentDidMount() {
+		const serviceName = 'ucsdapp';
+
+		Keychain.getGenericPassword(serviceName).then((creds) => {
+			console.log(JSON.stringify(creds));
+		});
 		Linking.addEventListener('url', this._handleOpenURL);
 	}
 	componentWillUnmount() {
@@ -148,10 +157,33 @@ const AccountLogin = ({ handleLogin }) => (
 			returnKeyType="go"
 			underlineColorAndroid="transparent"
 			secureTextEntry
+			onChange={(event) => {
+				this._passwordText = event.nativeEvent.text;
+			}}
 			onSubmitEditing={(event) => {
 				handleLogin(this._usernameText, event.nativeEvent.text);
 			}}
 		/>
+		<Touchable
+			onPress={() => console.log('whatever')}
+			style={styles.forgotButton}
+		>
+			<Text
+				style={styles.forgotText}
+			>
+				Forgot password?
+			</Text>
+		</Touchable>
+		<Touchable
+			onPress={() => handleLogin(this._usernameText, this._passwordText)}
+			style={styles.loginButton}
+		>
+			<Text
+				style={styles.loginText}
+			>
+				Login
+			</Text>
+		</Touchable>
 	</View>
 );
 
@@ -163,10 +195,10 @@ function mapStateToProps(state, props) {
 
 function mapDispatchToProps(dispatch) {
 	return {
-		doLogin: (user, pass) => {
-			dispatch({ type: 'USER_LOGIN', user, pass });
+		doLogin: (username, password) => {
+			dispatch({ type: 'USER_LOGIN', username, password });
 		},
-		doLogout: (user, pass) => {
+		doLogout: () => {
 			dispatch({ type: 'USER_LOGOUT' });
 		},
 	};
@@ -180,6 +212,10 @@ const styles = StyleSheet.create({
 	input: { flexGrow: 1, height: 50 },
 	spacedRow: { flexDirection: 'row', justifyContent: 'space-between' },
 	accountText: { textAlign: 'center', fontSize: 16, color: COLOR_DGREY },
+	forgotButton: { flex: 1, justifyContent: 'center', alignItems: 'center', borderRadius: 3, padding: 10, },
+	loginButton: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR_PRIMARY, borderRadius: 3, padding: 10, },
+	forgotText: { fontSize: 16, color: COLOR_PRIMARY },
+	loginText: { fontSize: 16, color: COLOR_WHITE },
 });
 
 module.exports = connect(mapStateToProps, mapDispatchToProps)(UserAccount);

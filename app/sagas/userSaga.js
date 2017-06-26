@@ -1,8 +1,14 @@
 import { delay } from 'redux-saga';
 import { call, put, takeLatest } from 'redux-saga/effects';
+import * as Keychain from 'react-native-keychain';
 
 function* doLogin(action) {
-	yield put({ type: 'LOGGED_IN', user: action.user });
+	const serviceName = 'ucsdapp';
+	const username = action.username;
+	const password = action.password;
+
+	yield Keychain.setGenericPassword(username, password, serviceName);
+	yield put({ type: 'LOGGED_IN', user: username });
 }
 
 function* doLogout(action) {
