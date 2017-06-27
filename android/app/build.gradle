@@ -150,10 +150,10 @@ dependencies {
     compile (project(':react-native-maps')) {
         exclude group: 'com.google.android.gms'
     }
-    compile ("com.google.android.gms:play-services-base:+") {
+    compile ("com.google.android.gms:play-services-base:11.0.+") {
         force = true;
     }
-    compile ("com.google.android.gms:play-services-maps:+") {
+    compile ("com.google.android.gms:play-services-maps:11.0.+") {
         force = true;
     }
 }
@@ -164,3 +164,5 @@ task copyDownloadableDepsToLibs(type: Copy) {
     from configurations.compile
     into 'libs'
 }
+
+apply plugin: 'com.google.gms.google-services'
