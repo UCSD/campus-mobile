@@ -1,17 +1,36 @@
 import React from 'react';
 import {
-	View,
+	ScrollView,
 } from 'react-native';
 
-import UserAccount from './UserAccount';
 import CardPreferences from './CardPreferences';
 import css from '../../styles/css';
 
 // View for user to manage preferences, including which cards are visible
-const PreferencesView = () => (
-	<View style={css.main_container}>
-		<UserAccount />
-		<CardPreferences />
-	</View>
-);
+class PreferencesView extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			scrollEnabled: true
+		};
+	}
+
+	toggleScroll = () => {
+		this.setState({ scrollEnabled: !this.state.scrollEnabled });
+	}
+
+	render() {
+		return (
+			<ScrollView
+				style={css.main_container}
+				scrollEnabled={this.state.scrollEnabled}
+			>
+				<CardPreferences
+					toggleScroll={this.toggleScroll}
+				/>
+			</ScrollView>
+		);
+	}
+}
+
 export default PreferencesView;

@@ -1,26 +1,17 @@
 import React, { Component } from 'react';
 import {
 	View,
-	Text,
-	Switch,
 	StyleSheet,
-	Platform,
-	Animated,
-	Easing,
-	TouchableWithoutFeedback,
-	PanResponder
 } from 'react-native';
 
 import { connect } from 'react-redux';
 import SortableList from 'react-native-sortable-list';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 
+import PrefItem from './PrefItem';
 import Card from '../card/Card';
-import { getMaxCardWidth } from '../../util/general';
 import {
-	COLOR_LGREY,
-	COLOR_MGREY
-} from '../../styles/ColorConstants';
+	MAX_CARD_WIDTH,
+} from '../../styles/LayoutConstants';
 
 // View for user to manage preferences, including which cards are visible
 export default class CardPreferences extends Component {
@@ -29,7 +20,7 @@ export default class CardPreferences extends Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		this.setState({ cardObject: this.getCardObject(nextProps.cards, nextProps.cardOrder) });
+		// this.setState({ cardObject: this.getCardObject(nextProps.cards, nextProps.cardOrder) });
 	}
 
 	setCardState = (id, state) => {
@@ -64,6 +55,7 @@ export default class CardPreferences extends Component {
 			const orderedCards = this.getOrderedArray();
 			this.props.orderCards(orderedCards);
 		}
+		this.props.toggleScroll(); // toggle parent scroll
 	}
 
 	render() {
@@ -89,6 +81,7 @@ export default class CardPreferences extends Component {
 								}
 							}
 						}
+						onActivateRow={(key) => this.props.toggleScroll()}
 						onChangeOrder={(nextOrder) => { this._order = nextOrder; }}
 						onReleaseRow={(key) => this._handleRelease()}
 					/>
@@ -120,164 +113,8 @@ function mapDispatchtoProps(dispatch) {
 	};
 }
 
-class PrefItem extends React.Component {
-
-	constructor(props) {
-		super(props);
-
-		this._active = new Animated.Value(0);
-
-		this._style = {
-			...Platform.select({
-				ios: {
-					shadowOpacity: this._active.interpolate({
-						inputRange: [0, 1],
-						outputRange: [0, 0.2],
-					}),
-					shadowRadius: this._active.interpolate({
-						inputRange: [0, 1],
-						outputRange: [2, 10],
-					}),
-				},
-
-				android: {
-					marginTop: this._active.interpolate({
-						inputRange: [0, 1],
-						outputRange: [0, 10],
-					}),
-					marginBottom: this._active.interpolate({
-						inputRange: [0, 1],
-						outputRange: [0, 10],
-					}),
-					elevation: this._active.interpolate({
-						inputRange: [0, 1],
-						outputRange: [2, 6],
-					}),
-				},
-			})
-		};
-
-		this.state = {
-			switchState: this.props.data.active
-		};
-	}
-
-	componentWillReceiveProps(nextProps) {
-		if (this.props.active !== nextProps.active) {
-			Animated.timing(this._active, {
-				duration: 300,
-				easing: Easing.bounce,
-				toValue: Number(nextProps.active),
-			}).start();
-		}
-	}
-
-	_handleToggle = () => {
-		const { data, updateState } = this.props;
-		updateState(data.id, this.state.switchState);
-	}
-
-	render() {
-		const { data } = this.props;
-		return (
-			<Animated.View
-				style={[styles.list_row, this._style]}
-			>
-				<Icon
-					style={{ padding: 7 }}
-					name="drag-handle"
-					size={20}
-				/>
-				<Text style={styles.name_text}>{data.name}</Text>
-				<View
-					style={{ width: 50, height: 50, justifyContent: 'center', alignItems: 'center' }}
-				>
-					<NoTouchy
-						style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
-						onPress={() => this.setState({ switchState: !this.state.switchState })}
-					>
-						<Switch
-							onValueChange={(value) => this._handleToggle()}
-							value={this.state.switchState}
-						/>
-					</NoTouchy>
-				</View>
-			</Animated.View>
-		);
-	}
-}
-
-class NoTouchy extends Component {
-	componentWillMount() {
-		this._panResponder = PanResponder.create({
-			// Ask to be the responder:
-			onStartShouldSetPanResponder: (evt, gestureState) => true,
-			onStartShouldSetPanResponderCapture: (evt, gestureState) => true,
-			onMoveShouldSetPanResponder: (evt, gestureState) => true,
-			onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
-			onResponderTerminationRequest: (evt, gestureState) => false,
-
-			onPanResponderGrant: (evt, gestureState) => {
-			// The gesture has started. Show visual feedback so the user knows
-			// what is happening!
-				if (this.props.onPress) {
-					this.props.onPress();
-				}
-
-			// gestureState.d{x,y} will be set to zero now
-			},
-			onPanResponderMove: (evt, gestureState) => {
-			// The most recent move distance is gestureState.move{X,Y}
-
-			// The accumulated gesture distance since becoming responder is
-			// gestureState.d{x,y}
-			},
-			onPanResponderTerminationRequest: (evt, gestureState) => true,
-			onPanResponderRelease: (evt, gestureState) => {
-			// The user has released all touches while this view is the
-			// responder. This typically means a gesture has succeeded
-			},
-			onPanResponderTerminate: (evt, gestureState) => {
-			// Another component has become the responder, so this gesture
-			// should be cancelled
-			},
-			onShouldBlockNativeResponder: (evt, gestureState) => {
-				// Returns whether this component should block native components from becoming the JS
-				// responder. Returns true by default. Is currently only supported on android.
-				return true;
-			},
-		});
-	}
-
-	render() {
-		return (
-			<View
-				{...this._panResponder.panHandlers}
-				style={this.props.style}
-			>
-				{this.props.children}
-			</View>
-		);
-	}
-}
-
 const styles = StyleSheet.create({
-	list_row: { backgroundColor: COLOR_LGREY, flexDirection: 'row', alignItems: 'center', width: getMaxCardWidth(), borderBottomWidth: 1, borderBottomColor: COLOR_MGREY ,
-		...Platform.select({
-			ios: {
-				shadowOpacity: 0,
-				shadowOffset: { height: 2, width: 2 },
-				shadowRadius: 2,
-			},
-
-			android: {
-				margin: 0,
-				elevation: 0,
-			},
-		})
-	},
-	name_text: { flex: 1, margin: 7, fontSize: 18 },
-	list_container: { width: getMaxCardWidth() },
+	list_container: { width: MAX_CARD_WIDTH },
 });
 
 module.exports = connect(mapStateToProps, mapDispatchtoProps)(CardPreferences);
