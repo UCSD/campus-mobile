@@ -9,11 +9,14 @@ import { Actions } from 'react-native-router-flux';
 import Card from '../card/Card';
 import BannerCard from '../common/BannerCard';
 import ConferenceListView from './ConferenceListView';
-import { getMaxCardWidth, getCampusPrimary } from '../../util/general';
 import Touchable from '../common/Touchable';
 import {
-	COLOR_DGREY
+	COLOR_DGREY,
+	COLOR_PRIMARY,
 } from '../../styles/ColorConstants';
+import {
+	MAX_CARD_WIDTH,
+} from '../../styles/LayoutConstants';
 
 const ConferenceCard = ({ conference, saved, hideCard }) => (
 	<View>
@@ -32,7 +35,7 @@ const ConferenceCard = ({ conference, saved, hideCard }) => (
 					id="conference"
 				>
 					<View
-						style={{ flex: 1, width: getMaxCardWidth() }}
+						style={styles.contentContainer}
 					>
 						<ConferenceListView
 							scrollEnabled={false}
@@ -59,8 +62,9 @@ const ConferenceCard = ({ conference, saved, hideCard }) => (
 
 const styles = StyleSheet.create({
 	more: { alignItems: 'center', justifyContent: 'center', padding: 6 },
-	more_label: { fontSize: 20, color: getCampusPrimary(), fontWeight: '300' },
+	more_label: { fontSize: 20, color: COLOR_PRIMARY, fontWeight: '300' },
 	conferenceListView: { borderBottomWidth: 1, borderBottomColor: COLOR_DGREY },
+	contentContainer: { flex: 1, width: MAX_CARD_WIDTH },
 });
 
 export default ConferenceCard;
