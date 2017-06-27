@@ -19,15 +19,30 @@
       android:label="@string/app_name"
       android:icon="@drawable/icon"
       android:theme="@style/AppTheme">
+      <service android:name="com.evollu.react.fcm.MessagingService" android:enabled="true" android:exported="true">
+        <intent-filter>
+          <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+        </intent-filter>
+      </service>
+      <service android:name="com.evollu.react.fcm.InstanceIdService" android:exported="false">
+        <intent-filter>
+        <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+        </intent-filter>
+      </service>
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"
         android:theme="@style/SplashTheme"
+        android:launchMode="singleTop"
         android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
         android:screenOrientation="portrait">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+        <intent-filter>
+          <action android:name="fcm.ACTION.HELLO" />
+          <category android:name="android.intent.category.DEFAULT" />
         </intent-filter>
       </activity>
       <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
