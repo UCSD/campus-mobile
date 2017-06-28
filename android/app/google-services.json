@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "209832154225",
+    "firebase_url": "https://campusmobile-c779b.firebaseio.com",
+    "project_id": "campusmobile-c779b",
+    "storage_bucket": "campusmobile-c779b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:209832154225:android:5fa94cd3be6fc552",
+        "android_client_info": {
+          "package_name": "edu.ucsd"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "209832154225-mudimbce1p7gmg4t3upf5tdvdp9ef8ov.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDiTeeuwxQUTDhzo6yXVX3KJjIeR01CQEc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
