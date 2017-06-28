@@ -780,7 +780,13 @@
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = G789749RTK;
 						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
 							com.apple.Keychain = {
+								enabled = 1;
+							};
+							com.apple.Push = {
 								enabled = 1;
 							};
 						};
