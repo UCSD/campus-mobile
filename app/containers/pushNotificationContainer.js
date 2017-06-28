@@ -15,6 +15,7 @@ class PushNotificationContainer extends React.Component {
     this.checkPermission();
 
     // if we launch with a notification waiting for us
+    // Note: Have to check what type of notification it is, especially on android, since some non-push things are notifications
     FCM.getInitialNotification().then((notif) => {
       console.log('launched w/notification waiting for us', notif);
     });

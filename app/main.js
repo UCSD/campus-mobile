@@ -18,6 +18,9 @@ import general from './util/general';
 // GPS
 import GeoLocationContainer from './containers/geoLocationContainer';
 
+// PUSH
+import PushNotificationContainer from './containers/pushNotificationContainer';
+
 // VIEWS
 import Home from './views/Home';
 import SurfReport from './views/weather/SurfReport';
@@ -80,6 +83,7 @@ class Main extends Component {
 
 		return (
 			<View style={css.flex}>
+				<PushNotificationContainer />
 				<RouterWithRedux
 					navigationBarStyle={general.platformIOS() ? css.navIOS : css.navAndroid}
 					titleStyle={general.platformIOS() ? css.navIOSTitle : css.navAndroidTitle}
