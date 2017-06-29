@@ -3,10 +3,6 @@ import {
 	View,
 	StatusBar,
 	Image,
-	Alert,
-	BackAndroid,
-	Keyboard,
-	StyleSheet,
 } from 'react-native';
 import { Scene, Router, Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
@@ -14,9 +10,6 @@ import { connect } from 'react-redux';
 import AppSettings from './AppSettings';
 import css from './styles/css';
 import general from './util/general';
-
-// GPS
-import GeoLocationContainer from './containers/geoLocationContainer';
 
 // VIEWS
 import Home from './views/Home';

@@ -4,9 +4,8 @@ import { connect } from 'react-redux';
 
 import ConferenceCard from './ConferenceCard';
 import logger from '../../util/logger';
-import { hideCard } from '../../actions/cards';
 
-const ConferenceCardContainer = ({ conferenceData, saved }) => {
+const ConferenceCardContainer = ({ conferenceData, saved, hideCard }) => {
 	logger.ga('Card Mounted: Conference');
 	if (conferenceData) {
 		return (
@@ -32,7 +31,7 @@ const mapStateToProps = (state) => (
 const mapDispatchToProps = (dispatch) => (
 	{
 		hideCard: (id) => {
-			dispatch(hideCard(id));
+			dispatch({ type: 'UPDATE_CARD_STATE', id, state: false });
 		}
 	}
 );

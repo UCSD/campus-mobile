@@ -18,9 +18,13 @@ function cards(state = initialState, action) {
 
 	switch (action.type) {
 	case 'SET_CARD_STATE':
-		newState.cards[action.id] = Object.assign({}, newState.cards[action.id], { active: action.active });
-
-		return newState;
+		return {
+			...state,
+			cards: {
+				...state.cards,
+				[action.id]: { ...state.cards[action.id], active: action.active }
+			}
+		};
 	case 'SET_AUTOACTIVATED_STATE':
 		newState.cards[action.id] = Object.assign({}, newState.cards[action.id], { autoActivated: action.autoActivated });
 

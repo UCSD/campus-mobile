@@ -3,7 +3,6 @@ import { StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 import ElevatedView from 'react-native-elevated-view';
 
-import { hideCard } from '../../actions/cards'; // TODO: Use saga
 import {
 	COLOR_LGREY
 } from '../../styles/ColorConstants';
@@ -38,7 +37,7 @@ const Card = ({ hideMenu, cardRefresh, id, title, header, hide, children }) => (
 const mapDispatchToProps = (dispatch) => (
 	{
 		hide: (id) => {
-			dispatch(hideCard(id));
+			dispatch({ type: 'UPDATE_CARD_STATE', id, state: false });
 		}
 	}
 );
