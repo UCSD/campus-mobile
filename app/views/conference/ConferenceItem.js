@@ -16,7 +16,7 @@ import {
 	COLOR_YELLOW
 } from '../../styles/ColorConstants';
 
-const ConferenceItem = ({ conferenceData, saved, add, remove, disabled }) => (
+const ConferenceItem = ({ conferenceData, saved, add, remove }) => (
 	<View
 		style={styles.itemRow}
 	>
@@ -51,7 +51,7 @@ const ConferenceItem = ({ conferenceData, saved, add, remove, disabled }) => (
 			</Touchable>
 		</View>
 
-		{ (!disabled) ? (
+		{ (add !== null) ? (
 			<Touchable
 				style={styles.starButton}
 				onPress={

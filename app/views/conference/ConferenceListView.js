@@ -14,10 +14,6 @@ import {
 	NAVIGATOR_HEIGHT,
 	TAB_BAR_HEIGHT,
 } from '../../styles/LayoutConstants';
-import {
-	COLOR_LGREY,
-	COLOR_BLACK,
-} from '../../styles/ColorConstants';
 import EmptyItem from './EmptyItem';
 import ConferenceItem from './ConferenceItem';
 import ConferenceHeader from './ConferenceHeader';
@@ -27,7 +23,8 @@ const dataSource = new ListView.DataSource({
 	sectionHeaderHasChanged: (s1, s2) => s1 !== s2
 });
 
-const ConferenceListView = ({ style, scrollEnabled, rows, personal, disabled, conferenceData, saved, addConference, removeConference }) => {
+const ConferenceListView = ({ addConference, conferenceSchedule, conferenceScheduleIds, removeConference, saved,
+	disabled, personal, rows, scrollEnabled, style }) => {
 	if (personal && Array.isArray(saved) && saved.length === 0) {
 		return (
 			<View style={[style, rows ? styles.card : styles.full]}>
@@ -42,7 +39,14 @@ const ConferenceListView = ({ style, scrollEnabled, rows, personal, disabled, co
 				style={[style, rows ? styles.card : styles.full]}
 				scrollEnabled={scrollEnabled}
 				stickySectionHeadersEnabled={false}
-				dataSource={dataSource.cloneWithRowsAndSections(convertToTimeMap(conferenceData.schedule, adjustData(conferenceData.schedule, conferenceData.uids, saved, personal, rows)))}
+				dataSource={
+					dataSource.cloneWithRowsAndSections(
+						convertToTimeMap(
+							conferenceSchedule,
+							adjustData(conferenceSchedule, conferenceScheduleIds, saved, personal, rows)
+						)
+					)
+				}
 				renderRow={(rowData, sectionID, rowID, highlightRow) => {
 					// Don't render first row bc rendered by header
 					if (Number(rowID) !== 0) {
@@ -51,10 +55,9 @@ const ConferenceListView = ({ style, scrollEnabled, rows, personal, disabled, co
 								<EmptyItem />
 								<ConferenceItem
 									conferenceData={rowData}
-									saved={isSaved(saved, rowData.id)}
-									add={addConference}
+									saved={saved.includes(rowData.id)}
+									add={(disabled) ? null : addConference}
 									remove={removeConference}
-									disabled={disabled}
 								/>
 							</View>
 						);
@@ -70,10 +73,9 @@ const ConferenceListView = ({ style, scrollEnabled, rows, personal, disabled, co
 						/>
 						<ConferenceItem
 							conferenceData={sectionData[0]}
-							saved={isSaved(saved, sectionData[0].id)}
-							add={addConference}
+							saved={saved.includes(sectionData[0].id)}
+							add={(disabled) ? null : addConference}
 							remove={removeConference}
-							disabled={disabled}
 						/>
 					</View>
 				)}
@@ -82,6 +84,11 @@ const ConferenceListView = ({ style, scrollEnabled, rows, personal, disabled, co
 	}
 };
 
+/*
+	Filters what session ids to use based on personal/saved and/or rows
+	Additional filtering can be done here
+	@returns Array of session ids
+ */
 function adjustData(scheduleIdMap, scheduleIdArray, savedArray, personal, rows) {
 	// Filter out saved items
 	if (!personal || !Array.isArray(savedArray)) {
@@ -104,7 +111,7 @@ function adjustData(scheduleIdMap, scheduleIdArray, savedArray, personal, rows) 
 		}
 
 		// Displaying for homecard
-		// Remove passed sessions
+		// Remove sessions that have passed
 		if (rows) {
 			const now = Date.now();
 			if (filtered.length > rows) {
@@ -134,18 +141,9 @@ function adjustData(scheduleIdMap, scheduleIdArray, savedArray, personal, rows) 
 	}
 }
 
-function isSaved(savedArray, id) {
-	if (Array.isArray(savedArray)) {
-		for ( let i = 0; i < savedArray.length; ++i) {
-			if (savedArray[i] === id) {
-				return true;
-			}
-		}
-	} else {
-		return false;
-	}
-}
-
+/*
+	@returns Object that maps keys from scheduleArray to Objects in scheduleMap
+*/
 function convertToTimeMap(scheduleMap, scheduleArray, header = false) {
 	const timeMap = {};
 
@@ -171,7 +169,8 @@ function convertToTimeMap(scheduleMap, scheduleArray, header = false) {
 
 const mapStateToProps = (state) => (
 	{
-		conferenceData: state.conference.data,
+		conferenceSchedule: state.conference.data.schedule,
+		conferenceScheduleIds: state.conference.data.uids,
 		saved: state.conference.saved
 	}
 );
