@@ -26,7 +26,6 @@ import SearchShuttleMenu from './SearchShuttleMenu';
 import ShuttleLocationContainer from '../../containers/shuttleLocationContainer';
 
 import { toggleRoute } from '../../actions/shuttle';
-import { clearSearch, fetchSearch, removeHistory } from '../../actions/map';
 
 import css from '../../styles/css';
 import logger from '../../util/logger';
@@ -391,16 +390,16 @@ const mapStateToProps = (state, props) => (
 const mapDispatchToProps = (dispatch, ownProps) => (
 	{
 		clearSearch: () => {
-			dispatch(clearSearch());
+			dispatch({ type: 'CLEAR_MAP_SEARCH' });
 		},
 		fetchSearch: (term, location) => {
-			dispatch(fetchSearch(term, location));
+			dispatch({ type: 'FETCH_MAP_SEARCH', term, location });
 		},
 		toggle: (route) => {
 			dispatch(toggleRoute(route));
 		},
 		removeHistory: (index) => {
-			dispatch(removeHistory(index));
+			dispatch({ type: 'REMOVE_HISTORY', index });
 		}
 	}
 );
