@@ -41,7 +41,7 @@ function* watchData() {
 		} catch (err) {
 			console.log(err);
 		}
-		yield delay(DATA_SAGA_TTL * 1000);
+		yield delay(DATA_SAGA_TTL);
 	}
 }
 
@@ -49,7 +49,7 @@ function* updateWeather() {
 	const { lastUpdated, data } = yield select(getWeather);
 	const nowTime = new Date().getTime();
 	const timeDiff = nowTime - lastUpdated;
-	const weatherTTL = WEATHER_API_TTL * 1000;
+	const weatherTTL = WEATHER_API_TTL;
 
 	if (timeDiff < weatherTTL && data) {
 		// Do nothing, no need to fetch new data
@@ -65,7 +65,7 @@ function* updateSurf() {
 	const { lastUpdated, data } = yield select(getSurf);
 	const nowTime = new Date().getTime();
 	const timeDiff = nowTime - lastUpdated;
-	const ttl = SURF_API_TTL * 1000;
+	const ttl = SURF_API_TTL;
 
 	if (timeDiff < ttl && data) {
 		// Do nothing, no need to fetch new data
@@ -82,7 +82,7 @@ function* updateSpecialEvents() {
 	const { cards } = yield select(getCards);
 	const nowTime = new Date().getTime();
 	const timeDiff = nowTime - lastUpdated;
-	const ttl = SPECIAL_EVENTS_TTL * 1000;
+	const ttl = SPECIAL_EVENTS_TTL;
 
 	if (timeDiff > ttl && Array.isArray(saved)) {
 		const specialEvents = yield call(fetchSpecialEvents);
@@ -128,7 +128,7 @@ function* updateLinks() {
 	const { lastUpdated, data } = yield select(getLinks);
 	const nowTime = new Date().getTime();
 	const timeDiff = nowTime - lastUpdated;
-	const ttl = QUICKLINKS_API_TTL * 1000;
+	const ttl = QUICKLINKS_API_TTL;
 
 	if ((timeDiff < ttl) && data) {
 		// Do nothing, no need to fetch new data
@@ -147,7 +147,7 @@ function* updateEvents() {
 	const { lastUpdated, data } = yield select(getEvents);
 	const nowTime = new Date().getTime();
 	const timeDiff = nowTime - lastUpdated;
-	const ttl = EVENTS_API_TTL * 1000;
+	const ttl = EVENTS_API_TTL;
 
 	if (timeDiff < ttl && data) {
 		// Do nothing, no need to fetch new data
@@ -162,7 +162,7 @@ function* updateNews() {
 	const { lastUpdated, data } = yield select(getNews);
 	const nowTime = new Date().getTime();
 	const timeDiff = nowTime - lastUpdated;
-	const ttl = NEWS_API_TTL * 1000;
+	const ttl = NEWS_API_TTL;
 
 	if (timeDiff < ttl && data) {
 		// Do nothing, no need to fetch new data
