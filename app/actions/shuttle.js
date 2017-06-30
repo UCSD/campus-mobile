@@ -10,7 +10,7 @@ function updateMaster() {
 		const { lastUpdated, routes, stops } = getState().shuttle;
 		const nowTime = new Date().getTime();
 		const timeDiff = nowTime - lastUpdated;
-		const shuttleTTL = SHUTTLE_MASTER_TTL * 1000;
+		const shuttleTTL = SHUTTLE_MASTER_TTL;
 
 		if ((timeDiff < shuttleTTL) && (routes !== null) && (stops !== null)) {
 			// Do nothing, don't need to update
