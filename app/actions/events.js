@@ -7,7 +7,7 @@ function updateEvents() {
 		const { lastUpdated, data } = getState().events;
 		const nowTime = new Date().getTime();
 		const timeDiff = nowTime - lastUpdated;
-		const eventsTTL = EVENTS_API_TTL * 1000;
+		const eventsTTL = EVENTS_API_TTL;
 
 		if (timeDiff < eventsTTL && data) {
 			// Do nothing, no need to fetch new data
