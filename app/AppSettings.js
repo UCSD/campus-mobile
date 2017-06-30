@@ -28,16 +28,16 @@ module.exports = {
 	SHUTTLE_STOPS_MASTER_NO_ROUTES: 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/shuttle_stops_master_map_no_routes.json',
 
 	/* TTLs */
-	WEATHER_API_TTL: 0.18, // 180ms
-	SURF_API_TTL: 0.18 , // 180ms
-	EVENTS_API_TTL: 0.36, // 360ms
-	NEWS_API_TTL: 0.36, // 360ms
-	DINING_API_TTL: 0.36, // 360ms
-	QUICKLINKS_API_TTL: 0.48, // 480ms
-	SHUTTLE_API_TTL: 0.06, // 60ms
-	SHUTTLE_MASTER_TTL: 0.86, // 860ms
-	SPECIAL_EVENTS_TTL: 0.21, // 210ms
-	DATA_SAGA_TTL: 0.06, // 60ms
+	WEATHER_API_TTL: 1800000, // 30 minutes
+	SURF_API_TTL: 1800000, // 30 minutes
+	EVENTS_API_TTL: 3600000, // 1 hour
+	NEWS_API_TTL: 3600000, // 1 hour
+	DINING_API_TTL: 3600000, // 1 hour
+	QUICKLINKS_API_TTL: 604800000, // 1 week
+	SHUTTLE_API_TTL: 6000, // 6 seconds
+	SHUTTLE_MASTER_TTL: 86400000, // 1 day
+	SPECIAL_EVENTS_TTL: 21600000, // 6 hours
+	DATA_SAGA_TTL: 60000, // 1 minute
 
 	USER_LOGIN: {
 		ENABLED: false,
