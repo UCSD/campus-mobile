@@ -7,7 +7,7 @@ function updateNews() {
 		const { lastUpdated, data } = getState().news;
 		const nowTime = new Date().getTime();
 		const timeDiff = nowTime - lastUpdated;
-		const newsTTL = NEWS_API_TTL * 1000;
+		const newsTTL = NEWS_API_TTL;
 
 		if (timeDiff < newsTTL && data) {
 			// Do nothing, no need to fetch new data
