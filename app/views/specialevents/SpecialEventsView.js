@@ -6,7 +6,7 @@ import {
 } from 'react-native';
 
 import logger from '../../util/logger';
-import ConferenceListView from './ConferenceListView';
+import SpecialEventsListView from './SpecialEventsListView';
 import {
 	COLOR_PRIMARY,
 	COLOR_LGREY,
@@ -21,7 +21,7 @@ import {
 import Touchable from '../common/Touchable';
 
 
-export default class ConferenceView extends Component {
+export default class SpecialEventsView extends Component {
 	constructor(props) {
 		super(props);
 
@@ -31,7 +31,7 @@ export default class ConferenceView extends Component {
 	}
 
 	componentDidMount() {
-		logger.ga('View Loaded: ConferenceView');
+		logger.ga('View Loaded: SpecialEventsView');
 	}
 
 	handleFullPress = () => {
@@ -47,8 +47,8 @@ export default class ConferenceView extends Component {
 			<View
 				style={[styles.main_container, styles.greybg]}
 			>
-				<ConferenceListView
-					style={styles.conferenceListView}
+				<SpecialEventsListView
+					style={styles.specialEventsListView}
 					scrollEnabled={true}
 					personal={this.state.personal}
 				/>
@@ -93,7 +93,7 @@ const FakeTabBar = ({ personal, handleFullPress, handleMinePress }) => (
 
 const styles = StyleSheet.create({
 	main_container: { flex: 1, backgroundColor: COLOR_MGREY, marginTop: NAVIGATOR_HEIGHT },
-	conferenceListView: { flex: 1 },
+	specialEventsListView: { flex: 1 },
 	greybg: { backgroundColor: COLOR_LGREY },
 	buttonContainer: { flex: 1, flexDirection: 'row', alignItems: 'center' },
 	selectedButton: { flex: 1, height: TAB_BAR_HEIGHT, alignItems: 'center', justifyContent: 'center', backgroundColor: COLOR_PRIMARY },

@@ -25,8 +25,8 @@ import PreferencesView from './views/preferences/PreferencesView';
 import NearbyMapView from './views/mapsearch/NearbyMapView';
 import TabIcons from './navigation/TabIcons';
 import DataListViewAll from './views/common/DataListViewAll';
-import ConferenceView from './views/conference/ConferenceView';
-import ConferenceDetailView from './views/conference/ConferenceDetailView';
+import SpecialEventsView from './views/specialEvents/SpecialEventsView';
+import SpecialEventsDetailView from './views/specialEvents/SpecialEventsDetailView';
 import ShuttleRoutesListView from './views/shuttle/ShuttleRoutesListView';
 import ShuttleStopsListView from './views/shuttle/ShuttleStopsListView';
 import ShuttleSavedListView from './views/shuttle/ShuttleSavedListView';
@@ -100,8 +100,8 @@ class Main extends Component {
 								<Scene key="ShuttleRoutesListView" component={ShuttleRoutesListView} title="Choose Route" hideTabBar />
 								<Scene key="ShuttleStopsListView" component={ShuttleStopsListView} title="Choose Stop" hideTabBar />
 								<Scene key="ShuttleSavedListView" component={ShuttleSavedListView} title="Manage Stops" hideTabBar />
-								<Scene key="ConferenceView" component={ConferenceView} title="Campus LISA" hideTabBar />
-								<Scene key="ConferenceDetailView" component={ConferenceDetailView} title="Campus LISA" hideTabBar />
+								<Scene key="SpecialEventsView" component={SpecialEventsView} title="Campus LISA" hideTabBar />
+								<Scene key="SpecialEventsDetailView" component={SpecialEventsDetailView} title="Campus LISA" hideTabBar />
 							</Scene>
 							<Scene key="tab2" title="Map" component={NearbyMapView} icon={TabIcons} />
 							<Scene key="tab3" title="Feedback" component={FeedbackView} icon={TabIcons} />

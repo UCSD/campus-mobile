@@ -3,7 +3,7 @@ import { put, call, select } from 'redux-saga/effects';
 import { Image } from 'react-native';
 
 import WeatherService from '../services/weatherService';
-import { fetchConference } from '../services/conferenceService';
+import { fetchSpecialEvents } from '../services/specialEventsService';
 import { fetchSurveyIds, fetchSurveyById } from '../services/surveyService';
 import LinksService from '../services/quicklinksService';
 import EventService from '../services/eventService';
@@ -11,7 +11,7 @@ import NewsService from '../services/newsService';
 import {
 	WEATHER_API_TTL,
 	SURF_API_TTL,
-	CONFERENCE_TTL,
+	SPECIAL_EVENTS_TTL,
 	QUICKLINKS_API_TTL,
 	EVENTS_API_TTL,
 	NEWS_API_TTL,
@@ -20,7 +20,7 @@ import {
 
 const getWeather = (state) => (state.weather);
 const getSurf = (state) => (state.surf);
-const getConference = (state) => (state.conference);
+const getSpecialEvents = (state) => (state.specialEvents);
 const getLinks = (state) => (state.links);
 const getSurvey = (state) => (state.survey);
 const getEvents = (state) => (state.events);
@@ -32,7 +32,7 @@ function* watchData() {
 		try {
 			yield call(updateWeather);
 			yield call(updateSurf);
-			yield call(updateConference);
+			yield call(updateSpecialEvents);
 			yield call(updateLinks);
 			yield call(updateEvents);
 			yield call(updateNews);
@@ -77,47 +77,47 @@ function* updateSurf() {
 	}
 }
 
-function* updateConference() {
-	const { lastUpdated, saved } = yield select(getConference);
+function* updateSpecialEvents() {
+	const { lastUpdated, saved } = yield select(getSpecialEvents);
 	const { cards } = yield select(getCards);
 	const nowTime = new Date().getTime();
 	const timeDiff = nowTime - lastUpdated;
-	const ttl = CONFERENCE_TTL * 1000;
+	const ttl = SPECIAL_EVENTS_TTL * 1000;
 
 	if (timeDiff > ttl && Array.isArray(saved)) {
-		const conference = yield call(fetchConference);
+		const specialEvents = yield call(fetchSpecialEvents);
 
-		if (conference) {
-			prefetchConferenceImages(conference);
-			if (conference['start-time'] <= nowTime &&
-				conference['end-time'] >= nowTime) {
-				// Inside active conference window
-				if (cards.conference.autoActivated === false) {
-					// Initialize Conference for first time use
+		if (specialEvents) {
+			prefetchSpecialEventsImages(specialEvents);
+			if (specialEvents['start-time'] <= nowTime &&
+				specialEvents['end-time'] >= nowTime) {
+				// Inside active specialEvents window
+				if (cards.specialEvents.autoActivated === false) {
+					// Initialize SpecialEvents for first time use
 					// wipe saved data
-					yield put({ type: 'CHANGED_CONFERENCE_SAVED', saved: [] });
-					yield put({ type: 'SET_CONFERENCE', conference });
+					yield put({ type: 'CHANGED_SPECIAL_EVENTS_SAVED', saved: [] });
+					yield put({ type: 'SET_SPECIAL_EVENTS', specialEvents });
 					// set active and autoActivated to true
-					yield put({ type: 'UPDATE_CARD_STATE', id: 'conference', state: true });
-					yield put({ type: 'UPDATE_AUTOACTIVATED_STATE', id: 'conference', state: true });
-				} else if (cards.conference.active) {
+					yield put({ type: 'UPDATE_CARD_STATE', id: 'specialEvents', state: true });
+					yield put({ type: 'UPDATE_AUTOACTIVATED_STATE', id: 'specialEvents', state: true });
+				} else if (cards.specialEvents.active) {
 					// remove any saved items that no longer exist
 					if (saved.length > 0) {
-						const stillsExists = yield call(savedExists, conference.uids, saved);
-						yield put({ type: 'CHANGED_CONFERENCE_SAVED', saved: stillsExists });
+						const stillsExists = yield call(savedExists, specialEvents.uids, saved);
+						yield put({ type: 'CHANGED_SPECIAL_EVENTS_SAVED', saved: stillsExists });
 					}
-					yield put({ type: 'SET_CONFERENCE', conference });
+					yield put({ type: 'SET_SPECIAL_EVENTS', specialEvents });
 				}
 			} else {
-				// Outside active conference window
-				// Deactivate card one time when the conference is over
-				if (cards.conference.autoActivated) {
+				// Outside active specialEvents window
+				// Deactivate card one time when the specialEvents is over
+				if (cards.specialEvents.autoActivated) {
 					// set active and autoActivated to false
-					yield put({ type: 'UPDATE_CARD_STATE', id: 'conference', state: false });
-					yield put({ type: 'UPDATE_AUTOACTIVATED_STATE', id: 'conference', state: false });
+					yield put({ type: 'UPDATE_CARD_STATE', id: 'specialEvents', state: false });
+					yield put({ type: 'UPDATE_AUTOACTIVATED_STATE', id: 'specialEvents', state: false });
 				} else {
 					// Auto-activated false, but manually re-enabled by user
-					// Conference is over, do nothing
+					// SpecialEvents is over, do nothing
 				}
 			}
 		}
@@ -205,9 +205,9 @@ function savedExists(scheduleIds, savedArray) {
 	return existsArray;
 }
 
-function prefetchConferenceImages(conference) {
-	Image.prefetch(conference['logo']);
-	Image.prefetch(conference['logo-sm']);
+function prefetchSpecialEventsImages(specialEvents) {
+	Image.prefetch(specialEvents['logo']);
+	Image.prefetch(specialEvents['logo-sm']);
 }
 
 function prefetchLinkImages(links) {

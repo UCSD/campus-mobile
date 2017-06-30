@@ -15,15 +15,15 @@ import {
 	TAB_BAR_HEIGHT,
 } from '../../styles/LayoutConstants';
 import EmptyItem from './EmptyItem';
-import ConferenceItem from './ConferenceItem';
-import ConferenceHeader from './ConferenceHeader';
+import SpecialEventsItem from './SpecialEventsItem';
+import SpecialEventsHeader from './SpecialEventsHeader';
 
 const dataSource = new ListView.DataSource({
 	rowHasChanged: (r1, r2) => r1 !== r2,
 	sectionHeaderHasChanged: (s1, s2) => s1 !== s2
 });
 
-const ConferenceListView = ({ addConference, conferenceSchedule, conferenceScheduleIds, removeConference, saved,
+const SpecialEventsListView = ({ addSpecialEvents, specialEventsSchedule, specialEventsScheduleIds, removeSpecialEvents, saved,
 	disabled, personal, rows, scrollEnabled, style }) => {
 	if (personal && Array.isArray(saved) && saved.length === 0) {
 		return (
@@ -42,8 +42,8 @@ const ConferenceListView = ({ addConference, conferenceSchedule, conferenceSched
 				dataSource={
 					dataSource.cloneWithRowsAndSections(
 						convertToTimeMap(
-							conferenceSchedule,
-							adjustData(conferenceSchedule, conferenceScheduleIds, saved, personal, rows)
+							specialEventsSchedule,
+							adjustData(specialEventsSchedule, specialEventsScheduleIds, saved, personal, rows)
 						)
 					)
 				}
@@ -53,11 +53,11 @@ const ConferenceListView = ({ addConference, conferenceSchedule, conferenceSched
 						return (
 							<View style={styles.rowContainer}>
 								<EmptyItem />
-								<ConferenceItem
-									conferenceData={rowData}
+								<SpecialEventsItem
+									specialEventsData={rowData}
 									saved={saved.includes(rowData.id)}
-									add={(disabled) ? null : addConference}
-									remove={removeConference}
+									add={(disabled) ? null : addSpecialEvents}
+									remove={removeSpecialEvents}
 								/>
 							</View>
 						);
@@ -68,14 +68,14 @@ const ConferenceListView = ({ addConference, conferenceSchedule, conferenceSched
 				renderSectionHeader={(sectionData, sectionID) => (
 					// Render header along with first row
 					<View style={styles.rowContainer}>
-						<ConferenceHeader
+						<SpecialEventsHeader
 							timestamp={sectionID}
 						/>
-						<ConferenceItem
-							conferenceData={sectionData[0]}
+						<SpecialEventsItem
+							specialEventsData={sectionData[0]}
 							saved={saved.includes(sectionData[0].id)}
-							add={(disabled) ? null : addConference}
-							remove={removeConference}
+							add={(disabled) ? null : addSpecialEvents}
+							remove={removeSpecialEvents}
 						/>
 					</View>
 				)}
@@ -169,27 +169,27 @@ function convertToTimeMap(scheduleMap, scheduleArray, header = false) {
 
 const mapStateToProps = (state) => (
 	{
-		conferenceSchedule: state.conference.data.schedule,
-		conferenceScheduleIds: state.conference.data.uids,
-		saved: state.conference.saved
+		specialEventsSchedule: state.specialEvents.data.schedule,
+		specialEventsScheduleIds: state.specialEvents.data.uids,
+		saved: state.specialEvents.saved
 	}
 );
 
 const mapDispatchToProps = (dispatch) => (
 	{
-		addConference: (id) => {
-			dispatch({ type: 'ADD_CONFERENCE', id });
+		addSpecialEvents: (id) => {
+			dispatch({ type: 'ADD_SPECIAL_EVENTS', id });
 		},
-		removeConference: (id) => {
-			dispatch({ type: 'REMOVE_CONFERENCE', id });
+		removeSpecialEvents: (id) => {
+			dispatch({ type: 'REMOVE_SPECIAL_EVENTS', id });
 		}
 	}
 );
 
-const ActualConferenceListView = connect(
+const ActualSpecialEventsListView = connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(ConferenceListView);
+)(SpecialEventsListView);
 
 const styles = StyleSheet.create({
 	rowContainer: { flexDirection: 'row', height: 76 },
@@ -198,4 +198,4 @@ const styles = StyleSheet.create({
 	noSavedSessions: { flexGrow: 1, fontSize: 18, textAlign: 'center', padding: 40, lineHeight: 30 },
 });
 
-export default ActualConferenceListView;
+export default ActualSpecialEventsListView;

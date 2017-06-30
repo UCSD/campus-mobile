@@ -14,7 +14,7 @@ import EventCardContainer from './events/EventCardContainer';
 import QuicklinksCardContainer from './quicklinks/QuicklinksCardContainer';
 import NewsCardContainer from './news/NewsCardContainer';
 import DiningCardContainer from './dining/DiningCardContainer';
-import ConferenceCardContainer from './conference/ConferenceCardContainer';
+import SpecialEventsCardContainer from './specialEvents/SpecialEventsCardContainer';
 //import SurveyCardContainer from './survey/SurveyCardContainer';
 //import ScheduleCard from './schedule/ScheduleCard';
 
@@ -76,8 +76,8 @@ class Home extends React.Component {
 
 				if (this.props.cards[key].active) {
 					switch (key) {
-					case 'conference':
-						card = <ConferenceCardContainer key={'conference'} />;
+					case 'specialEvents':
+						card = <SpecialEventsCardContainer key={'specialEvents'} />;
 						break;
 					case 'weather':
 						card = (<WeatherCardContainer key={'weather'} />);

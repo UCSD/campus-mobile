@@ -34,7 +34,7 @@ const manifest = {
 	1: (state) => ({ ...state }),
 	2: (state) => ({ ...state, shuttle: Object.assign({}, state.shuttle, { savedStops: [], stops: {}, lastUpdated: 0 }) }),
 	3: (state) => ({ ...state, shuttle: Object.assign({}, state.shuttle, { savedStops: [], stops: {}, lastUpdated: 0, closestStop: null }) }),
-	4: (state) => ({ ...state, cards: undefined }), // clear cards for conference
+	4: (state) => ({ ...state, cards: undefined }), // clear cards for specialEvents
 	5: (state) => ({ ...state, events: undefined }), // clear events data
 };
 

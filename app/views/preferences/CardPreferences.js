@@ -67,8 +67,8 @@ export default class CardPreferences extends Component {
 						data={this.state.cardObject}
 						renderRow={
 							({ data, active, disabled }) => {
-								// Hide conference option if there is no conferenceData
-								if (data.id === 'conference' && !this.props.conferenceData) {
+								// Hide specialEvents option if there is no specialEventsData
+								if (data.id === 'specialEvents' && !this.props.specialEventsData) {
 									return null;
 								} else {
 									return (
@@ -95,7 +95,7 @@ function mapStateToProps(state, props) {
 	return {
 		cards: state.cards.cards,
 		cardOrder: state.cards.cardOrder,
-		conferenceData: state.conference.data,
+		specialEventsData: state.specialEvents.data,
 	};
 }
 

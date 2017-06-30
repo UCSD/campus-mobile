@@ -11,7 +11,7 @@ import {
 	COLOR_BLACK,
 } from '../../styles/ColorConstants';
 
-const ConferenceHeader = ({ timestamp }) => (
+const SpecialEventsHeader = ({ timestamp }) => (
 	<View
 		style={styles.header}
 	>
@@ -26,4 +26,4 @@ const styles = StyleSheet.create({
 	headerText: { textAlign: 'right', alignSelf: 'stretch', color: COLOR_BLACK, fontSize: 12, marginTop: 7 },
 });
 
-export default ConferenceHeader;
+export default SpecialEventsHeader;

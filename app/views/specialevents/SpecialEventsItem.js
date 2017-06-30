@@ -16,36 +16,36 @@ import {
 	COLOR_YELLOW
 } from '../../styles/ColorConstants';
 
-const ConferenceItem = ({ conferenceData, saved, add, remove }) => (
+const SpecialEventsItem = ({ specialEventsData, saved, add, remove }) => (
 	<View
 		style={styles.itemRow}
 	>
 		<CircleBorder />
 		<View style={styles.titleContainer}>
 			<Touchable
-				onPress={() => Actions.ConferenceDetailView({ data: conferenceData, add, remove })}
+				onPress={() => Actions.SpecialEventsDetailView({ data: specialEventsData, add, remove })}
 			>
 				<View>
-					{conferenceData['talk-title'] ? (
+					{specialEventsData['talk-title'] ? (
 						<Text
 							style={styles.titleText}
 							numberOfLines={2}
 						>
-							{conferenceData['talk-title']}
+							{specialEventsData['talk-title']}
 						</Text>
 					) : null }
 
 					<View style={styles.labelView}>
-						{ conferenceData.label ? (
-							<Text style={[styles.labelText, { color: conferenceData['label-theme'] ? conferenceData['label-theme'] : COLOR_BLACK }]}>{conferenceData.label}</Text>
+						{ specialEventsData.label ? (
+							<Text style={[styles.labelText, { color: specialEventsData['label-theme'] ? specialEventsData['label-theme'] : COLOR_BLACK }]}>{specialEventsData.label}</Text>
 						) : null }
-						{ conferenceData['talk-type'] === 'Keynote' ? (
-							<Text style={styles.labelText}>{conferenceData['talk-type']}</Text>
+						{ specialEventsData['talk-type'] === 'Keynote' ? (
+							<Text style={styles.labelText}>{specialEventsData['talk-type']}</Text>
 						) : null }
-						{ conferenceData.label || conferenceData['talk-type'] === 'Keynote' ? (
+						{ specialEventsData.label || specialEventsData['talk-type'] === 'Keynote' ? (
 							<Text style={styles.labelText}> - </Text>
 						) : null }
-						<Text style={styles.labelText}>{getHumanizedDuration(conferenceData['start-time'], conferenceData['end-time'])}</Text>
+						<Text style={styles.labelText}>{getHumanizedDuration(specialEventsData['start-time'], specialEventsData['end-time'])}</Text>
 					</View>
 				</View>
 			</Touchable>
@@ -55,7 +55,7 @@ const ConferenceItem = ({ conferenceData, saved, add, remove }) => (
 			<Touchable
 				style={styles.starButton}
 				onPress={
-					() => ((saved) ? (remove(conferenceData.id)) : (add(conferenceData.id)))
+					() => ((saved) ? (remove(specialEventsData.id)) : (add(specialEventsData.id)))
 				}
 			>
 				<View style={styles.starButtonInner}>
@@ -99,4 +99,4 @@ const styles = StyleSheet.create({
 	circle: { position: 'absolute', top: 11, left: -2.5, height: 6, width: 6, borderRadius: 3, borderWidth: 1, borderColor: COLOR_DGREY, backgroundColor: COLOR_LGREY },
 });
 
-export default ConferenceItem;
+export default SpecialEventsItem;

@@ -6,7 +6,7 @@ import shuttleSaga from './shuttleSaga';
 import diningSaga from './diningSaga';
 import dataSaga from './dataSaga';
 import homeSaga from './homeSaga';
-import conferenceSaga from './conferenceSaga';
+import specialEventsSaga from './specialEventsSaga';
 import userSaga from './userSaga';
 
 // single entry point to start all Sagas at once
@@ -19,7 +19,7 @@ export default function* rootSaga() {
 		fork(diningSaga),
 		fork(dataSaga),
 		fork(homeSaga),
-		fork(conferenceSaga),
+		fork(specialEventsSaga),
 		fork(userSaga)
 	];
 }
