@@ -7,7 +7,7 @@ function updateLinks() {
 		const { lastUpdated, data } = getState().links;
 		const nowTime = new Date().getTime();
 		const timeDiff = nowTime - lastUpdated;
-		const linksTTL = QUICKLINKS_API_TTL * 1000;
+		const linksTTL = QUICKLINKS_API_TTL;
 
 		if ((timeDiff < linksTTL) && data) {
 			// Do nothing, no need to fetch new data

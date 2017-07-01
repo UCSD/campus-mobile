@@ -7,7 +7,7 @@ function updateWeather() {
 		const { lastUpdated, data } = getState().weather;
 		const nowTime = new Date().getTime();
 		const timeDiff = nowTime - lastUpdated;
-		const weatherTTL = WEATHER_API_TTL * 1000;
+		const weatherTTL = WEATHER_API_TTL;
 
 		if (timeDiff < weatherTTL && data) {
 			// Do nothing, no need to fetch new data
