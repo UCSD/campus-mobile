@@ -202,13 +202,15 @@ function* watchArrivals() {
 			}
 		}
 		// Update Vehicles
-		const toggleKeys = Object.keys(toggles);
-		for (let i = 0; i < toggleKeys.length; ++i) {
-			const routeKey = toggleKeys[i];
-			const route = toggles[routeKey];
-			// Update vehicle info if route is turned on
-			if (route) {
-				yield call(updateVehicles, routeKey);
+		if (toggles) {
+			const toggleKeys = Object.keys(toggles);
+			for (let i = 0; i < toggleKeys.length; ++i) {
+				const routeKey = toggleKeys[i];
+				const route = toggles[routeKey];
+				// Update vehicle info if route is turned on
+				if (route) {
+					yield call(updateVehicles, routeKey);
+				}
 			}
 		}
 		yield delay(SHUTTLE_API_TTL);
