@@ -201,8 +201,6 @@ function* watchArrivals() {
 				yield call(fetchArrival, closestStop.id); // Fetch arrival for closest stop
 			}
 		}
-		yield delay(SHUTTLE_API_TTL * 1000);
-
 		// Update Vehicles
 		const toggleKeys = Object.keys(toggles);
 		for (let i = 0; i < toggleKeys.length; ++i) {
@@ -213,6 +211,7 @@ function* watchArrivals() {
 				yield call(updateVehicles, routeKey);
 			}
 		}
+		yield delay(SHUTTLE_API_TTL);
 	}
 }
 
