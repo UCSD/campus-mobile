@@ -12,7 +12,6 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import * as Keychain from 'react-native-keychain';
 
 import { connect } from 'react-redux';
-import { userLoggedIn, userLoggedOut } from '../../actions';
 import getAuthenticationService from '../../services/authenticationService';
 
 import Touchable from '../common/Touchable';
@@ -33,9 +32,12 @@ class UserAccount extends Component {
 	componentDidMount() {
 		const serviceName = 'ucsdapp';
 
+		/*
+		TODO: Check for credentials and check if login is active, re-login if needed
 		Keychain.getGenericPassword(serviceName).then((creds) => {
 			console.log(JSON.stringify(creds));
 		});
+		*/
 		Linking.addEventListener('url', this._handleOpenURL);
 	}
 	componentWillUnmount() {
@@ -49,15 +51,17 @@ class UserAccount extends Component {
 		authenticationService.handleAuthenticationCallback(event)
 		.then(userInfo => {
 			// now we have user info, save in redux and we are set
-			this.props.dispatch(userLoggedIn({
+			/*this.props.dispatch(userLoggedIn({
 				profile: userInfo
-			}));
+			}));*/
+			this.props.doLogin();
 		})
 		.catch(error => {}); // TODO: notify user if logon failed?
 	}
 	_performUserAuthAction = () => {
 		if (this.props.user.isLoggedIn) {
-			this.props.dispatch(userLoggedOut()); // log out user, destroy profile/auth info
+			//this.props.dispatch(userLoggedOut()); // log out user, destroy profile/auth info
+			this.props.doLogout();
 		} else {
 			// if the are not logged in, log them in
 			const authUrl = authenticationService.createAuthenticationUrl();
