@@ -17,7 +17,6 @@ UC San Diego uses this platform for its campus mobile app on iOS and Android.
 
 ## Manual Bug Fixes
 [Pressing same tab](https://github.com/UCSD/campus-mobile/issues/134)
-[Preference Switches](https://github.com/UCSD/campus-mobile/issues/159)
 
 ## Building for Android
 
