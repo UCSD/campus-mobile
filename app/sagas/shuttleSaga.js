@@ -1,9 +1,44 @@
 import { delay } from 'redux-saga';
 import { call, fork, put, select, takeLatest } from 'redux-saga/effects';
-import { fetchShuttleArrivalsByStop } from '../services/shuttleService';
+import { fetchShuttleArrivalsByStop, fetchVehiclesByRoute } from '../services/shuttleService';
 import { SHUTTLE_API_TTL } from '../AppSettings';
 
 const getShuttle = (state) => (state.shuttle);
+
+function* toggleRoute(action) {
+	const { toggles, stops, routes } = yield select(getShuttle);
+	const { route } = action;
+
+	Object.keys(toggles).forEach((element) => {
+		// Toggle off any non-selected route
+		if (Number(element) !== Number(route)) {
+			if (toggles[element] === true) {
+				// Remove route from every stop
+				Object.keys(routes[element].stops).forEach((key2, index2) => {
+					if (stops[key2]) {
+						delete stops[key2].routes[element];
+					}
+				});
+			}
+			toggles[element] = false;
+		} else {
+			Object.keys(routes[element].stops).forEach((key2, index2) => {
+				if (stops[key2]) {
+					stops[key2].routes[element] = routes[element];
+				}
+			});
+
+			toggles[element] = true;
+		}
+	});
+
+	yield put({
+		type: 'TOGGLE_ROUTE',
+		toggles,
+		route,
+		stops
+	});
+}
 
 function* addStop(action) {
 	const shuttle = yield select(getShuttle);
@@ -141,10 +176,21 @@ function* fetchArrivalMan(action) {
 	yield call(fetchArrival, action.stopID);
 }
 
+// Update vehicles for given route
+function* updateVehicles(route) {
+	const vehicles = yield call(fetchVehiclesByRoute, route);
+	yield put({
+		type: 'SET_VEHICLES',
+		route,
+		vehicles
+	});
+}
+
 function* watchArrivals() {
 	while (true) {
-		const { savedStops, closestStop } = yield select(getShuttle);
+		const { savedStops, closestStop, toggles } = yield select(getShuttle);
 
+		// Update Arrivals
 		if (Array.isArray(savedStops)) {
 			// Fetch arrivals for all saved stops
 			for (let i = 0; i < savedStops.length; ++i) {
@@ -156,6 +202,17 @@ function* watchArrivals() {
 			}
 		}
 		yield delay(SHUTTLE_API_TTL * 1000);
+
+		// Update Vehicles
+		const toggleKeys = Object.keys(toggles);
+		for (let i = 0; i < toggleKeys.length; ++i) {
+			const routeKey = toggleKeys[i];
+			const route = toggles[routeKey];
+			// Update vehicle info if route is turned on
+			if (route) {
+				yield call(updateVehicles, routeKey);
+			}
+		}
 	}
 }
 
@@ -165,6 +222,7 @@ function* shuttleSaga() {
 	yield takeLatest('ORDER_STOPS', orderStops);
 	yield takeLatest('FETCH_ARRIVAL', fetchArrivalMan);
 	yield takeLatest('UPDATE_SHUTTLE_SCROLL', setScroll);
+	yield takeLatest('UPDATE_TOGGLE_ROUTE', toggleRoute);
 	yield call(watchArrivals);
 }
 

@@ -8,6 +8,7 @@ import { fetchSurveyIds, fetchSurveyById } from '../services/surveyService';
 import LinksService from '../services/quicklinksService';
 import EventService from '../services/eventService';
 import NewsService from '../services/newsService';
+import { fetchMasterStopsNoRoutes, fetchMasterRoutes } from '../services/shuttleService';
 import {
 	WEATHER_API_TTL,
 	SURF_API_TTL,
@@ -16,6 +17,7 @@ import {
 	EVENTS_API_TTL,
 	NEWS_API_TTL,
 	DATA_SAGA_TTL,
+	SHUTTLE_MASTER_TTL,
 } from '../AppSettings';
 
 const getWeather = (state) => (state.weather);
@@ -26,6 +28,7 @@ const getSurvey = (state) => (state.survey);
 const getEvents = (state) => (state.events);
 const getNews = (state) => (state.news);
 const getCards = (state) => (state.cards);
+const getShuttle = (state) => (state.shuttle);
 
 function* watchData() {
 	while (true) {
@@ -37,11 +40,41 @@ function* watchData() {
 			yield call(updateEvents);
 			yield call(updateNews);
 			yield call(updateSurveys);
+			yield call(updateShuttleMaster);
 			yield put({ type: 'UPDATE_DINING' });
 		} catch (err) {
 			console.log(err);
 		}
 		yield delay(DATA_SAGA_TTL * 1000);
+	}
+}
+
+function* updateShuttleMaster() {
+	const { lastUpdated, routes, stops } = yield select(getShuttle);
+	const nowTime = new Date().getTime();
+	const timeDiff = nowTime - lastUpdated;
+	const shuttleTTL = SHUTTLE_MASTER_TTL * 1000;
+
+	if ((timeDiff < shuttleTTL) && (routes !== null) && (stops !== null)) {
+		// Do nothing, don't need to update
+	} else {
+		// Fetch for new data
+		const stopsData = yield call(fetchMasterStopsNoRoutes);
+		const routesData = yield call(fetchMasterRoutes);
+
+		// Set toggles
+		const initialToggles = {};
+		Object.keys(routesData).forEach((key, index) => {
+			initialToggles[key] = false;
+		});
+
+		yield put({
+			type: 'SET_SHUTTLE_MASTER',
+			stops: stopsData,
+			routes: routesData,
+			toggles: initialToggles,
+			nowTime
+		});
 	}
 }
 

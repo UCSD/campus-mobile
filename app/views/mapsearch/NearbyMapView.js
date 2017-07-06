@@ -23,9 +23,6 @@ import SearchResults from './SearchResults';
 import SearchHistoryCard from './SearchHistoryCard';
 import SearchSuggest from './SearchSuggest';
 import SearchShuttleMenu from './SearchShuttleMenu';
-import ShuttleLocationContainer from '../../containers/shuttleLocationContainer';
-
-import { toggleRoute } from '../../actions/shuttle';
 
 import css from '../../styles/css';
 import logger from '../../util/logger';
@@ -364,7 +361,6 @@ class NearbyMapView extends React.Component {
 						visible={(this.state.showBar && this.props.search_results !== null)}
 						onPress={this.gotoResults}
 					/>
-					<ShuttleLocationContainer />
 				</View>
 			);
 		} else {
@@ -396,7 +392,7 @@ const mapDispatchToProps = (dispatch, ownProps) => (
 			dispatch({ type: 'FETCH_MAP_SEARCH', term, location });
 		},
 		toggle: (route) => {
-			dispatch(toggleRoute(route));
+			dispatch({ type: 'UPDATE_TOGGLE_ROUTE', route });
 		},
 		removeHistory: (index) => {
 			dispatch({ type: 'REMOVE_HISTORY', index });
