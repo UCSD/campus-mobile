@@ -9,9 +9,7 @@ module.exports = {
 	SURF_API_URL: 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/surffeed.json',
 	SHUTTLE_STOPS_API_URL: 'https://ies4wyrlx9.execute-api.us-west-2.amazonaws.com/prod/v2/stops/',
 	SHUTTLE_VEHICLES_API_URL: 'https://hjr84cay81.execute-api.us-west-2.amazonaws.com/prod?route=',
-	//DINING_API_URL: 'https://pg83tslbyi.execute-api.us-west-2.amazonaws.com/prod/v2/dining/locations',
-	DINING_API_URL: 'https://s3-us-west-2.amazonaws.com/ucsd-mobile/dev/dining/dining_v2_nomenu_2017-06-02.json', // HDH V2 Placeholder Feed
-	DINING_MENU_API_URL: 'https://s3-us-west-2.amazonaws.com/ucsd-mobile/dev/dining/menu/', // HDH V2 Placeholder Feed
+	DINING_API_URL: 'https://pg83tslbyi.execute-api.us-west-2.amazonaws.com/prod/v2/dining/locations',
 	EVENTS_API_URL: 'https://2jjml3hf27.execute-api.us-west-2.amazonaws.com/prod/events/student',
 	QUICKLINKS_API_URL: 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/quick_links/ucsd-quicklinks-v3.json',
 	NEWS_API_URL: 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/allstories.json',
