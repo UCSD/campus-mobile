@@ -117,12 +117,12 @@ const ActualSpecialEventsDetailView = connect(
 )(SpecialEventsDetailView);
 
 const styles = StyleSheet.create({
-	detailContainer: { width: WINDOW_WIDTH, paddingHorizontal: 18, paddingVertical: 14 },
+	detailContainer: { width: WINDOW_WIDTH, padding: 12 },
 	labelView: { flexDirection: 'row', paddingTop: 4 },
 	labelText: { fontSize: 13 },
 	sessionName: { fontSize: 22, color: COLOR_PRIMARY, paddingTop: 6 },
 	sessionInfo: { fontSize: 12, paddingTop: 6  },
-	sessionDesc: { lineHeight: 18, color: COLOR_DGREY, fontSize: 14, paddingTop: 14 },
+	sessionDesc: { lineHeight: 18, fontSize: 14, paddingTop: 14 },
 	hostedBy: { fontSize: 10, fontWeight: 'bold', marginTop: 20 },
 	speakerContainer: { marginTop: 2 },
 	speakerName: { fontSize: 14, fontWeight: 'bold', color: COLOR_PRIMARY, marginTop: 10 },

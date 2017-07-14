@@ -8,7 +8,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { Actions } from 'react-native-router-flux';
 
 import Touchable from '../common/Touchable';
-import {  getHumanizedDuration } from '../../util/general';
+import { platformIOS, getHumanizedDuration } from '../../util/general';
 import {
 	COLOR_DGREY,
 	COLOR_LGREY,
@@ -86,14 +86,14 @@ const CircleBorder = () => (
 
 const styles = StyleSheet.create({
 	itemRow: { flexGrow: 1, flexDirection: 'row', backgroundColor: COLOR_LGREY },
-	titleContainer: { flex: 1, marginTop: 3, justifyContent: 'center' },
-	titleText: { alignSelf: 'stretch', fontSize: 17, color: COLOR_BLACK },
+	titleContainer: { flex: 1, marginTop: 3 },
+	titleText: { alignSelf: 'stretch', fontSize: 17, color: '#000' },
 	labelView: { flexDirection: 'row', paddingTop: 4 },
 	labelText: { fontSize: 13 },
-	starButton: { justifyContent: 'center', width: 50 },
-	starButtonInner: { alignItems: 'center' },
-	starOuterIcon: { color: COLOR_DGREY },
-	starInnerIcon: { position: 'absolute', backgroundColor: 'transparent', marginTop: 3, color: COLOR_YELLOW },
+	starButton: { width: 50 },
+	starButtonInner: { justifyContent: 'flex-start', alignItems: 'center' },
+	starOuterIcon: { position: platformIOS() ? 'absolute' : 'relative', zIndex: 10, backgroundColor: 'rgba(0,0,0,0)' },
+	starInnerIcon: { position: 'absolute', zIndex: platformIOS() ? 5 : 15, marginTop: 3 },
 	borderContainer: { width: 1, alignSelf: 'stretch', marginHorizontal: 20, alignItems: 'flex-start' },
 	line: { flexGrow: 1, borderLeftWidth: 1, borderColor: COLOR_DGREY, paddingBottom: 20 },
 	circle: { position: 'absolute', top: 11, left: -2.5, height: 6, width: 6, borderRadius: 3, borderWidth: 1, borderColor: COLOR_DGREY, backgroundColor: COLOR_LGREY },
