@@ -12,6 +12,7 @@ import SpecialEventsListView from './SpecialEventsListView';
 import Touchable from '../common/Touchable';
 import {
 	COLOR_DGREY,
+	COLOR_MGREY,
 	COLOR_PRIMARY,
 } from '../../styles/ColorConstants';
 import {
@@ -23,6 +24,7 @@ const SpecialEventsCard = ({ specialEvents, saved, hideCard }) => (
 		{ (Array.isArray(saved) && saved.length < 1) ?
 			(
 				<BannerCard
+					title={specialEvents.name}
 					image={specialEvents.logo}
 					onPress={() => Actions.SpecialEventsView()}
 					onClose={() => hideCard('specialEvents')}
@@ -63,8 +65,8 @@ const SpecialEventsCard = ({ specialEvents, saved, hideCard }) => (
 const styles = StyleSheet.create({
 	more: { alignItems: 'center', justifyContent: 'center', padding: 6 },
 	more_label: { fontSize: 20, color: COLOR_PRIMARY, fontWeight: '300' },
-	specialEventsListView: { borderBottomWidth: 1, borderBottomColor: COLOR_DGREY },
-	contentContainer: { flex: 1, width: MAX_CARD_WIDTH },
+	specialEventsListView: { borderBottomWidth: 1, borderBottomColor: COLOR_MGREY },
+	contentContainer: { flexGrow: 1, width: MAX_CARD_WIDTH },
 });
 
 export default SpecialEventsCard;

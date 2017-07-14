@@ -16,7 +16,8 @@ import { getHumanizedDuration, platformIOS } from '../../util/general';
 import {
 	COLOR_DGREY,
 	COLOR_PRIMARY,
-	COLOR_BLACK
+	COLOR_BLACK,
+	COLOR_YELLOW,
 } from '../../styles/ColorConstants';
 import {
 	WINDOW_WIDTH
@@ -45,7 +46,6 @@ const SpecialEventsDetailView = ({ data, saved, add, remove }) => {
 									<Icon
 										name={'ios-star'}
 										size={26}
-										color={'yellow'} // TODO: USE Color Constant when avail
 										style={styles.starInnerIcon}
 									/>
 								) : null }
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
 	starButton: { width: 50, position: 'absolute', top: 2, right: -5, zIndex: 10 },
 	starButtonInner: { justifyContent: 'flex-start', alignItems: 'center' },
 	starOuterIcon: { color: COLOR_DGREY, position: platformIOS() ? 'absolute' : 'relative', zIndex: 10, backgroundColor: 'transparent' },
-	starInnerIcon: { position: 'absolute', zIndex: platformIOS() ? 5 : 15, marginTop: 3 },
+	starInnerIcon: { color: COLOR_YELLOW, position: 'absolute', zIndex: platformIOS() ? 5 : 15, marginTop: 3 },
 });
 
 export default ActualSpecialEventsDetailView;

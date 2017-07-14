@@ -11,6 +11,7 @@ import Touchable from '../common/Touchable';
 import { platformIOS, getHumanizedDuration } from '../../util/general';
 import {
 	COLOR_DGREY,
+	COLOR_MGREY,
 	COLOR_LGREY,
 	COLOR_BLACK,
 	COLOR_YELLOW
@@ -62,7 +63,7 @@ const SpecialEventsItem = ({ specialEventsData, saved, add, remove }) => (
 					<Icon
 						name={'ios-star-outline'}
 						size={32}
-						style={styles.starOuterIcon} // TODO: USE Color Constant when avail
+						style={styles.starOuterIcon}
 					/>
 					{ saved ? (
 						<Icon
@@ -92,11 +93,11 @@ const styles = StyleSheet.create({
 	labelText: { fontSize: 13 },
 	starButton: { width: 50 },
 	starButtonInner: { justifyContent: 'flex-start', alignItems: 'center' },
-	starOuterIcon: { position: platformIOS() ? 'absolute' : 'relative', zIndex: 10, backgroundColor: 'rgba(0,0,0,0)' },
-	starInnerIcon: { position: 'absolute', zIndex: platformIOS() ? 5 : 15, marginTop: 3 },
+	starOuterIcon: { color: COLOR_DGREY, position: platformIOS() ? 'absolute' : 'relative', zIndex: 10, backgroundColor: 'rgba(0,0,0,0)' },
+	starInnerIcon: { color: COLOR_YELLOW, position: 'absolute', zIndex: platformIOS() ? 5 : 15, marginTop: 3 },
 	borderContainer: { width: 1, alignSelf: 'stretch', marginHorizontal: 20, alignItems: 'flex-start' },
-	line: { flexGrow: 1, borderLeftWidth: 1, borderColor: COLOR_DGREY, paddingBottom: 20 },
-	circle: { position: 'absolute', top: 11, left: -2.5, height: 6, width: 6, borderRadius: 3, borderWidth: 1, borderColor: COLOR_DGREY, backgroundColor: COLOR_LGREY },
+	line: { flexGrow: 1, borderLeftWidth: 1, borderColor: COLOR_MGREY, paddingBottom: 20 },
+	circle: { position: 'absolute', top: 11, left: -2.5, height: 6, width: 6, borderRadius: 3, borderWidth: 1, borderColor: COLOR_MGREY, backgroundColor: COLOR_LGREY },
 });
 
 export default SpecialEventsItem;
