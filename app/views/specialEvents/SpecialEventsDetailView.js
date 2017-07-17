@@ -12,7 +12,7 @@ import moment from 'moment';
 import Touchable from '../common/Touchable';
 import css from '../../styles/css';
 import logger from '../../util/logger';
-import { getHumanizedDuration, platformIOS } from '../../util/general';
+import { gotoNavigationApp, getHumanizedDuration, platformIOS } from '../../util/general';
 import {
 	COLOR_DGREY,
 	COLOR_PRIMARY,
@@ -77,6 +77,10 @@ const SpecialEventsDetailView = ({ data, saved, add, remove }) => {
 						{data['full-description']}
 					</Text>
 
+					<Touchable onPress={ () => gotoNavigationApp('32.868140', '-117.250173') }>
+						<Text>Directions</Text>
+					</Touchable>
+
 					{data.speakers ? (
 						<View>
 							<Text style={styles.hostedBy}>Hosted By</Text>
@@ -120,10 +124,10 @@ const styles = StyleSheet.create({
 	detailContainer: { width: WINDOW_WIDTH, padding: 12 },
 	labelView: { flexDirection: 'row', paddingTop: 4 },
 	labelText: { fontSize: 13 },
-	sessionName: { fontSize: 22, color: COLOR_PRIMARY, paddingTop: 6 },
-	sessionInfo: { fontSize: 12, paddingTop: 6  },
-	sessionDesc: { lineHeight: 18, fontSize: 14, paddingTop: 14 },
-	hostedBy: { fontSize: 10, fontWeight: 'bold', marginTop: 20 },
+	sessionName: { fontSize: 24, color: COLOR_PRIMARY, paddingTop: 6 },
+	sessionInfo: { fontSize: 12, paddingTop: 16  },
+	sessionDesc: { lineHeight: 18, fontSize: 14, paddingTop: 16 },
+	hostedBy: { fontSize: 10, fontWeight: 'bold', marginTop: 16 },
 	speakerContainer: { marginTop: 2 },
 	speakerName: { fontSize: 14, fontWeight: 'bold', color: COLOR_PRIMARY, marginTop: 10 },
 	speakerPosition: { fontSize: 10, marginTop: 2 },
