@@ -6,6 +6,7 @@ import {
 	StyleSheet,
 } from 'react-native';
 import { connect } from 'react-redux';
+import moment from 'moment';
 
 import {
 	MAX_CARD_WIDTH,
@@ -18,13 +19,15 @@ import EmptyItem from './EmptyItem';
 import SpecialEventsItem from './SpecialEventsItem';
 import SpecialEventsHeader from './SpecialEventsHeader';
 
+
 const dataSource = new ListView.DataSource({
 	rowHasChanged: (r1, r2) => r1 !== r2,
 	sectionHeaderHasChanged: (s1, s2) => s1 !== s2
 });
 
-const SpecialEventsListView = ({ addSpecialEvents, specialEventsSchedule, specialEventsScheduleIds, removeSpecialEvents, saved,
-	disabled, personal, rows, scrollEnabled, style }) => {
+const SpecialEventsListView = ({ addSpecialEvents, specialEventsSchedule,
+	specialEventsScheduleIds, removeSpecialEvents, saved,disabled, personal, rows,
+	scrollEnabled, style, labels, labelItemIds, selectedDay, days, daysItemIds }) => {
 	if (personal && Array.isArray(saved) && saved.length === 0) {
 		return (
 			<View style={[style, rows ? styles.card : styles.full]}>
@@ -34,6 +37,35 @@ const SpecialEventsListView = ({ addSpecialEvents, specialEventsSchedule, specia
 			</View>
 		);
 	} else {
+		let scheduleIdArray = [];
+		// Use ids from selectedDay
+		if (daysItemIds) {
+			if (selectedDay) {
+				scheduleIdArray = daysItemIds[selectedDay];
+			} else {
+				// Select current day by default
+				for (let i = 0; i < days.length; ++i) {
+					selectedDay = days[i];
+					if (moment(selectedDay).isSameOrAfter(moment(), 'day')) {
+						break;
+					}
+				}
+				scheduleIdArray = daysItemIds[selectedDay];
+			}
+		}
+
+		// Apply label filtering
+		if (!personal && labels.length > 0) {
+			let labelArray = [];
+			for (let i = 0; i < labels.length; ++i) {
+				const label = labels[i];
+				const items = labelItemIds[label];
+
+				labelArray = labelArray.concat(items);
+			}
+			scheduleIdArray = scheduleIdArray.filter((item) => labelArray.includes(item));
+		}
+
 		return (
 			<ListView
 				style={[style, rows ? styles.card : styles.full]}
@@ -43,7 +75,7 @@ const SpecialEventsListView = ({ addSpecialEvents, specialEventsSchedule, specia
 					dataSource.cloneWithRowsAndSections(
 						convertToTimeMap(
 							specialEventsSchedule,
-							adjustData(specialEventsSchedule, specialEventsScheduleIds, saved, personal, rows)
+							adjustData(specialEventsSchedule, scheduleIdArray, saved, personal, rows)
 						)
 					)
 				}
@@ -86,7 +118,6 @@ const SpecialEventsListView = ({ addSpecialEvents, specialEventsSchedule, specia
 
 /*
 	Filters what session ids to use based on personal/saved and/or rows
-	Additional filtering can be done here
 	@returns Array of session ids
  */
 function adjustData(scheduleIdMap, scheduleIdArray, savedArray, personal, rows) {
@@ -105,9 +136,12 @@ function adjustData(scheduleIdMap, scheduleIdArray, savedArray, personal, rows) 
 		}
 	} else {
 		let filtered = [];
+		// Check if saved item is part of ids to be displayed
 		for (let i = 0; i < savedArray.length; ++i) {
 			const key = savedArray[i];
-			filtered.push(key);
+			if (scheduleIdArray.includes(key)) {
+				filtered.push(key);
+			}
 		}
 
 		// Displaying for homecard
@@ -171,7 +205,11 @@ const mapStateToProps = (state) => (
 	{
 		specialEventsSchedule: state.specialEvents.data.schedule,
 		specialEventsScheduleIds: state.specialEvents.data.uids,
-		saved: state.specialEvents.saved
+		saved: state.specialEvents.saved,
+		labelItemIds: state.specialEvents.data['label-items'],
+		labels: state.specialEvents.labels,
+		days: state.specialEvents.data.dates,
+		daysItemIds: state.specialEvents.data['date-items'],
 	}
 );
 

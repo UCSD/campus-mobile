@@ -44,9 +44,15 @@ function* removeSpecialEvents(action) {
 	}
 }
 
+function* updateLabels(action) {
+	const { labels } = action;
+	yield put({ type: 'CHANGED_SPECIAL_EVENTS_LABELS', labels });
+}
+
 function* specialEventsSaga() {
 	yield takeLatest('ADD_SPECIAL_EVENTS', addSpecialEvents);
 	yield takeLatest('REMOVE_SPECIAL_EVENTS', removeSpecialEvents);
+	yield takeLatest('UPDATE_SPECIAL_EVENTS_LABELS', updateLabels);
 }
 
 export default specialEventsSaga;
