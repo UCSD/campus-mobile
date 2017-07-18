@@ -58,10 +58,16 @@ class SpecialEventsView extends Component {
 
 
 	handleFullPress = () => {
+		Actions.refresh({
+			filterButton: this.renderFilterButton(this.state.onFilter)
+		});
 		this.setState({ personal: false });
 	}
 
 	handleMinePress = () => {
+		Actions.refresh({
+			filterButton: null
+		});
 		this.setState({ personal: true });
 	}
 
