@@ -5,9 +5,9 @@ import {
 	View,
 	Text,
 } from 'react-native';
-import CircleCheckBox from 'react-native-circle-checkbox';
 
 import Touchable from '../common/Touchable';
+import CircleCheckBox from '../common/CircleCheckBox';
 import {
 	COLOR_LGREY,
 	COLOR_DGREY,
