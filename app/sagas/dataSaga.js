@@ -239,8 +239,15 @@ function savedExists(scheduleIds, savedArray) {
 }
 
 function prefetchSpecialEventsImages(specialEvents) {
-	Image.prefetch(specialEvents['logo']);
-	Image.prefetch(specialEvents['logo-sm']);
+	if (specialEvents['logo']) {
+		Image.prefetch(specialEvents['logo']);
+	}
+	if (specialEvents['logo-sm']) {
+		Image.prefetch(specialEvents['logo-sm']);
+	}
+	if (specialEvents['map']) {
+		Image.prefetch(specialEvents['map']);
+	}
 }
 
 function prefetchLinkImages(links) {
