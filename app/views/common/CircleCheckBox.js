@@ -35,9 +35,9 @@ class CircleCheckBox extends Component {
 
   static defaultProps = {
     checked: false,
-    outerSize: 26,
-    filterSize: 23,
-    innerSize: 18,
+    outerSize: 18,
+    filterSize: 16,
+    innerSize: 13,
     outerColor: '#FC9527',
     filterColor: '#FFF',
     innerColor: '#FC9527',
@@ -124,8 +124,9 @@ var styles = StyleSheet.create({
     alignItems: 'center'
   },
   checkBoxLabel: {
-    marginLeft: 5,
-    marginRight: 5
+    fontSize: 18,
+    fontWeight: '300',
+    marginHorizontal: 10,
   }
 });
 

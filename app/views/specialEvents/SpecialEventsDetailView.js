@@ -81,6 +81,19 @@ const SpecialEventsDetailView = ({ data, saved, add, remove }) => {
 						<Text>Directions</Text>
 					</Touchable>
 
+					<Touchable
+						underlayColor={'rgba(200,200,200,.1)'}
+						onPress={() => gotoNavigationApp(latitude, longitude)}
+					>
+						<View style={styles.sed_dir}>
+							<Text style={styles.sed_dir_label}>Directions</Text>
+							<View style={styles.sed_dir_traveltype_container}>
+								<Icon name="md-walk" size={32} color="#182B49" />
+							</View>
+						</View>
+					</Touchable>
+
+
 					{data.speakers ? (
 						<View>
 							<Text style={styles.hostedBy}>Hosted By</Text>
@@ -136,6 +149,9 @@ const styles = StyleSheet.create({
 	starButtonInner: { justifyContent: 'flex-start', alignItems: 'center' },
 	starOuterIcon: { color: COLOR_DGREY, position: platformIOS() ? 'absolute' : 'relative', zIndex: 10, backgroundColor: 'transparent' },
 	starInnerIcon: { color: COLOR_YELLOW, position: 'absolute', zIndex: platformIOS() ? 5 : 15, marginTop: 3 },
+	sed_directions: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderTopWidth: 1, borderTopColor: 'red', margin: 6, padding: 6 },
+	sed_directions_label: { fontSize: 22, color: COLOR_PRIMARY },
+	sed_directions_icon: { flexDirection: 'column', alignItems: 'center', justifyContent: 'center' },
 });
 
 export default ActualSpecialEventsDetailView;

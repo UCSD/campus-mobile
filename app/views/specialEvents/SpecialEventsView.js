@@ -87,19 +87,21 @@ class SpecialEventsView extends Component {
 	}
 
 	renderFilterButton = (onFilter) => {
-		return (
-			<Touchable
-				onPress={this.handleFilterPress}
-			>
-				<Text
-					style={styles.selectedText}
+		if (!onFilter) {
+			return (
+				<Touchable
+					onPress={this.handleFilterPress}
 				>
-					{
-						(onFilter) ? ('Done') : ('Filter')
-					}
-				</Text>
-			</Touchable>
-		);
+					<Text
+						style={styles.selectedText}
+					>
+						Filter
+					</Text>
+				</Touchable>
+			);	
+		} else {
+			return null;
+		}
 	}
 
 	render() {

@@ -5,12 +5,14 @@ import {
 	View,
 	Text,
 } from 'react-native';
-
+import { Actions } from 'react-native-router-flux';
 import Touchable from '../common/Touchable';
 import CircleCheckBox from '../common/CircleCheckBox';
 import {
 	COLOR_LGREY,
 	COLOR_DGREY,
+	COLOR_WHITE,
+	COLOR_PRIMARY,
 } from '../../styles/ColorConstants';
 
 /**
@@ -47,7 +49,8 @@ class MultiSelect extends Component {
 		const dataSource = ds.cloneWithRows(items);
 
 		return (
-			<View>
+			<View style={styles.container}>
+				{/* Revisit for Welcome Week
 				<Touchable
 					onPress={() => this.onClear()}
 					style={styles.itemRow}
@@ -56,6 +59,7 @@ class MultiSelect extends Component {
 						Clear
 					</Text>
 				</Touchable>
+				*/}
 				<ListView
 					dataSource={dataSource}
 					renderRow={(rowData) => (
@@ -67,6 +71,13 @@ class MultiSelect extends Component {
 						/>
 					)}
 				/>
+
+				<Touchable
+					onPress={() => null}
+					style={styles.applyButton}
+				>
+					<Text style={styles.applyText}>Apply</Text>
+				</Touchable>
 			</View>
 		);
 	}
@@ -88,7 +99,10 @@ const MultiSelectItem = ({ data, selected, onSelect, color }) => (
 );
 
 const styles = StyleSheet.create({
+	container: { flexGrow: 1, backgroundColor: 'white', paddingHorizontal: 12 },
 	itemRow: { flexDirection: 'row', height: 50, alignItems: 'center', backgroundColor: 'white', borderBottomWidth: 1, borderBottomColor: COLOR_LGREY, },
+	applyButton: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR_PRIMARY, borderRadius: 3, padding: 10, marginBottom: 10 },
+	applyText: { fontSize: 16, color: COLOR_WHITE },
 });
 
 export default MultiSelect;
