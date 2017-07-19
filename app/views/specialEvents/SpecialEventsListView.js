@@ -63,7 +63,7 @@ const SpecialEventsListView = ({ addSpecialEvents, specialEventsSchedule,
 		// Apply label filtering
 		if (!personal && labels.length > 0) {
 			let labelArray = [];
-			for (let j = 0; i < labels.length; ++j) {
+			for (let j = 0; j < labels.length; ++j) {
 				const label = labels[j];
 				const items = labelItemIds[label];
 
