@@ -16,7 +16,7 @@ const SpecialEventsHeader = ({ timestamp }) => (
 		style={styles.header}
 	>
 		<Text style={styles.headerText}>
-			{moment(Number(timestamp)).format('MMM DD h:mm')}
+			{moment(Number(timestamp)).format('MMM D h:mm')}
 		</Text>
 	</View>
 );
