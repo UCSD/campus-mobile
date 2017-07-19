@@ -73,7 +73,7 @@ class MultiSelect extends Component {
 				/>
 
 				<Touchable
-					onPress={() => null}
+					onPress={() => this.props.applyFilters()}
 					style={styles.applyButton}
 				>
 					<Text style={styles.applyText}>Apply</Text>
