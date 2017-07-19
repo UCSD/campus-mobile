@@ -193,7 +193,7 @@ const FakeTabBar = ({ personal, handleFullPress, handleMinePress }) => (
 
 const DaysBar = ({ days, selectedDay, handleDayPress }) => {
 	return (
-		<View style={styles.tabBar}>
+		<View style={styles.daysBar}>
 			<ScrollView
 				horizontal
 				showsHorizontalScrollIndicator={false}
@@ -204,11 +204,11 @@ const DaysBar = ({ days, selectedDay, handleDayPress }) => {
 					days.map((day, index) =>
 						<Touchable
 							key={day}
-							style={index !== selectedDay ? styles.plainButton : styles.selectedButton}
+							style={styles.plainButton}
 							onPress={() => handleDayPress(index)}
 						>
 							<Text
-								style={index !== selectedDay ? styles.plainText : styles.selectedText}
+								style={index !== selectedDay ? styles.plainText : styles.selectedDayText}
 							>
 								Day {index + 1}
 							</Text>
@@ -232,4 +232,7 @@ const styles = StyleSheet.create({
 	selectedText: { textAlign: 'center', fontSize: 18, color: 'white' },
 	plainText: { textAlign: 'center', fontSize: 18, opacity: 0.5 },
 	tabBar: { borderTopWidth: 1, borderColor: COLOR_DGREY, backgroundColor: COLOR_WHITE, height: TAB_BAR_HEIGHT },
+
+	daysBar: { borderBottomWidth: 1, borderColor: COLOR_DGREY, backgroundColor: COLOR_WHITE, height: TAB_BAR_HEIGHT },
+	selectedDayText: { textAlign: 'center', fontSize: 18, color: COLOR_PRIMARY },
 });
