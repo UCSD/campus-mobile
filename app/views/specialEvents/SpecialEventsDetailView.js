@@ -15,6 +15,7 @@ import logger from '../../util/logger';
 import { gotoNavigationApp, getHumanizedDuration, platformIOS } from '../../util/general';
 import {
 	COLOR_DGREY,
+	COLOR_MGREY,
 	COLOR_PRIMARY,
 	COLOR_BLACK,
 	COLOR_YELLOW,
@@ -77,21 +78,17 @@ const SpecialEventsDetailView = ({ data, saved, add, remove }) => {
 						{data['full-description']}
 					</Text>
 
-					<Touchable onPress={ () => gotoNavigationApp('32.868140', '-117.250173') }>
-						<Text>Directions</Text>
-					</Touchable>
-
-					<Touchable
-						underlayColor={'rgba(200,200,200,.1)'}
-						onPress={() => gotoNavigationApp(latitude, longitude)}
-					>
-						<View style={styles.sed_dir}>
-							<Text style={styles.sed_dir_label}>Directions</Text>
-							<View style={styles.sed_dir_traveltype_container}>
-								<Icon name="md-walk" size={32} color="#182B49" />
+					{(data.map && data.map.latitude && data.map.longitude) ? (
+						<Touchable
+							underlayColor={'rgba(200,200,200,.1)'}
+							onPress={() => gotoNavigationApp(data.map.latitude, data.map.longitude)}
+						>
+							<View style={styles.sed_dir}>
+								<Text style={styles.sed_dir_label}>Directions</Text>
+								<Icon name="md-walk" size={32} style={styles.sed_dir_icon} />
 							</View>
-						</View>
-					</Touchable>
+						</Touchable>
+					) : null }
 
 
 					{data.speakers ? (
@@ -149,9 +146,9 @@ const styles = StyleSheet.create({
 	starButtonInner: { justifyContent: 'flex-start', alignItems: 'center' },
 	starOuterIcon: { color: COLOR_DGREY, position: platformIOS() ? 'absolute' : 'relative', zIndex: 10, backgroundColor: 'transparent' },
 	starInnerIcon: { color: COLOR_YELLOW, position: 'absolute', zIndex: platformIOS() ? 5 : 15, marginTop: 3 },
-	sed_directions: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderTopWidth: 1, borderTopColor: 'red', margin: 6, padding: 6 },
-	sed_directions_label: { fontSize: 22, color: COLOR_PRIMARY },
-	sed_directions_icon: { flexDirection: 'column', alignItems: 'center', justifyContent: 'center' },
+	sed_dir: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderTopWidth: 1, borderTopColor: COLOR_MGREY, marginTop: 16, paddingVertical: 6 },
+	sed_dir_label: { flex: 1, fontSize: 22, color: COLOR_PRIMARY },
+	sed_dir_icon: { color: COLOR_PRIMARY, alignSelf: 'flex-end' },
 });
 
 export default ActualSpecialEventsDetailView;
