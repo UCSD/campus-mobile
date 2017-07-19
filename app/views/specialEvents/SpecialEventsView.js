@@ -264,6 +264,6 @@ const styles = StyleSheet.create({
 	daysBar: { borderBottomWidth: 1, borderColor: COLOR_MGREY, backgroundColor: COLOR_WHITE, height: TAB_BAR_HEIGHT },
 	selectedDayText: { textAlign: 'center', fontSize: 18, color: COLOR_PRIMARY },
 	filterText: { textAlign: 'center', fontSize: 17, color: 'white' },
-	backButtonContainer: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', position: 'absolute', marginTop: -6 },
+	backButtonContainer: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: -6 },
 	backButtonImage: { color: COLOR_WHITE, marginRight: 7 },
 });
