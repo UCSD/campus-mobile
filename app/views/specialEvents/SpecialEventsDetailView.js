@@ -78,10 +78,10 @@ const SpecialEventsDetailView = ({ data, saved, add, remove }) => {
 						{data['full-description']}
 					</Text>
 
-					{(data.map && data.map.latitude && data.map.longitude) ? (
+					{(data.directions && data.directions.latitude && data.directions.longitude) ? (
 						<Touchable
 							underlayColor={'rgba(200,200,200,.1)'}
-							onPress={() => gotoNavigationApp(data.map.latitude, data.map.longitude)}
+							onPress={() => gotoNavigationApp(data.directions.latitude, data.directions.longitude)}
 						>
 							<View style={styles.sed_dir}>
 								<Text style={styles.sed_dir_label}>Directions</Text>

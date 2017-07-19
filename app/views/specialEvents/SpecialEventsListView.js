@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
 	rowContainer: { flexDirection: 'row', height: 76 },
 	full: { width: WINDOW_WIDTH, height: (WINDOW_HEIGHT - NAVIGATOR_HEIGHT - TAB_BAR_HEIGHT) },
 	card: { width: MAX_CARD_WIDTH },
-	noSavedSessions: { flexGrow: 1, fontSize: 18, textAlign: 'center', padding: 40, lineHeight: 30 },
+	noSavedSessions: { flexGrow: 1, fontSize: 16, textAlign: 'center', padding: 20, lineHeight: 22 },
 });
 
 export default ActualSpecialEventsListView;

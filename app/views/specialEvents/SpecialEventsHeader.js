@@ -16,13 +16,13 @@ const SpecialEventsHeader = ({ timestamp }) => (
 		style={styles.header}
 	>
 		<Text style={styles.headerText}>
-			{moment(Number(timestamp)).format('MMM D h:mm')}
+			{moment(Number(timestamp)).format('h:mm A')}
 		</Text>
 	</View>
 );
 
 const styles = StyleSheet.create({
-	header: { justifyContent: 'flex-start', alignItems: 'center', width: 45, backgroundColor: COLOR_LGREY, borderBottomWidth: 1, borderColor: COLOR_LGREY },
+	header: { justifyContent: 'flex-start', alignItems: 'center', width: 65, backgroundColor: COLOR_LGREY },
 	headerText: { textAlign: 'right', alignSelf: 'stretch', color: COLOR_BLACK, fontSize: 12, marginTop: 7 },
 });
 
