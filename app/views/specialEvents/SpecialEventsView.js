@@ -8,8 +8,9 @@ import {
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import moment from 'moment';
-import Icon from 'react-native-vector-icons/FontAwesome';
 
+import css from '../../styles/css';
+import general from '../../util/general';
 import logger from '../../util/logger';
 import SpecialEventsListView from './SpecialEventsListView';
 import {
@@ -52,6 +53,7 @@ class SpecialEventsView extends Component {
 		logger.ga('View Loaded: SpecialEventsView');
 
 		Actions.refresh({
+			backButton: this.renderBackButton(this.state.onFilter),
 			filterButton: this.renderFilterButton()
 		});
 	}
@@ -73,6 +75,7 @@ class SpecialEventsView extends Component {
 
 	handleFilterPress = () => {
 		Actions.refresh({
+			backButton: this.renderBackButton(!this.state.onFilter),
 			filterButton: this.renderFilterButton(!this.state.onFilter)
 		});
 		this.setState({ onFilter: !this.state.onFilter });
@@ -92,11 +95,25 @@ class SpecialEventsView extends Component {
 				onPress={this.handleFilterPress}
 			>
 				<Text
-					style={styles.selectedText}
+					style={general.platformIOS() ? css.navButtonTextIOS : css.navButtonTextAndroid}
 				>
 					{
 						(onFilter) ? ('Done') : ('Filter')
 					}
+				</Text>
+			</Touchable>
+		);
+	}
+
+	renderBackButton = (onFilter) => {
+		return (
+			<Touchable
+				onPress={() => (onFilter) ? (this.handleFilterPress()) : (Actions.pop())}
+			>
+				<Text
+					style={general.platformIOS() ? css.navButtonTextIOS : css.navButtonTextAndroid}
+				>
+					Back
 				</Text>
 			</Touchable>
 		);
@@ -235,4 +252,6 @@ const styles = StyleSheet.create({
 
 	daysBar: { borderBottomWidth: 1, borderColor: COLOR_DGREY, backgroundColor: COLOR_WHITE, height: TAB_BAR_HEIGHT },
 	selectedDayText: { textAlign: 'center', fontSize: 18, color: COLOR_PRIMARY },
+
+	filterText: { textAlign: 'center', fontSize: 17, color: 'white' },
 });

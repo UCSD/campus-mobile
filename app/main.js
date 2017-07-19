@@ -102,7 +102,7 @@ class Main extends Component {
 								<Scene key="ShuttleRoutesListView" component={ShuttleRoutesListView} title="Choose Route" hideTabBar />
 								<Scene key="ShuttleStopsListView" component={ShuttleStopsListView} title="Choose Stop" hideTabBar />
 								<Scene key="ShuttleSavedListView" component={ShuttleSavedListView} title="Manage Stops" hideTabBar />
-								<Scene key="SpecialEventsView" component={SpecialEventsView} title={this.props.specialEventsTitle} hideTabBar renderRightButton={(route) => route.filterButton} />
+								<Scene key="SpecialEventsView" component={SpecialEventsView} title={this.props.specialEventsTitle} hideTabBar renderBackButton={(route) => route.backButton} renderRightButton={(route) => route.filterButton} />
 								<Scene key="SpecialEventsDetailView" component={SpecialEventsDetailView} title="Campus LISA" hideTabBar />
 							</Scene>
 							<Scene key="tab2" title="Map" component={NearbyMapView} icon={TabIcons} />
