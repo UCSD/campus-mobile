@@ -34,7 +34,6 @@ import ShuttleSavedListView from './views/shuttle/ShuttleSavedListView';
 function mapStateToProps(state, props) {
 	return {
 		scene: state.routes.scene,
-		specialEventsTitle: (state.specialEvents.data) ? state.specialEvents.data.name : '',
 	};
 }
 const RouterWithRedux = connect()(Router);
@@ -102,8 +101,8 @@ class Main extends Component {
 								<Scene key="ShuttleRoutesListView" component={ShuttleRoutesListView} title="Choose Route" hideTabBar />
 								<Scene key="ShuttleStopsListView" component={ShuttleStopsListView} title="Choose Stop" hideTabBar />
 								<Scene key="ShuttleSavedListView" component={ShuttleSavedListView} title="Manage Stops" hideTabBar />
-								<Scene key="SpecialEventsView" component={SpecialEventsView} title={this.props.specialEventsTitle} hideTabBar renderBackButton={(route) => route.backButton} renderRightButton={(route) => route.filterButton} />
-								<Scene key="SpecialEventsDetailView" component={SpecialEventsDetailView} title="Campus LISA" hideTabBar />
+								<Scene key="SpecialEventsView" component={SpecialEventsView} title={(route) => route.specialEventsTitle} hideTabBar renderBackButton={(route) => route.backButton} renderRightButton={(route) => route.filterButton} />
+								<Scene key="SpecialEventsDetailView" component={SpecialEventsDetailView} title={(route) => route.specialEventsTitle}  hideTabBar />
 							</Scene>
 							<Scene key="tab2" title="Map" component={NearbyMapView} icon={TabIcons} />
 							<Scene key="tab3" title="Feedback" component={FeedbackView} icon={TabIcons} />

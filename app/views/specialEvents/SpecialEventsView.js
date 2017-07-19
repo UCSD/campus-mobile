@@ -55,7 +55,8 @@ class SpecialEventsView extends Component {
 
 		Actions.refresh({
 			backButton: this.renderBackButton(this.state.onFilter),
-			filterButton: this.renderFilterButton()
+			filterButton: this.renderFilterButton(),
+			specialEventsTitle: this.props.specialEventsTitle,
 		});
 	}
 
@@ -173,6 +174,7 @@ class SpecialEventsView extends Component {
 
 const mapStateToProps = (state) => (
 	{
+		specialEventsTitle: (state.specialEvents.data) ? state.specialEvents.data.name : '',
 		specialEventsLabels: state.specialEvents.data.labels,
 		specialEventsLabelThemes: state.specialEvents.data['label-themes'],
 		labels: state.specialEvents.labels,
