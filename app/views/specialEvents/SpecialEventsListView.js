@@ -27,8 +27,52 @@ const dataSource = new ListView.DataSource({
 
 const SpecialEventsListView = ({ addSpecialEvents, specialEventsSchedule,
 	specialEventsScheduleIds, removeSpecialEvents, saved,disabled, personal, rows,
-	scrollEnabled, style, labels, labelItemIds, selectedDay, days, daysItemIds }) => {
-	if (personal && Array.isArray(saved) && saved.length === 0) {
+	scrollEnabled, style, labels, labelItemIds, selectedDay, days, daysItemIds, inCard }) => {
+
+	let scheduleIdArray = [];
+	// Use ids from selectedDay
+	if (daysItemIds) {
+		if (!selectedDay) {
+			// Select current day by default
+			for (let i = 0; i < days.length; ++i) {
+				selectedDay = days[i];
+				if (moment(selectedDay).isSameOrAfter(moment(), 'day')) {
+					scheduleIdArray = daysItemIds[selectedDay];
+
+					// Filter saved for day
+					if (personal && Array.isArray(saved)) {
+						scheduleIdArray = scheduleIdArray.filter((item) => saved.includes(item));
+					}
+
+					// If displaying for card...continue looking for a day with saved
+					if (inCard && scheduleIdArray.length === 0) {
+						// continue
+					} else {
+						break;
+					}
+				}
+			}
+		}
+		scheduleIdArray = daysItemIds[selectedDay];
+
+		// Filter saved for day
+		if (personal && Array.isArray(saved)) {
+			scheduleIdArray = scheduleIdArray.filter((item) => saved.includes(item));
+		}
+
+		// Apply label filtering
+		if (!personal && labels.length > 0) {
+			let labelArray = [];
+			for (let j = 0; i < labels.length; ++j) {
+				const label = labels[j];
+				const items = labelItemIds[label];
+
+				labelArray = labelArray.concat(items);
+			}
+			scheduleIdArray = scheduleIdArray.filter((item) => labelArray.includes(item));
+		}
+	}
+	if (personal && scheduleIdArray.length === 0) {
 		return (
 			<View style={[style, rows ? styles.card : styles.full]}>
 				<Text style={styles.noSavedSessions}>
@@ -37,35 +81,6 @@ const SpecialEventsListView = ({ addSpecialEvents, specialEventsSchedule,
 			</View>
 		);
 	} else {
-		let scheduleIdArray = [];
-		// Use ids from selectedDay
-		if (daysItemIds) {
-			if (selectedDay) {
-				scheduleIdArray = daysItemIds[selectedDay];
-			} else {
-				// Select current day by default
-				for (let i = 0; i < days.length; ++i) {
-					selectedDay = days[i];
-					if (moment(selectedDay).isSameOrAfter(moment(), 'day')) {
-						break;
-					}
-				}
-				scheduleIdArray = daysItemIds[selectedDay];
-			}
-		}
-
-		// Apply label filtering
-		if (!personal && labels.length > 0) {
-			let labelArray = [];
-			for (let i = 0; i < labels.length; ++i) {
-				const label = labels[i];
-				const items = labelItemIds[label];
-
-				labelArray = labelArray.concat(items);
-			}
-			scheduleIdArray = scheduleIdArray.filter((item) => labelArray.includes(item));
-		}
-
 		return (
 			<ListView
 				style={[style, rows ? styles.card : styles.full]}

@@ -26,7 +26,7 @@ const SpecialEventsCard = ({ specialEvents, saved, hideCard }) => (
 				<BannerCard
 					title={specialEvents.name}
 					image={specialEvents.logo}
-					onPress={() => Actions.SpecialEventsView()}
+					onPress={() => Actions.SpecialEventsView({ personal: false })}
 					onClose={() => hideCard('specialEvents')}
 				/>
 			) :
@@ -45,13 +45,14 @@ const SpecialEventsCard = ({ specialEvents, saved, hideCard }) => (
 							rows={4}
 							disabled={true}
 							style={styles.specialEventsListView}
+							inCard={true}
 						/>
 						<Touchable
-							onPress={() => Actions.SpecialEventsView()}
+							onPress={() => Actions.SpecialEventsView({ personal: true })}
 						>
 							<View style={styles.more}>
 								<Text style={styles.more_label}>
-									See Full Schedule
+									See My Schedule
 								</Text>
 							</View>
 						</Touchable>

@@ -42,7 +42,7 @@ class SpecialEventsView extends Component {
 		}
 
 		this.state = {
-			personal: false,
+			personal: this.props.personal,
 			onFilter: false,
 			selectedDay,
 		};
@@ -210,7 +210,7 @@ const DaysBar = ({ days, selectedDay, handleDayPress }) => {
 							<Text
 								style={index !== selectedDay ? styles.plainText : styles.selectedText}
 							>
-								Day {index}
+								Day {index + 1}
 							</Text>
 						</Touchable>
 					)
