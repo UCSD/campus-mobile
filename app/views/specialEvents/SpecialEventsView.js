@@ -4,11 +4,12 @@ import {
 	StyleSheet,
 	Text,
 	ScrollView,
+	Image,
 } from 'react-native';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import moment from 'moment';
-
+import Icon from 'react-native-vector-icons/Ionicons';
 import css from '../../styles/css';
 import general from '../../util/general';
 import logger from '../../util/logger';
@@ -112,11 +113,18 @@ class SpecialEventsView extends Component {
 			<Touchable
 				onPress={() => (onFilter) ? (this.handleFilterPress()) : (Actions.pop())}
 			>
-				<Text
-					style={general.platformIOS() ? css.navButtonTextIOS : css.navButtonTextAndroid}
-				>
-					Back
-				</Text>
+				<View style={styles.backButtonContainer}>
+					<Icon
+						name={'ios-arrow-back'}
+						size={33}
+						style={styles.backButtonImage}
+					/>
+					<Text
+						style={general.platformIOS() ? css.navButtonTextIOS : css.navButtonTextAndroid}
+					>
+						Back
+					</Text>
+				</View>
 			</Touchable>
 		);
 	}
@@ -253,9 +261,9 @@ const styles = StyleSheet.create({
 	selectedText: { textAlign: 'center', fontSize: 18, color: 'white' },
 	plainText: { textAlign: 'center', fontSize: 18, opacity: 0.5 },
 	tabBar: { borderTopWidth: 1, borderColor: COLOR_DGREY, backgroundColor: COLOR_WHITE, height: TAB_BAR_HEIGHT },
-
 	daysBar: { borderBottomWidth: 1, borderColor: COLOR_MGREY, backgroundColor: COLOR_WHITE, height: TAB_BAR_HEIGHT },
 	selectedDayText: { textAlign: 'center', fontSize: 18, color: COLOR_PRIMARY },
-
 	filterText: { textAlign: 'center', fontSize: 17, color: 'white' },
+	backButtonContainer: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', position: 'absolute', marginTop: -6 },
+	backButtonImage: { color: COLOR_WHITE, marginRight: 7 },
 });
