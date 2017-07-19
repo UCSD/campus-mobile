@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/Ionicons';
+
 import css from '../../styles/css';
 import general from '../../util/general';
 import logger from '../../util/logger';
@@ -240,7 +241,7 @@ const DaysBar = ({ days, selectedDay, handleDayPress }) => {
 							<Text
 								style={index !== selectedDay ? styles.plainText : styles.selectedDayText}
 							>
-								Day {index + 1}
+								{moment(day).format('MMM D')}
 							</Text>
 						</Touchable>
 					)
