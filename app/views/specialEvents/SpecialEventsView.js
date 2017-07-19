@@ -90,19 +90,21 @@ class SpecialEventsView extends Component {
 	}
 
 	renderFilterButton = (onFilter) => {
-		return (
-			<Touchable
-				onPress={this.handleFilterPress}
-			>
-				<Text
-					style={general.platformIOS() ? css.navButtonTextIOS : css.navButtonTextAndroid}
+		if (!onFilter) {
+			return (
+				<Touchable
+					onPress={this.handleFilterPress}
 				>
-					{
-						(onFilter) ? ('Done') : ('Filter')
-					}
-				</Text>
-			</Touchable>
-		);
+					<Text
+						style={general.platformIOS() ? css.navButtonTextIOS : css.navButtonTextAndroid}
+					>
+						Filter
+						</Text>
+				</Touchable>
+			);
+		} else {
+			return null;
+		}
 	}
 
 	renderBackButton = (onFilter) => {
