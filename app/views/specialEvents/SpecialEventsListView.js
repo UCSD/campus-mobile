@@ -76,7 +76,7 @@ const SpecialEventsListView = ({ addSpecialEvents, specialEventsSchedule,
 		return (
 			<View style={[style, rows ? styles.card : styles.full]}>
 				<Text style={styles.noSavedSessions}>
-					Click the star icon next to a session to save it to your list.
+					Click the star icon next to a session to save it to your schedule.
 				</Text>
 			</View>
 		);
