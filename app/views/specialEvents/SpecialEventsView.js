@@ -15,9 +15,9 @@ import SpecialEventsListView from './SpecialEventsListView';
 import {
 	COLOR_PRIMARY,
 	COLOR_LGREY,
+	COLOR_MGREY,
 	COLOR_DGREY,
 	COLOR_WHITE,
-	COLOR_MGREY,
 } from '../../styles/ColorConstants';
 import {
 	TAB_BAR_HEIGHT,
@@ -115,6 +115,7 @@ class SpecialEventsView extends Component {
 						themes={this.props.specialEventsLabelThemes}
 						selected={this.props.labels}
 						onSelect={this.handleFilterSelect}
+						applyFilters={this.handleFilterPress}
 					/>
 				</View>
 			);
@@ -206,7 +207,7 @@ const DaysBar = ({ days, selectedDay, handleDayPress }) => {
 					days.map((day, index) =>
 						<Touchable
 							key={day}
-							style={styles.plainButton}
+							style={index === 0 ? styles.plainButtonFirst : styles.plainButton }
 							onPress={() => handleDayPress(index)}
 						>
 							<Text
@@ -230,11 +231,12 @@ const styles = StyleSheet.create({
 	scrollContentContainer: { flexGrow: 1 },
 	buttonContainer: { flex: 1, flexDirection: 'row', alignItems: 'center' },
 	selectedButton: { flexGrow: 1, minWidth: WINDOW_WIDTH / 4, height: TAB_BAR_HEIGHT, alignItems: 'center', justifyContent: 'center', backgroundColor: COLOR_PRIMARY },
-	plainButton: { flexGrow: 1, minWidth: WINDOW_WIDTH / 4, height: TAB_BAR_HEIGHT, alignItems: 'center', justifyContent: 'center', backgroundColor: COLOR_WHITE },
+	plainButtonFirst: { flexGrow: 1, minWidth: WINDOW_WIDTH / 4, height: TAB_BAR_HEIGHT, alignItems: 'center', justifyContent: 'center', backgroundColor: COLOR_WHITE },
+	plainButton: { flexGrow: 1, minWidth: WINDOW_WIDTH / 4, height: TAB_BAR_HEIGHT, alignItems: 'center', justifyContent: 'center', backgroundColor: COLOR_WHITE, borderLeftWidth: 1, borderLeftColor: COLOR_MGREY },
 	selectedText: { textAlign: 'center', fontSize: 18, color: 'white' },
 	plainText: { textAlign: 'center', fontSize: 18, opacity: 0.5 },
 	tabBar: { borderTopWidth: 1, borderColor: COLOR_DGREY, backgroundColor: COLOR_WHITE, height: TAB_BAR_HEIGHT },
 
-	daysBar: { borderBottomWidth: 1, borderColor: COLOR_DGREY, backgroundColor: COLOR_WHITE, height: TAB_BAR_HEIGHT },
+	daysBar: { borderBottomWidth: 1, borderColor: COLOR_MGREY, backgroundColor: COLOR_WHITE, height: TAB_BAR_HEIGHT },
 	selectedDayText: { textAlign: 'center', fontSize: 18, color: COLOR_PRIMARY },
 });
