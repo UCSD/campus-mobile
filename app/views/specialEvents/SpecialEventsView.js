@@ -161,6 +161,7 @@ class SpecialEventsView extends Component {
 						scrollEnabled={true}
 						personal={this.state.personal}
 						selectedDay={this.props.days[this.state.selectedDay]}
+						clearFilters={() => this.handleFilterSelect([])}
 					/>
 					<FakeTabBar
 						personal={this.state.personal}

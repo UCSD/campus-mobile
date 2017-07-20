@@ -17,14 +17,14 @@ import {
 	COLOR_YELLOW
 } from '../../styles/ColorConstants';
 
-const SpecialEventsItem = ({ specialEventsData, saved, add, remove }) => (
+const SpecialEventsItem = ({ specialEventsData, saved, add, remove, title }) => (
 	<View
 		style={styles.itemRow}
 	>
 		<CircleBorder />
 		<View style={styles.titleContainer}>
 			<Touchable
-				onPress={() => Actions.SpecialEventsDetailView({ data: specialEventsData, add, remove })}
+				onPress={() => Actions.SpecialEventsDetailView({ data: specialEventsData, title, add, remove })}
 			>
 				<View>
 					{specialEventsData['talk-title'] ? (
