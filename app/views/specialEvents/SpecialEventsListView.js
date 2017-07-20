@@ -117,6 +117,7 @@ const SpecialEventsListView = ({ addSpecialEvents, specialEventsSchedule,
 					<View style={styles.rowContainer}>
 						<SpecialEventsHeader
 							timestamp={sectionID}
+							rows={rows}
 						/>
 						<SpecialEventsItem
 							specialEventsData={sectionData[0]}
