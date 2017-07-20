@@ -4,7 +4,7 @@ import {
 	StyleSheet,
 	Text,
 	ScrollView,
-	Image,
+	BackAndroid,
 } from 'react-native';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
@@ -53,6 +53,7 @@ class SpecialEventsView extends Component {
 
 	componentDidMount() {
 		logger.ga('View Loaded: SpecialEventsView');
+		BackAndroid.addEventListener('hardwareBackPress', this.handleBackPress);
 
 		Actions.refresh({
 			backButton: this.renderBackButton(this.state.onFilter),
@@ -61,6 +62,19 @@ class SpecialEventsView extends Component {
 		});
 	}
 
+	componentWillUnmount() {
+		BackAndroid.removeEventListener('hardwareBackPress', this.handleBackPress);
+	}
+
+	// Returns true so router-flux back handler is ignored
+	handleBackPress = () => {
+		if (this.state.onFilter) {
+			this.handleFilterPress();
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	handleFullPress = () => {
 		Actions.refresh({
