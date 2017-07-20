@@ -90,7 +90,7 @@ const SpecialEventsListView = ({ addSpecialEvents, specialEventsSchedule,
 	} else {
 		return (
 			<View
-				style={{ flexGrow: 1 }}
+				style={styles.mainContainer}
 			>
 				<LabelsContainer
 					labels={labels}
@@ -297,8 +297,9 @@ const ActualSpecialEventsListView = connect(
 )(SpecialEventsListView);
 
 const styles = StyleSheet.create({
+	mainContainer: { flexGrow: 1 },
 	rowContainer: { flexDirection: 'row', height: 76 },
-	full: { width: WINDOW_WIDTH, height: (WINDOW_HEIGHT - NAVIGATOR_HEIGHT - TAB_BAR_HEIGHT) },
+	full: { flexGrow: 1, width: WINDOW_WIDTH, height: (WINDOW_HEIGHT - NAVIGATOR_HEIGHT - TAB_BAR_HEIGHT) },
 	card: { width: MAX_CARD_WIDTH },
 	noSavedSessions: { flexGrow: 1, fontSize: 16, textAlign: 'center', padding: 20, lineHeight: 22 },
 	labelsContainer: { width: WINDOW_WIDTH, flexDirection: 'row', backgroundColor: COLOR_PRIMARY, alignItems: 'center' },
