@@ -13,7 +13,7 @@ const EmptyItem = () => (
 );
 
 const styles = StyleSheet.create({
-	emptyRow: { width: 65, flexDirection: 'row',  backgroundColor: COLOR_LGREY },
+	emptyRow: { width: 75, flexDirection: 'row',  backgroundColor: COLOR_LGREY },
 });
 
 export default EmptyItem;
