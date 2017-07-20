@@ -7,7 +7,12 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import moment from 'moment';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import ElevatedView from 'react-native-elevated-view';
 
+import {
+	COLOR_PRIMARY,
+} from '../../styles/ColorConstants';
 import {
 	MAX_CARD_WIDTH,
 	WINDOW_WIDTH,
@@ -15,6 +20,7 @@ import {
 	NAVIGATOR_HEIGHT,
 	TAB_BAR_HEIGHT,
 } from '../../styles/LayoutConstants';
+import Touchable from '../common/Touchable';
 import EmptyItem from './EmptyItem';
 import SpecialEventsItem from './SpecialEventsItem';
 import SpecialEventsHeader from './SpecialEventsHeader';
@@ -27,7 +33,8 @@ const dataSource = new ListView.DataSource({
 
 const SpecialEventsListView = ({ addSpecialEvents, specialEventsSchedule,
 	specialEventsScheduleIds, removeSpecialEvents, saved,disabled, personal, rows,
-	scrollEnabled, style, labels, labelItemIds, selectedDay, days, daysItemIds, inCard }) => {
+	scrollEnabled, style, labels, labelItemIds, selectedDay, days, daysItemIds, inCard,
+	specialEventsTitle, clearFilters }) => {
 
 	let scheduleIdArray = [];
 	// Use ids from selectedDay
@@ -82,52 +89,95 @@ const SpecialEventsListView = ({ addSpecialEvents, specialEventsSchedule,
 		);
 	} else {
 		return (
-			<ListView
-				style={[style, rows ? styles.card : styles.full]}
-				scrollEnabled={scrollEnabled}
-				stickySectionHeadersEnabled={false}
-				dataSource={
-					dataSource.cloneWithRowsAndSections(
-						convertToTimeMap(
-							specialEventsSchedule,
-							adjustData(specialEventsSchedule, scheduleIdArray, saved, personal, rows)
+			<View
+				style={{ flexGrow: 1 }}
+			>
+				<LabelsContainer
+					labels={labels}
+					hide={personal}
+					clearFilters={clearFilters}
+				/>
+				<ListView
+					style={[style, rows ? styles.card : styles.full]}
+					scrollEnabled={scrollEnabled}
+					stickySectionHeadersEnabled={false}
+					dataSource={
+						dataSource.cloneWithRowsAndSections(
+							convertToTimeMap(
+								specialEventsSchedule,
+								adjustData(specialEventsSchedule, scheduleIdArray, saved, personal, rows)
+							)
 						)
-					)
-				}
-				renderRow={(rowData, sectionID, rowID, highlightRow) => {
-					// Don't render first row bc rendered by header
-					if (Number(rowID) !== 0) {
-						return (
-							<View style={styles.rowContainer}>
-								<EmptyItem />
-								<SpecialEventsItem
-									specialEventsData={rowData}
-									saved={saved.includes(rowData.id)}
-									add={(disabled) ? null : addSpecialEvents}
-									remove={removeSpecialEvents}
-								/>
-							</View>
-						);
-					} else {
-						return null;
 					}
-				}}
-				renderSectionHeader={(sectionData, sectionID) => (
-					// Render header along with first row
-					<View style={styles.rowContainer}>
-						<SpecialEventsHeader
-							timestamp={sectionID}
-							rows={rows}
-						/>
-						<SpecialEventsItem
-							specialEventsData={sectionData[0]}
-							saved={saved.includes(sectionData[0].id)}
-							add={(disabled) ? null : addSpecialEvents}
-							remove={removeSpecialEvents}
-						/>
-					</View>
-				)}
-			/>
+					renderRow={(rowData, sectionID, rowID, highlightRow) => {
+						// Don't render first row bc rendered by header
+						if (Number(rowID) !== 0) {
+							return (
+								<View style={styles.rowContainer}>
+									<EmptyItem />
+									<SpecialEventsItem
+										specialEventsData={rowData}
+										saved={saved.includes(rowData.id)}
+										add={(disabled) ? null : addSpecialEvents}
+										remove={removeSpecialEvents}
+										title={specialEventsTitle}
+									/>
+								</View>
+							);
+						} else {
+							return null;
+						}
+					}}
+					renderSectionHeader={(sectionData, sectionID) => (
+						// Render header along with first row
+						<View style={styles.rowContainer}>
+							<SpecialEventsHeader
+								timestamp={sectionID}
+								rows={rows}
+							/>
+							<SpecialEventsItem
+								specialEventsData={sectionData[0]}
+								saved={saved.includes(sectionData[0].id)}
+								add={(disabled) ? null : addSpecialEvents}
+								remove={removeSpecialEvents}
+								title={specialEventsTitle}
+							/>
+						</View>
+					)}
+				/>
+			</View>
+		);
+	}
+};
+
+const LabelsContainer = ({ labels, hide, clearFilters }) => {
+	if (hide || !Array.isArray(labels) || labels.length === 0) {
+		return null;
+	} else {
+		return (
+			<ElevatedView
+				elevation={2}
+			>
+				<Touchable
+					onPress={() => clearFilters()}
+					style={styles.labelsContainer}
+				>
+					<Text
+						style={styles.labelText}
+						numberOfLines={1}
+					>
+						{'Filters: '}
+						{
+							labels.map((label, index) => label + ((index !== labels.length - 1) ? (', ') : ('')))
+						}
+					</Text>
+					<Icon
+						name="close"
+						size={15}
+						style={styles.closeIcon}
+					/>
+				</Touchable>
+			</ElevatedView>
 		);
 	}
 };
@@ -226,6 +276,7 @@ const mapStateToProps = (state) => (
 		labels: state.specialEvents.labels,
 		days: state.specialEvents.data.dates,
 		daysItemIds: state.specialEvents.data['date-items'],
+		specialEventsTitle: (state.specialEvents.data) ? state.specialEvents.data.name : '',
 	}
 );
 
@@ -250,6 +301,9 @@ const styles = StyleSheet.create({
 	full: { width: WINDOW_WIDTH, height: (WINDOW_HEIGHT - NAVIGATOR_HEIGHT - TAB_BAR_HEIGHT) },
 	card: { width: MAX_CARD_WIDTH },
 	noSavedSessions: { flexGrow: 1, fontSize: 16, textAlign: 'center', padding: 20, lineHeight: 22 },
+	labelsContainer: { width: WINDOW_WIDTH, flexDirection: 'row', backgroundColor: COLOR_PRIMARY, alignItems: 'center' },
+	labelText: { width: WINDOW_WIDTH - 20, padding: 4, fontSize: 16, color: 'white',  },
+	closeIcon: { color: 'white', margin: 4 },
 });
 
 export default ActualSpecialEventsListView;
