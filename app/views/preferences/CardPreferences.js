@@ -19,8 +19,11 @@ export default class CardPreferences extends Component {
 		this.setState({ cardObject: this.getCardObject(this.props.cards, this.props.cardOrder) });
 	}
 
+	// Only setState if nextProps cardOrder is dfferent. Fixes flickering from re-render on android
 	componentWillReceiveProps(nextProps) {
-		// this.setState({ cardObject: this.getCardObject(nextProps.cards, nextProps.cardOrder) });
+		if (this.arraysEqual(nextProps.cardOrder, this.props.cardOrder)) {
+			this.setState({ cardObject: this.getCardObject(nextProps.cards, nextProps.cardOrder) });
+		}
 	}
 
 	setCardState = (id, state) => {
@@ -48,6 +51,19 @@ export default class CardPreferences extends Component {
 			orderArray.push(this.state.cardObject[this._order[i]].id);
 		}
 		return orderArray;
+	}
+
+	// Checks if array content is the same
+	arraysEqual = (arr1, arr2) => {
+		if (arr1.length !== arr2.length) {
+			return false;
+		}
+		for (let i = arr1.length; i--;) {
+			if (arr1[i] !== arr2[i]) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	_handleRelease = () => {
