@@ -21,7 +21,7 @@ export default class CardPreferences extends Component {
 
 	// Only setState if nextProps cardOrder is dfferent. Fixes flickering from re-render on android
 	componentWillReceiveProps(nextProps) {
-		if (this.arraysEqual(nextProps.cardOrder, this.props.cardOrder)) {
+		if (!this.arraysEqual(nextProps.cardOrder, this.props.cardOrder)) {
 			this.setState({ cardObject: this.getCardObject(nextProps.cards, nextProps.cardOrder) });
 		}
 	}
