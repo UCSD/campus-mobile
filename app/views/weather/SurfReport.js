@@ -39,7 +39,7 @@ const SurfReport = ({ surfData }) => {
 // This stuff should be moved to different files, but we should be redoing this view soon
 const SurfView = ({ surfData }) => (
 	<ScrollView
-		style={[css.main_container, css.whitebg]}
+		style={css.main_full}
 	>
 		<Image
 			style={styles.headerImage}

@@ -38,7 +38,7 @@ class SpecialEventsDetailView extends React.Component {
 		const { data, saved, add, remove } = this.props;
 
 		return (
-			<View style={[css.main_container, css.whitebg]}>
+			<View style={css.main_full}>
 				<ScrollView>
 					<View style={styles.detailContainer}>
 						<View style={styles.starButton}>

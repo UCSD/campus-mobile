@@ -7,10 +7,10 @@ import {
 	StyleSheet
 } from 'react-native';
 import moment from 'moment';
-
 import SafeImage from '../common/SafeImage';
 import logger from '../../util/logger';
 import Touchable from '../common/Touchable';
+import css from '../../styles/css';
 import {
 	COLOR_PRIMARY,
 	COLOR_WHITE,
@@ -20,14 +20,13 @@ import {
 } from '../../styles/ColorConstants';
 import {
 	WINDOW_WIDTH,
-	MARGIN_TOP,
 } from '../../styles/LayoutConstants';
 
 const NewsDetail = ({ data }) => {
 	logger.ga('View Loaded: News Detail: ' + data.title);
 
 	return (
-		<ScrollView style={styles.main_container}>
+		<ScrollView style={css.main_full}>
 			{data.image_lg ? (
 				<SafeImage
 					source={{ uri: data.image_lg }}
@@ -57,7 +56,6 @@ const NewsDetail = ({ data }) => {
 };
 
 const styles = StyleSheet.create({
-	main_container: { flexGrow: 1, backgroundColor: COLOR_MGREY, marginTop: MARGIN_TOP },
 	image: { width: WINDOW_WIDTH, height: 200 },
 	detailContainer: { width: WINDOW_WIDTH, paddingHorizontal: 18, paddingVertical: 14 },
 	titleText: { fontWeight: '400', fontSize: 22, color: COLOR_PRIMARY },

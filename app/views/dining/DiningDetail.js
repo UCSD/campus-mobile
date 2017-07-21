@@ -7,14 +7,12 @@ import {
 	Image,
 	ListView,
 } from 'react-native';
-
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Actions } from 'react-native-router-flux';
 
 const css = require('../../styles/css');
 const logger = require('../../util/logger');
 const general = require('../../util/general');
-
 const menuDataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
 class DiningDetail extends React.Component {
@@ -56,7 +54,7 @@ class DiningDetail extends React.Component {
 		const { data } = this.props;
 
 		return (
-			<View style={[css.main_container, css.whitebg]}>
+			<View style={css.main_full}>
 				<ScrollView contentContainerStyle={[css.scroll_main, css.whitebg]}>
 					<DiningDescription
 						name={data.name}

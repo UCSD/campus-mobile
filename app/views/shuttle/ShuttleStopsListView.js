@@ -18,7 +18,7 @@ const resultsDataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r
 
 const ShuttleStopsListView = ({ shuttle_stops, addStop }) => (
 	<ListView
-		style={[css.main_container, css.whitebg]}
+		style={css.main_full}
 		dataSource={resultsDataSource.cloneWithRows(shuttle_stops)}
 		renderRow={
 			(row) => (

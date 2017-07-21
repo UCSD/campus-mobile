@@ -10,7 +10,6 @@ import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/Ionicons';
-
 import css from '../../styles/css';
 import general from '../../util/general';
 import logger from '../../util/logger';
@@ -24,7 +23,6 @@ import {
 } from '../../styles/ColorConstants';
 import {
 	TAB_BAR_HEIGHT,
-	NAVIGATOR_HEIGHT,
 	WINDOW_WIDTH,
 } from '../../styles/LayoutConstants';
 import Touchable from '../common/Touchable';
@@ -149,7 +147,7 @@ class SpecialEventsView extends Component {
 		if (this.state.onFilter) {
 			return (
 				<View
-					style={[styles.main_container, styles.greybg]}
+					style={[css.main_full, css.lgreybg]}
 				>
 					<MultiSelect
 						items={this.props.specialEventsLabels}
@@ -163,7 +161,7 @@ class SpecialEventsView extends Component {
 		} else {
 			return (
 				<View
-					style={[styles.main_container, styles.greybg]}
+					style={[css.main_full, css.lgreybg]}
 				>
 					<DaysBar
 						days={this.props.days}
@@ -267,7 +265,6 @@ const DaysBar = ({ days, selectedDay, handleDayPress }) => {
 };
 
 const styles = StyleSheet.create({
-	main_container: { flex: 1, backgroundColor: COLOR_MGREY, marginTop: NAVIGATOR_HEIGHT },
 	specialEventsListView: { flex: 1 },
 	greybg: { backgroundColor: COLOR_LGREY },
 	scrollButtonContainer: { flexDirection: 'row' },

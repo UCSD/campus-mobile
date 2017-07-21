@@ -13,7 +13,6 @@ import {
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Device from 'react-native-device-info';
-
 import { hideKeyboard, getCampusPrimary } from '../util/general';
 import logger from '../util/logger';
 import css from '../styles/css';
