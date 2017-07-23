@@ -16,6 +16,7 @@ import logger from '../../util/logger';
 import SpecialEventsListView from './SpecialEventsListView';
 import {
 	COLOR_PRIMARY,
+	COLOR_SECONDARY,
 	COLOR_LGREY,
 	COLOR_MGREY,
 	COLOR_DGREY,
@@ -173,7 +174,7 @@ class SpecialEventsView extends Component {
 						scrollEnabled={true}
 						personal={this.state.personal}
 						selectedDay={this.props.days[this.state.selectedDay]}
-						clearFilters={() => this.handleFilterSelect([])}
+						handleFilterPress={this.handleFilterPress}
 					/>
 					<FakeTabBar
 						personal={this.state.personal}
@@ -248,7 +249,7 @@ const DaysBar = ({ days, selectedDay, handleDayPress }) => {
 					days.map((day, index) =>
 						<Touchable
 							key={day}
-							style={index === 0 ? styles.plainButtonFirst : styles.plainButton }
+							style={index !== selectedDay ? styles.plainButton : styles.selectedButton }
 							onPress={() => handleDayPress(index)}
 						>
 							<Text
@@ -271,14 +272,14 @@ const styles = StyleSheet.create({
 	scrollContentContainer: { flexGrow: 1 },
 	buttonContainer: { flex: 1, flexDirection: 'row', alignItems: 'center' },
 	selectedButton: { flexGrow: 1, minWidth: WINDOW_WIDTH / 4, height: TAB_BAR_HEIGHT, alignItems: 'center', justifyContent: 'center', backgroundColor: COLOR_PRIMARY },
-	plainButtonFirst: { flexGrow: 1, minWidth: WINDOW_WIDTH / 4, height: TAB_BAR_HEIGHT, alignItems: 'center', justifyContent: 'center', backgroundColor: COLOR_WHITE },
-	plainButton: { flexGrow: 1, minWidth: WINDOW_WIDTH / 4, height: TAB_BAR_HEIGHT, alignItems: 'center', justifyContent: 'center', backgroundColor: COLOR_WHITE, borderLeftWidth: 1, borderLeftColor: COLOR_MGREY },
+	plainButton: { flexGrow: 1, minWidth: WINDOW_WIDTH / 4, height: TAB_BAR_HEIGHT, alignItems: 'center', justifyContent: 'center', backgroundColor: COLOR_WHITE, borderRightWidth: 1, borderRightColor: COLOR_MGREY },
+	selectedButton: { flexGrow: 1, minWidth: WINDOW_WIDTH / 4, height: TAB_BAR_HEIGHT, alignItems: 'center', justifyContent: 'center', backgroundColor: COLOR_SECONDARY, borderRightWidth: 1, borderRightColor: COLOR_MGREY },
 	selectedText: { textAlign: 'center', fontSize: 18, color: 'white' },
 	plainText: { textAlign: 'center', fontSize: 18, opacity: 0.5 },
 	tabBar: { borderTopWidth: 1, borderColor: COLOR_DGREY, backgroundColor: COLOR_WHITE, height: TAB_BAR_HEIGHT },
 	daysBar: { borderBottomWidth: 1, borderColor: COLOR_MGREY, backgroundColor: COLOR_WHITE, height: TAB_BAR_HEIGHT },
-	selectedDayText: { textAlign: 'center', fontSize: 18, color: COLOR_PRIMARY },
+	selectedDayText: { textAlign: 'center', fontSize: 18, color: COLOR_WHITE, backgroundColor: COLOR_SECONDARY },
 	filterText: { textAlign: 'center', fontSize: 17, color: 'white' },
-	backButtonContainer: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: -6 },
+	backButtonContainer: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: -7 },
 	backButtonImage: { color: COLOR_WHITE, marginRight: 7 },
 });

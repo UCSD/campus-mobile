@@ -7,7 +7,6 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import moment from 'moment';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import ElevatedView from 'react-native-elevated-view';
 
 import {
@@ -34,7 +33,7 @@ const dataSource = new ListView.DataSource({
 const SpecialEventsListView = ({ addSpecialEvents, specialEventsSchedule,
 	specialEventsScheduleIds, removeSpecialEvents, saved,disabled, personal, rows,
 	scrollEnabled, style, labels, labelItemIds, selectedDay, days, daysItemIds, inCard,
-	specialEventsTitle, clearFilters }) => {
+	specialEventsTitle, handleFilterPress }) => {
 
 	let scheduleIdArray = [];
 	// Use ids from selectedDay
@@ -82,7 +81,7 @@ const SpecialEventsListView = ({ addSpecialEvents, specialEventsSchedule,
 	if (personal && scheduleIdArray.length === 0) {
 		return (
 			<View style={[style, rows ? styles.card : styles.full]}>
-				<Text style={styles.noSavedSessions}>
+				<Text style={styles.noSessions}>
 					Click the star icon next to a session to save it to your schedule.
 				</Text>
 			</View>
@@ -95,62 +94,68 @@ const SpecialEventsListView = ({ addSpecialEvents, specialEventsSchedule,
 				<LabelsContainer
 					labels={labels}
 					hide={personal}
-					clearFilters={clearFilters}
+					handleFilterPress={handleFilterPress}
 				/>
-				<ListView
-					style={[style, rows ? styles.card : styles.full]}
-					scrollEnabled={scrollEnabled}
-					stickySectionHeadersEnabled={false}
-					dataSource={
-						dataSource.cloneWithRowsAndSections(
-							convertToTimeMap(
-								specialEventsSchedule,
-								adjustData(specialEventsSchedule, scheduleIdArray, saved, personal, rows)
+				{(!personal && scheduleIdArray.length === 0) ? (
+					<Text style={styles.noSessions}>
+						There are no events for your selected filters.
+					</Text>
+				) : (
+					<ListView
+						style={[style, rows ? styles.card : styles.full]}
+						scrollEnabled={scrollEnabled}
+						stickySectionHeadersEnabled={false}
+						dataSource={
+							dataSource.cloneWithRowsAndSections(
+								convertToTimeMap(
+									specialEventsSchedule,
+									adjustData(specialEventsSchedule, scheduleIdArray, saved, personal, rows)
+								)
 							)
-						)
-					}
-					renderRow={(rowData, sectionID, rowID, highlightRow) => {
-						// Don't render first row bc rendered by header
-						if (Number(rowID) !== 0) {
-							return (
-								<View style={styles.rowContainer}>
-									<EmptyItem />
-									<SpecialEventsItem
-										specialEventsData={rowData}
-										saved={saved.includes(rowData.id)}
-										add={(disabled) ? null : addSpecialEvents}
-										remove={removeSpecialEvents}
-										title={specialEventsTitle}
-									/>
-								</View>
-							);
-						} else {
-							return null;
 						}
-					}}
-					renderSectionHeader={(sectionData, sectionID) => (
-						// Render header along with first row
-						<View style={styles.rowContainer}>
-							<SpecialEventsHeader
-								timestamp={sectionID}
-								rows={rows}
-							/>
-							<SpecialEventsItem
-								specialEventsData={sectionData[0]}
-								saved={saved.includes(sectionData[0].id)}
-								add={(disabled) ? null : addSpecialEvents}
-								remove={removeSpecialEvents}
-								title={specialEventsTitle}
-							/>
-						</View>
-					)}
-				/>
+						renderRow={(rowData, sectionID, rowID, highlightRow) => {
+							// Don't render first row bc rendered by header
+							if (Number(rowID) !== 0) {
+								return (
+									<View style={styles.rowContainer}>
+										<EmptyItem />
+										<SpecialEventsItem
+											specialEventsData={rowData}
+											saved={saved.includes(rowData.id)}
+											add={(disabled) ? null : addSpecialEvents}
+											remove={removeSpecialEvents}
+											title={specialEventsTitle}
+										/>
+									</View>
+								);
+							} else {
+								return null;
+							}
+						}}
+						renderSectionHeader={(sectionData, sectionID) => (
+							// Render header along with first row
+							<View style={styles.rowContainer}>
+								<SpecialEventsHeader
+									timestamp={sectionID}
+									rows={rows}
+								/>
+								<SpecialEventsItem
+									specialEventsData={sectionData[0]}
+									saved={saved.includes(sectionData[0].id)}
+									add={(disabled) ? null : addSpecialEvents}
+									remove={removeSpecialEvents}
+									title={specialEventsTitle}
+								/>
+							</View>
+						)}
+					/>
+				)}
 			</View>
 		);
 	}
 };
 
-const LabelsContainer = ({ labels, hide, clearFilters }) => {
+const LabelsContainer = ({ labels, hide, handleFilterPress }) => {
 	if (hide || !Array.isArray(labels) || labels.length === 0) {
 		return null;
 	} else {
@@ -159,7 +164,7 @@ const LabelsContainer = ({ labels, hide, clearFilters }) => {
 				elevation={2}
 			>
 				<Touchable
-					onPress={() => clearFilters()}
+					onPress={() => handleFilterPress()}
 					style={styles.labelsContainer}
 				>
 					<Text
@@ -171,11 +176,6 @@ const LabelsContainer = ({ labels, hide, clearFilters }) => {
 							labels.map((label, index) => label + ((index !== labels.length - 1) ? (', ') : ('')))
 						}
 					</Text>
-					<Icon
-						name="close"
-						size={15}
-						style={styles.closeIcon}
-					/>
 				</Touchable>
 			</ElevatedView>
 		);
@@ -301,10 +301,9 @@ const styles = StyleSheet.create({
 	rowContainer: { flexDirection: 'row', height: 76 },
 	full: { flexGrow: 1, width: WINDOW_WIDTH, height: (WINDOW_HEIGHT - NAVIGATOR_HEIGHT - TAB_BAR_HEIGHT) },
 	card: { width: MAX_CARD_WIDTH },
-	noSavedSessions: { flexGrow: 1, fontSize: 16, textAlign: 'center', padding: 20, lineHeight: 22 },
-	labelsContainer: { width: WINDOW_WIDTH, flexDirection: 'row', backgroundColor: COLOR_PRIMARY, alignItems: 'center' },
-	labelText: { width: WINDOW_WIDTH - 20, padding: 4, fontSize: 16, color: 'white',  },
-	closeIcon: { color: 'white', margin: 4 },
+	noSessions: { flexGrow: 1, fontSize: 16, textAlign: 'center', padding: 20, lineHeight: 22 },
+	labelsContainer: { alignItems: 'center', justifyContent: 'flex-start', borderBottomWidth: 2, borderBottomColor: COLOR_PRIMARY },
+	labelText: { width: WINDOW_WIDTH, paddingVertical: 4, paddingHorizontal: 20, fontSize: 14, color: COLOR_PRIMARY,  },
 });
 
 export default ActualSpecialEventsListView;

@@ -78,7 +78,7 @@ var css = StyleSheet.create({
 	navAndroidTitle: { color: COLOR_WHITE, fontSize: 24, marginTop: -8, fontWeight: '300' },
 	navCampusLogoTitle: { resizeMode: 'contain', height: 26, marginTop: platformIOS() ? 26 : 12, alignSelf: 'center' },
 	navIOSIconStyle: { tintColor:COLOR_WHITE, marginTop: -2 },
-	navButtonTextIOS: { color: COLOR_WHITE, marginTop: -2, fontWeight: '300', fontSize: 18 },
+	navButtonTextIOS: { color: COLOR_WHITE, marginTop: -3, fontWeight: '300', fontSize: 18 },
 	navAndroidIconStyle: { tintColor:COLOR_WHITE, marginTop: -6 },
 	navButtonTextAndroid: { color: COLOR_WHITE, marginTop: -6, fontWeight: '300', fontSize: 18 },
 	// 102 - Tab Bar
