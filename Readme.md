@@ -30,7 +30,6 @@ UC San Diego uses this platform for its campus mobile app on iOS and Android.
 
 Review the [modules documentation](https://htmlpreview.github.io/?https://raw.githubusercontent.com/UCSD/campus-mobile/dev/out/index.html)
 
-
 ## Screenshots
 ![Alt text](/../screenshots/screenshots/v5.0/ios/weather_card.png?raw=true "Weather")
 ![Alt text](/../screenshots/screenshots/v5.0/ios/shuttle_card.png?raw=true "Shuttle")
