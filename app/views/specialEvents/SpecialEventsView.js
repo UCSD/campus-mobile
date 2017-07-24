@@ -56,7 +56,7 @@ class SpecialEventsView extends Component {
 
 		Actions.refresh({
 			backButton: this.renderBackButton(this.state.onFilter),
-			filterButton: this.renderFilterButton(),
+			filterButton: this.renderFilterButton(this.state.personal),
 			specialEventsTitle: this.props.specialEventsTitle,
 		});
 	}
