@@ -52,7 +52,7 @@ function* getClosestStop(location) {
 		const distanceFromStop = getDistance(location.coords.latitude, location.coords.longitude, stop.lat, stop.lon);
 
 		if (distanceFromStop < closestDist) {
-			closestStop = stop;
+			closestStop = Object.assign({}, stop);
 			closestDist = distanceFromStop;
 		}
 	});

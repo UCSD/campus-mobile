@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import Toast from 'react-native-simple-toast';
 
-import { updateMaster } from '../../actions/shuttle';
 import ShuttleCard from './ShuttleCard';
 
 import logger from '../../util/logger';
@@ -12,7 +11,6 @@ import logger from '../../util/logger';
 class ShuttleCardContainer extends React.Component {
 	componentDidMount() {
 		logger.ga('Card Mounted: Shuttle');
-		this.props.updateMaster();
 	}
 
 	render() {
@@ -112,9 +110,6 @@ function mapStateToProps(state, props) {
 
 function mapDispatchtoProps(dispatch) {
 	return {
-		updateMaster: () => {
-			dispatch(updateMaster());
-		},
 		addStop: (stopID) => {
 			dispatch({ type: 'ADD_STOP', stopID });
 		},

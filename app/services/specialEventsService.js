@@ -1,6 +1,6 @@
 import { CAMPUS_LISA_URL } from '../AppSettings';
 
-export function fetchConference() {
+export function fetchSpecialEvents() {
 	return fetch(CAMPUS_LISA_URL, {
 		method: 'get',
 		dataType: 'json',
@@ -10,6 +10,6 @@ export function fetchConference() {
 		}
 	})
 	.then((response) => response.json())
-	.then((responseData) => responseData.conference)
-	.catch((err) => console.log('Error fetching conference: ' + err)); // TODO, figure out final form of JSON
+	.then((responseData) => responseData.specialEvents)
+	.catch((err) => console.log('Error fetching specialEvents: ' + err)); // TODO, figure out final form of JSON
 }

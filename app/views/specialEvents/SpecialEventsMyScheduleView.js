@@ -2,17 +2,17 @@ import React from 'react';
 import { View } from 'react-native';
 
 import css from '../../styles/css';
-import ConferenceListView from './ConferenceListView';
+import SpecialEventsListView from './SpecialEventsListView';
 
-const ConferenceFullScheduleView = () => (
+const SpecialEventsMyScheduleView = () => (
 	<View
 		style={[css.main_container, css.whitebg]}
 	>
-		<ConferenceListView
+		<SpecialEventsListView
 			scrollEnabled={true}
-			personal={false}
+			personal={true}
 		/>
 	</View>
 );
 
-export default ConferenceFullScheduleView;
+export default SpecialEventsMyScheduleView;

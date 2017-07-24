@@ -13,7 +13,7 @@ function* updateDining(action) {
 
 	const nowTime = new Date().getTime();
 	const timeDiff = nowTime - lastUpdated;
-	const diningTTL = DINING_API_TTL * 1000;
+	const diningTTL = DINING_API_TTL;
 	let diningData;
 
 	if (timeDiff < diningTTL && data) {

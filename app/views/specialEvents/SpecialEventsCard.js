@@ -8,41 +8,44 @@ import { Actions } from 'react-native-router-flux';
 
 import Card from '../card/Card';
 import BannerCard from '../common/BannerCard';
-import ConferenceListView from './ConferenceListView';
-import { getMaxCardWidth, getCampusPrimary } from '../../util/general';
+import SpecialEventsListView from './SpecialEventsListView';
 import Touchable from '../common/Touchable';
 import {
-	COLOR_DGREY
+	COLOR_DGREY,
+	COLOR_PRIMARY,
 } from '../../styles/ColorConstants';
+import {
+	MAX_CARD_WIDTH,
+} from '../../styles/LayoutConstants';
 
-const ConferenceCard = ({ conference, saved, hideCard }) => (
+const SpecialEventsCard = ({ specialEvents, saved, hideCard }) => (
 	<View>
 		{ (Array.isArray(saved) && saved.length < 1) ?
 			(
 				<BannerCard
-					image={conference.logo}
-					onPress={() => Actions.ConferenceView()}
-					onClose={() => hideCard('conference')}
+					image={specialEvents.logo}
+					onPress={() => Actions.SpecialEventsView()}
+					onClose={() => hideCard('specialEvents')}
 				/>
 			) :
 			(
 				<Card
-					title={conference.name}
-					header={conference['logo-sm']}
-					id="conference"
+					title={specialEvents.name}
+					header={specialEvents['logo-sm']}
+					id="specialEvents"
 				>
 					<View
-						style={{ flex: 1, width: getMaxCardWidth() }}
+						style={styles.contentContainer}
 					>
-						<ConferenceListView
+						<SpecialEventsListView
 							scrollEnabled={false}
 							personal={true}
 							rows={4}
 							disabled={true}
-							style={styles.conferenceListView}
+							style={styles.specialEventsListView}
 						/>
 						<Touchable
-							onPress={() => Actions.ConferenceView()}
+							onPress={() => Actions.SpecialEventsView()}
 						>
 							<View style={styles.more}>
 								<Text style={styles.more_label}>
@@ -59,8 +62,9 @@ const ConferenceCard = ({ conference, saved, hideCard }) => (
 
 const styles = StyleSheet.create({
 	more: { alignItems: 'center', justifyContent: 'center', padding: 6 },
-	more_label: { fontSize: 20, color: getCampusPrimary(), fontWeight: '300' },
-	conferenceListView: { borderBottomWidth: 1, borderBottomColor: COLOR_DGREY },
+	more_label: { fontSize: 20, color: COLOR_PRIMARY, fontWeight: '300' },
+	specialEventsListView: { borderBottomWidth: 1, borderBottomColor: COLOR_DGREY },
+	contentContainer: { flex: 1, width: MAX_CARD_WIDTH },
 });
 
-export default ConferenceCard;
+export default SpecialEventsCard;

@@ -7,6 +7,7 @@ function* doLogin(action) {
 	const username = action.username;
 	const password = action.password;
 
+	// TODO: Send to auth service to verify before actually doing login
 	yield Keychain.setGenericPassword(username, password, serviceName);
 	yield put({ type: 'LOGGED_IN', user: username });
 }

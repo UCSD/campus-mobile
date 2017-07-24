@@ -22,8 +22,8 @@ import {
 	WINDOW_WIDTH
 } from '../../styles/LayoutConstants';
 
-const ConferenceDetailView = ({ data, saved, add, remove }) => {
-	logger.ga('View Loaded: Conference Detail: ' + data['talk-title']);
+const SpecialEventsDetailView = ({ data, saved, add, remove }) => {
+	logger.ga('View Loaded: SpecialEvents Detail: ' + data['talk-title']);
 
 	return (
 		<View style={[css.main_container, css.whitebg]}>
@@ -108,13 +108,13 @@ function isSaved(savedArray, id) {
 
 const mapStateToProps = (state) => (
 	{
-		saved: state.conference.saved
+		saved: state.specialEvents.saved
 	}
 );
 
-const ActualConferenceDetailView = connect(
+const ActualSpecialEventsDetailView = connect(
 	mapStateToProps
-)(ConferenceDetailView);
+)(SpecialEventsDetailView);
 
 const styles = StyleSheet.create({
 	detailContainer: { width: WINDOW_WIDTH, paddingHorizontal: 18, paddingVertical: 14 },
@@ -134,4 +134,4 @@ const styles = StyleSheet.create({
 	starInnerIcon: { position: 'absolute', zIndex: platformIOS() ? 5 : 15, marginTop: 3 },
 });
 
-export default ActualConferenceDetailView;
+export default ActualSpecialEventsDetailView;

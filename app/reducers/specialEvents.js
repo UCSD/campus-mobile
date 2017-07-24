@@ -4,17 +4,17 @@ const initialState = {
 	saved: [],
 };
 
-function conference(state = initialState, action) {
+function specialEvents(state = initialState, action) {
 	const newState = { ...state };
 
 	switch (action.type) {
-	case 'SET_CONFERENCE': {
-		newState.data = action.conference;
+	case 'SET_SPECIAL_EVENTS': {
+		newState.data = action.specialEvents;
 		newState.lastUpdated = new Date().getTime();
 
 		return newState;
 	}
-	case 'CHANGED_CONFERENCE_SAVED': {
+	case 'CHANGED_SPECIAL_EVENTS_SAVED': {
 		newState.saved = action.saved;
 		return newState;
 	}
@@ -23,4 +23,4 @@ function conference(state = initialState, action) {
 	}
 }
 
-module.exports = conference;
+module.exports = specialEvents;
