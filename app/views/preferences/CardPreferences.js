@@ -87,9 +87,14 @@ export default class CardPreferences extends Component {
 								if (data.id === 'specialEvents' && !this.props.specialEventsData) {
 									return null;
 								} else {
+									// Using cardActive instead of data.active bc state isn't updated
+									// everytime
+									// Also, mildly confusing..but active prop from renderRow means
+									// the row has been grabbed
 									return (
 										<PrefItem
 											data={data}
+											cardActive={this.props.cards[data.id].active}
 											active={active}
 											updateState={this.setCardState}
 										/>
