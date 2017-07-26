@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import ElevatedView from 'react-native-elevated-view';
 import Icon from 'react-native-vector-icons/Ionicons';
-
+import { COLOR_SECONDARY, COLOR_MGREY } from '../../styles/ColorConstants';
 import { doPRM, getPRM, getMaxCardWidth } from '../../util/general';
 
 const deviceHeight = Dimensions.get('window').height;
@@ -71,7 +71,7 @@ const MenuItem = ({ data, index, onToggle, state }) => (
 			style={styles.radio_icon}
 			name={state ? 'ios-radio-button-on' : 'ios-radio-button-off'}
 			size={20}
-			color={'#182B49'}
+			color={COLOR_SECONDARY}
 		/>
 	</TouchableOpacity>
 );
@@ -86,8 +86,8 @@ const listHeight = deviceHeight - (statusBarHeight + navHeight + doPRM(44) + 16 
 
 const styles = StyleSheet.create({
 	list_container: { width: getMaxCardWidth(), maxHeight: listHeight },
-	card_main: { top: Math.round(44 * getPRM()) + 6, backgroundColor: '#FFFFFF', margin: 6, alignItems: 'flex-start', justifyContent: 'center', },
-	list_row: { alignItems: 'center', justifyContent: 'center', flexDirection: 'row', paddingVertical: 14, paddingHorizontal: 8, borderBottomWidth: 1, borderBottomColor: '#EEE', overflow: 'hidden',  },
+	card_main: { top: Math.round(44 * getPRM()) + 6, backgroundColor: 'white', margin: 6, alignItems: 'flex-start', justifyContent: 'center', },
+	list_row: { alignItems: 'center', justifyContent: 'center', flexDirection: 'row', paddingVertical: 14, paddingHorizontal: 8, borderBottomWidth: 1, borderBottomColor: COLOR_MGREY, overflow: 'hidden',  },
 	switch_container: { flex: 1, alignItems: 'flex-end' },
 	radio_icon: { alignSelf: 'flex-end', marginLeft: 10 },
 });
