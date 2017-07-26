@@ -246,19 +246,37 @@ const DaysBar = ({ days, selectedDay, handleDayPress }) => {
 				contentContainerStyle={styles.scrollContentContainer}
 			>
 				{
-					days.map((day, index) =>
-						<Touchable
-							key={day}
-							style={index !== selectedDay ? styles.plainButton : styles.selectedButton }
-							onPress={() => handleDayPress(index)}
-						>
-							<Text
-								style={index !== selectedDay ? styles.plainText : styles.selectedDayText}
+					days.map((day, index) => {
+						let tabStyle = null;
+
+						if (index === 0) {
+							if (index === selectedDay) {
+								tabStyle = styles.selectedFirstButton;
+							} else {
+								tabStyle = styles.plainFirstButton;
+							}
+						} else {
+							if (index === selectedDay) {
+								tabStyle = styles.selectedButton;
+							} else {
+								tabStyle = styles.plainButton;
+							}
+						}
+
+						return (
+							<Touchable
+								key={day}
+								style={tabStyle}
+								onPress={() => handleDayPress(index)}
 							>
-								{moment(day).format('MMM D')}
-							</Text>
-						</Touchable>
-					)
+								<Text
+									style={index !== selectedDay ? styles.plainText : styles.selectedDayText}
+								>
+									{moment(day).format('MMM D')}
+								</Text>
+							</Touchable>
+						);
+					})
 				}
 			</ScrollView>
 		</View>
@@ -272,8 +290,10 @@ const styles = StyleSheet.create({
 	scrollContentContainer: { flexGrow: 1 },
 	buttonContainer: { flex: 1, flexDirection: 'row', alignItems: 'center' },
 	selectedButton: { flexGrow: 1, minWidth: WINDOW_WIDTH / 4, height: TAB_BAR_HEIGHT, alignItems: 'center', justifyContent: 'center', backgroundColor: COLOR_PRIMARY },
-	plainButton: { flexGrow: 1, minWidth: WINDOW_WIDTH / 4, height: TAB_BAR_HEIGHT, alignItems: 'center', justifyContent: 'center', backgroundColor: COLOR_WHITE, borderRightWidth: 1, borderRightColor: COLOR_MGREY },
-	selectedButton: { flexGrow: 1, minWidth: WINDOW_WIDTH / 4, height: TAB_BAR_HEIGHT, alignItems: 'center', justifyContent: 'center', backgroundColor: COLOR_SECONDARY, borderRightWidth: 1, borderRightColor: COLOR_MGREY },
+	plainButton: { flexGrow: 1, minWidth: WINDOW_WIDTH / 4, height: TAB_BAR_HEIGHT, alignItems: 'center', justifyContent: 'center', backgroundColor: COLOR_WHITE, borderLeftWidth: 1, borderLeftColor: COLOR_MGREY },
+	plainFirstButton: { flexGrow: 1, minWidth: WINDOW_WIDTH / 4, height: TAB_BAR_HEIGHT, alignItems: 'center', justifyContent: 'center', backgroundColor: COLOR_WHITE },
+	selectedButton: { flexGrow: 1, minWidth: WINDOW_WIDTH / 4, height: TAB_BAR_HEIGHT, alignItems: 'center', justifyContent: 'center', backgroundColor: COLOR_SECONDARY, borderLeftWidth: 1, borderLeftColor: COLOR_MGREY },
+	selectedFirstButton: { flexGrow: 1, minWidth: WINDOW_WIDTH / 4, height: TAB_BAR_HEIGHT, alignItems: 'center', justifyContent: 'center', backgroundColor: COLOR_SECONDARY },
 	selectedText: { textAlign: 'center', fontSize: 18, color: 'white' },
 	plainText: { textAlign: 'center', fontSize: 18, opacity: 0.5 },
 	tabBar: { borderTopWidth: 1, borderColor: COLOR_DGREY, backgroundColor: COLOR_WHITE, height: TAB_BAR_HEIGHT },

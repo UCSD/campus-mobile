@@ -171,7 +171,7 @@ const LabelsContainer = ({ labels, hide, handleFilterPress }) => {
 						style={styles.labelText}
 						numberOfLines={1}
 					>
-						{'Filters: '}
+						<Text style={styles.labelHeader}>Filters: </Text>
 						{
 							labels.map((label, index) => label + ((index !== labels.length - 1) ? (', ') : ('')))
 						}
@@ -302,7 +302,8 @@ const styles = StyleSheet.create({
 	full: { flexGrow: 1, width: WINDOW_WIDTH, height: (WINDOW_HEIGHT - NAVIGATOR_HEIGHT - TAB_BAR_HEIGHT) },
 	card: { width: MAX_CARD_WIDTH },
 	noSessions: { flexGrow: 1, fontSize: 16, textAlign: 'center', padding: 20, lineHeight: 22 },
-	labelsContainer: { alignItems: 'center', justifyContent: 'flex-start', borderBottomWidth: 2, borderBottomColor: COLOR_PRIMARY },
+	labelsContainer: { alignItems: 'center', justifyContent: 'flex-start', borderBottomWidth: 1, borderBottomColor: COLOR_PRIMARY },
+	labelHeader: { fontWeight: '600' },
 	labelText: { width: WINDOW_WIDTH, paddingVertical: 4, paddingHorizontal: 20, fontSize: 14, color: COLOR_PRIMARY,  },
 });
 
