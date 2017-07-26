@@ -14,4 +14,5 @@ module.exports = {
 	COLOR_MBLUE: '#03A9F4',
 	COLOR_YELLOW: '#F3E500',
 	COLOR_MRED: '#DB3236',
+	COLOR_MORANGE: '#FC9527',
 };

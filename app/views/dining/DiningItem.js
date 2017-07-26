@@ -7,7 +7,7 @@ import {
 
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Actions } from 'react-native-router-flux';
-
+import { COLOR_SECONDARY } from '../../styles/ColorConstants';
 const css = require('../../styles/css');
 const general = require('../../util/general');
 
@@ -26,7 +26,7 @@ const DiningItem = ({ data }) => (
 		{data.coords.lat !== 0 ? (
 			<TouchableHighlight style={css.dc_locations_row_right} underlayColor={'rgba(200,200,200,.1)'} onPress={() => general.gotoNavigationApp(data.coords.lat, data.coords.lon)}>
 				<View style={css.dl_dir_traveltype_container}>
-					<Icon name="md-walk" size={32} color="#182B49" />
+					<Icon name="md-walk" size={32} color={COLOR_SECONDARY} />
 					{data.distanceMilesStr ? (
 						<Text style={css.dl_dir_eta}>{data.distanceMilesStr}</Text>
 					) : null }

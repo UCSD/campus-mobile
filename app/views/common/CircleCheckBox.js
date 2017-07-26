@@ -8,13 +8,14 @@
 
 'use strict'
 
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 import {
   StyleSheet,
   View,
   Text,
   TouchableOpacity,
-} from 'react-native'
+} from 'react-native';
+import { COLOR_MORANGE } from '../../styles/ColorConstants';
 
 class CircleCheckBox extends Component {
 
@@ -38,9 +39,9 @@ class CircleCheckBox extends Component {
     outerSize: 18,
     filterSize: 16,
     innerSize: 13,
-    outerColor: '#FC9527',
-    filterColor: '#FFF',
-    innerColor: '#FC9527',
+    outerColor: COLOR_MORANGE,
+    filterColor: 'white',
+    innerColor: COLOR_MORANGE,
     label: '',
     labelPosition: 'right',
     styleLabel: {}

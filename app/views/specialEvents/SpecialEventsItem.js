@@ -88,7 +88,7 @@ const CircleBorder = () => (
 const styles = StyleSheet.create({
 	itemRow: { flexGrow: 1, flexDirection: 'row', backgroundColor: COLOR_LGREY },
 	titleContainer: { flex: 1, marginTop: 3 },
-	titleText: { alignSelf: 'stretch', fontSize: 17, color: '#000' },
+	titleText: { alignSelf: 'stretch', fontSize: 17, color: 'black' },
 	labelView: { flexDirection: 'row', paddingTop: 4 },
 	labelText: { fontSize: 13 },
 	starButton: { width: 50 },

@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Actions } from 'react-native-router-flux';
+import { COLOR_SECONDARY } from '../../styles/ColorConstants';
 
 const css = require('../../styles/css');
 const logger = require('../../util/logger');
@@ -133,7 +134,7 @@ const DiningDirections = ({ latitude, longitude, distance }) => (
 				<View style={css.dl_market_directions}>
 					<Text style={css.dl_dir_label}>Directions</Text>
 					<View style={css.dl_dir_traveltype_container}>
-						<Icon name="md-walk" size={32} color="#182B49" />
+						<Icon name="md-walk" size={32} color={COLOR_SECONDARY} />
 						{distance ? (
 							<Text style={css.dl_dir_eta}>{distance}</Text>
 						) : null }
