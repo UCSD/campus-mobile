@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import moment from 'moment';
 
+import ShareContent from '../common/ShareContent';
 import SafeImage from '../common/SafeImage';
 import logger from '../../util/logger';
 import Touchable from '../common/Touchable';
@@ -16,7 +17,8 @@ import {
 	COLOR_WHITE,
 	COLOR_DGREY,
 	COLOR_BLACK,
-	COLOR_MGREY
+	COLOR_MGREY,
+	COLOR_LGREY,
 } from '../../styles/ColorConstants';
 import {
 	WINDOW_WIDTH,
@@ -50,7 +52,12 @@ const NewsDetail = ({ data }) => {
 						<Text style={styles.readMoreText}>Read the full article</Text>
 					</Touchable>
 				) : null }
-
+				<ShareContent
+					style={styles.shareButton}
+					title={'Share news'}
+					message={'Share event: ' + data.title}
+					url={data.link}
+				/>
 			</View>
 		</ScrollView>
 	);
@@ -65,6 +72,7 @@ const styles = StyleSheet.create({
 	descText: { lineHeight: 18, color: COLOR_BLACK, fontSize: 14, paddingTop: 14 },
 	touchable: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR_PRIMARY, borderRadius: 3, marginTop: 20, padding: 10 },
 	readMoreText: { fontSize: 16, color: COLOR_WHITE },
+	shareButton: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR_LGREY, borderRadius: 3, marginTop: 20, padding: 10 },
 });
 
 export default NewsDetail;
