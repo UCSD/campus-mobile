@@ -11,9 +11,6 @@ import AppSettings from './AppSettings';
 import css from './styles/css';
 import general from './util/general';
 
-// GPS
-import GeoLocationContainer from './containers/geoLocationContainer';
-
 // PUSH
 import PushNotificationContainer from './containers/pushNotificationContainer';
 
