@@ -80,7 +80,13 @@ const ShuttleOverview = ({ onPress, stopData, closest }) => {
 			<View>
 				<View style={styles.bigContainer}>
 					<View style={styles.bigCircles}>
-						<View style={styles.shortNameCircle}>
+
+						<View style={styles.stopNameCircle}>
+							<Text style={styles.shortNameText}>
+							</Text>
+						</View>
+
+						<View style={styles.atContainer}>
 							<ActivityIndicator
 								animating={true}
 								size="small"
@@ -105,7 +111,7 @@ const ShuttleOverview = ({ onPress, stopData, closest }) => {
 					</Text>
 
 					<Touchable onPress={() => openURL(AppSettings.SHUTTLE_SCHEDULE_URL)}>
-						<View style={styles.sc_bus_schedule_container}>
+						<View style={styles.scheduleContainer}>
 							<FAIcon name="bus" size={18} style={styles.busIcon} />
 							<Text style={styles.scheduleText}>Check Bus Schedule</Text>
 						</View>
@@ -120,11 +126,11 @@ const styles = StyleSheet.create({
 	busIcon: { color: COLOR_PRIMARY },
 	bigContainer: { width: MAX_CARD_WIDTH, borderBottomWidth: 1, borderBottomColor: COLOR_MGREY },
 	bigCircles: { flexDirection: 'row', alignItems: 'stretch', justifyContent: 'center', margin: 20, height: 83 },
-	shortNameCircle: { borderRadius: 50, width: 83, justifyContent: 'center', overflow: 'hidden' },
+	shortNameCircle: { borderRadius: 50, width: 83, justifyContent: 'center', overflow: 'hidden', padding: 2 },
 	shortNameText: { textAlign: 'center', color: COLOR_BLACK, fontWeight: '600', fontSize: 48, backgroundColor: 'transparent' },
 	atContainer: { flexGrow: 3, justifyContent: 'center', alignItems: 'center' },
 	atText: { textAlign: 'center', color: COLOR_DGREY, fontSize: 30, fontWeight: '300', backgroundColor: 'transparent' },
-	stopNameCircle: { borderRadius: 48, borderWidth: 1, backgroundColor: COLOR_WHITE, borderColor: COLOR_MGREY, width: 83, justifyContent: 'center' },
+	stopNameCircle: { borderRadius: 48, borderWidth: 1, backgroundColor: COLOR_WHITE, borderColor: COLOR_MGREY, width: 83, justifyContent: 'center', padding: 2 },
 	stopNameText: { padding: 5, textAlign: 'center', color: COLOR_DGREY, fontWeight: '500', fontSize: 16, backgroundColor: 'transparent' },
 	infoContainer: { alignItems: 'center', paddingBottom: 10, paddingHorizontal: 8 },
 	routeNameText: { fontSize: 17, color: COLOR_BLACK },
