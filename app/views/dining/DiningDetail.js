@@ -308,9 +308,11 @@ const MenuItem = ({ data }) => (
 	>
 		<Text style={css.dl_menu_item_name}>
 			{data.name}
-			<Text style={css.dl_menu_item_price}>
-				(${data.price})
-			</Text>
+			{(data.price && data.price !== '0' && data.price !== '0.00') ? (
+				<Text style={css.dl_menu_item_price}>
+					(${data.price})
+				</Text>
+			) : null }
 		</Text>
 	</TouchableHighlight>
 );
