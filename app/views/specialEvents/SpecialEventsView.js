@@ -213,7 +213,7 @@ const FakeTabBar = ({ personal, handleFullPress, handleMinePress }) => (
 			style={styles.buttonContainer}
 		>
 			<Touchable
-				style={personal ? styles.plainButton : styles.selectedButton}
+				style={personal ? (styles.plainButton) : ([styles.selectedButton, styles.hideLeftBorder])}
 				onPress={() => handleFullPress()}
 			>
 				<Text
@@ -293,6 +293,7 @@ const styles = StyleSheet.create({
 	plainButton: { flexGrow: 1, minWidth: WINDOW_WIDTH / 4, height: TAB_BAR_HEIGHT, alignItems: 'center', justifyContent: 'center', backgroundColor: COLOR_WHITE, borderLeftWidth: 1, borderLeftColor: COLOR_MGREY },
 	plainFirstButton: { flexGrow: 1, minWidth: WINDOW_WIDTH / 4, height: TAB_BAR_HEIGHT, alignItems: 'center', justifyContent: 'center', backgroundColor: COLOR_WHITE },
 	selectedButton: { flexGrow: 1, minWidth: WINDOW_WIDTH / 4, height: TAB_BAR_HEIGHT, alignItems: 'center', justifyContent: 'center', backgroundColor: COLOR_SECONDARY, borderLeftWidth: 1, borderLeftColor: COLOR_MGREY },
+	hideLeftBorder: { borderLeftWidth: 0 },
 	selectedFirstButton: { flexGrow: 1, minWidth: WINDOW_WIDTH / 4, height: TAB_BAR_HEIGHT, alignItems: 'center', justifyContent: 'center', backgroundColor: COLOR_SECONDARY },
 	selectedText: { textAlign: 'center', fontSize: 18, color: 'white' },
 	plainText: { textAlign: 'center', fontSize: 18, opacity: 0.5 },
