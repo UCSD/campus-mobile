@@ -12,7 +12,7 @@ const DiningService = {
 			if (data.errorMessage) {
 				throw (data.errorMessage);
 			} else {
-				return data;
+				return data.GetDiningInfoResult;
 			}
 		})
 		.catch((err) => console.log('Error fetching dining: ' + err));

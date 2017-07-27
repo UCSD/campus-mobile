@@ -81,7 +81,8 @@ class Main extends Component {
 					navigationBarStyle={general.platformIOS() ? css.navIOS : css.navAndroid}
 					titleStyle={general.platformIOS() ? css.navIOSTitle : css.navAndroidTitle}
 					barButtonIconStyle={general.platformIOS() ? css.navIOSIconStyle : css.navAndroidIconStyle}
-					backButtonTextStyle={general.platformIOS() ? css.navBackButtonTextIOS : css.navBackButtonTextAndroid}
+					backButtonTextStyle={general.platformIOS() ? css.navButtonTextIOS : css.navButtonTextAndroid}
+					rightButtonTextStyle={general.platformIOS() ? css.navButtonTextIOS : css.navButtonTextAndroid}
 					backTitle="Back"
 					onExitApp={this._exitHandler}
 				>
@@ -104,8 +105,8 @@ class Main extends Component {
 								<Scene key="ShuttleRoutesListView" component={ShuttleRoutesListView} title="Choose Route" hideTabBar />
 								<Scene key="ShuttleStopsListView" component={ShuttleStopsListView} title="Choose Stop" hideTabBar />
 								<Scene key="ShuttleSavedListView" component={ShuttleSavedListView} title="Manage Stops" hideTabBar />
-								<Scene key="SpecialEventsView" component={SpecialEventsView} title="Campus LISA" hideTabBar />
-								<Scene key="SpecialEventsDetailView" component={SpecialEventsDetailView} title="Campus LISA" hideTabBar />
+								<Scene key="SpecialEventsView" component={SpecialEventsView} title={(route) => route.specialEventsTitle} hideTabBar renderBackButton={(route) => route.backButton} renderRightButton={(route) => route.filterButton} />
+								<Scene key="SpecialEventsDetailView" component={SpecialEventsDetailView} title={(route) => route.specialEventsTitle}  hideTabBar />
 							</Scene>
 							<Scene key="tab2" title="Map" component={NearbyMapView} icon={TabIcons} />
 							<Scene key="tab3" title="Feedback" component={FeedbackView} icon={TabIcons} />

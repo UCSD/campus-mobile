@@ -2,6 +2,7 @@ const initialState = {
 	data: null,
 	lastUpdated: 0,
 	saved: [],
+	labels: [],
 };
 
 function specialEvents(state = initialState, action) {
@@ -16,6 +17,10 @@ function specialEvents(state = initialState, action) {
 	}
 	case 'CHANGED_SPECIAL_EVENTS_SAVED': {
 		newState.saved = action.saved;
+		return newState;
+	}
+	case 'CHANGED_SPECIAL_EVENTS_LABELS': {
+		newState.labels = action.labels;
 		return newState;
 	}
 	default:

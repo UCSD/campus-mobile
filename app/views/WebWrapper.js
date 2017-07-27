@@ -18,7 +18,7 @@ const WebWrapper = React.createClass({
 
 	renderScene() {
 		return (
-			<View style={[css.main_container, css.whitebg]}>
+			<View style={css.main_full}>
 				<WebView
 					injectedJavaScript={this.state.scriptInject}
 					ref={(w) => { this.webview = w; }}

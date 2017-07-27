@@ -9,6 +9,7 @@ const QuicklinksCardContainer = ({ linksData }) => {
 	logger.ga('Card Mounted: Quicklinks');
 	return (
 		<DataListCard
+			id="quicklinks"
 			title="Links"
 			data={linksData}
 			rows={4}

@@ -12,7 +12,7 @@ const DiningNutrition = ({ menuItem }) => {
 	logger.ga('View Loaded: Dining Nutrition: ' + menuItem.name );
 
 	return (
-		<View style={[css.main_container, css.whitebg]}>
+		<View style={css.main_full}>
 			<ScrollView contentContainerStyle={[css.scroll_main, css.whitebg]}>
 
 				<View style={css.dl_market_name}>

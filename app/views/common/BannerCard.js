@@ -14,10 +14,11 @@ import {
 } from '../../styles/LayoutConstants';
 import {
 	COLOR_PRIMARY,
-	COLOR_DGREY
+	COLOR_DGREY,
+	COLOR_MGREY,
 } from '../../styles/ColorConstants';
 
-const BannerCard = ({ image, onPress, onClose }) => (
+const BannerCard = ({ title, image, onPress, onClose }) => (
 	<Card>
 		<Touchable
 			onPress={() => onClose()}
@@ -33,12 +34,16 @@ const BannerCard = ({ image, onPress, onClose }) => (
 		<Touchable
 			onPress={() => onPress()}
 		>
-			<SafeImage
-				source={{ uri: image }}
-				style={styles.image}
-			/>
+			{image ? (
+				<SafeImage
+					source={{ uri: image }}
+					style={styles.image}
+				/>
+			) : (
+				<Text style={styles.cardTitle}>{title}</Text>
+			)}
 			<View style={styles.more}>
-				<Text style={styles.moreText}>See Full Schedule</Text>
+				<Text style={styles.more_label}>See Full Schedule</Text>
 			</View>
 		</Touchable>
 	</Card>
@@ -46,11 +51,12 @@ const BannerCard = ({ image, onPress, onClose }) => (
 
 const styles = StyleSheet.create({
 	image: { height: ((MAX_CARD_WIDTH / 1242) * 440), width: MAX_CARD_WIDTH, marginTop: 22 },
+	cardTitle: { color: COLOR_PRIMARY, width: MAX_CARD_WIDTH, textAlign: 'center', fontSize: 50, fontWeight: '600', paddingVertical: 30 },
 	closeContainer: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', zIndex: 10, position: 'absolute', top: 3, right: 3 },
 	closeText: { color: COLOR_DGREY, fontSize: 10, marginBottom: 2 },
 	closeIcon: { color: COLOR_DGREY, marginLeft: 2 },
-	more: { alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4, paddingTop: 6, paddingBottom: 4 },
-	moreText: { fontSize: 20, color: COLOR_PRIMARY, fontWeight: '300' },
+	more: { alignSelf: 'stretch', justifyContent: 'center', padding: 6, borderTopWidth: 1, borderTopColor: COLOR_MGREY },
+	more_label: { fontSize: 20, color: COLOR_PRIMARY, textAlign: 'center', fontWeight: '300' },
 
 });
 

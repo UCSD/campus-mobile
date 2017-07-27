@@ -1,7 +1,7 @@
-import { CAMPUS_LISA_URL } from '../AppSettings';
+import { SPECIAL_EVENT_API_URL } from '../AppSettings';
 
 export function fetchSpecialEvents() {
-	return fetch(CAMPUS_LISA_URL, {
+	return fetch(SPECIAL_EVENT_API_URL, {
 		method: 'get',
 		dataType: 'json',
 		headers: {
@@ -10,6 +10,6 @@ export function fetchSpecialEvents() {
 		}
 	})
 	.then((response) => response.json())
-	.then((responseData) => responseData.specialEvents)
+	.then((responseData) => responseData)
 	.catch((err) => console.log('Error fetching specialEvents: ' + err)); // TODO, figure out final form of JSON
 }

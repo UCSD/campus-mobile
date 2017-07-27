@@ -55,9 +55,7 @@ export default class PrefItem extends Component {
 			})
 		};
 
-		this.state = {
-			switchState: this.props.data.active
-		};
+		this._noTouched = false;
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -70,20 +68,29 @@ export default class PrefItem extends Component {
 		}
 	}
 
-	// Toggle can come from switch or NoTouchy
+	/*
+		Why is this handled weirdly?
+		Bc when the switch is touched it will sometimes pass the touch to parent
+		However, this is passed before switch onValueChange
+		Also catches sloppier presses not directly on the switch will also be caught
+	 */
 	_handleToggle = (fromSwitch) => {
-		const { data, updateState } = this.props;
-
+		const { data, updateState, cardActive } = this.props;
 		if (!fromSwitch) {
-			updateState(data.id, !this.state.switchState);
-			this.setState({ switchState: !this.state.switchState });
-		} else {
-			updateState(data.id, this.state.switchState);
+			if (!this._switchTouched) {
+				updateState(data.id, !cardActive);
+			}
+			this._noTouched = true;
+		}  else {
+			if (!this._noTouched) {
+				updateState(data.id, !cardActive);
+			}
+			this._noTouched = false;
 		}
 	}
 
 	render() {
-		const { data } = this.props;
+		const { data, cardActive } = this.props;
 		return (
 			<Animated.View
 				style={[styles.list_row, this._style]}
@@ -100,7 +107,7 @@ export default class PrefItem extends Component {
 				>
 					<Switch
 						onValueChange={(value) => this._handleToggle(true)}
-						value={this.state.switchState}
+						value={cardActive}
 					/>
 				</NoTouchy>
 			</Animated.View>

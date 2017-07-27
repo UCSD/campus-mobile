@@ -52,6 +52,7 @@ import {
 	COLOR_TRANSPARENT,
 } from './ColorConstants';
 import {
+	NAVIGATOR_HEIGHT,
 	WINDOW_WIDTH,
 	WINDOW_HEIGHT,
 	MAX_CARD_WIDTH,
@@ -77,9 +78,9 @@ var css = StyleSheet.create({
 	navAndroidTitle: { color: COLOR_WHITE, fontSize: 24, marginTop: -8, fontWeight: '300' },
 	navCampusLogoTitle: { resizeMode: 'contain', height: 26, marginTop: platformIOS() ? 26 : 12, alignSelf: 'center' },
 	navIOSIconStyle: { tintColor:COLOR_WHITE, marginTop: -2 },
-	navBackButtonTextIOS: { color: COLOR_WHITE, marginTop: -2, fontWeight: '300' },
+	navButtonTextIOS: { color: COLOR_WHITE, marginTop: -3, fontWeight: '300', fontSize: 18 },
 	navAndroidIconStyle: { tintColor:COLOR_WHITE, marginTop: -6 },
-	navBackButtonTextAndroid: { color: COLOR_WHITE, marginTop: -6, fontWeight: '300' },
+	navButtonTextAndroid: { color: COLOR_WHITE, marginTop: -6, fontWeight: '300', fontSize: 18 },
 	// 102 - Tab Bar
 	tabBarIOS: { borderTopWidth: 1, borderColor: '#DADADA', backgroundColor: COLOR_WHITE, height: TAB_BAR_HEIGHT },
 	tabBarAndroid: { top: NAVIGATOR_ANDROID_HEIGHT, borderBottomWidth: 1, borderColor: '#DADADA', backgroundColor: COLOR_WHITE, height: TAB_BAR_HEIGHT },
@@ -92,6 +93,8 @@ var css = StyleSheet.create({
 	 *  200 - Primary Containers
 	 ********************************************/
 	main_container: { flexGrow: 1, backgroundColor: COLOR_MGREY, marginTop: platformIOS() ? IOS_MARGIN_TOP : ANDROID_MARGIN_TOP, marginBottom: platformIOS() ? IOS_MARGIN_BOTTOM : ANDROID_MARGIN_BOTTOM },
+	main_full: { flexGrow: 1, marginTop: NAVIGATOR_HEIGHT },
+	main_full_lgrey: { flexGrow: 1, marginTop: NAVIGATOR_HEIGHT, backgroundColor: COLOR_LGREY },
 	view_all_container: { backgroundColor: COLOR_WHITE, paddingHorizontal: 12, marginTop: platformIOS() ? IOS_MARGIN_TOP : ANDROID_MARGIN_TOP, marginBottom: platformIOS() ? IOS_MARGIN_BOTTOM : ANDROID_MARGIN_BOTTOM },
 	view_container: { backgroundColor: COLOR_WHITE, marginTop: platformIOS() ? IOS_MARGIN_TOP : ANDROID_MARGIN_TOP, marginBottom: platformIOS() ? IOS_MARGIN_BOTTOM : ANDROID_MARGIN_BOTTOM },
 	listview_main: { marginTop: platformIOS() ? IOS_MARGIN_TOP : ANDROID_MARGIN_TOP, },
@@ -366,6 +369,7 @@ var css = StyleSheet.create({
 	 ********************************************/
 	CAMPUS_PRIMARY: { color: COLOR_PRIMARY },
 	whitebg: { backgroundColor: COLOR_WHITE },
+	lgreybg: { backgroundColor: COLOR_LGREY },
 	offwhitebg: { backgroundColor: '#FAFAFA' },
 	greybg: { backgroundColor: '#E2E2E2' },
 	dgrey: { color: '#333' },

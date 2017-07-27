@@ -12,6 +12,7 @@ import ElevatedView from 'react-native-elevated-view';
 import Icon from 'react-native-vector-icons/FontAwesome';
 // import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'; // Can't use until RNVI 4.0
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import { COLOR_MRED, COLOR_DGREY } from '../../styles/ColorConstants';
 import { getPRM, getMaxCardWidth } from '../../util/general';
 
 const PRM = getPRM();
@@ -101,10 +102,10 @@ const SearchSuggestItem = ({ data, onPress }) => (
 
 const styles = StyleSheet.create({
 	list_container: { width: getMaxCardWidth(), paddingTop: 8, paddingBottom: 8, height: Math.round(deviceWidth / 4) + 12 + 4 },
-	card_main: { top: 44 + 6, backgroundColor: '#FFFFFF', margin: 6, alignItems: 'center', justifyContent: 'center',  },
+	card_main: { top: 44 + 6, backgroundColor: 'white', margin: 6, alignItems: 'center', justifyContent: 'center',  },
 	list_row: { flex: 1, alignItems: 'center', flexDirection: 'column', paddingVertical: 14, width: Math.round((deviceWidth - 12) / 4), },
-	icon_container: { justifyContent: 'center', alignItems: 'center', width: 50, height: 50, borderRadius: 50 / 2, backgroundColor: '#db3236' },
-	icon_label: { fontSize: 12, margin: 2, color: '#9E9E9E' },
+	icon_container: { justifyContent: 'center', alignItems: 'center', width: 50, height: 50, borderRadius: 50 / 2, backgroundColor: COLOR_MRED },
+	icon_label: { fontSize: 12, margin: 2, color: COLOR_DGREY },
 });
 
 export default SearchSuggest;
