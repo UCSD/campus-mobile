@@ -148,6 +148,7 @@ class NearbyMapView extends React.Component {
 		this.props.clearSearch();
 	}
 
+	// Returns true so router-flux back handler is ignored
 	pressIcon = () => {
 		if (this.state.iconStatus === 'back') {
 			this.setState({

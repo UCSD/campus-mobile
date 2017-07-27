@@ -4,10 +4,12 @@ import {
 	Text,
 	ScrollView,
 	Linking,
-	TouchableHighlight,
 	StyleSheet
 } from 'react-native';
 import moment from 'moment';
+
+import ShareContent from '../common/ShareContent';
+import Touchable from '../common/Touchable';
 import SafeImage from '../common/SafeImage';
 import logger from '../../util/logger';
 import general from '../../util/general';
@@ -18,6 +20,7 @@ import {
 	COLOR_DGREY,
 	COLOR_BLACK,
 	COLOR_MGREY,
+	COLOR_LGREY,
 } from '../../styles/ColorConstants';
 import {
 	WINDOW_WIDTH,
@@ -52,17 +55,21 @@ const EventDetail = ({ data }) => {
 				</Text>
 
 				{data.contact_info ? (
-					<TouchableHighlight
-						underlayColor={'rgba(200,200,200,.1)'}
+					<Touchable
 						onPress={() => Linking.openURL('mailto:' + data.contact_info + '?')}
 						style={styles.touchable}
 					>
 						<Text style={styles.eventdetail_readmore_text}>
 							Email: {data.contact_info}
 						</Text>
-					</TouchableHighlight>
+					</Touchable>
 				) : null }
-
+				<ShareContent
+					style={styles.shareButton}
+					title={'Share event'}
+					message={'Share event: ' + data.title}
+					url={data.url}
+				/>
 			</View>
 		</ScrollView>
 	);
@@ -77,6 +84,7 @@ const styles = StyleSheet.create({
 	descText: { lineHeight: 18, color: COLOR_BLACK, fontSize: 14, paddingTop: 14 },
 	touchable: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR_PRIMARY, borderRadius: 3, marginTop: 20, padding: 10 },
 	eventdetail_readmore_text: { fontSize: 16, color: COLOR_WHITE },
+	shareButton: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR_LGREY, borderRadius: 3, marginTop: 20, padding: 10 },
 });
 
 export default EventDetail;
