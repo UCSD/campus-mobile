@@ -19,8 +19,11 @@ export default class CardPreferences extends Component {
 		this.setState({ cardObject: this.getCardObject(this.props.cards, this.props.cardOrder) });
 	}
 
+	// Only setState if nextProps cardOrder is dfferent. Fixes flickering from re-render on android
 	componentWillReceiveProps(nextProps) {
-		// this.setState({ cardObject: this.getCardObject(nextProps.cards, nextProps.cardOrder) });
+		if (!this.arraysEqual(nextProps.cardOrder, this.props.cardOrder)) {
+			this.setState({ cardObject: this.getCardObject(nextProps.cards, nextProps.cardOrder) });
+		}
 	}
 
 	setCardState = (id, state) => {
@@ -50,6 +53,19 @@ export default class CardPreferences extends Component {
 		return orderArray;
 	}
 
+	// Checks if array content is the same
+	arraysEqual = (arr1, arr2) => {
+		if (arr1.length !== arr2.length) {
+			return false;
+		}
+		for (let i = arr1.length; i--;) {
+			if (arr1[i] !== arr2[i]) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	_handleRelease = () => {
 		if (Array.isArray(this._order)) {
 			const orderedCards = this.getOrderedArray();
@@ -71,9 +87,14 @@ export default class CardPreferences extends Component {
 								if (data.id === 'specialEvents' && !this.props.specialEventsData) {
 									return null;
 								} else {
+									// Using cardActive instead of data.active bc state isn't updated
+									// everytime
+									// Also, mildly confusing..but active prop from renderRow means
+									// the row has been grabbed
 									return (
 										<PrefItem
 											data={data}
+											cardActive={this.props.cards[data.id].active}
 											active={active}
 											updateState={this.setCardState}
 										/>

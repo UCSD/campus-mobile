@@ -4,6 +4,7 @@ import {
 } from 'react-native';
 import MapView from 'react-native-maps';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { COLOR_DGREY, COLOR_MGREY, COLOR_PIN, COLOR_SECONDARY } from '../../styles/ColorConstants';
 
 // NOTE: For some reason MapView-onCalloutPress only works for Android and
 // TouchableHighlight-onPress only works for iOS...which is why it's in two places
@@ -34,8 +35,8 @@ const SearchMap = ({ location, selectedResult, style, shuttle, vehicles }) => (
 		}}
 		style={styles.map_container}
 		loadingEnabled={true}
-		loadingIndicatorColor={'#666'}
-		loadingBackgroundColor={'#EEE'}
+		loadingIndicatorColor={COLOR_DGREY}
+		loadingBackgroundColor={COLOR_MGREY}
 		showsUserLocation={true}
 		mapType={'standard'}
 		initialRegion={{
@@ -58,7 +59,7 @@ const SearchMap = ({ location, selectedResult, style, shuttle, vehicles }) => (
 							identifier={vehicle.name}
 							key={vehicle.name}
 						>
-							<Icon name={'bus'} size={20} color={'#182B49'} />
+							<Icon name={'bus'} size={20} color={COLOR_SECONDARY} />
 						</MapView.Marker.Animated>
 						)
 					);
@@ -85,9 +86,9 @@ const SearchMap = ({ location, selectedResult, style, shuttle, vehicles }) => (
 							title={stop.name}
 							identifier={stop.name}
 							key={stop.name + key}
-							pinColor={'#346994'}
+							pinColor={COLOR_PIN}
 						>
-							<Icon style={{ textAlign: 'center', height: 10, width: 10, borderWidth: 1, borderRadius: 5, borderColor: '#346994' }} name={'circle'} color={'white'} size={10} />
+							<Icon style={{ textAlign: 'center', height: 10, width: 10, borderWidth: 1, borderRadius: 5, borderColor: COLOR_PIN }} name={'circle'} color={'white'} size={10} />
 						</MapView.Marker>
 					);
 				})

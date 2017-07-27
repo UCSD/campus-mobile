@@ -11,19 +11,23 @@ import {
 	COLOR_BLACK,
 } from '../../styles/ColorConstants';
 
-const SpecialEventsHeader = ({ timestamp }) => (
+const SpecialEventsHeader = ({ timestamp, rows }) => (
 	<View
 		style={styles.header}
 	>
 		<Text style={styles.headerText}>
-			{moment(Number(timestamp)).format('h:mm')}
+			{rows ? (
+				moment(Number(timestamp)).format('MMM D[\n]h:mm A')
+			) : (
+				moment(Number(timestamp)).format('h:mm A')
+			)}
 		</Text>
 	</View>
 );
 
 const styles = StyleSheet.create({
-	header: { justifyContent: 'flex-start', alignItems: 'center', width: 45, backgroundColor: COLOR_LGREY, borderBottomWidth: 1, borderColor: COLOR_LGREY },
-	headerText: { textAlign: 'right', alignSelf: 'stretch', color: COLOR_BLACK, fontSize: 12, marginTop: 7 },
+	header: { justifyContent: 'flex-start', alignItems: 'center', width: 75, backgroundColor: COLOR_LGREY },
+	headerText: { textAlign: 'center', alignSelf: 'stretch', color: COLOR_BLACK, fontSize: 12, marginTop: 7 },
 });
 
 export default SpecialEventsHeader;

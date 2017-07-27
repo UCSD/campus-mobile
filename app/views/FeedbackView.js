@@ -1,4 +1,3 @@
-
 import React, { Component } from 'react';
 import {
 	Text,
@@ -14,7 +13,7 @@ import {
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Device from 'react-native-device-info';
-
+import { COLOR_MGREY } from '../styles/ColorConstants';
 import { hideKeyboard, getCampusPrimary } from '../util/general';
 import logger from '../util/logger';
 import css from '../styles/css';
@@ -209,13 +208,13 @@ const styles = StyleSheet.create({
 	loading_icon: { flex: 1, alignItems: 'center', justifyContent: 'center' },
 	feedback_container: { flexDirection: 'column', marginHorizontal: 8, marginTop: 8 },
 	feedback_label: { flexWrap: 'wrap', fontSize: 18, paddingBottom: 16, lineHeight: 24 },
-	feedback_text: { backgroundColor: '#FFF', flex:1, fontSize: 18, alignItems: 'center', padding: 8 },
+	feedback_text: { backgroundColor: 'white', flex:1, fontSize: 18, alignItems: 'center', padding: 8 },
 
 	submit_container: { justifyContent: 'center', alignItems: 'center', backgroundColor: getCampusPrimary(), borderRadius: 3, padding: 10 },
-	submit_text: { fontSize: 16, color: '#FFF' },
+	submit_text: { fontSize: 16, color: 'white' },
 
-	feedback_text_container: { flexDirection: 'row', borderColor: '#DADADA', borderBottomWidth: 1, marginBottom: 8, backgroundColor: 'white' },
-	text_container: { height: 50, borderColor: '#DADADA', borderBottomWidth: 1, marginBottom: 8 },
+	feedback_text_container: { flexDirection: 'row', borderColor: COLOR_MGREY, borderBottomWidth: 1, marginBottom: 8, backgroundColor: 'white' },
+	text_container: { height: 50, borderColor: COLOR_MGREY, borderBottomWidth: 1, marginBottom: 8 },
 });
 
 const mapStateToProps = (state, props) => (

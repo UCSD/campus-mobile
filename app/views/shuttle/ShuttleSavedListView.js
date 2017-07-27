@@ -90,7 +90,7 @@ class ShuttleSavedListView extends React.Component {
 		if (Object.keys(this.state.savedObject).length < 1) {
 			return (
 				<View
-					style={[css.main_container, css.whitebg]}
+					style={css.main_full}
 				>
 					<Text
 						style={styles.addNoticeText}
@@ -102,7 +102,7 @@ class ShuttleSavedListView extends React.Component {
 		} else {
 			return (
 				<SortableList
-					style={[css.main_container, css.whitebg]}
+					style={css.main_full}
 					data={this.state.savedObject}
 					renderRow={
 						({ data, active, disabled }) =>

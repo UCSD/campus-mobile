@@ -6,7 +6,12 @@ import {
 	StyleSheet,
 } from 'react-native';
 import { connect } from 'react-redux';
+import moment from 'moment';
+import ElevatedView from 'react-native-elevated-view';
 
+import {
+	COLOR_PRIMARY,
+} from '../../styles/ColorConstants';
 import {
 	MAX_CARD_WIDTH,
 	WINDOW_WIDTH,
@@ -14,79 +19,171 @@ import {
 	NAVIGATOR_HEIGHT,
 	TAB_BAR_HEIGHT,
 } from '../../styles/LayoutConstants';
+import Touchable from '../common/Touchable';
 import EmptyItem from './EmptyItem';
 import SpecialEventsItem from './SpecialEventsItem';
 import SpecialEventsHeader from './SpecialEventsHeader';
+
 
 const dataSource = new ListView.DataSource({
 	rowHasChanged: (r1, r2) => r1 !== r2,
 	sectionHeaderHasChanged: (s1, s2) => s1 !== s2
 });
 
-const SpecialEventsListView = ({ addSpecialEvents, specialEventsSchedule, specialEventsScheduleIds, removeSpecialEvents, saved,
-	disabled, personal, rows, scrollEnabled, style }) => {
-	if (personal && Array.isArray(saved) && saved.length === 0) {
+const SpecialEventsListView = ({ addSpecialEvents, specialEventsSchedule,
+	specialEventsScheduleIds, removeSpecialEvents, saved,disabled, personal, rows,
+	scrollEnabled, style, labels, labelItemIds, selectedDay, days, daysItemIds, inCard,
+	specialEventsTitle, handleFilterPress }) => {
+
+	let scheduleIdArray = [];
+	// Use ids from selectedDay
+	if (daysItemIds) {
+		if (!selectedDay) {
+			// Select current day by default
+			for (let i = 0; i < days.length; ++i) {
+				selectedDay = days[i];
+				if (moment(selectedDay).isSameOrAfter(moment(), 'day')) {
+					scheduleIdArray = daysItemIds[selectedDay];
+
+					// Filter saved for day
+					if (personal && Array.isArray(saved)) {
+						scheduleIdArray = scheduleIdArray.filter((item) => saved.includes(item));
+					}
+
+					// If displaying for card...continue looking for a day with saved
+					if (inCard && scheduleIdArray.length === 0) {
+						// continue
+					} else {
+						break;
+					}
+				}
+			}
+		}
+		scheduleIdArray = daysItemIds[selectedDay];
+
+		// Filter saved for day
+		if (personal && Array.isArray(saved)) {
+			scheduleIdArray = scheduleIdArray.filter((item) => saved.includes(item));
+		}
+
+		// Apply label filtering
+		if (!personal && labels.length > 0) {
+			let labelArray = [];
+			for (let j = 0; j < labels.length; ++j) {
+				const label = labels[j];
+				const items = labelItemIds[label];
+
+				labelArray = labelArray.concat(items);
+			}
+			scheduleIdArray = scheduleIdArray.filter((item) => labelArray.includes(item));
+		}
+	}
+	if (personal && scheduleIdArray.length === 0) {
 		return (
 			<View style={[style, rows ? styles.card : styles.full]}>
-				<Text style={styles.noSavedSessions}>
-					Click the star icon next to a session to save it to your list.
+				<Text style={styles.noSessions}>
+					Click the star icon next to a session to save it to your schedule.
 				</Text>
 			</View>
 		);
 	} else {
 		return (
-			<ListView
-				style={[style, rows ? styles.card : styles.full]}
-				scrollEnabled={scrollEnabled}
-				stickySectionHeadersEnabled={false}
-				dataSource={
-					dataSource.cloneWithRowsAndSections(
-						convertToTimeMap(
-							specialEventsSchedule,
-							adjustData(specialEventsSchedule, specialEventsScheduleIds, saved, personal, rows)
-						)
-					)
-				}
-				renderRow={(rowData, sectionID, rowID, highlightRow) => {
-					// Don't render first row bc rendered by header
-					if (Number(rowID) !== 0) {
-						return (
+			<View
+				style={styles.mainContainer}
+			>
+				<LabelsContainer
+					labels={labels}
+					hide={personal}
+					handleFilterPress={handleFilterPress}
+				/>
+				{(!personal && scheduleIdArray.length === 0) ? (
+					<Text style={styles.noSessions}>
+						There are no events for your selected filters.
+					</Text>
+				) : (
+					<ListView
+						style={[style, rows ? styles.card : styles.full]}
+						scrollEnabled={scrollEnabled}
+						stickySectionHeadersEnabled={false}
+						dataSource={
+							dataSource.cloneWithRowsAndSections(
+								convertToTimeMap(
+									specialEventsSchedule,
+									adjustData(specialEventsSchedule, scheduleIdArray, saved, personal, rows)
+								)
+							)
+						}
+						renderRow={(rowData, sectionID, rowID, highlightRow) => {
+							// Don't render first row bc rendered by header
+							if (Number(rowID) !== 0) {
+								return (
+									<View style={styles.rowContainer}>
+										<EmptyItem />
+										<SpecialEventsItem
+											specialEventsData={rowData}
+											saved={saved.includes(rowData.id)}
+											add={(disabled) ? null : addSpecialEvents}
+											remove={removeSpecialEvents}
+											title={specialEventsTitle}
+										/>
+									</View>
+								);
+							} else {
+								return null;
+							}
+						}}
+						renderSectionHeader={(sectionData, sectionID) => (
+							// Render header along with first row
 							<View style={styles.rowContainer}>
-								<EmptyItem />
+								<SpecialEventsHeader
+									timestamp={sectionID}
+									rows={rows}
+								/>
 								<SpecialEventsItem
-									specialEventsData={rowData}
-									saved={saved.includes(rowData.id)}
+									specialEventsData={sectionData[0]}
+									saved={saved.includes(sectionData[0].id)}
 									add={(disabled) ? null : addSpecialEvents}
 									remove={removeSpecialEvents}
+									title={specialEventsTitle}
 								/>
 							</View>
-						);
-					} else {
-						return null;
-					}
-				}}
-				renderSectionHeader={(sectionData, sectionID) => (
-					// Render header along with first row
-					<View style={styles.rowContainer}>
-						<SpecialEventsHeader
-							timestamp={sectionID}
-						/>
-						<SpecialEventsItem
-							specialEventsData={sectionData[0]}
-							saved={saved.includes(sectionData[0].id)}
-							add={(disabled) ? null : addSpecialEvents}
-							remove={removeSpecialEvents}
-						/>
-					</View>
+						)}
+					/>
 				)}
-			/>
+			</View>
+		);
+	}
+};
+
+const LabelsContainer = ({ labels, hide, handleFilterPress }) => {
+	if (hide || !Array.isArray(labels) || labels.length === 0) {
+		return null;
+	} else {
+		return (
+			<ElevatedView
+				elevation={2}
+			>
+				<Touchable
+					onPress={() => handleFilterPress()}
+					style={styles.labelsContainer}
+				>
+					<Text
+						style={styles.labelText}
+						numberOfLines={1}
+					>
+						<Text style={styles.labelHeader}>Filters: </Text>
+						{
+							labels.map((label, index) => label + ((index !== labels.length - 1) ? (', ') : ('')))
+						}
+					</Text>
+				</Touchable>
+			</ElevatedView>
 		);
 	}
 };
 
 /*
 	Filters what session ids to use based on personal/saved and/or rows
-	Additional filtering can be done here
 	@returns Array of session ids
  */
 function adjustData(scheduleIdMap, scheduleIdArray, savedArray, personal, rows) {
@@ -105,9 +202,12 @@ function adjustData(scheduleIdMap, scheduleIdArray, savedArray, personal, rows) 
 		}
 	} else {
 		let filtered = [];
+		// Check if saved item is part of ids to be displayed
 		for (let i = 0; i < savedArray.length; ++i) {
 			const key = savedArray[i];
-			filtered.push(key);
+			if (scheduleIdArray.includes(key)) {
+				filtered.push(key);
+			}
 		}
 
 		// Displaying for homecard
@@ -171,7 +271,12 @@ const mapStateToProps = (state) => (
 	{
 		specialEventsSchedule: state.specialEvents.data.schedule,
 		specialEventsScheduleIds: state.specialEvents.data.uids,
-		saved: state.specialEvents.saved
+		saved: state.specialEvents.saved,
+		labelItemIds: state.specialEvents.data['label-items'],
+		labels: state.specialEvents.labels,
+		days: state.specialEvents.data.dates,
+		daysItemIds: state.specialEvents.data['date-items'],
+		specialEventsTitle: (state.specialEvents.data) ? state.specialEvents.data.name : '',
 	}
 );
 
@@ -192,10 +297,14 @@ const ActualSpecialEventsListView = connect(
 )(SpecialEventsListView);
 
 const styles = StyleSheet.create({
+	mainContainer: { flexGrow: 1 },
 	rowContainer: { flexDirection: 'row', height: 76 },
-	full: { width: WINDOW_WIDTH, height: (WINDOW_HEIGHT - NAVIGATOR_HEIGHT - TAB_BAR_HEIGHT) },
+	full: { flexGrow: 1, width: WINDOW_WIDTH, height: (WINDOW_HEIGHT - NAVIGATOR_HEIGHT - TAB_BAR_HEIGHT) },
 	card: { width: MAX_CARD_WIDTH },
-	noSavedSessions: { flexGrow: 1, fontSize: 18, textAlign: 'center', padding: 40, lineHeight: 30 },
+	noSessions: { flexGrow: 1, fontSize: 16, textAlign: 'center', padding: 20, lineHeight: 22 },
+	labelsContainer: { alignItems: 'center', justifyContent: 'flex-start', borderBottomWidth: 1, borderBottomColor: COLOR_PRIMARY },
+	labelHeader: { fontWeight: '600' },
+	labelText: { width: WINDOW_WIDTH, paddingVertical: 4, paddingHorizontal: 20, fontSize: 14, color: COLOR_PRIMARY,  },
 });
 
 export default ActualSpecialEventsListView;

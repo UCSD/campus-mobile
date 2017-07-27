@@ -6,6 +6,7 @@ import {
 } from 'react-native';
 
 import DismissibleCard from '../card/DismissibleCard';
+import Touchable from '../common/Touchable';
 
 const css = require('../../styles/css');
 const logger = require('../../util/logger');
@@ -21,20 +22,20 @@ export default class MultipleChoiceCard extends React.Component {
 					</Text>
 				</View>
 				<View style={css.card_row_container}>
-					<TouchableHighlight style={css.card_button_container} underlayColor="#DDD" onPress={() => this._card.dismissCard()}>
+					<Touchable style={css.card_button_container} onPress={() => this._card.dismissCard()}>
 						<Text style={css.card_button_text}>Yes</Text>
-					</TouchableHighlight>
-					<TouchableHighlight style={css.card_button_container} underlayColor="#DDD" onPress={() => logger.log('No')}>
+					</Touchable>
+					<Touchable style={css.card_button_container} onPress={() => logger.log('No')}>
 						<Text style={css.card_button_text}>No</Text>
-					</TouchableHighlight>
+					</Touchable>
 				</View>
 				<View style={css.card_footer_container}>
-					<TouchableHighlight style={css.card_button_container} underlayColor="#DDD" onPress={() => this._card.dismissCard()}>
+					<Touchable style={css.card_button_container} onPress={() => this._card.dismissCard()}>
 						<Text style={css.card_button_text}>Maybe</Text>
-					</TouchableHighlight>
-					<TouchableHighlight style={css.card_button_container} underlayColor="#DDD" onPress={() => logger.log('No')}>
+					</Touchable>
+					<Touchable style={css.card_button_container} onPress={() => logger.log('No')}>
 						<Text style={css.card_button_text}>Surprise Me</Text>
-					</TouchableHighlight>
+					</Touchable>
 				</View>
 			</DismissibleCard>
 		);

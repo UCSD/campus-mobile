@@ -13,7 +13,7 @@ import {
 import { connect } from 'react-redux';
 import MapView from 'react-native-maps';
 import { checkGooglePlayServices, openGooglePlayUpdate } from 'react-native-google-api-availability-bridge';
-
+import { COLOR_MGREY } from '../../styles/ColorConstants';
 import SearchResultsBar from './SearchResultsBar';
 import SearchNavButton from './SearchNavButton';
 import SearchShuttleButton from './SearchShuttleButton';
@@ -409,7 +409,7 @@ const navMargin = Platform.select({
 });
 
 const styles = StyleSheet.create({
-	main_container: { width: deviceWidth, height: deviceHeight - 64 - statusBarHeight, backgroundColor: '#EAEAEA', marginTop: navMargin },
+	main_container: { width: deviceWidth, height: deviceHeight - 64 - statusBarHeight, backgroundColor: COLOR_MGREY, marginTop: navMargin },
 	section: { height: deviceHeight - 64 - statusBarHeight },
 });
 

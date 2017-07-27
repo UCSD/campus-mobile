@@ -129,6 +129,7 @@ function* updateSpecialEvents() {
 					// Initialize SpecialEvents for first time use
 					// wipe saved data
 					yield put({ type: 'CHANGED_SPECIAL_EVENTS_SAVED', saved: [] });
+					yield put({ type: 'CHANGED_SPECIAL_EVENTS_LABELS', labels: [] });
 					yield put({ type: 'SET_SPECIAL_EVENTS', specialEvents });
 					// set active and autoActivated to true
 					yield put({ type: 'UPDATE_CARD_STATE', id: 'specialEvents', state: true });
@@ -138,6 +139,7 @@ function* updateSpecialEvents() {
 					if (saved.length > 0) {
 						const stillsExists = yield call(savedExists, specialEvents.uids, saved);
 						yield put({ type: 'CHANGED_SPECIAL_EVENTS_SAVED', saved: stillsExists });
+						yield put({ type: 'CHANGED_SPECIAL_EVENTS_LABELS', labels: [] });
 					}
 					yield put({ type: 'SET_SPECIAL_EVENTS', specialEvents });
 				}
@@ -239,8 +241,15 @@ function savedExists(scheduleIds, savedArray) {
 }
 
 function prefetchSpecialEventsImages(specialEvents) {
-	Image.prefetch(specialEvents['logo']);
-	Image.prefetch(specialEvents['logo-sm']);
+	if (specialEvents['logo']) {
+		Image.prefetch(specialEvents['logo']);
+	}
+	if (specialEvents['logo-sm']) {
+		Image.prefetch(specialEvents['logo-sm']);
+	}
+	if (specialEvents['map']) {
+		Image.prefetch(specialEvents['map']);
+	}
 }
 
 function prefetchLinkImages(links) {

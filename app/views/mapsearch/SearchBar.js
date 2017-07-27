@@ -10,6 +10,7 @@ import {
 import ElevatedView from 'react-native-elevated-view';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { getPRM } from '../../util/general';
+import { COLOR_DGREY } from '../../styles/ColorConstants';
 
 const PRM = getPRM();
 const windowWidth = Dimensions.get('window').width;
@@ -107,7 +108,7 @@ SearchBar.defaultProps = {
 
 const styles = StyleSheet.create({
 	map_searchbar_container: { zIndex: 2, margin: 6, flexDirection: 'row', position: 'absolute', width: windowWidth - 12, height: 44, borderWidth: 0, backgroundColor: 'white', },
-	map_searchbar_input: { flex: 1, height: 44, padding: 8, color: '#555', fontSize: 20 },
+	map_searchbar_input: { flex: 1, height: 44, padding: 8, color: COLOR_DGREY, fontSize: 20 },
 	//map_searchbar_icon: { position: 'absolute', top: Math.round(9 * PRM), left: Math.round(8 * PRM) },
 	map_searchbar_icon: { top: 9, left: 8 },
 	map_searchbar_ai: { position: 'absolute', top: 12, left: 8 },

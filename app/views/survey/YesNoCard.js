@@ -7,6 +7,8 @@ import {
 } from 'react-native';
 
 import Card from '../card/Card';
+import Touchable from '../common/Touchable';
+import { COLOR_DGREY } from '../../styles/ColorConstants';
 
 const YesNoCard = ({ style, question, id, data, onPress }) => (
 	<Card
@@ -19,26 +21,26 @@ const YesNoCard = ({ style, question, id, data, onPress }) => (
 			</Text>
 		</View>
 		<View style={styles.answer_container}>
-			<TouchableOpacity
+			<Touchable
 				style={styles.button_container}
 				onPress={() => onPress('yes')}
 			>
 				<Text style={styles.card_button_text}>Yes</Text>
-			</TouchableOpacity>
-			<TouchableOpacity
+			</Touchable>
+			<Touchable
 				style={styles.button_container}
 				onPress={() => onPress('no')}
 			>
 				<Text style={styles.card_button_text}>No</Text>
-			</TouchableOpacity>
+			</Touchable>
 		</View>
 	</Card>
 );
 
 const styles = StyleSheet.create({
 	question_container: { justifyContent: 'center', alignItems: 'center', padding: 8, },
-	question_text: { color: '#747678', fontSize: 18, alignItems: 'center', },
-	card_button_text: { color: '#747678', fontSize: 18, alignItems: 'center', textAlign: 'center' },
+	question_text: { color: COLOR_DGREY, fontSize: 18, alignItems: 'center', },
+	card_button_text: { color: COLOR_DGREY, fontSize: 18, alignItems: 'center', textAlign: 'center' },
 	answer_container: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: 8 },
 	button_container: { flex: 1, justifyContent: 'center', alignItems: 'center', },
 });
