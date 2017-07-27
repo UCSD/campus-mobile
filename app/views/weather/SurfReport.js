@@ -12,7 +12,8 @@ import { connect } from 'react-redux';
 
 import {
 	COLOR_DGREY,
-	COLOR_BLACK
+	COLOR_MGREY,
+	COLOR_BLACK,
 } from '../../styles/ColorConstants';
 import {
 	WINDOW_WIDTH
@@ -66,22 +67,32 @@ const SurfList = ({ surfData }) => (
 				/>
 			)
 		}
-		renderSectionHeader={(sectionData, day) => (
-			<Text
-				style={[styles.dayText,
-					{ padding: 10 }]}
-			>
-				{day}
-			</Text>
-		)}
+		renderSectionHeader={(sectionData, day) => {
+
+			let dateDayOfWeek = sectionData[0].surfDayOfWeek;
+			let dateDayAndMonth = sectionData[0].surfMonth + ' ' + sectionData[0].surfDayOfMonth;
+
+			return (
+				<View style={styles.dateDayContainer}>
+					<View style={styles.dateDayHeader}>
+						<Text style={styles.dateDayOfWeek}>{dateDayOfWeek}</Text>
+						<Text style={styles.dateDayAndMonth}>{dateDayAndMonth}</Text>
+					</View>
+					<View style={styles.dateDayEmpty} />
+				</View>
+			);
+		}}
 	/>
 );
 
 const SurfItem = ({ data }) => (
-	<View style={styles.detailsContainer}>
-		<Text style={styles.titleText}>{data.surfTitle}</Text>
-		<Text style={styles.heightText}>{data.surfHeight}</Text>
-		{data.surfDesc ? (<Text style={styles.descText}>{data.surfDesc}</Text>) : null }
+	<View style={styles.surfDetailsContainer}>
+		<View style={styles.surfDetailsEmpty} />
+		<View style={styles.surfDetails}>
+			<Text style={styles.titleText}>{data.surfTitle}</Text>
+			<Text style={styles.heightText}>{data.surfHeight}</Text>
+			{data.surfDesc ? (<Text style={styles.descText}>{data.surfDesc}</Text>) : null }
+		</View>
 	</View>
 );
 
@@ -98,11 +109,18 @@ const ActualSurfReport = connect(
 
 const styles = StyleSheet.create({
 	headerImage: { width: WINDOW_WIDTH, height: Math.round(WINDOW_WIDTH * 0.361) },
-	dayText: { fontSize: 19, color: COLOR_BLACK },
-	detailsContainer: { padding: 10 },
+	dayText: { fontSize: 19, color: COLOR_BLACK, position: 'absolute', marginTop: 50, borderWidth: 1 },
+	surfDetailsContainer: { flexDirection: 'row' },
+	surfDetailsEmpty: { flex: 1 },
+	surfDetails: { flex: 2.5, borderLeftWidth: 1, borderLeftColor: COLOR_MGREY, marginVertical: 10, paddingHorizontal: 10 },
 	titleText: { fontSize: 18, color: COLOR_BLACK },
 	heightText: { fontSize: 16, color: COLOR_DGREY, paddingTop: 4 },
 	descText: { fontSize: 13, color: COLOR_DGREY, paddingTop: 4 },
+	dateDayContainer: { position: 'absolute', flexDirection: 'row', top: 10 },
+	dateDayHeader: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+	dateDayEmpty: { flex: 2.5 },
+	dateDayOfWeek: { fontSize: 19, color: 'black' },
+	dateDayAndMonth: { fontSize: 12, color: COLOR_DGREY },
 });
 
 export default ActualSurfReport;
