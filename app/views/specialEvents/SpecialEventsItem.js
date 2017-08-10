@@ -16,6 +16,9 @@ import {
 	COLOR_BLACK,
 	COLOR_YELLOW
 } from '../../styles/ColorConstants';
+import {
+	WINDOW_WIDTH
+} from '../../styles/LayoutConstants';
 
 const SpecialEventsItem = ({ specialEventsData, saved, add, remove, title }) => (
 	<View
@@ -37,16 +40,18 @@ const SpecialEventsItem = ({ specialEventsData, saved, add, remove, title }) => 
 					) : null }
 
 					<View style={styles.labelView}>
-						{ specialEventsData.label ? (
-							<Text style={[styles.labelText, { color: specialEventsData['label-theme'] ? specialEventsData['label-theme'] : COLOR_BLACK }]}>{specialEventsData.label}</Text>
-						) : null }
+						<Text style={styles.labelText}>{getHumanizedDuration(specialEventsData['start-time'], specialEventsData['end-time'])}</Text>
 						{ specialEventsData['talk-type'] === 'Keynote' ? (
 							<Text style={styles.labelText}>{specialEventsData['talk-type']}</Text>
 						) : null }
 						{ specialEventsData.label || specialEventsData['talk-type'] === 'Keynote' ? (
 							<Text style={styles.labelText}> - </Text>
 						) : null }
-						<Text style={styles.labelText}>{getHumanizedDuration(specialEventsData['start-time'], specialEventsData['end-time'])}</Text>
+						<Text style={styles.labelTextContainer} numberOfLines={1}>
+							{ Array.isArray(specialEventsData.label) ? (
+								specialEventsData.label.map((item, index) => <Text key={item + index} style={[styles.labelText, { color: Array.isArray(specialEventsData['label-theme']) ? specialEventsData['label-theme'][index] : COLOR_BLACK }]}>{item}</Text>)
+							) : null }
+						</Text>
 					</View>
 				</View>
 			</Touchable>
@@ -90,6 +95,7 @@ const styles = StyleSheet.create({
 	titleContainer: { flex: 1, marginTop: 3 },
 	titleText: { alignSelf: 'stretch', fontSize: 17, color: 'black' },
 	labelView: { flexDirection: 'row', paddingTop: 4 },
+	labelTextContainer: { 'flexDirection': 'row', 'maxWidth': WINDOW_WIDTH / 2, },
 	labelText: { fontSize: 13 },
 	starButton: { width: 50 },
 	starButtonInner: { justifyContent: 'flex-start', alignItems: 'center' },

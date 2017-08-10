@@ -68,13 +68,16 @@ const SpecialEventsListView = ({ addSpecialEvents, specialEventsSchedule,
 
 		// Apply label filtering
 		if (!personal && labels.length > 0) {
-			let labelArray = [];
+			const labelSet = new Set(); // Using set to get rid of dupes
 			for (let j = 0; j < labels.length; ++j) {
 				const label = labels[j];
 				const items = labelItemIds[label];
 
-				labelArray = labelArray.concat(items);
+				for (let k = 0; k < items.length; ++k) {
+					labelSet.add(items[k]);
+				}
 			}
+			const labelArray = Array.from(labelSet);
 			scheduleIdArray = scheduleIdArray.filter((item) => labelArray.includes(item));
 		}
 	}
