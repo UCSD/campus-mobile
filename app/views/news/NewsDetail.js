@@ -55,7 +55,7 @@ const NewsDetail = ({ data }) => {
 				<ShareContent
 					style={styles.shareButton}
 					title={'Share news'}
-					message={'Share event: ' + data.title}
+					message={'Share event: ' + data.title + '\n' + data.link}
 					url={data.link}
 				/>
 			</View>

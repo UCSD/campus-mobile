@@ -19,7 +19,6 @@ import {
 	COLOR_WHITE,
 	COLOR_DGREY,
 	COLOR_BLACK,
-	COLOR_MGREY,
 	COLOR_LGREY,
 } from '../../styles/ColorConstants';
 import {
@@ -67,7 +66,7 @@ const EventDetail = ({ data }) => {
 				<ShareContent
 					style={styles.shareButton}
 					title={'Share event'}
-					message={'Share event: ' + data.title}
+					message={'Share event: ' + data.title + '\n' + data.url}
 					url={data.url}
 				/>
 			</View>
