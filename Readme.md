@@ -31,15 +31,14 @@ UC San Diego uses this platform for its campus mobile app on iOS and Android.
 Review the [modules documentation](https://htmlpreview.github.io/?https://raw.githubusercontent.com/UCSD/campus-mobile/dev/out/index.html)
 
 ## Screenshots
-![Alt text](/../screenshots/screenshots/v5.0/ios/weather_card.png?raw=true "Weather")
-![Alt text](/../screenshots/screenshots/v5.0/ios/shuttle_card.png?raw=true "Shuttle")
-![Alt text](/../screenshots/screenshots/v5.0/ios/shuttle_detail.png?raw=true "Shuttle Detail")
-![Alt text](/../screenshots/screenshots/v5.0/ios/map.png?raw=true "Map")
-![Alt text](/../screenshots/screenshots/v5.0/ios/dining_card.png?raw=true "Dining")
-![Alt text](/../screenshots/screenshots/v5.0/ios/dining_detail.png?raw=true "Dining Detail")
-![Alt text](/../screenshots/screenshots/v5.0/ios/news_card.png?raw=true "News")
-![Alt text](/../screenshots/screenshots/v5.0/ios/events_card.png?raw=true "Events")
-![Alt text](/../screenshots/screenshots/v5.0/ios/links_card.png?raw=true "Links")
+
+| Home | Shuttle | Map |
+|------|---------|-----|
+| <img src="https://github.com/UCSD/campus-mobile/blob/screenshots/screenshots/v5.0/ios/weather_card.png?raw=true" width="275" alt="Home" title="Home" /> | <img src="https://github.com/UCSD/campus-mobile/blob/screenshots/screenshots/v5.0/ios/shuttle_detail.png?raw=true" width="275" alt="Shuttle" title="Shuttle" /> | <img src="https://github.com/UCSD/campus-mobile/blob/screenshots/screenshots/v5.0/ios/map.png?raw=true" width="275" alt="Map" title="Map" /> |
+
+| Dining | Events | News |
+|--------|--------|------|
+| <img src="https://github.com/UCSD/campus-mobile/blob/screenshots/screenshots/v5.0/ios/dining_detail.png?raw=true" width="275" alt="Dining" title="Dining" /> | <img src="https://github.com/UCSD/campus-mobile/blob/screenshots/screenshots/v5.0/ios/events_card.png?raw=true" width="275" alt="Events" title="Events" /> | <img src="https://github.com/UCSD/campus-mobile/blob/screenshots/screenshots/v5.0/ios/news_card.png?raw=true" width="275" alt="News" title="News" /> |
 
 
 ## License
