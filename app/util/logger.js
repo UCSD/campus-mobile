@@ -27,6 +27,17 @@ module.exports = {
 		tracker.trackScreenView(msg);
 	},
 
+
+	/**
+	 * Sends a trackEvent message to Google Analytics
+	 * @function
+	 * @param {string} category The category of event
+	 * @param {string} action The name of the action
+	 */
+	trackEvent(category, action) {
+		tracker.trackEvent(category, action);
+	},
+
 	/**
 	 * Sends a trackException message to Google Analytics
 	 * @function
