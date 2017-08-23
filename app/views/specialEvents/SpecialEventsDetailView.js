@@ -28,12 +28,12 @@ import {
 class SpecialEventsDetailView extends React.Component {
 	componentDidMount() {
 		const { data, title } = this.props;
-
 		logger.ga('View Loaded: SpecialEvents Detail: ' + data['talk-title']);
 		Actions.refresh({
 			specialEventsTitle: title,
 		});
 	}
+
 	render() {
 		const { data, saved, add, remove } = this.props;
 
@@ -42,11 +42,13 @@ class SpecialEventsDetailView extends React.Component {
 				<ScrollView>
 					<View style={styles.detailContainer}>
 						<View style={styles.starButton}>
-							<Touchable
-								onPress={
-									() => (isSaved(saved, data.id) ? (remove(data.id)) : (add(data.id)))
-								}
-							>
+							<Touchable onPress={() => (
+								isSaved(saved, data.id) ? (
+									this.removeSession(remove, data.id, data['talk-title'])
+								) : (
+									this.addSession(add, data.id, data['talk-title'])
+								)
+							)}>
 								<View style={styles.starButtonInner}>
 									<Icon
 										name={'ios-star-outline'}
@@ -118,6 +120,17 @@ class SpecialEventsDetailView extends React.Component {
 			</View>
 		);
 	}
+
+	removeSession(remove, id, title) {
+		remove(id);
+		logger.trackEvent('Special Events', 'Session Removed: ' + title)
+	}
+
+	addSession(add, id, title) {
+		add(id);
+		logger.trackEvent('Special Events', 'Session Added: ' + title)
+	}
+
 };
 
 function isSaved(savedArray, id) {
