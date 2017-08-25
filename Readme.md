@@ -5,7 +5,7 @@ The campus mobile app platform enables the university to deliver relevant inform
 
 The goal of this platform is to provide a responsive and intuitive native mobile interactions for a personalized campus experience.
 
-UC San Diego uses this platform for its campus mobile app on iOS and Android.
+[UC San Diego](https://mobile.ucsd.edu/) uses this platform for its campus mobile app on iOS and Android.
 
 ## Getting Started
 
@@ -13,10 +13,6 @@ UC San Diego uses this platform for its campus mobile app on iOS and Android.
 
 - Install From the project folder, run:
 	npm install
-	npm run-script apply-fixes
-
-## Manual Bug Fixes
-[Pressing same tab](https://github.com/UCSD/campus-mobile/issues/134)
 
 ## Building for Android
 
