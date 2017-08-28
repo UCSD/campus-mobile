@@ -8,7 +8,7 @@ import {
 
 const WINDOW_WIDTH = Dimensions.get('window').width,
 	WINDOW_HEIGHT = Dimensions.get('window').height,
-	MAX_CARD_WIDTH = WINDOW_WIDTH - 2 - 12,
+	MAX_CARD_WIDTH = WINDOW_WIDTH - 12,
 	NAVIGATOR_IOS_HEIGHT = 58,
 	NAVIGATOR_ANDROID_HEIGHT = 44,
 	NAVIGATOR_HEIGHT = platformAndroid() ? NAVIGATOR_ANDROID_HEIGHT : NAVIGATOR_IOS_HEIGHT,
