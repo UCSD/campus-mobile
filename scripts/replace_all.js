@@ -12,6 +12,7 @@ var APP_SETTINGS_PATH = './app/AppSettings.js';
 var IOS_INFO_PLIST_PATH = './ios/CampusMobile/Info.plist';
 var ANDROID_STRINGS_PATH = './android/app/src/main/res/values/strings.xml';
 var ANDROID_MANIFEST_PATH = './android/app/src/main/AndroidManifest.xml';
+var ANDROID_GOOGLE_SERVICES_PATH = './android/app/google-services.json';
 
 var APP_NAME = myEnv.APP_NAME;
 var APP_NAME_PH = myEnv.APP_NAME_PH;
@@ -28,6 +29,9 @@ var CODEPUSH_ANDROID_KEY_PH = myEnv.CODEPUSH_ANDROID_KEY_PH;
 
 var GOOGLE_MAPS_API_KEY = myEnv.GOOGLE_MAPS_API_KEY;
 var GOOGLE_MAPS_API_KEY_PH = myEnv.GOOGLE_MAPS_API_KEY_PH;
+
+var FIREBASE_KEY = myEnv.FIREBASE_KEY;
+var FIREBASE_KEY_PH = myEnv.FIREBASE_KEY_PH;
 
 if (REPLACEMENT_TYPE === 'production' || REPLACEMENT_TYPE === 'staging' || REPLACEMENT_TYPE === 'placeholder') {
 	// AppSettings.js
@@ -51,6 +55,12 @@ if (REPLACEMENT_TYPE === 'production' || REPLACEMENT_TYPE === 'staging' || REPLA
 	makeReplacements(ANDROID_MANIFEST_PATH, REPLACEMENT_TYPE, [
 		{ prodVal: GOOGLE_MAPS_API_KEY, stgVal: GOOGLE_MAPS_API_KEY, phVal: GOOGLE_MAPS_API_KEY_PH },
 	]);
+
+	// google-services.json
+	makeReplacements(ANDROID_GOOGLE_SERVICES_PATH, REPLACEMENT_TYPE, [
+		{ prodVal: FIREBASE_KEY, stgVal: FIREBASE_KEY, phVal: FIREBASE_KEY_PH },
+	]);
+
 } else {
 	console.log('Error: Replacement type not specififed');
 	console.log('Sample Usage: replace_all.js [Production|Staging|Placeholder]');
