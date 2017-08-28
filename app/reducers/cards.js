@@ -1,14 +1,12 @@
-// NOTE: AppSettings.XX_CARD_ENABLED is being deprecated to pave the way for more dynamic cards
-
 const initialState = {
 	cards: {
-		specialEvents: 		{ id: 'specialEvents', active: false, autoActivated: false, name: 'Special Events', component: 'SpecialEventsCard' },
+		specialEvents: 	{ id: 'specialEvents', active: false, autoActivated: false, name: 'Special Events', component: 'SpecialEventsCard' },
 		weather: 		{ id: 'weather', active: true, name: 'Weather', component: 'WeatherCard' },
 		shuttle: 		{ id: 'shuttle', active: true, name: 'Shuttle', component: 'ShuttleCard' },
 		dining: 		{ id: 'dining', active: true, name: 'Dining', component: 'DiningCard' },
 		events: 		{ id: 'events', active: true, name: 'Events', component: 'EventsCard' },
 		quicklinks: 	{ id: 'quicklinks', active: true, name: 'Links', component: 'QuicklinksCard' },
-		news: 		{ id: 'news', active: true, name: 'News', component: 'NewsCard' },
+		news: 			{ id: 'news', active: true, name: 'News', component: 'NewsCard' },
 	},
 	cardOrder: ['specialEvents', 'weather', 'shuttle', 'dining', 'events', 'quicklinks', 'news'],
 };
