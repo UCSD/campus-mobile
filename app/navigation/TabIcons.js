@@ -29,9 +29,9 @@ const TabIcons = function (props) {
 		tabIconPack = 'Entypo';
 		tabIconName = 'new-message';
 		tabIconText = 'Feedback';
-	} else if (props.title === 'Settings') {
-		tabIconPack = 'FontAwesome';
-		tabIconName = 'gear';
+	} else if (props.title === 'User Settings') {
+		tabIconPack = 'Entypo';
+		tabIconName = 'user';
 		tabIconText = 'Settings';
 	}
 
