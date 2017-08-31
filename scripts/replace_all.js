@@ -9,9 +9,13 @@ var REPLACEMENT_TYPE = process.argv[2];
 var myEnv = require(getUserHome() + '/.campusapp/env.js');
 
 var APP_SETTINGS_PATH = './app/AppSettings.js';
+
 var IOS_INFO_PLIST_PATH = './ios/CampusMobile/Info.plist';
+
 var ANDROID_STRINGS_PATH = './android/app/src/main/res/values/strings.xml';
 var ANDROID_MANIFEST_PATH = './android/app/src/main/AndroidManifest.xml';
+
+var IOS_GOOGLE_SERVICES_PATH = './ios/GoogleService-Info.plist';
 var ANDROID_GOOGLE_SERVICES_PATH = './android/app/google-services.json';
 
 var APP_NAME = myEnv.APP_NAME;
@@ -23,7 +27,8 @@ var GOOGLE_ANALYTICS_ID_PH = myEnv.GOOGLE_ANALYTICS_ID_PH;
 var GOOGLE_MAPS_API_KEY = myEnv.GOOGLE_MAPS_API_KEY;
 var GOOGLE_MAPS_API_KEY_PH = myEnv.GOOGLE_MAPS_API_KEY_PH;
 
-var FIREBASE_KEY = myEnv.FIREBASE_KEY;
+var FIREBASE_IOS_KEY = myEnv.FIREBASE_IOS_KEY;
+var FIREBASE_ANDROID_KEY = myEnv.FIREBASE_ANDROID_KEY;
 var FIREBASE_KEY_PH = myEnv.FIREBASE_KEY_PH;
 
 if (REPLACEMENT_TYPE === 'production' || REPLACEMENT_TYPE === 'staging' || REPLACEMENT_TYPE === 'placeholder') {
@@ -47,9 +52,14 @@ if (REPLACEMENT_TYPE === 'production' || REPLACEMENT_TYPE === 'staging' || REPLA
 		{ prodVal: GOOGLE_MAPS_API_KEY, stgVal: GOOGLE_MAPS_API_KEY, phVal: GOOGLE_MAPS_API_KEY_PH },
 	]);
 
+	// GoogleService-Info.plist
+	makeReplacements(IOS_GOOGLE_SERVICES_PATH, REPLACEMENT_TYPE, [
+		{ prodVal: FIREBASE_IOS_KEY, stgVal: FIREBASE_IOS_KEY, phVal: FIREBASE_KEY_PH },
+	]);
+
 	// google-services.json
 	makeReplacements(ANDROID_GOOGLE_SERVICES_PATH, REPLACEMENT_TYPE, [
-		{ prodVal: FIREBASE_KEY, stgVal: FIREBASE_KEY, phVal: FIREBASE_KEY_PH },
+		{ prodVal: FIREBASE_ANDROID_KEY, stgVal: FIREBASE_ANDROID_KEY, phVal: FIREBASE_KEY_PH },
 	]);
 
 } else {

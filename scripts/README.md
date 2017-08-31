@@ -6,7 +6,8 @@
 var APP_NAME = 'your-app-name';
 var GOOGLE_ANALYTICS_ID = 'Google Analytics ID Here';
 var GOOGLE_MAPS_API_KEY = 'Google Maps API Key Here';
-var FIREBASE_KEY = 'FireBase API Key Here';
+var FIREBASE_IOS_KEY = 'FireBase IOS API Key Here';
+var FIREBASE_ANDROID_KEY = 'FireBase Android API Key Here';
 
 // Placeholder Values (Do Not Modify)
 var APP_NAME_PH = 'Campus Mobile';
