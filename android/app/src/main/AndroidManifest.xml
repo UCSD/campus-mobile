@@ -49,6 +49,11 @@
       <meta-data
           android:name="com.google.android.geo.API_KEY"
           android:value="AIzaSyBW0Ca1RlZD9W9hivL-5s_ikI0cjD1cd7w"/>
+      <meta-data
+        android:name="com.google.firebase.messaging.default_notification_icon"
+        android:resource="@drawable/icon" />
+      <meta-data android:name="com.google.firebase.messaging.default_notification_color"
+        android:resource="@color/google_blue" />
     </application>
 
 </manifest>
