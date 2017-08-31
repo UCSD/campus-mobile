@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react';
 import { View, Text } from 'react-native';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Entypo from 'react-native-vector-icons/Entypo';
 
 import AppSettings from '../AppSettings';
@@ -37,8 +36,8 @@ const TabIcons = function (props) {
 
 	return (
 		<View style={[css.tabContainer, props.selected ? css.tabContainerBottom : null]}>
-			{tabIconPack === 'FontAwesome' ? (<FontAwesome style={[css.tabIcon, props.selected ? { color: COLOR_PRIMARY } : null]} name={tabIconName} size={24} />) : null }
-			{tabIconPack === 'Entypo' ? (<Entypo style={[css.tabIcon, props.selected ? { color: COLOR_PRIMARY } : null]} name={tabIconName} size={24} />) : null }
+			{tabIconPack === 'Entypo' && tabIconName !== 'user' ? (<Entypo style={[css.tabIcon, props.selected ? { color: COLOR_PRIMARY } : null]} name={tabIconName} size={24} />) : null }
+			{tabIconPack === 'Entypo' && tabIconName === 'user' ? (<Entypo style={[css.tabIconUser, props.selected ? { backgroundColor: COLOR_PRIMARY, borderColor: COLOR_PRIMARY } : null]} name={tabIconName} size={24} />) : null }
 		</View>
 	);
 };
