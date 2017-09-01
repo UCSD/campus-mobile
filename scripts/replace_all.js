@@ -6,7 +6,7 @@
 */
 var fs = require('fs');
 var REPLACEMENT_TYPE = process.argv[2];
-var myEnv = require(getUserHome() + '/.campusapp/env.js');
+var myEnv = require(getUserHome() + '/.campusmobile/env.js');
 
 var APP_SETTINGS_PATH = './app/AppSettings.js';
 

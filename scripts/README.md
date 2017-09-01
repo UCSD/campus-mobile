@@ -1,6 +1,6 @@
-1) Create a folder in your home directory ".campusapp"
+1) Create a folder in your home directory ".campusmobile"
 
-2) In your ".campusapp" folder, create a file "env.js" with the following content:
+2) In your ".campusmobile" folder, create a file "env.js" with the following content:
 
 // Modify These Values
 var APP_NAME = 'your-app-name';
