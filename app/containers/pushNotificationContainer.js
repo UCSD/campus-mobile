@@ -75,7 +75,6 @@ class PushNotificationContainer extends React.Component {
         this.getNotificationToken();
       }
     })
-    .catch(logger.error);
   }
 
   showLocalNotification = (notif) => {
