@@ -23,7 +23,7 @@ function* watchLocation() {
 				yield put({ type: 'SET_PERMISSION', permission: perm });
 			}
 		} catch (err) {
-			console.log(err);
+			console.log('Error: watchLocation: ' + err);
 		}
 		yield delay(5000); // wait 5s
 	}
