@@ -5,8 +5,9 @@
 	npm run-script insert-placeholder-values
 */
 var fs = require('fs');
+var os = require('os');
 var REPLACEMENT_TYPE = process.argv[2];
-var myEnv = require(getUserHome() + '/.campusmobile/env.js');
+var myEnv = require(os.homedir() + '/.campusmobile/env.js');
 
 var APP_SETTINGS_PATH = './app/AppSettings.js';
 
@@ -91,8 +92,4 @@ function makeReplacements(FILE_PATH, REPLACEMENT_TYPE, REPLACEMENTS) {
 			});
 		}
 	});
-}
-
-function getUserHome() {
-	return process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
 }
