@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>DocStrap Module: util/map</title>
+	<title>DocStrap Class: MultiSelect</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -33,21 +33,21 @@
 			<li class="dropdown">
 				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-util_general.html">util/general</a></li><li><a href="module-util_logger.html">util/logger</a></li><li><a href="module-util_map.html">util/map</a></li><li><a href="module-util_shuttle.html">util/shuttle</a></li>
+					<li><a href="module-general.html">general</a></li><li><a href="module-util_logger.html">util/logger</a></li><li><a href="module-util_map.html">util/map</a></li><li><a href="module-util_shuttle.html">util/shuttle</a></li>
 				</ul>
 			</li>
 			
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module.exports.html">module.exports</a></li>
+					<li><a href="MultiSelect.html">MultiSelect</a></li>
 				</ul>
 			</li>
 			
 			<li class="dropdown">
 				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="global.html#componentDidMount">componentDidMount</a></li><li><a href="global.html#componentWillMount">componentWillMount</a></li><li><a href="global.html#componentWillUnmount">componentWillUnmount</a></li><li><a href="global.html#shouldComponentUpdate">shouldComponentUpdate</a></li>
+					<li><a href="global.html#DataItem">DataItem</a></li><li><a href="global.html#DataListCard">DataListCard</a></li><li><a href="global.html#DataListView">DataListView</a></li><li><a href="global.html#DataListViewAll">DataListViewAll</a></li><li><a href="global.html#WeatherCard">WeatherCard</a></li><li><a href="global.html#WeatherCardContainer">WeatherCardContainer</a></li><li><a href="global.html#WeatherDay">WeatherDay</a></li><li><a href="global.html#WeatherWeek">WeatherWeek</a></li>
 				</ul>
 			</li>
 			
@@ -79,10 +79,15 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Module: util/map</h1>
+	<h1 class="page-title">Class: MultiSelect</h1>
 <section>
 
 <header>
+    
+        <h2>
+        MultiSelect
+        </h2>
+        
     
 </header>
 
@@ -91,92 +96,14 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>A module containing map-related helper functions</p></div>
-        
-
-        
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="util_map.js.html">util/map.js</a>,
-				 <a href="util_map.js.html#sunlight-1-line-19">line 19</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-        
-    
-    </div>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        <dl>
-            
 <hr>
 <dt>
-    <h4 class="name" id=".getDistance"><span class="type-signature">&lt;static> </span>getDistance(lat1, lon1, lat2, lon2)</h4>
+    <h4 class="name" id="MultiSelect"><span class="type-signature"></span>new MultiSelect(items, selected, themes, onSelect)</h4>
     
     
 </dt>
 <dd>
 
-    
-    <div class="description">
-        <p>Gets the surface distance between two Earth coordinates in meters</p>
-    </div>
     
 
     
@@ -210,13 +137,13 @@
 
         <tr>
             
-                <td class="name"><code>lat1</code></td>
+                <td class="name"><code>items</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">Array.&lt;String></span>
 
 
 
@@ -227,20 +154,20 @@
 
             
 
-            <td class="description last"><p>The latitude of the first point</p></td>
+            <td class="description last"><p>items to be selected</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>lon1</code></td>
+                <td class="name"><code>selected</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">Array.&lt;String></span>
 
 
 
@@ -251,20 +178,20 @@
 
             
 
-            <td class="description last"><p>The longitude of the first point</p></td>
+            <td class="description last"><p>items already selected</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>lat2</code></td>
+                <td class="name"><code>themes</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">Object</span>
 
 
 
@@ -275,20 +202,20 @@
 
             
 
-            <td class="description last"><p>The latitude of the second point</p></td>
+            <td class="description last"><p>coloring for items</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>lon2</code></td>
+                <td class="name"><code>onSelect</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">function</span>
 
 
 
@@ -299,7 +226,7 @@
 
             
 
-            <td class="description last"><p>The longitude of the second point</p></td>
+            <td class="description last"></td>
         </tr>
 
     
@@ -343,8 +270,8 @@
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="util_map.js.html">util/map.js</a>,
-				 <a href="util_map.js.html#sunlight-1-line-34">line 34</a>
+				<a href="views_specialEvents_MultiSelect.js.html">views/specialEvents/MultiSelect.js</a>,
+				 <a href="views_specialEvents_MultiSelect.js.html#sunlight-1-line-14">line 14</a>
 			</li>
 		</ul>
 	</dd>
@@ -369,231 +296,12 @@
     
 
     
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>Null if any of the inputs were null. Otherwise, the distance in meters (rounded down the nearest integer)</p>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">number</span>
-|
-
-<span class="param-type">null</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
 
     
 </dd>
 
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id=".getMidpointCoords"><span class="type-signature">&lt;static> </span>getMidpointCoords(lat1, lon1, lat2, lon2)</h4>
     
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Gets the coordinates of the midpoint between two coordinates</p>
     </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>lat1</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The latitude of the first point</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>lon1</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The longitude of the first point</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>lat2</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The latitude of the second point</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>lon2</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The longitude of the second point</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="util_map.js.html">util/map.js</a>,
-				 <a href="util_map.js.html#sunlight-1-line-58">line 58</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
 
     
 
@@ -606,35 +314,7 @@
     
 
     
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The midpoint coordinates stored in a 2-length array with the form {latitude, longitude}</p>
-</div>
 
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Array.&lt;number></span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        </dl>
     
 
     
@@ -688,7 +368,7 @@
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on Wed Mar 15th 2017
+		on Thu Sep 7th 2017
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>DocStrap Index</title>
+	<title>DocStrap Source: views/weather/WeatherCardContainer.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -33,21 +33,21 @@
 			<li class="dropdown">
 				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-util_general.html">util/general</a></li><li><a href="module-util_logger.html">util/logger</a></li><li><a href="module-util_map.html">util/map</a></li><li><a href="module-util_shuttle.html">util/shuttle</a></li>
+					<li><a href="module-general.html">general</a></li><li><a href="module-util_logger.html">util/logger</a></li><li><a href="module-util_map.html">util/map</a></li><li><a href="module-util_shuttle.html">util/shuttle</a></li>
 				</ul>
 			</li>
 			
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module.exports.html">module.exports</a></li>
+					<li><a href="MultiSelect.html">MultiSelect</a></li>
 				</ul>
 			</li>
 			
 			<li class="dropdown">
 				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="global.html#componentDidMount">componentDidMount</a></li><li><a href="global.html#componentWillMount">componentWillMount</a></li><li><a href="global.html#componentWillUnmount">componentWillUnmount</a></li><li><a href="global.html#shouldComponentUpdate">shouldComponentUpdate</a></li>
+					<li><a href="global.html#DataItem">DataItem</a></li><li><a href="global.html#DataListCard">DataListCard</a></li><li><a href="global.html#DataListView">DataListView</a></li><li><a href="global.html#DataListViewAll">DataListViewAll</a></li><li><a href="global.html#WeatherCard">WeatherCard</a></li><li><a href="global.html#WeatherCardContainer">WeatherCardContainer</a></li><li><a href="global.html#WeatherDay">WeatherDay</a></li><li><a href="global.html#WeatherWeek">WeatherWeek</a></li>
 				</ul>
 			</li>
 			
@@ -74,107 +74,51 @@
 <div class="row">
 
 	
-	<div class="col-md-8">
+	<div class="col-md-12">
 	
 		<div id="main">
 			
 
-	
-	
+		<h1 class="page-title">Source: views/weather/WeatherCardContainer.js</h1>
+    
+<section>
+    <article>
+        <pre
+            class="sunlight-highlight-javascript linenums">import React from 'react';
+import { Actions } from 'react-native-router-flux';
+import { connect } from 'react-redux';
 
+import SurfButton from './SurfButton';
+import WeatherCard from './WeatherCard';
+import logger from '../../util/logger';
 
+/**
+ * Container component for [WeatherCard]{@link WeatherCard}
+**/
+const WeatherCardContainer = ({ weatherData }) => {
+	logger.ga('Card Mounted: Weather');
+	return (
+		&lt;WeatherCard
+			weatherData={weatherData}
+			actionButton={&lt;SurfButton />}
+		/>
+	);
+};
 
+const mapStateToProps = (state) => (
+	{
+		weatherData: state.weather.data,
+	}
+);
 
+const ActualWeatherCard = connect(
+	mapStateToProps
+)(WeatherCardContainer);
 
-
-
-
-
-
-
-	
-	
-
-
-
-
-
-    <section class="readme-section">
-        <article><p><a href="http://makeapullrequest.com"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" alt="PRs Welcome"></a></p>
-<h1>Campus Mobile app</h1><p>The campus mobile app platform enables the university to deliver relevant information to students, staff, and visitors, taking the context of time and location into consideration. The platform uses <a href="https://facebook.github.io/react-native/">React Native</a> and implements a card based UI.</p>
-<p>The goal of this platform is to provide a responsive and intuitive native mobile interactions for a personalized campus experience.</p>
-<p>UC San Diego uses this platform for its campus mobile app on iOS and Android.</p>
-<h2>Getting Started</h2><ul>
-<li>Follow the <a href="https://facebook.github.io/react-native/docs/getting-started.html">Getting Started guide</a> for React Native</li>
-<li>From the project folder, run:<ul>
-<li>npm install</li>
-<li>npm run-script apply-fixes</li>
-</ul>
-</li>
-<li>For iOS, from the project folder, run: react-native run-ios</li>
-<li>For Android, from the project folder, run: react-native run-android</li>
-</ul>
-<h2>Documentation</h2><p>Review the <a href="https://htmlpreview.github.io/?https://raw.githubusercontent.com/UCSD/campus-mobile/dev/out/index.html">modules documentation</a></p>
-<h2>Building for Android</h2><p><a href="https://github.com/UCSD/campus-mobile-build-scripts">Utility script</a> to create an APK. This build script exists in a repository separate from the campus mobile app repository.</p>
-<pre class="prettyprint source"><code>// From an empty directory
-//Build APK one liner:
-git clone https://github.com/UCSD/campus-mobile-build-scripts.git && cd campus-mobile-build-scripts && npm install && node build-apk.js
-
-//Build APK and install on device one liner:
-git clone https://github.com/UCSD/campus-mobile-build-scripts.git && cd campus-mobile-build-scripts && npm install && node build-apk.js && adb install ./bld/android/app/build/outputs/apk/app-release.apk</code></pre><h2>Building for iOS</h2><p>TODO: add content</p>
-<h2>Available Cards</h2><ul>
-<li>TopBanner<ul>
-<li>For upcoming current events</li>
-</ul>
-</li>
-<li>Weather &amp; Surf<ul>
-<li>5 day weather report</li>
-<li>Surf report link</li>
-</ul>
-</li>
-<li>Shuttle<ul>
-<li>Nearest shuttle stops and arrival times</li>
-<li>Shuttle stop info to view all shuttles en route</li>
-</ul>
-</li>
-<li>Dining<ul>
-<li>Nearest dining options with menu and nutritional information</li>
-<li>View all dining link</li>
-</ul>
-</li>
-<li>Events<ul>
-<li>Upcoming events</li>
-<li>View all events link</li>
-</ul>
-</li>
-<li>Links<ul>
-<li>A list of helpful links from our legacy app</li>
-<li>View all quick links link</li>
-</ul>
-</li>
-<li>News<ul>
-<li>Latest news articles</li>
-<li>View all news link</li>
-</ul>
-</li>
-<li>Maps<ul>
-<li>Searchable campus map</li>
-<li>View all link</li>
-</ul>
-</li>
-</ul>
-<h2>Screenshots</h2><p><img src="/../screenshots/screenshots/splash.png?raw=true" alt="Alt text" title="Splash Screen"></p>
-<p><img src="/../screenshots/screenshots/weather.png?raw=true" alt="Alt text" title="Weather"></p>
-<p><img src="/../screenshots/screenshots/events.png?raw=true" alt="Alt text" title="Events"></p>
-<p><img src="/../screenshots/screenshots/news.png?raw=true" alt="Alt text" title="News"></p>
-<p><img src="/../screenshots/screenshots/dining.png?raw=true" alt="Alt text" title="Dining"></p>
-<p><img src="/../screenshots/screenshots/nearby.png?raw=true" alt="Alt text" title="Nearby Places"></p>
-<p><img src="/../screenshots/screenshots/shuttle_detail.png?raw=true" alt="Alt text" title="Shuttle Detail"></p>
-<p><img src="/../screenshots/screenshots/all_events.png?raw=true" alt="Alt text" title="All Events"></p>
-<h2>License</h2><pre class="prettyprint source"><code>MIT</code></pre></article>
-    </section>
-
-
+export default ActualWeatherCard;
+</pre>
+    </article>
+</section>
 
 
 
@@ -185,10 +129,6 @@ git clone https://github.com/UCSD/campus-mobile-build-scripts.git && cd campus-m
 
 	<div class="clearfix"></div>
 
-	
-		<div class="col-md-3">
-			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
-		</div>
 	
 
 </div>
@@ -221,7 +161,7 @@ git clone https://github.com/UCSD/campus-mobile-build-scripts.git && cd campus-m
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on Wed Mar 15th 2017
+		on Thu Sep 7th 2017
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
