@@ -12,7 +12,7 @@ function* watchLocation() {
 		try {
 			const location = yield select(getLocation);
 
-			if (location.permission === 'authorized') {
+			if (location.permission === 'authorized' && location.position && location.position.coords) {
 				const position = yield call(LocationService.getPosition);
 				yield put({ type: 'SET_POSITION', position });
 				const closestStop = yield call(getClosestStop, position); // CHANGE TO SAGA
@@ -23,7 +23,7 @@ function* watchLocation() {
 				yield put({ type: 'SET_PERMISSION', permission: perm });
 			}
 		} catch (err) {
-			console.log(err);
+			console.log('Error: watchLocation: ' + err);
 		}
 		yield delay(5000); // wait 5s
 	}

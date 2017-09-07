@@ -50,11 +50,11 @@ const BannerCard = ({ title, image, onPress, onClose }) => (
 );
 
 const styles = StyleSheet.create({
-	image: { height: ((MAX_CARD_WIDTH / 1242) * 440), width: MAX_CARD_WIDTH, marginTop: 22 },
+	image: { height: ((MAX_CARD_WIDTH / 1242) * 440), width: MAX_CARD_WIDTH },
 	cardTitle: { color: COLOR_PRIMARY, width: MAX_CARD_WIDTH, textAlign: 'center', fontSize: 50, fontWeight: '600', paddingVertical: 30 },
 	closeContainer: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', zIndex: 10, position: 'absolute', top: 3, right: 3 },
-	closeText: { color: COLOR_DGREY, fontSize: 10, marginBottom: 2 },
-	closeIcon: { color: COLOR_DGREY, marginLeft: 2 },
+	closeText: { color: COLOR_MGREY, fontSize: 10, marginBottom: 2, backgroundColor: 'transparent' },
+	closeIcon: { color: COLOR_MGREY, marginLeft: 2, backgroundColor: 'transparent' },
 	more: { alignSelf: 'stretch', justifyContent: 'center', padding: 6, borderTopWidth: 1, borderTopColor: COLOR_MGREY },
 	more_label: { fontSize: 20, color: COLOR_PRIMARY, textAlign: 'center', fontWeight: '300' },
 

@@ -110,7 +110,7 @@ class Main extends Component {
 							</Scene>
 							<Scene key="tab2" title="Map" component={NearbyMapView} icon={TabIcons} />
 							<Scene key="tab3" title="Feedback" component={FeedbackView} icon={TabIcons} />
-							<Scene key="tab4" title="Settings" component={PreferencesView} icon={TabIcons} />
+							<Scene key="tab4" title="User Settings" component={PreferencesView} icon={TabIcons} />
 						</Scene>
 					</Scene>
 				</RouterWithRedux>

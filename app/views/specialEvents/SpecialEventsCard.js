@@ -33,7 +33,6 @@ const SpecialEventsCard = ({ specialEvents, saved, hideCard }) => (
 			(
 				<Card
 					title={specialEvents.name}
-					header={specialEvents['logo-sm']}
 					id="specialEvents"
 				>
 					<View

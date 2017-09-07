@@ -6,7 +6,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Actions } from 'react-native-router-flux';
-
+import logger from '../../util/logger';
 import Touchable from '../common/Touchable';
 import { platformIOS, getHumanizedDuration } from '../../util/general';
 import {
@@ -58,12 +58,13 @@ const SpecialEventsItem = ({ specialEventsData, saved, add, remove, title }) => 
 		</View>
 
 		{ (add !== null) ? (
-			<Touchable
-				style={styles.starButton}
-				onPress={
-					() => ((saved) ? (remove(specialEventsData.id)) : (add(specialEventsData.id)))
-				}
-			>
+			<Touchable style={styles.starButton} onPress={() => (
+				(saved) ? (
+					removeSession(remove, specialEventsData.id, specialEventsData['talk-title'])
+				) : (
+					addSession(add, specialEventsData.id, specialEventsData['talk-title'])
+				)
+			)}>
 				<View style={styles.starButtonInner}>
 					<Icon
 						name={'ios-star-outline'}
@@ -89,6 +90,16 @@ const CircleBorder = () => (
 		<View style={styles.circle} />
 	</View>
 );
+
+const removeSession = (remove, id, title) => {
+	remove(id);
+	logger.trackEvent('Special Events', 'Session Removed: ' + title)
+}
+
+const addSession = (add, id, title) => {
+	add(id);
+	logger.trackEvent('Special Events', 'Session Added: ' + title)
+}
 
 const styles = StyleSheet.create({
 	itemRow: { flexGrow: 1, flexDirection: 'row', backgroundColor: COLOR_LGREY },

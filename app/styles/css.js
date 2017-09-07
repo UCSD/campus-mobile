@@ -49,6 +49,7 @@ import {
 	COLOR_LGREY,
 	COLOR_WHITE,
 	COLOR_BLACK,
+	COLOR_DMGREY,
 	COLOR_TRANSPARENT,
 } from './ColorConstants';
 import {
@@ -86,7 +87,8 @@ var css = StyleSheet.create({
 	tabBarAndroid: { top: NAVIGATOR_ANDROID_HEIGHT, borderBottomWidth: 1, borderColor: '#DADADA', backgroundColor: COLOR_WHITE, height: TAB_BAR_HEIGHT },
 	tabContainer: { width: 70, paddingVertical: 8 },
 	tabContainerBottom: { borderBottomColor: COLOR_PRIMARY },
-	tabIcon: { color: '#999', alignSelf: 'center', backgroundColor: COLOR_TRANSPARENT, opacity: .95 },
+	tabIcon: { color: COLOR_DMGREY, alignSelf: 'center', backgroundColor: 'transparent', opacity: .95, width: 24, height: 24, overflow: 'hidden' },
+	tabIconUser: { color: COLOR_DMGREY, alignSelf: 'center', opacity: .95, width: 24, height: 24, borderRadius: 12, overflow: 'hidden', backgroundColor: COLOR_DMGREY, borderWidth: 1, borderColor: COLOR_DMGREY, color: COLOR_WHITE },
 
 
 	/********************************************

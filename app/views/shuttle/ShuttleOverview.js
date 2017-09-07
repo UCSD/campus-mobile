@@ -82,7 +82,8 @@ const ShuttleOverview = ({ onPress, stopData, closest }) => {
 					<View style={styles.bigCircles}>
 
 						<View style={styles.stopNameCircle}>
-							<Text style={styles.shortNameText}>
+							<Text style={[styles.shortNameText, styles.shortNameTextLoading]}>
+								?
 							</Text>
 						</View>
 
@@ -128,6 +129,7 @@ const styles = StyleSheet.create({
 	bigCircles: { flexDirection: 'row', alignItems: 'stretch', justifyContent: 'center', margin: 20, height: 83 },
 	shortNameCircle: { borderRadius: 50, width: 83, justifyContent: 'center', overflow: 'hidden', padding: 2 },
 	shortNameText: { textAlign: 'center', color: COLOR_BLACK, fontWeight: '600', fontSize: 48, backgroundColor: 'transparent' },
+	shortNameTextLoading: { color: COLOR_DGREY },
 	atContainer: { flexGrow: 3, justifyContent: 'center', alignItems: 'center' },
 	atText: { textAlign: 'center', color: COLOR_DGREY, fontSize: 30, fontWeight: '300', backgroundColor: 'transparent' },
 	stopNameCircle: { borderRadius: 48, borderWidth: 1, backgroundColor: COLOR_WHITE, borderColor: COLOR_MGREY, width: 83, justifyContent: 'center', padding: 2 },

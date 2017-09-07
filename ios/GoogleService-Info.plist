@@ -7,34 +7,34 @@
 	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
 	<string>ca-app-pub-3940256099942544/4411468910</string>
 	<key>CLIENT_ID</key>
-	<string>209832154225-33ivdbp1o5ogbue3pracg4hbt2jmr69p.apps.googleusercontent.com</string>
+	<string>444046920085-2s4n918v7st3r58kmcpplkjdvmqmtgdj.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.209832154225-33ivdbp1o5ogbue3pracg4hbt2jmr69p</string>
+	<string>com.googleusercontent.apps.444046920085-2s4n918v7st3r58kmcpplkjdvmqmtgdj</string>
 	<key>API_KEY</key>
-	<string>AIzaSyClzv2ujNyV0xSZhJFC-UxZm_ZFAJRins0</string>
+	<string>FIREBASE_KEY_PH</string>
 	<key>GCM_SENDER_ID</key>
-	<string>209832154225</string>
+	<string>444046920085</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>edu.ucsd.ucsandiego</string>
 	<key>PROJECT_ID</key>
-	<string>campusmobile-c779b</string>
+	<string>uc-san-diego</string>
 	<key>STORAGE_BUCKET</key>
-	<string>campusmobile-c779b.appspot.com</string>
+	<string>uc-san-diego.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<true/>
 	<key>IS_ANALYTICS_ENABLED</key>
 	<false/>
 	<key>IS_APPINVITE_ENABLED</key>
-	<false/>
+	<true/>
 	<key>IS_GCM_ENABLED</key>
 	<true/>
 	<key>IS_SIGNIN_ENABLED</key>
 	<true/>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:209832154225:ios:cd9429451b823426</string>
+	<string>1:444046920085:ios:cd9429451b823426</string>
 	<key>DATABASE_URL</key>
-	<string>https://campusmobile-c779b.firebaseio.com</string>
+	<string>https://uc-san-diego.firebaseio.com</string>
 </dict>
 </plist>

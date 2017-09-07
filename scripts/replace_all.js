@@ -5,13 +5,19 @@
 	npm run-script insert-placeholder-values
 */
 var fs = require('fs');
+var os = require('os');
 var REPLACEMENT_TYPE = process.argv[2];
-var myEnv = require(getUserHome() + '/.campusapp/env.js');
+var myEnv = require(os.homedir() + '/.campusmobile/env.js');
 
 var APP_SETTINGS_PATH = './app/AppSettings.js';
+
 var IOS_INFO_PLIST_PATH = './ios/CampusMobile/Info.plist';
+
 var ANDROID_STRINGS_PATH = './android/app/src/main/res/values/strings.xml';
 var ANDROID_MANIFEST_PATH = './android/app/src/main/AndroidManifest.xml';
+
+var IOS_GOOGLE_SERVICES_PATH = './ios/GoogleService-Info.plist';
+var ANDROID_GOOGLE_SERVICES_PATH = './android/app/google-services.json';
 
 var APP_NAME = myEnv.APP_NAME;
 var APP_NAME_PH = myEnv.APP_NAME_PH;
@@ -19,15 +25,12 @@ var APP_NAME_PH = myEnv.APP_NAME_PH;
 var GOOGLE_ANALYTICS_ID = myEnv.GOOGLE_ANALYTICS_ID;
 var GOOGLE_ANALYTICS_ID_PH = myEnv.GOOGLE_ANALYTICS_ID_PH;
 
-var CODEPUSH_IOS_KEY_PROD = myEnv.CODEPUSH_IOS_KEY_PROD;
-var CODEPUSH_IOS_KEY_STG = myEnv.CODEPUSH_IOS_KEY_STG;
-var CODEPUSH_IOS_KEY_PH = myEnv.CODEPUSH_IOS_KEY_PH;
-var CODEPUSH_ANDROID_KEY_PROD = myEnv.CODEPUSH_ANDROID_KEY_PROD;
-var CODEPUSH_ANDROID_KEY_STG = myEnv.CODEPUSH_ANDROID_KEY_STG;
-var CODEPUSH_ANDROID_KEY_PH = myEnv.CODEPUSH_ANDROID_KEY_PH;
-
 var GOOGLE_MAPS_API_KEY = myEnv.GOOGLE_MAPS_API_KEY;
 var GOOGLE_MAPS_API_KEY_PH = myEnv.GOOGLE_MAPS_API_KEY_PH;
+
+var FIREBASE_IOS_KEY = myEnv.FIREBASE_IOS_KEY;
+var FIREBASE_ANDROID_KEY = myEnv.FIREBASE_ANDROID_KEY;
+var FIREBASE_KEY_PH = myEnv.FIREBASE_KEY_PH;
 
 if (REPLACEMENT_TYPE === 'production' || REPLACEMENT_TYPE === 'staging' || REPLACEMENT_TYPE === 'placeholder') {
 	// AppSettings.js
@@ -38,19 +41,28 @@ if (REPLACEMENT_TYPE === 'production' || REPLACEMENT_TYPE === 'staging' || REPLA
 	// Info.plist
 	makeReplacements(IOS_INFO_PLIST_PATH, REPLACEMENT_TYPE, [
 		{ prodVal: APP_NAME, stgVal: APP_NAME, phVal: APP_NAME_PH },
-		{ prodVal: CODEPUSH_IOS_KEY_PROD, stgVal: CODEPUSH_IOS_KEY_STG, phVal: CODEPUSH_IOS_KEY_PH },
 	]);
 
 	// strings.xml
 	makeReplacements(ANDROID_STRINGS_PATH, REPLACEMENT_TYPE, [
 		{ prodVal: APP_NAME, stgVal: APP_NAME, phVal: APP_NAME_PH },
-		{ prodVal: CODEPUSH_ANDROID_KEY_PROD, stgVal: CODEPUSH_ANDROID_KEY_STG, phVal: CODEPUSH_ANDROID_KEY_PH },
 	]);
 
 	// AndroidManifest.xml
 	makeReplacements(ANDROID_MANIFEST_PATH, REPLACEMENT_TYPE, [
 		{ prodVal: GOOGLE_MAPS_API_KEY, stgVal: GOOGLE_MAPS_API_KEY, phVal: GOOGLE_MAPS_API_KEY_PH },
 	]);
+
+	// GoogleService-Info.plist
+	makeReplacements(IOS_GOOGLE_SERVICES_PATH, REPLACEMENT_TYPE, [
+		{ prodVal: FIREBASE_IOS_KEY, stgVal: FIREBASE_IOS_KEY, phVal: FIREBASE_KEY_PH },
+	]);
+
+	// google-services.json
+	makeReplacements(ANDROID_GOOGLE_SERVICES_PATH, REPLACEMENT_TYPE, [
+		{ prodVal: FIREBASE_ANDROID_KEY, stgVal: FIREBASE_ANDROID_KEY, phVal: FIREBASE_KEY_PH },
+	]);
+
 } else {
 	console.log('Error: Replacement type not specififed');
 	console.log('Sample Usage: replace_all.js [Production|Staging|Placeholder]');
@@ -80,8 +92,4 @@ function makeReplacements(FILE_PATH, REPLACEMENT_TYPE, REPLACEMENTS) {
 			});
 		}
 	});
-}
-
-function getUserHome() {
-	return process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
 }
