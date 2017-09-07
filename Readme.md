@@ -24,7 +24,7 @@ The goal of this platform is to provide a responsive and intuitive native mobile
 
 ## Documentation
 
-Review the [modules documentation](https://htmlpreview.github.io/?https://raw.githubusercontent.com/UCSD/campus-mobile/dev/out/index.html)
+Review the [modules documentation](https://htmlpreview.github.io/?https://raw.githubusercontent.com/UCSD/campus-mobile/dev/docs/index.html)
 
 ## Screenshots
 

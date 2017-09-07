@@ -1,9 +1,10 @@
 {
   "opts": {
     "template": "./node_modules/ink-docstrap/template",
-	"readme": "Readme.md",
-	"recurse": true,
-	"verbose": true
+    "destination": "./docs/",
+    "readme": "Readme.md",
+    "recurse": true,
+    "verbose": true
   },
   "source": {
     "include": ["./app"]
