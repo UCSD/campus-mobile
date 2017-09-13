@@ -7,9 +7,8 @@ import {
 	ListView,
 	StyleSheet
 } from 'react-native';
-
+import moment from 'moment';
 import { connect } from 'react-redux';
-
 import {
 	COLOR_DGREY,
 	COLOR_MGREY,
@@ -21,12 +20,10 @@ import {
 import css from '../../styles/css';
 
 const logger = require('../../util/logger');
-
 const surfDataSource = new ListView.DataSource({
 	rowHasChanged: (r1, r2) => r1 !== r2,
 	sectionHeaderHasChanged: (s1, s2) => s1 !== s2 });
 const surfHeader = require('../../assets/img/surf_report_header.jpg');
-
 const SurfReport = ({ surfData }) => {
 	logger.log('View Mounted: Surf');
 
@@ -37,7 +34,6 @@ const SurfReport = ({ surfData }) => {
 	);
 };
 
-// This stuff should be moved to different files, but we should be redoing this view soon
 const SurfView = ({ surfData }) => (
 	<ScrollView
 		style={css.main_full}
@@ -57,44 +53,53 @@ const SurfView = ({ surfData }) => (
 	</ScrollView>
 );
 
-const SurfList = ({ surfData }) => (
-	<ListView
-		dataSource={surfData}
-		renderRow={
-			(row, sectionID, rowID) => (
-				<SurfItem
-					data={row}
-				/>
-			)
-		}
-		renderSectionHeader={(sectionData, day) => {
+const SurfList = ({ surfData }) => {
+	return (
+		<ListView
+			dataSource={surfData}
+			renderRow={
+				(row, sectionID, rowID) => (
+					<SurfItem
+						data={row}
+					/>
+				)
+			}
+			renderSectionHeader={(sectionData, day) => {
 
-			let dateDayOfWeek = sectionData[0].surfDayOfWeek;
-			let dateDayAndMonth = sectionData[0].surfMonth + ' ' + sectionData[0].surfDayOfMonth;
+				var dateDayOfWeek = sectionData[0].surfDayOfWeek;
+				var dateDayAndMonth = sectionData[0].surfMonth + ' ' + sectionData[0].surfDayOfMonth;
+				var surfTimestampNumeric = sectionData[0].surfTimestampNumeric;
+				var currentDate = moment().format('YYYYMMDD');
 
-			return (
-				<View style={styles.dateDayContainer}>
-					<View style={styles.dateDayHeader}>
-						<Text style={styles.dateDayOfWeek}>{dateDayOfWeek}</Text>
-						<Text style={styles.dateDayAndMonth}>{dateDayAndMonth}</Text>
+				return (
+					<View style={[styles.dateDayContainer, (currentDate !== surfTimestampNumeric) ? styles.hide : null]}>
+						<View style={styles.dateDayHeader}>
+							<Text style={styles.dateDayOfWeek}>{dateDayOfWeek}</Text>
+							<Text style={styles.dateDayAndMonth}>{dateDayAndMonth}</Text>
+						</View>
+						<View style={styles.dateDayEmpty} />
 					</View>
-					<View style={styles.dateDayEmpty} />
-				</View>
-			);
-		}}
-	/>
-);
+				);
+			}}
+		/>
+	);
+}
 
-const SurfItem = ({ data }) => (
-	<View style={styles.surfDetailsContainer}>
-		<View style={styles.surfDetailsEmpty} />
-		<View style={styles.surfDetails}>
-			<Text style={styles.titleText}>{data.surfTitle}</Text>
-			<Text style={styles.heightText}>{data.surfHeight}</Text>
-			{data.surfDesc ? (<Text style={styles.descText}>{data.surfDesc}</Text>) : null }
+const SurfItem = ({ data }) => {
+
+	var currentDate = moment().format('YYYYMMDD');
+	
+	return (
+		<View style={[styles.surfDetailsContainer, (currentDate !== data.surfTimestampNumeric) ? styles.hide : null]}>
+			<View style={styles.surfDetailsEmpty} />
+			<View style={styles.surfDetails}>
+				<Text style={styles.titleText}>{data.surfTitle}</Text>
+				<Text style={styles.heightText}>{data.surfHeight}</Text>
+				{data.surfDesc ? (<Text style={styles.descText}>{data.surfDesc}</Text>) : null }
+			</View>
 		</View>
-	</View>
-);
+	);
+}
 
 const mapStateToProps = (state) => (
 	{
@@ -109,6 +114,7 @@ const ActualSurfReport = connect(
 
 const styles = StyleSheet.create({
 	headerImage: { width: WINDOW_WIDTH, height: Math.round(WINDOW_WIDTH * 0.361) },
+	hide: { opacity: 0, height: 0 },
 	dayText: { fontSize: 19, color: COLOR_BLACK, position: 'absolute', marginTop: 50, borderWidth: 1 },
 	surfDetailsContainer: { flexDirection: 'row' },
 	surfDetailsEmpty: { flex: 1 },
