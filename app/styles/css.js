@@ -81,7 +81,7 @@ var css = StyleSheet.create({
 	navIOSIconStyle: { tintColor:COLOR_WHITE, marginTop: -2 },
 	navButtonTextIOS: { color: COLOR_WHITE, marginTop: -3, fontWeight: '300', fontSize: 18 },
 	navAndroidIconStyle: { tintColor:COLOR_WHITE, marginTop: -6 },
-	navButtonTextAndroid: { color: COLOR_WHITE, marginTop: -6, fontWeight: '300', fontSize: 18 },
+	navButtonTextAndroid: { color: COLOR_WHITE, marginTop: -8, fontWeight: '300', fontSize: 18 },
 	// 102 - Tab Bar
 	tabBarIOS: { borderTopWidth: 1, borderColor: '#DADADA', backgroundColor: COLOR_WHITE, height: TAB_BAR_HEIGHT },
 	tabBarAndroid: { top: NAVIGATOR_ANDROID_HEIGHT, borderBottomWidth: 1, borderColor: '#DADADA', backgroundColor: COLOR_WHITE, height: TAB_BAR_HEIGHT },
