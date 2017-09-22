@@ -90,7 +90,7 @@ const MultiSelectItem = ({ data, selected, onSelect, color }) => (
 );
 
 const styles = StyleSheet.create({
-	container: { backgroundColor: 'white', paddingBottom: 60, borderWidth: 1 },
+	container: { backgroundColor: 'white', paddingBottom: 60 },
 	itemRow: { flexDirection: 'row', height: 50, alignItems: 'center', backgroundColor: 'white', borderBottomWidth: 1, borderBottomColor: COLOR_LGREY, paddingHorizontal: 12 },
 	applyButton: { position: 'absolute', width: Math.round(WINDOW_WIDTH * .9), height: 40, bottom: 10, left: Math.round(WINDOW_WIDTH * .05), justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR_PRIMARY, borderRadius: 3, padding: 10 },
 	applyText: { fontSize: 16, color: COLOR_WHITE },
