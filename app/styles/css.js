@@ -27,6 +27,7 @@
 		408 - Feedback
 		409 - Preferences View
 		410 - Links View
+		411 - Onboarding
 	
 	500 - Modules
 		501 - Map Search
@@ -340,6 +341,32 @@ var css = StyleSheet.create({
 
 	// 410 - Links View
 	links_row_full: { paddingHorizontal: 12 },
+
+	// 411 - Onboarding
+	ob_container: { flexGrow: 1, backgroundColor: COLOR_SECONDARY, alignItems: 'center' },
+	ob_logo: { width: round(WINDOW_WIDTH * .8), height: round(WINDOW_WIDTH * .8) * .19, marginTop: round(WINDOW_HEIGHT * .2) },
+	ob_introtext: { color: COLOR_WHITE, fontSize: 22, textAlign: 'center' },
+	ob_intro1: { marginTop: 60 },
+	ob_intro2: { marginTop: 30, width: round(WINDOW_WIDTH * .8) },
+	ob_continue: { textDecorationLine: 'underline', marginTop: 80 },
+	ob_skip: { textDecorationLine: 'underline', marginTop: 24 },
+	ob_logincontainer: { width: round(WINDOW_WIDTH * .8) },
+	ob_input: { height: 40, backgroundColor: COLOR_WHITE, borderWidth: 1, borderColor: COLOR_BLACK, paddingLeft: 10 },
+	ob_inputplaceholder: { color: COLOR_DGREY },
+	ob_login: { marginTop: 60 },
+	ob_pass: { marginTop: 20 },
+	ob_actionscontainer: { flexDirection: 'row', marginTop: 20 },
+	ob_actions: { flex: 1 },
+	ob_forgotpass: { color: COLOR_WHITE, fontSize: 14, textAlign: 'left'},
+	ob_cancel: { color: COLOR_WHITE, fontSize: 14, textAlign: 'right' },
+
+
+
+
+
+
+
+
 
 
 	/********************************************
