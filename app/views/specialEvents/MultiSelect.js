@@ -14,6 +14,7 @@ import {
 	COLOR_WHITE,
 	COLOR_PRIMARY,
 } from '../../styles/ColorConstants';
+import { WINDOW_WIDTH } from '../../styles/LayoutConstants';
 
 /**
  * @param {String[]} items - items to be selected
@@ -50,16 +51,6 @@ class MultiSelect extends Component {
 
 		return (
 			<View style={styles.container}>
-				{/* Revisit for Welcome Week
-				<Touchable
-					onPress={() => this.onClear()}
-					style={styles.itemRow}
-				>
-					<Text>
-						Clear
-					</Text>
-				</Touchable>
-				*/}
 				<ListView
 					dataSource={dataSource}
 					renderRow={(rowData) => (
@@ -99,9 +90,9 @@ const MultiSelectItem = ({ data, selected, onSelect, color }) => (
 );
 
 const styles = StyleSheet.create({
-	container: { flexGrow: 1, backgroundColor: 'white', paddingHorizontal: 12 },
-	itemRow: { flexDirection: 'row', height: 50, alignItems: 'center', backgroundColor: 'white', borderBottomWidth: 1, borderBottomColor: COLOR_LGREY, },
-	applyButton: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR_PRIMARY, borderRadius: 3, padding: 10, marginBottom: 10 },
+	container: { backgroundColor: 'white', paddingBottom: 60, borderWidth: 1 },
+	itemRow: { flexDirection: 'row', height: 50, alignItems: 'center', backgroundColor: 'white', borderBottomWidth: 1, borderBottomColor: COLOR_LGREY, paddingHorizontal: 12 },
+	applyButton: { position: 'absolute', width: Math.round(WINDOW_WIDTH * .9), height: 40, bottom: 10, left: Math.round(WINDOW_WIDTH * .05), justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR_PRIMARY, borderRadius: 3, padding: 10 },
 	applyText: { fontSize: 16, color: COLOR_WHITE },
 });
 
