@@ -51,7 +51,7 @@ class Main extends Component {
 	}
 
 	campusLogo() {
-		return (<Image source={require('./assets/img/UCSanDiegoLogo-White.png')} style={css.navCampusLogoTitle} />);
+		return (<Image source={require('./assets/img/UCSanDiegoLogo-nav.png')} style={css.navCampusLogoTitle} />);
 	}
 
 	shouldComponentUpdate() {
