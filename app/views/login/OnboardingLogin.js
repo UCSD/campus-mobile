@@ -43,6 +43,7 @@ class OnboardingIntro extends React.Component {
 							autoCapitalize={'none'}
 							secureTextEntry={true}
 							returnKeyType={'send'}
+							onSubmitEditing={() => this.onSubmit()}
 						/>
 
 						<View style={css.ob_actionscontainer}>
@@ -57,6 +58,10 @@ class OnboardingIntro extends React.Component {
 				</View>
 			</TouchableWithoutFeedback>
 		);
+	}
+
+	onSubmit() {
+		Actions.Home();
 	}
 }
 
