@@ -47,7 +47,7 @@ class OnboardingIntro extends React.Component {
 						/>
 
 						<View style={css.ob_actionscontainer}>
-							<Touchable style={css.ob_actions} onPress={() => openURL(AppSettings.FORGOT_AD_PASSWORD_URL)}>
+							<Touchable style={css.ob_actions} onPress={() => openURL(AppSettings.FORGOT_PASSWORD_URL)}>
 								<Text style={css.ob_forgotpass}>Forgot password?</Text>
 							</Touchable>
 							<Touchable style={css.ob_actions} onPress={() => Actions.Home()}>
