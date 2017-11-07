@@ -343,7 +343,7 @@ var css = StyleSheet.create({
 	links_row_full: { paddingHorizontal: 12 },
 
 	// 411 - Onboarding
-	ob_container: { flexGrow: 1, backgroundColor: COLOR_SECONDARY, alignItems: 'center' },
+	ob_container: { flexGrow: 1, backgroundColor: COLOR_PRIMARY, alignItems: 'center' },
 	ob_logo: { width: round(WINDOW_WIDTH * .8), height: round(WINDOW_WIDTH * .8) * .19, marginTop: round(WINDOW_HEIGHT * .2) },
 	ob_introtext: { color: COLOR_WHITE, fontSize: 22, textAlign: 'center' },
 	ob_intro1: { marginTop: 60 },
