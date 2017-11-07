@@ -85,36 +85,36 @@ class Main extends Component {
 					barButtonIconStyle={general.platformIOS() ? css.navIOSIconStyle : css.navAndroidIconStyle}
 					backButtonTextStyle={general.platformIOS() ? css.navButtonTextIOS : css.navButtonTextAndroid}
 					rightButtonTextStyle={general.platformIOS() ? css.navButtonTextIOS : css.navButtonTextAndroid}
-					backTitle="Back"
+					backTitle={'Back'}
 					onExitApp={this._exitHandler}
 				>
-					<Scene key="root">
+					<Scene key={'root'}>
 						<Scene
-							key="tabbar"
+							key={'tabbar'}
 							tabs hideOnChildTabs initial
 							tabBarStyle={general.platformIOS() ? css.tabBarIOS : css.tabBarAndroid}
 						>
-							<Scene key="tab1" title={AppSettings.APP_NAME} initial icon={TabIcons}>
-								<Scene key="OnboardingIntro" component={OnboardingIntro} title="OnboardingIntro" hideTabBar hideNavBar={true} />
-								<Scene key="OnboardingLogin" component={OnboardingLogin} title="OnboardingLogin" hideTabBar hideNavBar={true} />
-								<Scene key="Home" component={Home} renderBackButton={() => (null)} renderTitle={() => this.campusLogo()} hideNavBar={false} hideTabBar={false}/>
-								<Scene key="SurfReport" component={SurfReport} title="Surf Report" hideTabBar />
-								<Scene key="ShuttleStop" component={ShuttleStop} title="Shuttle" hideTabBar />
-								<Scene key="DiningDetail" component={DiningDetail} title="Dining" hideTabBar />
-								<Scene key="DiningNutrition" component={DiningNutrition} title="Nutrition" hideTabBar />
-								<Scene key="EventDetail" component={EventDetail} title="Events" hideTabBar />
-								<Scene key="WebWrapper" component={WebWrapper} hideTabBar />
-								<Scene key="NewsDetail" component={NewsDetail} title="News" hideTabBar />
-								<Scene key="DataListViewAll" component={DataListViewAll} hideTabBar />
-								<Scene key="ShuttleRoutesListView" component={ShuttleRoutesListView} title="Choose Route" hideTabBar />
-								<Scene key="ShuttleStopsListView" component={ShuttleStopsListView} title="Choose Stop" hideTabBar />
-								<Scene key="ShuttleSavedListView" component={ShuttleSavedListView} title="Manage Stops" hideTabBar />
-								<Scene key="SpecialEventsView" component={SpecialEventsView} title={(route) => route.specialEventsTitle} hideTabBar renderBackButton={(route) => route.backButton} renderRightButton={(route) => route.filterButton} />
-								<Scene key="SpecialEventsDetailView" component={SpecialEventsDetailView} title={(route) => route.specialEventsTitle}  hideTabBar />
+							<Scene key={'tab1'}title={AppSettings.APP_NAME} initial icon={TabIcons}>
+								<Scene key={'OnboardingIntro'}component={OnboardingIntro} title={'OnboardingIntro'}hideTabBar hideNavBar={true} />
+								<Scene key={'OnboardingLogin'}component={OnboardingLogin} title={'OnboardingLogin'}hideTabBar hideNavBar={true} />
+								<Scene key={'Home'}component={Home} type='reset' renderBackButton={() => (null)} renderTitle={() => this.campusLogo()} hideNavBar={false} hideTabBar={false}/>
+								<Scene key={'SurfReport'}component={SurfReport} title={'Surf Report'}hideTabBar />
+								<Scene key={'ShuttleStop'}component={ShuttleStop} title={'Shuttle'}hideTabBar />
+								<Scene key={'DiningDetail'}component={DiningDetail} title={'Dining'}hideTabBar />
+								<Scene key={'DiningNutrition'}component={DiningNutrition} title={'Nutrition'}hideTabBar />
+								<Scene key={'EventDetail'}component={EventDetail} title={'Events'}hideTabBar />
+								<Scene key={'WebWrapper'}component={WebWrapper} hideTabBar />
+								<Scene key={'NewsDetail'}component={NewsDetail} title={'News'}hideTabBar />
+								<Scene key={'DataListViewAll'}component={DataListViewAll} hideTabBar />
+								<Scene key={'ShuttleRoutesListView'}component={ShuttleRoutesListView} title={'Choose Route'}hideTabBar />
+								<Scene key={'ShuttleStopsListView'}component={ShuttleStopsListView} title={'Choose Stop'}hideTabBar />
+								<Scene key={'ShuttleSavedListView'}component={ShuttleSavedListView} title={'Manage Stops'}hideTabBar />
+								<Scene key={'SpecialEventsView'}component={SpecialEventsView} title={(route) => route.specialEventsTitle} hideTabBar renderBackButton={(route) => route.backButton} renderRightButton={(route) => route.filterButton} />
+								<Scene key={'SpecialEventsDetailView'}component={SpecialEventsDetailView} title={(route) => route.specialEventsTitle}  hideTabBar />
 							</Scene>
-							<Scene key="tab2" title="Map" component={NearbyMapView} icon={TabIcons} />
-							<Scene key="tab3" title="Feedback" component={FeedbackView} icon={TabIcons} />
-							<Scene key="tab4" title="User Settings" component={PreferencesView} icon={TabIcons} />
+							<Scene key={'tab2'}title={'Map'}component={NearbyMapView} icon={TabIcons} />
+							<Scene key={'tab3'}title={'Feedback'}component={FeedbackView} icon={TabIcons} />
+							<Scene key={'tab4'}title={'User Settings'}component={PreferencesView} icon={TabIcons} />
 						</Scene>
 					</Scene>
 				</RouterWithRedux>
