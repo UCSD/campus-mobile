@@ -97,7 +97,7 @@ class Main extends Component {
 							<Scene key="tab1" title={AppSettings.APP_NAME} initial icon={TabIcons}>
 								<Scene key="OnboardingIntro" component={OnboardingIntro} title="OnboardingIntro" hideTabBar hideNavBar={true} />
 								<Scene key="OnboardingLogin" component={OnboardingLogin} title="OnboardingLogin" hideTabBar hideNavBar={true} />
-								<Scene key="Home" component={Home} renderTitle={() => this.campusLogo()} hideNavBar={false} hideTabBar={false}/>
+								<Scene key="Home" component={Home} renderBackButton={() => (null)} renderTitle={() => this.campusLogo()} hideNavBar={false} hideTabBar={false}/>
 								<Scene key="SurfReport" component={SurfReport} title="Surf Report" hideTabBar />
 								<Scene key="ShuttleStop" component={ShuttleStop} title="Shuttle" hideTabBar />
 								<Scene key="DiningDetail" component={DiningDetail} title="Dining" hideTabBar />
