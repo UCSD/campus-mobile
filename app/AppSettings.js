@@ -24,8 +24,7 @@ module.exports = {
 	SHUTTLE_ROUTES_MASTER: 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/shuttle_routes_master_map.json',
 	SHUTTLE_STOPS_MASTER: 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/shuttle_stops_master_map.json',
 	SHUTTLE_STOPS_MASTER_NO_ROUTES: 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/shuttle_stops_master_map_no_routes.json',
-	FORGOT_STUDENT_PASSWORD_URL: 'https://act.ucsd.edu/manage-sso/password',
-	FORGOT_AD_PASSWORD_URL: 'https://iam.ucsd.edu/ResetPassword/',
+	FORGOT_PASSWORD_URL: 'https://act.ucsd.edu/manage-sso/password',
 
 	/* TTLs */
 	WEATHER_API_TTL: 1800000, // 30 minutes
