@@ -1,8 +1,6 @@
 import React from 'react';
-import {
-	ScrollView,
-} from 'react-native';
-
+import { ScrollView } from 'react-native';
+import UserAccount from './UserAccount';
 import CardPreferences from './CardPreferences';
 import css from '../../styles/css';
 
@@ -25,6 +23,7 @@ class PreferencesView extends React.Component {
 				style={css.main_container}
 				scrollEnabled={this.state.scrollEnabled}
 			>
+				<UserAccount />
 				<CardPreferences
 					toggleScroll={this.toggleScroll}
 				/>
