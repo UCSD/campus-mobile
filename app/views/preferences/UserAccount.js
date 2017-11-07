@@ -84,7 +84,7 @@ class UserAccount extends Component {
 			onPress={this._performUserAuthAction}
 		>
 			<Text style={styles.accountText}>{mainText}</Text>
-			<Icon name="user" />
+			<Icon name='user' />
 		</TouchableOpacity>
 	);
 
@@ -100,10 +100,8 @@ class UserAccount extends Component {
 		if (Settings.USER_LOGIN.ENABLED === false) return null;
 
 		return (
-			<Card id="user" title="Account" hideMenu={true}>
-				<View
-					style={{ flexGrow: 1, width: getMaxCardWidth() }}
-				>
+			<Card id={'user'} title={this.props.user.isLoggedIn ? 'Logged in as:' : 'Log in with SSO:'} hideMenu={true}>
+				<View style={{ flexGrow: 1, width: getMaxCardWidth() }}>
 					{(this.props.user.isLoggedIn) ? (
 						<AccountInfo
 							username={this.props.user.username}
@@ -132,7 +130,7 @@ const AccountInfo = ({ username, handleLogout }) => (
 			{username}
 		</Text>
 		<Icon
-			name="sign-out"
+			name='sign-out'
 			size={20}
 		/>
 	</TouchableOpacity>
@@ -144,9 +142,9 @@ const AccountLogin = ({ handleLogin }) => (
 	>
 		<TextInput
 			style={styles.input}
-			placeholder="Username"
-			returnKeyType="next"
-			underlineColorAndroid="transparent"
+			placeholder='User ID / PID'
+			returnKeyType='next'
+			underlineColorAndroid='transparent'
 			onChange={(event) => {
 				this._usernameText = event.nativeEvent.text;
 			}}
@@ -157,9 +155,9 @@ const AccountLogin = ({ handleLogin }) => (
 		<TextInput
 			ref={(c) => { this._passwordInput = c; }}
 			style={styles.input}
-			placeholder="Password"
-			returnKeyType="go"
-			underlineColorAndroid="transparent"
+			placeholder='Password / PAC'
+			returnKeyType='go'
+			underlineColorAndroid='transparent'
 			secureTextEntry
 			onChange={(event) => {
 				this._passwordText = event.nativeEvent.text;
@@ -169,23 +167,20 @@ const AccountLogin = ({ handleLogin }) => (
 			}}
 		/>
 		<Touchable
-			onPress={() => console.log('whatever')}
-			style={styles.forgotButton}
-		>
-			<Text
-				style={styles.forgotText}
-			>
-				Forgot password?
-			</Text>
-		</Touchable>
-		<Touchable
 			onPress={() => handleLogin(this._usernameText, this._passwordText)}
 			style={styles.loginButton}
 		>
-			<Text
-				style={styles.loginText}
-			>
-				Login
+			<Text style={styles.loginText}>
+				Sign on
+			</Text>
+		</Touchable>
+
+		<Touchable
+			onPress={() => null}
+			style={styles.forgotButton}
+		>
+			<Text style={styles.forgotText}>
+				Forgot your password?
 			</Text>
 		</Touchable>
 	</View>
