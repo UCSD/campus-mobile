@@ -12,7 +12,6 @@ const WeatherService = {
 			}
 		})
 		.then((response) => response.json())
-		// This part should be on lambda...
 		.then((responseData) => {
 			if (Array.isArray(responseData.daily.data)) {
 				responseData.currently.temperature = Math.round(responseData.currently.temperature);
@@ -47,10 +46,8 @@ const WeatherService = {
 			}
 		})
 		.then(response => response.json())
-		.then((surfData) => {
-			console.log('weatherService surfData:')
-			console.log(surfData)
-			return surfData;
+		.then(responseData => {
+			return responseData;
 		})
 		.catch((err) => {
 			console.log('Error fetching surf: ' + err);
