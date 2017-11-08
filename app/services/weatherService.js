@@ -67,73 +67,74 @@ const WeatherService = {
 
 		// Should also be on lambda
 		.then((surfData) => {
-			if (Array.isArray(surfData)) {
-				const surfDataArray = [];
-				const startOfDay = new Date();
-				startOfDay.setHours(0,0,0,0);
+			return surfData;
+			// if (Array.isArray(surfData)) {
+			// 	const surfDataArray = [];
+			// 	const startOfDay = new Date();
+			// 	startOfDay.setHours(0,0,0,0);
 
-				for (let i = 0; surfData.length > i; i++) {
-					const surfDataRow = surfData[i];
+			// 	for (let i = 0; surfData.length > i; i++) {
+			// 		const surfDataRow = surfData[i];
 
-					const surfDataRowObj = {};
+			// 		const surfDataRowObj = {};
 
-					surfDataRowObj.surfTitle = surfDataRow.title.replace(/ : .*/g, '');
-					surfDataRowObj.surfHeight = surfDataRow.title
-						.replace(/.* : /g, '')
-						.replace(/ft.*/g, '')
-						.replace(/^\./g, '').replace(/^ /g, '')
-						.replace(/ $/g, '')
-						.replace(/Surf: /g, '') + ' ft';
-					surfDataRowObj.surfDesc = surfDataRow.title
-						.replace(/.*ft/g, '')
-						.replace(/^\./g, '')
-						.replace(/ \+ - /g, '')
-						.replace(/\+ - /g, '')
-						.replace(/^ /g, '')
-						.replace(/ $/g, '')
-						.replace(/^- /g, '');
-					// surfDataRowObj.surfDesc = this.capitalizeFirstLetter(surfDataRowObj.surfDesc);
+			// 		surfDataRowObj.surfTitle = surfDataRow.title.replace(/ : .*/g, '');
+			// 		surfDataRowObj.surfHeight = surfDataRow.title
+			// 			.replace(/.* : /g, '')
+			// 			.replace(/ft.*/g, '')
+			// 			.replace(/^\./g, '').replace(/^ /g, '')
+			// 			.replace(/ $/g, '')
+			// 			.replace(/Surf: /g, '') + ' ft';
+			// 		surfDataRowObj.surfDesc = surfDataRow.title
+			// 			.replace(/.*ft/g, '')
+			// 			.replace(/^\./g, '')
+			// 			.replace(/ \+ - /g, '')
+			// 			.replace(/\+ - /g, '')
+			// 			.replace(/^ /g, '')
+			// 			.replace(/ $/g, '')
+			// 			.replace(/^- /g, '');
+			// 		// surfDataRowObj.surfDesc = this.capitalizeFirstLetter(surfDataRowObj.surfDesc);
 
-					surfDataRowObj.surfDate = surfDataRow.date.replace(/ PDT/g, '');
-					surfDataRowObj.surfTimestamp = dateFormat(surfDataRowObj.surfDate, 'isoDateTime');
-					surfDataRowObj.surfTimestampNumeric = surfDataRowObj.surfTimestamp.substring(0,10).replace(/-/g, '');
-					surfDataRowObj.surfDayOfWeek = dateFormat(surfDataRowObj.surfDate, 'ddd').toUpperCase();
-					surfDataRowObj.surfDayOfMonth = dateFormat(surfDataRowObj.surfDate, 'd');
-					surfDataRowObj.surfMonth = dateFormat(surfDataRowObj.surfDate, 'mmm');
+			// 		surfDataRowObj.surfDate = surfDataRow.date.replace(/ PDT/g, '');
+			// 		surfDataRowObj.surfTimestamp = dateFormat(surfDataRowObj.surfDate, 'isoDateTime');
+			// 		surfDataRowObj.surfTimestampNumeric = surfDataRowObj.surfTimestamp.substring(0,10).replace(/-/g, '');
+			// 		surfDataRowObj.surfDayOfWeek = dateFormat(surfDataRowObj.surfDate, 'ddd').toUpperCase();
+			// 		surfDataRowObj.surfDayOfMonth = dateFormat(surfDataRowObj.surfDate, 'd');
+			// 		surfDataRowObj.surfMonth = dateFormat(surfDataRowObj.surfDate, 'mmm');
 
-					// Only care about surf data that's new
-					if (surfDataRowObj.surfTimestampNumeric >= getTimestampNumeric()) {
-						surfDataArray.push(surfDataRowObj);
-					}
-				}
+			// 		// Only care about surf data that's new
+			// 		if (surfDataRowObj.surfTimestampNumeric >= getTimestampNumeric()) {
+			// 			surfDataArray.push(surfDataRowObj);
+			// 		}
+			// 	}
 
-				// If no results for today, set surfDataNoResults true, and display a message
-				if (surfDataArray.length === 0) {
-					return null;
-				} else {
-					// Sort the result rows so we can break different days into groups
-					surfDataArray.sort((a, b) => {
-						if (a.surfTimestampNumeric < b.surfTimestampNumeric) {
-							return -1;
-						} else if (a.surfTimestampNumeric > b.surfTimestampNumeric) {
-							return 1;
-						} else {
-							return 0;
-						}
-					});
+			// 	// If no results for today, set surfDataNoResults true, and display a message
+			// 	if (surfDataArray.length === 0) {
+			// 		return null;
+			// 	} else {
+			// 		// Sort the result rows so we can break different days into groups
+			// 		surfDataArray.sort((a, b) => {
+			// 			if (a.surfTimestampNumeric < b.surfTimestampNumeric) {
+			// 				return -1;
+			// 			} else if (a.surfTimestampNumeric > b.surfTimestampNumeric) {
+			// 				return 1;
+			// 			} else {
+			// 				return 0;
+			// 			}
+			// 		});
 
-					// Create map
-					const surfDataMap = {};
-					surfDataArray.forEach((element) => {
-						const dateKey = element.surfDayOfWeek + ', ' + element.surfDayOfMonth + ' ' + element.surfMonth;
-						if (surfDataMap[dateKey]) {
-							surfDataMap[dateKey].push(element);
-						} else {
-							surfDataMap[dateKey] = [element];
-						}
-					});
-					return surfDataMap;
-				}
+			// 		// Create map
+			// 		const surfDataMap = {};
+			// 		surfDataArray.forEach((element) => {
+			// 			const dateKey = element.surfDayOfWeek + ', ' + element.surfDayOfMonth + ' ' + element.surfMonth;
+			// 			if (surfDataMap[dateKey]) {
+			// 				surfDataMap[dateKey].push(element);
+			// 			} else {
+			// 				surfDataMap[dateKey] = [element];
+			// 			}
+			// 		});
+			// 		return surfDataMap;
+			// 	}
 			} else {
 				return null;
 			}
