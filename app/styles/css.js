@@ -34,6 +34,7 @@
 		501 - Map Search
 		502 - Search Results
 		503 - LocationRequiredContent
+		504 - User Account
 	
 	900 - Misc
 */
@@ -399,6 +400,18 @@ var css = StyleSheet.create({
 	lrc_text: { fontSize: 14, color: '#777', paddingLeft: 6 },
 	lrc_button: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR_PRIMARY, borderRadius: 3, marginTop: 14, padding: 10 },
 	lrc_button_text: { color: COLOR_WHITE },
+
+	// 504 - User Account
+	ua_text: { flex: 1, fontSize: 18 },
+	ua_infoContainer: { flexGrow: 1, flexDirection: 'row', margin: 7 },
+	ua_loginContainer: { flexGrow: 1, margin: 7 },
+	ua_input: { flexGrow: 1, height: 40, paddingVertical: 4, paddingHorizontal: 8, borderWidth: 1, borderColor: COLOR_MGREY, marginBottom: 8, fontSize: 16, backgroundColor: 'white' },
+	ua_spacedRow: { flexDirection: 'row', justifyContent: 'space-between' },
+	ua_accountText: { textAlign: 'center', fontSize: 16, color: COLOR_DGREY },
+	ua_forgotButton: { flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: 16 },
+	ua_loginButton: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR_PRIMARY, borderRadius: 3, padding: 10, marginTop: 10 },
+	ua_forgotText: { fontSize: 14, color: COLOR_PRIMARY, padding: 4 },
+	ua_loginText: { fontSize: 16, color: COLOR_WHITE },
 
 
 	/********************************************

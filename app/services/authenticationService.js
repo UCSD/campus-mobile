@@ -1,9 +1,9 @@
-import Settings from '../AppSettings';
+import AppSettings from '../AppSettings';
 
-// OIDC authentication provider
-class OpenAuthentication {
+// OpenID Authentication Provider
+class OpenIDAuthentication {
 	createAuthenticationUrl = () => {
-		const openIdSettings = Settings.USER_LOGIN.OPTIONS;
+		const openIdSettings = AppSettings.SSO.OPENID.OPTIONS;
 		const authUrl = [
 			`${openIdSettings.AUTH_URL}`,
 			'?response_type=id_token+token',
@@ -17,7 +17,7 @@ class OpenAuthentication {
 		return authUrl;
 	}
 	handleAuthenticationCallback = (event) => {
-		const openIdSettings = Settings.USER_LOGIN.OPTIONS;
+		const openIdSettings = AppSettings.SSO.OPENID.OPTIONS;
 
 		// only handle callback URLs, in case we deep link for other things
 		if (event.url.startsWith(openIdSettings.REDIRECT_URL)) {
@@ -49,9 +49,9 @@ class OpenAuthentication {
 }
 
 export default function getAuthenticationService() {
-	if (Settings.USER_LOGIN.METHOD === 'openid') {
-		return new OpenAuthentication();
+	if (AppSettings.SSO.METHOD === 'openid') {
+		return new OpenIDAuthentication();
+	} else {
+		return null;
 	}
-
-	return null;
 }

@@ -38,15 +38,18 @@ module.exports = {
 	SPECIAL_EVENTS_TTL: 3600000, // 1 hour
 	DATA_SAGA_TTL: 60000, // 1 minute
 
-	USER_LOGIN: {
-		ENABLED: false,
+	/* SSO */
+	SSO: {
 		METHOD: 'openid',
-		OPTIONS: {
-			CLIENT_ID: 'campusimplicit',
-			AUTH_URL: 'https://auth-dev.ucdavis.edu/identity/connect/authorize',
-			USER_INFO_URL: 'https://auth-dev.ucdavis.edu/identity/connect/userinfo',
-			REDIRECT_URL: 'campusmobile://cb',
-			STATE: 'M9NGbE6bnUV18FflfVeZ2U0j94'
+
+		OPENID: {
+			OPTIONS: {
+				CLIENT_ID: 'campusimplicit',
+				AUTH_URL: 'https://auth-dev.ucdavis.edu/identity/connect/authorize',
+				USER_INFO_URL: 'https://auth-dev.ucdavis.edu/identity/connect/userinfo',
+				REDIRECT_URL: 'campusmobile://cb',
+				STATE: 'M9NGbE6bnUV18FflfVeZ2U0j94'
+			}
 		}
 	}
 };
