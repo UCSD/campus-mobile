@@ -8,7 +8,6 @@ import { fetchSurveyIds, fetchSurveyById } from '../services/surveyService';
 import LinksService from '../services/quicklinksService';
 import EventService from '../services/eventService';
 import NewsService from '../services/newsService';
-import emergencyAlertService from '../services/emergencyAlertService';
 import { fetchMasterStopsNoRoutes, fetchMasterRoutes } from '../services/shuttleService';
 import {
 	WEATHER_API_TTL,
@@ -19,7 +18,6 @@ import {
 	NEWS_API_TTL,
 	DATA_SAGA_TTL,
 	SHUTTLE_MASTER_TTL,
-	EMERGENCY_ALERT_TTL,
 } from '../AppSettings';
 
 const getWeather = (state) => (state.weather);
@@ -31,7 +29,6 @@ const getEvents = (state) => (state.events);
 const getNews = (state) => (state.news);
 const getCards = (state) => (state.cards);
 const getShuttle = (state) => (state.shuttle);
-const getEmergencyAlerts = (state) => (state.emergencyAlerts)
 
 function* watchData() {
 	while (true) {
@@ -45,7 +42,7 @@ function* watchData() {
 			yield call(updateSurveys);
 			yield call(updateShuttleMaster);
 			yield put({ type: 'UPDATE_DINING' });
-			yield call(updateEmergencyAlerts);
+
 		} catch (err) {
 			console.log(err);
 		}
@@ -178,24 +175,6 @@ function* updateLinks() {
 		if (links) {
 			yield put({ type: 'SET_LINKS', links });
 			prefetchLinkImages(links);
-		}
-	}
-}
-
-function* updateEmergencyAlerts() {
-	const { lastUpdated, data } = yield select(getEmergencyAlerts);
-	const nowTime = new Date().getTime();
-	const timeDiff = nowTime - lastUpdated;
-	const ttl = EMERGENCY_ALERTS_TTL;
-
-	if ((timeDiff < ttl) && data) {
-		// Do nothing, no need to fetch new data
-	} else {
-		// Fetch for new data
-		const links = yield call(LinksService.EmergencyAlertService);
-
-		if (emergencyAlerts) {
-			yield put({ type: 'SET_ALERTS', emergencyAlerts });
 		}
 	}
 }
