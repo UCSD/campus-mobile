@@ -1,7 +1,7 @@
 const initialState = {
 	cards: {
 		specialEvents: 	{ id: 'specialEvents', active: false, autoActivated: false, name: 'Special Events', component: 'SpecialEventsCard' },
-		schedule: 		{ id: 'schedule', active: true, name: 'Schedule', component: 'ScheduleCard' },
+		schedule: 		{ id: 'schedule', active: true, name: 'Class Schedule', component: 'ScheduleCard' },
 		weather: 		{ id: 'weather', active: true, name: 'Weather', component: 'WeatherCard' },
 		shuttle: 		{ id: 'shuttle', active: true, name: 'Shuttle', component: 'ShuttleCard' },
 		dining: 		{ id: 'dining', active: true, name: 'Dining', component: 'DiningCard' },
