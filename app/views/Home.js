@@ -16,7 +16,7 @@ import NewsCardContainer from './news/NewsCardContainer';
 import DiningCardContainer from './dining/DiningCardContainer';
 import SpecialEventsCardContainer from './specialEvents/SpecialEventsCardContainer';
 //import SurveyCardContainer from './survey/SurveyCardContainer';
-//import ScheduleCard from './schedule/ScheduleCard';
+import ScheduleCard from './schedule/ScheduleCard';
 
 import { platformAndroid } from '../util/general';
 import css from '../styles/css';
@@ -63,15 +63,11 @@ class Home extends React.Component {
 	}
 
 	_getCards = () => {
-		const activeCards = [];
-		let card;
+		var activeCards = [];
+		var card;
 
-		/*if (this.props.loggedIn) {
-			activeCards.push(<ScheduleCard key={'schedule'} />);
-		}
-		activeCards.push(<SurveyCardContainer key={'survey'} />);*/
 		if (Array.isArray(this.props.cardOrder)) {
-			for (let i = 0; i < this.props.cardOrder.length; ++i) {
+			for (var i = 0; i < this.props.cardOrder.length; ++i) {
 				const key = this.props.cardOrder[i];
 
 				if (this.props.cards[key].active) {
@@ -81,6 +77,9 @@ class Home extends React.Component {
 						break;
 					case 'weather':
 						card = (<WeatherCardContainer key={'weather'} />);
+						break;
+					case 'schedule':
+						card = <ScheduleCard key={'schedule'} />;
 						break;
 					case 'shuttle':
 						card = (<ShuttleCardContainer key={'shuttle'} />);
