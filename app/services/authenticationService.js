@@ -49,9 +49,5 @@ class OpenIDAuthentication {
 }
 
 export default function getAuthenticationService() {
-	if (AppSettings.SSO.METHOD === 'openid') {
-		return new OpenIDAuthentication();
-	} else {
-		return null;
-	}
+	return new OpenIDAuthentication();
 }
