@@ -9,7 +9,7 @@ const initialState = {
 		quicklinks: 	{ id: 'quicklinks', active: true, name: 'Links', component: 'QuicklinksCard' },
 		news: 			{ id: 'news', active: true, name: 'News', component: 'NewsCard' },
 	},
-	cardOrder: ['specialEvents', 'schedule', 'weather', 'shuttle', 'dining', 'events', 'quicklinks', 'news'],
+	cardOrder: ['specialEvents', 'weather', 'schedule', 'shuttle', 'dining', 'events', 'quicklinks', 'news'],
 };
 
 function cards(state = initialState, action) {
