@@ -42,9 +42,7 @@ var ScheduleDay = ({ id, data }) => (
 		<Text style={css.sc_dayText}>
 			{id}
 		</Text>
-		<DayList
-			courseItems={data}
-		/>
+		<DayList courseItems={data} />
 	</View>
 );
 
@@ -53,9 +51,6 @@ var DayList = ({ courseItems }) => (
 		dataSource={dataSource.cloneWithRows(courseItems)}
 		renderRow={(rowData, sectionID, rowID, highlightRow) => (
 			<DayItem key={rowID} data={rowData} />
-		)}
-		renderSeparator={(sectionID, rowID, adjacentRowHighlighted) => (
-			<DaySpacer key={'spacer' + rowID} />
 		)}
 	/>
 );
@@ -74,10 +69,6 @@ var DayItem = ({ data }) => (
 			{data.building + data.room}
 		</Text>
 	</View>
-);
-
-var DaySpacer = () => (
-	<View style={css.sc_spacer} />
 );
 
 export default ScheduleCard;

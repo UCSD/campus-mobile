@@ -16,6 +16,7 @@
 		304 - Dining Card
 		305 - Events & News Cards
 		306 - Links Card
+		307 - Class Schedule Card
 	
 	400 - Views
 		401 - Surf Report
@@ -45,6 +46,7 @@ import {
 import {
 	COLOR_PRIMARY,
 	COLOR_SECONDARY,
+	COLOR_VDGREY,
 	COLOR_DGREY,
 	COLOR_MGREY,
 	COLOR_LGREY,
@@ -227,6 +229,12 @@ var css = StyleSheet.create({
 	quicklinks_icon_fa: { padding: 8 },
 	quicklinks_name: { flexGrow: 5, color: '#444', fontSize: 16, paddingHorizontal: 8 },
 
+	// 307 - Class Schedule Card
+	sc_dayText: { fontSize: 16, color: COLOR_BLACK, paddingBottom: 6 },
+	sc_courseText: { fontSize: 14, color: COLOR_BLACK, paddingBottom: 2 },
+	sc_subText: { fontSize: 13, color: COLOR_VDGREY },
+	sc_dayContainer: { width: MAX_CARD_WIDTH + 2, padding: 7 },
+	sc_dayRow: { justifyContent: 'center', paddingBottom: 10 },
 
 	/********************************************
 	 *  400 - Views
