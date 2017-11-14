@@ -45,7 +45,7 @@ class SurfReport extends React.Component {
 				<View style={css.sr_surfDetailsEmpty} />
 				<View style={css.sr_surfDetails}>
 					<Text style={css.sr_titleText}>{rowData.title}</Text>
-					<Text style={css.sr_heightText}>tbd</Text>
+					<Text style={css.sr_heightText}>{rowData.surf_min}{'-'}{rowData.surf_max}{'ft'}</Text>
 				</View>
 			</View>
 		);
