@@ -2,6 +2,7 @@ import React from 'react';
 import { View, ScrollView, Text, Image, TextInput, TouchableWithoutFeedback } from 'react-native';
 import { connect } from 'react-redux';
 import OnboardingLogin from './OnboardingLogin';
+import ecpAuthenticationService from '../../services/auth/ecpAuthenticationService';
 import { openURL, hideKeyboard } from '../../util/general';
 import AppSettings from '../../AppSettings';
 import { Actions } from 'react-native-router-flux';
@@ -13,7 +14,7 @@ class OnboardingIntro extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-
+			ecpAuthentication: null
 		};
 	}
 	
@@ -50,7 +51,7 @@ class OnboardingIntro extends React.Component {
 							<Touchable style={css.ob_actions} onPress={() => openURL(AppSettings.FORGOT_PASSWORD_URL)}>
 								<Text style={css.ob_forgotpass}>Forgot password?</Text>
 							</Touchable>
-							<Touchable style={css.ob_actions} onPress={() => Actions.Home()}>
+							<Touchable style={css.ob_actions} onPress={() => this.authenticationService(ecpCallback)}>
 								<Text style={css.ob_cancel}>Cancel</Text>
 							</Touchable>
 						</View>
@@ -58,6 +59,11 @@ class OnboardingIntro extends React.Component {
 				</View>
 			</TouchableWithoutFeedback>
 		);
+	}
+
+	authenticationService() {
+		const ecpAuthentication = await ecpAuthenticationService();
+		return ecpAuthentication;
 	}
 
 	onSubmit() {
