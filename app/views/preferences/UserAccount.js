@@ -10,7 +10,8 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import * as Keychain from 'react-native-keychain';
 import { connect } from 'react-redux';
-import getAuthenticationService from '../../services/authenticationService';
+import openidAuthenticationService from '../../services/auth/openidAuthenticationService';
+import ecpAuthenticationService from '../../services/auth/ecpAuthenticationService';
 import Touchable from '../common/Touchable';
 import AppSettings from '../../AppSettings';
 import logger from '../../util/logger';
@@ -18,7 +19,12 @@ import css from '../../styles/css';
 import { getMaxCardWidth, openURL } from '../../util/general';
 import Card from '../card/Card';
 
-const authenticationService = getAuthenticationService();
+var authenticationService;
+if (AppSettings.SSO.METHOD === 'ecp') {
+	authenticationService = openidAuthenticationService();
+} else if ('openid') {
+	authenticationService = ecpAuthenticationService();
+}
 
 class UserAccount extends Component {
 	componentDidMount() {
@@ -191,4 +197,7 @@ function mapDispatchToProps(dispatch) {
 	};
 }
 
-module.exports = connect(mapStateToProps, mapDispatchToProps)(UserAccount);
+module.exports = connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(UserAccount);
