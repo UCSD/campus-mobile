@@ -14,8 +14,10 @@
     "buffer": "5.0.5",
     "dateformat": "1.0.12",
     "events": "1.1.1",
+    "fetch-cookie": "0.7.0",
     "html-entities": "1.2.0",
     "moment": "2.15.2",
+    "orchestrator": "0.3.8",
     "react": "15.4.2",
     "react-native": "0.42.3",
     "react-native-animatable": "1.1.1",
@@ -47,7 +49,10 @@
     "redux-thunk": "2.1.0",
     "stream": "0.0.2",
     "timers": "0.1.1",
-    "xml2js": "0.4.17"
+    "xml2js": "0.4.17",
+    "xml-formatter": "1.0.1",
+    "xmldom": "0.1.27",
+    "xpath": "0.0.24"
   },
   "devDependencies": {
     "babel-eslint": "^6.1.2",
