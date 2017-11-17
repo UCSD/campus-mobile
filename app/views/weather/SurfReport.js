@@ -26,14 +26,26 @@ class SurfReport extends React.Component {
 
 				<View style={css.dateDayContainer}>
 					<View style={css.dateDayHeader}>
-						<Text style={css.dateDayOfWeek}>{this.props.surfData.lastUpdated}</Text>
-						<Text style={css.dateDayAndMonth}>{this.props.surfData.forecast}</Text>
+						<Text style={css.dateDayOfWeek}>{new Date(this.props.surfData.lastUpdated).toDateString()}</Text>
+						<Text style={css.dateDayAndMonth}>{this.props.surfData.forecast.replace(/&nbsp;/g,'')}</Text>
 					</View>
 				</View>
 
 				<ListView
 					dataSource={surfDataSource.cloneWithRows(this.props.surfData.spots)}
 					renderRow={rowData => this.surfItem(rowData)}
+					renderSectionHeader={(sectionData) => {
+						var dateString = new Date(sectionData[0]['date']).toDateString();
+						return (
+							<View style={css.sr_dateDayContainer}>
+								<View style={css.sr_dateDayHeader}>
+									<Text style={css.sr_dateDayOfWeek}>{dateString.substring(4,10)}</Text>
+									<Text style={css.sr_dateDayAndMonth}>{dateString.substring(0,3)}</Text>
+								</View>
+								<View style={css.sr_dateDayEmpty} />
+							</View>
+						);
+					}}
 				/>
 			</ScrollView>
 		);
