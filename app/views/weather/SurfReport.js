@@ -26,7 +26,6 @@ class SurfReport extends React.Component {
 
 				<View style={css.dateDayContainer}>
 					<View style={css.dateDayHeader}>
-						<Text style={css.dateDayOfWeek}>{new Date(this.props.surfData.lastUpdated).toDateString()}</Text>
 						<Text style={css.dateDayAndMonth}>{this.props.surfData.forecast.replace(/&nbsp;/g,'')}</Text>
 					</View>
 				</View>
@@ -50,6 +49,7 @@ class SurfReport extends React.Component {
 			</ScrollView>
 		);
 	}
+
 
 	surfItem(rowData) {
 		return (
