@@ -13,6 +13,7 @@ import logger from '../../util/logger';
 
 var surfHeader = require('../../assets/img/surf_report_header.jpg');
 var surfDataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+var forecastParsed = [];
 
 class SurfReport extends React.Component {
 	componentDidMount() {
@@ -20,13 +21,17 @@ class SurfReport extends React.Component {
 	}
 
 	render() {
+		
+		if ("forecast" in this.props.surfData && this.props.surfData.forecast.length !== 0) {
+			this.formatForecast(this.props.surfData.forecast);
+		}
 		return (
 			<ScrollView style={css.main_full}>
 				<Image style={css.sr_headerImage} source={surfHeader} />
 
 				<View style={css.dateDayContainer}>
-					<View style={css.dateDayHeader}>
-						<Text style={css.dateDayAndMonth}>{this.props.surfData.forecast.replace(/&nbsp;/g,'')}</Text>
+					<View style={css.dateDayHeader}> 
+						{forecastParsed}
 					</View>
 				</View>
 
@@ -62,7 +67,21 @@ class SurfReport extends React.Component {
 			</View>
 		);
 	}
+
+	formatForecast(forecast) {
+		forecastParsed = [];
+		var reports = forecast.map(function(rep){
+			forecast.indexOf(rep)%2==0 ? forecastParsed.push(
+				<View style={css.dateDayHeader}> 
+					<Text style={css.sr_reportTitle}>{rep.replace(/&nbsp;/g,'')}</Text>
+				</View>
+			) : forecastParsed.push(
+				<View style={css.dateDayHeader}> 
+					<Text style={css.sr_reportText}>{rep.replace(/&nbsp;/g,'')}</Text>
+				</View>);
+		})}
 }
+
 
 
 function mapStateToProps(state) {
