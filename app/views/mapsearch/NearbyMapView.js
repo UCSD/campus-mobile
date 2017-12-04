@@ -23,6 +23,7 @@ import SearchResults from './SearchResults';
 import SearchHistoryCard from './SearchHistoryCard';
 import SearchSuggest from './SearchSuggest';
 import SearchShuttleMenu from './SearchShuttleMenu';
+import Toast from 'react-native-simple-toast';
 
 import css from '../../styles/css';
 import logger from '../../util/logger';
@@ -226,10 +227,10 @@ class NearbyMapView extends React.Component {
 	searchTimeout = () => {
 		if (!this.props.search_results) {
 			this.setState({
-				searchInput: 'No Results Found',
 				iconStatus: 'search'
 			});
 		}
+		Toast.showWithGravity('No Results Found.', Toast.SHORT, Toast.CENTER);
 	}
 
 	updateSearchSuggest = (text) => {
