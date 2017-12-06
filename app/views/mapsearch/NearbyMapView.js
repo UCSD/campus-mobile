@@ -230,7 +230,7 @@ class NearbyMapView extends React.Component {
 				iconStatus: 'search'
 			});
 		}
-		Toast.showWithGravity('No Results Found.', Toast.SHORT, Toast.CENTER);
+		Toast.showWithGravity('No results found for your search.', Toast.SHORT, Toast.BOTTOM);
 	}
 
 	updateSearchSuggest = (text) => {
