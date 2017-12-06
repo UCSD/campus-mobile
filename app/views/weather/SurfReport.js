@@ -13,7 +13,6 @@ import logger from '../../util/logger';
 
 var surfHeader = require('../../assets/img/surf_report_header.jpg');
 var surfDataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-var forecastParsed = [];
 var mapWeekdays = [
 	'Sunday',
 	'Monday',
@@ -90,11 +89,11 @@ class SurfReport extends React.Component {
 		forecastParsed = [];
 		var reports = forecast.map(function(rep){
 			forecast.indexOf(rep)%2==0 ? forecastParsed.push(
-				<View style={css.dateDayHeader}> 
+				<View key={forecast.indexOf(rep)} style={css.dateDayHeader}> 
 					<Text style={css.sr_reportTitle}>{rep}</Text>
 				</View>
 			) : forecastParsed.push(
-				<View style={css.dateDayHeader}> 
+				<View key={forecast.indexOf(rep)} style={css.dateDayHeader}> 
 					<Text style={css.sr_reportText}>{rep}</Text>
 				</View>);
 		})}
