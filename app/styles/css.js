@@ -231,17 +231,22 @@ var css = StyleSheet.create({
 	 *  400 - Views
 	 ********************************************/
 	// 401 - Surf Report
-	sr_listview: {},
-	sr_image: { width: WINDOW_WIDTH, height: round(WINDOW_WIDTH * .361) },
-	sr_day_row: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: 10 },
-	sr_day_row_border: { borderTopWidth: 1, borderTopColor: '#CCC' },
-	sr_day_date_container: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-	sr_dayofweek: { fontSize: 19, color: COLOR_BLACK },
-	sr_dayandmonth: { fontSize: 12, color: '#777' },
-	sr_day_details_container: { flex: 3, paddingLeft: 10, borderLeftWidth: 1, borderLeftColor: '#DDD' },
-	sr_day_details_title: { fontSize: 18, color: COLOR_BLACK },
-	sr_day_details_height: { fontSize: 16, color: '#333', paddingTop: 4 },
-	sr_day_details_desc: { fontSize: 13, color: '#777', paddingTop: 4 },
+	sr_headerImage: { width: WINDOW_WIDTH, height: Math.round(WINDOW_WIDTH * 0.361) },
+	sr_dayText: { fontSize: 19, color: COLOR_BLACK, position: 'absolute', marginTop: 50, borderWidth: 1 },
+	sr_surfDetailsContainer: { flexDirection: 'row' },
+	sr_surfDetailsEmpty: { flex: 1 },
+	sr_surfDetails: { flex: 2.5, borderLeftWidth: 1, borderLeftColor: COLOR_MGREY, marginVertical: 10, paddingHorizontal: 10 },
+	sr_titleText: { fontSize: 18, color: COLOR_BLACK },
+	sr_reportTitle: {fontSize: 18, color: COLOR_BLACK, paddingTop:7, paddingHorizontal:10},
+	sr_reportText: {fontSize: 14, color: COLOR_BLACK, paddingHorizontal:10},
+	sr_heightText: { fontSize: 16, color: COLOR_DGREY, paddingTop: 4 },
+	sr_descText: { fontSize: 13, color: COLOR_DGREY, paddingTop: 4 },
+	sr_dateDayContainer: { position: 'absolute', flexDirection: 'row', top: 10 },
+	sr_dateDayHeader: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+	sr_dateDayEmpty: { flex: 2.5 },
+	sr_dateDayOfWeek: { fontSize: 19, color: 'black' },
+	sr_dateDayAndMonth: { fontSize: 12, color: COLOR_DGREY },
+
 	
 	// 402 - Shuttle Stop
 	shuttlestop_image: { width: WINDOW_WIDTH, height: round(WINDOW_WIDTH * .533) },
