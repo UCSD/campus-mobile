@@ -40,6 +40,7 @@ import { StyleSheet } from 'react-native';
 import {
 	platformIOS,
 	platformAndroid,
+	deviceIphoneX
 } from '../util/general';
 import {
 	COLOR_PRIMARY,
@@ -59,6 +60,8 @@ import {
 	MAX_CARD_WIDTH,
 	NAVIGATOR_IOS_HEIGHT,
 	NAVIGATOR_ANDROID_HEIGHT,
+	NAVIGATOR_LOGO_IOS_MARGIN,
+	NAVIGATOR_LOGO_ANDROID_MARGIN,
 	STATUS_BAR_ANDROID_HEIGHT,
 	TAB_BAR_HEIGHT,
 	IOS_MARGIN_TOP,
@@ -75,17 +78,17 @@ var css = StyleSheet.create({
 	// 101 - Navigator
 	navIOS: { backgroundColor: COLOR_PRIMARY, height: NAVIGATOR_IOS_HEIGHT },
 	navAndroid: { backgroundColor: COLOR_PRIMARY, height: NAVIGATOR_ANDROID_HEIGHT },
-	navIOSTitle: { color: COLOR_WHITE, fontSize: 24, marginTop: -8, fontWeight: '300' },
+	navIOSTitle: { color: COLOR_WHITE, fontSize: 24, marginTop: deviceIphoneX() ? 8 : -8, fontWeight: '300' },
 	navAndroidTitle: { color: COLOR_WHITE, fontSize: 24, marginTop: -8, fontWeight: '300' },
-	navCampusLogoTitle: { resizeMode: 'contain', height: 26, marginTop: platformIOS() ? 26 : 12, alignSelf: 'center' },
-	navIOSIconStyle: { tintColor:COLOR_WHITE, marginTop: -2 },
-	navButtonTextIOS: { color: COLOR_WHITE, marginTop: -3, fontWeight: '300', fontSize: 18 },
+	navCampusLogoTitle: { resizeMode: 'contain', height: 26, marginTop: platformIOS() ? NAVIGATOR_LOGO_IOS_MARGIN : NAVIGATOR_LOGO_ANDROID_MARGIN, alignSelf: 'center' },
+	navIOSIconStyle: { tintColor:COLOR_WHITE, marginTop: deviceIphoneX() ? 14 : -2 },
+	navButtonTextIOS: { color: COLOR_WHITE, marginTop: deviceIphoneX() ? 13 : -3, fontWeight: '300', fontSize: 18, height: 24 },
 	navAndroidIconStyle: { tintColor:COLOR_WHITE, marginTop: -6 },
 	navButtonTextAndroid: { color: COLOR_WHITE, marginTop: -8, fontWeight: '300', fontSize: 18 },
 	// 102 - Tab Bar
 	tabBarIOS: { borderTopWidth: 1, borderColor: '#DADADA', backgroundColor: COLOR_WHITE, height: TAB_BAR_HEIGHT },
 	tabBarAndroid: { top: NAVIGATOR_ANDROID_HEIGHT, borderBottomWidth: 1, borderColor: '#DADADA', backgroundColor: COLOR_WHITE, height: TAB_BAR_HEIGHT },
-	tabContainer: { width: 70, paddingVertical: 8 },
+	tabContainer: { width: 70, paddingTop: deviceIphoneX() ? 4 : 8, paddingBottom: deviceIphoneX() ? 20 : 8 },
 	tabContainerBottom: { borderBottomColor: COLOR_PRIMARY },
 	tabIcon: { color: COLOR_DMGREY, alignSelf: 'center', backgroundColor: 'transparent', opacity: .95, width: 24, height: 24, overflow: 'hidden' },
 	tabIconUser: { color: COLOR_DMGREY, alignSelf: 'center', opacity: .95, width: 24, height: 24, borderRadius: 12, overflow: 'hidden', backgroundColor: COLOR_DMGREY, borderWidth: 1, borderColor: COLOR_DMGREY, color: COLOR_WHITE },

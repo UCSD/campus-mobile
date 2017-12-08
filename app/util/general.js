@@ -11,7 +11,6 @@ import {
 import dateFormat from 'dateformat';
 import logger from './logger';
 
-
 /**
  * A module containing general helper functions
  * @module general
@@ -41,6 +40,14 @@ module.exports = {
 	 */
 	getPlatform() {
 		return Platform.OS;
+	},
+
+	/**
+	 * Checks to see if the device model is iPhone X based on the viewport height
+	 * @returns {boolean} True if the device model is iPhone X, false otherwise
+	 */
+	deviceIphoneX() {
+		return Dimensions.get('window').height === 812;
 	},
 
 	/**
