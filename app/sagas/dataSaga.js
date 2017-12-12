@@ -42,6 +42,7 @@ function* watchData() {
 			yield call(updateSurveys);
 			yield call(updateShuttleMaster);
 			yield put({ type: 'UPDATE_DINING' });
+
 		} catch (err) {
 			console.log(err);
 		}
