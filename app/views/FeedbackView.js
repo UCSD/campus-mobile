@@ -5,16 +5,14 @@ import {
 	InteractionManager,
 	ActivityIndicator,
 	TextInput,
-	StyleSheet,
 	Alert,
 	TouchableWithoutFeedback,
 	TouchableOpacity
 } from 'react-native';
 import { connect } from 'react-redux';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import Device from 'react-native-device-info';
-import { COLOR_MGREY } from '../styles/ColorConstants';
-import { hideKeyboard, getCampusPrimary } from '../util/general';
+import Toast from 'react-native-simple-toast';
+import { hideKeyboard } from '../util/general';
 import logger from '../util/logger';
 import css from '../styles/css';
 import AppSettings from '../AppSettings';
@@ -96,6 +94,11 @@ class FeedbackView extends Component {
 				body: formData
 			})
 			.then((response) => {
+				if (response.status !== 200) {
+					const e = new Error('Invalid response from server.');
+					throw e;
+				}
+
 				// Clear fields and alert user
 				Alert.alert(
 					'Thank you!',
@@ -110,16 +113,26 @@ class FeedbackView extends Component {
 					commentsHeight: 0,
 					loaded: true
 				});
-				return response.json();
-			})
-			.then((responseJson) => {
-				// logger.log(responseJson);
 			})
 			.catch((error) => {
 				logger.log('Error submitting Feedback: ' + error);
+				this.setState({
+					loaded: true
+				}, () => {
+					Toast.showWithGravity(
+						'Unfortunately, there was an error submitting your feedback. Please try again.',
+						Toast.SHORT,
+						Toast.BOTTOM
+					);
+				});
 			});
 		}
 		else {
+			Toast.showWithGravity(
+				'Please complete the required field.',
+				Toast.SHORT,
+				Toast.BOTTOM
+			);
 			return;
 		}
 	}
@@ -127,11 +140,16 @@ class FeedbackView extends Component {
 	_renderLoadingView() {
 		return (
 			<View style={css.main_container}>
-				<ActivityIndicator
-					animating={true}
-					style={styles.loading_icon}
-					size="large"
-				/>
+				<View style={css.feedback_submitting_container}>
+					<ActivityIndicator
+						animating={true}
+						style={css.feedback_loading_icon}
+						size="large"
+					/>
+					<Text style={css.feedback_submitting_text}>
+						Your feedback is being submitted...
+					</Text>
+				</View>
 			</View>
 		);
 	}
@@ -142,13 +160,15 @@ class FeedbackView extends Component {
 				onPress={() => hideKeyboard()}
 			>
 				<View style={css.main_container}>
-					<View style={styles.feedback_container}>
-						<Text style={styles.feedback_label}>
-							Help us make the {AppSettings.APP_NAME} app better.{'\n'}
-							Submit your thoughts and suggestions.
+					<View style={css.feedback_container}>
+						<Text style={css.feedback_label}>
+							Help us make the {AppSettings.APP_NAME} app better.
+						</Text>
+						<Text style={css.feedback_label}>
+							Submit your thoughts and suggestions here.
 						</Text>
 
-						<View style={styles.feedback_text_container}>
+						<View style={css.feedback_comments_text_container}>
 							<TextInput
 								ref={(ref) => { this._feedback = ref; }}
 								multiline={true}
@@ -162,20 +182,20 @@ class FeedbackView extends Component {
 								}}
 								placeholder="Tell us what you think*"
 								underlineColorAndroid={'transparent'}
-								style={[styles.feedback_text, { height: Math.max(50, this.state.commentsHeight) }]}
+								style={[css.feedback_text_input, { height: Math.max(50, this.state.commentsHeight) }]}
 								returnKeyType={'done'}
 								maxLength={500}
 							/>
 						</View>
 
-						<View style={styles.text_container}>
+						<View style={css.feedback_email_text_container}>
 							<TextInput
 								ref={(ref) => { this._email = ref; }}
 								value={this.state.emailText}
 								onChangeText={(text) => this.setState({ emailText: text })}
 								placeholder="Email"
 								underlineColorAndroid={'transparent'}
-								style={styles.feedback_text}
+								style={css.feedback_text_input}
 								returnKeyType={'done'}
 								keyboardType={'email-address'}
 								maxLength={100}
@@ -183,8 +203,8 @@ class FeedbackView extends Component {
 						</View>
 
 						<TouchableOpacity underlayColor={'rgba(200,200,200,.1)'} onPress={() => this._postFeedback()}>
-							<View style={styles.submit_container}>
-								<Text style={styles.submit_text}>Submit</Text>
+							<View style={css.feedback_submit_container}>
+								<Text style={css.feedback_submit_text}>Submit</Text>
 							</View>
 						</TouchableOpacity>
 
@@ -203,19 +223,6 @@ class FeedbackView extends Component {
 		}
 	}
 }
-
-const styles = StyleSheet.create({
-	loading_icon: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-	feedback_container: { flexDirection: 'column', marginHorizontal: 8, marginTop: 8 },
-	feedback_label: { flexWrap: 'wrap', fontSize: 18, paddingBottom: 16, lineHeight: 24 },
-	feedback_text: { backgroundColor: 'white', flex:1, fontSize: 18, alignItems: 'center', padding: 8 },
-
-	submit_container: { justifyContent: 'center', alignItems: 'center', backgroundColor: getCampusPrimary(), borderRadius: 3, padding: 10 },
-	submit_text: { fontSize: 16, color: 'white' },
-
-	feedback_text_container: { flexDirection: 'row', borderColor: COLOR_MGREY, borderBottomWidth: 1, marginBottom: 8, backgroundColor: 'white' },
-	text_container: { height: 50, borderColor: COLOR_MGREY, borderBottomWidth: 1, marginBottom: 8 },
-});
 
 const mapStateToProps = (state, props) => (
 	{

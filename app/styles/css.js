@@ -336,11 +336,16 @@ var css = StyleSheet.create({
 	webview_container: { width: WINDOW_WIDTH, height: WINDOW_HEIGHT - 60 },
 
 	// 408 - Feedback
-	feedback_container: { alignItems: 'flex-start', flexDirection: 'column', padding: 16, },
-	feedback_label: { flex: 2, flexWrap: 'wrap', fontSize: 20, height: 80 },
-	feedback_text: { flex: 1, fontSize: 20, alignItems: 'center', width: MAX_CARD_WIDTH - 32, height: 50 },
-	feedback_submit: { flex:1, fontSize: 40, textAlign: 'center' },
-	feedback_appInfo: { position: 'absolute', bottom: 0, right: 0, color: '#BBB', fontSize: 9, padding: 4 },
+	feedback_container: { flex: 1, flexDirection: 'column', marginHorizontal: 8, marginTop: 8 },
+	feedback_label: { flexWrap: 'wrap', fontSize: 18, paddingBottom: 16, lineHeight: 24 },
+	feedback_comments_text_container: { flexDirection: 'row', borderColor: COLOR_MGREY, borderBottomWidth: 1, marginBottom: 8, backgroundColor: 'white' },
+	feedback_email_text_container: { height: 50, borderColor: COLOR_MGREY, borderBottomWidth: 1, marginBottom: 8 },
+	feedback_text_input: { flex:1, backgroundColor: 'white', fontSize: 18, alignItems: 'center', padding: 8 },
+	feedback_submit_container: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR_PRIMARY, borderRadius: 3, padding: 10 },
+	feedback_submit_text: { fontSize: 16, color: 'white' },
+	feedback_submitting_container: { flex: 1, flexDirection: 'column', padding: 16, alignItems: 'center', justifyContent: 'center' },
+	feedback_loading_icon: { paddingBottom: 16 },
+	feedback_submitting_text: { fontSize: 18, textAlign: 'center' },
 
 	// 409 - Preferences View
 	preferencesContainer: { padding: 10, borderTopWidth: 1, borderTopColor: '#EEE' },
