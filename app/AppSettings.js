@@ -15,6 +15,7 @@ module.exports = {
 	NEWS_API_URL: 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/allstories.json',
 	MAP_SEARCH_API_URL: 'https://xgu9qa7gx4.execute-api.us-west-2.amazonaws.com/prod/v2/map/search?region=0&query=',
 	SPECIAL_EVENT_API_URL: 'https://2jjml3hf27.execute-api.us-west-2.amazonaws.com/prod/events/special',
+	FEEDBACK_API_URL: 'https://eforms.ucsd.edu/view.php?id=175631',
 
 	/* RESOURCES */
 	SHUTTLE_SCHEDULE_URL: 'https://transportation.ucsd.edu/shuttles/',
@@ -36,6 +37,8 @@ module.exports = {
 	SHUTTLE_MASTER_TTL: 86400000, // 1 day
 	SPECIAL_EVENTS_TTL: 3600000, // 1 hour
 	DATA_SAGA_TTL: 60000, // 1 minute
+
+	FEEDBACK_POST_TTL: 10000,
 
 	USER_LOGIN: {
 		ENABLED: false,

@@ -9,6 +9,7 @@ import homeSaga from './homeSaga';
 import specialEventsSaga from './specialEventsSaga';
 import userSaga from './userSaga';
 import mapSaga from './mapSaga';
+import feedbackSaga from './feedbackSaga';
 
 // single entry point to start all Sagas at once
 export default function* rootSaga() {
@@ -22,6 +23,7 @@ export default function* rootSaga() {
 		fork(homeSaga),
 		fork(specialEventsSaga),
 		fork(userSaga),
-		fork(mapSaga)
+		fork(mapSaga),
+		fork(feedbackSaga)
 	];
 }
