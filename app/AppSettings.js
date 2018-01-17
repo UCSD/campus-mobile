@@ -27,10 +27,7 @@ module.exports = {
 
 	/* TTLs */
 	WEATHER_API_TTL: 1800000, // 30 minutes
-	
-	//SURF_API_TTL: 10000, // 1 hour
-	SURF_API_TTL: 10000, // 10 seconds (temp)
-
+	SURF_API_TTL: 1800000, // 30 minutes
 	EVENTS_API_TTL: 3600000, // 1 hour
 	NEWS_API_TTL: 3600000, // 1 hour
 	DINING_API_TTL: 3600000, // 1 hour
@@ -38,9 +35,7 @@ module.exports = {
 	SHUTTLE_API_TTL: 6000, // 6 seconds
 	SHUTTLE_MASTER_TTL: 86400000, // 1 day
 	SPECIAL_EVENTS_TTL: 3600000, // 1 hour
-	
-	//DATA_SAGA_TTL: 60000, // 1 minute
-	DATA_SAGA_TTL: 1000, // 1 second (temp)
+	DATA_SAGA_TTL: 60000, // 1 minute
 
 	USER_LOGIN: {
 		ENABLED: false,
