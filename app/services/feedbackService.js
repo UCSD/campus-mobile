@@ -1,6 +1,6 @@
 import Device from 'react-native-device-info';
 
-const AppSettings = require('../AppSettings');
+const { FEEDBACK_URL } = require('../AppSettings');
 
 const FeedbackService = {
 	FetchFeedback(feedback) {
@@ -30,7 +30,7 @@ const FeedbackService = {
 		formData.append('page_number','1');
 		formData.append('submit_form','Submit');
 
-		return fetch(AppSettings.FEEDBACK_API_URL, {
+		return fetch(FEEDBACK_URL, {
 			method: 'POST',
 			body: formData
 		})
