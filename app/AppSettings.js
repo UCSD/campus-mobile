@@ -37,6 +37,8 @@ module.exports = {
 	SPECIAL_EVENTS_TTL: 3600000, // 1 hour
 	DATA_SAGA_TTL: 60000, // 1 minute
 
+	FEEDBACK_POST_TTL: 10000,
+
 	USER_LOGIN: {
 		ENABLED: false,
 		METHOD: 'openid',
