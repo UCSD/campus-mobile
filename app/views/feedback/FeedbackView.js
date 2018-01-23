@@ -15,7 +15,7 @@ import logger from '../../util/logger';
 import css from '../../styles/css';
 import { APP_NAME, FEEDBACK_POST_TTL } from '../../AppSettings';
 
-class FeedbackView extends Component {
+export class FeedbackView extends Component {
 	componentDidMount() {
 		logger.ga('View Loaded: Feedback');
 
@@ -144,7 +144,6 @@ class FeedbackView extends Component {
 	}
 
 	render() {
-		// return this._renderSubmitView();
 		if (this.props.feedback.status.requesting) {
 			return (
 				<View style={css.main_container}>
@@ -168,8 +167,7 @@ class FeedbackView extends Component {
 
 const mapStateToProps = (state, props) => (
 	{
-		feedback: state.feedback,
-		scene: state.routes.scene
+		feedback: state.feedback
 	}
 );
 
@@ -187,4 +185,4 @@ const mapDispatchToProps = (dispatch, ownProps) => (
 	}
 );
 
-module.exports = connect(mapStateToProps, mapDispatchToProps)(FeedbackView);
+export default connect(mapStateToProps, mapDispatchToProps)(FeedbackView);
