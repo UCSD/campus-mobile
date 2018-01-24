@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders without crashing 1`] = `
+<ScrollViewMock
+  scrollEnabled={true}
+  style={
+    Object {
+      "backgroundColor": "#EAEAEA",
+      "flexGrow": 1,
+      "marginBottom": 40,
+      "marginTop": 58,
+    }
+  }
+>
+  <Connect(CardPreferences)
+    toggleScroll={[Function]}
+  />
+</ScrollViewMock>
+`;
