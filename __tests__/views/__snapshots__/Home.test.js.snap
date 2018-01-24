@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders without crashing 1`] = `
+<MenuContext
+  customStyles={Object {}}
+  style={
+    Object {
+      "flex": 1,
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "backgroundColor": "#EAEAEA",
+        "flexGrow": 1,
+        "marginBottom": 40,
+        "marginTop": 58,
+      }
+    }
+  >
+    <ScrollViewMock
+      onScroll={[Function]}
+      scrollEventThrottle={69}
+    >
+      <Connect(WeatherCardContainer)
+        key="weather"
+      />
+      <Connect(ShuttleCardContainer)
+        key="shuttle"
+      />
+      <Connect(DiningCardContainer)
+        key="dining"
+      />
+      <Connect(EventCardContainer)
+        key="events"
+      />
+      <Connect(QuicklinksCardContainer)
+        key="quicklinks"
+      />
+      <Connect(NewsCardContainer)
+        key="news"
+      />
+    </ScrollViewMock>
+  </View>
+</MenuContext>
+`;

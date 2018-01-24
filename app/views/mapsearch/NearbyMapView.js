@@ -37,7 +37,7 @@ const statusBarHeight = Platform.select({
 	android: StatusBar.currentHeight,
 });
 
-class NearbyMapView extends React.Component {
+export class NearbyMapView extends React.Component {
 
 	constructor(props) {
 		super(props);
@@ -402,7 +402,7 @@ const mapDispatchToProps = (dispatch, ownProps) => (
 	}
 );
 
-module.exports = connect(mapStateToProps, mapDispatchToProps)(NearbyMapView);
+export default connect(mapStateToProps, mapDispatchToProps)(NearbyMapView);
 
 const navMargin = Platform.select({
 	ios: 64,

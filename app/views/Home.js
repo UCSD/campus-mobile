@@ -22,7 +22,7 @@ import { platformAndroid } from '../util/general';
 import css from '../styles/css';
 import logger from '../util/logger';
 
-class Home extends React.Component {
+export class Home extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -153,5 +153,4 @@ function mapDispatchtoProps(dispatch) {
 		}
 	};
 }
-
-module.exports = connect(mapStateToProps, mapDispatchtoProps)(Home);
+export default connect(mapStateToProps, mapDispatchtoProps)(Home);
