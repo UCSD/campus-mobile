@@ -221,6 +221,11 @@
     "one-var": 0,                    // allow just one var statement per function (off by default)
     "wrap-regex": 0,                 // require regex literals to be wrapped in parentheses (off by default)
 
+  // Disabled Rules
+  // The following rules are disabled for various reasons.
+
+    "import/no-named-as-default": 0,  // disabled due to the usage of Higher Order Components with Redux
+
   // Legacy
   // The following rules are included for compatibility with JSHint and JSLint. While the names of the rules may not match up with the JSHint/JSLint counterpart, the functionality is the same.
 
