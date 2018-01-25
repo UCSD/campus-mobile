@@ -1,0 +1,185 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`card renders without crashing 1`] = `
+<Connect(Card)
+  id="dining"
+  title="Dining"
+>
+  <View
+    style={
+      Object {
+        "alignSelf": "stretch",
+        "padding": 8,
+      }
+    }
+  >
+    <View>
+      <DataListView
+        card={false}
+        data={
+          Array [
+            Object {
+              "address": "Revelle College",
+              "coords": Object {
+                "lat": 32.875016,
+                "lon": -117.242034,
+              },
+              "description": "Offers a modern vibe while you choose between the burger lounge,  stir-fry, freshly tossed salads, a sandwich bar, or several other delicious treats.",
+              "distance": 5965,
+              "distanceMiles": 3.706479161695697,
+              "distanceMilesStr": "3.7 mi",
+              "images": Array [
+                "https://s3-us-west-2.amazonaws.com/ucsd-its-wts/images/hdh/dining/64_degrees_1.jpg",
+                "https://s3-us-west-2.amazonaws.com/ucsd-its-wts/images/hdh/dining/64_degrees_2.jpg",
+                "https://s3-us-west-2.amazonaws.com/ucsd-its-wts/images/hdh/dining/64_degrees_3.jpg",
+                "https://s3-us-west-2.amazonaws.com/ucsd-its-wts/images/hdh/dining/64_degrees_4.jpg",
+                "https://s3-us-west-2.amazonaws.com/ucsd-its-wts/images/hdh/dining/64_degrees_5.jpg",
+              ],
+              "menuItems": Array [
+                Object {
+                  "name": "Ham, Egg, and Cheese Sandwich",
+                  "nutrition": Object {
+                    "calories": "477",
+                    "caloriesFromFat": "221",
+                    "cholesterol": "294mg",
+                    "cholesterolDV": "98%",
+                    "dietaryFiber": "1.3g",
+                    "dietaryFiberDV": "5%",
+                    "protein": "31.4g",
+                    "proteinDV": "63%",
+                    "saturatedFat": "8.1g",
+                    "saturatedFatDV": "40%",
+                    "servingSize": "1 EACH",
+                    "sodium": "1805mg",
+                    "sodiumDV": "75%",
+                    "sugars": "4.2g",
+                    "sugarsDV": "%",
+                    "totalCarbohydrate": "31.5g",
+                    "totalCarbohydrateDV": "10%",
+                    "totalFat": "24.5g",
+                    "totalFatDV": "38%",
+                    "transFat": "",
+                    "transFatDV": "%",
+                  },
+                  "price": "2.25",
+                  "station": "Burger Lounge",
+                  "tags": "Breakfast",
+                },
+              ],
+              "menuWebsite": "https://hdh.ucsd.edu/DiningMenus/#rogerspanelHeading#rogers",
+              "name": "64 Degrees",
+              "paymentOptions": "cash, credit card, dining dollars, triton cash",
+              "phone": "(858) 534-1097",
+              "regularHours": "Mon - Thur: 7 am - 9 pm
+Fri: 7 am - 8 pm
+Sat & Sun: 10 am - 8 pm",
+            },
+          ]
+        }
+        item="DiningItem"
+        rows={3}
+        scrollEnabled={false}
+      />
+      <Touchable
+        onPress={[Function]}
+      >
+        <View
+          style={
+            Object {
+              "alignItems": "center",
+              "justifyContent": "center",
+              "paddingBottom": 4,
+              "paddingHorizontal": 4,
+              "paddingTop": 8,
+            }
+          }
+        >
+          <Text
+            accessible={true}
+            allowFontScaling={true}
+            ellipsizeMode="tail"
+            style={
+              Object {
+                "color": "#034262",
+                "fontSize": 20,
+                "fontWeight": "300",
+              }
+            }
+          >
+            View All
+          </Text>
+        </View>
+      </Touchable>
+    </View>
+  </View>
+</Connect(Card)>
+`;
+
+exports[`container renders without crashing 1`] = `
+<DataListCard
+  data={
+    Array [
+      Object {
+        "address": "Revelle College",
+        "coords": Object {
+          "lat": 32.875016,
+          "lon": -117.242034,
+        },
+        "description": "Offers a modern vibe while you choose between the burger lounge,  stir-fry, freshly tossed salads, a sandwich bar, or several other delicious treats.",
+        "distance": 5965,
+        "distanceMiles": 3.706479161695697,
+        "distanceMilesStr": "3.7 mi",
+        "images": Array [
+          "https://s3-us-west-2.amazonaws.com/ucsd-its-wts/images/hdh/dining/64_degrees_1.jpg",
+          "https://s3-us-west-2.amazonaws.com/ucsd-its-wts/images/hdh/dining/64_degrees_2.jpg",
+          "https://s3-us-west-2.amazonaws.com/ucsd-its-wts/images/hdh/dining/64_degrees_3.jpg",
+          "https://s3-us-west-2.amazonaws.com/ucsd-its-wts/images/hdh/dining/64_degrees_4.jpg",
+          "https://s3-us-west-2.amazonaws.com/ucsd-its-wts/images/hdh/dining/64_degrees_5.jpg",
+        ],
+        "menuItems": Array [
+          Object {
+            "name": "Ham, Egg, and Cheese Sandwich",
+            "nutrition": Object {
+              "calories": "477",
+              "caloriesFromFat": "221",
+              "cholesterol": "294mg",
+              "cholesterolDV": "98%",
+              "dietaryFiber": "1.3g",
+              "dietaryFiberDV": "5%",
+              "protein": "31.4g",
+              "proteinDV": "63%",
+              "saturatedFat": "8.1g",
+              "saturatedFatDV": "40%",
+              "servingSize": "1 EACH",
+              "sodium": "1805mg",
+              "sodiumDV": "75%",
+              "sugars": "4.2g",
+              "sugarsDV": "%",
+              "totalCarbohydrate": "31.5g",
+              "totalCarbohydrateDV": "10%",
+              "totalFat": "24.5g",
+              "totalFatDV": "38%",
+              "transFat": "",
+              "transFatDV": "%",
+            },
+            "price": "2.25",
+            "station": "Burger Lounge",
+            "tags": "Breakfast",
+          },
+        ],
+        "menuWebsite": "https://hdh.ucsd.edu/DiningMenus/#rogerspanelHeading#rogers",
+        "name": "64 Degrees",
+        "paymentOptions": "cash, credit card, dining dollars, triton cash",
+        "phone": "(858) 534-1097",
+        "regularHours": "Mon - Thur: 7 am - 9 pm
+Fri: 7 am - 8 pm
+Sat & Sun: 10 am - 8 pm",
+      },
+    ]
+  }
+  id="dining"
+  item="DiningItem"
+  rows={3}
+  title="Dining"
+/>
+`;
