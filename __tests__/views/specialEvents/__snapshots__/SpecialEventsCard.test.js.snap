@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders without crashing 1`] = `
+<View>
+  <BannerCard
+    image="https://s3-us-west-2.amazonaws.com/ucsd-its-wts/images/v1/campus_lisa_2017_logo.png"
+    onClose={[Function]}
+    onPress={[Function]}
+    title="Campus Lisa"
+  />
+</View>
+`;
