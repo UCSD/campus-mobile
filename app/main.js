@@ -95,8 +95,8 @@ class Main extends Component {
 							tabBarStyle={general.platformIOS() ? css.tabBarIOS : css.tabBarAndroid}
 						>
 							<Scene key={'tab1'} title={AppSettings.APP_NAME} initial icon={TabIcons}>
-								<Scene key={'OnboardingIntro'} component={OnboardingIntro} title={'OnboardingIntro'} hideTabBar hideNavBar={true} />
-								<Scene key={'OnboardingLogin'} component={OnboardingLogin} title={'OnboardingLogin'} hideTabBar hideNavBar={true} />
+								{/*<Scene key={'OnboardingIntro'} component={OnboardingIntro} title={'OnboardingIntro'} hideTabBar hideNavBar={true} />
+								<Scene key={'OnboardingLogin'} component={OnboardingLogin} title={'OnboardingLogin'} hideTabBar hideNavBar={true} />*/}
 								<Scene key={'Home'} component={Home} type={'reset'} renderBackButton={() => (null)} renderTitle={() => this.campusLogo()} hideNavBar={false} hideTabBar={false}/>
 								<Scene key={'SurfReport'} component={SurfReport} title={'Surf Report'} hideTabBar />
 								<Scene key={'ShuttleStop'} component={ShuttleStop} title={'Shuttle'} hideTabBar />
