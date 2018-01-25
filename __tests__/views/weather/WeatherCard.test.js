@@ -4,6 +4,7 @@ import Enzyme, { shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-15.4';
 
 // Component to be tested
+import { WeatherCardContainer } from '../../../app/views/weather/WeatherCardContainer';
 import WeatherCard from '../../../app/views/weather/WeatherCard';
 import SurfButton from '../../../app/views/weather/SurfButton';
 import { WEATHER_RESPONSE } from '../../../mockApis/weatherApi';
@@ -16,12 +17,22 @@ const initialState = {
 	actionButton: (<SurfButton />)
 };
 
-// Set up component to be rendered
-function setup(props) {
+// Set up container to be rendered
+function setupContainer(props) {
+	return shallow(<WeatherCardContainer {...props} />);
+}
+
+test('container renders without crashing', () => {
+	const tree = setupContainer(initialState);
+	expect(tree).toMatchSnapshot();
+});
+
+// Set up card to be rendered
+function setupCard(props) {
 	return shallow(<WeatherCard {...props} />);
 }
 
-test('renders without crashing', () => {
-	const tree = setup(initialState);
+test('card renders without crashing', () => {
+	const tree = setupCard(initialState);
 	expect(tree).toMatchSnapshot();
 });
