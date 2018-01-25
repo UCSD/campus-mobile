@@ -19,7 +19,7 @@ import {
 	MAX_CARD_WIDTH,
 } from '../../styles/LayoutConstants';
 
-const SpecialEventsCard = ({ specialEvents, saved, hideCard }) => (
+export const SpecialEventsCard = ({ specialEvents, saved, hideCard }) => (
 	<View>
 		{ (Array.isArray(saved) && saved.length < 1) ?
 			(
