@@ -6,7 +6,7 @@ import moment from 'moment';
 import DataListCard from '../common/DataListCard';
 import logger from '../../util/logger';
 
-const NewsCardContainer = ({ newsData }) => {
+export const NewsCardContainer = ({ newsData }) => {
 	logger.ga('Card Mounted: News');
 
 	let data = null;
