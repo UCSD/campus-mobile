@@ -14,10 +14,9 @@ slack_notify() {
 
     curl -X POST --data-urlencode \
         "payload={
-            \"channel\": \"#notifications\",
+            \"channel\": \"#campus-mobile-ci\",
             \"username\": \"App Center\",
-            \"text\": \"$message\",
-            \"icon_url\": \"$ICON\" \
+            \"text\": \"$message\"
         }" \
         $SLACK_WEBHOOK
 }
