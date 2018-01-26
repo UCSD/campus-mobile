@@ -7,7 +7,14 @@
 var fs = require('fs');
 var os = require('os');
 var REPLACEMENT_TYPE = process.argv[2];
-var myEnv = require(os.homedir() + '/.campusmobile/env.js');
+var ENV_TYPE = process.argv[3];
+
+var myEnv;
+if (ENV_TYPE === 'ci') {
+	myEnv = process.env;
+} else {
+	var myEnv = require(os.homedir() + '/.campusmobile/env.js');
+}
 
 var APP_SETTINGS_PATH = './app/AppSettings.js';
 

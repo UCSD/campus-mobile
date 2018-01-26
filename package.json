@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest",
-    "insert-production-values-ci": "node scripts/replace_all_ci.js production",
+    "insert-production-values-ci": "node scripts/replace_all.js production ci",
     "insert-production-values": "node scripts/replace_all.js production",
     "insert-staging-values": "node scripts/replace_all.js staging",
     "insert-placeholder-values": "node scripts/replace_all.js placeholder",
