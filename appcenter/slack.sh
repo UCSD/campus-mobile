@@ -2,7 +2,14 @@ ORG=ucsd
 APP=Campus-Mobile-App
 
 build_url=https://appcenter.ms/users/a6wu/apps/Campus-Mobile-App
-build_link="<$build_url|$APP $APPCENTER_BRANCH #$APPCENTER_BUILD_ID>"
+
+
+if [ -z "$APPCENTER_XCODE_PROJECT" ]
+    build_link="<$build_url|$APP $APPCENTER_BRANCH Android #$APPCENTER_BUILD_ID>"
+else
+    build_link="<$build_url|$APP $APPCENTER_BRANCH iOS #$APPCENTER_BUILD_ID>"
+fi
+
 
 version() {
     cat package.json | jq -r .version
