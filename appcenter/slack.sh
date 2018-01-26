@@ -4,7 +4,7 @@ APP=Campus-Mobile-App
 build_url=https://appcenter.ms/users/a6wu/apps/Campus-Mobile-App
 
 
-if [ -z "$APPCENTER_XCODE_PROJECT" ]
+if [ -z "$APPCENTER_XCODE_PROJECT" ]; then
     build_link="<$build_url|$APP $APPCENTER_BRANCH Android #$APPCENTER_BUILD_ID>"
 else
     build_link="<$build_url|$APP $APPCENTER_BRANCH iOS #$APPCENTER_BUILD_ID>"
