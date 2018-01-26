@@ -8,7 +8,7 @@ import ShuttleCard from './ShuttleCard';
 
 import logger from '../../util/logger';
 
-class ShuttleCardContainer extends React.Component {
+export class ShuttleCardContainer extends React.Component {
 	componentDidMount() {
 		logger.ga('Card Mounted: Shuttle');
 	}

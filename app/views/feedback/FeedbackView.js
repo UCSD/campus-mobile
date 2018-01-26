@@ -10,13 +10,12 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import Toast from 'react-native-simple-toast';
-import { hideKeyboard } from '../util/general';
-import logger from '../util/logger';
-import css from '../styles/css';
-import { APP_NAME, FEEDBACK_POST_TTL } from '../AppSettings';
+import { hideKeyboard } from '../../util/general';
+import logger from '../../util/logger';
+import css from '../../styles/css';
+import { APP_NAME, FEEDBACK_POST_TTL } from '../../AppSettings';
 
-class FeedbackView extends Component {
-
+export class FeedbackView extends Component {
 	componentDidMount() {
 		logger.ga('View Loaded: Feedback');
 
@@ -70,13 +69,16 @@ class FeedbackView extends Component {
 				Toast.SHORT,
 				Toast.BOTTOM
 			);
-			return;
 		}
 	}
 
-	handleFeedbackInput = fieldName => e => {
-		const { comment, name, email, commentHeight } = this.props.feedback;
-		const newFeedback = { comment, name, email, commentHeight };
+	handleFeedbackInput = fieldName => (e) => {
+		const {
+			comment, name, email, commentHeight
+		} = this.props.feedback;
+		const newFeedback = {
+			comment, name, email, commentHeight
+		};
 		newFeedback[fieldName] = e.nativeEvent.text;
 
 		if (fieldName === 'comment') {
@@ -86,23 +88,6 @@ class FeedbackView extends Component {
 		}
 
 		this.props.updateFeedback(newFeedback);
-	}
-
-	_renderLoadingView() {
-		return (
-			<View style={css.main_container}>
-				<View style={css.feedback_submitting_container}>
-					<ActivityIndicator
-						animating={true}
-						style={css.feedback_loading_icon}
-						size="large"
-					/>
-					<Text style={css.feedback_submitting_text}>
-						Your feedback is being submitted...
-					</Text>
-				</View>
-			</View>
-		);
 	}
 
 	_renderFormView() {
@@ -121,35 +106,33 @@ class FeedbackView extends Component {
 
 						<View style={css.feedback_comments_text_container}>
 							<TextInput
-								ref={(ref) => { this._feedback = ref; }}
 								multiline={true}
 								blurOnSubmit={true}
 								value={this.props.feedback.comment}
 								onChange={this.handleFeedbackInput('comment')}
 								placeholder="Tell us what you think*"
-								underlineColorAndroid={'transparent'}
+								underlineColorAndroid="transparent"
 								style={[css.feedback_text_input, { height: Math.max(50, this.props.feedback.commentHeight) }]}
-								returnKeyType={'done'}
+								returnKeyType="done"
 								maxLength={500}
 							/>
 						</View>
 
 						<View style={css.feedback_email_text_container}>
 							<TextInput
-								ref={(ref) => { this._email = ref; }}
 								value={this.props.feedback.email}
 								onChange={this.handleFeedbackInput('email')}
 								placeholder="Email"
-								underlineColorAndroid={'transparent'}
+								underlineColorAndroid="transparent"
 								style={css.feedback_text_input}
-								returnKeyType={'done'}
-								keyboardType={'email-address'}
+								returnKeyType="done"
+								keyboardType="email-address"
 								autoCapitalize="none"
 								maxLength={100}
 							/>
 						</View>
 
-						<TouchableOpacity underlayColor={'rgba(200,200,200,.1)'} onPress={() => this._postFeedback()}>
+						<TouchableOpacity underlayColor="rgba(200,200,200,.1)" onPress={() => this._postFeedback()}>
 							<View style={css.feedback_submit_container}>
 								<Text style={css.feedback_submit_text}>Submit</Text>
 							</View>
@@ -161,9 +144,21 @@ class FeedbackView extends Component {
 	}
 
 	render() {
-		// return this._renderSubmitView();
 		if (this.props.feedback.status.requesting) {
-			return this._renderLoadingView();
+			return (
+				<View style={css.main_container}>
+					<View style={css.feedback_submitting_container}>
+						<ActivityIndicator
+							animating={true}
+							style={css.feedback_loading_icon}
+							size="large"
+						/>
+						<Text style={css.feedback_submitting_text}>
+							Your feedback is being submitted...
+						</Text>
+					</View>
+				</View>
+			);
 		} else {
 			return this._renderFormView();
 		}
@@ -172,8 +167,7 @@ class FeedbackView extends Component {
 
 const mapStateToProps = (state, props) => (
 	{
-		feedback: state.feedback,
-		scene: state.routes.scene
+		feedback: state.feedback
 	}
 );
 
@@ -191,4 +185,4 @@ const mapDispatchToProps = (dispatch, ownProps) => (
 	}
 );
 
-module.exports = connect(mapStateToProps, mapDispatchToProps)(FeedbackView);
+export default connect(mapStateToProps, mapDispatchToProps)(FeedbackView);

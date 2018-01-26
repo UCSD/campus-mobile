@@ -5,7 +5,7 @@ import DataListCard from '../common/DataListCard';
 import general from '../../util/general';
 import logger from '../../util/logger';
 
-const QuicklinksCardContainer = ({ linksData }) => {
+export const QuicklinksCardContainer = ({ linksData }) => {
 	logger.ga('Card Mounted: Quicklinks');
 	return (
 		<DataListCard

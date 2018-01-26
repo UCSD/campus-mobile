@@ -9,7 +9,7 @@ import logger from '../../util/logger';
 /**
  * Container component for [WeatherCard]{@link WeatherCard}
 **/
-const WeatherCardContainer = ({ weatherData }) => {
+export const WeatherCardContainer = ({ weatherData }) => {
 	logger.ga('Card Mounted: Weather');
 	return (
 		<WeatherCard

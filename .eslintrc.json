@@ -1,20 +1,23 @@
 {
   "parser": "babel-eslint",
 
-  "ecmaFeatures": {
-    "jsx": true
+  "parserOptions": {
+    "ecmaFeatures": {
+        "jsx": true
+    }
   },
 
   "env": {
     "es6": true,
-    "jasmine": true,
+    "jest": true,
+    "jasmine": true
   },
 
   "extends": "airbnb",
   "plugins": [
       "flowtype",
       "react",
-      "import",
+      "import"
   ],
 
   // Map from global var to bool specifying if it can be redefined
@@ -104,7 +107,7 @@
     "use-isnan": 1,                  // disallow comparisons with the value NaN
     "valid-jsdoc": 1,                // Ensure JSDoc comments are valid (off by default)
     "valid-typeof": 1,               // Ensure that the results of typeof are compared against a valid string
-    linebreak-style: 0,              // git already manages our line endings :-O
+    "linebreak-style": 0,              // git already manages our line endings :-O
   // Best Practices
   // These are rules designed to prevent you from making mistakes. They either prescribe a better way of doing something or help you avoid footguns.
 
@@ -218,6 +221,11 @@
     "one-var": 0,                    // allow just one var statement per function (off by default)
     "wrap-regex": 0,                 // require regex literals to be wrapped in parentheses (off by default)
 
+  // Disabled Rules
+  // The following rules are disabled for various reasons.
+
+    "import/no-named-as-default": 0,  // disabled due to the usage of Higher Order Components with Redux
+
   // Legacy
   // The following rules are included for compatibility with JSHint and JSLint. While the names of the rules may not match up with the JSHint/JSLint counterpart, the functionality is the same.
 
@@ -246,6 +254,16 @@
     "react/wrap-multilines": 0,
     "react/jsx-indent": [2, "tab"],
     "react/jsx-indent-props": [1, "tab"],
-    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
-  }
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }]
+  },
+
+  "overrides": [
+    {
+        // Specific overrides for test files
+        "files": ["__tests__/**/*.js", "app/**/*.test.js"],
+        "rules": {
+            "import/no-extraneous-dependencies": 0
+        }        
+    }
+  ]
 }

@@ -23,7 +23,7 @@ import DiningNutrition from './views/dining/DiningNutrition';
 import EventDetail from './views/events/EventDetail';
 import WebWrapper from './views/WebWrapper';
 import NewsDetail from './views/news/NewsDetail';
-import FeedbackView from './views/FeedbackView';
+import FeedbackView from './views/feedback/FeedbackView';
 import PreferencesView from './views/preferences/PreferencesView';
 import NearbyMapView from './views/mapsearch/NearbyMapView';
 import TabIcons from './navigation/TabIcons';
