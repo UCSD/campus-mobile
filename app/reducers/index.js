@@ -14,6 +14,7 @@ import linksReducer from './links';
 import routesReducer from './routes';
 import surveyReducer from './survey';
 import specialEventsReducer from './specialEvents';
+import feedbackReducer from './feedback';
 import homeReducer from './home';
 
 module.exports = combineReducers({
@@ -31,5 +32,6 @@ module.exports = combineReducers({
 	routes: routesReducer,
 	survey: surveyReducer,
 	specialEvents: specialEventsReducer,
+	feedback: feedbackReducer,
 	home: homeReducer,
 });

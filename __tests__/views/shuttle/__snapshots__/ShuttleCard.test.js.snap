@@ -1,0 +1,159 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`card renders without crashing 1`] = `
+<Connect(ScrollCard)
+  actionButton={
+    <Touchable
+      onPress={[Function]}
+      style={
+        Object {
+          "alignItems": "center",
+          "backgroundColor": "#F9F9F9",
+          "borderBottomWidth": 1,
+          "borderColor": "#EAEAEA",
+          "borderTopWidth": 1,
+          "justifyContent": "center",
+          "paddingHorizontal": 4,
+          "paddingVertical": 8,
+          "width": 738,
+        }
+      }
+    >
+      <Text
+        accessible={true}
+        allowFontScaling={true}
+        ellipsizeMode="tail"
+        style={
+          Object {
+            "color": "#034262",
+            "fontSize": 20,
+            "fontWeight": "300",
+          }
+        }
+      >
+        Add a Stop
+      </Text>
+    </Touchable>
+  }
+  extraActions={
+    Array [
+      Object {
+        "action": [MockFunction],
+        "name": "Manage Stops",
+      },
+    ]
+  }
+  id="shuttle"
+  lastScroll={0}
+  renderRow={[Function]}
+  scrollData={Array []}
+  title="Shuttle"
+  updateScroll={[MockFunction]}
+/>
+`;
+
+exports[`container renders without crashing 1`] = `
+<ShuttleCard
+  gotoRoutesList={[Function]}
+  gotoSavedList={[Function]}
+  lastScroll={0}
+  savedStops={
+    Array [
+      Object {
+        "arrivals": Array [
+          Object {
+            "pattern": Object {
+              "color": "#68FF1C",
+              "direction": null,
+              "id": 5672,
+              "name": "East Campus Connector",
+            },
+            "route": Object {
+              "color": "#68FF1C",
+              "customerRouteId": null,
+              "description": "East Campus Conector",
+              "displayOrder": 0,
+              "id": 2516,
+              "name": "East Campus Connector",
+              "routeType": "Bus",
+              "shortName": "EC",
+              "textColor": "#FFFFFF",
+              "url": null,
+            },
+            "schedulePrediction": false,
+            "secondsToArrival": -30,
+            "vehicle": Object {
+              "capacity": 40,
+              "heading": null,
+              "headingDegrees": 0,
+              "id": 3724,
+              "lastUpdated": "2018-01-25T21:30:21.2071373Z",
+              "lat": 0,
+              "lon": 0,
+              "name": "1642",
+              "passengerLoad": 0,
+              "speed": 0,
+            },
+          },
+        ],
+        "closest": true,
+        "id": 1592773,
+        "lat": 32.875789,
+        "lon": -117.209991,
+        "name": "Executive Drive",
+        "routes": Object {},
+        "rtpiNumber": "639",
+        "savedIndex": 0,
+      },
+    ]
+  }
+  stopsData={
+    Object {
+      "1592773": Object {
+        "arrivals": Array [
+          Object {
+            "pattern": Object {
+              "color": "#68FF1C",
+              "direction": null,
+              "id": 5672,
+              "name": "East Campus Connector",
+            },
+            "route": Object {
+              "color": "#68FF1C",
+              "customerRouteId": null,
+              "description": "East Campus Conector",
+              "displayOrder": 0,
+              "id": 2516,
+              "name": "East Campus Connector",
+              "routeType": "Bus",
+              "shortName": "EC",
+              "textColor": "#FFFFFF",
+              "url": null,
+            },
+            "schedulePrediction": false,
+            "secondsToArrival": 147,
+            "vehicle": Object {
+              "capacity": 40,
+              "heading": null,
+              "headingDegrees": 0,
+              "id": 3724,
+              "lastUpdated": "2018-01-25T21:25:41.0310807Z",
+              "lat": 0,
+              "lon": 0,
+              "name": "1642",
+              "passengerLoad": 0,
+              "speed": 0,
+            },
+          },
+        ],
+        "id": 1592773,
+        "lat": 32.875789,
+        "lon": -117.209991,
+        "name": "Executive Drive",
+        "routes": Object {},
+        "rtpiNumber": "639",
+      },
+    }
+  }
+/>
+`;
