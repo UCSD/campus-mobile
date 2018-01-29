@@ -1,5 +1,4 @@
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
-# Campus Mobile app
+# Campus Mobile &middot; [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) [![iOS Build status](https://build.appcenter.ms/v0.1/apps/0dd30a0f-0296-4681-a160-43897906418c/branches/ci/badge)](https://appcenter.ms)
 
 The campus mobile app platform enables the university to deliver relevant information to students, staff, and visitors, taking the context of time and location into consideration. The platform uses [React Native](https://facebook.github.io/react-native/) and implements a card based UI.
 
