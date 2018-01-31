@@ -1,14 +1,28 @@
 const initialState = {
 	cards: {
-		specialEvents: 	{ id: 'specialEvents', active: false, autoActivated: false, name: 'Special Events', component: 'SpecialEventsCard' },
-		weather: 		{ id: 'weather', active: true, name: 'Weather', component: 'WeatherCard' },
-		shuttle: 		{ id: 'shuttle', active: true, name: 'Shuttle', component: 'ShuttleCard' },
-		dining: 		{ id: 'dining', active: true, name: 'Dining', component: 'DiningCard' },
-		events: 		{ id: 'events', active: true, name: 'Events', component: 'EventsCard' },
-		quicklinks: 	{ id: 'quicklinks', active: true, name: 'Links', component: 'QuicklinksCard' },
-		news: 			{ id: 'news', active: true, name: 'News', component: 'NewsCard' },
+		specialEvents: {
+			id: 'specialEvents', active: false, autoActivated: false, name: 'Special Events', component: 'SpecialEventsCard'
+		},
+		shuttle: {
+			id: 'shuttle', active: true, name: 'Shuttle', component: 'ShuttleCard'
+		},
+		dining: {
+			id: 'dining', active: true, name: 'Dining', component: 'DiningCard'
+		},
+		events: {
+			id: 'events', active: true, name: 'Events', component: 'EventsCard'
+		},
+		news: {
+			id: 'news', active: true, name: 'News', component: 'NewsCard'
+		},
+		quicklinks: {
+			id: 'quicklinks', active: true, name: 'Links', component: 'QuicklinksCard'
+		},
+		weather: {
+			id: 'weather', active: true, name: 'Weather', component: 'WeatherCard'
+		}
 	},
-	cardOrder: ['specialEvents', 'weather', 'shuttle', 'dining', 'events', 'quicklinks', 'news'],
+	cardOrder: ['specialEvents', 'shuttle', 'dining', 'events', 'news', 'quicklinks', 'weather'],
 };
 
 function cards(state = initialState, action) {
