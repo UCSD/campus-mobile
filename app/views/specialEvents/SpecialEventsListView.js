@@ -301,7 +301,7 @@ const ActualSpecialEventsListView = connect(
 
 const styles = StyleSheet.create({
 	mainContainer: { flexGrow: 1 },
-	rowContainer: { flexDirection: 'row', height: 76 },
+	rowContainer: { flexDirection: 'row' },
 	full: { flexGrow: 1, width: WINDOW_WIDTH, height: (WINDOW_HEIGHT - NAVIGATOR_HEIGHT - TAB_BAR_HEIGHT) },
 	card: { width: MAX_CARD_WIDTH },
 	noSessions: { flexGrow: 1, fontSize: 16, textAlign: 'center', padding: 20, lineHeight: 22 },
