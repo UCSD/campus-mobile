@@ -123,9 +123,7 @@ function* updateSpecialEvents() {
 		
 		if (specialEvents) {
 			prefetchSpecialEventsImages(specialEvents);
-			console.log("nowTime: " + String(nowTime))
-			console.log(specialEvents)
-			// console.log("end time: "+ String(specialEvents['end-time']))
+		
 			if (specialEvents['start-time'] <= nowTime &&
 				specialEvents['end-time'] >= nowTime) {
 				// Inside active specialEvents window
