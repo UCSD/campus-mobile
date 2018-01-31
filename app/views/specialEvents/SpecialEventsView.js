@@ -284,7 +284,7 @@ const DaysBar = ({ days, selectedDay, handleDayPress }) => {
 };
 
 const styles = StyleSheet.create({
-	specialEventsListView: { flex: 1 },
+	specialEventsListView: { flex: 1},
 	greybg: { backgroundColor: COLOR_LGREY },
 	scrollButtonContainer: { flexDirection: 'row' },
 	scrollContentContainer: { flexGrow: 1 },
