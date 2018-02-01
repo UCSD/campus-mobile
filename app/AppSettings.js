@@ -14,7 +14,7 @@ module.exports = {
 	QUICKLINKS_API_URL: 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/quick_links/ucsd-quicklinks-v3.json',
 	NEWS_API_URL: 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/allstories.json',
 	MAP_SEARCH_API_URL: 'https://xgu9qa7gx4.execute-api.us-west-2.amazonaws.com/prod/v2/map/search?region=0&query=',
-	SPECIAL_EVENT_API_URL: 'https://s3-us-west-2.amazonaws.com/ucsdnews/CLISA_dev_test_4.json',
+	SPECIAL_EVENT_API_URL: 'https://2jjml3hf27.execute-api.us-west-2.amazonaws.com/prod/events/special',
 
 	/* RESOURCES */
 	SHUTTLE_SCHEDULE_URL: 'https://transportation.ucsd.edu/shuttles/',
@@ -37,8 +37,8 @@ module.exports = {
 	QUICKLINKS_API_TTL: 86400000, // 1 day
 	SHUTTLE_API_TTL: 6000, // 6 seconds
 	SHUTTLE_MASTER_TTL: 86400000, // 1 day
-	SPECIAL_EVENTS_TTL: 60000, //temp: 1 minute
-	// SPECIAL_EVENTS_TTL: 3600000, // 1 hour
+	// SPECIAL_EVENTS_TTL: 60000, //temp: 1 minute
+	SPECIAL_EVENTS_TTL: 3600000, // 1 hour
 	
 	//DATA_SAGA_TTL: 60000, // 1 minute
 	DATA_SAGA_TTL: 1000, // 1 second (temp)
