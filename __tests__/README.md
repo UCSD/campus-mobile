@@ -28,7 +28,7 @@ Tests that aren't snapshot specific can also be written and will be run concurre
 
 Tests are named after the component that they are testing. The test for `Home.js` is named `Home.test.js`.
 
-We've mirrored the structure of our `__tests__` directory to that of our `app/views/` directory. For example, `/app/views/Home.js` is tested at `__tests/views/Home.test.js`.
+We've mirrored the structure of our `__tests__` directory to that of our `app/views/` directory. For example, `/app/views/Home.js` is tested at `__tests__/views/Home.test.js`.
 
 The `__snapshots__` folder is created automatically following the creation and first run of a test. These files should be checked in and committed.
 
