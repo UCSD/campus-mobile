@@ -9,8 +9,8 @@ The goal of this platform is to provide a responsive and intuitive native mobile
 
 | Platform | Build Status |
 |:-------:|:-------:|  
-|iOS|[![iOS Build status](https://build.appcenter.ms/v0.1/apps/c176abb1-b0df-46fe-a4cf-f8fa8095b0dd/branches/dev/badge)](https://appcenter.ms)|
-|Android|[![Android Build status](https://build.appcenter.ms/v0.1/apps/0dd30a0f-0296-4681-a160-43897906418c/branches/dev/badge)](https://appcenter.ms)|
+|Android|[![iOS Build status](https://build.appcenter.ms/v0.1/apps/c176abb1-b0df-46fe-a4cf-f8fa8095b0dd/branches/dev/badge)](https://appcenter.ms)|
+|iOS|[![Android Build status](https://build.appcenter.ms/v0.1/apps/0dd30a0f-0296-4681-a160-43897906418c/branches/dev/badge)](https://appcenter.ms)|
 
 ## Getting Started
 
