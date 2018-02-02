@@ -74,7 +74,6 @@ class Main extends Component {
 		} else if (general.platformAndroid()) {
 			StatusBar.setBackgroundColor('#101d32', false);
 		}
-
 		return (
 			<View style={css.flex}>
 				<PushNotificationContainer />

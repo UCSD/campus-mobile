@@ -220,6 +220,7 @@ const FakeTabBar = ({ personal, handleFullPress, handleMinePress }) => (
 			>
 				<Text
 					style={personal ? styles.plainText : styles.selectedText}
+					allowFontScaling = {false}
 				>
 					Full Schedule
 				</Text>
@@ -230,6 +231,7 @@ const FakeTabBar = ({ personal, handleFullPress, handleMinePress }) => (
 			>
 				<Text
 					style={personal ? styles.selectedText : styles.plainText}
+					allowFontScaling = {false}
 				>
 					My Schedule
 				</Text>
