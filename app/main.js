@@ -3,6 +3,7 @@ import {
 	View,
 	StatusBar,
 	Image,
+	Text,
 } from 'react-native';
 import { Scene, Router, Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
@@ -73,7 +74,6 @@ class Main extends Component {
 		} else if (general.platformAndroid()) {
 			StatusBar.setBackgroundColor('#101d32', false);
 		}
-
 		return (
 			<View style={css.flex}>
 				<PushNotificationContainer />
