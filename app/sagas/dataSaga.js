@@ -120,13 +120,11 @@ function* updateSpecialEvents() {
 
 	if (timeDiff > ttl && Array.isArray(saved)) {
 		const specialEvents = yield call(fetchSpecialEvents);
-		
+		console.log("TESTING")
+
 		if (specialEvents) {
 			prefetchSpecialEventsImages(specialEvents);
-			
-			specialEvents['end-time'] = nowTime-1;
-			console.log("End time: " + string(specialEvents['end-time']))
-			console.log(nowTime)
+			specialEvents['end-time'] = nowTime - 1;
 
 			if (specialEvents['start-time'] <= nowTime &&
 				specialEvents['end-time'] >= nowTime) {
@@ -150,16 +148,26 @@ function* updateSpecialEvents() {
 					yield put({ type: 'SET_SPECIAL_EVENTS', specialEvents });
 				}
 			} else {
+				console.log("TESTING ELSE")
 				// Outside active specialEvents window
 				// wipe saved data
 				yield put({ type: 'CHANGED_SPECIAL_EVENTS_SAVED', saved: [] });
 				yield put({ type: 'CHANGED_SPECIAL_EVENTS_LABELS', labels: [] });
 				
-				// set active and autoactivated to false and set Special Events data to null
+				// set active and autoactivated to false
 				yield put({ type: 'UPDATE_CARD_STATE', id: 'specialEvents', state: false });
 				yield put({ type: 'UPDATE_AUTOACTIVATED_STATE', id: 'specialEvents', state: false });
-				yield put({ type: 'SET_SPECIAL_EVENTS', specialEvents: null });
+
 			}
+		} else {
+			console.log("TESTING NULL")
+			// wipe any saved data
+			yield put({ type: 'CHANGED_SPECIAL_EVENTS_SAVED', saved: [] });
+			yield put({ type: 'CHANGED_SPECIAL_EVENTS_LABELS', labels: [] });
+			
+			// set active and autoactivated to false and set Special Events data to null
+			yield put({ type: 'UPDATE_CARD_STATE', id: 'specialEvents', state: false });
+			yield put({ type: 'UPDATE_AUTOACTIVATED_STATE', id: 'specialEvents', state: false });
 		}
 	}
 }
