@@ -8,7 +8,7 @@ import {
 	TouchableOpacity,
 	Platform,
 	StatusBar,
-	BackAndroid
+	BackHandler
 } from 'react-native';
 import { connect } from 'react-redux';
 import MapView from 'react-native-maps';
@@ -70,7 +70,7 @@ export class NearbyMapView extends React.Component {
 	componentDidMount() {
 		logger.ga('View mounted: Full Map View');
 
-		BackAndroid.addEventListener('hardwareBackPress', this.pressIcon);
+		BackHandler.addEventListener('hardwareBackPress', this.pressIcon);
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -144,7 +144,7 @@ export class NearbyMapView extends React.Component {
 	}
 
 	componentWillUnmount() {
-		BackAndroid.removeEventListener('hardwareBackPress', this.pressIcon);
+		BackHandler.removeEventListener('hardwareBackPress', this.pressIcon);
 		clearTimeout(this.timer);
 		this.props.clearSearch();
 	}

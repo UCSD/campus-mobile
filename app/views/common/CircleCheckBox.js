@@ -14,6 +14,7 @@ import {
   View,
   Text,
   TouchableOpacity,
+  ViewPropTypes
 } from 'react-native';
 import { COLOR_MORANGE } from '../../styles/ColorConstants';
 
@@ -30,7 +31,7 @@ class CircleCheckBox extends Component {
    innerColor: React.PropTypes.string,
    onToggle: React.PropTypes.func.isRequired,
    labelPosition: React.PropTypes.oneOf(['right', 'left']),
-   styleCheckboxContainer: View.propTypes.style,
+   styleCheckboxContainer: ViewPropTypes.style,
    styleLabel: Text.propTypes.style,
   };
 

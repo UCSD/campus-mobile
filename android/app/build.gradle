@@ -58,7 +58,7 @@ import com.android.build.OutputFile
  *   inputExcludes: ["android/**", "ios/**"],
  *
  *   // override which node gets called and with what additional arguments
- *   nodeExecutableAndArgs: ["node"]
+ *   nodeExecutableAndArgs: ["node"],
  *
  *   // supply additional arguments to the packager
  *   extraPackagerArgs: []
@@ -140,6 +140,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-vector-icons')
     compile project(':react-native-fcm')
     compile 'com.google.firebase:firebase-core:11.0.+'
     compile project(':react-native-google-analytics-bridge')
@@ -147,7 +148,6 @@ dependencies {
     compile project(':react-native-exit-app')
     compile project(':react-native-device-info')
     compile project(':react-native-cookies')
-    compile project(':react-native-vector-icons')
     compile project(':react-native-permissions')
     compile project(':react-native-google-api-availability-bridge')
     compile fileTree(dir: "libs", include: ["*.jar"])
