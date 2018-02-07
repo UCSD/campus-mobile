@@ -10,7 +10,6 @@ import com.idehub.GoogleAnalyticsBridge.GoogleAnalyticsBridgePackage;
 import com.oblador.keychain.KeychainPackage;
 import com.github.wumke.RNExitApp.RNExitAppPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
-import com.psykar.cookiemanager.CookieManagerPackage;
 import com.joshblour.reactnativepermissions.ReactNativePermissionsPackage;
 import com.ivanwu.googleapiavailabilitybridge.ReactNativeGooglePlayServicesPackage;
 import com.airbnb.android.react.maps.MapsPackage;
@@ -42,7 +41,6 @@ public class MainApplication extends Application implements ReactApplication {
             new KeychainPackage(),
             new RNExitAppPackage(),
             new RNDeviceInfo(),
-            new CookieManagerPackage(),
             new ReactNativePermissionsPackage(),
             new ReactNativeGooglePlayServicesPackage(),
             new MapsPackage()
