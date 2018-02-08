@@ -23,6 +23,7 @@ import SearchResults from './SearchResults';
 import SearchHistoryCard from './SearchHistoryCard';
 import SearchSuggest from './SearchSuggest';
 import SearchShuttleMenu from './SearchShuttleMenu';
+import Toast from 'react-native-simple-toast';
 
 import css from '../../styles/css';
 import logger from '../../util/logger';
@@ -36,7 +37,7 @@ const statusBarHeight = Platform.select({
 	android: StatusBar.currentHeight,
 });
 
-class NearbyMapView extends React.Component {
+export class NearbyMapView extends React.Component {
 
 	constructor(props) {
 		super(props);
@@ -225,8 +226,8 @@ class NearbyMapView extends React.Component {
 
 	searchTimeout = () => {
 		if (!this.props.search_results) {
+			Toast.showWithGravity('No results found for your search.', Toast.SHORT, Toast.BOTTOM);
 			this.setState({
-				searchInput: 'No Results Found',
 				iconStatus: 'search'
 			});
 		}
@@ -401,7 +402,7 @@ const mapDispatchToProps = (dispatch, ownProps) => (
 	}
 );
 
-module.exports = connect(mapStateToProps, mapDispatchToProps)(NearbyMapView);
+export default connect(mapStateToProps, mapDispatchToProps)(NearbyMapView);
 
 const navMargin = Platform.select({
 	ios: 64,

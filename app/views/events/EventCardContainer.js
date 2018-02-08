@@ -6,7 +6,7 @@ import DataListCard from '../common/DataListCard';
 import logger from '../../util/logger';
 import { militaryToAMPM } from '../../util/general';
 
-const EventCardContainer = ({ eventsData }) => {
+export const EventCardContainer = ({ eventsData }) => {
 	logger.ga('Card Mounted: Events');
 
 	let data = null;

@@ -1,6 +1,15 @@
 {
   "images" : [
     {
+      "extent" : "full-screen",
+      "idiom" : "iphone",
+      "subtype" : "2436h",
+      "filename" : "iPhone-X-1125x2436.png",
+      "minimum-system-version" : "11.0",
+      "orientation" : "portrait",
+      "scale" : "3x"
+    },
+    {
       "orientation" : "portrait",
       "idiom" : "iphone",
       "filename" : "splashscreen-default.png",
@@ -50,14 +59,6 @@
       "filename" : "Default-1242@3x~iphone6s-portrait_1242x2208.png",
       "minimum-system-version" : "8.0",
       "orientation" : "portrait",
-      "scale" : "3x"
-    },
-    {
-      "orientation" : "landscape",
-      "idiom" : "iphone",
-      "extent" : "full-screen",
-      "minimum-system-version" : "8.0",
-      "subtype" : "736h",
       "scale" : "3x"
     },
     {
