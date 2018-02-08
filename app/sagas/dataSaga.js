@@ -120,11 +120,9 @@ function* updateSpecialEvents() {
 
 	if (timeDiff > ttl && Array.isArray(saved)) {
 		const specialEvents = yield call(fetchSpecialEvents);
-		console.log("TESTING")
 
 		if (specialEvents) {
 			prefetchSpecialEventsImages(specialEvents);
-			specialEvents['end-time'] = nowTime - 1;
 
 			if (specialEvents['start-time'] <= nowTime &&
 				specialEvents['end-time'] >= nowTime) {
@@ -148,8 +146,10 @@ function* updateSpecialEvents() {
 					yield put({ type: 'SET_SPECIAL_EVENTS', specialEvents });
 				}
 			} else {
-				console.log("TESTING ELSE")
 				// Outside active specialEvents window
+				//Set Special Events to null
+				yield put({ type: 'SET_SPECIAL_EVENTS', specialEvents: null});
+
 				// wipe saved data
 				yield put({ type: 'CHANGED_SPECIAL_EVENTS_SAVED', saved: [] });
 				yield put({ type: 'CHANGED_SPECIAL_EVENTS_LABELS', labels: [] });
@@ -160,7 +160,6 @@ function* updateSpecialEvents() {
 
 			}
 		} else {
-			console.log("TESTING NULL")
 			// wipe any saved data
 			yield put({ type: 'CHANGED_SPECIAL_EVENTS_SAVED', saved: [] });
 			yield put({ type: 'CHANGED_SPECIAL_EVENTS_LABELS', labels: [] });
