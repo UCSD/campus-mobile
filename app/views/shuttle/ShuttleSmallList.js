@@ -48,6 +48,7 @@ const ShuttleSmallRow = ({ arrival }) => (
 		<View style={[styles.circle, { backgroundColor: arrival.route.color }]}>
 			<Text
 				style={styles.shortNameText}
+				allowFontScaling = {false}
 			>
 				{arrival.route.shortName}
 			</Text>

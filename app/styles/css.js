@@ -36,7 +36,7 @@
 	900 - Misc
 */
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 import {
 	platformIOS,
 	platformAndroid,
@@ -78,7 +78,7 @@ var css = StyleSheet.create({
 	// 101 - Navigator
 	navIOS: { backgroundColor: COLOR_PRIMARY, height: NAVIGATOR_IOS_HEIGHT },
 	navAndroid: { backgroundColor: COLOR_PRIMARY, height: NAVIGATOR_ANDROID_HEIGHT },
-	navIOSTitle: { color: COLOR_WHITE, fontSize: 24, marginTop: deviceIphoneX() ? 8 : -8, fontWeight: '300' },
+	navIOSTitle: { color: COLOR_WHITE, fontSize: 24, marginTop: deviceIphoneX() ? 8 : -8, fontWeight: '300'},
 	navAndroidTitle: { color: COLOR_WHITE, fontSize: 24, marginTop: -8, fontWeight: '300' },
 	navCampusLogoTitle: { resizeMode: 'contain', height: 26, marginTop: platformIOS() ? NAVIGATOR_LOGO_IOS_MARGIN : NAVIGATOR_LOGO_ANDROID_MARGIN, alignSelf: 'center' },
 	navIOSIconStyle: { tintColor:COLOR_WHITE, marginTop: deviceIphoneX() ? 14 : -2 },

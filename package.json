@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest",
+    "insert-production-values-ci": "node scripts/replace_all.js production ci",
     "insert-production-values": "node scripts/replace_all.js production",
     "insert-staging-values": "node scripts/replace_all.js staging",
     "insert-placeholder-values": "node scripts/replace_all.js placeholder",
@@ -56,9 +57,9 @@
     "babel-plugin-transform-object-rest-spread": "6.23.0",
     "babel-preset-react": "6.23.0",
     "babel-preset-react-native": "1.9.1",
-    "enzyme": "^3.3.0",
-    "enzyme-adapter-react-15.4": "^1.0.5",
-    "enzyme-to-json": "^3.3.1",
+    "enzyme": "3.3.0",
+    "enzyme-adapter-react-15.4": "1.0.5",
+    "enzyme-to-json": "3.3.1",
     "eslint": "4.15.0",
     "eslint-config-airbnb": "16.1.0",
     "eslint-plugin-flowtype": "2.41.0",
@@ -69,8 +70,8 @@
     "jest": "22.1.4",
     "jsdoc": "3.4.3",
     "jsdoc-babel": "0.3.0",
-    "react-addons-test-utils": "^15.4.2",
-    "react-dom": "^15.4.2",
+    "react-addons-test-utils": "15.4.2",
+    "react-dom": "15.4.2",
     "react-test-renderer": "15.4.2"
   },
   "jest": {

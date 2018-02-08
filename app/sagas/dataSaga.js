@@ -120,9 +120,10 @@ function* updateSpecialEvents() {
 
 	if (timeDiff > ttl && Array.isArray(saved)) {
 		const specialEvents = yield call(fetchSpecialEvents);
-
+		
 		if (specialEvents) {
 			prefetchSpecialEventsImages(specialEvents);
+		
 			if (specialEvents['start-time'] <= nowTime &&
 				specialEvents['end-time'] >= nowTime) {
 				// Inside active specialEvents window
