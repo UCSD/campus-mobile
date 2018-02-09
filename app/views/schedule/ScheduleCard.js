@@ -2,12 +2,27 @@ import React from 'react';
 import {
 	View,
 	Text,
-	ListView
+	ListView,
+	StyleSheet,
+	TouchableHighlight,
 } from 'react-native';
 import { getData } from './scheduleData';
 import ScrollCard from '../card/ScrollCard';
+import Card from '../card/Card';
+import Touchable from '../common/Touchable';
 import logger from '../../util/logger';
+import Icon from 'react-native-vector-icons/Ionicons';
 import css from '../../styles/css';
+import {
+	COLOR_DGREY,
+	COLOR_MGREY,
+	COLOR_PRIMARY,
+	COLOR_LGREY,
+	COLOR_SECONDARY,
+} from '../../styles/ColorConstants';
+import {
+	MAX_CARD_WIDTH,
+} from '../../styles/LayoutConstants';
 
 var scheduleData = getData();
 var dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
@@ -16,24 +31,74 @@ var ScheduleCard = () => {
 	logger.ga('Card Mounted: Class Schedule');
 
 	return (
-		<ScrollCard
+		<Card 
 			id='schedule'
-			title='Class Schedule'
-			scrollData={scheduleData}
-			renderRow={
-				(rowData, sectionID, rowID, highlightRow) => (
-					(rowID !== 'SA' && rowID !== 'SU') ? (
-						<ScheduleDay
-							id={rowID}
-							data={rowData}
-						/>
-					) : (null)
-			)}
-			actionButton={null}
-			extraActions={null}
-			updateScroll={null}
-			lastScroll={null}
-		/>
+			title='Class Schedule'>
+			<View style={css.sc_dayContainer}>
+				<View
+					style={css.sc_dayRow}>
+					<Text
+						style={css.sc_courseText}>
+						CAT 125
+					</Text>
+					<Text
+						style={css.sc_subText}>
+						1:00 PM to 1:50 PM
+					</Text>
+					<Text
+						style={css.sc_subText}>
+						PCYNH 199
+					</Text>
+				</View>
+				<TouchableHighlight style={css.dc_locations_row_right} underlayColor={'rgba(200,200,200,.1)'} onPress={() => general.gotoNavigationApp(data.coords.lat, data.coords.lon)}>
+				<View style={css.dl_dir_traveltype_container}>
+					<Icon name="md-walk" size={32} color={COLOR_SECONDARY} />
+				</View>
+			</TouchableHighlight>
+			</View>
+			<View style={css.sc_dayContainer}>
+				<View
+					style={css.sc_dayRow}>
+					<Text style={css.sc_subText}>
+						CSE 8A
+					</Text>
+					<Text style={css.sc_subText}>
+						Lecture
+					</Text>
+					<Text style={css.sc_subText}>
+						2PM
+					</Text>
+				</View>
+			</View>
+			
+			<Touchable
+				style={styles.fullScheduleButton}
+				onPress={() => getData()}>
+
+					<Text style={styles.more_label}>
+						View Full Schedule
+					</Text>
+			</Touchable>
+		</Card>
+
+		// <ScrollCard
+		// 	id='schedule'
+		// 	title='Class Schedule'
+		// 	scrollData={scheduleData}
+		// 	renderRow={
+		// 		(rowData, sectionID, rowID, highlightRow) => (
+		// 			(rowID !== 'SA' && rowID !== 'SU') ? (
+		// 				<ScheduleDay
+		// 					id={rowID}
+		// 					data={rowData}
+		// 				/>
+		// 			) : (null)
+		// 	)}
+		// 	actionButton={null}
+		// 	extraActions={null}
+		// 	updateScroll={null}
+		// 	lastScroll={null}
+		// />
 	);
 };
 
@@ -70,5 +135,14 @@ var DayItem = ({ data }) => (
 		</Text>
 	</View>
 );
+
+const styles = StyleSheet.create({
+	more: { alignItems: 'center', justifyContent: 'center', padding: 6 },
+	more_label: { fontSize: 20, color: COLOR_PRIMARY, fontWeight: '300' },
+	specialEventsListView: { borderBottomWidth: 1, borderBottomColor: COLOR_MGREY },
+	nextClassContainer: { flexGrow: 1, width: MAX_CARD_WIDTH },
+	contentContainer: { flexShrink: 1, width: MAX_CARD_WIDTH },
+	fullScheduleButton: { width: MAX_CARD_WIDTH, backgroundColor: COLOR_LGREY, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4, paddingVertical: 8, borderTopWidth: 1, borderBottomWidth: 1, borderColor: COLOR_MGREY },
+});
 
 export default ScheduleCard;
