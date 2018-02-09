@@ -123,6 +123,7 @@ function* updateSpecialEvents() {
 
 		if (specialEvents) {
 			prefetchSpecialEventsImages(specialEvents);
+
 			if (specialEvents['start-time'] <= nowTime &&
 				specialEvents['end-time'] >= nowTime) {
 				// Inside active specialEvents window
@@ -146,16 +147,26 @@ function* updateSpecialEvents() {
 				}
 			} else {
 				// Outside active specialEvents window
-				// Deactivate card one time when the specialEvents is over
-				if (cards.specialEvents.autoActivated) {
-					// set active and autoActivated to false
-					yield put({ type: 'UPDATE_CARD_STATE', id: 'specialEvents', state: false });
-					yield put({ type: 'UPDATE_AUTOACTIVATED_STATE', id: 'specialEvents', state: false });
-				} else {
-					// Auto-activated false, but manually re-enabled by user
-					// SpecialEvents is over, do nothing
-				}
+				//Set Special Events to null
+				yield put({ type: 'SET_SPECIAL_EVENTS', specialEvents: null});
+
+				// wipe saved data
+				yield put({ type: 'CHANGED_SPECIAL_EVENTS_SAVED', saved: [] });
+				yield put({ type: 'CHANGED_SPECIAL_EVENTS_LABELS', labels: [] });
+				
+				// set active and autoactivated to false
+				yield put({ type: 'UPDATE_CARD_STATE', id: 'specialEvents', state: false });
+				yield put({ type: 'UPDATE_AUTOACTIVATED_STATE', id: 'specialEvents', state: false });
+
 			}
+		} else {
+			// wipe any saved data
+			yield put({ type: 'CHANGED_SPECIAL_EVENTS_SAVED', saved: [] });
+			yield put({ type: 'CHANGED_SPECIAL_EVENTS_LABELS', labels: [] });
+			
+			// set active and autoactivated to false and set Special Events data to null
+			yield put({ type: 'UPDATE_CARD_STATE', id: 'specialEvents', state: false });
+			yield put({ type: 'UPDATE_AUTOACTIVATED_STATE', id: 'specialEvents', state: false });
 		}
 	}
 }
