@@ -40,7 +40,7 @@ module.exports = {
 
 	FEEDBACK_POST_TTL: 10000,
 
-	USER_LOGIN: {
+	SSO: {
 		ENABLED: false,
 		METHOD: 'openid',
 
