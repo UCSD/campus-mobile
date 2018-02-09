@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -46,7 +47,6 @@
 		D479B584928944A1B4DA2B7A /* libLRDRCTSimpleToast.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1062771EF3AA479291C7BFA9 /* libLRDRCTSimpleToast.a */; };
 		DF3A709013A144A386C79621 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 08B18D3B65B5441EA1790B0D /* FontAwesome.ttf */; };
 		E24DFEBECA6E457DA26A0D9C /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 54EA745032D04279BAC96CB2 /* MaterialIcons.ttf */; };
-		E91CC56C5BA449EDA2B60F56 /* libRNCookieManagerIOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 24B29F3C33224E7493514346 /* libRNCookieManagerIOS.a */; };
 		F39704B1803340DEBE51D7E7 /* libRNFIRMessaging.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7FC8FBD8CF474ED0AAB246CD /* libRNFIRMessaging.a */; };
 		F979D7E01F017E760061C674 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F979D7DF1F017E760061C674 /* libz.tbd */; };
 /* End PBXBuildFile section */
@@ -391,7 +391,6 @@
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
 				794AD000FF0D404F8970FD2F /* libReactNativePermissions.a in Frameworks */,
 				D479B584928944A1B4DA2B7A /* libLRDRCTSimpleToast.a in Frameworks */,
-				E91CC56C5BA449EDA2B60F56 /* libRNCookieManagerIOS.a in Frameworks */,
 				A2803A699B484E538CC04625 /* libRNDeviceInfo.a in Frameworks */,
 				7F675770ECCB4CE4855E32D3 /* libRNExitApp.a in Frameworks */,
 				A62747CCACBA436E8CD8EC91 /* libRNKeychain.a in Frameworks */,
@@ -1280,9 +1279,7 @@
 				INFOPLIST_FILE = CampusMobileTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CampusMobile.app/CampusMobile";
@@ -1297,9 +1294,7 @@
 				INFOPLIST_FILE = CampusMobileTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CampusMobile.app/CampusMobile";
