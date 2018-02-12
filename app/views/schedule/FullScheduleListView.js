@@ -6,7 +6,7 @@ import {
 } from 'react-native';
 
 import css from '../../styles/css';
-
+import { getData } from './scheduleData';
 
 const dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 var scheduleData = getData();
