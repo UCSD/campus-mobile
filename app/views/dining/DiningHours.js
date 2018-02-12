@@ -2,90 +2,45 @@ import React from 'react';
 import {
 	View,
 	Text,
-	StyleSheet,
 } from 'react-native';
-import moment from 'moment';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const DiningHours = ({ regularHours, specialHours, customStyle }) => {
-	
-	if (specialHours) {
-		return null;
-	} else {
-		const now = moment(),
-			  nowMilitary = now.format('Hmm').toLowerCase(),
-			  dayOfWeek = now.format('ddd').toLowerCase(),
-			  openHours = regularHours[dayOfWeek];
+import css from '../../styles/css';
 
-		let open = false,
-			openStr = '',
-			closeStr = '';
+const dining = require('../../util/dining');
 
-		if (openHours) {
-			const openTime = parseInt(openHours.substring(0,4)),
-				  openTimeStr = openHours.substring(0,4),
-				  closeTime = parseInt(openHours.substring(5,9)),
-				  closeTimeStr = openHours.substring(5,9),
-				  openAMPM = (openTime < 1200) ? 'am' : 'pm',
-				  closeAMPM = (closeTime < 1200) ? 'am' : 'pm';
-			
-			openStr = formatTime(openTimeStr, openAMPM);
-			closeStr = formatTime(closeTimeStr, closeAMPM);
-
-			if (closeTime <= openTime) {
-				// Restaurant closes the next morning/day
-				if (nowMilitary <= closeTime) {
-					open = true;
-				} else if (nowMilitary >= openTime) {
-					open = true;
+const generateHourText = (parsedHours, textRows) => {
+	parsedHours.forEach((day) => {
+		let hoursText = [];
+		if (day.hours.length > 1) {
+			day.hours.forEach((hours, i, total) => {
+				if (i !== total.length - 1) {
+					hoursText.push(`${hours},\n`);
+				} else {
+					hoursText.push(hours);
 				}
-			} else if (nowMilitary >= openTime && nowMilitary <= closeTime) {
-				// Restaurant closes later the same day
-				open = true;
-			}
+			});
+		} else {
+			hoursText = day.hours;
 		}
+		textRows.push(<Text key={day.title}>{day.title}: <Text style={css.dd_hours_text_bold}>{hoursText}</Text></Text>);
+	});
+};
 
-		return (
-			<View style={[styles.hoursContainer, customStyle]}>
-				{open ? (
-					<Text style={styles.hoursMain}>Open now: </Text>
-				) : (
-					<Text style={styles.hoursClosed}>Closed. </Text>
-				)}
-				{openHours && openStr && closeStr ? (
-					<Text style={styles.hoursOpen}>Hours <Text style={styles.hoursBold}>{openStr} - {closeStr}</Text></Text>
-				) : null }
-			</View>
-		);
-	}
-}
+const DiningHours = ({ hours, specialHours, style }) => {
+	const hoursParsed = dining.parseWeeklyHours(hours),
+		hoursTextRows = [];
 
-function formatTime(time, ampm) {
-	let timeHH = time.substring(0,2),
-		timeMM = time.substring(2,4),
-		timeStr = '';
-
-	timeHH = parseInt(timeHH);
-	timeMM = parseInt(timeMM);
-
-	if (timeHH > 12) {
-		timeHH -= 12;
-	} else if (timeHH === 0) {
-		timeHH = '12';
-	}
-	if (timeMM === 0) {
-		timeMM = '00';
+	if (specialHours) {
+		hoursTextRows.push(<Text key={0}>Special Hours:</Text>);
 	}
 
-	return (timeHH + ':' + timeMM + ' ' + ampm);
-}
+	generateHourText(hoursParsed, hoursTextRows);
 
-const styles = StyleSheet.create({
-	hoursMain: { },
-	hoursOpen: { },
-	hoursBold: { fontWeight: '500' },
-	hoursClosed: { fontWeight: '500', color: '#D32322' },
-	hoursContainer: { flexDirection: 'row', alignItems: 'center' },
-});
+	return (
+		<View style={[css.dd_hours_container, style]}>
+			{hoursTextRows}
+		</View>
+	);
+};
 
 export default DiningHours;

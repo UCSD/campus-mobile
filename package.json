@@ -16,7 +16,7 @@
     "dateformat": "1.0.12",
     "events": "1.1.1",
     "html-entities": "1.2.0",
-    "moment": "2.15.2",
+    "moment": "2.20.1",
     "react": "15.4.2",
     "react-native": "0.42.3",
     "react-native-animatable": "1.1.1",

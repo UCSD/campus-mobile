@@ -2,33 +2,31 @@ import React from 'react';
 import {
 	View,
 	Text,
-	StyleSheet
 } from 'react-native';
 import DiningHours from './DiningHours';
 
-const DiningDescription = ({ name, description, regularHours, specialHours }) => (
-	<View style={styles.descriptionContainer}>
-		<Text style={styles.nameText}>{name}</Text>
-		{description ? (
-			<Text style={styles.subText}>{description}</Text>
-		) : null }
-		
+import css from '../../styles/css';
+
+const DiningDescription = ({
+	name, description, regularHours, specialHours
+}) => (
+	<View style={css.dd_description_container}>
+		<Text style={css.dd_description_nametext}>{name}</Text>
+		{description
+			? <Text style={css.dd_description_subtext}>{description}</Text>
+			: null
+		}
+
 		<DiningHours
-			regularHours={regularHours}
-			specialHours={specialHours}
-			customStyle={styles.diningHours}
+			hours={regularHours}
+			style={css.dd_description_hours}
 		/>
-		{specialHours ? (
-			<Text style={styles.subText}>Special Hours:{'\n'}{specialHours}</Text>
-		) : null }
+
+		{specialHours
+			? <DiningHours hours={specialHours} specialHours style={css.dd_description_hours} />
+			: null
+		}
 	</View>
 );
-
-const styles = StyleSheet.create({
-	descriptionContainer: { padding: 10 },
-	nameText: { fontSize: 26 },
-	subText: { paddingTop: 6 },
-	diningHours: { paddingTop: 10 },
-});
 
 export default DiningDescription;

@@ -3,6 +3,7 @@ import {
 	View,
 	ScrollView,
 } from 'react-native';
+import { connect } from 'react-redux';
 
 import logger from '../../util/logger';
 import DiningDescription from './DiningDescription';
@@ -22,6 +23,7 @@ class DiningDetail extends React.Component {
 	}
 
 	componentDidMount() {
+		this.props.getMenuItems(this.props.data.id);
 		logger.ga('View Mounted: Dining Detail');
 	}
 
@@ -49,9 +51,8 @@ class DiningDetail extends React.Component {
 
 	render() {
 		const { data } = this.props;
-
 		return (
-			<View style={[css.main_container, css.whitebg]}>
+			<View style={css.main_full}>
 				<ScrollView contentContainerStyle={[css.scroll_main, css.whitebg]}>
 					<DiningDescription
 						name={data.name}
@@ -71,7 +72,7 @@ class DiningDetail extends React.Component {
 						data={data}
 						filters={this.state.filters}
 						activeMeal={this.state.activeMeal}
-						addFilter={(filter) => this.addFilter(filter)}
+						addFilter={filter => this.addFilter(filter)}
 					/>
 				</ScrollView>
 			</View>
@@ -79,4 +80,12 @@ class DiningDetail extends React.Component {
 	}
 }
 
-export default DiningDetail;
+const mapDispatchToProps = dispatch => (
+	{
+		getMenuItems: (menuId) => {
+			dispatch({ type: 'UPDATE_DINING', menuId });
+		}
+	}
+);
+
+export default connect(null, mapDispatchToProps)(DiningDetail);

@@ -1,27 +1,37 @@
 import { put, takeLatest, call, select } from 'redux-saga/effects';
 import logger from '../util/logger';
 import DiningService from '../services/diningService';
-import { DINING_API_TTL } from '../AppSettings';
+import { DINING_API_TTL, DINING_MENU_API_TTL } from '../AppSettings';
 import { convertMetersToMiles, getDistanceMilesStr, dynamicSort } from '../util/general';
 import { getDistance } from '../util/map';
 
-const getDining = (state) => (state.dining);
+const getDining = state => (state.dining);
 
 function* updateDining(action) {
 	const { lastUpdated, data } = yield select(getDining);
-	const { position } = action;
+	const { position, menuId } = action;
 
 	const nowTime = new Date().getTime();
 	const timeDiff = nowTime - lastUpdated;
 	const diningTTL = DINING_API_TTL;
+	const diningMenuTTL = DINING_MENU_API_TTL;
 	let diningData;
 
-	if (timeDiff < diningTTL && data) {
+	if (menuId) {
+		const currentMenuId = data.lookup[menuId];
+		const menuTimeDiff = nowTime - data[currentMenuId].lastUpdated;
+		if (menuTimeDiff > diningMenuTTL || !data[currentMenuId].menuItems || !menuTimeDiff) {
+			const currentMenu = yield call(fetchDiningMenu, menuId);
+			yield put({ type: 'SET_DINING_MENU', data: currentMenu, id: currentMenuId });
+		}
+	}
+	else if (timeDiff < diningTTL && data) {
 		diningData = yield call(_sortDining, data);
 		if (position) {
 			diningData = yield call(_setDiningDistance, position, diningData);
 		}
-	} else {
+	}
+	else {
 		// Fetch for new data then sort and set distance
 		diningData = yield call(fetchDining, position);
 	}
@@ -44,6 +54,13 @@ function fetchDining(position) {
 		});
 }
 
+function fetchDiningMenu(id) {
+	return DiningService.FetchDiningMenu(id)
+		.catch((error) => {
+			logger.log(error);
+		});
+}
+
 function _sortDining(diningData) {
 	// Sort dining locations by name
 	return new Promise((resolve, reject) => {
@@ -51,7 +68,7 @@ function _sortDining(diningData) {
 			diningData.sort(dynamicSort('name'));
 			resolve(diningData);
 		} else {
-			reject('Error _sortDining, diningData is not an array(' + diningData + ')');
+			reject(new Error('Error _sortDining, diningData is not an array(' + diningData + ')'));
 		}
 	});
 }
@@ -73,7 +90,7 @@ function _setDiningDistance(position, diningData) {
 			}
 			resolve(diningData);
 		} else {
-			reject(null);
+			reject(new Error('Error _setDiningDistance'));
 		}
 	});
 }

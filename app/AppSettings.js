@@ -9,7 +9,7 @@ module.exports = {
 	SURF_API_URL: 'https://0yi5xwy0v7.execute-api.us-west-2.amazonaws.com/dev',
 	SHUTTLE_STOPS_API_URL: 'https://ies4wyrlx9.execute-api.us-west-2.amazonaws.com/prod/v2/stops/',
 	SHUTTLE_VEHICLES_API_URL: 'https://hjr84cay81.execute-api.us-west-2.amazonaws.com/prod?route=',
-	DINING_API_URL: 'http://hdh2.ucsd.edu/diningmenu/api/DiningDataService/GetDiningInfo_V2',
+	DINING_API_URL: 'https://s3-us-west-1.amazonaws.com/ucsd-mobile-dev/mock-apis/dining-api-v2.json',
 	EVENTS_API_URL: 'https://2jjml3hf27.execute-api.us-west-2.amazonaws.com/prod/events/student',
 	QUICKLINKS_API_URL: 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/quick_links/ucsd-quicklinks-v3.json',
 	NEWS_API_URL: 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/allstories.json',
@@ -31,6 +31,7 @@ module.exports = {
 	EVENTS_API_TTL: 3600000, // 1 hour
 	NEWS_API_TTL: 3600000, // 1 hour
 	DINING_API_TTL: 3600000, // 1 hour
+	DINING_MENU_API_TTL: 60000, // 1 minute
 	QUICKLINKS_API_TTL: 86400000, // 1 day
 	SHUTTLE_API_TTL: 6000, // 6 seconds
 	SHUTTLE_MASTER_TTL: 86400000, // 1 day
