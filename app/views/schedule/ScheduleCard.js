@@ -6,7 +6,8 @@ import {
 	StyleSheet,
 	TouchableHighlight,
 } from 'react-native';
-import { getData } from './scheduleData';
+
+import { getClasses, getFinals } from './scheduleData';
 import { FullScheduleListView } from './FullScheduleListView';
 import ScrollCard from '../card/ScrollCard';
 import Card from '../card/Card';
@@ -25,7 +26,7 @@ import {
 	MAX_CARD_WIDTH,
 } from '../../styles/LayoutConstants';
 
-var scheduleData = getData();
+var scheduleData = getClasses();
 var dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
 var ScheduleCard = () => {
