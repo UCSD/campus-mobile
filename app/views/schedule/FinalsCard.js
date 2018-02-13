@@ -6,9 +6,7 @@ import {
 	StyleSheet,
 	TouchableHighlight,
 } from 'react-native';
-
-import { getClasses, getFinals } from './scheduleData';
-import { FullScheduleListView } from './FullScheduleListView';
+import { getData } from './scheduleData';
 import ScrollCard from '../card/ScrollCard';
 import Card from '../card/Card';
 import Touchable from '../common/Touchable';
@@ -26,80 +24,31 @@ import {
 	MAX_CARD_WIDTH,
 } from '../../styles/LayoutConstants';
 
-var scheduleData = getClasses();
+var scheduleData = getData();
 var dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
-var ScheduleCard = () => {
-	logger.ga('Card Mounted: Class Schedule');
+var FinalsCard = () => {
+	logger.ga('Card Mounted: Finals Schedule');
 
 	return (
-		<Card 
-			id='schedule'
-			title='Class Schedule'>
-			<View style={css.sc_dayContainer}>
-				<View
-					style={css.sc_dayRow}>
-					<Text
-						style={css.sc_courseText}>
-						CAT 125
-					</Text>
-					<Text
-						style={css.sc_subText}>
-						1:00 PM to 1:50 PM
-					</Text>
-					<Text
-						style={css.sc_subText}>
-						PCYNH 199
-					</Text>
-				</View>
-				<TouchableHighlight style={css.dc_locations_row_right} underlayColor={'rgba(200,200,200,.1)'} onPress={() => general.gotoNavigationApp(data.coords.lat, data.coords.lon)}>
-				<View style={css.dl_dir_traveltype_container}>
-					<Icon name="md-walk" size={32} color={COLOR_SECONDARY} />
-				</View>
-			</TouchableHighlight>
-			</View>
-			<View style={css.sc_dayContainer}>
-				<View
-					style={css.sc_dayRow}>
-					<Text style={css.sc_subText}>
-						CSE 8A
-					</Text>
-					<Text style={css.sc_subText}>
-						Lecture
-					</Text>
-					<Text style={css.sc_subText}>
-						2PM
-					</Text>
-				</View>
-			</View>
-			
-			<Touchable
-				style={styles.fullScheduleButton}
-				onPress={() => FullScheduleListView()}>
-					<Text style={styles.more_label}>
-						View Full Schedule
-					</Text>
-			</Touchable>
-		</Card>
-
-		// <ScrollCard
-		// 	id='schedule'
-		// 	title='Class Schedule'
-		// 	scrollData={scheduleData}
-		// 	renderRow={
-		// 		(rowData, sectionID, rowID, highlightRow) => (
-		// 			(rowID !== 'SA' && rowID !== 'SU') ? (
-		// 				<ScheduleDay
-		// 					id={rowID}
-		// 					data={rowData}
-		// 				/>
-		// 			) : (null)
-		// 	)}
-		// 	actionButton={null}
-		// 	extraActions={null}
-		// 	updateScroll={null}
-		// 	lastScroll={null}
-		// />
+		<ScrollCard
+			id='finals'
+			title='Finals Schedule'
+			scrollData={scheduleData}
+			renderRow={
+				(rowData, sectionID, rowID, highlightRow) => (
+					(rowID !== 'SA' && rowID !== 'SU') ? (
+						<ScheduleDay
+							id={rowID}
+							data={rowData}
+						/>
+					) : (null)
+			)}
+			actionButton={null}
+			extraActions={null}
+			updateScroll={null}
+			lastScroll={null}
+		/>
 	);
 };
 
@@ -136,6 +85,26 @@ var DayItem = ({ data }) => (
 		</Text>
 	</View>
 );
+// var DayItem = ({ data }) => (
+//     <View style={css.sc_dayRow}>
+//         <Text style={css.sc_dayText}>
+//             Monday
+//         </Text>
+// 		<Text
+// 			style={css.sc_courseText}
+// 			numberOfLines={1}
+// 		>
+// 			Project/Computer Architecture
+// 		</Text>
+// 		<Text style={css.sc_subText}>
+// 			9:00am - 11:00am
+//         </Text>
+//         <Text style={css.sc_subText}>
+// 			CENTR216
+// 		</Text>
+// 	</View>
+// );
+
 
 const styles = StyleSheet.create({
 	more: { alignItems: 'center', justifyContent: 'center', padding: 6 },
@@ -146,4 +115,4 @@ const styles = StyleSheet.create({
 	fullScheduleButton: { width: MAX_CARD_WIDTH, backgroundColor: COLOR_LGREY, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4, paddingVertical: 8, borderTopWidth: 1, borderBottomWidth: 1, borderColor: COLOR_MGREY },
 });
 
-export default ScheduleCard;
+export default FinalsCard;

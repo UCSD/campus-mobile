@@ -1,6 +1,7 @@
 const initialState = {
 	cards: {
 		specialEvents: 	{ id: 'specialEvents', active: false, autoActivated: false, name: 'Special Events', component: 'SpecialEventsCard' },
+		finals: 		{ id: 'finals', active: true, name: 'Finals Schedule', component: 'FinalsCard' },
 		schedule: 		{ id: 'schedule', active: true, name: 'Class Schedule', component: 'ScheduleCard' },
 		weather: 		{ id: 'weather', active: true, name: 'Weather', component: 'WeatherCard' },
 		shuttle: 		{ id: 'shuttle', active: true, name: 'Shuttle', component: 'ShuttleCard' },
@@ -9,7 +10,7 @@ const initialState = {
 		quicklinks: 	{ id: 'quicklinks', active: true, name: 'Links', component: 'QuicklinksCard' },
 		news: 			{ id: 'news', active: true, name: 'News', component: 'NewsCard' },
 	},
-	cardOrder: ['specialEvents', 'schedule', 'weather',  'shuttle', 'dining', 'events', 'quicklinks', 'news'],
+	cardOrder: ['specialEvents', 'finals', 'schedule', 'weather',  'shuttle', 'dining', 'events', 'quicklinks', 'news'],
 };
 
 function cards(state = initialState, action) {
