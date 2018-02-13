@@ -59,6 +59,7 @@ class DiningDetail extends React.Component {
 						description={data.description}
 						regularHours={data.regularHours}
 						specialHours={data.specialHours}
+						paymentOptions={data.paymentOptions}
 					/>
 					<DiningImages
 						images={data.images}

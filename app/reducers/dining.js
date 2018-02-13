@@ -18,16 +18,20 @@ function dining(state = initialState, action) {
 
 		dataWithLookup.lookup = lookup;
 
-		newState.data = action.data;
-		newState.lastUpdated = new Date().getTime();
-
-		return newState;
+		return Object.assign({}, newState, {
+			data: dataWithLookup,
+			lastUpdated: new Date().getTime()
+		});
 	}
 	case 'SET_DINING_MENU': {
-		newState.data[action.id].menuItems = action.data;
-		newState.data[action.id].menuItems.lastUpdated = new Date().getTime();
+		const newDataArray = newState.data;
+		newDataArray[action.id].menuItems = action.data;
+		newDataArray[action.id].menuItems.lastUpdated = new Date().getTime();
+		const newData = Object.assign({}, newState, {
+			data: newDataArray
+		});
 
-		return newState;
+		return newData;
 	}
 	default:
 		return state;
