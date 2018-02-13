@@ -4,14 +4,10 @@ import {
 	Text,
 	ListView,
 	StyleSheet,
-	TouchableHighlight,
 } from 'react-native';
 import { getData } from './scheduleData';
-import ScrollCard from '../card/ScrollCard';
 import Card from '../card/Card';
-import Touchable from '../common/Touchable';
 import logger from '../../util/logger';
-import Icon from 'react-native-vector-icons/Ionicons';
 import css from '../../styles/css';
 import {
 	COLOR_DGREY,
@@ -31,29 +27,24 @@ var FinalsCard = () => {
 	logger.ga('Card Mounted: Finals Schedule');
 
 	return (
-		<ScrollCard
-			id='finals'
-			title='Finals Schedule'
-			scrollData={scheduleData}
-			renderRow={
-				(rowData, sectionID, rowID, highlightRow) => (
-					(rowID !== 'SA' && rowID !== 'SU') ? (
-						<ScheduleDay
-							id={rowID}
-							data={rowData}
-						/>
-					) : (null)
-			)}
-			actionButton={null}
-			extraActions={null}
-			updateScroll={null}
-			lastScroll={null}
-		/>
+        <Card
+            id='finals'
+            title='Finals Schedule'>
+            <ListView
+                dataSource={dataSource.cloneWithRows(scheduleData)}
+                renderRow={(rowData, sectionID, rowID, highlightRow) => (
+                <ScheduleDay
+                    id={rowID}
+                    data={rowData}
+                />
+                )}
+            />
+        </Card>
 	);
 };
 
 var ScheduleDay = ({ id, data }) => (
-	<View style={css.sc_dayContainer}>
+	<View style={css.sc_fullScheduleContainer}>
 		<Text style={css.sc_dayText}>
 			{id}
 		</Text>
@@ -85,34 +76,13 @@ var DayItem = ({ data }) => (
 		</Text>
 	</View>
 );
-// var DayItem = ({ data }) => (
-//     <View style={css.sc_dayRow}>
-//         <Text style={css.sc_dayText}>
-//             Monday
-//         </Text>
-// 		<Text
-// 			style={css.sc_courseText}
-// 			numberOfLines={1}
-// 		>
-// 			Project/Computer Architecture
-// 		</Text>
-// 		<Text style={css.sc_subText}>
-// 			9:00am - 11:00am
-//         </Text>
-//         <Text style={css.sc_subText}>
-// 			CENTR216
-// 		</Text>
-// 	</View>
-// );
-
 
 const styles = StyleSheet.create({
 	more: { alignItems: 'center', justifyContent: 'center', padding: 6 },
 	more_label: { fontSize: 20, color: COLOR_PRIMARY, fontWeight: '300' },
 	specialEventsListView: { borderBottomWidth: 1, borderBottomColor: COLOR_MGREY },
 	nextClassContainer: { flexGrow: 1, width: MAX_CARD_WIDTH },
-	contentContainer: { flexShrink: 1, width: MAX_CARD_WIDTH },
-	fullScheduleButton: { width: MAX_CARD_WIDTH, backgroundColor: COLOR_LGREY, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4, paddingVertical: 8, borderTopWidth: 1, borderBottomWidth: 1, borderColor: COLOR_MGREY },
+	contentContainer: { flexShrink: 1, width: MAX_CARD_WIDTH }
 });
 
 export default FinalsCard;

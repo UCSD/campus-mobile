@@ -238,6 +238,7 @@ var css = StyleSheet.create({
 	sc_courseText: { fontSize: 14, color: COLOR_BLACK, paddingBottom: 2 },
 	sc_subText: { fontSize: 13, color: COLOR_VDGREY },
 	sc_dayContainer: { width: MAX_CARD_WIDTH + 2, padding: 7, flexDirection: 'row', flex:1 },
+	sc_fullScheduleContainer: { width: MAX_CARD_WIDTH + 2, padding: 7, flexDirection: 'column', flex:1 },
 	sc_dayRow: { justifyContent: 'center', paddingBottom: 10, borderColor: '#CCC', borderWidth:1, },
 
 	/********************************************
