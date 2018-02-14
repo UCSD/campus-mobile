@@ -94,7 +94,7 @@ class Main extends Component {
 							tabs hideOnChildTabs initial
 							tabBarStyle={general.platformIOS() ? css.tabBarIOS : css.tabBarAndroid}
 						>
-							<Scene key={'tab1'} title={AppSettings.APP_NAME} initial icon={TabIcons}>
+							<Scene key={'tab1'} title={AppSettings.APP_NAME} icon={TabIcons}>
 								{/*
 								<Scene key={'OnboardingIntro'} component={OnboardingIntro} title={'OnboardingIntro'} hideTabBar hideNavBar={true} />
 								<Scene key={'OnboardingLogin'} component={OnboardingLogin} title={'OnboardingLogin'} hideTabBar hideNavBar={true} />*/}
@@ -115,7 +115,7 @@ class Main extends Component {
 							</Scene>
 							<Scene key={'tab2'} title={'Map'} component={NearbyMapView} icon={TabIcons} />
 							<Scene key={'tab3'} title={'Feedback'} component={FeedbackView} icon={TabIcons} />
-							<Scene key={'tab4'} title={'User Settings'} component={PreferencesView} icon={TabIcons} />
+							<Scene key={'tab4'} title={'User Settings'} initial component={PreferencesView} icon={TabIcons} />
 						</Scene>
 					</Scene>
 				</RouterWithRedux>
