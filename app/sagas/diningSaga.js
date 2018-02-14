@@ -8,7 +8,12 @@ import { getDistance } from '../util/map';
 const getDining = state => (state.dining);
 
 function* updateDining(action) {
-	const { lastUpdated, data } = yield select(getDining);
+	const {
+		lastUpdated,
+		data,
+		menus,
+		lookup
+	} = yield select(getDining);
 	const { position, menuId } = action;
 
 	const nowTime = new Date().getTime();
@@ -18,11 +23,16 @@ function* updateDining(action) {
 	let diningData;
 
 	if (menuId) {
-		const currentMenuId = data.lookup[menuId];
-		const menuTimeDiff = nowTime - data[currentMenuId].lastUpdated;
-		if (menuTimeDiff > diningMenuTTL || !data[currentMenuId].menuItems || !menuTimeDiff) {
+		const menuArrayPosition = lookup[menuId];
+		if (menus[menuArrayPosition]) {
+			const menuTimeDiff = nowTime - menus[menuArrayPosition].lastUpdated;
+			if (menuTimeDiff > diningMenuTTL || !menus[menuArrayPosition] || !menuTimeDiff) {
+				const currentMenu = yield call(fetchDiningMenu, menuId);
+				yield put({ type: 'SET_DINING_MENU', data: currentMenu, id: menuArrayPosition });
+			}
+		} else {
 			const currentMenu = yield call(fetchDiningMenu, menuId);
-			yield put({ type: 'SET_DINING_MENU', data: currentMenu, id: currentMenuId });
+			yield put({ type: 'SET_DINING_MENU', data: currentMenu, id: menuArrayPosition });
 		}
 	}
 	else if (timeDiff < diningTTL && data) {

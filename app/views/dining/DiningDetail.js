@@ -50,7 +50,7 @@ class DiningDetail extends React.Component {
 	}
 
 	render() {
-		const { data } = this.props;
+		const { data, menuData } = this.props;
 		return (
 			<View style={css.main_full}>
 				<ScrollView contentContainerStyle={[css.scroll_main, css.whitebg]}>
@@ -70,7 +70,7 @@ class DiningDetail extends React.Component {
 						distance={data.distanceMilesStr}
 					/>
 					<DiningMenu
-						data={data}
+						data={menuData}
 						filters={this.state.filters}
 						activeMeal={this.state.activeMeal}
 						addFilter={filter => this.addFilter(filter)}
@@ -81,6 +81,13 @@ class DiningDetail extends React.Component {
 	}
 }
 
+const mapStateToProps = (state, props) => (
+	{
+		menuData: state.dining.menus[state.dining.lookup[props.data.id]],
+		lookup: state.dining.lookup
+	}
+);
+
 const mapDispatchToProps = dispatch => (
 	{
 		getMenuItems: (menuId) => {
@@ -89,4 +96,4 @@ const mapDispatchToProps = dispatch => (
 	}
 );
 
-export default connect(null, mapDispatchToProps)(DiningDetail);
+export default connect(mapStateToProps, mapDispatchToProps)(DiningDetail);

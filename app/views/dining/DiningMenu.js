@@ -22,38 +22,40 @@ const DiningMenu = ({
 	addFilter,
 	activeMeal
 }) => {
-	if (!data.menuItems && data.menuWebsite) {
-		return (
-			<Touchable
-				onPress={() => openURL(data.menuWebsite)}
-			>
-				<View style={css.dd_menu_link_container}>
-					{data.name.indexOf('Market') >= 0 ? (
-						<Text style={css.dd_menu_link_text}>View To Go Menu</Text>
-					) : (
-						<Text style={css.dd_menu_link_text}>View Menu</Text>
-					)}
+	if (data) {
+		if (data.menuWebsite) {
+			return (
+				<Touchable
+					onPress={() => openURL(data.menuWebsite)}
+				>
+					<View style={css.dd_menu_link_container}>
+						{data.name.indexOf('Market') >= 0 ? (
+							<Text style={css.dd_menu_link_text}>View To Go Menu</Text>
+						) : (
+							<Text style={css.dd_menu_link_text}>View Menu</Text>
+						)}
+					</View>
+				</Touchable>
+			);
+		} else if (data && data.length > 1) {
+			return (
+				<View style={css.dd_menu_container}>
+					<MenuFilters
+						filters={filters}
+						addFilter={addFilter}
+						activeMeal={activeMeal}
+					/>
+					<MenuList
+						filters={filters}
+						data={data}
+						activeMeal={activeMeal}
+					/>
 				</View>
-			</Touchable>
-		);
-	} else if (data.menuItems) {
-		return (
-			<View style={css.dd_menu_container}>
-				<MenuFilters
-					filters={filters}
-					addFilter={addFilter}
-					activeMeal={activeMeal}
-				/>
-				<MenuList
-					filters={filters}
-					data={data.menuItems}
-					activeMeal={activeMeal}
-				/>
-			</View>
-		);
-	} else {
-		return null;
+			);
+		}
 	}
+
+	return null;
 };
 
 const MenuFilters = ({ filters, addFilter, activeMeal }) => (
