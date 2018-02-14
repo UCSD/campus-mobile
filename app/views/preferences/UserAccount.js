@@ -11,7 +11,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import * as Keychain from 'react-native-keychain';
 import { connect } from 'react-redux';
 //import openidAuthenticationService from '../../services/auth/openidAuthenticationService';
-import ecpAuthenticationService from '../../services/auth/ecpAuthenticationService';
+//import ecpAuthenticationService from '../../services/auth/ecpAuthenticationService';
 import Touchable from '../common/Touchable';
 import AppSettings from '../../AppSettings';
 import logger from '../../util/logger';
@@ -21,9 +21,9 @@ import Card from '../card/Card';
 
 var authenticationService;
 if (AppSettings.SSO.METHOD === 'ecp') {
-	authenticationService = openidAuthenticationService();
+	//authenticationService = openidAuthenticationService();
 } else if ('openid') {
-	authenticationService = ecpAuthenticationService();
+	//authenticationService = ecpAuthenticationService();
 }
 
 class UserAccount extends Component {
