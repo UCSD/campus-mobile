@@ -1,4 +1,4 @@
-import AppSettings from '../AppSettings';
+import AppSettings from '../../AppSettings';
 import fs from 'fs';
 import Orchestrator from 'orchestrator';
 import crypto  from 'crypto';
@@ -7,14 +7,18 @@ import querystring from 'querystring';
 import xmlformatter from 'xml-formatter';
 import xpath from 'xpath';
 
-const orchestrator = new Orchestrator(),
+const orchestrator = new Orchestrator()
+
 const xpathSelect = xpath.useNamespaces({
 	"saml2p":"urn:oasis:names:tc:SAML:2.0:protocol",
 	"paos":"urn:liberty:paos:2003-08",
 	"ecp":"urn:oasis:names:tc:SAML:2.0:profiles:SSO:ecp",
 })
+
 const xmldom = require('xmldom')
+
 const domParser = new xmldom.DOMParser()
+
 const xmlSerializer = new xmldom.XMLSerializer()
 
 /**

@@ -10,7 +10,7 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import * as Keychain from 'react-native-keychain';
 import { connect } from 'react-redux';
-import openidAuthenticationService from '../../services/auth/openidAuthenticationService';
+//import openidAuthenticationService from '../../services/auth/openidAuthenticationService';
 import ecpAuthenticationService from '../../services/auth/ecpAuthenticationService';
 import Touchable from '../common/Touchable';
 import AppSettings from '../../AppSettings';
