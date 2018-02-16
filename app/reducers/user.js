@@ -1,34 +1,37 @@
-export type State = {
-	isLoggedIn: boolean;
-	auth: ?Object;
-	profile: ?Object;
-};
-
 const initialState = {
 	isLoggedIn: false,
-	auth: null,
+	isLoggingIn: false,
 	profile: null,
 	username: null,
+	error: null
 };
 
-function user(state: State = initialState, action): State {
-	if (action.type === 'LOGGED_IN') {
-		//const { auth, profile } = action.data;
-		return {
-			...state,
-			isLoggedIn: true,
-			username: action.user
-			//auth,
-			//profile,
-		};
+function user(state = initialState, action) {
+	const newState = { ...state };
+
+	switch (action.type) {
+	case 'IS_LOGGING_IN': {
+		newState.isLoggingIn = true;
+		return newState;
 	}
-	if (action.type === 'LOGGED_OUT') {
-		return {
-			...state,
-			...initialState,
-		};
+	case 'LOGGED_IN': {
+		newState.isLoggedIn = true;
+		newState.username = action.user;
+		newState.error = null;
+		return newState;
 	}
-	return state;
+	case 'LOGGED_OUT': {
+		return initialState;
+	}
+	case 'USER_LOGIN_FAILED': {
+		newState.isLoggedIn = false;
+		newState.isLoggingIn = false;
+		newState.error = action.error;
+		return newState;
+	}
+	default:
+		return state;
+	}
 }
 
 module.exports = user;

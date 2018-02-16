@@ -54,6 +54,7 @@ import {
 	COLOR_WHITE,
 	COLOR_BLACK,
 	COLOR_DMGREY,
+	COLOR_MRED,
 	COLOR_TRANSPARENT,
 } from './ColorConstants';
 import {
@@ -410,8 +411,10 @@ var css = StyleSheet.create({
 	ua_accountText: { textAlign: 'center', fontSize: 16, color: COLOR_DGREY },
 	ua_forgotButton: { flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: 16 },
 	ua_loginButton: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR_PRIMARY, borderRadius: 3, padding: 10, marginTop: 10 },
+	ua_loginButtonDisabled: { backgroundColor: COLOR_DGREY },
 	ua_forgotText: { fontSize: 14, color: COLOR_PRIMARY, padding: 4 },
 	ua_loginText: { fontSize: 16, color: COLOR_WHITE },
+	ua_errorText: { flex: 1, fontSize: 18, color: COLOR_MRED },
 
 
 	/********************************************

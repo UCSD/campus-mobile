@@ -4,32 +4,20 @@ import {
 	Text,
 	Linking,
 	TouchableOpacity,
-	StyleSheet,
 	TextInput
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import * as Keychain from 'react-native-keychain';
 import { connect } from 'react-redux';
-//import openidAuthenticationService from '../../services/auth/openidAuthenticationService';
-//import ecpAuthenticationService from '../../services/auth/ecpAuthenticationService';
 import Touchable from '../common/Touchable';
 import AppSettings from '../../AppSettings';
-import logger from '../../util/logger';
 import css from '../../styles/css';
 import { getMaxCardWidth, openURL } from '../../util/general';
 import Card from '../card/Card';
 
-var authenticationService;
-if (AppSettings.SSO.METHOD === 'ecp') {
-	//authenticationService = openidAuthenticationService();
-} else if ('openid') {
-	//authenticationService = ecpAuthenticationService();
-}
+const auth = require('../../util/auth');
 
 class UserAccount extends Component {
 	componentDidMount() {
-		const serviceName = 'ucsdapp';
-
 		/*
 		TODO: Check for credentials and check if login is active, re-login if needed
 		Keychain.getGenericPassword(serviceName).then((creds) => {
@@ -41,30 +29,12 @@ class UserAccount extends Component {
 	componentWillUnmount() {
 		Linking.removeEventListener('url', this._handleOpenURL);
 	}
-	_handleOpenURL = (event) => {
-		// only handle proper auth redirection urls
-		if (!authenticationService) return;
-		if (!event.url.startsWith(AppSettings.SSO.OPENID.OPTIONS.REDIRECT_URL)) return;
 
-		authenticationService.handleAuthenticationCallback(event)
-		.then(userInfo => {
-			// now we have user info, save in redux and we are set
-			/*this.props.dispatch(userLoggedIn({
-				profile: userInfo
-			}));*/
-			this.props.doLogin();
-		})
-		.catch(error => {}); // TODO: notify user if logon failed?
-	}
 	_performUserAuthAction = () => {
 		if (this.props.user.isLoggedIn) {
-			//this.props.dispatch(userLoggedOut()); // log out user, destroy profile/auth info
 			this.props.doLogout();
 		} else {
-			// if the are not logged in, log them in
-			const authUrl = authenticationService.createAuthenticationUrl();
-
-			Linking.openURL(authUrl).catch(err => logger.log('An error occurred performing UserAuthAction: ', err));
+			this.props.refreshLogin();
 		}
 	}
 
@@ -82,7 +52,7 @@ class UserAccount extends Component {
 			onPress={this._performUserAuthAction}
 		>
 			<Text style={css.ua_accountText}>{mainText}</Text>
-			<Icon name='user' />
+			<Icon name="user" />
 		</TouchableOpacity>
 	);
 
@@ -105,7 +75,11 @@ class UserAccount extends Component {
 							handleLogout={this.handleLogout}
 						/>
 					) : (
-						<AccountLogin handleLogin={this.handleLogin} />
+						<AccountLogin
+							handleLogin={this.handleLogin}
+							error={this.props.user.error}
+							isLoggingIn={this.props.user.isLoggingIn}
+						/>
 					)}
 				</View>
 			</Card>
@@ -124,21 +98,22 @@ const AccountInfo = ({ username, handleLogout }) => (
 			{username}
 		</Text>
 		<Icon
-			name='sign-out'
+			name="sign-out"
 			size={20}
 		/>
 	</TouchableOpacity>
 );
 
-const AccountLogin = ({ handleLogin }) => (
+const AccountLogin = ({ handleLogin, error, isLoggingIn }) => (
 	<View
 		style={css.ua_loginContainer}
 	>
 		<TextInput
 			style={css.ua_input}
-			placeholder='User ID / PID'
-			returnKeyType='next'
-			underlineColorAndroid='transparent'
+			placeholder="User ID / PID"
+			returnKeyType="next"
+			underlineColorAndroid="transparent"
+			editable={!isLoggingIn}
 			onChange={(event) => {
 				this._usernameText = event.nativeEvent.text;
 			}}
@@ -149,9 +124,10 @@ const AccountLogin = ({ handleLogin }) => (
 		<TextInput
 			ref={(c) => { this._passwordInput = c; }}
 			style={css.ua_input}
-			placeholder='Password / PAC'
-			returnKeyType='go'
-			underlineColorAndroid='transparent'
+			placeholder="Password / PAC"
+			returnKeyType="go"
+			underlineColorAndroid="transparent"
+			editable={!isLoggingIn}
 			secureTextEntry
 			onChange={(event) => {
 				this._passwordText = event.nativeEvent.text;
@@ -160,12 +136,31 @@ const AccountLogin = ({ handleLogin }) => (
 				handleLogin(this._usernameText, event.nativeEvent.text);
 			}}
 		/>
+		{
+			(error) ?
+			(
+				<Text style={css.ua_errorText}>{error.message}</Text>
+			) : (
+				null
+			)
+		}
 		<Touchable
 			onPress={() => handleLogin(this._usernameText, this._passwordText)}
-			style={css.ua_loginButton}
+			style={
+				(isLoggingIn) ?
+				(
+					[css.ua_loginButton, css.ua_loginButtonDisabled]
+				) : (
+					css.ua_loginButton
+				)
+			}
 		>
 			<Text style={css.ua_loginText}>
-				Sign on
+				{
+					(isLoggingIn) ?
+					('Signing in...') :
+					('Sign in')
+				}
 			</Text>
 		</Touchable>
 
