@@ -1,10 +1,6 @@
 import * as Keychain from 'react-native-keychain';
-import { Crypt } from 'hybrid-crypto-js';
+import { RSA } from 'react-native-rsa-native';
 
-const Buffer = require('buffer/').Buffer;
-const base64 = require('base-64');
-
-const crypt = new Crypt();
 const accessTokenSiteName = 'https://ucsd.edu';
 
 /**
@@ -18,10 +14,10 @@ module.exports = {
 	 * @returns {String} Encrypted string
 	 */
 	encryptStringWithKey(string) {
-		const buffer = new Buffer(string);
-		const encryptedString = crypt.encrypt(this.ucsdPublicKey, buffer);
-		const encrypted = JSON.parse(encryptedString).cipher;
-		return base64.encode(encrypted);
+		return RSA.encrypt(string, this.ucsdPublicKey)
+			.then(encryptedMessage => (
+				encryptedMessage.replace(/(\r\n|\n|\r)/gm,'')
+			));
 	},
 
 	/**
