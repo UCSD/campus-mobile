@@ -17,35 +17,51 @@ import {
 import CardHeader from './CardHeader';
 import CardMenu from './CardMenu';
 
-
+const scrollDataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 class Card extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			data: {}
+			// data: {}
+			dataSource: scrollDataSource.cloneWithRows(['row 1', 'row 2']),
 		};
 	}
 
 	render() {
 		let list;
-		if (this.props.data !== {}) {
+		if (this.props.listData !== {}) {
 			list = (
-				// <ListView
-				// 	ref={c => { this._listview = c; }}
-				// 	style={styles.listStyle}
-				// 	onContentSizeChange={this.countDots}
-				// 	pagingEnabled
-				// 	horizontal
-				// 	showsHorizontalScrollIndicator={false}
-				// 	onScroll={this.handleScroll}
-				// 	scrollEventThrottle={69}
-				// 	dataSource={scrollDataSource.cloneWithRows(this.props.scrollData)}
-				// 	enableEmptySections={true}
-				// 	renderRow={this.props.renderRow}
-				// />
-			<View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-				<Text>Coming soon...</Text>
-			</View>
+				<ListView
+					ref={c => { this._listview = c; }}
+					style={styles.listStyle}
+					// onContentSizeChange={this.countDots}
+					// pagingEnabled
+					// horizontal
+					// showsHorizontalScrollIndicator={false}
+					// onScroll={this.handleScroll}
+					// scrollEventThrottle={69}
+					// dataSource={scrollDataSource.cloneWithRows(this.props.listData)}
+					dataSource={this.state.dataSource}
+					renderRow={(rowData) => <Text>{rowData}</Text>}
+					// enableEmptySections={true}
+					// renderRow={this.props.renderRow}
+				/>
+				// <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+				// 	<Text>Coming soon...</Text>
+				// </View>
+				// <List>
+				// 	<FlatList
+				// 		data={this.state.data}
+				// 		renderItem={this.props.renderItem}
+				// 	/>
+			  	// </List>
+			);
+		}
+		else {
+			list = (
+				<View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+					<Text>Coming soon...</Text>
+				</View>
 			);
 		}
 

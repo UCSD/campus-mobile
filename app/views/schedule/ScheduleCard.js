@@ -90,10 +90,10 @@ var ScheduleCard = () => {
 		// 	</Touchable>
 		// </Card> 
 
-		<Card
+		<ScrollCard
 			id='schedule'
-			title='Class Schedule'
-			data={scheduleData}
+			title='Class Schedule' //{scheduleData['MO'].instructor_name}
+			listData={scheduleData}
 			renderRow={
 				(rowData, sectionID, rowID, highlightRow) => (
 					(rowID !== 'SA' && rowID !== 'SU') ? (
