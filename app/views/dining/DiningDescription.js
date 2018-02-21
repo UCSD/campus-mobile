@@ -35,14 +35,17 @@ const DiningDescription = ({
 			/>
 
 			{specialHours
-				? <DiningHours hours={specialHours} specialHours style={css.dd_description_hours} />
+				? <DiningHours hours={specialHours} specialHours style={css.dd_description_special_hours} />
 				: null
 			}
 
 			{paymentOptionsText
 				?
 				(
-					<Text style={css.dd_description_subtext}>Payment Options: {paymentOptionsText}</Text>
+					<View>
+						<Text style={css.dd_description_subtext}>Payment Options</Text>
+						<Text>{paymentOptionsText}</Text>
+					</View>
 				)
 				: null
 			}

@@ -22,7 +22,22 @@ const generateHourText = (parsedHours, textRows) => {
 		} else {
 			hoursText = day.hours;
 		}
-		textRows.push(<Text key={day.title}>{day.title}: <Text style={css.dd_hours_text_bold}>{hoursText}</Text></Text>);
+
+		const newTextRow = (
+			<View
+				key={day.title}
+				style={css.dd_hours_row}
+			>
+				<Text style={css.dd_hours_text_title}>
+					{day.title}:
+				</Text>
+				<Text style={css.dd_hours_text_hours}>
+					{hoursText}
+				</Text>
+			</View>
+		);
+
+		textRows.push(newTextRow);
 	});
 };
 
@@ -31,7 +46,7 @@ const DiningHours = ({ hours, specialHours, style }) => {
 		hoursTextRows = [];
 
 	if (specialHours) {
-		hoursTextRows.push(<Text key={0}>Special Hours:</Text>);
+		hoursTextRows.push(<Text key={0} style={css.dd_description_subtext}>Special Hours</Text>);
 	}
 
 	generateHourText(hoursParsed, hoursTextRows);

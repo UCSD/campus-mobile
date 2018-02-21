@@ -51,6 +51,8 @@ import {
 	COLOR_WHITE,
 	COLOR_BLACK,
 	COLOR_DMGREY,
+	COLOR_MRED,
+	COLOR_MGREEN,
 	COLOR_TRANSPARENT,
 } from './ColorConstants';
 import {
@@ -184,8 +186,12 @@ var css = StyleSheet.create({
 	sc_small_list_container: { width: MAX_CARD_WIDTH, overflow: 'hidden' },
 
 	// 304 - Dining Card
-	dining_list_row: { backgroundColor: COLOR_LGREY, flexDirection: 'row', padding: 10, borderBottomWidth: 1, borderBottomColor: COLOR_MGREY, alignItems: 'center', justifyContent: 'center' },
-	dining_hours_dot: { paddingRight: 8 },
+	dining_list_row: { backgroundColor: COLOR_LGREY, flexDirection: 'row', padding: 10, borderBottomWidth: 1, borderBottomColor: COLOR_MGREY },
+	dining_list_title_row: { flexDirection: 'row', justifyContent: 'flex-start', flexWrap: 'wrap' },
+	dining_list_hours: { alignSelf: 'center', paddingTop: 8, paddingRight: 4 },
+	dining_hours_status: { alignSelf: 'center', paddingTop: 8, paddingLeft: 4, paddingRight: 4 },
+	dining_list_closing_soon_text: { fontSize: 14, color: COLOR_MRED, alignSelf: 'center', paddingTop: 8,  paddingLeft: 4 },
+	dining_list_opening_soon_text: { fontSize: 14, color: COLOR_MGREEN, alignSelf: 'center', paddingTop: 8, paddingLeft: 4 },
 
 	// 305 - Events & News Cards
 	events_list: { alignSelf: 'stretch', padding: 8 },
@@ -262,8 +268,8 @@ var css = StyleSheet.create({
 	shuttle_stop_no_arrivals: { fontSize: 16, color: '#555' },
 
 	// 403 - Dining List
-	dl_row_container_left: { flex: 6, justifyContent: 'center' },
-	dl_row_container_right: { flex: 1, alignItems: 'flex-end', justifyContent: 'center' },
+	dl_row_container_left: { flexDirection: 'column', flexWrap: 'wrap' },
+	dl_row_container_right: { flex: 1, alignItems: 'flex-end', justifyContent: 'center', flexWrap: 'wrap' },
 	dl_title_text: { fontSize: 20, color: COLOR_PRIMARY },
 	dl_dir_traveltype_container: { flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'center' },
 	dl_dir_eta: { color: COLOR_PRIMARY, fontSize: 11, fontWeight: '600' },
@@ -273,10 +279,12 @@ var css = StyleSheet.create({
 	// 404 - Dining Detail
 	dd_description_container: { padding: 10 },
 	dd_description_nametext: { fontSize: 26 },
-	dd_description_subtext: { paddingTop: 6 },
-	dd_description_hours: { paddingTop: 10 },
-	dd_hours_container: { flexDirection: 'column', alignItems: 'flex-start' },
-	dd_hours_text_bold: { fontWeight: '700' },
+	dd_description_subtext: { paddingTop: 8, fontWeight: '700' },
+	dd_description_hours: { paddingTop: 8 },
+	dd_hours_container: { flexDirection: 'column' },
+	dd_hours_row: { flexDirection: 'row' },
+	dd_hours_text_title: { flexGrow: 1, fontWeight: '700' },
+	dd_hours_text_hours: { flexGrow: 2, paddingLeft: 8 },
 	dd_images_scrollview: { height: 140 },
 	dd_images_image: { width: 140, height: 140, borderRadius: 5, marginHorizontal: 7 },
 	dd_directions_button_container: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderBottomColor: COLOR_MGREY, margin: 6, padding: 6 },

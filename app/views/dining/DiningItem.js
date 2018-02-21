@@ -8,6 +8,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 import ColoredDot from '../common/ColoredDot';
 import Touchable from '../common/Touchable';
+import DiningHoursText from './DiningHoursText';
 import {
 	COLOR_PRIMARY,
 	COLOR_MGREEN,
@@ -20,22 +21,47 @@ const dining = require('../../util/dining');
 
 const DiningItem = ({ data }) => {
 	if (!data.id) return null;
-	const activeDotColor = dining.getOpenStatus(data.regularHours, data.specialHours) ?
+	const status = dining.getOpenStatus(data.regularHours, data.specialHours);
+	const activeDotColor = status.isOpen ?
 		COLOR_MGREEN : COLOR_MRED;
+	let soonTextElement = null;
+
+	if (status.isOpen) {
+		if (status.isClosingSoon) {
+			// Closing soon text
+			soonTextElement = (<Text style={css.dining_list_closing_soon_text}>(Closing soon)</Text>);
+		}
+	} else {
+		if (status.isOpeningSoon) {
+			// Opening soon text
+			soonTextElement = (<Text style={css.dining_list_opening_soon_text}>(Opening soon)</Text>);
+		}
+	}
+
+	console.log(status);
 
 	return (
 		<View style={css.dining_list_row}>
-			<ColoredDot
-				size={10}
-				color={activeDotColor}
-				style={css.dining_hours_dot}
-			/>
 			<Touchable
 				style={css.dl_row_container_left}
-				onPress={() => Actions.DiningDetail({ data })}
+				onPress={() => { /* Actions.DiningDetail({ data }) */ }}
 			>
-				<View>
+				<View style={css.dining_list_title_row}>
 					<Text style={css.dl_title_text}>{data.name}</Text>
+				</View>
+				<View style={css.dining_list_title_row}>
+					<View style={css.dining_list_hours}>
+						<DiningHoursText
+							title={status.todaysTitle}
+							hours={status.todaysHours}
+						/>
+					</View>
+					<ColoredDot
+						size={10}
+						color={activeDotColor}
+						style={css.dining_hours_status}
+					/>
+					{soonTextElement}
 				</View>
 			</Touchable>
 

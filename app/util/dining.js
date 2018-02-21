@@ -5,105 +5,105 @@ import moment from 'moment';
  * @module util/dining
  */
 module.exports = {
+	/**
+	 * Parses hours from API into a moment object.
+	 * @function
+	 * @param {string} hours Set of opening and closing hours
+	 * @returns {object} Returns object:
+	 *  {
+	 *   opening: object,
+	 *   closing: object
+	 *  }
+	 */
+	parseHours(hours) {
+		const openingTimeMoment = moment(hours.substring(0,4), 'HHmm');
+		const closingTimeMoment = moment(hours.substring(5,9), 'HHmm');
+
+		return {
+			openingHour: openingTimeMoment,
+			closingHour: closingTimeMoment
+		};
+	},
 
 	/**
 	 * Gets the current open or closed status of a restaurant.
 	 * @function
 	 * @param {object} regularHours Normal operating hours
 	 * @param {array} specialHours Special operating hours with dates as keys
-	 * @returns {boolean} Returns true if the restaurant is open, false if closed
+	 * @returns {object} Returns object:
+	 *  {
+	 *   isOpen: Boolean,
+	 *   isOpeningSoon: Boolean,
+	 *   isClosingSoon: Boolean,
+	 *   todayTitle: String, // if special event
+	 *   todaysHours: String
+	 *  }
 	 */
 	getOpenStatus(regularHours, specialHours) {
-		let isOpen = false;
-		const now = moment();
-		const todayDay = now.format('ddd').toLowerCase();
-		let openHours = regularHours[todayDay];
+		const openStatus = {
+			isOpen: false,
+			isOpeningSoon: false,
+			isClosingSoon: false,
+			todaysTitle: null,
+			todaysHours: null
+		};
 
-		if (specialHours) {
-			const todayDate = now.format('MM/DD/YYYY');
-			if (specialHours[todayDate]) {
-				openHours = specialHours[todayDate].hours;
-			}
+		const now = moment();
+		let todaysHours = regularHours[now.format('ddd').toLowerCase()];
+
+		if (specialHours && specialHours[now.format('MM/DD/YYYY')]) {
+			todaysHours = specialHours[now.format('MM/DD/YYYY')].hours;
+			openStatus.todaysTitle = specialHours[now.format('MM/DD/YYYY')].title;
 		}
 
-		if (openHours) {
-			const openHoursArray = openHours.split(',');
-			openHoursArray.forEach((hours) => {
-				const openTime = moment(hours.substring(0, 4), 'HHmm'),
-					closeTime = moment(hours.substring(5, 9), 'HHmm');
-				if (openTime > closeTime) closeTime.add(24, 'h');
-				if (now.isBetween(openTime, closeTime)) isOpen = true;
+		// if 24 hours, return immediately
+		if (todaysHours === '0000-2359') {
+			openStatus.isOpen = true;
+			openStatus.todaysHours = '0000-2359';
+			return openStatus;
+		}
+
+		const closestTimes = {
+			closing: null,
+			opening: null
+		};
+
+		// If restaurant operates today
+		if (todaysHours) {
+			todaysHours.split(',').forEach((hours) => {
+				const operatingHours = this.parseHours(hours);
+
+				if (now.isBetween(operatingHours.openingHour, operatingHours.closingHour)) {
+					openStatus.isOpen = true;
+					closestTimes.opening = null;
+					closestTimes.closing = operatingHours.closingHour;
+					openStatus.todaysHours = hours;
+				} else {
+					// Restaurant is currently closed. Opening soon?
+					if (!closestTimes.opening) {
+						closestTimes.opening = operatingHours.openingHour;
+						openStatus.todaysHours = hours;
+					} else {
+						// is the current opening time closer?
+						if (operatingHours.openingHour - now < Math.abs(closestTimes.opening - now)) {
+							closestTimes.opening = operatingHours.openingHour;
+							openStatus.todaysHours = hours;
+						}
+					}
+				}
 			});
 		}
-
-		return isOpen;
-	},
-
-	/**
-	 * Returns array of operating hours.
-	 * @function
-	 * @param {object} hoursString String representing operating hours (e.g '0900-1600')
-	 * @returns {array} Array of objects containing formatted operating hours (hours)
-	 */
-	parseHours(hoursString) {
-		const hoursArray = [];
-		// If null, the restaurant is closed that day.
-		if (!hoursString) {
-			hoursArray.push('Closed');
-			return hoursArray;
+		if (closestTimes.opening) {
+			const { opening } = closestTimes;
+			const openingMinusOne = opening.clone().subtract(1, 'h');
+			openStatus.isOpeningSoon = now.isBetween(openingMinusOne, opening);
+		}
+		else if (closestTimes.closing) {
+			const { closing } = closestTimes;
+			const closingMinusOne = closing.clone().subtract(1, 'h');
+			openStatus.isClosingSoon = now.isBetween(closingMinusOne, closing);
 		}
 
-		hoursString.split(',').forEach((hours) => {
-			// If 24 hours, output special string
-			if (hours.substring(0, 4) === '0000' && hours.substring(5, 9) === '2359') {
-				hoursArray.push('Open 24 Hours');
-			} else {
-				const openTime = moment(hours.substring(0, 4), 'HHmm'),
-					closeTime = moment(hours.substring(5, 9), 'HHmm');
-				hoursArray.push(`${openTime.format('h:mm a')} - ${closeTime.format('h:mm a')}`);
-			}
-		});
-
-		return hoursArray;
+		return openStatus;
 	},
-
-	/**
-	 * Returns array of operating hours with date titles.
-	 * @function
-	 * @param {object} weeklyHours Can be regularHours or specialHours returned from API
-	 * @returns {array} Array of objects containing days (title) and their hours (hours)
-	 */
-	parseWeeklyHours(weeklyHours) {
-		const readableHours = [];
-		Object.keys(weeklyHours).forEach((today) => {
-			// Don't take into account special hours that have passed.
-			if (moment(today, 'MM/DD/YYYY').isValid() && moment(today, 'MM/DD/YYYY').isSameOrAfter(moment())) {
-				// Special Hours
-				Object.keys(weeklyHours).forEach((date) => {
-					const datesHours = this.parseHours(weeklyHours[date].hours);
-					readableHours.push({
-						title: `${weeklyHours[date].title} ${moment(date, 'MM/DD/YYYY').format('ddd M/DD')}`,
-						hours: datesHours
-					});
-				});
-			} else if (moment(today, 'ddd').isValid()) {
-				// Normal day
-				const openHours = weeklyHours[today];
-				if (openHours) {
-					const todaysHours = this.parseHours(openHours);
-
-					readableHours.push({
-						title: `${moment(today, 'ddd').format('ddd')}`,
-						hours: todaysHours
-					});
-				} else {
-					readableHours.push({
-						title: `${moment(today, 'ddd').format('ddd')}`,
-						hours: this.parseHours(null)
-					});
-				}
-			}
-		});
-		return readableHours;
-	}
 };
