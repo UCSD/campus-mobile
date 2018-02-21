@@ -8,7 +8,6 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 import ColoredDot from '../common/ColoredDot';
 import Touchable from '../common/Touchable';
-import DiningHoursText from './DiningHoursText';
 import {
 	COLOR_PRIMARY,
 	COLOR_MGREEN,
@@ -22,46 +21,52 @@ const dining = require('../../util/dining');
 const DiningItem = ({ data }) => {
 	if (!data.id) return null;
 	const status = dining.getOpenStatus(data.regularHours, data.specialHours);
+
 	const activeDotColor = status.isOpen ?
 		COLOR_MGREEN : COLOR_MRED;
-	let soonTextElement = null;
 
-	if (status.isOpen) {
-		if (status.isClosingSoon) {
-			// Closing soon text
-			soonTextElement = (<Text style={css.dining_list_closing_soon_text}>(Closing soon)</Text>);
-		}
-	} else {
-		if (status.isOpeningSoon) {
-			// Opening soon text
-			soonTextElement = (<Text style={css.dining_list_opening_soon_text}>(Opening soon)</Text>);
-		}
+	const statusText = status.isOpen ?
+		'Open' : 'Closed';
+
+	let soonStatusText = null;
+	let soonStatusColor = null;
+	if (status.openingSoon) {
+		soonStatusText = 'Opening Soon';
+		soonStatusColor = COLOR_MGREEN;
+	}
+	else if (status.closingSoon) {
+		soonStatusText = 'Closing Soon';
+		soonStatusColor = COLOR_MRED;
 	}
 
 	console.log(status);
 
 	return (
-		<View style={css.dining_list_row}>
+		<View style={css.dl_row}>
 			<Touchable
 				style={css.dl_row_container_left}
 				onPress={() => { /* Actions.DiningDetail({ data }) */ }}
 			>
-				<View style={css.dining_list_title_row}>
+				<View style={css.dl_title_row}>
 					<Text style={css.dl_title_text}>{data.name}</Text>
 				</View>
-				<View style={css.dining_list_title_row}>
-					<View style={css.dining_list_hours}>
-						<DiningHoursText
-							title={status.todaysTitle}
-							hours={status.todaysHours}
-						/>
-					</View>
+				<View style={css.dl_hours_row}>
 					<ColoredDot
 						size={10}
 						color={activeDotColor}
-						style={css.dining_hours_status}
+						style={css.dl_status_icon}
 					/>
-					{soonTextElement}
+					<Text style={css.dl_status_text}>
+						{statusText}
+					</Text>
+					<Text
+						style={[
+							css.dl_status_soon_text,
+							{ color: soonStatusColor }
+						]}
+					>
+						{soonStatusText}
+					</Text>
 				</View>
 			</Touchable>
 

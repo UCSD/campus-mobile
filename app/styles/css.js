@@ -20,7 +20,6 @@
 	400 - Views
 		401 - Surf Report
 		402 - Shuttle Stop
-		403 - Dining List
 		404 - Dining Detail
 		406 - Event & News Detail
 		407 - WebView
@@ -186,12 +185,17 @@ var css = StyleSheet.create({
 	sc_small_list_container: { width: MAX_CARD_WIDTH, overflow: 'hidden' },
 
 	// 304 - Dining Card
-	dining_list_row: { backgroundColor: COLOR_LGREY, flexDirection: 'row', padding: 10, borderBottomWidth: 1, borderBottomColor: COLOR_MGREY },
-	dining_list_title_row: { flexDirection: 'row', justifyContent: 'flex-start', flexWrap: 'wrap' },
-	dining_list_hours: { alignSelf: 'center', paddingTop: 8, paddingRight: 4 },
-	dining_hours_status: { alignSelf: 'center', paddingTop: 8, paddingLeft: 4, paddingRight: 4 },
-	dining_list_closing_soon_text: { fontSize: 14, color: COLOR_MRED, alignSelf: 'center', paddingTop: 8,  paddingLeft: 4 },
-	dining_list_opening_soon_text: { fontSize: 14, color: COLOR_MGREEN, alignSelf: 'center', paddingTop: 8, paddingLeft: 4 },
+	dl_row: { backgroundColor: COLOR_LGREY, flexDirection: 'row', padding: 10, borderBottomWidth: 1, borderBottomColor: COLOR_MGREY },
+	dl_row_container_left: { flex: 3, flexDirection: 'column', justifyContent: 'flex-start', },
+	dl_row_container_right: { flex: 1, alignItems: 'flex-end', justifyContent: 'center' },
+	dl_title_row: { flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' },
+	dl_title_text: { fontSize: 20, color: COLOR_PRIMARY },
+	dl_hours_row: { flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', paddingTop: 8 },
+	dl_status_icon: { paddingRight: 8 },
+	dl_status_text: { fontWeight: '700', paddingRight: 8 },
+	dl_status_soon_text: { paddingRight: 8 },
+	dl_dir_traveltype_container: { flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'center' },
+	dl_dir_eta: { color: COLOR_PRIMARY, fontSize: 11, fontWeight: '600' },
 
 	// 305 - Events & News Cards
 	events_list: { alignSelf: 'stretch', padding: 8 },
@@ -243,7 +247,6 @@ var css = StyleSheet.create({
 	sr_dateDayEmpty: { flex: 2.5 },
 	sr_dateDayOfWeek: { fontSize: 19, color: 'black' },
 	sr_dateDayAndMonth: { fontSize: 12, color: COLOR_DGREY },
-
 	
 	// 402 - Shuttle Stop
 	shuttlestop_image: { width: WINDOW_WIDTH, height: round(WINDOW_WIDTH * .533) },
@@ -267,16 +270,7 @@ var css = StyleSheet.create({
 	shuttlestop_aa: { marginRight: 20, marginVertical: 50 },
 	shuttle_stop_no_arrivals: { fontSize: 16, color: '#555' },
 
-	// 403 - Dining List
-	dl_row_container_left: { flexDirection: 'column', flexWrap: 'wrap' },
-	dl_row_container_right: { flex: 1, alignItems: 'flex-end', justifyContent: 'center', flexWrap: 'wrap' },
-	dl_title_text: { fontSize: 20, color: COLOR_PRIMARY },
-	dl_dir_traveltype_container: { flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'center' },
-	dl_dir_eta: { color: COLOR_PRIMARY, fontSize: 11, fontWeight: '600' },
-	dl_market_date: { borderBottomWidth: 1, borderBottomColor: '#EEE', paddingBottom: 12, paddingTop: 6 },
-	dl_market_date_label: { fontSize: 22, color: '#444', textAlign: 'center' },
-
-	// 404 - Dining Detail
+	// 403 - Dining Detail
 	dd_description_container: { padding: 10 },
 	dd_description_nametext: { fontSize: 26 },
 	dd_description_subtext: { paddingTop: 8, fontWeight: '700' },

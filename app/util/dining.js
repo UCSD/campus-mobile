@@ -33,75 +33,82 @@ module.exports = {
 	 * @returns {object} Returns object:
 	 *  {
 	 *   isOpen: Boolean,
-	 *   isOpeningSoon: Boolean,
-	 *   isClosingSoon: Boolean,
-	 *   todayTitle: String, // if special event
-	 *   todaysHours: String
+	 *   openingSoon: Boolean,
+	 *   closingSoon: Boolean
 	 *  }
 	 */
 	getOpenStatus(regularHours, specialHours) {
 		const openStatus = {
 			isOpen: false,
-			isOpeningSoon: false,
-			isClosingSoon: false,
-			todaysTitle: null,
-			todaysHours: null
+			isAlwaysOpen: false,
+			openingSoon: false,
+			closingSoon: false
 		};
 
 		const now = moment();
 		let todaysHours = regularHours[now.format('ddd').toLowerCase()];
-
 		if (specialHours && specialHours[now.format('MM/DD/YYYY')]) {
 			todaysHours = specialHours[now.format('MM/DD/YYYY')].hours;
-			openStatus.todaysTitle = specialHours[now.format('MM/DD/YYYY')].title;
 		}
 
 		// if 24 hours, return immediately
 		if (todaysHours === '0000-2359') {
 			openStatus.isOpen = true;
-			openStatus.todaysHours = '0000-2359';
+			openStatus.isAlwaysOpen = true;
 			return openStatus;
 		}
 
-		const closestTimes = {
-			closing: null,
-			opening: null
-		};
-
 		// If restaurant operates today
 		if (todaysHours) {
-			todaysHours.split(',').forEach((hours) => {
+			const todaysHoursArray = todaysHours.split(',');
+
+			// Keep record of hour that applies to current time
+			let currentHoursIndex = 0;
+			let currentHoursDistance;
+
+			todaysHoursArray.forEach((hours, i) => {
 				const operatingHours = this.parseHours(hours);
 
+				// Take into account closing times that are the next day
+				if (operatingHours.closingHour.isBefore(operatingHours.openingHour)) {
+					operatingHours.closingHour.add(1, 'days');
+				}
+
 				if (now.isBetween(operatingHours.openingHour, operatingHours.closingHour)) {
+					// Restaurant is open during these hours.
 					openStatus.isOpen = true;
-					closestTimes.opening = null;
-					closestTimes.closing = operatingHours.closingHour;
-					openStatus.todaysHours = hours;
-				} else {
-					// Restaurant is currently closed. Opening soon?
-					if (!closestTimes.opening) {
-						closestTimes.opening = operatingHours.openingHour;
-						openStatus.todaysHours = hours;
-					} else {
-						// is the current opening time closer?
-						if (operatingHours.openingHour - now < Math.abs(closestTimes.opening - now)) {
-							closestTimes.opening = operatingHours.openingHour;
-							openStatus.todaysHours = hours;
+					currentHoursIndex = i;
+				}
+				else {
+					// Restaurant is closed during these hours.
+					if (!openStatus.isOpen) {
+						const todaysDistance = Math.abs(operatingHours.openingHour - now);
+						// Set current hour index if this closing time is
+						// closer to present time than the previous one.
+						// Initialize currentHourDistance if not intialized.
+						if (!currentHoursDistance) {
+							currentHoursIndex = i;
+							currentHoursDistance = todaysDistance;
+						}
+						else if (todaysDistance < currentHoursDistance) {
+							currentHoursIndex = i;
+							currentHoursDistance = todaysDistance;
 						}
 					}
 				}
 			});
-		}
-		if (closestTimes.opening) {
-			const { opening } = closestTimes;
-			const openingMinusOne = opening.clone().subtract(1, 'h');
-			openStatus.isOpeningSoon = now.isBetween(openingMinusOne, opening);
-		}
-		else if (closestTimes.closing) {
-			const { closing } = closestTimes;
-			const closingMinusOne = closing.clone().subtract(1, 'h');
-			openStatus.isClosingSoon = now.isBetween(closingMinusOne, closing);
+
+			// Check if restaurant is opening or closing soon
+			const currentOperatingHours = this.parseHours(todaysHoursArray[currentHoursIndex]);
+			const closingHourMinusOne = currentOperatingHours.closingHour.clone().subtract(1, 'hours');
+			const openingHourMinusOne = currentOperatingHours.openingHour.clone().subtract(1, 'hours');
+
+			if (now.isBetween(closingHourMinusOne, currentOperatingHours.closingHour)) {
+				openStatus.closingSoon = true;
+			}
+			else if (now.isBetween(openingHourMinusOne, currentOperatingHours.openingHour)) {
+				openStatus.openingSoon = true;
+			}
 		}
 
 		return openStatus;
