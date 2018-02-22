@@ -35,7 +35,7 @@ const DiningDescription = ({
 				hours={regularHours}
 			/>
 
-			{specialHours[moment().format('MM/DD/YYYY')] ?
+			{(specialHours && specialHours[moment().format('MM/DD/YYYY')]) ?
 			(
 				<View>
 					<Text style={css.dd_description_subtext}>
