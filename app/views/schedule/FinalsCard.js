@@ -5,7 +5,7 @@ import {
 	ListView,
 	StyleSheet,
 } from 'react-native';
-import { getData } from './scheduleData';
+import { getFinals } from './scheduleData';
 import Card from '../card/Card';
 import logger from '../../util/logger';
 import css from '../../styles/css';
@@ -20,7 +20,7 @@ import {
 	MAX_CARD_WIDTH,
 } from '../../styles/LayoutConstants';
 
-var scheduleData = getData();
+var scheduleData = getFinals();
 var dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
 var FinalsCard = () => {

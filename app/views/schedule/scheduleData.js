@@ -271,7 +271,7 @@ const data = {
           "days": "MO",
           "building": "CENTR",
           "room": "216",
-          "instructor_name": "Eldon, John",
+          "instructor_name": "Eldon, Johnny",
           "special_mtg_code": ""
         },
         {
@@ -281,7 +281,7 @@ const data = {
           "days": "FR",
           "building": "CENTR",
           "room": "216",
-          "instructor_name": "Eldon, John",
+          "instructor_name": "Eldon, Johnny",
           "special_mtg_code": "FI"
         }
       ]

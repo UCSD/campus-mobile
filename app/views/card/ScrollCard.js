@@ -67,7 +67,6 @@ class ScrollCard extends React.Component {
 				/>
 			);
 		}
-
 		return (
 			<View>
 				<ElevatedView

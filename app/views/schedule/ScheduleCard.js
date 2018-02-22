@@ -35,80 +35,54 @@ var ScheduleCard = () => {
 	logger.ga('Card Mounted: Class Schedule');
 
 	return (
-		// <Card 
-		// 	id='schedule'
-		// 	title='Class Schedule'>
-		// 	<View style={css.sc_dayContainer}>
-		// 		{/* <List>
-		// 			<FlatList
-		// 				data={scheduleData}
-		// 			/>
-		// 		</List> */}
-				
-		// 		<View
-		// 			style={css.sc_dayRow}>
-		// 			<Text
-		// 				style={css.sc_courseText}>
-		// 				CAT CAT CAT CAT 
-		// 			</Text>
-		// 			<Text
-		// 				style={css.sc_subText}>
-		// 				1:00 PM to 1:50 PM
-		// 			</Text>
-		// 			<Text
-		// 				style={css.sc_subText}>
-		// 				PCYNH 199
-		// 			</Text>
-		// 		</View>
-		// 		<TouchableHighlight style={css.dc_locations_row_right} underlayColor={'rgba(200,200,200,.1)'} onPress={() => general.gotoNavigationApp(data.coords.lat, data.coords.lon)}>
-		// 		<View style={css.dl_dir_traveltype_container}>
-		// 			<Icon name="md-walk" size={32} color={COLOR_SECONDARY} />
-		// 		</View>
-		// 	</TouchableHighlight>
-		// 	</View>
-		// 	<View style={css.sc_dayContainer}>
-		// 		<View
-		// 			style={css.sc_dayRow}>
-		// 			<Text style={css.sc_subText}>
-		// 				CSE 8A
-		// 			</Text>
-		// 			<Text style={css.sc_subText}>
-		// 				Lecture
-		// 			</Text>
-		// 			<Text style={css.sc_subText}>
-		// 				2PM
-		// 			</Text>
-		// 		</View>
-		// 	</View>
-			
-		// 	<Touchable
-		// 		style={styles.fullScheduleButton}
-		// 		onPress={() => FullScheduleListView()}>
-		// 			<Text style={styles.more_label}>
-		// 				View Full Schedule
-		// 			</Text>
-		// 	</Touchable>
-		// </Card> 
-
-		<ScrollCard
+		<Card 
 			id='schedule'
-			title='Class Schedule' //{scheduleData['MO'].instructor_name}
-			listData={scheduleData}
-			renderRow={
-				(rowData, sectionID, rowID, highlightRow) => (
-					(rowID !== 'SA' && rowID !== 'SU') ? (
-						<ScheduleDay
-							id={rowID}
-							data={rowData}
-						/>
-					) : (null)
-			)}
-			actionButton={null}
-			extraActions={null}
-			updateScroll={null}
-			lastScroll={null}
-		/>
+			title='Class Schedule'>
+			<ListView
+                dataSource={dataSource.cloneWithRows(scheduleData)}
+                renderRow={(rowData, sectionID, rowID, highlightRow) => (
+					<ScheduleDay
+						id={rowID}
+						data={rowData}
+					/>
+                )}
+            />
+			<View style={css.sc_dayContainer}>
+				<TouchableHighlight style={css.dc_locations_row_right} underlayColor={'rgba(200,200,200,.1)'} onPress={() => general.gotoNavigationApp(data.coords.lat, data.coords.lon)}>
+					<View style={css.dl_dir_traveltype_container}>
+						<Icon name="md-walk" size={32} color={COLOR_SECONDARY} />
+					</View>
+				</TouchableHighlight>
+			</View>			
+			<Touchable
+				style={styles.fullScheduleButton}
+				onPress={() => FullScheduleListView()}>
+					<Text style={styles.more_label}>
+						View Full Schedule
+					</Text>
+			</Touchable>
+		</Card> 
 	);
+
+	// 	<Card
+	// 		id='schedule'
+	// 		title= {scheduleData['MO'][0].instructor_name} //'Class Schedule'
+	// 		listData={scheduleData}
+	// 		renderRow={
+	// 			(rowData, sectionID, rowID, highlightRow) => (
+	// 				(rowID !== 'SA' && rowID !== 'SU') ? (
+	// 					<ScheduleDay
+	// 						id={rowID}
+	// 						data={rowData}
+	// 					/>
+	// 				) : (null)
+	// 		)}
+	// 		actionButton={null}
+	// 		extraActions={null}
+	// 		updateScroll={null}
+	// 		lastScroll={null}
+	// 	/>
+	// );
 };
 
 var ScheduleDay = ({ id, data }) => (
