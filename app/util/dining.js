@@ -29,7 +29,7 @@ module.exports = {
 	 * Gets the current open or closed status of a restaurant.
 	 * @function
 	 * @param {object} regularHours Normal operating hours
-	 * @param {array} specialHours Special operating hours with dates as keys
+	 * @param {object} specialHours Special operating hours with dates as keys
 	 * @returns {object} Returns object:
 	 *  {
 	 *   isOpen: Boolean,
@@ -62,7 +62,7 @@ module.exports = {
 		if (todaysHours) {
 			const todaysHoursArray = todaysHours.split(',');
 
-			// Keep record of hour that applies to current time
+			// Keeps record of hours that apply to right now
 			let currentHoursIndex = 0;
 			let currentHoursDistance;
 

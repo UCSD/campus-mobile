@@ -45,7 +45,7 @@ const DiningItem = ({ data }) => {
 		<View style={css.dl_row}>
 			<Touchable
 				style={css.dl_row_container_left}
-				onPress={() => { /* Actions.DiningDetail({ data }) */ }}
+				onPress={() => { Actions.DiningDetail({ data }); }}
 			>
 				<View style={css.dl_title_row}>
 					<Text style={css.dl_title_text}>{data.name}</Text>

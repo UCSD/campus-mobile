@@ -3,57 +3,99 @@ import {
 	View,
 	Text,
 } from 'react-native';
+import moment from 'moment';
 
 import css from '../../styles/css';
 
 const dining = require('../../util/dining');
 
-const generateHourText = (parsedHours, textRows) => {
-	parsedHours.forEach((day) => {
-		let hoursText = [];
-		if (day.hours.length > 1) {
-			day.hours.forEach((hours, i, total) => {
-				if (i !== total.length - 1) {
-					hoursText.push(`${hours},\n`);
-				} else {
-					hoursText.push(hours);
-				}
-			});
-		} else {
-			hoursText = day.hours;
-		}
+const generateHourElements = (hoursArray) => {
+	const elementsArray = [];
 
-		const newTextRow = (
-			<View
-				key={day.title}
-				style={css.dd_hours_row}
-			>
-				<Text style={css.dd_hours_text_title}>
-					{day.title}:
-				</Text>
+	// Push hours
+	hoursArray.forEach((hours) => {
+		const operatingHours = dining.parseHours(hours);
+		const isAlwaysOpen = (hours === '0000-2359');
+		elementsArray.push(
+			<View key={hours}>
 				<Text style={css.dd_hours_text_hours}>
-					{hoursText}
+					{
+						(isAlwaysOpen) ?
+							('Open 24 Hours') :
+							(
+								operatingHours.openingHour.format('h:mm a')
+								+ ' - '
+								+ operatingHours.closingHour.format('h:mm a')
+							)
+					}
 				</Text>
 			</View>
 		);
-
-		textRows.push(newTextRow);
 	});
+
+	return elementsArray;
 };
 
-const DiningHours = ({ hours, specialHours, style }) => {
-	const hoursParsed = dining.parseWeeklyHours(hours),
-		hoursTextRows = [];
+const generateHours = (allHours) => {
+	const hoursRows = [];
+	for (const day of Object.keys(allHours)) {
+		const todaysHours = allHours[day];
 
-	if (specialHours) {
-		hoursTextRows.push(<Text key={0} style={css.dd_description_subtext}>Special Hours</Text>);
+		// If no hours for the day don't do anything
+		if (!todaysHours) break;
+
+		const todaysHoursArray = todaysHours.split(',');
+		const todaysTitle = moment(day, 'ddd').format('dddd');
+		const todaysHoursElements = generateHourElements(todaysHoursArray);
+
+		hoursRows.push(
+			<HoursRowElement
+				key={todaysTitle}
+				title={todaysTitle}
+				hours={todaysHoursElements}
+				style={css.dd_hours_row}
+			/>
+		);
 	}
+	return hoursRows;
+};
 
-	generateHourText(hoursParsed, hoursTextRows);
+const generateSpecialHours = (allHours) => {
+	const hoursRows = [];
+	const now = moment();
+	const todaysHours = allHours[now.format('MM/DD/YYYY')].hours;
+	const todaysHoursArray = todaysHours.split(',');
+	const todaysTitle = allHours[now.format('MM/DD/YYYY')].title;
+	const todaysHoursElements = generateHourElements(todaysHoursArray);
 
+	hoursRows.push(
+		<HoursRowElement
+			key={todaysTitle}
+			title={todaysTitle}
+			hours={todaysHoursElements}
+			style={css.dd_hours_row}
+		/>
+	);
+
+	return hoursRows;
+};
+
+const HoursRowElement = ({ title, hours, style }) => (
+	<View style={style}>
+		<Text style={css.dd_hours_text_title}>{title + ':'}</Text>
+		<View style={css.dd_hours_text_container}>
+			{hours}
+		</View>
+	</View>
+);
+
+const DiningHours = ({ hours, specialHours, style }) => {
+	let hoursElements;
+	if (specialHours) hoursElements = generateSpecialHours(hours);
+	else hoursElements = generateHours(hours);
 	return (
-		<View style={[css.dd_hours_container, style]}>
-			{hoursTextRows}
+		<View style={[style]}>
+			{hoursElements}
 		</View>
 	);
 };
