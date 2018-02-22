@@ -240,7 +240,7 @@ var css = StyleSheet.create({
 	sc_dayContainer: { width: MAX_CARD_WIDTH + 2, padding: 7, flexDirection: 'row', flex:1 },
 	sc_fullScheduleContainer: { width: MAX_CARD_WIDTH + 2, padding: 7, flexDirection: 'column', flex:1 },
 	sc_dayRow: { justifyContent: 'center', paddingBottom: 10, borderColor: '#CCC', borderWidth:1, },
-
+	sc_scheduleContainer: {width: MAX_CARD_WIDTH + 2, padding: 7, flexDirection:'column', flex:1 },
 	/********************************************
 	 *  400 - Views
 	 ********************************************/

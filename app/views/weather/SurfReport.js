@@ -102,6 +102,7 @@ class SurfReport extends React.Component {
 
 
 function mapStateToProps(state) {
+	console.log(state)
 	return {
 		surfData: state.surf.data,
 	};

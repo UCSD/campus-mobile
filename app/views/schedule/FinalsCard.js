@@ -5,7 +5,7 @@ import {
 	ListView,
 	StyleSheet,
 } from 'react-native';
-import { getData } from './scheduleData';
+import { getFinals } from './scheduleData';
 import Card from '../card/Card';
 import logger from '../../util/logger';
 import css from '../../styles/css';
@@ -20,12 +20,12 @@ import {
 	MAX_CARD_WIDTH,
 } from '../../styles/LayoutConstants';
 
-var scheduleData = getData();
+var scheduleData = getFinals();
 var dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
 var FinalsCard = () => {
 	logger.ga('Card Mounted: Finals Schedule');
-
+	console.log(scheduleData['MO'].length);
 	return (
         <Card
             id='finals'
@@ -33,10 +33,13 @@ var FinalsCard = () => {
             <ListView
                 dataSource={dataSource.cloneWithRows(scheduleData)}
                 renderRow={(rowData, sectionID, rowID, highlightRow) => (
-                <ScheduleDay
+				<View>
+					{ scheduleData[String(rowID)].length > 0 ? (
+					<ScheduleDay
                     id={rowID}
                     data={rowData}
-                />
+				/>) : null}
+				</View>
                 )}
             />
         </Card>
@@ -49,14 +52,14 @@ var ScheduleDay = ({ id, data }) => (
 			{id}
 		</Text>
 		<DayList courseItems={data} />
-	</View>
+	</View> 
 );
 
 var DayList = ({ courseItems }) => (
 	<ListView
 		dataSource={dataSource.cloneWithRows(courseItems)}
 		renderRow={(rowData, sectionID, rowID, highlightRow) => (
-			<DayItem key={rowID} data={rowData} />
+			<DayItem key={rowID} data={rowData}/>
 		)}
 	/>
 );

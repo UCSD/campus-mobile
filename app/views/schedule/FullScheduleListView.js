@@ -4,27 +4,49 @@ import {
 	View,
 	Text,
 } from 'react-native';
+import { connect } from 'react-redux';
 
 import css from '../../styles/css';
 import { getData } from './scheduleData';
 
-const dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+const fullScheduleDataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 var scheduleData = getData();
 
-const FullScheduleListView = ({ style, data, rows, scrollEnabled, item, card }) => {
-	return (
-		<ListView
-			style={style}
-			scrollEnabled={scrollEnabled}
-			dataSource={dataSource.cloneWithRows((rows) ? (data.slice(0,rows)) : (data))}
-			renderRow={(rowData, sectionID, rowID, highlightRow) => {
-				<ScheduleDay
-					id={rowID}
-					data={rowData}
+class FullSchedule extends React.Component {
+	componentDidMount() {
+		logger.ga('Card Mounted: Full Schedule');
+	}
+	render () {
+		return (
+			<ScrollView style={css.main_full}>
+				<ListView
+					dataSource={fullScheduleDataSource.cloneWithRows(this.props.fullScheduleData)}
+					// dataSource={dataSource.cloneWithRows((rows) ? (this.props.scheduleData.slice(0,rows)) : (this.props.scheduleData))}
+					renderRow={(rowData, sectionID, rowID, highlightRow) => {
+						<ScheduleDay
+							id={rowID}
+							data={rowData}
+						/>
+					}}
 				/>
-			}}
-		/>
-)};
+			</ScrollView>
+		);
+	}
+}
+// const FullScheduleList = ({ style, data, rows, scrollEnabled, item, card }) => {
+// 	return (
+// 		<ListView
+// 			style={style}
+// 			scrollEnabled={scrollEnabled}
+// 			dataSource={dataSource.cloneWithRows((rows) ? (data.slice(0,rows)) : (data))}
+// 			renderRow={(rowData, sectionID, rowID, highlightRow) => {
+// 				<ScheduleDay
+// 					id={rowID}
+// 					data={rowData}
+// 				/>
+// 			}}
+// 		/>
+// )};
 
 var ScheduleDay = ({ id, data }) => (
 	<View style={css.sc_dayContainer}>
@@ -59,18 +81,14 @@ var DayItem = ({ data }) => (
 	</View>
 );
 
-FullScheduleListView.propTypes = {
-	style: PropTypes.number, // Stylesheet is a number for some reason?
-	data: PropTypes.array.isRequired,
-	rows: PropTypes.number,
-	scrollEnabled: PropTypes.bool,
-	item: PropTypes.string.isRequired,
-	card: PropTypes.bool,
-};
+function mapStateToProps(state) {
+	return {
+		fullScheduleData: state.schedule.data,
+	};
+}
 
-FullScheduleListView.defaultProps = {
-	scrollEnabled: false,
-	card: false
-};
+const FullScheduleListView = connect(
+	mapStateToProps
+)(FullSchedule);
 
 export default FullScheduleListView;

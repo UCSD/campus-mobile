@@ -3,6 +3,7 @@ import { put, call, select } from 'redux-saga/effects';
 import { Image } from 'react-native';
 
 import WeatherService from '../services/weatherService';
+import ScheduleService from '../services/scheduleService';
 import { fetchSpecialEvents } from '../services/specialEventsService';
 import { fetchSurveyIds, fetchSurveyById } from '../services/surveyService';
 import LinksService from '../services/quicklinksService';
@@ -18,6 +19,7 @@ import {
 	NEWS_API_TTL,
 	DATA_SAGA_TTL,
 	SHUTTLE_MASTER_TTL,
+	SCHEDULE_TTL,
 } from '../AppSettings';
 
 const getWeather = (state) => (state.weather);
@@ -29,6 +31,7 @@ const getEvents = (state) => (state.events);
 const getNews = (state) => (state.news);
 const getCards = (state) => (state.cards);
 const getShuttle = (state) => (state.shuttle);
+const getSchedule = (state) => (state.schedule);
 
 function* watchData() {
 	while (true) {
@@ -42,11 +45,30 @@ function* watchData() {
 			yield call(updateSurveys);
 			yield call(updateShuttleMaster);
 			yield put({ type: 'UPDATE_DINING' });
+			yield call(updateSchedule);
 
 		} catch (err) {
 			console.log(err);
 		}
 		yield delay(DATA_SAGA_TTL);
+	}
+}
+
+function* updateSchedule() {
+	const { lastUpdated, data } = yield select(getSchedule);
+	const nowTime = new Date().getTime();
+	const timeDiff = nowTime - lastUpdated;
+	const scheduleTTL = SCHEDULE_TTL;
+
+	if (timeDiff < scheduleTTL && data) {
+		// Do nothing, no need to fetch new data
+		console.log("HERE?")
+	} else {
+		console.log("OR THERE?")
+		const schedule = yield call(ScheduleService.FetchSchedule);
+		if (schedule) {
+			yield put({ type: 'SET_SCHEDULE', schedule });
+		}
 	}
 }
 
