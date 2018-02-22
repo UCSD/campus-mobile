@@ -4,6 +4,7 @@ import {
 	Text,
 } from 'react-native';
 import DiningHours from './DiningHours';
+import moment from 'moment';
 
 import css from '../../styles/css';
 
@@ -34,7 +35,7 @@ const DiningDescription = ({
 				hours={regularHours}
 			/>
 
-			{specialHours ?
+			{specialHours[moment().format('MM/DD/YYYY')] ?
 			(
 				<View>
 					<Text style={css.dd_description_subtext}>
