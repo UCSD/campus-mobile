@@ -1,6 +1,8 @@
 import * as Keychain from 'react-native-keychain';
 import { RSA } from 'react-native-rsa-native';
 
+const base64 = require('base-64');
+
 const accessTokenSiteName = 'https://ucsd.edu';
 
 /**
@@ -18,6 +20,10 @@ module.exports = {
 			.then(encryptedMessage => (
 				encryptedMessage.replace(/(\r\n|\n|\r)/gm,'')
 			));
+	},
+
+	encryptStringWithBase64(string) {
+		return base64.encode(string);
 	},
 
 	/**

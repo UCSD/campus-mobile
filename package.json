@@ -11,12 +11,12 @@
     "generate-docs": "./node_modules/.bin/jsdoc -c jsdoc.conf.json"
   },
   "dependencies": {
+    "base-64": "^0.1.0",
     "buffer": "5.0.8",
     "dateformat": "1.0.12",
     "events": "1.1.1",
     "fetch-cookie": "0.7.0",
     "html-entities": "1.2.0",
-    "hybrid-crypto-js": "0.1.6",
     "moment": "2.15.2",
     "orchestrator": "0.3.8",
     "react": "15.4.2",

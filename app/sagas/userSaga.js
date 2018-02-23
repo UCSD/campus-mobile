@@ -4,15 +4,20 @@ import { delay } from 'redux-saga';
 const auth = require('../util/auth');
 
 function* doLogin(action) {
-	const username = action.username;
-	const password = action.password;
+	const passwordEncrypted = yield auth.encryptStringWithKey(action.password);
+	console.log(passwordEncrypted);
+	const loginInfo = auth.encryptStringWithBase64(
+		`${action.username}:${passwordEncrypted}`
+	);
+
+	console.log(loginInfo);
 
 	// TODO: Send to auth service to verify before actually doing login
 	/* Logic for using ssoService
 	try {
 		yield put({ type: 'IS_LOGGING_IN' });
 		const { response, timeout } yield race({
-			response: call(ssoService.retrieveAccessToken, username, password),
+			response: call(ssoService.retrieveAccessToken, loginInfo),
 			timeout: call(delay, SSO_TTL)
 		});
 
@@ -43,7 +48,7 @@ function* doLogin(action) {
 	// error.name = 'ssoInvalidCreds';
 	// yield put({ type: 'USER_LOGIN_FAILED', error });
 	yield auth.storeAccessToken('testToken');
-	yield put({ type: 'LOGGED_IN', user: username });
+	yield put({ type: 'LOGGED_IN', user: action.username });
 }
 
 function* doLogout(action) {
