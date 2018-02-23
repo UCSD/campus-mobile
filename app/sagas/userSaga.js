@@ -1,10 +1,19 @@
-import { call, put, takeLatest, race } from 'redux-saga/effects';
+import {
+	call,
+	put,
+	select,
+	takeLatest,
+	race
+} from 'redux-saga/effects';
 import { delay } from 'redux-saga';
+import moment from 'moment';
 import ssoService from '../services/ssoService';
 import { SSO_TTL } from '../AppSettings';
 import logger from '../util/logger';
 
 const auth = require('../util/auth');
+
+const getUserData = (state) => (state.user);
 
 function* doLogin(action) {
 	const username = action.username;
@@ -45,6 +54,18 @@ function* doLogin(action) {
 	}
 }
 
+function* doTokenRefresh() {
+	const { expiration } = yield select(getUserData);
+
+	// Check if expiration time is past current time
+	if (moment().isAfter(moment.unix(expiration))) {
+		// Get username and password from keystore
+		const { username, password } = yield auth.retrieveUserCreds();
+
+		yield put({ type: 'USER_LOGIN', username, password });
+	}
+}
+
 function* doLogout(action) {
 	yield auth.destroyUserCreds();
 	yield auth.destroyAccessToken();
@@ -54,6 +75,7 @@ function* doLogout(action) {
 function* userSaga() {
 	yield takeLatest('USER_LOGIN', doLogin);
 	yield takeLatest('USER_LOGOUT', doLogout);
+	yield takeLatest('USER_TOKEN_REFRESH', doTokenRefresh);
 }
 
 export default userSaga;

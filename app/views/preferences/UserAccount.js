@@ -17,22 +17,18 @@ import Card from '../card/Card';
 const auth = require('../../util/auth');
 
 class UserAccount extends Component {
-	componentDidMount() {
-		/*
-		TODO: Check for credentials and check if login is active, re-login if needed
-		Keychain.getGenericPassword(serviceName).then((creds) => {
-			console.log(JSON.stringify(creds));
-		});
-		*/
-
+	componentWillMount() {
 		if (this.props.user.isLoggedIn) {
+			this.props.doTokenRefresh();
 			auth.retrieveAccessToken()
 				.then(token => {
 					console.log('User Data: ', this.props.user);
 					console.log('Access Token: ', token);
 				});
 		}
+	}
 
+	componentDidMount() {
 		Linking.addEventListener('url', this._handleOpenURL);
 	}
 	componentWillUnmount() {
@@ -167,6 +163,9 @@ function mapDispatchToProps(dispatch) {
 	return {
 		doLogin: (username, password) => {
 			dispatch({ type: 'USER_LOGIN', username, password });
+		},
+		doTokenRefresh: () => {
+			dispatch({ type: 'USER_TOKEN_REFRESH' });
 		},
 		doLogout: () => {
 			dispatch({ type: 'USER_LOGOUT' });
