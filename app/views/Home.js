@@ -16,7 +16,7 @@ import NewsCardContainer from './news/NewsCardContainer';
 import DiningCardContainer from './dining/DiningCardContainer';
 import SpecialEventsCardContainer from './specialEvents/SpecialEventsCardContainer';
 //import SurveyCardContainer from './survey/SurveyCardContainer';
-import ScheduleCard from './schedule/ScheduleCard';
+import ScheduleCardContainer from './schedule/ScheduleCardContainer';
 import FinalsCard from './schedule/FinalsCard';
 
 import { platformAndroid } from '../util/general';
@@ -83,7 +83,7 @@ export class Home extends React.Component {
 						card = (<WeatherCardContainer key={'weather'} />);
 						break;
 					case 'schedule':
-						card = <ScheduleCard key={'schedule'} />;
+						card = <ScheduleCardContainer key={'schedule'} />;
 						break;
 					case 'shuttle':
 						card = (<ShuttleCardContainer key={'shuttle'} />);
