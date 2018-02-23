@@ -1,8 +1,10 @@
 const initialState = {
 	isLoggedIn: false,
 	isLoggingIn: false,
-	profile: null,
-	username: null,
+	profile: {
+		username: null
+	},
+	expiration: null,
 	error: null
 };
 
@@ -15,9 +17,11 @@ function user(state = initialState, action) {
 		return newState;
 	}
 	case 'LOGGED_IN': {
-		newState.isLoggedIn = true;
-		newState.username = action.user;
+		newState.isLoggingIn = false;
 		newState.error = null;
+		newState.profile.username = action.user;
+		newState.expiration = action.expiration;
+		newState.isLoggedIn = true;
 		return newState;
 	}
 	case 'LOGGED_OUT': {

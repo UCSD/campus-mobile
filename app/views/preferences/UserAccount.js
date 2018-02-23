@@ -24,18 +24,19 @@ class UserAccount extends Component {
 			console.log(JSON.stringify(creds));
 		});
 		*/
+
+		if (this.props.user.isLoggedIn) {
+			auth.retrieveAccessToken()
+				.then(token => {
+					console.log('User Data: ', this.props.user);
+					console.log('Access Token: ', token);
+				});
+		}
+
 		Linking.addEventListener('url', this._handleOpenURL);
 	}
 	componentWillUnmount() {
 		Linking.removeEventListener('url', this._handleOpenURL);
-	}
-
-	_performUserAuthAction = () => {
-		if (this.props.user.isLoggedIn) {
-			this.props.doLogout();
-		} else {
-			this.props.refreshLogin();
-		}
 	}
 
 	handleLogin = (user, pass) => {
@@ -46,32 +47,13 @@ class UserAccount extends Component {
 		this.props.doLogout();
 	}
 
-	_renderAccountContainer = (mainText) => (
-		<TouchableOpacity
-			style={css.ua_spacedRow}
-			onPress={this._performUserAuthAction}
-		>
-			<Text style={css.ua_accountText}>{mainText}</Text>
-			<Icon name="user" />
-		</TouchableOpacity>
-	);
-
-	_renderAccountInfo = () => {
-		// show the account info of logged in user, or not logged in
-		if (this.props.user.isLoggedIn) {
-			return this._renderAccountContainer(this.props.user.profile.name);
-		} else {
-			return this._renderAccountContainer('Tap to Log In');
-		}
-	}
-
 	render() {
 		return (
 			<Card id={'user'} title={this.props.user.isLoggedIn ? 'Logged in as:' : 'Log in with SSO:'} hideMenu={true}>
 				<View style={{ flexGrow: 1, width: getMaxCardWidth() }}>
 					{(this.props.user.isLoggedIn) ? (
 						<AccountInfo
-							username={this.props.user.username}
+							username={this.props.user.profile.username}
 							handleLogout={this.handleLogout}
 						/>
 					) : (

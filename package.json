@@ -12,10 +12,7 @@
   },
   "dependencies": {
     "base-64": "^0.1.0",
-    "buffer": "5.0.8",
     "dateformat": "1.0.12",
-    "events": "1.1.1",
-    "fetch-cookie": "0.7.0",
     "html-entities": "1.2.0",
     "moment": "2.15.2",
     "orchestrator": "0.3.8",
@@ -35,7 +32,6 @@
     "react-native-permissions": "0.2.7",
     "react-native-popup-menu": "0.6.1",
     "react-native-router-flux": "3.38.0",
-    "react-native-rsa": "0.0.3",
     "react-native-rsa-native": "^1.0.14",
     "react-native-side-menu": "0.20.1",
     "react-native-simple-toast": "0.0.5",
@@ -49,13 +45,7 @@
     "redux-persist-migrate": "4.1.0",
     "redux-persist-transform-filter": "0.0.6",
     "redux-saga": "0.14.3",
-    "redux-thunk": "2.1.0",
-    "stream": "0.0.2",
-    "timers": "0.1.1",
-    "xml-formatter": "1.0.1",
-    "xml2js": "0.4.17",
-    "xmldom": "0.1.27",
-    "xpath": "0.0.24"
+    "redux-thunk": "2.1.0"
   },
   "devDependencies": {
     "babel-eslint": "^6.1.2",

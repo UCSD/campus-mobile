@@ -37,19 +37,9 @@ module.exports = {
 	SHUTTLE_MASTER_TTL: 86400000, // 1 day
 	SPECIAL_EVENTS_TTL: 3600000, // 1 hour
 	DATA_SAGA_TTL: 60000, // 1 minute
+	SSO_TTL: 10000, // 10 seconds
 
 	/* SSO */
-	SSO: {
-		METHOD: 'openid',
-
-		OPENID: {
-			OPTIONS: {
-				CLIENT_ID: 'campusimplicit',
-				AUTH_URL: 'https://auth-dev.ucdavis.edu/identity/connect/authorize',
-				USER_INFO_URL: 'https://auth-dev.ucdavis.edu/identity/connect/userinfo',
-				REDIRECT_URL: 'campusmobile://cb',
-				STATE: 'M9NGbE6bnUV18FflfVeZ2U0j94'
-			}
-		}
-	}
+	SSO_ENDPOINT: 'https://jnwallmsbj.execute-api.us-west-2.amazonaws.com/dev/get-access-token-test',
+	SSO_CREDENTIALS_ERROR: 'orchestration failed(Error: IDP returned status was not success)'
 };

@@ -79,7 +79,7 @@ module.exports = {
 	retrieveAccessToken() {
 		return Keychain
 		.getInternetCredentials(accessTokenSiteName)
-		.then((credentials) => (credentials))
+		.then((credentials) => (credentials.password))
 		.catch((error) => (error));
 	},
 

@@ -1,28 +1,33 @@
-import { call, put, takeLatest } from 'redux-saga/effects';
+import { call, put, takeLatest, race } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
+import ssoService from '../services/ssoService';
+import { SSO_TTL } from '../AppSettings';
+import logger from '../util/logger';
 
 const auth = require('../util/auth');
 
 function* doLogin(action) {
-	const passwordEncrypted = yield auth.encryptStringWithKey(action.password);
-	console.log(passwordEncrypted);
+	const username = action.username;
+	const password = action.password;
+
+	/* const passwordEncrypted = yield auth.encryptStringWithKey(password);
 	const loginInfo = auth.encryptStringWithBase64(
-		`${action.username}:${passwordEncrypted}`
+		`${username}:${passwordEncrypted}`
+	); */
+
+	const loginInfo = auth.encryptStringWithBase64(
+		`${action.username}:${action.password}`
 	);
 
-	console.log(loginInfo);
-
-	// TODO: Send to auth service to verify before actually doing login
-	/* Logic for using ssoService
 	try {
 		yield put({ type: 'IS_LOGGING_IN' });
-		const { response, timeout } yield race({
+		const { response, timeout } = yield race({
 			response: call(ssoService.retrieveAccessToken, loginInfo),
 			timeout: call(delay, SSO_TTL)
 		});
 
 		if (timeout) {
-			const e = new Error('Logging in timed out.')
+			const e = new Error('Logging in timed out.');
 			e.name = 'ssoTimeout';
 			throw e;
 		} else if (response.error) {
@@ -31,24 +36,13 @@ function* doLogin(action) {
 		} else {
 			// Successfully logged in
 			yield auth.storeUserCreds(username, password);
-			yield auth.storeAccessToken(response.accessToken);
-			yield put({ type: 'LOGGED_IN', user: username });
+			yield auth.storeAccessToken(response.access_token);
+			yield put({ type: 'LOGGED_IN', user: username, expiration: response.expiration });
 		}
 	} catch (error) {
 		logger.log(error);
-		yield put({ type: 'USER_LOGIN_FAILED', error})
+		yield put({ type: 'USER_LOGIN_FAILED', error });
 	}
-
-	*/
-
-	// Temporary test logic
-	yield put({ type: 'IS_LOGGING_IN' });
-	yield call(delay, 2000);
-	// const error = new Error('Invalid credentials entered.');
-	// error.name = 'ssoInvalidCreds';
-	// yield put({ type: 'USER_LOGIN_FAILED', error });
-	yield auth.storeAccessToken('testToken');
-	yield put({ type: 'LOGGED_IN', user: action.username });
 }
 
 function* doLogout(action) {
