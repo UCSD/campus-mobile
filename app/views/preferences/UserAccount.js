@@ -98,6 +98,7 @@ const AccountLogin = ({ handleLogin, error, isLoggingIn }) => (
 			onSubmitEditing={(event) => {
 				this._passwordInput.focus();
 			}}
+			autoCapitalize="none"
 		/>
 		<TextInput
 			ref={(c) => { this._passwordInput = c; }}
