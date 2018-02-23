@@ -90,7 +90,8 @@ var ScheduleDay = ({ id, data }) => (
 		<Text style={css.sc_dayText}>
 			{id}
 		</Text>
-		<DayList courseItems={data} />
+			<DayList style={{alignSelf: 'flex-end'}}
+		courseItems={data} />
 	</View>
 );
 
