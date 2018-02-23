@@ -49,12 +49,15 @@ const generateHours = (allHours) => {
 		const todaysHoursElements = generateHourElements(todaysHoursArray);
 
 		hoursRows.push(
-			<HoursRowElement
+			<View
 				key={todaysTitle}
-				title={todaysTitle}
-				hours={todaysHoursElements}
 				style={css.dd_hours_row}
-			/>
+			>
+				<Text style={css.dd_hours_text_title}>{todaysTitle + ':'}</Text>
+				<View style={css.dd_hours_text_hoursyle}>
+					{todaysHoursElements}
+				</View>
+			</View>
 		);
 	}
 	return hoursRows;
@@ -69,25 +72,19 @@ const generateSpecialHours = (allHours) => {
 	const todaysHoursElements = generateHourElements(todaysHoursArray);
 
 	hoursRows.push(
-		<HoursRowElement
+		<View
 			key={todaysTitle}
-			title={todaysTitle}
-			hours={todaysHoursElements}
 			style={css.dd_hours_row}
-		/>
+		>
+			<Text style={css.dd_special_hours_text_title}>{todaysTitle + ':'}</Text>
+			<View style={css.dd_hours_text_hoursyle}>
+				{todaysHoursElements}
+			</View>
+		</View>
 	);
 
 	return hoursRows;
 };
-
-const HoursRowElement = ({ title, hours, style }) => (
-	<View style={style}>
-		<Text style={css.dd_hours_text_title}>{title + ':'}</Text>
-		<View style={css.dd_hours_text_container}>
-			{hours}
-		</View>
-	</View>
-);
 
 const DiningHours = ({ hours, specialHours, style }) => {
 	let hoursElements;

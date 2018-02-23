@@ -20,7 +20,7 @@
 	400 - Views
 		401 - Surf Report
 		402 - Shuttle Stop
-		404 - Dining Detail
+		403 - Dining Detail
 		406 - Event & News Detail
 		407 - WebView
 		408 - Feedback
@@ -274,9 +274,10 @@ var css = StyleSheet.create({
 	dd_description_container: { padding: 10 },
 	dd_description_nametext: { fontSize: 26 },
 	dd_description_subtext: { paddingTop: 8, paddingBottom: 8, fontWeight: '700' },
-	dd_hours_row: { flexDirection: 'row', paddingBottom: 4 },
-	dd_hours_text_title: { borderWidth: 1, borderColor: 'blue', flexGrow: 1, fontWeight: '700' },
-	dd_hours_text_hours: { borderWidth: 1, borderColor: 'red', flexGrow: 1 },
+	dd_hours_row: { flexDirection: 'row', paddingBottom: 4, flexWrap: 'wrap', alignItems: 'flex-start' },
+	dd_hours_text_title: { fontWeight: '700', width: '30%', paddingRight: 8 },
+	dd_special_hours_text_title: { fontWeight: '700', width: '50%', paddingRight: 8 },
+	dd_hours_text_hours: { flexGrow: 1 },
 	dd_images_scrollview: { height: 140 },
 	dd_images_image: { width: 140, height: 140, borderRadius: 5, marginHorizontal: 7 },
 	dd_directions_button_container: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderBottomColor: COLOR_MGREY, margin: 6, padding: 6 },
