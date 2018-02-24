@@ -20,6 +20,7 @@ class PreferencesView extends React.Component {
 	render() {
 		return (
 			<ScrollView
+				keyboardShouldPersistTaps={'handled'}
 				style={css.main_container}
 				scrollEnabled={this.state.scrollEnabled}
 			>
