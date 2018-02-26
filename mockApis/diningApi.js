@@ -1,58 +1,118 @@
 module.exports = {
 	DINING_RESPONSE: [
 		{
-			'name': '64 Degrees',
-			'description': 'Offers a modern vibe while you choose between the burger lounge,  stir-fry, freshly tossed salads, a sandwich bar, or several other delicious treats.',
-			'address': 'Revelle College',
-			'menuWebsite': 'https://hdh.ucsd.edu/DiningMenus/#rogerspanelHeading#rogers',
-			'coords': {
-				'lat': 32.875016,
-				'lon': -117.242034
-			},
-			'phone': '(858) 534-1097',
-			'regularHours': 'Mon - Thur: 7 am - 9 pm\nFri: 7 am - 8 pm\nSat & Sun: 10 am - 8 pm',
-			'paymentOptions': 'cash, credit card, dining dollars, triton cash',
+			'id': '01',
+			'name': 'Pines',
+			'description': 'This has an example of special hours.',
+			'location': 'Muir College ',
+			'address': '9500 Gilman Drive 0120, La Jolla, CA 92093-0120',
+			'tel': '858.534.5167',
+			'paymentOptions': [
+				'Cash',
+				'HDH Recharge'
+			],
+			'meals': 'breakfast, lunch, dinner',
+			'persistentMenu': 'false',
 			'images': [
-				'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/images/hdh/dining/64_degrees_1.jpg',
-				'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/images/hdh/dining/64_degrees_2.jpg',
-				'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/images/hdh/dining/64_degrees_3.jpg',
-				'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/images/hdh/dining/64_degrees_4.jpg',
-				'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/images/hdh/dining/64_degrees_5.jpg'
-			],
-			'menuItems': [
 				{
-					'name': 'Ham, Egg, and Cheese Sandwich',
-					'station': 'Burger Lounge',
-					'price': '2.25',
-					'tags': 'Breakfast',
-					'nutrition': {
-						'servingSize': '1 EACH',
-						'calories': '477',
-						'caloriesFromFat': '221',
-						'totalFat': '24.5g',
-						'totalFatDV': '38%',
-						'saturatedFat': '8.1g',
-						'saturatedFatDV': '40%',
-						'transFat': '',
-						'transFatDV': '%',
-						'cholesterol': '294mg',
-						'cholesterolDV': '98%',
-						'sodium': '1805mg',
-						'sodiumDV': '75%',
-						'totalCarbohydrate': '31.5g',
-						'totalCarbohydrateDV': '10%',
-						'dietaryFiber': '1.3g',
-						'dietaryFiberDV': '5%',
-						'sugars': '4.2g',
-						'sugarsDV': '%',
-						'protein': '31.4g',
-						'proteinDV': '63%'
-					}
+					'small': 'https://hdh2.ucsd.edu/_images/pines/inside1Small.png',
+					'large': 'https://hdh2.ucsd.edu/_images/pines/inside1Large.png',
+					'caption': 'Inside Pines'
 				},
+				{
+					'small': 'https://hdh2.ucsd.edu/_images/pines/outsideSmall.png',
+					'large': 'https://hdh2.ucsd.edu/_images/pines/outsideLarge.png',
+					'caption': 'Outside Pines'
+				},
+				{
+					'small': 'https://hdh2.ucsd.edu/_images/pines/pastaSmall.png',
+					'large': 'https://hdh2.ucsd.edu/_images/pines/pastaLargeLarge.png',
+					'caption': 'Pasta'
+				},
+				{
+					'small': 'https://hdh2.ucsd.edu/_images/pines/saladbarSmall.png',
+					'large': 'https://hdh2.ucsd.edu/_images/pines/saladbarLarge.png',
+					'caption': 'Salad Bar'
+				},
+				{
+					'small': 'https://hdh2.ucsd.edu/_images/pines/tacotrioSmall.png',
+					'large': 'https://hdh2.ucsd.edu/_images/pines/tacotrioLarge.png',
+					'caption': 'Taco Trio'
+				}
 			],
-			'distance': 5965,
-			'distanceMiles': 3.706479161695697,
-			'distanceMilesStr': '3.7 mi'
+			'coords': {
+				'lat': '32.8754115',
+				'lon': '-117.242701'
+			},
+			'regularHours': {
+				'mon': '0730-2100',
+				'tue': '0730-0900,1015-1100',
+				'wed': '0730-1800',
+				'thu': '0730-2100',
+				'fri': '0730-0900',
+				'sat': '1000-2000',
+				'sun': '0800-1100,1900-0100'
+			},
+			'specialHours': {
+				'02/26/2018': {
+					'title': 'This is a test of a very long title. One two three four five six seven',
+					'hours': '0800-0900,1000-1100,1200-1300,1400-1500'
+				},
+				'12/25/2018': {
+					'title': 'Christmas',
+					'hours': null
+				}
+			}
+		},
+		{
+			'id': '02',
+			'name': 'Open 24 Hours',
+			'description': 'This place is open 24 hours except on weekends.',
+			'location': 'Muir College, 1st Floor of Tamarack Apartments',
+			'address': '9500 Gilman Drive 0120, La Jolla, CA 92093-0120',
+			'tel': '858.822.7729',
+			'paymentOptions': [
+				'Cash',
+				'Check'
+			],
+			'meals': null,
+			'persistentMenu': null,
+			'images': [
+				{
+					'small': 'https://hdh2.ucsd.edu/_images/johnsmarket/inside1Small.png',
+					'large': 'https://hdh2.ucsd.edu/_images/johnsmarket/inside1Large.png',
+					'caption': 'Inside Johns Market'
+				},
+				{
+					'small': 'https://hdh2.ucsd.edu/_images/johnsmarket/inside2Small.png',
+					'large': 'https://hdh2.ucsd.edu/_images/johnsmarket/inside2Large.png',
+					'caption': 'Inside Johns Market'
+				},
+				{
+					'small': 'https://hdh2.ucsd.edu/_images/johnsmarket/inside3Small.png',
+					'large': 'https://hdh2.ucsd.edu/_images/johnsmarket/inside3Large.png',
+					'caption': 'Inside Johns Market'
+				},
+				{
+					'small': 'https://hdh2.ucsd.edu/_images/johnsmarket/outside1Small.png',
+					'large': 'https://hdh2.ucsd.edu/_images/johnsmarket/outside1Large.png',
+					'caption': 'Outside Johns Market'
+				}
+			],
+			'coords': {
+				'lat': '32.8794045',
+				'lon': '-117.242369'
+			},
+			'regularHours': {
+				'mon': '0000-2359',
+				'tue': '0000-2359',
+				'wed': '0000-2358',
+				'thu': '0000-2359',
+				'fri': '0000-2359',
+				'sat': null,
+				'sun': null
+			},
+			'specialHours': null
 		}
 	]
 };

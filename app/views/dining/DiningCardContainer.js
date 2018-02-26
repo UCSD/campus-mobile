@@ -4,14 +4,14 @@ import { connect } from 'react-redux';
 import DataListCard from '../common/DataListCard';
 import logger from '../../util/logger';
 
-const DiningCardContainer = ({ diningData }) => {
+export const DiningCardContainer = ({ diningData }) => {
 	logger.ga('Card Mounted: Dining');
 	return (
 		<DataListCard
 			id="dining"
 			title="Dining"
 			data={diningData}
-			item={'DiningItem'}
+			item="DiningItem"
 		/>
 	);
 };
@@ -22,8 +22,6 @@ function mapStateToProps(state) {
 	};
 }
 
-const ActualDiningCard = connect(
-	mapStateToProps,
-)(DiningCardContainer);
+const ActualDiningCard = connect(mapStateToProps, null)(DiningCardContainer);
 
 export default ActualDiningCard;
