@@ -25,7 +25,7 @@ export const ScheduleCardContainer = ({ scheduleData }) => {
 
 const mapStateToProps = (state) => (
 	{
-		scheduleData: getClasses(),
+		scheduleData: state.schedule.data,
 	}
 );
 

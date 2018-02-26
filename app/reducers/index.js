@@ -16,6 +16,7 @@ import surveyReducer from './survey';
 import specialEventsReducer from './specialEvents';
 import feedbackReducer from './feedback';
 import homeReducer from './home';
+import scheduleReducer from './schedule';
 
 module.exports = combineReducers({
 	cards: cardsReducer,
@@ -32,6 +33,7 @@ module.exports = combineReducers({
 	routes: routesReducer,
 	survey: surveyReducer,
 	specialEvents: specialEventsReducer,
+	schedule: scheduleReducer,
 	feedback: feedbackReducer,
 	home: homeReducer,
 });

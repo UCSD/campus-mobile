@@ -7,8 +7,7 @@ const dateFormat = require('dateformat');
 const ScheduleService = {
 
 	FetchSchedule() {
-        console.log("TESTING")
-        return getClasses().json();
+        return getClasses();
     }
 };
 

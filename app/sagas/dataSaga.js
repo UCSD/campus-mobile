@@ -66,6 +66,7 @@ function* updateSchedule() {
 	} else {
 		console.log("OR THERE?")
 		const schedule = yield call(ScheduleService.FetchSchedule);
+		
 		if (schedule) {
 			yield put({ type: 'SET_SCHEDULE', schedule });
 		}
