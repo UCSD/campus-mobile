@@ -86,7 +86,9 @@ def enableProguardInReleaseBuilds = false
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
-
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
     defaultConfig {
         applicationId "edu.ucsd"
         minSdkVersion 16
@@ -96,6 +98,7 @@ android {
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
+        multiDexEnabled true
     }
     signingConfigs {
         if (project.hasProperty('MYAPP_RELEASE_STORE_FILE')) {
