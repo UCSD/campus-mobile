@@ -12,7 +12,7 @@
     "generate-docs": "./node_modules/.bin/jsdoc -c jsdoc.conf.json"
   },
   "dependencies": {
-    "base-64": "^0.1.0",
+    "base-64": "0.1.0",
     "dateformat": "1.0.12",
     "html-entities": "1.2.0",
     "moment": "2.15.2",
@@ -33,7 +33,7 @@
     "react-native-permissions": "0.2.7",
     "react-native-popup-menu": "0.6.1",
     "react-native-router-flux": "3.38.0",
-    "react-native-rsa-native": "^1.0.14",
+    "react-native-rsa-native": "1.0.14",
     "react-native-side-menu": "0.20.1",
     "react-native-simple-toast": "0.0.7",
     "react-native-sortable-list": "0.0.11",
