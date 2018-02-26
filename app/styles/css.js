@@ -39,10 +39,11 @@
 	900 - Misc
 */
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 import {
 	platformIOS,
 	platformAndroid,
+	deviceIphoneX
 } from '../util/general';
 import {
 	COLOR_PRIMARY,
@@ -64,6 +65,8 @@ import {
 	MAX_CARD_WIDTH,
 	NAVIGATOR_IOS_HEIGHT,
 	NAVIGATOR_ANDROID_HEIGHT,
+	NAVIGATOR_LOGO_IOS_MARGIN,
+	NAVIGATOR_LOGO_ANDROID_MARGIN,
 	STATUS_BAR_ANDROID_HEIGHT,
 	TAB_BAR_HEIGHT,
 	IOS_MARGIN_TOP,
@@ -80,17 +83,17 @@ var css = StyleSheet.create({
 	// 101 - Navigator
 	navIOS: { backgroundColor: COLOR_PRIMARY, height: NAVIGATOR_IOS_HEIGHT },
 	navAndroid: { backgroundColor: COLOR_PRIMARY, height: NAVIGATOR_ANDROID_HEIGHT },
-	navIOSTitle: { color: COLOR_WHITE, fontSize: 24, marginTop: -8, fontWeight: '300' },
+	navIOSTitle: { color: COLOR_WHITE, fontSize: 24, marginTop: deviceIphoneX() ? 8 : -8, fontWeight: '300'},
 	navAndroidTitle: { color: COLOR_WHITE, fontSize: 24, marginTop: -8, fontWeight: '300' },
-	navCampusLogoTitle: { resizeMode: 'contain', height: 26, marginTop: platformIOS() ? 26 : 12, alignSelf: 'center' },
-	navIOSIconStyle: { tintColor:COLOR_WHITE, marginTop: -2 },
-	navButtonTextIOS: { color: COLOR_WHITE, marginTop: -3, fontWeight: '300', fontSize: 18 },
+	navCampusLogoTitle: { resizeMode: 'contain', height: 26, marginTop: platformIOS() ? NAVIGATOR_LOGO_IOS_MARGIN : NAVIGATOR_LOGO_ANDROID_MARGIN, alignSelf: 'center' },
+	navIOSIconStyle: { tintColor:COLOR_WHITE, marginTop: deviceIphoneX() ? 14 : -2 },
+	navButtonTextIOS: { color: COLOR_WHITE, marginTop: deviceIphoneX() ? 13 : -3, fontWeight: '300', fontSize: 18, height: 24 },
 	navAndroidIconStyle: { tintColor:COLOR_WHITE, marginTop: -6 },
 	navButtonTextAndroid: { color: COLOR_WHITE, marginTop: -8, fontWeight: '300', fontSize: 18 },
 	// 102 - Tab Bar
 	tabBarIOS: { borderTopWidth: 1, borderColor: '#DADADA', backgroundColor: COLOR_WHITE, height: TAB_BAR_HEIGHT },
 	tabBarAndroid: { top: NAVIGATOR_ANDROID_HEIGHT, borderBottomWidth: 1, borderColor: '#DADADA', backgroundColor: COLOR_WHITE, height: TAB_BAR_HEIGHT },
-	tabContainer: { width: 70, paddingVertical: 8 },
+	tabContainer: { width: 70, paddingTop: deviceIphoneX() ? 4 : 8, paddingBottom: deviceIphoneX() ? 20 : 8 },
 	tabContainerBottom: { borderBottomColor: COLOR_PRIMARY },
 	tabIcon: { color: COLOR_DMGREY, alignSelf: 'center', backgroundColor: 'transparent', opacity: .95, width: 24, height: 24, overflow: 'hidden' },
 	tabIconUser: { color: COLOR_DMGREY, alignSelf: 'center', opacity: .95, width: 24, height: 24, borderRadius: 12, overflow: 'hidden', backgroundColor: COLOR_DMGREY, borderWidth: 1, borderColor: COLOR_DMGREY, color: COLOR_WHITE },
@@ -242,17 +245,22 @@ var css = StyleSheet.create({
 	 *  400 - Views
 	 ********************************************/
 	// 401 - Surf Report
-	sr_listview: {},
-	sr_image: { width: WINDOW_WIDTH, height: round(WINDOW_WIDTH * .361) },
-	sr_day_row: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: 10 },
-	sr_day_row_border: { borderTopWidth: 1, borderTopColor: '#CCC' },
-	sr_day_date_container: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-	sr_dayofweek: { fontSize: 19, color: COLOR_BLACK },
-	sr_dayandmonth: { fontSize: 12, color: '#777' },
-	sr_day_details_container: { flex: 3, paddingLeft: 10, borderLeftWidth: 1, borderLeftColor: '#DDD' },
-	sr_day_details_title: { fontSize: 18, color: COLOR_BLACK },
-	sr_day_details_height: { fontSize: 16, color: '#333', paddingTop: 4 },
-	sr_day_details_desc: { fontSize: 13, color: '#777', paddingTop: 4 },
+	sr_headerImage: { width: WINDOW_WIDTH, height: Math.round(WINDOW_WIDTH * 0.361) },
+	sr_dayText: { fontSize: 19, color: COLOR_BLACK, position: 'absolute', marginTop: 50, borderWidth: 1 },
+	sr_surfDetailsContainer: { flexDirection: 'row' },
+	sr_surfDetailsEmpty: { flex: 1 },
+	sr_surfDetails: { flex: 2.5, borderLeftWidth: 1, borderLeftColor: COLOR_MGREY, marginVertical: 10, paddingHorizontal: 10 },
+	sr_titleText: { fontSize: 18, color: COLOR_BLACK },
+	sr_reportTitle: {fontSize: 18, color: COLOR_BLACK, paddingTop:7, paddingHorizontal:10},
+	sr_reportText: {fontSize: 14, color: COLOR_BLACK, paddingHorizontal:10},
+	sr_heightText: { fontSize: 16, color: COLOR_DGREY, paddingTop: 4 },
+	sr_descText: { fontSize: 13, color: COLOR_DGREY, paddingTop: 4 },
+	sr_dateDayContainer: { position: 'absolute', flexDirection: 'row', top: 10 },
+	sr_dateDayHeader: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+	sr_dateDayEmpty: { flex: 2.5 },
+	sr_dateDayOfWeek: { fontSize: 19, color: 'black' },
+	sr_dateDayAndMonth: { fontSize: 12, color: COLOR_DGREY },
+
 	
 	// 402 - Shuttle Stop
 	shuttlestop_image: { width: WINDOW_WIDTH, height: round(WINDOW_WIDTH * .533) },
@@ -339,11 +347,16 @@ var css = StyleSheet.create({
 	webview_container: { width: WINDOW_WIDTH, height: WINDOW_HEIGHT - 60 },
 
 	// 408 - Feedback
-	feedback_container: { alignItems: 'flex-start', flexDirection: 'column', padding: 16, },
-	feedback_label: { flex: 2, flexWrap: 'wrap', fontSize: 20, height: 80 },
-	feedback_text: { flex: 1, fontSize: 20, alignItems: 'center', width: MAX_CARD_WIDTH - 32, height: 50 },
-	feedback_submit: { flex:1, fontSize: 40, textAlign: 'center' },
-	feedback_appInfo: { position: 'absolute', bottom: 0, right: 0, color: '#BBB', fontSize: 9, padding: 4 },
+	feedback_container: { flex: 1, flexDirection: 'column', marginHorizontal: 8, marginTop: 8 },
+	feedback_label: { flexWrap: 'wrap', fontSize: 18, paddingBottom: 16, lineHeight: 24 },
+	feedback_comments_text_container: { flexDirection: 'row', borderColor: COLOR_MGREY, borderBottomWidth: 1, marginBottom: 8, backgroundColor: 'white' },
+	feedback_email_text_container: { height: 50, borderColor: COLOR_MGREY, borderBottomWidth: 1, marginBottom: 8 },
+	feedback_text_input: { flex:1, backgroundColor: 'white', fontSize: 18, alignItems: 'center', padding: 8 },
+	feedback_submit_container: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR_PRIMARY, borderRadius: 3, padding: 10 },
+	feedback_submit_text: { fontSize: 16, color: 'white' },
+	feedback_submitting_container: { flex: 1, flexDirection: 'column', padding: 16, alignItems: 'center', justifyContent: 'center' },
+	feedback_loading_icon: { paddingBottom: 16 },
+	feedback_submitting_text: { fontSize: 18, textAlign: 'center' },
 
 	// 409 - Preferences View
 	preferencesContainer: { padding: 10, borderTopWidth: 1, borderTopColor: '#EEE' },

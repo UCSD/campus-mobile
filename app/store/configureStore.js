@@ -37,7 +37,7 @@ const manifest = {
 	4: (state) => ({ ...state, cards: undefined }), // clear cards for specialEvents
 	5: (state) => ({ ...state, events: undefined }), // clear events data
 	6: (state) => ({ ...state, cards: undefined, conference: undefined }), // clear cards/conference for specialEvents
-	7: (state) => ({ ...state, cards: undefined }), // clear cards for class schedule
+	7: (state) => ({ ...state, surf: undefined }),
 };
 
 // reducerKey is the key of the reducer you want to store the state version in

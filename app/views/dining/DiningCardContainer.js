@@ -8,7 +8,7 @@ import CardComponent from '../card/CardComponent';
 
 const logger = require('../../util/logger');
 
-class DiningCardContainer extends CardComponent {
+export class DiningCardContainer extends CardComponent {
 	componentDidMount() {
 		logger.ga('Card Mounted: Dining');
 	}

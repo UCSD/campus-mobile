@@ -42,6 +42,7 @@ function* watchData() {
 			yield call(updateSurveys);
 			yield call(updateShuttleMaster);
 			yield put({ type: 'UPDATE_DINING' });
+
 		} catch (err) {
 			console.log(err);
 		}
@@ -119,9 +120,10 @@ function* updateSpecialEvents() {
 
 	if (timeDiff > ttl && Array.isArray(saved)) {
 		const specialEvents = yield call(fetchSpecialEvents);
-
+		
 		if (specialEvents) {
 			prefetchSpecialEventsImages(specialEvents);
+		
 			if (specialEvents['start-time'] <= nowTime &&
 				specialEvents['end-time'] >= nowTime) {
 				// Inside active specialEvents window

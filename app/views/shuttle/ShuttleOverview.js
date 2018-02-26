@@ -36,7 +36,7 @@ const ShuttleOverview = ({ onPress, stopData, closest }) => {
 				<View style={styles.bigContainer}>
 					<View style={styles.bigCircles}>
 						<View style={[styles.shortNameCircle, { backgroundColor: stopData.arrivals[0].route.color }]}>
-							<Text style={styles.shortNameText}>
+							<Text style={styles.shortNameText} allowFontScaling={false}>
 								{stopData.arrivals[0].route.shortName}
 							</Text>
 						</View>
@@ -47,6 +47,7 @@ const ShuttleOverview = ({ onPress, stopData, closest }) => {
 							<Text
 								style={styles.stopNameText}
 								numberOfLines={3}
+								allowFontScaling = {false}
 							>
 								{stopData.name}
 							</Text>

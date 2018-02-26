@@ -6,7 +6,7 @@ module.exports = {
 
 	/* APIs / FEEDS */
 	WEATHER_API_URL: 'https://w3wyps9yje.execute-api.us-west-2.amazonaws.com/prod/forecast?',
-	SURF_API_URL: 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/surffeed.json',
+	SURF_API_URL: 'https://0yi5xwy0v7.execute-api.us-west-2.amazonaws.com/dev',
 	SHUTTLE_STOPS_API_URL: 'https://ies4wyrlx9.execute-api.us-west-2.amazonaws.com/prod/v2/stops/',
 	SHUTTLE_VEHICLES_API_URL: 'https://hjr84cay81.execute-api.us-west-2.amazonaws.com/prod?route=',
 	DINING_API_URL: 'https://pg83tslbyi.execute-api.us-west-2.amazonaws.com/prod/v2/dining/locations',
@@ -26,6 +26,10 @@ module.exports = {
 	SHUTTLE_STOPS_MASTER_NO_ROUTES: 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/shuttle_stops_master_map_no_routes.json',
 	FORGOT_PASSWORD_URL: 'https://act.ucsd.edu/manage-sso/password',
 
+	/* SSO */
+	SSO_ENDPOINT: 'https://jnwallmsbj.execute-api.us-west-2.amazonaws.com/dev/get-access-token-test',
+	SSO_CREDENTIALS_ERROR: 'orchestration failed(Error: IDP returned status was not success)',
+
 	/* TTLs */
 	WEATHER_API_TTL: 1800000, // 30 minutes
 	SURF_API_TTL: 1800000, // 30 minutes
@@ -38,8 +42,6 @@ module.exports = {
 	SPECIAL_EVENTS_TTL: 3600000, // 1 hour
 	DATA_SAGA_TTL: 60000, // 1 minute
 	SSO_TTL: 10000, // 10 seconds
+	FEEDBACK_POST_TTL: 10000,
 
-	/* SSO */
-	SSO_ENDPOINT: 'https://jnwallmsbj.execute-api.us-west-2.amazonaws.com/dev/get-access-token-test',
-	SSO_CREDENTIALS_ERROR: 'orchestration failed(Error: IDP returned status was not success)'
 };
