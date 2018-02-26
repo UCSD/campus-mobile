@@ -25,7 +25,6 @@ var dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 
 
 var FinalsCard = () => {
 	logger.ga('Card Mounted: Finals Schedule');
-	console.log(scheduleData['MO'].length);
 	return (
         <Card
             id='finals'
@@ -35,10 +34,11 @@ var FinalsCard = () => {
                 renderRow={(rowData, sectionID, rowID, highlightRow) => (
 				<View>
 					{ scheduleData[String(rowID)].length > 0 ? (
-					<ScheduleDay
-                    id={rowID}
-                    data={rowData}
-				/>) : null}
+						<ScheduleDay
+							id={rowID}
+							data={rowData}
+						/>
+					) : null}
 				</View>
                 )}
             />
