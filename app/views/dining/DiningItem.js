@@ -39,7 +39,25 @@ const DiningItem = ({ data }) => {
 		soonStatusColor = COLOR_MRED;
 	}
 
-	console.log(status);
+	const isAlwaysOpen = (
+		status.currentHours.closingHour.format('HHmm') === '2359'
+		&& status.currentHours.openingHour.format('HHmm') === '0000'
+	);
+	const newHourElement = (
+		<View>
+			<Text style={css.dl_hours_text}>
+				{
+					(isAlwaysOpen) ?
+						('Open 24 Hours') :
+						(
+							status.currentHours.openingHour.format('h:mm a')
+							+ ' - '
+							+ status.currentHours.closingHour.format('h:mm a')
+						)
+				}
+			</Text>
+		</View>
+	);
 
 	return (
 		<View style={css.dl_row}>
@@ -49,8 +67,6 @@ const DiningItem = ({ data }) => {
 			>
 				<View style={css.dl_title_row}>
 					<Text style={css.dl_title_text}>{data.name}</Text>
-				</View>
-				<View style={css.dl_hours_row}>
 					<ColoredDot
 						size={10}
 						color={activeDotColor}
@@ -59,6 +75,9 @@ const DiningItem = ({ data }) => {
 					<Text style={css.dl_status_text}>
 						{statusText}
 					</Text>
+				</View>
+				<View style={css.dl_hours_row}>
+					{newHourElement}
 					<Text
 						style={[
 							css.dl_status_soon_text,

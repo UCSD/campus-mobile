@@ -27,6 +27,12 @@ class DiningDetail extends React.Component {
 		logger.ga('View Mounted: Dining Detail');
 	}
 
+	shouldComponentUpdate(nextProps, nextState) {
+		if (this.props.menuData !== nextProps.menuData) {
+			return true;
+		} else return false;
+	}
+
 	addFilter = (filter) => {
 		if (filter === 'Breakfast' || filter === 'Lunch' || filter === 'Dinner') {
 			this.setState({

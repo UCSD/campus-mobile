@@ -3,14 +3,18 @@ import {
 	View,
 	Text,
 } from 'react-native';
-import DiningHours from './DiningHours';
 import moment from 'moment';
+import DiningHours from './DiningHours';
 
 import css from '../../styles/css';
+
+const dining = require('../../util/dining');
 
 const DiningDescription = ({
 	name, description, regularHours, specialHours, paymentOptions
 }) => {
+	const hoursStatus = dining.getOpenStatus(regularHours, specialHours);
+
 	let paymentOptionsText = null;
 	if (paymentOptions) {
 		paymentOptions.forEach((option) => {
@@ -33,20 +37,22 @@ const DiningDescription = ({
 			<Text style={css.dd_description_subtext}>Hours:</Text>
 			<DiningHours
 				hours={regularHours}
+				status={hoursStatus}
 			/>
 
 			{(specialHours && specialHours[moment().format('MM/DD/YYYY')]) ?
-			(
-				<View>
-					<Text style={css.dd_description_subtext}>
-						Special hours:
-					</Text>
-					<DiningHours
-						hours={specialHours}
-						specialHours
-					/>
-				</View>
-			) : null
+				(
+					<View>
+						<Text style={css.dd_description_subtext}>
+							Special hours:
+						</Text>
+						<DiningHours
+							hours={specialHours}
+							status={hoursStatus}
+							specialHours
+						/>
+					</View>
+				) : null
 			}
 
 			{paymentOptionsText

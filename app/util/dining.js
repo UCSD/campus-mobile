@@ -33,8 +33,10 @@ module.exports = {
 	 * @returns {object} Returns object:
 	 *  {
 	 *   isOpen: Boolean,
+	 *   isAlwaysOpen: Boolean,
 	 *   openingSoon: Boolean,
-	 *   closingSoon: Boolean
+	 *   closingSoon: Boolean,
+	 *   currentHours: Object
 	 *  }
 	 */
 	getOpenStatus(regularHours, specialHours) {
@@ -42,11 +44,17 @@ module.exports = {
 			isOpen: false,
 			isAlwaysOpen: false,
 			openingSoon: false,
-			closingSoon: false
+			closingSoon: false,
+			currentHours: null
 		};
 
 		const now = moment();
-		let todaysHours = regularHours[now.format('ddd').toLowerCase()];
+		let todaysHours;
+
+		if (regularHours && regularHours[now.format('ddd').toLowerCase()]) {
+			todaysHours = regularHours[now.format('ddd').toLowerCase()];
+		}
+
 		if (specialHours && specialHours[now.format('MM/DD/YYYY')]) {
 			todaysHours = specialHours[now.format('MM/DD/YYYY')].hours;
 		}
@@ -55,6 +63,7 @@ module.exports = {
 		if (todaysHours === '0000-2359') {
 			openStatus.isOpen = true;
 			openStatus.isAlwaysOpen = true;
+			openStatus.currentHours = this.parseHours(todaysHours);
 			return openStatus;
 		}
 
@@ -77,6 +86,7 @@ module.exports = {
 				if (now.isBetween(operatingHours.openingHour, operatingHours.closingHour)) {
 					// Restaurant is open during these hours.
 					openStatus.isOpen = true;
+					openStatus.currentHours = operatingHours;
 					currentHoursIndex = i;
 				}
 				else {
@@ -98,8 +108,11 @@ module.exports = {
 				}
 			});
 
-			// Check if restaurant is opening or closing soon
+			// Set current closest hours to correct spot in index
 			const currentOperatingHours = this.parseHours(todaysHoursArray[currentHoursIndex]);
+			openStatus.currentHours = currentOperatingHours;
+
+			// Check if restaurant is opening or closing soon
 			const closingHourMinusOne = currentOperatingHours.closingHour.clone().subtract(1, 'hours');
 			const openingHourMinusOne = currentOperatingHours.openingHour.clone().subtract(1, 'hours');
 

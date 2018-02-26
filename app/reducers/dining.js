@@ -27,6 +27,7 @@ function dining(state = initialState, action) {
 		const newMenusArray = newState.menus;
 
 		newMenusArray[action.id] = action.data;
+		newMenusArray[action.id].lastUpdated = new Date().getTime();
 
 		newState.menus = newMenusArray;
 		return newState;
