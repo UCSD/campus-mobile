@@ -39,10 +39,12 @@ const ScheduleCard = ({ scheduleData, actionButton }) => (
 				<ListView
 					dataSource={dataSource.cloneWithRows(scheduleData)}
 					renderRow={(rowData, sectionID, rowID, highlightRow) => (
+						(rowID !== 'SA' && rowID !== 'SU') ? (
 						<ScheduleDay
 							id={rowID}
 							data={rowData}
 						/>
+						) : (null)
 					)}
 				/>
 				<TouchableHighlight style={css.dc_locations_row_right} underlayColor={'rgba(200,200,200,.1)'} onPress={() => general.gotoNavigationApp(data.coords.lat, data.coords.lon)}>
