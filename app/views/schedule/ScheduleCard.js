@@ -35,26 +35,28 @@ var dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 
 const ScheduleCard = ({ scheduleData, actionButton }) => (
 	<Card id="schedule" title="Class Schedule">
 		{scheduleData ? (
-			<View style={styles.sc_scheduleContainer}>
-				<TouchableHighlight style={styles.dc_locations_row_right} underlayColor={'rgba(200,200,200,.1)'} onPress={() => general.gotoNavigationApp(data.coords.lat, data.coords.lon)}>
-					<View style={css.dl_dir_traveltype_container}>
-						<Icon name="md-walk" size={32} color={COLOR_SECONDARY} />
+			<View style={styles.sc_scheduleCard}>
+				<View style={styles.sc_scheduleContainer}>
+					<TouchableHighlight style={styles.dc_locations_row_right} underlayColor={'rgba(200,200,200,.1)'} onPress={() => general.gotoNavigationApp(data.coords.lat, data.coords.lon)}>
+						<View style={css.dl_dir_traveltype_container}>
+							<Icon name="md-walk" size={32} color={COLOR_SECONDARY} />
+						</View>
+					</TouchableHighlight>
+					<View style={{flex:4}}>
+						<ListView
+							dataSource={dataSource.cloneWithRows(scheduleData)}
+							renderRow={(rowData, sectionID, rowID, highlightRow) => (
+								(rowID !== 'SA' && rowID !== 'SU') ? (
+								<ScheduleDay
+									id={rowID}
+									data={rowData}
+								/>
+								) : (null)
+							)}
+						/>
 					</View>
-				</TouchableHighlight>
-				<View style={{flex:4}}>
-					<ListView
-						dataSource={dataSource.cloneWithRows(scheduleData)}
-						renderRow={(rowData, sectionID, rowID, highlightRow) => (
-							(rowID !== 'SA' && rowID !== 'SU') ? (
-							<ScheduleDay
-								id={rowID}
-								data={rowData}
-							/>
-							) : (null)
-						)}
-					/>
 				</View>
-				{/* {actionButton} */}
+				{actionButton}
 			</View>
 		) : (
 			<View style={styles.loadingContainer}>
@@ -121,6 +123,7 @@ const styles = StyleSheet.create({
 	dayListStyle: {alignItems:'flex-end'},
 	sc_scheduleContainer: {width: MAX_CARD_WIDTH + 2, padding: 7, flexDirection:'row', flex:1, justifyContent: 'flex-start',
 		alignItems:'flex-start', },
+	sc_scheduleCard: {width: MAX_CARD_WIDTH + 2, padding: 7, flexDirection:'column'},
 	sc_dayText: { fontSize: 16, color:'#000' /*COLOR_BLACK, /*paddingBottom: 6 */},
 	dc_locations_row_right: { flex: 6 }
 });
