@@ -36,24 +36,25 @@ const ScheduleCard = ({ scheduleData, actionButton }) => (
 	<Card id="schedule" title="Class Schedule">
 		{scheduleData ? (
 			<View style={styles.sc_scheduleContainer}>
-				<ListView
-					style={{flex:1}}
-					dataSource={dataSource.cloneWithRows(scheduleData)}
-					renderRow={(rowData, sectionID, rowID, highlightRow) => (
-						(rowID !== 'SA' && rowID !== 'SU') ? (
-						<ScheduleDay
-							id={rowID}
-							data={rowData}
-						/>
-						) : (null)
-					)}
-				/>
-				<TouchableHighlight style={[css.dc_locations_row_right, {flex:1}]} underlayColor={'rgba(200,200,200,.1)'} onPress={() => general.gotoNavigationApp(data.coords.lat, data.coords.lon)}>
+				<TouchableHighlight style={styles.dc_locations_row_right} underlayColor={'rgba(200,200,200,.1)'} onPress={() => general.gotoNavigationApp(data.coords.lat, data.coords.lon)}>
 					<View style={css.dl_dir_traveltype_container}>
 						<Icon name="md-walk" size={32} color={COLOR_SECONDARY} />
 					</View>
 				</TouchableHighlight>
-				{actionButton}
+				<View style={{flex:4}}>
+					<ListView
+						dataSource={dataSource.cloneWithRows(scheduleData)}
+						renderRow={(rowData, sectionID, rowID, highlightRow) => (
+							(rowID !== 'SA' && rowID !== 'SU') ? (
+							<ScheduleDay
+								id={rowID}
+								data={rowData}
+							/>
+							) : (null)
+						)}
+					/>
+				</View>
+				{/* {actionButton} */}
 			</View>
 		) : (
 			<View style={styles.loadingContainer}>
@@ -116,10 +117,12 @@ const styles = StyleSheet.create({
 	fullScheduleButton: { width: MAX_CARD_WIDTH, backgroundColor: COLOR_LGREY, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4, paddingVertical: 8, borderTopWidth: 1, borderBottomWidth: 1, borderColor: COLOR_MGREY },
 	loadingContainer: { alignItems: 'center', justifyContent: 'center', width: MAX_CARD_WIDTH },
 	scheduleList: {flex: 1, justifyContent: 'flex-end', alignItems: 'flex-end'},
-	sc_dayRow: {justifyContent: 'flex-end', padding: 5, borderColor: '#000', borderWidth:1, flex: 1, width: '65%'},
+	sc_dayRow: {justifyContent: 'flex-end', padding: 5, borderColor: '#000', borderWidth:1, flex: 1, width: '100%'},
 	dayListStyle: {alignItems:'flex-end'},
-	sc_scheduleContainer: {width: MAX_CARD_WIDTH + 2, padding: 7, flexDirection:'column', flex:1 },
-	sc_dayText: { fontSize: 16, color:'#000' /*COLOR_BLACK, /*paddingBottom: 6 */}
+	sc_scheduleContainer: {width: MAX_CARD_WIDTH + 2, padding: 7, flexDirection:'row', flex:1, justifyContent: 'flex-start',
+		alignItems:'flex-start', },
+	sc_dayText: { fontSize: 16, color:'#000' /*COLOR_BLACK, /*paddingBottom: 6 */},
+	dc_locations_row_right: { flex: 6 }
 });
 
 export default ScheduleCard;
