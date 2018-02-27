@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import {
+	Alert,
 	View,
 	Text,
 	Linking,
+	ActivityIndicator,
 	TouchableOpacity,
 	TextInput
 } from 'react-native';
@@ -21,7 +23,7 @@ class UserAccount extends Component {
 		if (this.props.user.isLoggedIn) {
 			this.props.doTokenRefresh();
 			auth.retrieveAccessToken()
-				.then(token => {
+				.then((token) => {
 					console.log('User Data: ', this.props.user);
 					console.log('Access Token: ', token);
 				});
@@ -36,7 +38,7 @@ class UserAccount extends Component {
 	}
 
 	handleLogin = (user, pass) => {
-		this.props.doLogin(user, pass);
+		if (!this.props.user.isLoggingIn) this.props.doLogin(user, pass);
 	}
 
 	handleLogout = () => {
@@ -44,8 +46,19 @@ class UserAccount extends Component {
 	}
 
 	render() {
+		const { error } = this.props.user;
+		if (error && !this.props.user.isLoggingIn) {
+			Alert.alert(
+				'Sign in error',
+				error,
+				[
+					{ text: 'OK', onPress: () => { this.props.clearErrors(); } }
+				],
+				{ cancelable: false }
+			);
+		}
 		return (
-			<Card id={'user'} title={this.props.user.isLoggedIn ? 'Logged in as:' : 'Log in with SSO:'} hideMenu={true}>
+			<Card id="user" title={this.props.user.isLoggedIn ? 'Logged in as:' : 'Log in with SSO:'} hideMenu={true}>
 				<View style={{ flexGrow: 1, width: getMaxCardWidth() }}>
 					{(this.props.user.isLoggedIn) ? (
 						<AccountInfo
@@ -104,7 +117,7 @@ const AccountLogin = ({ handleLogin, error, isLoggingIn }) => (
 			ref={(c) => { this._passwordInput = c; }}
 			style={css.ua_input}
 			placeholder="Password / PAC"
-			returnKeyType="go"
+			returnKeyType="send"
 			underlineColorAndroid="transparent"
 			editable={!isLoggingIn}
 			secureTextEntry
@@ -115,32 +128,35 @@ const AccountLogin = ({ handleLogin, error, isLoggingIn }) => (
 				handleLogin(this._usernameText, event.nativeEvent.text);
 			}}
 		/>
-		{
-			(error) ?
-			(
-				<Text style={css.ua_errorText}>{error.message}</Text>
-			) : (
-				null
-			)
-		}
 		<Touchable
 			onPress={() => handleLogin(this._usernameText, this._passwordText)}
+			disabled={isLoggingIn}
 			style={
 				(isLoggingIn) ?
-				(
-					[css.ua_loginButton, css.ua_loginButtonDisabled]
-				) : (
-					css.ua_loginButton
-				)
+					(
+						[css.ua_loginButton, css.ua_loginButtonDisabled]
+					) : (
+						css.ua_loginButton
+					)
 			}
 		>
 			<Text style={css.ua_loginText}>
 				{
 					(isLoggingIn) ?
-					('Signing in...') :
-					('Sign in')
+						('Signing in...') :
+						('Sign in')
 				}
 			</Text>
+			{
+				(isLoggingIn) ?
+					(
+						<ActivityIndicator
+							size="small"
+							style={css.ua_loading_icon}
+							color="#fff"
+						/>
+					) : (null)
+			}
 		</Touchable>
 
 		<Touchable
@@ -171,6 +187,9 @@ function mapDispatchToProps(dispatch) {
 		doLogout: () => {
 			dispatch({ type: 'USER_LOGOUT' });
 		},
+		clearErrors: () => {
+			dispatch({ type: 'USER_CLEAR_ERRORS' });
+		}
 	};
 }
 

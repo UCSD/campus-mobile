@@ -382,6 +382,7 @@ var css = StyleSheet.create({
 	ob_actions: { flex: 1 },
 	ob_forgotpass: { color: COLOR_WHITE, fontSize: 14, textAlign: 'left'},
 	ob_cancel: { color: COLOR_WHITE, fontSize: 14, textAlign: 'right' },
+	ob_loading_icon: { paddingTop: round(WINDOW_HEIGHT * .25) },
 
 
 
@@ -423,7 +424,8 @@ var css = StyleSheet.create({
 	ua_spacedRow: { flexDirection: 'row', justifyContent: 'space-between' },
 	ua_accountText: { textAlign: 'center', fontSize: 16, color: COLOR_DGREY },
 	ua_forgotButton: { flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: 16 },
-	ua_loginButton: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR_PRIMARY, borderRadius: 3, padding: 10, marginTop: 10 },
+	ua_loginButton: { flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR_PRIMARY, borderRadius: 3, padding: 10, marginTop: 10 },
+	ua_loading_icon: { paddingLeft: 8 },
 	ua_loginButtonDisabled: { backgroundColor: COLOR_DGREY },
 	ua_forgotText: { fontSize: 14, color: COLOR_PRIMARY, padding: 4 },
 	ua_loginText: { fontSize: 16, color: COLOR_WHITE },

@@ -33,6 +33,10 @@ function user(state = initialState, action) {
 		newState.error = action.error;
 		return newState;
 	}
+	case 'USER_SET_ERRORS': {
+		newState.error = action.error;
+		return newState;
+	}
 	default:
 		return state;
 	}

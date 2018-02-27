@@ -16,17 +16,14 @@ const auth = require('../util/auth');
 const getUserData = (state) => (state.user);
 
 function* doLogin(action) {
-	const username = action.username;
-	const password = action.password;
+	const { username, password } = action;
 
 	/* const passwordEncrypted = yield auth.encryptStringWithKey(password);
 	const loginInfo = auth.encryptStringWithBase64(
 		`${username}:${passwordEncrypted}`
 	); */
 
-	const loginInfo = auth.encryptStringWithBase64(
-		`${action.username}:${action.password}`
-	);
+	const loginInfo = auth.encryptStringWithBase64(`${username}:${password}`);
 
 	try {
 		yield put({ type: 'IS_LOGGING_IN' });
@@ -50,7 +47,7 @@ function* doLogin(action) {
 		}
 	} catch (error) {
 		logger.log(error);
-		yield put({ type: 'USER_LOGIN_FAILED', error });
+		yield put({ type: 'USER_LOGIN_FAILED', error: error.message });
 	}
 }
 
@@ -72,10 +69,15 @@ function* doLogout(action) {
 	yield put({ type: 'LOGGED_OUT' });
 }
 
+function* clearErrors(action) {
+	yield put({ type: 'USER_SET_ERRORS', error: null });
+}
+
 function* userSaga() {
 	yield takeLatest('USER_LOGIN', doLogin);
 	yield takeLatest('USER_LOGOUT', doLogout);
 	yield takeLatest('USER_TOKEN_REFRESH', doTokenRefresh);
+	yield takeLatest('USER_CLEAR_ERRORS', clearErrors);
 }
 
 export default userSaga;

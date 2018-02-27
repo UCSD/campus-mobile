@@ -17,8 +17,8 @@ import PushNotificationContainer from './containers/pushNotificationContainer';
 
 // VIEWS
 import Home from './views/Home';
-//import OnboardingIntro from './views/login/OnboardingIntro';
-//import OnboardingLogin from './views/login/OnboardingLogin';
+import OnboardingIntro from './views/login/OnboardingIntro';
+import OnboardingLogin from './views/login/OnboardingLogin';
 import SurfReport from './views/weather/SurfReport';
 import ShuttleStop from './views/shuttle/ShuttleStop';
 import DiningDetail from './views/dining/DiningDetail';
@@ -40,6 +40,7 @@ import ShuttleSavedListView from './views/shuttle/ShuttleSavedListView';
 function mapStateToProps(state, props) {
 	return {
 		scene: state.routes.scene,
+		onBoardingViewed: state.routes.onBoardingViewed
 	};
 }
 const RouterWithRedux = connect()(Router);
@@ -95,10 +96,9 @@ class Main extends Component {
 							tabBarStyle={general.platformIOS() ? css.tabBarIOS : css.tabBarAndroid}
 						>
 							<Scene key={'tab1'} title={AppSettings.APP_NAME} icon={TabIcons}>
-								{/*
-								<Scene key={'OnboardingIntro'} component={OnboardingIntro} title={'OnboardingIntro'} hideTabBar hideNavBar={true} />
-								<Scene key={'OnboardingLogin'} component={OnboardingLogin} title={'OnboardingLogin'} hideTabBar hideNavBar={true} />*/}
-								<Scene key={'Home'} component={Home} type={'reset'} renderBackButton={() => (null)} renderTitle={() => this.campusLogo()} hideNavBar={false} hideTabBar={false}/>
+								<Scene key={'OnboardingIntro'} component={OnboardingIntro} initial={!this.props.onBoardingViewed} title={'OnboardingIntro'} hideTabBar hideNavBar={true} />
+								<Scene key={'OnboardingLogin'} component={OnboardingLogin} title={'OnboardingLogin'} hideTabBar hideNavBar={true} />
+								<Scene key={'Home'} component={Home} type={'reset'} renderBackButton={() => (null)} initial={this.props.onBoardingViewed} renderTitle={() => this.campusLogo()} hideNavBar={false} hideTabBar={false}/>
 								<Scene key={'SurfReport'} component={SurfReport} title={'Surf Report'} hideTabBar />
 								<Scene key={'ShuttleStop'} component={ShuttleStop} title={'Shuttle'} hideTabBar />
 								<Scene key={'DiningDetail'} component={DiningDetail} title={'Dining'} hideTabBar />
@@ -115,7 +115,7 @@ class Main extends Component {
 							</Scene>
 							<Scene key={'tab2'} title={'Map'} component={NearbyMapView} icon={TabIcons} />
 							<Scene key={'tab3'} title={'Feedback'} component={FeedbackView} icon={TabIcons} />
-							<Scene key={'tab4'} title={'User Settings'} initial component={PreferencesView} icon={TabIcons} />
+							<Scene key={'tab4'} title={'User Settings'} component={PreferencesView} icon={TabIcons} />
 						</Scene>
 					</Scene>
 				</RouterWithRedux>
