@@ -3,14 +3,14 @@ import {
 	ListView,
 	View,
 	Text,
+	ScrollView,
 } from 'react-native';
+import moment from 'moment';
 import { connect } from 'react-redux';
-
 import css from '../../styles/css';
-import { getData } from './scheduleData';
+import logger from '../../util/logger';
 
 const fullScheduleDataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-var scheduleData = getData();
 
 class FullSchedule extends React.Component {
 	componentDidMount() {
@@ -18,35 +18,23 @@ class FullSchedule extends React.Component {
 	}
 	render () {
 		return (
-			<ScrollView style={css.main_full}>
-				<ListView
-					dataSource={fullScheduleDataSource.cloneWithRows(this.props.fullScheduleData)}
-					// dataSource={dataSource.cloneWithRows((rows) ? (this.props.scheduleData.slice(0,rows)) : (this.props.scheduleData))}
-					renderRow={(rowData, sectionID, rowID, highlightRow) => {
-						<ScheduleDay
-							id={rowID}
-							data={rowData}
-						/>
-					}}
-				/>
-			</ScrollView>
+			<View>
+			</View>
+			// <ScrollView style={css.main_full}>
+			// 	<ListView
+			// 		dataSource={fullScheduleDataSource.cloneWithRows(this.props.fullScheduleData)}
+			// 		// dataSource={dataSource.cloneWithRows((rows) ? (this.props.scheduleData.slice(0,rows)) : (this.props.scheduleData))}
+			// 		renderRow={(rowData, sectionID, rowID, highlightRow) => {
+			// 			<ScheduleDay
+			// 				id={rowID}
+			// 				data={rowData}
+			// 			/>
+			// 		}}
+			// 	/>
+			// </ScrollView>
 		);
 	}
 }
-// const FullScheduleList = ({ style, data, rows, scrollEnabled, item, card }) => {
-// 	return (
-// 		<ListView
-// 			style={style}
-// 			scrollEnabled={scrollEnabled}
-// 			dataSource={dataSource.cloneWithRows((rows) ? (data.slice(0,rows)) : (data))}
-// 			renderRow={(rowData, sectionID, rowID, highlightRow) => {
-// 				<ScheduleDay
-// 					id={rowID}
-// 					data={rowData}
-// 				/>
-// 			}}
-// 		/>
-// )};
 
 var ScheduleDay = ({ id, data }) => (
 	<View style={css.sc_dayContainer}>
