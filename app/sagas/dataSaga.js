@@ -62,9 +62,7 @@ function* updateSchedule() {
 
 	if (timeDiff < scheduleTTL && data) {
 		// Do nothing, no need to fetch new data
-		console.log("HERE?")
 	} else {
-		console.log("OR THERE?")
 		const schedule = yield call(ScheduleService.FetchSchedule);
 		
 		if (schedule) {
