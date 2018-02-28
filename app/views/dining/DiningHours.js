@@ -7,7 +7,6 @@ import moment from 'moment';
 
 import ColoredDot from '../common/ColoredDot';
 import {
-	COLOR_PRIMARY,
 	COLOR_MGREEN,
 	COLOR_MRED
 } from '../../styles/ColorConstants';
@@ -17,15 +16,26 @@ const dining = require('../../util/dining');
 
 const generateHourElements = (hoursArray, status, today) => {
 	const elementsArray = [];
+	const activeDotColor = status.isOpen ?
+		COLOR_MGREEN : COLOR_MRED;
 
 	// Push hours
 	hoursArray.forEach((hours) => {
 		const operatingHours = dining.parseHours(hours);
 		const isAlwaysOpen = (hours === '0000-2359');
-		const activeDotColor = status.isOpen ?
-			COLOR_MGREEN : COLOR_MRED;
+		const isClosed = (hours === '0000-0000');
+
+		// Multiple if and or statements because we may receive
+		// a day string or a moment object if it's for a special event.
 		const todaysStatusElement = (
-			status.currentHours.openingHour.isSame(today, 'day')
+			status.currentHours &&
+			(
+				status.currentHours.openingHour.format('dddd') === today ||
+				(
+					moment.isMoment(today) &&
+					status.currentHours.openingHour.isSame(today, 'day')
+				)
+			)
 			&& status.currentHours.openingHour.isSame(operatingHours.openingHour)
 			&& status.currentHours.closingHour.isSame(operatingHours.closingHour)
 		) ?
@@ -34,24 +44,39 @@ const generateHourElements = (hoursArray, status, today) => {
 					<ColoredDot
 						size={10}
 						color={activeDotColor}
-						style={css.dl_status_icon}
+						style={css.dd_status_icon}
 					/>
 				</View>
 			) : (
-				null
+				// handle case where restaurant is explicitly closed on a date
+				(isClosed) ? (
+					<View>
+						<ColoredDot
+							size={10}
+							color={activeDotColor}
+							style={css.dd_status_icon}
+						/>
+					</View>
+				) : (
+					null
+				)
 			);
 
 		const newHourElement = (
 			<View key={hours} style={css.dd_hours_text_container}>
 				<Text style={css.dd_hours_text_hours}>
 					{
-						(isAlwaysOpen) ?
-							('Open 24 Hours') :
-							(
-								operatingHours.openingHour.format('h:mm a')
-								+ ' - '
-								+ operatingHours.closingHour.format('h:mm a')
-							)
+						(isClosed) ? (
+							'Closed'
+						) : (
+							(isAlwaysOpen) ?
+								('Open 24 Hours') :
+								(
+									operatingHours.openingHour.format('h:mm a')
+									+ ' — '
+									+ operatingHours.closingHour.format('h:mm a')
+								)
+						)
 					}
 				</Text>
 				{todaysStatusElement}
@@ -74,14 +99,14 @@ const generateHours = (allHours, status) => {
 
 		const todaysHoursArray = todaysHours.split(',');
 		const todaysTitle = moment(day, 'ddd').format('dddd');
-		const todaysHoursElements = generateHourElements(todaysHoursArray, status, moment(day, 'ddd'));
+		const todaysHoursElements = generateHourElements(todaysHoursArray, status, todaysTitle);
 
 		const newHourRow = (
 			<View
 				key={todaysTitle}
 				style={css.dd_hours_row}
 			>
-				<Text style={css.dd_hours_text_title}>{todaysTitle + ':'}</Text>
+				<Text style={css.dd_hours_text_title}>{`${todaysTitle}:`}</Text>
 				<View style={css.dd_hours_text_hoursyle}>
 					{todaysHoursElements}
 				</View>
@@ -96,25 +121,37 @@ const generateHours = (allHours, status) => {
 const generateSpecialHours = (allHours, status) => {
 	const hoursRows = [];
 	const now = moment();
-	const todaysHours = allHours[now.format('MM/DD/YYYY')].hours;
-	const todaysHoursArray = todaysHours.split(',');
-	const todaysTitle = allHours[now.format('MM/DD/YYYY')].title;
-	const todaysHoursElements = generateHourElements(todaysHoursArray, status, now);
+	Object.keys(allHours).forEach((day) => {
+		// Skip special hours that are more than a month away
+		if (moment(day, 'MM/DD/YYYY').isAfter(now.add(1, 'months'))) return;
 
-	const newHourRow = (
-		<View
-			key={todaysTitle}
-			style={css.dd_hours_row}
-		>
-			<Text style={css.dd_special_hours_text_title}>{todaysTitle + ':'}</Text>
-			<View style={css.dd_hours_text_hoursyle}>
-				{todaysHoursElements}
+		const todaysHours = allHours[day].hours;
+		let todaysHoursArray = [];
+
+		// If no hours for the day, the restaurant is closed
+		if (todaysHours) {
+			todaysHoursArray = todaysHours.split(',');
+		} else {
+			todaysHoursArray.push('0000-0000');
+		}
+
+		const todaysTitle = allHours[day].title;
+		const todaysHoursElements = generateHourElements(todaysHoursArray, status, now);
+
+		const newHourRow = (
+			<View
+				key={todaysTitle}
+				style={css.dd_hours_row}
+			>
+				<Text style={css.dd_special_hours_text_title}>{`${day} – ${todaysTitle}:`}</Text>
+				<View style={css.dd_hours_text_hoursyle}>
+					{todaysHoursElements}
+				</View>
 			</View>
-		</View>
-	);
+		);
 
-	hoursRows.push(newHourRow);
-
+		hoursRows.push(newHourRow);
+	});
 	return hoursRows;
 };
 

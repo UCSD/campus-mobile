@@ -40,7 +40,7 @@ const DiningDescription = ({
 				status={hoursStatus}
 			/>
 
-			{(specialHours && specialHours[moment().format('MM/DD/YYYY')]) ?
+			{(specialHours) ?
 				(
 					<View>
 						<Text style={css.dd_description_subtext}>

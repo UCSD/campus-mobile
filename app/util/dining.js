@@ -59,6 +59,9 @@ module.exports = {
 			todaysHours = specialHours[now.format('MM/DD/YYYY')].hours;
 		}
 
+		// if closed, return immediately
+		if (!todaysHours) return openStatus;
+
 		// if 24 hours, return immediately
 		if (todaysHours === '0000-2359') {
 			openStatus.isOpen = true;

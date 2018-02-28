@@ -39,7 +39,9 @@ const DiningItem = ({ data }) => {
 		soonStatusColor = COLOR_MRED;
 	}
 
+	const isClosed = (!status.currentHours);
 	const isAlwaysOpen = (
+		status.currentHours &&
 		status.currentHours.closingHour.format('HHmm') === '2359'
 		&& status.currentHours.openingHour.format('HHmm') === '0000'
 	);
@@ -47,13 +49,17 @@ const DiningItem = ({ data }) => {
 		<View>
 			<Text style={css.dl_hours_text}>
 				{
-					(isAlwaysOpen) ?
-						('Open 24 Hours') :
-						(
-							status.currentHours.openingHour.format('h:mm a')
-							+ ' - '
-							+ status.currentHours.closingHour.format('h:mm a')
-						)
+					(isClosed) ? (
+						'Closed'
+					) : (
+						(isAlwaysOpen) ?
+							('Open 24 Hours') :
+							(
+								status.currentHours.openingHour.format('h:mm a')
+								+ ' — '
+								+ status.currentHours.closingHour.format('h:mm a')
+							)
+					)
 				}
 			</Text>
 		</View>
@@ -67,14 +73,16 @@ const DiningItem = ({ data }) => {
 			>
 				<View style={css.dl_title_row}>
 					<Text style={css.dl_title_text}>{data.name}</Text>
-					<ColoredDot
-						size={10}
-						color={activeDotColor}
-						style={css.dl_status_icon}
-					/>
-					<Text style={css.dl_status_text}>
-						{statusText}
-					</Text>
+					<View style={css.dl_status_row}>
+						<ColoredDot
+							size={10}
+							color={activeDotColor}
+							style={css.dl_status_icon}
+						/>
+						<Text style={[css.dl_status_text, { color: activeDotColor }]}>
+							{statusText}
+						</Text>
+					</View>
 				</View>
 				<View style={css.dl_hours_row}>
 					{newHourElement}
