@@ -19,8 +19,12 @@ import Card from '../card/Card';
 const auth = require('../../util/auth');
 
 class UserAccount extends Component {
-	componentWillMount() {
-		if (this.props.user.isLoggedIn) {
+	componentDidMount() {
+		Linking.addEventListener('url', this._handleOpenURL);
+	}
+
+	componentWillReceiveProps(nextProps) {
+		if (nextProps.user.isLoggedIn) {
 			this.props.doTokenRefresh();
 			auth.retrieveAccessToken()
 				.then((token) => {
@@ -30,9 +34,6 @@ class UserAccount extends Component {
 		}
 	}
 
-	componentDidMount() {
-		Linking.addEventListener('url', this._handleOpenURL);
-	}
 	componentWillUnmount() {
 		Linking.removeEventListener('url', this._handleOpenURL);
 	}

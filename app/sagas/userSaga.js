@@ -13,19 +13,20 @@ import logger from '../util/logger';
 
 const auth = require('../util/auth');
 
-const getUserData = (state) => (state.user);
+const getUserData = state => (state.user);
 
 function* doLogin(action) {
 	const { username, password } = action;
 
-	/* const passwordEncrypted = yield auth.encryptStringWithKey(password);
-	const loginInfo = auth.encryptStringWithBase64(
-		`${username}:${passwordEncrypted}`
-	); */
-
-	const loginInfo = auth.encryptStringWithBase64(`${username}:${password}`);
-
 	try {
+		if (!password || password.length === 0) {
+			const e = new Error('Please type in your password.');
+			e.name = 'emptyPasswordError';
+			throw e;
+		}
+		const passwordEncrypted = yield auth.encryptStringWithKey(password);
+		const loginInfo = auth.encryptStringWithBase64(`${username}:${passwordEncrypted}`);
+
 		yield put({ type: 'IS_LOGGING_IN' });
 		const { response, timeout } = yield race({
 			response: call(ssoService.retrieveAccessToken, loginInfo),

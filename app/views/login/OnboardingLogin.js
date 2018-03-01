@@ -17,6 +17,8 @@ import Touchable from '../common/Touchable';
 import css from '../../styles/css';
 import { COLOR_DGREY } from '../../styles/ColorConstants';
 
+const auth = require('../../util/auth');
+
 const campusLogo = require('../../assets/img/UCSanDiegoLogo-White.png');
 
 class OnboardingLogin extends React.Component {
@@ -27,6 +29,13 @@ class OnboardingLogin extends React.Component {
 				Toast.SHORT,
 				Toast.BOTTOM
 			);
+
+			this.props.doTokenRefresh();
+			auth.retrieveAccessToken()
+				.then((token) => {
+					console.log('User Data: ', this.props.user);
+					console.log('Access Token: ', token);
+				});
 
 			this.props.setOnboardingViewed(true);
 			Actions.Home();

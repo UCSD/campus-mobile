@@ -1,8 +1,8 @@
 import * as Keychain from 'react-native-keychain';
-import { RSA } from 'react-native-rsa-native';
 
-const base64 = require('base-64');
+const forge = require('node-forge');
 
+const { pki } = forge;
 const accessTokenSiteName = 'https://ucsd.edu';
 
 /**
@@ -16,14 +16,13 @@ module.exports = {
 	 * @returns {String} Encrypted string
 	 */
 	encryptStringWithKey(string) {
-		return RSA.encrypt(string, this.ucsdPublicKey)
-			.then(encryptedMessage => (
-				encryptedMessage.replace(/(\r\n|\n|\r)/gm,'')
-			));
+		const publicKey = pki.publicKeyFromPem(this.ucsdPublicKey);
+		const encrypted = publicKey.encrypt(string, 'RSA-OAEP');
+		return forge.util.encode64(encrypted);
 	},
 
 	encryptStringWithBase64(string) {
-		return base64.encode(string);
+		return forge.util.encode64(string);
 	},
 
 	/**
@@ -45,9 +44,9 @@ module.exports = {
 	 */
 	retrieveUserCreds() {
 		return Keychain
-		.getGenericPassword()
-		.then((credentials) => (credentials))
-		.catch((error) => (error));
+			.getGenericPassword()
+			.then(credentials => (credentials))
+			.catch(error => (error));
 	},
 
 	/**
@@ -56,8 +55,8 @@ module.exports = {
 	 */
 	destroyUserCreds() {
 		return Keychain
-		.resetGenericPassword()
-		.then(() => (true));
+			.resetGenericPassword()
+			.then(() => (true));
 	},
 
 	/**
@@ -78,9 +77,9 @@ module.exports = {
 	 */
 	retrieveAccessToken() {
 		return Keychain
-		.getInternetCredentials(accessTokenSiteName)
-		.then((credentials) => (credentials.password))
-		.catch((error) => (error));
+			.getInternetCredentials(accessTokenSiteName)
+			.then(credentials => (credentials.password))
+			.catch(error => (error));
 	},
 
 	/**
@@ -89,8 +88,8 @@ module.exports = {
 	 */
 	destroyAccessToken() {
 		return Keychain
-		.resetInternetCredentials(accessTokenSiteName)
-		.then(() => (true));
+			.resetInternetCredentials(accessTokenSiteName)
+			.then(() => (true));
 	},
 
 	ucsdPublicKey: '-----BEGIN PUBLIC KEY-----\n' +

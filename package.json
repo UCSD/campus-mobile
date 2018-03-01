@@ -12,10 +12,10 @@
     "generate-docs": "./node_modules/.bin/jsdoc -c jsdoc.conf.json"
   },
   "dependencies": {
-    "base-64": "0.1.0",
     "dateformat": "1.0.12",
     "html-entities": "1.2.0",
     "moment": "2.15.2",
+    "node-forge": "^0.7.2",
     "orchestrator": "0.3.8",
     "react": "15.4.2",
     "react-native": "0.42.3",
