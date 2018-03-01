@@ -182,7 +182,7 @@ exports[`renders form when request is finished 1`] = `
           style={
             Object {
               "alignItems": "center",
-              "backgroundColor": "#034262",
+              "backgroundColor": "#182B49",
               "borderRadius": 3,
               "justifyContent": "center",
               "padding": 10,
@@ -341,7 +341,7 @@ exports[`renders form when request is finished 2`] = `
           style={
             Object {
               "alignItems": "center",
-              "backgroundColor": "#034262",
+              "backgroundColor": "#182B49",
               "borderRadius": 3,
               "justifyContent": "center",
               "padding": 10,
@@ -500,7 +500,7 @@ exports[`renders without crashing 1`] = `
           style={
             Object {
               "alignItems": "center",
-              "backgroundColor": "#034262",
+              "backgroundColor": "#182B49",
               "borderRadius": 3,
               "justifyContent": "center",
               "padding": 10,
