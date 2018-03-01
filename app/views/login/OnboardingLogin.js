@@ -72,7 +72,7 @@ class OnboardingLogin extends React.Component {
 								<View style={css.ob_logincontainer}>
 									<TextInput
 										style={[css.ob_input, css.ob_login]}
-										placeholder="User ID / PID"
+										placeholder="User ID"
 										placeholderTextColor={COLOR_DGREY}
 										autoCapitalize="none"
 										autoCorrect={false}
@@ -88,7 +88,7 @@ class OnboardingLogin extends React.Component {
 									<TextInput
 										style={[css.ob_input, css.ob_pass]}
 										ref={(input) => { this.passInput = input; }}
-										placeholder="Password / PAC"
+										placeholder="Password"
 										placeholderTextColor={COLOR_DGREY}
 										autoCapitalize="none"
 										secureTextEntry={true}
