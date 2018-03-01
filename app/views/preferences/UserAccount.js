@@ -102,7 +102,7 @@ const AccountLogin = ({ handleLogin, error, isLoggingIn }) => (
 	>
 		<TextInput
 			style={css.ua_input}
-			placeholder="User ID / PID"
+			placeholder="User ID"
 			returnKeyType="next"
 			underlineColorAndroid="transparent"
 			editable={!isLoggingIn}
@@ -117,7 +117,7 @@ const AccountLogin = ({ handleLogin, error, isLoggingIn }) => (
 		<TextInput
 			ref={(c) => { this._passwordInput = c; }}
 			style={css.ua_input}
-			placeholder="Password / PAC"
+			placeholder="Password"
 			returnKeyType="send"
 			underlineColorAndroid="transparent"
 			editable={!isLoggingIn}

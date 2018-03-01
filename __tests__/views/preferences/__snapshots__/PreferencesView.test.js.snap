@@ -2,6 +2,7 @@
 
 exports[`renders without crashing 1`] = `
 <ScrollViewMock
+  keyboardShouldPersistTaps="handled"
   scrollEnabled={true}
   style={
     Object {
@@ -12,6 +13,7 @@ exports[`renders without crashing 1`] = `
     }
   }
 >
+  <Connect(UserAccount) />
   <Connect(CardPreferences)
     toggleScroll={[Function]}
   />

@@ -22,6 +22,11 @@ const auth = require('../../util/auth');
 const campusLogo = require('../../assets/img/UCSanDiegoLogo-White.png');
 
 class OnboardingLogin extends React.Component {
+
+	componentWillMount() {
+		if (this.props.onBoardingViewed) Actions.Home();
+	}
+
 	componentWillReceiveProps(nextProps) {
 		if (nextProps.user.isLoggedIn) {
 			Toast.showWithGravity(
@@ -40,10 +45,6 @@ class OnboardingLogin extends React.Component {
 			this.props.setOnboardingViewed(true);
 			Actions.Home();
 		}
-	}
-
-	onSubmit = (username, password) => {
-		this.props.doLogin(username, password);
 	}
 
 	render() {
@@ -81,7 +82,7 @@ class OnboardingLogin extends React.Component {
 								<View style={css.ob_logincontainer}>
 									<TextInput
 										style={[css.ob_input, css.ob_login]}
-										placeholder="User ID / PID"
+										placeholder="User ID"
 										placeholderTextColor={COLOR_DGREY}
 										autoCapitalize="none"
 										autoCorrect={false}
@@ -97,7 +98,7 @@ class OnboardingLogin extends React.Component {
 									<TextInput
 										style={[css.ob_input, css.ob_pass]}
 										ref={(input) => { this.passInput = input; }}
-										placeholder="Password / PAC"
+										placeholder="Password"
 										placeholderTextColor={COLOR_DGREY}
 										autoCapitalize="none"
 										secureTextEntry={true}
@@ -112,7 +113,7 @@ class OnboardingLogin extends React.Component {
 										<Touchable style={css.ob_actions} onPress={() => openURL(AppSettings.FORGOT_PASSWORD_URL)}>
 											<Text style={css.ob_forgotpass}>Forgot password?</Text>
 										</Touchable>
-										<Touchable style={css.ob_actions} onPress={() => { Actions.pop(); }}>
+										<Touchable style={css.ob_actions} onPress={() => this.skipSSO()}>
 											<Text style={css.ob_cancel}>Cancel</Text>
 										</Touchable>
 									</View>
@@ -124,12 +125,22 @@ class OnboardingLogin extends React.Component {
 			</TouchableWithoutFeedback>
 		);
 	}
+
+	onSubmit = (username, password) => {
+		this.props.doLogin(username, password);
+	}
+
+	skipSSO = () => {
+		this.props.setOnboardingViewed(true);
+		Actions.Home();
+	}
 }
 
 const mapStateToProps = (state, props) => (
 	{
 		scene: state.routes.scene,
-		user: state.user
+		user: state.user,
+		onBoardingViewed: state.routes.onBoardingViewed
 	}
 );
 
