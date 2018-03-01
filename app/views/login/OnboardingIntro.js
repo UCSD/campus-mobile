@@ -8,20 +8,9 @@ import css from '../../styles/css';
 const campusLogo = require('../../assets/img/UCSanDiegoLogo-White.png');
 
 class OnboardingIntro extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-
-		};
-	}
 
 	componentWillMount() {
 		if (this.props.onBoardingViewed) Actions.Home();
-	}
-
-	skipSSO = () => {
-		this.props.setOnboardingViewed(true);
-		Actions.Home();
 	}
 
 	render() {
@@ -38,6 +27,11 @@ class OnboardingIntro extends React.Component {
 				</Touchable>
 			</View>
 		);
+	}
+
+	skipSSO = () => {
+		this.props.setOnboardingViewed(true);
+		Actions.Home();
 	}
 }
 

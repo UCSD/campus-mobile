@@ -20,6 +20,11 @@ import { COLOR_DGREY } from '../../styles/ColorConstants';
 const campusLogo = require('../../assets/img/UCSanDiegoLogo-White.png');
 
 class OnboardingLogin extends React.Component {
+
+	componentWillMount() {
+		if (this.props.onBoardingViewed) Actions.Home();
+	}
+
 	componentWillReceiveProps(nextProps) {
 		if (nextProps.user.isLoggedIn) {
 			Toast.showWithGravity(
@@ -31,10 +36,6 @@ class OnboardingLogin extends React.Component {
 			this.props.setOnboardingViewed(true);
 			Actions.Home();
 		}
-	}
-
-	onSubmit = (username, password) => {
-		this.props.doLogin(username, password);
 	}
 
 	render() {
@@ -103,7 +104,7 @@ class OnboardingLogin extends React.Component {
 										<Touchable style={css.ob_actions} onPress={() => openURL(AppSettings.FORGOT_PASSWORD_URL)}>
 											<Text style={css.ob_forgotpass}>Forgot password?</Text>
 										</Touchable>
-										<Touchable style={css.ob_actions} onPress={() => { Actions.pop(); }}>
+										<Touchable style={css.ob_actions} onPress={() => this.skipSSO()}>
 											<Text style={css.ob_cancel}>Cancel</Text>
 										</Touchable>
 									</View>
@@ -115,12 +116,22 @@ class OnboardingLogin extends React.Component {
 			</TouchableWithoutFeedback>
 		);
 	}
+
+	onSubmit = (username, password) => {
+		this.props.doLogin(username, password);
+	}
+
+	skipSSO = () => {
+		this.props.setOnboardingViewed(true);
+		Actions.Home();
+	}
 }
 
 const mapStateToProps = (state, props) => (
 	{
 		scene: state.routes.scene,
-		user: state.user
+		user: state.user,
+		onBoardingViewed: state.routes.onBoardingViewed
 	}
 );
 
