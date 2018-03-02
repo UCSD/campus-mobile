@@ -21,6 +21,7 @@ target 'CampusMobile' do
     'RCTWebSocket',
   ]
 
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
   pod 'react-native-maps', path: '../node_modules/react-native-maps'
 
   # Pods for CampusMobile

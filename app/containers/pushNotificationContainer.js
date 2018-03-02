@@ -68,7 +68,7 @@ class PushNotificationContainer extends React.Component {
   }
 
   getPermission = () => {
-    Permissions.requestPermission('notification')
+    Permissions.request('notification')
     .then((response) => {
       // if authorized, act
       if (response === 'authorized') {
@@ -95,7 +95,7 @@ class PushNotificationContainer extends React.Component {
     if (Platform.OS === 'ios') {
       // check for permission and either ask for it
       // or if we already have it then update the device tokens
-      Permissions.getPermissionStatus('notification')
+      Permissions.check('notification')
       .then((response) => {
         if (response === 'undetermined') {
           this.getPermission();

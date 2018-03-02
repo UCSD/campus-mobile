@@ -4,7 +4,7 @@ import {
 	StatusBar,
 	Image,
 } from 'react-native';
-import { Scene, Router, Actions } from 'react-native-router-flux';
+import { Scene, Tabs, Router, Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 
 import AppSettings from './AppSettings';
@@ -87,9 +87,13 @@ class Main extends Component {
 					onExitApp={this._exitHandler}
 				>
 					<Scene key="root">
-						<Scene
+						<Tabs
 							key="tabbar"
-							tabs hideOnChildTabs initial
+							tabs
+							hideNavBar
+							showLabel={false}
+							hideOnChildTabs
+							initial
 							tabBarStyle={general.platformIOS() ? css.tabBarIOS : css.tabBarAndroid}
 						>
 							<Scene key="tab1" title={AppSettings.APP_NAME} initial icon={TabIcons}>
@@ -111,7 +115,7 @@ class Main extends Component {
 							<Scene key="tab2" title="Map" component={NearbyMapView} icon={TabIcons} />
 							<Scene key="tab3" title="Feedback" component={FeedbackView} icon={TabIcons} />
 							<Scene key="tab4" title="User Settings" component={PreferencesView} icon={TabIcons} />
-						</Scene>
+						</Tabs>
 					</Scene>
 				</RouterWithRedux>
 			</View>

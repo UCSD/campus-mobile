@@ -1,10 +1,11 @@
 import React from 'react';
 import {
+	Text,
 	View,
 	ScrollView,
 } from 'react-native';
 import { connect } from 'react-redux';
-import { MenuContext } from 'react-native-popup-menu';
+import { MenuProvider } from 'react-native-popup-menu';
 import { checkGooglePlayServices } from 'react-native-google-api-availability-bridge';
 
 // Cards
@@ -115,11 +116,12 @@ export class Home extends React.Component {
 
 	render() {
 		// Prevent home from re-rendering when not in home
-		if (this.props.scene.sceneKey !== 'Home' && this.props.scene.sceneKey !== 'tabbar') {
+		if (false) {
+		//if (this.props.scene.sceneKey !== 'Home' && this.props.scene.sceneKey !== 'tabbar') {
 			return null;
 		} else {
 			return (
-				<MenuContext style={{ flex:1 }}>
+				<MenuProvider style={{ flex:1 }}>
 					<View style={css.main_container}>
 						<ScrollView
 							ref={c => { this._scrollview = c; }}
@@ -130,7 +132,7 @@ export class Home extends React.Component {
 							{ this._getCards() }
 						</ScrollView>
 					</View>
-				</MenuContext>
+				</MenuProvider>
 			);
 		}
 	}

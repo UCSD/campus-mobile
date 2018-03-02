@@ -35,9 +35,9 @@ const TabIcons = function (props) {
 	}
 
 	return (
-		<View style={[css.tabContainer, props.selected ? css.tabContainerBottom : null]}>
-			{tabIconPack === 'Entypo' && tabIconName !== 'user' ? (<Entypo style={[css.tabIcon, props.selected ? { color: COLOR_PRIMARY } : null]} name={tabIconName} size={24} />) : null }
-			{tabIconPack === 'Entypo' && tabIconName === 'user' ? (<Entypo style={[css.tabIconUser, props.selected ? { backgroundColor: COLOR_PRIMARY, borderColor: COLOR_PRIMARY } : null]} name={tabIconName} size={24} />) : null }
+		<View style={[css.tabContainer, props.focused ? css.tabContainerBottom : null]}>
+			{tabIconPack === 'Entypo' && tabIconName !== 'user' ? (<Entypo style={[css.tabIcon, props.focused ? { color: COLOR_PRIMARY } : null]} name={tabIconName} size={24} />) : null }
+			{tabIconPack === 'Entypo' && tabIconName === 'user' ? (<Entypo style={[css.tabIconUser, props.focused ? { backgroundColor: COLOR_PRIMARY, borderColor: COLOR_PRIMARY } : null]} name={tabIconName} size={24} />) : null }
 		</View>
 	);
 };

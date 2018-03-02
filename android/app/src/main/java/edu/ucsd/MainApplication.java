@@ -4,13 +4,11 @@ import android.app.Application;
 import android.util.Log;
 
 import com.facebook.react.ReactApplication;
-import com.oblador.vectoricons.VectorIconsPackage;
 import com.evollu.react.fcm.FIRMessagingPackage;
 import com.idehub.GoogleAnalyticsBridge.GoogleAnalyticsBridgePackage;
 import com.oblador.keychain.KeychainPackage;
 import com.github.wumke.RNExitApp.RNExitAppPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
-import com.joshblour.reactnativepermissions.ReactNativePermissionsPackage;
 import com.ivanwu.googleapiavailabilitybridge.ReactNativeGooglePlayServicesPackage;
 import com.airbnb.android.react.maps.MapsPackage;
 import com.facebook.react.ReactInstanceManager;
@@ -35,13 +33,11 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new VectorIconsPackage(),
             new FIRMessagingPackage(),
             new GoogleAnalyticsBridgePackage(),
             new KeychainPackage(),
             new RNExitAppPackage(),
             new RNDeviceInfo(),
-            new ReactNativePermissionsPackage(),
             new ReactNativeGooglePlayServicesPackage(),
             new MapsPackage()
       );

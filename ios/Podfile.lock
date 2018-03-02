@@ -1,20 +1,20 @@
 PODS:
-  - Firebase/Core (4.8.2):
+  - Firebase/Core (4.9.0):
     - FirebaseAnalytics (= 4.0.9)
-    - FirebaseCore (= 4.0.14)
-  - Firebase/Messaging (4.8.2):
+    - FirebaseCore (= 4.0.15)
+  - Firebase/Messaging (4.9.0):
     - Firebase/Core
-    - FirebaseMessaging (= 2.0.8)
+    - FirebaseMessaging (= 2.1.0)
   - FirebaseAnalytics (4.0.9):
     - FirebaseCore (~> 4.0)
     - FirebaseInstanceID (~> 2.0)
     - GoogleToolboxForMac/NSData+zlib (~> 2.1)
     - nanopb (~> 0.3)
-  - FirebaseCore (4.0.14):
+  - FirebaseCore (4.0.15):
     - GoogleToolboxForMac/NSData+zlib (~> 2.1)
-  - FirebaseInstanceID (2.0.8):
+  - FirebaseInstanceID (2.0.9):
     - FirebaseCore (~> 4.0)
-  - FirebaseMessaging (2.0.8):
+  - FirebaseMessaging (2.1.0):
     - FirebaseAnalytics (~> 4.0)
     - FirebaseCore (~> 4.0)
     - FirebaseInstanceID (~> 2.0)
@@ -33,7 +33,7 @@ PODS:
   - Protobuf (3.5.0)
   - React (0.44.0):
     - React/Core (= 0.44.0)
-  - react-native-maps (0.15.3):
+  - react-native-maps (0.20.1):
     - React
   - React/Core (0.44.0):
     - React/cxxreact
@@ -62,6 +62,8 @@ PODS:
     - React/Core
   - React/RCTWebSocket (0.44.0):
     - React/Core
+  - RNVectorIcons (4.5.0):
+    - React
   - Yoga (0.44.0.React)
 
 DEPENDENCIES:
@@ -78,6 +80,7 @@ DEPENDENCIES:
   - React/RCTText (from `../node_modules/react-native`)
   - React/RCTVibration (from `../node_modules/react-native`)
   - React/RCTWebSocket (from `../node_modules/react-native`)
+  - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga/Yoga.podspec`)
 
 EXTERNAL SOURCES:
@@ -85,22 +88,25 @@ EXTERNAL SOURCES:
     :path: ../node_modules/react-native
   react-native-maps:
     :path: ../node_modules/react-native-maps
+  RNVectorIcons:
+    :path: ../node_modules/react-native-vector-icons
   Yoga:
     :path: ../node_modules/react-native/ReactCommon/yoga/Yoga.podspec
 
 SPEC CHECKSUMS:
-  Firebase: 7d3b8cd837ad9fcd391657734c0d56dab8e9a5a3
+  Firebase: 632216af3ed7f31e3be34776947fdc7546cfb572
   FirebaseAnalytics: 388b630c15713f5dbf364071f5f3d6077fb52f4e
-  FirebaseCore: 2e0b98fb2d64ca8140136beff15772bdd14d2dd7
-  FirebaseInstanceID: 81df5805a08001e69138664bdd02c6719a9ac80f
-  FirebaseMessaging: dfdcd307c2382290a1e297a81d0f18370f5b1bcd
+  FirebaseCore: 3bd047463058fa6b5d312c97502c52e45401cdfb
+  FirebaseInstanceID: d2058a35e9bebda1b6dd42486b84917bde552a9d
+  FirebaseMessaging: 2bafab2d0f3ab3dfd753101c2c32995c2051b5da
   GoogleToolboxForMac: 2501e2ad72a52eb3dfe7bd9aee7dad11b858bd20
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
   Protobuf: 8a9838fba8dae3389230e1b7f8c104aa32389c03
   React: e53535491f7b382b8cd681428dd853159bf25545
   react-native-maps: 066c2afcc89e18726377bcc685315f989ca22449
+  RNVectorIcons: c0dbfbf6068fefa240c37b0f71bd03b45dddac44
   Yoga: f2b1f5b59fadb774a3dd9932a7cf813c6e284d71
 
-PODFILE CHECKSUM: 695c0c9afc089e891d6a7bd3f620a8e7679c346b
+PODFILE CHECKSUM: 2ae61f47d1f7b4da29df69e075b140eeea74a2c3
 
 COCOAPODS: 1.4.0

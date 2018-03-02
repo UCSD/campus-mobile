@@ -80,7 +80,7 @@ var css = StyleSheet.create({
 	navAndroid: { backgroundColor: COLOR_PRIMARY, height: NAVIGATOR_ANDROID_HEIGHT },
 	navIOSTitle: { color: COLOR_WHITE, fontSize: 24, marginTop: deviceIphoneX() ? 8 : -8, fontWeight: '300' },
 	navAndroidTitle: { color: COLOR_WHITE, fontSize: 24, marginTop: -8, fontWeight: '300' },
-	navCampusLogoTitle: { resizeMode: 'contain', height: 26, marginTop: platformIOS() ? NAVIGATOR_LOGO_IOS_MARGIN : NAVIGATOR_LOGO_ANDROID_MARGIN, alignSelf: 'center' },
+	navCampusLogoTitle: { resizeMode: 'contain', height: 26, alignSelf: 'center' },
 	navIOSIconStyle: { tintColor:COLOR_WHITE, marginTop: deviceIphoneX() ? 14 : -2 },
 	navButtonTextIOS: { color: COLOR_WHITE, marginTop: deviceIphoneX() ? 13 : -3, fontWeight: '300', fontSize: 18, height: 24 },
 	navAndroidIconStyle: { tintColor:COLOR_WHITE, marginTop: -6 },
@@ -97,9 +97,9 @@ var css = StyleSheet.create({
 	/********************************************
 	 *  200 - Primary Containers
 	 ********************************************/
-	main_container: { flexGrow: 1, backgroundColor: COLOR_MGREY, marginTop: platformIOS() ? IOS_MARGIN_TOP : ANDROID_MARGIN_TOP, marginBottom: platformIOS() ? IOS_MARGIN_BOTTOM : ANDROID_MARGIN_BOTTOM },
-	main_full: { flexGrow: 1, marginTop: NAVIGATOR_HEIGHT },
-	main_full_lgrey: { flexGrow: 1, marginTop: NAVIGATOR_HEIGHT, backgroundColor: COLOR_LGREY },
+	main_container: { flexGrow: 1, backgroundColor: COLOR_MGREY },
+	main_full: { flexGrow: 1 },
+	main_full_lgrey: { flexGrow: 1, backgroundColor: COLOR_LGREY },
 	view_all_container: { backgroundColor: COLOR_WHITE, paddingHorizontal: 12, marginTop: platformIOS() ? IOS_MARGIN_TOP : ANDROID_MARGIN_TOP, marginBottom: platformIOS() ? IOS_MARGIN_BOTTOM : ANDROID_MARGIN_BOTTOM },
 	view_container: { backgroundColor: COLOR_WHITE, marginTop: platformIOS() ? IOS_MARGIN_TOP : ANDROID_MARGIN_TOP, marginBottom: platformIOS() ? IOS_MARGIN_BOTTOM : ANDROID_MARGIN_BOTTOM },
 	listview_main: { marginTop: platformIOS() ? IOS_MARGIN_TOP : ANDROID_MARGIN_TOP, },
