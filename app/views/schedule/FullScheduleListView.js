@@ -19,19 +19,19 @@ class FullSchedule extends React.Component {
 	render () {
 		return (
 			<View>
+				{/* <ScrollView style={css.main_full}>
+					<ListView
+						dataSource={fullScheduleDataSource.cloneWithRows(this.props.fullScheduleData)}
+						// dataSource={dataSource.cloneWithRows((rows) ? (this.props.scheduleData.slice(0,rows)) : (this.props.scheduleData))}
+						renderRow={(rowData, sectionID, rowID, highlightRow) => {
+							<ScheduleDay
+								id={rowID}
+								data={rowData}
+							/>
+						}}
+					/>
+				</ScrollView> */}
 			</View>
-			// <ScrollView style={css.main_full}>
-			// 	<ListView
-			// 		dataSource={fullScheduleDataSource.cloneWithRows(this.props.fullScheduleData)}
-			// 		// dataSource={dataSource.cloneWithRows((rows) ? (this.props.scheduleData.slice(0,rows)) : (this.props.scheduleData))}
-			// 		renderRow={(rowData, sectionID, rowID, highlightRow) => {
-			// 			<ScheduleDay
-			// 				id={rowID}
-			// 				data={rowData}
-			// 			/>
-			// 		}}
-			// 	/>
-			// </ScrollView>
 		);
 	}
 }
