@@ -4,6 +4,7 @@ import { persistStore, persistReducer, createMigrate } from 'redux-persist';
 import thunkMiddleware from 'redux-thunk';
 import createFilter from 'redux-persist-transform-filter';
 import createSagaMiddleware from 'redux-saga';
+import logger from 'redux-logger'
 
 import rootSaga from '../sagas/rootSaga';
 import rootReducer from '../reducers';
@@ -51,6 +52,11 @@ const persistConfig = {
 
 export default function configureStore(initialState, onComplete: ?() => void) {
 	const middlewares = [sagaMiddleware, thunkMiddleware]; // lets us dispatch() functions
+
+	const logging = true;
+	if (logging) {
+		middlewares.push(logger);
+	}
 
 	const finalReducer = persistReducer(persistConfig, rootReducer);
 
