@@ -1,5 +1,5 @@
 import { AsyncStorage } from 'react-native';
-import { createStore, applyMiddleware, compose } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
 import { persistStore, persistReducer, createMigrate } from 'redux-persist';
 import thunkMiddleware from 'redux-thunk';
 import createFilter from 'redux-persist-transform-filter';
@@ -53,17 +53,15 @@ const persistConfig = {
 export default function configureStore(initialState, onComplete: ?() => void) {
 	const middlewares = [sagaMiddleware, thunkMiddleware]; // lets us dispatch() functions
 
-	const logging = true;
+	const logging = false;
 	if (logging) {
 		middlewares.push(logger);
 	}
 
 	const finalReducer = persistReducer(persistConfig, rootReducer);
 
-	const enhancer =  compose(finalReducer);
-
 	const store = createStore(
-		enhancer,
+		finalReducer,
 		applyMiddleware(...middlewares)
 	);
 
@@ -72,7 +70,7 @@ export default function configureStore(initialState, onComplete: ?() => void) {
 		module.hot.accept('../reducers', () => {
 			const nextRootReducer = reducers;
 
-			store.replaceReducer(nextRootReducer);
+			store.replaceReducer(persistConfig, nextRootReducer);
 		});
 	}
 

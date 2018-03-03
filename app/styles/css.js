@@ -87,7 +87,7 @@ var css = StyleSheet.create({
 	navButtonTextAndroid: { color: COLOR_WHITE, marginTop: -8, fontWeight: '300', fontSize: 18 },
 	// 102 - Tab Bar
 	tabBarIOS: { borderTopWidth: 1, borderColor: '#DADADA', backgroundColor: COLOR_WHITE, height: TAB_BAR_HEIGHT },
-	tabBarAndroid: { top: NAVIGATOR_ANDROID_HEIGHT, borderBottomWidth: 1, borderColor: '#DADADA', backgroundColor: COLOR_WHITE, height: TAB_BAR_HEIGHT },
+	tabBarAndroid: { borderBottomWidth: 1, borderColor: '#DADADA', backgroundColor: COLOR_WHITE, height: TAB_BAR_HEIGHT },
 	tabContainer: { width: 70, paddingTop: deviceIphoneX() ? 4 : 8, paddingBottom: deviceIphoneX() ? 20 : 8 },
 	tabContainerBottom: { borderBottomColor: COLOR_PRIMARY },
 	tabIcon: { color: COLOR_DMGREY, alignSelf: 'center', backgroundColor: 'transparent', opacity: .95, width: 24, height: 24, overflow: 'hidden' },
@@ -98,7 +98,7 @@ var css = StyleSheet.create({
 	 *  200 - Primary Containers
 	 ********************************************/
 	main_container: { flexGrow: 1, backgroundColor: COLOR_MGREY },
-	main_full: { flexGrow: 1 },
+	main_full: { flexGrow: 1, backgroundColor: COLOR_WHITE },
 	main_full_lgrey: { flexGrow: 1, backgroundColor: COLOR_LGREY },
 	view_all_container: { backgroundColor: COLOR_WHITE, paddingHorizontal: 12, marginTop: platformIOS() ? IOS_MARGIN_TOP : ANDROID_MARGIN_TOP, marginBottom: platformIOS() ? IOS_MARGIN_BOTTOM : ANDROID_MARGIN_BOTTOM },
 	view_container: { backgroundColor: COLOR_WHITE, marginTop: platformIOS() ? IOS_MARGIN_TOP : ANDROID_MARGIN_TOP, marginBottom: platformIOS() ? IOS_MARGIN_BOTTOM : ANDROID_MARGIN_BOTTOM },
