@@ -40,3 +40,7 @@ buck-out/
 \.buckd/
 android/app/libs
 *.keystore
+
+#Solomon custom ignores
+.gitignore
+*~

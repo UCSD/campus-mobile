@@ -68,21 +68,19 @@ const ScheduleCard = ({ scheduleData, actionButton }) => (
 	</Card>
 );
 
+// Holds the the daylist listview (currently only used as a container for the listview)
 var ScheduleDay = ({ id, data }) => (
 	// <View style={css.sc_dayContainer}>
 	<View style={styles.scheduleList}>
-		<Text style={styles.sc_dayText}>
-			{/* {id} */}
-		</Text>
 		<DayList
-			style={styles.dayListStyle} 
 			courseItems={data} />
 	</View>
 );
 
+// Holds the listview for a day of the week
 var DayList = ({ courseItems }) => (
 	<ListView
-		// style={styles.dayListStyle}
+		style={styles.dayListStyle}
 		dataSource={dataSource.cloneWithRows(courseItems)}
 		renderRow={(rowData, sectionID, rowID, highlightRow) => (
 			<DayItem key={rowID} data={rowData} />
@@ -90,6 +88,7 @@ var DayList = ({ courseItems }) => (
 	/>
 );
 
+// Holds the view for an individual section/class 
 var DayItem = ({ data }) => (
 	// <View style = {styles.scheduleList}>
 	<View style={styles.sc_dayRow}>
@@ -131,7 +130,7 @@ const styles = StyleSheet.create({
 	loadingContainer: { alignItems: 'center', justifyContent: 'center', width: MAX_CARD_WIDTH },
 	scheduleList: { flex: 1, justifyContent: 'flex-end', alignItems: 'flex-end'},
 	sc_dayRow: { justifyContent: 'center', padding: 5, borderColor: COLOR_BLACK, borderWidth: 1, flex: 1, width: '100%', flexDirection: 'row'},
-	dayListStyle: { alignItems:'flex-end'},
+	dayListStyle: {flex: 1, /* align0 Items:'flex-end'*/},
 	sc_scheduleContainer: { width: MAX_CARD_WIDTH, padding: 15, flexDirection:'row', flex:1, justifyContent: 'center'},
 	sc_scheduleCard: { width: MAX_CARD_WIDTH + 2, padding: 7, flexDirection:'column', flex: 1},
 	sc_dayText: { fontSize: 16, color: COLOR_BLACK, /*paddingBottom: 6 */},
