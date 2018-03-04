@@ -6,6 +6,7 @@ import {
 	StyleSheet,
 	TouchableHighlight,
 	ActivityIndicator,
+	TextInput
 } from 'react-native';
 
 import { getClasses, getFinals } from './scheduleData';
@@ -35,16 +36,44 @@ import {
 var dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
 const ScheduleCard = ({ scheduleData, actionButton }) => (
-	<Card id="schedule" title="Class Schedule">
+	<Card id="schedule" title="Upcoming Classes" >
 		{scheduleData ? (
 			<View style={styles.sc_scheduleCard}>
 				<View style={styles.sc_scheduleContainer}>
-					<TouchableHighlight style={styles.dc_locations_row_right} underlayColor={'rgba(200,200,200,.1)'} onPress={() => general.gotoNavigationApp(data.coords.lat, data.coords.lon)}>
+					{/* <TouchableHighlight style={styles.dc_locations_row_right} underlayColor={'rgba(200,200,200,.1)'} onPress={() => general.gotoNavigationApp(data.coords.lat, data.coords.lon)}>
 						<View style={css.dl_dir_traveltype_container}>
 							<Icon name="md-walk" size={32} color={COLOR_SECONDARY} />
 						</View>
-					</TouchableHighlight>
-					<View style={{flex:4}}>
+					</TouchableHighlight> */}
+					<View style = {{flex: 6}}>
+						<View>
+							<TouchableHighlight onPress= {()=>this._MyComponent.setNativeProps({text:'my new text'})}>
+							<Text>
+								Today 9 AM
+							</Text>
+							</TouchableHighlight>
+							<Text>
+								{/* CSE 198 Lecture */}
+								<TextInput  editable={false} ref={component=> this._MyComponent=component} /> 
+							</Text>	
+						</View>
+						<View>
+							<Text>
+								In session
+							</Text>
+						</View>
+						<View>
+							<Text>
+								Pepper Canyon Hall 106
+							</Text>
+						</View>
+						<View>
+							<Text>
+								1 More Class Today
+							</Text>	
+						</View>
+					</View>
+					<View style={{flex: 4}}>
 						<ListView
 							dataSource={dataSource.cloneWithRows(scheduleData)}
 							renderRow={(rowData, sectionID, rowID, highlightRow) => (
@@ -90,7 +119,6 @@ var DayList = ({ courseItems }) => (
 
 // Holds the view for an individual section/class 
 var DayItem = ({ data }) => (
-	// <View style = {styles.scheduleList}>
 	<View style={styles.sc_dayRow}>
 		<View style={{flex:6, flexDirection: 'column', justifyContent: 'flex-end'}}>
 			<Text style={styles.sc_timeText}>
