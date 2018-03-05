@@ -10,7 +10,6 @@ class SafeImage extends React.Component {
 		super(props);
 		this.state = {
 			validImage: true,
-			loading: true
 		};
 	}
 
@@ -25,16 +24,11 @@ class SafeImage extends React.Component {
 				<Image
 					{...this.props}
 					onError={this._handleError}
-					onLoadEnd={() => this.setState({ loading: false })}
-					resizeMode={'contain'}
-				>
-					<ActivityIndicator
-						style={styles.spinner}
-						animating={this.state.loading}
-					/>
-				</Image>
+					resizeMode="contain"
+				/>
 			);
-		} else {
+		}
+		else {
 			return null;
 		}
 	}

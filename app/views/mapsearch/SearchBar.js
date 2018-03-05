@@ -98,7 +98,7 @@ const SearchIcon = ({ iconStatus }) => {
 
 SearchBar.propTypes = {
 	placeholder: PropTypes.string,
-	update: React.PropTypes.func,
+	update: PropTypes.func,
 	searchInput: PropTypes.string
 };
 

@@ -80,41 +80,43 @@ export class NearbyMapView extends React.Component {
 			this.setState({ searchInput: null });
 		}
 
-		// Loop thru every vehicle
-		Object.keys(nextProps.toggles).forEach((route) => {
-			if (nextProps.toggles[route] === true && Array.isArray(nextProps.vehicles[route])) {
-				if (this.state.vehicles[route]) {
-					nextProps.vehicles[route].forEach((nextVehicle) => {
-						this.state.vehicles[route].forEach((currVehicle) => {
-							if (nextVehicle.id === currVehicle.id &&
-								(nextVehicle.lat !== currVehicle.lat || nextVehicle.lon !== currVehicle.lon)) {
-								// Animate vehicle movement
-								currVehicle.animated.timing({
-									latitude: nextVehicle.lat,
-									longitude: nextVehicle.lon,
-									duration: 500
-								}).start();
-							}
+		if (nextProps.toggles) {
+			// Loop thru every vehicle
+			Object.keys(nextProps.toggles).forEach((route) => {
+				if (nextProps.toggles[route] === true && Array.isArray(nextProps.vehicles[route])) {
+					if (this.state.vehicles[route]) {
+						nextProps.vehicles[route].forEach((nextVehicle) => {
+							this.state.vehicles[route].forEach((currVehicle) => {
+								if (nextVehicle.id === currVehicle.id &&
+									(nextVehicle.lat !== currVehicle.lat || nextVehicle.lon !== currVehicle.lon)) {
+									// Animate vehicle movement
+									currVehicle.animated.timing({
+										latitude: nextVehicle.lat,
+										longitude: nextVehicle.lon,
+										duration: 500
+									}).start();
+								}
+							});
 						});
-					});
-				} else {
-					// Make Animated values
-					nextProps.vehicles[route].forEach((nextVehicle) => {
-						nextVehicle.animated = new MapView.AnimatedRegion({
-							latitude: nextVehicle.lat,
-							longitude: nextVehicle.lon,
+					} else {
+						// Make Animated values
+						nextProps.vehicles[route].forEach((nextVehicle) => {
+							nextVehicle.animated = new MapView.AnimatedRegion({
+								latitude: nextVehicle.lat,
+								longitude: nextVehicle.lon,
+							});
 						});
-					});
 
-					const newVehicles = this.state.vehicles;
-					newVehicles[route] = nextProps.vehicles[route];
+						const newVehicles = this.state.vehicles;
+						newVehicles[route] = nextProps.vehicles[route];
 
-					this.setState({
-						vehicles: newVehicles
-					});
+						this.setState({
+							vehicles: newVehicles
+						});
+					}
 				}
-			}
-		});
+			});
+		}
 
 		if (this.state.iconStatus === 'load' && nextProps.search_results) {
 			this.setState({

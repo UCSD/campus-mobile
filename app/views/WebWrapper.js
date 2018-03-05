@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import {
 	View,
 	WebView
@@ -6,15 +6,14 @@ import {
 
 const css = require('../styles/css');
 
-const WebWrapper = React.createClass({
-
+class WebWrapper extends Component {
 	getInitialState() {
 		const title = this.props.route.title;
 		let scriptInjectStr = '';
 		return {
 			scriptInject: scriptInjectStr
 		};
-	},
+	}
 
 	renderScene() {
 		return (
@@ -28,12 +27,11 @@ const WebWrapper = React.createClass({
 				/>
 			</View>
 		);
-	},
+	}
 
 	render() {
 		return this.renderScene();
-	},
-
-});
+	}
+}
 
 module.exports = WebWrapper;
