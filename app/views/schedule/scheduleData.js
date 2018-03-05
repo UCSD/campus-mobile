@@ -395,7 +395,8 @@ export function getData() {
         start_time: startSeconds,
         end_time: endSeconds,
         meeting_type: currData.meeting_type,
-        special_mtg_code: currData.special_mtg_code
+        special_mtg_code: currData.special_mtg_code,
+        day_code: currData.days
       };
 
       courseItems[day].push(item);
