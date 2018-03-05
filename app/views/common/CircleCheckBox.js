@@ -9,6 +9,7 @@
 'use strict'
 
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import {
   StyleSheet,
   View,
@@ -21,16 +22,16 @@ import { COLOR_MORANGE } from '../../styles/ColorConstants';
 class CircleCheckBox extends Component {
 
   static propTypes = {
-   checked: React.PropTypes.bool,
-   label: React.PropTypes.string,
-   outerSize: React.PropTypes.number,
-   filterSize: React.PropTypes.number,
-   innerSize: React.PropTypes.number,
-   outerColor: React.PropTypes.string,
-   filterColor: React.PropTypes.string,
-   innerColor: React.PropTypes.string,
-   onToggle: React.PropTypes.func.isRequired,
-   labelPosition: React.PropTypes.oneOf(['right', 'left']),
+   checked: PropTypes.bool,
+   label: PropTypes.string,
+   outerSize: PropTypes.number,
+   filterSize: PropTypes.number,
+   innerSize: PropTypes.number,
+   outerColor: PropTypes.string,
+   filterColor: PropTypes.string,
+   innerColor: PropTypes.string,
+   onToggle: PropTypes.func.isRequired,
+   labelPosition: PropTypes.oneOf(['right', 'left']),
    styleCheckboxContainer: ViewPropTypes.style,
    styleLabel: Text.propTypes.style,
   };
