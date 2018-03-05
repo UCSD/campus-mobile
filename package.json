@@ -18,7 +18,7 @@
     "moment": "2.21.0",
     "prop-types": "^15.6.1",
     "react": "16.0.0",
-    "react-native": "0.50.4",
+    "react-native": "0.51.0",
     "react-native-animatable": "1.2.4",
     "react-native-device-info": "0.17.3",
     "react-native-elevated-view": "0.0.6",
