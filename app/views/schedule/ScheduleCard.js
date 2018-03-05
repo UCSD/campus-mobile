@@ -47,14 +47,11 @@ const ScheduleCard = ({ scheduleData, actionButton }) => (
 					</TouchableHighlight> */}
 					<View style = {{flex: 6}}>
 						<View>
-							<TouchableHighlight onPress= {()=>this._MyComponent.setNativeProps({text:'my new text'})}>
 							<Text>
-								Today 9 AM
+								<TextInput value = 'Today 9 AM' editable={false} ref={component=> this.timeLabel=component} /> 
 							</Text>
-							</TouchableHighlight>
 							<Text>
-								{/* CSE 198 Lecture */}
-								<TextInput  editable={false} ref={component=> this._MyComponent=component} /> 
+								<TextInput value = 'Course Label' editable={false} ref={component=> this.courseLabel=component} /> 
 							</Text>	
 						</View>
 						<View>
@@ -64,7 +61,7 @@ const ScheduleCard = ({ scheduleData, actionButton }) => (
 						</View>
 						<View>
 							<Text>
-								Pepper Canyon Hall 106
+								<TextInput value = 'Location Label' editable={false} ref={component=> this.locationLabel=component} /> 
 							</Text>
 						</View>
 						<View>
@@ -112,6 +109,7 @@ var DayList = ({ courseItems }) => (
 		style={styles.dayListStyle}
 		dataSource={dataSource.cloneWithRows(courseItems)}
 		renderRow={(rowData, sectionID, rowID, highlightRow) => (
+
 			<DayItem key={rowID} data={rowData} />
 		)}
 	/>
@@ -119,28 +117,34 @@ var DayList = ({ courseItems }) => (
 
 // Holds the view for an individual section/class 
 var DayItem = ({ data }) => (
-	<View style={styles.sc_dayRow}>
-		<View style={{flex:6, flexDirection: 'column', justifyContent: 'flex-end'}}>
-			<Text style={styles.sc_timeText}>
-				{data.day_code + ' ' + data.time_string}
-			</Text>
-			<Text
-				style={styles.sc_courseText}
-				numberOfLines={1}
-			>
-				{data.subject_code + ' ' + data.course_code}
-			</Text>
+	<TouchableHighlight onPress= {
+		()=>{this.courseLabel.setNativeProps({text: data.subject_code + ' ' + data.course_code})
+		this.timeLabel.setNativeProps({text: data.day_code + ' ' + data.time_string}) 
+		this.locationLabel.setNativeProps({text: data.building + ' ' + data.room}) }
+		}> 
+		<View style={styles.sc_dayRow}>
+			<View style={{flex:6, flexDirection: 'column', justifyContent: 'flex-end'}}>
+				<Text style={styles.sc_timeText}>
+					{data.day_code + ' ' + data.time_string}
+				</Text>
+				<Text
+					style={styles.sc_courseText}
+					numberOfLines={1}
+				>
+					{data.subject_code + ' ' + data.course_code}
+				</Text>
+			</View>
+			<View style={{flex:1, flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'flex-start'}}>
+				<Text style={[styles.sc_subText]} numberOfLines={1}>
+					{data.meeting_type === 'Lecture' && 'LE'}
+					{data.meeting_type === 'Discussion' && 'DI'}
+					{/*data.meeting_type/* + ' ' + data.time_string + '\n' */}
+					{/* {data.instructor_name + '\n'}
+					{data.building + data.room} */}
+				</Text>
+			</View>
 		</View>
-		<View style={{flex:1, flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'flex-start'}}>
-			<Text style={[styles.sc_subText]} numberOfLines={1}>
-				{data.meeting_type === 'Lecture' && 'LE'}
-				{data.meeting_type === 'Discussion' && 'DI'}
-				{/*data.meeting_type/* + ' ' + data.time_string + '\n' */}
-				{/* {data.instructor_name + '\n'}
-				{data.building + data.room} */}
-			</Text>
-		</View>
-	</View>
+	</TouchableHighlight>
 );
 
 ScheduleCard.propTypes = {
