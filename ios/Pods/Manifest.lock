@@ -31,40 +31,36 @@ PODS:
   - nanopb/decode (0.3.8)
   - nanopb/encode (0.3.8)
   - Protobuf (3.5.0)
-  - React (0.44.0):
-    - React/Core (= 0.44.0)
+  - React (0.47.2):
+    - React/Core (= 0.47.2)
   - react-native-maps (0.20.1):
     - React
-  - React/Core (0.44.0):
-    - React/cxxreact
-    - Yoga (= 0.44.0.React)
-  - React/cxxreact (0.44.0):
-    - React/jschelpers
-  - React/jschelpers (0.44.0)
-  - React/RCTActionSheet (0.44.0):
+  - React/Core (0.47.2):
+    - Yoga (= 0.47.2.React)
+  - React/RCTActionSheet (0.47.2):
     - React/Core
-  - React/RCTAnimation (0.44.0):
+  - React/RCTAnimation (0.47.2):
     - React/Core
-  - React/RCTGeolocation (0.44.0):
+  - React/RCTGeolocation (0.47.2):
     - React/Core
-  - React/RCTImage (0.44.0):
+  - React/RCTImage (0.47.2):
     - React/Core
     - React/RCTNetwork
-  - React/RCTLinkingIOS (0.44.0):
+  - React/RCTLinkingIOS (0.47.2):
     - React/Core
-  - React/RCTNetwork (0.44.0):
+  - React/RCTNetwork (0.47.2):
     - React/Core
-  - React/RCTSettings (0.44.0):
+  - React/RCTSettings (0.47.2):
     - React/Core
-  - React/RCTText (0.44.0):
+  - React/RCTText (0.47.2):
     - React/Core
-  - React/RCTVibration (0.44.0):
+  - React/RCTVibration (0.47.2):
     - React/Core
-  - React/RCTWebSocket (0.44.0):
+  - React/RCTWebSocket (0.47.2):
     - React/Core
   - RNVectorIcons (4.5.0):
     - React
-  - Yoga (0.44.0.React)
+  - Yoga (0.47.2.React)
 
 DEPENDENCIES:
   - Firebase/Messaging
@@ -102,7 +98,7 @@ SPEC CHECKSUMS:
   GoogleToolboxForMac: 2501e2ad72a52eb3dfe7bd9aee7dad11b858bd20
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
   Protobuf: 8a9838fba8dae3389230e1b7f8c104aa32389c03
-  React: e53535491f7b382b8cd681428dd853159bf25545
+  React: 2fb752725a8794867fc111603099734865004bec
   react-native-maps: 066c2afcc89e18726377bcc685315f989ca22449
   RNVectorIcons: c0dbfbf6068fefa240c37b0f71bd03b45dddac44
   Yoga: f2b1f5b59fadb774a3dd9932a7cf813c6e284d71

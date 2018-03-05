@@ -1,6 +1,6 @@
 {
   "name": "React",
-  "version": "0.44.0",
+  "version": "0.47.2",
   "summary": "A framework for building native apps using React",
   "description": "React Native apps are built using the React JS\nframework, and render directly to native UIKit\nelements using a fully asynchronous architecture.\nThere is no browser and no HTML. We have picked what\nwe think is the best set of features from these and\nother technologies to build what we hope to become\nthe best product development framework available,\nwith an emphasis on iteration speed, developer\ndelight, continuity of technology, and absolutely\nbeautiful and fast products with no compromises in\nquality or capability.",
   "homepage": "http://facebook.github.io/react-native/",
@@ -8,7 +8,7 @@
   "authors": "Facebook",
   "source": {
     "git": "https://github.com/facebook/react-native.git",
-    "tag": "v0.44.0"
+    "tag": "v0.47.2"
   },
   "default_subspecs": "Core",
   "requires_arc": true,
@@ -21,7 +21,7 @@
   "preserve_paths": [
     "package.json",
     "LICENSE",
-    "LICENSE-CustomComponents",
+    "LICENSE-docs",
     "PATENTS"
   ],
   "cocoapods_version": ">= 1.2.0",
@@ -30,10 +30,7 @@
       "name": "Core",
       "dependencies": {
         "Yoga": [
-          "0.44.0.React"
-        ],
-        "React/cxxreact": [
-
+          "0.47.2.React"
         ]
       },
       "source_files": "React/**/*.{c,h,m,mm,S}",
@@ -41,13 +38,51 @@
         "**/__tests__/*",
         "IntegrationTests/*",
         "React/DevSupport/*",
-        "React/Modules/RCTDev{LoadingView,Menu}.*",
+        "React/Inspector/*",
         "React/**/RCTTVView.*",
         "ReactCommon/yoga/*",
-        "React/Cxx*/*"
+        "React/Cxx*/*",
+        "React/Base/RCTBatchedBridge.mm",
+        "React/Executors/*"
       ],
+      "header_dir": "React",
       "frameworks": "JavaScriptCore",
-      "libraries": "stdc++"
+      "libraries": "stdc++",
+      "pod_target_xcconfig": {
+        "HEADER_SEARCH_PATHS": "\"$(PODS_TARGET_SRCROOT)/ReactCommon\""
+      }
+    },
+    {
+      "name": "BatchedBridge",
+      "dependencies": {
+        "React/Core": [
+
+        ],
+        "React/cxxreact_legacy": [
+
+        ]
+      },
+      "source_files": [
+        "React/Base/RCTBatchedBridge.mm",
+        "React/Executors/*"
+      ]
+    },
+    {
+      "name": "CxxBridge",
+      "dependencies": {
+        "Folly": [
+          "2016.09.26.00"
+        ],
+        "React/Core": [
+
+        ],
+        "React/cxxreact": [
+
+        ]
+      },
+      "compiler_flags": "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1",
+      "private_header_files": "React/Cxx*/*.h",
+      "source_files": "React/Cxx*/*.{h,m,mm}"
     },
     {
       "name": "DevSupport",
@@ -61,7 +96,7 @@
       },
       "source_files": [
         "React/DevSupport/*",
-        "React/Modules/RCTDev{LoadingView,Menu}.*"
+        "React/Inspector/*"
       ]
     },
     {
@@ -74,12 +109,40 @@
       "source_files": "React/**/RCTTVView.{h, m}"
     },
     {
-      "name": "jschelpers",
+      "name": "jschelpers_legacy",
       "source_files": [
-        "ReactCommon/jschelpers/{JavaScriptCore,JSCWrapper}.{cpp,h}",
+        "ReactCommon/jschelpers/{JavaScriptCore,JSCWrapper,InspectorInterfaces}.{cpp,h}",
         "ReactCommon/jschelpers/systemJSCWrapper.cpp"
       ],
-      "private_header_files": "ReactCommon/jschelpers/{JavaScriptCore,JSCWrapper}.h",
+      "private_header_files": "ReactCommon/jschelpers/{JavaScriptCore,JSCWrapper,InspectorInterfaces}.h",
+      "pod_target_xcconfig": {
+        "HEADER_SEARCH_PATHS": "\"$(PODS_TARGET_SRCROOT)/ReactCommon\""
+      },
+      "frameworks": "JavaScriptCore"
+    },
+    {
+      "name": "cxxreact_legacy",
+      "dependencies": {
+        "React/jschelpers_legacy": [
+
+        ]
+      },
+      "source_files": "ReactCommon/cxxreact/{JSBundleType,oss-compat-util}.{cpp,h}",
+      "private_header_files": "ReactCommon/cxxreact/{JSBundleType,oss-compat-util}.h",
+      "pod_target_xcconfig": {
+        "HEADER_SEARCH_PATHS": "\"$(PODS_TARGET_SRCROOT)/ReactCommon\""
+      }
+    },
+    {
+      "name": "jschelpers",
+      "dependencies": {
+        "Folly": [
+          "2016.09.26.00"
+        ]
+      },
+      "compiler_flags": "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1",
+      "source_files": "ReactCommon/jschelpers/*.{cpp,h}",
+      "private_header_files": "ReactCommon/jschelpers/*.h",
       "pod_target_xcconfig": {
         "HEADER_SEARCH_PATHS": "\"$(PODS_TARGET_SRCROOT)/ReactCommon\""
       },
@@ -90,12 +153,20 @@
       "dependencies": {
         "React/jschelpers": [
 
+        ],
+        "boost": [
+
+        ],
+        "Folly": [
+          "2016.09.26.00"
         ]
       },
-      "source_files": "ReactCommon/cxxreact/{JSBundleType,oss-compat-util}.{cpp,h}",
-      "private_header_files": "ReactCommon/cxxreact/{JSBundleType,oss-compat-util}.h",
+      "compiler_flags": "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1",
+      "source_files": "ReactCommon/cxxreact/*.{cpp,h}",
+      "exclude_files": "ReactCommon/cxxreact/{JSCTracing,SampleCxxModule}.*",
+      "private_header_files": "ReactCommon/cxxreact/*.h",
       "pod_target_xcconfig": {
-        "HEADER_SEARCH_PATHS": "\"$(PODS_TARGET_SRCROOT)/ReactCommon\""
+        "HEADER_SEARCH_PATHS": "\"$(PODS_TARGET_SRCROOT)/ReactCommon\" \"$(PODS_ROOT)/boost\" \"$(PODS_ROOT)/DoubleConversion\" \"$(PODS_ROOT)/Folly\""
       }
     },
     {
@@ -132,7 +203,8 @@
 
         ]
       },
-      "source_files": "Libraries/NativeAnimation/{Drivers/*,Nodes/*,*}.{h,m}"
+      "source_files": "Libraries/NativeAnimation/{Drivers/*,Nodes/*,*}.{h,m}",
+      "header_dir": "RCTAnimation"
     },
     {
       "name": "RCTCameraRoll",
@@ -239,6 +311,17 @@
       },
       "source_files": "Libraries/RCTTest/**/*.{h,m}",
       "frameworks": "XCTest"
+    },
+    {
+      "name": "_ignore_me_subspec_for_linting_",
+      "dependencies": {
+        "React/Core": [
+
+        ],
+        "React/CxxBridge": [
+
+        ]
+      }
     }
   ]
 }
