@@ -7,8 +7,6 @@ exports[`renders without crashing 1`] = `
     Object {
       "backgroundColor": "#EAEAEA",
       "flexGrow": 1,
-      "marginBottom": 40,
-      "marginTop": 58,
     }
   }
 >

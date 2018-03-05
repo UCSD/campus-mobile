@@ -1,7 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders without crashing 1`] = `
-<MenuContext
+<MenuProvider
+  backHandler={false}
   customStyles={Object {}}
   style={
     Object {
@@ -14,8 +15,6 @@ exports[`renders without crashing 1`] = `
       Object {
         "backgroundColor": "#EAEAEA",
         "flexGrow": 1,
-        "marginBottom": 40,
-        "marginTop": 58,
       }
     }
   >
@@ -43,5 +42,5 @@ exports[`renders without crashing 1`] = `
       />
     </ScrollViewMock>
   </View>
-</MenuContext>
+</MenuProvider>
 `;
