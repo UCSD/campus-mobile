@@ -31,36 +31,41 @@ PODS:
   - nanopb/decode (0.3.8)
   - nanopb/encode (0.3.8)
   - Protobuf (3.5.0)
-  - React (0.47.2):
-    - React/Core (= 0.47.2)
+  - React (0.51.0):
+    - React/Core (= 0.51.0)
   - react-native-maps (0.20.1):
     - React
-  - React/Core (0.47.2):
-    - Yoga (= 0.47.2.React)
-  - React/RCTActionSheet (0.47.2):
+  - React/Core (0.51.0):
+    - yoga (= 0.51.0.React)
+  - React/fishhook (0.51.0)
+  - React/RCTActionSheet (0.51.0):
     - React/Core
-  - React/RCTAnimation (0.47.2):
+  - React/RCTAnimation (0.51.0):
     - React/Core
-  - React/RCTGeolocation (0.47.2):
+  - React/RCTBlob (0.51.0):
     - React/Core
-  - React/RCTImage (0.47.2):
+  - React/RCTGeolocation (0.51.0):
+    - React/Core
+  - React/RCTImage (0.51.0):
     - React/Core
     - React/RCTNetwork
-  - React/RCTLinkingIOS (0.47.2):
+  - React/RCTLinkingIOS (0.51.0):
     - React/Core
-  - React/RCTNetwork (0.47.2):
+  - React/RCTNetwork (0.51.0):
     - React/Core
-  - React/RCTSettings (0.47.2):
+  - React/RCTSettings (0.51.0):
     - React/Core
-  - React/RCTText (0.47.2):
+  - React/RCTText (0.51.0):
     - React/Core
-  - React/RCTVibration (0.47.2):
+  - React/RCTVibration (0.51.0):
     - React/Core
-  - React/RCTWebSocket (0.47.2):
+  - React/RCTWebSocket (0.51.0):
     - React/Core
+    - React/fishhook
+    - React/RCTBlob
   - RNVectorIcons (4.5.0):
     - React
-  - Yoga (0.47.2.React)
+  - yoga (0.51.0.React)
 
 DEPENDENCIES:
   - Firebase/Messaging
@@ -77,7 +82,7 @@ DEPENDENCIES:
   - React/RCTVibration (from `../node_modules/react-native`)
   - React/RCTWebSocket (from `../node_modules/react-native`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
-  - Yoga (from `../node_modules/react-native/ReactCommon/yoga/Yoga.podspec`)
+  - yoga (from `../node_modules/react-native/ReactCommon/yoga/yoga.podspec`)
 
 EXTERNAL SOURCES:
   React:
@@ -86,8 +91,8 @@ EXTERNAL SOURCES:
     :path: ../node_modules/react-native-maps
   RNVectorIcons:
     :path: ../node_modules/react-native-vector-icons
-  Yoga:
-    :path: ../node_modules/react-native/ReactCommon/yoga/Yoga.podspec
+  yoga:
+    :path: ../node_modules/react-native/ReactCommon/yoga/yoga.podspec
 
 SPEC CHECKSUMS:
   Firebase: 632216af3ed7f31e3be34776947fdc7546cfb572
@@ -98,11 +103,11 @@ SPEC CHECKSUMS:
   GoogleToolboxForMac: 2501e2ad72a52eb3dfe7bd9aee7dad11b858bd20
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
   Protobuf: 8a9838fba8dae3389230e1b7f8c104aa32389c03
-  React: 2fb752725a8794867fc111603099734865004bec
+  React: 541ba768b9855e10cdc76f55427a5cd0653ca806
   react-native-maps: 066c2afcc89e18726377bcc685315f989ca22449
   RNVectorIcons: c0dbfbf6068fefa240c37b0f71bd03b45dddac44
-  Yoga: f2b1f5b59fadb774a3dd9932a7cf813c6e284d71
+  yoga: 17521bbb0dd54a47c0b3ac43253e78cdac7488e0
 
-PODFILE CHECKSUM: 2ae61f47d1f7b4da29df69e075b140eeea74a2c3
+PODFILE CHECKSUM: 14a60ce44b7c6d6ad4b6292ad1326b51014e1844
 
 COCOAPODS: 1.4.0

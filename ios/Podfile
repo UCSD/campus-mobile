@@ -6,7 +6,7 @@ target 'CampusMobile' do
   # use_frameworks!
 
   react_native_path = "../node_modules/react-native"
-  pod "Yoga", :path => "#{react_native_path}/ReactCommon/yoga/Yoga.podspec"
+  pod "yoga", :path => "#{react_native_path}/ReactCommon/yoga/yoga.podspec"
   pod "React", :path => react_native_path, :subspecs => [
     'Core',
     'RCTActionSheet',
