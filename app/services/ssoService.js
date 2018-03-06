@@ -13,7 +13,11 @@ const ssoService = {
 				if (data.errorMessage) {
 					throw (data.errorMessage);
 				} else {
-					return data;
+					if (data.access_token && data.expiration) {
+						return data;
+					} else {
+						throw new Error('Invalid response from server.');
+					}
 				}
 			})
 			.catch((err) => {
