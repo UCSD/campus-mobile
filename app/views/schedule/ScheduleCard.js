@@ -45,27 +45,27 @@ const ScheduleCard = ({ scheduleData, actionButton }) => (
 							<Icon name="md-walk" size={32} color={COLOR_SECONDARY} />
 						</View>
 					</TouchableHighlight> */}
-					<View style = {{flex: 6}}>
+					<View style = {{flex: 6, alignItems: 'flex-start', }}>
 						<View>
 							<Text>
-								<TextInput value = 'Today 9 AM' editable={false} ref={component=> this.timeLabel=component} /> 
+								<TextInput value = 'Class Time Label' editable={false} ref={component=> this.timeLabel=component} /> 
 							</Text>
-							<Text>
+							<Text style={{fontSize:36, fontWeight:'bold'}}>
 								<TextInput value = 'Course Label' editable={false} ref={component=> this.courseLabel=component} /> 
 							</Text>	
 						</View>
 						<View>
-							<Text>
+							<Text style={{fontSize:20}}>
 								In session
 							</Text>
 						</View>
 						<View>
-							<Text>
+							<Text style={{fontSize:20}}>
 								<TextInput value = 'Location Label' editable={false} ref={component=> this.locationLabel=component} /> 
 							</Text>
 						</View>
 						<View>
-							<Text>
+							<Text style={{fontSize:20}}>
 								1 More Class Today
 							</Text>	
 						</View>
@@ -161,9 +161,9 @@ const styles = StyleSheet.create({
 	fullScheduleButton: { width: MAX_CARD_WIDTH, backgroundColor: COLOR_LGREY, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4, paddingVertical: 8, borderTopWidth: 1, borderBottomWidth: 1, borderColor: COLOR_MGREY },
 	loadingContainer: { alignItems: 'center', justifyContent: 'center', width: MAX_CARD_WIDTH },
 	scheduleList: { flex: 1, justifyContent: 'flex-end', alignItems: 'flex-end'},
-	sc_dayRow: { justifyContent: 'center', padding: 5, borderColor: COLOR_BLACK, borderWidth: 1, flex: 1, width: '100%', flexDirection: 'row'},
-	dayListStyle: {flex: 1, /* align0 Items:'flex-end'*/},
-	sc_scheduleContainer: { width: MAX_CARD_WIDTH, padding: 15, flexDirection:'row', flex:1, justifyContent: 'center'},
+	sc_dayRow: { justifyContent: 'center', padding: 3, borderColor: COLOR_BLACK, borderWidth: 1, flex: 1, width: '100%', flexDirection: 'row'},
+	dayListStyle: {flex: 1, paddingRight: 10 /* align0 Items:'flex-end'*/},
+	sc_scheduleContainer: { width: MAX_CARD_WIDTH, padding: 10, flexDirection:'row', flex:1, justifyContent: 'center'},
 	sc_scheduleCard: { width: MAX_CARD_WIDTH + 2, padding: 7, flexDirection:'column', flex: 1},
 	sc_dayText: { fontSize: 16, color: COLOR_BLACK, /*paddingBottom: 6 */},
 	dc_locations_row_right: { flex: 6 },
