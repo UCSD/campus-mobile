@@ -14,6 +14,7 @@ function user(state = initialState, action) {
 	switch (action.type) {
 	case 'IS_LOGGING_IN': {
 		newState.isLoggingIn = true;
+		newState.timeRequested = new Date();
 		return newState;
 	}
 	case 'LOGGED_IN': {
@@ -22,6 +23,7 @@ function user(state = initialState, action) {
 		newState.profile.username = action.user;
 		newState.expiration = action.expiration;
 		newState.isLoggedIn = true;
+		delete newState.timeRequested;
 		return newState;
 	}
 	case 'LOGGED_OUT': {
@@ -30,6 +32,7 @@ function user(state = initialState, action) {
 	case 'USER_LOGIN_FAILED': {
 		newState.isLoggedIn = false;
 		newState.isLoggingIn = false;
+		delete newState.timeRequested;
 		newState.error = action.error;
 		return newState;
 	}

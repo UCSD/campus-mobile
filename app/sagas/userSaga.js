@@ -70,6 +70,11 @@ function* doLogout(action) {
 	yield put({ type: 'LOGGED_OUT' });
 }
 
+function* timeoutError() {
+	const error = new Error('There was a problem signing in. Please try again later.');
+	yield put({ type: 'USER_LOGIN_FAILED', error: error.message });
+}
+
 function* clearErrors(action) {
 	yield put({ type: 'USER_SET_ERRORS', error: null });
 }
@@ -78,6 +83,7 @@ function* userSaga() {
 	yield takeLatest('USER_LOGIN', doLogin);
 	yield takeLatest('USER_LOGOUT', doLogout);
 	yield takeLatest('USER_TOKEN_REFRESH', doTokenRefresh);
+	yield takeLatest('USER_LOGIN_TIMEOUT', timeoutError);
 	yield takeLatest('USER_CLEAR_ERRORS', clearErrors);
 }
 

@@ -27,6 +27,22 @@ class OnboardingLogin extends React.Component {
 		if (this.props.onBoardingViewed) Actions.Home();
 	}
 
+	componentDidMount() {
+		// if we're mounting and we're somehow still in the
+		// process of logging in, check if we've timed out.
+		// otherwise, set a timeout
+		if (this.props.user.isLoggingIn) {
+			const now = new Date();
+			const lastPostTime = new Date(this.props.user.timeRequested);
+			if (now - lastPostTime >= AppSettings.SSO_TTL) {
+				this.props.timeoutLogin();
+			} else {
+				// timeout after remaining time expires
+				setTimeout(this.props.timeoutLogin, now - lastPostTime);
+			}
+		}
+	}
+
 	componentWillReceiveProps(nextProps) {
 		if (nextProps.user.isLoggedIn) {
 			Toast.showWithGravity(
@@ -157,6 +173,9 @@ const mapDispatchToProps = (dispatch, ownProps) => (
 		},
 		doLogout: () => {
 			dispatch({ type: 'USER_LOGOUT' });
+		},
+		timeoutLogin: () => {
+			dispatch({ type: 'USER_LOGIN_TIMEOUT' });
 		},
 		clearErrors: () => {
 			dispatch({ type: 'USER_CLEAR_ERRORS' });
