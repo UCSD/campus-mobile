@@ -45,7 +45,7 @@ const ScheduleCard = ({ scheduleData, actionButton }) => (
 							<Icon name="md-walk" size={32} color={COLOR_SECONDARY} />
 						</View>
 					</TouchableHighlight> */}
-					<View style = {{flex: 6, alignItems: 'flex-start', }}>
+					<View style = {styles._leftHalf}>
 						<View>
 							<TextInput style={{height:20, width:150, fontSize:20, fontWeight:'bold', color: COLOR_VDGREY }} value={'Class Time Label'} /> 
 							<TextInput style={{height:20, width:150, fontSize:20, fontWeight:'bold'}} value ={'Course Label'} editable={false} ref={component=> this.courseLabel=component} /> 
@@ -63,7 +63,7 @@ const ScheduleCard = ({ scheduleData, actionButton }) => (
 								1 More Class Today
 						</Text>	
 					</View>
-					<View style={{flex: 4}}>
+					<View style={styles._rightHalf}>
 						<ListView
 							dataSource={dataSource.cloneWithRows(scheduleData)}
 							renderRow={(rowData, sectionID, rowID, highlightRow) => (
@@ -88,9 +88,15 @@ const ScheduleCard = ({ scheduleData, actionButton }) => (
 );
 
 const styles = StyleSheet.create({
+	_leftHalf: {
+		flex: 6,
+		padding: 0,
+		backgroundColor: '#98FB98',
+	},
 	_rightHalf: {
 		flex: 4,
 		padding: 0,
+		backgroundColor: '#FFC0CB',
 	},
 	more: { alignItems: 'center', justifyContent: 'center', padding: 6 },
 	more_label: { fontSize: 20, color: COLOR_PRIMARY, fontWeight: '300' },
@@ -103,7 +109,7 @@ const styles = StyleSheet.create({
 	sc_dayRow: { justifyContent: 'center', padding: 3, borderColor: COLOR_BLACK, borderWidth: 1, flex: 1, width: '100%', flexDirection: 'row'},
 	dayListStyle: {flex: 1, paddingRight: 10 /* align0 Items:'flex-end'*/},
 	sc_scheduleContainer: { width: MAX_CARD_WIDTH, padding: 10, flexDirection:'row', flex:1, justifyContent: 'center'},
-	sc_scheduleCard: { width: MAX_CARD_WIDTH + 2, padding: 7, flexDirection:'column', flex: 1},
+	sc_scheduleCard: { width: MAX_CARD_WIDTH + 2, padding: 0, flexDirection:'column', flex: 1},
 	sc_dayText: { fontSize: 16, color: COLOR_BLACK, /*paddingBottom: 6 */},
 	dc_locations_row_right: { flex: 6 },
 	sc_courseText: { fontSize: 24, color: COLOR_VDGREY, /*paddingBottom: 2 */},
