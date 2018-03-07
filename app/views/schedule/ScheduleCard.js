@@ -35,6 +35,20 @@ import {
 // var scheduleData = getClasses();
 var dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
+let rightHalf_cardRendered = 0;
+
+const extractAsSimpleList = (scheduleData) => {
+	let result = [];
+	result.push(...scheduleData.MO);
+	result.push(...scheduleData.TU);
+	result.push(...scheduleData.WE);
+	result.push(...scheduleData.TH);
+	result.push(...scheduleData.FR);
+	result = result.slice(0,4);
+	console.log(result);
+	return result;
+}
+
 const ScheduleCard = ({ scheduleData, actionButton }) => (
 	<Card id="schedule" title="Upcoming Classes" >
 		{scheduleData ? (
@@ -46,34 +60,32 @@ const ScheduleCard = ({ scheduleData, actionButton }) => (
 						</View>
 					</TouchableHighlight> */}
 					<View style = {styles.leftHalf}>
-						<View sytle= {styles.leftHalf_upper}>
+						<View sytle = {styles.leftHalf_upper}>
 							<TextInput style={{height:20, width:150, fontSize:20, color: COLOR_VDGREY }} value={'Class Time Label'} editable={false} ref={component=> this.timeLabel=component}/> 
 							<TextInput style={{height:36, width:150, fontSize:36, fontWeight:'bold'}} value ={'Course Label'} editable={false} ref={component=> this.courseLabel=component} /> 
 						</View>
-						
-						<Text style={{fontSize:20}}>
-							{"In session"}
-						</Text>
-						
-						<View>
-							<TextInput style={{height:20, width:150, fontSize:20}} value = 'Location Label' editable={false} ref={component=> this.locationLabel=component} /> 
+						<View sytle = {styles.leftHalf_lower}>
+							<Text style={{fontSize:20}}>
+								{"In session"}
+							</Text>
+							
+							<View>
+								<TextInput style={{height:20, width:150, fontSize:20}} value = 'Location Label' editable={false} ref={component=> this.locationLabel=component} /> 
+							</View>
+							
+							<Text style={{fontSize:20}}>
+									1 More Class Today
+							</Text>	
 						</View>
-						
-						<Text style={{fontSize:20}}>
-								1 More Class Today
-						</Text>	
 					</View>
-					<View style={styles._rightHalf}>
+					<View style={styles.rightHalf}>
 						<ListView
 							enableEmptySections={true}
-							dataSource={dataSource.cloneWithRows(scheduleData)}
+							dataSource={dataSource.cloneWithRows(extractAsSimpleList(scheduleData))}
 							renderRow={(rowData, sectionID, rowID, highlightRow) => (
-								(rowID !== 'SA' && rowID !== 'SU') ? (
-								<ScheduleDay
-									id={rowID}
+								<DayItem
 									data={rowData}
 								/>
-								) : (null)
 							)}
 						/>
 					</View>
@@ -95,8 +107,13 @@ const styles = StyleSheet.create({
 		backgroundColor: '#98FB98',
 	},
 	leftHalf_upper: {
-		height: 60%,
-		padding: 0,
+		height: '60%',
+		padding: 30,
+		backgroundColor: '#FFDEAD',
+	},
+	leftHalf_lower: {
+		height: '60%',
+		padding: 30,
 		backgroundColor: '#FFDEAD',
 	},
 	rightHalf: {
@@ -122,27 +139,6 @@ const styles = StyleSheet.create({
 	sc_subText: { fontSize: 16, color: COLOR_VDGREY, paddingBottom: 2},
 	sc_timeText: { fontSize: 12, color: COLOR_VDGREY },
 });
-
-// Holds the the daylist listview (currently only used as a container for the listview)
-var ScheduleDay = ({ id, data }) => (
-	// <View style={css.sc_dayContainer}>
-	<View style={styles.scheduleList}>
-		<DayList
-			courseItems={data} />
-	</View>
-);
-
-// Holds the listview for a day of the week
-var DayList = ({ courseItems }) => (
-	<ListView
-		style={styles.dayListStyle}
-		dataSource={dataSource.cloneWithRows(courseItems)}
-		renderRow={(rowData, sectionID, rowID, highlightRow) => (
-
-			<DayItem key={rowID} data={rowData} />
-		)}
-	/>
-);
 
 // Holds the view for an individual section/class 
 var DayItem = ({ data }) => (
