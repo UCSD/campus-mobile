@@ -47,12 +47,8 @@ const ScheduleCard = ({ scheduleData, actionButton }) => (
 					</TouchableHighlight> */}
 					<View style = {{flex: 6, alignItems: 'flex-start', }}>
 						<View>
-							<Text>
-								<TextInput value = 'Class Time Label' editable={false} ref={component=> this.timeLabel=component} /> 
-							</Text>
-							<Text style={{fontSize:36, fontWeight:'bold'}}>
-								<TextInput value = 'Course Label' editable={false} ref={component=> this.courseLabel=component} /> 
-							</Text>	
+							<TextInput value = 'Class Time Label' editable={false} ref={component=> this.timeLabel=component} />
+							<TextInput style={{fontSize:36, fontWeight:'bold'}} value = 'Course Label' editable={false} ref={component=> this.courseLabel=component} />
 						</View>
 						<View>
 							<Text style={{fontSize:20}}>
@@ -60,9 +56,9 @@ const ScheduleCard = ({ scheduleData, actionButton }) => (
 							</Text>
 						</View>
 						<View>
-							<Text style={{fontSize:20}}>
-								<TextInput value = 'Location Label' editable={false} ref={component=> this.locationLabel=component} /> 
-							</Text>
+							
+								<TextInput style={{fontSize:20}} value = 'Location Label' editable={false} ref={component=> this.locationLabel=component} /> 
+							
 						</View>
 						<View>
 							<Text style={{fontSize:20}}>
@@ -93,6 +89,30 @@ const ScheduleCard = ({ scheduleData, actionButton }) => (
 		)}
 	</Card>
 );
+
+const styles = StyleSheet.create({
+	_rightHalf: {
+		flex: 4,
+		padding: 0,
+	},
+	more: { alignItems: 'center', justifyContent: 'center', padding: 6 },
+	more_label: { fontSize: 20, color: COLOR_PRIMARY, fontWeight: '300' },
+	specialEventsListView: { borderBottomWidth: 1, borderBottomColor: COLOR_MGREY },
+	nextClassContainer: { flexGrow: 1, width: MAX_CARD_WIDTH },
+	contentContainer: { flexShrink: 1, width: MAX_CARD_WIDTH },
+	fullScheduleButton: { width: MAX_CARD_WIDTH, backgroundColor: COLOR_LGREY, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4, paddingVertical: 8, borderTopWidth: 1, borderBottomWidth: 1, borderColor: COLOR_MGREY },
+	loadingContainer: { alignItems: 'center', justifyContent: 'center', width: MAX_CARD_WIDTH },
+	scheduleList: { flex: 1, justifyContent: 'flex-end', alignItems: 'flex-end'},
+	sc_dayRow: { justifyContent: 'center', padding: 3, borderColor: COLOR_BLACK, borderWidth: 1, flex: 1, width: '100%', flexDirection: 'row'},
+	dayListStyle: {flex: 1, paddingRight: 10 /* align0 Items:'flex-end'*/},
+	sc_scheduleContainer: { width: MAX_CARD_WIDTH, padding: 10, flexDirection:'row', flex:1, justifyContent: 'center'},
+	sc_scheduleCard: { width: MAX_CARD_WIDTH + 2, padding: 7, flexDirection:'column', flex: 1},
+	sc_dayText: { fontSize: 16, color: COLOR_BLACK, /*paddingBottom: 6 */},
+	dc_locations_row_right: { flex: 6 },
+	sc_courseText: { fontSize: 24, color: COLOR_VDGREY, /*paddingBottom: 2 */},
+	sc_subText: { fontSize: 16, color: COLOR_VDGREY, paddingBottom: 2},
+	sc_timeText: { fontSize: 12, color: COLOR_VDGREY },
+});
 
 // Holds the the daylist listview (currently only used as a container for the listview)
 var ScheduleDay = ({ id, data }) => (
@@ -151,25 +171,5 @@ ScheduleCard.propTypes = {
 	scheduleData: PropTypes.object,
 	actionButton: PropTypes.element
 };
-
-const styles = StyleSheet.create({
-	more: { alignItems: 'center', justifyContent: 'center', padding: 6 },
-	more_label: { fontSize: 20, color: COLOR_PRIMARY, fontWeight: '300' },
-	specialEventsListView: { borderBottomWidth: 1, borderBottomColor: COLOR_MGREY },
-	nextClassContainer: { flexGrow: 1, width: MAX_CARD_WIDTH },
-	contentContainer: { flexShrink: 1, width: MAX_CARD_WIDTH },
-	fullScheduleButton: { width: MAX_CARD_WIDTH, backgroundColor: COLOR_LGREY, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4, paddingVertical: 8, borderTopWidth: 1, borderBottomWidth: 1, borderColor: COLOR_MGREY },
-	loadingContainer: { alignItems: 'center', justifyContent: 'center', width: MAX_CARD_WIDTH },
-	scheduleList: { flex: 1, justifyContent: 'flex-end', alignItems: 'flex-end'},
-	sc_dayRow: { justifyContent: 'center', padding: 3, borderColor: COLOR_BLACK, borderWidth: 1, flex: 1, width: '100%', flexDirection: 'row'},
-	dayListStyle: {flex: 1, paddingRight: 10 /* align0 Items:'flex-end'*/},
-	sc_scheduleContainer: { width: MAX_CARD_WIDTH, padding: 10, flexDirection:'row', flex:1, justifyContent: 'center'},
-	sc_scheduleCard: { width: MAX_CARD_WIDTH + 2, padding: 7, flexDirection:'column', flex: 1},
-	sc_dayText: { fontSize: 16, color: COLOR_BLACK, /*paddingBottom: 6 */},
-	dc_locations_row_right: { flex: 6 },
-	sc_courseText: { fontSize: 24, color: COLOR_VDGREY, /*paddingBottom: 2 */},
-	sc_subText: { fontSize: 16, color: COLOR_VDGREY, paddingBottom: 2},
-	sc_timeText: { fontSize: 12, color: COLOR_VDGREY },
-});
 
 export default ScheduleCard;

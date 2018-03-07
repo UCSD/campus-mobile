@@ -10,6 +10,10 @@ import { connect } from 'react-redux';
 import css from '../../styles/css';
 import logger from '../../util/logger';
 import { getClasses } from './scheduleData';
+import {
+	MAX_CARD_WIDTH,
+	NAVIGATOR_HEIGHT,
+} from '../../styles/LayoutConstants';
 
 const data = getClasses();
 
@@ -65,54 +69,71 @@ class FullSchedule extends React.Component {
 	renderSectionHeader = (sectionRows, sectionId) => {
 		let day = this.dayOfWeekIntepreter(sectionId);
 		return (
-		  <Text style={styles.header}>
-			{day}
-		  </Text>
+			<View style={styles.header_wrapper}>
+				<Text style={styles.header_text}>
+					{day}
+				</Text>
+			</View>
 		)
 	}
 
 	render () {
 		return (
 			<ListView
-				style={css.main_full}
+				style={styles.container}
 				dataSource={this.state.dataSource}
 				renderRow={this.renderRow}
 				renderSectionHeader={this.renderSectionHeader}
+				stickySectionHeadersEnabled={true}
 			/>
 		);
 	}
 }
 
 const styles = StyleSheet.create({
-	container: {
-	  flex: 1,
-	},//not used
 	// row: {
 	//   padding: 15,
 	//   marginBottom: 5,
 	//   backgroundColor: 'skyblue',
 	// },
-	header: {
-	  padding: 15,
-	//   marginBottom: 5,
-	//   backgroundColor: 'steelblue',
-	//   color: 'white',
-	  fontWeight: 'bold',
-	  fontSize: 16,
-	  borderColor: '#CCC', 
-	  borderTopWidth:1,
-	  borderBottomWidth:1,
+	container: {
+		flexGrow: 1, 
+		marginTop: NAVIGATOR_HEIGHT - 1,
 	},
-	row_container: { 
-		// justifyContent: 'center', 
-		padding: 10, 
-		paddingLeft: 15,
+	header_wrapper: {
+		// marginTop: 10,
+		marginBottom: 20,
+		borderColor: '#CCC', 
+		borderTopWidth:1,
+		borderBottomWidth:1,
+		backgroundColor: '#FFFFFF'
 	},
-	course_title: {
-		fontSize: 14, 
+	header_text: {
+		marginTop: 15,
+		marginBottom: 15,
+		marginLeft: 25,
+		fontWeight: 'bold',
+		fontSize: 22,
+	},
+	row: {
+		// paddingTop: 20,
+		paddingBottom: 20,
+		paddingLeft: 25,
+	},
+	course_code: {
+		fontSize: 18, 
 		fontWeight: 'bold',
 		color: '#000000',
-	}
+	},
+	course_title: { 
+		fontSize: 18, 
+		color: '#000000', 
+		marginBottom: 4,
+	},
+	course_text: { 
+		fontSize: 16, 
+		color: '#000000', 
+	},
 	// main_full: { flexGrow: 1, marginTop: NAVIGATOR_HEIGHT },
 	// sc_dayText: { fontSize: 16, color: COLOR_BLACK, paddingBottom: 6 }, //2
 	// sc_courseText: { fontSize: 14, color: COLOR_BLACK, paddingBottom: 2 },
@@ -124,17 +145,17 @@ const styles = StyleSheet.create({
 })
 
 const IndividualClass = ({ data }) => (
-	<View style={styles.row_container}>
-		<Text style={styles.course_title}>
+	<View style={styles.row}>
+		<Text style={styles.course_code}>
 			{data.subject_code} {data.course_code} 
 		</Text>
 		<Text
-			style={css.sc_courseText}
+			style={styles.course_title}
 			numberOfLines={1}
 		>
 			{data.course_title}
 		</Text>
-		<Text style={css.sc_subText}>
+		<Text style={styles.course_text}>
 			{data.meeting_type} {data.time_string + '\n'}
 			{data.instructor_name + '\n'}
 			{data.building + data.room}

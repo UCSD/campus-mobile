@@ -28,7 +28,7 @@ import {
 var scheduleData = getFinals();
 var dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
-console.log(scheduleData);
+// console.log(scheduleData);
 
 var FinalsCard = () => {
 	logger.ga('Card Mounted: Finals Schedule');
@@ -37,16 +37,27 @@ var FinalsCard = () => {
             id='finals'
             title='Finals Schedule'>
             <ListView
-                dataSource={dataSource.cloneWithRows(scheduleData)}
+				style = {{paddingTop: 0}}
+				dataSource={dataSource.cloneWithRows(scheduleData)}
+				renderSeparator={(sectionID, rowID, adjacentRowHighlighted) => (
+					scheduleData[rowID].length>0?(
+					<View style={{
+						borderColor: '#EAEAEA', 
+						borderTopWidth:1,
+						width: MAX_CARD_WIDTH + 2,
+						// paddingBottom: 5,
+						}}>
+					</View>):null
+				)}
                 renderRow={(rowData, sectionID, rowID, highlightRow) => (
-				<View>
-					{ scheduleData[String(rowID)].length > 0 ? (
-						<ScheduleDay
-							id={rowID}
-							data={rowData}
-						/>
-					) : null}
-				</View>
+					<View>
+						{ scheduleData[String(rowID)].length > 0 ? (
+							<ScheduleDay
+								id={rowID}
+								data={rowData}
+							/>
+						) : null}
+					</View>
                 )}
             />
         </Card>
@@ -131,13 +142,13 @@ const styles = StyleSheet.create({
 		fontWeight: 'bold',
 		fontSize: 18,
 		color: COLOR_VDGREY,
-		borderColor: '#EAEAEA', 
-		borderTopWidth:1,
+		
 	},
 	day_container: { 
 		paddingLeft: 15,
-		justifyContent: 'center', 
+		// justifyContent: 'center', 
 		paddingBottom: 5, 
+		paddingTop: 5,
 	},
 	course_title: {
 		fontSize: 16, 
