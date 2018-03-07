@@ -65,9 +65,11 @@ class FullSchedule extends React.Component {
 	renderSectionHeader = (sectionRows, sectionId) => {
 		let day = this.dayOfWeekIntepreter(sectionId);
 		return (
-		  <Text style={styles.header}>
-			{day}
-		  </Text>
+			<View style={styles.header}>
+				<Text style={styles.day_text}>
+					{day}
+				</Text>
+			</View>
 		)
 	}
 
@@ -93,15 +95,16 @@ const styles = StyleSheet.create({
 	//   backgroundColor: 'skyblue',
 	// },
 	header: {
-	  padding: 15,
 	//   marginBottom: 5,
 	//   backgroundColor: 'steelblue',
 	//   color: 'white',
-	  fontWeight: 'bold',
-	  fontSize: 16,
-	  borderColor: '#CCC', 
 	  borderTopWidth:1,
 	  borderBottomWidth:1,
+	},
+	day_text: {
+		padding: 15,
+		fontWeight: 'bold',
+	  	fontSize: 16,
 	},
 	row_container: { 
 		// justifyContent: 'center', 
