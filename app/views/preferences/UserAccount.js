@@ -103,7 +103,7 @@ const AccountInfo = ({ username, handleLogout }) => (
 				style={css.ua_username_checkmark}
 			/>
 			<Text style={css.ua_username_text}>
-				c3bryant{username}
+				{username}
 			</Text>
 		</View>
 		<View style={css.ua_logout}>
