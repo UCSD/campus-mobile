@@ -47,8 +47,8 @@ const ScheduleCard = ({ scheduleData, actionButton }) => (
 					</TouchableHighlight> */}
 					<View style = {styles.leftHalf}>
 						<View sytle= {styles.leftHalf_upper}>
-							<TextInput style={{height:20, width:150, fontSize:20, fontWeight:'bold', color: COLOR_VDGREY }} value={'Class Time Label'} /> 
-							<TextInput style={{height:20, width:150, fontSize:20, fontWeight:'bold'}} value ={'Course Label'} editable={false} ref={component=> this.courseLabel=component} /> 
+							<TextInput style={{height:20, width:150, fontSize:20, color: COLOR_VDGREY }} value={'Class Time Label'} editable={false} ref={component=> this.timeLabel=component}/> 
+							<TextInput style={{height:36, width:150, fontSize:36, fontWeight:'bold'}} value ={'Course Label'} editable={false} ref={component=> this.courseLabel=component} /> 
 						</View>
 						
 						<Text style={{fontSize:20}}>
@@ -65,6 +65,7 @@ const ScheduleCard = ({ scheduleData, actionButton }) => (
 					</View>
 					<View style={styles._rightHalf}>
 						<ListView
+							enableEmptySections={true}
 							dataSource={dataSource.cloneWithRows(scheduleData)}
 							renderRow={(rowData, sectionID, rowID, highlightRow) => (
 								(rowID !== 'SA' && rowID !== 'SU') ? (
