@@ -45,8 +45,8 @@ const ScheduleCard = ({ scheduleData, actionButton }) => (
 							<Icon name="md-walk" size={32} color={COLOR_SECONDARY} />
 						</View>
 					</TouchableHighlight> */}
-					<View style = {styles._leftHalf}>
-						<View>
+					<View style = {styles.leftHalf}>
+						<View sytle= {styles.leftHalf_upper}>
 							<TextInput style={{height:20, width:150, fontSize:20, fontWeight:'bold', color: COLOR_VDGREY }} value={'Class Time Label'} /> 
 							<TextInput style={{height:20, width:150, fontSize:20, fontWeight:'bold'}} value ={'Course Label'} editable={false} ref={component=> this.courseLabel=component} /> 
 						</View>
@@ -88,12 +88,17 @@ const ScheduleCard = ({ scheduleData, actionButton }) => (
 );
 
 const styles = StyleSheet.create({
-	_leftHalf: {
+	leftHalf: {
 		flex: 6,
 		padding: 0,
 		backgroundColor: '#98FB98',
 	},
-	_rightHalf: {
+	leftHalf_upper: {
+		height: 60%,
+		padding: 0,
+		backgroundColor: '#FFDEAD',
+	},
+	rightHalf: {
 		flex: 4,
 		padding: 0,
 		backgroundColor: '#FFC0CB',
