@@ -38,6 +38,7 @@ var FinalsCard = () => {
             title='Finals Schedule'>
             <ListView
 				style = {{paddingTop: 0}}
+				enableEmptySections={true}
 				dataSource={dataSource.cloneWithRows(scheduleData)}
 				renderSeparator={(sectionID, rowID, adjacentRowHighlighted) => (
 					scheduleData[rowID].length>0?(
@@ -46,7 +47,8 @@ var FinalsCard = () => {
 						borderTopWidth:1,
 						width: MAX_CARD_WIDTH + 2,
 						// paddingBottom: 5,
-						}}>
+						}}
+						key={rowID}>
 					</View>):null
 				)}
                 renderRow={(rowData, sectionID, rowID, highlightRow) => (

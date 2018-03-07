@@ -68,6 +68,9 @@ class FullSchedule extends React.Component {
 
 	renderSectionHeader = (sectionRows, sectionId) => {
 		let day = this.dayOfWeekIntepreter(sectionId);
+		if (day === 'Saturday' || day === 'Sunday') {
+			return null;
+		}
 		return (
 			<View style={styles.header_wrapper}>
 				<Text style={styles.header_text}>
@@ -85,6 +88,7 @@ class FullSchedule extends React.Component {
 				renderRow={this.renderRow}
 				renderSectionHeader={this.renderSectionHeader}
 				stickySectionHeadersEnabled={true}
+				enableEmptySections={true}
 			/>
 		);
 	}
