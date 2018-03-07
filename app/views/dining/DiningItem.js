@@ -21,49 +21,75 @@ const dining = require('../../util/dining');
 const DiningItem = ({ data }) => {
 	if (!data.id) return null;
 	const status = dining.getOpenStatus(data.regularHours, data.specialHours);
+	let activeDotColor,
+		statusText,
+		soonStatusText,
+		soonStatusColor,
+		newHourElement;
 
-	const activeDotColor = status.isOpen ?
-		COLOR_MGREEN : COLOR_MRED;
+	if (status) {
+		if (status.isValid) {
+			activeDotColor = status.isOpen ?
+				COLOR_MGREEN : COLOR_MRED;
 
-	const statusText = status.isOpen ?
-		'Open' : 'Closed';
+			statusText = status.isOpen ?
+				'Open' : 'Closed';
+		} else {
+			statusText = 'Unknown';
+		}
 
-	let soonStatusText = null;
-	let soonStatusColor = null;
-	if (status.openingSoon) {
-		soonStatusText = 'Opening Soon';
-		soonStatusColor = COLOR_MGREEN;
+		soonStatusText = null;
+		soonStatusColor = null;
+		if (status.openingSoon) {
+			soonStatusText = 'Opening Soon';
+			soonStatusColor = COLOR_MGREEN;
+		}
+		else if (status.closingSoon) {
+			soonStatusText = 'Closing Soon';
+			soonStatusColor = COLOR_MRED;
+		}
+
+		const isClosed = (!status.currentHours);
+		const isAlwaysOpen = (
+			status.currentHours &&
+			status.currentHours.closingHour.format('HHmm') === '2359'
+			&& status.currentHours.openingHour.format('HHmm') === '0000'
+		);
+		let newHourElementHoursText;
+		if (!status.isValid) {
+			newHourElementHoursText = 'Unknown hours';
+		}
+		else if (isClosed) {
+			newHourElementHoursText = 'Closed';
+		}
+		else if (isAlwaysOpen) {
+			newHourElementHoursText = 'Open 24 Hours';
+		}
+		else if (
+			status.currentHours.openingHour.format('h:mm a') !== 'Invalid date'
+			&& status.currentHours.closingHour.format('h:mm a') !== 'Invalid date'
+		) {
+			newHourElementHoursText = status.currentHours.openingHour.format('h:mm a')
+				+ ' — '
+				+ status.currentHours.closingHour.format('h:mm a');
+		} else {
+			newHourElementHoursText = 'Unknown hours';
+		}
+		newHourElement = (
+			<View>
+				<Text style={css.dl_hours_text}>
+					{newHourElementHoursText}
+				</Text>
+			</View>
+		);
+	} else {
+		statusText = 'Unknown';
+		newHourElement = (
+			<View>
+				<Text style={css.dl_hours_text}>Unknown Hours</Text>
+			</View>
+		);
 	}
-	else if (status.closingSoon) {
-		soonStatusText = 'Closing Soon';
-		soonStatusColor = COLOR_MRED;
-	}
-
-	const isClosed = (!status.currentHours);
-	const isAlwaysOpen = (
-		status.currentHours &&
-		status.currentHours.closingHour.format('HHmm') === '2359'
-		&& status.currentHours.openingHour.format('HHmm') === '0000'
-	);
-	const newHourElement = (
-		<View>
-			<Text style={css.dl_hours_text}>
-				{
-					(isClosed) ? (
-						'Closed'
-					) : (
-						(isAlwaysOpen) ?
-							('Open 24 Hours') :
-							(
-								status.currentHours.openingHour.format('h:mm a')
-								+ ' — '
-								+ status.currentHours.closingHour.format('h:mm a')
-							)
-					)
-				}
-			</Text>
-		</View>
-	);
 
 	return (
 		<View style={css.dl_row}>

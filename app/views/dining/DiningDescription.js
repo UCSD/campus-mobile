@@ -42,16 +42,11 @@ const DiningDescription = ({
 
 			{(specialHours) ?
 				(
-					<View>
-						<Text style={css.dd_description_subtext}>
-							Special hours:
-						</Text>
-						<DiningHours
-							hours={specialHours}
-							status={hoursStatus}
-							specialHours
-						/>
-					</View>
+					<DiningHours
+						hours={specialHours}
+						status={hoursStatus}
+						specialHours
+					/>
 				) : null
 			}
 

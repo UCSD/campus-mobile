@@ -43,6 +43,7 @@ module.exports = {
 		const openStatus = {
 			isOpen: false,
 			isAlwaysOpen: false,
+			isValid: true,
 			openingSoon: false,
 			closingSoon: false,
 			currentHours: null
@@ -51,12 +52,20 @@ module.exports = {
 		const now = moment();
 		let todaysHours;
 
+		// regular hours will have keys of 'mon', 'tue', etc.
 		if (regularHours && regularHours[now.format('ddd').toLowerCase()]) {
 			todaysHours = regularHours[now.format('ddd').toLowerCase()];
 		}
 
+		// special hours will have dates as keys: '12/25/20xx'
 		if (specialHours && specialHours[now.format('MM/DD/YYYY')]) {
 			todaysHours = specialHours[now.format('MM/DD/YYYY')].hours;
+		}
+
+		// if malformed, return immediately
+		if (typeof todaysHours !== 'string') {
+			openStatus.isValid = false;
+			return openStatus;
 		}
 
 		// if closed, return immediately
