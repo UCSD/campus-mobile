@@ -47,24 +47,21 @@ const ScheduleCard = ({ scheduleData, actionButton }) => (
 					</TouchableHighlight> */}
 					<View style = {{flex: 6, alignItems: 'flex-start', }}>
 						<View>
-							<TextInput value = 'Class Time Label' editable={false} ref={component=> this.timeLabel=component} />
-							<TextInput style={{fontSize:36, fontWeight:'bold'}} value = 'Course Label' editable={false} ref={component=> this.courseLabel=component} />
+							<TextInput style={{height:20, width:150, fontSize:20, fontWeight:'bold', color: COLOR_VDGREY }} value={'Class Time Label'} /> 
+							<TextInput style={{height:20, width:150, fontSize:20, fontWeight:'bold'}} value ={'Course Label'} editable={false} ref={component=> this.courseLabel=component} /> 
 						</View>
+						
+						<Text style={{fontSize:20}}>
+							{"In session"}
+						</Text>
+						
 						<View>
-							<Text style={{fontSize:20}}>
-								In session
-							</Text>
+							<TextInput style={{height:20, width:150, fontSize:20}} value = 'Location Label' editable={false} ref={component=> this.locationLabel=component} /> 
 						</View>
-						<View>
-							
-								<TextInput style={{fontSize:20}} value = 'Location Label' editable={false} ref={component=> this.locationLabel=component} /> 
-							
-						</View>
-						<View>
-							<Text style={{fontSize:20}}>
+						
+						<Text style={{fontSize:20}}>
 								1 More Class Today
-							</Text>	
-						</View>
+						</Text>	
 					</View>
 					<View style={{flex: 4}}>
 						<ListView
