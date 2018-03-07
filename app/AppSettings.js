@@ -27,7 +27,7 @@ module.exports = {
 	FORGOT_PASSWORD_URL: 'https://act.ucsd.edu/manage-sso/password',
 
 	/* SSO */
-	SSO_ENDPOINT: 'https://jnwallmsbj.execute-api.us-west-2.amazonaws.com/dev/get-access-token-test',
+	SSO_ENDPOINT: 'https://jnwallmsbj.execute-api.us-west-2.amazonaws.com/dev/authorization-service',
 	SSO_CREDENTIALS_ERROR: 'orchestration failed(Error: IDP returned status was not success)',
 
 	/* TTLs */
