@@ -419,15 +419,11 @@ var css = StyleSheet.create({
 
 	// 504 - User Account
 	ua_accountinfo: { flexDirection: 'row', paddingHorizontal: 10, paddingVertical: 14, alignItems: 'center' },
-		ua_loggedin: { flex: 3, flexDirection: 'row', alignItems: 'center' },
-			ua_username_checkmark: { color: COLOR_GREEN },
-			ua_username_text: { flex: 1, fontSize: 18, color: COLOR_VDGREY, paddingLeft: 4 },
-
-		ua_logout: { flex: 1 },
-			ua_loutout_text: { textAlign: 'right', fontSize: 18, fontWeight: '600', color: COLOR_SECONDARY },
-
-
-
+	ua_loggedin: { flex: 3, flexDirection: 'row', alignItems: 'center' },
+	ua_username_checkmark: { color: COLOR_GREEN },
+	ua_username_text: { flex: 1, fontSize: 18, color: COLOR_VDGREY, paddingLeft: 4 },
+	ua_logout: { flex: 1 },
+	ua_loutout_text: { textAlign: 'right', fontSize: 18, fontWeight: '600', color: COLOR_SECONDARY },
 	ua_loginContainer: { flexGrow: 1, margin: 7 },
 	ua_input: { flexGrow: 1, height: 40, paddingVertical: 4, paddingHorizontal: 8, borderWidth: 1, borderColor: COLOR_MGREY, marginBottom: 8, fontSize: 16, backgroundColor: 'white' },
 	ua_spacedRow: { flexDirection: 'row', justifyContent: 'space-between' },
