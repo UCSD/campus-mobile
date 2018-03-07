@@ -8,7 +8,7 @@ import {
 	TouchableOpacity,
 	TextInput
 } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import { connect } from 'react-redux';
 import Touchable from '../common/Touchable';
 import AppSettings from '../../AppSettings';
@@ -75,7 +75,7 @@ class UserAccount extends Component {
 		}
 		return (
 			<Card id="user" title={this.props.user.isLoggedIn ? 'Logged in as:' : 'Log in with SSO:'} hideMenu={true}>
-				<View style={{ flexGrow: 1, width: getMaxCardWidth() }}>
+				<View style={{ width: getMaxCardWidth() }}>
 					{(this.props.user.isLoggedIn) ? (
 						<AccountInfo
 							username={this.props.user.profile.username}
@@ -95,20 +95,23 @@ class UserAccount extends Component {
 }
 
 const AccountInfo = ({ username, handleLogout }) => (
-	<TouchableOpacity
-		style={css.ua_infoContainer}
-		onPress={handleLogout}
-	>
-		<Text
-			style={css.ua_text}
-		>
-			{username}
-		</Text>
-		<Icon
-			name="sign-out"
-			size={20}
-		/>
-	</TouchableOpacity>
+	<View style={css.ua_accountinfo}>
+		<View style={css.ua_loggedin}>
+			<Icon
+				name="check-circle"
+				size={26}
+				style={css.ua_username_checkmark}
+			/>
+			<Text style={css.ua_username_text}>
+				c3bryant{username}
+			</Text>
+		</View>
+		<View style={css.ua_logout}>
+			<Touchable onPress={handleLogout}>
+				<Text style={css.ua_loutout_text}>Log out</Text>
+			</Touchable>
+		</View>
+	</View>
 );
 
 const AccountLogin = ({ handleLogin, error, isLoggingIn }) => (
