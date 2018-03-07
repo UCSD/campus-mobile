@@ -28,8 +28,6 @@ import {
 var scheduleData = getFinals();
 var dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
-console.log(scheduleData);
-
 var FinalsCard = () => {
 	logger.ga('Card Mounted: Finals Schedule');
 	return (
