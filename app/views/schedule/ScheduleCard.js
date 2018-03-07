@@ -32,7 +32,6 @@ import {
 	MAX_CARD_WIDTH,
 } from '../../styles/LayoutConstants';
 
-// var scheduleData = getClasses();
 var dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
 let rightHalf_cardRendered = 0;
@@ -45,7 +44,7 @@ const extractAsSimpleList = (scheduleData) => {
 	result.push(...scheduleData.TH);
 	result.push(...scheduleData.FR);
 	result = result.slice(0,4);
-	console.log(result);
+	// console.log(result);
 	return result;
 }
 
@@ -53,18 +52,18 @@ const ScheduleCard = ({ scheduleData, actionButton }) => (
 	<Card id="schedule" title="Upcoming Classes" >
 		{scheduleData ? (
 			<View style={styles.sc_scheduleCard}>
-				<View style={styles.sc_scheduleContainer}>
+				<View style={styles.container}>
 					{/* <TouchableHighlight style={styles.dc_locations_row_right} underlayColor={'rgba(200,200,200,.1)'} onPress={() => general.gotoNavigationApp(data.coords.lat, data.coords.lon)}>
 						<View style={css.dl_dir_traveltype_container}>
 							<Icon name="md-walk" size={32} color={COLOR_SECONDARY} />
 						</View>
 					</TouchableHighlight> */}
 					<View style = {styles.leftHalf}>
-						<View sytle = {styles.leftHalf_upper}>
+						<View style = {styles.leftHalf_upper}>
 							<TextInput style={{height:20, width:150, fontSize:20, color: COLOR_VDGREY }} value={'Class Time Label'} editable={false} ref={component=> this.timeLabel=component}/> 
 							<TextInput style={{height:36, width:150, fontSize:36, fontWeight:'bold'}} value ={'Course Label'} editable={false} ref={component=> this.courseLabel=component} /> 
 						</View>
-						<View sytle = {styles.leftHalf_lower}>
+						<View style = {styles.leftHalf_lower}>
 							<Text style={{fontSize:20}}>
 								{"In session"}
 							</Text>
@@ -101,24 +100,53 @@ const ScheduleCard = ({ scheduleData, actionButton }) => (
 );
 
 const styles = StyleSheet.create({
+	container: { 
+		width: MAX_CARD_WIDTH, 
+		aspectRatio: 1.6,
+		padding: '2.5%', 
+		flexDirection:'row', 
+		flex:1, 
+		justifyContent: 'center'
+	},
 	leftHalf: {
 		flex: 6,
-		padding: 0,
-		backgroundColor: '#98FB98',
+		// paddingTop: '2.5%',
+		// paddingLeft: '2.5%',
+		// paddingBottom: '2.5%',
+		backgroundColor: '#F9E9FF',
 	},
 	leftHalf_upper: {
-		height: '60%',
-		padding: 30,
+		height: '30%',
+		padding: 0,
 		backgroundColor: '#FFDEAD',
 	},
 	leftHalf_lower: {
-		height: '60%',
-		padding: 30,
-		backgroundColor: '#FFDEAD',
+		height: '70%',
+		padding: 0,
+		backgroundColor: '#98FB98',
 	},
 	rightHalf: {
 		flex: 4,
-		padding: 0,
+		paddingLeft: '2.5%',
+		// paddingRight: '2.5%',
+		// paddingTop: '1%',
+		// paddingBottom: '1%',
+		backgroundColor: '#E6E6FA',
+	},
+	rightHalf_eachOfFourCards: { 
+		// justifyContent: 'center', 
+		// marginTop: '5%',
+		marginBottom: '5%',
+		borderColor: COLOR_BLACK, 
+		borderWidth: 1, 
+		borderRadius: 1,
+		paddingTop: '3%',
+		paddingLeft: '3%',
+		overflow: 'hidden',
+		// flex: 1, 
+		width: '100%', 
+		aspectRatio: 2.85,
+		flexDirection: 'row',
 		backgroundColor: '#FFC0CB',
 	},
 	more: { alignItems: 'center', justifyContent: 'center', padding: 6 },
@@ -129,9 +157,7 @@ const styles = StyleSheet.create({
 	fullScheduleButton: { width: MAX_CARD_WIDTH, backgroundColor: COLOR_LGREY, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4, paddingVertical: 8, borderTopWidth: 1, borderBottomWidth: 1, borderColor: COLOR_MGREY },
 	loadingContainer: { alignItems: 'center', justifyContent: 'center', width: MAX_CARD_WIDTH },
 	scheduleList: { flex: 1, justifyContent: 'flex-end', alignItems: 'flex-end'},
-	sc_dayRow: { justifyContent: 'center', padding: 3, borderColor: COLOR_BLACK, borderWidth: 1, flex: 1, width: '100%', flexDirection: 'row'},
 	dayListStyle: {flex: 1, paddingRight: 10 /* align0 Items:'flex-end'*/},
-	sc_scheduleContainer: { width: MAX_CARD_WIDTH, padding: 10, flexDirection:'row', flex:1, justifyContent: 'center'},
 	sc_scheduleCard: { width: MAX_CARD_WIDTH + 2, padding: 0, flexDirection:'column', flex: 1},
 	sc_dayText: { fontSize: 16, color: COLOR_BLACK, /*paddingBottom: 6 */},
 	dc_locations_row_right: { flex: 6 },
@@ -147,7 +173,7 @@ var DayItem = ({ data }) => (
 		this.timeLabel.setNativeProps({text: data.day_code + ' ' + data.time_string}) 
 		this.locationLabel.setNativeProps({text: data.building + ' ' + data.room}) }
 		}> 
-		<View style={styles.sc_dayRow}>
+		<View style={styles.rightHalf_eachOfFourCards}>
 			<View style={{flex:6, flexDirection: 'column', justifyContent: 'flex-end'}}>
 				<Text style={styles.sc_timeText}>
 					{data.day_code + ' ' + data.time_string}
