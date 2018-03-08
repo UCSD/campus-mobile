@@ -337,6 +337,36 @@ export function getClasses() {
   return classItems;
 }
 
+export function dayOfWeekIntepreter(abbr) {
+  fullString = '';
+  switch(abbr) {
+    case 'MO':
+      fullString = 'Monday';
+      break;
+    case 'TU':
+      fullString = 'Tuesday';
+      break;
+    case 'WE':
+      fullString = 'Wednesday';
+      break;
+    case 'TH':
+      fullString = 'Thursday';
+      break;
+    case 'FR':
+      fullString = 'Friday';
+      break;
+    case 'SA':
+      fullString = 'Saturday';
+      break;
+    case 'SU':
+      fullString = 'Sunday';
+      break;				
+    default:
+      fullString = abbr;
+  }
+  return fullString;
+}
+
 // Returns a courseItems object containing lists of courseItem objects.
 // There is one list per day of the week and the courseItem objects are 
 // sorted by their start times. This includes "FI" and "RE" meeting types.

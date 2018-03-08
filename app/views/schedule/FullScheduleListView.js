@@ -9,7 +9,7 @@ import moment from 'moment';
 import { connect } from 'react-redux';
 import css from '../../styles/css';
 import logger from '../../util/logger';
-import { getClasses } from './scheduleData';
+import { getClasses, dayOfWeekIntepreter } from './scheduleData';
 import {
 	MAX_CARD_WIDTH,
 	NAVIGATOR_HEIGHT,
@@ -35,39 +35,9 @@ class FullSchedule extends React.Component {
 			<IndividualClass key={sectionId} data={rowData} />
 		)
 	}
-	
-	dayOfWeekIntepreter = (abbr) => {
-		fullString = '';
-		switch(abbr) {
-			case 'MO':
-				fullString = 'Monday';
-				break;
-			case 'TU':
-				fullString = 'Tuesday';
-				break;
-			case 'WE':
-				fullString = 'Wednesday';
-				break;
-			case 'TH':
-				fullString = 'Thursday';
-				break;
-			case 'FR':
-				fullString = 'Friday';
-				break;
-			case 'SA':
-				fullString = 'Saturday';
-				break;
-			case 'SU':
-				fullString = 'Sunday';
-				break;				
-			default:
-				fullString = abbr;
-		}
-		return fullString;
-	}
 
 	renderSectionHeader = (sectionRows, sectionId) => {
-		let day = this.dayOfWeekIntepreter(sectionId);
+		let day = dayOfWeekIntepreter(sectionId);
 		if (day === 'Saturday' || day === 'Sunday') {
 			return null;
 		}

@@ -9,7 +9,7 @@ import {
 	TextInput
 } from 'react-native';
 
-import { getClasses, getFinals } from './scheduleData';
+import { getClasses, getFinals, dayOfWeekIntepreter } from './scheduleData';
 import { FullScheduleListView } from './FullScheduleListView';
 import ScrollCard from '../card/ScrollCard';
 import Card from '../card/Card';
@@ -58,13 +58,69 @@ const ScheduleCard = ({ scheduleData, actionButton }) => (
 							<Icon name="md-walk" size={32} color={COLOR_SECONDARY} />
 						</View>
 					</TouchableHighlight> */}
-					<View style = {styles.leftHalf}>
+		 			<View style = {styles.leftHalf}>
 						<View style = {styles.leftHalf_upper}>
-							<TextInput style={{height:20, width:150, fontSize:20, color: COLOR_VDGREY }} value={'Class Time Label'} editable={false} ref={component=> this.timeLabel=component}/> 
-							<TextInput style={{height:36, width:150, fontSize:36, fontWeight:'bold'}} value ={'Course Label'} editable={false} ref={component=> this.courseLabel=component} /> 
+							<View style = {styles.leftHalf_upper_timeText}>
+								<Text style = {styles.leftHalf_upper_timeText_firstSection}>
+									Today 9
+								</Text>
+								<Text style = {styles.leftHalf_upper_timeText_secondSection}>
+									AM 
+								</Text>
+							</View>
+							<View style = {styles.leftHalf_upper_classText}>
+								<Text style = {styles.leftHalf_upper_classText_firstSection} adjustsFontSizeToFit = {true}>
+									CSE 198
+								</Text>
+								<Text style = {styles.leftHalf_upper_classText_secondSection}>
+									Lecture
+								</Text>
+							</View>
+							{/* <TextInput style={{height:20, width:150, fontSize:20, color: COLOR_VDGREY }} value={'Class Time Label'} editable={false} ref={component=> this.timeLabel=component}/>  */}
+							{/* <TextInput style={{height:36, width:150, fontSize:36, fontWeight:'bold'}} value ={'Course Label'} editable={false} ref={component=> this.courseLabel=component} />  */}
 						</View>
 						<View style = {styles.leftHalf_lower}>
-							<Text style={{fontSize:20}}>
+							<View style = {styles.leftHalf_lower_sections}>
+								<Text style = {styles.leftHalf_lower_sections_icon}>
+									
+								</Text>
+								<View style = {styles.leftHalf_lower_sections_text}>
+									<Text style = {styles.leftHalf_lower_sections_text_topSection}>
+										In Session
+									</Text>
+									<Text style = {styles.leftHalf_lower_sections_text_bottomSection}>
+										9:00 AM to 9:50 AM
+									</Text>
+								</View>
+							</View>
+							<View style = {styles.leftHalf_lower_sections}>
+								<Text style = {styles.leftHalf_lower_sections_icon}>
+									
+								</Text>
+								<View style = {styles.leftHalf_lower_sections_text}>
+									<Text style = {styles.leftHalf_lower_sections_text_topSection}>
+										Pepper Canyon Hall 106
+									</Text>
+									<Text style = {styles.leftHalf_lower_sections_text_bottomSection}>
+										In Sixth College
+									</Text>
+								</View>
+							</View>
+							<View style = {styles.leftHalf_lower_sections}>
+								<Text style = {styles.leftHalf_lower_sections_icon}>
+									
+								</Text>
+								<View style = {styles.leftHalf_lower_sections_text}>
+									<Text style = {styles.leftHalf_lower_sections_text_topSection}>
+										1 More Class Today
+									</Text>
+									<Text style = {styles.leftHalf_lower_sections_text_bottomSection}>
+										Last Class Ends at 10:00 AM
+									</Text>
+								</View>
+							</View>
+							
+							{/* <Text style={{fontSize:20}}>
 								{"In session"}
 							</Text>
 							
@@ -74,12 +130,12 @@ const ScheduleCard = ({ scheduleData, actionButton }) => (
 							
 							<Text style={{fontSize:20}}>
 									1 More Class Today
-							</Text>	
+							</Text>	 */}
 						</View>
 					</View>
 					<View style={styles.rightHalf}>
 						<ListView
-							enableEmptySections={true}
+							contentContainerStyle={styles.rightHalf_allFourCards}
 							dataSource={dataSource.cloneWithRows(extractAsSimpleList(scheduleData))}
 							renderRow={(rowData, sectionID, rowID, highlightRow) => (
 								<DayItem
@@ -102,52 +158,43 @@ const ScheduleCard = ({ scheduleData, actionButton }) => (
 const styles = StyleSheet.create({
 	container: { 
 		width: MAX_CARD_WIDTH, 
-		aspectRatio: 1.6,
-		padding: '2.5%', 
+		aspectRatio: 1.6216,
+		paddingTop: '5%', 
+		paddingBottom: '5%', 
+		paddingLeft: '4%', 
+		paddingRight: '4%', 
 		flexDirection:'row', 
-		flex:1, 
-		justifyContent: 'center'
 	},
-	leftHalf: {
-		flex: 6,
-		// paddingTop: '2.5%',
-		// paddingLeft: '2.5%',
-		// paddingBottom: '2.5%',
-		backgroundColor: '#F9E9FF',
-	},
-	leftHalf_upper: {
-		height: '30%',
-		padding: 0,
-		backgroundColor: '#FFDEAD',
-	},
-	leftHalf_lower: {
-		height: '70%',
-		padding: 0,
-		backgroundColor: '#98FB98',
-	},
-	rightHalf: {
-		flex: 4,
-		paddingLeft: '2.5%',
-		// paddingRight: '2.5%',
-		// paddingTop: '1%',
-		// paddingBottom: '1%',
-		backgroundColor: '#E6E6FA',
+	leftHalf: {flex: 6,},
+	leftHalf_upper: {height: '30%',},
+	leftHalf_upper_timeText: {flex: 1, flexDirection: 'row', },
+	leftHalf_upper_timeText_firstSection: {fontSize: 16, marginLeft: 2, marginRight: 3, fontWeight: 'bold'},
+	leftHalf_upper_timeText_secondSection: {fontSize: 12, alignSelf: 'flex-end', fontWeight: 'bold'},
+	leftHalf_upper_classText: {flex: 2, flexDirection: 'row', top: '-1%'},
+	leftHalf_upper_classText_firstSection: {fontSize: 34, fontWeight: 'bold', marginRight: '3%',},
+	leftHalf_upper_classText_secondSection: {alignSelf: 'flex-end', fontSize: 13, paddingBottom: '0.5%'},
+
+	leftHalf_lower: {},
+	leftHalf_lower_sections: {marginTop: '5%', flexDirection: 'row', },
+	leftHalf_lower_sections_icon: {fontFamily: 'Material Design Icons', marginRight: '4%', fontSize: 35, },
+	leftHalf_lower_sections_text: {},
+	leftHalf_lower_sections_text_topSection: {fontSize: 15,},
+	leftHalf_lower_sections_text_bottomSection: {fontSize: 10, },
+	
+	rightHalf: {flex: 4, paddingTop: '1%',},
+	rightHalf_allFourCards: {
+		flex: 1,
+		justifyContent: 'space-between',
 	},
 	rightHalf_eachOfFourCards: { 
-		// justifyContent: 'center', 
-		// marginTop: '5%',
-		marginBottom: '5%',
-		borderColor: COLOR_BLACK, 
+		borderColor: '#707070', 
 		borderWidth: 1, 
-		borderRadius: 1,
-		paddingTop: '3%',
-		paddingLeft: '3%',
+		borderRadius: 2,
+		paddingTop: '2%',
+		paddingLeft: '4%',
 		overflow: 'hidden',
-		// flex: 1, 
 		width: '100%', 
-		aspectRatio: 2.85,
-		flexDirection: 'row',
-		backgroundColor: '#FFC0CB',
+		aspectRatio: 3.16,
 	},
 	more: { alignItems: 'center', justifyContent: 'center', padding: 6 },
 	more_label: { fontSize: 20, color: COLOR_PRIMARY, fontWeight: '300' },
@@ -161,37 +208,27 @@ const styles = StyleSheet.create({
 	sc_scheduleCard: { width: MAX_CARD_WIDTH + 2, padding: 0, flexDirection:'column', flex: 1},
 	sc_dayText: { fontSize: 16, color: COLOR_BLACK, /*paddingBottom: 6 */},
 	dc_locations_row_right: { flex: 6 },
-	sc_courseText: { fontSize: 24, color: COLOR_VDGREY, /*paddingBottom: 2 */},
-	sc_subText: { fontSize: 16, color: COLOR_VDGREY, paddingBottom: 2},
-	sc_timeText: { fontSize: 12, color: COLOR_VDGREY },
+	
 });
 
 // Holds the view for an individual section/class 
 var DayItem = ({ data }) => (
-	<TouchableHighlight onPress= {
-		()=>{this.courseLabel.setNativeProps({text: data.subject_code + ' ' + data.course_code})
-		this.timeLabel.setNativeProps({text: data.day_code + ' ' + data.time_string}) 
-		this.locationLabel.setNativeProps({text: data.building + ' ' + data.room}) }
-		}> 
+	<TouchableHighlight //onPress= {
+		// ()=>{this.courseLabel.setNativeProps({text: data.subject_code + ' ' + data.course_code})
+		// this.timeLabel.setNativeProps({text: data.day_code + ' ' + data.time_string}) 
+		// this.locationLabel.setNativeProps({text: data.building + ' ' + data.room}) }
+		// }
+		> 
 		<View style={styles.rightHalf_eachOfFourCards}>
-			<View style={{flex:6, flexDirection: 'column', justifyContent: 'flex-end'}}>
-				<Text style={styles.sc_timeText}>
-					{data.day_code + ' ' + data.time_string}
-				</Text>
-				<Text
-					style={styles.sc_courseText}
-					numberOfLines={1}
-				>
+			<Text style={{fontSize: 10, color: COLOR_VDGREY}}>
+					{dayOfWeekIntepreter(data.day_code) + ' ' + data.time_string}
+			</Text>
+			<View style={{flexDirection:'row', top: '-0%'}}>
+				<Text style={{fontSize: 18, color: COLOR_VDGREY, flex: 3}}>
 					{data.subject_code + ' ' + data.course_code}
 				</Text>
-			</View>
-			<View style={{flex:1, flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'flex-start'}}>
-				<Text style={[styles.sc_subText]} numberOfLines={1}>
-					{data.meeting_type === 'Lecture' && 'LE'}
-					{data.meeting_type === 'Discussion' && 'DI'}
-					{/*data.meeting_type/* + ' ' + data.time_string + '\n' */}
-					{/* {data.instructor_name + '\n'}
-					{data.building + data.room} */}
+				<Text style={{fontSize: 10, color: COLOR_VDGREY, flex: 2, alignSelf:'flex-end', paddingBottom: '4%'}} >
+					{data.meeting_type}
 				</Text>
 			</View>
 		</View>
