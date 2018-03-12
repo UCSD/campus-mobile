@@ -1,8 +1,8 @@
 PODS:
-  - Firebase/Core (4.10.0):
+  - Firebase/Core (4.10.1):
     - FirebaseAnalytics (= 4.1.0)
-    - FirebaseCore (= 4.0.16)
-  - Firebase/Messaging (4.10.0):
+    - FirebaseCore (= 4.0.17)
+  - Firebase/Messaging (4.10.1):
     - Firebase/Core
     - FirebaseMessaging (= 2.1.1)
   - FirebaseAnalytics (4.1.0):
@@ -10,7 +10,7 @@ PODS:
     - FirebaseInstanceID (~> 2.0)
     - GoogleToolboxForMac/NSData+zlib (~> 2.1)
     - nanopb (~> 0.3)
-  - FirebaseCore (4.0.16):
+  - FirebaseCore (4.0.17):
     - GoogleToolboxForMac/NSData+zlib (~> 2.1)
   - FirebaseInstanceID (2.0.9):
     - FirebaseCore (~> 4.0)
@@ -31,41 +31,41 @@ PODS:
   - nanopb/decode (0.3.8)
   - nanopb/encode (0.3.8)
   - Protobuf (3.5.0)
-  - React (0.51.0):
-    - React/Core (= 0.51.0)
+  - React (0.54.1):
+    - React/Core (= 0.54.1)
   - react-native-maps (0.20.1):
     - React
-  - React/Core (0.51.0):
-    - yoga (= 0.51.0.React)
-  - React/fishhook (0.51.0)
-  - React/RCTActionSheet (0.51.0):
+  - React/Core (0.54.1):
+    - yoga (= 0.54.1.React)
+  - React/fishhook (0.54.1)
+  - React/RCTActionSheet (0.54.1):
     - React/Core
-  - React/RCTAnimation (0.51.0):
+  - React/RCTAnimation (0.54.1):
     - React/Core
-  - React/RCTBlob (0.51.0):
+  - React/RCTBlob (0.54.1):
     - React/Core
-  - React/RCTGeolocation (0.51.0):
+  - React/RCTGeolocation (0.54.1):
     - React/Core
-  - React/RCTImage (0.51.0):
+  - React/RCTImage (0.54.1):
     - React/Core
     - React/RCTNetwork
-  - React/RCTLinkingIOS (0.51.0):
+  - React/RCTLinkingIOS (0.54.1):
     - React/Core
-  - React/RCTNetwork (0.51.0):
+  - React/RCTNetwork (0.54.1):
     - React/Core
-  - React/RCTSettings (0.51.0):
+  - React/RCTSettings (0.54.1):
     - React/Core
-  - React/RCTText (0.51.0):
+  - React/RCTText (0.54.1):
     - React/Core
-  - React/RCTVibration (0.51.0):
+  - React/RCTVibration (0.54.1):
     - React/Core
-  - React/RCTWebSocket (0.51.0):
+  - React/RCTWebSocket (0.54.1):
     - React/Core
     - React/fishhook
     - React/RCTBlob
   - RNVectorIcons (4.5.0):
     - React
-  - yoga (0.51.0.React)
+  - yoga (0.54.1.React)
 
 DEPENDENCIES:
   - Firebase/Messaging
@@ -95,19 +95,19 @@ EXTERNAL SOURCES:
     :path: ../node_modules/react-native/ReactCommon/yoga/yoga.podspec
 
 SPEC CHECKSUMS:
-  Firebase: c98c8b1fbcbdccd82539a36c2b17a9b1bb0ee798
+  Firebase: 92c6ba593e32db0defde464a9adc981d5cb49f97
   FirebaseAnalytics: 3dfae28d4a5e06f86c4fae830efc2ad3fadb19bc
-  FirebaseCore: eb9e1a56733ff1094ecf3e28af9069c344b25239
+  FirebaseCore: 872307b001bbefda1dfa0dbfffa50a6919023d4a
   FirebaseInstanceID: d2058a35e9bebda1b6dd42486b84917bde552a9d
   FirebaseMessaging: db0e01c52ef7e1f42846431273558107d084ede4
   GoogleToolboxForMac: 2501e2ad72a52eb3dfe7bd9aee7dad11b858bd20
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
   Protobuf: 8a9838fba8dae3389230e1b7f8c104aa32389c03
-  React: 541ba768b9855e10cdc76f55427a5cd0653ca806
+  React: c237e42de9c70e5cac6eeb52b4cfd3a0910c1f00
   react-native-maps: 066c2afcc89e18726377bcc685315f989ca22449
   RNVectorIcons: c0dbfbf6068fefa240c37b0f71bd03b45dddac44
-  yoga: 17521bbb0dd54a47c0b3ac43253e78cdac7488e0
+  yoga: 55da126afc384965b96bff46652464373b330add
 
-PODFILE CHECKSUM: 14a60ce44b7c6d6ad4b6292ad1326b51014e1844
+PODFILE CHECKSUM: 4fa3bc00061d78f88f97550369a51667a6b6bb41
 
 COCOAPODS: 1.4.0

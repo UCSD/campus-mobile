@@ -18,7 +18,7 @@ exports[`renders without crashing 1`] = `
       }
     }
   >
-    <ScrollViewMock
+    <ScrollView
       onScroll={[Function]}
       scrollEventThrottle={69}
     >
@@ -40,7 +40,7 @@ exports[`renders without crashing 1`] = `
       <Connect(NewsCardContainer)
         key="news"
       />
-    </ScrollViewMock>
+    </ScrollView>
   </View>
 </MenuProvider>
 `;

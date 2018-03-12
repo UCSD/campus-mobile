@@ -1,5 +1,6 @@
 # Uncomment the next line to define a global platform for your project
 # platform :ios, '9.0'
+install! 'cocoapods', :deterministic_uuids => false
 
 target 'CampusMobile' do
   # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
@@ -18,7 +19,7 @@ target 'CampusMobile' do
     'RCTSettings',
     'RCTText',
     'RCTVibration',
-    'RCTWebSocket',
+    'RCTWebSocket'
   ]
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
