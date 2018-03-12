@@ -42,18 +42,18 @@ export class FeedbackView extends Component {
 		if (oldStatus !== newStatus) {
 			// Successful feedback submission
 			if (newStatus.response) {
-				Alert.alert(
-					'Thank you!',
-					'We will take your feedback into consideration as we continue developing and improving the app.'
+				Toast.showWithGravity(
+					'Thanks, your feedback was submitted!',
+					Toast.LONG,
+					Toast.BOTTOM
 				);
 			}
 
 			// Failed feedback submission
 			if (newStatus.error) {
-				Toast.showWithGravity(
-					'Unfortunately, there was an error submitting your feedback. Please try again later.',
-					Toast.LONG,
-					Toast.BOTTOM
+				Alert.alert(
+					'Feedback Submission Error',
+					'Unfortunately, there was an error submitting your feedback. Please try again later.'
 				);
 			}
 		}
