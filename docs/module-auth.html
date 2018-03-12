@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>DocStrap Module: util/map</title>
+	<title>DocStrap Module: auth</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -79,7 +79,7 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Module: util/map</h1>
+	<h1 class="page-title">Module: auth</h1>
 <section>
 
 <header>
@@ -91,7 +91,7 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>A module containing map-related helper functions</p></div>
+            <div class="description"><p>A module containing auth helper functions</p></div>
         
 
         
@@ -129,8 +129,8 @@
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="util_map.js.html">util/map.js</a>,
-				 <a href="util_map.js.html#sunlight-1-line-19">line 19</a>
+				<a href="util_auth.js.html">util/auth.js</a>,
+				 <a href="util_auth.js.html#sunlight-1-line-8">line 8</a>
 			</li>
 		</ul>
 	</dd>
@@ -167,7 +167,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id=".getDistance"><span class="type-signature">&lt;static> </span>getDistance(lat1, lon1, lat2, lon2)</h4>
+    <h4 class="name" id=".destroyAccessToken"><span class="type-signature">&lt;static> </span>destroyAccessToken()</h4>
     
     
 </dt>
@@ -175,7 +175,7 @@
 
     
     <div class="description">
-        <p>Gets the surface distance between two Earth coordinates in meters</p>
+        <p>Deletes access token in the keychain</p>
     </div>
     
 
@@ -184,128 +184,6 @@
     
 
     
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>lat1</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The latitude of the first point</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>lon1</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The longitude of the first point</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>lat2</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The latitude of the second point</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>lon2</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The longitude of the second point</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
     
 
     
@@ -343,8 +221,8 @@
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="util_map.js.html">util/map.js</a>,
-				 <a href="util_map.js.html#sunlight-1-line-34">line 34</a>
+				<a href="util_auth.js.html">util/auth.js</a>,
+				 <a href="util_auth.js.html#sunlight-1-line-82">line 82</a>
 			</li>
 		</ul>
 	</dd>
@@ -373,7 +251,7 @@
     
             
 <div class="param-desc">
-    <p>Null if any of the inputs were null. Otherwise, the distance in meters (rounded down the nearest integer)</p>
+    <p>True once keychain is reset</p>
 </div>
 
 
@@ -384,10 +262,7 @@
     </dt>
     <dd>
         
-<span class="param-type">number</span>
-|
-
-<span class="param-type">null</span>
+<span class="param-type">boolean</span>
 
 
 
@@ -404,7 +279,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id=".getMidpointCoords"><span class="type-signature">&lt;static> </span>getMidpointCoords(lat1, lon1, lat2, lon2)</h4>
+    <h4 class="name" id=".destroyUserCreds"><span class="type-signature">&lt;static> </span>destroyUserCreds()</h4>
     
     
 </dt>
@@ -412,7 +287,119 @@
 
     
     <div class="description">
-        <p>Gets the coordinates of the midpoint between two coordinates</p>
+        <p>Deletes user credentials in the keychain</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="util_auth.js.html">util/auth.js</a>,
+				 <a href="util_auth.js.html#sunlight-1-line-56">line 56</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>True once keychain is reset</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">boolean</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".encryptStringWithBase64"><span class="type-signature">&lt;static> </span>encryptStringWithBase64(string)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Encrypts / encodes input using base64</p>
     </div>
     
 
@@ -447,13 +434,13 @@
 
         <tr>
             
-                <td class="name"><code>lat1</code></td>
+                <td class="name"><code>string</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">String</span>
 
 
 
@@ -464,79 +451,7 @@
 
             
 
-            <td class="description last"><p>The latitude of the first point</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>lon1</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The longitude of the first point</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>lat2</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The latitude of the second point</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>lon2</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The longitude of the second point</p></td>
+            <td class="description last"><p>String to encrypt</p></td>
         </tr>
 
     
@@ -580,8 +495,8 @@
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="util_map.js.html">util/map.js</a>,
-				 <a href="util_map.js.html#sunlight-1-line-58">line 58</a>
+				<a href="util_auth.js.html">util/auth.js</a>,
+				 <a href="util_auth.js.html#sunlight-1-line-29">line 29</a>
 			</li>
 		</ul>
 	</dd>
@@ -610,7 +525,7 @@
     
             
 <div class="param-desc">
-    <p>The midpoint coordinates stored in a 2-length array with the form {latitude, longitude}</p>
+    <p>Encrypted string</p>
 </div>
 
 
@@ -621,7 +536,741 @@
     </dt>
     <dd>
         
-<span class="param-type">Array.&lt;number></span>
+<span class="param-type">String</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".encryptStringWithKey"><span class="type-signature">&lt;static> </span>encryptStringWithKey(string)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Encrypts input using a public key</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>string</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>String to encrypt</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="util_auth.js.html">util/auth.js</a>,
+				 <a href="util_auth.js.html#sunlight-1-line-18">line 18</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>Encrypted string</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">String</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".retrieveAccessToken"><span class="type-signature">&lt;static> </span>retrieveAccessToken()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Retrieves access token in the keychain</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="util_auth.js.html">util/auth.js</a>,
+				 <a href="util_auth.js.html#sunlight-1-line-74">line 74</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>Object containing access token<br>or an error if something went wrong</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".retrieveUserCreds"><span class="type-signature">&lt;static> </span>retrieveUserCreds()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Retrieves user credentials in the keychain</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="util_auth.js.html">util/auth.js</a>,
+				 <a href="util_auth.js.html#sunlight-1-line-48">line 48</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>Object containing username and password<br>or an error if something went wrong</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".storeAccessToken"><span class="type-signature">&lt;static> </span>storeAccessToken(token)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Stores access token in the keychain</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>token</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Access token to store</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="util_auth.js.html">util/auth.js</a>,
+				 <a href="util_auth.js.html#sunlight-1-line-65">line 65</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>True if keychain was stored</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">boolean</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".storeUserCreds"><span class="type-signature">&lt;static> </span>storeUserCreds(user, pass)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Stores user credentials in the keychain</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>user</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>User's username</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>pass</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>User's password</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="util_auth.js.html">util/auth.js</a>,
+				 <a href="util_auth.js.html#sunlight-1-line-39">line 39</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>True if keychain was stored</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">boolean</span>
 
 
 

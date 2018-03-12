@@ -21,6 +21,11 @@ module.exports = {
 		return forge.util.encode64(encrypted);
 	},
 
+	/**
+	 * Encrypts / encodes input using base64
+	 * @param {String} string String to encrypt
+	 * @returns {String} Encrypted string
+	 */
 	encryptStringWithBase64(string) {
 		return forge.util.encode64(string);
 	},
