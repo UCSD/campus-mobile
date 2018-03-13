@@ -90,8 +90,8 @@ var css = StyleSheet.create({
 	tabBarAndroid: { borderBottomWidth: 1, borderColor: '#DADADA', backgroundColor: COLOR_WHITE, height: TAB_BAR_HEIGHT },
 	tabContainer: { width: 70, paddingTop: deviceIphoneX() ? 4 : 8, paddingBottom: deviceIphoneX() ? 20 : 8 },
 	tabContainerBottom: { borderBottomColor: COLOR_PRIMARY },
-	tabIcon: { color: COLOR_DMGREY, alignSelf: 'center', backgroundColor: 'transparent', opacity: .95, width: 24, height: 24, overflow: 'hidden' },
-	tabIconUser: { color: COLOR_DMGREY, alignSelf: 'center', opacity: .95, width: 24, height: 24, borderRadius: 12, overflow: 'hidden', backgroundColor: COLOR_DMGREY, borderWidth: 1, borderColor: COLOR_DMGREY, color: COLOR_WHITE },
+	tabIcon: { color: COLOR_DMGREY, alignSelf: 'center', backgroundColor: 'transparent', opacity: 0.95, width: 24, height: 24, overflow: 'hidden' },
+	tabIconUser: { borderColor: COLOR_DMGREY, alignSelf: 'center', overflow: 'hidden', borderRadius: 24, borderWidth: 1 },
 
 
 	/********************************************

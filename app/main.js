@@ -90,6 +90,7 @@ class Main extends Component {
 						<Tabs
 							key="tabbar"
 							tabs
+							tabBarPosition="bottom"
 							hideNavBar
 							showLabel={false}
 							hideOnChildTabs
