@@ -34,6 +34,10 @@ import ShuttleRoutesListView from './views/shuttle/ShuttleRoutesListView';
 import ShuttleStopsListView from './views/shuttle/ShuttleStopsListView';
 import ShuttleSavedListView from './views/shuttle/ShuttleSavedListView';
 
+import { COLOR_WHITE } from './styles/ColorConstants';
+
+const campusLogo = require('./assets/img/UCSanDiegoLogo-White.png');
+
 function mapStateToProps(state, props) {
 	return {
 		scene: state.routes.scene,
@@ -48,10 +52,6 @@ class Main extends Component {
 		this.state = {
 			hideTabs: false
 		};
-	}
-
-	campusLogo() {
-		return (<Image source={require('./assets/img/UCSanDiegoLogo-White.png')} style={css.navCampusLogoTitle} />);
 	}
 
 	shouldComponentUpdate() {
@@ -80,25 +80,23 @@ class Main extends Component {
 				<RouterWithRedux
 					navigationBarStyle={general.platformIOS() ? css.navIOS : css.navAndroid}
 					titleStyle={general.platformIOS() ? css.navIOSTitle : css.navAndroidTitle}
-					barButtonIconStyle={general.platformIOS() ? css.navIOSIconStyle : css.navAndroidIconStyle}
-					backButtonTextStyle={general.platformIOS() ? css.navButtonTextIOS : css.navButtonTextAndroid}
+					navBarButtonColor={COLOR_WHITE}
+					leftButtonTextStyle={general.platformIOS() ? css.navButtonTextIOS : css.navButtonTextAndroid}
 					rightButtonTextStyle={general.platformIOS() ? css.navButtonTextIOS : css.navButtonTextAndroid}
 					backTitle="Back"
 					onExitApp={this._exitHandler}
 				>
-					<Scene key="root">
+					<Scene hideNavBar key="root">
 						<Tabs
 							key="tabbar"
 							tabs
-							tabBarPosition="bottom"
-							hideNavBar
 							showLabel={false}
 							hideOnChildTabs
 							initial
 							tabBarStyle={general.platformIOS() ? css.tabBarIOS : css.tabBarAndroid}
 						>
 							<Scene key="tab1" title={AppSettings.APP_NAME} initial icon={TabIcons}>
-								<Scene key="Home" component={Home} renderTitle={() => this.campusLogo()} />
+								<Scene key="Home" component={Home} navigationBarTitleImage={campusLogo} navigationBarTitleImageStyle={css.navCampusLogoTitle} />
 								<Scene key="SurfReport" component={SurfReport} title="Surf Report" hideTabBar />
 								<Scene key="ShuttleStop" component={ShuttleStop} title="Shuttle" hideTabBar />
 								<Scene key="DiningDetail" component={DiningDetail} title="Dining" hideTabBar />

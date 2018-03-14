@@ -78,8 +78,8 @@ var css = StyleSheet.create({
 	// 101 - Navigator
 	navIOS: { backgroundColor: COLOR_PRIMARY, height: NAVIGATOR_IOS_HEIGHT },
 	navAndroid: { backgroundColor: COLOR_PRIMARY, height: NAVIGATOR_ANDROID_HEIGHT },
-	navIOSTitle: { color: COLOR_WHITE, fontSize: 24, marginTop: deviceIphoneX() ? 8 : -8, fontWeight: '300' },
-	navAndroidTitle: { color: COLOR_WHITE, fontSize: 24, marginTop: -8, fontWeight: '300' },
+	navIOSTitle: { color: COLOR_WHITE, fontSize: 24, fontWeight: '300' },
+	navAndroidTitle: { color: COLOR_WHITE, fontSize: 24, fontWeight: '300', alignSelf: 'center' },
 	navCampusLogoTitle: { resizeMode: 'contain', height: 26, alignSelf: 'center' },
 	navIOSIconStyle: { tintColor:COLOR_WHITE, marginTop: deviceIphoneX() ? 14 : -2 },
 	navButtonTextIOS: { color: COLOR_WHITE, marginTop: deviceIphoneX() ? 13 : -3, fontWeight: '300', fontSize: 18, height: 24 },
@@ -91,7 +91,8 @@ var css = StyleSheet.create({
 	tabContainer: { width: 70, paddingTop: deviceIphoneX() ? 4 : 8, paddingBottom: deviceIphoneX() ? 20 : 8 },
 	tabContainerBottom: { borderBottomColor: COLOR_PRIMARY },
 	tabIcon: { color: COLOR_DMGREY, alignSelf: 'center', backgroundColor: 'transparent', opacity: 0.95, width: 24, height: 24, overflow: 'hidden' },
-	tabIconUser: { borderColor: COLOR_DMGREY, alignSelf: 'center', overflow: 'hidden', borderRadius: 24, borderWidth: 1 },
+	tabIconUser: { color: COLOR_WHITE, alignSelf: 'center', backgroundColor: COLOR_DMGREY, opacity: 0.95, width: 24, height: 24, overflow: 'hidden' },
+	tabIconUserOutline: { borderColor: COLOR_DMGREY, alignSelf: 'center', overflow: 'hidden', borderRadius: 24, borderWidth: 1 },
 
 
 	/********************************************
