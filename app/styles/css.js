@@ -78,11 +78,11 @@ var css = StyleSheet.create({
 	// 101 - Navigator
 	navIOS: { backgroundColor: COLOR_PRIMARY, height: NAVIGATOR_IOS_HEIGHT },
 	navAndroid: { backgroundColor: COLOR_PRIMARY, height: NAVIGATOR_ANDROID_HEIGHT },
-	navIOSTitle: { color: COLOR_WHITE, fontSize: 24, fontWeight: '300' },
+	navIOSTitle: { color: COLOR_WHITE, fontSize: 24, fontWeight: '300', alignSelf: 'center' },
 	navAndroidTitle: { color: COLOR_WHITE, fontSize: 24, fontWeight: '300', alignSelf: 'center' },
 	navCampusLogoTitle: { resizeMode: 'contain', height: 26, alignSelf: 'center' },
 	navIOSIconStyle: { tintColor:COLOR_WHITE, marginTop: deviceIphoneX() ? 14 : -2 },
-	navButtonTextIOS: { color: COLOR_WHITE, marginTop: deviceIphoneX() ? 13 : -3, fontWeight: '300', fontSize: 18, height: 24 },
+	navButtonTextIOS: { color: COLOR_WHITE, fontWeight: '300', fontSize: 18, height: 24 },
 	navAndroidIconStyle: { tintColor:COLOR_WHITE, marginTop: -6 },
 	navButtonTextAndroid: { color: COLOR_WHITE, marginTop: -8, fontWeight: '300', fontSize: 18 },
 	// 102 - Tab Bar
