@@ -7,7 +7,6 @@ import {
 	BackHandler,
 } from 'react-native';
 import { connect } from 'react-redux';
-import { Actions } from 'react-native-router-flux';
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/Ionicons';
 import css from '../../styles/css';
@@ -44,7 +43,7 @@ class SpecialEventsView extends Component {
 		}
 
 		this.state = {
-			personal: this.props.personal,
+			personal: this.props.navigation.state.params.personal,
 			onFilter: false,
 			selectedDay,
 		};
@@ -54,11 +53,13 @@ class SpecialEventsView extends Component {
 		logger.ga('View Loaded: SpecialEventsView');
 		BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
 
+		/*
 		Actions.refresh({
 			backButton: this.renderBackButton(this.state.onFilter),
 			filterButton: this.renderFilterButton(this.state.personal),
 			specialEventsTitle: this.props.specialEventsTitle,
 		});
+		*/
 	}
 
 	componentWillUnmount() {
@@ -76,24 +77,30 @@ class SpecialEventsView extends Component {
 	}
 
 	handleFullPress = () => {
+		/*
 		Actions.refresh({
 			filterButton: this.renderFilterButton(this.state.onFilter)
 		});
 		this.setState({ personal: false });
+		*/
 	}
 
 	handleMinePress = () => {
+		/*
 		Actions.refresh({
 			filterButton: null
 		});
+		*/
 		this.setState({ personal: true });
 	}
 
 	handleFilterPress = () => {
+		/*
 		Actions.refresh({
 			backButton: this.renderBackButton(!this.state.onFilter),
 			filterButton: this.renderFilterButton(!this.state.onFilter)
 		});
+		*/
 		this.setState({ onFilter: !this.state.onFilter });
 	}
 
@@ -115,7 +122,7 @@ class SpecialEventsView extends Component {
 						style={general.platformIOS() ? css.navButtonTextIOS : css.navButtonTextAndroid}
 					>
 						Filter
-						</Text>
+					</Text>
 				</Touchable>
 			);
 		} else {

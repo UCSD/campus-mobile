@@ -8,7 +8,7 @@ import {
 	ListView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { Actions } from 'react-native-router-flux';
+import { withNavigation } from 'react-navigation';
 import { COLOR_SECONDARY } from '../../styles/ColorConstants';
 
 const css = require('../../styles/css');
@@ -52,7 +52,8 @@ class DiningDetail extends React.Component {
 	}
 
 	render() {
-		const { data } = this.props;
+		const { params } = this.props.navigation.state;
+		const { data } = params;
 
 		return (
 			<View style={css.main_full}>
@@ -300,11 +301,11 @@ const MenuList = ({ data, filters, activeMeal }) => {
 	}
 };
 
-const MenuItem = ({ data }) => (
+const UnwrappedMenuItem = ({ navigation, data }) => (
 	<TouchableHighlight
 		style={css.dl_market_menu_row}
 		underlayColor={'rgba(200,200,200,.1)'}
-		onPress={() => Actions.DiningNutrition({ menuItem: data })}
+		onPress={() => navigation.navigate('DiningNutrition', { menuItem: data })}
 	>
 		<Text style={css.dl_menu_item_name}>
 			{data.name}
@@ -316,3 +317,5 @@ const MenuItem = ({ data }) => (
 		</Text>
 	</TouchableHighlight>
 );
+
+const MenuItem = withNavigation(UnwrappedMenuItem);

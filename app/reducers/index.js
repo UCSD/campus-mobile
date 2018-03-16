@@ -11,7 +11,6 @@ import diningReducer from './dining';
 import eventsReducer from './events';
 import newsReducer from './news';
 import linksReducer from './links';
-import routesReducer from './routes';
 import surveyReducer from './survey';
 import specialEventsReducer from './specialEvents';
 import feedbackReducer from './feedback';
@@ -29,7 +28,6 @@ module.exports = combineReducers({
 	events: eventsReducer,
 	news: newsReducer,
 	links: linksReducer,
-	routes: routesReducer,
 	survey: surveyReducer,
 	specialEvents: specialEventsReducer,
 	feedback: feedbackReducer,

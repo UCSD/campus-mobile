@@ -76,18 +76,18 @@ var css = StyleSheet.create({
 	 *  100 - Navigation
 	 ********************************************/
 	// 101 - Navigator
+	nav: { backgroundColor: COLOR_PRIMARY },
+	navTitle: { flex: 1, fontSize: 24, fontWeight: '300', textAlign: 'center',alignSelf:'center' },
 	navIOS: { backgroundColor: COLOR_PRIMARY, height: NAVIGATOR_IOS_HEIGHT },
 	navAndroid: { backgroundColor: COLOR_PRIMARY, height: NAVIGATOR_ANDROID_HEIGHT },
-	navIOSTitle: { color: COLOR_WHITE, fontSize: 24, fontWeight: '300', alignSelf: 'center' },
-	navAndroidTitle: { color: COLOR_WHITE, fontSize: 24, fontWeight: '300', alignSelf: 'center' },
-	navCampusLogoTitle: { resizeMode: 'contain', height: 26, alignSelf: 'center' },
+	navCampusLogoTitle: { flex: 1, resizeMode: 'contain', height: 26, alignSelf: 'center' },
 	navIOSIconStyle: { tintColor:COLOR_WHITE, marginTop: deviceIphoneX() ? 14 : -2 },
 	navButtonTextIOS: { color: COLOR_WHITE, fontWeight: '300', fontSize: 18, height: 24 },
 	navAndroidIconStyle: { tintColor:COLOR_WHITE, marginTop: -6 },
 	navButtonTextAndroid: { color: COLOR_WHITE, marginTop: -8, fontWeight: '300', fontSize: 18 },
 	// 102 - Tab Bar
-	tabBarIOS: { borderTopWidth: 1, borderColor: '#DADADA', backgroundColor: COLOR_WHITE, height: TAB_BAR_HEIGHT },
-	tabBarAndroid: { borderBottomWidth: 1, borderColor: '#DADADA', backgroundColor: COLOR_WHITE, height: TAB_BAR_HEIGHT },
+	tabBarIOS: { borderTopWidth: 1, borderColor: '#DADADA', backgroundColor: COLOR_WHITE, height: 40 },
+	tabBarAndroid: { borderBottomWidth: 1, borderColor: '#DADADA', backgroundColor: COLOR_WHITE, height: 45 },
 	tabContainer: { width: 70, paddingTop: deviceIphoneX() ? 4 : 8, paddingBottom: deviceIphoneX() ? 20 : 8 },
 	tabContainerBottom: { borderBottomColor: COLOR_PRIMARY },
 	tabIcon: { color: COLOR_DMGREY, alignSelf: 'center', backgroundColor: 'transparent', opacity: 0.95, width: 24, height: 24, overflow: 'hidden' },

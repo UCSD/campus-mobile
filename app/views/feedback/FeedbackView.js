@@ -16,6 +16,10 @@ import css from '../../styles/css';
 import { APP_NAME, FEEDBACK_POST_TTL } from '../../AppSettings';
 
 export class FeedbackView extends Component {
+	static navigationOptions = {
+		title: 'Feedback',
+	}
+
 	componentDidMount() {
 		logger.ga('View Loaded: Feedback');
 

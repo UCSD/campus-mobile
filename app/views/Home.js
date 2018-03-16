@@ -1,7 +1,7 @@
 import React from 'react';
 import {
-	Text,
 	View,
+	Image,
 	ScrollView,
 } from 'react-native';
 import { connect } from 'react-redux';
@@ -16,14 +16,28 @@ import QuicklinksCardContainer from './quicklinks/QuicklinksCardContainer';
 import NewsCardContainer from './news/NewsCardContainer';
 import DiningCardContainer from './dining/DiningCardContainer';
 import SpecialEventsCardContainer from './specialEvents/SpecialEventsCardContainer';
-//import SurveyCardContainer from './survey/SurveyCardContainer';
-//import ScheduleCard from './schedule/ScheduleCard';
+// import SurveyCardContainer from './survey/SurveyCardContainer';
+// import ScheduleCard from './schedule/ScheduleCard';
 
 import { platformAndroid } from '../util/general';
 import css from '../styles/css';
 import logger from '../util/logger';
 
+const campusLogoImage = require('../assets/img/UCSanDiegoLogo-White.png');
+
+const CampusLogo = () => (
+	<Image
+		source={campusLogoImage}
+		style={css.navCampusLogoTitle}
+	/>
+);
+
 export class Home extends React.Component {
+	static navigationOptions = {
+		title: 'Home',
+		headerTitle: <CampusLogo />
+	};
+
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -48,6 +62,7 @@ export class Home extends React.Component {
 
 	componentDidUpdate(prevProps, prevState) {
 		// Handle scroll when switching into Home View but it doesn't re-mount
+		/*
 		if (prevProps.scene.sceneKey !== 'Home' &&
 			prevProps.scene.sceneKey !== 'tabbar' &&
 			this.props.scene.sceneKey === 'Home') {
@@ -55,6 +70,7 @@ export class Home extends React.Component {
 				this._scrollview.scrollTo({ y: this.props.lastScroll, animated: false });
 			}
 		}
+		*/
 	}
 
 	handleScroll = (event) => {
@@ -67,10 +83,10 @@ export class Home extends React.Component {
 		const activeCards = [];
 		let card;
 
-		/*if (this.props.loggedIn) {
+		/* if (this.props.loggedIn) {
 			activeCards.push(<ScheduleCard key={'schedule'} />);
 		}
-		activeCards.push(<SurveyCardContainer key={'survey'} />);*/
+		activeCards.push(<SurveyCardContainer key={'survey'} />); */
 		if (Array.isArray(this.props.cardOrder)) {
 			for (let i = 0; i < this.props.cardOrder.length; ++i) {
 				const key = this.props.cardOrder[i];
@@ -117,7 +133,7 @@ export class Home extends React.Component {
 	render() {
 		// Prevent home from re-rendering when not in home
 		if (false) {
-		//if (this.props.scene.sceneKey !== 'Home' && this.props.scene.sceneKey !== 'tabbar') {
+		// if (this.props.scene.sceneKey !== 'Home' && this.props.scene.sceneKey !== 'tabbar') {
 			return null;
 		} else {
 			return (
@@ -142,7 +158,6 @@ function mapStateToProps(state, props) {
 	return {
 		cards: state.cards.cards,
 		cardOrder: state.cards.cardOrder,
-		scene: state.routes.scene,
 		lastScroll: state.home.lastScroll,
 		// loggedIn: state.user.isLoggedIn
 	};

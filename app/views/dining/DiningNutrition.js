@@ -8,7 +8,10 @@ import {
 const logger = require('../../util/logger');
 const css = require('../../styles/css');
 
-const DiningNutrition = ({ menuItem }) => {
+const DiningNutrition = ({ navigation }) => {
+	const { params } = navigation.state;
+	const { menuItem } = params;
+
 	logger.ga('View Loaded: Dining Nutrition: ' + menuItem.name );
 
 	return (

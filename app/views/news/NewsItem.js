@@ -1,15 +1,14 @@
 import React from 'react';
-
-import { Actions } from 'react-native-router-flux';
+import { withNavigation } from 'react-navigation';
 
 import DataItem from '../common/DataItem';
 
-const NewsItem = ({ data, card }) => (
+const NewsItem = ({ navigation, data, card }) => (
 	<DataItem
 		data={data}
 		card={card}
-		onPress={() => Actions.NewsDetail({ data })}
+		onPress={() => { navigation.navigate('NewsDetail', { data }); }}
 	/>
 );
 
-export default NewsItem;
+export default withNavigation(NewsItem);

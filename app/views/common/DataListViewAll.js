@@ -18,7 +18,10 @@ import {
  * @param  {String} item String name of row item
  * @return {JSX}
  */
-const DataListViewAll = ({ title, data, item, card }) => {
+const DataListViewAll = ({ navigation }) => {
+	const { params } = navigation.state;
+	const { title, data, item, card } = params;
+
 	logger.ga('View Loaded: ' + title + ' ListView');
 	console.log('card: ' + card);
 	return (

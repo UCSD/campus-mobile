@@ -6,14 +6,18 @@ import {
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Ionicons';
-import { Actions } from 'react-native-router-flux';
+import { withNavigation } from 'react-navigation';
 import { COLOR_SECONDARY } from '../../styles/ColorConstants';
 const css = require('../../styles/css');
 const general = require('../../util/general');
 
-const DiningItem = ({ data }) => (
+const DiningItem = ({ navigation, data }) => (
 	<View style={css.dc_locations_row}>
-		<TouchableHighlight style={css.dc_locations_row_left} underlayColor={'rgba(200,200,200,.1)'} onPress={() => Actions.DiningDetail({ data })}>
+		<TouchableHighlight 
+			style={css.dc_locations_row_left}
+			underlayColor={'rgba(200,200,200,.1)'}
+			onPress={() => navigation.navigate('DiningDetail', { data })}
+		>
 			<View>
 				<Text style={css.dc_locations_title}>{data.name}</Text>
 				<Text style={css.dc_locations_hours}>{data.regularHours}</Text>
@@ -24,7 +28,11 @@ const DiningItem = ({ data }) => (
 		</TouchableHighlight>
 
 		{data.coords.lat !== 0 ? (
-			<TouchableHighlight style={css.dc_locations_row_right} underlayColor={'rgba(200,200,200,.1)'} onPress={() => general.gotoNavigationApp(data.coords.lat, data.coords.lon)}>
+			<TouchableHighlight
+				style={css.dc_locations_row_right}
+				underlayColor={'rgba(200,200,200,.1)'}
+				onPress={() => general.gotoNavigationApp(data.coords.lat, data.coords.lon)}
+			>
 				<View style={css.dl_dir_traveltype_container}>
 					<Icon name="md-walk" size={32} color={COLOR_SECONDARY} />
 					{data.distanceMilesStr ? (
@@ -36,4 +44,4 @@ const DiningItem = ({ data }) => (
 	</View>
 );
 
-export default DiningItem;
+export default withNavigation(DiningItem);

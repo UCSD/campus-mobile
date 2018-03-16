@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { connect } from 'react-redux';
-import { Actions } from 'react-native-router-flux';
 
 import DataListCard from '../common/DataListCard';
 import CardComponent from '../card/CardComponent';

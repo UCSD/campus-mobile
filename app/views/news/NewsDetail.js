@@ -7,6 +7,7 @@ import {
 	StyleSheet
 } from 'react-native';
 import moment from 'moment';
+import { withNavigation } from 'react-navigation';
 
 import ShareContent from '../common/ShareContent';
 import SafeImage from '../common/SafeImage';
@@ -25,7 +26,10 @@ import {
 	WINDOW_WIDTH,
 } from '../../styles/LayoutConstants';
 
-const NewsDetail = ({ data }) => {
+const NewsDetail = ({ navigation }) => {
+	const { params } = navigation.state;
+	const { data } = params;
+
 	logger.ga('View Loaded: News Detail: ' + data.title);
 
 	return (
@@ -74,4 +78,4 @@ const styles = StyleSheet.create({
 	shareButton: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR_LGREY, borderRadius: 3, marginTop: 20, padding: 10 },
 });
 
-export default NewsDetail;
+export default withNavigation(NewsDetail);

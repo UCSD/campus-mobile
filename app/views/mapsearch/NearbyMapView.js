@@ -38,7 +38,10 @@ const statusBarHeight = Platform.select({
 });
 
 export class NearbyMapView extends React.Component {
-
+	static navigationOptions = {
+		title: 'Map',
+	}
+	
 	constructor(props) {
 		super(props);
 
@@ -75,7 +78,7 @@ export class NearbyMapView extends React.Component {
 
 	componentWillReceiveProps(nextProps) {
 		// Clear search results when navigating away
-		if (nextProps.scene.key !== this.props.scene.key) {
+		if (!nextProps.navigation.isFocused()) {
 			this.props.clearSearch();
 			this.setState({ searchInput: null });
 		}
@@ -383,7 +386,6 @@ const mapStateToProps = (state, props) => (
 		vehicles: state.shuttle.vehicles,
 		search_history: state.map.history,
 		search_results: state.map.results,
-		scene: state.routes.scene
 	}
 );
 

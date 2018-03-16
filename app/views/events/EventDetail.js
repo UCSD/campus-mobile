@@ -25,7 +25,10 @@ import {
 	WINDOW_WIDTH,
 } from '../../styles/LayoutConstants';
 
-const EventDetail = ({ data }) => {
+const EventDetail = ({ navigation }) => {
+	const { params } = navigation.state;
+	const { data } = params;
+	
 	logger.ga('View Loaded: Event Detail: ' + data.title);
 
 	return (

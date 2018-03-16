@@ -7,7 +7,7 @@ import {
 	ActivityIndicator
 } from 'react-native';
 
-import { Actions } from 'react-native-router-flux';
+import { withNavigation } from 'react-navigation';
 
 import DataListView from './DataListView';
 import Card from '../card/Card';
@@ -27,7 +27,7 @@ import {
  * @param {Function} cardSort array sorting function
  * @return {JSX} Generic component for list type cards
  */
-const DataListCard = ({ id, title, data, item, rows, cardSort }) => {
+const DataListCard = ({ navigation, id, title, data, item, rows, cardSort }) => {
 	let sortedData = data;
 	if (cardSort && sortedData) {
 		sortedData = sortedData.slice().sort(cardSort);
@@ -47,7 +47,7 @@ const DataListCard = ({ id, title, data, item, rows, cardSort }) => {
 						/>
 						<Touchable
 							onPress={() => (
-								Actions.DataListViewAll({ title, data, item }) // Actions doesn't like being passed JSX
+								navigation.navigate('DataListViewAll', { title, data, item }) // Actions doesn't like being passed JSX
 							)}
 						>
 							<View style={styles.more}>
@@ -85,4 +85,4 @@ const styles = StyleSheet.create({
 	cardcenter: { alignItems: 'center', justifyContent: 'center', width: MAX_CARD_WIDTH },
 });
 
-export default DataListCard;
+export default withNavigation(DataListCard);

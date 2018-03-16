@@ -8,31 +8,31 @@ import css from '../styles/css';
 import { COLOR_PRIMARY } from '../styles/ColorConstants';
 
 const propTypes = {
-	selected: PropTypes.bool,
-	title: PropTypes.string,
+	title: PropTypes.string.isRequired,
+	focused: PropTypes.bool.isRequired,
 };
 
-const TabIcons = function (props) {
+const TabIcons = (props) => {
 	let tabIconPack,
 		tabIconText,
 		tabIconName;
 
-	if (props.title === AppSettings.APP_NAME) {
+	if (props.title === 'Home') {
 		tabIconPack = 'Entypo';
-		tabIconText = 'Home';
 		tabIconName = 'home';
+		tabIconText = 'Home';
 	} else if (props.title === 'Map') {
 		tabIconPack = 'Entypo';
-		tabIconText = 'Map';
 		tabIconName = 'location';
+		tabIconText = 'Map';
 	} else if (props.title === 'Feedback') {
 		tabIconPack = 'Entypo';
 		tabIconName = 'new-message';
 		tabIconText = 'Feedback';
-	} else if (props.title === 'User Settings') {
+	} else if (props.title === 'Preferences') {
 		tabIconPack = 'Entypo';
 		tabIconName = 'user';
-		tabIconText = 'Settings';
+		tabIconText = 'User Settings';
 	}
 
 	return (

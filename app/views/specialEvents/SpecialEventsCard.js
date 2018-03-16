@@ -4,7 +4,7 @@ import {
 	Text,
 	StyleSheet,
 } from 'react-native';
-import { Actions } from 'react-native-router-flux';
+import { withNavigation } from 'react-navigation';
 
 import Card from '../card/Card';
 import BannerCard from '../common/BannerCard';
@@ -19,14 +19,14 @@ import {
 	MAX_CARD_WIDTH,
 } from '../../styles/LayoutConstants';
 
-export const SpecialEventsCard = ({ specialEvents, saved, hideCard }) => (
+export const SpecialEventsCard = ({ navigation, specialEvents, saved, hideCard }) => (
 	<View>
 		{ (Array.isArray(saved) && saved.length < 1) ?
 			(
 				<BannerCard
 					title={specialEvents.name}
 					image={specialEvents.logo}
-					onPress={() => Actions.SpecialEventsView({ personal: false })}
+					onPress={() => navigation.navigate('SpecialEventsView', { title: specialEvents.name, personal: false })}
 					onClose={() => hideCard('specialEvents')}
 				/>
 			) :
@@ -47,7 +47,7 @@ export const SpecialEventsCard = ({ specialEvents, saved, hideCard }) => (
 							inCard={true}
 						/>
 						<Touchable
-							onPress={() => Actions.SpecialEventsView({ personal: true })}
+							onPress={() => navigation.navigate('SpecialEventsView', { title: specialEvents.name, personal: true })}
 						>
 							<View style={styles.more}>
 								<Text style={styles.more_label}>
@@ -69,4 +69,4 @@ const styles = StyleSheet.create({
 	contentContainer: { flexGrow: 1, width: MAX_CARD_WIDTH },
 });
 
-export default SpecialEventsCard;
+export default withNavigation(SpecialEventsCard);

@@ -8,6 +8,10 @@ import css from '../../styles/css';
 
 // View for user to manage preferences, including which cards are visible
 class PreferencesView extends React.Component {
+	static navigationOptions = {
+		title: 'User Settings',
+	}
+
 	constructor(props) {
 		super(props);
 		this.state = {

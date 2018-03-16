@@ -1,7 +1,7 @@
 import React from 'react';
 import { Alert } from 'react-native';
 import { connect } from 'react-redux';
-import { Actions } from 'react-native-router-flux';
+import { withNavigation } from 'react-navigation';
 import Toast from 'react-native-simple-toast';
 
 import ShuttleCard from './ShuttleCard';
@@ -14,7 +14,7 @@ export class ShuttleCardContainer extends React.Component {
 	}
 
 	render() {
-		const { stopsData, savedStops, removeStop, closestStop, updateScroll, lastScroll } = this.props;
+		const { navigation, stopsData, savedStops, removeStop, closestStop, updateScroll, lastScroll } = this.props;
 
 		const displayStops = savedStops.slice();
 		if (closestStop) {
@@ -25,24 +25,24 @@ export class ShuttleCardContainer extends React.Component {
 			savedStops={displayStops}
 			stopsData={stopsData}
 			gotoSavedList={this.gotoSavedList}
-			gotoRoutesList={this.gotoRoutesList}
+			gotoRoutesList={() => this.gotoRoutesList(navigation)}
 			removeStop={removeStop}
 			updateScroll={updateScroll}
 			lastScroll={lastScroll}
 		/>);
 	}
 
-	gotoRoutesList = () => {
+	gotoRoutesList = (navigation) => {
 		if (Array.isArray(this.props.savedStops) && this.props.savedStops.length < 10) {
 			const { shuttle_routes } = this.props;
 			// Sort routes by alphabet
 			const alphaRoutes = [];
 			Object.keys(shuttle_routes)
 				.sort((a, b) => shuttle_routes[a].name.trim().localeCompare(shuttle_routes[b].name.trim()))
-					.forEach((key) => {
-						alphaRoutes.push(shuttle_routes[key]);
-					});
-			Actions.ShuttleRoutesListView({ shuttle_routes: alphaRoutes, gotoStopsList: this.gotoStopsList });
+				.forEach((key) => {
+					alphaRoutes.push(shuttle_routes[key]);
+				});
+			navigation.navigate('ShuttleRoutesListView', { shuttle_routes: alphaRoutes, gotoStopsList: this.gotoStopsList });
 		} else {
 			Alert.alert(
 				'Add a Stop',
@@ -69,31 +69,35 @@ export class ShuttleCardContainer extends React.Component {
 	}
 
 	gotoStopsList = (stops) => {
+		const { navigation } = this.props;
+
 		// Sort stops by alphabet
 		const alphaStops = [];
 		Object.keys(stops)
 			.sort((a, b) => stops[a].name.trim().localeCompare(stops[b].name.trim()))
-				.forEach((key) => {
-					const stop = Object.assign({}, stops[key]);
+			.forEach((key) => {
+				const stop = Object.assign({}, stops[key]);
 
-					if (this.isSaved(stop)) {
-						stop.saved = true;
-					}
-					alphaStops.push(stop);
-				});
+				if (this.isSaved(stop)) {
+					stop.saved = true;
+				}
+				alphaStops.push(stop);
+			});
 
-		Actions.ShuttleStopsListView({ shuttle_stops: alphaStops, addStop: this.addStop });
+		navigation.navigate('ShuttleStopsListView', { shuttle_stops: alphaStops, addStop: this.addStop });
 	}
 
 	gotoSavedList = () => {
-		Actions.ShuttleSavedListView({ gotoRoutesList: this.gotoRoutesList });
+		const { navigation } = this.props;
+		navigation.navigate('ShuttleSavedListView', { gotoRoutesList: this.gotoRoutesList });
 	}
 
 	addStop = (stopID, stopName) => {
+		const { navigation } = this.props;
 		logger.ga('Shuttle: Added stop "' + stopName + '"');
 		Toast.showWithGravity('Stop added.', Toast.SHORT, Toast.CENTER);
 		this.props.addStop(stopID); // dispatch saga
-		Actions.popTo('Home'); // pop back to home
+		navigation.popToTop(); // pop back to home
 	}
 }
 
@@ -122,6 +126,6 @@ function mapDispatchtoProps(dispatch) {
 const ActualShuttleCard = connect(
 	mapStateToProps,
 	mapDispatchtoProps
-)(ShuttleCardContainer);
+)(withNavigation(ShuttleCardContainer));
 
 export default ActualShuttleCard;

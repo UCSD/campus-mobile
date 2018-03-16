@@ -4,7 +4,7 @@ import {
 	Text,
 	TouchableHighlight
 } from 'react-native';
-import { Actions } from 'react-native-router-flux';
+import { withNavigation } from 'react-navigation';
 
 import ShuttleOverview from './ShuttleOverview';
 import ScrollCard from '../card/ScrollCard';
@@ -18,7 +18,7 @@ import {
 	MAX_CARD_WIDTH
 } from '../../styles/LayoutConstants';
 
-const ShuttleCard = ({ stopsData, savedStops, gotoRoutesList, gotoSavedList, updateScroll, lastScroll }) => {
+const ShuttleCard = ({ navigation, stopsData, savedStops, gotoRoutesList, gotoSavedList, updateScroll, lastScroll }) => {
 	const extraActions = [
 		{
 			name: 'Manage Stops',
@@ -32,12 +32,13 @@ const ShuttleCard = ({ stopsData, savedStops, gotoRoutesList, gotoSavedList, upd
 			title="Shuttle"
 			scrollData={savedStops}
 			renderRow={
-				(row) =>
+				row => (
 					<ShuttleOverview
-						onPress={() => Actions.ShuttleStop({ stopID: row.id })}
+						onPress={() => navigation.navigate('ShuttleStop', { stopID: row.id })}
 						stopData={stopsData[row.id]}
 						closest={Object.prototype.hasOwnProperty.call(row, 'savedIndex')}
 					/>
+				)
 			}
 			actionButton={
 				<Touchable
@@ -54,7 +55,7 @@ const ShuttleCard = ({ stopsData, savedStops, gotoRoutesList, gotoSavedList, upd
 	);
 };
 
-export default ShuttleCard;
+export default withNavigation(ShuttleCard);
 
 const styles = StyleSheet.create({
 	addButton: { width: MAX_CARD_WIDTH, backgroundColor: COLOR_LGREY, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4, paddingVertical: 8, borderTopWidth: 1, borderBottomWidth: 1, borderColor: COLOR_MGREY },

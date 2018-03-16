@@ -15,19 +15,23 @@ import {
 
 const resultsDataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
-const ShuttleRoutesListView = ({ shuttle_routes, gotoStopsList }) => (
-	<ListView
-		style={css.main_full}
-		dataSource={resultsDataSource.cloneWithRows(shuttle_routes)}
-		renderRow={
-			(row) =>
-				<RouteItem
-					data={row}
-					gotoStopsList={gotoStopsList}
-				/>
-		}
-	/>
-);
+const ShuttleRoutesListView = ({ navigation }) => {
+	const { shuttle_routes, gotoStopsList } = navigation.state.params;
+	return (
+		<ListView
+			style={css.main_full}
+			dataSource={resultsDataSource.cloneWithRows(shuttle_routes)}
+			renderRow={
+				row => (
+					<RouteItem
+						data={row}
+						gotoStopsList={gotoStopsList}
+					/>
+				)
+			}
+		/>
+	);
+};
 
 const RouteItem = ({ data, gotoStopsList }) => (
 	<TouchableOpacity
