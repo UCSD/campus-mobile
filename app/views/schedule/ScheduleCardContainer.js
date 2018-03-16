@@ -10,6 +10,19 @@ import logger from '../../util/logger';
 /**
  * Container component for [ScheduleCard]{@link ScheduleCard}
 **/
+
+const mockData = (scheduleData) => {
+	let result = [];
+	result.push(...scheduleData.MO);
+	result.push(...scheduleData.TU);
+	result.push(...scheduleData.WE);
+	result.push(...scheduleData.TH);
+	result.push(...scheduleData.FR);
+	result = result.slice(0,4);
+	// console.log(result);
+	return result;
+}
+
 export const ScheduleCardContainer = ({ scheduleData }) => {
     logger.ga('Card Mounted: Schedule');
     // console.log(scheduleData);
@@ -17,7 +30,7 @@ export const ScheduleCardContainer = ({ scheduleData }) => {
 
 	return (
         <ScheduleCard
-            scheduleData={scheduleData}
+            scheduleData={mockData(scheduleData)}
             actionButton={<FullScheduleButton />}
         />
 	);
