@@ -25,6 +25,9 @@ import ShuttleSavedListView from '../views/shuttle/ShuttleSavedListView';
 // TABS
 import TabIcons from './TabIcons';
 
+// ROUTER UTIL
+import withNavigationPreventDuplicate from './withNavigationPreventDuplicate';
+
 import {
 	COLOR_SECONDARY,
 	COLOR_WHITE,
@@ -59,7 +62,7 @@ const TabNav = TabNavigator(
 
 const DummyView = () => (<View />); /* Workaround for misaligned title */
 
-export default StackNavigator(
+const MainStack = StackNavigator(
 	{
 		MainTabs: {
 			screen: TabNav
@@ -153,3 +156,10 @@ export default StackNavigator(
 		}
 	}
 );
+
+MainStack.router.getStateForAction =
+withNavigationPreventDuplicate(MainStack.router.getStateForAction);
+
+const Router = () => (<MainStack />);
+
+export default Router;
