@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
 	rightHalf: { flex: 4, paddingTop: C.R * 0.5, justifyContent: 'space-between' },
 	rightHalf_activeCard: {
 		borderColor: '#707070',
-		borderWidth: C.R * 1,
+		// borderWidth: C.R * 1,
 	},
 	rightHalf_eachOfFourCards: {
 		borderColor: '#707070',
@@ -180,14 +180,14 @@ const DayItem = (props) => {
 		underlayColor = {COLOR_LGREY}
 		activeOpacity = {0.5}
 	>
-		<View style={styles.rightHalf_eachOfFourCards}>
+		<View style={[styles.rightHalf_eachOfFourCards, props.active && styles.rightHalf_activeCard]}>
 			<View style={styles.rightHalf_each_dayAndTime}>
 				<Text style={styles.rightHalf_each_dayAndTime_text}>
 					{dayOfWeekIntepreter(data.day_code).substring(0, 3) + ' ' + data.time_string}
 				</Text>
-				<Text style={styles.rightHalf_each_dayAndTime_icon}>
+				{props.active && <Text style={styles.rightHalf_each_dayAndTime_icon}>
 					
-				</Text>
+				</Text>}
 			</View>
 			<View style={styles.rightHalf_each_classAndItsType}>
 				<Text style={styles.rightHalf_each_classAndItsType_class}>
@@ -203,7 +203,10 @@ const DayItem = (props) => {
 
 ScheduleCard.propTypes = {
 	upcoming4Courses: PropTypes.array,
-	actionButton: PropTypes.element
+	actionButton: PropTypes.element,
+	mainDisplay: PropTypes.object,
+	onClickCourse : PropTypes.func,
+	activeCourse: PropTypes.number
 };
 
 export default ScheduleCard;
