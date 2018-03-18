@@ -9,7 +9,7 @@ import moment from 'moment';
 import { connect } from 'react-redux';
 import css from '../../styles/css';
 import logger from '../../util/logger';
-import { getClasses, dayOfWeekIntepreter } from './scheduleData';
+import { getClasses, dayOfWeekInterpreter } from './scheduleData';
 import {
 	MAX_CARD_WIDTH,
 	NAVIGATOR_HEIGHT,
@@ -17,27 +17,29 @@ import {
 
 const data = getClasses();
 
-const rowHasChanged = (r1, r2) => r1.id !== r2.id
-const sectionHeaderHasChanged = (s1, s2) => s1 !== s2
-const ds = new ListView.DataSource({rowHasChanged, sectionHeaderHasChanged})
+const rowHasChanged = (r1, r2) => r1.id !== r2.id;
+const sectionHeaderHasChanged = (s1, s2) => s1 !== s2;
+const ds = new ListView.DataSource({ rowHasChanged, sectionHeaderHasChanged });
 
 class FullSchedule extends React.Component {
+	constructor(props){
+		super();
+		this.state = {
+			dataSource: ds.cloneWithRowsAndSections(data)
+		}
+	}
 	componentDidMount() {
 		logger.ga('Card Mounted: Full Schedule');
 	}
 
-	state = {
-		dataSource: ds.cloneWithRowsAndSections(data)
-	}
-	
-	renderRow = (rowData, sectionId) => {
-		return (
+
+
+	renderRow = (rowData, sectionId) => (
 			<IndividualClass key={sectionId} data={rowData} />
 		)
-	}
 
 	renderSectionHeader = (sectionRows, sectionId) => {
-		let day = dayOfWeekIntepreter(sectionId);
+		const day = dayOfWeekInterpreter(sectionId);
 		if (day === 'Saturday' || day === 'Sunday') {
 			return null;
 		}
@@ -47,10 +49,10 @@ class FullSchedule extends React.Component {
 					{day}
 				</Text>
 			</View>
-		)
+		);
 	}
 
-	render () {
+	render() {
 		return (
 			<ListView
 				style={styles.container}
@@ -71,13 +73,13 @@ const styles = StyleSheet.create({
 	//   backgroundColor: 'skyblue',
 	// },
 	container: {
-		flexGrow: 1, 
+		flexGrow: 1,
 		marginTop: NAVIGATOR_HEIGHT - 1,
 	},
 	header_wrapper: {
 		// marginTop: 10,
 		marginBottom: 20,
-		borderColor: '#CCC', 
+		borderColor: '#CCC',
 		borderTopWidth:1,
 		borderBottomWidth:1,
 		backgroundColor: '#FFFFFF'
@@ -95,18 +97,18 @@ const styles = StyleSheet.create({
 		paddingLeft: 25,
 	},
 	course_code: {
-		fontSize: 18, 
+		fontSize: 18,
 		fontWeight: 'bold',
 		color: '#000000',
 	},
-	course_title: { 
-		fontSize: 18, 
-		color: '#000000', 
+	course_title: {
+		fontSize: 18,
+		color: '#000000',
 		marginBottom: 4,
 	},
-	course_text: { 
-		fontSize: 16, 
-		color: '#000000', 
+	course_text: {
+		fontSize: 16,
+		color: '#000000',
 	},
 	// main_full: { flexGrow: 1, marginTop: NAVIGATOR_HEIGHT },
 	// sc_dayText: { fontSize: 16, color: COLOR_BLACK, paddingBottom: 6 }, //2
@@ -116,12 +118,12 @@ const styles = StyleSheet.create({
 	// sc_fullScheduleContainer: { width: MAX_CARD_WIDTH + 2, padding: 7, flexDirection: 'column', flex:1 },
 	// sc_dayRow: { justifyContent: 'center', paddingBottom: 10, borderColor: '#CCC', borderWidth:1, },
 	// sc_scheduleContainer: {width: MAX_CARD_WIDTH + 2, padding: 7, flexDirection:'column', flex:1 },
-})
+});
 
 const IndividualClass = ({ data }) => (
 	<View style={styles.row}>
 		<Text style={styles.course_code}>
-			{data.subject_code} {data.course_code} 
+			{data.subject_code} {data.course_code}
 		</Text>
 		<Text
 			style={styles.course_title}
@@ -143,8 +145,6 @@ function mapStateToProps(state) {
 	};
 }
 
-const FullScheduleListView = connect(
-	mapStateToProps
-)(FullSchedule);
+const FullScheduleListView = connect(mapStateToProps)(FullSchedule);
 
 export default FullScheduleListView;
