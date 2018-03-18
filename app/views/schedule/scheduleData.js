@@ -426,7 +426,8 @@ export function getData() {
 				end_time: endSeconds,
 				meeting_type: currData.meeting_type,
 				special_mtg_code: currData.special_mtg_code,
-				day_code: currData.days
+				day_code: currData.days,
+				grade_option: currCourse.grade_option
 			};
 
 			courseItems[day].push(item);

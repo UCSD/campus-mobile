@@ -6,6 +6,7 @@ import {
 	TouchableHighlight,
 	ActivityIndicator
 } from 'react-native';
+import { moment } from 'moment';
 // import Icon from 'react-native-vector-icons/Ionicons';
 
 import { dayOfWeekInterpreter } from './scheduleData';
@@ -34,10 +35,11 @@ const ScheduleCard = (props) => {
 							<View style={styles.leftHalf_upper}>
 								<View style={styles.leftHalf_upper_timeText}>
 									<Text style={styles.leftHalf_upper_timeText_firstSection}>
-										Today 9
+										{/* Today 9 */}
+										{dayOfWeekInterpreter(props.coursesToShow[props.activeCourse].day_code)}
 									</Text>
 									<Text style={styles.leftHalf_upper_timeText_secondSection}>
-										AM
+										{/* AM */}
 									</Text>
 								</View>
 								<View style={styles.leftHalf_upper_classText}>
@@ -55,10 +57,11 @@ const ScheduleCard = (props) => {
 									<Text style={styles.leftHalf_lower_sections_icon}></Text>
 									<View style={styles.leftHalf_lower_sections_text}>
 										<Text style={styles.leftHalf_lower_sections_text_topSection}>
-											In Session
+											{/* In Session */}
+											{props.coursesToShow[props.activeCourse].time_string}
 										</Text>
 										<Text style={styles.leftHalf_lower_sections_text_bottomSection}>
-											{props.coursesToShow[props.activeCourse].time_string}
+											Start and Finish Time
 										</Text>
 									</View>
 								</View>
@@ -66,10 +69,13 @@ const ScheduleCard = (props) => {
 									<Text style={styles.leftHalf_lower_sections_icon}></Text>
 									<View style={styles.leftHalf_lower_sections_text}>
 										<Text style={styles.leftHalf_lower_sections_text_topSection}>
-											Pepper Canyon Hall 106
+											{/* Pepper Canyon Hall 106 */}
+											{props.coursesToShow[props.activeCourse].building + ' '
+											+ props.coursesToShow[props.activeCourse].room}
 										</Text>
 										<Text style={styles.leftHalf_lower_sections_text_bottomSection}>
-											In Sixth College
+											{/* In Sixth College */}
+											Class Room Location
 										</Text>
 									</View>
 								</View>
@@ -77,10 +83,13 @@ const ScheduleCard = (props) => {
 									<Text style={styles.leftHalf_lower_sections_icon}></Text>
 									<View style={styles.leftHalf_lower_sections_text}>
 										<Text style={styles.leftHalf_lower_sections_text_topSection}>
-											1 More Class Today
+											{/* 1 More Class Today */}
+											{props.coursesToShow[props.activeCourse].grade_option === 'L' ?
+												'Letter Grade' : 'Pass/No Pass'}
 										</Text>
 										<Text style={styles.leftHalf_lower_sections_text_bottomSection}>
-											Last Class Ends at 10:00 AM
+											{/* Last Class Ends at 10:00 AM */}
+											Evaluation Option
 										</Text>
 									</View>
 								</View>
