@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
 	leftHalf_upper_classText_secondSection: {
 		fontSize: C.L * 5,
 		alignSelf: 'flex-end',
-		marginBottom: C.L * 2.25,
+		marginBottom: Math.round(C.L * 15 * 1.2) * 0.12,
 		color : COLOR_DGREY
 	},
 
