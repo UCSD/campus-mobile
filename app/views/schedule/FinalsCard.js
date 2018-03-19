@@ -23,8 +23,6 @@ const dataSource = new ListView.DataSource({
   rowHasChanged: (r1, r2) => r1 !== r2
 });
 
-// console.log(scheduleData);
-
 const FinalsCard = () => {
   logger.ga("Card Mounted: Finals Schedule");
   return (

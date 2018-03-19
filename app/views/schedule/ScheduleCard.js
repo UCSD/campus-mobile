@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import {
 	View,
-	// Text,
+	Text,
 	StyleSheet,
 	TouchableHighlight,
 	ActivityIndicator
@@ -10,12 +10,11 @@ import {
 // import Icon from 'react-native-vector-icons/Ionicons';
 
 import { dayOfWeekInterpreter } from './scheduleData';
-import ScheduleText from './ScheduleCardText';
 import Card from '../card/Card';
 
 // import css from '../../styles/css';
 import {
-	// COLOR_MGREY,
+	COLOR_MGREY,
 	// COLOR_PRIMARY,
 	COLOR_LGREY,
 	// COLOR_SECONDARY,
@@ -134,6 +133,22 @@ const ScheduleCard = (props) => {
 		</Card>
 	);
 };
+
+const ScheduleText = (props) => (
+	<Text
+		numberOfLines={1}
+		ellipsizeMode="tail"
+		allowFontScaling={false}
+		style={[
+			{
+				lineHeight: (() => Math.round(StyleSheet.flatten(props.style).fontSize * (1.2)))(),
+				color: COLOR_VDGREY
+			},
+			props.style]}
+	>
+		{props.children}
+	</Text>
+);
 
 const C = {
 	L: MAX_CARD_WIDTH * 0.006,

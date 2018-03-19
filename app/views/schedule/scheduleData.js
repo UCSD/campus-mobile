@@ -441,7 +441,6 @@ export function getData() {
 		const courseItem = courseItems[courseItemsKeys[l]];
 		courseItem.sort(sortTime);
 	}
-
 	return courseItems;
 }
 
