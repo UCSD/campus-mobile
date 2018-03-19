@@ -30,7 +30,7 @@ const dataSource = new ListView.DataSource({
 	sectionHeaderHasChanged: (s1, s2) => s1 !== s2
 });
 
-const SpecialEventsListView = ({ addSpecialEvents, specialEventsSchedule,
+const SpecialEventsListView = ({ navigation, addSpecialEvents, specialEventsSchedule,
 	specialEventsScheduleIds, removeSpecialEvents, saved,disabled, personal, rows,
 	scrollEnabled, style, labels, labelItemIds, selectedDay, days, daysItemIds, inCard,
 	specialEventsTitle, handleFilterPress }) => {

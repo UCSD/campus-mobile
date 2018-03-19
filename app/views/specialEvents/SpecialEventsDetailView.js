@@ -27,15 +27,15 @@ import {
 
 class SpecialEventsDetailView extends React.Component {
 	componentDidMount() {
-		const { data, title } = this.props;
+		const { navigation } = this.props;
+		const { data, title } = navigation.state.params;
+
 		logger.ga('View Loaded: SpecialEvents Detail: ' + data['talk-title']);
-		Actions.refresh({
-			specialEventsTitle: title,
-		});
 	}
 
 	render() {
-		const { data, saved, add, remove } = this.props;
+		const { navigation, saved } = this.props;
+		const { data, add, remove } = navigation.state.params;
 
 		return (
 			<View style={css.main_full}>

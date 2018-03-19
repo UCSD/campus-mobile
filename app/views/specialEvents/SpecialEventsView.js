@@ -4,7 +4,6 @@ import {
 	StyleSheet,
 	Text,
 	ScrollView,
-	BackHandler,
 } from 'react-native';
 import { connect } from 'react-redux';
 import moment from 'moment';
@@ -51,56 +50,17 @@ class SpecialEventsView extends Component {
 
 	componentDidMount() {
 		logger.ga('View Loaded: SpecialEventsView');
-		BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
-
-		/*
-		Actions.refresh({
-			backButton: this.renderBackButton(this.state.onFilter),
-			filterButton: this.renderFilterButton(this.state.personal),
-			specialEventsTitle: this.props.specialEventsTitle,
-		});
-		*/
-	}
-
-	componentWillUnmount() {
-		BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
-	}
-
-	// Returns true so router-flux back handler is ignored
-	handleBackPress = () => {
-		if (this.state.onFilter) {
-			this.handleFilterPress();
-			return true;
-		} else {
-			return false;
-		}
 	}
 
 	handleFullPress = () => {
-		/*
-		Actions.refresh({
-			filterButton: this.renderFilterButton(this.state.onFilter)
-		});
 		this.setState({ personal: false });
-		*/
 	}
 
 	handleMinePress = () => {
-		/*
-		Actions.refresh({
-			filterButton: null
-		});
-		*/
 		this.setState({ personal: true });
 	}
 
 	handleFilterPress = () => {
-		/*
-		Actions.refresh({
-			backButton: this.renderBackButton(!this.state.onFilter),
-			filterButton: this.renderFilterButton(!this.state.onFilter)
-		});
-		*/
 		this.setState({ onFilter: !this.state.onFilter });
 	}
 
@@ -128,27 +88,6 @@ class SpecialEventsView extends Component {
 		} else {
 			return null;
 		}
-	}
-
-	renderBackButton = (onFilter) => {
-		return (
-			<Touchable
-				onPress={() => (onFilter) ? (this.handleFilterPress()) : (Actions.pop())}
-			>
-				<View style={styles.backButtonContainer}>
-					<Icon
-						name={'ios-arrow-back'}
-						size={33}
-						style={styles.backButtonImage}
-					/>
-					<Text
-						style={general.platformIOS() ? css.navButtonTextIOS : css.navButtonTextAndroid}
-					>
-						Back
-					</Text>
-				</View>
-			</Touchable>
-		);
 	}
 
 	render() {

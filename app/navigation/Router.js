@@ -138,6 +138,14 @@ const MainStack = StackNavigator(
 				return { title };
 			}
 		},
+		SpecialEventsDetailView: {
+			screen: SpecialEventsDetailView,
+			navigationOptions: ({ navigation }) => {
+				const { params } = navigation.state;
+				const { title } = params;
+				return { title };
+			}
+		},
 		DataListViewAll: {
 			screen: DataListViewAll,
 			navigationOptions: ({ navigation }) => {
