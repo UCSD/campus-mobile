@@ -5,7 +5,6 @@ import {
 	ScrollView,
 } from 'react-native';
 import { connect } from 'react-redux';
-import { MenuProvider } from 'react-native-popup-menu';
 import { checkGooglePlayServices } from 'react-native-google-api-availability-bridge';
 
 // Cards
@@ -137,18 +136,16 @@ export class Home extends React.Component {
 			return null;
 		} else {
 			return (
-				<MenuProvider style={{ flex:1 }}>
-					<View style={css.main_container}>
-						<ScrollView
-							ref={c => { this._scrollview = c; }}
-							onScroll={this.handleScroll}
-							scrollEventThrottle={69}
-						>
-							{/* LOAD CARDS */}
-							{ this._getCards() }
-						</ScrollView>
-					</View>
-				</MenuProvider>
+				<View style={css.main_container}>
+					<ScrollView
+						ref={c => { this._scrollview = c; }}
+						onScroll={this.handleScroll}
+						scrollEventThrottle={69}
+					>
+						{/* LOAD CARDS */}
+						{ this._getCards() }
+					</ScrollView>
+				</View>
 			);
 		}
 	}

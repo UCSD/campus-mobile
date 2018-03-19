@@ -1,6 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { StackNavigator, TabNavigator } from 'react-navigation';
+import { MenuProvider } from 'react-native-popup-menu';
 
 import general from '../util/general';
 
@@ -135,7 +136,10 @@ const MainStack = StackNavigator(
 			navigationOptions: ({ navigation }) => {
 				const { params } = navigation.state;
 				const { title } = params;
-				return { title };
+				return {
+					title,
+					headerRight: (<DummyView />)
+				};
 			}
 		},
 		SpecialEventsDetailView: {
@@ -143,7 +147,10 @@ const MainStack = StackNavigator(
 			navigationOptions: ({ navigation }) => {
 				const { params } = navigation.state;
 				const { title } = params;
-				return { title };
+				return {
+					title,
+					headerRight: (<DummyView />)
+				};
 			}
 		},
 		DataListViewAll: {
@@ -151,7 +158,10 @@ const MainStack = StackNavigator(
 			navigationOptions: ({ navigation }) => {
 				const { params } = navigation.state;
 				const { title } = params;
-				return { title };
+				return {
+					title,
+					headerRight: (<DummyView />)
+				};
 			}
 		}
 	},
@@ -168,6 +178,10 @@ const MainStack = StackNavigator(
 MainStack.router.getStateForAction =
 withNavigationPreventDuplicate(MainStack.router.getStateForAction);
 
-const Router = () => (<MainStack />);
+const Router = () => (
+	<MenuProvider style={{ flex:1 }}>
+		<MainStack />
+	</MenuProvider>
+);
 
 export default Router;
