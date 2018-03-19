@@ -1,26 +1,28 @@
 import React, { PropTypes } from 'react';
 import {
 	View,
-	Text,
+	// Text,
 	StyleSheet,
 	TouchableHighlight,
 	ActivityIndicator
 } from 'react-native';
-import { moment } from 'moment';
+// import { moment } from 'moment';
 // import Icon from 'react-native-vector-icons/Ionicons';
 
 import { dayOfWeekInterpreter } from './scheduleData';
+import ScheduleText from './ScheduleCardText';
 import Card from '../card/Card';
 
 // import css from '../../styles/css';
 import {
-	// COLOR_DGREY,
 	// COLOR_MGREY,
 	// COLOR_PRIMARY,
 	COLOR_LGREY,
 	// COLOR_SECONDARY,
 	// COLOR_BLACK,
-	COLOR_VDGREY
+	COLOR_VDGREY,
+	COLOR_DGREY,
+	COLOR_DMGREY
 } from '../../styles/ColorConstants';
 import { MAX_CARD_WIDTH } from '../../styles/LayoutConstants';
 
@@ -34,63 +36,63 @@ const ScheduleCard = (props) => {
 						<View style={styles.leftHalf}>
 							<View style={styles.leftHalf_upper}>
 								<View style={styles.leftHalf_upper_timeText}>
-									<Text style={styles.leftHalf_upper_timeText_firstSection}>
+									<ScheduleText style={styles.leftHalf_upper_timeText_firstSection}>
 										{/* Today 9 */}
 										{dayOfWeekInterpreter(props.coursesToShow[props.activeCourse].day_code)}
-									</Text>
-									<Text style={styles.leftHalf_upper_timeText_secondSection}>
+									</ScheduleText>
+									<ScheduleText style={styles.leftHalf_upper_timeText_secondSection}>
 										{/* AM */}
-									</Text>
+									</ScheduleText>
 								</View>
 								<View style={styles.leftHalf_upper_classText}>
-									<Text style={styles.leftHalf_upper_classText_firstSection}>
+									<ScheduleText style={styles.leftHalf_upper_classText_firstSection}>
 										{props.coursesToShow[props.activeCourse].subject_code + ' '
 											+ props.coursesToShow[props.activeCourse].course_code}
-									</Text>
-									<Text style={styles.leftHalf_upper_classText_secondSection}>
+									</ScheduleText>
+									<ScheduleText style={styles.leftHalf_upper_classText_secondSection}>
 										{props.coursesToShow[props.activeCourse].meeting_type}
-									</Text>
+									</ScheduleText>
 								</View>
 							</View>
 							<View style={styles.leftHalf_lower}>
 								<View style={styles.leftHalf_lower_sections}>
-									<Text style={styles.leftHalf_lower_sections_icon}></Text>
+									<ScheduleText style={styles.leftHalf_lower_sections_icon}></ScheduleText>
 									<View style={styles.leftHalf_lower_sections_text}>
-										<Text style={styles.leftHalf_lower_sections_text_topSection}>
+										<ScheduleText style={styles.leftHalf_lower_sections_text_topSection}>
 											{/* In Session */}
 											{props.coursesToShow[props.activeCourse].time_string}
-										</Text>
-										<Text style={styles.leftHalf_lower_sections_text_bottomSection}>
+										</ScheduleText>
+										<ScheduleText style={styles.leftHalf_lower_sections_text_bottomSection}>
 											Start and Finish Time
-										</Text>
+										</ScheduleText>
 									</View>
 								</View>
 								<View style={styles.leftHalf_lower_sections}>
-									<Text style={styles.leftHalf_lower_sections_icon}></Text>
+									<ScheduleText style={styles.leftHalf_lower_sections_icon}></ScheduleText>
 									<View style={styles.leftHalf_lower_sections_text}>
-										<Text style={styles.leftHalf_lower_sections_text_topSection}>
+										<ScheduleText style={styles.leftHalf_lower_sections_text_topSection}>
 											{/* Pepper Canyon Hall 106 */}
 											{props.coursesToShow[props.activeCourse].building + ' '
 											+ props.coursesToShow[props.activeCourse].room}
-										</Text>
-										<Text style={styles.leftHalf_lower_sections_text_bottomSection}>
+										</ScheduleText>
+										<ScheduleText style={styles.leftHalf_lower_sections_text_bottomSection}>
 											{/* In Sixth College */}
 											Class Room Location
-										</Text>
+										</ScheduleText>
 									</View>
 								</View>
 								<View style={styles.leftHalf_lower_sections}>
-									<Text style={styles.leftHalf_lower_sections_icon}></Text>
+									<ScheduleText style={styles.leftHalf_lower_sections_icon}></ScheduleText>
 									<View style={styles.leftHalf_lower_sections_text}>
-										<Text style={styles.leftHalf_lower_sections_text_topSection}>
+										<ScheduleText style={styles.leftHalf_lower_sections_text_topSection}>
 											{/* 1 More Class Today */}
 											{props.coursesToShow[props.activeCourse].grade_option === 'L' ?
 												'Letter Grade' : 'Pass/No Pass'}
-										</Text>
-										<Text style={styles.leftHalf_lower_sections_text_bottomSection}>
+										</ScheduleText>
+										<ScheduleText style={styles.leftHalf_lower_sections_text_bottomSection}>
 											{/* Last Class Ends at 10:00 AM */}
 											Evaluation Option
-										</Text>
+										</ScheduleText>
 									</View>
 								</View>
 							</View>
@@ -161,7 +163,8 @@ const styles = StyleSheet.create({
 		fontSize: C.L * 7,
 		marginLeft: C.L * 1,
 		marginRight: C.L * 1,
-		fontWeight: 'bold'
+		// fontWeight: 'bold',
+		color: COLOR_DGREY
 	},
 	leftHalf_upper_timeText_secondSection: {
 		fontSize: C.L * 5,
@@ -174,12 +177,13 @@ const styles = StyleSheet.create({
 		fontSize: C.L * 15,
 		fontWeight: 'bold',
 		marginRight: C.L * 3,
-		overflow: 'hidden'
+		overflow: 'hidden',
 	},
 	leftHalf_upper_classText_secondSection: {
 		fontSize: C.L * 5,
 		alignSelf: 'flex-end',
-		paddingBottom: C.L * 1.5
+		marginBottom: C.L * 2.25,
+		color : COLOR_DGREY
 	},
 
 	leftHalf_lower: { flex: 7 },
@@ -187,7 +191,9 @@ const styles = StyleSheet.create({
 	leftHalf_lower_sections_icon: {
 		fontFamily: 'Material Design Icons',
 		fontSize: C.L * 15.5,
-		marginRight: C.L * 4
+		marginRight: C.L * 4,
+		lineHeight: Math.round(C.L * 16),
+		top: -C.L * 0.5,
 	},
 	leftHalf_lower_sections_text: {},
 	leftHalf_lower_sections_text_topSection: {
@@ -196,7 +202,8 @@ const styles = StyleSheet.create({
 	},
 	leftHalf_lower_sections_text_bottomSection: {
 		fontSize: C.L * 4.5,
-		paddingTop: C.L * 1
+		paddingTop: C.L * 1,
+		color: COLOR_DGREY
 	},
 
 	rightHalf: {
@@ -204,46 +211,49 @@ const styles = StyleSheet.create({
 		paddingTop: C.R * 0.5,
 		justifyContent: 'space-between'
 	},
-	rightHalf_activeCard: {
-		borderColor: '#707070'
-	// borderWidth: C.R * 1,
-	},
 	rightHalf_eachOfFourCards: {
-		borderColor: '#707070',
+		borderColor: COLOR_DGREY,
 		borderWidth: C.R * 0.5,
-		borderRadius: C.R * 1.5,
+		borderRadius: C.R * 1,
 		paddingLeft: C.R * 4,
+		paddingTop: C.R * 2.5,
 		overflow: 'hidden',
 		width: '100%',
-		aspectRatio: 3.16
+		aspectRatio: 3.16,
 	},
-	rightHalf_each_dayAndTime: { flexDirection: 'row' },
+	rightHalf_activeCard: {
+		borderColor: COLOR_VDGREY,
+		borderWidth: C.R * 0.75,
+		paddingLeft: C.R * 3.75,
+		paddingTop: C.R * 2.25,
+	},
+	rightHalf_each_dayAndTime: {
+		flexDirection: 'row',
+		height: Math.round(C.R * 9)
+	},
 	rightHalf_each_dayAndTime_text: {
-		flex: 8,
+		width: C.R * 70,
 		fontSize: C.R * 6.5,
-		paddingTop: C.R * 3.25,
-		color: COLOR_VDGREY
 	},
 	rightHalf_each_dayAndTime_icon: {
-		flex: 2,
 		fontSize: C.R * 9,
-		color: COLOR_VDGREY,
-		top: -C.R * 1.5,
-		fontFamily: 'Material Design Icons'
+		top: -C.R * 3,
+		fontFamily: 'Material Design Icons',
+		lineHeight: Math.round(C.R * 9),
 	},
 	rightHalf_each_classAndItsType: { flexDirection: 'row', top: C.R * 1 },
 	rightHalf_each_classAndItsType_class: {
-		flex: 3,
+		width: C.R * 55,
 		fontSize: C.R * 11,
-		color: COLOR_VDGREY
 	},
 	rightHalf_each_classAndItsType_type: {
-		flex: 2,
 		fontSize: C.R * 6,
-		color: COLOR_VDGREY,
 		alignSelf: 'flex-end',
 		paddingBottom: C.R * 1
-	}
+	},
+	rightHalf_each_inActiveText: {
+		color: COLOR_DGREY
+	},
 });
 
 // Holds the view for an individual section/class
@@ -257,20 +267,20 @@ const DayItem = (props) => {
 		>
 			<View style={[styles.rightHalf_eachOfFourCards, props.active && styles.rightHalf_activeCard]}>
 				<View style={styles.rightHalf_each_dayAndTime}>
-					<Text style={styles.rightHalf_each_dayAndTime_text}>
+					<ScheduleText style={[styles.rightHalf_each_dayAndTime_text, !props.active && styles.rightHalf_each_inActiveText]}>
 						{dayOfWeekInterpreter(data.day_code).substring(0, 3) + ' ' + data.time_string}
-					</Text>
+					</ScheduleText>
 					{props.active && (
-						<Text style={styles.rightHalf_each_dayAndTime_icon}></Text>
+						<ScheduleText style={[styles.rightHalf_each_dayAndTime_icon, !props.active && styles.rightHalf_each_inActiveText]}></ScheduleText>
 					)}
 				</View>
 				<View style={styles.rightHalf_each_classAndItsType}>
-					<Text style={styles.rightHalf_each_classAndItsType_class}>
+					<ScheduleText style={[styles.rightHalf_each_classAndItsType_class, !props.active && styles.rightHalf_each_inActiveText]}>
 						{data.subject_code + ' ' + data.course_code}
-					</Text>
-					<Text style={styles.rightHalf_each_classAndItsType_type}>
+					</ScheduleText>
+					<ScheduleText style={[styles.rightHalf_each_classAndItsType_type, !props.active && styles.rightHalf_each_inActiveText]}>
 						{data.meeting_type}
-					</Text>
+					</ScheduleText>
 				</View>
 			</View>
 		</TouchableHighlight>

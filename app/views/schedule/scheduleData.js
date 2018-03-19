@@ -259,7 +259,7 @@ const data = {
 			course_code: '141L',
 			units: 2,
 			course_level: 'UD',
-			grade_option: 'L',
+			grade_option: 'PNP',
 			course_title: 'Project/Computer Architecture',
 			enrollment_status: 'EN',
 			repeat_code: 'D',
