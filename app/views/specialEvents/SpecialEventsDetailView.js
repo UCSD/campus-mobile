@@ -8,7 +8,6 @@ import {
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
-import { Actions } from 'react-native-router-flux';
 
 import Touchable from '../common/Touchable';
 import css from '../../styles/css';
