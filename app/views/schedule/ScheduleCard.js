@@ -6,8 +6,8 @@ import {
 	TouchableHighlight,
 	ActivityIndicator
 } from 'react-native';
-// import { moment } from 'moment';
-// import Icon from 'react-native-vector-icons/Ionicons';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import SimpleIcon from 'react-native-vector-icons/SimpleLineIcons';
 
 import { dayOfWeekInterpreter } from './scheduleData';
 import Card from '../card/Card';
@@ -55,7 +55,7 @@ const ScheduleCard = (props) => {
 							</View>
 							<View style={styles.leftHalf_lower}>
 								<View style={styles.leftHalf_lower_sections}>
-									<ScheduleText style={styles.leftHalf_lower_sections_icon}></ScheduleText>
+								<SimpleIcon style={styles.leftHalf_lower_sections_icon} name="clock" />
 									<View style={styles.leftHalf_lower_sections_text}>
 										<ScheduleText style={styles.leftHalf_lower_sections_text_topSection}>
 											{/* In Session */}
@@ -67,7 +67,7 @@ const ScheduleCard = (props) => {
 									</View>
 								</View>
 								<View style={styles.leftHalf_lower_sections}>
-									<ScheduleText style={styles.leftHalf_lower_sections_icon}></ScheduleText>
+									<Icon style={styles.leftHalf_lower_sections_icon} name="location-arrow" />
 									<View style={styles.leftHalf_lower_sections_text}>
 										<ScheduleText style={styles.leftHalf_lower_sections_text_topSection}>
 											{/* Pepper Canyon Hall 106 */}
@@ -81,7 +81,7 @@ const ScheduleCard = (props) => {
 									</View>
 								</View>
 								<View style={styles.leftHalf_lower_sections}>
-									<ScheduleText style={styles.leftHalf_lower_sections_icon}></ScheduleText>
+								<Icon style={styles.leftHalf_lower_sections_icon} name="calendar-check-o" />
 									<View style={styles.leftHalf_lower_sections_text}>
 										<ScheduleText style={styles.leftHalf_lower_sections_text_topSection}>
 											{/* 1 More Class Today */}
@@ -286,7 +286,7 @@ const DayItem = (props) => {
 						{dayOfWeekInterpreter(data.day_code).substring(0, 3) + ' ' + data.time_string}
 					</ScheduleText>
 					{props.active && (
-						<ScheduleText style={[styles.rightHalf_each_dayAndTime_icon, !props.active && styles.rightHalf_each_inActiveText]}></ScheduleText>
+						<SimpleIcon style={[styles.rightHalf_each_dayAndTime_icon, !props.active && styles.rightHalf_each_inActiveText]} name="pin" />
 					)}
 				</View>
 				<View style={styles.rightHalf_each_classAndItsType}>
