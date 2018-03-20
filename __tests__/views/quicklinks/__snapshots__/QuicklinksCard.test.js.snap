@@ -84,7 +84,7 @@ exports[`card renders without crashing 1`] = `
 `;
 
 exports[`container renders without crashing 1`] = `
-<DataListCard
+<withNavigation(DataListCard)
   cardSort={[Function]}
   data={
     Array [

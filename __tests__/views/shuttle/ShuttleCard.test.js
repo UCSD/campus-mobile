@@ -5,7 +5,7 @@ import Adapter from 'enzyme-adapter-react-16';
 
 // Component to be tested
 import { ShuttleCardContainer } from '../../../app/views/shuttle/ShuttleCardContainer';
-import ShuttleCard from '../../../app/views/shuttle/ShuttleCard';
+import { ShuttleCard } from '../../../app/views/shuttle/ShuttleCard';
 import {
 	CLOSEST_STOP,
 	SHUTTLE_STOPS_DATA,
@@ -32,7 +32,10 @@ const initialCardState = {
 	gotoRoutesList: jest.fn(),
 	removeStop: jest.fn(),
 	updateScroll: jest.fn(),
-	lastScroll: 0
+	lastScroll: 0,
+	navigation: {
+		navigate: jest.fn()
+	}
 };
 
 // Set up container to be rendered

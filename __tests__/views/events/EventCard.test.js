@@ -5,7 +5,7 @@ import Adapter from 'enzyme-adapter-react-16';
 
 // Component to be tested
 import { EventCardContainer } from '../../../app/views/events/EventCardContainer';
-import DataListCard from '../../../app/views/common/DataListCard';
+import { DataListCard } from '../../../app/views/common/DataListCard';
 import { EVENTS_RESPONSE } from '../../../mockApis/eventsApi';
 
 Enzyme.configure({ adapter: new Adapter() });

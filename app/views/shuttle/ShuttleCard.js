@@ -18,7 +18,7 @@ import {
 	MAX_CARD_WIDTH
 } from '../../styles/LayoutConstants';
 
-const ShuttleCard = ({ navigation, stopsData, savedStops, gotoRoutesList, gotoSavedList, updateScroll, lastScroll }) => {
+export const ShuttleCard = ({ navigation, stopsData, savedStops, gotoRoutesList, gotoSavedList, updateScroll, lastScroll }) => {
 	const extraActions = [
 		{
 			name: 'Manage Stops',

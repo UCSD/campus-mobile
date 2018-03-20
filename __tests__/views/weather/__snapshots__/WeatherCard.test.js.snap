@@ -411,14 +411,14 @@ exports[`card renders without crashing 1`] = `
         }
       }
     />
-    <SurfButton />
+    <withNavigation(SurfButton) />
   </View>
 </Connect(Card)>
 `;
 
 exports[`container renders without crashing 1`] = `
 <WeatherCard
-  actionButton={<SurfButton />}
+  actionButton={<withNavigation(SurfButton) />}
   weatherData={
     Object {
       "currently": Object {

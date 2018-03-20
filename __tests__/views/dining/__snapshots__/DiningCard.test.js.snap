@@ -116,7 +116,7 @@ Sat & Sun: 10 am - 8 pm",
 `;
 
 exports[`container renders without crashing 1`] = `
-<DataListCard
+<withNavigation(DataListCard)
   data={
     Array [
       Object {
@@ -179,7 +179,6 @@ Sat & Sun: 10 am - 8 pm",
   }
   id="dining"
   item="DiningItem"
-  rows={3}
   title="Dining"
 />
 `;

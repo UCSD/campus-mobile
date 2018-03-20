@@ -5,7 +5,7 @@ import Adapter from 'enzyme-adapter-react-16';
 
 // Component to be tested
 import { QuicklinksCardContainer } from '../../../app/views/quicklinks/QuicklinksCardContainer';
-import DataListCard from '../../../app/views/common/DataListCard';
+import { DataListCard } from '../../../app/views/common/DataListCard';
 import general from '../../../app/util/general';
 import { QUICKLINKS_RESPONSE } from '../../../mockApis/quicklinksApi';
 

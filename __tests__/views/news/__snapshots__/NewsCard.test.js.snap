@@ -69,7 +69,7 @@ exports[`card renders without crashing 1`] = `
 `;
 
 exports[`container renders without crashing 1`] = `
-<DataListCard
+<withNavigation(DataListCard)
   data={
     Array [
       Object {
@@ -85,7 +85,6 @@ exports[`container renders without crashing 1`] = `
   }
   id="news"
   item="NewsItem"
-  rows={3}
   title="News"
 />
 `;

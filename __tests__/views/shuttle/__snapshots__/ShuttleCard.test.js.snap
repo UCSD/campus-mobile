@@ -53,7 +53,7 @@ exports[`card renders without crashing 1`] = `
 `;
 
 exports[`container renders without crashing 1`] = `
-<ShuttleCard
+<withNavigation(ShuttleCard)
   gotoRoutesList={[Function]}
   gotoSavedList={[Function]}
   lastScroll={0}

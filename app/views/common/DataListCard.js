@@ -27,7 +27,7 @@ import {
  * @param {Function} cardSort array sorting function
  * @return {JSX} Generic component for list type cards
  */
-const DataListCard = ({ navigation, id, title, data, item, rows, cardSort }) => {
+export const DataListCard = ({ navigation, id, title, data, item, rows, cardSort }) => {
 	let sortedData = data;
 	if (cardSort && sortedData) {
 		sortedData = sortedData.slice().sort(cardSort);
