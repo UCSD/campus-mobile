@@ -447,3 +447,32 @@ export function getData() {
 function sortTime(a, b) {
 	return a.start_time - b.start_time;
 }
+
+export function setFinals() {
+	var nowTime = new Date().getDay();
+	const finalsList = getFinals();
+	const upcomingFinals = {};
+
+	const mapWeekdays = [
+		"SA",
+		"SU",
+		"MO",
+		"TU",
+		"WE",
+		"TH",
+		"FR",
+	];
+
+	//translates the days from nowTime to match the days returned from getFinals
+	nowTime = (nowTime + 1) % 7;
+
+	//Pushes only upcoming finals to new object
+	for (var i = nowTime; i < 7; i++) {
+		if (finalsList[mapWeekdays[i]].length > 0) {
+			upcomingFinals[mapWeekdays[i]] = finalsList[mapWeekdays[i]];
+		}
+	}
+
+	return upcomingFinals;
+	
+}

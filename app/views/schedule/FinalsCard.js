@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, ListView, StyleSheet } from "react-native";
-import { getFinals } from "./scheduleData";
+import { getFinals, setFinals } from "./scheduleData";
 import Card from "../card/Card";
 import logger from "../../util/logger";
 import css from "../../styles/css";
@@ -18,42 +18,64 @@ import {
 } from "../../styles/ColorConstants";
 import { MAX_CARD_WIDTH } from "../../styles/LayoutConstants";
 
-const scheduleData = getFinals();
+const scheduleData = setFinals();
 const dataSource = new ListView.DataSource({
   rowHasChanged: (r1, r2) => r1 !== r2
 });
 
 const FinalsCard = () => {
   logger.ga("Card Mounted: Finals Schedule");
-  return (
-    <Card id="finals" title="Finals Schedule">
-      <ListView
-        style={{ paddingTop: 0 }}
-        enableEmptySections={true}
-        dataSource={dataSource.cloneWithRows(scheduleData)}
-        renderSeparator={(sectionID, rowID, adjacentRowHighlighted) =>
-          scheduleData[rowID].length > 0 ? (
-            <View
-              style={{
-                borderColor: "#EAEAEA",
-                borderTopWidth: 1,
-                width: MAX_CARD_WIDTH + 2
-                // paddingBottom: 5,
-              }}
-              key={rowID}
-            />
-          ) : null
-        }
-        renderRow={(rowData, sectionID, rowID, highlightRow) => (
-          <View>
-            {scheduleData[String(rowID)].length > 0 ? (
-              <ScheduleDay id={rowID} data={rowData} />
-            ) : null}
-          </View>
-        )}
-      />
-    </Card>
-  );
+  if (scheduleData.length > 0) {
+    return (
+      <Card id="finals" title="Finals Schedule">
+        <ListView
+          style={{ paddingTop: 0 }}
+          enableEmptySections={true}
+          dataSource={dataSource.cloneWithRows(scheduleData)}
+          renderSeparator={(sectionID, rowID, adjacentRowHighlighted) =>
+            scheduleData[rowID].length > 0 ? (
+              <View
+                style={{
+                  borderColor: "#EAEAEA",
+                  borderTopWidth: 1,
+                  width: MAX_CARD_WIDTH + 2
+                  // paddingBottom: 5,
+                }}
+                key={rowID}
+              />
+            ) : null
+          }
+          renderRow={(rowData, sectionID, rowID, highlightRow) => (
+            <View>
+              {scheduleData[String(rowID)].length > 0 ? (
+                <ScheduleDay id={rowID} data={rowData} />
+              ) : null}
+            </View>
+          )}
+        />
+      </Card>
+    );
+  } else {
+    return (
+      <Card id="finals" title="Finals Schedule">
+        <View style={{
+          flex:1,
+          flexDirection: 'row',
+          width: MAX_CARD_WIDTH,
+          height: 60,
+          alignItems: 'center',
+          justifyContent: 'center'}}>
+            <Text style={{
+              textAlign:'center',
+              fontSize: 16,
+              fontWeight: "bold",
+              color: COLOR_VDGREY}}>
+              {"Congrats! You've finished all your finals!!"}
+            </Text>
+        </View>
+      </Card>
+    );
+  }
 };
 
 const dayOfWeekIntepreter = abbr => {
