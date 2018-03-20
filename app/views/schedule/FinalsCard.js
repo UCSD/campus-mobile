@@ -18,14 +18,15 @@ import {
 } from "../../styles/ColorConstants";
 import { MAX_CARD_WIDTH } from "../../styles/LayoutConstants";
 
-const scheduleData = setFinals();
+const scheduleData = getFinals();
+
 const dataSource = new ListView.DataSource({
   rowHasChanged: (r1, r2) => r1 !== r2
 });
 
 const FinalsCard = () => {
   logger.ga("Card Mounted: Finals Schedule");
-  if (scheduleData.length > 0) {
+  // if (scheduleData.length > 0) {
     return (
       <Card id="finals" title="Finals Schedule">
         <ListView
@@ -55,27 +56,27 @@ const FinalsCard = () => {
         />
       </Card>
     );
-  } else {
-    return (
-      <Card id="finals" title="Finals Schedule">
-        <View style={{
-          flex:1,
-          flexDirection: 'row',
-          width: MAX_CARD_WIDTH,
-          height: 60,
-          alignItems: 'center',
-          justifyContent: 'center'}}>
-            <Text style={{
-              textAlign:'center',
-              fontSize: 16,
-              fontWeight: "bold",
-              color: COLOR_VDGREY}}>
-              {"Congrats! You've finished all your finals!!"}
-            </Text>
-        </View>
-      </Card>
-    );
-  }
+  // } else {
+  //   return (
+  //     <Card id="finals" title="Finals Schedule">
+  //       <View style={{
+  //         flex:1,
+  //         flexDirection: 'row',
+  //         width: MAX_CARD_WIDTH,
+  //         height: 60,
+  //         alignItems: 'center',
+  //         justifyContent: 'center'}}>
+  //           <Text style={{
+  //             textAlign:'center',
+  //             fontSize: 16,
+  //             fontWeight: "bold",
+  //             color: COLOR_VDGREY}}>
+  //             {"Congrats! You've finished all your finals!!"}
+  //           </Text>
+  //       </View>
+  //     </Card>
+  //   );
+  // }
 };
 
 const dayOfWeekIntepreter = abbr => {
