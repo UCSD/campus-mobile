@@ -292,13 +292,13 @@ const data = {
 // Returns a modified courseItems object containing only finals.
 export function getFinals() {
 	const finalItems = {
+		SA: [],
+		SU: [],
 		MO: [],
 		TU: [],
 		WE: [],
 		TH: [],
-		FR: [],
-		SA: [],
-		SU: []
+		FR: []
 	};
 
 	const courseItems = getData();
