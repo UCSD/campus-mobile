@@ -2,7 +2,6 @@ const initialState = {
 	comment: '',
 	name: '',
 	email: '',
-	commentHeight: 0,
 	status: {
 		requesting: false
 	}
@@ -22,7 +21,6 @@ function feedback(state = initialState, action) {
 			requesting: false
 		};
 		delete newState.status.timeRequested;
-		resetFeedback.commentHeight = 0;
 		return resetFeedback;
 	}
 	case 'FEEDBACK_POST_FAILED': {

@@ -78,18 +78,12 @@ export class FeedbackView extends Component {
 
 	handleFeedbackInput = fieldName => (e) => {
 		const {
-			comment, name, email, commentHeight
+			comment, name, email
 		} = this.props.feedback;
 		const newFeedback = {
-			comment, name, email, commentHeight
+			comment, name, email
 		};
 		newFeedback[fieldName] = e.nativeEvent.text;
-
-		if (fieldName === 'comment') {
-			if (this.props.feedback.commentHeight !== e.nativeEvent.contentSize.height) {
-				newFeedback.commentHeight = e.nativeEvent.contentSize.height;
-			}
-		}
 
 		this.props.updateFeedback(newFeedback);
 	}
@@ -116,7 +110,7 @@ export class FeedbackView extends Component {
 								onChange={this.handleFeedbackInput('comment')}
 								placeholder="Tell us what you think*"
 								underlineColorAndroid="transparent"
-								style={[css.feedback_text_input, { height: Math.max(50, this.props.feedback.commentHeight) }]}
+								style={css.feedback_text_input}
 								returnKeyType="done"
 								maxLength={500}
 							/>

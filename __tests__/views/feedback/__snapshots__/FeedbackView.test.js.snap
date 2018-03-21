@@ -123,18 +123,13 @@ exports[`renders form when request is finished 1`] = `
           placeholder="Tell us what you think*"
           returnKeyType="done"
           style={
-            Array [
-              Object {
-                "alignItems": "center",
-                "backgroundColor": "white",
-                "flex": 1,
-                "fontSize": 18,
-                "padding": 8,
-              },
-              Object {
-                "height": 50,
-              },
-            ]
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "white",
+              "flex": 1,
+              "fontSize": 18,
+              "padding": 8,
+            }
           }
           underlineColorAndroid="transparent"
           value=""
@@ -282,18 +277,13 @@ exports[`renders form when request is finished 2`] = `
           placeholder="Tell us what you think*"
           returnKeyType="done"
           style={
-            Array [
-              Object {
-                "alignItems": "center",
-                "backgroundColor": "white",
-                "flex": 1,
-                "fontSize": 18,
-                "padding": 8,
-              },
-              Object {
-                "height": 50,
-              },
-            ]
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "white",
+              "flex": 1,
+              "fontSize": 18,
+              "padding": 8,
+            }
           }
           underlineColorAndroid="transparent"
           value=""
@@ -441,18 +431,13 @@ exports[`renders without crashing 1`] = `
           placeholder="Tell us what you think*"
           returnKeyType="done"
           style={
-            Array [
-              Object {
-                "alignItems": "center",
-                "backgroundColor": "white",
-                "flex": 1,
-                "fontSize": 18,
-                "padding": 8,
-              },
-              Object {
-                "height": 50,
-              },
-            ]
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "white",
+              "flex": 1,
+              "fontSize": 18,
+              "padding": 8,
+            }
           }
           underlineColorAndroid="transparent"
           value=""
