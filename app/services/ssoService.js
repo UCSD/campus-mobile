@@ -26,6 +26,7 @@ const ssoService = {
 					throw new Error('There was a problem with your credentials.');
 				}
 				default: {
+					console.log(err);
 					throw new Error('There was a problem signing in. Please try again later.');
 				}
 				}
