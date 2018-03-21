@@ -36,6 +36,7 @@ import SpecialEventsDetailView from './views/specialEvents/SpecialEventsDetailVi
 import ShuttleRoutesListView from './views/shuttle/ShuttleRoutesListView';
 import ShuttleStopsListView from './views/shuttle/ShuttleStopsListView';
 import ShuttleSavedListView from './views/shuttle/ShuttleSavedListView';
+import FullSchedule from './views/schedule/FullScheduleListView';
 
 function mapStateToProps(state, props) {
 	return {
@@ -100,6 +101,7 @@ class Main extends Component {
 								<Scene key={'OnboardingLogin'} component={OnboardingLogin} title={'OnboardingLogin'} hideTabBar hideNavBar={true} />
 								<Scene key={'Home'} component={Home} type={'reset'} renderBackButton={() => (null)} initial={this.props.onBoardingViewed} renderTitle={() => this.campusLogo()} hideNavBar={false} hideTabBar={false}/>
 								<Scene key={'SurfReport'} component={SurfReport} title={'Surf Report'} hideTabBar />
+								<Scene key={'FullSchedule'} component={FullSchedule} title={'Full Schedule'} hideTabBar />
 								<Scene key={'ShuttleStop'} component={ShuttleStop} title={'Shuttle'} hideTabBar />
 								<Scene key={'DiningDetail'} component={DiningDetail} title={'Dining'} hideTabBar />
 								<Scene key={'DiningNutrition'} component={DiningNutrition} title={'Nutrition'} hideTabBar />

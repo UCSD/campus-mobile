@@ -43,5 +43,6 @@ module.exports = {
 	DATA_SAGA_TTL: 60000, // 1 minute
 	SSO_TTL: 10000, // 10 seconds
 	FEEDBACK_POST_TTL: 10000,
+	SCHEDULE_TTL: 60000,  // 1 minute
 
 };
