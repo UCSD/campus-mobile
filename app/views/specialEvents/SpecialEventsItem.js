@@ -33,7 +33,6 @@ const SpecialEventsItem = ({ navigation, specialEventsData, saved, add, remove, 
 					{specialEventsData['talk-title'] ? (
 						<Text
 							style={styles.titleText}
-							numberOfLines={2}
 						>
 							{specialEventsData['talk-title']}
 						</Text>
@@ -102,8 +101,8 @@ const addSession = (add, id, title) => {
 }
 
 const styles = StyleSheet.create({
-	itemRow: { flexGrow: 1, flexDirection: 'row', backgroundColor: COLOR_LGREY },
-	titleContainer: { flex: 1, marginTop: 3 },
+	itemRow: { flexShrink: 1, flexDirection: 'row', backgroundColor: COLOR_LGREY, paddingBottom: 10 },
+	titleContainer: { flexShrink: 1, flexBasis: 10000, marginTop: 3 }, // TODO: improve usage of flex, especially to avoid hardcoding 10000, which acts like an infifity value to maximize column width on all screen sizes.
 	titleText: { alignSelf: 'stretch', fontSize: 17, color: 'black' },
 	labelView: { flexDirection: 'row', paddingTop: 4 },
 	labelTextContainer: { 'flexDirection': 'row', 'maxWidth': WINDOW_WIDTH / 2, },

@@ -86,7 +86,8 @@ export default class CardPreferences extends Component {
 								// Hide specialEvents option if there is no specialEventsData
 								if (data.id === 'specialEvents' && !this.props.specialEventsData) {
 									return null;
-								} else {
+								} 
+								else {
 									// Using cardActive instead of data.active bc state isn't updated
 									// everytime
 									// Also, mildly confusing..but active prop from renderRow means

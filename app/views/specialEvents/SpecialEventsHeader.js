@@ -26,7 +26,7 @@ const SpecialEventsHeader = ({ timestamp, rows }) => (
 );
 
 const styles = StyleSheet.create({
-	header: { justifyContent: 'flex-start', alignItems: 'center', width: 75, backgroundColor: COLOR_LGREY },
+	header: { justifyContent: 'flex-start', alignItems: 'center', width: 75, backgroundColor: COLOR_LGREY, },
 	headerText: { textAlign: 'center', alignSelf: 'stretch', color: COLOR_BLACK, fontSize: 12, marginTop: 7 },
 });
 

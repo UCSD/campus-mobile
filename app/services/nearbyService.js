@@ -11,14 +11,15 @@ export default function fetchSearchResults(search, location) {
 			'Cache-Control': 'no-cache'
 		}
 	})
-	.then((response) => response.json())
-	.then((results) => _sortResults(location, results))
-	.catch((error) => logger.log(error));
+		.then(response => response.json())
+		.then(results => _sortResults(location, results))
+		.catch(error => logger.log(error));
 }
 
 function _sortResults(location, results) {
+	console.log(location, results);
 	if (location && Array.isArray(results)) {
-		// Calc distance from dining locations
+		// Calc distance from current location
 		return new Promise((resolve, reject) => {
 			for (let i = 0; results.length > i; i++) {
 				const distance = getDistance(location.coords.latitude, location.coords.longitude, results[i].mkrLat, results[i].mkrLong);

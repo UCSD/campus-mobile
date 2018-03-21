@@ -80,6 +80,7 @@ class SpecialEventsView extends Component {
 				>
 					<Text
 						style={general.platformIOS() ? css.navButtonTextIOS : css.navButtonTextAndroid}
+						allowFontScaling={false}
 					>
 						Filter
 					</Text>
@@ -164,6 +165,7 @@ const FakeTabBar = ({ personal, handleFullPress, handleMinePress }) => (
 			>
 				<Text
 					style={personal ? styles.plainText : styles.selectedText}
+					allowFontScaling = {false}
 				>
 					Full Schedule
 				</Text>
@@ -174,6 +176,7 @@ const FakeTabBar = ({ personal, handleFullPress, handleMinePress }) => (
 			>
 				<Text
 					style={personal ? styles.selectedText : styles.plainText}
+					allowFontScaling = {false}
 				>
 					My Schedule
 				</Text>
@@ -230,7 +233,7 @@ const DaysBar = ({ days, selectedDay, handleDayPress }) => {
 };
 
 const styles = StyleSheet.create({
-	specialEventsListView: { flex: 1 },
+	specialEventsListView: { flex: 1},
 	greybg: { backgroundColor: COLOR_LGREY },
 	scrollButtonContainer: { flexDirection: 'row' },
 	scrollContentContainer: { flexGrow: 1 },
@@ -246,7 +249,7 @@ const styles = StyleSheet.create({
 	tabBar: { borderTopWidth: 1, borderColor: COLOR_DGREY, backgroundColor: COLOR_WHITE, height: TAB_BAR_HEIGHT },
 	daysBar: { borderBottomWidth: 1, borderColor: COLOR_MGREY, backgroundColor: COLOR_WHITE, height: TAB_BAR_HEIGHT },
 	selectedDayText: { textAlign: 'center', fontSize: 18, color: COLOR_WHITE, backgroundColor: COLOR_SECONDARY },
-	filterText: { textAlign: 'center', fontSize: 17, color: 'white' },
+	filterText: { textAlign: 'center', fontSize: 17, color: 'white'},
 	backButtonContainer: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: -7 },
 	backButtonImage: { color: COLOR_WHITE, marginRight: 7 },
 });

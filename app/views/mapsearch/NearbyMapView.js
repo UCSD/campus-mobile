@@ -13,6 +13,7 @@ import {
 import { connect } from 'react-redux';
 import MapView from 'react-native-maps';
 import { checkGooglePlayServices, openGooglePlayUpdate } from 'react-native-google-api-availability-bridge';
+import Toast from 'react-native-simple-toast';
 import { COLOR_MGREY } from '../../styles/ColorConstants';
 import SearchResultsBar from './SearchResultsBar';
 import SearchNavButton from './SearchNavButton';
@@ -23,7 +24,6 @@ import SearchResults from './SearchResults';
 import SearchHistoryCard from './SearchHistoryCard';
 import SearchSuggest from './SearchSuggest';
 import SearchShuttleMenu from './SearchShuttleMenu';
-import Toast from 'react-native-simple-toast';
 
 import css from '../../styles/css';
 import logger from '../../util/logger';
@@ -41,20 +41,18 @@ export class NearbyMapView extends React.Component {
 	static navigationOptions = {
 		title: 'Map',
 	}
-	
+
 	constructor(props) {
 		super(props);
 
 		this.state = {
 			searchInput: null,
 			selectedResult: 0,
-			typing: false,
 			allowScroll: false,
 			iconStatus: 'search',
 			showBar: false,
 			showShuttle: true,
 			showNav: false,
-			showMenu: false,
 			vehicles: {},
 			updatedGoogle: true,
 		};
@@ -140,7 +138,8 @@ export class NearbyMapView extends React.Component {
 			(this.state.iconStatus !== nextState.iconStatus) ||
 			(this.state.showBar !== nextState.showBar) ||
 			(this.state.showMenu !== nextState.showMenu) ||
-			(this.state.route1 !== nextState.route1)) {*/
+			(this.state.route1 !== nextState.route1)) {
+			*/
 
 			return true;
 		} else {
@@ -212,7 +211,7 @@ export class NearbyMapView extends React.Component {
 
 	updateSearch = (text) => {
 		if (text && text.trim() !== '') {
-			this.props.fetchSearch(text);
+			this.props.fetchSearch(text, this.props.location);
 			this.scrollRef.scrollTo({ x: 0, y: 0, animated: true });
 			this.barRef.blur();
 
@@ -279,7 +278,7 @@ export class NearbyMapView extends React.Component {
 			return (
 				<View style={css.main_container}>
 					<Text>Please update Google Play Services and restart app to view map.</Text>
-					<TouchableOpacity underlayColor={'rgba(200,200,200,.1)'} onPress={() => openGooglePlayUpdate()}>
+					<TouchableOpacity underlayColor="rgba(200,200,200,.1)" onPress={() => openGooglePlayUpdate()}>
 						<View style={css.eventdetail_readmore_container}>
 							<Text style={css.eventdetail_readmore_text}>Update</Text>
 						</View>
@@ -337,7 +336,7 @@ export class NearbyMapView extends React.Component {
 						>
 							<SearchResults
 								results={this.props.search_results}
-								onSelect={(index) => this.updateSelectedResult(index)}
+								onSelect={index => this.updateSelectedResult(index)}
 							/>
 						</View>
 						<View
@@ -352,7 +351,7 @@ export class NearbyMapView extends React.Component {
 									removeHistory={this.props.removeHistory}
 									data={this.props.search_history}
 								/>
-								) : (null)}
+							) : (null)}
 						</View>
 						<View
 							style={styles.section}
@@ -414,7 +413,9 @@ const navMargin = Platform.select({
 });
 
 const styles = StyleSheet.create({
-	main_container: { width: deviceWidth, height: deviceHeight - 64 - statusBarHeight, backgroundColor: COLOR_MGREY, marginTop: navMargin },
+	main_container: {
+		width: deviceWidth, height: deviceHeight - 64 - statusBarHeight, backgroundColor: COLOR_MGREY, marginTop: navMargin
+	},
 	section: { height: deviceHeight - 64 - statusBarHeight },
 });
 

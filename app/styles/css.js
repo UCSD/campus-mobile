@@ -36,7 +36,7 @@
 	900 - Misc
 */
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 import {
 	platformIOS,
 	platformAndroid,

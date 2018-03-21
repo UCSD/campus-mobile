@@ -241,11 +241,11 @@ const MealButton = ({ name, active, addFilter }) => (
 		{ (active === true) ?
 			(<View style={css.dl_meal_button}>
 				<View style={css.dl_mealtype_circle_active} />
-				<Text style={css.dl_mealtype_label_active}>{name}</Text>
+				<Text style={css.dl_mealtype_label_active} allowFontScaling={false}>{name}</Text>
 			</View>) :
 			(<View style={css.dl_meal_button}>
 				<View style={css.dl_mealtype_circle} />
-				<Text style={css.dl_mealtype_label}>{name}</Text>
+				<Text style={css.dl_mealtype_label} allowFontScaling={false}>{name}</Text>
 			</View>)
 		}
 	</TouchableHighlight>
@@ -260,9 +260,9 @@ const TypeButton = ({ name, type, active, addFilter }) => (
 		onPress={() => addFilter(type)}
 	>
 		{active ? (
-			<Text style={css.dining_card_filter_button_active}>{name}</Text>
+			<Text style={css.dining_card_filter_button_active} allowFontScaling={false}>{name}</Text>
 		) : (
-			<Text style={css.dining_card_filter_button}>{name}</Text>
+			<Text style={css.dining_card_filter_button} allowFontScaling={false}>{name}</Text>
 		)}
 	</TouchableHighlight>
 );
