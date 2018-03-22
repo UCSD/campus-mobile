@@ -39,6 +39,14 @@ const DiningDescription = ({
 				hours={regularHours}
 				status={hoursStatus}
 			/>
+			{
+				(specialHours) ?
+					(
+						<Text style={css.dd_hours_text_disclaimer}>
+							Special hours may be in effect; Status and hours displayed above may not be accurate.
+						</Text>
+					) : null
+			}
 
 			{(specialHours) ?
 				(

@@ -26,7 +26,7 @@ const generateHourElements = (hoursArray, status, today) => {
 	// Push hours
 	hoursArray.forEach((hours) => {
 		const operatingHours = dining.parseHours(hours);
-		const isAlwaysOpen = (hours === '0000-2359');
+		const isAlwaysOpen = (hours === 'Open 24/7');
 		const isClosed = (hours === '0000-0000');
 		let todaysStatusElement = null;
 
@@ -37,14 +37,16 @@ const generateHourElements = (hoursArray, status, today) => {
 				// match with the current status, right now
 				const hoursAreCurrentHours = (
 					(
-						status.currentHours.openingHour.format('dddd') === today
-						|| (
-							moment.isMoment(today) &&
-							status.currentHours.openingHour.isSame(today, 'day')
-						)
+						status.currentHours === 'Open 24/7'
+						&& moment().format('dddd') === today
 					)
-					&& status.currentHours.openingHour.isSame(operatingHours.openingHour)
-					&& status.currentHours.closingHour.isSame(operatingHours.closingHour)
+					||
+					(
+						status.currentHours.openingHour
+						&& status.currentHours.openingHour.format('dddd') === today
+						&& status.currentHours.openingHour.isSame(operatingHours.openingHour)
+						&& status.currentHours.closingHour.isSame(operatingHours.closingHour)
+					)
 				);
 				if (hoursAreCurrentHours) {
 					todaysStatusElement = (
@@ -158,18 +160,13 @@ const generateHours = (allHours, status) => {
 
 const generateSpecialHours = (allHours, status) => {
 	const hoursRows = [];
-	const now = moment();
 	Object.keys(allHours).forEach((day) => {
-		// Skip special hours that are more than a month away
-		if (moment(day, 'MM/DD/YYYY').isAfter(now.add(1, 'months'))) return;
-
 		const todaysHours = allHours[day].hours;
-		let todaysHoursArray = [];
 		let todaysTitle;
 		if (allHours[day].title) {
-			todaysTitle = `${day} – ${allHours[day].title}`
+			todaysTitle = allHours[day].title;
 		} else {
-			todaysTitle = `${day} – Unknown`;
+			todaysTitle = 'Unknown';
 		}
 
 		// If hours are malformed, return 'Unknown hours'
@@ -188,23 +185,12 @@ const generateSpecialHours = (allHours, status) => {
 
 			hoursRows.push(newHourRow);
 		} else {
-			// If no hours for the day, the restaurant is closed
-			if (todaysHours) {
-				todaysHoursArray = todaysHours.split(',');
-			} else {
-				todaysHoursArray.push('0000-0000');
-			}
-
-			const todaysHoursElements = generateHourElements(todaysHoursArray, status, now);
 			const newHourRow = (
 				<View
-					key={todaysTitle}
-					style={css.dd_hours_row}
+					key={day}
 				>
 					<Text style={css.dd_special_hours_text_title}>{`${todaysTitle}:`}</Text>
-					<View style={css.dd_hours_text_hoursyle}>
-						{todaysHoursElements}
-					</View>
+					<Text style={css.dd_hours_text_special_hours}>{todaysHours}</Text>
 				</View>
 			);
 

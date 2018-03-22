@@ -43,25 +43,35 @@ function* updateDining(action) {
 	}
 	else {
 		// Fetch for new data then sort and set distance
-		diningData = yield call(fetchDining, position);
-	}
-	if (diningData) {
-		yield put({ type: 'SET_DINING', data: diningData });
+		try {
+			diningData = yield call(fetchDining, position);
+			if (diningData) {
+				yield put({ type: 'SET_DINING', data: diningData });
+			}
+		} catch (error) {
+			logger.log(error);
+		}
 	}
 }
 
 function fetchDining(position) {
-	return DiningService.FetchDining()
-		.then((dining) => {
-			let diningData = _sortDining(dining);
-			if (position) {
-				diningData = _setDiningDistance(position, diningData);
-			}
-			return diningData;
-		})
-		.catch((error) => {
-			logger.log(error);
-		});
+	return new Promise((resolve, reject) => {
+		DiningService.FetchDining()
+			.then((dining) => {
+				_sortDining(dining)
+					.then((diningData) => {
+						if (position) {
+							_setDiningDistance(position, diningData)
+								.then((diningDataWithDistance) => {
+									resolve(diningDataWithDistance);
+								});
+						}
+					});
+			})
+			.catch((error) => {
+				reject(new Error('Error _fetchDining, request failed:', error));
+			});
+	});
 }
 
 function fetchDiningMenu(id) {
@@ -88,10 +98,14 @@ function _setDiningDistance(position, diningData) {
 	return new Promise((resolve, reject) => {
 		if (Array.isArray(diningData)) {
 			for (let i = 0; diningData.length > i; i++) {
-				const distance = getDistance(position.coords.latitude, position.coords.longitude, diningData[i].coords.lat, diningData[i].coords.lon);
-				if (distance) {
-					diningData[i].distance = distance;
-				} else {
+				let distance;
+				if (diningData[i].coords) {
+					distance = getDistance(position.coords.latitude, position.coords.longitude, diningData[i].coords.lat, diningData[i].coords.lon);
+					if (distance) {
+						diningData[i].distance = distance;
+					}
+				}
+				else {
 					diningData[i].distance = 100000000;
 				}
 

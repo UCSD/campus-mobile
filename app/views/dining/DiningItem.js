@@ -19,8 +19,9 @@ const general = require('../../util/general');
 const dining = require('../../util/dining');
 
 const DiningItem = ({ data }) => {
-	if (!data.id) return null;
-	const status = dining.getOpenStatus(data.regularHours, data.specialHours);
+	if (!data.name) return null;
+	const status = dining.getOpenStatus(data.regularHours);
+	const areSpecialHours = data.specialHours;
 	let activeDotColor,
 		statusText,
 		soonStatusText,
@@ -52,18 +53,17 @@ const DiningItem = ({ data }) => {
 		const isClosed = (!status.currentHours);
 		const isAlwaysOpen = (
 			status.currentHours &&
-			status.currentHours.closingHour.format('HHmm') === '2359'
-			&& status.currentHours.openingHour.format('HHmm') === '0000'
+			status.currentHours === 'Open 24/7'
 		);
 		let newHourElementHoursText;
 		if (!status.isValid) {
 			newHourElementHoursText = 'Unknown hours';
 		}
 		else if (isClosed) {
-			newHourElementHoursText = 'Closed';
+			newHourElementHoursText = 'Closed today';
 		}
 		else if (isAlwaysOpen) {
-			newHourElementHoursText = 'Open 24 Hours';
+			newHourElementHoursText = 'Open 24/7';
 		}
 		else if (
 			status.currentHours.openingHour.format('h:mm a') !== 'Invalid date'
@@ -121,9 +121,21 @@ const DiningItem = ({ data }) => {
 						{soonStatusText}
 					</Text>
 				</View>
+				{
+					(areSpecialHours) ?
+						(
+							<View style={css.dl_hours_row}>
+								<Text style={css.dl_status_disclaimer}>
+									These hours may be impacted by a special event.
+								</Text>
+							</View>
+						) : (
+							null
+						)
+				}
 			</Touchable>
 
-			{data.coords.lat !== 0 ? (
+			{( data.coords && data.coords.lat !== 0) ? (
 				<Touchable
 					style={css.dl_row_container_right}
 					onPress={() => general.gotoNavigationApp(data.coords.lat, data.coords.lon)}

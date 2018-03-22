@@ -29,7 +29,6 @@ module.exports = {
 	 * Gets the current open or closed status of a restaurant.
 	 * @function
 	 * @param {object} regularHours Normal operating hours
-	 * @param {object} specialHours Special operating hours with dates as keys
 	 * @returns {object} Returns object:
 	 *  {
 	 *   isOpen: Boolean,
@@ -39,7 +38,7 @@ module.exports = {
 	 *   currentHours: Object
 	 *  }
 	 */
-	getOpenStatus(regularHours, specialHours) {
+	getOpenStatus(regularHours) {
 		const openStatus = {
 			isOpen: false,
 			isAlwaysOpen: false,
@@ -57,13 +56,8 @@ module.exports = {
 			todaysHours = regularHours[now.format('ddd').toLowerCase()];
 		}
 
-		// special hours will have dates as keys: '12/25/20xx'
-		if (specialHours && specialHours[now.format('MM/DD/YYYY')]) {
-			todaysHours = specialHours[now.format('MM/DD/YYYY')].hours;
-		}
-
 		// if malformed, return immediately
-		if (typeof todaysHours !== 'string') {
+		if (typeof todaysHours !== 'string' && typeof todaysHours !== 'undefined') {
 			openStatus.isValid = false;
 			return openStatus;
 		}
@@ -72,10 +66,10 @@ module.exports = {
 		if (!todaysHours) return openStatus;
 
 		// if 24 hours, return immediately
-		if (todaysHours === '0000-2359') {
+		if (todaysHours === 'Open 24/7') {
 			openStatus.isOpen = true;
 			openStatus.isAlwaysOpen = true;
-			openStatus.currentHours = this.parseHours(todaysHours);
+			openStatus.currentHours = 'Open 24/7';
 			return openStatus;
 		}
 

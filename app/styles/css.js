@@ -53,6 +53,7 @@ import {
 	COLOR_MRED,
 	COLOR_MGREEN,
 	COLOR_TRANSPARENT,
+	COLOR_DORANGE
 } from './ColorConstants';
 import {
 	NAVIGATOR_HEIGHT,
@@ -195,6 +196,7 @@ var css = StyleSheet.create({
 	dl_hours_text: { flexGrow: 1, paddingRight: 8 },
 	dl_status_icon: { paddingRight: 8 },
 	dl_status_text: { fontWeight: '700', paddingRight: 8 },
+	dl_status_disclaimer: { color: COLOR_DORANGE },
 	dl_status_soon_text: { paddingRight: 8 },
 	dl_dir_traveltype_container: { flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'center' },
 	dl_dir_eta: { color: COLOR_PRIMARY, fontSize: 11, fontWeight: '600' },
@@ -277,11 +279,13 @@ var css = StyleSheet.create({
 	dd_description_nametext: { fontSize: 26 },
 	dd_description_subtext: { paddingTop: 8, paddingBottom: 8, fontWeight: '700' },
 	dd_hours_text_container: { flexDirection: 'row', alignItems: 'center' },
+	dd_hours_text_disclaimer: { color: COLOR_DORANGE },
 	dd_hours_row: { flexDirection: 'row', paddingBottom: 8, flexWrap: 'wrap', alignItems: 'flex-start' },
 	dd_hours_text_title: { fontWeight: '700', width: '30%', paddingRight: 8 },
 	dd_status_icon: { paddingLeft: 8 },
 	dd_special_hours_text_title: { fontWeight: '700', width: '50%', paddingRight: 8 },
 	dd_hours_text_hours: { flexGrow: 1 },
+	dd_hours_text_special_hours: { paddingBottom: 8 },
 	dd_images_scrollview: { height: 140 },
 	dd_images_image: { width: 140, height: 140, borderRadius: 5, marginHorizontal: 7 },
 	dd_directions_button_container: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderBottomColor: COLOR_MGREY, margin: 6, padding: 6 },

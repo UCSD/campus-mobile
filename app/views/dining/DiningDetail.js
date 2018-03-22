@@ -30,7 +30,14 @@ class DiningDetail extends React.Component {
 	shouldComponentUpdate(nextProps, nextState) {
 		if (this.props.menuData !== nextProps.menuData) {
 			return true;
-		} else return false;
+		}
+		else if (
+			this.state.filters !== nextState.filters
+			|| this.state.activeMeal !== nextState.activeMeal
+		) {
+			return true;
+		}
+		else return false;
 	}
 
 	addFilter = (filter) => {
@@ -67,14 +74,26 @@ class DiningDetail extends React.Component {
 						specialHours={data.specialHours}
 						paymentOptions={data.paymentOptions}
 					/>
-					<DiningImages
-						images={data.images}
-					/>
-					<DiningDirections
-						latitude={data.coords.lat}
-						longitude={data.coords.lon}
-						distance={data.distanceMilesStr}
-					/>
+					{
+						(data.images && data.images.length > 0) ? (
+							<DiningImages
+								images={data.images}
+							/>
+						) : (
+							null
+						)
+					}
+					{
+						(data.coords) ? (
+							<DiningDirections
+								latitude={data.coords.lat}
+								longitude={data.coords.lon}
+								distance={data.distanceMilesStr}
+							/>
+						) : (
+							null
+						)
+					}
 					<DiningMenu
 						data={menuData}
 						filters={this.state.filters}
