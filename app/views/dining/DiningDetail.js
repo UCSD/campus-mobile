@@ -4,11 +4,11 @@ import {
 	Text,
 	TouchableHighlight,
 	ScrollView,
-	Image,
 	ListView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { withNavigation } from 'react-navigation';
+import SafeImage from '../common/SafeImage';
 import { COLOR_SECONDARY } from '../../styles/ColorConstants';
 
 const css = require('../../styles/css');
@@ -113,10 +113,10 @@ const DiningImages = ({ images }) => (
 				horizontal={true}
 			>
 				{images.map((object, i) => (
-					<Image
+					<SafeImage
 						key={i}
 						style={css.dl_market_scroller_image}
-						resizeMode={'cover'}
+						resizeMode="cover"
 						source={{ uri: object }}
 					/>
 				))}

@@ -40,6 +40,13 @@
 				<key>NSIncludesSubdomains</key>
 				<true/>
 			</dict>
+			<key>studentevents.ucsd.edu</key>
+			<dict>
+				<key>NSExceptionRequiresForwardSecrecy</key>
+				<false/>
+				<key>NSExceptionMinimumTLSVersion</key>
+				<string>TLSv1.0</string>
+			</dict>
 		</dict>
 	</dict>
 	<key>NSBluetoothPeripheralUsageDescription</key>

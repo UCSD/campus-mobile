@@ -13,18 +13,22 @@ class SafeImage extends React.Component {
 		};
 	}
 
-	_handleError = (error) => {
-		console.log('Error loading image: ' + error);
+	_handleError = (event) => {
+		console.log('Error loading image: ', event.nativeEvent.error);
 		this.setState({ validImage: false });
 	}
 
 	render() {
+		let selectedResizeMode = 'contain';
+		if (this.props.resizeMode) {
+			selectedResizeMode = this.props.resizeMode;
+		}
 		if (this.props.source && this.props.source.uri && this.state.validImage) {
 			return (
 				<Image
 					{...this.props}
 					onError={this._handleError}
-					resizeMode="contain"
+					resizeMode={selectedResizeMode}
 				/>
 			);
 		}
