@@ -27,7 +27,7 @@ module.exports = {
 	FORGOT_PASSWORD_URL: 'https://acms.ucsd.edu/students/gpasswd.html',
 
 	/* SSO */
-	SSO_ENDPOINT: 'https://jnwallmsbj.execute-api.us-west-2.amazonaws.com/dev/authorization-service',
+	SSO_ENDPOINT: 'https://3hepzvdimd.execute-api.us-west-2.amazonaws.com/dev/v1/authentication-service',
 	SSO_CREDENTIALS_ERROR: 'orchestration failed(Error: IDP returned status was not success)',
 
 	/* TTLs */
@@ -41,7 +41,7 @@ module.exports = {
 	SHUTTLE_MASTER_TTL: 86400000, // 1 day
 	SPECIAL_EVENTS_TTL: 3600000, // 1 hour
 	DATA_SAGA_TTL: 60000, // 1 minute
-	SSO_TTL: 10000, // 10 seconds
+	SSO_TTL: 15000, // 15 seconds
 	FEEDBACK_POST_TTL: 10000,
 
 };
