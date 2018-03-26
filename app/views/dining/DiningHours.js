@@ -27,7 +27,6 @@ const generateHourElements = (hoursArray, status, today) => {
 	hoursArray.forEach((hours) => {
 		const operatingHours = dining.parseHours(hours);
 		const isAlwaysOpen = (hours === 'Open 24/7');
-		const isClosed = (hours === '0000-0000');
 		let todaysStatusElement = null;
 
 		// Check if valid status
@@ -59,20 +58,6 @@ const generateHourElements = (hoursArray, status, today) => {
 						</View>
 					);
 				}
-			} else {
-				// (currentHours will be null on days restaurants are closed)
-				// handle cases where restaurant is closed on a special day
-				if (isClosed) {
-					todaysStatusElement = (
-						<View>
-							<ColoredDot
-								size={10}
-								color={activeDotColor}
-								style={css.dd_status_icon}
-							/>
-						</View>
-					);
-				}
 			}
 		} else {
 			// Status is invalid, return null
@@ -80,10 +65,7 @@ const generateHourElements = (hoursArray, status, today) => {
 		}
 
 		let newHourElementHoursText;
-		if (isClosed) {
-			newHourElementHoursText = 'Closed';
-		}
-		else if (isAlwaysOpen) {
+		if (isAlwaysOpen) {
 			newHourElementHoursText = 'Open 24 Hours';
 		}
 		else if (
