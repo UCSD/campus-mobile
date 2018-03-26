@@ -3,6 +3,12 @@ const initialState = {
 		specialEvents: {
 			id: 'specialEvents', active: false, autoActivated: false, name: 'Special Events', component: 'SpecialEventsCard'
 		},
+		finals: {
+			id: 'finals', active: true, name: 'Finals Schedule', component: 'FinalsCard'
+		},
+		schedule: {
+			id: 'schedule', active: true, name: 'Class Schedule', component: 'ScheduleCard'
+		},
 		shuttle: {
 			id: 'shuttle', active: true, name: 'Shuttle', component: 'ShuttleCard'
 		},
@@ -25,6 +31,8 @@ const initialState = {
 	
 	cardOrder: [
 		'specialEvents',
+		'finals',
+		'schedule',
 		'shuttle',
 		'dining',
 		'events',

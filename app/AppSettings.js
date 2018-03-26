@@ -42,6 +42,7 @@ module.exports = {
 	SPECIAL_EVENTS_TTL: 3600000, // 1 hour
 	DATA_SAGA_TTL: 60000, // 1 minute
 	SSO_TTL: 15000, // 15 seconds
-	FEEDBACK_POST_TTL: 10000,
-
+	FEEDBACK_POST_TTL: 10000, // 10 seconds
+	SCHEDULE_TTL: 60000,  // 1 minute
+	
 };
