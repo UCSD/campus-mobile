@@ -32,6 +32,10 @@ const getNews = (state) => (state.news);
 const getCards = (state) => (state.cards);
 const getShuttle = (state) => (state.shuttle);
 const getSchedule = (state) => (state.schedule);
+const getUserData = (state) => (state.user);
+
+// AUTH
+const auth = require('../util/auth');
 
 function* watchData() {
 	while (true) {
@@ -56,15 +60,20 @@ function* watchData() {
 
 function* updateSchedule() {
 	const { lastUpdated, data } = yield select(getSchedule);
+	const { isLoggedIn } = yield select(getUserData);
 	const nowTime = new Date().getTime();
 	const timeDiff = nowTime - lastUpdated;
 	const scheduleTTL = SCHEDULE_TTL;
 
-	if (timeDiff < scheduleTTL && data) {
+	if ((timeDiff < scheduleTTL && data) || !isLoggedIn) {
 		// Do nothing, no need to fetch new data
 	} else {
-		const schedule = yield call(ScheduleService.FetchSchedule);
-		
+		// Ensure access token is fresh
+		yield put({ type: 'USER_TOKEN_REFRESH' });
+		const accessToken = yield auth.retrieveAccessToken();
+
+		const schedule = yield call(ScheduleService.FetchSchedule, accessToken);
+
 		if (schedule) {
 			yield put({ type: 'SET_SCHEDULE', schedule });
 		}

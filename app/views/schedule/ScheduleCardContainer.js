@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import FullScheduleButton from './FullScheduleButton';
 import ScheduleCard from './ScheduleCard';
 import logger from '../../util/logger';
+import schedule from '../../util/schedule';
 
 /**
  * Container component for [ScheduleCard]{@link ScheduleCard}
@@ -12,12 +13,16 @@ import logger from '../../util/logger';
 
 const processData = (scheduleData) => {
 	if (!scheduleData) return [];
+
+	const parsedScheduleData = schedule.getData(scheduleData);
+	const classesData = schedule.getClasses(parsedScheduleData);
+
 	let result = [];
-	result.push(...scheduleData.MO);
-	result.push(...scheduleData.TU);
-	result.push(...scheduleData.WE);
-	result.push(...scheduleData.TH);
-	result.push(...scheduleData.FR);
+	result.push(...classesData.MO);
+	result.push(...classesData.TU);
+	result.push(...classesData.WE);
+	result.push(...classesData.TH);
+	result.push(...classesData.FR);
 	result = result.slice(0, 4);
 	return result;
 };

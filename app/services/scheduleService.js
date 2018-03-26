@@ -1,14 +1,19 @@
-import { getTimestampNumeric } from '../util/general';
-import { getClasses } from '../views/schedule/scheduleData';
-
 const AppSettings = require('../AppSettings');
-const dateFormat = require('dateformat');
 
 const ScheduleService = {
 
-	FetchSchedule() {
-        return getClasses();
-    }
+	FetchSchedule(accessToken) {
+		return fetch(AppSettings.SCHEDULE_API_URL, {
+			headers: {
+				'Authorization': `Bearer ${accessToken}`
+			}
+		})
+			.then(response => (response.json()))
+			.catch((err) => {
+				console.log('Error fetching courses:', err);
+				return null;
+			});
+	}
 };
 
 export default ScheduleService;
