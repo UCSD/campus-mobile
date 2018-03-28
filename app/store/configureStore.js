@@ -1,15 +1,14 @@
 import { AsyncStorage } from 'react-native';
-import { createStore, applyMiddleware } from 'redux';
-import { persistStore, persistReducer, createMigrate } from 'redux-persist';
+import { createStore, applyMiddleware, compose } from 'redux';
+import { persistStore, autoRehydrate } from 'redux-persist';
 import thunkMiddleware from 'redux-thunk';
+import createLogger from 'redux-logger';
 import createFilter from 'redux-persist-transform-filter';
 import createSagaMiddleware from 'redux-saga';
-import logger from 'redux-logger'
+import createMigration from 'redux-persist-migrate';
 
 import rootSaga from '../sagas/rootSaga';
 import rootReducer from '../reducers';
-
-const reducers = require('../reducers');
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -31,7 +30,7 @@ const saveShuttleFilter = createFilter(
 );
 
 // Migration
-const migrations = {
+const manifest = {
 	1: (state) => ({ ...state }),
 	2: (state) => ({ ...state, shuttle: Object.assign({}, state.shuttle, { savedStops: [], stops: {}, lastUpdated: 0 }) }),
 	3: (state) => ({ ...state, shuttle: Object.assign({}, state.shuttle, { savedStops: [], stops: {}, lastUpdated: 0, closestStop: null }) }),
@@ -42,41 +41,41 @@ const migrations = {
 };
 
 // reducerKey is the key of the reducer you want to store the state version in
-const persistConfig = {
-	key: 'home',
-	version: 2,
-	storage: AsyncStorage,
-	migrate: createMigrate(migrations),
-	transforms: [saveMapFilter, saveShuttleFilter]
-};
+// in this example after migrations run `state.app.version` will equal `2`
+const reducerKey = 'home';
+const migration = createMigration(manifest, reducerKey);
 
 export default function configureStore(initialState, onComplete: ?() => void) {
 	const middlewares = [sagaMiddleware, thunkMiddleware]; // lets us dispatch() functions
 
-	const logging = false;
-	if (logging) {
-		middlewares.push(logger);
-	}
+	/*
+	// neat middleware that logs actions
+	const loggerMiddleware = createLogger();
+	middlewares.push(loggerMiddleware);
+	*/
 
-	const finalReducer = persistReducer(persistConfig, rootReducer);
+	const enhancer =  compose(migration, autoRehydrate());
 
 	const store = createStore(
-		finalReducer,
-		applyMiddleware(...middlewares)
+		rootReducer,
+		applyMiddleware(...middlewares),
+		enhancer
 	);
 
 	if (module.hot) {
 		// Enable Webpack hot module replacement for reducers
 		module.hot.accept('../reducers', () => {
-			const nextRootReducer = reducers;
+			const nextRootReducer = require('../reducers');
 
-			store.replaceReducer(persistConfig, nextRootReducer);
+			store.replaceReducer(nextRootReducer);
 		});
 	}
 
-	persistStore(
-		store,
-		null,
+	persistStore(store,
+		{
+			storage: AsyncStorage,
+			transforms: [saveMapFilter, saveShuttleFilter],
+		},
 		() => {
 			onComplete();
 			sagaMiddleware.run(rootSaga);
