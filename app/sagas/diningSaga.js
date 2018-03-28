@@ -66,6 +66,9 @@ function fetchDining(position) {
 									resolve(diningDataWithDistance);
 								});
 						}
+					})
+					.catch((error) => {
+						reject(error);
 					});
 			})
 			.catch((error) => {
