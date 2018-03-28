@@ -37,7 +37,7 @@ const DiningMenu = ({
 					</View>
 				</Touchable>
 			);
-		} else if (data && data.length > 1) {
+		} else if (data.menuitems && data.menuitems.length > 1) {
 			return (
 				<View style={css.dd_menu_container}>
 					<MenuFilters
@@ -145,18 +145,19 @@ const TypeButton = ({
 );
 
 const MenuList = ({ data, filters, activeMeal }) => {
-	if (Array.isArray(data) && Array.isArray(filters)) {
-		let menuItems = [];
+	const { disclaimer, disclaimerEmail, menuitems } = data;
+	if (Array.isArray(data.menuitems) && Array.isArray(filters)) {
+		let filteredMenuItems = [];
 
 		// Active Meal filter
-		menuItems = data.filter((item) => {
+		filteredMenuItems = menuitems.filter((item) => {
 			const itemTags = item.tags.toLowerCase();
-			return ((itemTags.indexOf(activeMeal.toLowerCase()) >= 0) || (itemTags.indexOf(('ALL DAY').toLowerCase()) >= 0));
+			return ((itemTags.indexOf(activeMeal.toLowerCase()) >= 0) || (itemTags.indexOf(('ALL').toLowerCase()) >= 0));
 		});
 
 		// Food Type filters
 		filters.forEach((tag) => {
-			menuItems = menuItems.filter((item) => {
+			filteredMenuItems = filteredMenuItems.filter((item) => {
 				const itemTags = item.tags.toLowerCase();
 				return (itemTags.indexOf(tag.toLowerCase()) >= 0);
 			});
@@ -164,11 +165,13 @@ const MenuList = ({ data, filters, activeMeal }) => {
 
 		return (
 			<ListView
-				dataSource={menuDataSource.cloneWithRows(menuItems)}
+				dataSource={menuDataSource.cloneWithRows(filteredMenuItems)}
 				renderRow={(rowData, sectionID, rowID, highlightRow) => (
 					<MenuItem
 						key={rowID}
 						data={rowData}
+						disclaimer={disclaimer}
+						disclaimerEmail={disclaimerEmail}
 					/>
 				)}
 			/>
@@ -178,10 +181,10 @@ const MenuList = ({ data, filters, activeMeal }) => {
 	}
 };
 
-const MenuItem = ({ data }) => (
+const MenuItem = ({ data, disclaimer, disclaimerEmail }) => (
 	<Touchable
 		style={css.dd_menu_row}
-		onPress={() => Actions.DiningNutrition({ menuItem: data })}
+		onPress={() => Actions.DiningNutrition({ menuItem: data, disclaimer, disclaimerEmail })}
 	>
 		<Text style={css.dd_menu_item_name_text}>
 			{data.name}

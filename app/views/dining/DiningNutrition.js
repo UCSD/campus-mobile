@@ -5,10 +5,15 @@ import {
 	ScrollView,
 } from 'react-native';
 
+import {
+	openURL,
+} from '../../util/general';
+import Touchable from '../common/Touchable';
+
 const logger = require('../../util/logger');
 const css = require('../../styles/css');
 
-const DiningNutrition = ({ menuItem }) => {
+const DiningNutrition = ({ menuItem, disclaimer, disclaimerEmail }) => {
 	logger.ga('View Loaded: Dining Nutrition: ' + menuItem.name );
 
 	return (
@@ -56,19 +61,42 @@ const DiningNutrition = ({ menuItem }) => {
 				<View style={css.ddn_info_container}>
 					<Text>
 						<Text style={css.ddn_bold}>Allergens: </Text>
-						<Text style={css.ddn_font}>{menuItem.nutrition.allergens}</Text>
+						{
+							(menuItem.nutrition.allergens) ? (
+								<Text style={css.ddn_font}>{menuItem.nutrition.allergens}</Text>
+							) : (
+								<Text style={css.ddn_font}>None</Text>
+							)
+						}
 					</Text>
 				</View>
 
 				<View style={css.ddn_info_container}>
 					<Text>
 						<Text style={css.ddn_bold}>Disclaimer: </Text>
-						<Text style={css.ddn_disclaimer_font}>{menuItem.nutrition.disclaimer}</Text>
+						<Text style={css.ddn_disclaimer_font}>{disclaimer}</Text>
 					</Text>
 				</View>
+				{
+					(disclaimerEmail) ? (
+						<DisclaimerEmailButton
+							disclaimerEmail={disclaimerEmail}
+						/>
+					) : (null)
+				}
 			</ScrollView>
 		</View>
 	);
 };
+
+const DisclaimerEmailButton = ({ disclaimerEmail }) => (
+	<Touchable
+		onPress={() => openURL(`mailto:${disclaimerEmail}`)}
+	>
+		<View style={css.dd_menu_link_container}>
+			<Text style={css.dd_menu_link_text}>Contact Nutrition Team</Text>
+		</View>
+	</Touchable>
+);
 
 export default DiningNutrition;
