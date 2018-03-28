@@ -20,8 +20,7 @@
 	400 - Views
 		401 - Surf Report
 		402 - Shuttle Stop
-		403 - Dining List
-		404 - Dining Detail
+		403 - Dining Detail
 		406 - Event & News Detail
 		407 - WebView
 		408 - Feedback
@@ -51,7 +50,10 @@ import {
 	COLOR_WHITE,
 	COLOR_BLACK,
 	COLOR_DMGREY,
+	COLOR_MRED,
+	COLOR_MGREEN,
 	COLOR_TRANSPARENT,
+	COLOR_DORANGE
 } from './ColorConstants';
 import {
 	NAVIGATOR_HEIGHT,
@@ -185,20 +187,20 @@ var css = StyleSheet.create({
 	sc_small_list_container: { width: MAX_CARD_WIDTH, overflow: 'hidden' },
 
 	// 304 - Dining Card
-	dining_card: { width: MAX_CARD_WIDTH, padding: 8 },
-	dining_card_filters: { flexDirection: 'row', justifyContent: 'center', marginBottom: 6 },
-	dining_card_filter_button: { paddingVertical: 8, paddingHorizontal: 14, fontSize: 14, color: '#888', borderWidth: 1, borderColor: '#CCC', borderRadius: 3, backgroundColor: '#EEE', textAlign: 'center', marginHorizontal: 8 },
-	dining_card_filter_button_active: { paddingVertical: 8, paddingHorizontal: 14, fontSize: 14, color: '#EEE', borderWidth: 1, borderColor: '#CCC', borderRadius: 3, backgroundColor: COLOR_PRIMARY, textAlign: 'center', marginHorizontal: 8, overflow: 'hidden' },
-	dc_locations: { flexDirection: 'column' },
-	dc_locations_row: { backgroundColor: COLOR_LGREY, flexDirection: 'row', paddingBottom: 10, paddingTop: 10, borderBottomWidth: 1, borderBottomColor: '#DDD' },
-	dc_locations_row_left: { flex: 6, justifyContent: 'center' },
-	dc_locations_title: { fontSize: 20, color: COLOR_PRIMARY },
-	dc_locations_hours: { fontSize: 12, color: '#666', paddingTop: 1 },
-	dc_locations_spec_hours: { fontSize: 12, color: '#666', paddingTop: 4 },
-	dc_locations_description: { fontSize: 12, color: '#666', paddingTop: 6 },
-	dc_locations_row_right: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-	dining_card_more: { alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4, paddingTop: 8, paddingBottom: 4, borderTopWidth: 1, borderTopColor: '#DDD' },
-	dining_card_more_label: { fontSize: 20, color: COLOR_PRIMARY, fontWeight: '300' },
+	dl_row: { backgroundColor: COLOR_LGREY, flexDirection: 'row', padding: 10, borderBottomWidth: 1, borderBottomColor: COLOR_MGREY },
+	dl_row_container_left: { flex: 2, flexDirection: 'column', justifyContent: 'flex-start', },
+	dl_row_container_right: { flex: 1, alignItems: 'flex-end', justifyContent: 'center' },
+	dl_title_row: { flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', flexWrap: 'wrap' },
+	dl_title_text: { fontSize: 20, color: COLOR_PRIMARY },
+	dl_status_row: { flex: 1, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', paddingTop: 8 },
+	dl_hours_row: { flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', paddingTop: 8 },
+	dl_hours_text: { flexGrow: 1, paddingRight: 8 },
+	dl_status_icon: { paddingRight: 8 },
+	dl_status_text: { fontWeight: '700', paddingRight: 8 },
+	dl_status_disclaimer: { color: COLOR_DORANGE },
+	dl_status_soon_text: { paddingRight: 8 },
+	dl_dir_traveltype_container: { flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'center' },
+	dl_dir_eta: { color: COLOR_PRIMARY, fontSize: 11, fontWeight: '600' },
 
 	// 305 - Events & News Cards
 	events_list: { alignSelf: 'stretch', padding: 8 },
@@ -250,7 +252,6 @@ var css = StyleSheet.create({
 	sr_dateDayEmpty: { flex: 2.5 },
 	sr_dateDayOfWeek: { fontSize: 19, color: 'black' },
 	sr_dateDayAndMonth: { fontSize: 12, color: COLOR_DGREY },
-
 	
 	// 402 - Shuttle Stop
 	shuttlestop_image: { width: WINDOW_WIDTH, height: round(WINDOW_WIDTH * .533) },
@@ -274,36 +275,42 @@ var css = StyleSheet.create({
 	shuttlestop_aa: { marginRight: 20, marginVertical: 50 },
 	shuttle_stop_no_arrivals: { fontSize: 16, color: '#555' },
 
-	// 403 - Dining List
-	dining_listview: { padding: 8 },
-	dl_market_name: { padding: 10 },
-	dl_market_name_text: { color: '#333', fontSize: 26 },
-	dl_market_desc_text: { color: '#555', paddingTop: 6, fontSize: 14 },
-	dl_market_scroller: { height: 140 },
-	dl_market_scroller_image: { width: 140, height: 140, borderRadius: 5, marginHorizontal: 7 },
-	dl_market_directions: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderBottomColor: '#EEE', margin: 6, padding: 6 },
-	dl_dir_label: { flex: 5, fontSize: 22, color: COLOR_PRIMARY },
-	dl_dir_traveltype_container: { flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'center' },
-	dl_dir_icon: { width: 28, height: 28 },
-	dl_dir_eta: { color: COLOR_PRIMARY, fontSize: 11, fontWeight: '600' },
-	dl_noresults: { color: '#444', fontSize: 15 },
-	dl_market_date: { borderBottomWidth: 1, borderBottomColor: '#EEE', paddingBottom: 12, paddingTop: 6 },
-	dl_market_date_label: { fontSize: 22, color: '#444', textAlign: 'center' },
-	dl_market_filters_foodtype: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginVertical: 8 },
-	dl_market_filters_mealtype: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderTopWidth: 1, borderTopColor: '#EEE', },
-	dl_meal_button: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 40, },
-	dl_meal_button_active: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 40, },
-	dl_mealtype_circle: { borderWidth: 1, borderColor: '#CCC', borderRadius: 8, width: 16, height: 16, backgroundColor: '#CCC', marginRight: 5 },
-	dl_mealtype_circle_active: { borderWidth: 1, borderColor: '#BBB', borderRadius: 8, width: 16, height: 16, backgroundColor: COLOR_PRIMARY, marginRight: 5 },
-	dl_mealtype_label: { fontSize: 20, color: '#888', },
-	dl_mealtype_label_active: { fontSize: 20, color: COLOR_PRIMARY, },
-	dl_market_menu: { marginHorizontal: 8, marginVertical: 16 },
-	dl_market_menu_row: { flexDirection: 'row', paddingBottom: 8 },
-	dl_menu_item_name: { fontSize: 15, color: COLOR_PRIMARY },
-	dl_menu_item_price: { color: '#555', paddingLeft: 26, marginLeft: 30 },
-
-	// 404 - Dining Detail
-	dd_menu_item_name: { fontSize: 22, color: COLOR_PRIMARY, paddingTop: 10, paddingLeft: 1 },
+	// 403 - Dining Detail
+	dd_description_container: { padding: 10 },
+	dd_description_nametext: { fontSize: 26 },
+	dd_description_subtext: { paddingTop: 8, paddingBottom: 8, fontWeight: '700' },
+	dd_hours_text_container: { flexDirection: 'row', alignItems: 'center' },
+	dd_hours_text_disclaimer: { color: COLOR_DORANGE },
+	dd_hours_row: { flexDirection: 'row', paddingBottom: 8, flexWrap: 'wrap', alignItems: 'flex-start' },
+	dd_hours_text_title: { fontWeight: '700', width: '30%', paddingRight: 8 },
+	dd_status_icon: { paddingLeft: 8 },
+	dd_special_hours_text_title: { fontWeight: '700', width: '50%', paddingRight: 8 },
+	dd_hours_text_hours: { flexGrow: 1 },
+	dd_hours_text_special_hours: { paddingBottom: 8 },
+	dd_images_scrollview: { height: 140 },
+	dd_images_image: { width: 140, height: 140, borderRadius: 5, marginHorizontal: 7 },
+	dd_directions_button_container: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderBottomColor: COLOR_MGREY, margin: 6, padding: 6 },
+	dd_directions_text: { flex: 5, fontSize: 22, color: COLOR_PRIMARY },
+	dd_directions_icon_container: { flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'center' },
+	dd_directions_distance_text: { color: COLOR_PRIMARY, fontSize: 11, fontWeight: '600' },
+	dd_menu_link_container: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR_PRIMARY, borderRadius: 3, margin: 20, padding: 10 },
+	dd_menu_container: { marginHorizontal: 8 },
+	dd_menu_link_text: { fontSize: 16, color: COLOR_WHITE },
+	dd_menu_food_type: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginVertical: 8 },
+	dd_menu_meal_type: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderTopWidth: 1, borderTopColor: COLOR_MGREY, },
+	dd_menu_meal_type_text: { fontSize: 20, color: COLOR_DGREY, },
+	dd_menu_meal_type_text_active: { fontSize: 20, color: COLOR_PRIMARY, },
+	dd_menu_filter_button: { paddingVertical: 8, paddingHorizontal: 14, fontSize: 14, color: COLOR_DGREY, borderWidth: 1, borderColor: COLOR_DGREY, borderRadius: 3, backgroundColor: COLOR_MGREY, textAlign: 'center', marginHorizontal: 8 },
+	dd_menu_filter_button_active: { paddingVertical: 8, paddingHorizontal: 14, fontSize: 14, color: COLOR_WHITE, borderWidth: 1, borderColor: COLOR_DGREY, borderRadius: 3, backgroundColor: COLOR_PRIMARY, textAlign: 'center', marginHorizontal: 8, overflow: 'hidden' },
+	dd_menu_circle: { borderWidth: 1, borderColor: COLOR_MGREY, borderRadius: 8, width: 16, height: 16, backgroundColor: COLOR_MGREY, marginRight: 5 },
+	dd_menu_circle_active: { borderWidth: 1, borderColor: COLOR_MGREY, borderRadius: 8, width: 16, height: 16, backgroundColor: COLOR_PRIMARY, marginRight: 5 },
+	dd_menu_row: { flexDirection: 'row', paddingBottom: 8 },
+	dd_menu_item_name_text: { fontSize: 15, color: COLOR_PRIMARY },
+	dd_menu_item_price_text: { color: COLOR_DGREY, paddingLeft: 26, marginLeft: 30 },
+	dd_menu_meal_button: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 40, },
+	ddn_market_name: { padding: 10 },
+	ddn_market_name_text: { color: '#333', fontSize: 26 },
+	ddn_menu_item_name: { fontSize: 22, color: COLOR_PRIMARY, paddingTop: 10, paddingLeft: 1 },
 	ddn_container: { borderWidth: 2, borderColor: COLOR_BLACK, margin: 6, padding: 3 },
 	ddn_header: { fontSize: 50, fontWeight: '700', backgroundColor: COLOR_TRANSPARENT },
 	ddn_servingsize: { fontSize: 18 },
@@ -311,15 +318,14 @@ var css = StyleSheet.create({
 	ddn_dv: { fontSize: 14, fontWeight: '700', textAlign: 'right', paddingVertical: 2 },
 	ddn_bold: { fontSize: 18, fontWeight: '700' },
 	ddn_font: { fontSize: 18 },
+	ddn_disclaimer_font: { fontSize: 14 },
 	ddn_row_main: { flex: 5, flexDirection: 'row', borderTopWidth: 1, borderTopColor: '#999', paddingVertical: 2 },
 	ddn_row_sub: { flex: 5, flexDirection: 'row', borderTopWidth: 1, borderTopColor: '#999', paddingVertical: 2, paddingLeft: 20 },
 	ddn_percent: { flex: 1, fontSize: 18, fontWeight: '700', textAlign: 'right' },
 	ddn_topborder1: { borderTopWidth: 8, borderTopColor: COLOR_BLACK, paddingVertical: 2, marginTop: 2 },
 	ddn_topborder2: { borderTopWidth: 4, borderTopColor: COLOR_BLACK },
 	ddn_topborder3: { borderTopWidth: 1, borderTopColor: '#999' },
-	dd_menu_container: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR_PRIMARY, borderRadius: 3, margin: 20, padding: 10 },
-	dd_dining_menu: { marginHorizontal: 8 },
-	dd_menu_text: { fontSize: 16, color: COLOR_WHITE },
+	ddn_info_container: { padding: 10 },
 
 	// 406 - Event & News Detail
 	news_detail_container: { width: WINDOW_WIDTH, paddingHorizontal: 18, paddingVertical: 14 },
