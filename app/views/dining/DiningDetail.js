@@ -93,7 +93,12 @@ class DiningDetail extends React.Component {
 								distance={data.distanceMilesStr}
 							/>
 						) : (
-							null
+							(data.address) ? (
+								<DiningDirections
+									address={data.address}
+									distance={data.distanceMilesStr}
+								/>
+							) : (null)
 						)
 					}
 					<DiningMenu

@@ -147,7 +147,19 @@ const DiningItem = ({ navigation, data }) => {
 						) : null }
 					</View>
 				</Touchable>
-			) : null }
+			) : (
+				(data.address) ? (
+					<Touchable
+						style={css.dl_row_container_right}
+						onPress={() => general.gotoNavigationApp(null, null, data.address)}
+					>
+						<View style={css.dl_dir_traveltype_container}>
+							<Icon name="md-walk" size={32} color={COLOR_PRIMARY} />
+							<Text style={css.dl_dir_eta} />
+						</View>
+					</Touchable>
+				) : (null)
+			) }
 		</View>
 	);
 };

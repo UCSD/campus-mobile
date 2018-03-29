@@ -65,6 +65,8 @@ function fetchDining(position) {
 								.then((diningDataWithDistance) => {
 									resolve(diningDataWithDistance);
 								});
+						} else {
+							resolve(diningData);
 						}
 					})
 					.catch((error) => {

@@ -49,12 +49,8 @@
 			</dict>
 		</dict>
 	</dict>
-	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>Advertisement would like to use bluetooth.</string>
-	<key>NSCalendarsUsageDescription</key>
-	<string>Advertisement would like to create a calendar event.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string>Allowing location access while using the app allows cards to display information relevant to your location.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Entypo.ttf</string>

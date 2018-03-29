@@ -200,7 +200,7 @@ var css = StyleSheet.create({
 	dl_status_disclaimer: { color: COLOR_DORANGE },
 	dl_status_soon_text: { paddingRight: 8 },
 	dl_dir_traveltype_container: { flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'center' },
-	dl_dir_eta: { color: COLOR_PRIMARY, fontSize: 11, fontWeight: '600' },
+	dl_dir_eta: { color: COLOR_PRIMARY, fontSize: 11, fontWeight: '600', minWidth: 40 },
 
 	// 305 - Events & News Cards
 	events_list: { alignSelf: 'stretch', padding: 8 },

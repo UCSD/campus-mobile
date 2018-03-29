@@ -14,10 +14,13 @@ import {
 import css from '../../styles/css';
 import Touchable from '../common/Touchable';
 
-const DiningDirections = ({ latitude, longitude, distance }) => (
+const DiningDirections = ({ latitude, longitude, address, distance }) => (
 	latitude !== 0 && longitude !== 0 ? (
 		<Touchable
-			onPress={() => gotoNavigationApp(latitude, longitude)}
+			onPress={() => {
+				if (latitude && longitude) gotoNavigationApp(latitude, longitude);
+				else if (address) gotoNavigationApp(null, null, address);
+			}}
 			style={css.dd_directions_button_container}
 		>
 			<Text style={css.dd_directions_text}>Directions</Text>

@@ -94,25 +94,29 @@ module.exports = {
 	 * @param {string} method Can be "walk" or anything else. Anything else will result in a URL for driving.
 	 * @param {string|number} stopLat The latitude of the destination
 	 * @param {string|number} stopLon The longitude of the destination
+	 * @param {string} address The destination's address
 	 * @return {string} A platform-specific URL for obtaining the directions
 	 */
-	getDirectionsURL(method, stopLat, stopLon) {
+	getDirectionsURL(method, stopLat, stopLon, address) {
 		let directionsURL;
+		let directionsAddr;
+		if (stopLat && stopLon) directionsAddr = `${stopLat},${stopLon}`;
+		if (address) directionsAddr = address;
 
 		if (this.platformIOS()) {
 			if (method === 'walk') {
-				directionsURL = 'http://maps.apple.com/?saddr=Current%20Location&daddr=' + stopLat + ',' + stopLon + '&dirflg=w';
+				directionsURL = 'http://maps.apple.com/?saddr=Current%20Location&daddr=' + directionsAddr + '&dirflg=w';
 			} else {
 				// Default to driving directions
-				directionsURL = 'http://maps.apple.com/?saddr=Current%20Location&daddr=' + stopLat + ',' + stopLon + '&dirflg=d';
+				directionsURL = 'http://maps.apple.com/?saddr=Current%20Location&daddr=' + directionsAddr + '&dirflg=d';
 			}
 		} else {
 			if (method === 'walk') {
 				// directionsURL = 'https://www.google.com/maps/dir/' + startLat + ',' + startLon + '/' + stopLat + ',' + stopLon + '/@' + startLat + ',' + startLon + ',18z/data=!4m2!4m1!3e1';
-				directionsURL = 'https://maps.google.com/maps?saddr=Current+Location&daddr=' + stopLat + ',' + stopLon + '&dirflg=w';
+				directionsURL = 'https://maps.google.com/maps?saddr=Current+Location&daddr=' + directionsAddr + '&dirflg=w';
 			} else {
 				// Default to driving directions
-				directionsURL = 'https://maps.google.com/maps?saddr=Current+Location&daddr=' + stopLat + ',' + stopLon + '&dirflg=d';
+				directionsURL = 'https://maps.google.com/maps?saddr=Current+Location&daddr=' + directionsAddr + '&dirflg=d';
 			}
 		}
 
@@ -123,11 +127,18 @@ module.exports = {
 	 * Attempts to redirect the device to its navigation app
 	 * @param {string|number} destinationLat The destination's latitude
 	 * @param {string|number} destinationLon The destination's longitude
+	 * @param {string} destinationAddress The destination's address
 	 * @returns {boolean} true/false depending if navigation app is opened
 	 */
-	gotoNavigationApp(destinationLat, destinationLon) {
-		const destinationURL = module.exports.getDirectionsURL('walk', destinationLat, destinationLon );
-		return module.exports.openURL(destinationURL);
+	gotoNavigationApp(destinationLat, destinationLon, destinationAddress) {
+		if (destinationLat && destinationLon) {
+			const destinationURL = module.exports.getDirectionsURL('walk', destinationLat, destinationLon );
+			return module.exports.openURL(destinationURL);
+		}
+		else if (destinationAddress) {
+			const destinationURL = module.exports.getDirectionsURL('walk', null, null, destinationAddress );
+			return module.exports.openURL(destinationURL);
+		}
 	},
 
 	/**
