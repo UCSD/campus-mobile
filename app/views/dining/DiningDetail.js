@@ -66,7 +66,6 @@ class DiningDetail extends React.Component {
 		const { menuData, navigation } = this.props;
 		const { params } = navigation.state;
 		const { data } = params;
-		console.log(data, menuData)
 		return (
 			<View style={css.main_full}>
 				<ScrollView contentContainerStyle={[css.scroll_main, css.whitebg]}>
