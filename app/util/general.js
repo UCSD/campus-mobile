@@ -100,15 +100,16 @@ module.exports = {
 	getDirectionsURL(method, stopLat, stopLon, address) {
 		let directionsURL;
 		let directionsAddr;
-		if (stopLat && stopLon) directionsAddr = `${stopLat},${stopLon}`;
+
+		if (stopLat && stopLon) directionsAddr = `${stopLat},${stopLon}`
 		if (address) directionsAddr = address;
 
 		if (this.platformIOS()) {
 			if (method === 'walk') {
-				directionsURL = 'http://maps.apple.com/?saddr=Current%20Location&daddr=' + directionsAddr + '&dirflg=w';
+				directionsURL = `http://maps.apple.com/?daddr=${directionsAddr}&dirflg=w`;
 			} else {
 				// Default to driving directions
-				directionsURL = 'http://maps.apple.com/?saddr=Current%20Location&daddr=' + directionsAddr + '&dirflg=d';
+				directionsURL = `http://maps.apple.com/?daddr=${directionsAddr}&dirflg=d`;
 			}
 		} else {
 			if (method === 'walk') {

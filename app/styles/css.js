@@ -188,8 +188,8 @@ var css = StyleSheet.create({
 
 	// 304 - Dining Card
 	dl_row: { backgroundColor: COLOR_LGREY, flexDirection: 'row', padding: 10, borderBottomWidth: 1, borderBottomColor: COLOR_MGREY },
-	dl_row_container_left: { flex: 2, flexDirection: 'column', justifyContent: 'flex-start', },
-	dl_row_container_right: { flex: 1, alignItems: 'flex-end', justifyContent: 'center' },
+	dl_row_container_left: { flex: 5, flexDirection: 'column', justifyContent: 'flex-start', paddingRight: 8 },
+	dl_row_container_right: { flex: 1, alignItems: 'center', justifyContent: 'flex-end' },
 	dl_title_row: { flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', flexWrap: 'wrap' },
 	dl_title_text: { fontSize: 20, color: COLOR_PRIMARY },
 	dl_status_row: { flex: 1, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', paddingTop: 8 },
@@ -200,7 +200,7 @@ var css = StyleSheet.create({
 	dl_status_disclaimer: { color: COLOR_DORANGE },
 	dl_status_soon_text: { paddingRight: 8 },
 	dl_dir_traveltype_container: { flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'center' },
-	dl_dir_eta: { color: COLOR_PRIMARY, fontSize: 11, fontWeight: '600', minWidth: 40 },
+	dl_dir_eta: { color: COLOR_PRIMARY, fontSize: 11, fontWeight: '600' },
 
 	// 305 - Events & News Cards
 	events_list: { alignSelf: 'stretch', padding: 8 },

@@ -155,7 +155,6 @@ const DiningItem = ({ navigation, data }) => {
 					>
 						<View style={css.dl_dir_traveltype_container}>
 							<Icon name="md-walk" size={32} color={COLOR_PRIMARY} />
-							<Text style={css.dl_dir_eta} />
 						</View>
 					</Touchable>
 				) : (null)
