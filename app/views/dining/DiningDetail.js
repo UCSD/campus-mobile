@@ -96,7 +96,6 @@ class DiningDetail extends React.Component {
 							(data.address) ? (
 								<DiningDirections
 									address={data.address}
-									distance={data.distanceMilesStr}
 								/>
 							) : (null)
 						)
