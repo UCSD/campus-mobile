@@ -99,25 +99,56 @@ const generateHours = (allHours, status) => {
 	Object.keys(allHours).forEach((day) => {
 		const todaysHours = allHours[day];
 
-		// If no hours for the day don't do anything
-		if (!todaysHours) return;
+		// If eatery is closed today
+		if (!todaysHours) {
+			const todaysTitle = moment(day, 'ddd').format('dddd');
+			const newHourRow = (
+				<View
+					key={todaysTitle}
+					style={css.dd_hours_row}
+				>
+					<Text style={css.dd_hours_text_title}>{`${todaysTitle}:`}</Text>
+					<View>
+						<View style={css.dd_hours_text_container}>
+							<Text style={css.dd_hours_text_hours}>
+								Closed
+							</Text>
+							{
+								(moment().isSame(moment(day, 'ddd'), 'day')) ? (
+									<View>
+										<ColoredDot
+											size={10}
+											color={COLOR_MRED}
+											style={css.dd_status_icon}
+										/>
+									</View>
+								) : (null)
+							}
+						</View>
+					</View>
+				</View>
+			);
+
+			hoursRows.push(newHourRow);
+		}
 
 		// If hours are malformed, return 'Unknown hours'
-		if (typeof todaysHours !== 'string') {
+		else if (typeof todaysHours !== 'string') {
 			const newHourRow = (
 				<View
 					key={day}
 					style={css.dd_hours_row}
 				>
 					<Text style={css.dd_hours_text_title}>Unknown day:</Text>
-					<View style={css.dd_hours_text_hoursyle}>
+					<View>
 						<Text style={css.dd_hours_text_hours}>Unknown hours</Text>
 					</View>
 				</View>
 			);
 
 			hoursRows.push(newHourRow);
-		} else {
+		}
+		else {
 			const todaysHoursArray = todaysHours.split(',');
 			const todaysTitle = moment(day, 'ddd').format('dddd');
 			const todaysHoursElements = generateHourElements(todaysHoursArray, status, todaysTitle);
@@ -128,7 +159,7 @@ const generateHours = (allHours, status) => {
 					style={css.dd_hours_row}
 				>
 					<Text style={css.dd_hours_text_title}>{`${todaysTitle}:`}</Text>
-					<View style={css.dd_hours_text_hoursyle}>
+					<View>
 						{todaysHoursElements}
 					</View>
 				</View>
@@ -159,7 +190,7 @@ const generateSpecialHours = (allHours, status) => {
 					style={css.dd_hours_row}
 				>
 					<Text style={css.dd_special_hours_text_title}>{`${todaysTitle}:`}</Text>
-					<View style={css.dd_hours_text_hoursyle}>
+					<View>
 						<Text style={css.dd_hours_text_hours}>Unknown hours</Text>
 					</View>
 				</View>
