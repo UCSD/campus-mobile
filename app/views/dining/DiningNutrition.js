@@ -53,12 +53,16 @@ const DiningNutrition = ({ navigation }) => {
 					<View style={css.ddn_topborder1}><Text style={css.ddn_dv_amountperserving}>*Percent Daily Values are based on a 2,000 calorie diet.</Text></View>
 				</View>
 
-				<View style={css.ddn_info_container}>
-					<Text>
-						<Text style={css.ddn_bold}>Ingredients: </Text>
-						<Text style={css.ddn_font}>{menuItem.nutrition.ingredients}</Text>
-					</Text>
-				</View>
+				{
+					(menuItem.nutrition.ingredients) ? (
+						<View style={css.ddn_info_container}>
+							<Text>
+								<Text style={css.ddn_bold}>Ingredients: </Text>
+								<Text style={css.ddn_font}>{menuItem.nutrition.ingredients}</Text>
+							</Text>
+						</View>
+					) : (null)
+				}
 
 				<View style={css.ddn_info_container}>
 					<Text>
