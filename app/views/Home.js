@@ -72,6 +72,14 @@ export class Home extends React.Component {
 		*/
 	}
 
+	shouldComponentUpdate(nextProps, nextState) {
+		if (
+			this.props.cards !== nextProps.cards ||
+			this.props.cardOrder !== nextProps.cardOrder
+		) return true;
+		else return false;
+	}
+
 	handleScroll = (event) => {
 		if (this.props.updateScroll) {
 			this.props.updateScroll(event.nativeEvent.contentOffset.y);
