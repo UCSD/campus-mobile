@@ -188,7 +188,7 @@ var css = StyleSheet.create({
 
 	// 304 - Dining Card
 	dl_row: { backgroundColor: COLOR_LGREY, flexDirection: 'row', padding: 10, borderBottomWidth: 1, borderBottomColor: COLOR_MGREY },
-	dl_row_container_left: { flex: 5, flexDirection: 'column', justifyContent: 'flex-start', paddingRight: 8 },
+	dl_row_container_left: { flex: 4, flexDirection: 'column', justifyContent: 'flex-start', paddingRight: 8 },
 	dl_row_container_right: { flex: 1, alignItems: 'center', justifyContent: 'flex-end' },
 	dl_title_row: { flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', flexWrap: 'wrap' },
 	dl_title_text: { fontSize: 20, color: COLOR_PRIMARY },
@@ -282,7 +282,7 @@ var css = StyleSheet.create({
 	dd_hours_text_container: { flexDirection: 'row', alignItems: 'center' },
 	dd_hours_text_disclaimer: { color: COLOR_DORANGE },
 	dd_hours_row: { flexDirection: 'row', paddingBottom: 8, flexWrap: 'wrap', alignItems: 'flex-start' },
-	dd_hours_text_title: { fontWeight: '700', width: '30%', paddingRight: 8 },
+	dd_hours_text_title: { fontWeight: '700', width: '35%', paddingRight: 8 },
 	dd_status_icon: { paddingLeft: 8 },
 	dd_special_hours_text_title: { fontWeight: '700', width: '50%', paddingRight: 8 },
 	dd_hours_text_hours: { flexGrow: 1 },
