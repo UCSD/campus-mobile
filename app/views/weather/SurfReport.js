@@ -4,7 +4,7 @@ import {
 	Text,
 	ScrollView,
 	Image,
-	ListView,
+	FlatList,
 } from 'react-native';
 import moment from 'moment';
 import { connect } from 'react-redux';
@@ -12,7 +12,6 @@ import css from '../../styles/css';
 import logger from '../../util/logger';
 
 var surfHeader = require('../../assets/img/surf_report_header.jpg');
-var surfDataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 var mapWeekdays = [
 	'Sunday',
 	'Monday',
@@ -65,9 +64,10 @@ class SurfReport extends React.Component {
 					</View>
 				</View>
 
-				<ListView
-					dataSource={surfDataSource.cloneWithRows(this.props.surfData.spots)}
-					renderRow={rowData => this.surfItem(rowData)}
+				<FlatList
+					data={this.props.surfData.spots}
+					keyExtractor={(listItem, index) => (listItem.title + listItem.date)}
+					renderItem={({item: rowData}) => this.surfItem(rowData)}
 				/>
 			</ScrollView>
 		);

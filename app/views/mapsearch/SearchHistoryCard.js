@@ -1,11 +1,10 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {
 	View,
 	StyleSheet,
 	Dimensions,
 	Text,
-	ListView,
+	FlatList,
 	TouchableOpacity
 } from 'react-native';
 
@@ -17,8 +16,6 @@ import { COLOR_MGREY } from '../../styles/ColorConstants';
 const PRM = getPRM();
 const deviceHeight = Dimensions.get('window').height;
 
-const historyDataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-
 const SearchHistoryCard = ({ data, pressHistory, removeHistory }) => (
 	<ElevatedView
 		style={styles.card_main}
@@ -26,7 +23,7 @@ const SearchHistoryCard = ({ data, pressHistory, removeHistory }) => (
 	>
 		<View style={styles.list_container}>
 			<SearchHistoryList
-				historyData={historyDataSource.cloneWithRows(data)}
+				historyData={data}
 				pressHistory={pressHistory}
 				removeHistory={removeHistory}
 			/>
@@ -35,18 +32,20 @@ const SearchHistoryCard = ({ data, pressHistory, removeHistory }) => (
 );
 
 const SearchHistoryList = ({ historyData, pressHistory, removeHistory }) => (
-	<ListView
+	<FlatList
 		showsVerticalScrollIndicator={false}
-		dataSource={historyData}
+		data={historyData}
 		keyboardShouldPersistTaps="always"
-		renderRow={
-			(row, sectionID, rowID) =>
+		keyExtractor={(listItem, index) => (listItem)}
+		renderItem={
+			({ item: rowData, index: rowID }) => (
 				<SearchHistoryItem
-					data={row}
+					data={rowData}
 					index={rowID}
 					pressHistory={pressHistory}
 					removeHistory={removeHistory}
 				/>
+			)
 		}
 	/>
 );

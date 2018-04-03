@@ -2,7 +2,7 @@ import React from 'react';
 import {
 	View,
 	Text,
-	ListView
+	FlatList
 } from 'react-native';
 
 import {
@@ -12,8 +12,6 @@ import {
 } from '../../styles/ColorConstants';
 import css from '../../styles/css';
 import Touchable from '../common/Touchable';
-
-const menuDataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
 const DiningMenu = ({
 	navigation,
@@ -38,7 +36,6 @@ const DiningMenu = ({
 				</Touchable>
 			);
 		} else if (data.menuitems && data.menuitems.length > 1) {
-			console.log(data)
 			return (
 				<View style={css.dd_menu_container}>
 					<MenuFilters
@@ -166,9 +163,10 @@ const MenuList = ({ navigation, data, filters, activeMeal }) => {
 		});
 
 		return (
-			<ListView
-				dataSource={menuDataSource.cloneWithRows(filteredMenuItems)}
-				renderRow={(rowData, sectionID, rowID, highlightRow) => (
+			<FlatList
+				data={filteredMenuItems}
+				keyExtractor={(listItem, index) => (listItem.itemID)}
+				renderItem={({ item: rowData, index: rowID }) => (
 					<MenuItem
 						navigation={navigation}
 						key={rowID}

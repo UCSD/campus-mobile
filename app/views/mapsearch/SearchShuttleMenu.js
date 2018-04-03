@@ -5,7 +5,7 @@ import {
 	Text,
 	StyleSheet,
 	Dimensions,
-	ListView,
+	FlatList,
 	StatusBar,
 	Platform,
 	TouchableOpacity
@@ -20,7 +20,6 @@ const statusBarHeight = Platform.select({
 	ios: 0,
 	android: StatusBar.currentHeight,
 });
-const resultsDataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
 const SearchShuttleMenu = ({ onToggle, toggles, shuttle_routes }) => (
 	<ElevatedView
@@ -31,7 +30,7 @@ const SearchShuttleMenu = ({ onToggle, toggles, shuttle_routes }) => (
 			{shuttle_routes ?
 				(
 					<MenuList
-						shuttles={resultsDataSource.cloneWithRows(shuttle_routes)}
+						shuttles={shuttle_routes}
 						onToggle={onToggle}
 						toggles={toggles}
 					/>
@@ -43,20 +42,22 @@ const SearchShuttleMenu = ({ onToggle, toggles, shuttle_routes }) => (
 	</ElevatedView>
 );
 
-const MenuList = ({ shuttles, onToggle, toggles }) => (
-	<ListView
-		dataSource={shuttles}
-		renderRow={
-			(row, sectionID, rowID) =>
+const MenuList = ({ shuttles, onToggle, toggles }) => {
+	return (<FlatList
+		data={Object.values(shuttles)}
+		keyExtractor={(listItem, index) => (listItem.id)}
+		renderItem={
+			({ item: rowData, index: rowID }) => (
 				<MenuItem
-					data={row}
+					data={rowData}
 					index={rowID}
 					onToggle={onToggle}
-					state={toggles[row.id]}
+					state={toggles[rowData.id]}
 				/>
+			)
 		}
-	/>
-);
+	/>)
+};
 
 const MenuItem = ({ data, index, onToggle, state }) => (
 	<TouchableOpacity

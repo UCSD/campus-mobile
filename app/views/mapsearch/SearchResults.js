@@ -6,7 +6,7 @@ import {
 	Text,
 	StyleSheet,
 	Dimensions,
-	ListView,
+	FlatList,
 	StatusBar,
 	Platform
 } from 'react-native';
@@ -21,7 +21,6 @@ const statusBarHeight = Platform.select({
 	ios: 0,
 	android: StatusBar.currentHeight,
 });
-const resultsDataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
 const SearchResultsCard = ({ results, onSelect }) => (
 	<View>
@@ -33,7 +32,7 @@ const SearchResultsCard = ({ results, onSelect }) => (
 				{results ?
 					(
 						<SearchResultsList
-							results={resultsDataSource.cloneWithRows(results)}
+							results={results}
 							onSelect={onSelect}
 						/>
 					) : (
@@ -52,12 +51,13 @@ SearchResultsCard.propTypes = {
 SearchResultsCard.defaultProps = {};
 
 const SearchResultsList = ({ results, onSelect }) => (
-	<ListView
-		dataSource={results}
-		renderRow={
-			(row, sectionID, rowID) =>
+	<FlatList
+		data={results}
+		keyExtractor={(listItem, index) => (listItem.title)}
+		renderItem={
+			({ item: rowData, index: rowID }) =>
 				<SearchResultsItem
-					data={row}
+					data={rowData}
 					index={rowID}
 					onSelect={onSelect}
 				/>
