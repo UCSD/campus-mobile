@@ -280,7 +280,7 @@ var css = StyleSheet.create({
 	dd_description_nametext: { fontSize: 26 },
 	dd_description_subtext: { paddingTop: 8, paddingBottom: 8, fontWeight: '700' },
 	dd_hours_text_container: { flexDirection: 'row', alignItems: 'center' },
-	dd_hours_text_disclaimer: { color: COLOR_DORANGE },
+	dd_hours_text_disclaimer: { color: COLOR_DORANGE, paddingBottom: 10 },
 	dd_hours_row: { flexDirection: 'row', paddingBottom: 8, flexWrap: 'wrap', alignItems: 'flex-start' },
 	dd_hours_text_title: { fontWeight: '700', width: '35%', paddingRight: 8 },
 	dd_status_icon: { paddingLeft: 8 },

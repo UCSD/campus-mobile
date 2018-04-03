@@ -99,39 +99,39 @@ const DiningItem = ({ navigation, data }) => {
 			>
 				<View style={css.dl_title_row}>
 					<Text style={css.dl_title_text}>{data.name}</Text>
-					<View style={css.dl_status_row}>
-						<ColoredDot
-							size={10}
-							color={activeDotColor}
-							style={css.dl_status_icon}
-						/>
-						<Text style={[css.dl_status_text, { color: activeDotColor }]}>
-							{statusText}
-						</Text>
-					</View>
-				</View>
-				<View style={css.dl_hours_row}>
-					{newHourElement}
-					<Text
-						style={[
-							css.dl_status_soon_text,
-							{ color: soonStatusColor }
-						]}
-					>
-						{soonStatusText}
-					</Text>
 				</View>
 				{
-					(areSpecialHours) ?
-						(
-							<View style={css.dl_hours_row}>
-								<Text style={css.dl_status_disclaimer}>
-									These hours may be impacted by a special event.
+					(!areSpecialHours) ? (
+						<View>
+							<View style={css.dl_status_row}>
+								<ColoredDot
+									size={10}
+									color={activeDotColor}
+									style={css.dl_status_icon}
+								/>
+								<Text style={[css.dl_status_text, { color: activeDotColor }]}>
+									{statusText}
 								</Text>
 							</View>
-						) : (
-							null
-						)
+							<View style={css.dl_hours_row}>
+								{newHourElement}
+								<Text
+									style={[
+										css.dl_status_soon_text,
+										{ color: soonStatusColor }
+									]}
+								>
+									{soonStatusText}
+								</Text>
+							</View>
+						</View>
+					) : (
+						<View style={css.dl_hours_row}>
+							<Text style={css.dl_status_disclaimer}>
+								Today's hours may be impacted by a special event.
+							</Text>
+						</View>
+					)
 				}
 			</Touchable>
 

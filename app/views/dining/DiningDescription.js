@@ -35,18 +35,18 @@ const DiningDescription = ({
 			}
 
 			<Text style={css.dd_description_subtext}>Hours:</Text>
-			<DiningHours
-				hours={regularHours}
-				status={hoursStatus}
-			/>
 			{
 				(specialHours) ?
 					(
 						<Text style={css.dd_hours_text_disclaimer}>
-							Special hours may be in effect; Status and hours displayed above may not be accurate.
+							Special hours may be in effect; Status and hours displayed below may not be accurate.
 						</Text>
 					) : null
 			}
+			<DiningHours
+				hours={regularHours}
+				status={hoursStatus}
+			/>
 
 			{(specialHours) ?
 				(
