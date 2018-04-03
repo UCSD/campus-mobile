@@ -2,7 +2,7 @@ import React from 'react';
 import {
 	View,
 	Text,
-	ListView,
+	FlatList,
 	StyleSheet
 } from 'react-native';
 
@@ -15,8 +15,6 @@ import {
 	COLOR_BLACK
 } from '../../styles/ColorConstants';
 
-const arrivalDataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-
 const ShuttleSmallList = ({ arrivalData, rows, scrollEnabled }) => (
 	<View
 		style={styles.listContainer}
@@ -25,20 +23,26 @@ const ShuttleSmallList = ({ arrivalData, rows, scrollEnabled }) => (
 			Next Arrivals
 		</Text>
 		{(arrivalData) ? (
-			<ListView
+			<FlatList
 				style={{ height: getRowHeight(rows) }}
 				scrollEnabled={scrollEnabled}
 				showsVerticalScrollIndicator={false}
-				dataSource={arrivalDataSource.cloneWithRows(arrivalData)}
-				renderRow={
-					(row) =>
+				keyExtractor={(listItem, index) => (
+					listItem.route.id +
+					listItem.vehicle.id +
+					listItem.vehicle.lastUpdated
+				)}
+				data={arrivalData}
+				renderItem={
+					({ item: rowData }) => (
 						<ShuttleSmallRow
-							arrival={row}
+							arrival={rowData}
 						/>
+					)
 				}
 				enableEmptySections={true}
 			/>
-			) : (null)
+		) : (null)
 		}
 	</View>
 );

@@ -1,15 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-	ListView,
+	FlatList,
 } from 'react-native';
 
 import EventItem from '../events/EventItem';
 import NewsItem from '../news/NewsItem';
 import DiningItem from '../dining/DiningItem';
 import QuicklinksItem from '../quicklinks/QuicklinksItem';
-
-const dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
 /**
  * Generic listview used by DataListCard
@@ -23,26 +21,33 @@ const dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r
  * @todo Extract Items to a constants file or helper function
  */
 const DataListView = ({ style, data, rows, scrollEnabled, item, card }) => (
-	<ListView
+	<FlatList
 		style={style}
 		scrollEnabled={scrollEnabled}
-		dataSource={dataSource.cloneWithRows((rows) ? (data.slice(0,rows)) : (data))}
-		renderRow={(row) => {
+		data={(rows) ? (data.slice(0,rows)) : (data)}
+		keyExtractor={(listItem, index) => {
+			// We receieve all sorts of data here.
+			// TODO: Mandate that if DataListView is used, an id is passed
+			if (listItem.id) return listItem.id;
+			else if (listItem.name) return listItem.name;
+			else if (listItem.title) return listItem.title;
+		}}
+		renderItem={({ item: rowData }) => {
 			// Add to switch statement as new Items are needed
 			// Only reason this is a switch is cuz Actions from react-router-flux doesn't like being passed JSX
 			// Should revisit to see if this can be simplified
 			switch (item) {
 			case 'EventItem': {
-				return (<EventItem data={row} card={card} />);
+				return (<EventItem data={rowData} card={card} />);
 			}
 			case 'NewsItem': {
-				return (<NewsItem data={row} card={card} />);
+				return (<NewsItem data={rowData} card={card} />);
 			}
 			case 'DiningItem': {
-				return (<DiningItem data={row} card={card} />);
+				return (<DiningItem data={rowData} card={card} />);
 			}
 			case 'QuicklinksItem': {
-				return (<QuicklinksItem data={row} card={card} />);
+				return (<QuicklinksItem data={rowData} card={card} />);
 			}
 			default: {
 				return null;

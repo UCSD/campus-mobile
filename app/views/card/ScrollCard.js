@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, ListView } from 'react-native';
+import { View, StyleSheet, FlatList } from 'react-native';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 import { connect } from 'react-redux';
 import ElevatedView from 'react-native-elevated-view';
@@ -12,8 +12,6 @@ import {
 	COLOR_LGREY
 } from '../../styles/ColorConstants';
 
-const scrollDataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-
 class ScrollCard extends React.Component {
 	constructor(props) {
 		super(props);
@@ -24,7 +22,7 @@ class ScrollCard extends React.Component {
 	}
 
 	componentDidMount() {
-		this._listview.scrollTo({ x: this.props.lastScroll, animated: false });
+		this._flatlist.scrollToOffset({ x: this.props.lastScroll, animated: false });
 	}
 
 	setNativeProps(props) {
@@ -41,7 +39,7 @@ class ScrollCard extends React.Component {
 	}
 
 	handleScroll = (event) => {
-		if (this.props.updateScroll) {
+		if (this.props.updateScroll) { 
 			this.props.updateScroll(event.nativeEvent.contentOffset.x);
 		}
 		const dotIndex = Math.floor(event.nativeEvent.contentOffset.x / (getMaxCardWidth() - 12)); // minus padding
@@ -52,8 +50,8 @@ class ScrollCard extends React.Component {
 		let list;
 		if (this.props.scrollData !== {}) {
 			list = (
-				<ListView
-					ref={c => { this._listview = c; }}
+				<FlatList
+					ref={(c) => { this._flatlist = c; }}
 					style={styles.listStyle}
 					onContentSizeChange={this.countDots}
 					pagingEnabled
@@ -61,9 +59,10 @@ class ScrollCard extends React.Component {
 					showsHorizontalScrollIndicator={false}
 					onScroll={this.handleScroll}
 					scrollEventThrottle={69}
-					dataSource={scrollDataSource.cloneWithRows(this.props.scrollData)}
+					data={this.props.scrollData}
 					enableEmptySections={true}
-					renderRow={this.props.renderRow}
+					keyExtractor={(listItem, index) => (listItem.id.toString())}
+					renderItem={this.props.renderItem}
 				/>
 			);
 		}

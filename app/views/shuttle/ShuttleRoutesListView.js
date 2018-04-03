@@ -3,7 +3,7 @@ import {
 	TouchableOpacity,
 	Text,
 	StyleSheet,
-	ListView,
+	FlatList,
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -13,18 +13,19 @@ import {
 	COLOR_DGREY
 } from '../../styles/ColorConstants';
 
-const resultsDataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-
 const ShuttleRoutesListView = ({ navigation }) => {
 	const { shuttle_routes, gotoStopsList } = navigation.state.params;
 	return (
-		<ListView
+		<FlatList
 			style={css.main_full}
-			dataSource={resultsDataSource.cloneWithRows(shuttle_routes)}
-			renderRow={
-				row => (
+			data={shuttle_routes}
+			keyExtractor={(listItem, index) => (
+				listItem.id
+			)}
+			renderItem={
+				({ item: rowData }) => (
 					<RouteItem
-						data={row}
+						data={rowData}
 						gotoStopsList={gotoStopsList}
 					/>
 				)

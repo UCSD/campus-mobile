@@ -31,12 +31,12 @@ export const ShuttleCard = ({ navigation, stopsData, savedStops, gotoRoutesList,
 			id="shuttle"
 			title="Shuttle"
 			scrollData={savedStops}
-			renderRow={
-				row => (
+			renderItem={
+				({ item: rowData }) => (
 					<ShuttleOverview
-						onPress={() => navigation.navigate('ShuttleStop', { stopID: row.id })}
-						stopData={stopsData[row.id]}
-						closest={Object.prototype.hasOwnProperty.call(row, 'savedIndex')}
+						onPress={() => navigation.navigate('ShuttleStop', { stopID: rowData.id })}
+						stopData={stopsData[rowData.id]}
+						closest={Object.prototype.hasOwnProperty.call(rowData, 'savedIndex')}
 					/>
 				)
 			}
