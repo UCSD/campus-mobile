@@ -47,7 +47,6 @@ module.exports = {
 	 * @returns {boolean} True if the device model is iPhone X, false otherwise
 	 */
 	deviceIphoneX() {
-		return false;
 		return Dimensions.get('window').height === 812;
 	},
 

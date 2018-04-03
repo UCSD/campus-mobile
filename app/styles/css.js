@@ -8,7 +8,7 @@
 		102 - Tab Bar
 
 	200 - Primary Containers
-	
+
 	300 - Cards
 		301 - Card Container
 		302 - Weather Card
@@ -16,7 +16,7 @@
 		304 - Dining Card
 		305 - Events & News Cards
 		306 - Links Card
-	
+
 	400 - Views
 		401 - Surf Report
 		402 - Shuttle Stop
@@ -26,16 +26,15 @@
 		408 - Feedback
 		409 - Preferences View
 		410 - Links View
-	
+
 	500 - Modules
 		501 - Map Search
 		502 - Search Results
 		503 - LocationRequiredContent
-	
+
 	900 - Misc
 */
-import React from 'react';
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet } from 'react-native';
 import {
 	platformIOS,
 	platformAndroid,
@@ -43,28 +42,21 @@ import {
 } from '../util/general';
 import {
 	COLOR_PRIMARY,
-	COLOR_SECONDARY,
 	COLOR_DGREY,
 	COLOR_MGREY,
 	COLOR_LGREY,
 	COLOR_WHITE,
 	COLOR_BLACK,
 	COLOR_DMGREY,
-	COLOR_MRED,
-	COLOR_MGREEN,
 	COLOR_TRANSPARENT,
-	COLOR_DORANGE
+	COLOR_DORANGE,
 } from './ColorConstants';
 import {
-	NAVIGATOR_HEIGHT,
 	WINDOW_WIDTH,
 	WINDOW_HEIGHT,
 	MAX_CARD_WIDTH,
 	NAVIGATOR_IOS_HEIGHT,
 	NAVIGATOR_ANDROID_HEIGHT,
-	NAVIGATOR_LOGO_IOS_MARGIN,
-	NAVIGATOR_LOGO_ANDROID_MARGIN,
-	STATUS_BAR_ANDROID_HEIGHT,
 	TAB_BAR_HEIGHT,
 	IOS_MARGIN_TOP,
 	IOS_MARGIN_BOTTOM,
@@ -72,34 +64,30 @@ import {
 	ANDROID_MARGIN_BOTTOM,
 } from './LayoutConstants';
 
-var css = StyleSheet.create({
+const css = StyleSheet.create({
 
-	/********************************************
+	/**
 	 *  100 - Navigation
-	 ********************************************/
+	 */
 	// 101 - Navigator
-	nav: { backgroundColor: COLOR_PRIMARY, height: platformIOS() ? NAVIGATOR_IOS_HEIGHT : NAVIGATOR_ANDROID_HEIGHT },
-	navTitle: { flex: 1, fontSize: 24, fontWeight: '300', textAlign: 'center', alignSelf:'center' },
-	navIOS: { backgroundColor: COLOR_PRIMARY, height: NAVIGATOR_IOS_HEIGHT },
-	navAndroid: { backgroundColor: COLOR_PRIMARY, height: NAVIGATOR_ANDROID_HEIGHT },
-	navCampusLogoTitle: { flex: 1, resizeMode: 'contain', height: 26, alignSelf: 'center' },
-	navIOSIconStyle: { tintColor:COLOR_WHITE, marginTop: deviceIphoneX() ? 14 : -2 },
+	nav: { backgroundColor: COLOR_PRIMARY, height: platformIOS() ? NAVIGATOR_IOS_HEIGHT : NAVIGATOR_ANDROID_HEIGHT, marginTop: deviceIphoneX() ? -12 : 0 },
+	navTitle: { flex: 1, fontSize: 24, fontWeight: '300', textAlign: 'center', alignSelf:'center', marginTop: platformAndroid() ? -3 : 0 },
+	navCampusLogoTitle: { flex: 1, resizeMode: 'contain', height: 26, alignSelf: 'center', marginTop: platformAndroid() ? 6 : 0 },
 	navButtonTextIOS: { color: COLOR_WHITE, fontWeight: '300', fontSize: 18, height: 24 },
-	navAndroidIconStyle: { tintColor:COLOR_WHITE, marginTop: -6 },
 	navButtonTextAndroid: { color: COLOR_WHITE, marginTop: -8, fontWeight: '300', fontSize: 18 },
 	// 102 - Tab Bar
-	tabBarIOS: { backgroundColor: COLOR_WHITE, height: 40 },
-	tabBarAndroid: { backgroundColor: COLOR_WHITE, height: 45 },
-	tabContainer: { width: 70, paddingTop: deviceIphoneX() ? 4 : 8, paddingBottom: deviceIphoneX() ? 20 : 8 },
+	tabBarIOS: { backgroundColor: COLOR_WHITE, height: TAB_BAR_HEIGHT },
+	tabBarAndroid: { backgroundColor: COLOR_WHITE, height: TAB_BAR_HEIGHT },
+	tabContainer: { paddingTop: deviceIphoneX() ? 17 : 0 },
 	tabContainerBottom: { borderBottomColor: COLOR_PRIMARY },
 	tabIcon: { color: COLOR_DMGREY, alignSelf: 'center', backgroundColor: 'transparent', opacity: 0.95, width: 24, height: 24, overflow: 'hidden' },
 	tabIconUser: { color: COLOR_WHITE, alignSelf: 'center', backgroundColor: COLOR_DMGREY, opacity: 0.95, width: 24, height: 24, overflow: 'hidden' },
 	tabIconUserOutline: { borderColor: COLOR_DMGREY, alignSelf: 'center', overflow: 'hidden', borderRadius: 24, borderWidth: 1 },
 
 
-	/********************************************
+	/**
 	 *  200 - Primary Containers
-	 ********************************************/
+	 */
 	main_container: { flexGrow: 1, backgroundColor: COLOR_MGREY },
 	main_full: { flexGrow: 1, backgroundColor: COLOR_WHITE },
 	main_full_lgrey: { flexGrow: 1, backgroundColor: COLOR_LGREY },
@@ -110,9 +98,9 @@ var css = StyleSheet.create({
 	scroll_default: { alignItems: 'center' },
 
 
-	/********************************************
+	/**
 	 *  300 - Cards
-	 ********************************************/
+	 */
 	 // 301 - Card Container
 	card_main: { borderWidth: 1, borderRadius: 2, borderColor: '#DDD', backgroundColor: COLOR_LGREY, margin: 6, alignItems: 'flex-start', justifyContent: 'center', overflow: 'hidden' },
 	card_plain: { margin: 6, alignItems: 'center', justifyContent: 'center' },
@@ -233,9 +221,9 @@ var css = StyleSheet.create({
 	quicklinks_name: { flexGrow: 5, color: '#444', fontSize: 16, paddingHorizontal: 8 },
 
 
-	/********************************************
+	/**
 	 *  400 - Views
-	 ********************************************/
+	 */
 	// 401 - Surf Report
 	sr_headerImage: { width: WINDOW_WIDTH, height: Math.round(WINDOW_WIDTH * 0.361) },
 	sr_dayText: { fontSize: 19, color: COLOR_BLACK, position: 'absolute', marginTop: 50, borderWidth: 1 },
@@ -363,9 +351,9 @@ var css = StyleSheet.create({
 	links_row_full: { paddingHorizontal: 12 },
 
 
-	/********************************************
+	/**
 	 *  500 - Modules
-	 ********************************************/
+	 */
 	// 501 - Map Search
 	map_searchbar_container: { width: MAX_CARD_WIDTH, height: 44, borderWidth: 0 },
 	map_searchbar_input: { height: 44, padding: 8, paddingLeft: 40, backgroundColor: COLOR_TRANSPARENT, zIndex: 10, color: '#555', fontSize: 20 },
@@ -387,9 +375,9 @@ var css = StyleSheet.create({
 	lrc_button_text: { color: COLOR_WHITE },
 
 
-	/********************************************
+	/**
 	 *  900 - Misc
-	 ********************************************/
+	 */
 	CAMPUS_PRIMARY: { color: COLOR_PRIMARY },
 	whitebg: { backgroundColor: COLOR_WHITE },
 	lgreybg: { backgroundColor: COLOR_LGREY },
