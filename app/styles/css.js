@@ -70,8 +70,8 @@ const css = StyleSheet.create({
 	 *  100 - Navigation
 	 */
 	// 101 - Navigator
-	nav: { backgroundColor: COLOR_PRIMARY, height: platformIOS() ? NAVIGATOR_IOS_HEIGHT : NAVIGATOR_ANDROID_HEIGHT, marginTop: deviceIphoneX() ? -12 : 0 },
-	navTitle: { flex: 1, fontSize: 24, fontWeight: '300', textAlign: 'center', alignSelf:'center', marginTop: platformAndroid() ? -3 : 0 },
+	nav: { backgroundColor: COLOR_PRIMARY, height: platformIOS() ? NAVIGATOR_IOS_HEIGHT : NAVIGATOR_ANDROID_HEIGHT, marginTop: deviceIphoneX() ? -13 : 0 },
+	navTitle: { flex: 1, fontSize: 24, fontWeight: '300', textAlign: 'center', alignSelf:'center', marginTop: deviceIphoneX() ? 0 : -3 },
 	navCampusLogoTitle: { flex: 1, resizeMode: 'contain', height: 26, alignSelf: 'center', marginTop: platformAndroid() ? 6 : 0 },
 	navButtonTextIOS: { color: COLOR_WHITE, fontWeight: '300', fontSize: 18, height: 24 },
 	navButtonTextAndroid: { color: COLOR_WHITE, marginTop: -8, fontWeight: '300', fontSize: 18 },
