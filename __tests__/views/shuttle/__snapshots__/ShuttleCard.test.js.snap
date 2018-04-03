@@ -45,7 +45,7 @@ exports[`card renders without crashing 1`] = `
   }
   id="shuttle"
   lastScroll={0}
-  renderRow={[Function]}
+  renderItem={[Function]}
   scrollData={Array []}
   title="Shuttle"
   updateScroll={[MockFunction]}
