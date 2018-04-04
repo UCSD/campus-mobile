@@ -39,6 +39,7 @@ function* updateDining(action) {
 		diningData = yield call(_sortDining, data);
 		if (position) {
 			diningData = yield call(_setDiningDistance, position, diningData);
+			yield put({ type: 'SET_DINING', data: diningData });
 		}
 	}
 	else {
@@ -102,22 +103,23 @@ function _setDiningDistance(position, diningData) {
 	// Calc distance from dining locations
 	return new Promise((resolve, reject) => {
 		if (Array.isArray(diningData)) {
-			for (let i = 0; diningData.length > i; i++) {
+			resolve(diningData.map((eatery) => {
 				let distance;
-				if (diningData[i].coords) {
-					distance = getDistance(position.coords.latitude, position.coords.longitude, diningData[i].coords.lat, diningData[i].coords.lon);
+				if (eatery.coords) {
+					distance = getDistance(position.coords.latitude, position.coords.longitude, eatery.coords.lat, eatery.coords.lon);
 					if (distance) {
-						diningData[i].distance = distance;
+						eatery.distance = distance;
 					}
 				}
 				else {
-					diningData[i].distance = 100000000;
+					eatery.distance = 100000000;
 				}
 
-				diningData[i].distanceMiles = convertMetersToMiles(distance);
-				diningData[i].distanceMilesStr = getDistanceMilesStr(diningData[i].distanceMiles);
-			}
-			resolve(diningData);
+				eatery.distanceMiles = convertMetersToMiles(distance);
+				eatery.distanceMilesStr = getDistanceMilesStr(eatery.distanceMiles);
+
+				return eatery;
+			}));
 		} else {
 			reject(new Error('Error _setDiningDistance'));
 		}
