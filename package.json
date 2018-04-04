@@ -34,6 +34,7 @@
     "react-native-sortable-list": "0.0.21",
     "react-native-vector-icons": "4.5.0",
     "react-navigation": "1.5.8",
+    "react-navigation-header-buttons": "0.0.5",
     "react-redux": "5.0.7",
     "react-timer-mixin": "0.13.3",
     "redux": "3.7.2",
