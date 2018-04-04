@@ -132,5 +132,5 @@ const styles = StyleSheet.create({
 	},
 	icon: { padding: 7 },
 	name_text: { flex: 1, margin: 7, fontSize: 18 },
-	switchContainer: { backgroundColor: COLOR_LGREY, width: 50, height: 50, justifyContent: 'center', alignItems: 'center' },
+	switchContainer: { backgroundColor: COLOR_LGREY, width: 50, height: 50, justifyContent: 'center', alignItems: 'center', marginRight: 10 },
 });

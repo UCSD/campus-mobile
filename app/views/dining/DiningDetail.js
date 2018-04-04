@@ -1,17 +1,12 @@
 import React from 'react';
-import {
-	View,
-	ScrollView,
-} from 'react-native';
+import { ScrollView } from 'react-native';
 import { connect } from 'react-redux';
-
 import logger from '../../util/logger';
 import DiningDescription from './DiningDescription';
 import DiningImages from './DiningImages';
 import DiningDirections from './DiningDirections';
 import DiningMenu from './DiningMenu';
-
-const css = require('../../styles/css');
+import css from '../../styles/css';
 
 class DiningDetail extends React.Component {
 	constructor(props) {
@@ -67,48 +62,46 @@ class DiningDetail extends React.Component {
 		const { params } = navigation.state;
 		const { data } = params;
 		return (
-			<View style={css.main_full}>
-				<ScrollView contentContainerStyle={[css.scroll_main, css.whitebg]}>
-					<DiningDescription
-						name={data.name}
-						description={data.description}
-						regularHours={data.regularHours}
-						specialHours={data.specialHours}
-						paymentOptions={data.paymentOptions}
-					/>
-					{
-						(data.images && data.images.length > 0) ? (
-							<DiningImages
-								images={data.images}
-							/>
-						) : (
-							null
-						)
-					}
-					{
-						(data.coords) ? (
+			<ScrollView contentContainerStyle={css.main_full}>
+				<DiningDescription
+					name={data.name}
+					description={data.description}
+					regularHours={data.regularHours}
+					specialHours={data.specialHours}
+					paymentOptions={data.paymentOptions}
+				/>
+				{
+					(data.images && data.images.length > 0) ? (
+						<DiningImages
+							images={data.images}
+						/>
+					) : (
+						null
+					)
+				}
+				{
+					(data.coords) ? (
+						<DiningDirections
+							latitude={data.coords.lat}
+							longitude={data.coords.lon}
+							distance={data.distanceMilesStr}
+						/>
+					) : (
+						(data.address) ? (
 							<DiningDirections
-								latitude={data.coords.lat}
-								longitude={data.coords.lon}
-								distance={data.distanceMilesStr}
+								address={data.address}
 							/>
-						) : (
-							(data.address) ? (
-								<DiningDirections
-									address={data.address}
-								/>
-							) : (null)
-						)
-					}
-					<DiningMenu
-						navigation={this.props.navigation}
-						data={menuData}
-						filters={this.state.filters}
-						activeMeal={this.state.activeMeal}
-						addFilter={filter => this.addFilter(filter)}
-					/>
-				</ScrollView>
-			</View>
+						) : (null)
+					)
+				}
+				<DiningMenu
+					navigation={this.props.navigation}
+					data={menuData}
+					filters={this.state.filters}
+					activeMeal={this.state.activeMeal}
+					addFilter={filter => this.addFilter(filter)}
+				/>
+			</ScrollView>
 		);
 	}
 }

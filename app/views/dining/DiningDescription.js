@@ -30,7 +30,7 @@ const DiningDescription = ({
 		<View style={css.dd_description_container}>
 			<Text style={css.dd_description_nametext}>{name}</Text>
 			{description
-				? <Text style={css.dd_description_subtext}>{description}</Text>
+				? <Text style={css.dd_description_text}>{description}</Text>
 				: null
 			}
 
@@ -63,7 +63,7 @@ const DiningDescription = ({
 				(
 					<View>
 						<Text style={css.dd_description_subtext}>Payment Options:</Text>
-						<Text>{paymentOptionsText}</Text>
+						<Text style={css.dd_description_po}>{paymentOptionsText}</Text>
 					</View>
 				)
 				: null
