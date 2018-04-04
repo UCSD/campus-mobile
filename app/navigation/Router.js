@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Button } from 'react-native';
+import { View } from 'react-native';
 import { StackNavigator, TabNavigator } from 'react-navigation';
 import { MenuProvider } from 'react-native-popup-menu';
 

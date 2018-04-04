@@ -3,8 +3,7 @@ import {
 	View,
 	StyleSheet,
 	Text,
-	ScrollView,
-	Button
+	ScrollView
 } from 'react-native';
 import { connect } from 'react-redux';
 import HeaderButtons from 'react-navigation-header-buttons';
