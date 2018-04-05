@@ -147,6 +147,7 @@ export class Home extends React.Component {
 				<ScrollView
 					ref={(c) => { this._scrollview = c; }}
 					onScroll={this.handleScroll}
+					scrollEventThrottle={0}
 				>
 					{/* LOAD CARDS */}
 					{ this._getCards() }

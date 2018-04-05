@@ -3,6 +3,7 @@
 exports[`renders without crashing 1`] = `
 <ScrollView
   onScroll={[Function]}
+  scrollEventThrottle={0}
 >
   <Connect(WeatherCardContainer)
     key="weather"
