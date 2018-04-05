@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
 	circle: { borderRadius: 18, width: 36, height: 36, justifyContent: 'center', overflow: 'hidden' },
 	shortNameText: { textAlign: 'center', fontWeight: '600', fontSize: 19, backgroundColor: 'transparent' },
 	nameText: { flex: 4, fontSize: 15, color: COLOR_BLACK, marginLeft: 10 },
-	etaText: { flex: 1.2, fontSize: 15, color: COLOR_DGREY, marginLeft: 10, textAlign: 'right' },
+	etaText: { flex: 1.2, fontSize: 15, marginLeft: 10, textAlign: 'right' },
 	listContainer: { width: MAX_CARD_WIDTH, overflow: 'hidden' },
 });
 

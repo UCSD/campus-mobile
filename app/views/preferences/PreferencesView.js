@@ -1,10 +1,6 @@
 import React from 'react';
-import {
-	ScrollView,
-} from 'react-native';
-
+import { ScrollView } from 'react-native';
 import CardPreferences from './CardPreferences';
-import css from '../../styles/css';
 
 // View for user to manage preferences, including which cards are visible
 class PreferencesView extends React.Component {
@@ -25,13 +21,8 @@ class PreferencesView extends React.Component {
 
 	render() {
 		return (
-			<ScrollView
-				style={css.main_container}
-				scrollEnabled={this.state.scrollEnabled}
-			>
-				<CardPreferences
-					toggleScroll={this.toggleScroll}
-				/>
+			<ScrollView scrollEnabled={this.state.scrollEnabled}>
+				<CardPreferences toggleScroll={this.toggleScroll} />
 			</ScrollView>
 		);
 	}

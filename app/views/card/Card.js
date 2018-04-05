@@ -1,17 +1,13 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 import ElevatedView from 'react-native-elevated-view';
-
-import {
-	COLOR_LGREY
-} from '../../styles/ColorConstants';
+import css from '../../styles/css';
 import CardHeader from './CardHeader';
 import CardMenu from './CardMenu';
 
 const Card = ({ hideMenu, cardRefresh, id, title, header, hide, children }) => (
 	<ElevatedView
-		style={styles.mainContainer}
+		style={css.card_container}
 		ref={(i) => { this._card = i; }}
 		elevation={3}
 	>
@@ -34,16 +30,10 @@ const Card = ({ hideMenu, cardRefresh, id, title, header, hide, children }) => (
 	</ElevatedView>
 );
 
-const mapDispatchToProps = (dispatch) => (
-	{
-		hide: (id) => {
-			dispatch({ type: 'UPDATE_CARD_STATE', id, state: false });
-		}
+const mapDispatchToProps = (dispatch) => ({
+	hide: (id) => {
+		dispatch({ type: 'UPDATE_CARD_STATE', id, state: false });
 	}
-);
-
-const styles = StyleSheet.create({
-	mainContainer: { backgroundColor: COLOR_LGREY, margin: 6, alignItems: 'flex-start', justifyContent: 'center' },
 });
 
 export default connect(null, mapDispatchToProps)(Card);

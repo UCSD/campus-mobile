@@ -31,9 +31,7 @@ class ShuttleStopContainer extends React.Component {
 		const { navigation, stops, location } = this.props;
 		const { stopID } = navigation.state.params;
 		return (
-			<ScrollView
-				style={css.main_full}
-			>
+			<ScrollView style={css.scroll_default} contentContainerStyle={css.main_full}>
 				{ShuttleImageDict[stopID] ? (
 					<Image style={styles.shuttlestop_image} source={ShuttleImageDict[stopID]} />
 				) : null }

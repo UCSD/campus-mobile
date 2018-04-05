@@ -1,6 +1,4 @@
 module.exports = {
-
-	/* COLOR CONSTANTS */
 	COLOR_PRIMARY: '#034262',
 	COLOR_SECONDARY: '#186D96',
 	COLOR_PIN: '#346994',
@@ -18,4 +16,23 @@ module.exports = {
 	COLOR_MORANGE: '#FC9527',
 	COLOR_DORANGE: '#c66a00',
 	COLOR_MGREEN: '#00AD4B',
-};
+	COLOR: {
+		PRIMARY: '#034262',
+		SECONDARY: '#186D96',
+		PIN: '#346994',
+		DGREY: '#747678',
+		DMGREY: '#999999',
+		MGREY: '#EAEAEA',
+		LGREY: '#F9F9F9',
+		WHITE: '#FFFFFF',
+		BLACK: '#000000',
+		TRANSPARENT: 'rgba(0,0,0,0)',
+		LBLUE: '#B3E5FC',
+		MBLUE: '#03A9F4',
+		YELLOW: '#F3E500',
+		MRED: '#DB3236',
+		MORANGE: '#FC9527',
+		DORANGE: '#c66a00',
+		MGREEN: '#00AD4B',
+	}
+}

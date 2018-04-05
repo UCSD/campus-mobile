@@ -144,16 +144,13 @@ export class Home extends React.Component {
 			return null;
 		} else {
 			return (
-				<View style={css.main_container}>
-					<ScrollView
-						ref={c => { this._scrollview = c; }}
-						onScroll={this.handleScroll}
-						scrollEventThrottle={69}
-					>
-						{/* LOAD CARDS */}
-						{ this._getCards() }
-					</ScrollView>
-				</View>
+				<ScrollView
+					ref={(c) => { this._scrollview = c; }}
+					onScroll={this.handleScroll}
+				>
+					{/* LOAD CARDS */}
+					{ this._getCards() }
+				</ScrollView>
 			);
 		}
 	}

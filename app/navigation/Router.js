@@ -157,7 +157,7 @@ const MainStack = StackNavigator(
 			screen: DataListViewAll,
 			navigationOptions: ({ navigation }) => {
 				const { params } = navigation.state;
-				const { title } = params;
+				const { title } = params
 				return {
 					title,
 					headerRight: (<DummyView />)
@@ -179,7 +179,7 @@ MainStack.router.getStateForAction =
 withNavigationPreventDuplicate(MainStack.router.getStateForAction);
 
 const Router = () => (
-	<MenuProvider style={{ flex:1 }}>
+	<MenuProvider>
 		<MainStack />
 	</MenuProvider>
 );

@@ -19,7 +19,7 @@ import {
 	COLOR_WHITE,
 	COLOR_DGREY,
 	COLOR_BLACK,
-	COLOR_LGREY,
+	COLOR_MGREY,
 } from '../../styles/ColorConstants';
 import {
 	WINDOW_WIDTH,
@@ -32,8 +32,7 @@ const EventDetail = ({ navigation }) => {
 	logger.ga('View Loaded: Event Detail: ' + data.title);
 
 	return (
-		<ScrollView style={css.main_full}>
-
+		<ScrollView style={css.scroll_default} contentContainerStyle={css.main_full}>
 			{data.imagehq ? (
 				<SafeImage
 					source={{ uri: data.imagehq }}
@@ -86,7 +85,7 @@ const styles = StyleSheet.create({
 	descText: { lineHeight: 18, color: COLOR_BLACK, fontSize: 14, paddingTop: 14 },
 	touchable: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR_PRIMARY, borderRadius: 3, marginTop: 20, padding: 10 },
 	eventdetail_readmore_text: { fontSize: 16, color: COLOR_WHITE },
-	shareButton: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR_LGREY, borderRadius: 3, marginTop: 20, padding: 10 },
+	shareButton: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR_MGREY, borderRadius: 3, marginTop: 20, padding: 10 },
 });
 
 export default EventDetail;

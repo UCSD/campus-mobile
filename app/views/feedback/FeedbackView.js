@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {
 	Text,
 	View,
+	ScrollView,
 	ActivityIndicator,
 	TextInput,
 	Alert,
@@ -90,10 +91,8 @@ export class FeedbackView extends Component {
 
 	_renderFormView() {
 		return (
-			<TouchableWithoutFeedback
-				onPress={() => hideKeyboard()}
-			>
-				<View style={css.main_container}>
+			<ScrollView>
+				<TouchableWithoutFeedback onPress={() => hideKeyboard()}>
 					<View style={css.feedback_container}>
 						<Text style={css.feedback_label}>
 							Help us make the {APP_NAME} app better.
@@ -136,15 +135,15 @@ export class FeedbackView extends Component {
 							</View>
 						</TouchableOpacity>
 					</View>
-				</View>
-			</TouchableWithoutFeedback>
+				</TouchableWithoutFeedback>
+			</ScrollView>
 		);
 	}
 
 	render() {
 		if (this.props.feedback.status.requesting) {
 			return (
-				<View style={css.main_container}>
+				<ScrollView>
 					<View style={css.feedback_submitting_container}>
 						<ActivityIndicator
 							animating={true}
@@ -155,7 +154,7 @@ export class FeedbackView extends Component {
 							Your feedback is being submitted...
 						</Text>
 					</View>
-				</View>
+				</ScrollView>
 			);
 		} else {
 			return this._renderFormView();

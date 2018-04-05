@@ -4,7 +4,6 @@ import {
 	Text,
 	Linking,
 	TouchableOpacity,
-	StyleSheet,
 	TextInput
 } from 'react-native';
 
@@ -13,17 +12,13 @@ import * as Keychain from 'react-native-keychain';
 
 import { connect } from 'react-redux';
 import getAuthenticationService from '../../services/authenticationService';
-
+import css from '../../styles/css'
 import Touchable from '../common/Touchable';
 import Settings from '../../AppSettings';
 import logger from '../../util/logger';
 import { getMaxCardWidth } from '../../util/general';
 import Card from '../card/Card';
-import {
-	COLOR_DGREY,
-	COLOR_PRIMARY,
-	COLOR_WHITE,
-} from '../../styles/ColorConstants';
+
 
 const authenticationService = getAuthenticationService();
 
@@ -80,10 +75,10 @@ class UserAccount extends Component {
 
 	_renderAccountContainer = (mainText) => (
 		<TouchableOpacity
-			style={styles.spacedRow}
+			style={css.UserAccount_spacedRow}
 			onPress={this._performUserAuthAction}
 		>
-			<Text style={styles.accountText}>{mainText}</Text>
+			<Text style={css.UserAccount_accountText}>{mainText}</Text>
 			<Icon name="user" />
 		</TouchableOpacity>
 	);
@@ -123,11 +118,11 @@ class UserAccount extends Component {
 
 const AccountInfo = ({ username, handleLogout }) => (
 	<TouchableOpacity
-		style={styles.infoContainer}
+		style={css.UserAccount_infoContainer}
 		onPress={handleLogout}
 	>
 		<Text
-			style={styles.text}
+			style={css.UserAccount_text}
 		>
 			{username}
 		</Text>
@@ -140,10 +135,10 @@ const AccountInfo = ({ username, handleLogout }) => (
 
 const AccountLogin = ({ handleLogin }) => (
 	<View
-		style={styles.loginContainer}
+		style={css.UserAccount_loginContainer}
 	>
 		<TextInput
-			style={styles.input}
+			style={css.UserAccount_input}
 			placeholder="Username"
 			returnKeyType="next"
 			underlineColorAndroid="transparent"
@@ -156,7 +151,7 @@ const AccountLogin = ({ handleLogin }) => (
 		/>
 		<TextInput
 			ref={(c) => { this._passwordInput = c; }}
-			style={styles.input}
+			style={css.UserAccount_input}
 			placeholder="Password"
 			returnKeyType="go"
 			underlineColorAndroid="transparent"
@@ -169,21 +164,21 @@ const AccountLogin = ({ handleLogin }) => (
 			}}
 		/>
 		<Touchable
-			onPress={() => console.log('whatever')}
-			style={styles.forgotButton}
+			onPress={() => console.log('Forgot password')}
+			style={css.UserAccount_forgotButton}
 		>
 			<Text
-				style={styles.forgotText}
+				style={css.UserAccount_forgotText}
 			>
 				Forgot password?
 			</Text>
 		</Touchable>
 		<Touchable
 			onPress={() => handleLogin(this._usernameText, this._passwordText)}
-			style={styles.loginButton}
+			style={css.UserAccount_loginButton}
 		>
 			<Text
-				style={styles.loginText}
+				style={css.UserAccount_loginText}
 			>
 				Login
 			</Text>
@@ -208,18 +203,4 @@ function mapDispatchToProps(dispatch) {
 	};
 }
 
-const styles = StyleSheet.create({
-	text: { flex: 1, fontSize: 18 },
-	icon: { flex: 1 },
-	infoContainer: { flexGrow: 1, flexDirection: 'row', margin: 7 },
-	loginContainer: { flexGrow: 1, margin: 7 },
-	input: { flexGrow: 1, height: 50 },
-	spacedRow: { flexDirection: 'row', justifyContent: 'space-between' },
-	accountText: { textAlign: 'center', fontSize: 16, color: COLOR_DGREY },
-	forgotButton: { flex: 1, justifyContent: 'center', alignItems: 'center', borderRadius: 3, padding: 10, },
-	loginButton: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR_PRIMARY, borderRadius: 3, padding: 10, },
-	forgotText: { fontSize: 16, color: COLOR_PRIMARY },
-	loginText: { fontSize: 16, color: COLOR_WHITE },
-});
-
-module.exports = connect(mapStateToProps, mapDispatchToProps)(UserAccount);
+module.exports = connect(mapStateToProps, mapDispatchToProps)(UserAccount)

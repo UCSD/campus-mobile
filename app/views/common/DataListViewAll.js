@@ -1,9 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-	View,
-	StyleSheet
-} from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import DataListView from './DataListView';
 import logger from '../../util/logger';
 import css from '../../styles/css';
@@ -21,19 +18,17 @@ import {
 const DataListViewAll = ({ navigation }) => {
 	const { params } = navigation.state;
 	const { title, data, item, card } = params;
-
 	logger.ga('View Loaded: ' + title + ' ListView');
-	console.log('card: ' + card);
+
+
 	return (
-		<View style={css.main_full}>
-			<DataListView
-				style={(card) ? (styles.cardList) : (styles.list)}
-				data={data}
-				scrollEnabled={true}
-				item={item}
-				card={card}
-			/>
-		</View>
+		<DataListView
+			style={(card) ? (styles.cardList) : (styles.fullList)}
+			data={data}
+			scrollEnabled={true}
+			item={item}
+			card={card}
+		/>
 	);
 };
 
@@ -44,8 +39,8 @@ DataListViewAll.propTypes = {
 };
 
 const styles = StyleSheet.create({
-	list: { padding: 6, backgroundColor: COLOR_LGREY },
-	cardList: { margin: 6 }
+	fullList: { padding: 8, borderWidth: 2, borderColor: 'orange' },
+	cardList: { backgroundColor: 'green', paddingBottom: 100 },
 });
 
 export default DataListViewAll;

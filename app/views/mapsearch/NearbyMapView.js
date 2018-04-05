@@ -24,7 +24,7 @@ import SearchResults from './SearchResults';
 import SearchHistoryCard from './SearchHistoryCard';
 import SearchSuggest from './SearchSuggest';
 import SearchShuttleMenu from './SearchShuttleMenu';
-
+import AppSettings from '../../AppSettings';
 import css from '../../styles/css';
 import logger from '../../util/logger';
 
@@ -276,19 +276,18 @@ export class NearbyMapView extends React.Component {
 	render() {
 		if (platformAndroid() && !this.state.updatedGoogle) {
 			return (
-				<View style={css.main_container}>
-					<Text>Please update Google Play Services and restart app to view map.</Text>
+				<View style={css.map_nogoogleplay}>
+					<Text>Please update your Google Play Services and restart the {AppSettings.APP_NAME} app to use Map Search.</Text>
 					<TouchableOpacity underlayColor="rgba(200,200,200,.1)" onPress={() => openGooglePlayUpdate()}>
 						<View style={css.eventdetail_readmore_container}>
-							<Text style={css.eventdetail_readmore_text}>Update</Text>
+							<Text style={css.eventdetail_readmore_text}>Update Google Play Services</Text>
 						</View>
 					</TouchableOpacity>
 				</View>
 			);
-		}
-		if (this.props.location.coords) {
+		} else if (this.props.location.coords) {
 			return (
-				<View style={css.main_container}>
+				<View>
 					<SearchNavButton
 						visible={(this.state.showNav && this.props.search_results !== null)}
 						onPress={this.gotoNavigationApp}
@@ -413,9 +412,6 @@ const navMargin = Platform.select({
 });
 
 const styles = StyleSheet.create({
-	main_container: {
-		width: deviceWidth, height: deviceHeight - 64 - statusBarHeight, backgroundColor: COLOR_MGREY, marginTop: navMargin
-	},
 	section: { height: deviceHeight - 64 - statusBarHeight },
 });
 

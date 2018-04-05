@@ -148,7 +148,7 @@ module.exports = {
 	 * @returns {number} The rounded number
 	 */
 	round(number) {
-		return Math.round(number);
+		return Math.round(number)
 	},
 
 	/**

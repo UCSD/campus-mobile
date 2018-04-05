@@ -22,7 +22,7 @@ import {
 /**
  * @param  {String} title Card header
  * @param {Object[]} data contains data for row items
- * @param {String} item String name for row item, passing string here instead of actual component cuz of Actions
+ * @param {String} item String name for row item: pass string here instead of component
  * @param {Number} rows number of rows to display on card
  * @param {Function} cardSort array sorting function
  * @return {JSX} Generic component for list type cards
@@ -45,11 +45,9 @@ export const DataListCard = ({ navigation, id, title, data, item, rows, cardSort
 							item={item}
 							card={false}
 						/>
-						<Touchable
-							onPress={() => (
-								navigation.navigate('DataListViewAll', { title, data, item }) // Actions doesn't like being passed JSX
-							)}
-						>
+						<Touchable onPress={() => (
+							navigation.navigate('DataListViewAll', { title, data, item })
+						)}>
 							<View style={styles.more}>
 								<Text style={styles.more_label}>View All</Text>
 							</View>
