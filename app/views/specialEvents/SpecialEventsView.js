@@ -3,13 +3,13 @@ import {
 	View,
 	StyleSheet,
 	Text,
-	ScrollView,
+	ScrollView
 } from 'react-native';
 import { connect } from 'react-redux';
+import HeaderButtons from 'react-navigation-header-buttons';
 import moment from 'moment';
-import Icon from 'react-native-vector-icons/Ionicons';
+
 import css from '../../styles/css';
-import general from '../../util/general';
 import logger from '../../util/logger';
 import SpecialEventsListView from './SpecialEventsListView';
 import {
@@ -25,9 +25,26 @@ import {
 	WINDOW_WIDTH,
 } from '../../styles/LayoutConstants';
 import Touchable from '../common/Touchable';
-import MultiSelect from './MultiSelect';
 
 class SpecialEventsView extends Component {
+	static navigationOptions = ({ navigation }) => {
+		const { params } = navigation.state || {};
+		const { title, personal } = params;
+		return {
+			title,
+			headerRight: (
+				(!personal) ? (
+					<HeaderButtons color="#FFF">
+						<HeaderButtons.Item
+							title="Filter"
+							onPress={() => { navigation.navigate('SpecialEventsFilters', { title }); }}
+						/>
+					</HeaderButtons>
+				) : (<View />)
+			)
+		};
+	}
+
 	constructor(props) {
 		super(props);
 
@@ -42,8 +59,6 @@ class SpecialEventsView extends Component {
 		}
 
 		this.state = {
-			personal: this.props.navigation.state.params.personal,
-			onFilter: false,
 			selectedDay,
 		};
 	}
@@ -53,15 +68,11 @@ class SpecialEventsView extends Component {
 	}
 
 	handleFullPress = () => {
-		this.setState({ personal: false });
+		this.props.navigation.setParams({ personal: false });
 	}
 
 	handleMinePress = () => {
-		this.setState({ personal: true });
-	}
-
-	handleFilterPress = () => {
-		this.setState({ onFilter: !this.state.onFilter });
+		this.props.navigation.setParams({ personal: true });
 	}
 
 	handleFilterSelect = (labels) => {
@@ -72,87 +83,42 @@ class SpecialEventsView extends Component {
 		this.setState({ selectedDay: index });
 	}
 
-	renderFilterButton = (onFilter) => {
-		if (!onFilter) {
-			return (
-				<Touchable
-					onPress={this.handleFilterPress}
-				>
-					<Text
-						style={general.platformIOS() ? css.navButtonTextIOS : css.navButtonTextAndroid}
-						allowFontScaling={false}
-					>
-						Filter
-					</Text>
-				</Touchable>
-			);
-		} else {
-			return null;
-		}
-	}
-
 	render() {
-		if (this.state.onFilter) {
-			return (
-				<View
-					style={[css.main_full, css.lgreybg]}
-				>
-					<MultiSelect
-						items={this.props.specialEventsLabels}
-						themes={this.props.specialEventsLabelThemes}
-						selected={this.props.labels}
-						onSelect={this.handleFilterSelect}
-						applyFilters={this.handleFilterPress}
-					/>
-				</View>
-			);
-		} else {
-			return (
-				<View
-					style={[css.main_full, css.lgreybg]}
-				>
-					<DaysBar
-						days={this.props.days}
-						selectedDay={this.state.selectedDay}
-						handleDayPress={this.handleDayPress}
-					/>
-					<SpecialEventsListView
-						style={styles.specialEventsListView}
-						scrollEnabled={true}
-						personal={this.state.personal}
-						selectedDay={this.props.days[this.state.selectedDay]}
-						handleFilterPress={this.handleFilterPress}
-					/>
-					<FakeTabBar
-						personal={this.state.personal}
-						handleFullPress={this.handleFullPress}
-						handleMinePress={this.handleMinePress}
-					/>
-				</View>
-			);
-		}
+		const { personal } = this.props.navigation.state.params;
+
+		return (
+			<View
+				style={[css.main_full, css.lgreybg]}
+			>
+				<DaysBar
+					days={this.props.days}
+					selectedDay={this.state.selectedDay}
+					handleDayPress={this.handleDayPress}
+				/>
+				<SpecialEventsListView
+					style={styles.specialEventsListView}
+					scrollEnabled={true}
+					personal={personal}
+					selectedDay={this.props.days[this.state.selectedDay]}
+					handleFilterPress={this.handleFilterPress}
+				/>
+				<FakeTabBar
+					personal={personal}
+					handleFullPress={this.handleFullPress}
+					handleMinePress={this.handleMinePress}
+				/>
+			</View>
+		);
 	}
 }
 
 const mapStateToProps = (state) => (
 	{
-		specialEventsTitle: (state.specialEvents.data) ? state.specialEvents.data.name : '',
-		specialEventsLabels: state.specialEvents.data.labels,
-		specialEventsLabelThemes: state.specialEvents.data['label-themes'],
-		labels: state.specialEvents.labels,
 		days: state.specialEvents.data.dates,
 	}
 );
 
-const mapDispatchToProps = (dispatch) => (
-	{
-		updateSpecialEventsLabels: (labels) => {
-			dispatch({ type: 'UPDATE_SPECIAL_EVENTS_LABELS', labels });
-		},
-	}
-);
-
-export default connect(mapStateToProps, mapDispatchToProps)(SpecialEventsView);
+export default connect(mapStateToProps)(SpecialEventsView);
 
 const FakeTabBar = ({ personal, handleFullPress, handleMinePress }) => (
 	<View style={styles.tabBar}>

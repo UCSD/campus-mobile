@@ -29,8 +29,7 @@ const ShuttleSmallList = ({ arrivalData, rows, scrollEnabled }) => (
 				showsVerticalScrollIndicator={false}
 				keyExtractor={(listItem, index) => (
 					listItem.route.id +
-					listItem.vehicle.id +
-					listItem.vehicle.lastUpdated
+					listItem.vehicle.id.toString()
 				)}
 				data={arrivalData}
 				renderItem={

@@ -19,6 +19,7 @@ import NearbyMapView from '../views/mapsearch/NearbyMapView';
 import DataListViewAll from '../views/common/DataListViewAll';
 import SpecialEventsView from '../views/specialEvents/SpecialEventsView';
 import SpecialEventsDetailView from '../views/specialEvents/SpecialEventsDetailView';
+import SpecialEventsFilterListView from '../views/specialEvents/SpecialEventsFilterListView';
 import ShuttleRoutesListView from '../views/shuttle/ShuttleRoutesListView';
 import ShuttleStopsListView from '../views/shuttle/ShuttleStopsListView';
 import ShuttleSavedListView from '../views/shuttle/ShuttleSavedListView';
@@ -132,7 +133,10 @@ const MainStack = StackNavigator(
 			}
 		},
 		SpecialEventsView: {
-			screen: SpecialEventsView,
+			screen: SpecialEventsView
+		},
+		SpecialEventsFilters: {
+			screen: SpecialEventsFilterListView,
 			navigationOptions: ({ navigation }) => {
 				const { params } = navigation.state;
 				const { title } = params;
