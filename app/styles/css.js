@@ -174,7 +174,7 @@ const css = StyleSheet.create({
 	// 407 - WebView
 	webview_container: { width: LAYOUT.WINDOW_WIDTH, height: LAYOUT.WINDOW_HEIGHT - 60 },
 	// 408 - Feedback
-	feedback_container: { flex: 1, flexDirection: 'column', marginHorizontal: 8, marginTop: 8 },
+	feedback_container: { flex: 1, flexDirection: 'column', marginHorizontal: 8, marginTop: 8, marginBottom: 8 },
 	feedback_label: { flexWrap: 'wrap', fontSize: 18, paddingBottom: 16, lineHeight: 24 },
 	feedback_comments_text_container: { minHeight: 50, flexDirection: 'row', borderColor: COLOR.MGREY, borderBottomWidth: 1, marginBottom: 8, backgroundColor: 'white' },
 	feedback_email_text_container: { height: 50, borderColor: COLOR.MGREY, borderBottomWidth: 1, marginBottom: 8 },

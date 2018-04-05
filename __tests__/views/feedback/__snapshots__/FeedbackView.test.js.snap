@@ -42,7 +42,14 @@ exports[`loading screen renders when requesting 1`] = `
 `;
 
 exports[`renders form when request is finished 1`] = `
-<ScrollView>
+<_class
+  enableAutomaticScroll={true}
+  enableResetScrollToCoords={true}
+  extraHeight={75}
+  extraScrollHeight={0}
+  keyboardOpeningTime={250}
+  viewIsInsideTabBar={false}
+>
   <TouchableWithoutFeedback
     onPress={[Function]}
   >
@@ -51,6 +58,7 @@ exports[`renders form when request is finished 1`] = `
         Object {
           "flex": 1,
           "flexDirection": "column",
+          "marginBottom": 8,
           "marginHorizontal": 8,
           "marginTop": 8,
         }
@@ -185,11 +193,18 @@ exports[`renders form when request is finished 1`] = `
       </TouchableOpacity>
     </View>
   </TouchableWithoutFeedback>
-</ScrollView>
+</_class>
 `;
 
 exports[`renders form when request is finished 2`] = `
-<ScrollView>
+<_class
+  enableAutomaticScroll={true}
+  enableResetScrollToCoords={true}
+  extraHeight={75}
+  extraScrollHeight={0}
+  keyboardOpeningTime={250}
+  viewIsInsideTabBar={false}
+>
   <TouchableWithoutFeedback
     onPress={[Function]}
   >
@@ -198,6 +213,7 @@ exports[`renders form when request is finished 2`] = `
         Object {
           "flex": 1,
           "flexDirection": "column",
+          "marginBottom": 8,
           "marginHorizontal": 8,
           "marginTop": 8,
         }
@@ -332,11 +348,18 @@ exports[`renders form when request is finished 2`] = `
       </TouchableOpacity>
     </View>
   </TouchableWithoutFeedback>
-</ScrollView>
+</_class>
 `;
 
 exports[`renders without crashing 1`] = `
-<ScrollView>
+<_class
+  enableAutomaticScroll={true}
+  enableResetScrollToCoords={true}
+  extraHeight={75}
+  extraScrollHeight={0}
+  keyboardOpeningTime={250}
+  viewIsInsideTabBar={false}
+>
   <TouchableWithoutFeedback
     onPress={[Function]}
   >
@@ -345,6 +368,7 @@ exports[`renders without crashing 1`] = `
         Object {
           "flex": 1,
           "flexDirection": "column",
+          "marginBottom": 8,
           "marginHorizontal": 8,
           "marginTop": 8,
         }
@@ -479,5 +503,5 @@ exports[`renders without crashing 1`] = `
       </TouchableOpacity>
     </View>
   </TouchableWithoutFeedback>
-</ScrollView>
+</_class>
 `;

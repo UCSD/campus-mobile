@@ -1,20 +1,22 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import {
 	Text,
 	View,
-	ScrollView,
 	ActivityIndicator,
 	TextInput,
 	Alert,
 	TouchableWithoutFeedback,
-	TouchableOpacity
-} from 'react-native';
-import { connect } from 'react-redux';
-import Toast from 'react-native-simple-toast';
-import { hideKeyboard } from '../../util/general';
-import logger from '../../util/logger';
-import css from '../../styles/css';
-import { APP_NAME, FEEDBACK_POST_TTL } from '../../AppSettings';
+	TouchableOpacity,
+	ScrollView
+} from 'react-native'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { connect } from 'react-redux'
+import Toast from 'react-native-simple-toast'
+
+import { hideKeyboard } from '../../util/general'
+import logger from '../../util/logger'
+import css from '../../styles/css'
+import { APP_NAME, FEEDBACK_POST_TTL } from '../../AppSettings'
 
 export class FeedbackView extends Component {
 	static navigationOptions = {
@@ -22,26 +24,26 @@ export class FeedbackView extends Component {
 	}
 
 	componentDidMount() {
-		logger.ga('View Loaded: Feedback');
+		logger.ga('View Loaded: Feedback')
 
 		// if we're mounting and we're somehow still in the
 		// process of POSTing, check if we've timed out.
 		// otherwise, set a timeout
 		if (this.props.feedback.status.requesting) {
-			const now = new Date();
-			const lastPostTime = new Date(this.props.feedback.status.timeRequested);
+			const now = new Date()
+			const lastPostTime = new Date(this.props.feedback.status.timeRequested)
 			if (now - lastPostTime >= FEEDBACK_POST_TTL) {
-				this.props.timeoutFeedback();
+				this.props.timeoutFeedback()
 			} else {
 				// timeout after remaining time expires
-				setTimeout(this.props.timeoutFeedback, now - lastPostTime);
+				setTimeout(this.props.timeoutFeedback, now - lastPostTime)
 			}
 		}
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-		const oldStatus = prevProps.feedback.status;
-		const newStatus = this.props.feedback.status;
+		const oldStatus = prevProps.feedback.status
+		const newStatus = this.props.feedback.status
 
 		// Only render alerts if status change is new
 		if (oldStatus !== newStatus) {
@@ -51,7 +53,7 @@ export class FeedbackView extends Component {
 					'Thanks, your feedback was submitted!',
 					Toast.LONG,
 					Toast.BOTTOM
-				);
+				)
 			}
 
 			// Failed feedback submission
@@ -59,39 +61,39 @@ export class FeedbackView extends Component {
 				Alert.alert(
 					'Feedback Submission Error',
 					'Unfortunately, there was an error submitting your feedback. Please try again later.'
-				);
+				)
 			}
 		}
 	}
 
 	_postFeedback() {
 		if (this.props.feedback.comment !== '') {
-			this.props.postFeedback(this.props.feedback);
+			this.props.postFeedback(this.props.feedback)
 		}
 		else {
 			Toast.showWithGravity(
 				'Please complete the required field.',
 				Toast.SHORT,
 				Toast.BOTTOM
-			);
+			)
 		}
 	}
 
 	handleFeedbackInput = fieldName => (e) => {
 		const {
 			comment, name, email
-		} = this.props.feedback;
+		} = this.props.feedback
 		const newFeedback = {
 			comment, name, email
-		};
-		newFeedback[fieldName] = e.nativeEvent.text;
+		}
+		newFeedback[fieldName] = e.nativeEvent.text
 
-		this.props.updateFeedback(newFeedback);
+		this.props.updateFeedback(newFeedback)
 	}
 
 	_renderFormView() {
 		return (
-			<ScrollView>
+			<KeyboardAwareScrollView>
 				<TouchableWithoutFeedback onPress={() => hideKeyboard()}>
 					<View style={css.feedback_container}>
 						<Text style={css.feedback_label}>
@@ -136,8 +138,8 @@ export class FeedbackView extends Component {
 						</TouchableOpacity>
 					</View>
 				</TouchableWithoutFeedback>
-			</ScrollView>
-		);
+			</KeyboardAwareScrollView>
+		)
 	}
 
 	render() {
@@ -155,9 +157,9 @@ export class FeedbackView extends Component {
 						</Text>
 					</View>
 				</ScrollView>
-			);
+			)
 		} else {
-			return this._renderFormView();
+			return this._renderFormView()
 		}
 	}
 }
@@ -166,20 +168,20 @@ const mapStateToProps = (state, props) => (
 	{
 		feedback: state.feedback
 	}
-);
+)
 
 const mapDispatchToProps = (dispatch, ownProps) => (
 	{
 		updateFeedback: (feedback) => {
-			dispatch({ type: 'UPDATE_FEEDBACK_STATE', feedback });
+			dispatch({ type: 'UPDATE_FEEDBACK_STATE', feedback })
 		},
 		postFeedback: (feedback) => {
-			dispatch({ type: 'FEEDBACK_POST_REQUESTED', feedback });
+			dispatch({ type: 'FEEDBACK_POST_REQUESTED', feedback })
 		},
 		timeoutFeedback: () => {
-			dispatch({ type: 'FEEDBACK_POST_TIMEOUT' });
+			dispatch({ type: 'FEEDBACK_POST_TIMEOUT' })
 		}
 	}
-);
+)
 
-export default connect(mapStateToProps, mapDispatchToProps)(FeedbackView);
+export default connect(mapStateToProps, mapDispatchToProps)(FeedbackView)
