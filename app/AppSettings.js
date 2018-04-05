@@ -50,4 +50,4 @@ module.exports = {
 			STATE: 'M9NGbE6bnUV18FflfVeZ2U0j94'
 		}
 	}
-};
+}

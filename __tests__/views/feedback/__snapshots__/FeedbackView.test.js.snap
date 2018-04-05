@@ -1,14 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`loading screen renders when requesting 1`] = `
-<View
-  style={
-    Object {
-      "backgroundColor": "#EAEAEA",
-      "flexGrow": 1,
-    }
-  }
->
+<ScrollView>
   <View
     style={
       Object {
@@ -45,20 +38,13 @@ exports[`loading screen renders when requesting 1`] = `
       Your feedback is being submitted...
     </Text>
   </View>
-</View>
+</ScrollView>
 `;
 
 exports[`renders form when request is finished 1`] = `
-<TouchableWithoutFeedback
-  onPress={[Function]}
->
-  <View
-    style={
-      Object {
-        "backgroundColor": "#EAEAEA",
-        "flexGrow": 1,
-      }
-    }
+<ScrollView>
+  <TouchableWithoutFeedback
+    onPress={[Function]}
   >
     <View
       style={
@@ -198,21 +184,14 @@ exports[`renders form when request is finished 1`] = `
         </View>
       </TouchableOpacity>
     </View>
-  </View>
-</TouchableWithoutFeedback>
+  </TouchableWithoutFeedback>
+</ScrollView>
 `;
 
 exports[`renders form when request is finished 2`] = `
-<TouchableWithoutFeedback
-  onPress={[Function]}
->
-  <View
-    style={
-      Object {
-        "backgroundColor": "#EAEAEA",
-        "flexGrow": 1,
-      }
-    }
+<ScrollView>
+  <TouchableWithoutFeedback
+    onPress={[Function]}
   >
     <View
       style={
@@ -352,21 +331,14 @@ exports[`renders form when request is finished 2`] = `
         </View>
       </TouchableOpacity>
     </View>
-  </View>
-</TouchableWithoutFeedback>
+  </TouchableWithoutFeedback>
+</ScrollView>
 `;
 
 exports[`renders without crashing 1`] = `
-<TouchableWithoutFeedback
-  onPress={[Function]}
->
-  <View
-    style={
-      Object {
-        "backgroundColor": "#EAEAEA",
-        "flexGrow": 1,
-      }
-    }
+<ScrollView>
+  <TouchableWithoutFeedback
+    onPress={[Function]}
   >
     <View
       style={
@@ -506,6 +478,6 @@ exports[`renders without crashing 1`] = `
         </View>
       </TouchableOpacity>
     </View>
-  </View>
-</TouchableWithoutFeedback>
+  </TouchableWithoutFeedback>
+</ScrollView>
 `;

@@ -3,12 +3,6 @@
 exports[`renders without crashing 1`] = `
 <ScrollView
   scrollEnabled={true}
-  style={
-    Object {
-      "backgroundColor": "#EAEAEA",
-      "flexGrow": 1,
-    }
-  }
 >
   <Connect(CardPreferences)
     toggleScroll={[Function]}

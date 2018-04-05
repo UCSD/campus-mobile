@@ -1,14 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders without crashing 1`] = `
-<View
-  style={
-    Object {
-      "backgroundColor": "#EAEAEA",
-      "flexGrow": 1,
-    }
-  }
->
+<View>
   <SearchNavButton
     onPress={[Function]}
     visible={false}

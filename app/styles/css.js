@@ -70,7 +70,8 @@ const css = StyleSheet.create({
 	 *  200 - Common
 	 */
 	// 201 - DataListView
-
+	DataListViewAll_card_list: { padding: 8 },
+	DataListViewAll_full_list: { padding: 8 },
 	/**
 	 *  300 - Cards
 	 */
@@ -209,8 +210,6 @@ const css = StyleSheet.create({
 	/**
 	 *  600 - Data
 	 */
-
-
 
 	// temp
 	lgreybg: { backgroundColor: COLOR.LGREY },
