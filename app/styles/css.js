@@ -1,13 +1,14 @@
-/*
-	Master Stylesheet
+/*  Master Stylesheet
 
 	Section List
-	------------------------------------------
-	100 - Navigation
-		101 - Navigator
-		102 - Tab Bar
+	------------------------------
+	100 - Main
+		101 - Containers
+		102 - Navigator
+		203 - Tab Bar
 
-	200 - Primary Containers
+	200 - Common
+		201 - DataListView
 
 	300 - Cards
 		301 - Card Container
@@ -16,6 +17,7 @@
 		304 - Dining Card
 		305 - Events & News Cards
 		306 - Links Card
+		307 - Survey Card
 
 	400 - Views
 		401 - Surf Report
@@ -30,9 +32,8 @@
 	500 - Modules
 		501 - Map Search
 		502 - Search Results
-		503 - LocationRequiredContent
 
-	900 - Misc
+
 */
 import { StyleSheet } from 'react-native'
 import { platformAndroid, deviceIphoneX, round } from '../util/general'
@@ -40,17 +41,23 @@ import { COLOR } from './ColorConstants'
 import { LAYOUT } from './LayoutConstants'
 
 const css = StyleSheet.create({
+
 	/**
-	 *  100 - Navigation
+	 *  100 - Main
 	 */
-	// 101 - Navigator
+	// 101 - Containers
+	main_container: { flex: 1 },
+	main_full: { backgroundColor: COLOR.WHITE, paddingBottom: deviceIphoneX() ? LAYOUT.NAVIGATOR_HEIGHT : 0 },
+	scroll_default: { backgroundColor: COLOR.WHITE },
+	card_container: { backgroundColor: COLOR.WHITE, margin: 6 },
+	main_full_lgrey: { flexGrow: 1, backgroundColor: COLOR.LGREY }, // special events
+	// 102 - Navigator
 	nav: { backgroundColor: COLOR.PRIMARY, height: LAYOUT.NAVIGATOR_HEIGHT, marginTop: deviceIphoneX() ? -13 : 0 },
 	navTitle: { flex: 1, fontSize: 24, fontWeight: '300', textAlign: 'center', alignSelf: 'center', marginTop: deviceIphoneX() ? 0 : -3 },
 	navCampusLogoTitle: { flex: 1, resizeMode: 'contain', height: 26, alignSelf: 'center', marginTop: platformAndroid() ? 6 : 0 },
 	navButtonTextIOS: { color: COLOR.WHITE, fontWeight: '300', fontSize: 18, height: 24 },
 	navButtonTextAndroid: { color: COLOR.WHITE, marginTop: -8, fontWeight: '300', fontSize: 18 },
-
-	// 102 - Tab Bar
+	// 103 - Tab Bar
 	tabBarIOS: { backgroundColor: COLOR.WHITE, height: LAYOUT.TAB_BAR_HEIGHT },
 	tabBarAndroid: { backgroundColor: COLOR.WHITE, height: LAYOUT.TAB_BAR_HEIGHT },
 	tabContainer: { paddingTop: deviceIphoneX() ? 17 : 0 },
@@ -59,34 +66,17 @@ const css = StyleSheet.create({
 	tabIconUser: { color: COLOR.WHITE, alignSelf: 'center', backgroundColor: COLOR.DMGREY, opacity: 0.95, width: 24, height: 24, overflow: 'hidden' },
 	tabIconUserOutline: { borderColor: COLOR.DMGREY, alignSelf: 'center', overflow: 'hidden', borderRadius: 24, borderWidth: 1 },
 
-
 	/**
-	 *  200 - Primary Containers
+	 *  200 - Common
 	 */
-	main_container: { flex: 1 },
-	main_full: { backgroundColor: COLOR.WHITE, paddingBottom: deviceIphoneX() ? LAYOUT.NAVIGATOR_HEIGHT : 0 },
-	scroll_default: { backgroundColor: COLOR.WHITE },
-	card_container: { backgroundColor: COLOR.WHITE, margin: 6 },
-	// special events
-	main_full_lgrey: { flexGrow: 1, backgroundColor: COLOR.LGREY },
-
+	// 201 - DataListView
 
 	/**
 	 *  300 - Cards
 	 */
 	// 301 - Card Container
-	card_main: { borderWidth: 1, borderRadius: 2, borderColor: '#DDD', backgroundColor: COLOR.LGREY, margin: 6, alignItems: 'flex-start', justifyContent: 'center', overflow: 'hidden' },
-	card_row_container: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: 8, paddingBottom: 0 },
-	card_footer_container: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: 8 },
-	card_button_container: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.LGREY, },
-	card_button_text: { fontSize: 20, alignItems: 'center', textAlign: 'center' },
-	card_text_container: { justifyContent: 'center', alignItems: 'center', width: LAYOUT.MAX_CARD_WIDTH, padding: 8, borderBottomWidth: 1, borderBottomColor: '#DDD' },
-
 	// 302 - Weather Card
-
 	// 303 - Shuttle Card
-
-
 	// 304 - Dining Card
 	dl_row: { backgroundColor: COLOR.LGREY, flexDirection: 'row', padding: 10, borderBottomWidth: 1, borderBottomColor: COLOR.MGREY },
 	dl_row_container_left: { flex: 4, flexDirection: 'column', justifyContent: 'flex-start', paddingRight: 8 },
@@ -102,11 +92,15 @@ const css = StyleSheet.create({
 	dl_status_soon_text: { paddingRight: 8 },
 	dl_dir_traveltype_container: { flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'center' },
 	dl_dir_eta: { color: COLOR.PRIMARY, fontSize: 11, fontWeight: '600' },
-
 	// 305 - Events & News Cards
-
 	// 306 - Links Card
-
+	// 307 - Survey Card
+	card_main: { borderWidth: 1, borderRadius: 2, borderColor: COLOR.COLOR_MGREY, backgroundColor: COLOR.WHITE, margin: 6, alignItems: 'flex-start', justifyContent: 'center', overflow: 'hidden' },
+	card_row_container: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: 8, paddingBottom: 0 },
+	card_footer_container: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: 8 },
+	card_button_container: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.WHITE, },
+	card_button_text: { fontSize: 20, alignItems: 'center', textAlign: 'center' },
+	card_text_container: { justifyContent: 'center', alignItems: 'center', width: LAYOUT.MAX_CARD_WIDTH, padding: 8, borderBottomWidth: 1, borderBottomColor: COLOR.COLOR_MGREY },
 
 	/**
 	 *  400 - Views
@@ -119,10 +113,7 @@ const css = StyleSheet.create({
 	sr_reportTitle: { fontSize: 18, color: COLOR.BLACK, paddingTop: 7, paddingHorizontal: 10 },
 	sr_reportText: { fontSize: 14, color: COLOR.BLACK, paddingHorizontal: 10 },
 	sr_heightText: { fontSize: 16, color: COLOR.DGREY, paddingTop: 4 },
-
 	// 402 - Shuttle Stop
-
-
 	// 403 - Dining Detail
 	dd_description_container: { padding: 10, color: COLOR.BLACK },
 	dd_description_nametext: { fontSize: 26, color: COLOR.BLACK },
@@ -168,22 +159,19 @@ const css = StyleSheet.create({
 	ddn_bold: { color: COLOR.BLACK, fontSize: 18, fontWeight: '700' },
 	ddn_font: { color: COLOR.BLACK, fontSize: 18 },
 	ddn_disclaimer_font: { color: COLOR.BLACK, fontSize: 14 },
-	ddn_row_main: { flex: 5, flexDirection: 'row', borderTopWidth: 1, borderTopColor: '#999', paddingVertical: 2 },
-	ddn_row_sub: { flex: 5, flexDirection: 'row', borderTopWidth: 1, borderTopColor: '#999', paddingVertical: 2, paddingLeft: 20 },
+	ddn_row_main: { flex: 5, flexDirection: 'row', borderTopWidth: 1, borderTopColor: COLOR.DMGREY, paddingVertical: 2 },
+	ddn_row_sub: { flex: 5, flexDirection: 'row', borderTopWidth: 1, borderTopColor: COLOR.DMGREY, paddingVertical: 2, paddingLeft: 20 },
 	ddn_percent: { flex: 1, fontSize: 18, fontWeight: '700', textAlign: 'right' },
 	ddn_dv_amountperserving: { color: COLOR.BLACK },
 	ddn_topborder1: { borderTopWidth: 8, borderTopColor: COLOR.BLACK, paddingVertical: 2, marginTop: 2 },
 	ddn_topborder2: { borderTopWidth: 4, borderTopColor: COLOR.BLACK },
 	ddn_info_container: { padding: 10 },
 	dd_description_po: { color: COLOR.BLACK },
-
 	// 406 - Event & News Detail
 	eventdetail_readmore_container: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.PRIMARY, borderRadius: 3, marginTop: 20, padding: 10 },
 	eventdetail_readmore_text: { fontSize: 16, color: COLOR.WHITE },
-
 	// 407 - WebView
 	webview_container: { width: LAYOUT.WINDOW_WIDTH, height: LAYOUT.WINDOW_HEIGHT - 60 },
-
 	// 408 - Feedback
 	feedback_container: { flex: 1, flexDirection: 'column', marginHorizontal: 8, marginTop: 8 },
 	feedback_label: { flexWrap: 'wrap', fontSize: 18, paddingBottom: 16, lineHeight: 24 },
@@ -195,7 +183,6 @@ const css = StyleSheet.create({
 	feedback_submitting_container: { flex: 1, flexDirection: 'column', padding: 16, alignItems: 'center', justifyContent: 'center' },
 	feedback_loading_icon: { paddingBottom: 16 },
 	feedback_submitting_text: { fontSize: 18, textAlign: 'center' },
-
 	// 409 - Preferences View (User Settings)
 	UserAccount_text: { flex: 1, fontSize: 18 },
 	UserAccount_icon: { flex: 1 },
@@ -208,27 +195,24 @@ const css = StyleSheet.create({
 	UserAccount_loginButton: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.PRIMARY, borderRadius: 3, padding: 10, },
 	UserAccount_forgotText: { fontSize: 16, color: COLOR.PRIMARY },
 	UserAccount_loginText: { fontSize: 16, color: COLOR.WHITE },
-
 	// 410 - Links View
-
 
 	/**
 	 *  500 - Modules
 	 */
 	// 501 - Map Search
 	map_nogoogleplay: { padding: 16 },
-
 	// 502 - Search Results
 	destinationcard_marker_label: { flex: 2, fontSize: 18, paddingLeft: 8, paddingTop: 0, color: COLOR.PRIMARY, justifyContent: 'center' },
 	destinationcard_marker_dist_label: { flex: 1, textAlign: 'right', fontSize: 18, paddingLeft: 8, paddingTop: 0, color: COLOR.PRIMARY, justifyContent: 'center' },
 
-	// 503 - LocationRequiredContent
-
-
 	/**
-	 *  900 - Misc
+	 *  600 - Data
 	 */
-	whitebg: { backgroundColor: COLOR.WHITE },
+
+
+
+	// temp
 	lgreybg: { backgroundColor: COLOR.LGREY },
 	lgrey: { color: '#CCC' },
 	bold: { fontWeight: '700' },
