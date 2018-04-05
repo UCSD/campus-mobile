@@ -1,19 +1,12 @@
-import React from 'react';
-import {
-	View,
-	StyleSheet,
-} from 'react-native';
-
-import {
-	COLOR_LGREY,
-} from '../../styles/ColorConstants';
+import React from 'react'
+import { View, StyleSheet } from 'react-native'
 
 const EmptyItem = () => (
 	<View style={styles.emptyRow} />
-);
+)
 
 const styles = StyleSheet.create({
-	emptyRow: { width: 75, flexDirection: 'row',  backgroundColor: COLOR_LGREY },
-});
+	emptyRow: { width: 75, flexDirection: 'row' },
+})
 
-export default EmptyItem;
+export default EmptyItem

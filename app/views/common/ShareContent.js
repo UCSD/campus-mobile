@@ -1,54 +1,39 @@
-import React from 'react';
-import {
-	View,
-	Text,
-	Share,
-} from 'react-native';
-import Toast from 'react-native-simple-toast';
+import React from 'react'
+import { Text, Share } from 'react-native'
+import Toast from 'react-native-simple-toast'
 
-import Touchable from './Touchable';
+import css from '../../styles/css'
+import Touchable from './Touchable'
 
 class ShareContent extends React.Component {
 	_shareContent = () => {
-		const { message, url, title } = this.props;
+		const { message, url, title } = this.props
 
 		Share.share({
 			message,
 			url,
 			title
 		})
-		.then(this._showResult)
-		.catch((error) => console.log('Error sharing content: ' + title + error));
+			.then(this._showResult)
+			.catch(error => console.log('Error sharing content: ' + title + error))
 	}
 
 	_showResult = (result) => {
 		if (result.action === Share.sharedAction) {
-			/*if (result.activityType) {
-				Toast.showWithGravity(result.activityType, Toast.SHORT, Toast.CENTER);
-				console.log(result.activityType);
-			} else {*/
-				// TODO change dialog based on copy to clipboard or other
-				Toast.showWithGravity('Shared', Toast.SHORT, Toast.CENTER);
-			//}
-		} else if (result.action === Share.dismissedAction) {
-			// dismissed
+			Toast.showWithGravity('Shared', Toast.SHORT, Toast.CENTER)
 		}
 	}
 
 	render() {
-		const { style, title } = this.props;
-
+		const { title } = this.props
 		return (
-			<Touchable
-				onPress={this._shareContent}
-				style={style}
-			>
-				<Text>
+			<Touchable onPress={this._shareContent} style={css.share_button}>
+				<Text style={css.share_button_text}>
 					{title}
 				</Text>
 			</Touchable>
-		);
+		)
 	}
 }
 
-export default ShareContent;
+export default ShareContent

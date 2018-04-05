@@ -1,36 +1,34 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { View } from 'react-native';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { View, ScrollView } from 'react-native'
 
-import css from '../../styles/css';
-import logger from '../../util/logger';
-import MultiSelect from './MultiSelect';
+import css from '../../styles/css'
+import logger from '../../util/logger'
+import MultiSelect from './MultiSelect'
 
 class SpecialEventsMyScheduleView extends Component {
 	componentDidMount() {
-		logger.ga('View Loaded: SpecialEventsFilterListView');
+		logger.ga('View Loaded: SpecialEventsFilterListView')
 	}
 
 	handleFilterSelect = (labels) => {
-		this.props.updateSpecialEventsLabels(labels);
+		this.props.updateSpecialEventsLabels(labels)
 	}
 
 	render() {
 		return (
-			<View
-				style={[css.main_full, css.lgreybg]}
-			>
+			<ScrollView style={css.scroll_default} contentContainerStyle={css.main_full}>
 				<MultiSelect
 					items={this.props.specialEventsLabels}
 					themes={this.props.specialEventsLabelThemes}
 					selected={this.props.labels}
 					onSelect={this.handleFilterSelect}
 					applyFilters={() => {
-						this.props.navigation.pop();
+						this.props.navigation.pop()
 					}}
 				/>
-			</View>
-		);
+			</ScrollView>
+		)
 	}
 }
 
@@ -41,14 +39,14 @@ const mapStateToProps = state => (
 		specialEventsLabelThemes: state.specialEvents.data['label-themes'],
 		labels: state.specialEvents.labels,
 	}
-);
+)
 
 const mapDispatchToProps = dispatch => (
 	{
 		updateSpecialEventsLabels: (labels) => {
-			dispatch({ type: 'UPDATE_SPECIAL_EVENTS_LABELS', labels });
+			dispatch({ type: 'UPDATE_SPECIAL_EVENTS_LABELS', labels })
 		},
 	}
-);
+)
 
-export default connect(mapStateToProps, mapDispatchToProps)(SpecialEventsMyScheduleView);
+export default connect(mapStateToProps, mapDispatchToProps)(SpecialEventsMyScheduleView)

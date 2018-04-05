@@ -1,22 +1,15 @@
-import React from 'react';
-import {
-	View,
-	Text,
-	ScrollView,
-} from 'react-native';
+import React from 'react'
+import { View, Text, ScrollView } from 'react-native'
 
-import {
-	openURL,
-} from '../../util/general';
-import Touchable from '../common/Touchable';
-
-const logger = require('../../util/logger');
-const css = require('../../styles/css');
+import { openURL } from '../../util/general'
+import Touchable from '../common/Touchable'
+import logger from '../../util/logger'
+import css from '../../styles/css'
 
 const DiningNutrition = ({ navigation }) => {
-	const { params } = navigation.state;
-	const { menuItem, disclaimer, disclaimerEmail } = params;
-	logger.ga('View Loaded: Dining Nutrition: ' + menuItem.name );
+	const { params } = navigation.state
+	const { menuItem, disclaimer, disclaimerEmail } = params
+	logger.ga('View Loaded: Dining Nutrition: ' + menuItem.name )
 
 	return (
 		<ScrollView style={css.scroll_default} contentContainerStyle={css.main_full}>
@@ -42,9 +35,11 @@ const DiningNutrition = ({ navigation }) => {
 
 				<View style={css.ddn_row_main}><Text style={css.ddn_font}><Text style={css.bold}>Cholesterol</Text> {menuItem.nutrition.cholesterol}</Text><Text style={css.ddn_percent}>{menuItem.nutrition.cholesterol_DV}</Text></View>
 				<View style={css.ddn_row_main}><Text style={css.ddn_font}><Text style={css.bold}>Sodium</Text> {menuItem.nutrition.sodium}</Text><Text style={css.ddn_percent}>{menuItem.nutrition.sodium_DV}</Text></View>
-				<View style={css.ddn_row_main}><Text style={css.ddn_font}><Text style={css.bold}>Total Carbohydrate</Text> {menuItem.nutrition.totalCarbohydrate}</Text><Text style={css.ddn_percent}>{menuItem.nutrition.totalCarbohydrate_DV}</Text></View>
+				<View style={css.ddn_row_main}><Text style={css.ddn_font}><Text style={css.bold}>Total Carbohydrate</Text> {menuItem.nutrition.totalCarbohydrate}</Text><Text style={css.ddn_percent}>{menuItem.nutrition.totalCarbohhdrate_DV}</Text></View>
 				<View style={css.ddn_row_sub}><Text style={css.ddn_font}>Dietary Fiber {menuItem.nutrition.dietaryFiber}</Text><Text style={css.ddn_percent}>{menuItem.nutrition.dietaryFiber_DV}</Text></View>
-				<View style={css.ddn_row_sub}><Text style={css.ddn_font}>Sugars {menuItem.nutrition.sugars}</Text><Text style={css.ddn_percent}></Text></View>
+				<View style={css.ddn_row_sub}><Text style={css.ddn_font}>Sugars {menuItem.nutrition.sugars}</Text>
+					<Text style={css.ddn_percent}></Text>
+				</View>
 
 				<View style={css.ddn_row_main}><Text style={css.ddn_font}><Text style={css.bold}>Protein</Text> {menuItem.nutrition.protein}</Text><Text style={css.ddn_percent}>{menuItem.nutrition.protein_DV}</Text></View>
 
@@ -89,8 +84,8 @@ const DiningNutrition = ({ navigation }) => {
 				) : (null)
 			}
 		</ScrollView>
-	);
-};
+	)
+}
 
 const DisclaimerEmailButton = ({ disclaimerEmail }) => (
 	<Touchable
@@ -100,6 +95,6 @@ const DisclaimerEmailButton = ({ disclaimerEmail }) => (
 			<Text style={css.dd_menu_link_text}>Contact Nutrition Team</Text>
 		</View>
 	</Touchable>
-);
+)
 
-export default DiningNutrition;
+export default DiningNutrition

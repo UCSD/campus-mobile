@@ -36,18 +36,18 @@
 
 */
 import { StyleSheet } from 'react-native'
+
 import { platformAndroid, deviceIphoneX, round } from '../util/general'
 import { COLOR } from './ColorConstants'
 import { LAYOUT } from './LayoutConstants'
 
 const css = StyleSheet.create({
-
 	/**
 	 *  100 - Main
 	 */
 	// 101 - Containers
 	main_container: { flex: 1 },
-	main_full: { backgroundColor: COLOR.WHITE, paddingBottom: deviceIphoneX() ? LAYOUT.NAVIGATOR_HEIGHT : 0 },
+	main_full: { backgroundColor: 'white', paddingBottom: deviceIphoneX() ? LAYOUT.NAVIGATOR_HEIGHT : 0 },
 	scroll_default: { backgroundColor: COLOR.WHITE },
 	card_container: { backgroundColor: COLOR.WHITE, margin: 6 },
 	main_full_lgrey: { flexGrow: 1, backgroundColor: COLOR.LGREY }, // special events
@@ -62,7 +62,7 @@ const css = StyleSheet.create({
 	tabBarAndroid: { backgroundColor: COLOR.WHITE, height: LAYOUT.TAB_BAR_HEIGHT },
 	tabContainer: { paddingTop: deviceIphoneX() ? 17 : 0 },
 	tabContainerBottom: { borderBottomColor: COLOR.PRIMARY },
-	tabIcon: { color: COLOR.DMGREY, alignSelf: 'center', backgroundColor: 'transparent', opacity: 0.95, width: 24, height: 24, overflow: 'hidden' },
+	tabIcon: { color: COLOR.DMGREY, alignSelf: 'center', backgroundColor: COLOR.TRANSPARENT, opacity: 0.95, width: 24, height: 24, overflow: 'hidden' },
 	tabIconUser: { color: COLOR.WHITE, alignSelf: 'center', backgroundColor: COLOR.DMGREY, opacity: 0.95, width: 24, height: 24, overflow: 'hidden' },
 	tabIconUserOutline: { borderColor: COLOR.DMGREY, alignSelf: 'center', overflow: 'hidden', borderRadius: 24, borderWidth: 1 },
 
@@ -72,6 +72,8 @@ const css = StyleSheet.create({
 	// 201 - DataListView
 	DataListViewAll_card_list: { padding: 8 },
 	DataListViewAll_full_list: { padding: 8 },
+
+
 	/**
 	 *  300 - Cards
 	 */
@@ -79,7 +81,7 @@ const css = StyleSheet.create({
 	// 302 - Weather Card
 	// 303 - Shuttle Card
 	// 304 - Dining Card
-	dl_row: { backgroundColor: COLOR.LGREY, flexDirection: 'row', padding: 10, borderBottomWidth: 1, borderBottomColor: COLOR.MGREY },
+	dl_row: { flexDirection: 'row', padding: 10, borderBottomWidth: 1, borderBottomColor: COLOR.MGREY },
 	dl_row_container_left: { flex: 4, flexDirection: 'column', justifyContent: 'flex-start', paddingRight: 8 },
 	dl_row_container_right: { flex: 1, alignItems: 'center', justifyContent: 'flex-end' },
 	dl_title_row: { flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', flexWrap: 'wrap' },
@@ -171,6 +173,26 @@ const css = StyleSheet.create({
 	// 406 - Event & News Detail
 	eventdetail_readmore_container: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.PRIMARY, borderRadius: 3, marginTop: 20, padding: 10 },
 	eventdetail_readmore_text: { fontSize: 16, color: COLOR.WHITE },
+	button_primary: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.PRIMARY, borderRadius: 3, marginTop: 20, padding: 10 },
+	button_primary_text: { fontSize: 16, color: COLOR.WHITE },
+	share_button: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.MGREY, borderRadius: 3, marginTop: 20, padding: 10 },
+	share_button_text: { fontSize: 16 },
+
+	media_detail_container: { width: LAYOUT.WINDOW_WIDTH, paddingHorizontal: 12, paddingVertical: 14 },
+	media_detail_image: { width: LAYOUT.WINDOW_WIDTH, height: 200 },
+	media_detail_title: { fontWeight: '400', fontSize: 22, color: COLOR.PRIMARY },
+	media_detail_dateText: { fontSize: 11, color: COLOR.DGREY, paddingTop: 14 },
+	media_detail_descText: { lineHeight: 18, color: COLOR.BLACK, fontSize: 14, paddingTop: 14 },
+
+	//news
+	media_detail_touchable: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.PRIMARY, borderRadius: 3, marginTop: 20, padding: 10 },
+	media_detail_readMoreText: { fontSize: 16, color: COLOR.WHITE },
+
+	//event
+	media_detail_locationText: { fontSize: 16, color: COLOR.DGREY },
+	media_detail_contact_button: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.PRIMARY, borderRadius: 3, marginTop: 20, padding: 10 },
+	media_detail_contact_button_text: { fontSize: 16, color: COLOR.WHITE },
+
 	// 407 - WebView
 	webview_container: { width: LAYOUT.WINDOW_WIDTH, height: LAYOUT.WINDOW_HEIGHT - 60 },
 	// 408 - Feedback
@@ -178,7 +200,7 @@ const css = StyleSheet.create({
 	feedback_label: { flexWrap: 'wrap', fontSize: 18, paddingBottom: 16, lineHeight: 24 },
 	feedback_comments_text_container: { minHeight: 50, flexDirection: 'row', borderColor: COLOR.MGREY, borderBottomWidth: 1, marginBottom: 8, backgroundColor: 'white' },
 	feedback_email_text_container: { height: 50, borderColor: COLOR.MGREY, borderBottomWidth: 1, marginBottom: 8 },
-	feedback_text_input: { flex: 1, backgroundColor: 'white', fontSize: 18, alignItems: 'center', padding: 8 },
+	feedback_text_input: { flex: 1, backgroundColor: COLOR.WHITE, fontSize: 18, alignItems: 'center', padding: 8 },
 	feedback_submit_container: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.PRIMARY, borderRadius: 3, padding: 10 },
 	feedback_submit_text: { fontSize: 16, color: 'white' },
 	feedback_submitting_container: { flex: 1, flexDirection: 'column', padding: 16, alignItems: 'center', justifyContent: 'center' },
@@ -197,6 +219,12 @@ const css = StyleSheet.create({
 	UserAccount_forgotText: { fontSize: 16, color: COLOR.PRIMARY },
 	UserAccount_loginText: { fontSize: 16, color: COLOR.WHITE },
 	// 410 - Links View
+	links_row_container: { borderBottomWidth: 1, borderBottomColor: COLOR.MGREY, paddingBottom: 8, marginBottom: 8 },
+	links_row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
+	links_icon: { height: 42, width: 38 },
+	links_icon_fa: { padding: 8, color: COLOR.PRIMARY },
+	links_name: { flexGrow: 5, color: COLOR.BLACK, fontSize: 16, paddingHorizontal: 8 },
+	links_arrow_icon: { color: COLOR.DGREY },
 
 	/**
 	 *  500 - Modules
@@ -215,6 +243,7 @@ const css = StyleSheet.create({
 	lgreybg: { backgroundColor: COLOR.LGREY },
 	lgrey: { color: '#CCC' },
 	bold: { fontWeight: '700' },
+	flex: { flex: 1 },
 })
 
 module.exports = css
