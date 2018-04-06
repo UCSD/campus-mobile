@@ -172,12 +172,14 @@ const css = StyleSheet.create({
 	dn_topborder1: { borderTopWidth: 8, borderTopColor: COLOR.BLACK, paddingVertical: 2, marginTop: 2 },
 	dn_topborder2: { borderTopWidth: 4, borderTopColor: COLOR.BLACK },
 	dn_info_container: { padding: 10 },
+	dn_bold: { fontWeight: '700' },
+
 	// 404 - Events & News
 	eventdetail_readmore_container: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.PRIMARY, borderRadius: 3, marginTop: 20, padding: 10 },
 	eventdetail_readmore_text: { fontSize: 16, color: COLOR.WHITE },
 	media_detail_container: { width: LAYOUT.WINDOW_WIDTH, paddingHorizontal: 12, paddingVertical: 14 },
 	media_detail_image: { width: LAYOUT.WINDOW_WIDTH, height: 200 },
-	media_detail_title: { fontWeight: '400', fontSize: 22, color: COLOR.PRIMARY },
+	media_detail_title: { fontSize: 22, color: COLOR.PRIMARY },
 	media_detail_dateText: { color: COLOR.PRIMARY, paddingTop: 14 },
 	media_detail_descText: { lineHeight: 18, color: COLOR.BLACK, fontSize: 14, paddingTop: 14 },
 	media_detail_locationText: { fontSize: 16, color: COLOR.DGREY },

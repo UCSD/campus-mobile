@@ -22,10 +22,10 @@ const DiningNutrition = ({ navigation }) => {
 				<Text style={css.dn_header}>Nutrition Facts</Text>
 				<Text style={css.dn_servingsize}>Serving Size {menuItem.nutrition.servingSize}</Text>
 				<View style={css.dn_topborder1}><Text style={css.dn_amountperserving}>Amount Per Serving</Text></View>
-				<View style={css.dn_row_main}><Text style={css.dn_font}><Text style={css.bold}>Calories</Text> {menuItem.nutrition.calories}</Text></View>
+				<View style={css.dn_row_main}><Text style={css.dn_font}><Text style={css.dn_bold}>Calories</Text> {menuItem.nutrition.calories}</Text></View>
 				<View style={css.dn_topborder2}><Text style={css.dn_dv}>% Daily Values*</Text></View>
 
-				<View style={css.dn_row_main}><Text style={css.dn_font}><Text style={css.bold}>Total Fat</Text> {menuItem.nutrition.totalFat}</Text><Text style={css.dn_percent}>{menuItem.nutrition.totalFat_DV}</Text></View>
+				<View style={css.dn_row_main}><Text style={css.dn_font}><Text style={css.dn_bold}>Total Fat</Text> {menuItem.nutrition.totalFat}</Text><Text style={css.dn_percent}>{menuItem.nutrition.totalFat_DV}</Text></View>
 				<View style={css.dn_row_sub}><Text style={css.dn_font}>Saturated Fat {menuItem.nutrition.saturatedFat}</Text><Text style={css.dn_percent}>{menuItem.nutrition.saturatedFat_DV}</Text></View>
 				<View style={css.dn_row_sub}>
 					<Text style={css.dn_font}>Trans Fat {menuItem.nutrition.transFat}</Text><Text style={css.dn_percent}>
@@ -33,15 +33,15 @@ const DiningNutrition = ({ navigation }) => {
 					</Text>
 				</View>
 
-				<View style={css.dn_row_main}><Text style={css.dn_font}><Text style={css.bold}>Cholesterol</Text> {menuItem.nutrition.cholesterol}</Text><Text style={css.dn_percent}>{menuItem.nutrition.cholesterol_DV}</Text></View>
-				<View style={css.dn_row_main}><Text style={css.dn_font}><Text style={css.bold}>Sodium</Text> {menuItem.nutrition.sodium}</Text><Text style={css.dn_percent}>{menuItem.nutrition.sodium_DV}</Text></View>
-				<View style={css.dn_row_main}><Text style={css.dn_font}><Text style={css.bold}>Total Carbohydrate</Text> {menuItem.nutrition.totalCarbohydrate}</Text><Text style={css.dn_percent}>{menuItem.nutrition.totalCarbohhdrate_DV}</Text></View>
+				<View style={css.dn_row_main}><Text style={css.dn_font}><Text style={css.dn_bold}>Cholesterol</Text> {menuItem.nutrition.cholesterol}</Text><Text style={css.dn_percent}>{menuItem.nutrition.cholesterol_DV}</Text></View>
+				<View style={css.dn_row_main}><Text style={css.dn_font}><Text style={css.dn_bold}>Sodium</Text> {menuItem.nutrition.sodium}</Text><Text style={css.dn_percent}>{menuItem.nutrition.sodium_DV}</Text></View>
+				<View style={css.dn_row_main}><Text style={css.dn_font}><Text style={css.dn_bold}>Total Carbohydrate</Text> {menuItem.nutrition.totalCarbohydrate}</Text><Text style={css.dn_percent}>{menuItem.nutrition.totalCarbohhdrate_DV}</Text></View>
 				<View style={css.dn_row_sub}><Text style={css.dn_font}>Dietary Fiber {menuItem.nutrition.dietaryFiber}</Text><Text style={css.dn_percent}>{menuItem.nutrition.dietaryFiber_DV}</Text></View>
 				<View style={css.dn_row_sub}><Text style={css.dn_font}>Sugars {menuItem.nutrition.sugars}</Text>
 					<Text style={css.dn_percent}></Text>
 				</View>
 
-				<View style={css.dn_row_main}><Text style={css.dn_font}><Text style={css.bold}>Protein</Text> {menuItem.nutrition.protein}</Text><Text style={css.dn_percent}>{menuItem.nutrition.protein_DV}</Text></View>
+				<View style={css.dn_row_main}><Text style={css.dn_font}><Text style={css.dn_bold}>Protein</Text> {menuItem.nutrition.protein}</Text><Text style={css.dn_percent}>{menuItem.nutrition.protein_DV}</Text></View>
 
 				<View style={css.dn_topborder1}><Text style={css.dn_dv_amountperserving}>*Percent Daily Values are based on a 2,000 calorie diet.</Text></View>
 			</View>
