@@ -8,8 +8,7 @@ exports[`card renders without crashing 1`] = `
       style={
         Object {
           "alignItems": "center",
-          "backgroundColor": "#F9F9F9",
-          "borderBottomWidth": 1,
+          "backgroundColor": "#FFFFFF",
           "borderColor": "#EAEAEA",
           "borderTopWidth": 1,
           "justifyContent": "center",
