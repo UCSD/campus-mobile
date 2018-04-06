@@ -1,17 +1,17 @@
-import React from 'react';
+import React from 'react'
 import {
 	View,
 	Text,
 	ScrollView,
 	Image,
 	FlatList,
-} from 'react-native';
-import moment from 'moment';
-import { connect } from 'react-redux';
-import css from '../../styles/css';
-import logger from '../../util/logger';
+} from 'react-native'
+import { connect } from 'react-redux'
 
-const surfHeader = require('../../assets/img/surf_report_header.jpg');
+import css from '../../styles/css'
+import logger from '../../util/logger'
+
+const surfHeader = require('../../assets/images/surf_report_header.jpg')
 
 const mapWeekdays = [
 	'Sunday',
@@ -21,7 +21,8 @@ const mapWeekdays = [
 	'Thursday',
 	'Friday',
 	'Saturday'
-];
+]
+
 const mapMonths = [
 	'January',
 	'February',
@@ -35,11 +36,11 @@ const mapMonths = [
 	'October',
 	'November',
 	'December'
-];
+]
 
 class SurfReport extends React.Component {
 	componentDidMount() {
-		logger.ga('View Loaded: Surf Report');
+		logger.ga('View Loaded: Surf Report')
 	}
 
 	surfItem(rowData) {
@@ -50,27 +51,27 @@ class SurfReport extends React.Component {
 					<Text style={css.sr_heightText}>{rowData.surf_min}{'-'}{rowData.surf_max}{'ft'}</Text>
 				</View>
 			</View>
-		);
+		)
 	}
 
 	formatForecast(forecast) {
-		forecastParsed = [];
+		forecastParsed = []
 		var reports = forecast.map(function(rep){
 			forecast.indexOf(rep) % 2 == 0 ? forecastParsed.push(
-				<View key={forecast.indexOf(rep)} style={css.dateDayHeader}> 
+				<View key={forecast.indexOf(rep)} style={css.dateDayHeader}>
 					<Text style={css.sr_reportTitle}>{rep}</Text>
 				</View>
 			) : forecastParsed.push(
-				<View key={forecast.indexOf(rep)} style={css.dateDayHeader}> 
+				<View key={forecast.indexOf(rep)} style={css.dateDayHeader}>
 					<Text style={css.sr_reportText}>{rep}</Text>
-				</View>);
+				</View>)
 		})
 	}
 
 	render() {
-		var dateString = new Date(this.props.surfData.spots[0].date)
+		const dateString = new Date(this.props.surfData.spots[0].date)
 		if ('forecast' in this.props.surfData && this.props.surfData.forecast.length !== 0) {
-			this.formatForecast(this.props.surfData.forecast);
+			this.formatForecast(this.props.surfData.forecast)
 		}
 		return (
 			<ScrollView style={css.scroll_default} contentContainerStyle={css.main_full}>
@@ -93,16 +94,13 @@ class SurfReport extends React.Component {
 					renderItem={({item: rowData}) => this.surfItem(rowData)}
 				/>
 			</ScrollView>
-		);
+		)
 	}
 }
 
 function mapStateToProps(state) {
-	return {
-		surfData: state.surf.data,
-	};
+	return { surfData: state.surf.data }
 }
 
-const ActualSurfReport = connect(mapStateToProps)(SurfReport);
-
-export default ActualSurfReport;
+const ActualSurfReport = connect(mapStateToProps)(SurfReport)
+export default ActualSurfReport

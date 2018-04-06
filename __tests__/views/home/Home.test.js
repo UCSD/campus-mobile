@@ -4,7 +4,7 @@ import Enzyme, { shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 
 // Component to be tested
-import { Home } from '../../app/views/Home';
+import { Home } from '../../../app/views/home/Home';
 
 Enzyme.configure({ adapter: new Adapter() });
 

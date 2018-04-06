@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { View, ScrollView } from 'react-native'
+import { ScrollView } from 'react-native'
 
 import css from '../../styles/css'
 import logger from '../../util/logger'
@@ -17,17 +17,15 @@ class SpecialEventsMyScheduleView extends Component {
 
 	render() {
 		return (
-			<ScrollView style={css.scroll_default} contentContainerStyle={css.main_full}>
-				<MultiSelect
-					items={this.props.specialEventsLabels}
-					themes={this.props.specialEventsLabelThemes}
-					selected={this.props.labels}
-					onSelect={this.handleFilterSelect}
-					applyFilters={() => {
-						this.props.navigation.pop()
-					}}
-				/>
-			</ScrollView>
+			<MultiSelect
+				items={this.props.specialEventsLabels}
+				themes={this.props.specialEventsLabelThemes}
+				selected={this.props.labels}
+				onSelect={this.handleFilterSelect}
+				applyFilters={() => {
+					this.props.navigation.pop()
+				}}
+			/>
 		)
 	}
 }

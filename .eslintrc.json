@@ -79,7 +79,6 @@
     "$FlowFixMe": false,
     "$FixMe": false
   },
-
   "rules": {
     "indent": ["error", "tab"],      // indent tabs
     "no-tabs": "off",                // allows tabs at all

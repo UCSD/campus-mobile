@@ -1,41 +1,41 @@
-import React from 'react';
-import { View } from 'react-native';
-import { StackNavigator, TabNavigator } from 'react-navigation';
-import { MenuProvider } from 'react-native-popup-menu';
-
-import general from '../util/general';
+import React from 'react'
+import { View } from 'react-native'
+import { StackNavigator, TabNavigator } from 'react-navigation'
+import { MenuProvider } from 'react-native-popup-menu'
 
 // VIEWS
-import Home from '../views/Home';
-import SurfReport from '../views/weather/SurfReport';
-import ShuttleStop from '../views/shuttle/ShuttleStop';
-import DiningDetail from '../views/dining/DiningDetail';
-import DiningNutrition from '../views/dining/DiningNutrition';
-import EventDetail from '../views/events/EventDetail';
-import NewsDetail from '../views/news/NewsDetail';
-import FeedbackView from '../views/feedback/FeedbackView';
-import PreferencesView from '../views/preferences/PreferencesView';
-import NearbyMapView from '../views/mapsearch/NearbyMapView';
-import DataListViewAll from '../views/common/DataListViewAll';
-import SpecialEventsView from '../views/specialEvents/SpecialEventsView';
-import SpecialEventsDetailView from '../views/specialEvents/SpecialEventsDetailView';
-import SpecialEventsFilterListView from '../views/specialEvents/SpecialEventsFilterListView';
-import ShuttleRoutesListView from '../views/shuttle/ShuttleRoutesListView';
-import ShuttleStopsListView from '../views/shuttle/ShuttleStopsListView';
-import ShuttleSavedListView from '../views/shuttle/ShuttleSavedListView';
+import Home from '../views/home/Home'
+import SurfReport from '../views/weather/SurfReport'
+import ShuttleStop from '../views/shuttle/ShuttleStop'
+import DiningDetail from '../views/dining/DiningDetail'
+import DiningNutrition from '../views/dining/DiningNutrition'
+import EventDetail from '../views/events/EventDetail'
+import NewsDetail from '../views/news/NewsDetail'
+import FeedbackView from '../views/feedback/FeedbackView'
+import PreferencesView from '../views/preferences/PreferencesView'
+import NearbyMapView from '../views/mapsearch/NearbyMapView'
+import DataListViewAll from '../views/common/DataListViewAll'
+import SpecialEventsView from '../views/specialEvents/SpecialEventsView'
+import SpecialEventsDetailView from '../views/specialEvents/SpecialEventsDetailView'
+import SpecialEventsFilterListView from '../views/specialEvents/SpecialEventsFilterListView'
+import ShuttleRoutesListView from '../views/shuttle/ShuttleRoutesListView'
+import ShuttleStopsListView from '../views/shuttle/ShuttleStopsListView'
+import ShuttleSavedListView from '../views/shuttle/ShuttleSavedListView'
 
 // TABS
-import TabIcons from './TabIcons';
+import TabIcons from './TabIcons'
 
 // ROUTER UTIL
-import withNavigationPreventDuplicate from './withNavigationPreventDuplicate';
+import withNavigationPreventDuplicate from './withNavigationPreventDuplicate'
 
+// MISC
 import {
 	COLOR_SECONDARY,
 	COLOR_WHITE,
 	COLOR_MGREY
-} from '../styles/ColorConstants';
-import css from '../styles/css';
+} from '../styles/ColorConstants'
+import css from '../styles/css'
+import general from '../util/general'
 
 const TabNav = TabNavigator(
 	{
@@ -55,20 +55,18 @@ const TabNav = TabNavigator(
 		},
 		navigationOptions: ({ navigation }) => ({
 			tabBarIcon: ({ focused }) => {
-				const { routeName } = navigation.state;
-				return <TabIcons title={routeName} focused={focused} />;
+				const { routeName } = navigation.state
+				return <TabIcons title={routeName} focused={focused} />
 			}
 		})
 	}
-);
+)
 
-const DummyView = () => (<View />); /* Workaround for misaligned title */
+const DummyView = () => (<View />) /* Workaround for misaligned title */
 
 const MainStack = StackNavigator(
 	{
-		MainTabs: {
-			screen: TabNav
-		},
+		MainTabs: { screen: TabNav },
 		SurfReport: {
 			screen: SurfReport,
 			navigationOptions: {
@@ -132,40 +130,38 @@ const MainStack = StackNavigator(
 				headerRight: (<DummyView />)
 			}
 		},
-		SpecialEventsView: {
-			screen: SpecialEventsView
-		},
+		SpecialEventsView: { screen: SpecialEventsView },
 		SpecialEventsFilters: {
 			screen: SpecialEventsFilterListView,
 			navigationOptions: ({ navigation }) => {
-				const { params } = navigation.state;
-				const { title } = params;
+				const { params } = navigation.state
+				const { title } = params
 				return {
 					title,
 					headerRight: (<DummyView />)
-				};
+				}
 			}
 		},
 		SpecialEventsDetailView: {
 			screen: SpecialEventsDetailView,
 			navigationOptions: ({ navigation }) => {
-				const { params } = navigation.state;
-				const { title } = params;
+				const { params } = navigation.state
+				const { title } = params
 				return {
 					title,
 					headerRight: (<DummyView />)
-				};
+				}
 			}
 		},
 		DataListViewAll: {
 			screen: DataListViewAll,
 			navigationOptions: ({ navigation }) => {
-				const { params } = navigation.state;
+				const { params } = navigation.state
 				const { title } = params
 				return {
 					title,
 					headerRight: (<DummyView />)
-				};
+				}
 			}
 		}
 	},
@@ -177,15 +173,14 @@ const MainStack = StackNavigator(
 			headerTintColor: COLOR_WHITE
 		}
 	}
-);
+)
 
-MainStack.router.getStateForAction =
-withNavigationPreventDuplicate(MainStack.router.getStateForAction);
+MainStack.router.getStateForAction = withNavigationPreventDuplicate(MainStack.router.getStateForAction)
 
 const Router = () => (
 	<MenuProvider>
 		<MainStack />
 	</MenuProvider>
-);
+)
 
-export default Router;
+export default Router

@@ -3,18 +3,18 @@ import { Image, ScrollView } from 'react-native'
 import { connect } from 'react-redux'
 import { checkGooglePlayServices } from 'react-native-google-api-availability-bridge'
 
-import WeatherCardContainer from './weather/WeatherCardContainer'
-import ShuttleCardContainer from './shuttle/ShuttleCardContainer'
-import EventCardContainer from './events/EventCardContainer'
-import QuicklinksCardContainer from './quicklinks/QuicklinksCardContainer'
-import NewsCardContainer from './news/NewsCardContainer'
-import DiningCardContainer from './dining/DiningCardContainer'
-import SpecialEventsCardContainer from './specialEvents/SpecialEventsCardContainer'
-import { platformAndroid } from '../util/general'
-import css from '../styles/css'
-import logger from '../util/logger'
+import WeatherCardContainer from '../weather/WeatherCardContainer'
+import ShuttleCardContainer from '../shuttle/ShuttleCardContainer'
+import EventCardContainer from '../events/EventCardContainer'
+import QuicklinksCardContainer from '../quicklinks/QuicklinksCardContainer'
+import NewsCardContainer from '../news/NewsCardContainer'
+import DiningCardContainer from '../dining/DiningCardContainer'
+import SpecialEventsCardContainer from '../specialEvents/SpecialEventsCardContainer'
+import { platformAndroid } from '../../util/general'
+import css from '../../styles/css'
+import logger from '../../util/logger'
 
-const campusLogoImage = require('../assets/img/UCSanDiegoLogo-White.png')
+const campusLogoImage = require('../../assets/images/UCSanDiegoLogo-White.png')
 
 export class Home extends React.Component {
 	static navigationOptions = {

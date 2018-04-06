@@ -8,26 +8,22 @@
 		203 - Tab Bar
 
 	200 - Common
-		201 - DataListView
+		201 - DataList
+		202 - Buttons
 
 	300 - Cards
-		301 - Card Container
-		302 - Weather Card
-		303 - Shuttle Card
-		304 - Dining Card
-		305 - Events & News Cards
-		306 - Links Card
-		307 - Survey Card
+		301 - Dining Card
+		302 - Survey Card
 
 	400 - Views
 		401 - Surf Report
 		402 - Shuttle Stop
 		403 - Dining Detail
-		406 - Event & News Detail
-		407 - WebView
+		406 - Event & News
+		407 - Special Events
 		408 - Feedback
 		409 - Preferences View
-		410 - Links View
+		410 - Links (QuickLinks)
 
 	500 - Modules
 		501 - Map Search
@@ -69,18 +65,20 @@ const css = StyleSheet.create({
 	/**
 	 *  200 - Common
 	 */
-	// 201 - DataListView
-	DataListViewAll_card_list: { padding: 8 },
-	DataListViewAll_full_list: { padding: 8 },
+	// 201 - DataList
+	DataList_card_list: { padding: 8 },
+	DataList_full_list: { padding: 8 },
+	// 202 - Buttons
+	button_primary: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.PRIMARY, borderRadius: 3, marginTop: 20, padding: 10 },
+	button_primary_text: { fontSize: 16, color: COLOR.WHITE },
+	share_button: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.MGREY, borderRadius: 3, marginTop: 20, padding: 10 },
+	share_button_text: { fontSize: 16 },
 
 
 	/**
 	 *  300 - Cards
 	 */
-	// 301 - Card Container
-	// 302 - Weather Card
-	// 303 - Shuttle Card
-	// 304 - Dining Card
+	// 301 - Dining Card
 	dl_row: { flexDirection: 'row', padding: 10, borderBottomWidth: 1, borderBottomColor: COLOR.MGREY },
 	dl_row_container_left: { flex: 4, flexDirection: 'column', justifyContent: 'flex-start', paddingRight: 8 },
 	dl_row_container_right: { flex: 1, alignItems: 'center', justifyContent: 'flex-end' },
@@ -95,9 +93,7 @@ const css = StyleSheet.create({
 	dl_status_soon_text: { paddingRight: 8 },
 	dl_dir_traveltype_container: { flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'center' },
 	dl_dir_eta: { color: COLOR.PRIMARY, fontSize: 11, fontWeight: '600' },
-	// 305 - Events & News Cards
-	// 306 - Links Card
-	// 307 - Survey Card
+	// 302 - Survey Card
 	card_main: { borderWidth: 1, borderRadius: 2, borderColor: COLOR.COLOR_MGREY, backgroundColor: COLOR.WHITE, margin: 6, alignItems: 'flex-start', justifyContent: 'center', overflow: 'hidden' },
 	card_row_container: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: 8, paddingBottom: 0 },
 	card_footer_container: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: 8 },
@@ -170,31 +166,20 @@ const css = StyleSheet.create({
 	ddn_topborder2: { borderTopWidth: 4, borderTopColor: COLOR.BLACK },
 	ddn_info_container: { padding: 10 },
 	dd_description_po: { color: COLOR.BLACK },
-	// 406 - Event & News Detail
+	// 406 - Events & News
 	eventdetail_readmore_container: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.PRIMARY, borderRadius: 3, marginTop: 20, padding: 10 },
 	eventdetail_readmore_text: { fontSize: 16, color: COLOR.WHITE },
-	button_primary: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.PRIMARY, borderRadius: 3, marginTop: 20, padding: 10 },
-	button_primary_text: { fontSize: 16, color: COLOR.WHITE },
-	share_button: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.MGREY, borderRadius: 3, marginTop: 20, padding: 10 },
-	share_button_text: { fontSize: 16 },
-
 	media_detail_container: { width: LAYOUT.WINDOW_WIDTH, paddingHorizontal: 12, paddingVertical: 14 },
 	media_detail_image: { width: LAYOUT.WINDOW_WIDTH, height: 200 },
 	media_detail_title: { fontWeight: '400', fontSize: 22, color: COLOR.PRIMARY },
 	media_detail_dateText: { fontSize: 11, color: COLOR.DGREY, paddingTop: 14 },
 	media_detail_descText: { lineHeight: 18, color: COLOR.BLACK, fontSize: 14, paddingTop: 14 },
-
-	//news
-	media_detail_touchable: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.PRIMARY, borderRadius: 3, marginTop: 20, padding: 10 },
-	media_detail_readMoreText: { fontSize: 16, color: COLOR.WHITE },
-
-	//event
 	media_detail_locationText: { fontSize: 16, color: COLOR.DGREY },
-	media_detail_contact_button: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.PRIMARY, borderRadius: 3, marginTop: 20, padding: 10 },
-	media_detail_contact_button_text: { fontSize: 16, color: COLOR.WHITE },
-
-	// 407 - WebView
-	webview_container: { width: LAYOUT.WINDOW_WIDTH, height: LAYOUT.WINDOW_HEIGHT - 60 },
+	// 407 - Special Events
+	specialevents_filter: { backgroundColor: COLOR.WHITE, paddingBottom: deviceIphoneX() ? (LAYOUT.NAVIGATOR_HEIGHT + 60) : 60 },
+	specialevents_filter_itemrow: { flexDirection: 'row', alignItems: 'center', backgroundColor: COLOR.WHITE, borderBottomWidth: 1, borderBottomColor: COLOR.LGREY, padding: 12 },
+	specialevents_filter_applybutton: { position: 'absolute', width: LAYOUT.WINDOW_WIDTH - 20, bottom: deviceIphoneX() ? LAYOUT.NAVIGATOR_HEIGHT : 10, left: 10, padding: 10, justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.PRIMARY, borderRadius: 3, opacity: 0.95 },
+	specialevents_filter_applybutton_text: { fontSize: 16, color: COLOR.WHITE },
 	// 408 - Feedback
 	feedback_container: { flex: 1, flexDirection: 'column', marginHorizontal: 8, marginTop: 8, marginBottom: 8 },
 	feedback_label: { flexWrap: 'wrap', fontSize: 18, paddingBottom: 16, lineHeight: 24 },
@@ -225,6 +210,7 @@ const css = StyleSheet.create({
 	links_icon_fa: { padding: 8, color: COLOR.PRIMARY },
 	links_name: { flexGrow: 5, color: COLOR.BLACK, fontSize: 16, paddingHorizontal: 8 },
 	links_arrow_icon: { color: COLOR.DGREY },
+
 
 	/**
 	 *  500 - Modules
