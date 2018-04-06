@@ -19,9 +19,7 @@ import css from '../../styles/css'
 import { APP_NAME, FEEDBACK_POST_TTL } from '../../AppSettings'
 
 export class FeedbackView extends Component {
-	static navigationOptions = {
-		title: 'Feedback',
-	}
+	static navigationOptions = { title: 'Feedback' }
 
 	componentDidMount() {
 		logger.ga('View Loaded: Feedback')
@@ -29,26 +27,27 @@ export class FeedbackView extends Component {
 		// if we're mounting and we're somehow still in the
 		// process of POSTing, check if we've timed out.
 		// otherwise, set a timeout
-		if (this.props.feedback.status.requesting) {
+		if (this.props.requestStatus) {
 			const now = new Date()
-			const lastPostTime = new Date(this.props.feedback.status.timeRequested)
+			const lastPostTime = new Date(this.props.requestStatus.timeRequested)
+			const e = new Error('Request timed out.')
 			if (now - lastPostTime >= FEEDBACK_POST_TTL) {
-				this.props.timeoutFeedback()
+				this.props.timeoutFeedback(e)
 			} else {
 				// timeout after remaining time expires
-				setTimeout(this.props.timeoutFeedback, now - lastPostTime)
+				setTimeout(() => { this.props.timeoutFeedback(e) }, now - lastPostTime)
 			}
 		}
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-		const oldStatus = prevProps.feedback.status
-		const newStatus = this.props.feedback.status
+		const oldStatus = prevProps.requestStatus
+		const newStatus = this.props.requestStatus
 
 		// Only render alerts if status change is new
 		if (oldStatus !== newStatus) {
 			// Successful feedback submission
-			if (newStatus.response) {
+			if (this.props.feedback.response) {
 				Toast.showWithGravity(
 					'Thanks, your feedback was submitted!',
 					Toast.LONG,
@@ -57,7 +56,7 @@ export class FeedbackView extends Component {
 			}
 
 			// Failed feedback submission
-			if (newStatus.error) {
+			if (this.props.requestError) {
 				Alert.alert(
 					'Feedback Submission Error',
 					'Unfortunately, there was an error submitting your feedback. Please try again later.'
@@ -80,12 +79,8 @@ export class FeedbackView extends Component {
 	}
 
 	handleFeedbackInput = fieldName => (e) => {
-		const {
-			comment, name, email
-		} = this.props.feedback
-		const newFeedback = {
-			comment, name, email
-		}
+		const { comment, name, email } = this.props.feedback
+		const newFeedback = { comment, name, email }
 		newFeedback[fieldName] = e.nativeEvent.text
 
 		this.props.updateFeedback(newFeedback)
@@ -143,7 +138,7 @@ export class FeedbackView extends Component {
 	}
 
 	render() {
-		if (this.props.feedback.status.requesting) {
+		if (this.props.requestStatus) {
 			return (
 				<ScrollView>
 					<View style={css.feedback_submitting_container}>
@@ -166,20 +161,22 @@ export class FeedbackView extends Component {
 
 const mapStateToProps = (state, props) => (
 	{
-		feedback: state.feedback
+		feedback: state.feedback,
+		requestStatus: state.requestStatuses.POST_FEEDBACK,
+		requestError: state.requestErrors.POST_FEEDBACK
 	}
 )
 
 const mapDispatchToProps = (dispatch, ownProps) => (
 	{
 		updateFeedback: (feedback) => {
-			dispatch({ type: 'UPDATE_FEEDBACK_STATE', feedback })
+			dispatch({ type: 'FEEDBACK_UPDATE', feedback })
 		},
 		postFeedback: (feedback) => {
-			dispatch({ type: 'FEEDBACK_POST_REQUESTED', feedback })
+			dispatch({ type: 'FEEDBACK_POST', feedback })
 		},
-		timeoutFeedback: () => {
-			dispatch({ type: 'FEEDBACK_POST_TIMEOUT' })
+		timeoutFeedback: (error) => {
+			dispatch({ type: 'POST_FEEDBACK_FAILURE', error })
 		}
 	}
 )
