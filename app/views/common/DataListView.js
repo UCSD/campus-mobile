@@ -47,11 +47,26 @@ const DataFlatList = ({ style, data, rows, item, card }) => (
 		style={style}
 		data={(rows) ? (data.slice(0,rows)) : (data)}
 		keyExtractor={(listItem, index) => {
-			// We receieve all sorts of data here.
-			// TODO: Mandate that if DataListView is used, an id is passed
-			if (listItem.id) return listItem.id
-			else if (listItem.name) return listItem.name
-			else if (listItem.title) return listItem.title
+			// Specify the unique key that each kind of
+			// item will use to identify itself. Each
+			// item MUST have a unique key!
+			switch (item) {
+			case 'EventItem': {
+				return listItem.id
+			}
+			case 'NewsItem': {
+				return listItem.title
+			}
+			case 'DiningItem': {
+				return listItem.id
+			}
+			case 'QuicklinksItem': {
+				return listItem.name
+			}
+			default: {
+				return null
+			}
+			}
 		}}
 		renderItem={({ item: rowData }) => {
 			// Add to switch statement as new Items are needed
