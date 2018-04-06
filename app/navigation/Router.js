@@ -12,7 +12,7 @@ import DiningNutrition from '../views/dining/DiningNutrition'
 import EventDetail from '../views/events/EventDetail'
 import NewsDetail from '../views/news/NewsDetail'
 import FeedbackView from '../views/feedback/FeedbackView'
-import PreferencesView from '../views/preferences/PreferencesView'
+import Preferences from '../views/preferences/Preferences'
 import NearbyMapView from '../views/mapsearch/NearbyMapView'
 import DataListViewAll from '../views/common/DataListViewAll'
 import SpecialEventsView from '../views/specialEvents/SpecialEventsView'
@@ -42,7 +42,7 @@ const TabNav = TabNavigator(
 		Home: { screen: Home },
 		Map: { screen: NearbyMapView },
 		Feedback: { screen: FeedbackView },
-		Preferences: { screen: PreferencesView }
+		Preferences: { screen: Preferences }
 	},
 	{
 		tabBarOptions: {

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import {
 	Text,
 	Switch,
@@ -6,24 +6,19 @@ import {
 	Animated,
 	Easing,
 	StyleSheet,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+} from 'react-native'
+import Icon from 'react-native-vector-icons/MaterialIcons'
 
-import {
-	COLOR_LGREY,
-	COLOR_MGREY,
-} from '../../styles/ColorConstants';
-import {
-	MAX_CARD_WIDTH,
-} from '../../styles/LayoutConstants';
-import NoTouchy from '../common/NoTouchy';
+import { COLOR_MGREY } from '../../styles/ColorConstants'
+import { MAX_CARD_WIDTH } from '../../styles/LayoutConstants'
+import NoTouchy from '../common/NoTouchy'
 
 // Row item for sortable-list component
 export default class PrefItem extends Component {
 	constructor(props) {
 		super(props);
 
-		this._active = new Animated.Value(0);
+		this._active = new Animated.Value(0)
 
 		this._style = {
 			...Platform.select({
@@ -53,9 +48,9 @@ export default class PrefItem extends Component {
 					}),
 				},
 			})
-		};
+		}
 
-		this._noTouched = false;
+		this._noTouched = false
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -64,7 +59,7 @@ export default class PrefItem extends Component {
 				duration: 300,
 				easing: Easing.bounce,
 				toValue: Number(nextProps.active),
-			}).start();
+			}).start()
 		}
 	}
 
@@ -75,22 +70,22 @@ export default class PrefItem extends Component {
 		Also catches sloppier presses not directly on the switch will also be caught
 	 */
 	_handleToggle = (fromSwitch) => {
-		const { data, updateState, cardActive } = this.props;
+		const { data, updateState, cardActive } = this.props
 		if (!fromSwitch) {
 			if (!this._switchTouched) {
-				updateState(data.id, !cardActive);
+				updateState(data.id, !cardActive)
 			}
-			this._noTouched = true;
+			this._noTouched = true
 		}  else {
 			if (!this._noTouched) {
-				updateState(data.id, !cardActive);
+				updateState(data.id, !cardActive)
 			}
-			this._noTouched = false;
+			this._noTouched = false
 		}
 	}
 
 	render() {
-		const { data, cardActive } = this.props;
+		const { data, cardActive } = this.props
 		return (
 			<Animated.View
 				style={[styles.list_row, this._style]}
@@ -106,17 +101,22 @@ export default class PrefItem extends Component {
 					onPress={() => this._handleToggle(false)}
 				>
 					<Switch
-						onValueChange={(value) => this._handleToggle(true)}
+						onValueChange={value => this._handleToggle(true)}
 						value={cardActive}
 					/>
 				</NoTouchy>
 			</Animated.View>
-		);
+		)
 	}
 }
 
 const styles = StyleSheet.create({
-	list_row: { backgroundColor: COLOR_LGREY, flexDirection: 'row', alignItems: 'center', width: MAX_CARD_WIDTH, borderBottomWidth: 1, borderBottomColor: COLOR_MGREY ,
+	list_row: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		width: MAX_CARD_WIDTH,
+		borderBottomWidth: 1,
+		borderBottomColor: COLOR_MGREY,
 		...Platform.select({
 			ios: {
 				shadowOpacity: 0,
@@ -132,5 +132,5 @@ const styles = StyleSheet.create({
 	},
 	icon: { padding: 7 },
 	name_text: { flex: 1, margin: 7, fontSize: 18 },
-	switchContainer: { backgroundColor: COLOR_LGREY, width: 50, height: 50, justifyContent: 'center', alignItems: 'center', marginRight: 10 },
-});
+	switchContainer: { width: 50, height: 50, justifyContent: 'center', alignItems: 'center', marginRight: 10 },
+})

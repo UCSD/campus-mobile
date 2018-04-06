@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import SortableList from 'react-native-sortable-list'
-import PrefItem from './PrefItem'
+import PreferencesItem from './PreferencesItem'
 import Card from '../card/Card'
 
 // View for user to manage preferences, including which cards are visible
@@ -83,7 +83,7 @@ export default class CardPreferences extends Component {
 								// Also, mildly confusing..but active prop from renderRow means
 								// the row has been grabbed
 								return (
-									<PrefItem
+									<PreferencesItem
 										data={data}
 										cardActive={this.props.cards[data.id].active}
 										active={active}

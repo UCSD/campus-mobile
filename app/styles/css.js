@@ -5,7 +5,7 @@
 	100 - Main
 		101 - Containers
 		102 - Navigator
-		203 - Tab Bar
+		103 - Tab Bar
 
 	200 - Common
 		201 - DataList
@@ -17,13 +17,12 @@
 
 	400 - Views
 		401 - Surf Report
-		402 - Shuttle Stop
-		403 - Dining Detail
-		406 - Event & News
-		407 - Special Events
-		408 - Feedback
-		409 - Preferences View
-		410 - Links (QuickLinks)
+		402 - Dining Detail
+		403 - Event & News
+		404 - Special Events
+		405 - Feedback
+		406 - Preferences View
+		407 - Links View
 
 	500 - Modules
 		501 - Map Search
@@ -112,20 +111,19 @@ const css = StyleSheet.create({
 	sr_reportTitle: { fontSize: 18, color: COLOR.BLACK, paddingTop: 7, paddingHorizontal: 10 },
 	sr_reportText: { fontSize: 14, color: COLOR.BLACK, paddingHorizontal: 10 },
 	sr_heightText: { fontSize: 16, color: COLOR.DGREY, paddingTop: 4 },
-	// 402 - Shuttle Stop
-	// 403 - Dining Detail
+	// 402 - Dining Detail
 	dd_description_container: { padding: 10, color: COLOR.BLACK },
 	dd_description_nametext: { fontSize: 26, color: COLOR.BLACK },
 	dd_description_text: { color: COLOR.BLACK },
 	dd_description_subtext: { paddingTop: 8, color: COLOR.BLACK, fontWeight: '700' },
 	dd_hours_text_container: { flexDirection: 'row', alignItems: 'center', color: COLOR.BLACK },
-	dd_hours_text_disclaimer: { color: COLOR.DORANGE, paddingBottom: 10 },
-	dd_hours_row: { flexDirection: 'row', paddingBottom: 4, flexWrap: 'wrap', alignItems: 'flex-start' },
+	dd_hours_text_disclaimer: { color: COLOR.DORANGE, paddingVertical: 8 },
+	dd_hours_row: { flexDirection: 'row', paddingBottom: 8, flexWrap: 'wrap', alignItems: 'flex-start' },
 	dd_hours_text_title: { width: '35%', paddingRight: 8, color: COLOR.BLACK },
 	dd_status_icon: { paddingLeft: 8 },
-	dd_special_hours_text_title: { fontWeight: '700', width: '50%', paddingRight: 8 },
+	dd_special_hours_text_title: { color: COLOR.BLACK, width: '50%', paddingRight: 8 },
 	dd_hours_text_hours: { flexGrow: 1, color: COLOR.BLACK },
-	dd_hours_text_special_hours: { paddingBottom: 8 },
+	dd_hours_text_special_hours: { paddingBottom: 8, color: COLOR.BLACK },
 	dd_images_scrollview: { height: 140 },
 	dd_images_image: { width: 140, height: 140, borderRadius: 5, marginHorizontal: 7 },
 	dd_directions_button_container: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderBottomColor: COLOR.MGREY, margin: 6, padding: 6 },
@@ -166,7 +164,7 @@ const css = StyleSheet.create({
 	ddn_topborder2: { borderTopWidth: 4, borderTopColor: COLOR.BLACK },
 	ddn_info_container: { padding: 10 },
 	dd_description_po: { color: COLOR.BLACK },
-	// 406 - Events & News
+	// 403 - Events & News
 	eventdetail_readmore_container: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.PRIMARY, borderRadius: 3, marginTop: 20, padding: 10 },
 	eventdetail_readmore_text: { fontSize: 16, color: COLOR.WHITE },
 	media_detail_container: { width: LAYOUT.WINDOW_WIDTH, paddingHorizontal: 12, paddingVertical: 14 },
@@ -175,12 +173,12 @@ const css = StyleSheet.create({
 	media_detail_dateText: { fontSize: 11, color: COLOR.DGREY, paddingTop: 14 },
 	media_detail_descText: { lineHeight: 18, color: COLOR.BLACK, fontSize: 14, paddingTop: 14 },
 	media_detail_locationText: { fontSize: 16, color: COLOR.DGREY },
-	// 407 - Special Events
+	// 404 - Special Events
 	specialevents_filter: { backgroundColor: COLOR.WHITE, paddingBottom: deviceIphoneX() ? (LAYOUT.NAVIGATOR_HEIGHT + 60) : 60 },
 	specialevents_filter_itemrow: { flexDirection: 'row', alignItems: 'center', backgroundColor: COLOR.WHITE, borderBottomWidth: 1, borderBottomColor: COLOR.LGREY, padding: 12 },
 	specialevents_filter_applybutton: { position: 'absolute', width: LAYOUT.WINDOW_WIDTH - 20, bottom: deviceIphoneX() ? LAYOUT.NAVIGATOR_HEIGHT : 10, left: 10, padding: 10, justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.PRIMARY, borderRadius: 3, opacity: 0.95 },
 	specialevents_filter_applybutton_text: { fontSize: 16, color: COLOR.WHITE },
-	// 408 - Feedback
+	// 405 - Feedback
 	feedback_container: { flex: 1, flexDirection: 'column', marginHorizontal: 8, marginTop: 8, marginBottom: 8 },
 	feedback_label: { flexWrap: 'wrap', fontSize: 18, paddingBottom: 16, lineHeight: 24 },
 	feedback_comments_text_container: { minHeight: 50, flexDirection: 'row', borderColor: COLOR.MGREY, borderBottomWidth: 1, marginBottom: 8, backgroundColor: 'white' },
@@ -191,7 +189,7 @@ const css = StyleSheet.create({
 	feedback_submitting_container: { flex: 1, flexDirection: 'column', padding: 16, alignItems: 'center', justifyContent: 'center' },
 	feedback_loading_icon: { paddingBottom: 16 },
 	feedback_submitting_text: { fontSize: 18, textAlign: 'center' },
-	// 409 - Preferences View (User Settings)
+	// 406 - Preferences View (User Settings)
 	UserAccount_text: { flex: 1, fontSize: 18 },
 	UserAccount_icon: { flex: 1 },
 	UserAccount_infoContainer: { flexGrow: 1, flexDirection: 'row', margin: 7 },
@@ -203,7 +201,7 @@ const css = StyleSheet.create({
 	UserAccount_loginButton: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.PRIMARY, borderRadius: 3, padding: 10, },
 	UserAccount_forgotText: { fontSize: 16, color: COLOR.PRIMARY },
 	UserAccount_loginText: { fontSize: 16, color: COLOR.WHITE },
-	// 410 - Links View
+	// 407 - Links View
 	links_row_container: { borderBottomWidth: 1, borderBottomColor: COLOR.MGREY, paddingBottom: 8, marginBottom: 8 },
 	links_row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
 	links_icon: { height: 42, width: 38 },

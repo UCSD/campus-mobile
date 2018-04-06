@@ -30,14 +30,14 @@ const saveShuttleFilter = createFilter(
 
 // Migration
 const manifest = {
-	1: (state) => ({ ...state }),
-	2: (state) => ({ ...state, shuttle: Object.assign({}, state.shuttle, { savedStops: [], stops: {}, lastUpdated: 0 }) }),
-	3: (state) => ({ ...state, shuttle: Object.assign({}, state.shuttle, { savedStops: [], stops: {}, lastUpdated: 0, closestStop: null }) }),
-	4: (state) => ({ ...state, cards: undefined }), // clear cards for specialEvents
-	5: (state) => ({ ...state, events: undefined }), // clear events data
-	6: (state) => ({ ...state, cards: undefined, conference: undefined }), // clear cards/conference for specialEvents
-	7: (state) => ({ ...state, surf: undefined }),
-	8: (state) => ({ ...state, dining: undefined }),
+	1: state => ({ ...state }),
+	2: state => ({ ...state, shuttle: Object.assign({}, state.shuttle, { savedStops: [], stops: {}, lastUpdated: 0 }) }),
+	3: state => ({ ...state, shuttle: Object.assign({}, state.shuttle, { savedStops: [], stops: {}, lastUpdated: 0, closestStop: null }) }),
+	4: state => ({ ...state, cards: undefined }),
+	5: state => ({ ...state, events: undefined }),
+	6: state => ({ ...state, cards: undefined, conference: undefined }),
+	7: state => ({ ...state, surf: undefined }), // 5.5 migration
+	8: state => ({ ...state, dining: undefined, specialEvents: undefined }), // 5.6 migration
 }
 
 // reducerKey is the key of the reducer you want to store the state version in
@@ -53,24 +53,13 @@ export default function configureStore(initialState, onComplete: ?() => void) {
 		enhancer
 	)
 
-	if (module.hot) {
-		// Enable Webpack hot module replacement for reducers
-		module.hot.accept('../reducers', () => {
-			const nextRootReducer = require('../reducers')
+	persistStore(store, {
+		storage: AsyncStorage,
+		transforms: [saveMapFilter, saveShuttleFilter],
+	}, () => {
+		onComplete()
+		sagaMiddleware.run(rootSaga)
+	})
 
-			store.replaceReducer(nextRootReducer)
-		})
-	}
-
-	persistStore(store,
-		{
-			storage: AsyncStorage,
-			transforms: [saveMapFilter, saveShuttleFilter],
-		},
-		() => {
-			onComplete()
-			sagaMiddleware.run(rootSaga)
-		}
-	)
 	return store
 }
