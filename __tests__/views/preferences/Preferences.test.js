@@ -4,7 +4,7 @@ import Enzyme, { shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 
 // Component to be tested
-import PreferencesView from '../../../app/views/preferences/PreferencesView';
+import PreferencesView from '../../../app/views/preferences/Preferences';
 
 Enzyme.configure({ adapter: new Adapter() });
 
