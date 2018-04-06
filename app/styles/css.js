@@ -18,17 +18,16 @@
 	400 - Views
 		401 - Surf Report
 		402 - Dining Detail
-		403 - Event & News
-		404 - Special Events
-		405 - Feedback
-		406 - Preferences View
-		407 - Links View
+		403 - Dining Nutrition
+		404 - Event & News
+		405 - Special Events
+		406 - Feedback
+		407 - Preferences View
+		408 - Links View
+		409 - Map Search
+		410 - Search Results
 
-	500 - Modules
-		501 - Map Search
-		502 - Search Results
-
-
+	500 - Misc
 */
 import { StyleSheet } from 'react-native'
 
@@ -42,7 +41,7 @@ const css = StyleSheet.create({
 	 */
 	// 101 - Containers
 	main_container: { flex: 1 },
-	main_full: { backgroundColor: 'white', paddingBottom: deviceIphoneX() ? LAYOUT.NAVIGATOR_HEIGHT : 0 },
+	main_full: { backgroundColor: COLOR.WHITE, paddingBottom: deviceIphoneX() ? LAYOUT.NAVIGATOR_HEIGHT : 0 },
 	scroll_default: { backgroundColor: COLOR.WHITE },
 	card_container: { backgroundColor: COLOR.WHITE, margin: 6 },
 	main_full_lgrey: { flexGrow: 1, backgroundColor: COLOR.LGREY }, // special events
@@ -153,26 +152,27 @@ const css = StyleSheet.create({
 	dd_menu_item_name_text: { fontSize: 15, color: COLOR.PRIMARY },
 	dd_menu_item_price_text: { color: COLOR.BLACK, paddingLeft: 26, marginLeft: 30 },
 	dd_menu_meal_button: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 40, },
-	ddn_market_name: { padding: 10 },
-	ddn_market_name_text: { color: '#333', fontSize: 26 },
-	ddn_menu_item_name: { fontSize: 22, color: COLOR.PRIMARY, paddingTop: 10, paddingLeft: 1 },
-	ddn_container: { borderWidth: 2, borderColor: COLOR.BLACK, margin: 6, padding: 3 },
-	ddn_header: { color: COLOR.BLACK, fontSize: 50, fontWeight: '700', backgroundColor: COLOR.TRANSPARENT },
-	ddn_servingsize: { color: COLOR.BLACK, fontSize: 18 },
-	ddn_amountperserving: { color: COLOR.BLACK, fontSize: 14, fontWeight: '700' },
-	ddn_dv: { color: COLOR.BLACK, fontSize: 14, fontWeight: '700', textAlign: 'right', paddingVertical: 2 },
-	ddn_bold: { color: COLOR.BLACK, fontSize: 18, fontWeight: '700' },
-	ddn_font: { color: COLOR.BLACK, fontSize: 18 },
-	ddn_disclaimer_font: { color: COLOR.BLACK, fontSize: 14 },
-	ddn_row_main: { flex: 5, flexDirection: 'row', borderTopWidth: 1, borderTopColor: COLOR.DMGREY, paddingVertical: 2 },
-	ddn_row_sub: { flex: 5, flexDirection: 'row', borderTopWidth: 1, borderTopColor: COLOR.DMGREY, paddingVertical: 2, paddingLeft: 20 },
-	ddn_percent: { flex: 1, fontSize: 18, fontWeight: '700', textAlign: 'right' },
-	ddn_dv_amountperserving: { color: COLOR.BLACK },
-	ddn_topborder1: { borderTopWidth: 8, borderTopColor: COLOR.BLACK, paddingVertical: 2, marginTop: 2 },
-	ddn_topborder2: { borderTopWidth: 4, borderTopColor: COLOR.BLACK },
-	ddn_info_container: { padding: 10 },
 	dd_description_po: { color: COLOR.BLACK },
-	// 403 - Events & News
+	// 403 - Dining Nutrition
+	dn_market_name: { padding: 10 },
+	dn_market_name_text: { color: '#333', fontSize: 26 },
+	dn_menu_item_name: { fontSize: 22, color: COLOR.PRIMARY, paddingTop: 10, paddingLeft: 1 },
+	dn_container: { borderWidth: 2, borderColor: COLOR.BLACK, margin: 6, padding: 3 },
+	dn_header: { color: COLOR.BLACK, fontSize: 50, fontWeight: '700', backgroundColor: COLOR.TRANSPARENT },
+	dn_servingsize: { color: COLOR.BLACK, fontSize: 18 },
+	dn_amountperserving: { color: COLOR.BLACK, fontSize: 14, fontWeight: '700' },
+	dn_dv: { color: COLOR.BLACK, fontSize: 14, fontWeight: '700', textAlign: 'right', paddingVertical: 2 },
+	dn_bold: { color: COLOR.BLACK, fontSize: 18, fontWeight: '700' },
+	dn_font: { color: COLOR.BLACK, fontSize: 18 },
+	dn_disclaimer_font: { color: COLOR.BLACK, fontSize: 14 },
+	dn_row_main: { flex: 5, flexDirection: 'row', borderTopWidth: 1, borderTopColor: COLOR.DMGREY, paddingVertical: 2 },
+	dn_row_sub: { flex: 5, flexDirection: 'row', borderTopWidth: 1, borderTopColor: COLOR.DMGREY, paddingVertical: 2, paddingLeft: 20 },
+	dn_percent: { flex: 1, fontSize: 18, fontWeight: '700', textAlign: 'right' },
+	dn_dv_amountperserving: { color: COLOR.BLACK },
+	dn_topborder1: { borderTopWidth: 8, borderTopColor: COLOR.BLACK, paddingVertical: 2, marginTop: 2 },
+	dn_topborder2: { borderTopWidth: 4, borderTopColor: COLOR.BLACK },
+	dn_info_container: { padding: 10 },
+	// 404 - Events & News
 	eventdetail_readmore_container: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.PRIMARY, borderRadius: 3, marginTop: 20, padding: 10 },
 	eventdetail_readmore_text: { fontSize: 16, color: COLOR.WHITE },
 	media_detail_container: { width: LAYOUT.WINDOW_WIDTH, paddingHorizontal: 12, paddingVertical: 14 },
@@ -181,12 +181,12 @@ const css = StyleSheet.create({
 	media_detail_dateText: { color: COLOR.PRIMARY, paddingTop: 14 },
 	media_detail_descText: { lineHeight: 18, color: COLOR.BLACK, fontSize: 14, paddingTop: 14 },
 	media_detail_locationText: { fontSize: 16, color: COLOR.DGREY },
-	// 404 - Special Events
+	// 405 - Special Events
 	specialevents_filter: { backgroundColor: COLOR.WHITE, paddingBottom: deviceIphoneX() ? (LAYOUT.NAVIGATOR_HEIGHT + 60) : 60 },
 	specialevents_filter_itemrow: { flexDirection: 'row', alignItems: 'center', backgroundColor: COLOR.WHITE, borderBottomWidth: 1, borderBottomColor: COLOR.LGREY, padding: 12 },
 	specialevents_filter_applybutton: { position: 'absolute', width: LAYOUT.WINDOW_WIDTH - 20, bottom: deviceIphoneX() ? LAYOUT.NAVIGATOR_HEIGHT : 10, left: 10, padding: 10, justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.PRIMARY, borderRadius: 3, opacity: 0.95 },
 	specialevents_filter_applybutton_text: { fontSize: 16, color: COLOR.WHITE },
-	// 405 - Feedback
+	// 406 - Feedback
 	feedback_container: { flex: 1, flexDirection: 'column', marginHorizontal: 8, marginTop: 8, marginBottom: 8 },
 	feedback_label: { flexWrap: 'wrap', fontSize: 18, paddingBottom: 16, lineHeight: 24 },
 	feedback_comments_text_container: { minHeight: 50, flexDirection: 'row', borderColor: COLOR.MGREY, borderBottomWidth: 1, marginBottom: 8, backgroundColor: 'white' },
@@ -197,7 +197,7 @@ const css = StyleSheet.create({
 	feedback_submitting_container: { flex: 1, flexDirection: 'column', padding: 16, alignItems: 'center', justifyContent: 'center' },
 	feedback_loading_icon: { paddingBottom: 16 },
 	feedback_submitting_text: { fontSize: 18, textAlign: 'center' },
-	// 406 - Preferences View (User Settings)
+	// 407 - Preferences View (User Settings)
 	UserAccount_text: { flex: 1, fontSize: 18 },
 	UserAccount_icon: { flex: 1 },
 	UserAccount_infoContainer: { flexGrow: 1, flexDirection: 'row', margin: 7 },
@@ -209,31 +209,22 @@ const css = StyleSheet.create({
 	UserAccount_loginButton: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.PRIMARY, borderRadius: 3, padding: 10, },
 	UserAccount_forgotText: { fontSize: 16, color: COLOR.PRIMARY },
 	UserAccount_loginText: { fontSize: 16, color: COLOR.WHITE },
-	// 407 - Links View
+	// 408 - Links View
 	links_row_container: { borderBottomWidth: 1, borderBottomColor: COLOR.MGREY, paddingBottom: 8, marginBottom: 8 },
 	links_row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
 	links_icon: { height: 42, width: 38 },
 	links_icon_fa: { padding: 8, color: COLOR.PRIMARY },
 	links_name: { flexGrow: 5, color: COLOR.BLACK, fontSize: 16, paddingHorizontal: 8 },
 	links_arrow_icon: { color: COLOR.DGREY },
-
-
-	/**
-	 *  500 - Modules
-	 */
-	// 501 - Map Search
+	// 409 - Map Search
 	map_nogoogleplay: { padding: 16 },
-	// 502 - Search Results
+	// 410 - Search Results
 	destinationcard_marker_label: { flex: 2, fontSize: 18, paddingLeft: 8, paddingTop: 0, color: COLOR.PRIMARY, justifyContent: 'center' },
 	destinationcard_marker_dist_label: { flex: 1, textAlign: 'right', fontSize: 18, paddingLeft: 8, paddingTop: 0, color: COLOR.PRIMARY, justifyContent: 'center' },
 
 	/**
-	 *  600 - Data
+	 *  500 - Misc
 	 */
-
-	// temp
-	lgreybg: { backgroundColor: COLOR.LGREY },
-	lgrey: { color: '#CCC' },
 	bold: { fontWeight: '700' },
 	flex: { flex: 1 },
 })
