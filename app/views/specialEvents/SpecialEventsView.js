@@ -68,6 +68,11 @@ class SpecialEventsView extends Component {
 		this.props.navigation.setParams({ personal: true })
 	}
 
+	handleFilterPress = () => {
+		const { title } = this.props.navigation.state.params;
+		this.props.navigation.navigate('SpecialEventsFilters', { title });
+	}
+
 	handleFilterSelect = (labels) => {
 		this.props.updateSpecialEventsLabels(labels)
 	}
