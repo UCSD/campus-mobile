@@ -67,7 +67,15 @@ const css = StyleSheet.create({
 	// 201 - DataList
 	DataList_card_list: { padding: 8 },
 	DataList_full_list: { padding: 8 },
-	// 202 - Buttons
+	// 202 - DataItem
+	dataitem_descContainer: { flex: 1 },
+	dataitem_descText: { color: COLOR.VDGREY },
+	dataitem_touchableRow: { paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: COLOR.MGREY, },
+	dataitem_titleText: { fontSize: 17 },
+	dataitem_listInfoContainer: { flexDirection: 'row', paddingVertical: 8 },
+	dataitem_dateText: { color: COLOR.PRIMARY, paddingTop: 8 },
+	dataitem_image: { width: 120, height: 70, marginLeft: 10, borderWidth: 1, borderColor: COLOR.LGREY },
+	// 203 - Buttons
 	button_primary: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.PRIMARY, borderRadius: 3, marginTop: 20, padding: 10 },
 	button_primary_text: { fontSize: 16, color: COLOR.WHITE },
 	share_button: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.MGREY, borderRadius: 3, marginTop: 20, padding: 10 },
@@ -170,7 +178,7 @@ const css = StyleSheet.create({
 	media_detail_container: { width: LAYOUT.WINDOW_WIDTH, paddingHorizontal: 12, paddingVertical: 14 },
 	media_detail_image: { width: LAYOUT.WINDOW_WIDTH, height: 200 },
 	media_detail_title: { fontWeight: '400', fontSize: 22, color: COLOR.PRIMARY },
-	media_detail_dateText: { fontSize: 11, color: COLOR.DGREY, paddingTop: 14 },
+	media_detail_dateText: { color: COLOR.PRIMARY, paddingTop: 14 },
 	media_detail_descText: { lineHeight: 18, color: COLOR.BLACK, fontSize: 14, paddingTop: 14 },
 	media_detail_locationText: { fontSize: 16, color: COLOR.DGREY },
 	// 404 - Special Events

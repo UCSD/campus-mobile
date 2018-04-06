@@ -35,7 +35,7 @@ const NewsDetail = ({ navigation }) => {
 				<Text style={css.media_detail_dateText}>
 					{moment(css.media_detail_date).format('MMM Do, YYYY')}
 				</Text>
-				<Text style={css.media_detail_descText}>{data.description}</Text>
+				<Text style={css.media_detail_descText}>{data.description.trim()}</Text>
 				{data.link ? (
 					<Touchable
 						onPress={() => Linking.openURL(data.link)}
