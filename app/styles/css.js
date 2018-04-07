@@ -160,9 +160,9 @@ const css = StyleSheet.create({
 	dn_container: { borderWidth: 2, borderColor: COLOR.BLACK, margin: 6, padding: 3 },
 	dn_header: { color: COLOR.BLACK, fontSize: 50, fontWeight: '700', backgroundColor: COLOR.TRANSPARENT },
 	dn_servingsize: { color: COLOR.BLACK, fontSize: 18 },
+	dn_nf_bold: { fontWeight: '700' },
 	dn_amountperserving: { color: COLOR.BLACK, fontSize: 14, fontWeight: '700' },
 	dn_dv: { color: COLOR.BLACK, fontSize: 14, fontWeight: '700', textAlign: 'right', paddingVertical: 2 },
-	dn_bold: { color: COLOR.BLACK, fontSize: 18, fontWeight: '700' },
 	dn_font: { color: COLOR.BLACK, fontSize: 18 },
 	dn_disclaimer_font: { color: COLOR.BLACK, fontSize: 14 },
 	dn_row_main: { flex: 5, flexDirection: 'row', borderTopWidth: 1, borderTopColor: COLOR.DMGREY, paddingVertical: 2 },
@@ -171,7 +171,7 @@ const css = StyleSheet.create({
 	dn_dv_amountperserving: { color: COLOR.BLACK },
 	dn_topborder1: { borderTopWidth: 8, borderTopColor: COLOR.BLACK, paddingVertical: 2, marginTop: 2 },
 	dn_topborder2: { borderTopWidth: 4, borderTopColor: COLOR.BLACK },
-	dn_info_container: { padding: 10 },
+	dn_info_container: { paddingTop: 10, paddingHorizontal: 6 },
 	dn_bold: { fontWeight: '700' },
 
 	// 404 - Events & News
