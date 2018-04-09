@@ -9,6 +9,3 @@ sudo installer -store -pkg "$HOME/Downloads/node-installer.pkg" -target "/"
 
 # Insert production values
 npm run-script insert-production-values-ci
-
-# Apply fixes
-npm run-script apply-fixes
