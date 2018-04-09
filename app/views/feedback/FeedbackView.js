@@ -16,7 +16,7 @@ import Toast from 'react-native-simple-toast'
 import { hideKeyboard } from '../../util/general'
 import logger from '../../util/logger'
 import css from '../../styles/css'
-import { APP_NAME, FEEDBACK_POST_TTL } from '../../AppSettings'
+import { APP_NAME, REQUEST_POST_TTL } from '../../AppSettings'
 
 export class FeedbackView extends Component {
 	static navigationOptions = { title: 'Feedback' }
@@ -31,7 +31,7 @@ export class FeedbackView extends Component {
 			const now = new Date()
 			const lastPostTime = new Date(this.props.requestStatus.timeRequested)
 			const e = new Error('Request timed out.')
-			if (now - lastPostTime >= FEEDBACK_POST_TTL) {
+			if (now - lastPostTime >= REQUEST_POST_TTL) {
 				this.props.timeoutFeedback(e)
 			} else {
 				// timeout after remaining time expires
@@ -170,10 +170,10 @@ const mapStateToProps = (state, props) => (
 const mapDispatchToProps = (dispatch, ownProps) => (
 	{
 		updateFeedback: (feedback) => {
-			dispatch({ type: 'FEEDBACK_UPDATE', feedback })
+			dispatch({ type: 'UPDATE_FEEDBACK', feedback })
 		},
 		postFeedback: (feedback) => {
-			dispatch({ type: 'FEEDBACK_POST', feedback })
+			dispatch({ type: 'POST_FEEDBACK', feedback })
 		},
 		timeoutFeedback: (error) => {
 			dispatch({ type: 'POST_FEEDBACK_FAILURE', error })

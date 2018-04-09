@@ -1,26 +1,38 @@
-import React from 'react';
+import React from 'react'
 import {
 	View,
 	Text,
+	ActivityIndicator,
 	FlatList
-} from 'react-native';
+} from 'react-native'
 
 import {
 	openURL,
-} from '../../util/general';
+} from '../../util/general'
 import {
-} from '../../styles/ColorConstants';
-import css from '../../styles/css';
-import Touchable from '../common/Touchable';
+} from '../../styles/ColorConstants'
+import css from '../../styles/css'
+import Touchable from '../common/Touchable'
 
 const DiningMenu = ({
 	navigation,
+	requestStatus,
 	data,
 	filters,
 	addFilter,
 	activeMeal
 }) => {
-	if (data) {
+	if (requestStatus) {
+		return (
+			<View style={css.dd_menu_container}>
+				<ActivityIndicator
+					animating={true}
+					size="large"
+				/>
+			</View>
+		)
+	}
+	else if (data) {
 		if (data.menuWebsite) {
 			return (
 				<Touchable
@@ -34,7 +46,7 @@ const DiningMenu = ({
 						)}
 					</View>
 				</Touchable>
-			);
+			)
 		} else if (data.menuitems && data.menuitems.length > 1) {
 			return (
 				<View style={css.dd_menu_container}>
@@ -50,12 +62,12 @@ const DiningMenu = ({
 						activeMeal={activeMeal}
 					/>
 				</View>
-			);
+			)
 		}
 	}
 
-	return null;
-};
+	return null
+}
 
 const MenuFilters = ({ filters, addFilter, activeMeal }) => (
 	<View>
@@ -97,7 +109,7 @@ const MenuFilters = ({ filters, addFilter, activeMeal }) => (
 			/>
 		</View>
 	</View>
-);
+)
 
 /*
 	Breakfast, Lunch, Dinner
@@ -121,7 +133,7 @@ const MealButton = ({ name, active, addFilter }) => (
 			)
 		}
 	</Touchable>
-);
+)
 
 /*
 	VT, VG, GF
@@ -141,26 +153,26 @@ const TypeButton = ({
 			<Text style={css.dd_menu_filter_button}>{name}</Text>
 		)}
 	</Touchable>
-);
+)
 
 const MenuList = ({ navigation, data, filters, activeMeal }) => {
-	const { disclaimer, disclaimerEmail, menuitems } = data;
+	const { disclaimer, disclaimerEmail, menuitems } = data
 	if (Array.isArray(data.menuitems) && Array.isArray(filters)) {
-		let filteredMenuItems = [];
+		let filteredMenuItems = []
 
 		// Active Meal filter
 		filteredMenuItems = menuitems.filter((item) => {
-			const itemTags = item.tags.toLowerCase();
-			return ((itemTags.indexOf(activeMeal.toLowerCase()) >= 0) || (itemTags.indexOf(('ALL').toLowerCase()) >= 0));
-		});
+			const itemTags = item.tags.toLowerCase()
+			return ((itemTags.indexOf(activeMeal.toLowerCase()) >= 0) || (itemTags.indexOf(('ALL').toLowerCase()) >= 0))
+		})
 
 		// Food Type filters
 		filters.forEach((tag) => {
 			filteredMenuItems = filteredMenuItems.filter((item) => {
-				const itemTags = item.tags.toLowerCase();
-				return (itemTags.indexOf(tag.toLowerCase()) >= 0);
-			});
-		});
+				const itemTags = item.tags.toLowerCase()
+				return (itemTags.indexOf(tag.toLowerCase()) >= 0)
+			})
+		})
 
 		return (
 			<FlatList
@@ -176,11 +188,11 @@ const MenuList = ({ navigation, data, filters, activeMeal }) => {
 					/>
 				)}
 			/>
-		);
+		)
 	} else {
-		return null;
+		return null
 	}
-};
+}
 
 const MenuItem = ({ navigation, data, disclaimer, disclaimerEmail }) => (
 	<Touchable
@@ -191,6 +203,6 @@ const MenuItem = ({ navigation, data, disclaimer, disclaimerEmail }) => (
 		{data.name}<Text style={css.dd_menu_item_price_text}> (${data.price})</Text>
 		</Text>
 	</Touchable>
-);
+)
 
-export default DiningMenu;
+export default DiningMenu
