@@ -26,7 +26,7 @@ const EventDetail = ({ navigation }) => {
 				<SafeImage
 					source={{ uri: data.imagehq }}
 					style={css.media_detail_image}
-					resizeMode="stretch"
+					resizeMode="contain"
 				/>
 			) : (null)}
 
