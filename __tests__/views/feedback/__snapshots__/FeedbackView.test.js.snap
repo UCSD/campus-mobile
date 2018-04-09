@@ -104,7 +104,7 @@ exports[`renders form when request is finished 1`] = `
             "borderColor": "#EAEAEA",
             "flexDirection": "row",
             "marginBottom": 8,
-            "minHeight": 50,
+            "minHeight": 150,
           }
         }
       >
@@ -259,7 +259,7 @@ exports[`renders form when request is finished 2`] = `
             "borderColor": "#EAEAEA",
             "flexDirection": "row",
             "marginBottom": 8,
-            "minHeight": 50,
+            "minHeight": 150,
           }
         }
       >
@@ -414,7 +414,7 @@ exports[`renders without crashing 1`] = `
             "borderColor": "#EAEAEA",
             "flexDirection": "row",
             "marginBottom": 8,
-            "minHeight": 50,
+            "minHeight": 150,
           }
         }
       >

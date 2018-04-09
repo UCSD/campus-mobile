@@ -26,7 +26,7 @@ const NewsDetail = ({ navigation }) => {
 				<SafeImage
 					source={{ uri: data.image_lg }}
 					style={css.media_detail_image}
-					resizeMode="stretch"
+					resizeMode="contain"
 				/>
 			) : null }
 

@@ -41,7 +41,7 @@ module.exports = {
 	SHUTTLE_MASTER_TTL: 86400000, // 1 day
 	SPECIAL_EVENTS_TTL: 3600000, // 1 hour
 	DATA_SAGA_TTL: 60000, // 1 minute
-	FEEDBACK_POST_TTL: 10000, // 10 seconds
+	HTTP_REQUEST_TTL: 10000, // 10 seconds
 
 	USER_LOGIN: {
 		ENABLED: false,

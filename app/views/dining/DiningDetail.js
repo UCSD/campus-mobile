@@ -32,6 +32,11 @@ class DiningDetail extends React.Component {
 		) {
 			return true
 		}
+		else if (
+			this.props.menuRequestStatus !== nextProps.menuRequestStatus
+		) {
+			return true
+		}
 		else return false
 	}
 
@@ -52,7 +57,7 @@ class DiningDetail extends React.Component {
 	}
 
 	render() {
-		const { menuData, navigation } = this.props
+		const { menuData, navigation, menuRequestStatus } = this.props
 		const { params } = navigation.state
 		const { data } = params
 		return (
@@ -90,6 +95,7 @@ class DiningDetail extends React.Component {
 				}
 				<DiningMenu
 					navigation={this.props.navigation}
+					requestStatus={menuRequestStatus}
 					data={menuData}
 					filters={this.state.filters}
 					activeMeal={this.state.activeMeal}
@@ -103,6 +109,7 @@ class DiningDetail extends React.Component {
 const mapStateToProps = (state, props) => (
 	{
 		menuData: state.dining.menus[state.dining.lookup[props.navigation.state.params.data.id]],
+		menuRequestStatus: state.requestStatuses.GET_DINING_MENU,
 		lookup: state.dining.lookup
 	}
 )
@@ -110,7 +117,7 @@ const mapStateToProps = (state, props) => (
 const mapDispatchToProps = dispatch => (
 	{
 		getMenuItems: (menuId) => {
-			dispatch({ type: 'UPDATE_DINING', menuId })
+			dispatch({ type: 'GET_DINING_MENU', menuId })
 		}
 	}
 )
