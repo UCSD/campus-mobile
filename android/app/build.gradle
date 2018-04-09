@@ -97,6 +97,7 @@ def enableProguardInReleaseBuilds = false
 
 android {
     compileSdkVersion 23
+    buildToolsVersion "23.0.1"
 
     defaultConfig {
         applicationId "edu.ucsd"
@@ -151,24 +152,24 @@ android {
 }
 
 dependencies {
-    implementation project(':react-native-fcm')
-    implementation 'com.google.firebase:firebase-core:11.0.+'
-    implementation project(':react-native-google-analytics-bridge')
-    implementation project(':react-native-keychain')
-    implementation project(':react-native-exit-app')
-    implementation project(':react-native-device-info')
-    implementation project(':react-native-google-api-availability-bridge')
-    implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation "com.android.support:appcompat-v7:23.0.1"
-    implementation "com.facebook.react:react-native:+"  // From node_modules
-    implementation(project(':react-native-maps')){
+    compile project(':react-native-fcm')
+    compile 'com.google.firebase:firebase-core:11.0.+'
+    compile project(':react-native-google-analytics-bridge')
+    compile project(':react-native-keychain')
+    compile project(':react-native-exit-app')
+    compile project(':react-native-device-info')
+    compile project(':react-native-google-api-availability-bridge')
+    compile fileTree(dir: "libs", include: ["*.jar"])
+    compile "com.android.support:appcompat-v7:23.0.1"
+    compile "com.facebook.react:react-native:+"  // From node_modules
+    compile(project(':react-native-maps')){
         exclude group: 'com.google.android.gms', module: 'play-services-base'
         exclude group: 'com.google.android.gms', module: 'play-services-maps'
     }
-    implementation ("com.google.android.gms:play-services-base:11.0.+") {
+    compile ("com.google.android.gms:play-services-base:11.0.+") {
         force = true;
     }
-    implementation ("com.google.android.gms:play-services-maps:11.0.+") {
+    compile ("com.google.android.gms:play-services-maps:11.0.+") {
         force = true;
     }
 }
