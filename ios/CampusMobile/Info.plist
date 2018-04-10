@@ -21,7 +21,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>7</string>
+	<string>8</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -46,8 +46,18 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>$(PRODUCT_NAME) Apple music use.</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>$(PRODUCT_NAME) bluetooth use.</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>$(PRODUCT_NAME) calendar use.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Allowing location access while using the app allows cards to display information relevant to your location.</string>
+	<key>NSMotionUsageDescription</key>
+	<string>$(PRODUCT_NAME) motion use.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>$(PRODUCT_NAME) speech recognition use.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Entypo.ttf</string>
