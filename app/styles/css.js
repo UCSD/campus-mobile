@@ -112,12 +112,15 @@ const css = StyleSheet.create({
 	 */
 	// 401 - Surf Report
 	sr_headerImage: { width: LAYOUT.WINDOW_WIDTH, height: round(LAYOUT.WINDOW_WIDTH * 0.361) },
-	sr_surfDetailsContainer: { flexDirection: 'row' },
-	sr_surfDetails: { flex: 2.5, borderLeftWidth: 1, borderLeftColor: COLOR.MGREY, marginVertical: 10, paddingHorizontal: 10 },
-	sr_titleText: { fontSize: 18, color: COLOR.BLACK },
-	sr_reportTitle: { fontSize: 18, color: COLOR.BLACK, paddingTop: 7, paddingHorizontal: 10 },
-	sr_reportText: { fontSize: 14, color: COLOR.BLACK, paddingHorizontal: 10 },
-	sr_heightText: { fontSize: 16, color: COLOR.DGREY, paddingTop: 4 },
+	sr_container: { paddingHorizontal: 10, paddingTop: 10 },
+	sr_beach_list: { marginTop: 20 },
+	sr_surf_row: { marginBottom: 15 },
+	sr_title: { fontSize: 22, fontWeight: '400', color: COLOR.PRIMARY },
+	sr_desc: { fontSize: 16, marginTop: 5 },
+	sr_beach_name: { fontSize: 18 },
+	sr_beach_surf: { fontSize: 16, paddingTop: 4, paddingLeft: 8 },
+
+
 	// 402 - Dining Detail
 	dd_description_container: { padding: 10 },
 	dd_description_nametext: { fontSize: 26, color: COLOR.PRIMARY },

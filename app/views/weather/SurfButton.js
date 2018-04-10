@@ -19,13 +19,13 @@ const SurfButton = ({ navigation })  => (
 		style={styles.touchable}
 		onPress={() => { navigation.navigate('SurfReport'); }}
 	>
-		<Text style={styles.text}>Surf Report &raquo;</Text>
+		<Text style={styles.text}>Surf Report</Text>
 	</Touchable>
 );
 
 const styles = StyleSheet.create({
-	touchable: { borderTopWidth: 1, borderTopColor: COLOR_MGREY, width: MAX_CARD_WIDTH },
-	text: { fontSize: 20, fontWeight: '300', color: COLOR_PRIMARY, paddingHorizontal: 14, paddingVertical: 10,  },
+	touchable: { borderTopWidth: 1, borderTopColor: COLOR_MGREY },
+	text: { textAlign: 'center', fontSize: 20, fontWeight: '300', color: COLOR_PRIMARY, paddingHorizontal: 14, paddingVertical: 10,  },
 });
 
 export default withNavigation(SurfButton);
