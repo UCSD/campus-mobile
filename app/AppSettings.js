@@ -23,7 +23,7 @@ module.exports = {
 
 	// Dev endpoint - needs to be updated to PROD
 	// SPECIAL EVENTS PLACEHOLDER - Activated for v5.6-rc testing phase 1
-	SPECIAL_EVENT_API_URL: 'https://s3-us-west-1.amazonaws.com/ucsd-mobile-dev/mock-apis/welcomeweek-2017.json',
+	SPECIAL_EVENT_API_URL: 'https://s3-us-west-1.amazonaws.com/ucsd-mobile-dev/mock-apis/special-event-test_welcome-week-2017.json',
 	// SPECIAL EVENTS PROD
 	// SPECIAL_EVENT_API_URL: 'https://2jjml3hf27.execute-api.us-west-2.amazonaws.com/prod/events/special',
 
