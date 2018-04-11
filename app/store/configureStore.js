@@ -44,7 +44,7 @@ const manifest = {
 const reducerKey = 'home'
 const migration = createMigration(manifest, reducerKey)
 
-export default function configureStore(initialState, onComplete: ?() => void) {
+export default function configureStore(initialState, onComplete = () => null) {
 	const middlewares = [sagaMiddleware, thunkMiddleware] // lets us dispatch() functions
 	const enhancer =  compose(migration, autoRehydrate())
 	const store = createStore(

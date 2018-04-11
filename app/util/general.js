@@ -391,7 +391,7 @@ module.exports = {
 	 * @returns {function} Resets the app in case of a fatal error.
 	 */
 	gracefulFatalReset(e) {
-		logger.ga(e.toString())
+		logger.trackException(e.toString(), true)
 		AsyncStorage.clear()
 		Alert.alert(
 			'Unexpected error occurred',

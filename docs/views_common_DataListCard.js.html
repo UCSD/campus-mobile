@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-general.html">general</a></li><li><a href="module-util_logger.html">util/logger</a></li><li><a href="module-util_map.html">util/map</a></li><li><a href="module-util_shuttle.html">util/shuttle</a></li>
+					<li><a href="module-general.html">general</a></li><li><a href="module-util_dining.html">util/dining</a></li><li><a href="module-util_logger.html">util/logger</a></li><li><a href="module-util_map.html">util/map</a></li><li><a href="module-util_shuttle.html">util/shuttle</a></li>
 				</ul>
 			</li>
 			
@@ -47,7 +47,7 @@
 			<li class="dropdown">
 				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="global.html#DataItem">DataItem</a></li><li><a href="global.html#DataListCard">DataListCard</a></li><li><a href="global.html#DataListView">DataListView</a></li><li><a href="global.html#DataListViewAll">DataListViewAll</a></li><li><a href="global.html#WeatherCard">WeatherCard</a></li><li><a href="global.html#WeatherCardContainer">WeatherCardContainer</a></li><li><a href="global.html#WeatherDay">WeatherDay</a></li><li><a href="global.html#WeatherWeek">WeatherWeek</a></li>
+					<li><a href="global.html#bold">bold</a></li><li><a href="global.html#DataItem">DataItem</a></li><li><a href="global.html#DataList_card_list">DataList_card_list</a></li><li><a href="global.html#DataListCard">DataListCard</a></li><li><a href="global.html#DataListView">DataListView</a></li><li><a href="global.html#dl_row">dl_row</a></li><li><a href="global.html#main_container">main_container</a></li><li><a href="global.html#sr_headerImage">sr_headerImage</a></li><li><a href="global.html#WeatherCard">WeatherCard</a></li><li><a href="global.html#WeatherCardContainer">WeatherCardContainer</a></li><li><a href="global.html#WeatherDay">WeatherDay</a></li><li><a href="global.html#WeatherWeek">WeatherWeek</a></li>
 				</ul>
 			</li>
 			
@@ -84,38 +84,35 @@
 <section>
     <article>
         <pre
-            class="sunlight-highlight-javascript linenums">import React, { PropTypes } from 'react';
+            class="sunlight-highlight-javascript linenums">import React from 'react'
+import PropTypes from 'prop-types'
 import {
 	View,
 	Text,
 	StyleSheet,
 	ActivityIndicator
-} from 'react-native';
+} from 'react-native'
 
-import { Actions } from 'react-native-router-flux';
+import { withNavigation } from 'react-navigation'
 
-import DataListView from './DataListView';
-import Card from '../card/Card';
-import Touchable from './Touchable';
-import {
-	MAX_CARD_WIDTH
-} from '../../styles/LayoutConstants';
-import {
-	COLOR_PRIMARY
-} from '../../styles/ColorConstants';
+import DataListView from './DataListView'
+import Card from '../card/Card'
+import Touchable from './Touchable'
+import { MAX_CARD_WIDTH } from '../../styles/LayoutConstants'
+import { COLOR_PRIMARY } from '../../styles/ColorConstants'
 
 /**
  * @param  {String} title Card header
  * @param {Object[]} data contains data for row items
- * @param {String} item String name for row item, passing string here instead of actual component cuz of Actions
+ * @param {String} item String name for row item: pass string here instead of component
  * @param {Number} rows number of rows to display on card
  * @param {Function} cardSort array sorting function
  * @return {JSX} Generic component for list type cards
  */
-const DataListCard = ({ id, title, data, item, rows, cardSort }) => {
-	let sortedData = data;
+export const DataListCard = ({ navigation, id, title, data, item, rows, cardSort }) => {
+	let sortedData = data
 	if (cardSort &amp;&amp; sortedData) {
-		sortedData = sortedData.slice().sort(cardSort);
+		sortedData = sortedData.slice().sort(cardSort)
 	}
 
 	return (
@@ -130,11 +127,9 @@ const DataListCard = ({ id, title, data, item, rows, cardSort }) => {
 							item={item}
 							card={false}
 						/>
-						&lt;Touchable
-							onPress={() => (
-								Actions.DataListViewAll({ title, data, item }) // Actions doesn't like being passed JSX
-							)}
-						>
+						&lt;Touchable onPress={() => (
+							navigation.navigate('DataListViewAll', { title, data, item })
+						)}>
 							&lt;View style={styles.more}>
 								&lt;Text style={styles.more_label}>View All&lt;/Text>
 							&lt;/View>
@@ -147,8 +142,8 @@ const DataListCard = ({ id, title, data, item, rows, cardSort }) => {
 				)}
 			&lt;/View>
 		&lt;/Card>
-	);
-};
+	)
+}
 
 DataListCard.propTypes = {
 	title: PropTypes.string.isRequired,
@@ -156,21 +151,21 @@ DataListCard.propTypes = {
 	item: PropTypes.string.isRequired,
 	rows: PropTypes.number,
 	cardSort: PropTypes.func,
-};
+}
 
 DataListCard.defaultProps = {
 	rows: 3
-};
+}
 
 const styles = StyleSheet.create({
 	list: { alignSelf: 'stretch', padding: 8 },
-	content_load_err: { padding: 30, fontSize:16, alignSelf: 'center'  },
+	content_load_err: { padding: 30, fontSize: 16, alignSelf: 'center'  },
 	more: { alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4, paddingTop: 8, paddingBottom: 4 },
 	more_label: { fontSize: 20, color: COLOR_PRIMARY, fontWeight: '300' },
 	cardcenter: { alignItems: 'center', justifyContent: 'center', width: MAX_CARD_WIDTH },
-});
+})
 
-export default DataListCard;
+export default withNavigation(DataListCard)
 </pre>
     </article>
 </section>
@@ -216,7 +211,7 @@ export default DataListCard;
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on Mon Mar 12th 2018
+		on Wed Apr 11th 2018
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

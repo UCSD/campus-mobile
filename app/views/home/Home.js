@@ -89,7 +89,7 @@ export class Home extends React.Component {
 						card = (<NewsCardContainer key="news" />)
 						break
 					default:
-						return gracefulFatalReset(new Error('Invalid card in state': key))
+						return gracefulFatalReset(new Error('Invalid card in state: ', key))
 					}
 					activeCards.push(card)
 				}

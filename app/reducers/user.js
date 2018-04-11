@@ -1,9 +1,3 @@
-export type State = {
-	isLoggedIn: boolean;
-	auth: ?Object;
-	profile: ?Object;
-};
-
 const initialState = {
 	isLoggedIn: false,
 	auth: null,
@@ -11,7 +5,7 @@ const initialState = {
 	username: null,
 };
 
-function user(state: State = initialState, action): State {
+function user(state = initialState, action) {
 	if (action.type === 'LOGGED_IN') {
 		//const { auth, profile } = action.data;
 		return {

@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-general.html">general</a></li><li><a href="module-util_logger.html">util/logger</a></li><li><a href="module-util_map.html">util/map</a></li><li><a href="module-util_shuttle.html">util/shuttle</a></li>
+					<li><a href="module-general.html">general</a></li><li><a href="module-util_dining.html">util/dining</a></li><li><a href="module-util_logger.html">util/logger</a></li><li><a href="module-util_map.html">util/map</a></li><li><a href="module-util_shuttle.html">util/shuttle</a></li>
 				</ul>
 			</li>
 			
@@ -47,7 +47,7 @@
 			<li class="dropdown">
 				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="global.html#DataItem">DataItem</a></li><li><a href="global.html#DataListCard">DataListCard</a></li><li><a href="global.html#DataListView">DataListView</a></li><li><a href="global.html#DataListViewAll">DataListViewAll</a></li><li><a href="global.html#WeatherCard">WeatherCard</a></li><li><a href="global.html#WeatherCardContainer">WeatherCardContainer</a></li><li><a href="global.html#WeatherDay">WeatherDay</a></li><li><a href="global.html#WeatherWeek">WeatherWeek</a></li>
+					<li><a href="global.html#bold">bold</a></li><li><a href="global.html#DataItem">DataItem</a></li><li><a href="global.html#DataList_card_list">DataList_card_list</a></li><li><a href="global.html#DataListCard">DataListCard</a></li><li><a href="global.html#DataListView">DataListView</a></li><li><a href="global.html#dl_row">dl_row</a></li><li><a href="global.html#main_container">main_container</a></li><li><a href="global.html#sr_headerImage">sr_headerImage</a></li><li><a href="global.html#WeatherCard">WeatherCard</a></li><li><a href="global.html#WeatherCardContainer">WeatherCardContainer</a></li><li><a href="global.html#WeatherDay">WeatherDay</a></li><li><a href="global.html#WeatherWeek">WeatherWeek</a></li>
 				</ul>
 			</li>
 			
@@ -84,23 +84,18 @@
 <section>
     <article>
         <pre
-            class="sunlight-highlight-javascript linenums">import React, { Component } from 'react';
+            class="sunlight-highlight-javascript linenums">import React, { Component } from 'react'
 import {
 	ListView,
-	StyleSheet,
+	ScrollView,
 	View,
 	Text,
-} from 'react-native';
-import { Actions } from 'react-native-router-flux';
-import Touchable from '../common/Touchable';
-import CircleCheckBox from '../common/CircleCheckBox';
-import {
-	COLOR_LGREY,
-	COLOR_DGREY,
-	COLOR_WHITE,
-	COLOR_PRIMARY,
-} from '../../styles/ColorConstants';
-import { WINDOW_WIDTH } from '../../styles/LayoutConstants';
+} from 'react-native'
+
+import Touchable from '../common/Touchable'
+import CircleCheckBox from '../common/CircleCheckBox'
+import css from '../../styles/css'
+import { COLOR } from '../../styles/ColorConstants'
 
 /**
  * @param {String[]} items - items to be selected
@@ -112,58 +107,60 @@ class MultiSelect extends Component {
 	// Returns true if item is being selected
 	// false if being de-selected
 	onSelect = (item) => {
-		const currSelected = this.props.selected.slice();
-		const itemIndex = currSelected.indexOf(item);
+		const currSelected = this.props.selected.slice()
+		const itemIndex = currSelected.indexOf(item)
 
 		if (itemIndex > -1) {
-			currSelected.splice(itemIndex, 1);
-			this.props.onSelect(currSelected);
-			return true;
+			currSelected.splice(itemIndex, 1)
+			this.props.onSelect(currSelected)
+			return true
 		} else {
-			currSelected.push(item);
-			this.props.onSelect(currSelected);
-			return false;
+			currSelected.push(item)
+			this.props.onSelect(currSelected)
+			return false
 		}
 	}
 
 	onClear = () => {
-		this.props.onSelect([]);
+		this.props.onSelect([])
 	}
 
 	render() {
-		const { items, themes, selected } = this.props;
-		const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-		const dataSource = ds.cloneWithRows(items);
+		const { items, themes, selected } = this.props
+		const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
+		const dataSource = ds.cloneWithRows(items)
 
 		return (
-			&lt;View style={styles.container}>
-				&lt;ListView
-					dataSource={dataSource}
-					renderRow={(rowData) => (
-						&lt;MultiSelectItem
-							data={rowData}
-							selected={selected.includes(rowData)}
-							onSelect={this.onSelect}
-							color={(themes &amp;&amp; themes[rowData] !== '') ? (themes[rowData]) : (COLOR_DGREY)}
-						/>
-					)}
-				/>
+			&lt;View>
+				&lt;ScrollView style={css.scroll_default} contentContainerStyle={css.specialevents_filter}>
+					&lt;ListView
+						dataSource={dataSource}
+						renderRow={rowData => (
+							&lt;MultiSelectItem
+								data={rowData}
+								selected={selected.includes(rowData)}
+								onSelect={this.onSelect}
+								color={(themes &amp;&amp; themes[rowData] !== '') ? (themes[rowData]) : (COLOR.DGREY)}
+							/>
+						)}
+					/>
+				&lt;/ScrollView>
 
 				&lt;Touchable
 					onPress={() => this.props.applyFilters()}
-					style={styles.applyButton}
+					style={css.specialevents_filter_applybutton}
 				>
-					&lt;Text style={styles.applyText}>Apply&lt;/Text>
+					&lt;Text style={css.specialevents_filter_applybutton_text}>Apply Filters&lt;/Text>
 				&lt;/Touchable>
 			&lt;/View>
-		);
+		)
 	}
 }
 
 const MultiSelectItem = ({ data, selected, onSelect, color }) => (
 	&lt;Touchable
 		onPress={() => onSelect(data)}
-		style={styles.itemRow}
+		style={css.specialevents_filter_itemrow}
 	>
 		&lt;CircleCheckBox
 			checked={selected}
@@ -173,16 +170,9 @@ const MultiSelectItem = ({ data, selected, onSelect, color }) => (
 			innerColor={color}
 		/>
 	&lt;/Touchable>
-);
+)
 
-const styles = StyleSheet.create({
-	container: { backgroundColor: 'white', paddingBottom: 60 },
-	itemRow: { flexDirection: 'row', height: 50, alignItems: 'center', backgroundColor: 'white', borderBottomWidth: 1, borderBottomColor: COLOR_LGREY, paddingHorizontal: 12 },
-	applyButton: { position: 'absolute', width: Math.round(WINDOW_WIDTH * .9), height: 40, bottom: 10, left: Math.round(WINDOW_WIDTH * .05), justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR_PRIMARY, borderRadius: 3, padding: 10 },
-	applyText: { fontSize: 16, color: COLOR_WHITE },
-});
-
-export default MultiSelect;
+export default MultiSelect
 </pre>
     </article>
 </section>
@@ -228,7 +218,7 @@ export default MultiSelect;
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on Mon Mar 12th 2018
+		on Wed Apr 11th 2018
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
