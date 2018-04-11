@@ -10,7 +10,7 @@ import QuicklinksCardContainer from '../quicklinks/QuicklinksCardContainer'
 import NewsCardContainer from '../news/NewsCardContainer'
 import DiningCardContainer from '../dining/DiningCardContainer'
 import SpecialEventsCardContainer from '../specialEvents/SpecialEventsCardContainer'
-import { platformAndroid } from '../../util/general'
+import { platformAndroid, gracefulFatalReset } from '../../util/general'
 import css from '../../styles/css'
 import logger from '../../util/logger'
 
@@ -88,6 +88,8 @@ export class Home extends React.Component {
 					case 'news':
 						card = (<NewsCardContainer key="news" />)
 						break
+					default:
+						return gracefulFatalReset()
 					}
 					activeCards.push(card)
 				}

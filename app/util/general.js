@@ -3,13 +3,16 @@ import {
 	Linking,
 	Dimensions,
 	Keyboard,
-} from 'react-native';
+	Alert,
+	AsyncStorage
+} from 'react-native'
+import RNRestart from 'react-native-restart'
 import {
 	COLOR_PRIMARY,
 	COLOR_SECONDARY,
-} from '../styles/ColorConstants';
-import dateFormat from 'dateformat';
-import logger from './logger';
+} from '../styles/ColorConstants'
+import dateFormat from 'dateformat'
+import logger from './logger'
 
 /**
  * A module containing general helper functions
@@ -22,7 +25,7 @@ module.exports = {
 	 * @returns {boolean} True if the platform is IOS, false otherwise
 	 */
 	platformIOS() {
-		return Platform.OS === 'ios';
+		return Platform.OS === 'ios'
 	},
 
 	/**
@@ -31,7 +34,7 @@ module.exports = {
 	 * @returns {boolean} True if the platform is Android, false otherwise
 	 */
 	platformAndroid() {
-		return Platform.OS === 'android';
+		return Platform.OS === 'android'
 	},
 
 	/**
@@ -39,7 +42,7 @@ module.exports = {
 	 * @returns {string} The platform name
 	 */
 	getPlatform() {
-		return Platform.OS;
+		return Platform.OS
 	},
 
 	/**
@@ -47,7 +50,7 @@ module.exports = {
 	 * @returns {boolean} True if the device model is iPhone X, false otherwise
 	 */
 	deviceIphoneX() {
-		return Dimensions.get('window').height === 812;
+		return Dimensions.get('window').height === 812
 	},
 
 	/**
@@ -57,7 +60,7 @@ module.exports = {
 	 * @returns {number} The quantity now converted into miles
 	 */
 	convertMetersToMiles(meters) {
-		return (meters / 1609.344);
+		return (meters / 1609.344)
 	},
 
 	/**
@@ -66,7 +69,7 @@ module.exports = {
 	 * @returns {number} The miles quantity now as a string
 	 */
 	getDistanceMilesStr(miles) {
-		return (miles.toFixed(1) + ' mi');
+		return (miles.toFixed(1) + ' mi')
 	},
 
 	/**
@@ -77,15 +80,15 @@ module.exports = {
 	openURL(url) {
 		Linking.canOpenURL(url).then(supported => {
 			if (!supported) {
-				logger.log('ERR: openURL: Unable to handle url: ' + url);
-				return false;
+				logger.log('ERR: openURL: Unable to handle url: ' + url)
+				return false
 			} else {
-				return Linking.openURL(url);
+				return Linking.openURL(url)
 			}
 		}).catch(err => {
-			logger.log('ERR: openURL: ' + err);
-			return false;
-		});
+			logger.log('ERR: openURL: ' + err)
+			return false
+		})
 	},
 
 	/**
@@ -97,30 +100,30 @@ module.exports = {
 	 * @return {string} A platform-specific URL for obtaining the directions
 	 */
 	getDirectionsURL(method, stopLat, stopLon, address) {
-		let directionsURL;
-		let directionsAddr;
+		let directionsURL
+		let directionsAddr
 
 		if (stopLat && stopLon) directionsAddr = `${stopLat},${stopLon}`
-		if (address) directionsAddr = address;
+		if (address) directionsAddr = address
 
 		if (this.platformIOS()) {
 			if (method === 'walk') {
-				directionsURL = `http://maps.apple.com/?daddr=${directionsAddr}&dirflg=w`;
+				directionsURL = `http://maps.apple.com/?daddr=${directionsAddr}&dirflg=w`
 			} else {
 				// Default to driving directions
-				directionsURL = `http://maps.apple.com/?daddr=${directionsAddr}&dirflg=d`;
+				directionsURL = `http://maps.apple.com/?daddr=${directionsAddr}&dirflg=d`
 			}
 		} else {
 			if (method === 'walk') {
-				// directionsURL = 'https://www.google.com/maps/dir/' + startLat + ',' + startLon + '/' + stopLat + ',' + stopLon + '/@' + startLat + ',' + startLon + ',18z/data=!4m2!4m1!3e1';
-				directionsURL = 'https://maps.google.com/maps?saddr=Current+Location&daddr=' + directionsAddr + '&dirflg=w';
+				// directionsURL = 'https://www.google.com/maps/dir/' + startLat + ',' + startLon + '/' + stopLat + ',' + stopLon + '/@' + startLat + ',' + startLon + ',18z/data=!4m2!4m1!3e1'
+				directionsURL = 'https://maps.google.com/maps?saddr=Current+Location&daddr=' + directionsAddr + '&dirflg=w'
 			} else {
 				// Default to driving directions
-				directionsURL = 'https://maps.google.com/maps?saddr=Current+Location&daddr=' + directionsAddr + '&dirflg=d';
+				directionsURL = 'https://maps.google.com/maps?saddr=Current+Location&daddr=' + directionsAddr + '&dirflg=d'
 			}
 		}
 
-		return directionsURL;
+		return directionsURL
 	},
 
 	/**
@@ -132,12 +135,12 @@ module.exports = {
 	 */
 	gotoNavigationApp(destinationLat, destinationLon, destinationAddress) {
 		if (destinationLat && destinationLon) {
-			const destinationURL = module.exports.getDirectionsURL('walk', destinationLat, destinationLon );
-			return module.exports.openURL(destinationURL);
+			const destinationURL = module.exports.getDirectionsURL('walk', destinationLat, destinationLon )
+			return module.exports.openURL(destinationURL)
 		}
 		else if (destinationAddress) {
-			const destinationURL = module.exports.getDirectionsURL('walk', null, null, destinationAddress );
-			return module.exports.openURL(destinationURL);
+			const destinationURL = module.exports.getDirectionsURL('walk', null, null, destinationAddress )
+			return module.exports.openURL(destinationURL)
 		}
 	},
 
@@ -158,9 +161,9 @@ module.exports = {
 	 * @todo The variable windowHeight is unused
 	 */
 	getPRM() {
-		const windowWidth = Dimensions.get('window').width;
-		const appDefaultWidth = 414;
-		return (windowWidth / appDefaultWidth);
+		const windowWidth = Dimensions.get('window').width
+		const appDefaultWidth = 414
+		return (windowWidth / appDefaultWidth)
 	},
 
 	/**
@@ -171,11 +174,11 @@ module.exports = {
 	 * @todo This method could call this.getPRM() to prevent redundant code
 	 */
 	doPRM(num) {
-		const windowWidth = Dimensions.get('window').width;
-		const appDefaultWidth = 414;
-		const prm = (windowWidth / appDefaultWidth);
+		const windowWidth = Dimensions.get('window').width
+		const appDefaultWidth = 414
+		const prm = (windowWidth / appDefaultWidth)
 
-		return Math.round(num * prm);
+		return Math.round(num * prm)
 	},
 
 	/**
@@ -183,7 +186,7 @@ module.exports = {
 	 * @returns {number} The maximum width in points
 	 */
 	getMaxCardWidth() {
-		return Dimensions.get('window').width - 2 - 12;
+		return Dimensions.get('window').width - 2 - 12
 	},
 
 	/**
@@ -191,7 +194,7 @@ module.exports = {
 	 * @returns {number} The screen width in points
 	 */
 	getScreenWidth() {
-		return Dimensions.get('window').width;
+		return Dimensions.get('window').width
 	},
 
 	/**
@@ -199,7 +202,7 @@ module.exports = {
 	 * @returns {number} The screen height in points
 	 */
 	getScreenHeight() {
-		return Dimensions.get('window').height;
+		return Dimensions.get('window').height
 	},
 
 	/**
@@ -207,7 +210,7 @@ module.exports = {
 	 * @returns {string}
 	 */
 	getCampusPrimary() {
-		return COLOR_PRIMARY;
+		return COLOR_PRIMARY
 	},
 
 	/**
@@ -215,7 +218,7 @@ module.exports = {
 	 * @returns {string}
 	 */
 	getCampusSecondary() {
-		return COLOR_SECONDARY;
+		return COLOR_SECONDARY
 	},
 
 	/**
@@ -223,7 +226,7 @@ module.exports = {
 	 * @returns {number} The number of seconds since midnight Jan 1, 1970
 	 */
 	getCurrentTimestamp() {
-		return Math.round(Date.now() / 1000);
+		return Math.round(Date.now() / 1000)
 	},
 
 	/**
@@ -231,7 +234,7 @@ module.exports = {
 	 * @returns {string} The current time formatted to "yyyymmdd"
 	 */
 	getTimestampNumeric() {
-		return (dateFormat(Date.now(), 'yyyymmdd'));
+		return (dateFormat(Date.now(), 'yyyymmdd'))
 	},
 
 	/**
@@ -240,7 +243,7 @@ module.exports = {
 	 * @returns {string} The formatted current time
 	 */
 	getTimestamp(format) {
-		return (dateFormat(Date.now(), format));
+		return (dateFormat(Date.now(), format))
 	},
 
 	/**
@@ -248,7 +251,7 @@ module.exports = {
 	 * @returns {number} The number of milliseconds since midnight Jan 1, 1970
 	 */
 	getDateNow() {
-		return (Date.now());
+		return (Date.now())
 	},
 
 	/**
@@ -260,18 +263,18 @@ module.exports = {
 	getHumanizedDuration(startTime, endTime) {
 		var durationStr = '',
 			durationHours = 0,
-			durationMinutes = (Number(endTime) - Number(startTime)) / (60 * 1000);
+			durationMinutes = (Number(endTime) - Number(startTime)) / (60 * 1000)
 		while (durationMinutes >= 60) {
-			durationMinutes-=60;
-			durationHours+=1;
+			durationMinutes-=60
+			durationHours+=1
 		}
 		if (durationHours) {
-			durationStr += durationHours + ' hour' + (durationHours > 1 ? 's ' : ' ');
+			durationStr += durationHours + ' hour' + (durationHours > 1 ? 's ' : ' ')
 		}
 		if (durationMinutes) {
-			durationStr += durationMinutes + ' min' + (durationMinutes > 1 ? 's' : '');
+			durationStr += durationMinutes + ' min' + (durationMinutes > 1 ? 's' : '')
 		}
-		return (durationStr.trim());
+		return (durationStr.trim())
 	},
 
 	/**
@@ -281,46 +284,46 @@ module.exports = {
 	 */
 	militaryToAMPM(time) {
 		if (time) {
-			let militaryTime = time.substring(0, 5).replace(':','');
+			let militaryTime = time.substring(0, 5).replace(':','')
 			let militaryTimeHH,
 				militaryTimeMM,
-				militaryTimeAMPM;
+				militaryTimeAMPM
 
-			militaryTime = militaryTime.replace(/^0/,'');
+			militaryTime = militaryTime.replace(/^0/,'')
 
 			if (militaryTime.length === 3) {
-				militaryTimeHH = militaryTime.substring(0,1);
-				militaryTimeMM = militaryTime.substring(1,3);
+				militaryTimeHH = militaryTime.substring(0,1)
+				militaryTimeMM = militaryTime.substring(1,3)
 			} else if (militaryTime.length === 4) {
-				militaryTimeHH = militaryTime.substring(0,2);
-				militaryTimeMM = militaryTime.substring(2,4);
+				militaryTimeHH = militaryTime.substring(0,2)
+				militaryTimeMM = militaryTime.substring(2,4)
 			}
 
 			if (militaryTimeHH < 12) {
-				militaryTimeAMPM = 'am';
+				militaryTimeAMPM = 'am'
 			} else {
-				militaryTimeAMPM = 'pm';
+				militaryTimeAMPM = 'pm'
 			}
 
 			if (militaryTimeHH > 12) {
-				militaryTimeHH -= 12;
+				militaryTimeHH -= 12
 			}
 
 			if (militaryTimeHH === '0') {
-				militaryTimeHH = '12';
+				militaryTimeHH = '12'
 			}
 
 			if (militaryTimeMM === '00') {
-				militaryTimeMM = '';
+				militaryTimeMM = ''
 			}
 
 			if (militaryTimeMM.length > 0) {
-				return (militaryTimeHH + ':' + militaryTimeMM + militaryTimeAMPM);
+				return (militaryTimeHH + ':' + militaryTimeMM + militaryTimeAMPM)
 			} else {
-				return (militaryTimeHH + militaryTimeAMPM);
+				return (militaryTimeHH + militaryTimeAMPM)
 			}
 		} else {
-			return '';
+			return ''
 		}
 	},
 
@@ -330,11 +333,11 @@ module.exports = {
 	 * @returns {number[]} An array with each element containing a randomly generated hex color code
 	 */
 	getRandomColorArray(length) {
-		const randomColors = [];
+		const randomColors = []
 		for (let i = 0; i < length; ++i) {
-			randomColors.push(this.getRandomColor());
+			randomColors.push(this.getRandomColor())
 		}
-		return randomColors;
+		return randomColors
 	},
 
 	/**
@@ -342,7 +345,7 @@ module.exports = {
 	 * @returns {string} A randomly generated hex color code
 	 */
 	getRandomColor() {
-		return '#' + ('000000' + Math.random().toString(16).slice(2, 8).toUpperCase()).slice(-6);
+		return '#' + ('000000' + Math.random().toString(16).slice(2, 8).toUpperCase()).slice(-6)
 	},
 
 	/**
@@ -352,8 +355,8 @@ module.exports = {
 	 */
 	dynamicSort(property) {
 		return function (a, b) {
-			return (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
-		};
+			return (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0
+		}
 	},
 
 	/**
@@ -367,19 +370,35 @@ module.exports = {
 	 */
 	sortNearbyMarkers(a, b) {
 		if (a.distance < b.distance) {
-			return -1;
+			return -1
 		} else if (a.distance > b.distance) {
-			return 1;
+			return 1
 		} else {
-			return 0;
+			return 0
 		}
 	},
 
 	/**
-	 * Hides the keyboard
-	 * @function
+	 * @returns {function} Hides the keyboard
 	 */
 	hideKeyboard() {
-		Keyboard.dismiss();
+		Keyboard.dismiss()
 	},
-};
+
+	/**
+	 * @returns {function} Resets the app in case of a fatal error.
+	 */
+	gracefulFatalReset() {
+		AsyncStorage.clear()
+		Alert.alert(
+			'Unexpected error occurred',
+			'The app will now restart. If the app continues crashing, please keep an eye out for an update or try again later.',
+			[{
+				text: 'Okay',
+				onPress: () => {
+					RNRestart.Restart();
+				}
+			}]
+		)
+	}
+}
