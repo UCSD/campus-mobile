@@ -9,7 +9,7 @@ import {
 } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 
-import { COLOR_MGREY } from '../../styles/ColorConstants'
+import { COLOR_MGREY, COLOR_WHITE } from '../../styles/ColorConstants'
 import { MAX_CARD_WIDTH } from '../../styles/LayoutConstants'
 import NoTouchy from '../common/NoTouchy'
 
@@ -127,6 +127,7 @@ const styles = StyleSheet.create({
 			android: {
 				margin: 0,
 				elevation: 0,
+				backgroundColor: COLOR_WHITE
 			},
 		})
 	},
