@@ -8,11 +8,9 @@ import {
 } from 'react-native'
 import RNRestart from 'react-native-restart'
 import RNExitApp from 'react-native-exit-app'
-import {
-	COLOR_PRIMARY,
-	COLOR_SECONDARY,
-} from '../styles/ColorConstants'
 import dateFormat from 'dateformat'
+
+import { COLOR_PRIMARY, COLOR_SECONDARY } from '../styles/ColorConstants'
 import logger from './logger'
 
 /**
@@ -79,14 +77,14 @@ module.exports = {
 	 * @returns {boolean} If the URL cannot be opened, this logs to console and returns false. Otherwise, returns true.
 	 */
 	openURL(url) {
-		Linking.canOpenURL(url).then(supported => {
+		Linking.canOpenURL(url).then((supported) => {
 			if (!supported) {
 				logger.log('ERR: openURL: Unable to handle url: ' + url)
 				return false
 			} else {
 				return Linking.openURL(url)
 			}
-		}).catch(err => {
+		}).catch((err) => {
 			logger.log('ERR: openURL: ' + err)
 			return false
 		})
@@ -262,12 +260,12 @@ module.exports = {
 	 * @returns {string} A humanized string indicating an hours & minutes duration in time (i.e. '3 hours 15 mins')
 	 */
 	getHumanizedDuration(startTime, endTime) {
-		var durationStr = '',
+		let durationStr = '',
 			durationHours = 0,
 			durationMinutes = (Number(endTime) - Number(startTime)) / (60 * 1000)
 		while (durationMinutes >= 60) {
-			durationMinutes-=60
-			durationHours+=1
+			durationMinutes -= 60
+			durationHours += 1
 		}
 		if (durationHours) {
 			durationStr += durationHours + ' hour' + (durationHours > 1 ? 's ' : ' ')
@@ -394,8 +392,8 @@ module.exports = {
 		logger.trackException(e.toString(), true)
 		AsyncStorage.clear()
 		Alert.alert(
-			'Unexpected error occurred',
-			'Reload the app to try again. If the app continues crashing, please keep an eye out for an update or try again later.',
+			'Oops! Something went wrong!',
+			'An error report has been automatically sent to the technical staff. Try restarting. If the problem still occurs try again later.',
 			[{
 				text: 'Reload',
 				onPress: () => {
