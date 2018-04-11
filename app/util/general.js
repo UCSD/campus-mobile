@@ -7,6 +7,7 @@ import {
 	AsyncStorage
 } from 'react-native'
 import RNRestart from 'react-native-restart'
+import RNExitApp from 'react-native-exit-app'
 import {
 	COLOR_PRIMARY,
 	COLOR_SECONDARY,
@@ -386,19 +387,30 @@ module.exports = {
 	},
 
 	/**
+	 * @param {Object} e Error object with details about the fatal error.
 	 * @returns {function} Resets the app in case of a fatal error.
 	 */
-	gracefulFatalReset() {
+	gracefulFatalReset(e) {
+		logger.ga(e.toString())
 		AsyncStorage.clear()
 		Alert.alert(
 			'Unexpected error occurred',
-			'The app will now restart. If the app continues crashing, please keep an eye out for an update or try again later.',
+			'Reload the app to try again. If the app continues crashing, please keep an eye out for an update or try again later.',
 			[{
-				text: 'Okay',
+				text: 'Reload',
 				onPress: () => {
-					RNRestart.Restart();
+					RNRestart.Restart()
 				}
-			}]
+			},
+			{
+				text: 'Quit',
+				style: 'cancel',
+				onPress: () => {
+					RNExitApp.exitApp()
+				}
+			}
+			],
+			{ cancelable: false }
 		)
 	}
 }
