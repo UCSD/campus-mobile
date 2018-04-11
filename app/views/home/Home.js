@@ -59,41 +59,37 @@ export class Home extends React.Component {
 
 	_getCards = () => {
 		const activeCards = []
-		let card
 
 		if (Array.isArray(this.props.cardOrder)) {
-			for (let i = 0; i < this.props.cardOrder.length; ++i) {
-				const key = this.props.cardOrder[i]
-
-				if (this.props.cards[key].active) {
-					switch (key) {
+			this.props.cardOrder.forEach((card) => {
+				if (this.props.cards[card].active) {
+					switch (card) {
 					case 'specialEvents':
-						card = <SpecialEventsCardContainer key="specialEvents" />
+						activeCards.push(<SpecialEventsCardContainer key="specialEvents" />)
 						break
 					case 'weather':
-						card = (<WeatherCardContainer key="weather" />)
+						activeCards.push(<WeatherCardContainer key="weather" />)
 						break
 					case 'shuttle':
-						card = (<ShuttleCardContainer key="shuttle" />)
+						activeCards.push(<ShuttleCardContainer key="shuttle" />)
 						break
 					case 'dining':
-						card = (<DiningCardContainer key="dining" />)
+						activeCards.push(<DiningCardContainer key="dining" />)
 						break
 					case 'events':
-						card = (<EventCardContainer key="events" />)
+						activeCards.push(<EventCardContainer key="events" />)
 						break
 					case 'quicklinks':
-						card = (<QuicklinksCardContainer key="quicklinks" />)
+						activeCards.push(<QuicklinksCardContainer key="quicklinks" />)
 						break
 					case 'news':
-						card = (<NewsCardContainer key="news" />)
+						activeCards.push(<NewsCardContainer key="news" />)
 						break
 					default:
-						return gracefulFatalReset(new Error('Invalid card in state: ', key))
+						return gracefulFatalReset(new Error('Invalid card in state: ', card))
 					}
-					activeCards.push(card)
 				}
-			}
+			})
 		}
 		return activeCards
 	}
