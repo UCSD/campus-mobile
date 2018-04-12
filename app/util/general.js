@@ -390,23 +390,17 @@ module.exports = {
 	 */
 	gracefulFatalReset(e) {
 		logger.trackException(e.toString(), true)
-		AsyncStorage.clear()
 		Alert.alert(
 			'Oops! Something went wrong!',
 			'An error report has been automatically sent to the technical staff. Try restarting. If the problem still occurs try again later.',
-			[{
-				text: 'Reload',
-				onPress: () => {
-					RNRestart.Restart()
+			[
+				{
+					text: 'Quit',
+					style: 'cancel',
+					onPress: () => {
+						AsyncStorage.clear(() => RNExitApp.exitApp())
+					}
 				}
-			},
-			{
-				text: 'Quit',
-				style: 'cancel',
-				onPress: () => {
-					RNExitApp.exitApp()
-				}
-			}
 			],
 			{ cancelable: false }
 		)
