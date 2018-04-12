@@ -18,11 +18,23 @@ const DiningMenu = ({
 	navigation,
 	requestStatus,
 	data,
+	menuUrl,
 	filters,
 	addFilter,
 	activeMeal
 }) => {
-	if (requestStatus) {
+	if (menuUrl) {
+		return (
+			<Touchable
+				onPress={() => openURL(menuUrl)}
+			>
+				<View style={css.dd_menu_link_container}>
+					<Text style={css.dd_menu_link_text}>View Menu</Text>
+				</View>
+			</Touchable>
+		)
+	}
+	else if (requestStatus) {
 		return (
 			<View style={css.dd_menu_container}>
 				<ActivityIndicator
@@ -32,38 +44,22 @@ const DiningMenu = ({
 			</View>
 		)
 	}
-	else if (data) {
-		if (data.menuWebsite) {
-			return (
-				<Touchable
-					onPress={() => openURL(data.menuWebsite)}
-				>
-					<View style={css.dd_menu_link_container}>
-						{data.name.indexOf('Market') >= 0 ? (
-							<Text style={css.dd_menu_link_text}>View To Go Menu</Text>
-						) : (
-							<Text style={css.dd_menu_link_text}>View Menu</Text>
-						)}
-					</View>
-				</Touchable>
-			)
-		} else if (data.menuitems && data.menuitems.length > 1) {
-			return (
-				<View style={css.dd_menu_container}>
-					<MenuFilters
-						filters={filters}
-						addFilter={addFilter}
-						activeMeal={activeMeal}
-					/>
-					<MenuList
-						navigation={navigation}
-						filters={filters}
-						data={data}
-						activeMeal={activeMeal}
-					/>
-				</View>
-			)
-		}
+	else if (data && data.menuitems && data.menuitems.length > 1) {
+		return (
+			<View style={css.dd_menu_container}>
+				<MenuFilters
+					filters={filters}
+					addFilter={addFilter}
+					activeMeal={activeMeal}
+				/>
+				<MenuList
+					navigation={navigation}
+					filters={filters}
+					data={data}
+					activeMeal={activeMeal}
+				/>
+			</View>
+		)
 	}
 
 	return null

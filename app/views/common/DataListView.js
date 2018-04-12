@@ -58,7 +58,8 @@ const DataFlatList = ({ style, data, rows, item, card }) => (
 				return listItem.title
 			}
 			case 'DiningItem': {
-				return listItem.id
+				if (listItem.id) return listItem.id
+				else return listItem.name
 			}
 			case 'QuicklinksItem': {
 				return listItem.name
