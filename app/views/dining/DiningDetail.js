@@ -60,7 +60,6 @@ class DiningDetail extends React.Component {
 		const { menuData, navigation, menuRequestStatus } = this.props
 		const { params } = navigation.state
 		const { data } = params
-		console.log(data)
 		return (
 			<ScrollView style={css.scroll_default} contentContainerStyle={css.main_full}>
 				<DiningDescription

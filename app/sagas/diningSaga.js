@@ -101,9 +101,11 @@ function* fetchDiningMenu(id) {
 			const e = new Error('Request timed out.')
 			throw e
 		}
-		else if (!response.menuitems) {
-			const e = new Error('Invalid server response.')
-			throw e
+		else if (!response || !response.menuitems) {
+			// const e = new Error('Invalid server response.')
+			// throw e
+			yield put({ type: 'GET_DINING_MENU_SUCCESS' })
+			return null
 		}
 		else {
 			yield put({ type: 'GET_DINING_MENU_SUCCESS' })

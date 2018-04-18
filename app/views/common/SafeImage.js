@@ -14,7 +14,7 @@ class SafeImage extends React.Component {
 	}
 
 	_handleError = (event) => {
-		console.log('Error loading image: ', event.nativeEvent.error);
+		console.log(`Error loading image ${this.props.source.uri}:`, event.nativeEvent.error);
 		this.setState({ validImage: false });
 	}
 
