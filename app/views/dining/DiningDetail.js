@@ -93,12 +93,12 @@ class DiningDetail extends React.Component {
 						) : (null)
 					)
 				}
-				{ data.id ? (
+				{ (data.id || data.menuWebsite) ? (
 					<DiningMenu
 						navigation={this.props.navigation}
 						requestStatus={menuRequestStatus}
 						data={menuData}
-						menuUrl={data.menuUrl}
+						menuUrl={data.menuWebsite}
 						filters={this.state.filters}
 						activeMeal={this.state.activeMeal}
 						addFilter={filter => this.addFilter(filter)}
