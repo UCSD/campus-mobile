@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.ucsd"
-    android:versionCode="41"
+    android:versionCode="44"
     android:versionName="5.6">
 
     <uses-permission android:name="android.permission.INTERNET" />
