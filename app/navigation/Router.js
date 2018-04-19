@@ -48,6 +48,7 @@ const TabNav = TabNavigator(
 		tabBarOptions: {
 			showLabel: false,
 			showIcon: true,
+
 			pressColor: COLOR_MGREY,
 			indicatorStyle: { backgroundColor: COLOR_SECONDARY },
 			style: general.platformIOS() ? css.tabBarIOS : css.tabBarAndroid,
@@ -57,7 +58,8 @@ const TabNav = TabNavigator(
 			tabBarIcon: ({ focused }) => {
 				const { routeName } = navigation.state
 				return <TabIcons title={routeName} focused={focused} />
-			}
+			},
+			swipeEnabled: false
 		})
 	}
 )
