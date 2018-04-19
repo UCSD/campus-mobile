@@ -1,8 +1,8 @@
-const AppSettings = require('../AppSettings');
+const AppSettings = require('../AppSettings')
 
 const DiningService = {
 	FetchDining() {
-		return fetch(AppSettings.DINING_API_URL, {
+		return fetch(AppSettings.DINING_API_URL + '/locations', {
 			headers: {
 				'Cache-Control': 'no-cache'
 			}
@@ -10,16 +10,16 @@ const DiningService = {
 			.then(response => (response.json()))
 			.then((data) => {
 				if (data.errorMessage) {
-					throw (data.errorMessage);
+					throw (data.errorMessage)
 				} else {
-					return data;
+					return data
 				}
 			})
-			.catch(err => console.log('Error fetching dining: ' + err));
+			.catch(err => console.log('Error fetching dining: ' + err))
 	},
 
 	FetchDiningMenu(id) {
-		return fetch(`${AppSettings.DINING_API_URL}/menu/${id}`, {
+		return fetch(AppSettings.DINING_API_URL + '/menu/' + id, {
 			headers: {
 				'Cache-Control': 'no-cache'
 			}
@@ -27,13 +27,13 @@ const DiningService = {
 			.then(response => (response.json()))
 			.then((data) => {
 				if (data.message) {
-					throw (data.message);
+					throw (data.message)
 				} else {
-					return data;
+					return data
 				}
 			})
-			.catch(err => console.log(`Error fetching dining menu for id ${id}: ` + err));
+			.catch(err => console.log('Error fetching dining menu for id ' + id + ': ' + err))
 	}
-};
+}
 
-export default DiningService;
+export default DiningService
