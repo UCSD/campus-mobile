@@ -1,33 +1,33 @@
-import React from 'react';
+import React from 'react'
 import {
 	View,
 	Text,
-} from 'react-native';
-import moment from 'moment';
+} from 'react-native'
+import moment from 'moment'
 
-import ColoredDot from '../common/ColoredDot';
+import ColoredDot from '../common/ColoredDot'
 import {
 	COLOR_MGREEN,
 	COLOR_MRED
-} from '../../styles/ColorConstants';
-import css from '../../styles/css';
+} from '../../styles/ColorConstants'
+import css from '../../styles/css'
 
-const dining = require('../../util/dining');
+const dining = require('../../util/dining')
 
 const generateHourElements = (hoursArray, status, today) => {
-	const elementsArray = [];
-	let activeDotColor;
+	const elementsArray = []
+	let activeDotColor
 
 	if (status) {
 		activeDotColor = status.isOpen ?
-			COLOR_MGREEN : COLOR_MRED;
+			COLOR_MGREEN : COLOR_MRED
 	}
 
 	// Push hours
 	hoursArray.forEach((hours) => {
-		const operatingHours = dining.parseHours(hours);
-		const isAlwaysOpen = (hours === 'Open 24/7');
-		let todaysStatusElement = null;
+		const operatingHours = dining.parseHours(hours)
+		const isAlwaysOpen = (hours === 'Open 24/7')
+		let todaysStatusElement = null
 
 		// Check if valid status
 		if (status) {
@@ -46,7 +46,7 @@ const generateHourElements = (hoursArray, status, today) => {
 						&& status.currentHours.openingHour.isSame(operatingHours.openingHour)
 						&& status.currentHours.closingHour.isSame(operatingHours.closingHour)
 					)
-				);
+				)
 				if (hoursAreCurrentHours) {
 					todaysStatusElement = (
 						<View>
@@ -56,27 +56,37 @@ const generateHourElements = (hoursArray, status, today) => {
 								style={css.dd_status_icon}
 							/>
 						</View>
-					);
+					)
 				}
 			}
 		} else {
 			// Status is invalid, return null
-			todaysStatusElement = null;
+			todaysStatusElement = null
 		}
 
-		let newHourElementHoursText;
+		let newHourElementHoursText
 		if (isAlwaysOpen) {
-			newHourElementHoursText = 'Open 24 Hours';
+			newHourElementHoursText = 'Open 24 Hours'
 		}
 		else if (
 			operatingHours.openingHour.format('h:mm a') !== 'Invalid date'
 			&& operatingHours.closingHour.format('h:mm a') !== 'Invalid date'
 		) {
-			newHourElementHoursText = operatingHours.openingHour.format('h:mm a')
-				+ ' — '
-				+ operatingHours.closingHour.format('h:mm a');
+			let openingHourAmPm = 'a.m.'
+			if (operatingHours.openingHour.format('a') === 'pm') {
+				openingHourAmPm = 'p.m.'
+			}
+			let closingHourAmPm = 'a.m.'
+			if (operatingHours.closingHour.format('a') === 'pm') {
+				closingHourAmPm = 'p.m.'
+			}
+			newHourElementHoursText = operatingHours.openingHour.format('h:mm ')
+				+ openingHourAmPm
+				+ ' – '
+				+ operatingHours.closingHour.format('h:mm ')
+				+ closingHourAmPm
 		} else {
-			newHourElementHoursText = 'Unknown hours';
+			newHourElementHoursText = 'Unknown hours'
 		}
 
 		const newHourElement = (
@@ -86,22 +96,22 @@ const generateHourElements = (hoursArray, status, today) => {
 				</Text>
 				{todaysStatusElement}
 			</View>
-		);
+		)
 
-		elementsArray.push(newHourElement);
-	});
+		elementsArray.push(newHourElement)
+	})
 
-	return elementsArray;
-};
+	return elementsArray
+}
 
 const generateHours = (allHours, status) => {
-	const hoursRows = [];
+	const hoursRows = []
 	Object.keys(allHours).forEach((day) => {
-		const todaysHours = allHours[day];
+		const todaysHours = allHours[day]
 
 		// If eatery is closed today
 		if (!todaysHours) {
-			const todaysTitle = moment(day, 'ddd').format('dddd');
+			const todaysTitle = moment(day, 'ddd').format('dddd')
 			const newHourRow = (
 				<View
 					key={todaysTitle}
@@ -127,9 +137,9 @@ const generateHours = (allHours, status) => {
 						</View>
 					</View>
 				</View>
-			);
+			)
 
-			hoursRows.push(newHourRow);
+			hoursRows.push(newHourRow)
 		}
 
 		// If hours are malformed, return 'Unknown hours'
@@ -144,14 +154,14 @@ const generateHours = (allHours, status) => {
 						<Text style={css.dd_hours_text_hours}>Unknown hours</Text>
 					</View>
 				</View>
-			);
+			)
 
-			hoursRows.push(newHourRow);
+			hoursRows.push(newHourRow)
 		}
 		else {
-			const todaysHoursArray = todaysHours.split(',');
-			const todaysTitle = moment(day, 'ddd').format('dddd');
-			const todaysHoursElements = generateHourElements(todaysHoursArray, status, todaysTitle);
+			const todaysHoursArray = todaysHours.split(',')
+			const todaysTitle = moment(day, 'ddd').format('dddd')
+			const todaysHoursElements = generateHourElements(todaysHoursArray, status, todaysTitle)
 
 			const newHourRow = (
 				<View
@@ -163,23 +173,23 @@ const generateHours = (allHours, status) => {
 						{todaysHoursElements}
 					</View>
 				</View>
-			);
+			)
 
-			hoursRows.push(newHourRow);
+			hoursRows.push(newHourRow)
 		}
-	});
-	return hoursRows;
-};
+	})
+	return hoursRows
+}
 
 const generateSpecialHours = (allHours, status) => {
-	const hoursRows = [];
+	const hoursRows = []
 	Object.keys(allHours).forEach((day) => {
-		const todaysHours = allHours[day].hours;
-		let todaysTitle;
+		const todaysHours = allHours[day].hours
+		let todaysTitle
 		if (allHours[day].title) {
-			todaysTitle = allHours[day].title;
+			todaysTitle = allHours[day].title
 		} else {
-			todaysTitle = 'Unknown';
+			todaysTitle = 'Unknown'
 		}
 
 		// If hours are malformed, return 'Unknown hours'
@@ -194,9 +204,9 @@ const generateSpecialHours = (allHours, status) => {
 						<Text style={css.dd_hours_text_hours}>Unknown hours</Text>
 					</View>
 				</View>
-			);
+			)
 
-			hoursRows.push(newHourRow);
+			hoursRows.push(newHourRow)
 		} else {
 			const newHourRow = (
 				<View
@@ -205,13 +215,13 @@ const generateSpecialHours = (allHours, status) => {
 					<Text style={css.dd_special_hours_text_title}>{`${todaysTitle}:`}</Text>
 					<Text style={css.dd_hours_text_special_hours}>{todaysHours}</Text>
 				</View>
-			);
+			)
 
-			hoursRows.push(newHourRow);
+			hoursRows.push(newHourRow)
 		}
-	});
-	return hoursRows;
-};
+	})
+	return hoursRows
+}
 
 const DiningHours = ({
 	hours,
@@ -219,9 +229,9 @@ const DiningHours = ({
 	specialHours,
 	style
 }) => {
-	let hoursElements;
-	if (specialHours) hoursElements = generateSpecialHours(hours, status);
-	else hoursElements = generateHours(hours, status);
+	let hoursElements
+	if (specialHours) hoursElements = generateSpecialHours(hours, status)
+	else hoursElements = generateHours(hours, status)
 	return (
 		<View>
 			{
@@ -235,7 +245,7 @@ const DiningHours = ({
 				{hoursElements}
 			</View>
 		</View>
-	);
-};
+	)
+}
 
-export default DiningHours;
+export default DiningHours

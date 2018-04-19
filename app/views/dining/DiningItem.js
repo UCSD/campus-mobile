@@ -1,79 +1,89 @@
-import React from 'react';
+import React from 'react'
 import {
 	View,
 	Text,
-} from 'react-native';
+} from 'react-native'
 
-import Icon from 'react-native-vector-icons/Ionicons';
-import { withNavigation } from 'react-navigation';
-import ColoredDot from '../common/ColoredDot';
-import Touchable from '../common/Touchable';
+import Icon from 'react-native-vector-icons/Ionicons'
+import { withNavigation } from 'react-navigation'
+import ColoredDot from '../common/ColoredDot'
+import Touchable from '../common/Touchable'
 import {
 	COLOR_PRIMARY,
 	COLOR_MGREEN,
 	COLOR_MRED
-} from '../../styles/ColorConstants';
-import css from '../../styles/css';
+} from '../../styles/ColorConstants'
+import css from '../../styles/css'
 
-const general = require('../../util/general');
-const dining = require('../../util/dining');
+const general = require('../../util/general')
+const dining = require('../../util/dining')
 
 const DiningItem = ({ navigation, data }) => {
-	if (!data.name) return null;
-	const status = dining.getOpenStatus(data.regularHours);
-	const areSpecialHours = data.specialHours;
+	if (!data.name) return null
+	const status = dining.getOpenStatus(data.regularHours)
+	const areSpecialHours = data.specialHours
 	let activeDotColor,
 		statusText,
 		soonStatusText,
 		soonStatusColor,
-		newHourElement;
+		newHourElement
 
 	if (status) {
 		if (status.isValid) {
 			activeDotColor = status.isOpen ?
-				COLOR_MGREEN : COLOR_MRED;
+				COLOR_MGREEN : COLOR_MRED
 
 			statusText = status.isOpen ?
-				'Open' : 'Closed';
+				'Open' : 'Closed'
 		} else {
-			statusText = 'Unknown';
+			statusText = 'Unknown'
 		}
 
-		soonStatusText = null;
-		soonStatusColor = null;
+		soonStatusText = null
+		soonStatusColor = null
 		if (status.openingSoon) {
-			soonStatusText = 'Opening Soon';
-			soonStatusColor = COLOR_MGREEN;
+			soonStatusText = 'Opening Soon'
+			soonStatusColor = COLOR_MGREEN
 		}
 		else if (status.closingSoon) {
-			soonStatusText = 'Closing Soon';
-			soonStatusColor = COLOR_MRED;
+			soonStatusText = 'Closing Soon'
+			soonStatusColor = COLOR_MRED
 		}
 
-		const isClosed = (!status.currentHours);
+		const isClosed = (!status.currentHours)
 		const isAlwaysOpen = (
 			status.currentHours &&
 			status.currentHours === 'Open 24/7'
-		);
-		let newHourElementHoursText;
+		)
+		let newHourElementHoursText
 		if (!status.isValid) {
-			newHourElementHoursText = 'Unknown hours';
+			newHourElementHoursText = 'Unknown hours'
 		}
 		else if (isClosed) {
-			newHourElementHoursText = 'Closed today';
+			newHourElementHoursText = 'Closed today'
 		}
 		else if (isAlwaysOpen) {
-			newHourElementHoursText = 'Open 24/7';
+			newHourElementHoursText = 'Open 24 Hours'
 		}
 		else if (
 			status.currentHours.openingHour.format('h:mm a') !== 'Invalid date'
 			&& status.currentHours.closingHour.format('h:mm a') !== 'Invalid date'
 		) {
-			newHourElementHoursText = status.currentHours.openingHour.format('h:mm a')
+			let openingHourAmPm = 'a.m.'
+			if (status.currentHours.openingHour.format('a') === 'pm') {
+				openingHourAmPm = 'p.m.'
+			}
+			let closingHourAmPm = 'a.m.'
+			if (status.currentHours.closingHour.format('a') === 'pm') {
+				closingHourAmPm = 'p.m.'
+			}
+			newHourElementHoursText = status.currentHours.openingHour.format('h:mm ')
+				+ openingHourAmPm
 				+ ' — '
-				+ status.currentHours.closingHour.format('h:mm a');
+				+ status.currentHours.closingHour.format('h:mm ')
+				+ closingHourAmPm
 		} else {
-			newHourElementHoursText = 'Unknown hours';
+			newHourElementHoursText = 'Unknown hours'
 		}
 		newHourElement = (
 			<View>
@@ -81,14 +91,14 @@ const DiningItem = ({ navigation, data }) => {
 					{newHourElementHoursText}
 				</Text>
 			</View>
-		);
+		)
 	} else {
-		statusText = 'Unknown';
+		statusText = 'Unknown'
 		newHourElement = (
 			<View>
 				<Text style={css.dl_hours_text}>Unknown Hours</Text>
 			</View>
-		);
+		)
 	}
 
 	return (
@@ -160,7 +170,7 @@ const DiningItem = ({ navigation, data }) => {
 				) : (null)
 			) }
 		</View>
-	);
-};
+	)
+}
 
-export default withNavigation(DiningItem);
+export default withNavigation(DiningItem)
