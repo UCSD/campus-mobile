@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-// import { Actions } from 'react-native-router-flux';
 
 import FullScheduleButton from './FullScheduleButton';
 import ScheduleCard from './ScheduleCard';

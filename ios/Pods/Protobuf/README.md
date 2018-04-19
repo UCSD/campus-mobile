@@ -37,7 +37,7 @@ as well as a set of standard .proto files distributed along with protobuf.
 If you are looking for an old version that is not available in the release
 page, check out the maven repo here:
 
-  [http://repo1.maven.org/maven2/com/google/protobuf/protoc/](http://repo1.maven.org/maven2/com/google/protobuf/protoc/)
+  [https://repo1.maven.org/maven2/com/google/protobuf/protoc/](https://repo1.maven.org/maven2/com/google/protobuf/protoc/)
 
 These pre-built binaries are only provided for released versions. If you want
 to use the github master version at HEAD, or you need to modify protobuf code,
@@ -54,22 +54,33 @@ Protobuf supports several different programming languages. For each programming
 language, you can find instructions in the corresponding source directory about
 how to install protobuf runtime for that specific language:
 
-| Language                             | Source                                                |
-|--------------------------------------|-------------------------------------------------------|
-| C++ (include C++ runtime and protoc) | [src](src)                                            |
-| Java                                 | [java](java)                                          |
-| Python                               | [python](python)                                      |
-| Objective-C                          | [objectivec](objectivec)                              |
-| C#                                   | [csharp](csharp)                                      |
-| JavaNano                             | [javanano](javanano)                                  |
-| JavaScript                           | [js](js)                                              |
-| Ruby                                 | [ruby](ruby)                                          |
-| Go                                   | [golang/protobuf](https://github.com/golang/protobuf) |
-| PHP                                  | [php](php)                                            |
+| Language                             | Source                                                      |
+|--------------------------------------|-------------------------------------------------------------|
+| C++ (include C++ runtime and protoc) | [src](src)                                                  |
+| Java                                 | [java](java)                                                |
+| Python                               | [python](python)                                            |
+| Objective-C                          | [objectivec](objectivec)                                    |
+| C#                                   | [csharp](csharp)                                            |
+| JavaNano                             | [javanano](javanano)                                        |
+| JavaScript                           | [js](js)                                                    |
+| Ruby                                 | [ruby](ruby)                                                |
+| Go                                   | [golang/protobuf](https://github.com/golang/protobuf)       |
+| PHP                                  | [php](php)                                                  |
+| Dart                                 | [dart-lang/protobuf](https://github.com/dart-lang/protobuf) |
 
+Quick Start
+-----------
 
-Usage
------
+The best way to learn how to use protobuf is to follow the tutorials in our
+developer guide:
+
+https://developers.google.com/protocol-buffers/docs/tutorials
+
+If you want to learn from code examples, take a look at the examples in the
+[examples](examples) directory.
+
+Documentation
+-------------
 
 The complete documentation for Protocol Buffers is available via the
 web at:

@@ -4,7 +4,7 @@ import {
 	StyleSheet,
 	Dimensions,
 	Text,
-	ListView,
+	FlatList,
 	TouchableOpacity
 } from 'react-native';
 
@@ -19,7 +19,6 @@ const PRM = getPRM();
 const deviceHeight = Dimensions.get('window').height;
 const deviceWidth = Dimensions.get('window').width;
 
-const historyDataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 const suggestions = [
 	{
 		name: 'Parking',
@@ -46,7 +45,7 @@ const SearchSuggest = ({ onPress }) => (
 	>
 		<View style={styles.list_container}>
 			<SearchSuggestList
-				historyData={historyDataSource.cloneWithRows(suggestions)}
+				historyData={suggestions}
 				onPress={onPress}
 			/>
 		</View>
@@ -54,16 +53,17 @@ const SearchSuggest = ({ onPress }) => (
 );
 
 const SearchSuggestList = ({ historyData, onPress }) => (
-	<ListView
+	<FlatList
 		showsVerticalScrollIndicator={false}
 		showsHorizontalScrollIndicator={false}
-		dataSource={historyData}
+		data={historyData}
 		horizontal={true}
-		keyboardShouldPersistTaps='always'
-		renderRow={
-			(row, sectionID, rowID) =>
+		keyboardShouldPersistTaps="always"
+		keyExtractor={(listItem, index) => (listItem.name)}
+		renderItem={
+			({ item: rowData}) =>
 				<SearchSuggestItem
-					data={row}
+					data={rowData}
 					onPress={onPress}
 				/>
 		}

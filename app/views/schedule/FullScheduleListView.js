@@ -46,6 +46,7 @@ class FullSchedule extends React.Component {
 
 	render() {
 		return (
+			// TODO: CONVERT TO SECTIONLIST
 			<ListView
 				style={styles.container}
 				dataSource={this.state.dataSource}

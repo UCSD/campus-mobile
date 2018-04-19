@@ -1,43 +1,41 @@
-import React from 'react';
+import React from 'react'
 import {
 	StyleSheet,
 	Text,
-	TouchableHighlight
-} from 'react-native';
-import { Actions } from 'react-native-router-flux';
+} from 'react-native'
+import { withNavigation } from 'react-navigation'
 
-import ShuttleOverview from './ShuttleOverview';
-import ScrollCard from '../card/ScrollCard';
+import ShuttleOverview from './ShuttleOverview'
+import ScrollCard from '../card/ScrollCard'
 import Touchable from '../common/Touchable'
 import {
 	COLOR_PRIMARY,
 	COLOR_MGREY,
-	COLOR_LGREY
-} from '../../styles/ColorConstants';
-import {
-	MAX_CARD_WIDTH
-} from '../../styles/LayoutConstants';
+	COLOR_WHITE
+} from '../../styles/ColorConstants'
+import { MAX_CARD_WIDTH } from '../../styles/LayoutConstants'
 
-const ShuttleCard = ({ stopsData, savedStops, gotoRoutesList, gotoSavedList, updateScroll, lastScroll }) => {
+export const ShuttleCard = ({ navigation, stopsData, savedStops, gotoRoutesList, gotoSavedList, updateScroll, lastScroll }) => {
 	const extraActions = [
 		{
 			name: 'Manage Stops',
 			action: gotoSavedList
 		}
-	];
+	]
 
 	return (
 		<ScrollCard
 			id="shuttle"
 			title="Shuttle"
 			scrollData={savedStops}
-			renderRow={
-				(row) =>
+			renderItem={
+				({ item: rowData }) => (
 					<ShuttleOverview
-						onPress={() => Actions.ShuttleStop({ stopID: row.id })}
-						stopData={stopsData[row.id]}
-						closest={Object.prototype.hasOwnProperty.call(row, 'savedIndex')}
+						onPress={() => navigation.navigate('ShuttleStop', { stopID: rowData.id })}
+						stopData={stopsData[rowData.id]}
+						closest={Object.prototype.hasOwnProperty.call(rowData, 'savedIndex')}
 					/>
+				)
 			}
 			actionButton={
 				<Touchable
@@ -51,12 +49,12 @@ const ShuttleCard = ({ stopsData, savedStops, gotoRoutesList, gotoSavedList, upd
 			updateScroll={updateScroll}
 			lastScroll={lastScroll}
 		/>
-	);
-};
+	)
+}
 
-export default ShuttleCard;
+export default withNavigation(ShuttleCard)
 
 const styles = StyleSheet.create({
-	addButton: { width: MAX_CARD_WIDTH, backgroundColor: COLOR_LGREY, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4, paddingVertical: 8, borderTopWidth: 1, borderBottomWidth: 1, borderColor: COLOR_MGREY },
+	addButton: { width: MAX_CARD_WIDTH, backgroundColor: COLOR_WHITE, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4, paddingVertical: 8, borderTopWidth: 1, borderColor: COLOR_MGREY },
 	addText: { fontSize: 20, color: COLOR_PRIMARY, fontWeight: '300' },
-});
+})

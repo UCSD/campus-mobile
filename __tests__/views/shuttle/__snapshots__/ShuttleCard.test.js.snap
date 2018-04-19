@@ -8,8 +8,7 @@ exports[`card renders without crashing 1`] = `
       style={
         Object {
           "alignItems": "center",
-          "backgroundColor": "#F9F9F9",
-          "borderBottomWidth": 1,
+          "backgroundColor": "#FFFFFF",
           "borderColor": "#EAEAEA",
           "borderTopWidth": 1,
           "justifyContent": "center",
@@ -25,7 +24,7 @@ exports[`card renders without crashing 1`] = `
         ellipsizeMode="tail"
         style={
           Object {
-            "color": "#182B49",
+            "color": "#034262",
             "fontSize": 20,
             "fontWeight": "300",
           }
@@ -45,7 +44,7 @@ exports[`card renders without crashing 1`] = `
   }
   id="shuttle"
   lastScroll={0}
-  renderRow={[Function]}
+  renderItem={[Function]}
   scrollData={Array []}
   title="Shuttle"
   updateScroll={[MockFunction]}
@@ -53,7 +52,7 @@ exports[`card renders without crashing 1`] = `
 `;
 
 exports[`container renders without crashing 1`] = `
-<ShuttleCard
+<withNavigation(ShuttleCard)
   gotoRoutesList={[Function]}
   gotoSavedList={[Function]}
   lastScroll={0}

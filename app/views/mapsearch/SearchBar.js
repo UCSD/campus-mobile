@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import {
 	TextInput,
 	ActivityIndicator,
@@ -97,7 +98,7 @@ const SearchIcon = ({ iconStatus }) => {
 
 SearchBar.propTypes = {
 	placeholder: PropTypes.string,
-	update: React.PropTypes.func,
+	update: PropTypes.func,
 	searchInput: PropTypes.string
 };
 

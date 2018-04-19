@@ -4,8 +4,8 @@ import {
 	Text,
 	StyleSheet,
 } from 'react-native';
+import { withNavigation } from 'react-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { Actions } from 'react-native-router-flux';
 import logger from '../../util/logger';
 import Touchable from '../common/Touchable';
 import { platformIOS, getHumanizedDuration } from '../../util/general';
@@ -20,14 +20,14 @@ import {
 	WINDOW_WIDTH
 } from '../../styles/LayoutConstants';
 
-const SpecialEventsItem = ({ specialEventsData, saved, add, remove, title }) => (
+const SpecialEventsItem = ({ navigation, specialEventsData, saved, add, remove, title }) => (
 	<View
 		style={styles.itemRow}
 	>
 		<CircleBorder />
 		<View style={styles.titleContainer}>
 			<Touchable
-				onPress={() => Actions.SpecialEventsDetailView({ data: specialEventsData, title, add, remove })}
+				onPress={() => navigation.navigate('SpecialEventsDetailView', { data: specialEventsData, title, add, remove })}
 			>
 				<View>
 					{specialEventsData['talk-title'] ? (
@@ -101,7 +101,7 @@ const addSession = (add, id, title) => {
 }
 
 const styles = StyleSheet.create({
-	itemRow: { flexShrink: 1, flexDirection: 'row', backgroundColor: COLOR_LGREY, paddingBottom: 10 },
+	itemRow: { flexShrink: 1, flexDirection: 'row', paddingBottom: 10 },
 	titleContainer: { flexShrink: 1, flexBasis: 10000, marginTop: 3 }, // TODO: improve usage of flex, especially to avoid hardcoding 10000, which acts like an infifity value to maximize column width on all screen sizes.
 	titleText: { alignSelf: 'stretch', fontSize: 17, color: 'black' },
 	labelView: { flexDirection: 'row', paddingTop: 4 },
@@ -116,4 +116,6 @@ const styles = StyleSheet.create({
 	circle: { position: 'absolute', top: 11, left: -2.5, height: 6, width: 6, borderRadius: 3, borderWidth: 1, borderColor: COLOR_MGREY, backgroundColor: COLOR_LGREY },
 });
 
-export default SpecialEventsItem;
+const wrappedSpecialEventsItem = withNavigation(SpecialEventsItem);
+
+export default wrappedSpecialEventsItem;

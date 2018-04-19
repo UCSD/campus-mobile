@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-auth.html">auth</a></li><li><a href="module-general.html">general</a></li><li><a href="module-util_logger.html">util/logger</a></li><li><a href="module-util_map.html">util/map</a></li><li><a href="module-util_shuttle.html">util/shuttle</a></li>
+					<li><a href="module-auth.html">auth</a></li><li><a href="module-general.html">general</a></li><li><a href="module-schedule.html">schedule</a></li><li><a href="module-util_dining.html">util/dining</a></li><li><a href="module-util_logger.html">util/logger</a></li><li><a href="module-util_map.html">util/map</a></li><li><a href="module-util_shuttle.html">util/shuttle</a></li>
 				</ul>
 			</li>
 			
@@ -47,7 +47,7 @@
 			<li class="dropdown">
 				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="global.html#DataItem">DataItem</a></li><li><a href="global.html#DataListCard">DataListCard</a></li><li><a href="global.html#DataListView">DataListView</a></li><li><a href="global.html#DataListViewAll">DataListViewAll</a></li><li><a href="global.html#WeatherCard">WeatherCard</a></li><li><a href="global.html#WeatherCardContainer">WeatherCardContainer</a></li><li><a href="global.html#WeatherDay">WeatherDay</a></li><li><a href="global.html#WeatherWeek">WeatherWeek</a></li>
+					<li><a href="global.html#bold">bold</a></li><li><a href="global.html#DataItem">DataItem</a></li><li><a href="global.html#DataList_card_list">DataList_card_list</a></li><li><a href="global.html#DataListCard">DataListCard</a></li><li><a href="global.html#DataListView">DataListView</a></li><li><a href="global.html#dl_row">dl_row</a></li><li><a href="global.html#main_container">main_container</a></li><li><a href="global.html#processData">processData</a></li><li><a href="global.html#sr_headerImage">sr_headerImage</a></li><li><a href="global.html#WeatherCard">WeatherCard</a></li><li><a href="global.html#WeatherCardContainer">WeatherCardContainer</a></li><li><a href="global.html#WeatherDay">WeatherDay</a></li><li><a href="global.html#WeatherWeek">WeatherWeek</a></li>
 				</ul>
 			</li>
 			
@@ -84,25 +84,13 @@
 <section>
     <article>
         <pre
-            class="sunlight-highlight-javascript linenums">import React, { PropTypes } from 'react';
-import {
-	View,
-	Text,
-	StyleSheet
-} from 'react-native';
+            class="sunlight-highlight-javascript linenums">import React from 'react'
+import PropTypes from 'prop-types'
+import { View, Text } from 'react-native'
 
-import Touchable from './Touchable';
-import SafeImage from './SafeImage';
-import {
-	MAX_CARD_WIDTH
-} from '../../styles/LayoutConstants';
-import {
-	COLOR_BLACK,
-	COLOR_DGREY,
-	COLOR_MGREY,
-	COLOR_LGREY,
-	COLOR_PRIMARY
-} from '../../styles/ColorConstants';
+import Touchable from './Touchable'
+import SafeImage from './SafeImage'
+import css from '../../styles/css'
 
 /**
  * Generic row item
@@ -113,75 +101,39 @@ import {
  * @todo  Standardize and make this more generic/applicable?
  */
 const DataItem = ({ data, card, onPress }) => (
-	(card) ?
-	(
-		&lt;Touchable
-			onPress={() => onPress(data)}
-			style={styles.cardMain}
-		>
-			&lt;Text style={styles.cardTitleText}>{data.title}&lt;/Text>
-			&lt;View style={styles.cardInfoContainer}>
-				&lt;View style={styles.descContainer}>
-					{data.description ? (&lt;Text style={styles.descText} numberOfLines={3}>{data.description}&lt;/Text>) : null }
-					&lt;Text style={styles.dateText}>{data.subtext}&lt;/Text>
-				&lt;/View>
-				&lt;SafeImage style={styles.image} source={{ uri: data.image }} />
+	&lt;Touchable
+		onPress={() => onPress(data)}
+		style={css.dataitem_touchableRow}
+	>
+		&lt;Text style={css.dataitem_titleText}>{data.title}&lt;/Text>
+		&lt;View style={css.dataitem_listInfoContainer}>
+			&lt;View style={css.dataitem_descContainer}>
+				{data.description ? (
+					&lt;Text
+						style={css.dataitem_descText}
+						numberOfLines={2}
+					>
+						{data.description.trim()}
+					&lt;/Text>
+				) : null }
+				&lt;Text style={css.dataitem_dateText}>{data.subtext}&lt;/Text>
 			&lt;/View>
-		&lt;/Touchable>
-	) :
-	(
-		&lt;Touchable
-			onPress={() => onPress(data)}
-			style={styles.touchableRow}
-		>
-			&lt;Text
-				style={styles.titleText}
-				numberOfLines={1}
-			>
-				{data.title}
-			&lt;/Text>
-			&lt;View style={styles.listInfoContainer}>
-				&lt;View style={styles.descContainer}>
-					{data.description ? (
-						&lt;Text
-							style={styles.descText}
-							numberOfLines={3}
-						>
-							{data.description.trim()}
-						&lt;/Text>
-					) : null }
-					&lt;Text style={styles.dateText}>{data.subtext}&lt;/Text>
-				&lt;/View>
-				&lt;SafeImage style={styles.image} source={{ uri: data.image }} />
-			&lt;/View>
-		&lt;/Touchable>
-	)
-);
+			&lt;SafeImage style={css.dataitem_image} source={{ uri: data.image }} />
+		&lt;/View>
+	&lt;/Touchable>
+)
 
 DataItem.propTypes = {
 	data: PropTypes.object.isRequired,
 	card: PropTypes.bool,
 	onPress: PropTypes.func,
-};
+}
 
 DataItem.defaultProps = {
 	card: false
-};
+}
 
-const styles = StyleSheet.create({
-	cardMain: { borderWidth: 1, borderRadius: 2, borderColor: COLOR_MGREY, backgroundColor: COLOR_LGREY, alignItems: 'flex-start', justifyContent: 'center', overflow: 'hidden' },
-	cardTitleText: { flex:1, flexWrap: 'wrap', width: MAX_CARD_WIDTH, padding: 8, borderBottomWidth: 1, borderBottomColor: COLOR_MGREY, fontSize: 17, color: COLOR_BLACK },
-	cardInfoContainer: { flex: 1, flexDirection: 'row', padding: 14, borderBottomWidth: 1, borderBottomColor: COLOR_MGREY, alignItems: 'center' },
-	descContainer: { flex: 1 },
-	descText: { flexWrap: 'wrap', fontSize: 14, color: COLOR_DGREY, paddingTop: 8 },
-	touchableRow: { paddingHorizontal: 0, paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: COLOR_MGREY, },
-	titleText: { fontSize: 17, color: COLOR_BLACK, alignSelf: 'stretch' },
-	listInfoContainer: { flexDirection: 'row', paddingVertical: 8 },
-	dateText: { fontSize: 11, color: COLOR_PRIMARY, paddingTop: 8 },
-	image: { width: 120, height: 70, marginLeft: 10, borderWidth: 1, borderColor: COLOR_MGREY },
-});
-
-export default DataItem;
+export default DataItem
 </pre>
     </article>
 </section>
@@ -227,7 +179,7 @@ export default DataItem;
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on Mon Mar 12th 2018
+		on Thu Apr 19th 2018
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

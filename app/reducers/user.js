@@ -9,6 +9,7 @@ const initialState = {
 };
 
 function user(state = initialState, action) {
+
 	const newState = { ...state };
 
 	switch (action.type) {

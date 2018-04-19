@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-auth.html">auth</a></li><li><a href="module-general.html">general</a></li><li><a href="module-util_logger.html">util/logger</a></li><li><a href="module-util_map.html">util/map</a></li><li><a href="module-util_shuttle.html">util/shuttle</a></li>
+					<li><a href="module-auth.html">auth</a></li><li><a href="module-general.html">general</a></li><li><a href="module-schedule.html">schedule</a></li><li><a href="module-util_dining.html">util/dining</a></li><li><a href="module-util_logger.html">util/logger</a></li><li><a href="module-util_map.html">util/map</a></li><li><a href="module-util_shuttle.html">util/shuttle</a></li>
 				</ul>
 			</li>
 			
@@ -47,7 +47,7 @@
 			<li class="dropdown">
 				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="global.html#DataItem">DataItem</a></li><li><a href="global.html#DataListCard">DataListCard</a></li><li><a href="global.html#DataListView">DataListView</a></li><li><a href="global.html#DataListViewAll">DataListViewAll</a></li><li><a href="global.html#WeatherCard">WeatherCard</a></li><li><a href="global.html#WeatherCardContainer">WeatherCardContainer</a></li><li><a href="global.html#WeatherDay">WeatherDay</a></li><li><a href="global.html#WeatherWeek">WeatherWeek</a></li>
+					<li><a href="global.html#bold">bold</a></li><li><a href="global.html#DataItem">DataItem</a></li><li><a href="global.html#DataList_card_list">DataList_card_list</a></li><li><a href="global.html#DataListCard">DataListCard</a></li><li><a href="global.html#DataListView">DataListView</a></li><li><a href="global.html#dl_row">dl_row</a></li><li><a href="global.html#main_container">main_container</a></li><li><a href="global.html#processData">processData</a></li><li><a href="global.html#sr_headerImage">sr_headerImage</a></li><li><a href="global.html#WeatherCard">WeatherCard</a></li><li><a href="global.html#WeatherCardContainer">WeatherCardContainer</a></li><li><a href="global.html#WeatherDay">WeatherDay</a></li><li><a href="global.html#WeatherWeek">WeatherWeek</a></li>
 				</ul>
 			</li>
 			
@@ -84,74 +84,116 @@
 <section>
     <article>
         <pre
-            class="sunlight-highlight-javascript linenums">import React, { PropTypes } from 'react';
-import {
-	ListView,
-} from 'react-native';
-
-import EventItem from '../events/EventItem';
-import NewsItem from '../news/NewsItem';
-import DiningItem from '../dining/DiningItem';
-import QuicklinksItem from '../quicklinks/QuicklinksItem';
-
-const dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+            class="sunlight-highlight-javascript linenums">import React from 'react'
+import PropTypes from 'prop-types'
+import { FlatList, ScrollView } from 'react-native'
+import EventItem from '../events/EventItem'
+import NewsItem from '../news/NewsItem'
+import DiningItem from '../dining/DiningItem'
+import QuicklinksItem from '../quicklinks/QuicklinksItem'
+import css from '../../styles/css'
 
 /**
  * Generic listview used by DataListCard
- * @param  {StyleSheet} style
  * @param {Object[]} data
  * @param {Number} rows Max number of rows
  * @param {Boolean} scrollEnabled
  * @param {String} item String name of row item
  * @param {Boolean} card Display rows with card styling (if available);
  * @return {JSX}
- * @todo Extract Items to a constants file or helper function
  */
-const DataListView = ({ style, data, rows, scrollEnabled, item, card }) => (
-	&lt;ListView
+const DataListView = ({ style, data, rows, scrollEnabled, item, card }) => {
+	if (rows) {
+		return (
+			&lt;DataFlatList
+				style={style}
+				data={data}
+				rows={rows}
+				item={item}
+				card={card}
+			/>
+		)
+	} else {
+		return (
+			&lt;ScrollView style={css.scroll_default} contentContainerStyle={css.main_full}>
+				&lt;DataFlatList
+					style={style}
+					data={data}
+					rows={rows}
+					item={item}
+					card={card}
+				/>
+			&lt;/ScrollView>
+		)
+	}
+}
+
+const DataFlatList = ({ style, data, rows, item, card }) => (
+	&lt;FlatList
 		style={style}
-		scrollEnabled={scrollEnabled}
-		dataSource={dataSource.cloneWithRows((rows) ? (data.slice(0,rows)) : (data))}
-		renderRow={(row) => {
+		data={(rows) ? (data.slice(0,rows)) : (data)}
+		keyExtractor={(listItem, index) => {
+			// Specify the unique key that each kind of
+			// item will use to identify itself. Each
+			// item MUST have a unique key!
+			switch (item) {
+			case 'EventItem': {
+				return listItem.id
+			}
+			case 'NewsItem': {
+				return listItem.title
+			}
+			case 'DiningItem': {
+				if (listItem.id) return listItem.id
+				else return listItem.name
+			}
+			case 'QuicklinksItem': {
+				return listItem.name
+			}
+			default: {
+				return null
+			}
+			}
+		}}
+		renderItem={({ item: rowData }) => {
 			// Add to switch statement as new Items are needed
 			// Only reason this is a switch is cuz Actions from react-router-flux doesn't like being passed JSX
 			// Should revisit to see if this can be simplified
 			switch (item) {
 			case 'EventItem': {
-				return (&lt;EventItem data={row} card={card} />);
+				return (&lt;EventItem data={rowData} card={card} />)
 			}
 			case 'NewsItem': {
-				return (&lt;NewsItem data={row} card={card} />);
+				return (&lt;NewsItem data={rowData} card={card} />)
 			}
 			case 'DiningItem': {
-				return (&lt;DiningItem data={row} card={card} />);
+				return (&lt;DiningItem data={rowData} card={card} />)
 			}
 			case 'QuicklinksItem': {
-				return (&lt;QuicklinksItem data={row} card={card} />);
+				return (&lt;QuicklinksItem data={rowData} card={card} />)
 			}
 			default: {
-				return null;
+				return null
 			}
 			}
 		}}
 	/>
-);
+)
 
 DataListView.propTypes = {
-	style: PropTypes.number, // Stylesheet is a number for some reason?
 	data: PropTypes.array.isRequired,
 	rows: PropTypes.number,
 	scrollEnabled: PropTypes.bool,
 	item: PropTypes.string.isRequired,
 	card: PropTypes.bool,
-};
+}
 
 DataListView.defaultProps = {
 	scrollEnabled: false,
 	card: false
-};
+}
 
-export default DataListView;
+export default DataListView
 </pre>
     </article>
 </section>
@@ -197,7 +239,7 @@ export default DataListView;
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on Mon Mar 12th 2018
+		on Thu Apr 19th 2018
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

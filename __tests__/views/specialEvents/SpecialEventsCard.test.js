@@ -1,7 +1,7 @@
 import 'react-native';
 import React from 'react';
 import Enzyme, { shallow } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-15.4';
+import Adapter from 'enzyme-adapter-react-16';
 
 // Component to be tested
 import { SpecialEventsCardContainer } from '../../../app/views/specialEvents/SpecialEventsCardContainer';

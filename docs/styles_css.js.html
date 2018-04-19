@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>DocStrap Source: styles/css.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.slate.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html">DocStrap</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="module-auth.html">auth</a></li><li><a href="module-general.html">general</a></li><li><a href="module-schedule.html">schedule</a></li><li><a href="module-util_dining.html">util/dining</a></li><li><a href="module-util_logger.html">util/logger</a></li><li><a href="module-util_map.html">util/map</a></li><li><a href="module-util_shuttle.html">util/shuttle</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="MultiSelect.html">MultiSelect</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="global.html#bold">bold</a></li><li><a href="global.html#DataItem">DataItem</a></li><li><a href="global.html#DataList_card_list">DataList_card_list</a></li><li><a href="global.html#DataListCard">DataListCard</a></li><li><a href="global.html#DataListView">DataListView</a></li><li><a href="global.html#dl_row">dl_row</a></li><li><a href="global.html#main_container">main_container</a></li><li><a href="global.html#processData">processData</a></li><li><a href="global.html#sr_headerImage">sr_headerImage</a></li><li><a href="global.html#WeatherCard">WeatherCard</a></li><li><a href="global.html#WeatherCardContainer">WeatherCardContainer</a></li><li><a href="global.html#WeatherDay">WeatherDay</a></li><li><a href="global.html#WeatherWeek">WeatherWeek</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-12">
+	
+		<div id="main">
+			
+
+		<h1 class="page-title">Source: styles/css.js</h1>
+    
+<section>
+    <article>
+        <pre
+            class="sunlight-highlight-javascript linenums">/*  Master Stylesheet
+
+	Section List
+	------------------------------
+	100 - Main
+		101 - Containers
+		102 - Navigator
+		103 - Tab Bar
+
+	200 - Common
+		201 - DataList
+		202 - Buttons
+
+	300 - Cards
+		301 - Dining Card
+		302 - Survey Card
+
+	400 - Views
+		401 - Surf Report
+		402 - Dining Detail
+		403 - Dining Nutrition
+		404 - Event &amp; News
+		405 - Special Events
+		406 - Feedback
+		407 - Preferences View
+		408 - Links View
+		409 - Map Search
+		410 - Search Results
+
+	500 - Misc
+*/
+import { StyleSheet } from 'react-native'
+
+import { platformAndroid, deviceIphoneX, round } from '../util/general'
+import { COLOR } from './ColorConstants'
+import { LAYOUT } from './LayoutConstants'
+
+const css = StyleSheet.create({
+	/**
+	 *  100 - Main
+	 */
+	// 101 - Containers
+	main_container: { flex: 1 },
+	main_full: { backgroundColor: COLOR.WHITE, paddingBottom: deviceIphoneX() ? LAYOUT.NAVIGATOR_HEIGHT : 0 },
+	scroll_default: { backgroundColor: COLOR.WHITE },
+	card_container: { backgroundColor: COLOR.WHITE, margin: 6 },
+	main_full_lgrey: { flexGrow: 1, backgroundColor: COLOR.LGREY }, // special events
+	// 102 - Navigator
+	nav: { backgroundColor: COLOR.PRIMARY, height: LAYOUT.NAVIGATOR_HEIGHT, marginTop: deviceIphoneX() ? -13 : 0 },
+	navTitle: { flex: 1, fontSize: 24, fontWeight: '300', textAlign: 'center', alignSelf: 'center', marginTop: deviceIphoneX() ? 0 : -3 },
+	navCampusLogoTitle: { flex: 1, resizeMode: 'contain', height: 26, alignSelf: 'center', marginTop: platformAndroid() ? 6 : 0 },
+	navButtonTextIOS: { color: COLOR.WHITE, fontWeight: '300', fontSize: 18, height: 24 },
+	navButtonTextAndroid: { color: COLOR.WHITE, marginTop: -8, fontWeight: '300', fontSize: 18 },
+	// 103 - Tab Bar
+	tabBarIOS: { backgroundColor: COLOR.WHITE, height: LAYOUT.TAB_BAR_HEIGHT },
+	tabBarAndroid: { backgroundColor: COLOR.WHITE, height: LAYOUT.TAB_BAR_HEIGHT },
+	tabContainer: { paddingTop: deviceIphoneX() ? 17 : 0 },
+	tabContainerBottom: { borderBottomColor: COLOR.PRIMARY },
+	tabIcon: { color: COLOR.DMGREY, alignSelf: 'center', backgroundColor: COLOR.TRANSPARENT, opacity: 0.95, width: 24, height: 24, overflow: 'hidden' },
+	tabIconUser: { color: COLOR.WHITE, alignSelf: 'center', backgroundColor: COLOR.DMGREY, opacity: 0.95, width: 24, height: 24, overflow: 'hidden' },
+	tabIconUserOutline: { borderColor: COLOR.DMGREY, alignSelf: 'center', overflow: 'hidden', borderRadius: 24, borderWidth: 1 },
+
+	/**
+	 *  200 - Common
+	 */
+	// 201 - DataList
+	DataList_card_list: { padding: 8 },
+	DataList_full_list: { padding: 8 },
+	// 202 - DataItem
+	dataitem_descContainer: { flex: 1 },
+	dataitem_descText: { color: COLOR.VDGREY },
+	dataitem_touchableRow: { paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: COLOR.MGREY, },
+	dataitem_titleText: { fontSize: 17 },
+	dataitem_listInfoContainer: { flexDirection: 'row', paddingVertical: 8 },
+	dataitem_dateText: { color: COLOR.PRIMARY, paddingTop: 8 },
+	dataitem_image: { width: 120, height: 70, marginLeft: 10, borderWidth: 1, borderColor: COLOR.LGREY },
+	// 203 - Buttons
+	button_primary: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.PRIMARY, borderRadius: 3, marginTop: 20, padding: 10 },
+	button_primary_text: { fontSize: 16, color: COLOR.WHITE },
+	share_button: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.MGREY, borderRadius: 3, marginTop: 20, padding: 10 },
+	share_button_text: { fontSize: 16 },
+
+
+	/**
+	 *  300 - Cards
+	 */
+	// 301 - Dining Card
+	dl_row: { flexDirection: 'row', padding: 10, borderBottomWidth: 1, borderBottomColor: COLOR.MGREY },
+	dl_row_container_left: { flex: 4, flexDirection: 'column', justifyContent: 'flex-start', paddingRight: 8 },
+	dl_row_container_right: { flex: 1, alignItems: 'center', justifyContent: 'flex-end' },
+	dl_title_row: { flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', flexWrap: 'wrap' },
+	dl_title_text: { fontSize: 20, color: COLOR.PRIMARY },
+	dl_status_row: { flex: 1, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', paddingTop: 8 },
+	dl_hours_row: { flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', paddingTop: 8 },
+	dl_hours_text: { flexGrow: 1, paddingRight: 8 },
+	dl_status_icon: { paddingRight: 8 },
+	dl_status_text: { fontWeight: '700', paddingRight: 8 },
+	dl_status_disclaimer: { color: COLOR.DORANGE },
+	dl_status_soon_text: { paddingRight: 8 },
+	dl_dir_traveltype_container: { flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'center' },
+	dl_dir_eta: { color: COLOR.PRIMARY, fontSize: 11, fontWeight: '600' },
+	// 302 - Survey Card
+	card_main: { borderWidth: 1, borderRadius: 2, borderColor: COLOR.COLOR_MGREY, backgroundColor: COLOR.WHITE, margin: 6, alignItems: 'flex-start', justifyContent: 'center', overflow: 'hidden' },
+	card_row_container: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: 8, paddingBottom: 0 },
+	card_footer_container: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: 8 },
+	card_button_container: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.WHITE, },
+	card_button_text: { fontSize: 20, alignItems: 'center', textAlign: 'center' },
+	card_text_container: { justifyContent: 'center', alignItems: 'center', width: LAYOUT.MAX_CARD_WIDTH, padding: 8, borderBottomWidth: 1, borderBottomColor: COLOR.COLOR_MGREY },
+
+	/**
+	 *  400 - Views
+	 */
+	// 401 - Surf Report
+	sr_headerImage: { width: LAYOUT.WINDOW_WIDTH, height: round(LAYOUT.WINDOW_WIDTH * 0.361) },
+	sr_container: { paddingHorizontal: 10, paddingTop: 10 },
+	sr_beach_list: { marginTop: 20 },
+	sr_surf_row: { marginBottom: 15 },
+	sr_title: { fontSize: 22, fontWeight: '400', color: COLOR.PRIMARY },
+	sr_desc: { fontSize: 16, marginTop: 5 },
+	sr_beach_name: { fontSize: 18 },
+	sr_beach_surf: { fontSize: 16, paddingTop: 4, paddingLeft: 8 },
+
+
+	// 402 - Dining Detail
+	dd_description_container: { padding: 10 },
+	dd_description_nametext: { fontSize: 26, color: COLOR.PRIMARY },
+	dd_description_text: { paddingTop: 4 },
+	dd_description_subtext: { paddingTop: 8, color: COLOR.BLACK, fontWeight: '700' },
+	dd_hours_text_container: { flexDirection: 'row', alignItems: 'center', color: COLOR.BLACK },
+	dd_hours_text_disclaimer: { color: COLOR.DORANGE, paddingVertical: 8 },
+	dd_hours_row: { flexDirection: 'row', paddingBottom: 8, flexWrap: 'wrap', alignItems: 'flex-start' },
+	dd_hours_text_title: { width: '35%', paddingRight: 8, color: COLOR.BLACK },
+	dd_status_icon: { paddingLeft: 8 },
+	dd_special_hours_text_title: { color: COLOR.BLACK, width: '50%', paddingRight: 8 },
+	dd_hours_text_hours: { flexGrow: 1, color: COLOR.BLACK },
+	dd_hours_text_special_hours: { paddingBottom: 8, color: COLOR.BLACK },
+	dd_images_scrollview: { height: 140 },
+	dd_images_image: { width: 140, height: 140, borderRadius: 5, marginHorizontal: 7 },
+	dd_directions_button_container: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderBottomColor: COLOR.MGREY, margin: 6, padding: 6 },
+	dd_directions_text: { flex: 5, fontSize: 22, color: COLOR.PRIMARY },
+	dd_directions_icon_container: { flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'center' },
+	dd_directions_distance_text: { color: COLOR.PRIMARY, fontSize: 11, fontWeight: '600' },
+	dd_menu_link_container: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.PRIMARY, borderRadius: 3, margin: 20, padding: 10 },
+	dd_menu_container: { marginHorizontal: 8 },
+	dd_menu_link_text: { fontSize: 16, color: COLOR.WHITE },
+	dd_menu_food_type: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginVertical: 8 },
+	dd_menu_meal_type: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderTopWidth: 1, borderTopColor: COLOR.MGREY, },
+	dd_menu_meal_type_text: { fontSize: 20, color: COLOR.DGREY, },
+	dd_menu_meal_type_text_active: { fontSize: 20, color: COLOR.PRIMARY, },
+	dd_menu_filter_button: { paddingVertical: 8, paddingHorizontal: 14, fontSize: 14, color: COLOR.DGREY, borderWidth: 1, borderColor: COLOR.DGREY, borderRadius: 3, backgroundColor: COLOR.MGREY, textAlign: 'center', marginHorizontal: 8 },
+	dd_menu_filter_button_active: { paddingVertical: 8, paddingHorizontal: 14, fontSize: 14, color: COLOR.WHITE, borderWidth: 1, borderColor: COLOR.DGREY, borderRadius: 3, backgroundColor: COLOR.PRIMARY, textAlign: 'center', marginHorizontal: 8, overflow: 'hidden' },
+	dd_menu_circle: { borderWidth: 1, borderColor: COLOR.MGREY, borderRadius: 8, width: 16, height: 16, backgroundColor: COLOR.MGREY, marginRight: 5 },
+	dd_menu_circle_active: { borderWidth: 1, borderColor: COLOR.MGREY, borderRadius: 8, width: 16, height: 16, backgroundColor: COLOR.PRIMARY, marginRight: 5 },
+	dd_menu_row: { flexDirection: 'row', paddingBottom: 8 },
+	dd_menu_item_name_text: { fontSize: 15, color: COLOR.PRIMARY },
+	dd_menu_item_price_text: { color: COLOR.BLACK, paddingLeft: 26, marginLeft: 30 },
+	dd_menu_meal_button: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 40, },
+	dd_description_po: { color: COLOR.BLACK },
+	// 403 - Dining Nutrition
+	dn_container: { paddingHorizontal: 10, paddingTop: 10 },
+	dn_title: { fontSize: 26, color: COLOR.PRIMARY },
+	dn_market: { fontSize: 16 },
+	dn_nf_container: { borderWidth: 2, borderColor: COLOR.BLACK, padding: 3, marginTop: 10 },
+	dn_header: { fontSize: 42, fontWeight: '700', backgroundColor: COLOR.TRANSPARENT },
+	dn_servingsize: { fontSize: 18 },
+	dn_nf_bold: { fontWeight: '700' },
+	dn_amountperserving: { fontSize: 14, fontWeight: '700' },
+	dn_dv: { fontSize: 14, fontWeight: '700', textAlign: 'right', paddingVertical: 2 },
+	dn_font: { fontSize: 18 },
+	dn_disclaimer_font: { fontSize: 14 },
+	dn_row_main: { flex: 5, flexDirection: 'row', borderTopWidth: 1, borderTopColor: COLOR.DMGREY, paddingVertical: 2 },
+	dn_row_sub: { flex: 5, flexDirection: 'row', borderTopWidth: 1, borderTopColor: COLOR.DMGREY, paddingVertical: 2, paddingLeft: 20 },
+	dn_percent: { flex: 1, fontSize: 18, fontWeight: '700', textAlign: 'right' },
+	dn_dv_amountperserving: { fontSize: 13 },
+	dn_topborder1: { borderTopWidth: 8, borderTopColor: COLOR.BLACK, paddingVertical: 2, marginTop: 2 },
+	dn_topborder2: { borderTopWidth: 4, borderTopColor: COLOR.BLACK },
+	dn_info_container: { paddingTop: 10 },
+	dn_bold: { fontWeight: '700' },
+
+	// 404 - Events &amp; News
+	eventdetail_readmore_container: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.PRIMARY, borderRadius: 3, marginTop: 20, padding: 10 },
+	eventdetail_readmore_text: { fontSize: 16, color: COLOR.WHITE },
+	media_detail_container: { width: LAYOUT.WINDOW_WIDTH, paddingHorizontal: 12, paddingVertical: 14 },
+	media_detail_image: { width: LAYOUT.WINDOW_WIDTH, height: 200 },
+	media_detail_title: { fontSize: 22, color: COLOR.PRIMARY },
+	media_detail_dateText: { color: COLOR.PRIMARY, paddingTop: 14 },
+	media_detail_descText: { lineHeight: 18, color: COLOR.BLACK, fontSize: 14, paddingTop: 14 },
+	media_detail_locationText: { fontSize: 16, color: COLOR.DGREY },
+	// 405 - Special Events
+	specialevents_filter: { backgroundColor: COLOR.WHITE, paddingBottom: deviceIphoneX() ? (LAYOUT.NAVIGATOR_HEIGHT + 60) : 60 },
+	specialevents_filter_itemrow: { flexDirection: 'row', alignItems: 'center', backgroundColor: COLOR.WHITE, borderBottomWidth: 1, borderBottomColor: COLOR.LGREY, padding: 12 },
+	specialevents_filter_applybutton: { position: 'absolute', width: LAYOUT.WINDOW_WIDTH - 20, bottom: deviceIphoneX() ? LAYOUT.NAVIGATOR_HEIGHT : 10, left: 10, padding: 10, justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.PRIMARY, borderRadius: 3, opacity: 0.95 },
+	specialevents_filter_applybutton_text: { fontSize: 16, color: COLOR.WHITE },
+	// 406 - Feedback
+	feedback_container: { flex: 1, flexDirection: 'column', marginHorizontal: 8, marginTop: 8, marginBottom: 8 },
+	feedback_label: { flexWrap: 'wrap', fontSize: 18, paddingBottom: 16, lineHeight: 24 },
+	feedback_comments_text_container: { flexDirection: 'row', borderColor: COLOR.MGREY, borderBottomWidth: 1, marginBottom: 8, backgroundColor: 'white' },
+	feedback_email_text_container: { borderColor: COLOR.MGREY, borderBottomWidth: 1, marginBottom: 8 },
+	feedback_text_input: { flex: 1, backgroundColor: COLOR.WHITE, fontSize: 18, alignItems: 'center', padding: 8 },
+	feedback_submit_container: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.PRIMARY, borderRadius: 3, padding: 10 },
+	feedback_submit_text: { fontSize: 16, color: 'white' },
+	feedback_submitting_container: { flex: 1, flexDirection: 'column', padding: 16, alignItems: 'center', justifyContent: 'center' },
+	feedback_loading_icon: { paddingBottom: 16 },
+	feedback_submitting_text: { fontSize: 18, textAlign: 'center' },
+
+	// 407 - Preferences View (User Settings)
+	UserAccount_text: { flex: 1, fontSize: 18 },
+	UserAccount_icon: { flex: 1 },
+	UserAccount_infoContainer: { flexGrow: 1, flexDirection: 'row', margin: 7 },
+	UserAccount_loginContainer: { flexGrow: 1, margin: 7 },
+	UserAccount_input: { flexGrow: 1, height: 50 },
+	UserAccount_spacedRow: { flexDirection: 'row', justifyContent: 'space-between' },
+	UserAccount_accountText: { textAlign: 'center', fontSize: 16, color: COLOR.DGREY },
+	UserAccount_forgotButton: { flex: 1, justifyContent: 'center', alignItems: 'center', borderRadius: 3, padding: 10, },
+	UserAccount_loginButton: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.PRIMARY, borderRadius: 3, padding: 10, },
+	UserAccount_forgotText: { fontSize: 16, color: COLOR.PRIMARY },
+	UserAccount_loginText: { fontSize: 16, color: COLOR.WHITE },
+	// 408 - Links View
+	links_row_container: { borderBottomWidth: 1, borderBottomColor: COLOR.MGREY, paddingBottom: 8, marginBottom: 8 },
+	links_row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
+	links_icon: { height: 42, width: 38 },
+	links_icon_fa: { padding: 8, color: COLOR.PRIMARY },
+	links_name: { flexGrow: 5, color: COLOR.BLACK, fontSize: 16, paddingHorizontal: 8 },
+	links_arrow_icon: { color: COLOR.DGREY },
+	// 409 - Map Search
+	map_nogoogleplay: { padding: 16 },
+	// 410 - Search Results
+	destinationcard_marker_label: { flex: 2, fontSize: 18, paddingLeft: 8, paddingTop: 0, color: COLOR.PRIMARY, justifyContent: 'center' },
+	destinationcard_marker_dist_label: { flex: 1, textAlign: 'right', fontSize: 18, paddingLeft: 8, paddingTop: 0, color: COLOR.PRIMARY, justifyContent: 'center' },
+
+	/**
+	 *  500 - Misc
+	 */
+	bold: { fontWeight: '700' },
+	flex: { flex: 1 },
+})
+
+module.exports = css
+</pre>
+    </article>
+</section>
+
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+
+</div>
+</div>
+
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
+
+<footer>
+
+
+	<span class="copyright">
+	DocStrap Copyright © 2012-2015 The contributors to the JSDoc3 and DocStrap projects.
+	</span>
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
+	
+		on Thu Apr 19th 2018
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			return $( heading ).attr( "id" ) || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
+
+</body>
+</html>

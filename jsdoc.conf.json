@@ -3,8 +3,7 @@
     "template": "./node_modules/ink-docstrap/template",
     "destination": "./docs/",
     "readme": "Readme.md",
-    "recurse": true,
-    "verbose": true
+    "recurse": true
   },
   "source": {
     "include": ["./app"]
@@ -12,7 +11,7 @@
   "tags": {
     "allowUnknownTags": true
   },
-  "plugins": ["plugins/markdown", "node_modules/jsdoc-babel"],
+  "plugins": ["plugins/markdown"],
   "templates": {
     "logoFile": "",
     "cleverLinks": false,
@@ -34,10 +33,5 @@
   "markdown": {
     "parser": "gfm",
     "hardwrap": true
-  },
-  "babel": {
-    "babelrc": false,
-    "presets": ["react"],
-    "plugins": ["transform-object-rest-spread", "transform-class-properties"]
   }
 }

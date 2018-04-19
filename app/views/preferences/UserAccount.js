@@ -61,6 +61,25 @@ class UserAccount extends Component {
 		this.props.doLogout();
 	}
 
+	_renderAccountContainer = (mainText) => (
+		<TouchableOpacity
+			style={css.UserAccount_spacedRow}
+			onPress={this._performUserAuthAction}
+		>
+			<Text style={css.UserAccount_accountText}>{mainText}</Text>
+			<Icon name="user" />
+		</TouchableOpacity>
+	);
+
+	_renderAccountInfo = () => {
+		// show the account info of logged in user, or not logged in
+		if (this.props.user.isLoggedIn) {
+			return this._renderAccountContainer(this.props.user.profile.name);
+		} else {
+			return this._renderAccountContainer('Tap to Log In');
+		}
+	}
+
 	render() {
 		const { error } = this.props.user;
 		if (error && !this.props.user.isLoggingIn) {
@@ -121,6 +140,7 @@ const AccountLogin = ({ handleLogin, error, isLoggingIn }) => (
 		<TextInput
 			style={css.ua_input}
 			placeholder="User ID"
+
 			returnKeyType="next"
 			autoCapitalize="none"
 			autoCorrect={false}

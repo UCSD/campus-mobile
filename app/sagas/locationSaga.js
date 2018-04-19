@@ -30,7 +30,7 @@ function* watchLocation() {
 }
 
 function getPermission(type) {
-	return Permissions.requestPermission(type);
+	return Permissions.request(type);
 }
 
 // Move to shuttleSaga?

@@ -68,7 +68,7 @@ exports[`card renders without crashing 1`] = `
             ellipsizeMode="tail"
             style={
               Object {
-                "color": "#182B49",
+                "color": "#034262",
                 "fontSize": 20,
                 "fontWeight": "300",
               }
@@ -84,7 +84,7 @@ exports[`card renders without crashing 1`] = `
 `;
 
 exports[`container renders without crashing 1`] = `
-<DataListCard
+<withNavigation(DataListCard)
   cardSort={[Function]}
   data={
     Array [

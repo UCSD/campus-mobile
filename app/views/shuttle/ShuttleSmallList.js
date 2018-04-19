@@ -2,7 +2,7 @@ import React from 'react';
 import {
 	View,
 	Text,
-	ListView,
+	FlatList,
 	StyleSheet
 } from 'react-native';
 
@@ -15,8 +15,6 @@ import {
 	COLOR_BLACK
 } from '../../styles/ColorConstants';
 
-const arrivalDataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-
 const ShuttleSmallList = ({ arrivalData, rows, scrollEnabled }) => (
 	<View
 		style={styles.listContainer}
@@ -25,20 +23,25 @@ const ShuttleSmallList = ({ arrivalData, rows, scrollEnabled }) => (
 			Next Arrivals
 		</Text>
 		{(arrivalData) ? (
-			<ListView
+			<FlatList
 				style={{ height: getRowHeight(rows) }}
 				scrollEnabled={scrollEnabled}
 				showsVerticalScrollIndicator={false}
-				dataSource={arrivalDataSource.cloneWithRows(arrivalData)}
-				renderRow={
-					(row) =>
+				keyExtractor={(listItem, index) => (
+					listItem.route.id +
+					listItem.vehicle.id.toString()
+				)}
+				data={arrivalData}
+				renderItem={
+					({ item: rowData }) => (
 						<ShuttleSmallRow
-							arrival={row}
+							arrival={rowData}
 						/>
+					)
 				}
 				enableEmptySections={true}
 			/>
-			) : (null)
+		) : (null)
 		}
 	</View>
 );
@@ -76,7 +79,7 @@ const styles = StyleSheet.create({
 	circle: { borderRadius: 18, width: 36, height: 36, justifyContent: 'center', overflow: 'hidden' },
 	shortNameText: { textAlign: 'center', fontWeight: '600', fontSize: 19, backgroundColor: 'transparent' },
 	nameText: { flex: 4, fontSize: 15, color: COLOR_BLACK, marginLeft: 10 },
-	etaText: { flex: 1.2, fontSize: 15, color: COLOR_DGREY, marginLeft: 10, textAlign: 'right' },
+	etaText: { flex: 1.2, fontSize: 15, marginLeft: 10, textAlign: 'right' },
 	listContainer: { width: MAX_CARD_WIDTH, overflow: 'hidden' },
 });
 

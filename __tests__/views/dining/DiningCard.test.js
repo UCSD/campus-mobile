@@ -1,12 +1,12 @@
 import 'react-native';
 import React from 'react';
 import Enzyme, { shallow } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-15.4';
+import Adapter from 'enzyme-adapter-react-16';
 
 // Component to be tested
 import { DiningCardContainer } from '../../../app/views/dining/DiningCardContainer';
-import DataListCard from '../../../app/views/common/DataListCard';
-import { DINING_RESPONSE } from '../../../mockApis/diningAPI';
+import { DataListCard } from '../../../app/views/common/DataListCard';
+import { DINING_RESPONSE } from '../../../mockApis/diningApi';
 
 Enzyme.configure({ adapter: new Adapter() });
 

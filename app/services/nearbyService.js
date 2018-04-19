@@ -17,7 +17,6 @@ export default function fetchSearchResults(search, location) {
 }
 
 function _sortResults(location, results) {
-	console.log(location, results);
 	if (location && Array.isArray(results)) {
 		// Calc distance from current location
 		return new Promise((resolve, reject) => {

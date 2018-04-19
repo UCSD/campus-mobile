@@ -1,35 +1,32 @@
-import React, { PropTypes } from 'react';
+import React from 'react'
+import PropTypes from 'prop-types'
 import {
 	View,
 	Text,
 	StyleSheet,
 	ActivityIndicator
-} from 'react-native';
+} from 'react-native'
 
-import { Actions } from 'react-native-router-flux';
+import { withNavigation } from 'react-navigation'
 
-import DataListView from './DataListView';
-import Card from '../card/Card';
-import Touchable from './Touchable';
-import {
-	MAX_CARD_WIDTH
-} from '../../styles/LayoutConstants';
-import {
-	COLOR_PRIMARY
-} from '../../styles/ColorConstants';
+import DataListView from './DataListView'
+import Card from '../card/Card'
+import Touchable from './Touchable'
+import { MAX_CARD_WIDTH } from '../../styles/LayoutConstants'
+import { COLOR_PRIMARY } from '../../styles/ColorConstants'
 
 /**
  * @param  {String} title Card header
  * @param {Object[]} data contains data for row items
- * @param {String} item String name for row item, passing string here instead of actual component cuz of Actions
+ * @param {String} item String name for row item: pass string here instead of component
  * @param {Number} rows number of rows to display on card
  * @param {Function} cardSort array sorting function
  * @return {JSX} Generic component for list type cards
  */
-const DataListCard = ({ id, title, data, item, rows, cardSort }) => {
-	let sortedData = data;
+export const DataListCard = ({ navigation, id, title, data, item, rows, cardSort }) => {
+	let sortedData = data
 	if (cardSort && sortedData) {
-		sortedData = sortedData.slice().sort(cardSort);
+		sortedData = sortedData.slice().sort(cardSort)
 	}
 
 	return (
@@ -44,11 +41,9 @@ const DataListCard = ({ id, title, data, item, rows, cardSort }) => {
 							item={item}
 							card={false}
 						/>
-						<Touchable
-							onPress={() => (
-								Actions.DataListViewAll({ title, data, item }) // Actions doesn't like being passed JSX
-							)}
-						>
+						<Touchable onPress={() => (
+							navigation.navigate('DataListViewAll', { title, data, item })
+						)}>
 							<View style={styles.more}>
 								<Text style={styles.more_label}>View All</Text>
 							</View>
@@ -61,8 +56,8 @@ const DataListCard = ({ id, title, data, item, rows, cardSort }) => {
 				)}
 			</View>
 		</Card>
-	);
-};
+	)
+}
 
 DataListCard.propTypes = {
 	title: PropTypes.string.isRequired,
@@ -70,18 +65,18 @@ DataListCard.propTypes = {
 	item: PropTypes.string.isRequired,
 	rows: PropTypes.number,
 	cardSort: PropTypes.func,
-};
+}
 
 DataListCard.defaultProps = {
 	rows: 3
-};
+}
 
 const styles = StyleSheet.create({
 	list: { alignSelf: 'stretch', padding: 8 },
-	content_load_err: { padding: 30, fontSize:16, alignSelf: 'center'  },
+	content_load_err: { padding: 30, fontSize: 16, alignSelf: 'center'  },
 	more: { alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4, paddingTop: 8, paddingBottom: 4 },
 	more_label: { fontSize: 20, color: COLOR_PRIMARY, fontWeight: '300' },
 	cardcenter: { alignItems: 'center', justifyContent: 'center', width: MAX_CARD_WIDTH },
-});
+})
 
-export default DataListCard;
+export default withNavigation(DataListCard)

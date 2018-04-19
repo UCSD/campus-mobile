@@ -12,7 +12,7 @@ exports[`card renders without crashing 1`] = `
 `;
 
 exports[`container renders without crashing 1`] = `
-<SpecialEventsCard
+<withNavigation(SpecialEventsCard)
   hideCard={[MockFunction]}
   saved={Array []}
   specialEvents={

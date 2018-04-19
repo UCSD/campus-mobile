@@ -3,7 +3,7 @@ import {
 	TouchableOpacity,
 	Text,
 	StyleSheet,
-	ListView,
+	FlatList,
 	View
 } from 'react-native';
 
@@ -14,22 +14,24 @@ import {
 	COLOR_DGREY
 } from '../../styles/ColorConstants';
 
-const resultsDataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-
-const ShuttleStopsListView = ({ shuttle_stops, addStop }) => (
-	<ListView
-		style={css.main_full}
-		dataSource={resultsDataSource.cloneWithRows(shuttle_stops)}
-		renderRow={
-			(row) => (
-				<StopItem
-					data={row}
-					addStop={addStop}
-				/>
-			)
-		}
-	/>
-);
+const ShuttleStopsListView = ({ navigation }) => {
+	const { shuttle_stops, addStop } = navigation.state.params;
+	return (
+		<FlatList
+			style={css.main_full}
+			data={shuttle_stops}
+			keyExtractor={(listItem, index) => (listItem.id)}
+			renderItem={
+				({ item: rowData }) => (
+					<StopItem
+						data={rowData}
+						addStop={addStop}
+					/>
+				)
+			}
+		/>
+	);
+};
 
 const StopItem = ({ data, addStop }) => (
 	<TouchableOpacity

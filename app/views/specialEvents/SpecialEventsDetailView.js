@@ -8,7 +8,6 @@ import {
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
-import { Actions } from 'react-native-router-flux';
 
 import Touchable from '../common/Touchable';
 import css from '../../styles/css';
@@ -27,97 +26,95 @@ import {
 
 class SpecialEventsDetailView extends React.Component {
 	componentDidMount() {
-		const { data, title } = this.props;
+		const { navigation } = this.props;
+		const { data, title } = navigation.state.params;
+
 		logger.ga('View Loaded: SpecialEvents Detail: ' + data['talk-title']);
-		Actions.refresh({
-			specialEventsTitle: title,
-		});
 	}
 
 	render() {
-		const { data, saved, add, remove } = this.props;
+		const { navigation, saved } = this.props;
+		const { data, add, remove } = navigation.state.params;
 
 		return (
-			<View style={css.main_full}>
-				<ScrollView>
-					<View style={styles.detailContainer}>
-						<View style={styles.starButton}>
-							<Touchable onPress={() => (
-								isSaved(saved, data.id) ? (
-									this.removeSession(remove, data.id, data['talk-title'])
-								) : (
-									this.addSession(add, data.id, data['talk-title'])
-								)
-							)}>
-								<View style={styles.starButtonInner}>
+			<ScrollView style={css.scroll_default} contentContainerStyle={css.main_full}>
+				<View style={styles.detailContainer}>
+					<View style={styles.starButton}>
+						<Touchable onPress={() => (
+							isSaved(saved, data.id) ? (
+								this.removeSession(remove, data.id, data['talk-title'])
+							) : (
+								this.addSession(add, data.id, data['talk-title'])
+							)
+						)}>
+							<View style={styles.starButtonInner}>
+								<Icon
+									name={'ios-star-outline'}
+									size={32}
+									style={styles.starOuterIcon}
+								/>
+								{ isSaved(saved, data.id)  ? (
 									<Icon
-										name={'ios-star-outline'}
-										size={32}
-										style={styles.starOuterIcon}
+										name={'ios-star'}
+										size={26}
+										style={styles.starInnerIcon}
 									/>
-									{ isSaved(saved, data.id)  ? (
-										<Icon
-											name={'ios-star'}
-											size={26}
-											style={styles.starInnerIcon}
-										/>
-									) : null }
-								</View>
-							</Touchable>
-						</View>
-
-						<View style={styles.labelView}>
-							{ data.label ? (
-								<Text style={[styles.labelText, { color: data['label-theme'] ? data['label-theme'] : COLOR_BLACK }]}>{data.label}</Text>
-							) : null }
-							{ data['talk-type'] === 'Keynote' ? (
-								<Text style={styles.labelText}>{data['talk-type']}</Text>
-							) : null }
-							{ data.label || data['talk-type'] === 'Keynote' ? (
-								<Text style={styles.labelText}> - </Text>
-							) : null }
-							<Text style={styles.labelText}>{getHumanizedDuration(data['start-time'], data['end-time'])}</Text>
-						</View>
-
-						<Text style={styles.sessionName}>
-							{data['talk-title']}
-						</Text>
-						<Text style={styles.sessionInfo}>
-							{data.location} - {moment(Number(data['start-time'])).format('MMM Do YYYY, h:mm a')}
-						</Text>
-
-						<Text style={styles.sessionDesc}>
-							{data['full-description']}
-						</Text>
-
-						{(data.directions && data.directions.latitude && data.directions.longitude) ? (
-							<Touchable
-								underlayColor={'rgba(200,200,200,.1)'}
-								onPress={() => gotoNavigationApp(data.directions.latitude, data.directions.longitude)}
-							>
-								<View style={styles.sed_dir}>
-									<Text style={styles.sed_dir_label}>Directions</Text>
-									<Icon name="md-walk" size={32} style={styles.sed_dir_icon} />
-								</View>
-							</Touchable>
-						) : null }
-
-
-						{data.speakers ? (
-							<View>
-								<Text style={styles.hostedBy}>Hosted By</Text>
-								{data.speakers.map((object, i) => (
-									<View style={styles.speakerContainer} key={i}>
-										<Text style={styles.speakerName}>{object.name}</Text>
-										<Text style={styles.speakerPosition}>{object.position}</Text>
-										{/*<Text style={styles.speakerSubTalkTitle}>{object['sub-talk-title']}</Text>*/}
-									</View>
-								))}
+								) : null }
 							</View>
-						) : null }
+						</Touchable>
 					</View>
-				</ScrollView>
-			</View>
+
+					<View style={styles.labelView}>
+						{ data.label ? (
+							<Text style={[styles.labelText, { color: data['label-theme'] ? data['label-theme'] : COLOR_BLACK }]}>{data.label}</Text>
+						) : null }
+						{ data['talk-type'] === 'Keynote' ? (
+							<Text style={styles.labelText}>{data['talk-type']}</Text>
+						) : null }
+						{ data.label || data['talk-type'] === 'Keynote' ? (
+							<Text style={styles.labelText}> - </Text>
+						) : null }
+						<Text style={styles.labelText}>{getHumanizedDuration(data['start-time'], data['end-time'])}</Text>
+					</View>
+
+					<Text style={styles.sessionName}>
+						{data['talk-title']}
+					</Text>
+					<Text style={styles.sessionInfo}>
+						{data.location} - {moment(Number(data['start-time'])).format('MMM Do YYYY, h:mm a')}
+					</Text>
+
+					<Text style={styles.sessionDesc}>
+						{data['full-description']}
+					</Text>
+
+					{(data.directions && data.directions.latitude && data.directions.longitude) ? (
+						<Touchable
+							underlayColor={'rgba(200,200,200,.1)'}
+							onPress={() => gotoNavigationApp(data.directions.latitude, data.directions.longitude)}
+						>
+							<View style={styles.sed_dir}>
+								<Text style={styles.sed_dir_label}>Directions</Text>
+								<Icon name="md-walk" size={32} style={styles.sed_dir_icon} />
+							</View>
+						</Touchable>
+					) : null }
+
+
+					{data.speakers ? (
+						<View>
+							<Text style={styles.hostedBy}>Hosted By</Text>
+							{data.speakers.map((object, i) => (
+								<View style={styles.speakerContainer} key={i}>
+									<Text style={styles.speakerName}>{object.name}</Text>
+									<Text style={styles.speakerPosition}>{object.position}</Text>
+									{/*<Text style={styles.speakerSubTalkTitle}>{object['sub-talk-title']}</Text>*/}
+								</View>
+							))}
+						</View>
+					) : null }
+				</View>
+			</ScrollView>
 		);
 	}
 

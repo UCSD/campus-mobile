@@ -4,7 +4,6 @@ import {
 	View,
 	StyleSheet
 } from 'react-native';
-import { openSettings } from 'react-native-permissions';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import Touchable from './Touchable';
@@ -17,20 +16,25 @@ import {
 	COLOR_DGREY
 } from '../../styles/ColorConstants';
 
+/* Currently unused due to API changes to react-native-permissions
+const settingsPrompt = (
+	<Touchable
+		onPress={() => openSettings()}
+		style={styles.button}
+	>
+		<Text style={styles.buttonText}>
+			Open Location Services
+		</Text>
+	</Touchable>
+);
+*/
+
 const LocationRequiredContent = () => (
 	<View style={styles.container}>
 		<View style={styles.textRow}>
 			<Icon style={styles.icon} name={'warning'} size={16} />
 			<Text style={styles.promptText}>To use this feature please enable Location Services</Text>
 		</View>
-		<Touchable
-			onPress={() => openSettings()}
-			style={styles.button}
-		>
-			<Text style={styles.buttonText}>
-				Open Location Services
-			</Text>
-		</Touchable>
 	</View>
 );
 

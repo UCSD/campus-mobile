@@ -1,22 +1,24 @@
-import { combineReducers } from 'redux';
+import { combineReducers } from 'redux'
 
-import cardsReducer from './cards';
-import locationReducer from './location';
-import shuttleReducer from './shuttle';
-import mapReducer from './map';
-import userReducer from './user';
-import weatherReducer from './weather';
-import surfReducer from './surf';
-import diningReducer from './dining';
-import eventsReducer from './events';
-import newsReducer from './news';
-import linksReducer from './links';
-import routesReducer from './routes';
-import surveyReducer from './survey';
-import specialEventsReducer from './specialEvents';
-import feedbackReducer from './feedback';
-import homeReducer from './home';
-import scheduleReducer from './schedule';
+import cardsReducer from './cards'
+import locationReducer from './location'
+import shuttleReducer from './shuttle'
+import mapReducer from './map'
+import userReducer from './user'
+import weatherReducer from './weather'
+import surfReducer from './surf'
+import diningReducer from './dining'
+import eventsReducer from './events'
+import newsReducer from './news'
+import linksReducer from './links'
+import routesReducer from './routes'
+import scheduleReducer from './schedule'
+import surveyReducer from './survey'
+import specialEventsReducer from './specialEvents'
+import feedbackReducer from './feedback'
+import requestStatusesReducer from './requestStatuses'
+import requestErrorsReducer from './requestErrors'
+import homeReducer from './home'
 
 module.exports = combineReducers({
 	cards: cardsReducer,
@@ -35,5 +37,7 @@ module.exports = combineReducers({
 	specialEvents: specialEventsReducer,
 	schedule: scheduleReducer,
 	feedback: feedbackReducer,
+	requestStatuses: requestStatusesReducer,
+	requestErrors: requestErrorsReducer,
 	home: homeReducer,
-});
+})

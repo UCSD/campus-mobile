@@ -8,7 +8,7 @@ import {
 	TouchableOpacity,
 	Platform,
 	StatusBar,
-	BackAndroid
+	BackHandler
 } from 'react-native';
 import { connect } from 'react-redux';
 import MapView from 'react-native-maps';
@@ -24,7 +24,7 @@ import SearchResults from './SearchResults';
 import SearchHistoryCard from './SearchHistoryCard';
 import SearchSuggest from './SearchSuggest';
 import SearchShuttleMenu from './SearchShuttleMenu';
-
+import AppSettings from '../../AppSettings';
 import css from '../../styles/css';
 import logger from '../../util/logger';
 
@@ -38,6 +38,10 @@ const statusBarHeight = Platform.select({
 });
 
 export class NearbyMapView extends React.Component {
+	static navigationOptions = {
+		title: 'Map',
+	}
+
 	constructor(props) {
 		super(props);
 
@@ -67,51 +71,53 @@ export class NearbyMapView extends React.Component {
 	componentDidMount() {
 		logger.ga('View mounted: Full Map View');
 
-		BackAndroid.addEventListener('hardwareBackPress', this.pressIcon);
+		BackHandler.addEventListener('hardwareBackPress', this.pressIcon);
 	}
 
 	componentWillReceiveProps(nextProps) {
 		// Clear search results when navigating away
-		if (nextProps.scene.key !== this.props.scene.key) {
+		if (!nextProps.navigation.isFocused()) {
 			this.props.clearSearch();
 			this.setState({ searchInput: null });
 		}
 
-		// Loop thru every vehicle
-		Object.keys(nextProps.toggles).forEach((route) => {
-			if (nextProps.toggles[route] === true && Array.isArray(nextProps.vehicles[route])) {
-				if (this.state.vehicles[route]) {
-					nextProps.vehicles[route].forEach((nextVehicle) => {
-						this.state.vehicles[route].forEach((currVehicle) => {
-							if (nextVehicle.id === currVehicle.id &&
-								(nextVehicle.lat !== currVehicle.lat || nextVehicle.lon !== currVehicle.lon)) {
-								// Animate vehicle movement
-								currVehicle.animated.timing({
-									latitude: nextVehicle.lat,
-									longitude: nextVehicle.lon,
-									duration: 500
-								}).start();
-							}
+		if (nextProps.toggles) {
+			// Loop thru every vehicle
+			Object.keys(nextProps.toggles).forEach((route) => {
+				if (nextProps.toggles[route] === true && Array.isArray(nextProps.vehicles[route])) {
+					if (this.state.vehicles[route]) {
+						nextProps.vehicles[route].forEach((nextVehicle) => {
+							this.state.vehicles[route].forEach((currVehicle) => {
+								if (nextVehicle.id === currVehicle.id &&
+									(nextVehicle.lat !== currVehicle.lat || nextVehicle.lon !== currVehicle.lon)) {
+									// Animate vehicle movement
+									currVehicle.animated.timing({
+										latitude: nextVehicle.lat,
+										longitude: nextVehicle.lon,
+										duration: 500
+									}).start();
+								}
+							});
 						});
-					});
-				} else {
-					// Make Animated values
-					nextProps.vehicles[route].forEach((nextVehicle) => {
-						nextVehicle.animated = new MapView.AnimatedRegion({
-							latitude: nextVehicle.lat,
-							longitude: nextVehicle.lon,
+					} else {
+						// Make Animated values
+						nextProps.vehicles[route].forEach((nextVehicle) => {
+							nextVehicle.animated = new MapView.AnimatedRegion({
+								latitude: nextVehicle.lat,
+								longitude: nextVehicle.lon,
+							});
 						});
-					});
 
-					const newVehicles = this.state.vehicles;
-					newVehicles[route] = nextProps.vehicles[route];
+						const newVehicles = this.state.vehicles;
+						newVehicles[route] = nextProps.vehicles[route];
 
-					this.setState({
-						vehicles: newVehicles
-					});
+						this.setState({
+							vehicles: newVehicles
+						});
+					}
 				}
-			}
-		});
+			});
+		}
 
 		if (this.state.iconStatus === 'load' && nextProps.search_results) {
 			this.setState({
@@ -142,7 +148,7 @@ export class NearbyMapView extends React.Component {
 	}
 
 	componentWillUnmount() {
-		BackAndroid.removeEventListener('hardwareBackPress', this.pressIcon);
+		BackHandler.removeEventListener('hardwareBackPress', this.pressIcon);
 		clearTimeout(this.timer);
 		this.props.clearSearch();
 	}
@@ -270,19 +276,18 @@ export class NearbyMapView extends React.Component {
 	render() {
 		if (platformAndroid() && !this.state.updatedGoogle) {
 			return (
-				<View style={css.main_container}>
-					<Text>Please update Google Play Services and restart app to view map.</Text>
+				<View style={css.map_nogoogleplay}>
+					<Text>Please update your Google Play Services and restart the {AppSettings.APP_NAME} app to use Map Search.</Text>
 					<TouchableOpacity underlayColor="rgba(200,200,200,.1)" onPress={() => openGooglePlayUpdate()}>
 						<View style={css.eventdetail_readmore_container}>
-							<Text style={css.eventdetail_readmore_text}>Update</Text>
+							<Text style={css.eventdetail_readmore_text}>Update Google Play Services</Text>
 						</View>
 					</TouchableOpacity>
 				</View>
 			);
-		}
-		if (this.props.location.coords) {
+		} else if (this.props.location.coords) {
 			return (
-				<View style={css.main_container}>
+				<View>
 					<SearchNavButton
 						visible={(this.state.showNav && this.props.search_results !== null)}
 						onPress={this.gotoNavigationApp}
@@ -379,7 +384,6 @@ const mapStateToProps = (state, props) => (
 		vehicles: state.shuttle.vehicles,
 		search_history: state.map.history,
 		search_results: state.map.results,
-		scene: state.routes.scene
 	}
 );
 
@@ -408,9 +412,6 @@ const navMargin = Platform.select({
 });
 
 const styles = StyleSheet.create({
-	main_container: {
-		width: deviceWidth, height: deviceHeight - 64 - statusBarHeight, backgroundColor: COLOR_MGREY, marginTop: navMargin
-	},
 	section: { height: deviceHeight - 64 - statusBarHeight },
 });
 

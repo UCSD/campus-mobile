@@ -1,4 +1,4 @@
-import { fork } from 'redux-saga/effects';
+import { all, fork } from 'redux-saga/effects';
 import surveySaga from './surveySaga';
 import cardSaga from './cardSaga';
 import locationSaga from './locationSaga';
@@ -14,7 +14,7 @@ import routesSaga from './routesSaga';
 
 // single entry point to start all Sagas at once
 export default function* rootSaga() {
-	yield [
+	yield all([
 		fork(surveySaga),
 		fork(cardSaga),
 		fork(locationSaga),
@@ -27,5 +27,5 @@ export default function* rootSaga() {
 		fork(userSaga),
 		fork(mapSaga),
 		fork(feedbackSaga)
-	];
+	]);
 }

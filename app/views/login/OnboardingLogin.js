@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import {
 	Alert,
 	View,
@@ -7,38 +7,32 @@ import {
 	ActivityIndicator,
 	TextInput,
 	TouchableWithoutFeedback
-} from 'react-native';
-import { connect } from 'react-redux';
-import { Actions } from 'react-native-router-flux';
-import Toast from 'react-native-simple-toast';
-import { openURL, hideKeyboard } from '../../util/general';
-import AppSettings from '../../AppSettings';
-import Touchable from '../common/Touchable';
-import css from '../../styles/css';
-import { COLOR_DGREY } from '../../styles/ColorConstants';
+} from 'react-native'
+import { connect } from 'react-redux'
+import Toast from 'react-native-simple-toast'
+import { openURL, hideKeyboard } from '../../util/general'
+import AppSettings from '../../AppSettings'
+import Touchable from '../common/Touchable'
+import css from '../../styles/css'
+import { COLOR_DGREY } from '../../styles/ColorConstants'
 
-const auth = require('../../util/auth');
+const auth = require('../../util/auth')
 
-const campusLogo = require('../../assets/img/UCSanDiegoLogo-White.png');
+const campusLogo = require('../../assets/img/UCSanDiegoLogo-nav.png')
 
 class OnboardingLogin extends React.Component {
-
-	componentWillMount() {
-		if (this.props.onBoardingViewed) Actions.Home();
-	}
-
 	componentDidMount() {
 		// if we're mounting and we're somehow still in the
 		// process of logging in, check if we've timed out.
 		// otherwise, set a timeout
 		if (this.props.user.isLoggingIn) {
-			const now = new Date();
-			const lastPostTime = new Date(this.props.user.timeRequested);
+			const now = new Date()
+			const lastPostTime = new Date(this.props.user.timeRequested)
 			if (now - lastPostTime >= AppSettings.SSO_TTL) {
-				this.props.timeoutLogin();
+				this.props.timeoutLogin()
 			} else {
 				// timeout after remaining time expires
-				setTimeout(this.props.timeoutLogin, now - lastPostTime);
+				setTimeout(this.props.timeoutLogin, now - lastPostTime)
 			}
 		}
 	}
@@ -49,34 +43,30 @@ class OnboardingLogin extends React.Component {
 				'Successfully signed in!',
 				Toast.SHORT,
 				Toast.BOTTOM
-			);
+			)
 
-			this.props.doTokenRefresh();
+			this.props.doTokenRefresh()
 			auth.retrieveAccessToken()
 				.then((token) => {
-					console.log('User Data: ', this.props.user);
-					console.log('Access Token: ', token);
-				});
+					console.log('User Data: ', this.props.user)
+					console.log('Access Token: ', token)
+				})
 
-			this.props.setOnboardingViewed(true);
-			Actions.Home();
+			this.props.setOnboardingViewed(true)
 		}
 	}
 
 	render() {
-		const { error } = this.props.user;
-		if (error
-			&& this.props.scene.name === 'OnboardingLogin'
-			&& !this.props.user.isLoggingIn
-		) {
+		const { error } = this.props.user
+		if (error && !this.props.user.isLoggingIn) {
 			Alert.alert(
 				'Sign in error',
 				error,
 				[
-					{ text: 'OK', onPress: () => { this.props.clearErrors(); } }
+					{ text: 'OK', onPress: () => { this.props.clearErrors() } }
 				],
 				{ cancelable: false }
-			);
+			)
 		}
 
 		return (
@@ -105,22 +95,22 @@ class OnboardingLogin extends React.Component {
 										returnKeyType="next"
 										autoFocus={true}
 										onChange={(event) => {
-											this._usernameText = event.nativeEvent.text;
+											this._usernameText = event.nativeEvent.text
 										}}
 										onSubmitEditing={(event) => {
-											this.passInput.focus();
+											this.passInput.focus()
 										}}
 									/>
 									<TextInput
 										style={[css.ob_input, css.ob_pass]}
-										ref={(input) => { this.passInput = input; }}
+										ref={(input) => { this.passInput = input }}
 										placeholder="Password"
 										placeholderTextColor={COLOR_DGREY}
 										autoCapitalize="none"
 										secureTextEntry={true}
 										returnKeyType="send"
 										onChange={(event) => {
-											this._passwordText = event.nativeEvent.text;
+											this._passwordText = event.nativeEvent.text
 										}}
 										onSubmitEditing={() => this.onSubmit(this._usernameText, this._passwordText)}
 									/>
@@ -139,48 +129,46 @@ class OnboardingLogin extends React.Component {
 					</View>
 				</View>
 			</TouchableWithoutFeedback>
-		);
+		)
 	}
 
 	onSubmit = (username, password) => {
-		this.props.doLogin(username, password);
+		this.props.doLogin(username, password)
 	}
 
 	skipSSO = () => {
-		this.props.setOnboardingViewed(true);
-		Actions.Home();
+		this.props.setOnboardingViewed(true)
 	}
 }
 
 const mapStateToProps = (state, props) => (
 	{
-		scene: state.routes.scene,
 		user: state.user,
 		onBoardingViewed: state.routes.onBoardingViewed
 	}
-);
+)
 
 const mapDispatchToProps = (dispatch, ownProps) => (
 	{
 		setOnboardingViewed: (viewed) => {
-			dispatch({ type: 'SET_ONBOARDING_VIEWED', viewed });
+			dispatch({ type: 'SET_ONBOARDING_VIEWED', viewed })
 		},
 		doLogin: (username, password) => {
-			dispatch({ type: 'USER_LOGIN', username, password });
+			dispatch({ type: 'USER_LOGIN', username, password })
 		},
 		doTokenRefresh: () => {
-			dispatch({ type: 'USER_TOKEN_REFRESH' });
+			dispatch({ type: 'USER_TOKEN_REFRESH' })
 		},
 		doLogout: () => {
-			dispatch({ type: 'USER_LOGOUT' });
+			dispatch({ type: 'USER_LOGOUT' })
 		},
 		timeoutLogin: () => {
-			dispatch({ type: 'USER_LOGIN_TIMEOUT' });
+			dispatch({ type: 'USER_LOGIN_TIMEOUT' })
 		},
 		clearErrors: () => {
-			dispatch({ type: 'USER_CLEAR_ERRORS' });
+			dispatch({ type: 'USER_CLEAR_ERRORS' })
 		}
 	}
-);
+)
 
-export default connect(mapStateToProps, mapDispatchToProps)(OnboardingLogin);
+export default connect(mapStateToProps, mapDispatchToProps)(OnboardingLogin)
