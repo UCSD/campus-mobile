@@ -93,15 +93,17 @@ class DiningDetail extends React.Component {
 						) : (null)
 					)
 				}
-				<DiningMenu
-					navigation={this.props.navigation}
-					requestStatus={menuRequestStatus}
-					data={menuData}
-					menuUrl={data.menuUrl}
-					filters={this.state.filters}
-					activeMeal={this.state.activeMeal}
-					addFilter={filter => this.addFilter(filter)}
-				/>
+				{ data.id ? (
+					<DiningMenu
+						navigation={this.props.navigation}
+						requestStatus={menuRequestStatus}
+						data={menuData}
+						menuUrl={data.menuUrl}
+						filters={this.state.filters}
+						activeMeal={this.state.activeMeal}
+						addFilter={filter => this.addFilter(filter)}
+					/>
+				) : null }
 			</ScrollView>
 		)
 	}
