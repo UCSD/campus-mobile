@@ -20,7 +20,7 @@ const ShuttleStopsListView = ({ navigation }) => {
 		<FlatList
 			style={css.main_full}
 			data={shuttle_stops}
-			keyExtractor={(listItem, index) => (listItem.id)}
+			keyExtractor={(listItem, index) => (listItem.id + index)}
 			renderItem={
 				({ item: rowData }) => (
 					<StopItem

@@ -20,7 +20,8 @@ const ShuttleRoutesListView = ({ navigation }) => {
 			style={css.main_full}
 			data={shuttle_routes}
 			keyExtractor={(listItem, index) => (
-				listItem.id
+				listItem.id +
+				index
 			)}
 			renderItem={
 				({ item: rowData }) => (

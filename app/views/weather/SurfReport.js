@@ -57,7 +57,7 @@ class SurfReport extends React.Component {
 						<FlatList
 							style={css.sr_beach_list}
 							data={this.props.surfData.spots}
-							keyExtractor={(listItem, index) => (listItem.title + listItem.date)}
+							keyExtractor={(listItem, index) => (listItem.title + listItem.date + index)}
 							renderItem={({ item: rowData }) => (
 								<View style={css.sr_surf_row}>
 									<Text style={css.sr_beach_name}>{rowData.title}</Text>

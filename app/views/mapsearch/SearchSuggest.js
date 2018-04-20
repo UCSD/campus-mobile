@@ -59,7 +59,7 @@ const SearchSuggestList = ({ historyData, onPress }) => (
 		data={historyData}
 		horizontal={true}
 		keyboardShouldPersistTaps="always"
-		keyExtractor={(listItem, index) => (listItem.name)}
+		keyExtractor={(listItem, index) => (listItem.name + index)}
 		renderItem={
 			({ item: rowData}) =>
 				<SearchSuggestItem
