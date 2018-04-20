@@ -69,8 +69,8 @@ class SpecialEventsView extends Component {
 	}
 
 	handleFilterPress = () => {
-		const { title } = this.props.navigation.state.params;
-		this.props.navigation.navigate('SpecialEventsFilters', { title });
+		const { title } = this.props.navigation.state.params
+		this.props.navigation.navigate('SpecialEventsFilters', { title })
 	}
 
 	handleFilterSelect = (labels) => {
@@ -83,32 +83,44 @@ class SpecialEventsView extends Component {
 
 	render() {
 		const { personal } = this.props.navigation.state.params
-
-		return (
-			<View style={[css.main_full, css.flex]}>
-				<DaysBar
-					days={this.props.days}
-					selectedDay={this.state.selectedDay}
-					handleDayPress={this.handleDayPress}
-				/>
-				<SpecialEventsListView
-					style={styles.specialEventsListView}
-					scrollEnabled={true}
-					personal={personal}
-					selectedDay={this.props.days[this.state.selectedDay]}
-					handleFilterPress={this.handleFilterPress}
-				/>
-				<FakeTabBar
-					personal={personal}
-					handleFullPress={this.handleFullPress}
-					handleMinePress={this.handleMinePress}
-				/>
-			</View>
-		);
+		if (this.props.days) {
+			return (
+				<View style={[css.main_full, css.flex]}>
+					<DaysBar
+						days={this.props.days}
+						selectedDay={this.state.selectedDay}
+						handleDayPress={this.handleDayPress}
+					/>
+					<SpecialEventsListView
+						style={styles.specialEventsListView}
+						scrollEnabled={true}
+						personal={personal}
+						selectedDay={this.props.days[this.state.selectedDay]}
+						handleFilterPress={this.handleFilterPress}
+					/>
+					<FakeTabBar
+						personal={personal}
+						handleFullPress={this.handleFullPress}
+						handleMinePress={this.handleMinePress}
+					/>
+				</View>
+			)
+		} else {
+			return (
+				<View style={[css.main_full, css.flex]}>
+					<Text style={css.cm_desc}>
+						There are no special events available at this time.
+						{'\n\n'}Please try again later.
+					</Text>
+				</View>
+			)
+		}
 	}
 }
 
-const mapStateToProps = state => ({	days: state.specialEvents.data.dates })
+const mapStateToProps = state => ({
+	days: state.specialEvents.data ? state.specialEvents.data.dates : null
+})
 export default connect(mapStateToProps)(SpecialEventsView)
 
 const FakeTabBar = ({ personal, handleFullPress, handleMinePress }) => (

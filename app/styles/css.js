@@ -9,7 +9,9 @@
 
 	200 - Common
 		201 - DataList
-		202 - Buttons
+		202 - DataItem
+		203 - Buttons
+		204 - General
 
 	300 - Cards
 		301 - Dining Card
@@ -79,7 +81,8 @@ const css = StyleSheet.create({
 	button_primary_text: { fontSize: 16, color: COLOR.WHITE },
 	share_button: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.MGREY, borderRadius: 3, marginTop: 20, padding: 10 },
 	share_button_text: { fontSize: 16 },
-
+	// 204 - General
+	cm_desc: { fontSize: 16, padding: 20 },
 
 	/**
 	 *  300 - Cards
@@ -119,8 +122,6 @@ const css = StyleSheet.create({
 	sr_desc: { fontSize: 16, marginTop: 5 },
 	sr_beach_name: { fontSize: 18 },
 	sr_beach_surf: { fontSize: 16, paddingTop: 4, paddingLeft: 8 },
-
-
 	// 402 - Dining Detail
 	dd_description_container: { padding: 10 },
 	dd_description_nametext: { fontSize: 26, color: COLOR.PRIMARY },
@@ -176,7 +177,6 @@ const css = StyleSheet.create({
 	dn_topborder2: { borderTopWidth: 4, borderTopColor: COLOR.BLACK },
 	dn_info_container: { paddingTop: 10 },
 	dn_bold: { fontWeight: '700' },
-
 	// 404 - Events & News
 	eventdetail_readmore_container: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.PRIMARY, borderRadius: 3, marginTop: 20, padding: 10 },
 	eventdetail_readmore_text: { fontSize: 16, color: COLOR.WHITE },
