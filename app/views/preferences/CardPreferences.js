@@ -78,6 +78,15 @@ export default class CardPreferences extends Component {
 								return null
 							}
 							else {
+								// Hide cards if they require authentication and user is not authenticated
+								if (data.authenticated) {
+									if (!this.props.user.isLoggedIn) return false
+									else if (data.classifications.student &&
+										!this.props.user.profile.classifications.student) {
+										return false
+									}
+								}
+
 								// Using cardActive instead of data.active bc state isn't updated
 								// everytime
 								// Also, mildly confusing..but active prop from renderRow means
@@ -93,9 +102,9 @@ export default class CardPreferences extends Component {
 							}
 						}
 					}
-					onActivateRow={(key) => this.props.toggleScroll()}
+					onActivateRow={key => this.props.toggleScroll()}
 					onChangeOrder={(nextOrder) => { this._order = nextOrder }}
-					onReleaseRow={(key) => this._handleRelease()}
+					onReleaseRow={key => this._handleRelease()}
 				/>
 			</Card>
 		)
@@ -107,6 +116,7 @@ function mapStateToProps(state, props) {
 		cards: state.cards.cards,
 		cardOrder: state.cards.cardOrder,
 		specialEventsData: state.specialEvents.data,
+		user: state.user
 	}
 }
 

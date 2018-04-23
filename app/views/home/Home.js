@@ -65,6 +65,15 @@ export class Home extends React.Component {
 		if (Array.isArray(this.props.cardOrder)) {
 			this.props.cardOrder.forEach((card) => {
 				if (this.props.cards[card].active) {
+					// Skip cards if they require authentication
+					// and user is not authenticated
+					if (this.props.cards[card].authenticated) {
+						if (!this.props.user.isLoggedIn) return
+						else if (this.props.cards[card].classifications
+							&& this.props.cards[card].classifications.student
+							&& !this.props.user.profile.classifications.student) return
+					}
+
 					switch (card) {
 					case 'specialEvents':
 						activeCards.push(<SpecialEventsCardContainer key="specialEvents" />)
@@ -129,6 +138,7 @@ function mapStateToProps(state, props) {
 		cards: state.cards.cards,
 		cardOrder: state.cards.cardOrder,
 		lastScroll: state.home.lastScroll,
+		user: state.user
 	}
 }
 

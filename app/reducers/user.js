@@ -2,48 +2,49 @@ const initialState = {
 	isLoggedIn: false,
 	isLoggingIn: false,
 	profile: {
-		username: null
+		username: null,
+		classifications: null,
+		pid: null
 	},
 	expiration: null,
 	error: null
-};
+}
 
 function user(state = initialState, action) {
-
-	const newState = { ...state };
+	const newState = { ...state }
 
 	switch (action.type) {
 	case 'IS_LOGGING_IN': {
-		newState.isLoggingIn = true;
-		newState.timeRequested = new Date();
-		return newState;
+		newState.isLoggingIn = true
+		newState.timeRequested = new Date()
+		return newState
 	}
 	case 'LOGGED_IN': {
-		newState.isLoggingIn = false;
-		newState.error = null;
-		newState.profile.username = action.user;
-		newState.expiration = action.expiration;
-		newState.isLoggedIn = true;
-		delete newState.timeRequested;
-		return newState;
+		newState.isLoggingIn = false
+		newState.error = null
+		newState.profile = Object.assign({}, action.profile)
+		newState.expiration = action.expiration
+		newState.isLoggedIn = true
+		delete newState.timeRequested
+		return newState
 	}
 	case 'LOGGED_OUT': {
-		return initialState;
+		return initialState
 	}
 	case 'USER_LOGIN_FAILED': {
-		newState.isLoggedIn = false;
-		newState.isLoggingIn = false;
-		delete newState.timeRequested;
-		newState.error = action.error;
-		return newState;
+		newState.isLoggedIn = false
+		newState.isLoggingIn = false
+		delete newState.timeRequested
+		newState.error = action.error
+		return newState
 	}
 	case 'USER_SET_ERRORS': {
-		newState.error = action.error;
-		return newState;
+		newState.error = action.error
+		return newState
 	}
 	default:
-		return state;
+		return state
 	}
 }
 
-module.exports = user;
+module.exports = user
