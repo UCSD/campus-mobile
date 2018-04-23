@@ -46,7 +46,8 @@ export class Home extends React.Component {
 
 	shouldComponentUpdate(nextProps, nextState) {
 		if (this.props.cards !== nextProps.cards ||
-			this.props.cardOrder !== nextProps.cardOrder) {
+			this.props.cardOrder !== nextProps.cardOrder ||
+			this.props.user.isLoggedIn !== nextProps.user.isLoggedIn) {
 			return true
 		} else {
 			return false

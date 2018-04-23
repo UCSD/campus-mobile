@@ -46,11 +46,19 @@ const migration = createMigration(manifest, reducerKey)
 
 export default function configureStore(initialState, onComplete = () => null) {
 	const middlewares = [sagaMiddleware, thunkMiddleware] // lets us dispatch() functions
-	const enhancer =  compose(migration, autoRehydrate())
+
+	// custom composer for redux devtools
+	const composeWithTools =
+		typeof window === 'object' &&
+		window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?
+			window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({}) :
+			compose
+
+	const enhancer =  composeWithTools(migration, autoRehydrate())
 	const store = createStore(
 		rootReducer,
+		enhancer,
 		applyMiddleware(...middlewares),
-		enhancer
 	)
 
 	persistStore(store, {
