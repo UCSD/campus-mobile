@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, Share } from 'react-native'
+import { Text, Share, Platform } from 'react-native'
 import Toast from 'react-native-simple-toast'
 
 import css from '../../styles/css'
@@ -19,7 +19,7 @@ class ShareContent extends React.Component {
 	}
 
 	_showResult = (result) => {
-		if (result.action === Share.sharedAction) {
+		if (result.action === Share.sharedAction && Platform.OS === 'ios') {
 			Toast.showWithGravity('Shared', Toast.SHORT, Toast.CENTER)
 		}
 	}

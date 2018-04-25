@@ -103,7 +103,7 @@ android {
         applicationId "edu.ucsd"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 45
+        versionCode 46
         versionName "5.6"
         ndk {
             abiFilters "armeabi-v7a", "x86"
