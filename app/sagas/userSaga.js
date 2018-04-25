@@ -54,6 +54,7 @@ function* doLogin(action) {
 			}
 
 			yield put({ type: 'LOGGED_IN', profile: newProfile, expiration: response.expiration })
+			yield put({ type: 'TOGGLE_AUTHENTICATED_CARDS' })
 		}
 	} catch (error) {
 		logger.log(error)
@@ -77,6 +78,7 @@ function* doLogout(action) {
 	yield auth.destroyUserCreds()
 	yield auth.destroyAccessToken()
 	yield put({ type: 'LOGGED_OUT' })
+	yield put({ type: 'TOGGLE_AUTHENTICATED_CARDS' })
 }
 
 function* timeoutError() {

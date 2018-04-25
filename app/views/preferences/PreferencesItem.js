@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import {
 	Text,
 	Switch,
@@ -14,9 +15,9 @@ import { MAX_CARD_WIDTH } from '../../styles/LayoutConstants'
 import NoTouchy from '../common/NoTouchy'
 
 // Row item for sortable-list component
-export default class PrefItem extends Component {
+class PrefItem extends Component {
 	constructor(props) {
-		super(props);
+		super(props)
 
 		this._active = new Animated.Value(0)
 
@@ -70,22 +71,22 @@ export default class PrefItem extends Component {
 		Also catches sloppier presses not directly on the switch will also be caught
 	 */
 	_handleToggle = (fromSwitch) => {
-		const { data, updateState, cardActive } = this.props
+		const { data, cards } = this.props
 		if (!fromSwitch) {
 			if (!this._switchTouched) {
-				updateState(data.id, !cardActive)
+				this.props.setCardState(data.id, !cards[data.id].active)
 			}
 			this._noTouched = true
 		}  else {
 			if (!this._noTouched) {
-				updateState(data.id, !cardActive)
+				this.props.setCardState(data.id, !cards[data.id].active)
 			}
 			this._noTouched = false
 		}
 	}
 
 	render() {
-		const { data, cardActive } = this.props
+		const { data } = this.props
 		return (
 			<Animated.View
 				style={[styles.list_row, this._style]}
@@ -102,7 +103,7 @@ export default class PrefItem extends Component {
 				>
 					<Switch
 						onValueChange={value => this._handleToggle(true)}
-						value={cardActive}
+						value={this.props.cards[data.id].active}
 					/>
 				</NoTouchy>
 			</Animated.View>
@@ -135,3 +136,17 @@ const styles = StyleSheet.create({
 	name_text: { flex: 1, margin: 7, fontSize: 18 },
 	switchContainer: { width: 50, height: 50, justifyContent: 'center', alignItems: 'center', marginRight: 10 },
 })
+
+function mapStateToProps(state, props) {
+	return { cards: state.cards.cards }
+}
+
+function mapDispatchtoProps(dispatch) {
+	return {
+		setCardState: (id, state) => {
+			dispatch({ type: 'UPDATE_CARD_STATE', id, state })
+		}
+	}
+}
+
+export default connect(mapStateToProps, mapDispatchtoProps)(PrefItem)

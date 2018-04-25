@@ -5,16 +5,30 @@ import PreferencesItem from './PreferencesItem'
 import Card from '../card/Card'
 
 // View for user to manage preferences, including which cards are visible
-export default class CardPreferences extends Component {
+class CardPreferences extends Component {
 	componentWillMount() {
-		this.setState({ cardObject: this.getCardObject(this.props.cards, this.props.cardOrder) })
+		this.setState({ cardObject: this.getCardObject() })
 	}
 
-	// Only setState if nextProps cardOrder is dfferent. Fixes flickering from re-render on android
 	componentWillReceiveProps(nextProps) {
-		if (!this.arraysEqual(nextProps.cardOrder, this.props.cardOrder)) {
-			this.setState({ cardObject: this.getCardObject(nextProps.cards, nextProps.cardOrder) })
+		/*
+		* Recreating the cardObject will cause a re-render.
+		* Only do this when absolutely necessary.
+		* (Only necessary if the actual number of card rows
+		* to display has changed and the layout bounds have
+		* to be readjusted.)
+		*/
+		const nextCardObject = this.getCardObject()
+		if (Object.keys(this.state.cardObject).length !==
+			Object.keys(nextCardObject).length) {
+			this.setState({ cardObject: nextCardObject })
 		}
+	}
+
+	shouldComponentUpdate(nextProps, nextState) {
+		if (this.props.cardOrder !== nextProps.cardOrder) {
+			return true
+		} else return false
 	}
 
 	setCardState = (id, state) => {
@@ -22,89 +36,51 @@ export default class CardPreferences extends Component {
 		this.props.updateScroll() // reset homeview scroll
 	}
 
-	getCardObject = (cards, cardOrder) => {
-		const cardArray = []
+	getCardObject = () => {
 		const cardObject = {}
 
-		if (Array.isArray(cardOrder)) {
-			for (let i = 0; i < cardOrder.length; ++i) {
-				const key = cardOrder[i]
-				cardArray.push(cards[key])
-				cardObject[i] = cards[key]
-			}
+		if (Array.isArray(this.props.cardOrder)) {
+			this.props.cardOrder.forEach((cardKey) => {
+				cardObject[cardKey] = {
+					id: this.props.cards[cardKey].id,
+					name: this.props.cards[cardKey].name
+				}
+			})
 		}
 		return cardObject
 	}
 
-	getOrderedArray = () => {
-		const orderArray = []
-		for (let i = 0; i < this._order.length; ++i) {
-			orderArray.push(this.state.cardObject[this._order[i]].id)
-		}
-		return orderArray
-	}
-
-	// Checks if array content is the same
-	arraysEqual = (arr1, arr2) => {
-		if (arr1.length !== arr2.length) {
-			return false
-		}
-		for (let i = arr1.length; i--;) {
-			if (arr1[i] !== arr2[i]) {
-				return false
-			}
-		}
-		return true
-	}
-
-	_handleRelease = () => {
+	_handleRelease = (key) => {
 		if (Array.isArray(this._order)) {
-			const orderedCards = this.getOrderedArray()
-			this.props.orderCards(orderedCards)
+			let newIndex
+			this._order.forEach((orderKey, index) => {
+				if (orderKey === key) newIndex = index
+			})
+			this.props.reorderCard(key, newIndex)
+			this.props.toggleScroll() // toggle parent scroll
 		}
-		this.props.toggleScroll() // toggle parent scroll
 	}
 
 	render() {
 		return (
 			<Card id="cards" title="Cards" hideMenu={true}>
 				<SortableList
-					scrollEnabled={false}
 					data={this.state.cardObject}
+					order={this.props.cardOrder}
 					renderRow={
-						({ data, active, disabled }) => {
-							// Hide specialEvents option if there is no specialEventsData
-							if (data.id === 'specialEvents' && !this.props.specialEventsData) {
-								return null
-							}
-							else {
-								// Hide cards if they require authentication and user is not authenticated
-								if (data.authenticated) {
-									if (!this.props.user.isLoggedIn) return false
-									else if (data.classifications.student &&
-										!this.props.user.profile.classifications.student) {
-										return false
-									}
-								}
-
-								// Using cardActive instead of data.active bc state isn't updated
-								// everytime
-								// Also, mildly confusing..but active prop from renderRow means
-								// the row has been grabbed
-								return (
-									<PreferencesItem
-										data={data}
-										cardActive={this.props.cards[data.id].active}
-										active={active}
-										updateState={this.setCardState}
-									/>
-								)
-							}
-						}
+						({ data, active, disabled }) => (
+							// Mildly confusing, but active prop from
+							// renderRow means the row has been grabbed
+							<PreferencesItem
+								data={data}
+								active={active}
+							/>
+						)
 					}
 					onActivateRow={key => this.props.toggleScroll()}
 					onChangeOrder={(nextOrder) => { this._order = nextOrder }}
-					onReleaseRow={key => this._handleRelease()}
+					onReleaseRow={key => this._handleRelease(key)}
+					scrollEnabled={false}
 				/>
 			</Card>
 		)
@@ -114,19 +90,14 @@ export default class CardPreferences extends Component {
 function mapStateToProps(state, props) {
 	return {
 		cards: state.cards.cards,
-		cardOrder: state.cards.cardOrder,
-		specialEventsData: state.specialEvents.data,
-		user: state.user
+		cardOrder: state.cards.cardOrder
 	}
 }
 
 function mapDispatchtoProps(dispatch) {
 	return {
-		orderCards: (newOrder) => {
-			dispatch({ type: 'ORDER_CARDS', newOrder })
-		},
-		setCardState: (id, state) => {
-			dispatch({ type: 'UPDATE_CARD_STATE', id, state })
+		reorderCard: (id, newIndex) => {
+			dispatch({ type: 'REORDER_CARD', id, newIndex })
 		},
 		updateScroll: () => {
 			dispatch({ type: 'UPDATE_HOME_SCROLL', scrollY: 0 })
@@ -134,4 +105,4 @@ function mapDispatchtoProps(dispatch) {
 	}
 }
 
-module.exports = connect(mapStateToProps, mapDispatchtoProps)(CardPreferences)
+export default connect(mapStateToProps, mapDispatchtoProps)(CardPreferences)

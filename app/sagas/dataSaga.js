@@ -166,6 +166,7 @@ function* updateSpecialEvents() {
 				// set active and autoActivated to true
 				yield put({ type: 'UPDATE_CARD_STATE', id: 'specialEvents', state: true })
 				yield put({ type: 'UPDATE_AUTOACTIVATED_STATE', id: 'specialEvents', state: true })
+				yield put({ type: 'SHOW_CARD', id: 'specialEvents' })
 			} else if (cards.specialEvents.active) {
 				// remove any saved items that no longer exist
 				if (saved.length > 0) {
@@ -187,6 +188,7 @@ function* updateSpecialEvents() {
 			// set active and autoactivated to false
 			yield put({ type: 'UPDATE_CARD_STATE', id: 'specialEvents', state: false })
 			yield put({ type: 'UPDATE_AUTOACTIVATED_STATE', id: 'specialEvents', state: false })
+			yield put({ type: 'HIDE_CARD', id: 'specialEvents' })
 		}
 	}
 }
