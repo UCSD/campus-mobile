@@ -15,11 +15,7 @@ module.exports = {
 	NEWS_API_URL: 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/allstories.json',
 	MAP_SEARCH_API_URL: 'https://xgu9qa7gx4.execute-api.us-west-2.amazonaws.com/prod/v2/map/search?region=0&query=',
 	SCHEDULE_API_URL: 'https://api-qa.ucsd.edu:8243/student/my/academic_history/v1/class_list?term_code=WI18&academic_level=UN',
-	// Dev endpoint - needs to be updated to PROD
-	// SPECIAL EVENTS PLACEHOLDER - Activated for v5.6-rc testing phase 1
-	SPECIAL_EVENT_API_URL: 'https://s3-us-west-1.amazonaws.com/ucsd-mobile-dev/mock-apis/special-event-test_welcome-week-2017.json',
-	// SPECIAL EVENTS PROD
-	// SPECIAL_EVENT_API_URL: 'https://2jjml3hf27.execute-api.us-west-2.amazonaws.com/prod/events/special',
+	SPECIAL_EVENT_API_URL: 'https://2jjml3hf27.execute-api.us-west-2.amazonaws.com/prod/events/special',
 
 	/* RESOURCES */
 	SHUTTLE_SCHEDULE_URL: 'https://transportation.ucsd.edu/shuttles/',
@@ -50,7 +46,7 @@ module.exports = {
 	SCHEDULE_TTL: 60000,  // 1 minute
 
 	// Beta TTL - Dial down Special Events TTL for v5.6-rc testing phase
-	SPECIAL_EVENTS_TTL: 60000, // 1 hour
+	SPECIAL_EVENTS_TTL: 3600000, // 1 hour
 	// SPECIAL_EVENTS_TTL: 3600000, // 1 hour
 
 	DATA_SAGA_TTL: 60000, // 1 minute

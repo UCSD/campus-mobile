@@ -53,7 +53,7 @@ SearchResultsCard.defaultProps = {};
 const SearchResultsList = ({ results, onSelect }) => (
 	<FlatList
 		data={results}
-		keyExtractor={(listItem, index) => (listItem.title)}
+		keyExtractor={(listItem, index) => (listItem.title + index)}
 		renderItem={
 			({ item: rowData, index: rowID }) =>
 				<SearchResultsItem

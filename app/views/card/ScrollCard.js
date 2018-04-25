@@ -55,7 +55,7 @@ class ScrollCard extends React.Component {
 					scrollEventThrottle={0}
 					data={this.props.scrollData}
 					enableEmptySections={true}
-					keyExtractor={(listItem, index) => (listItem.id.toString())}
+					keyExtractor={(listItem, index) => (listItem.id.toString() + index)}
 					renderItem={this.props.renderItem}
 				/>
 			)

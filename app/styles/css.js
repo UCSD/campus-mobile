@@ -9,7 +9,9 @@
 
 	200 - Common
 		201 - DataList
-		202 - Buttons
+		202 - DataItem
+		203 - Buttons
+		204 - General
 
 	300 - Cards
 		301 - Dining Card
@@ -80,7 +82,8 @@ const css = StyleSheet.create({
 	button_primary_text: { fontSize: 16, color: COLOR.WHITE },
 	share_button: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.MGREY, borderRadius: 3, marginTop: 20, padding: 10 },
 	share_button_text: { fontSize: 16 },
-
+	// 204 - General
+	cm_desc: { fontSize: 16, padding: 20 },
 
 	/**
 	 *  300 - Cards

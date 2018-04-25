@@ -52,20 +52,20 @@ const DataFlatList = ({ style, data, rows, item, card }) => (
 			// item MUST have a unique key!
 			switch (item) {
 			case 'EventItem': {
-				return listItem.id
+				return listItem.id + index
 			}
 			case 'NewsItem': {
-				return listItem.title
+				return listItem.title + index
 			}
 			case 'DiningItem': {
-				if (listItem.id) return listItem.id
-				else return listItem.name
+				if (listItem.id) return listItem.id + index
+				else return listItem.name + index
 			}
 			case 'QuicklinksItem': {
-				return listItem.name
+				return listItem.name + index
 			}
 			default: {
-				return null
+				return index
 			}
 			}
 		}}

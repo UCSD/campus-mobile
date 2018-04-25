@@ -173,7 +173,7 @@ const MenuList = ({ navigation, data, filters, activeMeal }) => {
 		return (
 			<FlatList
 				data={filteredMenuItems}
-				keyExtractor={(listItem, index) => (listItem.itemID)}
+				keyExtractor={(listItem, index) => (listItem.itemID + index)}
 				renderItem={({ item: rowData, index: rowID }) => (
 					<MenuItem
 						navigation={navigation}
