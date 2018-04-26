@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import {
+	View,
 	Text,
 	Switch,
 	Platform,
@@ -12,7 +13,6 @@ import Icon from 'react-native-vector-icons/MaterialIcons'
 
 import { COLOR_MGREY, COLOR_WHITE } from '../../styles/ColorConstants'
 import { MAX_CARD_WIDTH } from '../../styles/LayoutConstants'
-import NoTouchy from '../common/NoTouchy'
 
 // Row item for sortable-list component
 class PrefItem extends Component {
@@ -64,29 +64,8 @@ class PrefItem extends Component {
 		}
 	}
 
-	/*
-		Why is this handled weirdly?
-		Bc when the switch is touched it will sometimes pass the touch to parent
-		However, this is passed before switch onValueChange
-		Also catches sloppier presses not directly on the switch will also be caught
-	 */
-	_handleToggle = (fromSwitch) => {
-		const { data, cards } = this.props
-		if (!fromSwitch) {
-			if (!this._switchTouched) {
-				this.props.setCardState(data.id, !cards[data.id].active)
-			}
-			this._noTouched = true
-		}  else {
-			if (!this._noTouched) {
-				this.props.setCardState(data.id, !cards[data.id].active)
-			}
-			this._noTouched = false
-		}
-	}
-
 	render() {
-		const { data } = this.props
+		const { data, cards } = this.props
 		return (
 			<Animated.View
 				style={[styles.list_row, this._style]}
@@ -97,15 +76,12 @@ class PrefItem extends Component {
 					size={20}
 				/>
 				<Text style={styles.name_text}>{data.name}</Text>
-				<NoTouchy
-					style={styles.switchContainer}
-					onPress={() => this._handleToggle(false)}
-				>
+				<View style={styles.switchContainer}>
 					<Switch
-						onValueChange={value => this._handleToggle(true)}
-						value={this.props.cards[data.id].active}
+						onValueChange={value => this.props.setCardState(data.id, value)}
+						value={cards[data.id].active}
 					/>
-				</NoTouchy>
+				</View>
 			</Animated.View>
 		)
 	}
