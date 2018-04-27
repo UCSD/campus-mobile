@@ -1,0 +1,122 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`card renders without crashing 1`] = `
+<Connect(Card)
+  id="quicklinks"
+  title="Links"
+>
+  <View
+    style={
+      Object {
+        "alignSelf": "stretch",
+        "padding": 8,
+      }
+    }
+  >
+    <View>
+      <DataListView
+        card={false}
+        data={
+          Array [
+            Object {
+              "card-order": 2,
+              "icon": "https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/quick_links/legacy-icon-courses.png",
+              "name": "Courses",
+              "url": "http://mobile.ucsd.edu/courses/",
+            },
+            Object {
+              "card-order": 5,
+              "icon": "https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/quick_links/legacy-icon-athletics.png",
+              "name": "Athletics",
+              "url": "http://m.ucsd.edu/athletics",
+            },
+            Object {
+              "card-order": 6,
+              "icon": "https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/quick_links/legacy-icon-bookstore.png",
+              "name": "Bookstore",
+              "url": "https://ucsandiegobookstore.com/",
+            },
+            Object {
+              "card-order": 7,
+              "icon": "https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/quick_links/legacy-icon-services.png",
+              "name": "Campus Services",
+              "url": "http://mobile.ucsd.edu/services/",
+            },
+          ]
+        }
+        item="QuicklinksItem"
+        rows={4}
+        scrollEnabled={false}
+      />
+      <Touchable
+        onPress={[Function]}
+      >
+        <View
+          style={
+            Object {
+              "alignItems": "center",
+              "justifyContent": "center",
+              "paddingBottom": 4,
+              "paddingHorizontal": 4,
+              "paddingTop": 8,
+            }
+          }
+        >
+          <Text
+            accessible={true}
+            allowFontScaling={true}
+            ellipsizeMode="tail"
+            style={
+              Object {
+                "color": "#034262",
+                "fontSize": 20,
+                "fontWeight": "300",
+              }
+            }
+          >
+            View All
+          </Text>
+        </View>
+      </Touchable>
+    </View>
+  </View>
+</Connect(Card)>
+`;
+
+exports[`container renders without crashing 1`] = `
+<withNavigation(DataListCard)
+  cardSort={[Function]}
+  data={
+    Array [
+      Object {
+        "card-order": 5,
+        "icon": "https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/quick_links/legacy-icon-athletics.png",
+        "name": "Athletics",
+        "url": "http://m.ucsd.edu/athletics",
+      },
+      Object {
+        "card-order": 6,
+        "icon": "https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/quick_links/legacy-icon-bookstore.png",
+        "name": "Bookstore",
+        "url": "https://ucsandiegobookstore.com/",
+      },
+      Object {
+        "card-order": 7,
+        "icon": "https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/quick_links/legacy-icon-services.png",
+        "name": "Campus Services",
+        "url": "http://mobile.ucsd.edu/services/",
+      },
+      Object {
+        "card-order": 2,
+        "icon": "https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/quick_links/legacy-icon-courses.png",
+        "name": "Courses",
+        "url": "http://mobile.ucsd.edu/courses/",
+      },
+    ]
+  }
+  id="quicklinks"
+  item="QuicklinksItem"
+  rows={4}
+  title="Links"
+/>
+`;

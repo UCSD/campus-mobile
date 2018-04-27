@@ -4,10 +4,12 @@ import android.app.Application;
 import android.util.Log;
 
 import com.facebook.react.ReactApplication;
-import com.oblador.vectoricons.VectorIconsPackage;
-import com.joshblour.reactnativepermissions.ReactNativePermissionsPackage;
+import com.avishayil.rnrestart.ReactNativeRestartPackage;
+import com.evollu.react.fcm.FIRMessagingPackage;
 import com.idehub.GoogleAnalyticsBridge.GoogleAnalyticsBridgePackage;
-import com.microsoft.codepush.react.CodePush;
+import com.oblador.keychain.KeychainPackage;
+import com.github.wumke.RNExitApp.RNExitAppPackage;
+import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.ivanwu.googleapiavailabilitybridge.ReactNativeGooglePlayServicesPackage;
 import com.airbnb.android.react.maps.MapsPackage;
 import com.facebook.react.ReactInstanceManager;
@@ -24,12 +26,7 @@ public class MainApplication extends Application implements ReactApplication {
   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
 
     @Override
-    protected String getJSBundleFile() {
-      return CodePush.getJSBundleFile();
-    }
-
-    @Override
-    protected boolean getUseDeveloperSupport() {
+    public boolean getUseDeveloperSupport() {
       return BuildConfig.DEBUG;
     }
 
@@ -37,13 +34,20 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new VectorIconsPackage(),
-            new ReactNativePermissionsPackage(),
+            new ReactNativeRestartPackage(),
+            new FIRMessagingPackage(),
             new GoogleAnalyticsBridgePackage(),
-            new CodePush(null, getApplicationContext(), BuildConfig.DEBUG),
+            new KeychainPackage(),
+            new RNExitAppPackage(),
+            new RNDeviceInfo(),
             new ReactNativeGooglePlayServicesPackage(),
             new MapsPackage()
       );
+    }
+
+    @Override
+    protected String getJSMainModuleName() {
+      return "index";
     }
   };
 

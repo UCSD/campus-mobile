@@ -1,43 +1,60 @@
-import React, { PropTypes } from 'react';
-import { View } from 'react-native';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import React from 'react';
+import PropTypes from 'prop-types';
+import { View, Text } from 'react-native';
 import Entypo from 'react-native-vector-icons/Entypo';
 
 import AppSettings from '../AppSettings';
 import css from '../styles/css';
+import { COLOR_PRIMARY } from '../styles/ColorConstants';
 
 const propTypes = {
-	selected: PropTypes.bool,
-	title: PropTypes.string,
+	title: PropTypes.string.isRequired,
+	focused: PropTypes.bool.isRequired,
 };
 
-const TabIcons = function (props) {
+const TabIcons = (props) => {
 	let tabIconPack,
 		tabIconText,
 		tabIconName;
 
-	if (props.title === AppSettings.APP_NAME) {
+	if (props.title === 'Home') {
 		tabIconPack = 'Entypo';
-		tabIconText = 'Home';
 		tabIconName = 'home';
+		tabIconText = 'Home';
 	} else if (props.title === 'Map') {
 		tabIconPack = 'Entypo';
-		tabIconText = 'Map';
 		tabIconName = 'location';
+		tabIconText = 'Map';
 	} else if (props.title === 'Feedback') {
 		tabIconPack = 'Entypo';
 		tabIconName = 'new-message';
 		tabIconText = 'Feedback';
-	} else if (props.title === 'Settings') {
-		tabIconPack = 'FontAwesome';
-		tabIconName = 'gear';
-		tabIconText = 'Settings';
+	} else if (props.title === 'Preferences') {
+		tabIconPack = 'Entypo';
+		tabIconName = 'user';
+		tabIconText = 'User Settings';
 	}
 
 	return (
-		<View style={[css.tabContainer, props.selected ? css.tabContainerBottom : null]}>
-			{tabIconPack === 'FontAwesome' ? (<FontAwesome style={[css.tabIcon, props.selected ? css.campus_primary : null]} name={tabIconName} size={24} />) : null }
-			{tabIconPack === 'Entypo' ? (<Entypo style={[css.tabIcon, props.selected ? css.campus_primary : null]} name={tabIconName} size={24} />) : null }
+		<View style={[css.tabContainer, props.focused ? css.tabContainerBottom : null]}>
+			{tabIconPack === 'Entypo' && tabIconName !== 'user' ? (
+				<Entypo
+					style={[css.tabIcon, props.focused ? { color: COLOR_PRIMARY } : null]}
+					name={tabIconName}
+					size={24}
+				/>
+			) : null }
+			{tabIconPack === 'Entypo' && tabIconName === 'user' ? (
+				<View
+					style={[css.tabIconUserOutline, props.focused ? { borderColor: COLOR_PRIMARY } : null]}
+				>
+					<Entypo
+						style={[css.tabIconUser, props.focused ? { backgroundColor: COLOR_PRIMARY } : null]}
+						name={tabIconName}
+						size={24}
+					/>
+				</View>
+			) : null }
 		</View>
 	);
 };

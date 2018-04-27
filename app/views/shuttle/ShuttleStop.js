@@ -4,123 +4,93 @@ import {
 	Text,
 	Image,
 	ScrollView,
-	Dimensions,
+	StyleSheet
 } from 'react-native';
 import { connect } from 'react-redux';
-import TimerMixin from 'react-timer-mixin';
 import MapView from 'react-native-maps';
 
 import ShuttleSmallList from './ShuttleSmallList';
-import { updateArrivals } from '../../actions/shuttle';
 import ShuttleImageDict from './ShuttleImageDict';
+import css from '../../styles/css';
+import logger from '../../util/logger';
+import {
+	WINDOW_WIDTH
+} from '../../styles/LayoutConstants';
+import {
+	COLOR_PRIMARY,
+	COLOR_WHITE,
+	COLOR_DGRAY
+} from '../../styles/ColorConstants';
 
-const stopUpdateInterval = 6000;
-const deviceWidth = Dimensions.get('window').width;
-
-const css = require('../../styles/css');
-const logger = require('../../util/logger');
-
-const ShuttleStopContainer = React.createClass({
-	mixins: [TimerMixin],
-
+class ShuttleStopContainer extends React.Component {
 	componentDidMount() {
 		logger.ga('View Mounted: Shuttle Stop');
-		this.startShuttleWatch();
-	},
-
-	startShuttleWatch() {
-		this.setInterval(
-			this.tryUpdateStop,
-			stopUpdateInterval
-		);
-	},
-
-	tryUpdateStop() {
-		const { stopID } = this.props;
-
-		this.props.updateArrivals(stopID);
-	},
+	}
 
 	render() {
-		const { stopID, stops } = this.props;
-
+		const { navigation, stops, location } = this.props;
+		const { stopID } = navigation.state.params;
 		return (
-			<View style={[css.main_container, css.offwhitebg]}>
+			<ScrollView style={css.scroll_default} contentContainerStyle={css.main_full}>
+				{ShuttleImageDict[stopID] ? (
+					<Image style={styles.shuttlestop_image} source={ShuttleImageDict[stopID]} />
+				) : null }
+				<Text style={styles.nameText}>{stops.name}</Text>
 
-				<ScrollView
-					contentContainerStyle={css.scroll_default}
+				{ (stops.arrivals) ? (
+					<ShuttleSmallList
+						arrivalData={stops.arrivals.slice(0,3)}
+						rows={3}
+						scrollEnabled={false}
+					/>
+				) : (
+					<Text style={styles.arrivalsText}>There are no active shuttles at this time</Text>
+				)}
+				<MapView
+					style={styles.map}
+					loadingEnabled={true}
+					loadingIndicatorColor={COLOR_DGRAY}
+					loadingBackgroundColor={COLOR_WHITE}
+					showsUserLocation={true}
+					mapType={'standard'}
+					initialRegion={{
+						latitude: location.coords.latitude,
+						longitude: location.coords.longitude,
+						latitudeDelta: 0.1,
+						longitudeDelta: 0.1,
+					}}
 				>
-					{ShuttleImageDict[stopID] ? (
-						<Image style={css.shuttlestop_image} source={ShuttleImageDict[stopID]} />
-					) : null }
-
-					<View style={css.shuttlestop_name_container}>
-						<Text style={css.shuttlestop_name_text}>{stops[stopID].name}</Text>
-					</View>
-
-					{ (stops[stopID].arrivals) ? (
-						<ShuttleSmallList
-							arrivalData={stops[stopID].arrivals.slice(0,3)}
-							style={{ width: deviceWidth }}
-							rows={3}
-							scrollEnabled={false}
-						/>
-					) : (
-						<View style={css.shuttle_stop_arrivals_container}>
-							<Text style={css.shuttle_stop_next_arrivals_text}>There are no active shuttles at this time</Text>
-						</View>
-					)}
-
-					<View style={css.shuttle_stop_map_container}>
-						<MapView
-							style={css.shuttlestop_map}
-							loadingEnabled={true}
-							loadingIndicatorColor={'#666'}
-							loadingBackgroundColor={'#EEE'}
-							showsUserLocation={true}
-							mapType={'standard'}
-							initialRegion={{
-								latitude: this.props.location.coords.latitude,
-								longitude: this.props.location.coords.longitude,
-								latitudeDelta: 0.1,
-								longitudeDelta: 0.1,
-							}}
-						>
-							<MapView.Marker
-								coordinate={{ latitude: stops[stopID].lat,
-									longitude: stops[stopID].lon }}
-								title={stops[stopID].lat.name}
-								description={stops[stopID].lat.name}
-								key={stops[stopID].lat.name}
-							/>
-						</MapView>
-					</View>
-				</ScrollView>
-			</View>
-
+					<MapView.Marker
+						coordinate={{ latitude: stops.lat,
+							longitude: stops.lon }}
+						title={stops.lat.name}
+						description={stops.lat.name}
+						key={stops.lat.name}
+					/>
+				</MapView>
+			</ScrollView>
 		);
-	},
-
-});
+	}
+}
 
 function mapStateToProps(state, props) {
+	const { stopID } = props.navigation.state.params;
 	return {
 		location: state.location.position,
-		stops: state.shuttle.stops,
+		stops: state.shuttle.stops[stopID],
 	};
 }
 
-const mapDispatchToProps = (dispatch) => (
-	{
-		updateArrivals: (stopID) => {
-			dispatch(updateArrivals(stopID));
-		}
-	}
-);
-
 const ActualShuttleStop = connect(
-	mapStateToProps,
-	mapDispatchToProps
+	mapStateToProps
 )(ShuttleStopContainer);
+
+const styles = StyleSheet.create({
+	shuttlestop_image: { width: WINDOW_WIDTH, height: Math.round(WINDOW_WIDTH * 0.533) },
+	nameText: { flex: 1, flexDirection: 'row', alignItems: 'center', width: WINDOW_WIDTH, paddingVertical: 10, paddingHorizontal: 14, backgroundColor: COLOR_PRIMARY, color: COLOR_WHITE, fontSize: 24, fontWeight: '300' },
+	arrivalsText: { width: WINDOW_WIDTH, padding: 16, fontSize: 20, fontWeight: '300', color: COLOR_DGRAY },
+	mapContainer: { margin: 1 },
+	map: { margin: 1, width: WINDOW_WIDTH, height: Math.round(WINDOW_WIDTH * 0.8) },
+});
 
 export default ActualShuttleStop;

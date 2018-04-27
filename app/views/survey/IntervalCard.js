@@ -6,6 +6,7 @@ import {
 } from 'react-native';
 
 import DismissibleCard from '../card/DismissibleCard';
+import Touchable from '../common/Touchable';
 
 const css = require('../../styles/css');
 const logger = require('../../util/logger');
@@ -21,21 +22,21 @@ export default class IntervalCard extends React.Component {
 					</Text>
 				</View>
 				<View style={css.card_footer_container}>
-					<TouchableHighlight style={css.card_button_container} underlayColor="#DDD" onPress={() => this._card.dismissCard()}>
+					<Touchable style={css.card_button_container} onPress={() => this._card.dismissCard()}>
 						<Text style={css.card_button_text}>0</Text>
-					</TouchableHighlight>
-					<TouchableHighlight style={css.card_button_container} underlayColor="#DDD" onPress={() => logger.log('No')}>
+					</Touchable>
+					<Touchable style={css.card_button_container} onPress={() => logger.log('No')}>
 						<Text style={css.card_button_text}>1</Text>
-					</TouchableHighlight>
-					<TouchableHighlight style={css.card_button_container} underlayColor="#DDD" onPress={() => this._card.dismissCard()}>
+					</Touchable>
+					<Touchable style={css.card_button_container} onPress={() => this._card.dismissCard()}>
 						<Text style={css.card_button_text}>2</Text>
-					</TouchableHighlight>
-					<TouchableHighlight style={css.card_button_container} underlayColor="#DDD" onPress={() => logger.log('No')}>
+					</Touchable>
+					<Touchable style={css.card_button_container} onPress={() => logger.log('No')}>
 						<Text style={css.card_button_text}>3</Text>
-					</TouchableHighlight>
-					<TouchableHighlight style={css.card_button_container} underlayColor="#DDD" onPress={() => this._card.dismissCard()}>
+					</Touchable>
+					<Touchable style={css.card_button_container} onPress={() => this._card.dismissCard()}>
 						<Text style={css.card_button_text}>4</Text>
-					</TouchableHighlight>
+					</Touchable>
 				</View>
 			</DismissibleCard>
 		);

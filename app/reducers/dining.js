@@ -1,6 +1,8 @@
 const initialState = {
 	data: null,
-	lastUpdated: new Date().getTime(),
+	menus: [],
+	lastUpdated: 0,
+	lookup: null
 };
 
 function dining(state = initialState, action) {
@@ -8,13 +10,28 @@ function dining(state = initialState, action) {
 
 	switch (action.type) {
 	case 'SET_DINING': {
-		newState.data = action.data;
+		// create a lookup object for restaurant IDs
+		const newLookup = {};
 
-		return newState;
+		for (let i = 0; i < action.data.length; i++) {
+			newLookup[action.data[i].id] = i;
+		}
+
+		return Object.assign({}, newState, {
+			data: action.data,
+			lastUpdated: new Date().getTime(),
+			lookup: newLookup
+		});
 	}
-	case 'SET_DINING_UPDATE': {
-		newState.lastUpdated = action.nowTime;
+	case 'SET_DINING_MENU': {
+		const newMenusArray = newState.menus;
 
+		newMenusArray[action.id] = action.data;
+		if (newMenusArray[action.id]) {
+			newMenusArray[action.id].lastUpdated = new Date().getTime();
+		}
+
+		newState.menus = newMenusArray;
 		return newState;
 	}
 	default:

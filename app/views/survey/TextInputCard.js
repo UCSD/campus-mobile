@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 
 import DismissibleCard from '../card/DismissibleCard';
+import Touchable from '../common/Touchable';
 
 const css = require('../../styles/css');
 const logger = require('../../util/logger');
@@ -29,9 +30,9 @@ export default class TextInputCard extends React.Component {
 					/>
 				</View>
 				<View style={css.card_footer_container}>
-					<TouchableHighlight style={css.card_button_container} underlayColor="#DDD" onPress={() => logger.log('No')}>
+					<Touchable style={css.card_button_container} onPress={() => logger.log('No')}>
 						<Text style={css.card_button_text}>Submit</Text>
-					</TouchableHighlight>
+					</Touchable>
 				</View>
 			</DismissibleCard>
 		);

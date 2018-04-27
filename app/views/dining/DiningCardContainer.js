@@ -1,44 +1,27 @@
 import React from 'react';
-
 import { connect } from 'react-redux';
-import { Actions } from 'react-native-router-flux';
 
-import CardComponent from '../card/CardComponent';
-import DiningCard from './DiningCard';
+import DataListCard from '../common/DataListCard';
+import logger from '../../util/logger';
 
-const logger = require('../../util/logger');
+export const DiningCardContainer = ({ diningData }) => {
+	logger.ga('Card Mounted: Dining');
+	return (
+		<DataListCard
+			id="dining"
+			title="Dining"
+			data={diningData}
+			item="DiningItem"
+		/>
+	);
+};
 
-class DiningCardContainer extends CardComponent {
-	componentDidMount() {
-		logger.ga('Card Mounted: Dining');
-	}
-
-	render() {
-		const { diningData, locationPermission } = this.props;
-
-		return (
-			<DiningCard
-				data={diningData}
-				rows={4}
-				permission={locationPermission}
-			/>
-		);
-	}
-
-	gotoDiningListView = () => {
-		Actions.DiningListView({ data: this.props.diningData });
-	}
-}
-
-function mapStateToProps(state, props) {
+function mapStateToProps(state) {
 	return {
 		diningData: state.dining.data,
-		locationPermission: state.location.permission,
 	};
 }
 
-const ActualDiningCard = connect(
-	mapStateToProps,
-)(DiningCardContainer);
+const ActualDiningCard = connect(mapStateToProps, null)(DiningCardContainer);
 
 export default ActualDiningCard;

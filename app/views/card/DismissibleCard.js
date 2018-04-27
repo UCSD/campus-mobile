@@ -1,22 +1,14 @@
-import React from 'react'
+import React from 'react';
 import {
-	View,
-	Text,
-	TouchableHighlight,
 	Animated,
-	PanResponder,
-	Dimensions,
-	ScrollView
+	StyleSheet
 } from 'react-native';
-import CardHeader from './CardHeader'
- 
-var css = require('../../styles/css');
-var logger = require('../../util/logger');
-var width = Dimensions.get('window').width;
-var third = Math.round(width/3);
-var tenth = Math.round(width/20);
 
-//var util = require("util");
+import CardHeader from './CardHeader';
+import {
+	COLOR_DGREY,
+	COLOR_LGREY
+} from '../../styles/ColorConstants';
 
 export default class DismissibleCard extends React.Component {
 
@@ -61,7 +53,7 @@ export default class DismissibleCard extends React.Component {
 						this.state.pan, // Auto-multiplexed
 						{toValue: {x: 0, friction: 3}} // Back to zero
 					).start();
-				}	
+				}
 			},
 		});*/
 	}
@@ -70,46 +62,48 @@ export default class DismissibleCard extends React.Component {
 		this._card.setNativeProps(props);
 	}
 
+	dismissCard() {
+		Animated.timing(
+			this.state.fadeAnim,
+			{ toValue: 0 }
+		).start(() => this.setState({ isDismissed: true }));
+	}
+
 	render() {
-		if(this.state.isDismissed) {
+		if (this.state.isDismissed) {
 			return null;
 		}
 		else {
 			/*
 			return (
-				<Animated.View 
+				<Animated.View
 					style={[css.card_main, { opacity: this.state.fadeAnim }, this.state.pan.getLayout()]}
 					{...this.state.panResponder.panHandlers}
 					>
-					
+
 					{(this.props.title) ? (
-						<CardHeader title={this.props.title} cardRefresh={this.props.cardRefresh} isRefreshing={this.props.isRefreshing} />) : 
+						<CardHeader title={this.props.title} cardRefresh={this.props.cardRefresh} isRefreshing={this.props.isRefreshing} />) :
 						(null)
 					}
-					
+
 					{this.props.children}
 				</Animated.View>
 			);*/
 			return (
-				<Animated.View 
-					style={[css.card_main, { opacity: this.state.fadeAnim }]}
-					>
-					
+				<Animated.View
+					style={[styles.card_main, this.props.style, { opacity: this.state.fadeAnim }]}
+				>
 					{(this.props.title) ? (
-						<CardHeader title={this.props.title} cardRefresh={this.props.cardRefresh} isRefreshing={this.props.isRefreshing} />) : 
+						<CardHeader title={this.props.title} cardRefresh={this.props.cardRefresh} isRefreshing={this.props.isRefreshing} />) :
 						(null)
 					}
-					
 					{this.props.children}
 				</Animated.View>
 			);
 		}
 	}
-
-	dismissCard() {
-		Animated.timing(
-			this.state.fadeAnim,
-			{toValue: 0}
-		).start(() => this.setState({ isDismissed: true }));
-	}
 }
+
+const styles = StyleSheet.create({
+	card_main: { borderWidth: 1, borderRadius: 2, borderColor: COLOR_DGREY, backgroundColor: COLOR_LGREY, margin: 6, alignItems: 'flex-start', justifyContent: 'center', overflow: 'hidden' },
+});

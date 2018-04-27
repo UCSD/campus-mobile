@@ -1,0 +1,116 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`card renders without crashing 1`] = `
+<Connect(Card)
+  id="events"
+  title="Events"
+>
+  <View
+    style={
+      Object {
+        "alignSelf": "stretch",
+        "padding": 8,
+      }
+    }
+  >
+    <View>
+      <DataListView
+        card={false}
+        data={
+          Array [
+            Object {
+              "contact_info": "innovation@ucsd.edu",
+              "contact_phone": "",
+              "description": "UC San Diego Office of Innovation and Commercialization is partnering with Dentons and Tiber Creek on a seminar series on what you need to know about forming a startup company.
+",
+              "endtime": "13:30:00",
+              "eventdate": "2018-01-25",
+              "id": "30487",
+              "image": "https://studentevents.ucsd.edu/article_images/170924917291122.jpg",
+              "imagehq": "https://studentevents.ucsd.edu/article_images/170924917291147.jpg",
+              "imagethumb": "https://studentevents.ucsd.edu/article_images/170924917291122.jpg",
+              "location": "Fung Auditorium - Bioengineering Hall",
+              "shortdescription": "",
+              "starttime": "11:30:00",
+              "subtext": "Jan 25th, 11:30am - 1:30pm",
+              "tags": Array [
+                "Seminars / Info Sessions",
+                "UCSD Office of Innovation and Commercialization ",
+              ],
+              "title": "Startups & Pizza: Source Funding for NewCo",
+              "url": "https://www.eventbrite.com/e/startups-pizza-source-funding-for-newco-tickets-37502383639?utm-medium=discovery&utm-campaign=social&utm-content=attendee",
+            },
+          ]
+        }
+        item="EventsItem"
+        rows={3}
+        scrollEnabled={false}
+      />
+      <Touchable
+        onPress={[Function]}
+      >
+        <View
+          style={
+            Object {
+              "alignItems": "center",
+              "justifyContent": "center",
+              "paddingBottom": 4,
+              "paddingHorizontal": 4,
+              "paddingTop": 8,
+            }
+          }
+        >
+          <Text
+            accessible={true}
+            allowFontScaling={true}
+            ellipsizeMode="tail"
+            style={
+              Object {
+                "color": "#034262",
+                "fontSize": 20,
+                "fontWeight": "300",
+              }
+            }
+          >
+            View All
+          </Text>
+        </View>
+      </Touchable>
+    </View>
+  </View>
+</Connect(Card)>
+`;
+
+exports[`container renders without crashing 1`] = `
+<withNavigation(DataListCard)
+  data={
+    Array [
+      Object {
+        "contact_info": "innovation@ucsd.edu",
+        "contact_phone": "",
+        "description": "UC San Diego Office of Innovation and Commercialization is partnering with Dentons and Tiber Creek on a seminar series on what you need to know about forming a startup company.
+",
+        "endtime": "13:30:00",
+        "eventdate": "2018-01-25",
+        "id": "30487",
+        "image": "https://studentevents.ucsd.edu/article_images/170924917291122.jpg",
+        "imagehq": "https://studentevents.ucsd.edu/article_images/170924917291147.jpg",
+        "imagethumb": "https://studentevents.ucsd.edu/article_images/170924917291122.jpg",
+        "location": "Fung Auditorium - Bioengineering Hall",
+        "shortdescription": "",
+        "starttime": "11:30:00",
+        "subtext": "Jan 25th, 11:30am - 1:30pm",
+        "tags": Array [
+          "Seminars / Info Sessions",
+          "UCSD Office of Innovation and Commercialization ",
+        ],
+        "title": "Startups & Pizza: Source Funding for NewCo",
+        "url": "https://www.eventbrite.com/e/startups-pizza-source-funding-for-newco-tickets-37502383639?utm-medium=discovery&utm-campaign=social&utm-content=attendee",
+      },
+    ]
+  }
+  id="events"
+  item="EventItem"
+  title="Events"
+/>
+`;

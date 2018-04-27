@@ -9,11 +9,7 @@ function events(state = initialState, action) {
 	switch (action.type) {
 	case 'SET_EVENTS': {
 		newState.data = action.events;
-
-		return newState;
-	}
-	case 'SET_EVENTS_UPDATE': {
-		newState.lastUpdated = action.nowTime;
+		newState.lastUpdated = new Date().getTime();
 
 		return newState;
 	}

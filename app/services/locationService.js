@@ -4,7 +4,6 @@ const logger = require('../util/logger');
 const positionOptions = {
 	enableHighAccuracy: false,
 	timeout: 5000,
-	maximumAge: 1000
 };
 
 export function getPosition() {
@@ -13,7 +12,7 @@ export function getPosition() {
 			(position) => {
 				resolve(position); },
 			(error) => {
-				logger.log('getPosition Error: ' + JSON.stringify(error));
+				//logger.log('getPosition Error: ' + JSON.stringify(error));
 				reject(error);
 			},
 			positionOptions

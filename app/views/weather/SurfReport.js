@@ -1,133 +1,93 @@
-import React from 'react';
+import React from 'react'
 import {
 	View,
 	Text,
 	ScrollView,
 	Image,
-	ListView,
-	AppState
-} from 'react-native';
+	FlatList,
+} from 'react-native'
+import { connect } from 'react-redux'
 
-import { Actions } from 'react-native-router-flux';
-import { connect } from 'react-redux';
-import { updateSurf } from '../../actions/surf';
+import css from '../../styles/css'
+import logger from '../../util/logger'
 
-const css = require('../../styles/css');
-const AppSettings = require('../../AppSettings');
-const logger = require('../../util/logger');
+const surfHeader = require('../../assets/images/surf_report_header.jpg')
 
-const surfDataSource = new ListView.DataSource({
-	rowHasChanged: (r1, r2) => r1 !== r2,
-	sectionHeaderHasChanged: (s1, s2) => s1 !== s2 });
-const surfHeader = require('../../assets/img/surf_report_header.jpg');
+const mapWeekdays = [
+	'Sunday',
+	'Monday',
+	'Tuesday',
+	'Wednesday',
+	'Thursday',
+	'Friday',
+	'Saturday'
+]
+
+const mapMonths = [
+	'January',
+	'February',
+	'March',
+	'April',
+	'May',
+	'June',
+	'July',
+	'August',
+	'September',
+	'October',
+	'November',
+	'December'
+]
 
 class SurfReport extends React.Component {
 	componentDidMount() {
-		logger.log('View Mounted: Surf');
-
-		this.props.updateSurf();
-
-		AppState.addEventListener('change', this._handleAppStateChange);
-	}
-
-	componentWillUnmount() {
-		AppState.removeEventListener('change', this._handleAppStateChange);
-	}
-
-	_handleAppStateChange = (currentAppState) => {
-		this.setState({ currentAppState });
-
-		// check TTL and refresh surf data if needed
-		if (currentAppState === 'active') {
-			const nowTime = new Date().getTime();
-			const timeDiff = nowTime - this.props.surfLastUpdated;
-			const surfTTL = AppSettings.SURF_API_TTL * 1000; // convert secs to ms
-
-			if (timeDiff > surfTTL) {
-				this.props.updateSurf();
-			}
-		}
+		logger.ga('View Loaded: Surf Report')
 	}
 
 	render() {
-		return (<SurfView
-			surfData={this.props.surfData}
-		/>);
+		try {
+			const dateString = new Date(this.props.surfData.spots[0].date)
+			return (
+				<ScrollView style={css.scroll_default} contentContainerStyle={css.main_full}>
+					<Image style={css.sr_headerImage} source={surfHeader} />
+					<View style={css.sr_container}>
+						<Text style={css.sr_title}>
+							Surf Report for {mapWeekdays[dateString.getDay()]}{', '}{mapMonths[dateString.getMonth()]}{' '}{dateString.getDate()}
+						</Text>
+						<Text style={css.sr_desc}>{this.props.surfData.forecast[3]}</Text>
+						<FlatList
+							style={css.sr_beach_list}
+							data={this.props.surfData.spots}
+							keyExtractor={(listItem, index) => (listItem.title + listItem.date + index)}
+							renderItem={({ item: rowData }) => (
+								<View style={css.sr_surf_row}>
+									<Text style={css.sr_beach_name}>{rowData.title}</Text>
+									<Text style={css.sr_beach_surf}>{rowData.surf_min}{'-'}{rowData.surf_max}{'ft'}</Text>
+								</View>
+							)}
+						/>
+					</View>
+				</ScrollView>
+			)
+		} catch (err) {
+			console.log('Error: Surf Report: ', err)
+			return (
+				<ScrollView style={css.scroll_default} contentContainerStyle={css.main_full}>
+					<Image style={css.sr_headerImage} source={surfHeader} />
+					<View style={css.sr_container}>
+						<Text style={css.sr_desc}>
+							An error occurred while loading your Surf Report.
+							{'\n'}Please try again later.
+						</Text>
+					</View>
+				</ScrollView>
+			)
+		}
 	}
 }
 
-// This stuff should be moved to different files, but we should be redoing this view soon
-const SurfView = ({ surfData }) => (
-	<View style={[css.main_container, css.whitebg]}>
-		<ScrollView contentContainerStyle={[css.scroll_main, css.whitebg]}>
-			<Image
-				style={css.sr_image}
-				source={surfHeader}
-			/>
-			{surfData ? (
-				<SurfList
-					surfData={surfDataSource.cloneWithRowsAndSections(surfData)}
-				/>
-			) : null }
-			{!surfData ? (
-				<Text style={[css.center, css.pad40]}>There is no surf data available at this time.{'\n'}Please check back later.</Text>
-			) : null }
-		</ScrollView>
-	</View>
-);
+function mapStateToProps(state) {
+	return { surfData: state.surf.data }
+}
 
-const SurfList = ({ surfData }) => (
-	<ListView
-		dataSource={surfData}
-		style={css.wf_listview}
-		renderRow={
-			(row, sectionID, rowID) => (
-				<SurfItem
-					data={row}
-				/>
-			)
-		}
-		renderSectionHeader={(sectionData, day) => (
-			<Text
-				style={[css.sr_dayofweek,
-					{ padding: 10 }]}
-			>
-				{day}
-			</Text>
-		)}
-	/>
-);
-
-const SurfItem = ({ data }) => (
-	<View style={css.sr_day_row}>
-		<View style={css.sr_day_details_container}>
-			<View style={css.sr_day_details_container_inner}>
-				<Text style={css.sr_day_details_title}>{data.surfTitle}</Text>
-				<Text style={css.sr_day_details_height}>{data.surfHeight}</Text>
-				{data.surfDesc ? (<Text style={css.sr_day_details_desc}>{data.surfDesc}</Text>) : null }
-			</View>
-		</View>
-	</View>
-);
-
-const mapStateToProps = (state) => (
-	{
-		surfData: state.surf.data,
-		surfLastUpdated: state.surf.lastUpdated,
-	}
-);
-
-const mapDispatchToProps = (dispatch) => (
-	{
-		updateSurf: () => {
-			dispatch(updateSurf());
-		}
-	}
-);
-
-const ActualSurfReport = connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(SurfReport);
-
-export default ActualSurfReport;
+const ActualSurfReport = connect(mapStateToProps)(SurfReport)
+export default ActualSurfReport

@@ -1,54 +1,57 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 import {
 	View,
 	StyleSheet,
 	Dimensions,
 	Text,
-	ListView,
+	FlatList,
 	TouchableOpacity
 } from 'react-native';
 
 import ElevatedView from 'react-native-elevated-view';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import { getPRM, getMaxCardWidth } from '../../util/general';
+import { COLOR_MGREY } from '../../styles/ColorConstants';
 
 const PRM = getPRM();
 const deviceHeight = Dimensions.get('window').height;
 
-const historyDataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-
-const SearchHistoryCard = ({ data, pressHistory }) => (
+const SearchHistoryCard = ({ data, pressHistory, removeHistory }) => (
 	<ElevatedView
 		style={styles.card_main}
 		elevation={2}
 	>
 		<View style={styles.list_container}>
 			<SearchHistoryList
-				historyData={historyDataSource.cloneWithRows(data)}
+				historyData={data}
 				pressHistory={pressHistory}
+				removeHistory={removeHistory}
 			/>
 		</View>
 	</ElevatedView>
 );
 
-const SearchHistoryList = ({ historyData, pressHistory }) => (
-	<ListView
+const SearchHistoryList = ({ historyData, pressHistory, removeHistory }) => (
+	<FlatList
 		showsVerticalScrollIndicator={false}
-		dataSource={historyData}
-		keyboardShouldPersistTaps={true}
-		renderRow={
-			(row, sectionID, rowID) =>
+		data={historyData}
+		keyboardShouldPersistTaps="always"
+		keyExtractor={(listItem, index) => (listItem + index)}
+		renderItem={
+			({ item: rowData, index: rowID }) => (
 				<SearchHistoryItem
-					data={row}
+					data={rowData}
+					index={rowID}
 					pressHistory={pressHistory}
+					removeHistory={removeHistory}
 				/>
+			)
 		}
 	/>
 );
 
-const SearchHistoryItem = ({ data, pressHistory }) => (
+const SearchHistoryItem = ({ data, index, pressHistory, removeHistory }) => (
 	<TouchableOpacity
-		underlayColor={'rgba(200,200,200,.1)'}
 		onPress={() => {
 			pressHistory(data);
 		}}
@@ -68,6 +71,18 @@ const SearchHistoryItem = ({ data, pressHistory }) => (
 			>
 				<Text>{data}</Text>
 			</View>
+			<TouchableOpacity
+				onPress={() => {
+					removeHistory(index);
+				}}
+				style={styles.icon_container}
+			>
+				<Icon
+					name="cancel"
+					size={Math.round(24 * PRM)}
+					color={'rgba(0,0,0,.5)'}
+				/>
+			</TouchableOpacity>
 		</View>
 	</TouchableOpacity>
 );
@@ -82,10 +97,10 @@ SearchHistoryCard.defaultProps = {
 
 const styles = StyleSheet.create({
 	list_container: { width: getMaxCardWidth(), padding: 8, maxHeight: Math.round(deviceHeight / 2) },
-	card_main: { top: Math.round(44 * getPRM()) + 6, backgroundColor: '#FFFFFF', margin: 6, alignItems: 'flex-start', justifyContent: 'center',  },
-	list_row: { flex: 1, flexDirection: 'row', paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: '#EEE', overflow: 'hidden' },
-	icon_container: { alignItems: 'center', flex: 0.1 },
-	text_container: { flex: 0.9 }
+	card_main: { top: 44 + 6, backgroundColor: 'white', margin: 6, alignItems: 'flex-start', justifyContent: 'center',  },
+	list_row: { flex: 1, flexDirection: 'row', paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: COLOR_MGREY, overflow: 'hidden' },
+	icon_container: { alignItems: 'center', width: 30 },
+	text_container: { flex: 1 }
 });
 
 export default SearchHistoryCard;

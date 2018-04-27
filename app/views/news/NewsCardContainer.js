@@ -1,40 +1,30 @@
 import React from 'react';
-import {
-	AppState,
-} from 'react-native';
 
 import { connect } from 'react-redux';
+import moment from 'moment';
 
-import CardComponent from '../card/CardComponent';
-import { updateNews } from '../../actions/news';
-import NewsCard from './NewsCard';
+import DataListCard from '../common/DataListCard';
 import logger from '../../util/logger';
 
-class NewsCardContainer extends CardComponent {
-	componentDidMount() {
-		logger.ga('Card Mounted: News');
+export const NewsCardContainer = ({ newsData }) => {
+	logger.ga('Card Mounted: News');
 
-		this.props.updateNews();
-		AppState.addEventListener('change', this._handleAppStateChange);
+	let data = null;
+	if (Array.isArray(newsData)) {
+		newsData.forEach((element) => {
+			element.subtext = moment(element.date).format('MMM Do, YYYY');
+		});
+		data = newsData;
 	}
-
-	componentWillUnmount() {
-		AppState.removeEventListener('change', this._handleAppStateChange);
-	}
-
-	_handleAppStateChange = (currentAppState) => {
-		this.setState({ currentAppState });
-		this.props.updateNews();
-	}
-
-	render() {
-		return (
-			<NewsCard
-				data={this.props.newsData}
-			/>
-		);
-	}
-}
+	return (
+		<DataListCard
+			id="news"
+			title="News"
+			data={data}
+			item={'NewsItem'}
+		/>
+	);
+};
 
 const mapStateToProps = (state) => (
 	{
@@ -42,17 +32,8 @@ const mapStateToProps = (state) => (
 	}
 );
 
-const mapDispatchToProps = (dispatch) => (
-	{
-		updateNews: () => {
-			dispatch(updateNews());
-		}
-	}
-);
-
 const ActualNewsCard = connect(
-	mapStateToProps,
-	mapDispatchToProps
+	mapStateToProps
 )(NewsCardContainer);
 
 export default ActualNewsCard;

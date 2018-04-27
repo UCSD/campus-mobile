@@ -1,4 +1,13 @@
 {
+  "opts": {
+    "template": "./node_modules/ink-docstrap/template",
+    "destination": "./docs/",
+    "readme": "Readme.md",
+    "recurse": true
+  },
+  "source": {
+    "include": ["./app"]
+  },
   "tags": {
     "allowUnknownTags": true
   },

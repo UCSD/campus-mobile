@@ -2,33 +2,47 @@ import React from 'react';
 import {
 	View,
 	Text,
-	TouchableHighlight,
+	TouchableOpacity,
+	StyleSheet
 } from 'react-native';
 
-import DismissibleCard from '../card/DismissibleCard';
+import Card from '../card/Card';
+import Touchable from '../common/Touchable';
+import { COLOR_DGREY } from '../../styles/ColorConstants';
 
-const css = require('../../styles/css');
-const logger = require('../../util/logger');
+const YesNoCard = ({ style, question, id, data, onPress }) => (
+	<Card
+		id="question"
+		title="Question"
+	>
+		<View style={styles.question_container}>
+			<Text style={styles.question_text}>
+				{question}
+			</Text>
+		</View>
+		<View style={styles.answer_container}>
+			<Touchable
+				style={styles.button_container}
+				onPress={() => onPress('yes')}
+			>
+				<Text style={styles.card_button_text}>Yes</Text>
+			</Touchable>
+			<Touchable
+				style={styles.button_container}
+				onPress={() => onPress('no')}
+			>
+				<Text style={styles.card_button_text}>No</Text>
+			</Touchable>
+		</View>
+	</Card>
+);
 
-export default class YesNoCard extends React.Component {
+const styles = StyleSheet.create({
+	question_container: { justifyContent: 'center', alignItems: 'center', padding: 8, },
+	question_text: { color: COLOR_DGREY, fontSize: 18, alignItems: 'center', },
+	card_button_text: { color: COLOR_DGREY, fontSize: 18, alignItems: 'center', textAlign: 'center' },
+	answer_container: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: 8 },
+	button_container: { flex: 1, justifyContent: 'center', alignItems: 'center', },
+});
 
-	render() {
-		return (
-			<DismissibleCard ref={(c) => { this._card = c; }}>
-				<View style={css.card_text_container}>
-					<Text style={css.card_button_text}>
-						Do you wanna dismiss me?
-					</Text>
-				</View>
-				<View style={css.card_footer_container}>
-					<TouchableHighlight style={css.card_button_container} underlayColor="#DDD" onPress={() => this._card.dismissCard()}>
-						<Text style={css.card_button_text}>Yes</Text>
-					</TouchableHighlight>
-					<TouchableHighlight style={css.card_button_container} underlayColor="#DDD" onPress={() => logger.log('No')}>
-						<Text style={css.card_button_text}>No</Text>
-					</TouchableHighlight>
-				</View>
-			</DismissibleCard>
-		);
-	}
-}
+export default YesNoCard;

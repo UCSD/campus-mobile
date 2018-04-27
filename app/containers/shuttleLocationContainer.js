@@ -8,7 +8,6 @@ import TimerMixin from 'react-timer-mixin';
 import { updateVehicles } from '../actions/shuttle';
 
 const logger = require('../util/logger');
-const AppSettings = require('../AppSettings');
 
 const ShuttleLocationContainer = React.createClass({
 	mixins: [TimerMixin],
@@ -59,8 +58,8 @@ const ShuttleLocationContainer = React.createClass({
 	},
 
 	render() {
-		if (!AppSettings.DEBUG_ENABLED) return null;
-
+		return null;
+		/*
 		if (this.props.permission !== 'authorized') {
 			return (
 				<Text>Permission: {this.props.permission}</Text>
@@ -73,6 +72,7 @@ const ShuttleLocationContainer = React.createClass({
 				Timestamp: {this.props.position.timestamp}
 			</Text>
 		);
+		*/
 	}
 });
 

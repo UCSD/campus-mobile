@@ -1,7 +1,7 @@
-const AppSettings = require('../AppSettings');
-const GoogleAnalytics = require('react-native-google-analytics-bridge');
+import { GOOGLE_ANALYTICS_ID } from '../AppSettings';
+import { GoogleAnalyticsTracker } from 'react-native-google-analytics-bridge';
 
-GoogleAnalytics.setTrackerId(AppSettings.GOOGLE_ANALYTICS_ID);
+let tracker = new GoogleAnalyticsTracker(GOOGLE_ANALYTICS_ID);
 
 /**
  * A module containing logging helper functions
@@ -19,27 +19,33 @@ module.exports = {
 	},
 
 	/**
-	 * Send an error message to the console
-	 * If debugging is enabled, the message is sent as an error (e.g. stderr)
+	 * Sends a trackScreenView message to Google Analytics
 	 * @function
-	 * @param {string} msg The error message to log
+	 * @param {string} msg The message to log
 	 */
-	error(msg) {
-		if (AppSettings.DEBUG_ENABLED) {
-			console.error(msg);
-		} else {
-			console.log(msg);
-		}
+	ga(msg) {
+		tracker.trackScreenView(msg);
+	},
+
+
+	/**
+	 * Sends a trackEvent message to Google Analytics
+	 * @function
+	 * @param {string} category The category of event
+	 * @param {string} action The name of the action
+	 */
+	trackEvent(category, action) {
+		tracker.trackEvent(category, action);
 	},
 
 	/**
-	 * Sends a log message to Google Analytics as well as the local console
+	 * Sends a trackException message to Google Analytics
 	 * @function
-	 * @param {string} msg The message to to log
+	 * @param {string} error The error message
+	 * @param {bool} fatal If the crash was fatal or not
 	 */
-	ga(msg) {
-		this.log(msg);
-		GoogleAnalytics.trackScreenView(msg);
+	trackException(error, fatal) {
+		tracker.trackException(error, fatal);
 	},
 
 };

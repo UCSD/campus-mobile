@@ -1,0 +1,86 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders without crashing 1`] = `
+<View>
+  <SearchNavButton
+    onPress={[Function]}
+    visible={false}
+  />
+  <SearchShuttleIcon
+    onPress={[Function]}
+    visible={true}
+  />
+  <SearchBar
+    iconStatus="search"
+    onFocus={[Function]}
+    placeholder="Search here"
+    pressIcon={[Function]}
+    reff={[Function]}
+    searchInput={null}
+    update={[Function]}
+  />
+  <ScrollView
+    keyboardShouldPersistTaps="always"
+    scrollEnabled={false}
+    showsVerticalScrollIndicator={false}
+  >
+    <View
+      style={
+        Object {
+          "height": 1270,
+        }
+      }
+    >
+      <SearchMap
+        location={
+          Object {
+            "coords": Object {
+              "latitude": 32.88,
+              "longitude": -117.234,
+            },
+          }
+        }
+        selectedResult={null}
+        vehicles={Object {}}
+      />
+    </View>
+    <View
+      style={
+        Object {
+          "height": 1270,
+        }
+      }
+    >
+      <SearchResultsCard
+        onSelect={[Function]}
+      />
+    </View>
+    <View
+      style={
+        Object {
+          "height": 1270,
+        }
+      }
+    >
+      <SearchSuggest
+        onPress={[Function]}
+      />
+    </View>
+    <View
+      style={
+        Object {
+          "height": 1270,
+        }
+      }
+    >
+      <SearchShuttleMenu
+        onToggle={[Function]}
+      />
+    </View>
+  </ScrollView>
+  <SearchResultsBar
+    onPress={[Function]}
+    visible={false}
+  />
+</View>
+`;

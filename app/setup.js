@@ -1,39 +1,46 @@
-import React from 'react';
-import { View } from 'react-native';
+import React from 'react'
+import { StatusBar } from 'react-native'
+import { setJSExceptionHandler } from 'react-native-exception-handler'
+import { Provider } from 'react-redux'
 
-// CODE PUSH
-import codePush from 'react-native-code-push';
-
-// REDUX
-import { Provider } from 'react-redux';
-import configureStore from './store/configureStore';
-
-import Main from './main';
-
-const codePushOptions = { checkFrequency: codePush.CheckFrequency.ON_APP_RESUME, installMode: codePush.InstallMode.ON_NEXT_RESTART };
+import configureStore from './store/configureStore'
+import Main from './main'
+import { platformAndroid, gracefulFatalReset } from './util/general'
+import { COLOR } from './styles/ColorConstants'
 
 class CampusMobileSetup extends React.Component {
 	constructor(props) {
-		super(props);
-
+		super(props)
 		this.state = {
-			store: configureStore({}, () => this.setState({ isLoading: false })),
+			store: configureStore({}, this.finishLoading),
 			isLoading: true,
-		};
-	}
-	render() {
-		let mainApp = <View />;
-
-		if (!this.state.isLoading) {
-			mainApp = <Main />;
 		}
-		return (
-			<Provider store={this.state.store}>
-				{mainApp}
-			</Provider>
-		);
+	}
+
+	finishLoading = () => {
+		this.setState({ isLoading: false })
+		const errorHandler = (e, isFatal) => {
+			if (isFatal) {
+				gracefulFatalReset(new Error('Crash: ' + e.name + ': ' + e.message + ': ' + e.stack))
+			}
+		}
+		setJSExceptionHandler(errorHandler, true)
+	}
+
+	render() {
+		if (platformAndroid()) {
+			StatusBar.setBackgroundColor(COLOR.PRIMARY, false)
+		}
+		if (!this.state.isLoading) {
+			return (
+				<Provider store={this.state.store}>
+					<Main />
+				</Provider>
+			)
+		} else {
+			return null
+		}
 	}
 }
 
-CampusMobileSetup = codePush(codePushOptions)(CampusMobileSetup);
-module.exports = CampusMobileSetup;
+module.exports = CampusMobileSetup

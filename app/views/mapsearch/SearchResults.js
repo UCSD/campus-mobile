@@ -1,17 +1,18 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import {
 	TouchableOpacity,
 	View,
 	Text,
 	StyleSheet,
 	Dimensions,
-	ListView,
+	FlatList,
 	StatusBar,
 	Platform
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ElevatedView from 'react-native-elevated-view';
-
+import { COLOR_MGREY } from '../../styles/ColorConstants';
 import css from '../../styles/css';
 import { doPRM, getPRM, getMaxCardWidth } from '../../util/general';
 
@@ -20,26 +21,27 @@ const statusBarHeight = Platform.select({
 	ios: 0,
 	android: StatusBar.currentHeight,
 });
-const resultsDataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
 const SearchResultsCard = ({ results, onSelect }) => (
-	<ElevatedView
-		style={styles.card_main}
-		elevation={2}
-	>
-		<View style={styles.list_container}>
-			{results ?
-				(
-					<SearchResultsList
-						results={resultsDataSource.cloneWithRows(results)}
-						onSelect={onSelect}
-					/>
-				) : (
-					null
-				)
-			}
-		</View>
-	</ElevatedView>
+	<View>
+		<ElevatedView
+			style={styles.card_main}
+			elevation={2}
+		>
+			<View style={styles.list_container}>
+				{results ?
+					(
+						<SearchResultsList
+							results={results}
+							onSelect={onSelect}
+						/>
+					) : (
+						null
+					)
+				}
+			</View>
+		</ElevatedView>
+	</View>
 );
 
 SearchResultsCard.propTypes = {
@@ -49,12 +51,13 @@ SearchResultsCard.propTypes = {
 SearchResultsCard.defaultProps = {};
 
 const SearchResultsList = ({ results, onSelect }) => (
-	<ListView
-		dataSource={results}
-		renderRow={
-			(row, sectionID, rowID) =>
+	<FlatList
+		data={results}
+		keyExtractor={(listItem, index) => (listItem.title + index)}
+		renderItem={
+			({ item: rowData, index: rowID }) =>
 				<SearchResultsItem
-					data={row}
+					data={rowData}
 					index={rowID}
 					onSelect={onSelect}
 				/>
@@ -87,13 +90,13 @@ const navHeight = Platform.select({
 });
 
 // device - (statusBar + navHeight + searchBar + listPadding + tabBar)
-const listHeight = deviceHeight - (statusBarHeight + navHeight + doPRM(44) + 16 + 40); // 18 + 64 + (44 * getPRM()));
+const listHeight = deviceHeight - (statusBarHeight + navHeight + 44 + 16 + 40);
 
 const styles = StyleSheet.create({
 	list_container: { width: getMaxCardWidth(), maxHeight: listHeight, },
-	card_main: { top: Math.round(44 * getPRM()) + 6, backgroundColor: '#FFFFFF', margin: 6, alignItems: 'flex-start', justifyContent: 'center', },
-	touch: { backgroundColor: '#FFF' },
-	list_row: { flexDirection: 'row', paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: '#EEE', overflow: 'hidden', paddingLeft: 8, paddingRight: 8 },
+	card_main: { top: 44 + 6, backgroundColor: 'white', margin: 6, alignItems: 'flex-start', justifyContent: 'center', },
+	touch: { backgroundColor: 'white' },
+	list_row: { flexDirection: 'row', paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: COLOR_MGREY, overflow: 'hidden', paddingLeft: 8, paddingRight: 8 },
 });
 
 export default SearchResultsCard;

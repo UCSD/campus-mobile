@@ -1,39 +1,176 @@
-import React from 'react';
+import React from 'react'
 import {
 	View,
 	Text,
-	TouchableHighlight,
-} from 'react-native';
+} from 'react-native'
 
-import Icon from 'react-native-vector-icons/Ionicons';
-import { Actions } from 'react-native-router-flux';
+import Icon from 'react-native-vector-icons/Ionicons'
+import { withNavigation } from 'react-navigation'
+import ColoredDot from '../common/ColoredDot'
+import Touchable from '../common/Touchable'
+import {
+	COLOR_PRIMARY,
+	COLOR_MGREEN,
+	COLOR_MRED
+} from '../../styles/ColorConstants'
+import css from '../../styles/css'
 
-const css = require('../../styles/css');
-const general = require('../../util/general');
+const general = require('../../util/general')
+const dining = require('../../util/dining')
 
-const DiningItem = ({ data }) => (
-	<View style={css.dc_locations_row}>
-		<TouchableHighlight style={css.dc_locations_row_left} underlayColor={'rgba(200,200,200,.1)'} onPress={() => Actions.DiningDetail({ data })}>
+const DiningItem = ({ navigation, data }) => {
+	if (!data.name) return null
+	const status = dining.getOpenStatus(data.regularHours)
+	const areSpecialHours = data.specialHours
+	let activeDotColor,
+		statusText,
+		soonStatusText,
+		soonStatusColor,
+		newHourElement
+
+	if (status) {
+		if (status.isValid) {
+			activeDotColor = status.isOpen ?
+				COLOR_MGREEN : COLOR_MRED
+
+			statusText = status.isOpen ?
+				'Open' : 'Closed'
+		} else {
+			statusText = 'Unknown'
+		}
+
+		soonStatusText = null
+		soonStatusColor = null
+		if (status.openingSoon) {
+			soonStatusText = 'Opening Soon'
+			soonStatusColor = COLOR_MGREEN
+		}
+		else if (status.closingSoon) {
+			soonStatusText = 'Closing Soon'
+			soonStatusColor = COLOR_MRED
+		}
+
+		const isClosed = (!status.currentHours)
+		const isAlwaysOpen = (
+			status.currentHours &&
+			status.currentHours === 'Open 24/7'
+		)
+		let newHourElementHoursText
+		if (!status.isValid) {
+			newHourElementHoursText = 'Unknown hours'
+		}
+		else if (isClosed) {
+			newHourElementHoursText = 'Closed today'
+		}
+		else if (isAlwaysOpen) {
+			newHourElementHoursText = 'Open 24 Hours'
+		}
+		else if (
+			status.currentHours.openingHour.format('h:mm a') !== 'Invalid date'
+			&& status.currentHours.closingHour.format('h:mm a') !== 'Invalid date'
+		) {
+			let openingHourAmPm = 'a.m.'
+			if (status.currentHours.openingHour.format('a') === 'pm') {
+				openingHourAmPm = 'p.m.'
+			}
+			let closingHourAmPm = 'a.m.'
+			if (status.currentHours.closingHour.format('a') === 'pm') {
+				closingHourAmPm = 'p.m.'
+			}
+			newHourElementHoursText = status.currentHours.openingHour.format('h:mm ')
+				+ openingHourAmPm
+				+ ' — '
+				+ status.currentHours.closingHour.format('h:mm ')
+				+ closingHourAmPm
+		} else {
+			newHourElementHoursText = 'Unknown hours'
+		}
+		newHourElement = (
 			<View>
-				<Text style={css.dc_locations_title}>{data.name}</Text>
-				<Text style={css.dc_locations_hours}>{data.regularHours}</Text>
-				{data.specialHours ? (
-					<Text style={css.dc_locations_spec_hours}>Special Hours:{'\n'}{data.specialHours}</Text>
-				) : null }
+				<Text style={css.dl_hours_text}>
+					{newHourElementHoursText}
+				</Text>
 			</View>
-		</TouchableHighlight>
+		)
+	} else {
+		statusText = 'Unknown'
+		newHourElement = (
+			<View>
+				<Text style={css.dl_hours_text}>Unknown Hours</Text>
+			</View>
+		)
+	}
 
-		{data.coords.lat !== 0 ? (
-			<TouchableHighlight style={css.dc_locations_row_right} underlayColor={'rgba(200,200,200,.1)'} onPress={() => general.gotoNavigationApp(data.coords.lat, data.coords.lon)}>
-				<View style={css.dl_dir_traveltype_container}>
-					<Icon name="md-walk" size={32} color="#182B49" />
-					{data.distanceMilesStr ? (
-						<Text style={css.dl_dir_eta}>{data.distanceMilesStr}</Text>
-					) : null }
+	return (
+		<View style={css.dl_row}>
+			<Touchable
+				style={css.dl_row_container_left}
+				onPress={() => navigation.navigate('DiningDetail', { data })}
+			>
+				<View style={css.dl_title_row}>
+					<Text style={css.dl_title_text}>{data.name}</Text>
 				</View>
-			</TouchableHighlight>
-		) : null }
-	</View>
-);
+				{
+					(!areSpecialHours) ? (
+						<View>
+							<View style={css.dl_status_row}>
+								<ColoredDot
+									size={10}
+									color={activeDotColor}
+									style={css.dl_status_icon}
+								/>
+								<Text style={[css.dl_status_text, { color: activeDotColor }]}>
+									{statusText}
+								</Text>
+							</View>
+							<View style={css.dl_hours_row}>
+								{newHourElement}
+								<Text
+									style={[
+										css.dl_status_soon_text,
+										{ color: soonStatusColor }
+									]}
+								>
+									{soonStatusText}
+								</Text>
+							</View>
+						</View>
+					) : (
+						<View style={css.dl_hours_row}>
+							<Text style={css.dl_status_disclaimer}>
+								Today's hours may be impacted by a special event.
+							</Text>
+						</View>
+					)
+				}
+			</Touchable>
 
-export default DiningItem;
+			{( data.coords && data.coords.lat !== 0) ? (
+				<Touchable
+					style={css.dl_row_container_right}
+					onPress={() => general.gotoNavigationApp(data.coords.lat, data.coords.lon)}
+				>
+					<View style={css.dl_dir_traveltype_container}>
+						<Icon name="md-walk" size={32} color={COLOR_PRIMARY} />
+						{data.distanceMilesStr ? (
+							<Text style={css.dl_dir_eta}>{data.distanceMilesStr}</Text>
+						) : null }
+					</View>
+				</Touchable>
+			) : (
+				(data.address) ? (
+					<Touchable
+						style={css.dl_row_container_right}
+						onPress={() => general.gotoNavigationApp(null, null, data.address)}
+					>
+						<View style={css.dl_dir_traveltype_container}>
+							<Icon name="md-walk" size={32} color={COLOR_PRIMARY} />
+						</View>
+					</Touchable>
+				) : (null)
+			) }
+		</View>
+	)
+}
+
+export default withNavigation(DiningItem)
