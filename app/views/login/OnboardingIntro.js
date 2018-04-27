@@ -8,7 +8,7 @@ import { connect } from 'react-redux'
 import Touchable from '../common/Touchable'
 import css from '../../styles/css'
 
-const campusLogo = require('../../assets/images/UCSanDiegoLogo-nav.png')
+const campusLogo = require('../../assets/images/UCSanDiegoLogo-White.png')
 
 class OnboardingIntro extends React.Component {
 	skipSSO = () => {

@@ -16,7 +16,7 @@ import { platformAndroid, gracefulFatalReset } from '../../util/general'
 import css from '../../styles/css'
 import logger from '../../util/logger'
 
-const campusLogoImage = require('../../assets/images/UCSanDiegoLogo-White.png')
+const campusLogoImage = require('../../assets/images/UCSanDiegoLogo-nav.png')
 
 export class Home extends React.Component {
 	static navigationOptions = {

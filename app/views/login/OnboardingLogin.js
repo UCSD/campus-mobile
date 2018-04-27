@@ -21,7 +21,7 @@ import { COLOR_DGREY } from '../../styles/ColorConstants'
 
 const auth = require('../../util/auth')
 
-const campusLogo = require('../../assets/images/UCSanDiegoLogo-nav.png')
+const campusLogo = require('../../assets/images/UCSanDiegoLogo-White.png')
 
 class OnboardingLogin extends React.Component {
 	componentDidMount() {
