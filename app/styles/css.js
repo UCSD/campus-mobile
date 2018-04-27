@@ -1,6 +1,8 @@
 /* eslint object-curly-newline: 0 */
 /*  Master Stylesheet
 
+	All predefined campuse-mobile styles should reside here.
+
 	Section List
 	------------------------------
 	100 - Main
@@ -33,7 +35,7 @@
 
 	500 - Misc
 */
-import { StyleSheet } from 'react-native'
+import { StyleSheet, Platform } from 'react-native'
 
 import { platformAndroid, deviceIphoneX, round } from '../util/general'
 import { COLOR } from './ColorConstants'
@@ -278,6 +280,98 @@ const css = StyleSheet.create({
 	 */
 	bold: { fontWeight: '700' },
 	flex: { flex: 1 },
+
+	// Imported styles
+	// survey
+	survey_question_container: { justifyContent: 'center', alignItems: 'center', padding: 8, },
+	survey_question_text: { color: COLOR.DGREY, fontSize: 18, alignItems: 'center', },
+	survey_card_button_text: { color: COLOR.DGREY, fontSize: 18, alignItems: 'center', textAlign: 'center' },
+	survey_answer_container: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: 8 },
+	survey_button_container: { flex: 1, justifyContent: 'center', alignItems: 'center', },
+
+	// surf button
+	surf_touchable: { borderTopWidth: 1, borderTopColor: COLOR.MGREY },
+	surf_text: { textAlign: 'center', fontSize: 20, fontWeight: '300', color: COLOR.PRIMARY, paddingHorizontal: 14, paddingVertical: 10,  },
+
+	// weather card
+	wc_topRowContainer: { flexDirection: 'row', borderBottomWidth: 1, borderColor: COLOR.MGREY, justifyContent: 'center', alignItems: 'center', width: LAYOUT.MAX_CARD_WIDTH, paddingHorizontal: 14 },
+	wc_topLeftContainer: { flex: 4 },
+	wc_tempText: { fontSize: 22, fontWeight: '300' },
+	wc_summaryText: { fontSize: 15, color: COLOR.DGREY, paddingTop: 10, fontWeight: '300' },
+	wc_topRightContainer: { flex: 1 },
+	wc_topIcon: { width: 68, height: 68 },
+	wc_loadingContainer: { alignItems: 'center', justifyContent: 'center', width: LAYOUT.MAX_CARD_WIDTH },
+
+	// weather day
+	wd_dayContainer: { flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center' },
+	wd_dayText: { fontSize: 14, fontWeight: '300', paddingBottom: 10 },
+	wd_icon: { height: 33, width: 33 },
+	wd_minText: { fontSize: 14, fontWeight: '300', color: COLOR.DGREY, paddingTop: 10 },
+	wd_maxText: { fontSize: 14, fontWeight: '300', paddingTop: 10 },
+
+	ww_weekContainer: { flexDirection: 'row', padding: 20 },
+
+	// banner card
+	bc_image: { height: ((LAYOUT.MAX_CARD_WIDTH / 1242) * 440), width: LAYOUT.MAX_CARD_WIDTH },
+	bc_cardTitle: { color: COLOR.PRIMARY, width: LAYOUT.MAX_CARD_WIDTH, textAlign: 'center', fontSize: 50, fontWeight: '600', paddingVertical: 30 },
+	bc_closeContainer: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', zIndex: 10, position: 'absolute', top: 3, right: 3 },
+	bc_closeText: { color: COLOR.MGREY, fontSize: 10, marginBottom: 2, backgroundColor: 'transparent' },
+	bc_closeIcon: { color: COLOR.MGREY, marginLeft: 2, backgroundColor: 'transparent' },
+	bc_more: { alignSelf: 'stretch', justifyContent: 'center', padding: 6, borderTopWidth: 1, borderTopColor: COLOR.MGREY },
+	bc_more_label: { fontSize: 20, color: COLOR.PRIMARY, textAlign: 'center', fontWeight: '300' },
+
+	// locationrequiredcontent
+	lrc_icon: { color: COLOR.DGREY },
+	lrc_container: { flex: 1, alignItems: 'center', padding: 8, width: LAYOUT.WINDOW_WIDTH },
+	lrc_textRow: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingTop: 10 },
+	lrc_promptText: { fontSize: 14, color: COLOR.DGREY, paddingLeft: 6 },
+	lrc_button: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.PRIMARY, borderRadius: 3, marginTop: 14, padding: 10 },
+	lrc_buttonText: { color: COLOR.WHITE },
+
+	// data list card
+	dlc_list: { alignSelf: 'stretch', padding: 8 },
+	dlc_content_load_err: { padding: 30, fontSize: 16, alignSelf: 'center'  },
+	dlc_more: { alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4, paddingTop: 8, paddingBottom: 4 },
+	dlc_more_label: { fontSize: 20, color: COLOR.PRIMARY, fontWeight: '300' },
+	dlc_cardcenter: { alignItems: 'center', justifyContent: 'center', width: LAYOUT.MAX_CARD_WIDTH },
+
+	// finals
+	finals_card_content: { width: LAYOUT.MAX_CARD_WIDTH + 2, marginBottom: 10 },	// +2 ?
+	finals_day_of_week: { paddingTop: 10, paddingBottom: 5, paddingLeft: 15, fontWeight: 'bold', fontSize: 18, color: COLOR.VDGREY },
+	finals_day_container: { paddingLeft: 15, paddingVertical: 5  },
+	finals_course_title: { fontSize: 16, fontWeight: 'bold', color: COLOR.VDGREY },
+	finals_course_text: { fontSize: 14, color: LAYOUT.COLOR_DGREY },
+	finals_separator: { width: LAYOUT.MAX_CARD_WIDTH + 2, borderColor: COLOR.COLOR_MGREY, borderTopWidth: 1 },	// +2 ?
+
+	// map search
+	map_section: { height: LAYOUT.MAP_HEIGHT },
+
+	// user settings
+	us_list_row: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		width: LAYOUT.MAX_CARD_WIDTH,
+		borderBottomWidth: 1,
+		borderBottomColor: COLOR.MGREY,
+		...Platform.select({
+			ios: {
+				shadowOpacity: 0,
+				shadowOffset: { height: 2, width: 2 },
+				shadowRadius: 2,
+			},
+
+			android: {
+				margin: 0,
+				elevation: 0,
+				backgroundColor: COLOR.WHITE
+			},
+		})
+	},
+	us_icon: { padding: 7 },
+	us_name_text: { flex: 1, margin: 7, fontSize: 18 },
+	us_switchContainer: { width: 50, height: 50, justifyContent: 'center', alignItems: 'center', marginRight: 10 },
+
+
 })
 
 module.exports = css

@@ -1,19 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {
-	View,
-	Text,
-	StyleSheet,
-	ActivityIndicator
-} from 'react-native'
-
+import { View, Text, ActivityIndicator } from 'react-native'
 import { withNavigation } from 'react-navigation'
 
 import DataListView from './DataListView'
 import Card from '../card/Card'
 import Touchable from './Touchable'
-import { MAX_CARD_WIDTH } from '../../styles/LayoutConstants'
-import { COLOR_PRIMARY } from '../../styles/ColorConstants'
+import css from '../../styles/css'
 
 /**
  * @param  {String} title Card header
@@ -31,7 +24,7 @@ export const DataListCard = ({ navigation, id, title, data, item, rows, cardSort
 
 	return (
 		<Card id={id} title={title}>
-			<View style={styles.list}>
+			<View style={css.dlc_list}>
 				{data ? (
 					<View>
 						<DataListView
@@ -44,13 +37,13 @@ export const DataListCard = ({ navigation, id, title, data, item, rows, cardSort
 						<Touchable onPress={() => (
 							navigation.navigate('DataListViewAll', { title, data, item })
 						)}>
-							<View style={styles.more}>
-								<Text style={styles.more_label}>View All</Text>
+							<View style={css.dlc_more}>
+								<Text style={css.dlc_more_label}>View All</Text>
 							</View>
 						</Touchable>
 					</View>
 				) : (
-					<View style={[styles.cardcenter, styles.wc_loading_height]}>
+					<View style={[css.dlc_cardcenter, css.dlc_wc_loading_height]}>
 						<ActivityIndicator size="large" />
 					</View>
 				)}
@@ -70,13 +63,5 @@ DataListCard.propTypes = {
 DataListCard.defaultProps = {
 	rows: 3
 }
-
-const styles = StyleSheet.create({
-	list: { alignSelf: 'stretch', padding: 8 },
-	content_load_err: { padding: 30, fontSize: 16, alignSelf: 'center'  },
-	more: { alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4, paddingTop: 8, paddingBottom: 4 },
-	more_label: { fontSize: 20, color: COLOR_PRIMARY, fontWeight: '300' },
-	cardcenter: { alignItems: 'center', justifyContent: 'center', width: MAX_CARD_WIDTH },
-})
 
 export default withNavigation(DataListCard)

@@ -19,7 +19,7 @@ import EventDetail from '../views/events/EventDetail'
 import NewsDetail from '../views/news/NewsDetail'
 import FeedbackView from '../views/feedback/FeedbackView'
 import Preferences from '../views/preferences/Preferences'
-import NearbyMapView from '../views/mapsearch/NearbyMapView'
+import Map from '../views/map/Map'
 import DataListViewAll from '../views/common/DataListViewAll'
 import SpecialEventsView from '../views/specialEvents/SpecialEventsView'
 import SpecialEventsDetailView from '../views/specialEvents/SpecialEventsDetailView'
@@ -43,7 +43,7 @@ import general from '../util/general'
 const TabNav = TabNavigator(
 	{
 		Home: { screen: Home },
-		Map: { screen: NearbyMapView },
+		Map: { screen: Map },
 		Feedback: { screen: FeedbackView },
 		Preferences: { screen: Preferences }
 	},

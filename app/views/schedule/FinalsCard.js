@@ -1,50 +1,39 @@
-import React from 'react';
-import { View, Text, ListView, StyleSheet } from 'react-native';
-import { connect } from 'react-redux';
+import React from 'react'
+import { View, Text, ListView } from 'react-native'
+import { connect } from 'react-redux'
 
-import Card from '../card/Card';
-import logger from '../../util/logger';
-import schedule from '../../util/schedule';
-import {
-COLOR_VDGREY,
-COLOR_DGREY,
-} from '../../styles/ColorConstants';
-import { MAX_CARD_WIDTH } from '../../styles/LayoutConstants';
+import Card from '../card/Card'
+import logger from '../../util/logger'
+import schedule from '../../util/schedule'
+import css from '../../styles/css'
 
 const dataSource = new ListView.DataSource({
 	rowHasChanged: (r1, r2) => r1 !== r2
-});
+})
 
 const FinalsCard = ({ scheduleData }) => {
-	logger.ga('Card Mounted: Finals Schedule');
+	logger.ga('Card Mounted: Finals Schedule')
 
 	if (!scheduleData) {
-		return null;
+		return null
 	}
 
-	const parsedScheduleData = schedule.getData(scheduleData);
-	const finalsData = schedule.getFinals(parsedScheduleData);
+	const parsedScheduleData = schedule.getData(scheduleData)
+	const finalsData = schedule.getFinals(parsedScheduleData)
 
 	// if (scheduleData.length > 0) {
 	return (
 		<Card id="finals" title="Finals Schedule">
 			<ListView
-				style={{ paddingTop: 0 }}
 				enableEmptySections={true}
 				dataSource={dataSource.cloneWithRows(finalsData)}
-				renderSeparator={(sectionID, rowID, adjacentRowHighlighted) =>
-					finalsData[rowID].length > 0 ? (
-						<View
-							style={{
-								borderColor: "#EAEAEA",
-								borderTopWidth: 1,
-								width: MAX_CARD_WIDTH + 2
-								// paddingBottom: 5,
-							}}
-							key={rowID}
-						/>
-					) : null
-				}
+				renderSeparator={(sectionID, rowID, adjacentRowHighlighted) => {
+					if (finalsData[rowID].length > 0) {
+						return (<View style={css.finals_separator} key={rowID} />)
+					} else {
+						return null
+					}
+				}}
 				renderRow={(rowData, sectionID, rowID, highlightRow) => (
 					<View>
 						{finalsData[String(rowID)].length > 0 ? (
@@ -54,36 +43,15 @@ const FinalsCard = ({ scheduleData }) => {
 				)}
 			/>
 		</Card>
-	);
-	// } else {
-	//   return (
-	//     <Card id="finals" title="Finals Schedule">
-	//       <View style={{
-	//         flex:1,
-	//         flexDirection: 'row',
-	//         width: MAX_CARD_WIDTH,
-	//         height: 60,
-	//         alignItems: 'center',
-	//         justifyContent: 'center'}}>
-	//           <Text style={{
-	//             textAlign:'center',
-	//             fontSize: 16,
-	//             fontWeight: "bold",
-	//             color: COLOR_VDGREY}}>
-	//             {"Congrats! You've finished all your finals!!"}
-	//           </Text>
-	//       </View>
-	//     </Card>
-	//   );
-	// }
-};
+	)
+}
 
 const ScheduleDay = ({ id, data }) => (
-	<View style={styles.card_content}>
-		<Text style={styles.day_of_week}>{schedule.dayOfWeekInterpreter(id)}</Text>
+	<View style={css.finals_card_content}>
+		<Text style={css.finals_day_of_week}>{schedule.dayOfWeekInterpreter(id)}</Text>
 		<DayList courseItems={data} />
 	</View>
-);
+)
 
 const DayList = ({ courseItems }) => (
 	<ListView
@@ -92,59 +60,27 @@ const DayList = ({ courseItems }) => (
 			<DayItem key={rowID} data={rowData} />
 		)}
 	/>
-);
+)
 
 const DayItem = ({ data }) => (
-	<View style={styles.day_container}>
-		<Text style={styles.course_title}>
+	<View style={css.finals_day_container}>
+		<Text style={css.finals_course_title}>
 			{data.subject_code} {data.course_code}
 		</Text>
-		<Text style={styles.course_text} numberOfLines={1}>
+		<Text style={css.finals_course_text} numberOfLines={1}>
 			{data.course_title}
 		</Text>
-		<Text style={styles.course_text}>
+		<Text style={css.finals_course_text}>
 			{data.time_string + '\n'}
 			{data.building + ' ' + data.room}
 		</Text>
 	</View>
-);
+)
 
-const styles = StyleSheet.create({
-	card_content: {
-		width: MAX_CARD_WIDTH + 2,
-		marginBottom: 10
-	},
-	day_of_week: {
-		paddingTop: 10,
-		paddingBottom: 5,
-		paddingLeft: 15,
-		fontWeight: 'bold',
-		fontSize: 18,
-		color: COLOR_VDGREY
-	},
-	day_container: {
-		paddingLeft: 15,
-		// justifyContent: 'center',
-		paddingBottom: 5,
-		paddingTop: 5
-	},
-	course_title: {
-		fontSize: 16,
-		fontWeight: 'bold',
-		color: COLOR_VDGREY
-	},
-	course_text: {
-		fontSize: 14,
-		color: COLOR_DGREY
-	}
-});
+const mapStateToProps = state => ({
+	scheduleData: state.schedule.data,
+})
 
-const mapStateToProps = state => (
-	{
-		scheduleData: state.schedule.data,
-	}
-);
+const ActualFinalsCard = connect(mapStateToProps)(FinalsCard)
 
-const ActualFinalsCard = connect(mapStateToProps)(FinalsCard);
-
-export default ActualFinalsCard;
+export default ActualFinalsCard

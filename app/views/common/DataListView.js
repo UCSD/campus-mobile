@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { FlatList, ScrollView } from 'react-native'
+
 import EventItem from '../events/EventItem'
 import NewsItem from '../news/NewsItem'
 import DiningItem from '../dining/DiningItem'
@@ -51,22 +52,22 @@ const DataFlatList = ({ style, data, rows, item, card }) => (
 			// item will use to identify itself. Each
 			// item MUST have a unique key!
 			switch (item) {
-			case 'EventItem': {
-				return listItem.id + index
-			}
-			case 'NewsItem': {
-				return listItem.title + index
-			}
-			case 'DiningItem': {
-				if (listItem.id) return listItem.id + index
-				else return listItem.name + index
-			}
-			case 'QuicklinksItem': {
-				return listItem.name + index
-			}
-			default: {
-				return index
-			}
+				case 'EventItem': {
+					return listItem.id + index
+				}
+				case 'NewsItem': {
+					return listItem.title + index
+				}
+				case 'DiningItem': {
+					if (listItem.id) return listItem.id + index
+					else return listItem.name + index
+				}
+				case 'QuicklinksItem': {
+					return listItem.name + index
+				}
+				default: {
+					return index
+				}
 			}
 		}}
 		renderItem={({ item: rowData }) => {
@@ -74,21 +75,21 @@ const DataFlatList = ({ style, data, rows, item, card }) => (
 			// Only reason this is a switch is cuz Actions from react-router-flux doesn't like being passed JSX
 			// Should revisit to see if this can be simplified
 			switch (item) {
-			case 'EventItem': {
-				return (<EventItem data={rowData} card={card} />)
-			}
-			case 'NewsItem': {
-				return (<NewsItem data={rowData} card={card} />)
-			}
-			case 'DiningItem': {
-				return (<DiningItem data={rowData} card={card} />)
-			}
-			case 'QuicklinksItem': {
-				return (<QuicklinksItem data={rowData} card={card} />)
-			}
-			default: {
-				return null
-			}
+				case 'EventItem': {
+					return (<EventItem data={rowData} card={card} />)
+				}
+				case 'NewsItem': {
+					return (<NewsItem data={rowData} card={card} />)
+				}
+				case 'DiningItem': {
+					return (<DiningItem data={rowData} card={card} />)
+				}
+				case 'QuicklinksItem': {
+					return (<QuicklinksItem data={rowData} card={card} />)
+				}
+				default: {
+					return null
+				}
 			}
 		}}
 	/>
