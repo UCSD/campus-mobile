@@ -1,24 +1,24 @@
-import { delay } from 'redux-saga';
-import { call, put, takeLatest } from 'redux-saga/effects';
+import { delay } from 'redux-saga'
+import { call, put, takeLatest } from 'redux-saga/effects'
 
-import { postSurvey } from '../services/surveyService';
+import { postSurvey } from '../services/surveyService'
 
 function* submitSurvey(action) {
-	yield put({ type: 'SURVEY_DONE', id: action.id });
+	yield put({ type: 'SURVEY_DONE', id: action.id })
 
-	// Keep trying to post answer, until success
+	// TODO: Refactor needed
 	while (true) {
 		try {
-			const post = yield call(postSurvey, action.id, action.answer, action.data);
-			return post;
+			const post = yield call(postSurvey, action.id, action.answer, action.data)
+			return post
 		} catch (error) {
-			delay(5000); // wait 5s
+			delay(5000)
 		}
 	}
 }
 
 function* surveySaga() {
-	yield takeLatest('SURVEY_SUBMITTED', submitSurvey);
+	yield takeLatest('SURVEY_SUBMITTED', submitSurvey)
 }
 
-export default surveySaga;
+export default surveySaga

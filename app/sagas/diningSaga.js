@@ -1,4 +1,10 @@
-import { put, takeLatest, call, select, race } from 'redux-saga/effects'
+import {
+	put,
+	takeLatest,
+	call,
+	select,
+	race,
+} from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 import logger from '../util/logger'
 import DiningService from '../services/diningService'

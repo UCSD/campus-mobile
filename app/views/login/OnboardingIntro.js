@@ -1,12 +1,20 @@
 import React from 'react'
-import { View, Text, Image } from 'react-native'
+import {
+	View,
+	Text,
+	Image
+} from 'react-native'
 import { connect } from 'react-redux'
 import Touchable from '../common/Touchable'
 import css from '../../styles/css'
 
-const campusLogo = require('../../assets/img/UCSanDiegoLogo-nav.png')
+const campusLogo = require('../../assets/images/UCSanDiegoLogo-nav.png')
 
 class OnboardingIntro extends React.Component {
+	skipSSO = () => {
+		this.props.setOnboardingViewed(true)
+	}
+
 	render() {
 		return (
 			<View style={css.ob_container}>
@@ -22,10 +30,6 @@ class OnboardingIntro extends React.Component {
 			</View>
 		)
 	}
-
-	skipSSO = () => {
-		this.props.setOnboardingViewed(true)
-	}
 }
 
 const mapStateToProps = (state, props) => (
@@ -35,7 +39,10 @@ const mapStateToProps = (state, props) => (
 const mapDispatchToProps = (dispatch, ownProps) => (
 	{
 		setOnboardingViewed: (viewed) => {
-			dispatch({ type: 'SET_ONBOARDING_VIEWED', viewed })
+			dispatch({
+				type: 'SET_ONBOARDING_VIEWED',
+				viewed
+			})
 		}
 	}
 )

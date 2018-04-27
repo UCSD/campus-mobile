@@ -1,6 +1,9 @@
 import React from 'react'
 import { View } from 'react-native'
-import { StackNavigator, TabNavigator } from 'react-navigation'
+import {
+	StackNavigator,
+	TabNavigator,
+} from 'react-navigation'
 import { MenuProvider } from 'react-native-popup-menu'
 import { connect } from 'react-redux'
 
@@ -33,11 +36,7 @@ import TabIcons from './TabIcons'
 import withNavigationPreventDuplicate from './withNavigationPreventDuplicate'
 
 // MISC
-import {
-	COLOR_SECONDARY,
-	COLOR_WHITE,
-	COLOR_MGREY
-} from '../styles/ColorConstants'
+import { COLOR } from '../styles/ColorConstants'
 import css from '../styles/css'
 import general from '../util/general'
 
@@ -53,10 +52,13 @@ const TabNav = TabNavigator(
 			showLabel: false,
 			showIcon: true,
 
-			pressColor: COLOR_MGREY,
-			indicatorStyle: { backgroundColor: COLOR_SECONDARY },
+			pressColor: COLOR.MGREY,
+			indicatorStyle: { backgroundColor: COLOR.SECONDARY },
 			style: general.platformIOS() ? css.tabBarIOS : css.tabBarAndroid,
-			iconStyle: { width: 26, height: 26 }
+			iconStyle: {
+				width: 26,
+				height: 26
+			}
 		},
 		navigationOptions: ({ navigation }) => ({
 			tabBarIcon: ({ focused }) => {
@@ -180,7 +182,7 @@ const MainStack = StackNavigator(
 		navigationOptions: {
 			headerStyle: css.nav,
 			headerTitleStyle: css.navTitle,
-			headerTintColor: COLOR_WHITE
+			headerTintColor: COLOR.WHITE
 		}
 	}
 )

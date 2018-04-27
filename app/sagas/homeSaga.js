@@ -1,15 +1,11 @@
-import { put, takeLatest } from 'redux-saga/effects';
-
-function* resetScroll() {
-	yield put({ type: 'SET_HOME_SCROLL', lastScroll: 0 });
-}
+import { put, takeLatest } from 'redux-saga/effects'
 
 function* setScroll(action) {
-	yield put({ type: 'SET_HOME_SCROLL', lastScroll: action.scrollY });
+	yield put({ type: 'SET_HOME_SCROLL', lastScroll: action.scrollY })
 }
 
 function* homeSaga() {
-	yield takeLatest('UPDATE_HOME_SCROLL', setScroll);
+	yield takeLatest('UPDATE_HOME_SCROLL', setScroll)
 }
 
-export default homeSaga;
+export default homeSaga

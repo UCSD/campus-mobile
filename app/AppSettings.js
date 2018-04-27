@@ -40,15 +40,12 @@ module.exports = {
 	DINING_API_TTL: 3600000, // 1 hour
 	DINING_MENU_API_TTL: 3600000, // 1 hour
 	QUICKLINKS_API_TTL: 86400000, // 1 day
-	SHUTTLE_API_TTL: 6000, // 6 seconds
+	SHUTTLE_API_TTL: 15000, // 15 seconds
 	SHUTTLE_MASTER_TTL: 86400000, // 1 day
 	SSO_TTL: 15000, // 15 seconds
 	SCHEDULE_TTL: 60000,  // 1 minute
-
-	// Beta TTL - Dial down Special Events TTL for v5.6-rc testing phase
 	SPECIAL_EVENTS_TTL: 3600000, // 1 hour
-	// SPECIAL_EVENTS_TTL: 3600000, // 1 hour
-
 	DATA_SAGA_TTL: 60000, // 1 minute
+	LOCATION_TTL: 15000, // 15 seconds
 	HTTP_REQUEST_TTL: 10000, // 10 seconds
 }

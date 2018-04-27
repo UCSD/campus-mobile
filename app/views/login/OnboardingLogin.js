@@ -10,7 +10,10 @@ import {
 } from 'react-native'
 import { connect } from 'react-redux'
 import Toast from 'react-native-simple-toast'
-import { openURL, hideKeyboard } from '../../util/general'
+import {
+	openURL,
+	hideKeyboard
+} from '../../util/general'
 import AppSettings from '../../AppSettings'
 import Touchable from '../common/Touchable'
 import css from '../../styles/css'
@@ -18,7 +21,7 @@ import { COLOR_DGREY } from '../../styles/ColorConstants'
 
 const auth = require('../../util/auth')
 
-const campusLogo = require('../../assets/img/UCSanDiegoLogo-nav.png')
+const campusLogo = require('../../assets/images/UCSanDiegoLogo-nav.png')
 
 class OnboardingLogin extends React.Component {
 	componentDidMount() {
@@ -56,6 +59,14 @@ class OnboardingLogin extends React.Component {
 		}
 	}
 
+	Submit = (username, password) => {
+		this.props.doLogin(username, password)
+	}
+
+	skipSSO = () => {
+		this.props.setOnboardingViewed(true)
+	}
+
 	render() {
 		const { error } = this.props.user
 		if (error && !this.props.user.isLoggingIn) {
@@ -63,7 +74,10 @@ class OnboardingLogin extends React.Component {
 				'Sign in error',
 				error,
 				[
-					{ text: 'OK', onPress: () => { this.props.clearErrors() } }
+					{
+						text: 'OK',
+						onPress: () => { this.props.clearErrors() }
+					}
 				],
 				{ cancelable: false }
 			)
@@ -131,14 +145,6 @@ class OnboardingLogin extends React.Component {
 			</TouchableWithoutFeedback>
 		)
 	}
-
-	onSubmit = (username, password) => {
-		this.props.doLogin(username, password)
-	}
-
-	skipSSO = () => {
-		this.props.setOnboardingViewed(true)
-	}
 }
 
 const mapStateToProps = (state, props) => (
@@ -151,7 +157,10 @@ const mapStateToProps = (state, props) => (
 const mapDispatchToProps = (dispatch, ownProps) => (
 	{
 		setOnboardingViewed: (viewed) => {
-			dispatch({ type: 'SET_ONBOARDING_VIEWED', viewed })
+			dispatch({
+				type: 'SET_ONBOARDING_VIEWED',
+				viewed
+			})
 		},
 		doLogin: (username, password) => {
 			dispatch({ type: 'USER_LOGIN', username, password })

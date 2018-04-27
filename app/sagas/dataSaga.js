@@ -4,7 +4,7 @@ import { Image } from 'react-native'
 
 import WeatherService from '../services/weatherService'
 import ScheduleService from '../services/scheduleService'
-import { fetchSpecialEvents } from '../services/specialEventsService'
+import SpecialEventsService from '../services/specialEventsService'
 import { fetchSurveyIds, fetchSurveyById } from '../services/surveyService'
 import LinksService from '../services/quicklinksService'
 import EventService from '../services/eventService'
@@ -150,7 +150,7 @@ function* updateSpecialEvents() {
 	const ttl = SPECIAL_EVENTS_TTL
 
 	if (timeDiff > ttl && Array.isArray(saved)) {
-		const specialEvents = yield call(fetchSpecialEvents)
+		const specialEvents = yield call(SpecialEventsService.FetchSpecialEvents)
 
 		if (specialEvents &&
 			specialEvents['start-time'] <= nowTime &&

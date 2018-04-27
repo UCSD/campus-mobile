@@ -17,10 +17,10 @@ function requestStatuses(state = {}, action) {
 	// and false when receiving POST_FEEDBACK_FAILURE / SUCCESS
 	// Also includes timestamp for REQUEST
 	switch (requestState) {
-	case 'REQUEST': {
-		newRequestState = { timeRequested: new Date() }
-		break
-	}
+		case 'REQUEST': {
+			newRequestState = { timeRequested: new Date() }
+			break
+		}
 	}
 	return {
 		...state,

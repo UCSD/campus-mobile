@@ -16,7 +16,10 @@ const auth = require('../util/auth')
 const getUserData = state => (state.user)
 
 function* doLogin(action) {
-	const { username, password } = action
+	const {
+		username,
+		password,
+	} = action
 
 	try {
 		if (!password || password.length === 0) {
@@ -28,7 +31,10 @@ function* doLogin(action) {
 		const loginInfo = auth.encryptStringWithBase64(`${username}:${passwordEncrypted}`)
 
 		yield put({ type: 'IS_LOGGING_IN' })
-		const { response, timeout } = yield race({
+		const {
+			response,
+			timeout
+		} = yield race({
 			response: call(ssoService.retrieveAccessToken, loginInfo),
 			timeout: call(delay, SSO_TTL)
 		})
@@ -45,7 +51,6 @@ function* doLogin(action) {
 			yield auth.storeUserCreds(username, password)
 			yield auth.storeAccessToken(response.access_token)
 
-
 			// Set up user profile
 			const newProfile = {
 				username,
@@ -58,7 +63,10 @@ function* doLogin(action) {
 		}
 	} catch (error) {
 		logger.log(error)
-		yield put({ type: 'USER_LOGIN_FAILED', error: error.message })
+		yield put({
+			type: 'USER_LOGIN_FAILED',
+			error: error.message
+		})
 	}
 }
 
@@ -68,9 +76,16 @@ function* doTokenRefresh() {
 	// Check if expiration time is past current time
 	if (moment().isAfter(moment.unix(expiration))) {
 		// Get username and password from keystore
-		const { username, password } = yield auth.retrieveUserCreds()
+		const {
+			username,
+			password
+		} = yield auth.retrieveUserCreds()
 
-		yield put({ type: 'USER_LOGIN', username, password })
+		yield put({
+			type: 'USER_LOGIN',
+			username,
+			password
+		})
 	}
 }
 
@@ -83,11 +98,17 @@ function* doLogout(action) {
 
 function* timeoutError() {
 	const error = new Error('There was a problem signing in. Please try again later.')
-	yield put({ type: 'USER_LOGIN_FAILED', error: error.message })
+	yield put({
+		type: 'USER_LOGIN_FAILED',
+		error: error.message
+	})
 }
 
 function* clearErrors(action) {
-	yield put({ type: 'USER_SET_ERRORS', error: null })
+	yield put({
+		type: 'USER_SET_ERRORS',
+		error: null
+	})
 }
 
 function* userSaga() {

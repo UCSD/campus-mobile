@@ -1,3 +1,4 @@
+/* eslint object-curly-newline: 0 */
 /*  Master Stylesheet
 
 	Section List

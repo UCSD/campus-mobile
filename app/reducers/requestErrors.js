@@ -4,7 +4,10 @@
 */
 
 function requestErrors(state = {}, action) {
-	const { type, error } = action
+	const {
+		type,
+		error,
+	} = action
 	const matches = /(.*)_(REQUEST|FAILURE)/.exec(type)
 
 	// not a *_REQUEST or *_FAILURE action, ignore

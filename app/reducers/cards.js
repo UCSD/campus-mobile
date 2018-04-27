@@ -86,22 +86,21 @@ function cards(state = initialState, action) {
 	const newState = { ...state }
 
 	switch (action.type) {
-	case 'SET_CARD_STATE':
-		return {
-			...state,
-			cards: {
-				...state.cards,
-				[action.id]: { ...state.cards[action.id], active: action.active }
+		case 'SET_CARD_STATE':
+			return {
+				...state,
+				cards: {
+					...state.cards,
+					[action.id]: { ...state.cards[action.id], active: action.active }
+				}
 			}
-		}
-	case 'SET_AUTOACTIVATED_STATE':
-		newState.cards[action.id] = Object.assign({}, newState.cards[action.id], { autoActivated: action.autoActivated })
+		case 'SET_AUTOACTIVATED_STATE':
+			newState.cards[action.id] = Object.assign({}, newState.cards[action.id], { autoActivated: action.autoActivated })
 
-		return newState
-	case 'SET_CARD_ORDER':
-		newState.cardOrder = action.cardOrder.slice()
-
-		return newState
+			return newState
+		case 'SET_CARD_ORDER':
+			newState.cardOrder = action.cardOrder.slice()
+			return newState
 	}
 
 	return state

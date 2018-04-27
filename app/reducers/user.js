@@ -14,36 +14,36 @@ function user(state = initialState, action) {
 	const newState = { ...state }
 
 	switch (action.type) {
-	case 'IS_LOGGING_IN': {
-		newState.isLoggingIn = true
-		newState.timeRequested = new Date()
-		return newState
-	}
-	case 'LOGGED_IN': {
-		newState.isLoggingIn = false
-		newState.error = null
-		newState.profile = Object.assign({}, action.profile)
-		newState.expiration = action.expiration
-		newState.isLoggedIn = true
-		delete newState.timeRequested
-		return newState
-	}
-	case 'LOGGED_OUT': {
-		return initialState
-	}
-	case 'USER_LOGIN_FAILED': {
-		newState.isLoggedIn = false
-		newState.isLoggingIn = false
-		delete newState.timeRequested
-		newState.error = action.error
-		return newState
-	}
-	case 'USER_SET_ERRORS': {
-		newState.error = action.error
-		return newState
-	}
-	default:
-		return state
+		case 'IS_LOGGING_IN': {
+			newState.isLoggingIn = true
+			newState.timeRequested = new Date()
+			return newState
+		}
+		case 'LOGGED_IN': {
+			newState.isLoggingIn = false
+			newState.error = null
+			newState.profile = Object.assign({}, action.profile)
+			newState.expiration = action.expiration
+			newState.isLoggedIn = true
+			delete newState.timeRequested
+			return newState
+		}
+		case 'LOGGED_OUT': {
+			return initialState
+		}
+		case 'USER_LOGIN_FAILED': {
+			newState.isLoggedIn = false
+			newState.isLoggingIn = false
+			delete newState.timeRequested
+			newState.error = action.error
+			return newState
+		}
+		case 'USER_SET_ERRORS': {
+			newState.error = action.error
+			return newState
+		}
+		default:
+			return state
 	}
 }
 
