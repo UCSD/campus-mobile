@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, StyleSheet, FlatList } from 'react-native'
+import { View, FlatList } from 'react-native'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import { connect } from 'react-redux'
 import ElevatedView from 'react-native-elevated-view'
@@ -7,8 +7,7 @@ import ElevatedView from 'react-native-elevated-view'
 import CardHeader from './CardHeader'
 import CardMenu from './CardMenu'
 import css from '../../styles/css'
-import { getMaxCardWidth } from '../../util/general'
-import { COLOR_DGREY } from '../../styles/ColorConstants'
+import { LAYOUT } from '../../styles/LayoutConstants'
 
 class ScrollCard extends React.Component {
 	constructor(props) {
@@ -28,7 +27,7 @@ class ScrollCard extends React.Component {
 	}
 
 	countDots = (width, height) => {
-		const numDots = Math.floor(width / getMaxCardWidth())
+		const numDots = Math.floor(width / LAYOUT.MAX_CARD_WIDTH)
 		this.setState({ numDots })
 	}
 
@@ -36,7 +35,7 @@ class ScrollCard extends React.Component {
 		if (this.props.updateScroll) {
 			this.props.updateScroll(event.nativeEvent.contentOffset.x)
 		}
-		const dotIndex = Math.floor(event.nativeEvent.contentOffset.x / (getMaxCardWidth() - 12)) // minus padding
+		const dotIndex = Math.floor(event.nativeEvent.contentOffset.x / (LAYOUT.MAX_CARD_WIDTH - 12)) // minus padding
 		this.setState({ dotIndex })
 	}
 
@@ -46,7 +45,7 @@ class ScrollCard extends React.Component {
 			list = (
 				<FlatList
 					ref={(c) => { this._flatlist = c }}
-					style={styles.listStyle}
+					style={css.scrollcard_listStyle}
 					onContentSizeChange={this.countDots}
 					pagingEnabled
 					horizontal
@@ -65,7 +64,7 @@ class ScrollCard extends React.Component {
 			<View>
 				<ElevatedView
 					elevation={3}
-					style={[css.card_container, this.state.numDots <= 1 ? styles.card_main_marginBottom : null]}
+					style={[css.card_container, this.state.numDots <= 1 ? css.scrollcard_main_marginBottom : null]}
 					ref={(i) => { this._card = i }}
 				>
 					<CardHeader
@@ -101,7 +100,7 @@ const PageIndicator = ({ numDots, dotIndex }) => {
 		const dotName = (dotIndex === i) ? ('circle') : ('circle-thin')
 		const dot = (
 			<FAIcon
-				style={styles.dotStyle}
+				style={css.scrollcard_dotStyle}
 				name={dotName}
 				size={10}
 				key={'dot' + i}
@@ -111,25 +110,16 @@ const PageIndicator = ({ numDots, dotIndex }) => {
 	}
 
 	return (
-		<View
-			style={styles.dotsContainer}
-		>
+		<View style={css.scrollcard_dotsContainer}>
 			{dots}
 		</View>
 	)
 }
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
 	hide: (id) => {
 		dispatch({ type: 'UPDATE_CARD_STATE', id, state: false })
 	}
 })
 
 export default connect(null, mapDispatchToProps)(ScrollCard)
-
-const styles = StyleSheet.create({
-	card_main_marginBottom: { marginBottom: 6 },
-	dotStyle: { padding: 6, paddingTop: 3, backgroundColor: 'transparent', color: COLOR_DGREY },
-	dotsContainer: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
-	listStyle: { flexDirection: 'row' },
-})

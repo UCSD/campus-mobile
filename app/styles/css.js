@@ -11,15 +11,15 @@
 		103 - Tab Bar
 
 	200 - Common
-		201 - DataList
-		202 - DataItem
-		203 - Buttons
-		204 - General
+		201 - Cards
+		202 - General
+		203 - DataList
+		204 - DataItem
+		205 - Buttons
 
 	300 - Cards
 		301 - Dining Card
-		302 - Survey Card
-		303 - Class Schedule Card
+		302 - Class Schedule Card
 
 	400 - Views
 		401 - Surf Report
@@ -69,10 +69,25 @@ const css = StyleSheet.create({
 	/**
 	 *  200 - Common
 	 */
-	// 201 - DataList
+	// 201 - Cards
+	card_main: { borderWidth: 1, borderRadius: 2, borderColor: COLOR.MGREY, backgroundColor: COLOR.WHITE, margin: 6, alignItems: 'flex-start', justifyContent: 'center', overflow: 'hidden' },
+	card_row_container: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: 8, paddingBottom: 0 },
+	card_footer_container: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: 8 },
+	card_button_container: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.WHITE, },
+	card_button_text: { fontSize: 20, alignItems: 'center', textAlign: 'center' },
+	card_text_container: { justifyContent: 'center', alignItems: 'center', width: LAYOUT.MAX_CARD_WIDTH, padding: 8, borderBottomWidth: 1, borderBottomColor: COLOR.MGREY },
+	scrollcard_main_marginBottom: { marginBottom: 6 },
+	scrollcard_dotStyle: { padding: 6, paddingTop: 3, backgroundColor: 'transparent', color: COLOR.DGREY },
+	scrollcard_dotsContainer: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
+	scrollcard_listStyle: { flexDirection: 'row' },
+
+
+	// 202 - General
+	cm_desc: { fontSize: 16, padding: 20 },
+	// 203 - DataList
 	DataList_card_list: { padding: 8 },
 	DataList_full_list: { padding: 8 },
-	// 202 - DataItem
+	// 204 - DataItem
 	dataitem_descContainer: { flex: 1 },
 	dataitem_descText: { color: COLOR.VDGREY },
 	dataitem_touchableRow: { paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: COLOR.MGREY, },
@@ -80,13 +95,11 @@ const css = StyleSheet.create({
 	dataitem_listInfoContainer: { flexDirection: 'row', paddingVertical: 8 },
 	dataitem_dateText: { color: COLOR.PRIMARY, paddingTop: 8 },
 	dataitem_image: { width: 120, height: 70, marginLeft: 10, borderWidth: 1, borderColor: COLOR.LGREY },
-	// 203 - Buttons
+	// 205 - Buttons
 	button_primary: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.PRIMARY, borderRadius: 3, marginTop: 20, padding: 10 },
 	button_primary_text: { fontSize: 16, color: COLOR.WHITE },
 	share_button: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.MGREY, borderRadius: 3, marginTop: 20, padding: 10 },
 	share_button_text: { fontSize: 16 },
-	// 204 - General
-	cm_desc: { fontSize: 16, padding: 20 },
 
 	/**
 	 *  300 - Cards
@@ -106,13 +119,6 @@ const css = StyleSheet.create({
 	dl_status_soon_text: { paddingRight: 8 },
 	dl_dir_traveltype_container: { flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'center' },
 	dl_dir_eta: { color: COLOR.PRIMARY, fontSize: 11, fontWeight: '600' },
-	// 302 - Survey Card
-	card_main: { borderWidth: 1, borderRadius: 2, borderColor: COLOR.MGREY, backgroundColor: COLOR.WHITE, margin: 6, alignItems: 'flex-start', justifyContent: 'center', overflow: 'hidden' },
-	card_row_container: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: 8, paddingBottom: 0 },
-	card_footer_container: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: 8 },
-	card_button_container: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.WHITE, },
-	card_button_text: { fontSize: 20, alignItems: 'center', textAlign: 'center' },
-	card_text_container: { justifyContent: 'center', alignItems: 'center', width: LAYOUT.MAX_CARD_WIDTH, padding: 8, borderBottomWidth: 1, borderBottomColor: COLOR.MGREY },
 	// 303 - Class Schedule Card
 	sc_dayText: { fontSize: 16, color: COLOR.BLACK, paddingBottom: 6 },
 	sc_courseText: { fontSize: 14, color: COLOR.BLACK, paddingBottom: 2 },
@@ -280,15 +286,9 @@ const css = StyleSheet.create({
 	 */
 	bold: { fontWeight: '700' },
 	flex: { flex: 1 },
+	flexrow: { flexDirection: 'row' },
 
 	// Imported styles
-	// survey
-	survey_question_container: { justifyContent: 'center', alignItems: 'center', padding: 8, },
-	survey_question_text: { color: COLOR.DGREY, fontSize: 18, alignItems: 'center', },
-	survey_card_button_text: { color: COLOR.DGREY, fontSize: 18, alignItems: 'center', textAlign: 'center' },
-	survey_answer_container: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: 8 },
-	survey_button_container: { flex: 1, justifyContent: 'center', alignItems: 'center', },
-
 	// surf button
 	surf_touchable: { borderTopWidth: 1, borderTopColor: COLOR.MGREY },
 	surf_text: { textAlign: 'center', fontSize: 20, fontWeight: '300', color: COLOR.PRIMARY, paddingHorizontal: 14, paddingVertical: 10,  },
@@ -370,6 +370,111 @@ const css = StyleSheet.create({
 	us_icon: { padding: 7 },
 	us_name_text: { flex: 1, margin: 7, fontSize: 18 },
 	us_switchContainer: { width: 50, height: 50, justifyContent: 'center', alignItems: 'center', marginRight: 10 },
+
+
+	// schedule
+	schedule_full_button_touchable: { borderTopWidth: 1, borderTopColor: COLOR.MGREY, width: LAYOUT.MAX_CARD_WIDTH },
+	schedule_full_button_text: { fontSize: 20, fontWeight: '300', color: COLOR.PRIMARY, paddingHorizontal: 14, paddingVertical: 10 },
+
+	// FullScheduleListView
+	fslv_container: { flexGrow: 1, marginTop: LAYOUT.NAVIGATOR_HEIGHT - 1 },
+	fslv_header_wrapper: { marginBottom: 20, borderColor: COLOR.DMGREY, borderTopWidth: 1, borderBottomWidth: 1, backgroundColor: COLOR.WHITE },
+	fslv_header_text: { marginTop: 15, marginBottom: 15, marginLeft: 25, fontWeight: 'bold', fontSize: 22 },
+	fslv_row: { paddingBottom: 20, paddingLeft: 25 },
+	fslv_course_code: { fontSize: 18, fontWeight: 'bold' },
+	fslv_course_title: { fontSize: 18, marginBottom: 4 },
+	fslv_course_text: { fontSize: 16 },
+
+	// ShuttleCard
+	shuttlecard_addButton: { width: LAYOUT.MAX_CARD_WIDTH, backgroundColor: COLOR.WHITE, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4, paddingVertical: 8, borderTopWidth: 1, borderColor: COLOR.MGREY },
+	shuttlecard_addText: { fontSize: 20, color: COLOR.PRIMARY, fontWeight: '300' },
+
+	// ShuttleOverview
+	so_busIcon: { color: COLOR.PRIMARY },
+	so_bigContainer: { width: LAYOUT.MAX_CARD_WIDTH, borderBottomWidth: 1, borderBottomColor: COLOR.MGREY },
+	so_bigCircles: { flexDirection: 'row', alignItems: 'stretch', justifyContent: 'center', margin: 20, height: 83 },
+	so_shortNameCircle: { borderRadius: 50, width: 83, justifyContent: 'center', overflow: 'hidden', padding: 2 },
+	so_shortNameText: { textAlign: 'center', fontWeight: '600', fontSize: 48, backgroundColor: 'transparent' },
+	so_shortNameTextLoading: { color: COLOR.DGREY },
+	so_atContainer: { flexGrow: 3, justifyContent: 'center', alignItems: 'center' },
+	so_atText: { textAlign: 'center', color: COLOR.DGREY, fontSize: 30, fontWeight: '300', backgroundColor: 'transparent' },
+	so_stopNameCircle: { borderRadius: 48, borderWidth: 1, backgroundColor: COLOR.WHITE, borderColor: COLOR.MGREY, width: 83, justifyContent: 'center', padding: 2 },
+	so_stopNameText: { padding: 5, textAlign: 'center', color: COLOR.DGREY, fontWeight: '500', fontSize: 16, backgroundColor: 'transparent' },
+	so_infoContainer: { alignItems: 'center', paddingBottom: 10, paddingHorizontal: 8 },
+	so_routeNameText: { fontSize: 17 },
+	so_arrivingText: { fontSize: 26, color: COLOR.DGREY },
+	so_noShuttleContainer: { width: LAYOUT.MAX_CARD_WIDTH, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 30, paddingVertical: 20 },
+	so_noShuttleText: { lineHeight: 28, fontSize: 15, textAlign: 'center' },
+	so_scheduleContainer: { flexDirection: 'row', marginTop: 10, justifyContent: 'center', alignItems: 'center' },
+	so_scheduleText: { color: COLOR.PRIMARY, fontSize: 20, paddingLeft: 8 },
+
+	// ShuttleRoutesListView
+	srlv_icon: { alignSelf: 'flex-end', color: COLOR.DGREY },
+	srlv_row_name: { flex: 1, paddingRight: 10 },
+	srlv_touchable: { flex: 1, flexDirection: 'row', alignItems: 'center', height: 60, padding: 7, paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: COLOR.MGREY, overflow: 'hidden' },
+
+	// ShuttleSavedListView
+	sslv_listRow: {
+		backgroundColor: COLOR.WHITE,
+		flexDirection: 'row',
+		alignItems: 'center',
+		width: LAYOUT.DEVICE_WIDTH,
+		borderBottomWidth: 1,
+		borderBottomColor: COLOR.MGREY,
+		height: 50,
+		...Platform.select({
+			ios: {
+				shadowOpacity: 0,
+				shadowOffset: { height: 2, width: 2 },
+				shadowRadius: 2,
+			},
+			android: {
+				margin: 0,
+				elevation: 0,
+			},
+		})
+	},
+	sslv_nameText: { flex: 1, margin: 7 },
+	sslv_cancelButton: { justifyContent: 'center', alignItems: 'center', width: 50, height: 50 },
+	sslv_addNoticeText: { lineHeight: 28, fontSize: 15, color: COLOR.DGREY, textAlign: 'center' },
+
+	// ShuttleSmallList
+	ssl_nextText: { fontSize: 20, fontWeight: '300', padding: 8 },
+	ssl_rowContainer: { flexDirection: 'row', marginBottom: 8, marginHorizontal: 8, alignItems: 'center', justifyContent: 'flex-start' },
+	ssl_circle: { borderRadius: 18, width: 36, height: 36, justifyContent: 'center', overflow: 'hidden' },
+	ssl_shortNameText: { textAlign: 'center', fontWeight: '600', fontSize: 19, backgroundColor: 'transparent' },
+	ssl_nameText: { flex: 4, fontSize: 15, marginLeft: 10 },
+	ssl_etaText: { flex: 1.2, fontSize: 15, marginLeft: 10, textAlign: 'right' },
+	ssl_listContainer: { width: LAYOUT.MAX_CARD_WIDTH, overflow: 'hidden' },
+
+	// ShuttleStop
+	ss_shuttlestop_image: { width: LAYOUT.WINDOW_WIDTH, height: round(LAYOUT.WINDOW_WIDTH * 0.533) },
+	ss_nameText: { flex: 1, flexDirection: 'row', alignItems: 'center', width: LAYOUT.WINDOW_WIDTH, paddingVertical: 10, paddingHorizontal: 14, backgroundColor: COLOR.PRIMARY, color: COLOR.WHITE, fontSize: 24, fontWeight: '300' },
+	ss_arrivalsText: { width: LAYOUT.WINDOW_WIDTH, padding: 16, fontSize: 20, fontWeight: '300', color: COLOR.DGRAY },
+	ss_mapContainer: { margin: 1 },
+	ss_map: { margin: 1, width: LAYOUT.WINDOW_WIDTH, height: round(LAYOUT.WINDOW_WIDTH * 0.8) },
+
+	// ShuttleStopsListView
+	sslv_icon: { alignSelf: 'flex-end', color: COLOR.DGREY },
+	sslv_row_name: { flex: 1, paddingRight: 10 },
+	sslv_row_name_disabled: { color: COLOR.MGREY, flex: 1, paddingRight: 10 },
+	sslv_list_row: { flex: 1, flexDirection: 'row', alignItems: 'center', height: 60, padding: 7, paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: COLOR.MGREY, overflow: 'hidden' },
+
+	// Common - CardHeader
+	ch_headerContainer: { flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: COLOR.MGREY },
+	ch_titleText: { flexGrow: 1, fontSize: 26, color: COLOR.DGREY, paddingLeft: 10, paddingVertical: 6 },
+	ch_titleImage: { height: 36, minWidth: 85, maxWidth: 150, marginTop: 6, marginLeft: 6 },
+	ch_filler: { flexGrow: 1 },
+
+	// Common - CardMenu
+	cm_menu: { flexDirection: 'row', justifyContent: 'flex-end', },
+	cm_option: { margin: 10, fontSize: 16 },
+	cm_trigger: { paddingTop: 9, paddingBottom: 6, paddingLeft: 12, paddingRight: 10, color: COLOR.DGREY, },
+
+
+
+
+
 
 
 })

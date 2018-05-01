@@ -2,7 +2,7 @@ import React from 'react'
 import { View, Text, ListView } from 'react-native'
 import { connect } from 'react-redux'
 
-import Card from '../card/Card'
+import Card from '../common/Card'
 import logger from '../../util/logger'
 import schedule from '../../util/schedule'
 import css from '../../styles/css'

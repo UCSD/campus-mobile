@@ -11,7 +11,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import SimpleIcon from 'react-native-vector-icons/SimpleLineIcons';
 
 import schedule from '../../util/schedule';
-import Card from '../card/Card';
+import Card from '../common/Card';
 
 // import css from '../../styles/css';
 import {
@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
 		fontSize: C.L * 5,
 		alignSelf: 'flex-end',
 		marginBottom: Math.round(C.L * 15 * 1.2) * 0.12,
-		color : COLOR_DGREY
+		color: COLOR_DGREY
 	},
 
 	leftHalf_lower: { flex: 7 },

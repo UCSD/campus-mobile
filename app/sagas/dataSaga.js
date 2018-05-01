@@ -5,7 +5,6 @@ import { Image } from 'react-native'
 import WeatherService from '../services/weatherService'
 import ScheduleService from '../services/scheduleService'
 import SpecialEventsService from '../services/specialEventsService'
-import { fetchSurveyIds, fetchSurveyById } from '../services/surveyService'
 import LinksService from '../services/quicklinksService'
 import EventService from '../services/eventService'
 import NewsService from '../services/newsService'
@@ -26,7 +25,6 @@ const getWeather = state => (state.weather)
 const getSurf = state => (state.surf)
 const getSpecialEvents = state => (state.specialEvents)
 const getLinks = state => (state.links)
-const getSurvey = state => (state.survey)
 const getEvents = state => (state.events)
 const getNews = state => (state.news)
 const getCards = state => (state.cards)
@@ -46,7 +44,6 @@ function* watchData() {
 			yield call(updateLinks)
 			yield call(updateEvents)
 			yield call(updateNews)
-			yield call(updateSurveys)
 			yield call(updateShuttleMaster)
 			yield put({ type: 'UPDATE_DINING' })
 			yield call(updateSchedule)
@@ -239,26 +236,6 @@ function* updateNews() {
 		// Fetch for new data
 		const news = yield call(NewsService.FetchNews)
 		yield put({ type: 'SET_NEWS', news })
-	}
-}
-
-function* updateSurveys() {
-	// TODO: SurveyTTL
-	const { allIds } = yield select(getSurvey)
-
-	// Fetch for all survey ids
-	const surveyIds = yield call(fetchSurveyIds)
-
-	if (Array.isArray(surveyIds) && Array.isArray(surveyIds) && surveyIds.length > allIds.length) {
-		// Fetch each new survey
-		for (let i = 0; i < surveyIds.length; ++i) {
-			const id = surveyIds[i]
-			if (allIds.indexOf(id) < 0) {
-				const survey = yield call(fetchSurveyById, id)
-				yield put({ type: 'SET_SURVEY', id, survey })
-			}
-		}
-		yield put({ type: 'SET_SURVEY_IDS', surveyIds })
 	}
 }
 

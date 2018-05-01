@@ -13,7 +13,6 @@ import newsReducer from './news'
 import linksReducer from './links'
 import routesReducer from './routes'
 import scheduleReducer from './schedule'
-import surveyReducer from './survey'
 import specialEventsReducer from './specialEvents'
 import feedbackReducer from './feedback'
 import requestStatusesReducer from './requestStatuses'
@@ -33,7 +32,6 @@ module.exports = combineReducers({
 	news: newsReducer,
 	links: linksReducer,
 	routes: routesReducer,
-	survey: surveyReducer,
 	specialEvents: specialEventsReducer,
 	schedule: scheduleReducer,
 	feedback: feedbackReducer,

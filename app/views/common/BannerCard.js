@@ -2,7 +2,7 @@ import React from 'react'
 import { View, Text } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
 
-import Card from '../card/Card'
+import Card from '../common/Card'
 import SafeImage from './SafeImage'
 import Touchable from '../common/Touchable'
 import css from '../../styles/css'

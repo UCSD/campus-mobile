@@ -7,7 +7,7 @@ import {
 	ActivityIndicator,
 } from 'react-native'
 
-import Card from '../card/Card'
+import Card from '../common/Card'
 import WeatherWeek from './WeatherWeek'
 import css from '../../styles/css'
 import AppSettings from '../../AppSettings'

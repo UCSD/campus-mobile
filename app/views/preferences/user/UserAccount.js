@@ -14,7 +14,7 @@ import AccountLogin from './AccountLogin'
 import AppSettings from '../../../AppSettings'
 import css from '../../../styles/css'
 import { getMaxCardWidth } from '../../../util/general'
-import Card from '../../card/Card'
+import Card from '../../common/Card'
 
 const auth = require('../../../util/auth')
 

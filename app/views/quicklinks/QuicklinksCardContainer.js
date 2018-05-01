@@ -19,10 +19,8 @@ export const QuicklinksCardContainer = ({ linksData }) => {
 	)
 }
 
-const mapStateToProps = (state) => (
-	{
-		linksData: state.links.data,
-	}
+const mapStateToProps = state => (
+	{ linksData: state.links.data }
 )
 
 const ActualLinksCard = connect(mapStateToProps)(QuicklinksCardContainer)

@@ -4,7 +4,7 @@ import { View, Text, ActivityIndicator } from 'react-native'
 import { withNavigation } from 'react-navigation'
 
 import DataListView from './DataListView'
-import Card from '../card/Card'
+import Card from '../common/Card'
 import Touchable from './Touchable'
 import css from '../../styles/css'
 

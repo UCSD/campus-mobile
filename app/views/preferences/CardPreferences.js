@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import SortableList from 'react-native-sortable-list'
 import PreferencesItem from './PreferencesItem'
-import Card from '../card/Card'
+import Card from '../common/Card'
 
 // View for user to manage preferences, including which cards are visible
 class CardPreferences extends Component {
