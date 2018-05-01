@@ -3,12 +3,13 @@ import {
 	View,
 	Text
 } from 'react-native'
+import { connect } from 'react-redux'
 
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import Touchable from '../../common/Touchable'
 import css from '../../../styles/css'
 
-const AccountInfo = ({ username, handleLogout }) => (
+const AccountInfo = ({ username, doLogout }) => (
 	<View style={css.ua_accountinfo}>
 		<View style={css.ua_loggedin}>
 			<Icon
@@ -21,11 +22,23 @@ const AccountInfo = ({ username, handleLogout }) => (
 			</Text>
 		</View>
 		<View style={css.ua_logout}>
-			<Touchable onPress={handleLogout}>
+			<Touchable onPress={() => doLogout()}>
 				<Text style={css.ua_loutout_text}>Log out</Text>
 			</Touchable>
 		</View>
 	</View>
 )
 
-export default AccountInfo
+function mapStateToProps(state, props) {
+	return { username: state.user.profile.username }
+}
+
+function mapDispatchToProps(dispatch) {
+	return {
+		doLogout: () => {
+			dispatch({ type: 'USER_LOGOUT' })
+		}
+	}
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AccountInfo)
