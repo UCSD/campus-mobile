@@ -21,20 +21,18 @@ function* doLogin(action) {
 		password,
 	} = action
 
+	yield put({ type: 'LOG_IN_REQUEST' })
 	try {
 		if (!password || password.length === 0) {
 			const e = new Error('Please type in your password.')
 			e.name = 'emptyPasswordError'
+			yield call(delay, 0)
 			throw e
 		}
 		const passwordEncrypted = yield auth.encryptStringWithKey(password)
 		const loginInfo = auth.encryptStringWithBase64(`${username}:${passwordEncrypted}`)
 
-		yield put({ type: 'IS_LOGGING_IN' })
-		const {
-			response,
-			timeout
-		} = yield race({
+		const { response, timeout } = yield race({
 			response: call(ssoService.retrieveAccessToken, loginInfo),
 			timeout: call(delay, SSO_TTL)
 		})
@@ -59,14 +57,19 @@ function* doLogin(action) {
 			}
 
 			yield put({ type: 'LOGGED_IN', profile: newProfile, expiration: response.expiration })
+			yield put({ type: 'LOG_IN_SUCCESS' })
 			yield put({ type: 'TOGGLE_AUTHENTICATED_CARDS' })
 		}
 	} catch (error) {
 		logger.log(error)
+<<<<<<< HEAD
 		yield put({
 			type: 'USER_LOGIN_FAILED',
 			error: error.message
 		})
+=======
+		yield put({ type: 'LOG_IN_FAILURE', error })
+>>>>>>> d760234e7a75c15b880ad2d218a027411fe5ec67
 	}
 }
 
@@ -96,6 +99,7 @@ function* doLogout(action) {
 	yield put({ type: 'TOGGLE_AUTHENTICATED_CARDS' })
 }
 
+<<<<<<< HEAD
 function* timeoutError() {
 	const error = new Error('There was a problem signing in. Please try again later.')
 	yield put({
@@ -111,12 +115,12 @@ function* clearErrors(action) {
 	})
 }
 
+=======
+>>>>>>> d760234e7a75c15b880ad2d218a027411fe5ec67
 function* userSaga() {
 	yield takeLatest('USER_LOGIN', doLogin)
 	yield takeLatest('USER_LOGOUT', doLogout)
 	yield takeLatest('USER_TOKEN_REFRESH', doTokenRefresh)
-	yield takeLatest('USER_LOGIN_TIMEOUT', timeoutError)
-	yield takeLatest('USER_CLEAR_ERRORS', clearErrors)
 }
 
 export default userSaga

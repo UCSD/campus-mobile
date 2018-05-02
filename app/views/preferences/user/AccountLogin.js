@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
 import {
+	Alert,
 	View,
 	Text,
 	TextInput,
 	ActivityIndicator
 } from 'react-native'
+import { connect } from 'react-redux'
 
 import AppSettings from '../../../AppSettings'
 import Touchable from '../../common/Touchable'
@@ -18,6 +20,23 @@ class AccountLogin extends Component {
 			credentials: {
 				username: '',
 				password: ''
+			}
+		}
+	}
+
+	componentDidUpdate(prevProps, prevState) {
+		const oldStatus = prevProps.requestStatus
+		const newStatus = this.props.requestStatus
+
+		// Only render alerts if status change is new
+		if (oldStatus !== newStatus) {
+			// Failed log in
+			if (this.props.requestError) {
+				Alert.alert(
+					'Sign in error',
+					this.props.requestError,
+					{ cancelable: false }
+				)
 			}
 		}
 	}
@@ -44,7 +63,7 @@ class AccountLogin extends Component {
 					autoCapitalize="none"
 					autoCorrect={false}
 					underlineColorAndroid="transparent"
-					editable={!this.props.isLoggingIn}
+					editable={!this.props.requestStatus}
 					onChange={this.handleCredentialInput('username')}
 					onSubmitEditing={(event) => {
 						this._passwordInput.focus()
@@ -57,16 +76,16 @@ class AccountLogin extends Component {
 					placeholder="Password"
 					returnKeyType="send"
 					underlineColorAndroid="transparent"
-					editable={!this.props.isLoggingIn}
+					editable={!this.props.requestStatus}
 					secureTextEntry
 					onChange={this.handleCredentialInput('password')}
-					onSubmitEditing={() => this.props.handleLogin(username, password)}
+					onSubmitEditing={() => this.props.doLogin(username, password)}
 				/>
 				<Touchable
-					onPress={() => this.props.handleLogin(username, password)}
-					disabled={this.props.isLoggingIn}
+					onPress={() => this.props.doLogin(username, password)}
+					disabled={this.props.requestStatus}
 					style={
-						(this.props.isLoggingIn) ?
+						(this.props.requestStatus) ?
 							(
 								[css.ua_loginButton, css.ua_loginButtonDisabled]
 							) : (
@@ -76,13 +95,13 @@ class AccountLogin extends Component {
 				>
 					<Text style={css.ua_loginText}>
 						{
-							(this.props.isLoggingIn) ?
+							(this.props.requestStatus) ?
 								('Signing in...') :
 								('Sign in')
 						}
 					</Text>
 					{
-						(this.props.isLoggingIn) ?
+						(this.props.requestStatus) ?
 							(
 								<ActivityIndicator
 									size="small"
@@ -106,4 +125,19 @@ class AccountLogin extends Component {
 	}
 }
 
-export default AccountLogin
+function mapStateToProps(state, props) {
+	return {
+		requestStatus: state.requestStatuses.LOG_IN,
+		requestError: state.requestErrors.LOG_IN
+	}
+}
+
+function mapDispatchToProps(dispatch) {
+	return {
+		doLogin: (username, password) => {
+			dispatch({ type: 'USER_LOGIN', username, password })
+		}
+	}
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AccountLogin)

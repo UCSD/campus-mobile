@@ -9,8 +9,12 @@ import createMigration from 'redux-persist-migrate'
 import rootSaga from '../sagas/rootSaga'
 import rootReducer from '../reducers'
 
-const sagaMiddleware = createSagaMiddleware()
+// immutable module import is ignored by eslint because it is
+// only used when the app is running in dev mode
+// eslint-disable-next-line import/no-extraneous-dependencies
+const immutable = require('redux-immutable-state-invariant')
 
+const sagaMiddleware = createSagaMiddleware()
 const saveMapFilter = createFilter(
 	'map',
 	['history']
@@ -46,6 +50,11 @@ const migration = createMigration(manifest, reducerKey)
 
 export default function configureStore(initialState, onComplete = () => null) {
 	const middlewares = [sagaMiddleware, thunkMiddleware] // lets us dispatch() functions
+
+	// If in development, add redux-immutable-state-invariant
+	if (__DEV__) {
+		middlewares.push(immutable.default())
+	}
 
 	// custom composer for redux devtools
 	const composeWithTools =

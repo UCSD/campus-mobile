@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import {
-	Alert,
 	View,
 	Text,
 	Linking,
@@ -52,14 +51,6 @@ class UserAccount extends Component {
 		Linking.removeEventListener('url', this._handleOpenURL)
 	}
 
-	handleLogin = (user, pass) => {
-		if (!this.props.user.isLoggingIn) this.props.doLogin(user, pass)
-	}
-
-	handleLogout = () => {
-		this.props.doLogout()
-	}
-
 	_renderAccountContainer = mainText => (
 		<TouchableOpacity
 			style={css.UserAccount_spacedRow}
@@ -80,31 +71,13 @@ class UserAccount extends Component {
 	}
 
 	render() {
-		const { error } = this.props.user
-		if (error && !this.props.user.isLoggingIn) {
-			Alert.alert(
-				'Sign in error',
-				error,
-				[
-					{ text: 'OK', onPress: () => { this.props.clearErrors() } }
-				],
-				{ cancelable: false }
-			)
-		}
 		return (
 			<Card id="user" title={this.props.user.isLoggedIn ? 'Logged in as:' : 'Log in with SSO:'} hideMenu={true}>
 				<View style={{ width: getMaxCardWidth() }}>
 					{(this.props.user.isLoggedIn) ? (
-						<AccountInfo
-							username={this.props.user.profile.username}
-							handleLogout={this.handleLogout}
-						/>
+						<AccountInfo />
 					) : (
-						<AccountLogin
-							handleLogin={this.handleLogin}
-							error={this.props.user.error}
-							isLoggingIn={this.props.user.isLoggingIn}
-						/>
+						<AccountLogin />
 					)}
 				</View>
 			</Card>
@@ -118,25 +91,10 @@ function mapStateToProps(state, props) {
 
 function mapDispatchToProps(dispatch) {
 	return {
-		doLogin: (username, password) => {
-			dispatch({ type: 'USER_LOGIN', username, password })
-		},
 		doTokenRefresh: () => {
 			dispatch({ type: 'USER_TOKEN_REFRESH' })
-		},
-		doLogout: () => {
-			dispatch({ type: 'USER_LOGOUT' })
-		},
-		timeoutLogin: () => {
-			dispatch({ type: 'USER_LOGIN_TIMEOUT' })
-		},
-		clearErrors: () => {
-			dispatch({ type: 'USER_CLEAR_ERRORS' })
 		}
 	}
 }
 
-module.exports = connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(UserAccount)
+export default connect(mapStateToProps, mapDispatchToProps)(UserAccount)

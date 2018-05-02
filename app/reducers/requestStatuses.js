@@ -11,20 +11,13 @@ function requestStatuses(state = {}, action) {
 	if (!matches) return state
 
 	const [, requestName, requestState] = matches
-	let newRequestState
 	// Store whether a request is happening at the moment or not
 	// e.g. will be true when receiving POST_FEEDBACK_REQUEST
 	// and false when receiving POST_FEEDBACK_FAILURE / SUCCESS
 	// Also includes timestamp for REQUEST
-	switch (requestState) {
-		case 'REQUEST': {
-			newRequestState = { timeRequested: new Date() }
-			break
-		}
-	}
 	return {
 		...state,
-		[requestName]: newRequestState
+		[requestName]: requestState === 'REQUEST' ? { timeRequested: new Date() } : null
 	}
 }
 
