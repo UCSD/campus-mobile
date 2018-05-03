@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ElevatedView from 'react-native-elevated-view';
-import { COLOR_MGREY } from '../../styles/ColorConstants';
+import COLOR from '../../styles/ColorConstants';
 import css from '../../styles/css';
 import { doPRM, getPRM, getMaxCardWidth } from '../../util/general';
 
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
 	list_container: { width: getMaxCardWidth(), maxHeight: listHeight, },
 	card_main: { top: 44 + 6, backgroundColor: 'white', margin: 6, alignItems: 'flex-start', justifyContent: 'center', },
 	touch: { backgroundColor: 'white' },
-	list_row: { flexDirection: 'row', paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: COLOR_MGREY, overflow: 'hidden', paddingLeft: 8, paddingRight: 8 },
+	list_row: { flexDirection: 'row', paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: COLOR.MGREY, overflow: 'hidden', paddingLeft: 8, paddingRight: 8 },
 });
 
 export default SearchResultsCard;

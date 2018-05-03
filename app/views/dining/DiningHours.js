@@ -6,10 +6,7 @@ import {
 import moment from 'moment'
 
 import ColoredDot from '../common/ColoredDot'
-import {
-	COLOR_MGREEN,
-	COLOR_MRED
-} from '../../styles/ColorConstants'
+import COLOR from '../../styles/ColorConstants'
 import css from '../../styles/css'
 
 const dining = require('../../util/dining')
@@ -20,7 +17,7 @@ const generateHourElements = (hoursArray, status, today) => {
 
 	if (status) {
 		activeDotColor = status.isOpen ?
-			COLOR_MGREEN : COLOR_MRED
+			COLOR.MGREEN : COLOR.MRED
 	}
 
 	// Push hours
@@ -52,8 +49,8 @@ const generateHourElements = (hoursArray, status, today) => {
 						<View>
 							<ColoredDot
 								size={10}
-								color={activeDotColor}
 								style={css.dd_status_icon}
+								color={activeDotColor}
 							/>
 						</View>
 					)
@@ -128,8 +125,8 @@ const generateHours = (allHours, status) => {
 									<View>
 										<ColoredDot
 											size={10}
-											color={COLOR_MRED}
 											style={css.dd_status_icon}
+											color={COLOR.MRED}
 										/>
 									</View>
 								) : (null)

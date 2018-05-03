@@ -13,16 +13,8 @@ import Touchable from '../common/Touchable';
 import css from '../../styles/css';
 import logger from '../../util/logger';
 import { gotoNavigationApp, getHumanizedDuration, platformIOS } from '../../util/general';
-import {
-	COLOR_DGREY,
-	COLOR_MGREY,
-	COLOR_PRIMARY,
-	COLOR_BLACK,
-	COLOR_YELLOW,
-} from '../../styles/ColorConstants';
-import {
-	WINDOW_WIDTH
-} from '../../styles/LayoutConstants';
+import COLOR from '../../styles/ColorConstants';
+import LAYOUT from '../../styles/LayoutConstants';
 
 class SpecialEventsDetailView extends React.Component {
 	componentDidMount() {
@@ -66,7 +58,7 @@ class SpecialEventsDetailView extends React.Component {
 
 					<View style={styles.labelView}>
 						{ data.label ? (
-							<Text style={[styles.labelText, { color: data['label-theme'] ? data['label-theme'] : COLOR_BLACK }]}>{data.label}</Text>
+							<Text style={[styles.labelText, { color: data['label-theme'] ? data['label-theme'] : COLOR.BLACK }]}>{data.label}</Text>
 						) : null }
 						{ data['talk-type'] === 'Keynote' ? (
 							<Text style={styles.labelText}>{data['talk-type']}</Text>
@@ -152,24 +144,24 @@ const ActualSpecialEventsDetailView = connect(
 )(SpecialEventsDetailView);
 
 const styles = StyleSheet.create({
-	detailContainer: { width: WINDOW_WIDTH, padding: 12 },
+	detailContainer: { width: LAYOUT.WINDOW_WIDTH, padding: 12 },
 	labelView: { flexDirection: 'row', paddingTop: 4 },
 	labelText: { fontSize: 13 },
-	sessionName: { fontSize: 24, color: COLOR_PRIMARY, paddingTop: 6 },
+	sessionName: { fontSize: 24, color: COLOR.PRIMARY, paddingTop: 6 },
 	sessionInfo: { fontSize: 12, paddingTop: 16  },
 	sessionDesc: { lineHeight: 18, fontSize: 14, paddingTop: 16 },
 	hostedBy: { fontSize: 10, fontWeight: 'bold', marginTop: 16 },
 	speakerContainer: { marginTop: 2 },
-	speakerName: { fontSize: 14, fontWeight: 'bold', color: COLOR_PRIMARY, marginTop: 10 },
+	speakerName: { fontSize: 14, fontWeight: 'bold', color: COLOR.PRIMARY, marginTop: 10 },
 	speakerPosition: { fontSize: 10, marginTop: 2 },
 	speakerSubTalkTitle: { fontSize: 10, marginTop: 2 },
 	starButton: { width: 50, position: 'absolute', top: 2, right: -5, zIndex: 10 },
 	starButtonInner: { justifyContent: 'flex-start', alignItems: 'center' },
-	starOuterIcon: { color: COLOR_DGREY, position: platformIOS() ? 'absolute' : 'relative', zIndex: 10, backgroundColor: 'transparent' },
-	starInnerIcon: { color: COLOR_YELLOW, position: 'absolute', zIndex: platformIOS() ? 5 : 15, marginTop: 3 },
-	sed_dir: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderTopWidth: 1, borderTopColor: COLOR_MGREY, marginTop: 16, paddingVertical: 6 },
-	sed_dir_label: { flex: 1, fontSize: 22, color: COLOR_PRIMARY },
-	sed_dir_icon: { color: COLOR_PRIMARY, alignSelf: 'flex-end' },
+	starOuterIcon: { color: COLOR.DGREY, position: platformIOS() ? 'absolute' : 'relative', zIndex: 10, backgroundColor: 'transparent' },
+	starInnerIcon: { color: COLOR.YELLOW, position: 'absolute', zIndex: platformIOS() ? 5 : 15, marginTop: 3 },
+	sed_dir: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderTopWidth: 1, borderTopColor: COLOR.MGREY, marginTop: 16, paddingVertical: 6 },
+	sed_dir_label: { flex: 1, fontSize: 22, color: COLOR.PRIMARY },
+	sed_dir_icon: { color: COLOR.PRIMARY, alignSelf: 'flex-end' },
 });
 
 export default ActualSpecialEventsDetailView;

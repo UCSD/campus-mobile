@@ -8,11 +8,7 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import { withNavigation } from 'react-navigation'
 import ColoredDot from '../common/ColoredDot'
 import Touchable from '../common/Touchable'
-import {
-	COLOR_PRIMARY,
-	COLOR_MGREEN,
-	COLOR_MRED
-} from '../../styles/ColorConstants'
+import COLOR from '../../styles/ColorConstants'
 import css from '../../styles/css'
 
 const general = require('../../util/general')
@@ -31,7 +27,7 @@ const DiningItem = ({ navigation, data }) => {
 	if (status) {
 		if (status.isValid) {
 			activeDotColor = status.isOpen ?
-				COLOR_MGREEN : COLOR_MRED
+				COLOR.MGREEN : COLOR.MRED
 
 			statusText = status.isOpen ?
 				'Open' : 'Closed'
@@ -43,11 +39,11 @@ const DiningItem = ({ navigation, data }) => {
 		soonStatusColor = null
 		if (status.openingSoon) {
 			soonStatusText = 'Opening Soon'
-			soonStatusColor = COLOR_MGREEN
+			soonStatusColor = COLOR.MGREEN
 		}
 		else if (status.closingSoon) {
 			soonStatusText = 'Closing Soon'
-			soonStatusColor = COLOR_MRED
+			soonStatusColor = COLOR.MRED
 		}
 
 		const isClosed = (!status.currentHours)
@@ -151,7 +147,7 @@ const DiningItem = ({ navigation, data }) => {
 					onPress={() => general.gotoNavigationApp(data.coords.lat, data.coords.lon)}
 				>
 					<View style={css.dl_dir_traveltype_container}>
-						<Icon name="md-walk" size={32} color={COLOR_PRIMARY} />
+						<Icon name="md-walk" size={32} color={COLOR.PRIMARY} />
 						{data.distanceMilesStr ? (
 							<Text style={css.dl_dir_eta}>{data.distanceMilesStr}</Text>
 						) : null }
@@ -164,7 +160,7 @@ const DiningItem = ({ navigation, data }) => {
 						onPress={() => general.gotoNavigationApp(null, null, data.address)}
 					>
 						<View style={css.dl_dir_traveltype_container}>
-							<Icon name="md-walk" size={32} color={COLOR_PRIMARY} />
+							<Icon name="md-walk" size={32} color={COLOR.PRIMARY} />
 						</View>
 					</Touchable>
 				) : (null)

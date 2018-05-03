@@ -36,7 +36,7 @@ import TabIcons from './TabIcons'
 import withNavigationPreventDuplicate from './withNavigationPreventDuplicate'
 
 // MISC
-import { COLOR } from '../styles/ColorConstants'
+import COLOR from '../styles/ColorConstants'
 import css from '../styles/css'
 import general from '../util/general'
 

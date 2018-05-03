@@ -11,7 +11,7 @@ import {
 import ElevatedView from 'react-native-elevated-view';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { getPRM, getMaxCardWidth } from '../../util/general';
-import { COLOR_MGREY } from '../../styles/ColorConstants';
+import COLOR from '../../styles/ColorConstants';
 
 const PRM = getPRM();
 const deviceHeight = Dimensions.get('window').height;
@@ -98,7 +98,7 @@ SearchHistoryCard.defaultProps = {
 const styles = StyleSheet.create({
 	list_container: { width: getMaxCardWidth(), padding: 8, maxHeight: Math.round(deviceHeight / 2) },
 	card_main: { top: 44 + 6, backgroundColor: 'white', margin: 6, alignItems: 'flex-start', justifyContent: 'center',  },
-	list_row: { flex: 1, flexDirection: 'row', paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: COLOR_MGREY, overflow: 'hidden' },
+	list_row: { flex: 1, flexDirection: 'row', paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: COLOR.MGREY, overflow: 'hidden' },
 	icon_container: { alignItems: 'center', width: 30 },
 	text_container: { flex: 1 }
 });

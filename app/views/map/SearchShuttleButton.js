@@ -5,7 +5,7 @@ import {
 } from 'react-native';
 import ElevatedView from 'react-native-elevated-view';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { COLOR_PIN } from '../../styles/ColorConstants';
+import COLOR from '../../styles/ColorConstants';
 import { getPRM } from '../../util/general';
 
 const SearchShuttleIcon = ({ visible, onPress }) => (
@@ -25,7 +25,7 @@ const SearchShuttleIcon = ({ visible, onPress }) => (
 );
 
 const styles = StyleSheet.create({
-	container: { zIndex: 2, justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: 6 + Math.round(44 * getPRM()), right: 6, width: 50, height: 50, borderRadius: 50 / 2, backgroundColor: COLOR_PIN },
+	container: { zIndex: 2, justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: 6 + Math.round(44 * getPRM()), right: 6, width: 50, height: 50, borderRadius: 50 / 2, backgroundColor: COLOR.PIN },
 	touchable: { width: 50, height: 50, borderRadius: 25, alignItems: 'center', justifyContent: 'center' },
 });
 

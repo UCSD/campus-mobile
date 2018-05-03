@@ -10,7 +10,6 @@ import RNRestart from 'react-native-restart'
 import RNExitApp from 'react-native-exit-app'
 import dateFormat from 'dateformat'
 
-import { COLOR_PRIMARY, COLOR_SECONDARY } from '../styles/ColorConstants'
 import logger from './logger'
 
 /**
@@ -202,22 +201,6 @@ module.exports = {
 	 */
 	getScreenHeight() {
 		return Dimensions.get('window').height
-	},
-
-	/**
-	 * Gets the UCSD campus primary color in hexidecimal form
-	 * @returns {string}
-	 */
-	getCampusPrimary() {
-		return COLOR_PRIMARY
-	},
-
-	/**
-	 * Gets the UCSD campus secondary color in hexidecimal form
-	 * @returns {string}
-	 */
-	getCampusSecondary() {
-		return COLOR_SECONDARY
 	},
 
 	/**

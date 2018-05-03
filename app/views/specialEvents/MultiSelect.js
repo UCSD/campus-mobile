@@ -9,7 +9,7 @@ import {
 import Touchable from '../common/Touchable'
 import CircleCheckBox from '../common/CircleCheckBox'
 import css from '../../styles/css'
-import { COLOR } from '../../styles/ColorConstants'
+import COLOR from '../../styles/ColorConstants'
 
 /**
  * @param {String[]} items - items to be selected

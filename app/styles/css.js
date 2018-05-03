@@ -38,8 +38,8 @@
 import { StyleSheet, Platform } from 'react-native'
 
 import { platformAndroid, deviceIphoneX, round } from '../util/general'
-import { COLOR } from './ColorConstants'
-import { LAYOUT } from './LayoutConstants'
+import COLOR from './ColorConstants'
+import LAYOUT from './LayoutConstants'
 
 const css = StyleSheet.create({
 	/**
@@ -51,6 +51,7 @@ const css = StyleSheet.create({
 	scroll_default: { backgroundColor: COLOR.WHITE },
 	card_container: { backgroundColor: COLOR.WHITE, margin: 6 },
 	main_full_lgrey: { flexGrow: 1, backgroundColor: COLOR.LGREY }, // special events
+	loginview_container: { flexGrow: 1, backgroundColor: COLOR.MGREY, marginTop: LAYOUT.NAVIGATOR_HEIGHT },
 	// 102 - Navigator
 	nav: { backgroundColor: COLOR.PRIMARY, height: LAYOUT.NAVIGATOR_HEIGHT, marginTop: deviceIphoneX() ? -13 : 0 },
 	navTitle: { flex: 1, fontSize: 24, fontWeight: '300', textAlign: 'center', alignSelf: 'center', marginTop: deviceIphoneX() ? 0 : -3 },
@@ -340,8 +341,8 @@ const css = StyleSheet.create({
 	finals_day_of_week: { paddingTop: 10, paddingBottom: 5, paddingLeft: 15, fontWeight: 'bold', fontSize: 18, color: COLOR.VDGREY },
 	finals_day_container: { paddingLeft: 15, paddingVertical: 5  },
 	finals_course_title: { fontSize: 16, fontWeight: 'bold', color: COLOR.VDGREY },
-	finals_course_text: { fontSize: 14, color: LAYOUT.COLOR_DGREY },
-	finals_separator: { width: LAYOUT.MAX_CARD_WIDTH + 2, borderColor: COLOR.COLOR_MGREY, borderTopWidth: 1 },	// +2 ?
+	finals_course_text: { fontSize: 14, color: COLOR.DGREY },
+	finals_separator: { width: LAYOUT.MAX_CARD_WIDTH + 2, borderColor: COLOR.MGREY, borderTopWidth: 1 },	// +2 ?
 
 	// map search
 	map_section: { height: LAYOUT.MAP_HEIGHT },

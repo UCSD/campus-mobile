@@ -3,7 +3,7 @@ import React from 'react'
 import { View } from 'react-native'
 import * as Animatable from 'react-native-animatable'
 
-import { COLOR } from '../../styles/ColorConstants'
+import COLOR from '../../styles/ColorConstants'
 
 const BlueDot = ({ dotSize, dotStyle }) => {
 	const innerWhiteDotSize = dotSize * 0.6,

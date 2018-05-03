@@ -4,7 +4,7 @@ import { View } from 'react-native'
 import Entypo from 'react-native-vector-icons/Entypo'
 
 import css from '../styles/css'
-import { COLOR } from '../styles/ColorConstants'
+import COLOR from '../styles/ColorConstants'
 
 const propTypes = {
 	title: PropTypes.string.isRequired,

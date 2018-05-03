@@ -22,7 +22,7 @@ import SearchSuggest from './SearchSuggest'
 import SearchShuttleMenu from './SearchShuttleMenu'
 import AppSettings from '../../AppSettings'
 import css from '../../styles/css'
-import { LAYOUT } from '../../styles/LayoutConstants'
+import LAYOUT from '../../styles/LayoutConstants'
 import logger from '../../util/logger'
 import { gotoNavigationApp, platformAndroid } from '../../util/general'
 

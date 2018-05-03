@@ -7,7 +7,7 @@ import ShuttleSmallList from './ShuttleSmallList'
 import ShuttleImageDict from './ShuttleImageDict'
 import logger from '../../util/logger'
 import css from '../../styles/css'
-import { COLOR } from '../../styles/ColorConstants'
+import COLOR from '../../styles/ColorConstants'
 
 class ShuttleStopContainer extends React.Component {
 	componentDidMount() {

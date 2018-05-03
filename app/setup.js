@@ -6,7 +6,7 @@ import { Provider } from 'react-redux'
 import configureStore from './store/configureStore'
 import Main from './main'
 import { platformAndroid, gracefulFatalReset } from './util/general'
-import { COLOR } from './styles/ColorConstants'
+import COLOR from './styles/ColorConstants'
 
 class CampusMobileSetup extends React.Component {
 	constructor(props) {

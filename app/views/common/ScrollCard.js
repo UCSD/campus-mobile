@@ -7,7 +7,7 @@ import ElevatedView from 'react-native-elevated-view'
 import CardHeader from './CardHeader'
 import CardMenu from './CardMenu'
 import css from '../../styles/css'
-import { LAYOUT } from '../../styles/LayoutConstants'
+import LAYOUT from '../../styles/LayoutConstants'
 
 class ScrollCard extends React.Component {
 	constructor(props) {

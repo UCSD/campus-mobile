@@ -4,7 +4,7 @@ import { withNavigation } from 'react-navigation'
 
 import ShuttleOverview from './ShuttleOverview'
 import css from '../../styles/css'
-import { LAYOUT } from '../../styles/LayoutConstants'
+import LAYOUT from '../../styles/LayoutConstants'
 
 const ShuttleOverviewList = ({ navigation, savedStops, stopsData, gotoRoutesList }) => {
 	let list

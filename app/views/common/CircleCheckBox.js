@@ -17,7 +17,7 @@ import {
   TouchableOpacity,
   ViewPropTypes
 } from 'react-native';
-import { COLOR } from '../../styles/ColorConstants';
+import COLOR from '../../styles/ColorConstants';
 
 class CircleCheckBox extends Component {
 

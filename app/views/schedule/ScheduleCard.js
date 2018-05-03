@@ -14,15 +14,8 @@ import schedule from '../../util/schedule';
 import Card from '../common/Card';
 
 // import css from '../../styles/css';
-import {
-	// COLOR_PRIMARY,
-	COLOR_LGREY,
-	// COLOR_SECONDARY,
-	// COLOR_BLACK,
-	COLOR_VDGREY,
-	COLOR_DGREY,
-} from '../../styles/ColorConstants';
-import { MAX_CARD_WIDTH } from '../../styles/LayoutConstants';
+import COLOR from '../../styles/ColorConstants';
+import LAYOUT from '../../styles/LayoutConstants';
 
 const ScheduleCard = ({
 	coursesToShow,
@@ -143,7 +136,7 @@ const ScheduleText = ({ style, children}) => (
 		style={[
 			{
 				lineHeight: (() => Math.round(StyleSheet.flatten(style).fontSize * (1.2)))(),
-				color: COLOR_VDGREY
+				color: COLOR.VDGREY
 			},
 			style]}
 	>
@@ -152,24 +145,24 @@ const ScheduleText = ({ style, children}) => (
 );
 
 const C = {
-	L: MAX_CARD_WIDTH * 0.006,
-	R: MAX_CARD_WIDTH * 0.004
+	L: LAYOUT.MAX_CARD_WIDTH * 0.006,
+	R: LAYOUT.MAX_CARD_WIDTH * 0.004
 };
 
 const styles = StyleSheet.create({
 	loadingContainer: {
 		alignItems: 'center',
 		justifyContent: 'center',
-		width: MAX_CARD_WIDTH ,
-		height: (MAX_CARD_WIDTH / 1.6216) + 44
+		width: LAYOUT.MAX_CARD_WIDTH ,
+		height: (LAYOUT.MAX_CARD_WIDTH / 1.6216) + 44
 	},
 	container: {
-		width: MAX_CARD_WIDTH,
+		width: LAYOUT.MAX_CARD_WIDTH,
 		aspectRatio: 1.6216,
-		paddingTop: MAX_CARD_WIDTH * 0.05,
-		paddingBottom: MAX_CARD_WIDTH * 0.05,
-		paddingLeft: MAX_CARD_WIDTH * 0.04,
-		paddingRight: MAX_CARD_WIDTH * 0.04,
+		paddingTop: LAYOUT.MAX_CARD_WIDTH * 0.05,
+		paddingBottom: LAYOUT.MAX_CARD_WIDTH * 0.05,
+		paddingLeft: LAYOUT.MAX_CARD_WIDTH * 0.04,
+		paddingRight: LAYOUT.MAX_CARD_WIDTH * 0.04,
 		flexDirection: 'row'
 	},
 	leftHalf: { flex: 6 },
@@ -180,7 +173,7 @@ const styles = StyleSheet.create({
 		marginLeft: C.L * 1,
 		marginRight: C.L * 1,
 		// fontWeight: 'bold',
-		color: COLOR_DGREY
+		color: COLOR.DGREY
 	},
 	leftHalf_upper_timeText_secondSection: {
 		fontSize: C.L * 5,
@@ -199,7 +192,7 @@ const styles = StyleSheet.create({
 		fontSize: C.L * 5,
 		alignSelf: 'flex-end',
 		marginBottom: Math.round(C.L * 15 * 1.2) * 0.12,
-		color: COLOR_DGREY
+		color: COLOR.DGREY
 	},
 
 	leftHalf_lower: { flex: 7 },
@@ -219,7 +212,7 @@ const styles = StyleSheet.create({
 	leftHalf_lower_sections_text_bottomSection: {
 		fontSize: C.L * 4.5,
 		paddingTop: C.L * 1,
-		color: COLOR_DGREY
+		color: COLOR.DGREY
 	},
 
 	rightHalf: {
@@ -228,7 +221,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-between'
 	},
 	rightHalf_eachOfFourCards: {
-		borderColor: COLOR_DGREY,
+		borderColor: COLOR.DGREY,
 		borderWidth: C.R * 0.5,
 		borderRadius: C.R * 1,
 		paddingLeft: C.R * 4,
@@ -238,7 +231,7 @@ const styles = StyleSheet.create({
 		aspectRatio: 3.16,
 	},
 	rightHalf_activeCard: {
-		borderColor: COLOR_VDGREY,
+		borderColor: COLOR.VDGREY,
 		borderWidth: C.R * 0.75,
 		paddingLeft: C.R * 3.75,
 		paddingTop: C.R * 2.25,
@@ -268,7 +261,7 @@ const styles = StyleSheet.create({
 		paddingBottom: C.R * 1
 	},
 	rightHalf_each_inActiveText: {
-		color: COLOR_DGREY
+		color: COLOR.DGREY
 	},
 });
 
@@ -283,7 +276,7 @@ const DayItem = ({
 		(
 			<TouchableHighlight
 				onPress={() => onClick(index)}
-				underlayColor={COLOR_LGREY}
+				underlayColor={COLOR.LGREY}
 				activeOpacity={0.5}
 			>
 				<View style={[styles.rightHalf_eachOfFourCards, active && styles.rightHalf_activeCard]}>

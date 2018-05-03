@@ -17,7 +17,7 @@ import {
 import AppSettings from '../../AppSettings'
 import Touchable from '../common/Touchable'
 import css from '../../styles/css'
-import { COLOR_DGREY } from '../../styles/ColorConstants'
+import COLOR from '../../styles/ColorConstants'
 
 const auth = require('../../util/auth')
 
@@ -103,7 +103,7 @@ class OnboardingLogin extends React.Component {
 									<TextInput
 										style={[css.ob_input, css.ob_login]}
 										placeholder="User ID"
-										placeholderTextColor={COLOR_DGREY}
+										placeholderTextColor={COLOR.DGREY}
 										autoCapitalize="none"
 										autoCorrect={false}
 										returnKeyType="next"
@@ -119,7 +119,7 @@ class OnboardingLogin extends React.Component {
 										style={[css.ob_input, css.ob_pass]}
 										ref={(input) => { this.passInput = input }}
 										placeholder="Password"
-										placeholderTextColor={COLOR_DGREY}
+										placeholderTextColor={COLOR.DGREY}
 										autoCapitalize="none"
 										secureTextEntry={true}
 										returnKeyType="send"
