@@ -102,7 +102,7 @@ class ShuttleSavedListView extends React.Component {
 		} else {
 			return (
 				<SortableList
-					style={css.main_full}
+					style={css.main_full_flex}
 					data={this.state.savedObject}
 					renderRow={
 						({ data, active, disabled }) =>
