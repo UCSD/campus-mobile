@@ -20,25 +20,10 @@ const auth = require('../../../util/auth')
 class UserAccount extends Component {
 	componentDidMount() {
 		Linking.addEventListener('url', this._handleOpenURL)
-
-		// if we're mounting and we're somehow still in the
-		// process of logging in, check if we've timed out.
-		// otherwise, set a timeout
-		if (this.props.user.isLoggingIn) {
-			const now = new Date()
-			const lastPostTime = new Date(this.props.user.timeRequested)
-			if (now - lastPostTime >= AppSettings.SSO_TTL) {
-				this.props.timeoutLogin()
-			} else {
-				// timeout after remaining time expires
-				setTimeout(this.props.timeoutLogin, now - lastPostTime)
-			}
-		}
 	}
 
 	componentWillReceiveProps(nextProps) {
 		if (nextProps.user.isLoggedIn) {
-			this.props.doTokenRefresh()
 			auth.retrieveAccessToken()
 				.then((token) => {
 					console.log('User Data: ', this.props.user)
@@ -89,12 +74,4 @@ function mapStateToProps(state, props) {
 	return { user: state.user }
 }
 
-function mapDispatchToProps(dispatch) {
-	return {
-		doTokenRefresh: () => {
-			dispatch({ type: 'USER_TOKEN_REFRESH' })
-		}
-	}
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(UserAccount)
+export default connect(mapStateToProps)(UserAccount)

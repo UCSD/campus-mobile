@@ -67,22 +67,22 @@ function* doLogin(action) {
 }
 
 function* doTokenRefresh() {
-	const { expiration } = yield select(getUserData)
+	// Get username and password from keystore
+	const {
+		username,
+		password
+	} = yield auth.retrieveUserCreds()
 
-	// Check if expiration time is past current time
-	if (moment().isAfter(moment.unix(expiration))) {
-		// Get username and password from keystore
-		const {
-			username,
-			password
-		} = yield auth.retrieveUserCreds()
+	yield put({
+		type: 'USER_LOGIN',
+		username,
+		password
+	})
+}
 
-		yield put({
-			type: 'USER_LOGIN',
-			username,
-			password
-		})
-	}
+function* doTimeOut() {
+	const error = new Error('Logging in timed out.')
+	yield put({ type: 'LOG_IN_FAILURE', error })
 }
 
 function* doLogout(action) {
@@ -95,7 +95,7 @@ function* doLogout(action) {
 function* userSaga() {
 	yield takeLatest('USER_LOGIN', doLogin)
 	yield takeLatest('USER_LOGOUT', doLogout)
-	yield takeLatest('USER_TOKEN_REFRESH', doTokenRefresh)
+	yield takeLatest('USER_LOGIN_TIMEOUT', doTimeOut)
 }
 
 export default userSaga

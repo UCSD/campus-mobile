@@ -48,7 +48,6 @@ class OnboardingLogin extends React.Component {
 				Toast.BOTTOM
 			)
 
-			this.props.doTokenRefresh()
 			auth.retrieveAccessToken()
 				.then((token) => {
 					console.log('User Data: ', this.props.user)
@@ -59,7 +58,7 @@ class OnboardingLogin extends React.Component {
 		}
 	}
 
-	Submit = (username, password) => {
+	onSubmit = (username, password) => {
 		this.props.doLogin(username, password)
 	}
 
@@ -164,9 +163,6 @@ const mapDispatchToProps = (dispatch, ownProps) => (
 		},
 		doLogin: (username, password) => {
 			dispatch({ type: 'USER_LOGIN', username, password })
-		},
-		doTokenRefresh: () => {
-			dispatch({ type: 'USER_TOKEN_REFRESH' })
 		},
 		doLogout: () => {
 			dispatch({ type: 'USER_LOGOUT' })

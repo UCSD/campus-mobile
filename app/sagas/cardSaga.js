@@ -5,7 +5,6 @@ const getUserData = state => (state.user)
 
 function* showCard(action) {
 	const { cards, cardOrder } = yield select(getCards)
-
 	// Check if card already added
 	let isCardAlreadyShown
 	cardOrder.forEach((cardKey) => {
@@ -15,9 +14,7 @@ function* showCard(action) {
 	if (!isCardAlreadyShown) {
 		// Appends card to default position
 		const { defaultPosition } = cards[action.id]
-		cardOrder.splice(defaultPosition, 0, action.id)
-		const newOrder = cardOrder
-		yield put({ type: 'SET_CARD_ORDER', cardOrder: newOrder })
+		yield put({ type: 'INSERT_CARD', id: action.id, position: defaultPosition })
 	}
 }
 
@@ -30,29 +27,14 @@ function* hideCard(action) {
 
 	// If card is not hidden, hide it
 	if (cardPosition) {
-		cardOrder.splice(cardPosition, 1)
-		const newOrder = cardOrder
-		yield put({ type: 'SET_CARD_ORDER', cardOrder: newOrder })
+		yield put({ type: 'REMOVE_CARD', id: action.id })
 	}
 }
 
 function* reorderCard(action) {
-	const { id, newIndex } = action
-	const { cardOrder } = yield select(getCards)
+	const { id, newIndex: newPosition } = action
 
-	let oldIndex
-	cardOrder.forEach((cardKey, index) => {
-		if (cardKey === id) oldIndex = index
-	})
-
-	const newOrder = cardOrder
-
-	// Remove card from old spot
-	newOrder.splice(oldIndex, 1)
-
-	// Replace card into new spot
-	newOrder.splice(newIndex, 0, id)
-	yield put({ type: 'SET_CARD_ORDER', cardOrder: newOrder })
+	yield put({ type: 'REPOSITION_CARD', id, newPosition })
 }
 
 function* updateCard(action) {

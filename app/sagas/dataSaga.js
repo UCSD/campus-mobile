@@ -66,12 +66,7 @@ function* updateSchedule() {
 			(timeDiff < scheduleTTL && data)) {
 		// Do nothing, no need to fetch new data
 	} else {
-		// Ensure access token is fresh
-		yield put({ type: 'USER_TOKEN_REFRESH' })
-		const accessToken = yield auth.retrieveAccessToken()
-
-		const schedule = yield call(ScheduleService.FetchSchedule, accessToken)
-
+		const schedule = yield call(ScheduleService.FetchSchedule)
 		if (schedule) {
 			yield put({ type: 'SET_SCHEDULE', schedule })
 		}

@@ -7,7 +7,7 @@ import Card from '../common/Card'
 // View for user to manage preferences, including which cards are visible
 class CardPreferences extends Component {
 	componentWillMount() {
-		this.setState({ cardObject: this.getCardObject() })
+		this.setState({ cardObject: this.getCardObject(this.props.cardOrder, this.props.cards) })
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -18,7 +18,7 @@ class CardPreferences extends Component {
 		* to display has changed and the layout bounds have
 		* to be readjusted.)
 		*/
-		const nextCardObject = this.getCardObject()
+		const nextCardObject = this.getCardObject(nextProps.cardOrder, nextProps.cards)
 		if (Object.keys(this.state.cardObject).length !==
 			Object.keys(nextCardObject).length) {
 			this.setState({ cardObject: nextCardObject })
@@ -36,14 +36,14 @@ class CardPreferences extends Component {
 		this.props.updateScroll() // reset homeview scroll
 	}
 
-	getCardObject = () => {
+	getCardObject = (cardOrder, cards) => {
 		const cardObject = {}
 
-		if (Array.isArray(this.props.cardOrder)) {
-			this.props.cardOrder.forEach((cardKey) => {
+		if (Array.isArray(cardOrder)) {
+			cardOrder.forEach((cardKey) => {
 				cardObject[cardKey] = {
-					id: this.props.cards[cardKey].id,
-					name: this.props.cards[cardKey].name
+					id: cards[cardKey].id,
+					name: cards[cardKey].name
 				}
 			})
 		}

@@ -24,6 +24,22 @@ class AccountLogin extends Component {
 		}
 	}
 
+	componentDidMount() {
+		// if we're mounting and we're somehow still in the
+		// process of logging in, check if we've timed out.
+		// otherwise, set a timeout
+		if (this.props.requestStatus) {
+			const now = new Date()
+			const lastPostTime = new Date(this.props.requestStatus.timeRequested)
+			if (now - lastPostTime >= AppSettings.SSO_TTL) {
+				this.props.timeoutLogin()
+			} else {
+				// timeout after remaining time expires
+				setTimeout(this.props.timeoutLogin, now - lastPostTime)
+			}
+		}
+	}
+
 	componentDidUpdate(prevProps, prevState) {
 		const oldStatus = prevProps.requestStatus
 		const newStatus = this.props.requestStatus
@@ -83,7 +99,7 @@ class AccountLogin extends Component {
 				/>
 				<Touchable
 					onPress={() => this.props.doLogin(username, password)}
-					disabled={this.props.requestStatus}
+					disabled={Boolean(this.props.requestStatus)}
 					style={
 						(this.props.requestStatus) ?
 							(
@@ -136,6 +152,9 @@ function mapDispatchToProps(dispatch) {
 	return {
 		doLogin: (username, password) => {
 			dispatch({ type: 'USER_LOGIN', username, password })
+		},
+		timeoutLogin: () => {
+			dispatch({ type: 'USER_LOGIN_TIMEOUT' })
 		}
 	}
 }

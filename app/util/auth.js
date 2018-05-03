@@ -1,9 +1,9 @@
-import * as Keychain from 'react-native-keychain';
+import * as Keychain from 'react-native-keychain'
 
-const forge = require('node-forge');
+const forge = require('node-forge')
 
-const { pki } = forge;
-const accessTokenSiteName = 'https://ucsd.edu';
+const { pki } = forge
+const accessTokenSiteName = 'https://ucsd.edu'
 
 /**
  * A module containing auth helper functions
@@ -16,9 +16,9 @@ module.exports = {
 	 * @returns {String} Encrypted string
 	 */
 	encryptStringWithKey(string) {
-		const publicKey = pki.publicKeyFromPem(this.ucsdPublicKey);
-		const encrypted = publicKey.encrypt(string, 'RSA-OAEP');
-		return forge.util.encode64(encrypted);
+		const publicKey = pki.publicKeyFromPem(this.ucsdPublicKey)
+		const encrypted = publicKey.encrypt(string, 'RSA-OAEP')
+		return forge.util.encode64(encrypted)
 	},
 
 	/**
@@ -27,7 +27,7 @@ module.exports = {
 	 * @returns {String} Encrypted string
 	 */
 	encryptStringWithBase64(string) {
-		return forge.util.encode64(string);
+		return forge.util.encode64(string)
 	},
 
 	/**
@@ -39,7 +39,7 @@ module.exports = {
 	storeUserCreds(user, pass) {
 		return Keychain
 			.setGenericPassword(user, pass)
-			.then(() => (true));
+			.then(() => (true))
 	},
 
 	/**
@@ -61,7 +61,7 @@ module.exports = {
 	destroyUserCreds() {
 		return Keychain
 			.resetGenericPassword()
-			.then(() => (true));
+			.then(() => (true))
 	},
 
 	/**
@@ -72,7 +72,7 @@ module.exports = {
 	storeAccessToken(token) {
 		return Keychain
 			.setInternetCredentials(accessTokenSiteName, 'accessToken', token)
-			.then(() => (true));
+			.then(() => (true))
 	},
 
 	/**
@@ -84,7 +84,7 @@ module.exports = {
 		return Keychain
 			.getInternetCredentials(accessTokenSiteName)
 			.then(credentials => (credentials.password))
-			.catch(error => (error));
+			.catch(error => (error))
 	},
 
 	/**
@@ -94,7 +94,44 @@ module.exports = {
 	destroyAccessToken() {
 		return Keychain
 			.resetInternetCredentials(accessTokenSiteName)
-			.then(() => (true));
+			.then(() => (true))
+	},
+
+	/**
+	 * Makes an authorized request using the access token.
+	 * If the response is a 401 Unauthorized, return error
+	 * indicating that access token has expired.
+	 * @param {String} endpoint URL of API endpoint
+	 * @returns {Object} Data from server
+	 * or returns an error if HTTP resonse isn't 200
+	 */
+	authorizedFetch(endpoint) {
+		return Keychain
+			.getInternetCredentials(accessTokenSiteName)
+			.then(credentials => (credentials.password))
+			.then(accessToken => (
+				fetch(endpoint, {
+					headers: { 'Authorization': `Bearer ${accessToken}` }
+				})
+					.then((response) => {
+						if (response.status === 200) return response.json()
+						else {
+							switch (response.status) {
+								case 401: {
+									const e = new Error('Expired access token')
+									throw e
+								}
+								default: {
+									const e = new Error(response.statusText)
+									throw e
+								}
+							}
+						}
+					})
+			))
+			.catch((error) => {
+				throw error
+			})
 	},
 
 	ucsdPublicKey: '-----BEGIN PUBLIC KEY-----\n' +

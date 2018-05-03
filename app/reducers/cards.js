@@ -98,9 +98,42 @@ function cards(state = initialState, action) {
 			newState.cards[action.id] = Object.assign({}, newState.cards[action.id], { autoActivated: action.autoActivated })
 
 			return newState
-		case 'SET_CARD_ORDER':
-			newState.cardOrder = action.cardOrder.slice()
+		case 'INSERT_CARD': {
+			const { id, position } = action
+			const newOrder = newState.cardOrder.slice()
+			newOrder.splice(position, 0, id)
+			newState.cardOrder = newOrder
 			return newState
+		}
+		case 'REMOVE_CARD': {
+			const { id } = action
+			let position
+			newState.cardOrder.forEach((card, index) => {
+				if (card === id) position = index
+			})
+
+			const newOrder = newState.cardOrder.slice()
+			newOrder.splice(position, 1)
+			newState.cardOrder = newOrder
+			return newState
+		}
+		case 'REPOSITION_CARD': {
+			const { id, newPosition } = action
+
+			let oldPosition
+			newState.cardOrder.forEach((cardKey, index) => {
+				if (cardKey === id) oldPosition = index
+			})
+
+			const newOrder = newState.cardOrder.slice()
+			// Remove card from old spot
+			newOrder.splice(oldPosition, 1)
+
+			// Replace card into new spot
+			newOrder.splice(newPosition, 0, id)
+			newState.cardOrder = newOrder
+			return newState
+		}
 	}
 
 	return state
