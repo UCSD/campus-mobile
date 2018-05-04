@@ -126,6 +126,7 @@ class OnboardingLogin extends React.Component {
 										value={username}
 										placeholder="User ID"
 										placeholderTextColor={COLOR.DGREY}
+										underlineColorAndroid={COLOR.TRANSPARENT}
 										autoCapitalize="none"
 										autoCorrect={false}
 										returnKeyType="next"
@@ -141,6 +142,7 @@ class OnboardingLogin extends React.Component {
 										ref={(input) => { this.passInput = input }}
 										placeholder="Password"
 										placeholderTextColor={COLOR.DGREY}
+										underlineColorAndroid={COLOR.TRANSPARENT}
 										autoCapitalize="none"
 										secureTextEntry={true}
 										returnKeyType="send"
