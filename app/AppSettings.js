@@ -33,6 +33,7 @@ module.exports = {
 	SSO_CREDENTIALS_ERROR: 'orchestration failed(Error: IDP returned status was not success)',
 
 	/* RETRIES */
+	SSO_IDP_ERROR_RETRY_INCREMENT: 10000, // 10 seconds
 	SSO_REFRESH_MAX_RETRIES: 3,
 	SSO_REFRESH_RETRY_INCREMENT: 5000, // 5 seconds
 	SSO_REFRESH_RETRY_MULTIPLIER: 3, // Multiplies increment by this amount for next try

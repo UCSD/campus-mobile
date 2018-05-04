@@ -5,7 +5,7 @@ const initialState = {
 		classifications: null,
 		pid: null
 	},
-	expiration: null
+	invalidSavedCredentials: false
 }
 
 function user(state = initialState, action) {
@@ -15,11 +15,16 @@ function user(state = initialState, action) {
 		case 'LOGGED_IN': {
 			newState.isLoggedIn = true
 			newState.profile = action.profile
-			newState.expiration = action.expiration
+			newState.invalidSavedCredentials = false
 			return newState
 		}
 		case 'LOGGED_OUT': {
 			return initialState
+		}
+		case 'PANIC_LOG_OUT': {
+			const loggedOutState = initialState
+			loggedOutState.invalidSavedCredentials = true
+			return loggedOutState
 		}
 		default:
 			return state
