@@ -16,6 +16,10 @@ module.exports = {
 	MAP_SEARCH_API_URL: 'https://xgu9qa7gx4.execute-api.us-west-2.amazonaws.com/prod/v2/map/search?region=0&query=',
 	SCHEDULE_API_URL: 'https://api-qa.ucsd.edu:8243/student/my/academic_history/v1/class_list?term_code=WI18&academic_level=UN',
 	SPECIAL_EVENT_API_URL: 'https://2jjml3hf27.execute-api.us-west-2.amazonaws.com/prod/events/special',
+	// DEV/QA ENDPOINTS - UPDATE TO PROD
+	AUTH_SERVICE_API_URL: 'https://3hepzvdimd.execute-api.us-west-2.amazonaws.com/dev/v1/authentication-service',
+	ACADEMIC_HISTORY_API_URL: 'https://api-qa.ucsd.edu:8243/student/my/academic_history/v1/class_list?term_code=WI18&academic_level=UN',
+	ACADEMIC_TERM_API_URL: 'https://m9zc9vs4f1.execute-api.us-west-2.amazonaws.com/dev/v1/term/current',
 
 	/* RESOURCES */
 	SHUTTLE_SCHEDULE_URL: 'https://transportation.ucsd.edu/shuttles/',
@@ -26,11 +30,6 @@ module.exports = {
 	SHUTTLE_STOPS_MASTER: 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/shuttle_stops_master_map.json',
 	SHUTTLE_STOPS_MASTER_NO_ROUTES: 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/shuttle_stops_master_map_no_routes.json',
 	FORGOT_PASSWORD_URL: 'https://acms.ucsd.edu/students/gpasswd.html',
-
-	/* SSO */
-	// DEV ENDPOINT - Needs to be updated to PROD
-	SSO_ENDPOINT: 'https://3hepzvdimd.execute-api.us-west-2.amazonaws.com/dev/v1/authentication-service',
-	SSO_CREDENTIALS_ERROR: 'orchestration failed(Error: IDP returned status was not success)',
 
 	/* RETRIES */
 	SSO_IDP_ERROR_RETRY_INCREMENT: 10000, // 10 seconds

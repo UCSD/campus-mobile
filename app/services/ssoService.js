@@ -1,8 +1,10 @@
 const AppSettings = require('../AppSettings')
 
+const SSO_CREDENTIALS_ERROR = 'orchestration failed(Error: IDP returned status was not success)'
+
 const ssoService = {
 	retrieveAccessToken(loginInfo) {
-		return fetch(AppSettings.SSO_ENDPOINT, {
+		return fetch(AppSettings.AUTH_SERVICE_API_URL, {
 			method: 'POST',
 			headers: { 'Authorization': loginInfo }
 		})
@@ -20,7 +22,7 @@ const ssoService = {
 			})
 			.catch((err) => {
 				switch (err) {
-					case AppSettings.SSO_CREDENTIALS_ERROR: {
+					case SSO_CREDENTIALS_ERROR: {
 						throw new Error('There was a problem with your credentials.')
 					}
 					default: {

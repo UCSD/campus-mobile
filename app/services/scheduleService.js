@@ -5,7 +5,7 @@ const AppSettings = require('../AppSettings')
 const ScheduleService = {
 	* FetchSchedule() {
 		try {
-			const data = yield authorizedFetch(AppSettings.SCHEDULE_API_URL)
+			const data = yield authorizedFetch(AppSettings.ACADEMIC_HISTORY_API_URL)
 			if (data.data) return data
 			else {
 				const e = new Error('Invalid data from schedule API')
