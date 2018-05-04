@@ -5,8 +5,7 @@ const initialState = {
 			active: false,
 			autoActivated: false,
 			name: 'Special Events',
-			component: 'SpecialEventsCard',
-			defaultPosition: 0
+			component: 'SpecialEventsCard'
 		},
 		finals: {
 			id: 'finals',
@@ -14,8 +13,7 @@ const initialState = {
 			name: 'Finals Schedule',
 			component: 'FinalsCard',
 			authenticated: true,
-			classifications: { student: true },
-			defaultPosition: 1
+			classifications: { student: true }
 		},
 		schedule: {
 			id: 'schedule',
@@ -23,50 +21,43 @@ const initialState = {
 			name: 'Class Schedule',
 			component: 'ScheduleCard',
 			authenticated: true,
-			classifications: { student: true },
-			defaultPosition: 2
+			classifications: { student: true }
 		},
 		shuttle: {
 			id: 'shuttle',
 			active: true,
 			name: 'Shuttle',
-			component: 'ShuttleCard',
-			defaultPosition: 3
+			component: 'ShuttleCard'
 		},
 		dining: {
 			id: 'dining',
 			active: true,
 			name: 'Dining',
-			component: 'DiningCard',
-			defaultPosition: 4
+			component: 'DiningCard'
 		},
 		events: {
 			id: 'events',
 			active: true,
 			name: 'Events',
-			component: 'EventsCard',
-			defaultPosition: 5
+			component: 'EventsCard'
 		},
 		news: {
 			id: 'news',
 			active: true,
 			name: 'News',
 			component: 'NewsCard',
-			defaultPosition: 6
 		},
 		quicklinks: {
 			id: 'quicklinks',
 			active: true,
 			name: 'Links',
-			component: 'QuicklinksCard',
-			defaultPosition: 7
+			component: 'QuicklinksCard'
 		},
 		weather: {
 			id: 'weather',
 			active: true,
 			name: 'Weather',
-			component: 'WeatherCard',
-			defaultPosition: 8
+			component: 'WeatherCard'
 		}
 	},
 
@@ -107,10 +98,7 @@ function cards(state = initialState, action) {
 		}
 		case 'REMOVE_CARD': {
 			const { id } = action
-			let position
-			newState.cardOrder.forEach((card, index) => {
-				if (card === id) position = index
-			})
+			const position = state.cardOrder.indexOf(id)
 
 			const newOrder = newState.cardOrder.slice()
 			newOrder.splice(position, 1)

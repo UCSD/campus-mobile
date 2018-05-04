@@ -4,29 +4,21 @@ const getCards = state => (state.cards)
 const getUserData = state => (state.user)
 
 function* showCard(action) {
-	const { cards, cardOrder } = yield select(getCards)
-	// Check if card already added
-	let isCardAlreadyShown
-	cardOrder.forEach((cardKey) => {
-		if (cardKey === action.id) isCardAlreadyShown = true
-	})
+	const { cardOrder } = yield select(getCards)
 
-	if (!isCardAlreadyShown) {
-		// Appends card to default position
-		const { defaultPosition } = cards[action.id]
-		yield put({ type: 'INSERT_CARD', id: action.id, position: defaultPosition })
+	// If card isn't already present in card stack
+	if (cardOrder.indexOf(action.id) < 0) {
+		// Appends card to top of cards stack
+		yield put({ type: 'INSERT_CARD', id: action.id, position: 0 })
 	}
 }
 
 function* hideCard(action) {
 	const { cardOrder } = yield select(getCards)
-	let cardPosition
-	cardOrder.forEach((card, index) => {
-		if (card === action.id) cardPosition = index
-	})
+	const cardPosition = cardOrder.indexOf(action.id)
 
-	// If card is not hidden, hide it
-	if (cardPosition) {
+	// If card is present in cardstest stack, hide it
+	if (cardPosition >= 0) {
 		yield put({ type: 'REMOVE_CARD', id: action.id })
 	}
 }
