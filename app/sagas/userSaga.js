@@ -96,6 +96,7 @@ function* userSaga() {
 	yield takeLatest('USER_LOGIN', doLogin)
 	yield takeLatest('USER_LOGOUT', doLogout)
 	yield takeLatest('USER_LOGIN_TIMEOUT', doTimeOut)
+	yield takeLatest('USER_TOKEN_REFRESH', doTokenRefresh)
 }
 
 export default userSaga

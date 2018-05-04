@@ -32,6 +32,11 @@ module.exports = {
 	SSO_ENDPOINT: 'https://3hepzvdimd.execute-api.us-west-2.amazonaws.com/dev/v1/authentication-service',
 	SSO_CREDENTIALS_ERROR: 'orchestration failed(Error: IDP returned status was not success)',
 
+	/* RETRIES */
+	SSO_REFRESH_MAX_RETRIES: 3,
+	SSO_REFRESH_RETRY_INCREMENT: 5000, // 5 seconds
+	SSO_REFRESH_RETRY_MULTIPLIER: 3, // Multiplies increment by this amount for next try
+
 	/* TTLs */
 	WEATHER_API_TTL: 1800000, // 30 minutes
 	SURF_API_TTL: 1800000, // 30 minutes

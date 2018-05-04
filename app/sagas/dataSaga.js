@@ -66,9 +66,13 @@ function* updateSchedule() {
 			(timeDiff < scheduleTTL && data)) {
 		// Do nothing, no need to fetch new data
 	} else {
-		const schedule = yield call(ScheduleService.FetchSchedule)
-		if (schedule) {
-			yield put({ type: 'SET_SCHEDULE', schedule })
+		try {
+			const schedule = yield call(ScheduleService.FetchSchedule)
+			if (schedule) {
+				yield put({ type: 'SET_SCHEDULE', schedule })
+			}
+		} catch (error) {
+			console.log(error)
 		}
 	}
 }

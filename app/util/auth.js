@@ -1,9 +1,40 @@
 import * as Keychain from 'react-native-keychain'
+import { put, select } from 'redux-saga/effects'
+import { delay } from 'redux-saga'
+import {
+	SSO_REFRESH_MAX_RETRIES,
+	SSO_REFRESH_RETRY_INCREMENT,
+	SSO_REFRESH_RETRY_MULTIPLIER
+} from '../AppSettings'
 
 const forge = require('node-forge')
 
 const { pki } = forge
 const accessTokenSiteName = 'https://ucsd.edu'
+
+// A "private" internal function that lets us
+// send a fetchrequest with the correct
+// authorization headers
+const authorizedFetchRequest = (endpoint, accessToken) => (
+	fetch(endpoint, {
+		headers: { 'Authorization': `Bearer ${accessToken}` }
+	})
+		.then((response) => {
+			if (response.status === 200) return response.json()
+			else {
+				switch (response.status) {
+					case 401: {
+						// We need to refresh our access token
+						return { invalidToken: true }
+					}
+					default: {
+						const e = new Error(response.statusText)
+						throw e
+					}
+				}
+			}
+		})
+)
 
 /**
  * A module containing auth helper functions
@@ -51,7 +82,7 @@ module.exports = {
 		return Keychain
 			.getGenericPassword()
 			.then(credentials => (credentials))
-			.catch(error => (error));
+			.catch(error => (error))
 	},
 
 	/**
@@ -98,40 +129,76 @@ module.exports = {
 	},
 
 	/**
-	 * Makes an authorized request using the access token.
-	 * If the response is a 401 Unauthorized, return error
-	 * indicating that access token has expired.
+	 * Makes an authorized request using an access token.
+	 * If the response is a 401 Unauthorized, this function
+	 * attempt to retry a predetermined amount of times.
+	 * If no successful response is received by the last
+	 * attempt, this function sets anAUTH_HTTP error in
+	 * state.requestErrors.
 	 * @param {String} endpoint URL of API endpoint
 	 * @returns {Object} Data from server
 	 * or returns an error if HTTP resonse isn't 200
 	 */
-	authorizedFetch(endpoint) {
-		return Keychain
+	* authorizedFetch(endpoint) {
+		// Check to see if we aren't in an error state
+		const requestErrors = state => (state.requestErrors)
+		const { AUTH_HTTP: authError } = yield select(requestErrors)
+		if (authError) {
+			const e = new Error('Unable to re-authorize user')
+			throw e
+		}
+
+		let accessToken = yield Keychain
 			.getInternetCredentials(accessTokenSiteName)
 			.then(credentials => (credentials.password))
-			.then(accessToken => (
-				fetch(endpoint, {
-					headers: { 'Authorization': `Bearer ${accessToken}` }
-				})
-					.then((response) => {
-						if (response.status === 200) return response.json()
-						else {
-							switch (response.status) {
-								case 401: {
-									const e = new Error('Expired access token')
-									throw e
-								}
-								default: {
-									const e = new Error(response.statusText)
-									throw e
-								}
-							}
-						}
-					})
-			))
-			.catch((error) => {
-				throw error
-			})
+
+		yield put({ type: 'AUTH_HTTP_REQUEST' })
+		try {
+			let endpointResponse = yield authorizedFetchRequest(endpoint, accessToken)
+
+			// Refresh token if invalidToken and retry request
+			if (endpointResponse.invalidToken) {
+				for (
+					let i = 0, remainingRetries = SSO_REFRESH_MAX_RETRIES;
+					remainingRetries > 0;
+					remainingRetries--, i++
+				) {
+					// Delay next attempt
+					console.log('delay: ', SSO_REFRESH_RETRY_INCREMENT * (SSO_REFRESH_RETRY_MULTIPLIER * i))
+					yield delay(SSO_REFRESH_RETRY_INCREMENT * (SSO_REFRESH_RETRY_MULTIPLIER * i))
+					console.log('retrying')
+
+					// Attempt to get a new access token
+					yield put({ type: 'USER_TOKEN_REFRESH' })
+
+					accessToken = yield Keychain
+						.getInternetCredentials(accessTokenSiteName)
+						.then(credentials => (credentials.password))
+
+					endpointResponse = yield authorizedFetchRequest(endpoint, accessToken)
+
+					if (!endpointResponse.invalidToken) {
+						yield put({ type: 'AUTH_HTTP_SUCCESS' })
+						return endpointResponse
+					}
+				}
+
+				const e = new Error('Unable to re-authorize user')
+				throw e
+			} else {
+				yield put({ type: 'AUTH_HTTP_SUCCESS' })
+				return endpointResponse
+			}
+		} catch (error) {
+			if (error.message === 'Unable to re-authorize user') {
+				// We were unable to get an authorized response.
+				// We need to ask the user to reauthenticate some
+				// other time.
+
+				yield put({ type: 'AUTH_HTTP_FAILURE', error })
+			}
+			throw error
+		}
 	},
 
 	ucsdPublicKey: '-----BEGIN PUBLIC KEY-----\n' +
@@ -140,4 +207,4 @@ module.exports = {
 		'hqGFS5sSnu19JYhIxeYj3tGyf0Ms+I0lu/MdRLuTMdBRbCkD3kTJmTqACq+MzQ9G\n' +
 		'CaCUGqS6FN1nNKARGwIDAQAB\n' +
 		'-----END PUBLIC KEY-----'
-};
+}
