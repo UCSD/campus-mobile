@@ -12,8 +12,8 @@ function requestStatuses(state = {}, action) {
 
 	const [, requestName, requestState] = matches
 	// Store whether a request is happening at the moment or not
-	// e.g. will be true when receiving POST_FEEDBACK_REQUEST
-	// and false when receiving POST_FEEDBACK_FAILURE / SUCCESS
+	// e.g. will be true when receiving REQUEST
+	// and false when receiving FAILURE / SUCCESS
 	// Also includes timestamp for REQUEST
 	return {
 		...state,

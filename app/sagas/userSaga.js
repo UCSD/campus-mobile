@@ -1,19 +1,15 @@
 import {
 	call,
 	put,
-	select,
 	takeLatest,
 	race
 } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
-import moment from 'moment'
 import ssoService from '../services/ssoService'
-import { SSO_TTL } from '../AppSettings'
+import { SSO_TTL, SSO_IDP_ERROR_RETRY_INCREMENT } from '../AppSettings'
 import logger from '../util/logger'
 
 const auth = require('../util/auth')
-
-const getUserData = state => (state.user)
 
 function* doLogin(action) {
 	const {
@@ -56,9 +52,13 @@ function* doLogin(action) {
 				classifications: { student: Boolean(response.pid) }
 			}
 
-			yield put({ type: 'LOGGED_IN', profile: newProfile, expiration: response.expiration })
+			yield put({ type: 'LOGGED_IN', profile: newProfile })
 			yield put({ type: 'LOG_IN_SUCCESS' })
 			yield put({ type: 'TOGGLE_AUTHENTICATED_CARDS' })
+
+			// Clears any potential errors from being
+			// unable to automatically reauthorize a user
+			yield put({ type: 'AUTH_HTTP_SUCCESS' })
 		}
 	} catch (error) {
 		logger.log(error)
@@ -67,17 +67,48 @@ function* doLogin(action) {
 }
 
 function* doTokenRefresh() {
+	try {
+		yield refreshTokenRequest()
+	} catch (error) {
+		const invalidCredsMessage = 'There was a problem with your credentials.'
+		if (error.message === invalidCredsMessage) {
+			// This means that the authentication server rejected our
+			// saved credentials. Did the user's password change? Only retry
+			// once, and if it fails again, force a sign-out.
+			try {
+				// Try once more with a delay just to be sure
+				yield delay(SSO_IDP_ERROR_RETRY_INCREMENT)
+				yield refreshTokenRequest()
+			} catch (secondError) {
+				if (secondError.message === invalidCredsMessage) {
+					// We tried again and got the same error
+					yield put({ type: 'PANIC_LOG_OUT' })
+					yield put({ type: 'TOGGLE_AUTHENTICATED_CARDS' })
+				}
+			}
+		}
+	}
+}
+
+function* refreshTokenRequest() {
 	// Get username and password from keystore
 	const {
 		username,
 		password
 	} = yield auth.retrieveUserCreds()
+	const passwordEncrypted = yield auth.encryptStringWithKey(password)
+	const loginInfo = auth.encryptStringWithBase64(`${username}:${passwordEncrypted}`)
+	const response = yield call(ssoService.retrieveAccessToken, loginInfo)
 
-	yield put({
-		type: 'USER_LOGIN',
-		username,
-		password
-	})
+	if (response.access_token) {
+		yield auth.storeAccessToken(response.access_token)
+		// Clears any potential errors from being
+		// unable to automatically reauthorize a user
+		yield put({ type: 'AUTH_HTTP_SUCCESS' })
+	} else {
+		const e = new Error('No access token returned.')
+		throw e
+	}
 }
 
 function* doTimeOut() {

@@ -142,6 +142,7 @@ module.exports = {
 	* authorizedFetch(endpoint) {
 		// Check to see if we aren't in an error state
 		const requestErrors = state => (state.requestErrors)
+		const userState = state => (state.user)
 		const { AUTH_HTTP: authError } = yield select(requestErrors)
 		if (authError) {
 			const e = new Error('Unable to re-authorize user')
@@ -163,10 +164,15 @@ module.exports = {
 					remainingRetries > 0;
 					remainingRetries--, i++
 				) {
+					// Throw if we're in an error state
+					const { invalidSavedCredentials } = yield select(userState)
+					if (invalidSavedCredentials) {
+						const e = new Error('Unable to re-authorize user')
+						throw e
+					}
+
 					// Delay next attempt
-					console.log('delay: ', SSO_REFRESH_RETRY_INCREMENT * (SSO_REFRESH_RETRY_MULTIPLIER * i))
 					yield delay(SSO_REFRESH_RETRY_INCREMENT * (SSO_REFRESH_RETRY_MULTIPLIER * i))
-					console.log('retrying')
 
 					// Attempt to get a new access token
 					yield put({ type: 'USER_TOKEN_REFRESH' })
