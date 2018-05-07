@@ -67,7 +67,12 @@ function* updateSchedule() {
 		// Do nothing, no need to fetch new data
 	} else {
 		try {
-			const schedule = yield call(ScheduleService.FetchSchedule)
+			const term = yield call(ScheduleService.FetchTerm)
+			if (term) {
+				yield put({ type: 'SET_SCHEDULE_TERM', term })
+			}
+
+			const schedule = yield call(ScheduleService.FetchSchedule, term.code)
 			if (schedule) {
 				yield put({ type: 'SET_SCHEDULE', schedule })
 			}

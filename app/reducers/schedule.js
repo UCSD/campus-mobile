@@ -1,6 +1,7 @@
 const initialState = {
 	data: null,
 	lastUpdated: new Date().getTime(),
+	currentTerm: null
 }
 
 function schedule(state = initialState, action) {
@@ -10,6 +11,9 @@ function schedule(state = initialState, action) {
 		case 'SET_SCHEDULE':
 			newState.data = action.schedule
 			newState.lastUpdated = new Date().getTime()
+			return newState
+		case 'SET_SCHEDULE_TERM':
+			newState.currentTerm = action.term
 			return newState
 		default:
 			return state
