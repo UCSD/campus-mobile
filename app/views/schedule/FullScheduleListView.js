@@ -1,53 +1,59 @@
 import React from 'react'
-import { ListView, View, Text } from 'react-native'
+import { SectionList, View, Text } from 'react-native'
 import { connect } from 'react-redux'
 
 import logger from '../../util/logger'
 import schedule from '../../util/schedule'
 import css from '../../styles/css'
 
-const rowHasChanged = (r1, r2) => r1.id !== r2.id
-const sectionHeaderHasChanged = (s1, s2) => s1 !== s2
-const ds = new ListView.DataSource({ rowHasChanged, sectionHeaderHasChanged })
-
 class FullSchedule extends React.Component {
 	constructor(props) {
 		super()
-		this.state = {
-			dataSource: ds.cloneWithRowsAndSections(schedule.getData(props.fullScheduleData))
-		}
+		this.state = { scheduleSections: this.getScheduleArray(props.fullScheduleData) }
 	}
 
 	componentDidMount() {
 		logger.ga('Card Mounted: Full Schedule')
 	}
 
-	renderRow = (rowData, sectionId) => (
-		<IndividualClass key={sectionId} data={rowData} />
-	)
+	getScheduleArray = (scheduleObject) => {
+		const scheduleData = schedule.getData(scheduleObject)
+		const scheduleArray = []
+		Object.keys(scheduleData).forEach((day) => {
+			// Skip Saturday and Sunday
+			if (day !== 'SA' && day !== 'SU') {
+				scheduleArray.push({
+					day,
+					data: scheduleData[day]
+				})
+			}
+		})
+		return scheduleArray
+	}
 
-	renderSectionHeader = (sectionRows, sectionId) => {
-		const day = schedule.dayOfWeekInterpreter(sectionId)
-		if (day === 'Saturday' || day === 'Sunday') {
-			return null
-		}
+	keyExtractor = (item, index) => (item.course_code + item.section)
+
+	renderSectionHeader = ({ section: { day } }) => {
+		const dayTitle = schedule.dayOfWeekInterpreter(day)
 		return (
 			<View style={css.fslv_header_wrapper}>
 				<Text style={css.fslv_header_text}>
-					{day}
+					{dayTitle}
 				</Text>
 			</View>
 		)
 	}
 
+	renderItem = ({ item, index, section }) => (<IndividualClass data={item} />)
+
 	render() {
 		return (
-			// TODO: CONVERT TO SECTIONLIST
-			<ListView
+			<SectionList
 				style={css.fslv_container}
-				dataSource={this.state.dataSource}
-				renderRow={this.renderRow}
+				sections={this.state.scheduleSections}
+				renderItem={this.renderItem}
 				renderSectionHeader={this.renderSectionHeader}
+				keyExtractor={this.keyExtractor}
 				stickySectionHeadersEnabled={true}
 				enableEmptySections={true}
 			/>
