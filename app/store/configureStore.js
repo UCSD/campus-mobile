@@ -34,14 +34,9 @@ const saveShuttleFilter = createFilter(
 
 // Migration
 const manifest = {
-	1: state => ({ ...state }),
-	2: state => ({ ...state, shuttle: Object.assign({}, state.shuttle, { savedStops: [], stops: {}, lastUpdated: 0 }) }),
-	3: state => ({ ...state, shuttle: Object.assign({}, state.shuttle, { savedStops: [], stops: {}, lastUpdated: 0, closestStop: null }) }),
-	4: state => ({ ...state, cards: undefined }),
-	5: state => ({ ...state, events: undefined }),
-	6: state => ({ ...state, cards: undefined, conference: undefined }),
 	7: state => ({ ...state, surf: undefined }), // 5.5 migration
 	8: state => ({ ...state, dining: undefined, specialEvents: undefined }), // 5.6 migration
+	9: state => ({ ...state, cards: undefined }), // 6.0 migration
 }
 
 // reducerKey is the key of the reducer you want to store the state version in
