@@ -17,7 +17,7 @@ module.exports = {
 	SPECIAL_EVENT_API_URL: 'https://2jjml3hf27.execute-api.us-west-2.amazonaws.com/prod/events/special',
 	// DEV/QA ENDPOINTS - UPDATE TO PROD
 	AUTH_SERVICE_API_URL: 'https://3hepzvdimd.execute-api.us-west-2.amazonaws.com/dev/v1/access-profile',
-	ACADEMIC_HISTORY_API_URL: 'https://api-qa.ucsd.edu:8243/student/my/academic_history/v1/class_list?academic_level=UN',
+	ACADEMIC_HISTORY_API_URL: 'https://api-qa.ucsd.edu:8243/student/my/academic_history/v1/class_list',
 	ACADEMIC_TERM_API_URL: 'https://m9zc9vs4f1.execute-api.us-west-2.amazonaws.com/dev/v1/term/current',
 
 	/* RESOURCES */

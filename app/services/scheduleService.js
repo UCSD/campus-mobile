@@ -5,8 +5,25 @@ const AppSettings = require('../AppSettings')
 const ScheduleService = {
 	* FetchSchedule(term) {
 		try {
-			const data = yield authorizedFetch(AppSettings.ACADEMIC_HISTORY_API_URL + `&term_code=${term}`)
-			if (data.data) return data
+			const data = []
+
+			// Query api for undergrad classes
+			const undergrad = yield authorizedFetch(AppSettings.ACADEMIC_HISTORY_API_URL +
+				`?academic_level=UN&term_code=${term}`)
+			// Add to data if there is class data
+			if (undergrad.data) {
+				data.push(...undergrad.data)
+			}
+
+			// Query api for graduate classes
+			const grad = yield authorizedFetch(AppSettings.ACADEMIC_HISTORY_API_URL +
+				`?academic_level=GR&term_code=${term}`)
+			// Add to data if there is class data
+			if (grad.data) {
+				data.push(...grad.data)
+			}
+
+			if (data) return { data }
 			else {
 				const e = new Error('Invalid data from schedule API')
 				throw e

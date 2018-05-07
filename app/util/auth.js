@@ -27,6 +27,9 @@ const authorizedFetchRequest = (endpoint, accessToken) => (
 						// We need to refresh our access token
 						return { invalidToken: true }
 					}
+					case 404: {
+						return { message: response.statusText}
+					}
 					default: {
 						const e = new Error(response.statusText)
 						throw e
