@@ -55,7 +55,9 @@ function* toggleAuthCards() {
 		) {
 			if (cards[cardKey].classifications) {
 				Object.keys(cards[cardKey].classifications).forEach((classification) => {
-					if (profile.classifications[classification]) {
+					// Checks to make sure it isn't adding a duplicate card
+					// if multiple classifications are met
+					if (profile.classifications[classification] && authCards.indexOf(cardKey) < 0) {
 						authCards.push(cardKey)
 					}
 				})
