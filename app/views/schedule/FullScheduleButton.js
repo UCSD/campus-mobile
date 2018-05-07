@@ -7,10 +7,10 @@ import Touchable from '../common/Touchable'
 
 const FullScheduleButton = ({ navigation }) => (
 	<Touchable
-		style={css.schedule_full_button_touchable}
+		style={css.card_button_container}
 		onPress={() => { navigation.navigate('FullSchedule') }}
 	>
-		<Text style={css.schedule_full_button_text}>View Full Schedule</Text>
+		<Text style={css.card_button_text}>View All</Text>
 	</Touchable>
 )
 

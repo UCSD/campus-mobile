@@ -37,8 +37,8 @@ export const DataListCard = ({ navigation, id, title, data, item, rows, cardSort
 						<Touchable onPress={() => (
 							navigation.navigate('DataListViewAll', { title, data, item })
 						)}>
-							<View style={css.dlc_more}>
-								<Text style={css.dlc_more_label}>View All</Text>
+							<View style={css.card_button_container}>
+								<Text style={css.card_button_text}>View All</Text>
 							</View>
 						</Touchable>
 					</View>

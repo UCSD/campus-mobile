@@ -19,7 +19,7 @@
 
 	300 - Cards
 		301 - Dining Card
-		302 - Class Schedule Card
+		302 - Classes Card
 
 	400 - Views
 		401 - Surf Report
@@ -40,6 +40,9 @@ import { StyleSheet, Platform } from 'react-native'
 import { platformAndroid, deviceIphoneX, round } from '../util/general'
 import COLOR from './ColorConstants'
 import LAYOUT from './LayoutConstants'
+
+const CC_LEFT = LAYOUT.MAX_CARD_WIDTH * 0.006
+const CC_RIGHT = LAYOUT.MAX_CARD_WIDTH * 0.004
 
 const css = StyleSheet.create({
 	/**
@@ -75,8 +78,8 @@ const css = StyleSheet.create({
 	card_main: { borderWidth: 1, borderRadius: 2, borderColor: COLOR.MGREY, backgroundColor: COLOR.WHITE, margin: 6, alignItems: 'flex-start', justifyContent: 'center', overflow: 'hidden' },
 	card_row_container: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: 8, paddingBottom: 0 },
 	card_footer_container: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: 8 },
-	card_button_container: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.WHITE, },
-	card_button_text: { fontSize: 20, alignItems: 'center', textAlign: 'center' },
+	card_button_container: { padding: 6, borderTopWidth: 1, borderTopColor: COLOR.MGREY },
+	card_button_text: { color: COLOR.PRIMARY, fontSize: 20, fontWeight: '300', textAlign: 'center' },
 	card_text_container: { justifyContent: 'center', alignItems: 'center', width: LAYOUT.MAX_CARD_WIDTH, padding: 8, borderBottomWidth: 1, borderBottomColor: COLOR.MGREY },
 	scrollcard_main_marginBottom: { marginBottom: 6 },
 	scrollcard_dotStyle: { padding: 6, paddingTop: 3, backgroundColor: 'transparent', color: COLOR.DGREY },
@@ -121,14 +124,33 @@ const css = StyleSheet.create({
 	dl_status_soon_text: { paddingRight: 8 },
 	dl_dir_traveltype_container: { flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'center' },
 	dl_dir_eta: { color: COLOR.PRIMARY, fontSize: 11, fontWeight: '600' },
-	// 303 - Class Schedule Card
-	sc_dayText: { fontSize: 16, color: COLOR.BLACK, paddingBottom: 6 },
-	sc_courseText: { fontSize: 14, color: COLOR.BLACK, paddingBottom: 2 },
-	sc_subText: { fontSize: 13, color: COLOR.VDGREY },
-	sc_dayContainer: { width: LAYOUT.MAX_CARD_WIDTH + 2, padding: 7, flexDirection: 'row', flex: 1 },
-	sc_fullScheduleContainer: { width: LAYOUT.MAX_CARD_WIDTH + 2, padding: 7, flexDirection: 'column', flex: 1 },
-	sc_dayRow: { justifyContent: 'center', paddingBottom: 10, borderColor: '#CCC', borderWidth: 1, },
-	sc_scheduleContainer: { width: LAYOUT.MAX_CARD_WIDTH + 2, padding: 7, flexDirection: 'column', flex: 1 },
+	// 302 - Classes Card
+	cc_loadingContainer: { alignItems: 'center', justifyContent: 'center', width: LAYOUT.MAX_CARD_WIDTH , height: (LAYOUT.MAX_CARD_WIDTH / 1.6216) + 44 },
+	cc_container: { width: LAYOUT.MAX_CARD_WIDTH, aspectRatio: 1.6216, paddingTop: LAYOUT.MAX_CARD_WIDTH * 0.05, paddingBottom: LAYOUT.MAX_CARD_WIDTH * 0.05, paddingLeft: LAYOUT.MAX_CARD_WIDTH * 0.04, paddingRight: LAYOUT.MAX_CARD_WIDTH * 0.04, flexDirection: 'row' },
+	cc_leftHalf: { flex: 6 },
+	cc_leftHalf_upper: { flex: 3 },
+	cc_leftHalf_upper_timeText: { flex: 1, flexDirection: 'row' },
+	cc_leftHalf_upper_timeText_firstSection: { fontSize: CC_LEFT * 7, marginLeft: CC_LEFT * 1, marginRight: CC_LEFT * 1, color: COLOR.DGREY },
+	cc_leftHalf_upper_timeText_secondSection: { fontSize: CC_LEFT * 5, alignSelf: 'flex-end', marginBottom: CC_LEFT * 0.5, fontWeight: 'bold' },
+	cc_leftHalf_upper_classText: { flex: 2, flexDirection: 'row', top: -CC_LEFT * 0 },
+	cc_leftHalf_upper_classText_firstSection: { fontSize: CC_LEFT * 15, fontWeight: 'bold', marginRight: CC_LEFT * 3, overflow: 'hidden' },
+	cc_leftHalf_upper_classText_secondSection: { fontSize: CC_LEFT * 5, alignSelf: 'flex-end', marginBottom: Math.round(CC_LEFT * 15 * 1.2) * 0.12, color: COLOR.DGREY },
+	cc_leftHalf_lower: { flex: 7 },
+	cc_leftHalf_lower_sections: { marginTop: CC_LEFT * 3.75, flexDirection: 'row' },
+	cc_leftHalf_lower_sections_icon: { fontSize: CC_LEFT * 16, marginRight: 6 },
+	cc_leftHalf_lower_sections_text: {},
+	cc_leftHalf_lower_sections_text_topSection: { fontSize: CC_LEFT * 6, paddingTop: CC_LEFT * 0.25 },
+	cc_leftHalf_lower_sections_text_bottomSection: { fontSize: CC_LEFT * 4.5, paddingTop: CC_LEFT * 1, color: COLOR.DGREY },
+	cc_rightHalf: { flex: 4, paddingTop: CC_RIGHT * 0.5, justifyContent: 'space-between' },
+	cc_rightHalf_eachOfFourCards: { borderColor: COLOR.DGREY, borderWidth: CC_RIGHT * 0.5, borderRadius: CC_RIGHT * 1, paddingLeft: CC_RIGHT * 4, paddingTop: CC_RIGHT * 2.5, overflow: 'hidden', width: '100%', aspectRatio: 3.16 },
+	cc_rightHalf_activeCard: { borderColor: COLOR.VDGREY, borderWidth: CC_RIGHT * 0.75, paddingLeft: CC_RIGHT * 3.75, paddingTop: CC_RIGHT * 2.25 },
+	cc_rightHalf_each_dayAndTime: { flexDirection: 'row', height: round(CC_RIGHT * 9) },
+	cc_rightHalf_each_dayAndTime_text: { width: CC_RIGHT * 70, fontSize: CC_RIGHT * 6.5 },
+	cc_rightHalf_each_dayAndTime_icon: { fontSize: CC_RIGHT * 9, top: -CC_RIGHT * 3, lineHeight: round(CC_RIGHT * 9) },
+	cc_rightHalf_each_classAndItsType: { flexDirection: 'row', top: CC_RIGHT * 1 },
+	cc_Half_each_classAndItsType_class: { width: CC_RIGHT * 55, fontSize: CC_RIGHT * 11 },
+	cc_rightHalf_each_classAndItsType_type: { fontSize: CC_RIGHT * 6, alignSelf: 'flex-end', paddingBottom: CC_RIGHT * 1 },
+	cc_rightHalf_each_inActiveText: { color: COLOR.DGREY },
 
 	/**
 	 *  400 - Views
@@ -333,8 +355,6 @@ const css = StyleSheet.create({
 	// data list card
 	dlc_list: { alignSelf: 'stretch', padding: 8 },
 	dlc_content_load_err: { padding: 30, fontSize: 16, alignSelf: 'center'  },
-	dlc_more: { alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4, paddingTop: 8, paddingBottom: 4 },
-	dlc_more_label: { fontSize: 20, color: COLOR.PRIMARY, fontWeight: '300' },
 	dlc_cardcenter: { alignItems: 'center', justifyContent: 'center', width: LAYOUT.MAX_CARD_WIDTH },
 
 	// finals
@@ -379,13 +399,13 @@ const css = StyleSheet.create({
 	schedule_full_button_text: { fontSize: 20, fontWeight: '300', color: COLOR.PRIMARY, paddingHorizontal: 14, paddingVertical: 10 },
 
 	// FullScheduleListView
-	fslv_container: { flexGrow: 1 },
-	fslv_header_wrapper: { borderColor: COLOR.DMGREY, borderTopWidth: 1, borderBottomWidth: 1, backgroundColor: COLOR.WHITE },
-	fslv_header_text: { marginTop: 15, marginBottom: 15, marginLeft: 25, fontWeight: 'bold', fontSize: 22 },
-	fslv_row: { paddingTop: 20, paddingBottom: 20, paddingLeft: 25 },
-	fslv_course_code: { fontSize: 18, fontWeight: 'bold' },
-	fslv_course_title: { fontSize: 18, marginBottom: 4 },
-	fslv_course_text: { fontSize: 16 },
+	fslv_container: { backgroundColor: COLOR.WHITE },
+	fslv_header_wrapper: { borderColor: COLOR.DMGREY, borderTopWidth: 1, borderBottomWidth: 1, backgroundColor: COLOR.LGREY },
+	fslv_header_text: { paddingHorizontal: 16, paddingVertical: 8, fontSize: 20, fontWeight: '300' },
+	fslv_row: { paddingHorizontal: 16, paddingVertical: 8 },
+	fslv_course_code: { fontSize: 16, fontWeight: 'bold' },
+	fslv_course_title: { fontSize: 16, marginBottom: 4 },
+	fslv_course_text: {  },
 
 	// ShuttleCard
 	shuttlecard_addButton: { width: LAYOUT.MAX_CARD_WIDTH, backgroundColor: COLOR.WHITE, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4, paddingVertical: 8, borderTopWidth: 1, borderColor: COLOR.MGREY },
