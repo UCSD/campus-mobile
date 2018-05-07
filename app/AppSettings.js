@@ -14,10 +14,9 @@ module.exports = {
 	QUICKLINKS_API_URL: 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/quick_links/ucsd-quicklinks-v3.json',
 	NEWS_API_URL: 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/allstories.json',
 	MAP_SEARCH_API_URL: 'https://xgu9qa7gx4.execute-api.us-west-2.amazonaws.com/prod/v2/map/search?region=0&query=',
-	SCHEDULE_API_URL: 'https://api-qa.ucsd.edu:8243/student/my/academic_history/v1/class_list?term_code=WI18&academic_level=UN',
 	SPECIAL_EVENT_API_URL: 'https://2jjml3hf27.execute-api.us-west-2.amazonaws.com/prod/events/special',
 	// DEV/QA ENDPOINTS - UPDATE TO PROD
-	AUTH_SERVICE_API_URL: 'https://3hepzvdimd.execute-api.us-west-2.amazonaws.com/dev/v1/authentication-service',
+	AUTH_SERVICE_API_URL: 'https://3hepzvdimd.execute-api.us-west-2.amazonaws.com/dev/v1/access-profile',
 	ACADEMIC_HISTORY_API_URL: 'https://api-qa.ucsd.edu:8243/student/my/academic_history/v1/class_list?academic_level=UN',
 	ACADEMIC_TERM_API_URL: 'https://m9zc9vs4f1.execute-api.us-west-2.amazonaws.com/dev/v1/term/current',
 
