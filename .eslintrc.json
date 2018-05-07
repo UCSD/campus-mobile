@@ -113,7 +113,7 @@
     "object-curly-newline": [
       "warn", {
         "multiline": true,
-        "minProperties": 4
+        "minProperties": 5
       }
     ],
     "no-param-reassign": 0,          // TODO: maybe we shouldn't allow this allow param reassignment.
