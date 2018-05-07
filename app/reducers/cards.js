@@ -10,7 +10,7 @@ const initialState = {
 		finals: {
 			id: 'finals',
 			active: true,
-			name: 'Finals Schedule',
+			name: 'Finals',
 			component: 'FinalsCard',
 			authenticated: true,
 			autoActivated: false,
@@ -19,7 +19,7 @@ const initialState = {
 		schedule: {
 			id: 'schedule',
 			active: true,
-			name: 'Class Schedule',
+			name: 'Classes',
 			component: 'ScheduleCard',
 			authenticated: true,
 			classifications: { student: true }
