@@ -20,8 +20,13 @@ class FullSchedule extends React.Component {
 		const scheduleData = schedule.getData(scheduleObject)
 		const scheduleArray = []
 		Object.keys(scheduleData).forEach((day) => {
-			// Skip Saturday and Sunday
-			if (day !== 'SA' && day !== 'SU') {
+			// Skip Saturday and Sunday and
+			// days with no data
+			if (
+				day !== 'SA' &&
+				day !== 'SU' &&
+				scheduleData[day].length > 0
+			) {
 				scheduleArray.push({
 					day,
 					data: scheduleData[day]

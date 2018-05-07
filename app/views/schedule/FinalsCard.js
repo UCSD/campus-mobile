@@ -1,5 +1,5 @@
-import React from 'react'
-import { View, Text, ListView } from 'react-native'
+import React, { Component } from 'react'
+import { View, Text, FlatList } from 'react-native'
 import { connect } from 'react-redux'
 
 import Card from '../common/Card'
@@ -7,43 +7,50 @@ import logger from '../../util/logger'
 import schedule from '../../util/schedule'
 import css from '../../styles/css'
 
-const dataSource = new ListView.DataSource({
-	rowHasChanged: (r1, r2) => r1 !== r2
-})
-
-const FinalsCard = ({ scheduleData }) => {
-	logger.ga('Card Mounted: Finals')
-
-	if (!scheduleData) {
-		return null
+class FinalsCard extends Component {
+	constructor(props) {
+		super()
+		this.state = { finalsData: this.getFinalsArray(props.scheduleData) }
 	}
 
-	const parsedScheduleData = schedule.getData(scheduleData)
-	const finalsData = schedule.getFinals(parsedScheduleData)
+	componentDidMount() {
+		logger.ga('Card Mounted: Finals')
+	}
 
-	// if (scheduleData.length > 0) {
-	return (
-		<Card id="finals" title="Finals">
-			<ListView
-				enableEmptySections={true}
-				dataSource={dataSource.cloneWithRows(finalsData)}
-				renderSeparator={(sectionID, rowID, adjacentRowHighlighted) => {
-					if (finalsData[rowID].length > 0) {
-						return (<View style={css.finals_separator} key={rowID} />)
-					} else {
-						return null
-					}
-				}}
-				renderRow={(rowData, sectionID, rowID, highlightRow) => (
-					<View>
-						{finalsData[String(rowID)].length > 0 ? (
-							<ScheduleDay id={rowID} data={rowData} />
-						) : null}
-					</View>
-				)}
-			/>
-		</Card>
-	)
+	getFinalsArray = (scheduleObject) => {
+		const parsedScheduleData = schedule.getData(scheduleObject)
+		const finalsData = schedule.getFinals(parsedScheduleData)
+		const finalsArray = []
+		Object.keys(finalsData).forEach((day) => {
+			if (finalsData[day].length > 0) {
+				finalsArray.push({
+					day,
+					data: finalsData[day]
+				})
+			}
+		})
+		return finalsArray
+	}
+
+	render() {
+		if (!this.state.finalsData) {
+			return null
+		}
+
+		// if (this.props.scheduleData.length > 0) {
+		return (
+			<Card id="finals" title="Finals">
+				<FlatList
+					data={this.state.finalsData}
+					ItemSeparatorComponent={(<View style={css.finals_separator} />)}
+					keyExtractor={(item, index) => (item.day)}
+					renderItem={({ item: rowData }) => (
+						<ScheduleDay id={rowData.day} data={rowData.data} />
+					)}
+				/>
+			</Card>
+		)
+	}
 }
 
 const ScheduleDay = ({ id, data }) => (
@@ -54,10 +61,11 @@ const ScheduleDay = ({ id, data }) => (
 )
 
 const DayList = ({ courseItems }) => (
-	<ListView
-		dataSource={dataSource.cloneWithRows(courseItems)}
-		renderRow={(rowData, sectionID, rowID, highlightRow) => (
-			<DayItem key={rowID} data={rowData} />
+	<FlatList
+		data={courseItems}
+		keyExtractor={(item, index) => (item.course_code + item.section)}
+		renderItem={({ item: rowData }) => (
+			<DayItem data={rowData} />
 		)}
 	/>
 )
@@ -77,10 +85,6 @@ const DayItem = ({ data }) => (
 	</View>
 )
 
-const mapStateToProps = state => ({
-	scheduleData: state.schedule.data,
-})
+const mapStateToProps = state => ({ scheduleData: state.schedule.data })
 
-const ActualFinalsCard = connect(mapStateToProps)(FinalsCard)
-
-export default ActualFinalsCard
+export default connect(mapStateToProps)(FinalsCard)

@@ -1,12 +1,12 @@
-import 'react-native';
-import React from 'react';
-import Enzyme, { shallow } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
+import 'react-native'
+import React from 'react'
+import Enzyme, { shallow } from 'enzyme'
+import Adapter from 'enzyme-adapter-react-16'
 
 // Component to be tested
-import { NearbyMapView } from '../../../app/views/mapsearch/NearbyMapView';
+import { Map } from '../../../app/views/map/Map'
 
-Enzyme.configure({ adapter: new Adapter() });
+Enzyme.configure({ adapter: new Adapter() })
 
 // Mock props passed down from state
 const initialState = {
@@ -16,14 +16,14 @@ const initialState = {
 			longitude: -117.234
 		}
 	}
-};
+}
 
 // Set up component to be rendered
 function setup(props) {
-	return shallow(<NearbyMapView {...props} />);
+	return shallow(<Map {...props} />)
 }
 
 test('renders without crashing', () => {
-	const tree = setup(initialState);
-	expect(tree).toMatchSnapshot();
-});
+	const tree = setup(initialState)
+	expect(tree).toMatchSnapshot()
+})

@@ -27,10 +27,18 @@ exports[`renders without crashing 1`] = `
     <View
       style={
         Object {
-          "height": 1270,
+          "height": 1250,
         }
       }
     >
+      <Text
+        accessible={true}
+        allowFontScaling={true}
+        ellipsizeMode="tail"
+      >
+        MapHeight: 
+        1250
+      </Text>
       <SearchMap
         location={
           Object {
@@ -47,7 +55,7 @@ exports[`renders without crashing 1`] = `
     <View
       style={
         Object {
-          "height": 1270,
+          "height": 1250,
         }
       }
     >
@@ -58,7 +66,7 @@ exports[`renders without crashing 1`] = `
     <View
       style={
         Object {
-          "height": 1270,
+          "height": 1250,
         }
       }
     >
@@ -69,7 +77,7 @@ exports[`renders without crashing 1`] = `
     <View
       style={
         Object {
-          "height": 1270,
+          "height": 1250,
         }
       }
     >
