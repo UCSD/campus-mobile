@@ -13,6 +13,7 @@ const initialState = {
 			name: 'Finals Schedule',
 			component: 'FinalsCard',
 			authenticated: true,
+			autoActivated: false,
 			classifications: { student: true }
 		},
 		schedule: {

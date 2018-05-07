@@ -46,8 +46,13 @@ function* toggleAuthCards() {
 
 	Object.keys(cards).forEach((cardKey) => {
 		// If newly logged in, show cards that require auth
-		// AND meet current users classifications
-		if (isLoggedIn && cards[cardKey].authenticated) {
+		// AND meet current users classifications AND
+		// are autoactivated
+		if (
+			isLoggedIn &&
+			cards[cardKey].authenticated &&
+			cards[cardKey].autoActivated !== false
+		) {
 			if (cards[cardKey].classifications) {
 				Object.keys(cards[cardKey].classifications).forEach((classification) => {
 					if (profile.classifications[classification]) {
