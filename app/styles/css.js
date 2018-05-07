@@ -379,10 +379,10 @@ const css = StyleSheet.create({
 	schedule_full_button_text: { fontSize: 20, fontWeight: '300', color: COLOR.PRIMARY, paddingHorizontal: 14, paddingVertical: 10 },
 
 	// FullScheduleListView
-	fslv_container: { flexGrow: 1, marginTop: LAYOUT.NAVIGATOR_HEIGHT - 1 },
-	fslv_header_wrapper: { marginBottom: 20, borderColor: COLOR.DMGREY, borderTopWidth: 1, borderBottomWidth: 1, backgroundColor: COLOR.WHITE },
+	fslv_container: { flexGrow: 1 },
+	fslv_header_wrapper: { borderColor: COLOR.DMGREY, borderTopWidth: 1, borderBottomWidth: 1, backgroundColor: COLOR.WHITE },
 	fslv_header_text: { marginTop: 15, marginBottom: 15, marginLeft: 25, fontWeight: 'bold', fontSize: 22 },
-	fslv_row: { paddingBottom: 20, paddingLeft: 25 },
+	fslv_row: { paddingTop: 20, paddingBottom: 20, paddingLeft: 25 },
 	fslv_course_code: { fontSize: 18, fontWeight: 'bold' },
 	fslv_course_title: { fontSize: 18, marginBottom: 4 },
 	fslv_course_text: { fontSize: 16 },
