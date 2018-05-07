@@ -368,14 +368,17 @@ module.exports = {
 	},
 
 	/**
-	 * @param {Object} e Error object with details about the fatal error.
+	 * @param {Object} err Error object with details about the fatal error.
 	 * @returns {function} Resets the app in case of a fatal error.
 	 */
-	gracefulFatalReset(e) {
-		logger.trackException(e.toString(), true)
+	gracefulFatalReset(err) {
+		const fatalErr = err.toString()
+		const fatalErrDev = (__DEV__ ? ('\n' + fatalErr) : '')
+		logger.trackException(fatalErr, true)
+
 		Alert.alert(
 			'Oops! Something went wrong!',
-			'An error report has been automatically sent to the technical staff. Try restarting. If the problem still occurs try again later.',
+			'An error report has been automatically sent to the technical staff. Try restarting. If the problem still occurs try again later.' + fatalErrDev,
 			[
 				{
 					text: 'Quit',
