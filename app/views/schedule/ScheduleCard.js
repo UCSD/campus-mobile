@@ -23,7 +23,7 @@ const ScheduleCard = ({
 	activeCourse,
 	onClickCourse
 }) => (
-	<Card id="schedule" title="Upcoming Classes">
+	<Card id="schedule" title="Classes">
 		{coursesToShow.length ? (
 			<View style={styles.sc_scheduleCard}>
 				<View style={styles.container}>

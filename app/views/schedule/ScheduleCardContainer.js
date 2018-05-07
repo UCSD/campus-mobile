@@ -37,7 +37,7 @@ class ScheduleCardContainer extends React.Component {
 	}
 
 	componentWillMount() {
-		logger.ga('Card Mounted: Schedule');
+		logger.ga('Card Mounted: Classes');
 	}
 	componentWillReceiveProps(nextProps) {
 		if (nextProps.scheduleData) {

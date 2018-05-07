@@ -12,7 +12,7 @@ const dataSource = new ListView.DataSource({
 })
 
 const FinalsCard = ({ scheduleData }) => {
-	logger.ga('Card Mounted: Finals Schedule')
+	logger.ga('Card Mounted: Finals')
 
 	if (!scheduleData) {
 		return null
@@ -23,7 +23,7 @@ const FinalsCard = ({ scheduleData }) => {
 
 	// if (scheduleData.length > 0) {
 	return (
-		<Card id="finals" title="Finals Schedule">
+		<Card id="finals" title="Finals">
 			<ListView
 				enableEmptySections={true}
 				dataSource={dataSource.cloneWithRows(finalsData)}
