@@ -131,11 +131,12 @@ module.exports = {
 				const endMoment = moment(endString, 'HH:mm')
 				const startAm = Boolean(startMoment.format('a') === 'am')
 				const endAm = Boolean(endMoment.format('a') === 'am')
-				const formattedTimeString = moment(startString, 'HH:mm').format('h:mm') +
-					(startAm ? (' a.m.') : (' p.m.')) +
-					' – ' +
-					moment(endString, 'HH:mm').format('h:mm') +
+				const formattedStartString = moment(startString, 'HH:mm').format('h:mm') +
+					(startAm ? (' a.m.') : (' p.m.'))
+				const formattedEndString = moment(endString, 'HH:mm').format('h:mm') +
 					(endAm ? (' a.m.') : (' p.m.'))
+				const formattedTimeString = formattedStartString +
+					' – ' + formattedEndString
 
 				const item = {
 					building: currData.building,
@@ -146,6 +147,7 @@ module.exports = {
 					course_code: currCourse.course_code,
 					course_title: currCourse.course_title,
 					time_string: formattedTimeString,
+					start_string: formattedStartString,
 					start_time: startSeconds,
 					end_time: endSeconds,
 					meeting_type: currData.meeting_type,
