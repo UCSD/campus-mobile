@@ -42,7 +42,7 @@ function* doLogin(action) {
 			throw response.error
 		} else {
 			// Successfully logged in
-			yield auth.storeUserCreds(username, password)
+			yield auth.storeUserCreds(username, passwordEncrypted)
 			yield auth.storeAccessToken(response.access_token)
 
 			// Set up user profile
@@ -96,8 +96,7 @@ function* refreshTokenRequest() {
 		username,
 		password
 	} = yield auth.retrieveUserCreds()
-	const passwordEncrypted = yield auth.encryptStringWithKey(password)
-	const loginInfo = auth.encryptStringWithBase64(`${username}:${passwordEncrypted}`)
+	const loginInfo = auth.encryptStringWithBase64(`${username}:${password}`)
 	const response = yield call(ssoService.retrieveAccessToken, loginInfo)
 
 	if (response.access_token) {
