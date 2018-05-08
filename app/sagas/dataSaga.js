@@ -8,6 +8,7 @@ import SpecialEventsService from '../services/specialEventsService'
 import LinksService from '../services/quicklinksService'
 import EventService from '../services/eventService'
 import NewsService from '../services/newsService'
+import schedule from '../util/schedule'
 import { fetchMasterStopsNoRoutes, fetchMasterRoutes } from '../services/shuttleService'
 import {
 	WEATHER_API_TTL,
@@ -72,9 +73,31 @@ function* updateSchedule() {
 				yield put({ type: 'SET_SCHEDULE_TERM', term })
 			}
 
-			const schedule = yield call(ScheduleService.FetchSchedule, term.code)
-			if (schedule) {
-				yield put({ type: 'SET_SCHEDULE', schedule })
+			const scheduleData = yield call(ScheduleService.FetchSchedule, term.code)
+			if (scheduleData) {
+				yield put({ type: 'SET_SCHEDULE', schedule: scheduleData })
+			}
+
+			// check for finals
+			const parsedScheduleData = schedule.getData(scheduleData)
+			const finalsData = schedule.getFinals(parsedScheduleData)
+			const finalsArray = []
+			Object.keys(finalsData).forEach((day) => {
+				if (finalsData[day].length > 0) {
+					finalsArray.push({
+						day,
+						data: finalsData[day]
+					})
+				}
+			})
+			if (finalsArray.length > 0) {
+				// check if finals are active
+				const finalsActive = yield call(ScheduleService.FetchFinals)
+				if (finalsActive) {
+					yield put({ type: 'SHOW_CARD', id: 'finals' })
+				} else {
+					yield put({ type: 'HIDE_CARD', id: 'finals' })
+				}
 			}
 		} catch (error) {
 			console.log(error)

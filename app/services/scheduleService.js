@@ -38,6 +38,13 @@ const ScheduleService = {
 			.then(response => response.json())
 			.then(responseData => responseData)
 			.catch(err => console.log('Error fetching academic term: ' + err))
+	},
+
+	FetchFinals() {
+		return fetch(AppSettings.ACADEMIC_TERM_API_URL + '/finals')
+			.then(response => response.json())
+			.then(responseData => responseData)
+			.catch(err => console.log('Error fetching finals: ' + err))
 	}
 }
 
