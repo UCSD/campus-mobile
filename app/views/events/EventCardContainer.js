@@ -11,8 +11,8 @@ export const EventCardContainer = ({ eventsData }) => {
 	logger.ga('Card Mounted: Events')
 
 	let data = null
-	const parsedEventsData = eventsData.slice()
-	if (Array.isArray(parsedEventsData)) {
+	if (Array.isArray(eventsData)) {
+		const parsedEventsData = eventsData.slice()
 		parsedEventsData.forEach((element, index) => {
 			parsedEventsData[index] = {
 				...element,

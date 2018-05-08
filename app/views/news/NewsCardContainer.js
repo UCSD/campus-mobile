@@ -10,8 +10,8 @@ export const NewsCardContainer = ({ newsData }) => {
 	logger.ga('Card Mounted: News')
 
 	let data = null
-	const parsedNewsData = newsData.slice()
-	if (Array.isArray(parsedNewsData)) {
+	if (Array.isArray(newsData)) {
+		const parsedNewsData = newsData.slice()
 		parsedNewsData.forEach((element, index) => {
 			parsedNewsData[index] = {
 				...element,
