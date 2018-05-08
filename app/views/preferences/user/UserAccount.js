@@ -38,10 +38,10 @@ class UserAccount extends Component {
 
 	_renderAccountContainer = mainText => (
 		<TouchableOpacity
-			style={css.UserAccount_spacedRow}
+			style={css.ua_spacedRow}
 			onPress={this._performUserAuthAction}
 		>
-			<Text style={css.UserAccount_accountText}>{mainText}</Text>
+			<Text style={css.ua_accountText}>{mainText}</Text>
 			<Icon name="user" />
 		</TouchableOpacity>
 	);
