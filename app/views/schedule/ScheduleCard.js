@@ -8,7 +8,6 @@ import {
 	ActivityIndicator
 } from 'react-native'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
-import SimpleIcon from 'react-native-vector-icons/SimpleLineIcons'
 
 import schedule from '../../util/schedule'
 import Card from '../common/Card'
@@ -31,54 +30,52 @@ const ScheduleCard = ({ coursesToShow, actionButton, activeCourse, onClickCourse
 									{/* AM */}
 								</ScheduleText>
 							</View>
-							<View style={css.cc_leftHalf_upper_classText}>
-								<ScheduleText style={css.cc_leftHalf_upper_classText_firstSection}>
-									{coursesToShow[activeCourse].subject_code + ' '
-										+ coursesToShow[activeCourse].course_code}
-								</ScheduleText>
-								<ScheduleText style={css.cc_leftHalf_upper_classText_secondSection}>
-									{coursesToShow[activeCourse].meeting_type}
-								</ScheduleText>
-							</View>
+							<ScheduleText style={css.cc_leftHalf_upper_classText_firstSection}>
+								{coursesToShow[activeCourse].subject_code + ' '
+									+ coursesToShow[activeCourse].course_code}
+							</ScheduleText>
+							<ScheduleText style={css.cc_leftHalf_upper_classText_secondSection}>
+								{coursesToShow[activeCourse].meeting_type}
+							</ScheduleText>
 						</View>
 						<View style={css.cc_leftHalf_lower}>
 							<View style={css.cc_leftHalf_lower_sections}>
-								<SimpleIcon style={css.cc_leftHalf_lower_sections_icon} name="clock" />
+								<FAIcon style={css.cc_icon_time} size={42} name="clock-o" />
 								<View style={css.cc_leftHalf_lower_sections_text}>
+									<ScheduleText style={css.cc_leftHalf_lower_sections_text_bottomSection}>
+										Start and Finish Time
+									</ScheduleText>
 									<ScheduleText style={css.cc_leftHalf_lower_sections_text_topSection}>
 										{/* In Session */}
 										{coursesToShow[activeCourse].time_string}
 									</ScheduleText>
-									<ScheduleText style={css.cc_leftHalf_lower_sections_text_bottomSection}>
-										Start and Finish Time
-									</ScheduleText>
 								</View>
 							</View>
 							<View style={css.cc_leftHalf_lower_sections}>
-								<FAIcon style={css.cc_leftHalf_lower_sections_icon} name="building-o" />
+								<FAIcon style={css.cc_icon_building} size={42} name="building-o" />
 								<View style={css.cc_leftHalf_lower_sections_text}>
+									<ScheduleText style={css.cc_leftHalf_lower_sections_text_bottomSection}>
+										{/* In Sixth College */}
+										Class Room Location
+									</ScheduleText>
 									<ScheduleText style={css.cc_leftHalf_lower_sections_text_topSection}>
 										{/* Pepper Canyon Hall 106 */}
 										{coursesToShow[activeCourse].building + ' '
 										+ coursesToShow[activeCourse].room}
 									</ScheduleText>
-									<ScheduleText style={css.cc_leftHalf_lower_sections_text_bottomSection}>
-										{/* In Sixth College */}
-										Class Room Location
-									</ScheduleText>
 								</View>
 							</View>
 							<View style={css.cc_leftHalf_lower_sections}>
-								<FAIcon style={css.cc_leftHalf_lower_sections_icon} name="calendar-check-o" />
+								<FAIcon style={css.cc_icon_lettergrade} size={42} name="check-square-o" />
 								<View style={css.cc_leftHalf_lower_sections_text}>
+									<ScheduleText style={css.cc_leftHalf_lower_sections_text_bottomSection}>
+										{/* Last Class Ends at 10:00 AM */}
+										Evaluation Option
+									</ScheduleText>
 									<ScheduleText style={css.cc_leftHalf_lower_sections_text_topSection}>
 										{/* 1 More Class Today */}
 										{coursesToShow[activeCourse].grade_option === 'L' ?
 											'Letter Grade' : 'Pass/No Pass'}
-									</ScheduleText>
-									<ScheduleText style={css.cc_leftHalf_lower_sections_text_bottomSection}>
-										{/* Last Class Ends at 10:00 AM */}
-										Evaluation Option
 									</ScheduleText>
 								</View>
 							</View>
@@ -147,22 +144,12 @@ const DayItem = ({ active, data, onClick, index }) => (
 			activeOpacity={0.5}
 		>
 			<View style={[css.cc_rightHalf_eachOfFourCards, active && css.cc_rightHalf_activeCard]}>
-				<View style={css.cc_rightHalf_each_dayAndTime}>
-					<ScheduleText style={[css.cc_rightHalf_each_dayAndTime_text, !active && css.cc_rightHalf_each_inActiveText]}>
-						{schedule.dayOfWeekInterpreter(data.day_code).substring(0, 3) + ' ' + data.time_string}
-					</ScheduleText>
-					{active && (
-						<SimpleIcon style={[css.cc_rightHalf_each_dayAndTime_icon, !active && css.cc_rightHalf_each_inActiveText]} name="pin" />
-					)}
-				</View>
-				<View style={css.cc_rightHalf_each_classAndItsType}>
-					<ScheduleText style={[css.cc_rightHalf_each_classAndItsType_class, !active && css.cc_rightHalf_each_inActiveText]}>
-						{data.subject_code + ' ' + data.course_code}
-					</ScheduleText>
-					<ScheduleText style={[css.cc_rightHalf_each_classAndItsType_type, !active && css.cc_rightHalf_each_inActiveText]}>
-						{data.meeting_type}
-					</ScheduleText>
-				</View>
+				<ScheduleText style={[css.cc_rightHalf_each_daytime_text, !active && css.cc_rightHalf_each_inActiveText]}>
+					{schedule.dayOfWeekInterpreter(data.day_code).substring(0, 3) + ' ' + data.time_string}
+				</ScheduleText>
+				<ScheduleText style={[css.cc_rightHalf_each_class_text, !active && css.cc_rightHalf_each_inActiveText]}>
+					{data.subject_code + ' ' + data.course_code}
+				</ScheduleText>
 			</View>
 		</TouchableHighlight>
 	) : null )

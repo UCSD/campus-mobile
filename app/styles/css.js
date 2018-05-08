@@ -134,22 +134,26 @@ const css = StyleSheet.create({
 	cc_leftHalf_upper_timeText_secondSection: { fontSize: CC_LEFT * 5, alignSelf: 'flex-end', marginBottom: CC_LEFT * 0.5, fontWeight: 'bold' },
 	cc_leftHalf_upper_classText: { flex: 2, flexDirection: 'row', top: -CC_LEFT * 0 },
 	cc_leftHalf_upper_classText_firstSection: { fontSize: CC_LEFT * 15, fontWeight: 'bold', marginRight: CC_LEFT * 3, overflow: 'hidden' },
-	cc_leftHalf_upper_classText_secondSection: { fontSize: CC_LEFT * 5, alignSelf: 'flex-end', marginBottom: Math.round(CC_LEFT * 15 * 1.2) * 0.12, color: COLOR.DGREY },
+	cc_leftHalf_upper_classText_secondSection: { marginBottom: Math.round(CC_LEFT * 15 * 1.2) * 0.12, color: COLOR.DGREY },
 	cc_leftHalf_lower: { flex: 7 },
+
 	cc_leftHalf_lower_sections: { marginTop: CC_LEFT * 3.75, flexDirection: 'row' },
-	cc_leftHalf_lower_sections_icon: { fontSize: CC_LEFT * 16, marginRight: 6 },
-	cc_leftHalf_lower_sections_text: {},
-	cc_leftHalf_lower_sections_text_topSection: { fontSize: CC_LEFT * 6, paddingTop: CC_LEFT * 0.25 },
-	cc_leftHalf_lower_sections_text_bottomSection: { fontSize: CC_LEFT * 4.5, paddingTop: CC_LEFT * 1, color: COLOR.DGREY },
+	cc_icon_time: { width: 44, marginRight: 6, color: COLOR.PRIMARY },
+	cc_icon_building: { width: 44, marginRight: 6, paddingLeft: 2, color: COLOR.DGREY },
+	cc_icon_lettergrade: { width: 44, marginRight: 6, paddingLeft: 2, paddingTop: 2, color: COLOR.MGREEN },
+
+	//cc_leftHalf_lower_sections_text_topSection: { fontSize: CC_LEFT * 6, paddingTop: CC_LEFT * 1.75 },
+	//cc_leftHalf_lower_sections_text_bottomSection: { fontSize: CC_LEFT * 4.5, paddingTop: CC_LEFT * 1, color: COLOR.DGREY },
+
+	cc_leftHalf_lower_sections_text_bottomSection: { fontSize: CC_LEFT * 4.5, paddingTop: CC_LEFT * 1.75, color: COLOR.DGREY },
+	cc_leftHalf_lower_sections_text_topSection: { fontSize: CC_LEFT * 6, paddingTop: CC_LEFT * 1 },
+
 	cc_rightHalf: { flex: 4, paddingTop: CC_RIGHT * 0.5, justifyContent: 'space-between' },
 	cc_rightHalf_eachOfFourCards: { borderColor: COLOR.DGREY, borderWidth: CC_RIGHT * 0.5, borderRadius: CC_RIGHT * 1, paddingLeft: CC_RIGHT * 4, paddingTop: CC_RIGHT * 2.5, overflow: 'hidden', width: '100%', aspectRatio: 3.16 },
 	cc_rightHalf_activeCard: { borderColor: COLOR.VDGREY, borderWidth: CC_RIGHT * 0.75, paddingLeft: CC_RIGHT * 3.75, paddingTop: CC_RIGHT * 2.25 },
-	cc_rightHalf_each_dayAndTime: { flexDirection: 'row', height: round(CC_RIGHT * 9) },
-	cc_rightHalf_each_dayAndTime_text: { width: CC_RIGHT * 70, fontSize: CC_RIGHT * 6.5 },
-	cc_rightHalf_each_dayAndTime_icon: { fontSize: CC_RIGHT * 9, top: -CC_RIGHT * 3, lineHeight: round(CC_RIGHT * 9) },
-	cc_rightHalf_each_classAndItsType: { flexDirection: 'row', top: CC_RIGHT * 1 },
+	cc_rightHalf_each_daytime_text: { fontSize: 12 },
+	cc_rightHalf_each_class_text: { paddingTop: 4, fontSize: 16 },
 	cc_Half_each_classAndItsType_class: { width: CC_RIGHT * 55, fontSize: CC_RIGHT * 11 },
-	cc_rightHalf_each_classAndItsType_type: { fontSize: CC_RIGHT * 6, alignSelf: 'flex-end', paddingBottom: CC_RIGHT * 1 },
 	cc_rightHalf_each_inActiveText: { color: COLOR.DGREY },
 
 	/**
