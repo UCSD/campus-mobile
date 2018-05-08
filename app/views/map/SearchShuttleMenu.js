@@ -45,7 +45,7 @@ const SearchShuttleMenu = ({ onToggle, toggles, shuttle_routes }) => (
 const MenuList = ({ shuttles, onToggle, toggles }) => {
 	return (<FlatList
 		data={Object.values(shuttles)}
-		keyExtractor={(listItem, index) => (listItem.id + index)}
+		keyExtractor={(listItem, index) => (String(listItem.id) + String(index))}
 		renderItem={
 			({ item: rowData, index: rowID }) => (
 				<MenuItem

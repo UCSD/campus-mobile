@@ -151,7 +151,6 @@ function* setScroll(action) {
 
 function* fetchArrival(stopID) {
 	const shuttle = yield select(getShuttle)
-	const stops = Object.assign({}, shuttle.stops)
 
 	try {
 		const arrivals = yield call(fetchShuttleArrivalsByStop, stopID)
@@ -167,7 +166,13 @@ function* fetchArrival(stopID) {
 				return 0
 			})
 
-			stops[stopID].arrivals = arrivals
+			const stops = {
+				...shuttle.stops,
+				[stopID]: {
+					...shuttle.stops[stopID],
+					arrivals
+				}
+			}
 
 			yield put({ type: 'SET_ARRIVALS', stops })
 		}

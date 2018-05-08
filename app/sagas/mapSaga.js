@@ -28,7 +28,7 @@ function* clearSearch(action) {
 function* addHistory(action) {
 	const { history } = yield select(getMap)
 	let newHistory = history.slice()
-	const { term } = action.term
+	const { term } = action
 	const termIndex = newHistory.indexOf(action.term)
 	if ( termIndex !== -1) {
 		// Move term to front of array if it's already in there

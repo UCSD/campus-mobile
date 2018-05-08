@@ -169,7 +169,7 @@ const css = StyleSheet.create({
 	dd_description_nametext: { fontSize: 26, color: COLOR.PRIMARY },
 	dd_description_text: { paddingTop: 4 },
 	dd_description_subtext: { paddingTop: 8, color: COLOR.BLACK, fontWeight: '700' },
-	dd_hours_text_container: { flexDirection: 'row', alignItems: 'center', color: COLOR.BLACK },
+	dd_hours_text_container: { flexDirection: 'row', alignItems: 'center' },
 	dd_hours_text_disclaimer: { color: COLOR.DORANGE, paddingVertical: 8 },
 	dd_hours_row: { flexDirection: 'row', paddingBottom: 8, flexWrap: 'wrap', alignItems: 'flex-start' },
 	dd_hours_text_title: { width: '35%', paddingRight: 8, color: COLOR.BLACK },

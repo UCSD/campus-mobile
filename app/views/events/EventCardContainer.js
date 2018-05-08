@@ -1,45 +1,43 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import moment from 'moment';
+import React from 'react'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import moment from 'moment'
 
-import DataListCard from '../common/DataListCard';
-import logger from '../../util/logger';
-import { militaryToAMPM } from '../../util/general';
+import DataListCard from '../common/DataListCard'
+import logger from '../../util/logger'
+import { militaryToAMPM } from '../../util/general'
 
 export const EventCardContainer = ({ eventsData }) => {
-	logger.ga('Card Mounted: Events');
+	logger.ga('Card Mounted: Events')
 
-	let data = null;
-	if (Array.isArray(eventsData)) {
-		eventsData.forEach((element) => {
-			element.subtext = moment(element.eventdate).format('MMM Do') + ', ' + militaryToAMPM(element.starttime) + ' - ' + militaryToAMPM(element.endtime);
-			element.image = element.imagethumb;
-		});
-		data = eventsData;
+	let data = null
+	const parsedEventsData = eventsData.slice()
+	if (Array.isArray(parsedEventsData)) {
+		parsedEventsData.forEach((element, index) => {
+			parsedEventsData[index] = {
+				...element,
+				subtext: moment(element.eventdate).format('MMM Do') + ', ' + militaryToAMPM(element.starttime) + ' - ' + militaryToAMPM(element.endtime),
+				image: element.imagethumb
+			}
+		})
+		data = parsedEventsData
 	}
 	return (
 		<DataListCard
 			id="events"
 			title="Events"
 			data={data}
-			item={'EventItem'}
+			item="EventItem"
 		/>
-	);
-};
+	)
+}
 
-EventCardContainer.propTypes = {
-	eventsData: PropTypes.array
-};
+EventCardContainer.defaultProps = { eventsData: null }
 
-const mapStateToProps = (state) => (
-	{
-		eventsData: state.events.data,
-	}
-);
+EventCardContainer.propTypes = { eventsData: PropTypes.arrayOf(PropTypes.object) }
 
-const ActualEventCard = connect(
-	mapStateToProps
-)(EventCardContainer);
+const mapStateToProps = state => (
+	{ eventsData: state.events.data }
+)
 
-export default ActualEventCard;
+export default connect(mapStateToProps)(EventCardContainer)

@@ -127,7 +127,8 @@ function _sortDining(diningData) {
 	// Sort dining locations by name
 	return new Promise((resolve, reject) => {
 		if (Array.isArray(diningData)) {
-			diningData.sort(dynamicSort('name'))
+			const sortedDiningData = diningData.slice()
+			sortedDiningData.sort(dynamicSort('name'))
 			resolve(diningData)
 		} else {
 			reject(new Error('Error _sortDining, diningData is not an array(' + diningData + ')'))
@@ -144,15 +145,25 @@ function _setDiningDistance(position, diningData) {
 				if (eatery.coords) {
 					distance = getDistance(position.coords.latitude, position.coords.longitude, eatery.coords.lat, eatery.coords.lon)
 					if (distance) {
-						eatery.distance = distance
+						eatery = {
+							...eatery,
+							distance
+						}
 					}
 				}
 				else {
-					eatery.distance = 100000000
+					eatery = {
+						...eatery,
+						distance: 100000000
+					}
 				}
 
-				eatery.distanceMiles = convertMetersToMiles(distance)
-				eatery.distanceMilesStr = getDistanceMilesStr(eatery.distanceMiles)
+				const milesDistance = convertMetersToMiles(distance)
+				eatery = {
+					...eatery,
+					distanceMiles: milesDistance,
+					distanceMilesStr: getDistanceMilesStr(milesDistance)
+				}
 
 				return eatery
 			}))

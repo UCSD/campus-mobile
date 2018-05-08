@@ -24,11 +24,12 @@ function dining(state = initialState, action) {
 			})
 		}
 		case 'SET_DINING_MENU': {
-			const newMenusArray = newState.menus
-
-			newMenusArray[action.id] = action.data
-			if (newMenusArray[action.id]) {
-				newMenusArray[action.id].lastUpdated = new Date().getTime()
+			const newMenusArray = {
+				...newState.menus,
+				[action.id]: {
+					...action.data,
+					lastUpdated: new Date().getTime()
+				}
 			}
 
 			newState.menus = newMenusArray

@@ -36,7 +36,7 @@ const SearchHistoryList = ({ historyData, pressHistory, removeHistory }) => (
 		showsVerticalScrollIndicator={false}
 		data={historyData}
 		keyboardShouldPersistTaps="always"
-		keyExtractor={(listItem, index) => (listItem + index)}
+		keyExtractor={(listItem, index) => (String(listItem) + String(index))}
 		renderItem={
 			({ item: rowData, index: rowID }) => (
 				<SearchHistoryItem

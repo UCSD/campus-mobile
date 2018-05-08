@@ -87,8 +87,13 @@ function cards(state = initialState, action) {
 				}
 			}
 		case 'SET_AUTOACTIVATED_STATE':
-			newState.cards[action.id] = Object.assign({}, newState.cards[action.id], { autoActivated: action.autoActivated })
-
+			newState.cards = {
+				...newState.cards,
+				[action.id]: {
+					...newState.cards[action.id],
+					autoActivated: action.autoActivated
+				}
+			}
 			return newState
 		case 'INSERT_CARD': {
 			const { id, position } = action

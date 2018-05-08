@@ -10,10 +10,7 @@ const ShuttleRoutesListView = ({ navigation }) => {
 		<FlatList
 			style={css.main_full}
 			data={shuttle_routes}
-			keyExtractor={(listItem, index) => (
-				listItem.id +
-				index
-			)}
+			keyExtractor={(listItem, index) => (String(listItem.id) + String(index))}
 			renderItem={
 				({ item: rowData }) => (
 					<RouteItem

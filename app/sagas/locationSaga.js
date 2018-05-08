@@ -35,7 +35,7 @@ function getPermission(type) {
 
 function* getClosestStop(location) {
 	const shuttle = yield select(getShuttle)
-	const stops = shuttle.stops
+	const { stops } = shuttle
 	const currClosestStop = shuttle.closestStop
 
 	let closestDist = 1000000000
