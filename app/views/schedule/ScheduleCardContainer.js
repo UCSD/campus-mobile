@@ -6,9 +6,6 @@ import ScheduleCard from './ScheduleCard'
 import logger from '../../util/logger'
 import schedule from '../../util/schedule'
 
-/**
- * Container component for [ScheduleCard]{@link ScheduleCard}
- **/
 const processData = (scheduleData) => {
 	if (!scheduleData) return []
 
@@ -21,6 +18,8 @@ const processData = (scheduleData) => {
 	result.push(...classesData.WE)
 	result.push(...classesData.TH)
 	result.push(...classesData.FR)
+	result.push(...classesData.SA)
+	result.push(...classesData.SU)
 	result = result.slice(0, 4)
 	return result
 }

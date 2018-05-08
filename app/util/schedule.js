@@ -8,13 +8,13 @@ module.exports = {
 	// Returns a modified courseItems object containing only finals.
 	getFinals(courseItems) {
 		const finalItems = {
-			SA: [],
-			SU: [],
 			MO: [],
 			TU: [],
 			WE: [],
 			TH: [],
-			FR: []
+			FR: [],
+			SA: [],
+			SU: []
 		}
 
 		Object.keys(courseItems).forEach((day) => {
@@ -173,31 +173,4 @@ module.exports = {
 	sortTime(a, b) {
 		return a.start_time - b.start_time
 	},
-
-	setFinals(finalsList) {
-		let nowTime = new Date().getDay()
-		const upcomingFinals = {}
-
-		const mapWeekdays = [
-			'SA',
-			'SU',
-			'MO',
-			'TU',
-			'WE',
-			'TH',
-			'FR',
-		]
-
-		// translates the days from nowTime to match the days returned from getFinals
-		nowTime = (nowTime + 1) % 7
-
-		// Pushes only upcoming finals to new object
-		for (let i = nowTime; i < 7; i++) {
-			if (finalsList[mapWeekdays[i]].length > 0) {
-				upcomingFinals[mapWeekdays[i]] = finalsList[mapWeekdays[i]]
-			}
-		}
-
-		return upcomingFinals
-	}
 }
