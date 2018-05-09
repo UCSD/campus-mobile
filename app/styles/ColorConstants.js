@@ -7,6 +7,7 @@ const COLOR = {
 	DMGREY: '#999999',
 	MGREY: '#EAEAEA',
 	LGREY: '#F9F9F9',
+	LGREY2: '#F0F0F0',
 	WHITE: '#FFFFFF',
 	BLACK: '#000000',
 	TRANSPARENT: 'rgba(0,0,0,0)',

@@ -160,7 +160,7 @@ const css = StyleSheet.create({
 	schedule_full_button_touchable: { borderTopWidth: 1, borderTopColor: COLOR.MGREY, width: LAYOUT.MAX_CARD_WIDTH },
 	schedule_full_button_text: { fontSize: 20, fontWeight: '300', color: COLOR.PRIMARY, paddingHorizontal: 14, paddingVertical: 10 },
 	fslv_container: { backgroundColor: COLOR.WHITE },
-	fslv_header_wrapper: { borderColor: COLOR.DMGREY, borderTopWidth: 1, borderBottomWidth: 1, backgroundColor: COLOR.LGREY },
+	fslv_header_wrapper: { borderColor: COLOR.LGREY2, borderTopWidth: 1, borderBottomWidth: 1, backgroundColor: COLOR.LGREY },
 	fslv_header_text: { paddingHorizontal: 16, paddingVertical: 8, fontSize: 20, fontWeight: '300' },
 	fslv_row: { paddingHorizontal: 16, paddingVertical: 8 },
 	fslv_course_code: { fontSize: 16, fontWeight: 'bold' },
