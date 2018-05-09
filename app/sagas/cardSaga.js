@@ -75,6 +75,9 @@ function* toggleAuthCards() {
 	if (isLoggedIn) {
 		// show cards
 		yield all(authCards.map(cardKey => put({ type: 'SHOW_CARD', id: cardKey })))
+
+		// perform first data calls when cards are mounted
+		yield put({ type: 'UPDATE_SCHEDULE' })
 	} else {
 		// hide cards
 		yield all(authCards.map(cardKey => put({ type: 'HIDE_CARD', id: cardKey })))
