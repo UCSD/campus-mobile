@@ -48,6 +48,7 @@ class FinalsCard extends Component {
 						<ScheduleDay id={rowData.day} data={rowData.data} />
 					)}
 				/>
+				<Text style={css.finals_last_updated}>Last updated: 3 hours ago</Text>
 			</Card>
 		)
 	}

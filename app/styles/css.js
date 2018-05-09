@@ -79,6 +79,7 @@ const css = StyleSheet.create({
 	scrollcard_dotStyle: { padding: 6, paddingTop: 3, backgroundColor: 'transparent', color: COLOR.DGREY },
 	scrollcard_dotsContainer: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
 	scrollcard_listStyle: { flexDirection: 'row' },
+	card_last_updated: { fontStyle: 'italic', fontWeight: '300', color: COLOR.DGREY },
 	// Data
 	DataList_card_list: { padding: 8 },
 	DataList_full_list: { padding: 8 },
@@ -129,7 +130,7 @@ const css = StyleSheet.create({
 	finals_course_title: { fontSize: 16, fontWeight: 'bold', color: COLOR.VDGREY },
 	finals_course_text: { fontSize: 14, color: COLOR.DGREY },
 	finals_separator: { width: LAYOUT.MAX_CARD_WIDTH + 2, borderColor: COLOR.MGREY, borderTopWidth: 1 },	// +2 ?
-
+	finals_last_updated: { marginLeft: 16, marginBottom: 8, fontStyle: 'italic', fontWeight: '300', color: COLOR.DGREY },
 	/**
 	 *  05 - Classes
 	 */
@@ -149,8 +150,8 @@ const css = StyleSheet.create({
 	cc_icon_time: { width: 44, marginRight: 6, color: COLOR.PRIMARY },
 	cc_icon_building: { width: 44, marginRight: 6, paddingLeft: 2, color: COLOR.DGREY },
 	cc_icon_lettergrade: { width: 44, marginRight: 6, paddingLeft: 1, paddingTop: 2, color: COLOR.MGREEN },
-	cc_leftHalf_lower_sections_text_bottomSection: { fontSize: CC_LEFT * 4.5, paddingTop: CC_LEFT * 1.75, color: COLOR.DGREY },
 	cc_leftHalf_lower_sections_text_topSection: { fontSize: CC_LEFT * 6, paddingTop: CC_LEFT * 1 },
+	cc_leftHalf_lower_sections_text_bottomSection: { fontSize: CC_LEFT * 4.5, paddingTop: CC_LEFT * 1.75, color: COLOR.DGREY },
 	cc_rightHalf: { flex: 4, paddingTop: CC_RIGHT * 0.5, justifyContent: 'space-between' },
 	cc_rightHalf_eachOfFourCards: { borderColor: COLOR.DGREY, borderWidth: CC_RIGHT * 0.5, borderRadius: CC_RIGHT * 1, paddingLeft: CC_RIGHT * 4, paddingTop: CC_RIGHT * 2.5, overflow: 'hidden', width: '100%', aspectRatio: 3.16 },
 	cc_rightHalf_activeCard: { borderColor: COLOR.VDGREY, borderWidth: CC_RIGHT * 0.75, paddingLeft: CC_RIGHT * 3.75, paddingTop: CC_RIGHT * 2.25 },
@@ -158,6 +159,7 @@ const css = StyleSheet.create({
 	cc_rightHalf_each_class_text: { paddingTop: 4, fontSize: 16 },
 	cc_Half_each_classAndItsType_class: { width: CC_RIGHT * 55, fontSize: CC_RIGHT * 11 },
 	cc_rightHalf_each_inActiveText: { color: COLOR.DGREY },
+	cc_last_updated: { marginLeft: 18, marginBottom: 8, fontStyle: 'italic', fontWeight: '300', color: COLOR.DGREY },
 	schedule_full_button_touchable: { borderTopWidth: 1, borderTopColor: COLOR.MGREY, width: LAYOUT.MAX_CARD_WIDTH },
 	schedule_full_button_text: { fontSize: 20, fontWeight: '300', color: COLOR.PRIMARY, paddingHorizontal: 14, paddingVertical: 10 },
 	fslv_container: { backgroundColor: COLOR.WHITE },
