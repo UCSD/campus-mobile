@@ -11,6 +11,7 @@ import FAIcon from 'react-native-vector-icons/FontAwesome'
 
 import schedule from '../../util/schedule'
 import Card from '../common/Card'
+import LastUpdated from '../common/LastUpdated'
 import css from '../../styles/css'
 import COLOR from '../../styles/ColorConstants'
 
@@ -116,7 +117,7 @@ const ScheduleCard = ({
 							/>
 						</View>
 					</View>
-					<Text style={css.cc_last_updated}>Last updated: 3 hours ago</Text>
+					<LastUpdated message="Last updated: 2 hours ago" error="warn" style={css.cc_last_updated} />
 					{actionButton}
 				</View>
 			) : (

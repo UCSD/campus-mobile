@@ -19,6 +19,8 @@ const COLOR = {
 	DORANGE: '#C66A00',
 	MGREEN: '#00AD4B',
 	GREEN: '#38D871',
+	WARNING: '#FFD845',
+	ERROR: '#CF0015',
 }
 
 module.exports = COLOR

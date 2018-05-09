@@ -3,6 +3,7 @@ import { View, Text, FlatList } from 'react-native'
 import { connect } from 'react-redux'
 
 import Card from '../common/Card'
+import LastUpdated from '../common/LastUpdated'
 import logger from '../../util/logger'
 import schedule from '../../util/schedule'
 import css from '../../styles/css'
@@ -48,7 +49,7 @@ class FinalsCard extends Component {
 						<ScheduleDay id={rowData.day} data={rowData.data} />
 					)}
 				/>
-				<Text style={css.finals_last_updated}>Last updated: 3 hours ago</Text>
+				<LastUpdated message="Last updated: 11 hours ago" error="error" />
 			</Card>
 		)
 	}

@@ -79,7 +79,12 @@ const css = StyleSheet.create({
 	scrollcard_dotStyle: { padding: 6, paddingTop: 3, backgroundColor: 'transparent', color: COLOR.DGREY },
 	scrollcard_dotsContainer: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
 	scrollcard_listStyle: { flexDirection: 'row' },
-	card_last_updated: { fontStyle: 'italic', fontWeight: '300', color: COLOR.DGREY },
+	card_last_updated: { flexDirection: 'row', marginLeft: 16, marginBottom: 8, alignContent: 'center' },
+	card_last_updated_text: { fontSize: 16, fontStyle: 'italic', fontWeight: '300', color: COLOR.DGREY, alignSelf: 'center' },
+	last_updated_err_icon: { fontSize: 16, marginRight: 6, alignSelf: 'center' },
+	last_updated_err_icon_warn: { color: COLOR.WARNING },
+	last_updated_err_icon_error: { color: COLOR.ERROR },
+
 	// Data
 	DataList_card_list: { padding: 8 },
 	DataList_full_list: { padding: 8 },
@@ -130,7 +135,6 @@ const css = StyleSheet.create({
 	finals_course_title: { fontSize: 16, fontWeight: 'bold', color: COLOR.VDGREY },
 	finals_course_text: { fontSize: 14, color: COLOR.DGREY },
 	finals_separator: { width: LAYOUT.MAX_CARD_WIDTH + 2, borderColor: COLOR.MGREY, borderTopWidth: 1 },	// +2 ?
-	finals_last_updated: { marginLeft: 16, marginBottom: 8, fontStyle: 'italic', fontWeight: '300', color: COLOR.DGREY },
 	/**
 	 *  05 - Classes
 	 */
@@ -159,7 +163,7 @@ const css = StyleSheet.create({
 	cc_rightHalf_each_class_text: { paddingTop: 4, fontSize: 16 },
 	cc_Half_each_classAndItsType_class: { width: CC_RIGHT * 55, fontSize: CC_RIGHT * 11 },
 	cc_rightHalf_each_inActiveText: { color: COLOR.DGREY },
-	cc_last_updated: { marginLeft: 18, marginBottom: 8, fontStyle: 'italic', fontWeight: '300', color: COLOR.DGREY },
+	cc_last_updated: { marginLeft: 18 },
 	schedule_full_button_touchable: { borderTopWidth: 1, borderTopColor: COLOR.MGREY, width: LAYOUT.MAX_CARD_WIDTH },
 	schedule_full_button_text: { fontSize: 20, fontWeight: '300', color: COLOR.PRIMARY, paddingHorizontal: 14, paddingVertical: 10 },
 	fslv_container: { backgroundColor: COLOR.WHITE },
