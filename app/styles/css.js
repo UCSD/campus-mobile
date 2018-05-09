@@ -147,7 +147,7 @@ const css = StyleSheet.create({
 	cc_leftHalf_lower_sections: { marginTop: CC_LEFT * 3.75, flexDirection: 'row' },
 	cc_icon_time: { width: 44, marginRight: 6, color: COLOR.PRIMARY },
 	cc_icon_building: { width: 44, marginRight: 6, paddingLeft: 2, color: COLOR.DGREY },
-	cc_icon_lettergrade: { width: 44, marginRight: 6, paddingLeft: 2, paddingTop: 2, color: COLOR.MGREEN },
+	cc_icon_lettergrade: { width: 44, marginRight: 6, paddingLeft: 1, paddingTop: 2, color: COLOR.MGREEN },
 	cc_leftHalf_lower_sections_text_bottomSection: { fontSize: CC_LEFT * 4.5, paddingTop: CC_LEFT * 1.75, color: COLOR.DGREY },
 	cc_leftHalf_lower_sections_text_topSection: { fontSize: CC_LEFT * 6, paddingTop: CC_LEFT * 1 },
 	cc_rightHalf: { flex: 4, paddingTop: CC_RIGHT * 0.5, justifyContent: 'space-between' },
