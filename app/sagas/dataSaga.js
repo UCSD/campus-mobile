@@ -33,9 +33,6 @@ const getShuttle = state => (state.shuttle)
 const getSchedule = state => (state.schedule)
 const getUserData = state => (state.user)
 
-// AUTH
-const auth = require('../util/auth')
-
 function* watchData() {
 	while (true) {
 		try {
@@ -56,50 +53,73 @@ function* watchData() {
 }
 
 function* updateSchedule() {
-	const { lastUpdated, data } = yield select(getSchedule)
+	const { lastUpdated, data, currentTerm } = yield select(getSchedule)
 	const { isLoggedIn, profile } = yield select(getUserData)
 	const nowTime = new Date().getTime()
 	const timeDiff = nowTime - lastUpdated
-	const scheduleTTL = SCHEDULE_TTL
 
-	if (!isLoggedIn ||
-			!profile.classifications.student ||
-			(timeDiff < scheduleTTL && data)) {
-		// Do nothing, no need to fetch new data
-	} else {
+	if (
+		isLoggedIn &&
+		profile.classifications.student &&
+		(
+			(currentTerm.term_code !== 'inactive' && !data) ||
+			timeDiff > SCHEDULE_TTL
+		)
+	) {
 		try {
+			yield put({ type: 'GET_SCHEDULE_REQUEST' })
 			const term = yield call(ScheduleService.FetchTerm)
 			if (term) {
 				yield put({ type: 'SET_SCHEDULE_TERM', term })
-			}
 
-			const scheduleData = yield call(ScheduleService.FetchSchedule, term.code)
-			if (scheduleData) {
-				yield put({ type: 'SET_SCHEDULE', schedule: scheduleData })
-			}
+				const scheduleData = yield call(ScheduleService.FetchSchedule, term.term_code)
+				if (scheduleData) {
+					yield put({ type: 'SET_SCHEDULE', schedule: scheduleData })
+					yield put({ type: 'GET_SCHEDULE_SUCCESS' })
+				}
 
-			// check for finals
-			const parsedScheduleData = schedule.getData(scheduleData)
-			const finalsData = schedule.getFinals(parsedScheduleData)
-			const finalsArray = []
-			Object.keys(finalsData).forEach((day) => {
-				if (finalsData[day].length > 0) {
-					finalsArray.push({
-						day,
-						data: finalsData[day]
-					})
+				// check for finals
+				const parsedScheduleData = schedule.getData(scheduleData)
+				const finalsData = schedule.getFinals(parsedScheduleData)
+				const finalsArray = []
+				Object.keys(finalsData).forEach((day) => {
+					if (finalsData[day].length > 0) {
+						finalsArray.push({
+							day,
+							data: finalsData[day]
+						})
+					}
+				})
+				if (finalsArray.length > 0) {
+					// check if finals are active
+					yield put({ type: 'GET_FINALS_REQUEST' })
+					try {
+						const finalsActive = yield call(ScheduleService.FetchFinals)
+						if (finalsActive) {
+							yield put({ type: 'SHOW_CARD', id: 'finals' })
+						} else {
+							yield put({ type: 'HIDE_CARD', id: 'finals' })
+						}
+						yield put({ type: 'GET_FINALS_SUCCESS' })
+					} catch (error) {
+						yield put({ type: 'GET_FINALS_ERROR', error })
+						throw error
+					}
 				}
-			})
-			if (finalsArray.length > 0) {
-				// check if finals are active
-				const finalsActive = yield call(ScheduleService.FetchFinals)
-				if (finalsActive) {
-					yield put({ type: 'SHOW_CARD', id: 'finals' })
-				} else {
-					yield put({ type: 'HIDE_CARD', id: 'finals' })
+			} else {
+				// There is no term
+				const inactiveTerm = {
+					term_name: 'No Term',
+					term_code: 'inactive'
 				}
+
+				yield put({ type: 'SET_SCHEDULE_TERM', term: inactiveTerm })
+				yield put({ type: 'SET_SCHEDULE', schedule: null })
+				yield put({ type: 'HIDE_CARD', id: 'finals' })
+				yield put({ type: 'GET_SCHEDULE_SUCCESS' })
 			}
 		} catch (error) {
+			yield put({ type: 'GET_SCHEDULE_ERROR', error })
 			console.log(error)
 		}
 	}

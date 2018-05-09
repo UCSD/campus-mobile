@@ -38,7 +38,8 @@ class ScheduleCardContainer extends React.Component {
 		logger.ga('Card Mounted: Classes')
 	}
 	componentWillReceiveProps(nextProps) {
-		if (nextProps.scheduleData) {
+		if (nextProps.scheduleData ||
+			(this.props.scheduleData && !nextProps.scheduleData)) {
 			// console.warn('receive new prop')
 			this.setState((state, props) => ({
 				...state,
@@ -57,9 +58,10 @@ class ScheduleCardContainer extends React.Component {
 		return (
 			<ScheduleCard
 				onClickCourse={this.onClickCourse}
-				// waitingData={this.state.courseDataReceived}
+				waitingData={this.props.requestStatus}
 				coursesToShow={this.state.upcoming4Courses}
 				activeCourse={this.state.activeCourse}
+				currentTerm={this.props.currentTerm}
 				actionButton={<FullScheduleButton />}
 			/>
 		)
@@ -67,7 +69,9 @@ class ScheduleCardContainer extends React.Component {
 }
 
 const mapStateToProps = state => ({
-	scheduleData: state.schedule.data
+	scheduleData: state.schedule.data,
+	currentTerm: state.schedule.currentTerm,
+	requestStatus: state.requestStatuses.GET_SCHEDULE
 })
 
 export default connect(mapStateToProps)(ScheduleCardContainer)

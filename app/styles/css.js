@@ -134,6 +134,7 @@ const css = StyleSheet.create({
 	 *  05 - Classes
 	 */
 	cc_loadingContainer: { alignItems: 'center', justifyContent: 'center', width: LAYOUT.MAX_CARD_WIDTH , height: (LAYOUT.MAX_CARD_WIDTH / 1.6216) + 44 },
+	cc_messageText: { fontWeight: '400', fontSize: 20 },
 	cc_container: { width: LAYOUT.MAX_CARD_WIDTH, aspectRatio: 1.6216, paddingTop: LAYOUT.MAX_CARD_WIDTH * 0.05, paddingBottom: LAYOUT.MAX_CARD_WIDTH * 0.05, paddingLeft: LAYOUT.MAX_CARD_WIDTH * 0.04, paddingRight: LAYOUT.MAX_CARD_WIDTH * 0.04, flexDirection: 'row' },
 	cc_leftHalf: { flex: 6 },
 	cc_leftHalf_upper: { flex: 3 },

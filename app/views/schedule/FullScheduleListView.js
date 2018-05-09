@@ -43,7 +43,12 @@ class FullSchedule extends React.Component {
 		)
 	}
 
-	renderItem = ({ item, index, section }) => (<IndividualClass data={item} />)
+	renderItem = ({ item, index, section }) => {
+		// Don't show class if it's a finals meeting
+		if (item.special_mtg_code !== 'FI') {
+			return (<IndividualClass data={item} />)
+		} else return null
+	}
 
 	render() {
 		return (

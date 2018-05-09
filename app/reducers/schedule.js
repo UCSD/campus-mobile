@@ -1,6 +1,6 @@
 const initialState = {
 	data: null,
-	lastUpdated: new Date().getTime(),
+	lastUpdated: 0,
 	currentTerm: null
 }
 
