@@ -163,7 +163,7 @@ const MainStack = StackNavigator(
 		},
 		FullSchedule: {
 			screen: FullSchedule,
-			navigationOptions: { title: 'Full Schedule' }
+			navigationOptions: { title: 'Classes' }
 		},
 		DataListViewAll: {
 			screen: DataListViewAll,

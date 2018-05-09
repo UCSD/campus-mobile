@@ -13,7 +13,7 @@ class FullSchedule extends React.Component {
 	}
 
 	componentDidMount() {
-		logger.ga('Card Mounted: Full Schedule')
+		logger.ga('View Loaded: Classes (View All)')
 	}
 
 	getScheduleArray = (scheduleObject) => {
