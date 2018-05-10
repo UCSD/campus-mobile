@@ -407,7 +407,7 @@ const css = StyleSheet.create({
 	 *  15 - Onboarding
 	 */
 	ob_container: { flexGrow: 1, backgroundColor: COLOR.PRIMARY, alignItems: 'center' },
-	ob_logo: { width: round(LAYOUT.WINDOW_WIDTH * 0.8), height: round(LAYOUT.WINDOW_WIDTH * 0.8) * 0.19, marginTop: round(LAYOUT.WINDOW_HEIGHT * 0.2) },
+	ob_logo: { width: round(LAYOUT.WINDOW_WIDTH * 0.8), height: round(LAYOUT.WINDOW_WIDTH * 0.8) * 0.19, marginTop: round(LAYOUT.WINDOW_HEIGHT * 0.15) },
 	ob_introtext: { color: COLOR.WHITE, fontSize: 22, textAlign: 'center' },
 	ob_intro1: { marginTop: 60 },
 	ob_intro2: { marginTop: 30, width: round(LAYOUT.WINDOW_WIDTH * 0.8) },
