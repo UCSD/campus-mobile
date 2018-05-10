@@ -1,8 +1,10 @@
 import { delay } from 'redux-saga'
 import { put, call, select } from 'redux-saga/effects'
 import Permissions from 'react-native-permissions'
+
 import * as LocationService from '../services/locationService'
 import { getDistance } from '../util/map'
+import AppSettings from '../AppSettings'
 
 const getLocation = state => (state.location)
 const getShuttle = state => (state.shuttle)
@@ -25,7 +27,7 @@ function* watchLocation() {
 		} catch (err) {
 			console.log('Error: watchLocation: ' + err)
 		}
-		yield delay(5000)
+		yield delay(AppSettings.LOCATION_TTL)
 	}
 }
 

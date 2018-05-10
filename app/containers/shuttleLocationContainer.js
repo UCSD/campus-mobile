@@ -2,12 +2,14 @@ import React from 'react'
 import { AppState } from 'react-native'
 import { connect } from 'react-redux'
 import TimerMixin from 'react-timer-mixin'
+
 import { updateVehicles } from '../sagas/shuttleSaga'
+import AppSettings from '../AppSettings'
 
 const ShuttleLocationContainer = React.createClass({
 	mixins: [TimerMixin],
 	locationWatch: null,
-	permissionUpdateInterval: 6000,
+	locationUpdateInterval: AppSettings.LOCATION_TTL,
 
 	componentDidMount() {
 		// start watch regardless
@@ -32,10 +34,7 @@ const ShuttleLocationContainer = React.createClass({
 		this.tryUpdateLocation()
 
 		// fire on interval
-		this.locationWatch = this.setInterval(
-			this.tryUpdateLocation,
-			this.permissionUpdateInterval
-		)
+		this.locationWatch = this.setInterval(this.tryUpdateLocation, this.locationUpdateInterval)
 	},
 
 	tryUpdateLocation() {

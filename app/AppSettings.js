@@ -30,26 +30,29 @@ module.exports = {
 	SHUTTLE_STOPS_MASTER_NO_ROUTES: 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/shuttle_stops_master_map_no_routes.json',
 	FORGOT_PASSWORD_URL: 'https://acms.ucsd.edu/students/gpasswd.html',
 
+	/* API TTLs */
+	LOCATION_TTL: 15000, // 15 seconds
+	SHUTTLE_API_TTL: 15000, // 15 seconds
+	DATA_SAGA_TTL: 60000, // 1 minute
+	WEATHER_API_TTL: 3600000, // 1 hour
+	SURF_API_TTL: 3600000, // 1 hour
+	EVENTS_API_TTL: 3600000, // 1 hour
+	NEWS_API_TTL: 3600000, // 1 hour
+	DINING_API_TTL: 3600000, // 1 hour
+	DINING_MENU_API_TTL: 3600000, // 1 hour
+	SCHEDULE_TTL: 3600000,  // 1 hour
+	SPECIAL_EVENTS_TTL: 3600000, // 1 hour
+	QUICKLINKS_API_TTL: 86400000, // 1 day
+	SHUTTLE_MASTER_TTL: 86400000, // 1 day
+
+	/* REQUEST TIMEOUTS */
+	HTTP_REQUEST_TTL: 10000, // 10 seconds
+	SSO_TTL: 15000, // 15 seconds
+
 	/* RETRIES */
 	SSO_IDP_ERROR_RETRY_INCREMENT: 10000, // 10 seconds
 	SSO_REFRESH_MAX_RETRIES: 3,
 	SSO_REFRESH_RETRY_INCREMENT: 5000, // 5 seconds
 	SSO_REFRESH_RETRY_MULTIPLIER: 3, // Multiplies increment by this amount for next try
 
-	/* TTLs */
-	WEATHER_API_TTL: 1800000, // 30 minutes
-	SURF_API_TTL: 1800000, // 30 minutes
-	EVENTS_API_TTL: 3600000, // 1 hour
-	NEWS_API_TTL: 3600000, // 1 hour
-	DINING_API_TTL: 3600000, // 1 hour
-	DINING_MENU_API_TTL: 3600000, // 1 hour
-	QUICKLINKS_API_TTL: 86400000, // 1 day
-	SHUTTLE_API_TTL: 15000, // 15 seconds
-	SHUTTLE_MASTER_TTL: 86400000, // 1 day
-	SSO_TTL: 15000, // 15 seconds
-	SCHEDULE_TTL: 60000,  // 1 minute
-	SPECIAL_EVENTS_TTL: 3600000, // 1 hour
-	DATA_SAGA_TTL: 60000, // 1 minute
-	LOCATION_TTL: 15000, // 15 seconds
-	HTTP_REQUEST_TTL: 10000, // 10 seconds
 }
