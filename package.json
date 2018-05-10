@@ -8,7 +8,6 @@
     "test": "jest",
     "insert-production-values-ci": "node scripts/replace_all.js production ci",
     "insert-production-values": "node scripts/replace_all.js production",
-    "insert-staging-values": "node scripts/replace_all.js staging",
     "insert-placeholder-values": "node scripts/replace_all.js placeholder",
     "apply-fixes": "node scripts/apply_fixes.js",
     "generate-docs": "./node_modules/.bin/jsdoc -c jsdoc.conf.json"
