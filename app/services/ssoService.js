@@ -6,7 +6,10 @@ const ssoService = {
 	retrieveAccessToken(loginInfo) {
 		return fetch(AppSettings.AUTH_SERVICE_API_URL, {
 			method: 'POST',
-			headers: { 'Authorization': loginInfo }
+			headers: {
+				'Authorization': loginInfo,
+				'x-api-key': 'AUTH_SERVICE_API_KEY_PH'
+			}
 		})
 			.then(response => (response.json()))
 			.then((data) => {
