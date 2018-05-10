@@ -59,6 +59,7 @@ class ScheduleCardContainer extends React.Component {
 			<ScheduleCard
 				onClickCourse={this.onClickCourse}
 				waitingData={this.props.requestStatus}
+				lastUpdated={this.props.lastUpdated}
 				coursesToShow={this.state.upcoming4Courses}
 				activeCourse={this.state.activeCourse}
 				currentTerm={this.props.currentTerm}
@@ -70,6 +71,7 @@ class ScheduleCardContainer extends React.Component {
 
 const mapStateToProps = state => ({
 	scheduleData: state.schedule.data,
+	lastUpdated: state.schedule.lastUpdated,
 	currentTerm: state.schedule.currentTerm,
 	requestStatus: state.requestStatuses.GET_SCHEDULE
 })

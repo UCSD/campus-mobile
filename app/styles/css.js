@@ -163,7 +163,7 @@ const css = StyleSheet.create({
 	cc_rightHalf_each_class_text: { paddingTop: 4, fontSize: 16 },
 	cc_Half_each_classAndItsType_class: { width: CC_RIGHT * 55, fontSize: CC_RIGHT * 11 },
 	cc_rightHalf_each_inActiveText: { color: COLOR.DGREY },
-	cc_last_updated: { marginLeft: 18 },
+	cc_last_updated: { marginLeft: 18, marginTop: 8 },
 	schedule_full_button_touchable: { borderTopWidth: 1, borderTopColor: COLOR.MGREY, width: LAYOUT.MAX_CARD_WIDTH },
 	schedule_full_button_text: { fontSize: 20, fontWeight: '300', color: COLOR.PRIMARY, paddingHorizontal: 14, paddingVertical: 10 },
 	fslv_container: { backgroundColor: COLOR.WHITE },
