@@ -129,11 +129,11 @@ class AccountLogin extends Component {
 				</Touchable>
 
 				<Touchable
-					onPress={() => openURL(AppSettings.FORGOT_PASSWORD_URL)}
+					onPress={() => openURL(AppSettings.ACCOUNT_HELP_URL)}
 					style={css.ua_forgotButton}
 				>
 					<Text style={css.ua_forgotText}>
-						Forgot your password?
+						Need help logging in?
 					</Text>
 				</Touchable>
 			</View>

@@ -364,6 +364,9 @@ const css = StyleSheet.create({
 	/**
 	 *  14 - Settings
 	 */
+
+	
+
 	ua_accountinfo: { flexDirection: 'row', paddingHorizontal: 10, paddingVertical: 14, alignItems: 'center' },
 	ua_loggedin: { flex: 3, flexDirection: 'row', alignItems: 'center' },
 	ua_username_checkmark: { color: COLOR.GREEN },
@@ -416,10 +419,13 @@ const css = StyleSheet.create({
 	ob_login: { marginTop: 60 },
 	ob_pass: { marginTop: 20 },
 	ob_actionscontainer: { flexDirection: 'row', marginTop: 20 },
-	ob_actions: { flex: 1 },
+	ob_help_button: { flex: 2 },
+	ob_cancel_button: { flex: 1 },
 	ob_forgotpass: { color: COLOR.WHITE, fontSize: 14, textAlign: 'left' },
 	ob_cancel: { color: COLOR.WHITE, fontSize: 14, textAlign: 'right' },
 	ob_loading_icon: { paddingTop: round(LAYOUT.WINDOW_HEIGHT * 0.25) },
+	ob_loginButton: { borderWidth: 1, borderColor: COLOR.WHITE, padding: 6, marginTop: 20, backgroundColor: COLOR.PRIMARY },
+	ob_loginText: { fontSize: 16, color: COLOR.WHITE, textAlign: 'center' },
 
 	/**
 	 *  99 - Misc

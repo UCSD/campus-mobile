@@ -150,11 +150,18 @@ class OnboardingLogin extends React.Component {
 										onSubmitEditing={() => this.onSubmit(username, password)}
 									/>
 
+									<Touchable
+										onPress={() => this.onSubmit(username, password)}
+										style={css.ob_loginButton}
+									>
+										<Text style={css.ob_loginText}>Sign in</Text>
+									</Touchable>
+
 									<View style={css.ob_actionscontainer}>
-										<Touchable style={css.ob_actions} onPress={() => openURL(AppSettings.FORGOT_PASSWORD_URL)}>
-											<Text style={css.ob_forgotpass}>Forgot password?</Text>
+										<Touchable style={css.ob_help_button} onPress={() => openURL(AppSettings.ACCOUNT_HELP_URL)}>
+											<Text style={css.ob_forgotpass}>Need help logging in?</Text>
 										</Touchable>
-										<Touchable style={css.ob_actions} onPress={() => this.skipSSO()}>
+										<Touchable style={css.ob_cancel_button} onPress={() => this.skipSSO()}>
 											<Text style={css.ob_cancel}>Cancel</Text>
 										</Touchable>
 									</View>
