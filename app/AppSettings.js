@@ -2,7 +2,7 @@ module.exports = {
 
 	/* APP CONFIG */
 	APP_NAME: 'Campus Mobile',
-	GOOGLE_ANALYTICS_ID: 'UA-XXXXXXXX-X',
+	GOOGLE_ANALYTICS_ID: 'GOOGLE_ANALYTICS_ID_PH',
 
 	/* APIs / FEEDS */
 	WEATHER_API_URL: 'https://w3wyps9yje.execute-api.us-west-2.amazonaws.com/prod/forecast?',

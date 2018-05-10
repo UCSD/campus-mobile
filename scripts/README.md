@@ -3,7 +3,7 @@
 2) In your ".campusmobile" folder, create a file "env.js" with the following content:
 
 // Modify These Values
-var APP_NAME = 'your-app-name'
+var APP_NAME = 'Your App Name'
 var GOOGLE_ANALYTICS_ID = 'Google Analytics ID Here'
 var GOOGLE_MAPS_API_KEY = 'Google Maps API Key Here'
 var FIREBASE_IOS_KEY = 'FireBase IOS API Key Here'
