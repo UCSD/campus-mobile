@@ -382,6 +382,8 @@ const css = StyleSheet.create({
 	ua_loading_icon: { paddingLeft: 8 },
 	ua_loginButtonDisabled: { backgroundColor: COLOR.DGREY },
 	ua_forgotText: { fontSize: 14, color: COLOR.PRIMARY, padding: 4 },
+	ua_panicIcon: { fontSize: 36, paddingTop: 8, alignSelf: 'center', color: COLOR.WARNING },
+	ua_panicText: { fontSize: 16, padding: 8, textAlign: 'center' },
 	ua_loginText: { fontSize: 16, color: COLOR.WHITE },
 	ua_errorText: { flex: 1, fontSize: 18, color: COLOR.MRED },
 	us_list_row: { flexDirection: 'row', alignItems: 'center', width: LAYOUT.MAX_CARD_WIDTH, borderBottomWidth: 1, borderBottomColor: COLOR.MGREY,

@@ -15,6 +15,8 @@ function schedule(state = initialState, action) {
 		case 'SET_SCHEDULE_TERM':
 			newState.currentTerm = action.term
 			return newState
+		case 'CLEAR_SCHEDULE_DATA':
+			return initialState
 		default:
 			return state
 	}

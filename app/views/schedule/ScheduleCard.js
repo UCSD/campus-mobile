@@ -130,10 +130,18 @@ const ScheduleCard = ({
 				</View>
 			)
 		) : (
-			// If we are waiting for data, show loading indicator
-			<View style={css.cc_loadingContainer}>
-				<ActivityIndicator size="large" />
-			</View>
+			(waitingData) ?
+				(
+					// If we are waiting for data, show loading indicator
+					<View style={css.cc_loadingContainer}>
+						<ActivityIndicator size="large" />
+					</View>
+				) : (
+					// Otherwise, we didn't get back any classes. :(
+					<View style={css.cc_loadingContainer}>
+						<Text>No classes to display right now.</Text>)
+					</View>
+				)
 		)}
 	</Card>
 )

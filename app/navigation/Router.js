@@ -165,6 +165,10 @@ const MainStack = StackNavigator(
 			screen: FullSchedule,
 			navigationOptions: { title: 'Classes' }
 		},
+		LoginScreen: {
+			screen: OnboardingLogin,
+			navigationOptions: { header: null }
+		},
 		DataListViewAll: {
 			screen: DataListViewAll,
 			navigationOptions: ({ navigation }) => {

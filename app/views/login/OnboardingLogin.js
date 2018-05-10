@@ -64,7 +64,13 @@ class OnboardingLogin extends React.Component {
 					console.log('Access Token: ', token)
 				})
 
-			this.props.setOnboardingViewed(true)
+			if (!this.props.onBoardingViewed) {
+				// If we're onboarding, set viewed to true
+				this.props.setOnboardingViewed(true)
+			} else {
+				// If we're not onboarding, pop the view
+				this.props.navigation.pop()
+			}
 		}
 	}
 
@@ -98,7 +104,13 @@ class OnboardingLogin extends React.Component {
 	}
 
 	skipSSO = () => {
-		this.props.setOnboardingViewed(true)
+		if (!this.props.onBoardingViewed) {
+			// If we're onboarding, set viewed to true
+			this.props.setOnboardingViewed(true)
+		} else {
+			// If we're not onboarding, pop the view
+			this.props.navigation.pop()
+		}
 	}
 
 	render() {

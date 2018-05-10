@@ -8,6 +8,7 @@ import {
 } from 'react-native'
 import { connect } from 'react-redux'
 
+import AccountPanicked from './AccountPanicked'
 import AppSettings from '../../../AppSettings'
 import Touchable from '../../common/Touchable'
 import css from '../../../styles/css'
@@ -67,6 +68,12 @@ class AccountLogin extends Component {
 
 	render() {
 		const { username, password } = this.state.credentials
+		
+		if (this.props.invalidCredentials) {
+			// Return this if user was logged out
+			return <AccountPanicked />
+		}
+		
 		return (
 			<View
 				style={css.ua_loginContainer}
@@ -143,6 +150,7 @@ class AccountLogin extends Component {
 
 function mapStateToProps(state, props) {
 	return {
+		invalidCredentials: state.user.invalidSavedCredentials,
 		requestStatus: state.requestStatuses.LOG_IN,
 		requestError: state.requestErrors.LOG_IN
 	}

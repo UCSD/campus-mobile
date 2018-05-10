@@ -1,5 +1,5 @@
 import React from 'react'
-import { Image, ScrollView } from 'react-native'
+import { Image, ScrollView, Alert } from 'react-native'
 import { connect } from 'react-redux'
 import { checkGooglePlayServices } from 'react-native-google-api-availability-bridge'
 
@@ -54,6 +54,28 @@ export class Home extends React.Component {
 		}
 	}
 
+	componentDidUpdate(prevProps) {
+		if (!prevProps.user.invalidSavedCredentials &&
+			this.props.user.invalidSavedCredentials) {
+			Alert.alert(
+				'Logged Out.',
+				'We had to log you out because we couldn\'t verify your credentials. Please log in again.',
+				[
+					{
+						text: 'Cancel',
+						style: 'cancel'
+					},
+					{
+						text: 'Log in',
+						onPress: () => {
+							this.props.navigation.navigate('LoginScreen')
+						}
+					}
+				]
+			)
+		}
+	}
+
 	handleScroll = (event) => {
 		if (this.props.updateScroll) {
 			this.props.updateScroll(event.nativeEvent.contentOffset.y)
@@ -76,35 +98,35 @@ export class Home extends React.Component {
 					}
 
 					switch (card) {
-					case 'specialEvents':
-						activeCards.push(<SpecialEventsCardContainer key="specialEvents" />)
-						break
-					case 'finals':
-						activeCards.push(<FinalsCard key="finals" />)
-						break
-					case 'schedule':
-						activeCards.push(<ScheduleCardContainer key="schedule" />)
-						break
-					case 'weather':
-						activeCards.push(<WeatherCardContainer key="weather" />)
-						break
-					case 'shuttle':
-						activeCards.push(<ShuttleCardContainer key="shuttle" />)
-						break
-					case 'dining':
-						activeCards.push(<DiningCardContainer key="dining" />)
-						break
-					case 'events':
-						activeCards.push(<EventCardContainer key="events" />)
-						break
-					case 'quicklinks':
-						activeCards.push(<QuicklinksCardContainer key="quicklinks" />)
-						break
-					case 'news':
-						activeCards.push(<NewsCardContainer key="news" />)
-						break
-					default:
-						return gracefulFatalReset(new Error('Invalid card in state: ', card))
+						case 'specialEvents':
+							activeCards.push(<SpecialEventsCardContainer key="specialEvents" />)
+							break
+						case 'finals':
+							activeCards.push(<FinalsCard key="finals" />)
+							break
+						case 'schedule':
+							activeCards.push(<ScheduleCardContainer key="schedule" />)
+							break
+						case 'weather':
+							activeCards.push(<WeatherCardContainer key="weather" />)
+							break
+						case 'shuttle':
+							activeCards.push(<ShuttleCardContainer key="shuttle" />)
+							break
+						case 'dining':
+							activeCards.push(<DiningCardContainer key="dining" />)
+							break
+						case 'events':
+							activeCards.push(<EventCardContainer key="events" />)
+							break
+						case 'quicklinks':
+							activeCards.push(<QuicklinksCardContainer key="quicklinks" />)
+							break
+						case 'news':
+							activeCards.push(<NewsCardContainer key="news" />)
+							break
+						default:
+							return gracefulFatalReset(new Error('Invalid card in state: ', card))
 					}
 				}
 			})

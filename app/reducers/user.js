@@ -26,6 +26,10 @@ function user(state = initialState, action) {
 			loggedOutState.invalidSavedCredentials = true
 			return loggedOutState
 		}
+		case 'CLEAR_INVALID_CREDS_ERROR': {
+			newState.invalidSavedCredentials = false
+			return newState
+		}
 		default:
 			return state
 	}

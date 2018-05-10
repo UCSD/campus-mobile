@@ -59,6 +59,8 @@ function* doLogin(action) {
 			// Clears any potential errors from being
 			// unable to automatically reauthorize a user
 			yield put({ type: 'AUTH_HTTP_SUCCESS' })
+
+			yield call(queryUserData)
 		}
 	} catch (error) {
 		logger.log(error)
@@ -84,6 +86,7 @@ function* doTokenRefresh() {
 					// We tried again and got the same error
 					yield put({ type: 'PANIC_LOG_OUT' })
 					yield put({ type: 'TOGGLE_AUTHENTICATED_CARDS' })
+					yield call(clearUserData)
 				}
 			}
 		}
@@ -120,6 +123,16 @@ function* doLogout(action) {
 	yield auth.destroyAccessToken()
 	yield put({ type: 'LOGGED_OUT' })
 	yield put({ type: 'TOGGLE_AUTHENTICATED_CARDS' })
+	yield call(clearUserData)
+}
+
+function* queryUserData() {
+	// perform first data calls when user is logged in
+	yield put({ type: 'UPDATE_SCHEDULE' })
+}
+
+function* clearUserData() {
+	yield put({ type: 'CLEAR_SCHEDULE_DATA' })
 }
 
 function* userSaga() {
