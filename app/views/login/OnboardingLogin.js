@@ -130,7 +130,6 @@ class OnboardingLogin extends React.Component {
 										autoCapitalize="none"
 										autoCorrect={false}
 										returnKeyType="next"
-										autoFocus={true}
 										onChange={this.handleCredentialInput('username')}
 										onSubmitEditing={(event) => {
 											this.passInput.focus()
