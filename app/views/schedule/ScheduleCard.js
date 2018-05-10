@@ -117,7 +117,7 @@ const ScheduleCard = ({
 							/>
 						</View>
 					</View>
-					<LastUpdated message="Last updated: 2 hours ago" error="warn" style={css.cc_last_updated} />
+					<LastUpdated message="Last updated: 2 hours ago" icon="warn" style={css.cc_last_updated} />
 					{actionButton}
 				</View>
 			) : (

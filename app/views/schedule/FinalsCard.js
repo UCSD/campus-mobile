@@ -49,7 +49,7 @@ class FinalsCard extends Component {
 						<ScheduleDay id={rowData.day} data={rowData.data} />
 					)}
 				/>
-				<LastUpdated message="Last updated: 11 hours ago" error="error" />
+				<LastUpdated message="Last updated: 11 hours ago" icon="error" />
 			</Card>
 		)
 	}
