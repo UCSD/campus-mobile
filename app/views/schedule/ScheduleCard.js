@@ -18,13 +18,14 @@ import COLOR from '../../styles/ColorConstants'
 const ScheduleCard = ({
 	coursesToShow,
 	waitingData,
+	lastUpdated,
 	actionButton,
 	activeCourse,
 	currentTerm,
 	onClickCourse
 }) => (
 	<Card id="schedule" title="Classes">
-		{(!waitingData) ? (
+		{(coursesToShow && coursesToShow[activeCourse]) ? (
 			(currentTerm && currentTerm.term_code !== 'inactive') ? (
 				<View style={css.cc_sc_scheduleCard}>
 					<View style={css.cc_container}>
@@ -116,8 +117,11 @@ const ScheduleCard = ({
 								index={3}
 							/>
 						</View>
-					</View>
-					<LastUpdated message="Last updated: 2 hours ago" icon="warn" style={css.cc_last_updated} />
+					</View>w
+					<LastUpdated
+						style={css.cc_last_updated}
+						lastUpdated={lastUpdated}
+					/>
 					{actionButton}
 				</View>
 			) : (

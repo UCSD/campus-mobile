@@ -49,7 +49,9 @@ class FinalsCard extends Component {
 						<ScheduleDay id={rowData.day} data={rowData.data} />
 					)}
 				/>
-				<LastUpdated message="Last updated: 11 hours ago" icon="error" />
+				<LastUpdated
+					lastUpdated={this.props.lastUpdated}
+				/>
 			</Card>
 		)
 	}
@@ -87,6 +89,10 @@ const DayItem = ({ data }) => (
 	</View>
 )
 
-const mapStateToProps = state => ({ scheduleData: state.schedule.data })
+const mapStateToProps = state => ({
+	scheduleData: state.schedule.data,
+	lastUpdated: state.schedule.lastUpdated,
+	requestError: state.requestErrors.GET_SCHEDULE
+})
 
 export default connect(mapStateToProps)(FinalsCard)
