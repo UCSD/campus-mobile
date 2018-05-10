@@ -52,7 +52,6 @@ class ScheduleCardContainer extends React.Component {
 			...prevState,
 			activeCourse: newActiveCourse,
 		}))
-		this.forceUpdate()
 	}
 	render() {
 		return (
