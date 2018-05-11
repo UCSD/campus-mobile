@@ -5,7 +5,8 @@ const initialState = {
 		classifications: null,
 		pid: null
 	},
-	invalidSavedCredentials: false
+	invalidSavedCredentials: false,
+	appUpdateRequired: false
 }
 
 function user(state = initialState, action) {
@@ -28,6 +29,10 @@ function user(state = initialState, action) {
 		}
 		case 'CLEAR_INVALID_CREDS_ERROR': {
 			newState.invalidSavedCredentials = false
+			return newState
+		}
+		case 'APP_UPDATE_REQUIRED': {
+			newState.appUpdateRequired = true
 			return newState
 		}
 		default:

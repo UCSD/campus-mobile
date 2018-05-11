@@ -144,11 +144,10 @@ module.exports = {
 	 */
 	* authorizedFetch(endpoint) {
 		// Check to see if we aren't in an error state
-		const requestErrors = state => (state.requestErrors)
 		const userState = state => (state.user)
-		const { AUTH_HTTP: authError } = yield select(requestErrors)
-		if (authError) {
-			const e = new Error('Unable to re-authorize user')
+		const { appUpdateRequired } = yield select(userState)
+		if (appUpdateRequired) {
+			const e = new Error('App update required.')
 			throw e
 		}
 

@@ -19,7 +19,7 @@ class LastUpdated extends Component {
 		if (this.props.lastUpdated) {
 			let warningComponent = null
 			let messageText = `Last updated: ${moment(this.props.lastUpdated).fromNow()}`
-			if (this.props.warning) {
+			if (this.props.warning && !this.props.error) {
 				warningComponent = (
 					<FAIcon
 						name="warning"

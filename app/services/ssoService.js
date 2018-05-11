@@ -13,7 +13,17 @@ const ssoService = {
 		})
 			.then(response => (response.json()))
 			.then((data) => {
-				if (data.errorMessage) {
+				if (data.message) {
+					switch (data.message) {
+						case 'Forbidden': {
+							return { error: { appUpdateRequired: true } }
+						}
+						default: {
+							throw new Error('Invalid response from server.')
+						}
+					}
+				}
+				else if (data.errorMessage) {
 					throw (data.errorMessage)
 				} else {
 					if (data.access_token && data.expiration) {

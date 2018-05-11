@@ -5,6 +5,8 @@ import {
 	race
 } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
+import { Alert } from 'react-native'
+
 import ssoService from '../services/ssoService'
 import { SSO_TTL, SSO_IDP_ERROR_RETRY_INCREMENT } from '../AppSettings'
 import logger from '../util/logger'
@@ -38,6 +40,21 @@ function* doLogin(action) {
 			e.name = 'ssoTimeout'
 			throw e
 		} else if (response.error) {
+			if (response.error.appUpdateRequired) {
+				yield put({ type: 'APP_UPDATE_REQUIRED' })
+
+				Alert.alert(
+					'App Update Required',
+					'If you would like to log in, please update the app.',
+					[
+						{
+							text: 'OK',
+							style: 'cancel'
+						}
+					],
+					{ cancelable: false }
+				)
+			}
 			logger.log(response)
 			throw response.error
 		} else {
@@ -102,7 +119,22 @@ function* refreshTokenRequest() {
 	const loginInfo = auth.encryptStringWithBase64(`${username}:${password}`)
 	const response = yield call(ssoService.retrieveAccessToken, loginInfo)
 
-	if (response.access_token) {
+	if (response.error.appUpdateRequired) {
+		yield put({ type: 'APP_UPDATE_REQUIRED' })
+
+		Alert.alert(
+			'App Update Required',
+			'If you would like to log in, please update the app.',
+			[
+				{
+					text: 'OK',
+					style: 'cancel'
+				}
+			],
+			{ cancelable: false }
+		)
+	}
+	else if (response.access_token) {
 		yield auth.storeAccessToken(response.access_token)
 		// Clears any potential errors from being
 		// unable to automatically reauthorize a user

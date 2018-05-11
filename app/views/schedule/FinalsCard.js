@@ -51,6 +51,11 @@ class FinalsCard extends Component {
 				/>
 				<LastUpdated
 					lastUpdated={this.props.lastUpdated}
+					error={
+						(this.props.requestError === 'App update required.') ?
+							('App update required.') :
+							(null)
+					}
 					warning={
 						(this.props.requestError) ?
 							('We\'re having trouble updating right now.') :

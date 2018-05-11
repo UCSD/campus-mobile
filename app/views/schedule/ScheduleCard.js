@@ -122,6 +122,11 @@ const ScheduleCard = ({
 					<LastUpdated
 						style={css.cc_last_updated}
 						lastUpdated={lastUpdated}
+						error={
+							(error === 'App update required.') ?
+								('App update required.') :
+								(null)
+						}
 						warning={
 							(error) ?
 								('We\'re having trouble updating right now.') :
