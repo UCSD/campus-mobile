@@ -19,6 +19,7 @@ const ScheduleCard = ({
 	coursesToShow,
 	waitingData,
 	lastUpdated,
+	error,
 	actionButton,
 	activeCourse,
 	currentTerm,
@@ -121,6 +122,11 @@ const ScheduleCard = ({
 					<LastUpdated
 						style={css.cc_last_updated}
 						lastUpdated={lastUpdated}
+						warning={
+							(error) ?
+								('We\'re having trouble updating right now.') :
+								(null)
+						}
 					/>
 					{actionButton}
 				</View>

@@ -51,6 +51,11 @@ class FinalsCard extends Component {
 				/>
 				<LastUpdated
 					lastUpdated={this.props.lastUpdated}
+					warning={
+						(this.props.requestError) ?
+							('We\'re having trouble updating right now.') :
+							(null)
+					}
 				/>
 			</Card>
 		)

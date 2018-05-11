@@ -79,9 +79,9 @@ const css = StyleSheet.create({
 	scrollcard_dotStyle: { padding: 6, paddingTop: 3, backgroundColor: 'transparent', color: COLOR.DGREY },
 	scrollcard_dotsContainer: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
 	scrollcard_listStyle: { flexDirection: 'row' },
-	card_last_updated: { flexDirection: 'row', marginLeft: 16, marginBottom: 8, alignContent: 'center' },
-	card_last_updated_text: { fontSize: 16, fontStyle: 'italic', fontWeight: '300', color: COLOR.DGREY, alignSelf: 'center' },
-	last_updated_err_icon: { fontSize: 16, marginRight: 6, alignSelf: 'center' },
+	card_last_updated: { flexDirection: 'row', alignItems: 'center', marginLeft: 16, marginBottom: 8 },
+	card_last_updated_text: { fontSize: 16, fontStyle: 'italic', fontWeight: '300', color: COLOR.DGREY },
+	last_updated_err_icon: { fontSize: 16, marginRight: 6 },
 	last_updated_err_icon_warn: { color: COLOR.WARNING },
 	last_updated_err_icon_error: { color: COLOR.ERROR },
 
