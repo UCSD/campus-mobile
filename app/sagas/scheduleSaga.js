@@ -62,7 +62,7 @@ function* updateSchedule() {
 						}
 						yield put({ type: 'GET_FINALS_SUCCESS' })
 					} catch (error) {
-						yield put({ type: 'GET_FINALS_ERROR', error })
+						yield put({ type: 'GET_FINALS_FAILURE', error })
 						throw error
 					}
 				}
@@ -79,7 +79,7 @@ function* updateSchedule() {
 				yield put({ type: 'GET_SCHEDULE_SUCCESS' })
 			}
 		} catch (error) {
-			yield put({ type: 'GET_SCHEDULE_ERROR', error })
+			yield put({ type: 'GET_SCHEDULE_FAILURE', error })
 			console.log(error)
 		}
 	}

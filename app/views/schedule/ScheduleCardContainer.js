@@ -59,7 +59,7 @@ class ScheduleCardContainer extends React.Component {
 				onClickCourse={this.onClickCourse}
 				waitingData={this.props.requestStatus}
 				lastUpdated={this.props.lastUpdated}
-				error={this.requestError}
+				error={this.props.requestError}
 				coursesToShow={this.state.upcoming4Courses}
 				activeCourse={this.state.activeCourse}
 				currentTerm={this.props.currentTerm}

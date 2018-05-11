@@ -21,13 +21,19 @@ class LastUpdated extends Component {
 			let messageText = `Last updated: ${moment(this.props.lastUpdated).fromNow()}`
 			if (this.props.warning) {
 				warningComponent = (
-					<FAIcon name="warning" style={[css.last_updated_err_icon, css.last_updated_err_icon_warn]} />
+					<FAIcon
+						name="warning"
+						style={[css.last_updated_err_icon, css.last_updated_err_icon_warn]}
+					/>
 				)
 				messageText = this.props.warning
 			}
 			else if (this.props.error) {
 				warningComponent = (
-					<FAIcon name="warning" style={[css.last_updated_err_icon, css.last_updated_err_icon_error]} />
+					<FAIcon
+						name="warning"
+						style={[css.last_updated_err_icon, css.last_updated_err_icon_error]}
+					/>
 				)
 				messageText = this.props.error
 			}
