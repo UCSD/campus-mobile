@@ -13,7 +13,7 @@ const AccountPanicked = ({ clearInvalidCredentialsError }) => (
 	<View style={css.ua_loginContainer}>
 		<FAIcon name="warning" style={css.ua_panicIcon} />
 		<Text style={css.ua_panicText}>
-			{'We had to log you out because we couldn\'t verify your credentials. Please log in again.'}
+			{'You have been logged out because your credentials could not be verified. Please try to log in again.'}
 		</Text>
 		<Touchable
 			onPress={() => clearInvalidCredentialsError()}

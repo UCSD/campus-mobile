@@ -59,7 +59,7 @@ export class Home extends React.Component {
 			this.props.user.invalidSavedCredentials) {
 			Alert.alert(
 				'Logged Out.',
-				'We had to log you out because we couldn\'t verify your credentials. Please log in again.',
+				'You have been logged out because your credentials could not be verified. Please try to log in again.',
 				[
 					{
 						text: 'Cancel',
