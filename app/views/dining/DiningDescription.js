@@ -1,29 +1,24 @@
-import React from 'react';
+import React from 'react'
 import {
 	View,
 	Text,
-} from 'react-native';
-import moment from 'moment';
-import DiningHours from './DiningHours';
+} from 'react-native'
+import DiningHours from './DiningHours'
 
-import css from '../../styles/css';
-
-const dining = require('../../util/dining');
+import css from '../../styles/css'
 
 const DiningDescription = ({
 	name, description, regularHours, specialHours, paymentOptions
 }) => {
-	const hoursStatus = dining.getOpenStatus(regularHours, specialHours);
-
-	let paymentOptionsText = null;
+	let paymentOptionsText = null
 	if (paymentOptions) {
 		paymentOptions.forEach((option) => {
 			if (!paymentOptionsText) {
-				paymentOptionsText = option;
+				paymentOptionsText = option
 			} else {
-				paymentOptionsText += `, ${option}`;
+				paymentOptionsText += `, ${option}`
 			}
-		});
+		})
 	}
 
 	return (
@@ -45,14 +40,12 @@ const DiningDescription = ({
 			}
 			<DiningHours
 				hours={regularHours}
-				status={hoursStatus}
 			/>
 
 			{(specialHours) ?
 				(
 					<DiningHours
 						hours={specialHours}
-						status={hoursStatus}
 						specialHours
 					/>
 				) : null
@@ -69,7 +62,7 @@ const DiningDescription = ({
 				: null
 			}
 		</View>
-	);
-};
+	)
+}
 
-export default DiningDescription;
+export default DiningDescription
