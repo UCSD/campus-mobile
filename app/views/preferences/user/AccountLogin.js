@@ -52,6 +52,7 @@ class AccountLogin extends Component {
 				Alert.alert(
 					'Sign in error',
 					this.props.requestError,
+					null,
 					{ cancelable: false }
 				)
 			}
