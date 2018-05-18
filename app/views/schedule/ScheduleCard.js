@@ -24,138 +24,143 @@ const ScheduleCard = ({
 	activeCourse,
 	currentTerm,
 	onClickCourse
-}) => (
-	<Card id="schedule" title="Classes">
-		{(coursesToShow && coursesToShow[activeCourse]) ? (
-			(currentTerm && currentTerm.term_code !== 'inactive') ? (
-				<View style={css.cc_sc_scheduleCard}>
-					<View style={css.cc_container}>
-						<View style={css.cc_leftHalf}>
-							<View style={css.cc_leftHalf_upper}>
-								<View style={css.cc_leftHalf_upper_timeText}>
-									<ScheduleText style={css.cc_leftHalf_upper_timeText_firstSection}>
-										{/* Today 9 */}
-										{schedule.dayOfWeekInterpreter(coursesToShow[activeCourse].day_code)}
+}) => {
+	if (coursesToShow && coursesToShow[activeCourse]) {
+		if (currentTerm && currentTerm.term_code !== 'inactive') {
+			return (
+				<Card id="schedule" title="Classes">
+					<View style={css.cc_sc_scheduleCard}>
+						<View style={css.cc_container}>
+							<View style={css.cc_leftHalf}>
+								<View style={css.cc_leftHalf_upper}>
+									<View style={css.cc_leftHalf_upper_timeText}>
+										<ScheduleText style={css.cc_leftHalf_upper_timeText_firstSection}>
+											{/* Today 9 */}
+											{schedule.dayOfWeekInterpreter(coursesToShow[activeCourse].day_code)}
+										</ScheduleText>
+										<ScheduleText style={css.cc_leftHalf_upper_timeText_secondSection}>
+											{/* AM */}
+										</ScheduleText>
+									</View>
+									<ScheduleText style={css.cc_leftHalf_upper_classText_firstSection}>
+										{coursesToShow[activeCourse].subject_code + ' '
+											+ coursesToShow[activeCourse].course_code}
 									</ScheduleText>
-									<ScheduleText style={css.cc_leftHalf_upper_timeText_secondSection}>
-										{/* AM */}
+									<ScheduleText style={css.cc_leftHalf_upper_classText_secondSection}>
+										{coursesToShow[activeCourse].meeting_type}
 									</ScheduleText>
 								</View>
-								<ScheduleText style={css.cc_leftHalf_upper_classText_firstSection}>
-									{coursesToShow[activeCourse].subject_code + ' '
-										+ coursesToShow[activeCourse].course_code}
-								</ScheduleText>
-								<ScheduleText style={css.cc_leftHalf_upper_classText_secondSection}>
-									{coursesToShow[activeCourse].meeting_type}
-								</ScheduleText>
+								<View style={css.cc_leftHalf_lower}>
+									<View style={css.cc_leftHalf_lower_sections}>
+										<FAIcon style={css.cc_icon_time} size={42} name="clock-o" />
+										<View style={css.cc_leftHalf_lower_sections_text}>
+											<ScheduleText style={css.cc_leftHalf_lower_sections_text_bottomSection}>
+												Start and Finish Time
+											</ScheduleText>
+											<ScheduleText style={css.cc_leftHalf_lower_sections_text_topSection}>
+												{/* In Session */}
+												{coursesToShow[activeCourse].time_string}
+											</ScheduleText>
+										</View>
+									</View>
+									<View style={css.cc_leftHalf_lower_sections}>
+										<FAIcon style={css.cc_icon_building} size={42} name="building-o" />
+										<View style={css.cc_leftHalf_lower_sections_text}>
+											<ScheduleText style={css.cc_leftHalf_lower_sections_text_bottomSection}>
+												{/* In Sixth College */}
+												Class Room Location
+											</ScheduleText>
+											<ScheduleText style={css.cc_leftHalf_lower_sections_text_topSection}>
+												{/* Pepper Canyon Hall 106 */}
+												{coursesToShow[activeCourse].building + ' '
+												+ coursesToShow[activeCourse].room}
+											</ScheduleText>
+										</View>
+									</View>
+									<View style={css.cc_leftHalf_lower_sections}>
+										<FAIcon style={css.cc_icon_lettergrade} size={42} name="check-square-o" />
+										<View style={css.cc_leftHalf_lower_sections_text}>
+											<ScheduleText style={css.cc_leftHalf_lower_sections_text_bottomSection}>
+												{/* Last Class Ends at 10:00 AM */}
+												Evaluation Option
+											</ScheduleText>
+											<ScheduleText style={css.cc_leftHalf_lower_sections_text_topSection}>
+												{/* 1 More Class Today */}
+												{coursesToShow[activeCourse].grade_option === 'L' ?
+													'Letter Grade' : 'Pass/No Pass'}
+											</ScheduleText>
+										</View>
+									</View>
+								</View>
 							</View>
-							<View style={css.cc_leftHalf_lower}>
-								<View style={css.cc_leftHalf_lower_sections}>
-									<FAIcon style={css.cc_icon_time} size={42} name="clock-o" />
-									<View style={css.cc_leftHalf_lower_sections_text}>
-										<ScheduleText style={css.cc_leftHalf_lower_sections_text_bottomSection}>
-											Start and Finish Time
-										</ScheduleText>
-										<ScheduleText style={css.cc_leftHalf_lower_sections_text_topSection}>
-											{/* In Session */}
-											{coursesToShow[activeCourse].time_string}
-										</ScheduleText>
-									</View>
-								</View>
-								<View style={css.cc_leftHalf_lower_sections}>
-									<FAIcon style={css.cc_icon_building} size={42} name="building-o" />
-									<View style={css.cc_leftHalf_lower_sections_text}>
-										<ScheduleText style={css.cc_leftHalf_lower_sections_text_bottomSection}>
-											{/* In Sixth College */}
-											Class Room Location
-										</ScheduleText>
-										<ScheduleText style={css.cc_leftHalf_lower_sections_text_topSection}>
-											{/* Pepper Canyon Hall 106 */}
-											{coursesToShow[activeCourse].building + ' '
-											+ coursesToShow[activeCourse].room}
-										</ScheduleText>
-									</View>
-								</View>
-								<View style={css.cc_leftHalf_lower_sections}>
-									<FAIcon style={css.cc_icon_lettergrade} size={42} name="check-square-o" />
-									<View style={css.cc_leftHalf_lower_sections_text}>
-										<ScheduleText style={css.cc_leftHalf_lower_sections_text_bottomSection}>
-											{/* Last Class Ends at 10:00 AM */}
-											Evaluation Option
-										</ScheduleText>
-										<ScheduleText style={css.cc_leftHalf_lower_sections_text_topSection}>
-											{/* 1 More Class Today */}
-											{coursesToShow[activeCourse].grade_option === 'L' ?
-												'Letter Grade' : 'Pass/No Pass'}
-										</ScheduleText>
-									</View>
-								</View>
+							<View style={css.cc_rightHalf}>
+								<DayItem
+									data={coursesToShow[0]}
+									active={activeCourse === 0}
+									onClick={onClickCourse}
+									index={0}
+								/>
+								<DayItem
+									data={coursesToShow[1]}
+									active={activeCourse === 1}
+									onClick={onClickCourse}
+									index={1}
+								/>
+								<DayItem
+									data={coursesToShow[2]}
+									active={activeCourse === 2}
+									onClick={onClickCourse}
+									index={2}
+								/>
+								<DayItem
+									data={coursesToShow[3]}
+									active={activeCourse === 3}
+									onClick={onClickCourse}
+									index={3}
+								/>
 							</View>
 						</View>
-						<View style={css.cc_rightHalf}>
-							<DayItem
-								data={coursesToShow[0]}
-								active={activeCourse === 0}
-								onClick={onClickCourse}
-								index={0}
-							/>
-							<DayItem
-								data={coursesToShow[1]}
-								active={activeCourse === 1}
-								onClick={onClickCourse}
-								index={1}
-							/>
-							<DayItem
-								data={coursesToShow[2]}
-								active={activeCourse === 2}
-								onClick={onClickCourse}
-								index={2}
-							/>
-							<DayItem
-								data={coursesToShow[3]}
-								active={activeCourse === 3}
-								onClick={onClickCourse}
-								index={3}
-							/>
-						</View>
-					</View>w
-					<LastUpdated
-						style={css.cc_last_updated}
-						lastUpdated={lastUpdated}
-						error={
-							(error === 'App update required.') ?
-								('App update required.') :
-								(null)
-						}
-						warning={
-							(error) ?
-								('We\'re having trouble updating right now.') :
-								(null)
-						}
-					/>
-					{actionButton}
-				</View>
-			) : (
-				<View style={css.cc_loadingContainer}>
-					<Text>No classes to display right now.</Text>)
-				</View>
+						<LastUpdated
+							style={css.cc_last_updated}
+							lastUpdated={lastUpdated}
+							error={
+								(error === 'App update required.') ?
+									('App update required.') :
+									(null)
+							}
+							warning={
+								(error) ?
+									('We\'re having trouble updating right now.') :
+									(null)
+							}
+						/>
+						{actionButton}
+					</View>
+				</Card>
 			)
-		) : (
-			(waitingData) ?
-				(
-					// If we are waiting for data, show loading indicator
-					<View style={css.cc_loadingContainer}>
-						<ActivityIndicator size="large" />
-					</View>
-				) : (
-					// Otherwise, we didn't get back any classes. :(
-					<View style={css.cc_loadingContainer}>
-						<Text>No classes to display right now.</Text>)
-					</View>
-				)
-		)}
-	</Card>
-)
+		}
+	}
+	else if (waitingData) {
+		return (
+			<Card id="schedule" title="Classes">
+				{/* If we are waiting for data, show loading indicator */}
+				<View style={css.cc_loadingContainer}>
+					<ActivityIndicator size="large" />
+				</View>
+			</Card>
+		)
+	}
+	else {
+		return (
+			<Card id="schedule" title="Classes">
+				{/* Otherwise, we didn't get back any classes. :( */}
+				<View style={css.cc_loadingContainer}>
+					<Text>No classes to display right now.</Text>
+				</View>
+			</Card>
+		)
+	}
+}
 
 const ScheduleText = ({ style, children }) => (
 	<Text

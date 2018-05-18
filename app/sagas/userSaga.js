@@ -102,7 +102,6 @@ function* doTokenRefresh() {
 				if (secondError.message === invalidCredsMessage) {
 					// We tried again and got the same error
 					yield put({ type: 'PANIC_LOG_OUT' })
-					yield put({ type: 'TOGGLE_AUTHENTICATED_CARDS' })
 					yield call(clearUserData)
 				}
 			}
@@ -151,10 +150,7 @@ function* doTimeOut() {
 }
 
 function* doLogout(action) {
-	yield auth.destroyUserCreds()
-	yield auth.destroyAccessToken()
 	yield put({ type: 'LOGGED_OUT' })
-	yield put({ type: 'TOGGLE_AUTHENTICATED_CARDS' })
 	yield call(clearUserData)
 }
 
@@ -164,6 +160,9 @@ function* queryUserData() {
 }
 
 function* clearUserData() {
+	yield put({ type: 'TOGGLE_AUTHENTICATED_CARDS' })
+	yield auth.destroyUserCreds()
+	yield auth.destroyAccessToken()
 	yield put({ type: 'CLEAR_SCHEDULE_DATA' })
 }
 
