@@ -19,69 +19,96 @@ function* doLogin(action) {
 		password,
 	} = action
 
-	yield put({ type: 'LOG_IN_REQUEST' })
-	try {
-		if (!password || password.length === 0) {
-			const e = new Error('Please type in your password.')
-			e.name = 'emptyPasswordError'
-			yield call(delay, 0)
-			throw e
+	// DEMO ACCOUNTS
+	if (username === 'studentdemo' && password === 'studentdemo') {
+		yield put({ type: 'LOG_IN_REQUEST' })
+		yield put({ type: 'ACTIVATE_STUDENT_DEMO_ACCOUNT' })
+		yield call(delay, 750)
+
+		// Successfully logged in
+		yield auth.storeUserCreds(username, password)
+
+		// Set up user profile
+		const newProfile = {
+			username: 'Student Demo',
+			pid: 'fakepid',
+			classifications: { student: true }
 		}
-		const passwordEncrypted = yield auth.encryptStringWithKey(password)
-		const loginInfo = auth.encryptStringWithBase64(`${username}:${passwordEncrypted}`)
 
-		const { response, timeout } = yield race({
-			response: call(ssoService.retrieveAccessToken, loginInfo),
-			timeout: call(delay, SSO_TTL)
-		})
+		yield put({ type: 'LOGGED_IN', profile: newProfile })
+		yield put({ type: 'LOG_IN_SUCCESS' })
+		yield put({ type: 'TOGGLE_AUTHENTICATED_CARDS' })
 
-		if (timeout) {
-			const e = new Error('Logging in timed out.')
-			e.name = 'ssoTimeout'
-			throw e
-		} else if (response.error) {
-			if (response.error.appUpdateRequired) {
-				yield put({ type: 'APP_UPDATE_REQUIRED' })
+		// Clears any potential errors from being
+		// unable to automatically reauthorize a user
+		yield put({ type: 'AUTH_HTTP_SUCCESS' })
 
-				Alert.alert(
-					'App Update Required',
-					'If you would like to log in, please update the app.',
-					[
-						{
-							text: 'OK',
-							style: 'cancel'
-						}
-					],
-					{ cancelable: false }
-				)
+		yield call(queryUserData)
+	} else {
+		yield put({ type: 'LOG_IN_REQUEST' })
+		try {
+			if (!password || password.length === 0) {
+				const e = new Error('Please type in your password.')
+				e.name = 'emptyPasswordError'
+				yield call(delay, 0)
+				throw e
 			}
-			logger.log(response)
-			throw response.error
-		} else {
-			// Successfully logged in
-			yield auth.storeUserCreds(username, passwordEncrypted)
-			yield auth.storeAccessToken(response.access_token)
+			const passwordEncrypted = yield auth.encryptStringWithKey(password)
+			const loginInfo = auth.encryptStringWithBase64(`${username}:${passwordEncrypted}`)
 
-			// Set up user profile
-			const newProfile = {
-				username,
-				pid: response.pid,
-				classifications: { student: Boolean(response.pid) }
+			const { response, timeout } = yield race({
+				response: call(ssoService.retrieveAccessToken, loginInfo),
+				timeout: call(delay, SSO_TTL)
+			})
+
+			if (timeout) {
+				const e = new Error('Logging in timed out.')
+				e.name = 'ssoTimeout'
+				throw e
+			} else if (response.error) {
+				if (response.error.appUpdateRequired) {
+					yield put({ type: 'APP_UPDATE_REQUIRED' })
+
+					Alert.alert(
+						'App Update Required',
+						'If you would like to log in, please update the app.',
+						[
+							{
+								text: 'OK',
+								style: 'cancel'
+							}
+						],
+						{ cancelable: false }
+					)
+				}
+				logger.log(response)
+				throw response.error
+			} else {
+				// Successfully logged in
+				yield auth.storeUserCreds(username, passwordEncrypted)
+				yield auth.storeAccessToken(response.access_token)
+
+				// Set up user profile
+				const newProfile = {
+					username,
+					pid: response.pid,
+					classifications: { student: Boolean(response.pid) }
+				}
+
+				yield put({ type: 'LOGGED_IN', profile: newProfile })
+				yield put({ type: 'LOG_IN_SUCCESS' })
+				yield put({ type: 'TOGGLE_AUTHENTICATED_CARDS' })
+
+				// Clears any potential errors from being
+				// unable to automatically reauthorize a user
+				yield put({ type: 'AUTH_HTTP_SUCCESS' })
+
+				yield call(queryUserData)
 			}
-
-			yield put({ type: 'LOGGED_IN', profile: newProfile })
-			yield put({ type: 'LOG_IN_SUCCESS' })
-			yield put({ type: 'TOGGLE_AUTHENTICATED_CARDS' })
-
-			// Clears any potential errors from being
-			// unable to automatically reauthorize a user
-			yield put({ type: 'AUTH_HTTP_SUCCESS' })
-
-			yield call(queryUserData)
+		} catch (error) {
+			logger.log(error)
+			yield put({ type: 'LOG_IN_FAILURE', error })
 		}
-	} catch (error) {
-		logger.log(error)
-		yield put({ type: 'LOG_IN_FAILURE', error })
 	}
 }
 

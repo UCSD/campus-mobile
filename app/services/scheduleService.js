@@ -3,12 +3,12 @@ import { authorizedFetch } from '../util/auth'
 const AppSettings = require('../AppSettings')
 
 const ScheduleService = {
-	* FetchSchedule(term) {
+	* FetchSchedule(term, isStudentDemo) {
 		try {
 			const data = []
 
 			// Query api for undergrad classes
-			const undergrad = yield authorizedFetch(AppSettings.ACADEMIC_HISTORY_API_URL +
+			const undergrad = yield authorizedFetch(AppSettings.ACADEMIC_HISTORY_API_URL(isStudentDemo) +
 				`?academic_level=UN&term_code=${term}`)
 			// Add to data if there is class data
 			if (undergrad.data) {
@@ -16,7 +16,7 @@ const ScheduleService = {
 			}
 
 			// Query api for graduate classes
-			const grad = yield authorizedFetch(AppSettings.ACADEMIC_HISTORY_API_URL +
+			const grad = yield authorizedFetch(AppSettings.ACADEMIC_HISTORY_API_URL(isStudentDemo) +
 				`?academic_level=GR&term_code=${term}`)
 			// Add to data if there is class data
 			if (grad.data) {
@@ -33,15 +33,15 @@ const ScheduleService = {
 		}
 	},
 
-	FetchTerm() {
+	FetchTerm(isStudentDemo) {
 		return fetch(AppSettings.ACADEMIC_TERM_API_URL)
 			.then(response => response.json())
 			.then(responseData => responseData)
 			.catch((error) => { throw error })
 	},
 
-	FetchFinals() {
-		return fetch(AppSettings.ACADEMIC_TERM_API_URL + '/finals')
+	FetchFinals(isStudentDemo) {
+		return fetch(AppSettings.ACADEMIC_TERM_FINALS_API_URL(isStudentDemo))
 			.then(response => response.json())
 			.then(responseData => responseData)
 			.catch((error) => { throw error })
