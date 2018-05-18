@@ -16,10 +16,8 @@ module.exports = {
 	MAP_SEARCH_API_URL: 'https://xgu9qa7gx4.execute-api.us-west-2.amazonaws.com/prod/v2/map/search?region=0&query=',
 	SPECIAL_EVENT_API_URL: 'https://2jjml3hf27.execute-api.us-west-2.amazonaws.com/prod/events/special',
 	ACADEMIC_HISTORY_API_URL: 'https://api.ucsd.edu:8245/student/my/academic_history/v1/class_list',
-
-	// DEV/QA ENDPOINTS - UPDATE TO PROD
-	AUTH_SERVICE_API_URL: 'https://3hepzvdimd.execute-api.us-west-2.amazonaws.com/dev/v1/access-profile',
-	ACADEMIC_TERM_API_URL: 'https://m9zc9vs4f1.execute-api.us-west-2.amazonaws.com/dev/v1/term/current',
+	AUTH_SERVICE_API_URL: 'https://c12cf2xke8.execute-api.us-west-2.amazonaws.com/prod/v1/access-profile',
+	ACADEMIC_TERM_API_URL: 'https://btgre7sss6.execute-api.us-west-2.amazonaws.com/prod/v1/term/current',
 
 	/* RESOURCES */
 	SHUTTLE_SCHEDULE_URL: 'https://transportation.ucsd.edu/shuttles/',
