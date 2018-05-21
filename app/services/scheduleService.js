@@ -19,7 +19,7 @@ const ScheduleService = {
 			const grad = yield authorizedFetch(AppSettings.ACADEMIC_HISTORY_API_URL(isStudentDemo) +
 				`?academic_level=GR&term_code=${term}`)
 			// Add to data if there is class data
-			if (grad.data) {
+			if (grad.data && !isStudentDemo) {
 				data.push(...grad.data)
 			}
 
