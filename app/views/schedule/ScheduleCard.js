@@ -33,15 +33,9 @@ const ScheduleCard = ({
 						<View style={css.cc_container}>
 							<View style={css.cc_leftHalf}>
 								<View style={css.cc_leftHalf_upper}>
-									<View style={css.cc_leftHalf_upper_timeText}>
-										<ScheduleText style={css.cc_leftHalf_upper_timeText_firstSection}>
-											{/* Today 9 */}
-											{schedule.dayOfWeekInterpreter(coursesToShow[activeCourse].day_code)}
-										</ScheduleText>
-										<ScheduleText style={css.cc_leftHalf_upper_timeText_secondSection}>
-											{/* AM */}
-										</ScheduleText>
-									</View>
+									<ScheduleText style={css.cc_leftHalf_upper_timeText}>
+										{schedule.dayOfWeekInterpreter(coursesToShow[activeCourse].day_code)}
+									</ScheduleText>
 									<ScheduleText style={css.cc_leftHalf_upper_classText_firstSection}>
 										{coursesToShow[activeCourse].subject_code + ' '
 											+ coursesToShow[activeCourse].course_code}
