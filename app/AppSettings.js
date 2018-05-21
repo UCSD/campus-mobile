@@ -16,13 +16,13 @@ module.exports = {
 	MAP_SEARCH_API_URL: 'https://xgu9qa7gx4.execute-api.us-west-2.amazonaws.com/prod/v2/map/search?region=0&query=',
 	SPECIAL_EVENT_API_URL: 'https://2jjml3hf27.execute-api.us-west-2.amazonaws.com/prod/events/special',
 	ACADEMIC_HISTORY_API_URL(isStudentDemo) {
-		if (isStudentDemo) return 'https://37dnvmiclj.execute-api.us-west-2.amazonaws.com/dev/v1/demo/student/class_list'
+		if (isStudentDemo) return 'https://pad7kcyzo1.execute-api.us-west-2.amazonaws.com/prod/v1/demo/student/class_list'
 		else return 'https://api.ucsd.edu:8245/student/my/academic_history/v1/class_list'
 	},
 	AUTH_SERVICE_API_URL: 'https://c12cf2xke8.execute-api.us-west-2.amazonaws.com/prod/v1/access-profile',
 	ACADEMIC_TERM_API_URL: 'https://btgre7sss6.execute-api.us-west-2.amazonaws.com/prod/v1/term/current',
 	ACADEMIC_TERM_FINALS_API_URL(isStudentDemo) {
-		if (isStudentDemo) return 'https://37dnvmiclj.execute-api.us-west-2.amazonaws.com/dev/v1/demo/term/current/finals'
+		if (isStudentDemo) return 'https://pad7kcyzo1.execute-api.us-west-2.amazonaws.com/prod/v1/demo/term/current/finals'
 		else return 'https://btgre7sss6.execute-api.us-west-2.amazonaws.com/prod/v1/term/current/finals'
 	},
 
