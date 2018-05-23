@@ -7,6 +7,7 @@ import {
 
 import ScheduleService from '../services/scheduleService'
 import schedule from '../util/schedule'
+import logger from '../util/logger'
 import { SCHEDULE_TTL } from '../AppSettings'
 
 const getSchedule = state => (state.schedule)
@@ -81,6 +82,7 @@ function* updateSchedule() {
 		} catch (error) {
 			yield put({ type: 'GET_SCHEDULE_FAILURE', error })
 			console.log(error)
+			logger.trackException(error.toString(), false)
 		}
 	}
 }

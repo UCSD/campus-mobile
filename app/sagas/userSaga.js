@@ -129,6 +129,7 @@ function* doTokenRefresh() {
 				if (secondError.message === invalidCredsMessage) {
 					// We tried again and got the same error
 					yield put({ type: 'PANIC_LOG_OUT' })
+					logger.trackException('InvalidCreds Error', false)
 					yield call(clearUserData)
 				}
 			}
