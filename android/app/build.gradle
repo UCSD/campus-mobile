@@ -154,7 +154,7 @@ android {
 dependencies {
     compile project(':react-native-restart')
     compile project(':react-native-fcm')
-    compile 'com.google.firebase:firebase-core:11.0.+'
+    compile 'com.google.firebase:firebase-core:11.0.4'
     compile project(':react-native-google-analytics-bridge')
     compile project(':react-native-keychain')
     compile project(':react-native-exit-app')
@@ -167,10 +167,10 @@ dependencies {
         exclude group: 'com.google.android.gms', module: 'play-services-base'
         exclude group: 'com.google.android.gms', module: 'play-services-maps'
     }
-    compile ("com.google.android.gms:play-services-base:11.0.+") {
+    compile ("com.google.android.gms:play-services-base:11.0.4") {
         force = true;
     }
-    compile ("com.google.android.gms:play-services-maps:11.0.+") {
+    compile ("com.google.android.gms:play-services-maps:11.0.4") {
         force = true;
     }
 }
