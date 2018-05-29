@@ -1,7 +1,8 @@
-import { GOOGLE_ANALYTICS_ID } from '../AppSettings';
-import { GoogleAnalyticsTracker } from 'react-native-google-analytics-bridge';
+import { GoogleAnalyticsTracker } from 'react-native-google-analytics-bridge'
 
-let tracker = new GoogleAnalyticsTracker(GOOGLE_ANALYTICS_ID);
+import { GOOGLE_ANALYTICS_ID } from '../AppSettings'
+
+const tracker = new GoogleAnalyticsTracker(GOOGLE_ANALYTICS_ID)
 
 /**
  * A module containing logging helper functions
@@ -15,7 +16,7 @@ module.exports = {
 	 * @param {string} msg The message to log
 	 */
 	log(msg) {
-		console.log(msg);
+		console.log(msg)
 	},
 
 	/**
@@ -24,7 +25,7 @@ module.exports = {
 	 * @param {string} msg The message to log
 	 */
 	ga(msg) {
-		tracker.trackScreenView(msg);
+		tracker.trackScreenView(msg)
 	},
 
 
@@ -35,7 +36,7 @@ module.exports = {
 	 * @param {string} action The name of the action
 	 */
 	trackEvent(category, action) {
-		tracker.trackEvent(category, action);
+		tracker.trackEvent(category, action)
 	},
 
 	/**
@@ -45,7 +46,8 @@ module.exports = {
 	 * @param {bool} fatal If the crash was fatal or not
 	 */
 	trackException(error, fatal) {
-		tracker.trackException(error, fatal);
+		tracker.trackEvent('Error', error)
+		// tracker.trackException(error, fatal);
 	},
 
-};
+}
