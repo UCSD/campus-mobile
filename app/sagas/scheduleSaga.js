@@ -82,7 +82,10 @@ function* updateSchedule() {
 		} catch (error) {
 			yield put({ type: 'GET_SCHEDULE_FAILURE', error })
 			console.log(error)
-			logger.trackException(error.toString(), false)
+			const errorDescription = error.toString()
+			let errorStack
+			if (error.stack) errorStack = error.stack.toString()
+			logger.trackException(`${errorDescription} ${errorStack}`, false)
 		}
 	}
 }

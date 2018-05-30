@@ -107,6 +107,10 @@ function* doLogin(action) {
 			}
 		} catch (error) {
 			logger.log(error)
+			const errorDescription = error.toString()
+			let errorStack
+			if (error.stack) errorStack = error.stack.toString()
+			logger.trackException(`${errorDescription} ${errorStack}`, false)
 			yield put({ type: 'LOG_IN_FAILURE', error })
 		}
 	}
