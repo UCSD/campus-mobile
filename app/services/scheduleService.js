@@ -11,7 +11,7 @@ const ScheduleService = {
 			const undergrad = yield authorizedFetch(AppSettings.ACADEMIC_HISTORY_API_URL(isStudentDemo) +
 				`?academic_level=UN&term_code=${term}`)
 			// Add to data if there is class data
-			if (undergrad.data) {
+			if (undergrad.data && Array.isArray(undergrad.data)) {
 				data.push(...undergrad.data)
 			}
 
@@ -19,7 +19,7 @@ const ScheduleService = {
 			const grad = yield authorizedFetch(AppSettings.ACADEMIC_HISTORY_API_URL(isStudentDemo) +
 				`?academic_level=GR&term_code=${term}`)
 			// Add to data if there is class data
-			if (grad.data && !isStudentDemo) {
+			if (grad.data && Array.isArray(grad.data) && !isStudentDemo) {
 				data.push(...grad.data)
 			}
 
