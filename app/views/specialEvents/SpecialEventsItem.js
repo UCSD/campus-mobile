@@ -39,18 +39,16 @@ const SpecialEventsItem = ({ navigation, specialEventsData, saved, add, remove, 
 					) : null }
 
 					<View style={styles.labelView}>
-						<Text style={styles.labelText}>{getHumanizedDuration(specialEventsData['start-time'], specialEventsData['end-time'])}</Text>
+						{ specialEventsData.label ? (
+							<Text style={[styles.labelText, { color: specialEventsData['label-theme'] ? specialEventsData['label-theme'] : COLOR_BLACK }]}>{specialEventsData.label}</Text>
+						) : null }
 						{ specialEventsData['talk-type'] === 'Keynote' ? (
 							<Text style={styles.labelText}>{specialEventsData['talk-type']}</Text>
 						) : null }
 						{ specialEventsData.label || specialEventsData['talk-type'] === 'Keynote' ? (
 							<Text style={styles.labelText}> - </Text>
 						) : null }
-						<Text style={styles.labelTextContainer} numberOfLines={1}>
-							{ Array.isArray(specialEventsData.label) ? (
-								specialEventsData.label.map((item, index) => <Text key={item + index} style={[styles.labelText, { color: Array.isArray(specialEventsData['label-theme']) ? specialEventsData['label-theme'][index] : COLOR_BLACK }]}>{item}</Text>)
-							) : null }
-						</Text>
+						<Text style={styles.labelText}>{getHumanizedDuration(specialEventsData['start-time'], specialEventsData['end-time'])}</Text>
 					</View>
 				</View>
 			</Touchable>
