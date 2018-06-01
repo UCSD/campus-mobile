@@ -42,9 +42,6 @@ const SpecialEventsItem = ({ navigation, specialEventsData, saved, add, remove, 
 						{ specialEventsData.label ? (
 							<Text style={[styles.labelText, { color: specialEventsData['label-theme'] ? specialEventsData['label-theme'] : COLOR_BLACK }]}>{specialEventsData.label}</Text>
 						) : null }
-						{ specialEventsData['talk-type'] === 'Keynote' ? (
-							<Text style={styles.labelText}>{specialEventsData['talk-type']}</Text>
-						) : null }
 						{ specialEventsData.label || specialEventsData['talk-type'] === 'Keynote' ? (
 							<Text style={styles.labelText}> - </Text>
 						) : null }
