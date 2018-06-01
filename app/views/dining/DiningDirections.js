@@ -6,7 +6,7 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons'
 
 import { gotoNavigationApp } from '../../util/general'
-import COLOR from '../../styles/ColorConstants'
+import { COLOR } from '../../styles/ColorConstants'
 import css from '../../styles/css'
 import Touchable from '../common/Touchable'
 
@@ -21,7 +21,7 @@ const DiningDirections = ({ latitude, longitude, address, distance }) => (
 		>
 			<Text style={css.dd_directions_text}>Directions</Text>
 			<View style={css.dd_directions_icon_container}>
-				<Icon name="md-walk" size={32} color={COLOR_PRIMARY} />
+				<Icon name="md-walk" size={32} color={COLOR.PRIMARY} />
 				{distance ? (
 					<Text style={css.dd_directions_distance_text}>{distance}</Text>
 				) : null }
