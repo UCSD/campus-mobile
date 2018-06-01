@@ -28,6 +28,7 @@ module.exports = {
 	/* TTLs */
 	WEATHER_API_TTL: 1800000, // 30 minutes
 	SURF_API_TTL: 1800000, // 30 minutes
+	SPECIAL_EVENTS_TTL: 1800000, // 30 minutes
 	EVENTS_API_TTL: 3600000, // 1 hour
 	NEWS_API_TTL: 3600000, // 1 hour
 	DINING_API_TTL: 3600000, // 1 hour
@@ -35,7 +36,6 @@ module.exports = {
 	QUICKLINKS_API_TTL: 86400000, // 1 day
 	SHUTTLE_API_TTL: 6000, // 6 seconds
 	SHUTTLE_MASTER_TTL: 86400000, // 1 day
-	SPECIAL_EVENTS_TTL: 3600000, // 1 hour
 	DATA_SAGA_TTL: 60000, // 1 minute
 	HTTP_REQUEST_TTL: 10000, // 10 seconds
 
