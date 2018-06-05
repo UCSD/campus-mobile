@@ -80,7 +80,7 @@ const css = StyleSheet.create({
 	scrollcard_dotsContainer: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
 	scrollcard_listStyle: { flexDirection: 'row' },
 	card_last_updated: { flexDirection: 'row', alignItems: 'center', marginLeft: 16, marginBottom: 8 },
-	card_last_updated_text: { fontSize: 16, fontStyle: 'italic', fontWeight: '300', color: COLOR.DGREY },
+	card_last_updated_text: { fontStyle: 'italic', fontWeight: '300', color: COLOR.DGREY },
 	last_updated_err_icon: { fontSize: 16, marginRight: 6 },
 	last_updated_err_icon_warn: { color: COLOR.WARNING },
 	last_updated_err_icon_error: { color: COLOR.ERROR },
@@ -138,7 +138,7 @@ const css = StyleSheet.create({
 	/**
 	 *  05 - Classes
 	 */
-	cc_loadingContainer: { alignItems: 'center', justifyContent: 'center', width: LAYOUT.MAX_CARD_WIDTH , height: (LAYOUT.MAX_CARD_WIDTH / 1.6216) + 44 },
+	cc_loadingContainer: { alignItems: 'center', justifyContent: 'center', paddingHorizontal: 10, paddingVertical: 40 },
 	cc_messageText: { fontWeight: '400', fontSize: 20 },
 	cc_container: { flexDirection: 'row', width: LAYOUT.MAX_CARD_WIDTH, height: (LAYOUT.MAX_CARD_WIDTH / 1.6216) + 44, paddingTop: LAYOUT.MAX_CARD_WIDTH * 0.05, paddingBottom: LAYOUT.MAX_CARD_WIDTH * 0.05, paddingLeft: LAYOUT.MAX_CARD_WIDTH * 0.04, paddingRight: LAYOUT.MAX_CARD_WIDTH * 0.04 },
 	cc_leftHalf: { flex: 6 },
@@ -163,6 +163,7 @@ const css = StyleSheet.create({
 	cc_Half_each_classAndItsType_class: { width: CC_RIGHT * 55, fontSize: CC_RIGHT * 11 },
 	cc_rightHalf_each_inActiveText: { color: COLOR.DGREY },
 	cc_last_updated: { marginLeft: 18, marginTop: 8 },
+	cc_noclasses: { fontSize: 16, textAlign: 'center' },
 	schedule_full_button_touchable: { borderTopWidth: 1, borderTopColor: COLOR.MGREY, width: LAYOUT.MAX_CARD_WIDTH },
 	schedule_full_button_text: { fontSize: 20, fontWeight: '300', color: COLOR.PRIMARY, paddingHorizontal: 14, paddingVertical: 10 },
 	fslv_container: { backgroundColor: COLOR.WHITE },

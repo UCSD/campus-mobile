@@ -25,11 +25,11 @@ const ScheduleCard = ({
 	currentTerm,
 	onClickCourse
 }) => {
-	if (coursesToShow && coursesToShow[activeCourse]) {
-		if (currentTerm && currentTerm.term_code !== 'inactive') {
+	try {
+		if (coursesToShow && coursesToShow[activeCourse] && currentTerm.term_code) {
 			return (
 				<Card id="schedule" title="Classes">
-					<View style={css.cc_sc_scheduleCard}>
+					<View>
 						<View style={css.cc_container}>
 							<View style={css.cc_leftHalf}>
 								<View style={css.cc_leftHalf_upper}>
@@ -114,47 +114,54 @@ const ScheduleCard = ({
 								/>
 							</View>
 						</View>
-						<LastUpdated
-							style={css.cc_last_updated}
-							lastUpdated={lastUpdated}
-							error={
-								(error === 'App update required.') ?
-									('App update required.') :
-									(null)
-							}
-							warning={
-								(error) ?
-									('We\'re having trouble updating right now.') :
-									(null)
-							}
-						/>
+						<LastUpdatedMin lastUpdated={lastUpdated} error={error} />
 						{actionButton}
 					</View>
 				</Card>
 			)
+		} else if (waitingData) {
+			return <LoadingClasses lastUpdated={lastUpdated} error={error} />
+		} else {
+			return <NoClasses lastUpdated={lastUpdated} error={error} />
 		}
-	}
-	else if (waitingData) {
-		return (
-			<Card id="schedule" title="Classes">
-				{/* If we are waiting for data, show loading indicator */}
-				<View style={css.cc_loadingContainer}>
-					<ActivityIndicator size="large" />
-				</View>
-			</Card>
-		)
-	}
-	else {
-		return (
-			<Card id="schedule" title="Classes">
-				{/* Otherwise, we didn't get back any classes. :( */}
-				<View style={css.cc_loadingContainer}>
-					<Text>No classes to display right now.</Text>
-				</View>
-			</Card>
-		)
+	} catch (err) {
+		return <NoClasses lastUpdated={lastUpdated} error={error} />
 	}
 }
+
+const LastUpdatedMin = ({ lastUpdated, error }) => (
+	<LastUpdated
+		style={css.cc_last_updated}
+		lastUpdated={lastUpdated}
+		error={
+			(error === 'App update required.') ?
+				('App update required.') :
+				(null)
+		}
+		warning={
+			(error) ?
+				('We\'re having trouble updating right now.') :
+				(null)
+		}
+	/>
+)
+
+const LoadingClasses = ({ lastUpdated, error }) => (
+	<Card id="schedule" title="Classes">
+		<View style={css.cc_loadingContainer}>
+			<ActivityIndicator size="large" />
+		</View>
+	</Card>
+)
+
+const NoClasses = ({ lastUpdated, error }) => (
+	<Card id="schedule" title="Classes">
+		<View style={css.cc_loadingContainer}>
+			<Text style={css.cc_noclasses}>There are no classes to display right now.</Text>
+		</View>
+		<LastUpdatedMin lastUpdated={lastUpdated} error={error} />
+	</Card>
+)
 
 const ScheduleText = ({ style, children }) => (
 	<Text
