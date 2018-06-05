@@ -14,13 +14,11 @@ import logger from '../util/logger'
 const auth = require('../util/auth')
 
 function* doLogin(action) {
-	const {
-		username,
-		password,
-	} = action
+	const { username, password } = action
 
 	// DEMO ACCOUNTS
-	if (username === 'studentdemo' && password === 'studentdemo') {
+	if ((username === 'studentdemo' && password === 'studentdemo') ||
+		(username === 'demo' && password === 'demo')) {
 		yield put({ type: 'LOG_IN_REQUEST' })
 		yield put({ type: 'ACTIVATE_STUDENT_DEMO_ACCOUNT' })
 		yield call(delay, 750)
