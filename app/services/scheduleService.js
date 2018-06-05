@@ -16,11 +16,13 @@ const ScheduleService = {
 			}
 
 			// Query api for graduate classes
-			const grad = yield authorizedFetch(AppSettings.ACADEMIC_HISTORY_API_URL(isStudentDemo) +
-				`?academic_level=GR&term_code=${term}`)
-			// Add to data if there is class data
-			if (grad.data && Array.isArray(grad.data) && !isStudentDemo) {
-				data.push(...grad.data)
+			if (!isStudentDemo) {
+				const grad = yield authorizedFetch(AppSettings.ACADEMIC_HISTORY_API_URL(isStudentDemo) +
+					`?academic_level=GR&term_code=${term}`)
+				// Add to data if there is class data
+				if (grad.data && Array.isArray(grad.data)) {
+					data.push(...grad.data)
+				}
 			}
 
 			if (data) return { data }
