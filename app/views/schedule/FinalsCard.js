@@ -43,7 +43,7 @@ class FinalsCard extends Component {
 			<Card id="finals" title="Finals">
 				<FlatList
 					data={this.state.finalsData}
-					ItemSeparatorComponent={(<View style={css.finals_separator} />)}
+					ItemSeparatorComponent={() => (<View style={css.finals_separator} />)}
 					keyExtractor={(item, index) => (item.day)}
 					renderItem={({ item: rowData }) => (
 						<ScheduleDay id={rowData.day} data={rowData.data} />
