@@ -93,7 +93,11 @@ const DayItem = ({ data }) => (
 			{data.course_title}
 		</Text>
 		<Text style={css.finals_course_text}>
-			{data.time_string + '\n'}
+			{
+				(data.time_string) ? (
+					data.time_string + '\n'
+				) : (null)
+			}
 			{data.building + ' ' + data.room}
 		</Text>
 	</View>

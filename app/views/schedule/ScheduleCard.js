@@ -53,7 +53,11 @@ const ScheduleCard = ({
 											</ScheduleText>
 											<ScheduleText style={css.cc_leftHalf_lower_sections_text_topSection}>
 												{/* In Session */}
-												{coursesToShow[activeCourse].time_string}
+												{
+													(coursesToShow[activeCourse].time_string) ? (
+														coursesToShow[activeCourse].time_string
+													) : ('No Time Associated')
+												}
 											</ScheduleText>
 										</View>
 									</View>
@@ -125,6 +129,7 @@ const ScheduleCard = ({
 			return <NoClasses lastUpdated={lastUpdated} error={error} />
 		}
 	} catch (err) {
+		console.log(err)
 		return <NoClasses lastUpdated={lastUpdated} error={error} />
 	}
 }
@@ -190,7 +195,13 @@ const DayItem = ({ active, data, onClick, index }) => (
 		>
 			<View style={[css.cc_rightHalf_eachOfFourCards, active && css.cc_rightHalf_activeCard]}>
 				<ScheduleText style={[css.cc_rightHalf_each_daytime_text, !active && css.cc_rightHalf_each_inActiveText]}>
-					{schedule.dayOfWeekInterpreter(data.day_code).substring(0, 3) + ' @ ' + data.start_string}
+					{
+						schedule.dayOfWeekInterpreter(data.day_code).substring(0, 3) +
+							(data.start_string ? (
+								(' @ ' + data.start_string)
+							) : ('')
+							)
+					}
 				</ScheduleText>
 				<ScheduleText style={[css.cc_rightHalf_each_class_text, !active && css.cc_rightHalf_each_inActiveText]}>
 					{data.subject_code + ' ' + data.course_code}

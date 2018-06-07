@@ -113,31 +113,38 @@ module.exports = {
 				const currSectionData = currCourse.section_data
 				for (let k = 0; k < currSectionData.length; ++k) {
 					const currData = currSectionData[k]
+
 					// if (currData.special_mtg_code === '') {
 					// time format is HH:MM - HH:MM
 					// split time string and get seconds
 					const timeString = currData.time
-					const timeArr = timeString.split(' ')
-					const startString = timeArr[0]
-					const endString = timeArr[2]
-					const startArr = startString.split(':') // split it at the colons
-					const endArr = endString.split(':') // split it at the colons
-					// minutes are worth 60 seconds. Hours are worth 60 minutes.
-					const startSeconds = (+startArr[0] * 60 * 60) + (+startArr[1] * 60)
-					const endSeconds = (+endArr[0] * 60 * 60) + (+endArr[1] * 60)
+					let startSeconds,
+						endSeconds,
+						formattedTimeString,
+						formattedStartString
+
+					if (timeString) {
+						const timeArr = timeString.split(' ')
+						const startString = timeArr[0]
+						const endString = timeArr[2]
+						const startArr = startString.split(':') // split it at the colons
+						const endArr = endString.split(':') // split it at the colons
+						// minutes are worth 60 seconds. Hours are worth 60 minutes.
+						startSeconds = (+startArr[0] * 60 * 60) + (+startArr[1] * 60)
+						endSeconds = (+endArr[0] * 60 * 60) + (+endArr[1] * 60)
+						const startMoment = moment(startString, 'HH:mm')
+						const endMoment = moment(endString, 'HH:mm')
+						const startAm = Boolean(startMoment.format('a') === 'am')
+						const endAm = Boolean(endMoment.format('a') === 'am')
+						formattedStartString = moment(startString, 'HH:mm').format('h:mm') +
+							(startAm ? (' a.m.') : (' p.m.'))
+						const formattedEndString = moment(endString, 'HH:mm').format('h:mm') +
+							(endAm ? (' a.m.') : (' p.m.'))
+						formattedTimeString = formattedStartString +
+							' – ' + formattedEndString
+					}
 
 					const day = currData.days
-
-					const startMoment = moment(startString, 'HH:mm')
-					const endMoment = moment(endString, 'HH:mm')
-					const startAm = Boolean(startMoment.format('a') === 'am')
-					const endAm = Boolean(endMoment.format('a') === 'am')
-					const formattedStartString = moment(startString, 'HH:mm').format('h:mm') +
-						(startAm ? (' a.m.') : (' p.m.'))
-					const formattedEndString = moment(endString, 'HH:mm').format('h:mm') +
-						(endAm ? (' a.m.') : (' p.m.'))
-					const formattedTimeString = formattedStartString +
-						' – ' + formattedEndString
 
 					const item = {
 						building: currData.building,
@@ -169,6 +176,7 @@ module.exports = {
 			}
 			return courseItems
 		} catch (err) {
+			console.log(err)
 			return []
 		}
 	},
