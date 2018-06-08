@@ -6,7 +6,7 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons'
 
 import { gotoNavigationApp } from '../../util/general'
-import { COLOR } from '../../styles/ColorConstants'
+import COLOR from '../../styles/ColorConstants'
 import css from '../../styles/css'
 import Touchable from '../common/Touchable'
 

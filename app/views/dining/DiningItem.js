@@ -8,7 +8,7 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import { withNavigation } from 'react-navigation'
 import ColoredDot from '../common/ColoredDot'
 import Touchable from '../common/Touchable'
-import { COLOR } from '../../styles/ColorConstants'
+import COLOR from '../../styles/ColorConstants'
 import css from '../../styles/css'
 
 const general = require('../../util/general')
