@@ -1,11 +1,11 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React from 'react'
+import { connect } from 'react-redux'
 
-import DataListCard from '../common/DataListCard';
-import logger from '../../util/logger';
+import DataListCard from '../common/DataListCard'
+import logger from '../../util/logger'
 
 export const DiningCardContainer = ({ diningData }) => {
-	logger.ga('Card Mounted: Dining');
+	logger.ga('Card Mounted: Dining')
 	return (
 		<DataListCard
 			id="dining"
@@ -13,15 +13,13 @@ export const DiningCardContainer = ({ diningData }) => {
 			data={diningData}
 			item="DiningItem"
 		/>
-	);
-};
-
-function mapStateToProps(state) {
-	return {
-		diningData: state.dining.data,
-	};
+	)
 }
 
-const ActualDiningCard = connect(mapStateToProps, null)(DiningCardContainer);
+function mapStateToProps(state) {
+	return { diningData: state.dining.data }
+}
 
-export default ActualDiningCard;
+const ActualDiningCard = connect(mapStateToProps, null)(DiningCardContainer)
+
+export default ActualDiningCard
