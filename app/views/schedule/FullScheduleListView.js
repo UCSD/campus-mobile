@@ -65,24 +65,42 @@ class FullSchedule extends React.Component {
 	}
 }
 
-const IndividualClass = ({ data }) => (
-	<View style={css.fslv_row}>
-		<Text style={css.fslv_course_code}>
-			{data.subject_code} {data.course_code}
-		</Text>
-		<Text
-			style={css.fslv_course_title}
-			numberOfLines={1}
-		>
-			{data.course_title}
-		</Text>
-		<Text style={css.fslv_course_text}>
-			{data.meeting_type} {data.time_string + '\n'}
-			{data.instructor_name + '\n'}
-			{data.building + data.room}
-		</Text>
-	</View>
-)
+const IndividualClass = ({ data }) => {
+	let classTime,
+		classLocation
+
+	if (data.time_string) {
+		classTime = data.time_string
+	} else {
+		classTime = ''
+	}
+
+	if (data.building) {
+		classLocation = data.building + ' ' +
+			data.room
+	} else {
+		classLocation = 'No Location Associated'
+	}
+
+	return (
+		<View style={css.fslv_row}>
+			<Text style={css.fslv_course_code}>
+				{data.subject_code} {data.course_code}
+			</Text>
+			<Text
+				style={css.fslv_course_title}
+				numberOfLines={1}
+			>
+				{data.course_title}
+			</Text>
+			<Text style={css.fslv_course_text}>
+				{data.meeting_type} {classTime + '\n'}
+				{data.instructor_name + '\n'}
+				{classLocation}
+			</Text>
+		</View>
+	)
+}
 
 function mapStateToProps(state) {
 	return { fullScheduleData: state.schedule.data }

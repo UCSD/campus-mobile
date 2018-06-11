@@ -20,6 +20,7 @@ const processData = (scheduleData) => {
 	result.push(...classesData.FR)
 	result.push(...classesData.SA)
 	result.push(...classesData.SU)
+	result.push(...classesData.OTHER)
 	result = result.slice(0, 4)
 	return result
 }

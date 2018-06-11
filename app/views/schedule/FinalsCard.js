@@ -84,24 +84,38 @@ const DayList = ({ courseItems }) => (
 	/>
 )
 
-const DayItem = ({ data }) => (
-	<View style={css.finals_day_container}>
-		<Text style={css.finals_course_title}>
-			{data.subject_code} {data.course_code}
-		</Text>
-		<Text style={css.finals_course_text} numberOfLines={1}>
-			{data.course_title}
-		</Text>
-		<Text style={css.finals_course_text}>
-			{
-				(data.time_string) ? (
-					data.time_string + '\n'
-				) : (null)
-			}
-			{data.building + ' ' + data.room}
-		</Text>
-	</View>
-)
+const DayItem = ({ data }) => {
+	let classTime,
+		classLocation
+
+	if (data.time_string) {
+		classTime = data.time_string + '\n'
+	} else {
+		classTime = ''
+	}
+
+	if (data.building) {
+		classLocation = data.building + ' ' +
+			data.room
+	} else {
+		classLocation = 'No Location Associated'
+	}
+
+	return (
+		<View style={css.finals_day_container}>
+			<Text style={css.finals_course_title}>
+				{data.subject_code} {data.course_code}
+			</Text>
+			<Text style={css.finals_course_text} numberOfLines={1}>
+				{data.course_title}
+			</Text>
+			<Text style={css.finals_course_text}>
+				{classTime}
+				{classLocation}
+			</Text>
+		</View>
+	)
+}
 
 const mapStateToProps = state => ({
 	scheduleData: state.schedule.data,

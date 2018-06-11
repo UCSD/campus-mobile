@@ -26,7 +26,48 @@ const ScheduleCard = ({
 	onClickCourse
 }) => {
 	try {
-		if (coursesToShow && coursesToShow[activeCourse] && currentTerm.term_code) {
+		if (
+			coursesToShow &&
+			coursesToShow[activeCourse] &&
+			currentTerm.term_code) {
+			const currentCourse = coursesToShow[activeCourse]
+
+			// Get values for view and account for optional values
+			let classTime,
+				classLocation,
+				classEval
+
+			if (currentCourse.time_string) {
+				classTime = currentCourse.time_string
+			} else {
+				classTime = 'No Time Associated'
+			}
+
+			if (currentCourse.building) {
+				classLocation = currentCourse.building + ' ' +
+					currentCourse.room
+			} else {
+				classLocation = 'No Location Associated'
+			}
+
+			switch (currentCourse.grade_option) {
+				case 'L': {
+					classEval = 'Letter Grade'
+					break
+				}
+				case 'P': {
+					classEval = 'Pass/No Pass'
+					break
+				}
+				case 'S': {
+					classEval = 'Sat/Unsat'
+					break
+				}
+				default: {
+					classEval = 'Other'
+				}
+			}
+
 			return (
 				<Card id="schedule" title="Classes">
 					<View>
@@ -34,61 +75,35 @@ const ScheduleCard = ({
 							<View style={css.cc_leftHalf}>
 								<View style={css.cc_leftHalf_upper}>
 									<ScheduleText style={css.cc_leftHalf_upper_timeText}>
-										{schedule.dayOfWeekInterpreter(coursesToShow[activeCourse].day_code)}
+										{schedule.dayOfWeekInterpreter(currentCourse.day_code)}
 									</ScheduleText>
 									<ScheduleText style={css.cc_leftHalf_upper_classText_firstSection}>
-										{coursesToShow[activeCourse].subject_code + ' '
-											+ coursesToShow[activeCourse].course_code}
+										{currentCourse.subject_code + ' '
+											+ currentCourse.course_code}
 									</ScheduleText>
 									<ScheduleText style={css.cc_leftHalf_upper_classText_secondSection}>
-										{coursesToShow[activeCourse].meeting_type}
+										{currentCourse.meeting_type}
 									</ScheduleText>
 								</View>
 								<View style={css.cc_leftHalf_lower}>
-									<View style={css.cc_leftHalf_lower_sections}>
-										<FAIcon style={css.cc_icon_time} size={42} name="clock-o" />
-										<View style={css.cc_leftHalf_lower_sections_text}>
-											<ScheduleText style={css.cc_leftHalf_lower_sections_text_bottomSection}>
-												Start and Finish Time
-											</ScheduleText>
-											<ScheduleText style={css.cc_leftHalf_lower_sections_text_topSection}>
-												{/* In Session */}
-												{
-													(coursesToShow[activeCourse].time_string) ? (
-														coursesToShow[activeCourse].time_string
-													) : ('No Time Associated')
-												}
-											</ScheduleText>
-										</View>
-									</View>
-									<View style={css.cc_leftHalf_lower_sections}>
-										<FAIcon style={css.cc_icon_building} size={42} name="building-o" />
-										<View style={css.cc_leftHalf_lower_sections_text}>
-											<ScheduleText style={css.cc_leftHalf_lower_sections_text_bottomSection}>
-												{/* In Sixth College */}
-												Class Room Location
-											</ScheduleText>
-											<ScheduleText style={css.cc_leftHalf_lower_sections_text_topSection}>
-												{/* Pepper Canyon Hall 106 */}
-												{coursesToShow[activeCourse].building + ' '
-												+ coursesToShow[activeCourse].room}
-											</ScheduleText>
-										</View>
-									</View>
-									<View style={css.cc_leftHalf_lower_sections}>
-										<FAIcon style={css.cc_icon_lettergrade} size={42} name="check-square-o" />
-										<View style={css.cc_leftHalf_lower_sections_text}>
-											<ScheduleText style={css.cc_leftHalf_lower_sections_text_bottomSection}>
-												{/* Last Class Ends at 10:00 AM */}
-												Evaluation Option
-											</ScheduleText>
-											<ScheduleText style={css.cc_leftHalf_lower_sections_text_topSection}>
-												{/* 1 More Class Today */}
-												{coursesToShow[activeCourse].grade_option === 'L' ?
-													'Letter Grade' : 'Pass/No Pass'}
-											</ScheduleText>
-										</View>
-									</View>
+									<ClassMetaWithIcon
+										icon="clock-o"
+										iconStyle={css.cc_icon_time}
+										description="Start and Finish Time"
+										value={classTime}
+									/>
+									<ClassMetaWithIcon
+										icon="building-o"
+										iconStyle={css.cc_icon_building}
+										description="Class Room Location"
+										value={classLocation}
+									/>
+									<ClassMetaWithIcon
+										icon="check-square-o"
+										iconStyle={css.cc_icon_lettergrade}
+										description="Evaluation Option"
+										value={classEval}
+									/>
 								</View>
 							</View>
 							<View style={css.cc_rightHalf}>
@@ -168,6 +183,20 @@ const NoClasses = ({ lastUpdated, error }) => (
 	</Card>
 )
 
+const ClassMetaWithIcon = ({ icon, iconStyle, description, value }) => (
+	<View style={css.cc_leftHalf_lower_sections}>
+		<FAIcon style={iconStyle} size={42} name={icon} />
+		<View style={css.cc_leftHalf_lower_sections_text}>
+			<ScheduleText style={css.cc_leftHalf_lower_sections_text_bottomSection}>
+				{description}
+			</ScheduleText>
+			<ScheduleText style={css.cc_leftHalf_lower_sections_text_topSection}>
+				{value}
+			</ScheduleText>
+		</View>
+	</View>
+)
+
 const ScheduleText = ({ style, children }) => (
 	<Text
 		numberOfLines={1}
@@ -186,8 +215,19 @@ const ScheduleText = ({ style, children }) => (
 )
 
 // Holds the view for an individual section/class
-const DayItem = ({ active, data, onClick, index }) => (
-	( data ? (
+const DayItem = ({ active, data, onClick, index }) => {
+	if (!data) return null
+
+	const day = schedule.dayOfWeekInterpreter(data.day_code)
+
+	let shortenedDay
+	if (day === 'Other' ) shortenedDay = day
+	else shortenedDay = day.substring(0,3)
+
+	let hour = ''
+	if (data.start_string) hour = ' @ ' + data.start_string
+
+	return (
 		<TouchableHighlight
 			onPress={() => onClick(index)}
 			underlayColor={COLOR.LGREY}
@@ -195,21 +235,15 @@ const DayItem = ({ active, data, onClick, index }) => (
 		>
 			<View style={[css.cc_rightHalf_eachOfFourCards, active && css.cc_rightHalf_activeCard]}>
 				<ScheduleText style={[css.cc_rightHalf_each_daytime_text, !active && css.cc_rightHalf_each_inActiveText]}>
-					{
-						schedule.dayOfWeekInterpreter(data.day_code).substring(0, 3) +
-							(data.start_string ? (
-								(' @ ' + data.start_string)
-							) : ('')
-							)
-					}
+					{ shortenedDay + hour }
 				</ScheduleText>
 				<ScheduleText style={[css.cc_rightHalf_each_class_text, !active && css.cc_rightHalf_each_inActiveText]}>
 					{data.subject_code + ' ' + data.course_code}
 				</ScheduleText>
 			</View>
 		</TouchableHighlight>
-	) : null )
-)
+	)
+}
 
 ScheduleCard.propTypes = {
 	coursesToShow: PropTypes.arrayOf(PropTypes.object).isRequired,

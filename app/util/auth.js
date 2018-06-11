@@ -191,7 +191,7 @@ module.exports = {
 
 					// Delay next authorized fetch attempt
 					let multiplier = SSO_REFRESH_RETRY_MULTIPLIER * i
-					if (multiplier === 0) multiplier = 1
+					if (multiplier < 0) multiplier = 1
 					yield delay(SSO_REFRESH_RETRY_INCREMENT * multiplier)
 
 					accessToken = yield Keychain

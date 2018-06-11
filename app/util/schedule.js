@@ -14,7 +14,8 @@ module.exports = {
 			TH: [],
 			FR: [],
 			SA: [],
-			SU: []
+			SU: [],
+			OTHER: []
 		}
 
 		Object.keys(courseItems).forEach((day) => {
@@ -37,12 +38,13 @@ module.exports = {
 			TH: [],
 			FR: [],
 			SA: [],
-			SU: []
+			SU: [],
+			OTHER: []
 		}
 
 		Object.keys(courseItems).forEach((day) => {
 			courseItems[day].forEach((item) => {
-				if (item.special_mtg_code === '') {
+				if (!item.special_mtg_code) {
 					classItems[day].push(item)
 				}
 			})
@@ -76,7 +78,7 @@ module.exports = {
 				fullString = 'Sunday'
 				break
 			default:
-				fullString = abbr
+				fullString = 'Other'
 		}
 		return fullString
 	},
@@ -95,7 +97,8 @@ module.exports = {
 				TH: [],
 				FR: [],
 				SA: [],
-				SU: []
+				SU: [],
+				OTHER: []
 			}
 
 			// loop thru "data"
@@ -144,7 +147,10 @@ module.exports = {
 							' – ' + formattedEndString
 					}
 
-					const day = currData.days
+					let day = 'OTHER'
+					if (currData.days) {
+						day = currData.days
+					}
 
 					const item = {
 						building: currData.building,
@@ -174,6 +180,7 @@ module.exports = {
 				const courseItem = courseItems[courseItemsKeys[l]]
 				courseItem.sort(this.sortTime)
 			}
+
 			return courseItems
 		} catch (err) {
 			console.log(err)
