@@ -28,7 +28,7 @@ const authorizedFetchRequest = (endpoint, accessToken) => (
 						return { invalidToken: true }
 					}
 					case 404: {
-						return { message: response.statusText}
+						return { message: response.statusText }
 					}
 					default: {
 						const e = new Error(response.statusText)
@@ -134,20 +134,30 @@ module.exports = {
 	/**
 	 * Makes an authorized request using an access token.
 	 * If the response is a 401 Unauthorized, this function
-	 * attempt to retry a predetermined amount of times.
+	 * attempts to retry a predetermined amount of times.
 	 * If no successful response is received by the last
-	 * attempt, this function sets anAUTH_HTTP error in
+	 * attempt, this function sets an AUTH_HTTP error in
 	 * state.requestErrors.
 	 * @param {String} endpoint URL of API endpoint
 	 * @returns {Object} Data from server
 	 * or returns an error if HTTP resonse isn't 200
 	 */
 	* authorizedFetch(endpoint) {
+		yield put({ type: 'AUTH_HTTP_REQUEST' })
+
 		// Check to see if we aren't in an error state
 		const userState = state => (state.user)
-		const { appUpdateRequired } = yield select(userState)
+		const { appUpdateRequired, isLoggedIn } = yield select(userState)
 		if (appUpdateRequired) {
 			const e = new Error('App update required.')
+			yield put({ type: 'AUTH_HTTP_FAILURE', e })
+			throw e
+		}
+
+		// Check to see if user is logged in
+		if (!isLoggedIn) {
+			const e = new Error('Not signed in.')
+			yield put({ type: 'AUTH_HTTP_FAILURE', e })
 			throw e
 		}
 
@@ -155,7 +165,6 @@ module.exports = {
 			.getInternetCredentials(accessTokenSiteName)
 			.then(credentials => (credentials.password))
 
-		yield put({ type: 'AUTH_HTTP_REQUEST' })
 		try {
 			let endpointResponse = yield authorizedFetchRequest(endpoint, accessToken)
 
@@ -173,11 +182,17 @@ module.exports = {
 						throw e
 					}
 
-					// Delay next attempt
-					yield delay(SSO_REFRESH_RETRY_INCREMENT * (SSO_REFRESH_RETRY_MULTIPLIER * i))
+					// Break if we're logged out
+					const { isLoggedIn: retryIsLoggedIn } = yield select(userState)
+					if (!retryIsLoggedIn) return
 
 					// Attempt to get a new access token
 					yield put({ type: 'USER_TOKEN_REFRESH' })
+
+					// Delay next authorized fetch attempt
+					let multiplier = SSO_REFRESH_RETRY_MULTIPLIER * i
+					if (multiplier === 0) multiplier = 1
+					yield delay(SSO_REFRESH_RETRY_INCREMENT * multiplier)
 
 					accessToken = yield Keychain
 						.getInternetCredentials(accessTokenSiteName)
