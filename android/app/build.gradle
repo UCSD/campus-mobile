@@ -155,6 +155,7 @@ android {
 }
 
 dependencies {
+    compile project(':bugsnag-react-native')
     compile project(':react-native-restart')
     compile project(':react-native-fcm')
     compile 'com.google.firebase:firebase-core:11.0.4'

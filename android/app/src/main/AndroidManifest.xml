@@ -52,6 +52,8 @@
       <meta-data
         android:name="com.google.firebase.messaging.default_notification_icon"
         android:resource="@drawable/icon" />
+      <meta-data android:name="com.bugsnag.android.API_KEY"
+          android:value="BUGSNAG_PH"/>
     </application>
 
 </manifest>

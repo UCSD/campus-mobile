@@ -1,8 +1,10 @@
 import { GoogleAnalyticsTracker } from 'react-native-google-analytics-bridge'
+import { Client } from 'bugsnag-react-native' 
 
 import { GOOGLE_ANALYTICS_ID } from '../AppSettings'
 
 const tracker = new GoogleAnalyticsTracker(GOOGLE_ANALYTICS_ID)
+const bugsnag = new Client()
 
 /**
  * A module containing logging helper functions
@@ -45,8 +47,18 @@ module.exports = {
 	 * @param {string} error The error message
 	 * @param {bool} fatal If the crash was fatal or not
 	 */
-	trackException(error, fatal) {
-		tracker.trackEvent('Error', error)
+	trackException(error, metadata, fatal) {
+		console.log(error)
+		let severity = 'warning'
+		if (fatal) severity = 'error'
+		bugsnag.notify(error, (report) => {
+			report.severity = severity
+
+			if (metadata) {
+				report.metadata = metadata
+			}
+		})
+		// tracker.trackEvent('Error', error)
 		// tracker.trackException(error, fatal);
 	},
 

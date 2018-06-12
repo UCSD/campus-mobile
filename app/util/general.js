@@ -374,7 +374,7 @@ module.exports = {
 	gracefulFatalReset(err) {
 		const fatalErr = err.toString()
 		const fatalErrDev = (__DEV__ ? ('\n' + fatalErr) : '')
-		logger.trackException(fatalErr, true)
+		logger.trackException(err, null, true)
 
 		Alert.alert(
 			'Oops! Something went wrong!',

@@ -48,9 +48,12 @@ function* doLogin(action) {
 			} else if (response.error) {
 				if (response.error.appUpdateRequired) {
 					yield outOfDateAlert()
+					const appUpdateError = new Error('App update required.')
+					throw appUpdateError
+				} else {
+					logger.log(response)
+					throw response.error
 				}
-				logger.log(response)
-				throw response.error
 			} else {
 				// Successfully logged in
 				yield auth.storeUserCreds(username, passwordEncrypted)
@@ -74,11 +77,7 @@ function* doLogin(action) {
 				yield call(queryUserData)
 			}
 		} catch (error) {
-			logger.log(error)
-			const errorDescription = error.toString()
-			let errorStack
-			if (error.stack) errorStack = error.stack.toString()
-			logger.trackException(`${errorDescription} ${errorStack}`, false)
+			logger.trackException(error, false)
 			yield put({ type: 'LOG_IN_FAILURE', error })
 		}
 	}

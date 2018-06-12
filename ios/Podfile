@@ -28,6 +28,8 @@ target 'CampusMobile' do
   # Pods for CampusMobile
   pod 'Firebase/Messaging'
 
+  pod 'BugsnagReactNative', :path => '../node_modules/bugsnag-react-native'
+
   # target 'CampusMobileTests' do
   #   inherit! :search_paths
   #   # Pods for testing
