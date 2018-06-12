@@ -155,7 +155,7 @@ const css = StyleSheet.create({
 	cc_icon_lettergrade: { width: 44, marginRight: 2 * CC_LEFT, paddingLeft: 1, paddingTop: 2, color: COLOR.MGREEN },
 	cc_leftHalf_lower_sections_text_topSection: { fontSize: CC_LEFT * 6, paddingTop: CC_LEFT * 1 },
 	cc_leftHalf_lower_sections_text_bottomSection: { fontSize: CC_LEFT * 4.5, paddingTop: CC_LEFT * 1.75, color: COLOR.DGREY },
-	cc_rightHalf: { flex: 4, paddingTop: CC_RIGHT * 0.5, justifyContent: 'space-between' },
+	cc_rightHalf: { flex: 4, paddingTop: CC_RIGHT * 0.5, justifyContent: 'flex-start' },
 	cc_rightHalf_eachOfFourCards: { borderColor: COLOR.DGREY, borderWidth: CC_RIGHT * 0.5, borderRadius: CC_RIGHT * 1, paddingLeft: CC_RIGHT * 4, paddingTop: CC_RIGHT * 2.5, overflow: 'hidden', width: '100%', aspectRatio: 3.16 },
 	cc_rightHalf_activeCard: { borderColor: COLOR.VDGREY, borderWidth: CC_RIGHT * 0.75, paddingLeft: CC_RIGHT * 3.75, paddingTop: CC_RIGHT * 2.25 },
 	cc_rightHalf_each_daytime_text: { fontSize: 7 * CC_RIGHT },
@@ -171,7 +171,8 @@ const css = StyleSheet.create({
 	fslv_header_text: { paddingHorizontal: 16, paddingVertical: 8, fontSize: 20, fontWeight: '300' },
 	fslv_row: { paddingHorizontal: 16, paddingVertical: 8 },
 	fslv_course_code: { fontSize: 16, fontWeight: 'bold' },
-	fslv_course_title: { fontSize: 16, marginBottom: 4 },
+	fslv_course_instructor: { fontSize: 16, marginBottom: 4 },
+	fslv_course_title: { fontSize: 16 },
 
 	/**
 	 *  06 - Shuttle

@@ -232,6 +232,7 @@ const DayItem = ({ active, data, onClick, index }) => {
 			onPress={() => onClick(index)}
 			underlayColor={COLOR.LGREY}
 			activeOpacity={0.5}
+			style={{ marginBottom: 8 }}
 		>
 			<View style={[css.cc_rightHalf_eachOfFourCards, active && css.cc_rightHalf_activeCard]}>
 				<ScheduleText style={[css.cc_rightHalf_each_daytime_text, !active && css.cc_rightHalf_each_inActiveText]}>

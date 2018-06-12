@@ -67,19 +67,38 @@ class FullSchedule extends React.Component {
 
 const IndividualClass = ({ data }) => {
 	let classTime,
-		classLocation
+		classLocation,
+		classEval
 
 	if (data.time_string) {
-		classTime = data.time_string
+		classTime = data.time_string + '\n'
 	} else {
 		classTime = ''
 	}
 
 	if (data.building) {
 		classLocation = data.building + ' ' +
-			data.room
+			data.room + '\n'
 	} else {
 		classLocation = 'No Location Associated'
+	}
+
+	switch (data.grade_option) {
+		case 'L': {
+			classEval = 'Letter Grade'
+			break
+		}
+		case 'P': {
+			classEval = 'Pass/No Pass'
+			break
+		}
+		case 'S': {
+			classEval = 'Sat/Unsat'
+			break
+		}
+		default: {
+			classEval = ''
+		}
 	}
 
 	return (
@@ -93,10 +112,16 @@ const IndividualClass = ({ data }) => {
 			>
 				{data.course_title}
 			</Text>
+			<Text
+				style={css.fslv_course_instructor}
+				numberOfLines={1}
+			>
+				{data.instructor_name}
+			</Text>
 			<Text style={css.fslv_course_text}>
-				{data.meeting_type} {classTime + '\n'}
-				{data.instructor_name + '\n'}
+				{data.meeting_type} {classTime}
 				{classLocation}
+				{classEval}
 			</Text>
 		</View>
 	)
