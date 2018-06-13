@@ -44,10 +44,12 @@ class FullSchedule extends React.Component {
 	}
 
 	renderItem = ({ item, index, section }) => {
-		// Don't show class if it's a finals meeting
-		if (item.special_mtg_code !== 'FI') {
+		// Only show classes without a special meeting code (i.e. 'FI', 'PB', etc)
+		if (!item.special_mtg_code) {
 			return (<IndividualClass data={item} />)
-		} else return null
+		} else {
+			return null
+		}
 	}
 
 	render() {
@@ -73,14 +75,14 @@ const IndividualClass = ({ data }) => {
 	if (data.time_string) {
 		classTime = data.time_string + '\n'
 	} else {
-		classTime = ''
+		classTime = '\n'
 	}
 
 	if (data.building) {
 		classLocation = data.building + ' ' +
 			data.room + '\n'
 	} else {
-		classLocation = 'No Location Associated'
+		classLocation = 'No Location Associated\n'
 	}
 
 	switch (data.grade_option) {
