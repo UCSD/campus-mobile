@@ -1705,7 +1705,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = CampusMobile/CampusMobile.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
@@ -1731,8 +1731,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = edu.ucsd.ucsandiego;
 				PRODUCT_NAME = CampusMobile;
-				PROVISIONING_PROFILE = "efb2a539-4dee-4aa3-89fb-aa67e3b5015b";
-				PROVISIONING_PROFILE_SPECIFIER = "UC San Diego Mobile Dev";
+				PROVISIONING_PROFILE = "56e34c1f-2539-4329-a752-16e52aa4169a";
+				PROVISIONING_PROFILE_SPECIFIER = "UC San Diego Mobile";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
