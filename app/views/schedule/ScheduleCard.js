@@ -10,6 +10,7 @@ import {
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 
 import schedule from '../../util/schedule'
+import logger from '../../util/logger'
 import Card from '../common/Card'
 import LastUpdated from '../common/LastUpdated'
 import css from '../../styles/css'
@@ -144,7 +145,7 @@ const ScheduleCard = ({
 			return <NoClasses lastUpdated={lastUpdated} error={error} />
 		}
 	} catch (err) {
-		console.log(err)
+		logger.trackException(err)
 		return <NoClasses lastUpdated={lastUpdated} error={error} />
 	}
 }
