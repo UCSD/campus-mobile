@@ -1,4 +1,6 @@
 rootProject.name = 'CampusMobile'
+include ':bugsnag-react-native'
+project(':bugsnag-react-native').projectDir = new File(rootProject.projectDir, '../node_modules/bugsnag-react-native/android')
 include ':react-native-restart'
 project(':react-native-restart').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-restart/android')
 include ':react-native-fcm'

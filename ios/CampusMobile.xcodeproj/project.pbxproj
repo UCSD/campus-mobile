@@ -930,7 +930,6 @@
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				0ECE5E87D028C26ECACBCF05 /* [CP] Embed Pods Frameworks */,
 				784BA91E315E23D7670D1558 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
@@ -1525,21 +1524,6 @@
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
 		};
-		0ECE5E87D028C26ECACBCF05 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CampusMobile/Pods-CampusMobile-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		2D02E4CB1E0B4B27006451C7 /* Bundle React Native Code And Images */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1721,7 +1705,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = CampusMobile/CampusMobile.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
@@ -1747,8 +1731,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = edu.ucsd.ucsandiego;
 				PRODUCT_NAME = CampusMobile;
-				PROVISIONING_PROFILE = "efb2a539-4dee-4aa3-89fb-aa67e3b5015b";
-				PROVISIONING_PROFILE_SPECIFIER = "UC San Diego Mobile Dev";
+				PROVISIONING_PROFILE = "56e34c1f-2539-4329-a752-16e52aa4169a";
+				PROVISIONING_PROFILE_SPECIFIER = "UC San Diego Mobile";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};

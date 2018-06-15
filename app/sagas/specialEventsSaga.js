@@ -7,7 +7,7 @@ function* addSpecialEvents(action) {
 
 	if (Array.isArray(specialEvents.saved)) {
 		const saved = specialEvents.saved.slice()
-		const { schedule } = specialEvents.data.schedule
+		const { schedule } = specialEvents.data
 		let contains = false
 		let addIndex = 0
 		// Make sure stop hasn't already been saved

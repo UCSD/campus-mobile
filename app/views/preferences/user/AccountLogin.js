@@ -48,10 +48,12 @@ class AccountLogin extends Component {
 		// Only render alerts if status change is new
 		if (oldStatus !== newStatus) {
 			// Failed log in
-			if (this.props.requestError) {
+			if (this.props.requestError &&
+				this.props.requestError !== 'App update required.') {
 				Alert.alert(
 					'Sign in error',
 					this.props.requestError,
+					null,
 					{ cancelable: false }
 				)
 			}

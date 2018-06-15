@@ -6,7 +6,8 @@ const initialState = {
 		pid: null
 	},
 	invalidSavedCredentials: false,
-	appUpdateRequired: false
+	appUpdateRequired: false,
+	isStudentDemo: false
 }
 
 function user(state = initialState, action) {
@@ -33,6 +34,10 @@ function user(state = initialState, action) {
 		}
 		case 'APP_UPDATE_REQUIRED': {
 			newState.appUpdateRequired = true
+			return newState
+		}
+		case 'ACTIVATE_STUDENT_DEMO_ACCOUNT': {
+			newState.isStudentDemo = true
 			return newState
 		}
 		default:

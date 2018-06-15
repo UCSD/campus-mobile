@@ -15,10 +15,16 @@ module.exports = {
 	NEWS_API_URL: 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/allstories.json',
 	MAP_SEARCH_API_URL: 'https://xgu9qa7gx4.execute-api.us-west-2.amazonaws.com/prod/v2/map/search?region=0&query=',
 	SPECIAL_EVENT_API_URL: 'https://2jjml3hf27.execute-api.us-west-2.amazonaws.com/prod/events/special',
-	// DEV/QA ENDPOINTS - UPDATE TO PROD
-	AUTH_SERVICE_API_URL: 'https://3hepzvdimd.execute-api.us-west-2.amazonaws.com/dev/v1/access-profile',
-	ACADEMIC_HISTORY_API_URL: 'https://api-qa.ucsd.edu:8243/student/my/academic_history/v1/class_list',
-	ACADEMIC_TERM_API_URL: 'https://m9zc9vs4f1.execute-api.us-west-2.amazonaws.com/dev/v1/term/current',
+	ACADEMIC_HISTORY_API_URL(isStudentDemo) {
+		if (isStudentDemo) return 'https://pad7kcyzo1.execute-api.us-west-2.amazonaws.com/prod/v1/demo/student/class_list'
+		else return 'https://api.ucsd.edu:8245/student/my/academic_history/v1/class_list'
+	},
+	AUTH_SERVICE_API_URL: 'https://c12cf2xke8.execute-api.us-west-2.amazonaws.com/prod/v1/access-profile',
+	ACADEMIC_TERM_API_URL: 'https://btgre7sss6.execute-api.us-west-2.amazonaws.com/prod/v1/term/current',
+	ACADEMIC_TERM_FINALS_API_URL(isStudentDemo) {
+		if (isStudentDemo) return 'https://pad7kcyzo1.execute-api.us-west-2.amazonaws.com/prod/v1/demo/term/current/finals'
+		else return 'https://btgre7sss6.execute-api.us-west-2.amazonaws.com/prod/v1/term/current/finals'
+	},
 
 	/* RESOURCES */
 	SHUTTLE_SCHEDULE_URL: 'https://transportation.ucsd.edu/shuttles/',
@@ -33,14 +39,14 @@ module.exports = {
 	LOCATION_TTL: 15000, // 15 seconds
 	SHUTTLE_API_TTL: 15000, // 15 seconds
 	DATA_SAGA_TTL: 60000, // 1 minute
-	WEATHER_API_TTL: 3600000, // 1 hour
-	SURF_API_TTL: 3600000, // 1 hour
+	SCHEDULE_TTL: 300000,  // 5 minutes
+	WEATHER_API_TTL: 1800000, // 30 minutes
+	SURF_API_TTL: 1800000, // 30 minutes
+	SPECIAL_EVENTS_TTL: 1800000, // 30 minutes
 	EVENTS_API_TTL: 3600000, // 1 hour
 	NEWS_API_TTL: 3600000, // 1 hour
 	DINING_API_TTL: 3600000, // 1 hour
 	DINING_MENU_API_TTL: 3600000, // 1 hour
-	SCHEDULE_TTL: 3600000,  // 1 hour
-	SPECIAL_EVENTS_TTL: 3600000, // 1 hour
 	QUICKLINKS_API_TTL: 86400000, // 1 day
 	SHUTTLE_MASTER_TTL: 86400000, // 1 day
 

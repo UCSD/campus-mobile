@@ -1,4 +1,9 @@
 PODS:
+  - BugsnagReactNative (2.9.5):
+    - BugsnagReactNative/Core (= 2.9.5)
+    - React
+  - BugsnagReactNative/Core (2.9.5):
+    - React
   - Firebase/Core (4.11.0):
     - FirebaseAnalytics (= 4.1.0)
     - FirebaseCore (= 4.0.18)
@@ -8,10 +13,10 @@ PODS:
   - FirebaseAnalytics (4.1.0):
     - FirebaseCore (~> 4.0)
     - FirebaseInstanceID (~> 2.0)
-    - GoogleToolboxForMac/NSData+zlib (~> 2.1)
+    - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
     - nanopb (~> 0.3)
   - FirebaseCore (4.0.18):
-    - GoogleToolboxForMac/NSData+zlib (~> 2.1)
+    - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
   - FirebaseInstanceID (2.0.10):
     - FirebaseCore (~> 4.0)
   - FirebaseMessaging (2.1.1):
@@ -23,7 +28,7 @@ PODS:
   - GoogleToolboxForMac/Defines (2.1.3)
   - GoogleToolboxForMac/Logger (2.1.3):
     - GoogleToolboxForMac/Defines (= 2.1.3)
-  - GoogleToolboxForMac/NSData+zlib (2.1.3):
+  - "GoogleToolboxForMac/NSData+zlib (2.1.3)":
     - GoogleToolboxForMac/Defines (= 2.1.3)
   - nanopb (0.3.8):
     - nanopb/decode (= 0.3.8)
@@ -68,6 +73,7 @@ PODS:
   - yoga (0.54.4.React)
 
 DEPENDENCIES:
+  - BugsnagReactNative (from `../node_modules/bugsnag-react-native`)
   - Firebase/Messaging
   - react-native-maps (from `../node_modules/react-native-maps`)
   - React/Core (from `../node_modules/react-native`)
@@ -84,17 +90,31 @@ DEPENDENCIES:
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - yoga (from `../node_modules/react-native/ReactCommon/yoga/yoga.podspec`)
 
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Firebase
+    - FirebaseAnalytics
+    - FirebaseCore
+    - FirebaseInstanceID
+    - FirebaseMessaging
+    - GoogleToolboxForMac
+    - nanopb
+    - Protobuf
+
 EXTERNAL SOURCES:
+  BugsnagReactNative:
+    :path: "../node_modules/bugsnag-react-native"
   React:
-    :path: ../node_modules/react-native
+    :path: "../node_modules/react-native"
   react-native-maps:
-    :path: ../node_modules/react-native-maps
+    :path: "../node_modules/react-native-maps"
   RNVectorIcons:
-    :path: ../node_modules/react-native-vector-icons
+    :path: "../node_modules/react-native-vector-icons"
   yoga:
-    :path: ../node_modules/react-native/ReactCommon/yoga/yoga.podspec
+    :path: "../node_modules/react-native/ReactCommon/yoga/yoga.podspec"
 
 SPEC CHECKSUMS:
+  BugsnagReactNative: 0b7626917d3612281d07aea84e5041f123290fee
   Firebase: cc13dfab1038c8b45d7903e01fc690451d6d0b24
   FirebaseAnalytics: 3dfae28d4a5e06f86c4fae830efc2ad3fadb19bc
   FirebaseCore: b981f47e5254cbcfdeb483355300d743f6fcab2c
@@ -108,6 +128,6 @@ SPEC CHECKSUMS:
   RNVectorIcons: c0dbfbf6068fefa240c37b0f71bd03b45dddac44
   yoga: 55da126afc384965b96bff46652464373b330add
 
-PODFILE CHECKSUM: 4fa3bc00061d78f88f97550369a51667a6b6bb41
+PODFILE CHECKSUM: 55f875ddc5559859cdd7118b5aa39f1e15347def
 
-COCOAPODS: 1.4.0
+COCOAPODS: 1.5.3

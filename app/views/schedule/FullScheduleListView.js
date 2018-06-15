@@ -44,10 +44,12 @@ class FullSchedule extends React.Component {
 	}
 
 	renderItem = ({ item, index, section }) => {
-		// Don't show class if it's a finals meeting
-		if (item.special_mtg_code !== 'FI') {
+		// Only show classes without a special meeting code (i.e. 'FI', 'PB', etc)
+		if (!item.special_mtg_code) {
 			return (<IndividualClass data={item} />)
-		} else return null
+		} else {
+			return null
+		}
 	}
 
 	render() {
@@ -65,24 +67,67 @@ class FullSchedule extends React.Component {
 	}
 }
 
-const IndividualClass = ({ data }) => (
-	<View style={css.fslv_row}>
-		<Text style={css.fslv_course_code}>
-			{data.subject_code} {data.course_code}
-		</Text>
-		<Text
-			style={css.fslv_course_title}
-			numberOfLines={1}
-		>
-			{data.course_title}
-		</Text>
-		<Text style={css.fslv_course_text}>
-			{data.meeting_type} {data.time_string + '\n'}
-			{data.instructor_name + '\n'}
-			{data.building + data.room}
-		</Text>
-	</View>
-)
+const IndividualClass = ({ data }) => {
+	let classTime,
+		classLocation,
+		classEval
+
+	if (data.time_string) {
+		classTime = data.time_string + '\n'
+	} else {
+		classTime = '\n'
+	}
+
+	if (data.building) {
+		classLocation = data.building + ' ' +
+			data.room + '\n'
+	} else {
+		classLocation = 'No Location Associated\n'
+	}
+
+	switch (data.grade_option) {
+		case 'L': {
+			classEval = 'Letter Grade'
+			break
+		}
+		case 'P': {
+			classEval = 'Pass/No Pass'
+			break
+		}
+		case 'S': {
+			classEval = 'Sat/Unsat'
+			break
+		}
+		default: {
+			classEval = ''
+		}
+	}
+
+	return (
+		<View style={css.fslv_row}>
+			<Text style={css.fslv_course_code}>
+				{data.subject_code} {data.course_code}
+			</Text>
+			<Text
+				style={css.fslv_course_title}
+				numberOfLines={1}
+			>
+				{data.course_title}
+			</Text>
+			<Text
+				style={css.fslv_course_instructor}
+				numberOfLines={1}
+			>
+				{data.instructor_name}
+			</Text>
+			<Text style={css.fslv_course_text}>
+				{data.meeting_type} {classTime}
+				{classLocation}
+				{classEval}
+			</Text>
+		</View>
+	)
+}
 
 function mapStateToProps(state) {
 	return { fullScheduleData: state.schedule.data }

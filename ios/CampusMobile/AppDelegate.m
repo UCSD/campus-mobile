@@ -12,12 +12,14 @@
 #import "RCTUtils.h"
 #import "RCTBundleURLProvider.h"
 #import "RCTRootView.h"
+#import <BugsnagReactNative/BugsnagReactNative.h>
 #import "RNFIRMessaging.h"
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  [BugsnagReactNative start];
   [FIRApp configure];
   [[UNUserNotificationCenter currentNotificationCenter] setDelegate:self];
   NSURL *jsCodeLocation;

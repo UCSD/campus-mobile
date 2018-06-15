@@ -85,6 +85,7 @@ class OnboardingLogin extends React.Component {
 				Alert.alert(
 					'Sign in error',
 					this.props.requestError,
+					null,
 					{ cancelable: false }
 				)
 			}
@@ -173,7 +174,7 @@ class OnboardingLogin extends React.Component {
 											<Text style={css.ob_forgotpass}>Need help logging in?</Text>
 										</Touchable>
 										<Touchable style={css.ob_cancel_button} onPress={() => this.skipSSO()}>
-											<Text style={css.ob_cancel}>Cancel</Text>
+											<Text style={css.ob_cancel}>Skip</Text>
 										</Touchable>
 									</View>
 								</View>

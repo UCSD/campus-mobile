@@ -42,6 +42,9 @@ var FIREBASE_IOS_KEY = myEnv.FIREBASE_IOS_KEY;
 var FIREBASE_ANDROID_KEY = myEnv.FIREBASE_ANDROID_KEY;
 var FIREBASE_KEY_PH = myEnv.FIREBASE_KEY_PH;
 
+var BUGSNAG_KEY = myEnv.BUGSNAG_KEY
+var BUGSNAG_PH = myEnv.BUGSNAG_PH
+
 if (REPLACEMENT_TYPE === 'production' || REPLACEMENT_TYPE === 'placeholder') {
 	// AppSettings.js
 	makeReplacements(APP_SETTINGS_PATH, REPLACEMENT_TYPE, [
@@ -57,6 +60,7 @@ if (REPLACEMENT_TYPE === 'production' || REPLACEMENT_TYPE === 'placeholder') {
 	// Info.plist
 	makeReplacements(IOS_INFO_PLIST_PATH, REPLACEMENT_TYPE, [
 		{ prodVal: APP_NAME, phVal: APP_NAME_PH },
+		{ prodVal: BUGSNAG_KEY, phVal: BUGSNAG_PH }
 	]);
 
 	// strings.xml
@@ -67,6 +71,7 @@ if (REPLACEMENT_TYPE === 'production' || REPLACEMENT_TYPE === 'placeholder') {
 	// AndroidManifest.xml
 	makeReplacements(ANDROID_MANIFEST_PATH, REPLACEMENT_TYPE, [
 		{ prodVal: GOOGLE_MAPS_API_KEY, phVal: GOOGLE_MAPS_API_KEY_PH },
+		{ prodVal: BUGSNAG_KEY, phVal: BUGSNAG_PH }
 	]);
 
 	// GoogleService-Info.plist

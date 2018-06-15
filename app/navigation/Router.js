@@ -163,7 +163,10 @@ const MainStack = StackNavigator(
 		},
 		FullSchedule: {
 			screen: FullSchedule,
-			navigationOptions: { title: 'Classes' }
+			navigationOptions: {
+				title: 'Classes',
+				headerRight: (<DummyView />)
+			}
 		},
 		LoginScreen: {
 			screen: OnboardingLogin,

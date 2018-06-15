@@ -6,34 +6,28 @@ import css from '../../styles/css'
 import CardHeader from './CardHeader'
 import CardMenu from './CardMenu'
 
-const Card = ({ hideMenu, cardRefresh, id, title, header, hide, children }) => {
-	if (title) {
-		return (
-			<ElevatedView
-				style={css.card_container}
-				ref={(i) => { this._card = i }}
-				elevation={3}
-			>
-				<CardHeader
+const Card = ({ hideMenu, cardRefresh, id, title, header, hide, children }) => (
+	<ElevatedView
+		style={css.card_container}
+		ref={(i) => { this._card = i }}
+		elevation={3}
+	>
+		<CardHeader
+			id={id}
+			title={title}
+			menu={
+				<CardMenu
+					hideMenu={hideMenu}
+					cardRefresh={cardRefresh}
+					hideCard={hide}
 					id={id}
-					title={title}
-					menu={
-						<CardMenu
-							hideMenu={hideMenu}
-							cardRefresh={cardRefresh}
-							hideCard={hide}
-							id={id}
-						/>
-					}
-					image={header}
 				/>
-				{children}
-			</ElevatedView>
-		)
-	} else {
-		return null
-	}
-}
+			}
+			image={header}
+		/>
+		{children}
+	</ElevatedView>
+)
 
 const mapDispatchToProps = dispatch => ({
 	hide: (id) => {
