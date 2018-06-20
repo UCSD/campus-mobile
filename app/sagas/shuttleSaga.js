@@ -15,33 +15,68 @@ function* toggleRoute(action) {
 	const { toggles, stops, routes } = yield select(getShuttle)
 	const { route } = action
 
-	Object.keys(toggles).forEach((element) => {
-		// Toggle off any non-selected route
-		if (Number(element) !== Number(route)) {
-			if (toggles[element] === true) {
+	const newToggles = Object.assign({}, toggles)
+	// Performs a deep copy of stops
+	let newStops = JSON.parse(JSON.stringify(stops))
+
+	if (toggles[route]) {
+		// If route is on, toggle off
+		newToggles[route] = false
+
+		// Remove route from every stop
+		Object.keys(routes[route].stops).forEach((stop) => {
+			if (stops[stop]) {
+				const newStop = { ...stops[stop] }
+				delete newStop.routes[route]
+				newStops = {
+					...newStops,
+					newStop
+				}
+			}
+		})
+	} else {
+		// Temporary: Deselect other selected routes
+		Object.keys(newToggles).forEach((toggledRoute) => {
+			if (newToggles[toggledRoute] && toggledRoute !== route) {
+				newToggles[toggledRoute] = false
+
 				// Remove route from every stop
-				Object.keys(routes[element].stops).forEach((key2, index2) => {
-					if (stops[key2]) {
-						delete stops[key2].routes[element]
+				Object.keys(routes[toggledRoute].stops).forEach((stop) => {
+					if (stops[stop]) {
+						const newStop = { ...stops[stop] }
+						delete newStop.routes[route]
+						newStops = {
+							...newStops,
+							newStop
+						}
 					}
 				})
 			}
-			toggles[element] = false
-		} else {
-			Object.keys(routes[element].stops).forEach((key2, index2) => {
-				if (stops[key2]) {
-					stops[key2].routes[element] = routes[element]
+		})
+
+		// Turn route on
+		newToggles[route] = true
+
+		// Add route to stops
+		Object.keys(routes[route].stops).forEach((stop) => {
+			if (stops[stop]) {
+				const newStop = {
+					...stops[stop],
+					routes: {}
 				}
-			})
-			toggles[element] = true
-		}
-	})
+				newStop.routes[route] = routes[route]
+				newStops = {
+					...newStops,
+					newStop
+				}
+			}
+		})
+	}
 
 	yield put({
 		type: 'TOGGLE_ROUTE',
-		toggles,
-		route,
-		stops
+		newToggles,
+		newStops
 	})
 }
 
