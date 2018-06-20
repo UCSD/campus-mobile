@@ -20,8 +20,8 @@ function shuttle(state = initialState, action) {
 			newState.lastUpdated = action.nowTime
 			return newState
 		case 'TOGGLE_ROUTE':
-			newState.toggles = action.toggles
-			newState.stops = action.stops
+			newState.toggles = action.newToggles
+			newState.stops = action.newStops
 			return newState
 		case 'SET_VEHICLES': {
 			const vehicles = {}
