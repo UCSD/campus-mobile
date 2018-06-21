@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.ucsd"
-    android:versionCode="59"
-    android:versionName="6.1">
+    android:versionCode="60"
+    android:versionName="6.0">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
