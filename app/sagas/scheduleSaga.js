@@ -81,7 +81,7 @@ function* updateSchedule() {
 			}
 		} catch (error) {
 			yield put({ type: 'GET_SCHEDULE_FAILURE', error })
-			logger.trackException(error, false)
+			logger.trackException(error)
 		}
 	}
 }
