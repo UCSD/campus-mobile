@@ -55,7 +55,10 @@ module.exports = {
 			report.severity = severity
 
 			if (metadata) {
-				report.metadata = metadata
+				report.metadata = {
+					...report.metadata,
+					loggerData: { ...metadata }
+				}
 			}
 		})
 		// tracker.trackEvent('Error', error)
