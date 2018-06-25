@@ -15,6 +15,7 @@
     "generate-docs": "./node_modules/.bin/jsdoc -c jsdoc.conf.json"
   },
   "dependencies": {
+    "@mapbox/polyline": "^1.0.0",
     "bugsnag-react-native": "2.9.5",
     "dateformat": "3.0.3",
     "html-entities": "1.2.1",
