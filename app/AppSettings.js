@@ -10,8 +10,8 @@ module.exports = {
 	SHUTTLE_STOPS_API_URL: 'https://ies4wyrlx9.execute-api.us-west-2.amazonaws.com/prod/v2/stops/',
 
 	/* DEV ROUTE, REMOVE BEFORE DEPLOYING! */
-	SHUTTLE_PATHS_URL: ' https://11wl1gc3v9.execute-api.us-west-2.amazonaws.com/dev/polylines/',
-	
+	SHUTTLE_PATHS_URL: 'https://11wl1gc3v9.execute-api.us-west-2.amazonaws.com/dev/polylines/',
+
 	SHUTTLE_VEHICLES_API_URL: 'https://hjr84cay81.execute-api.us-west-2.amazonaws.com/prod?route=',
 	DINING_API_URL: 'https://pg83tslbyi.execute-api.us-west-2.amazonaws.com/prod/v3/dining',
 	EVENTS_API_URL: 'https://2jjml3hf27.execute-api.us-west-2.amazonaws.com/prod/events/student',
