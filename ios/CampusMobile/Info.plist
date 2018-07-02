@@ -43,9 +43,13 @@
 				<string>TLSv1.0</string>
 				<key>NSExceptionRequiresForwardSecrecy</key>
 				<false/>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+        <true/>
 			</dict>
 			<key>ucsdnews.ucsd.edu</key>
 			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+        <true/>
 				<key>NSExceptionMinimumTLSVersion</key>
 				<string>TLSv1.0</string>
 				<key>NSExceptionRequiresForwardSecrecy</key>
