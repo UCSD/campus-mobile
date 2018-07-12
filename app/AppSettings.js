@@ -36,7 +36,7 @@ module.exports = {
 	ACCOUNT_HELP_URL: 'https://acms.ucsd.edu/students/accounts-and-passwords/index.html',
 
 	/* API TTLs */
-	LOCATION_TTL: 15000, // 15 seconds
+	LOCATION_TTL: 5000, // 5 seconds
 	SHUTTLE_API_TTL: 15000, // 15 seconds
 	DATA_SAGA_TTL: 60000, // 1 minute
 	SCHEDULE_TTL: 300000,  // 5 minutes
