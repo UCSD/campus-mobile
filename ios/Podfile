@@ -1,5 +1,5 @@
 # Uncomment the next line to define a global platform for your project
-# platform :ios, '9.0'
+platform :ios, '9.0'
 install! 'cocoapods', :deterministic_uuids => false
 
 target 'CampusMobile' do
@@ -26,7 +26,9 @@ target 'CampusMobile' do
   pod 'react-native-maps', path: '../node_modules/react-native-maps'
 
   # Pods for CampusMobile
-  pod 'Firebase/Messaging'
+  # Required by RNFirebase
+  pod 'Firebase/Core', '~> 5.3.0'
+  pod 'Firebase/Messaging', '~> 5.3.0'
 
   pod 'BugsnagReactNative', :path => '../node_modules/bugsnag-react-native'
 
