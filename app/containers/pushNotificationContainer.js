@@ -4,20 +4,31 @@ import {
 	Platform,
 } from 'react-native'
 import { connect } from 'react-redux'
+import firebase from 'react-native-firebase'
 import Permissions from 'react-native-permissions'
 
 class PushNotificationContainer extends React.Component {
 	componentDidMount() {
 		this.checkPermission()
+
+		this.onTokenRefreshListener = firebase.messaging().onTokenRefresh((fcmToken) => {
+			// Process your token as required
+			console.log('Firebase Token (refresh):', fcmToken)
+		})
 	}
 
 	componentWillUnmount() {
 		// stop listening for events
-		this.notificationListener.remove()
-		this.refreshTokenListener.remove()
+		this.onTokenRefreshListener()
 	}
 
 	getNotificationToken = () => {
+		firebase.messaging().getToken()
+			.then((fcmToken) => {
+				if (fcmToken) {
+					console.log('Firebase Token: ', fcmToken)
+				}
+			})
 	}
 
 	getSoftPermission = () => {
