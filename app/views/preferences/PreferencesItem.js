@@ -14,9 +14,9 @@ import css from '../../styles/css'
  * @param {Object} style Optional style
  * @return {JSX} Return PreferencesItem JSX
  */
-const PreferencesItem = ({ title, icon, link, style }) => (
+const PreferencesItem = ({ title, icon, link, style, navigation }) => (
 	<Touchable
-		onPress={() => { null }}
+		onPress={() => { navigation.navigate(link) }}
 		style={css.pi_container}
 	>
 		<Entypo name={icon} size={24} style={css.pi_icon} />
