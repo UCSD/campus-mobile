@@ -24,7 +24,7 @@
 */
 import { StyleSheet, Platform } from 'react-native'
 
-import { platformAndroid, deviceIphoneX, round } from '../util/general'
+import { platformAndroid, deviceIphoneX, platformIOS, round } from '../util/general'
 import COLOR from './ColorConstants'
 import LAYOUT from './LayoutConstants'
 
@@ -41,8 +41,11 @@ const css = StyleSheet.create({
 	main_full_flex: { flex: 1, backgroundColor: COLOR.WHITE, paddingBottom: deviceIphoneX() ? LAYOUT.NAVIGATOR_HEIGHT : 0 },
 	scroll_default: { backgroundColor: COLOR.WHITE },
 	card_container: { backgroundColor: COLOR.WHITE, margin: 6 },
+	card_full_container: { backgroundColor: COLOR.WHITE, marginTop: 16 },
 	main_full_lgrey: { flexGrow: 1, backgroundColor: COLOR.LGREY }, // special events
 	loginview_container: { flexGrow: 1, backgroundColor: COLOR.MGREY, marginTop: LAYOUT.NAVIGATOR_HEIGHT },
+	messaging_container: { flex: 1, paddingBottom: platformIOS() ? LAYOUT.NAVIGATOR_HEIGHT : 0 },
+
 	// Navigator
 	nav: { backgroundColor: COLOR.PRIMARY, height: LAYOUT.NAVIGATOR_HEIGHT, marginTop: deviceIphoneX() ? -13 : 0 },
 	navTitle: { flex: 1, fontSize: 24, fontWeight: '300', textAlign: 'center', alignSelf: 'center', marginTop: deviceIphoneX() ? 0 : -3 },
@@ -365,9 +368,6 @@ const css = StyleSheet.create({
 	/**
 	 *  14 - Settings
 	 */
-
-	
-
 	ua_accountinfo: { flexDirection: 'row', paddingHorizontal: 10, paddingVertical: 14, alignItems: 'center' },
 	ua_loggedin: { flex: 3, flexDirection: 'row', alignItems: 'center' },
 	ua_username_checkmark: { color: COLOR.GREEN },
@@ -387,24 +387,16 @@ const css = StyleSheet.create({
 	ua_panicText: { fontSize: 16, padding: 8, textAlign: 'center' },
 	ua_loginText: { fontSize: 16, color: COLOR.WHITE },
 	ua_errorText: { flex: 1, fontSize: 18, color: COLOR.MRED },
-	us_list_row: { flexDirection: 'row', alignItems: 'center', width: LAYOUT.MAX_CARD_WIDTH, borderBottomWidth: 1, borderBottomColor: COLOR.MGREY,
-		...Platform.select({
-			ios: {
-				shadowOpacity: 0,
-				shadowOffset: { height: 2, width: 2 },
-				shadowRadius: 2,
-			},
+	
+	us_list_row: { flexDirection: 'row', alignItems: 'center', borderTopWidth: 1, borderTopColor: COLOR.MGREY, paddingHorizontal: 20, paddingVertical: 8 },
+	us_icon: { color: COLOR.DGREY },
+	us_name_text: { flexGrow: 1, fontSize: 18, color: COLOR.VDGREY, paddingLeft: 16 },
+	us_switchContainer: { justifyContent: 'center', alignItems: 'center' },
 
-			android: {
-				margin: 0,
-				elevation: 0,
-				backgroundColor: COLOR.WHITE
-			},
-		})
-	},
-	us_icon: { padding: 7 },
-	us_name_text: { flex: 1, margin: 7, fontSize: 18 },
-	us_switchContainer: { width: 50, height: 50, justifyContent: 'center', alignItems: 'center', marginRight: 10 },
+	pi_container: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: COLOR.WHITE, marginVertical: 20, paddingVertical: 8, paddingHorizontal: 20, borderTopWidth: 2, borderTopColor: COLOR.MGREY, borderBottomWidth: 2, borderBottomColor: COLOR.MGREY },
+	pi_icon: { color: COLOR.PRIMARY },
+	pi_title: { flexGrow: 1, fontSize: 18, color: COLOR.VDGREY, paddingLeft: 16 },
+	pi_arrow: { color: COLOR.CCC },
 
 	/**
 	 *  15 - Onboarding

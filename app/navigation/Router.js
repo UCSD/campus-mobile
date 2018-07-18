@@ -17,7 +17,8 @@ import DiningDetail from '../views/dining/DiningDetail'
 import DiningNutrition from '../views/dining/DiningNutrition'
 import EventDetail from '../views/events/EventDetail'
 import NewsDetail from '../views/news/NewsDetail'
-import FeedbackView from '../views/feedback/FeedbackView'
+import Feedback from '../views/preferences/feedback/Feedback'
+import Messaging from '../views/messaging/Messaging'
 import Preferences from '../views/preferences/Preferences'
 import Map from '../views/map/Map'
 import DataListViewAll from '../views/common/DataListViewAll'
@@ -44,7 +45,7 @@ const TabNav = TabNavigator(
 	{
 		Home: { screen: Home },
 		Map: { screen: Map },
-		Feedback: { screen: FeedbackView },
+		Messaging: { screen: Messaging },
 		Preferences: { screen: Preferences }
 	},
 	{
@@ -171,6 +172,13 @@ const MainStack = StackNavigator(
 		LoginScreen: {
 			screen: OnboardingLogin,
 			navigationOptions: { header: null }
+		},
+		Feedback: {
+			screen: Feedback,
+			navigationOptions: {
+				title: 'Feedback',
+				headerRight: (<DummyView />)
+			}
 		},
 		DataListViewAll: {
 			screen: DataListViewAll,

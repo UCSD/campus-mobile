@@ -42,24 +42,25 @@ module.exports = {
 	},
 
 	/**
-	 * Sends a trackException message to Google Analytics
+	 * Sends a trackException message to Bugsnag
 	 * @function
 	 * @param {string} error The error message
 	 * @param {bool} fatal If the crash was fatal or not
 	 */
 	trackException(error, metadata, fatal) {
-		console.log(error)
 		let severity = 'warning'
 		if (fatal) severity = 'error'
-		bugsnag.notify(error, (report) => {
-			report.severity = severity
 
-			if (metadata) {
-				report.metadata = metadata
-			}
-		})
-		// tracker.trackEvent('Error', error)
-		// tracker.trackException(error, fatal);
+		if (__DEV__) {
+			console.log(error, metadata, fatal)
+		} else {
+			bugsnag.notify(error, (report) => {
+				report.severity = severity
+				if (metadata) {
+					report.metadata = metadata
+				}
+			})
+		}
 	},
 
 }

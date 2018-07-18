@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import SortableList from 'react-native-sortable-list'
-import PreferencesItem from './PreferencesItem'
-import Card from '../common/Card'
+import CardPreferencesItem from './CardPreferencesItem'
+import Card from '../../common/Card'
 
 // View for user to manage preferences, including which cards are visible
 class CardPreferences extends Component {
@@ -63,7 +63,7 @@ class CardPreferences extends Component {
 
 	render() {
 		return (
-			<Card id="cards" title="Cards" hideMenu={true}>
+			<Card id="cards" title="Cards" hideMenu={true} full={true}>
 				<SortableList
 					data={this.state.cardObject}
 					order={this.props.cardOrder}
@@ -71,7 +71,7 @@ class CardPreferences extends Component {
 						({ data, active, disabled }) => (
 							// Mildly confusing, but active prop from
 							// renderRow means the row has been grabbed
-							<PreferencesItem
+							<CardPreferencesItem
 								data={data}
 								active={active}
 							/>

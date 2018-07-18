@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
 import { ScrollView } from 'react-native'
+import { withNavigation } from 'react-navigation'
 import UserAccount from './user/UserAccount'
-import CardPreferences from './CardPreferences'
+import CardPreferences from './card/CardPreferences'
+import PreferencesItem from './PreferencesItem'
 
 // View for user to manage preferences, including which cards are visible
 class PreferencesView extends Component {
-	static navigationOptions = { title: 'User Settings' }
+	static navigationOptions = { title: 'User Profile' }
 
 	constructor(props) {
 		super(props)
@@ -21,9 +23,10 @@ class PreferencesView extends Component {
 			<ScrollView scrollEnabled={this.state.scrollEnabled}>
 				<UserAccount />
 				<CardPreferences toggleScroll={this.toggleScroll} />
+				<PreferencesItem title="Feedback" icon="new-message" link="Feedback" />
 			</ScrollView>
 		)
 	}
 }
 
-export default PreferencesView
+export default withNavigation(PreferencesView)
