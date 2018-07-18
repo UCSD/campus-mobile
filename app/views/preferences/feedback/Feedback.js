@@ -12,15 +12,12 @@ import {
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { connect } from 'react-redux'
 import Toast from 'react-native-simple-toast'
-
 import { hideKeyboard } from '../../../util/general'
 import logger from '../../../util/logger'
 import css from '../../../styles/css'
 import { APP_NAME, REQUEST_POST_TTL } from '../../../AppSettings'
 
 export class FeedbackView extends Component {
-	static navigationOptions = { title: 'Feedbacks' }
-
 	componentDidMount() {
 		logger.ga('View Loaded: Feedback')
 
