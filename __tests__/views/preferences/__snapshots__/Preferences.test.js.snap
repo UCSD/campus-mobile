@@ -8,5 +8,10 @@ exports[`renders without crashing 1`] = `
   <Connect(CardPreferences)
     toggleScroll={[Function]}
   />
+  <withNavigation(PreferencesItem)
+    icon="new-message"
+    link="Feedback"
+    title="Feedback"
+  />
 </ScrollView>
 `;

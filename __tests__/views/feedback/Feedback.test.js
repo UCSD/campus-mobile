@@ -4,7 +4,7 @@ import Enzyme, { shallow } from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
 
 // Component to be tested
-import { FeedbackView } from '../../../app/views/feedback/FeedbackView'
+import { FeedbackView } from '../../../app/views/preferences/feedback/Feedback'
 
 Enzyme.configure({ adapter: new Adapter() })
 

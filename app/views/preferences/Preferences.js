@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { ScrollView } from 'react-native'
-import { withNavigation } from 'react-navigation'
 import UserAccount from './user/UserAccount'
 import CardPreferences from './card/CardPreferences'
 import PreferencesItem from './PreferencesItem'
@@ -29,4 +28,4 @@ class PreferencesView extends Component {
 	}
 }
 
-export default withNavigation(PreferencesView)
+export default PreferencesView
