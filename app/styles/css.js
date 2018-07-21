@@ -52,11 +52,11 @@ const css = StyleSheet.create({
 	// Tab Bar
 	tabBarIOS: { backgroundColor: COLOR.WHITE, height: LAYOUT.TAB_BAR_HEIGHT },
 	tabBarAndroid: { backgroundColor: COLOR.WHITE, height: LAYOUT.TAB_BAR_HEIGHT },
-	tabContainer: { paddingTop: deviceIphoneX() ? 17 : 0 },
+	tabContainer: { justifyContent: 'center' },
 	tabContainerBottom: { borderBottomColor: COLOR.PRIMARY },
 	tabIcon: { color: COLOR.DMGREY, alignSelf: 'center', backgroundColor: COLOR.TRANSPARENT, opacity: 0.95, width: 24, height: 24, overflow: 'hidden' },
 	tabIconUser: { color: COLOR.WHITE, alignSelf: 'center', backgroundColor: COLOR.DMGREY, opacity: 0.95, width: 24, height: 24, overflow: 'hidden' },
-	tabIconUserOutline: { borderColor: COLOR.DMGREY, alignSelf: 'center', overflow: 'hidden', borderRadius: 24, borderWidth: 1 },
+	tabIconUserOutline: { borderColor: COLOR.DMGREY, alignSelf: 'center', overflow: 'hidden', borderRadius: 24, width: 24, height: 24, borderWidth: 1 },
 
 	/**
 	 *  02 - Common
@@ -366,7 +366,7 @@ const css = StyleSheet.create({
 	 *  14 - Settings
 	 */
 
-	
+
 
 	ua_accountinfo: { flexDirection: 'row', paddingHorizontal: 10, paddingVertical: 14, alignItems: 'center' },
 	ua_loggedin: { flex: 3, flexDirection: 'row', alignItems: 'center' },
