@@ -52,7 +52,7 @@ const css = StyleSheet.create({
 	// Tab Bar
 	tabBarIOS: { backgroundColor: COLOR.WHITE, height: LAYOUT.TAB_BAR_HEIGHT },
 	tabBarAndroid: { backgroundColor: COLOR.WHITE, height: LAYOUT.TAB_BAR_HEIGHT },
-	tabContainer: { justifyContent: 'center' },
+	tabContainer: { justifyContent: 'center', paddingTop: deviceIphoneX() ? 17 : 0 },
 	tabContainerBottom: { borderBottomColor: COLOR.PRIMARY },
 	tabIcon: { color: COLOR.DMGREY, alignSelf: 'center', backgroundColor: COLOR.TRANSPARENT, opacity: 0.95, width: 24, height: 24, overflow: 'hidden' },
 	tabIconUser: { color: COLOR.WHITE, alignSelf: 'center', backgroundColor: COLOR.DMGREY, opacity: 0.95, width: 24, height: 24, overflow: 'hidden' },
