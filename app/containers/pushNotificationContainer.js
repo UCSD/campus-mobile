@@ -15,11 +15,16 @@ class PushNotificationContainer extends React.Component {
 			// Process your token as required
 			console.log('Firebase Token (refresh):', fcmToken)
 		})
+
+		this.messageListener = firebase.messaging().onMessage((message) => {
+			console.log('New message received: ', message)
+		})
 	}
 
 	componentWillUnmount() {
 		// stop listening for events
 		this.onTokenRefreshListener()
+		this.messageListener()
 	}
 
 	getNotificationToken = () => {
