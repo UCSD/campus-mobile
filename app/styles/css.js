@@ -41,7 +41,7 @@ const css = StyleSheet.create({
 	main_full_flex: { flex: 1, backgroundColor: COLOR.WHITE, paddingBottom: deviceIphoneX() ? LAYOUT.NAVIGATOR_HEIGHT : 0 },
 	scroll_default: { backgroundColor: COLOR.WHITE },
 	card_container: { backgroundColor: COLOR.WHITE, margin: 6 },
-	card_full_container: { backgroundColor: COLOR.WHITE, marginTop: 16 },
+	card_full_container: { backgroundColor: COLOR.WHITE, marginTop: 16, borderTopWidth: 1, borderBottomWidth: 1, borderColor: COLOR.MGREY },
 	main_full_lgrey: { flexGrow: 1, backgroundColor: COLOR.LGREY }, // special events
 	loginview_container: { flexGrow: 1, backgroundColor: COLOR.MGREY, marginTop: LAYOUT.NAVIGATOR_HEIGHT },
 	messaging_container: { flex: 1, paddingBottom: platformIOS() ? LAYOUT.NAVIGATOR_HEIGHT : 0 },
@@ -387,8 +387,8 @@ const css = StyleSheet.create({
 	ua_panicText: { fontSize: 16, padding: 8, textAlign: 'center' },
 	ua_loginText: { fontSize: 16, color: COLOR.WHITE },
 	ua_errorText: { flex: 1, fontSize: 18, color: COLOR.MRED },
-	
-	us_list_row: { flexDirection: 'row', alignItems: 'center', borderTopWidth: 1, borderTopColor: COLOR.MGREY, paddingHorizontal: 20, paddingVertical: 8 },
+
+	us_list_row: { flexDirection: 'row', alignItems: 'center', borderTopWidth: 1, borderTopColor: COLOR.MGREY, paddingHorizontal: 20, paddingVertical: 8, margin: 0, elevation: 0, backgroundColor: COLOR.WHITE },
 	us_icon: { color: COLOR.DGREY },
 	us_name_text: { flexGrow: 1, fontSize: 18, color: COLOR.VDGREY, paddingLeft: 16 },
 	us_switchContainer: { justifyContent: 'center', alignItems: 'center' },

@@ -56,8 +56,9 @@ class UserAccount extends Component {
 	}
 
 	render() {
+		const cardTitle = this.props.user.isLoggedIn ? 'Logged in as:' : 'Log in with SSO:'
 		return (
-			<Card id="user" title={this.props.user.isLoggedIn ? 'Logged in as:' : 'Log in with SSO:'} hideMenu={true} full={true}>
+			<Card id="user" title={cardTitle} hideMenu full>
 				<View style={{ width: getMaxCardWidth() }}>
 					{(this.props.user.isLoggedIn) ? (
 						<AccountInfo />

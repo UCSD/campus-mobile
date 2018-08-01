@@ -10,7 +10,7 @@ const Card = ({ hideMenu, cardRefresh, id, title, header, hide, children, full }
 	<ElevatedView
 		style={full ? css.card_full_container : css.card_container}
 		ref={(i) => { this._card = i }}
-		elevation={3}
+		elevation={full ? 0 : 3}
 	>
 		<CardHeader
 			id={id}

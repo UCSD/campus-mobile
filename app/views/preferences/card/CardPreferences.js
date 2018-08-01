@@ -63,7 +63,7 @@ class CardPreferences extends Component {
 
 	render() {
 		return (
-			<Card id="cards" title="Cards" hideMenu={true} full={true}>
+			<Card id="cards" title="Cards" hideMenu full>
 				<SortableList
 					data={this.state.cardObject}
 					order={this.props.cardOrder}
