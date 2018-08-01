@@ -25,3 +25,37 @@ allprojects {
         }
     }
 }
+
+ext {
+    gps_version = '15.0.1'
+    maps_version = '15.0.1'
+    analytics_version = '16.0.1'
+    tagmanager_version = '16.0.1'
+    measurement_version = '16.0.0'
+    invite_version = '16.0.1'
+    supportlib_version = '27.1.1'
+}
+
+subprojects {
+    project.configurations.all {
+        resolutionStrategy.eachDependency { details ->
+            if (details.requested.group == 'com.android.support'
+                && !details.requested.name.contains('multidex')
+            ) {
+                details.useVersion "$supportlib_version"
+            }
+
+            if (details.requested.group == 'com.google.android.gms'
+                && !details.requested.name.contains('multidex')) {
+                if (details.requested.name.contains('play-services-analytics')) details.useVersion "$analytics_version"
+                else if (details.requested.name.contains('play-services-appinvite')) details.useVersion "$invite_version"
+                else if (details.requested.name.equals('play-services-tagmanager-v4-impl')) details.useVersion "$tagmanager_version"
+                else if (details.requested.name.equals('play-services-measurement-base')) details.useVersion "$measurement_version"
+                else {
+                    println details.requested.name
+                    details.useVersion "$gps_version"
+                }
+            }
+        }
+    }
+}

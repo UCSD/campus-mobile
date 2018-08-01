@@ -157,10 +157,10 @@ android {
 dependencies {
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
-    implementation "com.android.support:appcompat-v7:27.1.1"
-    implementation "com.google.android.gms:play-services-base:15.0.1"
-    implementation "com.google.android.gms:play-services-maps:15.0.1"
-    implementation "com.google.android.gms:play-services-analytics:16.0.1"
+    implementation "com.android.support:appcompat-v7:$supportlib_version"
+    implementation "com.google.android.gms:play-services-base:$gps_version"
+    implementation "com.google.android.gms:play-services-maps:$maps_version"
+    implementation "com.google.android.gms:play-services-analytics:$analytics_version"
 
     implementation project(':react-native-firebase')
     implementation "com.google.firebase:firebase-core:16.0.1"
@@ -192,4 +192,4 @@ task copyDownloadableDepsToLibs(type: Copy) {
     into 'libs'
 }
 
-// apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.gms.google-services'

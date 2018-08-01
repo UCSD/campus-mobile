@@ -39,7 +39,7 @@ public class MainApplication extends Application implements ReactApplication {
           new MainReactPackage(),
             new RNFirebasePackage(),
             new RNFirebaseNotificationsPackage(),
-              new RNFirebaseMessagingPackage(),
+            new RNFirebaseMessagingPackage(),
             BugsnagReactNative.getPackage(),
             new ReactNativeRestartPackage(),
             new GoogleAnalyticsBridgePackage(),
