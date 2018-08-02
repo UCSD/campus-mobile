@@ -12,7 +12,7 @@ import AccountInfo from './AccountInfo'
 import AccountLogin from './AccountLogin'
 import AppSettings from '../../../AppSettings'
 import css from '../../../styles/css'
-import { getMaxCardWidth } from '../../../util/general'
+import { getScreenWidth } from '../../../util/general'
 import Card from '../../common/Card'
 
 const auth = require('../../../util/auth')
@@ -59,7 +59,7 @@ class UserAccount extends Component {
 		const cardTitle = this.props.user.isLoggedIn ? 'Logged in as:' : 'Log in with SSO:'
 		return (
 			<Card id="user" title={cardTitle} hideMenu full>
-				<View style={{ width: getMaxCardWidth() }}>
+				<View style={{ width: getScreenWidth() }}>
 					{(this.props.user.isLoggedIn) ? (
 						<AccountInfo />
 					) : (

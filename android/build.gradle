@@ -52,7 +52,6 @@ subprojects {
                 else if (details.requested.name.equals('play-services-tagmanager-v4-impl')) details.useVersion "$tagmanager_version"
                 else if (details.requested.name.equals('play-services-measurement-base')) details.useVersion "$measurement_version"
                 else {
-                    println details.requested.name
                     details.useVersion "$gps_version"
                 }
             }
