@@ -6,6 +6,7 @@ import ElevatedView from 'react-native-elevated-view'
 
 import CardHeader from './CardHeader'
 import CardMenu from './CardMenu'
+import { trackException } from '../../util/logger'
 import css from '../../styles/css'
 import LAYOUT from '../../styles/LayoutConstants'
 
@@ -54,7 +55,14 @@ class ScrollCard extends React.Component {
 					scrollEventThrottle={0}
 					data={this.props.scrollData}
 					enableEmptySections={true}
-					keyExtractor={(listItem, index) => (listItem.id.toString() + index)}
+					keyExtractor={(listItem, index) => {
+						if (listItem.id) return listItem.id.toString() + index
+						else {
+							const error = new Error('Invalid ScrollCard list item')
+							trackException(error, listItem)
+							return index
+						}
+					}}
 					renderItem={this.props.renderItem}
 				/>
 			)

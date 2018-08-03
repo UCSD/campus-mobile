@@ -77,7 +77,7 @@ function* doLogin(action) {
 				yield call(queryUserData)
 			}
 		} catch (error) {
-			logger.trackException(error, false)
+			logger.trackException(error)
 			yield put({ type: 'LOG_IN_FAILURE', error })
 		}
 	}
@@ -100,7 +100,8 @@ function* doTokenRefresh() {
 				if (secondError.message === invalidCredsMessage) {
 					// We tried again and got the same error
 					yield put({ type: 'PANIC_LOG_OUT' })
-					logger.trackException('InvalidCreds Error', false)
+					const invalidCredsError = new Error('InvalidCreds Error')
+					logger.trackException(invalidCredsError)
 					yield call(clearUserData)
 				}
 			}

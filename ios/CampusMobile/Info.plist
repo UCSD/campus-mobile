@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>BugsnagAPIKey</key>
+	<string>BUGSNAG_PH</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -11,7 +13,7 @@
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.1</string>
+	<string>6.0</string>
 	<key>CFBundleName</key>
 	<string>$(PRODUCT_NAME)</string>
 	<key>CFBundlePackageType</key>
@@ -21,7 +23,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>10</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -41,9 +43,13 @@
 				<string>TLSv1.0</string>
 				<key>NSExceptionRequiresForwardSecrecy</key>
 				<false/>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+        <true/>
 			</dict>
 			<key>ucsdnews.ucsd.edu</key>
 			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+        <true/>
 				<key>NSExceptionMinimumTLSVersion</key>
 				<string>TLSv1.0</string>
 				<key>NSExceptionRequiresForwardSecrecy</key>
@@ -94,7 +100,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>BugsnagAPIKey</key>
-	<string>BUGSNAG_PH</string>
 </dict>
 </plist>
