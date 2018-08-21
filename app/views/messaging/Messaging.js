@@ -6,6 +6,18 @@ import Icon from 'react-native-vector-icons/MaterialIcons'
 import logger from '../../util/logger'
 import css from '../../styles/css'
 
+const checkData = (data) => {
+	const cleanData = data.filter((item) => {
+		const day = moment.unix(item.timestamp)
+		if (day.isValid()) {
+			return true
+		}
+		return false
+	})
+	cleanData.sort( ( left, right ) => moment.utc(left.timestamp).diff(moment.utc(right.timestamp)))
+	return cleanData
+}
+
 export class Messaging extends Component {
 	static navigationOptions = { title: 'Notifications' }
 
@@ -58,7 +70,7 @@ export class Messaging extends Component {
 				{
 					id: 'sampleId2',
 					title: 'Test Message', // optional
-					timestamp: 1533338241173,
+					timestamp: 'fjdkla34928j',
 					sender: 'example@ucsd.edu',
 					message: 'Hello. This is a test message from some sender. I have a lot to say so this might take up a bit of space. Lorem ipsum etc whatever.',
 					// data is optional
@@ -90,23 +102,14 @@ export class Messaging extends Component {
 		logger.ga('View Loaded: Messaging')
 	}
 
-
-	renderSeparator = ({ leadingItem }) => {
-		if (leadingItem.data.explanation.length === 0) {
-			return null
-		}
-		return (
-			<View
-				style={{ height: 1, width: '100%', backgroundColor: '#D2D2D2' }}
-			/>
-		)
-	}
+	renderSeparator = ({ leadingItem }) => (
+		<View
+			style={{ height: 1, width: '100%', backgroundColor: '#D2D2D2' }}
+		/>
+	)
 
 	renderItem = ({ item }) => {
 		const day = moment.unix(item.timestamp)
-		if (item.data.explanation.length === 0) {
-			return null
-		}
 		return (
 			<View style={{ height: 110, width: '100%', flexDirection: 'row', justifyContent: 'flex-start' }}>
 				<View style={{ justifyContent: 'center', alignItems: 'center', marginLeft: 10, marginRight: 20 }}>
@@ -127,12 +130,13 @@ export class Messaging extends Component {
 	}
 
 	render() {
-		this.state.dataSource.sort( ( left, right ) => moment.utc(left.timestamp).diff(moment.utc(right.timestamp)))
+		const filteredData = checkData(this.state.dataSource)
+		console.log(filteredData.length)
 		return (
 			<ScrollView style={css.scroll_default} contentContainerStyle={css.main_full}>
 				<FlatList
 					style={{ backgroundColor: '#F9F9F9' }}
-					data={this.state.dataSource}
+					data={filteredData}
 					renderItem={this.renderItem}
 					keyExtractor={(item, index) => item.id}
 					ItemSeparatorComponent={this.renderSeparator}
