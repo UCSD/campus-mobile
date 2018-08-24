@@ -18,7 +18,7 @@ const ParkingTypes = require('./ParkingSpotTypeList.json')
 class ParkingSpotType extends React.Component {
 	constructor(props) {
 		super(props)
-		this.state = { isChecked: [false, false, false, false, false], count: 0, warning: false }
+		this.state = { isChecked: [false, false, false, false, false], count: 0 }
 	}
 
 	incrementCount() {
@@ -29,9 +29,6 @@ class ParkingSpotType extends React.Component {
 		this.setState({ count: this.state.count - 1 })
 	}
 
-	closeWarning() {
-		this.setState({ warning: false })
-	}
 
 	rowTouched(index) {
 		const ids = [...this.state.isChecked]
@@ -47,41 +44,7 @@ class ParkingSpotType extends React.Component {
 			this.setState({ isChecked: ids })
 			this.incrementCount()
 		}
-		// user tried to select a row but reached limit
-		else {
-			this.setState({ warning: true })
-		}
-	}
-
-	// returns the warning sign
-	displayWarning() {
-		return (
-			<ElevatedView
-				style={Styles.warningElevatedView}
-				elevation={5}
-			>
-				<View style={Styles.waringContainerView}>
-					<Touchable style={Styles.closeBtnStyle} onPress={() => this.closeWarning()}>
-						<Icon name="close" size={25} color={COLOR.DGREY} />
-					</Touchable>
-					<Text style={Styles.warningHeaderTextStyle} >
-						{'Max Selection (3)'}
-					</Text>
-					<Text>
-						{'Only up to 3 type selections'}
-					</Text>
-					<Text>
-						{'are allowed at one time.'}
-					</Text>
-					<Text>
-						{'\nCancel a parking type selection to'}
-					</Text>
-					<Text>
-						{'add another parking type.'}
-					</Text>
-				</View>
-			</ElevatedView>
-		)
+		// user tried to select a row but reached limit, so do nothing
 	}
 
 	// this function returns a touchable that has all the elements needed for each row
@@ -98,7 +61,6 @@ class ParkingSpotType extends React.Component {
 	}
 
 	render() {
-		console.log('rendered')
 		return (
 			<View
 				style={Styles.fullContainer}
@@ -117,11 +79,38 @@ class ParkingSpotType extends React.Component {
 					}
 					enableEmptySections={true}
 				/>
-				{this.state.warning ? this.displayWarning() : null}
+				{displayWarning()}
 			</View>
 		)
 	}
 }
+
+// returns the warning sign
+const displayWarning = () =>  (
+	<ElevatedView
+		style={Styles.warningElevatedView}
+		elevation={5}
+	>
+		<View style={Styles.waringContainerView}>
+			<Text style={Styles.warningHeaderTextStyle} >
+				{'Max Selection (3)'}
+			</Text>
+			<Text>
+				{'Only up to 3 type selections'}
+			</Text>
+			<Text>
+				{'are allowed at one time.'}
+			</Text>
+			<Text>
+				{'\nCancel a parking type selection to'}
+			</Text>
+			<Text>
+				{'add another parking type.'}
+			</Text>
+		</View>
+	</ElevatedView>
+)
+
 
 // returns an elevated view that contains all elemnts of a selected row
 function getSelectedRow({ parkingObj }) {
@@ -209,16 +198,11 @@ const Styles = {
 		alignItems: 'center',
 		justifyContent: 'center',
 		marginHorizontal: 30,
-		posotion: 'relative',
-		top: -100
+		bottom: 25
 	},
 	warningConatinerView: {
 		alignItems: 'center',
 		justifyContent: 'center'
-	},
-	closeBtnStyle: {
-		right: -240,
-		top: -15
 	},
 	warningHeaderTextStyle: {
 		fontSize: 18,
