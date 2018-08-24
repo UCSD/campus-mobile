@@ -29,6 +29,7 @@ import ShuttleRoutesListView from '../views/shuttle/ShuttleRoutesListView'
 import ShuttleStopsListView from '../views/shuttle/ShuttleStopsListView'
 import ShuttleSavedListView from '../views/shuttle/ShuttleSavedListView'
 import FullSchedule from '../views/schedule/FullScheduleListView'
+import ParkingSpotType from '../views/parking/ParkingSpotType'
 
 // TABS
 import TabIcons from './TabIcons'
@@ -136,6 +137,13 @@ const MainStack = StackNavigator(
 			screen: ShuttleRoutesListView,
 			navigationOptions: {
 				title: 'Choose Route',
+				headerRight: (<DummyView />)
+			}
+		},
+		ParkingSpotType: {
+			screen: ParkingSpotType,
+			navigationOptions: {
+				title: 'Parking: Edit Parking Type',
 				headerRight: (<DummyView />)
 			}
 		},

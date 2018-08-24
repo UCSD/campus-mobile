@@ -87,9 +87,14 @@ export class ShuttleCardContainer extends React.Component {
 		navigation.navigate('ShuttleStopsListView', { shuttle_stops: alphaStops, addStop: this.addStop });
 	}
 
+	// gotoSavedList = () => {
+	// 	const { navigation } = this.props;
+	// 	navigation.navigate('ShuttleSavedListView', { gotoRoutesList: this.gotoRoutesList });
+	// }
+
 	gotoSavedList = () => {
 		const { navigation } = this.props;
-		navigation.navigate('ShuttleSavedListView', { gotoRoutesList: this.gotoRoutesList });
+		navigation.navigate('ParkingSpotType', { gotoRoutesList: this.gotoRoutesList });
 	}
 
 	addStop = (stopID, stopName) => {
