@@ -59,12 +59,19 @@ const initialState = {
 			active: true,
 			name: 'Weather',
 			component: 'WeatherCard'
+		},
+		parking: {
+			id: 'parking',
+			active: true,
+			name: 'Parking Availability',
+			component: 'ParkingCard'
 		}
 	},
 
 	// Only cards that show up by default
 	// on first launch should appear here.
 	cardOrder: [
+		'parking',
 		'shuttle',
 		'dining',
 		'events',
