@@ -71,6 +71,7 @@ class ParkingSpotType extends React.Component {
 					showsVerticalScrollIndicator={false}
 					keyExtractor={parkingType => parkingType.id.toString()}
 					data={ParkingTypes}
+					extraData={this.state.isChecked}
 					renderItem={
 						(parkingObj) => {
 							parkingObj = parkingObj.item
@@ -85,6 +86,11 @@ class ParkingSpotType extends React.Component {
 	}
 }
 
+const renderSeparator = () => (
+	<View
+		style={Styles.flatListSeperator}
+	/>
+)
 // returns the warning sign
 const displayWarning = () =>  (
 	<ElevatedView
@@ -178,7 +184,7 @@ const Styles = {
 		alignItems: 'center',
 		justifyContent: 'center',
 		height: 50,
-		margin: 3
+		margin: 3,
 
 	},
 	unelevatedRowView: {
@@ -189,7 +195,7 @@ const Styles = {
 		alignItems: 'center',
 		justifyContent: 'center',
 		height: 50,
-		margin: 3
+		margin: 3,
 	},
 	warningElevatedView: {
 		flex: 1,
@@ -214,6 +220,10 @@ const Styles = {
 		backgroundColor: 'white'
 	},
 	flatList: { backgroundColor: 'white' },
+	flatListSeperator: {
+		height: 1,
+		backgroundColor: COLOR.MGREY,
+	}
 }
 
 
