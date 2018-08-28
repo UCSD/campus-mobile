@@ -7,6 +7,15 @@ import { connect } from 'react-redux'
 import firebase from 'react-native-firebase'
 import Permissions from 'react-native-permissions'
 
+const subscribeToDefaults = (messaging) => {
+	const defaultTopics = ['all', 'emergency']
+
+	defaultTopics.forEach((topic) => {
+		messaging.subscribeToTopic(topic)
+		console.log('Subscribed to ' + topic)
+	})
+}
+
 class PushNotificationContainer extends React.Component {
 	componentDidMount() {
 		this.checkPermission()
@@ -15,7 +24,7 @@ class PushNotificationContainer extends React.Component {
 			// Process your token as required
 			console.log('Firebase Token (refresh):', fcmToken)
 
-			firebase.messaging().subscribeToTopic('emergency')
+			subscribeToDefaults(firebase.messaging())
 		})
 
 		this.messageListener = firebase.messaging().onMessage((message) => {
@@ -25,8 +34,6 @@ class PushNotificationContainer extends React.Component {
 		this.notificationListener = firebase.notifications().onNotification((notification) => {
 			console.log('New notification received: ', notification)
 		})
-
-		firebase.messaging().subscribeToTopic('emergency')
 	}
 
 	componentWillUnmount() {
@@ -40,6 +47,7 @@ class PushNotificationContainer extends React.Component {
 			.then((fcmToken) => {
 				if (fcmToken) {
 					console.log('Firebase Token: ', fcmToken)
+					subscribeToDefaults(firebase.messaging())
 				}
 			})
 	}
