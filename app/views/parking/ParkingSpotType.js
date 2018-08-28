@@ -11,7 +11,7 @@ import { connect } from 'react-redux'
 import COLOR from '../../styles/ColorConstants'
 import Touchable from '../common/Touchable'
 import css from '../../styles/css'
-import funtionsss from '../../sagas/parkingSaga'
+import { updateParkingTypeSelection } from '../../sagas/parkingSaga'
 
 const campusLogo = require('../../assets/images/UCSanDiegoLogo-White.png')
 const ParkingTypes = require('./ParkingSpotTypeList.json')
@@ -33,7 +33,7 @@ class ParkingSpotType extends React.Component {
 
 	rowTouched(index) {
 		const { dispatch, parkingData } = this.props
-		console.log(funtionsss.updateParkingTypeSelection)
+		console.log(updateParkingTypeSelection)
 		const ids = [...parkingData]
 		// user is trying to unselect a row
 		if (ids[index]) {
