@@ -10,4 +10,6 @@ class ParkingCardContainer extends Component {
   }
 }
 
-export default ParkingCardContainer;
+const mapStateToProps = state => ({ parkingData: state.weather.data })
+const ActualParkingCard = connect(mapStateToProps)(ParkingCardContainer)
+export default ActualParkingCard
