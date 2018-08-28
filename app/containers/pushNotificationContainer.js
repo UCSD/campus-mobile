@@ -21,8 +21,10 @@ class PushNotificationContainer extends React.Component {
 		})
 
 		this.notificationListener = firebase.notifications().onNotification((notification) => {
- 			console.log('New notification received: ', notification)  
+ 			console.log('New notification received: ', notification)
 		})
+
+		firebase.messaging().subscribeToTopic('emergency');
 	}
 
 	componentWillUnmount() {

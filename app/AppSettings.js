@@ -19,7 +19,10 @@ module.exports = {
 		if (isStudentDemo) return 'https://pad7kcyzo1.execute-api.us-west-2.amazonaws.com/prod/v1/demo/student/class_list'
 		else return 'https://api.ucsd.edu:8245/student/my/academic_history/v1/class_list'
 	},
-	AUTH_SERVICE_API_URL: 'https://c12cf2xke8.execute-api.us-west-2.amazonaws.com/prod/v1/access-profile',
+
+	// AUTH_SERVICE_API_URL: ’https://c12cf2xke8.execute-api.us-west-2.amazonaws.com/prod/v1/access-profile',
+	// For dev only
+	AUTH_SERVICE_API_URL: 'https://3hepzvdimd.execute-api.us-west-2.amazonaws.com/dev/v1/access-profile',
 	ACADEMIC_TERM_API_URL: 'https://btgre7sss6.execute-api.us-west-2.amazonaws.com/prod/v1/term/current',
 	ACADEMIC_TERM_FINALS_API_URL(isStudentDemo) {
 		if (isStudentDemo) return 'https://pad7kcyzo1.execute-api.us-west-2.amazonaws.com/prod/v1/demo/term/current/finals'
