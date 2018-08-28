@@ -11,6 +11,7 @@ import { connect } from 'react-redux'
 import COLOR from '../../styles/ColorConstants'
 import Touchable from '../common/Touchable'
 import css from '../../styles/css'
+import funtionsss from '../../sagas/parkingSaga'
 
 const campusLogo = require('../../assets/images/UCSanDiegoLogo-White.png')
 const ParkingTypes = require('./ParkingSpotTypeList.json')
@@ -31,17 +32,19 @@ class ParkingSpotType extends React.Component {
 
 
 	rowTouched(index) {
-		const ids = [...this.state.isChecked]
+		const { dispatch, parkingData } = this.props
+		console.log(funtionsss.updateParkingTypeSelection)
+		const ids = [...parkingData]
 		// user is trying to unselect a row
 		if (ids[index]) {
 			ids[index] = !ids[index]
-			this.setState({ isChecked: ids })
+			//dispatch(updateParkingTypeSelection(ids))
 			this.decrementCount()
 		}
 		// user is trying to select a row
 		else if (this.state.count < 3) {
 			ids[index] = !ids[index]
-			this.setState({ isChecked: ids })
+			//dispatch(updateParkingTypeSelection(ids))
 			this.incrementCount()
 		}
 		// user tried to select a row but reached limit, so do nothing
@@ -79,6 +82,7 @@ class ParkingSpotType extends React.Component {
 						}
 					}
 					enableEmptySections={true}
+					ItemSeperatorComponent={renderSeparator}
 				/>
 				{displayWarning()}
 			</View>
@@ -86,11 +90,15 @@ class ParkingSpotType extends React.Component {
 	}
 }
 
-const renderSeparator = () => (
-	<View
-		style={Styles.flatListSeperator}
-	/>
-)
+const renderSeparator = ({ leadingItme, section }) => {
+	// TODO:
+	console.log(leadingItme, section)
+	return (
+		<View
+			style={Styles.flatListSeperator}
+		/>
+	)
+}
 // returns the warning sign
 const displayWarning = () =>  (
 	<ElevatedView
@@ -225,6 +233,10 @@ const Styles = {
 		backgroundColor: COLOR.MGREY,
 	}
 }
+// export default ParkingSpotType
+const mapStateToProps = (state) => {
+	return ({ parkingData: state.parking.isChecked })
+}
 
 
-export default ParkingSpotType
+export default connect(mapStateToProps)(ParkingSpotType)
