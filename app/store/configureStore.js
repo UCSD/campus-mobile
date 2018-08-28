@@ -37,6 +37,7 @@ const manifest = {
 	7: state => ({ ...state, surf: undefined }), // 5.5 migration
 	8: state => ({ ...state, dining: undefined, specialEvents: undefined }), // 5.6 migration
 	9: state => ({ ...state, cards: undefined }), // 6.0 migration
+	10: state => ({ ...state, cards: undefined }), // 6.1 migration
 }
 
 // reducerKey is the key of the reducer you want to store the state version in
