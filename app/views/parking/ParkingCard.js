@@ -5,8 +5,9 @@ import ScrollCard from '../common/ScrollCard';
 const ParkingCard = () => {
   return (
     <ScrollCard
-    id="parking"
-    title="Parking Availability"/>
+      id="parking"
+      title="Parking Availability"
+    />
   );
 };
 
