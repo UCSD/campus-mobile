@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { Component } from 'react';
+import ParkingCard from './ParkingCard';
 
-class ParkingCardContainer extends React.Component {
+class ParkingCardContainer extends Component {
   render() {
     return (
       <ParkingCard>
-        Hello!
       </ParkingCard>
     );
   }
