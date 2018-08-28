@@ -3,7 +3,6 @@ import {
 	View,
 	Text,
 	FlatList,
-	ScrollView
 } from 'react-native'
 import ElevatedView from 'react-native-elevated-view'
 import Icon from 'react-native-vector-icons/MaterialIcons'
@@ -11,41 +10,22 @@ import { connect } from 'react-redux'
 import COLOR from '../../styles/ColorConstants'
 import Touchable from '../common/Touchable'
 import css from '../../styles/css'
-import { updateParkingTypeSelection } from '../../sagas/parkingSaga'
 
-const campusLogo = require('../../assets/images/UCSanDiegoLogo-White.png')
 const ParkingTypes = require('./ParkingSpotTypeList.json')
 
 class ParkingSpotType extends React.Component {
-	constructor(props) {
-		super(props)
-		this.state = { isChecked: [false, false, false, false, false], count: 0 }
-	}
-
-	incrementCount() {
-		this.setState({ count: this.state.count + 1 })
-	}
-
-	decrementCount() {
-		this.setState({ count: this.state.count - 1 })
-	}
-
-
 	rowTouched(index) {
-		const { dispatch, parkingData } = this.props
-		console.log(updateParkingTypeSelection)
-		const ids = [...parkingData]
+		const { isChecked, updateSelectedTypes, count } = this.props
+		const ids = [...isChecked]
 		// user is trying to unselect a row
 		if (ids[index]) {
 			ids[index] = !ids[index]
-			//dispatch(updateParkingTypeSelection(ids))
-			this.decrementCount()
+			updateSelectedTypes(ids, count - 1)
 		}
 		// user is trying to select a row
-		else if (this.state.count < 3) {
+		else if (count < 3) {
 			ids[index] = !ids[index]
-			//dispatch(updateParkingTypeSelection(ids))
-			this.incrementCount()
+			updateSelectedTypes(ids, count + 1)
 		}
 		// user tried to select a row but reached limit, so do nothing
 	}
@@ -54,11 +34,12 @@ class ParkingSpotType extends React.Component {
 	// also decides if the row is selected or unselcted based on the state
 	renderRow(parkingObj) {
 		const { id } = parkingObj
+		const { isChecked } = this.props
 		return (
 			<Touchable
 				onPress={() => this.rowTouched(id)}
 			>
-				{this.state.isChecked[id] ? getSelectedRow({ parkingObj }) : getUnselectedRow({ parkingObj })}
+				{isChecked[id] ? getSelectedRow({ parkingObj }) : getUnselectedRow({ parkingObj })}
 			</Touchable>
 		)
 	}
@@ -74,7 +55,7 @@ class ParkingSpotType extends React.Component {
 					showsVerticalScrollIndicator={false}
 					keyExtractor={parkingType => parkingType.id.toString()}
 					data={ParkingTypes}
-					extraData={this.state.isChecked}
+					extraData={this.props.isChecked}
 					renderItem={
 						(parkingObj) => {
 							parkingObj = parkingObj.item
@@ -234,9 +215,18 @@ const Styles = {
 	}
 }
 // export default ParkingSpotType
-const mapStateToProps = (state) => {
-	return ({ parkingData: state.parking.isChecked })
-}
+const mapStateToProps = state => ({
+	isChecked: state.parking.isChecked,
+	count: state.parking.count
+})
 
 
-export default connect(mapStateToProps)(ParkingSpotType)
+const mapDispatchToProps = dispatch => (
+	{
+		updateSelectedTypes: (isChecked, count) => {
+			dispatch({ type: 'SET_PARKING_TYPE_SELECTION', isChecked, count })
+		},
+	}
+)
+
+export default connect(mapStateToProps, mapDispatchToProps)(ParkingSpotType)
