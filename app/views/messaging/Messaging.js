@@ -1,5 +1,11 @@
 import React, { Component } from 'react'
-import { View, Text, ScrollView, FlatList } from 'react-native'
+import {
+	View,
+	Text,
+	ScrollView,
+	FlatList,
+	RefreshControl,
+} from 'react-native'
 import { connect } from 'react-redux'
 import moment from 'moment'
 import Icon from 'react-native-vector-icons/MaterialIcons'
@@ -14,90 +20,13 @@ const checkData = (data) => {
 		}
 		return false
 	})
-	cleanData.sort( ( left, right ) => moment.utc(left.timestamp).diff(moment.utc(right.timestamp)))
+	cleanData.sort( ( left, right ) => moment.utc(right.timestamp).diff(moment.utc(left.timestamp)))
 	return cleanData
 }
 
 export class Messaging extends Component {
 	static navigationOptions = { title: 'Notifications' }
 
-	constructor() {
-		super()
-		this.state = {
-			dataSource: [
-				{
-					id: 'sampleId1',
-					title: 'Test Message', // optional
-					timestamp: 1533338011173,
-					sender: 'example@ucsd.edu',
-					message: 'Hello. This is a test message from some sender. I have a lot to say so this might take up a bit of space. Lorem ipsum etc whatever.',
-					// data is optional
-					data: {
-						example: true,
-						another: true,
-						url: 'https://google.com',
-						explanation: 'This can be any user supplied data'
-					}
-				},
-				{
-					id: 'sampleId2',
-					title: 'Test Message', // optional
-					timestamp: 1533338423173,
-					sender: 'example@ucsd.edu',
-					message: 'Hello. This is a test message from some sender. I have a lot to say so this might take up a bit of space. Lorem ipsum etc whatever.',
-					// data is optional
-					data: {
-						example: true,
-						another: true,
-						url: 'https://google.com',
-						explanation: 'This can be any user supplied data'
-					}
-				},
-				{
-					id: 'sampleId2',
-					title: 'Test Message', // optional
-					timestamp: 1533338011163,
-					sender: 'example@ucsd.edu',
-					message: 'Hello. This is a test message from some sender. I have a lot to say so this might take up a bit of space. Lorem ipsum etc whatever.',
-					// data is optional
-					data: {
-						example: true,
-						another: true,
-						url: 'https://google.com',
-						explanation: 'This can be any user supplied data'
-					}
-				},
-				{
-					id: 'sampleId2',
-					title: 'Test Message', // optional
-					timestamp: 'fjdkla34928j',
-					sender: 'example@ucsd.edu',
-					message: 'Hello. This is a test message from some sender. I have a lot to say so this might take up a bit of space. Lorem ipsum etc whatever.',
-					// data is optional
-					data: {
-						example: true,
-						another: true,
-						url: 'https://google.com',
-						explanation: ''
-					}
-				},
-				{
-					id: 'sampleId2',
-					title: 'Test Message', // optional
-					timestamp: 153333800003,
-					sender: 'example@ucsd.edu',
-					message: 'Hello. This is a test message from some sender. I have a lot to say so this might take up a bit of space. Lorem ipsum etc whatever.',
-					// data is optional
-					data: {
-						example: true,
-						another: true,
-						url: 'https://google.com',
-						explanation: 'This can be any user supplied data'
-					}
-				}
-			]
-		}
-	}
 	componentDidMount() {
 		logger.ga('View Loaded: Messaging')
 	}
@@ -109,7 +38,10 @@ export class Messaging extends Component {
 	)
 
 	renderItem = ({ item }) => {
-		const day = moment.unix(item.timestamp)
+		const { message, timestamp } = item
+		const { message: messageText, title } = message
+		const day = moment(timestamp)
+
 		return (
 			<View style={{ height: 110, width: '100%', flexDirection: 'row', justifyContent: 'flex-start' }}>
 				<View style={{ justifyContent: 'center', alignItems: 'center', marginLeft: 10, marginRight: 20 }}>
@@ -121,19 +53,34 @@ export class Messaging extends Component {
 				</View>
 				<View  style={{ flexDirection: 'column', justifyContent: 'center' }}>
 					<Text style={{ color: '#D2D2D2' }}>{day.format('MMMM Do')}</Text>
-					<Text style={{ color: '#D2D2D2' }}>{item.title}</Text>
-					<Text style={{ color: '#D2D2D2' }}>{item.data.explanation}</Text>
+					<Text style={{ color: '#D2D2D2' }}>{title}</Text>
+					<Text style={{ color: '#D2D2D2' }}>{messageText}</Text>
 				</View>
 			</View>
-
 		)
 	}
 
 	render() {
-		const filteredData = checkData(this.state.dataSource)
-		console.log(filteredData.length)
+		const { messages, nextTimestamp } = this.props.messages
+
+		const filteredData = checkData(messages)
+
+		let isLoading = false
+		if (this.props.myMessagesStatus) isLoading = true
+
+		const MessageRefresh = (
+			<RefreshControl
+				refreshing={isLoading}
+				onRefresh={() => this.props.updateMessages(new Date().getTime())}
+			/>
+		)
+
 		return (
-			<ScrollView style={css.scroll_default} contentContainerStyle={css.main_full}>
+			<ScrollView
+				style={css.scroll_default}
+				contentContainerStyle={css.main_full}
+				refreshControl={MessageRefresh}
+			>
 				<FlatList
 					style={{ backgroundColor: '#F9F9F9' }}
 					data={filteredData}
@@ -148,11 +95,19 @@ export class Messaging extends Component {
 }
 
 const mapStateToProps = (state, props) => (
-	{}
+	{
+		messages: state.messages,
+		myMessagesStatus: state.requestStatuses.GET_MESSAGES,
+		myMessagesError: state.requestErrors.GET_MESSAGES
+	}
 )
 
 const mapDispatchToProps = (dispatch, ownProps) => (
-	{}
+	{
+		updateMessages: (timestamp) => {
+			dispatch({ type: 'UPDATE_MESSAGES', timestamp })
+		},
+	}
 )
 
 export default connect(mapStateToProps, mapDispatchToProps)(Messaging)

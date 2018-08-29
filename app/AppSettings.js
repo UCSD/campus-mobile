@@ -19,12 +19,17 @@ module.exports = {
 		if (isStudentDemo) return 'https://pad7kcyzo1.execute-api.us-west-2.amazonaws.com/prod/v1/demo/student/class_list'
 		else return 'https://api.ucsd.edu:8245/student/my/academic_history/v1/class_list'
 	},
-	AUTH_SERVICE_API_URL: 'https://c12cf2xke8.execute-api.us-west-2.amazonaws.com/prod/v1/access-profile',
+
+	// AUTH_SERVICE_API_URL: ’https://c12cf2xke8.execute-api.us-west-2.amazonaws.com/prod/v1/access-profile',
+	// For dev only
+	AUTH_SERVICE_API_URL: 'https://3hepzvdimd.execute-api.us-west-2.amazonaws.com/dev/v1/access-profile',
 	ACADEMIC_TERM_API_URL: 'https://btgre7sss6.execute-api.us-west-2.amazonaws.com/prod/v1/term/current',
 	ACADEMIC_TERM_FINALS_API_URL(isStudentDemo) {
 		if (isStudentDemo) return 'https://pad7kcyzo1.execute-api.us-west-2.amazonaws.com/prod/v1/demo/term/current/finals'
 		else return 'https://btgre7sss6.execute-api.us-west-2.amazonaws.com/prod/v1/term/current/finals'
 	},
+	// DEV ONLY
+	MYMESSAGES_API_URL: 'https://api-qa.ucsd.edu:8243/mp-mymessages/1.0.0',
 
 	/* RESOURCES */
 	SHUTTLE_SCHEDULE_URL: 'https://transportation.ucsd.edu/shuttles/',
@@ -53,6 +58,7 @@ module.exports = {
 	/* REQUEST TIMEOUTS */
 	HTTP_REQUEST_TTL: 10000, // 10 seconds
 	SSO_TTL: 15000, // 15 seconds
+	MESSAGING_TTL: 10000, // 10 seconds
 
 	/* RETRIES */
 	SSO_IDP_ERROR_RETRY_INCREMENT: 10000, // 10 seconds
