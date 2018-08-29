@@ -28,6 +28,8 @@ module.exports = {
 		if (isStudentDemo) return 'https://pad7kcyzo1.execute-api.us-west-2.amazonaws.com/prod/v1/demo/term/current/finals'
 		else return 'https://btgre7sss6.execute-api.us-west-2.amazonaws.com/prod/v1/term/current/finals'
 	},
+	// DEV ONLY
+	MYMESSAGES_API_URL: 'https://api-qa.ucsd.edu:8243/mp-mymessages/1.0.0',
 
 	/* RESOURCES */
 	SHUTTLE_SCHEDULE_URL: 'https://transportation.ucsd.edu/shuttles/',
@@ -56,6 +58,7 @@ module.exports = {
 	/* REQUEST TIMEOUTS */
 	HTTP_REQUEST_TTL: 10000, // 10 seconds
 	SSO_TTL: 15000, // 15 seconds
+	MESSAGING_TTL: 10000, // 10 seconds
 
 	/* RETRIES */
 	SSO_IDP_ERROR_RETRY_INCREMENT: 10000, // 10 seconds

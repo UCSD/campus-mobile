@@ -11,6 +11,7 @@ import mapSaga from './mapSaga'
 import feedbackSaga from './feedbackSaga'
 import routesSaga from './routesSaga'
 import scheduleSaga from './scheduleSaga'
+import messagesSaga from './messagesSaga'
 
 // single entry point to start all Sagas at once
 export default function* rootSaga() {
@@ -26,6 +27,7 @@ export default function* rootSaga() {
 		fork(userSaga),
 		fork(mapSaga),
 		fork(feedbackSaga),
-		fork(scheduleSaga)
+		fork(scheduleSaga),
+		fork(messagesSaga),
 	])
 }
