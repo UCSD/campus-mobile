@@ -447,7 +447,7 @@ const css = StyleSheet.create({
 	pst_elevated_row_view: { flexDirection: 'row', flex: 1, paddingLeft: 15, backgroundColor: COLOR.MGREY, alignItems: 'center', justifyContent: 'center', height: 50, margin: 3 },
 	pst_unelevated_row_view: { flexDirection: 'row', flex: 1, paddingLeft: 15, backgroundColor: COLOR.WHITE, alignItems: 'center', justifyContent: 'center', height: 50, margin: 3 },
 	pst_warning_elevated_view: { flex: 1, flexDirection: 'row', backgroundColor: 'white' , alignItems: 'center', justifyContent: 'center', marginHorizontal: 30, bottom: 25 },
-	warning_conatiner_view: { alignItems: 'center', justifyContent: 'center' },
+	pst_warning_container_view: { alignItems: 'center', justifyContent: 'center' },
 	pst_warning_header_text: { fontSize: 18, top: -20, alignItems: 'center' },
 	pst_full_container: { flex: 1, backgroundColor: 'white' },
 	pst_flat_list: { backgroundColor: 'white' },
