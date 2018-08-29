@@ -441,6 +441,21 @@ const css = StyleSheet.create({
 	lrc_button: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.PRIMARY, borderRadius: 3, marginTop: 14, padding: 10 },
 	lrc_buttonText: { color: COLOR.WHITE },
 
+	/**
+	 *	16 - Parking
+	 */
+	pst_elevated_row_view: { flexDirection: 'row', flex: 1, paddingLeft: 15, backgroundColor: COLOR.MGREY, alignItems: 'center', justifyContent: 'center', height: 50, margin: 3 },
+	pst_unelevated_row_view: { flexDirection: 'row', flex: 1, paddingLeft: 15, backgroundColor: COLOR.WHITE, alignItems: 'center', justifyContent: 'center', height: 50, margin: 3 },
+	pst_warning_elevated_view: { flex: 1, flexDirection: 'row', backgroundColor: 'white' , alignItems: 'center', justifyContent: 'center', marginHorizontal: 30, bottom: 25 },
+	warning_conatiner_view: { alignItems: 'center', justifyContent: 'center' },
+	pst_warning_header_text: { fontSize: 18, top: -20, alignItems: 'center' },
+	pst_full_container: { flex: 1, backgroundColor: 'white' },
+	pst_flat_list: { backgroundColor: 'white' },
+	pst_flat_list_separator: { height: 1, backgroundColor: COLOR.MGREY },
+	pst_circle: { borderRadius: 18, width: 36, height: 36, justifyContent: 'center', overflow: 'hidden' },
+	pst_character: { textAlign: 'center', fontWeight: '600', fontSize: 19, backgroundColor: 'transparent' },
+	pst_row_text: { flex: 1, paddingRight: 10, paddingLeft: 10 },
+
 })
 
 module.exports = css

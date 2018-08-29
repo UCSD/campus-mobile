@@ -43,27 +43,36 @@ class ParkingSpotType extends React.Component {
 			</Touchable>
 		)
 	}
+	// TODO
+	renderSeparator({ leadingItem, highlighted, props }) {
+		//console.log(props)
+		return (
+			<View
+				style={css.pst_flat_list_separator}
+			/>
+		)
+	}
 
 	render() {
 		return (
 			<View
-				style={Styles.fullContainer}
+				style={css.pst_full_container}
 			>
 				<FlatList
-					style={Styles.flatList}
+					style={css.pst_flat_list}
 					scrollEnabled={false}
 					showsVerticalScrollIndicator={false}
 					keyExtractor={parkingType => parkingType.id.toString()}
 					data={ParkingTypes}
 					extraData={this.props.isChecked}
 					renderItem={
-						(parkingObj) => {
+						(parkingObj, separators) => {
 							parkingObj = parkingObj.item
 							return this.renderRow(parkingObj)
 						}
 					}
 					enableEmptySections={true}
-					ItemSeperatorComponent={renderSeparator}
+					ItemSeparatorComponent={this.renderSeparator}
 				/>
 				{displayWarning()}
 			</View>
@@ -71,23 +80,14 @@ class ParkingSpotType extends React.Component {
 	}
 }
 
-const renderSeparator = ({ leadingItme, section }) => {
-	// TODO:
-	console.log(leadingItme, section)
-	return (
-		<View
-			style={Styles.flatListSeperator}
-		/>
-	)
-}
 // returns the warning sign
 const displayWarning = () =>  (
 	<ElevatedView
-		style={Styles.warningElevatedView}
+		style={css.pst_warning_elevated_view}
 		elevation={5}
 	>
-		<View style={Styles.waringContainerView}>
-			<Text style={Styles.warningHeaderTextStyle} >
+		<View style={css.pst_warning_conatiner_view}>
+			<Text style={css.pst_warning_header_text} >
 				{'Max Selection (3)'}
 			</Text>
 			<Text>
@@ -111,17 +111,17 @@ const displayWarning = () =>  (
 function getSelectedRow({ parkingObj }) {
 	const { type, textColor, backgroundColor, shortName } = parkingObj
 	return (
-		<ElevatedView style={Styles.elevatedRowView} elevation={5}>
-			<View style={[css.ssl_circle, { backgroundColor }]}>
+		<ElevatedView style={css.pst_elevated_row_view} elevation={5}>
+			<View style={[css.pst_circle, { backgroundColor }]}>
 				<Text
-					style={[css.ssl_shortNameText, { color: textColor }]}
+					style={[css.pst_character, { color: textColor }]}
 					allowFontScaling={false}
 				>
 					{shortName || accessibleIcon()}
 				</Text>
 			</View>
 			<Text
-				style={[css.sslv_row_name, { paddingLeft: 10 }]}
+				style={css.pst_row_text}
 			>
 				{type}
 			</Text>
@@ -133,17 +133,17 @@ function getSelectedRow({ parkingObj }) {
 function getUnselectedRow({ parkingObj }) {
 	const { type, textColor, backgroundColor, shortName } = parkingObj
 	return (
-		<View style={Styles.unelevatedRowView}>
-			<View style={[css.ssl_circle, { backgroundColor }]}>
+		<View style={css.pst_unelevated_row_view}>
+			<View style={[css.pst_circle, { backgroundColor }]}>
 				<Text
-					style={[css.ssl_shortNameText, { color: textColor }]}
+					style={[css.pst_character, { color: textColor }]}
 					allowFontScaling={false}
 				>
 					{shortName || accessibleIcon()}
 				</Text>
 			</View>
 			<Text
-				style={[css.sslv_row_name, { paddingLeft: 10 }]}
+				style={css.pst_row_text}
 			>
 				{type}
 			</Text>
@@ -164,56 +164,6 @@ const uncheckedIcon = () => (
 	<Icon name="check" size={25} color={COLOR.MGREY} style={{ paddingRight: 20 }} />
 )
 
-const Styles = {
-	elevatedRowView: {
-		flexDirection: 'row',
-		flex: 1,
-		paddingLeft: 15,
-		backgroundColor: COLOR.MGREY,
-		alignItems: 'center',
-		justifyContent: 'center',
-		height: 50,
-		margin: 3,
-
-	},
-	unelevatedRowView: {
-		flexDirection: 'row',
-		flex: 1,
-		paddingLeft: 15,
-		backgroundColor: 'white',
-		alignItems: 'center',
-		justifyContent: 'center',
-		height: 50,
-		margin: 3,
-	},
-	warningElevatedView: {
-		flex: 1,
-		flexDirection: 'row',
-		backgroundColor: 'white' ,
-		alignItems: 'center',
-		justifyContent: 'center',
-		marginHorizontal: 30,
-		bottom: 25
-	},
-	warningConatinerView: {
-		alignItems: 'center',
-		justifyContent: 'center'
-	},
-	warningHeaderTextStyle: {
-		fontSize: 18,
-		top: -20,
-		alignItems: 'center'
-	},
-	fullContainer: {
-		flex: 1,
-		backgroundColor: 'white'
-	},
-	flatList: { backgroundColor: 'white' },
-	flatListSeperator: {
-		height: 1,
-		backgroundColor: COLOR.MGREY,
-	}
-}
 // export default ParkingSpotType
 const mapStateToProps = state => ({
 	isChecked: state.parking.isChecked,
