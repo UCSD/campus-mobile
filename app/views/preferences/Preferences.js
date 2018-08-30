@@ -23,6 +23,7 @@ class PreferencesView extends Component {
 				<UserAccount />
 				<CardPreferences toggleScroll={this.toggleScroll} />
 				<PreferencesItem title="Feedback" icon="new-message" link="Feedback" />
+				<PreferencesItem title="Notifications" icon="bell" link="Notifications" />
 			</ScrollView>
 		)
 	}

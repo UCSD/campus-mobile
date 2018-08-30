@@ -441,6 +441,10 @@ const css = StyleSheet.create({
 	lrc_button: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.PRIMARY, borderRadius: 3, marginTop: 14, padding: 10 },
 	lrc_buttonText: { color: COLOR.WHITE },
 
+	/**
+	 *	16 - Notifications
+	 */
+	notifications_row_view: { flexDirection: 'row', flex: 1, paddingLeft: 10, backgroundColor: COLOR.WHITE, alignItems: 'center', justifyContent: 'center', height: 35 },
 })
 
 module.exports = css

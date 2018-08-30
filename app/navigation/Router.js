@@ -29,6 +29,7 @@ import ShuttleRoutesListView from '../views/shuttle/ShuttleRoutesListView'
 import ShuttleStopsListView from '../views/shuttle/ShuttleStopsListView'
 import ShuttleSavedListView from '../views/shuttle/ShuttleSavedListView'
 import FullSchedule from '../views/schedule/FullScheduleListView'
+import Notifications from '../views/preferences/notifications/Notifications'
 
 // TABS
 import TabIcons from './TabIcons'
@@ -177,6 +178,13 @@ const MainStack = StackNavigator(
 			screen: Feedback,
 			navigationOptions: {
 				title: 'Feedback',
+				headerRight: (<DummyView />)
+			}
+		},
+		Notifications: {
+			screen: Notifications,
+			navigationOptions: {
+				title: 'Notifications',
 				headerRight: (<DummyView />)
 			}
 		},
