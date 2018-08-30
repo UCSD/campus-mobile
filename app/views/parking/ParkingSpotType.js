@@ -164,7 +164,6 @@ const uncheckedIcon = () => (
 	<Icon name="check" size={25} color={COLOR.MGREY} style={{ paddingRight: 20 }} />
 )
 
-// export default ParkingSpotType
 const mapStateToProps = state => ({
 	isChecked: state.parking.isChecked,
 	count: state.parking.count
