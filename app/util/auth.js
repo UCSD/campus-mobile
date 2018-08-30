@@ -20,7 +20,36 @@ const authorizedFetchRequest = (endpoint, accessToken) => (
 		headers: { 'Authorization': `Bearer ${accessToken}` }
 	})
 		.then((response) => {
-			if (response.status === 200) return response.json()
+			if (response.status === 200) return response.text()
+			else {
+				switch (response.status) {
+					case 401: {
+						// We need to refresh our access token
+						return { invalidToken: true }
+					}
+					case 404: {
+						return { message: response.statusText }
+					}
+					default: {
+						const e = new Error(response.statusText)
+						throw e
+					}
+				}
+			}
+		})
+)
+
+const authorizedPostRequest = (endpoint, accessToken, payload) => (
+	fetch(endpoint, {
+		method: 'POST',
+		headers: {
+			'content-type': 'application/json',
+			'Authorization': `Bearer ${accessToken}`
+		},
+		body: JSON.stringify(payload)
+	})
+		.then((response) => {
+			if (response.status === 200) return response.text()
 			else {
 				switch (response.status) {
 					case 401: {
@@ -139,10 +168,11 @@ module.exports = {
 	 * attempt, this function sets an AUTH_HTTP error in
 	 * state.requestErrors.
 	 * @param {String} endpoint URL of API endpoint
+	 * @param {Object} payload JSON data to POST to endpoint
 	 * @returns {Object} Data from server
 	 * or returns an error if HTTP resonse isn't 200
 	 */
-	* authorizedFetch(endpoint) {
+	* authorizedFetch(endpoint, payload) {
 		yield put({ type: 'AUTH_HTTP_REQUEST' })
 
 		// Check to see if we aren't in an error state
@@ -166,7 +196,9 @@ module.exports = {
 			.then(credentials => (credentials.password))
 
 		try {
-			let endpointResponse = yield authorizedFetchRequest(endpoint, accessToken)
+			let endpointResponse
+			if (payload) endpointResponse = yield authorizedPostRequest(endpoint, accessToken, payload)
+			else endpointResponse = yield authorizedFetchRequest(endpoint, accessToken)
 
 			// Refresh token if invalidToken and retry request
 			if (endpointResponse.invalidToken) {

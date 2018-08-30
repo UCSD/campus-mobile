@@ -8,9 +8,17 @@ function messages(state = initialState, action) {
 
 	switch (action.type) {
 		case 'SET_MESSAGES': {
-			const { messages, nextTimestamp } = action
-			newState.messages = [...messages]
+			const { messages: newMessages, nextTimestamp } = action
+			newState.messages = [...newMessages]
 			newState.nextTimestamp = nextTimestamp
+			return newState
+		}
+		case 'CONFIRM_REGISTRATION': {
+			newState.registered = true
+			return newState
+		}
+		case 'CONFIRM_DEREGISTRATION': {
+			newState.registered = false
 			return newState
 		}
 		default:

@@ -13,6 +13,7 @@ import logger from '../../util/logger'
 import css from '../../styles/css'
 
 const checkData = (data) => {
+	if (!Array.isArray(data)) return null
 	const cleanData = data.filter((item) => {
 		const day = moment.unix(item.timestamp)
 		if (day.isValid()) {

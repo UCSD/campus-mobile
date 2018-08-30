@@ -25,6 +25,7 @@ class PushNotificationContainer extends React.Component {
 			console.log('Firebase Token (refresh):', fcmToken)
 
 			subscribeToDefaults(firebase.messaging())
+			if (this.props.user.isLoggedIn) this.props.registerToken(fcmToken)
 		})
 
 		this.messageListener = firebase.messaging().onMessage((message) => {
@@ -47,6 +48,8 @@ class PushNotificationContainer extends React.Component {
 			.then((fcmToken) => {
 				if (fcmToken) {
 					console.log('Firebase Token: ', fcmToken)
+
+					// Subscribe to default topics
 					subscribeToDefaults(firebase.messaging())
 				}
 			})
@@ -117,7 +120,15 @@ class PushNotificationContainer extends React.Component {
 }
 
 function mapStateToProps(state, props) {
-	return {}
+	return { user: state.user }
 }
 
-module.exports = connect(mapStateToProps)(PushNotificationContainer)
+const mapDispatchToProps = (dispatch, ownProps) => (
+	{
+		registerToken: (token) => {
+			dispatch({ type: 'REGISTER_TOKEN', token })
+		}
+	}
+)
+
+module.exports = connect(mapStateToProps, mapDispatchToProps)(PushNotificationContainer)

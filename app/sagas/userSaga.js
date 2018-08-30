@@ -7,6 +7,7 @@ import {
 } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 import { Alert } from 'react-native'
+import firebase from 'react-native-firebase'
 
 import ssoService from '../services/ssoService'
 import { SSO_TTL, SSO_IDP_ERROR_RETRY_INCREMENT } from '../AppSettings'
@@ -69,6 +70,9 @@ function* doLogin(action) {
 				yield put({ type: 'LOGGED_IN', profile: newProfile })
 				yield put({ type: 'LOG_IN_SUCCESS' })
 				yield put({ type: 'TOGGLE_AUTHENTICATED_CARDS' })
+
+				const fcmToken = yield firebase.messaging().getToken()
+				if (fcmToken) yield put({ type: 'REGISTER_TOKEN', token: fcmToken })
 
 				// Clears any potential errors from being
 				// unable to automatically reauthorize a user
@@ -144,6 +148,11 @@ function* doTimeOut() {
 }
 
 function* doLogout(action) {
+	// We need to pass in the accessToken before we lose it
+	// This isn't guaranteed to work but we should try anyways
+	const accessToken = yield auth.retrieveAccessToken()
+	yield put({ type: 'UNREGISTER_TOKEN', accessToken })
+
 	yield put({ type: 'LOGGED_OUT' })
 	yield call(clearUserData)
 }
