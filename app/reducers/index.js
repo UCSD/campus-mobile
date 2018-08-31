@@ -40,10 +40,6 @@ module.exports = combineReducers({
 	requestStatuses: requestStatusesReducer,
 	requestErrors: requestErrorsReducer,
 	home: homeReducer,
-<<<<<<< HEAD
 	messages: messagesReducer,
-=======
-	parking: parkingReducer,
 	notifications: notificationsReducer
->>>>>>> 5bae5e5d... Added notifications page
 })
