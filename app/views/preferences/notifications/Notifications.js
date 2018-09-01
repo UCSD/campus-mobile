@@ -2,15 +2,16 @@ import React, { Component } from 'react'
 import {
 	Text,
 	View,
-	FlatList,
+	SectionList,
 	Switch
 } from 'react-native'
 import { connect } from 'react-redux'
 import css from '../../../styles/css'
 
+const jsonData = require('./Notifications.json')
 // this is just an example of dummy data
-const data = [
-	{
+const data =
+	[{
 		'id': 0,
 		'name': 'Pangea'
 	},
@@ -27,6 +28,16 @@ class Notifications extends Component {
 	constructor(props) {
 		super(props)
 		this.props = props
+
+		// these for loops take data from the provided json example and set the sate of each slider
+		// based on the property called active
+
+		// for (var index in jsonData) {
+		// 	for (var i in jsonData[index].data) {
+		// 		var active = jsonData[index].data[i].active
+		// 		this.changeState(i, active)
+		// 	}
+		// }
 	}
 
 	changeState(index, value) {
@@ -36,21 +47,18 @@ class Notifications extends Component {
 		updateSelectedNotifications(newState)
 	}
 
-	renderRow(item) {
-		const { name } = item.item
+	renderRow(item, index, section ) {
+		const text = item.name
+		const { id }  = item
 		return (
-			<View
-				style={css.notifications_row_view}
-			>
-				<Text
-					style={css.pst_row_text}
-				>
-					{name}
+			<View style={css.notifications_row_view}>
+				<Text style={css.notifications_row_text}>
+					{text}
 				</Text>
 				<View style={css.us_switchContainer}>
 					<Switch
-						onValueChange={value => this.changeState(item.index, value)}
-						value={this.props.isActive[item.index]}
+						onValueChange={value => this.changeState(id, value)}
+						value={this.props.isActive[id]}
 					/>
 				</View>
 			</View>
@@ -60,27 +68,34 @@ class Notifications extends Component {
 	render() {
 		return (
 			<View
-				style={css.pst_full_container}
+				style={css.notifications_full_container}
 			>
-				<FlatList
-					style={css.pst_flat_list}
-					scrollEnabled={true}
-					showsVerticalScrollIndicator={false}
-					keyExtractor={dataItem => dataItem.id}
-					data={data}
-					extraData={this.props.isActive}
-					renderItem={item => this.renderRow(item)}
-					enableEmptySections={true}
+				<SectionList
+					style={css.notifications_section_list}
+					renderItem={({ item, index, section }) => this.renderRow(item, index, section)}
+					renderSectionHeader={({ section: { title } }) =>
+						renderSectionHeader(title)
+					}
+					sections={jsonData}
+					keyExtractor={item => item.id}
 					ItemSeparatorComponent={renderSeparator}
+					ListFooterComponent={renderSeparator}
+					ListHeaderComponent={renderSeparator}
 				/>
 			</View>
 		)
 	}
 }
 
+const renderSectionHeader = title => (
+	<View style={css.notifications_section_list_header_container}>
+		<Text style={css.notifications_section_list_header_text}>{title}</Text>
+		{renderSeparator}
+	</View>
+)
 const renderSeparator = () => (
 	<View
-		style={css.pst_flat_list_separator}
+		style={css.notifications_section_list_separator}
 	/>
 )
 

@@ -444,7 +444,13 @@ const css = StyleSheet.create({
 	/**
 	 *	16 - Notifications
 	 */
-	notifications_row_view: { flexDirection: 'row', flex: 1, paddingLeft: 10, backgroundColor: COLOR.WHITE, alignItems: 'center', justifyContent: 'center', height: 35 },
+	notifications_full_container: { flex: 1, backgroundColor: COLOR.WHITE },
+	notifications_section_list: { flex: 1 },
+	notifications_row_view: { flexDirection: 'row', flex: 1, paddingLeft: 10, paddingRight: 10, alignItems: 'center', justifyContent: 'center', height: 35 },
+	notifications_section_list_header_container: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 45, borderBottomColor: COLOR.MGREY, borderBottomWidth: 1 },
+	notifications_section_list_header_text: { flex: 1, paddingLeft: 5, fontSize: 23, color: COLOR.VDGREY },
+	notifications_row_text: { flex: 1, paddingRight: 10, paddingLeft: 10, fontSize: 19, color: COLOR.VDGREY },
+	notifications_section_list_separator: { height: 1, backgroundColor: COLOR.MGREY },
 })
 
 module.exports = css
