@@ -13,5 +13,10 @@ exports[`renders without crashing 1`] = `
     link="Feedback"
     title="Feedback"
   />
+  <withNavigation(PreferencesItem)
+    icon="bell"
+    link="Notifications"
+    title="Notifications"
+  />
 </ScrollView>
 `;
