@@ -452,6 +452,7 @@ const css = StyleSheet.create({
 	pst_full_container: { flex: 1, backgroundColor: 'white' },
 	pst_flat_list: { backgroundColor: 'white' },
 	pst_flat_list_separator: { height: 1, backgroundColor: COLOR.MGREY },
+	pst_flat_list_empty_separator: { height: 1, backgroundColor: COLOR.WHITE },
 	pst_circle: { borderRadius: 18, width: 36, height: 36, justifyContent: 'center', overflow: 'hidden' },
 	pst_character: { textAlign: 'center', fontWeight: '600', fontSize: 19, backgroundColor: 'transparent' },
 	pst_row_text: { flex: 1, paddingRight: 10, paddingLeft: 10, fontSize: 19 },

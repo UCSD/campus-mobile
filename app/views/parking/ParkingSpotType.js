@@ -14,17 +14,20 @@ import css from '../../styles/css'
 const ParkingTypes = require('./ParkingSpotTypeList.json')
 
 class ParkingSpotType extends React.Component {
-	rowTouched(index) {
+	rowTouched(parkingObj) {
 		const { isChecked, updateSelectedTypes, count } = this.props
 		const ids = [...isChecked]
+		const index = parkingObj.item.id
 		// user is trying to unselect a row
 		if (ids[index]) {
 			ids[index] = !ids[index]
+			parkingObj.separators.unhighlight()
 			updateSelectedTypes(ids, count - 1)
 		}
 		// user is trying to select a row
 		else if (count < 3) {
 			ids[index] = !ids[index]
+			parkingObj.separators.highlight()
 			updateSelectedTypes(ids, count + 1)
 		}
 		// user tried to select a row but reached limit, so do nothing
@@ -33,26 +36,20 @@ class ParkingSpotType extends React.Component {
 	// this function returns a touchable that has all the elements needed for each row
 	// also decides if the row is selected or unselcted based on the state
 	renderRow(parkingObj) {
-		const { id } = parkingObj
+		const { id } = parkingObj.item
 		const { isChecked } = this.props
+
 		return (
 			<Touchable
-				onPress={() => this.rowTouched(id)}
+				onPress={() => this.rowTouched(parkingObj)}
 			>
 				{isChecked[id] ? getSelectedRow({ parkingObj }) : getUnselectedRow({ parkingObj })}
 			</Touchable>
 		)
 	}
-	// TODO
-	renderSeparator({ leadingItem, highlighted, props }) {
-		//console.log(props)
-		return (
-			<View
-				style={css.pst_flat_list_separator}
-			/>
-		)
-	}
 
+	// the flat list doesn't need extraData prop becuase it rerenders wehn an item is highlighted or unhighlighted
+	// the highlight and unhihglight methods are given in renderItem prop (parkingObj)
 	render() {
 		return (
 			<View
@@ -64,20 +61,36 @@ class ParkingSpotType extends React.Component {
 					showsVerticalScrollIndicator={false}
 					keyExtractor={parkingType => parkingType.id.toString()}
 					data={ParkingTypes}
-					extraData={this.props.isChecked}
-					renderItem={
-						(parkingObj, separators) => {
-							parkingObj = parkingObj.item
-							return this.renderRow(parkingObj)
+					renderItem={parkingObj => this.renderRow(parkingObj)}
+					enableEmptySections={true}
+					ItemSeparatorComponent={
+						({ leadingItem, highlighted }) => {
+							// added a one because leadingItem is the object preceding the seperator
+							if (this.props.isChecked[leadingItem.id + 1]) {
+								return renderSeparator(true)
+							}
+							return renderSeparator(false)
 						}
 					}
-					enableEmptySections={true}
-					ItemSeparatorComponent={this.renderSeparator}
+					ListFooterComponent={renderSeparator(false)}
 				/>
 				{displayWarning()}
 			</View>
 		)
 	}
+}
+
+// returns a list seperator if given argument "highlight" is false
+// otherwise returns a placeholder for the list separator
+const renderSeparator = (highlighted) => {
+	if (highlighted) {
+		return (
+			<View
+				style={css.pst_flat_list_empty_separator}
+			/>
+		)
+	}
+	return <View style={css.pst_flat_list_separator} />
 }
 
 // returns the warning sign
@@ -109,7 +122,7 @@ const displayWarning = () =>  (
 
 // returns an elevated view that contains all elemnts of a selected row
 function getSelectedRow({ parkingObj }) {
-	const { type, textColor, backgroundColor, shortName } = parkingObj
+	const { type, textColor, backgroundColor, shortName } = parkingObj.item
 	return (
 		<ElevatedView style={css.pst_elevated_row_view} elevation={5}>
 			<View style={[css.pst_circle, { backgroundColor }]}>
@@ -131,7 +144,7 @@ function getSelectedRow({ parkingObj }) {
 }
 // returns a view containing an unslected row
 function getUnselectedRow({ parkingObj }) {
-	const { type, textColor, backgroundColor, shortName } = parkingObj
+	const { type, textColor, backgroundColor, shortName } = parkingObj.item
 	return (
 		<View style={css.pst_unelevated_row_view}>
 			<View style={[css.pst_circle, { backgroundColor }]}>
