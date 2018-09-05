@@ -1,13 +1,11 @@
-import React, { Component } from 'react';
-import ParkingCard from './ParkingCard';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import ParkingCard from './ParkingCard'
 
-class ParkingCardContainer extends Component {
-  render() {
-    return (
-      <ParkingCard>
-      </ParkingCard>
-    );
-  }
+export const ParkingCardContainer = ({ weatherData }) => {
+	return (
+		<ParkingCard />
+	)
 }
 
 const mapStateToProps = state => ({ parkingData: state.weather.data })
