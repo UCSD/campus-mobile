@@ -73,6 +73,7 @@ class ParkingSpotType extends React.Component {
 						}
 					}
 					ListFooterComponent={renderSeparator(false)}
+					ListHeaderComponent={renderSeparator(false)}
 				/>
 				{displayWarning()}
 			</View>
