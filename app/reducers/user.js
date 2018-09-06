@@ -3,11 +3,13 @@ const initialState = {
 	profile: {
 		username: null,
 		classifications: null,
-		pid: null
+		pid: null,
 	},
+	syncedProfile: {},
 	invalidSavedCredentials: false,
 	appUpdateRequired: false,
-	isStudentDemo: false
+	isStudentDemo: false,
+	lastSynced: null,
 }
 
 function user(state = initialState, action) {
@@ -38,6 +40,17 @@ function user(state = initialState, action) {
 		}
 		case 'ACTIVATE_STUDENT_DEMO_ACCOUNT': {
 			newState.isStudentDemo = true
+			return newState
+		}
+		case 'SET_USER_PROFILE': {
+			newState.syncedProfile = {
+				...newState.syncedProfile,
+				...action.profileItems,
+			}
+			return newState
+		}
+		case 'PROFILE_SYNCED': {
+			newState.lastSynced = new Date().getTime()
 			return newState
 		}
 		default:

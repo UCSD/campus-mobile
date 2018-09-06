@@ -42,6 +42,7 @@ function* watchData() {
 			yield call(updateShuttleMaster)
 			yield put({ type: 'UPDATE_DINING' })
 			yield put({ type: 'UPDATE_SCHEDULE' })
+			yield put({ type: 'SYNC_USER_PROFILE' })
 		} catch (err) {
 			console.log(err)
 		}

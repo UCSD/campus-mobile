@@ -10,7 +10,12 @@ import { Alert } from 'react-native'
 import firebase from 'react-native-firebase'
 
 import ssoService from '../services/ssoService'
-import { SSO_TTL, SSO_IDP_ERROR_RETRY_INCREMENT } from '../AppSettings'
+import userService from '../services/userService'
+import {
+	SSO_TTL,
+	SSO_IDP_ERROR_RETRY_INCREMENT,
+	USER_PROFILE_SYNC_TTL,
+} from '../AppSettings'
 import logger from '../util/logger'
 
 const auth = require('../util/auth')
@@ -142,6 +147,23 @@ function* refreshTokenRequest() {
 	}
 }
 
+function* getUserProfile() {
+	// Request user profile from API
+	yield put({ type: 'GET_PROFILE_REQUEST' })
+
+	try {
+		const profile = yield call(userService.FetchUserProfile)
+		yield put({ type: 'GET_PROFILE_SUCCESS' })
+
+		if (profile) {
+			yield put({ type: 'SET_USER_PROFILE', profileItems: profile })
+		}
+	} catch (error) {
+		yield put({ type: 'GET_PROFILE_FAILURE' })
+		logger.trackException(error)
+	}
+}
+
 function* doTimeOut() {
 	const error = new Error('Logging in timed out.')
 	yield put({ type: 'LOG_IN_FAILURE', error })
@@ -160,6 +182,7 @@ function* doLogout(action) {
 function* queryUserData() {
 	// perform first data calls when user is logged in
 	yield put({ type: 'UPDATE_SCHEDULE' })
+	yield put({ type: 'GET_USER_PROFILE' })
 }
 
 function* clearUserData() {
@@ -211,11 +234,46 @@ function* outOfDateAlert() {
 	)
 }
 
+function* syncUserProfile() {
+	const { profile, lastSynced } = yield select(userState)
+
+	const nowTime = new Date().getTime()
+	const timeDiff = nowTime - lastSynced
+	const syncTTL = USER_PROFILE_SYNC_TTL
+
+	if (timeDiff < syncTTL) return
+
+	// Get latest profile from server
+	yield getUserProfile()
+
+	// Update remote profile with local one
+	const newAttributes = []
+
+	Object.keys(profile).forEach((key) => {
+		newAttributes.push({
+			attribute: key,
+			value: profile[key],
+		})
+	})
+
+	yield put({ type: 'POST_PROFILE_REQUEST' })
+	try {
+		yield call(userService.PostUserProfile, newAttributes)
+		yield put({ type: 'POST_PROFILE_SUCCESS' })
+		yield put({ type: 'PROFILE_SYNCED' })
+	} catch (error) {
+		yield put({ type: 'POST_PROFILE_FAILURE' })
+		logger.trackException(error)
+	}
+}
+
 function* userSaga() {
 	yield takeLatest('USER_LOGIN', doLogin)
 	yield takeLatest('USER_LOGOUT', doLogout)
 	yield takeLatest('USER_LOGIN_TIMEOUT', doTimeOut)
 	yield takeLatest('USER_TOKEN_REFRESH', doTokenRefresh)
+	yield takeLatest('GET_USER_PROFILE', getUserProfile)
+	yield takeLatest('SYNC_USER_PROFILE', syncUserProfile)
 }
 
 export default userSaga

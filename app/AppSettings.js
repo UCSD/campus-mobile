@@ -31,6 +31,7 @@ module.exports = {
 	// DEV ONLY
 	MYMESSAGES_API_URL: 'https://api-qa.ucsd.edu:8243/mp-mymessages/1.0.0',
 	PUSH_REGISTRATION_API_URL: 'https://api-qa.ucsd.edu:8243/mp-registration/1.0.0',
+	USER_PROFILE_API_URL: 'https://api-qa.ucsd.edu:8243/mp-registration/1.0.0/profile',
 
 	/* RESOURCES */
 	SHUTTLE_SCHEDULE_URL: 'https://transportation.ucsd.edu/shuttles/',
@@ -55,6 +56,7 @@ module.exports = {
 	DINING_MENU_API_TTL: 3600000, // 1 hour
 	QUICKLINKS_API_TTL: 86400000, // 1 day
 	SHUTTLE_MASTER_TTL: 86400000, // 1 day
+	USER_PROFILE_SYNC_TTL: 3600000, // 1 hour
 
 	/* REQUEST TIMEOUTS */
 	HTTP_REQUEST_TTL: 10000, // 10 seconds
