@@ -235,7 +235,9 @@ function* outOfDateAlert() {
 }
 
 function* syncUserProfile() {
-	const { profile, lastSynced } = yield select(userState)
+	const { isLoggedIn, profile, lastSynced } = yield select(userState)
+
+	if (!isLoggedIn) return
 
 	const nowTime = new Date().getTime()
 	const timeDiff = nowTime - lastSynced
