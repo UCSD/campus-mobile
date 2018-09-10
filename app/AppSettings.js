@@ -25,6 +25,8 @@ module.exports = {
 		if (isStudentDemo) return 'https://pad7kcyzo1.execute-api.us-west-2.amazonaws.com/prod/v1/demo/term/current/finals'
 		else return 'https://btgre7sss6.execute-api.us-west-2.amazonaws.com/prod/v1/term/current/finals'
 	},
+	/* DEV ENDPOINT - UPDATE TO PROD */
+	PARKING_API_URL: 'https://8tcoih8tu0.execute-api.us-west-2.amazonaws.com/dev/parking/v1.0/406/status',
 
 	/* RESOURCES */
 	SHUTTLE_SCHEDULE_URL: 'https://transportation.ucsd.edu/shuttles/',
