@@ -182,7 +182,23 @@ function* doLogout(action) {
 function* queryUserData() {
 	// perform first data calls when user is logged in
 	yield put({ type: 'UPDATE_SCHEDULE' })
-	yield put({ type: 'GET_USER_PROFILE' })
+
+	// Sync user profile from cloud when first logging in
+	yield call(getUserProfile)
+	const { profile, syncedProfile } = yield select(userState)
+
+	// populate newProfile with potentially stale remote data first
+	let profileItems = { ...syncedProfile }
+
+	// add newly initialized profile object
+	profileItems = {
+		...profileItems,
+		...profile
+	}
+
+	const modifyProfileAction = { profileItems }
+
+	yield call(modifyLocalProfile, modifyProfileAction)
 }
 
 function* clearUserData() {
@@ -269,12 +285,20 @@ function* syncUserProfile() {
 	}
 }
 
+function* modifyLocalProfile(action) {
+	const { profileItems } = action
+	yield put({ type: 'SET_LOCAL_PROFILE', profileItems })
+	yield put({ type: 'RESET_SYNCED_DATE' })
+	yield call(syncUserProfile)
+}
+
 function* userSaga() {
 	yield takeLatest('USER_LOGIN', doLogin)
 	yield takeLatest('USER_LOGOUT', doLogout)
 	yield takeLatest('USER_LOGIN_TIMEOUT', doTimeOut)
 	yield takeLatest('USER_TOKEN_REFRESH', doTokenRefresh)
 	yield takeLatest('GET_USER_PROFILE', getUserProfile)
+	yield takeLatest('MODIFY_LOCAL_PROFILE', modifyLocalProfile)
 	yield takeLatest('SYNC_USER_PROFILE', syncUserProfile)
 }
 

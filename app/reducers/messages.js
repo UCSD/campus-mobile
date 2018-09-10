@@ -1,12 +1,30 @@
 const initialState = {
 	messages: null,
 	nextTimestamp: null,
+	topics: [
+		{
+			'audienceId': 'all',
+			'topics': [
+				{
+					'topicId': 'all',
+					'topicMetadata': {
+						'name': 'General',
+						'description': 'General messages for the whole UCSD community.'
+					}
+				}
+			]
+		}
+	]
 }
 
 function messages(state = initialState, action) {
 	const newState = { ...state }
 
 	switch (action.type) {
+		case 'SET_TOPICS': {
+			newState.topics = [...action.topics]
+			return newState
+		}
 		case 'SET_MESSAGES': {
 			const { messages: newMessages, nextTimestamp } = action
 			newState.messages = [...newMessages]

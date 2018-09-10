@@ -8,7 +8,7 @@ import firebase from 'react-native-firebase'
 import Permissions from 'react-native-permissions'
 
 const subscribeToDefaults = (messaging) => {
-	const defaultTopics = ['all', 'emergency']
+	const defaultTopics = ['emergency']
 
 	defaultTopics.forEach((topic) => {
 		messaging.subscribeToTopic(topic)
