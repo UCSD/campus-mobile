@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { withNavigation } from 'react-navigation'
 import ParkingCard from './ParkingCard'
 
-export class ParkingCardContainer extends React.Component {
+export class ParkingCardContainer extends Component {
 	gotoParkingSpotType = (navigation) => {
 		navigation.navigate('ParkingSpotType')
 	}
