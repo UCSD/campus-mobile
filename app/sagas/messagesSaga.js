@@ -13,8 +13,30 @@ import MessagesService from '../services/messagesService'
 import logger from '../util/logger'
 import { MESSAGING_TTL } from '../AppSettings'
 
-const getMessages = state => (state.messages)
 const getUserData = state => (state.user)
+
+function* getTopics() {
+	try {
+		yield put({ type: 'GET_TOPICS_REQUEST' })
+
+		const { response, timeout } = yield race({
+			response: call(MessagesService.FetchTopics),
+			timeout: call(delay, MESSAGING_TTL)
+		})
+
+		if (timeout) {
+			const e = new Error('Request timed out.')
+			throw e
+		}
+		else if (response) {
+			yield put({ type: 'SET_TOPICS', topics: response })
+			yield put({ type: 'GET_TOPICS_SUCCESS' })
+		}
+	} catch (error) {
+		yield put({ type: 'GET_TOPICS_FAILED', error })
+		logger.trackException(error, false)
+	}
+}
 
 function* registerToken(action) {
 	const { token } = action
@@ -100,10 +122,44 @@ function* updateMessages(action) {
 	}
 }
 
+function* subscribeToTopic(action) {
+	const { topicId } = action
+	const { profile } = yield select(getUserData)
+
+	let newTopicSubscriptions = []
+	if (Array.isArray(profile.subscribedTopics)) {
+		newTopicSubscriptions = [...profile.subscribedTopics]
+	}
+	newTopicSubscriptions.push(topicId)
+	const profileItems = { subscribedTopics: newTopicSubscriptions }
+
+	yield firebase.messaging().subscribeToTopic(topicId)
+	yield put({ type: 'MODIFY_LOCAL_PROFILE', profileItems })
+}
+
+function* unsubscribeFromTopic(action) {
+	const { topicId } = action
+	const { profile } = yield select(getUserData)
+
+	let newTopicSubscriptions = []
+	if (Array.isArray(profile.subscribedTopics)) {
+		newTopicSubscriptions = [...profile.subscribedTopics]
+	}
+	const topicIndex = newTopicSubscriptions.indexOf(topicId)
+	newTopicSubscriptions.splice(topicIndex, 1)
+	const profileItems = { subscribedTopics: newTopicSubscriptions }
+
+	yield firebase.messaging().unsubscribeFromTopic(topicId)
+	yield put({ type: 'MODIFY_LOCAL_PROFILE', profileItems })
+}
+
 function* messagesSaga() {
 	yield takeLatest('UPDATE_MESSAGES', updateMessages)
 	yield takeLatest('REGISTER_TOKEN', registerToken)
 	yield takeLatest('UNREGISTER_TOKEN', unregisterToken)
+	yield takeLatest('GET_TOPICS', getTopics)
+	yield takeLatest('SUBSCRIBE_TO_TOPIC', subscribeToTopic)
+	yield takeLatest('UNSUBSCRIBE_FROM_TOPIC', unsubscribeFromTopic)
 }
 
 export default messagesSaga

@@ -42,6 +42,13 @@ function user(state = initialState, action) {
 			newState.isStudentDemo = true
 			return newState
 		}
+		case 'SET_LOCAL_PROFILE': {
+			newState.profile = {
+				...newState.profile,
+				...action.profileItems,
+			}
+			return newState
+		}
 		case 'SET_USER_PROFILE': {
 			newState.syncedProfile = {
 				...newState.syncedProfile,
@@ -51,6 +58,10 @@ function user(state = initialState, action) {
 		}
 		case 'PROFILE_SYNCED': {
 			newState.lastSynced = new Date().getTime()
+			return newState
+		}
+		case 'RESET_SYNCED_DATE': {
+			newState.lastSynced = null
 			return newState
 		}
 		default:

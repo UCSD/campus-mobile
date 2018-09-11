@@ -2,10 +2,25 @@ import { authorizedFetch } from '../util/auth'
 
 const {
 	MYMESSAGES_API_URL,
+	MESSAGES_TOPICS_URL,
 	PUSH_REGISTRATION_API_URL,
 } = require('../AppSettings')
 
 const MyMessagesService = {
+	* FetchTopics() {
+		try {
+			const topics = yield (yield fetch(MESSAGES_TOPICS_URL)).json()
+
+			if (Object.keys(topics).length > 0) return topics
+			else {
+				const e = new Error('Invalid data from messages API')
+				throw e
+			}
+		} catch (error) {
+			throw error
+		}
+	},
+
 	* FetchMyMessages(timestamp) {
 		try {
 			let query = '?start=' + new Date().getTime()

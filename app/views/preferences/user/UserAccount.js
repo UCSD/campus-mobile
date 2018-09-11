@@ -22,6 +22,8 @@ class UserAccount extends Component {
 		Linking.addEventListener('url', this._handleOpenURL)
 	}
 
+	/*
+	DEBUG ACCESS TOKEN
 	componentWillReceiveProps(nextProps) {
 		if (nextProps.user.isLoggedIn) {
 			auth.retrieveAccessToken()
@@ -31,6 +33,7 @@ class UserAccount extends Component {
 				})
 		}
 	}
+	*/
 
 	componentWillUnmount() {
 		Linking.removeEventListener('url', this._handleOpenURL)

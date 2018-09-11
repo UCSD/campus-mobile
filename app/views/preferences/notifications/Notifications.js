@@ -8,57 +8,62 @@ import {
 import { connect } from 'react-redux'
 import css from '../../../styles/css'
 
-const jsonData = require('./Notifications.json')
-// this is just an example of dummy data
-const data =
-	[{
-		'id': 0,
-		'name': 'Pangea'
-	},
-	{
-		'id': 1,
-		'name': 'Gilman'
-	},
-	{
-		'id': 2,
-		'name': 'P103'
-	}]
-
 class Notifications extends Component {
-	constructor(props) {
-		super(props)
-		this.props = props
-
-		// these for loops take data from the provided json example and set the sate of each slider
-		// based on the property called active
-
-		// for (var index in jsonData) {
-		// 	for (var i in jsonData[index].data) {
-		// 		var active = jsonData[index].data[i].active
-		// 		this.changeState(i, active)
-		// 	}
-		// }
+	componentDidMount() {
+		this.props.getTopics()
 	}
 
-	changeState(index, value) {
-		const { isActive, updateSelectedNotifications } = this.props
-		const newState = [...isActive]
-		newState[index] = value
-		updateSelectedNotifications(newState)
+	getSections() {
+		if (!Array.isArray(this.props.topics)) return []
+
+		const sections = [
+			{
+				'title': 'Categories',
+				'data': []
+			}
+		]
+
+		this.props.topics.forEach((audience) => {
+			if (audience.audienceId === 'all' ||
+				(this.props.isLoggedIn
+				&& this.props.profile
+				&& this.props.profile.classifications
+				&& Object.keys(this.props.profile.classifications).indexOf(audience.audienceId) >= 0)) {
+				sections[0].data = [...sections[0].data, ...audience.topics]
+			}
+		})
+
+		return sections
 	}
 
-	renderRow(item, index, section ) {
-		const text = item.name
-		const { id }  = item
+	setSubscription = (topicId, value) => {
+		if (value === true) {
+			this.props.subscribeToTopic(topicId)
+		} else {
+			this.props.unsubscribeFromTopic(topicId)
+		}
+	}
+
+	renderRow(item, index, section) {
+		const { topicId, topicMetadata } = item
+		const { name } = topicMetadata
+
+		let topicState = false
+		if (this.props.profile
+			&& Array.isArray(this.props.profile.subscribedTopics)
+			&& this.props.profile.subscribedTopics.indexOf(topicId) >= 0) {
+			topicState = true
+		}
+
 		return (
 			<View style={css.notifications_row_view}>
 				<Text style={css.notifications_row_text}>
-					{text}
+					{name}
 				</Text>
 				<View style={css.us_switchContainer}>
 					<Switch
-						onValueChange={value => this.changeState(id, value)}
-						value={this.props.isActive[id]}
+						onValueChange={value => this.setSubscription(topicId, value)}
+						value={topicState}
 					/>
 				</View>
 			</View>
@@ -66,6 +71,8 @@ class Notifications extends Component {
 	}
 
 	render() {
+		const sections = this.getSections()
+
 		return (
 			<View
 				style={css.notifications_full_container}
@@ -76,7 +83,7 @@ class Notifications extends Component {
 					renderSectionHeader={({ section: { title } }) =>
 						renderSectionHeader(title)
 					}
-					sections={jsonData}
+					sections={sections}
 					keyExtractor={item => item.id}
 					ItemSeparatorComponent={renderSeparator}
 					ListFooterComponent={renderSeparator}
@@ -99,14 +106,25 @@ const renderSeparator = () => (
 	/>
 )
 
-const mapStateToProps = state => ({ isActive: state.notifications.isActive })
-
+const mapStateToProps = state => ({
+	isLoggedIn: state.user.isLoggedIn,
+	profile: state.user.profile,
+	isActive: state.notifications.isActive,
+	topics: state.messages.topics,
+	topicsLoading: state.requestStatuses.GET_TOPICS,
+})
 
 const mapDispatchToProps = dispatch => (
 	{
-		updateSelectedNotifications: (isActive) => {
-			dispatch({ type: 'SET_NOTIFICATION_STATE', isActive })
+		getTopics: () => {
+			dispatch({ type: 'GET_TOPICS' })
 		},
+		subscribeToTopic: (topicId) => {
+			dispatch({ type: 'SUBSCRIBE_TO_TOPIC', topicId })
+		},
+		unsubscribeFromTopic: (topicId) => {
+			dispatch({ type: 'UNSUBSCRIBE_FROM_TOPIC', topicId })
+		}
 	}
 )
 
