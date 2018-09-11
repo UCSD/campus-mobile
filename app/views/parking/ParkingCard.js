@@ -1,12 +1,17 @@
 import React from 'react';
+import { Text } from 'react-native';
+import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import ScrollCard from '../common/ScrollCard';
 
-
-const ParkingCard = () => {
+const ParkingCard = ({ savedStructures }) => {
   return (
-    <ScrollCard
-      id="parking"
-      title="Parking Availability"
+	   <ScrollCard
+        id="parking"
+        title="Parking Availability"
+        renderItem={() => (
+          <ParkingOverview />
+        )}
+        scrollData={savedStructures}
     />
   );
 };

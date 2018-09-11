@@ -1,15 +1,18 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import ParkingCard from './ParkingCard';
 
-class ParkingCardContainer extends Component {
+export class ParkingCardContainer extends Component {
   render() {
     return (
-      <ParkingCard>
-      </ParkingCard>
+      <ParkingCard
+        savedStructures={}
+      />
     );
   }
 }
 
-const mapStateToProps = state => ({ parkingData: state.weather.data })
+const mapStateToProps = state => ({ savedStructures:  });
 const ActualParkingCard = connect(mapStateToProps)(ParkingCardContainer)
-export default ActualParkingCard
+export default ActualParkingCard;

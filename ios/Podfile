@@ -32,6 +32,8 @@ target 'CampusMobile' do
 
   pod 'BugsnagReactNative', :path => '../node_modules/bugsnag-react-native'
 
+  pod 'RNSVG', :path => '../node_modules/react-native-svg'
+
   # target 'CampusMobileTests' do
   #   inherit! :search_paths
   #   # Pods for testing
