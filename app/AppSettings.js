@@ -25,6 +25,8 @@ module.exports = {
 		if (isStudentDemo) return 'https://pad7kcyzo1.execute-api.us-west-2.amazonaws.com/prod/v1/demo/term/current/finals'
 		else return 'https://btgre7sss6.execute-api.us-west-2.amazonaws.com/prod/v1/term/current/finals'
 	},
+	/* DEV ENDPOINT - UPDATE TO PROD */
+	PARKING_API_URL: 'https://8tcoih8tu0.execute-api.us-west-2.amazonaws.com/dev/parking/v1.0/406/status',
 
 	/* RESOURCES */
 	SHUTTLE_SCHEDULE_URL: 'https://transportation.ucsd.edu/shuttles/',
@@ -49,6 +51,7 @@ module.exports = {
 	DINING_MENU_API_TTL: 3600000, // 1 hour
 	QUICKLINKS_API_TTL: 86400000, // 1 day
 	SHUTTLE_MASTER_TTL: 86400000, // 1 day
+	PARKING_API_TTL: 3600000,	// 1 hour
 
 	/* REQUEST TIMEOUTS */
 	HTTP_REQUEST_TTL: 10000, // 10 seconds

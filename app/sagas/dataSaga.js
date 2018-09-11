@@ -7,6 +7,7 @@ import SpecialEventsService from '../services/specialEventsService'
 import LinksService from '../services/quicklinksService'
 import EventService from '../services/eventService'
 import NewsService from '../services/newsService'
+import ParkingService from '../services/parkingService'
 import schedule from '../util/schedule'
 import { fetchMasterStopsNoRoutes, fetchMasterRoutes } from '../services/shuttleService'
 import {
@@ -17,7 +18,8 @@ import {
 	EVENTS_API_TTL,
 	NEWS_API_TTL,
 	DATA_SAGA_TTL,
-	SHUTTLE_MASTER_TTL
+	SHUTTLE_MASTER_TTL,
+	PARKING_API_TT
 } from '../AppSettings'
 
 const getWeather = state => (state.weather)
@@ -29,6 +31,7 @@ const getNews = state => (state.news)
 const getCards = state => (state.cards)
 const getShuttle = state => (state.shuttle)
 const getUserData = state => (state.user)
+const getParkingData = state => (state.parkingData)
 
 function* watchData() {
 	while (true) {
@@ -37,6 +40,7 @@ function* watchData() {
 			yield call(updateSurf)
 			yield call(updateSpecialEvents)
 			yield call(updateLinks)
+			yield call(updateParking)
 			yield call(updateEvents)
 			yield call(updateNews)
 			yield call(updateShuttleMaster)
@@ -176,6 +180,34 @@ function* updateLinks() {
 		if (links) {
 			yield put({ type: 'SET_LINKS', links })
 			prefetchLinkImages(links)
+		}
+	}
+}
+
+function* updateParking() {
+	const parkingData = yield select(getParkingData)
+	const nowTime = new Date().getTime()
+	const ttl = PARKING_API_TT
+	// set to the first element becuase we only have one parking lot set up right now
+	if (parkingData) {
+		const element = parkingData[0]
+		const { LastUpdated, LocationName, Availability } = element
+		const timeDiff = nowTime - LastUpdated
+
+		if ((timeDiff < ttl) && Availability && LocationName) {
+		// Do nothing, no need to fetch new data
+		} else {
+			// Fetch for new data
+			const ParkingData = yield call(ParkingService.FetchParking)
+			if (ParkingData) {
+				yield put({ type: 'SET_PARKING_DATA', ParkingData })
+			}
+		}
+	}
+	else {
+		const ParkingData = yield call(ParkingService.FetchParking)
+		if (ParkingData) {
+			yield put({ type: 'SET_PARKING_DATA', ParkingData })
 		}
 	}
 }
