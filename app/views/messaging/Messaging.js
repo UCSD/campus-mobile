@@ -53,9 +53,9 @@ export class Messaging extends Component {
 					/>
 				</View>
 				<View  style={{ flexDirection: 'column', justifyContent: 'center' }}>
-					<Text style={{ color: '#D2D2D2' }}>{day.format('MMMM Do')}</Text>
-					<Text style={{ color: '#D2D2D2' }}>{title}</Text>
-					<Text style={{ color: '#D2D2D2' }}>{messageText}</Text>
+					<Text style={{ color: '#a1a1a1', fontWeight: 'bold', fontSize: 10 }}>{day.format('MMMM Do')}</Text>
+					<Text style={{ color: '#818181', fontWeight: 'bold', fontSize: 28 }}>{title}</Text>
+					<Text style={{ color: '#818181', fontWeight: 'bold', fontSize: 14 }}>{messageText}</Text>
 				</View>
 			</View>
 		)
@@ -83,7 +83,7 @@ export class Messaging extends Component {
 				refreshControl={MessageRefresh}
 			>
 				<FlatList
-					style={{ backgroundColor: '#F9F9F9' }}
+					style={{ backgroundColor: '#f1f1f1' }}
 					data={filteredData}
 					renderItem={this.renderItem}
 					keyExtractor={(item, index) => item.id}
