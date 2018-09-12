@@ -2,9 +2,8 @@ import React, { Component } from 'react'
 import {
 	View,
 	Text,
-	ScrollView,
 	FlatList,
-	RefreshControl,
+	ActivityIndicator
 } from 'react-native'
 import { connect } from 'react-redux'
 import moment from 'moment'
@@ -30,6 +29,7 @@ export class Messaging extends Component {
 
 	componentDidMount() {
 		logger.ga('View Loaded: Messaging')
+		this.props.updateMessages(new Date().getTime())
 	}
 
 	renderSeparator = ({ leadingItem }) => (
@@ -62,35 +62,33 @@ export class Messaging extends Component {
 	}
 
 	render() {
-		const { messages, nextTimestamp } = this.props.messages
-
+		const { messages, nextTimestamp, loadingMoreData } = this.props.messages
+		const { updateMessages, loadMoreMessages } = this.props
 		const filteredData = checkData(messages)
 
 		let isLoading = false
 		if (this.props.myMessagesStatus) isLoading = true
 
-		const MessageRefresh = (
-			<RefreshControl
-				refreshing={isLoading}
-				onRefresh={() => this.props.updateMessages(new Date().getTime())}
-			/>
-		)
-
 		return (
-			<ScrollView
-				style={css.scroll_default}
-				contentContainerStyle={css.main_full}
-				refreshControl={MessageRefresh}
-			>
+			<View style={css.main_full}>
 				<FlatList
 					style={{ backgroundColor: '#f1f1f1' }}
 					data={filteredData}
+					onRefresh={() => updateMessages(new Date().getTime())}
+					refreshing={isLoading}
 					renderItem={this.renderItem}
 					keyExtractor={(item, index) => item.id}
 					ItemSeparatorComponent={this.renderSeparator}
+					onEndReachedThreshold={0.5}
+					ListFooterComponent={loadingMoreData ? <ActivityIndicator size="large" animating /> : null}
+					onEndReached={(info) => {
+						// this if check makes sure that we dont fetch extra data in the intialization of the list
+						if (info.distanceFromEnd > 0 && nextTimestamp) {
+							loadMoreMessages(nextTimestamp)
+						}
+					}}
 				/>
-
-			</ScrollView>
+			</View>
 		)
 	}
 }
@@ -99,7 +97,8 @@ const mapStateToProps = (state, props) => (
 	{
 		messages: state.messages,
 		myMessagesStatus: state.requestStatuses.GET_MESSAGES,
-		myMessagesError: state.requestErrors.GET_MESSAGES
+		myMessagesError: state.requestErrors.GET_MESSAGES,
+		loadingMoreData: state.loadingMoreData
 	}
 )
 
@@ -108,6 +107,9 @@ const mapDispatchToProps = (dispatch, ownProps) => (
 		updateMessages: (timestamp) => {
 			dispatch({ type: 'UPDATE_MESSAGES', timestamp })
 		},
+		loadMoreMessages: (timestamp) => {
+			dispatch({ type: 'LOAD_MORE_MESSAGES', timestamp })
+		}
 	}
 )
 

@@ -122,6 +122,36 @@ function* updateMessages(action) {
 	}
 }
 
+function* loadMoreMessages(action) {
+	const { timestamp } = action
+	const { isLoggedIn } = yield select(getUserData)
+
+	if (isLoggedIn) {
+		try {
+			yield put({ type: 'GET_MESSAGES_REQUEST' })
+
+			const { response, timeout } = yield race({
+				response: call(MessagesService.FetchMyMessages, timestamp),
+				timeout: call(delay, MESSAGING_TTL)
+			})
+
+			if (timeout) {
+				const e = new Error('Request timed out.')
+				throw e
+			}
+			else {
+				const { messages, next: nextTimestamp } = response
+
+				yield put({ type: 'ADD_MESSAGES', messages, nextTimestamp })
+				yield put({ type: 'GET_MESSAGES_SUCCESS' })
+			}
+		} catch (error) {
+			yield put({ type: 'GET_MESSAGES_FAILURE', error })
+			logger.trackException(error, false)
+		}
+	}
+}
+
 function* subscribeToTopic(action) {
 	const { topicId } = action
 	const { profile } = yield select(getUserData)
@@ -155,6 +185,7 @@ function* unsubscribeFromTopic(action) {
 
 function* messagesSaga() {
 	yield takeLatest('UPDATE_MESSAGES', updateMessages)
+	yield takeLatest('LOAD_MORE_MESSAGES', loadMoreMessages)
 	yield takeLatest('REGISTER_TOKEN', registerToken)
 	yield takeLatest('UNREGISTER_TOKEN', unregisterToken)
 	yield takeLatest('GET_TOPICS', getTopics)
