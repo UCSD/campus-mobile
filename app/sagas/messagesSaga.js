@@ -1,4 +1,5 @@
 import {
+	all,
 	call,
 	put,
 	select,
@@ -92,6 +93,12 @@ function* unregisterToken(action) {
 	}
 }
 
+// Intended to be used when the user is logging out
+function* resetMessages() {
+	yield put({ type: 'CLEAR_MESSAGE_DATA' })
+	yield put({ type: 'UPDATE_MESSAGES' })
+}
+
 function* updateMessages(action) {
 	const { timestamp } = action
 	const { isLoggedIn } = yield select(getUserData)
@@ -164,6 +171,7 @@ function* subscribeToTopic(action) {
 	const profileItems = { subscribedTopics: newTopicSubscriptions }
 
 	yield firebase.messaging().subscribeToTopic(topicId)
+	console.log('Subscribed to', topicId)
 	yield put({ type: 'MODIFY_LOCAL_PROFILE', profileItems })
 }
 
@@ -180,10 +188,46 @@ function* unsubscribeFromTopic(action) {
 	const profileItems = { subscribedTopics: newTopicSubscriptions }
 
 	yield firebase.messaging().unsubscribeFromTopic(topicId)
+	console.log('Unsubscribed from', topicId)
 	yield put({ type: 'MODIFY_LOCAL_PROFILE', profileItems })
 }
 
+// Removes all topic subscriptions except for the default 'all' topic
+function* clearUserSubscriptions(action) {
+	const { subscribedTopics } = action
+	if (Array.isArray(subscribedTopics)) {
+		yield all(subscribedTopics.map(topic => (
+			call(() => {
+				if (topic !== 'all') {
+					firebase.messaging().unsubscribeFromTopic(topic)
+					console.log('Unsubscribed from', topic)
+				}
+			})
+		)))
+
+		const defaultSubscriptions = ['all']
+		const profileItems = { subscribedTopics: defaultSubscriptions }
+		yield put({ type: 'MODIFY_LOCAL_PROFILE', profileItems })
+	}
+}
+
+// Subscribes to all topics in profile.subscribedTopics
+// used when settings have been synced from the server
+function* refreshTopicSubscriptions(action) {
+	const { profile } = yield select(getUserData)
+
+	if (Array.isArray(profile.subscribedTopics)) {
+		yield all(profile.subscribedTopics.map(topic => (
+			call(() => {
+				firebase.messaging().subscribeToTopic(topic)
+				console.log('Subscribed to', topic)
+			})
+		)))
+	}
+}
+
 function* messagesSaga() {
+	yield takeLatest('RESET_MESSAGES', resetMessages)
 	yield takeLatest('UPDATE_MESSAGES', updateMessages)
 	yield takeLatest('LOAD_MORE_MESSAGES', loadMoreMessages)
 	yield takeLatest('REGISTER_TOKEN', registerToken)
@@ -191,6 +235,8 @@ function* messagesSaga() {
 	yield takeLatest('GET_TOPICS', getTopics)
 	yield takeLatest('SUBSCRIBE_TO_TOPIC', subscribeToTopic)
 	yield takeLatest('UNSUBSCRIBE_FROM_TOPIC', unsubscribeFromTopic)
+	yield takeLatest('CLEAR_USER_SUBSCRIPTIONS', clearUserSubscriptions)
+	yield takeLatest('REFRESH_TOPIC_SUBSCRIPTIONS', refreshTopicSubscriptions)
 }
 
 export default messagesSaga

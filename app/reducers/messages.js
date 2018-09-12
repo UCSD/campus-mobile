@@ -22,6 +22,10 @@ function messages(state = initialState, action) {
 	const newState = { ...state }
 
 	switch (action.type) {
+		case 'CLEAR_MESSAGE_DATA': {
+			newState.messages = null
+			return newState
+		}
 		case 'SET_TOPICS': {
 			newState.topics = [...action.topics]
 			return newState
