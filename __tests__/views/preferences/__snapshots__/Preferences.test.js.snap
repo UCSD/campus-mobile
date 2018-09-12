@@ -4,14 +4,29 @@ exports[`renders without crashing 1`] = `
 <ScrollView
   scrollEnabled={true}
 >
-  <Connect(UserAccount) />
-  <Connect(CardPreferences)
-    toggleScroll={[Function]}
-  />
-  <withNavigation(PreferencesItem)
-    icon="new-message"
-    link="Feedback"
-    title="Feedback"
-  />
+  <View
+    style={
+      Object {
+        "paddingBottom": 50,
+      }
+    }
+  >
+    <Connect(UserAccount) />
+    <Connect(CardPreferences)
+      toggleScroll={[Function]}
+    />
+    <withNavigation(PreferencesItem)
+      icon="bell-o"
+      iconPack="FontAwesome"
+      link="Notifications"
+      title="Notifications"
+    />
+    <withNavigation(PreferencesItem)
+      icon="new-message"
+      iconPack="Entypo"
+      link="Feedback"
+      title="Feedback"
+    />
+  </View>
 </ScrollView>
 `;
