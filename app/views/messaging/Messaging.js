@@ -52,9 +52,9 @@ export class Messaging extends Component {
 						style={{ color: '#21D383' }}
 					/>
 				</View>
-				<View  style={{ flexDirection: 'column', justifyContent: 'center' }}>
+				<View  style={{ flexDirection: 'column', justifyContent: 'center', flex: 1 }}>
 					<Text style={{ color: '#a1a1a1', fontWeight: 'bold', fontSize: 10 }}>{day.format('MMMM Do')}</Text>
-					<Text style={{ color: '#818181', fontWeight: 'bold', fontSize: 28 }}>{title}</Text>
+					<Text style={{ color: '#818181', fontWeight: 'bold', fontSize: 24 }}>{title}</Text>
 					<Text style={{ color: '#818181', fontWeight: 'bold', fontSize: 14 }}>{messageText}</Text>
 				</View>
 			</View>
