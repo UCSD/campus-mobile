@@ -366,8 +366,9 @@ const css = StyleSheet.create({
 	feedback_submitting_text: { fontSize: 18, textAlign: 'center' },
 
 	/**
-	 *  14 - Settings
+	 *  14 - User Profile
 	 */
+	profile_inner: { paddingBottom: 50 },
 	ua_accountinfo: { flexDirection: 'row', paddingHorizontal: 10, paddingVertical: 14, alignItems: 'center' },
 	ua_loggedin: { flex: 3, flexDirection: 'row', alignItems: 'center' },
 	ua_username_checkmark: { color: COLOR.GREEN },
@@ -393,7 +394,7 @@ const css = StyleSheet.create({
 	us_name_text: { flexGrow: 1, fontSize: 18, color: COLOR.VDGREY, paddingLeft: 16 },
 	us_switchContainer: { justifyContent: 'center', alignItems: 'center' },
 
-	pi_container: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: COLOR.WHITE, marginVertical: 20, paddingVertical: 8, paddingHorizontal: 20, borderTopWidth: 2, borderTopColor: COLOR.MGREY, borderBottomWidth: 2, borderBottomColor: COLOR.MGREY },
+	pi_container: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: COLOR.WHITE, marginTop: 20, paddingVertical: 8, paddingHorizontal: 20, borderTopWidth: 2, borderTopColor: COLOR.MGREY, borderBottomWidth: 2, borderBottomColor: COLOR.MGREY },
 	pi_icon: { color: COLOR.PRIMARY },
 	pi_title: { flexGrow: 1, fontSize: 18, color: COLOR.VDGREY, paddingLeft: 16 },
 	pi_arrow: { color: COLOR.CCC },

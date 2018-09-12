@@ -2,7 +2,8 @@ import React from 'react'
 import { Text } from 'react-native'
 import { withNavigation } from 'react-navigation'
 import Entypo from 'react-native-vector-icons/Entypo'
-import Ionicon from 'react-native-vector-icons/Ionicons'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import Touchable from '../common/Touchable'
 import css from '../../styles/css'
 
@@ -14,14 +15,21 @@ import css from '../../styles/css'
  * @param {Object} style Optional style
  * @return {JSX} Return PreferencesItem JSX
  */
-const PreferencesItem = ({ title, icon, link, style, navigation }) => (
+const PreferencesItem = ({ title, iconPack, icon, link, style, navigation }) => (
 	<Touchable
 		onPress={() => { navigation.navigate(link) }}
 		style={css.pi_container}
 	>
-		<Entypo name={icon} size={24} style={css.pi_icon} />
+		{iconPack === 'Entypo' ? (
+			<Entypo name={icon} size={24} style={css.pi_icon} />
+		) : null }
+
+		{iconPack === 'FontAwesome' ? (
+			<FontAwesome name={icon} size={24} style={css.pi_icon} />
+		) : null }
+
 		<Text style={css.pi_title}>{title}</Text>
-		<Ionicon name="ios-arrow-forward" size={24} style={css.pi_arrow} />
+		<Ionicons name="ios-arrow-forward" size={24} style={css.pi_arrow} />
 	</Touchable>
 )
 
