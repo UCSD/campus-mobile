@@ -2,55 +2,68 @@ import React, { Component } from 'react'
 import {
 	Text,
 	View,
-	FlatList,
+	SectionList,
 	Switch
 } from 'react-native'
 import { connect } from 'react-redux'
 import css from '../../../styles/css'
 
-// this is just an example of dummy data
-const data = [
-	{
-		'id': 0,
-		'name': 'Pangea'
-	},
-	{
-		'id': 1,
-		'name': 'Gilman'
-	},
-	{
-		'id': 2,
-		'name': 'P103'
-	}]
-
 class Notifications extends Component {
-	constructor(props) {
-		super(props)
-		this.props = props
+	componentDidMount() {
+		this.props.getTopics()
 	}
 
-	changeState(index, value) {
-		const { isActive, updateSelectedNotifications } = this.props
-		const newState = [...isActive]
-		newState[index] = value
-		updateSelectedNotifications(newState)
+	getSections() {
+		if (!Array.isArray(this.props.topics)) return []
+
+		const sections = [
+			{
+				'title': 'Categories',
+				'data': []
+			}
+		]
+
+		this.props.topics.forEach((audience) => {
+			if (audience.audienceId === 'all' ||
+				(this.props.isLoggedIn
+				&& this.props.profile
+				&& this.props.profile.classifications
+				&& Object.keys(this.props.profile.classifications).indexOf(audience.audienceId) >= 0)) {
+				sections[0].data = [...sections[0].data, ...audience.topics]
+			}
+		})
+
+		return sections
 	}
 
-	renderRow(item) {
-		const { name } = item.item
+	setSubscription = (topicId, value) => {
+		if (value === true) {
+			this.props.subscribeToTopic(topicId)
+		} else {
+			this.props.unsubscribeFromTopic(topicId)
+		}
+	}
+
+	renderRow(item, index, section) {
+		const { topicId, topicMetadata } = item
+		const { name } = topicMetadata
+
+		let topicState = false
+		if (this.props.profile
+			&& Array.isArray(this.props.profile.subscribedTopics)
+			&& this.props.profile.subscribedTopics.indexOf(topicId) >= 0) {
+			topicState = true
+		}
+
 		return (
-			<View
-				style={css.notifications_row_view}
-			>
-				<Text
-					style={css.pst_row_text}
-				>
+			<View style={css.notifications_row_view}>
+				<Text style={css.notifications_row_text}>
 					{name}
 				</Text>
 				<View style={css.us_switchContainer}>
 					<Switch
-						onValueChange={value => this.changeState(item.index, value)}
-						value={this.props.isActive[item.index]}
+						onValueChange={value => this.setSubscription(topicId, value)}
+						value={topicState}
 					/>
 				</View>
 			</View>
@@ -58,40 +71,60 @@ class Notifications extends Component {
 	}
 
 	render() {
+		const sections = this.getSections()
+
 		return (
 			<View
-				style={css.pst_full_container}
+				style={css.notifications_full_container}
 			>
-				<FlatList
-					style={css.pst_flat_list}
-					scrollEnabled={true}
-					showsVerticalScrollIndicator={false}
-					keyExtractor={dataItem => dataItem.id}
-					data={data}
-					extraData={this.props.isActive}
-					renderItem={item => this.renderRow(item)}
-					enableEmptySections={true}
+				<SectionList
+					style={css.notifications_section_list}
+					renderItem={({ item, index, section }) => this.renderRow(item, index, section)}
+					renderSectionHeader={({ section: { title } }) =>
+						renderSectionHeader(title)
+					}
+					sections={sections}
+					keyExtractor={item => item.id}
 					ItemSeparatorComponent={renderSeparator}
+					ListFooterComponent={renderSeparator}
+					ListHeaderComponent={renderSeparator}
 				/>
 			</View>
 		)
 	}
 }
 
+const renderSectionHeader = title => (
+	<View style={css.notifications_section_list_header_container}>
+		<Text style={css.notifications_section_list_header_text}>{title}</Text>
+		{renderSeparator}
+	</View>
+)
 const renderSeparator = () => (
 	<View
-		style={css.pst_flat_list_separator}
+		style={css.notifications_section_list_separator}
 	/>
 )
 
-const mapStateToProps = state => ({ isActive: state.notifications.isActive })
-
+const mapStateToProps = state => ({
+	isLoggedIn: state.user.isLoggedIn,
+	profile: state.user.profile,
+	isActive: state.notifications.isActive,
+	topics: state.messages.topics,
+	topicsLoading: state.requestStatuses.GET_TOPICS,
+})
 
 const mapDispatchToProps = dispatch => (
 	{
-		updateSelectedNotifications: (isActive) => {
-			dispatch({ type: 'SET_NOTIFICATION_STATE', isActive })
+		getTopics: () => {
+			dispatch({ type: 'GET_TOPICS' })
 		},
+		subscribeToTopic: (topicId) => {
+			dispatch({ type: 'SUBSCRIBE_TO_TOPIC', topicId })
+		},
+		unsubscribeFromTopic: (topicId) => {
+			dispatch({ type: 'UNSUBSCRIBE_FROM_TOPIC', topicId })
+		}
 	}
 )
 

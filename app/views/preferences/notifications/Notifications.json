@@ -1,0 +1,22 @@
+[
+  {
+	"title": "Categories",
+	"data": [
+		{
+			"id": 0,
+			"name": "General",
+			"active": true
+		},
+		{
+			"id": 1,
+			"name": "Events",
+			"active": true
+		},
+		{
+			"id": 2,
+			"name": "Classes",
+			"active": true
+		}
+	]
+  }
+]

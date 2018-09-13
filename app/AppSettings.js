@@ -19,14 +19,22 @@ module.exports = {
 		if (isStudentDemo) return 'https://pad7kcyzo1.execute-api.us-west-2.amazonaws.com/prod/v1/demo/student/class_list'
 		else return 'https://api.ucsd.edu:8245/student/my/academic_history/v1/class_list'
 	},
-	AUTH_SERVICE_API_URL: 'https://c12cf2xke8.execute-api.us-west-2.amazonaws.com/prod/v1/access-profile',
+
+	// AUTH_SERVICE_API_URL: ’https://c12cf2xke8.execute-api.us-west-2.amazonaws.com/prod/v1/access-profile',
+	// For dev only
+	AUTH_SERVICE_API_URL: 'https://3hepzvdimd.execute-api.us-west-2.amazonaws.com/dev/v1/access-profile',
 	ACADEMIC_TERM_API_URL: 'https://btgre7sss6.execute-api.us-west-2.amazonaws.com/prod/v1/term/current',
 	ACADEMIC_TERM_FINALS_API_URL(isStudentDemo) {
 		if (isStudentDemo) return 'https://pad7kcyzo1.execute-api.us-west-2.amazonaws.com/prod/v1/demo/term/current/finals'
 		else return 'https://btgre7sss6.execute-api.us-west-2.amazonaws.com/prod/v1/term/current/finals'
 	},
-	/* DEV ENDPOINT - UPDATE TO PROD */
+
+	/* DEV ENDPOINTS - UPDATE TO PROD */
 	PARKING_API_URL: 'https://8tcoih8tu0.execute-api.us-west-2.amazonaws.com/dev/parking/v1.0/406/status',
+	MYMESSAGES_API_URL: 'https://api-qa.ucsd.edu:8243/mp-mymessages/1.0.0',
+	MESSAGES_TOPICS_URL: 'https://s3-us-west-1.amazonaws.com/ucsd-mobile-dev/mock-apis/messaging/topics.json',
+	PUSH_REGISTRATION_API_URL: 'https://api-qa.ucsd.edu:8243/mp-registration/1.0.0',
+	USER_PROFILE_API_URL: 'https://api-qa.ucsd.edu:8243/mp-registration/1.0.0/profile',
 
 	/* RESOURCES */
 	SHUTTLE_SCHEDULE_URL: 'https://transportation.ucsd.edu/shuttles/',
@@ -49,13 +57,15 @@ module.exports = {
 	NEWS_API_TTL: 3600000, // 1 hour
 	DINING_API_TTL: 3600000, // 1 hour
 	DINING_MENU_API_TTL: 3600000, // 1 hour
+	PARKING_API_TTL: 3600000,	// 1 hour
+	USER_PROFILE_SYNC_TTL: 3600000, // 1 hour
 	QUICKLINKS_API_TTL: 86400000, // 1 day
 	SHUTTLE_MASTER_TTL: 86400000, // 1 day
-	PARKING_API_TTL: 3600000,	// 1 hour
 
 	/* REQUEST TIMEOUTS */
 	HTTP_REQUEST_TTL: 10000, // 10 seconds
 	SSO_TTL: 15000, // 15 seconds
+	MESSAGING_TTL: 10000, // 10 seconds
 
 	/* RETRIES */
 	SSO_IDP_ERROR_RETRY_INCREMENT: 10000, // 10 seconds

@@ -7,9 +7,15 @@ import {
 } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 import { Alert } from 'react-native'
+import firebase from 'react-native-firebase'
 
 import ssoService from '../services/ssoService'
-import { SSO_TTL, SSO_IDP_ERROR_RETRY_INCREMENT } from '../AppSettings'
+import userService from '../services/userService'
+import {
+	SSO_TTL,
+	SSO_IDP_ERROR_RETRY_INCREMENT,
+	USER_PROFILE_SYNC_TTL,
+} from '../AppSettings'
 import logger from '../util/logger'
 
 const auth = require('../util/auth')
@@ -69,6 +75,9 @@ function* doLogin(action) {
 				yield put({ type: 'LOGGED_IN', profile: newProfile })
 				yield put({ type: 'LOG_IN_SUCCESS' })
 				yield put({ type: 'TOGGLE_AUTHENTICATED_CARDS' })
+
+				const fcmToken = yield firebase.messaging().getToken()
+				if (fcmToken) yield put({ type: 'REGISTER_TOKEN', token: fcmToken })
 
 				// Clears any potential errors from being
 				// unable to automatically reauthorize a user
@@ -138,12 +147,34 @@ function* refreshTokenRequest() {
 	}
 }
 
+function* getUserProfile() {
+	// Request user profile from API
+	yield put({ type: 'GET_PROFILE_REQUEST' })
+
+	try {
+		const profile = yield call(userService.FetchUserProfile)
+		yield put({ type: 'GET_PROFILE_SUCCESS' })
+
+		if (profile) {
+			yield put({ type: 'SET_USER_PROFILE', profileItems: profile })
+		}
+	} catch (error) {
+		yield put({ type: 'GET_PROFILE_FAILURE' })
+		logger.trackException(error)
+	}
+}
+
 function* doTimeOut() {
 	const error = new Error('Logging in timed out.')
 	yield put({ type: 'LOG_IN_FAILURE', error })
 }
 
 function* doLogout(action) {
+	// We need to pass in the accessToken before we lose it
+	// This isn't guaranteed to work but we should try anyways
+	const accessToken = yield auth.retrieveAccessToken()
+	yield put({ type: 'UNREGISTER_TOKEN', accessToken })
+
 	yield put({ type: 'LOGGED_OUT' })
 	yield call(clearUserData)
 }
@@ -151,6 +182,23 @@ function* doLogout(action) {
 function* queryUserData() {
 	// perform first data calls when user is logged in
 	yield put({ type: 'UPDATE_SCHEDULE' })
+
+	// Sync user profile from cloud when first logging in
+	yield call(getUserProfile)
+	const { profile, syncedProfile } = yield select(userState)
+
+	// populate newProfile with potentially stale remote data first
+	let profileItems = { ...syncedProfile }
+
+	// add newly initialized profile object
+	profileItems = {
+		...profileItems,
+		...profile
+	}
+
+	const modifyProfileAction = { profileItems }
+
+	yield call(modifyLocalProfile, modifyProfileAction)
 }
 
 function* clearUserData() {
@@ -202,11 +250,56 @@ function* outOfDateAlert() {
 	)
 }
 
+function* syncUserProfile() {
+	const { isLoggedIn, profile, lastSynced } = yield select(userState)
+
+	if (!isLoggedIn) return
+
+	const nowTime = new Date().getTime()
+	const timeDiff = nowTime - lastSynced
+	const syncTTL = USER_PROFILE_SYNC_TTL
+
+	if (timeDiff < syncTTL) return
+
+	// Get latest profile from server
+	yield getUserProfile()
+
+	// Update remote profile with local one
+	const newAttributes = []
+
+	Object.keys(profile).forEach((key) => {
+		newAttributes.push({
+			attribute: key,
+			value: profile[key],
+		})
+	})
+
+	yield put({ type: 'POST_PROFILE_REQUEST' })
+	try {
+		yield call(userService.PostUserProfile, newAttributes)
+		yield put({ type: 'POST_PROFILE_SUCCESS' })
+		yield put({ type: 'PROFILE_SYNCED' })
+	} catch (error) {
+		yield put({ type: 'POST_PROFILE_FAILURE' })
+		logger.trackException(error)
+	}
+}
+
+function* modifyLocalProfile(action) {
+	const { profileItems } = action
+	yield put({ type: 'SET_LOCAL_PROFILE', profileItems })
+	yield put({ type: 'RESET_SYNCED_DATE' })
+	yield call(syncUserProfile)
+}
+
 function* userSaga() {
 	yield takeLatest('USER_LOGIN', doLogin)
 	yield takeLatest('USER_LOGOUT', doLogout)
 	yield takeLatest('USER_LOGIN_TIMEOUT', doTimeOut)
 	yield takeLatest('USER_TOKEN_REFRESH', doTokenRefresh)
+	yield takeLatest('GET_USER_PROFILE', getUserProfile)
+	yield takeLatest('MODIFY_LOCAL_PROFILE', modifyLocalProfile)
+	yield takeLatest('SYNC_USER_PROFILE', syncUserProfile)
 }
 
 export default userSaga

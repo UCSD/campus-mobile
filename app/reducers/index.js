@@ -19,6 +19,7 @@ import requestStatusesReducer from './requestStatuses'
 import requestErrorsReducer from './requestErrors'
 import homeReducer from './home'
 import parkingReducer from './parking'
+import messagesReducer from './messages'
 import notificationsReducer from './notifications'
 
 module.exports = combineReducers({
@@ -41,5 +42,6 @@ module.exports = combineReducers({
 	requestErrors: requestErrorsReducer,
 	home: homeReducer,
 	parking: parkingReducer,
+	messages: messagesReducer,
 	notifications: notificationsReducer
 })

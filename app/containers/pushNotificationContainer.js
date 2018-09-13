@@ -7,6 +7,15 @@ import { connect } from 'react-redux'
 import firebase from 'react-native-firebase'
 import Permissions from 'react-native-permissions'
 
+const subscribeToDefaults = (messaging) => {
+	const defaultTopics = ['emergency']
+
+	defaultTopics.forEach((topic) => {
+		messaging.subscribeToTopic(topic)
+		console.log('Subscribed to ' + topic)
+	})
+}
+
 class PushNotificationContainer extends React.Component {
 	componentDidMount() {
 		this.checkPermission()
@@ -14,6 +23,9 @@ class PushNotificationContainer extends React.Component {
 		this.onTokenRefreshListener = firebase.messaging().onTokenRefresh((fcmToken) => {
 			// Process your token as required
 			console.log('Firebase Token (refresh):', fcmToken)
+
+			subscribeToDefaults(firebase.messaging())
+			if (this.props.user.isLoggedIn) this.props.registerToken(fcmToken)
 		})
 
 		this.messageListener = firebase.messaging().onMessage((message) => {
@@ -21,7 +33,7 @@ class PushNotificationContainer extends React.Component {
 		})
 
 		this.notificationListener = firebase.notifications().onNotification((notification) => {
- 			console.log('New notification received: ', notification)  
+			console.log('New notification received: ', notification)
 		})
 	}
 
@@ -36,6 +48,9 @@ class PushNotificationContainer extends React.Component {
 			.then((fcmToken) => {
 				if (fcmToken) {
 					console.log('Firebase Token: ', fcmToken)
+
+					// Subscribe to default topics
+					subscribeToDefaults(firebase.messaging())
 				}
 			})
 	}
@@ -105,7 +120,15 @@ class PushNotificationContainer extends React.Component {
 }
 
 function mapStateToProps(state, props) {
-	return {}
+	return { user: state.user }
 }
 
-module.exports = connect(mapStateToProps)(PushNotificationContainer)
+const mapDispatchToProps = (dispatch, ownProps) => (
+	{
+		registerToken: (token) => {
+			dispatch({ type: 'REGISTER_TOKEN', token })
+		}
+	}
+)
+
+module.exports = connect(mapStateToProps, mapDispatchToProps)(PushNotificationContainer)
