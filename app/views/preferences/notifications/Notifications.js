@@ -23,12 +23,19 @@ class Notifications extends Component {
 			}
 		]
 
+		const userProfile = this.props.profile
+		const { classifications } = userProfile
+
 		this.props.topics.forEach((audience) => {
-			if (audience.audienceId === 'all' ||
-				(this.props.isLoggedIn
-				&& this.props.profile
-				&& this.props.profile.classifications
-				&& Object.keys(this.props.profile.classifications).indexOf(audience.audienceId) >= 0)) {
+			if (audience.audienceId !== 'all'
+				&& this.props.isLoggedIn
+				&& classifications
+				&& Array.isArray(Object.keys(classifications))
+				&& Object.keys(classifications).indexOf(audience.audienceId) >= 0
+				&& classifications[audience.audienceId]) {
+				sections[0].data = [...sections[0].data, ...audience.topics]
+			}
+			else if (audience.audienceId === 'all') {
 				sections[0].data = [...sections[0].data, ...audience.topics]
 			}
 		})
