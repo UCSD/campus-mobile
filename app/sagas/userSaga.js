@@ -22,6 +22,8 @@ const auth = require('../util/auth')
 
 const userState = state => (state.user)
 
+// This function is used when a user manually submits
+// credentials to sign in with.
 function* doLogin(action) {
 	const { username, password } = action
 
@@ -72,6 +74,10 @@ function* doLogin(action) {
 					classifications: { student: Boolean(response.pid) }
 				}
 
+				// Post sign-in flow
+				// Toggles any cards that should show up for the signed in user
+				// Registers firebase push token
+				// Queries any user data with newly obtained access token
 				yield put({ type: 'LOGGED_IN', profile: newProfile })
 				yield put({ type: 'LOG_IN_SUCCESS' })
 				yield put({ type: 'TOGGLE_AUTHENTICATED_CARDS' })
@@ -92,6 +98,33 @@ function* doLogin(action) {
 	}
 }
 
+function* queryUserData() {
+	// perform first data calls when user is logged in
+	yield put({ type: 'UPDATE_SCHEDULE' })
+
+	// Sync user profile from cloud when first logging in
+	yield call(getUserProfile)
+	const { profile, syncedProfile } = yield select(userState)
+
+	// populate newProfile with potentially stale remote data first
+	let profileItems = { ...syncedProfile }
+
+	// add newly initialized profile object
+	profileItems = {
+		...profileItems,
+		...profile
+	}
+
+	const modifyProfileAction = { profileItems }
+
+	yield call(modifyLocalProfile, modifyProfileAction)
+
+	// subscribes to firebase topics that have been synced from the server
+	yield put({ type: 'REFRESH_TOPIC_SUBSCRIPTIONS' })
+	yield put({ type: 'UPDATE_MESSAGES' })
+}
+// Used when an API call requires an access token and the current
+// one is stale.
 function* doTokenRefresh() {
 	try {
 		yield refreshTokenRequest()
@@ -118,6 +151,8 @@ function* doTokenRefresh() {
 	}
 }
 
+// Utility method that actually makes the request for the new
+// access token using encrypted stored credentials
 function* refreshTokenRequest() {
 	const { isLoggedIn } = yield select(userState)
 	if (!isLoggedIn) {
@@ -147,6 +182,7 @@ function* refreshTokenRequest() {
 	}
 }
 
+// Obtains the user profile stored in the cloud
 function* getUserProfile() {
 	// Request user profile from API
 	yield put({ type: 'GET_PROFILE_REQUEST' })
@@ -164,74 +200,24 @@ function* getUserProfile() {
 	}
 }
 
+// Times out any current logging-in process
 function* doTimeOut() {
 	const error = new Error('Logging in timed out.')
 	yield put({ type: 'LOG_IN_FAILURE', error })
 }
 
+// Logs out the user
 function* doLogout(action) {
+	const { profile } = yield select(userState)
+	const { subscribedTopics: currentSubscriptions } = profile
+
 	// We need to pass in the accessToken before we lose it
 	// This isn't guaranteed to work but we should try anyways
 	const accessToken = yield auth.retrieveAccessToken()
 	yield put({ type: 'UNREGISTER_TOKEN', accessToken })
 
 	yield put({ type: 'LOGGED_OUT' })
-	yield call(clearUserData)
-}
-
-function* queryUserData() {
-	// perform first data calls when user is logged in
-	yield put({ type: 'UPDATE_SCHEDULE' })
-
-	// Sync user profile from cloud when first logging in
-	yield call(getUserProfile)
-	const { profile, syncedProfile } = yield select(userState)
-
-	// populate newProfile with potentially stale remote data first
-	let profileItems = { ...syncedProfile }
-
-	// add newly initialized profile object
-	profileItems = {
-		...profileItems,
-		...profile
-	}
-
-	const modifyProfileAction = { profileItems }
-
-	yield call(modifyLocalProfile, modifyProfileAction)
-}
-
-function* clearUserData() {
-	yield put({ type: 'TOGGLE_AUTHENTICATED_CARDS' })
-	yield auth.destroyUserCreds()
-	yield auth.destroyAccessToken()
-	yield put({ type: 'CLEAR_SCHEDULE_DATA' })
-}
-
-function* activateDemoAccount(demoUsername, demoPassword) {
-	yield put({ type: 'LOG_IN_REQUEST' })
-	yield put({ type: 'ACTIVATE_STUDENT_DEMO_ACCOUNT' })
-	yield call(delay, 750)
-
-	// Successfully logged in
-	yield auth.storeUserCreds(demoUsername, demoPassword)
-
-	// Set up user profile
-	const newProfile = {
-		username: 'Student Demo',
-		pid: 'fakepid',
-		classifications: { student: true }
-	}
-
-	yield put({ type: 'LOGGED_IN', profile: newProfile })
-	yield put({ type: 'LOG_IN_SUCCESS' })
-	yield put({ type: 'TOGGLE_AUTHENTICATED_CARDS' })
-
-	// Clears any potential errors from being
-	// unable to automatically reauthorize a user
-	yield put({ type: 'AUTH_HTTP_SUCCESS' })
-
-	yield call(queryUserData)
+	yield call(clearUserData, currentSubscriptions)
 }
 
 function* outOfDateAlert() {
@@ -250,6 +236,7 @@ function* outOfDateAlert() {
 	)
 }
 
+// Syncs local profile with remote user profile stored in the cloud
 function* syncUserProfile() {
 	const { isLoggedIn, profile, lastSynced } = yield select(userState)
 
@@ -279,17 +266,65 @@ function* syncUserProfile() {
 		yield call(userService.PostUserProfile, newAttributes)
 		yield put({ type: 'POST_PROFILE_SUCCESS' })
 		yield put({ type: 'PROFILE_SYNCED' })
+
+		// subscribes to firebase topics that have been synced from the server
+		yield put({ type: 'REFRESH_TOPIC_SUBSCRIPTIONS' })
 	} catch (error) {
 		yield put({ type: 'POST_PROFILE_FAILURE' })
 		logger.trackException(error)
 	}
 }
 
+// Handles modifying the local user profile object.
+// If the user is signed in, initiates a sync attempt
+// with the remote server
 function* modifyLocalProfile(action) {
 	const { profileItems } = action
 	yield put({ type: 'SET_LOCAL_PROFILE', profileItems })
 	yield put({ type: 'RESET_SYNCED_DATE' })
 	yield call(syncUserProfile)
+}
+
+// Handles signing in to the fake student demo account
+// username and password are both "demo"
+function* activateDemoAccount(demoUsername, demoPassword) {
+	yield put({ type: 'LOG_IN_REQUEST' })
+	yield put({ type: 'ACTIVATE_STUDENT_DEMO_ACCOUNT' })
+	yield call(delay, 750)
+
+	// Successfully logged in
+	yield auth.storeUserCreds(demoUsername, demoPassword)
+
+	// Set up user profile
+	const newProfile = {
+		username: 'Student Demo',
+		pid: 'fakepid',
+		classifications: { student: true }
+	}
+
+	yield put({ type: 'LOGGED_IN', profile: newProfile })
+	yield put({ type: 'LOG_IN_SUCCESS' })
+	yield put({ type: 'TOGGLE_AUTHENTICATED_CARDS' })
+
+	// Clears any potential errors from being
+	// unable to automatically reauthorize a user
+	yield put({ type: 'AUTH_HTTP_SUCCESS' })
+
+	yield call(queryUserData)
+}
+
+
+// Performs various cleanup actions. These include:
+// Unregistering / unassociating the firebase push token
+// Clearing any user specific data (but not any default preferences
+// such as card order or subscriptions to default notification categories)
+function* clearUserData(currentSubscriptions) {
+	yield put({ type: 'TOGGLE_AUTHENTICATED_CARDS' })
+	yield auth.destroyUserCreds()
+	yield auth.destroyAccessToken()
+	yield put({ type: 'CLEAR_SCHEDULE_DATA' })
+	yield put({ type: 'CLEAR_USER_SUBSCRIPTIONS', subscribedTopics: currentSubscriptions })
+	yield put({ type: 'RESET_MESSAGES' })
 }
 
 function* userSaga() {

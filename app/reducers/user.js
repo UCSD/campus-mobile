@@ -17,8 +17,12 @@ function user(state = initialState, action) {
 
 	switch (action.type) {
 		case 'LOGGED_IN': {
+			const { profile } = action
 			newState.isLoggedIn = true
-			newState.profile = action.profile
+			newState.profile = {
+				...newState.profile,
+				...profile
+			}
 			newState.invalidSavedCredentials = false
 			return newState
 		}
