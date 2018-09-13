@@ -20,11 +20,13 @@
 	13 - Feedback
 	14 - Settings
 	15 - Onboarding
+	16 - Parking
+	17 - Notifications
 	99 - Misc
 */
 import { StyleSheet, Platform } from 'react-native'
 
-import { platformAndroid, deviceIphoneX, round } from '../util/general'
+import { platformAndroid, deviceIphoneX, platformIOS, round } from '../util/general'
 import COLOR from './ColorConstants'
 import LAYOUT from './LayoutConstants'
 
@@ -41,8 +43,11 @@ const css = StyleSheet.create({
 	main_full_flex: { flex: 1, backgroundColor: COLOR.WHITE, paddingBottom: deviceIphoneX() ? LAYOUT.NAVIGATOR_HEIGHT : 0 },
 	scroll_default: { backgroundColor: COLOR.WHITE },
 	card_container: { backgroundColor: COLOR.WHITE, margin: 6 },
+	card_full_container: { backgroundColor: COLOR.WHITE, marginTop: 16, borderTopWidth: 1, borderBottomWidth: 1, borderColor: COLOR.MGREY },
 	main_full_lgrey: { flexGrow: 1, backgroundColor: COLOR.LGREY }, // special events
 	loginview_container: { flexGrow: 1, backgroundColor: COLOR.MGREY, marginTop: LAYOUT.NAVIGATOR_HEIGHT },
+	messaging_container: { flex: 1, paddingBottom: platformIOS() ? LAYOUT.NAVIGATOR_HEIGHT : 0 },
+
 	// Navigator
 	nav: { backgroundColor: COLOR.PRIMARY, height: LAYOUT.NAVIGATOR_HEIGHT, marginTop: deviceIphoneX() ? -13 : 0 },
 	navTitle: { flex: 1, fontSize: 24, fontWeight: '300', textAlign: 'center', alignSelf: 'center', marginTop: deviceIphoneX() ? 0 : -3 },
@@ -363,11 +368,9 @@ const css = StyleSheet.create({
 	feedback_submitting_text: { fontSize: 18, textAlign: 'center' },
 
 	/**
-	 *  14 - Settings
+	 *  14 - User Profile
 	 */
-
-
-
+	profile_inner: { paddingBottom: 50 },
 	ua_accountinfo: { flexDirection: 'row', paddingHorizontal: 10, paddingVertical: 14, alignItems: 'center' },
 	ua_loggedin: { flex: 3, flexDirection: 'row', alignItems: 'center' },
 	ua_username_checkmark: { color: COLOR.GREEN },
@@ -387,24 +390,16 @@ const css = StyleSheet.create({
 	ua_panicText: { fontSize: 16, padding: 8, textAlign: 'center' },
 	ua_loginText: { fontSize: 16, color: COLOR.WHITE },
 	ua_errorText: { flex: 1, fontSize: 18, color: COLOR.MRED },
-	us_list_row: { flexDirection: 'row', alignItems: 'center', width: LAYOUT.MAX_CARD_WIDTH, borderBottomWidth: 1, borderBottomColor: COLOR.MGREY,
-		...Platform.select({
-			ios: {
-				shadowOpacity: 0,
-				shadowOffset: { height: 2, width: 2 },
-				shadowRadius: 2,
-			},
 
-			android: {
-				margin: 0,
-				elevation: 0,
-				backgroundColor: COLOR.WHITE
-			},
-		})
-	},
-	us_icon: { padding: 7 },
-	us_name_text: { flex: 1, margin: 7, fontSize: 18 },
-	us_switchContainer: { width: 50, height: 50, justifyContent: 'center', alignItems: 'center', marginRight: 10 },
+	us_list_row: { flexDirection: 'row', alignItems: 'center', borderTopWidth: 1, borderTopColor: COLOR.MGREY, paddingHorizontal: 20, paddingVertical: 8, margin: 0, elevation: 0, backgroundColor: COLOR.WHITE },
+	us_icon: { color: COLOR.DGREY },
+	us_name_text: { flexGrow: 1, fontSize: 18, color: COLOR.VDGREY, paddingLeft: 16 },
+	us_switchContainer: { justifyContent: 'center', alignItems: 'center' },
+
+	pi_container: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: COLOR.WHITE, marginTop: 20, paddingVertical: 8, paddingHorizontal: 20, borderTopWidth: 2, borderTopColor: COLOR.MGREY, borderBottomWidth: 2, borderBottomColor: COLOR.MGREY },
+	pi_icon: { color: COLOR.PRIMARY },
+	pi_title: { flexGrow: 1, fontSize: 18, color: COLOR.VDGREY, paddingLeft: 16 },
+	pi_arrow: { color: COLOR.CCC },
 
 	/**
 	 *  15 - Onboarding
@@ -449,6 +444,33 @@ const css = StyleSheet.create({
 	lrc_button: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.PRIMARY, borderRadius: 3, marginTop: 14, padding: 10 },
 	lrc_buttonText: { color: COLOR.WHITE },
 
+	/**
+	 *	16 - Parking
+	 */
+	pst_elevated_row_view: { flexDirection: 'row', flex: 1, paddingLeft: 15, backgroundColor: COLOR.MGREY, alignItems: 'center', justifyContent: 'center', height: 50, margin: 3 },
+	pst_unelevated_row_view: { flexDirection: 'row', flex: 1, paddingLeft: 15, backgroundColor: COLOR.WHITE, alignItems: 'center', justifyContent: 'center', height: 50, margin: 3 },
+	pst_warning_elevated_view: { flex: 1, flexDirection: 'row', backgroundColor: 'white' , alignItems: 'center', justifyContent: 'center', marginHorizontal: 30, bottom: 25 },
+	pst_warning_container_view: { alignItems: 'center', justifyContent: 'center' },
+	pst_warning_header_text: { fontSize: 18, top: -20, alignItems: 'center' },
+	pst_full_container: { flex: 1, backgroundColor: 'white' },
+	pst_flat_list: { backgroundColor: 'white' },
+	pst_flat_list_separator: { height: 1, backgroundColor: COLOR.MGREY },
+	pst_flat_list_empty_separator: { height: 1, backgroundColor: COLOR.WHITE },
+	pst_circle: { borderRadius: 18, width: 36, height: 36, justifyContent: 'center', overflow: 'hidden' },
+	pst_character: { textAlign: 'center', fontWeight: '600', fontSize: 19, backgroundColor: 'transparent' },
+	pst_row_text: { flex: 1, paddingRight: 10, paddingLeft: 10, fontSize: 19 },
+
+	/**
+	 *	17 - Notifications
+	 */
+	notifications_row_view: { flexDirection: 'row', flex: 1, paddingLeft: 10, backgroundColor: COLOR.WHITE, alignItems: 'center', justifyContent: 'center', height: 35 },
+	//notifications_row_view: { flexDirection: 'row', flex: 1, paddingLeft: 10, paddingRight: 10, alignItems: 'center', justifyContent: 'center', height: 35 },
+	notifications_full_container: { flex: 1, backgroundColor: COLOR.WHITE },
+	notifications_section_list: { flex: 1 },
+	notifications_section_list_header_container: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 45, borderBottomColor: COLOR.MGREY, borderBottomWidth: 1 },
+	notifications_section_list_header_text: { flex: 1, paddingLeft: 5, fontSize: 23, color: COLOR.VDGREY },
+	notifications_row_text: { flex: 1, paddingRight: 10, paddingLeft: 10, fontSize: 19, color: COLOR.VDGREY },
+	notifications_section_list_separator: { height: 1, backgroundColor: COLOR.MGREY },
 })
 
 module.exports = css

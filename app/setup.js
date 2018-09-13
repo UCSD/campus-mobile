@@ -1,12 +1,10 @@
 import React from 'react'
-import { StatusBar } from 'react-native'
 import { setJSExceptionHandler } from 'react-native-exception-handler'
 import { Provider } from 'react-redux'
 
 import configureStore from './store/configureStore'
 import Main from './main'
-import { platformAndroid, gracefulFatalReset } from './util/general'
-import COLOR from './styles/ColorConstants'
+import { gracefulFatalReset } from './util/general'
 
 class CampusMobileSetup extends React.Component {
 	constructor(props) {
@@ -28,9 +26,6 @@ class CampusMobileSetup extends React.Component {
 	}
 
 	render() {
-		if (platformAndroid()) {
-			StatusBar.setBackgroundColor(COLOR.PRIMARY, false)
-		}
 		if (!this.state.isLoading) {
 			return (
 				<Provider store={this.state.store}>

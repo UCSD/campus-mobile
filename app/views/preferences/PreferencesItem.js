@@ -1,100 +1,36 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import {
-	View,
-	Text,
-	Switch,
-	Platform,
-	Animated,
-	Easing,
-} from 'react-native'
-import Icon from 'react-native-vector-icons/MaterialIcons'
-
+import React from 'react'
+import { Text } from 'react-native'
+import { withNavigation } from 'react-navigation'
+import Entypo from 'react-native-vector-icons/Entypo'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import Ionicons from 'react-native-vector-icons/Ionicons'
+import Touchable from '../common/Touchable'
 import css from '../../styles/css'
 
-// Row item for sortable-list component
-class PrefItem extends Component {
-	constructor(props) {
-		super(props)
+/**
+ * Row item for user preferences
+ * @param  {String} title Title to display
+ * @param {String} icon Icon to display
+ * @param {String} link Where to navigate to
+ * @param {Object} style Optional style
+ * @return {JSX} Return PreferencesItem JSX
+ */
+const PreferencesItem = ({ title, iconPack, icon, link, style, navigation }) => (
+	<Touchable
+		onPress={() => { navigation.navigate(link) }}
+		style={css.pi_container}
+	>
+		{iconPack === 'Entypo' ? (
+			<Entypo name={icon} size={24} style={css.pi_icon} />
+		) : null }
 
-		this._active = new Animated.Value(0)
+		{iconPack === 'FontAwesome' ? (
+			<FontAwesome name={icon} size={24} style={css.pi_icon} />
+		) : null }
 
-		this._style = {
-			...Platform.select({
-				ios: {
-					shadowOpacity: this._active.interpolate({
-						inputRange: [0, 1],
-						outputRange: [0, 0.2],
-					}),
-					shadowRadius: this._active.interpolate({
-						inputRange: [0, 1],
-						outputRange: [2, 10],
-					}),
-				},
+		<Text style={css.pi_title}>{title}</Text>
+		<Ionicons name="ios-arrow-forward" size={24} style={css.pi_arrow} />
+	</Touchable>
+)
 
-				android: {
-					marginTop: this._active.interpolate({
-						inputRange: [0, 1],
-						outputRange: [0, 10],
-					}),
-					marginBottom: this._active.interpolate({
-						inputRange: [0, 1],
-						outputRange: [0, 10],
-					}),
-					elevation: this._active.interpolate({
-						inputRange: [0, 1],
-						outputRange: [2, 6],
-					}),
-				},
-			})
-		}
-
-		this._noTouched = false
-	}
-
-	componentWillReceiveProps(nextProps) {
-		if (this.props.active !== nextProps.active) {
-			Animated.timing(this._active, {
-				duration: 300,
-				easing: Easing.bounce,
-				toValue: Number(nextProps.active),
-			}).start()
-		}
-	}
-
-	render() {
-		const { data, cards } = this.props
-		return (
-			<Animated.View
-				style={[css.us_list_row, this._style]}
-			>
-				<Icon
-					style={css.us_icon}
-					name="drag-handle"
-					size={20}
-				/>
-				<Text style={css.us_name_text}>{data.name}</Text>
-				<View style={css.us_switchContainer}>
-					<Switch
-						onValueChange={value => this.props.setCardState(data.id, value)}
-						value={cards[data.id].active}
-					/>
-				</View>
-			</Animated.View>
-		)
-	}
-}
-
-function mapStateToProps(state, props) {
-	return { cards: state.cards.cards }
-}
-
-function mapDispatchtoProps(dispatch) {
-	return {
-		setCardState: (id, state) => {
-			dispatch({ type: 'UPDATE_CARD_STATE', id, state })
-		}
-	}
-}
-
-export default connect(mapStateToProps, mapDispatchtoProps)(PrefItem)
+export default withNavigation(PreferencesItem)

@@ -4,52 +4,55 @@ import {
 	Platform,
 } from 'react-native'
 import { connect } from 'react-redux'
-import FCM, { FCMEvent } from 'react-native-fcm'
+import firebase from 'react-native-firebase'
 import Permissions from 'react-native-permissions'
+
+const subscribeToDefaults = (messaging) => {
+	const defaultTopics = ['emergency']
+
+	defaultTopics.forEach((topic) => {
+		messaging.subscribeToTopic(topic)
+		console.log('Subscribed to ' + topic)
+	})
+}
 
 class PushNotificationContainer extends React.Component {
 	componentDidMount() {
 		this.checkPermission()
 
-		// if we launch with a notification waiting for us
-		// Note: Have to check what type of notification it is, especially on android, since some non-push things are notifications
-		FCM.getInitialNotification().then((notif) => {
-			console.log('launched w/notification waiting for us', notif)
+		this.onTokenRefreshListener = firebase.messaging().onTokenRefresh((fcmToken) => {
+			// Process your token as required
+			console.log('Firebase Token (refresh):', fcmToken)
+
+			subscribeToDefaults(firebase.messaging())
+			if (this.props.user.isLoggedIn) this.props.registerToken(fcmToken)
 		})
 
-		this.notificationListener = FCM.on(FCMEvent.Notification, (notif) => {
-			if (!notif) return // make sure we get something
-
-			console.log('got notification', notif)
-
-			// there are two parts of notif. notif.notification contains the notification payload, notif.data contains data payload
-			if (notif.local_notification) {
-				// this is a local notification
-				return
-			}
-			if (notif.opened_from_tray) {
-				// app is open/resumed because user clicked banner
-				return
-			}
-			// if app is already open, show a local notification with the same info
-			this.showLocalNotification(notif)
+		this.messageListener = firebase.messaging().onMessage((message) => {
+			console.log('New message received: ', message)
 		})
-		this.refreshTokenListener = FCM.on(FCMEvent.RefreshToken, (token) => {
-			this.updateServerToken(token)
-			// fcm token may not be available on first load, catch it here
+
+		this.notificationListener = firebase.notifications().onNotification((notification) => {
+			console.log('New notification received: ', notification)
 		})
 	}
 
 	componentWillUnmount() {
 		// stop listening for events
-		this.notificationListener.remove()
-		this.refreshTokenListener.remove()
+		this.onTokenRefreshListener()
+		this.messageListener()
 	}
 
 	getNotificationToken = () => {
-		FCM.getFCMToken().then((token) => {
-			this.updateServerToken(token)
-		})
+		firebase.messaging().getToken()
+			.then((fcmToken) => {
+				if (fcmToken) {
+					console.log('Firebase Token: ', fcmToken)
+
+					// Subscribe to default topics
+					subscribeToDefaults(firebase.messaging())
+				}
+			})
 	}
 
 	getSoftPermission = () => {
@@ -82,14 +85,7 @@ class PushNotificationContainer extends React.Component {
 	showLocalNotification = (notif) => {
 		// NOTE: will not work until we configure local notifications
 		if (notif && notif.notification) {
-			FCM.presentLocalNotification({
-				title: notif.notification.title,
-				body: notif.notification.body,
-				priority: 'high',
-				click_action: notif.notification.click_action,
-				show_in_foreground: true,
-				local: true
-			})
+
 		}
 	}
 
@@ -124,7 +120,15 @@ class PushNotificationContainer extends React.Component {
 }
 
 function mapStateToProps(state, props) {
-	return {}
+	return { user: state.user }
 }
 
-module.exports = connect(mapStateToProps)(PushNotificationContainer)
+const mapDispatchToProps = (dispatch, ownProps) => (
+	{
+		registerToken: (token) => {
+			dispatch({ type: 'REGISTER_TOKEN', token })
+		}
+	}
+)
+
+module.exports = connect(mapStateToProps, mapDispatchToProps)(PushNotificationContainer)

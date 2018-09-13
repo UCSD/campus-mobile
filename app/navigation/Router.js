@@ -17,7 +17,8 @@ import DiningDetail from '../views/dining/DiningDetail'
 import DiningNutrition from '../views/dining/DiningNutrition'
 import EventDetail from '../views/events/EventDetail'
 import NewsDetail from '../views/news/NewsDetail'
-import FeedbackView from '../views/feedback/FeedbackView'
+import Feedback from '../views/preferences/feedback/Feedback'
+import Messaging from '../views/messaging/Messaging'
 import Preferences from '../views/preferences/Preferences'
 import Map from '../views/map/Map'
 import DataListViewAll from '../views/common/DataListViewAll'
@@ -28,6 +29,8 @@ import ShuttleRoutesListView from '../views/shuttle/ShuttleRoutesListView'
 import ShuttleStopsListView from '../views/shuttle/ShuttleStopsListView'
 import ShuttleSavedListView from '../views/shuttle/ShuttleSavedListView'
 import FullSchedule from '../views/schedule/FullScheduleListView'
+import ParkingSpotType from '../views/parking/ParkingSpotType'
+import Notifications from '../views/preferences/notifications/Notifications'
 
 // TABS
 import TabIcons from './TabIcons'
@@ -44,7 +47,7 @@ const TabNav = TabNavigator(
 	{
 		Home: { screen: Home },
 		Map: { screen: Map },
-		Feedback: { screen: FeedbackView },
+		Messaging: { screen: Messaging },
 		Preferences: { screen: Preferences }
 	},
 	{
@@ -138,6 +141,13 @@ const MainStack = StackNavigator(
 				headerRight: (<DummyView />)
 			}
 		},
+		ParkingSpotType: {
+			screen: ParkingSpotType,
+			navigationOptions: {
+				title: 'Parking: Edit Parking Type',
+				headerRight: (<DummyView />)
+			}
+		},
 		SpecialEventsView: { screen: SpecialEventsView },
 		SpecialEventsFilters: {
 			screen: SpecialEventsFilterListView,
@@ -171,6 +181,20 @@ const MainStack = StackNavigator(
 		LoginScreen: {
 			screen: OnboardingLogin,
 			navigationOptions: { header: null }
+		},
+		Feedback: {
+			screen: Feedback,
+			navigationOptions: {
+				title: 'Feedback',
+				headerRight: (<DummyView />)
+			}
+		},
+		Notifications: {
+			screen: Notifications,
+			navigationOptions: {
+				title: 'Notifications',
+				headerRight: (<DummyView />)
+			}
 		},
 		DataListViewAll: {
 			screen: DataListViewAll,

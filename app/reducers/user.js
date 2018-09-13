@@ -3,11 +3,13 @@ const initialState = {
 	profile: {
 		username: null,
 		classifications: null,
-		pid: null
+		pid: null,
 	},
+	syncedProfile: {},
 	invalidSavedCredentials: false,
 	appUpdateRequired: false,
-	isStudentDemo: false
+	isStudentDemo: false,
+	lastSynced: null,
 }
 
 function user(state = initialState, action) {
@@ -15,8 +17,12 @@ function user(state = initialState, action) {
 
 	switch (action.type) {
 		case 'LOGGED_IN': {
+			const { profile } = action
 			newState.isLoggedIn = true
-			newState.profile = action.profile
+			newState.profile = {
+				...newState.profile,
+				...profile
+			}
 			newState.invalidSavedCredentials = false
 			return newState
 		}
@@ -38,6 +44,28 @@ function user(state = initialState, action) {
 		}
 		case 'ACTIVATE_STUDENT_DEMO_ACCOUNT': {
 			newState.isStudentDemo = true
+			return newState
+		}
+		case 'SET_LOCAL_PROFILE': {
+			newState.profile = {
+				...newState.profile,
+				...action.profileItems,
+			}
+			return newState
+		}
+		case 'SET_USER_PROFILE': {
+			newState.syncedProfile = {
+				...newState.syncedProfile,
+				...action.profileItems,
+			}
+			return newState
+		}
+		case 'PROFILE_SYNCED': {
+			newState.lastSynced = new Date().getTime()
+			return newState
+		}
+		case 'RESET_SYNCED_DATE': {
+			newState.lastSynced = null
 			return newState
 		}
 		default:

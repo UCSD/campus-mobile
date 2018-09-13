@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { View } from 'react-native'
 import Entypo from 'react-native-vector-icons/Entypo'
-
+import FAIcon from 'react-native-vector-icons/FontAwesome'
 import css from '../styles/css'
 import COLOR from '../styles/ColorConstants'
 
@@ -12,43 +12,29 @@ const propTypes = {
 }
 
 const TabIcons = (props) => {
-	let tabIconPack,
-		tabIconName
+	let TabIcon
 
 	if (props.title === 'Home') {
-		tabIconPack = 'Entypo'
-		tabIconName = 'home'
+		TabIcon = () => (<Entypo name="home" size={24} style={[css.tabIcon, props.focused ? { color: COLOR.PRIMARY } : null]} />)
 	} else if (props.title === 'Map') {
-		tabIconPack = 'Entypo'
-		tabIconName = 'location'
-	} else if (props.title === 'Feedback') {
-		tabIconPack = 'Entypo'
-		tabIconName = 'new-message'
+		TabIcon = () => (<Entypo name="location" size={24} style={[css.tabIcon, props.focused ? { color: COLOR.PRIMARY } : null]} />)
+	} else if (props.title === 'Messaging') {
+		TabIcon = () => (<FAIcon name="bell-o" size={24} style={[css.tabIcon, props.focused ? { color: COLOR.PRIMARY } : null]} />)
 	} else if (props.title === 'Preferences') {
-		tabIconPack = 'Entypo'
-		tabIconName = 'user'
+		TabIcon = () => (
+			<View style={[css.tabIconUserOutline, props.focused ? { borderColor: COLOR.PRIMARY } : null]}>
+				<Entypo
+					style={[css.tabIconUser, props.focused ? { backgroundColor: COLOR.PRIMARY } : null]}
+					name="user"
+					size={24}
+				/>
+			</View>
+		)
 	}
 
 	return (
 		<View style={[css.tabContainer, props.focused ? css.tabContainerBottom : null]}>
-			{tabIconPack === 'Entypo' && tabIconName !== 'user' ? (
-				<Entypo
-					style={[css.tabIcon, props.focused ? { color: COLOR.PRIMARY } : null]}
-					name={tabIconName}
-					size={24}
-				/>
-			) : null }
-			{tabIconPack === 'Entypo' && tabIconName === 'user' ? (
-				<View
-					style={[css.tabIconUserOutline, props.focused ? { borderColor: COLOR.PRIMARY } : null]}
-				>
-					<Entypo
-						style={[css.tabIconUser, props.focused ? { backgroundColor: COLOR.PRIMARY } : null]}
-						name={tabIconName}
-						size={24}
-					/>
-				</View>
-			) : null }
+			<TabIcon />
 		</View>
 	)
 }

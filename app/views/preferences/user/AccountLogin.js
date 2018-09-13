@@ -70,12 +70,12 @@ class AccountLogin extends Component {
 
 	render() {
 		const { username, password } = this.state.credentials
-		
+
 		if (this.props.invalidCredentials) {
 			// Return this if user was logged out
 			return <AccountPanicked />
 		}
-		
+
 		return (
 			<View
 				style={css.ua_loginContainer}

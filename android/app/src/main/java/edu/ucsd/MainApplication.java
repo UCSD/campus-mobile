@@ -4,9 +4,12 @@ import android.app.Application;
 import android.util.Log;
 
 import com.facebook.react.ReactApplication;
+import com.horcrux.svg.SvgPackage;
+import io.invertase.firebase.RNFirebasePackage;
+import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
+import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
 import com.bugsnag.BugsnagReactNative;
 import com.avishayil.rnrestart.ReactNativeRestartPackage;
-import com.evollu.react.fcm.FIRMessagingPackage;
 import com.idehub.GoogleAnalyticsBridge.GoogleAnalyticsBridgePackage;
 import com.oblador.keychain.KeychainPackage;
 import com.github.wumke.RNExitApp.RNExitAppPackage;
@@ -35,9 +38,12 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new SvgPackage(),
+            new RNFirebasePackage(),
+            new RNFirebaseNotificationsPackage(),
+            new RNFirebaseMessagingPackage(),
             BugsnagReactNative.getPackage(),
             new ReactNativeRestartPackage(),
-            new FIRMessagingPackage(),
             new GoogleAnalyticsBridgePackage(),
             new KeychainPackage(),
             new RNExitAppPackage(),

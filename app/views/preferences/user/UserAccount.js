@@ -12,7 +12,7 @@ import AccountInfo from './AccountInfo'
 import AccountLogin from './AccountLogin'
 import AppSettings from '../../../AppSettings'
 import css from '../../../styles/css'
-import { getMaxCardWidth } from '../../../util/general'
+import { getScreenWidth } from '../../../util/general'
 import Card from '../../common/Card'
 
 const auth = require('../../../util/auth')
@@ -22,6 +22,8 @@ class UserAccount extends Component {
 		Linking.addEventListener('url', this._handleOpenURL)
 	}
 
+	/*
+	DEBUG ACCESS TOKEN
 	componentWillReceiveProps(nextProps) {
 		if (nextProps.user.isLoggedIn) {
 			auth.retrieveAccessToken()
@@ -31,6 +33,7 @@ class UserAccount extends Component {
 				})
 		}
 	}
+	*/
 
 	componentWillUnmount() {
 		Linking.removeEventListener('url', this._handleOpenURL)
@@ -56,9 +59,10 @@ class UserAccount extends Component {
 	}
 
 	render() {
+		const cardTitle = this.props.user.isLoggedIn ? 'Logged in as:' : 'Log in with SSO:'
 		return (
-			<Card id="user" title={this.props.user.isLoggedIn ? 'Logged in as:' : 'Log in with SSO:'} hideMenu={true}>
-				<View style={{ width: getMaxCardWidth() }}>
+			<Card id="user" title={cardTitle} hideMenu full>
+				<View style={{ width: getScreenWidth() }}>
 					{(this.props.user.isLoggedIn) ? (
 						<AccountInfo />
 					) : (

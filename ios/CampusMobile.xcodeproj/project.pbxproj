@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		0018BAF1CCB641E98673EB97 /* libRCTRestart.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F7F569A125C843DCBF8ABABC /* libRCTRestart.a */; };
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
@@ -60,9 +59,9 @@
 		F0C67FF7204DBE8C00B3116E /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F0C67FBE204DBE8C00B3116E /* EvilIcons.ttf */; };
 		F0C67FF8204DBE8C00B3116E /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F0C67FBF204DBE8C00B3116E /* SimpleLineIcons.ttf */; };
 		F0C67FF9204DBE8C00B3116E /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F0C67FC0204DBE8C00B3116E /* MaterialIcons.ttf */; };
-		F39704B1803340DEBE51D7E7 /* libRNFIRMessaging.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7FC8FBD8CF474ED0AAB246CD /* libRNFIRMessaging.a */; };
 		F3E3E1F9DC627AD81E6CB592 /* libPods-CampusMobile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9371BC6A8FB7F6C9AA4F678D /* libPods-CampusMobile.a */; };
 		F979D7E01F017E760061C674 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F979D7DF1F017E760061C674 /* libz.tbd */; };
+		C8F245DA63BA4B29A75A767C /* libRNFirebase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C0E1D5522BFD4A3695137A9E /* libRNFirebase.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -346,13 +345,6 @@
 			remoteGlobalIDString = 358F4ED71D1E81A9004DF814;
 			remoteInfo = RCTBlob;
 		};
-		B600A3EC1F0424CA005CDF85 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = FC62352DB99A4E29A4F4F3BB /* RNFIRMessaging.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 134814201AA4EA6300B7C361;
-			remoteInfo = RNFIRMessaging;
-		};
 		F0828A2C2049C91E00432B27 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = EE97A121B45144E095B3DC46 /* RNDeviceInfo.xcodeproj */;
@@ -455,7 +447,6 @@
 		77FB3C9C1E4A5B4300A80D5E /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		77FB3C9E1E4A5B5000A80D5E /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
-		7FC8FBD8CF474ED0AAB246CD /* libRNFIRMessaging.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFIRMessaging.a; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		9371BC6A8FB7F6C9AA4F678D /* libPods-CampusMobile.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CampusMobile.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4186507B80950A47FBBC516 /* Pods-CampusMobile.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CampusMobile.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CampusMobile/Pods-CampusMobile.debug.xcconfig"; sourceTree = "<group>"; };
@@ -482,7 +473,8 @@
 		F7F569A125C843DCBF8ABABC /* libRCTRestart.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTRestart.a; sourceTree = "<group>"; };
 		F979D7DF1F017E760061C674 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		F9A432C11EFDFB5D00CB22CB /* CampusMobile.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = CampusMobile.entitlements; path = CampusMobile/CampusMobile.entitlements; sourceTree = "<group>"; };
-		FC62352DB99A4E29A4F4F3BB /* RNFIRMessaging.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNFIRMessaging.xcodeproj; path = "../node_modules/react-native-fcm/ios/RNFIRMessaging.xcodeproj"; sourceTree = "<group>"; };
+		C215C28DAEBE4BB287813227 /* RNFirebase.xcodeproj */ = {isa = PBXFileReference; name = "RNFirebase.xcodeproj"; path = "../node_modules/react-native-firebase/ios/RNFirebase.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		C0E1D5522BFD4A3695137A9E /* libRNFirebase.a */ = {isa = PBXFileReference; name = "libRNFirebase.a"; path = "libRNFirebase.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -519,10 +511,10 @@
 				7F675770ECCB4CE4855E32D3 /* libRNExitApp.a in Frameworks */,
 				A62747CCACBA436E8CD8EC91 /* libRNKeychain.a in Frameworks */,
 				AC7E2F282770419C8EC64B53 /* libRCTGoogleAnalyticsBridge.a in Frameworks */,
-				F39704B1803340DEBE51D7E7 /* libRNFIRMessaging.a in Frameworks */,
 				ACE5D3917CC544D6A8A19C2C /* libReactNativePermissions.a in Frameworks */,
 				F3E3E1F9DC627AD81E6CB592 /* libPods-CampusMobile.a in Frameworks */,
 				0018BAF1CCB641E98673EB97 /* libRCTRestart.a in Frameworks */,
+				C8F245DA63BA4B29A75A767C /* libRNFirebase.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -795,9 +787,9 @@
 				CB8D6C96DB384AA1957B551C /* RNExitApp.xcodeproj */,
 				4A2723B48DD84562B8D18F1D /* RNKeychain.xcodeproj */,
 				616941E514954A0DA9D0CF55 /* RCTGoogleAnalyticsBridge.xcodeproj */,
-				FC62352DB99A4E29A4F4F3BB /* RNFIRMessaging.xcodeproj */,
 				E30EC6CC86424A0FBDCAFEA8 /* ReactNativePermissions.xcodeproj */,
 				C32A31BF74C743C094FC9A1B /* RCTRestart.xcodeproj */,
+				C215C28DAEBE4BB287813227 /* RNFirebase.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -844,14 +836,6 @@
 			children = (
 				ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */,
 				2D16E6721FA4F8DC00B85C8A /* libRCTBlob-tvOS.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		B600A3C91F0424CA005CDF85 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				B600A3ED1F0424CA005CDF85 /* libRNFIRMessaging.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1103,10 +1087,6 @@
 				{
 					ProductGroup = 77E020A61EFC418700A9941B /* Products */;
 					ProjectRef = CB8D6C96DB384AA1957B551C /* RNExitApp.xcodeproj */;
-				},
-				{
-					ProductGroup = B600A3C91F0424CA005CDF85 /* Products */;
-					ProjectRef = FC62352DB99A4E29A4F4F3BB /* RNFIRMessaging.xcodeproj */;
 				},
 				{
 					ProductGroup = F9A4329B1EFDFA9600CB22CB /* Products */;
@@ -1388,13 +1368,6 @@
 			fileType = archive.ar;
 			path = libRCTBlob.a;
 			remoteRef = ADBDB9261DFEBF0700ED6528 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		B600A3ED1F0424CA005CDF85 /* libRNFIRMessaging.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libRNFIRMessaging.a;
-			remoteRef = B600A3EC1F0424CA005CDF85 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		F0828A2D2049C91E00432B27 /* libRNDeviceInfo-tvOS.a */ = {
@@ -1716,10 +1689,10 @@
 					"$(SRCROOT)/../node_modules/react-native-device-info/RNDeviceInfo",
 					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
 					"$(SRCROOT)/../node_modules/react-native-google-analytics-bridge/ios/RCTGoogleAnalyticsBridge/**",
-					"$(SRCROOT)/../node_modules/react-native-fcm/ios",
 					"$(SRCROOT)/../node_modules/react-native-maps/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-restart/ios/RCTRestart/**",
+					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 				);
 				INFOPLIST_FILE = CampusMobile/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -1756,10 +1729,10 @@
 					"$(SRCROOT)/../node_modules/react-native-device-info/RNDeviceInfo",
 					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
 					"$(SRCROOT)/../node_modules/react-native-google-analytics-bridge/ios/RCTGoogleAnalyticsBridge/**",
-					"$(SRCROOT)/../node_modules/react-native-fcm/ios",
 					"$(SRCROOT)/../node_modules/react-native-maps/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-restart/ios/RCTRestart/**",
+					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 				);
 				INFOPLIST_FILE = CampusMobile/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -1793,6 +1766,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-restart/ios/RCTRestart/**",
+					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 				);
 				INFOPLIST_FILE = "CampusMobile-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1827,6 +1801,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-restart/ios/RCTRestart/**",
+					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 				);
 				INFOPLIST_FILE = "CampusMobile-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
