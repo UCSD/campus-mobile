@@ -15,6 +15,7 @@ import logger from '../util/logger'
 import { MESSAGING_TTL } from '../AppSettings'
 
 const getUserData = state => (state.user)
+const getMessages = state => (state.messages)
 
 function* getTopics() {
 	try {
@@ -102,6 +103,7 @@ function* resetMessages() {
 function* updateMessages(action) {
 	const { timestamp } = action
 	const { isLoggedIn } = yield select(getUserData)
+	const { messages } = yield select(getMessages)
 
 	if (isLoggedIn) {
 		try {
@@ -117,39 +119,10 @@ function* updateMessages(action) {
 				throw e
 			}
 			else {
-				const { messages, next: nextTimestamp } = response
+				const { messages: newMessages, next: nextTimestamp } = response
+				const newMessagesArray = mergeMessagesArrays(messages, newMessages)
 
-				yield put({ type: 'SET_MESSAGES', messages, nextTimestamp })
-				yield put({ type: 'GET_MESSAGES_SUCCESS' })
-			}
-		} catch (error) {
-			yield put({ type: 'GET_MESSAGES_FAILURE', error })
-			logger.trackException(error, false)
-		}
-	}
-}
-
-function* loadMoreMessages(action) {
-	const { timestamp } = action
-	const { isLoggedIn } = yield select(getUserData)
-
-	if (isLoggedIn) {
-		try {
-			yield put({ type: 'GET_MESSAGES_REQUEST' })
-
-			const { response, timeout } = yield race({
-				response: call(MessagesService.FetchMyMessages, timestamp),
-				timeout: call(delay, MESSAGING_TTL)
-			})
-
-			if (timeout) {
-				const e = new Error('Request timed out.')
-				throw e
-			}
-			else {
-				const { messages, next: nextTimestamp } = response
-
-				yield put({ type: 'ADD_MESSAGES', messages, nextTimestamp })
+				yield put({ type: 'SET_MESSAGES', messages: newMessagesArray, nextTimestamp })
 				yield put({ type: 'GET_MESSAGES_SUCCESS' })
 			}
 		} catch (error) {
@@ -226,10 +199,32 @@ function* refreshTopicSubscriptions(action) {
 	}
 }
 
+function mergeMessagesArrays(old, updated) {
+	const messages = {}
+
+	if (Array.isArray(old)) {
+		old.forEach((message) => {
+			messages[message.messageId] = message
+		})
+	}
+
+	if (Array.isArray(updated)) {
+		updated.forEach((message) => {
+			messages[message.messageId] = message
+		})
+	}
+
+	const result = []
+	Object.keys(messages).forEach((messageId) => {
+		result.push(messages[messageId])
+	})
+
+	return result
+}
+
 function* messagesSaga() {
 	yield takeLatest('RESET_MESSAGES', resetMessages)
 	yield takeLatest('UPDATE_MESSAGES', updateMessages)
-	yield takeLatest('LOAD_MORE_MESSAGES', loadMoreMessages)
 	yield takeLatest('REGISTER_TOKEN', registerToken)
 	yield takeLatest('UNREGISTER_TOKEN', unregisterToken)
 	yield takeLatest('GET_TOPICS', getTopics)
