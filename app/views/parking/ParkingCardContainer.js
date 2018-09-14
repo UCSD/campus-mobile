@@ -9,16 +9,53 @@ export class ParkingCardContainer extends Component {
 	}
 
   render() {
-    const { navigation } = this.props;
+    const { navigation, parkingData, count } = this.props;
+
+    const numSpotTypes = () => {
+      const { isChecked } = this.props;
+
+      const mySpots = [];
+      for (let i = 0; i < isChecked.length; i++) {
+        if (isChecked[i]) {
+          switch (i) {
+            case 0:
+              mySpots.push('S');
+              break;
+            case 1:
+              mySpots.push('B');
+              break;
+            case 2:
+              mySpots.push('A');
+              break;
+            case 3:
+              mySpots.push('ADA');
+              break;
+            default:
+              break;
+          }
+        }
+      }
+      return mySpots;
+    }
+
     return (
       <ParkingCard
-        savedStructures={this.props.parkingData}
+        savedStructures={parkingData}
         gotoParkingSpotType={() => this.gotoParkingSpotType(navigation)}
+        mySpots={numSpotTypes()}
+        lotCount={count}
       />
     );
   }
 }
 
-const mapStateToProps = state => ({ parkingData: state.parking.data });
+const mapStateToProps = (state) => {
+  return {
+    parkingData: state.parking.parkingData,
+    isChecked: state.parking.isChecked,
+    count: state.parking.count
+  }
+};
+
 const ActualParkingCard = connect(mapStateToProps)(withNavigation(ParkingCardContainer));
 export default ActualParkingCard;

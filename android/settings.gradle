@@ -1,6 +1,4 @@
 rootProject.name = 'CampusMobile'
-include ':react-native-svg'
-project(':react-native-svg').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-svg/android')
 include ':react-native-firebase'
 project(':react-native-firebase').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-firebase/android')
 include ':bugsnag-react-native'
@@ -19,5 +17,7 @@ include ':react-native-google-api-availability-bridge'
 project(':react-native-google-api-availability-bridge').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-google-api-availability-bridge/android')
 include ':react-native-maps'
 project(':react-native-maps').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-maps/lib/android')
+include ':react-native-svg'
+project(':react-native-svg').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-svg/android')
 
 include ':app'
