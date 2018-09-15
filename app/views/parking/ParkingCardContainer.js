@@ -4,21 +4,29 @@ import { withNavigation } from 'react-navigation'
 import ParkingCard from './ParkingCard'
 
 export class ParkingCardContainer extends Component {
-gotoParkingSpotType = (navigation) => {
-	navigation.navigate('ParkingSpotType')
+	gotoParkingSpotType = (navigation) => {
+		navigation.navigate('ParkingSpotType')
+	}
+
+	render() {
+		const { navigation, parkingData, count, selectedSpots } = this.props
+		return (
+			<ParkingCard
+				savedStructures={parkingData}
+				gotoParkingSpotType={() => this.gotoParkingSpotType(navigation)}
+				selectedSpots={selectedSpots}
+				lotCount={count}
+			/>
+		)
+	}
 }
 
-render() {
-	const { navigation } = this.props
-	return (
-		<ParkingCard
-			savedStructures={this.props.parkingData}
-			gotoParkingSpotType={() => this.gotoParkingSpotType(navigation)}
-		/>
-	)
-}
-}
+const mapStateToProps = state => ({
+	parkingData: state.parking.parkingData,
+	isChecked: state.parking.isChecked,
+	count: state.parking.count,
+	selectedSpots: state.parking.selectedSpots
+})
 
-const mapStateToProps = state => ({ parkingData: state.parking.data })
 const ActualParkingCard = connect(mapStateToProps)(withNavigation(ParkingCardContainer))
 export default ActualParkingCard

@@ -1,25 +1,26 @@
 import React from 'react'
-import { Text } from 'react-native'
 import { withNavigation } from 'react-navigation'
-import { AnimatedCircularProgress } from 'react-native-circular-progress'
 import ScrollCard from '../common/ScrollCard'
+import ParkingOverview from './ParkingOverview'
 
-const ParkingCard = ({ savedStructures, navigation, gotoParkingSpotType }) => {
+const ParkingCard = ({ savedStructures, navigation, gotoParkingSpotType, selectedSpots }) => {
 	const extraActions = [
 		{
 			name: 'Edit Spot Type',
 			action: gotoParkingSpotType
 		}
 	]
-
 	return (
 		<ScrollCard
 			id="parking"
 			title="Parking Availability"
-			renderItem={() => (
-				<ParkingOverview />
-			)}
 			scrollData={savedStructures}
+			renderItem={() => (
+				<ParkingOverview
+					selectedSpots={selectedSpots}
+					structureData={savedStructures}
+				/>
+			)}
 			extraActions={extraActions}
 		/>
 	)
