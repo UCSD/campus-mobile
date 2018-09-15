@@ -8,7 +8,7 @@ import ParkingOverview from './ParkingOverview';
 const ParkingCard = ({ savedStructures, navigation, gotoParkingSpotType, mySpots, lotCount }) => {
   const extraActions = [
 		{
-			name: 'Edit Parking Spot Type',
+			name: 'Edit Spot Type',
 			action: gotoParkingSpotType
 		}
 	];

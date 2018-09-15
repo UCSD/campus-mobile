@@ -1,7 +1,9 @@
 const initialState = {
 	isChecked: [false, false, false, false, false],
 	count: 0,
-	parkingData: []
+	parkingData: [],
+	selectedSpots: [],
+	showWarning: false
 }
 
 function parking(state = initialState, action) {
@@ -10,6 +12,31 @@ function parking(state = initialState, action) {
 		case 'SET_PARKING_TYPE_SELECTION': {
 			newState.isChecked = action.isChecked
 			newState.count = action.count
+			const tempArray = []
+			for (let i = 0; i < 5; i++) {
+				switch (i) {
+					case 0:
+						if (newState.isChecked[i]) tempArray.push('S')
+						break
+					case 1:
+						if (newState.isChecked[i]) tempArray.push('B')
+						break
+					case 2:
+						if (newState.isChecked[i]) tempArray.push('A')
+						break
+					case 3:
+						if (newState.isChecked[i]) tempArray.push('ADA')
+						break
+					case 4:
+						if (newState.isChecked[i]) tempArray.push('V')
+						break
+				}
+			}
+			newState.selectedSpots = [...tempArray]
+			return newState
+		}
+		case 'SET_WARNING_SIGN': {
+			newState.showWarning = action.showWarning
 			return newState
 		}
 		case 'SET_PARKING_DATA': {

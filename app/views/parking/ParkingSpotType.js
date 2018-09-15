@@ -15,7 +15,7 @@ const ParkingTypes = require('./ParkingSpotTypeList.json')
 
 class ParkingSpotType extends React.Component {
 	rowTouched(parkingObj) {
-		const { isChecked, updateSelectedTypes, count } = this.props
+		const { isChecked, updateSelectedTypes, count, renderWarning } = this.props
 		const ids = [...isChecked]
 		const index = parkingObj.item.id
 		// user is trying to unselect a row
@@ -23,12 +23,16 @@ class ParkingSpotType extends React.Component {
 			ids[index] = !ids[index]
 			parkingObj.separators.unhighlight()
 			updateSelectedTypes(ids, count - 1)
+			renderWarning(false)
 		}
 		// user is trying to select a row
 		else if (count < 3) {
 			ids[index] = !ids[index]
 			parkingObj.separators.highlight()
 			updateSelectedTypes(ids, count + 1)
+		}
+		else {
+			renderWarning(true)
 		}
 		// user tried to select a row but reached limit, so do nothing
 	}
@@ -75,7 +79,7 @@ class ParkingSpotType extends React.Component {
 					ListFooterComponent={renderSeparator(false)}
 					ListHeaderComponent={renderSeparator(false)}
 				/>
-				{displayWarning()}
+				{this.props.showWarning ? displayWarning() : null}
 			</View>
 		)
 	}
@@ -96,11 +100,8 @@ const renderSeparator = (highlighted) => {
 
 // returns the warning sign
 const displayWarning = () =>  (
-	<ElevatedView
-		style={css.pst_warning_elevated_view}
-		elevation={5}
-	>
-		<View style={css.pst_warning_conatiner_view}>
+
+		<View style={css.pst_warning_container_view}>
 			<Text style={css.pst_warning_header_text} >
 				{'Max Selection (3)'}
 			</Text>
@@ -117,7 +118,7 @@ const displayWarning = () =>  (
 				{'add another parking type.'}
 			</Text>
 		</View>
-	</ElevatedView>
+
 )
 
 
@@ -180,7 +181,8 @@ const uncheckedIcon = () => (
 
 const mapStateToProps = state => ({
 	isChecked: state.parking.isChecked,
-	count: state.parking.count
+	count: state.parking.count,
+	showWarning: state.parking.showWarning
 })
 
 
@@ -189,6 +191,9 @@ const mapDispatchToProps = dispatch => (
 		updateSelectedTypes: (isChecked, count) => {
 			dispatch({ type: 'SET_PARKING_TYPE_SELECTION', isChecked, count })
 		},
+		renderWarning: (showWarning) => {
+			dispatch({ type: 'SET_WARNING_SIGN', showWarning })
+		}
 	}
 )
 
