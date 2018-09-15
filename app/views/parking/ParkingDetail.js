@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons'
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import ColorConstants from '../../styles/ColorConstants';
 import css from '../../styles/css';
+
 
 class ParkingDetail extends Component {
 
@@ -49,21 +51,35 @@ class ParkingDetail extends Component {
   }
 
   accessibleIcon = () => (
-  	<Icon name="accessible" size={25} color="white" />
+  	<Icon name="accessible" size={35} color="white" />
   )
 
   render() {
     const { spotType, spotsAvailable, totalSpots } = this.props;
+    const fillAmount = (spotsAvailable/totalSpots) * 100;
   return (
     <View>
       <AnimatedCircularProgress
         size={150}
         width={15}
-        fill={(spotsAvailable/totalSpots)*100}
+        fill={fillAmount ? fillAmount : 0}
         tintColor={this.mapAvailabilityToColor()}
         backgroundColor="#808080"
         rotation={360}
-      />
+      >
+      {
+        (fill) => (
+          <View style={css.po_fill_info}>
+            <Text style={[css.po_circle_number, { color: this.mapAvailabilityToColor() }]}>
+              {fillAmount ? Math.trunc(fillAmount) : 0}
+            </Text>
+            <Text style={[css.po_circle_percent,{ color: this.mapAvailabilityToColor() }]}>
+              %
+            </Text>
+          </View>
+        )
+      }
+      </AnimatedCircularProgress>
       <View style={[css.po_circle,{ backgroundColor: this.mapSpotToColor() }]}>
         <Text style={[css.po_character, { color: this.mapSpotToLetterColor() }]}>
           {this.mapSpotToColor() === ColorConstants.MBLUE ? this.accessibleIcon() : spotType}
