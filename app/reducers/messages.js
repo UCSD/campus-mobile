@@ -1,6 +1,8 @@
 const initialState = {
 	messages: [],
 	nextTimestamp: null,
+	latestTimeStamp: null,
+	hasUnreadMsgs: false,
 	topics: [
 		{
 			'audienceId': 'all',
