@@ -24,7 +24,7 @@ function messages(state = initialState, action) {
 
 	switch (action.type) {
 		case 'CLEAR_MESSAGE_DATA': {
-			newState.messages = null
+			newState.messages = []
 			return newState
 		}
 		case 'SET_TOPICS': {

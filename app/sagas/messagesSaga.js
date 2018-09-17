@@ -9,6 +9,7 @@ import {
 import { delay } from 'redux-saga'
 import Device from 'react-native-device-info'
 import firebase from 'react-native-firebase'
+import moment from 'moment'
 
 import MessagesService from '../services/messagesService'
 import logger from '../util/logger'
@@ -121,8 +122,10 @@ function* updateMessages(action) {
 			else {
 				const { messages: newMessages, next: nextTimestamp } = response
 				const newMessagesArray = mergeMessagesArrays(messages, newMessages)
+				const sortedMessages = newMessagesArray.sort(( left, right ) =>
+					moment.utc(right.timestamp).diff(moment.utc(left.timestamp)))
 
-				yield put({ type: 'SET_MESSAGES', messages: newMessagesArray, nextTimestamp })
+				yield put({ type: 'SET_MESSAGES', messages: sortedMessages, nextTimestamp })
 				yield put({ type: 'GET_MESSAGES_SUCCESS' })
 			}
 		} catch (error) {

@@ -20,7 +20,7 @@ const checkData = (data) => {
 		}
 		return false
 	})
-	cleanData.sort( ( left, right ) => moment.utc(right.timestamp).diff(moment.utc(left.timestamp)))
+
 	return cleanData
 }
 
