@@ -58,7 +58,7 @@ class ParkingDetail extends Component {
     const { spotType, spotsAvailable, totalSpots } = this.props;
     const fillAmount = (spotsAvailable/totalSpots) * 100;
   return (
-    <View>
+    <View style={{ justifyContent: 'center', alignItems: 'center' }}>
       <AnimatedCircularProgress
         size={150}
         width={15}
