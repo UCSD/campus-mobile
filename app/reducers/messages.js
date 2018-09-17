@@ -35,6 +35,17 @@ function messages(state = initialState, action) {
 			const { messages: newMessages, nextTimestamp } = action
 			newState.messages = [...newMessages]
 			newState.nextTimestamp = nextTimestamp
+			if (state.messages[0]) {
+				if (newState.latestTimeStamp) {
+					if (newState.latestTimeStamp < state.messages[0].timestamp) {
+						newState.hasUnreadMsgs = true
+					}
+				}
+			}
+			else {
+				newState.hasUnreadMsgs = true
+			}
+			newState.latestTimeStamp = newMessages[0].timestamp
 			return newState
 		}
 		case 'CONFIRM_REGISTRATION': {
