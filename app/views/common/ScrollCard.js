@@ -46,6 +46,7 @@ class ScrollCard extends React.Component {
 			list = (
 				<FlatList
 					ref={(c) => { this._flatlist = c }}
+					extraData={this.props.extraData}
 					style={css.scrollcard_listStyle}
 					onContentSizeChange={this.countDots}
 					pagingEnabled
@@ -57,6 +58,7 @@ class ScrollCard extends React.Component {
 					enableEmptySections={true}
 					keyExtractor={(listItem, index) => {
 						if (listItem.id) return listItem.id.toString() + index
+						if (listItem.LocationId) return listItem.LocationId.toString() + index
 						else {
 							const error = new Error('Invalid ScrollCard list item')
 							trackException(error, listItem)
