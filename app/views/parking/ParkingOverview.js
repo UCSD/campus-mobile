@@ -58,25 +58,43 @@ class ParkingOverview extends Component {
       }
       else if (spotsSelected.length === 1) {
         return (
+<<<<<<< HEAD
           <View style={css.po_one_spot_selected}>
             <ParkingDetail spotType={spotsSelected[0]} spotsAvailable={ this.getOpenPerType(spotsSelected[0]) } totalSpots={ this.getTotalPerType(spotsSelected[0]) } size={LAYOUT.MAX_CARD_WIDTH * 0.38} widthMultiplier={15}/>
+=======
+          <View>
+            <ParkingDetail spotType={spotsSelected[0]} spotsAvailable={ this.getOpenPerType(spotsSelected[0]) } totalSpots={ this.getTotalPerType(spotsSelected[0]) }/>
+>>>>>>> a72362899121227600c07243b46af5a55a6e89dd
           </View>
         );
       }
       else if (spotsSelected.length === 2) {
         return (
+<<<<<<< HEAD
           <View style={css.po_two_spots_selected}>
             <ParkingDetail spotType={spotsSelected[0]} spotsAvailable={ this.getOpenPerType(spotsSelected[0]) } totalSpots={ this.getTotalPerType(spotsSelected[0])} size={LAYOUT.MAX_CARD_WIDTH * 0.32} widthMultiplier={LAYOUT.MAX_CARD_WIDTH * 0.035}/>
             <ParkingDetail spotType={spotsSelected[1]} spotsAvailable={ this.getOpenPerType(spotsSelected[1]) } totalSpots={ this.getTotalPerType(spotsSelected[1]) } size={LAYOUT.MAX_CARD_WIDTH * 0.32} widthMultiplier={LAYOUT.MAX_CARD_WIDTH * 0.035}/>
+=======
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', flex: 1 }}>
+            <ParkingDetail spotType={spotsSelected[0]} spotsAvailable={ this.getOpenPerType(spotsSelected[0]) } totalSpots={ this.getTotalPerType(spotsSelected[0])}  />
+            <ParkingDetail spotType={spotsSelected[1]} spotsAvailable={ this.getOpenPerType(spotsSelected[1]) } totalSpots={ this.getTotalPerType(spotsSelected[1]) } />
+>>>>>>> a72362899121227600c07243b46af5a55a6e89dd
           </View>
         );
       }
       else {
         return (
+<<<<<<< HEAD
           <View style={css.po_three_spots_selected}>
             <ParkingDetail spotType={spotsSelected[0]} spotsAvailable={ this.getOpenPerType(spotsSelected[0]) } totalSpots={ this.getTotalPerType(spotsSelected[0]) } size={LAYOUT.MAX_CARD_WIDTH * 0.25} widthMultiplier={LAYOUT.MAX_CARD_WIDTH * 0.028}/>
             <ParkingDetail spotType={spotsSelected[1]}  spotsAvailable={ this.getOpenPerType(spotsSelected[1]) } totalSpots={ this.getTotalPerType(spotsSelected[1]) } size={LAYOUT.MAX_CARD_WIDTH * 0.25} widthMultiplier={LAYOUT.MAX_CARD_WIDTH * 0.028}/>
             <ParkingDetail spotType={spotsSelected[2]}  spotsAvailable={ this.getOpenPerType(spotsSelected[2]) } totalSpots={ this.getTotalPerType(spotsSelected[2]) } size={LAYOUT.MAX_CARD_WIDTH * 0.25} widthMultiplier={LAYOUT.MAX_CARD_WIDTH * 0.028}/>
+=======
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', flex: 1 }}>
+            <ParkingDetail spotType={spotsSelected[0]} spotsAvailable={ this.getOpenPerType(spotsSelected[0]) } totalSpots={ this.getTotalPerType(spotsSelected[0]) } />
+            <ParkingDetail spotType={spotsSelected[1]}  spotsAvailable={ this.getOpenPerType(spotsSelected[1]) } totalSpots={ this.getTotalPerType(spotsSelected[1]) } />
+            <ParkingDetail spotType={spotsSelected[2]}  spotsAvailable={ this.getOpenPerType(spotsSelected[2]) } totalSpots={ this.getTotalPerType(spotsSelected[2]) } />
+>>>>>>> a72362899121227600c07243b46af5a55a6e89dd
           </View>
         );
       }
@@ -84,8 +102,14 @@ class ParkingOverview extends Component {
 
   render() {
     const { structureData, spotsSelected } = this.props;
+<<<<<<< HEAD
     return (
       <View style={{ flex: 1, justifyContent: 'space-evenly' }}>
+=======
+    console.log(this.props)
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+>>>>>>> a72362899121227600c07243b46af5a55a6e89dd
         <Text style={css.po_structure_name}>
           {structureData.LocationName}
         </Text>

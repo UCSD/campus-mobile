@@ -46,6 +46,7 @@ class ScrollCard extends React.Component {
 			list = (
 				<FlatList
 					ref={(c) => { this._flatlist = c }}
+					extraData={this.props.extraData}
 					style={css.scrollcard_listStyle}
 					onContentSizeChange={this.countDots}
 					pagingEnabled

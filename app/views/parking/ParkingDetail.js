@@ -7,6 +7,7 @@ import css from '../../styles/css';
 import LAYOUT from '../../styles/LayoutConstants';
 
 
+
 class ParkingDetail extends Component {
 
    mapSpotToColor() {
@@ -56,6 +57,7 @@ class ParkingDetail extends Component {
   )
 
   render() {
+<<<<<<< HEAD
     const { spotType, spotsAvailable, totalSpots, size , widthMultiplier } = this.props;
     const fillAmount = (spotsAvailable/totalSpots) * 100;
 
@@ -65,11 +67,25 @@ class ParkingDetail extends Component {
         duration={1500}
         size={size}
         width={widthMultiplier}
+=======
+    const { spotType, spotsAvailable, totalSpots } = this.props;
+    const fillAmount = (spotsAvailable/totalSpots) * 100;
+
+  return (
+    <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+      <AnimatedCircularProgress
+        duration={1500}
+        size={150}
+        width={15}
+>>>>>>> a72362899121227600c07243b46af5a55a6e89dd
         fill={fillAmount ? fillAmount : 0}
         tintColor={this.mapAvailabilityToColor()}
         backgroundColor={ColorConstants.LGREY2}
         rotation={360}
+<<<<<<< HEAD
         style={{ marginBottom: 30 }}
+=======
+>>>>>>> a72362899121227600c07243b46af5a55a6e89dd
       >
       {
         (fill) => (
