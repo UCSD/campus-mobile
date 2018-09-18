@@ -69,6 +69,9 @@ export class Messaging extends Component {
 	}
 
 	render() {
+		if (this.props.hasUnreadMsgs) {
+			this.props.setMessagesRead()
+		}
 		const { messages, nextTimestamp } = this.props.messages
 		const { updateMessages } = this.props
 		const filteredData = checkData(messages)
@@ -105,7 +108,8 @@ const mapStateToProps = (state, props) => (
 	{
 		messages: state.messages,
 		myMessagesStatus: state.requestStatuses.GET_MESSAGES,
-		myMessagesError: state.requestErrors.GET_MESSAGES
+		myMessagesError: state.requestErrors.GET_MESSAGES,
+		hasUnreadMsgs: state.messages.hasUnreadMsgs
 	}
 )
 
@@ -113,6 +117,9 @@ const mapDispatchToProps = (dispatch, ownProps) => (
 	{
 		updateMessages: (timestamp) => {
 			dispatch({ type: 'UPDATE_MESSAGES', timestamp })
+		},
+		setMessagesRead: () => {
+			dispatch({ type: 'SET_MESSAGES_READ' })
 		}
 	}
 )

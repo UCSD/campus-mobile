@@ -21,9 +21,7 @@ const TabIcons = (props) => {
 	} else if (props.title === 'Map') {
 		TabIcon = () => (<Entypo name="location" size={24} style={[css.tabIcon, props.focused ? { color: COLOR.PRIMARY } : null]} />)
 	} else if (props.title === 'Messaging') {
-		// ßconsole.log(this.props.hasUnreadMsgs)
-		const boolTest = true
-		if (boolTest) {
+		if (props.hasUnreadMsgs) {
 			TabIcon = () => (<View style={styles.badgeIconView}><View style={styles.badge} /><FAIcon name="bell-o" size={24} style={[css.tabIcon, props.focused ? { color: COLOR.PRIMARY } : null]} /></View>)
 		}
 		else {
@@ -54,7 +52,6 @@ const styles = {
 		padding: 5
 	},
 	badge: {
-		color: '#fff',
 		position: 'absolute',
 		zIndex: 10,
 		top: 1,
