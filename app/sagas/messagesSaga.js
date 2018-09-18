@@ -124,7 +124,12 @@ function* updateMessages(action) {
 				const newMessagesArray = mergeMessagesArrays(messages, newMessages)
 				const sortedMessages = newMessagesArray.sort(( left, right ) =>
 					moment.utc(right.timestamp).diff(moment.utc(left.timestamp)))
-
+				if (messages[0]) {
+					if (messages[0].timestamp < sortedMessages[0].timestamp) {
+						yield put({ type: 'SET_MESSAGES_UNREAD' })
+					}
+				}
+				yield put({ type: 'SET_MESSAGES_UNREAD' })
 				yield put({ type: 'SET_MESSAGES', messages: sortedMessages, nextTimestamp })
 				yield put({ type: 'GET_MESSAGES_SUCCESS' })
 			}

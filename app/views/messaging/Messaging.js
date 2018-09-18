@@ -70,7 +70,7 @@ export class Messaging extends Component {
 
 	render() {
 		const { messages, nextTimestamp } = this.props.messages
-		const { updateMessages, loadMoreMessages } = this.props
+		const { updateMessages } = this.props
 		const filteredData = checkData(messages)
 
 		let isLoading = false

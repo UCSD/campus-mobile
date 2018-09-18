@@ -1,7 +1,6 @@
 const initialState = {
 	messages: [],
 	nextTimestamp: null,
-	latestTimeStamp: null,
 	hasUnreadMsgs: false,
 	topics: [
 		{
@@ -35,17 +34,14 @@ function messages(state = initialState, action) {
 			const { messages: newMessages, nextTimestamp } = action
 			newState.messages = [...newMessages]
 			newState.nextTimestamp = nextTimestamp
-			if (state.messages[0]) {
-				if (newState.latestTimeStamp) {
-					if (newState.latestTimeStamp < state.messages[0].timestamp) {
-						newState.hasUnreadMsgs = true
-					}
-				}
-			}
-			else {
-				newState.hasUnreadMsgs = true
-			}
-			newState.latestTimeStamp = newMessages[0].timestamp
+			return newState
+		}
+		case 'SET_MESSAGES_READ': {
+			newState.hasUnreadMsgs = false
+			return newState
+		}
+		case 'SET_MESSAGES_UNREAD': {
+			newState.hasUnreadMsgs = true
 			return newState
 		}
 		case 'CONFIRM_REGISTRATION': {
