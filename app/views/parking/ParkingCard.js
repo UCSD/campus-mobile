@@ -24,6 +24,7 @@ const ParkingCard = ({ savedStructures, navigation, gotoParkingSpotType, mySpots
             lotCount={lotCount}
           />
         )}
+        extraData={mySpots}
         scrollData={savedStructures}
         extraActions={extraActions}
     />

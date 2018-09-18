@@ -458,13 +458,16 @@ const css = StyleSheet.create({
 	pst_character: { textAlign: 'center', fontWeight: '600', fontSize: 19, backgroundColor: 'transparent' },
 	pst_row_text: { flex: 1, paddingRight: 10, paddingLeft: 10, fontSize: 19 },
 
-	po_structure_name: { justifyContent: 'center', alignItems: 'center', fontSize: 25, fontWeight: 'bold' },
-	po_structure_spots_available: { justifyContent: 'center', alignItems: 'center', fontSize: 19, color: COLOR.DGREY, fontWeight: 'bold' },
-	po_circle: { borderRadius: 32, width: 64, height: 64, justifyContent: 'center', overflow: 'hidden', backgroundColor: COLOR.GREEN },
+	po_structure_name: {  alignSelf: 'center', fontSize: 25, fontWeight: 'bold', paddingTop: 5 },
+	po_structure_spots_available: {  alignSelf: 'center', fontSize: 19, color: COLOR.DGREY, fontWeight: 'bold', paddingTop: 5 },
+	po_circle: { borderRadius: 32, width: 64, height: 64, justifyContent: 'space-around', overflow: 'hidden', backgroundColor: COLOR.GREEN },
 	po_character: { textAlign: 'center', fontWeight: '600', fontSize: 35, backgroundColor: 'transparent' },
 	po_circle_number: { textAlign: 'center', fontSize: 45, fontWeight: 'bold' },
 	po_circle_percent: { fontSize: 25, textAlign: 'center' },
-	po_fill_info: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center' },
+	po_fill_info: { flexDirection: 'row', alignItems: 'center' },
+	po_one_spot_selected: { flexDirection: 'row',  justifyContent: 'space-around',  width: LAYOUT.MAX_CARD_WIDTH,  borderWidth: 5,borderColor: 'red' },
+	po_two_spots_selected: { flexDirection: 'row',  justifyContent: 'center',  width: LAYOUT.MAX_CARD_WIDTH,  borderWidth: 5, borderColor: 'red' },
+	po_three_spots_selected: { flexDirection: 'row',  justifyContent: 'center', width: LAYOUT.MAX_CARD_WIDTH,  borderWidth: 5, borderColor: 'red' },
 
 	/**
 	 *	17 - Notifications

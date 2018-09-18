@@ -100,7 +100,6 @@ const renderSeparator = (highlighted) => {
 
 // returns the warning sign
 const displayWarning = () =>  (
-
 		<View style={css.pst_warning_container_view}>
 			<Text style={css.pst_warning_header_text} >
 				{'Max Selection (3)'}

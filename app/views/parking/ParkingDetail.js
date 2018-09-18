@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons'
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import ColorConstants from '../../styles/ColorConstants';
 import css from '../../styles/css';
+import LAYOUT from '../../styles/LayoutConstants';
 
 
 class ParkingDetail extends Component {
@@ -14,7 +15,7 @@ class ParkingDetail extends Component {
       case 'A':
         return ColorConstants.MRED;
       case 'B':
-        return ColorConstants.GREEN;
+        return ColorConstants.MGREEN;
       case 'S':
         return ColorConstants.YELLOW
       case 'ADA':
@@ -55,17 +56,20 @@ class ParkingDetail extends Component {
   )
 
   render() {
-    const { spotType, spotsAvailable, totalSpots } = this.props;
+    const { spotType, spotsAvailable, totalSpots, size , widthMultiplier } = this.props;
     const fillAmount = (spotsAvailable/totalSpots) * 100;
+
   return (
-    <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+    <View style={{ alignItems: 'center' }}>
       <AnimatedCircularProgress
-        size={150}
-        width={15}
+        duration={1500}
+        size={size}
+        width={widthMultiplier}
         fill={fillAmount ? fillAmount : 0}
         tintColor={this.mapAvailabilityToColor()}
-        backgroundColor="#808080"
+        backgroundColor={ColorConstants.LGREY2}
         rotation={360}
+        style={{ marginBottom: 30 }}
       >
       {
         (fill) => (
