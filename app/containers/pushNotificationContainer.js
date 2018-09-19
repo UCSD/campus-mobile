@@ -29,7 +29,6 @@ class PushNotificationContainer extends React.Component {
 		})
 
 		this.messageListener = firebase.messaging().onMessage((message) => {
-			console.log('New message received: ', message)
 			this.props.updateMessages()
 		})
 
