@@ -3,10 +3,6 @@ const initialState = {
 	selectedSpots: [],
 	count: 0,
 	parkingData: [],
-<<<<<<< HEAD
-	selectedSpots: [],
-=======
->>>>>>> a72362899121227600c07243b46af5a55a6e89dd
 	showWarning: false
 }
 
@@ -37,13 +33,6 @@ function parking(state = initialState, action) {
 				}
 			}
 			newState.selectedSpots = [...tempArray]
-<<<<<<< HEAD
-			return newState
-		}
-		case 'SET_WARNING_SIGN': {
-			newState.showWarning = action.showWarning
-=======
->>>>>>> a72362899121227600c07243b46af5a55a6e89dd
 			return newState
 		}
 		case 'SET_PARKING_DATA': {
