@@ -31,17 +31,10 @@ class ParkingSpotType extends React.Component {
 			parkingObj.separators.highlight()
 			updateSelectedTypes(ids, count + 1)
 		}
-<<<<<<< HEAD
 		else {
 			renderWarning(true)
 		}
 		// user tried to select a row but reached limit, so do nothing
-=======
-		// user tried to select a row but reached limit, so show warning sign
-		else {
-			renderWarning(true)
-		}
->>>>>>> a72362899121227600c07243b46af5a55a6e89dd
 	}
 
 	// this function returns a touchable that has all the elements needed for each row
@@ -107,7 +100,6 @@ const renderSeparator = (highlighted) => {
 
 // returns the warning sign
 const displayWarning = () =>  (
-<<<<<<< HEAD
 		<View style={css.pst_warning_container_view}>
 			<Text style={css.pst_warning_header_text} >
 				{'Max Selection (3)'}
@@ -126,25 +118,6 @@ const displayWarning = () =>  (
 			</Text>
 		</View>
 
-=======
-	<View style={css.pst_warning_container_view}>
-		<Text style={css.pst_warning_header_text} >
-			{'Max Selection (3)'}
-		</Text>
-		<Text>
-			{'Only up to 3 type selections'}
-		</Text>
-		<Text>
-			{'are allowed at one time.'}
-		</Text>
-		<Text>
-			{'\nCancel a parking type selection to'}
-		</Text>
-		<Text>
-			{'add another parking type.'}
-		</Text>
-	</View>
->>>>>>> a72362899121227600c07243b46af5a55a6e89dd
 )
 
 

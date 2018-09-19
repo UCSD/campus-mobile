@@ -51,6 +51,16 @@ class ParkingOverview extends Component {
       return totalPerType;
     }
 
+    displaySpots() {
+      const message = "Please select parking type"
+      if(this.getTotalSpots() === 0) {
+        return message;
+      }
+      else {
+        return this.getTotalSpots();
+      }
+    }
+
     renderDetails() {
       const { structureData, spotsSelected } = this.props;
       if (spotsSelected.length === 0) {
@@ -58,43 +68,79 @@ class ParkingOverview extends Component {
       }
       else if (spotsSelected.length === 1) {
         return (
-<<<<<<< HEAD
           <View style={css.po_one_spot_selected}>
-            <ParkingDetail spotType={spotsSelected[0]} spotsAvailable={ this.getOpenPerType(spotsSelected[0]) } totalSpots={ this.getTotalPerType(spotsSelected[0]) } size={LAYOUT.MAX_CARD_WIDTH * 0.38} widthMultiplier={15}/>
-=======
-          <View>
-            <ParkingDetail spotType={spotsSelected[0]} spotsAvailable={ this.getOpenPerType(spotsSelected[0]) } totalSpots={ this.getTotalPerType(spotsSelected[0]) }/>
->>>>>>> a72362899121227600c07243b46af5a55a6e89dd
+            <ParkingDetail spotType={spotsSelected[0]}
+              spotsAvailable={ this.getOpenPerType(spotsSelected[0]) }
+              totalSpots={ this.getTotalPerType(spotsSelected[0]) }
+              size={LAYOUT.MAX_CARD_WIDTH * 0.38}
+              widthMultiplier={15} circleRadius={32} letterSize={35}
+              progressNumber={48}
+              progressPercent={20}/>
           </View>
         );
       }
       else if (spotsSelected.length === 2) {
         return (
-<<<<<<< HEAD
           <View style={css.po_two_spots_selected}>
-            <ParkingDetail spotType={spotsSelected[0]} spotsAvailable={ this.getOpenPerType(spotsSelected[0]) } totalSpots={ this.getTotalPerType(spotsSelected[0])} size={LAYOUT.MAX_CARD_WIDTH * 0.32} widthMultiplier={LAYOUT.MAX_CARD_WIDTH * 0.035}/>
-            <ParkingDetail spotType={spotsSelected[1]} spotsAvailable={ this.getOpenPerType(spotsSelected[1]) } totalSpots={ this.getTotalPerType(spotsSelected[1]) } size={LAYOUT.MAX_CARD_WIDTH * 0.32} widthMultiplier={LAYOUT.MAX_CARD_WIDTH * 0.035}/>
-=======
-          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', flex: 1 }}>
-            <ParkingDetail spotType={spotsSelected[0]} spotsAvailable={ this.getOpenPerType(spotsSelected[0]) } totalSpots={ this.getTotalPerType(spotsSelected[0])}  />
-            <ParkingDetail spotType={spotsSelected[1]} spotsAvailable={ this.getOpenPerType(spotsSelected[1]) } totalSpots={ this.getTotalPerType(spotsSelected[1]) } />
->>>>>>> a72362899121227600c07243b46af5a55a6e89dd
+            <ParkingDetail
+              spotType={spotsSelected[0]}
+              spotsAvailable={ this.getOpenPerType(spotsSelected[0]) }
+              totalSpots={ this.getTotalPerType(spotsSelected[0])}
+              size={LAYOUT.MAX_CARD_WIDTH * 0.32}
+              widthMultiplier={LAYOUT.MAX_CARD_WIDTH * 0.035}
+              circleRadius={(LAYOUT.MAX_CARD_WIDTH*0.137)/2}
+              letterSize={LAYOUT.MAX_CARD_WIDTH * 0.075}
+              progressNumber={LAYOUT.MAX_CARD_WIDTH * 0.1}
+              progressPercent={LAYOUT.MAX_CARD_WIDTH * 0.05}/>
+            <View style={{ paddingLeft: 10, paddingRight: 10 }}/>
+            <ParkingDetail
+              spotType={spotsSelected[1]}
+              spotsAvailable={ this.getOpenPerType(spotsSelected[1]) }
+              totalSpots={ this.getTotalPerType(spotsSelected[1]) }
+              size={LAYOUT.MAX_CARD_WIDTH * 0.32}
+              widthMultiplier={LAYOUT.MAX_CARD_WIDTH * 0.035}
+              circleRadius={(LAYOUT.MAX_CARD_WIDTH*0.137)/2}
+              letterSize={LAYOUT.MAX_CARD_WIDTH * 0.075}
+              progressNumber={LAYOUT.MAX_CARD_WIDTH * 0.1}
+              progressPercent={LAYOUT.MAX_CARD_WIDTH * 0.05}/>
           </View>
         );
       }
       else {
         return (
-<<<<<<< HEAD
           <View style={css.po_three_spots_selected}>
-            <ParkingDetail spotType={spotsSelected[0]} spotsAvailable={ this.getOpenPerType(spotsSelected[0]) } totalSpots={ this.getTotalPerType(spotsSelected[0]) } size={LAYOUT.MAX_CARD_WIDTH * 0.25} widthMultiplier={LAYOUT.MAX_CARD_WIDTH * 0.028}/>
-            <ParkingDetail spotType={spotsSelected[1]}  spotsAvailable={ this.getOpenPerType(spotsSelected[1]) } totalSpots={ this.getTotalPerType(spotsSelected[1]) } size={LAYOUT.MAX_CARD_WIDTH * 0.25} widthMultiplier={LAYOUT.MAX_CARD_WIDTH * 0.028}/>
-            <ParkingDetail spotType={spotsSelected[2]}  spotsAvailable={ this.getOpenPerType(spotsSelected[2]) } totalSpots={ this.getTotalPerType(spotsSelected[2]) } size={LAYOUT.MAX_CARD_WIDTH * 0.25} widthMultiplier={LAYOUT.MAX_CARD_WIDTH * 0.028}/>
-=======
-          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', flex: 1 }}>
-            <ParkingDetail spotType={spotsSelected[0]} spotsAvailable={ this.getOpenPerType(spotsSelected[0]) } totalSpots={ this.getTotalPerType(spotsSelected[0]) } />
-            <ParkingDetail spotType={spotsSelected[1]}  spotsAvailable={ this.getOpenPerType(spotsSelected[1]) } totalSpots={ this.getTotalPerType(spotsSelected[1]) } />
-            <ParkingDetail spotType={spotsSelected[2]}  spotsAvailable={ this.getOpenPerType(spotsSelected[2]) } totalSpots={ this.getTotalPerType(spotsSelected[2]) } />
->>>>>>> a72362899121227600c07243b46af5a55a6e89dd
+            <ParkingDetail
+              spotType={spotsSelected[0]}
+              spotsAvailable={ this.getOpenPerType(spotsSelected[0]) }
+              totalSpots={ this.getTotalPerType(spotsSelected[0]) }
+              size={LAYOUT.MAX_CARD_WIDTH * 0.25}
+              widthMultiplier={LAYOUT.MAX_CARD_WIDTH * 0.028}
+              circleRadius={(LAYOUT.MAX_CARD_WIDTH * 0.128)/2}
+              letterSize={LAYOUT.MAX_CARD_WIDTH * 0.068}
+              progressNumber={LAYOUT.MAX_CARD_WIDTH * 0.08}
+              progressPercent={LAYOUT.MAX_CARD_WIDTH * 0.045}/>
+            <View style={{ paddingLeft: 5, paddingRight: 5 }}/>
+            <ParkingDetail
+              spotType={spotsSelected[1]}
+              spotsAvailable={ this.getOpenPerType(spotsSelected[1]) }
+              totalSpots={ this.getTotalPerType(spotsSelected[1]) }
+              size={LAYOUT.MAX_CARD_WIDTH * 0.25}
+              widthMultiplier={LAYOUT.MAX_CARD_WIDTH * 0.028}
+              circleRadius={(LAYOUT.MAX_CARD_WIDTH * 0.128)/2}
+              letterSize={LAYOUT.MAX_CARD_WIDTH * 0.068}
+              progressNumber={LAYOUT.MAX_CARD_WIDTH * 0.08}
+              progressPercent={LAYOUT.MAX_CARD_WIDTH * 0.045}/>
+            <View style={{ paddingLeft: 5, paddingRight: 5 }}/>
+            <ParkingDetail
+              spotType={spotsSelected[2]}
+              spotsAvailable={ this.getOpenPerType(spotsSelected[2]) }
+              totalSpots={ this.getTotalPerType(spotsSelected[2]) }
+              size={LAYOUT.MAX_CARD_WIDTH * 0.25}
+              widthMultiplier={LAYOUT.MAX_CARD_WIDTH * 0.028}
+              circleRadius={(LAYOUT.MAX_CARD_WIDTH * 0.128)/2}
+              letterSize={LAYOUT.MAX_CARD_WIDTH * 0.068}
+              progressNumber={LAYOUT.MAX_CARD_WIDTH * 0.08}
+              progressPercent={LAYOUT.MAX_CARD_WIDTH * 0.045}/>
           </View>
         );
       }
@@ -102,19 +148,14 @@ class ParkingOverview extends Component {
 
   render() {
     const { structureData, spotsSelected } = this.props;
-<<<<<<< HEAD
+    const message = "Please select a parking type"
     return (
-      <View style={{ flex: 1, justifyContent: 'space-evenly' }}>
-=======
-    console.log(this.props)
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
->>>>>>> a72362899121227600c07243b46af5a55a6e89dd
+      <View style={{ flex: 1, width: LAYOUT.MAX_CARD_WIDTH }}>
         <Text style={css.po_structure_name}>
           {structureData.LocationName}
         </Text>
         <Text style={css.po_structure_spots_available}>
-          ~ {this.getTotalSpots()} Spots
+          {spotsSelected.length === 0 ? message : "~ " + this.getTotalSpots() + " Spots"}
         </Text>
         {this.renderDetails()}
       </View>
