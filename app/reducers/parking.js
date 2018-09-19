@@ -25,7 +25,7 @@ function parking(state = initialState, action) {
 						if (newState.isChecked[i]) tempArray.push('A')
 						break
 					case 3:
-						if (newState.isChecked[i]) tempArray.push('ADA')
+						if (newState.isChecked[i]) tempArray.push('Accessible')
 						break
 					case 4:
 						if (newState.isChecked[i]) tempArray.push('V')

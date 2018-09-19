@@ -19,7 +19,7 @@ class ParkingDetail extends Component {
         return ColorConstants.MGREEN;
       case 'S':
         return ColorConstants.YELLOW
-      case 'ADA':
+      case 'Accessible':
         return ColorConstants.MBLUE;
       default:
         return null;
