@@ -17,6 +17,11 @@ const ParkingCard = ({
 		}
 	]
 
+	const allData = {
+		mySpots,
+		savedStructures
+	};
+
   return (
 	   <ScrollCard
         id="parking"
@@ -28,7 +33,7 @@ const ParkingCard = ({
             lotCount={lotCount}
           />
         )}
-        extraData={mySpots}
+        extraData={allData}
         scrollData={savedStructures}
         extraActions={extraActions}
     />
