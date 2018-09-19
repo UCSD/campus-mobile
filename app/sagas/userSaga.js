@@ -279,10 +279,15 @@ function* syncUserProfile() {
 // If the user is signed in, initiates a sync attempt
 // with the remote server
 function* modifyLocalProfile(action) {
+	const { profile } = yield select(userState)
 	const { profileItems } = action
+
 	yield put({ type: 'SET_LOCAL_PROFILE', profileItems })
 	yield put({ type: 'RESET_SYNCED_DATE' })
 	yield call(syncUserProfile)
+
+	// if profile change includes changes to subscriptions, reset messages
+	if (profileItems.subscribedTopics) yield put({ type: 'RESET_MESSAGES' })
 }
 
 // Handles signing in to the fake student demo account
