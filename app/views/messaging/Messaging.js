@@ -80,26 +80,26 @@ export class Messaging extends Component {
 		if (this.props.myMessagesStatus) isLoading = true
 
 		return (
-			<View style={css.scroll_default}>
-				<FlatList
-					data={filteredData}
-					onRefresh={() => updateMessages(new Date().getTime())}
-					refreshing={isLoading}
-					renderItem={this.renderItem}
-					keyExtractor={(item, index) => item.id}
-					ItemSeparatorComponent={this.renderSeparator}
-					onEndReachedThreshold={0.5}
-					ListFooterComponent={isLoading ? <ActivityIndicator size="large" animating /> : null}
-					onEndReached={(info) => {
-						// this if check makes sure that we dont fetch extra data in the intialization of the list
-						if (info.distanceFromEnd > 0
-							&& nextTimestamp
-							&& !isLoading) {
-							updateMessages(nextTimestamp)
-						}
-					}}
-				/>
-			</View>
+			<FlatList
+				data={filteredData}
+				style={css.scroll_default}
+				contentContainerStyle={css.main_full}
+				onRefresh={() => updateMessages(new Date().getTime())}
+				refreshing={isLoading}
+				renderItem={this.renderItem}
+				keyExtractor={(item, index) => item.id}
+				ItemSeparatorComponent={this.renderSeparator}
+				onEndReachedThreshold={0.5}
+				ListFooterComponent={(isLoading && nextTimestamp) ? <ActivityIndicator size="large" animating /> : null}
+				onEndReached={(info) => {
+					// this if check makes sure that we dont fetch extra data in the intialization of the list
+					if (info.distanceFromEnd > 0
+						&& nextTimestamp
+						&& !isLoading) {
+						updateMessages(nextTimestamp)
+					}
+				}}
+			/>
 		)
 	}
 }
