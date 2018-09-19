@@ -57,8 +57,7 @@ class ParkingDetail extends Component {
   )
 
   render() {
-<<<<<<< HEAD
-    const { spotType, spotsAvailable, totalSpots, size , widthMultiplier } = this.props;
+    const { spotType, spotsAvailable, totalSpots, size , widthMultiplier, circleRadius, letterSize } = this.props;
     const fillAmount = (spotsAvailable/totalSpots) * 100;
 
   return (
@@ -67,25 +66,11 @@ class ParkingDetail extends Component {
         duration={1500}
         size={size}
         width={widthMultiplier}
-=======
-    const { spotType, spotsAvailable, totalSpots } = this.props;
-    const fillAmount = (spotsAvailable/totalSpots) * 100;
-
-  return (
-    <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-      <AnimatedCircularProgress
-        duration={1500}
-        size={150}
-        width={15}
->>>>>>> a72362899121227600c07243b46af5a55a6e89dd
         fill={fillAmount ? fillAmount : 0}
         tintColor={this.mapAvailabilityToColor()}
         backgroundColor={ColorConstants.LGREY2}
         rotation={360}
-<<<<<<< HEAD
         style={{ marginBottom: 30 }}
-=======
->>>>>>> a72362899121227600c07243b46af5a55a6e89dd
       >
       {
         (fill) => (
@@ -100,8 +85,8 @@ class ParkingDetail extends Component {
         )
       }
       </AnimatedCircularProgress>
-      <View style={[css.po_circle,{ backgroundColor: this.mapSpotToColor() }]}>
-        <Text style={[css.po_character, { color: this.mapSpotToLetterColor() }]}>
+      <View style={[css.po_circle,{ backgroundColor: this.mapSpotToColor() },{ borderRadius: circleRadius, width: (circleRadius*2), height: (circleRadius*2) }]}>
+        <Text style={[css.po_character, { color: this.mapSpotToLetterColor() }, { fontSize: letterSize }]}>
           {this.mapSpotToColor() === ColorConstants.MBLUE ? this.accessibleIcon() : spotType}
         </Text>
       </View>

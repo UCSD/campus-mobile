@@ -17,7 +17,6 @@ const ParkingCard = ({
 		}
 	]
 
-<<<<<<< HEAD
   return (
 	   <ScrollCard
         id="parking"
@@ -35,29 +34,6 @@ const ParkingCard = ({
     />
   );
 };
-=======
-	const parkingData = {
-		mySpots,
-		lotCount,
-	}
->>>>>>> a72362899121227600c07243b46af5a55a6e89dd
 
-	return (
-		<ScrollCard
-			id="parking"
-			title="Parking Availability"
-			renderItem={({ item }) => (
-				<ParkingOverview
-					structureData={item}
-					spotsSelected={mySpots}
-					lotCount={lotCount}
-				/>
-			)}
-			scrollData={savedStructures}
-			extraData={parkingData}
-			extraActions={extraActions}
-		/>
-	)
-}
 
 export default withNavigation(ParkingCard)
