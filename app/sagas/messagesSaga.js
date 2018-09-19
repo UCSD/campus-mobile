@@ -103,7 +103,7 @@ function* resetMessages() {
 
 function* updateMessages(action) {
 	const { timestamp } = action
-	const { isLoggedIn } = yield select(getUserData)
+	const { isLoggedIn, profile } = yield select(getUserData)
 	const { messages } = yield select(getMessages)
 
 	if (isLoggedIn) {
@@ -124,12 +124,20 @@ function* updateMessages(action) {
 				const newMessagesArray = mergeMessagesArrays(messages, newMessages)
 				const sortedMessages = newMessagesArray.sort(( left, right ) =>
 					moment.utc(right.timestamp).diff(moment.utc(left.timestamp)))
-				if (messages[0]) {
-					if (messages[0].timestamp < sortedMessages[0].timestamp) {
-						yield put({ type: 'SET_MESSAGES_UNREAD' })
+
+				let count = 0
+				// check for how many of the new messages have a timestamp after latestTimeStamp
+				// latestTimeStamp is set when the user last opened the notfications pages
+				let { length } = sortedMessages
+				if (sortedMessages.length > 10) {
+					length = 10
+				}
+				for (let i = 0; i < length; i++) {
+					if (sortedMessages[i].timestamp > profile.latestTimeStamp) {
+						count++
 					}
 				}
-				yield put({ type: 'SET_MESSAGES_UNREAD' })
+				yield put({ type: 'SET_UNREAD_MESSAGES', count })
 				yield put({ type: 'SET_MESSAGES', messages: sortedMessages, nextTimestamp })
 				yield put({ type: 'GET_MESSAGES_SUCCESS' })
 			}
@@ -139,6 +147,7 @@ function* updateMessages(action) {
 		}
 	}
 }
+
 
 function* subscribeToTopic(action) {
 	const { topicId } = action

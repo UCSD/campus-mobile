@@ -1,7 +1,7 @@
 const initialState = {
 	messages: [],
 	nextTimestamp: null,
-	hasUnreadMsgs: false,
+	unreadMessages: 0,
 	topics: [
 		{
 			'audienceId': 'all',
@@ -36,12 +36,9 @@ function messages(state = initialState, action) {
 			newState.nextTimestamp = nextTimestamp
 			return newState
 		}
-		case 'SET_MESSAGES_READ': {
-			newState.hasUnreadMsgs = false
-			return newState
-		}
-		case 'SET_MESSAGES_UNREAD': {
-			newState.hasUnreadMsgs = true
+		case 'SET_UNREAD_MESSAGES': {
+			const { count } = action
+			newState.unreadMessages = count
 			return newState
 		}
 		case 'CONFIRM_REGISTRATION': {
