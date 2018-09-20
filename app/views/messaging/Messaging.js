@@ -29,7 +29,6 @@ export class Messaging extends Component {
 
 	componentDidMount() {
 		logger.ga('View Loaded: Messaging')
-		// this.props.updateMessages(new Date().getTime())
 		this.props.navigation.addListener('willFocus', () => {
 			this.props.setLatestTimeStamp(new Date().getTime())
 		})

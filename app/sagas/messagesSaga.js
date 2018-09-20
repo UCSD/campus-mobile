@@ -10,6 +10,7 @@ import { delay } from 'redux-saga'
 import Device from 'react-native-device-info'
 import firebase from 'react-native-firebase'
 import moment from 'moment'
+import Toast from 'react-native-simple-toast'
 
 import MessagesService from '../services/messagesService'
 import logger from '../util/logger'
@@ -144,6 +145,11 @@ function* updateMessages(action) {
 		} catch (error) {
 			yield put({ type: 'GET_MESSAGES_FAILURE', error })
 			logger.trackException(error, false)
+			Toast.showWithGravity(
+				'Opps. There was a network problem.',
+				Toast.SHORT,
+				Toast.BOTTOM
+			)
 		}
 	}
 }
