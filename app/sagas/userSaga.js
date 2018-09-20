@@ -110,10 +110,12 @@ function* queryUserData() {
 	let profileItems = { ...syncedProfile }
 
 	// add newly initialized profile object
-	profileItems = {
-		...profileItems,
-		...profile
-	}
+	profileItems = { ...profileItems }
+
+	// only sync data that is dependent on the user signing in
+	if (profile.username) profileItems.username = profile.username
+	if (profile.classifications) profileItems.classifications = { ...profile.classifications }
+	if (profile.pid) profileItems.pid = profile.pid
 
 	const modifyProfileAction = { profileItems }
 
@@ -280,9 +282,13 @@ function* syncUserProfile() {
 // with the remote server
 function* modifyLocalProfile(action) {
 	const { profileItems } = action
+
 	yield put({ type: 'SET_LOCAL_PROFILE', profileItems })
 	yield put({ type: 'RESET_SYNCED_DATE' })
 	yield call(syncUserProfile)
+
+	// if profile change includes changes to subscriptions, reset messages
+	if (profileItems.subscribedTopics) yield put({ type: 'RESET_MESSAGES' })
 }
 
 // Handles signing in to the fake student demo account

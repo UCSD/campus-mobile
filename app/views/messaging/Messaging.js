@@ -29,7 +29,9 @@ export class Messaging extends Component {
 
 	componentDidMount() {
 		logger.ga('View Loaded: Messaging')
-		this.props.updateMessages(new Date().getTime())
+		this.props.navigation.addListener('willFocus', () => {
+			this.props.setLatestTimeStamp(new Date().getTime())
+		})
 	}
 
 	renderSeparator = ({ leadingItem }) => (
@@ -69,9 +71,6 @@ export class Messaging extends Component {
 	}
 
 	render() {
-		if (this.props.hasUnreadMsgs) {
-			this.props.setMessagesRead()
-		}
 		const { messages, nextTimestamp } = this.props.messages
 		const { updateMessages } = this.props
 		const filteredData = checkData(messages)
@@ -80,26 +79,26 @@ export class Messaging extends Component {
 		if (this.props.myMessagesStatus) isLoading = true
 
 		return (
-			<View style={css.scroll_default}>
-				<FlatList
-					data={filteredData}
-					onRefresh={() => updateMessages(new Date().getTime())}
-					refreshing={isLoading}
-					renderItem={this.renderItem}
-					keyExtractor={(item, index) => item.id}
-					ItemSeparatorComponent={this.renderSeparator}
-					onEndReachedThreshold={0.5}
-					ListFooterComponent={isLoading ? <ActivityIndicator size="large" animating /> : null}
-					onEndReached={(info) => {
-						// this if check makes sure that we dont fetch extra data in the intialization of the list
-						if (info.distanceFromEnd > 0
-							&& nextTimestamp
-							&& !isLoading) {
-							updateMessages(nextTimestamp)
-						}
-					}}
-				/>
-			</View>
+			<FlatList
+				data={filteredData}
+				style={css.scroll_default}
+				contentContainerStyle={css.main_full}
+				onRefresh={() => updateMessages(new Date().getTime())}
+				refreshing={isLoading}
+				renderItem={this.renderItem}
+				keyExtractor={(item, index) => item.id}
+				ItemSeparatorComponent={this.renderSeparator}
+				onEndReachedThreshold={0.5}
+				ListFooterComponent={(isLoading && nextTimestamp) ? <ActivityIndicator size="large" animating /> : null}
+				onEndReached={(info) => {
+					// this if check makes sure that we dont fetch extra data in the intialization of the list
+					if (info.distanceFromEnd > 0
+						&& nextTimestamp
+						&& !isLoading) {
+						updateMessages(nextTimestamp)
+					}
+				}}
+			/>
 		)
 	}
 }
@@ -109,7 +108,6 @@ const mapStateToProps = (state, props) => (
 		messages: state.messages,
 		myMessagesStatus: state.requestStatuses.GET_MESSAGES,
 		myMessagesError: state.requestErrors.GET_MESSAGES,
-		hasUnreadMsgs: state.messages.hasUnreadMsgs
 	}
 )
 
@@ -118,8 +116,10 @@ const mapDispatchToProps = (dispatch, ownProps) => (
 		updateMessages: (timestamp) => {
 			dispatch({ type: 'UPDATE_MESSAGES', timestamp })
 		},
-		setMessagesRead: () => {
-			dispatch({ type: 'SET_MESSAGES_READ' })
+		setLatestTimeStamp: (timestamp) => {
+			const profileItems = { latestTimeStamp: timestamp }
+			dispatch({ type: 'MODIFY_LOCAL_PROFILE', profileItems })
+			dispatch({ type: 'SET_UNREAD_MESSAGES',  count: 0 })
 		}
 	}
 )
