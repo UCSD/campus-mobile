@@ -9,12 +9,15 @@ import {
 import { delay } from 'redux-saga'
 import Device from 'react-native-device-info'
 import firebase from 'react-native-firebase'
+import moment from 'moment'
+import Toast from 'react-native-simple-toast'
 
 import MessagesService from '../services/messagesService'
 import logger from '../util/logger'
 import { MESSAGING_TTL } from '../AppSettings'
 
 const getUserData = state => (state.user)
+const getMessages = state => (state.messages)
 
 function* getTopics() {
 	try {
@@ -101,7 +104,8 @@ function* resetMessages() {
 
 function* updateMessages(action) {
 	const { timestamp } = action
-	const { isLoggedIn } = yield select(getUserData)
+	const { isLoggedIn, profile } = yield select(getUserData)
+	const { messages } = yield select(getMessages)
 
 	if (isLoggedIn) {
 		try {
@@ -117,47 +121,39 @@ function* updateMessages(action) {
 				throw e
 			}
 			else {
-				const { messages, next: nextTimestamp } = response
+				const { messages: newMessages, next: nextTimestamp } = response
+				const newMessagesArray = mergeMessagesArrays(messages, newMessages)
+				const sortedMessages = newMessagesArray.sort(( left, right ) =>
+					moment.utc(right.timestamp).diff(moment.utc(left.timestamp)))
 
-				yield put({ type: 'SET_MESSAGES', messages, nextTimestamp })
+				let count = 0
+				// check for how many of the new messages have a timestamp after latestTimeStamp
+				// latestTimeStamp is set when the user last opened the notfications pages
+				let { length } = sortedMessages
+				if (sortedMessages.length > 10) {
+					length = 10
+				}
+				for (let i = 0; i < length; i++) {
+					if (sortedMessages[i].timestamp > profile.latestTimeStamp) {
+						count++
+					}
+				}
+				yield put({ type: 'SET_UNREAD_MESSAGES', count })
+				yield put({ type: 'SET_MESSAGES', messages: sortedMessages, nextTimestamp })
 				yield put({ type: 'GET_MESSAGES_SUCCESS' })
 			}
 		} catch (error) {
 			yield put({ type: 'GET_MESSAGES_FAILURE', error })
 			logger.trackException(error, false)
+			Toast.showWithGravity(
+				'Opps. There was a network problem.',
+				Toast.SHORT,
+				Toast.BOTTOM
+			)
 		}
 	}
 }
 
-function* loadMoreMessages(action) {
-	const { timestamp } = action
-	const { isLoggedIn } = yield select(getUserData)
-
-	if (isLoggedIn) {
-		try {
-			yield put({ type: 'GET_MESSAGES_REQUEST' })
-
-			const { response, timeout } = yield race({
-				response: call(MessagesService.FetchMyMessages, timestamp),
-				timeout: call(delay, MESSAGING_TTL)
-			})
-
-			if (timeout) {
-				const e = new Error('Request timed out.')
-				throw e
-			}
-			else {
-				const { messages, next: nextTimestamp } = response
-
-				yield put({ type: 'ADD_MESSAGES', messages, nextTimestamp })
-				yield put({ type: 'GET_MESSAGES_SUCCESS' })
-			}
-		} catch (error) {
-			yield put({ type: 'GET_MESSAGES_FAILURE', error })
-			logger.trackException(error, false)
-		}
-	}
-}
 
 function* subscribeToTopic(action) {
 	const { topicId } = action
@@ -226,10 +222,32 @@ function* refreshTopicSubscriptions(action) {
 	}
 }
 
+function mergeMessagesArrays(old, updated) {
+	const messages = {}
+
+	if (Array.isArray(old)) {
+		old.forEach((message) => {
+			messages[message.messageId] = message
+		})
+	}
+
+	if (Array.isArray(updated)) {
+		updated.forEach((message) => {
+			messages[message.messageId] = message
+		})
+	}
+
+	const result = []
+	Object.keys(messages).forEach((messageId) => {
+		result.push(messages[messageId])
+	})
+
+	return result
+}
+
 function* messagesSaga() {
 	yield takeLatest('RESET_MESSAGES', resetMessages)
 	yield takeLatest('UPDATE_MESSAGES', updateMessages)
-	yield takeLatest('LOAD_MORE_MESSAGES', loadMoreMessages)
 	yield takeLatest('REGISTER_TOKEN', registerToken)
 	yield takeLatest('UNREGISTER_TOKEN', unregisterToken)
 	yield takeLatest('GET_TOPICS', getTopics)

@@ -29,11 +29,12 @@ class PushNotificationContainer extends React.Component {
 		})
 
 		this.messageListener = firebase.messaging().onMessage((message) => {
-			console.log('New message received: ', message)
+			this.props.updateMessages()
 		})
 
 		this.notificationListener = firebase.notifications().onNotification((notification) => {
 			console.log('New notification received: ', notification)
+			this.props.updateMessages()
 		})
 	}
 
@@ -127,6 +128,9 @@ const mapDispatchToProps = (dispatch, ownProps) => (
 	{
 		registerToken: (token) => {
 			dispatch({ type: 'REGISTER_TOKEN', token })
+		},
+		updateMessages: () => {
+			dispatch({ type: 'UPDATE_MESSAGES' })
 		}
 	}
 )

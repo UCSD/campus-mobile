@@ -1,7 +1,7 @@
 const initialState = {
-	messages: null,
+	messages: [],
 	nextTimestamp: null,
-	loadingMoreData: false,
+	unreadMessages: 0,
 	topics: [
 		{
 			'audienceId': 'all',
@@ -23,7 +23,7 @@ function messages(state = initialState, action) {
 
 	switch (action.type) {
 		case 'CLEAR_MESSAGE_DATA': {
-			newState.messages = null
+			newState.messages = []
 			return newState
 		}
 		case 'SET_TOPICS': {
@@ -34,21 +34,11 @@ function messages(state = initialState, action) {
 			const { messages: newMessages, nextTimestamp } = action
 			newState.messages = [...newMessages]
 			newState.nextTimestamp = nextTimestamp
-			newState.loadingMoreData = false
 			return newState
 		}
-		case 'ADD_MESSAGES': {
-			const { messages: newMessages, nextTimestamp } = action
-			newState.messages = [...state.messages]
-			// remove one duplicate message
-			newMessages.shift()
-			newState.messages = newState.messages.concat(newMessages)
-			newState.nextTimestamp = nextTimestamp
-			newState.loadingMoreData = false
-			return newState
-		}
-		case 'GET_MESSAGES_REQUEST': {
-			newState.loadingMoreData = true
+		case 'SET_UNREAD_MESSAGES': {
+			const { count } = action
+			newState.unreadMessages = count
 			return newState
 		}
 		case 'CONFIRM_REGISTRATION': {
