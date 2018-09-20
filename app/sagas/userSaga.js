@@ -110,10 +110,12 @@ function* queryUserData() {
 	let profileItems = { ...syncedProfile }
 
 	// add newly initialized profile object
-	profileItems = {
-		...profileItems,
-		...profile
-	}
+	profileItems = { ...profileItems }
+
+	// only sync data that is dependent on the user signing in
+	if (profile.username) profileItems.username = profile.username
+	if (profile.classifications) profileItems.classifications = { ...profile.classifications }
+	if (profile.pid) profileItems.pid = profile.pid
 
 	const modifyProfileAction = { profileItems }
 
@@ -279,7 +281,6 @@ function* syncUserProfile() {
 // If the user is signed in, initiates a sync attempt
 // with the remote server
 function* modifyLocalProfile(action) {
-	const { profile } = yield select(userState)
 	const { profileItems } = action
 
 	yield put({ type: 'SET_LOCAL_PROFILE', profileItems })
