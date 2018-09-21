@@ -4,6 +4,7 @@ const initialState = {
 		username: null,
 		classifications: null,
 		pid: null,
+		subscribedTopics: ['emergency', 'all'],
 	},
 	syncedProfile: {},
 	invalidSavedCredentials: false,

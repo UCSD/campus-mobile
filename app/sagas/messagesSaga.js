@@ -190,18 +190,19 @@ function* unsubscribeFromTopic(action) {
 
 // Removes all topic subscriptions except for the default 'all' topic
 function* clearUserSubscriptions(action) {
+	const defaultSubscriptions = ['emergency', 'all']
+
 	const { subscribedTopics } = action
 	if (Array.isArray(subscribedTopics)) {
 		yield all(subscribedTopics.map(topic => (
 			call(() => {
-				if (topic !== 'all') {
+				if (defaultSubscriptions.indexOf(topic) < 0) {
 					firebase.messaging().unsubscribeFromTopic(topic)
 					console.log('Unsubscribed from', topic)
 				}
 			})
 		)))
 
-		const defaultSubscriptions = ['all']
 		const profileItems = { subscribedTopics: defaultSubscriptions }
 		yield put({ type: 'MODIFY_LOCAL_PROFILE', profileItems })
 	}
