@@ -74,7 +74,7 @@ const styles = {
 }
 
 function mapStateToProps(state, props) {
-	return { hasUnreadMsgs: state.messages.hasUnreadMsgs }
+	return { unreadMessages: state.messages.unreadMessages }
 }
 
 TabIcons.propTypes = propTypes
