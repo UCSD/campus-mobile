@@ -19,7 +19,6 @@ import requestStatusesReducer from './requestStatuses'
 import requestErrorsReducer from './requestErrors'
 import homeReducer from './home'
 import messagesReducer from './messages'
-import notificationsReducer from './notifications'
 
 module.exports = combineReducers({
 	cards: cardsReducer,
@@ -41,5 +40,4 @@ module.exports = combineReducers({
 	requestErrors: requestErrorsReducer,
 	home: homeReducer,
 	messages: messagesReducer,
-	notifications: notificationsReducer
 })
