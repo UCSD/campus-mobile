@@ -451,6 +451,11 @@ const css = StyleSheet.create({
 	notifications_section_list_header_text: { flex: 1, paddingLeft: 5, fontSize: 23, color: COLOR.VDGREY },
 	notifications_row_text: { flex: 1, paddingRight: 10, paddingLeft: 10, fontSize: 19, color: COLOR.VDGREY },
 	notifications_section_list_separator: { height: 1, backgroundColor: COLOR.MGREY },
+	notifications_row: { height: 110, width: '100%', flexDirection: 'row', justifyContent: 'flex-start' },
+	notifications_vector_icon: { justifyContent: 'center', alignItems: 'center', marginLeft: 10, marginRight: 20 },
+	notifications_timestamp_text: { color: '#a1a1a1', fontWeight: 'bold', fontSize: 10 },
+	notifications_title_text: { color: '#818181', fontWeight: 'bold', fontSize: 24 },
+	notifications_body_text: { color: '#818181', fontWeight: 'bold', fontSize: 14 },
 
 	/**
 	 *	16 - Messaging
