@@ -117,7 +117,6 @@ const renderSeparator = () => (
 const mapStateToProps = state => ({
 	isLoggedIn: state.user.isLoggedIn,
 	profile: state.user.profile,
-	isActive: state.notifications.isActive,
 	topics: state.messages.topics,
 	topicsLoading: state.requestStatuses.GET_TOPICS,
 })
