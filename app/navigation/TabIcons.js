@@ -77,7 +77,9 @@ const styles = {
 		color: 'white',
 		position: 'absolute',
 		textAlignVertical: 'center',
-		textAlign: 'center'
+		textAlign: 'center',
+		fontWeight: 'bold',
+		fontSize: 12
 	}
 }
 
