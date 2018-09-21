@@ -130,8 +130,8 @@ function* updateMessages(action) {
 				// check for how many of the new messages have a timestamp after latestTimeStamp
 				// latestTimeStamp is set when the user last opened the notfications pages
 				let { length } = sortedMessages
-				if (sortedMessages.length > 10) {
-					length = 10
+				if (sortedMessages.length > 9) {
+					length = 9
 				}
 				for (let i = 0; i < length; i++) {
 					if (sortedMessages[i].timestamp > profile.latestTimeStamp) {

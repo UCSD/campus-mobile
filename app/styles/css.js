@@ -451,6 +451,14 @@ const css = StyleSheet.create({
 	notifications_section_list_header_text: { flex: 1, paddingLeft: 5, fontSize: 23, color: COLOR.VDGREY },
 	notifications_row_text: { flex: 1, paddingRight: 10, paddingLeft: 10, fontSize: 19, color: COLOR.VDGREY },
 	notifications_section_list_separator: { height: 1, backgroundColor: COLOR.MGREY },
+
+	/**
+	 *	16 - Messaging
+	 */
+	badgeIconView: { position: 'relative', padding: 5 },
+	badge: { position: 'absolute', zIndex: 10, top: platformAndroid() ? 5 : 1 , right: 5, padding: 1, width: 15, height: 15, backgroundColor: 'red', borderRadius: 15 / 2, flex: 1, justifyContent: 'center', alignItems: 'center' },
+	badgeNumber: { color: 'white', position: 'absolute', textAlignVertical: 'center', textAlign: 'center', fontWeight: 'bold', fontSize: 12
+	}
 })
 
 module.exports = css
