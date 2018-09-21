@@ -22,6 +22,8 @@ const COLOR = {
 	GREEN: '#38D871',
 	WARNING: '#FFD845',
 	ERROR: '#CF0015',
+	TIME: '#A1A1A1',
+	DARKGRAY: '#818181',
 }
 
 module.exports = COLOR
