@@ -1,7 +1,7 @@
 const initialState = {
-	isChecked: [false, false, false, false, false],
+	isChecked: [true, true, true, false, false],
 	selectedSpots: [],
-	count: 0,
+	count: 3,
 	parkingData: [],
 	showWarning: false
 }
