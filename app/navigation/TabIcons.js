@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { View } from 'react-native'
+import { View, Text } from 'react-native'
 import { connect } from 'react-redux'
 import Entypo from 'react-native-vector-icons/Entypo'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
@@ -22,7 +22,7 @@ const TabIcons = (props) => {
 		TabIcon = () => (<Entypo name="location" size={24} style={[css.tabIcon, props.focused ? { color: COLOR.PRIMARY } : null]} />)
 	} else if (props.title === 'Messaging') {
 		if (props.hasUnreadMsgs) {
-			TabIcon = () => (<View style={styles.badgeIconView}><View style={styles.badge} /><FAIcon name="bell-o" size={24} style={[css.tabIcon, props.focused ? { color: COLOR.PRIMARY } : null]} /></View>)
+			TabIcon = () => (<View style={styles.badgeIconView}><View style={styles.badge}><Text style={styles.badgeNumber}>2</Text></View><FAIcon name="bell-o" size={24} style={[css.tabIcon, props.focused ? { color: COLOR.PRIMARY } : null]} /></View>)
 		}
 		else {
 			TabIcon = () => (<FAIcon name="bell-o" size={24} style={[css.tabIcon, props.focused ? { color: COLOR.PRIMARY } : null]} />)
@@ -60,12 +60,21 @@ const styles = {
 		width: 15,
 		height: 15,
 		backgroundColor: 'red',
-		borderRadius: 15 / 2
+		borderRadius: 15 / 2,
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center'
+	},
+	badgeNumber: {
+		color: 'white',
+		position: 'absolute',
+		textAlignVertical: 'center',
+		textAlign: 'center'
 	}
 }
 
 function mapStateToProps(state, props) {
-	return { hasUnreadMsgs: state.messages.hasUnreadMsgs }
+	return { unreadMessages: state.messages.unreadMessages }
 }
 
 TabIcons.propTypes = propTypes
