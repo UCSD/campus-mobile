@@ -155,7 +155,6 @@ android {
 }
 
 dependencies {
-    compile project(':react-native-svg')
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
     implementation "com.android.support:appcompat-v7:$supportlib_version"
@@ -182,6 +181,7 @@ dependencies {
     implementation project(':react-native-exit-app')
     implementation project(':react-native-device-info')
     implementation project(':react-native-google-api-availability-bridge')
+    implementation project(':react-native-svg')
 
     implementation fileTree(dir: "libs", include: ["*.jar"])
 }

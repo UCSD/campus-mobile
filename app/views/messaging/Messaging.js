@@ -20,7 +20,7 @@ const checkData = (data) => {
 		}
 		return false
 	})
-	cleanData.sort( ( left, right ) => moment.utc(right.timestamp).diff(moment.utc(left.timestamp)))
+
 	return cleanData
 }
 
@@ -29,7 +29,9 @@ export class Messaging extends Component {
 
 	componentDidMount() {
 		logger.ga('View Loaded: Messaging')
-		this.props.updateMessages(new Date().getTime())
+		this.props.navigation.addListener('willFocus', () => {
+			this.props.setLatestTimeStamp(new Date().getTime())
+		})
 	}
 
 	renderSeparator = ({ leadingItem }) => (
@@ -43,6 +45,13 @@ export class Messaging extends Component {
 		const { message: messageText, title } = message
 		const day = moment(timestamp)
 
+		let timeString
+		if (day.isSame(moment(), 'day')) {
+			timeString = day.format('h:mm a')
+		} else {
+			timeString = day.fromNow()
+		}
+
 		return (
 			<View style={{ height: 110, width: '100%', flexDirection: 'row', justifyContent: 'flex-start' }}>
 				<View style={{ justifyContent: 'center', alignItems: 'center', marginLeft: 10, marginRight: 20 }}>
@@ -53,7 +62,7 @@ export class Messaging extends Component {
 					/>
 				</View>
 				<View  style={{ flexDirection: 'column', justifyContent: 'center', flex: 1 }}>
-					<Text style={{ color: '#a1a1a1', fontWeight: 'bold', fontSize: 10 }}>{day.format('MMMM Do')}</Text>
+					<Text style={{ color: '#a1a1a1', fontWeight: 'bold', fontSize: 10 }}>{timeString}</Text>
 					<Text style={{ color: '#818181', fontWeight: 'bold', fontSize: 24 }}>{title}</Text>
 					<Text style={{ color: '#818181', fontWeight: 'bold', fontSize: 14 }}>{messageText}</Text>
 				</View>
@@ -62,33 +71,34 @@ export class Messaging extends Component {
 	}
 
 	render() {
-		const { messages, nextTimestamp, loadingMoreData } = this.props.messages
-		const { updateMessages, loadMoreMessages } = this.props
+		const { messages, nextTimestamp } = this.props.messages
+		const { updateMessages } = this.props
 		const filteredData = checkData(messages)
 
 		let isLoading = false
 		if (this.props.myMessagesStatus) isLoading = true
 
 		return (
-			<View style={css.main_full}>
-				<FlatList
-					style={{ backgroundColor: '#f1f1f1' }}
-					data={filteredData}
-					onRefresh={() => updateMessages(new Date().getTime())}
-					refreshing={isLoading}
-					renderItem={this.renderItem}
-					keyExtractor={(item, index) => item.id}
-					ItemSeparatorComponent={this.renderSeparator}
-					onEndReachedThreshold={0.5}
-					ListFooterComponent={loadingMoreData ? <ActivityIndicator size="large" animating /> : null}
-					onEndReached={(info) => {
-						// this if check makes sure that we dont fetch extra data in the intialization of the list
-						if (info.distanceFromEnd > 0 && nextTimestamp) {
-							loadMoreMessages(nextTimestamp)
-						}
-					}}
-				/>
-			</View>
+			<FlatList
+				data={filteredData}
+				style={css.scroll_default}
+				contentContainerStyle={css.main_full}
+				onRefresh={() => updateMessages(new Date().getTime())}
+				refreshing={isLoading}
+				renderItem={this.renderItem}
+				keyExtractor={(item, index) => item.id}
+				ItemSeparatorComponent={this.renderSeparator}
+				onEndReachedThreshold={0.5}
+				ListFooterComponent={(isLoading && nextTimestamp) ? <ActivityIndicator size="large" animating /> : null}
+				onEndReached={(info) => {
+					// this if check makes sure that we dont fetch extra data in the intialization of the list
+					if (info.distanceFromEnd > 0
+						&& nextTimestamp
+						&& !isLoading) {
+						updateMessages(nextTimestamp)
+					}
+				}}
+			/>
 		)
 	}
 }
@@ -98,7 +108,6 @@ const mapStateToProps = (state, props) => (
 		messages: state.messages,
 		myMessagesStatus: state.requestStatuses.GET_MESSAGES,
 		myMessagesError: state.requestErrors.GET_MESSAGES,
-		loadingMoreData: state.loadingMoreData
 	}
 )
 
@@ -107,8 +116,10 @@ const mapDispatchToProps = (dispatch, ownProps) => (
 		updateMessages: (timestamp) => {
 			dispatch({ type: 'UPDATE_MESSAGES', timestamp })
 		},
-		loadMoreMessages: (timestamp) => {
-			dispatch({ type: 'LOAD_MORE_MESSAGES', timestamp })
+		setLatestTimeStamp: (timestamp) => {
+			const profileItems = { latestTimeStamp: timestamp }
+			dispatch({ type: 'MODIFY_LOCAL_PROFILE', profileItems })
+			dispatch({ type: 'SET_UNREAD_MESSAGES',  count: 0 })
 		}
 	}
 )

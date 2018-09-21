@@ -95,6 +95,7 @@ class Notifications extends Component {
 					ItemSeparatorComponent={renderSeparator}
 					ListFooterComponent={renderSeparator}
 					ListHeaderComponent={renderSeparator}
+					stickySectionHeadersEnabled={false}
 				/>
 			</View>
 		)
