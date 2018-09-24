@@ -130,6 +130,52 @@ function* updateMessages(action) {
 				// check for how many of the new messages have a timestamp after latestTimeStamp
 				// latestTimeStamp is set when the user last opened the notfications pages
 				let { length } = sortedMessages
+				if (sortedMessages.length > 10) {
+					length = 10
+				}
+				for (let i = 0; i < length; i++) {
+					if (sortedMessages[i].timestamp > profile.latestTimeStamp) {
+						count++
+					}
+				}
+				yield put({ type: 'SET_UNREAD_MESSAGES', count })
+				yield put({ type: 'SET_MESSAGES', messages: sortedMessages, nextTimestamp })
+				yield put({ type: 'GET_MESSAGES_SUCCESS' })
+			}
+		} catch (error) {
+			yield put({ type: 'GET_MESSAGES_FAILURE', error })
+			logger.trackException(error, false)
+			Toast.showWithGravity(
+				'Opps. There was a network problem.',
+				Toast.SHORT,
+				Toast.BOTTOM
+			)
+		}
+	} else {
+		// If we aren't signed in, get messages from public topics
+		const userTopics = profile.subscribedTopics
+		try {
+			yield put({ type: 'GET_MESSAGES_REQUEST' })
+
+			const { response, timeout } = yield race({
+				response: call(MessagesService.FetchTopicMessages, userTopics, timestamp),
+				timeout: call(delay, MESSAGING_TTL)
+			})
+
+			if (timeout) {
+				const e = new Error('Request timed out.')
+				throw e
+			}
+			else {
+				const { messages: newMessages, next: nextTimestamp } = response
+				const newMessagesArray = mergeMessagesArrays(messages, newMessages)
+				const sortedMessages = newMessagesArray.sort(( left, right ) =>
+					moment.utc(right.timestamp).diff(moment.utc(left.timestamp)))
+
+				let count = 0
+				// check for how many of the new messages have a timestamp after latestTimeStamp
+				// latestTimeStamp is set when the user last opened the notfications pages
+				let { length } = sortedMessages
 				if (sortedMessages.length > 9) {
 					length = 9
 				}

@@ -29,6 +29,7 @@ module.exports = {
 		else return 'https://btgre7sss6.execute-api.us-west-2.amazonaws.com/prod/v1/term/current/finals'
 	},
 	// DEV ONLY
+	TOPICS_API_URL: 'https://bvgjvzaakl.execute-api.us-west-2.amazonaws.com/dev/topics',
 	MYMESSAGES_API_URL: 'https://api-qa.ucsd.edu:8243/mp-mymessages/1.0.0',
 	MESSAGES_TOPICS_URL: 'https://s3-us-west-1.amazonaws.com/ucsd-mobile-dev/mock-apis/messaging/topics.json',
 	PUSH_REGISTRATION_API_URL: 'https://api-qa.ucsd.edu:8243/mp-registration/1.0.0',

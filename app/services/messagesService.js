@@ -1,6 +1,7 @@
 import { authorizedFetch } from '../util/auth'
 
 const {
+	TOPICS_API_URL,
 	MYMESSAGES_API_URL,
 	MESSAGES_TOPICS_URL,
 	PUSH_REGISTRATION_API_URL,
@@ -38,11 +39,26 @@ const MyMessagesService = {
 		}
 	},
 
-	* FetchTopicMessages(topic, timestamp) {
-		try {
-			const messages = JSON.parse(yield authorizedFetch(`${MYMESSAGES_API_URL}/topic/${topic}`))
+	* FetchTopicMessages(topics, timestamp) {
+		let userTopics = ''
+		if (topics.length > 0) {
+			topics.forEach((topic, index, arr) => {
+				// Handle push / Firebase messaging
+				if (!Object.is(arr.length - 1, index)) {
+					userTopics += `${topic},`
+				} else {
+					userTopics += `${topic}`
+				}
+			})
+		}
 
-			if (messages) return { messages }
+
+		let query = '&start=' + new Date().getTime()
+		if (timestamp) query = '&start=' + timestamp
+
+		try {
+			const messages = yield (yield fetch(`${TOPICS_API_URL}?topics=${userTopics}${query}`)).json()
+			if (messages && messages.messages) return messages
 			else {
 				const e = new Error('Invalid data from messages API')
 				throw e
