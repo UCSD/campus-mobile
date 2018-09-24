@@ -482,6 +482,19 @@ const css = StyleSheet.create({
 	notifications_section_list_header_text: { flex: 1, paddingLeft: 5, fontSize: 23, color: COLOR.VDGREY },
 	notifications_row_text: { flex: 1, paddingRight: 10, paddingLeft: 10, fontSize: 19, color: COLOR.VDGREY },
 	notifications_section_list_separator: { height: 1, backgroundColor: COLOR.MGREY },
+	notifications_row: { minHeight: 110, flexDirection: 'row', justifyContent: 'flex-start' },
+	notifications_vector_icon: { justifyContent: 'center', alignItems: 'center', marginLeft: 10, marginRight: 20 },
+	notifications_timestamp_text: { color: COLOR.TIME, fontWeight: 'bold', fontSize: 10 },
+	notifications_title_text: { color: COLOR.DARKGRAY, fontWeight: 'bold', fontSize: 24 },
+	notifications_body_text: { color: COLOR.DARKGRAY, fontWeight: 'bold', fontSize: 14 },
+
+	/**
+	 *	16 - Messaging
+	 */
+	badgeIconView: { position: 'relative', padding: 5 },
+	badge: { position: 'absolute', zIndex: 10, top: platformAndroid() ? 5 : 1 , right: 5, padding: 1, width: 15, height: 15, backgroundColor: 'red', borderRadius: 15 / 2, flex: 1, justifyContent: 'center', alignItems: 'center' },
+	badgeNumber: { color: 'white', position: 'absolute', textAlignVertical: 'center', textAlign: 'center', fontWeight: 'bold', fontSize: 12
+	}
 })
 
 module.exports = css

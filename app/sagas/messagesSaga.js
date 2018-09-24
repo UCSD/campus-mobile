@@ -130,8 +130,8 @@ function* updateMessages(action) {
 				// check for how many of the new messages have a timestamp after latestTimeStamp
 				// latestTimeStamp is set when the user last opened the notfications pages
 				let { length } = sortedMessages
-				if (sortedMessages.length > 10) {
-					length = 10
+				if (sortedMessages.length > 9) {
+					length = 9
 				}
 				for (let i = 0; i < length; i++) {
 					if (sortedMessages[i].timestamp > profile.latestTimeStamp) {
@@ -190,18 +190,19 @@ function* unsubscribeFromTopic(action) {
 
 // Removes all topic subscriptions except for the default 'all' topic
 function* clearUserSubscriptions(action) {
+	const defaultSubscriptions = ['emergency', 'all']
+
 	const { subscribedTopics } = action
 	if (Array.isArray(subscribedTopics)) {
 		yield all(subscribedTopics.map(topic => (
 			call(() => {
-				if (topic !== 'all') {
+				if (defaultSubscriptions.indexOf(topic) < 0) {
 					firebase.messaging().unsubscribeFromTopic(topic)
 					console.log('Unsubscribed from', topic)
 				}
 			})
 		)))
 
-		const defaultSubscriptions = ['all']
 		const profileItems = { subscribedTopics: defaultSubscriptions }
 		yield put({ type: 'MODIFY_LOCAL_PROFILE', profileItems })
 	}

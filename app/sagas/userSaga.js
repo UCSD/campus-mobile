@@ -99,12 +99,22 @@ function* doLogin(action) {
 }
 
 function* queryUserData() {
-	// perform first data calls when user is logged in
-	yield put({ type: 'UPDATE_SCHEDULE' })
-
+	// USER PROFILE SYNC
 	// Sync user profile from cloud when first logging in
 	yield call(getUserProfile)
 	const { profile, syncedProfile } = yield select(userState)
+
+	// If newly signed in user fits into certain categories,
+	// subscribe them to their topics.
+	if (profile.classifications) {
+		if (profile.classifications.student) {
+			// subscribe to default student topics
+			yield put({ type: 'SUBSCRIBE_TO_TOPIC', topicId: 'students' })
+		}
+	}
+
+	// If their synced profile has unsubscribed from these topics,
+	// that is synced in the next few steps and handled accordingly
 
 	// populate newProfile with potentially stale remote data first
 	let profileItems = { ...syncedProfile }
@@ -123,6 +133,10 @@ function* queryUserData() {
 
 	// subscribes to firebase topics that have been synced from the server
 	yield put({ type: 'REFRESH_TOPIC_SUBSCRIPTIONS' })
+
+	// INITIAL USER DATA CALLS
+	// perform first data calls when user is logged in
+	yield put({ type: 'UPDATE_SCHEDULE' })
 	yield put({ type: 'UPDATE_MESSAGES' })
 }
 // Used when an API call requires an access token and the current
