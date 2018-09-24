@@ -100,23 +100,23 @@ const renderSeparator = (highlighted) => {
 
 // returns the warning sign
 const displayWarning = () =>  (
-		<View style={css.pst_warning_container_view}>
-			<Text style={css.pst_warning_header_text} >
-				{'Max Selection (3)'}
-			</Text>
-			<Text>
-				{'Only up to 3 type selections'}
-			</Text>
-			<Text>
-				{'are allowed at one time.'}
-			</Text>
-			<Text>
-				{'\nCancel a parking type selection to'}
-			</Text>
-			<Text>
-				{'add another parking type.'}
-			</Text>
-		</View>
+	<View style={css.pst_warning_container_view}>
+		<Text style={css.pst_warning_header_text} >
+			{'Max Selection (3)'}
+		</Text>
+		<Text>
+			{'Only up to 3 type selections'}
+		</Text>
+		<Text>
+			{'are allowed at one time.'}
+		</Text>
+		<Text>
+			{'\nCancel a parking type selection to'}
+		</Text>
+		<Text>
+			{'add another parking type.'}
+		</Text>
+	</View>
 
 )
 

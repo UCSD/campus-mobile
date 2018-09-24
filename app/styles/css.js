@@ -447,8 +447,8 @@ const css = StyleSheet.create({
 	/**
 	 *	16 - Parking
 	 */
-	pst_elevated_row_view: { flexDirection: 'row', flex: 1, paddingLeft: 15, backgroundColor: COLOR.MGREY, alignItems: 'center', justifyContent: 'center', height: 50, margin: 3 },
-	pst_unelevated_row_view: { flexDirection: 'row', flex: 1, paddingLeft: 15, backgroundColor: COLOR.WHITE, alignItems: 'center', justifyContent: 'center', height: 50, margin: 3 },
+	pst_elevated_row_view: { flexDirection: 'row', flex: 1, paddingLeft: 15, backgroundColor: COLOR.MGREY, alignItems: 'center', justifyContent: 'center', height: round(LAYOUT.MAX_CONTENT_HEIGHT / 13), margin: 3 },
+	pst_unelevated_row_view: { flexDirection: 'row', flex: 1, paddingLeft: 15, backgroundColor: COLOR.WHITE, alignItems: 'center', justifyContent: 'center', height: round(LAYOUT.MAX_CONTENT_HEIGHT / 13), margin: 3 },
 	pst_warning_elevated_view: { flex: 1, flexDirection: 'row', backgroundColor: 'white' , alignItems: 'center', justifyContent: 'center', marginHorizontal: 30, bottom: 25 },
 	pst_warning_container_view: { alignItems: 'center', justifyContent: 'center', flex: 1 },
 	pst_warning_header_text: { fontSize: 18, top: -20, alignItems: 'center' },
