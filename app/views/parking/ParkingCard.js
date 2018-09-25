@@ -17,28 +17,23 @@ const ParkingCard = ({
 		}
 	]
 
-	const allData = {
-		mySpots,
-		savedStructures
-	};
-
-  return (
-	   <ScrollCard
-        id="parking"
-        title="Parking Availability"
-        renderItem={({ item }) => (
-          <ParkingOverview
-            structureData={item}
-            spotsSelected={mySpots}
-            lotCount={lotCount}
-          />
-        )}
-        extraData={allData}
-        scrollData={savedStructures}
-        extraActions={extraActions}
-    />
-  );
-};
+	return (
+		<ScrollCard
+			id="parking"
+			title="Parking Availability"
+			renderItem={({ item }) => (
+				<ParkingOverview
+					structureData={item}
+					spotsSelected={mySpots}
+					lotCount={lotCount}
+				/>
+			)}
+			extraData={mySpots}
+			scrollData={savedStructures}
+			extraActions={extraActions}
+		/>
+	)
+}
 
 
 export default withNavigation(ParkingCard)
