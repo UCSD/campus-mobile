@@ -39,6 +39,7 @@ module.exports = {
 
 	/* RESOURCES */
 	SHUTTLE_SCHEDULE_URL: 'https://transportation.ucsd.edu/shuttles/',
+	PRIVACY_POLICY_URL: 'https://mobile.ucsd.edu/privacy-policy.html',
 	FEEDBACK_URL: 'https://eforms.ucsd.edu/view.php?id=175631',
 	WEATHER_ICON_BASE_URL: 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/images/v1/weather-icons/',
 	SHUTTLE_ROUTES_MASTER: 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/shuttle_routes_master_map.json',

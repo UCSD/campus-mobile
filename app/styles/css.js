@@ -474,7 +474,7 @@ const css = StyleSheet.create({
 	/**
 	 *	17 - Notifications
 	 */
-	notifications_row_view: { flexDirection: 'row', flex: 1, paddingLeft: 10, backgroundColor: COLOR.WHITE, alignItems: 'center', justifyContent: 'center', height: 35 },
+	notifications_row_view: { flexDirection: 'row', flex: 1, paddingLeft: 10, backgroundColor: COLOR.WHITE, alignItems: 'center', justifyContent: 'center' },
 	notifications_full_container: { flex: 1, backgroundColor: COLOR.WHITE },
 	notifications_section_list: { flex: 1 },
 	notifications_section_list_header_container: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 45, borderBottomColor: COLOR.MGREY, borderBottomWidth: 1 },

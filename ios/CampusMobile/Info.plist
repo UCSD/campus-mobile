@@ -44,12 +44,12 @@
 				<key>NSExceptionRequiresForwardSecrecy</key>
 				<false/>
 				<key>NSExceptionAllowsInsecureHTTPLoads</key>
-        <true/>
+				<true/>
 			</dict>
 			<key>ucsdnews.ucsd.edu</key>
 			<dict>
 				<key>NSExceptionAllowsInsecureHTTPLoads</key>
-        <true/>
+				<true/>
 				<key>NSExceptionMinimumTLSVersion</key>
 				<string>TLSv1.0</string>
 				<key>NSExceptionRequiresForwardSecrecy</key>
@@ -81,6 +81,7 @@
 		<string>Octicons.ttf</string>
 		<string>SimpleLineIcons.ttf</string>
 		<string>Zocial.ttf</string>
+		<string>Feather.ttf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>

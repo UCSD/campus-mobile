@@ -18,7 +18,7 @@ class Notifications extends Component {
 
 		const sections = [
 			{
-				'title': 'Categories',
+				'title': 'Topics',
 				'data': []
 			}
 		]
@@ -81,9 +81,7 @@ class Notifications extends Component {
 		const sections = this.getSections()
 
 		return (
-			<View
-				style={css.notifications_full_container}
-			>
+			<View style={css.notifications_full_container}>
 				<SectionList
 					style={css.notifications_section_list}
 					renderItem={({ item, index, section }) => this.renderRow(item, index, section)}
