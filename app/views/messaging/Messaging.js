@@ -10,6 +10,7 @@ import moment from 'moment'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import logger from '../../util/logger'
 import css from '../../styles/css'
+import { DGREY } from '../../styles/ColorConstants'
 
 const checkData = (data) => {
 	if (!Array.isArray(data)) return null
@@ -57,9 +58,9 @@ export class Messaging extends Component {
 			<View style={css.notifications_row}>
 				<View style={css.notifications_vector_icon}>
 					<Icon
-						name="check-circle"
+						name="info"
 						size={30}
-						style={{ color: '#21D383' }}
+						style={{ color: DGREY }}
 					/>
 				</View>
 				<View  style={{ flexDirection: 'column', justifyContent: 'center', flex: 1 }}>

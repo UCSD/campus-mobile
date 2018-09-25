@@ -18,7 +18,7 @@ class Notifications extends Component {
 
 		const sections = [
 			{
-				'title': 'Categories',
+				'title': 'Topics',
 				'data': []
 			}
 		]
