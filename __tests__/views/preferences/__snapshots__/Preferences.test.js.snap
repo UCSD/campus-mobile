@@ -19,13 +19,22 @@ exports[`renders without crashing 1`] = `
       icon="bell-o"
       iconPack="FontAwesome"
       link="Notifications"
+      linkType="internal"
       title="Notifications"
     />
     <withNavigation(PreferencesItem)
       icon="new-message"
       iconPack="Entypo"
       link="Feedback"
+      linkType="internal"
       title="Feedback"
+    />
+    <withNavigation(PreferencesItem)
+      icon="lock"
+      iconPack="Feather"
+      link="https://mobile.ucsd.edu/privacy-policy.html"
+      linkType="external"
+      title="Privacy Policy"
     />
   </View>
 </ScrollView>
