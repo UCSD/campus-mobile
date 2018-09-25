@@ -20,7 +20,7 @@ const ParkingCard = ({
 	return (
 		<ScrollCard
 			id="parking"
-			title="Parking Availability"
+			title="Parking"
 			renderItem={({ item }) => (
 				<ParkingOverview
 					structureData={item}

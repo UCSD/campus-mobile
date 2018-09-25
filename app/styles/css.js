@@ -475,18 +475,17 @@ const css = StyleSheet.create({
 	 *	17 - Notifications
 	 */
 	notifications_row_view: { flexDirection: 'row', flex: 1, paddingLeft: 10, backgroundColor: COLOR.WHITE, alignItems: 'center', justifyContent: 'center', height: 35 },
-	//notifications_row_view: { flexDirection: 'row', flex: 1, paddingLeft: 10, paddingRight: 10, alignItems: 'center', justifyContent: 'center', height: 35 },
 	notifications_full_container: { flex: 1, backgroundColor: COLOR.WHITE },
 	notifications_section_list: { flex: 1 },
 	notifications_section_list_header_container: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 45, borderBottomColor: COLOR.MGREY, borderBottomWidth: 1 },
 	notifications_section_list_header_text: { flex: 1, paddingLeft: 5, fontSize: 23, color: COLOR.VDGREY },
 	notifications_row_text: { flex: 1, paddingRight: 10, paddingLeft: 10, fontSize: 19, color: COLOR.VDGREY },
 	notifications_section_list_separator: { height: 1, backgroundColor: COLOR.MGREY },
-	notifications_row: { minHeight: 110, flexDirection: 'row', justifyContent: 'flex-start' },
+	notifications_row: { paddingVertical: 10, paddingRight: 10, flexDirection: 'row', justifyContent: 'flex-start' },
 	notifications_vector_icon: { justifyContent: 'center', alignItems: 'center', marginLeft: 10, marginRight: 20 },
 	notifications_timestamp_text: { color: COLOR.TIME, fontWeight: 'bold', fontSize: 10 },
-	notifications_title_text: { color: COLOR.DARKGRAY, fontWeight: 'bold', fontSize: 24 },
-	notifications_body_text: { color: COLOR.DARKGRAY, fontWeight: 'bold', fontSize: 14 },
+	notifications_title_text: { color: COLOR.BLACK, fontWeight: 'bold', fontSize: 24 },
+	notifications_body_text: { paddingTop: 10, color: COLOR.VDGREY, fontSize: 14 },
 
 	/**
 	 *	16 - Messaging
