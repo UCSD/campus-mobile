@@ -19,6 +19,8 @@ class ParkingOverview extends Component {
 		return totalAvailableSpots
 	}
 
+	// this function returns the number of parking spots open of a given type
+	// returns -1 if the structure does not have the specific type
 	getOpenPerType(currentType) {
 		const { structureData } = this.props
 
@@ -28,8 +30,10 @@ class ParkingOverview extends Component {
 			for (let i = 0; i < tempType.length; i++) {
 				openPerType += Number(tempType[i]['Open'])
 			}
+			return openPerType
+		} else {
+			return -1
 		}
-		return openPerType
 	}
 
 	getTotalPerType(currentType) {
