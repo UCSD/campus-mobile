@@ -7,15 +7,6 @@ import { connect } from 'react-redux'
 import firebase from 'react-native-firebase'
 import Permissions from 'react-native-permissions'
 
-const subscribeToDefaults = (messaging) => {
-	const defaultTopics = ['emergency']
-
-	defaultTopics.forEach((topic) => {
-		messaging.subscribeToTopic(topic)
-		console.log('Subscribed to ' + topic)
-	})
-}
-
 class PushNotificationContainer extends React.Component {
 	componentDidMount() {
 		this.checkPermission()
@@ -24,7 +15,9 @@ class PushNotificationContainer extends React.Component {
 			// Process your token as required
 			console.log('Firebase Token (refresh):', fcmToken)
 
-			subscribeToDefaults(firebase.messaging())
+			// Subscribe to topics
+			this.props.refreshSubscriptions()
+
 			if (this.props.user.isLoggedIn) this.props.registerToken(fcmToken)
 		})
 
@@ -50,8 +43,8 @@ class PushNotificationContainer extends React.Component {
 				if (fcmToken) {
 					console.log('Firebase Token: ', fcmToken)
 
-					// Subscribe to default topics
-					subscribeToDefaults(firebase.messaging())
+					// Subscribe to topics
+					this.props.refreshSubscriptions()
 				}
 			})
 	}
@@ -116,6 +109,9 @@ class PushNotificationContainer extends React.Component {
 	}
 
 	render() {
+		// When app launches, update messages for the first time
+		this.props.updateMessages()
+
 		return null // TODO: render error message if user does not allow location
 	}
 }
@@ -131,6 +127,9 @@ const mapDispatchToProps = (dispatch, ownProps) => (
 		},
 		updateMessages: () => {
 			dispatch({ type: 'UPDATE_MESSAGES' })
+		},
+		refreshSubscriptions: () => {
+			dispatch({ type: 'REFRESH_TOPIC_SUBSCRIPTIONS' })
 		}
 	}
 )

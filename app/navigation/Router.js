@@ -144,7 +144,7 @@ const MainStack = StackNavigator(
 		ParkingSpotType: {
 			screen: ParkingSpotType,
 			navigationOptions: {
-				title: 'Parking: Edit Parking Type',
+				title: 'Spot Types',
 				headerRight: (<DummyView />)
 			}
 		},

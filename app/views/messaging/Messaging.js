@@ -10,6 +10,7 @@ import moment from 'moment'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import logger from '../../util/logger'
 import css from '../../styles/css'
+import { DGREY } from '../../styles/ColorConstants'
 
 const checkData = (data) => {
 	if (!Array.isArray(data)) return null
@@ -36,7 +37,8 @@ export class Messaging extends Component {
 
 	renderSeparator = ({ leadingItem }) => (
 		<View
-			style={{ height: 1, width: '100%', backgroundColor: '#D2D2D2' }}
+			// style={{ height: 1, width: '100%', backgroundColor: '#D2D2D2' }}
+			style={css.notifications_section_list_separator}
 		/>
 	)
 
@@ -53,18 +55,18 @@ export class Messaging extends Component {
 		}
 
 		return (
-			<View style={{ height: 110, width: '100%', flexDirection: 'row', justifyContent: 'flex-start' }}>
-				<View style={{ justifyContent: 'center', alignItems: 'center', marginLeft: 10, marginRight: 20 }}>
+			<View style={css.notifications_row}>
+				<View style={css.notifications_vector_icon}>
 					<Icon
-						name="check-circle"
+						name="info"
 						size={30}
-						style={{ color: '#21D383' }}
+						style={{ color: DGREY }}
 					/>
 				</View>
 				<View  style={{ flexDirection: 'column', justifyContent: 'center', flex: 1 }}>
-					<Text style={{ color: '#a1a1a1', fontWeight: 'bold', fontSize: 10 }}>{timeString}</Text>
-					<Text style={{ color: '#818181', fontWeight: 'bold', fontSize: 24 }}>{title}</Text>
-					<Text style={{ color: '#818181', fontWeight: 'bold', fontSize: 14 }}>{messageText}</Text>
+					<Text style={css.notifications_timestamp_text}>{timeString}</Text>
+					<Text style={css.notifications_title_text}>{title}</Text>
+					<Text style={css.notifications_body_text}>{messageText}</Text>
 				</View>
 			</View>
 		)

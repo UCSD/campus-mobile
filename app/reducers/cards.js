@@ -63,7 +63,7 @@ const initialState = {
 		parking: {
 			id: 'parking',
 			active: true,
-			name: 'Parking Availability',
+			name: 'Parking',
 			component: 'ParkingCard'
 		}
 	},

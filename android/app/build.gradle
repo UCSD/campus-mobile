@@ -182,6 +182,7 @@ dependencies {
     implementation project(':react-native-device-info')
     implementation project(':react-native-google-api-availability-bridge')
     implementation project(':react-native-svg')
+    implementation project(':react-native-vector-icons')
 
     implementation fileTree(dir: "libs", include: ["*.jar"])
 }
