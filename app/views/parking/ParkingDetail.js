@@ -18,7 +18,9 @@ class ParkingDetail extends Component {
       case 'B':
         return ColorConstants.MGREEN;
       case 'S':
-        return ColorConstants.YELLOW
+        return ColorConstants.YELLOW;
+      case 'V':
+        return ColorConstants.BLACK;
       case 'Accessible':
         return ColorConstants.MBLUE;
       default:
@@ -52,6 +54,33 @@ class ParkingDetail extends Component {
     }
   }
 
+  mapSpotsToDisplay() {
+    const { spotsAvailable, totalSpots, progressNumber, progressPercent } = this.props;
+    const fillAmount = (spotsAvailable/totalSpots) * 100;
+
+    if(spotsAvailable === 0) {
+      return (
+        <View style={css.po_fill_info}>
+          <Text style={[ css.po_circle_number, { color: ColorConstants.DGREY }, { fontSize: progressNumber }]}>
+            NA
+          </Text>
+        </View>
+      )
+    }
+    else {
+      return (
+        <View style={css.po_fill_info}>
+          <Text style={[css.po_circle_number, { color: this.mapAvailabilityToColor() }, { fontSize: progressNumber }]}>
+            {fillAmount ? Math.trunc(fillAmount) : 0}
+          </Text>
+          <Text style={[css.po_circle_percent,{ color: this.mapAvailabilityToColor() }, { fontSize: progressPercent }]}>
+            %
+          </Text>
+        </View>
+      )
+    }
+  }
+
   accessibleIcon = () => (
   	<Icon name="accessible" size={35} color="white" />
   )
@@ -82,15 +111,10 @@ class ParkingDetail extends Component {
         rotation={360}
         style={{ marginBottom: 15 }}
       >
-      {
+	{
         (fill) => (
-          <View style={css.po_fill_info}>
-            <Text style={[css.po_circle_number, { color: this.mapAvailabilityToColor() }, { fontSize: progressNumber }]}>
-              {fillAmount ? Math.trunc(fillAmount) : 0}
-            </Text>
-            <Text style={[css.po_circle_percent,{ color: this.mapAvailabilityToColor() }, { fontSize: progressPercent }]}>
-              %
-            </Text>
+          <View>
+            {this.mapSpotsToDisplay()}
           </View>
         )
       }
