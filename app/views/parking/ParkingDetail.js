@@ -51,9 +51,14 @@ class ParkingDetail extends Component {
 	}
 
 	mapSpotsToDisplay() {
-		const { spotsAvailable, totalSpots, progressNumber, progressPercent } = this.props
+		const {
+			spotType,
+			spotsAvailable,
+			totalSpots,
+			progressNumber,
+			progressPercent
+		} = this.props
 		const fillAmount = (spotsAvailable / totalSpots) * 100
-
 		if (spotsAvailable === 0) {
 			return (
 				<View style={css.po_fill_info}>
