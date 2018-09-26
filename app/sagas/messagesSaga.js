@@ -146,7 +146,7 @@ function* updateMessages(action) {
 			yield put({ type: 'GET_MESSAGES_FAILURE', error })
 			logger.trackException(error, false)
 			Toast.showWithGravity(
-				'Opps. There was a network problem.',
+				'Oops. There was a network problem.',
 				Toast.SHORT,
 				Toast.BOTTOM
 			)
@@ -192,7 +192,7 @@ function* updateMessages(action) {
 			yield put({ type: 'GET_MESSAGES_FAILURE', error })
 			logger.trackException(error, false)
 			Toast.showWithGravity(
-				'Opps. There was a network problem.',
+				'Oops. There was a network problem.',
 				Toast.SHORT,
 				Toast.BOTTOM
 			)
