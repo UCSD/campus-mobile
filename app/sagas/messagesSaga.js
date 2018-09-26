@@ -204,17 +204,15 @@ function* updateMessages(action) {
 function* subscribeToTopic(action) {
 	const { topicId } = action
 	const { profile } = yield select(getUserData)
-
 	let newTopicSubscriptions = []
 	if (Array.isArray(profile.subscribedTopics)) {
 		newTopicSubscriptions = [...profile.subscribedTopics]
 	}
 	newTopicSubscriptions.push(topicId)
 	const profileItems = { subscribedTopics: newTopicSubscriptions }
-
+	yield put({ type: 'MODIFY_LOCAL_PROFILE', profileItems })
 	yield firebase.messaging().subscribeToTopic(topicId)
 	console.log('Subscribed to', topicId)
-	yield put({ type: 'MODIFY_LOCAL_PROFILE', profileItems })
 }
 
 function* unsubscribeFromTopic(action) {
@@ -228,10 +226,9 @@ function* unsubscribeFromTopic(action) {
 	const topicIndex = newTopicSubscriptions.indexOf(topicId)
 	newTopicSubscriptions.splice(topicIndex, 1)
 	const profileItems = { subscribedTopics: newTopicSubscriptions }
-
+	yield put({ type: 'MODIFY_LOCAL_PROFILE', profileItems })
 	yield firebase.messaging().unsubscribeFromTopic(topicId)
 	console.log('Unsubscribed from', topicId)
-	yield put({ type: 'MODIFY_LOCAL_PROFILE', profileItems })
 }
 
 // Removes all topic subscriptions except for the default 'all' topic
