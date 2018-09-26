@@ -44,7 +44,7 @@ const MyMessagesService = {
 		if (topics.length > 0) {
 			topics.forEach((topic, index, arr) => {
 				// Handle push / Firebase messaging
-				if (!Object.is(arr.length - 1, index)) {
+				if (index !== arr.length - 1) {
 					userTopics += `${topic},`
 				} else {
 					userTopics += `${topic}`
