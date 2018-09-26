@@ -83,7 +83,7 @@ class OnboardingLogin extends React.Component {
 			// Failed log in
 			if (this.props.requestError) {
 				Alert.alert(
-					'Sign in error',
+					'Sorry, unable to sign you in.',
 					this.props.requestError,
 					null,
 					{ cancelable: false }

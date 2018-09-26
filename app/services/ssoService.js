@@ -36,7 +36,7 @@ const ssoService = {
 			.catch((err) => {
 				switch (err) {
 					case SSO_CREDENTIALS_ERROR: {
-						throw new Error('There was a problem with your credentials.')
+						throw new Error('Be sure you are using the correct credentials; TritonLink login if you are a student, SSO if you are Faculty/Staff.')
 					}
 					default: {
 						console.log(err)

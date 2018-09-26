@@ -145,7 +145,7 @@ function* doTokenRefresh() {
 	try {
 		yield refreshTokenRequest()
 	} catch (error) {
-		const invalidCredsMessage = 'There was a problem with your credentials.'
+		const invalidCredsMessage = 'Be sure you are using the correct credentials; TritonLink login if you are a student, SSO if you are Faculty/Staff.'
 		if (error.message === invalidCredsMessage) {
 			// This means that the authentication server rejected our
 			// saved credentials. Did the user's password change? Only retry

@@ -51,7 +51,7 @@ class AccountLogin extends Component {
 			if (this.props.requestError &&
 				this.props.requestError !== 'App update required.') {
 				Alert.alert(
-					'Sign in error',
+					'Sorry, unable to sign you in.',
 					this.props.requestError,
 					null,
 					{ cancelable: false }
