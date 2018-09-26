@@ -2,20 +2,7 @@ const initialState = {
 	messages: [],
 	nextTimestamp: null,
 	unreadMessages: 0,
-	topics: [
-		{
-			'audienceId': 'all',
-			'topics': [
-				{
-					'topicId': 'all',
-					'topicMetadata': {
-						'name': 'General',
-						'description': 'General messages for the whole UCSD community.'
-					}
-				}
-			]
-		}
-	]
+	topics: []
 }
 
 function messages(state = initialState, action) {

@@ -37,7 +37,24 @@ const manifest = {
 	7: state => ({ ...state, surf: undefined }), // 5.5 migration
 	8: state => ({ ...state, dining: undefined, specialEvents: undefined }), // 5.6 migration
 	9: state => ({ ...state, cards: undefined }), // 6.0 migration
-	10: state => ({ ...state, cards: undefined })
+	10: (state) => {
+		const newState = { ...state }
+		if (state.cards && state.cards.cardOrder) {
+			if (Array.isArray(state.cards.cardOrder)
+				&& state.cards.cardOrder.indexOf('parking') < 0) {
+				newState.cards.cardOrder.unshift('parking')
+			}
+		}
+		if (state.user && state.user.profile) {
+			newState.user.profile.subscribedTopics = [
+				'emergency',
+				'all',
+				'shuttle',
+				'freefood',
+			]
+		}
+		return newState
+	}, // 6.1 messages migration
 }
 
 // reducerKey is the key of the reducer you want to store the state version in
