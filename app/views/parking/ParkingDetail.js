@@ -52,7 +52,6 @@ class ParkingDetail extends Component {
 
 	mapSpotsToDisplay() {
 		const {
-			spotType,
 			spotsAvailable,
 			totalSpots,
 			progressNumber,
@@ -91,15 +90,12 @@ class ParkingDetail extends Component {
 			spotType,
 			spotsAvailable,
 			totalSpots,
-			size ,
+			size,
 			widthMultiplier,
 			circleRadius,
 			letterSize,
-			progressNumber,
-			progressPercent
 		} = this.props
 		const fillAmount = (spotsAvailable / totalSpots) * 100
-
 		return (
 			<View style={{ alignItems: 'center' }}>
 				<AnimatedCircularProgress
@@ -112,7 +108,11 @@ class ParkingDetail extends Component {
 					rotation={360}
 					style={{ marginBottom: 15 }}
 				>
-					{fill => (<View> {this.mapSpotsToDisplay()} </View>)}
+					{fill => (
+						<View>
+							{this.mapSpotsToDisplay()}
+						</View>
+					)}
 				</AnimatedCircularProgress>
 				<View style={[css.po_circle,{ backgroundColor: this.mapSpotToColor() },{ borderRadius: circleRadius, width: (circleRadius * 2), height: (circleRadius * 2) }]}>
 					<Text style={[css.po_character, { color: this.mapSpotToLetterColor() }, { fontSize: letterSize }]}>
