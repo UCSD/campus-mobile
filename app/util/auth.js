@@ -177,12 +177,7 @@ module.exports = {
 
 		// Check to see if we aren't in an error state
 		const userState = state => (state.user)
-		const { appUpdateRequired, isLoggedIn } = yield select(userState)
-		if (appUpdateRequired) {
-			const e = new Error('App update required.')
-			yield put({ type: 'AUTH_HTTP_FAILURE', e })
-			throw e
-		}
+		const { isLoggedIn } = yield select(userState)
 
 		// Check to see if user is logged in
 		if (!isLoggedIn) {
