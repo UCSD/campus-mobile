@@ -36,7 +36,7 @@ function parking(state = initialState, action) {
 			return newState
 		}
 		case 'SET_PARKING_DATA': {
-			newState.parkingData[0] = action.ParkingData
+			newState.parkingData = [action.ParkingData]
 			return newState
 		}
 		case 'SET_WARNING_SIGN': {
