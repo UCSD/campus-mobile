@@ -19,7 +19,7 @@ import {
 	NEWS_API_TTL,
 	DATA_SAGA_TTL,
 	SHUTTLE_MASTER_TTL,
-	PARKING_API_TT
+	PARKING_API_TTL
 } from '../AppSettings'
 
 const getWeather = state => (state.weather)
@@ -188,7 +188,7 @@ function* updateLinks() {
 function* updateParking() {
 	const parkingData = yield select(getParkingData)
 	const nowTime = new Date().getTime()
-	const ttl = PARKING_API_TT
+	const ttl = PARKING_API_TTL
 	// set to the first element becuase we only have one parking lot set up right now
 	if (parkingData) {
 		const element = parkingData[0]
