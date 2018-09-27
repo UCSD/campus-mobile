@@ -484,7 +484,7 @@ const css = StyleSheet.create({
 	notifications_row: { paddingVertical: 10, paddingRight: 10, flexDirection: 'row', justifyContent: 'flex-start' },
 	notifications_vector_icon: { justifyContent: 'center', alignItems: 'center', marginLeft: 10, marginRight: 16 },
 	notifications_timestamp_text: { color: COLOR.TIME, fontWeight: 'bold', fontSize: 10 },
-	notifications_title_text: { color: COLOR.BLACK, fontWeight: 'bold', fontSize: 24 },
+	notifications_title_text: { color: COLOR.BLACK, fontWeight: '400', fontSize: platformAndroid() ? 16 : 20 },
 	notifications_body_text: { paddingTop: 10, color: COLOR.VDGREY, fontSize: 14 },
 
 	/**
