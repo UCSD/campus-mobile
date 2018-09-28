@@ -102,7 +102,10 @@ class ParkingDetail extends Component {
 					duration={1500}
 					size={size}
 					width={widthMultiplier}
-					fill={fillAmount ? fillAmount : 0}
+					fill={
+						!Number.isNaN(fillAmount)
+						&& Number.isFinite(fillAmount) ? fillAmount : 0
+					}
 					tintColor={this.mapAvailabilityToColor()}
 					backgroundColor={ColorConstants.LGREY2}
 					rotation={360}
