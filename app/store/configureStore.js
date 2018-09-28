@@ -40,11 +40,28 @@ const manifest = {
 	10: (state) => {
 		const newState = { ...state }
 		if (state.cards && state.cards.cardOrder) {
+			// Add parking card if it doesn't exist
+			if (state.cards.cards) {
+				if (!state.cards.cards.parking) {
+					state.cards.cards = {
+						...state.cards.cards,
+						parking: {
+							id: 'parking',
+							active: true,
+							name: 'Parking',
+							component: 'ParkingCard'
+						}
+					}
+				}
+			}
+
 			if (Array.isArray(state.cards.cardOrder)
 				&& state.cards.cardOrder.indexOf('parking') < 0) {
 				newState.cards.cardOrder.unshift('parking')
 			}
 		}
+
+		// Create default preferences for notifications
 		if (state.user && state.user.profile) {
 			newState.user.profile.subscribedTopics = [
 				'emergency',
