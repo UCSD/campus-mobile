@@ -57,7 +57,7 @@ const manifest = {
 
 			if (Array.isArray(state.cards.cardOrder)
 				&& state.cards.cardOrder.indexOf('parking') < 0) {
-				newState.cards.cardOrder.unshift('parking')
+				newState.cards.cardOrder.splice(1, 0, 'parking')
 			}
 		}
 

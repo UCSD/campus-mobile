@@ -71,8 +71,8 @@ const initialState = {
 	// Only cards that show up by default
 	// on first launch should appear here.
 	cardOrder: [
-		'parking',
 		'shuttle',
+		'parking',
 		'dining',
 		'events',
 		'news',
