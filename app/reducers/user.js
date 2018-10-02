@@ -4,7 +4,7 @@ const initialState = {
 		username: null,
 		classifications: null,
 		pid: null,
-		subscribedTopics: ['emergency', 'all', 'shuttle', 'freefood'],
+		subscribedTopics: ['emergency', 'all', 'shuttle'],
 	},
 	syncedProfile: {},
 	invalidSavedCredentials: false,

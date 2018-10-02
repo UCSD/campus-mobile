@@ -66,8 +66,7 @@ const manifest = {
 			newState.user.profile.subscribedTopics = [
 				'emergency',
 				'all',
-				'shuttle',
-				'freefood',
+				'shuttle'
 			]
 		}
 		return newState
