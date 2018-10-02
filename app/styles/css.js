@@ -24,11 +24,17 @@
 	17 - Notifications
 	99 - Misc
 */
-import { StyleSheet, Platform } from 'react-native'
+import { StyleSheet, Platform, Dimensions } from 'react-native'
 
 import { platformAndroid, deviceIphoneX, platformIOS, round } from '../util/general'
 import COLOR from './ColorConstants'
 import LAYOUT from './LayoutConstants'
+
+
+const windowSize = Dimensions.get('window'),
+	windowWidth = windowSize.width,
+	maxAppWidth = 414,
+	prm = windowWidth / maxAppWidth
 
 const CC_LEFT = LAYOUT.MAX_CARD_WIDTH * 0.006
 const CC_RIGHT = LAYOUT.MAX_CARD_WIDTH * 0.004
