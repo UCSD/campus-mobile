@@ -23,16 +23,15 @@ const TabIcons = (props) => {
 	} else if (props.title === 'Messaging') {
 		if (props.unreadMessages) {
 			TabIcon = () => (
-				<View style={css.badgeIconView}>
-					<View style={css.badge}>
-						<Text style={css.badgeNumber}>
-							{props.unreadMessages}
+				<View style={css.tabIconWithBadge}>
+					<View style={css.tabIconBadge}>
+						<Text style={css.tabIconBadgeText} numberOfLines={1}>
+							{props.unreadMessages <= 99 ? props.unreadMessages : '99'}
 						</Text>
 					</View>
 					<FAIcon name="bell-o" size={24} style={[css.tabIcon, props.focused ? { color: COLOR.PRIMARY } : null]} />
 				</View>)
-		}
-		else {
+		} else {
 			TabIcon = () => (<FAIcon name="bell-o" size={24} style={[css.tabIcon, props.focused ? { color: COLOR.PRIMARY } : null]} />)
 		}
 	} else if (props.title === 'Preferences') {

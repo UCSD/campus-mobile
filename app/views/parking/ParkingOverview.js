@@ -3,6 +3,7 @@ import { View, Text } from 'react-native'
 import css from '../../styles/css'
 import ParkingDetail from './ParkingDetail'
 import LAYOUT from '../../styles/LayoutConstants'
+import { getPRM } from '../../util/general'
 
 class ParkingOverview extends Component {
 	getTotalSpots() {
@@ -69,11 +70,11 @@ class ParkingOverview extends Component {
 						spotsAvailable={this.getOpenPerType(spotsSelected[0])}
 						totalSpots={this.getTotalPerType(spotsSelected[0])}
 						size={LAYOUT.MAX_CARD_WIDTH * 0.38}
-						widthMultiplier={15}
-						circleRadius={32}
-						letterSize={35}
-						progressNumber={48}
-						progressPercent={20}
+						widthMultiplier={LAYOUT.MAX_CARD_WIDTH * 0.037}
+						circleRadius={(LAYOUT.MAX_CARD_WIDTH * 0.14) / 2}
+						letterSize={LAYOUT.MAX_CARD_WIDTH * 0.08}
+						progressNumber={LAYOUT.MAX_CARD_WIDTH * 0.14}
+						progressPercent={LAYOUT.MAX_CARD_WIDTH * 0.06}
 					/>
 				</View>
 			)
@@ -85,10 +86,10 @@ class ParkingOverview extends Component {
 						spotsAvailable={this.getOpenPerType(spotsSelected[0])}
 						totalSpots={this.getTotalPerType(spotsSelected[0])}
 						size={LAYOUT.MAX_CARD_WIDTH * 0.32}
-						widthMultiplier={LAYOUT.MAX_CARD_WIDTH * 0.035}
+						widthMultiplier={LAYOUT.MAX_CARD_WIDTH * 0.032}
 						circleRadius={(LAYOUT.MAX_CARD_WIDTH * 0.137) / 2}
 						letterSize={LAYOUT.MAX_CARD_WIDTH * 0.075}
-						progressNumber={LAYOUT.MAX_CARD_WIDTH * 0.1}
+						progressNumber={LAYOUT.MAX_CARD_WIDTH * 0.12}
 						progressPercent={LAYOUT.MAX_CARD_WIDTH * 0.05}
 					/>
 					<View style={{ paddingHorizontal: 20 }} />
@@ -97,10 +98,10 @@ class ParkingOverview extends Component {
 						spotsAvailable={this.getOpenPerType(spotsSelected[1])}
 						totalSpots={this.getTotalPerType(spotsSelected[1])}
 						size={LAYOUT.MAX_CARD_WIDTH * 0.32}
-						widthMultiplier={LAYOUT.MAX_CARD_WIDTH * 0.035}
+						widthMultiplier={LAYOUT.MAX_CARD_WIDTH * 0.032}
 						circleRadius={(LAYOUT.MAX_CARD_WIDTH * 0.137) / 2}
 						letterSize={LAYOUT.MAX_CARD_WIDTH * 0.075}
-						progressNumber={LAYOUT.MAX_CARD_WIDTH * 0.1}
+						progressNumber={LAYOUT.MAX_CARD_WIDTH * 0.12}
 						progressPercent={LAYOUT.MAX_CARD_WIDTH * 0.05}
 					/>
 				</View>
@@ -113,11 +114,11 @@ class ParkingOverview extends Component {
 						spotsAvailable={this.getOpenPerType(spotsSelected[0])}
 						totalSpots={this.getTotalPerType(spotsSelected[0])}
 						size={LAYOUT.MAX_CARD_WIDTH * 0.25}
-						widthMultiplier={LAYOUT.MAX_CARD_WIDTH * 0.028}
-						circleRadius={(LAYOUT.MAX_CARD_WIDTH * 0.128) / 2}
-						letterSize={LAYOUT.MAX_CARD_WIDTH * 0.068}
+						widthMultiplier={LAYOUT.MAX_CARD_WIDTH * 0.025}
+						circleRadius={(LAYOUT.MAX_CARD_WIDTH * 0.124) / 2}
+						letterSize={LAYOUT.MAX_CARD_WIDTH * 0.062}
 						progressNumber={LAYOUT.MAX_CARD_WIDTH * 0.08}
-						progressPercent={LAYOUT.MAX_CARD_WIDTH * 0.045}
+						progressPercent={LAYOUT.MAX_CARD_WIDTH * 0.035}
 					/>
 					<View style={{ paddingHorizontal: 10 }} />
 					<ParkingDetail
@@ -125,11 +126,11 @@ class ParkingOverview extends Component {
 						spotsAvailable={this.getOpenPerType(spotsSelected[1])}
 						totalSpots={this.getTotalPerType(spotsSelected[1])}
 						size={LAYOUT.MAX_CARD_WIDTH * 0.25}
-						widthMultiplier={LAYOUT.MAX_CARD_WIDTH * 0.028}
-						circleRadius={(LAYOUT.MAX_CARD_WIDTH * 0.128) / 2}
-						letterSize={LAYOUT.MAX_CARD_WIDTH * 0.068}
+						widthMultiplier={LAYOUT.MAX_CARD_WIDTH * 0.025}
+						circleRadius={(LAYOUT.MAX_CARD_WIDTH * 0.124) / 2}
+						letterSize={LAYOUT.MAX_CARD_WIDTH * 0.062}
 						progressNumber={LAYOUT.MAX_CARD_WIDTH * 0.08}
-						progressPercent={LAYOUT.MAX_CARD_WIDTH * 0.045}
+						progressPercent={LAYOUT.MAX_CARD_WIDTH * 0.035}
 					/>
 					<View style={{ paddingHorizontal: 10 }} />
 					<ParkingDetail
@@ -137,11 +138,11 @@ class ParkingOverview extends Component {
 						spotsAvailable={this.getOpenPerType(spotsSelected[2])}
 						totalSpots={this.getTotalPerType(spotsSelected[2])}
 						size={LAYOUT.MAX_CARD_WIDTH * 0.25}
-						widthMultiplier={LAYOUT.MAX_CARD_WIDTH * 0.028}
-						circleRadius={(LAYOUT.MAX_CARD_WIDTH * 0.128) / 2}
-						letterSize={LAYOUT.MAX_CARD_WIDTH * 0.068}
+						widthMultiplier={LAYOUT.MAX_CARD_WIDTH * 0.025}
+						circleRadius={(LAYOUT.MAX_CARD_WIDTH * 0.124) / 2}
+						letterSize={LAYOUT.MAX_CARD_WIDTH * 0.062}
 						progressNumber={LAYOUT.MAX_CARD_WIDTH * 0.08}
-						progressPercent={LAYOUT.MAX_CARD_WIDTH * 0.045}
+						progressPercent={LAYOUT.MAX_CARD_WIDTH * 0.035}
 					/>
 				</View>
 			)
@@ -150,16 +151,24 @@ class ParkingOverview extends Component {
 
 	render() {
 		const { structureData, spotsSelected } = this.props
-		const message = 'Please select a parking type'
-		const lotName = structureData.LocationName.replace('Parking ','') + ' Availability'
+		let message
+		if (Array.isArray(spotsSelected) && spotsSelected.length > 0) {
+			const totalSpots = this.getTotalSpots()
+			if (totalSpots === 1) {
+				message = '~ ' + totalSpots + ' Spot Available'
+			} else {
+				message = '~ ' + totalSpots + ' Spots Available'
+			}
+		} else {
+			message = 'Please select a parking type'
+		}
 
 		return (
 			<View style={{ flex: 1, width: LAYOUT.MAX_CARD_WIDTH }}>
-				<Text style={css.po_structure_name}>{lotName}</Text>
-				<Text style={css.po_structure_spots_available}>
-					{spotsSelected.length === 0 ? message : '~ ' + this.getTotalSpots() + ' Spots'}
-				</Text>
+				<Text style={css.po_structure_name}>{structureData.LocationName}</Text>
+				<Text style={css.po_structure_spots_available}>{message}</Text>
 				{this.renderDetails()}
+				<Text style={css.po_structure_comingsoon}>More Lots Coming Soon!</Text>
 			</View>
 		)
 	}

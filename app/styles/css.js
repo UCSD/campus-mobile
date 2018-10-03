@@ -432,6 +432,55 @@ const css = StyleSheet.create({
 	ob_loginText: { fontSize: 16, color: COLOR.WHITE, textAlign: 'center' },
 
 	/**
+	 *	16 - Parking
+	 */
+	pst_elevated_row_view: { flexDirection: 'row', flex: 1, paddingLeft: 15, backgroundColor: COLOR.MGREY, alignItems: 'center', justifyContent: 'center', height: round(LAYOUT.MAX_CONTENT_HEIGHT / 13), margin: 3 },
+	pst_unelevated_row_view: { flexDirection: 'row', flex: 1, paddingLeft: 15, backgroundColor: COLOR.WHITE, alignItems: 'center', justifyContent: 'center', height: round(LAYOUT.MAX_CONTENT_HEIGHT / 13), margin: 3 },
+	pst_warning_elevated_view: { flex: 1, flexDirection: 'row', backgroundColor: 'white' , alignItems: 'center', justifyContent: 'center', marginHorizontal: 30, bottom: 25 },
+	pst_warning_container_view: { alignItems: 'center', justifyContent: 'center', flex: 1 },
+	pst_warning_header_text: { fontSize: 18, top: -20, alignItems: 'center' },
+	pst_full_container: { flex: 1, backgroundColor: COLOR.WHITE },
+	pst_flat_list: { backgroundColor: COLOR.WHITE, flex: 1 },
+	pst_flat_list_separator: { height: 1, backgroundColor: COLOR.MGREY },
+	pst_flat_list_empty_separator: { height: 1, backgroundColor: COLOR.WHITE },
+	pst_circle: { borderRadius: 18, width: 36, height: 36, justifyContent: 'center', overflow: 'hidden' },
+	pst_character: { textAlign: 'center', fontWeight: '600', fontSize: 19, backgroundColor: 'transparent' },
+	pst_row_text: { flex: 1, paddingRight: 10, paddingLeft: 10, fontSize: 19 },
+
+	po_structure_name: {  alignSelf: 'center', fontSize: 26, paddingTop: 8, color: COLOR.VDGREY },
+	po_structure_spots_available: {  alignSelf: 'center', fontSize: 16, color: COLOR.VDGREY, paddingTop: 4, paddingBottom: 16 },
+	po_circle: { justifyContent: 'space-around', overflow: 'hidden', backgroundColor: COLOR.GREEN },
+	po_character: { textAlign: 'center', fontWeight: '600',  backgroundColor: 'transparent' },
+	po_circle_number: { fontWeight: 'bold' },
+	po_circle_number_na: { color: COLOR.DGREY },
+	po_circle_percent: {  textAlign: 'center' },
+	po_fill_info: { flexDirection: 'row', alignItems: 'center' },
+	po_one_spot_selected: { flexDirection: 'row',  justifyContent: 'space-around',  width: LAYOUT.MAX_CARD_WIDTH, paddingTop: 5, paddingBottom: 20 },
+	po_two_spots_selected: { flexDirection: 'row',  justifyContent: 'center',  width: LAYOUT.MAX_CARD_WIDTH, paddingTop: 5, paddingBottom: 20 },
+	po_three_spots_selected: { flexDirection: 'row', justifyContent: 'center', width: LAYOUT.MAX_CARD_WIDTH, paddingTop: 5, paddingBottom: 20 },
+	po_structure_comingsoon: { textAlign: 'center', fontSize: round(18 * prm), color: COLOR.DGREY, fontStyle: 'italic', marginBottom: 10 },
+
+	/**
+	 *	17 - Notifications
+	 */
+	notifications_row_view: { flexDirection: 'row', flex: 1, paddingLeft: 10, paddingRight: 10, backgroundColor: COLOR.WHITE, alignItems: 'center', justifyContent: 'center', height: 35 },
+	notifications_full_container: { flex: 1, backgroundColor: COLOR.WHITE },
+	notifications_section_list: { flex: 1 },
+	notifications_section_list_header_container: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 45, borderBottomColor: COLOR.MGREY, borderBottomWidth: 1 },
+	notifications_section_list_header_text: { flex: 1, paddingLeft: 5, fontSize: 23, color: COLOR.VDGREY },
+	notifications_row_text: { flex: 1, paddingRight: 10, fontSize: 19, color: COLOR.VDGREY },
+	notifications_section_list_separator: { height: 1, backgroundColor: COLOR.MGREY },
+	notifications_row: { paddingVertical: 10, paddingRight: 10, flexDirection: 'row', justifyContent: 'flex-start' },
+	notifications_vector_icon: { justifyContent: 'center', alignItems: 'center', marginLeft: 10, marginRight: 16 },
+	notifications_timestamp_text: { color: COLOR.TIME, fontWeight: 'bold', fontSize: 10 },
+	notifications_title_text: { color: COLOR.BLACK, fontWeight: '400', fontSize: platformAndroid() ? 16 : 20 },
+	notifications_body_text: { paddingTop: 10, color: COLOR.VDGREY, fontSize: 14 },
+
+	tabIconWithBadge: { padding: round(5 * prm) },
+	tabIconBadge: { position: 'absolute', zIndex: 10, top: platformIOS() ? 0 : 3, right: platformIOS() ? 2 : 3, width: round(18 * prm), height: round(18 * prm), backgroundColor: 'red', borderRadius: round(9 * prm), justifyContent: 'center', opacity: 1 },
+	tabIconBadgeText: { color: COLOR.WHITE, textAlign: 'center', fontSize: round(12 * prm), overflow: 'hidden', fontWeight: '700' },
+
+	/**
 	 *  99 - Misc
 	 */
 	// Banner Card
@@ -450,56 +499,7 @@ const css = StyleSheet.create({
 	lrc_button: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.PRIMARY, borderRadius: 3, marginTop: 14, padding: 10 },
 	lrc_buttonText: { color: COLOR.WHITE },
 
-	/**
-	 *	16 - Parking
-	 */
-	pst_elevated_row_view: { flexDirection: 'row', flex: 1, paddingLeft: 15, backgroundColor: COLOR.MGREY, alignItems: 'center', justifyContent: 'center', height: round(LAYOUT.MAX_CONTENT_HEIGHT / 13), margin: 3 },
-	pst_unelevated_row_view: { flexDirection: 'row', flex: 1, paddingLeft: 15, backgroundColor: COLOR.WHITE, alignItems: 'center', justifyContent: 'center', height: round(LAYOUT.MAX_CONTENT_HEIGHT / 13), margin: 3 },
-	pst_warning_elevated_view: { flex: 1, flexDirection: 'row', backgroundColor: 'white' , alignItems: 'center', justifyContent: 'center', marginHorizontal: 30, bottom: 25 },
-	pst_warning_container_view: { alignItems: 'center', justifyContent: 'center', flex: 1 },
-	pst_warning_header_text: { fontSize: 18, top: -20, alignItems: 'center' },
-	pst_full_container: { flex: 1, backgroundColor: COLOR.WHITE },
-	pst_flat_list: { backgroundColor: COLOR.WHITE, flex: 1 },
-	pst_flat_list_separator: { height: 1, backgroundColor: COLOR.MGREY },
-	pst_flat_list_empty_separator: { height: 1, backgroundColor: COLOR.WHITE },
-	pst_circle: { borderRadius: 18, width: 36, height: 36, justifyContent: 'center', overflow: 'hidden' },
-	pst_character: { textAlign: 'center', fontWeight: '600', fontSize: 19, backgroundColor: 'transparent' },
-	pst_row_text: { flex: 1, paddingRight: 10, paddingLeft: 10, fontSize: 19 },
 
-	po_structure_name: {  alignSelf: 'center', fontSize: 25, fontWeight: 'bold', paddingTop: 5 },
-	po_structure_spots_available: {  alignSelf: 'center', fontSize: 19, color: COLOR.DGREY, fontWeight: 'bold', paddingTop: 5, paddingBottom: 10 },
-	po_circle: { justifyContent: 'space-around', overflow: 'hidden', backgroundColor: COLOR.GREEN },
-	po_character: { textAlign: 'center', fontWeight: '600',  backgroundColor: 'transparent' },
-	po_circle_number: { textAlign: 'center',  fontWeight: 'bold' },
-	po_circle_percent: {  textAlign: 'center' },
-	po_fill_info: { flexDirection: 'row', alignItems: 'center' },
-	po_one_spot_selected: { flexDirection: 'row',  justifyContent: 'space-around',  width: LAYOUT.MAX_CARD_WIDTH, paddingTop: 5, paddingBottom: 20 },
-	po_two_spots_selected: { flexDirection: 'row',  justifyContent: 'center',  width: LAYOUT.MAX_CARD_WIDTH, paddingTop: 5, paddingBottom: 20 },
-	po_three_spots_selected: { flexDirection: 'row',  justifyContent: 'center', width: LAYOUT.MAX_CARD_WIDTH, paddingTop: 5, paddingBottom: 20 },
-
-	/**
-	 *	17 - Notifications
-	 */
-	notifications_row_view: { flexDirection: 'row', flex: 1, paddingLeft: 10, paddingRight: 10, backgroundColor: COLOR.WHITE, alignItems: 'center', justifyContent: 'center', height: 35 },
-	notifications_full_container: { flex: 1, backgroundColor: COLOR.WHITE },
-	notifications_section_list: { flex: 1 },
-	notifications_section_list_header_container: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 45, borderBottomColor: COLOR.MGREY, borderBottomWidth: 1 },
-	notifications_section_list_header_text: { flex: 1, paddingLeft: 5, fontSize: 23, color: COLOR.VDGREY },
-	notifications_row_text: { flex: 1, paddingRight: 10, fontSize: 19, color: COLOR.VDGREY },
-	notifications_section_list_separator: { height: 1, backgroundColor: COLOR.MGREY },
-	notifications_row: { paddingVertical: 10, paddingRight: 10, flexDirection: 'row', justifyContent: 'flex-start' },
-	notifications_vector_icon: { justifyContent: 'center', alignItems: 'center', marginLeft: 10, marginRight: 16 },
-	notifications_timestamp_text: { color: COLOR.TIME, fontWeight: 'bold', fontSize: 10 },
-	notifications_title_text: { color: COLOR.BLACK, fontWeight: '400', fontSize: platformAndroid() ? 16 : 20 },
-	notifications_body_text: { paddingTop: 10, color: COLOR.VDGREY, fontSize: 14 },
-
-	/**
-	 *	16 - Messaging
-	 */
-	badgeIconView: { position: 'relative', padding: 5 },
-	badge: { position: 'absolute', zIndex: 10, top: platformAndroid() ? 5 : 1 , right: 5, padding: 1, width: 15, height: 15, backgroundColor: 'red', borderRadius: 15 / 2, flex: 1, justifyContent: 'center', alignItems: 'center' },
-	badgeNumber: { color: 'white', position: 'absolute', textAlignVertical: 'center', textAlign: 'center', fontWeight: 'bold', fontSize: 12
-	}
 })
 
 module.exports = css

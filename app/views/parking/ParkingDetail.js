@@ -57,24 +57,22 @@ class ParkingDetail extends Component {
 			progressNumber,
 			progressPercent
 		} = this.props
-		const fillAmount = (spotsAvailable / totalSpots) * 100
+
 		if (spotsAvailable === -1) {
 			return (
 				<View style={css.po_fill_info}>
-					<Text style={[css.po_circle_number, { color: ColorConstants.DGREY }, { fontSize: progressNumber }]}>
-						NA
+					<Text style={[css.po_circle_number_na, { fontSize: progressNumber * 0.65 }]}>
+						N/A
 					</Text>
 				</View>
 			)
-		}
-		else {
+		} else {
+			const fillAmount = (spotsAvailable / totalSpots) * 100
 			return (
 				<View style={css.po_fill_info}>
 					<Text style={[css.po_circle_number, { color: this.mapAvailabilityToColor() }, { fontSize: progressNumber }]}>
 						{fillAmount ? Math.trunc(fillAmount) : 0}
-					</Text>
-					<Text style={[css.po_circle_percent,{ color: this.mapAvailabilityToColor() }, { fontSize: progressPercent }]}>
-						%
+						<Text style={[css.po_circle_percent,{ color: this.mapAvailabilityToColor() }, { fontSize: progressPercent }]}>%</Text>
 					</Text>
 				</View>
 			)
