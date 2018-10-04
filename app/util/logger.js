@@ -53,14 +53,14 @@ module.exports = {
 
 		if (__DEV__) {
 			console.log(error, metadata, fatal)
-		} else {
-			bugsnag.notify(error, (report) => {
-				report.severity = severity
-				if (metadata) {
-					report.metadata = metadata
-				}
-			})
 		}
+
+		bugsnag.notify(error, (report) => {
+			report.severity = severity
+			if (metadata) {
+				report.metadata = metadata
+			}
+		})
 	},
 
 }
