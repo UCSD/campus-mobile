@@ -3,21 +3,29 @@ import { View, Text } from 'react-native'
 import css from '../../styles/css'
 import ParkingDetail from './ParkingDetail'
 import LAYOUT from '../../styles/LayoutConstants'
-import { getPRM } from '../../util/general'
+import logger from '../../util/logger'
 
 class ParkingOverview extends Component {
 	getTotalSpots() {
-		const { structureData, spotsSelected } = this.props
-		let totalAvailableSpots = 0
-		for (let i = 0; i < spotsSelected.length; i++) {
-			const parkingSpotsPerType = structureData.Availability[spotsSelected[i]]
-			if (parkingSpotsPerType) {
-				for (let j = 0; j < parkingSpotsPerType.length; j++) {
-					totalAvailableSpots += Number(parkingSpotsPerType[j].Open)
+		try {
+			const { structureData, spotsSelected } = this.props
+			let totalAvailableSpots = 0
+			if (Array.isArray(spotsSelected)) {
+				for (let i = 0; i < spotsSelected.length; i++) {
+					if (structureData.Availability && spotsSelected[i]) {
+						const parkingSpotsPerType = structureData.Availability[spotsSelected[i]]
+						if (Array.isArray(parkingSpotsPerType)) {
+							for (let j = 0; j < parkingSpotsPerType.length; j++) {
+								totalAvailableSpots += Number(parkingSpotsPerType[j].Open)
+							}
+						}
+					}
 				}
 			}
+			return totalAvailableSpots
+		} catch (error) {
+			logger.trackException(error, false)
 		}
-		return totalAvailableSpots
 	}
 
 	// this function returns the number of parking spots open of a given type
