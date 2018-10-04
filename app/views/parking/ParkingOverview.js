@@ -25,6 +25,7 @@ class ParkingOverview extends Component {
 			return totalAvailableSpots
 		} catch (error) {
 			logger.trackException(error, false)
+			return 0
 		}
 	}
 
