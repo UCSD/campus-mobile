@@ -447,8 +447,10 @@ const css = StyleSheet.create({
 	pst_character: { textAlign: 'center', fontWeight: '600', fontSize: 19, backgroundColor: 'transparent' },
 	pst_row_text: { flex: 1, paddingRight: 10, paddingLeft: 10, fontSize: 19 },
 
-	po_structure_name: {  alignSelf: 'center', fontSize: 26, paddingTop: 8, color: COLOR.VDGREY },
-	po_structure_spots_available: {  alignSelf: 'center', fontSize: 16, color: COLOR.VDGREY, paddingTop: 4, paddingBottom: 16 },
+	po_container: { width: LAYOUT.MAX_CARD_WIDTH, alignItems: 'center' },
+	po_structure_name: { fontSize: 32, paddingTop: 8, color: COLOR.VDGREY, fontWeight: 'bold' },
+	po_structure_context: { fontSize: 14, color: COLOR.DGREY },
+	po_structure_spots_available: {  alignSelf: 'center', fontSize: 18, color: COLOR.VDGREY, paddingVertical: 16 },
 	po_circle: { justifyContent: 'space-around', overflow: 'hidden', backgroundColor: COLOR.GREEN },
 	po_character: { textAlign: 'center', fontWeight: '600',  backgroundColor: 'transparent' },
 	po_circle_number: { fontWeight: 'bold' },
@@ -458,7 +460,7 @@ const css = StyleSheet.create({
 	po_one_spot_selected: { flexDirection: 'row',  justifyContent: 'space-around',  width: LAYOUT.MAX_CARD_WIDTH, paddingTop: 5, paddingBottom: 20 },
 	po_two_spots_selected: { flexDirection: 'row',  justifyContent: 'center',  width: LAYOUT.MAX_CARD_WIDTH, paddingTop: 5, paddingBottom: 20 },
 	po_three_spots_selected: { flexDirection: 'row', justifyContent: 'center', width: LAYOUT.MAX_CARD_WIDTH, paddingTop: 5, paddingBottom: 20 },
-	po_structure_comingsoon: { textAlign: 'center', fontSize: round(18 * prm), color: COLOR.DGREY, fontStyle: 'italic', marginBottom: 10 },
+	po_structure_comingsoon: { textAlign: 'center', fontSize: round(17 * prm), color: COLOR.DGREY, fontStyle: 'italic', marginBottom: 10 },
 
 	/**
 	 *	17 - Notifications

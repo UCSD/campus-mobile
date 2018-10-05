@@ -164,17 +164,18 @@ class ParkingOverview extends Component {
 		if (Array.isArray(spotsSelected) && spotsSelected.length > 0) {
 			const totalSpots = this.getTotalSpots()
 			if (totalSpots === 1) {
-				message = '~ ' + totalSpots + ' Spot Available'
+				message = '~' + totalSpots + ' Spot Available'
 			} else {
-				message = '~ ' + totalSpots + ' Spots Available'
+				message = '~' + totalSpots + ' Spots Available'
 			}
 		} else {
 			message = 'Please select a parking type'
 		}
 
 		return (
-			<View style={{ flex: 1, width: LAYOUT.MAX_CARD_WIDTH }}>
+			<View style={css.po_container}>
 				<Text style={css.po_structure_name}>{structureData.LocationName}</Text>
+				<Text style={css.po_structure_context}>{structureData.LocationContext}</Text>
 				<Text style={css.po_structure_spots_available}>{message}</Text>
 				{this.renderDetails()}
 				<Text style={css.po_structure_comingsoon}>More Lots Coming Soon!</Text>
