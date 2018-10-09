@@ -3,6 +3,8 @@ const initialState = {
 	selectedSpots: ['S', 'B', 'A'],
 	count: 3,
 	parkingData: [],
+	parkingLotsData: [],
+	selectedLots: [],
 	showWarning: false
 }
 
@@ -41,6 +43,28 @@ function parking(state = initialState, action) {
 		}
 		case 'SET_WARNING_SIGN': {
 			newState.showWarning = action.showWarning
+			return newState
+		}
+		case 'SET_PARKING_LOT_DATA': {
+			newState.parkingLotsData = [...action.ParkingLotData]
+			return newState
+		}
+		// for some reason this is saying that i modifed state
+		case 'SET_PARKING_LOT_SELECTION': {
+			const tempObj = {...state.parkingLotsData[action.index]}
+			tempObj.active = action.value
+			newState.parkingLotsData = [...state.parkingLotsData]
+			newState.parkingLotsData[action.index] = tempObj
+			return newState
+		}
+		case 'EDIT_LOCAL_LOT_SELECTION': {
+			const tempArray = []
+			state.parkingLotsData.forEach((lot) => {
+				if (lot.active) {
+					tempArray.push(lot.name)
+				}
+			})
+			newState.selectedLots = [...tempArray]
 			return newState
 		}
 		default:

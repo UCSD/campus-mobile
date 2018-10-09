@@ -7,6 +7,7 @@ const ParkingCard = ({
 	savedStructures,
 	navigation,
 	gotoParkingSpotType,
+	gotoManageParkingLots,
 	mySpots,
 	lotCount
 }) => {
@@ -14,6 +15,10 @@ const ParkingCard = ({
 		{
 			name: 'Edit Spot Type',
 			action: gotoParkingSpotType
+		},
+		{
+			name: 'Manage Parking Lots',
+			action: gotoManageParkingLots
 		}
 	]
 

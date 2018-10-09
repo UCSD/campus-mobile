@@ -7,6 +7,9 @@ export class ParkingCardContainer extends Component {
 	gotoParkingSpotType = (navigation) => {
 		navigation.navigate('ParkingSpotType')
 	}
+	gotoManageParkingLots = (navigation) => {
+		navigation.navigate('ManageParkingLots')
+	}
 
 	render() {
 		const { navigation, parkingData, count, selectedSpots } = this.props
@@ -14,6 +17,7 @@ export class ParkingCardContainer extends Component {
 			<ParkingCard
 				savedStructures={parkingData}
 				gotoParkingSpotType={() => this.gotoParkingSpotType(navigation)}
+				gotoManageParkingLots={() => this.gotoManageParkingLots(navigation)}
 				mySpots={selectedSpots}
 				lotCount={count}
 			/>
