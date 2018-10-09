@@ -203,6 +203,17 @@ function* updateParking() {
 			if (ParkingData) {
 				yield put({ type: 'SET_PARKING_DATA', ParkingData })
 			}
+			let ParkingLotData = yield call(ParkingService.FetchParkingLots)
+			if (ParkingLotData) {
+				const userData = yield select(getUserData)
+				const prevSelectedParkingLots = userData.selectedLots
+				if (prevSelectedParkingLots) {
+					ParkingLotData = ParkingLotData.map(obj => ({ ...obj, active: prevSelectedParkingLots.includes(obj.name) }))
+				} else {
+					ParkingLotData = ParkingLotData.map(obj => ({ ...obj, active: false }))
+				}
+				yield put({ type: 'SET_PARKING_LOT_DATA', ParkingLotData })
+			}
 		}
 	}
 	else {
@@ -210,8 +221,20 @@ function* updateParking() {
 		if (ParkingData) {
 			yield put({ type: 'SET_PARKING_DATA', ParkingData })
 		}
+		let ParkingLotData = yield call(ParkingService.FetchParkingLots)
+		if (ParkingLotData) {
+			const userData = yield select(getUserData)
+			const prevSelectedParkingLots = userData.selectedLots
+			if (prevSelectedParkingLots) {
+				ParkingLotData = ParkingLotData.map(obj => ({ ...obj, active: prevSelectedParkingLots.includes(obj.name) }))
+			} else {
+				ParkingLotData = ParkingLotData.map(obj => ({ ...obj, active: false }))
+			}
+			yield put({ type: 'SET_PARKING_LOT_DATA', ParkingLotData })
+		}
 	}
 }
+
 
 function* updateEvents() {
 	const { lastUpdated, data } = yield select(getEvents)
