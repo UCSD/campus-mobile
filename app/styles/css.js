@@ -486,6 +486,8 @@ const css = StyleSheet.create({
 	notifications_timestamp_text: { color: COLOR.TIME, fontWeight: 'bold', fontSize: 10 },
 	notifications_title_text: { color: COLOR.BLACK, fontWeight: '400', fontSize: platformAndroid() ? 16 : 20 },
 	notifications_body_text: { paddingTop: 10, color: COLOR.VDGREY, fontSize: 14 },
+	notifications_parking_selected_row_text_container: { paddingLeft: 75, flexDirection: 'row', paddingRight: 60, alignItems: 'center' },
+	notifications_parking_row_view: { flexDirection: 'row', flex: 1, paddingLeft: 10, paddingRight: 10, alignItems: 'center', justifyContent: 'center', height: 35 },
 
 	/**
 	 *	16 - Messaging
