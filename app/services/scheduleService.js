@@ -1,6 +1,7 @@
 import { authorizedFetch } from '../util/auth'
 
-const AppSettings = require('../AppSettings')
+import AppSettings from '../AppSettings'
+import logger from '../util/logger'
 
 const ScheduleService = {
 	* FetchSchedule(term, isStudentDemo) {
@@ -15,7 +16,7 @@ const ScheduleService = {
 				data.push(...undergrad.data)
 			}
 		} catch (err) {
-			//console.log(err)
+			logger.trackException(err, false)
 		}
 
 		// Query api for graduate classes
@@ -25,7 +26,7 @@ const ScheduleService = {
 				data.push(...grad.data)
 			}
 		} catch (err) {
-			//console.log(err)
+			logger.trackException(err, false)
 		}
 
 		return { data }

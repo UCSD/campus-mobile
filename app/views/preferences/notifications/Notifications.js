@@ -51,7 +51,13 @@ class Notifications extends Component {
 		}
 	}
 
-	renderRow(item, index, section) {
+	renderSectionHeader = title => (
+		<View style={css.pnt_header_row}>
+			<Text style={css.pnt_header_text}>{title}</Text>
+		</View>
+	)
+
+	renderItem(item, index, section) {
 		const { topicId, topicMetadata } = item
 		const { name } = topicMetadata
 
@@ -63,11 +69,11 @@ class Notifications extends Component {
 		}
 
 		return (
-			<View style={css.notifications_row_view}>
-				<Text style={css.notifications_row_text}>
+			<View style={css.pnt_row}>
+				<Text style={css.pnt_row_text} numberOfLines={2}>
 					{name}
 				</Text>
-				<View style={css.us_switchContainer}>
+				<View style={css.pnt_switch}>
 					<Switch
 						onValueChange={value => this.setSubscription(topicId, value)}
 						value={topicState}
@@ -81,18 +87,12 @@ class Notifications extends Component {
 		const sections = this.getSections()
 
 		return (
-			<View style={css.notifications_full_container}>
+			<View style={css.main_full_flex}>
 				<SectionList
-					style={css.notifications_section_list}
-					renderItem={({ item, index, section }) => this.renderRow(item, index, section)}
-					renderSectionHeader={({ section: { title } }) =>
-						renderSectionHeader(title)
-					}
+					renderItem={({ item, index, section }) => this.renderItem(item, index, section)}
+					renderSectionHeader={({ section: { title } }) => this.renderSectionHeader(title)}
 					sections={sections}
 					keyExtractor={item => item.id}
-					ItemSeparatorComponent={renderSeparator}
-					ListFooterComponent={renderSeparator}
-					ListHeaderComponent={renderSeparator}
 					stickySectionHeadersEnabled={false}
 				/>
 			</View>
@@ -100,17 +100,6 @@ class Notifications extends Component {
 	}
 }
 
-const renderSectionHeader = title => (
-	<View style={css.notifications_section_list_header_container}>
-		<Text style={css.notifications_section_list_header_text}>{title}</Text>
-		{renderSeparator}
-	</View>
-)
-const renderSeparator = () => (
-	<View
-		style={css.notifications_section_list_separator}
-	/>
-)
 
 const mapStateToProps = state => ({
 	isLoggedIn: state.user.isLoggedIn,

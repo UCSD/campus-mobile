@@ -377,6 +377,7 @@ const css = StyleSheet.create({
 	 *  14 - User Profile
 	 */
 	profile_inner: { paddingBottom: 50 },
+	// User Account
 	ua_accountinfo: { flexDirection: 'row', paddingHorizontal: 10, paddingVertical: 14, alignItems: 'center' },
 	ua_loggedin: { flex: 3, flexDirection: 'row', alignItems: 'center' },
 	ua_username_checkmark: { color: COLOR.GREEN },
@@ -406,6 +407,12 @@ const css = StyleSheet.create({
 	pi_icon: { color: COLOR.PRIMARY },
 	pi_title: { flexGrow: 1, fontSize: 18, color: COLOR.VDGREY, paddingLeft: 16 },
 	pi_arrow: { color: COLOR.CCC },
+	// Profile Notification Topics
+	pnt_header_row: { borderBottomColor: COLOR.MGREY0, borderBottomWidth: 1 },
+	pnt_header_text: { paddingVertical: round(12 * prm), paddingHorizontal: round(8 * prm), fontSize: round(26 * prm), color: COLOR.VDGREY },
+	pnt_row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingVertical: round(6 * prm), borderBottomColor: COLOR.MGREY, borderBottomWidth: 1 },
+	pnt_row_text: { flex: 1, paddingLeft: round(20 * prm), fontSize: round(22 * prm), color: COLOR.VDGREY },
+	pnt_switch: { marginHorizontal: round(12 * prm), justifyContent: 'center', alignItems: 'center' },
 
 	/**
 	 *  15 - Onboarding
@@ -465,19 +472,13 @@ const css = StyleSheet.create({
 	/**
 	 *	17 - Notifications
 	 */
-	notifications_row_view: { flexDirection: 'row', flex: 1, paddingLeft: 10, paddingRight: 10, backgroundColor: COLOR.WHITE, alignItems: 'center', justifyContent: 'center', height: 35 },
-	notifications_full_container: { flex: 1, backgroundColor: COLOR.WHITE },
-	notifications_section_list: { flex: 1 },
-	notifications_section_list_header_container: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 45, borderBottomColor: COLOR.MGREY, borderBottomWidth: 1 },
-	notifications_section_list_header_text: { flex: 1, paddingLeft: 5, fontSize: 23, color: COLOR.VDGREY },
-	notifications_row_text: { flex: 1, paddingRight: 10, fontSize: 19, color: COLOR.VDGREY },
-	notifications_section_list_separator: { height: 1, backgroundColor: COLOR.MGREY },
 	notifications_row: { paddingVertical: 10, paddingRight: 10, flexDirection: 'row', justifyContent: 'flex-start' },
 	notifications_vector_icon: { justifyContent: 'center', alignItems: 'center', marginLeft: 10, marginRight: 16 },
 	notifications_timestamp_text: { color: COLOR.TIME, fontWeight: 'bold', fontSize: 10 },
 	notifications_title_text: { color: COLOR.BLACK, fontWeight: '400', fontSize: platformAndroid() ? 16 : 20 },
 	notifications_body_text: { paddingTop: 10, color: COLOR.VDGREY, fontSize: 14 },
-
+	notifications_section_list_separator: { height: 1, backgroundColor: COLOR.MGREY },
+	// Notifications Icon Badge
 	tabIconWithBadge: { padding: round(5 * prm) },
 	tabIconBadge: { position: 'absolute', zIndex: 10, top: platformIOS() ? 0 : 3, right: platformIOS() ? 2 : 3, width: round(18 * prm), height: round(18 * prm), backgroundColor: 'red', borderRadius: round(9 * prm), justifyContent: 'center', opacity: 1 },
 	tabIconBadgeText: { color: COLOR.WHITE, textAlign: 'center', fontSize: round(12 * prm), overflow: 'hidden', fontWeight: '700' },

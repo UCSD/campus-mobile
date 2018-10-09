@@ -23,8 +23,8 @@ class ParkingOverview extends Component {
 				}
 			}
 			return totalAvailableSpots
-		} catch (error) {
-			logger.trackException(error, false)
+		} catch (err) {
+			logger.trackException(err, false)
 			return 0
 		}
 	}
@@ -32,28 +32,36 @@ class ParkingOverview extends Component {
 	// this function returns the number of parking spots open of a given type
 	// returns -1 if the structure does not have the specific type
 	getOpenPerType(currentType) {
-		const { structureData } = this.props
-
-		const tempType = structureData.Availability[currentType]
-		let openPerType = 0
-		if (tempType) {
-			for (let i = 0; i < tempType.length; i++) {
-				openPerType += Number(tempType[i].Open)
+		try {
+			const { structureData } = this.props
+			const tempType = structureData.Availability[currentType]
+			let openPerType = 0
+			if (tempType) {
+				for (let i = 0; i < tempType.length; i++) {
+					openPerType += Number(tempType[i].Open)
+				}
+				return openPerType
+			} else {
+				return -1
 			}
-			return openPerType
-		} else {
+		} catch (err) {
+			logger.trackException(err, false)
 			return -1
 		}
 	}
 
 	getTotalPerType(currentType) {
-		const { structureData } = this.props
-		const tempType = structureData.Availability[currentType]
 		let totalPerType = 0
-		if (tempType) {
-			for (let i = 0; i < tempType.length; i++) {
-				totalPerType += Number(tempType[i].Total)
+		try {
+			const { structureData } = this.props
+			const tempType = structureData.Availability[currentType]
+			if (tempType) {
+				for (let i = 0; i < tempType.length; i++) {
+					totalPerType += Number(tempType[i].Total)
+				}
 			}
+		} catch (err) {
+			logger.trackException(err, false)
 		}
 		return totalPerType
 	}
