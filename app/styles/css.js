@@ -462,6 +462,16 @@ const css = StyleSheet.create({
 	po_three_spots_selected: { flexDirection: 'row', justifyContent: 'center', width: LAYOUT.MAX_CARD_WIDTH, paddingTop: 5, paddingBottom: 20 },
 	po_structure_comingsoon: { textAlign: 'center', fontSize: round(17 * prm), color: COLOR.DGREY, fontStyle: 'italic', marginBottom: 10 },
 
+	mpl_row_view: { flexDirection: 'row', flex: 1, paddingLeft: 15, backgroundColor: COLOR.WHITE, alignItems: 'center', justifyContent: 'center', paddingVertical: 10 },
+	mpl_row_text_unselected: { flex: 1, paddingLeft: 10, fontSize: 19, justifyContent: 'flex-start', color: COLOR.PRIMARY },
+	mpl_row_text_selected: { flex: 1, paddingLeft: 10, fontSize: 19, justifyContent: 'flex-start', color: COLOR.DGREY },
+	mpl_row_add_remove_btn: { paddingRight: 30 },
+	mpl_message_view: { flexGrow: 1, justifyContent: 'center', alignItems: 'center'},
+	mpl_message_text: { fontSize: 19, textAlign: 'center' },
+	mpl_flat_list_container: { backgroundColor: COLOR.WHITE },
+	mpl_btn: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.PRIMARY, borderRadius: 3, marginTop: 20, padding: 10 , borderWidth: 1, width: LAYOUT.WINDOW_WIDTH/2 },
+
+
 	/**
 	 *	17 - Notifications
 	 */
@@ -477,6 +487,8 @@ const css = StyleSheet.create({
 	notifications_timestamp_text: { color: COLOR.TIME, fontWeight: 'bold', fontSize: 10 },
 	notifications_title_text: { color: COLOR.BLACK, fontWeight: '400', fontSize: platformAndroid() ? 16 : 20 },
 	notifications_body_text: { paddingTop: 10, color: COLOR.VDGREY, fontSize: 14 },
+	notifications_parking_selected_row_text_container: { paddingLeft: 75, flexDirection: 'row', paddingRight: 60, alignItems: 'center' },
+	notifications_parking_row_view: { flexDirection: 'row', flex: 1, paddingLeft: 10, paddingRight: 10, alignItems: 'center', justifyContent: 'center', height: 35 },
 
 	tabIconWithBadge: { padding: round(5 * prm) },
 	tabIconBadge: { position: 'absolute', zIndex: 10, top: platformIOS() ? 0 : 3, right: platformIOS() ? 2 : 3, width: round(18 * prm), height: round(18 * prm), backgroundColor: 'red', borderRadius: round(9 * prm), justifyContent: 'center', opacity: 1 },

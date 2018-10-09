@@ -29,6 +29,7 @@ module.exports = {
 		else return 'https://api-qa.ucsd.edu:8243/student/my/academic_history/v1/class_list'
 	},
 	PARKING_API_URL: 'https://8tcoih8tu0.execute-api.us-west-2.amazonaws.com/dev/parking/v1.0/406/status',
+	PARKING_LOTS_API_URL: 'https://s3.us-west-1.amazonaws.com/ucsd-mobile-dev/mock-apis/parking/parking-lot-availability.json',
 	TOPICS_API_URL: 'https://bvgjvzaakl.execute-api.us-west-2.amazonaws.com/dev/topics',
 	MYMESSAGES_API_URL: 'https://api-qa.ucsd.edu:8243/mp-mymessages/1.0.0',
 	MESSAGES_TOPICS_URL: 'https://s3-us-west-1.amazonaws.com/ucsd-mobile-dev/mock-apis/messaging/topics.json',

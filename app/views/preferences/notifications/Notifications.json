@@ -1,0 +1,48 @@
+[
+  {
+	"title": "Categories",
+	"data": [
+		{
+			"id": 0,
+			"name": "General",
+			"active": true
+		},
+		{
+			"id": 1,
+			"name": "Events",
+			"active": true
+		},
+		{
+			"id": 2,
+			"name": "Classes",
+			"active": true
+		}
+	]
+  },
+  {
+	"title": "Parking",
+	"data": [
+		{
+			"id": 3,
+			"name": "Pangea",
+			"active": true,
+			"startTime": "11:00am",
+			"endTime": "11:00pm"
+		},
+		{
+			"id": 4,
+			"name": "Gilman",
+			"active": true,
+			"startTime": "11:00am",
+			"endTime": "11:00pm"
+		},
+		{
+			"id": 5,
+			"name": "P103",
+			"active": true,
+			"startTime": "11:00am",
+			"endTime": "11:00pm"
+		}
+	]
+  }
+]

@@ -9,6 +9,15 @@ const ParkingService = {
 				console.log('Error fetching parking data: ' + err)
 				return null
 			})
+	},
+	FetchParkingLots() {
+		return fetch(AppSettings.PARKING_LOTS_API_URL)
+			.then(response => response.json())
+			.then(responseData => responseData)
+			.catch((err) => {
+				console.log('Error fetching parking lots: ' + err)
+				return null
+			})
 	}
 }
 
