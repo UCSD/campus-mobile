@@ -103,9 +103,11 @@ module.exports = {
 
 			// loop thru "data"
 			// grab all enrolled classes bc academic history has dropped/waitlisted classes too...
-			for (let i = 0; i < courses.length; ++i) {
-				if (courses[i].enrollment_status === 'EN') {
-					enrolledCourses.push(courses[i])
+			if (Array.isArray(courses)) {
+				for (let i = 0; i < courses.length; ++i) {
+					if (courses[i].enrollment_status === 'EN') {
+						enrolledCourses.push(courses[i])
+					}
 				}
 			}
 

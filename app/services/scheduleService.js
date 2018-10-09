@@ -4,35 +4,31 @@ const AppSettings = require('../AppSettings')
 
 const ScheduleService = {
 	* FetchSchedule(term, isStudentDemo) {
-		try {
-			const data = []
+		const data = [],
+			UN_API_URL = AppSettings.ACADEMIC_HISTORY_API_URL(isStudentDemo) + '?academic_level=UN&term_code=' + term,
+			GR_API_URL = AppSettings.ACADEMIC_HISTORY_API_URL(isStudentDemo) + '?academic_level=GR&term_code=' + term
 
-			// Query api for undergrad classes
-			const undergrad = JSON.parse(yield authorizedFetch(AppSettings.ACADEMIC_HISTORY_API_URL(isStudentDemo) +
-				`?academic_level=UN&term_code=${term}`))
-			// Add to data if there is class data
+		// Query api for undergrad classes
+		try {
+			const undergrad = JSON.parse(yield authorizedFetch(UN_API_URL))
 			if (undergrad.data && Array.isArray(undergrad.data)) {
 				data.push(...undergrad.data)
 			}
-
-			// Query api for graduate classes
-			if (!isStudentDemo) {
-				const grad = JSON.parse(yield authorizedFetch(AppSettings.ACADEMIC_HISTORY_API_URL(isStudentDemo) +
-					`?academic_level=GR&term_code=${term}`))
-				// Add to data if there is class data
-				if (grad.data && Array.isArray(grad.data)) {
-					data.push(...grad.data)
-				}
-			}
-
-			if (data) return { data }
-			else {
-				const e = new Error('Invalid data from schedule API')
-				throw e
-			}
-		} catch (error) {
-			throw error
+		} catch (err) {
+			//console.log(err)
 		}
+
+		// Query api for graduate classes
+		try {
+			const grad = JSON.parse(yield authorizedFetch(GR_API_URL))
+			if (grad.data && Array.isArray(grad.data)) {
+				data.push(...grad.data)
+			}
+		} catch (err) {
+			//console.log(err)
+		}
+
+		return { data }
 	},
 
 	FetchTerm(isStudentDemo) {
