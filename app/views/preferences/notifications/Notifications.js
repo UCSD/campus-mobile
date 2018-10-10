@@ -3,9 +3,12 @@ import {
 	Text,
 	View,
 	SectionList,
-	Switch
+	Switch,
+	LayoutAnimation,
+	TouchableWithoutFeedback
 } from 'react-native'
 import { connect } from 'react-redux'
+import DatePicker from 'react-native-datepicker'
 import css from '../../../styles/css'
 
 class Notifications extends Component {
@@ -134,4 +137,3 @@ const mapDispatchToProps = dispatch => (
 )
 
 export default connect(mapStateToProps, mapDispatchToProps)(Notifications)
-
