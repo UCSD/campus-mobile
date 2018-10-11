@@ -463,13 +463,13 @@ const css = StyleSheet.create({
 	po_structure_comingsoon: { textAlign: 'center', fontSize: round(17 * prm), color: COLOR.DGREY, fontStyle: 'italic', marginBottom: 10 },
 
 	mpl_row_view: { flexDirection: 'row', flex: 1, paddingLeft: 15, backgroundColor: COLOR.WHITE, alignItems: 'center', justifyContent: 'center', paddingVertical: 10 },
-	mpl_row_text_unselected: { flex: 1, paddingLeft: 10, fontSize: 19, justifyContent: 'flex-start', color: COLOR.PRIMARY },
-	mpl_row_text_selected: { flex: 1, paddingLeft: 10, fontSize: 19, justifyContent: 'flex-start', color: COLOR.DGREY },
+	mpl_row_text_unselected: { flex: 1, paddingLeft: 10, fontSize: 19, justifyContent: 'flex-start', color: COLOR.DGREY },
+	mpl_row_text_selected: { flex: 1, paddingLeft: 10, fontSize: 19, justifyContent: 'flex-start', color: COLOR.PRIMARY },
 	mpl_row_add_remove_btn: { paddingRight: 30 },
 	mpl_message_view: { flexGrow: 1, justifyContent: 'center', alignItems: 'center' },
 	mpl_message_text: { fontSize: 19, textAlign: 'center' },
 	mpl_flat_list_container: { backgroundColor: COLOR.WHITE },
-	mpl_btn: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.PRIMARY, borderRadius: 3, marginTop: 20, padding: 10 , borderWidth: 1, width: LAYOUT.WINDOW_WIDTH/2 },
+	mpl_btn: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.PRIMARY, borderRadius: 3, marginTop: 20, padding: 10 , borderWidth: 1, width: LAYOUT.WINDOW_WIDTH / 2 },
 
 
 	/**

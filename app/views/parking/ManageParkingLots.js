@@ -16,22 +16,20 @@ import css from '../../styles/css'
 class ManageParkingLots extends React.Component {
 	renderRow(parkingLot) {
 		const { name, active } = parkingLot.item
-		const { updateSelectedLots, saveSelectedLots, selectedLots } = this.props
+		const { updateSelectedLots, selectedLots } = this.props
 		if (active) {
 			return (
 				<View style={css.mpl_row_view}>
-
 					<Text style={css.mpl_row_text_selected}>
 						{name}
 					</Text>
 					<Touchable
 						onPress={() => {
-							updateSelectedLots(!active, parkingLot.index)
-							saveSelectedLots(selectedLots)
+							updateSelectedLots(!active, parkingLot.index, selectedLots)
 						}}
 						style={css.mpl_row_add_remove_btn}
 					>
-						{addIcon()}
+						{cancelIcon()}
 					</Touchable>
 				</View>
 			)
@@ -44,12 +42,11 @@ class ManageParkingLots extends React.Component {
 				</Text>
 				<Touchable
 					onPress={() => {
-						updateSelectedLots(!active, parkingLot.index)
-						saveSelectedLots(selectedLots)
+						updateSelectedLots(!active, parkingLot.index, selectedLots)
 					}}
 					style={css.mpl_row_add_remove_btn}
 				>
-					{cancelIcon()}
+					{addIcon()}
 				</Touchable>
 			</View>
 		)
@@ -104,18 +101,14 @@ const renderSeparator = () => (
 )
 const mapStateToProps = state => ({
 	parkingLotsData: state.parking.parkingLotsData,
-	selectedParkingLots: state.parking.selectedParkingLots
+	selectedLots: state.parking.selectedLots
 })
 
 
 const mapDispatchToProps = dispatch => (
 	{
-		updateSelectedLots: (value, index) => {
-			dispatch({ type: 'SET_PARKING_LOT_SELECTION', index, value })
-			dispatch({ type: 'EDIT_LOCAL_LOT_SELECTION' })
-		},
-		saveSelectedLots: (selectedLots) => {
-			dispatch({ type: 'MODIFY_LOCAL_PROFILE', selectedLots })
+		updateSelectedLots: (value, index, selectedLots) => {
+			dispatch({ type: 'UPDATE_PARKING_LOT_SELECTIONS', index, value, selectedLots })
 		},
 		renderWarning: (showWarning) => {
 			dispatch({ type: 'SET_WARNING_SIGN', showWarning })

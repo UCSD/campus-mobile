@@ -51,7 +51,7 @@ function parking(state = initialState, action) {
 		}
 		// for some reason this is saying that i modifed state
 		case 'SET_PARKING_LOT_SELECTION': {
-			const tempObj = {...state.parkingLotsData[action.index]}
+			const tempObj = { ...state.parkingLotsData[action.index] }
 			tempObj.active = action.value
 			newState.parkingLotsData = [...state.parkingLotsData]
 			newState.parkingLotsData[action.index] = tempObj
