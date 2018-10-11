@@ -3,7 +3,8 @@ import {
 	View,
 	Text,
 	FlatList,
-	Linking
+	Linking,
+	ScrollView
 } from 'react-native'
 
 import Icon from 'react-native-vector-icons/MaterialIcons'
@@ -34,7 +35,7 @@ class ManageParkingLots extends React.Component {
 				</View>
 			)
 		}
-		return (
+        return (
 			<View style={css.mpl_row_view}>
 
 				<Text style={css.mpl_row_text_unselected}>
@@ -51,11 +52,10 @@ class ManageParkingLots extends React.Component {
 			</View>
 		)
 	}
+
 	render() {
 		return (
-			<View
-				style={css.main_full_flex}
-			>
+			<ScrollView style={css.scroll_default} contentContainerStyle={css.main_full}>
 				<FlatList
 					style={css.mpl_flat_list_container}
 					scrollEnabled={false}
@@ -78,15 +78,16 @@ class ManageParkingLots extends React.Component {
 						location please mesage us at{'\n'}
 						parking@ucsd.edu
 					</Text>
+
 					<Touchable
-						onPress={() => Linking.openURL('mailto:parking@ucsd.edu?')}
-						style={css.mpl_btn}
+						onPress={() => Linking.openURL('mailto:parking@ucsd.edu')}
+						style={css.button_primary}
 						text="Email Us"
 					>
 						<Text style={css.button_primary_text}>Email Us</Text>
 					</Touchable>
 				</View>
-			</View>
+			</ScrollView>
 		)
 	}
 }
