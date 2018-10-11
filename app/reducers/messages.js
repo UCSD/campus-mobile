@@ -1,7 +1,7 @@
 const initialState = {
 	messages: [],
 	nextTimestamp: null,
-	unreadMessages: 0,
+	unreadMessages: 1,
 	topics: []
 }
 

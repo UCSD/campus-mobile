@@ -26,7 +26,7 @@ const TabIcons = (props) => {
 				<View style={css.tabIconWithBadge}>
 					<View style={css.tabIconBadge}>
 						<Text style={css.tabIconBadgeText} numberOfLines={1}>
-							{props.unreadMessages <= 99 ? props.unreadMessages : '99'}
+							{props.unreadMessages}
 						</Text>
 					</View>
 					<FAIcon name="bell-o" size={24} style={[css.tabIcon, props.focused ? { color: COLOR.PRIMARY } : null]} />
