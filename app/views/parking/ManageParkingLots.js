@@ -35,9 +35,8 @@ class ManageParkingLots extends React.Component {
 				</View>
 			)
 		}
-        return (
+		return (
 			<View style={css.mpl_row_view}>
-
 				<Text style={css.mpl_row_text_unselected}>
 					{name}
 				</Text>

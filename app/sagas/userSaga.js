@@ -296,7 +296,7 @@ function* syncUserProfile() {
 // with the remote server
 function* modifyLocalProfile(action) {
 	const { profileItems } = action
-
+	console.log(profileItems.selectedLots)
 	yield put({ type: 'SET_LOCAL_PROFILE', profileItems })
 	yield put({ type: 'RESET_SYNCED_DATE' })
 	yield call(syncUserProfile)

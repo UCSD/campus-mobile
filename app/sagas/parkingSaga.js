@@ -1,8 +1,10 @@
-import { put, takeLatest } from 'redux-saga/effects'
+import { put, takeLatest, select } from 'redux-saga/effects'
+
+const getParkingData = state => (state.parking)
 
 function* updateParkingLotSelection(action) {
 	yield* setLocalParkingLotSelections(action.index, action.value)
-	yield* syncLotsWithProfile(action.selectedLots)
+	yield* syncLocalLotsSelection()
 }
 
 function* setLocalParkingLotSelections(index, value) {
@@ -10,9 +12,9 @@ function* setLocalParkingLotSelections(index, value) {
 	yield put({ type: 'EDIT_LOCAL_LOT_SELECTION' })
 }
 
-function* syncLotsWithProfile(selectedLots) {
+function* syncLocalLotsSelection() {
+	const { selectedLots } = yield select(getParkingData)
 	const profileItems = { selectedLots }
-	console.log(this)
 	yield put({ type: 'MODIFY_LOCAL_PROFILE', profileItems })
 }
 

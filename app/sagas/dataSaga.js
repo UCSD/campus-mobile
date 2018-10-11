@@ -206,7 +206,7 @@ function* updateParking() {
 			let ParkingLotData = yield call(ParkingService.FetchParkingLots)
 			if (ParkingLotData) {
 				const userData = yield select(getUserData)
-				const prevSelectedParkingLots = userData.selectedLots
+				const prevSelectedParkingLots = userData.profile.selectedLots
 				if (prevSelectedParkingLots) {
 					ParkingLotData = ParkingLotData.map(obj => ({ ...obj, active: prevSelectedParkingLots.includes(obj.name) }))
 				} else {
@@ -224,7 +224,7 @@ function* updateParking() {
 		let ParkingLotData = yield call(ParkingService.FetchParkingLots)
 		if (ParkingLotData) {
 			const userData = yield select(getUserData)
-			const prevSelectedParkingLots = userData.selectedLots
+			const prevSelectedParkingLots = userData.profile.selectedLots
 			if (prevSelectedParkingLots) {
 				ParkingLotData = ParkingLotData.map(obj => ({ ...obj, active: prevSelectedParkingLots.includes(obj.name) }))
 			} else {
