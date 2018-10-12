@@ -32,7 +32,7 @@ const SpecialEventsItem = ({ navigation, specialEventsData, saved, add, remove, 
 
 					<View style={styles.labelView}>
 						{ specialEventsData.label ? (
-							<Text style={[styles.labelText, { color: specialEventsData['label-theme'] ? specialEventsData['label-theme'] : COLOR_BLACK }]}>{specialEventsData.label}</Text>
+							<Text style={[styles.labelText, { color: specialEventsData['label-theme'] ? specialEventsData['label-theme'] : COLOR.BLACK }]}>{specialEventsData.label}</Text>
 						) : null }
 						{ specialEventsData.label || specialEventsData['talk-type'] === 'Keynote' ? (
 							<Text style={styles.labelText}> - </Text>
