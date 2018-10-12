@@ -264,9 +264,6 @@ function* syncUserProfile() {
 
 	if (timeDiff < syncTTL) return
 
-	// Get latest profile from server
-	yield getUserProfile()
-
 	// Update remote profile with local one
 	const newAttributes = []
 
@@ -280,6 +277,8 @@ function* syncUserProfile() {
 	yield put({ type: 'POST_PROFILE_REQUEST' })
 	try {
 		yield call(userService.PostUserProfile, newAttributes)
+		// Get latest profile from server
+		yield call(getUserProfile)
 		yield put({ type: 'POST_PROFILE_SUCCESS' })
 		yield put({ type: 'PROFILE_SYNCED' })
 
@@ -296,7 +295,7 @@ function* syncUserProfile() {
 // with the remote server
 function* modifyLocalProfile(action) {
 	const { profileItems } = action
-	console.log(profileItems.selectedLots)
+
 	yield put({ type: 'SET_LOCAL_PROFILE', profileItems })
 	yield put({ type: 'RESET_SYNCED_DATE' })
 	yield call(syncUserProfile)

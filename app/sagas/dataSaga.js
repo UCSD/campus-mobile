@@ -207,6 +207,7 @@ function* updateParking() {
 			if (ParkingLotData) {
 				const userData = yield select(getUserData)
 				const prevSelectedParkingLots = userData.profile.selectedLots
+				console.log(prevSelectedParkingLots)
 				if (prevSelectedParkingLots) {
 					ParkingLotData = ParkingLotData.map(obj => ({ ...obj, active: prevSelectedParkingLots.includes(obj.name) }))
 				} else {
