@@ -8,8 +8,7 @@ exports[`card renders without crashing 1`] = `
   <View
     style={
       Object {
-        "alignSelf": "stretch",
-        "padding": 8,
+        "top": -1,
       }
     }
   >
