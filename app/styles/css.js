@@ -246,7 +246,7 @@ const css = StyleSheet.create({
 	/**
 	 *  07 - Dining
 	 */
-	dl_row: { flexDirection: 'row', padding: 10, borderBottomWidth: 1, borderBottomColor: COLOR.MGREY },
+	dl_row: { flexDirection: 'row', padding: 10, borderTopWidth: 1, borderTopColor: COLOR.MGREY },
 	dl_row_container_left: { flex: 4, flexDirection: 'column', justifyContent: 'flex-start', paddingRight: 8 },
 	dl_row_container_right: { flex: 1, alignItems: 'center', justifyContent: 'flex-end' },
 	dl_title_row: { flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', flexWrap: 'wrap' },
