@@ -12,8 +12,7 @@
 	05 - Classes
 	06 - Shuttle
 	07 - Dining
-	08 - Events
-	09 - News
+
 	10 - Links
 	11 - Weather
 	12 - Map
@@ -22,6 +21,7 @@
 	15 - Onboarding
 	16 - Parking
 	17 - Notifications
+
 	99 - Misc
 */
 import { StyleSheet, Platform, Dimensions } from 'react-native'
@@ -97,16 +97,16 @@ const css = StyleSheet.create({
 	last_updated_err_icon_error: { color: COLOR.ERROR },
 
 	// Data
-	DataList_card_list: { padding: 8 },
-	DataList_full_list: { padding: 8 },
+	DataList_card_list: {  },
+	DataList_full_list: { top: -1 },
 	dataitem_descContainer: { flex: 1 },
 	dataitem_descText: { color: COLOR.VDGREY },
-	dataitem_touchableRow: { paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: COLOR.MGREY, },
+	dataitem_touchableRow: { paddingVertical: 12, paddingHorizontal: 8, borderTopWidth: 1, borderTopColor: COLOR.MGREY, },
 	dataitem_titleText: { fontSize: 17 },
 	dataitem_listInfoContainer: { flexDirection: 'row', paddingVertical: 8 },
 	dataitem_dateText: { color: COLOR.PRIMARY, paddingTop: 8 },
 	dataitem_image: { width: 120, height: 70, marginLeft: 10, borderWidth: 1, borderColor: COLOR.LGREY },
-	dlc_list: { alignSelf: 'stretch', padding: 8 },
+	dlc_list: { top: -1 },
 	dlc_content_load_err: { padding: 30, fontSize: 16, alignSelf: 'center'  },
 	dlc_cardcenter: { alignItems: 'center', justifyContent: 'center', width: LAYOUT.MAX_CARD_WIDTH },
 	// Buttons
@@ -317,11 +317,11 @@ const css = StyleSheet.create({
 	/**
 	 *  10 - Links
 	 */
-	links_row_container: { borderBottomWidth: 1, borderBottomColor: COLOR.MGREY, paddingBottom: 8, marginBottom: 8 },
+	links_row_container: { paddingVertical: 8, paddingHorizontal: 16, borderTopWidth: 1, borderTopColor: COLOR.MGREY },
 	links_row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
-	links_icon: { height: 42, width: 38 },
-	links_icon_fa: { padding: 8, color: COLOR.PRIMARY },
-	links_name: { flexGrow: 5, color: COLOR.BLACK, fontSize: 16, paddingHorizontal: 8 },
+	links_icon: { height: 34, width: 34 },
+	links_icon_fa: { paddingLeft: 8, paddingRight: 5, color: COLOR.PRIMARY },
+	links_name: { flex: 1, color: COLOR.VDGREY, fontSize: round(22 * prm), fontWeight: '300', paddingHorizontal: 16 },
 	links_arrow_icon: { color: COLOR.DGREY },
 
 	/**
