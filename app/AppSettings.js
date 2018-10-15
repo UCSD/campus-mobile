@@ -28,7 +28,16 @@ module.exports = {
 		if (isStudentDemo) return 'https://pad7kcyzo1.execute-api.us-west-2.amazonaws.com/prod/v1/demo/student/class_list'
 		else return 'https://api-qa.ucsd.edu:8243/student/my/academic_history/v1/class_list'
 	},
-	PARKING_API_URL: 'https://8tcoih8tu0.execute-api.us-west-2.amazonaws.com/dev/parking/v1.0/406/status',
+	PARKING_API_URLS:
+	[
+		'https://8tcoih8tu0.execute-api.us-west-2.amazonaws.com/dev/parking/v1.0/406/status',
+		'https://8tcoih8tu0.execute-api.us-west-2.amazonaws.com/dev/parking/v1.0/1/status',
+		'https://8tcoih8tu0.execute-api.us-west-2.amazonaws.com/dev/parking/v1.0/2/status',
+		'https://8tcoih8tu0.execute-api.us-west-2.amazonaws.com/dev/parking/v1.0/3/status',
+		'https://8tcoih8tu0.execute-api.us-west-2.amazonaws.com/dev/parking/v1.0/4/status',
+		'https://8tcoih8tu0.execute-api.us-west-2.amazonaws.com/dev/parking/v1.0/5/status'
+	],
+
 	PARKING_LOTS_API_URL: 'https://s3.us-west-1.amazonaws.com/ucsd-mobile-dev/mock-apis/parking/parking-lot-availability.json',
 	TOPICS_API_URL: 'https://bvgjvzaakl.execute-api.us-west-2.amazonaws.com/dev/topics',
 	MYMESSAGES_API_URL: 'https://api-qa.ucsd.edu:8243/mp-mymessages/1.0.0',
