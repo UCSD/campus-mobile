@@ -101,7 +101,7 @@ class ParkingOverview extends Component {
 						progressNumber={LAYOUT.MAX_CARD_WIDTH * 0.12}
 						progressPercent={LAYOUT.MAX_CARD_WIDTH * 0.05}
 					/>
-					<View style={{ paddingHorizontal: 20 }} />
+					<View style={css.po_acp_gap_1} />
 					<ParkingDetail
 						spotType={spotsSelected[1]}
 						spotsAvailable={this.getOpenPerType(spotsSelected[1])}
@@ -129,7 +129,7 @@ class ParkingOverview extends Component {
 						progressNumber={LAYOUT.MAX_CARD_WIDTH * 0.08}
 						progressPercent={LAYOUT.MAX_CARD_WIDTH * 0.035}
 					/>
-					<View style={{ paddingHorizontal: 10 }} />
+					<View style={css.po_acp_gap_2} />
 					<ParkingDetail
 						spotType={spotsSelected[1]}
 						spotsAvailable={this.getOpenPerType(spotsSelected[1])}
@@ -141,7 +141,7 @@ class ParkingOverview extends Component {
 						progressNumber={LAYOUT.MAX_CARD_WIDTH * 0.08}
 						progressPercent={LAYOUT.MAX_CARD_WIDTH * 0.035}
 					/>
-					<View style={{ paddingHorizontal: 10 }} />
+					<View style={css.po_acp_gap_2} />
 					<ParkingDetail
 						spotType={spotsSelected[2]}
 						spotsAvailable={this.getOpenPerType(spotsSelected[2])}
