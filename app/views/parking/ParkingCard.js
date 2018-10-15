@@ -21,7 +21,6 @@ const ParkingCard = ({
 			action: gotoManageParkingLots
 		}
 	]
-
 	return (
 		<ScrollCard
 			id="parking"
@@ -34,7 +33,7 @@ const ParkingCard = ({
 				/>
 			)}
 			extraData={mySpots}
-			scrollData={savedStructures}
+			scrollData={savedStructures[0]}
 			extraActions={extraActions}
 		/>
 	)
