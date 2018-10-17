@@ -1,11 +1,11 @@
 import { authorizedFetch } from '../util/auth'
 
-const { USER_PROFILE_API_URL } = require('../AppSettings')
+const { MP_REGISTRATION_API_URL } = require('../AppSettings')
 
 const userService = {
 	* FetchUserProfile() {
 		try {
-			const profile = JSON.parse(yield authorizedFetch(USER_PROFILE_API_URL))
+			const profile = JSON.parse(yield authorizedFetch(MP_REGISTRATION_API_URL + '/profile'))
 
 			if (profile) return profile
 			else {
@@ -19,7 +19,7 @@ const userService = {
 
 	* PostUserProfile(profile) {
 		try {
-			const result = yield authorizedFetch(`${USER_PROFILE_API_URL}`, profile)
+			const result = yield authorizedFetch(MP_REGISTRATION_API_URL + '/profile', profile)
 			if (result === 'Success') return result
 			else {
 				const e = new Error('Invalid data from token registration API')

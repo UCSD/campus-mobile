@@ -4,7 +4,7 @@ const {
 	TOPICS_API_URL,
 	MYMESSAGES_API_URL,
 	MESSAGES_TOPICS_URL,
-	PUSH_REGISTRATION_API_URL,
+	MP_REGISTRATION_API_URL,
 } = require('../AppSettings')
 
 const MyMessagesService = {
@@ -70,7 +70,7 @@ const MyMessagesService = {
 
 	* PostPushToken(token, deviceId) {
 		try {
-			const result = yield authorizedFetch(`${PUSH_REGISTRATION_API_URL}/register`, { deviceId, token })
+			const result = yield authorizedFetch(`${MP_REGISTRATION_API_URL}/register`, { deviceId, token })
 			if (result === 'Success') return result
 			else {
 				const e = new Error('Invalid data from token registration API')
@@ -85,7 +85,7 @@ const MyMessagesService = {
 	// losing the accessToken, so it has to be provided manually for us.
 	* DeletePushToken(token, accessToken) {
 		try {
-			yield fetch(`${PUSH_REGISTRATION_API_URL}/token/${encodeURIComponent(token)}`, {
+			yield fetch(`${MP_REGISTRATION_API_URL}/token/${encodeURIComponent(token)}`, {
 				method: 'DELETE',
 				headers: { 'Authorization': `Bearer ${accessToken}` }
 			})

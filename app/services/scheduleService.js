@@ -6,8 +6,8 @@ import logger from '../util/logger'
 const ScheduleService = {
 	* FetchSchedule(term, isStudentDemo) {
 		const data = [],
-			UN_API_URL = AppSettings.ACADEMIC_HISTORY_API_URL(isStudentDemo) + '?academic_level=UN&term_code=' + term,
-			GR_API_URL = AppSettings.ACADEMIC_HISTORY_API_URL(isStudentDemo) + '?academic_level=GR&term_code=' + term
+			UN_API_URL = AppSettings.ACADEMIC_HISTORY_API_URL + '?academic_level=UN&term_code=' + term,
+			GR_API_URL = AppSettings.ACADEMIC_HISTORY_API_URL + '?academic_level=GR&term_code=' + term
 
 		// Query api for undergrad classes
 		try {
