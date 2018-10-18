@@ -461,6 +461,9 @@ const css = StyleSheet.create({
 	po_two_spots_selected: { flexDirection: 'row',  justifyContent: 'center',  width: LAYOUT.MAX_CARD_WIDTH, paddingTop: 5, paddingBottom: 20 },
 	po_three_spots_selected: { flexDirection: 'row', justifyContent: 'center', width: LAYOUT.MAX_CARD_WIDTH, paddingTop: 5, paddingBottom: 20 },
 	po_structure_comingsoon: { textAlign: 'center', fontSize: round(17 * prm), color: COLOR.DGREY, fontStyle: 'italic', marginBottom: 10 },
+	po_acp: { marginBottom: 15 },
+	po_acp_gap_1: { paddingHorizontal: 20 },
+	po_acp_gap_2: { paddingHorizontal: 10 },
 
 	mpl_row_view: { flexDirection: 'row', flex: 1, paddingLeft: 15, backgroundColor: COLOR.WHITE, alignItems: 'center', justifyContent: 'center', paddingVertical: 10 },
 	mpl_row_text_unselected: { flex: 1, paddingLeft: 10, fontSize: 19, justifyContent: 'flex-start', color: COLOR.DGREY },
