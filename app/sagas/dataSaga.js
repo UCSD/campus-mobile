@@ -31,7 +31,7 @@ const getNews = state => (state.news)
 const getCards = state => (state.cards)
 const getShuttle = state => (state.shuttle)
 const getUserData = state => (state.user)
-const getParkingData = state => (state.parkingData)
+const getParkingData = state => (state.parking)
 
 function* watchData() {
 	while (true) {
@@ -186,33 +186,12 @@ function* updateLinks() {
 }
 
 function* updateParking() {
-	const ParkingData = yield select(getParkingData)
-	const nowTime = new Date().getTime()
-	const ttl = PARKING_API_TTL
-	// set to the first element becuase we only have one parking lot set up right now
-	if (ParkingData) {
-		const element = ParkingData[0]
-		const { LastUpdated, LocationName, Availability } = element
-		const timeDiff = nowTime - LastUpdated
+	const { lastUpdated } = yield select(getParkingData),
+		nowTime = new Date().getTime(),
+		ttl = PARKING_API_TTL,
+		timeDiff = nowTime - lastUpdated
 
-		if ((timeDiff < ttl) && Availability && LocationName) {
-		// Do nothing, no need to fetch new data
-		} else {
-			// Fetch for new data
-			const parkingData = yield call(ParkingService.FetchParking)
-			if (parkingData) {
-				yield put({ type: 'SET_PARKING_DATA', parkingData })
-			}
-			// get previously selected lots from users synced profile
-			const userData = yield select(getUserData)
-			const prevSelectedParkingLots = userData.profile.selectedLots
-			if (prevSelectedParkingLots) {
-				yield put({ type: 'SYNC_PARKING_LOTS_DATA', prevSelectedParkingLots })
-			}
-		}
-	}
-	// when parking data does not already exists
-	else {
+	if (timeDiff > ttl) {
 		// Fetch for new data
 		const parkingData = yield call(ParkingService.FetchParking)
 		if (parkingData) {

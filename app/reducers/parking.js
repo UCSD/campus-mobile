@@ -4,7 +4,8 @@ const initialState = {
 	count: 3,
 	parkingData: [],
 	selectedLots: ['Lot 406'],
-	showWarning: false
+	showWarning: false,
+	lastUpdated: null,
 }
 
 function parking(state = initialState, action) {
@@ -38,6 +39,7 @@ function parking(state = initialState, action) {
 		}
 		case 'SET_PARKING_DATA': {
 			newState.parkingData = [...action.parkingData]
+			newState.lastUpdated = new Date().getTime()
 			return newState
 		}
 		case 'SET_WARNING_SIGN': {
