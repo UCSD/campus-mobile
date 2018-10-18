@@ -3,8 +3,7 @@ const initialState = {
 	selectedSpots: ['S', 'B', 'A'],
 	count: 3,
 	parkingData: [],
-	parkingLotsData: [],
-	selectedLots: [],
+	selectedLots: ['Lot 406'],
 	showWarning: false
 }
 
@@ -38,33 +37,25 @@ function parking(state = initialState, action) {
 			return newState
 		}
 		case 'SET_PARKING_DATA': {
-			newState.parkingData = [action.ParkingData]
+			newState.parkingData = [...action.parkingData]
 			return newState
 		}
 		case 'SET_WARNING_SIGN': {
 			newState.showWarning = action.showWarning
 			return newState
 		}
-		case 'SET_PARKING_LOT_DATA': {
-			newState.parkingLotsData = [...action.ParkingLotData]
-			return newState
-		}
-		// for some reason this is saying that i modifed state
 		case 'SET_PARKING_LOT_SELECTION': {
-			const tempObj = { ...state.parkingLotsData[action.index] }
-			tempObj.active = action.value
-			newState.parkingLotsData = [...state.parkingLotsData]
-			newState.parkingLotsData[action.index] = tempObj
+			let temp = [...state.selectedLots]
+			if (action.add) {
+				temp.push(action.name)
+			} else {
+				temp = temp.filter(e => e !== action.name)
+			}
+			newState.selectedLots = [...temp]
 			return newState
 		}
-		case 'EDIT_LOCAL_LOT_SELECTION': {
-			const tempArray = []
-			state.parkingLotsData.forEach((lot) => {
-				if (lot.active) {
-					tempArray.push(lot.name)
-				}
-			})
-			newState.selectedLots = [...tempArray]
+		case 'SYNC_PARKING_LOTS_DATA': {
+			newState.selectedLots = [...action.prevSelectedParkingLots]
 			return newState
 		}
 		default:

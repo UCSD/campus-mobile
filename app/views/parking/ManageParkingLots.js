@@ -16,17 +16,17 @@ import css from '../../styles/css'
 
 class ManageParkingLots extends React.Component {
 	renderRow(parkingLot) {
-		const { name, active } = parkingLot.item
+		const { LocationName } = parkingLot.item
 		const { updateSelectedLots, selectedLots } = this.props
-		if (active) {
+		if (selectedLots.includes(LocationName)) {
 			return (
 				<View style={css.mpl_row_view}>
 					<Text style={css.mpl_row_text_selected}>
-						{name}
+						{LocationName}
 					</Text>
 					<Touchable
 						onPress={() => {
-							updateSelectedLots(!active, parkingLot.index, selectedLots)
+							updateSelectedLots(false, LocationName, selectedLots)
 						}}
 						style={css.mpl_row_add_remove_btn}
 					>
@@ -38,11 +38,11 @@ class ManageParkingLots extends React.Component {
 		return (
 			<View style={css.mpl_row_view}>
 				<Text style={css.mpl_row_text_unselected}>
-					{name}
+					{LocationName}
 				</Text>
 				<Touchable
 					onPress={() => {
-						updateSelectedLots(!active, parkingLot.index, selectedLots)
+						updateSelectedLots(true, LocationName, selectedLots)
 					}}
 					style={css.mpl_row_add_remove_btn}
 				>
@@ -59,12 +59,13 @@ class ManageParkingLots extends React.Component {
 					style={css.mpl_flat_list_container}
 					scrollEnabled={false}
 					showsVerticalScrollIndicator={false}
-					keyExtractor={parkingLot => parkingLot.id}
-					data={this.props.parkingLotsData}
+					keyExtractor={parkingLot => parkingLot.LocationId}
+					data={this.props.parkingData}
 					renderItem={parkingLot => this.renderRow(parkingLot)}
 					ItemSeparatorComponent={renderSeparator}
 					ListFooterComponent={renderSeparator}
 					ListHeaderComponent={renderSeparator}
+					extraData={this.props.selectedLots}
 				/>
 				<View style={css.mpl_message_view}>
 					<Text style={css.mpl_message_text}>
@@ -100,15 +101,15 @@ const renderSeparator = () => (
 	<View style={css.pst_flat_list_separator} />
 )
 const mapStateToProps = state => ({
-	parkingLotsData: state.parking.parkingLotsData,
+	parkingData: state.parking.parkingData,
 	selectedLots: state.parking.selectedLots
 })
 
 
 const mapDispatchToProps = dispatch => (
 	{
-		updateSelectedLots: (value, index, selectedLots) => {
-			dispatch({ type: 'UPDATE_PARKING_LOT_SELECTIONS', index, value, selectedLots })
+		updateSelectedLots: (add, name, selectedLots) => {
+			dispatch({ type: 'UPDATE_PARKING_LOT_SELECTIONS', add, name, selectedLots })
 		},
 		renderWarning: (showWarning) => {
 			dispatch({ type: 'SET_WARNING_SIGN', showWarning })

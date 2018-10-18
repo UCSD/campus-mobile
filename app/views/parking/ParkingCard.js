@@ -9,7 +9,8 @@ const ParkingCard = ({
 	gotoParkingSpotType,
 	gotoManageParkingLots,
 	mySpots,
-	lotCount
+	lotCount,
+	selectedLots
 }) => {
 	const extraActions = [
 		{
@@ -21,6 +22,15 @@ const ParkingCard = ({
 			action: gotoManageParkingLots
 		}
 	]
+
+	// only display the selcted parking lots
+	const data = []
+	savedStructures.forEach((obj) => {
+		if (selectedLots.includes(obj.LocationName)) {
+			data.push(obj)
+		}
+	})
+
 	return (
 		<ScrollCard
 			id="parking"
@@ -33,7 +43,7 @@ const ParkingCard = ({
 				/>
 			)}
 			extraData={mySpots}
-			scrollData={savedStructures[0]}
+			scrollData={data}
 			extraActions={extraActions}
 		/>
 	)

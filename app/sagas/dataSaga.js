@@ -186,12 +186,12 @@ function* updateLinks() {
 }
 
 function* updateParking() {
-	const parkingData = yield select(getParkingData)
+	const ParkingData = yield select(getParkingData)
 	const nowTime = new Date().getTime()
 	const ttl = PARKING_API_TTL
 	// set to the first element becuase we only have one parking lot set up right now
-	if (parkingData) {
-		const element = parkingData[0]
+	if (ParkingData) {
+		const element = ParkingData[0]
 		const { LastUpdated, LocationName, Availability } = element
 		const timeDiff = nowTime - LastUpdated
 
@@ -199,39 +199,30 @@ function* updateParking() {
 		// Do nothing, no need to fetch new data
 		} else {
 			// Fetch for new data
-			const ParkingData = yield call(ParkingService.FetchParking)
-			if (ParkingData) {
-				yield put({ type: 'SET_PARKING_DATA', ParkingData })
+			const parkingData = yield call(ParkingService.FetchParking)
+			if (parkingData) {
+				yield put({ type: 'SET_PARKING_DATA', parkingData })
 			}
-			let ParkingLotData = yield call(ParkingService.FetchParkingLots)
-			if (ParkingLotData) {
-				const userData = yield select(getUserData)
-				const prevSelectedParkingLots = userData.profile.selectedLots
-				console.log(prevSelectedParkingLots)
-				if (prevSelectedParkingLots) {
-					ParkingLotData = ParkingLotData.map(obj => ({ ...obj, active: prevSelectedParkingLots.includes(obj.name) }))
-				} else {
-					ParkingLotData = ParkingLotData.map(obj => ({ ...obj, active: false }))
-				}
-				yield put({ type: 'SET_PARKING_LOT_DATA', ParkingLotData })
-			}
-		}
-	}
-	else {
-		const ParkingData = yield call(ParkingService.FetchParking)
-		if (ParkingData) {
-			yield put({ type: 'SET_PARKING_DATA', ParkingData })
-		}
-		let ParkingLotData = yield call(ParkingService.FetchParkingLots)
-		if (ParkingLotData) {
+			// get previously selected lots from users synced profile
 			const userData = yield select(getUserData)
 			const prevSelectedParkingLots = userData.profile.selectedLots
 			if (prevSelectedParkingLots) {
-				ParkingLotData = ParkingLotData.map(obj => ({ ...obj, active: prevSelectedParkingLots.includes(obj.name) }))
-			} else {
-				ParkingLotData = ParkingLotData.map(obj => ({ ...obj, active: false }))
+				yield put({ type: 'SYNC_PARKING_LOTS_DATA', prevSelectedParkingLots })
 			}
-			yield put({ type: 'SET_PARKING_LOT_DATA', ParkingLotData })
+		}
+	}
+	// when parking data does not already exists
+	else {
+		// Fetch for new data
+		const parkingData = yield call(ParkingService.FetchParking)
+		if (parkingData) {
+			yield put({ type: 'SET_PARKING_DATA', parkingData })
+		}
+		// get previously selected lots from users synced profile
+		const userData = yield select(getUserData)
+		const prevSelectedParkingLots = userData.profile.selectedLots
+		if (prevSelectedParkingLots) {
+			yield put({ type: 'SYNC_PARKING_LOTS_DATA', prevSelectedParkingLots })
 		}
 	}
 }

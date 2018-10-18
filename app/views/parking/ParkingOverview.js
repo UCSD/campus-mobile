@@ -10,15 +10,11 @@ class ParkingOverview extends Component {
 		try {
 			const { structureData, spotsSelected } = this.props
 			let totalAvailableSpots = 0
-			if (Array.isArray(spotsSelected)) {
-				for (let i = 0; i < spotsSelected.length; i++) {
-					if (structureData.Availability && spotsSelected[i]) {
-						const parkingSpotsPerType = structureData.Availability[spotsSelected[i]]
-						if (Array.isArray(parkingSpotsPerType)) {
-							for (let j = 0; j < parkingSpotsPerType.length; j++) {
-								totalAvailableSpots += Number(parkingSpotsPerType[j].Open)
-							}
-						}
+			for (let i = 0; i < spotsSelected.length; i++) {
+				if (structureData.Availability && spotsSelected[i]) {
+					const parkingSpotsPerType = structureData.Availability[spotsSelected[i]]
+					if (parkingSpotsPerType) {
+						totalAvailableSpots += Number(parkingSpotsPerType.Open)
 					}
 				}
 			}
@@ -33,39 +29,24 @@ class ParkingOverview extends Component {
 	// returns -1 if the structure does not have the specific type
 	getOpenPerType(currentType) {
 		const { structureData } = this.props
-
-		const tempType = structureData.Availability[currentType]
-		let openPerType = 0
-		if (tempType) {
-			for (let i = 0; i < tempType.length; i++) {
-				openPerType += Number(tempType[i].Open)
-			}
-			return openPerType
-		} else {
+		try {
+			return Number(structureData.Availability[currentType].Open)
+		}
+		catch (error) {
 			return -1
 		}
 	}
 
 	getTotalPerType(currentType) {
 		const { structureData } = this.props
-		const tempType = structureData.Availability[currentType]
-		let totalPerType = 0
-		if (tempType) {
-			for (let i = 0; i < tempType.length; i++) {
-				totalPerType += Number(tempType[i].Total)
-			}
+		try {
+			return Number(structureData.Availability[currentType].Total)
 		}
-		return totalPerType
+		catch (error) {
+			return 0
+		}
 	}
 
-	displaySpots() {
-		const message = 'Please select parking type'
-		if (this.getTotalSpots() === 0) {
-			return message
-		} else {
-			return this.getTotalSpots()
-		}
-	}
 
 	renderDetails() {
 		const { spotsSelected } = this.props
