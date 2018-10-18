@@ -16,8 +16,9 @@ import MessagesService from '../services/messagesService'
 import logger from '../util/logger'
 import { MESSAGING_TTL } from '../AppSettings'
 
-const getUserData = state => (state.user)
-const getMessages = state => (state.messages)
+const getUserData = state => (state.user),
+	getMessages = state => (state.messages),
+	MAX_BADGE_COUNT = 99
 
 function* getTopics() {
 	try {
@@ -130,8 +131,8 @@ function* updateMessages(action) {
 				// check for how many of the new messages have a timestamp after latestTimeStamp
 				// latestTimeStamp is set when the user last opened the notfications pages
 				let { length } = sortedMessages
-				if (sortedMessages.length > 99) {
-					length = 99
+				if (sortedMessages.length > MAX_BADGE_COUNT) {
+					length = MAX_BADGE_COUNT
 				}
 				for (let i = 0; i < length; i++) {
 					if (sortedMessages[i].timestamp > profile.latestTimeStamp) {
@@ -176,8 +177,8 @@ function* updateMessages(action) {
 				// check for how many of the new messages have a timestamp after latestTimeStamp
 				// latestTimeStamp is set when the user last opened the notfications pages
 				let { length } = sortedMessages
-				if (sortedMessages.length > 9) {
-					length = 9
+				if (sortedMessages.length > MAX_BADGE_COUNT) {
+					length = MAX_BADGE_COUNT
 				}
 				for (let i = 0; i < length; i++) {
 					if (sortedMessages[i].timestamp > profile.latestTimeStamp) {
