@@ -10,7 +10,6 @@
     "campus-prod": "node scripts/replace_all.js prod",
     "campus-qa-ci": "node scripts/replace_all.js qa ci",
     "campus-qa": "node scripts/replace_all.js qa",
-    "campus-ph": "node scripts/replace_all.js ph",
     "apply-fixes": "node scripts/apply_fixes.js",
     "generate-docs": "./node_modules/.bin/jsdoc -c jsdoc.conf.json"
   },
