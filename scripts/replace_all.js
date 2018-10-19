@@ -118,17 +118,12 @@ function makeReplacements(FILE_PATH, ENV, REPLACEMENTS) {
 	fs.readFile(FILE_PATH, 'utf8', (err, data) => {
 		if (!err) {
 			for (let i = 0; REPLACEMENTS.length > i; i++) {
-				/*if (ENV === 'prod') {
+				if (ENV === 'prod') {
 					data = data.replace(REPLACEMENTS[i].phVal, REPLACEMENTS[i].prodVal).replace(REPLACEMENTS[i].qaVal, REPLACEMENTS[i].prodVal)
 				} else if (ENV === 'qa') {
 					data = data.replace(REPLACEMENTS[i].prodVal, REPLACEMENTS[i].qaVal).replace(REPLACEMENTS[i].phVal, REPLACEMENTS[i].qaVal)
 				} else if (ENV === 'ph') {
 					data = data.replace(REPLACEMENTS[i].prodVal, REPLACEMENTS[i].phVal).replace(REPLACEMENTS[i].qaVal, REPLACEMENTS[i].phVal)
-				}*/
-				if (ENV === 'prod') {
-					data = data.replace(REPLACEMENTS[i].phVal, REPLACEMENTS[i].prodVal)
-				} else if (ENV === 'ph') {
-					data = data.replace(REPLACEMENTS[i].prodVal, REPLACEMENTS[i].phVal)
 				}
 			}
 			fs.writeFile(FILE_PATH, data, 'utf8', (writeErr) => {
