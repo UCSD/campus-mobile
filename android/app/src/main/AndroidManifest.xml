@@ -50,7 +50,7 @@
         android:name="com.google.firebase.messaging.default_notification_icon"
         android:resource="@drawable/icon_sil" />
       <meta-data android:name="com.bugsnag.android.API_KEY"
-          android:value="BUGSNAG_PH"/>
+          android:value="BUGSNAG_KEY_PH"/>
     </application>
 
 </manifest>
