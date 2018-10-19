@@ -88,7 +88,7 @@ if (REPLACEMENT_ENV === 'prod' || REPLACEMENT_ENV === 'qa' || REPLACEMENT_ENV ==
 		{ prodVal: myEnv.GS_IOS_PROD_CLIENT_ID, 				qaVal: myEnv.GS_IOS_QA_CLIENT_ID, 				phVal: PH.GS_IOS_CLIENT_ID_PH },
 		{ prodVal: myEnv.GS_IOS_PROD_REVERSED_CLIENT_ID,		qaVal: myEnv.GS_IOS_QA_REVERSED_CLIENT_ID, 		phVal: PH.GS_IOS_REVERSED_CLIENT_ID_PH },
 		{ prodVal: myEnv.GS_IOS_PROD_API_KEY, 					qaVal: myEnv.GS_IOS_QA_API_KEY, 				phVal: PH.GS_IOS_API_KEY_PH },
-		{ prodVal: myEnv.GS_IOS_PROD_BUNDLE_ID, 				qaVal: myEnv.GS_IOS_QA_BUNDLE_ID, 				phVal: PH.GS_IOS_BUNDLE_ID_PH },
+		{ prodVal: myEnv.GS_IOS_BUNDLE_ID, 						qaVal: myEnv.GS_IOS_BUNDLE_ID, 					phVal: PH.GS_IOS_BUNDLE_ID_PH },
 		{ prodVal: myEnv.GS_IOS_PROD_APP_ID, 					qaVal: myEnv.GS_IOS_QA_APP_ID, 					phVal: PH.GS_IOS_APP_ID_PH },
 
 		{ prodVal: myEnv.GS_PROD_FIREBASE_URL, 					qaVal: myEnv.GS_QA_FIREBASE_URL, 				phVal: PH.GS_FIREBASE_URL_PH },
@@ -101,7 +101,7 @@ if (REPLACEMENT_ENV === 'prod' || REPLACEMENT_ENV === 'qa' || REPLACEMENT_ENV ==
 		{ prodVal: myEnv.GS_ANDROID_PROD_CLIENT_ID, 			qaVal: myEnv.GS_ANDROID_QA_CLIENT_ID, 			phVal: PH.GS_ANDROID_CLIENT_ID_PH },
 		{ prodVal: myEnv.GS_ANDROID_PROD_API_KEY, 				qaVal: myEnv.GS_ANDROID_QA_API_KEY, 			phVal: PH.GS_ANDROID_API_KEY_PH },
 		{ prodVal: myEnv.GS_ANDROID_PROD_APP_ID, 				qaVal: myEnv.GS_ANDROID_QA_APP_ID, 				phVal: PH.GS_ANDROID_APP_ID_PH },
-		{ prodVal: myEnv.GS_ANDROID_PROD_BUNDLE_ID, 			qaVal: myEnv.GS_ANDROID_QA_BUNDLE_ID, 			phVal: PH.GS_ANDROID_BUNDLE_ID_PH },
+		{ prodVal: myEnv.GS_ANDROID_BUNDLE_ID, 					qaVal: myEnv.GS_ANDROID_BUNDLE_ID, 				phVal: PH.GS_ANDROID_BUNDLE_ID_PH },
 
 		{ prodVal: myEnv.GS_PROD_FIREBASE_URL, 					qaVal: myEnv.GS_QA_FIREBASE_URL, 				phVal: PH.GS_FIREBASE_URL_PH },
 		{ prodVal: myEnv.GS_PROD_STORAGE_BUCKET, 				qaVal: myEnv.GS_QA_STORAGE_BUCKET, 				phVal: PH.GS_STORAGE_BUCKET_PH },
@@ -109,8 +109,7 @@ if (REPLACEMENT_ENV === 'prod' || REPLACEMENT_ENV === 'qa' || REPLACEMENT_ENV ==
 		{ prodVal: myEnv.GS_PROD_PROJECT_NUMBER, 				qaVal: myEnv.GS_QA_PROJECT_NUMBER, 				phVal: PH.GS_PROJECT_NUMBER_PH },
 	])
 } else {
-	console.log('Error: Replacement type not specififed')
-	console.log('Sample Usage: npm run-script [campus-ph|campus-qa|campus-prod]')
+	console.log('Error: Replacement type not specififed.\nSample Usage: npm run-script [campus-ph|campus-qa|campus-prod]')
 }
 
 
