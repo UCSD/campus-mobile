@@ -8,4 +8,4 @@ curl "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}.pkg" > "$HO
 sudo installer -store -pkg "$HOME/Downloads/node-installer.pkg" -target "/"
 
 # Insert production values
-npm run-script insert-production-values-ci
+npm run-script campus-prod-ci

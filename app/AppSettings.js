@@ -1,7 +1,7 @@
 module.exports = {
 
 	/* APP CONFIG */
-	APP_NAME: 'Campus Mobile',
+	APP_NAME: 'APP_NAME_PH',
 	GOOGLE_ANALYTICS_ID: 'GOOGLE_ANALYTICS_ID_PH',
 
 	/* ENDPOINTS */
