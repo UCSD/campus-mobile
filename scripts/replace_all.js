@@ -33,19 +33,16 @@ const PH = {
 	FIREBASE_KEY_PH: 'FIREBASE_KEY_PH',
 	BUGSNAG_KEY_PH: 'BUGSNAG_KEY_PH',
 	AUTH_SERVICE_API_KEY_PH: 'AUTH_SERVICE_API_KEY_PH',
-
 	GS_PROJECT_ID_PH: 'GS_PROJECT_ID_PH',
 	GS_STORAGE_BUCKET_PH: 'GS_STORAGE_BUCKET_PH',
 	GS_FIREBASE_URL_PH: 'GS_FIREBASE_URL_PH',
 	GS_PROJECT_NUMBER_PH: 'GS_PROJECT_NUMBER_PH', // iOS: GCM_SENDER_ID, Android: project_info.project_number
-
 	GS_IOS_CLIENT_ID_PH: 'GS_IOS_CLIENT_ID_PH',
 	GS_IOS_REVERSED_CLIENT_ID_PH: 'GS_IOS_REVERSED_CLIENT_ID_PH',
 	GS_IOS_API_KEY_PH: 'GS_IOS_API_KEY_PH',
 	GS_IOS_BUNDLE_ID_PH: 'GS_IOS_BUNDLE_ID_PH',
 	GS_IOS_STORAGE_BUCKET_PH: 'GS_IOS_STORAGE_BUCKET_PH',
 	GS_IOS_APP_ID_PH: 'GS_IOS_APP_ID_PH',
-
 	GS_ANDROID_CLIENT_ID_PH: 'GS_ANDROID_CLIENT_ID_PH',
 	GS_ANDROID_API_KEY_PH: 'GS_ANDROID_API_KEY_PH',
 	GS_ANDROID_APP_ID_PH: 'GS_ANDROID_APP_ID_PH',
@@ -106,7 +103,7 @@ if (REPLACEMENT_ENV === 'prod' || REPLACEMENT_ENV === 'qa') {
 		{ prodVal: myEnv.GS_PROD_PROJECT_NUMBER, 				qaVal: myEnv.GS_QA_PROJECT_NUMBER, 				phVal: PH.GS_PROJECT_NUMBER_PH },
 	])
 } else {
-	console.log('Error: Replacement type not specififed.\nSample Usage: npm run-script [campus-ph|campus-prod]')
+	console.log('Error: Replacement type not specififed.\nSample Usage: npm run-script [campus-prod|campus-qa]')
 }
 
 
