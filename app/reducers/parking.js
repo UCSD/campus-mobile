@@ -1,7 +1,6 @@
 const initialState = {
 	isChecked: [true, true, true, false, false],
 	selectedSpots: ['S', 'B', 'A'],
-	count: 3,
 	parkingData: [],
 	selectedLots: ['Lot 406'],
 	showWarning: false,
@@ -13,7 +12,6 @@ function parking(state = initialState, action) {
 	switch (action.type) {
 		case 'SET_PARKING_TYPE_SELECTION': {
 			newState.isChecked = action.isChecked
-			newState.count = action.count
 			const tempArray = []
 			for (let i = 0; i < 5; i++) {
 				switch (i) {

@@ -15,21 +15,21 @@ const ParkingTypes = require('./ParkingSpotTypeList.json')
 
 class ParkingSpotType extends React.Component {
 	rowTouched(parkingObj) {
-		const { isChecked, updateSelectedTypes, count, renderWarning } = this.props
+		const { isChecked, updateSelectedTypes, selectedSpots, renderWarning } = this.props
 		const ids = [...isChecked]
 		const index = parkingObj.item.id
 		// user is trying to unselect a row
 		if (ids[index]) {
 			ids[index] = !ids[index]
 			parkingObj.separators.unhighlight()
-			updateSelectedTypes(ids, count - 1)
+			updateSelectedTypes(ids, selectedSpots.length - 1)
 			renderWarning(false)
 		}
 		// user is trying to select a row
-		else if (count < 3) {
+		else if (selectedSpots.length < 3) {
 			ids[index] = !ids[index]
 			parkingObj.separators.highlight()
-			updateSelectedTypes(ids, count + 1)
+			updateSelectedTypes(ids, selectedSpots.length + 1)
 		}
 		else {
 			renderWarning(true)
@@ -52,7 +52,7 @@ class ParkingSpotType extends React.Component {
 		)
 	}
 
-	// the flat list doesn't need extraData prop becuase it rerenders wehn an item is highlighted or unhighlighted
+	// the flat list doesn't need extraData prop becuase it rerenders when an item is highlighted or unhighlighted
 	// the highlight and unhihglight methods are given in renderItem prop (parkingObj)
 	render() {
 		return (
@@ -180,15 +180,15 @@ const uncheckedIcon = () => (
 
 const mapStateToProps = state => ({
 	isChecked: state.parking.isChecked,
-	count: state.parking.count,
+	selectedSpots: state.parking.selectedSpots,
 	showWarning: state.parking.showWarning
 })
 
 
 const mapDispatchToProps = dispatch => (
 	{
-		updateSelectedTypes: (isChecked, count) => {
-			dispatch({ type: 'SET_PARKING_TYPE_SELECTION', isChecked, count })
+		updateSelectedTypes: (isChecked) => {
+			dispatch({ type: 'SET_PARKING_TYPE_SELECTION', isChecked })
 		},
 		renderWarning: (showWarning) => {
 			dispatch({ type: 'SET_WARNING_SIGN', showWarning })

@@ -195,6 +195,7 @@ function* updateParking() {
 		// Fetch for new data
 		const parkingData = yield call(ParkingService.FetchParking)
 		if (parkingData) {
+			parkingData.sort(compare)
 			yield put({ type: 'SET_PARKING_DATA', parkingData })
 		}
 		// get previously selected lots from users synced profile
@@ -204,6 +205,16 @@ function* updateParking() {
 			yield put({ type: 'SYNC_PARKING_LOTS_DATA', prevSelectedParkingLots })
 		}
 	}
+}
+// comparator function to sort all the parking lots in alphanumeric order based on the LocationName
+function compare(e1, e2) {
+	if (e1.LocationName < e2.LocationName) {
+		return -1
+	}
+	if (e1.LocationName > e2.LocationName) {
+		return 1
+	}
+	return 0
 }
 
 
