@@ -488,6 +488,7 @@ const css = StyleSheet.create({
 	notifications_title_text: { color: COLOR.BLACK, fontWeight: '400', fontSize: platformAndroid() ? 16 : 20 },
 	notifications_body_text: { paddingTop: 10, color: COLOR.VDGREY, fontSize: 14 },
 	notifications_section_list_separator: { height: 1, backgroundColor: COLOR.MGREY },
+	notifications_err: { textAlign: 'center', fontSize: 16, padding: 30 },
 	// Notifications Icon Badge
 	tabIconWithBadge: { padding: round(5 * prm) },
 	tabIconBadge: { position: 'absolute', zIndex: 10, top: platformIOS() ? 0 : 3, right: platformIOS() ? 2 : 3, width: round(18 * prm), height: round(18 * prm), backgroundColor: 'red', borderRadius: round(9 * prm), justifyContent: 'center', opacity: 1 },

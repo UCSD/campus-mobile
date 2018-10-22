@@ -377,7 +377,7 @@ module.exports = {
 		logger.trackException(err, null, true)
 
 		Alert.alert(
-			'Oops! Something went wrong!',
+			'Oops! Something went wrong.',
 			'An error report has been automatically sent to the technical staff. Try restarting. If the problem still occurs try again later.' + fatalErrDev,
 			[
 				{

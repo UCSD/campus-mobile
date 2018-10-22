@@ -3,6 +3,8 @@ import {
 	View,
 	Text,
 	FlatList,
+	ScrollView,
+	RefreshControl,
 	ActivityIndicator
 } from 'react-native'
 import { connect } from 'react-redux'
@@ -84,28 +86,47 @@ export class Messaging extends Component {
 		let isLoading = false
 		if (this.props.myMessagesStatus) isLoading = true
 
-		return (
-			<FlatList
-				data={filteredData}
-				style={css.scroll_default}
-				contentContainerStyle={css.main_full}
-				onRefresh={() => updateMessages(new Date().getTime())}
-				refreshing={isLoading}
-				renderItem={this.renderItem}
-				keyExtractor={(item, index) => item.id}
-				ItemSeparatorComponent={this.renderSeparator}
-				onEndReachedThreshold={0.5}
-				ListFooterComponent={(isLoading && nextTimestamp) ? <ActivityIndicator size="large" animating /> : null}
-				onEndReached={(info) => {
-					// this if check makes sure that we dont fetch extra data in the intialization of the list
-					if (info.distanceFromEnd > 0
-						&& nextTimestamp
-						&& !isLoading) {
-						updateMessages(nextTimestamp)
+		if (Array.isArray(filteredData) && filteredData.length > 0) {
+			return (
+				<FlatList
+					data={filteredData}
+					style={css.scroll_default}
+					contentContainerStyle={css.main_full}
+					onRefresh={() => updateMessages(new Date().getTime())}
+					refreshing={isLoading}
+					renderItem={this.renderItem}
+					keyExtractor={(item, index) => item.id}
+					ItemSeparatorComponent={this.renderSeparator}
+					onEndReachedThreshold={0.5}
+					ListFooterComponent={(isLoading && nextTimestamp) ? <ActivityIndicator size="large" animating /> : null}
+					onEndReached={(info) => {
+						// this if check makes sure that we dont fetch extra data in the intialization of the list
+						if (info.distanceFromEnd > 0
+							&& nextTimestamp
+							&& !isLoading) {
+							updateMessages(nextTimestamp)
+						}
+					}}
+				/>
+			)
+		} else {
+			return (
+				<ScrollView
+					style={css.scroll_default}
+					contentContainerStyle={css.main_full_flex}
+					refreshControl={
+						<RefreshControl
+							refreshing={isLoading}
+							onRefresh={() => updateMessages(new Date().getTime())}
+						/>
 					}
-				}}
-			/>
-		)
+				>
+					<View style={css.main_full_flex}>
+						<Text style={css.notifications_err}>There was a problem fetching your messages.{'\n\n'}Please try again soon.</Text>
+					</View>
+				</ScrollView>
+			)
+		}
 	}
 }
 
