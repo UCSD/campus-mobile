@@ -30,6 +30,9 @@ export class Messaging extends Component {
 
 	componentDidMount() {
 		logger.ga('View Loaded: Messaging')
+		this.props.navigation.addListener('willFocus', () => {
+			this.props.setLatestTimeStamp(new Date().getTime())
+		})
 	}
 
 	renderSeparator = ({ leadingItem }) => (
@@ -71,9 +74,9 @@ export class Messaging extends Component {
 
 	render() {
 		// this will clear the notifications badge when the user is on this screen
-		if (this.props.navigation.isFocused()) {
+		/*if (this.props.navigation.isFocused()) {
 			this.props.setLatestTimeStamp(new Date().getTime())
-		}
+		}*/
 		const { messages, nextTimestamp } = this.props.messages
 		const { updateMessages } = this.props
 		const filteredData = checkData(messages)
