@@ -7,15 +7,24 @@ export class ParkingCardContainer extends Component {
 	gotoParkingSpotType = (navigation) => {
 		navigation.navigate('ParkingSpotType')
 	}
+	gotoManageParkingLots = (navigation) => {
+		navigation.navigate('ManageParkingLots')
+	}
 
 	render() {
-		const { navigation, parkingData, count, selectedSpots } = this.props
+		const {
+			navigation,
+			parkingData,
+			selectedSpots,
+			selectedLots
+		} = this.props
 		return (
 			<ParkingCard
 				savedStructures={parkingData}
 				gotoParkingSpotType={() => this.gotoParkingSpotType(navigation)}
-				mySpots={selectedSpots}
-				lotCount={count}
+				gotoManageParkingLots={() => this.gotoManageParkingLots(navigation)}
+				selectedSpots={selectedSpots}
+				selectedLots={selectedLots}
 			/>
 		)
 	}
@@ -25,8 +34,8 @@ const mapStateToProps = state => (
 	{
 		parkingData: state.parking.parkingData,
 		isChecked: state.parking.isChecked,
-		count: state.parking.count,
-		selectedSpots: state.parking.selectedSpots
+		selectedSpots: state.parking.selectedSpots,
+		selectedLots: state.parking.selectedLots
 	}
 )
 

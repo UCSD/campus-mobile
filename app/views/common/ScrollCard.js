@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, FlatList } from 'react-native'
+import { View, FlatList, ActivityIndicator } from 'react-native'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import { connect } from 'react-redux'
 import ElevatedView from 'react-native-elevated-view'
@@ -20,7 +20,9 @@ class ScrollCard extends React.Component {
 	}
 
 	componentDidMount() {
-		this._flatlist.scrollToOffset({ x: this.props.lastScroll, animated: false })
+		if (this.props.scrollData.length ) {
+			this._flatlist.scrollToOffset({ x: this.props.lastScroll, animated: false })
+		}
 	}
 
 	setNativeProps(props) {
@@ -42,7 +44,7 @@ class ScrollCard extends React.Component {
 
 	render() {
 		let list
-		if (this.props.scrollData !== {}) {
+		if (this.props.scrollData.length > 0) {
 			list = (
 				<FlatList
 					ref={(c) => { this._flatlist = c }}
@@ -55,7 +57,6 @@ class ScrollCard extends React.Component {
 					onScroll={this.handleScroll}
 					scrollEventThrottle={0}
 					data={this.props.scrollData}
-					extraData={this.props.extraData}
 					enableEmptySections={true}
 					keyExtractor={(listItem, index) => {
 						if (listItem.id) return listItem.id.toString() + index
@@ -68,6 +69,12 @@ class ScrollCard extends React.Component {
 					}}
 					renderItem={this.props.renderItem}
 				/>
+			)
+		} else {
+			list = (
+				<View style={[css.dlc_cardcenter, css.dlc_wc_loading_height]}>
+					<ActivityIndicator size="large" />
+				</View>
 			)
 		}
 

@@ -33,7 +33,8 @@ module.exports = {
 	QUICKLINKS_API_URL: 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/quick_links/ucsd-quicklinks-v3.json',
 
 	/* DEV ENDPOINTS - UPDATE TO PROD */
-	PARKING_API_URL: 'https://8tcoih8tu0.execute-api.us-west-2.amazonaws.com/dev/parking/v1.0/406/status',
+	PARKING_API_URL: 'https://4pefyt8qv7.execute-api.us-west-2.amazonaws.com/dev/parking/v1.0/status',
+
 	/* END DEV ENDPOINTS */
 
 	/* RESOURCES */

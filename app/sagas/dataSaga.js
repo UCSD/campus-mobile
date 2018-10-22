@@ -31,7 +31,7 @@ const getNews = state => (state.news)
 const getCards = state => (state.cards)
 const getShuttle = state => (state.shuttle)
 const getUserData = state => (state.user)
-const getParkingData = state => (state.parkingData)
+const getParkingData = state => (state.parking)
 
 function* watchData() {
 	while (true) {
@@ -186,32 +186,37 @@ function* updateLinks() {
 }
 
 function* updateParking() {
-	const parkingData = yield select(getParkingData)
-	const nowTime = new Date().getTime()
-	const ttl = PARKING_API_TTL
-	// set to the first element becuase we only have one parking lot set up right now
-	if (parkingData) {
-		const element = parkingData[0]
-		const { LastUpdated, LocationName, Availability } = element
-		const timeDiff = nowTime - LastUpdated
+	const { lastUpdated } = yield select(getParkingData),
+		nowTime = new Date().getTime(),
+		ttl = PARKING_API_TTL,
+		timeDiff = nowTime - lastUpdated
 
-		if ((timeDiff < ttl) && Availability && LocationName) {
-		// Do nothing, no need to fetch new data
-		} else {
-			// Fetch for new data
-			const ParkingData = yield call(ParkingService.FetchParking)
-			if (ParkingData) {
-				yield put({ type: 'SET_PARKING_DATA', ParkingData })
-			}
+	if (timeDiff > ttl) {
+		// Fetch for new data
+		const parkingData = yield call(ParkingService.FetchParking)
+		if (parkingData) {
+			parkingData.sort(compare)
+			yield put({ type: 'SET_PARKING_DATA', parkingData })
 		}
-	}
-	else {
-		const ParkingData = yield call(ParkingService.FetchParking)
-		if (ParkingData) {
-			yield put({ type: 'SET_PARKING_DATA', ParkingData })
+		// get previously selected lots from users synced profile
+		const userData = yield select(getUserData)
+		const prevSelectedParkingLots = userData.profile.selectedLots
+		if (prevSelectedParkingLots) {
+			yield put({ type: 'SYNC_PARKING_LOTS_DATA', prevSelectedParkingLots })
 		}
 	}
 }
+// comparator function to sort all the parking lots in alphanumeric order based on the LocationName
+function compare(e1, e2) {
+	if (e1.LocationName < e2.LocationName) {
+		return -1
+	}
+	if (e1.LocationName > e2.LocationName) {
+		return 1
+	}
+	return 0
+}
+
 
 function* updateEvents() {
 	const { lastUpdated, data } = yield select(getEvents)

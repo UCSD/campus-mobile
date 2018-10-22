@@ -6,7 +6,17 @@ import css from '../../styles/css'
 import CardHeader from './CardHeader'
 import CardMenu from './CardMenu'
 
-const Card = ({ hideMenu, cardRefresh, id, title, header, hide, children, full }) => (
+const Card = ({
+	hideMenu,
+	cardRefresh,
+	id,
+	title,
+	header,
+	hide,
+	children,
+	full,
+	extraActions
+}) => (
 	<ElevatedView
 		style={full ? css.card_full_container : css.card_container}
 		ref={(i) => { this._card = i }}
@@ -20,6 +30,7 @@ const Card = ({ hideMenu, cardRefresh, id, title, header, hide, children, full }
 					hideMenu={hideMenu}
 					cardRefresh={cardRefresh}
 					hideCard={hide}
+					extraActions={extraActions}
 					id={id}
 				/>
 			}

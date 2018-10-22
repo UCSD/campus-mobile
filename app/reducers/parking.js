@@ -1,9 +1,10 @@
 const initialState = {
 	isChecked: [true, true, true, false, false],
 	selectedSpots: ['S', 'B', 'A'],
-	count: 3,
 	parkingData: [],
-	showWarning: false
+	selectedLots: ['Lot 406'],
+	showWarning: false,
+	lastUpdated: null,
 }
 
 function parking(state = initialState, action) {
@@ -11,7 +12,6 @@ function parking(state = initialState, action) {
 	switch (action.type) {
 		case 'SET_PARKING_TYPE_SELECTION': {
 			newState.isChecked = action.isChecked
-			newState.count = action.count
 			const tempArray = []
 			for (let i = 0; i < 5; i++) {
 				switch (i) {
@@ -36,11 +36,26 @@ function parking(state = initialState, action) {
 			return newState
 		}
 		case 'SET_PARKING_DATA': {
-			newState.parkingData = [action.ParkingData]
+			newState.parkingData = [...action.parkingData]
+			newState.lastUpdated = new Date().getTime()
 			return newState
 		}
 		case 'SET_WARNING_SIGN': {
 			newState.showWarning = action.showWarning
+			return newState
+		}
+		case 'SET_PARKING_LOT_SELECTION': {
+			let temp = [...state.selectedLots]
+			if (action.add) {
+				temp.push(action.name)
+			} else {
+				temp = temp.filter(e => e !== action.name)
+			}
+			newState.selectedLots = [...temp]
+			return newState
+		}
+		case 'SYNC_PARKING_LOTS_DATA': {
+			newState.selectedLots = [...action.prevSelectedParkingLots]
 			return newState
 		}
 		default:

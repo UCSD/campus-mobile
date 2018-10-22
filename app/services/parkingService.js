@@ -6,10 +6,9 @@ const ParkingService = {
 			.then(response => response.json())
 			.then(responseData => responseData)
 			.catch((err) => {
-				console.log('Error fetching parking data: ' + err)
+				console.log('Error fetching parking lots: ' + err)
 				return null
 			})
-	}
+	},
 }
-
 export default ParkingService

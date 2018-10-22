@@ -107,7 +107,7 @@ class ParkingDetail extends Component {
 					tintColor={this.mapAvailabilityToColor()}
 					backgroundColor={ColorConstants.LGREY2}
 					rotation={360}
-					style={{ marginBottom: 15 }}
+					style={css.po_acp}
 				>
 					{fill => (
 						<View>
