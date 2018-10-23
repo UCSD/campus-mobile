@@ -70,13 +70,14 @@ export class Messaging extends Component {
 	}
 
 	render() {
-		// this will clear the notifications badge when the user is on this screen
-		if (this.props.navigation.isFocused()) {
-			this.props.setLatestTimeStamp(new Date().getTime())
-		}
-		const { messages, nextTimestamp } = this.props.messages
+		const { messages, nextTimestamp, unreadMessages } = this.props.messages
 		const { updateMessages } = this.props
 		const filteredData = checkData(messages)
+
+		// this will clear the notifications badge when the user is on this screen
+		if (this.props.navigation.isFocused() && unreadMessages) {
+			this.props.setLatestTimeStamp(new Date().getTime())
+		}
 
 		let isLoading = false
 		if (this.props.myMessagesStatus) isLoading = true
@@ -111,6 +112,7 @@ const mapStateToProps = (state, props) => (
 		messages: state.messages,
 		myMessagesStatus: state.requestStatuses.GET_MESSAGES,
 		myMessagesError: state.requestErrors.GET_MESSAGES,
+		unreadMessages: state.unreadMessages
 	}
 )
 
