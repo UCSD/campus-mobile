@@ -140,7 +140,8 @@ class ParkingOverview extends Component {
 	}
 
 	render() {
-		const { structureData, selectedSpots } = this.props
+		const { structureData, selectedSpots, totalLotCount } = this.props
+
 		let message
 		if (Array.isArray(selectedSpots) && selectedSpots.length) {
 			const totalSpots = this.getTotalSpots()
@@ -159,7 +160,9 @@ class ParkingOverview extends Component {
 				<Text style={css.po_structure_context}>{structureData.LocationContext}</Text>
 				<Text style={css.po_structure_spots_available}>{message}</Text>
 				{this.renderDetails()}
-				<Text style={css.po_structure_comingsoon}>More Lots Coming Soon!</Text>
+				{totalLotCount === 1 ? (
+					<Text style={css.po_structure_comingsoon}>More Lots Coming Soon!</Text>
+				) : null }
 			</View>
 		)
 	}

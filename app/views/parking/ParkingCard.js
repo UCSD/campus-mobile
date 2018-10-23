@@ -42,6 +42,7 @@ const ParkingCard = ({
 					<ParkingOverview
 						structureData={item}
 						selectedSpots={selectedSpots}
+						totalLotCount={savedStructures.length}
 					/>
 				)}
 				extraData={selectedSpots}
