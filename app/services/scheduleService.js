@@ -4,7 +4,7 @@ import AppSettings from '../AppSettings'
 import logger from '../util/logger'
 
 const ScheduleService = {
-	* FetchSchedule(term, isStudentDemo) {
+	* FetchSchedule(term) {
 		const data = [],
 			UN_API_URL = AppSettings.ACADEMIC_HISTORY_API_URL + '?academic_level=UN&term_code=' + term,
 			GR_API_URL = AppSettings.ACADEMIC_HISTORY_API_URL + '?academic_level=GR&term_code=' + term
@@ -32,15 +32,15 @@ const ScheduleService = {
 		return { data }
 	},
 
-	FetchTerm(isStudentDemo) {
+	FetchTerm() {
 		return fetch(AppSettings.ACADEMIC_TERM_API_URL)
 			.then(response => response.json())
 			.then(responseData => responseData)
 			.catch((error) => { throw error })
 	},
 
-	FetchFinals(isStudentDemo) {
-		return fetch(AppSettings.ACADEMIC_TERM_FINALS_API_URL(isStudentDemo))
+	FetchFinals() {
+		return fetch(AppSettings.ACADEMIC_TERM_FINALS_API_URL)
 			.then(response => response.json())
 			.then(responseData => responseData)
 			.catch((error) => { throw error })

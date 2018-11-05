@@ -27,74 +27,67 @@ const userState = state => (state.user)
 function* doLogin(action) {
 	const { username, password } = action
 
-	if ((username === 'studentdemo' && password === 'studentdemo') ||
-		(username === 'demo' && password === 'demo')) {
-		// DEMO ACCOUNT LOGIN
-		yield activateDemoAccount(username, password)
-	} else {
-		// NORMAL LOGIN
-		yield put({ type: 'LOG_IN_REQUEST' })
-		try {
-			if (!password || password.length === 0) {
-				const e = new Error('Please type in your password.')
-				e.name = 'emptyPasswordError'
-				yield call(delay, 0)
-				throw e
-			}
-			const passwordEncrypted = yield auth.encryptStringWithKey(password)
-			const loginInfo = auth.encryptStringWithBase64(`${username}:${passwordEncrypted}`)
-
-			const { response, timeout } = yield race({
-				response: call(ssoService.retrieveAccessToken, loginInfo),
-				timeout: call(delay, SSO_TTL)
-			})
-
-			if (timeout) {
-				const e = new Error('Logging in timed out.')
-				e.name = 'ssoTimeout'
-				throw e
-			} else if (response.error) {
-				if (response.error.appUpdateRequired) {
-					yield outOfDateAlert()
-					const appUpdateError = new Error('App update required.')
-					throw appUpdateError
-				} else {
-					logger.log(response)
-					throw response.error
-				}
-			} else {
-				// Successfully logged in
-				yield auth.storeUserCreds(username, passwordEncrypted)
-				yield auth.storeAccessToken(response.access_token)
-
-				// Set up user profile
-				const newProfile = {
-					username,
-					pid: response.pid,
-					classifications: { student: Boolean(response.pid) }
-				}
-
-				// Post sign-in flow
-				// Toggles any cards that should show up for the signed in user
-				// Registers firebase push token
-				// Queries any user data with newly obtained access token
-				yield put({ type: 'LOGGED_IN', profile: newProfile })
-				yield put({ type: 'LOG_IN_SUCCESS' })
-				yield put({ type: 'TOGGLE_AUTHENTICATED_CARDS' })
-
-				const fcmToken = yield firebase.messaging().getToken()
-				if (fcmToken) yield put({ type: 'REGISTER_TOKEN', token: fcmToken })
-
-				// Clears any potential errors from being
-				// unable to automatically reauthorize a user
-				yield put({ type: 'AUTH_HTTP_SUCCESS' })
-
-				yield call(queryUserData)
-			}
-		} catch (error) {
-			logger.trackException(error)
-			yield put({ type: 'LOG_IN_FAILURE', error })
+	yield put({ type: 'LOG_IN_REQUEST' })
+	try {
+		if (!password || password.length === 0) {
+			const e = new Error('Please type in your password.')
+			e.name = 'emptyPasswordError'
+			yield call(delay, 0)
+			throw e
 		}
+		const passwordEncrypted = yield auth.encryptStringWithKey(password)
+		const loginInfo = auth.encryptStringWithBase64(`${username}:${passwordEncrypted}`)
+
+		const { response, timeout } = yield race({
+			response: call(ssoService.retrieveAccessToken, loginInfo),
+			timeout: call(delay, SSO_TTL)
+		})
+
+		if (timeout) {
+			const e = new Error('Logging in timed out.')
+			e.name = 'ssoTimeout'
+			throw e
+		} else if (response.error) {
+			if (response.error.appUpdateRequired) {
+				yield outOfDateAlert()
+				const appUpdateError = new Error('App update required.')
+				throw appUpdateError
+			} else {
+				logger.log(response)
+				throw response.error
+			}
+		} else {
+			// Successfully logged in
+			yield auth.storeUserCreds(username, passwordEncrypted)
+			yield auth.storeAccessToken(response.access_token)
+
+			// Set up user profile
+			const newProfile = {
+				username,
+				pid: response.pid,
+				classifications: { student: Boolean(response.pid) }
+			}
+
+			// Post sign-in flow
+			// Toggles any cards that should show up for the signed in user
+			// Registers firebase push token
+			// Queries any user data with newly obtained access token
+			yield put({ type: 'LOGGED_IN', profile: newProfile })
+			yield put({ type: 'LOG_IN_SUCCESS' })
+			yield put({ type: 'TOGGLE_AUTHENTICATED_CARDS' })
+
+			const fcmToken = yield firebase.messaging().getToken()
+			if (fcmToken) yield put({ type: 'REGISTER_TOKEN', token: fcmToken })
+
+			// Clears any potential errors from being
+			// unable to automatically reauthorize a user
+			yield put({ type: 'AUTH_HTTP_SUCCESS' })
+
+			yield call(queryUserData)
+		}
+	} catch (error) {
+		logger.trackException(error)
+		yield put({ type: 'LOG_IN_FAILURE', error })
 	}
 }
 
@@ -303,35 +296,6 @@ function* modifyLocalProfile(action) {
 	// if profile change includes changes to subscriptions, reset messages
 	if (profileItems.subscribedTopics) yield put({ type: 'RESET_MESSAGES' })
 }
-
-// Handles signing in to the fake student demo account
-// username and password are both "demo"
-function* activateDemoAccount(demoUsername, demoPassword) {
-	yield put({ type: 'LOG_IN_REQUEST' })
-	yield put({ type: 'ACTIVATE_STUDENT_DEMO_ACCOUNT' })
-	yield call(delay, 750)
-
-	// Successfully logged in
-	yield auth.storeUserCreds(demoUsername, demoPassword)
-
-	// Set up user profile
-	const newProfile = {
-		username: 'Student Demo',
-		pid: 'fakepid',
-		classifications: { student: true }
-	}
-
-	yield put({ type: 'LOGGED_IN', profile: newProfile })
-	yield put({ type: 'LOG_IN_SUCCESS' })
-	yield put({ type: 'TOGGLE_AUTHENTICATED_CARDS' })
-
-	// Clears any potential errors from being
-	// unable to automatically reauthorize a user
-	yield put({ type: 'AUTH_HTTP_SUCCESS' })
-
-	yield call(queryUserData)
-}
-
 
 // Performs various cleanup actions. These include:
 // Unregistering / unassociating the firebase push token

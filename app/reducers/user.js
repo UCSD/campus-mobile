@@ -9,7 +9,6 @@ const initialState = {
 	syncedProfile: {},
 	invalidSavedCredentials: false,
 	appUpdateRequired: false,
-	isStudentDemo: false,
 	lastSynced: null,
 }
 
@@ -41,10 +40,6 @@ function user(state = initialState, action) {
 		}
 		case 'APP_UPDATE_REQUIRED': {
 			newState.appUpdateRequired = true
-			return newState
-		}
-		case 'ACTIVATE_STUDENT_DEMO_ACCOUNT': {
-			newState.isStudentDemo = true
 			return newState
 		}
 		case 'SET_LOCAL_PROFILE': {
