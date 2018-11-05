@@ -53,7 +53,7 @@ if (REPLACEMENT_ENV === 'prod' || REPLACEMENT_ENV === 'qa') {
 	// AppSettings.js
 	makeReplacements(APP_SETTINGS_PATH, REPLACEMENT_ENV, [
 		{ prodVal: myEnv.APP_NAME, qaVal: myEnv.APP_NAME, phVal: PH.APP_NAME_PH },
-		{ prodVal: myEnv.GOOGLE_ANALYTICS_ID_PROD, qaVal: myEnv.GOOGLE_ANALYTICS_ID_PH, phVal: PH.GOOGLE_ANALYTICS_ID_PH },
+		{ prodVal: myEnv.GOOGLE_ANALYTICS_ID_PROD, qaVal: myEnv.GOOGLE_ANALYTICS_ID_QA, phVal: PH.GOOGLE_ANALYTICS_ID_PH },
 	])
 
 	// ssoService.js
