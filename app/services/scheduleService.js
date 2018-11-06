@@ -40,7 +40,7 @@ const ScheduleService = {
 	},
 
 	FetchFinals(isStudentDemo) {
-		return fetch(AppSettings.ACADEMIC_TERM_FINALS_API_URL(isStudentDemo))
+		return fetch(AppSettings.ACADEMIC_TERM_FINALS_API_URL)
 			.then(response => response.json())
 			.then(responseData => responseData)
 			.catch((error) => { throw error })
