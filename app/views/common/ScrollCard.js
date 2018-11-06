@@ -30,7 +30,7 @@ class ScrollCard extends React.Component {
 	}
 
 	countDots = (width, height) => {
-		const numDots = Math.floor(width / LAYOUT.MAX_CARD_WIDTH)
+		const numDots = this.props.scrollData.length
 		this.setState({ numDots })
 	}
 
