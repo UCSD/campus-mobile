@@ -57,11 +57,13 @@ export class Map extends React.Component {
 			})
 		}
 
-		Object.keys(this.props.toggles).forEach((route) => {
-			if (this.props.toggles[route]) {
-				this.state.currentToggledRoute = route
-			}
-		})
+		if (this.props.toggles) {
+			Object.keys(this.props.toggles).forEach((route) => {
+				if (this.props.toggles[route]) {
+					this.state.currentToggledRoute = route
+				}
+			})
+		}
 	}
 
 	componentDidMount() {

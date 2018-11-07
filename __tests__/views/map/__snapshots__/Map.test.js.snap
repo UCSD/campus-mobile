@@ -48,6 +48,7 @@ exports[`renders without crashing 1`] = `
             },
           }
         }
+        polylines={null}
         selectedResult={null}
         vehicles={Object {}}
       />
