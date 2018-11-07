@@ -1,10 +1,11 @@
 import React from 'react'
+import { StatusBar } from 'react-native'
 import { setJSExceptionHandler } from 'react-native-exception-handler'
 import { Provider } from 'react-redux'
 
 import configureStore from './store/configureStore'
 import Main from './main'
-import { gracefulFatalReset } from './util/general'
+import { gracefulFatalReset, platformIOS } from './util/general'
 
 class CampusMobileSetup extends React.Component {
 	constructor(props) {
@@ -26,6 +27,10 @@ class CampusMobileSetup extends React.Component {
 	}
 
 	render() {
+		if (platformIOS) {
+			StatusBar.setBarStyle('light-content')
+		}
+
 		if (!this.state.isLoading) {
 			return (
 				<Provider store={this.state.store}>
