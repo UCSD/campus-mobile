@@ -6,7 +6,11 @@ import {
 	select,
 	takeLatest
 } from 'redux-saga/effects'
-import { fetchShuttleArrivalsByStop, fetchVehiclesByRoute } from '../services/shuttleService'
+import {
+	fetchShuttleArrivalsByStop,
+	fetchVehiclesByRoute,
+	fetchRoutePolyline
+} from '../services/shuttleService'
 import { SHUTTLE_API_TTL } from '../AppSettings'
 
 const getShuttle = state => (state.shuttle)
@@ -15,9 +19,10 @@ function* toggleRoute(action) {
 	const { toggles, stops, routes } = yield select(getShuttle)
 	const { route } = action
 
+	let newRoute = null
 	const newToggles = Object.assign({}, toggles)
 	// Performs a deep copy of stops
-	let newStops = JSON.parse(JSON.stringify(stops))
+	const newStops = JSON.parse(JSON.stringify(stops))
 
 	if (toggles[route]) {
 		// If route is on, toggle off
@@ -28,10 +33,13 @@ function* toggleRoute(action) {
 			if (stops[stop]) {
 				const newStop = { ...stops[stop] }
 				delete newStop.routes[route]
+				/*
 				newStops = {
 					...newStops,
 					newStop
 				}
+				*/
+				newStops[stop] = newStop
 			}
 		})
 	} else {
@@ -45,10 +53,13 @@ function* toggleRoute(action) {
 					if (stops[stop]) {
 						const newStop = { ...stops[stop] }
 						delete newStop.routes[route]
+						/*
 						newStops = {
 							...newStops,
 							newStop
 						}
+						*/
+						newStops[stop] = newStop
 					}
 				})
 			}
@@ -57,6 +68,15 @@ function* toggleRoute(action) {
 		// Turn route on
 		newToggles[route] = true
 
+		// Add polylines to route
+		const polylines = yield call(fetchRoutePolyline, route)
+		if (polylines) {
+			newRoute = {
+				...routes[route],
+				polylines
+			}
+		}
+
 		// Add route to stops
 		Object.keys(routes[route].stops).forEach((stop) => {
 			if (stops[stop]) {
@@ -64,17 +84,23 @@ function* toggleRoute(action) {
 					...stops[stop],
 					routes: {}
 				}
+				/*
 				newStop.routes[route] = routes[route]
 				newStops = {
 					...newStops,
 					newStop
 				}
+				*/
+				newStop.routes[route] = true
+				newStops[stop] = newStop
 			}
 		})
 	}
 
 	yield put({
 		type: 'TOGGLE_ROUTE',
+		route,
+		newRoute,
 		newToggles,
 		newStops
 	})

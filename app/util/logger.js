@@ -58,7 +58,10 @@ module.exports = {
 		bugsnag.notify(error, (report) => {
 			report.severity = severity
 			if (metadata) {
-				report.metadata = metadata
+				report.metadata = {
+					...report.metadata,
+					loggerData: { ...metadata }
+				}
 			}
 		})
 	},
