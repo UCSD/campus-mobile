@@ -9,6 +9,13 @@ const TEXT_FIX_PATH = './node_modules/react-native/Libraries/Text/Text.js'
 const TEXT_ERR = 'if \\(this.context.isInAParentText\\)'
 const TEXT_FIX = 'newProps = {...newProps, style: [{color: \'black\'}, this.props.style] }\n    if (this.context.isInAParentText)'
 
+// Set correct safe area for iPhone XR
+const XR_FIX_PATH = './node_modules/react-native-safe-area-view/index.js'
+const XR_FIX_REPL1 = 'const X_HEIGHT = 812;'
+const XR_FIX_REPL1_FIX = 'const X_HEIGHT = 812;const XSMAX_WIDTH = 414;const XSMAX_HEIGHT = 896;'
+const XR_FIX_REPL2 = '\\(D_HEIGHT === X_WIDTH && D_WIDTH === X_HEIGHT\\)\\)'
+const XR_FIX_REPL2_FIX = '\(D_HEIGHT === X_WIDTH && D_WIDTH === X_HEIGHT\)\) || \(\(D_HEIGHT === XSMAX_HEIGHT && D_WIDTH === XSMAX_WIDTH\) || \(D_HEIGHT === XSMAX_WIDTH && D_WIDTH === XSMAX_HEIGHT\)\)'
+
 const makeReplacements = (FILE_PATH, REPLACEMENTS) => {
 	fs.readFile(FILE_PATH, 'utf8', (readErr, data) => {
 		if (readErr) {
@@ -31,4 +38,9 @@ const makeReplacements = (FILE_PATH, REPLACEMENTS) => {
 
 makeReplacements(TEXT_FIX_PATH, [
 	{ initial: TEXT_ERR, fixed: TEXT_FIX }
+])
+
+makeReplacements(XR_FIX_PATH, [
+	{ initial: XR_FIX_REPL1, fixed: XR_FIX_REPL1_FIX },
+	{ initial: XR_FIX_REPL2, fixed: XR_FIX_REPL2_FIX }
 ])
