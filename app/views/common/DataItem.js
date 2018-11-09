@@ -6,14 +6,6 @@ import Touchable from './Touchable'
 import SafeImage from './SafeImage'
 import css from '../../styles/css'
 
-/**
- * Generic row item
- * @param  {Object} data
- * @param {Boolean} card Display using card style
- * @param {Function} onPress
- * @return {JSX}
- * @todo  Standardize and make this more generic/applicable?
- */
 const DataItem = ({ data, card, onPress }) => (
 	<Touchable
 		onPress={() => onPress(data)}

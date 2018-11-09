@@ -8,7 +8,6 @@ import LinksService from '../services/quicklinksService'
 import EventService from '../services/eventService'
 import NewsService from '../services/newsService'
 import ParkingService from '../services/parkingService'
-import schedule from '../util/schedule'
 import { fetchMasterStopsNoRoutes, fetchMasterRoutes } from '../services/shuttleService'
 import {
 	WEATHER_API_TTL,

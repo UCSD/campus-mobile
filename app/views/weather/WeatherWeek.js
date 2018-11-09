@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { View } from 'react-native'
 
 import WeatherDay from './WeatherDay'
@@ -16,14 +15,10 @@ import css from '../../styles/css'
  */
 const WeatherWeek = ({ weatherData }) => (
 	<View style={css.ww_weekContainer}>
-		{weatherData.data.map((val,index) =>
-			<WeatherDay key={index} data={val} />
-		)}
+		{weatherData.data.map((obj, index) => (
+			<WeatherDay key={obj.dayofweek} data={obj} />
+		))}
 	</View>
 )
-
-WeatherWeek.propTypes = {
-	weatherData: PropTypes.object,
-}
 
 export default WeatherWeek

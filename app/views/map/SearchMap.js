@@ -48,7 +48,13 @@ class SearchMap extends Component {
 	}
 
 	render() {
-		const { location, selectedResult, shuttle, vehicles, polylines } = this.props
+		const {
+			location,
+			selectedResult,
+			shuttle,
+			vehicles,
+			polylines
+		} = this.props
 
 		let shuttleVehicles = null
 		if (shuttle && (Object.keys(vehicles).length !== 0)) {
@@ -221,8 +227,6 @@ SearchMap.defaultProps = {
 	selectedResult: null,
 }
 
-const styles = StyleSheet.create({
-	map_container: { ...StyleSheet.absoluteFillObject },
-})
+const styles = StyleSheet.create({ map_container: { ...StyleSheet.absoluteFillObject } })
 
 export default SearchMap

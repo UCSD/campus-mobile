@@ -15,7 +15,7 @@ import css from '../../styles/css'
  * @param {Boolean} scrollEnabled
  * @param {String} item String name of row item
  * @param {Boolean} card Display rows with card styling (if available);
- * @return {JSX}
+ * @return {JSX} Returns presentation JSX DataListView component
  */
 const DataListView = ({ style, data, rows, scrollEnabled, item, card }) => {
 	if (rows) {

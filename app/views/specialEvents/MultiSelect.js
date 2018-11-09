@@ -15,7 +15,8 @@ import COLOR from '../../styles/ColorConstants'
  * @param {String[]} items - items to be selected
  * @param {String[]} selected - items already selected
  * @param {Object} themes - coloring for items
- * @param {Function} onSelect
+ * @param {Function} onSelect - selected item
+ * @return {JSX} Return MultiSelect JSX
  */
 class MultiSelect extends Component {
 	// Returns true if item is being selected

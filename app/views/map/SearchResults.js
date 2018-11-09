@@ -1,5 +1,5 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from 'react'
+import PropTypes from 'prop-types'
 import {
 	TouchableOpacity,
 	View,
@@ -9,18 +9,18 @@ import {
 	FlatList,
 	StatusBar,
 	Platform
-} from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import ElevatedView from 'react-native-elevated-view';
-import COLOR from '../../styles/ColorConstants';
-import css from '../../styles/css';
-import { doPRM, getPRM, getMaxCardWidth } from '../../util/general';
+} from 'react-native'
+import Icon from 'react-native-vector-icons/FontAwesome'
+import ElevatedView from 'react-native-elevated-view'
+import COLOR from '../../styles/ColorConstants'
+import css from '../../styles/css'
+import { getMaxCardWidth } from '../../util/general'
 
-const deviceHeight = Dimensions.get('window').height;
+const deviceHeight = Dimensions.get('window').height
 const statusBarHeight = Platform.select({
 	ios: 0,
 	android: StatusBar.currentHeight,
-});
+})
 
 const SearchResultsCard = ({ results, onSelect }) => (
 	<View>
@@ -42,28 +42,26 @@ const SearchResultsCard = ({ results, onSelect }) => (
 			</View>
 		</ElevatedView>
 	</View>
-);
+)
 
-SearchResultsCard.propTypes = {
-	onSelect: PropTypes.func
-};
-
-SearchResultsCard.defaultProps = {};
+SearchResultsCard.propTypes = { onSelect: PropTypes.func }
+SearchResultsCard.defaultProps = {}
 
 const SearchResultsList = ({ results, onSelect }) => (
 	<FlatList
 		data={results}
 		keyExtractor={(listItem, index) => (listItem.title + index)}
 		renderItem={
-			({ item: rowData, index: rowID }) =>
+			({ item: rowData, index: rowID }) => (
 				<SearchResultsItem
 					data={rowData}
 					index={rowID}
 					onSelect={onSelect}
 				/>
+			)
 		}
 	/>
-);
+)
 
 const SearchResultsItem = ({ data, onSelect, index }) => (
 	<TouchableOpacity
@@ -82,21 +80,21 @@ const SearchResultsItem = ({ data, onSelect, index }) => (
 			}
 		</View>
 	</TouchableOpacity>
-);
+)
 
 const navHeight = Platform.select({
 	ios: 58,
 	android: 44
-});
+})
 
 // device - (statusBar + navHeight + searchBar + listPadding + tabBar)
-const listHeight = deviceHeight - (statusBarHeight + navHeight + 44 + 16 + 40);
+const listHeight = deviceHeight - (statusBarHeight + navHeight + 44 + 16 + 40)
 
 const styles = StyleSheet.create({
 	list_container: { width: getMaxCardWidth(), maxHeight: listHeight, },
 	card_main: { top: 44 + 6, backgroundColor: 'white', margin: 6, alignItems: 'flex-start', justifyContent: 'center', },
 	touch: { backgroundColor: 'white' },
 	list_row: { flexDirection: 'row', paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: COLOR.MGREY, overflow: 'hidden', paddingLeft: 8, paddingRight: 8 },
-});
+})
 
-export default SearchResultsCard;
+export default SearchResultsCard

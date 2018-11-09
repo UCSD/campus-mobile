@@ -39,7 +39,6 @@
     "react-native-maps": "https://github.com/react-community/react-native-maps.git#35855f93ef056b5b073140a37e2d4b128ec00cfd",
     "react-native-permissions": "1.1.1",
     "react-native-popup-menu": "0.12.3",
-    "react-native-restart": "0.0.6",
     "react-native-simple-toast": "0.0.8",
     "react-native-sortable-list": "0.0.21",
     "react-native-svg": "6.5.2",

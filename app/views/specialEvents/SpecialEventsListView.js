@@ -1,31 +1,39 @@
 import React from 'react'
-import {
-	View,
-	Text,
-	ListView,
-	StyleSheet,
-} from 'react-native'
+import { View, Text, ListView } from 'react-native'
 import { connect } from 'react-redux'
 import moment from 'moment'
 import ElevatedView from 'react-native-elevated-view'
-
-import COLOR from '../../styles/ColorConstants'
-import LAYOUT from '../../styles/LayoutConstants'
 import Touchable from '../common/Touchable'
 import SpecialEventsItem from './SpecialEventsItem'
 import SpecialEventsHeader from './SpecialEventsHeader'
-
+import css from '../../styles/css'
 
 const dataSource = new ListView.DataSource({
 	rowHasChanged: (r1, r2) => r1 !== r2,
 	sectionHeaderHasChanged: (s1, s2) => s1 !== s2
 })
 
-const SpecialEventsListView = ({ navigation, addSpecialEvents, specialEventsSchedule,
-	specialEventsScheduleIds, removeSpecialEvents, saved,disabled, personal, rows,
-	scrollEnabled, style, labels, labelItemIds, selectedDay, days, daysItemIds, inCard,
-	specialEventsTitle, handleFilterPress }) => {
-
+const SpecialEventsListView = ({
+	navigation,
+	addSpecialEvents,
+	specialEventsSchedule,
+	specialEventsScheduleIds,
+	removeSpecialEvents,
+	saved,
+	disabled,
+	personal,
+	rows,
+	scrollEnabled,
+	style,
+	labels,
+	labelItemIds,
+	selectedDay,
+	days,
+	daysItemIds,
+	inCard,
+	specialEventsTitle,
+	handleFilterPress
+}) => {
 	let scheduleIdArray = []
 	// Use ids from selectedDay
 	if (daysItemIds) {
@@ -74,43 +82,41 @@ const SpecialEventsListView = ({ navigation, addSpecialEvents, specialEventsSche
 	}
 	if (personal && scheduleIdArray.length === 0) {
 		return (
-			<View style={[style, rows ? styles.card : styles.full]}>
-				<Text style={styles.noSessions}>
+			<View style={[style, rows ? css.selv_card : css.selv_full]}>
+				<Text style={css.selv_noSessions}>
 					Click the star icon next to a session to save it to your schedule.
 				</Text>
 			</View>
 		)
 	} else {
 		return (
-			<View style={styles.mainContainer}>
+			<View style={css.selv_mainContainer}>
 				<LabelsContainer
 					labels={labels}
 					hide={personal}
 					handleFilterPress={handleFilterPress}
 				/>
 				{(!personal && scheduleIdArray.length === 0) ? (
-					<Text style={styles.noSessions}>
+					<Text style={css.selv_noSessions}>
 						There are no events for your selected filters.
 					</Text>
 				) : (
 					<ListView
-						style={[style, rows ? styles.card : styles.full]}
+						style={[style, rows ? css.selv_card : css.selv_full]}
 						scrollEnabled={scrollEnabled}
 						stickySectionHeadersEnabled={false}
 						dataSource={
-							dataSource.cloneWithRowsAndSections(
-								convertToTimeMap(
-									specialEventsSchedule,
-									adjustData(specialEventsSchedule, scheduleIdArray, saved, personal, rows)
-								)
-							)
+							dataSource.cloneWithRowsAndSections(convertToTimeMap(
+								specialEventsSchedule,
+								adjustData(specialEventsSchedule, scheduleIdArray, saved, personal, rows)
+							))
 						}
 						renderRow={(rowData, sectionID, rowID, highlightRow) => {
 							// Don't render first row bc rendered by header
 							if (Number(rowID) !== 0) {
 								return (
-									<View style={styles.rowContainer}>
-										<View style={styles.emptyRow} />
+									<View style={css.selv_rowContainer}>
+										<View style={css.selv_emptyRow} />
 										<SpecialEventsItem
 											specialEventsData={rowData}
 											saved={saved.includes(rowData.id)}
@@ -126,7 +132,7 @@ const SpecialEventsListView = ({ navigation, addSpecialEvents, specialEventsSche
 						}}
 						renderSectionHeader={(sectionData, sectionID) => (
 							// Render header along with first row
-							<View style={styles.rowContainer}>
+							<View style={css.selv_rowContainer}>
 								<SpecialEventsHeader
 									timestamp={sectionID}
 									rows={rows}
@@ -157,13 +163,13 @@ const LabelsContainer = ({ labels, hide, handleFilterPress }) => {
 			>
 				<Touchable
 					onPress={() => handleFilterPress()}
-					style={styles.labelsContainer}
+					style={css.selv_labelsContainer}
 				>
 					<Text
-						style={styles.labelText}
+						style={css.selv_labelText}
 						numberOfLines={1}
 					>
-						<Text style={styles.labelHeader}>Filters: </Text>
+						<Text style={css.selv_labelHeader}>Filters: </Text>
 						{
 							labels.map((label, index) => label + ((index !== labels.length - 1) ? (', ') : ('')))
 						}
@@ -279,21 +285,5 @@ const mapDispatchToProps = dispatch => ({
 	}
 })
 
-const ActualSpecialEventsListView = connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(SpecialEventsListView)
-
-const styles = StyleSheet.create({
-	mainContainer: { flexGrow: 1 },
-	rowContainer: { flexDirection: 'row' },
-	full: { flexGrow: 1, width: LAYOUT.WINDOW_WIDTH, height: (LAYOUT.WINDOW_HEIGHT - LAYOUT.NAVIGATOR_HEIGHT - LAYOUT.TAB_BAR_HEIGHT) },
-	card: { width: LAYOUT.MAX_CARD_WIDTH },
-	noSessions: { flexGrow: 1, fontSize: 16, textAlign: 'center', padding: 20, lineHeight: 22 },
-	labelsContainer: { alignItems: 'center', justifyContent: 'flex-start', borderBottomWidth: 1, borderBottomColor: COLOR.PRIMARY },
-	labelHeader: { fontWeight: '600', },
-	labelText: { width: LAYOUT.WINDOW_WIDTH, paddingVertical: 4, paddingHorizontal: 20, fontSize: 14, color: COLOR.PRIMARY },
-	emptyRow: { width: 75, flexDirection: 'row' },
-})
-
+const ActualSpecialEventsListView = connect(mapStateToProps,mapDispatchToProps)(SpecialEventsListView)
 export default ActualSpecialEventsListView
