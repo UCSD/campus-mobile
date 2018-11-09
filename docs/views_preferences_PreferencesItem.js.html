@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>DocStrap Index</title>
+	<title>DocStrap Source: views/preferences/PreferencesItem.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -74,98 +74,72 @@
 <div class="row">
 
 	
-	<div class="col-md-8">
+	<div class="col-md-12">
 	
 		<div id="main">
 			
 
-	
-	
+		<h1 class="page-title">Source: views/preferences/PreferencesItem.js</h1>
+    
+<section>
+    <article>
+        <pre
+            class="sunlight-highlight-javascript linenums">import React from 'react'
+import { Text } from 'react-native'
+import { withNavigation } from 'react-navigation'
+import Entypo from 'react-native-vector-icons/Entypo'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import Feather from 'react-native-vector-icons/Feather'
+import Ionicons from 'react-native-vector-icons/Ionicons'
+import Touchable from '../common/Touchable'
+import { openURL } from '../../util/general'
+import css from '../../styles/css'
 
+/**
+ * Row item for user preferences
+ * @param  {String} title Title to display
+ * @param {String} icon Icon to display
+ * @param {String} link Where to navigate to
+ * @param {Object} style Optional style
+ * @return {JSX} Return PreferencesItem JSX
+ */
+const PreferencesItem = ({
+	title,
+	iconPack,
+	icon,
+	linkType,
+	link,
+	style,
+	navigation
+}) => (
+	&lt;Touchable
+		onPress={() => {
+			if (linkType === 'internal') {
+				navigation.navigate(link)
+			} else if (linkType === 'external') {
+				openURL(link)
+			}
+		}}
+		style={css.pi_container}
+	>
+		{iconPack === 'Entypo' ? (
+			&lt;Entypo name={icon} size={24} style={css.pi_icon} />
+		) : null }
+		{iconPack === 'Feather' ? (
+			&lt;Feather name={icon} size={24} style={css.pi_icon} />
+		) : null }
+		{iconPack === 'FontAwesome' ? (
+			&lt;FontAwesome name={icon} size={24} style={css.pi_icon} />
+		) : null }
+		&lt;Text style={css.pi_title}>{title}&lt;/Text>
+		&lt;Ionicons name="ios-arrow-forward" size={24} style={css.pi_arrow} />
+	&lt;/Touchable>
+)
 
-
-
-
-
-
-
-
-
-
-	
-	
-
-
-
-
-
-    <section class="readme-section">
-        <article><h1>Campus Mobile</h1><p><a href="http://makeapullrequest.com"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" alt="PRs Welcome"></a> </p>
-<p>The campus mobile app platform enables the university to deliver relevant information to students, staff, and visitors, taking the context of time and location into consideration. The platform uses <a href="https://facebook.github.io/react-native/">React Native</a> and implements a card based UI.</p>
-<p>The goal of this platform is to provide a responsive and intuitive native mobile interactions for a personalized campus experience.</p>
-<p><a href="https://mobile.ucsd.edu/">UC San Diego</a> uses this platform for its campus mobile app on iOS and Android.</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">Platform</th>
-<th style="text-align:center">Build Status</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">Android</td>
-<td style="text-align:center"><a href="https://appcenter.ms"><img src="https://build.appcenter.ms/v0.1/apps/c176abb1-b0df-46fe-a4cf-f8fa8095b0dd/branches/v6.1-rc/badge" alt="Android Build status"></a></td>
-</tr>
-<tr>
-<td style="text-align:center">iOS</td>
-<td style="text-align:center"><a href="https://appcenter.ms"><img src="https://build.appcenter.ms/v0.1/apps/c176abb1-b0df-46fe-a4cf-f8fa8095b0dd/branches/v6.1-rc/badge" alt="iOS Build status"></a></td>
-</tr>
-</tbody>
-</table>
-<h2>Getting Started</h2><ul>
-<li><p>Follow the <a href="https://facebook.github.io/react-native/docs/getting-started.html">Getting Started guide</a> for React Native</p>
-</li>
-<li><p>Install From the project folder, run:<br>  npm install</p>
-</li>
-</ul>
-<h2>Building for Android</h2><pre class="prettyprint source"><code>react-native run-android</code></pre><h2>Building for iOS</h2><pre class="prettyprint source"><code>react-native run-ios</code></pre><h2>Documentation</h2><p>Review the <a href="https://htmlpreview.github.io/?https://raw.githubusercontent.com/UCSD/campus-mobile/dev/docs/index.html">modules documentation</a></p>
-<h2>Testing</h2><p>Review the <a href="__tests__/README.md">testing documentation</a></p>
-<h2>Screenshots</h2><table>
-<thead>
-<tr>
-<th>Home</th>
-<th>Shuttle</th>
-<th>Map</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><img src="https://github.com/UCSD/campus-mobile/blob/screenshots/screenshots/v5.0/ios/weather_card.png?raw=true" width="275" alt="Home" title="Home" /></td>
-<td><img src="https://github.com/UCSD/campus-mobile/blob/screenshots/screenshots/v5.0/ios/shuttle_detail.png?raw=true" width="275" alt="Shuttle" title="Shuttle" /></td>
-<td><img src="https://github.com/UCSD/campus-mobile/blob/screenshots/screenshots/v5.0/ios/map.png?raw=true" width="275" alt="Map" title="Map" /></td>
-</tr>
-</tbody>
-</table>
-<table>
-<thead>
-<tr>
-<th>Dining</th>
-<th>Events</th>
-<th>News</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><img src="https://github.com/UCSD/campus-mobile/blob/screenshots/screenshots/v5.0/ios/dining_detail.png?raw=true" width="275" alt="Dining" title="Dining" /></td>
-<td><img src="https://github.com/UCSD/campus-mobile/blob/screenshots/screenshots/v5.0/ios/events_card.png?raw=true" width="275" alt="Events" title="Events" /></td>
-<td><img src="https://github.com/UCSD/campus-mobile/blob/screenshots/screenshots/v5.0/ios/news_card.png?raw=true" width="275" alt="News" title="News" /></td>
-</tr>
-</tbody>
-</table>
-<h2>License</h2><pre class="prettyprint source"><code>MIT</code></pre></article>
-    </section>
-
-
+export default withNavigation(PreferencesItem)
+</pre>
+    </article>
+</section>
 
 
 
@@ -176,10 +150,6 @@
 
 	<div class="clearfix"></div>
 
-	
-		<div class="col-md-3">
-			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
-		</div>
 	
 
 </div>

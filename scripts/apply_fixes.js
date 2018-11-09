@@ -14,7 +14,7 @@ const XR_FIX_PATH = './node_modules/react-native-safe-area-view/index.js'
 const XR_FIX_REPL1 = 'const X_HEIGHT = 812;'
 const XR_FIX_REPL1_FIX = 'const X_HEIGHT = 812;const XSMAX_WIDTH = 414;const XSMAX_HEIGHT = 896;'
 const XR_FIX_REPL2 = '\\(D_HEIGHT === X_WIDTH && D_WIDTH === X_HEIGHT\\)\\)'
-const XR_FIX_REPL2_FIX = '\(D_HEIGHT === X_WIDTH && D_WIDTH === X_HEIGHT\)\) || \(\(D_HEIGHT === XSMAX_HEIGHT && D_WIDTH === XSMAX_WIDTH\) || \(D_HEIGHT === XSMAX_WIDTH && D_WIDTH === XSMAX_HEIGHT\)\)'
+const XR_FIX_REPL2_FIX = '\(D_HEIGHT === X_WIDTH && D_WIDTH === X_HEIGHT\)\) || \(\(D_HEIGHT === XSMAX_HEIGHT && D_WIDTH === XSMAX_WIDTH\) || \(D_HEIGHT === XSMAX_WIDTH && D_WIDTH === XSMAX_HEIGHT\)\)' // eslint-disable-line no-useless-escape
 const XR_FIX_REPL3 = 'return DeviceInfo.isIPhoneX_deprecated;'
 const XR_FIX_REPL3_FIX = '//return DeviceInfo.isIPhoneX_deprecated;'
 
