@@ -14,13 +14,11 @@ module.exports = {
 	MYMESSAGES_API_URL: 'https://api-qa.ucsd.edu:8243/mp-mymessages/1.0.0',
 	MP_REGISTRATION_API_URL: 'https://api-qa.ucsd.edu:8243/mp-registration/1.0.0',
 	MESSAGES_TOPICS_URL: 'https://s3-us-west-1.amazonaws.com/ucsd-mobile-dev/mock-apis/messaging/topics.json',
+	SHUTTLE_PATHS_URL: 'https://11wl1gc3v9.execute-api.us-west-2.amazonaws.com/dev/polylines/',
+
 	/* PROD */
 	// SHUTTLE
 	SHUTTLE_STOPS_API_URL: 'https://ies4wyrlx9.execute-api.us-west-2.amazonaws.com/prod/v2/stops/',
-
-	/* DEV ROUTE, REMOVE BEFORE DEPLOYING! */
-	SHUTTLE_PATHS_URL: 'https://11wl1gc3v9.execute-api.us-west-2.amazonaws.com/dev/polylines/',
-
 	SHUTTLE_VEHICLES_API_URL: 'https://hjr84cay81.execute-api.us-west-2.amazonaws.com/prod?route=',
 	SHUTTLE_ROUTES_MASTER: 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/shuttle_routes_master_map.json',
 	SHUTTLE_STOPS_MASTER: 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/shuttle_stops_master_map.json',
