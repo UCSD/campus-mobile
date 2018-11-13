@@ -1,0 +1,15 @@
+# Node
+#
+node_modules/
+
+# iOS
+#
+ios/
+
+# Android
+#
+android/
+
+# Documentation
+#
+docs/
