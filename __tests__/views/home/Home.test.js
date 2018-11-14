@@ -1,12 +1,12 @@
-import 'react-native';
-import React from 'react';
-import Enzyme, { shallow } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
+import 'react-native'
+import React from 'react'
+import Enzyme, { shallow } from 'enzyme'
+import Adapter from 'enzyme-adapter-react-16'
 
 // Component to be tested
-import { Home } from '../../../app/views/home/Home';
+import { Home } from '../../../app/views/home/Home'
 
-Enzyme.configure({ adapter: new Adapter() });
+Enzyme.configure({ adapter: new Adapter() })
 
 // Mock props passed down from state
 const initialState = {
@@ -14,7 +14,7 @@ const initialState = {
 		sceneKey: 'Home'
 	},
 	cards: {
-		specialEvents: 	{
+		specialEvents: {
 			id: 'specialEvents', active: false, autoActivated: false, name: 'Special Events', component: 'SpecialEventsCard'
 		},
 		weather: {
@@ -32,19 +32,19 @@ const initialState = {
 		quicklinks: {
 			id: 'quicklinks', active: true, name: 'Links', component: 'QuicklinksCard'
 		},
-		news:{
+		news: {
 			id: 'news', active: true, name: 'News', component: 'NewsCard'
 		},
 	},
 	cardOrder: ['specialEvents', 'weather', 'shuttle', 'dining', 'events', 'quicklinks', 'news']
-};
+}
 
 // Set up component to be rendered
 function setup(props) {
-	return shallow(<Home {...props} />);
+	return shallow(<Home {...props} />)
 }
 
 test('renders without crashing', () => {
-	const tree = setup(initialState);
-	expect(tree).toMatchSnapshot();
-});
+	const tree = setup(initialState)
+	expect(tree).toMatchSnapshot()
+})
