@@ -10,4 +10,4 @@ module.exports = {
 			'subtext': 'Jan 25th, 2018'
 		}
 	]
-};
+}
