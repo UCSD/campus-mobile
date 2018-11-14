@@ -40,7 +40,7 @@ const DiningNutrition = ({ navigation }) => {
 					<View style={css.dn_row_main}><Text style={css.dn_font}><Text style={css.dn_nf_bold}>Total Carbohydrate</Text> {menuItem.nutrition.totalCarbohydrate}</Text><Text style={css.dn_percent}>{menuItem.nutrition.totalCarbohhdrate_DV}</Text></View>
 					<View style={css.dn_row_sub}><Text style={css.dn_font}>Dietary Fiber {menuItem.nutrition.dietaryFiber}</Text><Text style={css.dn_percent}>{menuItem.nutrition.dietaryFiber_DV}</Text></View>
 					<View style={css.dn_row_sub}><Text style={css.dn_font}>Sugars {menuItem.nutrition.sugars}</Text>
-						<Text style={css.dn_percent}></Text>
+						<Text style={css.dn_percent} />
 					</View>
 
 					<View style={css.dn_row_main}><Text style={css.dn_font}><Text style={css.dn_nf_bold}>Protein</Text> {menuItem.nutrition.protein}</Text><Text style={css.dn_percent}>{menuItem.nutrition.protein_DV}</Text></View>

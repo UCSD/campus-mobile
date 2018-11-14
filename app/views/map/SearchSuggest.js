@@ -70,7 +70,7 @@ const SearchSuggestList = ({ historyData, onPress }) => (
 
 const SearchSuggestItem = ({ data, onPress }) => (
 	<TouchableOpacity
-		underlayColor={'rgba(200,200,200,.1)'}
+		underlayColor="rgba(200,200,200,.1)"
 		onPress={() => {
 			onPress(data.name)
 		}}
@@ -83,7 +83,7 @@ const SearchSuggestItem = ({ data, onPress }) => (
 				<MaterialIcon
 					name={data.icon}
 					size={Math.round(24 * PRM)}
-					color={'white'}
+					color="white"
 				/>
 			</ElevatedView>
 			<Text style={styles.icon_label}>

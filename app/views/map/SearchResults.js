@@ -66,7 +66,7 @@ const SearchResultsList = ({ results, onSelect }) => (
 const SearchResultsItem = ({ data, onSelect, index }) => (
 	<TouchableOpacity
 		key={index}
-		underlayColor={'rgba(200,200,200,.1)'}
+		underlayColor="rgba(200,200,200,.1)"
 		onPress={() => onSelect(index)}
 		style={styles.touch}
 	>

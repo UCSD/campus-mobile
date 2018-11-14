@@ -56,7 +56,7 @@ class SearchBar extends React.Component {
 					clearButtonMode="while-editing"
 					selectTextOnFocus={true}
 					style={styles.map_searchbar_input}
-					underlineColorAndroid={'rgba(0,0,0,0)'}
+					underlineColorAndroid="rgba(0,0,0,0)"
 					onFocus={event => onFocus()}
 					onBlur={() => this.setState({ text: searchInput })}
 					defaultValue={searchInput}
@@ -81,7 +81,7 @@ const SearchIcon = ({ iconStatus }) => {
 				<Icon
 					name="search"
 					size={Math.round(24 * PRM)}
-					color={'rgba(0,0,0,.5)'}
+					color="rgba(0,0,0,.5)"
 				/>
 			)
 		case 'menu':
@@ -89,7 +89,7 @@ const SearchIcon = ({ iconStatus }) => {
 				<Icon
 					name="bars"
 					size={Math.round(24 * PRM)}
-					color={'rgba(0,0,0,.5)'}
+					color="rgba(0,0,0,.5)"
 				/>
 			)
 		case 'back':
@@ -97,7 +97,7 @@ const SearchIcon = ({ iconStatus }) => {
 				<Icon
 					name="arrow-left"
 					size={Math.round(24 * PRM)}
-					color={'rgba(0,0,0,.5)'}
+					color="rgba(0,0,0,.5)"
 				/>
 			)
 	}
