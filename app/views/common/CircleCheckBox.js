@@ -35,6 +35,7 @@ class CircleCheckBox extends Component {
 		innerColor: COLOR.MORANGE,
 		label: '',
 		labelPosition: 'right',
+		styleCheckboxContainer: '',
 		styleLabel: {}
 	};
 
@@ -67,6 +68,7 @@ class CircleCheckBox extends Component {
 		})
 
 		this.state = { customStyle: customStyles }
+		this._onToggle = this._onToggle.bind(this)
 	}
 
 	_onToggle() {
@@ -89,7 +91,7 @@ class CircleCheckBox extends Component {
 
 	render() {
 		return (
-			<TouchableOpacity onPress={this._onToggle.bind(this)}>
+			<TouchableOpacity onPress={this._onToggle}>
 				<View style={[styles.checkBoxContainer, this.props.styleCheckboxContainer]}>
 					{this._renderLabel('left')}
 					<View style={[styles.alignStyle, this.state.customStyle._circleOuterStyle]}>
