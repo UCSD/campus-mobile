@@ -371,6 +371,18 @@ module.exports = {
 		Keyboard.dismiss()
 	},
 
+
+	tryParseJSON(jsonString) {
+		try {
+			const o = JSON.parse(jsonString)
+			if (o && typeof o === 'object') {
+				return o
+			}
+		} catch (err) { }
+
+		return false
+	},
+
 	/**
 	 * @param {Object} err Error object with details about the fatal error.
 	 * @returns {function} Resets the app in case of a fatal error.
