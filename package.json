@@ -13,6 +13,11 @@
     "apply-fixes": "node scripts/apply_fixes.js",
     "generate-docs": "./node_modules/.bin/jsdoc -c jsdoc.conf.json"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "eslint . && npm test"
+    }
+  },
   "dependencies": {
     "@mapbox/polyline": "1.0.0",
     "bugsnag-react-native": "2.9.5",
