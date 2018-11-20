@@ -27,7 +27,7 @@ export class Home extends React.Component {
 
 	constructor(props) {
 		super(props)
-		this.state = { updatedGoogle: true }
+		this.props.user.updatedGoogle = true
 	}
 
 	componentWillMount() {
@@ -141,7 +141,7 @@ export class Home extends React.Component {
 	updateGooglePlay = () => {
 		checkGooglePlayServices((result) => {
 			if (result === 'update') {
-				this.setState({ updatedGoogle: false })
+				this.props.user.updatedGoogle = false
 			}
 		})
 	}
