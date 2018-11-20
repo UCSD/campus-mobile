@@ -7,10 +7,6 @@ import ShuttleCard from './ShuttleCard'
 import logger from '../../util/logger'
 
 export class ShuttleCardContainer extends React.Component {
-	componentDidMount() {
-		logger.ga('Card Mounted: Shuttle')
-	}
-
 	gotoRoutesList = (navigation) => {
 		if (Array.isArray(this.props.savedStops) && this.props.savedStops.length < 10) {
 			const { shuttle_routes } = this.props

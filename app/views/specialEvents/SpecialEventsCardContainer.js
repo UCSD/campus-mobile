@@ -1,12 +1,8 @@
 import React from 'react'
-
 import { connect } from 'react-redux'
-
 import SpecialEventsCard from './SpecialEventsCard'
-import logger from '../../util/logger'
 
 export const SpecialEventsCardContainer = ({ specialEventsData, saved, hideCard }) => {
-	logger.ga('Card Mounted: SpecialEvents')
 	if (specialEventsData) {
 		return (
 			<SpecialEventsCard

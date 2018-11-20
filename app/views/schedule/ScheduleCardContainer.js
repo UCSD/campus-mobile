@@ -85,7 +85,6 @@ class ScheduleCardContainer extends React.Component {
 	}
 
 	componentWillMount() {
-		logger.ga('Card Mounted: Classes')
 		this.setState({ activeCourse: selectedClass })
 	}
 	componentWillReceiveProps(nextProps) {

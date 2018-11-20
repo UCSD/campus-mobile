@@ -1,14 +1,9 @@
 import React from 'react'
-
 import { connect } from 'react-redux'
 import moment from 'moment'
-
 import DataListCard from '../common/DataListCard'
-import logger from '../../util/logger'
 
 export const NewsCardContainer = ({ newsData }) => {
-	logger.ga('Card Mounted: News')
-
 	let data = null
 	if (Array.isArray(newsData)) {
 		const parsedNewsData = newsData.slice()
