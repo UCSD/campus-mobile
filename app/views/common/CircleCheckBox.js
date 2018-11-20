@@ -1,12 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import {
-	StyleSheet,
-	View,
-	Text,
-	TouchableOpacity,
-	ViewPropTypes
-} from 'react-native'
+import { StyleSheet, View, Text, TouchableOpacity, ViewPropTypes } from 'react-native'
+import css from '../../styles/css'
 import COLOR from '../../styles/ColorConstants'
 
 class CircleCheckBox extends Component {
@@ -84,7 +79,7 @@ class CircleCheckBox extends Component {
 	_renderLabel(position) {
 		let templ = (<View />)
 		if ((this.props.label.length > 0) && (position === this.props.labelPosition)) {
-			templ = (<Text style={[styles.checkBoxLabel, this.props.styleLabel]}>{this.props.label}</Text>)
+			templ = (<Text style={[css.ccb_checkBoxLabel, this.props.styleLabel]}>{this.props.label}</Text>)
 		}
 		return templ
 	}
@@ -92,10 +87,10 @@ class CircleCheckBox extends Component {
 	render() {
 		return (
 			<TouchableOpacity onPress={this._onToggle}>
-				<View style={[styles.checkBoxContainer, this.props.styleCheckboxContainer]}>
+				<View style={[css.ccb_checkBoxContainer, this.props.styleCheckboxContainer]}>
 					{this._renderLabel('left')}
-					<View style={[styles.alignStyle, this.state.customStyle._circleOuterStyle]}>
-						<View style={[styles.alignStyle, this.state.customStyle._circleFilterStyle]}>
+					<View style={[css.ccb_center, this.state.customStyle._circleOuterStyle]}>
+						<View style={[css.ccb_center, this.state.customStyle._circleFilterStyle]}>
 							{this._renderInner()}
 						</View>
 					</View>
@@ -105,11 +100,5 @@ class CircleCheckBox extends Component {
 		)
 	}
 }
-
-const styles = StyleSheet.create({
-	checkBoxContainer: { flexDirection: 'row', alignItems: 'center' },
-	alignStyle: { justifyContent: 'center', alignItems: 'center' },
-	checkBoxLabel: { fontSize: 18, fontWeight: '300', marginHorizontal: 10 }
-})
 
 module.exports = CircleCheckBox

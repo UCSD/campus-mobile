@@ -93,7 +93,6 @@ const css = StyleSheet.create({
 	last_updated_err_icon: { fontSize: 16, marginRight: 6 },
 	last_updated_err_icon_warn: { color: COLOR.WARNING },
 	last_updated_err_icon_error: { color: COLOR.ERROR },
-
 	// Data
 	DataList_card_list: {  },
 	DataList_full_list: { top: -1 },
@@ -112,6 +111,10 @@ const css = StyleSheet.create({
 	button_primary_text: { fontSize: 16, color: COLOR.WHITE },
 	share_button: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.MGREY, borderRadius: 3, marginTop: 20, padding: 10 },
 	share_button_text: { fontSize: 16 },
+	// Checkbox
+	ccb_checkBoxContainer: { flexDirection: 'row', alignItems: 'center' },
+	ccb_center: { justifyContent: 'center', alignItems: 'center' },
+	ccb_checkBoxLabel: { fontSize: 18, fontWeight: '300', marginHorizontal: 10 },
 	// Media
 	eventdetail_readmore_container: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.PRIMARY, borderRadius: 3, marginTop: 20, padding: 10 },
 	eventdetail_readmore_text: { fontSize: 16, color: COLOR.WHITE },
