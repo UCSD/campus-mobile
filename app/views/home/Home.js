@@ -25,13 +25,9 @@ export class Home extends React.Component {
 		headerTitle: <Image source={campusLogoImage} style={css.navCampusLogoTitle} />
 	};
 
-	constructor(props) {
-		super(props)
-		this.props.user.updatedGoogle = true
-	}
-
 	componentWillMount() {
 		if (platformAndroid()) {
+			this.props.user.updatedGoogle = true
 			this.updateGooglePlay()
 		}
 	}

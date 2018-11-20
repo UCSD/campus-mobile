@@ -10,33 +10,86 @@ Enzyme.configure({ adapter: new Adapter() })
 
 // Mock props passed down from state
 const initialState = {
-	scene: {
-		sceneKey: 'Home'
-	},
 	cards: {
 		specialEvents: {
-			id: 'specialEvents', active: false, autoActivated: false, name: 'Special Events', component: 'SpecialEventsCard'
+			id: 'specialEvents',
+			active: false,
+			autoActivated: false,
+			name: 'Special Events',
+			component: 'SpecialEventsCard'
 		},
-		weather: {
-			id: 'weather', active: true, name: 'Weather', component: 'WeatherCard'
+		finals: {
+			id: 'finals',
+			active: true,
+			name: 'Finals',
+			component: 'FinalsCard',
+			authenticated: true,
+			autoActivated: false,
+			classifications: { student: true }
+		},
+		schedule: {
+			id: 'schedule',
+			active: true,
+			name: 'Classes',
+			component: 'ScheduleCard',
+			authenticated: true,
+			classifications: { student: true }
 		},
 		shuttle: {
-			id: 'shuttle', active: true, name: 'Shuttle', component: 'ShuttleCard'
+			id: 'shuttle',
+			active: true,
+			name: 'Shuttle',
+			component: 'ShuttleCard'
 		},
 		dining: {
-			id: 'dining', active: true, name: 'Dining', component: 'DiningCard'
+			id: 'dining',
+			active: true,
+			name: 'Dining',
+			component: 'DiningCard'
 		},
 		events: {
-			id: 'events', active: true, name: 'Events', component: 'EventsCard'
-		},
-		quicklinks: {
-			id: 'quicklinks', active: true, name: 'Links', component: 'QuicklinksCard'
+			id: 'events',
+			active: true,
+			name: 'Events',
+			component: 'EventsCard'
 		},
 		news: {
-			id: 'news', active: true, name: 'News', component: 'NewsCard'
+			id: 'news',
+			active: true,
+			name: 'News',
+			component: 'NewsCard',
 		},
+		quicklinks: {
+			id: 'quicklinks',
+			active: true,
+			name: 'Links',
+			component: 'QuicklinksCard'
+		},
+		weather: {
+			id: 'weather',
+			active: true,
+			name: 'Weather',
+			component: 'WeatherCard'
+		},
+		parking: {
+			id: 'parking',
+			active: true,
+			name: 'Parking',
+			component: 'ParkingCard'
+		}
 	},
-	cardOrder: ['specialEvents', 'weather', 'shuttle', 'dining', 'events', 'quicklinks', 'news']
+
+	// Only cards that show up by default
+	// on first launch should appear here.
+	cardOrder: [
+		'shuttle',
+		'parking',
+		'dining',
+		'events',
+		'news',
+		'quicklinks',
+		'weather'
+	],
 }
 
 // Set up component to be rendered
