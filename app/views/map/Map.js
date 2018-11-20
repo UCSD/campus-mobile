@@ -35,7 +35,6 @@ export class Map extends React.Component {
 		super(props)
 
 		this.state = {
-			toggledRoute: null,
 			searchInput: null,
 			selectedResult: 0,
 			allowScroll: false,
@@ -271,8 +270,9 @@ export class Map extends React.Component {
 		} else if (this.props.location.coords) {
 			let polylines = null
 			if (this.state.currentToggledRoute) {
-				polylines = this.props.routes[this.state.currentToggledRoute].polylines
+				({ polylines } = this.props.routes[this.state.currentToggledRoute].polylines)
 			}
+
 			return (
 				<View>
 					<SearchNavButton

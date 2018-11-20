@@ -57,7 +57,7 @@ class ShuttleSavedListView extends React.Component {
 		return orderArray
 	}
 
-	arrayToObject(array) {
+	arrayToObject = (array) => {
 		const savedObject = {}
 		if (Array.isArray(array)) {
 			for (let i = 0; i < array.length; ++i) {

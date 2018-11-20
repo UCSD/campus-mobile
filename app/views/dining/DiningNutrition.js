@@ -30,9 +30,7 @@ const DiningNutrition = ({ navigation }) => {
 					<View style={css.dn_row_main}><Text style={css.dn_font}><Text style={css.dn_nf_bold}>Total Fat</Text> {menuItem.nutrition.totalFat}</Text><Text style={css.dn_percent}>{menuItem.nutrition.totalFat_DV}</Text></View>
 					<View style={css.dn_row_sub}><Text style={css.dn_font}>Saturated Fat {menuItem.nutrition.saturatedFat}</Text><Text style={css.dn_percent}>{menuItem.nutrition.saturatedFat_DV}</Text></View>
 					<View style={css.dn_row_sub}>
-						<Text style={css.dn_font}>Trans Fat {menuItem.nutrition.transFat}</Text><Text style={css.dn_percent}>
-							{menuItem.nutrition.transFatDV !== '%' ? menuItem.nutrition.transFatDV : null }
-						</Text>
+						<Text style={css.dn_font}>Trans Fat {menuItem.nutrition.transFat}</Text><Text style={css.dn_percent}>{menuItem.nutrition.transFatDV !== '%' ? menuItem.nutrition.transFatDV : null }</Text>
 					</View>
 
 					<View style={css.dn_row_main}><Text style={css.dn_font}><Text style={css.dn_nf_bold}>Cholesterol</Text> {menuItem.nutrition.cholesterol}</Text><Text style={css.dn_percent}>{menuItem.nutrition.cholesterol_DV}</Text></View>
