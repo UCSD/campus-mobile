@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import moment from 'moment'
 import FullScheduleButton from './FullScheduleButton'
 import ScheduleCard from './ScheduleCard'
-import logger from '../../util/logger'
 import schedule from '../../util/schedule'
 
 const processData = (scheduleData) => {
