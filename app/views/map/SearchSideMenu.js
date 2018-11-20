@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react'
+import React, { /* PropTypes */ } from 'react'
 import { Text, ScrollView, View, Switch } from 'react-native'
 
 const SearchSideMenu = ({ onToggle, toggles, shuttle_routes }) => (
@@ -21,9 +21,12 @@ const SearchSideMenu = ({ onToggle, toggles, shuttle_routes }) => (
 )
 
 SearchSideMenu.propTypes = {
-	toggles: PropTypes.object,
-	shuttle_routes: PropTypes.object,
+	// toggles: PropTypes.object,
+	// shuttle_routes: PropTypes.object,
 }
 
-SearchSideMenu.defaultProps = { shuttle_routes: null }
+SearchSideMenu.defaultProps = {
+	// shuttle_routes: null
+}
+
 export default SearchSideMenu

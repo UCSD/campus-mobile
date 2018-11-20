@@ -30,9 +30,9 @@ const DataItem = ({ data, card, onPress }) => (
 )
 
 DataItem.propTypes = {
-	data: PropTypes.object.isRequired,
+	// data: PropTypes.object.isRequired,
 	card: PropTypes.bool,
-	onPress: PropTypes.func,
+	// onPress: PropTypes.func,
 }
 
 DataItem.defaultProps = {

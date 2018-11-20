@@ -1,5 +1,5 @@
 import React from 'react'
-import PropTypes from 'prop-types'
+// import PropTypes from 'prop-types'
 import {
 	TouchableOpacity,
 	View,
@@ -44,8 +44,13 @@ const SearchResultsCard = ({ results, onSelect }) => (
 	</View>
 )
 
-SearchResultsCard.propTypes = { onSelect: PropTypes.func }
-SearchResultsCard.defaultProps = {}
+SearchResultsCard.propTypes = {
+	// onSelect: PropTypes.func
+}
+
+SearchResultsCard.defaultProps = {
+
+}
 
 const SearchResultsList = ({ results, onSelect }) => (
 	<FlatList
@@ -73,11 +78,9 @@ const SearchResultsItem = ({ data, onSelect, index }) => (
 		<View style={styles.list_row}>
 			<Icon name="map-marker" size={30} />
 			<Text style={css.destinationcard_marker_label}>{data.title}</Text>
-			{
-				(data.distanceMilesStr) ? (
-					<Text style={css.destinationcard_marker_dist_label}>{data.distanceMilesStr}</Text>
-				) : (null)
-			}
+			{data.distanceMilesStr ? (
+				<Text style={css.destinationcard_marker_dist_label}>{data.distanceMilesStr}</Text>
+			) : null }
 		</View>
 	</TouchableOpacity>
 )

@@ -96,7 +96,7 @@ const DataFlatList = ({ style, data, rows, item, card }) => (
 )
 
 DataListView.propTypes = {
-	data: PropTypes.array.isRequired,
+	// data: PropTypes.array.isRequired,
 	rows: PropTypes.number,
 	scrollEnabled: PropTypes.bool,
 	item: PropTypes.string.isRequired,

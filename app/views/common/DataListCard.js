@@ -51,10 +51,10 @@ export const DataListCard = ({ navigation, id, title, data, item, rows, cardSort
 
 DataListCard.propTypes = {
 	title: PropTypes.string.isRequired,
-	data: PropTypes.array,
+	// data: PropTypes.array,
 	item: PropTypes.string.isRequired,
 	rows: PropTypes.number,
-	cardSort: PropTypes.func,
+	// cardSort: PropTypes.func,
 }
 
 DataListCard.defaultProps = {
