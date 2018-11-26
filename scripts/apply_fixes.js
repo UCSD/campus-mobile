@@ -3,6 +3,14 @@
 	npm run-script apply-fixes
 */
 const fs = require('fs')
+const shell = require('shelljs')
+
+// Configure Glog
+shell.cd('node_modules/react-native')
+shell.exec('scripts/ios-install-third-party.sh')
+shell.cd('third-party/glog-0.3.4')
+shell.exec('./configure')
+shell.cd('../../../../')
 
 // Fix an issue with Android default text color
 const TEXT_FIX_PATH = './node_modules/react-native/Libraries/Text/Text.js'
