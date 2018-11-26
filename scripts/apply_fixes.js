@@ -12,6 +12,13 @@ shell.cd('third-party/glog-0.3.4')
 shell.exec('./configure')
 shell.cd('../../../../')
 
+// Fix an issue with libfishhook.a linking
+const LIBFH_PATH = './node_modules/react-native/Libraries/WebSocket/RCTWebSocket.xcodeproj/project.pbxproj'
+const LIBFH_OLD_1 = '13526A521F362F7F0008EF00'
+const LIBFH_OLD_2 = '13526A511F362F7F0008EF00'
+const LIBFH_NEW_1 = '2D3ABDC220C7206E00DF56E9'
+const LIBFH_NEW_2 = '3DBE0D001F3B181A0099AA32'
+
 // Fix an issue with Android default text color
 const TEXT_FIX_PATH = './node_modules/react-native/Libraries/Text/Text.js'
 const TEXT_ERR = 'if \\(this.context.isInAParentText\\)'
@@ -45,6 +52,11 @@ const makeReplacements = (FILE_PATH, REPLACEMENTS) => {
 		}
 	})
 }
+
+makeReplacements(LIBFH_PATH, [
+	{ initial: LIBFH_OLD_1, fixed: LIBFH_NEW_1 },
+	{ initial: LIBFH_OLD_2, fixed: LIBFH_NEW_2 }
+])
 
 makeReplacements(TEXT_FIX_PATH, [
 	{ initial: TEXT_ERR, fixed: TEXT_FIX }
