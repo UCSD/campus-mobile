@@ -63,7 +63,7 @@ module.exports = {
 			lon2 = Math.radians(lon2)
 			const bx = Math.cos(lat2) * Math.cos(lon2 - lon1)
 			const by = Math.cos(lat2) * Math.sin(lon2 - lon1)
-			const lat3 = Math.atan2(Math.sin(lat1) + Math.sin(lat2), Math.sqrt(((Math.cos(lat1) + bx) * (Math.cos(lat1) + bx)) + (by ** 2)))
+			const lat3 = Math.atan2(Math.sin(lat1) + Math.sin(lat2), Math.sqrt(((Math.cos(lat1) + bx) * (Math.cos(lat1) + bx)) + (by * by)))
 			const lon3 = lon1 + Math.atan2(by, Math.cos(lat1) + bx)
 			return [Math.round(Math.degrees(lat3), 5), Math.round(Math.degrees(lon3), 5)]
 		} else {
