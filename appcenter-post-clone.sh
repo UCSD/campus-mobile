@@ -7,5 +7,5 @@ NODE_VERSION="9.4.0"
 curl "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}.pkg" > "$HOME/Downloads/node-installer.pkg"
 sudo installer -store -pkg "$HOME/Downloads/node-installer.pkg" -target "/"
 
-# Insert production values
-npm run-script campus-qa-ci
+# Insert environment variables
+npm run campus-qa-ci
