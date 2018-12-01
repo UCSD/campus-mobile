@@ -15,7 +15,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "eslint . --max-warnings=0 && npm test"
+      "pre-commit": "./node_modules/.bin/eslint . --max-warnings=0 && npm test"
     }
   },
   "dependencies": {
