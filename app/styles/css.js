@@ -155,7 +155,7 @@ const css = StyleSheet.create({
 	sev_backButtonContainer: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: -7 },
 	sev_backButtonImage: { color: COLOR.WHITE, marginRight: 7 },
 	selv_mainContainer: { flexGrow: 1 },
-	selv_rowContainer: { flexDirection: 'row' },
+	selv_rowContainer: { flexGrow: 1, flexDirection: 'row' },
 	selv_full: { flexGrow: 1, width: LAYOUT.WINDOW_WIDTH, height: (LAYOUT.WINDOW_HEIGHT - LAYOUT.NAVIGATOR_HEIGHT - LAYOUT.TAB_BAR_HEIGHT) },
 	selv_card: { width: LAYOUT.MAX_CARD_WIDTH },
 	selv_noSessions: { flexGrow: 1, fontSize: 16, textAlign: 'center', padding: 20, lineHeight: 22 },
@@ -163,8 +163,9 @@ const css = StyleSheet.create({
 	selv_labelHeader: { fontWeight: '600', },
 	selv_labelText: { width: LAYOUT.WINDOW_WIDTH, paddingVertical: 4, paddingHorizontal: 20, fontSize: 14, color: COLOR.PRIMARY },
 	selv_emptyRow: { width: 75, flexDirection: 'row' },
-	sei_itemRow: { flexShrink: 1, flexDirection: 'row', paddingBottom: 10 },
-	sei_titleContainer: { flexShrink: 1, flexBasis: 10000, marginTop: 3 }, // TODO: improve usage of flex, especially to avoid hardcoding 10000, which acts like an infifity value to maximize column width on all screen sizes.
+
+	sei_itemRow: { flexShrink: 1, flexDirection: 'row' },
+	sei_titleContainer: { flexShrink: 1, flexBasis: 10000, marginTop: 3, marginBottom: 8 }, // TODO: improve usage of flex, especially to avoid hardcoding 10000, which acts like an infifity value to maximize column width on all screen sizes.
 	sei_titleText: { alignSelf: 'stretch', fontSize: 17, color: 'black' },
 	sei_labelView: { flexDirection: 'row', paddingTop: 4 },
 	sei_labelTextContainer: { 'flexDirection': 'row', 'maxWidth': LAYOUT.WINDOW_WIDTH / 2, },
@@ -173,9 +174,11 @@ const css = StyleSheet.create({
 	sei_starButtonInner: { justifyContent: 'flex-start', alignItems: 'center' },
 	sei_starOuterIcon: { color: COLOR.DGREY, position: platformIOS() ? 'absolute' : 'relative', zIndex: 10, backgroundColor: 'rgba(0,0,0,0)' },
 	sei_starInnerIcon: { color: COLOR.YELLOW, position: 'absolute', zIndex: platformIOS() ? 5 : 15, marginTop: 3 },
+
 	sei_borderContainer: { width: 1, alignSelf: 'stretch', marginRight: 10, alignItems: 'flex-start' },
-	sei_line: { flexGrow: 1, borderLeftWidth: 1, borderColor: COLOR.MGREY, paddingBottom: 20 },
+	sei_line: { flexGrow: 1, borderLeftWidth: 1, borderColor: COLOR.MGREY },
 	sei_circle: { position: 'absolute', top: 11, left: -2.5, height: 6, width: 6, borderRadius: 3, borderWidth: 1, borderColor: COLOR.MGREY, backgroundColor: COLOR.LGREY },
+
 	sedv_detailContainer: { width: LAYOUT.WINDOW_WIDTH, padding: 12 },
 	sedv_labelView: { flexDirection: 'row', paddingTop: 4 },
 	sedv_labelText: { fontSize: 13 },
