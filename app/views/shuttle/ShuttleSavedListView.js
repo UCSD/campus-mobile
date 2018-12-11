@@ -57,7 +57,7 @@ class ShuttleSavedListView extends React.Component {
 		return orderArray
 	}
 
-	arrayToObject(array) {
+	arrayToObject = (array) => {
 		const savedObject = {}
 		if (Array.isArray(array)) {
 			for (let i = 0; i < array.length; ++i) {
@@ -95,12 +95,13 @@ class ShuttleSavedListView extends React.Component {
 					style={css.main_full_flex}
 					data={this.state.savedObject}
 					renderRow={
-						({ data, active, disabled }) =>
+						({ data, active, disabled }) => (
 							<SavedItem
 								data={data}
 								active={active}
 								removeStop={removeStop}
 							/>
+						)
 					}
 					onChangeOrder={(nextOrder) => { this._order = nextOrder }}
 					onReleaseRow={key => this._handleRelease()}

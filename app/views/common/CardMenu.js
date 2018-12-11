@@ -5,7 +5,13 @@ import Icon from 'react-native-vector-icons/Ionicons'
 
 import css from '../../styles/css'
 
-const CardMenu = ({ hideMenu, cardRefresh, extraActions, hideCard, id }) => {
+const CardMenu = ({
+	hideMenu,
+	cardRefresh,
+	extraActions,
+	hideCard,
+	id
+}) => {
 	let extraOptions
 	if (extraActions) {
 		extraOptions = extraActions.map(action => (

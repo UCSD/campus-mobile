@@ -1,108 +1,93 @@
-import React from 'react';
-import {
-	View,
-	Text,
-	StyleSheet,
-} from 'react-native';
-import { withNavigation } from 'react-navigation';
-import Icon from 'react-native-vector-icons/Ionicons';
-import logger from '../../util/logger';
-import Touchable from '../common/Touchable';
-import { platformIOS, getHumanizedDuration } from '../../util/general';
-import COLOR from '../../styles/ColorConstants';
-import LAYOUT from '../../styles/LayoutConstants';
+import React from 'react'
+import { View, Text } from 'react-native'
+import { withNavigation } from 'react-navigation'
+import Icon from 'react-native-vector-icons/Ionicons'
+import logger from '../../util/logger'
+import Touchable from '../common/Touchable'
+import { getHumanizedDuration } from '../../util/general'
+import css from '../../styles/css'
+import COLOR from '../../styles/ColorConstants'
 
-const SpecialEventsItem = ({ navigation, specialEventsData, saved, add, remove, title }) => (
-	<View
-		style={styles.itemRow}
-	>
+const SpecialEventsItem = ({
+	navigation,
+	specialEventsData,
+	saved,
+	add,
+	remove,
+	title
+}) => (
+	<View style={css.sei_itemRow}>
 		<CircleBorder />
-		<View style={styles.titleContainer}>
+		<View style={css.sei_titleContainer}>
 			<Touchable
 				onPress={() => navigation.navigate('SpecialEventsDetailView', { data: specialEventsData, title, add, remove })}
 			>
 				<View>
 					{specialEventsData['talk-title'] ? (
 						<Text
-							style={styles.titleText}
+							style={css.sei_titleText}
 						>
 							{specialEventsData['talk-title']}
 						</Text>
 					) : null }
 
-					<View style={styles.labelView}>
+					<View style={css.sei_labelView}>
 						{ specialEventsData.label ? (
-							<Text style={[styles.labelText, { color: specialEventsData['label-theme'] ? specialEventsData['label-theme'] : COLOR.BLACK }]}>{specialEventsData.label}</Text>
+							<Text style={[css.sei_labelText, { color: specialEventsData['label-theme'] ? specialEventsData['label-theme'] : COLOR.BLACK }]}>{specialEventsData.label}</Text>
 						) : null }
 						{ specialEventsData.label || specialEventsData['talk-type'] === 'Keynote' ? (
-							<Text style={styles.labelText}> - </Text>
+							<Text style={css.sei_labelText}> - </Text>
 						) : null }
-						<Text style={styles.labelText}>{getHumanizedDuration(specialEventsData['start-time'], specialEventsData['end-time'])}</Text>
+						<Text style={css.sei_labelText}>{getHumanizedDuration(specialEventsData['start-time'], specialEventsData['end-time'])}</Text>
 					</View>
 				</View>
 			</Touchable>
 		</View>
 
 		{ (add !== null) ? (
-			<Touchable style={styles.starButton} onPress={() => (
-				(saved) ? (
+			<Touchable
+				style={css.sei_starButton}
+				onPress={() => (saved ? (
 					removeSession(remove, specialEventsData.id, specialEventsData['talk-title'])
 				) : (
 					addSession(add, specialEventsData.id, specialEventsData['talk-title'])
-				)
-			)}>
-				<View style={styles.starButtonInner}>
+				))}
+			>
+				<View style={css.sei_starButtonInner}>
 					<Icon
-						name={'ios-star-outline'}
+						name="ios-star-outline"
 						size={32}
-						style={styles.starOuterIcon}
+						style={css.sei_starOuterIcon}
 					/>
 					{ saved ? (
 						<Icon
-							name={'ios-star'}
+							name="ios-star"
 							size={26}
-							style={styles.starInnerIcon}
+							style={css.sei_starInnerIcon}
 						/>
 					) : null }
 				</View>
 			</Touchable>
 		) : null }
 	</View>
-);
+)
 
 const CircleBorder = () => (
-	<View style={styles.borderContainer}>
-		<View style={styles.line} />
-		<View style={styles.circle} />
+	<View style={css.sei_borderContainer}>
+		<View style={css.sei_line} />
+		<View style={css.sei_circle} />
 	</View>
-);
+)
 
 const removeSession = (remove, id, title) => {
-	remove(id);
+	remove(id)
 	logger.trackEvent('Special Events', 'Session Removed: ' + title)
 }
 
 const addSession = (add, id, title) => {
-	add(id);
+	add(id)
 	logger.trackEvent('Special Events', 'Session Added: ' + title)
 }
 
-const styles = StyleSheet.create({
-	itemRow: { flexShrink: 1, flexDirection: 'row', paddingBottom: 10 },
-	titleContainer: { flexShrink: 1, flexBasis: 10000, marginTop: 3 }, // TODO: improve usage of flex, especially to avoid hardcoding 10000, which acts like an infifity value to maximize column width on all screen sizes.
-	titleText: { alignSelf: 'stretch', fontSize: 17, color: 'black' },
-	labelView: { flexDirection: 'row', paddingTop: 4 },
-	labelTextContainer: { 'flexDirection': 'row', 'maxWidth': LAYOUT.WINDOW_WIDTH / 2, },
-	labelText: { fontSize: 13 },
-	starButton: { width: 50 },
-	starButtonInner: { justifyContent: 'flex-start', alignItems: 'center' },
-	starOuterIcon: { color: COLOR.DGREY, position: platformIOS() ? 'absolute' : 'relative', zIndex: 10, backgroundColor: 'rgba(0,0,0,0)' },
-	starInnerIcon: { color: COLOR.YELLOW, position: 'absolute', zIndex: platformIOS() ? 5 : 15, marginTop: 3 },
-	borderContainer: { width: 1, alignSelf: 'stretch', marginRight: 10, alignItems: 'flex-start' },
-	line: { flexGrow: 1, borderLeftWidth: 1, borderColor: COLOR.MGREY, paddingBottom: 20 },
-	circle: { position: 'absolute', top: 11, left: -2.5, height: 6, width: 6, borderRadius: 3, borderWidth: 1, borderColor: COLOR.MGREY, backgroundColor: COLOR.LGREY },
-});
-
-const wrappedSpecialEventsItem = withNavigation(SpecialEventsItem);
-
-export default wrappedSpecialEventsItem;
+const wrappedSpecialEventsItem = withNavigation(SpecialEventsItem)
+export default wrappedSpecialEventsItem

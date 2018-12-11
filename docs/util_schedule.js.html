@@ -47,7 +47,7 @@
 			<li class="dropdown">
 				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="global.html#bold">bold</a></li><li><a href="global.html#DataItem">DataItem</a></li><li><a href="global.html#DataList_card_list">DataList_card_list</a></li><li><a href="global.html#DataListCard">DataListCard</a></li><li><a href="global.html#DataListView">DataListView</a></li><li><a href="global.html#dl_row">dl_row</a></li><li><a href="global.html#main_container">main_container</a></li><li><a href="global.html#processData">processData</a></li><li><a href="global.html#sr_headerImage">sr_headerImage</a></li><li><a href="global.html#WeatherCard">WeatherCard</a></li><li><a href="global.html#WeatherCardContainer">WeatherCardContainer</a></li><li><a href="global.html#WeatherDay">WeatherDay</a></li><li><a href="global.html#WeatherWeek">WeatherWeek</a></li>
+					<li><a href="global.html#bc_image">bc_image</a></li><li><a href="global.html#card_main">card_main</a></li><li><a href="global.html#cc_loadingContainer">cc_loadingContainer</a></li><li><a href="global.html#DataListCard">DataListCard</a></li><li><a href="global.html#DataListView">DataListView</a></li><li><a href="global.html#dl_row">dl_row</a></li><li><a href="global.html#feedback_container">feedback_container</a></li><li><a href="global.html#finals_card_content">finals_card_content</a></li><li><a href="global.html#links_row_container">links_row_container</a></li><li><a href="global.html#main_container">main_container</a></li><li><a href="global.html#map_nogoogleplay">map_nogoogleplay</a></li><li><a href="global.html#notifications_row">notifications_row</a></li><li><a href="global.html#ob_container">ob_container</a></li><li><a href="global.html#PreferencesItem">PreferencesItem</a></li><li><a href="global.html#profile_inner">profile_inner</a></li><li><a href="global.html#pst_elevated_row_view">pst_elevated_row_view</a></li><li><a href="global.html#shuttlecard_addButton">shuttlecard_addButton</a></li><li><a href="global.html#specialevents_filter">specialevents_filter</a></li><li><a href="global.html#wc_topRowContainer">wc_topRowContainer</a></li><li><a href="global.html#WeatherCard">WeatherCard</a></li><li><a href="global.html#WeatherDay">WeatherDay</a></li><li><a href="global.html#WeatherWeek">WeatherWeek</a></li>
 				</ul>
 			</li>
 			
@@ -84,7 +84,9 @@
 <section>
     <article>
         <pre
-            class="sunlight-highlight-javascript linenums">/**
+            class="sunlight-highlight-javascript linenums">import moment from 'moment'
+
+/**
 * A module containing class schedule helper functions
 * @module schedule
 */
@@ -92,24 +94,25 @@ module.exports = {
 	// Returns a modified courseItems object containing only finals.
 	getFinals(courseItems) {
 		const finalItems = {
-			SA: [],
-			SU: [],
 			MO: [],
 			TU: [],
 			WE: [],
 			TH: [],
-			FR: []
-		};
+			FR: [],
+			SA: [],
+			SU: [],
+			OTHER: []
+		}
 
 		Object.keys(courseItems).forEach((day) => {
-			courseItems[day].forEach(function(item) {
-				if (item.special_mtg_code == "FI") {
-					finalItems[day].push(item);
+			courseItems[day].forEach((item) => {
+				if (item.special_mtg_code === 'FI') {
+					finalItems[day].push(item)
 				}
-			});
-		});
+			})
+		})
 
-		return finalItems;
+		return finalItems
 	},
 
 	// Returns a modified courseItems object containing only classes (includes discussions).
@@ -121,158 +124,162 @@ module.exports = {
 			TH: [],
 			FR: [],
 			SA: [],
-			SU: []
-		};
+			SU: [],
+			OTHER: []
+		}
 
 		Object.keys(courseItems).forEach((day) => {
-			courseItems[day].forEach(function(item) {
-				if (item.special_mtg_code == "") {
-					classItems[day].push(item);
+			courseItems[day].forEach((item) => {
+				if (!item.special_mtg_code) {
+					classItems[day].push(item)
 				}
-			});
-		});
+			})
+		})
 
-		return classItems;
+		return classItems
 	},
 
 	dayOfWeekInterpreter(abbr) {
-		fullString = '';
+		let fullString = ''
 		switch (abbr) {
-		case 'MO':
-			fullString = 'Monday';
-			break;
-		case 'TU':
-			fullString = 'Tuesday';
-			break;
-		case 'WE':
-			fullString = 'Wednesday';
-			break;
-		case 'TH':
-			fullString = 'Thursday';
-			break;
-		case 'FR':
-			fullString = 'Friday';
-			break;
-		case 'SA':
-			fullString = 'Saturday';
-			break;
-		case 'SU':
-			fullString = 'Sunday';
-			break;
-		default:
-			fullString = abbr;
+			case 'MO':
+				fullString = 'Monday'
+				break
+			case 'TU':
+				fullString = 'Tuesday'
+				break
+			case 'WE':
+				fullString = 'Wednesday'
+				break
+			case 'TH':
+				fullString = 'Thursday'
+				break
+			case 'FR':
+				fullString = 'Friday'
+				break
+			case 'SA':
+				fullString = 'Saturday'
+				break
+			case 'SU':
+				fullString = 'Sunday'
+				break
+			default:
+				fullString = 'Other'
 		}
-		return fullString;
+		return fullString
 	},
 
 	// Returns a courseItems object containing lists of courseItem objects.
 	// There is one list per day of the week and the courseItem objects are
 	// sorted by their start times. This includes "FI" and "RE" meeting types.
 	getData(data) {
-		const courses = data.data;
-		const enrolledCourses = [];
-		const courseItems = {
-			MO: [],
-			TU: [],
-			WE: [],
-			TH: [],
-			FR: [],
-			SA: [],
-			SU: []
-		};
-
-		// loop thru "data"
-		// grab all enrolled classes bc academic history has dropped/waitlisted classes too...
-		for (let i = 0; i &lt; courses.length; ++i) {
-			if (courses[i].enrollment_status === 'EN') {
-				enrolledCourses.push(courses[i]);
+		try {
+			const courses = data.data
+			const enrolledCourses = []
+			const courseItems = {
+				MO: [],
+				TU: [],
+				WE: [],
+				TH: [],
+				FR: [],
+				SA: [],
+				SU: [],
+				OTHER: []
 			}
-		}
 
-		// grab all "section_data" where "special_mtg_code" === ""
-		// put into days
-		for (let j = 0; j &lt; enrolledCourses.length; ++j) {
-			const currCourse = enrolledCourses[j];
-			const currSectionData = currCourse.section_data;
-			for (let k = 0; k &lt; currSectionData.length; ++k) {
-				const currData = currSectionData[k];
-				// if (currData.special_mtg_code === '') {
-				// time format is HH:MM - HH:MM
-				// split time string and get seconds
-				const timeString = currData.time;
-				const timeArr = timeString.split(' ');
-				const startString = timeArr[0];
-				const endString = timeArr[2];
-				const startArr = startString.split(':'); // split it at the colons
-				const endArr = endString.split(':'); // split it at the colons
-				// minutes are worth 60 seconds. Hours are worth 60 minutes.
-				const startSeconds = +startArr[0] * 60 * 60 + +startArr[1] * 60;
-				const endSeconds = +endArr[0] * 60 * 60 + +endArr[1] * 60;
-
-				const day = currData.days;
-
-				const item = {
-					building: currData.building,
-					room: currData.room,
-					instructor_name: currData.instructor_name,
-					section: currData.section,
-					subject_code: currCourse.subject_code,
-					course_code: currCourse.course_code,
-					course_title: currCourse.course_title,
-					time_string: timeString,
-					start_time: startSeconds,
-					end_time: endSeconds,
-					meeting_type: currData.meeting_type,
-					special_mtg_code: currData.special_mtg_code,
-					day_code: currData.days,
-					grade_option: currCourse.grade_option
-				};
-
-				courseItems[day].push(item);
-				// }
+			// loop thru "data"
+			// grab all enrolled classes bc academic history has dropped/waitlisted classes too...
+			if (Array.isArray(courses)) {
+				for (let i = 0; i &lt; courses.length; ++i) {
+					if (courses[i].enrollment_status === 'EN') {
+						enrolledCourses.push(courses[i])
+					}
+				}
 			}
-		}
 
-		// sort by "time"
-		const courseItemsKeys = Object.keys(courseItems);
-		for (let l = 0; l &lt; courseItemsKeys.length; ++l) {
-			const courseItem = courseItems[courseItemsKeys[l]];
-			courseItem.sort(this.sortTime);
+			// grab all "section_data" where "special_mtg_code" === ""
+			// put into days
+			for (let j = 0; j &lt; enrolledCourses.length; ++j) {
+				const currCourse = enrolledCourses[j]
+				const currSectionData = currCourse.section_data
+				for (let k = 0; k &lt; currSectionData.length; ++k) {
+					const currData = currSectionData[k]
+
+					// if (currData.special_mtg_code === '') {
+					// time format is HH:MM - HH:MM
+					// split time string and get seconds
+					const timeString = currData.time
+					let startSeconds,
+						endSeconds,
+						formattedTimeString,
+						formattedStartString
+
+					if (timeString) {
+						const timeArr = timeString.split(' ')
+						const startString = timeArr[0]
+						const endString = timeArr[2]
+						const startArr = startString.split(':') // split it at the colons
+						const endArr = endString.split(':') // split it at the colons
+						// minutes are worth 60 seconds. Hours are worth 60 minutes.
+						startSeconds = (+startArr[0] * 60 * 60) + (+startArr[1] * 60)
+						endSeconds = (+endArr[0] * 60 * 60) + (+endArr[1] * 60)
+						const startMoment = moment(startString, 'HH:mm')
+						const endMoment = moment(endString, 'HH:mm')
+						const startAm = Boolean(startMoment.format('a') === 'am')
+						const endAm = Boolean(endMoment.format('a') === 'am')
+						formattedStartString = moment(startString, 'HH:mm').format('h:mm') +
+							(startAm ? (' a.m.') : (' p.m.'))
+						const formattedEndString = moment(endString, 'HH:mm').format('h:mm') +
+							(endAm ? (' a.m.') : (' p.m.'))
+						formattedTimeString = formattedStartString +
+							' – ' + formattedEndString
+					}
+
+					let day = 'OTHER'
+					if (currData.days) {
+						day = currData.days
+					}
+
+					const item = {
+						building: currData.building,
+						room: currData.room,
+						instructor_name: currData.instructor_name,
+						section: currData.section,
+						subject_code: currCourse.subject_code,
+						course_code: currCourse.course_code,
+						course_title: currCourse.course_title,
+						time_string: formattedTimeString,
+						start_string: formattedStartString,
+						start_time: startSeconds,
+						end_time: endSeconds,
+						meeting_type: currData.meeting_type,
+						special_mtg_code: currData.special_mtg_code,
+						day_code: currData.days,
+						grade_option: currCourse.grade_option
+					}
+
+					courseItems[day].push(item)
+				}
+			}
+
+			// sort by "time"
+			const courseItemsKeys = Object.keys(courseItems)
+			for (let l = 0; l &lt; courseItemsKeys.length; ++l) {
+				const courseItem = courseItems[courseItemsKeys[l]]
+				courseItem.sort(this.sortTime)
+			}
+
+			return courseItems
+		} catch (err) {
+			console.log(err)
+			return []
 		}
-		return courseItems;
 	},
 
 	sortTime(a, b) {
-		return a.start_time - b.start_time;
+		return a.start_time - b.start_time
 	},
-
-	setFinals(finalsList) {
-		let nowTime = new Date().getDay();
-		const upcomingFinals = {};
-
-		const mapWeekdays = [
-			'SA',
-			'SU',
-			'MO',
-			'TU',
-			'WE',
-			'TH',
-			'FR',
-		];
-
-		// translates the days from nowTime to match the days returned from getFinals
-		nowTime = (nowTime + 1) % 7;
-
-		// Pushes only upcoming finals to new object
-		for (let i = nowTime; i &lt; 7; i++) {
-			if (finalsList[mapWeekdays[i]].length > 0) {
-				upcomingFinals[mapWeekdays[i]] = finalsList[mapWeekdays[i]];
-			}
-		}
-
-		return upcomingFinals;
-	}
-};
+}
 </pre>
     </article>
 </section>
@@ -318,7 +325,7 @@ module.exports = {
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on Thu Apr 19th 2018
+		on Fri Nov 9th 2018
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

@@ -4,12 +4,9 @@ import { connect } from 'react-redux'
 import moment from 'moment'
 
 import DataListCard from '../common/DataListCard'
-import logger from '../../util/logger'
 import { militaryToAMPM } from '../../util/general'
 
 export const EventCardContainer = ({ eventsData }) => {
-	logger.ga('Card Mounted: Events')
-
 	let data = null
 	if (Array.isArray(eventsData)) {
 		const parsedEventsData = eventsData.slice()

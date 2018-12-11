@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import {
 	View,
 	Text,
@@ -58,10 +57,5 @@ const WeatherCard = ({ weatherData, actionButton }) => (
 		)}
 	</Card>
 )
-
-WeatherCard.propTypes = {
-	weatherData: PropTypes.object,
-	actionButton: PropTypes.element
-}
 
 export default WeatherCard

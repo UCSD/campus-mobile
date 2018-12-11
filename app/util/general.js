@@ -6,7 +6,6 @@ import {
 	Alert,
 	AsyncStorage
 } from 'react-native'
-import RNRestart from 'react-native-restart'
 import RNExitApp from 'react-native-exit-app'
 import dateFormat from 'dateformat'
 
@@ -156,9 +155,14 @@ module.exports = {
 	 * Gets the pixel-ratio-modifier needed for this device window
 	 * The modifier is a ratio to be used for scaling GUI elements based on the default sizes
 	 * @returns {number} The ratio of current window width vs the app's default width
-	 * @todo The variable windowHeight is unused
 	 */
 	getPRM() {
+		const windowWidth = Dimensions.get('window').width
+		const appDefaultWidth = 414
+		return (windowWidth / appDefaultWidth)
+	},
+
+	PRM() {
 		const windowWidth = Dimensions.get('window').width
 		const appDefaultWidth = 414
 		return (windowWidth / appDefaultWidth)
@@ -365,6 +369,18 @@ module.exports = {
 	 */
 	hideKeyboard() {
 		Keyboard.dismiss()
+	},
+
+
+	tryParseJSON(jsonString) {
+		try {
+			const o = JSON.parse(jsonString)
+			if (o && typeof o === 'object') {
+				return o
+			}
+		} catch (err) { }
+
+		return false
 	},
 
 	/**

@@ -140,5 +140,5 @@ module.exports = {
 			'rtpiNumber': '764',
 			'routes': {}
 		}
-	} 
-};
+	}
+}

@@ -17,7 +17,15 @@ import css from '../../styles/css'
  * @param {Object} style Optional style
  * @return {JSX} Return PreferencesItem JSX
  */
-const PreferencesItem = ({ title, iconPack, icon, linkType, link, style, navigation }) => (
+const PreferencesItem = ({
+	title,
+	iconPack,
+	icon,
+	linkType,
+	link,
+	style,
+	navigation
+}) => (
 	<Touchable
 		onPress={() => {
 			if (linkType === 'internal') {

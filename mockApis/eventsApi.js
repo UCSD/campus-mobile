@@ -22,4 +22,4 @@ module.exports = {
 			'image': 'https://studentevents.ucsd.edu/article_images/170924917291122.jpg'
 		}
 	]
-};
+}

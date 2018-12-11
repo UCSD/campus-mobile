@@ -3,21 +3,17 @@ import { connect } from 'react-redux'
 
 import DataListCard from '../common/DataListCard'
 import general from '../../util/general'
-import logger from '../../util/logger'
 
-export const QuicklinksCardContainer = ({ linksData }) => {
-	logger.ga('Card Mounted: Quicklinks')
-	return (
-		<DataListCard
-			id="quicklinks"
-			title="Links"
-			data={linksData}
-			rows={4}
-			item="QuicklinksItem"
-			cardSort={general.dynamicSort('card-order')}
-		/>
-	)
-}
+export const QuicklinksCardContainer = ({ linksData }) => (
+	<DataListCard
+		id="quicklinks"
+		title="Links"
+		data={linksData}
+		rows={4}
+		item="QuicklinksItem"
+		cardSort={general.dynamicSort('card-order')}
+	/>
+)
 
 const mapStateToProps = state => (
 	{ linksData: state.links.data }

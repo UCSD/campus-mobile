@@ -357,4 +357,4 @@ module.exports = {
 		},
 		'offset': -8
 	}
-};
+}

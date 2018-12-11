@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
+// import PropTypes from 'prop-types'
 import { StyleSheet } from 'react-native'
 import MapView, { Polyline } from 'react-native-maps'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -48,7 +48,13 @@ class SearchMap extends Component {
 	}
 
 	render() {
-		const { location, selectedResult, shuttle, vehicles, polylines } = this.props
+		const {
+			location,
+			selectedResult,
+			shuttle,
+			vehicles,
+			polylines
+		} = this.props
 
 		let shuttleVehicles = null
 		if (shuttle && (Object.keys(vehicles).length !== 0)) {
@@ -212,17 +218,15 @@ class SearchMap extends Component {
 }
 
 SearchMap.propTypes = {
-	location: PropTypes.object,
-	selectedResult: PropTypes.object,
+	// location: PropTypes.object,
+	// selectedResult: PropTypes.object,
 }
 
 SearchMap.defaultProps = {
-	location: null,
-	selectedResult: null,
+	// location: null,
+	// selectedResult: null,
 }
 
-const styles = StyleSheet.create({
-	map_container: { ...StyleSheet.absoluteFillObject },
-})
+const styles = StyleSheet.create({ map_container: { ...StyleSheet.absoluteFillObject } })
 
 export default SearchMap

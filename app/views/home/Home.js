@@ -25,13 +25,9 @@ export class Home extends React.Component {
 		headerTitle: <Image source={campusLogoImage} style={css.navCampusLogoTitle} />
 	};
 
-	constructor(props) {
-		super(props)
-		this.state = { updatedGoogle: true }
-	}
-
 	componentWillMount() {
 		if (platformAndroid()) {
+			this.props.user.updatedGoogle = true
 			this.updateGooglePlay()
 		}
 	}
@@ -141,7 +137,7 @@ export class Home extends React.Component {
 	updateGooglePlay = () => {
 		checkGooglePlayServices((result) => {
 			if (result === 'update') {
-				this.setState({ updatedGoogle: false })
+				this.props.user.updatedGoogle = false
 			}
 		})
 	}
