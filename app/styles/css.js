@@ -367,10 +367,10 @@ const css = StyleSheet.create({
 	 */
 	links_row_container: { paddingVertical: 8, paddingHorizontal: 16, borderTopWidth: 1, borderTopColor: COLOR.MGREY },
 	links_row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
-	links_icon: { height: 34, width: 34 },
+	links_icon: { height: 28, width: 28 },
 	links_icon_fa: { paddingLeft: 8, paddingRight: 5, color: COLOR.PRIMARY },
-	links_name: { flex: 1, color: COLOR.VDGREY, fontSize: round(22 * prm), fontWeight: '300', paddingHorizontal: 16 },
-	links_arrow_icon: { color: COLOR.DGREY },
+	links_name: { flexGrow: 1, color: COLOR.VDGREY, fontSize: 18, paddingLeft: 16 },
+	links_arrow_icon: { color: COLOR.CCC },
 
 	/**
 	 *  11 - Weather
