@@ -65,8 +65,7 @@ export class FeedbackView extends Component {
 	_postFeedback() {
 		if (this.props.feedback.comment !== '') {
 			this.props.postFeedback(this.props.feedback)
-		}
-		else {
+		} else {
 			Toast.showWithGravity(
 				'Please complete the required field.',
 				Toast.SHORT,

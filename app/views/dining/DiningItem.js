@@ -51,8 +51,7 @@ class DiningItem extends Component {
 			if (status.openingSoon) {
 				soonStatusText = 'Opening Soon'
 				soonStatusColor = COLOR.MGREEN
-			}
-			else if (status.closingSoon) {
+			} else if (status.closingSoon) {
 				soonStatusText = 'Closing Soon'
 				soonStatusColor = COLOR.MRED
 			}
@@ -65,14 +64,11 @@ class DiningItem extends Component {
 			let newHourElementHoursText
 			if (!status.isValid) {
 				newHourElementHoursText = 'Unknown hours'
-			}
-			else if (isClosed) {
+			} else if (isClosed) {
 				newHourElementHoursText = 'Closed today'
-			}
-			else if (isAlwaysOpen) {
+			} else if (isAlwaysOpen) {
 				newHourElementHoursText = 'Open 24 Hours'
-			}
-			else if (
+			} else if (
 				status.currentHours.openingHour.format('h:mm a') !== 'Invalid date'
 				&& status.currentHours.closingHour.format('h:mm a') !== 'Invalid date'
 			) {

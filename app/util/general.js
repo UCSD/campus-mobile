@@ -134,8 +134,7 @@ module.exports = {
 		if (destinationLat && destinationLon) {
 			const destinationURL = module.exports.getDirectionsURL('walk', destinationLat, destinationLon )
 			return module.exports.openURL(destinationURL)
-		}
-		else if (destinationAddress) {
+		} else if (destinationAddress) {
 			const destinationURL = module.exports.getDirectionsURL('walk', null, null, destinationAddress )
 			return module.exports.openURL(destinationURL)
 		}

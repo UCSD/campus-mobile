@@ -64,8 +64,7 @@ const generateHourElements = (hoursArray, status, today) => {
 		let newHourElementHoursText
 		if (isAlwaysOpen) {
 			newHourElementHoursText = 'Open 24 Hours'
-		}
-		else if (
+		} else if (
 			operatingHours.openingHour.format('h:mm a') !== 'Invalid date'
 			&& operatingHours.closingHour.format('h:mm a') !== 'Invalid date'
 		) {
@@ -135,12 +134,9 @@ const generateHours = (allHours, status) => {
 					</View>
 				</View>
 			)
-
 			hoursRows.push(newHourRow)
-		}
-
-		// If hours are malformed, return 'Unknown hours'
-		else if (typeof todaysHours !== 'string') {
+		} else if (typeof todaysHours !== 'string') {
+			// If hours are malformed, return 'Unknown hours'
 			const newHourRow = (
 				<View
 					key={day}
@@ -154,8 +150,7 @@ const generateHours = (allHours, status) => {
 			)
 
 			hoursRows.push(newHourRow)
-		}
-		else {
+		} else {
 			const todaysHoursArray = todaysHours.split(',')
 			const todaysTitle = moment(day, 'ddd').format('dddd')
 			const todaysHoursElements = generateHourElements(todaysHoursArray, status, todaysTitle)

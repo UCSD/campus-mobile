@@ -41,11 +41,9 @@ class ParkingDetail extends Component {
 		const percentAvailable = spotsAvailable / totalSpots
 		if (percentAvailable > 0.5) {
 			return ColorConstants.AVAILABILITY_HIGH
-		}
-		else if (percentAvailable >= 0.25 && percentAvailable < 0.5) {
+		} else if (percentAvailable >= 0.25 && percentAvailable < 0.5) {
 			return ColorConstants.AVAILABILITY_MEDIUM
-		}
-		else {
+		} else {
 			return ColorConstants.AVAILABILITY_LOW
 		}
 	}

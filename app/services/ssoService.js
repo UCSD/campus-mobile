@@ -22,8 +22,7 @@ const ssoService = {
 							throw new Error('Invalid response from server.')
 						}
 					}
-				}
-				else if (data.errorMessage) {
+				} else if (data.errorMessage) {
 					throw (data.errorMessage)
 				} else {
 					if (data.access_token && data.expiration) {

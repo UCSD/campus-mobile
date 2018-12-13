@@ -31,8 +31,7 @@ function* getTopics() {
 		if (timeout) {
 			const e = new Error('Request timed out.')
 			throw e
-		}
-		else if (response) {
+		} else if (response) {
 			yield put({ type: 'SET_TOPICS', topics: response })
 			yield put({ type: 'GET_TOPICS_SUCCESS' })
 		}
@@ -58,8 +57,7 @@ function* registerToken(action) {
 			if (timeout) {
 				const e = new Error('Request timed out.')
 				throw e
-			}
-			else if (response) {
+			} else if (response) {
 				yield put({ type: 'CONFIRM_REGISTRATION' })
 				yield put({ type: 'POST_TOKEN_SUCCESS' })
 			}
@@ -85,8 +83,7 @@ function* unregisterToken(action) {
 		if (timeout) {
 			const e = new Error('Request timed out.')
 			throw e
-		}
-		else if (response) {
+		} else if (response) {
 			yield put({ type: 'CONFIRM_DEREGISTRATION' })
 			yield put({ type: 'POST_TOKEN_SUCCESS' })
 		}
@@ -119,8 +116,7 @@ function* updateMessages(action) {
 			if (timeout) {
 				const e = new Error('Request timed out.')
 				throw e
-			}
-			else {
+			} else {
 				const { messages: newMessages, next: nextTimestamp } = response
 				const newMessagesArray = mergeMessagesArrays(messages, newMessages)
 				const sortedMessages = newMessagesArray.sort(( left, right ) =>
@@ -160,8 +156,7 @@ function* updateMessages(action) {
 			if (timeout) {
 				const e = new Error('Request timed out.')
 				throw e
-			}
-			else {
+			} else {
 				const { messages: newMessages, next: nextTimestamp } = response
 				const newMessagesArray = mergeMessagesArrays(messages, newMessages)
 				const sortedMessages = newMessagesArray.sort(( left, right ) =>
