@@ -15,7 +15,7 @@ const DiningService = {
 					return data
 				}
 			})
-			.catch(err => console.log('Error fetching dining: ' + err))
+			.catch(err => console.log('Error:FetchDining:' + err))
 	},
 
 	FetchDiningMenu(id) {
@@ -32,7 +32,7 @@ const DiningService = {
 					return data
 				}
 			})
-			.catch(err => console.log('Error fetching dining menu for id ' + id + ': ' + err))
+			.catch(err => console.log('Error:FetchDiningMenu:' + err))
 	}
 }
 

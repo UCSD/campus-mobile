@@ -233,11 +233,12 @@ module.exports = {
 	},
 
 	/**
-	 * Gets the current date
-	 * @returns {number} The number of milliseconds since midnight Jan 1, 1970
+	 * Returns the time difference between now and lastUpdated
+	 * @param {string} lastUpdated The last updated time
+	 * @returns {number} The number of milliseconds between now and lastUpdated
 	 */
-	getDateNow() {
-		return (Date.now())
+	timeDiff(lastUpdated) {
+		return (Date.now() - lastUpdated)
 	},
 
 	/**
