@@ -1,6 +1,6 @@
 import React from 'react'
+import { View } from 'react-native'
 import { connect } from 'react-redux'
-import ElevatedView from 'react-native-elevated-view'
 
 import css from '../../styles/css'
 import CardHeader from './CardHeader'
@@ -8,6 +8,7 @@ import CardMenu from './CardMenu'
 
 const Card = ({
 	hideMenu,
+	hideHeader,
 	cardRefresh,
 	id,
 	title,
@@ -17,27 +18,27 @@ const Card = ({
 	full,
 	extraActions
 }) => (
-	<ElevatedView
+	<View
 		style={full ? css.card_full_container : css.card_container}
 		ref={(i) => { this._card = i }}
-		elevation={full ? 0 : 3}
 	>
 		<CardHeader
 			id={id}
 			title={title}
 			menu={
 				<CardMenu
-					hideMenu={hideMenu}
+					id={id}
 					cardRefresh={cardRefresh}
+					hideMenu={hideMenu}
 					hideCard={hide}
 					extraActions={extraActions}
-					id={id}
 				/>
 			}
 			image={header}
+			hideHeader={hideHeader}
 		/>
 		{children}
-	</ElevatedView>
+	</View>
 )
 
 const mapDispatchToProps = dispatch => ({

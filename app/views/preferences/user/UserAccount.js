@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
-import { View, Text, Linking, TouchableOpacity } from 'react-native'
+import { Text, Linking, TouchableOpacity } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { connect } from 'react-redux'
 import AccountInfo from './AccountInfo'
 import AccountLogin from './AccountLogin'
 import css from '../../../styles/css'
-import { getScreenWidth } from '../../../util/general'
 import Card from '../../common/Card'
 
 class UserAccount extends Component {
@@ -40,13 +39,11 @@ class UserAccount extends Component {
 		const cardTitle = this.props.user.isLoggedIn ? 'Logged in as:' : 'Log in with SSO:'
 		return (
 			<Card id="user" title={cardTitle} hideMenu full>
-				<View style={{ width: getScreenWidth() }}>
-					{(this.props.user.isLoggedIn) ? (
-						<AccountInfo />
-					) : (
-						<AccountLogin />
-					)}
-				</View>
+				{this.props.user.isLoggedIn ? (
+					<AccountInfo />
+				) : (
+					<AccountLogin />
+				)}
 			</Card>
 		)
 	}

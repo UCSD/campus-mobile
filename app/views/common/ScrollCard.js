@@ -2,8 +2,6 @@ import React from 'react'
 import { View, FlatList, ActivityIndicator } from 'react-native'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import { connect } from 'react-redux'
-import ElevatedView from 'react-native-elevated-view'
-
 import CardHeader from './CardHeader'
 import CardMenu from './CardMenu'
 import { trackException } from '../../util/logger'
@@ -80,8 +78,7 @@ class ScrollCard extends React.Component {
 
 		return (
 			<View>
-				<ElevatedView
-					elevation={3}
+				<View
 					style={[css.card_container, this.state.numDots <= 1 ? css.scrollcard_main_marginBottom : null]}
 					ref={(i) => { this._card = i }}
 				>
@@ -99,7 +96,7 @@ class ScrollCard extends React.Component {
 					/>
 					{list}
 					{this.props.actionButton}
-				</ElevatedView>
+				</View>
 
 				{ this.state.numDots > 1 ? (
 					<PageIndicator

@@ -2,7 +2,6 @@ import React from 'react'
 import { View, Text, ListView } from 'react-native'
 import { connect } from 'react-redux'
 import moment from 'moment'
-import ElevatedView from 'react-native-elevated-view'
 import Touchable from '../common/Touchable'
 import SpecialEventsItem from './SpecialEventsItem'
 import SpecialEventsHeader from './SpecialEventsHeader'
@@ -158,24 +157,20 @@ const LabelsContainer = ({ labels, hide, handleFilterPress }) => {
 		return null
 	} else {
 		return (
-			<ElevatedView
-				elevation={2}
+			<Touchable
+				onPress={() => handleFilterPress()}
+				style={css.selv_labelsContainer}
 			>
-				<Touchable
-					onPress={() => handleFilterPress()}
-					style={css.selv_labelsContainer}
+				<Text
+					style={css.selv_labelText}
+					numberOfLines={1}
 				>
-					<Text
-						style={css.selv_labelText}
-						numberOfLines={1}
-					>
-						<Text style={css.selv_labelHeader}>Filters: </Text>
-						{
-							labels.map((label, index) => label + ((index !== labels.length - 1) ? (', ') : ('')))
-						}
-					</Text>
-				</Touchable>
-			</ElevatedView>
+					<Text style={css.selv_labelHeader}>Filters: </Text>
+					{
+						labels.map((label, index) => label + ((index !== labels.length - 1) ? (', ') : ('')))
+					}
+				</Text>
+			</Touchable>
 		)
 	}
 }

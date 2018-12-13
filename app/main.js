@@ -5,7 +5,7 @@ import PushNotificationContainer from './containers/pushNotificationContainer'
 import Router from './navigation/Router'
 
 const Main = () => (
-	<View style={css.main_container}>
+	<View style={css.main}>
 		<PushNotificationContainer />
 		<Router />
 	</View>

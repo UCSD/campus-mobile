@@ -1,4 +1,3 @@
-/* eslint object-curly-newline: 0, object-property-newline: 0 */
 /*  Master Stylesheet
 
 	All predefined campus-mobile styles should reside here.
@@ -42,16 +41,15 @@ const css = StyleSheet.create({
 	 *  01 - Main
 	 */
 	// Containers
-	main_container: { flex: 1 },
+	main: { flex: 1 },
 	main_full: { backgroundColor: COLOR.WHITE, paddingBottom: deviceIphoneX() ? LAYOUT.NAVIGATOR_HEIGHT : 0 },
 	main_full_flex: { flex: 1, backgroundColor: COLOR.WHITE, paddingBottom: deviceIphoneX() ? LAYOUT.NAVIGATOR_HEIGHT : 0 },
 	scroll_default: { backgroundColor: COLOR.WHITE },
-	card_container: { backgroundColor: COLOR.WHITE, margin: 6 },
-	card_full_container: { backgroundColor: COLOR.WHITE, marginTop: 16, borderTopWidth: 1, borderBottomWidth: 1, borderColor: COLOR.MGREY },
+	card_container: { backgroundColor: COLOR.WHITE, margin: 6, borderRadius: 3 },
+	card_full_container: { backgroundColor: COLOR.WHITE, marginBottom: 16, borderTopWidth: 1, borderBottomWidth: 1, borderColor: COLOR.MGREY },
 	main_full_lgrey: { flexGrow: 1, backgroundColor: COLOR.LGREY }, // special events
 	loginview_container: { flexGrow: 1, backgroundColor: COLOR.MGREY, marginTop: LAYOUT.NAVIGATOR_HEIGHT },
 	messaging_container: { flex: 1, paddingBottom: platformIOS() ? LAYOUT.NAVIGATOR_HEIGHT : 0 },
-
 	// Navigator
 	nav: { backgroundColor: COLOR.PRIMARY, height: LAYOUT.NAVIGATOR_HEIGHT, marginTop: deviceIphoneX() ? -13 : 0 },
 	navTitle: { flex: 1, fontSize: 24, fontWeight: '300', textAlign: 'center', alignSelf: 'center', marginTop: deviceIphoneX() ? 0 : -3 },
@@ -137,6 +135,7 @@ const css = StyleSheet.create({
 	specialevents_filter_itemrow: { flexDirection: 'row', alignItems: 'center', backgroundColor: COLOR.WHITE, borderBottomWidth: 1, borderBottomColor: COLOR.LGREY, padding: 12 },
 	specialevents_filter_applybutton: { position: 'absolute', width: LAYOUT.WINDOW_WIDTH - 20, bottom: deviceIphoneX() ? LAYOUT.NAVIGATOR_HEIGHT : 10, left: 10, padding: 10, justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.PRIMARY, borderRadius: 3, opacity: 0.95 },
 	specialevents_filter_applybutton_text: { fontSize: 16, color: COLOR.WHITE },
+	// SpecialEventsView
 	sev_specialEventsListView: { flex: 1 },
 	sev_scrollButtonContainer: { flexDirection: 'row' },
 	sev_scrollContentContainer: { flexGrow: 1 },
@@ -154,6 +153,7 @@ const css = StyleSheet.create({
 	sev_filterText: { textAlign: 'center', fontSize: 17, color: 'white' },
 	sev_backButtonContainer: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: -7 },
 	sev_backButtonImage: { color: COLOR.WHITE, marginRight: 7 },
+	// SpecialEventsListView
 	selv_mainContainer: { flexGrow: 1 },
 	selv_rowContainer: { flexGrow: 1, flexDirection: 'row' },
 	selv_full: { flexGrow: 1, width: LAYOUT.WINDOW_WIDTH, height: (LAYOUT.WINDOW_HEIGHT - LAYOUT.NAVIGATOR_HEIGHT - LAYOUT.TAB_BAR_HEIGHT) },
@@ -163,7 +163,7 @@ const css = StyleSheet.create({
 	selv_labelHeader: { fontWeight: '600', },
 	selv_labelText: { width: LAYOUT.WINDOW_WIDTH, paddingVertical: 4, paddingHorizontal: 20, fontSize: 14, color: COLOR.PRIMARY },
 	selv_emptyRow: { width: 75, flexDirection: 'row' },
-
+	// SpecialEventsItem
 	sei_itemRow: { flexShrink: 1, flexDirection: 'row' },
 	sei_titleContainer: { flexShrink: 1, flexBasis: 10000, marginTop: 3, marginBottom: 8 }, // TODO: improve usage of flex, especially to avoid hardcoding 10000, which acts like an infifity value to maximize column width on all screen sizes.
 	sei_titleText: { alignSelf: 'stretch', fontSize: 17, color: 'black' },
@@ -174,11 +174,10 @@ const css = StyleSheet.create({
 	sei_starButtonInner: { justifyContent: 'flex-start', alignItems: 'center' },
 	sei_starOuterIcon: { color: COLOR.DGREY, position: platformIOS() ? 'absolute' : 'relative', zIndex: 10, backgroundColor: 'rgba(0,0,0,0)' },
 	sei_starInnerIcon: { color: COLOR.YELLOW, position: 'absolute', zIndex: platformIOS() ? 5 : 15, marginTop: 3 },
-
 	sei_borderContainer: { width: 1, alignSelf: 'stretch', marginRight: 10, alignItems: 'flex-start' },
 	sei_line: { flexGrow: 1, borderLeftWidth: 1, borderColor: COLOR.MGREY },
 	sei_circle: { position: 'absolute', top: 11, left: -2.5, height: 6, width: 6, borderRadius: 3, borderWidth: 1, borderColor: COLOR.MGREY, backgroundColor: COLOR.LGREY },
-
+	// SpecialEventsDetailView
 	sedv_detailContainer: { width: LAYOUT.WINDOW_WIDTH, padding: 12 },
 	sedv_labelView: { flexDirection: 'row', paddingTop: 4 },
 	sedv_labelText: { fontSize: 13 },
@@ -271,19 +270,7 @@ const css = StyleSheet.create({
 	srlv_icon: { alignSelf: 'flex-end', color: COLOR.DGREY },
 	srlv_row_name: { flex: 1, paddingRight: 10 },
 	srlv_touchable: { flex: 1, flexDirection: 'row', alignItems: 'center', height: 60, padding: 7, paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: COLOR.MGREY, overflow: 'hidden' },
-	sslv_listRow: { backgroundColor: COLOR.WHITE, flexDirection: 'row', alignItems: 'center', width: LAYOUT.DEVICE_WIDTH, borderBottomWidth: 1, borderBottomColor: COLOR.MGREY, height: 50,
-		...Platform.select({
-			ios: {
-				shadowOpacity: 0,
-				shadowOffset: { height: 2, width: 2 },
-				shadowRadius: 2,
-			},
-			android: {
-				margin: 0,
-				elevation: 0,
-			},
-		})
-	},
+	sslv_listRow: { backgroundColor: COLOR.WHITE, flexDirection: 'row', alignItems: 'center', width: LAYOUT.DEVICE_WIDTH, borderBottomWidth: 1, borderBottomColor: COLOR.MGREY, height: 50,	...Platform.select({ ios: { shadowOpacity: 0, shadowOffset: { height: 2, width: 2 }, shadowRadius: 2 }, android: { margin: 0, elevation: 0, } }) },
 	sslv_nameText: { flex: 1, margin: 7 },
 	sslv_cancelButton: { justifyContent: 'center', alignItems: 'center', width: 50, height: 50 },
 	sslv_addNoticeText: { lineHeight: 28, fontSize: 15, color: COLOR.DGREY, textAlign: 'center' },
@@ -437,7 +424,6 @@ const css = StyleSheet.create({
 	/**
 	 *  14 - User Profile
 	 */
-	profile_inner: { paddingBottom: 50 },
 	// User Account
 	ua_accountinfo: { flexDirection: 'row', paddingHorizontal: 10, paddingVertical: 14, alignItems: 'center' },
 	ua_loggedin: { flex: 3, flexDirection: 'row', alignItems: 'center' },
@@ -464,7 +450,7 @@ const css = StyleSheet.create({
 	us_name_text: { flexGrow: 1, fontSize: 18, color: COLOR.VDGREY, paddingLeft: 16 },
 	us_switchContainer: { justifyContent: 'center', alignItems: 'center' },
 
-	pi_container: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: COLOR.WHITE, marginTop: 20, paddingVertical: 8, paddingHorizontal: 20, borderTopWidth: 2, borderTopColor: COLOR.MGREY, borderBottomWidth: 2, borderBottomColor: COLOR.MGREY },
+	pi_container: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: COLOR.WHITE, marginBottom: 16, paddingVertical: 8, paddingHorizontal: 20, borderTopWidth: 1, borderTopColor: COLOR.MGREY, borderBottomWidth: 1, borderBottomColor: COLOR.MGREY },
 	pi_icon: { color: COLOR.PRIMARY },
 	pi_title: { flexGrow: 1, fontSize: 18, color: COLOR.VDGREY, paddingLeft: 16 },
 	pi_arrow: { color: COLOR.CCC },
@@ -573,8 +559,6 @@ const css = StyleSheet.create({
 	lrc_promptText: { fontSize: 14, color: COLOR.DGREY, paddingLeft: 6 },
 	lrc_button: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.PRIMARY, borderRadius: 3, marginTop: 14, padding: 10 },
 	lrc_buttonText: { color: COLOR.WHITE },
-
-
 })
 
 module.exports = css

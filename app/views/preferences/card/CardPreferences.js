@@ -1,11 +1,18 @@
 import React, { Component } from 'react'
+import { ScrollView } from 'react-native'
 import { connect } from 'react-redux'
 import SortableList from 'react-native-sortable-list'
 import CardPreferencesItem from './CardPreferencesItem'
 import Card from '../../common/Card'
+import css from '../../../styles/css'
 
 // View for user to manage preferences, including which cards are visible
 class CardPreferences extends Component {
+	constructor(props) {
+		super(props)
+		this.state = { scrollEnabled: true }
+	}
+
 	componentWillMount() {
 		this.setState({ cardObject: this.getCardObject(this.props.cardOrder, this.props.cards) })
 	}
@@ -50,6 +57,10 @@ class CardPreferences extends Component {
 		return cardObject
 	}
 
+	toggleScroll = () => {
+		this.setState({ scrollEnabled: !this.state.scrollEnabled })
+	}
+
 	_handleRelease = (key) => {
 		if (Array.isArray(this._order)) {
 			let newIndex
@@ -57,32 +68,34 @@ class CardPreferences extends Component {
 				if (orderKey === key) newIndex = index
 			})
 			this.props.reorderCard(key, newIndex)
-			this.props.toggleScroll() // toggle parent scroll
+			this.toggleScroll() // toggle parent scroll
 		}
 	}
 
 	render() {
 		return (
-			<Card id="cards" title="Cards" hideMenu full>
-				<SortableList
-					data={this.state.cardObject}
-					order={this.props.cardOrder}
-					renderRow={
-						({ data, active, disabled }) => (
-							// Mildly confusing, but active prop from
-							// renderRow means the row has been grabbed
-							<CardPreferencesItem
-								data={data}
-								active={active}
-							/>
-						)
-					}
-					onActivateRow={key => this.props.toggleScroll()}
-					onChangeOrder={(nextOrder) => { this._order = nextOrder }}
-					onReleaseRow={key => this._handleRelease(key)}
-					scrollEnabled={false}
-				/>
-			</Card>
+			<ScrollView scrollEnabled={false} style={css.scroll_default} contentContainerStyle={css.main_full_flex}>
+				<Card id="cards" title="Cards" hideHeader full>
+					<SortableList
+						data={this.state.cardObject}
+						order={this.props.cardOrder}
+						renderRow={
+							({ data, active, disabled }) => (
+								// Mildly confusing, but active prop from
+								// renderRow means the row has been grabbed
+								<CardPreferencesItem
+									data={data}
+									active={active}
+								/>
+							)
+						}
+						onActivateRow={key => this.toggleScroll()}
+						onChangeOrder={(nextOrder) => { this._order = nextOrder }}
+						onReleaseRow={key => this._handleRelease(key)}
+						scrollEnabled={false}
+					/>
+				</Card>
+			</ScrollView>
 		)
 	}
 }
