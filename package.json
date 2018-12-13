@@ -39,7 +39,7 @@
     "react-native-exit-app": "1.0.0",
     "react-native-firebase": "4.3.7",
     "react-native-google-analytics-bridge": "5.6.2",
-    "react-native-google-api-availability-bridge": "https://github.com/UCSD/react-native-google-api-availability-bridge#1a8725274d72d3cfbde1a0b336be55e5afd4503d",
+    "react-native-google-api-availability-bridge": "1.3.0",
     "react-native-keyboard-aware-scroll-view": "0.5.0",
     "react-native-keychain": "3.0.0-rc.3",
     "react-native-maps": "https://github.com/react-community/react-native-maps.git#35855f93ef056b5b073140a37e2d4b128ec00cfd",
