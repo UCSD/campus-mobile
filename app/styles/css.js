@@ -105,7 +105,7 @@ const css = StyleSheet.create({
 	dataitem_image: { width: 120, height: 70, marginLeft: 10, borderWidth: 1, borderColor: COLOR.LGREY },
 	dlc_list: { top: -1 },
 	dlc_content_load_err: { padding: 30, fontSize: 16, alignSelf: 'center'  },
-	dlc_cardcenter: { alignItems: 'center', justifyContent: 'center', width: LAYOUT.MAX_CARD_WIDTH },
+	dlc_cardcenter: { alignItems: 'center', justifyContent: 'center', padding: 20 },
 	// Buttons
 	button_primary: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.PRIMARY, borderRadius: 3, marginTop: 20, padding: 10 },
 	button_primary_text: { fontSize: 16, color: COLOR.WHITE },
