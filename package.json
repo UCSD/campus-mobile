@@ -7,9 +7,7 @@
     "test": "jest",
     "eslint": "./node_modules/.bin/eslint . --max-warnings=0",
     "campus-prod-ci": "node scripts/replace-all prod ci",
-    "campus-prod": "node scripts/replace-all prod",
     "campus-qa-ci": "node scripts/replace-all qa ci",
-    "campus-qa": "node scripts/replace-all qa",
     "generate-docs": "./node_modules/.bin/jsdoc -c jsdoc.conf.json",
     "dev-fixes": "node scripts/dev-fixes",
     "postinstall": "node scripts/postinstall-fixes"
