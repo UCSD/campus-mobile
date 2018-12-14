@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { ScrollView } from 'react-native'
 import { connect } from 'react-redux'
 import SortableList from 'react-native-sortable-list'
 import CardPreferencesItem from './CardPreferencesItem'
