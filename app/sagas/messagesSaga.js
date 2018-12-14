@@ -197,7 +197,6 @@ function* subscribeToTopic(action) {
 	const profileItems = { subscribedTopics: newTopicSubscriptions }
 	yield put({ type: 'MODIFY_LOCAL_PROFILE', profileItems })
 	yield firebase.messaging().subscribeToTopic(topicId)
-	console.log('Subscribed to', topicId)
 }
 
 function* unsubscribeFromTopic(action) {
@@ -213,7 +212,6 @@ function* unsubscribeFromTopic(action) {
 	const profileItems = { subscribedTopics: newTopicSubscriptions }
 	yield put({ type: 'MODIFY_LOCAL_PROFILE', profileItems })
 	yield firebase.messaging().unsubscribeFromTopic(topicId)
-	console.log('Unsubscribed from', topicId)
 }
 
 // Removes all topic subscriptions except for the default 'all' topic
@@ -226,7 +224,6 @@ function* clearUserSubscriptions(action) {
 			call(() => {
 				if (defaultSubscriptions.indexOf(topic) < 0) {
 					firebase.messaging().unsubscribeFromTopic(topic)
-					console.log('Unsubscribed from', topic)
 				}
 			})
 		)))
@@ -245,7 +242,6 @@ function* refreshTopicSubscriptions(action) {
 		yield all(profile.subscribedTopics.map(topic => (
 			call(() => {
 				firebase.messaging().subscribeToTopic(topic)
-				console.log('Subscribed to', topic)
 			})
 		)))
 	}
