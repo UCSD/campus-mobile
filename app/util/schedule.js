@@ -88,7 +88,7 @@ module.exports = {
 	// sorted by their start times. This includes "FI" and "RE" meeting types.
 	getData(data) {
 		try {
-			const courses = data.data
+			const courses = data.scheduleData.data
 			const enrolledCourses = []
 			const courseItems = {
 				MO: [],
