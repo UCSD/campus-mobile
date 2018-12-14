@@ -38,7 +38,7 @@ class UserAccount extends Component {
 	render() {
 		const cardTitle = this.props.user.isLoggedIn ? 'Logged in as:' : 'Log in with SSO:'
 		return (
-			<Card id="user" title={cardTitle} hideMenu full>
+			<Card id="user" title={cardTitle} style={css.card_full_container} hideMenu>
 				{this.props.user.isLoggedIn ? (
 					<AccountInfo />
 				) : (

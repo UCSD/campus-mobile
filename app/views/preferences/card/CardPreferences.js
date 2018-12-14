@@ -74,9 +74,10 @@ class CardPreferences extends Component {
 
 	render() {
 		return (
-			<ScrollView scrollEnabled={false} style={css.scroll_default} contentContainerStyle={css.main_full_flex}>
-				<Card id="cards" title="Cards" hideHeader full>
+			<ScrollView scrollEnabled={false} contentContainerStyle={css.full_flex}>
+				<Card id="cards" title="Cards" hideHeader style={css.full_flex}>
 					<SortableList
+						style={css.full_flex}
 						data={this.state.cardObject}
 						order={this.props.cardOrder}
 						renderRow={

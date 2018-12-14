@@ -15,11 +15,11 @@ const Card = ({
 	header,
 	hide,
 	children,
-	full,
+	style,
 	extraActions
 }) => (
 	<View
-		style={full ? css.card_full_container : css.card_container}
+		style={style || css.card_container}
 		ref={(i) => { this._card = i }}
 	>
 		<CardHeader
