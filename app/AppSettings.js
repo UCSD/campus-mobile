@@ -16,6 +16,7 @@ module.exports = {
 	MESSAGES_TOPICS_URL: 'https://s3-us-west-1.amazonaws.com/ucsd-mobile-dev/mock-apis/messaging/topics.json',
 	SHUTTLE_PATHS_URL: 'https://11wl1gc3v9.execute-api.us-west-2.amazonaws.com/dev/polylines/',
 	PARKING_API_URL: 'https://4pefyt8qv7.execute-api.us-west-2.amazonaws.com/dev/parking/v1.0/status',
+	SURF_API_URL: 'https://0yi5xwy0v7.execute-api.us-west-2.amazonaws.com/dev/v1/surf',
 
 	/* PROD */
 	// SHUTTLE
@@ -29,7 +30,6 @@ module.exports = {
 	EVENTS_API_URL: 'https://2jjml3hf27.execute-api.us-west-2.amazonaws.com/prod/events/student',
 	SPECIAL_EVENT_API_URL: 'https://2jjml3hf27.execute-api.us-west-2.amazonaws.com/prod/events/special',
 	WEATHER_API_URL: 'https://w3wyps9yje.execute-api.us-west-2.amazonaws.com/prod/forecast?',
-	SURF_API_URL: 'https://kusyfng6mg.execute-api.us-west-2.amazonaws.com/prod/v1/surf',
 	DINING_API_URL: 'https://pg83tslbyi.execute-api.us-west-2.amazonaws.com/prod/v3/dining',
 	MAP_SEARCH_API_URL: 'https://xgu9qa7gx4.execute-api.us-west-2.amazonaws.com/prod/v2/map/search?region=0&query=',
 	FEEDBACK_URL: 'https://eforms.ucsd.edu/view.php?id=175631',
