@@ -24,15 +24,12 @@
 	99 - Misc
 */
 import { StyleSheet, Platform, Dimensions } from 'react-native'
-
 import { platformAndroid, deviceIphoneX, platformIOS, round } from '../util/general'
 import COLOR from './ColorConstants'
 import LAYOUT from './LayoutConstants'
 
-const windowWidth = Dimensions.get('window').width,
-	maxAppWidth = 414,
-	prm = windowWidth / maxAppWidth
-
+const windowWidth = Dimensions.get('window').width
+const prm = (windowWidth / LAYOUT.MAX_APP_WIDTH)
 const CC_LEFT = LAYOUT.MAX_CARD_WIDTH * 0.006
 const CC_RIGHT = LAYOUT.MAX_CARD_WIDTH * 0.004
 

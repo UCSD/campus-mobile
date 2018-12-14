@@ -74,29 +74,27 @@ class CardPreferences extends Component {
 
 	render() {
 		return (
-			<ScrollView scrollEnabled={false} contentContainerStyle={css.full_flex}>
-				<Card id="cards" title="Cards" hideHeader style={css.full_flex}>
-					<SortableList
-						style={css.full_flex}
-						data={this.state.cardObject}
-						order={this.props.cardOrder}
-						renderRow={
-							({ data, active, disabled }) => (
-								// Mildly confusing, but active prop from
-								// renderRow means the row has been grabbed
-								<CardPreferencesItem
-									data={data}
-									active={active}
-								/>
-							)
-						}
-						onActivateRow={key => this.toggleScroll()}
-						onChangeOrder={(nextOrder) => { this._order = nextOrder }}
-						onReleaseRow={key => this._handleRelease(key)}
-						scrollEnabled={false}
-					/>
-				</Card>
-			</ScrollView>
+			<Card id="cards" title="Cards" hideHeader style={css.full_flex}>
+				<SortableList
+					style={css.full_flex}
+					data={this.state.cardObject}
+					order={this.props.cardOrder}
+					renderRow={
+						({ data, active, disabled }) => (
+							// Mildly confusing, but active prop from
+							// renderRow means the row has been grabbed
+							<CardPreferencesItem
+								data={data}
+								active={active}
+							/>
+						)
+					}
+					onActivateRow={key => this.toggleScroll()}
+					onChangeOrder={(nextOrder) => { this._order = nextOrder }}
+					onReleaseRow={key => this._handleRelease(key)}
+					scrollEnabled={false}
+				/>
+			</Card>
 		)
 	}
 }
