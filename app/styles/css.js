@@ -516,6 +516,9 @@ const css = StyleSheet.create({
 	po_acp: { marginBottom: 15 },
 	po_acp_gap_1: { paddingHorizontal: 20 },
 	po_acp_gap_2: { paddingHorizontal: 10 },
+	// ParkingCard
+	pc_nolots_container: { paddingHorizontal: 20, paddingVertical: 40 },
+	pc_nolots_text: {  alignSelf: 'center', fontSize: round(18 * prm) },
 
 	mpl_row_view: { flexDirection: 'row', flex: 1, paddingLeft: 15, backgroundColor: COLOR.WHITE, alignItems: 'center', justifyContent: 'center', paddingVertical: 10 },
 	mpl_row_text_unselected: { flex: 1, paddingLeft: 10, fontSize: 19, justifyContent: 'flex-start', color: COLOR.DGREY },

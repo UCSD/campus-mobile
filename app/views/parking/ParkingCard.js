@@ -3,6 +3,7 @@ import { View, Text } from 'react-native'
 import { withNavigation } from 'react-navigation'
 import ScrollCard from '../common/ScrollCard'
 import Card from '../common/Card'
+import Touchable from '../common/Touchable'
 import ParkingOverview from './ParkingOverview'
 import css from '../../styles/css'
 
@@ -16,14 +17,23 @@ const ParkingCard = ({
 }) => {
 	const extraActions = [
 		{
-			name: 'Edit Spot Type',
+			name: 'Spot Types',
 			action: gotoParkingSpotType
 		},
 		{
-			name: 'Manage Parking Lots',
+			name: 'Manage Lots',
 			action: gotoManageParkingLots
 		}
 	]
+
+	const ManageLotsButton = (
+		<Touchable
+			style={css.card_button_container}
+			onPress={() => { navigation.navigate('ManageParkingLots') }}
+		>
+			<Text style={css.card_button_text}>Manage Lots</Text>
+		</Touchable>
+	)
 
 	// only display the selcted parking lots
 	const data = []
@@ -48,6 +58,7 @@ const ParkingCard = ({
 				extraData={selectedSpots}
 				scrollData={data}
 				extraActions={extraActions}
+				actionButton={ManageLotsButton}
 			/>
 		)
 	} else {
@@ -57,9 +68,10 @@ const ParkingCard = ({
 				title="Parking"
 				extraActions={extraActions}
 			>
-				<View style={css.po_container}>
-					<Text style={css.po_structure_spots_available}>Please select a parking lot</Text>
+				<View style={css.pc_nolots_container}>
+					<Text style={css.pc_nolots_text}>Add a parking lot to begin.</Text>
 				</View>
+				{ManageLotsButton}
 			</Card>
 		)
 	}
