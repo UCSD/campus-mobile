@@ -32,6 +32,7 @@ import FullSchedule from '../views/schedule/FullScheduleListView'
 import ParkingSpotType from '../views/parking/ParkingSpotType'
 import ManageParkingLots from '../views/parking/ManageParkingLots'
 import Notifications from '../views/preferences/notifications/Notifications'
+import CardPreferences from '../views/preferences/card/CardPreferences'
 
 // TABS
 import TabIcons from './TabIcons'
@@ -201,6 +202,13 @@ const MainStack = StackNavigator(
 			screen: Notifications,
 			navigationOptions: {
 				title: 'Notifications',
+				headerRight: (<DummyView />)
+			}
+		},
+		CardPreferences: {
+			screen: CardPreferences,
+			navigationOptions: {
+				title: 'Cards',
 				headerRight: (<DummyView />)
 			}
 		},

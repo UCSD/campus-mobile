@@ -65,9 +65,7 @@ class PrefItem extends Component {
 	render() {
 		const { data, cards } = this.props
 		return (
-			<Animated.View
-				style={[css.us_list_row, this._style]}
-			>
+			<Animated.View style={[css.us_list_row, this._style]}>
 				<Icon
 					style={css.us_icon}
 					name="drag-handle"

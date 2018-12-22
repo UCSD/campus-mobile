@@ -25,19 +25,13 @@ class DiningDetail extends React.Component {
 	shouldComponentUpdate(nextProps, nextState) {
 		if (this.props.menuData !== nextProps.menuData) {
 			return true
-		}
-		else if (
-			this.state.filters !== nextState.filters
-			|| this.state.activeMeal !== nextState.activeMeal
-		) {
+		} else if ((this.state.filters !== nextState.filters) || (this.state.activeMeal !== nextState.activeMeal)) {
 			return true
-		}
-		else if (
-			this.props.menuRequestStatus !== nextProps.menuRequestStatus
-		) {
+		} else if (this.props.menuRequestStatus !== nextProps.menuRequestStatus) {
 			return true
+		} else {
+			return false
 		}
-		else return false
 	}
 
 	addFilter = (filter) => {

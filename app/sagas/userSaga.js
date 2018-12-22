@@ -185,8 +185,7 @@ function* refreshTokenRequest() {
 
 	if (response.error && response.error.appUpdateRequired) {
 		yield outOfDateAlert()
-	}
-	else if (response.access_token) {
+	} else if (response.access_token) {
 		yield auth.storeAccessToken(response.access_token)
 		// Clears any potential errors from being
 		// unable to automatically reauthorize a user

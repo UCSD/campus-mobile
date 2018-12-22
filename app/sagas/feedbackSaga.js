@@ -27,12 +27,10 @@ function* postFeedback(action) {
 		if (timeout) {
 			const e = new Error('Request timed out.')
 			throw e
-		}
-		else if (response.status !== 200) {
+		} else if (response.status !== 200) {
 			const e = new Error('Invalid server response.')
 			throw e
-		}
-		else {
+		} else {
 			yield put({ type: 'SET_FEEDBACK_RESPONSE', response })
 			yield put({ type: 'POST_FEEDBACK_SUCCESS' })
 		}

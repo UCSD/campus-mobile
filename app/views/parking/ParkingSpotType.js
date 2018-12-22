@@ -18,20 +18,19 @@ class ParkingSpotType extends React.Component {
 		const { isChecked, updateSelectedTypes, selectedSpots, renderWarning } = this.props
 		const ids = [...isChecked]
 		const index = parkingObj.item.id
-		// user is trying to unselect a row
+
 		if (ids[index]) {
+			// user is trying to unselect a row
 			ids[index] = !ids[index]
 			parkingObj.separators.unhighlight()
 			updateSelectedTypes(ids, selectedSpots.length - 1)
 			renderWarning(false)
-		}
-		// user is trying to select a row
-		else if (selectedSpots.length < 3) {
+		} else if (selectedSpots.length < 3) {
+			// user is trying to select a row
 			ids[index] = !ids[index]
 			parkingObj.separators.highlight()
 			updateSelectedTypes(ids, selectedSpots.length + 1)
-		}
-		else {
+		} else {
 			renderWarning(true)
 		}
 		// user tried to select a row but reached limit, so do nothing

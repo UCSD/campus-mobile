@@ -29,8 +29,7 @@ class Notifications extends Component {
 				&& Object.keys(classifications).indexOf(audience.audienceId) >= 0
 				&& classifications[audience.audienceId]) {
 				sections[0].data = [...sections[0].data, ...audience.topics]
-			}
-			else if (audience.audienceId === 'all') {
+			} else if (audience.audienceId === 'all') {
 				sections[0].data = [...sections[0].data, ...audience.topics]
 			}
 		})

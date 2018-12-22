@@ -23,8 +23,7 @@ const DiningMenu = ({
 				</View>
 			</Touchable>
 		)
-	}
-	else if (requestStatus) {
+	} else if (requestStatus) {
 		return (
 			<View style={css.dd_menu_container}>
 				<ActivityIndicator
@@ -33,8 +32,7 @@ const DiningMenu = ({
 				/>
 			</View>
 		)
-	}
-	else if (data && data.menuitems && data.menuitems.length > 1) {
+	} else if (data && data.menuitems && data.menuitems.length > 1) {
 		return (
 			<View style={css.dd_menu_container}>
 				<MenuFilters

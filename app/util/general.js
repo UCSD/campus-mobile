@@ -134,8 +134,7 @@ module.exports = {
 		if (destinationLat && destinationLon) {
 			const destinationURL = module.exports.getDirectionsURL('walk', destinationLat, destinationLon )
 			return module.exports.openURL(destinationURL)
-		}
-		else if (destinationAddress) {
+		} else if (destinationAddress) {
 			const destinationURL = module.exports.getDirectionsURL('walk', null, null, destinationAddress )
 			return module.exports.openURL(destinationURL)
 		}
@@ -233,11 +232,12 @@ module.exports = {
 	},
 
 	/**
-	 * Gets the current date
-	 * @returns {number} The number of milliseconds since midnight Jan 1, 1970
+	 * Returns the time difference between now and lastUpdated
+	 * @param {string} lastUpdated The last updated time
+	 * @returns {number} The number of milliseconds between now and lastUpdated
 	 */
-	getDateNow() {
-		return (Date.now())
+	timeDiff(lastUpdated) {
+		return (Date.now() - lastUpdated)
 	},
 
 	/**

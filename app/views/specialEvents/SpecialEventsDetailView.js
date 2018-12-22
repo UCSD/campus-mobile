@@ -39,8 +39,7 @@ class SpecialEventsDetailView extends React.Component {
 					{data['full-description']}
 				</Text>
 			)
-		}
-		else if (data.speakers) {
+		} else if (data.speakers) {
 			talkDescription = (
 				data.speakers.map((object, i) => (
 					<View style={css.sedv_speakerContainer} key={String(object.name) + String(i)}>

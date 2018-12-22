@@ -5,18 +5,26 @@ import FullScheduleButton from './FullScheduleButton'
 import ScheduleCard from './ScheduleCard'
 import schedule from '../../util/schedule'
 
-const processData = (scheduleData) => {
+let defaultSelectedClass = null
+
+const getUpcomingClasses = (scheduleData) => {
 	if (!scheduleData) return []
 
 	const parsedScheduleData = schedule.getData(scheduleData)
 	const classesData = schedule.getClasses(parsedScheduleData)
-
 	const date = moment()
 	const dayOfTheWeek = date.day()
 	const currTime = moment(date.format('HH:mm a'), ['HH:mm A']).format('HHmm')
+	const MAX_RESULTS = 4
 
+	/** result:Array - Classes with a specific day of the week **/
 	const result = []
+	/** times:Array - An array of parsed class end times **/
+	const times = []
+	/** otherResults:Array - Classes without a specific day of the week **/
+	const otherResults = []
 
+	/** Add classes scheduled to take place today to the `result` array **/
 	switch (dayOfTheWeek) {
 		case 0:
 			result.push(...classesData.SU)
@@ -39,17 +47,20 @@ const processData = (scheduleData) => {
 		case 6:
 			result.push(...classesData.SA)
 			break
-		default:
-			result.push(...classesData.OTHER)
-			break
 	}
 
-	const times = []
+	/** Loop classes scheduled to take place today **/
 	for (let i = 0; i < result.length; i++) {
-		const arr = result[i].time_string.split(' – ')
-		const endTime = arr[1].replace(/\./gi, '')
-		const newEndTime = moment(endTime, ['h:mm A']).format('HHmm')
-		times.push(newEndTime)
+		if (result[i].time_string) {
+			/** If a class has a set time, parse it and push it to the `times` array **/
+			const arr = result[i].time_string.split(' – ')
+			const endTime = arr[1].replace(/\./gi, '')
+			const newEndTime = moment(endTime, ['h:mm A']).format('HHmm')
+			times.push(newEndTime)
+		} else {
+			/** If a class has no set time, push it to the `otherResults` array **/
+			otherResults.push(result[i])
+		}
 	}
 
 	let i = 0
@@ -63,44 +74,55 @@ const processData = (scheduleData) => {
 
 	for (let j = 0; j < times.length; j++) {
 		if (times[j] > currTime) {
-			selectedClass = j
+			defaultSelectedClass = j
 			break
 		}
 	}
 
-	return result
+	if (defaultSelectedClass == null) {
+		defaultSelectedClass = 0
+		otherResults.lenth = MAX_RESULTS
+		otherResults.push(...classesData.OTHER)
+		return otherResults
+	} else {
+		return result
+	}
 }
-
-let selectedClass = 0
 
 class ScheduleCardContainer extends React.Component {
 	constructor(props) {
 		super(props)
+
 		this.state = {
-			upcoming4Courses: processData(props.scheduleData),
-			activeCourse: 0
+			upcoming4Courses: getUpcomingClasses(this.props.scheduleData),
+			activeCourse: null
 		}
 		this.onClickCourse = this.onClickCourse.bind(this)
 	}
 
 	componentWillMount() {
-		this.setState({ activeCourse: selectedClass })
+		this.setState({ activeCourse: defaultSelectedClass })
 	}
+
+	/** TODO: Review ScheduleCardContainer::componentWillReceiveProps **/
 	componentWillReceiveProps(nextProps) {
-		if (nextProps.scheduleData ||
-			(this.props.scheduleData && !nextProps.scheduleData)) {
+		/*
+		if ((nextProps.scheduleData) || (this.props.scheduleData && !nextProps.scheduleData)) {
 			this.setState((state, props) => ({
 				...state,
-				upcoming4Courses: processData(props.scheduleData)
+				upcoming4Courses: getUpcomingClasses(this.props.scheduleData)
 			}))
 		}
+		*/
 	}
+
 	onClickCourse(newActiveCourse) {
 		this.setState(prevState => ({
 			...prevState,
 			activeCourse: newActiveCourse,
 		}))
 	}
+
 	render() {
 		return (
 			<ScheduleCard

@@ -5,6 +5,7 @@ import Entypo from 'react-native-vector-icons/Entypo'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Feather from 'react-native-vector-icons/Feather'
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Touchable from '../common/Touchable'
 import { openURL } from '../../util/general'
 import css from '../../styles/css'
@@ -44,6 +45,9 @@ const PreferencesItem = ({
 		) : null }
 		{iconPack === 'FontAwesome' ? (
 			<FontAwesome name={icon} size={24} style={css.pi_icon} />
+		) : null }
+		{iconPack === 'MaterialCommunityIcons' ? (
+			<MaterialCommunityIcons name={icon} size={24} style={css.pi_icon} />
 		) : null }
 		<Text style={css.pi_title}>{title}</Text>
 		<Ionicons name="ios-arrow-forward" size={24} style={css.pi_arrow} />

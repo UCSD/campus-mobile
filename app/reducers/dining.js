@@ -19,7 +19,7 @@ function dining(state = initialState, action) {
 
 			return Object.assign({}, newState, {
 				data: action.data,
-				lastUpdated: new Date().getTime(),
+				lastUpdated: Date().now(),
 				lookup: newLookup
 			})
 		}
@@ -28,7 +28,7 @@ function dining(state = initialState, action) {
 				...newState.menus,
 				[action.id]: {
 					...action.data,
-					lastUpdated: new Date().getTime()
+					lastUpdated: Date().now(),
 				}
 			}
 
