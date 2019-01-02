@@ -1,0 +1,31 @@
+[{
+"id": 0,
+"type": "Student",
+"backgroundColor": "yellow",
+"textColor": "black",
+"shortName": "S"
+}, {
+"id": 1,
+"type": "Staff/grad",
+"backgroundColor": "green",
+"textColor": "white",
+"shortName": "B"
+}, {
+"id": 2,
+"type": "Faculty",
+"backgroundColor": "red",
+"textColor": "white",
+"shortName": "A"
+}, {
+"id": 3,
+"type": "Accessible",
+"backgroundColor": "blue",
+"textColor": "white",
+"shortName": ""
+}, {
+"id": 4,
+"type": "Visitor",
+"backgroundColor": "black",
+"textColor": "white",
+"shortName": "V"
+}]

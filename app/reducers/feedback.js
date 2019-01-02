@@ -1,22 +1,22 @@
 const initialState = {
 	comment: '',
 	name: '',
-	email: ''
+	email: '',
 }
 
 function feedback(state = initialState, action) {
 	switch (action.type) {
-	case 'SET_FEEDBACK_STATE': {
-		return Object.assign({}, action.feedback)
-	}
-	case 'SET_FEEDBACK_RESPONSE': {
-		const feedbackWithResponse = Object.assign({}, initialState)
-		feedbackWithResponse.response = action.response
-		return feedbackWithResponse
-	}
-	default: {
-		return state
-	}
+		case 'SET_FEEDBACK_STATE': {
+			return Object.assign({}, action.feedback)
+		}
+		case 'SET_FEEDBACK_RESPONSE': {
+			const feedbackWithResponse = Object.assign({}, initialState)
+			feedbackWithResponse.response = action.response
+			return feedbackWithResponse
+		}
+		default: {
+			return state
+		}
 	}
 }
 

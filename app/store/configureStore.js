@@ -9,8 +9,12 @@ import createMigration from 'redux-persist-migrate'
 import rootSaga from '../sagas/rootSaga'
 import rootReducer from '../reducers'
 
-const sagaMiddleware = createSagaMiddleware()
+// immutable module import is ignored by eslint because it is
+// only used when the app is running in dev mode
+// eslint-disable-next-line import/no-extraneous-dependencies
+const immutable = require('redux-immutable-state-invariant')
 
+const sagaMiddleware = createSagaMiddleware()
 const saveMapFilter = createFilter(
 	'map',
 	['history']
@@ -30,14 +34,42 @@ const saveShuttleFilter = createFilter(
 
 // Migration
 const manifest = {
-	1: state => ({ ...state }),
-	2: state => ({ ...state, shuttle: Object.assign({}, state.shuttle, { savedStops: [], stops: {}, lastUpdated: 0 }) }),
-	3: state => ({ ...state, shuttle: Object.assign({}, state.shuttle, { savedStops: [], stops: {}, lastUpdated: 0, closestStop: null }) }),
-	4: state => ({ ...state, cards: undefined }),
-	5: state => ({ ...state, events: undefined }),
-	6: state => ({ ...state, cards: undefined, conference: undefined }),
 	7: state => ({ ...state, surf: undefined }), // 5.5 migration
 	8: state => ({ ...state, dining: undefined, specialEvents: undefined }), // 5.6 migration
+	9: state => ({ ...state, cards: undefined }), // 6.0 migration
+	10: (state) => {
+		const newState = { ...state }
+		if (state.cards && state.cards.cardOrder) {
+			// Add parking card if it doesn't exist
+			if (state.cards.cards) {
+				if (!state.cards.cards.parking) {
+					state.cards.cards = {
+						...state.cards.cards,
+						parking: {
+							id: 'parking',
+							active: true,
+							name: 'Parking',
+							component: 'ParkingCard'
+						}
+					}
+				}
+			}
+
+			if (Array.isArray(state.cards.cardOrder)
+				&& state.cards.cardOrder.indexOf('parking') < 0) {
+				newState.cards.cardOrder.splice(1, 0, 'parking')
+			}
+		}
+
+		// Create default preferences for notifications
+		if (state.user && state.user.profile) {
+			newState.user.profile.subscribedTopics = [
+				'emergency',
+				'all'
+			]
+		}
+		return newState
+	}, // 6.1 messages migration
 }
 
 // reducerKey is the key of the reducer you want to store the state version in
@@ -46,11 +78,24 @@ const migration = createMigration(manifest, reducerKey)
 
 export default function configureStore(initialState, onComplete = () => null) {
 	const middlewares = [sagaMiddleware, thunkMiddleware] // lets us dispatch() functions
-	const enhancer =  compose(migration, autoRehydrate())
+
+	// If in development, add redux-immutable-state-invariant
+	if (__DEV__) {
+		middlewares.push(immutable.default())
+	}
+
+	// custom composer for redux devtools
+	const composeWithTools =
+		typeof window === 'object' &&
+		window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?
+			window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({}) :
+			compose
+
+	const enhancer =  composeWithTools(migration, autoRehydrate())
 	const store = createStore(
 		rootReducer,
+		enhancer,
 		applyMiddleware(...middlewares),
-		enhancer
 	)
 
 	persistStore(store, {

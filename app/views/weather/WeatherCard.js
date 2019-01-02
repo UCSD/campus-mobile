@@ -1,24 +1,16 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from 'react'
+import PropTypes from 'prop-types'
 import {
 	View,
 	Text,
 	Image,
 	ActivityIndicator,
-	StyleSheet,
-} from 'react-native';
+} from 'react-native'
 
-import Card from '../card/Card';
-
-import WeatherWeek from './WeatherWeek';
-import {
-	COLOR_MGREY,
-	COLOR_DGREY,
-} from '../../styles/ColorConstants';
-import {
-	MAX_CARD_WIDTH
-} from '../../styles/LayoutConstants';
-import AppSettings from '../../AppSettings';
+import Card from '../common/Card'
+import WeatherWeek from './WeatherWeek'
+import css from '../../styles/css'
+import AppSettings from '../../AppSettings'
 
 /**
  * Presentational Component for WeatherCard
@@ -34,26 +26,23 @@ import AppSettings from '../../AppSettings';
  * @param {Number} weatherData.daily[].tempMin Min temperature for day
  * @param {JSX} Optional button component
  * @return {JSX} Presentational Component for WeatherCard
- *
- * @todo Provide icon default using non-image urls?
- * @todo Get rid of PRM
  */
 const WeatherCard = ({ weatherData, actionButton }) => (
 	<Card id="weather" title="Weather">
 		{weatherData ? (
 			<View>
-				<View style={styles.topRowContainer}>
-					<View style={styles.topLeftContainer}>
-						<Text style={styles.tempText}>
+				<View style={css.wc_topRowContainer}>
+					<View style={css.wc_topLeftContainer}>
+						<Text style={css.wc_tempText}>
 							{ weatherData.currently.temperature }&deg; in San Diego
 						</Text>
-						<Text style={styles.summaryText}>
+						<Text style={css.wc_summaryText}>
 							{ weatherData.currently.summary }
 						</Text>
 					</View>
-					<View style={styles.topRightContainer}>
+					<View style={css.wc_topRightContainer}>
 						<Image
-							style={styles.topIcon}
+							style={css.wc_topIcon}
 							source={{ uri: AppSettings.WEATHER_ICON_BASE_URL + weatherData.currently.icon + '.png' }}
 						/>
 					</View>
@@ -63,26 +52,16 @@ const WeatherCard = ({ weatherData, actionButton }) => (
 				{actionButton}
 			</View>
 		) : (
-			<View style={styles.loadingContainer}>
+			<View style={css.wc_loadingContainer}>
 				<ActivityIndicator size="large" />
 			</View>
 		)}
 	</Card>
-);
+)
 
 WeatherCard.propTypes = {
 	weatherData: PropTypes.object,
 	actionButton: PropTypes.element
-};
+}
 
-const styles = StyleSheet.create({
-	topRowContainer: { flexDirection: 'row', borderBottomWidth: 1, borderColor: COLOR_MGREY, justifyContent: 'center', alignItems: 'center', width: MAX_CARD_WIDTH, paddingHorizontal: 14 },
-	topLeftContainer: { flex: 4 },
-	tempText: { fontSize: 22, fontWeight: '300' },
-	summaryText: { fontSize: 15, color: COLOR_DGREY, paddingTop: 10, fontWeight: '300' },
-	topRightContainer: { flex: 1 },
-	topIcon: { width: 68, height: 68 },
-	loadingContainer: { alignItems: 'center', justifyContent: 'center', width: MAX_CARD_WIDTH },
-});
-
-export default WeatherCard;
+export default WeatherCard

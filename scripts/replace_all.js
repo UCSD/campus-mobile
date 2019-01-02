@@ -1,102 +1,131 @@
-/* 	
+/*
 	Usage:
-	npm run-script insert-production-values
-	npm run-script insert-staging-values
-	npm run-script insert-placeholder-values
+	npm run-script [campus-prod|campus-qa]
 */
-var fs = require('fs');
-var os = require('os');
-var REPLACEMENT_TYPE = process.argv[2];
-var ENV_TYPE = process.argv[3];
+const fs = require('fs')
+const os = require('os')
 
-var myEnv;
+const REPLACEMENT_ENV = process.argv[2]
+const ENV_TYPE = process.argv[3]
+
+// Environment Setup
+let myEnv
 if (ENV_TYPE === 'ci') {
-	myEnv = process.env;
+	myEnv = process.env
 } else {
-	var myEnv = require(os.homedir() + '/.campusmobile/env.js');
+	myEnv = require(os.homedir() + '/.campusmobile/env.js') // eslint-disable-line
 }
 
-var APP_SETTINGS_PATH = './app/AppSettings.js';
+// File Paths
+const APP_SETTINGS_PATH = './app/AppSettings.js',
+	SSO_SERVICE_PATH = './app/services/ssoService.js',
+	IOS_INFO_PLIST_PATH = './ios/CampusMobile/Info.plist',
+	ANDROID_STRINGS_PATH = './android/app/src/main/res/values/strings.xml',
+	ANDROID_MANIFEST_PATH = './android/app/src/main/AndroidManifest.xml',
+	IOS_GOOGLE_SERVICES_PATH = './ios/GoogleService-Info.plist',
+	ANDROID_GOOGLE_SERVICES_PATH = './android/app/google-services.json'
 
-var IOS_INFO_PLIST_PATH = './ios/CampusMobile/Info.plist';
+// Placeholder Values
+const PH = {
+	APP_NAME_PH: 'APP_NAME_PH',
+	GOOGLE_ANALYTICS_ID_PH: 'GOOGLE_ANALYTICS_ID_PH',
+	GOOGLE_MAPS_API_KEY_PH: 'GOOGLE_MAPS_API_KEY_PH',
+	FIREBASE_KEY_PH: 'FIREBASE_KEY_PH',
+	BUGSNAG_KEY_PH: 'BUGSNAG_KEY_PH',
+	AUTH_SERVICE_API_KEY_PH: 'AUTH_SERVICE_API_KEY_PH',
+	GS_PROJECT_ID_PH: 'GS_PROJECT_ID_PH',
+	GS_STORAGE_BUCKET_PH: 'GS_STORAGE_BUCKET_PH',
+	GS_FIREBASE_URL_PH: 'GS_FIREBASE_URL_PH',
+	GS_PROJECT_NUMBER_PH: 'GS_PROJECT_NUMBER_PH', // iOS: GCM_SENDER_ID, Android: project_info.project_number
+	GS_IOS_CLIENT_ID_PH: 'GS_IOS_CLIENT_ID_PH',
+	GS_IOS_REVERSED_CLIENT_ID_PH: 'GS_IOS_REVERSED_CLIENT_ID_PH',
+	GS_IOS_API_KEY_PH: 'GS_IOS_API_KEY_PH',
+	GS_IOS_BUNDLE_ID_PH: 'GS_IOS_BUNDLE_ID_PH',
+	GS_IOS_STORAGE_BUCKET_PH: 'GS_IOS_STORAGE_BUCKET_PH',
+	GS_IOS_APP_ID_PH: 'GS_IOS_APP_ID_PH',
+	GS_ANDROID_CLIENT_ID_PH: 'GS_ANDROID_CLIENT_ID_PH',
+	GS_ANDROID_API_KEY_PH: 'GS_ANDROID_API_KEY_PH',
+	GS_ANDROID_APP_ID_PH: 'GS_ANDROID_APP_ID_PH',
+	GS_ANDROID_BUNDLE_ID_PH: 'GS_ANDROID_BUNDLE_ID_PH',
+}
 
-var ANDROID_STRINGS_PATH = './android/app/src/main/res/values/strings.xml';
-var ANDROID_MANIFEST_PATH = './android/app/src/main/AndroidManifest.xml';
-
-var IOS_GOOGLE_SERVICES_PATH = './ios/GoogleService-Info.plist';
-var ANDROID_GOOGLE_SERVICES_PATH = './android/app/google-services.json';
-
-var APP_NAME = myEnv.APP_NAME;
-var APP_NAME_PH = myEnv.APP_NAME_PH;
-
-var GOOGLE_ANALYTICS_ID = myEnv.GOOGLE_ANALYTICS_ID;
-var GOOGLE_ANALYTICS_ID_PH = myEnv.GOOGLE_ANALYTICS_ID_PH;
-
-var GOOGLE_MAPS_API_KEY = myEnv.GOOGLE_MAPS_API_KEY;
-var GOOGLE_MAPS_API_KEY_PH = myEnv.GOOGLE_MAPS_API_KEY_PH;
-
-var FIREBASE_IOS_KEY = myEnv.FIREBASE_IOS_KEY;
-var FIREBASE_ANDROID_KEY = myEnv.FIREBASE_ANDROID_KEY;
-var FIREBASE_KEY_PH = myEnv.FIREBASE_KEY_PH;
-
-if (REPLACEMENT_TYPE === 'production' || REPLACEMENT_TYPE === 'staging' || REPLACEMENT_TYPE === 'placeholder') {
+if (REPLACEMENT_ENV === 'prod' || REPLACEMENT_ENV === 'qa') {
 	// AppSettings.js
-	makeReplacements(APP_SETTINGS_PATH, REPLACEMENT_TYPE, [
-		{ prodVal: APP_NAME, stgVal: APP_NAME, phVal: APP_NAME_PH },
-		{ prodVal: GOOGLE_ANALYTICS_ID, stgVal: GOOGLE_ANALYTICS_ID, phVal: GOOGLE_ANALYTICS_ID_PH },
-	]);
+	makeReplacements(APP_SETTINGS_PATH, REPLACEMENT_ENV, [
+		{ prodVal: myEnv.APP_NAME, qaVal: myEnv.APP_NAME, phVal: PH.APP_NAME_PH },
+		{ prodVal: myEnv.GOOGLE_ANALYTICS_ID_PROD, qaVal: myEnv.GOOGLE_ANALYTICS_ID_PH, phVal: PH.GOOGLE_ANALYTICS_ID_PH },
+	])
+
+	// ssoService.js
+	makeReplacements(SSO_SERVICE_PATH, REPLACEMENT_ENV, [
+		{ prodVal: myEnv.AUTH_SERVICE_API_KEY_PROD, qaVal: myEnv.AUTH_SERVICE_API_KEY_QA, phVal: PH.AUTH_SERVICE_API_KEY_PH },
+	])
+
 	// Info.plist
-	makeReplacements(IOS_INFO_PLIST_PATH, REPLACEMENT_TYPE, [
-		{ prodVal: APP_NAME, stgVal: APP_NAME, phVal: APP_NAME_PH },
-	]);
+	makeReplacements(IOS_INFO_PLIST_PATH, REPLACEMENT_ENV, [
+		{ prodVal: myEnv.APP_NAME, qaVal: myEnv.APP_NAME, phVal: PH.APP_NAME_PH },
+		{ prodVal: myEnv.BUGSNAG_KEY, qaVal: myEnv.BUGSNAG_KEY, phVal: PH.BUGSNAG_KEY_PH }
+	])
 
 	// strings.xml
-	makeReplacements(ANDROID_STRINGS_PATH, REPLACEMENT_TYPE, [
-		{ prodVal: APP_NAME, stgVal: APP_NAME, phVal: APP_NAME_PH },
-	]);
+	makeReplacements(ANDROID_STRINGS_PATH, REPLACEMENT_ENV, [
+		{ prodVal: myEnv.APP_NAME, qaVal: myEnv.APP_NAME, phVal: PH.APP_NAME_PH },
+	])
 
 	// AndroidManifest.xml
-	makeReplacements(ANDROID_MANIFEST_PATH, REPLACEMENT_TYPE, [
-		{ prodVal: GOOGLE_MAPS_API_KEY, stgVal: GOOGLE_MAPS_API_KEY, phVal: GOOGLE_MAPS_API_KEY_PH },
-	]);
+	makeReplacements(ANDROID_MANIFEST_PATH, REPLACEMENT_ENV, [
+		{ prodVal: myEnv.GOOGLE_MAPS_API_KEY, qaVal: myEnv.GOOGLE_MAPS_API_KEY, phVal: PH.GOOGLE_MAPS_API_KEY_PH },
+		{ prodVal: myEnv.BUGSNAG_KEY, qaVal: myEnv.BUGSNAG_KEY, phVal: PH.BUGSNAG_KEY_PH }
+	])
 
 	// GoogleService-Info.plist
-	makeReplacements(IOS_GOOGLE_SERVICES_PATH, REPLACEMENT_TYPE, [
-		{ prodVal: FIREBASE_IOS_KEY, stgVal: FIREBASE_IOS_KEY, phVal: FIREBASE_KEY_PH },
-	]);
+	makeReplacements(IOS_GOOGLE_SERVICES_PATH, REPLACEMENT_ENV, [
+		{ prodVal: myEnv.GS_IOS_PROD_CLIENT_ID, 				qaVal: myEnv.GS_IOS_QA_CLIENT_ID, 				phVal: PH.GS_IOS_CLIENT_ID_PH },
+		{ prodVal: myEnv.GS_IOS_PROD_REVERSED_CLIENT_ID,		qaVal: myEnv.GS_IOS_QA_REVERSED_CLIENT_ID, 		phVal: PH.GS_IOS_REVERSED_CLIENT_ID_PH },
+		{ prodVal: myEnv.GS_IOS_PROD_API_KEY, 					qaVal: myEnv.GS_IOS_QA_API_KEY, 				phVal: PH.GS_IOS_API_KEY_PH },
+		{ prodVal: myEnv.GS_IOS_BUNDLE_ID, 						qaVal: myEnv.GS_IOS_BUNDLE_ID, 					phVal: PH.GS_IOS_BUNDLE_ID_PH },
+		{ prodVal: myEnv.GS_IOS_PROD_APP_ID, 					qaVal: myEnv.GS_IOS_QA_APP_ID, 					phVal: PH.GS_IOS_APP_ID_PH },
+		{ prodVal: myEnv.GS_PROD_FIREBASE_URL, 					qaVal: myEnv.GS_QA_FIREBASE_URL, 				phVal: PH.GS_FIREBASE_URL_PH },
+		{ prodVal: myEnv.GS_PROD_STORAGE_BUCKET, 				qaVal: myEnv.GS_QA_STORAGE_BUCKET, 				phVal: PH.GS_STORAGE_BUCKET_PH },
+		{ prodVal: myEnv.GS_PROD_PROJECT_ID, 					qaVal: myEnv.GS_QA_PROJECT_ID, 					phVal: PH.GS_PROJECT_ID_PH },
+		{ prodVal: myEnv.GS_PROD_PROJECT_NUMBER, 				qaVal: myEnv.GS_QA_PROJECT_NUMBER, 				phVal: PH.GS_PROJECT_NUMBER_PH },
+	])
 
 	// google-services.json
-	makeReplacements(ANDROID_GOOGLE_SERVICES_PATH, REPLACEMENT_TYPE, [
-		{ prodVal: FIREBASE_ANDROID_KEY, stgVal: FIREBASE_ANDROID_KEY, phVal: FIREBASE_KEY_PH },
-	]);
-
+	makeReplacements(ANDROID_GOOGLE_SERVICES_PATH, REPLACEMENT_ENV, [
+		{ prodVal: myEnv.GS_ANDROID_PROD_CLIENT_ID, 			qaVal: myEnv.GS_ANDROID_QA_CLIENT_ID, 			phVal: PH.GS_ANDROID_CLIENT_ID_PH },
+		{ prodVal: myEnv.GS_ANDROID_PROD_API_KEY, 				qaVal: myEnv.GS_ANDROID_QA_API_KEY, 			phVal: PH.GS_ANDROID_API_KEY_PH },
+		{ prodVal: myEnv.GS_ANDROID_PROD_APP_ID, 				qaVal: myEnv.GS_ANDROID_QA_APP_ID, 				phVal: PH.GS_ANDROID_APP_ID_PH },
+		{ prodVal: myEnv.GS_ANDROID_BUNDLE_ID, 					qaVal: myEnv.GS_ANDROID_BUNDLE_ID, 				phVal: PH.GS_ANDROID_BUNDLE_ID_PH },
+		{ prodVal: myEnv.GS_PROD_FIREBASE_URL, 					qaVal: myEnv.GS_QA_FIREBASE_URL, 				phVal: PH.GS_FIREBASE_URL_PH },
+		{ prodVal: myEnv.GS_PROD_STORAGE_BUCKET, 				qaVal: myEnv.GS_QA_STORAGE_BUCKET, 				phVal: PH.GS_STORAGE_BUCKET_PH },
+		{ prodVal: myEnv.GS_PROD_PROJECT_ID, 					qaVal: myEnv.GS_QA_PROJECT_ID, 					phVal: PH.GS_PROJECT_ID_PH },
+		{ prodVal: myEnv.GS_PROD_PROJECT_NUMBER, 				qaVal: myEnv.GS_QA_PROJECT_NUMBER, 				phVal: PH.GS_PROJECT_NUMBER_PH },
+	])
 } else {
-	console.log('Error: Replacement type not specififed');
-	console.log('Sample Usage: replace_all.js [Production|Staging|Placeholder]');
+	console.log('Error: Replacement type not specififed.\nSample Usage: npm run-script [campus-prod|campus-qa]')
 }
 
 
-function makeReplacements(FILE_PATH, REPLACEMENT_TYPE, REPLACEMENTS) {
-	fs.readFile(FILE_PATH, 'utf8', function(err, data) {
-		if (err) {
-			return console.log(err);
-		} else {
-			for (var i = 0; REPLACEMENTS.length > i; i++) {
-				if (REPLACEMENT_TYPE === 'production') {
-					data = data.replace(REPLACEMENTS[i].phVal, REPLACEMENTS[i].prodVal).replace(REPLACEMENTS[i].stgVal, REPLACEMENTS[i].prodVal);
-				} else if (REPLACEMENT_TYPE === 'staging') {
-					data = data.replace(REPLACEMENTS[i].prodVal, REPLACEMENTS[i].stgVal).replace(REPLACEMENTS[i].phVal, REPLACEMENTS[i].stgVal);
-				} else if (REPLACEMENT_TYPE === 'placeholder') {
-					data = data.replace(REPLACEMENTS[i].prodVal, REPLACEMENTS[i].phVal).replace(REPLACEMENTS[i].stgVal, REPLACEMENTS[i].phVal);
+function makeReplacements(FILE_PATH, ENV, REPLACEMENTS) {
+	fs.readFile(FILE_PATH, 'utf8', (err, data) => {
+		if (!err) {
+			for (let i = 0; REPLACEMENTS.length > i; i++) {
+				if (ENV === 'prod') {
+					data = data.replace(REPLACEMENTS[i].phVal, REPLACEMENTS[i].prodVal)
+				} else if (ENV === 'qa') {
+					data = data.replace(REPLACEMENTS[i].phVal, REPLACEMENTS[i].qaVal)
 				}
 			}
-			fs.writeFile(FILE_PATH, data, 'utf8', function(err) {
-				if (err) {
-					return console.log(err);
+			fs.writeFile(FILE_PATH, data, 'utf8', (writeErr) => {
+				if (writeErr) {
+					return console.log(err)
 				} else {
-					console.log('SUCCESS: File ' + FILE_PATH + ' updated with ' + REPLACEMENT_TYPE + ' values.');
+					console.log('SUCCESS: File ' + FILE_PATH + ' updated with ' + ENV + ' values.')
 				}
-			});
+			})
+		} else {
+			return console.log('Error: ' + err)
 		}
-	});
+	})
 }

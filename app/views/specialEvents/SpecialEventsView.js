@@ -12,16 +12,8 @@ import moment from 'moment'
 import css from '../../styles/css'
 import logger from '../../util/logger'
 import SpecialEventsListView from './SpecialEventsListView'
-import {
-	COLOR_SECONDARY,
-	COLOR_MGREY,
-	COLOR_DGREY,
-	COLOR_WHITE,
-} from '../../styles/ColorConstants'
-import {
-	TAB_BAR_HEIGHT,
-	WINDOW_WIDTH,
-} from '../../styles/LayoutConstants'
+import COLOR from '../../styles/ColorConstants'
+import LAYOUT from '../../styles/LayoutConstants'
 import Touchable from '../common/Touchable'
 
 class SpecialEventsView extends Component {
@@ -32,7 +24,7 @@ class SpecialEventsView extends Component {
 			title,
 			headerRight: (
 				(!personal) ? (
-					<HeaderButtons color={COLOR_WHITE}>
+					<HeaderButtons color={COLOR.WHITE}>
 						<HeaderButtons.Item
 							title="Filter"
 							onPress={() => { navigation.navigate('SpecialEventsFilters', { title }) }}
@@ -202,17 +194,17 @@ const styles = StyleSheet.create({
 	scrollButtonContainer: { flexDirection: 'row' },
 	scrollContentContainer: { flexGrow: 1 },
 	buttonContainer: { flex: 1, flexDirection: 'row', alignItems: 'center' },
-	selectedButton: { flexGrow: 1, minWidth: Math.round(WINDOW_WIDTH / 3.65), height: TAB_BAR_HEIGHT, alignItems: 'center', justifyContent: 'center', backgroundColor: COLOR_SECONDARY, borderLeftWidth: 1, borderLeftColor: COLOR_MGREY },
-	selectedFirstButton: { flexGrow: 1, minWidth: WINDOW_WIDTH / 4, height: TAB_BAR_HEIGHT, alignItems: 'center', justifyContent: 'center', backgroundColor: COLOR_SECONDARY },
-	plainButton: { flexGrow: 1, minWidth: Math.round(WINDOW_WIDTH / 3.65), height: TAB_BAR_HEIGHT, alignItems: 'center', justifyContent: 'center', backgroundColor: COLOR_WHITE, borderLeftWidth: 1, borderLeftColor: COLOR_MGREY },
-	plainFirstButton: { flexGrow: 1, minWidth: Math.round(WINDOW_WIDTH / 3.65), height: TAB_BAR_HEIGHT, alignItems: 'center', justifyContent: 'center', backgroundColor: COLOR_WHITE },
+	selectedButton: { flexGrow: 1, minWidth: Math.round(LAYOUT.WINDOW_WIDTH / 3.65), height: LAYOUT.TAB_BAR_HEIGHT, alignItems: 'center', justifyContent: 'center', backgroundColor: COLOR.SECONDARY, borderLeftWidth: 1, borderLeftColor: COLOR.MGREY },
+	selectedFirstButton: { flexGrow: 1, minWidth: LAYOUT.WINDOW_WIDTH / 4, height: LAYOUT.TAB_BAR_HEIGHT, alignItems: 'center', justifyContent: 'center', backgroundColor: COLOR.SECONDARY },
+	plainButton: { flexGrow: 1, minWidth: Math.round(LAYOUT.WINDOW_WIDTH / 3.65), height: LAYOUT.TAB_BAR_HEIGHT, alignItems: 'center', justifyContent: 'center', backgroundColor: COLOR.WHITE, borderLeftWidth: 1, borderLeftColor: COLOR.MGREY },
+	plainFirstButton: { flexGrow: 1, minWidth: Math.round(LAYOUT.WINDOW_WIDTH / 3.65), height: LAYOUT.TAB_BAR_HEIGHT, alignItems: 'center', justifyContent: 'center', backgroundColor: COLOR.WHITE },
 	hideLeftBorder: { borderLeftWidth: 0 },
 	selectedText: { textAlign: 'center', fontSize: 18, color: 'white' },
 	plainText: { textAlign: 'center', fontSize: 18, opacity: 0.5 },
-	tabBar: { borderTopWidth: 1, borderColor: COLOR_DGREY, backgroundColor: COLOR_WHITE, height: TAB_BAR_HEIGHT },
-	daysBar: { borderBottomWidth: 1, borderColor: COLOR_MGREY, backgroundColor: COLOR_WHITE, height: TAB_BAR_HEIGHT },
-	selectedDayText: { textAlign: 'center', fontSize: 18, color: COLOR_WHITE, backgroundColor: COLOR_SECONDARY },
+	tabBar: { borderTopWidth: 1, borderColor: COLOR.DGREY, backgroundColor: COLOR.WHITE, height: LAYOUT.TAB_BAR_HEIGHT },
+	daysBar: { borderBottomWidth: 1, borderColor: COLOR.MGREY, backgroundColor: COLOR.WHITE, height: LAYOUT.TAB_BAR_HEIGHT },
+	selectedDayText: { textAlign: 'center', fontSize: 18, color: COLOR.WHITE, backgroundColor: COLOR.SECONDARY },
 	filterText: { textAlign: 'center', fontSize: 17, color: 'white' },
 	backButtonContainer: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: -7 },
-	backButtonImage: { color: COLOR_WHITE, marginRight: 7 },
+	backButtonImage: { color: COLOR.WHITE, marginRight: 7 },
 })

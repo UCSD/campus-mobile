@@ -1,4 +1,9 @@
-import { call, put, takeLatest, race } from 'redux-saga/effects'
+import {
+	call,
+	put,
+	takeLatest,
+	race
+} from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 import FeedbackService from '../services/feedbackService'
 import { HTTP_REQUEST_TTL } from '../AppSettings'

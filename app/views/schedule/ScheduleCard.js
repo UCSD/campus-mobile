@@ -1,131 +1,257 @@
-import React from 'react';
+import React from 'react'
+import PropTypes from 'prop-types'
 import {
 	View,
 	Text,
 	StyleSheet,
-	ListView
-} from 'react-native';
+	TouchableHighlight,
+	ActivityIndicator
+} from 'react-native'
+import FAIcon from 'react-native-vector-icons/FontAwesome'
 
-import { getData } from './scheduleData';
-import ScrollCard from '../card/ScrollCard';
-import logger from '../../util/logger';
-import {
-	MAX_CARD_WIDTH
-} from '../../styles/LayoutConstants';
-import {
-	COLOR_LGREY,
-	COLOR_DGREY
-} from '../../styles/ColorConstants';
+import schedule from '../../util/schedule'
+import logger from '../../util/logger'
+import Card from '../common/Card'
+import LastUpdated from '../common/LastUpdated'
+import css from '../../styles/css'
+import COLOR from '../../styles/ColorConstants'
 
-const scheduleData = getData();
-const daytaSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+const ScheduleCard = ({
+	coursesToShow,
+	waitingData,
+	lastUpdated,
+	error,
+	actionButton,
+	activeCourse,
+	currentTerm,
+	onClickCourse
+}) => {
+	try {
+		if (
+			coursesToShow &&
+			coursesToShow[activeCourse] &&
+			currentTerm.term_code) {
+			const currentCourse = coursesToShow[activeCourse]
 
-const ScheduleCard = () => {
-	logger.ga('Card Mounted: Schedule');
+			// Get values for view and account for optional values
+			let classTime,
+				classLocation,
+				classEval
+
+			if (currentCourse.time_string) {
+				classTime = currentCourse.time_string
+			} else {
+				classTime = 'No Time Associated'
+			}
+
+			if (currentCourse.building) {
+				classLocation = currentCourse.building + ' ' +
+					currentCourse.room
+			} else {
+				classLocation = 'No Location Associated'
+			}
+
+			switch (currentCourse.grade_option) {
+				case 'L': {
+					classEval = 'Letter Grade'
+					break
+				}
+				case 'P': {
+					classEval = 'Pass/No Pass'
+					break
+				}
+				case 'S': {
+					classEval = 'Sat/Unsat'
+					break
+				}
+				default: {
+					classEval = 'Other'
+				}
+			}
+
+			return (
+				<Card id="schedule" title="Classes">
+					<View>
+						<View style={css.cc_container}>
+							<View style={css.cc_leftHalf}>
+								<View style={css.cc_leftHalf_upper}>
+									<ScheduleText style={css.cc_leftHalf_upper_timeText}>
+										{schedule.dayOfWeekInterpreter(currentCourse.day_code)}
+									</ScheduleText>
+									<ScheduleText style={css.cc_leftHalf_upper_classText_firstSection}>
+										{currentCourse.subject_code + ' '
+											+ currentCourse.course_code}
+									</ScheduleText>
+									<ScheduleText style={css.cc_leftHalf_upper_classText_secondSection}>
+										{currentCourse.meeting_type}
+									</ScheduleText>
+								</View>
+								<View style={css.cc_leftHalf_lower}>
+									<ClassMetaWithIcon
+										icon="clock-o"
+										iconStyle={css.cc_icon_time}
+										description="Start and Finish Time"
+										value={classTime}
+									/>
+									<ClassMetaWithIcon
+										icon="building-o"
+										iconStyle={css.cc_icon_building}
+										description="Class Room Location"
+										value={classLocation}
+									/>
+									<ClassMetaWithIcon
+										icon="check-square-o"
+										iconStyle={css.cc_icon_lettergrade}
+										description="Evaluation Option"
+										value={classEval}
+									/>
+								</View>
+							</View>
+							<View style={css.cc_rightHalf}>
+								<DayItem
+									data={coursesToShow[0]}
+									active={activeCourse === 0}
+									onClick={onClickCourse}
+									index={0}
+								/>
+								<DayItem
+									data={coursesToShow[1]}
+									active={activeCourse === 1}
+									onClick={onClickCourse}
+									index={1}
+								/>
+								<DayItem
+									data={coursesToShow[2]}
+									active={activeCourse === 2}
+									onClick={onClickCourse}
+									index={2}
+								/>
+								<DayItem
+									data={coursesToShow[3]}
+									active={activeCourse === 3}
+									onClick={onClickCourse}
+									index={3}
+								/>
+							</View>
+						</View>
+						<LastUpdatedMin lastUpdated={lastUpdated} error={error} />
+						{actionButton}
+					</View>
+				</Card>
+			)
+		} else if (waitingData) {
+			return <LoadingClasses lastUpdated={lastUpdated} error={error} />
+		} else {
+			return <NoClasses lastUpdated={lastUpdated} error={error} />
+		}
+	} catch (err) {
+		logger.trackException(err)
+		return <NoClasses lastUpdated={lastUpdated} error={error} />
+	}
+}
+
+const LastUpdatedMin = ({ lastUpdated, error }) => (
+	<LastUpdated
+		style={css.cc_last_updated}
+		lastUpdated={lastUpdated}
+		error={
+			(error === 'App update required.') ?
+				('App update required.') :
+				(null)
+		}
+		warning={
+			(error) ?
+				('We\'re having trouble updating right now.') :
+				(null)
+		}
+	/>
+)
+
+const LoadingClasses = ({ lastUpdated, error }) => (
+	<Card id="schedule" title="Classes">
+		<View style={css.cc_loadingContainer}>
+			<ActivityIndicator size="large" />
+		</View>
+	</Card>
+)
+
+const NoClasses = ({ lastUpdated, error }) => (
+	<Card id="schedule" title="Classes">
+		<View style={css.cc_loadingContainer}>
+			<Text style={css.cc_noclasses}>There are no classes to display right now.</Text>
+		</View>
+		<LastUpdatedMin lastUpdated={lastUpdated} error={error} />
+	</Card>
+)
+
+const ClassMetaWithIcon = ({ icon, iconStyle, description, value }) => (
+	<View style={css.cc_leftHalf_lower_sections}>
+		<FAIcon style={iconStyle} size={42} name={icon} />
+		<View style={css.cc_leftHalf_lower_sections_text}>
+			<ScheduleText style={css.cc_leftHalf_lower_sections_text_bottomSection}>
+				{description}
+			</ScheduleText>
+			<ScheduleText style={css.cc_leftHalf_lower_sections_text_topSection}>
+				{value}
+			</ScheduleText>
+		</View>
+	</View>
+)
+
+const ScheduleText = ({ style, children }) => (
+	<Text
+		numberOfLines={1}
+		ellipsizeMode="tail"
+		allowFontScaling={false}
+		style={[
+			{
+				lineHeight: (() => Math.round(StyleSheet.flatten(style).fontSize * (1.2)))(),
+				color: COLOR.VDGREY
+			},
+			style
+		]}
+	>
+		{children}
+	</Text>
+)
+
+// Holds the view for an individual section/class
+const DayItem = ({ active, data, onClick, index }) => {
+	if (!data) return null
+
+	const day = schedule.dayOfWeekInterpreter(data.day_code)
+
+	let shortenedDay
+	if (day === 'Other' ) shortenedDay = day
+	else shortenedDay = day.substring(0,3)
+
+	let hour = ''
+	if (data.start_string) hour = ' @ ' + data.start_string
 
 	return (
-		<ScrollCard
-			id="Schedule"
-			title="Schedule"
-			scrollData={scheduleData}
-			renderRow={
-				(rowData, sectionID, rowID, highlightRow) => (
-					(rowID !== 'SA' && rowID !== 'SU') ? (
-						<ScheduleDay
-							id={rowID}
-							data={rowData}
-						/>
-					) : (null)
-			)}
-			actionButton={null}
-			extraActions={null}
-			updateScroll={null}
-			lastScroll={null}
-		/>
-	);
-};
-
-const ScheduleDay = ({ id, data }) => (
-	<View
-		style={styles.dayContainer}
-	>
-		<Text
-			style={styles.dayText}
+		<TouchableHighlight
+			onPress={() => onClick(index)}
+			underlayColor={COLOR.LGREY}
+			activeOpacity={0.5}
+			style={{ marginBottom: 8 }}
 		>
-			{id}
-		</Text>
-		<DayList
-			courseItems={data}
-		/>
-	</View>
-);
+			<View style={[css.cc_rightHalf_eachOfFourCards, active && css.cc_rightHalf_activeCard]}>
+				<ScheduleText style={[css.cc_rightHalf_each_daytime_text, !active && css.cc_rightHalf_each_inActiveText]}>
+					{ shortenedDay + hour }
+				</ScheduleText>
+				<ScheduleText style={[css.cc_rightHalf_each_class_text, !active && css.cc_rightHalf_each_inActiveText]}>
+					{data.subject_code + ' ' + data.course_code}
+				</ScheduleText>
+			</View>
+		</TouchableHighlight>
+	)
+}
 
-const DayList = ({ courseItems }) => (
-	<ListView
-		dataSource={daytaSource.cloneWithRows(courseItems)}
-		renderRow={(rowData, sectionID, rowID, highlightRow) => (
-			<DayItem
-				key={rowID}
-				data={rowData}
-			/>
-		)}
-		renderSeparator={(sectionID, rowID, adjacentRowHighlighted) => (
-			<DaySpacer
-				key={'spacer' + rowID}
-			/>
-		)}
-	/>
-);
+ScheduleCard.propTypes = {
+	coursesToShow: PropTypes.arrayOf(PropTypes.object).isRequired,
+	actionButton: PropTypes.element.isRequired,
+	onClickCourse: PropTypes.func.isRequired,
+	activeCourse: PropTypes.number.isRequired
+}
 
-/*
-	{
-		building: currData.building,
-		room: currData.room,
-		instructor_name: currData.instructor_name,
-		section: currData.section,
-		subject_code: currCourse.subject_code,
-		course_code: currCourse.course_code,
-		course_title: currCourse.course_title,
-		time_string,
-		start_time: startSeconds,
-		end_time: endSeconds,
-		meeting_type: currData.meeting_type,
-		special_mtg_code
-	}
- */
-const DayItem = ({ data }) => (
-	<View
-		style={styles.dayRow}
-	>
-		<Text
-			style={styles.courseText}
-			numberOfLines={1}
-		>
-			{data.course_title}
-		</Text>
-		<Text
-			style={styles.subText}
-		>
-			{data.meeting_type + ' ' + data.time_string + '\n'}
-			{data.instructor_name + '\n'}
-			{data.building + data.room}
-		</Text>
-	</View>
-);
-
-const DaySpacer = () => (
-	<View
-		style={styles.spacer}
-	/>
-);
-
-const styles = StyleSheet.create({
-	spacer: { height: 1, width: MAX_CARD_WIDTH, backgroundColor: COLOR_LGREY },
-	dayText: { fontSize: 18, color: COLOR_DGREY },
-	courseText: { fontSize: 18, color: COLOR_DGREY },
-	subText: { fontSize: 13, color: COLOR_DGREY, opacity: 0.69 },
-	dayContainer: { width: MAX_CARD_WIDTH + 2, padding: 7 },
-	dayRow: { height: 70, justifyContent: 'center' },
-});
-
-export default ScheduleCard;
+export default ScheduleCard

@@ -8,8 +8,7 @@ exports[`card renders without crashing 1`] = `
   <View
     style={
       Object {
-        "alignSelf": "stretch",
-        "padding": 8,
+        "top": -1,
       }
     }
   >
@@ -39,11 +38,9 @@ exports[`card renders without crashing 1`] = `
         <View
           style={
             Object {
-              "alignItems": "center",
-              "justifyContent": "center",
-              "paddingBottom": 4,
-              "paddingHorizontal": 4,
-              "paddingTop": 8,
+              "borderTopColor": "#EAEAEA",
+              "borderTopWidth": 1,
+              "padding": 6,
             }
           }
         >
@@ -56,6 +53,7 @@ exports[`card renders without crashing 1`] = `
                 "color": "#034262",
                 "fontSize": 20,
                 "fontWeight": "300",
+                "textAlign": "center",
               }
             }
           >

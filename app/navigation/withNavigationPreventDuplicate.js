@@ -1,10 +1,13 @@
 import deepDiffer from 'react-native/lib/deepDiffer'
-import { NavigationActions, StateUtils } from 'react-navigation'
+import {
+	NavigationActions,
+	StateUtils,
+} from 'react-navigation'
 
 export const getActiveRouteForState = navigationState => (
-	navigationState.routes
-		? getActiveRouteForState(navigationState.routes[navigationState.index])
-		: navigationState
+	navigationState.routes ? (
+		getActiveRouteForState(navigationState.routes[navigationState.index])
+	) : (navigationState)
 )
 
 export const isEqualRoute = (route1, route2) => {

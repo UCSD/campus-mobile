@@ -11,12 +11,15 @@ import diningReducer from './dining'
 import eventsReducer from './events'
 import newsReducer from './news'
 import linksReducer from './links'
-import surveyReducer from './survey'
+import routesReducer from './routes'
+import scheduleReducer from './schedule'
 import specialEventsReducer from './specialEvents'
 import feedbackReducer from './feedback'
 import requestStatusesReducer from './requestStatuses'
 import requestErrorsReducer from './requestErrors'
 import homeReducer from './home'
+import parkingReducer from './parking'
+import messagesReducer from './messages'
 
 module.exports = combineReducers({
 	cards: cardsReducer,
@@ -30,10 +33,13 @@ module.exports = combineReducers({
 	events: eventsReducer,
 	news: newsReducer,
 	links: linksReducer,
-	survey: surveyReducer,
+	routes: routesReducer,
 	specialEvents: specialEventsReducer,
+	schedule: scheduleReducer,
 	feedback: feedbackReducer,
 	requestStatuses: requestStatusesReducer,
 	requestErrors: requestErrorsReducer,
 	home: homeReducer,
+	parking: parkingReducer,
+	messages: messagesReducer,
 })

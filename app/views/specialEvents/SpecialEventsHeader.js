@@ -6,8 +6,6 @@ import {
 } from 'react-native'
 import moment from 'moment'
 
-import { COLOR_BLACK } from '../../styles/ColorConstants'
-
 const SpecialEventsHeader = ({ timestamp, rows }) => (
 	<View style={styles.header}>
 		<Text style={styles.headerText}>
@@ -22,7 +20,7 @@ const SpecialEventsHeader = ({ timestamp, rows }) => (
 
 const styles = StyleSheet.create({
 	header: { justifyContent: 'flex-start', alignItems: 'center', width: 75 },
-	headerText: { textAlign: 'center', alignSelf: 'stretch', color: COLOR_BLACK, fontSize: 12, marginTop: 7 },
+	headerText: { textAlign: 'center', alignSelf: 'stretch', fontSize: 12, marginTop: 7 },
 })
 
 export default SpecialEventsHeader

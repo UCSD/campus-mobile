@@ -1,27 +1,27 @@
 {
   "project_info": {
-    "project_number": "444046920085",
-    "firebase_url": "https://uc-san-diego.firebaseio.com",
-    "project_id": "uc-san-diego",
-    "storage_bucket": "uc-san-diego.appspot.com"
+    "project_number": "GS_PROJECT_NUMBER_PH",
+    "firebase_url": "GS_FIREBASE_URL_PH",
+    "project_id": "GS_PROJECT_ID_PH",
+    "storage_bucket": "GS_STORAGE_BUCKET_PH"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:444046920085:android:5fa94cd3be6fc552",
+        "mobilesdk_app_id": "GS_ANDROID_APP_ID_PH",
         "android_client_info": {
-          "package_name": "edu.ucsd"
+          "package_name": "GS_ANDROID_BUNDLE_ID_PH"
         }
       },
       "oauth_client": [
         {
-          "client_id": "444046920085-oep6l2mih0m0l5bqk5k8c9i3d5i02eoo.apps.googleusercontent.com",
+          "client_id": "GS_ANDROID_CLIENT_ID_PH",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "FIREBASE_KEY_PH"
+          "current_key": "GS_ANDROID_API_KEY_PH"
         }
       ],
       "services": {
@@ -33,7 +33,7 @@
           "other_platform_oauth_client": []
         },
         "ads_service": {
-          "status": 2
+          "status": 1
         }
       }
     }

@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>DocStrap Source: util/schedule.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.slate.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html">DocStrap</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="module-auth.html">auth</a></li><li><a href="module-general.html">general</a></li><li><a href="module-schedule.html">schedule</a></li><li><a href="module-util_dining.html">util/dining</a></li><li><a href="module-util_logger.html">util/logger</a></li><li><a href="module-util_map.html">util/map</a></li><li><a href="module-util_shuttle.html">util/shuttle</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="MultiSelect.html">MultiSelect</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="global.html#bold">bold</a></li><li><a href="global.html#DataItem">DataItem</a></li><li><a href="global.html#DataList_card_list">DataList_card_list</a></li><li><a href="global.html#DataListCard">DataListCard</a></li><li><a href="global.html#DataListView">DataListView</a></li><li><a href="global.html#dl_row">dl_row</a></li><li><a href="global.html#main_container">main_container</a></li><li><a href="global.html#processData">processData</a></li><li><a href="global.html#sr_headerImage">sr_headerImage</a></li><li><a href="global.html#WeatherCard">WeatherCard</a></li><li><a href="global.html#WeatherCardContainer">WeatherCardContainer</a></li><li><a href="global.html#WeatherDay">WeatherDay</a></li><li><a href="global.html#WeatherWeek">WeatherWeek</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-12">
+	
+		<div id="main">
+			
+
+		<h1 class="page-title">Source: util/schedule.js</h1>
+    
+<section>
+    <article>
+        <pre
+            class="sunlight-highlight-javascript linenums">/**
+* A module containing class schedule helper functions
+* @module schedule
+*/
+module.exports = {
+	// Returns a modified courseItems object containing only finals.
+	getFinals(courseItems) {
+		const finalItems = {
+			SA: [],
+			SU: [],
+			MO: [],
+			TU: [],
+			WE: [],
+			TH: [],
+			FR: []
+		};
+
+		Object.keys(courseItems).forEach((day) => {
+			courseItems[day].forEach(function(item) {
+				if (item.special_mtg_code == "FI") {
+					finalItems[day].push(item);
+				}
+			});
+		});
+
+		return finalItems;
+	},
+
+	// Returns a modified courseItems object containing only classes (includes discussions).
+	getClasses(courseItems) {
+		const classItems = {
+			MO: [],
+			TU: [],
+			WE: [],
+			TH: [],
+			FR: [],
+			SA: [],
+			SU: []
+		};
+
+		Object.keys(courseItems).forEach((day) => {
+			courseItems[day].forEach(function(item) {
+				if (item.special_mtg_code == "") {
+					classItems[day].push(item);
+				}
+			});
+		});
+
+		return classItems;
+	},
+
+	dayOfWeekInterpreter(abbr) {
+		fullString = '';
+		switch (abbr) {
+		case 'MO':
+			fullString = 'Monday';
+			break;
+		case 'TU':
+			fullString = 'Tuesday';
+			break;
+		case 'WE':
+			fullString = 'Wednesday';
+			break;
+		case 'TH':
+			fullString = 'Thursday';
+			break;
+		case 'FR':
+			fullString = 'Friday';
+			break;
+		case 'SA':
+			fullString = 'Saturday';
+			break;
+		case 'SU':
+			fullString = 'Sunday';
+			break;
+		default:
+			fullString = abbr;
+		}
+		return fullString;
+	},
+
+	// Returns a courseItems object containing lists of courseItem objects.
+	// There is one list per day of the week and the courseItem objects are
+	// sorted by their start times. This includes "FI" and "RE" meeting types.
+	getData(data) {
+		const courses = data.data;
+		const enrolledCourses = [];
+		const courseItems = {
+			MO: [],
+			TU: [],
+			WE: [],
+			TH: [],
+			FR: [],
+			SA: [],
+			SU: []
+		};
+
+		// loop thru "data"
+		// grab all enrolled classes bc academic history has dropped/waitlisted classes too...
+		for (let i = 0; i &lt; courses.length; ++i) {
+			if (courses[i].enrollment_status === 'EN') {
+				enrolledCourses.push(courses[i]);
+			}
+		}
+
+		// grab all "section_data" where "special_mtg_code" === ""
+		// put into days
+		for (let j = 0; j &lt; enrolledCourses.length; ++j) {
+			const currCourse = enrolledCourses[j];
+			const currSectionData = currCourse.section_data;
+			for (let k = 0; k &lt; currSectionData.length; ++k) {
+				const currData = currSectionData[k];
+				// if (currData.special_mtg_code === '') {
+				// time format is HH:MM - HH:MM
+				// split time string and get seconds
+				const timeString = currData.time;
+				const timeArr = timeString.split(' ');
+				const startString = timeArr[0];
+				const endString = timeArr[2];
+				const startArr = startString.split(':'); // split it at the colons
+				const endArr = endString.split(':'); // split it at the colons
+				// minutes are worth 60 seconds. Hours are worth 60 minutes.
+				const startSeconds = +startArr[0] * 60 * 60 + +startArr[1] * 60;
+				const endSeconds = +endArr[0] * 60 * 60 + +endArr[1] * 60;
+
+				const day = currData.days;
+
+				const item = {
+					building: currData.building,
+					room: currData.room,
+					instructor_name: currData.instructor_name,
+					section: currData.section,
+					subject_code: currCourse.subject_code,
+					course_code: currCourse.course_code,
+					course_title: currCourse.course_title,
+					time_string: timeString,
+					start_time: startSeconds,
+					end_time: endSeconds,
+					meeting_type: currData.meeting_type,
+					special_mtg_code: currData.special_mtg_code,
+					day_code: currData.days,
+					grade_option: currCourse.grade_option
+				};
+
+				courseItems[day].push(item);
+				// }
+			}
+		}
+
+		// sort by "time"
+		const courseItemsKeys = Object.keys(courseItems);
+		for (let l = 0; l &lt; courseItemsKeys.length; ++l) {
+			const courseItem = courseItems[courseItemsKeys[l]];
+			courseItem.sort(this.sortTime);
+		}
+		return courseItems;
+	},
+
+	sortTime(a, b) {
+		return a.start_time - b.start_time;
+	},
+
+	setFinals(finalsList) {
+		let nowTime = new Date().getDay();
+		const upcomingFinals = {};
+
+		const mapWeekdays = [
+			'SA',
+			'SU',
+			'MO',
+			'TU',
+			'WE',
+			'TH',
+			'FR',
+		];
+
+		// translates the days from nowTime to match the days returned from getFinals
+		nowTime = (nowTime + 1) % 7;
+
+		// Pushes only upcoming finals to new object
+		for (let i = nowTime; i &lt; 7; i++) {
+			if (finalsList[mapWeekdays[i]].length > 0) {
+				upcomingFinals[mapWeekdays[i]] = finalsList[mapWeekdays[i]];
+			}
+		}
+
+		return upcomingFinals;
+	}
+};
+</pre>
+    </article>
+</section>
+
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+
+</div>
+</div>
+
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
+
+<footer>
+
+
+	<span class="copyright">
+	DocStrap Copyright © 2012-2015 The contributors to the JSDoc3 and DocStrap projects.
+	</span>
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
+	
+		on Thu Apr 19th 2018
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			return $( heading ).attr( "id" ) || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
+
+</body>
+</html>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 import {
 	View,
 	Text,
@@ -6,10 +6,7 @@ import {
 import moment from 'moment'
 
 import ColoredDot from '../common/ColoredDot'
-import {
-	COLOR_MGREEN,
-	COLOR_MRED
-} from '../../styles/ColorConstants'
+import COLOR from '../../styles/ColorConstants'
 import css from '../../styles/css'
 
 const dining = require('../../util/dining')
@@ -20,7 +17,7 @@ const generateHourElements = (hoursArray, status, today) => {
 
 	if (status) {
 		activeDotColor = status.isOpen ?
-			COLOR_MGREEN : COLOR_MRED
+			COLOR.MGREEN : COLOR.MRED
 	}
 
 	// Push hours
@@ -52,8 +49,8 @@ const generateHourElements = (hoursArray, status, today) => {
 						<View>
 							<ColoredDot
 								size={10}
-								color={activeDotColor}
 								style={css.dd_status_icon}
+								color={activeDotColor}
 							/>
 						</View>
 					)
@@ -128,8 +125,8 @@ const generateHours = (allHours, status) => {
 									<View>
 										<ColoredDot
 											size={10}
-											color={COLOR_MRED}
 											style={css.dd_status_icon}
+											color={COLOR.MRED}
 										/>
 									</View>
 								) : (null)
@@ -223,29 +220,37 @@ const generateSpecialHours = (allHours, status) => {
 	return hoursRows
 }
 
-const DiningHours = ({
-	hours,
-	status,
-	specialHours,
-	style
-}) => {
-	let hoursElements
-	if (specialHours) hoursElements = generateSpecialHours(hours, status)
-	else hoursElements = generateHours(hours, status)
-	return (
-		<View>
-			{
-				(specialHours && hoursElements.length > 0) ? (
-					<Text style={css.dd_description_subtext}>
-						Special hours:
-					</Text>
-				) : null
-			}
-			<View style={[style]}>
-				{hoursElements}
+class DiningHours extends Component {
+	componentDidMount() {
+		this.interval = setInterval(() => this.forceUpdate(), 950)
+	}
+
+	componentWillUnmount() {
+		clearInterval(this.interval)
+	}
+
+	render() {
+		const { hours, specialHours, style } = this.props
+		const status = dining.getOpenStatus(hours)
+
+		let hoursElements
+		if (specialHours) hoursElements = generateSpecialHours(hours, status)
+		else hoursElements = generateHours(hours, status)
+		return (
+			<View>
+				{
+					(specialHours && hoursElements.length > 0) ? (
+						<Text style={css.dd_description_subtext}>
+							Special hours:
+						</Text>
+					) : null
+				}
+				<View style={[style]}>
+					{hoursElements}
+				</View>
 			</View>
-		</View>
-	)
+		)
+	}
 }
 
 export default DiningHours

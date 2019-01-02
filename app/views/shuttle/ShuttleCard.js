@@ -1,21 +1,21 @@
 import React from 'react'
-import {
-	StyleSheet,
-	Text,
-} from 'react-native'
+import { Text } from 'react-native'
 import { withNavigation } from 'react-navigation'
 
 import ShuttleOverview from './ShuttleOverview'
-import ScrollCard from '../card/ScrollCard'
+import ScrollCard from '../common/ScrollCard'
 import Touchable from '../common/Touchable'
-import {
-	COLOR_PRIMARY,
-	COLOR_MGREY,
-	COLOR_WHITE
-} from '../../styles/ColorConstants'
-import { MAX_CARD_WIDTH } from '../../styles/LayoutConstants'
+import css from '../../styles/css'
 
-export const ShuttleCard = ({ navigation, stopsData, savedStops, gotoRoutesList, gotoSavedList, updateScroll, lastScroll }) => {
+export const ShuttleCard = ({
+	navigation,
+	stopsData,
+	savedStops,
+	gotoRoutesList,
+	gotoSavedList,
+	updateScroll,
+	lastScroll,
+}) => {
 	const extraActions = [
 		{
 			name: 'Manage Stops',
@@ -39,10 +39,10 @@ export const ShuttleCard = ({ navigation, stopsData, savedStops, gotoRoutesList,
 			}
 			actionButton={
 				<Touchable
-					style={styles.addButton}
+					style={css.shuttlecard_addButton}
 					onPress={() => gotoRoutesList()}
 				>
-					<Text style={styles.addText}>Add a Stop</Text>
+					<Text style={css.shuttlecard_addText}>Add a Stop</Text>
 				</Touchable>
 			}
 			extraActions={extraActions}
@@ -53,8 +53,3 @@ export const ShuttleCard = ({ navigation, stopsData, savedStops, gotoRoutesList,
 }
 
 export default withNavigation(ShuttleCard)
-
-const styles = StyleSheet.create({
-	addButton: { width: MAX_CARD_WIDTH, backgroundColor: COLOR_WHITE, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4, paddingVertical: 8, borderTopWidth: 1, borderColor: COLOR_MGREY },
-	addText: { fontSize: 20, color: COLOR_PRIMARY, fontWeight: '300' },
-})

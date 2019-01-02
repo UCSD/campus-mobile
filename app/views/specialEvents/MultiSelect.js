@@ -9,7 +9,7 @@ import {
 import Touchable from '../common/Touchable'
 import CircleCheckBox from '../common/CircleCheckBox'
 import css from '../../styles/css'
-import { COLOR } from '../../styles/ColorConstants'
+import COLOR from '../../styles/ColorConstants'
 
 /**
  * @param {String[]} items - items to be selected
@@ -45,7 +45,7 @@ class MultiSelect extends Component {
 		const dataSource = ds.cloneWithRows(items)
 
 		return (
-			<View>
+			<View style={css.main_full_flex}>
 				<ScrollView style={css.scroll_default} contentContainerStyle={css.specialevents_filter}>
 					<ListView
 						dataSource={dataSource}

@@ -96,18 +96,21 @@ def enableSeparateBuildPerCPUArchitecture = false
 def enableProguardInReleaseBuilds = false
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.1"
-
+    compileSdkVersion 27
+    buildToolsVersion "27.0.3"
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
     defaultConfig {
         applicationId "edu.ucsd"
         minSdkVersion 16
-        targetSdkVersion 22
-        versionCode 46
-        versionName "5.6"
+        targetSdkVersion 27
+        versionCode 1
+        versionName "6.1.2"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
+        multiDexEnabled true
     }
     signingConfigs {
         if (project.hasProperty('MYAPP_RELEASE_STORE_FILE')) {
@@ -152,27 +155,36 @@ android {
 }
 
 dependencies {
-    compile project(':react-native-restart')
-    compile project(':react-native-fcm')
-    compile 'com.google.firebase:firebase-core:11.0.+'
-    compile project(':react-native-google-analytics-bridge')
-    compile project(':react-native-keychain')
-    compile project(':react-native-exit-app')
-    compile project(':react-native-device-info')
-    compile project(':react-native-google-api-availability-bridge')
-    compile fileTree(dir: "libs", include: ["*.jar"])
-    compile "com.android.support:appcompat-v7:23.0.1"
-    compile "com.facebook.react:react-native:+"  // From node_modules
-    compile(project(':react-native-maps')){
+    implementation "com.facebook.react:react-native:+"  // From node_modules
+
+    implementation "com.android.support:appcompat-v7:$supportlib_version"
+    implementation "com.google.android.gms:play-services-base:$gps_version"
+    implementation "com.google.android.gms:play-services-maps:$maps_version"
+    implementation "com.google.android.gms:play-services-analytics:$analytics_version"
+
+    implementation project(':react-native-firebase')
+    implementation "com.google.firebase:firebase-core:16.0.1"
+    implementation "com.google.firebase:firebase-messaging:17.1.0"
+
+    implementation (project(':react-native-maps')) {
         exclude group: 'com.google.android.gms', module: 'play-services-base'
         exclude group: 'com.google.android.gms', module: 'play-services-maps'
     }
-    compile ("com.google.android.gms:play-services-base:11.0.+") {
-        force = true;
+
+    implementation (project(':react-native-google-analytics-bridge')) {
+        exclude group: 'com.google.android.gms', module: 'play-services-analytics'
     }
-    compile ("com.google.android.gms:play-services-maps:11.0.+") {
-        force = true;
-    }
+
+    implementation project(':bugsnag-react-native')
+    implementation project(':react-native-restart')
+    implementation project(':react-native-keychain')
+    implementation project(':react-native-exit-app')
+    implementation project(':react-native-device-info')
+    implementation project(':react-native-google-api-availability-bridge')
+    implementation project(':react-native-svg')
+    implementation project(':react-native-vector-icons')
+
+    implementation fileTree(dir: "libs", include: ["*.jar"])
 }
 
 // Run this once to be able to run the application with BUCK

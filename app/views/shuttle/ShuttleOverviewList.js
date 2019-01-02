@@ -1,26 +1,22 @@
-import React from 'react';
-import {
-	FlatList,
-	View,
-} from 'react-native';
-import { withNavigation } from 'react-navigation';
+import React from 'react'
+import { FlatList, View } from 'react-native'
+import { withNavigation } from 'react-navigation'
 
-import ShuttleOverview from './ShuttleOverview';
-import {
-	MAX_CARD_WIDTH
-} from '../../styles/LayoutConstants';
+import ShuttleOverview from './ShuttleOverview'
+import css from '../../styles/css'
+import LAYOUT from '../../styles/LayoutConstants'
 
 const ShuttleOverviewList = ({ navigation, savedStops, stopsData, gotoRoutesList }) => {
-	let list;
+	let list
 	if (Array.isArray(savedStops) && savedStops.length > 1) {
 		list = (
 			<FlatList
-				style={{ flexDirection: 'row' }}
+				style={css.flexrow}
 				scrollEnabled={false}
 				showsVerticalScrollIndicator={false}
 				showsHorizontalScrollIndicator={false}
 				horizontal={true}
-				snapToInterval={MAX_CARD_WIDTH - 50 - 12}
+				snapToInterval={LAYOUT.MAX_CARD_WIDTH - 50 - 12}
 				dataSource={savedStops}
 				renderItem={
 					({ item: rowData }) => (
@@ -31,14 +27,14 @@ const ShuttleOverviewList = ({ navigation, savedStops, stopsData, gotoRoutesList
 					)
 				}
 			/>
-		);
+		)
 	}
 
 	return (
-		<View style={{ flexDirection: 'row' }}>
+		<View style={css.flexrow}>
 			{list}
 		</View>
-	);
-};
+	)
+}
 
-export default withNavigation(ShuttleOverviewList);
+export default withNavigation(ShuttleOverviewList)

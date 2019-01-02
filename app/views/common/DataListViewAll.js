@@ -20,9 +20,11 @@ const DataListViewAll = ({ navigation }) => {
 }
 
 DataListViewAll.propTypes = {
-	title: PropTypes.string,
-	data: PropTypes.array.isRequired,
-	item: PropTypes.string.isRequired
+	navigation: PropTypes.shape({
+		title: PropTypes.string,
+		data: PropTypes.arrayOf(PropTypes.object),
+		item: PropTypes.string
+	}).isRequired
 }
 
 export default DataListViewAll

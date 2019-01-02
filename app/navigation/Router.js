@@ -1,19 +1,26 @@
 import React from 'react'
 import { View } from 'react-native'
-import { StackNavigator, TabNavigator } from 'react-navigation'
+import {
+	StackNavigator,
+	TabNavigator,
+} from 'react-navigation'
 import { MenuProvider } from 'react-native-popup-menu'
+import { connect } from 'react-redux'
 
 // VIEWS
 import Home from '../views/home/Home'
+import OnboardingIntro from '../views/login/OnboardingIntro'
+import OnboardingLogin from '../views/login/OnboardingLogin'
 import SurfReport from '../views/weather/SurfReport'
 import ShuttleStop from '../views/shuttle/ShuttleStop'
 import DiningDetail from '../views/dining/DiningDetail'
 import DiningNutrition from '../views/dining/DiningNutrition'
 import EventDetail from '../views/events/EventDetail'
 import NewsDetail from '../views/news/NewsDetail'
-import FeedbackView from '../views/feedback/FeedbackView'
+import Feedback from '../views/preferences/feedback/Feedback'
+import Messaging from '../views/messaging/Messaging'
 import Preferences from '../views/preferences/Preferences'
-import NearbyMapView from '../views/mapsearch/NearbyMapView'
+import Map from '../views/map/Map'
 import DataListViewAll from '../views/common/DataListViewAll'
 import SpecialEventsView from '../views/specialEvents/SpecialEventsView'
 import SpecialEventsDetailView from '../views/specialEvents/SpecialEventsDetailView'
@@ -21,6 +28,10 @@ import SpecialEventsFilterListView from '../views/specialEvents/SpecialEventsFil
 import ShuttleRoutesListView from '../views/shuttle/ShuttleRoutesListView'
 import ShuttleStopsListView from '../views/shuttle/ShuttleStopsListView'
 import ShuttleSavedListView from '../views/shuttle/ShuttleSavedListView'
+import FullSchedule from '../views/schedule/FullScheduleListView'
+import ParkingSpotType from '../views/parking/ParkingSpotType'
+import ManageParkingLots from '../views/parking/ManageParkingLots'
+import Notifications from '../views/preferences/notifications/Notifications'
 
 // TABS
 import TabIcons from './TabIcons'
@@ -29,19 +40,15 @@ import TabIcons from './TabIcons'
 import withNavigationPreventDuplicate from './withNavigationPreventDuplicate'
 
 // MISC
-import {
-	COLOR_SECONDARY,
-	COLOR_WHITE,
-	COLOR_MGREY
-} from '../styles/ColorConstants'
+import COLOR from '../styles/ColorConstants'
 import css from '../styles/css'
 import general from '../util/general'
 
 const TabNav = TabNavigator(
 	{
 		Home: { screen: Home },
-		Map: { screen: NearbyMapView },
-		Feedback: { screen: FeedbackView },
+		Map: { screen: Map },
+		Messaging: { screen: Messaging },
 		Preferences: { screen: Preferences }
 	},
 	{
@@ -49,10 +56,13 @@ const TabNav = TabNavigator(
 			showLabel: false,
 			showIcon: true,
 
-			pressColor: COLOR_MGREY,
-			indicatorStyle: { backgroundColor: COLOR_SECONDARY },
+			pressColor: COLOR.MGREY,
+			indicatorStyle: { backgroundColor: COLOR.SECONDARY },
 			style: general.platformIOS() ? css.tabBarIOS : css.tabBarAndroid,
-			iconStyle: { width: 26, height: 26 }
+			iconStyle: {
+				width: 26,
+				height: 26
+			}
 		},
 		navigationOptions: ({ navigation }) => ({
 			tabBarIcon: ({ focused }) => {
@@ -132,6 +142,20 @@ const MainStack = StackNavigator(
 				headerRight: (<DummyView />)
 			}
 		},
+		ParkingSpotType: {
+			screen: ParkingSpotType,
+			navigationOptions: {
+				title: 'Spot Types',
+				headerRight: (<DummyView />)
+			}
+		},
+		ManageParkingLots: {
+			screen: ManageParkingLots,
+			navigationOptions: {
+				title: 'Manage Lots',
+				headerRight: (<DummyView />)
+			}
+		},
 		SpecialEventsView: { screen: SpecialEventsView },
 		SpecialEventsFilters: {
 			screen: SpecialEventsFilterListView,
@@ -155,6 +179,31 @@ const MainStack = StackNavigator(
 				}
 			}
 		},
+		FullSchedule: {
+			screen: FullSchedule,
+			navigationOptions: {
+				title: 'Classes',
+				headerRight: (<DummyView />)
+			}
+		},
+		LoginScreen: {
+			screen: OnboardingLogin,
+			navigationOptions: { header: null }
+		},
+		Feedback: {
+			screen: Feedback,
+			navigationOptions: {
+				title: 'Feedback',
+				headerRight: (<DummyView />)
+			}
+		},
+		Notifications: {
+			screen: Notifications,
+			navigationOptions: {
+				title: 'Notifications',
+				headerRight: (<DummyView />)
+			}
+		},
 		DataListViewAll: {
 			screen: DataListViewAll,
 			navigationOptions: ({ navigation }) => {
@@ -172,17 +221,45 @@ const MainStack = StackNavigator(
 		navigationOptions: {
 			headerStyle: css.nav,
 			headerTitleStyle: css.navTitle,
-			headerTintColor: COLOR_WHITE
+			headerTintColor: COLOR.WHITE
 		}
 	}
 )
 
-MainStack.router.getStateForAction = withNavigationPreventDuplicate(MainStack.router.getStateForAction)
+const OnboardingStack = StackNavigator(
+	{
+		OnboardingIntro: {
+			screen: OnboardingIntro,
+			navigationOptions: { header: null }
+		},
+		OnboardingLogin: {
+			screen: OnboardingLogin,
+			navigationOptions: { header: null }
+		},
+	},
+	{
+		initialRouteName: 'OnboardingIntro',
+		headerMode: 'none'
+	}
+)
 
-const Router = () => (
+MainStack.router.getStateForAction = withNavigationPreventDuplicate(MainStack.router.getStateForAction)
+OnboardingStack.router.getStateForAction = withNavigationPreventDuplicate(OnboardingStack.router.getStateForAction)
+
+const Router = ({ onBoardingViewed }) => (
 	<MenuProvider>
-		<MainStack />
+		{
+			(onBoardingViewed) ? (
+				<MainStack />
+			) : (
+				<OnboardingStack />
+			)
+		}
 	</MenuProvider>
 )
 
-export default Router
+const mapStateToProps = (state, props) => (
+	{ onBoardingViewed: state.routes.onBoardingViewed }
+)
+
+export default connect(mapStateToProps)(Router)

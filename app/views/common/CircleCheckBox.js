@@ -17,7 +17,7 @@ import {
   TouchableOpacity,
   ViewPropTypes
 } from 'react-native';
-import { COLOR_MORANGE } from '../../styles/ColorConstants';
+import COLOR from '../../styles/ColorConstants';
 
 class CircleCheckBox extends Component {
 
@@ -41,9 +41,9 @@ class CircleCheckBox extends Component {
     outerSize: 18,
     filterSize: 16,
     innerSize: 13,
-    outerColor: COLOR_MORANGE,
+    outerColor: COLOR.MORANGE,
     filterColor: 'white',
-    innerColor: COLOR_MORANGE,
+    innerColor: COLOR.MORANGE,
     label: '',
     labelPosition: 'right',
     styleLabel: {}
