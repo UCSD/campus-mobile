@@ -14,7 +14,6 @@ module.exports = {
 	MYMESSAGES_API_URL: 'https://api-qa.ucsd.edu:8243/mp-mymessages/1.0.0',
 	MP_REGISTRATION_API_URL: 'https://api-qa.ucsd.edu:8243/mp-registration/1.0.0',
 	MESSAGES_TOPICS_URL: 'https://s3-us-west-1.amazonaws.com/ucsd-mobile-dev/mock-apis/messaging/topics.json',
-	SHUTTLE_PATHS_URL: 'https://11wl1gc3v9.execute-api.us-west-2.amazonaws.com/dev/polylines/',
 	PARKING_API_URL: 'https://4pefyt8qv7.execute-api.us-west-2.amazonaws.com/dev/parking/v1.0/status',
 	SURF_API_URL: 'https://0yi5xwy0v7.execute-api.us-west-2.amazonaws.com/dev/v1/surf',
 
@@ -45,7 +44,7 @@ module.exports = {
 
 	/* TTLs */
 	LOCATION_TTL: 5000, // 5 seconds
-	SHUTTLE_API_TTL: 15000, // 15 seconds
+	SHUTTLE_API_TTL: 5000, // 15 seconds
 	DATA_SAGA_TTL: 60000, // 1 minute
 	SCHEDULE_TTL: 300000,  // 5 minutes
 	PARKING_API_TTL: 300000,	// 5 minutes

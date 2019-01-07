@@ -13,7 +13,6 @@ import Toast from 'react-native-simple-toast'
 
 import SearchResultsBar from './SearchResultsBar'
 import SearchNavButton from './SearchNavButton'
-import SearchShuttleButton from './SearchShuttleButton'
 import SearchBar from './SearchBar'
 import SearchMap from './SearchMap'
 import SearchResults from './SearchResults'
@@ -40,7 +39,6 @@ export class Map extends React.Component {
 			allowScroll: false,
 			iconStatus: 'search',
 			showBar: false,
-			showShuttle: true,
 			showNav: false,
 			vehicles: {},
 			updatedGoogle: true,
@@ -143,7 +141,6 @@ export class Map extends React.Component {
 			this.setState({
 				iconStatus: 'search',
 				showBar: (this.props.search_results !== null),
-				showShuttle: true,
 				showNav: true,
 			})
 			this.scrollRef.scrollTo({ x: 0, y: 0, animated: true })
@@ -158,7 +155,6 @@ export class Map extends React.Component {
 		this.setState({
 			iconStatus: 'back',
 			showBar: false,
-			showShuttle: false,
 			showNav: false
 		})
 		this.scrollRef.scrollTo({ x: 0, y: LAYOUT.MAP_HEIGHT, animated: true })
@@ -169,7 +165,6 @@ export class Map extends React.Component {
 		this.setState({
 			iconStatus: 'back',
 			showBar: false,
-			showShuttle: false,
 			showNav: false,
 		})
 	}
@@ -178,7 +173,6 @@ export class Map extends React.Component {
 		this.setState({
 			iconStatus: 'back',
 			showBar: false,
-			showShuttle: false,
 			showNav: false,
 		})
 		this.scrollRef.scrollTo({ x: 0, y: 3 * (LAYOUT.MAP_HEIGHT), animated: true })
@@ -202,7 +196,6 @@ export class Map extends React.Component {
 				searchInput: text,
 				showBar: true,
 				iconStatus: 'load',
-				showShuttle: true,
 				showNav: true,
 				selectedResult: 0
 			})
@@ -227,7 +220,6 @@ export class Map extends React.Component {
 			searchInput: text,
 			showBar: true,
 			iconStatus: 'load',
-			showShuttle: true,
 			showNav: true,
 			selectedResult: 0
 		})
@@ -239,7 +231,6 @@ export class Map extends React.Component {
 			iconStatus: 'search',
 			selectedResult: newSelect,
 			showBar: true,
-			showShuttle: true,
 			showNav: true,
 		})
 		this.scrollRef.scrollTo({ x: 0, y: 0, animated: true })
@@ -268,20 +259,11 @@ export class Map extends React.Component {
 				</View>
 			)
 		} else if (this.props.location.coords) {
-			let polylines = null
-			if (this.state.currentToggledRoute) {
-				({ polylines } = this.props.routes[this.state.currentToggledRoute].polylines)
-			}
-
 			return (
 				<View>
 					<SearchNavButton
 						visible={(this.state.showNav && this.props.search_results !== null)}
 						onPress={this.gotoNavigationApp}
-					/>
-					<SearchShuttleButton
-						visible={this.state.showShuttle}
-						onPress={this.gotoShuttleSettings}
 					/>
 					<SearchBar
 						update={this.updateSearch}
@@ -294,18 +276,12 @@ export class Map extends React.Component {
 						}
 					/>
 					<ScrollView
-						ref={
-							(ref) => {
-								this.scrollRef = ref
-							}
-						}
+						ref={(ref) => { this.scrollRef = ref }}
 						showsVerticalScrollIndicator={false}
 						scrollEnabled={this.state.allowScroll}
 						keyboardShouldPersistTaps="always"
 					>
-						<View
-							style={css.map_section}
-						>
+						<View style={css.map_section}>
 							<Text>MapHeight: {LAYOUT.MAP_HEIGHT}</Text>
 							<SearchMap
 								location={this.props.location}
@@ -316,20 +292,15 @@ export class Map extends React.Component {
 								}
 								shuttle={this.props.shuttle_stops}
 								vehicles={this.state.vehicles}
-								polylines={polylines}
 							/>
 						</View>
-						<View
-							style={css.map_section}
-						>
+						<View style={css.map_section}>
 							<SearchResults
 								results={this.props.search_results}
 								onSelect={index => this.updateSelectedResult(index)}
 							/>
 						</View>
-						<View
-							style={css.map_section}
-						>
+						<View style={css.map_section}>
 							<SearchSuggest
 								onPress={this.updateSearchSuggest}
 							/>
@@ -341,9 +312,7 @@ export class Map extends React.Component {
 								/>
 							) : (null)}
 						</View>
-						<View
-							style={css.map_section}
-						>
+						<View style={css.map_section}>
 							<SearchShuttleMenu
 								shuttle_routes={this.props.shuttle_routes}
 								onToggle={this.toggleRoute}

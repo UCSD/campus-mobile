@@ -6,11 +6,7 @@ import {
 	select,
 	takeLatest
 } from 'redux-saga/effects'
-import {
-	fetchShuttleArrivalsByStop,
-	fetchVehiclesByRoute,
-	fetchRoutePolyline
-} from '../services/shuttleService'
+import { fetchShuttleArrivalsByStop, fetchVehiclesByRoute } from '../services/shuttleService'
 import { SHUTTLE_API_TTL } from '../AppSettings'
 
 const getShuttle = state => (state.shuttle)
@@ -19,7 +15,7 @@ function* toggleRoute(action) {
 	const { toggles, stops, routes } = yield select(getShuttle)
 	const { route } = action
 
-	let newRoute = null
+	const newRoute = null
 	const newToggles = Object.assign({}, toggles)
 	// Performs a deep copy of stops
 	const newStops = JSON.parse(JSON.stringify(stops))
@@ -67,15 +63,6 @@ function* toggleRoute(action) {
 
 		// Turn route on
 		newToggles[route] = true
-
-		// Add polylines to route
-		const polylines = yield call(fetchRoutePolyline, route)
-		if (polylines) {
-			newRoute = {
-				...routes[route],
-				polylines
-			}
-		}
 
 		// Add route to stops
 		Object.keys(routes[route].stops).forEach((stop) => {

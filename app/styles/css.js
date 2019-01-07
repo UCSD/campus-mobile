@@ -404,6 +404,8 @@ const css = StyleSheet.create({
 	destinationcard_marker_label: { flex: 2, fontSize: 18, paddingLeft: 8, paddingTop: 0, color: COLOR.PRIMARY, justifyContent: 'center' },
 	destinationcard_marker_dist_label: { flex: 1, textAlign: 'right', fontSize: 18, paddingLeft: 8, paddingTop: 0, color: COLOR.PRIMARY, justifyContent: 'center' },
 	map_section: { height: LAYOUT.MAP_HEIGHT },
+	snb_container: { zIndex: 2, justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: 44, right: 6, width: 50, height: 50, borderRadius: 25, backgroundColor: COLOR.MBLUE },
+	snb_touchable: { width: 50, height: 50, borderRadius: 25, alignItems: 'center', justifyContent: 'center' },
 
 	/**
 	 *  13 - Feedback

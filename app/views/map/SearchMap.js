@@ -1,11 +1,9 @@
 import React, { Component } from 'react'
 // import PropTypes from 'prop-types'
 import { StyleSheet } from 'react-native'
-import MapView, { Polyline } from 'react-native-maps'
+import MapView from 'react-native-maps'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import COLOR from '../../styles/ColorConstants'
-
-const polylineLib = require('@mapbox/polyline')
 
 // NOTE: For some reason MapView-onCalloutPress only works for Android and
 // TouchableHighlight-onPress only works for iOS...which is why it's in two places
@@ -53,7 +51,6 @@ class SearchMap extends Component {
 			selectedResult,
 			shuttle,
 			vehicles,
-			polylines
 		} = this.props
 
 		let shuttleVehicles = null
@@ -142,28 +139,6 @@ class SearchMap extends Component {
 			)
 		}
 
-		const routePolylines = []
-		if (polylines) {
-			polylines.forEach((polyline) => {
-				const decodedPolyline = polylineLib.decode(polyline.line)
-				const processedPolyline = []
-				decodedPolyline.forEach((coordinates) => {
-					processedPolyline.push({
-						latitude: coordinates[0],
-						longitude: coordinates[1]
-					})
-				})
-				const newPolylineComponent = (
-					<Polyline
-						coordinates={processedPolyline}
-						strokeColor={COLOR.PRIMARY}
-						strokeWidth={3}
-					/>
-				)
-				routePolylines.push(newPolylineComponent)
-			})
-		}
-
 		return (
 			<MapView
 				ref={(MapRef) => {
@@ -211,7 +186,6 @@ class SearchMap extends Component {
 				{shuttleVehicles}
 				{shuttleStops}
 				{searchResultMarker}
-				{routePolylines}
 			</MapView>
 		)
 	}

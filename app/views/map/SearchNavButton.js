@@ -1,29 +1,21 @@
 import React from 'react'
-import { TouchableOpacity, StyleSheet } from 'react-native'
-import ElevatedView from 'react-native-elevated-view'
+import { TouchableOpacity } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import COLOR from '../../styles/ColorConstants'
-import { getPRM } from '../../util/general'
+import css from '../../styles/css'
 
-const SearchNavButton = ({ visible, onPress }) => (
-	(visible) ? (
-		<ElevatedView
-			style={styles.container}
-			elevation={2} // zIndex style and elevation has to match
-		>
+const SearchNavButton = ({ visible, onPress }) => {
+	if (visible) {
+		return (
 			<TouchableOpacity
-				style={styles.touchable}
+				style={css.snb_container}
 				onPress={() => onPress()}
 			>
 				<Icon name="location-arrow" size={20} color="white" />
 			</TouchableOpacity>
-		</ElevatedView>
-	) : (<ElevatedView />) // Android bug - breaks view if this is null...on RN39...check if this bug still exists in RN40 or if this can be changed to null
-)
-
-const styles = StyleSheet.create({
-	container: { zIndex: 2, justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: (2 * (6 + Math.round(44 * getPRM()))) + 12, right: 6, width: 50, height: 50, borderRadius: 50 / 2, backgroundColor: COLOR.MBLUE },
-	touchable: { width: 50, height: 50, borderRadius: 25, alignItems: 'center', justifyContent: 'center' },
-})
+		)
+	} else {
+		return null
+	}
+}
 
 export default SearchNavButton
