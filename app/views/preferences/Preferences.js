@@ -12,7 +12,7 @@ class PreferencesView extends Component {
 			<ScrollView>
 				<UserAccount />
 				<PreferencesItem title="Notifications" iconPack="FontAwesome" icon="bell-o" linkType="internal" link="Notifications" />
-				<PreferencesItem title="Cards" iconPack="MaterialCommunityIcons" icon="cards-variant" linkType="internal" link="CardPreferences" />
+				<PreferencesItem title="Cards" iconPack="MaterialIcons" icon="reorder" linkType="internal" link="CardPreferences" />
 				<PreferencesItem title="Feedback" iconPack="Entypo" icon="new-message" linkType="internal" link="Feedback" />
 				<PreferencesItem title="Privacy Policy" iconPack="Feather" icon="lock" linkType="external" link={AppSettings.PRIVACY_POLICY_URL} />
 			</ScrollView>

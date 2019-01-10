@@ -11,8 +11,8 @@ exports[`renders without crashing 1`] = `
     title="Notifications"
   />
   <withNavigation(PreferencesItem)
-    icon="cards-variant"
-    iconPack="MaterialCommunityIcons"
+    icon="reorder"
+    iconPack="MaterialIcons"
     link="CardPreferences"
     linkType="internal"
     title="Cards"
