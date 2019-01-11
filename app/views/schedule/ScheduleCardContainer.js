@@ -94,7 +94,7 @@ class ScheduleCardContainer extends React.Component {
 		super(props)
 
 		this.state = {
-			upcoming4Courses: getUpcomingClasses(this.props.scheduleData),
+			upcoming4Courses: getUpcomingClasses(props.scheduleData),
 			activeCourse: null
 		}
 		this.onClickCourse = this.onClickCourse.bind(this)
@@ -106,14 +106,12 @@ class ScheduleCardContainer extends React.Component {
 
 	/** TODO: Review ScheduleCardContainer::componentWillReceiveProps **/
 	componentWillReceiveProps(nextProps) {
-		/*
 		if ((nextProps.scheduleData) || (this.props.scheduleData && !nextProps.scheduleData)) {
 			this.setState((state, props) => ({
 				...state,
-				upcoming4Courses: getUpcomingClasses(this.props.scheduleData)
+				upcoming4Courses: getUpcomingClasses(props.scheduleData)
 			}))
 		}
-		*/
 	}
 
 	onClickCourse(newActiveCourse) {
