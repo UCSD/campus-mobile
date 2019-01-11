@@ -27,14 +27,6 @@ exports[`renders without crashing 1`] = `
         }
       }
     >
-      <Text
-        accessible={true}
-        allowFontScaling={true}
-        ellipsizeMode="tail"
-      >
-        MapHeight: 
-        1250
-      </Text>
       <SearchMap
         location={
           Object {

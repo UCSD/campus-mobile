@@ -282,7 +282,6 @@ export class Map extends React.Component {
 						keyboardShouldPersistTaps="always"
 					>
 						<View style={css.map_section}>
-							<Text>MapHeight: {LAYOUT.MAP_HEIGHT}</Text>
 							<SearchMap
 								location={this.props.location}
 								selectedResult={

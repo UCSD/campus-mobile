@@ -1,20 +1,12 @@
 import React from 'react'
 import {
 	View,
-	StyleSheet,
-	Dimensions,
 	Text,
 	FlatList,
 	TouchableOpacity
 } from 'react-native'
-
-import ElevatedView from 'react-native-elevated-view'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
-import COLOR from '../../styles/ColorConstants'
-import { getPRM, getMaxCardWidth } from '../../util/general'
-
-const PRM = getPRM()
-const deviceWidth = Dimensions.get('window').width
+import css from '../../styles/css'
 
 const suggestions = [
 	{
@@ -36,17 +28,14 @@ const suggestions = [
 ]
 
 const SearchSuggest = ({ onPress }) => (
-	<ElevatedView
-		style={styles.card_main}
-		elevation={2}
-	>
-		<View style={styles.list_container}>
+	<View style={css.ss_card_main}>
+		<View style={css.ss_list_container}>
 			<SearchSuggestList
 				historyData={suggestions}
 				onPress={onPress}
 			/>
 		</View>
-	</ElevatedView>
+	</View>
 )
 
 const SearchSuggestList = ({ historyData, onPress }) => (
@@ -75,30 +64,19 @@ const SearchSuggestItem = ({ data, onPress }) => (
 			onPress(data.name)
 		}}
 	>
-		<View style={styles.list_row}>
-			<ElevatedView
-				style={styles.icon_container}
-				elevation={3}
-			>
+		<View style={css.ss_list_row}>
+			<View style={css.ss_icon_container}>
 				<MaterialIcon
 					name={data.icon}
-					size={Math.round(24 * PRM)}
+					size={24}
 					color="white"
 				/>
-			</ElevatedView>
-			<Text style={styles.icon_label}>
+			</View>
+			<Text style={css.ss_icon_label}>
 				{data.name}
 			</Text>
 		</View>
 	</TouchableOpacity>
 )
-
-const styles = StyleSheet.create({
-	list_container: { width: getMaxCardWidth(), paddingTop: 8, paddingBottom: 8, height: Math.round(deviceWidth / 4) + 12 + 4 },
-	card_main: { top: 44 + 6, backgroundColor: 'white', margin: 6, alignItems: 'center', justifyContent: 'center',  },
-	list_row: { flex: 1, alignItems: 'center', flexDirection: 'column', paddingVertical: 14, width: Math.round((deviceWidth - 12) / 4), },
-	icon_container: { justifyContent: 'center', alignItems: 'center', width: 50, height: 50, borderRadius: 50 / 2, backgroundColor: COLOR.MRED },
-	icon_label: { fontSize: 12, margin: 2, color: COLOR.DGREY },
-})
 
 export default SearchSuggest

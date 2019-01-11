@@ -9,7 +9,6 @@ import {
 	Platform,
 	TouchableOpacity
 } from 'react-native'
-import ElevatedView from 'react-native-elevated-view'
 import Icon from 'react-native-vector-icons/Ionicons'
 import COLOR from '../../styles/ColorConstants'
 import { doPRM, getPRM, getMaxCardWidth } from '../../util/general'
@@ -21,10 +20,7 @@ const statusBarHeight = Platform.select({
 })
 
 const SearchShuttleMenu = ({ onToggle, toggles, shuttle_routes }) => (
-	<ElevatedView
-		style={styles.card_main}
-		elevation={2}
-	>
+	<View style={styles.card_main}>
 		<View style={styles.list_container}>
 			{shuttle_routes ? (
 				<MenuList
@@ -34,7 +30,7 @@ const SearchShuttleMenu = ({ onToggle, toggles, shuttle_routes }) => (
 				/>
 			) : null }
 		</View>
-	</ElevatedView>
+	</View>
 )
 
 const MenuList = ({ shuttles, onToggle, toggles }) => (
@@ -83,7 +79,7 @@ const listHeight = deviceHeight - (statusBarHeight + navHeight + doPRM(44) + 16 
 
 const styles = StyleSheet.create({
 	list_container: { width: getMaxCardWidth(), maxHeight: listHeight },
-	card_main: { top: Math.round(44 * getPRM()) + 6, backgroundColor: 'white', margin: 6, alignItems: 'flex-start', justifyContent: 'center', },
+	card_main: { top: Math.round(44 * getPRM()) + 6, backgroundColor: 'white', margin: 6, alignItems: 'flex-start', justifyContent: 'center', borderRadius: 3 },
 	list_row: { alignItems: 'center', justifyContent: 'center', flexDirection: 'row', paddingVertical: 14, paddingHorizontal: 8, borderBottomWidth: 1, borderBottomColor: COLOR.MGREY, overflow: 'hidden',  },
 	switch_container: { flex: 1, alignItems: 'flex-end' },
 	radio_icon: { alignSelf: 'flex-end', marginLeft: 10 },
