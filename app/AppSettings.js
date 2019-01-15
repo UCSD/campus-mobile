@@ -5,7 +5,7 @@ module.exports = {
 	GOOGLE_ANALYTICS_ID: 'GOOGLE_ANALYTICS_ID_PH',
 
 	/* ENDPOINTS */
-	AUTH_SERVICE_API_URL: 'https://c12cf2xke8.execute-api.us-west-2.amazonaws.com/prod/v1/access-profile',
+	AUTH_SERVICE_API_URL: 'https://c12cf2xke8.execute-api.us-west-2.amazonaws.com/prod/v1.1/access-profile',
 	ACADEMIC_TERM_API_URL: 'https://btgre7sss6.execute-api.us-west-2.amazonaws.com/prod/v1/term/current',
 	ACADEMIC_TERM_FINALS_API_URL: 'https://btgre7sss6.execute-api.us-west-2.amazonaws.com/prod/v1/term/current/finals',
 	ACADEMIC_HISTORY_API_URL: 'https://api.ucsd.edu:8243/student/my/academic_history/v1/class_list',
