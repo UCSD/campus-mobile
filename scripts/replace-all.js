@@ -1,7 +1,3 @@
-/*
-	Usage:
-	npm run-script [campus-prod|campus-qa]
-*/
 const fs = require('fs')
 const os = require('os')
 
@@ -15,6 +11,12 @@ if (ENV_TYPE === 'ci') {
 } else {
 	myEnv = require(os.homedir() + '/.campusmobile/env.js') // eslint-disable-line
 }
+
+// CI Debug
+console.log('## Campus Mobile: replace-all.js')
+console.log('## REPLACEMENT_ENV: ' + REPLACEMENT_ENV)
+console.log('## ENV_TYPE: ' + ENV_TYPE)
+console.log('## myEnv: ' + myEnv)
 
 // File Paths
 const APP_SETTINGS_PATH = './app/AppSettings.js',
@@ -103,7 +105,7 @@ if (REPLACEMENT_ENV === 'prod' || REPLACEMENT_ENV === 'qa') {
 		{ prodVal: myEnv.GS_PROD_PROJECT_NUMBER, 				qaVal: myEnv.GS_QA_PROJECT_NUMBER, 				phVal: PH.GS_PROJECT_NUMBER_PH },
 	])
 } else {
-	console.log('Error: Replacement type not specififed.\nSample Usage: npm run-script [campus-prod|campus-qa]')
+	console.log('Error: Replacement type not specififed.')
 }
 
 
