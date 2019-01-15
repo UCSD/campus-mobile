@@ -12,12 +12,6 @@ if (ENV_TYPE === 'ci') {
 	myEnv = require(os.homedir() + '/.campusmobile/env.js') // eslint-disable-line
 }
 
-// CI Debug
-console.log('## Campus Mobile: replace-all.js')
-console.log('## REPLACEMENT_ENV: ' + REPLACEMENT_ENV)
-console.log('## ENV_TYPE: ' + ENV_TYPE)
-console.log('## myEnv: ' + myEnv)
-
 // File Paths
 const APP_SETTINGS_PATH = './app/AppSettings.js',
 	SSO_SERVICE_PATH = './app/services/ssoService.js',
