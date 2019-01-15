@@ -23,7 +23,7 @@ const QuicklinksItem = ({ data }) => {
 							<Image style={css.links_icon} source={{ uri: data.icon }} />
 						)}
 						<Text style={css.links_name}>{data.name}</Text>
-						<Ionicons name="ios-arrow-forward" size={28} style={css.pi_arrow} />
+						<Ionicons name="ios-arrow-forward" size={28} style={css.fl_row_arrow} />
 					</View>
 				</View>
 			</Touchable>

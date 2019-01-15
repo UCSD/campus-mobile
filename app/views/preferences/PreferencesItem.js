@@ -50,7 +50,7 @@ const PreferencesItem = ({
 			<MaterialIcons name={icon} size={24} style={css.pi_icon} />
 		) : null }
 		<Text style={css.pi_title}>{title}</Text>
-		<Ionicons name="ios-arrow-forward" size={24} style={css.pi_arrow} />
+		<Ionicons name="ios-arrow-forward" size={28} style={css.fl_row_arrow} />
 	</Touchable>
 )
 

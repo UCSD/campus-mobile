@@ -102,6 +102,11 @@ const css = StyleSheet.create({
 	dlc_list: { top: -1 },
 	dlc_content_load_err: { padding: 30, fontSize: 16, alignSelf: 'center'  },
 	dlc_cardcenter: { alignItems: 'center', justifyContent: 'center', padding: 20 },
+	// FlatList
+	fl_row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', padding: 12, borderTopWidth: 1, borderTopColor: COLOR.MGREY },
+	fl_row_title: { flex: 1, color: COLOR.VDGREY, fontSize: 18 },
+	fl_row_title_disabled: { flex: 1, color: COLOR.DMGREY, fontSize: 18 },
+	fl_row_arrow: { color: COLOR.CCC },
 	// Buttons
 	button_primary: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.PRIMARY, borderRadius: 3, marginTop: 20, padding: 10 },
 	button_primary_text: { fontSize: 16, color: COLOR.WHITE },
@@ -268,6 +273,7 @@ const css = StyleSheet.create({
 	srlv_icon: { alignSelf: 'flex-end', color: COLOR.DGREY },
 	srlv_row_name: { flex: 1, paddingRight: 10 },
 	srlv_touchable: { flex: 1, flexDirection: 'row', alignItems: 'center', height: 60, padding: 7, paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: COLOR.MGREY, overflow: 'hidden' },
+
 	sslv_listRow: { backgroundColor: COLOR.WHITE, flexDirection: 'row', alignItems: 'center', width: LAYOUT.DEVICE_WIDTH, borderBottomWidth: 1, borderBottomColor: COLOR.MGREY, height: 50,	...Platform.select({ ios: { shadowOpacity: 0, shadowOffset: { height: 2, width: 2 }, shadowRadius: 2 }, android: { margin: 0, elevation: 0 } }) },
 	sslv_nameText: { flex: 1, margin: 7 },
 	sslv_cancelButton: { justifyContent: 'center', alignItems: 'center', width: 50, height: 50 },
@@ -367,7 +373,7 @@ const css = StyleSheet.create({
 	links_row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
 	links_icon: { height: 28, width: 28 },
 	links_icon_fa: { paddingLeft: 8, paddingRight: 5, color: COLOR.PRIMARY },
-	links_name: { flexGrow: 1, color: COLOR.VDGREY, fontSize: 18, paddingLeft: 16 },
+	links_name: { flex: 1, color: COLOR.VDGREY, fontSize: 18, paddingLeft: 16 },
 	links_arrow_icon: { color: COLOR.CCC },
 
 	/**
@@ -540,10 +546,10 @@ const css = StyleSheet.create({
 	pc_nolots_container: { paddingHorizontal: 20, paddingVertical: 40 },
 	pc_nolots_text: {  alignSelf: 'center', fontSize: round(18 * prm) },
 
-	mpl_row_view: { flexDirection: 'row', flex: 1, paddingLeft: 15, backgroundColor: COLOR.WHITE, alignItems: 'center', justifyContent: 'center', paddingVertical: 10 },
-	mpl_row_text_unselected: { flex: 1, paddingLeft: 10, fontSize: 19, justifyContent: 'flex-start', color: COLOR.DGREY },
-	mpl_row_text_selected: { flex: 1, paddingLeft: 10, fontSize: 19, justifyContent: 'flex-start', color: COLOR.PRIMARY },
-	mpl_row_add_remove_btn: { paddingRight: 30 },
+	mpl_row_view: { flexDirection: 'row', flex: 1, padding: 12, alignItems: 'center', justifyContent: 'center' },
+	mpl_row_text_unselected: { flex: 1, fontSize: 20, justifyContent: 'flex-start', color: COLOR.VDGREY2 },
+	mpl_row_text_selected: { flex: 1, fontSize: 20, justifyContent: 'flex-start', color: COLOR.PRIMARY },
+	mpl_row_add_remove_btn: {  },
 	mpl_message_view: { justifyContent: 'center', alignItems: 'center', marginVertical: round(30 * prm) },
 	mpl_message_text: { fontSize: round(19 * prm), textAlign: 'center' },
 

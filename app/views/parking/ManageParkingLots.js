@@ -1,23 +1,16 @@
 import React from 'react'
-import {
-	View,
-	Text,
-	FlatList,
-	Linking,
-	ScrollView
-} from 'react-native'
-
+import { View, Text, FlatList, Linking, ScrollView } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { connect } from 'react-redux'
 import COLOR from '../../styles/ColorConstants'
 import Touchable from '../common/Touchable'
 import css from '../../styles/css'
 
-
 class ManageParkingLots extends React.Component {
 	renderRow(parkingLot) {
 		const { LocationName } = parkingLot.item
 		const { updateSelectedLots, selectedLots } = this.props
+
 		if (selectedLots.includes(LocationName)) {
 			return (
 				<View style={css.mpl_row_view}>
@@ -34,22 +27,23 @@ class ManageParkingLots extends React.Component {
 					</Touchable>
 				</View>
 			)
+		} else {
+			return (
+				<View style={css.mpl_row_view}>
+					<Text style={css.mpl_row_text_unselected}>
+						{LocationName}
+					</Text>
+					<Touchable
+						onPress={() => {
+							updateSelectedLots(true, LocationName, selectedLots)
+						}}
+						style={css.mpl_row_add_remove_btn}
+					>
+						{addIcon()}
+					</Touchable>
+				</View>
+			)
 		}
-		return (
-			<View style={css.mpl_row_view}>
-				<Text style={css.mpl_row_text_unselected}>
-					{LocationName}
-				</Text>
-				<Touchable
-					onPress={() => {
-						updateSelectedLots(true, LocationName, selectedLots)
-					}}
-					style={css.mpl_row_add_remove_btn}
-				>
-					{addIcon()}
-				</Touchable>
-			</View>
-		)
 	}
 
 	render() {
