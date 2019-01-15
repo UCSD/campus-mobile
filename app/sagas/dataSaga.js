@@ -1,8 +1,8 @@
+
 import { delay } from 'redux-saga'
 import { put, call, select } from 'redux-saga/effects'
 import { Image } from 'react-native'
 
-import { updateDining } from './diningSaga'
 import WeatherService from '../services/weatherService'
 import SpecialEventsService from '../services/specialEventsService'
 import LinksService from '../services/quicklinksService'
@@ -44,7 +44,7 @@ function* watchData() {
 			yield call(updateEvents)
 			yield call(updateNews)
 			yield call(updateShuttleMaster)
-			yield call(updateDining)
+			yield put({ type: 'UPDATE_DINING' })
 			yield put({ type: 'UPDATE_SCHEDULE' })
 			yield put({ type: 'SYNC_USER_PROFILE' })
 		} catch (err) {

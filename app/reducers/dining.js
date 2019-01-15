@@ -12,29 +12,34 @@ function dining(state = initialState, action) {
 		case 'SET_DINING': {
 			// create a lookup object for restaurant IDs
 			const newLookup = {}
-
 			for (let i = 0; i < action.data.length; i++) {
 				newLookup[action.data[i].id] = i
 			}
 
-			return Object.assign({}, newState, {
-				data: action.data,
-				lastUpdated: Date().now(),
-				lookup: newLookup
-			})
+			newState.data = action.data
+			newState.lastUpdated = new Date().getTime()
+			newState.lookup = newLookup
+			return newState
 		}
+
+		case 'SET_DINING_DISTANCE': {
+			newState.data = action.data
+			return newState
+		}
+
 		case 'SET_DINING_MENU': {
 			const newMenusArray = {
 				...newState.menus,
 				[action.id]: {
 					...action.data,
-					lastUpdated: Date().now(),
+					lastUpdated: new Date().getTime()
 				}
 			}
 
 			newState.menus = newMenusArray
 			return newState
 		}
+
 		default:
 			return state
 	}
