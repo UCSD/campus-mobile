@@ -15,6 +15,7 @@ import {
 	SSO_TTL,
 	SSO_IDP_ERROR_RETRY_INCREMENT,
 	USER_PROFILE_SYNC_TTL,
+	UCSD_STUDENT
 } from '../AppSettings'
 import logger from '../util/logger'
 
@@ -62,7 +63,7 @@ function* doLogin(action) {
 			yield auth.storeAccessToken(response.access_token)
 
 			// Set up user profile
-			const isStudent = Boolean((response.pid) && (response.ucsdaffiliation.match(/(B|G|J|M|U)/)))
+			const isStudent = Boolean((response.pid) && (response.ucsdaffiliation.match(UCSD_STUDENT)))
 
 			const newProfile = {
 				username,
@@ -189,6 +190,23 @@ function* refreshTokenRequest() {
 		yield auth.storeAccessToken(response.access_token)
 		// Clears any potential errors from being
 		// unable to automatically reauthorize a user
+
+		// Set up user profile
+		const isStudent = Boolean((response.pid) && (response.ucsdaffiliation.match(UCSD_STUDENT)))
+		const newProfile = {
+			username,
+			pid: response.pid,
+			ucsdaffiliation: response.ucsdaffiliation,
+			classifications: {
+				student: isStudent
+			}
+		}
+
+		// Post sign-in flow
+		// Toggles any cards that should show up for the signed in user
+		// Registers firebase push token
+		// Queries any user data with newly obtained access token
+		yield put({ type: 'LOGGED_IN', profile: newProfile })
 		yield put({ type: 'AUTH_HTTP_SUCCESS' })
 	} else {
 		const e = new Error('No access token returned.')
