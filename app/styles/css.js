@@ -409,6 +409,7 @@ const css = StyleSheet.create({
 	map_nogoogleplay: { padding: 16 },
 	map_section: { height: LAYOUT.MAP_HEIGHT },
 	snb_container: { zIndex: 2, justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: 44, right: 6, width: 50, height: 50, borderRadius: 25, backgroundColor: COLOR.MBLUE },
+	snb_container_nav: { bottom: 100 },
 	srb_bottomBarContainer: { zIndex: 5, alignItems: 'center', justifyContent: 'center', position: 'absolute', bottom: 0, width: LAYOUT.WINDOW_WIDTH, padding: 10, backgroundColor: COLOR.WHITE },
 	srb_bottomBarContent: { flex: 1, justifyContent: 'center', alignSelf: 'stretch' },
 	srb_bottomBarText: { textAlign: 'center' },

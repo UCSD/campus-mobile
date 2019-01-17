@@ -7,7 +7,7 @@ const SearchNavButton = ({ visible, onPress }) => {
 	if (visible) {
 		return (
 			<TouchableOpacity
-				style={css.snb_container}
+				style={[css.snb_container, css.snb_container_nav]}
 				onPress={() => onPress()}
 			>
 				<Icon name="location-arrow" size={20} color="white" />

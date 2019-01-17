@@ -6,6 +6,10 @@ exports[`renders without crashing 1`] = `
     onPress={[Function]}
     visible={false}
   />
+  <SearchShuttleIcon
+    onPress={[Function]}
+    visible={true}
+  />
   <SearchBar
     iconStatus="search"
     onFocus={[Function]}
