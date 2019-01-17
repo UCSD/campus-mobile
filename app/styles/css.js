@@ -421,13 +421,13 @@ const css = StyleSheet.create({
 	ss_icon_label: { fontSize: 12, marginTop: 4, color: COLOR.VDGREY2 },
 	// SearchResults
 	ms_container: { top: 50, backgroundColor: COLOR.WHITE, width: LAYOUT.MAX_CARD_WIDTH, margin: 6, marginBottom: deviceIphoneX() ? (92 + LAYOUT.STATUS_BAR_HEIGHT + LAYOUT.TAB_BAR_HEIGHT) : (36 + LAYOUT.STATUS_BAR_HEIGHT + LAYOUT.TAB_BAR_HEIGHT), borderRadius: 3 },
-	ms_result_row: { flexDirection: 'row', paddingVertical: 14, borderTopWidth: 1, borderTopColor: COLOR.MGREY, marginTop: -1, overflow: 'hidden', paddingLeft: 8, paddingRight: 8, alignItems: 'center' },
+	ms_result_row: { flexDirection: 'row', paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: COLOR.MGREY, overflow: 'hidden', paddingLeft: 8, paddingRight: 8, alignItems: 'center' },
 	ms_result_icon: { color: COLOR.VDGREY },
 	ms_result_title: { flex: 4, fontSize: 16, paddingLeft: 12, paddingTop: 0, color: COLOR.VDGREY },
 	ms_result_dist: { flex: 1, textAlign: 'right', fontSize: 16, paddingLeft: 8, paddingTop: 0, color: COLOR.PRIMARY },
 	// SearchHistoryCard
 	shc_list_container: { width: LAYOUT.MAX_CARD_WIDTH, top: 50, backgroundColor: COLOR.WHITE, margin: 6, maxHeight: (LAYOUT.WINDOW_HEIGHT / 2), borderRadius: 3 },
-	shc_list_row: { flexDirection: 'row', paddingVertical: 14, borderTopWidth: 1, borderTopColor: COLOR.LGREY, marginTop: -1 },
+	shc_list_row: { flexDirection: 'row', paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: COLOR.LGREY },
 	shc_row_icon: { alignSelf: 'center', marginHorizontal: 6, color: COLOR.DMGREY },
 	shc_row_text: { flex: 1, fontSize: 16, alignSelf: 'center', color: COLOR.VDGREY2 },
 	shc_row_remove: { justifyContent: 'center' },
