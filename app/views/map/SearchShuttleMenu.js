@@ -3,23 +3,12 @@ import {
 	View,
 	Text,
 	StyleSheet,
-	Dimensions,
 	FlatList,
-	StatusBar,
-	Platform,
 	TouchableOpacity
 } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
 import COLOR from '../../styles/ColorConstants'
 import LAYOUT from '../../styles/LayoutConstants'
-import { doPRM, getPRM, getMaxCardWidth } from '../../util/general'
-
-
-const deviceHeight = Dimensions.get('window').height
-const statusBarHeight = Platform.select({
-	ios: 0,
-	android: StatusBar.currentHeight,
-})
 
 const SearchShuttleMenu = ({ onToggle, toggles, shuttle_routes }) => (
 	<View style={styles.card_main}>
