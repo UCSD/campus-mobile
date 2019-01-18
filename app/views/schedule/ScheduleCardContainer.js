@@ -81,7 +81,7 @@ const getUpcomingClasses = (scheduleData) => {
 
 	if (defaultSelectedClass == null) {
 		defaultSelectedClass = 0
-		otherResults.lenth = MAX_RESULTS
+		otherResults.length = MAX_RESULTS
 		otherResults.push(...classesData.OTHER)
 		return otherResults
 	} else {
@@ -92,24 +92,20 @@ const getUpcomingClasses = (scheduleData) => {
 class ScheduleCardContainer extends React.Component {
 	constructor(props) {
 		super(props)
-
 		this.state = {
 			upcoming4Courses: getUpcomingClasses(props.scheduleData),
-			activeCourse: null
+			activeCourse: defaultSelectedClass
 		}
 		this.onClickCourse = this.onClickCourse.bind(this)
 	}
 
-	componentWillMount() {
-		this.setState({ activeCourse: defaultSelectedClass })
-	}
-
-	/** TODO: Review ScheduleCardContainer::componentWillReceiveProps **/
+	// /** TODO: Review ScheduleCardContainer::componentWillReceiveProps **/
 	componentWillReceiveProps(nextProps) {
 		if ((nextProps.scheduleData) || (this.props.scheduleData && !nextProps.scheduleData)) {
 			this.setState((state, props) => ({
 				...state,
-				upcoming4Courses: getUpcomingClasses(props.scheduleData)
+				upcoming4Courses: getUpcomingClasses(props.scheduleData),
+				activeCourse: defaultSelectedClass
 			}))
 		}
 	}
