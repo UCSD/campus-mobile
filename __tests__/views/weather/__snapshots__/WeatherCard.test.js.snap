@@ -5,8 +5,8 @@ exports[`card renders without crashing 1`] = `
   id="weather"
   title="Weather"
 >
-  <View>
-    <View
+  <Component>
+    <Component
       style={
         Object {
           "alignItems": "center",
@@ -19,7 +19,7 @@ exports[`card renders without crashing 1`] = `
         }
       }
     >
-      <View
+      <Component
         style={
           Object {
             "flex": 4,
@@ -55,8 +55,8 @@ exports[`card renders without crashing 1`] = `
         >
           Partly Cloudy
         </Text>
-      </View>
-      <View
+      </Component>
+      <Component
         style={
           Object {
             "flex": 1,
@@ -76,8 +76,8 @@ exports[`card renders without crashing 1`] = `
             }
           }
         />
-      </View>
-    </View>
+      </Component>
+    </Component>
     <WeatherWeek
       weatherData={
         Object {
@@ -412,7 +412,7 @@ exports[`card renders without crashing 1`] = `
       }
     />
     <withNavigation(SurfButton) />
-  </View>
+  </Component>
 </Connect(Card)>
 `;
 

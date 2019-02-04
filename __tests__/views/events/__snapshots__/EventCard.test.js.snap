@@ -5,14 +5,14 @@ exports[`card renders without crashing 1`] = `
   id="events"
   title="Events"
 >
-  <View
+  <Component
     style={
       Object {
         "top": -1,
       }
     }
   >
-    <View>
+    <Component>
       <DataListView
         card={false}
         data={
@@ -48,7 +48,7 @@ exports[`card renders without crashing 1`] = `
       <Touchable
         onPress={[Function]}
       >
-        <View
+        <Component
           style={
             Object {
               "borderTopColor": "#EAEAEA",
@@ -72,10 +72,10 @@ exports[`card renders without crashing 1`] = `
           >
             View All
           </Text>
-        </View>
+        </Component>
       </Touchable>
-    </View>
-  </View>
+    </Component>
+  </Component>
 </Connect(Card)>
 `;
 
