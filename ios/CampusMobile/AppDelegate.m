@@ -8,7 +8,7 @@
 
 #import "AppDelegate.h"
 
-#import "RCTUtils.h"
+#import <React/RCTUtils.h>
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
 #import <BugsnagReactNative/BugsnagReactNative.h>
@@ -23,7 +23,7 @@
   [BugsnagReactNative start];
   [FIRApp configure];
   [RNFirebaseNotifications configure];
-  [[UNUserNotificationCenter currentNotificationCenter] setDelegate:self];
+  /*[[UNUserNotificationCenter currentNotificationCenter] setDelegate:self];*/
   NSURL *jsCodeLocation;
 
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
