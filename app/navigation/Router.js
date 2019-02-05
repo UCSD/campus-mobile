@@ -1,8 +1,9 @@
 import React from 'react'
 import { View } from 'react-native'
 import {
-	StackNavigator,
-	TabNavigator,
+	createStackNavigator,
+	createBottomTabNavigator,
+	createAppContainer
 } from 'react-navigation'
 import { MenuProvider } from 'react-native-popup-menu'
 import { connect } from 'react-redux'
@@ -34,6 +35,7 @@ import ManageParkingLots from '../views/parking/ManageParkingLots'
 import Notifications from '../views/preferences/notifications/Notifications'
 import CardPreferences from '../views/preferences/card/CardPreferences'
 
+
 // TABS
 import TabIcons from './TabIcons'
 
@@ -44,8 +46,9 @@ import withNavigationPreventDuplicate from './withNavigationPreventDuplicate'
 import COLOR from '../styles/ColorConstants'
 import css from '../styles/css'
 import general from '../util/general'
+import NavigationService from './NavigationService'
 
-const TabNav = TabNavigator(
+const TabNav = createBottomTabNavigator(
 	{
 		Home: { screen: Home },
 		Map: { screen: Map },
@@ -65,7 +68,7 @@ const TabNav = TabNavigator(
 				height: 26
 			}
 		},
-		navigationOptions: ({ navigation }) => ({
+		defaultNavigationOptions: ({ navigation }) => ({
 			tabBarIcon: ({ focused }) => {
 				const { routeName } = navigation.state
 				return <TabIcons title={routeName} focused={focused} />
@@ -77,82 +80,82 @@ const TabNav = TabNavigator(
 
 const DummyView = () => (<View />) /* Workaround for misaligned title */
 
-const MainStack = StackNavigator(
+let MainStack = createStackNavigator(
 	{
 		MainTabs: { screen: TabNav },
 		SurfReport: {
 			screen: SurfReport,
-			navigationOptions: {
+			defaultNavigationOptions: {
 				title: 'Surf Report',
 				headerRight: (<DummyView />)
 			}
 		},
 		NewsDetail: {
 			screen: NewsDetail,
-			navigationOptions: {
+			defaultNavigationOptions: {
 				title: 'News',
 				headerRight: (<DummyView />)
 			}
 		},
 		EventDetail: {
 			screen: EventDetail,
-			navigationOptions: {
+			defaultNavigationOptions: {
 				title: 'Events',
 				headerRight: (<DummyView />)
 			}
 		},
 		DiningDetail: {
 			screen: DiningDetail,
-			navigationOptions: {
+			defaultNavigationOptions: {
 				title: 'Dining',
 				headerRight: (<DummyView />)
 			}
 		},
 		DiningNutrition: {
 			screen: DiningNutrition,
-			navigationOptions: {
+			defaultNavigationOptions: {
 				title: 'Nutrition',
 				headerRight: (<DummyView />)
 			}
 		},
 		ShuttleStop: {
 			screen: ShuttleStop,
-			navigationOptions: {
+			defaultNavigationOptions: {
 				title: 'Shuttle',
 				headerRight: (<DummyView />)
 			}
 		},
 		ShuttleStopsListView: {
 			screen: ShuttleStopsListView,
-			navigationOptions: {
+			defaultNavigationOptions: {
 				title: 'Choose Stop',
 				headerRight: (<DummyView />)
 			}
 		},
 		ShuttleSavedListView: {
 			screen: ShuttleSavedListView,
-			navigationOptions: {
+			defaultNavigationOptions: {
 				title: 'Manage Stops',
 				headerRight: (<DummyView />)
 			}
 		},
 		ShuttleRoutesListView: {
 			screen: ShuttleRoutesListView,
-			navigationOptions: {
+			defaultNavigationOptions: {
 				title: 'Choose Route',
 				headerRight: (<DummyView />)
 			}
 		},
 		ParkingSpotType: {
 			screen: ParkingSpotType,
-			navigationOptions: {
+			defaultNavigationOptions: {
 				title: 'Spot Types',
 				headerRight: (<DummyView />)
 			}
 		},
 		ManageParkingLots: {
 			screen: ManageParkingLots,
-			navigationOptions: {
+			defaultNavigationOptions: {
 				title: 'Manage Lots',
 				headerRight: (<DummyView />)
 			}
@@ -160,7 +163,7 @@ const MainStack = StackNavigator(
 		SpecialEventsView: { screen: SpecialEventsView },
 		SpecialEventsFilters: {
 			screen: SpecialEventsFilterListView,
-			navigationOptions: ({ navigation }) => {
+			defaultNavigationOptions: ({ navigation }) => {
 				const { params } = navigation.state
 				const { title } = params
 				return {
@@ -171,7 +174,7 @@ const MainStack = StackNavigator(
 		},
 		SpecialEventsDetailView: {
 			screen: SpecialEventsDetailView,
-			navigationOptions: ({ navigation }) => {
+			defaultNavigationOptions: ({ navigation }) => {
 				const { params } = navigation.state
 				const { title } = params
 				return {
@@ -182,39 +185,39 @@ const MainStack = StackNavigator(
 		},
 		FullSchedule: {
 			screen: FullSchedule,
-			navigationOptions: {
+			defaultNavigationOptions: {
 				title: 'Classes',
 				headerRight: (<DummyView />)
 			}
 		},
 		LoginScreen: {
 			screen: OnboardingLogin,
-			navigationOptions: { header: null }
+			defaultNavigationOptions: { header: null }
 		},
 		Feedback: {
 			screen: Feedback,
-			navigationOptions: {
+			defaultNavigationOptions: {
 				title: 'Feedback',
 				headerRight: (<DummyView />)
 			}
 		},
 		Notifications: {
 			screen: Notifications,
-			navigationOptions: {
+			defaultNavigationOptions: {
 				title: 'Notifications',
 				headerRight: (<DummyView />)
 			}
 		},
 		CardPreferences: {
 			screen: CardPreferences,
-			navigationOptions: {
+			defaultNavigationOptions: {
 				title: 'Cards',
 				headerRight: (<DummyView />)
 			}
 		},
 		DataListViewAll: {
 			screen: DataListViewAll,
-			navigationOptions: ({ navigation }) => {
+			defaultNavigationOptions: ({ navigation }) => {
 				const { params } = navigation.state
 				const { title } = params
 				return {
@@ -226,7 +229,7 @@ const MainStack = StackNavigator(
 	},
 	{
 		initialRouteName: 'MainTabs',
-		navigationOptions: {
+		defaultNavigationOptions: {
 			headerStyle: css.nav,
 			headerTitleStyle: css.navTitle,
 			headerTintColor: COLOR.WHITE
@@ -234,15 +237,15 @@ const MainStack = StackNavigator(
 	}
 )
 
-const OnboardingStack = StackNavigator(
+let OnboardingStack = createStackNavigator(
 	{
 		OnboardingIntro: {
 			screen: OnboardingIntro,
-			navigationOptions: { header: null }
+			defaultNavigationOptions: { header: null }
 		},
 		OnboardingLogin: {
 			screen: OnboardingLogin,
-			navigationOptions: { header: null }
+			defaultNavigationOptions: { header: null }
 		},
 	},
 	{
@@ -254,13 +257,16 @@ const OnboardingStack = StackNavigator(
 MainStack.router.getStateForAction = withNavigationPreventDuplicate(MainStack.router.getStateForAction)
 OnboardingStack.router.getStateForAction = withNavigationPreventDuplicate(OnboardingStack.router.getStateForAction)
 
+MainStack = createAppContainer(MainStack)
+OnboardingStack = createAppContainer(OnboardingStack)
+
 const Router = ({ onBoardingViewed }) => (
 	<MenuProvider>
 		{
 			(onBoardingViewed) ? (
-				<MainStack />
+				<MainStack ref={navigatorRef => NavigationService.setTopLevelNavigator(navigatorRef)} />
 			) : (
-				<OnboardingStack />
+				<OnboardingStack ref={navigatorRef => NavigationService.setTopLevelNavigator(navigatorRef)} />
 			)
 		}
 	</MenuProvider>
