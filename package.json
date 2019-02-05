@@ -9,8 +9,7 @@
     "campus-prod-ci": "node scripts/replace-all prod ci",
     "campus-qa-ci": "node scripts/replace-all qa ci",
     "generate-docs": "./node_modules/.bin/jsdoc -c jsdoc.conf.json",
-    "dev-fixes": "node scripts/dev-fixes",
-    "postinstall": "node scripts/postinstall-fixes"
+    "dev-fixes": "node scripts/dev-fixes"
   },
   "husky": {
     "hooks": {
@@ -41,7 +40,7 @@
     "react-native-keychain": "3.0.0-rc.3",
     "react-native-maps": "0.21.0",
     "react-native-permissions": "1.1.1",
-    "react-native-popup-menu": "0.12.3",
+    "react-native-popup-menu": "0.13.3",
     "react-native-restart": "0.0.7",
     "react-native-simple-toast": "0.0.8",
     "react-native-sortable-list": "0.0.21",
