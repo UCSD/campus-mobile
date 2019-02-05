@@ -73,10 +73,12 @@ import com.android.build.OutputFile
  */
 
 project.ext.react = [
-    entryFile: "index.js"
+    entryFile: "index.js",
+    inputExcludes: ["ios/**", "__tests__/**", "bundle_out/**"]
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
+apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
 
 /**
  * Set this to true to create two separate APKs instead of one:
@@ -96,15 +98,28 @@ def enableProguardInReleaseBuilds = false
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
-
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
     defaultConfig {
-        applicationId "com.campusmobile"
+        applicationId "edu.ucsd"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
-        versionName "1.0"
+        versionName "6.2"
         ndk {
             abiFilters "armeabi-v7a", "x86"
+        }
+        multiDexEnabled true
+    }
+    signingConfigs {
+        if (project.hasProperty('MYAPP_RELEASE_STORE_FILE')) {
+            release {
+                storeFile file(MYAPP_RELEASE_STORE_FILE)
+                storePassword MYAPP_RELEASE_STORE_PASSWORD
+                keyAlias MYAPP_RELEASE_KEY_ALIAS
+                keyPassword MYAPP_RELEASE_KEY_PASSWORD
+            }
         }
     }
     splits {
@@ -116,9 +131,12 @@ android {
         }
     }
     buildTypes {
-        release {
-            minifyEnabled enableProguardInReleaseBuilds
-            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+        if (project.hasProperty('MYAPP_RELEASE_STORE_FILE')) {
+            release {
+                minifyEnabled enableProguardInReleaseBuilds
+                proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+                signingConfig signingConfigs.release
+            }
         }
     }
     // applicationVariants are e.g. debug, release
@@ -137,9 +155,35 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: "libs", include: ["*.jar"])
-    compile "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
-    compile "com.facebook.react:react-native:+"  // From node_modules
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation "com.android.support:appcompat-v7:$supportLibVersion"
+    implementation "com.facebook.react:react-native:+"  // From node_modules
+    
+    implementation "com.google.android.gms:play-services-base:$gps_version"
+    implementation "com.google.android.gms:play-services-maps:$maps_version"
+    implementation "com.google.android.gms:play-services-analytics:$analytics_version"
+
+    implementation project(':react-native-firebase')
+    implementation "com.google.firebase:firebase-core:16.0.1"
+    implementation "com.google.firebase:firebase-messaging:17.1.0"
+
+    implementation (project(':react-native-maps')) {
+        exclude group: 'com.google.android.gms', module: 'play-services-base'
+        exclude group: 'com.google.android.gms', module: 'play-services-maps'
+    }
+
+    implementation (project(':react-native-google-analytics-bridge')) {
+        exclude group: 'com.google.android.gms', module: 'play-services-analytics'
+    }
+
+    implementation project(':bugsnag-react-native')
+    implementation project(':react-native-restart')
+    implementation project(':react-native-keychain')
+    implementation project(':react-native-exit-app')
+    implementation project(':react-native-device-info')
+    implementation project(':react-native-google-api-availability-bridge')
+    implementation project(':react-native-svg')
+    implementation project(':react-native-vector-icons')
 }
 
 // Run this once to be able to run the application with BUCK
@@ -148,3 +192,5 @@ task copyDownloadableDepsToLibs(type: Copy) {
     from configurations.compile
     into 'libs'
 }
+
+apply plugin: 'com.google.gms.google-services'
