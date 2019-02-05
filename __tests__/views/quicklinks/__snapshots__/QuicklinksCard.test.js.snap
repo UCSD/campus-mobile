@@ -59,10 +59,7 @@ exports[`card renders without crashing 1`] = `
             }
           }
         >
-          <Text
-            accessible={true}
-            allowFontScaling={true}
-            ellipsizeMode="tail"
+          <Component
             style={
               Object {
                 "color": "#034262",
@@ -73,7 +70,7 @@ exports[`card renders without crashing 1`] = `
             }
           >
             View All
-          </Text>
+          </Component>
         </Component>
       </Touchable>
     </Component>

@@ -13,10 +13,8 @@ exports[`loading screen renders when requesting 1`] = `
       }
     }
   >
-    <ActivityIndicator
+    <Component
       animating={true}
-      color="#999999"
-      hidesWhenStopped={true}
       size="large"
       style={
         Object {
@@ -24,10 +22,7 @@ exports[`loading screen renders when requesting 1`] = `
         }
       }
     />
-    <Text
-      accessible={true}
-      allowFontScaling={true}
-      ellipsizeMode="tail"
+    <Component
       style={
         Object {
           "fontSize": 18,
@@ -36,7 +31,7 @@ exports[`loading screen renders when requesting 1`] = `
       }
     >
       Your feedback is being submitted...
-    </Text>
+    </Component>
   </Component>
 </ScrollView>
 `;
@@ -64,10 +59,7 @@ exports[`renders form when request is finished 1`] = `
         }
       }
     >
-      <Text
-        accessible={true}
-        allowFontScaling={true}
-        ellipsizeMode="tail"
+      <Component
         style={
           Object {
             "flexWrap": "wrap",
@@ -80,11 +72,8 @@ exports[`renders form when request is finished 1`] = `
         Help us make the 
         Campus Mobile
          app better.
-      </Text>
-      <Text
-        accessible={true}
-        allowFontScaling={true}
-        ellipsizeMode="tail"
+      </Component>
+      <Component
         style={
           Object {
             "flexWrap": "wrap",
@@ -95,7 +84,7 @@ exports[`renders form when request is finished 1`] = `
         }
       >
         Submit your thoughts and suggestions here.
-      </Text>
+      </Component>
       <Component
         style={
           Object {
@@ -174,10 +163,7 @@ exports[`renders form when request is finished 1`] = `
             }
           }
         >
-          <Text
-            accessible={true}
-            allowFontScaling={true}
-            ellipsizeMode="tail"
+          <Component
             style={
               Object {
                 "color": "white",
@@ -186,7 +172,7 @@ exports[`renders form when request is finished 1`] = `
             }
           >
             Submit
-          </Text>
+          </Component>
         </Component>
       </TouchableOpacity>
     </Component>
@@ -217,10 +203,7 @@ exports[`renders form when request is finished 2`] = `
         }
       }
     >
-      <Text
-        accessible={true}
-        allowFontScaling={true}
-        ellipsizeMode="tail"
+      <Component
         style={
           Object {
             "flexWrap": "wrap",
@@ -233,11 +216,8 @@ exports[`renders form when request is finished 2`] = `
         Help us make the 
         Campus Mobile
          app better.
-      </Text>
-      <Text
-        accessible={true}
-        allowFontScaling={true}
-        ellipsizeMode="tail"
+      </Component>
+      <Component
         style={
           Object {
             "flexWrap": "wrap",
@@ -248,7 +228,7 @@ exports[`renders form when request is finished 2`] = `
         }
       >
         Submit your thoughts and suggestions here.
-      </Text>
+      </Component>
       <Component
         style={
           Object {
@@ -327,10 +307,7 @@ exports[`renders form when request is finished 2`] = `
             }
           }
         >
-          <Text
-            accessible={true}
-            allowFontScaling={true}
-            ellipsizeMode="tail"
+          <Component
             style={
               Object {
                 "color": "white",
@@ -339,7 +316,7 @@ exports[`renders form when request is finished 2`] = `
             }
           >
             Submit
-          </Text>
+          </Component>
         </Component>
       </TouchableOpacity>
     </Component>
@@ -370,10 +347,7 @@ exports[`renders without crashing 1`] = `
         }
       }
     >
-      <Text
-        accessible={true}
-        allowFontScaling={true}
-        ellipsizeMode="tail"
+      <Component
         style={
           Object {
             "flexWrap": "wrap",
@@ -386,11 +360,8 @@ exports[`renders without crashing 1`] = `
         Help us make the 
         Campus Mobile
          app better.
-      </Text>
-      <Text
-        accessible={true}
-        allowFontScaling={true}
-        ellipsizeMode="tail"
+      </Component>
+      <Component
         style={
           Object {
             "flexWrap": "wrap",
@@ -401,7 +372,7 @@ exports[`renders without crashing 1`] = `
         }
       >
         Submit your thoughts and suggestions here.
-      </Text>
+      </Component>
       <Component
         style={
           Object {
@@ -480,10 +451,7 @@ exports[`renders without crashing 1`] = `
             }
           }
         >
-          <Text
-            accessible={true}
-            allowFontScaling={true}
-            ellipsizeMode="tail"
+          <Component
             style={
               Object {
                 "color": "white",
@@ -492,7 +460,7 @@ exports[`renders without crashing 1`] = `
             }
           >
             Submit
-          </Text>
+          </Component>
         </Component>
       </TouchableOpacity>
     </Component>

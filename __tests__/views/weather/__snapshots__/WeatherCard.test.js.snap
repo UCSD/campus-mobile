@@ -26,10 +26,7 @@ exports[`card renders without crashing 1`] = `
           }
         }
       >
-        <Text
-          accessible={true}
-          allowFontScaling={true}
-          ellipsizeMode="tail"
+        <Component
           style={
             Object {
               "fontSize": 22,
@@ -39,11 +36,8 @@ exports[`card renders without crashing 1`] = `
         >
           49.35
           ° in San Diego
-        </Text>
-        <Text
-          accessible={true}
-          allowFontScaling={true}
-          ellipsizeMode="tail"
+        </Component>
+        <Component
           style={
             Object {
               "color": "#747678",
@@ -54,7 +48,7 @@ exports[`card renders without crashing 1`] = `
           }
         >
           Partly Cloudy
-        </Text>
+        </Component>
       </Component>
       <Component
         style={
