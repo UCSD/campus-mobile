@@ -5,8 +5,8 @@ exports[`card renders without crashing 1`] = `
   id="weather"
   title="Weather"
 >
-  <View>
-    <View
+  <Component>
+    <Component
       style={
         Object {
           "alignItems": "center",
@@ -19,17 +19,14 @@ exports[`card renders without crashing 1`] = `
         }
       }
     >
-      <View
+      <Component
         style={
           Object {
             "flex": 4,
           }
         }
       >
-        <Text
-          accessible={true}
-          allowFontScaling={true}
-          ellipsizeMode="tail"
+        <Component
           style={
             Object {
               "fontSize": 22,
@@ -39,11 +36,8 @@ exports[`card renders without crashing 1`] = `
         >
           49.35
           ° in San Diego
-        </Text>
-        <Text
-          accessible={true}
-          allowFontScaling={true}
-          ellipsizeMode="tail"
+        </Component>
+        <Component
           style={
             Object {
               "color": "#747678",
@@ -54,16 +48,16 @@ exports[`card renders without crashing 1`] = `
           }
         >
           Partly Cloudy
-        </Text>
-      </View>
-      <View
+        </Component>
+      </Component>
+      <Component
         style={
           Object {
             "flex": 1,
           }
         }
       >
-        <Image
+        <Component
           source={
             Object {
               "uri": "https://s3-us-west-2.amazonaws.com/ucsd-its-wts/images/v1/weather-icons/partly-cloudy-day.png",
@@ -76,8 +70,8 @@ exports[`card renders without crashing 1`] = `
             }
           }
         />
-      </View>
-    </View>
+      </Component>
+    </Component>
     <WeatherWeek
       weatherData={
         Object {
@@ -412,7 +406,7 @@ exports[`card renders without crashing 1`] = `
       }
     />
     <withNavigation(SurfButton) />
-  </View>
+  </Component>
 </Connect(Card)>
 `;
 

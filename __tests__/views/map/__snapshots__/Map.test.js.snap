@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders without crashing 1`] = `
-<View>
+<Component>
   <SearchNavButton
     onPress={[Function]}
     visible={false}
@@ -24,7 +24,7 @@ exports[`renders without crashing 1`] = `
     scrollEnabled={false}
     showsVerticalScrollIndicator={false}
   >
-    <View
+    <Component
       style={
         Object {
           "height": 1250,
@@ -43,8 +43,8 @@ exports[`renders without crashing 1`] = `
         selectedResult={null}
         vehicles={Object {}}
       />
-    </View>
-    <View
+    </Component>
+    <Component
       style={
         Object {
           "height": 1250,
@@ -54,8 +54,8 @@ exports[`renders without crashing 1`] = `
       <SearchResultsCard
         onSelect={[Function]}
       />
-    </View>
-    <View
+    </Component>
+    <Component
       style={
         Object {
           "height": 1250,
@@ -65,8 +65,8 @@ exports[`renders without crashing 1`] = `
       <SearchSuggest
         onPress={[Function]}
       />
-    </View>
-    <View
+    </Component>
+    <Component
       style={
         Object {
           "height": 1250,
@@ -76,11 +76,11 @@ exports[`renders without crashing 1`] = `
       <SearchShuttleMenu
         onToggle={[Function]}
       />
-    </View>
+    </Component>
   </ScrollView>
   <SearchResultsBar
     onPress={[Function]}
     visible={false}
   />
-</View>
+</Component>
 `;

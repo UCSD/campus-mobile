@@ -2,20 +2,23 @@
  * Copyright (c) 2015-present, Facebook, Inc.
  * All rights reserved.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 
 #import "AppDelegate.h"
 
-#import "RCTUtils.h"
-#import "RCTBundleURLProvider.h"
-#import "RCTRootView.h"
+#import <React/RCTUtils.h>
+#import <React/RCTBundleURLProvider.h>
+#import <React/RCTRootView.h>
 #import <BugsnagReactNative/BugsnagReactNative.h>
 #import <Firebase.h>
 #import "RNFirebaseNotifications.h"
 #import "RNFirebaseMessaging.h"
+#if RCT_DEV
+#import <React/RCTDevLoadingView.h>
+#endif
+#import <UserNotifications/UserNotifications.h>
 
 @implementation AppDelegate
 
@@ -29,7 +32,16 @@
 
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
 
-  RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
+
+  RCTBridge *bridge = [[RCTBridge alloc] initWithBundleURL:jsCodeLocation
+                                            moduleProvider:nil
+                                             launchOptions:launchOptions];
+
+  #if RCT_DEV
+  [bridge moduleForClass:[RCTDevLoadingView class]];
+  #endif
+ 
+ RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
                                                       moduleName:@"CampusMobile"
                                                initialProperties:nil
                                                    launchOptions:launchOptions];

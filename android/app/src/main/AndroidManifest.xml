@@ -11,7 +11,7 @@
 
     <application
       android:name=".MainApplication"
-      android:allowBackup="true"
+      android:allowBackup="false"
       android:label="@string/app_name"
       android:icon="@drawable/icon"
       android:theme="@style/SplashTheme">
@@ -30,7 +30,8 @@
         android:label="@string/app_name"
         android:launchMode="singleTop"
         android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
-        android:screenOrientation="portrait">
+        android:screenOrientation="portrait"
+        android:windowSoftInputMode="adjustResize">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
