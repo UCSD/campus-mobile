@@ -3,6 +3,7 @@ import { View } from 'react-native'
 import {
 	createStackNavigator,
 	createBottomTabNavigator,
+	createMaterialTopTabNavigator,
 	createAppContainer
 } from 'react-navigation'
 import { MenuProvider } from 'react-native-popup-menu'
@@ -46,38 +47,73 @@ import withNavigationPreventDuplicate from './withNavigationPreventDuplicate'
 // MISC
 import COLOR from '../styles/ColorConstants'
 import css from '../styles/css'
-import general from '../util/general'
 import NavigationService from './NavigationService'
+import { platformAndroid } from '../util/general'
 
-const TabNav = createBottomTabNavigator(
-	{
-		Home: { screen: Home },
-		Map: { screen: Map },
-		Messaging: { screen: Messaging },
-		Preferences: { screen: Preferences }
-	},
-	{
-		tabBarOptions: {
-			showLabel: false,
-			showIcon: true,
 
-			pressColor: COLOR.MGREY,
-			indicatorStyle: { backgroundColor: COLOR.SECONDARY },
-			style: general.platformIOS() ? css.tabBarIOS : css.tabBarAndroid,
-			iconStyle: {
-				width: 26,
-				height: 26
-			}
+let TabNav
+
+if (platformAndroid()) {
+	TabNav = createMaterialTopTabNavigator(
+		{
+			Home: { screen: Home },
+			Map: { screen: Map },
+			Messaging: { screen: Messaging },
+			Preferences: { screen: Preferences }
 		},
-		defaultNavigationOptions: ({ navigation }) => ({
-			tabBarIcon: ({ focused }) => {
-				const { routeName } = navigation.state
-				return <TabIcons title={routeName} focused={focused} />
+		{
+			tabBarOptions: {
+				showLabel: false,
+				showIcon: true,
+
+				pressColor: COLOR.MGREY,
+				indicatorStyle: { backgroundColor: COLOR.SECONDARY },
+				style: css.tabBarAndroid,
+				iconStyle: {
+					width: 26,
+					height: 26
+				}
 			},
-			swipeEnabled: false
-		})
-	}
-)
+			defaultNavigationOptions: ({ navigation }) => ({
+				tabBarIcon: ({ focused }) => {
+					const { routeName } = navigation.state
+					return <TabIcons title={routeName} focused={focused} />
+				},
+				swipeEnabled: false
+			})
+		}
+	)
+} else {
+	TabNav = createBottomTabNavigator(
+		{
+			Home: { screen: Home },
+			Map: { screen: Map },
+			Messaging: { screen: Messaging },
+			Preferences: { screen: Preferences }
+		},
+		{
+			tabBarOptions: {
+				showLabel: false,
+				showIcon: true,
+
+				pressColor: COLOR.MGREY,
+				indicatorStyle: { backgroundColor: COLOR.SECONDARY },
+				style: css.tabBarIOS,
+				iconStyle: {
+					width: 26,
+					height: 26
+				}
+			},
+			defaultNavigationOptions: ({ navigation }) => ({
+				tabBarIcon: ({ focused }) => {
+					const { routeName } = navigation.state
+					return <TabIcons title={routeName} focused={focused} />
+				},
+				swipeEnabled: false
+			})
+		}
+	)
+}
 
 const DummyView = () => (<View />) /* Workaround for misaligned title */
 
