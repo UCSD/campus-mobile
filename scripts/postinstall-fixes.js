@@ -24,15 +24,6 @@ const makeReplacements = (FILE_PATH, REPLACEMENTS) => {
 	})
 }
 
-// Fix an issue with Android default text color
-const TEXT_FIX_PATH = './node_modules/react-native/Libraries/Text/Text.js'
-const TEXT_ERR = 'if \\(this.context.isInAParentText\\)'
-const TEXT_FIX = 'newProps = {...newProps, style: [{color: \'black\'}, this.props.style] }\n    if (this.context.isInAParentText)'
-
-makeReplacements(TEXT_FIX_PATH, [
-	{ initial: TEXT_ERR, fixed: TEXT_FIX }
-])
-
 // Set correct safe area for iPhone XR
 const XR_FIX_PATH = './node_modules/react-native-safe-area-view/index.js'
 const XR_FIX_REPL1 = 'const X_HEIGHT = 812;'
