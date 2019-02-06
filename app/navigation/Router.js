@@ -8,6 +8,7 @@ import {
 import { MenuProvider } from 'react-native-popup-menu'
 import { connect } from 'react-redux'
 
+
 // VIEWS
 import Home from '../views/home/Home'
 import OnboardingIntro from '../views/login/OnboardingIntro'
@@ -233,7 +234,8 @@ let MainStack = createStackNavigator(
 			headerStyle: css.nav,
 			headerTitleStyle: css.navTitle,
 			headerTintColor: COLOR.WHITE
-		}
+		},
+		cardStyle: { backgroundColor: COLOR.LGREY2 }
 	}
 )
 
@@ -250,8 +252,9 @@ let OnboardingStack = createStackNavigator(
 	},
 	{
 		initialRouteName: 'OnboardingIntro',
-		headerMode: 'none'
-	}
+		headerMode: 'none',
+		cardStyle: { backgroundColor: COLOR.LGREY2 }
+	},
 )
 
 MainStack.router.getStateForAction = withNavigationPreventDuplicate(MainStack.router.getStateForAction)
