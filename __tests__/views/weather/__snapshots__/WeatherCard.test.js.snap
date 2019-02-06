@@ -57,7 +57,7 @@ exports[`card renders without crashing 1`] = `
           }
         }
       >
-        <Image
+        <Component
           source={
             Object {
               "uri": "https://s3-us-west-2.amazonaws.com/ucsd-its-wts/images/v1/weather-icons/partly-cloudy-day.png",

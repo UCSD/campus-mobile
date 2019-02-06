@@ -91,6 +91,9 @@
     "snapshotSerializers": [
       "enzyme-to-json/serializer"
     ],
+    "transform": {
+      "^.+\\.(js)$": "<rootDir>/node_modules/react-native/jest/preprocessor.js"
+    },
     "setupFiles": [
       "<rootDir>/tests.setup.js"
     ]
