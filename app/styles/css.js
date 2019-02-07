@@ -406,6 +406,7 @@ const css = StyleSheet.create({
 	/**
 	 *  12 - Map
 	 */
+	map_container: { ...StyleSheet.absoluteFillObject },
 	map_nogoogleplay: { padding: 16 },
 	map_section: { height: LAYOUT.MAP_HEIGHT },
 	snb_container: { zIndex: 2, justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: 44, right: 6, width: 50, height: 50, borderRadius: 25, backgroundColor: COLOR.MBLUE },
@@ -431,6 +432,12 @@ const css = StyleSheet.create({
 	shc_row_icon: { alignSelf: 'center', marginHorizontal: 6, color: COLOR.DMGREY },
 	shc_row_text: { flex: 1, fontSize: 16, alignSelf: 'center', color: COLOR.VDGREY2 },
 	shc_row_remove: { justifyContent: 'center' },
+	// SearchBar
+	map_searchbar_container: { zIndex: 2, margin: 6, flexDirection: 'row', position: 'absolute', width: LAYOUT.WINDOW_WIDTH - 12, height: 44, borderWidth: 0, borderRadius: 3, backgroundColor: COLOR.WHITE },
+	map_searchbar_input: { flex: 1, height: 44, paddingHorizontal: 4, color: COLOR.VDGREY, fontSize: 20 },
+	map_searchbar_icon: { top: 9, left: 8 },
+	map_searchbar_ai: { position: 'absolute', top: 12, left: 8 },
+	map_searchbar_icon_container: { height: 44, justifyContent: 'center', alignSelf: 'center', margin: 8 },
 
 	/**
 	 *  13 - Feedback

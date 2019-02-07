@@ -1,17 +1,10 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { View, Text } from 'react-native'
 import { connect } from 'react-redux'
 import Entypo from 'react-native-vector-icons/Entypo'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import css from '../styles/css'
 import COLOR from '../styles/ColorConstants'
-
-const propTypes = {
-	title: PropTypes.string.isRequired,
-	focused: PropTypes.bool.isRequired,
-
-}
 
 const TabIcons = (props) => {
 	let TabIcon
@@ -58,5 +51,4 @@ function mapStateToProps(state, props) {
 	return { unreadMessages: state.messages.unreadMessages }
 }
 
-TabIcons.propTypes = propTypes
 export default connect(mapStateToProps)(TabIcons)
