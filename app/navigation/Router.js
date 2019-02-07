@@ -1,5 +1,5 @@
 import React from 'react'
-import { View } from 'react-native'
+import { View, Image } from 'react-native'
 import {
 	createStackNavigator,
 	createBottomTabNavigator,
@@ -50,6 +50,7 @@ import css from '../styles/css'
 import NavigationService from './NavigationService'
 import { platformAndroid } from '../util/general'
 
+const campusLogoImage = require('../assets/images/UCSanDiegoLogo-nav.png')
 
 let TabNav
 
@@ -115,6 +116,12 @@ if (platformAndroid()) {
 	)
 }
 
+TabNav.navigationOptions = ({ navigation }) => {
+	const { routeName } = navigation.state.routes[navigation.state.index]
+	const headerTitle = ( routeName === 'Home') ? <Image source={campusLogoImage} style={css.navCampusLogoTitle} /> : routeName
+	return { headerTitle }
+}
+
 const DummyView = () => (<View />) /* Workaround for misaligned title */
 
 let MainStack = createStackNavigator(
@@ -122,77 +129,77 @@ let MainStack = createStackNavigator(
 		MainTabs: { screen: TabNav },
 		SurfReport: {
 			screen: SurfReport,
-			defaultNavigationOptions: {
+			navigationOptions: {
 				title: 'Surf Report',
 				headerRight: (<DummyView />)
 			}
 		},
 		NewsDetail: {
 			screen: NewsDetail,
-			defaultNavigationOptions: {
+			navigationOptions: {
 				title: 'News',
 				headerRight: (<DummyView />)
 			}
 		},
 		EventDetail: {
 			screen: EventDetail,
-			defaultNavigationOptions: {
+			navigationOptions: {
 				title: 'Events',
 				headerRight: (<DummyView />)
 			}
 		},
 		DiningDetail: {
 			screen: DiningDetail,
-			defaultNavigationOptions: {
+			navigationOptions: {
 				title: 'Dining',
 				headerRight: (<DummyView />)
 			}
 		},
 		DiningNutrition: {
 			screen: DiningNutrition,
-			defaultNavigationOptions: {
+			navigationOptions: {
 				title: 'Nutrition',
 				headerRight: (<DummyView />)
 			}
 		},
 		ShuttleStop: {
 			screen: ShuttleStop,
-			defaultNavigationOptions: {
+			navigationOptions: {
 				title: 'Shuttle',
 				headerRight: (<DummyView />)
 			}
 		},
 		ShuttleStopsListView: {
 			screen: ShuttleStopsListView,
-			defaultNavigationOptions: {
+			navigationOptions: {
 				title: 'Choose Stop',
 				headerRight: (<DummyView />)
 			}
 		},
 		ShuttleSavedListView: {
 			screen: ShuttleSavedListView,
-			defaultNavigationOptions: {
+			navigationOptions: {
 				title: 'Manage Stops',
 				headerRight: (<DummyView />)
 			}
 		},
 		ShuttleRoutesListView: {
 			screen: ShuttleRoutesListView,
-			defaultNavigationOptions: {
+			navigationOptions: {
 				title: 'Choose Route',
 				headerRight: (<DummyView />)
 			}
 		},
 		ParkingSpotType: {
 			screen: ParkingSpotType,
-			defaultNavigationOptions: {
+			navigationOptions: {
 				title: 'Spot Types',
 				headerRight: (<DummyView />)
 			}
 		},
 		ManageParkingLots: {
 			screen: ManageParkingLots,
-			defaultNavigationOptions: {
+			navigationOptions: {
 				title: 'Manage Lots',
 				headerRight: (<DummyView />)
 			}
@@ -200,7 +207,7 @@ let MainStack = createStackNavigator(
 		SpecialEventsView: { screen: SpecialEventsView },
 		SpecialEventsFilters: {
 			screen: SpecialEventsFilterListView,
-			defaultNavigationOptions: ({ navigation }) => {
+			navigationOptions: ({ navigation }) => {
 				const { params } = navigation.state
 				const { title } = params
 				return {
@@ -211,7 +218,7 @@ let MainStack = createStackNavigator(
 		},
 		SpecialEventsDetailView: {
 			screen: SpecialEventsDetailView,
-			defaultNavigationOptions: ({ navigation }) => {
+			navigationOptions: ({ navigation }) => {
 				const { params } = navigation.state
 				const { title } = params
 				return {
@@ -222,39 +229,39 @@ let MainStack = createStackNavigator(
 		},
 		FullSchedule: {
 			screen: FullSchedule,
-			defaultNavigationOptions: {
+			navigationOptions: {
 				title: 'Classes',
 				headerRight: (<DummyView />)
 			}
 		},
 		LoginScreen: {
 			screen: OnboardingLogin,
-			defaultNavigationOptions: { header: null }
+			navigationOptions: { header: null }
 		},
 		Feedback: {
 			screen: Feedback,
-			defaultNavigationOptions: {
+			navigationOptions: {
 				title: 'Feedback',
 				headerRight: (<DummyView />)
 			}
 		},
 		Notifications: {
 			screen: Notifications,
-			defaultNavigationOptions: {
+			navigationOptions: {
 				title: 'Notifications',
 				headerRight: (<DummyView />)
 			}
 		},
 		CardPreferences: {
 			screen: CardPreferences,
-			defaultNavigationOptions: {
+			navigationOptions: {
 				title: 'Cards',
 				headerRight: (<DummyView />)
 			}
 		},
 		DataListViewAll: {
 			screen: DataListViewAll,
-			defaultNavigationOptions: ({ navigation }) => {
+			navigationOptions: ({ navigation }) => {
 				const { params } = navigation.state
 				const { title } = params
 				return {
@@ -269,7 +276,8 @@ let MainStack = createStackNavigator(
 		defaultNavigationOptions: {
 			headerStyle: css.nav,
 			headerTitleStyle: css.navTitle,
-			headerTintColor: COLOR.WHITE
+			headerTintColor: COLOR.WHITE,
+
 		},
 		cardStyle: { backgroundColor: COLOR.LGREY2 }
 	}
@@ -279,11 +287,11 @@ let OnboardingStack = createStackNavigator(
 	{
 		OnboardingIntro: {
 			screen: OnboardingIntro,
-			defaultNavigationOptions: { header: null }
+			navigationOptions: { header: null }
 		},
 		OnboardingLogin: {
 			screen: OnboardingLogin,
-			defaultNavigationOptions: { header: null }
+			navigationOptions: { header: null }
 		},
 	},
 	{
