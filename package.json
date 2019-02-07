@@ -51,7 +51,6 @@
     "react-navigation": "3.0.9",
     "react-navigation-header-buttons": "0.0.5",
     "react-redux": "5.0.7",
-    "react-timer-mixin": "0.13.3",
     "redux": "3.7.2",
     "redux-logger": "3.0.6",
     "redux-persist": "4.10.2",
