@@ -6,8 +6,8 @@ import createFilter from 'redux-persist-transform-filter'
 import createSagaMiddleware from 'redux-saga'
 import createMigration from 'redux-persist-migrate'
 
-import rootSaga from '../sagas/rootSaga'
-import rootReducer from '../reducers'
+import rootSaga from './sagas/rootSaga'
+import rootReducer from './reducers'
 
 // immutable module import is ignored by eslint because it is
 // only used when the app is running in dev mode
@@ -76,7 +76,7 @@ const manifest = {
 const reducerKey = 'home'
 const migration = createMigration(manifest, reducerKey)
 
-export default function configureStore(initialState, onComplete = () => null) {
+export default function AppRedux(initialState, onComplete = () => null) {
 	const middlewares = [sagaMiddleware, thunkMiddleware] // lets us dispatch() functions
 
 	// If in development, add redux-immutable-state-invariant

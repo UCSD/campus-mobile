@@ -1,17 +1,18 @@
-import React from 'react'
-import { StatusBar } from 'react-native'
+import React, { Component } from 'react'
+import { View, StatusBar } from 'react-native'
 import { setJSExceptionHandler } from 'react-native-exception-handler'
 import { Provider } from 'react-redux'
-
-import configureStore from './store/configureStore'
-import Main from './main'
+import AppRedux from './AppRedux'
+import PushNotificationContainer from './containers/pushNotificationContainer'
+import Router from './navigation/Router'
 import { gracefulFatalReset, platformIOS } from './util/general'
+import css from './styles/css'
 
-class CampusMobileSetup extends React.Component {
+export default class App extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			store: configureStore({}, this.finishLoading),
+			store: AppRedux({}, this.finishLoading),
 			isLoading: true,
 		}
 	}
@@ -27,14 +28,17 @@ class CampusMobileSetup extends React.Component {
 	}
 
 	render() {
-		if (platformIOS) {
+		if (platformIOS()) {
 			StatusBar.setBarStyle('light-content')
 		}
 
 		if (!this.state.isLoading) {
 			return (
 				<Provider store={this.state.store}>
-					<Main />
+					<View style={css.main}>
+						<PushNotificationContainer />
+						<Router />
+					</View>
 				</Provider>
 			)
 		} else {
@@ -42,5 +46,3 @@ class CampusMobileSetup extends React.Component {
 		}
 	}
 }
-
-module.exports = CampusMobileSetup
