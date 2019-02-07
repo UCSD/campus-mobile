@@ -17,7 +17,6 @@ import { platformAndroid, gracefulFatalReset } from '../../util/general'
 import logger from '../../util/logger'
 
 export class Home extends React.Component {
-	static navigationOptions = { title: 'Home' }
 	constructor(props) {
 		super(props)
 		this.state = { updatedGoogle: true } // eslint-disable-line
