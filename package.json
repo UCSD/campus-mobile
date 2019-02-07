@@ -55,7 +55,7 @@
     "redux-persist": "4.10.2",
     "redux-persist-migrate": "5.0.0",
     "redux-persist-transform-filter": "0.0.16",
-    "redux-saga": "0.16.0",
+    "redux-saga": "0.16.1",
     "redux-thunk": "2.2.0",
     "shelljs": "0.8.3"
   },
