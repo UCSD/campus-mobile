@@ -1,19 +1,21 @@
 {
   "images" : [
     {
-      "orientation" : "portrait",
-      "idiom" : "iphone",
       "extent" : "full-screen",
-      "minimum-system-version" : "12.0",
+      "idiom" : "iphone",
       "subtype" : "2688h",
+      "filename" : "UCSanDiego_splash_TEMP_iPhone_XSMax.png",
+      "minimum-system-version" : "12.0",
+      "orientation" : "portrait",
       "scale" : "3x"
     },
     {
-      "orientation" : "portrait",
-      "idiom" : "iphone",
       "extent" : "full-screen",
-      "minimum-system-version" : "12.0",
+      "idiom" : "iphone",
       "subtype" : "1792h",
+      "filename" : "UCSanDiego_splash_TEMP_iPhone_XR.png",
+      "minimum-system-version" : "12.0",
+      "orientation" : "portrait",
       "scale" : "2x"
     },
     {
@@ -56,6 +58,7 @@
       "idiom" : "ipad",
       "filename" : "Default-Portrait@2x~ipad_1536x2048.png",
       "extent" : "full-screen",
+      "minimum-system-version" : "7.0",
       "scale" : "2x"
     }
   ],
