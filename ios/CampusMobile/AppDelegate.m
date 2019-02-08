@@ -24,7 +24,7 @@
   [BugsnagReactNative start];
   [FIRApp configure];
   [RNFirebaseNotifications configure];
-  /*[[UNUserNotificationCenter currentNotificationCenter] setDelegate:self];*/
+  [[UNUserNotificationCenter currentNotificationCenter] setDelegate:self];
   NSURL *jsCodeLocation;
 
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
