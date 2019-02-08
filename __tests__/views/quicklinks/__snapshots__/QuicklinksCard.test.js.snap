@@ -5,14 +5,14 @@ exports[`card renders without crashing 1`] = `
   id="quicklinks"
   title="Links"
 >
-  <Component
+  <View
     style={
       Object {
         "top": -1,
       }
     }
   >
-    <Component>
+    <View>
       <DataListView
         card={false}
         data={
@@ -50,7 +50,7 @@ exports[`card renders without crashing 1`] = `
       <Touchable
         onPress={[Function]}
       >
-        <Component
+        <View
           style={
             Object {
               "borderTopColor": "#EAEAEA",
@@ -59,7 +59,7 @@ exports[`card renders without crashing 1`] = `
             }
           }
         >
-          <Component
+          <Text
             style={
               Object {
                 "color": "#034262",
@@ -70,11 +70,11 @@ exports[`card renders without crashing 1`] = `
             }
           >
             View All
-          </Component>
-        </Component>
+          </Text>
+        </View>
       </Touchable>
-    </Component>
-  </Component>
+    </View>
+  </View>
 </Connect(Card)>
 `;
 

@@ -18,7 +18,7 @@ exports[`card renders without crashing 1`] = `
         }
       }
     >
-      <Component
+      <Text
         style={
           Object {
             "color": "#034262",
@@ -28,7 +28,7 @@ exports[`card renders without crashing 1`] = `
         }
       >
         Add a Stop
-      </Component>
+      </Text>
     </Touchable>
   }
   extraActions={
