@@ -14,19 +14,18 @@ const TabIcons = (props) => {
 	} else if (props.title === 'Map') {
 		TabIcon = () => (<Entypo name="location" size={24} style={[css.tabIcon, props.focused ? { color: COLOR.PRIMARY } : null]} />)
 	} else if (props.title === 'Messaging') {
-		if (props.unreadMessages) {
-			TabIcon = () => (
-				<View style={css.tabIconWithBadge}>
+		TabIcon = () => (
+			<View style={css.tabIconWithBadge}>
+				{!props.unreadMessages ? (
 					<View style={css.tabIconBadge}>
-						<Text style={css.tabIconBadgeText} numberOfLines={1}>
-							{props.unreadMessages}
+						<Text style={css.tabIconBadgeCount} numberOfLines={1}>
+							5
 						</Text>
 					</View>
-					<FAIcon name="bell-o" size={24} style={[css.tabIcon, props.focused ? { color: COLOR.PRIMARY } : null]} />
-				</View>)
-		} else {
-			TabIcon = () => (<FAIcon name="bell-o" size={24} style={[css.tabIcon, props.focused ? { color: COLOR.PRIMARY } : null]} />)
-		}
+				) : null }
+				<FAIcon name="bell-o" size={24} style={[css.tabIcon, props.focused ? { color: COLOR.PRIMARY } : null]} />
+			</View>
+		)
 	} else if (props.title === 'Preferences') {
 		TabIcon = () => (
 			<View style={[css.tabIconUserOutline, props.focused ? { borderColor: COLOR.PRIMARY } : null]}>

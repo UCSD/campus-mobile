@@ -23,13 +23,11 @@
 
 	99 - Misc
 */
-import { StyleSheet, Platform, Dimensions } from 'react-native'
+import { StyleSheet, Platform } from 'react-native'
 import { platformAndroid, deviceIphoneX, platformIOS, round } from '../util/general'
 import COLOR from './ColorConstants'
 import LAYOUT from './LayoutConstants'
 
-const windowWidth = Dimensions.get('window').width
-const prm = (windowWidth / LAYOUT.MAX_APP_WIDTH)
 const CC_LEFT = LAYOUT.MAX_CARD_WIDTH * 0.006
 const CC_RIGHT = LAYOUT.MAX_CARD_WIDTH * 0.004
 
@@ -55,13 +53,17 @@ const css = StyleSheet.create({
 	navButtonTextIOS: { color: COLOR.WHITE, fontWeight: '300', fontSize: 18, height: 24 },
 	navButtonTextAndroid: { color: COLOR.WHITE, marginTop: -8, fontWeight: '300', fontSize: 18 },
 	// Tab Bar
-	tabBarIOS: { backgroundColor: COLOR.WHITE, height: LAYOUT.TAB_BAR_HEIGHT },
-	tabBarAndroid: { backgroundColor: COLOR.WHITE, height: LAYOUT.TAB_BAR_HEIGHT },
+	tabBar: { backgroundColor: COLOR.WHITE, height: LAYOUT.TAB_BAR_HEIGHT },
 	tabContainer: { justifyContent: 'center', paddingTop: deviceIphoneX() ? 17 : 0 },
 	tabContainerBottom: { borderBottomColor: COLOR.PRIMARY },
+	// Tab Icons
 	tabIcon: { color: COLOR.DMGREY, alignSelf: 'center', backgroundColor: COLOR.TRANSPARENT, opacity: 0.95, width: 24, height: 24, overflow: 'hidden' },
 	tabIconUser: { color: COLOR.WHITE, alignSelf: 'center', backgroundColor: COLOR.DMGREY, opacity: 0.95, width: 24, height: 24, overflow: 'hidden' },
 	tabIconUserOutline: { borderColor: COLOR.DMGREY, alignSelf: 'center', overflow: 'hidden', borderRadius: 24, width: 24, height: 24, borderWidth: 1 },
+	tabIconWithBadge: { padding: 5 },
+	tabIconBadge: { position: 'absolute', zIndex: 10, top: platformIOS() ? 0 : 3, right: platformIOS() ? 2 : 3, width: 18, height: 18, backgroundColor: 'red', borderRadius: 9, justifyContent: 'center', opacity: 1 },
+	tabIconBadgeCount: { color: COLOR.WHITE, textAlign: 'center', fontSize: 12, overflow: 'hidden', fontWeight: '700' },
+
 
 	/**
 	 *  02 - Common
@@ -488,10 +490,10 @@ const css = StyleSheet.create({
 	pi_arrow: { color: COLOR.CCC },
 	// Profile Notification Topics
 	pnt_header_row: { borderBottomColor: COLOR.MGREY0, borderBottomWidth: 1 },
-	pnt_header_text: { paddingVertical: round(12 * prm), paddingHorizontal: round(8 * prm), fontSize: round(26 * prm), color: COLOR.VDGREY },
-	pnt_row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingVertical: round(6 * prm), borderBottomColor: COLOR.MGREY, borderBottomWidth: 1 },
-	pnt_row_text: { flex: 1, paddingLeft: round(20 * prm), fontSize: round(22 * prm), color: COLOR.VDGREY },
-	pnt_switch: { marginHorizontal: round(12 * prm), justifyContent: 'center', alignItems: 'center' },
+	pnt_header_text: { paddingVertical: 12, paddingHorizontal: 8, fontSize: 26, color: COLOR.VDGREY },
+	pnt_row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingVertical: 6, borderBottomColor: COLOR.MGREY, borderBottomWidth: 1 },
+	pnt_row_text: { flex: 1, paddingLeft: 20, fontSize: 22, color: COLOR.VDGREY },
+	pnt_switch: { marginHorizontal: 12, justifyContent: 'center', alignItems: 'center' },
 
 	/**
 	 *  15 - Onboarding
@@ -534,9 +536,9 @@ const css = StyleSheet.create({
 	pst_row_text: { flex: 1, paddingRight: 10, paddingLeft: 10, fontSize: 19 },
 
 	po_container: { width: LAYOUT.MAX_CARD_WIDTH, alignItems: 'center' },
-	po_structure_name: { fontSize: round(32 * prm), marginTop: 4, color: COLOR.VDGREY },
-	po_structure_context: { fontSize: round(18 * prm), marginTop: 4, color: COLOR.DGREY },
-	po_structure_spots_available: {  alignSelf: 'center', fontSize: round(18 * prm), marginTop: 8 },
+	po_structure_name: { fontSize: 32, marginTop: 4, color: COLOR.VDGREY },
+	po_structure_context: { fontSize: 18, marginTop: 4, color: COLOR.DGREY },
+	po_structure_spots_available: {  alignSelf: 'center', fontSize: 18, marginTop: 8 },
 	po_circle: { justifyContent: 'space-around', overflow: 'hidden', backgroundColor: COLOR.GREEN },
 	po_character: { textAlign: 'center', fontWeight: '600', backgroundColor: 'transparent' },
 	po_circle_number: { fontWeight: 'bold' },
@@ -546,20 +548,20 @@ const css = StyleSheet.create({
 	po_one_spot_selected: { flexDirection: 'row', justifyContent: 'space-around', width: LAYOUT.MAX_CARD_WIDTH, marginTop: 16, paddingBottom: 20 },
 	po_two_spots_selected: { flexDirection: 'row', justifyContent: 'center', width: LAYOUT.MAX_CARD_WIDTH, marginTop: 16, paddingBottom: 20 },
 	po_three_spots_selected: { flexDirection: 'row', justifyContent: 'center', width: LAYOUT.MAX_CARD_WIDTH, marginTop: 16, paddingBottom: 20 },
-	po_structure_comingsoon: { textAlign: 'center', fontSize: round(17 * prm), color: COLOR.DGREY, fontStyle: 'italic', marginBottom: 10 },
+	po_structure_comingsoon: { textAlign: 'center', fontSize: 17, color: COLOR.DGREY, fontStyle: 'italic', marginBottom: 10 },
 	po_acp: { marginBottom: 15 },
 	po_acp_gap_1: { paddingHorizontal: 20 },
 	po_acp_gap_2: { paddingHorizontal: 10 },
 	// ParkingCard
 	pc_nolots_container: { paddingHorizontal: 20, paddingVertical: 40 },
-	pc_nolots_text: {  alignSelf: 'center', fontSize: round(18 * prm) },
+	pc_nolots_text: {  alignSelf: 'center', fontSize: 18 },
 
 	mpl_row_view: { flexDirection: 'row', flex: 1, padding: 12, alignItems: 'center', justifyContent: 'center' },
 	mpl_row_text_unselected: { flex: 1, fontSize: 20, justifyContent: 'flex-start', color: COLOR.VDGREY2 },
 	mpl_row_text_selected: { flex: 1, fontSize: 20, justifyContent: 'flex-start', color: COLOR.PRIMARY },
 	mpl_row_add_remove_btn: {  },
-	mpl_message_view: { justifyContent: 'center', alignItems: 'center', marginVertical: round(30 * prm) },
-	mpl_message_text: { fontSize: round(19 * prm), textAlign: 'center' },
+	mpl_message_view: { justifyContent: 'center', alignItems: 'center', marginVertical: 30 },
+	mpl_message_text: { fontSize: 19, textAlign: 'center' },
 
 	/**
 	 *	17 - Notifications
@@ -571,10 +573,6 @@ const css = StyleSheet.create({
 	notifications_body_text: { paddingTop: 10, color: COLOR.VDGREY, fontSize: 14 },
 	notifications_section_list_separator: { height: 1, backgroundColor: COLOR.MGREY },
 	notifications_err: { textAlign: 'center', fontSize: 16, padding: 30 },
-	// Notifications Icon Badge
-	tabIconWithBadge: { padding: round(5 * prm) },
-	tabIconBadge: { position: 'absolute', zIndex: 10, top: platformIOS() ? 0 : 3, right: platformIOS() ? 2 : 3, width: round(18 * prm), height: round(18 * prm), backgroundColor: 'red', borderRadius: round(9 * prm), justifyContent: 'center', opacity: 1 },
-	tabIconBadgeText: { color: COLOR.WHITE, textAlign: 'center', fontSize: round(12 * prm), overflow: 'hidden', fontWeight: '700' },
 
 	/**
 	 *  99 - Misc

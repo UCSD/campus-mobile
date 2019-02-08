@@ -8,7 +8,11 @@ import {
 } from 'react-navigation'
 import { MenuProvider } from 'react-native-popup-menu'
 import { connect } from 'react-redux'
-
+import { platformAndroid } from '../util/general'
+import css from '../styles/css'
+import COLOR from '../styles/ColorConstants'
+import TabIcons from './TabIcons'
+import NavigationService from './NavigationService'
 
 // VIEWS
 import Home from '../views/home/Home'
@@ -37,19 +41,6 @@ import ManageParkingLots from '../views/parking/ManageParkingLots'
 import Notifications from '../views/preferences/notifications/Notifications'
 import CardPreferences from '../views/preferences/card/CardPreferences'
 
-
-// TABS
-import TabIcons from './TabIcons'
-
-// ROUTER UTIL
-import withNavigationPreventDuplicate from './withNavigationPreventDuplicate'
-
-// MISC
-import COLOR from '../styles/ColorConstants'
-import css from '../styles/css'
-import NavigationService from './NavigationService'
-import { platformAndroid } from '../util/general'
-
 const campusLogoImage = require('../assets/images/UCSanDiegoLogo-nav.png')
 
 let TabNav
@@ -66,14 +57,9 @@ if (platformAndroid()) {
 			tabBarOptions: {
 				showLabel: false,
 				showIcon: true,
-
 				pressColor: COLOR.MGREY,
-				indicatorStyle: { backgroundColor: COLOR.SECONDARY },
-				style: css.tabBarAndroid,
-				iconStyle: {
-					width: 26,
-					height: 26
-				}
+				indicatorStyle: { backgroundColor: COLOR.TRANSPARENT },
+				style: css.tabBar,
 			},
 			defaultNavigationOptions: ({ navigation }) => ({
 				tabBarIcon: ({ focused }) => {
@@ -96,14 +82,9 @@ if (platformAndroid()) {
 			tabBarOptions: {
 				showLabel: false,
 				showIcon: true,
-
 				pressColor: COLOR.MGREY,
-				indicatorStyle: { backgroundColor: COLOR.SECONDARY },
-				style: css.tabBarIOS,
-				iconStyle: {
-					width: 26,
-					height: 26
-				}
+				indicatorStyle: { backgroundColor: 'green' },
+				style: css.tabBar,
 			},
 			defaultNavigationOptions: ({ navigation }) => ({
 				tabBarIcon: ({ focused }) => {
@@ -241,8 +222,7 @@ let MainStack = createStackNavigator(
 		Feedback: {
 			screen: Feedback,
 			navigationOptions: {
-				title: 'Feedback',
-				headerRight: (<DummyView />)
+				title: 'Feedback'
 			}
 		},
 		Notifications: {
@@ -300,9 +280,6 @@ let OnboardingStack = createStackNavigator(
 		cardStyle: { backgroundColor: COLOR.LGREY2 }
 	},
 )
-
-MainStack.router.getStateForAction = withNavigationPreventDuplicate(MainStack.router.getStateForAction)
-OnboardingStack.router.getStateForAction = withNavigationPreventDuplicate(OnboardingStack.router.getStateForAction)
 
 MainStack = createAppContainer(MainStack)
 OnboardingStack = createAppContainer(OnboardingStack)
