@@ -215,7 +215,7 @@ let MainStack = createStackNavigator(
 			headerTintColor: COLOR.WHITE,
 		},
 		headerLayoutPreset: 'center',
-		cardStyle: { backgroundColor: COLOR.LGREY2 }
+		cardStyle: { backgroundColor: COLOR.BG_GRAY }
 	}
 )
 
@@ -233,7 +233,7 @@ let OnboardingStack = createStackNavigator(
 	{
 		initialRouteName: 'OnboardingIntro',
 		headerMode: 'none',
-		cardStyle: { backgroundColor: COLOR.LGREY2 }
+		cardStyle: { backgroundColor: COLOR.BG_GRAY }
 	},
 )
 
