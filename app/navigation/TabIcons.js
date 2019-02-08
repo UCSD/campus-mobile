@@ -16,10 +16,10 @@ const TabIcons = (props) => {
 	} else if (props.title === 'Messaging') {
 		TabIcon = () => (
 			<View style={css.tabIconWithBadge}>
-				{!props.unreadMessages ? (
+				{props.unreadMessages ? (
 					<View style={css.tabIconBadge}>
 						<Text style={css.tabIconBadgeCount} numberOfLines={1}>
-							5
+							{props.unreadMessages}
 						</Text>
 					</View>
 				) : null }
