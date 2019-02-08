@@ -28,8 +28,6 @@ const checkData = (data) => {
 }
 
 export class Messaging extends Component {
-	static navigationOptions = { title: 'Notifications' }
-
 	componentDidMount() {
 		logger.ga('View Loaded: Messaging')
 		this.props.navigation.addListener('willFocus', () => {
