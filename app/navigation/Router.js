@@ -76,7 +76,14 @@ if (platformAndroid()) {
 
 TabNav.navigationOptions = ({ navigation }) => {
 	const { routeName } = navigation.state.routes[navigation.state.index]
-	const headerTitle = ( routeName === 'Home') ? <Image source={campusLogoImage} style={css.navCampusLogoTitle} /> : routeName
+	let headerTitle = ( routeName === 'Home') ? <Image source={campusLogoImage} style={css.navCampusLogoTitle} /> : routeName
+	switch (routeName) {
+		case 'Messaging':
+			headerTitle = 'Notifications'
+			break
+		case 'Preferences':
+			headerTitle = 'User Profile'
+	}
 	return { headerTitle }
 }
 
