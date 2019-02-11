@@ -6,9 +6,10 @@ import {
 import { connect } from 'react-redux'
 import firebase from 'react-native-firebase'
 import Permissions from 'react-native-permissions'
+import NavigationService from '../navigation/NavigationService'
 
 class PushNotificationContainer extends React.Component {
-	componentDidMount() {
+	async componentDidMount() {
 		this.checkPermission()
 
 		this.onTokenRefreshListener = firebase.messaging().onTokenRefresh((fcmToken) => {
@@ -23,9 +24,28 @@ class PushNotificationContainer extends React.Component {
 			this.props.updateMessages()
 		})
 
+		// this runs when the app is in foreground and notification is received
 		this.notificationListener = firebase.notifications().onNotification((notification) => {
+			// body and title is availble for android here
 			this.props.updateMessages()
 		})
+		// this runs if app was in backgorund or foreground and the notification was tapped
+		this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen: firebase.NotificationOpen) => {
+			const { notification } = notificationOpen
+			const { routeName, params } = notification.data
+			NavigationService.navigate(routeName, params)
+			// body and title is availble for adnroid here
+		})
+
+		// this only runs if the app was compeltely closed (not in foreground or background) and the notification was tapped
+		const notificationOpen: firebase.NotificationOpen = await firebase.notifications().getInitialNotification()
+		if (notificationOpen) {
+			// App was opened by a notification
+			const { notification } = notificationOpen
+			const { routeName, params } = notification.data
+			NavigationService.navigate(routeName, params)
+			// body and ttitle is not availble for android here
+		}
 	}
 
 	componentWillUnmount() {
