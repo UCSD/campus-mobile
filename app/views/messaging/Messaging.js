@@ -8,10 +8,12 @@ import {
 	ActivityIndicator
 } from 'react-native'
 import { connect } from 'react-redux'
+import Hyperlink from 'react-native-hyperlink'
 import moment from 'moment'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import logger from '../../util/logger'
 import css from '../../styles/css'
+import { openURL } from '../../util/general'
 import { DGREY } from '../../styles/ColorConstants'
 
 const checkData = (data) => {
@@ -68,7 +70,12 @@ export class Messaging extends Component {
 				<View  style={{ flexDirection: 'column', justifyContent: 'center', flex: 1 }}>
 					<Text style={css.notifications_timestamp_text}>{timeString}</Text>
 					<Text style={css.notifications_title_text}>{title}</Text>
-					<Text style={css.notifications_body_text}>{messageText}</Text>
+					<Hyperlink
+						onPress={(url, text) => openURL(url)}
+						linkStyle={(css.hyperlink)}
+					>
+						<Text style={css.notifications_body_text}>{messageText}</Text>
+					</Hyperlink>
 				</View>
 			</View>
 		)
