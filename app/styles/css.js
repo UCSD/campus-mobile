@@ -130,6 +130,7 @@ const css = StyleSheet.create({
 	bold: { fontWeight: '700' },
 	flex: { flex: 1 },
 	flexrow: { flexDirection: 'row' },
+	hyperlink: { color: '#2980b9' },
 
 	/**
 	 *  03 - Special Events
