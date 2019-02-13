@@ -1,9 +1,9 @@
 import { Dimensions, StatusBar } from 'react-native'
-import { deviceIphoneX } from '../util/general'
+import { platformAndroid, deviceIphoneX } from '../util/general'
 
 const WINDOW_WIDTH = Dimensions.get('window').width
 const WINDOW_HEIGHT = Dimensions.get('window').height
-const STATUS_BAR_HEIGHT = StatusBar.currentHeight
+const STATUS_BAR_HEIGHT = platformAndroid() ? StatusBar.currentHeight : 0
 const NAVIGATOR_HEIGHT = 42
 const TAB_BAR_HEIGHT = deviceIphoneX() ? 31 : NAVIGATOR_HEIGHT
 const MAX_CARD_WIDTH = WINDOW_WIDTH - 12

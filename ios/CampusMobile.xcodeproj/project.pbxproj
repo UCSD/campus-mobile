@@ -15,7 +15,6 @@
 		00E356F31AD99517003FC87E /* CampusMobileTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* CampusMobileTests.m */; };
 		133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C398B91ACF4ADC00677621 /* libRCTLinking.a */; };
 		139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139105C11AF99BAD00B5F7CC /* libRCTSettings.a */; };
-		139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139FDEF41B06529B00C62182 /* libRCTWebSocket.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
@@ -46,6 +45,7 @@
 		6752E8EA312C4C40BD5BFDB6 /* libRNExitApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A9C9E892AB1C4D4084935B43 /* libRNExitApp.a */; };
 		775CDD40220C0D6400447923 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 775CDD3F220C0D6400447923 /* GoogleService-Info.plist */; };
 		77E0803A220BABA5001AC8C8 /* libRNGestureHandler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 77E08039220BAB89001AC8C8 /* libRNGestureHandler.a */; };
+		77EF0322220E358000756459 /* libRCTWebSocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139FDEF41B06529B00C62182 /* libRCTWebSocket.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		839E318F6F244CD9AECA5B97 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 90F7456A43534D9AA3A92E2A /* FontAwesome.ttf */; };
 		9F0A6E7FD2D04F13A6901CA1 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EF7897739DF64784BB5FF4C1 /* Entypo.ttf */; };
@@ -446,6 +446,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				77EF0322220E358000756459 /* libRCTWebSocket.a in Frameworks */,
 				77E0803A220BABA5001AC8C8 /* libRNGestureHandler.a in Frameworks */,
 				ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */,
 				5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */,
@@ -459,7 +460,6 @@
 				139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */,
 				832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */,
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
-				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
 				FB6FB5E65FB346C68DAFC4BF /* libReactNativeExceptionHandler.a in Frameworks */,
 				6752E8EA312C4C40BD5BFDB6 /* libRNExitApp.a in Frameworks */,
 				5DCA2160FF774AA990983A9B /* libRNFirebase.a in Frameworks */,
