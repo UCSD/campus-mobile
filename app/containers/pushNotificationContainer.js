@@ -33,8 +33,12 @@ class PushNotificationContainer extends React.Component {
 		this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen: firebase.NotificationOpen) => {
 			const { notification } = notificationOpen
 			const { routeName, params } = notification.data
-			NavigationService.navigate(routeName, params)
-			// body and title is availble for adnroid here
+			if (routeName) {
+				NavigationService.navigate(routeName, params)
+			} else {
+				NavigationService.navigate('Messaging', params)
+			}
+			// body and title is availble for android here
 		})
 
 		// this only runs if the app was compeltely closed (not in foreground or background) and the notification was tapped
@@ -44,6 +48,11 @@ class PushNotificationContainer extends React.Component {
 			const { notification } = notificationOpen
 			const { routeName, params } = notification.data
 			NavigationService.navigate(routeName, params)
+			if (routeName) {
+				NavigationService.navigate(routeName, params)
+			} else {
+				NavigationService.navigate('Messaging', params)
+			}
 			// body and ttitle is not availble for android here
 		}
 	}
