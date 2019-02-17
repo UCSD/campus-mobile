@@ -123,7 +123,8 @@ const css = StyleSheet.create({
 	media_detail_image: { width: LAYOUT.WINDOW_WIDTH, height: 200 },
 	media_detail_title: { fontSize: 22, color: COLOR.PRIMARY },
 	media_detail_dateText: { color: COLOR.PRIMARY, paddingTop: 14 },
-	media_detail_descText: { lineHeight: 18, color: COLOR.BLACK, fontSize: 14, paddingTop: 14 },
+	media_detail_descContainer: { paddingTop: 14 },
+	media_detail_descText: { lineHeight: 18, color: COLOR.BLACK, fontSize: 14 },
 	media_detail_locationText: { fontSize: 16, color: COLOR.DGREY },
 	cm_desc: { fontSize: 16, padding: 20 },
 	// General
