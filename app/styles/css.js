@@ -563,7 +563,8 @@ const css = StyleSheet.create({
 	notifications_vector_icon: { justifyContent: 'center', alignItems: 'center', marginLeft: 10, marginRight: 16 },
 	notifications_timestamp_text: { color: COLOR.TIME, fontWeight: 'bold', fontSize: 10 },
 	notifications_title_text: { color: COLOR.BLACK, fontWeight: '400', fontSize: platformAndroid() ? 16 : 20 },
-	notifications_body_text: { paddingTop: 10, color: COLOR.VDGREY, fontSize: 14 },
+	notifications_body_text_container: { paddingTop: 10 },
+	notifications_body_text: { color: COLOR.VDGREY, fontSize: 14 },
 	notifications_section_list_separator: { height: 1, backgroundColor: COLOR.MGREY },
 	notifications_err: { textAlign: 'center', fontSize: 16, padding: 30 },
 	// Notifications Icon Badge

@@ -70,12 +70,14 @@ export class Messaging extends Component {
 				<View  style={{ flexDirection: 'column', justifyContent: 'center', flex: 1 }}>
 					<Text style={css.notifications_timestamp_text}>{timeString}</Text>
 					<Text style={css.notifications_title_text}>{title}</Text>
-					<Hyperlink
-						onPress={(url, text) => openURL(url)}
-						linkStyle={(css.hyperlink)}
-					>
-						<Text style={css.notifications_body_text}>{messageText}</Text>
-					</Hyperlink>
+					<View style={css.notifications_body_text_container}>
+						<Hyperlink
+							onPress={(url, text) => openURL(url)}
+							linkStyle={(css.hyperlink)}
+						>
+							<Text style={css.notifications_body_text}>{messageText}</Text>
+						</Hyperlink>
+					</View>
 				</View>
 			</View>
 		)
