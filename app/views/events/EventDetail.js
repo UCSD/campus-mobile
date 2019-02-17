@@ -38,14 +38,16 @@ const EventDetail = ({ navigation }) => {
 				<Text style={css.media_detail_dateText}>
 					{moment(data.eventdate).format('MMM Do') + ', ' + general.militaryToAMPM(data.starttime) + ' - ' + general.militaryToAMPM(data.endtime)}
 				</Text>
-				<Hyperlink
-					onPress={(url, text) => openURL(url)}
-					linkStyle={(css.hyperlink)}
-				>
-					<Text style={css.media_detail_descText}>
-						{data.description}
-					</Text>
-				</Hyperlink>
+				<View style={css.media_detail_descContainer}>
+					<Hyperlink
+						onPress={(url, text) => openURL(url)}
+						linkStyle={(css.hyperlink)}
+					>
+						<Text style={css.media_detail_descText}>
+							{data.description}
+						</Text>
+					</Hyperlink>
+				</View>
 				{data.contact_info ? (
 					<Touchable
 						onPress={() => Linking.openURL('mailto:' + data.contact_info + '?')}
