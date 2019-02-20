@@ -102,7 +102,7 @@ function* resetMessages() {
 function* updateMessages(action) {
 	const { timestamp } = action
 	const { isLoggedIn, profile } = yield select(getUserData)
-	const { messages } = yield select(getMessages)
+	const { messages, lastMessageSeenTimeStamp } = yield select(getMessages)
 
 	if (isLoggedIn) {
 		try {
@@ -123,14 +123,14 @@ function* updateMessages(action) {
 					moment.utc(right.timestamp).diff(moment.utc(left.timestamp)))
 
 				let count = 0
-				// check for how many of the new messages have a timestamp after latestTimeStamp
-				// latestTimeStamp is set when the user last opened the notfications pages
+				// check for how many of the new messages have a timestamp after lastMessageSeenTimeStamp
+				// lastMessageSeenTimeStamp is set when the user last opened the notfications pages
 				let { length } = sortedMessages
 				if (sortedMessages.length > MAX_BADGE_COUNT) {
 					length = MAX_BADGE_COUNT
 				}
 				for (let i = 0; i < length; i++) {
-					if (sortedMessages[i].timestamp > profile.latestTimeStamp) {
+					if (sortedMessages[i].timestamp > lastMessageSeenTimeStamp) {
 						count++
 					}
 				}
@@ -170,7 +170,7 @@ function* updateMessages(action) {
 					length = MAX_BADGE_COUNT
 				}
 				for (let i = 0; i < length; i++) {
-					if (sortedMessages[i].timestamp > profile.latestTimeStamp) {
+					if (sortedMessages[i].timestamp > lastMessageSeenTimeStamp) {
 						count++
 					}
 				}

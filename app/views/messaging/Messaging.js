@@ -32,7 +32,7 @@ export class Messaging extends Component {
 		const { unreadMessages } = this.props.messages
 		this.props.navigation.addListener('willFocus', () => {
 			if (unreadMessages !== 0) {
-				this.props.setLatestTimeStamp(new Date().getTime())
+				this.props.notificationsSeen()
 			}
 		})
 	}
@@ -81,7 +81,7 @@ export class Messaging extends Component {
 
 		// this will clear the notifications badge when the user is on this screen
 		if (this.props.navigation.isFocused() && unreadMessages) {
-			this.props.setLatestTimeStamp(new Date().getTime())
+			this.props.notificationsSeen()
 		}
 
 		const isLoading = (this.props.myMessagesStatus != null)
@@ -143,9 +143,9 @@ const mapDispatchToProps = (dispatch, ownProps) => (
 		updateMessages: (timestamp) => {
 			dispatch({ type: 'UPDATE_MESSAGES', timestamp })
 		},
-		setLatestTimeStamp: (timestamp) => {
-			const profileItems = { latestTimeStamp: timestamp }
-			dispatch({ type: 'MODIFY_LOCAL_PROFILE', profileItems })
+		notificationsSeen: () => {
+			const timestamp = new Date().getTime()
+			dispatch({ type: 'SET_LAST_MESSAGE_SEEN_TIME_STAMP', timestamp })
 			dispatch({ type: 'SET_UNREAD_MESSAGES',  count: 0 })
 		}
 	}

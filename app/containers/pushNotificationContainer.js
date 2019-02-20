@@ -29,7 +29,7 @@ class PushNotificationContainer extends React.Component {
 			// body and title is available for android here
 			this.props.updateMessages(new Date().getTime())
 		})
-		// this runs if app was in backgorund or foreground and the notification was tapped
+		// this runs if app was in background or foreground and the notification was tapped
 		this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen: firebase.NotificationOpen) => {
 			const { notification } = notificationOpen
 			const { routeName, params } = notification.data
