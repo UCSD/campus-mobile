@@ -270,15 +270,9 @@ function* outOfDateAlert() {
 
 // Syncs local profile with remote user profile stored in the cloud
 function* syncUserProfile() {
-	const { isLoggedIn, profile, lastSynced } = yield select(userState)
+	const { isLoggedIn, profile } = yield select(userState)
 
 	if (!isLoggedIn) return
-
-	const nowTime = new Date().getTime()
-	const timeDiff = nowTime - lastSynced
-	const syncTTL = USER_PROFILE_SYNC_TTL
-
-	if (timeDiff < syncTTL) return
 
 	// Update remote profile with local one
 	const newAttributes = []
