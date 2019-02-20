@@ -23,15 +23,17 @@ const checkData = (data) => {
 		}
 		return false
 	})
-
 	return cleanData
 }
 
 export class Messaging extends Component {
 	componentDidMount() {
 		logger.ga('View Loaded: Messaging')
+		const { unreadMessages } = this.props.messages
 		this.props.navigation.addListener('willFocus', () => {
-			this.props.setLatestTimeStamp(new Date().getTime())
+			if (unreadMessages !== 0) {
+				this.props.setLatestTimeStamp(new Date().getTime())
+			}
 		})
 	}
 
@@ -82,9 +84,7 @@ export class Messaging extends Component {
 			this.props.setLatestTimeStamp(new Date().getTime())
 		}
 
-		let isLoading = false
-		if (this.props.myMessagesStatus) isLoading = true
-
+		const isLoading = (this.props.myMessagesStatus != null)
 		if (Array.isArray(filteredData) && filteredData.length > 0) {
 			return (
 				<FlatList

@@ -21,24 +21,25 @@ class PushNotificationContainer extends React.Component {
 		})
 
 		this.messageListener = firebase.messaging().onMessage((message) => {
-			this.props.updateMessages()
+			this.props.updateMessages(new Date().getTime())
 		})
 
 		// this runs when the app is in foreground and notification is received
 		this.notificationListener = firebase.notifications().onNotification((notification) => {
-			// body and title is availble for android here
-			this.props.updateMessages()
+			// body and title is available for android here
+			this.props.updateMessages(new Date().getTime())
 		})
 		// this runs if app was in backgorund or foreground and the notification was tapped
 		this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen: firebase.NotificationOpen) => {
 			const { notification } = notificationOpen
 			const { routeName, params } = notification.data
+			this.props.updateMessages(new Date().getTime())
 			if (routeName) {
 				NavigationService.navigate(routeName, params)
 			} else {
 				NavigationService.navigate('Messaging', params)
 			}
-			// body and title is availble for android here
+			// body and title is available for android here
 		})
 
 		// this only runs if the app was compeltely closed (not in foreground or background) and the notification was tapped
@@ -47,13 +48,14 @@ class PushNotificationContainer extends React.Component {
 			// App was opened by a notification
 			const { notification } = notificationOpen
 			const { routeName, params } = notification.data
+			this.props.updateMessages(new Date().getTime())
 			NavigationService.navigate(routeName, params)
 			if (routeName) {
 				NavigationService.navigate(routeName, params)
 			} else {
 				NavigationService.navigate('Messaging', params)
 			}
-			// body and ttitle is not availble for android here
+			// body and title is not available for android here
 		}
 	}
 
@@ -131,7 +133,7 @@ class PushNotificationContainer extends React.Component {
 
 	render() {
 		// When app launches, update messages for the first time
-		this.props.updateMessages()
+		this.props.updateMessages(new Date().getTime())
 
 		// TODO: render error message if user does not allow location
 		return null
