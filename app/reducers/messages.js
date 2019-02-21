@@ -3,7 +3,6 @@ const initialState = {
 	nextTimestamp: null,
 	unreadMessages: 1,
 	topics: [],
-	lastMessageSeenTimeStamp: null
 }
 
 function messages(state = initialState, action) {
@@ -35,10 +34,6 @@ function messages(state = initialState, action) {
 		}
 		case 'CONFIRM_DEREGISTRATION': {
 			newState.registered = false
-			return newState
-		}
-		case 'SET_LAST_MESSAGE_SEEN_TIME_STAMP': {
-			newState.lastMessageSeenTimeStamp = action.timestamp
 			return newState
 		}
 		default:

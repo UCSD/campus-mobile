@@ -29,9 +29,11 @@ const checkData = (data) => {
 export class Messaging extends Component {
 	componentDidMount() {
 		logger.ga('View Loaded: Messaging')
-		const { unreadMessages } = this.props.messages
 		this.props.navigation.addListener('willFocus', () => {
-			if (unreadMessages !== 0) {
+			const { unreadMessages } = this.props.messages
+			console.log('will focus ' + unreadMessages)
+			if (unreadMessages > 0) {
+				console.log('unreadMessages is: ' + unreadMessages)
 				this.props.notificationsSeen()
 			}
 		})
@@ -75,14 +77,10 @@ export class Messaging extends Component {
 	}
 
 	render() {
-		const { messages, nextTimestamp, unreadMessages } = this.props.messages
+		const { messages, nextTimestamp } = this.props.messages
 		const { updateMessages } = this.props
 		const filteredData = checkData(messages)
 
-		// this will clear the notifications badge when the user is on this screen
-		if (this.props.navigation.isFocused() && unreadMessages) {
-			this.props.notificationsSeen()
-		}
 
 		const isLoading = (this.props.myMessagesStatus != null)
 		if (Array.isArray(filteredData) && filteredData.length > 0) {
@@ -145,7 +143,8 @@ const mapDispatchToProps = (dispatch, ownProps) => (
 		},
 		notificationsSeen: () => {
 			const timestamp = new Date().getTime()
-			dispatch({ type: 'SET_LAST_MESSAGE_SEEN_TIME_STAMP', timestamp })
+			const profileItems = { latestTimeStamp: timestamp }
+			dispatch({ type: 'MODIFY_LOCAL_PROFILE', profileItems })
 			dispatch({ type: 'SET_UNREAD_MESSAGES',  count: 0 })
 		}
 	}
