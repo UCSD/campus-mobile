@@ -111,22 +111,41 @@ export class Messaging extends Component {
 				/>
 			)
 		} else {
-			return (
-				<ScrollView
-					style={css.scroll_default}
-					contentContainerStyle={css.main_full_flex}
-					refreshControl={
-						<RefreshControl
-							refreshing={isLoading}
-							onRefresh={() => updateMessages(new Date().getTime())}
-						/>
-					}
-				>
-					<View style={css.main_full_flex}>
-						<Text style={css.notifications_err}>There was a problem fetching your messages.{'\n\n'}Please try again soon.</Text>
-					</View>
-				</ScrollView>
-			)
+			if (!this.props.myMessagesError) {
+				return (
+					<ScrollView
+						style={css.scroll_default}
+						contentContainerStyle={css.main_full_flex}
+						refreshControl={
+							<RefreshControl
+								refreshing={isLoading}
+								onRefresh={() => updateMessages(new Date().getTime())}
+							/>
+						}
+					>
+						<View style={css.main_full_flex}>
+							<Text style={css.notifications_err} >You aren&apos;t subscribed to any notification topics.{'\n\n'}You can add topics in the User Profile.</Text>
+						</View>
+					</ScrollView>
+				)
+			} else {
+				return (
+					<ScrollView
+						style={css.scroll_default}
+						contentContainerStyle={css.main_full_flex}
+						refreshControl={
+							<RefreshControl
+								refreshing={isLoading}
+								onRefresh={() => updateMessages(new Date().getTime())}
+							/>
+						}
+					>
+						<View style={css.main_full_flex}>
+							<Text style={css.notifications_err}>There was a problem fetching your messages.{'\n\n'}Please try again soon.</Text>
+						</View>
+					</ScrollView>
+				)
+			}
 		}
 	}
 }
