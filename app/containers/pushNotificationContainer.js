@@ -132,9 +132,6 @@ class PushNotificationContainer extends React.Component {
 	}
 
 	render() {
-		// When app launches, update messages for the first time
-		this.props.updateMessages(new Date().getTime())
-
 		// TODO: render error message if user does not allow location
 		return null
 	}
