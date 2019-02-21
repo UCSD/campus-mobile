@@ -31,9 +31,7 @@ export class Messaging extends Component {
 		logger.ga('View Loaded: Messaging')
 		this.props.navigation.addListener('willFocus', () => {
 			const { unreadMessages } = this.props.messages
-			console.log('will focus ' + unreadMessages)
 			if (unreadMessages > 0) {
-				console.log('unreadMessages is: ' + unreadMessages)
 				this.props.notificationsSeen()
 			}
 		})
