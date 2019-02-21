@@ -1,7 +1,10 @@
 {
   "name": "CampusMobile",
-  "version": "6.2.0",
-  "private": true,
+  "version": "6.3.0",
+  "description": "React Native App for Campus",
+  "keywords": ["react native", "mobile", "app", "ios", "android", "campus", "university", "education"],
+  "homepage": "https://github.com/UCSD/campus-mobile",
+  "bugs": "https://github.com/UCSD/campus-mobile/issues",
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest",
