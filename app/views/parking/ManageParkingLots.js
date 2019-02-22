@@ -1,65 +1,45 @@
 import React from 'react'
-import { View, Text, FlatList, Linking, ScrollView } from 'react-native'
+import {
+	View,
+	Text,
+	Platform,
+	Linking,
+	ScrollView,
+	Animated,
+	Easing,
+	TouchableOpacity
+} from 'react-native'
+import SortableList from 'react-native-sortable-list'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { connect } from 'react-redux'
 import COLOR from '../../styles/ColorConstants'
 import Touchable from '../common/Touchable'
 import css from '../../styles/css'
 
-class ManageParkingLots extends React.Component {
-	renderRow(parkingLot) {
-		const { LocationName } = parkingLot.item
-		const { updateSelectedLots, selectedLots } = this.props
 
-		if (selectedLots.includes(LocationName)) {
-			return (
-				<View style={css.mpl_row_view}>
-					<Text style={css.mpl_row_text_selected}>
-						{LocationName}
-					</Text>
-					<Touchable
-						onPress={() => {
-							updateSelectedLots(false, LocationName, selectedLots)
-						}}
-						style={css.mpl_row_add_remove_btn}
-					>
-						{cancelIcon()}
-					</Touchable>
-				</View>
-			)
-		} else {
-			return (
-				<View style={css.mpl_row_view}>
-					<Text style={css.mpl_row_text_unselected}>
-						{LocationName}
-					</Text>
-					<Touchable
-						onPress={() => {
-							updateSelectedLots(true, LocationName, selectedLots)
-						}}
-						style={css.mpl_row_add_remove_btn}
-					>
-						{addIcon()}
-					</Touchable>
-				</View>
-			)
-		}
+class ManageParkingLots extends React.Component {
+	_handleRelease = () => {
+		// TODO
 	}
 
 	render() {
+		const { updateSelectedLots, selectedLots } = this.props
 		return (
 			<ScrollView style={css.scroll_default} contentContainerStyle={css.main_full}>
-				<FlatList
-					style={css.mpl_flat_list_container}
-					scrollEnabled={false}
-					showsVerticalScrollIndicator={false}
-					keyExtractor={parkingLot => parkingLot.LocationId}
+				<SortableList
+					style={css.main_full_flex}
 					data={this.props.parkingData}
-					renderItem={parkingLot => this.renderRow(parkingLot)}
-					ItemSeparatorComponent={renderSeparator}
-					ListFooterComponent={renderSeparator}
-					ListHeaderComponent={renderSeparator}
-					extraData={this.props.selectedLots}
+					renderRow={
+						({ data, active, disabled }) => (
+							<ListItem
+								data={data}
+								active={active}
+								selectedLots={selectedLots}
+								updateSelectedLots={updateSelectedLots}
+							/>
+						)}
+					onChangeOrder={(nextOrder) => { this._order = nextOrder }}
+					onReleaseRow={key => this._handleRelease()}
 				/>
 				<View style={css.mpl_message_view}>
 					<Text style={css.mpl_message_text}>
@@ -85,20 +65,102 @@ class ManageParkingLots extends React.Component {
 		)
 	}
 }
+
+class ListItem extends React.Component {
+	constructor(props) {
+		super(props)
+
+		this._active = new Animated.Value(0)
+
+		this._style = {
+			...Platform.select({
+				ios: {
+					shadowOpacity: this._active.interpolate({
+						inputRange: [0, 1],
+						outputRange: [0, 0.2],
+					}),
+					shadowRadius: this._active.interpolate({
+						inputRange: [0, 1],
+						outputRange: [2, 10],
+					}),
+				},
+
+				android: {
+					marginTop: this._active.interpolate({
+						inputRange: [0, 1],
+						outputRange: [0, 10],
+					}),
+					marginBottom: this._active.interpolate({
+						inputRange: [0, 1],
+						outputRange: [0, 10],
+					}),
+					elevation: this._active.interpolate({
+						inputRange: [0, 1],
+						outputRange: [2, 6],
+					}),
+				},
+			})
+		}
+	}
+
+	componentWillReceiveProps(nextProps) {
+		if (this.props.active !== nextProps.active) {
+			Animated.timing(this._active, {
+				duration: 300,
+				easing: Easing.bounce,
+				toValue: Number(nextProps.active),
+			}).start()
+		}
+	}
+
+	render() {
+		const { data, selectedLots, updateSelectedLots } = this.props
+
+		if (selectedLots.includes(data.LocationName)) {
+			return (
+				<Animated.View style={[css.sslv_listRow, this._style]}>
+					<Icon name="drag-handle" size={20} />
+					<Text style={css.mpl_row_text_selected}>
+						{ data.LocationName }
+					</Text>
+					<TouchableOpacity
+						onPress={() => { updateSelectedLots(false, data.LocationName, selectedLots) }}
+						style={css.mpl_row_add_remove_btn}
+					>
+						{cancelIcon()}
+					</TouchableOpacity>
+				</Animated.View>
+			)
+		} else {
+			return (
+				<Animated.View style={[css.sslv_listRow, this._style]}>
+					<Icon name="drag-handle" size={20} />
+					<Text style={css.mpl_row_text_unselected}>
+						{ data.LocationName }
+					</Text>
+					<TouchableOpacity
+						onPress={() => { updateSelectedLots(true, data.LocationName, selectedLots)}}
+						style={css.mpl_row_add_remove_btn}
+					>
+						{addIcon()}
+					</TouchableOpacity>
+				</Animated.View>
+			)
+		}
+	}
+}
+
 const addIcon = () => (
 	<Icon name="add" size={25} color={COLOR.DGREY} />
 )
 const cancelIcon = () => (
 	<Icon name="cancel" size={25} color={COLOR.DGREY} />
 )
-const renderSeparator = () => (
-	<View style={css.pst_flat_list_separator} />
-)
+
 const mapStateToProps = state => ({
 	parkingData: state.parking.parkingData,
 	selectedLots: state.parking.selectedLots
 })
-
 
 const mapDispatchToProps = dispatch => (
 	{
