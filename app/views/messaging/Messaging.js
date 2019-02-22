@@ -30,7 +30,6 @@ export class Messaging extends Component {
 	componentDidMount() {
 		logger.ga('View Loaded: Messaging')
 		this.props.navigation.addListener('willFocus', () => {
-			console.log('will show up')
 			const { unreadMessages } = this.props.messages
 			if (unreadMessages > 0) {
 				this.props.notificationsSeen()
@@ -81,7 +80,7 @@ export class Messaging extends Component {
 		const filteredData = checkData(messages)
 
 		const isLoading = (this.props.myMessagesStatus != null)
-		if (!isLoading && unreadMessages) {
+		if (!isLoading && unreadMessages && this.props.navigation.isFocused()) {
 			this.props.notificationsSeen()
 		}
 		if (Array.isArray(filteredData) && filteredData.length > 0) {
