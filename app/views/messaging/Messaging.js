@@ -5,7 +5,7 @@ import {
 	FlatList,
 	ScrollView,
 	RefreshControl,
-	ActivityIndicator
+	ActivityIndicator,
 } from 'react-native'
 import { connect } from 'react-redux'
 import moment from 'moment'
@@ -30,6 +30,7 @@ export class Messaging extends Component {
 	componentDidMount() {
 		logger.ga('View Loaded: Messaging')
 		this.props.navigation.addListener('willFocus', () => {
+			console.log('will show up')
 			const { unreadMessages } = this.props.messages
 			if (unreadMessages > 0) {
 				this.props.notificationsSeen()
@@ -75,12 +76,14 @@ export class Messaging extends Component {
 	}
 
 	render() {
-		const { messages, nextTimestamp } = this.props.messages
+		const { messages, nextTimestamp, unreadMessages } = this.props.messages
 		const { updateMessages } = this.props
 		const filteredData = checkData(messages)
 
-
 		const isLoading = (this.props.myMessagesStatus != null)
+		if (!isLoading && unreadMessages) {
+			this.props.notificationsSeen()
+		}
 		if (Array.isArray(filteredData) && filteredData.length > 0) {
 			return (
 				<FlatList
