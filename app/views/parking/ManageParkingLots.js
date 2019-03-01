@@ -18,8 +18,26 @@ import css from '../../styles/css'
 
 
 class ManageParkingLots extends React.Component {
+	componentWillMount() {
+		const parkingLots = this.props.parkingData
+		this.setState({ parkingLots })
+	}
+
+	getOrderedArray = () => {
+		const orderArray = []
+		if (Array.isArray(this._order)) {
+			for (let i = 0; i < this._order.length; ++i) {
+				orderArray.push(this.state.parkingLots[this._order[i]])
+			}
+		}
+		return orderArray
+	}
+
 	_handleRelease = () => {
-		// TODO
+		if (this._order) {
+			const orderedParkingLots = this.getOrderedArray()
+			this.props.reorderParkingLots(orderedParkingLots)
+		}
 	}
 
 	render() {
@@ -169,6 +187,9 @@ const mapDispatchToProps = dispatch => (
 		},
 		renderWarning: (showWarning) => {
 			dispatch({ type: 'SET_WARNING_SIGN', showWarning })
+		},
+		reorderParkingLots: (parkingData) => {
+			dispatch({ type: 'REORDER_PARKING_LOTS', parkingData })
 		}
 	}
 )
