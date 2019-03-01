@@ -6,9 +6,9 @@ import logger from '../util/logger'
 const ScheduleService = {
 	* FetchSchedule(term) {
 		const data = []
-		const UN_API_URL = AppSettings.ACADEMIC_HISTORY_API_URL + '?academic_level=UN&term_code=' + term
-		const GR_API_URL = AppSettings.ACADEMIC_HISTORY_API_URL + '?academic_level=GR&term_code=' + term
-
+		// const UN_API_URL = AppSettings.ACADEMIC_HISTORY_API_URL + '?academic_level=UN&term_code=' + term
+		// const GR_API_URL = AppSettings.ACADEMIC_HISTORY_API_URL + '?academic_level=GR&term_code=' + term
+		const UN_API_URL = AppSettings.TUTORING_CLASSES_URL
 		// Query api for undergrad classes
 		try {
 			const undergrad = JSON.parse(yield authorizedFetch(UN_API_URL))
@@ -19,15 +19,15 @@ const ScheduleService = {
 			logger.trackException(err, false)
 		}
 
-		// Query api for graduate classes
-		try {
-			const grad = JSON.parse(yield authorizedFetch(GR_API_URL))
-			if (grad.data && Array.isArray(grad.data)) {
-				data.push(...grad.data)
-			}
-		} catch (err) {
-			logger.trackException(err, false)
-		}
+		// // Query api for graduate classes
+		// try {
+		// 	const grad = JSON.parse(yield authorizedFetch(GR_API_URL))
+		// 	if (grad.data && Array.isArray(grad.data)) {
+		// 		data.push(...grad.data)
+		// 	}
+		// } catch (err) {
+		// 	logger.trackException(err, false)
+		// }
 
 		return { data }
 	},

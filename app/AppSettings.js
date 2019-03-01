@@ -16,6 +16,8 @@ module.exports = {
 	MESSAGES_TOPICS_URL: 'https://s3-us-west-1.amazonaws.com/ucsd-mobile-dev/mock-apis/messaging/topics.json',
 	PARKING_API_URL: 'https://4pefyt8qv7.execute-api.us-west-2.amazonaws.com/dev/parking/v1.0/status',
 	SURF_API_URL: 'https://0yi5xwy0v7.execute-api.us-west-2.amazonaws.com/dev/v1/surf',
+	TUTOR_SERVICE_API_URL: 'https://s3-us-west-1.amazonaws.com/ucsd-mobile-dev/mock-apis/tutoring/tutors-v2.json',
+	TUTORING_CLASSES_URL: 'https://okx7bcw5rg.execute-api.us-west-2.amazonaws.com/dev/class_list',
 
 	/* PROD */
 	// SHUTTLE
