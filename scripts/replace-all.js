@@ -23,7 +23,7 @@ const APP_SETTINGS_PATH = './app/AppSettings.js',
 
 // Placeholder Values
 const PH = {
-	APP_NAME_PH: 'Campus Mobile',
+	APP_NAME_PH: 'CampusMobile',
 	GOOGLE_ANALYTICS_ID_PH: 'GOOGLE_ANALYTICS_ID_PH',
 	GOOGLE_MAPS_API_KEY_PH: 'GOOGLE_MAPS_API_KEY_PH',
 	FIREBASE_KEY_PH: 'FIREBASE_KEY_PH',

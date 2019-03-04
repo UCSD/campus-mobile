@@ -27,7 +27,7 @@ exports[`renders without crashing 1`] = `
     <View
       style={
         Object {
-          "height": 1250,
+          "height": 1208,
         }
       }
     >
@@ -47,7 +47,7 @@ exports[`renders without crashing 1`] = `
     <View
       style={
         Object {
-          "height": 1250,
+          "height": 1208,
         }
       }
     >
@@ -58,7 +58,7 @@ exports[`renders without crashing 1`] = `
     <View
       style={
         Object {
-          "height": 1250,
+          "height": 1208,
         }
       }
     >
@@ -69,7 +69,7 @@ exports[`renders without crashing 1`] = `
     <View
       style={
         Object {
-          "height": 1250,
+          "height": 1208,
         }
       }
     >

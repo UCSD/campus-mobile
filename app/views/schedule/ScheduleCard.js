@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import {
 	View,
 	Text,
@@ -245,13 +244,6 @@ const DayItem = ({ active, data, onClick, index }) => {
 			</View>
 		</TouchableHighlight>
 	)
-}
-
-ScheduleCard.propTypes = {
-	coursesToShow: PropTypes.arrayOf(PropTypes.object).isRequired,
-	actionButton: PropTypes.element.isRequired,
-	onClickCourse: PropTypes.func.isRequired,
-	activeCourse: PropTypes.number.isRequired
 }
 
 export default ScheduleCard

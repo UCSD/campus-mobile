@@ -1,30 +1,24 @@
 import { Dimensions, StatusBar } from 'react-native'
 import { platformAndroid, deviceIphoneX } from '../util/general'
 
-const WINDOW_WIDTH = Dimensions.get('window').width,
-	WINDOW_HEIGHT = Dimensions.get('window').height,
-	NAVIGATOR_HEIGHT = 42,
-	NAVIGATOR_LOGO_IOS_MARGIN = deviceIphoneX() ? NAVIGATOR_HEIGHT : 26,
-	NAVIGATOR_LOGO_ANDROID_MARGIN = 12,
-	STATUS_BAR_HEIGHT = platformAndroid() ? StatusBar.currentHeight : 0,
-	TAB_BAR_HEIGHT = deviceIphoneX() ? 31 : NAVIGATOR_HEIGHT,
-	MAX_CARD_WIDTH = WINDOW_WIDTH - 12,
-	MAX_CONTENT_HEIGHT = WINDOW_HEIGHT - NAVIGATOR_HEIGHT,
-	MAP_HEIGHT = (WINDOW_HEIGHT) - (NAVIGATOR_HEIGHT + TAB_BAR_HEIGHT + STATUS_BAR_HEIGHT),
-	MAX_APP_WIDTH = 414
+const WINDOW_WIDTH = Dimensions.get('window').width
+const WINDOW_HEIGHT = Dimensions.get('window').height
+const STATUS_BAR_HEIGHT = platformAndroid() ? StatusBar.currentHeight : 0
+const NAVIGATOR_HEIGHT = 42
+const TAB_BAR_HEIGHT = deviceIphoneX() ? 31 : NAVIGATOR_HEIGHT
+const MAX_CARD_WIDTH = WINDOW_WIDTH - 12
+const MAX_CONTENT_HEIGHT = WINDOW_HEIGHT - NAVIGATOR_HEIGHT
+const MAP_HEIGHT = (WINDOW_HEIGHT) - (NAVIGATOR_HEIGHT + TAB_BAR_HEIGHT + STATUS_BAR_HEIGHT)
 
 const LAYOUT = {
 	WINDOW_WIDTH,
 	WINDOW_HEIGHT,
 	NAVIGATOR_HEIGHT,
-	NAVIGATOR_LOGO_IOS_MARGIN,
-	NAVIGATOR_LOGO_ANDROID_MARGIN,
 	STATUS_BAR_HEIGHT,
 	TAB_BAR_HEIGHT,
 	MAX_CARD_WIDTH,
 	MAX_CONTENT_HEIGHT,
 	MAP_HEIGHT,
-	MAX_APP_WIDTH,
 }
 
 module.exports = LAYOUT

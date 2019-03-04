@@ -1,7 +1,7 @@
 module.exports = {
 
 	/* APP CONFIG */
-	APP_NAME: 'Campus Mobile',
+	APP_NAME: 'CampusMobile',
 	GOOGLE_ANALYTICS_ID: 'GOOGLE_ANALYTICS_ID_PH',
 
 	/* ENDPOINTS */
@@ -70,6 +70,4 @@ module.exports = {
 	SSO_REFRESH_RETRY_INCREMENT: 5000, // 5 seconds
 	SSO_REFRESH_RETRY_MULTIPLIER: 3, // Multiplies increment by this amount for next try
 
-	/* UCSD AFFILIATION */
-	UCSD_STUDENT: /(B|G|J|M|U)/,
 }
