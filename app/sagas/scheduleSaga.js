@@ -39,6 +39,8 @@ function* updateSchedule() {
 					yield put({ type: 'GET_SCHEDULE_SUCCESS' })
 				}
 
+				yield put({ type: 'UPDATE_TUTOR_SESSIONS' })
+
 				// check for finals
 				const parsedScheduleData = schedule.getData(scheduleData)
 				const finalsData = schedule.getFinals(parsedScheduleData)
