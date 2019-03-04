@@ -31,6 +31,7 @@ const checkData = (data) => {
 export class Messaging extends Component {
 	componentDidMount() {
 		logger.ga('View Loaded: Messaging')
+		this.props.updateMessages(new Date().getTime())
 		this.props.navigation.addListener('willFocus', () => {
 			const { unreadMessages } = this.props.messages
 			if (unreadMessages > 0) {
