@@ -5,7 +5,7 @@ import {
 	FlatList,
 	ScrollView,
 	RefreshControl,
-	ActivityIndicator
+	ActivityIndicator,
 } from 'react-native'
 import { connect } from 'react-redux'
 import moment from 'moment'
@@ -23,7 +23,6 @@ const checkData = (data) => {
 		}
 		return false
 	})
-
 	return cleanData
 }
 
@@ -31,7 +30,10 @@ export class Messaging extends Component {
 	componentDidMount() {
 		logger.ga('View Loaded: Messaging')
 		this.props.navigation.addListener('willFocus', () => {
-			this.props.setLatestTimeStamp(new Date().getTime())
+			const { unreadMessages } = this.props.messages
+			if (unreadMessages > 0) {
+				this.props.notificationsSeen()
+			}
 		})
 	}
 
@@ -77,14 +79,10 @@ export class Messaging extends Component {
 		const { updateMessages } = this.props
 		const filteredData = checkData(messages)
 
-		// this will clear the notifications badge when the user is on this screen
-		if (this.props.navigation.isFocused() && unreadMessages) {
-			this.props.setLatestTimeStamp(new Date().getTime())
+		const isLoading = (this.props.myMessagesStatus != null)
+		if (!isLoading && unreadMessages && this.props.navigation.isFocused()) {
+			this.props.notificationsSeen()
 		}
-
-		let isLoading = false
-		if (this.props.myMessagesStatus) isLoading = true
-
 		if (Array.isArray(filteredData) && filteredData.length > 0) {
 			return (
 				<FlatList
@@ -143,7 +141,8 @@ const mapDispatchToProps = (dispatch, ownProps) => (
 		updateMessages: (timestamp) => {
 			dispatch({ type: 'UPDATE_MESSAGES', timestamp })
 		},
-		setLatestTimeStamp: (timestamp) => {
+		notificationsSeen: () => {
+			const timestamp = new Date().getTime()
 			const profileItems = { latestTimeStamp: timestamp }
 			dispatch({ type: 'MODIFY_LOCAL_PROFILE', profileItems })
 			dispatch({ type: 'SET_UNREAD_MESSAGES',  count: 0 })
