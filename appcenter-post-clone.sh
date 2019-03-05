@@ -8,4 +8,9 @@ curl "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}.pkg" > "$HO
 sudo installer -store -pkg "$HOME/Downloads/node-installer.pkg" -target "/"
 
 # Insert environment variables
-npm run campus-qa-ci
+if [ "$BUILD_ENV" == "PROD" ];
+then
+    npm run campus-prod-ci
+else
+    npm run campus-qa-ci
+fi
