@@ -2,7 +2,16 @@
   "name": "CampusMobile",
   "version": "6.3.0",
   "description": "React Native App for Campus",
-  "keywords": ["react native", "mobile", "app", "ios", "android", "campus", "university", "education"],
+  "keywords": [
+    "react native",
+    "mobile",
+    "app",
+    "ios",
+    "android",
+    "campus",
+    "university",
+    "education"
+  ],
   "homepage": "https://github.com/UCSD/campus-mobile",
   "bugs": "https://github.com/UCSD/campus-mobile/issues",
   "scripts": {
