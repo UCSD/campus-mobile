@@ -20,6 +20,7 @@ import requestErrorsReducer from './requestErrors'
 import homeReducer from './home'
 import parkingReducer from './parking'
 import messagesReducer from './messages'
+import tutorSessionReducer from './tutorSessions'
 
 module.exports = combineReducers({
 	cards: cardsReducer,
@@ -42,4 +43,5 @@ module.exports = combineReducers({
 	home: homeReducer,
 	parking: parkingReducer,
 	messages: messagesReducer,
+	tutorSession: tutorSessionReducer
 })
