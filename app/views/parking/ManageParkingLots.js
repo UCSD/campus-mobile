@@ -157,7 +157,7 @@ class ListItem extends React.Component {
 						{ data.LocationName }
 					</Text>
 					<TouchableOpacity
-						onPress={() => { updateSelectedLots(true, data.LocationName, selectedLots)}}
+						onPress={() => { updateSelectedLots(true, data.LocationName, selectedLots) }}
 						style={css.mpl_row_add_remove_btn}
 					>
 						{addIcon()}
@@ -188,8 +188,8 @@ const mapDispatchToProps = dispatch => (
 		renderWarning: (showWarning) => {
 			dispatch({ type: 'SET_WARNING_SIGN', showWarning })
 		},
-		reorderParkingLots: (parkingData) => {
-			dispatch({ type: 'REORDER_PARKING_LOTS', parkingData })
+		reorderParkingLots: (newParkingData) => {
+			dispatch({ type: 'REORDER_PARKING_LOTS', newParkingData })
 		}
 	}
 )

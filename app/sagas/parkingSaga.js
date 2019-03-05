@@ -19,8 +19,8 @@ function* syncLocalLotsSelection() {
 }
 
 function* reorderParkingLots(action) {
-	const { parkingData } = action
-	yield put({ type: 'SET_PARKING_DATA', parkingData })
+	const { newParkingData } = action
+	yield put({ type: 'SET_PARKING_DATA', newParkingData })
 }
 
 function* parkingSaga() {
