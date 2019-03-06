@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { View, Text, ActivityIndicator } from 'react-native'
 import { withNavigation } from 'react-navigation'
 import DataListView from './DataListView'
@@ -47,14 +46,6 @@ export const DataListCard = ({ navigation, id, title, data, item, rows, cardSort
 			</View>
 		</Card>
 	)
-}
-
-DataListCard.propTypes = {
-	title: PropTypes.string.isRequired,
-	// data: PropTypes.array,
-	item: PropTypes.string.isRequired,
-	rows: PropTypes.number,
-	// cardSort: PropTypes.func,
 }
 
 DataListCard.defaultProps = {

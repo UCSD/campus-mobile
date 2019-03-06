@@ -1,7 +1,5 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { FlatList, ScrollView } from 'react-native'
-
 import EventItem from '../events/EventItem'
 import NewsItem from '../news/NewsItem'
 import DiningItem from '../dining/DiningItem'
@@ -94,18 +92,5 @@ const DataFlatList = ({ style, data, rows, item, card }) => (
 		}}
 	/>
 )
-
-DataListView.propTypes = {
-	// data: PropTypes.array.isRequired,
-	rows: PropTypes.number,
-	scrollEnabled: PropTypes.bool,
-	item: PropTypes.string.isRequired,
-	card: PropTypes.bool,
-}
-
-DataListView.defaultProps = {
-	scrollEnabled: false,
-	card: false
-}
 
 export default DataListView

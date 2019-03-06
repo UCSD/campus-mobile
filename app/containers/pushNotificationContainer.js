@@ -6,9 +6,10 @@ import {
 import { connect } from 'react-redux'
 import firebase from 'react-native-firebase'
 import Permissions from 'react-native-permissions'
+import NavigationService from '../navigation/NavigationService'
 
 class PushNotificationContainer extends React.Component {
-	componentDidMount() {
+	async componentDidMount() {
 		this.checkPermission()
 
 		this.onTokenRefreshListener = firebase.messaging().onTokenRefresh((fcmToken) => {
@@ -20,12 +21,42 @@ class PushNotificationContainer extends React.Component {
 		})
 
 		this.messageListener = firebase.messaging().onMessage((message) => {
-			this.props.updateMessages()
+			this.props.updateMessages(new Date().getTime())
 		})
 
+		// this runs when the app is in foreground and notification is received
 		this.notificationListener = firebase.notifications().onNotification((notification) => {
-			this.props.updateMessages()
+			// body and title is available for android here
+			this.props.updateMessages(new Date().getTime())
 		})
+		// this runs if app was in background or foreground and the notification was tapped
+		this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen: firebase.NotificationOpen) => {
+			const { notification } = notificationOpen
+			const { routeName, params } = notification.data
+			this.props.updateMessages(new Date().getTime())
+			if (routeName) {
+				NavigationService.navigate(routeName, params)
+			} else {
+				NavigationService.navigate('Messaging', params)
+			}
+			// body and title is available for android here
+		})
+
+		// this only runs if the app was compeltely closed (not in foreground or background) and the notification was tapped
+		const notificationOpen: firebase.NotificationOpen = await firebase.notifications().getInitialNotification()
+		if (notificationOpen) {
+			// App was opened by a notification
+			const { notification } = notificationOpen
+			const { routeName, params } = notification.data
+			this.props.updateMessages(new Date().getTime())
+			NavigationService.navigate(routeName, params)
+			if (routeName) {
+				NavigationService.navigate(routeName, params)
+			} else {
+				NavigationService.navigate('Messaging', params)
+			}
+			// body and title is not available for android here
+		}
 	}
 
 	componentWillUnmount() {
@@ -101,9 +132,6 @@ class PushNotificationContainer extends React.Component {
 	}
 
 	render() {
-		// When app launches, update messages for the first time
-		this.props.updateMessages()
-
 		// TODO: render error message if user does not allow location
 		return null
 	}

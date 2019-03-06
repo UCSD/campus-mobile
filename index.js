@@ -1,4 +1,5 @@
 import { AppRegistry } from 'react-native'
-import CampusMobileSetup from './app/setup'
+import App from './app/App'
+import { name as appName } from './app.json'
 
-AppRegistry.registerComponent('CampusMobile', () => CampusMobileSetup)
+AppRegistry.registerComponent(appName, () => App)

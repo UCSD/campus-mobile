@@ -8,7 +8,6 @@ import {
 } from 'react-native'
 import RNExitApp from 'react-native-exit-app'
 import dateFormat from 'dateformat'
-
 import logger from './logger'
 
 /**
@@ -47,7 +46,7 @@ module.exports = {
 	 * @returns {boolean} True if the device model is iPhone X, false otherwise
 	 */
 	deviceIphoneX() {
-		return Dimensions.get('window').height === 812
+		return (Dimensions.get('window').height === 812 || Dimensions.get('window').height === 896)
 	},
 
 	/**

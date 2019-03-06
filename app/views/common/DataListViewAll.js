@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import DataListView from './DataListView'
 import logger from '../../util/logger'
 import css from '../../styles/css'
@@ -17,14 +16,6 @@ const DataListViewAll = ({ navigation }) => {
 			card={card}
 		/>
 	)
-}
-
-DataListViewAll.propTypes = {
-	navigation: PropTypes.shape({
-		title: PropTypes.string,
-		data: PropTypes.arrayOf(PropTypes.object),
-		item: PropTypes.string
-	}).isRequired
 }
 
 export default DataListViewAll
