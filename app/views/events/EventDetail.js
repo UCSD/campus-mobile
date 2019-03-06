@@ -5,13 +5,13 @@ import {
 	ScrollView,
 	Linking,
 } from 'react-native'
+import Hyperlink from 'react-native-hyperlink'
 import moment from 'moment'
-
 import ShareContent from '../common/ShareContent'
 import Touchable from '../common/Touchable'
 import SafeImage from '../common/SafeImage'
 import logger from '../../util/logger'
-import general from '../../util/general'
+import general, { openURL } from '../../util/general'
 import css from '../../styles/css'
 
 const EventDetail = ({ navigation }) => {
@@ -38,9 +38,16 @@ const EventDetail = ({ navigation }) => {
 				<Text style={css.media_detail_dateText}>
 					{moment(data.eventdate).format('MMM Do') + ', ' + general.militaryToAMPM(data.starttime) + ' - ' + general.militaryToAMPM(data.endtime)}
 				</Text>
-				<Text style={css.media_detail_descText}>
-					{data.description}
-				</Text>
+				<View style={css.media_detail_descContainer}>
+					<Hyperlink
+						onPress={(url, text) => openURL(url)}
+						linkStyle={(css.hyperlink)}
+					>
+						<Text style={css.media_detail_descText}>
+							{data.description}
+						</Text>
+					</Hyperlink>
+				</View>
 				{data.contact_info ? (
 					<Touchable
 						onPress={() => Linking.openURL('mailto:' + data.contact_info + '?')}
