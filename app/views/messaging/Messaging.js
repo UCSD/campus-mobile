@@ -110,8 +110,8 @@ export class Messaging extends Component {
 				myMessagesStatusText = 'There was a problem fetching your messages.\n\n' +
 									   'Please try again soon.'
 			} else if (messages && messages.length === 0) {
-				myMessagesStatusText = 'You have no notifications available.\n\n' +
-									   'Subscribe to notification topics in User Profile.'
+				myMessagesStatusText = 'You have no notifications.\nYou may be opted out of all topics.\n\n' +
+									   'Notifications to specific topics can be turned on in User Profile.'
 			}
 
 			return (
@@ -126,7 +126,7 @@ export class Messaging extends Component {
 					}
 				>
 					<View>
-						<Text style={css.notifications_err}>
+						<Text style={css.notifications_status}>
 							{myMessagesStatusText}
 						</Text>
 					</View>
