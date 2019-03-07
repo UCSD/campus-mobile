@@ -37,13 +37,6 @@ export class Messaging extends Component {
 		})
 	}
 
-	renderSeparator = ({ leadingItem }) => (
-		<View
-			// style={{ height: 1, width: '100%', backgroundColor: '#D2D2D2' }}
-			style={css.notifications_section_list_separator}
-		/>
-	)
-
 	renderItem = ({ item }) => {
 		const { message, timestamp } = item
 		const { message: messageText, title } = message
@@ -97,7 +90,6 @@ export class Messaging extends Component {
 					refreshing={isLoading}
 					renderItem={this.renderItem}
 					keyExtractor={(item, index) => item.id}
-					ItemSeparatorComponent={this.renderSeparator}
 					onEndReachedThreshold={0.5}
 					ListFooterComponent={(isLoading && nextTimestamp) ? <ActivityIndicator size="large" animating /> : null}
 					onEndReached={(info) => {
@@ -111,41 +103,35 @@ export class Messaging extends Component {
 				/>
 			)
 		} else {
-			if (!this.props.myMessagesError) {
-				return (
-					<ScrollView
-						style={css.scroll_default}
-						contentContainerStyle={css.main_full_flex}
-						refreshControl={
-							<RefreshControl
-								refreshing={isLoading}
-								onRefresh={() => updateMessages(new Date().getTime())}
-							/>
-						}
-					>
-						<View style={css.main_full_flex}>
-							<Text style={css.notifications_err} >You aren&apos;t subscribed to any notification topics.{'\n\n'}You can add topics in the User Profile.</Text>
-						</View>
-					</ScrollView>
-				)
-			} else {
-				return (
-					<ScrollView
-						style={css.scroll_default}
-						contentContainerStyle={css.main_full_flex}
-						refreshControl={
-							<RefreshControl
-								refreshing={isLoading}
-								onRefresh={() => updateMessages(new Date().getTime())}
-							/>
-						}
-					>
-						<View style={css.main_full_flex}>
-							<Text style={css.notifications_err}>There was a problem fetching your messages.{'\n\n'}Please try again soon.</Text>
-						</View>
-					</ScrollView>
-				)
+			let myMessagesStatusText = ''
+			if (isLoading) {
+				myMessagesStatusText = 'Loading your notifications, please wait.'
+			} else if (this.props.myMessagesError) {
+				myMessagesStatusText = 'There was a problem fetching your messages.\n\n' +
+									   'Please try again soon.'
+			} else if (messages && messages.length === 0) {
+				myMessagesStatusText = 'You have no notifications available.\n\n' +
+									   'Subscribe to notification topics in User Profile.'
 			}
+
+			return (
+				<ScrollView
+					style={css.scroll_default}
+					contentContainerStyle={css.main_full_flex}
+					refreshControl={
+						<RefreshControl
+							refreshing={isLoading}
+							onRefresh={() => updateMessages(new Date().getTime())}
+						/>
+					}
+				>
+					<View>
+						<Text style={css.notifications_err}>
+							{myMessagesStatusText}
+						</Text>
+					</View>
+				</ScrollView>
+			)
 		}
 	}
 }
