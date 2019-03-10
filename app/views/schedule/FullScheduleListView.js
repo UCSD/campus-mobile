@@ -5,11 +5,14 @@ import { connect } from 'react-redux'
 import logger from '../../util/logger'
 import schedule from '../../util/schedule'
 import css from '../../styles/css'
+import SISchedule from './SISchedule'
 
 class FullSchedule extends React.Component {
 	constructor(props) {
 		super()
-		this.state = { scheduleSections: this.getScheduleArray(props.fullScheduleData) }
+		this.state = {
+			scheduleSections: this.getScheduleArray(props.fullScheduleData),
+		}
 	}
 
 	componentDidMount() {
@@ -30,6 +33,17 @@ class FullSchedule extends React.Component {
 		return scheduleArray
 	}
 
+	getMatchingSISessions = (classObject) => {
+		const { siSessions } = this.props
+		let session = null
+		siSessions.forEach((siSession) => {
+			if (siSession.course === (classObject.subject_code + ' ' + classObject.course_code)) {
+				session = siSession
+			}
+		})
+		return session
+	}
+
 	keyExtractor = (item, index) => (item.course_code + item.section)
 
 	renderSectionHeader = ({ section: { day } }) => {
@@ -46,7 +60,8 @@ class FullSchedule extends React.Component {
 	renderItem = ({ item, index, section }) => {
 		// Only show classes without a special meeting code (i.e. 'FI', 'PB', etc)
 		if (!item.special_mtg_code) {
-			return (<IndividualClass data={item} />)
+			const siSession = this.getMatchingSISessions(item)
+			return (<IndividualClass data={item} props={this.props} siSession={siSession} />)
 		} else {
 			return null
 		}
@@ -67,7 +82,7 @@ class FullSchedule extends React.Component {
 	}
 }
 
-const IndividualClass = ({ data }) => {
+const IndividualClass = ({ data, props, siSession }) => {
 	let classTime,
 		classLocation,
 		classEval
@@ -102,7 +117,6 @@ const IndividualClass = ({ data }) => {
 			classEval = ''
 		}
 	}
-
 	return (
 		<View style={css.fslv_row}>
 			<Text style={css.fslv_course_code}>
@@ -125,12 +139,16 @@ const IndividualClass = ({ data }) => {
 				{classLocation}
 				{classEval}
 			</Text>
+			<SISchedule siSession={siSession} />
 		</View>
 	)
 }
 
 function mapStateToProps(state) {
-	return { fullScheduleData: state.schedule.data }
+	return {
+		fullScheduleData: state.schedule.data,
+		siSessions: state.supplementalInstruction.sessions
+	}
 }
 
 const FullScheduleListView = connect(mapStateToProps)(FullSchedule)
