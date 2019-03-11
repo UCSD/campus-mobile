@@ -138,6 +138,7 @@ const IndividualClass = ({ data, props, siSession }) => {
 				{data.meeting_type} {classTime}
 				{classLocation}
 				{classEval}
+				{'\n'}
 			</Text>
 			<SISchedule siSession={siSession} />
 		</View>

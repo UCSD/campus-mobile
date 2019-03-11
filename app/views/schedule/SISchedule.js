@@ -23,7 +23,7 @@ class SISchedule extends React.Component {
 						this.setState({ selected })
 					}}
 				>
-					<View style={{ alignItems: 'center', flexDirection: 'row' }}>
+					<View style={css.fslv_si_text_container}>
 						<Text style={css.fslv_si_session_text}>
 							Supplemental Instruction
 						</Text>
@@ -63,8 +63,8 @@ class SISchedule extends React.Component {
 		const { selected } = this.state
 		if (selected) {
 			return (
-				<View style={{ alignItems: 'center', flexDirection: 'row' }}>
-					<Text style={{ fontWeight: 'bold' }}>
+				<View style={css.fslv_si_text_container}>
+					<Text style={css.fslv_si_leader_text}>
 						{'Leader: '}
 					</Text>
 					<Text>
@@ -84,7 +84,7 @@ class SISchedule extends React.Component {
 			siSession.days.forEach((day) => {
 				const fullString = siSchedule.dayOfWeekInterpreter(day)
 				const scheduleObj = (
-					<View style={{ alignItems: 'center', flexDirection: 'row' }}>
+					<View style={css.fslv_si_text_container}>
 						<Text>
 							{fullString} {siSession.time}, {siSession.building}, {siSession.room}
 						</Text>
