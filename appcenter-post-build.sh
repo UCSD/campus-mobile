@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 echo "#### appcenter-post-build START ####"
 
 # Install bugsnag-sourcemaps
@@ -13,8 +12,11 @@ bugsnag-sourcemaps upload \
     --minified-url main.jsbundle \
     --minified-file ios-release.bundle \
     --upload-sources
+    
+echo '## APPCENTER SOURCE:'
+find $APPCENTER_SOURCE_DIRECTORY
 
-ls -la $APPCENTER_SOURCE_DIRECTORY
-ls -la $APPCENTER_OUTPUT_DIRECTORY
+echo '## APPCENTER OUTPUT:'
+find $APPCENTER_OUTPUT_DIRECTORY
 
 echo "#### appcenter-post-build END ####"
