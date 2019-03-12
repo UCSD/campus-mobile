@@ -4,7 +4,6 @@ import {
 	Text,
 	Platform,
 	Linking,
-	ScrollView,
 	Animated,
 	Easing,
 	TouchableOpacity
@@ -43,9 +42,9 @@ class ManageParkingLots extends React.Component {
 	render() {
 		const { updateSelectedLots, selectedLots } = this.props
 		return (
-			<ScrollView style={css.scroll_default} contentContainerStyle={css.main_full}>
+			<View style={css.main_full_flex}>
 				<SortableList
-					style={css.main_full_flex}
+					style={css.flex}
 					data={this.props.parkingData}
 					renderRow={
 						({ data, active, disabled }) => (
@@ -61,14 +60,9 @@ class ManageParkingLots extends React.Component {
 				/>
 				<View style={css.mpl_message_view}>
 					<Text style={css.mpl_message_text}>
-						Where are the other lots?{'\n'}
-						{'\n'}
-						We are continuously adding parking{'\n'}
-						lots and structures to the app!{'\n'}
-						{'\n'}
-						If you would like to request a specific{'\n'}
-						location please mesage us at{'\n'}
-						parking@ucsd.edu
+						Where are the other lots?{'\n\n'}
+						We are continuously adding parking lots and structures to the app!{'\n\n'}
+						If you would like to request a specific location please mesage us at parking@ucsd.edu
 					</Text>
 
 					<Touchable
@@ -79,7 +73,7 @@ class ManageParkingLots extends React.Component {
 						<Text style={css.button_primary_text}>Email Us</Text>
 					</Touchable>
 				</View>
-			</ScrollView>
+			</View>
 		)
 	}
 }

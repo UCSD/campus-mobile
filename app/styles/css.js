@@ -562,7 +562,7 @@ const css = StyleSheet.create({
 	mpl_row_text_unselected: { flex: 1, fontSize: 20, justifyContent: 'flex-start', color: COLOR.VDGREY2 },
 	mpl_row_text_selected: { flex: 1, fontSize: 20, justifyContent: 'flex-start', color: COLOR.PRIMARY },
 	mpl_row_add_remove_btn: {  },
-	mpl_message_view: { justifyContent: 'center', alignItems: 'center', marginVertical: 30 },
+	mpl_message_view: { position: 'absolute', bottom: 0, zIndex: -1, width: LAYOUT.WINDOW_WIDTH, padding: 30 },
 	mpl_message_text: { fontSize: 19, textAlign: 'center' },
 
 	/**
