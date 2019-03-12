@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+echo "#### appcenter-post-build START ####"
+
 # Install bugsnag-sourcemaps
 npm install --global bugsnag-sourcemaps
 
@@ -11,3 +13,5 @@ bugsnag-sourcemaps upload \
     --minified-url main.jsbundle \
     --minified-file ios-release.bundle \
     --upload-sources
+
+echo "#### appcenter-post-build END ####"
