@@ -57,12 +57,15 @@ class ScrollCard extends React.Component {
 					data={this.props.scrollData}
 					enableEmptySections={true}
 					keyExtractor={(listItem, index) => {
-						if (listItem.id) return listItem.id.toString() + index
-						if (listItem.LocationId) return listItem.LocationId.toString() + index
-						else {
-							const error = new Error('Invalid ScrollCard list item')
-							trackException(error, listItem)
-							return index
+						if (listItem.id) {
+							// Return unique saved shuttle stop id
+							return listItem.id.toString()
+						} else if (listItem.LocationId) {
+							// Return unique saved parking lot LocationId
+							return listItem.LocationId
+						} else {
+							// Default return
+							return index.toString()
 						}
 					}}
 					renderItem={this.props.renderItem}

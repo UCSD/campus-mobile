@@ -1,11 +1,18 @@
 import React from 'react'
-import { View } from 'react-native'
+import { Image } from 'react-native'
 import {
-	StackNavigator,
-	TabNavigator,
+	createStackNavigator,
+	createBottomTabNavigator,
+	createMaterialTopTabNavigator,
+	createAppContainer
 } from 'react-navigation'
 import { MenuProvider } from 'react-native-popup-menu'
 import { connect } from 'react-redux'
+import { platformAndroid } from '../util/general'
+import css from '../styles/css'
+import COLOR from '../styles/ColorConstants'
+import TabIcons from './TabIcons'
+import NavigationService from './NavigationService'
 
 // VIEWS
 import Home from '../views/home/Home'
@@ -34,127 +41,119 @@ import ManageParkingLots from '../views/parking/ManageParkingLots'
 import Notifications from '../views/preferences/notifications/Notifications'
 import CardPreferences from '../views/preferences/card/CardPreferences'
 
-// TABS
-import TabIcons from './TabIcons'
+const campusLogoImage = require('../assets/images/UCSanDiegoLogo-nav.png')
 
-// ROUTER UTIL
-import withNavigationPreventDuplicate from './withNavigationPreventDuplicate'
+const TabNavScreens = {
+	Home: { screen: Home },
+	Map: { screen: Map },
+	Messaging: { screen: Messaging },
+	Preferences: { screen: Preferences }
+}
 
-// MISC
-import COLOR from '../styles/ColorConstants'
-import css from '../styles/css'
-import general from '../util/general'
-
-const TabNav = TabNavigator(
-	{
-		Home: { screen: Home },
-		Map: { screen: Map },
-		Messaging: { screen: Messaging },
-		Preferences: { screen: Preferences }
+const TabNavSetup = {
+	tabBarOptions: {
+		showLabel: false,
+		showIcon: true,
+		pressColor: COLOR.MGREY,
+		indicatorStyle: { backgroundColor: platformAndroid() ? COLOR.PRIMARY : COLOR.TRANSPARENT },
+		style: css.tabBar,
 	},
-	{
-		tabBarOptions: {
-			showLabel: false,
-			showIcon: true,
-
-			pressColor: COLOR.MGREY,
-			indicatorStyle: { backgroundColor: COLOR.SECONDARY },
-			style: general.platformIOS() ? css.tabBarIOS : css.tabBarAndroid,
-			iconStyle: {
-				width: 26,
-				height: 26
-			}
+	defaultNavigationOptions: ({ navigation }) => ({
+		tabBarIcon: ({ focused }) => {
+			const { routeName } = navigation.state
+			return <TabIcons title={routeName} focused={focused} />
 		},
-		navigationOptions: ({ navigation }) => ({
-			tabBarIcon: ({ focused }) => {
-				const { routeName } = navigation.state
-				return <TabIcons title={routeName} focused={focused} />
-			},
-			swipeEnabled: false
-		})
+		swipeEnabled: false
+	})
+}
+
+let TabNav
+if (platformAndroid()) {
+	TabNav = createMaterialTopTabNavigator(TabNavScreens, TabNavSetup)
+} else {
+	TabNav = createBottomTabNavigator(TabNavScreens, TabNavSetup)
+}
+
+TabNav.navigationOptions = ({ navigation }) => {
+	const { routeName } = navigation.state.routes[navigation.state.index]
+	let headerTitle = ( routeName === 'Home') ? <Image source={campusLogoImage} style={css.navCampusLogoTitle} /> : routeName
+	switch (routeName) {
+		case 'Messaging':
+			headerTitle = 'Notifications'
+			break
+		case 'Preferences':
+			headerTitle = 'User Profile'
 	}
-)
+	return { headerTitle }
+}
 
-const DummyView = () => (<View />) /* Workaround for misaligned title */
-
-const MainStack = StackNavigator(
+let MainStack = createStackNavigator(
 	{
 		MainTabs: { screen: TabNav },
 		SurfReport: {
 			screen: SurfReport,
 			navigationOptions: {
-				title: 'Surf Report',
-				headerRight: (<DummyView />)
+				title: 'Surf Report'
 			}
 		},
 		NewsDetail: {
 			screen: NewsDetail,
 			navigationOptions: {
 				title: 'News',
-				headerRight: (<DummyView />)
 			}
 		},
 		EventDetail: {
 			screen: EventDetail,
 			navigationOptions: {
 				title: 'Events',
-				headerRight: (<DummyView />)
 			}
 		},
 		DiningDetail: {
 			screen: DiningDetail,
 			navigationOptions: {
 				title: 'Dining',
-				headerRight: (<DummyView />)
 			}
 		},
 		DiningNutrition: {
 			screen: DiningNutrition,
 			navigationOptions: {
 				title: 'Nutrition',
-				headerRight: (<DummyView />)
 			}
 		},
 		ShuttleStop: {
 			screen: ShuttleStop,
 			navigationOptions: {
 				title: 'Shuttle',
-				headerRight: (<DummyView />)
 			}
 		},
 		ShuttleStopsListView: {
 			screen: ShuttleStopsListView,
 			navigationOptions: {
 				title: 'Choose Stop',
-				headerRight: (<DummyView />)
 			}
 		},
 		ShuttleSavedListView: {
 			screen: ShuttleSavedListView,
 			navigationOptions: {
 				title: 'Manage Stops',
-				headerRight: (<DummyView />)
 			}
 		},
 		ShuttleRoutesListView: {
 			screen: ShuttleRoutesListView,
 			navigationOptions: {
 				title: 'Choose Route',
-				headerRight: (<DummyView />)
 			}
 		},
 		ParkingSpotType: {
 			screen: ParkingSpotType,
 			navigationOptions: {
 				title: 'Spot Types',
-				headerRight: (<DummyView />)
 			}
 		},
 		ManageParkingLots: {
 			screen: ManageParkingLots,
 			navigationOptions: {
 				title: 'Manage Lots',
-				headerRight: (<DummyView />)
 			}
 		},
 		SpecialEventsView: { screen: SpecialEventsView },
@@ -165,7 +164,6 @@ const MainStack = StackNavigator(
 				const { title } = params
 				return {
 					title,
-					headerRight: (<DummyView />)
 				}
 			}
 		},
@@ -176,7 +174,6 @@ const MainStack = StackNavigator(
 				const { title } = params
 				return {
 					title,
-					headerRight: (<DummyView />)
 				}
 			}
 		},
@@ -184,7 +181,6 @@ const MainStack = StackNavigator(
 			screen: FullSchedule,
 			navigationOptions: {
 				title: 'Classes',
-				headerRight: (<DummyView />)
 			}
 		},
 		LoginScreen: {
@@ -194,22 +190,19 @@ const MainStack = StackNavigator(
 		Feedback: {
 			screen: Feedback,
 			navigationOptions: {
-				title: 'Feedback',
-				headerRight: (<DummyView />)
+				title: 'Feedback'
 			}
 		},
 		Notifications: {
 			screen: Notifications,
 			navigationOptions: {
 				title: 'Notifications',
-				headerRight: (<DummyView />)
 			}
 		},
 		CardPreferences: {
 			screen: CardPreferences,
 			navigationOptions: {
 				title: 'Cards',
-				headerRight: (<DummyView />)
 			}
 		},
 		DataListViewAll: {
@@ -217,24 +210,23 @@ const MainStack = StackNavigator(
 			navigationOptions: ({ navigation }) => {
 				const { params } = navigation.state
 				const { title } = params
-				return {
-					title,
-					headerRight: (<DummyView />)
-				}
+				return { title }
 			}
 		}
 	},
 	{
 		initialRouteName: 'MainTabs',
-		navigationOptions: {
+		defaultNavigationOptions: {
 			headerStyle: css.nav,
 			headerTitleStyle: css.navTitle,
-			headerTintColor: COLOR.WHITE
-		}
+			headerTintColor: COLOR.WHITE,
+		},
+		headerLayoutPreset: 'center',
+		cardStyle: { backgroundColor: COLOR.BG_GRAY }
 	}
 )
 
-const OnboardingStack = StackNavigator(
+let OnboardingStack = createStackNavigator(
 	{
 		OnboardingIntro: {
 			screen: OnboardingIntro,
@@ -247,24 +239,27 @@ const OnboardingStack = StackNavigator(
 	},
 	{
 		initialRouteName: 'OnboardingIntro',
-		headerMode: 'none'
+		headerMode: 'none',
+		cardStyle: { backgroundColor: COLOR.BG_GRAY }
+	},
+)
+
+MainStack = createAppContainer(MainStack)
+OnboardingStack = createAppContainer(OnboardingStack)
+
+const Router = ({ onBoardingViewed }) => {
+	if (onBoardingViewed) {
+		return (
+			<MenuProvider>
+				<MainStack ref={navigatorRef => NavigationService.setTopLevelNavigator(navigatorRef)} />
+			</MenuProvider>
+		)
+	} else {
+		return (
+			<OnboardingStack ref={navigatorRef => NavigationService.setTopLevelNavigator(navigatorRef)} />
+		)
 	}
-)
-
-MainStack.router.getStateForAction = withNavigationPreventDuplicate(MainStack.router.getStateForAction)
-OnboardingStack.router.getStateForAction = withNavigationPreventDuplicate(OnboardingStack.router.getStateForAction)
-
-const Router = ({ onBoardingViewed }) => (
-	<MenuProvider>
-		{
-			(onBoardingViewed) ? (
-				<MainStack />
-			) : (
-				<OnboardingStack />
-			)
-		}
-	</MenuProvider>
-)
+}
 
 const mapStateToProps = (state, props) => (
 	{ onBoardingViewed: state.routes.onBoardingViewed }

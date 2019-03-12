@@ -103,7 +103,6 @@ function* updateMessages(action) {
 	const { timestamp } = action
 	const { isLoggedIn, profile } = yield select(getUserData)
 	const { messages } = yield select(getMessages)
-
 	if (isLoggedIn) {
 		try {
 			yield put({ type: 'GET_MESSAGES_REQUEST' })
