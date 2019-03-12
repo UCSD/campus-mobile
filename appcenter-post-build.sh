@@ -14,4 +14,7 @@ bugsnag-sourcemaps upload \
     --minified-file ios-release.bundle \
     --upload-sources
 
+ls -la $APPCENTER_SOURCE_DIRECTORY
+ls -la $APPCENTER_OUTPUT_DIRECTORY
+
 echo "#### appcenter-post-build END ####"
