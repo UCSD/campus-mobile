@@ -254,6 +254,7 @@ const css = StyleSheet.create({
 	fslv_si_session_text: { color: COLOR.PRIMARY, fontSize: 16 },
 	fslv_si_right_arrow_icon: { color: COLOR.PRIMARY, paddingTop: 3 },
 	fslv_si_down_arrow_icon: { color: COLOR.PRIMARY },
+	fslv_flat_list_separator: { height: 1, backgroundColor: COLOR.MGREY },
 
 	/**
 	 *  06 - Shuttle

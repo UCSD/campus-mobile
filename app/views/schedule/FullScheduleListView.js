@@ -77,10 +77,15 @@ class FullSchedule extends React.Component {
 				keyExtractor={this.keyExtractor}
 				stickySectionHeadersEnabled={true}
 				enableEmptySections={true}
+				ItemSeparatorComponent={renderSeparator}
 			/>
 		)
 	}
 }
+
+const renderSeparator = () => (
+	<View style={css.fslv_flat_list_separator} />
+)
 
 const IndividualClass = ({ data, props, siSession }) => {
 	let classTime,
