@@ -9,10 +9,10 @@ bugsnag-sourcemaps upload \
     --api-key $BUGSNAG_KEY \
     --code-bundle-id $APPCENTER_BUILD_ID \
     --source-map index.ios.map \
-    --minified-url main.jsbundle \
+    --minified-url dummy-sourcemap-main.jsbundle \
     --minified-file ios-release.bundle \
     --upload-sources
-    
+
 echo '## APPCENTER SOURCE:'
 find $APPCENTER_SOURCE_DIRECTORY
 
