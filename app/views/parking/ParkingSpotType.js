@@ -1,10 +1,5 @@
 import React from 'react'
-import {
-	View,
-	Text,
-	FlatList,
-} from 'react-native'
-import ElevatedView from 'react-native-elevated-view'
+import { View, Text, FlatList } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { connect } from 'react-redux'
 import COLOR from '../../styles/ColorConstants'
@@ -124,7 +119,7 @@ const displayWarning = () =>  (
 function getSelectedRow({ parkingObj }) {
 	const { type, textColor, backgroundColor, shortName } = parkingObj.item
 	return (
-		<ElevatedView style={css.pst_elevated_row_view} elevation={5}>
+		<View style={css.pst_elevated_row_view}>
 			<View style={[css.pst_circle, { backgroundColor }]}>
 				<Text
 					style={[css.pst_character, { color: textColor }]}
@@ -139,7 +134,7 @@ function getSelectedRow({ parkingObj }) {
 				{type}
 			</Text>
 			{checkedIcon()}
-		</ElevatedView>
+		</View>
 	)
 }
 // returns a view containing an unslected row

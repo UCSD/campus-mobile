@@ -1,0 +1,51 @@
+{
+  "name": "react-native-google-analytics-bridge",
+  "version": "5.6.2",
+  "summary": "React Native bridge for using native Google Analytics libraries on iOS and Android",
+  "authors": "Idéhub AS",
+  "homepage": "https://github.com/idehub/react-native-google-analytics-bridge#readme",
+  "license": "MIT",
+  "platforms": {
+    "ios": "7.0"
+  },
+  "source": {
+    "git": "https://github.com/idehub/react-native-google-analytics-bridge",
+    "tag": "5.6.2"
+  },
+  "default_subspecs": "Core",
+  "subspecs": [
+    {
+      "name": "Core",
+      "dependencies": {
+        "React": [
+
+        ]
+      },
+      "frameworks": [
+        "CoreData",
+        "SystemConfiguration"
+      ],
+      "libraries": [
+        "z",
+        "sqlite3.0",
+        "GoogleAnalyticsServices"
+      ],
+      "vendored_libraries": "ios/RCTGoogleAnalyticsBridge/google-analytics-lib/libGoogleAnalyticsServices.a",
+      "source_files": [
+        "ios/RCTGoogleAnalyticsBridge/google-analytics-lib/*.{h}",
+        "ios/RCTGoogleAnalyticsBridge/RCTGoogleAnalyticsBridge/*.{h,m}"
+      ]
+    },
+    {
+      "name": "adSupport",
+      "dependencies": {
+        "react-native-google-analytics-bridge/Core": [
+
+        ]
+      },
+      "frameworks": "AdSupport",
+      "libraries": "AdIdAccess",
+      "vendored_libraries": "ios/RCTGoogleAnalyticsBridge/google-analytics-lib/libAdIdAccess.a"
+    }
+  ]
+}

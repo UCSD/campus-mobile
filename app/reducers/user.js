@@ -6,6 +6,7 @@ const initialState = {
 		pid: null,
 		ucsdaffiliation: null,
 		subscribedTopics: ['emergency', 'all'],
+		latestTimeStamp: null
 	},
 	syncedProfile: {},
 	invalidSavedCredentials: false,

@@ -2,7 +2,7 @@ const initialState = {
 	messages: [],
 	nextTimestamp: null,
 	unreadMessages: 1,
-	topics: []
+	topics: [],
 }
 
 function messages(state = initialState, action) {

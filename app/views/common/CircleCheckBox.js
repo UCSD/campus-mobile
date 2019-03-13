@@ -1,25 +1,9 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { StyleSheet, View, Text, TouchableOpacity, ViewPropTypes } from 'react-native'
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native'
 import css from '../../styles/css'
 import COLOR from '../../styles/ColorConstants'
 
 class CircleCheckBox extends Component {
-	static propTypes = {
-		checked: PropTypes.bool,
-		label: PropTypes.string,
-		outerSize: PropTypes.number,
-		filterSize: PropTypes.number,
-		innerSize: PropTypes.number,
-		outerColor: PropTypes.string,
-		filterColor: PropTypes.string,
-		innerColor: PropTypes.string,
-		onToggle: PropTypes.func.isRequired,
-		labelPosition: PropTypes.oneOf(['right', 'left']),
-		styleCheckboxContainer: ViewPropTypes.style,
-		styleLabel: Text.propTypes.style,
-	}
-
 	static defaultProps = {
 		checked: false,
 		outerSize: 18,
@@ -32,7 +16,7 @@ class CircleCheckBox extends Component {
 		labelPosition: 'right',
 		styleCheckboxContainer: '',
 		styleLabel: {}
-	};
+	}
 
 	constructor(props) {
 		super(props)
