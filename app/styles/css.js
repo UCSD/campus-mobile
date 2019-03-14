@@ -162,7 +162,7 @@ const css = StyleSheet.create({
 	sev_backButtonImage: { color: COLOR.WHITE, marginRight: 7 },
 	// SpecialEventsListView
 	selv_mainContainer: { flexGrow: 1 },
-	selv_rowContainer: { flexGrow: 1, flexDirection: 'row' },
+	selv_rowContainer: { flexGrow: 1, flexShrink: 1, flexDirection: 'row' },
 	selv_full: { flexGrow: 1, width: LAYOUT.WINDOW_WIDTH, height: (LAYOUT.WINDOW_HEIGHT - LAYOUT.NAVIGATOR_HEIGHT - LAYOUT.TAB_BAR_HEIGHT) },
 	selv_card: { width: LAYOUT.MAX_CARD_WIDTH },
 	selv_noSessions: { flexGrow: 1, fontSize: 16, textAlign: 'center', padding: 20, lineHeight: 22 },

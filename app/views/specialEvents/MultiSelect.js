@@ -1,6 +1,12 @@
 import React, { Component } from 'react'
+// import {
+// 	ListView,
+// 	ScrollView,
+// 	View,
+// 	Text,
+// } from 'react-native'
 import {
-	ListView,
+	FlatList,
 	ScrollView,
 	View,
 	Text,
@@ -42,22 +48,21 @@ class MultiSelect extends Component {
 
 	render() {
 		const { items, themes, selected } = this.props
-		const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
-		const dataSource = ds.cloneWithRows(items)
-
 		return (
 			<View style={css.main_full_flex}>
 				<ScrollView style={css.scroll_default} contentContainerStyle={css.specialevents_filter}>
-					<ListView
-						dataSource={dataSource}
-						renderRow={rowData => (
+					<FlatList
+						data={items}
+						keyExtractor={item => item}
+						renderItem={item => (
 							<MultiSelectItem
-								data={rowData}
-								selected={selected.includes(rowData)}
+								data={item.item}
+								selected={selected.includes(item.item)}
 								onSelect={this.onSelect}
-								color={(themes && themes[rowData] !== '') ? (themes[rowData]) : (COLOR.DGREY)}
+								color={(themes && themes[item] !== '') ? (themes[item]) : (COLOR.DGREY)}
 							/>
 						)}
+						extraData={selected}
 					/>
 				</ScrollView>
 
