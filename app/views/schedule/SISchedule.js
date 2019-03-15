@@ -15,27 +15,31 @@ class SISchedule extends React.Component {
 	renderSIsection() {
 		const { siSession } = this.props
 		let { selected } = this.state
-		return (
-			<View>
-				<TouchableWithoutFeedback
-					onPress={() => {
-						selected = !selected
-						this.setState({ selected })
-					}}
-				>
-					<View style={css.fslv_si_text_container}>
-						<Text style={css.fslv_si_session_text}>
-							Supplemental Instruction
-						</Text>
-						{this.renderArrowIcon(selected)}
-					</View>
-				</TouchableWithoutFeedback>
+		if (siSession) {
+			return (
 				<View>
-					{this.renderSILeaderText(selected, siSession)}
-					{this.renderSIScheduleText(selected, siSession)}
+					<TouchableWithoutFeedback
+						onPress={() => {
+							selected = !selected
+							this.setState({ selected })
+						}}
+					>
+						<View style={css.fslv_si_text_container}>
+							<Text style={css.fslv_si_session_text}>
+								Supplemental Instruction
+							</Text>
+							{this.renderArrowIcon(selected)}
+						</View>
+					</TouchableWithoutFeedback>
+					<View>
+						{this.renderSILeaderText(selected, siSession)}
+						{this.renderSIScheduleText(selected, siSession)}
+					</View>
 				</View>
-			</View>
-		)
+			)
+		} else {
+			return null
+		}
 	}
 
 	renderArrowIcon() {
