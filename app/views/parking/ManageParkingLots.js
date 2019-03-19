@@ -3,7 +3,6 @@ import {
 	View,
 	Text,
 	Platform,
-	Linking,
 	Animated,
 	Easing,
 	TouchableOpacity
@@ -12,7 +11,6 @@ import SortableList from 'react-native-sortable-list'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { connect } from 'react-redux'
 import COLOR from '../../styles/ColorConstants'
-import Touchable from '../common/Touchable'
 import css from '../../styles/css'
 
 
@@ -64,14 +62,6 @@ class ManageParkingLots extends React.Component {
 						We are continuously adding parking lots and structures to the app!{'\n\n'}
 						If you would like to request a specific location please mesage us at parking@ucsd.edu
 					</Text>
-
-					<Touchable
-						onPress={() => Linking.openURL('mailto:parking@ucsd.edu')}
-						style={css.button_primary}
-						text="Email Us"
-					>
-						<Text style={css.button_primary_text}>Email Us</Text>
-					</Touchable>
 				</View>
 			</View>
 		)
