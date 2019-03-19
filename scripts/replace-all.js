@@ -60,6 +60,7 @@ if (REPLACEMENT_ENV === 'prod' || REPLACEMENT_ENV === 'qa') {
 		{ prodVal: myEnv.MYMESSAGES_API_URL_PROD, qaVal: myEnv.MYMESSAGES_API_URL_QA },
 		{ prodVal: myEnv.MP_REGISTRATION_API_URL_PROD, qaVal: myEnv.MP_REGISTRATION_API_URL_QA },
 		{ prodVal: myEnv.MESSAGES_TOPICS_URL_PROD, qaVal: myEnv.MESSAGES_TOPICS_URL_QA },
+		{ prodVal: myEnv.PARKING_API_URL_PROD, qaVal: myEnv.PARKING_API_URL_QA },
 	])
 
 	// ssoService.js
