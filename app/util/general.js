@@ -56,7 +56,7 @@ module.exports = {
 	 * @returns {number} The quantity now converted into miles
 	 */
 	convertMetersToMiles(meters) {
-		return (meters / 1609.344)
+		return (meters * 0.00062137)
 	},
 
 	/**
