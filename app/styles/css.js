@@ -370,9 +370,9 @@ const css = StyleSheet.create({
 	dn_info_container: { paddingTop: 10 },
 	dn_bold: { fontWeight: '700' },
 	dn_sort_bar_container: { alignItems: 'flex-start', justifyContent: 'center', flexDirection: 'row' , backgroundColor: COLOR.WHITE, paddingTop: 10 },
-	dn_sort_by_text: { borderColor: 'white', borderWidth: 1, paddingRight: 4, fontSize: 17, color: COLOR.PRIMARY },
-	dn_sort_bar_selected_text: { color: COLOR.PRIMARY, borderColor: 'black', borderWidth: 1, paddingHorizontal: 10, fontSize: 17 },
-	dn_sort_bar_unselected_text: { color: 'white', borderColor: 'black', borderWidth: 1, paddingHorizontal: 10, fontSize: 17, backgroundColor: COLOR.PRIMARY },
+	dn_sort_by_text: { borderColor: 'white', borderWidth: 1, paddingRight: 4, fontSize: 14, color: COLOR.PRIMARY },
+	dn_sort_bar_selected_text: { color: COLOR.PRIMARY, borderColor: 'black', borderWidth: 1, paddingHorizontal: 10, fontSize: 14 },
+	dn_sort_bar_unselected_text: { color: 'white', borderColor: 'black', borderWidth: 1, paddingHorizontal: 10, fontSize: 14, backgroundColor: COLOR.PRIMARY },
 
 	/**
 	 *  10 - Links
