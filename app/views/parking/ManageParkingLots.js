@@ -20,6 +20,24 @@ class ManageParkingLots extends React.Component {
 		this.setState({ parkingLots })
 	}
 
+	componentWillReceiveProps(nextProps) {
+		if (Array.isArray(this.props.parkingData) && Array.isArray(nextProps.parkingData) &&
+			this.props.parkingData.length !== nextProps.parkingData.length) {
+			const parkingLots = this.props.parkingData
+			console.log(parkingLots)
+			this.setState({ parkingLots })
+		}
+	}
+
+	shouldComponentUpdate(nextProps, nextState) {
+		if (Array.isArray(this.props.parkingData) && Array.isArray(nextProps.parkingData) &&
+			this.props.parkingData.length !== nextProps.parkingData.length) {
+			return true
+		} else {
+			return false
+		}
+	}
+
 	getOrderedArray = () => {
 		const orderArray = []
 		if (Array.isArray(this._order)) {
