@@ -18,14 +18,8 @@ function* syncLocalLotsSelection() {
 	yield put({ type: 'MODIFY_LOCAL_PROFILE', profileItems })
 }
 
-function* reorderParkingLots(action) {
-	const { newParkingData } = action
-	yield put({ type: 'SET_PARKING_DATA', newParkingData })
-}
-
 function* parkingSaga() {
 	yield takeLatest('UPDATE_PARKING_LOT_SELECTIONS', updateParkingLotSelection)
-	yield takeLatest('REORDER_PARKING_LOTS', reorderParkingLots )
 }
 
 export default parkingSaga
