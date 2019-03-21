@@ -8,13 +8,15 @@ import moment from 'moment'
 
 const SpecialEventsHeader = ({ timestamp, rows }) => (
 	<View style={styles.header}>
-		<Text style={styles.headerText}>
-			{rows ? (
-				moment(Number(timestamp)).format('MMM D[\n]h:mm A')
-			) : (
-				moment(Number(timestamp)).format('h:mm A')
-			)}
-		</Text>
+		{timestamp ? (
+			<Text style={styles.headerText}>
+				{rows ? (
+					moment(Number(timestamp)).format('MMM D[\n]h:mm A')
+				) : (
+					moment(Number(timestamp)).format('h:mm A')
+				)}
+			</Text>
+		) : null }
 	</View>
 )
 

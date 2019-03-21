@@ -48,6 +48,7 @@ class MultiSelect extends Component {
 
 	render() {
 		const { items, themes, selected } = this.props
+
 		return (
 			<View style={css.main_full_flex}>
 				<ScrollView style={css.scroll_default} contentContainerStyle={css.specialevents_filter}>
@@ -59,7 +60,7 @@ class MultiSelect extends Component {
 								data={item.item}
 								selected={selected.includes(item.item)}
 								onSelect={this.onSelect}
-								color={(themes && themes[item] !== '') ? (themes[item]) : (COLOR.DGREY)}
+								color={(themes && themes[item.item] !== '') ? (themes[item.item]) : (COLOR.DGREY)}
 							/>
 						)}
 						extraData={selected}

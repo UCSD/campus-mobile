@@ -82,6 +82,8 @@ const SpecialEventsListView = ({
 			</View>
 		)
 	} else {
+		let lastStartTime
+
 		return (
 			<View style={css.selv_mainContainer}>
 				<LabelsContainer
@@ -102,13 +104,18 @@ const SpecialEventsListView = ({
 						keyExtractor={item => item.id}
 						renderItem={(item) => {
 							const rowData = item.item
+							const specialEventsHeader = (
+								<SpecialEventsHeader
+									timestamp={(lastStartTime !== rowData['start-time']) ? rowData['start-time'] : null}
+									rows={rows}
+								/>
+							)
+							lastStartTime = rowData['start-time']
+
 							return (
 								<View style={css.selv_rowContainer}>
 									<View style={css.selv_rowContainer}>
-										<SpecialEventsHeader
-											timestamp={rowData['start-time']}
-											rows={rows}
-										/>
+										{specialEventsHeader}
 										<SpecialEventsItem
 											specialEventsData={rowData}
 											saved={saved.includes(rowData.id)}

@@ -162,14 +162,13 @@ const css = StyleSheet.create({
 	sev_backButtonImage: { color: COLOR.WHITE, marginRight: 7 },
 	// SpecialEventsListView
 	selv_mainContainer: { flexGrow: 1 },
-	selv_rowContainer: { flexGrow: 1, flexShrink: 1, flexDirection: 'row' },
+	selv_rowContainer: { flex: 1, flexDirection: 'row' },
 	selv_full: { flexGrow: 1, width: LAYOUT.WINDOW_WIDTH, height: (LAYOUT.WINDOW_HEIGHT - LAYOUT.NAVIGATOR_HEIGHT - LAYOUT.TAB_BAR_HEIGHT) },
 	selv_card: { width: LAYOUT.MAX_CARD_WIDTH },
 	selv_noSessions: { flexGrow: 1, fontSize: 16, textAlign: 'center', padding: 20, lineHeight: 22 },
 	selv_labelsContainer: { alignItems: 'center', justifyContent: 'flex-start', borderBottomWidth: 1, borderBottomColor: COLOR.PRIMARY },
 	selv_labelHeader: { fontWeight: '600' },
 	selv_labelText: { width: LAYOUT.WINDOW_WIDTH, paddingVertical: 4, paddingHorizontal: 20, fontSize: 14, color: COLOR.PRIMARY },
-	selv_emptyRow: { width: 75, flexDirection: 'row' },
 	// SpecialEventsItem
 	sei_itemRow: { flexShrink: 1, flexDirection: 'row' },
 	sei_titleContainer: { flexShrink: 1, flexBasis: 10000, marginTop: 3, marginBottom: 8 }, // TODO: improve usage of flex, especially to avoid hardcoding 10000, which acts like an infifity value to maximize column width on all screen sizes.
