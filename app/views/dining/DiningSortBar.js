@@ -12,36 +12,40 @@ class DiningSortBar extends React.Component {
 		const { updateDiningSort, sortBy } = this.props
 		if (sortBy === 'A-Z') {
 			return (
-				<View style={css.dn_sort_bar_container} >
-					<Text style={css.dn_sort_by_text}>
-						{'Sort By:'}
-					</Text>
-					<Text
-						style={css.dn_sort_bar_selected_text}
-						onPress={() => updateDiningSort('Closest')}
-					>
-						Closest
-					</Text>
-					<Text style={css.dn_sort_bar_unselected_text}>
-						{' A - Z '}
-					</Text>
+				<View style={css.dn_sort_bar_container}>
+					<View style={css.dn_sort_bar_content} >
+						<Text style={css.dn_sort_by_text}>
+							{'Sort By:'}
+						</Text>
+						<Text
+							style={css.dn_sort_bar_selected_text}
+							onPress={() => updateDiningSort('Closest')}
+						>
+							Closest
+						</Text>
+						<Text style={css.dn_sort_bar_unselected_text}>
+							{' A - Z '}
+						</Text>
+					</View>
 				</View>
 			)
 		} else {
 			return (
-				<View style={css.dn_sort_bar_container} >
-					<Text style={css.dn_sort_by_text}>
-						{'Sort By:'}
-					</Text>
-					<Text style={css.dn_sort_bar_unselected_text}>
-						Closest
-					</Text>
-					<Text
-						style={css.dn_sort_bar_selected_text}
-						onPress={() => updateDiningSort('A-Z')}
-					>
-						{' A - Z '}
-					</Text>
+				<View style={css.dn_sort_bar_container}>
+					<View style={css.dn_sort_bar_content} >
+						<Text style={css.dn_sort_by_text}>
+							{'Sort By:'}
+						</Text>
+						<Text style={css.dn_sort_bar_unselected_text}>
+							Closest
+						</Text>
+						<Text
+							style={css.dn_sort_bar_selected_text}
+							onPress={() => updateDiningSort('A-Z')}
+						>
+							{' A - Z '}
+						</Text>
+					</View>
 				</View>
 			)
 		}
