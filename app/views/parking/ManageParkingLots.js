@@ -21,17 +21,15 @@ class ManageParkingLots extends React.Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		if (Array.isArray(this.props.parkingData) && Array.isArray(nextProps.parkingData) &&
-			this.props.parkingData.length !== nextProps.parkingData.length) {
-			const parkingLots = this.props.parkingData
-			console.log(parkingLots)
-			this.setState({ parkingLots })
+
+		if (this.props.selectedLots.length !== nextProps.selectedLots.length) {
+			const { selectedLots } = this.props
+			this.setState({ selectedLots })
 		}
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
-		if (Array.isArray(this.props.parkingData) && Array.isArray(nextProps.parkingData) &&
-			this.props.parkingData.length !== nextProps.parkingData.length) {
+		if (this.props.selectedLots.length !== nextProps.selectedLots.length) {
 			return true
 		} else {
 			return false
@@ -136,46 +134,26 @@ class ListItem extends React.Component {
 	render() {
 		const { data, selectedLots, updateSelectedLots } = this.props
 
-		if (selectedLots.includes(data.LocationName)) {
-			return (
-				<Animated.View style={[css.sslv_listRow, this._style]}>
-					<Icon name="drag-handle" size={20} />
-					<Text style={css.mpl_row_text_selected}>
-						{ data.LocationName }
-					</Text>
-					<TouchableOpacity
-						onPress={() => { updateSelectedLots(false, data.LocationName, selectedLots) }}
-						style={css.mpl_row_add_remove_btn}
-					>
-						{cancelIcon()}
-					</TouchableOpacity>
-				</Animated.View>
-			)
-		} else {
-			return (
-				<Animated.View style={[css.sslv_listRow, this._style]}>
-					<Icon name="drag-handle" size={20} />
-					<Text style={css.mpl_row_text_unselected}>
-						{ data.LocationName }
-					</Text>
-					<TouchableOpacity
-						onPress={() => { updateSelectedLots(true, data.LocationName, selectedLots) }}
-						style={css.mpl_row_add_remove_btn}
-					>
-						{addIcon()}
-					</TouchableOpacity>
-				</Animated.View>
-			)
-		}
+		return (
+			<Animated.View style={[css.us_list_row, this._style]}>
+				<Icon name="drag-handle" size={20} />
+				<Text style={[css.us_name_text, selectedLots.includes(data.LocationName) ? css.us_name_text_selected : null]}>
+					{ data.LocationName }
+				</Text>
+				<TouchableOpacity
+					onPress={() => { updateSelectedLots(!selectedLots.includes(data.LocationName), data.LocationName, selectedLots) }}
+					style={css.us_switchContainer}
+				>
+					{selectedLots.includes(data.LocationName) ? (
+						<Icon name="cancel" size={24} color={COLOR.DGREY} />
+					) : (
+						<Icon name="add" size={24} color={COLOR.DGREY} />
+					)}
+				</TouchableOpacity>
+			</Animated.View>
+		)
 	}
 }
-
-const addIcon = () => (
-	<Icon name="add" size={25} color={COLOR.DGREY} />
-)
-const cancelIcon = () => (
-	<Icon name="cancel" size={25} color={COLOR.DGREY} />
-)
 
 const mapStateToProps = state => ({
 	parkingData: state.parking.parkingData,
@@ -191,7 +169,7 @@ const mapDispatchToProps = dispatch => (
 			dispatch({ type: 'SET_WARNING_SIGN', showWarning })
 		},
 		reorderParkingLots: (newParkingData) => {
-			dispatch({ type: 'REORDER_PARKING_LOTS', newParkingData })
+			dispatch({ type: 'SET_PARKING_DATA', newParkingData })
 		}
 	}
 )

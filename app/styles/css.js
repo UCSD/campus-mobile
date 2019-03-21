@@ -480,10 +480,10 @@ const css = StyleSheet.create({
 	ua_panicText: { fontSize: 16, padding: 8, textAlign: 'center' },
 	ua_loginText: { fontSize: 16, color: COLOR.WHITE },
 	ua_errorText: { flex: 1, fontSize: 18, color: COLOR.MRED },
-
-	us_list_row: { flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderTopWidth: 1, borderColor: COLOR.MGREY, paddingHorizontal: 20, paddingVertical: 8, margin: -1, elevation: 0, backgroundColor: COLOR.WHITE },
+	us_list_row: { flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderTopWidth: 1, borderColor: COLOR.MGREY, paddingHorizontal: 20, paddingVertical: 8, margin: -1, elevation: 0, backgroundColor: COLOR.WHITE, minHeight: 48 },
 	us_icon: { color: COLOR.DGREY },
 	us_name_text: { flexGrow: 1, fontSize: 18, color: COLOR.VDGREY, paddingLeft: 16 },
+	us_name_text_selected: { color: COLOR.PRIMARY },
 	us_switchContainer: { justifyContent: 'center', alignItems: 'center' },
 
 	pi_container: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: COLOR.WHITE, marginBottom: 16, paddingVertical: 8, paddingHorizontal: 20, borderTopWidth: 1, borderTopColor: COLOR.MGREY, borderBottomWidth: 1, borderBottomColor: COLOR.MGREY },
