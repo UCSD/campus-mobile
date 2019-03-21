@@ -26,7 +26,7 @@ class DiningCardContainer extends React.Component {
 		}
 		const extraActions = [
 			{
-				name: 'A-Z',
+				name: 'A > Z',
 				action: sortAlphaNumeric
 			},
 			{

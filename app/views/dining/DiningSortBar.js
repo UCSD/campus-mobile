@@ -2,6 +2,8 @@ import React from 'react'
 import { View, Text } from 'react-native'
 import { connect } from 'react-redux'
 import css from '../../styles/css'
+import Touchable from '../common/Touchable'
+
 
 class DiningSortBar extends React.Component {
 	constructor(props) {
@@ -13,16 +15,15 @@ class DiningSortBar extends React.Component {
 		if (sortBy === 'A-Z') {
 			return (
 				<View style={css.dn_sort_bar_container}>
-					<View style={css.dn_sort_bar_content} >
+					<View style={css.dn_sort_bar_content}>
 						<Text style={css.dn_sort_by_text}>
 							{'Sort By:'}
 						</Text>
-						<Text
-							style={css.dn_sort_bar_selected_text}
-							onPress={() => updateDiningSort('Closest')}
-						>
-							Closest
-						</Text>
+						<Touchable onPress={() => updateDiningSort('Closest')}>
+							<Text style={css.dn_sort_bar_selected_text}>
+								Closest
+							</Text>
+						</Touchable>
 						<Text style={css.dn_sort_bar_unselected_text}>
 							{' A - Z '}
 						</Text>
@@ -32,19 +33,18 @@ class DiningSortBar extends React.Component {
 		} else {
 			return (
 				<View style={css.dn_sort_bar_container}>
-					<View style={css.dn_sort_bar_content} >
+					<View style={css.dn_sort_bar_content}>
 						<Text style={css.dn_sort_by_text}>
 							{'Sort By:'}
 						</Text>
 						<Text style={css.dn_sort_bar_unselected_text}>
 							Closest
 						</Text>
-						<Text
-							style={css.dn_sort_bar_selected_text}
-							onPress={() => updateDiningSort('A-Z')}
-						>
-							{' A - Z '}
-						</Text>
+						<Touchable onPress={() => updateDiningSort('A-Z')}>
+							<Text style={css.dn_sort_bar_selected_text}>
+								{' A - Z '}
+							</Text>
+						</Touchable>
 					</View>
 				</View>
 			)

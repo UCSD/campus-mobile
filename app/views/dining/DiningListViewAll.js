@@ -13,32 +13,6 @@ import DiningSortBar from './DiningSortBar'
  * @return {JSX} Returns presentation JSX DiningListView component
  */
 class DiningListViewAll extends React.Component {
-	constructor() {
-		super()
-		this.onViewableItemsChanged = this.onViewableItemsChanged.bind(this)
-		this.viewabilityConfig = {
-			itemVisiblePercentThreshold: 25,
-			waitForInteraction: true
-		}
-	}
-	state = {
-		sortBarVisible: true,
-		currentIndex: 0,
-	}
-
-	onViewableItemsChanged = (info) => {
-		const { viewableItems, changed } = info
-		if (viewableItems[0].index < this.state.currentIndex) {
-			this.setState({ sortBarVisible: true, currentIndex: viewableItems[0].index })
-		} else if (viewableItems[0].index > this.state.currentIndex) {
-			this.setState({ sortBarVisible: false, currentIndex: viewableItems[0].index })
-		} else if (!changed[0].isViewable) {
-			this.setState({ sortBarVisible: true })
-		} else if (changed[0].isViewable) {
-			this.setState({ sortBarVisible: false })
-		}
-	}
-
 	render() {
 		const { data } = this.props
 
@@ -52,14 +26,11 @@ class DiningListViewAll extends React.Component {
 							else return listItem.name + index
 						}}
 						ListHeaderComponent={<DiningSortBar />}
-						stickyHeaderIndices={this.state.sortBarVisible ? [0] : null}
 						renderItem={({ item: rowData }) => (
 							<DiningItem data={rowData} />
 						)}
 						onViewableItemsChanged={this.onViewableItemsChanged}
-
 						ItemSeparatorComponent={renderSeperator}
-						viewabilityConfig={this.viewabilityConfig}
 					/>
 				</View>
 			)
