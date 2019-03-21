@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
-// import PropTypes from 'prop-types'
-import { StyleSheet } from 'react-native'
 import MapView from 'react-native-maps'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import css from '../../styles/css'
 import COLOR from '../../styles/ColorConstants'
 
 // NOTE: For some reason MapView-onCalloutPress only works for Android and
@@ -79,11 +78,6 @@ class SearchMap extends Component {
 			// Create MapView.Marker for each shuttle stop
 			shuttleStops = Object.keys(shuttle).map((key, index) => {
 				const stop = shuttle[key]
-				if ((Object.keys(stop.routes).length === 0 && stop.routes.constructor === Object) ||
-					// Hide Airport stops
-					stop.routes['89']) {
-					return null
-				}
 
 				return (
 					<MapView.Marker
@@ -164,7 +158,7 @@ class SearchMap extends Component {
 						MapRef.animateToRegion(midRegion, 1000)
 					}
 				}}
-				style={styles.map_container}
+				style={css.map_container}
 				loadingEnabled={true}
 				loadingIndicatorColor={COLOR.DGREY}
 				loadingBackgroundColor={COLOR.MGREY}
@@ -191,16 +185,9 @@ class SearchMap extends Component {
 	}
 }
 
-SearchMap.propTypes = {
-	// location: PropTypes.object,
-	// selectedResult: PropTypes.object,
-}
-
 SearchMap.defaultProps = {
-	// location: null,
-	// selectedResult: null,
+	location: null,
+	selectedResult: null,
 }
-
-const styles = StyleSheet.create({ map_container: { ...StyleSheet.absoluteFillObject } })
 
 export default SearchMap

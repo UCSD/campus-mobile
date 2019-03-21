@@ -1,8 +1,6 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import moment from 'moment'
-
 import DataListCard from '../common/DataListCard'
 import { militaryToAMPM } from '../../util/general'
 
@@ -29,9 +27,9 @@ export const EventCardContainer = ({ eventsData }) => {
 	)
 }
 
-EventCardContainer.defaultProps = { eventsData: null }
-
-EventCardContainer.propTypes = { eventsData: PropTypes.arrayOf(PropTypes.object) }
+EventCardContainer.defaultProps = {
+	eventsData: null
+}
 
 const mapStateToProps = state => (
 	{ eventsData: state.events.data }

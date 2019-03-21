@@ -27,10 +27,6 @@ import logger from '../../util/logger'
 import { gotoNavigationApp, platformAndroid } from '../../util/general'
 
 export class Map extends React.Component {
-	static navigationOptions = {
-		title: 'Map',
-	}
-
 	constructor(props) {
 		super(props)
 

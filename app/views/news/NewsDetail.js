@@ -6,8 +6,10 @@ import {
 	Linking,
 } from 'react-native'
 import moment from 'moment'
+import Hyperlink from 'react-native-hyperlink'
 import { withNavigation } from 'react-navigation'
 
+import { openURL } from '../../util/general'
 import ShareContent from '../common/ShareContent'
 import SafeImage from '../common/SafeImage'
 import logger from '../../util/logger'
@@ -35,7 +37,16 @@ const NewsDetail = ({ navigation }) => {
 				<Text style={css.media_detail_dateText}>
 					{moment(css.media_detail_date).format('MMM Do, YYYY')}
 				</Text>
-				<Text style={css.media_detail_descText}>{data.description.trim()}</Text>
+				<View style={css.media_detail_descContainer}>
+					<Hyperlink
+						onPress={(url, text) => openURL(url)}
+						linkStyle={(css.hyperlink)}
+					>
+						<Text style={css.media_detail_descText}>
+							{data.description.trim()}
+						</Text>
+					</Hyperlink>
+				</View>
 				{data.link ? (
 					<Touchable
 						onPress={() => Linking.openURL(data.link)}

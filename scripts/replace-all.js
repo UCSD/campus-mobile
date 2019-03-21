@@ -13,17 +13,19 @@ if (ENV_TYPE === 'ci') {
 }
 
 // File Paths
-const APP_SETTINGS_PATH = './app/AppSettings.js',
-	SSO_SERVICE_PATH = './app/services/ssoService.js',
-	IOS_INFO_PLIST_PATH = './ios/CampusMobile/Info.plist',
-	ANDROID_STRINGS_PATH = './android/app/src/main/res/values/strings.xml',
-	ANDROID_MANIFEST_PATH = './android/app/src/main/AndroidManifest.xml',
-	IOS_GOOGLE_SERVICES_PATH = './ios/GoogleService-Info.plist',
-	ANDROID_GOOGLE_SERVICES_PATH = './android/app/google-services.json'
+const APP_SETTINGS_PATH = './app/AppSettings.js'
+const SSO_SERVICE_PATH = './app/services/ssoService.js'
+const IOS_INFO_PLIST_PATH = './ios/CampusMobile/Info.plist'
+const IOS_GOOGLE_SERVICES_PATH = './ios/GoogleService-Info.plist'
+const ANDROID_STRINGS_PATH = './android/app/src/main/res/values/strings.xml'
+const ANDROID_MANIFEST_PATH = './android/app/src/main/AndroidManifest.xml'
+const ANDROID_GOOGLE_SERVICES_PATH = './android/app/google-services.json'
+const ANDROID_APP_BUILD_GRADLE_PATH = './android/app/build.gradle'
 
 // Placeholder Values
 const PH = {
-	APP_NAME_PH: 'Campus Mobile',
+	APP_NAME_PH: 'CampusMobile',
+	APP_VERSION_PH: '1.0.0',
 	GOOGLE_ANALYTICS_ID_PH: 'GOOGLE_ANALYTICS_ID_PH',
 	GOOGLE_MAPS_API_KEY_PH: 'GOOGLE_MAPS_API_KEY_PH',
 	FIREBASE_KEY_PH: 'FIREBASE_KEY_PH',
@@ -50,6 +52,15 @@ if (REPLACEMENT_ENV === 'prod' || REPLACEMENT_ENV === 'qa') {
 	makeReplacements(APP_SETTINGS_PATH, REPLACEMENT_ENV, [
 		{ prodVal: myEnv.APP_NAME, qaVal: myEnv.APP_NAME, phVal: PH.APP_NAME_PH },
 		{ prodVal: myEnv.GOOGLE_ANALYTICS_ID_PROD, qaVal: myEnv.GOOGLE_ANALYTICS_ID_QA, phVal: PH.GOOGLE_ANALYTICS_ID_PH },
+		{ prodVal: myEnv.AUTH_SERVICE_API_URL_PROD, qaVal: myEnv.AUTH_SERVICE_API_URL_QA },
+		{ prodVal: myEnv.ACADEMIC_TERM_API_URL_PROD, qaVal: myEnv.ACADEMIC_TERM_API_URL_QA },
+		{ prodVal: myEnv.ACADEMIC_TERM_FINALS_API_URL_PROD, qaVal: myEnv.ACADEMIC_TERM_FINALS_API_URL_QA },
+		{ prodVal: myEnv.ACADEMIC_HISTORY_API_URL_PROD, qaVal: myEnv.ACADEMIC_HISTORY_API_URL_QA },
+		{ prodVal: myEnv.TOPICS_API_URL_PROD, qaVal: myEnv.TOPICS_API_URL_QA },
+		{ prodVal: myEnv.MYMESSAGES_API_URL_PROD, qaVal: myEnv.MYMESSAGES_API_URL_QA },
+		{ prodVal: myEnv.MP_REGISTRATION_API_URL_PROD, qaVal: myEnv.MP_REGISTRATION_API_URL_QA },
+		{ prodVal: myEnv.MESSAGES_TOPICS_URL_PROD, qaVal: myEnv.MESSAGES_TOPICS_URL_QA },
+		{ prodVal: myEnv.PARKING_API_URL_PROD, qaVal: myEnv.PARKING_API_URL_QA },
 	])
 
 	// ssoService.js
@@ -60,7 +71,13 @@ if (REPLACEMENT_ENV === 'prod' || REPLACEMENT_ENV === 'qa') {
 	// Info.plist
 	makeReplacements(IOS_INFO_PLIST_PATH, REPLACEMENT_ENV, [
 		{ prodVal: myEnv.APP_NAME, qaVal: myEnv.APP_NAME, phVal: PH.APP_NAME_PH },
+		{ prodVal: myEnv.APP_VERSION, qaVal: myEnv.APP_VERSION, phVal: PH.APP_VERSION_PH },
 		{ prodVal: myEnv.BUGSNAG_KEY, qaVal: myEnv.BUGSNAG_KEY, phVal: PH.BUGSNAG_KEY_PH }
+	])
+
+	// build.gradle
+	makeReplacements(ANDROID_APP_BUILD_GRADLE_PATH, REPLACEMENT_ENV, [
+		{ prodVal: myEnv.APP_VERSION, qaVal: myEnv.APP_VERSION, phVal: PH.APP_VERSION_PH },
 	])
 
 	// strings.xml
@@ -70,6 +87,7 @@ if (REPLACEMENT_ENV === 'prod' || REPLACEMENT_ENV === 'qa') {
 
 	// AndroidManifest.xml
 	makeReplacements(ANDROID_MANIFEST_PATH, REPLACEMENT_ENV, [
+		{ prodVal: myEnv.APP_VERSION, qaVal: myEnv.APP_VERSION, phVal: PH.APP_VERSION_PH },
 		{ prodVal: myEnv.GOOGLE_MAPS_API_KEY, qaVal: myEnv.GOOGLE_MAPS_API_KEY, phVal: PH.GOOGLE_MAPS_API_KEY_PH },
 		{ prodVal: myEnv.BUGSNAG_KEY, qaVal: myEnv.BUGSNAG_KEY, phVal: PH.BUGSNAG_KEY_PH }
 	])
@@ -107,10 +125,14 @@ function makeReplacements(FILE_PATH, ENV, REPLACEMENTS) {
 	fs.readFile(FILE_PATH, 'utf8', (err, data) => {
 		if (!err) {
 			for (let i = 0; REPLACEMENTS.length > i; i++) {
-				if (ENV === 'prod') {
-					data = data.replace(REPLACEMENTS[i].phVal, REPLACEMENTS[i].prodVal)
-				} else if (ENV === 'qa') {
-					data = data.replace(REPLACEMENTS[i].phVal, REPLACEMENTS[i].qaVal)
+				if (REPLACEMENTS[i].phVal) {
+					if (ENV === 'prod') {
+						data = data.replace(REPLACEMENTS[i].phVal, REPLACEMENTS[i].prodVal)
+					} else if (ENV === 'qa') {
+						data = data.replace(REPLACEMENTS[i].phVal, REPLACEMENTS[i].qaVal)
+					}
+				} else if (REPLACEMENT_ENV === 'qa') {
+					data = data.replace(REPLACEMENTS[i].prodVal, REPLACEMENTS[i].qaVal)
 				}
 			}
 			fs.writeFile(FILE_PATH, data, 'utf8', (writeErr) => {

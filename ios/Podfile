@@ -33,6 +33,16 @@ target 'CampusMobile' do
   pod 'BugsnagReactNative', :path => '../node_modules/bugsnag-react-native'
 
   pod 'RNSVG', :path => '../node_modules/react-native-svg'
+  
+  pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler/ios'
+
+  pod 'RNDeviceInfo', :path => '../node_modules/react-native-device-info'
+
+  pod 'react-native-google-analytics-bridge', :path => '../node_modules/react-native-google-analytics-bridge'
+
+  pod 'RNKeychain', :path => '../node_modules/react-native-keychain'
+
+  pod 'ReactNativePermissions', :path => '../node_modules/react-native-permissions'
 
   # target 'CampusMobileTests' do
   #   inherit! :search_paths

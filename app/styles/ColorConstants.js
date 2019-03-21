@@ -29,6 +29,7 @@ const COLOR = {
 	AVAILABILITY_HIGH: '#00AD67',
 	TIME: '#A1A1A1',
 	DARKGRAY: '#818181',
+	BG_GRAY: '#EFEFF4'
 }
 
 module.exports = COLOR
