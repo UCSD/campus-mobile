@@ -1,12 +1,5 @@
 import React, { Component } from 'react'
-import {
-	View,
-	Text,
-	FlatList,
-	ScrollView,
-	RefreshControl,
-	ActivityIndicator,
-} from 'react-native'
+import { View, Text, FlatList, ActivityIndicator } from 'react-native'
 import { connect } from 'react-redux'
 import Hyperlink from 'react-native-hyperlink'
 import moment from 'moment'
@@ -86,59 +79,44 @@ export class Messaging extends Component {
 		if (!isLoading && unreadMessages && this.props.navigation.isFocused()) {
 			this.props.notificationsSeen()
 		}
-		if (Array.isArray(filteredData) && filteredData.length > 0) {
-			return (
-				<FlatList
-					data={filteredData}
-					style={css.scroll_default}
-					contentContainerStyle={css.main_full}
-					onRefresh={() => updateMessages(new Date().getTime())}
-					refreshing={isLoading}
-					renderItem={this.renderItem}
-					keyExtractor={(item, index) => item.id}
-					onEndReachedThreshold={0.5}
-					ListFooterComponent={(isLoading && nextTimestamp) ? <ActivityIndicator size="large" animating /> : null}
-					onEndReached={(info) => {
-						// this if check makes sure that we dont fetch extra data in the intialization of the list
-						if (info.distanceFromEnd > 0
-							&& nextTimestamp
-							&& !isLoading) {
-							updateMessages(nextTimestamp)
-						}
-					}}
-				/>
-			)
-		} else {
-			let myMessagesStatusText = ''
-			if (isLoading) {
-				myMessagesStatusText = 'Loading your notifications, please wait.'
-			} else if (this.props.myMessagesError) {
-				myMessagesStatusText = 'There was a problem fetching your messages.\n\n' +
-									   'Please try again soon.'
-			} else if (messages && messages.length === 0) {
-				myMessagesStatusText = 'You have no notifications.\nYou may be opted out of all topics.\n\n' +
-									   'Notifications to specific topics can be turned on in User Profile.'
-			}
 
-			return (
-				<ScrollView
-					style={css.scroll_default}
-					contentContainerStyle={css.main_full_flex}
-					refreshControl={
-						<RefreshControl
-							refreshing={isLoading}
-							onRefresh={() => updateMessages(new Date().getTime())}
-						/>
-					}
-				>
-					<View>
-						<Text style={css.notifications_status}>
-							{myMessagesStatusText}
-						</Text>
-					</View>
-				</ScrollView>
-			)
+		let myMessagesStatusText = ''
+		if (isLoading) {
+			myMessagesStatusText = 'Loading your notifications, please wait.'
+		} else if (!this.props.myMessagesError) {
+			myMessagesStatusText = 'There was a problem fetching your messages.\n\n' +
+								   'Please try again soon.'
+		} else if (messages && messages.length === 0) {
+			myMessagesStatusText = 'You have no notifications.\nYou may be opted out of all topics.\n\n' +
+								   'Notifications to specific topics can be turned on in User Profile.'
 		}
+
+		return (
+			<FlatList
+				data={filteredData}
+				ListEmptyComponent={
+					<Text style={css.notifications_status}>
+						{myMessagesStatusText}
+					</Text>
+				}
+				style={css.scroll_default}
+				contentContainerStyle={css.main_full}
+				onRefresh={() => updateMessages(new Date().getTime())}
+				refreshing={isLoading}
+				renderItem={this.renderItem}
+				keyExtractor={(item, index) => item.id}
+				onEndReachedThreshold={0.5}
+				ListFooterComponent={(isLoading && nextTimestamp) ? <ActivityIndicator size="large" animating /> : null}
+				onEndReached={(info) => {
+					// this if check makes sure that we dont fetch extra data in the intialization of the list
+					if (info.distanceFromEnd > 0
+						&& nextTimestamp
+						&& !isLoading) {
+						updateMessages(nextTimestamp)
+					}
+				}}
+			/>
+		)
 	}
 }
 

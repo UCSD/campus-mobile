@@ -575,6 +575,7 @@ const css = StyleSheet.create({
 	notifications_body_text_container: { paddingTop: 10 },
 	notifications_body_text: { color: COLOR.VDGREY, fontSize: 14 },
 	notifications_section_list_separator: { height: 1, backgroundColor: COLOR.MGREY },
+	notifications_status: { fontSize: 16, padding: 20 },
 	notifications_err: { textAlign: 'center', fontSize: 16, padding: 30 },
 
 	/**
