@@ -105,10 +105,16 @@ const css = StyleSheet.create({
 	dlc_content_load_err: { padding: 30, fontSize: 16, alignSelf: 'center'  },
 	dlc_cardcenter: { alignItems: 'center', justifyContent: 'center', padding: 20 },
 	// FlatList
-	fl_row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', padding: 12, borderTopWidth: 1, borderTopColor: COLOR.MGREY },
+	fl_row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', padding: 8, borderTopWidth: 1, marginTop: -1, borderTopColor: COLOR.MGREY },
 	fl_row_title: { flex: 1, color: COLOR.VDGREY, fontSize: 18 },
 	fl_row_title_disabled: { flex: 1, color: COLOR.DMGREY, fontSize: 18 },
 	fl_row_arrow: { color: COLOR.CCC },
+	// Sortable List View
+	sl_row: { flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderTopWidth: 1, borderColor: COLOR.MGREY, paddingVertical: 8, marginTop: -1, elevation: 0, backgroundColor: COLOR.WHITE, minHeight: 48 },
+	sl_icon: { color: COLOR.CCC, marginLeft: 8 },
+	sl_title: { flex: 5, fontSize: 18, marginLeft: 6 },
+	sl_title_disabled: { color: COLOR.CCC },
+	sl_switch_container: { flex: 1, justifyContent: 'center', alignItems: 'flex-end', marginRight: 12 },
 	// Buttons
 	button_primary: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.PRIMARY, borderRadius: 3, marginTop: 20, padding: 10 },
 	button_primary_text: { fontSize: 16, color: COLOR.WHITE },
@@ -480,12 +486,6 @@ const css = StyleSheet.create({
 	ua_panicText: { fontSize: 16, padding: 8, textAlign: 'center' },
 	ua_loginText: { fontSize: 16, color: COLOR.WHITE },
 	ua_errorText: { flex: 1, fontSize: 18, color: COLOR.MRED },
-	us_list_row: { flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderTopWidth: 1, borderColor: COLOR.MGREY, paddingHorizontal: 20, paddingVertical: 8, margin: -1, elevation: 0, backgroundColor: COLOR.WHITE, minHeight: 48 },
-	us_icon: { color: COLOR.DGREY },
-	us_name_text: { flexGrow: 1, fontSize: 18, color: COLOR.VDGREY, paddingLeft: 16 },
-	us_name_text_selected: { color: COLOR.PRIMARY },
-	us_switchContainer: { justifyContent: 'center', alignItems: 'center' },
-
 	pi_container: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: COLOR.WHITE, marginBottom: 16, paddingVertical: 8, paddingHorizontal: 20, borderTopWidth: 1, borderTopColor: COLOR.MGREY, borderBottomWidth: 1, borderBottomColor: COLOR.MGREY },
 	pi_icon: { color: COLOR.PRIMARY },
 	pi_title: { flexGrow: 1, fontSize: 18, color: COLOR.VDGREY, paddingLeft: 16 },

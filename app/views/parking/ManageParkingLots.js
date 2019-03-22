@@ -135,17 +135,17 @@ class ListItem extends React.Component {
 		const { data, selectedLots, updateSelectedLots } = this.props
 
 		return (
-			<Animated.View style={[css.us_list_row, this._style]}>
-				<Icon name="drag-handle" size={20} />
-				<Text style={[css.us_name_text, selectedLots.includes(data.LocationName) ? css.us_name_text_selected : null]}>
+			<Animated.View style={[css.sl_row, this._style]}>
+				<Icon style={css.sl_icon} name="drag-handle" size={20} />
+				<Text style={[css.sl_title, !selectedLots.includes(data.LocationName) ? css.sl_title_disabled : null]}>
 					{ data.LocationName }
 				</Text>
 				<TouchableOpacity
 					onPress={() => { updateSelectedLots(!selectedLots.includes(data.LocationName), data.LocationName, selectedLots) }}
-					style={css.us_switchContainer}
+					style={css.sl_switch_container}
 				>
 					{selectedLots.includes(data.LocationName) ? (
-						<Icon name="cancel" size={24} color={COLOR.DGREY} />
+						<Icon name="remove" size={24} color={COLOR.DGREY} />
 					) : (
 						<Icon name="add" size={24} color={COLOR.DGREY} />
 					)}
