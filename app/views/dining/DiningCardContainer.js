@@ -4,6 +4,7 @@ import { View, Text, ActivityIndicator } from 'react-native'
 import { withNavigation } from 'react-navigation'
 import css from '../../styles/css'
 import Card from '../common/Card'
+import Touchable from '../common/Touchable'
 import DiningListView  from './DiningListView'
 
 class DiningCardContainer extends React.Component {
@@ -44,14 +45,12 @@ class DiningCardContainer extends React.Component {
 							scrollEnabled={false}
 							style={css.DataList_card_list}
 						/>
-						<View style={css.card_button_container}>
-							<Text
-								style={css.card_button_text}
-								onPress={() => navigation.navigate('DiningListViewAll')}
-							>
-								View All
-							</Text>
-						</View>
+						<Touchable
+							style={css.card_button_container}
+							onPress={() => navigation.navigate('DiningListViewAll')}
+						>
+							<Text style={css.card_button_text}>View All</Text>
+						</Touchable>
 					</View>
 				) : (
 					<View style={[css.dlc_cardcenter, css.dlc_wc_loading_height]}>

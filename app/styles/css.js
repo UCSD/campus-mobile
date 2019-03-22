@@ -105,10 +105,13 @@ const css = StyleSheet.create({
 	dlc_content_load_err: { padding: 30, fontSize: 16, alignSelf: 'center'  },
 	dlc_cardcenter: { alignItems: 'center', justifyContent: 'center', padding: 20 },
 	// FlatList
+	fl_full: { flexGrow: 1, backgroundColor: COLOR.WHITE, paddingBottom: deviceIphoneX() ? LAYOUT.NAVIGATOR_HEIGHT : 0 },
+	fl_bg: { backgroundColor: COLOR.WHITE },
 	fl_row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', padding: 12, borderTopWidth: 1, borderTopColor: COLOR.MGREY },
 	fl_row_title: { flex: 1, color: COLOR.VDGREY, fontSize: 18 },
 	fl_row_title_disabled: { flex: 1, color: COLOR.DMGREY, fontSize: 18 },
 	fl_row_arrow: { color: COLOR.CCC },
+	fl_separator: { height: 1, backgroundColor: COLOR.MGREY },
 	// Buttons
 	button_primary: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.PRIMARY, borderRadius: 3, marginTop: 20, padding: 10 },
 	button_primary_text: { fontSize: 16, color: COLOR.WHITE },
