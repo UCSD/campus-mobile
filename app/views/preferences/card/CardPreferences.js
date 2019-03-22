@@ -93,7 +93,6 @@ class CardPreferences extends Component {
 					onActivateRow={key => this.toggleScroll()}
 					onChangeOrder={(nextOrder) => { this._order = nextOrder }}
 					onReleaseRow={key => this._handleRelease(key)}
-					scrollEnabled={false}
 				/>
 			</Card>
 		)

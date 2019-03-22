@@ -1,5 +1,5 @@
 import React from 'react'
-import { FlatList, ScrollView } from 'react-native'
+import { FlatList } from 'react-native'
 import EventItem from '../events/EventItem'
 import NewsItem from '../news/NewsItem'
 import DiningItem from '../dining/DiningItem'
@@ -15,36 +15,23 @@ import css from '../../styles/css'
  * @param {Boolean} card Display rows with card styling (if available);
  * @return {JSX} Returns presentation JSX DataListView component
  */
-const DataListView = ({ style, data, rows, scrollEnabled, item, card }) => {
-	if (rows) {
-		return (
-			<DataFlatList
-				style={style}
-				data={data}
-				rows={rows}
-				item={item}
-				card={card}
-			/>
-		)
-	} else {
-		return (
-			<ScrollView style={css.scroll_default} contentContainerStyle={css.main_full}>
-				<DataFlatList
-					style={style}
-					data={data}
-					rows={rows}
-					item={item}
-					card={card}
-				/>
-			</ScrollView>
-		)
-	}
-}
-
-const DataFlatList = ({ style, data, rows, item, card }) => (
-	<FlatList
+const DataListView = ({ style, data, rows, scrollEnabled, item, card }) => (
+	<DataFlatList
 		style={style}
-		data={(rows) ? (data.slice(0,rows)) : (data)}
+		data={data}
+		rows={rows}
+		scrollEnabled={scrollEnabled}
+		item={item}
+		card={card}
+	/>
+)
+
+const DataFlatList = ({ style, data, rows, scrollEnabled, item, card }) => (
+	<FlatList
+		style={[style, css.scroll_default]}
+		contentContainerStyle={rows ? null : css.main_full}
+		data={rows ? data.slice(0,rows) : data}
+		scrollEnabled={scrollEnabled}
 		keyExtractor={(listItem, index) => {
 			// Specify the unique key that each kind of
 			// item will use to identify itself. Each
