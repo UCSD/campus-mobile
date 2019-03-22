@@ -1,20 +1,85 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import DataListCard from '../common/DataListCard'
+import { View, Text, ActivityIndicator } from 'react-native'
+import { withNavigation } from 'react-navigation'
+import css from '../../styles/css'
+import Card from '../common/Card'
+import Touchable from '../common/Touchable'
+import DiningListView  from './DiningListView'
 
-export const DiningCardContainer = ({ diningData }) => (
-	<DataListCard
-		id="dining"
-		title="Dining"
-		data={diningData}
-		item="DiningItem"
-	/>
-)
+class DiningCardContainer extends React.Component {
+	constructor(props) {
+		super()
+	}
+	render() {
+		const {
+			navigation,
+			diningData,
+			rows,
+			updateDiningSort
+		} = this.props
 
-function mapStateToProps(state) {
-	return { diningData: state.dining.data }
+		const sortAlphaNumeric = () => {
+			updateDiningSort('A-Z')
+		}
+		const sortDistance = () => {
+			updateDiningSort('Closest')
+		}
+		const extraActions = [
+			{
+				name: 'A > Z',
+				action: sortAlphaNumeric
+			},
+			{
+				name: 'Closest',
+				action: sortDistance
+			}
+		]
+		return (
+			<Card id="dining" title="Dining" extraActions={extraActions}>
+				{ diningData ? (
+					<View>
+						<DiningListView
+							data={diningData}
+							rows={rows}
+							scrollEnabled={false}
+							style={css.DataList_card_list}
+						/>
+						<Touchable
+							style={css.card_button_container}
+							onPress={() => navigation.navigate('DiningListViewAll')}
+						>
+							<Text style={css.card_button_text}>View All</Text>
+						</Touchable>
+					</View>
+				) : (
+					<View style={[css.dlc_cardcenter, css.dlc_wc_loading_height]}>
+						<ActivityIndicator size="large" />
+					</View>
+				)}
+			</Card>
+		)
+	}
 }
 
-const ActualDiningCard = connect(mapStateToProps)(DiningCardContainer)
+function mapStateToProps(state) {
+	return {
+		diningData: state.dining.data,
+	}
+}
 
+const mapDispatchToProps = dispatch => (
+	{
+		updateDiningSort: (sortBy) => {
+			dispatch({ type: 'SET_DINING_SORT', sortBy })
+			dispatch({ type: 'REORDER_DINING' })
+		}
+	}
+)
+
+DiningCardContainer.defaultProps = {
+	rows: 3
+}
+
+const ActualDiningCard = connect(mapStateToProps,mapDispatchToProps)(withNavigation(DiningCardContainer))
 export default ActualDiningCard

@@ -105,10 +105,13 @@ const css = StyleSheet.create({
 	dlc_content_load_err: { padding: 30, fontSize: 16, alignSelf: 'center'  },
 	dlc_cardcenter: { alignItems: 'center', justifyContent: 'center', padding: 20 },
 	// FlatList
+	fl_full: { flexGrow: 1, backgroundColor: COLOR.WHITE, paddingBottom: deviceIphoneX() ? LAYOUT.NAVIGATOR_HEIGHT : 0 },
+	fl_bg: { backgroundColor: COLOR.WHITE },
 	fl_row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', padding: 12, borderTopWidth: 1, borderTopColor: COLOR.MGREY },
 	fl_row_title: { flex: 1, color: COLOR.VDGREY, fontSize: 18 },
 	fl_row_title_disabled: { flex: 1, color: COLOR.DMGREY, fontSize: 18 },
 	fl_row_arrow: { color: COLOR.CCC },
+	fl_separator: { height: 1, backgroundColor: COLOR.MGREY },
 	// Buttons
 	button_primary: { justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.PRIMARY, borderRadius: 3, marginTop: 20, padding: 10 },
 	button_primary_text: { fontSize: 16, color: COLOR.WHITE },
@@ -301,7 +304,7 @@ const css = StyleSheet.create({
 	/**
 	 *  07 - Dining
 	 */
-	dl_row: { flexDirection: 'row', padding: 10, borderTopWidth: 1, borderTopColor: COLOR.MGREY },
+	dl_row: { flexDirection: 'row', padding: 10 },
 	dl_row_container_left: { flex: 4, flexDirection: 'column', justifyContent: 'flex-start', paddingRight: 8 },
 	dl_row_container_right: { flex: 1, alignItems: 'center', justifyContent: 'flex-end' },
 	dl_title_row: { flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', flexWrap: 'wrap' },
@@ -368,6 +371,11 @@ const css = StyleSheet.create({
 	dn_topborder2: { borderTopWidth: 4, borderTopColor: COLOR.BLACK },
 	dn_info_container: { paddingTop: 10 },
 	dn_bold: { fontWeight: '700' },
+	dn_sort_bar_container: { backgroundColor: 'transparent', alignSelf: 'center' },
+	dn_sort_bar_content: { alignSelf: 'flex-start', justifyContent: 'center', flexDirection: 'row' , backgroundColor: 'white', paddingTop: 10 },
+	dn_sort_by_text: { borderColor: 'white', borderWidth: 1, paddingRight: 4, fontSize: 14, color: COLOR.PRIMARY },
+	dn_sort_bar_selected_text: { color: COLOR.PRIMARY, borderColor: 'black', borderWidth: 1, paddingHorizontal: 10, fontSize: 14 },
+	dn_sort_bar_unselected_text: { color: 'white', borderColor: 'black', borderWidth: 1, paddingHorizontal: 10, fontSize: 14, backgroundColor: COLOR.PRIMARY },
 
 	/**
 	 *  10 - Links
