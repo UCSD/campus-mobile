@@ -10,6 +10,7 @@ import QuicklinksCardContainer from '../quicklinks/QuicklinksCardContainer'
 import NewsCardContainer from '../news/NewsCardContainer'
 import DiningCardContainer from '../dining/DiningCardContainer'
 import SpecialEventsCardContainer from '../specialEvents/SpecialEventsCardContainer'
+import StudentIDCard from '../studentId/StudentIDCard'
 import FinalsCard from '../schedule/FinalsCard'
 import ScheduleCardContainer from '../schedule/ScheduleCardContainer'
 import ParkingCardContainer from '../parking/ParkingCardContainer'
@@ -84,15 +85,21 @@ export class Home extends React.Component {
 					// Skip cards if they require authentication
 					// and user is not authenticated
 					if (this.props.cards[card].authenticated) {
-						if (!this.props.user.isLoggedIn) return
-						else if (this.props.cards[card].classifications
-							&& this.props.cards[card].classifications.student
-							&& !this.props.user.profile.classifications.student) return
+						if (!this.props.user.isLoggedIn) {
+							return
+						} else if (this.props.cards[card].classifications &&
+                                   this.props.cards[card].classifications.student &&
+                                   !this.props.user.profile.classifications.student) {
+							return
+						}
 					}
 
 					switch (card) {
 						case 'specialEvents':
 							activeCards.push(<SpecialEventsCardContainer key="specialEvents" />)
+							break
+						case 'studentId':
+							activeCards.push(<StudentIDCard key="studentId" />)
 							break
 						case 'finals':
 							activeCards.push(<FinalsCard key="finals" />)
