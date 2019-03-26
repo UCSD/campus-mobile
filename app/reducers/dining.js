@@ -2,8 +2,7 @@ const initialState = {
 	data: null,
 	menus: [],
 	lastUpdated: 0,
-	lookup: null,
-	sortBy: 'Closest'
+	lookup: null
 }
 
 function dining(state = initialState, action) {
@@ -38,10 +37,6 @@ function dining(state = initialState, action) {
 			}
 
 			newState.menus = newMenusArray
-			return newState
-		}
-		case 'SET_DINING_SORT': {
-			newState.sortBy = action.sortBy
 			return newState
 		}
 
