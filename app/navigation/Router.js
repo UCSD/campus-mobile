@@ -22,7 +22,6 @@ import SurfReport from '../views/weather/SurfReport'
 import ShuttleStop from '../views/shuttle/ShuttleStop'
 import DiningDetail from '../views/dining/DiningDetail'
 import DiningNutrition from '../views/dining/DiningNutrition'
-import DiningListViewAll from '../views/dining/DiningListViewAll'
 import EventDetail from '../views/events/EventDetail'
 import NewsDetail from '../views/news/NewsDetail'
 import Feedback from '../views/preferences/feedback/Feedback'
@@ -119,12 +118,6 @@ let MainStack = createStackNavigator(
 			screen: DiningNutrition,
 			navigationOptions: {
 				title: 'Nutrition',
-			}
-		},
-		DiningListViewAll: {
-			screen: DiningListViewAll,
-			navigationOptions: {
-				title: 'Dining',
 			}
 		},
 		ShuttleStop: {

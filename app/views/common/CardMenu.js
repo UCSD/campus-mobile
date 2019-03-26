@@ -31,6 +31,9 @@ const CardMenu = ({
 					<Icon size={28} style={css.cm_trigger} name="md-more" />
 				</MenuTrigger>
 				<MenuOptions>
+					<MenuOption onSelect={() => { hideCard(id) }}>
+						<Text style={css.cm_option}>Hide Card</Text>
+					</MenuOption>
 					{
 						(cardRefresh) ? (
 							<MenuOption onSelect={() => { cardRefresh() }}>
@@ -39,9 +42,6 @@ const CardMenu = ({
 						) : (null)
 					}
 					{extraOptions}
-					<MenuOption onSelect={() => { hideCard(id) }}>
-						<Text style={css.cm_option}>Hide Card</Text>
-					</MenuOption>
 				</MenuOptions>
 			</Menu>
 		)

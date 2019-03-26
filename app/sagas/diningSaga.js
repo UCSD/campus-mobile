@@ -1,9 +1,9 @@
-import { put, takeLatest, call, select, race, all } from 'redux-saga/effects'
+import { put, takeLatest, call, select, race } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 import logger from '../util/logger'
 import DiningService from '../services/diningService'
 import { DINING_API_TTL, DINING_MENU_API_TTL, HTTP_REQUEST_TTL } from '../AppSettings'
-import { convertMetersToMiles, getDistanceMilesStr, dynamicSort, sortNearbyMarkers, timeDiff } from '../util/general'
+import { convertMetersToMiles, getDistanceMilesStr, dynamicSort, timeDiff } from '../util/general'
 import { getDistance } from '../util/map'
 
 const getDining = state => (state.dining)
@@ -96,77 +96,18 @@ function* fetchDiningMenu(id) {
 		yield put({ type: 'GET_DINING_MENU_FAILURE', error })
 	}
 }
-function* reorderDining() {
-	const { sortBy, data } = yield select(getDining)
-	switch (sortBy) {
-		case 'A-Z': {
-			// Sort dining locations nearest to you
-			if (Array.isArray(data)) {
-				const sortedDiningData = data.slice()
-				yield all(sortedDiningData.sort(dynamicSort('name')))
-				yield put({ type: 'SET_DINING', data: sortedDiningData })
-			}
-			break
-		}
-		case 'Closest': {
-			// Sort dining locations by name
-			if (Array.isArray(data)) {
-				const sortedDiningData = data.slice()
-				yield all(sortedDiningData.sort(sortNearbyMarkers))
-				yield put({ type: 'SET_DINING', data: sortedDiningData })
-			}
-			break
-		}
-		default:
-			// on defualt sort dining locations by name
-			if (Array.isArray(data)) {
-				const sortedDiningData = data.slice()
-				yield all(sortedDiningData.sort(dynamicSort('name')))
-				yield put({ type: 'SET_DINING', data: sortedDiningData })
-			}
-			break
-	}
-}
 
 function _sortDining(diningData) {
-	const { sortBy } = select(getDining)
-	switch (sortBy) {
-		case 'A-Z': {
-			// Sort dining locations nearest to you
-			return new Promise((resolve, reject) => {
-				if (Array.isArray(diningData)) {
-					const sortedDiningData = diningData.slice()
-					sortedDiningData.sort(sortNearbyMarkers)
-					resolve(sortedDiningData)
-				} else {
-					reject(new Error('Err:_sortDining:' + diningData))
-				}
-			})
+	// Sort dining locations by name
+	return new Promise((resolve, reject) => {
+		if (Array.isArray(diningData)) {
+			const sortedDiningData = diningData.slice()
+			sortedDiningData.sort(dynamicSort('name'))
+			resolve(sortedDiningData)
+		} else {
+			reject(new Error('Err:_sortDining:' + diningData))
 		}
-		case 'Closest': {
-		// Sort dining locations by name
-			return new Promise((resolve, reject) => {
-				if (Array.isArray(diningData)) {
-					const sortedDiningData = diningData.slice()
-					sortedDiningData.sort(dynamicSort('name'))
-					resolve(sortedDiningData)
-				} else {
-					reject(new Error('Err:_sortDining:' + diningData))
-				}
-			})
-		}
-		default:
-			// Sort dining locations by name
-			return new Promise((resolve, reject) => {
-				if (Array.isArray(diningData)) {
-					const sortedDiningData = diningData.slice()
-					sortedDiningData.sort(dynamicSort('name'))
-					resolve(sortedDiningData)
-				} else {
-					reject(new Error('Err:_sortDining:' + diningData))
-				}
-			})
-	}
+	})
 }
 
 function _setDiningDistance(position, diningData) {
@@ -208,7 +149,6 @@ function _setDiningDistance(position, diningData) {
 function* diningSaga() {
 	yield takeLatest('UPDATE_DINING', updateDining)
 	yield takeLatest('GET_DINING_MENU', getDiningMenu)
-	yield takeLatest('REORDER_DINING', reorderDining)
 }
 
 export default diningSaga
