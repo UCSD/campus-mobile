@@ -1,7 +1,8 @@
 import React from 'react'
-import { ScrollView, Alert } from 'react-native'
+import { View, Text, ScrollView, Alert } from 'react-native'
 import { connect } from 'react-redux'
 import { checkGooglePlayServices } from 'react-native-google-api-availability-bridge'
+import Barcode from 'react-native-barcode-builder'
 
 import WeatherCardContainer from '../weather/WeatherCardContainer'
 import ShuttleCardContainer from '../shuttle/ShuttleCardContainer'
@@ -16,6 +17,7 @@ import ScheduleCardContainer from '../schedule/ScheduleCardContainer'
 import ParkingCardContainer from '../parking/ParkingCardContainer'
 import { platformAndroid, gracefulFatalReset } from '../../util/general'
 import logger from '../../util/logger'
+import css from '../../styles/css'
 
 export class Home extends React.Component {
 	constructor(props) {
@@ -153,6 +155,17 @@ export class Home extends React.Component {
 				scrollEventThrottle={0}
 			>
 				{/* LOAD CARDS */}
+
+				<View style={[css.card_main, css.card_demo]}>
+					<Text style={{ fontSize: 26 }}>
+						`1234567890`
+					</Text>
+					<Barcode
+						format="codabar"
+						value="1234567890"
+					/>
+				</View>
+
 				{ this._getCards() }
 			</ScrollView>
 		)

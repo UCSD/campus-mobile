@@ -70,6 +70,7 @@ const css = StyleSheet.create({
 	 */
 	// Cards
 	card_main: { borderWidth: 1, borderRadius: 2, borderColor: COLOR.MGREY, backgroundColor: COLOR.WHITE, margin: 6, alignItems: 'flex-start', justifyContent: 'center', overflow: 'hidden' },
+	card_demo: { alignItems: 'center' },
 	card_row_container: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: 8, paddingBottom: 0 },
 	card_footer_container: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: 8 },
 	card_button_container: { padding: 6, borderTopWidth: 1, borderTopColor: COLOR.MGREY },
