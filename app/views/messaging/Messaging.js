@@ -83,7 +83,7 @@ export class Messaging extends Component {
 		let myMessagesStatusText = ''
 		if (isLoading) {
 			myMessagesStatusText = 'Loading your notifications, please wait.'
-		} else if (!this.props.myMessagesError) {
+		} else if (this.props.myMessagesError) {
 			myMessagesStatusText = 'There was a problem fetching your messages.\n\n' +
 								   'Please try again soon.'
 		} else if (messages && messages.length === 0) {
