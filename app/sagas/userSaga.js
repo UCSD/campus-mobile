@@ -107,11 +107,13 @@ function* queryUserData() {
 	// subscribe them to their topics.
 	if (profile.classifications) {
 		if (profile.classifications.student) {
-			// subscribe to default student topics
-			yield put({ type: 'SUBSCRIBE_TO_TOPIC', topicId: 'students' })
+			// Only add student subscription if synced profile doesnt exist ie: first time log in
+			if (!syncedProfile.subscribedTopics) {
+				// subscribe to default student topics
+				yield put({ type: 'SUBSCRIBE_TO_TOPIC', topicId: 'students' })
+			}
 		}
 	}
-
 	// If their synced profile has unsubscribed from these topics,
 	// that is synced in the next few steps and handled accordingly
 
