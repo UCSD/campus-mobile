@@ -3,6 +3,7 @@ import { View, Text, ScrollView, Alert } from 'react-native'
 import { connect } from 'react-redux'
 import { checkGooglePlayServices } from 'react-native-google-api-availability-bridge'
 import Barcode from 'react-native-barcode-builder'
+import Modal from 'react-native-modal'
 
 import WeatherCardContainer from '../weather/WeatherCardContainer'
 import ShuttleCardContainer from '../shuttle/ShuttleCardContainer'
@@ -15,14 +16,19 @@ import StudentIDCard from '../studentId/StudentIDCard'
 import FinalsCard from '../schedule/FinalsCard'
 import ScheduleCardContainer from '../schedule/ScheduleCardContainer'
 import ParkingCardContainer from '../parking/ParkingCardContainer'
+import Touchable from '../common/Touchable'
 import { platformAndroid, gracefulFatalReset } from '../../util/general'
 import logger from '../../util/logger'
 import css from '../../styles/css'
+import COLOR from '../../styles/ColorConstants'
 
 export class Home extends React.Component {
 	constructor(props) {
 		super(props)
-		this.state = { updatedGoogle: true } // eslint-disable-line
+		this.state = {
+			updatedGoogle: true, // eslint-disable-line
+			isModalVisible: false
+		}
 	}
 
 	componentWillMount() {
@@ -43,7 +49,8 @@ export class Home extends React.Component {
 	shouldComponentUpdate(nextProps, nextState) {
 		if (this.props.cards !== nextProps.cards ||
 			this.props.cardOrder !== nextProps.cardOrder ||
-			this.props.user.isLoggedIn !== nextProps.user.isLoggedIn) {
+			this.props.user.isLoggedIn !== nextProps.user.isLoggedIn ||
+			this.state.isModalVisible !== nextState.isModalVisible) {
 			return true
 		} else {
 			return false
@@ -76,6 +83,10 @@ export class Home extends React.Component {
 		if (this.props.updateScroll) {
 			this.props.updateScroll(event.nativeEvent.contentOffset.y)
 		}
+	}
+
+	_toggleModal = () => {
+		this.setState({ isModalVisible: !this.state.isModalVisible })
 	}
 
 	_getCards = () => {
@@ -157,13 +168,36 @@ export class Home extends React.Component {
 				{/* LOAD CARDS */}
 
 				<View style={[css.card_main, css.card_demo]}>
-					<Text style={{ fontSize: 26 }}>
-						`1234567890`
-					</Text>
-					<Barcode
-						format="codabar"
-						value="1234567890"
-					/>
+					<Touchable onPress={this._toggleModal}>
+						<View style={{ transform: [{ scaleX: 0.75 }] }}>
+							<Barcode
+								format="codabar"
+								value="1234567890"
+								width={2}
+								height={40}
+							/>
+						</View>
+					</Touchable>
+
+					<Modal
+						style={{ margin: 0, backgroundColor: COLOR.WHITE }}
+						isVisible={this.state.isModalVisible}
+					>
+						<View style={{ position: 'absolute', bottom: 32, right: 16, transform: [{ rotate: '90deg' }], fontSize: 16 }}>
+							<Touchable onPress={() => this.setState({ isModalVisible: false })}>
+								<Text style={{ textAlign: 'right', padding: 8, color: COLOR.PRIMARY }}>Close</Text>
+							</Touchable>
+						</View>
+
+						<View style={{ transform: [{ rotate: '90deg' }] }}>
+							<Barcode
+								format="codabar"
+								value="1234567890"
+								height={100}
+								width={4}
+							/>
+						</View>
+					</Modal>
 				</View>
 
 				{ this._getCards() }
