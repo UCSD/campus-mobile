@@ -109,6 +109,7 @@ function* queryUserData() {
 		if (profile.classifications.student) {
 			// subscribe to default student topics
 			yield put({ type: 'SUBSCRIBE_TO_TOPIC', topicId: 'students' })
+			yield put({ type: 'UPDATE_STUDENT_PROFILE' })
 		}
 	}
 

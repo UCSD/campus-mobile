@@ -8,7 +8,7 @@ const initialState = {
 			component: 'SpecialEventsCard'
 		},
 		studentId: {
-			id: 'studentId',
+			id: 'studentID',
 			active: true,
 			name: 'Student ID',
 			component: 'StudentIDCard',
@@ -85,7 +85,7 @@ const initialState = {
 		'events',
 		'news',
 		'quicklinks',
-		'weather'
+		'weather',
 	],
 }
 
