@@ -67,6 +67,8 @@
 	<string>$(PRODUCT_NAME) calendar use.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Allowing location access while using the app allows cards to display information relevant to your location.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Allowing location access allows cards to display information relevant to your location.</string>
 	<key>NSMotionUsageDescription</key>
 	<string>$(PRODUCT_NAME) motion use.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
