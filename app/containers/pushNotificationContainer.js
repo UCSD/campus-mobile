@@ -1,15 +1,18 @@
 import React from 'react'
-import {
-	Alert,
-	Platform,
-} from 'react-native'
+import { Alert, Platform, AppState } from 'react-native'
 import { connect } from 'react-redux'
 import firebase from 'react-native-firebase'
 import Permissions from 'react-native-permissions'
 import NavigationService from '../navigation/NavigationService'
 
 class PushNotificationContainer extends React.Component {
+	state = {
+		appState: AppState.currentState
+	}
+
 	async componentDidMount() {
+		AppState.addEventListener('change', this._handleAppStateChange)
+
 		this.checkPermission()
 
 		this.onTokenRefreshListener = firebase.messaging().onTokenRefresh((fcmToken) => {
@@ -62,6 +65,7 @@ class PushNotificationContainer extends React.Component {
 	componentWillUnmount() {
 		this.onTokenRefreshListener()
 		this.messageListener()
+		AppState.removeEventListener('change', this._handleAppStateChange)
 	}
 
 	getNotificationToken = () => {
@@ -129,6 +133,13 @@ class PushNotificationContainer extends React.Component {
 	// Set device information along with app push ID token
 	updateServerToken = (token) => {
 		// TODO: send token to server so we can push notifications here
+	}
+
+	_handleAppStateChange = (nextAppState) => {
+		if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
+			this.props.updateMessages(new Date().getTime())
+		}
+		this.setState({ appState: nextAppState })
 	}
 
 	render() {
