@@ -5,6 +5,7 @@ import Entypo from 'react-native-vector-icons/Entypo'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Feather from 'react-native-vector-icons/Feather'
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import Touchable from '../common/Touchable'
 import { openURL } from '../../util/general'
 import css from '../../styles/css'
@@ -17,7 +18,15 @@ import css from '../../styles/css'
  * @param {Object} style Optional style
  * @return {JSX} Return PreferencesItem JSX
  */
-const PreferencesItem = ({ title, iconPack, icon, linkType, link, style, navigation }) => (
+const PreferencesItem = ({
+	title,
+	iconPack,
+	icon,
+	linkType,
+	link,
+	style,
+	navigation
+}) => (
 	<Touchable
 		onPress={() => {
 			if (linkType === 'internal') {
@@ -37,8 +46,11 @@ const PreferencesItem = ({ title, iconPack, icon, linkType, link, style, navigat
 		{iconPack === 'FontAwesome' ? (
 			<FontAwesome name={icon} size={24} style={css.pi_icon} />
 		) : null }
+		{iconPack === 'MaterialIcons' ? (
+			<MaterialIcons name={icon} size={24} style={css.pi_icon} />
+		) : null }
 		<Text style={css.pi_title}>{title}</Text>
-		<Ionicons name="ios-arrow-forward" size={24} style={css.pi_arrow} />
+		<Ionicons name="ios-arrow-forward" size={28} style={css.fl_row_arrow} />
 	</Touchable>
 )
 

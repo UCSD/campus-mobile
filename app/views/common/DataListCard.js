@@ -1,8 +1,6 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { View, Text, ActivityIndicator } from 'react-native'
 import { withNavigation } from 'react-navigation'
-
 import DataListView from './DataListView'
 import Card from '../common/Card'
 import Touchable from './Touchable'
@@ -34,9 +32,7 @@ export const DataListCard = ({ navigation, id, title, data, item, rows, cardSort
 							item={item}
 							card={false}
 						/>
-						<Touchable onPress={() => (
-							navigation.navigate('DataListViewAll', { title, data, item })
-						)}>
+						<Touchable onPress={() => (navigation.navigate('DataListViewAll', { title, data, item }))}>
 							<View style={css.card_button_container}>
 								<Text style={css.card_button_text}>View All</Text>
 							</View>
@@ -50,14 +46,6 @@ export const DataListCard = ({ navigation, id, title, data, item, rows, cardSort
 			</View>
 		</Card>
 	)
-}
-
-DataListCard.propTypes = {
-	title: PropTypes.string.isRequired,
-	data: PropTypes.array,
-	item: PropTypes.string.isRequired,
-	rows: PropTypes.number,
-	cardSort: PropTypes.func,
 }
 
 DataListCard.defaultProps = {

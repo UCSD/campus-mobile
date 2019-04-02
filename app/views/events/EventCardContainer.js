@@ -1,15 +1,10 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import moment from 'moment'
-
 import DataListCard from '../common/DataListCard'
-import logger from '../../util/logger'
 import { militaryToAMPM } from '../../util/general'
 
 export const EventCardContainer = ({ eventsData }) => {
-	logger.ga('Card Mounted: Events')
-
 	let data = null
 	if (Array.isArray(eventsData)) {
 		const parsedEventsData = eventsData.slice()
@@ -32,9 +27,9 @@ export const EventCardContainer = ({ eventsData }) => {
 	)
 }
 
-EventCardContainer.defaultProps = { eventsData: null }
-
-EventCardContainer.propTypes = { eventsData: PropTypes.arrayOf(PropTypes.object) }
+EventCardContainer.defaultProps = {
+	eventsData: null
+}
 
 const mapStateToProps = state => (
 	{ eventsData: state.events.data }

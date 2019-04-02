@@ -1,19 +1,12 @@
 import React, { Component } from 'react'
-import {
-	View,
-	StyleSheet,
-	Text,
-	ScrollView
-} from 'react-native'
+import { View, Text, ScrollView } from 'react-native'
 import { connect } from 'react-redux'
 import HeaderButtons from 'react-navigation-header-buttons'
 import moment from 'moment'
-
 import css from '../../styles/css'
 import logger from '../../util/logger'
 import SpecialEventsListView from './SpecialEventsListView'
 import COLOR from '../../styles/ColorConstants'
-import LAYOUT from '../../styles/LayoutConstants'
 import Touchable from '../common/Touchable'
 
 class SpecialEventsView extends Component {
@@ -84,7 +77,7 @@ class SpecialEventsView extends Component {
 						handleDayPress={this.handleDayPress}
 					/>
 					<SpecialEventsListView
-						style={styles.specialEventsListView}
+						style={css.sev_specialEventsListView}
 						scrollEnabled={true}
 						personal={personal}
 						selectedDay={this.props.days[this.state.selectedDay]}
@@ -110,31 +103,26 @@ class SpecialEventsView extends Component {
 	}
 }
 
-const mapStateToProps = state => ({
-	days: state.specialEvents.data ? state.specialEvents.data.dates : null
-})
-export default connect(mapStateToProps)(SpecialEventsView)
-
 const FakeTabBar = ({ personal, handleFullPress, handleMinePress }) => (
-	<View style={styles.tabBar}>
-		<View style={styles.buttonContainer}>
+	<View style={css.sev_tabBar}>
+		<View style={css.sev_buttonContainer}>
 			<Touchable
-				style={personal ? (styles.plainButton) : ([styles.selectedButton, styles.hideLeftBorder])}
+				style={personal ? (css.sev_plainButton) : ([css.sev_selectedButton, css.sev_hideLeftBorder])}
 				onPress={() => handleFullPress()}
 			>
 				<Text
-					style={personal ? styles.plainText : styles.selectedText}
+					style={personal ? css.sev_plainText : css.sev_selectedText}
 					allowFontScaling={false}
 				>
 					Full Schedule
 				</Text>
 			</Touchable>
 			<Touchable
-				style={personal ? styles.selectedButton : styles.plainButton}
+				style={personal ? css.sev_selectedButton : css.sev_plainButton}
 				onPress={() => handleMinePress()}
 			>
 				<Text
-					style={personal ? styles.selectedText : styles.plainText}
+					style={personal ? css.sev_selectedText : css.sev_plainText}
 					allowFontScaling={false}
 				>
 					My Schedule
@@ -145,12 +133,12 @@ const FakeTabBar = ({ personal, handleFullPress, handleMinePress }) => (
 )
 
 const DaysBar = ({ days, selectedDay, handleDayPress }) => (
-	<View style={styles.daysBar}>
+	<View style={css.sev_daysBar}>
 		<ScrollView
 			horizontal
 			showsHorizontalScrollIndicator={false}
-			style={styles.scrollButtonContainer}
-			contentContainerStyle={styles.scrollContentContainer}
+			style={css.sev_scrollButtonContainer}
+			contentContainerStyle={css.sev_scrollContentContainer}
 		>
 			{
 				days.map((day, index) => {
@@ -158,15 +146,15 @@ const DaysBar = ({ days, selectedDay, handleDayPress }) => (
 
 					if (index === 0) {
 						if (index === selectedDay) {
-							tabStyle = styles.selectedFirstButton
+							tabStyle = css.sev_selectedFirstButton
 						} else {
-							tabStyle = styles.plainFirstButton
+							tabStyle = css.sev_plainFirstButton
 						}
 					} else {
 						if (index === selectedDay) {
-							tabStyle = styles.selectedButton
+							tabStyle = css.sev_selectedButton
 						} else {
-							tabStyle = styles.plainButton
+							tabStyle = css.sev_plainButton
 						}
 					}
 
@@ -176,9 +164,7 @@ const DaysBar = ({ days, selectedDay, handleDayPress }) => (
 							style={tabStyle}
 							onPress={() => handleDayPress(index)}
 						>
-							<Text
-								style={index !== selectedDay ? styles.plainText : styles.selectedDayText}
-							>
+							<Text style={index !== selectedDay ? css.sev_plainText : css.sev_selectedDayText}>
 								{moment(day).format('MMM D')}
 							</Text>
 						</Touchable>
@@ -189,22 +175,5 @@ const DaysBar = ({ days, selectedDay, handleDayPress }) => (
 	</View>
 )
 
-const styles = StyleSheet.create({
-	specialEventsListView: { flex: 1 },
-	scrollButtonContainer: { flexDirection: 'row' },
-	scrollContentContainer: { flexGrow: 1 },
-	buttonContainer: { flex: 1, flexDirection: 'row', alignItems: 'center' },
-	selectedButton: { flexGrow: 1, minWidth: Math.round(LAYOUT.WINDOW_WIDTH / 3.65), height: LAYOUT.TAB_BAR_HEIGHT, alignItems: 'center', justifyContent: 'center', backgroundColor: COLOR.SECONDARY, borderLeftWidth: 1, borderLeftColor: COLOR.MGREY },
-	selectedFirstButton: { flexGrow: 1, minWidth: LAYOUT.WINDOW_WIDTH / 4, height: LAYOUT.TAB_BAR_HEIGHT, alignItems: 'center', justifyContent: 'center', backgroundColor: COLOR.SECONDARY },
-	plainButton: { flexGrow: 1, minWidth: Math.round(LAYOUT.WINDOW_WIDTH / 3.65), height: LAYOUT.TAB_BAR_HEIGHT, alignItems: 'center', justifyContent: 'center', backgroundColor: COLOR.WHITE, borderLeftWidth: 1, borderLeftColor: COLOR.MGREY },
-	plainFirstButton: { flexGrow: 1, minWidth: Math.round(LAYOUT.WINDOW_WIDTH / 3.65), height: LAYOUT.TAB_BAR_HEIGHT, alignItems: 'center', justifyContent: 'center', backgroundColor: COLOR.WHITE },
-	hideLeftBorder: { borderLeftWidth: 0 },
-	selectedText: { textAlign: 'center', fontSize: 18, color: 'white' },
-	plainText: { textAlign: 'center', fontSize: 18, opacity: 0.5 },
-	tabBar: { borderTopWidth: 1, borderColor: COLOR.DGREY, backgroundColor: COLOR.WHITE, height: LAYOUT.TAB_BAR_HEIGHT },
-	daysBar: { borderBottomWidth: 1, borderColor: COLOR.MGREY, backgroundColor: COLOR.WHITE, height: LAYOUT.TAB_BAR_HEIGHT },
-	selectedDayText: { textAlign: 'center', fontSize: 18, color: COLOR.WHITE, backgroundColor: COLOR.SECONDARY },
-	filterText: { textAlign: 'center', fontSize: 17, color: 'white' },
-	backButtonContainer: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: -7 },
-	backButtonImage: { color: COLOR.WHITE, marginRight: 7 },
-})
+const mapStateToProps = state => ({	days: state.specialEvents.data ? state.specialEvents.data.dates : null })
+export default connect(mapStateToProps)(SpecialEventsView)

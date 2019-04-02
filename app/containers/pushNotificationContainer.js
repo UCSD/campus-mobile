@@ -6,33 +6,60 @@ import {
 import { connect } from 'react-redux'
 import firebase from 'react-native-firebase'
 import Permissions from 'react-native-permissions'
+import NavigationService from '../navigation/NavigationService'
 
 class PushNotificationContainer extends React.Component {
-	componentDidMount() {
+	async componentDidMount() {
 		this.checkPermission()
 
 		this.onTokenRefreshListener = firebase.messaging().onTokenRefresh((fcmToken) => {
-			// Process your token as required
-			console.log('Firebase Token (refresh):', fcmToken)
-
-			// Subscribe to topics
+			/** Subscribe to topics **/
 			this.props.refreshSubscriptions()
 
+			/** If logged in, register token **/
 			if (this.props.user.isLoggedIn) this.props.registerToken(fcmToken)
 		})
 
 		this.messageListener = firebase.messaging().onMessage((message) => {
-			this.props.updateMessages()
+			this.props.updateMessages(new Date().getTime())
 		})
 
+		// this runs when the app is in foreground and notification is received
 		this.notificationListener = firebase.notifications().onNotification((notification) => {
-			console.log('New notification received: ', notification)
-			this.props.updateMessages()
+			// body and title is available for android here
+			this.props.updateMessages(new Date().getTime())
 		})
+		// this runs if app was in background or foreground and the notification was tapped
+		this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen: firebase.NotificationOpen) => {
+			const { notification } = notificationOpen
+			const { routeName, params } = notification.data
+			this.props.updateMessages(new Date().getTime())
+			if (routeName) {
+				NavigationService.navigate(routeName, params)
+			} else {
+				NavigationService.navigate('Messaging', params)
+			}
+			// body and title is available for android here
+		})
+
+		// this only runs if the app was compeltely closed (not in foreground or background) and the notification was tapped
+		const notificationOpen: firebase.NotificationOpen = await firebase.notifications().getInitialNotification()
+		if (notificationOpen) {
+			// App was opened by a notification
+			const { notification } = notificationOpen
+			const { routeName, params } = notification.data
+			this.props.updateMessages(new Date().getTime())
+			NavigationService.navigate(routeName, params)
+			if (routeName) {
+				NavigationService.navigate(routeName, params)
+			} else {
+				NavigationService.navigate('Messaging', params)
+			}
+			// body and title is not available for android here
+		}
 	}
 
 	componentWillUnmount() {
-		// stop listening for events
 		this.onTokenRefreshListener()
 		this.messageListener()
 	}
@@ -41,9 +68,7 @@ class PushNotificationContainer extends React.Component {
 		firebase.messaging().getToken()
 			.then((fcmToken) => {
 				if (fcmToken) {
-					console.log('Firebase Token: ', fcmToken)
-
-					// Subscribe to topics
+					/** Subscribe to topics **/
 					this.props.refreshSubscriptions()
 				}
 			})
@@ -103,16 +128,12 @@ class PushNotificationContainer extends React.Component {
 
 	// Set device information along with app push ID token
 	updateServerToken = (token) => {
-		console.log('push token', token)
-
 		// TODO: send token to server so we can push notifications here
 	}
 
 	render() {
-		// When app launches, update messages for the first time
-		this.props.updateMessages()
-
-		return null // TODO: render error message if user does not allow location
+		// TODO: render error message if user does not allow location
+		return null
 	}
 }
 

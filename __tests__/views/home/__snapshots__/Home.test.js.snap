@@ -5,11 +5,11 @@ exports[`renders without crashing 1`] = `
   onScroll={[Function]}
   scrollEventThrottle={0}
 >
-  <Connect(WeatherCardContainer)
-    key="weather"
-  />
   <Connect(withNavigation(ShuttleCardContainer))
     key="shuttle"
+  />
+  <Connect(withNavigation(ParkingCardContainer))
+    key="parking"
   />
   <Connect(DiningCardContainer)
     key="dining"
@@ -17,11 +17,14 @@ exports[`renders without crashing 1`] = `
   <Connect(EventCardContainer)
     key="events"
   />
+  <Connect(NewsCardContainer)
+    key="news"
+  />
   <Connect(QuicklinksCardContainer)
     key="quicklinks"
   />
-  <Connect(NewsCardContainer)
-    key="news"
+  <Connect(WeatherCardContainer)
+    key="weather"
   />
 </ScrollView>
 `;

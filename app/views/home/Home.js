@@ -1,5 +1,5 @@
 import React from 'react'
-import { Image, ScrollView, Alert } from 'react-native'
+import { ScrollView, Alert } from 'react-native'
 import { connect } from 'react-redux'
 import { checkGooglePlayServices } from 'react-native-google-api-availability-bridge'
 
@@ -14,20 +14,12 @@ import FinalsCard from '../schedule/FinalsCard'
 import ScheduleCardContainer from '../schedule/ScheduleCardContainer'
 import ParkingCardContainer from '../parking/ParkingCardContainer'
 import { platformAndroid, gracefulFatalReset } from '../../util/general'
-import css from '../../styles/css'
 import logger from '../../util/logger'
 
-const campusLogoImage = require('../../assets/images/UCSanDiegoLogo-nav.png')
-
 export class Home extends React.Component {
-	static navigationOptions = {
-		title: 'Home',
-		headerTitle: <Image source={campusLogoImage} style={css.navCampusLogoTitle} />
-	};
-
 	constructor(props) {
 		super(props)
-		this.state = { updatedGoogle: true }
+		this.state = { updatedGoogle: true } // eslint-disable-line
 	}
 
 	componentWillMount() {
@@ -141,7 +133,7 @@ export class Home extends React.Component {
 	updateGooglePlay = () => {
 		checkGooglePlayServices((result) => {
 			if (result === 'update') {
-				this.setState({ updatedGoogle: false })
+				this.setState({ updatedGoogle: false }) // eslint-disable-line
 			}
 		})
 	}

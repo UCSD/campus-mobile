@@ -1,17 +1,12 @@
 import React, { Component } from 'react'
-import {
-	View,
-	Text,
-	FlatList,
-	ScrollView,
-	RefreshControl,
-	ActivityIndicator
-} from 'react-native'
+import { View, Text, FlatList, ActivityIndicator } from 'react-native'
 import { connect } from 'react-redux'
+import Hyperlink from 'react-native-hyperlink'
 import moment from 'moment'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import logger from '../../util/logger'
 import css from '../../styles/css'
+import { openURL } from '../../util/general'
 import { DGREY } from '../../styles/ColorConstants'
 
 const checkData = (data) => {
@@ -23,26 +18,20 @@ const checkData = (data) => {
 		}
 		return false
 	})
-
 	return cleanData
 }
 
 export class Messaging extends Component {
-	static navigationOptions = { title: 'Notifications' }
-
 	componentDidMount() {
 		logger.ga('View Loaded: Messaging')
+		this.props.updateMessages(new Date().getTime())
 		this.props.navigation.addListener('willFocus', () => {
-			this.props.setLatestTimeStamp(new Date().getTime())
+			const { unreadMessages } = this.props.messages
+			if (unreadMessages > 0) {
+				this.props.notificationsSeen()
+			}
 		})
 	}
-
-	renderSeparator = ({ leadingItem }) => (
-		<View
-			// style={{ height: 1, width: '100%', backgroundColor: '#D2D2D2' }}
-			style={css.notifications_section_list_separator}
-		/>
-	)
 
 	renderItem = ({ item }) => {
 		const { message, timestamp } = item
@@ -68,7 +57,14 @@ export class Messaging extends Component {
 				<View  style={{ flexDirection: 'column', justifyContent: 'center', flex: 1 }}>
 					<Text style={css.notifications_timestamp_text}>{timeString}</Text>
 					<Text style={css.notifications_title_text}>{title}</Text>
-					<Text style={css.notifications_body_text}>{messageText}</Text>
+					<View style={css.notifications_body_text_container}>
+						<Hyperlink
+							onPress={(url, text) => openURL(url)}
+							linkStyle={(css.hyperlink)}
+						>
+							<Text style={css.notifications_body_text}>{messageText}</Text>
+						</Hyperlink>
+					</View>
 				</View>
 			</View>
 		)
@@ -79,55 +75,48 @@ export class Messaging extends Component {
 		const { updateMessages } = this.props
 		const filteredData = checkData(messages)
 
-		// this will clear the notifications badge when the user is on this screen
-		if (this.props.navigation.isFocused() && unreadMessages) {
-			this.props.setLatestTimeStamp(new Date().getTime())
+		const isLoading = (this.props.myMessagesStatus != null)
+		if (!isLoading && unreadMessages && this.props.navigation.isFocused()) {
+			this.props.notificationsSeen()
 		}
 
-		let isLoading = false
-		if (this.props.myMessagesStatus) isLoading = true
+		let myMessagesStatusText = ''
+		if (isLoading) {
+			myMessagesStatusText = 'Loading your notifications, please wait.'
+		} else if (this.props.myMessagesError) {
+			myMessagesStatusText = 'There was a problem fetching your messages.\n\n' +
+								   'Please try again soon.'
+		} else if (messages && messages.length === 0) {
+			myMessagesStatusText = 'You have no notifications.\nYou may be opted out of all topics.\n\n' +
+								   'Notifications to specific topics can be turned on in User Profile.'
+		}
 
-		if (Array.isArray(filteredData) && filteredData.length > 0) {
-			return (
-				<FlatList
-					data={filteredData}
-					style={css.scroll_default}
-					contentContainerStyle={css.main_full}
-					onRefresh={() => updateMessages(new Date().getTime())}
-					refreshing={isLoading}
-					renderItem={this.renderItem}
-					keyExtractor={(item, index) => item.id}
-					ItemSeparatorComponent={this.renderSeparator}
-					onEndReachedThreshold={0.5}
-					ListFooterComponent={(isLoading && nextTimestamp) ? <ActivityIndicator size="large" animating /> : null}
-					onEndReached={(info) => {
-						// this if check makes sure that we dont fetch extra data in the intialization of the list
-						if (info.distanceFromEnd > 0
-							&& nextTimestamp
-							&& !isLoading) {
-							updateMessages(nextTimestamp)
-						}
-					}}
-				/>
-			)
-		} else {
-			return (
-				<ScrollView
-					style={css.scroll_default}
-					contentContainerStyle={css.main_full_flex}
-					refreshControl={
-						<RefreshControl
-							refreshing={isLoading}
-							onRefresh={() => updateMessages(new Date().getTime())}
-						/>
+		return (
+			<FlatList
+				data={filteredData}
+				ListEmptyComponent={
+					<Text style={css.notifications_status}>
+						{myMessagesStatusText}
+					</Text>
+				}
+				style={css.scroll_default}
+				contentContainerStyle={css.main_full}
+				onRefresh={() => updateMessages(new Date().getTime())}
+				refreshing={isLoading}
+				renderItem={this.renderItem}
+				keyExtractor={(item, index) => item.id}
+				onEndReachedThreshold={0.5}
+				ListFooterComponent={(isLoading && nextTimestamp) ? <ActivityIndicator size="large" animating /> : null}
+				onEndReached={(info) => {
+					// this if check makes sure that we dont fetch extra data in the intialization of the list
+					if (info.distanceFromEnd > 0
+						&& nextTimestamp
+						&& !isLoading) {
+						updateMessages(nextTimestamp)
 					}
-				>
-					<View style={css.main_full_flex}>
-						<Text style={css.notifications_err}>There was a problem fetching your messages.{'\n\n'}Please try again soon.</Text>
-					</View>
-				</ScrollView>
-			)
-		}
+				}}
+			/>
+		)
 	}
 }
 
@@ -145,7 +134,8 @@ const mapDispatchToProps = (dispatch, ownProps) => (
 		updateMessages: (timestamp) => {
 			dispatch({ type: 'UPDATE_MESSAGES', timestamp })
 		},
-		setLatestTimeStamp: (timestamp) => {
+		notificationsSeen: () => {
+			const timestamp = new Date().getTime()
 			const profileItems = { latestTimeStamp: timestamp }
 			dispatch({ type: 'MODIFY_LOCAL_PROFILE', profileItems })
 			dispatch({ type: 'SET_UNREAD_MESSAGES',  count: 0 })

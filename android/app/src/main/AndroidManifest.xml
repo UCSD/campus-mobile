@@ -1,11 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.ucsd"
     android:versionCode="1"
-    android:versionName="6.1.2">
+    android:versionName="1.0.0">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -13,9 +11,9 @@
 
     <application
       android:name=".MainApplication"
-      android:allowBackup="true"
+      android:allowBackup="false"
       android:label="@string/app_name"
-      android:icon="@drawable/icon"
+      android:icon="@mipmap/ic_launcher"
       android:theme="@style/SplashTheme">
         <service android:name="io.invertase.firebase.messaging.RNFirebaseMessagingService">
             <intent-filter>
@@ -32,7 +30,8 @@
         android:label="@string/app_name"
         android:launchMode="singleTop"
         android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
-        android:screenOrientation="portrait">
+        android:screenOrientation="portrait"
+        android:windowSoftInputMode="adjustResize">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
@@ -48,7 +47,7 @@
           android:value="GOOGLE_MAPS_API_KEY_PH"/>
       <meta-data
         android:name="com.google.firebase.messaging.default_notification_icon"
-        android:resource="@drawable/icon_sil" />
+        android:resource="@mipmap/ic_launcher_sil" />
       <meta-data android:name="com.bugsnag.android.API_KEY"
           android:value="BUGSNAG_KEY_PH"/>
     </application>

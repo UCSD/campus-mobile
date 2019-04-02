@@ -2,7 +2,8 @@ import {
 	SHUTTLE_ROUTES_MASTER,
 	SHUTTLE_STOPS_MASTER_NO_ROUTES,
 	SHUTTLE_STOPS_API_URL,
-	SHUTTLE_VEHICLES_API_URL
+	SHUTTLE_VEHICLES_API_URL,
+	SHUTTLE_PATHS_URL
 } from '../AppSettings'
 
 export function fetchShuttleArrivalsByStop(stopID) {
@@ -38,6 +39,15 @@ export function fetchMasterRoutes() {
 		.then(response => response.json())
 		.catch((err) => {
 			console.log('Error fetchMasterRoutes' + err)
+			return null
+		})
+}
+
+export function fetchRoutePolyline(routeId) {
+	return fetch(SHUTTLE_PATHS_URL + routeId)
+		.then(response => response.json())
+		.catch((err) => {
+			console.log('Error fetchRoutePolyline' + err)
 			return null
 		})
 }

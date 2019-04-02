@@ -25,4 +25,4 @@ module.exports = {
 			'card-order': 2
 		}
 	]
-};
+}

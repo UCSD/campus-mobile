@@ -1,20 +1,13 @@
 import React from 'react'
-import {
-	View,
-	Text,
-	ScrollView,
-	StyleSheet,
-} from 'react-native'
+import { View, Text, ScrollView } from 'react-native'
 import { connect } from 'react-redux'
 import Icon from 'react-native-vector-icons/Ionicons'
 import moment from 'moment'
-
 import Touchable from '../common/Touchable'
-import css from '../../styles/css'
 import logger from '../../util/logger'
-import { gotoNavigationApp, getHumanizedDuration, platformIOS } from '../../util/general';
+import { gotoNavigationApp, getHumanizedDuration } from '../../util/general'
+import css from '../../styles/css'
 import COLOR from '../../styles/ColorConstants'
-import LAYOUT from '../../styles/LayoutConstants'
 
 class SpecialEventsDetailView extends React.Component {
 	static removeSession(remove, id, title) {
@@ -42,18 +35,17 @@ class SpecialEventsDetailView extends React.Component {
 		let talkDescription = null
 		if (data['full-description'].length > 0) {
 			talkDescription = (
-				<Text style={styles.sessionDesc}>
+				<Text style={css.sedv_sessionDesc}>
 					{data['full-description']}
 				</Text>
 			)
-		}
-		else if (data.speakers) {
+		} else if (data.speakers) {
 			talkDescription = (
 				data.speakers.map((object, i) => (
-					<View style={styles.speakerContainer} key={String(object.name) + String(i)}>
-						<Text style={styles.speakerSubTalkTitle}>{object['sub-talk-title']}</Text>
-						<Text style={styles.speakerName}>{object.name}</Text>
-						<Text style={styles.speakerPosition}>{object.position}</Text>
+					<View style={css.sedv_speakerContainer} key={String(object.name) + String(i)}>
+						<Text style={css.sedv_speakerSubTalkTitle}>{object['sub-talk-title']}</Text>
+						<Text style={css.sedv_speakerName}>{object.name}</Text>
+						<Text style={css.sedv_speakerPosition}>{object.position}</Text>
 					</View>
 				))
 			)
@@ -64,9 +56,9 @@ class SpecialEventsDetailView extends React.Component {
 		if (data['speaker-shortdesc']) {
 			speakersInfoElement = (
 				<View>
-					<Text style={styles.hostedBy}>Hosted By</Text>
-					<View style={styles.speakerContainer}>
-						<Text style={styles.speakerName}>{data['speaker-shortdesc']}</Text>
+					<Text style={css.sedv_hostedBy}>Hosted By</Text>
+					<View style={css.sedv_speakerContainer}>
+						<Text style={css.sedv_speakerName}>{data['speaker-shortdesc']}</Text>
 					</View>
 				</View>
 			)
@@ -74,8 +66,8 @@ class SpecialEventsDetailView extends React.Component {
 
 		return (
 			<ScrollView style={css.scroll_default} contentContainerStyle={css.main_full}>
-				<View style={styles.detailContainer}>
-					<View style={styles.starButton}>
+				<View style={css.sedv_detailContainer}>
+					<View style={css.sedv_starButton}>
 						<Touchable onPress={() => (
 							isSaved(saved, data.id) ? (
 								SpecialEventsDetailView.removeSession(remove, data.id, data['talk-title'])
@@ -84,37 +76,37 @@ class SpecialEventsDetailView extends React.Component {
 							)
 						)}
 						>
-							<View style={styles.starButtonInner}>
+							<View style={css.sedv_starButtonInner}>
 								<Icon
 									name="ios-star-outline"
 									size={32}
-									style={styles.starOuterIcon}
+									style={css.sedv_starOuterIcon}
 								/>
 								{ isSaved(saved, data.id)  ? (
 									<Icon
 										name="ios-star"
 										size={26}
-										style={styles.starInnerIcon}
+										style={css.sedv_starInnerIcon}
 									/>
 								) : null }
 							</View>
 						</Touchable>
 					</View>
 
-					<View style={styles.labelView}>
+					<View style={css.sedv_labelView}>
 						{ data.label ? (
-							<Text style={[styles.labelText, { color: data['label-theme'] ? data['label-theme'] : COLOR.BLACK }]}>{data.label}</Text>
+							<Text style={[css.sedv_labelText, { color: data['label-theme'] ? data['label-theme'] : COLOR.BLACK }]}>{data.label}</Text>
 						) : null }
 						{ data.label || data['talk-type'] === 'Keynote' ? (
-							<Text style={styles.labelText}> - </Text>
+							<Text style={css.sedv_labelText}> - </Text>
 						) : null }
-						<Text style={styles.labelText}>{getHumanizedDuration(data['start-time'], data['end-time'])}</Text>
+						<Text style={css.sedv_labelText}>{getHumanizedDuration(data['start-time'], data['end-time'])}</Text>
 					</View>
 
-					<Text style={styles.sessionName}>
+					<Text style={css.sedv_sessionName}>
 						{data['talk-title']}
 					</Text>
-					<Text style={styles.sessionInfo}>
+					<Text style={css.sedv_sessionInfo}>
 						{data.location} - {moment(Number(data['start-time'])).format('MMM Do YYYY, h:mm a')}
 					</Text>
 
@@ -125,9 +117,9 @@ class SpecialEventsDetailView extends React.Component {
 							underlayColor="rgba(200,200,200,.1)"
 							onPress={() => gotoNavigationApp(data.directions.latitude, data.directions.longitude)}
 						>
-							<View style={styles.sed_dir}>
-								<Text style={styles.sed_dir_label}>Directions</Text>
-								<Icon name="md-walk" size={32} style={styles.sed_dir_icon} />
+							<View style={css.sedv_sed_dir}>
+								<Text style={css.sedv_sed_dir_label}>Directions</Text>
+								<Icon name="md-walk" size={32} style={css.sedv_sed_dir_icon} />
 							</View>
 						</Touchable>
 					) : null }
@@ -150,28 +142,5 @@ function isSaved(savedArray, id) {
 }
 
 const mapStateToProps = state => ({ saved: state.specialEvents.saved })
-
 const ActualSpecialEventsDetailView = connect(mapStateToProps)(SpecialEventsDetailView)
-
-const styles = StyleSheet.create({
-	detailContainer: { width: LAYOUT.WINDOW_WIDTH, padding: 12 },
-	labelView: { flexDirection: 'row', paddingTop: 4 },
-	labelText: { fontSize: 13 },
-	sessionName: { fontSize: 24, color: COLOR.PRIMARY, paddingTop: 6 },
-	sessionInfo: { fontSize: 12, paddingTop: 16  },
-	sessionDesc: { lineHeight: 18, fontSize: 14, paddingTop: 16 },
-	hostedBy: { fontSize: 10, fontWeight: 'bold', marginTop: 16 },
-	speakerContainer: { marginTop: 2 },
-	speakerName: { fontSize: 14, fontWeight: 'bold', color: COLOR.PRIMARY, marginTop: 10 },
-	speakerPosition: { fontSize: 10, marginTop: 2 },
-	speakerSubTalkTitle: { fontSize: 14, fontWeight: 'bold', marginTop: 10 },
-	starButton: { width: 50, position: 'absolute', top: 2, right: -5, zIndex: 10 },
-	starButtonInner: { justifyContent: 'flex-start', alignItems: 'center' },
-	starOuterIcon: { color: COLOR.DGREY, position: platformIOS() ? 'absolute' : 'relative', zIndex: 10, backgroundColor: 'transparent' },
-	starInnerIcon: { color: COLOR.YELLOW, position: 'absolute', zIndex: platformIOS() ? 5 : 15, marginTop: 3 },
-	sed_dir: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderTopWidth: 1, borderTopColor: COLOR.MGREY, marginTop: 16, paddingVertical: 6 },
-	sed_dir_icon: { color: COLOR.PRIMARY, alignSelf: 'flex-end' },
-	sed_dir_label: { flex: 1, fontSize: 22, color: COLOR.PRIMARY },
-})
-
 export default ActualSpecialEventsDetailView

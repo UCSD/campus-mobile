@@ -1,8 +1,5 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { ScrollView } from 'react-native'
-
-import css from '../../styles/css'
 import logger from '../../util/logger'
 import MultiSelect from './MultiSelect'
 

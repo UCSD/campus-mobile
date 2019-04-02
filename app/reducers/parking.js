@@ -2,7 +2,7 @@ const initialState = {
 	isChecked: [true, true, true, false, false],
 	selectedSpots: ['S', 'B', 'A'],
 	parkingData: [],
-	selectedLots: ['Lot 406'],
+	selectedLots: ['Osler'],
 	showWarning: false,
 	lastUpdated: null,
 }
@@ -36,7 +36,7 @@ function parking(state = initialState, action) {
 			return newState
 		}
 		case 'SET_PARKING_DATA': {
-			newState.parkingData = [...action.parkingData]
+			newState.parkingData = [...action.newParkingData]
 			newState.lastUpdated = new Date().getTime()
 			return newState
 		}

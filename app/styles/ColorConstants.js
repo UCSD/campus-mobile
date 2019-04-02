@@ -3,6 +3,7 @@ const COLOR = {
 	SECONDARY: '#186D96',
 	PIN: '#346994',
 	VDGREY: '#333333',
+	VDGREY2: '#555555',
 	DGREY: '#747678',
 	DMGREY: '#999999',
 	CCC: '#CCCCCC',
@@ -28,6 +29,7 @@ const COLOR = {
 	AVAILABILITY_HIGH: '#00AD67',
 	TIME: '#A1A1A1',
 	DARKGRAY: '#818181',
+	BG_GRAY: '#EFEFF4'
 }
 
 module.exports = COLOR

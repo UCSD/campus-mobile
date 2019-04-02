@@ -97,8 +97,7 @@ module.exports = {
 					openStatus.isOpen = true
 					openStatus.currentHours = operatingHours
 					currentHoursIndex = i
-				}
-				else {
+				} else {
 					// Restaurant is closed during these hours.
 					if (!openStatus.isOpen) {
 						const todaysDistance = Math.abs(operatingHours.openingHour - now)
@@ -108,8 +107,7 @@ module.exports = {
 						if (!currentHoursDistance) {
 							currentHoursIndex = i
 							currentHoursDistance = todaysDistance
-						}
-						else if (todaysDistance < currentHoursDistance) {
+						} else if (todaysDistance < currentHoursDistance) {
 							currentHoursIndex = i
 							currentHoursDistance = todaysDistance
 						}
@@ -127,8 +125,7 @@ module.exports = {
 
 			if (now.isBetween(closingHourMinusOne, currentOperatingHours.closingHour)) {
 				openStatus.closingSoon = true
-			}
-			else if (now.isBetween(openingHourMinusOne, currentOperatingHours.openingHour)) {
+			} else if (now.isBetween(openingHourMinusOne, currentOperatingHours.openingHour)) {
 				openStatus.openingSoon = true
 			}
 		}

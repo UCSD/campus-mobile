@@ -9,8 +9,8 @@ The goal of this platform is to provide a responsive and intuitive native mobile
 
 | Platform | Build Status |
 |:-------:|:-------:|  
-|Android|[![Android Build status](https://build.appcenter.ms/v0.1/apps/c176abb1-b0df-46fe-a4cf-f8fa8095b0dd/branches/v6.1-rc/badge)](https://appcenter.ms)|
-|iOS|[![iOS Build status](https://build.appcenter.ms/v0.1/apps/c176abb1-b0df-46fe-a4cf-f8fa8095b0dd/branches/v6.1-rc/badge)](https://appcenter.ms)|
+|iOS|[![iOS Build status](https://build.appcenter.ms/v0.1/apps/0dd30a0f-0296-4681-a160-43897906418c/branches/dev/badge)](https://appcenter.ms)|
+|Android|[![Android Build status](https://build.appcenter.ms/v0.1/apps/c176abb1-b0df-46fe-a4cf-f8fa8095b0dd/branches/dev/badge)](https://appcenter.ms)|
 
 ## Getting Started
 
@@ -37,13 +37,13 @@ Review the [testing documentation](__tests__/README.md)
 
 ## Screenshots
 
-| Home | Shuttle | Map |
+| SSO | Classes | Parking |
 |------|---------|-----|
-| <img src="https://github.com/UCSD/campus-mobile/blob/screenshots/screenshots/v5.0/ios/weather_card.png?raw=true" width="275" alt="Home" title="Home" /> | <img src="https://github.com/UCSD/campus-mobile/blob/screenshots/screenshots/v5.0/ios/shuttle_detail.png?raw=true" width="275" alt="Shuttle" title="Shuttle" /> | <img src="https://github.com/UCSD/campus-mobile/blob/screenshots/screenshots/v5.0/ios/map.png?raw=true" width="275" alt="Map" title="Map" /> |
+| <img src="https://s3.us-west-1.amazonaws.com/ucsd-its-wts-dev/screenshots/6.1/iPhoneX/iPhoneX_login.jpg" width="275" alt="SSO" title="SSO" /> | <img src="https://s3.us-west-1.amazonaws.com/ucsd-its-wts-dev/screenshots/6.1/iPhoneX/iPhoneX_classes.jpg" width="275" alt="Classes" title="Classes" /> | <img src="https://s3.us-west-1.amazonaws.com/ucsd-its-wts-dev/screenshots/6.1/iPhoneX/iPhoneX_parking.png" width="275" alt="Parking" title="Parking" /> |
 
-| Dining | Events | News |
+| Notifications | Map | Shuttle |
 |--------|--------|------|
-| <img src="https://github.com/UCSD/campus-mobile/blob/screenshots/screenshots/v5.0/ios/dining_detail.png?raw=true" width="275" alt="Dining" title="Dining" /> | <img src="https://github.com/UCSD/campus-mobile/blob/screenshots/screenshots/v5.0/ios/events_card.png?raw=true" width="275" alt="Events" title="Events" /> | <img src="https://github.com/UCSD/campus-mobile/blob/screenshots/screenshots/v5.0/ios/news_card.png?raw=true" width="275" alt="News" title="News" /> |
+| <img src="https://s3.us-west-1.amazonaws.com/ucsd-its-wts-dev/screenshots/6.1/iPhoneX/iPhoneX_notifications.png" width="275" alt="Notifications" title="Notifications" /> | <img src="https://s3.us-west-1.amazonaws.com/ucsd-its-wts-dev/screenshots/6.1/iPhoneX/iPhoneX_map.png" width="275" alt="Map" title="Map" /> | <img src="https://s3.us-west-1.amazonaws.com/ucsd-its-wts-dev/screenshots/6.1/iPhoneX/iPhoneX_shuttle.png" width="275" alt="Shuttle" title="Shuttle" /> |
 
 
 ## License

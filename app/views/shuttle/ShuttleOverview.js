@@ -33,7 +33,7 @@ const ShuttleOverview = ({ onPress, stopData, closest }) => {
 							<Text
 								style={css.so_stopNameText}
 								numberOfLines={3}
-								allowFontScaling = {false}
+								allowFontScaling={false}
 							>
 								{stopData.name}
 							</Text>

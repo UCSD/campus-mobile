@@ -6,10 +6,8 @@ import {
 	Alert,
 	AsyncStorage
 } from 'react-native'
-import RNRestart from 'react-native-restart'
 import RNExitApp from 'react-native-exit-app'
 import dateFormat from 'dateformat'
-
 import logger from './logger'
 
 /**
@@ -48,7 +46,7 @@ module.exports = {
 	 * @returns {boolean} True if the device model is iPhone X, false otherwise
 	 */
 	deviceIphoneX() {
-		return Dimensions.get('window').height === 812
+		return (Dimensions.get('window').height === 812 || Dimensions.get('window').height === 896)
 	},
 
 	/**
@@ -135,8 +133,7 @@ module.exports = {
 		if (destinationLat && destinationLon) {
 			const destinationURL = module.exports.getDirectionsURL('walk', destinationLat, destinationLon )
 			return module.exports.openURL(destinationURL)
-		}
-		else if (destinationAddress) {
+		} else if (destinationAddress) {
 			const destinationURL = module.exports.getDirectionsURL('walk', null, null, destinationAddress )
 			return module.exports.openURL(destinationURL)
 		}
@@ -156,9 +153,14 @@ module.exports = {
 	 * Gets the pixel-ratio-modifier needed for this device window
 	 * The modifier is a ratio to be used for scaling GUI elements based on the default sizes
 	 * @returns {number} The ratio of current window width vs the app's default width
-	 * @todo The variable windowHeight is unused
 	 */
 	getPRM() {
+		const windowWidth = Dimensions.get('window').width
+		const appDefaultWidth = 414
+		return (windowWidth / appDefaultWidth)
+	},
+
+	PRM() {
 		const windowWidth = Dimensions.get('window').width
 		const appDefaultWidth = 414
 		return (windowWidth / appDefaultWidth)
@@ -229,11 +231,12 @@ module.exports = {
 	},
 
 	/**
-	 * Gets the current date
-	 * @returns {number} The number of milliseconds since midnight Jan 1, 1970
+	 * Returns the time difference between now and lastUpdated
+	 * @param {string} lastUpdated The last updated time
+	 * @returns {number} The number of milliseconds between now and lastUpdated
 	 */
-	getDateNow() {
-		return (Date.now())
+	timeDiff(lastUpdated) {
+		return (Date.now() - lastUpdated)
 	},
 
 	/**
@@ -365,6 +368,18 @@ module.exports = {
 	 */
 	hideKeyboard() {
 		Keyboard.dismiss()
+	},
+
+
+	tryParseJSON(jsonString) {
+		try {
+			const o = JSON.parse(jsonString)
+			if (o && typeof o === 'object') {
+				return o
+			}
+		} catch (err) { }
+
+		return false
 	},
 
 	/**

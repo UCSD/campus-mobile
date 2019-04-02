@@ -47,7 +47,7 @@
 			<li class="dropdown">
 				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="global.html#bold">bold</a></li><li><a href="global.html#DataItem">DataItem</a></li><li><a href="global.html#DataList_card_list">DataList_card_list</a></li><li><a href="global.html#DataListCard">DataListCard</a></li><li><a href="global.html#DataListView">DataListView</a></li><li><a href="global.html#dl_row">dl_row</a></li><li><a href="global.html#main_container">main_container</a></li><li><a href="global.html#processData">processData</a></li><li><a href="global.html#sr_headerImage">sr_headerImage</a></li><li><a href="global.html#WeatherCard">WeatherCard</a></li><li><a href="global.html#WeatherCardContainer">WeatherCardContainer</a></li><li><a href="global.html#WeatherDay">WeatherDay</a></li><li><a href="global.html#WeatherWeek">WeatherWeek</a></li>
+					<li><a href="global.html#bc_image">bc_image</a></li><li><a href="global.html#card_main">card_main</a></li><li><a href="global.html#cc_loadingContainer">cc_loadingContainer</a></li><li><a href="global.html#DataListCard">DataListCard</a></li><li><a href="global.html#DataListView">DataListView</a></li><li><a href="global.html#dl_row">dl_row</a></li><li><a href="global.html#feedback_container">feedback_container</a></li><li><a href="global.html#finals_card_content">finals_card_content</a></li><li><a href="global.html#links_row_container">links_row_container</a></li><li><a href="global.html#main">main</a></li><li><a href="global.html#map_container">map_container</a></li><li><a href="global.html#notifications_row">notifications_row</a></li><li><a href="global.html#ob_container">ob_container</a></li><li><a href="global.html#PreferencesItem">PreferencesItem</a></li><li><a href="global.html#pst_elevated_row_view">pst_elevated_row_view</a></li><li><a href="global.html#shuttlecard_addButton">shuttlecard_addButton</a></li><li><a href="global.html#specialevents_filter">specialevents_filter</a></li><li><a href="global.html#ua_accountinfo">ua_accountinfo</a></li><li><a href="global.html#wc_topRowContainer">wc_topRowContainer</a></li><li><a href="global.html#WeatherCard">WeatherCard</a></li><li><a href="global.html#WeatherDay">WeatherDay</a></li><li><a href="global.html#WeatherWeek">WeatherWeek</a></li>
 				</ul>
 			</li>
 			
@@ -84,12 +84,75 @@
 <section>
     <article>
         <pre
-            class="sunlight-highlight-javascript linenums">import * as Keychain from 'react-native-keychain';
+            class="sunlight-highlight-javascript linenums">import * as Keychain from 'react-native-keychain'
+import { put, select } from 'redux-saga/effects'
+import { delay } from 'redux-saga'
+import {
+	SSO_REFRESH_MAX_RETRIES,
+	SSO_REFRESH_RETRY_INCREMENT,
+	SSO_REFRESH_RETRY_MULTIPLIER
+} from '../AppSettings'
 
-const forge = require('node-forge');
+const forge = require('node-forge')
 
-const { pki } = forge;
-const accessTokenSiteName = 'https://ucsd.edu';
+const { pki } = forge
+const accessTokenSiteName = 'https://ucsd.edu'
+
+// A "private" internal function that lets us
+// send a fetchrequest with the correct
+// authorization headers
+const authorizedFetchRequest = (endpoint, accessToken) => (
+	fetch(endpoint, {
+		headers: { 'Authorization': `Bearer ${accessToken}` }
+	})
+		.then((response) => {
+			if (response.status === 200) return response.text()
+			else {
+				switch (response.status) {
+					case 401: {
+						// We need to refresh our access token
+						return { invalidToken: true }
+					}
+					case 404: {
+						return { message: response.statusText }
+					}
+					default: {
+						const e = new Error(response.statusText)
+						throw e
+					}
+				}
+			}
+		})
+)
+
+const authorizedPostRequest = (endpoint, accessToken, payload) => (
+	fetch(endpoint, {
+		method: 'POST',
+		headers: {
+			'content-type': 'application/json',
+			'Authorization': `Bearer ${accessToken}`
+		},
+		body: JSON.stringify(payload)
+	})
+		.then((response) => {
+			if (response.status === 200) return response.text()
+			else {
+				switch (response.status) {
+					case 401: {
+						// We need to refresh our access token
+						return { invalidToken: true }
+					}
+					case 404: {
+						return { message: response.statusText }
+					}
+					default: {
+						const e = new Error(response.statusText)
+						throw e
+					}
+				}
+			}
+		})
+)
 
 /**
  * A module containing auth helper functions
@@ -102,9 +165,9 @@ module.exports = {
 	 * @returns {String} Encrypted string
 	 */
 	encryptStringWithKey(string) {
-		const publicKey = pki.publicKeyFromPem(this.ucsdPublicKey);
-		const encrypted = publicKey.encrypt(string, 'RSA-OAEP');
-		return forge.util.encode64(encrypted);
+		const publicKey = pki.publicKeyFromPem(this.ucsdPublicKey)
+		const encrypted = publicKey.encrypt(string, 'RSA-OAEP')
+		return forge.util.encode64(encrypted)
 	},
 
 	/**
@@ -113,7 +176,7 @@ module.exports = {
 	 * @returns {String} Encrypted string
 	 */
 	encryptStringWithBase64(string) {
-		return forge.util.encode64(string);
+		return forge.util.encode64(string)
 	},
 
 	/**
@@ -125,7 +188,7 @@ module.exports = {
 	storeUserCreds(user, pass) {
 		return Keychain
 			.setGenericPassword(user, pass)
-			.then(() => (true));
+			.then(() => (true))
 	},
 
 	/**
@@ -137,7 +200,7 @@ module.exports = {
 		return Keychain
 			.getGenericPassword()
 			.then(credentials => (credentials))
-			.catch(error => (error));
+			.catch(error => (error))
 	},
 
 	/**
@@ -147,7 +210,7 @@ module.exports = {
 	destroyUserCreds() {
 		return Keychain
 			.resetGenericPassword()
-			.then(() => (true));
+			.then(() => (true))
 	},
 
 	/**
@@ -158,7 +221,7 @@ module.exports = {
 	storeAccessToken(token) {
 		return Keychain
 			.setInternetCredentials(accessTokenSiteName, 'accessToken', token)
-			.then(() => (true));
+			.then(() => (true))
 	},
 
 	/**
@@ -170,7 +233,7 @@ module.exports = {
 		return Keychain
 			.getInternetCredentials(accessTokenSiteName)
 			.then(credentials => (credentials.password))
-			.catch(error => (error));
+			.catch(error => (error))
 	},
 
 	/**
@@ -180,7 +243,103 @@ module.exports = {
 	destroyAccessToken() {
 		return Keychain
 			.resetInternetCredentials(accessTokenSiteName)
-			.then(() => (true));
+			.then(() => (true))
+	},
+
+	/**
+	 * Makes an authorized request using an access token.
+	 * If the response is a 401 Unauthorized, this function
+	 * attempts to retry a predetermined amount of times.
+	 * If no successful response is received by the last
+	 * attempt, this function sets an AUTH_HTTP error in
+	 * state.requestErrors.
+	 * @param {String} endpoint URL of API endpoint
+	 * @param {Object} payload JSON data to POST to endpoint
+	 * @returns {Object} Data from server
+	 * or returns an error if HTTP resonse isn't 200
+	 */
+	* authorizedFetch(endpoint, payload) {
+		yield put({ type: 'AUTH_HTTP_REQUEST' })
+
+		// Check to see if we aren't in an error state
+		const userState = state => (state.user)
+		const { appUpdateRequired, isLoggedIn } = yield select(userState)
+		if (appUpdateRequired) {
+			const e = new Error('App update required.')
+			yield put({ type: 'AUTH_HTTP_FAILURE', e })
+			throw e
+		}
+
+		// Check to see if user is logged in
+		if (!isLoggedIn) {
+			const e = new Error('Not signed in.')
+			yield put({ type: 'AUTH_HTTP_FAILURE', e })
+			throw e
+		}
+
+		let accessToken = yield Keychain
+			.getInternetCredentials(accessTokenSiteName)
+			.then(credentials => (credentials.password))
+
+		try {
+			let endpointResponse
+			if (payload) endpointResponse = yield authorizedPostRequest(endpoint, accessToken, payload)
+			else endpointResponse = yield authorizedFetchRequest(endpoint, accessToken)
+
+			// Refresh token if invalidToken and retry request
+			if (endpointResponse.invalidToken) {
+				for (
+					let i = 0, remainingRetries = SSO_REFRESH_MAX_RETRIES;
+					remainingRetries > 0;
+					remainingRetries--, i++
+				) {
+					// Throw if we're in an error state
+					const { invalidSavedCredentials } = yield select(userState)
+					if (invalidSavedCredentials) {
+						const e = new Error('Unable to re-authorize user')
+						throw e
+					}
+
+					// Break if we're logged out
+					const { isLoggedIn: retryIsLoggedIn } = yield select(userState)
+					if (!retryIsLoggedIn) return
+
+					// Attempt to get a new access token
+					yield put({ type: 'USER_TOKEN_REFRESH' })
+
+					// Delay next authorized fetch attempt
+					let multiplier = SSO_REFRESH_RETRY_MULTIPLIER * i
+					if (multiplier &lt; 1) multiplier = 1
+					yield delay(SSO_REFRESH_RETRY_INCREMENT * multiplier)
+
+					accessToken = yield Keychain
+						.getInternetCredentials(accessTokenSiteName)
+						.then(credentials => (credentials.password))
+
+					endpointResponse = yield authorizedFetchRequest(endpoint, accessToken)
+
+					if (!endpointResponse.invalidToken) {
+						yield put({ type: 'AUTH_HTTP_SUCCESS' })
+						return endpointResponse
+					}
+				}
+
+				const e = new Error('Unable to re-authorize user')
+				throw e
+			} else {
+				yield put({ type: 'AUTH_HTTP_SUCCESS' })
+				return endpointResponse
+			}
+		} catch (error) {
+			if (error.message === 'Unable to re-authorize user') {
+				// We were unable to get an authorized response.
+				// We need to ask the user to reauthenticate some
+				// other time.
+
+				yield put({ type: 'AUTH_HTTP_FAILURE', error })
+			}
+			throw error
+		}
 	},
 
 	ucsdPublicKey: '-----BEGIN PUBLIC KEY-----\n' +
@@ -189,7 +348,7 @@ module.exports = {
 		'hqGFS5sSnu19JYhIxeYj3tGyf0Ms+I0lu/MdRLuTMdBRbCkD3kTJmTqACq+MzQ9G\n' +
 		'CaCUGqS6FN1nNKARGwIDAQAB\n' +
 		'-----END PUBLIC KEY-----'
-};
+}
 </pre>
     </article>
 </section>
@@ -235,7 +394,7 @@ module.exports = {
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on Thu Apr 19th 2018
+		on Thu Feb 7th 2019
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

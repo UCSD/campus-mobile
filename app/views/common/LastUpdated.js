@@ -27,8 +27,7 @@ class LastUpdated extends Component {
 					/>
 				)
 				messageText = this.props.warning
-			}
-			else if (this.props.error) {
+			} else if (this.props.error) {
 				warningComponent = (
 					<FAIcon
 						name="warning"

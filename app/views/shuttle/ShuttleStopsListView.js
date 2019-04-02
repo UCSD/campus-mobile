@@ -1,8 +1,8 @@
 import React from 'react'
-import { TouchableOpacity, Text, FlatList } from 'react-native'
-
-import Icon from 'react-native-vector-icons/FontAwesome'
+import { Text, FlatList } from 'react-native'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import css from '../../styles/css'
+import Touchable from '../common/Touchable'
 
 const ShuttleStopsListView = ({ navigation }) => {
 	const { shuttle_stops, addStop } = navigation.state.params
@@ -24,20 +24,16 @@ const ShuttleStopsListView = ({ navigation }) => {
 }
 
 const StopItem = ({ data, addStop }) => (
-	<TouchableOpacity
+	<Touchable
 		onPress={() => addStop(data.id, data.name.trim())}
-		style={css.sslv_list_row}
+		style={css.fl_row}
 		disabled={(data.saved === true)}
 	>
-		<Text style={(data.saved === true) ? (css.sslv_row_name_disabled) : (css.sslv_row_name)}>
+		<Text style={(data.saved === true) ? (css.fl_row_title_disabled) : (css.fl_row_title)}>
 			{data.name.trim()}
 		</Text>
-		<Icon
-			style={css.sslv_icon}
-			name="chevron-right"
-			size={20}
-		/>
-	</TouchableOpacity>
+		<Ionicons name="ios-arrow-forward" size={28} style={css.fl_row_arrow} />
+	</Touchable>
 )
 
 export default ShuttleStopsListView

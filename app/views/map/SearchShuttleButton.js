@@ -1,32 +1,22 @@
-import React from 'react';
-import {
-	TouchableOpacity,
-	StyleSheet
-} from 'react-native';
-import ElevatedView from 'react-native-elevated-view';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import COLOR from '../../styles/ColorConstants';
-import { getPRM } from '../../util/general';
+import React from 'react'
+import { TouchableOpacity } from 'react-native'
+import Icon from 'react-native-vector-icons/FontAwesome'
+import css from '../../styles/css'
+import COLOR from '../../styles/ColorConstants'
 
-const SearchShuttleIcon = ({ visible, onPress }) => (
-	(visible) ? (
-		<ElevatedView
-			style={styles.container}
-			elevation={2} // zIndex style and elevation has to match
-		>
+const SearchShuttleIcon = ({ visible, onPress }) => {
+	if (visible) {
+		return (
 			<TouchableOpacity
 				onPress={() => onPress()}
-				style={styles.touchable}
+				style={css.snb_container}
 			>
-				<Icon name={'bus'} size={20} color={'white'} />
+				<Icon name="bus" size={20} color={COLOR.WHITE} />
 			</TouchableOpacity>
-		</ElevatedView>
-	) : (<ElevatedView />) // Android bug
-);
+		)
+	} else {
+		return null
+	}
+}
 
-const styles = StyleSheet.create({
-	container: { zIndex: 2, justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: 6 + Math.round(44 * getPRM()), right: 6, width: 50, height: 50, borderRadius: 50 / 2, backgroundColor: COLOR.PIN },
-	touchable: { width: 50, height: 50, borderRadius: 25, alignItems: 'center', justifyContent: 'center' },
-});
-
-export default SearchShuttleIcon;
+export default SearchShuttleIcon

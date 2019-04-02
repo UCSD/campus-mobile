@@ -15,6 +15,7 @@ import {
 	SSO_TTL,
 	SSO_IDP_ERROR_RETRY_INCREMENT,
 	USER_PROFILE_SYNC_TTL,
+	UCSD_STUDENT
 } from '../AppSettings'
 import logger from '../util/logger'
 
@@ -27,74 +28,72 @@ const userState = state => (state.user)
 function* doLogin(action) {
 	const { username, password } = action
 
-	if ((username === 'studentdemo' && password === 'studentdemo') ||
-		(username === 'demo' && password === 'demo')) {
-		// DEMO ACCOUNT LOGIN
-		yield activateDemoAccount(username, password)
-	} else {
-		// NORMAL LOGIN
-		yield put({ type: 'LOG_IN_REQUEST' })
-		try {
-			if (!password || password.length === 0) {
-				const e = new Error('Please type in your password.')
-				e.name = 'emptyPasswordError'
-				yield call(delay, 0)
-				throw e
-			}
-			const passwordEncrypted = yield auth.encryptStringWithKey(password)
-			const loginInfo = auth.encryptStringWithBase64(`${username}:${passwordEncrypted}`)
-
-			const { response, timeout } = yield race({
-				response: call(ssoService.retrieveAccessToken, loginInfo),
-				timeout: call(delay, SSO_TTL)
-			})
-
-			if (timeout) {
-				const e = new Error('Logging in timed out.')
-				e.name = 'ssoTimeout'
-				throw e
-			} else if (response.error) {
-				if (response.error.appUpdateRequired) {
-					yield outOfDateAlert()
-					const appUpdateError = new Error('App update required.')
-					throw appUpdateError
-				} else {
-					logger.log(response)
-					throw response.error
-				}
-			} else {
-				// Successfully logged in
-				yield auth.storeUserCreds(username, passwordEncrypted)
-				yield auth.storeAccessToken(response.access_token)
-
-				// Set up user profile
-				const newProfile = {
-					username,
-					pid: response.pid,
-					classifications: { student: Boolean(response.pid) }
-				}
-
-				// Post sign-in flow
-				// Toggles any cards that should show up for the signed in user
-				// Registers firebase push token
-				// Queries any user data with newly obtained access token
-				yield put({ type: 'LOGGED_IN', profile: newProfile })
-				yield put({ type: 'LOG_IN_SUCCESS' })
-				yield put({ type: 'TOGGLE_AUTHENTICATED_CARDS' })
-
-				const fcmToken = yield firebase.messaging().getToken()
-				if (fcmToken) yield put({ type: 'REGISTER_TOKEN', token: fcmToken })
-
-				// Clears any potential errors from being
-				// unable to automatically reauthorize a user
-				yield put({ type: 'AUTH_HTTP_SUCCESS' })
-
-				yield call(queryUserData)
-			}
-		} catch (error) {
-			logger.trackException(error)
-			yield put({ type: 'LOG_IN_FAILURE', error })
+	yield put({ type: 'LOG_IN_REQUEST' })
+	try {
+		if (!password || password.length === 0) {
+			const e = new Error('Please type in your password.')
+			e.name = 'emptyPasswordError'
+			yield call(delay, 0)
+			throw e
 		}
+		const passwordEncrypted = yield auth.encryptStringWithKey(password)
+		const loginInfo = auth.encryptStringWithBase64(`${username}:${passwordEncrypted}`)
+
+		const { response, timeout } = yield race({
+			response: call(ssoService.retrieveAccessToken, loginInfo),
+			timeout: call(delay, SSO_TTL)
+		})
+
+		if (timeout) {
+			const e = new Error('Logging in timed out.')
+			e.name = 'ssoTimeout'
+			throw e
+		} else if (response.error) {
+			if (response.error.appUpdateRequired) {
+				yield outOfDateAlert()
+				const appUpdateError = new Error('App update required.')
+				throw appUpdateError
+			} else {
+				logger.log(response)
+				throw response.error
+			}
+		} else {
+			// Successfully logged in
+			yield auth.storeUserCreds(username, passwordEncrypted)
+			yield auth.storeAccessToken(response.access_token)
+
+			// Set up user profile
+			const isStudent = Boolean((response.pid) && (response.ucsdaffiliation.match(UCSD_STUDENT)))
+
+			const newProfile = {
+				username,
+				pid: response.pid,
+				ucsdaffiliation: response.ucsdaffiliation,
+				classifications: {
+					student: isStudent
+				}
+			}
+
+			// Post sign-in flow
+			// Toggles any cards that should show up for the signed in user
+			// Registers firebase push token
+			// Queries any user data with newly obtained access token
+			yield put({ type: 'LOGGED_IN', profile: newProfile })
+			yield put({ type: 'LOG_IN_SUCCESS' })
+			yield put({ type: 'TOGGLE_AUTHENTICATED_CARDS' })
+
+			const fcmToken = yield firebase.messaging().getToken()
+			if (fcmToken) yield put({ type: 'REGISTER_TOKEN', token: fcmToken })
+
+			// Clears any potential errors from being
+			// unable to automatically reauthorize a user
+			yield put({ type: 'AUTH_HTTP_SUCCESS' })
+
+			yield call(queryUserData)
+		}
+	} catch (error) {
+		logger.trackException(error)
+		yield put({ type: 'LOG_IN_FAILURE', error })
 	}
 }
 
@@ -126,6 +125,7 @@ function* queryUserData() {
 	if (profile.username) profileItems.username = profile.username
 	if (profile.classifications) profileItems.classifications = { ...profile.classifications }
 	if (profile.pid) profileItems.pid = profile.pid
+	if (profile.ucsdaffiliation) profileItems.ucsdaffiliation = profile.ucsdaffiliation
 
 	const modifyProfileAction = { profileItems }
 
@@ -186,11 +186,27 @@ function* refreshTokenRequest() {
 
 	if (response.error && response.error.appUpdateRequired) {
 		yield outOfDateAlert()
-	}
-	else if (response.access_token) {
+	} else if (response.access_token) {
 		yield auth.storeAccessToken(response.access_token)
 		// Clears any potential errors from being
 		// unable to automatically reauthorize a user
+
+		// Set up user profile
+		const isStudent = Boolean((response.pid) && (response.ucsdaffiliation.match(UCSD_STUDENT)))
+		const newProfile = {
+			username,
+			pid: response.pid,
+			ucsdaffiliation: response.ucsdaffiliation,
+			classifications: {
+				student: isStudent
+			}
+		}
+
+		// Post sign-in flow
+		// Toggles any cards that should show up for the signed in user
+		// Registers firebase push token
+		// Queries any user data with newly obtained access token
+		yield put({ type: 'LOGGED_IN', profile: newProfile })
 		yield put({ type: 'AUTH_HTTP_SUCCESS' })
 	} else {
 		const e = new Error('No access token returned.')
@@ -254,15 +270,9 @@ function* outOfDateAlert() {
 
 // Syncs local profile with remote user profile stored in the cloud
 function* syncUserProfile() {
-	const { isLoggedIn, profile, lastSynced } = yield select(userState)
+	const { isLoggedIn, profile } = yield select(userState)
 
 	if (!isLoggedIn) return
-
-	const nowTime = new Date().getTime()
-	const timeDiff = nowTime - lastSynced
-	const syncTTL = USER_PROFILE_SYNC_TTL
-
-	if (timeDiff < syncTTL) return
 
 	// Update remote profile with local one
 	const newAttributes = []
@@ -303,35 +313,6 @@ function* modifyLocalProfile(action) {
 	// if profile change includes changes to subscriptions, reset messages
 	if (profileItems.subscribedTopics) yield put({ type: 'RESET_MESSAGES' })
 }
-
-// Handles signing in to the fake student demo account
-// username and password are both "demo"
-function* activateDemoAccount(demoUsername, demoPassword) {
-	yield put({ type: 'LOG_IN_REQUEST' })
-	yield put({ type: 'ACTIVATE_STUDENT_DEMO_ACCOUNT' })
-	yield call(delay, 750)
-
-	// Successfully logged in
-	yield auth.storeUserCreds(demoUsername, demoPassword)
-
-	// Set up user profile
-	const newProfile = {
-		username: 'Student Demo',
-		pid: 'fakepid',
-		classifications: { student: true }
-	}
-
-	yield put({ type: 'LOGGED_IN', profile: newProfile })
-	yield put({ type: 'LOG_IN_SUCCESS' })
-	yield put({ type: 'TOGGLE_AUTHENTICATED_CARDS' })
-
-	// Clears any potential errors from being
-	// unable to automatically reauthorize a user
-	yield put({ type: 'AUTH_HTTP_SUCCESS' })
-
-	yield call(queryUserData)
-}
-
 
 // Performs various cleanup actions. These include:
 // Unregistering / unassociating the firebase push token

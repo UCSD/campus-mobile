@@ -1,15 +1,11 @@
-import React from 'react';
-import {
-	View,
-	ScrollView,
-} from 'react-native';
-
-import SafeImage from '../common/SafeImage';
-import css from '../../styles/css';
+import React from 'react'
+import { View, ScrollView } from 'react-native'
+import SafeImage from '../common/SafeImage'
+import css from '../../styles/css'
 
 const DiningImages = ({ images }) => (
 	<View>
-		{(images) ? (
+		{images ? (
 			<ScrollView
 				style={css.dd_images_scrollview}
 				directionalLockEnabled={false}
@@ -26,6 +22,6 @@ const DiningImages = ({ images }) => (
 			</ScrollView>
 		) : null }
 	</View>
-);
+)
 
-export default DiningImages;
+export default DiningImages

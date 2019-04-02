@@ -1,6 +1,12 @@
 import React, { Component } from 'react'
+// import {
+// 	ListView,
+// 	ScrollView,
+// 	View,
+// 	Text,
+// } from 'react-native'
 import {
-	ListView,
+	FlatList,
 	ScrollView,
 	View,
 	Text,
@@ -15,7 +21,8 @@ import COLOR from '../../styles/ColorConstants'
  * @param {String[]} items - items to be selected
  * @param {String[]} selected - items already selected
  * @param {Object} themes - coloring for items
- * @param {Function} onSelect
+ * @param {Function} onSelect - selected item
+ * @return {JSX} Return MultiSelect JSX
  */
 class MultiSelect extends Component {
 	// Returns true if item is being selected
@@ -41,22 +48,22 @@ class MultiSelect extends Component {
 
 	render() {
 		const { items, themes, selected } = this.props
-		const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
-		const dataSource = ds.cloneWithRows(items)
 
 		return (
 			<View style={css.main_full_flex}>
 				<ScrollView style={css.scroll_default} contentContainerStyle={css.specialevents_filter}>
-					<ListView
-						dataSource={dataSource}
-						renderRow={rowData => (
+					<FlatList
+						data={items}
+						keyExtractor={item => item}
+						renderItem={item => (
 							<MultiSelectItem
-								data={rowData}
-								selected={selected.includes(rowData)}
+								data={item.item}
+								selected={selected.includes(item.item)}
 								onSelect={this.onSelect}
-								color={(themes && themes[rowData] !== '') ? (themes[rowData]) : (COLOR.DGREY)}
+								color={(themes && themes[item.item] !== '') ? (themes[item.item]) : (COLOR.DGREY)}
 							/>
 						)}
+						extraData={selected}
 					/>
 				</ScrollView>
 

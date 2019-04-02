@@ -15,9 +15,10 @@ function* toggleRoute(action) {
 	const { toggles, stops, routes } = yield select(getShuttle)
 	const { route } = action
 
+	const newRoute = null
 	const newToggles = Object.assign({}, toggles)
 	// Performs a deep copy of stops
-	let newStops = JSON.parse(JSON.stringify(stops))
+	const newStops = JSON.parse(JSON.stringify(stops))
 
 	if (toggles[route]) {
 		// If route is on, toggle off
@@ -28,10 +29,13 @@ function* toggleRoute(action) {
 			if (stops[stop]) {
 				const newStop = { ...stops[stop] }
 				delete newStop.routes[route]
+				/*
 				newStops = {
 					...newStops,
 					newStop
 				}
+				*/
+				newStops[stop] = newStop
 			}
 		})
 	} else {
@@ -45,10 +49,13 @@ function* toggleRoute(action) {
 					if (stops[stop]) {
 						const newStop = { ...stops[stop] }
 						delete newStop.routes[route]
+						/*
 						newStops = {
 							...newStops,
 							newStop
 						}
+						*/
+						newStops[stop] = newStop
 					}
 				})
 			}
@@ -64,17 +71,23 @@ function* toggleRoute(action) {
 					...stops[stop],
 					routes: {}
 				}
+				/*
 				newStop.routes[route] = routes[route]
 				newStops = {
 					...newStops,
 					newStop
 				}
+				*/
+				newStop.routes[route] = true
+				newStops[stop] = newStop
 			}
 		})
 	}
 
 	yield put({
 		type: 'TOGGLE_ROUTE',
+		route,
+		newRoute,
 		newToggles,
 		newStops
 	})

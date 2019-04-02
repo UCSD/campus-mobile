@@ -20,6 +20,9 @@ function shuttle(state = initialState, action) {
 			newState.lastUpdated = action.nowTime
 			return newState
 		case 'TOGGLE_ROUTE':
+			if (action.newRoute && action.route) {
+				newState.routes[action.route] = action.newRoute
+			}
 			newState.toggles = action.newToggles
 			newState.stops = action.newStops
 			return newState

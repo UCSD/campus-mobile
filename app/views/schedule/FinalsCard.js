@@ -1,10 +1,8 @@
 import React, { Component } from 'react'
 import { View, Text, FlatList } from 'react-native'
 import { connect } from 'react-redux'
-
 import Card from '../common/Card'
 import LastUpdated from '../common/LastUpdated'
-import logger from '../../util/logger'
 import schedule from '../../util/schedule'
 import css from '../../styles/css'
 
@@ -12,10 +10,6 @@ class FinalsCard extends Component {
 	constructor(props) {
 		super()
 		this.state = { finalsData: this.getFinalsArray(props.scheduleData) }
-	}
-
-	componentDidMount() {
-		logger.ga('Card Mounted: Finals')
 	}
 
 	getFinalsArray = (scheduleObject) => {

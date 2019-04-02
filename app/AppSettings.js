@@ -1,16 +1,14 @@
 module.exports = {
 
 	/* APP CONFIG */
-	APP_NAME: 'APP_NAME_PH',
+	APP_NAME: 'CampusMobile',
 	GOOGLE_ANALYTICS_ID: 'GOOGLE_ANALYTICS_ID_PH',
 
 	/* ENDPOINTS */
-	// SSO
-	AUTH_SERVICE_API_URL: 'https://c12cf2xke8.execute-api.us-west-2.amazonaws.com/prod/v1/access-profile',
+	AUTH_SERVICE_API_URL: 'https://c12cf2xke8.execute-api.us-west-2.amazonaws.com/prod/v1.1/access-profile',
 	ACADEMIC_TERM_API_URL: 'https://btgre7sss6.execute-api.us-west-2.amazonaws.com/prod/v1/term/current',
 	ACADEMIC_TERM_FINALS_API_URL: 'https://btgre7sss6.execute-api.us-west-2.amazonaws.com/prod/v1/term/current/finals',
 	ACADEMIC_HISTORY_API_URL: 'https://api.ucsd.edu:8243/student/my/academic_history/v1/class_list',
-	// MESSAGING
 	TOPICS_API_URL: 'https://h6rc133pbh.execute-api.us-west-2.amazonaws.com/prod/topics',
 	MYMESSAGES_API_URL: 'https://api.ucsd.edu:8243/mp-mymessages/1.0.0',
 	MP_REGISTRATION_API_URL: 'https://api.ucsd.edu:8243/mp-registration/1.0.0',
@@ -31,7 +29,7 @@ module.exports = {
 	MAP_SEARCH_API_URL: 'https://xgu9qa7gx4.execute-api.us-west-2.amazonaws.com/prod/v2/map/search?region=0&query=',
 	FEEDBACK_URL: 'https://eforms.ucsd.edu/view.php?id=175631',
 	QUICKLINKS_API_URL: 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/quick_links/ucsd-quicklinks-v3.json',
-	PARKING_API_URL: 'https://b2waxbcovi.execute-api.us-west-2.amazonaws.com/prod/parking/v1.0/status',
+	PARKING_API_URL: 'https://b2waxbcovi.execute-api.us-west-2.amazonaws.com/prod/parking/v1.1/status',
 
 	/* RESOURCES */
 	WEATHER_ICON_BASE_URL: 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/images/v1/weather-icons/',
@@ -42,7 +40,7 @@ module.exports = {
 	ACCOUNT_HELP_URL: 'https://acms.ucsd.edu/students/accounts-and-passwords/index.html',
 
 	/* TTLs */
-	LOCATION_TTL: 5000, // 5 seconds
+	LOCATION_TTL: 15000, // 15 seconds
 	SHUTTLE_API_TTL: 15000, // 15 seconds
 	DATA_SAGA_TTL: 60000, // 1 minute
 	SCHEDULE_TTL: 300000,  // 5 minutes

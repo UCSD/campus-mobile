@@ -11,8 +11,8 @@ import SortableList from 'react-native-sortable-list'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { connect } from 'react-redux'
 import Toast from 'react-native-simple-toast'
-
 import css from '../../styles/css'
+import COLOR from '../../styles/ColorConstants'
 
 class ShuttleSavedListView extends React.Component {
 	componentWillMount() {
@@ -57,7 +57,7 @@ class ShuttleSavedListView extends React.Component {
 		return orderArray
 	}
 
-	arrayToObject(array) {
+	arrayToObject = (array) => {
 		const savedObject = {}
 		if (Array.isArray(array)) {
 			for (let i = 0; i < array.length; ++i) {
@@ -95,12 +95,13 @@ class ShuttleSavedListView extends React.Component {
 					style={css.main_full_flex}
 					data={this.state.savedObject}
 					renderRow={
-						({ data, active, disabled }) =>
+						({ data, active, disabled }) => (
 							<SavedItem
 								data={data}
 								active={active}
 								removeStop={removeStop}
 							/>
+						)
 					}
 					onChangeOrder={(nextOrder) => { this._order = nextOrder }}
 					onReleaseRow={key => this._handleRelease()}
@@ -165,17 +166,17 @@ class SavedItem extends React.Component {
 	render() {
 		const { data } = this.props
 		return (
-			<Animated.View style={[css.sslv_listRow, this._style]}>
-				<Icon name="drag-handle" size={20} />
-				<Text style={css.sslv_nameText}>
+			<Animated.View style={[css.sl_row, this._style]}>
+				<Icon style={css.sl_icon} name="drag-handle" size={20} />
+				<Text style={css.sl_title}>
 					{ data.closest ? ('Closest Stop') : (data.name.trim()) }
 				</Text>
 				{ !data.closest ? (
 					<TouchableOpacity
 						onPressOut={() => this._handleRemove(data.id)}
-						style={css.sslv_cancelButton}
+						style={css.sl_switch_container}
 					>
-						<Icon name="cancel" size={20} />
+						<Icon name="remove" size={24} color={COLOR.DGREY} />
 					</TouchableOpacity>
 				) : null }
 			</Animated.View>

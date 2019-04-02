@@ -1,14 +1,6 @@
 import React, { Component } from 'react'
-import {
-	Text,
-	View,
-	SectionList,
-	Switch,
-	LayoutAnimation,
-	TouchableWithoutFeedback
-} from 'react-native'
+import { Text, View, SectionList, Switch } from 'react-native'
 import { connect } from 'react-redux'
-import DatePicker from 'react-native-datepicker'
 import css from '../../../styles/css'
 
 class Notifications extends Component {
@@ -37,8 +29,7 @@ class Notifications extends Component {
 				&& Object.keys(classifications).indexOf(audience.audienceId) >= 0
 				&& classifications[audience.audienceId]) {
 				sections[0].data = [...sections[0].data, ...audience.topics]
-			}
-			else if (audience.audienceId === 'all') {
+			} else if (audience.audienceId === 'all') {
 				sections[0].data = [...sections[0].data, ...audience.topics]
 			}
 		})

@@ -3,9 +3,10 @@ import { View, Text } from 'react-native'
 
 import css from '../../styles/css'
 
-const CardHeader = ({ id, title, menu }) => {
-	if (!title || !id || !menu) return null
-	else {
+const CardHeader = ({ id, title, menu, hideHeader }) => {
+	if (!title || !id || !menu || hideHeader) {
+		return null
+	} else {
 		return (
 			<View style={css.ch_headerContainer}>
 				<Text style={css.ch_titleText}>

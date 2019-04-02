@@ -27,10 +27,6 @@ import logger from '../../util/logger'
 import { gotoNavigationApp, platformAndroid } from '../../util/general'
 
 export class Map extends React.Component {
-	static navigationOptions = {
-		title: 'Map',
-	}
-
 	constructor(props) {
 		super(props)
 
@@ -52,6 +48,14 @@ export class Map extends React.Component {
 			checkGooglePlayServices((result) => {
 				if (result === 'update') {
 					this.setState({ updatedGoogle: false })
+				}
+			})
+		}
+
+		if (this.props.toggles) {
+			Object.keys(this.props.toggles).forEach((route) => {
+				if (this.props.toggles[route]) {
+					this.state.currentToggledRoute = route
 				}
 			})
 		}
@@ -240,7 +244,11 @@ export class Map extends React.Component {
 	toggleRoute = (route) => {
 		this.pressIcon()
 		this.props.toggle(route)
-		this.setState({	vehicles: {} })
+		if (this.state.currentToggledRoute === route) {
+			this.setState({ vehicles: {}, currentToggledRoute: null })
+		} else {
+			this.setState({	vehicles: {}, currentToggledRoute: route })
+		}
 	}
 
 	render() {
@@ -277,19 +285,12 @@ export class Map extends React.Component {
 						}
 					/>
 					<ScrollView
-						ref={
-							(ref) => {
-								this.scrollRef = ref
-							}
-						}
+						ref={(ref) => { this.scrollRef = ref }}
 						showsVerticalScrollIndicator={false}
 						scrollEnabled={this.state.allowScroll}
 						keyboardShouldPersistTaps="always"
 					>
-						<View
-							style={css.map_section}
-						>
-							<Text>MapHeight: {LAYOUT.MAP_HEIGHT}</Text>
+						<View style={css.map_section}>
 							<SearchMap
 								location={this.props.location}
 								selectedResult={
@@ -301,17 +302,13 @@ export class Map extends React.Component {
 								vehicles={this.state.vehicles}
 							/>
 						</View>
-						<View
-							style={css.map_section}
-						>
+						<View style={css.map_section}>
 							<SearchResults
 								results={this.props.search_results}
 								onSelect={index => this.updateSelectedResult(index)}
 							/>
 						</View>
-						<View
-							style={css.map_section}
-						>
+						<View style={css.map_section}>
 							<SearchSuggest
 								onPress={this.updateSearchSuggest}
 							/>
@@ -323,9 +320,7 @@ export class Map extends React.Component {
 								/>
 							) : (null)}
 						</View>
-						<View
-							style={css.map_section}
-						>
+						<View style={css.map_section}>
 							<SearchShuttleMenu
 								shuttle_routes={this.props.shuttle_routes}
 								onToggle={this.toggleRoute}
@@ -350,6 +345,7 @@ const mapStateToProps = (state, props) => (
 		location: state.location.position,
 		locationPermission: state.location.permission,
 		toggles: state.shuttle.toggles,
+		routes: state.shuttle.routes,
 		shuttle_routes: state.shuttle.routes,
 		shuttle_stops: state.shuttle.stops,
 		vehicles: state.shuttle.vehicles,

@@ -15,7 +15,7 @@ const getUserData = state => (state.user)
 
 function* updateSchedule() {
 	const { lastUpdated, data, currentTerm } = yield select(getSchedule)
-	const { isLoggedIn, profile, isStudentDemo } = yield select(getUserData)
+	const { isLoggedIn, profile } = yield select(getUserData)
 	const nowTime = new Date().getTime()
 	const timeDiff = nowTime - lastUpdated
 
@@ -29,11 +29,11 @@ function* updateSchedule() {
 	) {
 		try {
 			yield put({ type: 'GET_SCHEDULE_REQUEST' })
-			const term = yield call(ScheduleService.FetchTerm, isStudentDemo)
+			const term = yield call(ScheduleService.FetchTerm)
 			if (term) {
 				yield put({ type: 'SET_SCHEDULE_TERM', term })
 
-				const scheduleData = yield call(ScheduleService.FetchSchedule, term.term_code, isStudentDemo)
+				const scheduleData = yield call(ScheduleService.FetchSchedule, term.term_code)
 				if (scheduleData) {
 					yield put({ type: 'SET_SCHEDULE', schedule: scheduleData })
 					yield put({ type: 'GET_SCHEDULE_SUCCESS' })
@@ -55,7 +55,7 @@ function* updateSchedule() {
 					// check if finals are active
 					yield put({ type: 'GET_FINALS_REQUEST' })
 					try {
-						const finalsActive = yield call(ScheduleService.FetchFinals, isStudentDemo)
+						const finalsActive = yield call(ScheduleService.FetchFinals)
 						if (finalsActive) {
 							yield put({ type: 'SHOW_CARD', id: 'finals' })
 						} else {

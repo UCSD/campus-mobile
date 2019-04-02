@@ -47,4 +47,4 @@ module.exports = {
 			'Miscellaneous': '#747678'
 		}
 	}
-};
+}

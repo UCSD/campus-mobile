@@ -47,7 +47,7 @@
 			<li class="dropdown">
 				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="global.html#bold">bold</a></li><li><a href="global.html#DataItem">DataItem</a></li><li><a href="global.html#DataList_card_list">DataList_card_list</a></li><li><a href="global.html#DataListCard">DataListCard</a></li><li><a href="global.html#DataListView">DataListView</a></li><li><a href="global.html#dl_row">dl_row</a></li><li><a href="global.html#main_container">main_container</a></li><li><a href="global.html#processData">processData</a></li><li><a href="global.html#sr_headerImage">sr_headerImage</a></li><li><a href="global.html#WeatherCard">WeatherCard</a></li><li><a href="global.html#WeatherCardContainer">WeatherCardContainer</a></li><li><a href="global.html#WeatherDay">WeatherDay</a></li><li><a href="global.html#WeatherWeek">WeatherWeek</a></li>
+					<li><a href="global.html#bc_image">bc_image</a></li><li><a href="global.html#card_main">card_main</a></li><li><a href="global.html#cc_loadingContainer">cc_loadingContainer</a></li><li><a href="global.html#DataListCard">DataListCard</a></li><li><a href="global.html#DataListView">DataListView</a></li><li><a href="global.html#dl_row">dl_row</a></li><li><a href="global.html#feedback_container">feedback_container</a></li><li><a href="global.html#finals_card_content">finals_card_content</a></li><li><a href="global.html#links_row_container">links_row_container</a></li><li><a href="global.html#main">main</a></li><li><a href="global.html#map_container">map_container</a></li><li><a href="global.html#notifications_row">notifications_row</a></li><li><a href="global.html#ob_container">ob_container</a></li><li><a href="global.html#PreferencesItem">PreferencesItem</a></li><li><a href="global.html#pst_elevated_row_view">pst_elevated_row_view</a></li><li><a href="global.html#shuttlecard_addButton">shuttlecard_addButton</a></li><li><a href="global.html#specialevents_filter">specialevents_filter</a></li><li><a href="global.html#ua_accountinfo">ua_accountinfo</a></li><li><a href="global.html#wc_topRowContainer">wc_topRowContainer</a></li><li><a href="global.html#WeatherCard">WeatherCard</a></li><li><a href="global.html#WeatherDay">WeatherDay</a></li><li><a href="global.html#WeatherWeek">WeatherWeek</a></li>
 				</ul>
 			</li>
 			
@@ -84,82 +84,150 @@
 <section>
     <article>
         <pre
-            class="sunlight-highlight-javascript linenums">import React from 'react';
-import { connect } from 'react-redux';
-// import { Actions } from 'react-native-router-flux';
+            class="sunlight-highlight-javascript linenums">import React from 'react'
+import { connect } from 'react-redux'
+import moment from 'moment'
+import FullScheduleButton from './FullScheduleButton'
+import ScheduleCard from './ScheduleCard'
+import schedule from '../../util/schedule'
 
-import FullScheduleButton from './FullScheduleButton';
-import ScheduleCard from './ScheduleCard';
-import logger from '../../util/logger';
-import schedule from '../../util/schedule';
+let defaultSelectedClass = null
 
-/**
- * Container component for [ScheduleCard]{@link ScheduleCard}
- * */
+const getUpcomingClasses = (scheduleData) => {
+	if (!scheduleData) return []
 
-const processData = (scheduleData) => {
-	if (!scheduleData) return [];
+	const parsedScheduleData = schedule.getData(scheduleData)
+	const classesData = schedule.getClasses(parsedScheduleData)
+	const date = moment()
+	const dayOfTheWeek = date.day()
+	const currTime = moment(date.format('HH:mm a'), ['HH:mm A']).format('HHmm')
+	const MAX_RESULTS = 4
 
-	const parsedScheduleData = schedule.getData(scheduleData);
-	const classesData = schedule.getClasses(parsedScheduleData);
+	/** result:Array - Classes with a specific day of the week **/
+	const result = []
+	/** times:Array - An array of parsed class end times **/
+	const times = []
+	/** otherResults:Array - Classes without a specific day of the week **/
+	const otherResults = []
 
-	let result = [];
-	result.push(...classesData.MO);
-	result.push(...classesData.TU);
-	result.push(...classesData.WE);
-	result.push(...classesData.TH);
-	result.push(...classesData.FR);
-	result = result.slice(0, 4);
-	return result;
-};
+	/** Add classes scheduled to take place today to the `result` array **/
+	switch (dayOfTheWeek) {
+		case 0:
+			result.push(...classesData.SU)
+			break
+		case 1:
+			result.push(...classesData.MO)
+			break
+		case 2:
+			result.push(...classesData.TU)
+			break
+		case 3:
+			result.push(...classesData.WE)
+			break
+		case 4:
+			result.push(...classesData.TH)
+			break
+		case 5:
+			result.push(...classesData.FR)
+			break
+		case 6:
+			result.push(...classesData.SA)
+			break
+	}
+
+	/** Loop classes scheduled to take place today **/
+	for (let i = 0; i &lt; result.length; i++) {
+		if (result[i].time_string) {
+			/** If a class has a set time, parse it and push it to the `times` array **/
+			const arr = result[i].time_string.split(' – ')
+			const endTime = arr[1].replace(/\./gi, '')
+			const newEndTime = moment(endTime, ['h:mm A']).format('HHmm')
+			times.push(newEndTime)
+		} else {
+			/** If a class has no set time, push it to the `otherResults` array **/
+			otherResults.push(result[i])
+		}
+	}
+
+	let i = 0
+	while (times[i] &lt; currTime) {
+		if (result.length > 4) {
+			result.shift()
+			times.shift()
+		}
+		i++
+	}
+
+	for (let j = 0; j &lt; times.length; j++) {
+		if (times[j] > currTime) {
+			defaultSelectedClass = j
+			break
+		}
+	}
+
+	if (defaultSelectedClass == null) {
+		defaultSelectedClass = 0
+		otherResults.length = MAX_RESULTS
+		otherResults.push(...classesData.OTHER)
+		return otherResults
+	} else {
+		return result
+	}
+}
 
 class ScheduleCardContainer extends React.Component {
 	constructor(props) {
-		super(props);
+		super(props)
 		this.state = {
-			upcoming4Courses: processData(props.scheduleData),
-			activeCourse: 0
-		};
-		this.onClickCourse = this.onClickCourse.bind(this);
+			upcoming4Courses: getUpcomingClasses(props.scheduleData),
+			activeCourse: defaultSelectedClass
+		}
+		this.onClickCourse = this.onClickCourse.bind(this)
 	}
 
-	componentWillMount() {
-		logger.ga('Card Mounted: Schedule');
-	}
+	// /** TODO: Review ScheduleCardContainer::componentWillReceiveProps **/
 	componentWillReceiveProps(nextProps) {
-		if (nextProps.scheduleData) {
-			// console.warn('receive new prop');
+		if ((nextProps.scheduleData) || (this.props.scheduleData &amp;&amp; !nextProps.scheduleData)) {
 			this.setState((state, props) => ({
 				...state,
-				upcoming4Courses: processData(props.scheduleData)
-			}));
+				upcoming4Courses: getUpcomingClasses(props.scheduleData),
+				activeCourse: defaultSelectedClass
+			}))
 		}
 	}
+
 	onClickCourse(newActiveCourse) {
 		this.setState(prevState => ({
 			...prevState,
 			activeCourse: newActiveCourse,
-		}));
-		this.forceUpdate();
+		}))
 	}
+
 	render() {
 		return (
 			&lt;ScheduleCard
 				onClickCourse={this.onClickCourse}
-				// waitingData={this.state.courseDataReceived}
+				waitingData={this.props.requestStatus}
+				lastUpdated={this.props.lastUpdated}
+				error={this.props.requestError}
 				coursesToShow={this.state.upcoming4Courses}
 				activeCourse={this.state.activeCourse}
+				currentTerm={this.props.currentTerm}
 				actionButton={&lt;FullScheduleButton />}
 			/>
-		);
+		)
 	}
 }
 
 const mapStateToProps = state => ({
-	scheduleData: state.schedule.data
-});
+	scheduleData: state.schedule.data,
+	lastUpdated: state.schedule.lastUpdated,
+	currentTerm: state.schedule.currentTerm,
+	requestStatus: state.requestStatuses.GET_SCHEDULE,
+	requestError: state.requestErrors.GET_SCHEDULE
+})
 
-export default connect(mapStateToProps)(ScheduleCardContainer);
+export default connect(mapStateToProps)(ScheduleCardContainer)
 </pre>
     </article>
 </section>
@@ -205,7 +273,7 @@ export default connect(mapStateToProps)(ScheduleCardContainer);
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on Thu Apr 19th 2018
+		on Thu Feb 7th 2019
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

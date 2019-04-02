@@ -1,10 +1,5 @@
 import React from 'react'
-import {
-	View,
-	Text,
-	FlatList,
-} from 'react-native'
-import ElevatedView from 'react-native-elevated-view'
+import { View, Text, FlatList } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { connect } from 'react-redux'
 import COLOR from '../../styles/ColorConstants'
@@ -18,20 +13,19 @@ class ParkingSpotType extends React.Component {
 		const { isChecked, updateSelectedTypes, selectedSpots, renderWarning } = this.props
 		const ids = [...isChecked]
 		const index = parkingObj.item.id
-		// user is trying to unselect a row
+
 		if (ids[index]) {
+			// user is trying to unselect a row
 			ids[index] = !ids[index]
 			parkingObj.separators.unhighlight()
 			updateSelectedTypes(ids, selectedSpots.length - 1)
 			renderWarning(false)
-		}
-		// user is trying to select a row
-		else if (selectedSpots.length < 3) {
+		} else if (selectedSpots.length < 3) {
+			// user is trying to select a row
 			ids[index] = !ids[index]
 			parkingObj.separators.highlight()
 			updateSelectedTypes(ids, selectedSpots.length + 1)
-		}
-		else {
+		} else {
 			renderWarning(true)
 		}
 		// user tried to select a row but reached limit, so do nothing
@@ -125,7 +119,7 @@ const displayWarning = () =>  (
 function getSelectedRow({ parkingObj }) {
 	const { type, textColor, backgroundColor, shortName } = parkingObj.item
 	return (
-		<ElevatedView style={css.pst_elevated_row_view} elevation={5}>
+		<View style={css.pst_elevated_row_view}>
 			<View style={[css.pst_circle, { backgroundColor }]}>
 				<Text
 					style={[css.pst_character, { color: textColor }]}
@@ -140,7 +134,7 @@ function getSelectedRow({ parkingObj }) {
 				{type}
 			</Text>
 			{checkedIcon()}
-		</ElevatedView>
+		</View>
 	)
 }
 // returns a view containing an unslected row

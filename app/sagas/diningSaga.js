@@ -1,47 +1,25 @@
-import {
-	put,
-	takeLatest,
-	call,
-	select,
-	race,
-} from 'redux-saga/effects'
+import { put, takeLatest, call, select, race } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 import logger from '../util/logger'
 import DiningService from '../services/diningService'
 import { DINING_API_TTL, DINING_MENU_API_TTL, HTTP_REQUEST_TTL } from '../AppSettings'
-import { convertMetersToMiles, getDistanceMilesStr, dynamicSort } from '../util/general'
+import { convertMetersToMiles, getDistanceMilesStr, dynamicSort, timeDiff } from '../util/general'
 import { getDistance } from '../util/map'
 
 const getDining = state => (state.dining)
 
 function* updateDining(action) {
-	const {
-		lastUpdated,
-		data
-	} = yield select(getDining)
+	const { lastUpdated, data } = yield select(getDining)
 	const { position } = action
 
-	const nowTime = new Date().getTime()
-	const timeDiff = nowTime - lastUpdated
-	const diningTTL = DINING_API_TTL
-	let diningData
-
-	if (timeDiff < diningTTL && data) {
-		diningData = yield call(_sortDining, data)
+	if (timeDiff(lastUpdated) > DINING_API_TTL) {
+		const diningData = yield call(fetchDining, position)
+		const diningDataSorted = yield call(_sortDining, diningData)
+		yield put({ type: 'SET_DINING', data: diningDataSorted })
+	} else {
 		if (position) {
-			diningData = yield call(_setDiningDistance, position, diningData)
-			yield put({ type: 'SET_DINING', data: diningData })
-		}
-	}
-	else {
-		// Fetch for new data then sort and set distance
-		try {
-			diningData = yield call(fetchDining, position)
-			if (diningData) {
-				yield put({ type: 'SET_DINING', data: diningData })
-			}
-		} catch (error) {
-			logger.log(error)
+			const diningDataWithDistance = yield call(_setDiningDistance, position, data)
+			yield put({ type: 'SET_DINING_DISTANCE', data: diningDataWithDistance })
 		}
 	}
 }
@@ -106,14 +84,10 @@ function* fetchDiningMenu(id) {
 		if (timeout) {
 			const e = new Error('Request timed out.')
 			throw e
-		}
-		else if (!response || !response.menuitems) {
-			// const e = new Error('Invalid server response.')
-			// throw e
+		} else if (!response || !response.menuitems) {
 			yield put({ type: 'GET_DINING_MENU_SUCCESS' })
 			return null
-		}
-		else {
+		} else {
 			yield put({ type: 'GET_DINING_MENU_SUCCESS' })
 			return response
 		}
@@ -129,9 +103,9 @@ function _sortDining(diningData) {
 		if (Array.isArray(diningData)) {
 			const sortedDiningData = diningData.slice()
 			sortedDiningData.sort(dynamicSort('name'))
-			resolve(diningData)
+			resolve(sortedDiningData)
 		} else {
-			reject(new Error('Error _sortDining, diningData is not an array(' + diningData + ')'))
+			reject(new Error('Err:_sortDining:' + diningData))
 		}
 	})
 }
@@ -150,8 +124,7 @@ function _setDiningDistance(position, diningData) {
 							distance
 						}
 					}
-				}
-				else {
+				} else {
 					eatery = {
 						...eatery,
 						distance: 100000000

@@ -1,10 +1,9 @@
 import { GoogleAnalyticsTracker } from 'react-native-google-analytics-bridge'
-import { Client } from 'bugsnag-react-native' 
-
+import { Client } from 'bugsnag-react-native'
 import { GOOGLE_ANALYTICS_ID } from '../AppSettings'
 
-const tracker = new GoogleAnalyticsTracker(GOOGLE_ANALYTICS_ID)
-const bugsnag = new Client()
+const tracker = new GoogleAnalyticsTracker(GOOGLE_ANALYTICS_ID),
+	bugsnag = new Client()
 
 /**
  * A module containing logging helper functions
@@ -12,41 +11,22 @@ const bugsnag = new Client()
  */
 module.exports = {
 
-	/**
-	 * Send a log message to the console
-	 * @function
-	 * @param {string} msg The message to log
-	 */
+	/** Log message to the console **/
 	log(msg) {
 		console.log(msg)
 	},
 
-	/**
-	 * Sends a trackScreenView message to Google Analytics
-	 * @function
-	 * @param {string} msg The message to log
-	 */
+	/** Send a trackScreenView message to Google Analytics **/
 	ga(msg) {
 		tracker.trackScreenView(msg)
 	},
 
-
-	/**
-	 * Sends a trackEvent message to Google Analytics
-	 * @function
-	 * @param {string} category The category of event
-	 * @param {string} action The name of the action
-	 */
+	/** Sends a trackEvent message to Google Analytics **/
 	trackEvent(category, action) {
 		tracker.trackEvent(category, action)
 	},
 
-	/**
-	 * Sends a trackException message to Bugsnag
-	 * @function
-	 * @param {string} error The error message
-	 * @param {bool} fatal If the crash was fatal or not
-	 */
+	/** Sends a trackException message to Bugsnag **/
 	trackException(error, metadata, fatal) {
 		let severity = 'warning'
 		if (fatal) severity = 'error'
@@ -58,9 +38,11 @@ module.exports = {
 		bugsnag.notify(error, (report) => {
 			report.severity = severity
 			if (metadata) {
-				report.metadata = metadata
+				report.metadata = {
+					...report.metadata,
+					loggerData: { ...metadata }
+				}
 			}
 		})
 	},
-
 }

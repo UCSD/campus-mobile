@@ -1,3 +1,4 @@
+
 import { delay } from 'redux-saga'
 import { put, call, select } from 'redux-saga/effects'
 import { Image } from 'react-native'
@@ -8,7 +9,6 @@ import LinksService from '../services/quicklinksService'
 import EventService from '../services/eventService'
 import NewsService from '../services/newsService'
 import ParkingService from '../services/parkingService'
-import schedule from '../util/schedule'
 import { fetchMasterStopsNoRoutes, fetchMasterRoutes } from '../services/shuttleService'
 import {
 	WEATHER_API_TTL,
@@ -186,17 +186,17 @@ function* updateLinks() {
 }
 
 function* updateParking() {
-	const { lastUpdated } = yield select(getParkingData),
+	const { lastUpdated, parkingData } = yield select(getParkingData),
 		nowTime = new Date().getTime(),
 		ttl = PARKING_API_TTL,
 		timeDiff = nowTime - lastUpdated
 
 	if (timeDiff > ttl) {
 		// Fetch for new data
-		const parkingData = yield call(ParkingService.FetchParking)
-		if (parkingData) {
-			parkingData.sort(compare)
-			yield put({ type: 'SET_PARKING_DATA', parkingData })
+		const newParkingData = yield call(ParkingService.FetchParking)
+		if (newParkingData) {
+			newParkingData.sort(sortByOldParkingData(parkingData))
+			yield put({ type: 'SET_PARKING_DATA', newParkingData })
 		}
 		// get previously selected lots from users synced profile
 		const userData = yield select(getUserData)
@@ -206,6 +206,16 @@ function* updateParking() {
 		}
 	}
 }
+
+// comparator function to sort all the parking lots in the same order as a parking data structure which is passed in
+function sortByOldParkingData(parkingData) {
+	console.log(parkingData)
+	return function (a, b) {
+		return parkingData.findIndex(x => x.LocationName === a.LocationName) - parkingData.findIndex(x => x.LocationName === b.LocationName)
+	}
+}
+
+
 // comparator function to sort all the parking lots in alphanumeric order based on the LocationName
 function compare(e1, e2) {
 	if (e1.LocationName < e2.LocationName) {

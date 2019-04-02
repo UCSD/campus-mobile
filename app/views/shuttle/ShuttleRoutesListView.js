@@ -1,8 +1,8 @@
 import React from 'react'
-import { TouchableOpacity, Text, FlatList } from 'react-native'
-
-import Icon from 'react-native-vector-icons/FontAwesome'
+import { Text, FlatList } from 'react-native'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import css from '../../styles/css'
+import Touchable from '../common/Touchable'
 
 const ShuttleRoutesListView = ({ navigation }) => {
 	const { shuttle_routes, gotoStopsList } = navigation.state.params
@@ -24,19 +24,15 @@ const ShuttleRoutesListView = ({ navigation }) => {
 }
 
 const RouteItem = ({ data, gotoStopsList }) => (
-	<TouchableOpacity
+	<Touchable
 		onPress={() => gotoStopsList(data.stops)}
-		style={css.srlv_touchable}
+		style={css.fl_row}
 	>
-		<Text style={css.srlv_row_name}>
+		<Text style={css.fl_row_title}>
 			{data.name.trim()}
 		</Text>
-		<Icon
-			style={css.srlv_icon}
-			name="chevron-right"
-			size={20}
-		/>
-	</TouchableOpacity>
+		<Ionicons name="ios-arrow-forward" size={28} style={css.fl_row_arrow} />
+	</Touchable>
 )
 
 export default ShuttleRoutesListView

@@ -1,102 +1,42 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import {
-	TouchableOpacity,
-	View,
-	Text,
-	StyleSheet,
-	Dimensions,
-	FlatList,
-	StatusBar,
-	Platform
-} from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import ElevatedView from 'react-native-elevated-view';
-import COLOR from '../../styles/ColorConstants';
-import css from '../../styles/css';
-import { doPRM, getPRM, getMaxCardWidth } from '../../util/general';
+import React from 'react'
+import { View,	Text, FlatList } from 'react-native'
+import Icon from 'react-native-vector-icons/FontAwesome'
+import css from '../../styles/css'
+import Touchable from '../common/Touchable'
 
-const deviceHeight = Dimensions.get('window').height;
-const statusBarHeight = Platform.select({
-	ios: 0,
-	android: StatusBar.currentHeight,
-});
-
-const SearchResultsCard = ({ results, onSelect }) => (
-	<View>
-		<ElevatedView
-			style={styles.card_main}
-			elevation={2}
-		>
-			<View style={styles.list_container}>
-				{results ?
-					(
-						<SearchResultsList
-							results={results}
+const SearchResultsCard = ({ results, onSelect }) => {
+	if (results) {
+		return (
+			<FlatList
+				style={css.ms_container}
+				data={results}
+				keyExtractor={(listItem, index) => (listItem.title + index)}
+				renderItem={
+					({ item: rowData, index: rowID }) => (
+						<SearchResultsItem
+							data={rowData}
+							index={rowID}
 							onSelect={onSelect}
 						/>
-					) : (
-						null
 					)
 				}
-			</View>
-		</ElevatedView>
-	</View>
-);
-
-SearchResultsCard.propTypes = {
-	onSelect: PropTypes.func
-};
-
-SearchResultsCard.defaultProps = {};
-
-const SearchResultsList = ({ results, onSelect }) => (
-	<FlatList
-		data={results}
-		keyExtractor={(listItem, index) => (listItem.title + index)}
-		renderItem={
-			({ item: rowData, index: rowID }) =>
-				<SearchResultsItem
-					data={rowData}
-					index={rowID}
-					onSelect={onSelect}
-				/>
-		}
-	/>
-);
+			/>
+		)
+	} else {
+		return null
+	}
+}
 
 const SearchResultsItem = ({ data, onSelect, index }) => (
-	<TouchableOpacity
-		key={index}
-		underlayColor={'rgba(200,200,200,.1)'}
-		onPress={() => onSelect(index)}
-		style={styles.touch}
-	>
-		<View style={styles.list_row}>
-			<Icon name="map-marker" size={30} />
-			<Text style={css.destinationcard_marker_label}>{data.title}</Text>
-			{
-				(data.distanceMilesStr) ? (
-					<Text style={css.destinationcard_marker_dist_label}>{data.distanceMilesStr}</Text>
-				) : (null)
-			}
+	<Touchable onPress={() => onSelect(index)}>
+		<View style={css.ms_result_row}>
+			<Icon name="map-marker" size={22} style={css.ms_result_icon} />
+			<Text style={css.ms_result_title}>{data.title}</Text>
+			{data.distanceMilesStr ? (
+				<Text style={css.ms_result_dist}>{data.distanceMilesStr}</Text>
+			) : null }
 		</View>
-	</TouchableOpacity>
-);
+	</Touchable>
+)
 
-const navHeight = Platform.select({
-	ios: 58,
-	android: 44
-});
-
-// device - (statusBar + navHeight + searchBar + listPadding + tabBar)
-const listHeight = deviceHeight - (statusBarHeight + navHeight + 44 + 16 + 40);
-
-const styles = StyleSheet.create({
-	list_container: { width: getMaxCardWidth(), maxHeight: listHeight, },
-	card_main: { top: 44 + 6, backgroundColor: 'white', margin: 6, alignItems: 'flex-start', justifyContent: 'center', },
-	touch: { backgroundColor: 'white' },
-	list_row: { flexDirection: 'row', paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: COLOR.MGREY, overflow: 'hidden', paddingLeft: 8, paddingRight: 8 },
-});
-
-export default SearchResultsCard;
+export default SearchResultsCard

@@ -77,9 +77,7 @@ class AccountLogin extends Component {
 		}
 
 		return (
-			<View
-				style={css.ua_loginContainer}
-			>
+			<View style={css.ua_loginContainer}>
 				<TextInput
 					style={css.ua_input}
 					value={username}

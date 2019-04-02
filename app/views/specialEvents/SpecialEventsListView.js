@@ -1,31 +1,33 @@
 import React from 'react'
-import {
-	View,
-	Text,
-	ListView,
-	StyleSheet,
-} from 'react-native'
+import { View, Text, FlatList } from 'react-native'
 import { connect } from 'react-redux'
 import moment from 'moment'
-import ElevatedView from 'react-native-elevated-view'
-
-import COLOR from '../../styles/ColorConstants'
-import LAYOUT from '../../styles/LayoutConstants'
 import Touchable from '../common/Touchable'
 import SpecialEventsItem from './SpecialEventsItem'
 import SpecialEventsHeader from './SpecialEventsHeader'
+import css from '../../styles/css'
 
-
-const dataSource = new ListView.DataSource({
-	rowHasChanged: (r1, r2) => r1 !== r2,
-	sectionHeaderHasChanged: (s1, s2) => s1 !== s2
-})
-
-const SpecialEventsListView = ({ navigation, addSpecialEvents, specialEventsSchedule,
-	specialEventsScheduleIds, removeSpecialEvents, saved,disabled, personal, rows,
-	scrollEnabled, style, labels, labelItemIds, selectedDay, days, daysItemIds, inCard,
-	specialEventsTitle, handleFilterPress }) => {
-
+const SpecialEventsListView = ({
+	navigation,
+	addSpecialEvents,
+	specialEventsSchedule,
+	specialEventsScheduleIds,
+	removeSpecialEvents,
+	saved,
+	disabled,
+	personal,
+	rows,
+	scrollEnabled,
+	style,
+	labels,
+	labelItemIds,
+	selectedDay,
+	days,
+	daysItemIds,
+	inCard,
+	specialEventsTitle,
+	handleFilterPress
+}) => {
 	let scheduleIdArray = []
 	// Use ids from selectedDay
 	if (daysItemIds) {
@@ -51,7 +53,6 @@ const SpecialEventsListView = ({ navigation, addSpecialEvents, specialEventsSche
 			}
 		}
 		scheduleIdArray = daysItemIds[selectedDay]
-
 		// Filter saved for day
 		if (personal && Array.isArray(saved)) {
 			scheduleIdArray = scheduleIdArray.filter(item => saved.includes(item))
@@ -74,43 +75,47 @@ const SpecialEventsListView = ({ navigation, addSpecialEvents, specialEventsSche
 	}
 	if (personal && scheduleIdArray.length === 0) {
 		return (
-			<View style={[style, rows ? styles.card : styles.full]}>
-				<Text style={styles.noSessions}>
+			<View style={[style, rows ? css.selv_card : css.selv_full]}>
+				<Text style={css.selv_noSessions}>
 					Click the star icon next to a session to save it to your schedule.
 				</Text>
 			</View>
 		)
 	} else {
+		let lastStartTime
+
 		return (
-			<View style={styles.mainContainer}>
+			<View style={css.selv_mainContainer}>
 				<LabelsContainer
 					labels={labels}
 					hide={personal}
 					handleFilterPress={handleFilterPress}
 				/>
 				{(!personal && scheduleIdArray.length === 0) ? (
-					<Text style={styles.noSessions}>
+					<Text style={css.selv_noSessions}>
 						There are no events for your selected filters.
 					</Text>
 				) : (
-					<ListView
-						style={[style, rows ? styles.card : styles.full]}
+					<FlatList
+						style={[style, rows ? css.selv_card : css.selv_full]}
 						scrollEnabled={scrollEnabled}
 						stickySectionHeadersEnabled={false}
-						dataSource={
-							dataSource.cloneWithRowsAndSections(
-								convertToTimeMap(
-									specialEventsSchedule,
-									adjustData(specialEventsSchedule, scheduleIdArray, saved, personal, rows)
-								)
+						data={getEvents(specialEventsSchedule,adjustData(specialEventsSchedule, scheduleIdArray, saved, personal, rows))}
+						keyExtractor={item => item.id}
+						renderItem={(item) => {
+							const rowData = item.item
+							const specialEventsHeader = (
+								<SpecialEventsHeader
+									timestamp={(lastStartTime !== rowData['start-time']) ? rowData['start-time'] : null}
+									rows={rows}
+								/>
 							)
-						}
-						renderRow={(rowData, sectionID, rowID, highlightRow) => {
-							// Don't render first row bc rendered by header
-							if (Number(rowID) !== 0) {
-								return (
-									<View style={styles.rowContainer}>
-										<View style={styles.emptyRow} />
+							lastStartTime = rowData['start-time']
+
+							return (
+								<View style={css.selv_rowContainer}>
+									<View style={css.selv_rowContainer}>
+										{specialEventsHeader}
 										<SpecialEventsItem
 											specialEventsData={rowData}
 											saved={saved.includes(rowData.id)}
@@ -119,27 +124,9 @@ const SpecialEventsListView = ({ navigation, addSpecialEvents, specialEventsSche
 											title={specialEventsTitle}
 										/>
 									</View>
-								)
-							} else {
-								return null
-							}
+								</View>
+							)
 						}}
-						renderSectionHeader={(sectionData, sectionID) => (
-							// Render header along with first row
-							<View style={styles.rowContainer}>
-								<SpecialEventsHeader
-									timestamp={sectionID}
-									rows={rows}
-								/>
-								<SpecialEventsItem
-									specialEventsData={sectionData[0]}
-									saved={saved.includes(sectionData[0].id)}
-									add={(disabled) ? null : addSpecialEvents}
-									remove={removeSpecialEvents}
-									title={specialEventsTitle}
-								/>
-							</View>
-						)}
 					/>
 				)}
 			</View>
@@ -152,24 +139,20 @@ const LabelsContainer = ({ labels, hide, handleFilterPress }) => {
 		return null
 	} else {
 		return (
-			<ElevatedView
-				elevation={2}
+			<Touchable
+				onPress={() => handleFilterPress()}
+				style={css.selv_labelsContainer}
 			>
-				<Touchable
-					onPress={() => handleFilterPress()}
-					style={styles.labelsContainer}
+				<Text
+					style={css.selv_labelText}
+					numberOfLines={1}
 				>
-					<Text
-						style={styles.labelText}
-						numberOfLines={1}
-					>
-						<Text style={styles.labelHeader}>Filters: </Text>
-						{
-							labels.map((label, index) => label + ((index !== labels.length - 1) ? (', ') : ('')))
-						}
-					</Text>
-				</Touchable>
-			</ElevatedView>
+					<Text style={css.selv_labelHeader}>Filters: </Text>
+					{
+						labels.map((label, index) => label + ((index !== labels.length - 1) ? (', ') : ('')))
+					}
+				</Text>
+			</Touchable>
 		)
 	}
 }
@@ -235,28 +218,17 @@ function adjustData(scheduleIdMap, scheduleIdArray, savedArray, personal, rows) 
 
 /*
 	@returns Object that maps keys from scheduleArray to Objects in scheduleMap
+	@return array of objects that corresponding to sheculeArray
 */
-function convertToTimeMap(scheduleMap, scheduleArray, header = false) {
-	const timeMap = {}
-
+function getEvents(scheduleMap, scheduleArray, header = false) {
+	const arrOfScheduleObj = []
 	if (Array.isArray(scheduleArray)) {
 		scheduleArray.forEach((key) => {
 			const session = scheduleMap[key]
-			if (!timeMap[session['start-time']]) {
-				// Create an entry in the map for the timestamp if it hasn't yet been created
-				timeMap[session['start-time']] = []
-			}
-			timeMap[session['start-time']].push(session)
+			arrOfScheduleObj.push(session)
 		})
-
-		// Remove an item from section so spacing lines up
-		if (header) {
-			Object.keys(timeMap).forEach((key) => {
-				timeMap[key].pop()
-			})
-		}
 	}
-	return timeMap
+	return arrOfScheduleObj
 }
 
 const mapStateToProps = state => ({
@@ -279,21 +251,5 @@ const mapDispatchToProps = dispatch => ({
 	}
 })
 
-const ActualSpecialEventsListView = connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(SpecialEventsListView)
-
-const styles = StyleSheet.create({
-	mainContainer: { flexGrow: 1 },
-	rowContainer: { flexDirection: 'row' },
-	full: { flexGrow: 1, width: LAYOUT.WINDOW_WIDTH, height: (LAYOUT.WINDOW_HEIGHT - LAYOUT.NAVIGATOR_HEIGHT - LAYOUT.TAB_BAR_HEIGHT) },
-	card: { width: LAYOUT.MAX_CARD_WIDTH },
-	noSessions: { flexGrow: 1, fontSize: 16, textAlign: 'center', padding: 20, lineHeight: 22 },
-	labelsContainer: { alignItems: 'center', justifyContent: 'flex-start', borderBottomWidth: 1, borderBottomColor: COLOR.PRIMARY },
-	labelHeader: { fontWeight: '600', },
-	labelText: { width: LAYOUT.WINDOW_WIDTH, paddingVertical: 4, paddingHorizontal: 20, fontSize: 14, color: COLOR.PRIMARY },
-	emptyRow: { width: 75, flexDirection: 'row' },
-})
-
+const ActualSpecialEventsListView = connect(mapStateToProps,mapDispatchToProps)(SpecialEventsListView)
 export default ActualSpecialEventsListView

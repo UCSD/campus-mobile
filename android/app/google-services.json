@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "GS_ANDROID_APP_ID_PH",
+        "mobilesdk_app_id": "1:1:android:1",
         "android_client_info": {
-          "package_name": "GS_ANDROID_BUNDLE_ID_PH"
+          "package_name": "edu.ucsd"
         }
       },
       "oauth_client": [

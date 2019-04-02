@@ -1,7 +1,5 @@
 import React from 'react'
-import PropTypes from 'prop-types'
-import { FlatList, ScrollView } from 'react-native'
-
+import { FlatList } from 'react-native'
 import EventItem from '../events/EventItem'
 import NewsItem from '../news/NewsItem'
 import DiningItem from '../dining/DiningItem'
@@ -15,38 +13,25 @@ import css from '../../styles/css'
  * @param {Boolean} scrollEnabled
  * @param {String} item String name of row item
  * @param {Boolean} card Display rows with card styling (if available);
- * @return {JSX}
+ * @return {JSX} Returns presentation JSX DataListView component
  */
-const DataListView = ({ style, data, rows, scrollEnabled, item, card }) => {
-	if (rows) {
-		return (
-			<DataFlatList
-				style={style}
-				data={data}
-				rows={rows}
-				item={item}
-				card={card}
-			/>
-		)
-	} else {
-		return (
-			<ScrollView style={css.scroll_default} contentContainerStyle={css.main_full}>
-				<DataFlatList
-					style={style}
-					data={data}
-					rows={rows}
-					item={item}
-					card={card}
-				/>
-			</ScrollView>
-		)
-	}
-}
-
-const DataFlatList = ({ style, data, rows, item, card }) => (
-	<FlatList
+const DataListView = ({ style, data, rows, scrollEnabled, item, card }) => (
+	<DataFlatList
 		style={style}
-		data={(rows) ? (data.slice(0,rows)) : (data)}
+		data={data}
+		rows={rows}
+		scrollEnabled={scrollEnabled}
+		item={item}
+		card={card}
+	/>
+)
+
+const DataFlatList = ({ style, data, rows, scrollEnabled, item, card }) => (
+	<FlatList
+		style={[style, css.scroll_default]}
+		contentContainerStyle={rows ? null : css.main_full}
+		data={rows ? data.slice(0,rows) : data}
+		scrollEnabled={scrollEnabled}
 		keyExtractor={(listItem, index) => {
 			// Specify the unique key that each kind of
 			// item will use to identify itself. Each
@@ -94,18 +79,5 @@ const DataFlatList = ({ style, data, rows, item, card }) => (
 		}}
 	/>
 )
-
-DataListView.propTypes = {
-	data: PropTypes.array.isRequired,
-	rows: PropTypes.number,
-	scrollEnabled: PropTypes.bool,
-	item: PropTypes.string.isRequired,
-	card: PropTypes.bool,
-}
-
-DataListView.defaultProps = {
-	scrollEnabled: false,
-	card: false
-}
 
 export default DataListView

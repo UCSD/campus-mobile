@@ -1,41 +1,35 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders without crashing 1`] = `
-<ScrollView
-  scrollEnabled={true}
->
-  <View
-    style={
-      Object {
-        "paddingBottom": 50,
-      }
-    }
-  >
-    <Connect(UserAccount) />
-    <Connect(CardPreferences)
-      toggleScroll={[Function]}
-    />
-    <withNavigation(PreferencesItem)
-      icon="bell-o"
-      iconPack="FontAwesome"
-      link="Notifications"
-      linkType="internal"
-      title="Notifications"
-    />
-    <withNavigation(PreferencesItem)
-      icon="new-message"
-      iconPack="Entypo"
-      link="Feedback"
-      linkType="internal"
-      title="Feedback"
-    />
-    <withNavigation(PreferencesItem)
-      icon="lock"
-      iconPack="Feather"
-      link="https://mobile.ucsd.edu/privacy-policy.html"
-      linkType="external"
-      title="Privacy Policy"
-    />
-  </View>
+<ScrollView>
+  <Connect(UserAccount) />
+  <withNavigation(PreferencesItem)
+    icon="bell-o"
+    iconPack="FontAwesome"
+    link="Notifications"
+    linkType="internal"
+    title="Notifications"
+  />
+  <withNavigation(PreferencesItem)
+    icon="reorder"
+    iconPack="MaterialIcons"
+    link="CardPreferences"
+    linkType="internal"
+    title="Cards"
+  />
+  <withNavigation(PreferencesItem)
+    icon="new-message"
+    iconPack="Entypo"
+    link="Feedback"
+    linkType="internal"
+    title="Feedback"
+  />
+  <withNavigation(PreferencesItem)
+    icon="lock"
+    iconPack="Feather"
+    link="https://mobile.ucsd.edu/privacy-policy.html"
+    linkType="external"
+    title="Privacy Policy"
+  />
 </ScrollView>
 `;

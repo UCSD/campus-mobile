@@ -3,9 +3,15 @@ import { connect } from 'react-redux'
 import SortableList from 'react-native-sortable-list'
 import CardPreferencesItem from './CardPreferencesItem'
 import Card from '../../common/Card'
+import css from '../../../styles/css'
 
 // View for user to manage preferences, including which cards are visible
 class CardPreferences extends Component {
+	constructor(props) {
+		super(props)
+		this.state = { scrollEnabled: true }
+	}
+
 	componentWillMount() {
 		this.setState({ cardObject: this.getCardObject(this.props.cardOrder, this.props.cards) })
 	}
@@ -28,7 +34,9 @@ class CardPreferences extends Component {
 	shouldComponentUpdate(nextProps, nextState) {
 		if (this.props.cardOrder !== nextProps.cardOrder) {
 			return true
-		} else return false
+		} else {
+			return false
+		}
 	}
 
 	setCardState = (id, state) => {
@@ -50,6 +58,10 @@ class CardPreferences extends Component {
 		return cardObject
 	}
 
+	toggleScroll = () => {
+		this.setState({ scrollEnabled: !this.state.scrollEnabled })
+	}
+
 	_handleRelease = (key) => {
 		if (Array.isArray(this._order)) {
 			let newIndex
@@ -57,14 +69,15 @@ class CardPreferences extends Component {
 				if (orderKey === key) newIndex = index
 			})
 			this.props.reorderCard(key, newIndex)
-			this.props.toggleScroll() // toggle parent scroll
+			this.toggleScroll() // toggle parent scroll
 		}
 	}
 
 	render() {
 		return (
-			<Card id="cards" title="Cards" hideMenu full>
+			<Card id="cards" title="Cards" hideHeader style={css.full_flex}>
 				<SortableList
+					style={css.full_flex}
 					data={this.state.cardObject}
 					order={this.props.cardOrder}
 					renderRow={
@@ -77,10 +90,9 @@ class CardPreferences extends Component {
 							/>
 						)
 					}
-					onActivateRow={key => this.props.toggleScroll()}
+					onActivateRow={key => this.toggleScroll()}
 					onChangeOrder={(nextOrder) => { this._order = nextOrder }}
 					onReleaseRow={key => this._handleRelease(key)}
-					scrollEnabled={false}
 				/>
 			</Card>
 		)

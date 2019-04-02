@@ -1,16 +1,6 @@
 import React from 'react'
-import {
-	View,
-	Text,
-	ActivityIndicator,
-	FlatList
-} from 'react-native'
-
-import {
-	openURL,
-} from '../../util/general'
-import {
-} from '../../styles/ColorConstants'
+import { View, Text, ActivityIndicator, FlatList } from 'react-native'
+import { openURL } from '../../util/general'
 import css from '../../styles/css'
 import Touchable from '../common/Touchable'
 
@@ -33,8 +23,7 @@ const DiningMenu = ({
 				</View>
 			</Touchable>
 		)
-	}
-	else if (requestStatus) {
+	} else if (requestStatus) {
 		return (
 			<View style={css.dd_menu_container}>
 				<ActivityIndicator
@@ -43,8 +32,7 @@ const DiningMenu = ({
 				/>
 			</View>
 		)
-	}
-	else if (data && data.menuitems && data.menuitems.length > 1) {
+	} else if (data && data.menuitems && data.menuitems.length > 1) {
 		return (
 			<View style={css.dd_menu_container}>
 				<MenuFilters
@@ -196,7 +184,7 @@ const MenuItem = ({ navigation, data, disclaimer, disclaimerEmail }) => (
 		onPress={() => navigation.navigate('DiningNutrition', { menuItem: data, disclaimer, disclaimerEmail })}
 	>
 		<Text style={css.dd_menu_item_name_text}>
-		{data.name}<Text style={css.dd_menu_item_price_text}> (${data.price})</Text>
+			{data.name}<Text style={css.dd_menu_item_price_text}> (${data.price})</Text>
 		</Text>
 	</Touchable>
 )

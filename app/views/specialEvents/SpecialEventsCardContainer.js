@@ -1,12 +1,8 @@
-import React from 'react';
-
-import { connect } from 'react-redux';
-
-import SpecialEventsCard from './SpecialEventsCard';
-import logger from '../../util/logger';
+import React from 'react'
+import { connect } from 'react-redux'
+import SpecialEventsCard from './SpecialEventsCard'
 
 export const SpecialEventsCardContainer = ({ specialEventsData, saved, hideCard }) => {
-	logger.ga('Card Mounted: SpecialEvents');
 	if (specialEventsData) {
 		return (
 			<SpecialEventsCard
@@ -15,30 +11,26 @@ export const SpecialEventsCardContainer = ({ specialEventsData, saved, hideCard 
 				saved={saved}
 				hideCard={hideCard}
 			/>
-		);
+		)
 	} else {
-		return null;
+		return null
 	}
-};
+}
 
-const mapStateToProps = (state) => (
+const mapStateToProps = state => (
 	{
 		specialEventsData: state.specialEvents.data,
 		saved: state.specialEvents.saved
 	}
-);
+)
 
-const mapDispatchToProps = (dispatch) => (
+const mapDispatchToProps = dispatch => (
 	{
 		hideCard: (id) => {
-			dispatch({ type: 'UPDATE_CARD_STATE', id, state: false });
+			dispatch({ type: 'UPDATE_CARD_STATE', id, state: false })
 		}
 	}
-);
+)
 
-const ActualSpecialEventsCard = connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(SpecialEventsCardContainer);
-
-export default ActualSpecialEventsCard;
+const ActualSpecialEventsCard = connect(mapStateToProps, mapDispatchToProps)(SpecialEventsCardContainer)
+export default ActualSpecialEventsCard

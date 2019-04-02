@@ -47,7 +47,7 @@
 			<li class="dropdown">
 				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="global.html#bold">bold</a></li><li><a href="global.html#DataItem">DataItem</a></li><li><a href="global.html#DataList_card_list">DataList_card_list</a></li><li><a href="global.html#DataListCard">DataListCard</a></li><li><a href="global.html#DataListView">DataListView</a></li><li><a href="global.html#dl_row">dl_row</a></li><li><a href="global.html#main_container">main_container</a></li><li><a href="global.html#processData">processData</a></li><li><a href="global.html#sr_headerImage">sr_headerImage</a></li><li><a href="global.html#WeatherCard">WeatherCard</a></li><li><a href="global.html#WeatherCardContainer">WeatherCardContainer</a></li><li><a href="global.html#WeatherDay">WeatherDay</a></li><li><a href="global.html#WeatherWeek">WeatherWeek</a></li>
+					<li><a href="global.html#bc_image">bc_image</a></li><li><a href="global.html#card_main">card_main</a></li><li><a href="global.html#cc_loadingContainer">cc_loadingContainer</a></li><li><a href="global.html#DataListCard">DataListCard</a></li><li><a href="global.html#DataListView">DataListView</a></li><li><a href="global.html#dl_row">dl_row</a></li><li><a href="global.html#feedback_container">feedback_container</a></li><li><a href="global.html#finals_card_content">finals_card_content</a></li><li><a href="global.html#links_row_container">links_row_container</a></li><li><a href="global.html#main">main</a></li><li><a href="global.html#map_container">map_container</a></li><li><a href="global.html#notifications_row">notifications_row</a></li><li><a href="global.html#ob_container">ob_container</a></li><li><a href="global.html#PreferencesItem">PreferencesItem</a></li><li><a href="global.html#pst_elevated_row_view">pst_elevated_row_view</a></li><li><a href="global.html#shuttlecard_addButton">shuttlecard_addButton</a></li><li><a href="global.html#specialevents_filter">specialevents_filter</a></li><li><a href="global.html#ua_accountinfo">ua_accountinfo</a></li><li><a href="global.html#wc_topRowContainer">wc_topRowContainer</a></li><li><a href="global.html#WeatherCard">WeatherCard</a></li><li><a href="global.html#WeatherDay">WeatherDay</a></li><li><a href="global.html#WeatherWeek">WeatherWeek</a></li>
 				</ul>
 			</li>
 			
@@ -130,7 +130,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="util_auth.js.html">util/auth.js</a>,
-				 <a href="util_auth.js.html#sunlight-1-line-8">line 8</a>
+				 <a href="util_auth.js.html#sunlight-1-line-71">line 71</a>
 			</li>
 		</ul>
 	</dd>
@@ -164,6 +164,192 @@
         <h3 class="subsection-title">Methods</h3>
 
         <dl>
+            
+<hr>
+<dt>
+    <h4 class="name" id=".authorizedFetch"><span class="type-signature">&lt;static> </span>authorizedFetch(endpoint, payload)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Makes an authorized request using an access token.<br>If the response is a 401 Unauthorized, this function<br>attempts to retry a predetermined amount of times.<br>If no successful response is received by the last<br>attempt, this function sets an AUTH_HTTP error in<br>state.requestErrors.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>endpoint</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>URL of API endpoint</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>payload</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>JSON data to POST to endpoint</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="util_auth.js.html">util/auth.js</a>,
+				 <a href="util_auth.js.html#sunlight-1-line-175">line 175</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>Data from server<br>or returns an error if HTTP resonse isn't 200</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
             
 <hr>
 <dt>
@@ -222,7 +408,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="util_auth.js.html">util/auth.js</a>,
-				 <a href="util_auth.js.html#sunlight-1-line-94">line 94</a>
+				 <a href="util_auth.js.html#sunlight-1-line-157">line 157</a>
 			</li>
 		</ul>
 	</dd>
@@ -334,7 +520,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="util_auth.js.html">util/auth.js</a>,
-				 <a href="util_auth.js.html#sunlight-1-line-61">line 61</a>
+				 <a href="util_auth.js.html#sunlight-1-line-124">line 124</a>
 			</li>
 		</ul>
 	</dd>
@@ -496,7 +682,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="util_auth.js.html">util/auth.js</a>,
-				 <a href="util_auth.js.html#sunlight-1-line-29">line 29</a>
+				 <a href="util_auth.js.html#sunlight-1-line-92">line 92</a>
 			</li>
 		</ul>
 	</dd>
@@ -658,7 +844,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="util_auth.js.html">util/auth.js</a>,
-				 <a href="util_auth.js.html#sunlight-1-line-18">line 18</a>
+				 <a href="util_auth.js.html#sunlight-1-line-81">line 81</a>
 			</li>
 		</ul>
 	</dd>
@@ -770,7 +956,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="util_auth.js.html">util/auth.js</a>,
-				 <a href="util_auth.js.html#sunlight-1-line-83">line 83</a>
+				 <a href="util_auth.js.html#sunlight-1-line-146">line 146</a>
 			</li>
 		</ul>
 	</dd>
@@ -882,7 +1068,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="util_auth.js.html">util/auth.js</a>,
-				 <a href="util_auth.js.html#sunlight-1-line-50">line 50</a>
+				 <a href="util_auth.js.html#sunlight-1-line-113">line 113</a>
 			</li>
 		</ul>
 	</dd>
@@ -1044,7 +1230,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="util_auth.js.html">util/auth.js</a>,
-				 <a href="util_auth.js.html#sunlight-1-line-72">line 72</a>
+				 <a href="util_auth.js.html#sunlight-1-line-135">line 135</a>
 			</li>
 		</ul>
 	</dd>
@@ -1230,7 +1416,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="util_auth.js.html">util/auth.js</a>,
-				 <a href="util_auth.js.html#sunlight-1-line-39">line 39</a>
+				 <a href="util_auth.js.html#sunlight-1-line-102">line 102</a>
 			</li>
 		</ul>
 	</dd>
@@ -1337,7 +1523,7 @@
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on Thu Apr 19th 2018
+		on Thu Feb 7th 2019
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
