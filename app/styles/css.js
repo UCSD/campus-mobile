@@ -11,7 +11,7 @@
 	05 - Classes
 	06 - Shuttle
 	07 - Dining
-
+	08 - Student ID Card
 	10 - Links
 	11 - Weather
 	12 - Map
@@ -378,6 +378,29 @@ const css = StyleSheet.create({
 	dn_topborder2: { borderTopWidth: 4, borderTopColor: COLOR.BLACK },
 	dn_info_container: { paddingTop: 10 },
 	dn_bold: { fontWeight: '700' },
+
+	/**
+	 *  08 - Student ID Card
+	 */
+	// Student ID Card
+	sid_container: { flexDirection: 'row', margin: 12 },
+	sid_left: { flex: 1 },
+	sid_photo: { height: 80, borderWidth: 1 },
+	sid_affiliation: { textAlign: 'center', fontSize: 15, paddingTop: 8 },
+	sid_right: { flex: 3, marginLeft: 16 },
+	sid_name: { color: COLOR.BLACK, fontSize: 16 },
+	sid_college: { color: COLOR.DGREY, fontSize: 16, paddingTop: 2 },
+	sid_major: { color: COLOR.BLACK, fontSize: 16, paddingTop: 2 },
+	sid_barcode: { flexGrow: 1, marginTop: 8, justifyContent: 'center' },
+	sid_barcode_tip: { textAlign: 'center', fontSize: 11, color: COLOR.DGREY, zIndex: 2 },
+	sid_barcode_inner: { marginTop: -6 },
+	sid_barcode_id: { textAlign: 'center', fontSize: 14, zIndex: 2, marginTop: -8, letterSpacing: 4 },
+	// Barcode Modal
+	sid_modal: { margin: 40, backgroundColor: COLOR.WHITE },
+	sid_modal_close: { position: 'absolute', bottom: 32, right: 16, transform: [{ rotate: '90deg' }], fontSize: 16 },
+	sid_modal_close_text: { textAlign: 'right', padding: 8, color: COLOR.PRIMARY },
+	sid_modal_barcode: { justifyContent: 'center', transform: [{ rotate: '90deg' }] },
+	sid_modal_barcode_id: { textAlign: 'center', fontSize: 20, zIndex: 2, marginTop: -8, letterSpacing: 4 },
 
 	/**
 	 *  10 - Links
