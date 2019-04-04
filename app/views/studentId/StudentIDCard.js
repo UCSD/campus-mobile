@@ -2,6 +2,7 @@ import React from 'react'
 import { View, Text, Image, ActivityIndicator } from 'react-native'
 import Barcode from 'react-native-barcode-builder'
 import Modal from 'react-native-modal'
+import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import Card from '../common/Card'
 import Touchable from '../common/Touchable'
 import css from '../../styles/css'
@@ -59,11 +60,16 @@ const StudentIDCard = ({ data, barcodeModalVisible, toggleModal, waitingData }) 
 						isVisible={barcodeModalVisible}
 						backdropOpacity={0.3}
 					>
-						<View style={css.sid_modal_close}>
-							<Touchable onPress={toggleModal}>
-								<Text style={css.sid_modal_close_text}>Close</Text>
-							</Touchable>
-						</View>
+						<Touchable
+							style={css.sid_modal_close}
+							onPress={toggleModal}
+						>
+							<MCIcon
+								size={36}
+								name="close-circle-outline"
+								style={css.sid_modal_close_icon}
+							/>
+						</Touchable>
 
 						<View style={css.sid_modal_barcode}>
 							<Barcode
