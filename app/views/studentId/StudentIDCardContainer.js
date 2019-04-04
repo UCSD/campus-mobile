@@ -1,5 +1,4 @@
 import React from 'react'
-import { Alert } from 'react-native'
 import { connect } from 'react-redux'
 import SystemSetting from 'react-native-system-setting'
 import StudentIDCard from './StudentIDCard'
@@ -12,31 +11,22 @@ class StudentIDCardContainer extends React.Component {
 		}
 	}
 
-	_toggleModal = () => {
-		this.state.barcodeModalVisible ? this._restoreBrightness() : this._setMaxBrightness()
-		this.setState({ barcodeModalVisible: !this.state.barcodeModalVisible })
-	}
-
-	_setMaxBrightness = () => {
-		// Save original brightness to restore later
-		SystemSetting.saveBrightness()
-
+	setMaxBrightness = () => {
 		// Set max brightness
-		SystemSetting.setBrightnessForce(1.0).then((success) => {
-			!success && Alert.alert(
-				'Unable to Increase Brightness',
-				'For easier scanning, it is recommended to temporarily set your device to it\'s maximum brightness setting.',
-				[
-					{ 'text': 'Allow', style: 'Cancel' },
-					{ 'text': 'Open Settings', onPress: () => SystemSetting.grantWriteSettingPremission() }
-				]
-			)
+		SystemSetting.getAppBrightness().then((brightness) => {
+			this.setState({ deviceBrightness: brightness })
+			SystemSetting.setAppBrightness(1.0)
 		})
 	}
 
-	_restoreBrightness = () => {
+	restoreBrightness = () => {
 		// Restore original brightness
-		SystemSetting.restoreBrightness()
+		SystemSetting.setAppBrightness(this.state.deviceBrightness)
+	}
+
+	toggleModal = () => {
+		this.state.barcodeModalVisible ? this.restoreBrightness() : this.setMaxBrightness()
+		this.setState({ barcodeModalVisible: !this.state.barcodeModalVisible })
 	}
 
 	render() {
@@ -45,7 +35,7 @@ class StudentIDCardContainer extends React.Component {
 			<StudentIDCard
 				data={studentProfile.data}
 				barcodeModalVisible={this.state.barcodeModalVisible}
-				toggleModal={this._toggleModal}
+				toggleModal={this.toggleModal}
 			/>
 		)
 	}
