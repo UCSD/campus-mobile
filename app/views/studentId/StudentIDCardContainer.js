@@ -30,11 +30,26 @@ class StudentIDCardContainer extends React.Component {
 	}
 
 	render() {
-		const { studentProfile } = this.props
+		const {
+			studentProfile,
+			studentProfileRequestStatus,
+			studentNameRequestStatus,
+			studentPhotoRequestStatus,
+			studentNamerequestError,
+			studentPhotorequestError,
+			studentProfilerequestError
+		} = this.props
+
 		return (
 			<StudentIDCard
-				data={studentProfile.data}
+				studentProfile={studentProfile}
 				barcodeModalVisible={this.state.barcodeModalVisible}
+				studentPhotoRequestStatus={studentPhotoRequestStatus}
+				studentProfileRequestStatus={studentProfileRequestStatus}
+				studentNameRequestStatus={studentNameRequestStatus}
+				studentNamerequestError={studentNamerequestError}
+				studentPhotorequestError={studentPhotorequestError}
+				studentProfilerequestError={studentProfilerequestError}
 				toggleModal={this.toggleModal}
 			/>
 		)
@@ -43,7 +58,13 @@ class StudentIDCardContainer extends React.Component {
 
 const mapStateToProps = state => (
 	{
-		studentProfile: state.studentProfile
+		studentProfile: state.studentProfile,
+		studentProfileRequestStatus: state.requestStatuses.GET_STUDENT_PROFILE,
+		studentNameRequestStatus: state.requestStatuses.GET_STUDENT_NAME,
+		studentPhotoRequestStatus: state.requestStatuses.GET_STUDENT_PHOTO,
+		studentNameRequestError: state.requestErrors.GET_STUDENT_NAME,
+		studentPhotoRequestError: state.requestErrors.GET_STUDENT_PHOTO,
+		studentProfileRequestError: state.requestErrors.GET_STUDENT_PROFILE
 	}
 )
 

@@ -92,6 +92,7 @@ const css = StyleSheet.create({
 	last_updated_err_icon: { fontSize: 16, marginRight: 6 },
 	last_updated_err_icon_warn: { color: COLOR.WARNING },
 	last_updated_err_icon_error: { color: COLOR.ERROR },
+	safe_image_loading_activity_indicator: { flex: 1, alignItems: 'center', justifyContent: 'center' },
 	// Data
 	DataList_card_list: {  },
 	DataList_full_list: { top: -1 },
@@ -399,6 +400,7 @@ const css = StyleSheet.create({
 	sid_modal: { margin: 40, backgroundColor: COLOR.WHITE },
 	sid_modal_close: { position: 'absolute', bottom: 16, right: 16, transform: [{ rotate: '90deg' }] },
 	sid_modal_close_icon: { color: COLOR.PRIMARY },
+	sid_avatar_icon: { justifyContent: 'center', alignItems: 'center' },
 	sid_modal_barcode: { justifyContent: 'center', transform: [{ rotate: '90deg' }] },
 	sid_modal_barcode_id: { textAlign: 'center', fontSize: 20, zIndex: 2, marginTop: -8, letterSpacing: 4 },
 
