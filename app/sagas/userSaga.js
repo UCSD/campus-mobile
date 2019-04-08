@@ -68,8 +68,6 @@ function* doLogin(action) {
 				isStudent = true
 			}
 
-			console.log('isStudent---------:' + isStudent)
-
 			// User Profile
 			const newProfile = {
 				username,
