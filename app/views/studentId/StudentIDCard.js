@@ -3,7 +3,7 @@ import { View, Text, ActivityIndicator } from 'react-native'
 import Barcode from 'react-native-barcode-builder'
 import Modal from 'react-native-modal'
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons'
-import AvatarIcon from 'react-native-vector-icons/EvilIcons'
+import AvatarIcon from 'react-native-vector-icons/Entypo'
 import Card from '../common/Card'
 import Touchable from '../common/Touchable'
 import css from '../../styles/css'
@@ -128,10 +128,11 @@ const LoadingCard = () => (
 )
 
 const avatarIcon = () => (
-	<View style={css.sid_avatar_icon}>
+	<View style={css.sid_avatar_icon_container}>
 		<AvatarIcon
 			size={55}
 			name="user"
+			style={css.sid_avatar_icon}
 		/>
 	</View>
 )

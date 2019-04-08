@@ -400,7 +400,8 @@ const css = StyleSheet.create({
 	sid_modal: { margin: 40, backgroundColor: COLOR.WHITE },
 	sid_modal_close: { position: 'absolute', bottom: 16, right: 16 },
 	sid_modal_close_icon: { color: COLOR.PRIMARY },
-	sid_avatar_icon: { justifyContent: 'center', alignItems: 'center' },
+	sid_avatar_icon_container: { justifyContent: 'center', alignItems: 'center' },
+	sid_avatar_icon: { color: COLOR.DGREY },
 	sid_modal_barcode: { justifyContent: 'center', transform: [{ rotate: '90deg' }] },
 	sid_modal_barcode_id: { textAlign: 'center', fontSize: 20, zIndex: 2, marginTop: -8, letterSpacing: 4 },
 
