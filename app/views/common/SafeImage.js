@@ -24,16 +24,14 @@ class SafeImage extends React.Component {
 		}
 		if (this.props.source && this.props.source.uri && this.state.validImage) {
 			return (
-				<View>
-					<ImageBackground
-						{...this.props}
-						onError={this._handleError}
-						resizeMode={selectedResizeMode}
-						onLoadEnd={this._handleOnLoadEnd}
-					>
-						{this.state.loading ? <ActivityIndicator size="small" style={css.safe_image_loading_activity_indicator} /> : null}
-					</ImageBackground>
-				</View>
+				<ImageBackground
+					{...this.props}
+					onError={this._handleError}
+					resizeMode={selectedResizeMode}
+					onLoadEnd={this._handleOnLoadEnd}
+				>
+					{this.state.loading ? <ActivityIndicator size="small" style={css.safe_image_loading_activity_indicator} /> : null}
+				</ImageBackground>
 			)
 		} else if (this.props.onFailure) {
 			return this.props.onFailure
