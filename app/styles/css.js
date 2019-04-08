@@ -397,7 +397,7 @@ const css = StyleSheet.create({
 	sid_barcode_id: { textAlign: 'center', fontSize: 14, zIndex: 2, marginTop: -8, letterSpacing: 4 },
 	// Barcode Modal
 	sid_modal: { margin: 40, backgroundColor: COLOR.WHITE },
-	sid_modal_close: { position: 'absolute', bottom: 16, right: 16, transform: [{ rotate: '90deg' }] },
+	sid_modal_close: { position: 'absolute', bottom: 16, right: 16 },
 	sid_modal_close_icon: { color: COLOR.PRIMARY },
 	sid_modal_barcode: { justifyContent: 'center', transform: [{ rotate: '90deg' }] },
 	sid_modal_barcode_id: { textAlign: 'center', fontSize: 20, zIndex: 2, marginTop: -8, letterSpacing: 4 },
