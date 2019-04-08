@@ -326,6 +326,7 @@ function* clearUserData(currentSubscriptions) {
 	yield put({ type: 'CLEAR_SCHEDULE_DATA' })
 	yield put({ type: 'CLEAR_USER_SUBSCRIPTIONS', subscribedTopics: currentSubscriptions })
 	yield put({ type: 'RESET_MESSAGES' })
+	yield put({ type: 'CLEAR_STUDENT_PROFILE_DATA' })
 }
 
 function* userSaga() {
