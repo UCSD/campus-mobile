@@ -67,4 +67,6 @@ module.exports = {
 	SSO_REFRESH_RETRY_INCREMENT: 5000, // 5 seconds
 	SSO_REFRESH_RETRY_MULTIPLIER: 3, // Multiplies increment by this amount for next try
 
+	/* UCSD AFFILIATION */
+	UCSD_STUDENT: /(B|G|J|M|U)/
 }

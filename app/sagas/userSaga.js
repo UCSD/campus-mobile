@@ -62,9 +62,13 @@ function* doLogin(action) {
 			yield auth.storeUserCreds(username, passwordEncrypted)
 			yield auth.storeAccessToken(response.access_token)
 
-			// Set up user profile
-			const isStudent = Boolean((response.pid) && (response.ucsdaffiliation.match(UCSD_STUDENT)))
+			// Student Classification
+			let isStudent = false
+			if (response.pid && response.ucsdaffiliation.match(UCSD_STUDENT)) {
+				isStudent = true
+			}
 
+			// User Profile
 			const newProfile = {
 				username,
 				pid: response.pid,
