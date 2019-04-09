@@ -386,7 +386,7 @@ const css = StyleSheet.create({
 	// Student ID Card
 	sid_container: { flexDirection: 'row', margin: 12 },
 	sid_left: { flex: 1 },
-	sid_photo: { height: 80, borderWidth: 1 },
+	sid_photo: { height: 100 },
 	sid_affiliation: { textAlign: 'center', fontSize: 15, paddingTop: 8 },
 	sid_right: { flex: 3, marginLeft: 16 },
 	sid_name: { color: COLOR.BLACK, fontSize: 16 },
