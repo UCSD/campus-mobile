@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+echo "#### appcenter-post-clone START ####"
+
 # Install our version of Node
 set -ex
 brew uninstall node@6
@@ -14,3 +16,5 @@ then
 else
     npm run campus-qa-ci
 fi
+
+echo "#### appcenter-post-clone END ####"

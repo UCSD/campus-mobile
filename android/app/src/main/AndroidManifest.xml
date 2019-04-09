@@ -13,7 +13,7 @@
       android:name=".MainApplication"
       android:allowBackup="false"
       android:label="@string/app_name"
-      android:icon="@drawable/icon"
+      android:icon="@mipmap/ic_launcher"
       android:theme="@style/SplashTheme">
         <service android:name="io.invertase.firebase.messaging.RNFirebaseMessagingService">
             <intent-filter>
@@ -47,7 +47,7 @@
           android:value="GOOGLE_MAPS_API_KEY_PH"/>
       <meta-data
         android:name="com.google.firebase.messaging.default_notification_icon"
-        android:resource="@drawable/icon_sil" />
+        android:resource="@mipmap/ic_launcher_sil" />
       <meta-data android:name="com.bugsnag.android.API_KEY"
           android:value="BUGSNAG_KEY_PH"/>
     </application>

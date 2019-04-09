@@ -65,14 +65,10 @@ class PrefItem extends Component {
 	render() {
 		const { data, cards } = this.props
 		return (
-			<Animated.View style={[css.us_list_row, this._style]}>
-				<Icon
-					style={css.us_icon}
-					name="drag-handle"
-					size={24}
-				/>
-				<Text style={css.us_name_text}>{data.name}</Text>
-				<View style={css.us_switchContainer}>
+			<Animated.View style={[css.sl_row, this._style]}>
+				<Icon style={css.sl_icon} name="drag-handle" size={20} />
+				<Text style={css.sl_title}>{data.name}</Text>
+				<View style={css.sl_switch_container}>
 					<Switch
 						onValueChange={value => this.props.setCardState(data.id, value)}
 						value={cards[data.id].active}

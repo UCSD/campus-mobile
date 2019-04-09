@@ -138,16 +138,19 @@ class ParkingOverview extends Component {
 	}
 
 	render() {
-		const { structureData, selectedSpots, totalLotCount } = this.props
+		const { structureData, selectedSpots } = this.props
 
 		let message
 		if (Array.isArray(selectedSpots) && selectedSpots.length) {
-			const totalSpots = this.getTotalSpots()
-			if (totalSpots === 1) {
-				message = '~' + totalSpots + ' Spot Available'
+			let totalSpots
+			if (structureData.AvailabilityType === 'aggregate') {
+				totalSpots = structureData.Open
 			} else {
-				message = '~' + totalSpots + ' Spots Available'
+				totalSpots = this.getTotalSpots()
 			}
+
+			if (totalSpots === 1) 	message = '~' + totalSpots + ' Spot Available'
+			else 					message = '~' + totalSpots + ' Spots Available'
 		} else {
 			message = 'Please select a parking type'
 		}
@@ -158,9 +161,6 @@ class ParkingOverview extends Component {
 				<Text style={css.po_structure_context}>{structureData.LocationContext}</Text>
 				<Text style={css.po_structure_spots_available}>{message}</Text>
 				{this.renderDetails()}
-				{totalLotCount === 1 ? (
-					<Text style={css.po_structure_comingsoon}>More Lots Coming Soon!</Text>
-				) : null }
 			</View>
 		)
 	}

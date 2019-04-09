@@ -34,7 +34,9 @@ class CardPreferences extends Component {
 	shouldComponentUpdate(nextProps, nextState) {
 		if (this.props.cardOrder !== nextProps.cardOrder) {
 			return true
-		} else return false
+		} else {
+			return false
+		}
 	}
 
 	setCardState = (id, state) => {
@@ -91,7 +93,6 @@ class CardPreferences extends Component {
 					onActivateRow={key => this.toggleScroll()}
 					onChangeOrder={(nextOrder) => { this._order = nextOrder }}
 					onReleaseRow={key => this._handleRelease(key)}
-					scrollEnabled={false}
 				/>
 			</Card>
 		)
