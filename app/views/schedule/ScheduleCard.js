@@ -141,11 +141,11 @@ const ScheduleCard = ({
 		} else if (waitingData) {
 			return <LoadingClasses lastUpdated={lastUpdated} error={error} />
 		} else {
-			return <NoClasses lastUpdated={lastUpdated} error={error} />
+			return <NoClasses lastUpdated={lastUpdated} error={error} actionButton={actionButton} />
 		}
 	} catch (err) {
 		logger.trackException(err)
-		return <NoClasses lastUpdated={lastUpdated} error={error} />
+		return <NoClasses lastUpdated={lastUpdated} error={error} actionButton={actionButton} />
 	}
 }
 
@@ -171,15 +171,19 @@ const LoadingClasses = ({ lastUpdated, error }) => (
 		<View style={css.cc_loadingContainer}>
 			<ActivityIndicator size="large" />
 		</View>
+		<LastUpdatedMin lastUpdated={lastUpdated} error={error} />
 	</Card>
 )
 
-const NoClasses = ({ lastUpdated, error }) => (
+const NoClasses = ({ lastUpdated, error, actionButton }) => (
 	<Card id="schedule" title="Classes">
 		<View style={css.cc_loadingContainer}>
-			<Text style={css.cc_noclasses}>There are no classes to display right now.</Text>
+			<Text style={css.cc_noclasses}>
+				You do not have any classes today.
+			</Text>
 		</View>
 		<LastUpdatedMin lastUpdated={lastUpdated} error={error} />
+		{actionButton}
 	</Card>
 )
 
