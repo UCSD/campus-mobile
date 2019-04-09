@@ -15,7 +15,7 @@ class SISchedule extends React.Component {
 	renderSIsection() {
 		const { siSession } = this.props
 		let { selected } = this.state
-		if (siSession) {
+		if (siSession && siSession.length > 0) {
 			return (
 				<View>
 					<TouchableWithoutFeedback
@@ -72,7 +72,7 @@ class SISchedule extends React.Component {
 						{'Leader: '}
 					</Text>
 					<Text>
-						{siSession.si_leader}
+						{siSession[0].si_leader}
 					</Text>
 				</View>
 			)
@@ -85,16 +85,18 @@ class SISchedule extends React.Component {
 		const { selected } = this.state
 		if (selected) {
 			const scheduleArray = []
-			siSession.days.forEach((day) => {
-				const fullString = siSchedule.dayOfWeekInterpreter(day)
-				const scheduleObj = (
-					<View style={css.fslv_si_text_container}>
-						<Text>
-							{fullString} {siSession.time}, {siSession.building}, {siSession.room}
-						</Text>
-					</View>
-				)
-				scheduleArray.push(scheduleObj)
+			siSession.forEach((siSesh) => {
+				siSesh.days.forEach((day) => {
+					const fullString = siSchedule.dayOfWeekInterpreter(day)
+					const scheduleObj = (
+						<View style={css.fslv_si_text_container}>
+							<Text>
+								{fullString} {siSesh.time}, {siSesh.building}, {siSesh.room}
+							</Text>
+						</View>
+					)
+					scheduleArray.push(scheduleObj)
+				})
 			})
 			return scheduleArray
 		}

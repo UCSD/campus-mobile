@@ -35,13 +35,14 @@ class FullSchedule extends React.Component {
 
 	getMatchingSISessions = (classObject) => {
 		const { siSessions } = this.props
-		let session = null
+		const sessions = []
 		siSessions.forEach((siSession) => {
 			if (siSession.course === (classObject.subject_code + ' ' + classObject.course_code)) {
-				session = siSession
+				sessions.push(siSession)
 			}
 		})
-		return session
+
+		return sessions
 	}
 
 	keyExtractor = (item, index) => (item.course_code + item.section)
@@ -60,8 +61,8 @@ class FullSchedule extends React.Component {
 	renderItem = ({ item, index, section }) => {
 		// Only show classes without a special meeting code (i.e. 'FI', 'PB', etc)
 		if (!item.special_mtg_code) {
-			const siSession = this.getMatchingSISessions(item)
-			return (<IndividualClass data={item} props={this.props} siSession={siSession} />)
+			const siSessions = this.getMatchingSISessions(item)
+			return (<IndividualClass data={item} props={this.props} siSession={siSessions} />)
 		} else {
 			return null
 		}

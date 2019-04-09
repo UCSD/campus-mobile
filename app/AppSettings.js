@@ -13,7 +13,8 @@ module.exports = {
 	MYMESSAGES_API_URL: 'https://api.ucsd.edu:8243/mp-mymessages/1.0.0',
 	MP_REGISTRATION_API_URL: 'https://api.ucsd.edu:8243/mp-registration/1.0.0',
 	MESSAGES_TOPICS_URL: 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/topics.json',
-	SI_SESSIONS_SERVICE_API_URL: 'https://s3-us-west-1.amazonaws.com/ucsd-mobile-dev/mock-apis/tutoring/tutors-v3.json',
+	// SI_SESSIONS_SERVICE_API_URL: 'https://s3-us-west-1.amazonaws.com/ucsd-mobile-dev/mock-apis/tutoring/tutors-v3.json',
+	SI_SESSIONS_SERVICE_API_URL: 'https://s3-us-west-1.amazonaws.com/ucsd-mobile-dev/mock-apis/tlc/TLC_SI_v4_a.json',
 	// SHUTTLE
 	SHUTTLE_STOPS_API_URL: 'https://ies4wyrlx9.execute-api.us-west-2.amazonaws.com/prod/v2/stops/',
 	SHUTTLE_VEHICLES_API_URL: 'https://hjr84cay81.execute-api.us-west-2.amazonaws.com/prod?route=',
