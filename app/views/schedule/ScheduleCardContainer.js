@@ -7,6 +7,19 @@ import schedule from '../../util/schedule'
 
 let defaultSelectedClass = null
 
+const getTotalClasses = (scheduleData) => {
+	let totalClasses = 0
+	if (scheduleData) {
+		const parsedScheduleData = schedule.getData(scheduleData)
+		Object.keys(parsedScheduleData).forEach((key) => {
+			if (Array.isArray(parsedScheduleData[key])) {
+				totalClasses += parsedScheduleData[key].length
+			}
+		})
+	}
+	return totalClasses
+}
+
 const getUpcomingClasses = (scheduleData) => {
 	if (!scheduleData) return []
 
@@ -94,6 +107,7 @@ class ScheduleCardContainer extends React.Component {
 		super(props)
 		this.state = {
 			upcoming4Courses: getUpcomingClasses(props.scheduleData),
+			totalClasses: getTotalClasses(props.scheduleData),
 			activeCourse: defaultSelectedClass
 		}
 		this.onClickCourse = this.onClickCourse.bind(this)
@@ -105,6 +119,7 @@ class ScheduleCardContainer extends React.Component {
 			this.setState((state, props) => ({
 				...state,
 				upcoming4Courses: getUpcomingClasses(props.scheduleData),
+				totalClasses: getTotalClasses(props.scheduleData),
 				activeCourse: defaultSelectedClass
 			}))
 		}
@@ -122,6 +137,7 @@ class ScheduleCardContainer extends React.Component {
 			<ScheduleCard
 				onClickCourse={this.onClickCourse}
 				waitingData={this.props.requestStatus}
+				totalClasses={this.state.totalClasses}
 				lastUpdated={this.props.lastUpdated}
 				error={this.props.requestError}
 				coursesToShow={this.state.upcoming4Courses}

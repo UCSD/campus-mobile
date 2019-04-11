@@ -17,6 +17,7 @@ import COLOR from '../../styles/ColorConstants'
 
 const ScheduleCard = ({
 	coursesToShow,
+	totalClasses,
 	waitingData,
 	lastUpdated,
 	error,
@@ -26,10 +27,7 @@ const ScheduleCard = ({
 	onClickCourse
 }) => {
 	try {
-		if (
-			coursesToShow &&
-			coursesToShow[activeCourse] &&
-			currentTerm.term_code) {
+		if (coursesToShow && coursesToShow[activeCourse] && currentTerm.term_code) {
 			const currentCourse = coursesToShow[activeCourse]
 
 			// Get values for view and account for optional values
@@ -70,82 +68,79 @@ const ScheduleCard = ({
 
 			return (
 				<Card id="schedule" title="Classes">
-					<View>
-						<View style={css.cc_container}>
-							<View style={css.cc_leftHalf}>
-								<View style={css.cc_leftHalf_upper}>
-									<ScheduleText style={css.cc_leftHalf_upper_timeText}>
-										{schedule.dayOfWeekInterpreter(currentCourse.day_code)}
-									</ScheduleText>
-									<ScheduleText style={css.cc_leftHalf_upper_classText_firstSection}>
-										{currentCourse.subject_code + ' '
-											+ currentCourse.course_code}
-									</ScheduleText>
-									<ScheduleText style={css.cc_leftHalf_upper_classText_secondSection}>
-										{currentCourse.meeting_type}
-									</ScheduleText>
-								</View>
-								<View style={css.cc_leftHalf_lower}>
-									<ClassMetaWithIcon
-										icon="clock-o"
-										iconStyle={css.cc_icon_time}
-										description="Start and Finish Time"
-										value={classTime}
-									/>
-									<ClassMetaWithIcon
-										icon="building-o"
-										iconStyle={css.cc_icon_building}
-										description="Class Room Location"
-										value={classLocation}
-									/>
-									<ClassMetaWithIcon
-										icon="check-square-o"
-										iconStyle={css.cc_icon_lettergrade}
-										description="Evaluation Option"
-										value={classEval}
-									/>
-								</View>
+					<View style={css.cc_container}>
+						<View style={css.cc_leftHalf}>
+							<View style={css.cc_leftHalf_upper}>
+								<ScheduleText style={css.cc_leftHalf_upper_timeText}>
+									{schedule.dayOfWeekInterpreter(currentCourse.day_code)}
+								</ScheduleText>
+								<ScheduleText style={css.cc_leftHalf_upper_classText_firstSection}>
+									{currentCourse.subject_code + ' '
+										+ currentCourse.course_code}
+								</ScheduleText>
+								<ScheduleText style={css.cc_leftHalf_upper_classText_secondSection}>
+									{currentCourse.meeting_type}
+								</ScheduleText>
 							</View>
-							<View style={css.cc_rightHalf}>
-								<DayItem
-									data={coursesToShow[0]}
-									active={activeCourse === 0}
-									onClick={onClickCourse}
-									index={0}
+							<View style={css.cc_leftHalf_lower}>
+								<ClassMetaWithIcon
+									icon="clock-o"
+									iconStyle={css.cc_icon_time}
+									description="Start and Finish Time"
+									value={classTime}
 								/>
-								<DayItem
-									data={coursesToShow[1]}
-									active={activeCourse === 1}
-									onClick={onClickCourse}
-									index={1}
+								<ClassMetaWithIcon
+									icon="building-o"
+									iconStyle={css.cc_icon_building}
+									description="Class Room Location"
+									value={classLocation}
 								/>
-								<DayItem
-									data={coursesToShow[2]}
-									active={activeCourse === 2}
-									onClick={onClickCourse}
-									index={2}
-								/>
-								<DayItem
-									data={coursesToShow[3]}
-									active={activeCourse === 3}
-									onClick={onClickCourse}
-									index={3}
+								<ClassMetaWithIcon
+									icon="check-square-o"
+									iconStyle={css.cc_icon_lettergrade}
+									description="Evaluation Option"
+									value={classEval}
 								/>
 							</View>
 						</View>
-						<LastUpdatedMin lastUpdated={lastUpdated} error={error} />
-						{actionButton}
+						<View style={css.cc_rightHalf}>
+							<DayItem
+								data={coursesToShow[0]}
+								active={activeCourse === 0}
+								onClick={onClickCourse}
+								index={0}
+							/>
+							<DayItem
+								data={coursesToShow[1]}
+								active={activeCourse === 1}
+								onClick={onClickCourse}
+								index={1}
+							/>
+							<DayItem
+								data={coursesToShow[2]}
+								active={activeCourse === 2}
+								onClick={onClickCourse}
+								index={2}
+							/>
+							<DayItem
+								data={coursesToShow[3]}
+								active={activeCourse === 3}
+								onClick={onClickCourse}
+								index={3}
+							/>
+						</View>
 					</View>
+					<LastUpdatedMin lastUpdated={lastUpdated} error={error} />
+					{actionButton}
 				</Card>
 			)
-		} else if (waitingData) {
-			return <LoadingClasses lastUpdated={lastUpdated} error={error} />
-		} else {
+		} else if (totalClasses > 0) {
 			return <NoClasses lastUpdated={lastUpdated} error={error} actionButton={actionButton} />
+		} else {
+			return <LoadingClasses lastUpdated={lastUpdated} error={error} />
 		}
 	} catch (err) {
-		logger.trackException(err)
-		return <NoClasses lastUpdated={lastUpdated} error={error} actionButton={actionButton} />
+		return <LoadingClasses lastUpdated={lastUpdated} error={error} />
 	}
 }
 
