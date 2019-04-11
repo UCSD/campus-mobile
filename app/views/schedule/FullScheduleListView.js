@@ -6,6 +6,8 @@ import logger from '../../util/logger'
 import schedule from '../../util/schedule'
 import css from '../../styles/css'
 import SISchedule from './SISchedule'
+import siSchedule from '../../util/siSchedule'
+
 
 class FullSchedule extends React.Component {
 	constructor(props) {
@@ -61,8 +63,7 @@ class FullSchedule extends React.Component {
 	renderItem = ({ item, index, section }) => {
 		// Only show classes without a special meeting code (i.e. 'FI', 'PB', etc)
 		if (!item.special_mtg_code) {
-			const siSessions = this.getMatchingSISessions(item)
-			return (<IndividualClass data={item} props={this.props} siSession={siSessions} />)
+			return (<IndividualClass data={item} props={this.props} />)
 		} else {
 			return null
 		}
@@ -88,7 +89,7 @@ const renderSeparator = () => (
 	<View style={css.fslv_flat_list_separator} />
 )
 
-const IndividualClass = ({ data, props, siSession }) => {
+const IndividualClass = ({ data, props }) => {
 	let classTime,
 		classLocation,
 		classEval
@@ -146,7 +147,15 @@ const IndividualClass = ({ data, props, siSession }) => {
 				{classEval}
 				{'\n'}
 			</Text>
-			<SISchedule siSession={siSession} />
+			{siSchedule.hasSessions(props.siSessions, data.instructor_name, data.subject_code + '_' + data.course_code) ?
+				(
+					<SISchedule
+						siSessions={props.siSessions}
+						instructor_name={data.instructor_name}
+						course_title={data.subject_code + '_' + data.course_code}
+					/>
+				) : null
+			}
 		</View>
 	)
 }
@@ -154,7 +163,7 @@ const IndividualClass = ({ data, props, siSession }) => {
 function mapStateToProps(state) {
 	return {
 		fullScheduleData: state.schedule.data,
-		siSessions: state.supplementalInstruction.sessions
+		siSessions: state.supplementalInstruction.data
 	}
 }
 

@@ -13,33 +13,28 @@ class SISchedule extends React.Component {
 	}
 
 	renderSIsection() {
-		const { siSession } = this.props
+		const { siSessions } = this.props
 		let { selected } = this.state
-		if (siSession && siSession.length > 0) {
-			return (
-				<View>
-					<TouchableWithoutFeedback
-						onPress={() => {
-							selected = !selected
-							this.setState({ selected })
-						}}
-					>
-						<View style={css.fslv_si_text_container}>
-							<Text style={css.fslv_si_session_text}>
-								Supplemental Instruction
-							</Text>
-							{this.renderArrowIcon(selected)}
-						</View>
-					</TouchableWithoutFeedback>
-					<View>
-						{this.renderSILeaderText(selected, siSession)}
-						{this.renderSIScheduleText(selected, siSession)}
+		return (
+			<View>
+				<TouchableWithoutFeedback
+					onPress={() => {
+						selected = !selected
+						this.setState({ selected })
+					}}
+				>
+					<View style={css.fslv_si_text_container}>
+						<Text style={css.fslv_si_session_text}>
+							Supplemental Instruction
+						</Text>
+						{this.renderArrowIcon(selected)}
 					</View>
+				</TouchableWithoutFeedback>
+				<View>
+					{this.renderAllText()}
 				</View>
-			)
-		} else {
-			return null
-		}
+			</View>
+		)
 	}
 
 	renderArrowIcon() {
@@ -61,49 +56,59 @@ class SISchedule extends React.Component {
 			/>
 		)
 	}
-
-	renderSILeaderText() {
-		const { siSession } = this.props
+	renderAllText() {
+		const { siSessions, instructor_name, course_title } = this.props
 		const { selected } = this.state
+		const siSessionObj = siSessions[course_title][instructor_name]
+		const text = []
 		if (selected) {
-			return (
-				<View style={css.fslv_si_text_container}>
-					<Text style={css.fslv_si_leader_text}>
-						{'Leader: '}
-					</Text>
-					<Text>
-						{siSession[0].si_leader}
-					</Text>
-				</View>
-			)
-		}
-		return null
-	}
-
-	renderSIScheduleText() {
-		const { siSession } = this.props
-		const { selected } = this.state
-		if (selected) {
-			const scheduleArray = []
-			siSession.forEach((siSesh) => {
-				siSesh.days.forEach((day) => {
-					const fullString = siSchedule.dayOfWeekInterpreter(day)
-					const scheduleObj = (
-						<View style={css.fslv_si_text_container}>
-							<Text>
-								{fullString} {siSesh.time}, {siSesh.building}, {siSesh.room}
-							</Text>
-						</View>
-					)
-					scheduleArray.push(scheduleObj)
+			if (Object.keys(siSessionObj)) {
+				console.log('got here')
+				Object.keys(siSessionObj).forEach((leader) => {
+					const leaderText = renderSILeaderText(leader)
+					const scheduleText = renderSIScheduleText(siSessionObj, leader)
+					text.push(leaderText)
+					text.push(scheduleText)
 				})
-			})
-			return scheduleArray
+			}
 		}
+		return text
 	}
 
 	render() {
 		return this.renderSIsection()
 	}
 }
+const renderSILeaderText = SILeaderName => (
+	<View style={css.fslv_si_text_container}>
+		<Text style={css.fslv_si_leader_text}>
+			{'Leader: '}
+		</Text>
+		<Text>
+			{SILeaderName}
+		</Text>
+	</View>
+)
+
+const renderSIScheduleText = (siSessions, leader) =>  {
+	const scheduleObj = {}
+	siSessions[leader].forEach((siSession) => {
+		siSession.days.forEach((day) => {
+			const fullString = siSchedule.dayOfWeekInterpreter(day)
+			const time = siSchedule.convertTime(siSession.time)
+			const scheduleText = (
+				<View style={css.fslv_si_text_container}>
+					<Text>
+						{fullString} {time}, {siSession.building}, {siSession.room}
+					</Text>
+				</View>
+			)
+			scheduleObj[fullString] = scheduleText
+		})
+	})
+	const scheduleArray = siSchedule.reorderWeekDays(scheduleObj)
+	return scheduleArray
+}
+
+
 export default SISchedule
