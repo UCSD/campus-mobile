@@ -55,7 +55,8 @@ class FullSchedule extends React.Component {
 	render() {
 		return (
 			<SectionList
-				style={css.fslv_container}
+				style={css.scroll_default}
+				contentContainerStyle={css.main_full}
 				sections={this.state.scheduleSections}
 				renderItem={this.renderItem}
 				renderSectionHeader={this.renderSectionHeader}
