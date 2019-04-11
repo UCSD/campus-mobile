@@ -1,16 +1,11 @@
 import React from 'react'
-import { View, Text, ListView } from 'react-native'
+import { View, Text, FlatList } from 'react-native'
 import { connect } from 'react-redux'
 import moment from 'moment'
 import Touchable from '../common/Touchable'
 import SpecialEventsItem from './SpecialEventsItem'
 import SpecialEventsHeader from './SpecialEventsHeader'
 import css from '../../styles/css'
-
-const dataSource = new ListView.DataSource({
-	rowHasChanged: (r1, r2) => r1 !== r2,
-	sectionHeaderHasChanged: (s1, s2) => s1 !== s2
-})
 
 const SpecialEventsListView = ({
 	navigation,
@@ -58,7 +53,6 @@ const SpecialEventsListView = ({
 			}
 		}
 		scheduleIdArray = daysItemIds[selectedDay]
-
 		// Filter saved for day
 		if (personal && Array.isArray(saved)) {
 			scheduleIdArray = scheduleIdArray.filter(item => saved.includes(item))
@@ -88,6 +82,8 @@ const SpecialEventsListView = ({
 			</View>
 		)
 	} else {
+		let lastStartTime
+
 		return (
 			<View style={css.selv_mainContainer}>
 				<LabelsContainer
@@ -100,22 +96,26 @@ const SpecialEventsListView = ({
 						There are no events for your selected filters.
 					</Text>
 				) : (
-					<ListView
+					<FlatList
 						style={[style, rows ? css.selv_card : css.selv_full]}
 						scrollEnabled={scrollEnabled}
 						stickySectionHeadersEnabled={false}
-						dataSource={
-							dataSource.cloneWithRowsAndSections(convertToTimeMap(
-								specialEventsSchedule,
-								adjustData(specialEventsSchedule, scheduleIdArray, saved, personal, rows)
-							))
-						}
-						renderRow={(rowData, sectionID, rowID, highlightRow) => {
-							// Don't render first row bc rendered by header
-							if (Number(rowID) !== 0) {
-								return (
+						data={getEvents(specialEventsSchedule,adjustData(specialEventsSchedule, scheduleIdArray, saved, personal, rows))}
+						keyExtractor={item => item.id}
+						renderItem={(item) => {
+							const rowData = item.item
+							const specialEventsHeader = (
+								<SpecialEventsHeader
+									timestamp={(lastStartTime !== rowData['start-time']) ? rowData['start-time'] : null}
+									rows={rows}
+								/>
+							)
+							lastStartTime = rowData['start-time']
+
+							return (
+								<View style={css.selv_rowContainer}>
 									<View style={css.selv_rowContainer}>
-										<View style={css.selv_emptyRow} />
+										{specialEventsHeader}
 										<SpecialEventsItem
 											specialEventsData={rowData}
 											saved={saved.includes(rowData.id)}
@@ -124,27 +124,9 @@ const SpecialEventsListView = ({
 											title={specialEventsTitle}
 										/>
 									</View>
-								)
-							} else {
-								return null
-							}
+								</View>
+							)
 						}}
-						renderSectionHeader={(sectionData, sectionID) => (
-							// Render header along with first row
-							<View style={css.selv_rowContainer}>
-								<SpecialEventsHeader
-									timestamp={sectionID}
-									rows={rows}
-								/>
-								<SpecialEventsItem
-									specialEventsData={sectionData[0]}
-									saved={saved.includes(sectionData[0].id)}
-									add={(disabled) ? null : addSpecialEvents}
-									remove={removeSpecialEvents}
-									title={specialEventsTitle}
-								/>
-							</View>
-						)}
 					/>
 				)}
 			</View>
@@ -236,28 +218,17 @@ function adjustData(scheduleIdMap, scheduleIdArray, savedArray, personal, rows) 
 
 /*
 	@returns Object that maps keys from scheduleArray to Objects in scheduleMap
+	@return array of objects that corresponding to sheculeArray
 */
-function convertToTimeMap(scheduleMap, scheduleArray, header = false) {
-	const timeMap = {}
-
+function getEvents(scheduleMap, scheduleArray, header = false) {
+	const arrOfScheduleObj = []
 	if (Array.isArray(scheduleArray)) {
 		scheduleArray.forEach((key) => {
 			const session = scheduleMap[key]
-			if (!timeMap[session['start-time']]) {
-				// Create an entry in the map for the timestamp if it hasn't yet been created
-				timeMap[session['start-time']] = []
-			}
-			timeMap[session['start-time']].push(session)
+			arrOfScheduleObj.push(session)
 		})
-
-		// Remove an item from section so spacing lines up
-		if (header) {
-			Object.keys(timeMap).forEach((key) => {
-				timeMap[key].pop()
-			})
-		}
 	}
-	return timeMap
+	return arrOfScheduleObj
 }
 
 const mapStateToProps = state => ({
