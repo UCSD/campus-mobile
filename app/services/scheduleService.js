@@ -11,7 +11,6 @@ const ScheduleService = {
 		// Query api for undergrad classes
 		try {
 			const undergrad = JSON.parse(yield authorizedFetch(UN_API_URL))
-			console.log(undergrad)
 			if (undergrad.data && Array.isArray(undergrad.data)) {
 				data.push(...undergrad.data)
 			}
