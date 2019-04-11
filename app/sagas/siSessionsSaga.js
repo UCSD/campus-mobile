@@ -27,8 +27,7 @@ function* updateSISessions() {
 			yield put({ type: 'GET_SI_SESSIONS_REQUEST' })
 			const sessions = yield call(siSessionService.FetchSISessions)
 			if (sessions) {
-				const parsedSessions =  siSchedule.getSessions(sessions, data)
-				yield put({ type: 'SET_SI_SESSIONS', parsedSessions })
+				yield put({ type: 'SET_SI_SESSIONS', sessions })
 				yield put({ type: 'GET_SI_SESSIONS_SUCCESS' })
 			}
 		} catch (error) {
