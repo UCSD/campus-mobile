@@ -13,7 +13,6 @@ class SISchedule extends React.Component {
 	}
 
 	renderSIsection() {
-		const { siSessions } = this.props
 		let { selected } = this.state
 		return (
 			<View>
@@ -62,15 +61,12 @@ class SISchedule extends React.Component {
 		const siSessionObj = siSessions[course_title][instructor_name]
 		const text = []
 		if (selected) {
-			if (Object.keys(siSessionObj)) {
-				console.log('got here')
-				Object.keys(siSessionObj).forEach((leader) => {
-					const leaderText = renderSILeaderText(leader)
-					const scheduleText = renderSIScheduleText(siSessionObj, leader)
-					text.push(leaderText)
-					text.push(scheduleText)
-				})
-			}
+			Object.keys(siSessionObj).forEach((leader) => {
+				const leaderText = renderSILeaderText(leader)
+				const scheduleText = renderSIScheduleText(siSessionObj, leader)
+				text.push(leaderText)
+				text.push(scheduleText)
+			})
 		}
 		return text
 	}
