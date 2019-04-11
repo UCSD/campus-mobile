@@ -4,24 +4,29 @@ import moment from 'moment'
  * @module util/SISessions
  */
 module.exports = {
-	getSessions(SIData, classData) {
-		const dict = this.populateDict(SIData)
-		const classSchedule =  this.populateArr(classData)
-
-		const sessionObj = this.getSessionsForSchedule(dict, classSchedule)
-		sessionObj.forEach((session) => {
-			if (session.time) {
-				session.time = this.convertTime(session.time)
+	hasSessions(SIData, instructor_name, course_title) {
+		if (SIData) {
+			// check if the class has SIsessions
+			if (SIData[course_title]) {
+				// check if your professor has SIsessions
+				if (SIData[course_title][instructor_name]) {
+					return true
+				}
 			}
-		})
-		return sessionObj
+		}
+		return false
 	},
-	populateDict(str_json) {
-		const dict = []
-		Object.keys(str_json.data).forEach((key) => {
-			dict[key.toString()] = str_json.data[key]
-		})
-		return dict
+	reorderWeekDays(scheduleObj) {
+		const scheduleArray = []
+		if (scheduleObj.Monday) scheduleArray.push(scheduleObj.Monday)
+		if (scheduleObj.Tuesday) scheduleArray.push(scheduleObj.Tuesday)
+		if (scheduleObj.Wednesday) scheduleArray.push(scheduleObj.Wednesday)
+		if (scheduleObj.Thursday) scheduleArray.push(scheduleObj.Thursday)
+		if (scheduleObj.Friday) scheduleArray.push(scheduleObj.Friday)
+		if (scheduleObj.Saturday) scheduleArray.push(scheduleObj.Saturday)
+		if (scheduleObj.Sunday) scheduleArray.push(scheduleObj.Sunday)
+		if (scheduleObj.Other) scheduleArray.push(scheduleObj.Other)
+		return scheduleArray
 	},
 	convertTime(timeString) {
 		let formattedTimeString,
@@ -61,13 +66,16 @@ module.exports = {
 					// console.log(' *** A si session exists for this class, but not this instructor')
 				} else {
 					const tutoring_data = class_dict[instructor]
-					// console.log(' *** A si session exists for this class, and this instructor')
-					for (let j = 0; j < tutoring_data.length; j++) {
-						const currTutorSession = tutoring_data[j]
-						const course = class_name.split('_')
-						currTutorSession.course = course[0] + ' ' + course[1]
-						arrToReturn.push(tutoring_data[j])
-					}
+					Object.keys(tutoring_data).forEach((leader) => {
+						const session = tutoring_data[leader]
+						// console.log(' *** A si session exists for this class, and this instructor')
+						for (let j = 0; j < session.length; j++) {
+							const currTutorSession = session[j]
+							const course = class_name.split('_')
+							currTutorSession.course = course[0] + ' ' + course[1]
+							arrToReturn.push(tutoring_data[j])
+						}
+					})
 				}
 			}
 		}
