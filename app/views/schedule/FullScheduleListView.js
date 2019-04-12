@@ -141,11 +141,10 @@ const IndividualClass = ({ data, props }) => {
 			>
 				{data.instructor_name}
 			</Text>
-			<Text style={css.fslv_course_text}>
+			<Text>
 				{data.meeting_type} {classTime}
 				{classLocation}
 				{classEval}
-				{'\n'}
 			</Text>
 			{siSchedule.hasSessions(props.siSessions, data.instructor_name, data.subject_code + '_' + data.course_code) ?
 				(

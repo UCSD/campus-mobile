@@ -1,8 +1,9 @@
 import React from 'react'
-import { View, Text, TouchableWithoutFeedback } from 'react-native'
+import { View, Text } from 'react-native'
 import Icon from 'react-native-vector-icons/Entypo'
 import siSchedule from '../../util/siSchedule'
 import css from '../../styles/css'
+import Touchable from '../common/Touchable'
 
 class SISchedule extends React.Component {
 	constructor(props) {
@@ -15,20 +16,20 @@ class SISchedule extends React.Component {
 	renderSIsection() {
 		let { selected } = this.state
 		return (
-			<View>
-				<TouchableWithoutFeedback
+			<View style={css.fslv_si_container}>
+				<Touchable
 					onPress={() => {
 						selected = !selected
 						this.setState({ selected })
 					}}
 				>
-					<View style={css.fslv_si_text_container}>
+					<View style={css.fslv_si_session}>
 						<Text style={css.fslv_si_session_text}>
 							Supplemental Instruction
 						</Text>
 						{this.renderArrowIcon(selected)}
 					</View>
-				</TouchableWithoutFeedback>
+				</Touchable>
 				<View>
 					{this.renderAllText()}
 				</View>
@@ -46,15 +47,17 @@ class SISchedule extends React.Component {
 					style={css.fslv_si_down_arrow_icon}
 				/>
 			)
+		} else {
+			return (
+				<Icon
+					name="triangle-right"
+					size={20}
+					style={css.fslv_si_right_arrow_icon}
+				/>
+			)
 		}
-		return (
-			<Icon
-				name="triangle-right"
-				size={20}
-				style={css.fslv_si_right_arrow_icon}
-			/>
-		)
 	}
+
 	renderAllText() {
 		const { siSessions, instructor_name, course_title } = this.props
 		const { selected } = this.state
@@ -75,14 +78,10 @@ class SISchedule extends React.Component {
 		return this.renderSIsection()
 	}
 }
+
 const renderSILeaderText = SILeaderName => (
 	<View style={css.fslv_si_text_container}>
-		<Text style={css.fslv_si_leader_text}>
-			{'Leader: '}
-		</Text>
-		<Text>
-			{SILeaderName}
-		</Text>
+		<Text><Text style={css.bold}>Leader: </Text>{SILeaderName}</Text>
 	</View>
 )
 
@@ -105,6 +104,5 @@ const renderSIScheduleText = (siSessions, leader) =>  {
 	const scheduleArray = siSchedule.reorderWeekDays(scheduleObj)
 	return scheduleArray
 }
-
 
 export default SISchedule
