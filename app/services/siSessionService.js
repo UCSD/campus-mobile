@@ -2,7 +2,7 @@ import AppSettings from '../AppSettings'
 
 const siSessionService = {
 	FetchSISessions() {
-		return fetch(AppSettings.SI_SESSIONS_SERVICE_API_URL)
+		return fetch(AppSettings.SI_SESSIONS_API_URL)
 			.then(response => response.json())
 			.then(responseData => responseData)
 			.catch((err) => {
