@@ -5,11 +5,16 @@ import { connect } from 'react-redux'
 import logger from '../../util/logger'
 import schedule from '../../util/schedule'
 import css from '../../styles/css'
+import SISchedule from './SISchedule'
+import siSchedule from '../../util/siSchedule'
+
 
 class FullSchedule extends React.Component {
 	constructor(props) {
 		super()
-		this.state = { scheduleSections: this.getScheduleArray(props.fullScheduleData) }
+		this.state = {
+			scheduleSections: this.getScheduleArray(props.fullScheduleData),
+		}
 	}
 
 	componentDidMount() {
@@ -30,6 +35,18 @@ class FullSchedule extends React.Component {
 		return scheduleArray
 	}
 
+	getMatchingSISessions = (classObject) => {
+		const { siSessions } = this.props
+		const sessions = []
+		siSessions.forEach((siSession) => {
+			if (siSession.course === (classObject.subject_code + ' ' + classObject.course_code)) {
+				sessions.push(siSession)
+			}
+		})
+
+		return sessions
+	}
+
 	keyExtractor = (item, index) => (item.course_code + item.section)
 
 	renderSectionHeader = ({ section: { day } }) => {
@@ -46,7 +63,7 @@ class FullSchedule extends React.Component {
 	renderItem = ({ item, index, section }) => {
 		// Only show classes without a special meeting code (i.e. 'FI', 'PB', etc)
 		if (!item.special_mtg_code) {
-			return (<IndividualClass data={item} />)
+			return (<IndividualClass data={item} props={this.props} />)
 		} else {
 			return null
 		}
@@ -63,12 +80,17 @@ class FullSchedule extends React.Component {
 				keyExtractor={this.keyExtractor}
 				stickySectionHeadersEnabled={true}
 				enableEmptySections={true}
+				ItemSeparatorComponent={renderSeparator}
 			/>
 		)
 	}
 }
 
-const IndividualClass = ({ data }) => {
+const renderSeparator = () => (
+	<View style={css.fslv_flat_list_separator} />
+)
+
+const IndividualClass = ({ data, props }) => {
 	let classTime,
 		classLocation,
 		classEval
@@ -103,7 +125,6 @@ const IndividualClass = ({ data }) => {
 			classEval = ''
 		}
 	}
-
 	return (
 		<View style={css.fslv_row}>
 			<Text style={css.fslv_course_code}>
@@ -121,17 +142,29 @@ const IndividualClass = ({ data }) => {
 			>
 				{data.instructor_name}
 			</Text>
-			<Text style={css.fslv_course_text}>
+			<Text>
 				{data.meeting_type} {classTime}
 				{classLocation}
 				{classEval}
 			</Text>
+			{siSchedule.hasSessions(props.siSessions, data.instructor_name, data.subject_code + '_' + data.course_code) ?
+				(
+					<SISchedule
+						siSessions={props.siSessions}
+						instructor_name={data.instructor_name}
+						course_title={data.subject_code + '_' + data.course_code}
+					/>
+				) : null
+			}
 		</View>
 	)
 }
 
 function mapStateToProps(state) {
-	return { fullScheduleData: state.schedule.data }
+	return {
+		fullScheduleData: state.schedule.data,
+		siSessions: state.supplementalInstruction.data
+	}
 }
 
 const FullScheduleListView = connect(mapStateToProps)(FullSchedule)
