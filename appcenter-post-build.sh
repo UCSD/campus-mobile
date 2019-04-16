@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 echo "#### appcenter-post-build START ####"
 
-# Install bugsnag-sourcemaps
+npm install --global react-native-cli
 npm install --global bugsnag-sourcemaps
 
 # Debug
