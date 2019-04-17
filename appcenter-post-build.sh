@@ -4,6 +4,9 @@ echo "#### appcenter-post-build START ####"
 npm install --global react-native-cli
 npm install --global bugsnag-sourcemaps
 
+
+
+
 if [ -n "$APPCENTER_XCODE_PROJECT" ]
 then
     echo "Generating React Native bundle for iOS..."
@@ -40,5 +43,13 @@ else
         --minified-file android-release.bundle \
         --upload-sources
 fi
+
+echo '## APPCENTER SOURCE:'
+find $APPCENTER_SOURCE_DIRECTORY
+
+echo '## APPCENTER OUTPUT:'
+find $APPCENTER_OUTPUT_DIRECTORY
+
+echo '## APPCENTER_REACTNATIVE_PACKAGE: $APPCENTER_REACTNATIVE_PACKAGE'
 
 echo "#### appcenter-post-build END ####"
