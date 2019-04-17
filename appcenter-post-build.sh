@@ -41,9 +41,4 @@ else
         --upload-sources
 fi
 
-echo '## Current directory: '
-ls -la
-
 echo "#### appcenter-post-build END ####"
-
-
