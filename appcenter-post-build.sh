@@ -4,8 +4,11 @@ echo "#### appcenter-post-build START ####"
 npm install --global react-native-cli
 npm install --global bugsnag-sourcemaps
 
-
-
+# Debug
+echo "Current dir - START:"
+pwd
+ls -la
+echo "Bundle File: $BUNDLE_FILE"
 
 if [ -n "$APPCENTER_XCODE_PROJECT" ]
 then
@@ -50,6 +53,11 @@ find $APPCENTER_SOURCE_DIRECTORY
 echo '## APPCENTER OUTPUT:'
 find $APPCENTER_OUTPUT_DIRECTORY
 
-echo '## APPCENTER_REACTNATIVE_PACKAGE: $APPCENTER_REACTNATIVE_PACKAGE'
+
+echo "Current dir - END:"
+pwd
+ls -la
+
+echo "## APPCENTER_REACTNATIVE_PACKAGE: $APPCENTER_REACTNATIVE_PACKAGE"
 
 echo "#### appcenter-post-build END ####"
