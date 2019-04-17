@@ -38,7 +38,7 @@ else
         --api-key $BUGSNAG_KEY \
         --code-bundle-id $APPCENTER_BUILD_ID \
         --source-map android-release.bundle.map \
-        --minified-url index.android.bundle \
+        --minified-url assets/index.android.bundle \
         --minified-file android-release.bundle \
         --upload-sources
 fi
