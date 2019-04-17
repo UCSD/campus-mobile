@@ -25,7 +25,7 @@ then
         --api-key $BUGSNAG_KEY \
         --code-bundle-id $APPCENTER_BUILD_ID \
         --source-map ios-release.bundle.map \
-        --minified-url main.jsbundle \
+        --minified-url main.jsbundles \
         --minified-file ios-release.bundle \
         --upload-sources
 else
@@ -42,7 +42,7 @@ else
         --api-key $BUGSNAG_KEY \
         --code-bundle-id $APPCENTER_BUILD_ID \
         --source-map android-release.bundle.map \
-        --minified-url app/build/generated/assets/react/release/index.android.bundle \
+        --minified-url app/build/generated/assets/react/release/index.android.bundles \
         --minified-file android-release.bundle \
         --upload-sources
 fi
