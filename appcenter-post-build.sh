@@ -22,8 +22,6 @@ then
         --minified-url main.jsbundle \
         --minified-file ios-release.bundle \
         --upload-sources
-
-    echo "BUNDLE_FILE: $BUNDLE_FILE"
 else
     echo "Generating React Native bundle for Android..."
     react-native bundle \
@@ -38,7 +36,7 @@ else
         --api-key $BUGSNAG_KEY \
         --code-bundle-id $APPCENTER_BUILD_ID \
         --source-map android-release.bundle.map \
-        --minified-url assets/index.android.bundle \
+        --minified-url android/app/build/generated/assets/react/release/index.android.bundle \
         --minified-file android-release.bundle \
         --upload-sources
 fi
