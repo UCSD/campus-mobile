@@ -21,8 +21,8 @@ then
         --source-map ios-release.bundle.map \
         --minified-url main.jsbundle \
         --minified-file ios-release.bundle \
-        --upload-sources \
-        
+        --upload-sources
+
     echo "BUNDLE_FILE: $BUNDLE_FILE"
 else
     echo "Generating React Native bundle for Android..."
@@ -40,7 +40,7 @@ else
         --source-map android-release.bundle.map \
         --minified-url index.android.bundle \
         --minified-file android-release.bundle \
-        --upload-sources \
+        --upload-sources
 fi
 
 echo '## IOS:'
