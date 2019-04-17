@@ -4,12 +4,6 @@ echo "#### appcenter-post-build START ####"
 npm install --global react-native-cli
 npm install --global bugsnag-sourcemaps
 
-# Debug
-echo "Current dir - START:"
-pwd
-ls -la
-echo "Bundle File: $BUNDLE_FILE"
-
 if [ -n "$APPCENTER_XCODE_PROJECT" ]
 then
     echo "Generating React Native bundle for iOS..."
@@ -25,9 +19,10 @@ then
         --api-key $BUGSNAG_KEY \
         --code-bundle-id $APPCENTER_BUILD_ID \
         --source-map ios-release.bundle.map \
-        --minified-url main.jsbundles \
+        --minified-url /Users/vsts/Library/Developer/Xcode/DerivedData/CampusMobile-*/Build/Intermediates.noindex/ArchiveIntermediates/CampusMobile/BuildProductsPath/Release-iphoneos/CampusMobile.app/main.jsbundle \
         --minified-file ios-release.bundle \
-        --upload-sources
+        --upload-sources \
+        --add-wildcard-prefix
 else
     echo "Generating React Native bundle for Android..."
     react-native bundle \
@@ -42,22 +37,16 @@ else
         --api-key $BUGSNAG_KEY \
         --code-bundle-id $APPCENTER_BUILD_ID \
         --source-map android-release.bundle.map \
-        --minified-url app/build/generated/assets/react/release/index.android.bundles \
+        --minified-url app/build/generated/assets/react/release/index.android.bundle \
         --minified-file android-release.bundle \
-        --upload-sources
+        --upload-sources \
+        --add-wildcard-prefix
 fi
 
-echo '## APPCENTER SOURCE:'
-find $APPCENTER_SOURCE_DIRECTORY
+echo '## IOS:'
+find /Users/vsts/Library/Developer/Xcode/DerivedData
 
 echo '## APPCENTER OUTPUT:'
-find $APPCENTER_OUTPUT_DIRECTORY
-
-
-echo "Current dir - END:"
-pwd
-ls -la
-
-echo "## APPCENTER_REACTNATIVE_PACKAGE: $APPCENTER_REACTNATIVE_PACKAGE"
+find app/build
 
 echo "#### appcenter-post-build END ####"
