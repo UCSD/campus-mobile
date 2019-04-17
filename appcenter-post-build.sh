@@ -17,7 +17,7 @@ then
     echo "Uploading source map for iOS..."
     bugsnag-sourcemaps upload \
         --api-key $BUGSNAG_KEY \
-        --code-bundle-id $APPCENTER_BUILD_ID \
+        --app-version $APPCENTER_BUILD_ID \
         --source-map ios-release.bundle.map \
         --minified-url main.jsbundle \
         --minified-file ios-release.bundle \
@@ -34,18 +34,15 @@ else
     echo "Uploading source map for Android..."
     bugsnag-sourcemaps upload \
         --api-key $BUGSNAG_KEY \
-        --code-bundle-id $APPCENTER_BUILD_ID \
+        --app-version $APPCENTER_BUILD_ID \
         --source-map android-release.bundle.map \
-        --minified-url android/app/build/generated/assets/react/release/index.android.bundle \
+        --minified-url index.android.bundle \
         --minified-file android-release.bundle \
         --upload-sources
 fi
 
-echo '## IOS:'
-find /Users/vsts/Library/Developer/Xcode/DerivedData
-
-echo '## APPCENTER OUTPUT:'
-find app/build
+echo '## Current directory: '
+ls -la
 
 echo "#### appcenter-post-build END ####"
 
