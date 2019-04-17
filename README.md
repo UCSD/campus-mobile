@@ -1,6 +1,6 @@
 # campus_mobile
 
-A new Flutter project.
+Campus mobile app experiment.
 
 ## Getting Started
 
