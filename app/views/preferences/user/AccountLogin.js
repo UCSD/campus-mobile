@@ -106,7 +106,7 @@ class AccountLogin extends Component {
 				/>
 				<Touchable
 					onPress={() => this.props.doLogin(username, password)}
-					disabled={Boolean(this.props.requestStatus)}
+					disabled={((this.props.requestStatus) !== null)}
 					style={
 						(this.props.requestStatus) ?
 							(
