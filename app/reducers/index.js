@@ -21,6 +21,7 @@ import homeReducer from './home'
 import parkingReducer from './parking'
 import messagesReducer from './messages'
 import supplementalInstructionReducer from './supplementalInstruction'
+import occuspaceReducer from './occuspace'
 
 module.exports = combineReducers({
 	cards: cardsReducer,
@@ -43,5 +44,6 @@ module.exports = combineReducers({
 	home: homeReducer,
 	parking: parkingReducer,
 	messages: messagesReducer,
-	supplementalInstruction: supplementalInstructionReducer
+	supplementalInstruction: supplementalInstructionReducer,
+	occuspace: occuspaceReducer
 })
