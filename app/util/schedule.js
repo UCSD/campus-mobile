@@ -118,7 +118,7 @@ module.exports = {
 				const currSectionData = currCourse.section_data
 				for (let k = 0; k < currSectionData.length; ++k) {
 					const currData = currSectionData[k]
-
+					// Only show classes without a special meeting code (i.e. 'FI', 'PB', etc)
 					if (currData.special_mtg_code === '') {
 						// time format is HH:MM - HH:MM
 						// split time string and get seconds
