@@ -44,8 +44,7 @@ class FullSchedule extends React.Component {
 	}
 
 	renderItem = ({ item, index, section }) => (
-		<IndividualClass data={item} />
-
+		<IndividualClass data={item} props={this.props} />
 	)
 
 	render() {
