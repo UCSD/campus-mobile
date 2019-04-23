@@ -16,7 +16,7 @@ export const SpecialEventsCard = ({ navigation, specialEvents, saved, hideCard }
 					if (array[0] === 'app') {
 						navigation.navigate(array[1])
 					} else {
-						openURL(specialEvents['banner-url'])
+						if ( specialEvents['banner-url'].length > 0 ) openURL(specialEvents['banner-url'])
 					}
 				} else {
 					navigation.navigate('SpecialEventsView', { title: specialEvents.name, personal: false })
