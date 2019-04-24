@@ -5,7 +5,20 @@ import FullScheduleButton from './FullScheduleButton'
 import ScheduleCard from './ScheduleCard'
 import schedule from '../../util/schedule'
 
-let defaultSelectedClass = null
+let defaultSelectedClass = 0
+
+const getTotalClasses = (scheduleData) => {
+	let totalClasses = 0
+	if (scheduleData) {
+		const parsedScheduleData = schedule.getData(scheduleData)
+		Object.keys(parsedScheduleData).forEach((key) => {
+			if (Array.isArray(parsedScheduleData[key])) {
+				totalClasses += parsedScheduleData[key].length
+			}
+		})
+	}
+	return totalClasses
+}
 
 const getUpcomingClasses = (scheduleData) => {
 	if (!scheduleData) return []
@@ -21,10 +34,10 @@ const getUpcomingClasses = (scheduleData) => {
 	const result = []
 	/** times:Array - An array of parsed class end times **/
 	const times = []
-	/** otherResults:Array - Classes without a specific day of the week **/
+	// /** otherResults:Array - Classes without a specific day of the week **/
 	const otherResults = []
 
-	/** Add classes scheduled to take place today to the `result` array **/
+	// /** Add classes scheduled to take place today to the `result` array **/
 	switch (dayOfTheWeek) {
 		case 0:
 			result.push(...classesData.SU)
@@ -49,10 +62,10 @@ const getUpcomingClasses = (scheduleData) => {
 			break
 	}
 
-	/** Loop classes scheduled to take place today **/
+	// /** Loop classes scheduled to take place today **/
 	for (let i = 0; i < result.length; i++) {
 		if (result[i].time_string) {
-			/** If a class has a set time, parse it and push it to the `times` array **/
+			//* If a class has a set time, parse it and push it to the `times` array *
 			const arr = result[i].time_string.split(' – ')
 			const endTime = arr[1].replace(/\./gi, '')
 			const newEndTime = moment(endTime, ['h:mm A']).format('HHmm')
@@ -94,6 +107,7 @@ class ScheduleCardContainer extends React.Component {
 		super(props)
 		this.state = {
 			upcoming4Courses: getUpcomingClasses(props.scheduleData),
+			totalClasses: getTotalClasses(props.scheduleData),
 			activeCourse: defaultSelectedClass
 		}
 		this.onClickCourse = this.onClickCourse.bind(this)
@@ -105,6 +119,7 @@ class ScheduleCardContainer extends React.Component {
 			this.setState((state, props) => ({
 				...state,
 				upcoming4Courses: getUpcomingClasses(props.scheduleData),
+				totalClasses: getTotalClasses(props.scheduleData),
 				activeCourse: defaultSelectedClass
 			}))
 		}
@@ -122,6 +137,7 @@ class ScheduleCardContainer extends React.Component {
 			<ScheduleCard
 				onClickCourse={this.onClickCourse}
 				waitingData={this.props.requestStatus}
+				totalClasses={this.state.totalClasses}
 				lastUpdated={this.props.lastUpdated}
 				error={this.props.requestError}
 				coursesToShow={this.state.upcoming4Courses}
