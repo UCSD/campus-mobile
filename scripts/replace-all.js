@@ -7,6 +7,10 @@ const ENV_TYPE = process.argv[3]
 // Environment Setup
 let myEnv
 if (ENV_TYPE === 'ci') {
+	const APP_CONFIG = JSON.parse(process.env.APP_CONFIG.replace(/\\\"/g,'"')) // eslint-disable-line
+	Object.keys(APP_CONFIG).forEach((key) => {
+		process.env[key] = APP_CONFIG[key]
+	})
 	myEnv = process.env
 } else {
 	myEnv = require(os.homedir() + '/.campusmobile/env.js') // eslint-disable-line
@@ -62,6 +66,7 @@ if (REPLACEMENT_ENV === 'prod' || REPLACEMENT_ENV === 'qa') {
 		{ prodVal: myEnv.MESSAGES_TOPICS_URL_PROD, qaVal: myEnv.MESSAGES_TOPICS_URL_QA },
 		{ prodVal: myEnv.PARKING_API_URL_PROD, qaVal: myEnv.PARKING_API_URL_QA },
 		{ prodVal: myEnv.SPECIAL_EVENT_API_URL_PROD, qaVal: myEnv.SPECIAL_EVENT_API_URL_QA },
+		{ prodVal: myEnv.SI_SESSIONS_API_URL_PROD, qaVal: myEnv.SI_SESSIONS_API_URL_QA },
 	])
 
 	// ssoService.js
@@ -73,7 +78,7 @@ if (REPLACEMENT_ENV === 'prod' || REPLACEMENT_ENV === 'qa') {
 	makeReplacements(IOS_INFO_PLIST_PATH, REPLACEMENT_ENV, [
 		{ prodVal: myEnv.APP_NAME, qaVal: myEnv.APP_NAME, phVal: PH.APP_NAME_PH },
 		{ prodVal: myEnv.APP_VERSION, qaVal: myEnv.APP_VERSION, phVal: PH.APP_VERSION_PH },
-		{ prodVal: myEnv.BUGSNAG_KEY, qaVal: myEnv.BUGSNAG_KEY, phVal: PH.BUGSNAG_KEY_PH }
+		{ prodVal: myEnv.BUGSNAG_KEY, qaVal: myEnv.BUGSNAG_KEY, phVal: PH.BUGSNAG_KEY_PH },
 	])
 
 	// build.gradle
@@ -90,7 +95,7 @@ if (REPLACEMENT_ENV === 'prod' || REPLACEMENT_ENV === 'qa') {
 	makeReplacements(ANDROID_MANIFEST_PATH, REPLACEMENT_ENV, [
 		{ prodVal: myEnv.APP_VERSION, qaVal: myEnv.APP_VERSION, phVal: PH.APP_VERSION_PH },
 		{ prodVal: myEnv.GOOGLE_MAPS_API_KEY, qaVal: myEnv.GOOGLE_MAPS_API_KEY, phVal: PH.GOOGLE_MAPS_API_KEY_PH },
-		{ prodVal: myEnv.BUGSNAG_KEY, qaVal: myEnv.BUGSNAG_KEY, phVal: PH.BUGSNAG_KEY_PH }
+		{ prodVal: myEnv.BUGSNAG_KEY, qaVal: myEnv.BUGSNAG_KEY, phVal: PH.BUGSNAG_KEY_PH },
 	])
 
 	// GoogleService-Info.plist

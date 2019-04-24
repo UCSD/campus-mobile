@@ -62,9 +62,13 @@ function* doLogin(action) {
 			yield auth.storeUserCreds(username, passwordEncrypted)
 			yield auth.storeAccessToken(response.access_token)
 
-			// Set up user profile
-			const isStudent = Boolean((response.pid) && (response.ucsdaffiliation.match(UCSD_STUDENT)))
+			// Student Classification
+			let isStudent = false
+			if (response.pid && response.ucsdaffiliation.match(UCSD_STUDENT)) {
+				isStudent = true
+			}
 
+			// User Profile
 			const newProfile = {
 				username,
 				pid: response.pid,
@@ -107,12 +111,14 @@ function* queryUserData() {
 	// subscribe them to their topics.
 	if (profile.classifications) {
 		if (profile.classifications.student) {
-			// subscribe to default student topics
-			yield put({ type: 'SUBSCRIBE_TO_TOPIC', topicId: 'students' })
-			yield put({ type: 'UPDATE_STUDENT_PROFILE' })
+			// Only add student subscription if synced profile doesnt exist ie: first time log in
+			if (!syncedProfile.subscribedTopics) {
+				// subscribe to default student topics
+				yield put({ type: 'SUBSCRIBE_TO_TOPIC', topicId: 'students' })
+				yield put({ type: 'UPDATE_STUDENT_PROFILE' })
+			}
 		}
 	}
-
 	// If their synced profile has unsubscribed from these topics,
 	// that is synced in the next few steps and handled accordingly
 
