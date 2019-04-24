@@ -8,7 +8,6 @@ const ScheduleService = {
 		const data = []
 		const UN_API_URL = AppSettings.ACADEMIC_HISTORY_API_URL + '?academic_level=UN&term_code=' + term
 		const GR_API_URL = AppSettings.ACADEMIC_HISTORY_API_URL + '?academic_level=GR&term_code=' + term
-
 		// Query api for undergrad classes
 		try {
 			const undergrad = JSON.parse(yield authorizedFetch(UN_API_URL))
@@ -18,7 +17,6 @@ const ScheduleService = {
 		} catch (err) {
 			logger.trackException(err, false)
 		}
-
 		// Query api for graduate classes
 		try {
 			const grad = JSON.parse(yield authorizedFetch(GR_API_URL))
@@ -28,7 +26,6 @@ const ScheduleService = {
 		} catch (err) {
 			logger.trackException(err, false)
 		}
-
 		return { data }
 	},
 

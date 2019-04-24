@@ -38,6 +38,7 @@ function* updateSchedule() {
 					yield put({ type: 'SET_SCHEDULE', schedule: scheduleData })
 					yield put({ type: 'GET_SCHEDULE_SUCCESS' })
 				}
+				yield put({ type: 'UPDATE_SI_SESSIONS' })
 
 				// check for finals
 				const parsedScheduleData = schedule.getData(scheduleData)
