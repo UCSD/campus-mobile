@@ -19,9 +19,20 @@ const StudentIDService = {
 	* FetchStudentName() {
 		// fetch name
 		try {
-			const name = yield authorizedFetch(MY_STUDENT_CONTACT_API_URL + '/name')
-			if (name) {
-				return name
+			const displayName = yield authorizedFetch(MY_STUDENT_CONTACT_API_URL + '/display_name')
+			if (displayName) {
+				return displayName
+			}
+		} catch (err) {
+			logger.trackException(err, false)
+		}
+	},
+	* FetchStudentBarcode() {
+		// fetch barcode
+		try {
+			const barcode = yield authorizedFetch(MY_STUDENT_CONTACT_API_URL + '/barcode')
+			if (barcode) {
+				return barcode
 			}
 		} catch (err) {
 			logger.trackException(err, false)

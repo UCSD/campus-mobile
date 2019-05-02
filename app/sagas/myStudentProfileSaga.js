@@ -38,6 +38,17 @@ function* updateStudentProfile() {
 			yield put({ type: 'GET_STUDENT_NAME_FAILURE', error })
 			logger.trackException(error)
 		}
+		try {
+			yield put({ type: 'GET_STUDENT_BARCODE' })
+			const studentBarcode = JSON.parse(yield call(StudentIDService.FetchStudentBarcode))
+			if (studentBarcode.barCode) {
+				yield put({ type: 'SET_STUDENT_BARCODE' })
+				yield put({ type: 'GET_STUDENT_BARCODE_SUCCESS' })
+			}
+		} catch (error) {
+			yield put({ type: 'GET_STUDENT_BARCODE_FAILURE', error })
+			logger.trackException(error)
+		}
 
 		try {
 			yield put({ type: 'GET_STUDENT_PHOTO_REQUEST' })
