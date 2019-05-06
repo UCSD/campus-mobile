@@ -7,6 +7,8 @@ The goal of this platform is to provide a responsive and intuitive native mobile
 
 [UC San Diego](https://mobile.ucsd.edu/) uses this platform for its Campus Mobile app on iOS and Android.
 
+## Branch Deprecation Notice
+The `dev` branch will be going away. Please see [https://www.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow](https://www.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow) for more information.
 
 ## Getting Started
 1. Complete the [React Native CLI Quickstart](https://facebook.github.io/react-native/docs/getting-started.html) setup instructions.
