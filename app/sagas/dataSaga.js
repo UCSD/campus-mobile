@@ -266,6 +266,9 @@ function prefetchSpecialEventsImages(specialEvents) {
 	if (specialEvents.map) {
 		Image.prefetch(specialEvents.map)
 	}
+	if (specialEvents['banner-image']) {
+		Image.prefetch(specialEvents['banner-image'])
+	}
 }
 
 function prefetchLinkImages(links) {

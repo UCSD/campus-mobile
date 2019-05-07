@@ -64,7 +64,7 @@ module.exports = {
 
 	/* TIMEOUTS */
 	HTTP_REQUEST_TTL: 15000, // 15 seconds
-	SSO_TTL: 15000, // 15 seconds
+	SSO_TTL: 20000, // 20 seconds
 	MESSAGING_TTL: 15000, // 15 seconds
 
 	/* RETRIES */

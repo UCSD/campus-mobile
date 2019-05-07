@@ -5,6 +5,7 @@ import ParkingDetail from './ParkingDetail'
 import LAYOUT from '../../styles/LayoutConstants'
 import logger from '../../util/logger'
 
+
 class ParkingOverview extends Component {
 	getTotalSpots() {
 		try {
@@ -149,7 +150,8 @@ class ParkingOverview extends Component {
 				totalSpots = this.getTotalSpots()
 			}
 
-			if (totalSpots === 1) 	message = '~' + totalSpots + ' Spot Available'
+			if ( Object.entries(structureData.Availability).length === 0) message = 'Data unavailable. Please try again later.'
+			else if (totalSpots === 1) 	message = '~' + totalSpots + ' Spot Available'
 			else 					message = '~' + totalSpots + ' Spots Available'
 		} else {
 			message = 'Please select a parking type'
