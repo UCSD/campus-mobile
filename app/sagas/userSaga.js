@@ -115,8 +115,8 @@ function* queryUserData() {
 			if (!syncedProfile.subscribedTopics) {
 				// subscribe to default student topics
 				yield put({ type: 'SUBSCRIBE_TO_TOPIC', topicId: 'students' })
-				yield put({ type: 'UPDATE_STUDENT_PROFILE' })
 			}
+			yield put({ type: 'UPDATE_STUDENT_PROFILE' })
 		}
 	}
 	// If their synced profile has unsubscribed from these topics,
