@@ -30,10 +30,10 @@ const StudentIDCard = ({
 		return (
 			<Card id="studentId" title="Student ID">
 				<View style={css.sid_container}>
-					{loadImage(studentProfile.image.data.photo_url)}
+					{loadImage(studentProfile.image.data.photoUrl)}
 					<View style={css.sid_right}>
 						<Text style={css.sid_name}>
-							{studentProfile.name.data.first_name + ' ' + studentProfile.name.data.last_name}
+							{studentProfile.name.data.firstName + ' ' + studentProfile.name.data.lastName}
 						</Text>
 						<Text style={css.sid_college}>
 							{studentProfile.profile.data.College_Current}
