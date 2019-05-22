@@ -22,7 +22,7 @@ export const ShuttleCard = ({
 			action: gotoSavedList
 		}
 	]
-
+	console.log(savedStops)
 	return (
 		<ScrollCard
 			id="shuttle"
