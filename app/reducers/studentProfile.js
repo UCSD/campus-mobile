@@ -18,7 +18,7 @@ function studentProfileReducer(state = initialState, action) {
 			newState.image.data = action.image
 			return newState
 		case 'SET_STUDENT_BARCODE':
-			newState.barcode = action.barcode
+			newState.barcode.data = action.barcode
 			return newState
 		case 'CLEAR_STUDENT_PROFILE_DATA':
 			return initialState
