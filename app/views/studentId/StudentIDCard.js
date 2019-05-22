@@ -26,7 +26,7 @@ const StudentIDCard = ({
 	studentPhotoRequestError,
 	studentProfileRequestError
 }) => {
-	if (studentProfile.image.data && studentProfile.profile.data && studentProfile.name.data) {
+	if (studentProfile.image.data && studentProfile.profile.data && studentProfile.name.data && studentProfile.barcode.data) {
 		return (
 			<Card id="studentId" title="Student ID">
 				<View style={css.sid_container}>
@@ -49,13 +49,13 @@ const StudentIDCard = ({
 								<View style={css.sid_barcode_inner}>
 									<Barcode
 										format="codabar"
-										value="12345678901234"
+										value={studentProfile.barcode.data.barCode}
 										width={defaultBarcodeWidth}
 										height={defaultBarcodeWidth * 25}
 									/>
 								</View>
 								<Text style={css.sid_barcode_id}>
-									12345678901234
+									{studentProfile.barcode.data.barCode}
 								</Text>
 							</Touchable>
 						</View>
@@ -73,12 +73,12 @@ const StudentIDCard = ({
 							<View style={css.sid_modal_barcode}>
 								<Barcode
 									format="codabar"
-									value="12345678901234"
+									value={studentProfile.barcode.data.barCode}
 									height={largeBarcodeWidth * 25}
 									width={largeBarcodeWidth}
 								/>
 								<Text style={css.sid_modal_barcode_id}>
-									12345678901234
+									{studentProfile.barcode.data.barCode}
 								</Text>
 							</View>
 						</Modal>
@@ -102,12 +102,12 @@ const StudentIDCard = ({
 						<View style={css.sid_modal_barcode}>
 							<Barcode
 								format="codabar"
-								value="12345678901234"
+								value={studentProfile.barcode.data.barCode}
 								height={largeBarcodeWidth * 25}
 								width={largeBarcodeWidth}
 							/>
 							<Text style={css.sid_modal_barcode_id}>
-								12345678901234
+								{studentProfile.barcode.data.barCode}
 							</Text>
 						</View>
 					</Modal>
