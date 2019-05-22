@@ -30,8 +30,8 @@ function* updateStudentProfile() {
 		try {
 			yield put({ type: 'GET_STUDENT_NAME_REQUEST' })
 			const name = JSON.parse(yield call(StudentIDService.FetchStudentName))
-			if (name.data) {
-				yield put({ type: 'SET_STUDENT_NAME', name: name.data })
+			if (name) {
+				yield put({ type: 'SET_STUDENT_NAME', name })
 				yield put({ type: 'GET_STUDENT_NAME_SUCCESS' })
 			}
 		} catch (error) {
@@ -41,8 +41,8 @@ function* updateStudentProfile() {
 		try {
 			yield put({ type: 'GET_STUDENT_BARCODE' })
 			const studentBarcode = JSON.parse(yield call(StudentIDService.FetchStudentBarcode))
-			if (studentBarcode.barCode) {
-				yield put({ type: 'SET_STUDENT_BARCODE' })
+			if (studentBarcode) {
+				yield put({ type: 'SET_STUDENT_BARCODE', barcode: studentBarcode })
 				yield put({ type: 'GET_STUDENT_BARCODE_SUCCESS' })
 			}
 		} catch (error) {
@@ -53,8 +53,8 @@ function* updateStudentProfile() {
 		try {
 			yield put({ type: 'GET_STUDENT_PHOTO_REQUEST' })
 			const image = JSON.parse(yield call(StudentIDService.FetchStudentPhoto))
-			if (image.data) {
-				yield put({ type: 'SET_STUDENT_PHOTO', image: image.data })
+			if (image) {
+				yield put({ type: 'SET_STUDENT_PHOTO', image })
 				yield put({ type: 'GET_STUDENT_PHOTO_SUCCESS' })
 			}
 		} catch (error) {
