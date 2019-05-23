@@ -49,13 +49,13 @@ const StudentIDCard = ({
 								<View style={css.sid_barcode_inner}>
 									<Barcode
 										format="codabar"
-										value={studentProfile.barcode.data.barCode}
+										value={studentProfile.barcode.data.barCode.toString()}
 										width={defaultBarcodeWidth}
 										height={defaultBarcodeWidth * 25}
 									/>
 								</View>
 								<Text style={css.sid_barcode_id}>
-									{studentProfile.barcode.data.barCode}
+									{studentProfile.barcode.data.barCode.toString()}
 								</Text>
 							</Touchable>
 						</View>
@@ -73,12 +73,12 @@ const StudentIDCard = ({
 							<View style={css.sid_modal_barcode}>
 								<Barcode
 									format="codabar"
-									value={studentProfile.barcode.data.barCode}
+									value={studentProfile.barcode.data.barCode.toString()}
 									height={largeBarcodeWidth * 25}
 									width={largeBarcodeWidth}
 								/>
 								<Text style={css.sid_modal_barcode_id}>
-									{studentProfile.barcode.data.barCode}
+									{studentProfile.barcode.data.barCode.toString()}
 								</Text>
 							</View>
 						</Modal>
@@ -102,12 +102,12 @@ const StudentIDCard = ({
 						<View style={css.sid_modal_barcode}>
 							<Barcode
 								format="codabar"
-								value={studentProfile.barcode.data.barCode}
+								value={studentProfile.barcode.data.barCode.toString()}
 								height={largeBarcodeWidth * 25}
 								width={largeBarcodeWidth}
 							/>
 							<Text style={css.sid_modal_barcode_id}>
-								{studentProfile.barcode.data.barCode}
+								{studentProfile.barcode.data.barCode.toString()}
 							</Text>
 						</View>
 					</Modal>
