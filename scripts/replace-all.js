@@ -13,7 +13,13 @@ if (ENV_TYPE === 'ci') {
 	})
 	myEnv = process.env
 } else {
-	myEnv = require(os.homedir() + '/.campusmobile/env.js') // eslint-disable-line
+	const tempEnv = require(os.homedir() + '/.campusmobile/config.js') // eslint-disable-line
+	myEnv = {}
+	myEnv.APP_VERSION = tempEnv.APP_VERSION
+	myEnv.BUILD_ENV = tempEnv.BUILD_ENV
+	Object.keys(tempEnv.APP_CONFIG).forEach((key) => {
+		myEnv[key] = tempEnv.APP_CONFIG[key]
+	})
 }
 
 // File Paths

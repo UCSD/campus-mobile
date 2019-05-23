@@ -4,6 +4,8 @@ echo "#### appcenter-post-build START ####"
 npm install --global react-native-cli
 npm install --global bugsnag-sourcemaps
 
+BUGSNAG_KEY=$(node scripts/export-config-key.js BUGSNAG_KEY ci)
+
 if [ -n "$APPCENTER_XCODE_PROJECT" ]
 then
     echo "Generating React Native bundle for iOS..."
