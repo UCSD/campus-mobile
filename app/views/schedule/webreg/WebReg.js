@@ -5,7 +5,7 @@ import { SearchBar } from 'react-native-elements'
 
 import css from '../../../styles/css'
 import auth from '../../../util/auth'
-import ClassCalendar from './ClassCalendar'
+import HomePage from './HomePage'
 
 class WebReg extends React.Component {
 	constructor(props) {
@@ -57,9 +57,7 @@ class WebReg extends React.Component {
 
 	render() {
 		return (
-			<View flex style={{ backgroundColor: 'white' }}>
-				<ClassCalendar />
-			</View>
+			<HomePage />
 		)
 	}
 
