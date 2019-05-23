@@ -2,9 +2,13 @@ import { Text, View, ScrollView } from 'react-native'
 import React from 'react'
 
 class ClassCalendar extends React.Component {
+	constructor(props) {
+		super(props)
+	}
+	
 	render() {
 		const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-		const hours = ['8:00', '9:00', '10:00', '11:00', '12:00', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00']
+		const hours = ['8 am', '9 am', '10 am', '11 am', '12 pm', '1 pm', '2 pm', '3 pm', '4 pm', '5 pm', '6 pm', '7 pm', '8 pm', '9 pm']
 
 		const {
 			cardStyle,
@@ -20,14 +24,14 @@ class ClassCalendar extends React.Component {
 			<View style={cardStyle}>
 				<View style={daysContainerStyle}>
 					{days.map((day, i) => (
-						<View style={dayContainerStyle} key={i}>
+						<View style={dayContainerStyle} key={day}>
 							<Text style={dayTextStyle}>{day}</Text>
 						</View>
 					))}
 				</View>
-				<ScrollView>
+				<ScrollView style={{ flex: 1 }}>
 					{hours.map((hour, i) => (
-						<View style={[timeRowStyle, { borderBottomWidth: i === 13 ? 1 : 0 }]} key={i}>
+						<View style={[timeRowStyle, { borderBottomWidth: i === 13 ? 1 : 0 }]} key={hour}>
 							<View style={timeContainerStyle}>
 								<Text style={timeTextStyle}>
 									{hour}
@@ -41,11 +45,12 @@ class ClassCalendar extends React.Component {
 	}
 }
 
+
 const styles = {
 	cardStyle: {
 		flex: 1,
-		marginLeft: 5,
-		marginRight: 5
+		marginLeft: 20,
+		marginRight: 20
 	},
 	daysContainerStyle: {
 		marginLeft: 30,
@@ -66,7 +71,7 @@ const styles = {
 	timeRowStyle: {
 		flexDirection: 'row',
 		borderTopWidth: 1,
-		borderColor: '#aaa'
+		borderColor: '#B7B7B7'
 	},
 	timeContainerStyle: {
 		width: 30,
@@ -76,8 +81,8 @@ const styles = {
 	timeTextStyle: {
 		fontFamily: 'Helvetica Neue',
 		textColor: 'black',
-		paddingTop: 30,
-		paddingBottom: 30,
+		paddingTop: 25,
+		paddingBottom: 25,
 		fontSize: 10
 	}
 }

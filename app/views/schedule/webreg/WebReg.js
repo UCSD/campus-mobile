@@ -57,7 +57,7 @@ class WebReg extends React.Component {
 
 	render() {
 		return (
-			<View>
+			<View flex style={{ backgroundColor: 'white' }}>
 				<ClassCalendar />
 			</View>
 		)
