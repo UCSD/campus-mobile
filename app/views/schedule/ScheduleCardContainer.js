@@ -1,9 +1,14 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { Text } from 'react-native'
+import { withNavigation } from 'react-navigation'
 import moment from 'moment'
+
 import FullScheduleButton from './FullScheduleButton'
 import ScheduleCard from './ScheduleCard'
 import schedule from '../../util/schedule'
+import css from '../../styles/css'
+import Touchable from '../common/Touchable'
 
 let defaultSelectedClass = 0
 
@@ -133,6 +138,7 @@ class ScheduleCardContainer extends React.Component {
 	}
 
 	render() {
+		const { navigation } = this.props
 		return (
 			<ScheduleCard
 				onClickCourse={this.onClickCourse}
@@ -143,11 +149,20 @@ class ScheduleCardContainer extends React.Component {
 				coursesToShow={this.state.upcoming4Courses}
 				activeCourse={this.state.activeCourse}
 				currentTerm={this.props.currentTerm}
-				actionButton={<FullScheduleButton />}
+				actionButton={registrationButton(navigation)}
 			/>
 		)
 	}
 }
+
+const registrationButton = navigation => (
+	<Touchable
+		style={css.card_button_container}
+		onPress={() => { navigation.navigate('WebReg') }}
+	>
+		<Text style={css.card_button_text}>Register</Text>
+	</Touchable>
+)
 
 const mapStateToProps = state => ({
 	scheduleData: state.schedule.data,
@@ -157,4 +172,4 @@ const mapStateToProps = state => ({
 	requestError: state.requestErrors.GET_SCHEDULE
 })
 
-export default connect(mapStateToProps)(ScheduleCardContainer)
+export default connect(mapStateToProps)(withNavigation(ScheduleCardContainer))
