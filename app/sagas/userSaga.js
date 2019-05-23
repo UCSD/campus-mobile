@@ -116,7 +116,6 @@ function* queryUserData() {
 				// subscribe to default student topics
 				yield put({ type: 'SUBSCRIBE_TO_TOPIC', topicId: 'students' })
 			}
-			yield put({ type: 'UPDATE_STUDENT_PROFILE' })
 		}
 	}
 	// If their synced profile has unsubscribed from these topics,
@@ -145,6 +144,7 @@ function* queryUserData() {
 	// perform first data calls when user is logged in
 	yield put({ type: 'UPDATE_SCHEDULE' })
 	yield put({ type: 'UPDATE_MESSAGES' })
+	yield put({ type: 'UPDATE_STUDENT_PROFILE' })
 }
 // Used when an API call requires an access token and the current
 // one is stale.
