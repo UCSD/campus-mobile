@@ -29,7 +29,7 @@ class ClassCalendar extends React.Component {
 						</View>
 					))}
 				</View>
-				<ScrollView style={{ flex: 1 }}>
+				<ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
 					{hours.map((hour, i) => (
 						<View style={[timeRowStyle, { borderBottomWidth: i === 14 ? 1 : 0 }]} key={hour}>
 							<View style={timeContainerStyle}>
