@@ -4,6 +4,7 @@ import auth from '../../../util/auth'
 import CourseListMockData from './CourseListMockData.json'
 import { getDayOfWeek } from '../../../util/schedule'
 
+import CourseCard from './CourseCard'
 const { width, height } = Dimensions.get('window')
 const CARD_WIDTH = (width - 70) / 7
 const CARD_HEIGHT = 50
@@ -140,6 +141,23 @@ class ClassCalendar extends React.Component {
 			timeRowStyle,
 			timeContainerStyle
 		} = styles
+
+		const { device } = this.props
+
+		var offset = 0
+
+		switch(device) {
+			case 1:
+				offset = 60
+				break
+			case 2:
+				offset = 77
+				break
+			case 0:
+			default:
+				offset = 0
+				break
+		}
 
 		return (
 			<View style={[cardStyle]}>

@@ -100,10 +100,20 @@ class HomePage extends React.Component {
 	}
 
 	renderDisplayType() {
+		// 0 - Android, 1 - iPhone, 2 - iPhone X
+		var device = 0
+		if(platformIOS()) {
+			if(deviceIphoneX()) {
+				device = 2
+			} else {
+				device = 1
+			}
+		}
+
 		if(this.state.display_type === 'Calendar') {
-			return <ClassCalendar />
+			return <ClassCalendar device={device} />
 		} else if(this.state.display_type === 'Finals') {
-			return <FinalCalendar />
+			return <FinalCalendar device={device} />
 		} else {
 			return null // TODO - Need List view here
 		}
