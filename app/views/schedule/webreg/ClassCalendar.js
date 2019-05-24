@@ -1,7 +1,10 @@
-import { Text, View, ScrollView } from 'react-native'
+import { Text, View, ScrollView, Dimensions } from 'react-native'
 import React from 'react'
 
 import CourseCard from './CourseCard'
+const { width, height } = Dimensions.get('window')
+const CARD_WIDTH = (width - 70) / 7
+const CARD_HEIGHT = 50
 
 class ClassCalendar extends React.Component {
 	constructor(props) {
@@ -40,7 +43,7 @@ class ClassCalendar extends React.Component {
 		}
 
 		return (
-			<View style={cardStyle}>
+			<View style={[cardStyle]}>
 				<View style={daysContainerStyle}>
 					{days.map((day, i) => (
 						<View style={dayContainerStyle} key={day}>
@@ -48,6 +51,7 @@ class ClassCalendar extends React.Component {
 						</View>
 					))}
 				</View>
+<<<<<<< HEAD
 				<ScrollView style={{ flex: 1, marginBottom: offset }} showsVerticalScrollIndicator={false}>
 					{hours.map((hour, i) => (
 						<View style={[timeRowStyle, { borderBottomWidth: i === 14 ? 1 : 0 }]} key={hour}>
@@ -56,8 +60,79 @@ class ClassCalendar extends React.Component {
 									{hour}
 								</Text>
 							</View>
+=======
+				<ScrollView
+					style={{flex:1}}
+					showsVerticalScrollIndicator={false}
+				>
+
+					<View style={{
+							flexDirection: 'row',
+							flex: 1,
+							justifyContent: 'flex-start',
+						}}>
+						<View style={{
+								flex: 1/7,
+								flexDirection: 'column',
+								alignItems: 'stretch',
+								justifyContent: 'center'
+							}}>
+							{hours.map((hour, i) => (
+								<View style={[timeRowStyle, { borderBottomWidth: i === 14 ? 1 : 0 }]} key={hour}>
+									<View style={timeContainerStyle}>
+										<Text style={timeTextStyle}>
+											{hour}
+										</Text>
+									</View>
+								</View>
+							))}
+>>>>>>> 2c4dafb658b07ebb1a74c20c342f63e061b871c3
 						</View>
-					))}
+						{
+							days.map((item, index) => {
+								console.log('ahahah');
+								return (
+								<View style={{
+										flex: 1/7,
+										flexDirection: 'column',
+										alignItems: 'stretch',
+										justifyContent: 'center'
+									}}>
+									{hours.map((hour, i) => (
+										<View style={[timeRowStyle, { borderBottomWidth: i === 14 ? 1 : 0 }]} key={hour}>
+											<View style={timeContainerStyle}>
+												<View style={{ height: 50 }}>
+
+												</View>
+											</View>
+										</View>
+									))}
+								</View>)
+						})
+					}
+				</View>
+
+					{/*
+					<ScrollView style={{ flex: 1 }}>
+						{hours.map((hour, i) => (
+							<View style={[timeRowStyle, { borderBottomWidth: i === 14 ? 1 : 0 }]} key={hour}>
+								<View style={timeContainerStyle}>
+									<Text style={timeTextStyle}>
+										{hour}
+									</Text>
+								</View>
+							</View>
+						))}
+					</ScrollView>
+					*/}
+					<View style={{
+							backgroundColor: 'red',
+							position: 'absolute',
+							top: 400,
+							left: 70,
+							width: CARD_WIDTH,
+							height: CARD_HEIGHT
+						}}></View>
 				</ScrollView>
 			</View>
 		)
@@ -94,14 +169,13 @@ const styles = {
 	},
 	timeContainerStyle: {
 		width: 30,
+		height: 50,
 		justifyContent: 'center',
 		alignItems: 'center',
 	},
 	timeTextStyle: {
 		fontFamily: 'Helvetica Neue',
 		textColor: 'black',
-		paddingTop: 20,
-		paddingBottom: 20,
 		fontSize: 10
 	}
 }
