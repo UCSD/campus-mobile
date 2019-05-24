@@ -20,6 +20,23 @@ class ClassCalendar extends React.Component {
 			timeContainerStyle
 		} = styles
 
+		const { device } = this.props
+
+		var offset = 0
+
+		switch(device) {
+			case 1:
+				offset = 60
+				break
+			case 2:
+				offset = 77
+				break
+			case 0:
+			default:
+				offset = 0
+				break
+		}
+
 		return (
 			<View style={cardStyle}>
 				<View style={daysContainerStyle}>
@@ -29,7 +46,7 @@ class ClassCalendar extends React.Component {
 						</View>
 					))}
 				</View>
-				<ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+				<ScrollView style={{ flex: 1, marginBottom: offset }} showsVerticalScrollIndicator={false}>
 					{hours.map((hour, i) => (
 						<View style={[timeRowStyle, { borderBottomWidth: i === 14 ? 1 : 0 }]} key={hour}>
 							<View style={timeContainerStyle}>
