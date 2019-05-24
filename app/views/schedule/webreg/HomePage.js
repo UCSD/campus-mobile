@@ -110,6 +110,8 @@ class HomePage extends React.Component {
 	}
 
 	renderSwitchNavigator() {
+		const { switchContainerStyle } = styles
+		
 		if(platformIOS()) {
 			if(deviceIphoneX()) {
 				return (
