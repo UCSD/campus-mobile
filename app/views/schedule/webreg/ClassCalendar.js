@@ -3,8 +3,8 @@ import React from 'react'
 import auth from '../../../util/auth'
 import CourseListMockData from './CourseListMockData.json'
 import { getDayOfWeek } from '../../../util/schedule'
-
 import CourseCard from './CourseCard'
+
 const { width, height } = Dimensions.get('window')
 const CARD_WIDTH = (width - 70) / 7
 const CARD_HEIGHT = 50
@@ -88,7 +88,7 @@ const getCourseList = (courses) => {
 			height = CARD_HEIGHT / 60 * duration
 
 			if(!obj[name]) {
-				obj[name] = {pressed: false, data: []}
+				obj[name] = {selected: false, data: []}
 			}
 			obj[name].data.push({ x, y, width, height, display, type, name, location })
 		})
@@ -110,17 +110,32 @@ class ClassCalendar extends React.Component {
 		const res = []
 		for (let item in this.state.courseList) {
 			console.log(item)
-			res.push(this.state.courseList[item].data.map((course, index) => {
-				const { x, y, width, height } = course
-				return <View style={{
-						backgroundColor: 'blue',
-						position: 'absolute',
-						top: y,
-						left: x,
-						width,
-						height
-					}}></View>
-			}))
+			this.state.courseList[item].data.map((course, index) => {
+			// 	const { x, y, width, height, display, type,  } = course
+			// 	return <View style={{
+			// 			backgroundColor: 'blue',
+			// 			position: 'absolute',
+			// 			top: y,
+			// 			left: x,
+			// 			width,
+			// 			height
+			// 		}}></View>
+        const { color = 'red', name, location, display, type, selected, x, y, height, width, status = 'enrolled' } = course
+        res.push(<CourseCard
+          color={color}
+          name={name}
+          location={location}
+          display={display}
+          type={type}
+          selected={selected}
+          x={x}
+          y={y}
+          height={height}
+          width={width}
+          status={status}
+          ></CourseCard>)
+			})
+      console.log(res)
 		}
 		return res
 	}

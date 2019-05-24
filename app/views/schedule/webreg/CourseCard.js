@@ -40,6 +40,7 @@ class CourseCard extends React.Component {
 			status
 		} = this.props
 
+		console.log('x and y', x, y)
 		const {
 			containerStyle,
 			headerContainerStyle,
@@ -62,7 +63,7 @@ class CourseCard extends React.Component {
 		}
 
 		return (
-			<View style={[containerStyle, { x, y, width, height }, this.renderBorder(selected)]}>
+			<View style={[containerStyle, { left: x, top: y, width, height }, this.renderBorder(selected)]}>
 				<View style={{ justifyContent: 'center', backgroundColor: headerColor }}>
 					<Text style={headerTextStyle}>{display === 'Calendar' ? type : display}</Text>
 				</View>
