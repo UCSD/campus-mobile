@@ -34,7 +34,10 @@ class ClassCalendar extends React.Component {
 						</View>
 					))}
 				</View>
-				<ScrollView style={{flex:1}}>
+				<ScrollView
+					style={{flex:1}}
+					showsVerticalScrollIndicator={false}
+				>
 
 					<View style={{
 							flexDirection: 'row',

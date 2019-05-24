@@ -1,4 +1,4 @@
-import { TouchableWithoutFeedback, View, Text, FlatList, Platform, Button, Dimensions, Alert } from 'react-native'
+import { TouchableWithoutFeedback, View, Text, FlatList, Platform, Button, Dimensions, Alert, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { SearchBar } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/SimpleLineIcons'
@@ -109,27 +109,50 @@ class HomePage extends React.Component {
 		}
 	}
 
-	renderSwitchNavigator() {
+	renderSwitchNavigator(options) {
 		const { switchContainerStyle } = styles
-		
+
 		if(platformIOS()) {
 			if(deviceIphoneX()) {
 				return (
-					<View style={switchContainerStyle}>
-
+					<View style={[switchContainerStyle, { paddingBottom: 34 }]}>
+						{options.map((opt, i) => {
+							return this.renderButton(opt, i)
+						})}
 					</View>
 				)
 			} else {
 				return (
 					<View style={switchContainerStyle}>
+						{options.map((opt, i) => {
+							return this.renderButton(opt, i)
+						})}
 					</View>
 				)
 			}
 		}
 	}
 
-	renderButton(value) {
-		const { switchItemStyle, switchTextStyle } = styles
+	renderButton(value, index) {
+		const { switchItemStyle, switchTextStyle, chosenItemStyle } = styles
+
+		if(value === this.state.display_type) {
+			return (
+				<View style={switchItemStyle} key={index}>
+					<TouchableOpacity disabled style={chosenItemStyle}>
+						<Text style={[switchTextStyle, { color: '#034263' }]}>{value}</Text>
+					</TouchableOpacity>
+				</View>
+			)
+		}
+
+		return (
+			<View style={switchItemStyle} key={index}>
+				<TouchableOpacity onPress={() => this.setState({ display_type: value })}>
+					<Text style={switchTextStyle}>{value}</Text>
+				</TouchableOpacity>
+			</View>
+		)
 	}
 
 	render() {
@@ -139,6 +162,8 @@ class HomePage extends React.Component {
 			termSelectorContainerStyle,
 			iconContainerStyle
 		} = styles
+
+		let options = ['Calendar', 'List', 'Finals']
 
 		return (
 			<View style={{ backgroundColor: '#F5F5F5', flex: 1 }}>
@@ -164,8 +189,8 @@ class HomePage extends React.Component {
 				<View style={{ marginLeft: 15, marginRight: 15 }}>
 					<SearchBar ref={search => this.search = search} placeholder="Search Course" onChangeText={this.updateSearch} value={this.state.search} platform={Platform.OS} onCancel={() => console.log('hahaa')} autoCorrect={false} />
 				</View>
-				{this.renderSwitchNavigator()}
 				{this.renderDisplayType()}
+				{this.renderSwitchNavigator(options)}
 				{this.showSelector()}
 			</View>
 		)
@@ -194,8 +219,12 @@ const styles = {
 		height: 20
 	},
 	switchContainerStyle: {
+		paddingTop: 17,
+		paddingBottom: 17,
+		bottom: 0,
 		position: 'absolute',
 		flexDirection: 'row',
+		backgroundColor: '#F5F5F5',
 		flex: 1
 	},
 	switchItemStyle: {
@@ -204,7 +233,13 @@ const styles = {
 		alignItems: 'center'
 	},
 	switchTextStyle: {
-		color: '#7D7D7D'
+		color: '#7D7D7D',
+		paddingTop: 1,
+		paddingBottom: 1
+	},
+	chosenItemStyle: {
+		 borderColor: '#034263',
+		 borderBottomWidth: 1
 	}
 }
 
