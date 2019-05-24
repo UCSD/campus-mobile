@@ -6,7 +6,7 @@ import Icon from 'react-native-vector-icons/SimpleLineIcons'
 import { terms } from './TermMockData.json'
 import DropDown from './DropDown'
 import LAYOUT from '../../../styles/LayoutConstants'
-import { deviceIphoneX } from '../../../util/general'
+import { deviceIphoneX, platformIOS } from '../../../util/general'
 import ClassCalendar from './ClassCalendar'
 import FinalCalendar from './FinalCalendar'
 
@@ -32,7 +32,8 @@ class HomePage extends React.Component {
 		this.state = {
 			search: '',
 			term: 'Spring 2019',
-			show: false
+			show: false,
+			display_type: 'Calendar'
 		}
 		this.showAppTime = this.showAppTime.bind(this)
 		this.selectTerm = this.selectTerm.bind(this)
@@ -98,15 +99,36 @@ class HomePage extends React.Component {
 		}
 	}
 
-	// Flatlist for swiping different term
-	// <FlatList
-	//   horizontal
-	//   pagingEnabled
-	//   showsHorizontalScrollIndicator={false}
-	//   data={terms}
-	//   renderItem={object => this.renderTerm(object.item)}
-	//   keyExtractor={(_item, index) => '' + index}
-	// />
+	renderDisplayType() {
+		if(this.state.display_type === 'Calendar') {
+			return <ClassCalendar />
+		} else if(this.state.display_type === 'Finals') {
+			return <FinalCalendar />
+		} else {
+			return null // TODO - Need List view here
+		}
+	}
+
+	renderSwitchNavigator() {
+		if(platformIOS()) {
+			if(deviceIphoneX()) {
+				return (
+					<View style={switchContainerStyle}>
+
+					</View>
+				)
+			} else {
+				return (
+					<View style={switchContainerStyle}>
+					</View>
+				)
+			}
+		}
+	}
+
+	renderButton(value) {
+		const { switchItemStyle, switchTextStyle } = styles
+	}
 
 	render() {
 		const {
@@ -140,6 +162,8 @@ class HomePage extends React.Component {
 				<View style={{ marginLeft: 15, marginRight: 15 }}>
 					<SearchBar ref={search => this.search = search} placeholder="Search Course" onChangeText={this.updateSearch} value={this.state.search} platform={Platform.OS} onCancel={() => console.log('hahaa')} autoCorrect={false} />
 				</View>
+				{this.renderSwitchNavigator()}
+				{this.renderDisplayType()}
 				{this.showSelector()}
 			</View>
 		)
@@ -166,6 +190,19 @@ const styles = {
 		justifyContent: 'center',
 		width: 20,
 		height: 20
+	},
+	switchContainerStyle: {
+		position: 'absolute',
+		flexDirection: 'row',
+		flex: 1
+	},
+	switchItemStyle: {
+		flex: 1/3,
+		justifyContent: 'center',
+		alignItems: 'center'
+	},
+	switchTextStyle: {
+		color: '#7D7D7D'
 	}
 }
 

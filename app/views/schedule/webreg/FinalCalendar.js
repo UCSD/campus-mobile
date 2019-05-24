@@ -31,7 +31,7 @@ class ClassCalendar extends React.Component {
 				</View>
 				<ScrollView style={{ flex: 1 }}>
 					{hours.map((hour, i) => (
-						<View style={[timeRowStyle, { borderBottomWidth: i === 13 ? 1 : 0 }]} key={hour}>
+						<View style={[timeRowStyle, { borderBottomWidth: i === 14 ? 1 : 0 }]} key={hour}>
 							<View style={timeContainerStyle}>
 								<Text style={timeTextStyle}>
 									{hour}
@@ -81,8 +81,8 @@ const styles = {
 	timeTextStyle: {
 		fontFamily: 'Helvetica Neue',
 		textColor: 'black',
-		paddingTop: 25,
-		paddingBottom: 25,
+		paddingTop: 20,
+		paddingBottom: 20,
 		fontSize: 10
 	}
 }

@@ -1,0 +1,9 @@
+{
+  "terms": [
+    {"term_name":"Spring 2019","term_code":"SP19"},
+    {"term_name":"Winter 2019","term_code":"WI19"},
+    {"term_name":"Fall 2019","term_code":"FA19"},
+    {"term_name":"Summer I 2019","term_code":"SSI19"},
+    {"term_name":"Summer II 2019","term_code":"SPII19"}
+  ]
+}
