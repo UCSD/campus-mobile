@@ -6,6 +6,7 @@ exports[`card renders without crashing 1`] = `
     image="https://s3-us-west-2.amazonaws.com/ucsd-its-wts/images/v1/campus_lisa_2017_logo.png"
     onClose={[Function]}
     onPress={[Function]}
+    showButton={true}
     title="Campus Lisa"
   />
 </View>
