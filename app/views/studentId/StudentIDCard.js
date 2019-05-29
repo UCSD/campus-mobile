@@ -24,7 +24,8 @@ const StudentIDCard = ({
 	studentPhotoRequestStatus,
 	studentNameRequestError,
 	studentPhotoRequestError,
-	studentProfileRequestError
+	studentProfileRequestError,
+	retryPressed
 }) => {
 	if (studentProfile.image.data && studentProfile.profile.data && studentProfile.name.data && studentProfile.barcode.data) {
 		return (
@@ -114,6 +115,8 @@ const StudentIDCard = ({
 				</View>
 			</Card>
 		)
+	} else if (studentNameRequestError || studentPhotoRequestError || studentProfileRequestError) {
+		return <ErrorCard retryPressed={retryPressed} />
 	} else {
 		return <LoadingCard />
 	}
@@ -121,10 +124,28 @@ const StudentIDCard = ({
 
 const LoadingCard = () => (
 	<Card id="studentId" title="Student ID">
-		<View style={css.cc_loadingContainer}>
+		<View style={css.sid_loadingContainer}>
 			<ActivityIndicator size="large" />
 		</View>
 	</Card>
+)
+
+const ErrorCard = ({ retryPressed }) => (
+	<Card id="studntId" title="Student ID">
+		<View style={css.sid_loadingContainer}>
+			<Text>Sorry, there was a problem getting your info.</Text>
+			{retryButton(retryPressed)}
+		</View>
+	</Card>
+)
+
+const retryButton = retryPressed => (
+	<Touchable
+		style={css.card_button_container}
+		onPress={() => retryPressed()}
+	>
+		<Text style={css.card_button_text}>Retry</Text>
+	</Touchable>
 )
 
 const avatarIcon = () => (

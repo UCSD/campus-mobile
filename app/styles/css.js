@@ -402,6 +402,8 @@ const css = StyleSheet.create({
 	sid_barcode_tip: { textAlign: 'center', fontSize: 11, color: COLOR.DGREY, zIndex: 2 },
 	sid_barcode_inner: { marginTop: -6 },
 	sid_barcode_id: { textAlign: 'center', fontSize: 14, zIndex: 2, marginTop: -8, letterSpacing: 4 },
+	sid_loadingContainer: { alignItems: 'center', justifyContent: 'center', paddingHorizontal: 10, paddingVertical: 40 },
+	sid_errorContainer: { alignItems: 'center', justifyContent: 'center', paddingHorizontal: 10, paddingVertical: 40 },
 	// Barcode Modal
 	sid_modal: { margin: 40, backgroundColor: COLOR.WHITE },
 	sid_modal_close: { position: 'absolute', bottom: 16, right: 16 },

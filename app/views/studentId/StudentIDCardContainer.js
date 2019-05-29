@@ -35,9 +35,10 @@ class StudentIDCardContainer extends React.Component {
 			studentProfileRequestStatus,
 			studentNameRequestStatus,
 			studentPhotoRequestStatus,
-			studentNamerequestError,
-			studentPhotorequestError,
-			studentProfilerequestError
+			studentNameRequestError,
+			studentPhotoRequestError,
+			studentProfileRequestError,
+			retryPressed,
 		} = this.props
 
 		return (
@@ -47,9 +48,10 @@ class StudentIDCardContainer extends React.Component {
 				studentPhotoRequestStatus={studentPhotoRequestStatus}
 				studentProfileRequestStatus={studentProfileRequestStatus}
 				studentNameRequestStatus={studentNameRequestStatus}
-				studentNamerequestError={studentNamerequestError}
-				studentPhotorequestError={studentPhotorequestError}
-				studentProfilerequestError={studentProfilerequestError}
+				studentNameRequestError={studentNameRequestError}
+				studentPhotoRequestError={studentPhotoRequestError}
+				studentProfileRequestError={studentProfileRequestError}
+				retryPressed={retryPressed}
 				toggleModal={this.toggleModal}
 			/>
 		)
@@ -68,4 +70,12 @@ const mapStateToProps = state => (
 	}
 )
 
-export default connect(mapStateToProps)(StudentIDCardContainer)
+const mapDispatchToProps = (dispatch, ownProps) => (
+	{
+		retryPressed: () => {
+			dispatch({ type: 'UPDATE_STUDENT_PROFILE' })
+		}
+	}
+)
+
+export default connect(mapStateToProps, mapDispatchToProps)(StudentIDCardContainer)
