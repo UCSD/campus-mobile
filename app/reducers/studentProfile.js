@@ -21,7 +21,12 @@ function studentProfileReducer(state = initialState, action) {
 			newState.barcode.data = action.barcode
 			return newState
 		case 'CLEAR_STUDENT_PROFILE_DATA':
-			return initialState
+			return {
+				profile: { data: null },
+				name: { data: null },
+				image: { data: null },
+				barcode: { data: null }
+			}
 		default:
 			return state
 	}
