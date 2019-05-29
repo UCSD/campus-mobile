@@ -8,7 +8,7 @@ import {
 } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 import logger from '../util/logger'
-import { HTTP_REQUEST_SID_TTL } from '../AppSettings'
+import { SID_CARD_TIMEOUT } from '../AppSettings'
 import StudentIDService from '../services/studentIDService'
 
 // const getStudentProfile = state => (state.studentProfile)
@@ -32,7 +32,7 @@ function* fetchStudentBarcode() {
 	try {
 		const { response, timeout } = yield race({
 			response: call(StudentIDService.FetchStudentBarcode),
-			timeout: call(delay, HTTP_REQUEST_SID_TTL)
+			timeout: call(delay, SID_CARD_TIMEOUT)
 		})
 
 		if (timeout) {
@@ -52,7 +52,7 @@ function* fetchStudentPhoto() {
 	try {
 		const { response, timeout } = yield race({
 			response: call(StudentIDService.FetchStudentPhoto),
-			timeout: call(delay, HTTP_REQUEST_SID_TTL)
+			timeout: call(delay, SID_CARD_TIMEOUT)
 		})
 
 		if (timeout) {
@@ -72,7 +72,7 @@ function* fetchStudentName() {
 	try {
 		const { response, timeout } = yield race({
 			response: call(StudentIDService.FetchStudentName),
-			timeout: call(delay, HTTP_REQUEST_SID_TTL)
+			timeout: call(delay, SID_CARD_TIMEOUT)
 		})
 
 		if (timeout) {
@@ -92,7 +92,7 @@ function* fetchStudentProfile() {
 	try {
 		const { response, timeout } = yield race({
 			response: call(StudentIDService.FetchStudentProfile),
-			timeout: call(delay, HTTP_REQUEST_SID_TTL)
+			timeout: call(delay, SID_CARD_TIMEOUT)
 		})
 
 		if (timeout) {
