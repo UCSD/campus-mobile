@@ -60,29 +60,6 @@ const StudentIDCard = ({
 								</Text>
 							</Touchable>
 						</View>
-						<Modal
-							style={css.sid_modal}
-							isVisible={barcodeModalVisible}
-							backdropOpacity={0.3}
-						>
-							<View style={css.sid_modal_close}>
-								<Touchable onPress={toggleModal}>
-									<Text style={css.sid_modal_close_text}>Close</Text>
-								</Touchable>
-							</View>
-
-							<View style={css.sid_modal_barcode}>
-								<Barcode
-									format="codabar"
-									value={studentProfile.barcode.data.barCode.toString()}
-									height={largeBarcodeWidth * 25}
-									width={largeBarcodeWidth}
-								/>
-								<Text style={css.sid_modal_barcode_id}>
-									{studentProfile.barcode.data.barCode.toString()}
-								</Text>
-							</View>
-						</Modal>
 					</View>
 					<Modal
 						style={css.sid_modal}
