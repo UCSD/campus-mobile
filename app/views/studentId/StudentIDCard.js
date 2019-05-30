@@ -121,7 +121,7 @@ const retryButton = retryPressed => (
 		style={css.card_button_container}
 		onPress={() => retryPressed()}
 	>
-		<Text style={css.card_button_text}>Retry</Text>
+		<Text style={css.card_button_text}>Try again</Text>
 	</Touchable>
 )
 
