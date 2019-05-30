@@ -1,6 +1,7 @@
 import { TouchableWithoutFeedback, View, Text, FlatList, Platform, Button, Dimensions, Alert, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { SearchBar } from 'react-native-elements'
+import { connect } from 'react-redux'
 import Icon from 'react-native-vector-icons/SimpleLineIcons'
 
 import { terms } from './TermMockData.json'
@@ -8,10 +9,14 @@ import DropDown from './DropDown'
 import LAYOUT from '../../../styles/LayoutConstants'
 import { deviceIphoneX, platformIOS } from '../../../util/general'
 import ClassCalendar from './ClassCalendar'
+import ClassCard from './ClassCard'
 import FinalCalendar from './FinalCalendar'
 
 const WINDOW_WIDTH = Dimensions.get('window').width
 const WINDOW_HEIGHT = Dimensions.get('window').height
+
+
+const { width, height } = Dimensions.get('window')
 
 let termNameArr = []
 let termCodeArr = []
@@ -101,18 +106,18 @@ class HomePage extends React.Component {
 
 	renderDisplayType() {
 		// 0 - Android, 1 - iPhone, 2 - iPhone X
-		var device = 0
-		if(platformIOS()) {
-			if(deviceIphoneX()) {
+		let device = 0
+		if (platformIOS()) {
+			if (deviceIphoneX()) {
 				device = 2
 			} else {
 				device = 1
 			}
 		}
 
-		if(this.state.display_type === 'Calendar') {
+		if (this.state.display_type === 'Calendar') {
 			return <ClassCalendar device={device} />
-		} else if(this.state.display_type === 'Finals') {
+		} else if (this.state.display_type === 'Finals') {
 			return <FinalCalendar device={device} />
 		} else {
 			return null // TODO - Need List view here
@@ -122,21 +127,17 @@ class HomePage extends React.Component {
 	renderSwitchNavigator(options) {
 		const { switchContainerStyle } = styles
 
-		if(platformIOS()) {
-			if(deviceIphoneX()) {
+		if (platformIOS()) {
+			if (deviceIphoneX()) {
 				return (
 					<View style={[switchContainerStyle, { paddingBottom: 34 }]}>
-						{options.map((opt, i) => {
-							return this.renderButton(opt, i)
-						})}
+						{options.map((opt, i) => this.renderButton(opt, i))}
 					</View>
 				)
 			} else {
 				return (
 					<View style={switchContainerStyle}>
-						{options.map((opt, i) => {
-							return this.renderButton(opt, i)
-						})}
+						{options.map((opt, i) => this.renderButton(opt, i))}
 					</View>
 				)
 			}
@@ -146,7 +147,7 @@ class HomePage extends React.Component {
 	renderButton(value, index) {
 		const { switchItemStyle, switchTextStyle, chosenItemStyle } = styles
 
-		if(value === this.state.display_type) {
+		if (value === this.state.display_type) {
 			return (
 				<View style={switchItemStyle} key={index}>
 					<TouchableOpacity disabled style={chosenItemStyle}>
@@ -165,6 +166,23 @@ class HomePage extends React.Component {
 		)
 	}
 
+	renderClassCard() {
+		const { selectedCourse } = this.props
+		if (selectedCourse) {
+			return (
+				<View style={{
+					position: 'absolute',
+					bottom: 0,
+					width,
+					left: 0,
+					right: 0
+				}}
+				>
+					<ClassCard data={this.props.selectedCourseDetail} props={this.props} />
+				</View>)
+		}
+	}
+
 	render() {
 		const {
 			termContainerStyle,
@@ -173,7 +191,7 @@ class HomePage extends React.Component {
 			iconContainerStyle
 		} = styles
 
-		let options = ['Calendar', 'List', 'Finals']
+		const options = ['Calendar', 'List', 'Finals']
 
 		return (
 			<View style={{ backgroundColor: '#F5F5F5', flex: 1 }}>
@@ -201,7 +219,9 @@ class HomePage extends React.Component {
 				</View>
 				{this.renderDisplayType()}
 				{this.renderSwitchNavigator(options)}
+				{this.renderClassCard()}
 				{this.showSelector()}
+
 			</View>
 		)
 	}
@@ -238,7 +258,7 @@ const styles = {
 		flex: 1
 	},
 	switchItemStyle: {
-		flex: 1/3,
+		flex: 1 / 3,
 		justifyContent: 'center',
 		alignItems: 'center'
 	},
@@ -253,4 +273,11 @@ const styles = {
 	}
 }
 
-export default HomePage
+function mapStateToProps(state) {
+	return {
+		selectedCourse: state.schedule.selectedCourse,
+		selectedCourseDetail: state.schedule.selectedCourseDetail
+	}
+}
+
+export default connect(mapStateToProps, null)(HomePage)

@@ -6,6 +6,7 @@ import { SearchBar } from 'react-native-elements'
 import css from '../../../styles/css'
 import auth from '../../../util/auth'
 import HomePage from './HomePage'
+import ClassCard from './ClassCard'
 
 class WebReg extends React.Component {
 	constructor(props) {
@@ -20,6 +21,7 @@ class WebReg extends React.Component {
 		this.setState({ data: this.props.fullScheduleData.data })
 		// this.search.focus()
 		this.props.populateClassArray()
+		this.props.selectCourse(null, null)
 	}
 
 	updateSearch = (search) => {
@@ -103,8 +105,12 @@ const mapDispatchToProps = (dispatch, ownProps) => (
 		},
 		scheduleLayoutChange: ({ y }) => {
 			dispatch({ type: 'SCHEDULE_LAYOUT_CHANGE', y })
-		}
+		},
+		selectCourse: (selectedCourse, data) => {
+			dispatch({ type: 'SELECT_COURSE', selectedCourse, data })
+		},
 	}
 )
+
 
 export default connect(mapStateToProps, mapDispatchToProps)(WebReg)

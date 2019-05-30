@@ -1,4 +1,4 @@
-import { Text, View } from 'react-native'
+import { Text, View, TouchableOpacity } from 'react-native'
 import React from 'react'
 
 /**
@@ -15,20 +15,17 @@ import React from 'react'
  * @props status   - 'enrolled' / 'waitlist' / 'plan'
  */
 class CourseCard extends React.Component {
-	constructor(props) {
-		super(props)
-	}
-
 	renderBorder(selected) {
-		if(selected) {
+		if (selected) {
+			console.log('course selected', this.props.name)
 			return ({
 				borderWidth: 1,
 				borderRadius: 3,
 				borderColor: '#034263'
 			})
 		}
+		return null
 	}
-
 
 	render() {
 		const {
@@ -37,20 +34,19 @@ class CourseCard extends React.Component {
 			display, type,
 			selected,
 			x, y, height, width,
-			status
+			status,
+			onPress
 		} = this.props
 
-		console.log('x and y', x, y)
 		const {
 			containerStyle,
-			headerContainerStyle,
 			headerTextStyle,
 			courseContainerStyle,
 			courseTextStyle
 		} = styles
 
-		var headerColor = '#7D7D7D'
-		switch(status) {
+		let headerColor = '#7D7D7D'
+		switch (status) {
 			case 'waitlist':
 				headerColor = 'red'
 				break
@@ -63,7 +59,7 @@ class CourseCard extends React.Component {
 		}
 
 		return (
-			<View style={[containerStyle, { left: x, top: y, width, height }, this.renderBorder(selected)]}>
+			<TouchableOpacity activeOpacity={1} onPress={onPress} style={[containerStyle, { left: x, top: y, width, height }, this.renderBorder(selected)]}>
 				<View style={{ justifyContent: 'center', backgroundColor: headerColor }}>
 					<Text style={headerTextStyle}>{display === 'Calendar' ? type : display}</Text>
 				</View>
@@ -71,7 +67,7 @@ class CourseCard extends React.Component {
 					<Text style={courseTextStyle}>{name}</Text>
 					<Text style={courseTextStyle}>{location}</Text>
 				</View>
-			</View>
+			</TouchableOpacity>
 		)
 	}
 }
@@ -107,7 +103,7 @@ const styles = {
 		alignItems: 'center'
 	},
 	courseTextStyle: {
-		fontSize: 10,
+		fontSize: 7,
 		textAlign: 'center',
 		paddingTop: 2,
 		paddingBottom: 2,
