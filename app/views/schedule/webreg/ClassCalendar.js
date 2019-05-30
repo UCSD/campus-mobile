@@ -139,6 +139,17 @@ class ClassCalendar extends React.Component {
 								</View>))
 						}
 					</View>
+					<TouchableWithoutFeedback onPress={() => this.props.selectCourse(null, null)}>
+						<View
+							style={{
+								position: 'absolute',
+								top: 0,
+								bottom: 0,
+								left: 0,
+								right: 0,
+							}}
+						/>
+					</TouchableWithoutFeedback>
 					{
 						this.renderCourseCard()
 					}

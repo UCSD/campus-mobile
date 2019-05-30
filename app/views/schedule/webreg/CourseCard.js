@@ -1,6 +1,8 @@
 import { Text, View, TouchableOpacity } from 'react-native'
 import React from 'react'
 
+const BORDER_WIDTH = 1
+const BORDER_RADIUS = 3
 /**
  * @props color    - the border color of current class
  * @props name     - the name of class
@@ -19,8 +21,8 @@ class CourseCard extends React.Component {
 		if (selected) {
 			console.log('course selected', this.props.name)
 			return ({
-				borderWidth: 1,
-				borderRadius: 3,
+				borderWidth: BORDER_WIDTH,
+				borderRadius: BORDER_RADIUS,
 				borderColor: '#034263'
 			})
 		}
@@ -59,9 +61,26 @@ class CourseCard extends React.Component {
 		}
 
 		return (
-			<TouchableOpacity activeOpacity={1} onPress={onPress} style={[containerStyle, { left: x, top: y, width, height }, this.renderBorder(selected)]}>
-				<View style={{ justifyContent: 'center', backgroundColor: headerColor }}>
-					<Text style={headerTextStyle}>{display === 'Calendar' ? type : display}</Text>
+			<TouchableOpacity
+				activeOpacity={1}
+				onPress={onPress}
+				style={
+					[containerStyle,
+						{
+							left: x - (selected ? BORDER_WIDTH : 0),
+							top: y - (selected ? BORDER_WIDTH : 0),
+							width: width + (selected ? 2 * BORDER_WIDTH : 0),
+							height: height + (selected ? 2 * BORDER_WIDTH : 0)
+						},
+						this.renderBorder(selected)]}
+			>
+				<View style={{
+					justifyContent: 'center',
+					backgroundColor: headerColor }}
+				>
+					<Text style={headerTextStyle}>
+						{display === 'Calendar' ? type : display}
+					</Text>
 				</View>
 				<View style={courseContainerStyle}>
 					<Text style={courseTextStyle}>{name}</Text>

@@ -1,4 +1,12 @@
-import { TouchableWithoutFeedback, View, Text, FlatList, Platform, Button, Dimensions, Alert, TouchableOpacity } from 'react-native'
+import {
+	View,
+	Text,
+	Platform,
+	Dimensions,
+	Alert,
+	TouchableOpacity,
+	Animated,
+} from 'react-native'
 import React from 'react'
 import { SearchBar } from 'react-native-elements'
 import { connect } from 'react-redux'
@@ -10,6 +18,7 @@ import LAYOUT from '../../../styles/LayoutConstants'
 import { deviceIphoneX, platformIOS } from '../../../util/general'
 import ClassCalendar from './ClassCalendar'
 import ClassCard from './ClassCard'
+import ClassCardBottomSheet from './ClassCardBottomSheet'
 import FinalCalendar from './FinalCalendar'
 
 const WINDOW_WIDTH = Dimensions.get('window').width
@@ -38,7 +47,8 @@ class HomePage extends React.Component {
 			search: '',
 			term: 'Spring 2019',
 			show: false,
-			display_type: 'Calendar'
+			display_type: 'Calendar',
+			lastCourse: null
 		}
 		this.showAppTime = this.showAppTime.bind(this)
 		this.selectTerm = this.selectTerm.bind(this)
@@ -167,19 +177,48 @@ class HomePage extends React.Component {
 	}
 
 	renderClassCard() {
-		const { selectedCourse } = this.props
+		const { selectedCourse, selectedCourseDetail } = this.props
 		if (selectedCourse) {
+			this.state.lastCourse = selectedCourse
+			this.state.lastCourseDetail = selectedCourseDetail
+			const modalY = new Animated.Value(height / 4)
+			Animated.timing(modalY, {
+				duration: 300,
+				toValue: 0
+			}).start()
 			return (
-				<View style={{
+				<Animated.View style={{
 					position: 'absolute',
 					bottom: 0,
 					width,
 					left: 0,
-					right: 0
+					right: 0,
+					transform: [{ translateY: modalY }]
 				}}
 				>
-					<ClassCard data={this.props.selectedCourseDetail} props={this.props} />
-				</View>)
+					<ClassCardBottomSheet data={selectedCourseDetail} props={this.props} />
+				</Animated.View>)
+		} else if (this.state.lastCourse) {
+			const course = this.state.lastCourse
+			this.state.lastCourse = null
+			const modalY = new Animated.Value(0)
+			Animated.timing(modalY, {
+				duration: 300,
+				toValue: height / 4
+			}).start()
+			return (
+				<Animated.View style={{
+					position: 'absolute',
+					bottom: 0,
+					width,
+					left: 0,
+					right: 0,
+					transform: [{ translateY: modalY }]
+				}}
+				>
+					<ClassCard data={this.state.lastCourseDetail} props={this.props} />
+				</Animated.View>
+			)
 		}
 	}
 
