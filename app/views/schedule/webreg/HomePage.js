@@ -6,6 +6,8 @@ import {
 	Alert,
 	TouchableOpacity,
 	Animated,
+	ScrollView,
+	Button
 } from 'react-native'
 import React from 'react'
 import { SearchBar } from 'react-native-elements'
@@ -15,9 +17,12 @@ import Icon from 'react-native-vector-icons/SimpleLineIcons'
 import { terms } from './TermMockData.json'
 import DropDown from './DropDown'
 import LAYOUT from '../../../styles/LayoutConstants'
+import css from '../../../styles/css'
+import auth from '../../../util/auth'
 import { deviceIphoneX, platformIOS } from '../../../util/general'
 import ClassCalendar from './ClassCalendar'
 import ClassCard from './ClassCard'
+import ClassList from './ClassList'
 import ClassCardBottomSheet from './ClassCardBottomSheet'
 import FinalCalendar from './FinalCalendar'
 
@@ -130,7 +135,25 @@ class HomePage extends React.Component {
 		} else if (this.state.display_type === 'Finals') {
 			return <FinalCalendar device={device} />
 		} else {
-			return null // TODO - Need List view here
+			return (
+				<ScrollView
+					style={css.scroll_default}
+					contentContainerStyle={css.main_full}
+					onMomentumScrollEnd={(e) => {
+						console.log(e.nativeEvent.contentOffset.y)
+						this.props.scheduleLayoutChange({ y: e.nativeEvent.contentOffset.y })
+						// this.props.clearRefresh();
+					}}
+					onScrollEndDrag={(e) => {
+						console.log(e.nativeEvent.contentOffset.y)
+						this.props.scheduleLayoutChange({ y: e.nativeEvent.contentOffset.y })
+						// this.props.clearRefresh();
+					}}
+				>
+					<Button onPress={() => auth.retrieveAccessToken().then(credentials => console.log(credentials))} title="Get Access Token" />
+					<ClassList />
+				</ScrollView>
+			)
 		}
 	}
 
@@ -315,8 +338,21 @@ const styles = {
 function mapStateToProps(state) {
 	return {
 		selectedCourse: state.schedule.selectedCourse,
-		selectedCourseDetail: state.schedule.selectedCourseDetail
+		selectedCourseDetail: state.schedule.selectedCourseDetail,
+		fullScheduleData: state.schedule.data,
 	}
 }
 
-export default connect(mapStateToProps, null)(HomePage)
+
+const mapDispatchToProps = (dispatch, ownProps) => (
+	{
+		populateClassArray: () => {
+			dispatch({ type: 'POPULATE_CLASS' })
+		},
+		scheduleLayoutChange: ({ y }) => {
+			dispatch({ type: 'SCHEDULE_LAYOUT_CHANGE', y })
+		}
+	}
+)
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomePage)
