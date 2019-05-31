@@ -27,7 +27,7 @@ const StudentIDCard = ({
 	studentProfileRequestError,
 	retryPressed
 }) => {
-	if (studentProfile.image.data && studentProfile.profile.data && studentProfile.name.data && studentProfile.barcode.data) {
+	if (studentProfile.profile.data && studentProfile.name.data && studentProfile.barcode.data) {
 		return (
 			<Card id="studentId" title="Student ID">
 				<View style={css.sid_container}>
@@ -92,10 +92,10 @@ const StudentIDCard = ({
 				</View>
 			</Card>
 		)
-	} else if (studentNameRequestError || studentPhotoRequestError || studentProfileRequestError) {
-		return <ErrorCard retryPressed={retryPressed} />
-	} else {
+	} else if (studentProfileRequestStatus || studentNameRequestStatus || studentPhotoRequestStatus) {
 		return <LoadingCard />
+	} else {
+		return <ErrorCard retryPressed={retryPressed} />
 	}
 }
 
