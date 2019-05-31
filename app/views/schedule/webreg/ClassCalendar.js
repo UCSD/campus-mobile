@@ -221,7 +221,7 @@ const getCourseList = (courses) => {
 
 			const m = re.exec(time)
 			if (m) {
-				startTime = (Number.parseInt(m[1], 10) * 60) - Number.parseInt(m[2], 10)
+				startTime = (Number.parseInt(m[1], 10) * 60) + Number.parseInt(m[2], 10)
 				endTime = (Number.parseInt(m[3], 10) * 60) + Number.parseInt(m[4], 10)
 				duration = endTime - startTime
 			}
