@@ -87,8 +87,13 @@ function* updateSchedule() {
 	}
 }
 
+function* populateClassArray(scheduleData) {
+	yield put({ type: 'POPULATE_CLASS_ARRAY' })
+}
+
 function* scheduleSaga() {
 	yield takeLatest('UPDATE_SCHEDULE', updateSchedule)
+	yield takeLatest('POPULATE_CLASS', populateClassArray)
 }
 
 export default scheduleSaga

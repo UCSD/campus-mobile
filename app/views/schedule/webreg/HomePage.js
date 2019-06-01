@@ -1,36 +1,17 @@
-import {
-	View,
-	Text,
-	Platform,
-	Dimensions,
-	Alert,
-	TouchableOpacity,
-	Animated,
-	ScrollView,
-	Button
-} from 'react-native'
+import { TouchableWithoutFeedback, View, Text, FlatList, Platform, Button, Dimensions, Alert, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { SearchBar } from 'react-native-elements'
-import { connect } from 'react-redux'
 import Icon from 'react-native-vector-icons/SimpleLineIcons'
 
 import { terms } from './TermMockData.json'
 import DropDown from './DropDown'
 import LAYOUT from '../../../styles/LayoutConstants'
-import css from '../../../styles/css'
-import auth from '../../../util/auth'
 import { deviceIphoneX, platformIOS } from '../../../util/general'
 import ClassCalendar from './ClassCalendar'
-import ClassCard from './ClassCard'
-import ClassList from './ClassList'
-import ClassCardBottomSheet from './ClassCardBottomSheet'
 import FinalCalendar from './FinalCalendar'
 
 const WINDOW_WIDTH = Dimensions.get('window').width
 const WINDOW_HEIGHT = Dimensions.get('window').height
-
-
-const { width, height } = Dimensions.get('window')
 
 let termNameArr = []
 let termCodeArr = []
@@ -52,8 +33,7 @@ class HomePage extends React.Component {
 			search: '',
 			term: 'Spring 2019',
 			show: false,
-			display_type: 'Calendar',
-			lastCourse: null
+			display_type: 'Calendar'
 		}
 		this.showAppTime = this.showAppTime.bind(this)
 		this.selectTerm = this.selectTerm.bind(this)
@@ -135,25 +115,7 @@ class HomePage extends React.Component {
 		} else if (this.state.display_type === 'Finals') {
 			return <FinalCalendar device={device} />
 		} else {
-			return (
-				<ScrollView
-					style={css.scroll_default}
-					contentContainerStyle={css.main_full}
-					onMomentumScrollEnd={(e) => {
-						console.log(e.nativeEvent.contentOffset.y)
-						this.props.scheduleLayoutChange({ y: e.nativeEvent.contentOffset.y })
-						// this.props.clearRefresh();
-					}}
-					onScrollEndDrag={(e) => {
-						console.log(e.nativeEvent.contentOffset.y)
-						this.props.scheduleLayoutChange({ y: e.nativeEvent.contentOffset.y })
-						// this.props.clearRefresh();
-					}}
-				>
-					<Button onPress={() => auth.retrieveAccessToken().then(credentials => console.log(credentials))} title="Get Access Token" />
-					<ClassList />
-				</ScrollView>
-			)
+			return null // TODO - Need List view here
 		}
 	}
 
@@ -199,52 +161,6 @@ class HomePage extends React.Component {
 		)
 	}
 
-	renderClassCard() {
-		const { selectedCourse, selectedCourseDetail } = this.props
-		if (selectedCourse) {
-			this.state.lastCourse = selectedCourse
-			this.state.lastCourseDetail = selectedCourseDetail
-			const modalY = new Animated.Value(height / 4)
-			Animated.timing(modalY, {
-				duration: 300,
-				toValue: 0
-			}).start()
-			return (
-				<Animated.View style={{
-					position: 'absolute',
-					bottom: 0,
-					width,
-					left: 0,
-					right: 0,
-					transform: [{ translateY: modalY }]
-				}}
-				>
-					<ClassCardBottomSheet data={selectedCourseDetail} props={this.props} />
-				</Animated.View>)
-		} else if (this.state.lastCourse) {
-			const course = this.state.lastCourse
-			this.state.lastCourse = null
-			const modalY = new Animated.Value(0)
-			Animated.timing(modalY, {
-				duration: 300,
-				toValue: height / 4
-			}).start()
-			return (
-				<Animated.View style={{
-					position: 'absolute',
-					bottom: 0,
-					width,
-					left: 0,
-					right: 0,
-					transform: [{ translateY: modalY }]
-				}}
-				>
-					<ClassCard data={this.state.lastCourseDetail} props={this.props} />
-				</Animated.View>
-			)
-		}
-	}
-
 	render() {
 		const {
 			termContainerStyle,
@@ -256,7 +172,7 @@ class HomePage extends React.Component {
 		const options = ['Calendar', 'List', 'Finals']
 
 		return (
-			<View style={{ backgroundColor: '#F5F5F5', flex: 1 }}>
+			<View style={{ backgroundColor: '#FDFDFD', flex: 1 }}>
 				<View style={termSelectorContainerStyle}>
 					<View style={[iconContainerStyle, { alignItems: 'flex-end', paddingTop: 1 }]}>
 						<Icon name="info" onPress={this.showAppTime} size={18} />
@@ -281,9 +197,7 @@ class HomePage extends React.Component {
 				</View>
 				{this.renderDisplayType()}
 				{this.renderSwitchNavigator(options)}
-				{this.renderClassCard()}
 				{this.showSelector()}
-
 			</View>
 		)
 	}
@@ -316,7 +230,7 @@ const styles = {
 		bottom: 0,
 		position: 'absolute',
 		flexDirection: 'row',
-		backgroundColor: '#F5F5F5',
+		backgroundColor: '#FDFDFD',
 		flex: 1
 	},
 	switchItemStyle: {
@@ -335,24 +249,4 @@ const styles = {
 	}
 }
 
-function mapStateToProps(state) {
-	return {
-		selectedCourse: state.schedule.selectedCourse,
-		selectedCourseDetail: state.schedule.selectedCourseDetail,
-		fullScheduleData: state.schedule.data,
-	}
-}
-
-
-const mapDispatchToProps = (dispatch, ownProps) => (
-	{
-		populateClassArray: () => {
-			dispatch({ type: 'POPULATE_CLASS' })
-		},
-		scheduleLayoutChange: ({ y }) => {
-			dispatch({ type: 'SCHEDULE_LAYOUT_CHANGE', y })
-		}
-	}
-)
-
-export default connect(mapStateToProps, mapDispatchToProps)(HomePage)
+export default HomePage

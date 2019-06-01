@@ -265,6 +265,22 @@ const css = StyleSheet.create({
 	fslv_si_right_arrow_icon: { color: COLOR.PRIMARY, paddingTop: 3 },
 	fslv_si_down_arrow_icon: { color: COLOR.PRIMARY, paddingTop: 3 },
 	fslv_flat_list_separator: { height: 1, backgroundColor: COLOR.LGREY2 },
+	webreg_course_container: { paddingHorizontal: 16, paddingVertical: 16, backgroundColor: 'rgb(250, 250, 250)', margin: 12 },
+	webreg_course_info_container: { flex: 1, flexDirection: 'row' },
+	webreg_course_unit_container: { flex: 0.2, flexDirection: 'row' },
+	webreg_course_unit_bg: { borderRadius: 20, width: 40, height: 40, justifyContent: 'center', alignItems: 'center', overflow: 'hidden', padding: 2, backgroundColor: 'rgba(234, 234, 234, 1)' },
+	webreg_course_unit_text: { textAlign: 'center', fontWeight: '400', fontSize: 24, backgroundColor: 'transparent' },
+	webreg_course_name_container: { flex: 0.8, flexDirection: 'column', },
+	webreg_course_code: { fontWeight: '700', fontSize: 20, backgroundColor: 'transparent' },
+	webreg_course_title: { fontWeight: '400', fontSize: 16, backgroundColor: 'transparent' },
+	webreg_section_prof_container: { flex: 1, flexDirection: 'row' },
+	webreg_section_container: { flex: 0.5, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'flex-start', paddingTop: 6 },
+	webreg_section_id: { color: 'rgb(159, 159, 159)',  paddingRight: 8 },
+	webreg_prof_container: { flex: 0.5, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'flex-end' },
+	webreg_course_prof: { color: 'rgb(84, 129, 176)', textAlign: 'right' },
+	webreg_lecture_section_container: { flex: 1, flexDirection: 'row', paddingTop: 6 },
+	webreg_di_section_container: { flex: 1, flexDirection: 'row', paddingTop: 2 },
+
 
 	/**
 	 *  06 - Shuttle

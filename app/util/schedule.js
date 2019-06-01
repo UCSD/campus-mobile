@@ -83,6 +83,36 @@ module.exports = {
 		return fullString
 	},
 
+	getDayOfWeek(day) {
+		let idx = -1
+		switch (day) {
+			case 'MO':
+				idx = 1
+				break
+			case 'TU':
+				idx = 2
+				break
+			case 'WE':
+				idx = 3
+				break
+			case 'TH':
+				idx = 4
+				break
+			case 'FR':
+				idx = 5
+				break
+			case 'SA':
+				idx = 6
+				break
+			case 'SU':
+				idx = 0
+				break
+			default:
+				idx = -1
+		}
+		return idx
+	},
+
 	// Returns a courseItems object containing lists of courseItem objects.
 	// There is one list per day of the week and the courseItem objects are
 	// sorted by their start times. This includes "FI" and "RE" meeting types.
@@ -194,4 +224,57 @@ module.exports = {
 	sortTime(a, b) {
 		return a.start_time - b.start_time
 	},
+
+	/**
+	 * Parses hours from API into a moment object.
+	 * @function
+	 * @param {int} pointX x coordinate
+	 * @param {int} pointY y coordinate
+	 * @param {int} areaTopLeftX top left x coordinate
+	 * @param {int} areaTopLeftY top left y coordinate
+	 * @param {int} areaBottomRightX bottom right x coordinate
+	 * @param {int} areaBottomRightY bottom right y coordinate
+	 * @returns {boolean} Returns true if point is within area; otherwise false.
+	 */
+	isPointWithinArea(
+		pointX,
+		pointY,
+		areaTopLeftX,
+		areaTopLeftY,
+		areaBottomRightX,
+		areaBottomRightY,
+	) {
+		return areaTopLeftX <= pointX && pointX <= areaBottomRightX &&
+			areaTopLeftY <= pointY && pointY <= areaBottomRightY
+	},
+
+	/**
+	 * move one element in the array before the other element
+	 * @function
+	 * @param {object[]} array array of objects
+	 * @param {int} from index of which element to move
+	 * @param {int} to index of where to move
+	 * @param {int} mergeProps additional props
+	 * @returns {object[]} Returns the resulted array
+	 */
+	moveArrayElement(
+		array,
+		from,
+		to,
+		mergeProps
+	) {
+		if (to > array.length) { return array }
+		const arr = [
+			...array.slice(0, from),
+			...array.slice(from + 1),
+		]
+		return [
+			...arr.slice(0, to),
+			{
+				...array[from],
+				...mergeProps,
+			},
+			...arr.slice(to),
+		]
+	}
 }
