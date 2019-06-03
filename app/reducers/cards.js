@@ -12,7 +12,6 @@ const initialState = {
 			active: true,
 			name: 'Student ID',
 			component: 'StudentIDCard',
-			autoActivated: true,
 			authenticated: true,
 			classifications: { student: true }
 		},
