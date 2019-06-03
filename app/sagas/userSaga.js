@@ -144,6 +144,7 @@ function* queryUserData() {
 	// perform first data calls when user is logged in
 	yield put({ type: 'UPDATE_SCHEDULE' })
 	yield put({ type: 'UPDATE_MESSAGES' })
+	yield put({ type: 'UPDATE_STUDENT_PROFILE' })
 }
 // Used when an API call requires an access token and the current
 // one is stale.
