@@ -73,7 +73,7 @@ const manifest = {
 	11: (state) => {
 		const newState = { ...state }
 		if (state.cards && state.cards.cardOrder) {
-			// Add parking card if it doesn't exist
+			// Add student ID card if it doesn't exist
 			if (state.cards.cards) {
 				if (!state.cards.cards.studentId) {
 					state.cards.cards = {
@@ -88,6 +88,10 @@ const manifest = {
 						}
 					}
 				}
+			}
+			if (Array.isArray(state.cards.cardOrder)
+				&& state.cards.cardOrder.indexOf('studentId') < 0) {
+				newState.cards.cardOrder.splice(0, 0, 'studentId')
 			}
 		}
 		return newState // 6.7 studentId migration
