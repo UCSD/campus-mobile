@@ -5,7 +5,7 @@ import thunkMiddleware from 'redux-thunk'
 import createFilter from 'redux-persist-transform-filter'
 import createSagaMiddleware from 'redux-saga'
 import createMigration from 'redux-persist-migrate'
-import { put } from 'redux-saga/effects'
+
 import rootSaga from './sagas/rootSaga'
 import rootReducer from './reducers'
 
@@ -93,7 +93,6 @@ const manifest = {
 				&& state.cards.cardOrder.indexOf('studentId') < 0) {
 				newState.cards.cardOrder.splice(0, 0, 'studentId')
 			}
-			put({ type: 'UPDATE_STUDENT_PROFILE' })
 		}
 		return newState // 6.7 studentId migration
 	}
