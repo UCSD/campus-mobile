@@ -35,4 +35,4 @@ const mapDispatchToProps = (dispatch, ownProps) => (
 	}
 )
 
-module.exports = connect(mapDispatchToProps)(AppStateContainer)
+module.exports = connect(null ,mapDispatchToProps)(AppStateContainer)
