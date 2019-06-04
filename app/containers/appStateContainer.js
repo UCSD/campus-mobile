@@ -23,6 +23,7 @@ class AppStateContainer extends React.Component {
 	}
 
 	render() {
+		this.props.updateStudentProfile()
 		return null
 	}
 }
@@ -35,4 +36,4 @@ const mapDispatchToProps = (dispatch, ownProps) => (
 	}
 )
 
-module.exports = connect(null ,mapDispatchToProps)(AppStateContainer)
+module.exports = connect(null, mapDispatchToProps)(AppStateContainer)
