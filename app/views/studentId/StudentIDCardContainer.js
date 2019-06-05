@@ -11,6 +11,10 @@ class StudentIDCardContainer extends React.Component {
 		}
 	}
 
+	componentDidMount() {
+		this.props.retryPressed()
+	}
+
 	setMaxBrightness = () => {
 		// Set max brightness
 		SystemSetting.getAppBrightness().then((brightness) => {
