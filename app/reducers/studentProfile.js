@@ -2,11 +2,13 @@ const initialState = {
 	profile: { data: null },
 	name: { data: null },
 	image: { data: null },
-	barcode: { data: null }
+	barcode: { data: null },
+	lastUpdated: null
 }
 
 function studentProfileReducer(state = initialState, action) {
 	const newState = { ...state }
+	newState.lastUpdated = new Date().getTime()
 	switch (action.type) {
 		case 'SET_STUDENT_PROFILE':
 			newState.profile.data = action.profile
@@ -25,7 +27,8 @@ function studentProfileReducer(state = initialState, action) {
 				profile: { data: null },
 				name: { data: null },
 				image: { data: null },
-				barcode: { data: null }
+				barcode: { data: null },
+				lastUpdated: null
 			}
 		default:
 			return state
