@@ -92,7 +92,7 @@ const StudentIDCard = ({
 				</View>
 			</Card>
 		)
-	} else if (studentProfileRequestStatus || studentNameRequestStatus || studentPhotoRequestStatus) {
+	} else if (studentProfileRequestStatus || studentNameRequestStatus || studentPhotoRequestStatus || !studentProfile.lastUpdated) {
 		return <LoadingCard />
 	} else {
 		return <ErrorCard retryPressed={retryPressed} />
