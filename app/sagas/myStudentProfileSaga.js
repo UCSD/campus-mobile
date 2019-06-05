@@ -8,16 +8,25 @@ import {
 } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 import logger from '../util/logger'
-import { SID_CARD_TIMEOUT } from '../AppSettings'
+import { SID_CARD_TIMEOUT, SID_API_TTL } from '../AppSettings'
 import StudentIDService from '../services/studentIDService'
+
 
 // const getStudentProfile = state => (state.studentProfile)
 const getUserData = state => (state.user)
+const getStudentProfile =  state => (state.studentProfile)
 
 function* updateStudentProfile() {
-	console.log('got here')
+	const { lastUpdated, data } = yield select(getStudentProfile)
 	const { isLoggedIn, profile } = yield select(getUserData)
-	if (isLoggedIn && profile.classifications.student) {
+
+	const nowTime = new Date().getTime()
+	const timeDiff = nowTime - lastUpdated
+	const sidTTl = SID_API_TTL
+
+	if (timeDiff < sidTTl && data) {
+		// Do nothing, no need to fetch new data
+	} else if (isLoggedIn && profile.classifications.student) {
 		const fetchArray = [
 			put({ type: 'GET_STUDENT_BARCODE_REQUEST' }),
 			put({ type: 'GET_STUDENT_PROFILE_REQUEST' }),
