@@ -11,10 +11,6 @@ class StudentIDCardContainer extends React.Component {
 		}
 	}
 
-	componentDidMount() {
-		this.props.retryPressed()
-	}
-
 	setMaxBrightness = () => {
 		// Set max brightness
 		SystemSetting.getAppBrightness().then((brightness) => {
@@ -74,7 +70,7 @@ const mapStateToProps = state => (
 	}
 )
 
-const mapDispatchToProps = (dispatch, ownProps) => (
+const mapDispatchToProps = dispatch => (
 	{
 		retryPressed: () => {
 			dispatch({ type: 'UPDATE_STUDENT_PROFILE' })
