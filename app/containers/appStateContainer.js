@@ -7,8 +7,9 @@ class AppStateContainer extends React.Component {
 		appState: AppState.currentState
 	}
 
-	async componentDidMount() {
+	componentDidMount() {
 		AppState.addEventListener('change', this._handleAppStateChange)
+		this.props.updateStudentProfile()
 	}
 
 	componentWillUnmount() {
@@ -23,7 +24,6 @@ class AppStateContainer extends React.Component {
 	}
 
 	render() {
-		this.props.updateStudentProfile()
 		return null
 	}
 }
@@ -32,6 +32,7 @@ const mapDispatchToProps = (dispatch, ownProps) => (
 	{
 		updateStudentProfile: () => {
 			dispatch({ type: 'UPDATE_STUDENT_PROFILE' })
+			console.log('UPDATE_STUDENT_PROFILE')
 		}
 	}
 )

@@ -18,6 +18,7 @@ function* updateStudentProfile() {
 	const { isLoggedIn, profile } = yield select(getUserData)
 
 	if (isLoggedIn && profile.classifications.student) {
+		console.log('got here')
 		const fetchArray = [
 			put({ type: 'GET_STUDENT_BARCODE_REQUEST' }),
 			put({ type: 'GET_STUDENT_PROFILE_REQUEST' }),
