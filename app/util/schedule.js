@@ -118,62 +118,61 @@ module.exports = {
 				const currSectionData = currCourse.section_data
 				for (let k = 0; k < currSectionData.length; ++k) {
 					const currData = currSectionData[k]
-					// Only show classes without a special meeting code (i.e. 'FI', 'PB', etc)
-					if (currData.special_mtg_code === '') {
-						// time format is HH:MM - HH:MM
-						// split time string and get seconds
-						const timeString = currData.time
-						let startSeconds,
-							endSeconds,
-							formattedTimeString,
-							formattedStartString
 
-						if (timeString) {
-							const timeArr = timeString.split(' ')
-							const startString = timeArr[0]
-							const endString = timeArr[2]
-							const startArr = startString.split(':') // split it at the colons
-							const endArr = endString.split(':') // split it at the colons
-							// minutes are worth 60 seconds. Hours are worth 60 minutes.
-							startSeconds = (+startArr[0] * 60 * 60) + (+startArr[1] * 60)
-							endSeconds = (+endArr[0] * 60 * 60) + (+endArr[1] * 60)
-							const startMoment = moment(startString, 'HH:mm')
-							const endMoment = moment(endString, 'HH:mm')
-							const startAm = Boolean(startMoment.format('a') === 'am')
-							const endAm = Boolean(endMoment.format('a') === 'am')
-							formattedStartString = moment(startString, 'HH:mm').format('h:mm') +
-								(startAm ? (' a.m.') : (' p.m.'))
-							const formattedEndString = moment(endString, 'HH:mm').format('h:mm') +
-								(endAm ? (' a.m.') : (' p.m.'))
-							formattedTimeString = formattedStartString +
-								' – ' + formattedEndString
-						}
+					// if (currData.special_mtg_code === '') {
+					// time format is HH:MM - HH:MM
+					// split time string and get seconds
+					const timeString = currData.time
+					let startSeconds,
+						endSeconds,
+						formattedTimeString,
+						formattedStartString
 
-						let day = 'OTHER'
-						if (currData.days) {
-							day = currData.days
-						}
-
-						const item = {
-							building: currData.building,
-							room: currData.room,
-							instructor_name: currData.instructor_name,
-							section: currData.section,
-							subject_code: currCourse.subject_code,
-							course_code: currCourse.course_code,
-							course_title: currCourse.course_title,
-							time_string: formattedTimeString,
-							start_string: formattedStartString,
-							start_time: startSeconds,
-							end_time: endSeconds,
-							meeting_type: currData.meeting_type,
-							special_mtg_code: currData.special_mtg_code,
-							day_code: currData.days,
-							grade_option: currCourse.grade_option
-						}
-
-						courseItems[day].push(item)
+					if (timeString) {
+						const timeArr = timeString.split(' ')
+						const startString = timeArr[0]
+						const endString = timeArr[2]
+						const startArr = startString.split(':') // split it at the colons
+						const endArr = endString.split(':') // split it at the colons
+						// minutes are worth 60 seconds. Hours are worth 60 minutes.
+						startSeconds = (+startArr[0] * 60 * 60) + (+startArr[1] * 60)
+						endSeconds = (+endArr[0] * 60 * 60) + (+endArr[1] * 60)
+						const startMoment = moment(startString, 'HH:mm')
+						const endMoment = moment(endString, 'HH:mm')
+						const startAm = Boolean(startMoment.format('a') === 'am')
+						const endAm = Boolean(endMoment.format('a') === 'am')
+						formattedStartString = moment(startString, 'HH:mm').format('h:mm') +
+							(startAm ? (' a.m.') : (' p.m.'))
+						const formattedEndString = moment(endString, 'HH:mm').format('h:mm') +
+							(endAm ? (' a.m.') : (' p.m.'))
+						formattedTimeString = formattedStartString +
+							' – ' + formattedEndString
 					}
+
+					let day = 'OTHER'
+					if (currData.days) {
+						day = currData.days
+					}
+
+					const item = {
+						building: currData.building,
+						room: currData.room,
+						instructor_name: currData.instructor_name,
+						section: currData.section,
+						subject_code: currCourse.subject_code,
+						course_code: currCourse.course_code,
+						course_title: currCourse.course_title,
+						time_string: formattedTimeString,
+						start_string: formattedStartString,
+						start_time: startSeconds,
+						end_time: endSeconds,
+						meeting_type: currData.meeting_type,
+						special_mtg_code: currData.special_mtg_code,
+						day_code: currData.days,
+						grade_option: currCourse.grade_option
+					}
+
+					courseItems[day].push(item)
 				}
 			}
 
