@@ -144,6 +144,7 @@ function* queryUserData() {
 	// perform first data calls when user is logged in
 	yield put({ type: 'UPDATE_SCHEDULE' })
 	yield put({ type: 'UPDATE_MESSAGES' })
+	yield put({ type: 'UPDATE_STUDENT_PROFILE' })
 }
 // Used when an API call requires an access token and the current
 // one is stale.
@@ -214,6 +215,7 @@ function* refreshTokenRequest() {
 		// Queries any user data with newly obtained access token
 		yield put({ type: 'LOGGED_IN', profile: newProfile })
 		yield put({ type: 'AUTH_HTTP_SUCCESS' })
+		yield put({ type: 'UPDATE_STUDENT_PROFILE' })
 	} else {
 		const e = new Error('No access token returned.')
 		throw e
@@ -331,6 +333,7 @@ function* clearUserData(currentSubscriptions) {
 	yield put({ type: 'CLEAR_SCHEDULE_DATA' })
 	yield put({ type: 'CLEAR_USER_SUBSCRIPTIONS', subscribedTopics: currentSubscriptions })
 	yield put({ type: 'RESET_MESSAGES' })
+	yield put({ type: 'CLEAR_STUDENT_PROFILE_DATA' })
 }
 
 function* userSaga() {

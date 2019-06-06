@@ -70,6 +70,32 @@ const manifest = {
 		}
 		return newState
 	}, // 6.1 messages migration
+	11: (state) => {
+		const newState = { ...state }
+		if (state.cards && state.cards.cardOrder) {
+			// Add student ID card if it doesn't exist
+			if (state.cards.cards) {
+				if (!state.cards.cards.studentId) {
+					state.cards.cards = {
+						...state.cards.cards,
+						studentId: {
+							id: 'studentId',
+							active: true,
+							name: 'Student ID',
+							component: 'StudentIDCard',
+							authenticated: true,
+							classifications: { student: true }
+						}
+					}
+				}
+			}
+			if (Array.isArray(state.cards.cardOrder)
+				&& state.cards.cardOrder.indexOf('studentId') < 0) {
+				newState.cards.cardOrder.splice(0, 0, 'studentId')
+			}
+		}
+		return newState // 6.7 studentId migration
+	}
 }
 
 // reducerKey is the key of the reducer you want to store the state version in
