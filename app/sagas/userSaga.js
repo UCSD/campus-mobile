@@ -215,7 +215,6 @@ function* refreshTokenRequest() {
 		// Queries any user data with newly obtained access token
 		yield put({ type: 'LOGGED_IN', profile: newProfile })
 		yield put({ type: 'AUTH_HTTP_SUCCESS' })
-		yield put({ type: 'UPDATE_STUDENT_PROFILE' })
 	} else {
 		const e = new Error('No access token returned.')
 		throw e

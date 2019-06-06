@@ -70,7 +70,7 @@ const mapStateToProps = state => (
 	}
 )
 
-const mapDispatchToProps = (dispatch, ownProps) => (
+const mapDispatchToProps = dispatch => (
 	{
 		retryPressed: () => {
 			dispatch({ type: 'UPDATE_STUDENT_PROFILE' })
