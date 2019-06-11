@@ -27,12 +27,12 @@ function* updateStudentProfile() {
 	if (timeDiff < sidTTl && data) {
 		// Do nothing, no need to fetch new data
 	} else if (isLoggedIn && profile.classifications.student) {
+		put({ type: 'SHOW_CARD', id: 'studentId' })
 		const fetchArray = [
 			put({ type: 'GET_STUDENT_BARCODE_REQUEST' }),
 			put({ type: 'GET_STUDENT_PROFILE_REQUEST' }),
 			put({ type: 'GET_STUDENT_PHOTO_REQUEST' }),
 			put({ type: 'GET_STUDENT_NAME_REQUEST' }),
-			put({ type: 'SHOW_CARD', id: 'studentId' })
 		]
 		yield all(fetchArray)
 	}
