@@ -31,7 +31,8 @@ function* updateStudentProfile() {
 			put({ type: 'GET_STUDENT_BARCODE_REQUEST' }),
 			put({ type: 'GET_STUDENT_PROFILE_REQUEST' }),
 			put({ type: 'GET_STUDENT_PHOTO_REQUEST' }),
-			put({ type: 'GET_STUDENT_NAME_REQUEST' })
+			put({ type: 'GET_STUDENT_NAME_REQUEST' }),
+			put({ type: 'SHOW_CARD', id: 'studentId' })
 		]
 		yield all(fetchArray)
 	}
