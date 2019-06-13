@@ -17,21 +17,21 @@ const getUserData = state => (state.user)
 const getStudentProfile =  state => (state.studentProfile)
 
 function* updateStudentProfile() {
-	const { lastUpdated, data } = yield select(getStudentProfile)
+	const { lastUpdated } = yield select(getStudentProfile)
 	const { isLoggedIn, profile } = yield select(getUserData)
 
 	const nowTime = new Date().getTime()
 	const timeDiff = nowTime - lastUpdated
-	const sidTTl = SID_API_TTL
 
-	if (timeDiff < sidTTl && data) {
+	if (timeDiff < SID_API_TTL) {
 		// Do nothing, no need to fetch new data
 	} else if (isLoggedIn && profile.classifications.student) {
+		yield put({ type: 'SHOW_CARD', id: 'studentId' })
 		const fetchArray = [
 			put({ type: 'GET_STUDENT_BARCODE_REQUEST' }),
 			put({ type: 'GET_STUDENT_PROFILE_REQUEST' }),
 			put({ type: 'GET_STUDENT_PHOTO_REQUEST' }),
-			put({ type: 'GET_STUDENT_NAME_REQUEST' })
+			put({ type: 'GET_STUDENT_NAME_REQUEST' }),
 		]
 		yield all(fetchArray)
 	}

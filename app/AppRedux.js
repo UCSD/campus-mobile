@@ -89,10 +89,6 @@ const manifest = {
 					}
 				}
 			}
-			if (Array.isArray(state.cards.cardOrder)
-				&& state.cards.cardOrder.indexOf('studentId') < 0) {
-				newState.cards.cardOrder.splice(0, 0, 'studentId')
-			}
 		}
 		return newState // 6.7 studentId migration
 	}

@@ -277,6 +277,22 @@ function* outOfDateAlert() {
 
 // Syncs local profile with remote user profile stored in the cloud
 function* syncUserProfile() {
+	const { isLoggedIn, lastUpdated } = yield select(userState)
+
+	if (!isLoggedIn) return
+
+	const nowTime = new Date().getTime()
+	const timeDiff = nowTime - lastUpdated
+	const ttl = USER_PROFILE_SYNC_TTL
+
+	if (timeDiff < ttl) {
+		// Do nothing, no need to fetch new data
+	} else {
+		yield call(uploadUserProfile)
+	}
+}
+
+function* uploadUserProfile() {
 	const { isLoggedIn, profile } = yield select(userState)
 
 	if (!isLoggedIn) return
@@ -315,7 +331,7 @@ function* modifyLocalProfile(action) {
 
 	yield put({ type: 'SET_LOCAL_PROFILE', profileItems })
 	yield put({ type: 'RESET_SYNCED_DATE' })
-	yield call(syncUserProfile)
+	yield call(uploadUserProfile)
 
 	// if profile change includes changes to subscriptions, reset messages
 	if (profileItems.subscribedTopics) yield put({ type: 'RESET_MESSAGES' })
@@ -343,6 +359,7 @@ function* userSaga() {
 	yield takeLatest('GET_USER_PROFILE', getUserProfile)
 	yield takeLatest('MODIFY_LOCAL_PROFILE', modifyLocalProfile)
 	yield takeLatest('SYNC_USER_PROFILE', syncUserProfile)
+	yield takeLatest('UPLOAD_USER_PROFILE', uploadUserProfile)
 }
 
 export default userSaga
