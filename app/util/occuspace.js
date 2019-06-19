@@ -1,38 +1,23 @@
-import moment from 'moment'
 /**
  * A module containing occuspace related helper functions
  * @module util/occuspace
  */
 module.exports = {
 	/**
-	 * creates a map of strings to objects that holds all locations
-	 * @param {[Object]]}
-	 * @returns {{int,Object}}} map of occuspace locationNames to occuspaceObjects
+	 * Gets the slected occuspace locations from the data passed in
+	 * @param {[Object]} occuslaceData The array of all occuspace locations
+	 * @param {[String]} selectedLocations The array strings that correspond to all slected occuspace locations
+	 * @returns {[Object]]} An array of of ojects that has only the selcted occupace locations
 	 */
-	getLocationsMap(occuspaceData) {
-		const map = {}
+	getSelectedOccusapceLocations(occuspaceData, selectedLocations) {
+		const arrayToReturn = []
 		if (occuspaceData) {
-			// only add the selcted locations
-			occuspaceData.forEach((obj) => {
-				map[obj.locationName] = obj
+			occuspaceData.forEach((locationObj) => {
+				if (selectedLocations.includes(locationObj.locationName)) {
+					arrayToReturn.push(locationObj)
+				}
 			})
 		}
-		return map
-	},
-	/**
-	 * creates an array of objects that holds only selected locations in order
-	 * @param {[String:Object]}
-	 * @param {[String]} array of selected locations in order
-	 * @returns {[Object]} array of location objects in given order
-	 */
-	getSelectedLocations(occuspaceData, selectedLocations) {
-		const locations = []
-		if (occuspaceData) {
-			// only add the selcted locations
-			selectedLocations.forEach((location) => {
-				locations.push(occuspaceData[location])
-			})
-		}
-		return locations
+		return arrayToReturn
 	},
 }

@@ -6,7 +6,7 @@ const OccuspaceService = {
 			.then(response => response.json())
 			.then(responseData => responseData)
 			.catch((err) => {
-				console.log('Error fetching parking lots: ' + err)
+				console.log('Error fetching occuspace data: ' + err)
 				return null
 			})
 	},
