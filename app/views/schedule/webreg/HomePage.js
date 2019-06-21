@@ -48,6 +48,11 @@ class HomePage extends React.Component {
 		this.props.selectTerm({term_name: "Spring 2019", term_code: "SP19"})
 	}
 
+	componentWillMount() {
+		this.props.selectFinal(null, null)
+		this.props.selectFinal(null, null)
+	}
+
 	selectTerm() {
 		this.setState({ show: true })
 	}
@@ -216,6 +221,52 @@ class HomePage extends React.Component {
 		}
 	}
 
+	renderFinalCard() {
+		const { selectedCourseFinal, selectedCourseFinalDetail } = this.props
+		if (selectedCourseFinal) {
+			this.state.lastFinal = selectedCourseFinal
+			this.state.lastFinalDetail = selectedCourseFinalDetail
+			const modalY = new Animated.Value(WINDOW_HEIGHT / 4)
+			Animated.timing(modalY, {
+				duration: 300,
+				toValue: 0
+			}).start()
+			return (
+				<Animated.View style={{
+					position: 'absolute',
+					bottom: 0,
+					width: WINDOW_WIDTH,
+					left: 0,
+					right: 0,
+					transform: [{ translateY: modalY }]
+				}}
+				>
+					<ClassCardBottomSheet data={selectedCourseFinalDetail} props={this.props} />
+				</Animated.View>)
+		} else if (this.state.lastFinal) {
+			const course = this.state.lastFinal
+			this.state.lastFinal = null
+			const modalY = new Animated.Value(0)
+			Animated.timing(modalY, {
+				duration: 300,
+				toValue: WINDOW_HEIGHT / 4
+			}).start()
+			return (
+				<Animated.View style={{
+					position: 'absolute',
+					bottom: 0,
+					width: WINDOW_WIDTH,
+					left: 0,
+					right: 0,
+					transform: [{ translateY: modalY }]
+				}}
+				>
+					<ClassCard data={this.state.lastFinalDetail} props={this.props} />
+				</Animated.View>
+			)
+		}
+	}
+
 	render() {
 		const {
 			webreg_homepage_term_container,
@@ -244,11 +295,7 @@ class HomePage extends React.Component {
 							this.dropDownY = layout.y
 						}}
 					>
-<<<<<<< HEAD
 						<Text style={termTextStyle}>{this.props.selectedTerm.term_name}</Text>
-=======
-						<Text style={webreg_homepage_term_text}>{this.state.term}</Text>
->>>>>>> 5f22a320... Integrate bottom sheet into course calendar. Put styles into css.
 					</View>
 					<View style={[webreg_homepage_icon_container_style, { alignItems: 'flex-start', paddingTop: 2 }]}>
 						<Icon name="arrow-down" onPress={this.selectTerm} size={18} />
@@ -264,6 +311,7 @@ class HomePage extends React.Component {
 				{this.renderDisplayType()}
 				{this.renderSwitchNavigator(options)}
 				{this.renderClassCard()}
+				{this.renderFinalCard()}
 				{this.showSelector()}
 			</View>
 		)
@@ -275,6 +323,8 @@ function mapStateToProps(state) {
 	return {
 		selectedCourse: state.schedule.selectedCourse,
 		selectedCourseDetail: state.schedule.selectedCourseDetail,
+		selectedCourseFinal: state.schedule.selectedCourseFinal,
+		selectedCourseFinalDetail: state.schedule.selectedCourseFinalDetail,
 		fullScheduleData: state.schedule.data,
 	}
 }
