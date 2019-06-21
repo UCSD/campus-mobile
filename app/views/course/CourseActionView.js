@@ -27,7 +27,7 @@ const CourseActionView = ({ course, sectCode, style }) => {
 		borderBottomRightRadius: 4,
 	}
 	return (
-		<View style={[cellWrapperStyle, { paddingVertical: 7 }, style]}>
+		<View style={[cellWrapperStyle, style, { paddingTop: 7, paddingBottom: 14 }]}>
 			<View style={cellContainerStyle}>
 				<HeaderRow
 					course={course}
@@ -85,20 +85,19 @@ export default CourseActionView
 const styles = {
 	cellWrapperStyle: {
 		width: width - 32,
+		alignSelf: 'center',
 		flexDirection: 'row',
 		justifyContent: 'center',
 		alignItems: 'center',
-		marginVertical: 4,
-		marginHorizontal: 16,
-		backgroundColor: '#fff',
+		backgroundColor: '#FBFBFB',
 		borderRadius: 10,
-		shadowColor: '#000000',
+		shadowColor: '#000',
 		shadowOffset: {
 			width: 0,
 			height: 2
 		},
-		shadowRadius: 2,
-		shadowOpacity: 0.2
+		shadowRadius: 5,
+		shadowOpacity: 0.1
 	},
 	cellContainerStyle: {
 		width: '83%',

@@ -1,6 +1,6 @@
 /* eslint-disable class-methods-use-this */
 import React, { Component } from 'react'
-import { View, Text, Image, Animated, Dimensions, TouchableWithoutFeedback } from 'react-native'
+import { View, Text, Image, Dimensions, TouchableWithoutFeedback } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import HeaderRow from './HeaderRow'
 import SectionRow from './SectionRow'
@@ -27,6 +27,7 @@ export default class CourseTableView extends Component {
 
 	renderLecture(course, section) {
 		const { cellWrapperStyle, cellContainerStyle, dotStyle, expandIconStyle } = styles
+		const { expanded } = this.state
 		return (
 			<TouchableWithoutFeedback onPress={this._onPress}>
 				<View style={[cellWrapperStyle, { paddingTop: 4, paddingBottom: 7 }]}>
@@ -35,7 +36,12 @@ export default class CourseTableView extends Component {
 						<HeaderRow course={course} />
 						<SectionRow data={section} />
 					</View>
-					<Icon name="play-arrow" size={25} color="#034263" style={expandIconStyle} />
+					<Icon
+						name="play-arrow"
+						size={25}
+						color="#034263"
+						style={[expandIconStyle, expanded && { transform: [{ rotate: '90deg' }] }]}
+					/>
 				</View>
 			</TouchableWithoutFeedback>
 		)
@@ -112,20 +118,20 @@ const styles = {
 	},
 	cellWrapperStyle: {
 		width: width - 32,
+		alignSelf: 'center',
 		flexDirection: 'row',
 		justifyContent: 'center',
 		alignItems: 'center',
-		marginVertical: 4,
-		marginHorizontal: 16,
-		backgroundColor: '#fff',
+		marginBottom: 6,
+		backgroundColor: '#FBFBFB',
 		borderRadius: 10,
-		shadowColor: '#000000',
+		shadowColor: '#000',
 		shadowOffset: {
 			width: 0,
 			height: 2
 		},
-		shadowRadius: 2,
-		shadowOpacity: 0.2
+		shadowRadius: 5,
+		shadowOpacity: 0.1
 	},
 	cellContainerStyle: {
 		width: '73%',
@@ -142,7 +148,7 @@ const styles = {
 		width: 20,
 		height: 20,
 		position: 'absolute',
-		right: 15,
+		right: 14,
 		transform: [{ rotate: '-90deg' }],
 		tintColor: '#BEBEBE'
 	},

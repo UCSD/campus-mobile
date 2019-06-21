@@ -1,8 +1,9 @@
 {
-  "courseCode": " CSE 12",
-  "courseName": " Basic Data Struct & OO Design (4 units)",
+  "courseCode": "CSE 12",
+  "courseName": "Basic Data Struct & OO Design",
   "instructor": "Gillespie, Gary N",
   "sectionId": "983761",
+  "unit": 4,
   "sections": [
     {
       "sectCode": "A00",
