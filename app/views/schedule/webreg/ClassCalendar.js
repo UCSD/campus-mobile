@@ -51,7 +51,7 @@ class ClassCalendar extends React.Component {
 	}
 
 	getBottomMargin(device) {
-		switch(device) {
+		switch (device) {
 			case 1:
 				return 55
 			case 2:

@@ -54,7 +54,7 @@ class FinalCalendar extends React.Component {
 	}
 
 	getBottomMargin(device) {
-		switch(device) {
+		switch (device) {
 			case 1:
 				return 55
 			case 2:
@@ -256,14 +256,12 @@ const getCourseList = (courses) => {
 }
 
 const getFinalIndex = (date) => {
-	let parsedArr = date.split('-')
-	let parsedDate = trimZero(parsedArr[1]) + '/' + trimZero(parsedArr[2]) + '/' + parsedArr[0].substring(2, 4)
+	const parsedArr = date.split('-')
+	const parsedDate = trimZero(parsedArr[1]) + '/' + trimZero(parsedArr[2]) + '/' + parsedArr[0].substring(2, 4)
 	return MOCK_DATE.indexOf(parsedDate)
 }
 
-const trimZero = (str) => {
-	return str.charAt(0) === '0' ? str.charAt(1) : str
-}
+const trimZero = str => (str.charAt(0) === '0' ? str.charAt(1) : str)
 
 // const getFinalIndex = (day) => {
 // 	// TODO: need to differentiate between the first Saturday and the second one

@@ -202,7 +202,7 @@ class HomePage extends React.Component {
 						<Text style={searchTextStyle}> Search Course </Text>
 					</View>
 				</View>
-				{/*<Button onPress={() => auth.retrieveAccessToken().then(credentials => console.log(credentials))} title="Get Access Token" />*/}
+				{/* <Button onPress={() => auth.retrieveAccessToken().then(credentials => console.log(credentials))} title="Get Access Token" />*/}
 				{this.renderDisplayType()}
 				{this.renderSwitchNavigator(options)}
 				{this.showSelector()}
