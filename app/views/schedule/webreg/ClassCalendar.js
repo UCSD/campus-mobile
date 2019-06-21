@@ -1,6 +1,7 @@
 import { Text, View, ScrollView, Dimensions, Button, TouchableWithoutFeedback } from 'react-native'
 import React from 'react'
 import { connect } from 'react-redux'
+import Icon from 'react-native-vector-icons/FontAwesome'
 
 import auth from '../../../util/auth'
 import CourseListMockData from './mockData/CourseListMockData.json'
@@ -28,28 +29,96 @@ class ClassCalendar extends React.Component {
 		this.state = { courses: CourseListMockData.data, sample: CourseListMockData.data[0], courseList: getCourseList(CourseListMockData.data) }
 	}
 
+	componentWillMount() {
+		this.props.resetCourseCard()
+	}
+
 	renderCourseCard() {
 		const res = []
 		Object.keys(this.state.courseList).map((item, i) => {
 			this.state.courseList[item].data.map((course, index) => {
 				const { color = 0, name, location, display, type, selected, x, y, height, width, status = 'enrolled' } = course
-				res.push(<CourseCard
-					selected={this.props.selectedCourse && this.props.selectedCourse === name}
-					color={COLOR_LIST[color % COLOR_LIST.length]}
-					name={name}
-					location={location}
-					display={display}
-					type={type}
-					x={x}
-					y={y}
-					height={height}
-					width={width}
-					status={status}
-					onPress={() => {
-						this.props.selectCourse(name, this.state.courseList[item].course)
-						this.setState({ courseList: { ...this.state.courseList, [name]: { ...this.state.courseList[name], selected: !this.state.courseList[item].selected } } })
-					}}
-				/>)
+
+				const onLayout = (event) => {
+					const { x, y, width, height } = event.nativeEvent.layout
+					console.log('onLayout,', { name, x, y, width, height })
+					this.props.updateCourseCard(name, x, y, width, height)
+				}
+
+				if (this.props.selectedCourse && this.props.selectedCourse === name) {
+					res.push(<CourseCard
+						selected
+						color={COLOR_LIST[color % COLOR_LIST.length]}
+						name={name}
+						location={location}
+						display={display}
+						type={type}
+						x={x}
+						y={y}
+						height={height}
+						width={width}
+						status={status}
+						onPress={() => {
+							this.props.selectCourse(name, this.state.courseList[item].course)
+							this.setState({ courseList: { ...this.state.courseList, [name]: { ...this.state.courseList[name], selected: !this.state.courseList[item].selected } } })
+						}}
+						onLayout={onLayout}
+						zIndex
+					/>)
+					console.log({ index: i, left: x + width, top: y })
+					// Check if the course is overlapping with some other course(s)
+					// TODO: resolve the case where there are multiple conflict at one time slot
+					if (this.props.courseCards) {
+						const conflict = []
+						Object.keys(this.props.courseCards).map((courseName, i) => {
+							const course = this.props.courseCards[courseName]
+							course.map((info, idx) => {
+								if (name === courseName) return null
+								const { x: courseX, y: courseY } = info
+								if (Math.abs(courseX - x) <= 1 && Math.abs(courseY - y) <= 1 ) {
+									console.log('comparing course card coordinates', courseName, courseX, courseY, x, y)
+									conflict.push(courseName)
+								}
+								return null
+							})
+							return null
+						})
+						console.log('overall conflict', conflict)
+						if (conflict.length >= 1) {
+							res.push(<Icon
+								style={{
+									position: 'absolute',
+									left: x + (width * 0.8),
+									top: y - (height / 7.5),
+									zIndex: 2
+								}}
+								name="refresh"
+								size={18}
+								onPress={() => {
+									this.props.selectCourse(conflict[0], this.state.courseList[conflict[0]].course)
+								}}
+							/>)
+						}
+					}
+				} else {
+					res.push(<CourseCard
+						color={COLOR_LIST[color % COLOR_LIST.length]}
+						name={name}
+						location={location}
+						display={display}
+						type={type}
+						x={x}
+						y={y}
+						height={height}
+						width={width}
+						status={status}
+						onPress={() => {
+							this.props.selectCourse(name, this.state.courseList[item].course)
+							this.setState({ courseList: { ...this.state.courseList, [name]: { ...this.state.courseList[name], selected: !this.state.courseList[item].selected } } })
+						}}
+						onLayout={onLayout}
+					/>)
+				}
 				return null
 			})
 			return null
@@ -290,6 +359,7 @@ const styles = {
 function mapStateToProps(state) {
 	return {
 		selectedCourse: state.schedule.selectedCourse,
+		courseCards: state.schedule.courseCards
 	}
 }
 
@@ -299,6 +369,12 @@ const mapDispatchToProps = (dispatch, ownProps) => (
 		selectCourse: (selectedCourse, data) => {
 			dispatch({ type: 'SELECT_COURSE', selectedCourse, data })
 		},
+		updateCourseCard: (name, x, y, width, height) => {
+			dispatch({ type: 'UPDATE_COURSE_CARD', name, x, y, width, height })
+		},
+		resetCourseCard: () => {
+			dispatch({ type: 'RESET_COURSE_CARD' })
+		}
 	}
 )
 

@@ -28,6 +28,9 @@ const renderBorder = (selected) => {
  * @props height   - height of card (parsed by time)
  * @props width    - width of card (parsed by Dimensions.width)
  * @props status   - 'enrolled' / 'waitlist' / 'plan'
+ * @props onPress  - callback when the course card is pressed
+ * @props onLayout - layout information when the course card is first rendered
+ * @props zIndex   - if true then the course card is on top of other possible conflicting cards
  */
 class CourseCard extends React.Component {
 	componentWillMount() {
@@ -42,7 +45,9 @@ class CourseCard extends React.Component {
 			selected,
 			x, y, height, width,
 			status,
-			onPress
+			onPress,
+			onLayout,
+			zIndex
 		} = this.props
 
 		let headerColor = '#7D7D7D'
@@ -70,12 +75,14 @@ class CourseCard extends React.Component {
 			<TouchableOpacity
 				activeOpacity={1}
 				onPress={onPress}
+				onLayout={onLayout}
 				style={[webreg_coursecard_container,
 					{
 						left: x - (selected ? BORDER_WIDTH : 0),
 						top: y - (selected ? BORDER_WIDTH : 0),
 						width: width + (selected ? 2 * BORDER_WIDTH : 0),
-						height: height + (selected ? 2 * BORDER_WIDTH : 0)
+						height: height + (selected ? 2 * BORDER_WIDTH : 0),
+						zIndex: zIndex ? 1 : 0
 					},
 					renderBorder(selected)]}
 			>
