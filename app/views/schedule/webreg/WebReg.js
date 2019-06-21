@@ -13,12 +13,12 @@ class WebReg extends React.Component {
 		super()
 		this.state = {
 			search: '',
-			data: null
+			// data: null
 		}
 	}
 
 	componentWillMount() {
-		this.setState({ data: this.props.fullScheduleData.data })
+		// this.setState({ data: this.props.fullScheduleData.data })
 		// this.search.focus()
 		this.props.populateClassArray()
 		this.props.selectCourse(null, null)
@@ -26,7 +26,7 @@ class WebReg extends React.Component {
 
 	updateSearch = (search) => {
 		this.setState({ search })
-		this.setState({ data: this.filterData(search) })
+		// this.setState({ data: this.filterData(search) })
 	};
 
 	filterData(text) {

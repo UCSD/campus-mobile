@@ -64,15 +64,14 @@ class CourseCard extends React.Component {
 			<TouchableOpacity
 				activeOpacity={1}
 				onPress={onPress}
-				style={
-					[containerStyle,
-						{
-							left: x - (selected ? BORDER_WIDTH : 0),
-							top: y - (selected ? BORDER_WIDTH : 0),
-							width: width + (selected ? 2 * BORDER_WIDTH : 0),
-							height: height + (selected ? 2 * BORDER_WIDTH : 0)
-						},
-						this.renderBorder(selected)]}
+				style={[containerStyle,
+					{
+						left: x - (selected ? BORDER_WIDTH : 0),
+						top: y - (selected ? BORDER_WIDTH : 0),
+						width: width + (selected ? 2 * BORDER_WIDTH : 0),
+						height: height + (selected ? 2 * BORDER_WIDTH : 0)
+					},
+					this.renderBorder(selected)]}
 			>
 				<View style={{
 					justifyContent: 'center',
@@ -94,14 +93,14 @@ class CourseCard extends React.Component {
 const styles = {
 	containerStyle: {
 		position: 'absolute',
+		shadowColor: '#000',
 		backgroundColor: 'white',
-		shadowColor: 'black',
-		overflow: 'hidden',
 		shadowRadius: 2,
-		shadowOffset: { width: 2, height: 2 },
-		shadowOpacity: 0.8,
+		shadowOffset: { width: 0, height: 1 },
+		shadowOpacity: 0.2,
 		elevation: 1,
-		borderRadius: 3
+		borderRadius: 3,
+		flex: 1
 	},
 	headerContainerStyle: {
 		justifyContent: 'center',

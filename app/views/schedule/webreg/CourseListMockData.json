@@ -3,8 +3,8 @@
     "data": [
         {
             "term_code": "SP19",
-            "subject_code": "CSE",
-            "course_code": "101",
+            "subject_code": "ANSC",
+            "course_code": "117GS",
             "units": 4,
             "course_level": "UD",
             "grade_option": "L",

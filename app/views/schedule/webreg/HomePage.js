@@ -9,6 +9,7 @@ import LAYOUT from '../../../styles/LayoutConstants'
 import { deviceIphoneX, platformIOS } from '../../../util/general'
 import ClassCalendar from './ClassCalendar'
 import FinalCalendar from './FinalCalendar'
+import auth from '../../../util/auth'
 
 const WINDOW_WIDTH = Dimensions.get('window').width
 const WINDOW_HEIGHT = Dimensions.get('window').height
@@ -33,7 +34,7 @@ class HomePage extends React.Component {
 			search: '',
 			term: 'Spring 2019',
 			show: false,
-			display_type: 'Calendar'
+			display_type: 'Calendar',
 		}
 		this.showAppTime = this.showAppTime.bind(this)
 		this.selectTerm = this.selectTerm.bind(this)
@@ -79,8 +80,8 @@ class HomePage extends React.Component {
 		termNameArr = [...INITIAL_NAME_ARR]
 		termCodeArr = [...INITIAL_CODE_ARR]
 		const index = termNameArr.indexOf(choice)
-		termNameArr.unshift(termNameArr.splice(index, 1))
-		termCodeArr.unshift(termCodeArr.splice(index, 1))
+		termNameArr.unshift(termNameArr.splice(index, 1)[0])
+		termCodeArr.unshift(termCodeArr.splice(index, 1)[0])
 		this.setState({ show: false, term: choice })
 	}
 
@@ -166,7 +167,10 @@ class HomePage extends React.Component {
 			termContainerStyle,
 			termTextStyle,
 			termSelectorContainerStyle,
-			iconContainerStyle
+			iconContainerStyle,
+			searchBarStyle,
+			searchBarContainerStyle,
+			searchTextStyle
 		} = styles
 
 		const options = ['Calendar', 'List', 'Finals']
@@ -192,9 +196,13 @@ class HomePage extends React.Component {
 						<Icon name="arrow-down" onPress={this.selectTerm} size={18} />
 					</View>
 				</View>
-				<View style={{ marginLeft: 15, marginRight: 15 }}>
-					<SearchBar ref={search => this.search = search} placeholder="Search Course" onChangeText={this.updateSearch} value={this.state.search} platform={Platform.OS} onCancel={() => console.log('hahaa')} autoCorrect={false} />
+				<View style={searchBarContainerStyle}>
+					<View style={searchBarStyle}>
+						<Icon name="magnifier" size={18} />
+						<Text style={searchTextStyle}> Search Course </Text>
+					</View>
 				</View>
+				{/* <Button onPress={() => auth.retrieveAccessToken().then(credentials => console.log(credentials))} title="Get Access Token" />*/}
 				{this.renderDisplayType()}
 				{this.renderSwitchNavigator(options)}
 				{this.showSelector()}
@@ -204,6 +212,27 @@ class HomePage extends React.Component {
 }
 
 const styles = {
+	searchTextStyle: {
+		color: '#7D7D7D',
+		fontSize: 18,
+		paddingLeft: 10
+	},
+	searchBarContainerStyle: {
+		marginLeft: 15,
+		marginRight: 15,
+		marginTop: 5,
+		marginBottom: 10
+	},
+	searchBarStyle: {
+		backgroundColor: '#F1F1F1',
+		borderRadius: 15,
+		paddingLeft: 15,
+		paddingTop: 5,
+		paddingBottom: 5,
+		paddingRight: 10,
+		flexDirection: 'row',
+		alignItems: 'center'
+	},
 	termContainerStyle: {
 		flex: 1,
 	},

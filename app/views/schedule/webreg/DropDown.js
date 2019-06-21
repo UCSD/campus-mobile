@@ -106,14 +106,13 @@ const styles = {
 		position: 'absolute',
 		backgroundColor: 'white',
 		opacity: 1,
-		overflow: 'hidden',
 		borderRadius: 10,
 		paddingTop: 10,
 		paddingBottom: 10,
-		shadowOpacity: 0.8,
-		shadowOffset: { width: 2, height: 2 },
+		shadowOpacity: 0.2,
+		shadowOffset: { width: 0, height: 2 },
 		shadowColor: 'black',
-		shadowRadius: 10,
+		shadowRadius: 5,
 		elevation: 1
 	},
 	defaultContainerTextStyle: {
