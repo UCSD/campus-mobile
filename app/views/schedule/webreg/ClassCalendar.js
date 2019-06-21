@@ -41,14 +41,24 @@ class ClassCalendar extends React.Component {
 					onPress={() => {
 						this.props.selectCourse(name, this.state.courseList[item].course)
 						this.setState({ courseList: { ...this.state.courseList, [name]: { ...this.state.courseList[name], selected: !this.state.courseList[item].selected } } })
-					}
-					}
+					}}
 				/>)
 				return null
 			})
 			return null
 		})
 		return res
+	}
+
+	getBottomMargin(device) {
+		switch(device) {
+			case 1:
+				return 55
+			case 2:
+				return 72
+			default:
+				return 0
+		}
 	}
 
 	render() {
@@ -83,7 +93,7 @@ class ClassCalendar extends React.Component {
 		}
 
 		return (
-			<View style={[cardStyle]}>
+			<View style={[cardStyle, { marginBottom: this.getBottomMargin(this.props.device) }]}>
 				{ /* <Button onPress={() => auth.retrieveAccessToken().then(credentials => console.log(credentials))} title="Get Access Token" /> */}
 				<View style={daysContainerStyle}>
 					{days.map((day, i) => (
@@ -258,8 +268,8 @@ const styles = {
 	dayTextStyle: {
 		fontFamily: 'Helvetica Neue',
 		textColor: 'black',
-		paddingTop: 10,
-		paddingBottom: 10,
+		paddingTop: 16,
+		paddingBottom: 16,
 		fontSize: 10
 	},
 	timeRowStyle: {

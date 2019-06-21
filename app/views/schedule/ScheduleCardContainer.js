@@ -137,18 +137,35 @@ class ScheduleCardContainer extends React.Component {
 		}))
 	}
 
+	// render() {
+	// 	const { navigation } = this.props
+	// 	return (
+	// 		<ScheduleCard
+	// 			onClickCourse={this.onClickCourse}
+	// 			waitingData={this.props.requestStatus}
+	// 			totalClasses={this.state.totalClasses}
+	// 			lastUpdated={this.props.lastUpdated}
+	// 			error={this.props.requestError}
+	// 			coursesToShow={this.state.upcoming4Courses}
+	// 			activeCourse={this.state.activeCourse}
+	// 			currentTerm={this.props.currentTerm}
+	// 			actionButton={registrationButton(navigation)}
+	// 		/>
+	// 	)
+	// }
+
 	render() {
 		const { navigation } = this.props
 		return (
 			<ScheduleCard
-				onClickCourse={this.onClickCourse}
-				waitingData={this.props.requestStatus}
-				totalClasses={this.state.totalClasses}
-				lastUpdated={this.props.lastUpdated}
-				error={this.props.requestError}
-				coursesToShow={this.state.upcoming4Courses}
-				activeCourse={this.state.activeCourse}
-				currentTerm={this.props.currentTerm}
+				onClickCourse={111}
+				waitingData={111}
+				totalClasses={4}
+				lastUpdated={111}
+				error={111}
+				coursesToShow={11}
+				activeCourse={11}
+				currentTerm={11}
 				actionButton={registrationButton(navigation)}
 			/>
 		)

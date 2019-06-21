@@ -15,6 +15,8 @@ const CARD_HEIGHT = 50
 // '#808000', '#ffd8b1', '#000075', '#808080', '#ffffff', '#000000']
 const COLOR_LIST = ['#ffdfba', '#ffffba', '#baffc9', '#bae1ff', 'rgb(193, 224, 252)']
 
+const MOCK_DATE = ['6/8/19', '6/10/19', '6/11/19', '6/12/19', '6/13/19', '6/14/19', '6/15/19']
+
 class FinalCalendar extends React.Component {
 	constructor(props) {
 		super(props)
@@ -51,6 +53,17 @@ class FinalCalendar extends React.Component {
 		return res
 	}
 
+	getBottomMargin(device) {
+		switch(device) {
+			case 1:
+				return 55
+			case 2:
+				return 72
+			default:
+				return 0
+		}
+	}
+
 	render() {
 		const { courses, sample } = this.state
 		const days = ['Sat', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
@@ -83,12 +96,13 @@ class FinalCalendar extends React.Component {
 		}
 
 		return (
-			<View style={[cardStyle]}>
+			<View style={[cardStyle, { marginBottom: this.getBottomMargin(this.props.device) }]}>
 				{ /* <Button onPress={() => auth.retrieveAccessToken().then(credentials => console.log(credentials))} title="Get Access Token" /> */}
 				<View style={daysContainerStyle}>
 					{days.map((day, i) => (
 						<View style={dayContainerStyle} key={day}>
-							<Text style={[dayTextStyle]}>{day}</Text>
+							<Text style={[dayTextStyle, { paddingBottom: 0 }]}>{day}</Text>
+							<Text style={[dayTextStyle, { paddingTop: 0 }]}>{MOCK_DATE[i]}</Text>
 						</View>
 					))}
 				</View>
@@ -111,7 +125,7 @@ class FinalCalendar extends React.Component {
 						}}
 						>
 							{hours.map((hour, i) => (
-								<View style={[timeRowStyle, { borderBottomWidth: i === 14 ? 1 : 0 }]} key={hour}>
+								<View style={[timeRowStyle, { borderBottomWidth: i === 13 ? 1 : 0 }]} key={hour}>
 									<View style={timeContainerStyle}>
 										<Text style={timeTextStyle}>
 											{hour}
@@ -130,7 +144,7 @@ class FinalCalendar extends React.Component {
 								}}
 								>
 									{hours.map((hour, i) => (
-										<View style={[timeRowStyle, { borderBottomWidth: i === 14 ? 1 : 0 }]} key={hour}>
+										<View style={[timeRowStyle, { borderBottomWidth: i === 13 ? 1 : 0 }]} key={hour}>
 											<View style={timeContainerStyle}>
 												<View style={{ height: 50 }} />
 											</View>
@@ -179,6 +193,7 @@ const getCourseList = (courses) => {
 				meeting_type,
 				time,
 				days,
+				date,
 				building,
 				room,
 				special_mtg_code,
@@ -224,7 +239,8 @@ const getCourseList = (courses) => {
 				endTime = (Number.parseInt(m[3], 10) * 60) + Number.parseInt(m[4], 10)
 				duration = endTime - startTime
 			}
-			const x = ((getFinalIndex(days) + 1) * CARD_WIDTH) - 12.5
+			// const x = ((getFinalIndex(days) + 1) * CARD_WIDTH) - 12.5 -- USE DAYS
+			const x = ((getFinalIndex(date) + 1) * CARD_WIDTH) - 12.5
 			const y = (((startTime / 60) - 8) * (CARD_HEIGHT + 1)) + 2
 			const width  = CARD_WIDTH - 2
 			const height = (CARD_HEIGHT / 60) * duration
@@ -239,33 +255,43 @@ const getCourseList = (courses) => {
 	return obj
 }
 
-const getFinalIndex = (day) => {
-	// TODO: need to differentiate between the first Saturday and the second one
-	let idx = -1
-	switch (day) {
-		case 'MO':
-			idx = 1
-			break
-		case 'TU':
-			idx = 2
-			break
-		case 'WE':
-			idx = 3
-			break
-		case 'TH':
-			idx = 4
-			break
-		case 'FR':
-			idx = 5
-			break
-		case 'SA':
-			idx = 0
-			break
-		default:
-			idx = -1
-	}
-	return idx
+const getFinalIndex = (date) => {
+	let parsedArr = date.split('-')
+	let parsedDate = trimZero(parsedArr[1]) + '/' + trimZero(parsedArr[2]) + '/' + parsedArr[0].substring(2, 4)
+	return MOCK_DATE.indexOf(parsedDate)
 }
+
+const trimZero = (str) => {
+	return str.charAt(0) === '0' ? str.charAt(1) : str
+}
+
+// const getFinalIndex = (day) => {
+// 	// TODO: need to differentiate between the first Saturday and the second one
+// 	let idx = -1
+// 	switch (day) {
+// 		case 'MO':
+// 			idx = 1
+// 			break
+// 		case 'TU':
+// 			idx = 2
+// 			break
+// 		case 'WE':
+// 			idx = 3
+// 			break
+// 		case 'TH':
+// 			idx = 4
+// 			break
+// 		case 'FR':
+// 			idx = 5
+// 			break
+// 		case 'SA':
+// 			idx = 0
+// 			break
+// 		default:
+// 			idx = -1
+// 	}
+// 	return idx
+// }
 
 const styles = {
 	cardStyle: {
