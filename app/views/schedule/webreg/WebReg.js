@@ -62,33 +62,6 @@ class WebReg extends React.Component {
 			<HomePage />
 		)
 	}
-
-	// Charles's Render for ClassList
-	// render() {
-	// 	const { fullScheduleData } = this.props
-	// 	const { search } = this.state
-	//
-	// 	return (
-	// 		<ScrollView
-	// 			style={css.scroll_default}
-	// 			contentContainerStyle={css.main_full}
-	// 			onMomentumScrollEnd={(e) => {
-	// 				console.log(e.nativeEvent.contentOffset.y)
-	// 				this.props.scheduleLayoutChange({ y: e.nativeEvent.contentOffset.y })
-	// 				// this.props.clearRefresh();
-	// 			}}
-	// 			onScrollEndDrag={(e) => {
-	// 				console.log(e.nativeEvent.contentOffset.y)
-	// 				this.props.scheduleLayoutChange({ y: e.nativeEvent.contentOffset.y })
-	// 				// this.props.clearRefresh();
-	// 			}}
-	// 		>
-	//
-	// 			<Button onPress={() => auth.retrieveAccessToken().then(credentials => console.log(credentials))} title="Get Access Token" />
-	// 			<ClassList />
-	// 		</ScrollView>
-	// 	)
-	// }
 }
 
 function mapStateToProps(state) {

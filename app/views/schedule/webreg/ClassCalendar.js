@@ -3,17 +3,24 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import auth from '../../../util/auth'
-import CourseListMockData from './CourseListMockData.json'
+import CourseListMockData from './mockData/CourseListMockData.json'
 import { getDayOfWeek } from '../../../util/schedule'
 import CourseCard from './CourseCard'
 
 const { width, height } = Dimensions.get('window')
 const CARD_WIDTH = (width - 70) / 7
 const CARD_HEIGHT = 50
-// const COLOR_LIST = ['#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231', '#911eb4', '#46f0f0',
-// '#f032e6', '#bcf60c', '#fabebe', '#008080', '#e6beff', '#9a6324', '#fffac8', '#800000', '#aaffc3',
-// '#808000', '#ffd8b1', '#000075', '#808080', '#ffffff', '#000000']
 const COLOR_LIST = ['#ffdfba', '#ffffba', '#baffc9', '#bae1ff', 'rgb(193, 224, 252)']
+const getBottomMargin = (device) => {
+	switch (device) {
+		case 1:
+			return 55
+		case 2:
+			return 72
+		default:
+			return 0
+	}
+}
 
 class ClassCalendar extends React.Component {
 	constructor(props) {
@@ -50,17 +57,6 @@ class ClassCalendar extends React.Component {
 		return res
 	}
 
-	getBottomMargin(device) {
-		switch (device) {
-			case 1:
-				return 55
-			case 2:
-				return 72
-			default:
-				return 0
-		}
-	}
-
 	render() {
 		const { courses, sample } = this.state
 		const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
@@ -93,7 +89,7 @@ class ClassCalendar extends React.Component {
 		}
 
 		return (
-			<View style={[cardStyle, { marginBottom: this.getBottomMargin(this.props.device) }]}>
+			<View style={[cardStyle, { marginBottom: getBottomMargin(this.props.device) }]}>
 				{ /* <Button onPress={() => auth.retrieveAccessToken().then(credentials => console.log(credentials))} title="Get Access Token" /> */}
 				<View style={daysContainerStyle}>
 					{days.map((day, i) => (

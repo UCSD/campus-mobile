@@ -3,19 +3,26 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import auth from '../../../util/auth'
-import CourseListMockData from './CourseListMockData.json'
+import CourseListMockData from './mockData/CourseListMockData.json'
 import { getDayOfWeek } from '../../../util/schedule'
+import css from '../../../styles/css'
 import CourseCard from './CourseCard'
 
 const { width, height } = Dimensions.get('window')
 const CARD_WIDTH = (width - 70) / 7
 const CARD_HEIGHT = 50
-// const COLOR_LIST = ['#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231', '#911eb4', '#46f0f0',
-// '#f032e6', '#bcf60c', '#fabebe', '#008080', '#e6beff', '#9a6324', '#fffac8', '#800000', '#aaffc3',
-// '#808000', '#ffd8b1', '#000075', '#808080', '#ffffff', '#000000']
 const COLOR_LIST = ['#ffdfba', '#ffffba', '#baffc9', '#bae1ff', 'rgb(193, 224, 252)']
-
 const MOCK_DATE = ['6/8/19', '6/10/19', '6/11/19', '6/12/19', '6/13/19', '6/14/19', '6/15/19']
+const getBottomMargin = (device) => {
+	switch (device) {
+		case 1:
+			return 55
+		case 2:
+			return 72
+		default:
+			return 0
+	}
+}
 
 class FinalCalendar extends React.Component {
 	constructor(props) {
@@ -53,17 +60,6 @@ class FinalCalendar extends React.Component {
 		return res
 	}
 
-	getBottomMargin(device) {
-		switch (device) {
-			case 1:
-				return 55
-			case 2:
-				return 72
-			default:
-				return 0
-		}
-	}
-
 	render() {
 		const { courses, sample } = this.state
 		const days = ['Sat', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
@@ -71,14 +67,14 @@ class FinalCalendar extends React.Component {
 		const { device } = this.props
 
 		const {
-			cardStyle,
-			daysContainerStyle,
-			dayContainerStyle,
-			dayTextStyle,
-			timeTextStyle,
-			timeRowStyle,
-			timeContainerStyle
-		} = styles
+			webreg_final_calendar_card,
+			webreg_final_calendar_daysContainer,
+			webreg_final_calendar_dayContainer,
+			webreg_final_calendar_dayText,
+			webreg_final_calendar_timeText,
+			webreg_final_calendar_timeRow,
+			webreg_final_calendar_timeContainer
+		} = css
 
 		let offset = 0
 
@@ -96,13 +92,13 @@ class FinalCalendar extends React.Component {
 		}
 
 		return (
-			<View style={[cardStyle, { marginBottom: this.getBottomMargin(this.props.device) }]}>
+			<View style={[webreg_final_calendar_card, { marginBottom: getBottomMargin(this.props.device) }]}>
 				{ /* <Button onPress={() => auth.retrieveAccessToken().then(credentials => console.log(credentials))} title="Get Access Token" /> */}
-				<View style={daysContainerStyle}>
+				<View style={webreg_final_calendar_daysContainer}>
 					{days.map((day, i) => (
-						<View style={dayContainerStyle} key={day}>
-							<Text style={[dayTextStyle, { paddingBottom: 0 }]}>{day}</Text>
-							<Text style={[dayTextStyle, { paddingTop: 0 }]}>{MOCK_DATE[i]}</Text>
+						<View style={webreg_final_calendar_dayContainer} key={day}>
+							<Text style={[webreg_final_calendar_dayText, { paddingBottom: 0 }]}>{day}</Text>
+							<Text style={[webreg_final_calendar_dayText, { paddingTop: 0 }]}>{MOCK_DATE[i]}</Text>
 						</View>
 					))}
 				</View>
@@ -125,9 +121,9 @@ class FinalCalendar extends React.Component {
 						}}
 						>
 							{hours.map((hour, i) => (
-								<View style={[timeRowStyle, { borderBottomWidth: i === 13 ? 1 : 0 }]} key={hour}>
-									<View style={timeContainerStyle}>
-										<Text style={timeTextStyle}>
+								<View style={[webreg_final_calendar_timeRow, { borderBottomWidth: i === 13 ? 1 : 0 }]} key={hour}>
+									<View style={webreg_final_calendar_timeContainer}>
+										<Text style={webreg_final_calendar_timeText}>
 											{hour}
 										</Text>
 									</View>
@@ -144,8 +140,8 @@ class FinalCalendar extends React.Component {
 								}}
 								>
 									{hours.map((hour, i) => (
-										<View style={[timeRowStyle, { borderBottomWidth: i === 13 ? 1 : 0 }]} key={hour}>
-											<View style={timeContainerStyle}>
+										<View style={[webreg_final_calendar_timeRow, { borderBottomWidth: i === 13 ? 1 : 0 }]} key={hour}>
+											<View style={webreg_final_calendar_timeContainer}>
 												<View style={{ height: 50 }} />
 											</View>
 										</View>
@@ -262,75 +258,6 @@ const getFinalIndex = (date) => {
 }
 
 const trimZero = str => (str.charAt(0) === '0' ? str.charAt(1) : str)
-
-// const getFinalIndex = (day) => {
-// 	// TODO: need to differentiate between the first Saturday and the second one
-// 	let idx = -1
-// 	switch (day) {
-// 		case 'MO':
-// 			idx = 1
-// 			break
-// 		case 'TU':
-// 			idx = 2
-// 			break
-// 		case 'WE':
-// 			idx = 3
-// 			break
-// 		case 'TH':
-// 			idx = 4
-// 			break
-// 		case 'FR':
-// 			idx = 5
-// 			break
-// 		case 'SA':
-// 			idx = 0
-// 			break
-// 		default:
-// 			idx = -1
-// 	}
-// 	return idx
-// }
-
-const styles = {
-	cardStyle: {
-		flex: 1,
-		marginLeft: 20,
-		marginRight: 20
-	},
-	daysContainerStyle: {
-		marginLeft: 30,
-		flexDirection: 'row',
-	},
-	dayContainerStyle: {
-		flex: 1 / 7,
-		justifyContent: 'center',
-		alignItems: 'center'
-	},
-	dayTextStyle: {
-		fontFamily: 'Helvetica Neue',
-		textColor: 'black',
-		paddingTop: 10,
-		paddingBottom: 10,
-		fontSize: 10
-	},
-	timeRowStyle: {
-		flexDirection: 'row',
-		borderTopWidth: 1,
-		borderColor: '#B7B7B7'
-	},
-	timeContainerStyle: {
-		width: 30,
-		height: 50,
-		justifyContent: 'center',
-		alignItems: 'center',
-	},
-	timeTextStyle: {
-		fontFamily: 'Helvetica Neue',
-		textColor: 'black',
-		fontSize: 10
-	}
-}
-
 
 function mapStateToProps(state) {
 	return {
