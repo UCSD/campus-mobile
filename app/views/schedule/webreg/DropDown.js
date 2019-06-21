@@ -1,11 +1,17 @@
 import {
 	TouchableWithoutFeedback,
-	View, Text, TouchableOpacity,
-	Platform, Button, Dimensions,
+	View,
+	Text,
+	TouchableOpacity,
+	Platform,
+	Button,
+	Dimensions,
 	Alert
 } from 'react-native'
 import React from 'react'
 import PropTypes from 'prop-types'
+
+import css from '../../../styles/css'
 
 const WINDOW_WIDTH = Dimensions.get('window').width
 const WINDOW_HEIGHT = Dimensions.get('window').height
@@ -24,7 +30,7 @@ const WINDOW_HEIGHT = Dimensions.get('window').height
  */
 class DropDown extends React.Component {
 	renderItem(item, i) {
-		const { defaultContainerTextStyle, defaultChoiceTextStyle } = styles
+		const { webreg_dropdown_defaultContainerText, webreg_dropdown_defaultChoiceText } = css
 
 		if (i === 0) {
 			return (
@@ -32,8 +38,8 @@ class DropDown extends React.Component {
 					onPress={() => this.props.onSelect(item)}
 					key={i}
 				>
-					<View style={[defaultContainerTextStyle, { backgroundColor: '#e1e1e1' }]}>
-						<Text style={[defaultChoiceTextStyle, { color: '#034263' }]}>{item}</Text>
+					<View style={[webreg_dropdown_defaultContainerText, { backgroundColor: '#e1e1e1' }]}>
+						<Text style={[webreg_dropdown_defaultChoiceText, { color: '#034263' }]}>{item}</Text>
 					</View>
 				</TouchableOpacity>
 			)
@@ -44,8 +50,8 @@ class DropDown extends React.Component {
 				onPress={() => this.props.onSelect(item)}
 				key={i}
 			>
-				<View style={defaultContainerTextStyle}>
-					<Text style={defaultChoiceTextStyle}>{item}</Text>
+				<View style={webreg_dropdown_defaultContainerText}>
+					<Text style={webreg_dropdown_defaultChoiceText}>{item}</Text>
 				</View>
 			</TouchableOpacity>
 		)
@@ -62,73 +68,25 @@ class DropDown extends React.Component {
 		} = this.props
 
 		const {
-			backgroundStyle,
-			cancelTriggerStyle,
-			overlayStyle,
-			dialogContainerStyle,
-		} = styles
+			webreg_dropdown_background,
+			webreg_dropdown_cancelTrigger,
+			webreg_dropdown_overlay,
+			webreg_dropdown_dialogContainer,
+		} = css
 
 		return (
-			<View style={backgroundStyle}>
+			<View style={[webreg_dropdown_background, {  height: WINDOW_HEIGHT, width: WINDOW_WIDTH }]}>
 				<TouchableWithoutFeedback
 					onPress={onCancel}
-					style={cancelTriggerStyle}
+					style={webreg_dropdown_cancelTrigger}
 				>
-					<View style={overlayStyle} />
+					<View style={[webreg_dropdown_overlay, { height: WINDOW_HEIGHT, width: WINDOW_WIDTH }]} />
 				</TouchableWithoutFeedback>
 				<View style={[dialogContainerStyle, { top: y, right: x, width: cardWidth }]}>
 					{choices.map((item, i) => isTermName ? this.renderItem(item.term_name, i) : this.renderItem(item.term_code, i))}
 				</View>
 			</View>
 		)
-	}
-}
-
-const styles = {
-	backgroundStyle: {
-		position: 'absolute',
-		top: 0,
-		left: 0,
-		height: WINDOW_HEIGHT,
-		width: WINDOW_WIDTH
-	},
-	cancelTriggerStyle: {
-		position: 'absolute',
-		top: 0,
-		left: 0,
-	},
-	overlayStyle: {
-		position: 'absolute',
-		backgroundColor: 'black',
-		opacity: 0.2,
-		height: WINDOW_HEIGHT,
-		width: WINDOW_WIDTH
-	},
-	dialogContainerStyle: {
-		position: 'absolute',
-		backgroundColor: 'white',
-		opacity: 1,
-		borderRadius: 10,
-		paddingTop: 10,
-		paddingBottom: 10,
-		shadowOpacity: 0.2,
-		shadowOffset: { width: 0, height: 2 },
-		shadowColor: 'black',
-		shadowRadius: 5,
-		elevation: 1
-	},
-	defaultContainerTextStyle: {
-		flex: 1,
-		paddingTop: 10,
-		paddingBottom: 10,
-		backgroundColor: 'white',
-		justifyContent: 'center',
-	},
-	defaultChoiceTextStyle: {
-		fontFamily: 'Helvetica Neue',
-		fontSize: 18,
-		color: '#7D7D7D',
-		textAlign: 'center'
 	}
 }
 

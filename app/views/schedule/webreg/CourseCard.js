@@ -1,8 +1,21 @@
 import { Text, View, TouchableOpacity } from 'react-native'
 import React from 'react'
 
+import css from '../../../styles/css'
+
 const BORDER_WIDTH = 1
 const BORDER_RADIUS = 3
+const renderBorder = (selected) => {
+	if (selected) {
+		return ({
+			borderWidth: BORDER_WIDTH,
+			borderRadius: BORDER_RADIUS,
+			borderColor: '#034263'
+		})
+	}
+	return null
+}
+
 /**
  * @props color    - the border color of current class
  * @props name     - the name of class
@@ -17,16 +30,8 @@ const BORDER_RADIUS = 3
  * @props status   - 'enrolled' / 'waitlist' / 'plan'
  */
 class CourseCard extends React.Component {
-	renderBorder(selected) {
-		if (selected) {
-			console.log('course selected', this.props.name)
-			return ({
-				borderWidth: BORDER_WIDTH,
-				borderRadius: BORDER_RADIUS,
-				borderColor: '#034263'
-			})
-		}
-		return null
+	componentWillMount() {
+		console.log('placeholder for eslint error')
 	}
 
 	render() {
@@ -39,13 +44,6 @@ class CourseCard extends React.Component {
 			status,
 			onPress
 		} = this.props
-
-		const {
-			containerStyle,
-			headerTextStyle,
-			courseContainerStyle,
-			courseTextStyle
-		} = styles
 
 		let headerColor = '#7D7D7D'
 		switch (status) {
@@ -60,72 +58,42 @@ class CourseCard extends React.Component {
 				headerColor = '#7D7D7D'
 		}
 
+		const {
+			webreg_coursecard_container,
+			webreg_coursecard_header_container,
+			webreg_coursecard_header_text,
+			webreg_coursecard_course_container,
+			webreg_coursecard_course_text
+		} = css
+
 		return (
 			<TouchableOpacity
 				activeOpacity={1}
 				onPress={onPress}
-				style={[containerStyle,
+				style={[webreg_coursecard_container,
 					{
 						left: x - (selected ? BORDER_WIDTH : 0),
 						top: y - (selected ? BORDER_WIDTH : 0),
 						width: width + (selected ? 2 * BORDER_WIDTH : 0),
 						height: height + (selected ? 2 * BORDER_WIDTH : 0)
 					},
-					this.renderBorder(selected)]}
+					renderBorder(selected)]}
 			>
-				<View style={{
-					justifyContent: 'center',
-					backgroundColor: headerColor }}
+				<View style={[webreg_coursecard_header_container,
+					{
+						backgroundColor: headerColor
+					}]}
 				>
-					<Text style={headerTextStyle}>
+					<Text style={webreg_coursecard_header_text}>
 						{display === 'Calendar' ? type : display}
 					</Text>
 				</View>
-				<View style={courseContainerStyle}>
-					<Text style={courseTextStyle}>{name}</Text>
-					<Text style={courseTextStyle}>{location}</Text>
+				<View style={webreg_coursecard_course_container}>
+					<Text style={webreg_coursecard_course_text}>{name}</Text>
+					<Text style={webreg_coursecard_course_text}>{location}</Text>
 				</View>
 			</TouchableOpacity>
 		)
-	}
-}
-
-const styles = {
-	containerStyle: {
-		position: 'absolute',
-		shadowColor: '#000',
-		backgroundColor: 'white',
-		shadowRadius: 2,
-		shadowOffset: { width: 0, height: 1 },
-		shadowOpacity: 0.2,
-		elevation: 1,
-		borderRadius: 3,
-		flex: 1
-	},
-	headerContainerStyle: {
-		justifyContent: 'center',
-		alignItems: 'center'
-	},
-	headerTextStyle: {
-		paddingTop: 1,
-		paddingBottom: 1,
-		textAlign: 'center',
-		fontWeight: 'bold',
-		fontSize: 10,
-		fontFamily: 'Helvetica Neue',
-	},
-	courseContainerStyle: {
-		flexDirection: 'column',
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center'
-	},
-	courseTextStyle: {
-		fontSize: 7,
-		textAlign: 'center',
-		paddingTop: 2,
-		paddingBottom: 2,
-		fontFamily: 'Helvetica Neue',
 	}
 }
 
