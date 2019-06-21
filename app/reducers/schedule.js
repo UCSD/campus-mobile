@@ -8,7 +8,8 @@ const initialState = {
 	selectedCourse: null,
 	selectedCourseDetail: null,
 	refresh: false,
-	layout: { prev: 0, curr: 0, y: 0 }
+	layout: { prev: 0, curr: 0, y: 0 },
+	courseCards: {}
 }
 
 function schedule(state = initialState, action) {
@@ -113,6 +114,25 @@ function schedule(state = initialState, action) {
 		case 'UPDATE_CLASS_DATA': {
 			newState.classes = action.classes
 			console.log('new state classes',newState.classes)
+			return newState
+		}
+		case 'UPDATE_COURSE_CARD': {
+			const { name, x, y, width, height } = action
+
+			if (name in newState.courseCards) {
+				newState.courseCards = { ...newState.courseCards, [name]: [] }
+				for (let i = 0; i < state.courseCards[name].length; i++) {
+					newState.courseCards[name].push(JSON.parse(JSON.stringify(state.courseCards[name][i])))
+				}
+				newState.courseCards[name].push({ x, y, width, height })
+			} else {
+				newState.courseCards = { ...newState.courseCards, [name]: [{ x, y, width, height }] }
+			}
+			console.log(newState.courseCards)
+			return newState
+		}
+		case 'RESET_COURSE_CARD': {
+			newState.courseCards = {}
 			return newState
 		}
 		default:
