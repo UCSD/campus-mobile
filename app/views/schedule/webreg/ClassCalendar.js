@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 
 import auth from '../../../util/auth'
 import CourseListMockData from './mockData/CourseListMockData.json'
-import { getDayOfWeek } from '../../../util/schedule'
+import { getDayOfWeek, getCourseList } from '../../../util/schedule'
 import CourseCard from './CourseCard'
 
 const { width, height } = Dimensions.get('window')
@@ -26,7 +26,11 @@ const getBottomMargin = (device) => {
 class ClassCalendar extends React.Component {
 	constructor(props) {
 		super(props)
-		this.state = { courses: CourseListMockData.data, sample: CourseListMockData.data[0], courseList: getCourseList(CourseListMockData.data) }
+		this.state = {
+			courses: CourseListMockData.data,
+			sample: CourseListMockData.data[0],
+			courseList: getCourseList(CourseListMockData.data, false, CARD_WIDTH, CARD_HEIGHT)
+		}
 	}
 
 	componentWillMount() {
@@ -65,9 +69,8 @@ class ClassCalendar extends React.Component {
 						onLayout={onLayout}
 						zIndex
 					/>)
-					console.log({ index: i, left: x + width, top: y })
+
 					// Check if the course is overlapping with some other course(s)
-					// TODO: resolve the case where there are multiple conflict at one time slot
 					if (this.props.courseCards) {
 						const conflict = []
 						Object.keys(this.props.courseCards).map((courseName, i) => {
@@ -240,87 +243,6 @@ class ClassCalendar extends React.Component {
 	}
 }
 
-const getCourseList = (courses) => {
-	const obj = {}
-
-	for (let i = 0; i < courses.length; i++) {
-		const course = courses[i]
-		const {
-			subject_code,
-			course_code,
-			course_level,
-			course_title,
-			grade_option,
-			section_data
-		} = course
-
-		section_data.map((item, index) => {
-			const {
-				section_code,
-				meeting_type,
-				time,
-				days,
-				building,
-				room,
-				special_mtg_code,
-				section
-			} = item
-
-			let display,
-				type,
-				duration
-
-			const name = subject_code + ' ' + course_code
-			const location = building == undefined ? '' : building + ' ' + room
-
-			// Handle Lectures, Dicussions, and finals
-			if ( special_mtg_code === '' && meeting_type === 'Lecture' ) {
-				display = 'Calendar'
-				type = 'LE'
-			} else if ( special_mtg_code === '' && meeting_type === 'Discussion' ) {
-				display = 'Calendar'
-				type = 'DI'
-			} else if ( special_mtg_code !== undefined && special_mtg_code === 'FI' ) {
-				display = 'Final'
-				type = 'FI'
-				return null
-			} else {
-				return null
-			}
-
-			const data = {
-				display,
-				type,
-				name,
-				location
-			}
-
-			let startTime,
-				endTime
-
-			const re = /^([0-2]?[1-9]):([0-5][0-9]) - ([0-2]?[1-9]):([0-5][0-9])$/
-
-			const m = re.exec(time)
-			if (m) {
-				startTime = (Number.parseInt(m[1], 10) * 60) + Number.parseInt(m[2], 10)
-				endTime = (Number.parseInt(m[3], 10) * 60) + Number.parseInt(m[4], 10)
-				duration = endTime - startTime
-			}
-			const x = (((getDayOfWeek(days) + 1) % 7) * CARD_WIDTH) - 12.5
-			const y = (((startTime / 60) - 7) * (CARD_HEIGHT + 1)) + 2
-			const width  = CARD_WIDTH - 2
-			const height = (CARD_HEIGHT / 60) * duration
-
-			if (!obj[name]) {
-				obj[name] = { selected: false, data: [], course }
-			}
-			obj[name].data.push({ x, y, width, height, display, type, name, location, color: i })
-			return null
-		})
-	}
-	return obj
-}
-
 const styles = {
 	cardStyle: {
 		flex: 1,
@@ -362,12 +284,10 @@ const styles = {
 }
 
 
-function mapStateToProps(state) {
-	return {
-		selectedCourse: state.schedule.selectedCourse,
-		courseCards: state.schedule.courseCards
-	}
-}
+const mapStateToProps = state => ({
+	selectedCourse: state.schedule.selectedCourse,
+	courseCards: state.schedule.courseCards
+})
 
 
 const mapDispatchToProps = (dispatch, ownProps) => (

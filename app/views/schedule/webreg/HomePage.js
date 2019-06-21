@@ -16,12 +16,12 @@ import { connect } from 'react-redux'
 import Icon from 'react-native-vector-icons/SimpleLineIcons'
 
 
-import { terms } from './mockData/TermMockData.json'
-import DropDown from './DropDown'
 import LAYOUT from '../../../styles/LayoutConstants'
 import { deviceIphoneX, platformIOS } from '../../../util/general'
 import auth from '../../../util/auth'
 import css from '../../../styles/css'
+import { terms } from './mockData/TermMockData.json'
+import DropDown from './DropDown'
 import ClassCalendar from './ClassCalendar'
 import FinalCalendar from './FinalCalendar'
 import ClassCard from './ClassCard'
@@ -319,15 +319,13 @@ class HomePage extends React.Component {
 }
 
 
-function mapStateToProps(state) {
-	return {
-		selectedCourse: state.schedule.selectedCourse,
-		selectedCourseDetail: state.schedule.selectedCourseDetail,
-		selectedCourseFinal: state.schedule.selectedCourseFinal,
-		selectedCourseFinalDetail: state.schedule.selectedCourseFinalDetail,
-		fullScheduleData: state.schedule.data,
-	}
-}
+const mapStateToProps = state => ({
+	selectedCourse: state.schedule.selectedCourse,
+	selectedCourseDetail: state.schedule.selectedCourseDetail,
+	selectedCourseFinal: state.schedule.selectedCourseFinal,
+	selectedCourseFinalDetail: state.schedule.selectedCourseFinalDetail,
+	fullScheduleData: state.schedule.data,
+})
 
 function mapStateToProps(state) {
 	return {
