@@ -83,8 +83,13 @@ class ClassCalendar extends React.Component {
 							})
 							return null
 						})
-						console.log('overall conflict', conflict)
-						if (conflict.length >= 1) {
+						const sortedConflict = [...conflict]
+						sortedConflict.push(name)
+						sortedConflict.sort()
+						const indexOfName = sortedConflict.indexOf(name)
+
+						console.log('sortedConflict array', sortedConflict)
+						if (sortedConflict.length > 1) {
 							res.push(<Icon
 								style={{
 									position: 'absolute',
@@ -95,7 +100,8 @@ class ClassCalendar extends React.Component {
 								name="refresh"
 								size={18}
 								onPress={() => {
-									this.props.selectCourse(conflict[0], this.state.courseList[conflict[0]].course)
+									const nextCourse = sortedConflict[(indexOfName + 1) % sortedConflict.length]
+									this.props.selectCourse(nextCourse, this.state.courseList[nextCourse].course)
 								}}
 							/>)
 						}

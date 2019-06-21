@@ -1,6 +1,7 @@
 import { Text, View, ScrollView, Dimensions, Button, TouchableWithoutFeedback } from 'react-native'
 import React from 'react'
 import { connect } from 'react-redux'
+import Icon from 'react-native-vector-icons/FontAwesome'
 
 import auth from '../../../util/auth'
 import CourseListMockData from './mockData/CourseListMockData.json'
@@ -30,29 +31,100 @@ class FinalCalendar extends React.Component {
 		this.state = { courses: CourseListMockData.data, sample: CourseListMockData.data[0], courseList: getCourseList(CourseListMockData.data) }
 	}
 
+
 	renderCourseCard() {
 		const res = []
+
 		Object.keys(this.state.courseList).map((item, i) => {
 			this.state.courseList[item].data.map((course, index) => {
 				const { color = 0, name, location, display, type, selected, x, y, height, width, status = 'enrolled' } = course
-				res.push(<CourseCard
-					selected={this.props.selectedCourse && this.props.selectedCourse === name}
-					color={COLOR_LIST[color % COLOR_LIST.length]}
-					name={name}
-					location={location}
-					display={display}
-					type={type}
-					x={x}
-					y={y}
-					height={height}
-					width={width}
-					status={status}
-					onPress={() => {
-						this.props.selectCourse(name, this.state.courseList[item].course)
-						this.setState({ courseList: { ...this.state.courseList, [name]: { ...this.state.courseList[name], selected: !this.state.courseList[item].selected } } })
+
+				const onLayout = (event) => {
+					const { x, y, width, height } = event.nativeEvent.layout
+					console.log('onLayout,', { name, x, y, width, height })
+					this.props.updateCourseCard(name, x, y, width, height)
+				}
+
+				if (this.props.selectedCourse && this.props.selectedCourse === name) {
+					res.push(<CourseCard
+						selected
+						color={COLOR_LIST[color % COLOR_LIST.length]}
+						name={name}
+						location={location}
+						display={display}
+						type={type}
+						x={x}
+						y={y}
+						height={height}
+						width={width}
+						status={status}
+						onPress={() => {
+							this.props.selectCourse(name, this.state.courseList[item].course)
+							this.setState({ courseList: { ...this.state.courseList, [name]: { ...this.state.courseList[name], selected: !this.state.courseList[item].selected } } })
+						}}
+						onLayout={onLayout}
+						zIndex
+					/>)
+					console.log({ index: i, left: x + width, top: y })
+					// Check if the course is overlapping with some other course(s)
+					// TODO: resolve the case where there are multiple conflict at one time slot
+					if (this.props.courseCards) {
+						const conflict = []
+						Object.keys(this.props.courseCards).map((courseName, i) => {
+							const course = this.props.courseCards[courseName]
+							course.map((info, idx) => {
+								if (name === courseName) return null
+								const { x: courseX, y: courseY } = info
+								if (Math.abs(courseX - x) <= 1 && Math.abs(courseY - y) <= 1 ) {
+									console.log('comparing course card coordinates', courseName, courseX, courseY, x, y)
+									conflict.push(courseName)
+								}
+								return null
+							})
+							return null
+						})
+						const sortedConflict = [...conflict]
+						sortedConflict.push(name)
+						sortedConflict.sort()
+						const indexOfName = sortedConflict.indexOf(name)
+
+						console.log('sortedConflict array', sortedConflict)
+						if (sortedConflict.length > 1) {
+							res.push(<Icon
+								style={{
+									position: 'absolute',
+									left: x + (width * 0.8),
+									top: y - (height / 15),
+									zIndex: 2
+								}}
+								name="refresh"
+								size={18}
+								onPress={() => {
+									const nextCourse = sortedConflict[(indexOfName + 1) % sortedConflict.length]
+									this.props.selectCourse(nextCourse, this.state.courseList[nextCourse].course)
+								}}
+							/>)
+						}
 					}
-					}
-				/>)
+				} else {
+					res.push(<CourseCard
+						color={COLOR_LIST[color % COLOR_LIST.length]}
+						name={name}
+						location={location}
+						display={display}
+						type={type}
+						x={x}
+						y={y}
+						height={height}
+						width={width}
+						status={status}
+						onPress={() => {
+							this.props.selectCourse(name, this.state.courseList[item].course)
+							this.setState({ courseList: { ...this.state.courseList, [name]: { ...this.state.courseList[name], selected: !this.state.courseList[item].selected } } })
+						}}
+						onLayout={onLayout}
+					/>)
+				}
 				return null
 			})
 			return null
@@ -61,6 +133,8 @@ class FinalCalendar extends React.Component {
 	}
 
 	render() {
+		console.log(this.props.selectedCourse, this.state.courseList)
+
 		const { courses, sample } = this.state
 		const days = ['Sat', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 		const hours = ['8 am', '9 am', '10 am', '11 am', '12 pm', '1 pm', '2 pm', '3 pm', '4 pm', '5 pm', '6 pm', '7 pm', '8 pm', '9 pm']
@@ -93,7 +167,6 @@ class FinalCalendar extends React.Component {
 
 		return (
 			<View style={[webreg_final_calendar_card, { marginBottom: getBottomMargin(this.props.device) }]}>
-				{ /* <Button onPress={() => auth.retrieveAccessToken().then(credentials => console.log(credentials))} title="Get Access Token" /> */}
 				<View style={webreg_final_calendar_daysContainer}>
 					{days.map((day, i) => (
 						<View style={webreg_final_calendar_dayContainer} key={day}>
@@ -261,7 +334,8 @@ const trimZero = str => (str.charAt(0) === '0' ? str.charAt(1) : str)
 
 function mapStateToProps(state) {
 	return {
-		selectedCourse: state.schedule.selectedCourse,
+		selectedCourse: state.schedule.selectedCourseFinal,
+		courseCards: state.schedule.finalCards
 	}
 }
 
@@ -269,7 +343,10 @@ function mapStateToProps(state) {
 const mapDispatchToProps = (dispatch, ownProps) => (
 	{
 		selectCourse: (selectedCourse, data) => {
-			dispatch({ type: 'SELECT_COURSE', selectedCourse, data })
+			dispatch({ type: 'SELECT_COURSE_FINAL', selectedCourse, data })
+		},
+		updateCourseCard: (name, x, y, width, height) => {
+			dispatch({ type: 'UPDATE_FINAL_CARD', name, x, y, width, height })
 		},
 	}
 )

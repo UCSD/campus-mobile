@@ -7,9 +7,12 @@ const initialState = {
 	classes: [],
 	selectedCourse: null,
 	selectedCourseDetail: null,
+	selectedCourseFinal: null,
+	selectedCourseFinalDetail: null,
 	refresh: false,
 	layout: { prev: 0, curr: 0, y: 0 },
-	courseCards: {}
+	courseCards: {},
+	finalCards: {}
 }
 
 function schedule(state = initialState, action) {
@@ -23,13 +26,6 @@ function schedule(state = initialState, action) {
 			}
 			const { draggedClassIndex, anotherClassIndex } = action
 
-			// Method 1: ES6 Syntax
-			// [newClasses[draggedClassIndex].tlX, newClasses[anotherClassIndex].tlX] = [newClasses[anotherClassIndex].tlX, newClasses[draggedClassIndex].tlX]
-			// [newClasses[draggedClassIndex].tlY, newClasses[anotherClassIndex].tlY] = [newClasses[anotherClassIndex].tlY, newClasses[draggedClassIndex].tlY]
-			// [newClasses[draggedClassIndex].brX, newClasses[anotherClassIndex].brX] = [newClasses[anotherClassIndex].brX, newClasses[draggedClassIndex].brX]
-			// [newClasses[draggedClassIndex].brY, newClasses[anotherClassIndex].brY] = [newClasses[anotherClassIndex].brY, newClasses[draggedClassIndex].brY]
-
-			// Method 2: The Manual Way
 			const { tlX, tlY, brX, brY } = newClasses[draggedClassIndex]
 			const { tlX: tlX2, tlY: tlY2, brX: brX2, brY: brY2 } = newClasses[anotherClassIndex]
 			newClasses[draggedClassIndex].tlX = tlX2
@@ -42,15 +38,6 @@ function schedule(state = initialState, action) {
 			newClasses[anotherClassIndex].brY = brY
 			newState.classes = moveArrayElement(newClasses, draggedClassIndex, anotherClassIndex)
 
-			// Method 3: Also works, with the introduction of a helper function
-			// const { draggedClassIndex, anotherClassIndex } = action
-			// const newClasses =  Array.from(Object.create(newState.classes))
-			// swap(newClasses[draggedClassIndex], newClasses[anotherClassIndex], 'tlX')
-			// swap(newClasses[draggedClassIndex], newClasses[anotherClassIndex], 'tlY')
-			// swap(newClasses[draggedClassIndex], newClasses[anotherClassIndex], 'brX')
-			// swap(newClasses[draggedClassIndex], newClasses[anotherClassIndex], 'brY')
-			// newState.classes = moveArrayElement(newClasses, draggedClassIndex, anotherClassIndex)
-
 			return newState
 		}
 		case 'SET_SCHEDULE':
@@ -62,7 +49,7 @@ function schedule(state = initialState, action) {
 			return newState
 		case 'CLEAR_SCHEDULE_DATA':
 			return initialState
-		case 'SELECT_COURSE':
+		case 'SELECT_COURSE': {
 			if (newState.selectedCourse === action.selectedCourse) {
 				newState.selectedCourse = null
 				newState.selectedCourseDetail = null
@@ -71,6 +58,17 @@ function schedule(state = initialState, action) {
 				newState.selectedCourseDetail = action.data
 			}
 			return newState
+		}
+		case 'SELECT_COURSE_FINAL': {
+			if (newState.selectedCourseFinal === action.selectedCourse) {
+				newState.selectedCourseFinal = null
+				newState.selectedCourseFinalDetail = null
+			} else {
+				newState.selectedCourseFinal = action.selectedCourse
+				newState.selectedCourseFinalDetail = action.data
+			}
+			return newState
+		}
 		case 'POPULATE_CLASS_ARRAY': {
 			console.log(	newState.data )
 			newState.classes = newState.data.data.map((item, index) => {
@@ -129,6 +127,21 @@ function schedule(state = initialState, action) {
 				newState.courseCards = { ...newState.courseCards, [name]: [{ x, y, width, height }] }
 			}
 			console.log(newState.courseCards)
+			return newState
+		}
+		case 'UPDATE_FINAL_CARD': {
+			const { name, x, y, width, height } = action
+
+			if (name in newState.finalCards) {
+				newState.finalCards = { ...newState.finalCards, [name]: [] }
+				for (let i = 0; i < state.finalCards[name].length; i++) {
+					newState.finalCards[name].push(JSON.parse(JSON.stringify(state.finalCards[name][i])))
+				}
+				newState.finalCards[name].push({ x, y, width, height })
+			} else {
+				newState.finalCards = { ...newState.finalCards, [name]: [{ x, y, width, height }] }
+			}
+			console.log(newState.finalCards)
 			return newState
 		}
 		case 'RESET_COURSE_CARD': {
