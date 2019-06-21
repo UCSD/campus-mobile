@@ -40,6 +40,7 @@ import ParkingSpotType from '../views/parking/ParkingSpotType'
 import ManageParkingLots from '../views/parking/ManageParkingLots'
 import Notifications from '../views/preferences/notifications/Notifications'
 import CardPreferences from '../views/preferences/card/CardPreferences'
+import WebReg from '../views/schedule/webreg/WebReg'
 
 import CourseView from '../views/course/CourseView'
 
@@ -183,6 +184,12 @@ let MainStack = createStackNavigator(
 			screen: FullSchedule,
 			navigationOptions: {
 				title: 'Classes',
+			}
+		},
+		WebReg: {
+			screen: WebReg,
+			navigationOptions: {
+				title: 'Registration',
 			}
 		},
 		LoginScreen: {

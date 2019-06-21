@@ -7,7 +7,7 @@ import SafeImage from './SafeImage'
 import Touchable from '../common/Touchable'
 import css from '../../styles/css'
 
-const BannerCard = ({ title, image, onPress, onClose }) => (
+const BannerCard = ({ showButton, title, image, onPress, onClose }) => (
 	<Card>
 		<Touchable
 			onPress={() => onClose()}
@@ -31,9 +31,13 @@ const BannerCard = ({ title, image, onPress, onClose }) => (
 			) : (
 				<Text style={css.bc_cardTitle}>{title}</Text>
 			)}
-			<View style={css.bc_more}>
-				<Text style={css.bc_more_label}>See Full Schedule</Text>
-			</View>
+			{showButton ? (
+				<View style={css.bc_more}>
+					<Text style={css.bc_more_label}>See Full Schedule</Text>
+				</View>
+			) : (
+				<View />
+			)}
 		</Touchable>
 	</Card>
 )
