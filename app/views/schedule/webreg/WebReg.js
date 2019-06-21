@@ -13,20 +13,16 @@ class WebReg extends React.Component {
 		super()
 		this.state = {
 			search: '',
-			// data: null
 		}
 	}
 
 	componentWillMount() {
-		// this.setState({ data: this.props.fullScheduleData.data })
-		// this.search.focus()
 		this.props.populateClassArray()
 		this.props.selectCourse(null, null)
 	}
 
 	updateSearch = (search) => {
 		this.setState({ search })
-		// this.setState({ data: this.filterData(search) })
 	};
 
 	filterData(text) {
@@ -64,11 +60,9 @@ class WebReg extends React.Component {
 	}
 }
 
-function mapStateToProps(state) {
-	return {
-		fullScheduleData: state.schedule.data,
-	}
-}
+const mapStateToProps = state => ({
+	fullScheduleData: state.schedule.data,
+})
 
 
 const mapDispatchToProps = (dispatch, ownProps) => (

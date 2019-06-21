@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 
 import auth from '../../../util/auth'
 import CourseListMockData from './mockData/CourseListMockData.json'
-import { getDayOfWeek } from '../../../util/schedule'
+import { getFinalIndex, getCourseList } from '../../../util/schedule'
 import css from '../../../styles/css'
 import CourseCard from './CourseCard'
 
@@ -28,7 +28,11 @@ const getBottomMargin = (device) => {
 class FinalCalendar extends React.Component {
 	constructor(props) {
 		super(props)
-		this.state = { courses: CourseListMockData.data, sample: CourseListMockData.data[0], courseList: getCourseList(CourseListMockData.data) }
+		this.state = {
+			courses: CourseListMockData.data,
+			sample: CourseListMockData.data[0],
+			courseList: getCourseList(CourseListMockData.data, true, CARD_WIDTH, CARD_HEIGHT)
+		}
 	}
 
 
@@ -66,8 +70,8 @@ class FinalCalendar extends React.Component {
 						zIndex
 					/>)
 					console.log({ index: i, left: x + width, top: y })
+
 					// Check if the course is overlapping with some other course(s)
-					// TODO: resolve the case where there are multiple conflict at one time slot
 					if (this.props.courseCards) {
 						const conflict = []
 						Object.keys(this.props.courseCards).map((courseName, i) => {
@@ -233,112 +237,17 @@ class FinalCalendar extends React.Component {
 							}}
 						/>
 					</TouchableWithoutFeedback>
-					{
-						this.renderCourseCard()
-					}
+					{ this.renderCourseCard() }
 				</ScrollView>
 			</View>
 		)
 	}
 }
 
-const getCourseList = (courses) => {
-	const obj = {}
-
-	for (let i = 0; i < courses.length; i++) {
-		const course = courses[i]
-		const {
-			subject_code,
-			course_code,
-			course_level,
-			course_title,
-			grade_option,
-			section_data
-		} = course
-
-		section_data.map((item, index) => {
-			const {
-				section_code,
-				meeting_type,
-				time,
-				days,
-				date,
-				building,
-				room,
-				special_mtg_code,
-				section
-			} = item
-
-			let display,
-				type,
-				duration
-
-			const name = subject_code + ' ' + course_code
-			const location = building == undefined ? '' : building + ' ' + room
-
-			// Handle Lectures, Dicussions, and finals
-			if ( special_mtg_code === '' && meeting_type === 'Lecture' ) {
-				return null
-			} else if ( special_mtg_code === '' && meeting_type === 'Discussion' ) {
-				return null
-			} else if ( special_mtg_code !== undefined && special_mtg_code === 'FI' ) {
-				display = 'Final'
-				type = 'FI'
-			} else {
-				return null
-			}
-
-			const data = {
-				display,
-				type,
-				name,
-				location
-			}
-
-			let startTime,
-				endTime
-
-			const re = /^([0-2]?[1-9]):([0-5][0-9]) - ([0-2]?[1-9]):([0-5][0-9])$/
-
-			const m = re.exec(time)
-			if (m) {
-				console.log(days, m[1], m[2], m[3], m[4])
-
-				startTime = (Number.parseInt(m[1], 10) * 60) + Number.parseInt(m[2], 10)
-				endTime = (Number.parseInt(m[3], 10) * 60) + Number.parseInt(m[4], 10)
-				duration = endTime - startTime
-			}
-			// const x = ((getFinalIndex(days) + 1) * CARD_WIDTH) - 12.5 -- USE DAYS
-			const x = ((getFinalIndex(date) + 1) * CARD_WIDTH) - 12.5
-			const y = (((startTime / 60) - 8) * (CARD_HEIGHT + 1)) + 2
-			const width  = CARD_WIDTH - 2
-			const height = (CARD_HEIGHT / 60) * duration
-
-			if (!obj[name]) {
-				obj[name] = { selected: false, data: [], course }
-			}
-			obj[name].data.push({ x, y, width, height, display, type, name, location, color: i })
-			return null
-		})
-	}
-	return obj
-}
-
-const getFinalIndex = (date) => {
-	const parsedArr = date.split('-')
-	const parsedDate = trimZero(parsedArr[1]) + '/' + trimZero(parsedArr[2]) + '/' + parsedArr[0].substring(2, 4)
-	return MOCK_DATE.indexOf(parsedDate)
-}
-
-const trimZero = str => (str.charAt(0) === '0' ? str.charAt(1) : str)
-
-function mapStateToProps(state) {
-	return {
-		selectedCourse: state.schedule.selectedCourseFinal,
-		courseCards: state.schedule.finalCards
-	}
-}
-
+const mapStateToProps = state => ({
+	selectedCourse: state.schedule.selectedCourseFinal,
+	courseCards: state.schedule.finalCards
+})
 
 const mapDispatchToProps = (dispatch, ownProps) => (
 	{
