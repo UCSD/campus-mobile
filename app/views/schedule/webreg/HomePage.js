@@ -14,6 +14,7 @@ import { SearchBar } from 'react-native-elements'
 import { connect } from 'react-redux'
 import Icon from 'react-native-vector-icons/SimpleLineIcons'
 
+import CourseListMockData from './mockData/CourseListMockData.json'
 
 import LAYOUT from '../../../styles/LayoutConstants'
 import { deviceIphoneX, platformIOS } from '../../../util/general'
@@ -23,9 +24,9 @@ import { terms } from './mockData/TermMockData.json'
 import DropDown from './DropDown'
 import ClassCalendar from './ClassCalendar'
 import FinalCalendar from './FinalCalendar'
-import ClassCard from './ClassCard'
-import ClassList from './ClassList'
-import ClassCardBottomSheet from './ClassCardBottomSheet'
+import CourseListCard from './CourseListCard'
+import CourseList from './CourseList'
+import CalendarModalCard from './CalendarModalCard'
 
 const WINDOW_WIDTH = Dimensions.get('window').width
 const WINDOW_HEIGHT = Dimensions.get('window').height
@@ -121,24 +122,26 @@ class HomePage extends React.Component {
 			return <FinalCalendar device={device} />
 		} else {
 			return (
-				<ScrollView
-					style={css.scroll_default}
-					contentContainerStyle={css.main_full}
-					onMomentumScrollEnd={(e) => {
-						console.log(e.nativeEvent.contentOffset.y)
-						this.props.scheduleLayoutChange({ y: e.nativeEvent.contentOffset.y })
-						// this.props.clearRefresh();
-					}}
-					onScrollEndDrag={(e) => {
-						console.log(e.nativeEvent.contentOffset.y)
-						this.props.scheduleLayoutChange({ y: e.nativeEvent.contentOffset.y })
-						// this.props.clearRefresh();
-					}}
-				>
-					<Button onPress={() => auth.retrieveAccessToken().then(credentials => console.log(credentials))} title="Get Access Token" />
-					<ClassList />
-				</ScrollView>
+				<CourseList mock={CourseListMockData} />
 			)
+			// 	<ScrollView
+			// 		style={css.scroll_default}
+			// 		contentContainerStyle={css.main_full}
+			// 		onMomentumScrollEnd={(e) => {
+			// 			console.log(e.nativeEvent.contentOffset.y)
+			// 			this.props.scheduleLayoutChange({ y: e.nativeEvent.contentOffset.y })
+			// 			// this.props.clearRefresh();
+			// 		}}
+			// 		onScrollEndDrag={(e) => {
+			// 			console.log(e.nativeEvent.contentOffset.y)
+			// 			this.props.scheduleLayoutChange({ y: e.nativeEvent.contentOffset.y })
+			// 			// this.props.clearRefresh();
+			// 		}}
+			// 	>
+			// 		<Button onPress={() => auth.retrieveAccessToken().then(credentials => console.log(credentials))} title="Get Access Token" />
+			// 		<CourseList classes={CourseListMockData.data} />
+			// 	</ScrollView>
+			// )
 		}
 	}
 
@@ -204,7 +207,7 @@ class HomePage extends React.Component {
 					transform: [{ translateY: modalY }]
 				}}
 				>
-					<ClassCardBottomSheet data={selectedCourseDetail} props={this.props} />
+					<CalendarModalCard data={selectedCourseDetail} props={this.props} />
 				</Animated.View>)
 		} else if (this.state.lastCourse) {
 			const course = this.state.lastCourse
@@ -224,7 +227,7 @@ class HomePage extends React.Component {
 					transform: [{ translateY: modalY }]
 				}}
 				>
-					<ClassCard data={this.state.lastCourseDetail} props={this.props} />
+					<CourseListCard data={this.state.lastCourseDetail} props={this.props} />
 				</Animated.View>
 			)
 		}

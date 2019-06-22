@@ -32,7 +32,7 @@ const renderBorder = (selected) => {
  * @props onLayout - layout information when the course card is first rendered
  * @props zIndex   - if true then the course card is on top of other possible conflicting cards
  */
-class CourseCard extends React.Component {
+class CalendarCard extends React.Component {
 	componentWillMount() {
 		console.log('placeholder for eslint error')
 	}
@@ -104,4 +104,4 @@ class CourseCard extends React.Component {
 	}
 }
 
-export default CourseCard
+export default CalendarCard

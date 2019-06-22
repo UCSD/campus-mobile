@@ -15,7 +15,7 @@ import LastUpdated from '../../common/LastUpdated'
 import css from '../../../styles/css'
 import COLOR from '../../../styles/ColorConstants'
 
-const ClassCard = ({ data, props }) => {
+const CourseListCard = ({ data }) => {
 	/* Sample Course Data
 	{
 					 "term_code": "SP19",
@@ -59,28 +59,36 @@ const ClassCard = ({ data, props }) => {
 					 ]
 			 },
 	*/
-	const { subject_code, course_code, units, grade_option, course_title, section_data } = data
+	const { subject_code, course_code, units, grade_option, course_title, section_data, enrollment_status } = data
 	const
 		courseUnit      = units,
 		courseCode      = subject_code + course_code,
 		courseTitle     = course_title,
 		sectionID       = section_data[0].section,
 		courseProf      = section_data[0].instructor_name,
-		courseSections  = section_data
+		courseSections  = section_data,
+		enrollmentStatus = enrollment_status
 
 	return (
-		<View style={css.webreg_course_container}>
-			<View style={css.webreg_course_info_container}>
-				<View style={css.webreg_course_unit_container}>
-					<View style={css.webreg_course_unit_bg}>
-						<Text style={css.webreg_course_unit_text} allowFontScaling={false} >
+		<View style={[css.webreg_list_card_container, getBorderStyle(enrollmentStatus)]}>
+			{/* <View>
+
+			</View>
+			<View>
+
+			</View> */}
+
+			<View style={css.webreg_list_card_info_container}>
+				<View style={css.webreg_list_card_unit_container}>
+					<View style={css.webreg_list_card_unit_bg}>
+						<Text style={css.webreg_list_card_unit_text} allowFontScaling={false} >
 							{courseUnit}
 						</Text>
 					</View>
 				</View>
-				<View style={css.webreg_course_name_container}>
-					<Text style={css.webreg_course_code}>{courseCode}</Text>
-					<Text style={css.webreg_course_title}>{courseTitle}</Text>
+				<View style={css.webreg_list_card_name_container}>
+					<Text style={css.webreg_list_card_code}>{courseCode}</Text>
+					<Text style={css.webreg_list_card_title}>{courseTitle}</Text>
 				</View>
 			</View>
 			<View style={css.webreg_section_prof_container}>
@@ -89,7 +97,7 @@ const ClassCard = ({ data, props }) => {
 					<Text>{sectionID}</Text>
 				</View>
 				<View style={css.webreg_prof_container} >
-					<Text style={css.webreg_course_prof} numberOfLines={1} >
+					<Text style={css.webreg_list_card_prof} numberOfLines={1} >
 						{courseProf}
 					</Text>
 				</View>
@@ -98,6 +106,24 @@ const ClassCard = ({ data, props }) => {
 			{renderSchedule('DI', courseSections)}
 		</View>
 	)
+}
+
+const getBorderStyle = (status) => {
+	let borderStyle = { borderRadius: 10 ,borderWidth: 2, borderColor: COLOR.PRIMARY, borderStyle: 'solid' };
+	switch (status) {
+		// TODO
+		case 'EN':
+			break
+		case 'WL':
+			borderStyle = { ...borderStyle, borderStyle: 'dashed', borderWidth: 2 }
+			break
+		case 'PL':
+			borderStyle = { ...borderStyle, borderColor: COLOR.DGREY }
+			break
+		default:
+			break
+	}
+	return borderStyle
 }
 
 const renderSchedule = (type, courseSections) => {
@@ -119,29 +145,30 @@ const renderSchedule = (type, courseSections) => {
 			section               = item.section_code
 			daysOfWeek[item.days] = true
 			timeString            = item.time
-			place                 = item.building
+			place                 = item.building + ' ' + item.room
 		}
 		return null
 	})
 
 	return (
 		<View style={[type === 'LE' ? css.webreg_lecture_section_container : css.webreg_di_section_container, { alignSelf: 'center' }]}>
-			<Text style={{ color: 'rgb(159, 159, 159)', flex: 0.12 }}>{section}</Text>
-			<View style={{ flex: 0.88, flexDirection: 'row', justifyContent: 'space-between' }}>
-				<Text style={{ flex: 0.2, color: type === 'LE' ? 'rgb(159, 159, 159)' : 'black' }}>{type}</Text>
-				<View style={{ flex: 0.5, flexWrap: 'wrap', flexDirection: 'row' }}>
+			
+			<View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
+				<Text style={{ color: 'rgb(159, 159, 159)', flex: 0.1, fontSize: 12 }}>{section + ' '}</Text>
+				<Text style={{ color: 'black', flex: 0.1, fontSize: 12 }}>{type}</Text>
+				<View style={{ flex: 0.2, flexWrap: 'wrap', flexDirection: 'row' }}>
 					{
 						days.map((item, idx) => {
 							if (daysOfWeek[item]) {
-								return <Text style={{ color: 'rgb(84, 129, 176)', paddingRight: idx === days.length ? 0 : 3 }}>{daysAbbr[idx]}</Text>
+								return <Text style={{ color: 'rgb(84, 129, 176)', paddingRight: idx === days.length ? 0 : 3, fontSize: 12 }}>{daysAbbr[idx]}</Text>
 							} else {
-								return <Text style={{ color: 'rgb(222, 222, 222)',  paddingRight: idx === days.length ? 0 : 3 }}>{daysAbbr[idx]}</Text>
+								return <Text style={{ color: 'rgb(222, 222, 222)',  paddingRight: idx === days.length ? 0 : 3, fontSize: 12 }}>{daysAbbr[idx]}</Text>
 							}
 						})
 					}
 				</View>
-				<Text style={{ flex: 0.5 }}>{timeString}</Text>
-				<Text style={{ flex: 0.3, flexDirection: 'row', justifyContent: 'flex-end', textAlign: 'right' }}>{place}</Text>
+				<Text style={{ flex: 0.3, fontSize: 12, textAlign: 'center' }}>{timeString}</Text>
+				<Text style={{ flex: 0.3, fontSize: 12, textAlign: 'center' }}>{place}</Text>
 			</View>
 		</View>)
 }
@@ -152,4 +179,4 @@ const padString = (direction, str, len) => {
 	else return str.padStart(len, ' ')
 }
 
-export default ClassCard
+export default CourseListCard
