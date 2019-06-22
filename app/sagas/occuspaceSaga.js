@@ -8,8 +8,9 @@ function* updateOccuspaceData() {
 	let { data }  = yield select(getOccuspaceData)
 	try {
 		// new data being fetched
-		const occuspaceData = yield call(OccuspaceService.FetchOccuspace)
-		if (occuspaceData) {
+		const response = yield call(OccuspaceService.FetchOccuspace)
+		if (response) {
+			const occuspaceData = JSON.parse(response)
 			if (data) {
 				data =  occuspaceData.sort(sortByOldOrder(data))
 			} else {
