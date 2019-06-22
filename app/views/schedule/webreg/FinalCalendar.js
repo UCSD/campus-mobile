@@ -7,7 +7,7 @@ import auth from '../../../util/auth'
 import CourseListMockData from './mockData/CourseListMockData.json'
 import { getFinalIndex, getCourseList } from '../../../util/schedule'
 import css from '../../../styles/css'
-import CourseCard from './CourseCard'
+import CalendarCard from './CalendarCard'
 
 const { width, height } = Dimensions.get('window')
 const CARD_WIDTH = (width - 70) / 7
@@ -50,7 +50,7 @@ class FinalCalendar extends React.Component {
 				}
 
 				if (this.props.selectedCourse && this.props.selectedCourse === name) {
-					res.push(<CourseCard
+					res.push(<CalendarCard
 						selected
 						color={COLOR_LIST[color % COLOR_LIST.length]}
 						name={name}
@@ -111,7 +111,7 @@ class FinalCalendar extends React.Component {
 						}
 					}
 				} else {
-					res.push(<CourseCard
+					res.push(<CalendarCard
 						color={COLOR_LIST[color % COLOR_LIST.length]}
 						name={name}
 						location={location}

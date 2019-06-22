@@ -6,7 +6,7 @@ import { SearchBar } from 'react-native-elements'
 import css from '../../../styles/css'
 import auth from '../../../util/auth'
 import HomePage from './HomePage'
-import ClassCard from './ClassCard'
+import CourseListCard from './CourseListCard'
 
 class WebReg extends React.Component {
 	constructor(props) {
@@ -30,28 +30,28 @@ class WebReg extends React.Component {
 		return data.filter(item => ((item.subject_code + item.course_code).toLowerCase()).includes(text.toLowerCase()))
 	}
 
-	renderClasses() {
-		return (
-			<FlatList
-				ListHeaderComponent={(
-					<SearchBar
-						ref={search => this.search = search}
-						placeholder="Search Course"
-						onChangeText={this.updateSearch}
-						value={this.state.search}
-						platform={Platform.OS}
-						onCancel={() => console.log('hahaa')}
-						autoCorrect={false}
-					/>
-				)}
-				keyboardShouldPersistTaps="handled"
-				data={this.state.data}
-				showsVerticalScrollIndicator={false}
-				renderItem={({ item }) => <ClassCard data={item} props={this.props} />}
-				keyExtractor={item => item.course_code + item.section}
-			/>
-		)
-	}
+	// renderClasses() {
+	// 	return (
+	// 		<FlatList
+	// 			ListHeaderComponent={(
+	// 				<SearchBar
+	// 					ref={search => this.search = search}
+	// 					placeholder="Search Course"
+	// 					onChangeText={this.updateSearch}
+	// 					value={this.state.search}
+	// 					platform={Platform.OS}
+	// 					onCancel={() => console.log('hahaa')}
+	// 					autoCorrect={false}
+	// 				/>
+	// 			)}
+	// 			keyboardShouldPersistTaps="handled"
+	// 			data={this.state.data}
+	// 			showsVerticalScrollIndicator={false}
+	// 			renderItem={({ item }) => <CourseListCard data={item} props={this.props} />}
+	// 			keyExtractor={item => item.course_code + item.section}
+	// 		/>
+	// 	)
+	// }
 
 	render() {
 		return (

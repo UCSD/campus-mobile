@@ -12,9 +12,9 @@ import {
 import React from 'react'
 import { connect } from 'react-redux'
 import { SearchBar } from 'react-native-elements'
-import { connect } from 'react-redux'
 import Icon from 'react-native-vector-icons/SimpleLineIcons'
 
+import CourseListMockData from './mockData/CourseListMockData.json'
 
 import LAYOUT from '../../../styles/LayoutConstants'
 import { deviceIphoneX, platformIOS } from '../../../util/general'
@@ -24,9 +24,9 @@ import { terms } from './mockData/TermMockData.json'
 import DropDown from './DropDown'
 import ClassCalendar from './ClassCalendar'
 import FinalCalendar from './FinalCalendar'
-import ClassCard from './ClassCard'
-import ClassList from './ClassList'
-import ClassCardBottomSheet from './ClassCardBottomSheet'
+import CourseListCard from './CourseListCard'
+import CourseList from './CourseList'
+import CalendarModalCard from './CalendarModalCard'
 
 const WINDOW_WIDTH = Dimensions.get('window').width
 const WINDOW_HEIGHT = Dimensions.get('window').height
@@ -112,24 +112,26 @@ class HomePage extends React.Component {
 			return <FinalCalendar device={device} />
 		} else {
 			return (
-				<ScrollView
-					style={css.scroll_default}
-					contentContainerStyle={css.main_full}
-					onMomentumScrollEnd={(e) => {
-						console.log(e.nativeEvent.contentOffset.y)
-						this.props.scheduleLayoutChange({ y: e.nativeEvent.contentOffset.y })
-						// this.props.clearRefresh();
-					}}
-					onScrollEndDrag={(e) => {
-						console.log(e.nativeEvent.contentOffset.y)
-						this.props.scheduleLayoutChange({ y: e.nativeEvent.contentOffset.y })
-						// this.props.clearRefresh();
-					}}
-				>
-					<Button onPress={() => auth.retrieveAccessToken().then(credentials => console.log(credentials))} title="Get Access Token" />
-					<ClassList />
-				</ScrollView>
+				<CourseList mock={CourseListMockData} />
 			)
+			// 	<ScrollView
+			// 		style={css.scroll_default}
+			// 		contentContainerStyle={css.main_full}
+			// 		onMomentumScrollEnd={(e) => {
+			// 			console.log(e.nativeEvent.contentOffset.y)
+			// 			this.props.scheduleLayoutChange({ y: e.nativeEvent.contentOffset.y })
+			// 			// this.props.clearRefresh();
+			// 		}}
+			// 		onScrollEndDrag={(e) => {
+			// 			console.log(e.nativeEvent.contentOffset.y)
+			// 			this.props.scheduleLayoutChange({ y: e.nativeEvent.contentOffset.y })
+			// 			// this.props.clearRefresh();
+			// 		}}
+			// 	>
+			// 		<Button onPress={() => auth.retrieveAccessToken().then(credentials => console.log(credentials))} title="Get Access Token" />
+			// 		<CourseList classes={CourseListMockData.data} />
+			// 	</ScrollView>
+			// )
 		}
 	}
 
@@ -175,7 +177,7 @@ class HomePage extends React.Component {
 		)
 	}
 
-	renderClassCard() {
+	renderModalCard() {
 		const { selectedCourse, selectedCourseDetail } = this.props
 		if (selectedCourse) {
 			this.state.lastCourse = selectedCourse
@@ -195,10 +197,9 @@ class HomePage extends React.Component {
 					transform: [{ translateY: modalY }]
 				}}
 				>
-					<ClassCardBottomSheet data={selectedCourseDetail} props={this.props} />
+					<CalendarModalCard data={selectedCourseDetail} props={this.props} />
 				</Animated.View>)
 		} else if (this.state.lastCourse) {
-			const course = this.state.lastCourse
 			this.state.lastCourse = null
 			const modalY = new Animated.Value(0)
 			Animated.timing(modalY, {
@@ -215,13 +216,13 @@ class HomePage extends React.Component {
 					transform: [{ translateY: modalY }]
 				}}
 				>
-					<ClassCard data={this.state.lastCourseDetail} props={this.props} />
+					<CalendarModalCard data={this.state.lastCourseDetail} props={this.props} />
 				</Animated.View>
 			)
 		}
 	}
 
-	renderFinalCard() {
+	renderFinalModalCard() {
 		const { selectedCourseFinal, selectedCourseFinalDetail } = this.props
 		if (selectedCourseFinal) {
 			this.state.lastFinal = selectedCourseFinal
@@ -310,8 +311,8 @@ class HomePage extends React.Component {
 				{/* <Button onPress={() => auth.retrieveAccessToken().then(credentials => console.log(credentials))} title="Get Access Token" />*/}
 				{this.renderDisplayType()}
 				{this.renderSwitchNavigator(options)}
-				{this.renderClassCard()}
-				{this.renderFinalCard()}
+				{this.renderModalCard()}
+				{this.renderFinalModalCard()}
 				{this.showSelector()}
 			</View>
 		)
@@ -326,13 +327,6 @@ const mapStateToProps = state => ({
 	selectedCourseFinalDetail: state.schedule.selectedCourseFinalDetail,
 	fullScheduleData: state.schedule.data,
 })
-
-function mapStateToProps(state) {
-	return {
-		selectedTerm: state.schedule.selectedTerm,
-	}
-}
-
 
 const mapDispatchToProps = (dispatch, ownProps) => (
 	{
