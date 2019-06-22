@@ -1,14 +1,14 @@
 import { OCCUSPACE_API_URL_MOCK } from '../AppSettings'
+import { authorizedPublicFetch } from '../util/auth'
 
 const OccuspaceService = {
-	FetchOccuspace() {
-		return fetch(OCCUSPACE_API_URL_MOCK)
-			.then(response => response.json())
-			.then(responseData => responseData)
-			.catch((err) => {
-				console.log('Error fetching occuspace data: ' + err)
-				return null
-			})
+	* FetchOccuspace() {
+		try {
+			const data = (yield authorizedPublicFetch(OCCUSPACE_API_URL_MOCK + '/busyness'))
+			return data
+		} catch (error) {
+			throw error
+		}
 	},
 }
 
