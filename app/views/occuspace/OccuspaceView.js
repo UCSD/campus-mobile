@@ -53,7 +53,8 @@ const OccuspaceRow = ({ data }) => {
 	)
 }
 const BuysnessInfo = ({ busyness, estimated, units }) => {
-	console.log(busyness)
+	const percentage = busyness / 100
+	const color = (busyness <= 50 ? COLOR.GREEN : COLOR.YELLOW)
 	const busynessText = (
 		<Text>
 			{busyness + '% full'}
@@ -63,7 +64,13 @@ const BuysnessInfo = ({ busyness, estimated, units }) => {
 		return (
 			<View>
 				{busynessText}
-				<Progress.Bar progress={0.3} width={null} />
+				<Progress.Bar
+					progress={percentage}
+					width={null}
+					color={color}
+					borderWidth={0}
+					unfilledColor={COLOR.MGREY}
+				/>
 			</View>
 		)
 	} else {
@@ -78,7 +85,13 @@ const BuysnessInfo = ({ busyness, estimated, units }) => {
 						</Text>
 					</Text>
 				</View>
-				<Progress.Bar progress={0.3} width={null} />
+				<Progress.Bar
+					progress={percentage}
+					width={null}
+					color={color}
+					borderWidth={0}
+					unfilledColor={COLOR.MGREY}
+				/>
 			</View>
 		)
 	}
