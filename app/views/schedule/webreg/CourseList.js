@@ -13,9 +13,9 @@ import {
 } from 'react-native'
 import { connect } from 'react-redux'
 
-import { isPointWithinArea, moveArrayElement } from '../../../util/schedule'
-import DragableClassCard from './DragableClassCard'
-import CourseListCard from './CourseListCard';
+// import { isPointWithinArea, moveArrayElement } from '../../../util/schedule'
+// import DragableClassCard from './DragableClassCard'
+import CourseListCard from './CourseListCard'
 
 class CourseList extends Component {
 	// static defaultProps = {

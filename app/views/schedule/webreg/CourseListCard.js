@@ -3,10 +3,10 @@ import {
 	View,
 	Text,
 	StyleSheet,
-	TouchableHighlight,
-	ActivityIndicator
+	ActivityIndicator,
+	TouchableOpacity,
 } from 'react-native'
-import FAIcon from 'react-native-vector-icons/FontAwesome'
+import Icon from 'react-native-vector-icons/MaterialIcons'
 
 import schedule from '../../../util/schedule'
 import logger from '../../../util/logger'
@@ -61,55 +61,63 @@ const CourseListCard = ({ data }) => {
 	*/
 	const { subject_code, course_code, units, grade_option, course_title, section_data, enrollment_status } = data
 	const
-		courseUnit      = units,
-		courseCode      = subject_code + course_code,
-		courseTitle     = course_title,
-		sectionID       = section_data[0].section,
-		courseProf      = section_data[0].instructor_name,
-		courseSections  = section_data,
+		courseUnit = units,
+		courseCode = subject_code + course_code,
+		courseTitle = course_title,
+		sectionID = section_data[0].section,
+		courseProf = section_data[0].instructor_name,
+		courseSections = section_data,
 		enrollmentStatus = enrollment_status
 
 	return (
 		<View style={[css.webreg_list_card_container, getBorderStyle(enrollmentStatus)]}>
-			{/* <View>
-
-			</View>
-			<View>
-
-			</View> */}
-
+			{/* Course Info */}
 			<View style={css.webreg_list_card_info_container}>
-				<View style={css.webreg_list_card_unit_container}>
-					<View style={css.webreg_list_card_unit_bg}>
-						<Text style={css.webreg_list_card_unit_text} allowFontScaling={false} >
-							{courseUnit}
+				<View style={css.webreg_list_card_header_container}>
+					<View style={css.webreg_list_card_unit_container}>
+						<View style={css.webreg_list_card_unit_bg}>
+							<Text style={css.webreg_list_card_unit_text} allowFontScaling={false} >
+								{courseUnit}
+							</Text>
+						</View>
+					</View>
+					<View style={css.webreg_list_card_name_container}>
+						<Text style={css.webreg_list_card_code}>{courseCode}</Text>
+						<Text style={css.webreg_list_card_title}>{courseTitle}</Text>
+					</View>
+				</View>
+				<View style={css.webreg_section_prof_container}>
+					<View style={css.webreg_section_container} >
+						<Text style={css.webreg_section_id}>Section ID</Text>
+						<Text>{sectionID}</Text>
+					</View>
+					<View style={css.webreg_prof_container} >
+						<Text style={css.webreg_course_prof} numberOfLines={1} >
+							{courseProf}
 						</Text>
 					</View>
 				</View>
-				<View style={css.webreg_list_card_name_container}>
-					<Text style={css.webreg_list_card_code}>{courseCode}</Text>
-					<Text style={css.webreg_list_card_title}>{courseTitle}</Text>
-				</View>
+				{renderSchedule('LE', courseSections)}
+				{renderSchedule('DI', courseSections)}
+				{renderSchedule('FI', courseSections)}
 			</View>
-			<View style={css.webreg_section_prof_container}>
-				<View style={css.webreg_section_container} >
-					<Text style={css.webreg_section_id}>Section ID</Text>
-					<Text>{sectionID}</Text>
-				</View>
-				<View style={css.webreg_prof_container} >
-					<Text style={css.webreg_list_card_prof} numberOfLines={1} >
-						{courseProf}
-					</Text>
-				</View>
+			{/* Action buttons */}
+			<View style={css.webreg_list_card_action_container}>
+				<TouchableOpacity>
+					<Icon name="cached" size={28} color={COLOR.PRIMARY} />
+				</TouchableOpacity>
+				<TouchableOpacity>
+					<Icon name="delete" size={28} color={COLOR.PRIMARY} />
+				</TouchableOpacity>
+				<TouchableOpacity>
+					<Icon name="add" size={28} color={COLOR.PRIMARY} />
+				</TouchableOpacity>
 			</View>
-			{renderSchedule('LE', courseSections)}
-			{renderSchedule('DI', courseSections)}
 		</View>
 	)
 }
-
 const getBorderStyle = (status) => {
-	let borderStyle = { borderRadius: 10 ,borderWidth: 2, borderColor: COLOR.PRIMARY, borderStyle: 'solid' };
+	let borderStyle = { borderRadius: 10, borderWidth: 2, borderColor: COLOR.PRIMARY, borderStyle: 'solid' }
 	switch (status) {
 		// TODO
 		case 'EN':
@@ -129,7 +137,8 @@ const getBorderStyle = (status) => {
 const renderSchedule = (type, courseSections) => {
 	let section,
 		timeString,
-		place
+		place,
+		finalDate
 	const daysOfWeek = {
 			MO: false,
 			TU: false,
@@ -141,42 +150,53 @@ const renderSchedule = (type, courseSections) => {
 		daysAbbr = ['M', 'T', 'W', 'T', 'F']
 
 	courseSections.map((item, idx) => {
-		if (item.meeting_type === (type === 'LE' ? 'Lecture' : 'Discussion')) {
-			section               = item.section_code
+		if (item.special_mtg_code === type) {
+			finalDate = item.date
+			timeString = item.time
+			place = item.building + ' ' + item.room
+		} else if (item.meeting_type === ((type === 'LE' || type === 'FI') ? 'Lecture' : 'Discussion') && item.special_mtg_code === '') {
+			section = item.section_code
 			daysOfWeek[item.days] = true
-			timeString            = item.time
-			place                 = item.building + ' ' + item.room
+			timeString = item.time
+			place = item.building + ' ' + item.room
 		}
 		return null
 	})
 
+	if (type === 'FI') {
+		return (
+			<View style={css.webreg_list_card_section_container}>
+				<View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
+					<Text style={{ color: COLOR.DGREY, flex: 0.18, fontSize: 12 }}>FINAL</Text>
+					<Text style={{ flex: 0.27, fontSize: 12, color: COLOR.PRIMARY, flexWrap: 'wrap', flexDirection: 'row' }}>{finalDate}</Text>
+					<Text style={{ flex: 0.3, fontSize: 12, textAlign: 'center' }}>{timeString}</Text>
+					<Text style={{ flex: 0.25, fontSize: 12, textAlign: 'center' }}>{place}</Text>
+				</View>
+			</View>
+		)
+	}
 	return (
-		<View style={[type === 'LE' ? css.webreg_lecture_section_container : css.webreg_di_section_container, { alignSelf: 'center' }]}>
-			
+		<View style={css.webreg_list_card_section_container}>
+
 			<View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
-				<Text style={{ color: 'rgb(159, 159, 159)', flex: 0.1, fontSize: 12 }}>{section + ' '}</Text>
-				<Text style={{ color: 'black', flex: 0.1, fontSize: 12 }}>{type}</Text>
-				<View style={{ flex: 0.2, flexWrap: 'wrap', flexDirection: 'row' }}>
+				<Text style={{ color: COLOR.DGREY, flex: 0.09, fontSize: 12 }}>{section + ' '}</Text>
+				<Text style={{ color: 'black', flex: 0.09, fontSize: 12 }}>{type}</Text>
+				<View style={{ flex: 0.27, flexWrap: 'wrap', flexDirection: 'row' }}>
 					{
 						days.map((item, idx) => {
 							if (daysOfWeek[item]) {
-								return <Text style={{ color: 'rgb(84, 129, 176)', paddingRight: idx === days.length ? 0 : 3, fontSize: 12 }}>{daysAbbr[idx]}</Text>
+								return <Text style={{ color: COLOR.PRIMARY, paddingRight: idx === days.length ? 0 : 3, fontSize: 12 }}>{daysAbbr[idx]}</Text>
 							} else {
-								return <Text style={{ color: 'rgb(222, 222, 222)',  paddingRight: idx === days.length ? 0 : 3, fontSize: 12 }}>{daysAbbr[idx]}</Text>
+								return <Text style={{ color: COLOR.MGREY, paddingRight: idx === days.length ? 0 : 3, fontSize: 12 }}>{daysAbbr[idx]}</Text>
 							}
 						})
 					}
 				</View>
 				<Text style={{ flex: 0.3, fontSize: 12, textAlign: 'center' }}>{timeString}</Text>
-				<Text style={{ flex: 0.3, fontSize: 12, textAlign: 'center' }}>{place}</Text>
+				<Text style={{ flex: 0.25, fontSize: 12, textAlign: 'center' }}>{place}</Text>
 			</View>
-		</View>)
-}
-
-const padString = (direction, str, len) => {
-	if (str === undefined) return
-	if (direction === 'end') return str.padEnd(len, ' ')
-	else return str.padStart(len, ' ')
+		</View>
+	)
 }
 
 export default CourseListCard

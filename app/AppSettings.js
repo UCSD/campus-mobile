@@ -6,16 +6,17 @@ module.exports = {
 
 	/* ENDPOINTS */
 	// SSO
-	AUTH_SERVICE_API_URL: 'https://3hepzvdimd.execute-api.us-west-2.amazonaws.com/dev/v1/access-profile',	// ACADEMIC
-	ACADEMIC_TERM_API_URL: 'https://m9zc9vs4f1.execute-api.us-west-2.amazonaws.com/dev/v1/term/current',
-	ACADEMIC_TERM_FINALS_API_URL: 'https://m9zc9vs4f1.execute-api.us-west-2.amazonaws.com/dev/v1/term/current/finals',
-	ACADEMIC_HISTORY_API_URL: 'https://api-qa.ucsd.edu:8243/student/my/academic_history/v1/class_list',
+	AUTH_SERVICE_API_URL: 'https://c12cf2xke8.execute-api.us-west-2.amazonaws.com/prod/v1.1/access-profile',
+	// ACADEMIC
+	ACADEMIC_TERM_API_URL: 'https://btgre7sss6.execute-api.us-west-2.amazonaws.com/prod/v1/term/current',
+	ACADEMIC_TERM_FINALS_API_URL: 'https://btgre7sss6.execute-api.us-west-2.amazonaws.com/prod/v1/term/current/finals',
+	ACADEMIC_HISTORY_API_URL: 'https://api.ucsd.edu:8243/student/my/academic_history/v1/class_list',
 	SI_SESSIONS_API_URL: 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/TLC_SI_DATA.json',
 	// MESSAGING
-	TOPICS_API_URL: 'https://bvgjvzaakl.execute-api.us-west-2.amazonaws.com/dev/topics',
-	MYMESSAGES_API_URL: 'https://api-qa.ucsd.edu:8243/mp-mymessages/1.0.0',
-	MP_REGISTRATION_API_URL: 'https://api-qa.ucsd.edu:8243/mp-registration/1.0.0',
-	MESSAGES_TOPICS_URL: 'https://s3-us-west-1.amazonaws.com/ucsd-mobile-dev/mock-apis/messaging/topics.json',
+	TOPICS_API_URL: 'https://h6rc133pbh.execute-api.us-west-2.amazonaws.com/prod/topics',
+	MYMESSAGES_API_URL: 'https://api.ucsd.edu:8243/mp-mymessages/1.0.0',
+	MP_REGISTRATION_API_URL: 'https://api.ucsd.edu:8243/mp-registration/1.0.0',
+	MESSAGES_TOPICS_URL: 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/topics.json',
 	// SHUTTLE
 	SHUTTLE_STOPS_API_URL: 'https://ies4wyrlx9.execute-api.us-west-2.amazonaws.com/prod/v2/stops/',
 	SHUTTLE_VEHICLES_API_URL: 'https://hjr84cay81.execute-api.us-west-2.amazonaws.com/prod?route=',

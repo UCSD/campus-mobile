@@ -6,7 +6,7 @@ import { SearchBar } from 'react-native-elements'
 import css from '../../../styles/css'
 import auth from '../../../util/auth'
 import HomePage from './HomePage'
-import CourseListCard from './CourseListCard';
+import CourseListCard from './CourseListCard'
 
 class WebReg extends React.Component {
 	constructor(props) {

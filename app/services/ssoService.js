@@ -8,7 +8,7 @@ const ssoService = {
 			method: 'POST',
 			headers: {
 				'Authorization': loginInfo,
-				'x-api-key': 'eKFql1kJAj53iyU2fNKyH4jI2b7t70MZ5YbAuPBZ'
+				'x-api-key': 'AUTH_SERVICE_API_KEY_PH'
 			}
 		})
 			.then(response => (response.json()))
