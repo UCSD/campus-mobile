@@ -1,6 +1,8 @@
-import { put, call, takeLatest, select } from 'redux-saga/effects'
+import { put, call, takeLatest, select, race } from 'redux-saga/effects'
+import { delay } from 'redux-saga'
 import OccuspaceService from '../services/occuspaceService'
 import logger from '../util/logger'
+import { OCCUSPACE_FETCH_TIMEOUT } from '../AppSettings'
 
 const getOccuspaceData = state => (state.occuspace)
 function* updateOccuspaceData() {
@@ -8,16 +10,31 @@ function* updateOccuspaceData() {
 	let { data }  = yield select(getOccuspaceData)
 	try {
 		// new data being fetched
-		const response = yield call(OccuspaceService.FetchOccuspace)
-		if (response) {
-			const occuspaceData = JSON.parse(response)
-			if (data) {
-				data =  occuspaceData.sort(sortByOldOrder(data))
-			} else {
-				data = occuspaceData
+		const { response, timeout } = yield race({
+			response: call(OccuspaceService.FetchOccuspace),
+			timeout: call(delay, OCCUSPACE_FETCH_TIMEOUT)
+		})
+
+		if (timeout) {
+			const e = new Error('Request timed out.')
+			e.name = 'occuspaceTimeout'
+			throw e
+		} else if (response.error) {
+			if (response.error) {
+				logger.log(response)
+				throw response.error
 			}
-			yield put({ type: 'SET_OCCUSPACE_DATA', data })
-			yield put({ type: 'SHOW_CARD', id: 'occuspace' })
+		} else {
+			if (response) {
+				const occuspaceData = JSON.parse(response)
+				if (data) {
+					data =  occuspaceData.sort(sortByOldOrder(data))
+				} else {
+					data = occuspaceData
+				}
+				yield put({ type: 'SET_OCCUSPACE_DATA', data })
+				yield put({ type: 'SHOW_CARD', id: 'occuspace' })
+			}
 		}
 	} catch (error) {
 		logger.trackException(error)
