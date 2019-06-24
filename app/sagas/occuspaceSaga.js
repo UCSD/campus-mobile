@@ -9,6 +9,7 @@ function* updateOccuspaceData() {
 	// old data on device
 	let { data }  = yield select(getOccuspaceData)
 	try {
+		yield put({ type: 'GET_OCCUSPACE_REQUEST' })
 		// new data being fetched
 		const { response, timeout } = yield race({
 			response: call(OccuspaceService.FetchOccuspace),
@@ -37,6 +38,7 @@ function* updateOccuspaceData() {
 			}
 		}
 	} catch (error) {
+		yield put({ type: 'GET_OCCUSPACE_FAILED', error })
 		logger.trackException(error)
 	}
 }
