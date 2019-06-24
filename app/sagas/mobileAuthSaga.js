@@ -14,7 +14,7 @@ import logger from '../util/logger'
 function* updateMobileAuthToken() {
 	try {
 		// these three lines need to be moved to the upgrade script in AppRedux.js
-		const storedCreds = yield auth.storeMobileCreds(MOBILE_PUBLUIC_API_KEY_PH, MOBILE_PUBLUIC_API_SECRET_PH)
+		const storedCreds = yield auth.storeMobileCreds('MOBILE_PUBLUIC_API_KEY_PH', 'MOBILE_PUBLUIC_API_SECRET_PH')
 		// these three lines need to be moved to the upgrade script in AppRedux.js
 		yield put({ type: 'GET_MOBILE_AUTH_TOKEN_REQUEST' })
 		// username is the key password is the secret
