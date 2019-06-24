@@ -21,10 +21,8 @@ function* updateOccuspaceData() {
 			e.name = 'occuspaceTimeout'
 			throw e
 		} else if (response.error) {
-			if (response.error) {
-				logger.log(response)
-				throw response.error
-			}
+			logger.log(response)
+			throw response.error
 		} else {
 			if (response) {
 				const occuspaceData = JSON.parse(response)
@@ -34,11 +32,12 @@ function* updateOccuspaceData() {
 					data = occuspaceData
 				}
 				yield put({ type: 'SET_OCCUSPACE_DATA', data })
+				yield put({ type: 'GET_OCCUSPACE_SUCESS' })
 				yield put({ type: 'SHOW_CARD', id: 'occuspace' })
 			}
 		}
 	} catch (error) {
-		yield put({ type: 'GET_OCCUSPACE_FAILED', error })
+		yield put({ type: 'GET_OCCUSPACE_FAILURE', error })
 		logger.trackException(error)
 	}
 }
