@@ -1,7 +1,8 @@
 import {
 	call,
 	put,
-	select,
+	delay,
+	race,
 	takeLatest
 } from 'redux-saga/effects'
 
@@ -9,6 +10,7 @@ import {
 import mobileAuthService from '../services/mobileAuthService'
 import auth from '../util/auth'
 import logger from '../util/logger'
+import { PUBLIC_MOBILE_AUTH_TIMEOUT } from '../AppSettings'
 
 
 function* updateMobileAuthToken() {
@@ -22,15 +24,27 @@ function* updateMobileAuthToken() {
 		// encryption step
 		const authInfo = auth.encryptStringWithBase64(username + ':' + password)
 		// fetch token using encrypted credentials
-		const response = yield call(mobileAuthService.retrieveAccessToken, authInfo)
-		console.log(response)
-		// safely store the token
-		const storedToken = yield auth.storePublicAccessToken(response.access_token)
-		if (storedToken) {
-			yield put({ type: 'GET_MOBILE_AUTH_TOKEN_SUCCESS' })
+		const { response, timeout } = yield race({
+			response: call(mobileAuthService.retrieveAccessToken, authInfo),
+			timeout: call(delay, PUBLIC_MOBILE_AUTH_TIMEOUT)
+		})
+		// check if the request timed out or if there were other errors
+		if (timeout) {
+			const e = new Error('Updating mobile auth token timed out.')
+			e.name = 'mobileAuthTimeout'
+			throw e
+		} else if (response.error) {
+			const appUpdateError = new Error('App update required.')
+			throw appUpdateError
 		} else {
-			const error = 'could not store token'
-			yield put({ type: 'GET_MOBILE_AUTH_TOKEN_FAILURE', error  })
+			// safely store the token
+			const storedToken = yield auth.storePublicAccessToken(response.access_token)
+			if (storedToken) {
+				yield put({ type: 'GET_MOBILE_AUTH_TOKEN_SUCCESS' })
+			} else {
+				const error = new Error('Could not store token.')
+				yield put({ type: 'GET_MOBILE_AUTH_TOKEN_FAILURE', error  })
+			}
 		}
 	} catch (error) {
 		yield put({ type: 'GET_MOBILE_AUTH_TOKEN_FAILURE', error })
