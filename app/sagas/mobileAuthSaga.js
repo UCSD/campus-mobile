@@ -1,10 +1,10 @@
 import {
 	call,
 	put,
-	delay,
 	race,
 	takeLatest
 } from 'redux-saga/effects'
+import { delay } from 'redux-saga'
 
 
 import mobileAuthService from '../services/mobileAuthService'
