@@ -1,7 +1,6 @@
 import React from 'react'
 import { View, Text, FlatList } from 'react-native'
 import * as Progress from 'react-native-progress'
-import LAYOUT from '../../styles/LayoutConstants'
 import ColoredDot from '../common/ColoredDot'
 import COLOR from '../../styles/ColorConstants'
 import css from '../../styles/css'
@@ -11,18 +10,18 @@ const OccuspaceView = ({ data }) => {
 
 	const statusText = data.isOpen ? 'Open' : 'Closed'
 	return (
-		<View style={{ flexGrow: 1, padding: 8, width: LAYOUT.MAX_CARD_WIDTH }}>
-			<Text style={{ fontSize: 20 }}>
+		<View style={css.occuspace_view}>
+			<Text style={css.occuspace_location_title}>
 				{data.locationName}
 			</Text>
-			<View style={{ flexDirection: 'row', paddingBottom: 10 }}>
+			<View style={css.occuspace_status_text}>
 				<Text>
 					{statusText}
 				</Text>
 				<ColoredDot
 					size={10}
 					color={activeDotColor}
-					style={css.dl_status_icon}
+					style={css.occusapce_status_dot}
 				/>
 			</View>
 			<OccuspaceSubViewList data={data.sublocations.length > 0 ? data.sublocations : [data]} />
@@ -37,7 +36,7 @@ const OccuspaceSubViewList = ({ data }) => (
 		scrollEnabled={true}
 		keyExtractor={listItem => listItem.locationId.toString()}
 		renderItem={({ item: rowData }) => <OccuspaceRow data={rowData} />}
-		ItemSeparatorComponent={() => <View style={{ paddingBottom: 10 }} />}
+		ItemSeparatorComponent={() => <View style={css.occusapce_item_separator} />}
 	/>
 )
 
@@ -56,14 +55,16 @@ const BuysnessInfo = ({ busyness, estimated, units }) => {
 	const percentage = busyness / 100
 	const color = (busyness <= 50 ? COLOR.GREEN : COLOR.YELLOW)
 	const busynessText = (
-		<Text>
+		<Text style={css.occuspace_busyness_text}>
 			{busyness + '% full'}
 		</Text>
 	)
 	if (units !== 'open seats') {
 		return (
 			<View>
-				{busynessText}
+				<View style={css.occuspace_busyness_row}>
+					{busynessText}
+				</View>
 				<Progress.Bar
 					progress={percentage}
 					width={null}
@@ -76,11 +77,11 @@ const BuysnessInfo = ({ busyness, estimated, units }) => {
 	} else {
 		return (
 			<View>
-				<View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+				<View style={css.occuspace_busyness_row}>
 					{busynessText}
-					<Text style={{ fontWeight: 'bold' }}>
+					<Text style={css.occuspace_estimated_text}>
 						{estimated}
-						<Text style={{ fontWeight: 'normal', color: COLOR.DGREY }}>
+						<Text style={css.occusapce_units_text}>
 							{' ' + units}
 						</Text>
 					</Text>
