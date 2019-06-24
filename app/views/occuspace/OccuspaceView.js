@@ -52,11 +52,12 @@ const OccuspaceRow = ({ data }) => {
 	)
 }
 const BuysnessInfo = ({ busyness, estimated, units }) => {
-	const percentage = busyness / 100
+	const percentage = 1 - (busyness / 100)
+	const percentageText = Math.round(percentage * 100)
 	const color = (busyness <= 50 ? COLOR.GREEN : COLOR.YELLOW)
 	const busynessText = (
 		<Text style={css.occuspace_busyness_text}>
-			{busyness + '% full'}
+			{percentageText + '% availability'}
 		</Text>
 	)
 	if (units !== 'open seats') {
