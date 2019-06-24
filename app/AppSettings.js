@@ -67,6 +67,7 @@ module.exports = {
 	HTTP_REQUEST_TTL: 15000, // 15 seconds
 	SSO_TTL: 15000, // 15 seconds
 	MESSAGING_TTL: 15000, // 15 seconds
+	PUBLIC_MOBILE_AUTH_TIMEOUT: 15000, // 15 seconds
 
 	/* RETRIES */
 	SSO_IDP_ERROR_RETRY_INCREMENT: 10000, // 10 seconds
