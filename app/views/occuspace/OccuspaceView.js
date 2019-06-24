@@ -82,7 +82,7 @@ const BuysnessInfo = ({ busyness, estimated, units }) => {
 					{busynessText}
 					<Text style={css.occuspace_estimated_text}>
 						{estimated}
-						<Text style={css.occusapce_units_text}>
+						<Text style={css.occuspace_units_text}>
 							{' ' + units}
 						</Text>
 					</Text>
