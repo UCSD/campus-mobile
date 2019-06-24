@@ -34,7 +34,9 @@ module.exports = {
 	FEEDBACK_URL: 'https://eforms.ucsd.edu/view.php?id=175631',
 	QUICKLINKS_API_URL: 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/quick_links/ucsd-quicklinks-v3.json',
 	PARKING_API_URL: 'https://b2waxbcovi.execute-api.us-west-2.amazonaws.com/prod/parking/v1.1/status',
-	OCCUSPACE_API_URL_MOCK: 'https://s3-us-west-1.amazonaws.com/ucsd-mobile-dev/mock-apis/occuspace/waitzv1.json',
+	OCCUSPACE_API_URL_MOCK: 'https://api-qa.ucsd.edu:8243/occuspace/v1.0',
+	QA_MOBILE_API_URL: 'https://api-qa.ucsd.edu:8243/token',
+
 
 	/* RESOURCES */
 	WEATHER_ICON_BASE_URL: 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/images/v1/weather-icons/',
@@ -69,8 +71,11 @@ module.exports = {
 	/* RETRIES */
 	SSO_IDP_ERROR_RETRY_INCREMENT: 10000, // 10 seconds
 	SSO_REFRESH_MAX_RETRIES: 3,
+	MOBILE_PUBLIC_TOKEN_MAX_RETRIES: 3,
 	SSO_REFRESH_RETRY_INCREMENT: 5000, // 5 seconds
+	MOBILE_PUBLIC_TOKEN_RETRY_INCREMENT: 5000, // 5 seconds
 	SSO_REFRESH_RETRY_MULTIPLIER: 3, // Multiplies increment by this amount for next try
+	MOBILE_PUBLIC_TOKEN_RETRY_MULTIPLIER: 3, // Multiplies increment by this amount for next try
 
 	/* UCSD AFFILIATION */
 	UCSD_STUDENT: /(B|G|J|M|U)/
