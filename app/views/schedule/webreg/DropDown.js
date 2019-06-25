@@ -20,6 +20,7 @@ const WINDOW_HEIGHT = Dimensions.get('window').height
  * @props x: int -- start x
  * @props y: int -- start y
  * @props cardWidth: int
+ * @props isTermName: boolean
  */
 class DropDown extends React.Component {
 	renderItem(item, i) {
@@ -56,7 +57,8 @@ class DropDown extends React.Component {
 			choiceStyle,
 			containerStyle,
 			onCancel,
-			x, y, cardWidth
+			x, y, cardWidth,
+			isTermName
 		} = this.props
 
 		const {
@@ -75,7 +77,7 @@ class DropDown extends React.Component {
 					<View style={overlayStyle} />
 				</TouchableWithoutFeedback>
 				<View style={[dialogContainerStyle, { top: y, right: x, width: cardWidth }]}>
-					{choices.map((item, i) => this.renderItem(item, i))}
+					{choices.map((item, i) => isTermName ? this.renderItem(item.term_name, i) : this.renderItem(item.term_code, i))}
 				</View>
 			</View>
 		)
@@ -133,7 +135,8 @@ const styles = {
 DropDown.defaultProps = {
 	x: 0,
 	y: 0,
-	width: 0
+	width: 0,
+	isTermName: false
 }
 
 export default DropDown
