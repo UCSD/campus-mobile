@@ -31,21 +31,20 @@ import CalendarModalCard from './CalendarModalCard'
 const WINDOW_WIDTH = Dimensions.get('window').width
 const WINDOW_HEIGHT = Dimensions.get('window').height
 
-var term_arr = [...terms]
+let term_arr = [...terms]
 const INITIAL_TERMS = [...terms]
 
 class HomePage extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			search: '',
 			show: false,
 			display_type: 'Calendar',
 		}
 		this.selectTerm = this.selectTerm.bind(this)
 		this.handleCancel = this.handleCancel.bind(this)
 		this.handleSelect = this.handleSelect.bind(this)
-		this.props.selectTerm({term_name: "Spring 2019", term_code: "SP19"})
+		this.props.selectTerm({ term_name: 'Spring 2019', term_code: 'SP19' })
 	}
 
 	componentWillMount() {
@@ -58,8 +57,8 @@ class HomePage extends React.Component {
 	}
 
 	myIndexOf(arr, key, type) {
-		for(var i = 0; i < arr.length; i++) {
-			if(type === 'name' ? arr[i].term_name === key : arr[i].term_code === key) {
+		for (let i = 0; i < arr.length; i++) {
+			if (type === 'name' ? arr[i].term_name === key : arr[i].term_code === key) {
 				return i
 			}
 		}
