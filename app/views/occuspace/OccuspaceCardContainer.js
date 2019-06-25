@@ -14,12 +14,16 @@ class OccuspaceCardContainer extends Component {
 			navigation,
 			occuspaceData,
 			selectedLocations,
+			requestErrors,
+			retry
 		} = this.props
 		return (
 			<OccuspaceCard
 				occuspaceData={occuspaceData}
 				goToManageLocations={() => this.navigateToManageLocations(navigation)}
 				selectedLocations={selectedLocations}
+				requestErrors={requestErrors}
+				retry={retry}
 			/>
 		)
 	}
@@ -28,8 +32,17 @@ class OccuspaceCardContainer extends Component {
 const mapStateToProps = state => (
 	{
 		occuspaceData: state.occuspace.data,
-		selectedLocations: state.occuspace.selectedLocations
+		selectedLocations: state.occuspace.selectedLocations,
+		requestErrors: state.requestErrors
 	}
 )
 
-export default connect(mapStateToProps)(withNavigation(OccuspaceCardContainer))
+function mapDispatchtoProps(dispatch) {
+	return {
+		retry: () => {
+			dispatch({ type: 'UPDATE_OCCUSPACE_DATA' })
+		}
+	}
+}
+
+export default connect(mapStateToProps, mapDispatchtoProps)(withNavigation(OccuspaceCardContainer))

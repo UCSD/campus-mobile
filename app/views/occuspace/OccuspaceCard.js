@@ -11,7 +11,9 @@ import { getSelectedOccusapceLocations } from '../../util/occuspace'
 const OccupsaceCard = ({
 	occuspaceData,
 	goToManageLocations,
-	selectedLocations
+	selectedLocations,
+	requestErrors,
+	retry
 }) => {
 	const extraActions = [
 		{
@@ -19,7 +21,14 @@ const OccupsaceCard = ({
 			action: goToManageLocations
 		},
 	]
-
+	const retryButton = (
+		<Touchable
+			style={css.card_button_container}
+			onPress={() => retry()}
+		>
+			<Text style={css.card_button_text}>Try again</Text>
+		</Touchable>
+	)
 	const ManageLocationButton = (
 		<Touchable
 			style={css.card_button_container}
@@ -28,9 +37,23 @@ const OccupsaceCard = ({
 			<Text style={css.card_button_text}>Manage Locations</Text>
 		</Touchable>
 	)
+	// this will handle the case where we ran into an issue with the fetch for occuspace data
+	if (requestErrors && requestErrors.GET_OCCUSPACE) {
+		return (
+			<Card
+				id="occuspace"
+				title="Busyness"
+				extraActions={extraActions}
+			>
+				<View style={css.occuspace_no_locations_container}>
+					<Text style={css.occuspace_no_loocations_text}>Oops. Something went wrong :(</Text>
+				</View>
+				{retryButton}
+			</Card>
+		)
+	}
 	const data = getSelectedOccusapceLocations(occuspaceData, selectedLocations)
-	const locationCount = data.length
-	if (locationCount > 0) {
+	if (selectedLocations.length > 0) {
 		return (
 			<ScrollCard
 				id="occuspace"
@@ -53,8 +76,8 @@ const OccupsaceCard = ({
 				title="Busyness"
 				extraActions={extraActions}
 			>
-				<View style={css.pc_nolots_container}>
-					<Text style={css.pc_nolots_text}>Add a location to begin.</Text>
+				<View style={css.occuspace_no_locations_container}>
+					<Text style={css.occuspace_no_loocations_text}>Add a location to begin.</Text>
 				</View>
 				{ManageLocationButton}
 			</Card>
