@@ -4,6 +4,7 @@ const initialState = {
 	data: null,
 	lastUpdated: 0,
 	currentTerm: null,
+	selectedTerm: null,
 	classes: [],
 	selectedCourse: null,
 	selectedCourseDetail: null,
@@ -58,6 +59,9 @@ function schedule(state = initialState, action) {
 			return newState
 		case 'SET_SCHEDULE_TERM':
 			newState.currentTerm = action.term
+			return newState
+		case 'SET_SELECTED_TERM':
+			newState.selectedTerm = action.selectedTerm
 			return newState
 		case 'CLEAR_SCHEDULE_DATA':
 			return initialState

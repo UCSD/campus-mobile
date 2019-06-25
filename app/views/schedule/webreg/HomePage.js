@@ -1,5 +1,6 @@
 import { TouchableWithoutFeedback, View, Text, FlatList, Platform, Button, Dimensions, Alert, TouchableOpacity } from 'react-native'
 import React from 'react'
+import { connect } from 'react-redux'
 import { SearchBar } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/SimpleLineIcons'
 
@@ -14,25 +15,14 @@ import auth from '../../../util/auth'
 const WINDOW_WIDTH = Dimensions.get('window').width
 const WINDOW_HEIGHT = Dimensions.get('window').height
 
-let termNameArr = []
-let termCodeArr = []
-
-const INITIAL_NAME_ARR = []
-const INITIAL_CODE_ARR = []
-
-terms.forEach((element) => {
-	termNameArr.push(element.term_name)
-	termCodeArr.push(element.term_code)
-	INITIAL_NAME_ARR.push(element.term_name)
-	INITIAL_CODE_ARR.push(element.term_code)
-})
+var term_arr = [...terms]
+const INITIAL_TERMS = [...terms]
 
 class HomePage extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {
 			search: '',
-			term: 'Spring 2019',
 			show: false,
 			display_type: 'Calendar',
 		}
@@ -40,6 +30,7 @@ class HomePage extends React.Component {
 		this.selectTerm = this.selectTerm.bind(this)
 		this.handleCancel = this.handleCancel.bind(this)
 		this.handleSelect = this.handleSelect.bind(this)
+		this.props.selectTerm({term_name: "Spring 2019", term_code: "SP19"})
 	}
 
 	// componentDidMount() {
@@ -72,17 +63,26 @@ class HomePage extends React.Component {
 		this.setState({ show: true })
 	}
 
+	myIndexOf(arr, key, type) {
+		for(var i = 0; i < arr.length; i++) {
+			if(type === 'name' ? arr[i].term_name === key : arr[i].term_code === key) {
+				return i
+			}
+		}
+		return -1
+	}
+
 	handleCancel = () => {
 		this.setState({ show: false })
 	}
 
 	handleSelect = (choice) => {
-		termNameArr = [...INITIAL_NAME_ARR]
-		termCodeArr = [...INITIAL_CODE_ARR]
-		const index = termNameArr.indexOf(choice)
-		termNameArr.unshift(termNameArr.splice(index, 1)[0])
-		termCodeArr.unshift(termCodeArr.splice(index, 1)[0])
-		this.setState({ show: false, term: choice })
+		term_arr = [...INITIAL_TERMS]
+		const index = this.myIndexOf(term_arr, choice, 'name')
+		choice = term_arr[index]
+		term_arr.unshift(term_arr.splice(index, 1)[0])
+		this.setState({ show: false })
+		this.props.selectTerm(choice)
 	}
 
 	showSelector() {
@@ -94,7 +94,8 @@ class HomePage extends React.Component {
 					cardWidth={this.width}
 					onCancel={this.handleCancel}
 					onSelect={this.handleSelect}
-					choices={termNameArr}
+					choices={term_arr}
+					isTermName
 				/>
 			)
 		}
@@ -190,7 +191,7 @@ class HomePage extends React.Component {
 							this.dropDownY = layout.y
 						}}
 					>
-						<Text style={termTextStyle}>{this.state.term}</Text>
+						<Text style={termTextStyle}>{this.props.selectedTerm.term_name}</Text>
 					</View>
 					<View style={[iconContainerStyle, { alignItems: 'flex-start', paddingTop: 2 }]}>
 						<Icon name="arrow-down" onPress={this.selectTerm} size={18} />
@@ -278,4 +279,19 @@ const styles = {
 	}
 }
 
-export default HomePage
+function mapStateToProps(state) {
+	return {
+		selectedTerm: state.schedule.selectedTerm,
+	}
+}
+
+
+const mapDispatchToProps = (dispatch, ownProps) => (
+	{
+		selectTerm: (selectedTerm) => {
+			dispatch({ type: 'SET_SELECTED_TERM', selectedTerm })
+		},
+	}
+)
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomePage)
