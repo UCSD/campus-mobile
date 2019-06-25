@@ -18,7 +18,7 @@ import LastUpdated from '../../common/LastUpdated'
 import css from '../../../styles/css'
 import COLOR from '../../../styles/ColorConstants'
 
-class ClassCardBottomSheet extends React.Component {
+class CalendarModalCard extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = { gradeOption: this.props.data.grade_option }
@@ -262,4 +262,4 @@ const mapDispatchToProps = (dispatch, ownProps) => (
 	}
 )
 
-export default connect(null, mapDispatchToProps)(ClassCardBottomSheet)
+export default connect(null, mapDispatchToProps)(CalendarModalCard)

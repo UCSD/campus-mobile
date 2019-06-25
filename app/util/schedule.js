@@ -276,5 +276,134 @@ module.exports = {
 			},
 			...arr.slice(to),
 		]
+	},
+
+	getFinalIndex(date) {
+		const trimZero = str => (str.charAt(0) === '0' ? str.charAt(1) : str)
+		const parsedArr = date.split('-')
+		const parsedDate = trimZero(parsedArr[1]) + '/' + trimZero(parsedArr[2]) + '/' + parsedArr[0].substring(2, 4)
+		const MOCK_DATE = ['6/8/19', '6/10/19', '6/11/19', '6/12/19', '6/13/19', '6/14/19', '6/15/19']
+		return MOCK_DATE.indexOf(parsedDate)
+	},
+
+	getCourseList(courses, final, cardWidth, cardHeight) {
+		const obj = {}
+
+		for (let i = 0; i < courses.length; i++) {
+			const course = courses[i]
+			const {
+				subject_code,
+				course_code,
+				course_level,
+				course_title,
+				grade_option,
+				section_data
+			} = course
+
+			section_data.map((item, index) => {
+				const {
+					section_code,
+					meeting_type,
+					time,
+					days,
+					date,
+					building,
+					room,
+					special_mtg_code,
+					section
+				} = item
+
+				let display,
+					type,
+					duration
+
+				const name = subject_code + ' ' + course_code
+				const location = building == undefined ? '' : building + ' ' + room
+
+				// Handle lectures, dicussions, and finals
+				// if not final, then select lectures and dicussions
+				if (!final) {
+					if ( special_mtg_code === '' && meeting_type === 'Lecture' ) {
+						display = 'Calendar'
+						type = 'LE'
+					} else if ( special_mtg_code === '' && meeting_type === 'Discussion' ) {
+						display = 'Calendar'
+						type = 'DI'
+					} else if ( special_mtg_code !== undefined && special_mtg_code === 'FI' ) {
+						display = 'Final'
+						type = 'FI'
+						return null
+					} else {
+						return null
+					}
+				} else {
+					if ( special_mtg_code === '' && meeting_type === 'Lecture' ) {
+						return null
+					} else if ( special_mtg_code === '' && meeting_type === 'Discussion' ) {
+						return null
+					} else if ( special_mtg_code !== undefined && special_mtg_code === 'FI' ) {
+						display = 'Final'
+						type = 'FI'
+					} else {
+						return null
+					}
+				}
+
+				const data = {
+					display,
+					type,
+					name,
+					location
+				}
+
+				let startTime,
+					endTime
+
+				const re = /^([0-2]?[1-9]):([0-5][0-9]) - ([0-2]?[1-9]):([0-5][0-9])$/
+
+				const m = re.exec(time)
+				if (m) {
+					startTime = (Number.parseInt(m[1], 10) * 60) + Number.parseInt(m[2], 10)
+					endTime = (Number.parseInt(m[3], 10) * 60) + Number.parseInt(m[4], 10)
+					duration = endTime - startTime
+				}
+				let x,
+					y
+				if (final) {
+					x = ((module.exports.getFinalIndex(date) + 1) * cardWidth) - 12.5
+					y = (((startTime / 60) - 8) * (cardHeight + 1)) + 2
+				} else {
+					x = (((module.exports.getDayOfWeek(days) + 1) % 7) * cardWidth) - 12.5
+					y = (((startTime / 60) - 7) * (cardHeight + 1)) + 2
+				}
+				const width  = cardWidth - 2
+				const height = (cardHeight / 60) * duration
+
+				if (!obj[name]) {
+					obj[name] = { selected: false, data: [], course }
+				}
+				obj[name].data.push({ x, y, width, height, display, type, name, location, color: i })
+				return null
+			})
+		}
+		return obj
+	},
+
+	getBottomMargin(device, type='list') {
+		if(type === 'card') {
+			if(device === 2) {
+				return 17
+			}
+			return 0
+		} else {
+			switch (device) {
+				case 1:
+					return 55
+				case 2:
+					return 72
+				default:
+					return 0
+			}
+		}
 	}
 }
