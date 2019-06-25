@@ -192,7 +192,7 @@ class HomePage extends React.Component {
 		)
 	}
 
-	renderClassCard() {
+	renderModalCard() {
 		const { selectedCourse, selectedCourseDetail } = this.props
 		if (selectedCourse) {
 			this.state.lastCourse = selectedCourse
@@ -215,7 +215,6 @@ class HomePage extends React.Component {
 					<CalendarModalCard data={selectedCourseDetail} props={this.props} />
 				</Animated.View>)
 		} else if (this.state.lastCourse) {
-			const course = this.state.lastCourse
 			this.state.lastCourse = null
 			const modalY = new Animated.Value(0)
 			Animated.timing(modalY, {
@@ -232,13 +231,13 @@ class HomePage extends React.Component {
 					transform: [{ translateY: modalY }]
 				}}
 				>
-					<CourseListCard data={this.state.lastCourseDetail} props={this.props} />
+					<CalendarModalCard data={this.state.lastCourseDetail} props={this.props} />
 				</Animated.View>
 			)
 		}
 	}
 
-	renderFinalCard() {
+	renderFinalModalCard() {
 		const { selectedCourseFinal, selectedCourseFinalDetail } = this.props
 		if (selectedCourseFinal) {
 			this.state.lastFinal = selectedCourseFinal
@@ -258,7 +257,7 @@ class HomePage extends React.Component {
 					transform: [{ translateY: modalY }]
 				}}
 				>
-					<CourseListCard data={selectedCourseFinalDetail} props={this.props} />
+					<CalendarModalCard data={selectedCourseFinalDetail} props={this.props} />
 				</Animated.View>)
 		} else if (this.state.lastFinal) {
 			const course = this.state.lastFinal
@@ -278,7 +277,7 @@ class HomePage extends React.Component {
 					transform: [{ translateY: modalY }]
 				}}
 				>
-					<CourseListCard data={this.state.lastFinalDetail} props={this.props} />
+					<CalendarModalCard data={this.state.lastFinalDetail} props={this.props} />
 				</Animated.View>
 			)
 		}
@@ -327,8 +326,8 @@ class HomePage extends React.Component {
 				{/* <Button onPress={() => auth.retrieveAccessToken().then(credentials => console.log(credentials))} title="Get Access Token" />*/}
 				{this.renderDisplayType()}
 				{this.renderSwitchNavigator(options)}
-				{this.renderClassCard()}
-				{this.renderFinalCard()}
+				{this.renderModalCard()}
+				{this.renderFinalModalCard()}
 				{this.showSelector()}
 			</View>
 		)

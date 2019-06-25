@@ -74,86 +74,39 @@ class CalendarModalCard extends React.Component {
 	}
 
 	renderGradeOption() {
-		if (this.state.gradeOption === 'L') {
-			return (
-				<View style={css.webreg_course_info_container}>
-					<View style={{ flex: 0.5, flexDirection: 'row', justifyContent: 'flex-start', marginTop: 10, marginRight: 15 }}>
-						<TouchableOpacity
-							style={{
-								borderBottomLeftRadius: 6,
-								borderTopLeftRadius: 6,
-								paddingTop: 8,
-								paddingBottom: 8,
-								flex: 0.5,
-								backgroundColor: 'rgb(255, 255, 255)',
-								borderWidth: 1,
-								borderColor: 'rgb(25, 66, 96)'
-							}}
-							onPress={this.changeGradeOption}
-						>
-							<Text style={{ textAlign: 'center', fontSize: 16, color: 'rgb(25, 66, 96)' }}>PNP</Text>
-						</TouchableOpacity>
-						<TouchableOpacity
-							style={{
-								borderBottomRightRadius: 6,
-								borderTopRightRadius: 6,
-								paddingTop: 8,
-								paddingBottom: 8,
-								flex: 0.5,
-								backgroundColor: 'rgb(25, 66, 96)',
-								borderWidth: 1,
-								borderColor: 'rgb(25, 66, 96)'
-							}}
-						>
-							<Text style={{ textAlign: 'center', fontSize: 16, color: 'white' }}>Letter</Text>
-						</TouchableOpacity>
-					</View>
+		const { gradeOption } = this.state
+
+		const color_1 = gradeOption === 'L' ? COLOR.WHITE : COLOR.PRIMARY
+		const color_2 = gradeOption === 'L' ? COLOR.PRIMARY : COLOR.WHITE
+
+		return (
+			<View style={css.webreg_common_grade_option_button_container}>
+				<View style={css.webreg_common_grade_option_button}>
 					<TouchableOpacity
-						style={{ borderRadius: 6, marginTop: 10, marginLeft: 15, paddingTop: 8, paddingBottom: 8, flex: 0.5, backgroundColor: 'rgb(25, 66, 96)' }}
-						onPress={this.dropCourse}
+						style={[css.webreg_common_grade_option_button_left, { backgroundColor: color_1 }]}
+						onPress={this.changeGradeOption}
 					>
-						<Text style={{ textAlign: 'center', fontSize: 16, color: 'white' }}>Drop course</Text>
+						<Text style={[css.webreg_common_action_button_text, { color: color_2 }]}>P/NP</Text>
+					</TouchableOpacity>
+					<TouchableOpacity
+						style={[css.webreg_common_grade_option_button_right, { backgroundColor: color_2 }]}
+					>
+						<Text style={[css.webreg_common_action_button_text, { color: color_1 }]}>Letter</Text>
 					</TouchableOpacity>
 				</View>
-			)
-		} else {
-			return (
-				<View style={css.webreg_course_info_container}>
-					<View style={{ flex: 0.5, flexDirection: 'row', justifyContent: 'flex-start', marginTop: 10, marginRight: 15 }}>
-						<TouchableOpacity
-							style={{
-								borderBottomLeftRadius: 6,
-								borderTopLeftRadius: 6,
-								paddingTop: 8,
-								paddingBottom: 8,
-								flex: 0.5,
-								backgroundColor: 'rgb(25, 66, 96)',
-								borderWidth: 1,
-								borderColor: 'rgb(25, 66, 96)'
-							}}
-						>
-							<Text style={{ textAlign: 'center', fontSize: 16, color: 'white' }}>PNP</Text>
-						</TouchableOpacity>
-						<TouchableOpacity
-							style={{
-								borderBottomRightRadius: 6,
-								borderTopRightRadius: 6,
-								paddingTop: 8,
-								paddingBottom: 8,
-								flex: 0.5,
-								backgroundColor: 'rgb(255, 255, 255)',
-								borderWidth: 1,
-								borderColor: 'rgb(25, 66, 96)'
-							}}
-							onPress={this.changeGradeOption}
-						>
-							<Text style={{ textAlign: 'center', fontSize: 16, color: 'rgb(25, 66, 96)' }}>Letter</Text>
-						</TouchableOpacity>
-					</View>
-					<TouchableOpacity style={{ borderRadius: 6, marginTop: 10, marginLeft: 15, paddingTop: 8, paddingBottom: 8, flex: 0.5, backgroundColor: 'rgb(25, 66, 96)' }}><Text style={{ textAlign: 'center', fontSize: 16, color: 'white' }}>Drop course</Text></TouchableOpacity>
-				</View>
-			)
-		}
+			</View>
+		)
+	}
+
+	renderEnrollmentAction() {
+		return (
+			<TouchableOpacity
+				style={css.webreg_common_enrollment_action_button}
+				onPress={this.dropCourse}
+			>
+				<Text style={[css.webreg_common_action_button_text, { color: COLOR.WHITE }]}>Drop course</Text>
+			</TouchableOpacity>
+		)
 	}
 
 	render() {
@@ -168,34 +121,39 @@ class CalendarModalCard extends React.Component {
 			courseSections  = section_data
 
 		return (
-			<View style={css.webreg_course_container}>
-				<View style={css.webreg_course_info_container}>
-					<View style={css.webreg_course_unit_container}>
-						<View style={css.webreg_course_unit_bg}>
-							<Text style={css.webreg_course_unit_text} allowFontScaling={false} >
+			<View style={css.webreg_modal_card_container}>
+				<View style={css.webreg_modal_card_header_container}>
+					<View style={css.webreg_common_unit_container}>
+						<View style={css.webreg_common_unit_bg}>
+							<Text style={css.webreg_common_unit_text} allowFontScaling={false} >
 								{courseUnit}
 							</Text>
 						</View>
 					</View>
-					<View style={css.webreg_course_name_container}>
-						<Text style={css.webreg_course_code}>{courseCode}</Text>
-						<Text style={css.webreg_course_title}>{courseTitle}</Text>
+					<View style={css.webreg_common_name_container}>
+						<Text style={css.webreg_common_code}>{courseCode}</Text>
+						<Text style={css.webreg_common_title}>{courseTitle}</Text>
 					</View>
 				</View>
-				<View style={css.webreg_section_prof_container}>
-					<View style={css.webreg_section_container} >
-						<Text style={css.webreg_section_id}>Section ID</Text>
-						<Text>{sectionID}</Text>
+				{/* Section Header */}
+				<View style={css.webreg_section_header_container}>
+					<View style={css.webreg_section_id_container} >
+						<Text style={css.webreg_section_id_label}>Section ID</Text>
+						<Text style={css.webreg_section_id_id}>{sectionID}</Text>
 					</View>
-					<View style={css.webreg_prof_container} >
-						<Text style={css.webreg_course_prof} numberOfLines={1} >
+					<View style={css.webreg_section_prof_container} >
+						<Text style={css.webreg_section_prof_text} numberOfLines={1} >
 							{courseProf}
 						</Text>
 					</View>
 				</View>
 				{renderSchedule('LE', courseSections)}
 				{renderSchedule('DI', courseSections)}
-				{this.renderGradeOption()}
+				{renderSchedule('FI', courseSections)}
+				<View style={css.webreg_common_action_button_container}>
+					{this.renderGradeOption()}
+					{this.renderEnrollmentAction()}
+				</View>
 			</View>
 		)
 	}
@@ -205,7 +163,8 @@ class CalendarModalCard extends React.Component {
 const renderSchedule = (type, courseSections) => {
 	let section,
 		timeString,
-		place
+		place,
+		finalDate
 	const daysOfWeek = {
 			MO: false,
 			TU: false,
@@ -217,35 +176,53 @@ const renderSchedule = (type, courseSections) => {
 		daysAbbr = ['M', 'T', 'W', 'T', 'F']
 
 	courseSections.map((item, idx) => {
-		if (item.meeting_type === (type === 'LE' ? 'Lecture' : 'Discussion')) {
-			section               = item.section_code
+		if (item.special_mtg_code === type) {
+			finalDate = item.date
+			timeString = item.time
+			place = item.building + ' ' + item.room
+		} else if (item.meeting_type === ((type === 'LE' || type === 'FI') ? 'Lecture' : 'Discussion') && item.special_mtg_code === '') {
+			section = item.section_code
 			daysOfWeek[item.days] = true
-			timeString            = item.time
-			place                 = item.building
+			timeString = item.time
+			place = item.building + ' ' + item.room
 		}
 		return null
 	})
 
+	if (type === 'FI') {
+		return (
+			<View style={css.webreg_section_container}>
+				<View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
+					<Text style={{ color: COLOR.DGREY, flex: 0.18, fontSize: 12 }}>FINAL</Text>
+					<Text style={{ flex: 0.27, fontSize: 12, color: COLOR.PRIMARY, flexWrap: 'wrap', flexDirection: 'row' }}>{finalDate}</Text>
+					<Text style={{ flex: 0.3, fontSize: 12, textAlign: 'center' }}>{timeString}</Text>
+					<Text style={{ flex: 0.25, fontSize: 12, textAlign: 'center' }}>{place}</Text>
+				</View>
+			</View>
+		)
+	}
 	return (
-		<View style={[type === 'LE' ? css.webreg_lecture_section_container : css.webreg_di_section_container, { alignSelf: 'center' }]}>
-			<Text style={{ color: 'rgb(159, 159, 159)', flex: 0.12 }}>{section}</Text>
-			<View style={{ flex: 0.88, flexDirection: 'row', justifyContent: 'space-between' }}>
-				<Text style={{ flex: 0.2, color: type === 'LE' ? 'rgb(159, 159, 159)' : 'black' }}>{type}</Text>
-				<View style={{ flex: 0.5, flexWrap: 'wrap', flexDirection: 'row' }}>
+		<View style={css.webreg_section_container}>
+
+			<View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
+				<Text style={{ color: COLOR.DGREY, flex: 0.09, fontSize: 12 }}>{section + ' '}</Text>
+				<Text style={{ color: 'black', flex: 0.09, fontSize: 12 }}>{type}</Text>
+				<View style={{ flex: 0.27, flexWrap: 'wrap', flexDirection: 'row' }}>
 					{
 						days.map((item, idx) => {
 							if (daysOfWeek[item]) {
-								return <Text style={{ color: 'rgb(84, 129, 176)', paddingRight: idx === days.length ? 0 : 3 }}>{daysAbbr[idx]}</Text>
+								return <Text style={{ color: COLOR.PRIMARY, paddingRight: idx === days.length ? 0 : 3, fontSize: 12 }}>{daysAbbr[idx]}</Text>
 							} else {
-								return <Text style={{ color: 'rgb(222, 222, 222)',  paddingRight: idx === days.length ? 0 : 3 }}>{daysAbbr[idx]}</Text>
+								return <Text style={{ color: COLOR.MGREY, paddingRight: idx === days.length ? 0 : 3, fontSize: 12 }}>{daysAbbr[idx]}</Text>
 							}
 						})
 					}
 				</View>
-				<Text style={{ flex: 0.5 }}>{timeString}</Text>
-				<Text style={{ flex: 0.3, flexDirection: 'row', justifyContent: 'flex-end', textAlign: 'right' }}>{place}</Text>
+				<Text style={{ flex: 0.3, fontSize: 12, textAlign: 'center' }}>{timeString}</Text>
+				<Text style={{ flex: 0.25, fontSize: 12, textAlign: 'center' }}>{place}</Text>
 			</View>
-		</View>)
+		</View>
+	)
 }
 
 const padString = (direction, str, len) => {

@@ -74,25 +74,26 @@ const CourseListCard = ({ data }) => {
 			{/* Course Info */}
 			<View style={css.webreg_list_card_info_container}>
 				<View style={css.webreg_list_card_header_container}>
-					<View style={css.webreg_list_card_unit_container}>
-						<View style={css.webreg_list_card_unit_bg}>
-							<Text style={css.webreg_list_card_unit_text} allowFontScaling={false} >
+					<View style={css.webreg_common_unit_container}>
+						<View style={css.webreg_common_unit_bg}>
+							<Text style={css.webreg_common_unit_text} allowFontScaling={false} >
 								{courseUnit}
 							</Text>
 						</View>
 					</View>
-					<View style={css.webreg_list_card_name_container}>
-						<Text style={css.webreg_list_card_code}>{courseCode}</Text>
-						<Text style={css.webreg_list_card_title}>{courseTitle}</Text>
+					<View style={css.webreg_common_name_container}>
+						<Text style={css.webreg_common_code}>{courseCode}</Text>
+						<Text style={css.webreg_common_title}>{courseTitle}</Text>
 					</View>
 				</View>
-				<View style={css.webreg_section_prof_container}>
-					<View style={css.webreg_section_container} >
-						<Text style={css.webreg_section_id}>Section ID</Text>
-						<Text>{sectionID}</Text>
+				{/* Section Header */}
+				<View style={css.webreg_section_header_container}>
+					<View style={css.webreg_section_id_container} >
+						<Text style={css.webreg_section_id_label}>Section ID</Text>
+						<Text style={css.webreg_section_id_id}>{sectionID}</Text>
 					</View>
-					<View style={css.webreg_prof_container} >
-						<Text style={css.webreg_course_prof} numberOfLines={1} >
+					<View style={css.webreg_section_prof_container} >
+						<Text style={css.webreg_section_prof_text} numberOfLines={1} >
 							{courseProf}
 						</Text>
 					</View>
@@ -165,7 +166,7 @@ const renderSchedule = (type, courseSections) => {
 
 	if (type === 'FI') {
 		return (
-			<View style={css.webreg_list_card_section_container}>
+			<View style={css.webreg_section_container}>
 				<View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
 					<Text style={{ color: COLOR.DGREY, flex: 0.18, fontSize: 12 }}>FINAL</Text>
 					<Text style={{ flex: 0.27, fontSize: 12, color: COLOR.PRIMARY, flexWrap: 'wrap', flexDirection: 'row' }}>{finalDate}</Text>
@@ -176,7 +177,7 @@ const renderSchedule = (type, courseSections) => {
 		)
 	}
 	return (
-		<View style={css.webreg_list_card_section_container}>
+		<View style={css.webreg_section_container}>
 
 			<View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
 				<Text style={{ color: COLOR.DGREY, flex: 0.09, fontSize: 12 }}>{section + ' '}</Text>
