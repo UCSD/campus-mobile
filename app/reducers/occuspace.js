@@ -24,8 +24,8 @@ function occuspace(state = initialState, action) {
 			newState.selectedLocations = [...temp]
 			return newState
 		}
-		case 'SET_ORDER_OCCUSAPCE_DATA': {
-			newState.data = action.newOrder
+		case 'SYNC_OCCUSPACE_LOCATION_DATA': {
+			newState.selectedLocations = [...action.prevSlectedOccuspaceLocations]
 			return newState
 		}
 

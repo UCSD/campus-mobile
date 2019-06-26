@@ -150,9 +150,11 @@ const mapDispatchToProps = dispatch => (
 	{
 		addLocation: (locationName, selectedLocations) => {
 			dispatch({ type: 'SET_SELECTED_OCCUSPACE_LOCATIONS', add: true, name: locationName, selectedLocations })
+			dispatch({ type: 'UPLOAD_SELECTED_OCCUSPACE_LOCATIONS' })
 		},
 		removeLocation: (locationName, selectedLocations) => {
 			dispatch({ type: 'SET_SELECTED_OCCUSPACE_LOCATIONS', add: false, name: locationName, selectedLocations })
+			dispatch({ type: 'UPLOAD_SELECTED_OCCUSPACE_LOCATIONS' })
 		},
 		reorderOccuspaceLocations: (newOrder) => {
 			dispatch({ type: 'SET_ORDER_OCCUSAPCE_DATA', newOrder })
