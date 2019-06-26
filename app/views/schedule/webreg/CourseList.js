@@ -16,16 +16,20 @@ import { connect } from 'react-redux'
 // import { isPointWithinArea, moveArrayElement } from '../../../util/schedule'
 // import DragableClassCard from './DragableClassCard'
 import CourseListCard from './CourseListCard'
+import { getBottomMargin } from '../../../util/schedule'
 
 class CourseList extends Component {
+	componentWillMount() {
+		console.log(this)
+	}
 	// static defaultProps = {
 	// 	animationDuration: 250
 	// };
-
-	state = {
-		dndEnabled: true,
-		refresh: false
-	};
+	//
+	// state = {
+	// 	dndEnabled: true,
+	// 	refresh: false
+	// };
 
 	// componentWillMount() {
 	// 	this.panResponder = this.createPanResponder()
@@ -174,8 +178,8 @@ class CourseList extends Component {
 			// 	style={styles.container}
 			// 	{...this.panResponder.panHandlers}
 			// >
-
 			<FlatList
+				style={{ marginBottom: getBottomMargin(this.props.device) }}
 				// keyboardShouldPersistTaps="handled"
 				data={mock.data}
 				renderItem={({ item }) => (<CourseListCard
@@ -184,7 +188,6 @@ class CourseList extends Component {
 				keyExtractor={item => item.course_code + item.section}
 				extraData={this.props.refresh}
 			/>
-
 			// </View>
 		)
 	}

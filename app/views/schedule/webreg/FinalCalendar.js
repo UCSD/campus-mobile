@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 
 import auth from '../../../util/auth'
 import CourseListMockData from './mockData/CourseListMockData.json'
-import { getFinalIndex, getCourseList } from '../../../util/schedule'
+import { getFinalIndex, getCourseList, getBottomMargin } from '../../../util/schedule'
 import css from '../../../styles/css'
 import CalendarCard from './CalendarCard'
 
@@ -14,16 +14,6 @@ const CARD_WIDTH = (width - 70) / 7
 const CARD_HEIGHT = 50
 const COLOR_LIST = ['#ffdfba', '#ffffba', '#baffc9', '#bae1ff', 'rgb(193, 224, 252)']
 const MOCK_DATE = ['6/8/19', '6/10/19', '6/11/19', '6/12/19', '6/13/19', '6/14/19', '6/15/19']
-const getBottomMargin = (device) => {
-	switch (device) {
-		case 1:
-			return 55
-		case 2:
-			return 72
-		default:
-			return 0
-	}
-}
 
 class FinalCalendar extends React.Component {
 	constructor(props) {
@@ -142,7 +132,6 @@ class FinalCalendar extends React.Component {
 		const { courses, sample } = this.state
 		const days = ['Sat', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 		const hours = ['8 am', '9 am', '10 am', '11 am', '12 pm', '1 pm', '2 pm', '3 pm', '4 pm', '5 pm', '6 pm', '7 pm', '8 pm', '9 pm']
-		const { device } = this.props
 
 		const {
 			webreg_final_calendar_card,
@@ -153,21 +142,6 @@ class FinalCalendar extends React.Component {
 			webreg_final_calendar_timeRow,
 			webreg_final_calendar_timeContainer
 		} = css
-
-		let offset = 0
-
-		switch (device) {
-			case 1:
-				offset = 60
-				break
-			case 2:
-				offset = 77
-				break
-			case 0:
-			default:
-				offset = 0
-				break
-		}
 
 		return (
 			<View style={[webreg_final_calendar_card, { marginBottom: getBottomMargin(this.props.device) }]}>

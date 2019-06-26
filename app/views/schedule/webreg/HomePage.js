@@ -18,6 +18,7 @@ import CourseListMockData from './mockData/CourseListMockData.json'
 
 import LAYOUT from '../../../styles/LayoutConstants'
 import { deviceIphoneX, platformIOS } from '../../../util/general'
+import { getBottomMargin } from '../../../util/schedule'
 import auth from '../../../util/auth'
 import css from '../../../styles/css'
 import { terms } from './mockData/TermMockData.json'
@@ -34,6 +35,39 @@ const WINDOW_HEIGHT = Dimensions.get('window').height
 let term_arr = [...terms]
 const INITIAL_TERMS = [...terms]
 
+const showAppTime = () => {
+	Alert.alert(
+		'Your Appointment Time',
+		'First Pass: \n Second Pass:',
+		[
+			{ text: 'OK', onPress: () => console.log('OK Pressed') },
+		],
+		{ cancelable: false },
+	)
+}
+
+const myIndexOf = (arr, key, type) => {
+	for (let i = 0; i < arr.length; i++) {
+		if (type === 'name' ? arr[i].term_name === key : arr[i].term_code === key) {
+			return i
+		}
+	}
+	return -1
+}
+
+
+const getDeviceType = () => {
+	// 0 - Android, 1 - iPhone, 2 - iPhone X
+	if (platformIOS()) {
+		if (deviceIphoneX()) {
+			return 2
+		} else {
+			return 1
+		}
+	}
+	return 0
+}
+
 class HomePage extends React.Component {
 	constructor(props) {
 		super(props)
@@ -49,20 +83,6 @@ class HomePage extends React.Component {
 
 	componentWillMount() {
 		this.props.selectFinal(null, null)
-		this.props.selectFinal(null, null)
-	}
-
-	selectTerm() {
-		this.setState({ show: true })
-	}
-
-	myIndexOf(arr, key, type) {
-		for (let i = 0; i < arr.length; i++) {
-			if (type === 'name' ? arr[i].term_name === key : arr[i].term_code === key) {
-				return i
-			}
-		}
-		return -1
 	}
 
 	handleCancel = () => {
@@ -71,7 +91,7 @@ class HomePage extends React.Component {
 
 	handleSelect = (choice) => {
 		term_arr = [...INITIAL_TERMS]
-		const index = this.myIndexOf(term_arr, choice, 'name')
+		const index = myIndexOf(term_arr, choice, 'name')
 		choice = term_arr[index]
 		term_arr.unshift(term_arr.splice(index, 1)[0])
 		this.setState({ show: false })
@@ -94,16 +114,12 @@ class HomePage extends React.Component {
 		}
 	}
 
+	selectTerm() {
+		this.setState({ show: true })
+	}
+
 	renderDisplayType() {
-		// 0 - Android, 1 - iPhone, 2 - iPhone X
-		let device = 0
-		if (platformIOS()) {
-			if (deviceIphoneX()) {
-				device = 2
-			} else {
-				device = 1
-			}
-		}
+		const device = getDeviceType()
 
 		if (this.state.display_type === 'Calendar') {
 			return <ClassCalendar device={device} />
@@ -111,7 +127,7 @@ class HomePage extends React.Component {
 			return <FinalCalendar device={device} />
 		} else {
 			return (
-				<CourseList mock={CourseListMockData} />
+				<CourseList device={device} mock={CourseListMockData} />
 			)
 			// 	<ScrollView
 			// 		style={css.scroll_default}
@@ -189,7 +205,7 @@ class HomePage extends React.Component {
 			return (
 				<Animated.View style={{
 					position: 'absolute',
-					bottom: 0,
+					bottom: getBottomMargin(getDeviceType(), 'card'),
 					width: WINDOW_WIDTH,
 					left: 0,
 					right: 0,
@@ -208,7 +224,7 @@ class HomePage extends React.Component {
 			return (
 				<Animated.View style={{
 					position: 'absolute',
-					bottom: 0,
+					bottom: getBottomMargin(getDeviceType(), 'card'),
 					width: WINDOW_WIDTH,
 					left: 0,
 					right: 0,
@@ -234,14 +250,14 @@ class HomePage extends React.Component {
 			return (
 				<Animated.View style={{
 					position: 'absolute',
-					bottom: 0,
+					bottom: getBottomMargin(getDeviceType(), 'card'),
 					width: WINDOW_WIDTH,
 					left: 0,
 					right: 0,
 					transform: [{ translateY: modalY }]
 				}}
 				>
-					<ClassCardBottomSheet data={selectedCourseFinalDetail} props={this.props} />
+					<CalendarModalCard data={selectedCourseFinalDetail} props={this.props} />
 				</Animated.View>)
 		} else if (this.state.lastFinal) {
 			const course = this.state.lastFinal
@@ -254,14 +270,14 @@ class HomePage extends React.Component {
 			return (
 				<Animated.View style={{
 					position: 'absolute',
-					bottom: 0,
+					bottom: getBottomMargin(getDeviceType(), 'card'),
 					width: WINDOW_WIDTH,
 					left: 0,
 					right: 0,
 					transform: [{ translateY: modalY }]
 				}}
 				>
-					<ClassCard data={this.state.lastFinalDetail} props={this.props} />
+					<CalendarModalCard data={this.state.lastFinalDetail} props={this.props} />
 				</Animated.View>
 			)
 		}
@@ -295,7 +311,7 @@ class HomePage extends React.Component {
 							this.dropDownY = layout.y
 						}}
 					>
-						<Text style={termTextStyle}>{this.props.selectedTerm.term_name}</Text>
+						<Text style={webreg_homepage_term_text}>{this.props.selectedTerm.term_name}</Text>
 					</View>
 					<View style={[webreg_homepage_icon_container_style, { alignItems: 'flex-start', paddingTop: 2 }]}>
 						<Icon name="arrow-down" onPress={this.selectTerm} size={18} />
@@ -325,10 +341,24 @@ const mapStateToProps = state => ({
 	selectedCourseFinal: state.schedule.selectedCourseFinal,
 	selectedCourseFinalDetail: state.schedule.selectedCourseFinalDetail,
 	fullScheduleData: state.schedule.data,
+	selectedTerm: state.schedule.selectedTerm,
 })
+
 
 const mapDispatchToProps = (dispatch, ownProps) => (
 	{
+		populateClassArray: () => {
+			dispatch({ type: 'POPULATE_CLASS' })
+		},
+		scheduleLayoutChange: ({ y }) => {
+			dispatch({ type: 'SCHEDULE_LAYOUT_CHANGE', y })
+		},
+		selectCourse: (selectedCourse, data) => {
+			dispatch({ type: 'SELECT_COURSE', selectedCourse, data })
+		},
+		selectFinal: (selectedCourse, data) => {
+			dispatch({ type: 'SELECT_COURSE_FINAL', selectedCourse, data })
+		},
 		selectTerm: (selectedTerm) => {
 			dispatch({ type: 'SET_SELECTED_TERM', selectedTerm })
 		},
