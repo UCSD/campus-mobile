@@ -224,7 +224,7 @@ class HomePage extends React.Component {
 			return (
 				<Animated.View style={{
 					position: 'absolute',
-					bottom: getBottomMargin(this.getDeviceType(), 'card'),
+					bottom: -28,
 					width: WINDOW_WIDTH,
 					left: 0,
 					right: 0,
@@ -270,7 +270,7 @@ class HomePage extends React.Component {
 			return (
 				<Animated.View style={{
 					position: 'absolute',
-					bottom: getBottomMargin(this.getDeviceType(), 'card'),
+					bottom: -28,
 					width: WINDOW_WIDTH,
 					left: 0,
 					right: 0,
