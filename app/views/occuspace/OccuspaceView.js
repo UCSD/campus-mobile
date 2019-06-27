@@ -72,6 +72,7 @@ const BuysnessInfo = ({ busyness, estimated, units }) => {
 					color={color}
 					borderWidth={0}
 					unfilledColor={COLOR.MGREY}
+					height={10}
 				/>
 			</View>
 		)
@@ -93,6 +94,7 @@ const BuysnessInfo = ({ busyness, estimated, units }) => {
 					color={color}
 					borderWidth={0}
 					unfilledColor={COLOR.MGREY}
+					height={10}
 				/>
 			</View>
 		)
