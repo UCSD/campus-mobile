@@ -16,7 +16,7 @@ import { PUBLIC_MOBILE_AUTH_TIMEOUT } from '../AppSettings'
 function* updateMobileAuthToken() {
 	try {
 		// these three lines need to be moved to the upgrade script in AppRedux.js
-		const storedCreds = yield auth.storeMobileCreds('MOBILE_PUBLUIC_API_KEY_PH', 'MOBILE_PUBLUIC_API_SECRET_PH')
+		const storedCreds = yield auth.storeMobileCreds('MOBILE_PUBLIC_API_KEY_PH', 'MOBILE_PUBLIC_API_SECRET_PH')
 		// these three lines need to be moved to the upgrade script in AppRedux.js
 		yield put({ type: 'GET_MOBILE_AUTH_TOKEN_REQUEST' })
 		// username is the key password is the secret
