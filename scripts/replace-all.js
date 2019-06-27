@@ -13,7 +13,13 @@ if (ENV_TYPE === 'ci') {
 	})
 	myEnv = process.env
 } else {
-	myEnv = require(os.homedir() + '/.campusmobile/env.js') // eslint-disable-line
+	const tempEnv = require(os.homedir() + '/.campusmobile/config.js') // eslint-disable-line
+	myEnv = {}
+	myEnv.APP_VERSION = tempEnv.APP_VERSION
+	myEnv.BUILD_ENV = tempEnv.BUILD_ENV
+	Object.keys(tempEnv.APP_CONFIG).forEach((key) => {
+		myEnv[key] = tempEnv.APP_CONFIG[key]
+	})
 }
 
 // File Paths
@@ -71,6 +77,8 @@ if (REPLACEMENT_ENV === 'prod' || REPLACEMENT_ENV === 'qa') {
 		{ prodVal: myEnv.PARKING_API_URL_PROD, qaVal: myEnv.PARKING_API_URL_QA },
 		{ prodVal: myEnv.SPECIAL_EVENT_API_URL_PROD, qaVal: myEnv.SPECIAL_EVENT_API_URL_QA },
 		{ prodVal: myEnv.SI_SESSIONS_API_URL_PROD, qaVal: myEnv.SI_SESSIONS_API_URL_QA },
+		{ prodVal: myEnv.MY_STUDENT_CONTACT_API_URL_PROD, qaVal: myEnv.MY_STUDENT_CONTACT_API_URL_QA },
+		{ prodVal: myEnv.MY_STUDENT_PROFILE_API_URL_PROD, qaVal: myEnv.MY_STUDENT_PROFILE_API_URL_QA },
 	])
 
 	// ssoService.js

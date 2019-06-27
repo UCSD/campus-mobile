@@ -58,6 +58,10 @@ class ScrollCard extends React.Component {
 					enableEmptySections={true}
 					keyExtractor={(listItem, index) => {
 						if (listItem.id) {
+							// To prevent closest stop key dublicate if it is also in saved stops.
+							if (Object.prototype.hasOwnProperty.call(listItem, 'savedIndex')) {
+								return (listItem.id.toString() + 'CLOSEST')
+							}
 							// Return unique saved shuttle stop id
 							return listItem.id.toString()
 						} else if (listItem.LocationId) {

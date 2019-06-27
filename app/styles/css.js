@@ -11,7 +11,7 @@
 	05 - Classes
 	06 - Shuttle
 	07 - Dining
-
+	08 - Student ID Card
 	10 - Links
 	11 - Weather
 	12 - Map
@@ -70,6 +70,7 @@ const css = StyleSheet.create({
 	 */
 	// Cards
 	card_main: { borderWidth: 1, borderRadius: 2, borderColor: COLOR.MGREY, backgroundColor: COLOR.WHITE, margin: 6, alignItems: 'flex-start', justifyContent: 'center', overflow: 'hidden' },
+	card_demo: { alignItems: 'center' },
 	card_row_container: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: 8, paddingBottom: 0 },
 	card_footer_container: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: 8 },
 	card_button_container: { padding: 6, borderTopWidth: 1, borderTopColor: COLOR.MGREY },
@@ -91,6 +92,7 @@ const css = StyleSheet.create({
 	last_updated_err_icon: { fontSize: 16, marginRight: 6 },
 	last_updated_err_icon_warn: { color: COLOR.WARNING },
 	last_updated_err_icon_error: { color: COLOR.ERROR },
+	safe_image_loading_activity_indicator: { flex: 1, alignItems: 'center', justifyContent: 'center' },
 	// Data
 	DataList_card_list: {  },
 	DataList_full_list: { top: -1 },
@@ -383,6 +385,33 @@ const css = StyleSheet.create({
 	dn_topborder2: { borderTopWidth: 4, borderTopColor: COLOR.BLACK },
 	dn_info_container: { paddingTop: 10 },
 	dn_bold: { fontWeight: '700' },
+
+	/**
+	 *  08 - Student ID Card
+	 */
+	// Student ID Card
+	sid_container: { flexDirection: 'row', margin: 12 },
+	sid_left: { flex: 1 },
+	sid_photo: { height: 100 },
+	sid_affiliation: { textAlign: 'center', fontSize: 15, paddingTop: 8 },
+	sid_right: { flex: 3, marginLeft: 16 },
+	sid_name: { color: COLOR.BLACK, fontSize: 16 },
+	sid_college: { color: COLOR.DGREY, fontSize: 16, paddingTop: 2 },
+	sid_major: { color: COLOR.BLACK, fontSize: 16, paddingTop: 2 },
+	sid_barcode: { flexGrow: 1, marginTop: 8, justifyContent: 'center' },
+	sid_barcode_tip: { textAlign: 'center', fontSize: 11, color: COLOR.DGREY, zIndex: 2 },
+	sid_barcode_inner: { marginTop: -6 },
+	sid_barcode_id: { textAlign: 'center', fontSize: 14, zIndex: 2, marginTop: -8, letterSpacing: 4 },
+	sid_loadingContainer: { alignItems: 'center', justifyContent: 'center', paddingHorizontal: 10, paddingVertical: 40 },
+	sid_errorContainer: { alignItems: 'center', justifyContent: 'center', paddingHorizontal: 10, paddingVertical: 40 },
+	// Barcode Modal
+	sid_modal: { margin: 40, backgroundColor: COLOR.WHITE },
+	sid_modal_close: { position: 'absolute', bottom: 16, right: 16 },
+	sid_modal_close_icon: { color: COLOR.PRIMARY },
+	sid_avatar_icon_container: { justifyContent: 'center', alignItems: 'center' },
+	sid_avatar_icon: { color: COLOR.DGREY },
+	sid_modal_barcode: { justifyContent: 'center', transform: [{ rotate: '90deg' }] },
+	sid_modal_barcode_id: { textAlign: 'center', fontSize: 20, zIndex: 2, marginTop: -8, letterSpacing: 4 },
 
 	/**
 	 *  10 - Links

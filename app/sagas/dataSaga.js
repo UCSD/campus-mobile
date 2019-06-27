@@ -46,6 +46,7 @@ function* watchData() {
 			yield call(updateShuttleMaster)
 			yield put({ type: 'UPDATE_DINING' })
 			yield put({ type: 'UPDATE_SCHEDULE' })
+			yield put({ type: 'UPDATE_STUDENT_PROFILE' })
 			yield put({ type: 'SYNC_USER_PROFILE' })
 			yield put({ type: 'UPDATE_OCCUSPACE_DATA' })
 		} catch (err) {
@@ -216,19 +217,6 @@ function sortByOldParkingData(parkingData) {
 	}
 }
 
-
-// comparator function to sort all the parking lots in alphanumeric order based on the LocationName
-function compare(e1, e2) {
-	if (e1.LocationName < e2.LocationName) {
-		return -1
-	}
-	if (e1.LocationName > e2.LocationName) {
-		return 1
-	}
-	return 0
-}
-
-
 function* updateEvents() {
 	const { lastUpdated, data } = yield select(getEvents)
 	const nowTime = new Date().getTime()
@@ -280,6 +268,9 @@ function prefetchSpecialEventsImages(specialEvents) {
 	}
 	if (specialEvents.map) {
 		Image.prefetch(specialEvents.map)
+	}
+	if (specialEvents['banner-image']) {
+		Image.prefetch(specialEvents['banner-image'])
 	}
 }
 
