@@ -389,7 +389,7 @@ module.exports = {
 		return obj
 	},
 
-	getBottomMargin(device, type='list') {
+	getBottomMargin(device, type = 'list') {
 		if(type === 'card') {
 			if(device === 2) {
 				return 17

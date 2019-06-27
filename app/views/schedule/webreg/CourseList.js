@@ -19,14 +19,17 @@ import CourseListCard from './CourseListCard'
 import { getBottomMargin } from '../../../util/schedule'
 
 class CourseList extends Component {
+	componentWillMount() {
+		console.log(this)
+	}
 	// static defaultProps = {
 	// 	animationDuration: 250
 	// };
-
-	state = {
-		dndEnabled: true,
-		refresh: false
-	};
+	//
+	// state = {
+	// 	dndEnabled: true,
+	// 	refresh: false
+	// };
 
 	// componentWillMount() {
 	// 	this.panResponder = this.createPanResponder()

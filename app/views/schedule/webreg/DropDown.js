@@ -83,7 +83,7 @@ class DropDown extends React.Component {
 					<View style={[webreg_dropdown_overlay, { height: WINDOW_HEIGHT, width: WINDOW_WIDTH }]} />
 				</TouchableWithoutFeedback>
 				<View style={[webreg_dropdown_dialogContainer, { top: y, right: x, width: cardWidth }]}>
-					{choices.map((item, i) => isTermName ? this.renderItem(item.term_name, i) : this.renderItem(item.term_code, i))}
+					{choices.map((item, i) => (isTermName ? this.renderItem(item.term_name, i) : this.renderItem(item.term_code, i)))}
 				</View>
 			</View>
 		)

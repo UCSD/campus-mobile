@@ -46,18 +46,39 @@ const showAppTime = () => {
 	)
 }
 
+const myIndexOf = (arr, key, type) => {
+	for (let i = 0; i < arr.length; i++) {
+		if (type === 'name' ? arr[i].term_name === key : arr[i].term_code === key) {
+			return i
+		}
+	}
+	return -1
+}
+
+
+const getDeviceType = () => {
+	// 0 - Android, 1 - iPhone, 2 - iPhone X
+	if (platformIOS()) {
+		if (deviceIphoneX()) {
+			return 2
+		} else {
+			return 1
+		}
+	}
+	return 0
+}
+
 class HomePage extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			search: '',
 			show: false,
 			display_type: 'Calendar',
 		}
 		this.selectTerm = this.selectTerm.bind(this)
 		this.handleCancel = this.handleCancel.bind(this)
 		this.handleSelect = this.handleSelect.bind(this)
-		this.props.selectTerm({term_name: "Spring 2019", term_code: "SP19"})
+		this.props.selectTerm({ term_name: 'Spring 2019', term_code: 'SP19' })
 	}
 
 	componentWillMount() {
@@ -106,20 +127,9 @@ class HomePage extends React.Component {
 		}
 	}
 
-	getDeviceType() {
-		// 0 - Android, 1 - iPhone, 2 - iPhone X
-		if (platformIOS()) {
-			if (deviceIphoneX()) {
-				return 2
-			} else {
-				return 1
-			}
-		}
-		return 0
-	}
 
 	renderDisplayType() {
-		let device = this.getDeviceType()
+		const device = getDeviceType()
 
 		if (this.state.display_type === 'Calendar') {
 			return <ClassCalendar device={device} />
@@ -205,7 +215,7 @@ class HomePage extends React.Component {
 			return (
 				<Animated.View style={{
 					position: 'absolute',
-					bottom: getBottomMargin(this.getDeviceType(), 'card'),
+					bottom: getBottomMargin(getDeviceType(), 'card'),
 					width: WINDOW_WIDTH,
 					left: 0,
 					right: 0,
@@ -250,7 +260,7 @@ class HomePage extends React.Component {
 			return (
 				<Animated.View style={{
 					position: 'absolute',
-					bottom: getBottomMargin(this.getDeviceType(), 'card'),
+					bottom: getBottomMargin(getDeviceType(), 'card'),
 					width: WINDOW_WIDTH,
 					left: 0,
 					right: 0,
