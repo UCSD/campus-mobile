@@ -13,7 +13,7 @@ const mobileAuthService = {
 			.then(response => (response.json()))
 			.then((data) => {
 				if (data.error) {
-					throw new Error('Client Authentication failed.')
+					throw new Error('Client Authentication failed.' + data.error)
 				} else {
 					if (data.access_token && data.expires_in) {
 						return data
@@ -24,7 +24,7 @@ const mobileAuthService = {
 			})
 			.catch((err) => {
 				console.log(err)
-				throw new Error('Client Authentication failed.')
+				throw new Error('Client Authentication failed.' + err)
 			})
 	}
 }
