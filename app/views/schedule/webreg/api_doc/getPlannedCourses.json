@@ -1,0 +1,576 @@
+{
+    "results": [
+        {
+            "subjectCode": "ANAR",
+            "courseCode": "124",
+            "instructionType": "LE",
+            "sectionNumber": "958164",
+            "sectionCode": "A00",
+            "specialMeetingCode": "",
+            "longDescription": "",
+            "sectionStatus": null,
+            "enrollmentStatus": "PL",
+            "gradeOption": "L",
+            "creditHours": 4,
+            "gradeOptionPlus": false,
+            "creditHoursPlus": false,
+            "courseTitle": "The Archaeology of Asia",
+            "enrollmentCapacity": 20,
+            "enrollmentQuantity": 19,
+            "countOnWaitlist": 2,
+            "stopEnrollmentFlag": true,
+            "classTimes": [
+                {
+                    "dayCode": "2",
+                    "startDate": "2019-01-07",
+                    "beginHHTime": "9",
+                    "beginMMTime": "30",
+                    "endHHTime": "10",
+                    "endMMTime": "50",
+                    "buildingCode": "HSS",
+                    "roomCode": "1106A",
+                    "endDate": "2019-03-15"
+                },
+                {
+                    "dayCode": "4",
+                    "startDate": "2019-01-07",
+                    "beginHHTime": "9",
+                    "beginMMTime": "30",
+                    "endHHTime": "10",
+                    "endMMTime": "50",
+                    "buildingCode": "HSS",
+                    "roomCode": "1106A",
+                    "endDate": "2019-03-15"
+                }
+            ],
+            "instructors": [
+                "Fortier, Jana"
+            ]
+        },
+        {
+            "subjectCode": "ANAR",
+            "courseCode": "124",
+            "instructionType": "LE",
+            "sectionNumber": "958164",
+            "sectionCode": "A00",
+            "specialMeetingCode": "FI",
+            "longDescription": "",
+            "sectionStatus": null,
+            "enrollmentStatus": null,
+            "gradeOption": null,
+            "creditHours": null,
+            "gradeOptionPlus": false,
+            "creditHoursPlus": false,
+            "courseTitle": null,
+            "enrollmentCapacity": null,
+            "enrollmentQuantity": null,
+            "countOnWaitlist": null,
+            "stopEnrollmentFlag": false,
+            "classTimes": [
+                {
+                    "dayCode": "2",
+                    "startDate": "2019-03-19",
+                    "beginHHTime": "8",
+                    "beginMMTime": "0",
+                    "endHHTime": "10",
+                    "endMMTime": "59",
+                    "buildingCode": "HSS",
+                    "roomCode": "1106A",
+                    "endDate": null
+                }
+            ],
+            "instructors": [
+                "Fortier, Jana"
+            ]
+        },
+        {
+            "subjectCode": "CHEM",
+            "courseCode": "6B",
+            "instructionType": "DI",
+            "sectionNumber": "959975",
+            "sectionCode": "B05",
+            "specialMeetingCode": "",
+            "longDescription": "",
+            "sectionStatus": null,
+            "enrollmentStatus": "PL",
+            "gradeOption": "L",
+            "creditHours": 4,
+            "gradeOptionPlus": false,
+            "creditHoursPlus": false,
+            "courseTitle": "General Chemistry II",
+            "enrollmentCapacity": 44,
+            "enrollmentQuantity": 42,
+            "countOnWaitlist": 0,
+            "stopEnrollmentFlag": false,
+            "classTimes": [
+                {
+                    "dayCode": "1",
+                    "startDate": "2019-01-07",
+                    "beginHHTime": "17",
+                    "beginMMTime": "0",
+                    "endHHTime": "17",
+                    "endMMTime": "50",
+                    "buildingCode": "SOLIS",
+                    "roomCode": "111",
+                    "endDate": "2019-03-15"
+                }
+            ],
+            "instructors": [
+                "Kummel, Andrew C"
+            ]
+        },
+        {
+            "subjectCode": "CHEM",
+            "courseCode": "6B",
+            "instructionType": "LE",
+            "sectionNumber": "959970",
+            "sectionCode": "B00",
+            "specialMeetingCode": "",
+            "longDescription": "",
+            "sectionStatus": null,
+            "enrollmentStatus": null,
+            "gradeOption": null,
+            "creditHours": null,
+            "gradeOptionPlus": false,
+            "creditHoursPlus": false,
+            "courseTitle": null,
+            "enrollmentCapacity": null,
+            "enrollmentQuantity": null,
+            "countOnWaitlist": null,
+            "stopEnrollmentFlag": false,
+            "classTimes": [
+                {
+                    "dayCode": "2",
+                    "startDate": "2019-01-07",
+                    "beginHHTime": "8",
+                    "beginMMTime": "0",
+                    "endHHTime": "9",
+                    "endMMTime": "20",
+                    "buildingCode": "YORK",
+                    "roomCode": "2722",
+                    "endDate": null
+                },
+                {
+                    "dayCode": "4",
+                    "startDate": "2019-01-07",
+                    "beginHHTime": "8",
+                    "beginMMTime": "0",
+                    "endHHTime": "9",
+                    "endMMTime": "20",
+                    "buildingCode": "YORK",
+                    "roomCode": "2722",
+                    "endDate": null
+                }
+            ],
+            "instructors": [
+                "Kummel, Andrew C"
+            ]
+        },
+        {
+            "subjectCode": "CHEM",
+            "courseCode": "6B",
+            "instructionType": "LE",
+            "sectionNumber": "959970",
+            "sectionCode": "B00",
+            "specialMeetingCode": "RE",
+            "longDescription": "",
+            "sectionStatus": null,
+            "enrollmentStatus": null,
+            "gradeOption": null,
+            "creditHours": null,
+            "gradeOptionPlus": false,
+            "creditHoursPlus": false,
+            "courseTitle": null,
+            "enrollmentCapacity": null,
+            "enrollmentQuantity": null,
+            "countOnWaitlist": null,
+            "stopEnrollmentFlag": false,
+            "classTimes": [
+                {
+                    "dayCode": "7",
+                    "startDate": "2019-01-20",
+                    "beginHHTime": "18",
+                    "beginMMTime": "0",
+                    "endHHTime": "20",
+                    "endMMTime": "50",
+                    "buildingCode": "YORK",
+                    "roomCode": "2622",
+                    "endDate": null
+                },
+                {
+                    "dayCode": "2",
+                    "startDate": "2019-01-22",
+                    "beginHHTime": "20",
+                    "beginMMTime": "0",
+                    "endHHTime": "22",
+                    "endMMTime": "50",
+                    "buildingCode": "WLH",
+                    "roomCode": "2005",
+                    "endDate": null
+                },
+                {
+                    "dayCode": "7",
+                    "startDate": "2019-02-10",
+                    "beginHHTime": "18",
+                    "beginMMTime": "0",
+                    "endHHTime": "20",
+                    "endMMTime": "50",
+                    "buildingCode": "YORK",
+                    "roomCode": "2622",
+                    "endDate": null
+                },
+                {
+                    "dayCode": "2",
+                    "startDate": "2019-02-12",
+                    "beginHHTime": "19",
+                    "beginMMTime": "0",
+                    "endHHTime": "21",
+                    "endMMTime": "50",
+                    "buildingCode": "YORK",
+                    "roomCode": "2722",
+                    "endDate": null
+                },
+                {
+                    "dayCode": "7",
+                    "startDate": "2019-03-03",
+                    "beginHHTime": "18",
+                    "beginMMTime": "0",
+                    "endHHTime": "20",
+                    "endMMTime": "50",
+                    "buildingCode": "YORK",
+                    "roomCode": "2622",
+                    "endDate": null
+                },
+                {
+                    "dayCode": "3",
+                    "startDate": "2019-03-06",
+                    "beginHHTime": "20",
+                    "beginMMTime": "0",
+                    "endHHTime": "22",
+                    "endMMTime": "50",
+                    "buildingCode": "YORK",
+                    "roomCode": "2622",
+                    "endDate": null
+                },
+                {
+                    "dayCode": "7",
+                    "startDate": "2019-03-17",
+                    "beginHHTime": "18",
+                    "beginMMTime": "0",
+                    "endHHTime": "20",
+                    "endMMTime": "50",
+                    "buildingCode": "YORK",
+                    "roomCode": "2622",
+                    "endDate": null
+                }
+            ],
+            "instructors": [
+                "Kummel, Andrew C"
+            ]
+        },
+        {
+            "subjectCode": "CHEM",
+            "courseCode": "6B",
+            "instructionType": "LE",
+            "sectionNumber": "959970",
+            "sectionCode": "B00",
+            "specialMeetingCode": "MI",
+            "longDescription": "",
+            "sectionStatus": null,
+            "enrollmentStatus": null,
+            "gradeOption": null,
+            "creditHours": null,
+            "gradeOptionPlus": false,
+            "creditHoursPlus": false,
+            "courseTitle": null,
+            "enrollmentCapacity": null,
+            "enrollmentQuantity": null,
+            "countOnWaitlist": null,
+            "stopEnrollmentFlag": false,
+            "classTimes": [
+                {
+                    "dayCode": "4",
+                    "startDate": "2019-01-24",
+                    "beginHHTime": "20",
+                    "beginMMTime": "0",
+                    "endHHTime": "21",
+                    "endMMTime": "50",
+                    "buildingCode": "YORK",
+                    "roomCode": "2722",
+                    "endDate": null
+                },
+                {
+                    "dayCode": "4",
+                    "startDate": "2019-02-14",
+                    "beginHHTime": "20",
+                    "beginMMTime": "0",
+                    "endHHTime": "21",
+                    "endMMTime": "50",
+                    "buildingCode": "YORK",
+                    "roomCode": "2722",
+                    "endDate": null
+                },
+                {
+                    "dayCode": "4",
+                    "startDate": "2019-03-07",
+                    "beginHHTime": "20",
+                    "beginMMTime": "0",
+                    "endHHTime": "21",
+                    "endMMTime": "50",
+                    "buildingCode": "YORK",
+                    "roomCode": "2722",
+                    "endDate": null
+                }
+            ],
+            "instructors": [
+                "Kummel, Andrew C"
+            ]
+        },
+        {
+            "subjectCode": "CHEM",
+            "courseCode": "6B",
+            "instructionType": "LE",
+            "sectionNumber": "959970",
+            "sectionCode": "B00",
+            "specialMeetingCode": "FI",
+            "longDescription": "",
+            "sectionStatus": null,
+            "enrollmentStatus": null,
+            "gradeOption": null,
+            "creditHours": null,
+            "gradeOptionPlus": false,
+            "creditHoursPlus": false,
+            "courseTitle": null,
+            "enrollmentCapacity": null,
+            "enrollmentQuantity": null,
+            "countOnWaitlist": null,
+            "stopEnrollmentFlag": false,
+            "classTimes": [
+                {
+                    "dayCode": "4",
+                    "startDate": "2019-03-21",
+                    "beginHHTime": "8",
+                    "beginMMTime": "0",
+                    "endHHTime": "10",
+                    "endMMTime": "59",
+                    "buildingCode": "YORK",
+                    "roomCode": "2722",
+                    "endDate": null
+                }
+            ],
+            "instructors": [
+                "Kummel, Andrew C"
+            ]
+        },
+        {
+            "subjectCode": "CHEM",
+            "courseCode": "6B",
+            "instructionType": "DI",
+            "sectionNumber": "960008",
+            "sectionCode": "E07",
+            "specialMeetingCode": "",
+            "longDescription": "",
+            "sectionStatus": null,
+            "enrollmentStatus": "PL",
+            "gradeOption": "L",
+            "creditHours": 4,
+            "gradeOptionPlus": false,
+            "creditHoursPlus": false,
+            "courseTitle": "General Chemistry II",
+            "enrollmentCapacity": 44,
+            "enrollmentQuantity": 44,
+            "countOnWaitlist": 1,
+            "stopEnrollmentFlag": true,
+            "classTimes": [
+                {
+                    "dayCode": "1",
+                    "startDate": "2019-01-07",
+                    "beginHHTime": "18",
+                    "beginMMTime": "0",
+                    "endHHTime": "18",
+                    "endMMTime": "50",
+                    "buildingCode": "TM102",
+                    "roomCode": "1",
+                    "endDate": "2019-03-15"
+                }
+            ],
+            "instructors": [
+                "Lam, Tin Yiu"
+            ]
+        },
+        {
+            "subjectCode": "CHEM",
+            "courseCode": "6B",
+            "instructionType": "LE",
+            "sectionNumber": "960001",
+            "sectionCode": "E00",
+            "specialMeetingCode": "",
+            "longDescription": "",
+            "sectionStatus": null,
+            "enrollmentStatus": null,
+            "gradeOption": null,
+            "creditHours": null,
+            "gradeOptionPlus": false,
+            "creditHoursPlus": false,
+            "courseTitle": null,
+            "enrollmentCapacity": null,
+            "enrollmentQuantity": null,
+            "countOnWaitlist": null,
+            "stopEnrollmentFlag": false,
+            "classTimes": [
+                {
+                    "dayCode": "1",
+                    "startDate": "2019-01-07",
+                    "beginHHTime": "10",
+                    "beginMMTime": "0",
+                    "endHHTime": "10",
+                    "endMMTime": "50",
+                    "buildingCode": "GH",
+                    "roomCode": "242",
+                    "endDate": null
+                },
+                {
+                    "dayCode": "3",
+                    "startDate": "2019-01-07",
+                    "beginHHTime": "10",
+                    "beginMMTime": "0",
+                    "endHHTime": "10",
+                    "endMMTime": "50",
+                    "buildingCode": "GH",
+                    "roomCode": "242",
+                    "endDate": null
+                },
+                {
+                    "dayCode": "5",
+                    "startDate": "2019-01-07",
+                    "beginHHTime": "10",
+                    "beginMMTime": "0",
+                    "endHHTime": "10",
+                    "endMMTime": "50",
+                    "buildingCode": "GH",
+                    "roomCode": "242",
+                    "endDate": null
+                }
+            ],
+            "instructors": [
+                "Lam, Tin Yiu"
+            ]
+        },
+        {
+            "subjectCode": "CHEM",
+            "courseCode": "6B",
+            "instructionType": "LE",
+            "sectionNumber": "960001",
+            "sectionCode": "E00",
+            "specialMeetingCode": "RE",
+            "longDescription": "",
+            "sectionStatus": null,
+            "enrollmentStatus": null,
+            "gradeOption": null,
+            "creditHours": null,
+            "gradeOptionPlus": false,
+            "creditHoursPlus": false,
+            "courseTitle": null,
+            "enrollmentCapacity": null,
+            "enrollmentQuantity": null,
+            "countOnWaitlist": null,
+            "stopEnrollmentFlag": false,
+            "classTimes": [
+                {
+                    "dayCode": "3",
+                    "startDate": "2019-01-30",
+                    "beginHHTime": "20",
+                    "beginMMTime": "0",
+                    "endHHTime": "21",
+                    "endMMTime": "50",
+                    "buildingCode": "LEDDN",
+                    "roomCode": "AUD",
+                    "endDate": null
+                },
+                {
+                    "dayCode": "4",
+                    "startDate": "2019-02-28",
+                    "beginHHTime": "20",
+                    "beginMMTime": "0",
+                    "endHHTime": "21",
+                    "endMMTime": "50",
+                    "buildingCode": "PETER",
+                    "roomCode": "108",
+                    "endDate": null
+                },
+                {
+                    "dayCode": "2",
+                    "startDate": "2019-03-19",
+                    "beginHHTime": "17",
+                    "beginMMTime": "0",
+                    "endHHTime": "18",
+                    "endMMTime": "50",
+                    "buildingCode": "GH",
+                    "roomCode": "242",
+                    "endDate": null
+                },
+                {
+                    "dayCode": "3",
+                    "startDate": "2019-03-20",
+                    "beginHHTime": "17",
+                    "beginMMTime": "0",
+                    "endHHTime": "18",
+                    "endMMTime": "50",
+                    "buildingCode": "PETER",
+                    "roomCode": "108",
+                    "endDate": null
+                }
+            ],
+            "instructors": [
+                "Lam, Tin Yiu"
+            ]
+        },
+        {
+            "subjectCode": "CHEM",
+            "courseCode": "6B",
+            "instructionType": "LE",
+            "sectionNumber": "960001",
+            "sectionCode": "E00",
+            "specialMeetingCode": "MI",
+            "longDescription": "",
+            "sectionStatus": null,
+            "enrollmentStatus": null,
+            "gradeOption": null,
+            "creditHours": null,
+            "gradeOptionPlus": false,
+            "creditHoursPlus": false,
+            "courseTitle": null,
+            "enrollmentCapacity": null,
+            "enrollmentQuantity": null,
+            "countOnWaitlist": null,
+            "stopEnrollmentFlag": false,
+            "classTimes": [
+                {
+                    "dayCode": "6",
+                    "startDate": "2019-02-02",
+                    "beginHHTime": "9",
+                    "beginMMTime": "0",
+                    "endHHTime": "10",
+                    "endMMTime": "50",
+                    "buildingCode": "GH",
+                    "roomCode": "242",
+                    "endDate": null
+                },
+                {
+                    "dayCode": "6",
+                    "startDate": "2019-03-02",
+                    "beginHHTime": "9",
+                    "beginMMTime": "0",
+                    "endHHTime": "10",
+                    "endMMTime": "50",
+                    "buildingCode": "GH",
+                    "roomCode": "242",
+                    "endDate": null
+                }
+            ],
+            "instructors": [
+                "Lam, Tin Yiu"
+            ]
+        }
+    ]
+}
