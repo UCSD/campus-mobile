@@ -11,6 +11,7 @@ import {
 } from 'react-native'
 import React from 'react'
 import { connect } from 'react-redux'
+import { SearchBar } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/SimpleLineIcons'
 
 import CourseListMockData from './mockData/CourseListMockData.json'
@@ -121,12 +122,7 @@ class HomePage extends React.Component {
 		const device = getDeviceType()
 
 		if (this.state.display_type === 'Calendar') {
-			return (
-				<View style={{ flex: 1 }}>
-					<Button onPress={() => auth.retrieveAccessToken().then(credentials => console.log(credentials))} title="Get Access Token" />
-					<ClassCalendar device={device} />
-				</View>
-			)
+			return <ClassCalendar device={device} />
 		} else if (this.state.display_type === 'Finals') {
 			return <FinalCalendar device={device} />
 		} else {
