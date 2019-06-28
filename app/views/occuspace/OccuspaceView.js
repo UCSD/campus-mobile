@@ -37,6 +37,7 @@ const OccuspaceSubViewList = ({ data }) => (
 		keyExtractor={listItem => listItem.locationId.toString()}
 		renderItem={({ item: rowData }) => <OccuspaceRow data={rowData} />}
 		ItemSeparatorComponent={() => <View style={css.occusapce_item_separator} />}
+		nestedScrollEnabled={true}
 	/>
 )
 
