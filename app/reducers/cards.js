@@ -1,5 +1,11 @@
 const initialState = {
 	cards: {
+		webreg: {
+			id: 'webreg',
+			active: true,
+			name: 'WebReg',
+			component: 'WebRegCard'
+		},
 		specialEvents: {
 			id: 'specialEvents',
 			active: false,
