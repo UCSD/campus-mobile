@@ -28,7 +28,7 @@ export const WebRegCard = ({
 			actionButton={
 				<Touchable
 					style={css.shuttlecard_addButton}
-					onPress={() => NavigationService.navigate('CourseView')}
+					onPress={() => NavigationService.navigate('CourseSearch')}
 				>
 					<Text style={css.shuttlecard_addText}>View Courses</Text>
 				</Touchable>

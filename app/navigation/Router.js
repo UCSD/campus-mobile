@@ -42,6 +42,7 @@ import Notifications from '../views/preferences/notifications/Notifications'
 import CardPreferences from '../views/preferences/card/CardPreferences'
 import WebReg from '../views/schedule/webreg/WebReg'
 
+import CourseSearch from '../views/course/CourseSearchList'
 import CourseView from '../views/course/CourseView'
 
 const campusLogoImage = require('../assets/images/UCSanDiegoLogo-nav.png')
@@ -220,6 +221,12 @@ let MainStack = createStackNavigator(
 				const { params } = navigation.state
 				const { title } = params
 				return { title }
+			}
+		},
+		CourseSearch: {
+			screen: CourseSearch,
+			navigationOptions: {
+				title: 'Course Search'
 			}
 		},
 		CourseView: {

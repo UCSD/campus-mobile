@@ -12,6 +12,7 @@ const CourseHeader = ({ course, terms, style }) => {
 		termStyle,
 		termFontStyle,
 	} = styles
+
 	return (
 		<View style={[containerStyle, style]}>
 			<View style={unitBGStyle}>
