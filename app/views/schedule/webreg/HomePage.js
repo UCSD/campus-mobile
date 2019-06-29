@@ -36,7 +36,7 @@ const WINDOW_HEIGHT = Dimensions.get('window').height
 const showAppTime = () => {
 	Alert.alert(
 		'Your Appointment Time',
-		'First Pass: \n Second Pass:',
+		'First Pass: Wed, 05/15 8:20 am - Fri, 05/17 11:59 \n Second Pass: Mon, 05/27 8:00 am - Thurs, 08/22 11:59 pm',
 		[
 			{ text: 'OK', onPress: () => console.log('OK Pressed') },
 		],

@@ -3,7 +3,6 @@ import { ScrollView, Alert } from 'react-native'
 import { connect } from 'react-redux'
 import { checkGooglePlayServices } from 'react-native-google-api-availability-bridge'
 
-import WebRegCardContainer from '../course/WebRegCard'
 import WeatherCardContainer from '../weather/WeatherCardContainer'
 import ShuttleCardContainer from '../shuttle/ShuttleCardContainer'
 import EventCardContainer from '../events/EventCardContainer'
@@ -77,7 +76,7 @@ export class Home extends React.Component {
 	}
 
 	_getCards = () => {
-		const activeCards = [<WebRegCardContainer key="webreg" />]
+		const activeCards = []
 
 		if (Array.isArray(this.props.cardOrder)) {
 			this.props.cardOrder.forEach((card) => {
@@ -121,9 +120,6 @@ export class Home extends React.Component {
 							break
 						case 'parking':
 							activeCards.push(<ParkingCardContainer key="parking" />)
-							break
-						case 'webreg':
-							activeCards.push(<WebRegCardContainer key="webreg" />)
 							break
 						default:
 							return gracefulFatalReset(new Error('Invalid card in state: ', card))

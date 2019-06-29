@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons'
 import HeaderRow from './HeaderRow'
 import SectionRow from './SectionRow'
 import StatusBar from './StatusBar'
-import Course from './Course.json'
+import Course from './mockData/Course.json'
 import ExpandArrow from './icons8-expand-arrow-filled-500.png'
 
 const { width } = Dimensions.get('screen')

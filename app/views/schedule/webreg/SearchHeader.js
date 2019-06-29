@@ -2,6 +2,7 @@ import React from 'react'
 import { TouchableOpacity, View, Text, TextInput, Dimensions, Switch, Image } from 'react-native'
 import Icon from 'react-native-vector-icons/SimpleLineIcons'
 import MIcon from 'react-native-vector-icons/MaterialIcons'
+import FIcon from 'react-native-vector-icons/FontAwesome'
 import { connect } from 'react-redux'
 
 import NavigationService from '../../../navigation/NavigationService'
@@ -9,7 +10,6 @@ import css from '../../../styles/css'
 import Filter from './Filter'
 
 const { width } = Dimensions.get('screen')
-const filterImg = require('./filterIcon.png')
 
 class SearchHeader extends React.Component {
 	constructor(props) {
@@ -23,14 +23,9 @@ class SearchHeader extends React.Component {
 
 		this.filterOptions = ['Lower division', 'Upper division', 'Graduate division']
 
-		this.onBackBtnPressed = this.onBackBtnPressed.bind(this)
 		this.onChangeText = this.onChangeText.bind(this)
 		this.onSubmit = this.onSubmit.bind(this)
 		this.onFilterPressed = this.onFilterPressed.bind(this)
-	}
-
-	onBackBtnPressed = () => {
-		NavigationService.navigate('MainTabs')
 	}
 
 	onChangeText = (text) => {
@@ -52,7 +47,6 @@ class SearchHeader extends React.Component {
 		})
 		this.props.showFilter(showFilter)
 	}
-
 
 	renderBackBtn() {
 		const { backBtnStyle } = styles
@@ -88,6 +82,7 @@ class SearchHeader extends React.Component {
 					onSubmitEditing={this.onSubmit}
 				/>
 				<TouchableOpacity
+					activeOpacity={1}
 					onPress={onSelectTerm}
 					style={switcherContainerStyle}
 					onLayout={(event) => {
@@ -110,10 +105,7 @@ class SearchHeader extends React.Component {
 				style={filterBtnStyle}
 				onPress={this.onFilterPressed}
 			>
-				<Image
-					style={filterIconStyle}
-					source={filterImg}
-				/>
+				<FIcon name="sliders" size={24} />
 			</TouchableOpacity>
 		)
 	}
@@ -183,10 +175,6 @@ const styles = {
 		flex: 0.14,
 		justifyContent: 'center',
 		alignItems: 'center'
-	},
-	filterIconStyle: {
-		width: 24,
-		height: 24
 	},
 	lineSeparator: {
 		borderWidth: 0.5,

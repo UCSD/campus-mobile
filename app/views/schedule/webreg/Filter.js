@@ -1,12 +1,13 @@
 import React from 'react'
-import { TouchableOpacity, View, Text, Switch } from 'react-native'
+import { TouchableOpacity, View, Text, Switch, Animated } from 'react-native'
+import { connect } from 'react-redux'
 
 
 class Filter extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			filterVal: [false, false, false]
+			filterVal: [false, false, false],
 		}
 
 		this.filterOptions = ['Lower division', 'Upper division', 'Graduate division']
@@ -14,13 +15,13 @@ class Filter extends React.Component {
 		this.onClearPressed = this.onClearPressed.bind(this)
 	}
 
-	onToggleSwitch = ( val, index) => {
+	onToggleSwitch = (val, index) => {
 		const { filterVal } = this.state
 		filterVal[index] = val
-		console.log(index)
-		return this.setState({
+		this.setState({
 			filterVal
 		})
+		// this.props.updateFilter(filterVal);
 	}
 
 	onClearPressed = () => {
@@ -35,12 +36,12 @@ class Filter extends React.Component {
 		const { filterViewStyle, filterTitle, lineSeparator, optionStyle, clearStyle } = styles
 
 		return (
-			<View style={filterViewStyle}>
+			<Animated.View style={[filterViewStyle, this.props.style]}>
 				<Text style={filterTitle}>Filter</Text>
 				<Text style={{ fontSize: 12, lineHeight: 14, color: ' rgba(0, 0, 0, 0.5)', marginTop: 20, alignSelf: 'flex-start' }}>Show Only:</Text>
 				<View>
 					{this.filterOptions.map((option, index) => (
-						<View style={{ paddingLeft: 22,flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+						<View style={{ paddingLeft: 22, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
 							<Text style={optionStyle}>{option}</Text>
 							<Switch
 								trackColor={{ true: '#006A96', false: 'white' }}
@@ -57,7 +58,7 @@ class Filter extends React.Component {
 				<TouchableOpacity onPress={this.onClearPressed} >
 					<Text style={clearStyle}>Clear</Text>
 				</TouchableOpacity>
-			</View>
+			</Animated.View>
 		)
 	}
 }
@@ -74,9 +75,15 @@ const styles = {
 		right: 0,
 		flexDirection: 'column',
 		alignItems: 'center',
-		borderWidth: 1,
 		paddingHorizontal: 12,
-		backgroundColor: '#fff'
+		backgroundColor: '#fff',
+		shadowColor: '#000',
+		shadowOffset: {
+			width: 0,
+			height: 1,
+		},
+		shadowOpacity: 0.1,
+		shadowRadius: 2,
 	},
 	filterTitle: {
 		fontSize: 18,
@@ -103,4 +110,15 @@ const styles = {
 	}
 }
 
-export default Filter
+const mapDispatchToProps = dispatch => (
+	{
+		updateFilter: (filterVal) => {
+			dispatch({
+				type: 'UPDATE_FILTER_VALUE',
+				filterVal
+			})
+		},
+	}
+)
+
+export default connect(null, mapDispatchToProps)(Filter)

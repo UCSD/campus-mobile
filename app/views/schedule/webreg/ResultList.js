@@ -2,7 +2,6 @@ import React from 'react'
 import { View, Text, FlatList, TouchableOpacity } from 'react-native'
 import { withNavigation } from 'react-navigation'
 import { connect } from 'react-redux'
-
 import CourseHeader from './CourseHeader'
 import Data from './mockData/mockData.json'
 import NavigationService from '../../../navigation/NavigationService'
@@ -40,7 +39,7 @@ class ResultList extends React.Component {
 	render() {
 		const { emptyFontStyle, emptyViewStyle } = styles
 
-		if ( this.props.input.length != 0) {
+		if ( this.props.input.length !== 0) {
 			return (
 				<FlatList
 					data={Data}
@@ -74,4 +73,4 @@ const styles = {
 
 const mapStateToProps = state => ({ input: state.course.searchInput })
 
-export default connect(mapStateToProps)(ResultList)
+export default withNavigation(connect(mapStateToProps)(ResultList))
