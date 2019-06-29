@@ -77,4 +77,4 @@ const mapStateToProps = (state) => {
 	return { input: state.course.searchInput }
 } 
 
-export default connect(mapStateToProps)(ResultList)
+export default withNavigation(connect(mapStateToProps)(ResultList));

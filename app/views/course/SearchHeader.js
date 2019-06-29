@@ -1,10 +1,9 @@
 import React from 'react'
-import { TouchableOpacity, View, Text, TextInput, Dimensions, Switch, Image } from 'react-native'
+import { TouchableOpacity, View, TextInput, Dimensions, Image } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
 import NavigationService from '../../navigation/NavigationService'
 import { connect } from 'react-redux';
-
-import Filter from './Filter';
+import { withNavigation } from 'react-navigation'
 
 const { width } = Dimensions.get('screen')
 class SearchHeader extends React.Component {
@@ -167,18 +166,17 @@ const styles = {
 }
 
 const mapDispatchToProps = dispatch => (
-  {
-    updateInput: (input) => {
-      dispatch({ type: 'UPDATE_INPUT', input })
-    }
-  }, 
-  {
-    showFilter: (showFilter) => {
-      dispatch({ type: 'CHANGE_FILTER_VISIBILITY', showFilter})
-    }
-  }
+	{
+		updateInput: (input) => {
+			dispatch({
+				type: 'UPDATE_INPUT',
+				input
+			})
+		},
+		showFilter: (showFilter) => {
+			dispatch({ type: 'CHANGE_FILTER_VISIBILITY', showFilter})
+		},
+	}
 )
 
-
-
-export default connect(null, mapDispatchToProps)(SearchHeader)
+export default withNavigation(connect(null, mapDispatchToProps)(SearchHeader))

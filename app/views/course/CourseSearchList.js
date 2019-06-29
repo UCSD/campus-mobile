@@ -1,8 +1,6 @@
 import React from 'react'
-import { TouchableOpacity, View, Text, TextInput, Image, Switch } from 'react-native'
-import Icon from 'react-native-vector-icons/Ionicons'
+import { View } from 'react-native'
 import { withNavigation } from 'react-navigation'
-import NavigationService from '../../navigation/NavigationService'
 import { connect } from 'react-redux';
 import ResultList from './ResultList';
 import SearchHeader from './SearchHeader';
