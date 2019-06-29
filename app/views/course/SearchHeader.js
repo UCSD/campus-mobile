@@ -56,7 +56,10 @@ class SearchHeader extends React.Component {
         style={backBtnStyle}
         onPress={this.onBackBtnPressed}
       >
-        <Icon name="ios-arrow-back" size={24} ></Icon>
+        <Image
+            style={{width:24, height:24}}
+            source={require('./backIcon.png')}
+        />
       </TouchableOpacity>
     )
   }
@@ -67,7 +70,10 @@ class SearchHeader extends React.Component {
 
     return (
       <View style={barViewStyle}>
-        <Icon name="ios-search" size={24} style={searchIconStyle}></Icon>
+        <Image
+            style={searchIconStyle}
+            source={require('./searchIcon.png')}
+        />
         <TextInput
           style={inputStyle}
           value={input}
@@ -97,7 +103,6 @@ class SearchHeader extends React.Component {
 
 
   render() {
-    const { showFilter } = this.state;
     const { searchBarStyle } = styles
     return (
       <View style={searchBarStyle}>
@@ -136,16 +141,18 @@ const styles = {
     borderWidth: 1,
     borderColor: '#194160',
     borderRadius: 20,
+    alignItems:'center',
+    justifyContent:'center',
+    backgroundColor:'#f1f1f1',
   },
   searchIconStyle: {
-    flex: 0.15,
-    left: 10,
-    top: 4,
-    marginRight: 7,
+    width: 21, 
+    height: 21,
+    marginHorizontal:7,
   },
   inputStyle: {
-    flex: 0.85,
-    fontSize: 18,
+    flex:1,
+    fontSize: 14,
   },
   filterBtnStyle: {
     flex: 0.14,

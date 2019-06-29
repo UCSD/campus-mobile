@@ -1,5 +1,5 @@
 import React from 'react'
-import { TouchableOpacity, View, Text, Switch } from 'react-native'
+import { TouchableOpacity, View, Text, Switch, Animated } from 'react-native'
 import { connect } from 'react-redux';
 
 
@@ -7,7 +7,7 @@ class Filter extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      filterVal: [false, false, false]
+      filterVal: [false, false, false],
     }
 
     this.filterOptions = ['Lower division', 'Upper division', 'Graduate division']
@@ -36,7 +36,7 @@ class Filter extends React.Component {
     const { filterViewStyle, filterTitle, lineSeparator, optionStyle, clearStyle } = styles
 
     return (
-      <View style={filterViewStyle}>
+      <Animated.View style={[filterViewStyle, this.props.style]}>
         <Text style={filterTitle}>Filter</Text>
         <Text style={{ fontSize: 12, lineHeight: 14, color: ' rgba(0, 0, 0, 0.5)', marginTop: 20, alignSelf: 'flex-start' }}>Show Only:</Text>
         <View >
@@ -58,8 +58,7 @@ class Filter extends React.Component {
         <TouchableOpacity onPress={this.onClearPressed} >
           <Text style={clearStyle}>Clear</Text>
         </TouchableOpacity>
-
-      </View>
+      </Animated.View>
     )
   }
 }
@@ -73,7 +72,7 @@ const styles = {
     borderBottomLeftRadius: 10,
     position: 'absolute',
     top: 55,
-    right: 0,
+    right:0,
     flexDirection: 'column',
     alignItems: 'center',
     paddingHorizontal: 12,

@@ -1,5 +1,5 @@
 import React from 'react'
-import { View } from 'react-native'
+import { View, Animated } from 'react-native'
 import { withNavigation } from 'react-navigation'
 import { connect } from 'react-redux';
 import ResultList from './ResultList';
@@ -8,14 +8,20 @@ import Filter from './Filter'
 
 
 class CourseSearchList extends React.Component {
-	
+	constructor(){
+		super();
+		this.state = {
+			filterRightPos: new Animated.Value(-200)
+		}
+	}
 
 	render() {
 		return (
 			<View flex style={{ backgroundColor: 'white' }}>
 				<SearchHeader />
 				<ResultList />
-				{this.props.showFilter && <Filter />}
+				{this.props.showFilter && 
+					<Filter />}
 			</View>
 		)
 	}
