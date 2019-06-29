@@ -1,10 +1,9 @@
 import React from 'react'
-import { TouchableOpacity, View, Text, TextInput, Dimensions, Switch, Image } from 'react-native'
+import { TouchableOpacity, View, TextInput, Dimensions, Image } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
 import NavigationService from '../../navigation/NavigationService'
 import { connect } from 'react-redux';
-
-import Filter from './Filter';
+import { withNavigation } from 'react-navigation'
 
 const { width } = Dimensions.get('screen')
 class SearchHeader extends React.Component {
@@ -57,7 +56,10 @@ class SearchHeader extends React.Component {
         style={backBtnStyle}
         onPress={this.onBackBtnPressed}
       >
-        <Icon name="ios-arrow-back" size={24} ></Icon>
+        <Image
+            style={{width:24, height:24}}
+            source={require('./backIcon.png')}
+        />
       </TouchableOpacity>
     )
   }
@@ -68,7 +70,10 @@ class SearchHeader extends React.Component {
 
     return (
       <View style={barViewStyle}>
-        <Icon name="ios-search" size={24} style={searchIconStyle}></Icon>
+        <Image
+            style={searchIconStyle}
+            source={require('./searchIcon.png')}
+        />
         <TextInput
           style={inputStyle}
           value={input}
@@ -98,7 +103,6 @@ class SearchHeader extends React.Component {
 
 
   render() {
-    const { showFilter } = this.state;
     const { searchBarStyle } = styles
     return (
       <View style={searchBarStyle}>
@@ -137,16 +141,18 @@ const styles = {
     borderWidth: 1,
     borderColor: '#194160',
     borderRadius: 20,
+    alignItems:'center',
+    justifyContent:'center',
+    backgroundColor:'#f1f1f1',
   },
   searchIconStyle: {
-    flex: 0.15,
-    left: 10,
-    top: 4,
-    marginRight: 7,
+    width: 21, 
+    height: 21,
+    marginHorizontal:7,
   },
   inputStyle: {
-    flex: 0.85,
-    fontSize: 18,
+    flex:1,
+    fontSize: 14,
   },
   filterBtnStyle: {
     flex: 0.14,
@@ -167,18 +173,17 @@ const styles = {
 }
 
 const mapDispatchToProps = dispatch => (
-  {
-    updateInput: (input) => {
-      dispatch({ type: 'UPDATE_INPUT', input })
-    }
-  }, 
-  {
-    showFilter: (showFilter) => {
-      dispatch({ type: 'CHANGE_FILTER_VISIBILITY', showFilter})
-    }
-  }
+	{
+		updateInput: (input) => {
+			dispatch({
+				type: 'UPDATE_INPUT',
+				input
+			})
+		},
+		showFilter: (showFilter) => {
+			dispatch({ type: 'CHANGE_FILTER_VISIBILITY', showFilter})
+		},
+	}
 )
 
-
-
-export default connect(null, mapDispatchToProps)(SearchHeader)
+export default withNavigation(connect(null, mapDispatchToProps)(SearchHeader))

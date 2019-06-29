@@ -1,6 +1,7 @@
 const initialState = {
   searchInput: '',
   filterVisible: false,
+  filterVal: [false, false, false]
 }
 
 function course( state = initialState, action ) {
@@ -13,6 +14,10 @@ function course( state = initialState, action ) {
     }
     case 'CHANGE_FILTER_STATUS': {
       newState.filterVisible = action.filterVisible;
+      return newState
+    }
+    case 'UPDATE_FILTER': {
+      newState.filterVal = action.filterVal;
       return newState
     }
     default:
