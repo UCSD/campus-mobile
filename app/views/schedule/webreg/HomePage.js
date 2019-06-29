@@ -136,9 +136,7 @@ class HomePage extends React.Component {
 		} else if (this.state.display_type === 'Finals') {
 			return <FinalCalendar device={device} />
 		} else {
-			return (
-				<CourseList device={device} mock={CourseListMockData} />
-			)
+			return <CourseList device={device} mock={CourseListMockData} />
 			// 	<ScrollView
 			// 		style={css.scroll_default}
 			// 		contentContainerStyle={css.main_full}
