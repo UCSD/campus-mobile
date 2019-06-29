@@ -11,7 +11,6 @@ import {
 } from 'react-native'
 import React from 'react'
 import { connect } from 'react-redux'
-import { SearchBar } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/SimpleLineIcons'
 
 import CourseListMockData from './mockData/CourseListMockData.json'
@@ -32,7 +31,7 @@ import CalendarModalCard from './CalendarModalCard'
 const WINDOW_WIDTH = Dimensions.get('window').width
 const WINDOW_HEIGHT = Dimensions.get('window').height
 
-var term_arr = [...terms]
+let term_arr = [...terms]
 const INITIAL_TERMS = [...terms]
 
 const showAppTime = () => {
@@ -89,14 +88,6 @@ class HomePage extends React.Component {
 		this.setState({ show: true })
 	}
 
-	myIndexOf(arr, key, type) {
-		for(var i = 0; i < arr.length; i++) {
-			if(type === 'name' ? arr[i].term_name === key : arr[i].term_code === key) {
-				return i
-			}
-		}
-		return -1
-	}
 
 	handleCancel = () => {
 		this.setState({ show: false })
@@ -104,7 +95,7 @@ class HomePage extends React.Component {
 
 	handleSelect = (choice) => {
 		term_arr = [...INITIAL_TERMS]
-		const index = this.myIndexOf(term_arr, choice, 'name')
+		const index = myIndexOf(term_arr, choice, 'name')
 		choice = term_arr[index]
 		term_arr.unshift(term_arr.splice(index, 1)[0])
 		this.setState({ show: false })
@@ -127,16 +118,20 @@ class HomePage extends React.Component {
 		}
 	}
 
-
 	renderDisplayType() {
 		const device = getDeviceType()
 
 		if (this.state.display_type === 'Calendar') {
-			return <ClassCalendar device={device} />
+			return (
+				<View style={{ flex: 1 }}>
+					<Button onPress={() => auth.retrieveAccessToken().then(credentials => console.log(credentials))} title="Get Access Token" />
+					<ClassCalendar device={device} />
+				</View>
+			)
 		} else if (this.state.display_type === 'Finals') {
 			return <FinalCalendar device={device} />
 		} else {
-			return <CourseList device={device} mock={CourseListMockData} />
+			return <CourseList device={device} />
 			// 	<ScrollView
 			// 		style={css.scroll_default}
 			// 		contentContainerStyle={css.main_full}
