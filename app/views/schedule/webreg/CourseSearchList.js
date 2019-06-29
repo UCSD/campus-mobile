@@ -2,11 +2,11 @@ import React from 'react'
 import { TouchableOpacity, View, Text, TextInput, Image, Switch } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
 import { withNavigation } from 'react-navigation'
+import { connect } from 'react-redux'
 import NavigationService from '../../../navigation/NavigationService'
-import { connect } from 'react-redux';
-import ResultList from './ResultList';
-import SearchHeader from './SearchHeader';
-import DropDown from './DropDown';
+import ResultList from './ResultList'
+import SearchHeader from './SearchHeader'
+import DropDown from './DropDown'
 import Filter from './Filter'
 import { myIndexOf } from '../../../util/schedule'
 
@@ -22,6 +22,12 @@ class CourseSearchList extends React.Component {
 	}
 
 
+	getDropDownLayout = (x, y, width) => {
+		this.dropDownX = x
+		this.dropDownY = y
+		this.width = width
+	}
+
 	handleSelect = (choice) => {
 		const { initialTerms } = this.props
 		const index = myIndexOf(initialTerms, choice)
@@ -36,19 +42,13 @@ class CourseSearchList extends React.Component {
 
 	constructArr() {
 		const { initialTerms, selectedTerm } = this.props
-		result = [selectedTerm]
-		for(var i = 0; i < initialTerms.length; i++) {
-			if(initialTerms[i].term_code !== selectedTerm.term_code) {
+		const result = [selectedTerm]
+		for (let i = 0; i < initialTerms.length; i++) {
+			if (initialTerms[i].term_code !== selectedTerm.term_code) {
 				result.push(initialTerms[i])
 			}
 		}
 		return result
-	}
-
-	getDropDownLayout = (x, y, width) => {
-		this.dropDownX = x
-		this.dropDownY = y
-		this.width = width
 	}
 
 	showSelector() {
@@ -106,12 +106,12 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => (
-  {
+	{
 		selectTerm: (selectedTerm) => {
 			dispatch({ type: 'SET_SELECTED_TERM', selectedTerm })
 		},
-  }
+	}
 )
 
 
-export default withNavigation( connect(mapStateToProps, mapDispatchToProps)(CourseSearchList));
+export default withNavigation( connect(mapStateToProps, mapDispatchToProps)(CourseSearchList))

@@ -1,10 +1,11 @@
 import React from 'react'
 import { View, Text, FlatList, TouchableOpacity } from 'react-native'
+import { withNavigation } from 'react-navigation'
+import { connect } from 'react-redux'
+
 import CourseHeader from './CourseHeader'
 import Data from './mockData/mockData.json'
-import { withNavigation } from 'react-navigation'
 import NavigationService from '../../../navigation/NavigationService'
-import { connect } from 'react-redux';
 
 class ResultList extends React.Component {
 	constructor(props) {
@@ -29,7 +30,7 @@ class ResultList extends React.Component {
 			<CourseHeader
 				course={item}
 				term=""
-				style={{zIndex: 0}}
+				style={{ zIndex: 0 }}
 			/>
 		</TouchableOpacity>
 	)
@@ -71,8 +72,6 @@ const styles = {
 	}
 }
 
-const mapStateToProps = (state) => {
-	return { input: state.course.searchInput }
-}
+const mapStateToProps = state => ({ input: state.course.searchInput })
 
 export default connect(mapStateToProps)(ResultList)

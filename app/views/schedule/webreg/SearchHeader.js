@@ -1,87 +1,92 @@
 import React from 'react'
 import { TouchableOpacity, View, Text, TextInput, Dimensions, Switch, Image } from 'react-native'
-import NavigationService from '../../../navigation/NavigationService'
 import Icon from 'react-native-vector-icons/SimpleLineIcons'
 import MIcon from 'react-native-vector-icons/MaterialIcons'
-import { connect } from 'react-redux';
+import { connect } from 'react-redux'
 
-import css from '../../../styles/css';
-import Filter from './Filter';
+import NavigationService from '../../../navigation/NavigationService'
+import css from '../../../styles/css'
+import Filter from './Filter'
 
 const { width } = Dimensions.get('screen')
+const filterImg = require('./filterIcon.png')
+
 class SearchHeader extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      input: '',
-      searchedCourse: '',
-      showFilter: false,
-      optionVal: [false, true, false]
-    }
+	constructor(props) {
+		super(props)
+		this.state = {
+			input: '',
+			searchedCourse: '',
+			showFilter: false,
+			optionVal: [false, true, false]
+		}
 
-    this.filterOptions = ['Lower division', 'Upper division', 'Graduate division']
+		this.filterOptions = ['Lower division', 'Upper division', 'Graduate division']
 
-    this.onBackBtnPressed = this.onBackBtnPressed.bind(this)
-    this.onChangeText = this.onChangeText.bind(this)
-    this.onSubmit = this.onSubmit.bind(this)
-    this.onFilterPressed = this.onFilterPressed.bind(this)
-  }
+		this.onBackBtnPressed = this.onBackBtnPressed.bind(this)
+		this.onChangeText = this.onChangeText.bind(this)
+		this.onSubmit = this.onSubmit.bind(this)
+		this.onFilterPressed = this.onFilterPressed.bind(this)
+	}
 
-  onBackBtnPressed = () => {
-    NavigationService.navigate('MainTabs')
-  }
+	onBackBtnPressed = () => {
+		NavigationService.navigate('MainTabs')
+	}
 
-  onChangeText = (text) => {
-    this.setState({ input: text })
-  }
+	onChangeText = (text) => {
+		this.setState({ input: text })
+	}
 
-  onSubmit = () => {
-    const { input } = this.state;
-    this.setState({
-      searchedCourse: input
-    });
-    this.props.updateInput(input);
-  }
+	onSubmit = () => {
+		const { input } = this.state
+		this.setState({
+			searchedCourse: input
+		})
+		this.props.updateInput(input)
+	}
 
-  onFilterPressed = () => {
-    const { showFilter } = this.state
-    this.setState({
-      showFilter: !showFilter
-    })
-    this.props.showFilter(showFilter);
-  }
+	onFilterPressed = () => {
+		const { showFilter } = this.state
+		this.setState({
+			showFilter: !showFilter
+		})
+		this.props.showFilter(showFilter)
+	}
 
 
-  renderBackBtn() {
-    const { backBtnStyle } = styles;
+	renderBackBtn() {
+		const { backBtnStyle } = styles
 		const { onPress } = this.props
-    return (
-      <TouchableOpacity
-        style={backBtnStyle}
-        onPress={onPress}
-      >
-        <Icon name="arrow-left" size={20} ></Icon>
-      </TouchableOpacity>
-    )
-  }
+		return (
+			<TouchableOpacity
+				style={backBtnStyle}
+				onPress={onPress}
+			>
+				<Icon name="arrow-left" size={20}  />
+			</TouchableOpacity>
+		)
+	}
 
-  renderBar = () => {
-    const { input } = this.state;
-    const { barViewStyle, inputStyle, termTextStyle, switcherContainerStyle } = styles
+	renderBar = () => {
+		const { input } = this.state
+		const { barViewStyle, inputStyle, termTextStyle, switcherContainerStyle } = styles
 		const { selectedTerm, getDropDownLayout, onSelectTerm } = this.props
 
-    return (
+		console.log('searched course: ', this.state.searchedCourse)
+		console.log('optionVal: ', this.state.optionVal)
+
+		return (
 			<View style={barViewStyle}>
 				<Icon name="magnifier" size={18} />
 				<TextInput
-          style={inputStyle}
-          value={input}
-          onChangeText={this.onChangeText}
-          autoCorrect={false}
+					style={inputStyle}
+					value={input}
+					onChangeText={this.onChangeText}
+					autoCorrect={false}
 					autoFocus={true}
-          returnKeyType="go"
-          onSubmitEditing={this.onSubmit}
-        />
+					returnKeyType="go"
+					onSubmitEditing={this.onSubmit}
+				/>
 				<TouchableOpacity
 					onPress={onSelectTerm}
 					style={switcherContainerStyle}
@@ -94,115 +99,116 @@ class SearchHeader extends React.Component {
 					<MIcon name="unfold-more" size={18} />
 				</TouchableOpacity>
 			</View>
-    )
-  }
-
-  renderFilterBtn = () => {
-    const { filterBtnStyle, filterIconStyle } = styles
-
-    return (
-      <TouchableOpacity
-        style={filterBtnStyle}
-        onPress={this.onFilterPressed}>
-        <Image
-          style={filterIconStyle}
-          source={require('./filterIcon.png')}
-        />
-      </TouchableOpacity>
-    )
-  }
-
-
-  render() {
-    const { showFilter } = this.state;
-    const { searchBarStyle } = styles
-    return (
-      <View style={searchBarStyle}>
-        {this.renderBackBtn()}
-        {this.renderBar()}
-        {this.renderFilterBtn()}
-      </View>
 		)
-  }
+	}
+
+	renderFilterBtn = () => {
+		const { filterBtnStyle, filterIconStyle } = styles
+
+		return (
+			<TouchableOpacity
+				style={filterBtnStyle}
+				onPress={this.onFilterPressed}
+			>
+				<Image
+					style={filterIconStyle}
+					source={filterImg}
+				/>
+			</TouchableOpacity>
+		)
+	}
+
+
+	render() {
+		const { showFilter } = this.state
+		const { searchBarStyle } = styles
+		return (
+			<View style={searchBarStyle}>
+				{this.renderBackBtn()}
+				{this.renderBar()}
+				{this.renderFilterBtn()}
+			</View>
+		)
+	}
 }
 
 const styles = {
 	switcherContainerStyle: {
 		flexDirection: 'row'
 	},
-  searchBarStyle: {
-    flexDirection: 'row',
-    width: '100%',
-    marginTop: 15,
-    marginBottom: 15,
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-  },
+	searchBarStyle: {
+		flexDirection: 'row',
+		width: '100%',
+		marginTop: 15,
+		marginBottom: 15,
+		justifyContent: 'center',
+		alignItems: 'center',
+		shadowColor: '#000',
+		shadowOffset: {
+			width: 0,
+			height: 1,
+		},
+		shadowOpacity: 0.1,
+		shadowRadius: 2,
+	},
 	termTextStyle: {
 		color: '#7D7D7D',
 		fontSize: 15
 	},
-  backBtnStyle: {
-    flex: 0.14,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  barViewStyle: {
-    flex: 0.72,
-    flexDirection: 'row',
+	backBtnStyle: {
+		flex: 0.14,
+		justifyContent: 'center',
+		alignItems: 'center'
+	},
+	barViewStyle: {
+		flex: 0.72,
+		flexDirection: 'row',
 		alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#194160',
-    borderRadius: 20,
+		borderWidth: 1,
+		borderColor: '#194160',
+		borderRadius: 20,
 		backgroundColor: '#F1F1F1',
 		paddingLeft: 15,
 		paddingRight: 10,
 		paddingTop: 5,
 		paddingBottom: 5
-  },
-  inputStyle: {
-    flex: 1,
-    fontSize: 15,
+	},
+	inputStyle: {
+		flex: 1,
+		fontSize: 15,
 		paddingLeft: 10,
 		paddingRight: 10
-  },
-  filterBtnStyle: {
-    flex: 0.14,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  filterIconStyle: {
-    width: 24,
-    height: 24
-  },
-  lineSeparator: {
-    borderWidth: 0.5,
-    width: width / 2 - 20,
-    height: 0.5,
-    marginVertical: 13,
-    borderColor: 'rgba(0, 0, 0, 0.1)'
-  },
+	},
+	filterBtnStyle: {
+		flex: 0.14,
+		justifyContent: 'center',
+		alignItems: 'center'
+	},
+	filterIconStyle: {
+		width: 24,
+		height: 24
+	},
+	lineSeparator: {
+		borderWidth: 0.5,
+		width: (width / 2) - 20,
+		height: 0.5,
+		marginVertical: 13,
+		borderColor: 'rgba(0, 0, 0, 0.1)'
+	},
 }
 
 const mapDispatchToProps = dispatch => (
-  {
-    updateInput: (input) => {
-      dispatch({ type: 'UPDATE_INPUT', input })
-    },
+	{
+		updateInput: (input) => {
+			dispatch({ type: 'UPDATE_INPUT', input })
+		},
 		selectTerm: (selectedTerm) => {
 			dispatch({ type: 'SET_SELECTED_TERM', selectedTerm })
 		},
 		showFilter: (showFilter) => {
-      dispatch({ type: 'CHANGE_FILTER_VISIBILITY', showFilter})
-    }
-  }
+			dispatch({ type: 'CHANGE_FILTER_VISIBILITY', showFilter })
+		}
+	}
 )
 
 const mapStateToProps = state => ({

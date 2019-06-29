@@ -79,9 +79,9 @@ class HomePage extends React.Component {
 
 	constructArr() {
 		const { initialTerms, selectedTerm } = this.props
-		result = [selectedTerm]
-		for(var i = 0; i < initialTerms.length; i++) {
-			if(initialTerms[i].term_code !== selectedTerm.term_code) {
+		const result = [selectedTerm]
+		for (let i = 0; i < initialTerms.length; i++) {
+			if (initialTerms[i].term_code !== selectedTerm.term_code) {
 				result.push(initialTerms[i])
 			}
 		}
@@ -329,7 +329,7 @@ class HomePage extends React.Component {
 						<Text style={webreg_homepage_search_text}>Search Course</Text>
 					</View>
 				</TouchableOpacity>
-				{/*<SearchBar placeholder={"Search Course"} />*/}
+				{/* <SearchBar placeholder={"Search Course"} />*/}
 				{/* <Button onPress={() => auth.retrieveAccessToken().then(credentials => console.log(credentials))} title="Get Access Token" />*/}
 				{this.renderDisplayType()}
 				{this.renderSwitchNavigator(options)}
