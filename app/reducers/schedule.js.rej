@@ -1,4 +1,0 @@
-diff a/app/reducers/schedule.js b/app/reducers/schedule.js	(rejected hunks)
-@@ -122 +122 @@ function schedule(state = initialState, action) {
--			if(name in newState.courseCards) {
-+			if (name in newState.courseCards) {

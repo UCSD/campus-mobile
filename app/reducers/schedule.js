@@ -4,7 +4,7 @@ const initialState = {
 	data: null,
 	lastUpdated: 0,
 	currentTerm: null,
-	selectedTerm: null,
+	selectedTerm: { term_name: 'Spring 2019', term_code: 'SP19' },
 	classes: [],
 	selectedCourse: null,
 	selectedCourseDetail: null,

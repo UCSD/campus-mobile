@@ -5,6 +5,7 @@ import {
 	Dimensions,
 	Alert,
 	TouchableOpacity,
+	TouchableWithoutFeedback,
 	Animated,
 	ScrollView,
 	Button,
@@ -18,10 +19,9 @@ import CourseListMockData from './mockData/CourseListMockData.json'
 
 import LAYOUT from '../../../styles/LayoutConstants'
 import { deviceIphoneX, platformIOS } from '../../../util/general'
-import { getBottomMargin } from '../../../util/schedule'
+import { getBottomMargin, myIndexOf } from '../../../util/schedule'
 import auth from '../../../util/auth'
 import css from '../../../styles/css'
-import { terms } from './mockData/TermMockData.json'
 import DropDown from './DropDown'
 import ClassCalendar from './ClassCalendar'
 import FinalCalendar from './FinalCalendar'
@@ -33,9 +33,6 @@ import SearchBar from './SearchBar'
 const WINDOW_WIDTH = Dimensions.get('window').width
 const WINDOW_HEIGHT = Dimensions.get('window').height
 
-let term_arr = [...terms]
-const INITIAL_TERMS = [...terms]
-
 const showAppTime = () => {
 	Alert.alert(
 		'Your Appointment Time',
@@ -45,15 +42,6 @@ const showAppTime = () => {
 		],
 		{ cancelable: false },
 	)
-}
-
-const myIndexOf = (arr, key, type) => {
-	for (let i = 0; i < arr.length; i++) {
-		if (type === 'name' ? arr[i].term_name === key : arr[i].term_code === key) {
-			return i
-		}
-	}
-	return -1
 }
 
 
@@ -74,12 +62,11 @@ class HomePage extends React.Component {
 		super(props)
 		this.state = {
 			show: false,
-			display_type: 'Calendar',
+			display_type: 'Calendar'
 		}
 		this.selectTerm = this.selectTerm.bind(this)
 		this.handleCancel = this.handleCancel.bind(this)
 		this.handleSelect = this.handleSelect.bind(this)
-		this.props.selectTerm({ term_name: 'Spring 2019', term_code: 'SP19' })
 	}
 
 	componentWillMount() {
@@ -90,16 +77,25 @@ class HomePage extends React.Component {
 		this.setState({ show: true })
 	}
 
+	constructArr() {
+		const { initialTerms, selectedTerm } = this.props
+		result = [selectedTerm]
+		for(var i = 0; i < initialTerms.length; i++) {
+			if(initialTerms[i].term_code !== selectedTerm.term_code) {
+				result.push(initialTerms[i])
+			}
+		}
+		return result
+	}
 
 	handleCancel = () => {
 		this.setState({ show: false })
 	}
 
 	handleSelect = (choice) => {
-		term_arr = [...INITIAL_TERMS]
-		const index = myIndexOf(term_arr, choice, 'name')
-		choice = term_arr[index]
-		term_arr.unshift(term_arr.splice(index, 1)[0])
+		const { initialTerms } = this.props
+		const index = myIndexOf(initialTerms, choice, 'name')
+		choice = initialTerms[index]
 		this.setState({ show: false })
 		this.props.selectTerm(choice)
 	}
@@ -113,7 +109,7 @@ class HomePage extends React.Component {
 					cardWidth={this.width}
 					onCancel={this.handleCancel}
 					onSelect={this.handleSelect}
-					choices={term_arr}
+					choices={this.constructArr()}
 					isTermName
 				/>
 			)
@@ -299,6 +295,8 @@ class HomePage extends React.Component {
 			webreg_homepage_search_text
 		} = css
 
+		const { onSearchClick } = this.props
+
 		const options = ['Calendar', 'List', 'Finals']
 
 		return (
@@ -322,13 +320,16 @@ class HomePage extends React.Component {
 						<Icon name="arrow-down" onPress={this.selectTerm} size={18} />
 					</View>
 				</View>
-				{/* <View>
+				<TouchableOpacity
+					onPress={onSearchClick}
+					style={webreg_homepage_webreg_homepage_search_bar_container}
+				>
 					<View style={webreg_homepage_search_bar}>
 						<Icon name="magnifier" size={18} />
-						<TextInput placeholder={"Search Course"} style={webreg_homepage_search_text} />
+						<Text style={webreg_homepage_search_text}>Search Course</Text>
 					</View>
-				</View> */}
-				<SearchBar placeholder={"Search Course"} />
+				</TouchableOpacity>
+				{/*<SearchBar placeholder={"Search Course"} />*/}
 				{/* <Button onPress={() => auth.retrieveAccessToken().then(credentials => console.log(credentials))} title="Get Access Token" />*/}
 				{this.renderDisplayType()}
 				{this.renderSwitchNavigator(options)}

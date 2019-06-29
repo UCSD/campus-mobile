@@ -405,5 +405,14 @@ module.exports = {
 					return 0
 			}
 		}
+	},
+
+	myIndexOf(arr, key, type) {
+		for (let i = 0; i < arr.length; i++) {
+			if (type === 'name' ? arr[i].term_name === key : arr[i].term_code === key) {
+				return i
+			}
+		}
+		return -1
 	}
 }

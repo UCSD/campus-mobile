@@ -6,13 +6,16 @@ import css from '../../../styles/css'
 import auth from '../../../util/auth'
 import HomePage from './HomePage'
 import CourseListCard from './CourseListCard'
+import CourseSearchList from './CourseSearchList'
+import { terms } from './mockData/TermMockData.json'
+const INITIAL_TERMS = [...terms]
 
 class WebReg extends React.Component {
 	constructor(props) {
 		super()
-		// this.state = {
-		// 	search: '',
-		// }
+		this.state = {
+			search: false
+		}
 	}
 
 	componentWillMount() {
@@ -30,9 +33,11 @@ class WebReg extends React.Component {
 	}
 
 	render() {
-		return (
-			<HomePage />
-		)
+		if (this.state.search) {
+			return <CourseSearchList initialTerms={INITIAL_TERMS} onGoBack={() => this.setState({ search: false })}/>
+		} else {
+			return <HomePage initialTerms={INITIAL_TERMS} onSearchClick={() => this.setState({ search: true })}/>
+		}
 	}
 }
 
