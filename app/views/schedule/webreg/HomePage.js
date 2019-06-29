@@ -7,7 +7,8 @@ import {
 	TouchableOpacity,
 	Animated,
 	ScrollView,
-	Button
+	Button,
+	TextInput
 } from 'react-native'
 import React from 'react'
 import { connect } from 'react-redux'
@@ -27,6 +28,7 @@ import FinalCalendar from './FinalCalendar'
 import CourseListCard from './CourseListCard'
 import CourseList from './CourseList'
 import CalendarModalCard from './CalendarModalCard'
+import SearchBar from './SearchBar'
 
 const WINDOW_WIDTH = Dimensions.get('window').width
 const WINDOW_HEIGHT = Dimensions.get('window').height
@@ -321,12 +323,13 @@ class HomePage extends React.Component {
 						<Icon name="arrow-down" onPress={this.selectTerm} size={18} />
 					</View>
 				</View>
-				<View style={webreg_homepage_webreg_homepage_search_bar_container}>
+				{/* <View>
 					<View style={webreg_homepage_search_bar}>
 						<Icon name="magnifier" size={18} />
-						<Text style={webreg_homepage_search_text}> Search Course </Text>
+						<TextInput placeholder={"Search Course"} style={webreg_homepage_search_text} />
 					</View>
-				</View>
+				</View> */}
+				<SearchBar placeholder={"Search Course"} />
 				{/* <Button onPress={() => auth.retrieveAccessToken().then(credentials => console.log(credentials))} title="Get Access Token" />*/}
 				{this.renderDisplayType()}
 				{this.renderSwitchNavigator(options)}
