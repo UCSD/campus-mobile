@@ -387,6 +387,23 @@ module.exports = {
 			})
 		}
 		return obj
-	}
+	},
 
+	getBottomMargin(device, type = 'list') {
+		if (type === 'card') {
+			if (device === 2) {
+				return 17
+			}
+			return 0
+		} else {
+			switch (device) {
+				case 1:
+					return 55
+				case 2:
+					return 72
+				default:
+					return 0
+			}
+		}
+	}
 }

@@ -5,23 +5,13 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 
 import auth from '../../../util/auth'
 import CourseListMockData from './mockData/CourseListMockData.json'
-import { getDayOfWeek, getCourseList } from '../../../util/schedule'
+import { getDayOfWeek, getCourseList, getBottomMargin } from '../../../util/schedule'
 import CalendarCard from './CalendarCard'
 
 const { width, height } = Dimensions.get('window')
 const CARD_WIDTH = (width - 70) / 7
 const CARD_HEIGHT = 50
 const COLOR_LIST = ['#ffdfba', '#ffffba', '#baffc9', '#bae1ff', 'rgb(193, 224, 252)']
-const getBottomMargin = (device) => {
-	switch (device) {
-		case 1:
-			return 55
-		case 2:
-			return 72
-		default:
-			return 0
-	}
-}
 
 class ClassCalendar extends React.Component {
 	constructor(props) {
@@ -139,7 +129,6 @@ class ClassCalendar extends React.Component {
 		const { courses, sample } = this.state
 		const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 		const hours = ['7 am', '8 am', '9 am', '10 am', '11 am', '12 pm', '1 pm', '2 pm', '3 pm', '4 pm', '5 pm', '6 pm', '7 pm', '8 pm', '9 pm']
-		const { device } = this.props
 
 		const {
 			cardStyle,
@@ -150,21 +139,6 @@ class ClassCalendar extends React.Component {
 			timeRowStyle,
 			timeContainerStyle
 		} = styles
-
-		let offset = 0
-
-		switch (device) {
-			case 1:
-				offset = 60
-				break
-			case 2:
-				offset = 77
-				break
-			case 0:
-			default:
-				offset = 0
-				break
-		}
 
 		return (
 			<View style={[cardStyle, { marginBottom: getBottomMargin(this.props.device) }]}>
