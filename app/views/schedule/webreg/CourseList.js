@@ -1,15 +1,7 @@
 import React, { Component } from 'react'
 import {
-	StyleSheet,
-	Text,
-	View,
-	LayoutAnimation,
-	PanResponder,
+	// StyleSheet,
 	FlatList,
-	TouchableOpacity,
-	Dimensions,
-	SearchBar,
-	TouchableWithoutFeedback,
 } from 'react-native'
 import { connect } from 'react-redux'
 
@@ -21,13 +13,13 @@ import { getBottomMargin } from '../../../util/schedule'
 
 class CourseList extends Component {
 	componentWillMount() {
-		console.log(this)
+		// console.log(this)
 	}
 
 	render() {
 		const mock = CourseListMockData
 
-		console.log(mock)
+		// console.log(mock)
 		return (
 			<FlatList
 				style={{ marginBottom: getBottomMargin(this.props.device) }}
@@ -37,18 +29,11 @@ class CourseList extends Component {
 					data={item}
 				/>)}
 				keyExtractor={item => item.course_code + item.section}
-				extraData={this.props.refresh}
+				extraData={this.state}
 			/>
 		)
 	}
 }
-
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		paddingHorizontal: 0,
-	},
-})
 
 function mapStateToProps(state) {
 	return {
@@ -63,9 +48,9 @@ const mapDispatchToProps = (dispatch, ownProps) => (
 		updateClassData: (classes) => {
 			dispatch({ type: 'UPDATE_CLASS_DATA', classes })
 		},
-		changeClassPosition: (draggedClassIndex, anotherClassIndex) => {
-			dispatch({ type: 'CHANGE_CLASS_POS', draggedClassIndex, anotherClassIndex })
-		},
+		// changeClassPosition: (draggedClassIndex, anotherClassIndex) => {
+		// 	dispatch({ type: 'CHANGE_CLASS_POS', draggedClassIndex, anotherClassIndex })
+		// },
 		refreshClassList: () => {
 			dispatch({ type: 'REFRESH_CLASS_LIST' })
 		}

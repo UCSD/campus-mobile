@@ -2,21 +2,16 @@ import React from 'react'
 import {
 	View,
 	Text,
-	StyleSheet,
-	ActivityIndicator,
 	TouchableOpacity,
 } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 
-import schedule from '../../../util/schedule'
-import logger from '../../../util/logger'
-import Card from '../../common/Card'
-import LastUpdated from '../../common/LastUpdated'
 import css from '../../../styles/css'
 import COLOR from '../../../styles/ColorConstants'
 
 const CourseListCard = ({ data }) => {
-	const { subject_code, course_code, units, grade_option, course_title, section_data, enrollment_status } = data
+	// grade_option to be added
+	const { subject_code, course_code, units, course_title, section_data, enrollment_status } = data
 	const
 		courseUnit = units,
 		courseCode = subject_code + course_code,

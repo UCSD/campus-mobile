@@ -1,11 +1,7 @@
 import React from 'react'
-import { ScrollView, View, Text, FlatList, Platform, Button } from 'react-native'
 import { connect } from 'react-redux'
 
-import css from '../../../styles/css'
-import auth from '../../../util/auth'
 import HomePage from './HomePage'
-import CourseListCard from './CourseListCard'
 import CourseSearchList from './CourseSearchList'
 import { terms } from './mockData/TermMockData.json'
 

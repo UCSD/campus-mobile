@@ -1,23 +1,18 @@
 import {
 	View,
 	Text,
-	Platform,
 	Dimensions,
 	Alert,
 	TouchableOpacity,
-	TouchableWithoutFeedback,
 	Animated,
-	ScrollView,
 	Button,
-	TextInput
 } from 'react-native'
 import React from 'react'
 import { connect } from 'react-redux'
 import Icon from 'react-native-vector-icons/SimpleLineIcons'
 
-import CourseListMockData from './mockData/CourseListMockData.json'
+// import CourseListMockData from './mockData/CourseListMockData.json'
 
-import LAYOUT from '../../../styles/LayoutConstants'
 import { deviceIphoneX, platformIOS } from '../../../util/general'
 import { getBottomMargin, myIndexOf } from '../../../util/schedule'
 import auth from '../../../util/auth'
@@ -25,10 +20,9 @@ import css from '../../../styles/css'
 import DropDown from './DropDown'
 import ClassCalendar from './ClassCalendar'
 import FinalCalendar from './FinalCalendar'
-import CourseListCard from './CourseListCard'
 import CourseList from './CourseList'
 import CalendarModalCard from './CalendarModalCard'
-import SearchBar from './SearchBar'
+// import SearchBar from './SearchBar'
 
 const WINDOW_WIDTH = Dimensions.get('window').width
 const WINDOW_HEIGHT = Dimensions.get('window').height
@@ -261,7 +255,7 @@ class HomePage extends React.Component {
 					<CalendarModalCard data={selectedCourseFinalDetail} props={this.props} />
 				</Animated.View>)
 		} else if (this.state.lastFinal) {
-			const course = this.state.lastFinal
+			// const course = this.state.lastFinal
 			this.state.lastFinal = null
 			const modalY = new Animated.Value(0)
 			Animated.timing(modalY, {
