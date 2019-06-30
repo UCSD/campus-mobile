@@ -31,6 +31,7 @@ const WINDOW_HEIGHT = Dimensions.get('window').height
 class DropDown extends React.Component {
 	renderItem(item, i) {
 		const { webreg_dropdown_defaultContainerText, webreg_dropdown_defaultChoiceText } = css
+		const { choiceStyle, containerStyle } = this.props
 
 		if (i === 0) {
 			return (
@@ -38,8 +39,8 @@ class DropDown extends React.Component {
 					onPress={() => this.props.onSelect(item)}
 					key={i}
 				>
-					<View style={[webreg_dropdown_defaultContainerText, { backgroundColor: '#e1e1e1' }]}>
-						<Text style={[webreg_dropdown_defaultChoiceText, { color: '#034263' }]}>{item}</Text>
+					<View style={[webreg_dropdown_defaultContainerText, containerStyle, { backgroundColor: '#e1e1e1' }]}>
+						<Text style={[webreg_dropdown_defaultChoiceText, choiceStyle, { color: '#034263' }]}>{item}</Text>
 					</View>
 				</TouchableOpacity>
 			)
@@ -50,8 +51,8 @@ class DropDown extends React.Component {
 				onPress={() => this.props.onSelect(item)}
 				key={i}
 			>
-				<View style={webreg_dropdown_defaultContainerText}>
-					<Text style={webreg_dropdown_defaultChoiceText}>{item}</Text>
+				<View style={[webreg_dropdown_defaultContainerText, containerStyle]}>
+					<Text style={[webreg_dropdown_defaultChoiceText, choiceStyle]}>{item}</Text>
 				</View>
 			</TouchableOpacity>
 		)
@@ -60,8 +61,6 @@ class DropDown extends React.Component {
 	render() {
 		const {
 			choices,
-			choiceStyle,
-			containerStyle,
 			onCancel,
 			x, y, cardWidth,
 			isTermName

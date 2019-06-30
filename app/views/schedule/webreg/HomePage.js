@@ -1,58 +1,41 @@
 import {
 	View,
 	Text,
-	Platform,
 	Dimensions,
 	Alert,
 	TouchableOpacity,
 	Animated,
-	ScrollView,
-	Button
+	Button,
 } from 'react-native'
 import React from 'react'
 import { connect } from 'react-redux'
-import { SearchBar } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/SimpleLineIcons'
 
-import CourseListMockData from './mockData/CourseListMockData.json'
+// import CourseListMockData from './mockData/CourseListMockData.json'
 
-import LAYOUT from '../../../styles/LayoutConstants'
 import { deviceIphoneX, platformIOS } from '../../../util/general'
-import { getBottomMargin } from '../../../util/schedule'
+import { getBottomMargin, myIndexOf } from '../../../util/schedule'
 import auth from '../../../util/auth'
 import css from '../../../styles/css'
-import { terms } from './mockData/TermMockData.json'
 import DropDown from './DropDown'
 import ClassCalendar from './ClassCalendar'
 import FinalCalendar from './FinalCalendar'
-import CourseListCard from './CourseListCard'
 import CourseList from './CourseList'
 import CalendarModalCard from './CalendarModalCard'
+// import SearchBar from './SearchBar'
 
 const WINDOW_WIDTH = Dimensions.get('window').width
 const WINDOW_HEIGHT = Dimensions.get('window').height
 
-let term_arr = [...terms]
-const INITIAL_TERMS = [...terms]
-
 const showAppTime = () => {
 	Alert.alert(
 		'Your Appointment Time',
-		'First Pass: \n Second Pass:',
+		'First Pass: Wed, 05/15 8:20 am - Fri, 05/17 11:59 \n Second Pass: Mon, 05/27 8:00 am - Thurs, 08/22 11:59 pm',
 		[
 			{ text: 'OK', onPress: () => console.log('OK Pressed') },
 		],
 		{ cancelable: false },
 	)
-}
-
-const myIndexOf = (arr, key, type) => {
-	for (let i = 0; i < arr.length; i++) {
-		if (type === 'name' ? arr[i].term_name === key : arr[i].term_code === key) {
-			return i
-		}
-	}
-	return -1
 }
 
 
@@ -73,16 +56,30 @@ class HomePage extends React.Component {
 		super(props)
 		this.state = {
 			show: false,
-			display_type: 'Calendar',
+			display_type: 'Calendar'
 		}
 		this.selectTerm = this.selectTerm.bind(this)
 		this.handleCancel = this.handleCancel.bind(this)
 		this.handleSelect = this.handleSelect.bind(this)
-		this.props.selectTerm({ term_name: 'Spring 2019', term_code: 'SP19' })
 	}
 
 	componentWillMount() {
 		this.props.selectFinal(null, null)
+	}
+
+	selectTerm() {
+		this.setState({ show: true })
+	}
+
+	constructArr() {
+		const { initialTerms, selectedTerm } = this.props
+		const result = [selectedTerm]
+		for (let i = 0; i < initialTerms.length; i++) {
+			if (initialTerms[i].term_code !== selectedTerm.term_code) {
+				result.push(initialTerms[i])
+			}
+		}
+		return result
 	}
 
 	handleCancel = () => {
@@ -90,10 +87,9 @@ class HomePage extends React.Component {
 	}
 
 	handleSelect = (choice) => {
-		term_arr = [...INITIAL_TERMS]
-		const index = myIndexOf(term_arr, choice, 'name')
-		choice = term_arr[index]
-		term_arr.unshift(term_arr.splice(index, 1)[0])
+		const { initialTerms } = this.props
+		const index = myIndexOf(initialTerms, choice, 'name')
+		choice = initialTerms[index]
 		this.setState({ show: false })
 		this.props.selectTerm(choice)
 	}
@@ -107,28 +103,27 @@ class HomePage extends React.Component {
 					cardWidth={this.width}
 					onCancel={this.handleCancel}
 					onSelect={this.handleSelect}
-					choices={term_arr}
+					choices={this.constructArr()}
 					isTermName
 				/>
 			)
 		}
 	}
 
-	selectTerm() {
-		this.setState({ show: true })
-	}
-
 	renderDisplayType() {
 		const device = getDeviceType()
 
 		if (this.state.display_type === 'Calendar') {
-			return <ClassCalendar device={device} />
+			return (
+				<View style={{ flex: 1 }}>
+					<Button onPress={() => auth.retrieveAccessToken().then(credentials => console.log(credentials))} title="Get Access Token" />
+					<ClassCalendar device={device} />
+				</View>
+			)
 		} else if (this.state.display_type === 'Finals') {
 			return <FinalCalendar device={device} />
 		} else {
-			return (
-				<CourseList device={device} mock={CourseListMockData} />
-			)
+			return <CourseList device={device} />
 			// 	<ScrollView
 			// 		style={css.scroll_default}
 			// 		contentContainerStyle={css.main_full}
@@ -224,7 +219,7 @@ class HomePage extends React.Component {
 			return (
 				<Animated.View style={{
 					position: 'absolute',
-					bottom: getBottomMargin(getDeviceType(), 'card'),
+					bottom: -28,
 					width: WINDOW_WIDTH,
 					left: 0,
 					right: 0,
@@ -260,7 +255,7 @@ class HomePage extends React.Component {
 					<CalendarModalCard data={selectedCourseFinalDetail} props={this.props} />
 				</Animated.View>)
 		} else if (this.state.lastFinal) {
-			const course = this.state.lastFinal
+			// const course = this.state.lastFinal
 			this.state.lastFinal = null
 			const modalY = new Animated.Value(0)
 			Animated.timing(modalY, {
@@ -270,7 +265,7 @@ class HomePage extends React.Component {
 			return (
 				<Animated.View style={{
 					position: 'absolute',
-					bottom: getBottomMargin(getDeviceType(), 'card'),
+					bottom: -28,
 					width: WINDOW_WIDTH,
 					left: 0,
 					right: 0,
@@ -293,6 +288,8 @@ class HomePage extends React.Component {
 			webreg_homepage_webreg_homepage_search_bar_container,
 			webreg_homepage_search_text
 		} = css
+
+		const { onSearchClick } = this.props
 
 		const options = ['Calendar', 'List', 'Finals']
 
@@ -317,12 +314,16 @@ class HomePage extends React.Component {
 						<Icon name="arrow-down" onPress={this.selectTerm} size={18} />
 					</View>
 				</View>
-				<View style={webreg_homepage_webreg_homepage_search_bar_container}>
+				<TouchableOpacity
+					onPress={onSearchClick}
+					style={webreg_homepage_webreg_homepage_search_bar_container}
+				>
 					<View style={webreg_homepage_search_bar}>
 						<Icon name="magnifier" size={18} />
-						<Text style={webreg_homepage_search_text}> Search Course </Text>
+						<Text style={webreg_homepage_search_text}>Search Course</Text>
 					</View>
-				</View>
+				</TouchableOpacity>
+				{/* <SearchBar placeholder={"Search Course"} />*/}
 				{/* <Button onPress={() => auth.retrieveAccessToken().then(credentials => console.log(credentials))} title="Get Access Token" />*/}
 				{this.renderDisplayType()}
 				{this.renderSwitchNavigator(options)}

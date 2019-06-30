@@ -4,7 +4,7 @@ const initialState = {
 	data: null,
 	lastUpdated: 0,
 	currentTerm: null,
-	selectedTerm: null,
+	selectedTerm: { term_name: 'Spring 2019', term_code: 'SP19' },
 	classes: [],
 	selectedCourse: null,
 	selectedCourseDetail: null,
@@ -76,7 +76,8 @@ function schedule(state = initialState, action) {
 		case 'POPULATE_CLASS_ARRAY': {
 			console.log(	newState.data )
 			newState.classes = newState.data.data.map((item, index) => {
-				const { subject_code, course_code, units, grade_option, course_title, section_data } = item
+				// grade_option to be added
+				const { subject_code, course_code, units, course_title, section_data } = item
 				const
 					courseUnit      = units,
 					courseCode      = subject_code + course_code,
@@ -115,7 +116,7 @@ function schedule(state = initialState, action) {
 		}
 		case 'UPDATE_CLASS_DATA': {
 			newState.classes = action.classes
-			console.log('new state classes',newState.classes)
+			// console.log('new state classes',newState.classes)
 			return newState
 		}
 		case 'UPDATE_COURSE_CARD': {

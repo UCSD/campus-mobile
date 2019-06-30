@@ -2,64 +2,16 @@ import React from 'react'
 import {
 	View,
 	Text,
-	StyleSheet,
-	ActivityIndicator,
 	TouchableOpacity,
 } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 
-import schedule from '../../../util/schedule'
-import logger from '../../../util/logger'
-import Card from '../../common/Card'
-import LastUpdated from '../../common/LastUpdated'
 import css from '../../../styles/css'
 import COLOR from '../../../styles/ColorConstants'
 
 const CourseListCard = ({ data }) => {
-	/* Sample Course Data
-	{
-					 "term_code": "SP19",
-					 "subject_code": "CSE",
-					 "course_code": "101",
-					 "units": 4,
-					 "course_level": "UD",
-					 "grade_option": "L",
-					 "grade": "",
-					 "course_title": "Design & Analysis of Algorithm",
-					 "enrollment_status": "EN",
-					 "repeat_code": "N",
-					 "section_data": [
-							 {
-									 "section": "972389",
-									 "section_code": "B00",
-									 "meeting_type": "Lecture",
-									 "date": null,
-									 "time": "8:00 - 9:20",
-									 "days": "TU",
-									 "building": "CENTR",
-									 "room": "212",
-									 "instructor_name": "Jones, Miles E",
-									 "special_mtg_code": "",
-									 "enrollStatus": ""
-							 },
-							 ...
-							 {
-									 "section": "972390",
-									 "section_code": "B01",
-									 "meeting_type": "Discussion",
-									 "date": null,
-									 "time": "16:00 - 16:50",
-									 "days": "MO",
-									 "building": "WLH",
-									 "room": "2204",
-									 "instructor_name": "Jones, Miles E",
-									 "special_mtg_code": "",
-									 "enrollStatus": "EN"
-							 }
-					 ]
-			 },
-	*/
-	const { subject_code, course_code, units, grade_option, course_title, section_data, enrollment_status } = data
+	// grade_option to be added
+	const { subject_code, course_code, units, course_title, section_data, enrollment_status } = data
 	const
 		courseUnit = units,
 		courseCode = subject_code + course_code,

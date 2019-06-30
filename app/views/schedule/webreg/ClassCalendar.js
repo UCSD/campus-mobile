@@ -1,9 +1,9 @@
-import { Text, View, ScrollView, Dimensions, Button, TouchableWithoutFeedback } from 'react-native'
+import { Text, View, ScrollView, Dimensions, TouchableWithoutFeedback } from 'react-native'
 import React from 'react'
 import { connect } from 'react-redux'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
-import auth from '../../../util/auth'
+// import auth from '../../../util/auth'
 import CourseListMockData from './mockData/CourseListMockData.json'
 import { getDayOfWeek, getCourseList, getBottomMargin } from '../../../util/schedule'
 import CalendarCard from './CalendarCard'
@@ -35,7 +35,7 @@ class ClassCalendar extends React.Component {
 
 				const onLayout = (event) => {
 					const { x, y, width, height } = event.nativeEvent.layout
-					console.log('onLayout,', { name, x, y, width, height })
+					// console.log('onLayout,', { name, x, y, width, height })
 					this.props.updateCourseCard(name, x, y, width, height)
 				}
 

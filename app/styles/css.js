@@ -293,7 +293,7 @@ const css = StyleSheet.create({
 	webreg_modal_card_header_container: { flex: 1, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 8, paddingVertical: 4, backgroundColor: COLOR.LBLUE, borderTopLeftRadius: 10, borderTopRightRadius: 10, marginBottom: 4 },
 	webreg_homepage_search_text: { color: '#7D7D7D', fontSize: 18, paddingLeft: 10 },
 	webreg_homepage_webreg_homepage_search_bar_container: { marginLeft: 15, marginRight: 15, marginTop: 5, marginBottom: 10 },
-	webreg_homepage_search_bar: { backgroundColor: '#F1F1F1', borderRadius: 15, paddingLeft: 15, paddingTop: 5, paddingBottom: 5, paddingRight: 10, flexDirection: 'row', alignItems: 'center' },
+	webreg_homepage_search_bar: { backgroundColor: '#F1F1F1', borderRadius: 20, paddingLeft: 15, paddingTop: 5, paddingBottom: 5, paddingRight: 10, flexDirection: 'row', alignItems: 'center' },
 	webreg_homepage_term_container: { flex: 1, },
 	webreg_homepage_term_text: { fontFamily: 'Helvetica Neue', fontSize: 18, alignSelf: 'center' },
 	webreg_homepage_term_selector_container: { flexDirection: 'row', marginTop: 20, marginBottom: 10, marginLeft: 50, marginRight: 50 },

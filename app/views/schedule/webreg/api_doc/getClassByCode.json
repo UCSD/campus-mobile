@@ -1,0 +1,59 @@
+{
+  "metadata": {},
+  "data": {
+    "subjectCode": "CSE",
+    "courseCode": "101",
+    "departmentCode": "CSE",
+    "courseTitle": "Design & Analysis of Algorithm",
+    "unitsMin": 4,
+    "unitsMax": 4,
+    "unitsInc": 0,
+    "academicLevel": "UD",
+    "sections": [
+      {
+        "sectionId": "849795",
+        "termCode": "FA15",
+        "subterm": "01",
+        "sectionCode": "A00",
+        "instructionType": "LE",
+        "sectionStatus": "NC",
+        "subtitle": "Section specific subtitle.",
+        "startDate": "2015-12-09",
+        "endDate": "2015-12-15",
+        "enrolledQuantity": 0,
+        "capacityQuantity": 105,
+        "stopEnrollmentFlag": false,
+        "planCode": "ST",
+        "meetings": [
+          {
+            "dayCode": "MWF",
+            "startTime": "1500",
+            "endTime": "1759",
+            "buildingCode": "PCYNH",
+            "roomCode": "106"
+          }
+        ],
+        "additionalMeetings": [
+          {
+            "meetingType": "FI",
+            "meetingDate": "2015-12-09",
+            "dayCode": "MO",
+            "startTime": "1500",
+            "endTime": "1759",
+            "buildingCode": "PCYNH",
+            "roomCode": "106"
+          }
+        ],
+        "instructors": [
+          {
+            "pid": "A12345678",
+            "instructorName": "Smith, John",
+            "primaryInstructorFlag": true,
+            "workloadUnits": 0,
+            "workloadPercent": 0
+          }
+        ]
+      }
+    ]
+  }
+}
