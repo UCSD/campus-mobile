@@ -29,7 +29,7 @@ class ResultList extends React.Component {
 			<CourseHeader
 				course={item}
 				term=""
-				style={{ zIndex: 0 }}
+				style={{ zIndex:0 }}
 			/>
 		</TouchableOpacity>
 	)
@@ -63,7 +63,7 @@ const styles = {
 	emptyViewStyle: {
 		flex: 1,
 		justifyContent: 'center',
-		alignItems: 'center'
+		alignItems: 'center',
 	},
 	emptyFontStyle: {
 		color: 'grey',

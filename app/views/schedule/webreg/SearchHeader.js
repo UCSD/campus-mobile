@@ -1,15 +1,13 @@
 import React from 'react'
-import { TouchableOpacity, View, Text, TextInput, Dimensions, Switch, Image } from 'react-native'
+import { TouchableOpacity, View, Text, TextInput, Dimensions } from 'react-native'
 import Icon from 'react-native-vector-icons/SimpleLineIcons'
 import MIcon from 'react-native-vector-icons/MaterialIcons'
 import FIcon from 'react-native-vector-icons/FontAwesome'
 import { connect } from 'react-redux'
 
-import NavigationService from '../../../navigation/NavigationService'
-import css from '../../../styles/css'
-import Filter from './Filter'
 
-const { width } = Dimensions.get('screen')
+
+const { width, height} = Dimensions.get('window')
 
 class SearchHeader extends React.Component {
 	constructor(props) {
@@ -18,7 +16,7 @@ class SearchHeader extends React.Component {
 			input: '',
 			searchedCourse: '',
 			showFilter: false,
-			optionVal: [false, true, false]
+			optionVal: [false, true, false],
 		}
 
 		this.filterOptions = ['Lower division', 'Upper division', 'Graduate division']
@@ -26,9 +24,10 @@ class SearchHeader extends React.Component {
 		this.onChangeText = this.onChangeText.bind(this)
 		this.onSubmit = this.onSubmit.bind(this)
 		this.onFilterPressed = this.onFilterPressed.bind(this)
+		this.onBackBtnPressed = this.onBackBtnPressed.bind(this)
 	}
 
-	onChangeText = (text) => {
+ 	onChangeText = (text) => {
 		this.setState({ input: text })
 	}
 
@@ -45,18 +44,29 @@ class SearchHeader extends React.Component {
 		this.setState({
 			showFilter: !showFilter
 		})
-		this.props.showFilter(showFilter)
+		this.props.showFilter(!showFilter)
+	}
+
+	onBackBtnPressed = () => {
+		const { onPress } = this.props
+		onPress()
+		this.setState({
+			searchedCourse:'',
+			showFilter: false
+		})
+		this.props.updateInput('')
+		this.props.showFilter(false)
 	}
 
 	renderBackBtn() {
 		const { backBtnStyle } = styles
-		const { onPress } = this.props
+
 		return (
 			<TouchableOpacity
 				style={backBtnStyle}
-				onPress={onPress}
+				onPress={this.onBackBtnPressed}
 			>
-				<Icon name="arrow-left" size={20}  />
+				<Icon name="arrow-left" size={20} />
 			</TouchableOpacity>
 		)
 	}
@@ -66,11 +76,10 @@ class SearchHeader extends React.Component {
 		const { barViewStyle, inputStyle, termTextStyle, switcherContainerStyle } = styles
 		const { selectedTerm, getDropDownLayout, onSelectTerm } = this.props
 
-		console.log('searched course: ', this.state.searchedCourse)
-		console.log('optionVal: ', this.state.optionVal)
+
 
 		return (
-			<View style={barViewStyle}>
+			<View style={[barViewStyle]}>
 				<Icon name="magnifier" size={18} />
 				<TextInput
 					style={inputStyle}
@@ -98,7 +107,7 @@ class SearchHeader extends React.Component {
 	}
 
 	renderFilterBtn = () => {
-		const { filterBtnStyle, filterIconStyle } = styles
+		const { filterBtnStyle } = styles
 
 		return (
 			<TouchableOpacity
@@ -110,12 +119,26 @@ class SearchHeader extends React.Component {
 		)
 	}
 
+	componentDidMount(){
+		const { showFilter, searchInput } = this.state;
+		if( !showFilter || searchInput.length != 0){
+			this.setState({
+				showFilter: false,
+				searchInput: '',
+			})
+			this.props.showFilter(false);
+			this.props.updateInput('')
+		}
+	}
 
 	render() {
-		const { showFilter } = this.state
 		const { searchBarStyle } = styles
+
+
 		return (
-			<View style={searchBarStyle}>
+			<View 
+				style={[searchBarStyle, this.props.style]}
+				>
 				{this.renderBackBtn()}
 				{this.renderBar()}
 				{this.renderFilterBtn()}
@@ -159,11 +182,11 @@ const styles = {
 		borderWidth: 1,
 		borderColor: '#194160',
 		borderRadius: 20,
-		backgroundColor: '#F1F1F1',
 		paddingLeft: 15,
 		paddingRight: 10,
 		paddingTop: 5,
-		paddingBottom: 5
+		paddingBottom: 5,
+		backgroundColor: '#F1F1F1'
 	},
 	inputStyle: {
 		flex: 1,
@@ -174,7 +197,8 @@ const styles = {
 	filterBtnStyle: {
 		flex: 0.14,
 		justifyContent: 'center',
-		alignItems: 'center'
+		alignItems: 'center',
+		zIndex:1000,
 	},
 	lineSeparator: {
 		borderWidth: 0.5,
@@ -183,6 +207,12 @@ const styles = {
 		marginVertical: 13,
 		borderColor: 'rgba(0, 0, 0, 0.1)'
 	},
+	overlayStyle: {
+		flex: 1,
+		position: 'absolute',
+		backgroundColor:'black',
+		opacity:0.2,
+	}
 }
 
 const mapDispatchToProps = dispatch => (
@@ -201,6 +231,8 @@ const mapDispatchToProps = dispatch => (
 
 const mapStateToProps = state => ({
 	selectedTerm: state.schedule.selectedTerm,
+	searchInput: state.course.searchInput,
+	filterVisible: state.course.filterVisible
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SearchHeader)

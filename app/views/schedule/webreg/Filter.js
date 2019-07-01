@@ -65,7 +65,6 @@ class Filter extends React.Component {
 
 const styles = {
 	filterViewStyle: {
-		zIndex: 1000,
 		width: 200,
 		height: 210,
 		borderTopLeftRadius: 10,
@@ -120,5 +119,6 @@ const mapDispatchToProps = dispatch => (
 		},
 	}
 )
+
 
 export default connect(null, mapDispatchToProps)(Filter)
