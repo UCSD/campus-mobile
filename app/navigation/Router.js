@@ -41,7 +41,7 @@ import ManageParkingLots from '../views/parking/ManageParkingLots'
 import Notifications from '../views/preferences/notifications/Notifications'
 import CardPreferences from '../views/preferences/card/CardPreferences'
 import WebReg from '../views/schedule/webreg/WebReg'
-
+import CourseView from '../views/schedule/webreg/CourseView'
 const campusLogoImage = require('../assets/images/UCSanDiegoLogo-nav.png')
 
 const TabNavScreens = {
@@ -218,6 +218,12 @@ let MainStack = createStackNavigator(
 				const { params } = navigation.state
 				const { title } = params
 				return { title }
+			}
+		},
+		CourseView: {
+			screen: CourseView,
+			navigationOptions: {
+				title: 'Class detail',
 			}
 		}
 	},
