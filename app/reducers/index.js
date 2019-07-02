@@ -20,6 +20,7 @@ import requestErrorsReducer from './requestErrors'
 import homeReducer from './home'
 import parkingReducer from './parking'
 import messagesReducer from './messages'
+import studentProfileReducer from './studentProfile'
 import supplementalInstructionReducer from './supplementalInstruction'
 
 module.exports = combineReducers({
@@ -43,5 +44,6 @@ module.exports = combineReducers({
 	home: homeReducer,
 	parking: parkingReducer,
 	messages: messagesReducer,
+	studentProfile: studentProfileReducer,
 	supplementalInstruction: supplementalInstructionReducer
 })
