@@ -157,7 +157,7 @@ const mapDispatchToProps = dispatch => (
 			dispatch({ type: 'UPLOAD_SELECTED_OCCUSPACE_LOCATIONS' })
 		},
 		reorderOccuspaceLocations: (newOrder) => {
-			dispatch({ type: 'SET_ORDER_OCCUSAPCE_DATA', newOrder })
+			dispatch({ type: 'SET_ORDERED_OCCUSAPCE_DATA', newOrder })
 		}
 	}
 )

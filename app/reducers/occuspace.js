@@ -28,6 +28,10 @@ function occuspace(state = initialState, action) {
 			newState.selectedLocations = [...action.prevSlectedOccuspaceLocations]
 			return newState
 		}
+		case 'SET_ORDERED_OCCUSAPCE_DATA': {
+			newState.data = [...action.newOrder]
+			return newState
+		}
 
 		default:
 			return state
