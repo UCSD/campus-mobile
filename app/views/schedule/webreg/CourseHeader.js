@@ -1,41 +1,56 @@
 import React from 'react'
-import { View, Text } from 'react-native'
+import { TouchableOpacity, View, StyleSheet } from 'react-native'
+import { withNavigation } from 'react-navigation'
+import Icon from 'react-native-vector-icons/MaterialIcons'
+import { connect } from 'react-redux'
+import CourseCell from './CourseCell'
 
-const CourseHeader = ({ course, terms, style }) => {
-	const {
-		containerStyle,
-		unitBGStyle,
-		unitFontStyle,
-		courseContainerStyle,
-		titleStyle,
-		descriptionStyle,
-		termStyle,
-		termFontStyle,
-	} = styles
 
-	return (
-		<View style={[containerStyle, style]}>
-			<View style={unitBGStyle}>
-				<Text style={unitFontStyle}>{course.unit}</Text>
+class CourseHeader extends React.Component {
+	constructor(props) {
+		super(props)
+		this.onBackButtonPress = this.onBackButtonPress.bind(this)
+	}
+
+	onBackButtonPress() {
+		this.props.navigation.goBack()
+	}
+
+	_renderBackButton() {
+		const { backButtonStyle } = styles
+
+		return (
+			<TouchableOpacity
+				style={backButtonStyle}
+				onPress={this.onBackButtonPress}
+			>
+				<Icon name="navigate-before" size={24} />
+			</TouchableOpacity>
+		)
+	}
+
+	render() {
+		const { headerContainerStyle } = styles
+
+		return (
+			<View
+				style={[headerContainerStyle, this.props.style]}
+			>
+				{this._renderBackButton()}
+				<CourseCell course={this.props.course} style={{ flex: 0.72 }} />
+				<View style={styles.rightButtonStyle} />
 			</View>
-			<View style={courseContainerStyle}>
-				<Text style={titleStyle}>{course.courseCode}</Text>
-				<Text style={descriptionStyle}>{course.courseName}</Text>
-			</View>
-
-			{terms !== null &&
-				<View style={termStyle}>
-					<Text style={termFontStyle}>{terms}</Text>
-				</View>
-			}
-		</View>
-	)
+		)
+	}
 }
 
-const styles = {
-	containerStyle: {
-		alignSelf: 'center',
+const styles = StyleSheet.create({
+
+	headerContainerStyle: {
 		flexDirection: 'row',
+		width: '100%',
+		// marginTop: 15,
+		justifyContent: 'center',
 		alignItems: 'center',
 		shadowColor: '#000',
 		shadowOffset: {
@@ -44,47 +59,31 @@ const styles = {
 		},
 		shadowOpacity: 0.1,
 		shadowRadius: 2,
-		width: '85%',
-		borderRadius: 10,
-		backgroundColor: '#FBFBFB',
-		paddingTop: 3,
-		paddingLeft: 12,
-		paddingBottom: 6
 	},
-	unitBGStyle: {
-		width: 28,
-		height: 28,
-		borderRadius: 14,
+	termTextStyle: {
+		color: '#7D7D7D',
+		fontSize: 15
+	},
+	backButtonStyle: {
+		flex: 0.14,
+		justifyContent: 'center',
+		alignItems: 'center'
+	},
+	rightButtonStyle: {
+		flex: 0.14,
 		justifyContent: 'center',
 		alignItems: 'center',
-		backgroundColor: '#EAEAEA',
+		zIndex: 1000,
 	},
-	unitFontStyle: {
-		fontSize: 14,
-		lineHeight: 16
-	},
-	courseContainerStyle: {
-		flexDirection: 'column',
-		marginLeft: 13,
-	},
-	titleStyle: {
-		fontSize: 18,
-		lineHeight: 21,
-		fontWeight: 'bold',
-	},
-	descriptionStyle: {
-		fontSize: 14,
-		lineHeight: 16,
-	},
-	termStyle: {
-		position: 'absolute',
-		top: 6,
-		right: 7
-	},
-	termFontStyle: {
-		color: '#7D7D7D',
-		fontSize: 12,
-		lineHeight: 14,
+})
+
+const mapDispatchToProps = dispatch => (
+	{
 	}
-}
-export default CourseHeader
+)
+
+const mapStateToProps = state => ({
+
+})
+
+export default withNavigation(connect(mapStateToProps, mapDispatchToProps)(CourseHeader))

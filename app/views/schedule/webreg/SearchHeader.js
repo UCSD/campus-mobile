@@ -1,13 +1,11 @@
 import React from 'react'
-import { TouchableOpacity, View, Text, TextInput, Dimensions } from 'react-native'
-import Icon from 'react-native-vector-icons/SimpleLineIcons'
-import MIcon from 'react-native-vector-icons/MaterialIcons'
-import FIcon from 'react-native-vector-icons/FontAwesome'
+import { TouchableOpacity, View, Text, TextInput, Dimensions, StyleSheet } from 'react-native'
+import { withNavigation } from 'react-navigation'
+import Icon from 'react-native-vector-icons/MaterialIcons'
 import { connect } from 'react-redux'
 
 
-
-const { width, height} = Dimensions.get('window')
+const { width } = Dimensions.get('window')
 
 class SearchHeader extends React.Component {
 	constructor(props) {
@@ -23,11 +21,23 @@ class SearchHeader extends React.Component {
 
 		this.onChangeText = this.onChangeText.bind(this)
 		this.onSubmit = this.onSubmit.bind(this)
-		this.onFilterPressed = this.onFilterPressed.bind(this)
-		this.onBackBtnPressed = this.onBackBtnPressed.bind(this)
+		this.onFilterPress = this.onFilterPress.bind(this)
+		this.onBackButtonPress = this.onBackButtonPress.bind(this)
 	}
 
- 	onChangeText = (text) => {
+	componentDidMount() {
+		const { showFilter, searchInput } = this.state
+		if ( !showFilter || searchInput.length !== 0) {
+			this.setState({
+				showFilter: false,
+				searchInput: '',
+			})
+			this.props.showFilter(false)
+			this.props.updateInput('')
+		}
+	}
+
+	onChangeText = (text) => {
 		this.setState({ input: text })
 	}
 
@@ -39,7 +49,7 @@ class SearchHeader extends React.Component {
 		this.props.updateInput(input)
 	}
 
-	onFilterPressed = () => {
+	onFilterPress = () => {
 		const { showFilter } = this.state
 		this.setState({
 			showFilter: !showFilter
@@ -47,26 +57,25 @@ class SearchHeader extends React.Component {
 		this.props.showFilter(!showFilter)
 	}
 
-	onBackBtnPressed = () => {
-		const { onPress } = this.props
-		onPress()
+	onBackButtonPress = () => {
+		this.props.navigation.goBack()
 		this.setState({
-			searchedCourse:'',
+			searchedCourse: '',
 			showFilter: false
 		})
 		this.props.updateInput('')
 		this.props.showFilter(false)
 	}
 
-	renderBackBtn() {
+	renderBackButton() {
 		const { backBtnStyle } = styles
 
 		return (
 			<TouchableOpacity
 				style={backBtnStyle}
-				onPress={this.onBackBtnPressed}
+				onPress={this.onBackButtonPress}
 			>
-				<Icon name="arrow-left" size={20} />
+				<Icon name="navigate-before" size={24} />
 			</TouchableOpacity>
 		)
 	}
@@ -76,11 +85,9 @@ class SearchHeader extends React.Component {
 		const { barViewStyle, inputStyle, termTextStyle, switcherContainerStyle } = styles
 		const { selectedTerm, getDropDownLayout, onSelectTerm } = this.props
 
-
-
 		return (
 			<View style={[barViewStyle]}>
-				<Icon name="magnifier" size={18} />
+				<Icon name="search" size={24} />
 				<TextInput
 					style={inputStyle}
 					value={input}
@@ -96,65 +103,54 @@ class SearchHeader extends React.Component {
 					style={switcherContainerStyle}
 					onLayout={(event) => {
 						const { layout } = event.nativeEvent
-						getDropDownLayout(45, layout.y, layout.width + 20)
+						getDropDownLayout(45, layout.y + 35, layout.width + 20)
 					}}
 				>
 					<Text style={termTextStyle}>{selectedTerm.term_code}</Text>
-					<MIcon name="unfold-more" size={18} />
+					<Icon name="unfold-more" size={20} />
 				</TouchableOpacity>
 			</View>
 		)
 	}
 
-	renderFilterBtn = () => {
+	renderFilterButton = () => {
 		const { filterBtnStyle } = styles
 
 		return (
 			<TouchableOpacity
 				style={filterBtnStyle}
-				onPress={this.onFilterPressed}
+				onPress={this.onFilterPress}
 			>
-				<FIcon name="sliders" size={24} />
+				<Icon name="filter-list" size={24} />
 			</TouchableOpacity>
 		)
 	}
 
-	componentDidMount(){
-		const { showFilter, searchInput } = this.state;
-		if( !showFilter || searchInput.length != 0){
-			this.setState({
-				showFilter: false,
-				searchInput: '',
-			})
-			this.props.showFilter(false);
-			this.props.updateInput('')
-		}
-	}
-
 	render() {
-		const { searchBarStyle } = styles
+		const { headerContainerStyle } = styles
 
 
 		return (
-			<View 
-				style={[searchBarStyle, this.props.style]}
-				>
-				{this.renderBackBtn()}
+			<View
+				style={[headerContainerStyle, this.props.style]}
+			>
+				{this.renderBackButton()}
 				{this.renderBar()}
-				{this.renderFilterBtn()}
+				{this.renderFilterButton()}
 			</View>
 		)
 	}
 }
 
-const styles = {
+const styles = StyleSheet.create({
 	switcherContainerStyle: {
+		alignItems: 'center',
 		flexDirection: 'row'
 	},
-	searchBarStyle: {
+	headerContainerStyle: {
 		flexDirection: 'row',
 		width: '100%',
-		marginTop: 15,
+		// marginTop: 15,
 		marginBottom: 15,
 		justifyContent: 'center',
 		alignItems: 'center',
@@ -182,10 +178,8 @@ const styles = {
 		borderWidth: 1,
 		borderColor: '#194160',
 		borderRadius: 20,
-		paddingLeft: 15,
-		paddingRight: 10,
-		paddingTop: 5,
-		paddingBottom: 5,
+		paddingHorizontal: 10,
+		paddingVertical: 3,
 		backgroundColor: '#F1F1F1'
 	},
 	inputStyle: {
@@ -198,7 +192,7 @@ const styles = {
 		flex: 0.14,
 		justifyContent: 'center',
 		alignItems: 'center',
-		zIndex:1000,
+		zIndex: 1000,
 	},
 	lineSeparator: {
 		borderWidth: 0.5,
@@ -210,10 +204,10 @@ const styles = {
 	overlayStyle: {
 		flex: 1,
 		position: 'absolute',
-		backgroundColor:'black',
-		opacity:0.2,
+		backgroundColor: 'black',
+		opacity: 0.2,
 	}
-}
+})
 
 const mapDispatchToProps = dispatch => (
 	{
@@ -235,4 +229,4 @@ const mapStateToProps = state => ({
 	filterVisible: state.course.filterVisible
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(SearchHeader)
+export default withNavigation(connect(mapStateToProps, mapDispatchToProps)(SearchHeader))

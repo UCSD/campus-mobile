@@ -1,17 +1,18 @@
 import React from 'react'
-import { TouchableOpacity, View, Text, TextInput, Image, Switch } from 'react-native'
-import Icon from 'react-native-vector-icons/Ionicons'
-import { withNavigation } from 'react-navigation'
+import { StatusBar, View } from 'react-native'
+import { withNavigation, SafeAreaView } from 'react-navigation'
 import { connect } from 'react-redux'
-import NavigationService from '../../../navigation/NavigationService'
 import ResultList from './ResultList'
 import SearchHeader from './SearchHeader'
 import DropDown from './DropDown'
 import Filter from './Filter'
 import { myIndexOf } from '../../../util/schedule'
+import { terms } from './mockData/TermMockData.json'
+// import COLOR from '../../../styles/ColorConstants'
 
+const INITIAL_TERMS = [...terms]
 
-class CourseSearchList extends React.Component {
+class CourseSearch extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {
@@ -29,9 +30,8 @@ class CourseSearchList extends React.Component {
 	}
 
 	handleSelect = (choice) => {
-		const { initialTerms } = this.props
-		const index = myIndexOf(initialTerms, choice)
-		choice = initialTerms[index]
+		const index = myIndexOf(INITIAL_TERMS, choice)
+		choice = INITIAL_TERMS[index]
 		this.setState({ showTermSwitcher: false })
 		this.props.selectTerm(choice)
 	}
@@ -41,11 +41,11 @@ class CourseSearchList extends React.Component {
 	}
 
 	constructArr() {
-		const { initialTerms, selectedTerm } = this.props
+		const { selectedTerm } = this.props
 		const result = [selectedTerm]
-		for (let i = 0; i < initialTerms.length; i++) {
-			if (initialTerms[i].term_code !== selectedTerm.term_code) {
-				result.push(initialTerms[i])
+		for (let i = 0; i < INITIAL_TERMS.length; i++) {
+			if (INITIAL_TERMS[i].term_code !== selectedTerm.term_code) {
+				result.push(INITIAL_TERMS[i])
 			}
 		}
 		return result
@@ -69,19 +69,21 @@ class CourseSearchList extends React.Component {
 	}
 
 	render() {
-		const { onGoBack, initialTerms } = this.props
 		return (
-			<View flex style={{ backgroundColor: 'white' }}>
+			<SafeAreaView flex style={{ backgroundColor: 'white' }}>
+				<StatusBar
+					barStyle="dark-content"
+					// backgroundColor={COLOR.PRIMARY}
+				/>
 				<SearchHeader
 					getDropDownLayout={this.getDropDownLayout}
-					initialTerms={initialTerms}
+					initialTerms={INITIAL_TERMS}
 					onSelectTerm={() => this.setState({ showTermSwitcher: true })}
-					onPress={onGoBack}
 				/>
 				<ResultList />
 				{this.props.showFilter && <Filter />}
 				{this.showSelector()}
-			</View>
+			</SafeAreaView>
 		)
 	}
 }
@@ -114,4 +116,4 @@ const mapDispatchToProps = dispatch => (
 )
 
 
-export default withNavigation( connect(mapStateToProps, mapDispatchToProps)(CourseSearchList))
+export default withNavigation( connect(mapStateToProps, mapDispatchToProps)(CourseSearch))

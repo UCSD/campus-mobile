@@ -10,6 +10,7 @@ import {
 import React from 'react'
 import { connect } from 'react-redux'
 import Icon from 'react-native-vector-icons/SimpleLineIcons'
+import NavigationService from '../../../navigation/NavigationService'
 
 // import CourseListMockData from './mockData/CourseListMockData.json'
 
@@ -22,7 +23,6 @@ import ClassCalendar from './ClassCalendar'
 import FinalCalendar from './FinalCalendar'
 import CourseList from './CourseList'
 import CalendarModalCard from './CalendarModalCard'
-// import SearchBar from './SearchBar'
 
 const WINDOW_WIDTH = Dimensions.get('window').width
 const WINDOW_HEIGHT = Dimensions.get('window').height
@@ -69,6 +69,10 @@ class HomePage extends React.Component {
 
 	selectTerm() {
 		this.setState({ show: true })
+	}
+
+	_onSearchBarPressed = () => {
+		NavigationService.navigate('CourseSearch')
 	}
 
 	constructArr() {
@@ -289,8 +293,6 @@ class HomePage extends React.Component {
 			webreg_homepage_search_text
 		} = css
 
-		const { onSearchClick } = this.props
-
 		const options = ['Calendar', 'List', 'Finals']
 
 		return (
@@ -315,7 +317,7 @@ class HomePage extends React.Component {
 					</View>
 				</View>
 				<TouchableOpacity
-					onPress={onSearchClick}
+					onPress={this._onSearchBarPressed}
 					style={webreg_homepage_webreg_homepage_search_bar_container}
 				>
 					<View style={webreg_homepage_search_bar}>

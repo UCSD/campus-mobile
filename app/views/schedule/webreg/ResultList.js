@@ -2,7 +2,7 @@ import React from 'react'
 import { View, Text, FlatList, TouchableOpacity } from 'react-native'
 import { withNavigation } from 'react-navigation'
 import { connect } from 'react-redux'
-import CourseHeader from './CourseHeader'
+import CourseHeader from './CourseCell'
 import Data from './mockData/mockData.json'
 import NavigationService from '../../../navigation/NavigationService'
 
@@ -29,7 +29,7 @@ class ResultList extends React.Component {
 			<CourseHeader
 				course={item}
 				term=""
-				style={{ zIndex:0 }}
+				style={{ zIndex: 0 }}
 			/>
 		</TouchableOpacity>
 	)
