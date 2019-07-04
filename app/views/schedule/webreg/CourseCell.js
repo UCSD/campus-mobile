@@ -1,36 +1,37 @@
 import React from 'react'
-import { View, Text } from 'react-native'
+// import css from '../../../styles/css'
 
-const CourseCell = ({ course, terms, style }) => {
-	const {
-		containerStyle,
-		unitBGStyle,
-		unitFontStyle,
-		courseContainerStyle,
-		titleStyle,
-		descriptionStyle,
-		termStyle,
-		termFontStyle,
-	} = styles
+import CourseTitle from './common/CourseTitle'
 
-	return (
-		<View style={[containerStyle, style]}>
-			<View style={unitBGStyle}>
-				<Text style={unitFontStyle}>{course.unit}</Text>
-			</View>
-			<View style={courseContainerStyle}>
-				<Text style={titleStyle}>{course.courseCode}</Text>
-				<Text style={descriptionStyle}>{course.courseName}</Text>
-			</View>
 
-			{terms !== null &&
-				<View style={termStyle}>
-					<Text style={termFontStyle}>{terms}</Text>
-				</View>
-			}
-		</View>
+const CourseCell = ({ course, terms }) =>
+	// return (
+	// 	<View style={[containerStyle, style]}>
+	// 		<View style={css.webreg_common_unit_bg}>
+	// 			<Text style={css.webreg_common_unit_text}>{course.unit}</Text>
+	// 		</View>
+	// 		<View style={courseContainerStyle}>
+	// 			<Text style={titleStyle}>{course.courseCode}</Text>
+	// 			<Text style={descriptionStyle}>{course.courseName}</Text>
+	// 		</View>
+
+	// 		{terms !== null &&
+	// 			<View style={termStyle}>
+	// 				<Text style={termFontStyle}>{terms}</Text>
+	// 			</View>
+	// 		}
+	// 	</View>
+	// )
+
+	 (
+		<CourseTitle
+			unit={course.unit}
+			code={course.courseCode}
+			title={course.courseName}
+			containerStyle={styles.containerStyle}
+		/>
 	)
-}
+
 
 const styles = {
 	containerStyle: {
@@ -44,47 +45,36 @@ const styles = {
 		},
 		shadowOpacity: 0.1,
 		shadowRadius: 2,
-		width: '85%',
+		width: '88%',
 		borderRadius: 10,
 		backgroundColor: '#FBFBFB',
 		paddingTop: 3,
-		paddingLeft: 12,
-		paddingBottom: 6
+		paddingLeft: 6,
+		paddingBottom: 3
 	},
-	unitBGStyle: {
-		width: 28,
-		height: 28,
-		borderRadius: 14,
-		justifyContent: 'center',
-		alignItems: 'center',
-		backgroundColor: '#EAEAEA',
-	},
-	unitFontStyle: {
-		fontSize: 14,
-		lineHeight: 16
-	},
-	courseContainerStyle: {
-		flexDirection: 'column',
-		marginLeft: 13,
-	},
-	titleStyle: {
-		fontSize: 18,
-		lineHeight: 21,
-		fontWeight: 'bold',
-	},
-	descriptionStyle: {
-		fontSize: 14,
-		lineHeight: 16,
-	},
-	termStyle: {
-		position: 'absolute',
-		top: 6,
-		right: 7
-	},
-	termFontStyle: {
-		color: '#7D7D7D',
-		fontSize: 12,
-		lineHeight: 14,
-	}
+	// courseContainerStyle: {
+	// 	flexDirection: 'column',
+	// 	marginLeft: 13,
+	// },
+	// titleStyle: {
+	// 	fontSize: 18,
+	// 	lineHeight: 21,
+	// 	fontWeight: 'bold',
+	// },
+	// descriptionStyle: {
+	// 	fontSize: 14,
+	// 	lineHeight: 16,
+	// },
+	// termStyle: {
+	// 	position: 'absolute',
+	// 	top: 6,
+	// 	right: 7
+	// },
+	// termFontStyle: {
+	// 	color: '#7D7D7D',
+	// 	fontSize: 12,
+	// 	lineHeight: 14,
+	// }
 }
+
 export default CourseCell

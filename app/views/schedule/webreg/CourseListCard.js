@@ -6,6 +6,8 @@ import {
 } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 
+import CourseTitle from './common/CourseTitle'
+
 import css from '../../../styles/css'
 import COLOR from '../../../styles/ColorConstants'
 
@@ -25,19 +27,7 @@ const CourseListCard = ({ data }) => {
 		<View style={[css.webreg_list_card_container, getBorderStyle(enrollmentStatus)]}>
 			{/* Course Info */}
 			<View style={css.webreg_list_card_info_container}>
-				<View style={css.webreg_list_card_header_container}>
-					<View style={css.webreg_common_unit_container}>
-						<View style={css.webreg_common_unit_bg}>
-							<Text style={css.webreg_common_unit_text} allowFontScaling={false} >
-								{courseUnit}
-							</Text>
-						</View>
-					</View>
-					<View style={css.webreg_common_name_container}>
-						<Text style={css.webreg_common_code}>{courseCode}</Text>
-						<Text style={css.webreg_common_title}>{courseTitle}</Text>
-					</View>
-				</View>
+				<CourseTitle unit={courseUnit} code={courseCode} title={courseTitle} containerStyle={css.webreg_list_card_header_container} />
 				{/* Section Header */}
 				<View style={css.webreg_section_header_container}>
 					<View style={css.webreg_section_id_container} >
