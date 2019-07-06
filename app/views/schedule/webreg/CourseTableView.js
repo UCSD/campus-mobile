@@ -19,8 +19,9 @@ import ExpandArrow from './icons8-expand-arrow-filled-500.png'
 
 const { width } = Dimensions.get('screen')
 
-export default class CourseTableView extends Component {
+const AnimatedIcon = Animated.createAnimatedComponent(Icon);
 
+export default class CourseTableView extends Component {
 	constructor() {
 		super()
 		this.state = {
@@ -28,9 +29,11 @@ export default class CourseTableView extends Component {
 			/* Add custom animation and color changes */
 			animatedHeight: new Animated.Value(0),
 			animatedColor: new Animated.Value(0),
+			spinValue: new Animated.Value(0),
 			/* Min and Max height of course table */
 			minHeight: 0,
 			maxHeight: 0,
+			spin: '180deg',
 			/* Keep track of the progress of animated value by adding a listener */
 			progress: 0,
 			/* Lecture style that will be added the animiated value once
@@ -50,14 +53,14 @@ export default class CourseTableView extends Component {
 	}
 
 	_setLectureStyle() {
-		this.setState({ lectureStyle: [{...this.state.lectureStyle}, { height: this.state.animatedHeight }] })
+		this.setState({ lectureStyle: [{ ...this.state.lectureStyle }, { height: this.state.animatedHeight }] })
 	}
 
 	_setMaxHeight(event) {
 		console.log('in set max height', event.nativeEvent.layout.height)
 
 		this.setState({
-			maxHeight: event.nativeEvent.layout.height + 7
+			maxHeight: event.nativeEvent.layout.height
 		})
 
 		this._setLectureStyle()
@@ -66,6 +69,8 @@ export default class CourseTableView extends Component {
 	_setMinHeight(event) {
 		console.log('in set min height', event.nativeEvent.layout.height)
 		const { height } = event.nativeEvent.layout
+		// Should set the minHeight to be the height of container plus
+		// its margin to bottom card
 		this.setState({
 			minHeight: height + 7,
 		})
@@ -101,6 +106,18 @@ export default class CourseTableView extends Component {
 					duration: 500,
 				}
 			).start()
+			Animated.timing(
+				this.state.spinValue,
+				{
+					toValue: 0,
+					duration: 300,
+					easing: Easing.linear
+				}
+			).start()
+			this.state.spin = this.state.spinValue.interpolate({
+				inputRange: [0, 1],
+				outputRange: ['180deg', '90deg']
+			})
 		} else {
 			Animated.timing(
 				this.state.animatedHeight,
@@ -117,6 +134,18 @@ export default class CourseTableView extends Component {
 					duration: 500,
 				}
 			).start()
+			Animated.timing(
+				this.state.spinValue,
+				{
+					toValue: 1,
+					duration: 300,
+					easing: Easing.linear
+				}
+			).start()
+			this.state.spin = this.state.spinValue.interpolate({
+				inputRange: [0, 1],
+				outputRange: ['180deg', '90deg']
+			})
 		}
 	}
 
@@ -129,6 +158,7 @@ export default class CourseTableView extends Component {
 	renderLecture(course, section) {
 		const { cellWrapperStyle, cellContainerStyle, dotStyle, expandIconStyle } = styles
 		const { expanded } = this.state
+
 		return (
 			<TouchableWithoutFeedback
 				onPress={() => {
@@ -143,11 +173,17 @@ export default class CourseTableView extends Component {
 						<HeaderRow course={course} />
 						<SectionRow data={section} />
 					</View>
-					<Icon
+					{/*}<AnimatedIcon
 						name="play-arrow"
 						size={25}
 						color="#034263"
-						style={[expandIconStyle, expanded && { transform: [{ rotate: '90deg' }] }]}
+						style={[expandIconStyle, expanded && { transform: [{ rotate: this.state.spin }] }]}
+					/>*/}
+					<AnimatedIcon
+						name="play-arrow"
+						size={25}
+						color="#034263"
+						style={[expandIconStyle, { transform: [{ rotate: this.state.spin }] }]}
 					/>
 				</View>
 			</TouchableWithoutFeedback>
@@ -186,13 +222,7 @@ export default class CourseTableView extends Component {
 	renderPrereq() {
 		const { cellWrapperStyle, cellContainerStyle, expandIconStyle, prereqTextStyle } = styles
 		return (
-			<TouchableWithoutFeedback
-				// onPress={() => {
-				// 	console.log('in rendering course Prerequisites')
-				// 	this.toggle()
-				// }}
-				// onLayout={this._setMinHeight}
-			>
+			<TouchableWithoutFeedback >
 				<View style={[cellWrapperStyle, { marginBottom: 12 }]}>
 					<View style={cellContainerStyle}>
 						<Text style={prereqTextStyle}>Course Prerequisites & Level Restrictions</Text>
@@ -216,24 +246,23 @@ export default class CourseTableView extends Component {
 			>
 				{this.renderPrereq()}
 				<Animated.View
-					style={this.state.lectureStyle}
+					style={{ overflow: 'hidden', height: this.state.animatedHeight }}
 				>
 					<View style={{ overflow: 'hidden' }} onLayout={this._setMaxHeight}>
-					{
-						Course.sections.map((sect) => {
-							switch (sect.type) {
-								case 'LE':
-									return this.renderLecture(Course, sect)
-								case 'DI':
+						{
+							Course.sections.map((sect) => {
+								switch (sect.type) {
+									case 'LE':
+										return this.renderLecture(Course, sect)
+									case 'DI':
 									// return this.state.expanded && this.renderEnrollment(sect)
-									return this.renderEnrollment(sect)
-								default:
+										return this.renderEnrollment(sect)
+									default:
 									// return this.renderAdditionalMeeting(sect)
-									return
-							}
-						})
-					}
-					{/*<FlatList
+								}
+							})
+						}
+						{/* <FlatList
 						data={Course.sections}
 						style={{ overflow: 'hidden' }}
 						keyExtractor={({item, index}) => index}
@@ -251,7 +280,7 @@ export default class CourseTableView extends Component {
 						}}}
 					/>*/}
 					</View>
-						{/*
+					{/*
 							style={{ flex: 1, flexDirection: 'column' }}
 
 							Course.sections.map((sect) => {
@@ -325,7 +354,6 @@ const styles = {
 		height: 20,
 		position: 'absolute',
 		right: 14,
-		transform: [{ rotate: '-90deg' }],
 		tintColor: '#BEBEBE'
 	},
 	dotStyle: {

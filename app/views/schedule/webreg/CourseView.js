@@ -15,8 +15,8 @@ const CourseView = () => (
 		/>
 		<CourseHeader course={Course} />
 		<CourseTableView style={{ marginTop: 16 }} />
-		{/*<CourseDetailView course={Course} sectCode="A01" style={{ marginTop: 16 }} />
-		<CourseActionView course={Course} sectCode="A01" style={{ marginTop: 16 }} />*/}
+		<CourseDetailView course={Course} sectCode="A01" style={{ marginTop: 16 }} />
+		<CourseActionView course={Course} sectCode="A01" style={{ marginTop: 16 }} />
 	</SafeAreaView>
 )
 
