@@ -11,6 +11,7 @@ import {
 	FlatList
 } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
+
 import HeaderRow from './HeaderRow'
 import SectionRow from './SectionRow'
 import StatusBar from './StatusBar'
@@ -18,8 +19,7 @@ import Course from './mockData/Course.json'
 import ExpandArrow from './icons8-expand-arrow-filled-500.png'
 
 const { width } = Dimensions.get('screen')
-
-const AnimatedIcon = Animated.createAnimatedComponent(Icon);
+const AnimatedIcon = Animated.createAnimatedComponent(Icon)
 
 export default class CourseTableView extends Component {
 	constructor() {
@@ -47,7 +47,6 @@ export default class CourseTableView extends Component {
 		this._setMinHeight = this._setMinHeight.bind(this)
 		this.toggle = this.toggle.bind(this)
 		this.state.animatedHeight.addListener((progress) => {
-			console.log(progress.value)
 			this.setState({ progress })
 		})
 	}
@@ -57,8 +56,6 @@ export default class CourseTableView extends Component {
 	}
 
 	_setMaxHeight(event) {
-		console.log('in set max height', event.nativeEvent.layout.height)
-
 		this.setState({
 			maxHeight: event.nativeEvent.layout.height
 		})
@@ -67,7 +64,6 @@ export default class CourseTableView extends Component {
 	}
 
 	_setMinHeight(event) {
-		console.log('in set min height', event.nativeEvent.layout.height)
 		const { height } = event.nativeEvent.layout
 		// Should set the minHeight to be the height of container plus
 		// its margin to bottom card
@@ -162,7 +158,6 @@ export default class CourseTableView extends Component {
 		return (
 			<TouchableWithoutFeedback
 				onPress={() => {
-					console.log('in rendering lectures')
 					this.toggle()
 				}}
 				onLayout={this._setMinHeight}
@@ -173,7 +168,7 @@ export default class CourseTableView extends Component {
 						<HeaderRow course={course} />
 						<SectionRow data={section} />
 					</View>
-					{/*}<AnimatedIcon
+					{/* }<AnimatedIcon
 						name="play-arrow"
 						size={25}
 						color="#034263"
@@ -262,39 +257,7 @@ export default class CourseTableView extends Component {
 								}
 							})
 						}
-						{/* <FlatList
-						data={Course.sections}
-						style={{ overflow: 'hidden' }}
-						keyExtractor={({item, index}) => index}
-						renderItem={({item, index}) => {
-							console.log('section', item, index)
-						switch (item.type) {
-							case 'LE':
-								return this.renderLecture(Course, item)
-							case 'DI':
-								// return this.state.expanded && this.renderEnrollment(sect)
-								return this.renderEnrollment(item)
-							default:
-								// return this.renderAdditionalMeeting(sect)
-								return
-						}}}
-					/>*/}
 					</View>
-					{/*
-							style={{ flex: 1, flexDirection: 'column' }}
-
-							Course.sections.map((sect) => {
-							switch (sect.type) {
-								case 'LE':
-									return this.renderLecture(Course, sect)
-								case 'DI':
-									// return this.state.expanded && this.renderEnrollment(sect)
-									return this.renderEnrollment(sect)
-								default:
-									// return this.renderAdditionalMeeting(sect)
-									return
-							}
-						})*/}
 				</Animated.View>
 				<View>
 					{Course.sections.map((sect) => {
