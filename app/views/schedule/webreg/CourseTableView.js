@@ -1,4 +1,3 @@
-/* eslint-disable class-methods-use-this */
 import React, { Component } from 'react'
 import {
 	View,
@@ -75,7 +74,6 @@ export default class CourseTableView extends Component {
 
 	/**
 	 * Toggle the discussion sections in a course table.
-	 *
 	 */
 	toggle() {
 		const initialValue = this.state.expanded ? this.state.maxHeight : this.state.minHeight
@@ -168,12 +166,6 @@ export default class CourseTableView extends Component {
 						<HeaderRow course={course} />
 						<SectionRow data={section} />
 					</View>
-					{/* }<AnimatedIcon
-						name="play-arrow"
-						size={25}
-						color="#034263"
-						style={[expandIconStyle, expanded && { transform: [{ rotate: this.state.spin }] }]}
-					/>*/}
 					<AnimatedIcon
 						name="play-arrow"
 						size={25}
@@ -250,10 +242,9 @@ export default class CourseTableView extends Component {
 									case 'LE':
 										return this.renderLecture(Course, sect)
 									case 'DI':
-									// return this.state.expanded && this.renderEnrollment(sect)
 										return this.renderEnrollment(sect)
 									default:
-									// return this.renderAdditionalMeeting(sect)
+										return
 								}
 							})
 						}

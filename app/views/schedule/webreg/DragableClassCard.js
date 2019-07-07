@@ -12,12 +12,13 @@ import { connect } from 'react-redux'
 
 import schedule from '../../../util/schedule'
 import logger from '../../../util/logger'
+import { getScreenWidth } from '../../../util/general'
 import Card from '../../common/Card'
 import LastUpdated from '../../common/LastUpdated'
 import css from '../../../styles/css'
 import COLOR from '../../../styles/ColorConstants'
 
-const WINDOW_WIDTH = Dimensions.get('window').width
+const WINDOW_WIDTH = getScreenWidth()
 
 class DragableClassCard extends Component {
 	onLayout = () => {

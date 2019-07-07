@@ -4,12 +4,14 @@ import { connect } from 'react-redux'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 import auth from '../../../util/auth'
+import { getScreenWidth, getScreenHeight } from '../../../util/general'
 import CourseListMockData from './mockData/CourseListMockData.json'
 import { getFinalIndex, getCourseList, getBottomMargin } from '../../../util/schedule'
 import css from '../../../styles/css'
 import CalendarCard from './CalendarCard'
 
-const { width, height } = Dimensions.get('window')
+const width = getScreenWidth()
+const height = getScreenHeight()
 const CARD_WIDTH = (width - 70) / 7
 const CARD_HEIGHT = 50
 const COLOR_LIST = ['#ffdfba', '#ffffba', '#baffc9', '#bae1ff', 'rgb(193, 224, 252)']
@@ -35,7 +37,6 @@ class FinalCalendar extends React.Component {
 
 				const onLayout = (event) => {
 					const { x, y, width, height } = event.nativeEvent.layout
-					console.log('onLayout,', { name, x, y, width, height })
 					this.props.updateCourseCard(name, x, y, width, height)
 				}
 
@@ -59,9 +60,7 @@ class FinalCalendar extends React.Component {
 						onLayout={onLayout}
 						zIndex
 					/>)
-					console.log({ index: i, left: x + width, top: y })
 
-					// Check if the course is overlapping with some other course(s)
 					if (this.props.courseCards) {
 						const conflict = []
 						Object.keys(this.props.courseCards).map((courseName, i) => {
@@ -70,7 +69,6 @@ class FinalCalendar extends React.Component {
 								if (name === courseName) return null
 								const { x: courseX, y: courseY } = info
 								if (Math.abs(courseX - x) <= 1 && Math.abs(courseY - y) <= 1 ) {
-									console.log('comparing course card coordinates', courseName, courseX, courseY, x, y)
 									conflict.push(courseName)
 								}
 								return null
@@ -82,7 +80,6 @@ class FinalCalendar extends React.Component {
 						sortedConflict.sort()
 						const indexOfName = sortedConflict.indexOf(name)
 
-						console.log('sortedConflict array', sortedConflict)
 						if (sortedConflict.length > 1) {
 							res.push(<Icon
 								style={{
@@ -127,8 +124,6 @@ class FinalCalendar extends React.Component {
 	}
 
 	render() {
-		console.log(this.props.selectedCourse, this.state.courseList)
-
 		const { courses, sample } = this.state
 		const days = ['Sat', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 		const hours = ['8 am', '9 am', '10 am', '11 am', '12 pm', '1 pm', '2 pm', '3 pm', '4 pm', '5 pm', '6 pm', '7 pm', '8 pm', '9 pm']

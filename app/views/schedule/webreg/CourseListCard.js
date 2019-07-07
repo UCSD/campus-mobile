@@ -13,7 +13,14 @@ import COLOR from '../../../styles/ColorConstants'
 
 const CourseListCard = ({ data }) => {
 	// grade_option to be added
-	const { subject_code, course_code, units, course_title, section_data, enrollment_status } = data
+	const {
+	  subject_code,
+	  course_code,
+	  units,
+	  course_title,
+	  section_data,
+	  enrollment_status
+	} = data
 	const
 		courseUnit = units,
 		courseCode = subject_code + course_code,

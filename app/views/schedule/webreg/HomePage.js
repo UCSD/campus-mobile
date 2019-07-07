@@ -12,9 +12,7 @@ import { connect } from 'react-redux'
 import Icon from 'react-native-vector-icons/SimpleLineIcons'
 import NavigationService from '../../../navigation/NavigationService'
 
-// import CourseListMockData from './mockData/CourseListMockData.json'
-
-import { deviceIphoneX, platformIOS } from '../../../util/general'
+import { deviceIphoneX, platformIOS, getScreenWidth, getScreenHeight } from '../../../util/general'
 import { getBottomMargin, myIndexOf } from '../../../util/schedule'
 import auth from '../../../util/auth'
 import css from '../../../styles/css'
@@ -24,8 +22,8 @@ import FinalCalendar from './FinalCalendar'
 import CourseList from './CourseList'
 import CalendarModalCard from './CalendarModalCard'
 
-const WINDOW_WIDTH = Dimensions.get('window').width
-const WINDOW_HEIGHT = Dimensions.get('window').height
+const WINDOW_WIDTH = getScreenWidth()
+const WINDOW_HEIGHT = getScreenHeight()
 
 const showAppTime = () => {
 	Alert.alert(
@@ -40,7 +38,11 @@ const showAppTime = () => {
 
 
 const getDeviceType = () => {
-	// 0 - Android, 1 - iPhone, 2 - iPhone X
+	/*
+	 * 0 - Android,
+	 * 1 - iPhone,
+	 * 2 - iPhone X
+	 */
 	if (platformIOS()) {
 		if (deviceIphoneX()) {
 			return 2
@@ -128,24 +130,6 @@ class HomePage extends React.Component {
 			return <FinalCalendar device={device} />
 		} else {
 			return <CourseList device={device} />
-			// 	<ScrollView
-			// 		style={css.scroll_default}
-			// 		contentContainerStyle={css.main_full}
-			// 		onMomentumScrollEnd={(e) => {
-			// 			console.log(e.nativeEvent.contentOffset.y)
-			// 			this.props.scheduleLayoutChange({ y: e.nativeEvent.contentOffset.y })
-			// 			// this.props.clearRefresh();
-			// 		}}
-			// 		onScrollEndDrag={(e) => {
-			// 			console.log(e.nativeEvent.contentOffset.y)
-			// 			this.props.scheduleLayoutChange({ y: e.nativeEvent.contentOffset.y })
-			// 			// this.props.clearRefresh();
-			// 		}}
-			// 	>
-			// 		<Button onPress={() => auth.retrieveAccessToken().then(credentials => console.log(credentials))} title="Get Access Token" />
-			// 		<CourseList classes={CourseListMockData.data} />
-			// 	</ScrollView>
-			// )
 		}
 	}
 
@@ -259,7 +243,6 @@ class HomePage extends React.Component {
 					<CalendarModalCard data={selectedCourseFinalDetail} props={this.props} />
 				</Animated.View>)
 		} else if (this.state.lastFinal) {
-			// const course = this.state.lastFinal
 			this.state.lastFinal = null
 			const modalY = new Animated.Value(0)
 			Animated.timing(modalY, {
@@ -319,14 +302,17 @@ class HomePage extends React.Component {
 				<TouchableOpacity
 					onPress={this._onSearchBarPressed}
 					style={webreg_homepage_webreg_homepage_search_bar_container}
+					activeOpacity={0.2}
 				>
 					<View style={webreg_homepage_search_bar}>
-						<Icon name="magnifier" size={18} />
+						<TouchableOpacity
+							activeOpacity={1}
+						>
+							<Icon name="magnifier" size={18} />
+						</TouchableOpacity>
 						<Text style={webreg_homepage_search_text}>Search Course</Text>
 					</View>
 				</TouchableOpacity>
-				{/* <SearchBar placeholder={"Search Course"} />*/}
-				{/* <Button onPress={() => auth.retrieveAccessToken().then(credentials => console.log(credentials))} title="Get Access Token" />*/}
 				{this.renderDisplayType()}
 				{this.renderSwitchNavigator(options)}
 				{this.renderModalCard()}

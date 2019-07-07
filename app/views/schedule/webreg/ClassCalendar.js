@@ -3,12 +3,13 @@ import React from 'react'
 import { connect } from 'react-redux'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
-// import auth from '../../../util/auth'
 import CourseListMockData from './mockData/CourseListMockData.json'
 import { getDayOfWeek, getCourseList, getBottomMargin } from '../../../util/schedule'
+import { getScreenWidth, getScreenHeight } from '../../../util/general'
 import CalendarCard from './CalendarCard'
 
-const { width, height } = Dimensions.get('window')
+const width = getScreenWidth()
+const height = getScreenHeight()
 const CARD_WIDTH = (width - 70) / 7
 const CARD_HEIGHT = 50
 const COLOR_LIST = ['#ffdfba', '#ffffba', '#baffc9', '#bae1ff', 'rgb(193, 224, 252)']

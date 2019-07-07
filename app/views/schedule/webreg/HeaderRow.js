@@ -1,6 +1,9 @@
 import React from 'react'
-import { View, Text, TouchableOpacity } from 'react-native'
-
+import {
+  View,
+  Text,
+  TouchableOpacity
+} from 'react-native'
 const renderSideBar = (course, type, largeText) => {
 	const {
 		smallTextStyle,

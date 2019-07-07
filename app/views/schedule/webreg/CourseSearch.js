@@ -8,7 +8,6 @@ import DropDown from './DropDown'
 import Filter from './Filter'
 import { myIndexOf } from '../../../util/schedule'
 import { terms } from './mockData/TermMockData.json'
-// import COLOR from '../../../styles/ColorConstants'
 
 const INITIAL_TERMS = [...terms]
 

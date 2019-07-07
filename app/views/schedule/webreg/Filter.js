@@ -1,5 +1,11 @@
 import React from 'react'
-import { TouchableOpacity, View, Text, Switch, Animated } from 'react-native'
+import {
+  TouchableOpacity,
+  View,
+  Text,
+  Switch,
+  Animated
+} from 'react-native'
 import { connect } from 'react-redux'
 
 
@@ -21,7 +27,6 @@ class Filter extends React.Component {
 		this.setState({
 			filterVal
 		})
-		// this.props.updateFilter(filterVal);
 	}
 
 	onClearPressed = () => {

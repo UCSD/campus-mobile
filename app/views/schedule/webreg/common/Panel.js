@@ -118,10 +118,7 @@ class Panel extends Component {
 		return (
 			<Animated.View style={[styles.container, { height: this.state.animatedHeight }]}>
 				<TouchableWithoutFeedback
-					onPress={() => {
-						console.log('Newbie pressed')
-						this.toggle()
-					}}
+					onPress={this.props.onPress}
 					onLayout={this._setMinHeight}
 				>
 					<Animated.View>
@@ -139,7 +136,7 @@ class Panel extends Component {
 	}
 }
 
-const styles = StyleSheet.create({
+const defaultStyles = StyleSheet.create({
 	container: {
 		marginTop: 15,
 		overflow: 'hidden'
@@ -151,13 +148,27 @@ const styles = StyleSheet.create({
 })
 
 Panel.propTypes = {
-	children: PropTypes.node.isRequired,
-	// style: ViewPropTypes.style,
-	style: PropTypes.any,
+  animatedColor: PropTypes.string,
+  animatedHeight: PropTypes.number,
+  children: PropTypes.node.isRequired,
+  headerComponent:  PropTypes.node.isRequired,
+  duration: PropTypes.number,
+  icon: PropTypes.node,
+  onPress: PropTypes.func,
+  onLayout: PropTypes.func,
+  style: PropTypes.object,
 }
 
 Panel.defaultProps = {
-	style: {},
+  animatedColor: null,
+  animatedHeight: null,
+  children: null,
+  headerComponent: null,
+  duration: 1000,
+  icon: null,
+  onPress: null,
+  onLayout: null,
+  style: defaultStyles,
 }
 
 export default Panel

@@ -11,7 +11,6 @@ const CourseView = () => (
 	<SafeAreaView style={styles.containerStyle}>
 		<StatusBar
 			barStyle="dark-content"
-			// backgroundColor={COLOR.PRIMARY}
 		/>
 		<CourseHeader course={Course} />
 		<CourseTableView style={{ marginTop: 16 }} />

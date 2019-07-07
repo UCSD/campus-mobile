@@ -11,9 +11,10 @@ import {
 import React from 'react'
 
 import css from '../../../styles/css'
+import { getScreenWidth, getScreenHeight } from '../../../util/general'
 
-const WINDOW_WIDTH = Dimensions.get('window').width
-const WINDOW_HEIGHT = Dimensions.get('window').height
+const WINDOW_WIDTH = getScreenWidth()
+const WINDOW_HEIGHT = getScreenHeight()
 
 /**
  * Reusable Component

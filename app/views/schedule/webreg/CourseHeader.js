@@ -1,5 +1,10 @@
 import React from 'react'
-import { TouchableOpacity, View, StyleSheet } from 'react-native'
+import {
+  TouchableOpacity,
+  View,
+  StyleSheet
+}
+from 'react-native'
 import { withNavigation } from 'react-navigation'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { connect } from 'react-redux'
