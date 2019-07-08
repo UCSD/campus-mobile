@@ -38,6 +38,7 @@ class SearchHeader extends React.Component {
 	onSubmit = () => {
 		const { input } = this.state
 		this.props.updateInput(input)
+		this.setState({ input: '' })
 	}
 
 	onFilterPress = () => {
