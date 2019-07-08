@@ -1,20 +1,23 @@
 import React from 'react'
 import {
-  TouchableOpacity,
-  View,
-  Text,
-  Switch,
-  Animated
+	TouchableOpacity,
+	View,
+	Text,
+	Switch,
+	Animated,
+	TouchableWithoutFeedback
 } from 'react-native'
 import { connect } from 'react-redux'
+import css from '../../../styles/css'
+import { getScreenWidth, getScreenHeight, deviceIphoneX } from '../../../util/general'
+
+const WINDOW_WIDTH = getScreenWidth()
+const WINDOW_HEIGHT = getScreenHeight()
 
 
 class Filter extends React.Component {
 	constructor(props) {
 		super(props)
-		this.state = {
-			filterVal: [false, false, false],
-		}
 
 		this.filterOptions = ['Lower division', 'Upper division', 'Graduate division']
 		this.onToggleSwitch = this.onToggleSwitch.bind(this)
@@ -22,48 +25,69 @@ class Filter extends React.Component {
 	}
 
 	onToggleSwitch = (val, index) => {
-		const { filterVal } = this.state
+		const filterVal = [...this.props.filterVal.filterVal]
 		filterVal[index] = val
-		this.setState({
+		this.props.updateFilter({
 			filterVal
 		})
 	}
 
 	onClearPressed = () => {
-		this.setState({
+		this.props.updateFilter({
 			filterVal: [false, false, false]
 		})
 	}
 
 
 	render() {
-		const { filterVal } = this.state
-		const { filterViewStyle, filterTitle, lineSeparator, optionStyle, clearStyle } = styles
+		const { filterVal } = this.props.filterVal
+
+		const {
+			filterViewStyle,
+			filterTitle,
+			lineSeparator,
+			optionStyle,
+			clearStyle
+		} = styles
+
+		const {
+			webreg_dropdown_background,
+			webreg_dropdown_cancelTrigger,
+			webreg_dropdown_overlay,
+		} = css
 
 		return (
-			<Animated.View style={[filterViewStyle, this.props.style]}>
-				<Text style={filterTitle}>Filter</Text>
-				<Text style={{ fontSize: 12, lineHeight: 14, color: ' rgba(0, 0, 0, 0.5)', marginTop: 20, alignSelf: 'flex-start' }}>Show Only:</Text>
-				<View>
-					{this.filterOptions.map((option, index) => (
-						<View style={{ paddingLeft: 22, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-							<Text style={optionStyle}>{option}</Text>
-							<Switch
-								trackColor={{ true: '#006A96', false: 'white' }}
-								value={filterVal[index]}
-								onValueChange={val => this.onToggleSwitch(val, index)}
-								style={{
-									transform: [{ scaleX: 0.5 }, { scaleY: 0.5 }]
-								}}
-							/>
-						</View>
-					))}
-				</View>
-				<View style={lineSeparator} />
-				<TouchableOpacity onPress={this.onClearPressed} >
-					<Text style={clearStyle}>Clear</Text>
-				</TouchableOpacity>
-			</Animated.View>
+			<View style={[webreg_dropdown_background, {  height: WINDOW_HEIGHT, width: WINDOW_WIDTH }]}>
+				<TouchableWithoutFeedback
+					onPress={() => this.props.showFilter(false)}
+					style={webreg_dropdown_cancelTrigger}
+				>
+					<View style={[webreg_dropdown_overlay, { height: WINDOW_HEIGHT, width: WINDOW_WIDTH }]} />
+				</TouchableWithoutFeedback>
+				<Animated.View style={[filterViewStyle, this.props.style]}>
+					<Text style={filterTitle}>Filter</Text>
+					<Text style={{ fontSize: 12, lineHeight: 14, color: ' rgba(0, 0, 0, 0.5)', marginTop: 20, alignSelf: 'flex-start' }}>Show Only:</Text>
+					<View>
+						{this.filterOptions.map((option, index) => (
+							<View style={{ paddingLeft: 22, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+								<Text style={optionStyle}>{option}</Text>
+								<Switch
+									trackColor={{ true: '#006A96', false: 'white' }}
+									value={filterVal[index]}
+									onValueChange={val => this.onToggleSwitch(val, index)}
+									style={{
+										transform: [{ scaleX: 0.5 }, { scaleY: 0.5 }]
+									}}
+								/>
+							</View>
+						))}
+					</View>
+					<View style={lineSeparator} />
+					<TouchableOpacity onPress={this.onClearPressed} >
+						<Text style={clearStyle}>Clear</Text>
+					</TouchableOpacity>
+				</Animated.View>
+			</View>
 		)
 	}
 }
@@ -75,7 +99,7 @@ const styles = {
 		borderTopLeftRadius: 10,
 		borderBottomLeftRadius: 10,
 		position: 'absolute',
-		top: 55,
+		top: deviceIphoneX() ? 76 : 55,
 		right: 0,
 		flexDirection: 'column',
 		alignItems: 'center',
@@ -118,12 +142,18 @@ const mapDispatchToProps = dispatch => (
 	{
 		updateFilter: (filterVal) => {
 			dispatch({
-				type: 'UPDATE_FILTER_VALUE',
+				type: 'UPDATE_FILTER',
 				filterVal
 			})
+		},
+		showFilter: (showFilter) => {
+			dispatch({ type: 'CHANGE_FILTER_VISIBILITY', showFilter })
 		},
 	}
 )
 
+const mapStateToProps = state => ({
+	filterVal: state.course.filterVal
+})
 
-export default connect(null, mapDispatchToProps)(Filter)
+export default connect(mapStateToProps, mapDispatchToProps)(Filter)

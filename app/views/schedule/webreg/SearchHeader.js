@@ -3,6 +3,7 @@ import { TouchableOpacity, View, Text, TextInput, Dimensions, StyleSheet } from 
 import { withNavigation } from 'react-navigation'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { connect } from 'react-redux'
+import { deviceIphoneX } from '../../../util/general'
 
 
 const { width } = Dimensions.get('window')
@@ -12,9 +13,6 @@ class SearchHeader extends React.Component {
 		super(props)
 		this.state = {
 			input: '',
-			searchedCourse: '',
-			showFilter: false,
-			optionVal: [false, true, false],
 		}
 
 		this.filterOptions = ['Lower division', 'Upper division', 'Graduate division']
@@ -26,12 +24,8 @@ class SearchHeader extends React.Component {
 	}
 
 	componentDidMount() {
-		const { showFilter, searchInput } = this.state
-		if ( !showFilter || searchInput.length !== 0) {
-			this.setState({
-				showFilter: false,
-				searchInput: '',
-			})
+		const { searchInput } = this.props
+		if ( searchInput.length !== 0) {
 			this.props.showFilter(false)
 			this.props.updateInput('')
 		}
@@ -43,26 +37,15 @@ class SearchHeader extends React.Component {
 
 	onSubmit = () => {
 		const { input } = this.state
-		this.setState({
-			searchedCourse: input
-		})
 		this.props.updateInput(input)
 	}
 
 	onFilterPress = () => {
-		const { showFilter } = this.state
-		this.setState({
-			showFilter: !showFilter
-		})
-		this.props.showFilter(!showFilter)
+		this.props.showFilter(true)
 	}
 
 	onBackButtonPress = () => {
 		this.props.navigation.goBack()
-		this.setState({
-			searchedCourse: '',
-			showFilter: false
-		})
 		this.props.updateInput('')
 		this.props.showFilter(false)
 	}
@@ -103,7 +86,7 @@ class SearchHeader extends React.Component {
 					style={switcherContainerStyle}
 					onLayout={(event) => {
 						const { layout } = event.nativeEvent
-						getDropDownLayout(45, layout.y + 35, layout.width + 20)
+						getDropDownLayout(45, layout.y + (deviceIphoneX() ? 30 : 6), layout.width + 20)
 					}}
 				>
 					<Text style={termTextStyle}>{selectedTerm.term_code}</Text>
