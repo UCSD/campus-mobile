@@ -23,14 +23,6 @@ class SearchHeader extends React.Component {
 		this.onBackButtonPress = this.onBackButtonPress.bind(this)
 	}
 
-	componentDidMount() {
-		const { searchInput } = this.props
-		if ( searchInput.length !== 0) {
-			this.props.showFilter(false)
-			this.props.updateInput('')
-		}
-	}
-
 	onChangeText = (text) => {
 		this.setState({ input: text })
 	}
@@ -38,7 +30,6 @@ class SearchHeader extends React.Component {
 	onSubmit = () => {
 		const { input } = this.state
 		this.props.updateInput(input)
-		this.setState({ input: '' })
 	}
 
 	onFilterPress = () => {
@@ -195,14 +186,14 @@ const styles = StyleSheet.create({
 
 const mapDispatchToProps = dispatch => (
 	{
-		updateInput: (input) => {
-			dispatch({ type: 'UPDATE_INPUT', input })
+		updateInput: (searchInput) => {
+			dispatch({ type: 'UPDATE_SEARCH_INPUT', searchInput })
 		},
 		selectTerm: (selectedTerm) => {
 			dispatch({ type: 'SET_SELECTED_TERM', selectedTerm })
 		},
-		showFilter: (showFilter) => {
-			dispatch({ type: 'CHANGE_FILTER_VISIBILITY', showFilter })
+		showFilter: (filterVisible) => {
+			dispatch({ type: 'CHANGE_FILTER_STATUS', filterVisible })
 		}
 	}
 )

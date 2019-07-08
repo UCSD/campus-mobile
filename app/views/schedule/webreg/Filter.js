@@ -9,7 +9,8 @@ import {
 } from 'react-native'
 import { connect } from 'react-redux'
 import css from '../../../styles/css'
-import { getScreenWidth, getScreenHeight, deviceIphoneX } from '../../../util/general'
+import { getScreenWidth, getScreenHeight } from '../../../util/general'
+
 
 const WINDOW_WIDTH = getScreenWidth()
 const WINDOW_HEIGHT = getScreenHeight()
@@ -25,23 +26,19 @@ class Filter extends React.Component {
 	}
 
 	onToggleSwitch = (val, index) => {
-		const filterVal = [...this.props.filterVal.filterVal]
-		filterVal[index] = val
-		this.props.updateFilter({
-			filterVal
-		})
+		const { filterVal } = this.props;
+		currFilter = [ ...filterVal];
+		currFilter[index] = val;
+		this.props.updateFilter(currFilter)
 	}
 
 	onClearPressed = () => {
-		this.props.updateFilter({
-			filterVal: [false, false, false]
-		})
+		this.props.updateFilter([false, false, false])
 	}
 
-
 	render() {
-		const { filterVal } = this.props.filterVal
-
+		const { filterVal } = this.props
+		console.log(filterVal);
 		const {
 			filterViewStyle,
 			filterTitle,
@@ -57,7 +54,7 @@ class Filter extends React.Component {
 		} = css
 
 		return (
-			<View style={[webreg_dropdown_background, {  height: WINDOW_HEIGHT, width: WINDOW_WIDTH }]}>
+			<View style={[webreg_dropdown_background, { height: WINDOW_HEIGHT, width: WINDOW_WIDTH }]}>
 				<TouchableWithoutFeedback
 					onPress={() => this.props.showFilter(false)}
 					style={webreg_dropdown_cancelTrigger}
@@ -73,7 +70,7 @@ class Filter extends React.Component {
 								<Text style={optionStyle}>{option}</Text>
 								<Switch
 									trackColor={{ true: '#006A96', false: 'white' }}
-									value={filterVal[index]}
+									value={filterVal ? filterVal[index] : false}
 									onValueChange={val => this.onToggleSwitch(val, index)}
 									style={{
 										transform: [{ scaleX: 0.5 }, { scaleY: 0.5 }]
@@ -98,9 +95,6 @@ const styles = {
 		height: 210,
 		borderTopLeftRadius: 10,
 		borderBottomLeftRadius: 10,
-		position: 'absolute',
-		top: deviceIphoneX() ? 76 : 55,
-		right: 0,
 		flexDirection: 'column',
 		alignItems: 'center',
 		paddingHorizontal: 12,
@@ -146,8 +140,8 @@ const mapDispatchToProps = dispatch => (
 				filterVal
 			})
 		},
-		showFilter: (showFilter) => {
-			dispatch({ type: 'CHANGE_FILTER_VISIBILITY', showFilter })
+		showFilter: (filterVisible) => {
+			dispatch({ type: 'CHANGE_FILTER_STATUS', filterVisible })
 		},
 	}
 )

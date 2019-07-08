@@ -17,8 +17,7 @@ function course( state = initialState, action ) {
       return newState
     }
     case 'UPDATE_FILTER': {
-      newState.filterVal = action.filterVal;
-      return newState
+      return {...state, filterVal:action.filterVal}
     }
     default:
       return state

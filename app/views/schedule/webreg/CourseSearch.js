@@ -1,5 +1,5 @@
 import React from 'react'
-import { StatusBar, View } from 'react-native'
+import { StatusBar } from 'react-native'
 import { withNavigation, SafeAreaView } from 'react-navigation'
 import { connect } from 'react-redux'
 import ResultList from './ResultList'
@@ -8,6 +8,7 @@ import DropDown from './DropDown'
 import Filter from './Filter'
 import { myIndexOf } from '../../../util/schedule'
 import { terms } from './mockData/TermMockData.json'
+import { deviceIphoneX } from '../../../util/general'
 
 const INITIAL_TERMS = [...terms]
 
@@ -67,12 +68,18 @@ class CourseSearch extends React.Component {
 		}
 	}
 
+	componentDidMount = () => {
+		this.props.updateInput('')
+		this.props.updateFilterStatus(false)
+		this.props.updateFilterVal([false, false, false])
+	}
+
 	render() {
 		return (
 			<SafeAreaView flex style={{ backgroundColor: 'white' }}>
 				<StatusBar
 					barStyle="dark-content"
-					// backgroundColor={COLOR.PRIMARY}
+				// backgroundColor={COLOR.PRIMARY}
 				/>
 				<SearchHeader
 					getDropDownLayout={this.getDropDownLayout}
@@ -80,7 +87,11 @@ class CourseSearch extends React.Component {
 					onSelectTerm={() => this.setState({ showTermSwitcher: true })}
 				/>
 				<ResultList />
-				{this.props.showFilter && <Filter />}
+				{this.props.showFilter && <Filter style={{
+					position: 'absolute',
+					top: deviceIphoneX() ? 76 : 55,
+					right: 0,
+				}} />}
 				{this.showSelector()}
 			</SafeAreaView>
 		)
@@ -111,8 +122,20 @@ const mapDispatchToProps = dispatch => (
 		selectTerm: (selectedTerm) => {
 			dispatch({ type: 'SET_SELECTED_TERM', selectedTerm })
 		},
+		updateFilterVal: (filterVal) => {
+			dispatch({
+				type: 'UPDATE_FILTER',
+				filterVal
+			})
+		},
+		updateFilterStatus: (filterVisible) => {
+			dispatch({ type: 'CHANGE_FILTER_STATUS', filterVisible })
+		},
+		updateInput: (searchInput) => {
+			dispatch({ type: 'UPDATE_SEARCH_INPUT', searchInput })
+		},
 	}
 )
 
 
-export default withNavigation( connect(mapStateToProps, mapDispatchToProps)(CourseSearch))
+export default withNavigation(connect(mapStateToProps, mapDispatchToProps)(CourseSearch))
