@@ -91,6 +91,26 @@ const manifest = {
 			}
 		}
 		return newState // 6.7 studentId migration
+	},
+	12: (state) => {
+		const newState = { ...state }
+		if (state.cards && state.cards.cardOrder) {
+			// Add occuspace card if it doesn't exist
+			if (state.cards.cards) {
+				if (!state.cards.cards.occuspace) {
+					state.cards.cards = {
+						...state.cards.cards,
+						occuspace: {
+							id: 'occuspace',
+							active: true,
+							name: 'Availability',
+							component: 'occuspaceCard'
+						}
+					}
+				}
+			}
+		}
+		return newState // 6.8 occuspace migration
 	}
 }
 
