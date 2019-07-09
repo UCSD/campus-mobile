@@ -77,7 +77,7 @@ const initialState = {
 		occuspace: {
 			id: 'occuspace',
 			active: true,
-			name: 'Busysness',
+			name: 'Availability',
 			component: 'occuspaceCard'
 		}
 	},

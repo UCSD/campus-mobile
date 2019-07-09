@@ -42,7 +42,7 @@ const OccupsaceCard = ({
 		return (
 			<Card
 				id="occuspace"
-				title="Busyness"
+				title="Availability"
 				extraActions={extraActions}
 			>
 				<View style={css.occuspace_no_locations_container}>
@@ -57,7 +57,7 @@ const OccupsaceCard = ({
 		return (
 			<ScrollCard
 				id="occuspace"
-				title="Busyness"
+				title="Availability"
 				renderItem={({ item }) => (
 					<OccuspaceView
 						data={item}
@@ -73,7 +73,7 @@ const OccupsaceCard = ({
 		return (
 			<Card
 				id="occuspace"
-				title="Busyness"
+				title="Availability"
 				extraActions={extraActions}
 			>
 				<View style={css.occuspace_no_locations_container}>
