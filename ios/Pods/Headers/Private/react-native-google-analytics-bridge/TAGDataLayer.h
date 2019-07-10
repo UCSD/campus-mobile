@@ -1,1 +1,0 @@
-../../../../../node_modules/react-native-google-analytics-bridge/ios/RCTGoogleAnalyticsBridge/google-analytics-lib/TAGDataLayer.h

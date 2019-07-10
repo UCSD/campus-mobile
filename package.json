@@ -1,121 +1,27 @@
 {
   "name": "CampusMobile",
-  "version": "6.3.0",
-  "description": "React Native App for Campus",
-  "keywords": [
-    "react native",
-    "mobile",
-    "app",
-    "ios",
-    "android",
-    "campus",
-    "university",
-    "education"
-  ],
-  "homepage": "https://github.com/UCSD/campus-mobile",
-  "bugs": "https://github.com/UCSD/campus-mobile/issues",
+  "version": "0.0.1",
+  "private": true,
   "scripts": {
-    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "start": "react-native start",
     "test": "jest",
-    "eslint": "lint-staged",
-    "eslint-all": "./node_modules/.bin/eslint . --max-warnings=0",
-    "campus-prod-ci": "node scripts/replace-all prod ci",
-    "campus-qa-ci": "node scripts/replace-all qa ci",
-    "generate-docs": "./node_modules/.bin/jsdoc -c jsdoc.conf.json"
+    "lint": "eslint ."
   },
   "dependencies": {
-    "@babel/runtime": "7.3.1",
-    "bugsnag-react-native": "2.9.5",
-    "dateformat": "3.0.3",
-    "html-entities": "1.2.1",
-    "moment": "2.24.0",
-    "node-forge": "0.7.2",
-    "react": "16.6.3",
-    "react-native": "0.57.8",
-    "react-native-animatable": "1.3.1",
-    "react-native-barcode-builder": "1.0.5",
-    "react-native-circle-checkbox": "0.1.6",
-    "react-native-circular-progress": "1.0.1",
-    "react-native-datepicker": "1.7.2",
-    "react-native-device-info": "0.21.2",
-    "react-native-exception-handler": "2.7.1",
-    "react-native-exit-app": "1.0.0",
-    "react-native-firebase": "4.3.7",
-    "react-native-gesture-handler": "1.0.15",
-    "react-native-google-analytics-bridge": "5.6.2",
-    "react-native-google-api-availability-bridge": "1.3.0",
-    "react-native-hyperlink": "0.0.14",
-    "react-native-keyboard-aware-scroll-view": "0.5.0",
-    "react-native-keychain": "3.0.0-rc.3",
-    "react-native-maps": "0.23.0",
-    "react-native-modal": "9.0.0",
-    "react-native-permissions": "1.1.1",
-    "react-native-popup-menu": "0.15.0",
-    "react-native-restart": "0.0.7",
-    "react-native-simple-toast": "0.0.8",
-    "react-native-sortable-list": "0.0.22",
-    "react-native-svg": "6.5.2",
-    "react-native-system-setting": "1.7.2",
-    "react-native-vector-icons": "4.5.0",
-    "react-navigation": "3.0.9",
-    "react-navigation-header-buttons": "0.0.5",
-    "react-redux": "5.0.7",
-    "redux": "3.7.2",
-    "redux-logger": "3.0.6",
-    "redux-persist": "4.10.2",
-    "redux-persist-migrate": "5.0.0",
-    "redux-persist-transform-filter": "0.0.16",
-    "redux-saga": "0.16.1",
-    "redux-thunk": "2.2.0"
+    "react": "16.8.6",
+    "react-native": "0.60.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.0.0-0",
-    "babel-eslint": "10.0.1",
-    "babel-jest": "24.1.0",
-    "enzyme": "3.8.0",
-    "enzyme-adapter-react-16": "1.9.1",
-    "enzyme-to-json": "3.3.5",
-    "eslint": "4.19.1",
-    "eslint-config-airbnb": "16.1.0",
-    "eslint-plugin-flowtype": "2.46.1",
-    "eslint-plugin-import": "2.9.0",
-    "eslint-plugin-jsx-a11y": "6.0.3",
-    "eslint-plugin-react": "7.7.0",
-    "flow-bin": "0.92.1",
-    "husky": "1.3.1",
-    "ink-docstrap": "1.3.2",
-    "jest": "24.1.0",
-    "jsdoc": "3.5.5",
-    "lint-staged": "8.1.3",
-    "metro-react-native-babel-preset": "0.51.1",
-    "react-dom": "16.8.1",
-    "react-test-renderer": "16.8.1",
-    "redux-immutable-state-invariant": "2.1.0"
+    "@babel/core": "7.5.4",
+    "@babel/runtime": "7.5.4",
+    "@react-native-community/eslint-config": "0.0.3",
+    "babel-jest": "24.8.0",
+    "eslint": "6.0.1",
+    "jest": "24.8.0",
+    "metro-react-native-babel-preset": "0.54.1",
+    "react-test-renderer": "16.8.6"
   },
   "jest": {
-    "preset": "react-native",
-    "transformIgnorePatterns": [
-      "node_modules/(?!(jest-)?react-native|react-navigation|mobx-react)"
-    ],
-    "snapshotSerializers": [
-      "enzyme-to-json/serializer"
-    ],
-    "transform": {
-      "^.+\\.(js)$": "<rootDir>/node_modules/react-native/jest/preprocessor.js"
-    },
-    "setupFiles": [
-      "<rootDir>/tests.setup.js"
-    ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged && npm test"
-    }
-  },
-  "lint-staged": {
-    "*.js": [
-      "eslint --fix",
-      "git add"
-    ]
+    "preset": "react-native"
   }
 }

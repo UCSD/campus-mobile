@@ -1,64 +1,47 @@
-# Uncomment the next line to define a global platform for your project
 platform :ios, '9.0'
-install! 'cocoapods', :deterministic_uuids => false
+require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
 target 'CampusMobile' do
-  # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
-  # use_frameworks!
-
-  react_native_path = "../node_modules/react-native"
-  pod "yoga", :path => "#{react_native_path}/ReactCommon/yoga/yoga.podspec"
-  pod "React", :path => react_native_path, :subspecs => [
-    'Core',
-    'RCTActionSheet',
-    'RCTAnimation',
-    'RCTGeolocation',
-    'RCTImage',
-    'RCTLinkingIOS',
-    'RCTNetwork',
-    'RCTSettings',
-    'RCTText',
-    'RCTVibration',
-    'RCTWebSocket'
-  ]
-
-  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
-  pod 'react-native-maps', path: '../node_modules/react-native-maps'
-
   # Pods for CampusMobile
-  # Required by RNFirebase
-  pod 'Firebase/Core', '~> 5.3.0'
-  pod 'Firebase/Messaging', '~> 5.3.0'
+  pod 'React', :path => '../node_modules/react-native/'
+  pod 'React-Core', :path => '../node_modules/react-native/React'
+  pod 'React-DevSupport', :path => '../node_modules/react-native/React'
+  pod 'React-fishhook', :path => '../node_modules/react-native/Libraries/fishhook'
+  pod 'React-RCTActionSheet', :path => '../node_modules/react-native/Libraries/ActionSheetIOS'
+  pod 'React-RCTAnimation', :path => '../node_modules/react-native/Libraries/NativeAnimation'
+  pod 'React-RCTBlob', :path => '../node_modules/react-native/Libraries/Blob'
+  pod 'React-RCTImage', :path => '../node_modules/react-native/Libraries/Image'
+  pod 'React-RCTLinking', :path => '../node_modules/react-native/Libraries/LinkingIOS'
+  pod 'React-RCTNetwork', :path => '../node_modules/react-native/Libraries/Network'
+  pod 'React-RCTSettings', :path => '../node_modules/react-native/Libraries/Settings'
+  pod 'React-RCTText', :path => '../node_modules/react-native/Libraries/Text'
+  pod 'React-RCTVibration', :path => '../node_modules/react-native/Libraries/Vibration'
+  pod 'React-RCTWebSocket', :path => '../node_modules/react-native/Libraries/WebSocket'
 
-  pod 'BugsnagReactNative', :path => '../node_modules/bugsnag-react-native'
+  pod 'React-cxxreact', :path => '../node_modules/react-native/ReactCommon/cxxreact'
+  pod 'React-jsi', :path => '../node_modules/react-native/ReactCommon/jsi'
+  pod 'React-jsiexecutor', :path => '../node_modules/react-native/ReactCommon/jsiexecutor'
+  pod 'React-jsinspector', :path => '../node_modules/react-native/ReactCommon/jsinspector'
+  pod 'yoga', :path => '../node_modules/react-native/ReactCommon/yoga'
 
-  pod 'RNSVG', :path => '../node_modules/react-native-svg'
-  
-  pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler/ios'
+  pod 'DoubleConversion', :podspec => '../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec'
+  pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
+  pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
-  pod 'RNDeviceInfo', :path => '../node_modules/react-native-device-info'
+  target 'CampusMobileTests' do
+    inherit! :search_paths
+    # Pods for testing
+  end
 
-  pod 'react-native-google-analytics-bridge', :path => '../node_modules/react-native-google-analytics-bridge'
-
-  pod 'RNKeychain', :path => '../node_modules/react-native-keychain'
-
-  pod 'ReactNativePermissions', :path => '../node_modules/react-native-permissions'
-
-  # target 'CampusMobileTests' do
-  #   inherit! :search_paths
-  #   # Pods for testing
-  # end
+  use_native_modules!
 end
 
-post_install do |installer|
-  installer.pods_project.targets.each do |target|
-    if target.name == 'react-native-google-maps'
-      target.build_configurations.each do |config|
-        config.build_settings['CLANG_ENABLE_MODULES'] = 'No'
-      end
-    end
-    if target.name == "React"
-      target.remove_from_project
-    end
+target 'CampusMobile-tvOS' do
+  # Pods for CampusMobile-tvOS
+
+  target 'CampusMobile-tvOSTests' do
+    inherit! :search_paths
+    # Pods for testing
   end
+
 end

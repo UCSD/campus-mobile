@@ -32,14 +32,12 @@ local.properties
 
 # node.js
 #
-node_modules/
 npm-debug.log
 yarn-error.log
 
 # BUCK
 buck-out/
 \.buckd/
-android/app/libs
 *.keystore
 
 # fastlane
@@ -55,3 +53,6 @@ android/app/libs
 
 # Bundle artifact
 *.jsbundle
+
+# CocoaPods
+/ios/Pods/
