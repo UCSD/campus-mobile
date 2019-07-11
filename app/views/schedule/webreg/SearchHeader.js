@@ -3,7 +3,6 @@ import { TouchableOpacity, View, Text, TextInput, Dimensions, StyleSheet } from 
 import { withNavigation } from 'react-navigation'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { connect } from 'react-redux'
-import { deviceIphoneX } from '../../../util/general'
 
 
 const { width } = Dimensions.get('window')
@@ -13,6 +12,9 @@ class SearchHeader extends React.Component {
 		super(props)
 		this.state = {
 			input: '',
+			hasText: false,
+			isFilterButtonVisible: false,
+			isTermSelectorVisible: false,
 		}
 
 		this.filterOptions = ['Lower division', 'Upper division', 'Graduate division']
@@ -21,33 +23,72 @@ class SearchHeader extends React.Component {
 		this.onSubmit = this.onSubmit.bind(this)
 		this.onFilterPress = this.onFilterPress.bind(this)
 		this.onBackButtonPress = this.onBackButtonPress.bind(this)
+		this.onClearButtonPress = this.onClearButtonPress.bind(this)
+		this.onTermSwitcherPress = this.onTermSwitcherPress.bind(this)
 	}
 
 	onChangeText = (text) => {
 		this.setState({ input: text })
+		if ( text !== '' ) {
+			this.setState({ hasText: true })
+		} else {
+			this.setState({ hasText: false })
+		}
 	}
 
-	onSubmit = () => {
+	onSubmit() {
+		this.setState({ isFilterButtonVisible: true, isTermSelectorVisible: true })
 		const { input } = this.state
 		this.props.updateInput(input)
+		this.props.setBodyToRender(1)
 	}
 
-	onFilterPress = () => {
+	onFilterPress() {
 		this.props.showFilter(true)
 	}
 
-	onBackButtonPress = () => {
+	onBackButtonPress() {
 		this.props.navigation.goBack()
-		this.props.updateInput('')
-		this.props.showFilter(false)
+		this.reset()
 	}
 
-	renderBackButton() {
-		const { backBtnStyle } = styles
+	onClearButtonPress() {
+		this.props.setBodyToRender(0)
+		this.reset()
+	}
 
+	onTermSwitcherPress() {
+		this.props.showTermSwitcher(true)
+	}
+
+	reset() {
+		this.setState({
+			input: '',
+			hasText: false,
+			isFilterButtonVisible: false,
+			isTermSelectorVisible: false,
+		})
+		this.props.updateInput('')
+		this.props.showFilter(false)
+		this.props.showTermSwitcher(false)
+	}
+
+	_renderLeftButton() {
+		const { leftButtonStyle } = styles
+
+		if (this.state.hasText) {
+			return (
+				<TouchableOpacity
+					style={leftButtonStyle}
+					onPress={this.onClearButtonPress}
+				>
+					<Icon name="close" size={24} />
+				</TouchableOpacity>
+			)
+		}
 		return (
 			<TouchableOpacity
-				style={backBtnStyle}
+				style={leftButtonStyle}
 				onPress={this.onBackButtonPress}
 			>
 				<Icon name="navigate-before" size={24} />
@@ -55,10 +96,30 @@ class SearchHeader extends React.Component {
 		)
 	}
 
-	renderBar = () => {
+	_renderTermSwicher() {
+		const { termTextStyle, switcherContainerStyle } = styles
+		const { selectedTerm } = this.props
+
+		if (this.state.isTermSelectorVisible) {
+			return (
+				<TouchableOpacity
+					activeOpacity={1}
+					onPress={this.onTermSwitcherPress}
+					style={switcherContainerStyle}
+					onLayout={(event) => { this.props.onLayoutTermSwicher(event) }}
+				>
+					<Text style={termTextStyle}>{selectedTerm.term_code}</Text>
+					<Icon name="unfold-more" size={20} />
+				</TouchableOpacity>
+			)
+		}
+
+		return <View />
+	}
+
+	_renderBar() {
 		const { input } = this.state
-		const { barViewStyle, inputStyle, termTextStyle, switcherContainerStyle } = styles
-		const { selectedTerm, getDropDownLayout, onSelectTerm } = this.props
+		const { barViewStyle, inputStyle } = styles
 
 		return (
 			<View style={[barViewStyle]}>
@@ -66,38 +127,37 @@ class SearchHeader extends React.Component {
 				<TextInput
 					style={inputStyle}
 					value={input}
+					placeholder="Search by course code"
 					onChangeText={this.onChangeText}
 					autoCorrect={false}
-					autoFocus={true}
 					returnKeyType="go"
 					onSubmitEditing={this.onSubmit}
 				/>
-				<TouchableOpacity
-					activeOpacity={1}
-					onPress={onSelectTerm}
-					style={switcherContainerStyle}
-					onLayout={(event) => {
-						const { layout } = event.nativeEvent
-						getDropDownLayout(45, layout.y + (deviceIphoneX() ? 30 : 6), layout.width + 20)
-					}}
-				>
-					<Text style={termTextStyle}>{selectedTerm.term_code}</Text>
-					<Icon name="unfold-more" size={20} />
-				</TouchableOpacity>
+				{this._renderTermSwicher()}
 			</View>
 		)
 	}
 
-	renderFilterButton = () => {
-		const { filterBtnStyle } = styles
+	_renderRightButton = () => {
+		const { rightButtonStyle } = styles
+
+		if (this.state.isFilterButtonVisible) {
+			return (
+				<TouchableOpacity
+					style={rightButtonStyle}
+					onPress={this.onFilterPress}
+				>
+					<Icon name="filter-list" size={24} />
+				</TouchableOpacity>
+			)
+		}
 
 		return (
-			<TouchableOpacity
-				style={filterBtnStyle}
-				onPress={this.onFilterPress}
+			<View
+				style={rightButtonStyle}
 			>
-				<Icon name="filter-list" size={24} />
-			</TouchableOpacity>
+				<Icon name="lens" color="rgba(0,0,0,0)" size={24} />
+			</View>
 		)
 	}
 
@@ -108,10 +168,11 @@ class SearchHeader extends React.Component {
 		return (
 			<View
 				style={[headerContainerStyle, this.props.style]}
+				onLayout={(event) => { this.props.onLayoutHeader(event) }}
 			>
-				{this.renderBackButton()}
-				{this.renderBar()}
-				{this.renderFilterButton()}
+				{this._renderLeftButton()}
+				{this._renderBar()}
+				{this._renderRightButton()}
 			</View>
 		)
 	}
@@ -141,7 +202,7 @@ const styles = StyleSheet.create({
 		color: '#7D7D7D',
 		fontSize: 15
 	},
-	backBtnStyle: {
+	leftButtonStyle: {
 		flex: 0.14,
 		justifyContent: 'center',
 		alignItems: 'center'
@@ -163,7 +224,7 @@ const styles = StyleSheet.create({
 		paddingLeft: 10,
 		paddingRight: 10
 	},
-	filterBtnStyle: {
+	rightButtonStyle: {
 		flex: 0.14,
 		justifyContent: 'center',
 		alignItems: 'center',
@@ -193,15 +254,17 @@ const mapDispatchToProps = dispatch => (
 			dispatch({ type: 'SET_SELECTED_TERM', selectedTerm })
 		},
 		showFilter: (filterVisible) => {
-			dispatch({ type: 'CHANGE_FILTER_STATUS', filterVisible })
+			dispatch({ type: 'CHANGE_FILTER_VISIBILITY', filterVisible })
+		},
+		showTermSwitcher: (termSwitcherVisible) => {
+			dispatch({ type: 'CHANGE_TERM_SWITCHER_VISIBILITY', termSwitcherVisible })
 		}
 	}
 )
 
 const mapStateToProps = state => ({
 	selectedTerm: state.schedule.selectedTerm,
-	searchInput: state.course.searchInput,
-	filterVisible: state.course.filterVisible
+	searchInput: state.webreg.searchInput,
 })
 
 export default withNavigation(connect(mapStateToProps, mapDispatchToProps)(SearchHeader))

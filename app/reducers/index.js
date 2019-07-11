@@ -22,7 +22,6 @@ import parkingReducer from './parking'
 import messagesReducer from './messages'
 import supplementalInstructionReducer from './supplementalInstruction'
 import webregReducer from './webreg'
-import courseReducer from './course'
 
 module.exports = combineReducers({
 	cards: cardsReducer,
@@ -47,5 +46,4 @@ module.exports = combineReducers({
 	messages: messagesReducer,
 	supplementalInstruction: supplementalInstructionReducer,
 	webreg: webregReducer,
-	course: courseReducer
 })

@@ -37,40 +37,17 @@ class ResultList extends React.Component {
 	renderSeparator = () => (<View style={{ height: 15 }} />)
 
 	render() {
-		const { emptyFontStyle, emptyViewStyle } = styles
-
-		if ( this.props.input.length !== 0) {
-			return (
-				<FlatList
-					data={Data}
-					keyExtractor={this.keyExtractor}
-					renderItem={this.renderItem}
-					ItemSeparatorComponent={this.renderSeparator}
-				/>
-			)
-		} else {
-			return (
-				<View style={emptyViewStyle}>
-					<Text style={emptyFontStyle}>Search by course code</Text>
-					<Text style={emptyFontStyle}>eg. ANTH 23</Text>
-				</View>
-			)
-		}
+		return (
+			<FlatList
+				data={Data}
+				keyExtractor={this.keyExtractor}
+				renderItem={this.renderItem}
+				ItemSeparatorComponent={this.renderSeparator}
+			/>
+		)
 	}
 }
 
-const styles = {
-	emptyViewStyle: {
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
-	},
-	emptyFontStyle: {
-		color: 'grey',
-		fontSize: 18
-	}
-}
-
-const mapStateToProps = state => ({ input: state.course.searchInput })
+const mapStateToProps = state => ({ input: state.webreg.searchInput })
 
 export default withNavigation(connect(mapStateToProps)(ResultList))

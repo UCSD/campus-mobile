@@ -3,7 +3,7 @@ import React from 'react'
 import CourseTitle from './common/CourseTitle'
 
 
-const CourseCell = ({ course, terms }) =>
+const CourseCell = ({ course = { unit: -1, courseCode: 'undefined', title: 'undefined' }, terms }) =>
 	 (
 		<CourseTitle
 			unit={course.unit}

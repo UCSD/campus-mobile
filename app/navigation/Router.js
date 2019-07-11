@@ -1,5 +1,5 @@
 import React from 'react'
-import { Image, View } from 'react-native'
+import { Image } from 'react-native'
 import {
 	createStackNavigator,
 	createBottomTabNavigator,
@@ -189,7 +189,8 @@ let MainStack = createStackNavigator(
 		WebReg: {
 			screen: WebReg,
 			navigationOptions: {
-				title: 'Registration',
+				// title: 'Registration',
+				header: null,
 			}
 		},
 		LoginScreen: {

@@ -26,9 +26,9 @@ class Filter extends React.Component {
 	}
 
 	onToggleSwitch = (val, index) => {
-		const { filterVal } = this.props;
-		currFilter = [ ...filterVal];
-		currFilter[index] = val;
+		const { filterVal } = this.props
+		const currFilter = [...filterVal]
+		currFilter[index] = val
 		this.props.updateFilter(currFilter)
 	}
 
@@ -38,7 +38,7 @@ class Filter extends React.Component {
 
 	render() {
 		const { filterVal } = this.props
-		console.log(filterVal);
+		console.log(filterVal)
 		const {
 			filterViewStyle,
 			filterTitle,
@@ -141,13 +141,13 @@ const mapDispatchToProps = dispatch => (
 			})
 		},
 		showFilter: (filterVisible) => {
-			dispatch({ type: 'CHANGE_FILTER_STATUS', filterVisible })
+			dispatch({ type: 'CHANGE_FILTER_VISIBILITY', filterVisible })
 		},
 	}
 )
 
 const mapStateToProps = state => ({
-	filterVal: state.course.filterVal
+	filterVal: state.webreg.filterVal
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Filter)

@@ -23,9 +23,7 @@ const WINDOW_HEIGHT = getScreenHeight()
  * @props containerStyle: JSON -- container style
  * @props onCancel: function
  * @props onSelect: function
- * @props x: int -- start x
- * @props y: int -- start y
- * @props cardWidth: int
+ * @props style: JSON -- left, right, top, bottom
  * @props isTermName: boolean
  */
 class DropDown extends React.Component {
@@ -62,7 +60,7 @@ class DropDown extends React.Component {
 		const {
 			choices,
 			onCancel,
-			x, y, cardWidth,
+			style,
 			isTermName
 		} = this.props
 
@@ -81,7 +79,7 @@ class DropDown extends React.Component {
 				>
 					<View style={[webreg_dropdown_overlay, { height: WINDOW_HEIGHT, width: WINDOW_WIDTH }]} />
 				</TouchableWithoutFeedback>
-				<View style={[webreg_dropdown_dialogContainer, { top: y, right: x, width: cardWidth }]}>
+				<View style={[webreg_dropdown_dialogContainer, style]}>
 					{choices.map((item, i) => (isTermName ? this.renderItem(item.term_name, i) : this.renderItem(item.term_code, i)))}
 				</View>
 			</View>
@@ -90,9 +88,6 @@ class DropDown extends React.Component {
 }
 
 DropDown.defaultProps = {
-	x: 0,
-	y: 0,
-	width: 0,
 	isTermName: false
 }
 

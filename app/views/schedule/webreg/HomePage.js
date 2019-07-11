@@ -9,7 +9,7 @@ import {
 } from 'react-native'
 import React from 'react'
 import { connect } from 'react-redux'
-import Icon from 'react-native-vector-icons/SimpleLineIcons'
+import Icon from 'react-native-vector-icons/MaterialIcons'
 import NavigationService from '../../../navigation/NavigationService'
 
 import { deviceIphoneX, platformIOS, getScreenWidth, getScreenHeight } from '../../../util/general'
@@ -104,9 +104,11 @@ class HomePage extends React.Component {
 		if (this.state.show) {
 			return (
 				<DropDown
-					x={this.dropDownX}
-					y={this.dropDownY}
-					cardWidth={this.width}
+					style={{
+						left: this.dropDownX,
+						top: this.dropDownY,
+						width: this.dropDownWidth
+					}}
 					onCancel={this.handleCancel}
 					onSelect={this.handleSelect}
 					choices={this.constructArr()}
@@ -139,7 +141,7 @@ class HomePage extends React.Component {
 		if (platformIOS()) {
 			if (deviceIphoneX()) {
 				return (
-					<View style={[webreg_homepage_switch_container, { paddingBottom: 34 }]}>
+					<View style={webreg_homepage_switch_container}>
 						{options.map((opt, i) => this.renderButton(opt, i))}
 					</View>
 				)
@@ -207,7 +209,7 @@ class HomePage extends React.Component {
 			return (
 				<Animated.View style={{
 					position: 'absolute',
-					bottom: -28,
+					bottom: -42,
 					width: WINDOW_WIDTH,
 					left: 0,
 					right: 0,
@@ -271,48 +273,38 @@ class HomePage extends React.Component {
 			webreg_homepage_term_text,
 			webreg_homepage_term_selector_container,
 			webreg_homepage_icon_container_style,
-			webreg_homepage_search_bar,
-			webreg_homepage_webreg_homepage_search_bar_container,
-			webreg_homepage_search_text
 		} = css
 
 		const options = ['Calendar', 'List', 'Finals']
 
 		return (
 			<View style={{ backgroundColor: '#FDFDFD', flex: 1 }}>
-				<View style={webreg_homepage_term_selector_container}>
-					<View style={[webreg_homepage_icon_container_style, { alignItems: 'flex-end', paddingTop: 1 }]}>
-						<Icon name="info" onPress={showAppTime} size={18} />
+				<View
+					style={webreg_homepage_term_selector_container}
+					onLayout={(event) => {
+						const { layout } = event.nativeEvent
+						this.containerX = layout.x
+						this.containerY = layout.y
+					}}
+				>
+					<View style={webreg_homepage_icon_container_style}>
+						<Icon name="alarm" onPress={showAppTime} size={24} />
 					</View>
 					<View
 						style={webreg_homepage_term_container}
 						onLayout={(event) => {
 							const { layout } = event.nativeEvent
-							this.width = layout.width + 50
-							this.dropDownX = 45
-							this.dropDownY = layout.y
+							this.dropDownWidth = layout.width
+							this.dropDownX = layout.x + this.containerX
+							this.dropDownY = layout.y + this.containerY
 						}}
 					>
 						<Text style={webreg_homepage_term_text}>{this.props.selectedTerm.term_name}</Text>
 					</View>
-					<View style={[webreg_homepage_icon_container_style, { alignItems: 'flex-start', paddingTop: 2 }]}>
-						<Icon name="arrow-down" onPress={this.selectTerm} size={18} />
+					<View style={webreg_homepage_icon_container_style}>
+						<Icon name="arrow-drop-down" onPress={this.selectTerm} size={24} />
 					</View>
 				</View>
-				<TouchableOpacity
-					onPress={this._onSearchBarPressed}
-					style={webreg_homepage_webreg_homepage_search_bar_container}
-					activeOpacity={0.2}
-				>
-					<View style={webreg_homepage_search_bar}>
-						<TouchableOpacity
-							activeOpacity={1}
-						>
-							<Icon name="magnifier" size={18} />
-						</TouchableOpacity>
-						<Text style={webreg_homepage_search_text}>Search Course</Text>
-					</View>
-				</TouchableOpacity>
 				{this.renderDisplayType()}
 				{this.renderSwitchNavigator(options)}
 				{this.renderModalCard()}

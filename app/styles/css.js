@@ -292,13 +292,10 @@ const css = StyleSheet.create({
 	webreg_list_card_header_container: { flex: 1, alignItems: 'center', flexDirection: 'row', paddingHorizontal: 8, marginBottom: 4 },
 	webreg_modal_card_container: { flex: 1, backgroundColor: COLOR.WHITE, borderRadius: 10, elevation: 2,  margin: 10, shadowColor: COLOR.BLACK, shadowRadius: 4, shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1 },
 	webreg_modal_card_header_container: { flex: 1, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 8, paddingVertical: 4, backgroundColor: COLOR.LBLUE, borderTopLeftRadius: 10, borderTopRightRadius: 10, marginBottom: 4 },
-	webreg_homepage_search_text: { color: '#7D7D7D', fontSize: 18, paddingLeft: 10 },
-	webreg_homepage_webreg_homepage_search_bar_container: { marginLeft: 15, marginRight: 15, marginTop: 5, marginBottom: 10 },
-	webreg_homepage_search_bar: { backgroundColor: '#F1F1F1', borderRadius: 20, paddingLeft: 15, paddingTop: 5, paddingBottom: 5, paddingRight: 10, flexDirection: 'row', alignItems: 'center' },
-	webreg_homepage_term_container: { flex: 1, },
+	webreg_homepage_term_container: { flex: 1 },
 	webreg_homepage_term_text: { fontFamily: 'Helvetica Neue', fontSize: 18, alignSelf: 'center' },
-	webreg_homepage_term_selector_container: { flexDirection: 'row', marginTop: 20, marginBottom: 10, marginLeft: 50, marginRight: 50 },
-	webreg_homepage_icon_container_style: { justifyContent: 'center', width: 20, height: 20 },
+	webreg_homepage_term_selector_container: { flexDirection: 'row', marginTop: 10, marginBottom: 10, marginLeft: 50, marginRight: 50 },
+	webreg_homepage_icon_container_style: { justifyContent: 'center', alignItems: 'center', },
 	webreg_homepage_switch_container: { paddingTop: 17, paddingBottom: 17, bottom: 0, position: 'absolute', flexDirection: 'row', backgroundColor: '#FDFDFD', flex: 1 },
 	webreg_homepage_switch_item: { flex: 1 / 3, justifyContent: 'center', alignItems: 'center' },
 	webreg_homepage_switch_text: { color: '#7D7D7D', paddingTop: 1, paddingBottom: 1 },
@@ -317,17 +314,17 @@ const css = StyleSheet.create({
 	webreg_final_calendar_timeContainer: { width: 30, height: 50, justifyContent: 'center', alignItems: 'center', },
 	webreg_final_calendar_timeText: { fontFamily: 'Helvetica Neue', color: 'black', fontSize: 10 },
 	// reusable component - DropDown
-	webreg_dropdown_background: { position: 'absolute', top: 0, left: 0 },
+	webreg_dropdown_background: { position: 'absolute', top: 0, left: 0, },
 	webreg_dropdown_cancelTrigger: { position: 'absolute', top: 0, left: 0, },
-	webreg_dropdown_overlay: { position: 'absolute', backgroundColor: 'black', opacity: 0.2 },
-	webreg_dropdown_dialogContainer: { position: 'absolute', backgroundColor: 'white', opacity: 1, borderRadius: 10, paddingTop: 10, paddingBottom: 10, shadowOpacity: 0.2, shadowOffset: { width: 0, height: 2 }, shadowColor: 'black', shadowRadius: 5, elevation: 1 },
+	webreg_dropdown_overlay: { position: 'absolute', backgroundColor: 'black', opacity: 0.1 },
+	webreg_dropdown_dialogContainer: { position: 'absolute', backgroundColor: 'white', opacity: 1, borderRadius: 2, paddingHorizontal: 0, paddingVertical: 0, shadowOpacity: 0.2, shadowOffset: { width: 0, height: 1 }, shadowColor: 'black', shadowRadius: 2, elevation: 1 },
 	webreg_dropdown_defaultContainerText: { flex: 1, paddingTop: 10, paddingBottom: 10, backgroundColor: 'white', justifyContent: 'center', },
 	webreg_dropdown_defaultChoiceText: { fontFamily: 'Helvetica Neue', fontSize: 18, color: '#7D7D7D', textAlign: 'center' },
 
 	/**
 	 *  06 - Shuttle
 	 */
-	shuttlecard_addButton: { width: LAYOUT.MAX_CARD_WIDTH, backgroundColor: COLOR.WHITE, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4, paddingVertical: 8, borderTopWidth: 1, borderColor: COLOR.MGREY },
+	shuttlecard_addButton: { width: LAYOUT.MAX_CARD_WIDTH, backgroundColor: COLOR.WHITE, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 0, paddingVertical: 8, borderTopWidth: 1, borderColor: COLOR.MGREY },
 	shuttlecard_addText: { fontSize: 20, color: COLOR.PRIMARY, fontWeight: '300' },
 	so_busIcon: { color: COLOR.PRIMARY },
 	so_bigContainer: { width: LAYOUT.MAX_CARD_WIDTH, borderBottomWidth: 1, borderBottomColor: COLOR.MGREY },
