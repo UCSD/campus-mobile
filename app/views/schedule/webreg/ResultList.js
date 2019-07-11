@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, FlatList, TouchableOpacity } from 'react-native'
+import { View, FlatList, TouchableOpacity } from 'react-native'
 import { withNavigation } from 'react-navigation'
 import { connect } from 'react-redux'
 import CourseHeader from './CourseCell'
