@@ -57,65 +57,16 @@ class HomePage extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			show: false,
 			display_type: 'Calendar'
 		}
-		this.selectTerm = this.selectTerm.bind(this)
-		this.handleCancel = this.handleCancel.bind(this)
-		this.handleSelect = this.handleSelect.bind(this)
 	}
 
 	componentWillMount() {
 		this.props.selectFinal(null, null)
 	}
 
-	selectTerm() {
-		this.setState({ show: true })
-	}
-
 	_onSearchBarPressed = () => {
 		NavigationService.navigate('CourseSearch')
-	}
-
-	constructArr() {
-		const { initialTerms, selectedTerm } = this.props
-		const result = [selectedTerm]
-		for (let i = 0; i < initialTerms.length; i++) {
-			if (initialTerms[i].term_code !== selectedTerm.term_code) {
-				result.push(initialTerms[i])
-			}
-		}
-		return result
-	}
-
-	handleCancel = () => {
-		this.setState({ show: false })
-	}
-
-	handleSelect = (choice) => {
-		const { initialTerms } = this.props
-		const index = myIndexOf(initialTerms, choice, 'name')
-		choice = initialTerms[index]
-		this.setState({ show: false })
-		this.props.selectTerm(choice)
-	}
-
-	showSelector() {
-		if (this.state.show) {
-			return (
-				<DropDown
-					style={{
-						left: this.dropDownX,
-						top: this.dropDownY,
-						width: this.dropDownWidth
-					}}
-					onCancel={this.handleCancel}
-					onSelect={this.handleSelect}
-					choices={this.constructArr()}
-					isTermName
-				/>
-			)
-		}
 	}
 
 	renderDisplayType() {
@@ -278,38 +229,31 @@ class HomePage extends React.Component {
 		const options = ['Calendar', 'List', 'Finals']
 
 		return (
-			<View style={{ backgroundColor: '#FDFDFD', flex: 1 }}>
+			<View
+				style={{ backgroundColor: '#FDFDFD', flex: 1 }}
+				onLayout={(event) => { this.props.onParent(event) }}
+			>
 				<View
 					style={webreg_homepage_term_selector_container}
-					onLayout={(event) => {
-						const { layout } = event.nativeEvent
-						this.containerX = layout.x
-						this.containerY = layout.y
-					}}
+					onLayout={(event) => { this.props.onContainer(event) }}
 				>
 					<View style={webreg_homepage_icon_container_style}>
 						<Icon name="alarm" onPress={showAppTime} size={24} />
 					</View>
 					<View
 						style={webreg_homepage_term_container}
-						onLayout={(event) => {
-							const { layout } = event.nativeEvent
-							this.dropDownWidth = layout.width
-							this.dropDownX = layout.x + this.containerX
-							this.dropDownY = layout.y + this.containerY
-						}}
+						onLayout={(event) => { this.props.onSelector(event) }}
 					>
 						<Text style={webreg_homepage_term_text}>{this.props.selectedTerm.term_name}</Text>
 					</View>
 					<View style={webreg_homepage_icon_container_style}>
-						<Icon name="arrow-drop-down" onPress={this.selectTerm} size={24} />
+						<Icon name="arrow-drop-down" onPress={() => this.props.showTermSelector(true)} size={24} />
 					</View>
 				</View>
 				{this.renderDisplayType()}
 				{this.renderSwitchNavigator(options)}
 				{this.renderModalCard()}
 				{this.renderFinalModalCard()}
-				{this.showSelector()}
 			</View>
 		)
 	}
@@ -340,9 +284,9 @@ const mapDispatchToProps = (dispatch, ownProps) => (
 		selectFinal: (selectedCourse, data) => {
 			dispatch({ type: 'SELECT_COURSE_FINAL', selectedCourse, data })
 		},
-		selectTerm: (selectedTerm) => {
-			dispatch({ type: 'SET_SELECTED_TERM', selectedTerm })
-		},
+		showTermSelector: (termSelectorVisible) => {
+			dispatch({ type: 'CHANGE_TERM_SELECTOR_VISIBILITY', termSelectorVisible })
+		}
 	}
 )
 

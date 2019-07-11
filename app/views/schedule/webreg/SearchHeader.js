@@ -122,7 +122,10 @@ class SearchHeader extends React.Component {
 		const { barViewStyle, inputStyle } = styles
 
 		return (
-			<View style={[barViewStyle]}>
+			<View
+				style={[barViewStyle]}
+				onLayout={(event) => { this.props.onSearchBar(event) }}
+			>
 				<Icon name="search" size={24} />
 				<TextInput
 					style={inputStyle}

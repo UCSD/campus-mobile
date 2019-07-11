@@ -39,15 +39,26 @@ class WebReg extends React.Component {
 		this.setState({ bodyIndex: index })
 	}
 
-	handleSelect = (choice) => {
+	handleSelectSwitcher = (choice) => {
 		const index = myIndexOf(INITIAL_TERMS, choice)
 		choice = INITIAL_TERMS[index]
 		this.props.showTermSwitcher(false)
 		this.props.selectTerm(choice)
 	}
 
-	handleCancel = () => {
+	handleCancelSwitcher = () => {
 		this.props.showTermSwitcher(false)
+	}
+
+	handleCancelSelector = () => {
+		this.props.showTermSelector(false)
+	}
+
+	handleSelectSelector = (choice) => {
+		const index = myIndexOf(INITIAL_TERMS, choice, 'name')
+		choice = INITIAL_TERMS[index]
+		this.props.showTermSelector(false)
+		this.props.selectTerm(choice)
 	}
 
 	constructArr() {
@@ -76,15 +87,30 @@ class WebReg extends React.Component {
 			return (
 				<DropDown
 					style={{
-						left: this.termSwicherX + this.headerX,
+						left: (this.searchBarX + this.termSwicherX) - 5,
 						width: this.termSwicherW,
-						top: this.headerH + this.headerY,
+						top: (this.headerY + 2),
 					}}
-					onCancel={this.handleCancel}
-					onSelect={this.handleSelect}
+					onCancel={this.handleCancelSwitcher}
+					onSelect={this.handleSelectSwitcher}
 					choices={this.constructArr()}
 					choiceStyle={styles.dropDownTextStyle}
 					containerStyle={styles.dropDownContainerStyle}
+				/>
+			)
+		}
+		if (this.props.termSelectorVisible) {
+			return (
+				<DropDown
+					style={{
+						left: (this.containerX + this.selectorX + this.parentX) - 0.5,
+						top: (this.containerY + this.selectorY + this.parentY) - 10,
+						width: this.selectorWidth
+					}}
+					onCancel={this.handleCancelSelector}
+					onSelect={this.handleSelectSelector}
+					choices={this.constructArr()}
+					isTermName
 				/>
 			)
 		}
@@ -97,7 +123,25 @@ class WebReg extends React.Component {
 
 	_renderBody() {
 		switch (this.state.bodyIndex) {
-			case 0: return <HomePage initialTerms={INITIAL_TERMS} />
+			case 0: return (<HomePage
+				initialTerms={INITIAL_TERMS}
+				onParent={(event)	=> {
+					const { layout } = event.nativeEvent
+					this.parentX = layout.x
+					this.parentY = layout.y
+				}}
+				onContainer={(event)	=> {
+					const { layout } = event.nativeEvent
+					this.containerX = layout.x
+					this.containerY = layout.y
+				}}
+				onSelector={(event)	=> {
+					const { layout } = event.nativeEvent
+					this.selectorX = layout.x
+					this.selectorY = layout.y
+					this.selectorWidth = layout.width
+				}}
+			/>)
 			case 1: return <CourseSearch />
 			default: <View />
 		}
@@ -125,6 +169,12 @@ class WebReg extends React.Component {
 						this.termSwicherX = layout.x
 						this.termSwicherY = layout.y
 					}}
+					onSearchBar={(event) => {
+						const { layout } = event.nativeEvent
+						this.searchBarW = layout.width
+						this.searchBarX = layout.x
+						this.searchBarY = layout.y
+					}}
 				/>
 				{this._renderBody()}
 				{this.showModal()}
@@ -151,6 +201,7 @@ const mapStateToProps = state => ({
 	selectedTerm: state.schedule.selectedTerm,
 	filterVisible: state.webreg.filterVisible,
 	termSwitcherVisible: state.webreg.termSwitcherVisible,
+	termSelectorVisible: state.webreg.termSelectorVisible,
 	fullScheduleData: state.schedule.data,
 })
 
@@ -171,6 +222,9 @@ const mapDispatchToProps = (dispatch, ownProps) => (
 		},
 		showTermSwitcher: (termSwitcherVisible) => {
 			dispatch({ type: 'CHANGE_TERM_SWITCHER_VISIBILITY', termSwitcherVisible })
+		},
+		showTermSelector: (termSelectorVisible) => {
+			dispatch({ type: 'CHANGE_TERM_SELECTOR_VISIBILITY', termSelectorVisible })
 		}
 	}
 )

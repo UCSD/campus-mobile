@@ -293,7 +293,7 @@ const css = StyleSheet.create({
 	webreg_modal_card_container: { flex: 1, backgroundColor: COLOR.WHITE, borderRadius: 10, elevation: 2,  margin: 10, shadowColor: COLOR.BLACK, shadowRadius: 4, shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1 },
 	webreg_modal_card_header_container: { flex: 1, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 8, paddingVertical: 4, backgroundColor: COLOR.LBLUE, borderTopLeftRadius: 10, borderTopRightRadius: 10, marginBottom: 4 },
 	webreg_homepage_term_container: { flex: 1 },
-	webreg_homepage_term_text: { fontFamily: 'Helvetica Neue', fontSize: 18, alignSelf: 'center' },
+	webreg_homepage_term_text: { fontSize: 18, alignSelf: 'center' },
 	webreg_homepage_term_selector_container: { flexDirection: 'row', marginTop: 10, marginBottom: 10, marginLeft: 50, marginRight: 50 },
 	webreg_homepage_icon_container_style: { justifyContent: 'center', alignItems: 'center', },
 	webreg_homepage_switch_container: { paddingTop: 17, paddingBottom: 17, bottom: 0, position: 'absolute', flexDirection: 'row', backgroundColor: '#FDFDFD', flex: 1 },
@@ -303,23 +303,23 @@ const css = StyleSheet.create({
 	// reusable component - CourseCard
 	webreg_coursecard_container: { position: 'absolute', shadowColor: '#000', backgroundColor: 'white', shadowRadius: 2, shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, elevation: 1, borderRadius: 3, flex: 1 },
 	webreg_coursecard_header_container: { justifyContent: 'center', alignItems: 'center', },
-	webreg_coursecard_header_text: { paddingTop: 1, paddingBottom: 1, textAlign: 'center', fontWeight: 'bold', fontSize: 10, fontFamily: 'Helvetica Neue', },
+	webreg_coursecard_header_text: { paddingTop: 1, paddingBottom: 1, textAlign: 'center', fontWeight: 'bold', fontSize: 10, },
 	webreg_coursecard_course_container: { flexDirection: 'column', flex: 1, justifyContent: 'center', alignItems: 'center' },
-	webreg_coursecard_course_text: { fontSize: 7, textAlign: 'center', paddingTop: 2, paddingBottom: 2, fontFamily: 'Helvetica Neue', },
+	webreg_coursecard_course_text: { fontSize: 7, textAlign: 'center', paddingTop: 2, paddingBottom: 2 },
 	webreg_final_calendar_card: { flex: 1, marginLeft: 20, marginRight: 20 },
 	webreg_final_calendar_daysContainer: { marginLeft: 30, flexDirection: 'row', },
 	webreg_final_calendar_dayContainer: { flex: 1 / 7, justifyContent: 'center', alignItems: 'center' },
-	webreg_final_calendar_dayText: { fontFamily: 'Helvetica Neue', color: 'black', paddingTop: 10, paddingBottom: 10, fontSize: 10 },
+	webreg_final_calendar_dayText: { color: 'black', paddingTop: 10, paddingBottom: 10, fontSize: 10 },
 	webreg_final_calendar_timeRow: { flexDirection: 'row', borderTopWidth: 1, borderColor: '#B7B7B7' },
 	webreg_final_calendar_timeContainer: { width: 30, height: 50, justifyContent: 'center', alignItems: 'center', },
-	webreg_final_calendar_timeText: { fontFamily: 'Helvetica Neue', color: 'black', fontSize: 10 },
+	webreg_final_calendar_timeText: { color: 'black', fontSize: 10 },
 	// reusable component - DropDown
 	webreg_dropdown_background: { position: 'absolute', top: 0, left: 0, },
 	webreg_dropdown_cancelTrigger: { position: 'absolute', top: 0, left: 0, },
 	webreg_dropdown_overlay: { position: 'absolute', backgroundColor: 'black', opacity: 0.1 },
 	webreg_dropdown_dialogContainer: { position: 'absolute', backgroundColor: 'white', opacity: 1, borderRadius: 2, paddingHorizontal: 0, paddingVertical: 0, shadowOpacity: 0.2, shadowOffset: { width: 0, height: 1 }, shadowColor: 'black', shadowRadius: 2, elevation: 1 },
 	webreg_dropdown_defaultContainerText: { flex: 1, paddingTop: 10, paddingBottom: 10, backgroundColor: 'white', justifyContent: 'center', },
-	webreg_dropdown_defaultChoiceText: { fontFamily: 'Helvetica Neue', fontSize: 18, color: '#7D7D7D', textAlign: 'center' },
+	webreg_dropdown_defaultChoiceText: { fontSize: 18, color: '#7D7D7D', textAlign: 'center' },
 
 	/**
 	 *  06 - Shuttle
