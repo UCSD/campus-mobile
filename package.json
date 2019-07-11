@@ -20,8 +20,13 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "dateformat": "3.0.0",
+    "html-entities": "1.2.1",
+    "moment": "2.24.0",
+    "node-forge": "0.8.5",
     "react": "16.8.6",
-    "react-native": "0.60.0"
+    "react-native": "0.60.0",
+    "react-native-hyperlink": "0.0.14"
   },
   "devDependencies": {
     "@babel/core": "7.5.4",
