@@ -9,7 +9,7 @@ const App = () => (
 		<StatusBar barStyle="light-content" />
 		<SafeAreaView>
 			<ScrollView contentInsetAdjustmentBehavior="automatic">
-				<View>	
+				<View>
 					<Text>
 						asdf
 						Text text Text text Text text Text text Text text Text text Text text Text text Text text Text text Text text
