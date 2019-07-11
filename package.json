@@ -1,7 +1,19 @@
 {
   "name": "CampusMobile",
-  "version": "0.0.1",
-  "private": true,
+  "version": "6.8.0",
+  "description": "React Native App for Campus",
+  "keywords": [
+    "react native",
+    "mobile",
+    "app",
+    "ios",
+    "android",
+    "campus",
+    "university",
+    "education"
+  ],
+  "homepage": "https://github.com/UCSD/campus-mobile",
+  "bugs": "https://github.com/UCSD/campus-mobile/issues",
   "scripts": {
     "start": "react-native start",
     "test": "jest",
@@ -15,13 +27,33 @@
     "@babel/core": "7.5.4",
     "@babel/runtime": "7.5.4",
     "@react-native-community/eslint-config": "0.0.3",
+    "babel-eslint": "10.0.2",
     "babel-jest": "24.8.0",
     "eslint": "6.0.1",
+    "eslint-config-airbnb": "17.1.1",
+    "eslint-plugin-flowtype": "3.11.1",
+    "eslint-plugin-import": "2.18.0",
+    "eslint-plugin-jsx-a11y": "6.2.3",
+    "eslint-plugin-react": "7.14.2",
+    "flow-bin": "0.102.0",
+    "husky": "3.0.0",
     "jest": "24.8.0",
+    "lint-staged": "9.2.0",
     "metro-react-native-babel-preset": "0.54.1",
     "react-test-renderer": "16.8.6"
   },
   "jest": {
     "preset": "react-native"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged && npm test"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "git add"
+    ]
   }
 }
