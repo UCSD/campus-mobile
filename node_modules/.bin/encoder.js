@@ -1,0 +1,1 @@
+../jsbarcode/bin/barcodes/EAN_UPC/encoder.js

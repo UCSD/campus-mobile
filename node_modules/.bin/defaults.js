@@ -1,0 +1,1 @@
+../jsbarcode/bin/options/defaults.js

@@ -1,0 +1,1 @@
+../jsbarcode/bin/renderers/index.js

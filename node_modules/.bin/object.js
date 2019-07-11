@@ -1,0 +1,1 @@
+../jsbarcode/bin/renderers/object.js

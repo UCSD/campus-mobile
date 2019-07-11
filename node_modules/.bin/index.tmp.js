@@ -1,0 +1,1 @@
+../jsbarcode/bin/barcodes/index.tmp.js

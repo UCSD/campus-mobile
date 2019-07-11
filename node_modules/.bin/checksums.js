@@ -1,0 +1,1 @@
+../jsbarcode/bin/barcodes/MSI/checksums.js
