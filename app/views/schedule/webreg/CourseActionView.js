@@ -2,9 +2,9 @@ import React from 'react'
 import { View, Text, Dimensions, TouchableOpacity } from 'react-native'
 import HeaderRow from './HeaderRow'
 import SectionRow from './SectionRow'
-import { getScreenWidth } from '../../../util/general'
+// import { getScreenWidth } from '../../../util/general'
 
-const { width } = getScreenWidth()
+const { width } = Dimensions.get('screen')
 
 const CourseActionView = ({ course, sectCode, style }) => {
 	const {

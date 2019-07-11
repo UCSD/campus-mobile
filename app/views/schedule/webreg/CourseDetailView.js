@@ -3,9 +3,8 @@ import { View, Dimensions } from 'react-native'
 import HeaderRow from './HeaderRow'
 import SectionRow from './SectionRow'
 import StatusBar from './StatusBar'
-import { getScreenWidth } from '../../../util/general'
 
-const { width } = getScreenWidth()
+const { width } = Dimensions.get('screen')
 
 const CourseDetailView = ({ course, sectCode, style }) => {
 	const { cellWrapperStyle, cellContainerStyle } = styles
@@ -28,8 +27,6 @@ const CourseDetailView = ({ course, sectCode, style }) => {
 		</View>
 	)
 }
-
-export default CourseDetailView
 
 const styles = {
 	cellWrapperStyle: {
@@ -54,3 +51,5 @@ const styles = {
 		right: 3
 	},
 }
+
+export default CourseDetailView

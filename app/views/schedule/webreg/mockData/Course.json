@@ -36,6 +36,36 @@
       "waitlistCount": 8
     },
     {
+      "sectCode": "B00",
+      "type": "LE",
+      "dayCode": "TuTh",
+      "time": "3:30p-4:50p",
+      "bldg": "PCYNH",
+      "room": "106"
+    },
+    {
+      "sectCode": "B01",
+      "type": "DI",
+      "dayCode": "Tu",
+      "time": "7:30p-8:20p",
+      "bldg": "PCYNH",
+      "room": "106",
+      "availSeats": 22,
+      "totalSeats": 30,
+      "waitlistCount": 0
+    },
+    {
+      "sectCode": "B02",
+      "type": "DI",
+      "dayCode": "Tu",
+      "time": "7:30p-8:20p",
+      "bldg": "PCYNH",
+      "room": "106",
+      "availSeats": 0,
+      "totalSeats": 30,
+      "waitlistCount": 8
+    },
+    {
       "type": "FINAL",
       "dayCode": "Mon 12/13",
       "time": "3:00p-5:59p",
