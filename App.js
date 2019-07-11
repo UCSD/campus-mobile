@@ -31,8 +31,6 @@ const App = () => (
 				<TEST_node_forge />
 				<TEST_react_native_animatable />
 				<TEST_react_native_barcode_builder />
-
-				<Barcode value="Hello World" format="CODE128" />
 			</View>
 		</ScrollView>
 	</Fragment>
@@ -126,7 +124,7 @@ const TEST_react_native_barcode_builder = () => (
 		moduleVersion="1.0.5"
 		moduleVersionLink="https://github.com/wonsikin/react-native-barcode-builder/releases/tag/v1.0.5"
 		moduleTest="<Barcode />"
-		moduleOutput="test"
+		moduleOutput="work in progress"
 	/>
 )
 
