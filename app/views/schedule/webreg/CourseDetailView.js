@@ -6,21 +6,28 @@ import StatusBar from './StatusBar'
 
 const { width } = Dimensions.get('screen')
 
-const CourseDetailView = ({ course, sectCode, style }) => {
+const CourseDetailView = ({ course, diCode, leIdx, style }) => {
 	const { cellWrapperStyle, cellContainerStyle } = styles
+	let lectureNum = 0
+
 	return (
 		<View style={[cellWrapperStyle, { paddingVertical: 7 }, style]}>
 			<View style={cellContainerStyle}>
 				<HeaderRow course={course} type="sectionId" style={{ paddingBottom: 6 }} />
-				{course.sections.map((section) => {
-					const sectionStyle = {
-						paddingTop: section.type === 'FINAL' ? 3 : 0,
-						paddingBottom: 1
+				{course.sections.map((section, index) => {
+					if (index >= leIdx) {
+						const sectionStyle = {
+							paddingTop: section.type === 'FINAL' ? 3 : 0,
+							paddingBottom: 1
+						}
+						if (section.type === 'LE') {
+							lectureNum += 1
+						}
+						const isEnrolled = lectureNum <= 1 && (section.sectCode === diCode || section.type === 'LE' || section.type === 'FINAL')
+						return isEnrolled && (
+							<SectionRow data={section} style={sectionStyle} />
+						)
 					}
-					const isEnrolled = section.type !== 'DI' || section.sectCode === sectCode
-					return isEnrolled && (
-						<SectionRow data={section} style={sectionStyle} />
-					)
 				})}
 				<StatusBar data={course.sections[1]} style={{ paddingTop: 2 }} />
 			</View>

@@ -2,8 +2,6 @@ import React from 'react'
 import { StatusBar } from 'react-native'
 import { SafeAreaView } from 'react-navigation'
 import CourseTableView from './CourseTableView'
-import CourseDetailView from './CourseDetailView'
-import CourseActionView from './CourseActionView'
 import CourseHeader from './CourseHeader'
 import Course from './mockData/Course.json'
 
@@ -14,8 +12,6 @@ const CourseView = () => (
 		/>
 		<CourseHeader course={Course} />
 		<CourseTableView style={{ marginTop: 16 }} />
-		<CourseDetailView course={Course} sectCode="A01" style={{ marginTop: 16 }} />
-		<CourseActionView course={Course} sectCode="A01" style={{ marginTop: 16 }} />
 	</SafeAreaView>
 )
 

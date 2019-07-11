@@ -4,11 +4,8 @@ import {
 	Text,
 	Dimensions,
 	TouchableWithoutFeedback,
-	Animated,
 } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
-
-import SectionRow from './SectionRow'
 import CourseTableComponent from './CourseTableComponent'
 import Course from './mockData/Course.json'
 
@@ -16,21 +13,8 @@ import Course from './mockData/Course.json'
 const { width } = Dimensions.get('screen')
 
 export default class CourseTableView extends Component {
-	constructor(props) {
-		super(props)
-	}
-	renderAdditionalMeeting(section) {
-		const { cellWrapperStyle, cellContainerStyle, dotStyle } = styles
-		return (
-			<TouchableWithoutFeedback>
-				<View style={cellWrapperStyle}>
-					<View style={dotStyle} />
-					<View style={cellContainerStyle}>
-						<SectionRow data={section} />
-					</View>
-				</View>
-			</TouchableWithoutFeedback>
-		)
+	constructor() {
+		super()
 	}
 
 	renderPrereq() {
@@ -50,7 +34,7 @@ export default class CourseTableView extends Component {
 	render() {
 		const { containerStyle } = styles
 		return (
-			<Animated.View
+			<View
 				style={
 					[
 						containerStyle,
@@ -63,23 +47,11 @@ export default class CourseTableView extends Component {
 					Course.sections.map((sect, index) => {
 						if (sect.type === 'LE') {
 							console.log('LE', index)
-							return <CourseTableComponent sectIdx={index} />
+							return <CourseTableComponent course={Course} lecIdx={index} />
 						}
 					})
 				}
-				{
-					Course.sections.map((sect) => {
-						switch (sect.type) {
-							case 'LE':
-								return
-							case 'DI':
-								return
-							default:
-								return this.renderAdditionalMeeting(sect)
-						}
-					})
-				}
-			</Animated.View>
+			</View>
 		)
 	}
 }

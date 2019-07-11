@@ -8,20 +8,23 @@ import {
 	Easing
 } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
-
+import { withNavigation } from 'react-navigation'
 import HeaderRow from './HeaderRow'
 import SectionRow from './SectionRow'
 import StatusBar from './StatusBar'
-import Course from './mockData/Course.json'
 import ExpandArrow from './icons8-expand-arrow-filled-500.png'
 
 
 const { width } = Dimensions.get('screen')
 const AnimatedIcon = Animated.createAnimatedComponent(Icon)
 
-export default class CourseTableView extends Component {
-	constructor(props) {
-		super(props)
+/**
+ * @props sectIdx - the index of the lecture section
+ * @props course - course data
+ */
+class CourseTableView extends Component {
+	constructor() {
+		super()
 		this.state = {
 			expanded: false,
 			/* Add custom animation and color changes */
@@ -176,10 +179,12 @@ export default class CourseTableView extends Component {
 		)
 	}
 
-	renderEnrollment(section) {
+	renderEnrollment(course, section, lectureIdx) {
 		const { cellWrapperStyle, cellContainerStyle, navIconStyle } = styles
 		return (
-			<TouchableWithoutFeedback>
+			<TouchableWithoutFeedback
+				onPress={() => this.props.navigation.navigate('CourseSectionView', { course, diCode: section.sectCode, leIdx: lectureIdx })}
+			>
 				<View style={cellWrapperStyle}>
 					<View style={cellContainerStyle}>
 						<SectionRow data={section} style={{ paddingBottom: 3 }} />
@@ -191,36 +196,55 @@ export default class CourseTableView extends Component {
 		)
 	}
 
-	render() {
-		const { sectIdx } = this.props;
-		let lectureNum = 0;
-
+	renderAdditionalMeeting(section) {
+		const { cellWrapperStyle, cellContainerStyle, dotStyle } = styles
 		return (
-			<Animated.View
-				style={{ overflow: 'hidden', height: this.state.animatedHeight }}
-			>
-				<View style={{ overflow: 'hidden' }} onLayout={this._setMaxHeight}>
-					{
-						Course.sections.map((sect, index) => {
-							console.log(index, sectIdx, lectureNum)
-							if (index >= sectIdx && lectureNum <= 1) {
-								switch (sect.type) {
-									case 'LE':
-										lectureNum += 1
-										if (lectureNum <= 1) {
-											return this.renderLecture(Course, sect)
-										}
-										return;
-									case 'DI':
-										return this.renderEnrollment(sect)
-									default:
-										return
-								}
-							}
-						})
-					}
+			<TouchableWithoutFeedback>
+				<View style={cellWrapperStyle}>
+					<View style={dotStyle} />
+					<View style={cellContainerStyle}>
+						<SectionRow data={section} />
+					</View>
 				</View>
-			</Animated.View>
+			</TouchableWithoutFeedback>
+		)
+	}
+
+	render() {
+		const { lecIdx, course } = this.props
+		let lectureNum = 0
+		let finalIdx = 0
+		console.log(course);
+		return (
+			<View style={{ marginBottom: 30 }}>
+				<Animated.View
+					style={{ overflow: 'hidden', height: this.state.animatedHeight }}
+				>
+					<View style={{ overflow: 'hidden' }} onLayout={this._setMaxHeight}>
+						{
+							course.sections.map((sect, index) => {
+								console.log(index, lecIdx, lectureNum)
+								if (index >= lecIdx && lectureNum <= 1) {
+									switch (sect.type) {
+										case 'LE':
+											lectureNum += 1
+											if (lectureNum <= 1) {
+												return this.renderLecture(course, sect)
+											}
+											return
+										case 'DI':
+											return this.renderEnrollment(course, sect, lecIdx)
+										default:
+											finalIdx = index
+											return
+									}
+								}
+							})
+						}
+					</View>
+				</Animated.View>
+				{this.renderAdditionalMeeting(course.sections[finalIdx])}
+			</View>
 		)
 	}
 }
@@ -275,13 +299,8 @@ const styles = {
 		borderRadius: 4,
 		position: 'absolute',
 		left: 16,
-	},
-	prereqTextStyle: {
-		fontSize: 12,
-		lineHeight: 14,
-		fontWeight: 'bold',
-		color: '#034263',
-		marginTop: 13,
-		marginBottom: 12
 	}
 }
+
+
+export default withNavigation(CourseTableView);

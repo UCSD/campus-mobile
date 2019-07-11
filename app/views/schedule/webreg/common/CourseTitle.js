@@ -7,6 +7,7 @@ const CourseTitle = ({
 	unit = '-1',
 	code = 'Unknown',
 	title = 'Unknown',
+	term = '',
 	containerStyle,
 }) => (
 	<View style={[css.webreg_common_title_container, containerStyle]} >

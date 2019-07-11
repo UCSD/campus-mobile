@@ -6,7 +6,6 @@ import {
 } from 'react-native'
 import { withNavigation } from 'react-navigation'
 import Icon from 'react-native-vector-icons/MaterialIcons'
-import { connect } from 'react-redux'
 import CourseCell from './CourseCell'
 
 
@@ -81,13 +80,5 @@ const styles = StyleSheet.create({
 	},
 })
 
-const mapDispatchToProps = dispatch => (
-	{
-	}
-)
 
-const mapStateToProps = state => ({
-
-})
-
-export default withNavigation(connect(mapStateToProps, mapDispatchToProps)(CourseHeader))
+export default withNavigation(CourseHeader)

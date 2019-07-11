@@ -34,6 +34,13 @@
       "availSeats": 0,
       "totalSeats": 30,
       "waitlistCount": 8
+		},
+		{
+      "type": "FINAL",
+      "dayCode": "Mon 12/13",
+      "time": "3:00p-5:59p",
+      "bldg": "TBA",
+      "room": "TBA"
     },
     {
       "sectCode": "B00",
