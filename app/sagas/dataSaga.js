@@ -48,12 +48,14 @@ function* watchData() {
 			yield put({ type: 'UPDATE_SCHEDULE' })
 			yield put({ type: 'UPDATE_STUDENT_PROFILE' })
 			yield put({ type: 'SYNC_USER_PROFILE' })
+			yield put({ type: 'UPDATE_OCCUSPACE_DATA' })
 		} catch (err) {
 			console.log(err)
 		}
 		yield delay(DATA_SAGA_TTL)
 	}
 }
+
 
 function* updateShuttleMaster() {
 	const { lastUpdated, routes, stops } = yield select(getShuttle)

@@ -616,6 +616,22 @@ const css = StyleSheet.create({
 	notifications_err: { textAlign: 'center', fontSize: 16, padding: 30 },
 
 	/**
+	 *	18 - Occupsace
+	 */
+	occuspace_view: { flexGrow: 1, padding: 8, width: LAYOUT.MAX_CARD_WIDTH, height: 200 },
+	occuspace_location_title: { fontSize: 20, color: COLOR.PRIMARY },
+	occuspace_status_text: { flexDirection: 'row', paddingBottom: 10, fontSize: 12 },
+	occuspace_sublocation_text: { fontSize: 15 },
+	occusapce_status_dot: { paddingLeft: 8, paddingTop: 4 },
+	occusapce_item_separator: { padding: 5 },
+	occuspace_busyness_text: { fontSize: 12 },
+	occuspace_busyness_row: { flexDirection: 'row', justifyContent: 'space-between', fontSize: 12 },
+	occuspace_estimated_text: { fontWeight: 'bold' },
+	occuspace_units_text: { fontWeight: 'normal', color: COLOR.DGREY },
+	occuspace_no_locations_container: { paddingHorizontal: 20, paddingVertical: 40 },
+	occuspace_no_loocations_text: {  alignSelf: 'center', fontSize: 18 },
+
+	/**
 	 *  99 - Misc
 	 */
 	// Banner Card

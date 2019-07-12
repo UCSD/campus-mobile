@@ -40,6 +40,7 @@ import ParkingSpotType from '../views/parking/ParkingSpotType'
 import ManageParkingLots from '../views/parking/ManageParkingLots'
 import Notifications from '../views/preferences/notifications/Notifications'
 import CardPreferences from '../views/preferences/card/CardPreferences'
+import ManageOccuspaceLocations from '../views/occuspace/ManageOccuspaceLocations'
 
 const campusLogoImage = require('../assets/images/UCSanDiegoLogo-nav.png')
 
@@ -211,6 +212,12 @@ let MainStack = createStackNavigator(
 				const { params } = navigation.state
 				const { title } = params
 				return { title }
+			}
+		},
+		ManageOccuspaceLocations: {
+			screen: ManageOccuspaceLocations,
+			navigationOptions: {
+				title: 'Manage Locations'
 			}
 		}
 	},
