@@ -13,6 +13,7 @@ import routesSaga from './routesSaga'
 import scheduleSaga from './scheduleSaga'
 import parkingSaga from './parkingSaga'
 import messagesSaga from './messagesSaga'
+import myStudentProfileSaga from './myStudentProfileSaga'
 import siSessionsSaga from './siSessionsSaga'
 
 
@@ -34,5 +35,6 @@ export default function* rootSaga() {
 		fork(parkingSaga),
 		fork(messagesSaga),
 		fork(siSessionsSaga),
+		fork(myStudentProfileSaga),
 	])
 }

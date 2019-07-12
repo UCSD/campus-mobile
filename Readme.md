@@ -1,14 +1,11 @@
 # Campus Mobile 
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) [![iOS Build status](https://build.appcenter.ms/v0.1/apps/0dd30a0f-0296-4681-a160-43897906418c/branches/dev/badge)](https://appcenter.ms)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) [![iOS Build status](https://build.appcenter.ms/v0.1/apps/0dd30a0f-0296-4681-a160-43897906418c/branches/master/badge)](https://appcenter.ms) [![Android Build status](https://build.appcenter.ms/v0.1/apps/c176abb1-b0df-46fe-a4cf-f8fa8095b0dd/branches/master/badge)](https://appcenter.ms)
 
 The Campus Mobile app platform enables the university to deliver relevant information to students, staff, and visitors, taking the context of time and location into consideration. The platform uses [React Native](https://facebook.github.io/react-native/) and implements a card based UI.
 
 The goal of this platform is to provide a responsive and intuitive native mobile interactions for a personalized campus experience.
 
 [UC San Diego](https://mobile.ucsd.edu/) uses this platform for its Campus Mobile app on iOS and Android.
-
-## Branch Deprecation Notice
-The `dev` branch will be going away. Please see [https://www.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow](https://www.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow) for more information.
 
 ## Getting Started
 1. Complete the [React Native CLI Quickstart](https://facebook.github.io/react-native/docs/getting-started.html) setup instructions.

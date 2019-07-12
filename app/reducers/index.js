@@ -20,6 +20,7 @@ import requestErrorsReducer from './requestErrors'
 import homeReducer from './home'
 import parkingReducer from './parking'
 import messagesReducer from './messages'
+import studentProfileReducer from './studentProfile'
 import supplementalInstructionReducer from './supplementalInstruction'
 import webregReducer from './webreg'
 
@@ -45,5 +46,7 @@ module.exports = combineReducers({
 	parking: parkingReducer,
 	messages: messagesReducer,
 	supplementalInstruction: supplementalInstructionReducer,
+	studentProfile: studentProfileReducer,
+	supplementalInstruction: supplementalInstructionReducer
 	webreg: webregReducer,
 })

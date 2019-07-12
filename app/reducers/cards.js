@@ -13,6 +13,14 @@ const initialState = {
 			name: 'Special Events',
 			component: 'SpecialEventsCard'
 		},
+		studentId: {
+			id: 'studentId',
+			active: true,
+			name: 'Student ID',
+			component: 'StudentIDCard',
+			authenticated: true,
+			classifications: { student: true }
+		},
 		finals: {
 			id: 'finals',
 			active: true,
@@ -83,7 +91,7 @@ const initialState = {
 		'events',
 		'news',
 		'quicklinks',
-		'weather'
+		'weather',
 	],
 }
 

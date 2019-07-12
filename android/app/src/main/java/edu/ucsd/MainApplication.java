@@ -4,19 +4,8 @@ import android.app.Application;
 import android.util.Log;
 
 import com.facebook.react.ReactApplication;
-import com.oblador.vectoricons.VectorIconsPackage;
-import com.horcrux.svg.SvgPackage;
-import com.avishayil.rnrestart.ReactNativeRestartPackage;
-import com.airbnb.android.react.maps.MapsPackage;
-import com.oblador.keychain.KeychainPackage;
-import com.ivanwu.googleapiavailabilitybridge.ReactNativeGooglePlayServicesPackage;
-import com.idehub.GoogleAnalyticsBridge.GoogleAnalyticsBridgePackage;
-import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
-import io.invertase.firebase.RNFirebasePackage;
-import com.github.wumke.RNExitApp.RNExitAppPackage;
 import com.masteratul.exceptionhandler.ReactNativeExceptionHandlerPackage;
-import com.learnium.RNDeviceInfo.RNDeviceInfo;
-import com.bugsnag.BugsnagReactNative;
+import com.ninty.system.setting.SystemSettingPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.horcrux.svg.SvgPackage;
@@ -53,19 +42,9 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new VectorIconsPackage(),
-            new SvgPackage(),
-            new ReactNativeRestartPackage(),
-            new MapsPackage(),
-            new KeychainPackage(),
-            new ReactNativeGooglePlayServicesPackage(),
-            new GoogleAnalyticsBridgePackage(),
-            new RNGestureHandlerPackage(),
-            new RNFirebasePackage(),
-            new RNExitAppPackage(),
             new ReactNativeExceptionHandlerPackage(),
             new RNDeviceInfo(),
-            BugsnagReactNative.getPackage(),
+            new SystemSettingPackage(),
             new RNGestureHandlerPackage(),
             new VectorIconsPackage(),
             new SvgPackage(),
