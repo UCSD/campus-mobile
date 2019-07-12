@@ -308,7 +308,7 @@ const css = StyleSheet.create({
 	webreg_coursecard_header_text: { paddingTop: 1, paddingBottom: 1, textAlign: 'center', fontWeight: 'bold', fontSize: 10, },
 	webreg_coursecard_course_container: { flexDirection: 'column', flex: 1, justifyContent: 'center', alignItems: 'center' },
 	webreg_coursecard_course_text: { fontSize: 7, textAlign: 'center', paddingTop: 2, paddingBottom: 2 },
-	webreg_final_calendar_card: { flex: 1, marginLeft: 20, marginRight: 20 },
+	webreg_final_calendar_card: { flex: 1, marginLeft: 20, marginRight: 20, marginBottom: 55 },
 	webreg_final_calendar_daysContainer: { marginLeft: 30, flexDirection: 'row', },
 	webreg_final_calendar_dayContainer: { flex: 1 / 7, justifyContent: 'center', alignItems: 'center' },
 	webreg_final_calendar_dayText: { color: 'black', paddingTop: 10, paddingBottom: 10, fontSize: 10 },

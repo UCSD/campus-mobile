@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, FlatList, TouchableOpacity } from 'react-native'
+import { Text, View, FlatList, TouchableOpacity } from 'react-native'
 import { withNavigation } from 'react-navigation'
 import { connect } from 'react-redux'
 import CourseHeader from './CourseCell'
@@ -37,14 +37,37 @@ class ResultList extends React.Component {
 	renderSeparator = () => (<View style={{ height: 15 }} />)
 
 	render() {
-		return (
-			<FlatList
-				data={Data}
-				keyExtractor={this.keyExtractor}
-				renderItem={this.renderItem}
-				ItemSeparatorComponent={this.renderSeparator}
-			/>
-		)
+		const { emptyFontStyle, emptyViewStyle } = styles
+
+		if ( this.props.input.length != 0) {
+			return (
+				<FlatList
+					data={Data}
+					keyExtractor={this.keyExtractor}
+					renderItem={this.renderItem}
+					ItemSeparatorComponent={this.renderSeparator}
+				/>
+			)
+		} else {
+			return (
+				<View style={emptyViewStyle}>
+					<Text style={emptyFontStyle}>Search by course code</Text>
+					<Text style={emptyFontStyle}>eg. ANTH 23</Text>
+				</View>
+			)
+		}
+	}
+}
+
+const styles = {
+	emptyViewStyle: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center'
+	},
+	emptyFontStyle: {
+		color: 'grey',
+		fontSize: 18
 	}
 }
 

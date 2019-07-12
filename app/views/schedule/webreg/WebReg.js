@@ -156,6 +156,7 @@ class WebReg extends React.Component {
 				/>
 				<SearchHeader
 					initialTerms={INITIAL_TERMS}
+					bodyIndex={this.state.bodyIndex}
 					setBodyToRender={this.setBodyToRender}
 					onLayoutHeader={(event) => {
 						const { layout } = event.nativeEvent

@@ -1,5 +1,5 @@
 import React from 'react'
-import { TouchableOpacity, View, Text, TextInput, Dimensions, StyleSheet } from 'react-native'
+import { TouchableOpacity, View, Text, TextInput, Dimensions, StyleSheet, Keyboard } from 'react-native'
 import { withNavigation } from 'react-navigation'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { connect } from 'react-redux'
@@ -12,9 +12,6 @@ class SearchHeader extends React.Component {
 		super(props)
 		this.state = {
 			input: '',
-			hasText: false,
-			isFilterButtonVisible: false,
-			isTermSelectorVisible: false,
 		}
 
 		this.filterOptions = ['Lower division', 'Upper division', 'Graduate division']
@@ -29,22 +26,22 @@ class SearchHeader extends React.Component {
 
 	onChangeText = (text) => {
 		this.setState({ input: text })
-		if ( text !== '' ) {
-			this.setState({ hasText: true })
-		} else {
-			this.setState({ hasText: false })
-		}
 	}
 
 	onSubmit() {
-		this.setState({ isFilterButtonVisible: true, isTermSelectorVisible: true })
 		const { input } = this.state
-		this.props.updateInput(input)
-		this.props.setBodyToRender(1)
+		if (!input) {
+			this.props.setBodyToRender(0)
+			this.reset()
+		} else {
+			this.props.updateInput(input)
+			this.props.setBodyToRender(1)
+		}
 	}
 
 	onFilterPress() {
 		this.props.showFilter(true)
+		Keyboard.dismiss()
 	}
 
 	onBackButtonPress() {
@@ -55,18 +52,17 @@ class SearchHeader extends React.Component {
 	onClearButtonPress() {
 		this.props.setBodyToRender(0)
 		this.reset()
+		Keyboard.dismiss()
 	}
 
 	onTermSwitcherPress() {
 		this.props.showTermSwitcher(true)
+		Keyboard.dismiss()
 	}
 
 	reset() {
 		this.setState({
 			input: '',
-			hasText: false,
-			isFilterButtonVisible: false,
-			isTermSelectorVisible: false,
 		})
 		this.props.updateInput('')
 		this.props.showFilter(false)
@@ -76,7 +72,7 @@ class SearchHeader extends React.Component {
 	_renderLeftButton() {
 		const { leftButtonStyle } = styles
 
-		if (this.state.hasText) {
+		if (this.props.bodyIndex === 1) {
 			return (
 				<TouchableOpacity
 					style={leftButtonStyle}
@@ -100,7 +96,7 @@ class SearchHeader extends React.Component {
 		const { termTextStyle, switcherContainerStyle } = styles
 		const { selectedTerm } = this.props
 
-		if (this.state.isTermSelectorVisible) {
+		if (this.props.bodyIndex) {
 			return (
 				<TouchableOpacity
 					activeOpacity={1}
@@ -134,6 +130,10 @@ class SearchHeader extends React.Component {
 					onChangeText={this.onChangeText}
 					autoCorrect={false}
 					returnKeyType="go"
+					onFocus={() => {
+						this.props.setBodyToRender(1)
+						this.props.selectCourse(null, null)
+					}}
 					onSubmitEditing={this.onSubmit}
 				/>
 				{this._renderTermSwicher()}
@@ -144,7 +144,7 @@ class SearchHeader extends React.Component {
 	_renderRightButton = () => {
 		const { rightButtonStyle } = styles
 
-		if (this.state.isFilterButtonVisible) {
+		if (this.props.bodyIndex) {
 			return (
 				<TouchableOpacity
 					style={rightButtonStyle}
@@ -261,7 +261,10 @@ const mapDispatchToProps = dispatch => (
 		},
 		showTermSwitcher: (termSwitcherVisible) => {
 			dispatch({ type: 'CHANGE_TERM_SWITCHER_VISIBILITY', termSwitcherVisible })
-		}
+		},
+		selectCourse: (selectedCourse, data) => {
+			dispatch({ type: 'SELECT_COURSE', selectedCourse, data })
+		},
 	}
 )
 

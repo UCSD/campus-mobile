@@ -6,7 +6,6 @@ import { connect } from 'react-redux'
 
 import CourseListCard from './CourseListCard'
 import CourseListMockData from './mockData/CourseListMockData.json'
-import { getBottomMargin } from '../../../util/schedule'
 
 class CourseList extends Component {
 	componentWillMount() {
@@ -17,11 +16,9 @@ class CourseList extends Component {
 
 		return (
 			<FlatList
-				style={{ marginBottom: getBottomMargin(this.props.device) }}
+				style={{ marginBottom: 55 }}
 				data={mock.data}
-				renderItem={({ item }) => (<CourseListCard
-					data={item}
-				/>)}
+				renderItem={({ item }) => (<CourseListCard data={item} />)}
 				keyExtractor={item => item.course_code + item.section}
 				extraData={this.state}
 			/>

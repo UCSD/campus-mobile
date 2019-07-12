@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 import CourseListMockData from './mockData/CourseListMockData.json'
-import { getDayOfWeek, getCourseList, getBottomMargin } from '../../../util/schedule'
+import { getDayOfWeek, getCourseList } from '../../../util/schedule'
 import { getScreenWidth, getScreenHeight } from '../../../util/general'
 import CalendarCard from './CalendarCard'
 
@@ -142,7 +142,7 @@ class ClassCalendar extends React.Component {
 		} = styles
 
 		return (
-			<View style={[cardStyle, { marginBottom: getBottomMargin(this.props.device) }]}>
+			<View style={cardStyle}>
 				{ /* <Button onPress={() => auth.retrieveAccessToken().then(credentials => console.log(credentials))} title="Get Access Token" /> */}
 				<View style={daysContainerStyle}>
 					{days.map((day, i) => (
@@ -222,7 +222,8 @@ const styles = {
 	cardStyle: {
 		flex: 1,
 		marginLeft: 20,
-		marginRight: 20
+		marginRight: 20,
+		marginBottom: 55
 	},
 	daysContainerStyle: {
 		marginLeft: 30,

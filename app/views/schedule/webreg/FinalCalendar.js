@@ -6,7 +6,7 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import auth from '../../../util/auth'
 import { getScreenWidth, getScreenHeight } from '../../../util/general'
 import CourseListMockData from './mockData/CourseListMockData.json'
-import { getFinalIndex, getCourseList, getBottomMargin } from '../../../util/schedule'
+import { getFinalIndex, getCourseList } from '../../../util/schedule'
 import css from '../../../styles/css'
 import CalendarCard from './CalendarCard'
 
@@ -139,7 +139,7 @@ class FinalCalendar extends React.Component {
 		} = css
 
 		return (
-			<View style={[webreg_final_calendar_card, { marginBottom: getBottomMargin(this.props.device) }]}>
+			<View style={webreg_final_calendar_card}>
 				<View style={webreg_final_calendar_daysContainer}>
 					{days.map((day, i) => (
 						<View style={webreg_final_calendar_dayContainer} key={day}>

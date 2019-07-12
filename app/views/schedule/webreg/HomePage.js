@@ -13,7 +13,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons'
 import NavigationService from '../../../navigation/NavigationService'
 
 import { deviceIphoneX, platformIOS, getScreenWidth, getScreenHeight } from '../../../util/general'
-import { getBottomMargin, myIndexOf } from '../../../util/schedule'
+import { myIndexOf } from '../../../util/schedule'
 import auth from '../../../util/auth'
 import css from '../../../styles/css'
 import DropDown from './DropDown'
@@ -90,19 +90,11 @@ class HomePage extends React.Component {
 		const { webreg_homepage_switch_container } = css
 
 		if (platformIOS()) {
-			if (deviceIphoneX()) {
-				return (
-					<View style={webreg_homepage_switch_container}>
-						{options.map((opt, i) => this.renderButton(opt, i))}
-					</View>
-				)
-			} else {
-				return (
-					<View style={webreg_homepage_switch_container}>
-						{options.map((opt, i) => this.renderButton(opt, i))}
-					</View>
-				)
-			}
+			return (
+				<View style={webreg_homepage_switch_container}>
+					{options.map((opt, i) => this.renderButton(opt, i))}
+				</View>
+			)
 		}
 	}
 
@@ -141,7 +133,7 @@ class HomePage extends React.Component {
 			return (
 				<Animated.View style={{
 					position: 'absolute',
-					bottom: getBottomMargin(getDeviceType(), 'card'),
+					bottom: 0,
 					width: WINDOW_WIDTH,
 					left: 0,
 					right: 0,
@@ -186,7 +178,7 @@ class HomePage extends React.Component {
 			return (
 				<Animated.View style={{
 					position: 'absolute',
-					bottom: getBottomMargin(getDeviceType(), 'card'),
+					bottom: 0,
 					width: WINDOW_WIDTH,
 					left: 0,
 					right: 0,
@@ -247,7 +239,14 @@ class HomePage extends React.Component {
 						<Text style={webreg_homepage_term_text}>{this.props.selectedTerm.term_name}</Text>
 					</View>
 					<View style={webreg_homepage_icon_container_style}>
-						<Icon name="arrow-drop-down" onPress={() => this.props.showTermSelector(true)} size={24} />
+						<Icon
+							name="arrow-drop-down"
+							onPress={() => {
+								this.props.showTermSelector(true)
+								this.props.selectCourse(null, null)
+							}}
+							size={24}
+						/>
 					</View>
 				</View>
 				{this.renderDisplayType()}
