@@ -47,6 +47,5 @@ module.exports = combineReducers({
 	messages: messagesReducer,
 	supplementalInstruction: supplementalInstructionReducer,
 	studentProfile: studentProfileReducer,
-	supplementalInstruction: supplementalInstructionReducer
-	webreg: webregReducer,
+	webreg: webregReducer
 })
