@@ -4,9 +4,10 @@ import { SafeAreaView } from 'react-navigation'
 import CourseDetailView from './CourseDetailView'
 import CourseActionView from './CourseActionView'
 import CourseHeader from './CourseHeader'
+import CourseCalender from './ClassCalendar'
 
 const CourseSectionView = ({ navigation }) => {
-	const { course, diCode , leIdx } = navigation.state.params
+	const { course, diCode, leIdx } = navigation.state.params
 	return (
 		<SafeAreaView style={styles.containerStyle}>
 			<StatusBar
@@ -14,7 +15,8 @@ const CourseSectionView = ({ navigation }) => {
 			/>
 			<CourseHeader course={course} />
 			<CourseDetailView course={course} diCode={diCode} leIdx={leIdx} style={{ marginTop: 16 }} />
-			{/* <CourseActionView course={course} sectCode="A01" style={{ marginTop: 16 }} /> */}
+			<CourseCalender />
+			<CourseActionView style={{ position: 'absolute', bottom: 22 }} />
 		</SafeAreaView>
 	)
 }
