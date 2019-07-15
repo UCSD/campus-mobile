@@ -2,7 +2,7 @@ const AppSettings = require('../AppSettings')
 
 const mobileAuthService = {
 	retrieveAccessToken(base64Secret) {
-		return fetch(AppSettings.QA_MOBILE_API_URL, {
+		return fetch(AppSettings.MOBILE_API_AUTH_URL, {
 			method: 'POST',
 			headers: {
 				'Authorization': 'Basic ' + base64Secret ,

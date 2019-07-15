@@ -79,6 +79,8 @@ if (REPLACEMENT_ENV === 'prod' || REPLACEMENT_ENV === 'qa') {
 		{ prodVal: myEnv.SI_SESSIONS_API_URL_PROD, qaVal: myEnv.SI_SESSIONS_API_URL_QA },
 		{ prodVal: myEnv.MY_STUDENT_CONTACT_API_URL_PROD, qaVal: myEnv.MY_STUDENT_CONTACT_API_URL_QA },
 		{ prodVal: myEnv.MY_STUDENT_PROFILE_API_URL_PROD, qaVal: myEnv.MY_STUDENT_PROFILE_API_URL_QA },
+		{ prodVal: myEnv.MOBILE_API_AUTH_URL_PROD, qaVal: myEnv.MOBILE_API_AUTH_URL_QA },
+		{ prodVal: myEnv.OCCUSPACE_API_URL_PROD, qaVal: myEnv.OCCUSPACE_API_URL_QA },
 	])
 
 	// ssoService.js
