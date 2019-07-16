@@ -102,6 +102,10 @@ Widget buildWeatherCard() {
                 child: const Text('Surf Report'),
                 onPressed: () {/* ... */},
               ),
+              FlatButton(
+                child: Icon(Icons.more_vert),
+                onPressed: () {/* ... */},
+              ),
             ],
           ),
         ),
