@@ -23,6 +23,7 @@ import react_native_datepicker_test from '../react-native-datepicker/react_nativ
 import react_native_popup_menu_test from '../react-native-popup-menu/react_native_popup_menu_test'
 import react_native_sortable_list_test from '../react-native-sortable-list/react_native_sortable_list_test'
 import react_navigation_header_buttons_test from '../react-navigation-header-buttons/react_navigation_header_buttons_test'
+import react_native_circle_checkbox_test from '../react-native-circle-checkbox/react_native_circle_checkbox_test'
 
 let MainStack = createStackNavigator(
 	{
@@ -81,6 +82,10 @@ let MainStack = createStackNavigator(
 		react_navigation_header_buttons: {
 			screen: react_navigation_header_buttons_test,
 			navigationOptions: { title: 'react-navigation-header-buttons' }
+		},
+		react_native_circle_checkbox: {
+			screen: react_native_circle_checkbox_test,
+			navigationOptions: { title: 'react-native-circle-checkbox' }
 		}
 	},
 	{

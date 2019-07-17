@@ -134,6 +134,14 @@ const data = [
 		moduleVersionLink: 'https://github.com/vonovak/react-navigation-header-buttons/releases/tag/v3.0.1',
 		moduleStatus: 'PASS',
 		routeName: 'react_navigation_header_buttons'
+	},
+	{
+		moduleName: 'react-native-circle-checkbox',
+		moduleLink: 'https://github.com/paramoshkinandrew/ReactNativeCircleCheckbox',
+		moduleVersion: '0.1.6',
+		moduleVersionLink: 'https://github.com/paramoshkinandrew/ReactNativeCircleCheckbox/releases/tag/0.1.6',
+		moduleStatus: 'PASS',
+		routeName: 'react_native_circle_checkbox'
 	}
 ]
 
