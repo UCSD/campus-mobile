@@ -118,6 +118,22 @@ const data = [
 		moduleVersionLink: 'https://github.com/instea/react-native-popup-menu/releases/tag/0.15.5',
 		moduleStatus: 'PASS',
 		routeName: 'react_native_popup_menu'
+	},
+	{
+		moduleName: 'react-native-sortable-list',
+		moduleLink: 'https://github.com/gitim/react-native-sortable-list',
+		moduleVersion: '0.0.23',
+		moduleVersionLink: 'https://github.com/gitim/react-native-sortable-list/releases/tag/v0.0.23',
+		moduleStatus: 'PASS',
+		routeName: 'react_native_sortable_list'
+	},
+	{
+		moduleName: 'react-navigation-header-buttons',
+		moduleLink: 'https://github.com/vonovak/react-navigation-header-buttons',
+		moduleVersion: '3.0.1',
+		moduleVersionLink: 'https://github.com/vonovak/react-navigation-header-buttons/releases/tag/v3.0.1',
+		moduleStatus: 'PASS',
+		routeName: 'react_navigation_header_buttons'
 	}
 ]
 
