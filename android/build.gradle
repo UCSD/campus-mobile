@@ -31,6 +31,12 @@ allprojects {
             // Android JSC is installed from npm
             url("$rootDir/../node_modules/jsc-android/dist")
         }
+        maven {
+            // Android fix for react-native-datepicker
+            // https://github.com/xgfe/react-native-datepicker/issues/315
+            url "https://jitpack.io"
+            /*part of the reacte-native-date-picker fix*/
+        }
 
         google()
         jcenter()
