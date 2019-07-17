@@ -8,31 +8,17 @@ import Hyperlink from 'react-native-hyperlink'
 import * as Animatable from 'react-native-animatable'
 import Barcode from 'react-native-barcode-builder'
 
+import DependencyOutput from './test_components/reusable/DependencyOutput'
+import TestList from './test_components/reusable/TestList'
+import Router from './test_components/react-navigation/Router'
+
 const dateformat = require('dateformat')
 const entities = require('html-entities').XmlEntities
 const moment = require('moment')
 const forge = require('node-forge')
 
 const App = () => (
-	<ScrollView contentInsetAdjustmentBehavior="automatic" style={css.scrollview_container}>
-		<View>
-			<Text style={css.testbed}>Campus Mobile Dependency Testbed</Text>
-
-			{/* FAIL */}
-			<TEST_react_native_barcode_builder />
-
-			{/* TBD / INCOMPLETE */}
-			<TEST_react_native_circular_progress />
-			<TEST_node_forge />
-
-			{/* PASS */}
-			<TEST_dateformat />
-			<TEST_react_native_hyperlink />
-			<TEST_html_entities />
-			<TEST_moment />
-			<TEST_react_native_animatable />
-		</View>
-	</ScrollView>
+	<Router />
 )
 
 const TEST_react_native_barcode_builder = () => (
@@ -58,29 +44,6 @@ const TEST_react_native_circular_progress = () => (
 		moduleStatus="TBD"
 	/>
 )
-
-const TEST_node_forge = () => {
-	const { pki } = forge
-	const ucsdPublicKey = '-----BEGIN PUBLIC KEY-----\n'
-		+ 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDJD70ejMwsmes6ckmxkNFgKley\n'
-		+ 'gfN/OmwwPSZcpB/f5IdTUy2gzPxZ/iugsToE+yQ+ob4evmFWhtRjNUXY+lkKUXdi\n'
-		+ 'hqGFS5sSnu19JYhIxeYj3tGyf0Ms+I0lu/MdRLuTMdBRbCkD3kTJmTqACq+MzQ9G\n'
-		+ 'CaCUGqS6FN1nNKARGwIDAQAB\n'
-		+ '-----END PUBLIC KEY-----'
-
-	const pk = pki.publicKeyFromPem(ucsdPublicKey)
-	return (
-		<DependencyOutput
-			moduleName="node-forge"
-			moduleLink="https://github.com/digitalbazaar/forge"
-			moduleVersion="0.8.5"
-			moduleVersionLink="https://github.com/digitalbazaar/forge/releases/tag/0.8.5"
-			moduleTest="pk.encrypt('test', 'RSA-OAEP')"
-			moduleOutput={pk.encrypt('test', 'RSA-OAEP')}
-			moduleStatus="TBD"
-		/>
-	)
-}
 
 const TEST_dateformat = () => {
 	const now = new Date()
@@ -143,49 +106,6 @@ const TEST_react_native_animatable = () => (
 		moduleOutput={(<Animatable.Text animation="zoomIn" duration={2000} iterationCount="infinite">Zoom in animation test</Animatable.Text>)}
 		moduleStatus="PASS"
 	/>
-)
-
-
-const DependencyOutput = ({ moduleName, moduleLink, moduleVersion, moduleVersionLink, moduleTest, moduleOutput, moduleStatus }) => (
-	<View style={css.dependency_output}>
-		<Hyperlink
-			linkStyle={css.hyperlink}
-			linkText={url => url === moduleLink ? moduleName : url} // eslint-disable-line
-			onPress={url => Linking.openURL(moduleLink)}
-		>
-			<View style={css.do_row}>
-				<Text style={css.do_left}>Module:</Text>
-				<Text style={[css.do_right, css.do_module_name]}>{moduleLink}</Text>
-			</View>
-		</Hyperlink>
-		<Hyperlink
-			linkStyle={css.hyperlink}
-			linkText={url => url === moduleVersionLink ? moduleVersion : url} // eslint-disable-line
-			onPress={url => Linking.openURL(moduleVersionLink)}
-		>
-			<View style={css.do_row}>
-				<Text style={css.do_left}>Version:</Text>
-				<Text style={[css.do_right, css.do_test]}>{moduleVersionLink}</Text>
-			</View>
-		</Hyperlink>
-		<View style={css.do_row}>
-			<Text style={css.do_left}>Test:</Text>
-			<Text style={[css.do_right, css.do_test]}>{moduleTest}</Text>
-		</View>
-		<Hyperlink
-			linkStyle={css.hyperlink}
-			onPress={url => Linking.openURL(moduleOutput)}
-		>
-			<View style={css.do_row}>
-				<Text style={css.do_left}>Output:</Text>
-				<Text style={[css.do_right, css.do_test]}>{moduleOutput}</Text>
-			</View>
-		</Hyperlink>
-		<View style={css.do_row}>
-			<Text style={css.do_left}>Status:</Text>
-			<Text style={[css.do_right, (moduleStatus === 'PASS') ? css.do_pass : css.do_fail]}>{moduleStatus}</Text>
-		</View>
-	</View>
 )
 
 const css = StyleSheet.create({
