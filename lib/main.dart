@@ -4,6 +4,7 @@
 import 'package:flutter/material.dart';
 
 import 'cards/weather.dart';
+import 'placeholder_widget.dart';
 
 void main() => runApp(MyApp());
 
@@ -40,26 +41,15 @@ class HomeState extends State<Home> {
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.black);
-  static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Index 0: Home',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 1: Business',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 2: School',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 3: Profile',
-      style: optionStyle,
-    ),
+  final List<Widget> _children = <Widget>[
+    Weather(),
+    PlaceholderWidget(Colors.deepOrange),
+    PlaceholderWidget(Colors.blue),
+    PlaceholderWidget(Colors.green),
   ];
 
   void _onItemTapped(int index) {
+    print(index);
     setState(() {
       _selectedIndex = index;
     });
@@ -71,13 +61,7 @@ class HomeState extends State<Home> {
       appBar: AppBar(
         title: Text("UCSD"),
       ),
-      body: SafeArea(
-        child: Column(
-          children: <Widget>[
-            Weather(),
-          ],
-        ),
-      ),
+      body: _children[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
