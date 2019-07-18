@@ -88,7 +88,7 @@ let MainStack = createStackNavigator(
 			navigationOptions: { title: 'react-native-circle-checkbox' }
 		},
 		react_native_device_info: {
-			screen: gestureHandlerRootHOC(react_native_device_info_test),
+			screen: react_native_device_info_test,
 			navigationOptions: { title: 'react-native-device-info' }
 		}
 	},
