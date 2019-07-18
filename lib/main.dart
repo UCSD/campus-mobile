@@ -8,14 +8,28 @@ import 'cards/weather.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  final ucsdBackgroundColor = const Color(0x034263);
+  MaterialColor ucsdPrimaryBlue = MaterialColor(
+    0xFF034263,
+    <int, Color>{
+      50: Color(0xFF034263),
+      100: Color(0xFF034263),
+      200: Color(0xFF034263),
+      300: Color(0xFF034263),
+      400: Color(0xFF034263),
+      500: Color(0xFF034263),
+      600: Color(0xFF034263),
+      700: Color(0xFF034263),
+      800: Color(0xFF034263),
+      900: Color(0xFF034263),
+    },
+  );
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'UCSD',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: ucsdPrimaryBlue,
       ),
       home: Home(),
     );
