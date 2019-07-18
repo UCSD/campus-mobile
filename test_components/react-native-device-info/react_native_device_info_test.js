@@ -5,10 +5,11 @@ import DeviceInfo from 'react-native-device-info'
 export default class react_native_device_info_test extends React.Component {
 	render() {
 		const baseOS = DeviceInfo.getUniqueID()
-		console.log(baseOS)
 		return (
 			<View style={css.dependency_output}>
-				<Text> {baseOS}</Text>
+				<Text>
+					{baseOS}
+				</Text>
 			</View>
 		)
 	}
