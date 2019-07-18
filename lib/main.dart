@@ -42,12 +42,15 @@ class HomeState extends State<Home> {
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.black);
+
   final List<Widget> _children = <Widget>[
     Weather(),
     PlaceholderWidget(Colors.deepOrange), // map
     PlaceholderWidget(Colors.blue), // messages
     Profile(), // profile
   ];
+
+  Weather weatherCard;
 
   void _onItemTapped(int index) {
     print(index);

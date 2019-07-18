@@ -71,9 +71,6 @@ Widget buildDailyForecast(AsyncSnapshot snapshot, int pos) {
   );
 }
 
-// TODO: convert epoch time to human readable, https://stackoverflow.com/questions/45357520/dart-converting-milliseconds-since-epoch-unix-timestamp-into-human-readable
-// go through each array for "daily" - no need to write loop function
-
 class Weather extends StatelessWidget {
   final Future<Map> post;
 
@@ -132,7 +129,7 @@ class Weather extends StatelessWidget {
           }
 
           // By default, show a loading spinner.
-          return CircularProgressIndicator();
+          return Center(child: CircularProgressIndicator());
         });
   }
 }
