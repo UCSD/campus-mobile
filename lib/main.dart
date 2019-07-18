@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import 'cards/weather.dart';
 import 'placeholder_widget.dart';
+import 'profile_view.dart';
 
 void main() => runApp(MyApp());
 
@@ -43,9 +44,9 @@ class HomeState extends State<Home> {
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.black);
   final List<Widget> _children = <Widget>[
     Weather(),
-    PlaceholderWidget(Colors.deepOrange),
-    PlaceholderWidget(Colors.blue),
-    PlaceholderWidget(Colors.green),
+    PlaceholderWidget(Colors.deepOrange), // map
+    PlaceholderWidget(Colors.blue), // messages
+    Profile(), // profile
   ];
 
   void _onItemTapped(int index) {
