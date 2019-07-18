@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'UCSD',
+      title: 'UC San Diego',
       theme: ThemeData(
         primarySwatch: ucsdPrimaryBlue,
       ),
@@ -63,7 +63,12 @@ class HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("UCSD"),
+        title: Center(
+          child: Image.asset(
+            'assets/images/UCSanDiegoLogo-nav.png',
+            width: 200,
+          ),
+        ),
       ),
       body: _children[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
