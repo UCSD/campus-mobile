@@ -4,7 +4,7 @@ class Profile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Column(
+      child: ListView(
         children: <Widget>[
           Card(
             child: Padding(
