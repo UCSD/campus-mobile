@@ -51,8 +51,7 @@ Future<Map> fetchPost() async {
 
 Widget buildDailyForecast(AsyncSnapshot snapshot, int pos) {
   return Container(
-    width: 70,
-    padding: EdgeInsets.all(10.0),
+    width: 80,
     child: Column(
       children: <Widget>[
         Text(getDayOfWeek(snapshot.data['daily']['data'][pos]['time'])),
@@ -60,11 +59,13 @@ Widget buildDailyForecast(AsyncSnapshot snapshot, int pos) {
             snapshot.data['daily']['data'][pos]['icon'] +
             '.png'),
         Text(snapshot.data['daily']['data'][pos]['temperatureHigh']
-            .round()
-            .toString()),
+                .round()
+                .toString() +
+            '\u00B0'),
         Text(snapshot.data['daily']['data'][pos]['temperatureLow']
-            .round()
-            .toString()),
+                .round()
+                .toString() +
+            '\u00B0'),
       ],
     ),
   );
@@ -88,14 +89,16 @@ class Weather extends StatelessWidget {
           if (snapshot.hasData) {
             return Card(
               child: Column(
-                mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   ListTile(
-                    leading: Icon(Icons.wb_sunny),
-                    title: Text(snapshot.data['currently']['summary']),
-                    subtitle: Text((snapshot.data['currently']['temperature'])
-                        .round()
-                        .toString()),
+                    title: Text((snapshot.data['currently']['temperature'])
+                            .round()
+                            .toString() +
+                        '\u00B0'),
+                    subtitle: Text(snapshot.data['currently']['summary']),
+                    trailing: Image.network(WEATHER_ICON_BASE_URL +
+                        snapshot.data['currently']['icon'] +
+                        '.png'),
                   ),
                   Row(
                     children: <Widget>[
