@@ -3,7 +3,6 @@ import {
 	createStackNavigator,
 	createAppContainer
 } from 'react-navigation'
-// import { MenuProvider } from 'react-native-popup-menu'
 
 import NavigationService from './NavigationService'
 import TestList from '../reusable/TestList'
@@ -24,6 +23,7 @@ import react_native_popup_menu_test from '../react-native-popup-menu/react_nativ
 import react_native_sortable_list_test from '../react-native-sortable-list/react_native_sortable_list_test'
 import react_navigation_header_buttons_test from '../react-navigation-header-buttons/react_navigation_header_buttons_test'
 import react_native_circle_checkbox_test from '../react-native-circle-checkbox/react_native_circle_checkbox_test'
+import react_native_device_info_test from '../react-native-device-info/react_native_device_info_test'
 
 let MainStack = createStackNavigator(
 	{
@@ -86,6 +86,10 @@ let MainStack = createStackNavigator(
 		react_native_circle_checkbox: {
 			screen: react_native_circle_checkbox_test,
 			navigationOptions: { title: 'react-native-circle-checkbox' }
+		},
+		react_native_device_info: {
+			screen: gestureHandlerRootHOC(react_native_device_info_test),
+			navigationOptions: { title: 'react-native-device-info' }
 		}
 	},
 	{

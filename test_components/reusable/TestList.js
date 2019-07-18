@@ -31,11 +31,18 @@ const renderItem = item => (
 
 const data = [
 	{
+		moduleName: 'react-native-device-info',
+		moduleLink: 'https://github.com/react-native-community/react-native-device-info',
+		moduleVersion: '2.2.2',
+		moduleVersionLink: 'https://github.com/react-native-community/react-native-device-info/releases/tag/v2.2.2',
+		moduleStatus: 'PASS',
+		routeName: 'react_native_device_info'
+	},
+	{
 		moduleName: 'node-forge',
 		moduleLink: 'https://github.com/digitalbazaar/forge',
 		moduleVersion: '0.8.5',
 		moduleVersionLink: 'https://github.com/digitalbazaar/forge/releases/tag/0.8.5',
-		component: 'import and insert component here',
 		moduleStatus: 'PASS',
 		routeName: 'node_forge'
 	},
