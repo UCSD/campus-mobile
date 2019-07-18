@@ -32,12 +32,20 @@ class Profile extends StatelessWidget {
                     obscureText: true,
                   ),
                   SizedBox(height: 10),
-                  FlatButton(
-                    child: Text('Sign In'),
-                    onPressed: () {},
-                    color: Color(0xFF034263),
-                    textColor: Colors.white,
-                  )
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: FlatButton(
+                          child: Text('Sign In'),
+                          onPressed: () {},
+                          color: Color(0xFF034263),
+                          textColor: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  Center(child: Text('Need help logging in?')),
                 ],
               ),
             ),
