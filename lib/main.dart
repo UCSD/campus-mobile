@@ -53,7 +53,6 @@ class HomeState extends State<Home> {
   Weather weatherCard;
 
   void _onItemTapped(int index) {
-    print(index);
     setState(() {
       _selectedIndex = index;
     });
