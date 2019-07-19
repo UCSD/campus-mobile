@@ -26,6 +26,7 @@ import react_native_circle_checkbox_test from '../react-native-circle-checkbox/r
 import react_native_device_info_test from '../react-native-device-info/react_native_device_info_test'
 import react_native_exception_handler_test from '../react-native-exception-handler/react_native_exception_handler_test'
 import react_native_exit_app_test from '../react-native-exit-app/react_native_exit_app_test'
+import react_native_keychain_test from '../react-native-keychain/react_native_keychain_test'
 
 let MainStack = createStackNavigator(
 	{
@@ -100,6 +101,10 @@ let MainStack = createStackNavigator(
 		react_native_exit_app: {
 			screen: react_native_exit_app_test,
 			navigationOptions: { title: 'react-native-exit-app-test' }
+		},
+		react_native_keychain: {
+			screen: react_native_keychain_test,
+			navigationOptions: { title: 'react-native-keychain-test' }
 		}
 	},
 	{

@@ -1,1 +1,1 @@
-../../../ReactNativeExceptionHandler/ios/ReactNativeExceptionHandler.h
+../../../../../node_modules/react-native-exception-handler/ios/ReactNativeExceptionHandler.h

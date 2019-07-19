@@ -1,0 +1,28 @@
+{
+  "name": "react-native-exit-app",
+  "version": "1.0.0",
+  "summary": "Exit,close,kill,shutdown app completely for React Native on iOS and Android.",
+  "description": "Exit,close,kill,shutdown app completely for React Native on iOS and Android.",
+  "homepage": "https://github.com/wumke/react-native-exit-app",
+  "license": "MIT",
+  "authors": {
+    "wumke": "semver.org"
+  },
+  "platforms": {
+    "ios": "7.0"
+  },
+  "source": {
+    "git": "https://github.com/wumke/react-native-exit-app.git",
+    "tag": "master"
+  },
+  "source_files": "ios/RNExitApp/*.{h,m}",
+  "requires_arc": true,
+  "xcconfig": {
+    "HEADER_SEARCH_PATHS": "$(SDKROOT)/usr/include/libxml2"
+  },
+  "dependencies": {
+    "React": [
+
+    ]
+  }
+}

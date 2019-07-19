@@ -31,11 +31,19 @@ const renderItem = item => (
 
 const data = [
 	{
+		moduleName: 'react-native-keychain',
+		moduleLink: 'https://github.com/oblador/react-native-keychain',
+		moduleVersion: '3.1.3',
+		moduleVersionLink: 'https://github.com/oblador/react-native-keychain/releases/tag/v3.1.3',
+		moduleStatus: 'PASS',
+		routeName: 'react_native_keychain'
+	},
+	{
 		moduleName: 'react-native-exit-app',
 		moduleLink: 'https://github.com/wumke/react-native-exit-app',
 		moduleVersion: '1.0.0',
 		moduleVersionLink: 'https://github.com/wumke/react-native-exit-app',
-		moduleStatus: 'PASS',
+		moduleStatus: 'TBD',
 		routeName: 'react_native_exit_app'
 	},
 	{

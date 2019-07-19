@@ -59,6 +59,8 @@ PODS:
     - React-cxxreact (= 0.60.0)
     - React-jsi (= 0.60.0)
   - React-jsinspector (0.60.0)
+  - react-native-exit-app (1.0.0):
+    - React
   - React-RCTActionSheet (0.60.0):
     - React-Core (= 0.60.0)
   - React-RCTAnimation (0.60.0):
@@ -89,6 +91,8 @@ PODS:
     - React
   - RNGestureHandler (1.3.0):
     - React
+  - RNKeychain (3.1.3):
+    - React
   - RNSVG (9.5.3):
     - React
   - yoga (0.60.0.React)
@@ -106,6 +110,7 @@ DEPENDENCIES:
   - React-jsi (from `../node_modules/react-native/ReactCommon/jsi`)
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
+  - react-native-exit-app (from `../node_modules/react-native-exit-app/ios`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
   - React-RCTBlob (from `../node_modules/react-native/Libraries/Blob`)
@@ -116,9 +121,10 @@ DEPENDENCIES:
   - React-RCTText (from `../node_modules/react-native/Libraries/Text`)
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - React-RCTWebSocket (from `../node_modules/react-native/Libraries/WebSocket`)
-  - ReactNativeExceptionHandler (from `../node_modules/react-native-exception-handler/ReactNativeExceptionHandler.podspec`)
+  - ReactNativeExceptionHandler (from `../node_modules/react-native-exception-handler`)
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
+  - RNKeychain (from `../node_modules/react-native-keychain`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -151,6 +157,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsiexecutor"
   React-jsinspector:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
+  react-native-exit-app:
+    :path: "../node_modules/react-native-exit-app/ios"
   React-RCTActionSheet:
     :path: "../node_modules/react-native/Libraries/ActionSheetIOS"
   React-RCTAnimation:
@@ -172,11 +180,13 @@ EXTERNAL SOURCES:
   React-RCTWebSocket:
     :path: "../node_modules/react-native/Libraries/WebSocket"
   ReactNativeExceptionHandler:
-    :podspec: "../node_modules/react-native-exception-handler/ReactNativeExceptionHandler.podspec"
+    :path: "../node_modules/react-native-exception-handler"
   RNDeviceInfo:
     :path: "../node_modules/react-native-device-info"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
+  RNKeychain:
+    :path: "../node_modules/react-native-keychain"
   RNSVG:
     :path: "../node_modules/react-native-svg"
   yoga:
@@ -196,6 +206,7 @@ SPEC CHECKSUMS:
   React-jsi: 8e128c4d0d8febc2977ef617d1c09bb54326069c
   React-jsiexecutor: 7a3554f703a58963ec80b860144ea0f0e9b910e1
   React-jsinspector: d4ed52225912efe0019bb7f1a225aec20f23049a
+  react-native-exit-app: 6ece42df0e5ac9b89a329525b1e77ed3f75d4182
   React-RCTActionSheet: b27ff3cf3a68f917c46d2b94abf938b625b96570
   React-RCTAnimation: 9e4708e5bd65fca8285ce7c0aa076f3f4fa5c2f8
   React-RCTBlob: 6eafcc3a24f33785692a7be24918ade607bc8719
@@ -209,9 +220,10 @@ SPEC CHECKSUMS:
   ReactNativeExceptionHandler: 8025d98049c25f186835a3af732dd7c9974d6dce
   RNDeviceInfo: a88be26a64ada7cbc2bc0ebbd1662d340304874e
   RNGestureHandler: 5329a942fce3d41c68b84c2c2276ce06a696d8b0
+  RNKeychain: c658833a9cb2cbcba6423bdd6e16cce59e27da0e
   RNSVG: 90c76b7cf235654d45e54655b6c189ea4041057c
   yoga: 616fde658be980aa60a2158835170f3f9c2d04b4
 
-PODFILE CHECKSUM: 375117ad4333eb83923c8955beefc3441527e30c
+PODFILE CHECKSUM: 510ae476ed12378c8ad06a49759f18a1c8039818
 
 COCOAPODS: 1.6.0
