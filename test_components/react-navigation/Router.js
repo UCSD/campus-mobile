@@ -24,12 +24,17 @@ import react_native_sortable_list_test from '../react-native-sortable-list/react
 import react_navigation_header_buttons_test from '../react-navigation-header-buttons/react_navigation_header_buttons_test'
 import react_native_circle_checkbox_test from '../react-native-circle-checkbox/react_native_circle_checkbox_test'
 import react_native_device_info_test from '../react-native-device-info/react_native_device_info_test'
+import react_native_exception_handler_test from '../react-native-exception-handler/react_native_exception_handler_test'
 
 let MainStack = createStackNavigator(
 	{
 		MainPage: {
 			screen: TestList,
 			navigationOptions: { header: null }
+		},
+		react_native_exception_handler: {
+			screen: react_native_exception_handler_test,
+			navigationOptions: { title: 'react-native-exception-handler' }
 		},
 		node_forge: {
 			screen: node_forge_test,

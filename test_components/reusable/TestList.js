@@ -31,6 +31,15 @@ const renderItem = item => (
 
 const data = [
 	{
+		moduleName: 'react-native-exception-handler',
+		moduleLink: 'https://github.com/master-atul/react-native-exception-handler',
+		moduleVersion: '2.10.8',
+		moduleVersionLink: 'https://github.com/master-atul/react-native-exception-handler/releases/tag/2.10.8',
+		moduleStatus: 'PASS',
+		routeName: 'react_native_exception_handler'
+
+	},
+	{
 		moduleName: 'react-native-device-info',
 		moduleLink: 'https://github.com/react-native-community/react-native-device-info',
 		moduleVersion: '2.2.2',

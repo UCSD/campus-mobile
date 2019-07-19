@@ -1,0 +1,1 @@
+../../../ReactNativeExceptionHandler/ios/ReactNativeExceptionHandler.h
