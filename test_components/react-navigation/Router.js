@@ -25,6 +25,7 @@ import react_navigation_header_buttons_test from '../react-navigation-header-but
 import react_native_circle_checkbox_test from '../react-native-circle-checkbox/react_native_circle_checkbox_test'
 import react_native_device_info_test from '../react-native-device-info/react_native_device_info_test'
 import react_native_exception_handler_test from '../react-native-exception-handler/react_native_exception_handler_test'
+import react_native_exit_app_test from '../react-native-exit-app/react_native_exit_app_test'
 
 let MainStack = createStackNavigator(
 	{
@@ -95,6 +96,10 @@ let MainStack = createStackNavigator(
 		react_native_device_info: {
 			screen: react_native_device_info_test,
 			navigationOptions: { title: 'react-native-device-info' }
+		},
+		react_native_exit_app: {
+			screen: react_native_exit_app_test,
+			navigationOptions: { title: 'react-native-exit-app-test' }
 		}
 	},
 	{

@@ -31,6 +31,14 @@ const renderItem = item => (
 
 const data = [
 	{
+		moduleName: 'react-native-exit-app',
+		moduleLink: 'https://github.com/wumke/react-native-exit-app',
+		moduleVersion: '1.0.0',
+		moduleVersionLink: 'https://github.com/wumke/react-native-exit-app',
+		moduleStatus: 'PASS',
+		routeName: 'react_native_exit_app'
+	},
+	{
 		moduleName: 'react-native-exception-handler',
 		moduleLink: 'https://github.com/master-atul/react-native-exception-handler',
 		moduleVersion: '2.10.8',
