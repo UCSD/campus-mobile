@@ -31,6 +31,14 @@ const renderItem = item => (
 
 const data = [
 	{
+		moduleName: 'react-native-maps',
+		moduleLink: 'https://github.com/react-native-community/react-native-maps',
+		moduleVersion: '0.25.0',
+		moduleVersionLink: 'https://github.com/react-native-community/react-native-maps/releases/tag/v0.25.0',
+		moduleStatus: 'TBD',
+		routeName: 'react_native_maps'
+	},
+	{
 		moduleName: 'react-native-keychain',
 		moduleLink: 'https://github.com/oblador/react-native-keychain',
 		moduleVersion: '3.1.3',
