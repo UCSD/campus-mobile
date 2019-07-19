@@ -1,13 +1,10 @@
 import React from 'react'
 import { View, StyleSheet, Alert } from 'react-native'
-import { setJSExceptionHandler, getJSExceptionHandler } from 'react-native-exception-handler'
+import { setJSExceptionHandler } from 'react-native-exception-handler'
 
 export default class react_native_exception_handler_test extends React.Component {
 	render() {
-		setJSExceptionHandler((exceptionhandler, allowInDevMode) => {})
 		setJSExceptionHandler(errorHandler, true)
-		const currentHandler = getJSExceptionHandler()
-		console.log(currentHandler)
 		return (
 			<View style={css.dependency_output}>
 				{this.test()}
