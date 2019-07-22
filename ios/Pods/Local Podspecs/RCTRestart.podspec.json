@@ -1,0 +1,28 @@
+{
+  "name": "RCTRestart",
+  "version": "0.0.12",
+  "summary": "React Native Restart Component",
+  "homepage": "https://github.com/avishayil/react-native-restart#readme",
+  "license": {
+    "type": "MIT",
+    "file": "../LICENSE"
+  },
+  "authors": {
+    "name": "Avishay Bar",
+    "email": "http://www.geektime.co.il"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source": {
+    "git": "git+https://github.com/avishayil/react-native-restart.git",
+    "tag": "v0.0.12"
+  },
+  "source_files": "RCTRestart/**/*.{h,m}",
+  "requires_arc": true,
+  "dependencies": {
+    "React": [
+
+    ]
+  }
+}

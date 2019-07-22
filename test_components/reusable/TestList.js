@@ -31,6 +31,14 @@ const renderItem = item => (
 
 const data = [
 	{
+		moduleName: 'react-native-restart',
+		moduleLink: 'https://github.com/avishayil/react-native-restart',
+		moduleVersion: '0.0.12',
+		moduleVersionLink: 'https://github.com/avishayil/react-native-restart/releases/tag/v0.0.12',
+		moduleStatus: 'TBD',
+		routeName: 'react_native_restart'
+	},
+	{
 		moduleName: 'react-native-maps',
 		moduleLink: 'https://github.com/react-native-community/react-native-maps',
 		moduleVersion: '0.25.0',
