@@ -8,7 +8,6 @@ export default class react_native_maps_test extends React.Component {
 			<View style={styles.container}>
 				{
 					<MapView
-						provider={PROVIDER_GOOGLE}
 						style={styles.map}
 						region={
 							{
