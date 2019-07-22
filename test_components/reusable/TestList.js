@@ -31,11 +31,19 @@ const renderItem = item => (
 
 const data = [
 	{
+		moduleName: 'react-native-vector-icons',
+		moduleLink: 'https://github.com/oblador/react-native-vector-icons',
+		moduleVersion: '6.6.0',
+		moduleVersionLink: 'https://github.com/oblador/react-native-vector-icons/releases/tag/v6.6.0',
+		moduleStatus: 'PASS',
+		routeName: 'react_native_vector_icons'
+	},
+	{
 		moduleName: 'react-native-system-setting',
 		moduleLink: 'https://github.com/c19354837/react-native-system-setting',
 		moduleVersion: '1.7.2',
 		moduleVersionLink: 'https://github.com/c19354837/react-native-system-setting/releases/tag/V1.7.2',
-		moduleStatus: 'TBD',
+		moduleStatus: 'PASS',
 		routeName: 'react_native_system_setting'
 	},
 	{

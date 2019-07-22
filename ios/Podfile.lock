@@ -101,6 +101,8 @@ PODS:
     - React
   - RNSVG (9.5.3):
     - React
+  - RNVectorIcons (6.6.0):
+    - React
   - yoga (0.60.0.React)
 
 DEPENDENCIES:
@@ -135,6 +137,7 @@ DEPENDENCIES:
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNKeychain (from `../node_modules/react-native-keychain`)
   - RNSVG (from `../node_modules/react-native-svg`)
+  - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -204,6 +207,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-keychain"
   RNSVG:
     :path: "../node_modules/react-native-svg"
+  RNVectorIcons:
+    :path: "../node_modules/react-native-vector-icons"
   yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -240,6 +245,7 @@ SPEC CHECKSUMS:
   RNGestureHandler: 5329a942fce3d41c68b84c2c2276ce06a696d8b0
   RNKeychain: c658833a9cb2cbcba6423bdd6e16cce59e27da0e
   RNSVG: 90c76b7cf235654d45e54655b6c189ea4041057c
+  RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
   yoga: 616fde658be980aa60a2158835170f3f9c2d04b4
 
 PODFILE CHECKSUM: 510ae476ed12378c8ad06a49759f18a1c8039818
