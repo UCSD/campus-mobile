@@ -29,6 +29,7 @@ import react_native_exit_app_test from '../react-native-exit-app/react_native_ex
 import react_native_keychain_test from '../react-native-keychain/react_native_keychain_test'
 import react_native_maps_test from '../react-native-maps/react_native_maps_test'
 import react_native_restart_test from '../react-native-restart/react_native_restart_test'
+import react_native_system_setting_test from '../react-native-system-setting/react_native_system_setting_test'
 
 let MainStack = createStackNavigator(
 	{
@@ -115,6 +116,10 @@ let MainStack = createStackNavigator(
 		react_native_restart: {
 			screen: react_native_restart_test,
 			navigationOptions: { title: 'react-native-restart-test' }
+		},
+		react_native_system_setting: {
+			screen: react_native_system_setting_test,
+			navigationOptions: { title: 'react-native-system-setting-test' }
 		}
 	},
 	{

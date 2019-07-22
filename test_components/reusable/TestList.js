@@ -31,6 +31,14 @@ const renderItem = item => (
 
 const data = [
 	{
+		moduleName: 'react-native-system-setting',
+		moduleLink: 'https://github.com/c19354837/react-native-system-setting',
+		moduleVersion: '1.7.2',
+		moduleVersionLink: 'https://github.com/c19354837/react-native-system-setting/releases/tag/V1.7.2',
+		moduleStatus: 'TBD',
+		routeName: 'react_native_system_setting'
+	},
+	{
 		moduleName: 'react-native-restart',
 		moduleLink: 'https://github.com/avishayil/react-native-restart',
 		moduleVersion: '0.0.12',

@@ -13,6 +13,8 @@ PODS:
   - glog (0.3.5)
   - RCTRestart (0.0.12):
     - React
+  - RCTSystemSetting (1.7.2):
+    - React
   - React (0.60.0):
     - React-Core (= 0.60.0)
     - React-DevSupport (= 0.60.0)
@@ -106,6 +108,7 @@ DEPENDENCIES:
   - Folly (from `../node_modules/react-native/third-party-podspecs/Folly.podspec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - RCTRestart (from `../node_modules/react-native-restart/ios`)
+  - RCTSystemSetting (from `../node_modules/react-native-system-setting`)
   - React (from `../node_modules/react-native`)
   - React-ART (from `../node_modules/react-native/Libraries/ART`)
   - React-Core (from `../node_modules/react-native/React`)
@@ -147,6 +150,8 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
   RCTRestart:
     :path: "../node_modules/react-native-restart/ios"
+  RCTSystemSetting:
+    :path: "../node_modules/react-native-system-setting"
   React:
     :path: "../node_modules/react-native"
   React-ART:
@@ -208,6 +213,7 @@ SPEC CHECKSUMS:
   Folly: 30e7936e1c45c08d884aa59369ed951a8e68cf51
   glog: 1f3da668190260b06b429bb211bfbee5cd790c28
   RCTRestart: 59fa9d918cb1ea27676a73168757ca13153126ea
+  RCTSystemSetting: 9279ff44c49bb4fb0a5d335a0851852c8f3eda99
   React: 4b3c068e793e96672dcd186a2b572fac43e4b031
   React-ART: e1929bca49c7c30161aee54e7619a096477f7b23
   React-Core: 3dc86b22920597f813c62a96db3165950b64826b

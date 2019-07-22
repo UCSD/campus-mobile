@@ -1,0 +1,24 @@
+{
+  "name": "RCTSystemSetting",
+  "version": "1.7.2",
+  "homepage": "https://github.com/c19354837/react-native-system-setting",
+  "summary": "provide some system setting APIs. Volume, brightness, wifi, location, bluetooth, airplane...",
+  "license": "MIT",
+  "authors": {
+    "Ninty": "c19354837@hotmail.com"
+  },
+  "platforms": {
+    "ios": "7.0"
+  },
+  "source": {
+    "git": "https://github.com/c19354837/react-native-system-setting",
+    "tag": "v1.7.2"
+  },
+  "source_files": "ios/*.{h,m}",
+  "preserve_paths": "**/*.js",
+  "dependencies": {
+    "React": [
+
+    ]
+  }
+}

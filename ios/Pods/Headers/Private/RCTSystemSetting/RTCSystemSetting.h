@@ -1,0 +1,1 @@
+../../../../../node_modules/react-native-system-setting/ios/RTCSystemSetting.h
