@@ -4,7 +4,6 @@ import RNRestart from 'react-native-restart'
 
 export default class react_native_restart_test extends React.Component {
 	render() {
-		console.log(RNRestart)
 		RNRestart.Restart()
 		return (
 			<View style={css.dependency_output}>
