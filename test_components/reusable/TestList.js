@@ -35,7 +35,7 @@ const data = [
 		moduleLink: 'https://github.com/avishayil/react-native-restart',
 		moduleVersion: '0.0.12',
 		moduleVersionLink: 'https://github.com/avishayil/react-native-restart/releases/tag/v0.0.12',
-		moduleStatus: 'TBD',
+		moduleStatus: 'PASS',
 		routeName: 'react_native_restart'
 	},
 	{
