@@ -5,15 +5,16 @@ import store from './Reducers/index'
 import CounterAction from './Actions/CounterAction'
 
 export default class react_redux_test extends Component {
-  constructor(props){
-        super(props)
-    }
+	constructor(props){
+		super(props)
+	}
 
-    render() {
-        return (
-            <Provider store={store}>
-                <CounterAction />
-            </Provider>
-        );
-    }
+	render() {
+		return (
+			<Provider store={store}>
+				<CounterAction />
+			</Provider>
+		)
+	}
 }
+

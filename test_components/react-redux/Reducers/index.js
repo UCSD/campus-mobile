@@ -1,15 +1,19 @@
-import { combineReducers, createStore } from 'redux';
+import { combineReducers, createStore, applyMiddleware } from 'redux'
+import logger from 'redux-logger'
+
 
 import counterReducer from './CounterReducer'
 
 const AppReducers = combineReducers({
-    counterReducer,
-});
+	counterReducer,
+})
 
-const rootReducer = (state, action) => {
-	return AppReducers(state,action);
-}
+const rootReducer = (state, action) => AppReducers(state,action)
 
-let store = createStore(rootReducer);
+// Logger with default options
+const store = createStore(
+	rootReducer,
+	applyMiddleware(logger)
+)
 
-export default store;
+export default store

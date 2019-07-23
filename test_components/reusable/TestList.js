@@ -31,6 +31,14 @@ const renderItem = item => (
 
 const data = [
 	{
+		moduleName: 'redux-logger',
+		moduleLink: 'https://github.com/LogRocket/redux-logger',
+		moduleVersion: '3.0.6',
+		moduleVersionLink: 'https://github.com/LogRocket/redux-logger/releases/tag/3.0.6',
+		moduleStatus: 'PASS',
+		routeName: 'redux_logger'
+	},
+	{
 		moduleName: 'react-redux',
 		moduleLink: 'https://www.github.com/reduxjs/redux',
 		moduleVersion: '4.0.4',

@@ -32,6 +32,7 @@ import react_native_restart_test from '../react-native-restart/react_native_rest
 import react_native_system_setting_test from '../react-native-system-setting/react_native_system_setting_test'
 import react_native_vector_icons_test from '../react-native-vector-icons/react_native_vector_icons_test'
 import react_redux_test from '../react-redux/react_redux_test'
+import redux_logger_test from '../redux-logger/redux_logger_test'
 
 let MainStack = createStackNavigator(
 	{
@@ -130,6 +131,10 @@ let MainStack = createStackNavigator(
 		react_redux: {
 			screen: react_redux_test,
 			navigationOptions: { title: 'react-redux-test' }
+		},
+		redux_logger: {
+			screen: redux_logger_test,
+			navigationOptions: { title: 'redux-logger-test' }
 		}
 	},
 	{
