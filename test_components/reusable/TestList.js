@@ -31,6 +31,14 @@ const renderItem = item => (
 
 const data = [
 	{
+		moduleName: 'react-redux',
+		moduleLink: 'https://www.github.com/reduxjs/redux',
+		moduleVersion: '4.0.4',
+		moduleVersionLink: 'https://github.com/reduxjs/redux/releases/tag/v4.0.4',
+		moduleStatus: 'PASS',
+		routeName: 'react_redux'
+	},
+	{
 		moduleName: 'react-native-vector-icons',
 		moduleLink: 'https://github.com/oblador/react-native-vector-icons',
 		moduleVersion: '6.6.0',
