@@ -31,6 +31,14 @@ const renderItem = item => (
 
 const data = [
 	{
+		moduleName: 'redux-persist',
+		moduleLink: 'https://github.com/rt2zz/redux-persist',
+		moduleVersion: '5.10.0',
+		moduleVersionLink: 'https://github.com/rt2zz/redux-persist/releases/tag/v5.10.0',
+		moduleStatus: 'TBD',
+		routeName: 'redux_persist'
+	},
+	{
 		moduleName: 'redux-logger',
 		moduleLink: 'https://github.com/LogRocket/redux-logger',
 		moduleVersion: '3.0.6',

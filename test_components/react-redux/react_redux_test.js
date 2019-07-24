@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { Provider } from 'react-redux'
+import { PersistGate } from 'redux-persist/integration/react'
 
-import store from './Reducers/index'
+import storeAndPersistor from '../redux-persist/configureStore'
 import CounterAction from './Actions/CounterAction'
 
 export default class react_redux_test extends Component {
@@ -11,10 +12,11 @@ export default class react_redux_test extends Component {
 
 	render() {
 		return (
-			<Provider store={store}>
-				<CounterAction />
+			<Provider store={storeAndPersistor.store}>
+				<PersistGate loading={null} persistor={storeAndPersistor.persistor}>
+					<CounterAction />
+				</PersistGate>
 			</Provider>
 		)
 	}
 }
-

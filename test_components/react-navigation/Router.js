@@ -33,6 +33,7 @@ import react_native_system_setting_test from '../react-native-system-setting/rea
 import react_native_vector_icons_test from '../react-native-vector-icons/react_native_vector_icons_test'
 import react_redux_test from '../react-redux/react_redux_test'
 import redux_logger_test from '../redux-logger/redux_logger_test'
+import redux_persist_test from '../redux-persist/redux_persist_test'
 
 let MainStack = createStackNavigator(
 	{
@@ -135,6 +136,10 @@ let MainStack = createStackNavigator(
 		redux_logger: {
 			screen: redux_logger_test,
 			navigationOptions: { title: 'redux-logger-test' }
+		},
+		redux_persist: {
+			screen: redux_persist_test,
+			navigationOptions: { title: 'redux-persist-test' }
 		}
 	},
 	{
