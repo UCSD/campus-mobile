@@ -1,10 +1,14 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:encrypt/encrypt.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;
+import 'package:pointycastle/api.dart' as pc;
 import 'package:pointycastle/asymmetric/api.dart';
+import 'package:pointycastle/asymmetric/pkcs1.dart';
+import 'package:pointycastle/asymmetric/rsa.dart';
 import 'package:xml/xml.dart' as xml;
 
 // QA Environment
@@ -40,6 +44,10 @@ Future<String> getResponseConsumerUrl(
 Future<String> getSamlAssertion(String msg, String url,
     Map<String, String> options, String ecpIdpPackage) async {
   print(msg);
+  print(url);
+  print(options);
+  print(ecpIdpPackage);
+
   final response = await http.post(url, headers: options, body: ecpIdpPackage);
 
   if (response.statusCode == 200) {
@@ -60,20 +68,29 @@ void doLogin(String email, String password) async {
 
   final encrypter = Encrypter(RSA(publicKey: publicKey));
   Encrypted encryptedPassword = encrypter.encrypt(password);
-  print(encryptedPassword.base64);
+  //print(encryptedPassword.base64);
 
-  final String userPassword = email + ':' + encryptedPassword.base64;
   Codec<String, String> stringToBase64 = utf8.fuse(base64);
+  final String userPassword = email + ':' + encryptedPassword.base64;
   final String base64EncodedWithEncryptedPassword =
       stringToBase64.encode(userPassword);
+  //print('encoded user:pass ' + base64EncodedWithEncryptedPassword);
   String ecpIdpPackage;
   String ecpEndpoint;
+
+  var cipher = PKCS1Encoding(RSAEngine());
+  cipher.init(true, pc.PublicKeyParameter<RSAPublicKey>(publicKey));
+  Uint8List output = cipher.process(utf8.encode(password));
+  var base64EncodedText = base64Encode(output);
+  final String res = stringToBase64.encode(email + ':' + base64EncodedText);
+  print(res);
 
   // Step 1
   // get ECP endpoint URL
   getResponseConsumerUrl('get response consumer URL', ecpTokenUrl, headerValues)
       .then((response) {
     ecpIdpPackage = response; // save for use in request to ECP
+    print('ecpIdPackage ' + ecpIdpPackage);
     // parse SOAP XML for 'responseConsumerURL' attribute value
     var document = xml.parse(response);
 
@@ -85,63 +102,18 @@ void doLogin(String email, String password) async {
 
     // TODO: is ecpEndpoint used?
     print(ecpEndpoint);
-  });
 
-  // TODO: call IDP_URL with credentials
-  final Map<String, String> headers = {
-    'Content-Type': 'text/xml; charset=utf-8',
-    'Authorization': 'Basic ' + base64EncodedWithEncryptedPassword
-  };
-  getSamlAssertion('Get SAML Assertion', idpUrl, headers, ecpIdpPackage)
-      .then((response) {
-    print(response);
+    // TODO: base64EncodedWithEncryptedPassword has the incorrect value
+    // structure of call is correct
+    final Map<String, String> headers = {
+      'Content-Type': 'text/xml; charset=utf-8',
+      'Authorization': 'Basic ' + base64EncodedWithEncryptedPassword
+    };
+    getSamlAssertion('Get SAML Assertion', idpUrl, headers, ecpIdpPackage)
+        .then((response) {
+      debugPrint('response: ' + response);
+    });
   });
-
-  //
-  // Step 2
-  // get authenticated SAML assertion from ECP
-  //
-  // BEGIN node.js code
-  //
-  //  logger('SSO User: ' + SSO.USER.LOGIN)
-  //
-  //  var encryptedPass = encryptWithRsaPublicKey(SSO.USER.PASSWORD, './public_key.txt')
-  //  var encodedAuthWithEncryptedPass = encodeBase64(SSO.USER.LOGIN + ':' + encryptedPass)
-  //
-  //  var IDP_FETCH_OPTIONS = {
-  //    method: 'POST',
-  //    body: SSO.ECP_INIT_IDP_PACKAGE,
-  //    headers: {
-  //      'Content-Type': 'text/xml; charset=utf-8',
-  //      'Authorization': 'Basic ' + encodedAuthWithEncryptedPass
-  //    }
-  //  }
-  //
-  //  var resp = await fetchWithLogging('Post crafted response to IdP', SSO.IDP_URL, IDP_FETCH_OPTIONS)
-  //  var responseText = await resp.text()
-  //
-  //  if (!resp.ok) {
-  //    throw new Error('Invalid response from IdP [' + SSO.IDP_URL + ']')
-  //  }
-  //
-  //  const doc = domParser.parseFromString(responseText)
-  //
-  //  const SAMLstatusCode = xpathSelect("//saml2p:Status/saml2p:StatusCode/@Value", doc, true).value
-  //
-  //  if (SAMLstatusCode != "urn:oasis:names:tc:SAML:2.0:status:Success") {
-  //    logger("SAML STATUS: " + xpathSelect("//saml2p:Status", doc, true))
-  //    throw new Error('IDP returned status was not success')
-  //  }
-  //
-  //
-  //  SSO.IDP_SAML_ASSERTION = responseText
-  //  SSO.IDP_ASSERTION_CONSUMER_SERVICE_URL = xpathSelect("//ecp:Response/@AssertionConsumerServiceURL", doc, true).value
-  //
-  //  if (SSO.ECP_INIT_RESPONSE_CONSUMER_URL !== SSO.IDP_ASSERTION_CONSUMER_SERVICE_URL) {
-  //    throw new Error(`ACS URL returned by SP (${SSO.ECP_INIT_RESPONSE_CONSUMER_URL}) does not match the one returned by the IDP (${SSO.IDP_ASSERTION_CONSUMER_SERVICE_URL})`)
-  //  }
-  //
-  // END node.js code
 }
 
 class Login extends StatefulWidget {
