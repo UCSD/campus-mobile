@@ -34,6 +34,7 @@ import react_native_vector_icons_test from '../react-native-vector-icons/react_n
 import react_redux_test from '../react-redux/react_redux_test'
 import redux_logger_test from '../redux-logger/redux_logger_test'
 import redux_persist_test from '../redux-persist/redux_persist_test'
+import react_native_async_storage_test from '../react-native-async-storage/react_native_async_storage_test'
 
 let MainStack = createStackNavigator(
 	{
@@ -140,6 +141,10 @@ let MainStack = createStackNavigator(
 		redux_persist: {
 			screen: redux_persist_test,
 			navigationOptions: { title: 'redux-persist-test' }
+		},
+		react_native_async_storage: {
+			screen: react_native_async_storage_test,
+			navigationOptions: { title: 'react-native-async-storage-test' }
 		}
 	},
 	{

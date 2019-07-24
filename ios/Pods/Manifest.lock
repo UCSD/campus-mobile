@@ -93,6 +93,8 @@ PODS:
     - React-fishhook (= 0.60.0)
   - ReactNativeExceptionHandler (2.10.8):
     - React
+  - RNCAsyncStorage (1.5.1):
+    - React
   - RNDeviceInfo (2.2.2):
     - React
   - RNGestureHandler (1.3.0):
@@ -133,6 +135,7 @@ DEPENDENCIES:
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - React-RCTWebSocket (from `../node_modules/react-native/Libraries/WebSocket`)
   - ReactNativeExceptionHandler (from `../node_modules/react-native-exception-handler`)
+  - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNKeychain (from `../node_modules/react-native-keychain`)
@@ -199,6 +202,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/Libraries/WebSocket"
   ReactNativeExceptionHandler:
     :path: "../node_modules/react-native-exception-handler"
+  RNCAsyncStorage:
+    :path: "../node_modules/@react-native-community/async-storage"
   RNDeviceInfo:
     :path: "../node_modules/react-native-device-info"
   RNGestureHandler:
@@ -241,6 +246,7 @@ SPEC CHECKSUMS:
   React-RCTVibration: 4ee1cf208ab17a50fafb1c16ffe28fe594a64e4f
   React-RCTWebSocket: fca087d583724aa0e5fef7d911f0f2a28d0f2736
   ReactNativeExceptionHandler: 8025d98049c25f186835a3af732dd7c9974d6dce
+  RNCAsyncStorage: 2808c378f6a70f22f66eeb6c11a8d69f326dd795
   RNDeviceInfo: a88be26a64ada7cbc2bc0ebbd1662d340304874e
   RNGestureHandler: 5329a942fce3d41c68b84c2c2276ce06a696d8b0
   RNKeychain: c658833a9cb2cbcba6423bdd6e16cce59e27da0e

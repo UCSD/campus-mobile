@@ -31,11 +31,19 @@ const renderItem = item => (
 
 const data = [
 	{
+		moduleName: 'react-native-community/async-storage',
+		moduleLink: 'https://github.com/react-native-community/async-storage',
+		moduleVersion: '1.5.1',
+		moduleVersionLink: 'https://github.com/react-native-community/async-storage/releases/tag/v1.5.1',
+		moduleStatus: 'TBD',
+		routeName: 'react_native_async_storage'
+	},
+	{
 		moduleName: 'redux-persist',
 		moduleLink: 'https://github.com/rt2zz/redux-persist',
 		moduleVersion: '5.10.0',
 		moduleVersionLink: 'https://github.com/rt2zz/redux-persist/releases/tag/v5.10.0',
-		moduleStatus: 'TBD',
+		moduleStatus: 'PASS',
 		routeName: 'redux_persist'
 	},
 	{
