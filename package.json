@@ -51,7 +51,8 @@
     "react-redux": "7.1.0",
     "redux": "4.0.4",
     "redux-logger": "3.0.6",
-    "redux-persist": "5.10.0"
+    "redux-persist": "5.10.0",
+    "redux-persist-transform-filter": "0.0.18"
   },
   "devDependencies": {
     "@babel/core": "7.5.4",

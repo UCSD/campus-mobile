@@ -4,7 +4,7 @@ import * as Actions from './ActionTypes';
 import CounterComponent from '../Components/CounterComponent'
 
 const mapStateToProps = (state) => ({
-     count: state.counterReducer.count
+     count: state.CounterReducer.count
 });
 
 const mapDispatchToProps = (dispatch) => ({

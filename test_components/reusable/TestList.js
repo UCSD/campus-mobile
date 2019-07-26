@@ -31,11 +31,19 @@ const renderItem = item => (
 
 const data = [
 	{
+		moduleName: 'redux-persist-transform-filter',
+		moduleLink: 'https://github.com/edy/redux-persist-transform-filter',
+		moduleVersion: '0.0.15',
+		moduleVersionLink: 'https://github.com/edy/redux-persist-transform-filter/releases/tag/0.0.15',
+		moduleStatus: 'PASS',
+		routeName: 'redux_persist_transform_filter'
+	},
+	{
 		moduleName: 'react-native-community/async-storage',
 		moduleLink: 'https://github.com/react-native-community/async-storage',
 		moduleVersion: '1.5.1',
 		moduleVersionLink: 'https://github.com/react-native-community/async-storage/releases/tag/v1.5.1',
-		moduleStatus: 'TBD',
+		moduleStatus: 'PASS',
 		routeName: 'react_native_async_storage'
 	},
 	{
