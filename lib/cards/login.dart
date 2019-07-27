@@ -106,7 +106,6 @@ void doLogin(String email, String password) async {
 
     // TODO: is ecpEndpoint used?
 
-    // TODO: base64EncodedWithEncryptedPassword has the incorrect value
     // structure of call is correct
     final Map<String, String> headers = {
       'Content-Type': 'text/xml; charset=utf-8',
