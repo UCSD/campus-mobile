@@ -3,12 +3,9 @@ import 'dart:typed_data';
 
 import 'package:encrypt/encrypt.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;
-import 'package:pointycastle/api.dart' as pc;
-import 'package:pointycastle/asymmetric/api.dart';
-import 'package:pointycastle/asymmetric/pkcs1.dart';
-import 'package:pointycastle/asymmetric/rsa.dart';
+import 'package:pointycastle/asymmetric/oaep.dart';
+import 'package:pointycastle/pointycastle.dart' as pc;
 import 'package:xml/xml.dart' as xml;
 
 // QA Environment
@@ -44,9 +41,9 @@ Future<String> getResponseConsumerUrl(
 Future<String> getSamlAssertion(String msg, String url,
     Map<String, String> options, String ecpIdpPackage) async {
   print(msg);
-  print(url);
-  print(options);
-  print(ecpIdpPackage);
+//  print(url);
+//  debugPrint('*** ' + ecpIdpPackage);
+//  print('***');
 
   final response = await http.post(url, headers: options, body: ecpIdpPackage);
 
@@ -61,36 +58,43 @@ Future<String> getSamlAssertion(String msg, String url,
   }
 }
 
+void printWrapped(String text) {
+  final pattern = new RegExp('.{1,800}'); // 800 is the size of each chunk
+  pattern.allMatches(text).forEach((match) => print(match.group(0)));
+}
+
 void doLogin(String email, String password) async {
-  final publicKeyFile = await rootBundle.loadString('assets/public_key.txt');
+  final String pkString = '-----BEGIN PUBLIC KEY-----\n' +
+      'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDJD70ejMwsmes6ckmxkNFgKley\n' +
+      'gfN/OmwwPSZcpB/f5IdTUy2gzPxZ/iugsToE+yQ+ob4evmFWhtRjNUXY+lkKUXdi\n' +
+      'hqGFS5sSnu19JYhIxeYj3tGyf0Ms+I0lu/MdRLuTMdBRbCkD3kTJmTqACq+MzQ9G\n' +
+      'CaCUGqS6FN1nNKARGwIDAQAB\n' +
+      '-----END PUBLIC KEY-----';
+
   final rsaParser = RSAKeyParser();
-  final RSAPublicKey publicKey = rsaParser.parse(publicKeyFile);
+  final pc.RSAPublicKey publicKey = rsaParser.parse(pkString);
 
-  final encrypter = Encrypter(RSA(publicKey: publicKey));
-  Encrypted encryptedPassword = encrypter.encrypt(password);
-  //print(encryptedPassword.base64);
+  var cipher = OAEPEncoding(pc.AsymmetricBlockCipher('RSA'));
+  pc.AsymmetricKeyParameter<pc.RSAPublicKey> keyParametersPublic =
+      new pc.PublicKeyParameter(publicKey);
+  cipher.init(true, keyParametersPublic);
+  Uint8List output = cipher.process(utf8.encode(password));
+  var base64EncodedText = base64.encode(output);
 
-  Codec<String, String> stringToBase64 = utf8.fuse(base64);
-  final String userPassword = email + ':' + encryptedPassword.base64;
   final String base64EncodedWithEncryptedPassword =
-      stringToBase64.encode(userPassword);
-  //print('encoded user:pass ' + base64EncodedWithEncryptedPassword);
+      base64.encode(utf8.encode(email + ':' + base64EncodedText));
+
   String ecpIdpPackage;
   String ecpEndpoint;
-
-  var cipher = PKCS1Encoding(RSAEngine());
-  cipher.init(true, pc.PublicKeyParameter<RSAPublicKey>(publicKey));
-  Uint8List output = cipher.process(utf8.encode(password));
-  var base64EncodedText = base64Encode(output);
-  final String res = stringToBase64.encode(email + ':' + base64EncodedText);
-  print(res);
 
   // Step 1
   // get ECP endpoint URL
   getResponseConsumerUrl('get response consumer URL', ecpTokenUrl, headerValues)
       .then((response) {
     ecpIdpPackage = response; // save for use in request to ECP
-    print('ecpIdPackage ' + ecpIdpPackage);
+
+    // Note: ecpIdpPackage looks correct
+    //
     // parse SOAP XML for 'responseConsumerURL' attribute value
     var document = xml.parse(response);
 
@@ -101,7 +105,6 @@ void doLogin(String email, String password) async {
         .toString();
 
     // TODO: is ecpEndpoint used?
-    print(ecpEndpoint);
 
     // TODO: base64EncodedWithEncryptedPassword has the incorrect value
     // structure of call is correct
@@ -111,7 +114,12 @@ void doLogin(String email, String password) async {
     };
     getSamlAssertion('Get SAML Assertion', idpUrl, headers, ecpIdpPackage)
         .then((response) {
+      debugPrint('***');
+      debugPrint(idpUrl);
+      debugPrint(headers.toString());
+      debugPrint(ecpIdpPackage);
       debugPrint('response: ' + response);
+      debugPrint('***');
     });
   });
 }
