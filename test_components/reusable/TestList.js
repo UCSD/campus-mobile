@@ -31,6 +31,14 @@ const renderItem = item => (
 
 const data = [
 	{
+		moduleName: 'react-native-permissions',
+		moduleLink: 'https://github.com/react-native-community/react-native-permissions',
+		moduleVersion: '1.2.0',
+		moduleVersionLink: 'https://github.com/react-native-community/react-native-permissions/releases/tag/1.2.0',
+		moduleStatus: 'PASS',
+		routeName: 'react_native_permissions'
+	},
+	{
 		moduleName: 'react-native-simple-toast',
 		moduleLink: 'https://github.com/vonovak/react-native-simple-toast',
 		moduleVersion: '0.1.1',

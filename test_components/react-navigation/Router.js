@@ -38,6 +38,7 @@ import react_native_async_storage_test from '../react-native-async-storage/react
 import redux_persist_transform_filter_test from '../redux-persist-transform-filter/redux_persist_transform_filter_test'
 import redux_saga_test from '../redux-saga/redux_saga_test'
 import react_native_simple_toast_test from '../react-native-simple-toast/react_native_simple_toast_test'
+import react_native_permissions_test from '../react-native-permissions/react_native_permissions_test'
 
 let MainStack = createStackNavigator(
 	{
@@ -160,6 +161,10 @@ let MainStack = createStackNavigator(
 		react_native_simple_toast: {
 			screen: react_native_simple_toast_test,
 			navigationOptions: { title: 'react-native-simple-toast-test' }
+		},
+		react_native_permissions: {
+			screen: react_native_permissions_test,
+			navigationOptions: { title: 'react-native-permissions-test' }
 		}
 	},
 	{
