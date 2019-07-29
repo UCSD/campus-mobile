@@ -31,6 +31,14 @@ const renderItem = item => (
 
 const data = [
 	{
+		moduleName: 'react-native-simple-toast',
+		moduleLink: 'https://github.com/vonovak/react-native-simple-toast',
+		moduleVersion: '0.1.1',
+		moduleVersionLink: 'https://github.com/vonovak/react-native-simple-toast/releases/tag/v0.1.1',
+		moduleStatus: 'PASS',
+		routeName: 'react_native_simple_toast'
+	},
+	{
 		moduleName: 'redux-saga',
 		moduleLink: 'https://github.com/redux-saga/redux-saga',
 		moduleVersion: '1.0.0',
