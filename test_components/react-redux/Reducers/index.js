@@ -1,12 +1,9 @@
-import { combineReducers } from 'redux'
+import CounterReducer from './CounterReducer'
+import MovieReducer from './MovieReducer'
 
-
-import counterReducer from './CounterReducer'
-
-const AppReducers = combineReducers({
-	counterReducer,
-})
-
-const rootReducer = (state, action) => AppReducers(state,action)
+const rootReducer = {
+	CounterReducer,
+	MovieReducer
+}
 
 export default rootReducer

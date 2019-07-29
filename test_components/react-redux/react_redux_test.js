@@ -4,6 +4,7 @@ import { PersistGate } from 'redux-persist/integration/react'
 
 import storeAndPersistor from '../redux-persist/configureStore'
 import CounterAction from './Actions/CounterAction'
+import FetchExample from '../redux-saga/FetchExample'
 
 export default class react_redux_test extends Component {
 	constructor(props){
@@ -15,6 +16,7 @@ export default class react_redux_test extends Component {
 			<Provider store={storeAndPersistor.store}>
 				<PersistGate loading={null} persistor={storeAndPersistor.persistor}>
 					<CounterAction />
+					<FetchExample />
 				</PersistGate>
 			</Provider>
 		)

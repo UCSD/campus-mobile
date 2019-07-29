@@ -31,6 +31,14 @@ const renderItem = item => (
 
 const data = [
 	{
+		moduleName: 'redux-saga',
+		moduleLink: 'https://github.com/redux-saga/redux-saga',
+		moduleVersion: '1.0.0',
+		moduleVersionLink: 'https://github.com/redux-saga/redux-saga/releases/tag/v1.0.0',
+		moduleStatus: 'PASS',
+		routeName: 'redux_saga'
+	},
+	{
 		moduleName: 'redux-persist-transform-filter',
 		moduleLink: 'https://github.com/edy/redux-persist-transform-filter',
 		moduleVersion: '0.0.15',

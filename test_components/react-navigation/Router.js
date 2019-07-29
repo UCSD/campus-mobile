@@ -36,6 +36,7 @@ import redux_logger_test from '../redux-logger/redux_logger_test'
 import redux_persist_test from '../redux-persist/redux_persist_test'
 import react_native_async_storage_test from '../react-native-async-storage/react_native_async_storage_test'
 import redux_persist_transform_filter_test from '../redux-persist-transform-filter/redux_persist_transform_filter_test'
+import redux_saga_test from '../redux-saga/redux_saga_test'
 
 let MainStack = createStackNavigator(
 	{
@@ -150,6 +151,10 @@ let MainStack = createStackNavigator(
 		redux_persist_transform_filter: {
 			screen: redux_persist_transform_filter_test,
 			navigationOptions: { title: 'redux-persist-transform-filter' }
+		},
+		redux_saga: {
+			screen: redux_saga_test,
+			navigationOptions: { title: 'redux-saga-test' }
 		}
 	},
 	{
