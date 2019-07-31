@@ -1,8 +1,18 @@
 import React from 'react'
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, Text, Button } from 'react-native'
 import firebase from 'react-native-firebase'
 
 export default class react_native_firebase_test extends React.Component {
+	getNotificationToken = () => {
+		firebase.messaging().getToken()
+			.then((fcmToken) => {
+				if (fcmToken) {
+					/** Subscribe to topics **/
+					this.setState({ token: fcmToken })
+				}
+			})
+	}
+
 	render() {
 		const Analytics = firebase.analytics()
 		Analytics.setAnalyticsCollectionEnabled(true)
@@ -14,7 +24,14 @@ export default class react_native_firebase_test extends React.Component {
 		})
 		return (
 			<View style={css.dependency_output}>
-				{/*insert test component here*/}
+				<Button
+					onPress={this.getNotificationToken}
+					title="get token"
+					color="#841584"
+				/>
+				<Text>
+					{this.state ? this.state.token : 'token was not fetched'}
+				</Text>
 			</View>
 		)
 	}
