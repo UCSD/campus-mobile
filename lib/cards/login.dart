@@ -105,7 +105,7 @@ void doLogin(String email, String password) async {
         .toString();
 
     // TODO: is ecpEndpoint used?
-
+    
     // structure of call is correct
     final Map<String, String> headers = {
       'Content-Type': 'text/xml; charset=utf-8',
