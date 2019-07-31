@@ -39,6 +39,7 @@ import redux_persist_transform_filter_test from '../redux-persist-transform-filt
 import redux_saga_test from '../redux-saga/redux_saga_test'
 import react_native_simple_toast_test from '../react-native-simple-toast/react_native_simple_toast_test'
 import react_native_permissions_test from '../react-native-permissions/react_native_permissions_test'
+import react_native_firebase_test from '../react-native-firebase/react_native_firebase_test'
 
 let MainStack = createStackNavigator(
 	{
@@ -165,6 +166,10 @@ let MainStack = createStackNavigator(
 		react_native_permissions: {
 			screen: react_native_permissions_test,
 			navigationOptions: { title: 'react-native-permissions-test' }
+		},
+		react_native_firebase: {
+			screen: react_native_firebase_test,
+			navigationOptions: { title: 'react-native-firebase-test' }
 		}
 	},
 	{

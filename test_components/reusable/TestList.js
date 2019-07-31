@@ -31,6 +31,14 @@ const renderItem = item => (
 
 const data = [
 	{
+		moduleName: 'react-native-firebase',
+		moduleLink: 'https://github.com/invertase/react-native-firebase',
+		moduleVersion: '5.5.6',
+		moduleVersionLink: 'https://github.com/invertase/react-native-firebase/releases/tag/v5.5.6',
+		moduleStatus: 'TBD',
+		routeName: 'react_native_firebase'
+	},
+	{
 		moduleName: 'react-native-permissions',
 		moduleLink: 'https://github.com/react-native-community/react-native-permissions',
 		moduleVersion: '1.2.0',

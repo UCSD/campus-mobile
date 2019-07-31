@@ -16,6 +16,7 @@
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* CampusMobileTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* CampusMobileTests.m */; };
+		3425358D22F0DCCD0029A2E2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3425358C22F0DCCD0029A2E2 /* GoogleService-Info.plist */; };
 		47EC9B5531449C7FAFE76B79 /* libPods-CampusMobile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B2BF11AA26D40AAD4F9228A6 /* libPods-CampusMobile.a */; };
 		A7801D4E1025847C37C79856 /* libPods-CampusMobile-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E358616C2A68643218E347AA /* libPods-CampusMobile-tvOS.a */; };
 		BCA6B5F2E00B5A173FC76367 /* libPods-CampusMobile-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D3BA2FD1454EC222A8DBDB6D /* libPods-CampusMobile-tvOSTests.a */; };
@@ -57,6 +58,7 @@
 		2D02E47B1E0B4A5D006451C7 /* CampusMobile-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CampusMobile-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* CampusMobile-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CampusMobile-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2F5A2F07AE83A92A147B6DDF /* Pods-CampusMobile-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CampusMobile-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-CampusMobile-tvOS/Pods-CampusMobile-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
+		3425358C22F0DCCD0029A2E2 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		3C3555CC55D7A2C80957B0DD /* Pods-CampusMobileTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CampusMobileTests.debug.xcconfig"; path = "Target Support Files/Pods-CampusMobileTests/Pods-CampusMobileTests.debug.xcconfig"; sourceTree = "<group>"; };
 		A5A2C5076F85DEB54EC7282E /* Pods-CampusMobile.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CampusMobile.release.xcconfig"; path = "Target Support Files/Pods-CampusMobile/Pods-CampusMobile.release.xcconfig"; sourceTree = "<group>"; };
 		B2BF11AA26D40AAD4F9228A6 /* libPods-CampusMobile.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CampusMobile.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -134,7 +136,6 @@
 				3C3555CC55D7A2C80957B0DD /* Pods-CampusMobileTests.debug.xcconfig */,
 				0D4F385E38F0E9FEB6968DE4 /* Pods-CampusMobileTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -175,6 +176,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				3425358C22F0DCCD0029A2E2 /* GoogleService-Info.plist */,
 				13B07FAE1A68108700A75B9A /* CampusMobile */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* CampusMobileTests */,
@@ -339,6 +341,7 @@
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
+				3425358D22F0DCCD0029A2E2 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

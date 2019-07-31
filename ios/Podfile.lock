@@ -1,6 +1,30 @@
 PODS:
   - boost-for-react-native (1.63.0)
+  - Crashlytics (3.13.4):
+    - Fabric (~> 1.10.2)
   - DoubleConversion (1.1.6)
+  - Fabric (1.10.2)
+  - Firebase/Core (6.4.0):
+    - Firebase/CoreOnly
+    - FirebaseAnalytics (= 6.0.3)
+  - Firebase/CoreOnly (6.4.0):
+    - FirebaseCore (= 6.0.4)
+  - FirebaseAnalytics (6.0.3):
+    - FirebaseCore (~> 6.0)
+    - FirebaseInstanceID (~> 4.2)
+    - GoogleAppMeasurement (= 6.0.3)
+    - GoogleUtilities/AppDelegateSwizzler (~> 6.0)
+    - GoogleUtilities/MethodSwizzler (~> 6.0)
+    - GoogleUtilities/Network (~> 6.0)
+    - "GoogleUtilities/NSData+zlib (~> 6.0)"
+    - nanopb (~> 0.3)
+  - FirebaseCore (6.0.4):
+    - GoogleUtilities/Environment (~> 6.0)
+    - GoogleUtilities/Logger (~> 6.0)
+  - FirebaseInstanceID (4.2.1):
+    - FirebaseCore (~> 6.0)
+    - GoogleUtilities/Environment (~> 6.0)
+    - GoogleUtilities/UserDefaults (~> 6.0)
   - Folly (2018.10.22.00):
     - boost-for-react-native
     - DoubleConversion
@@ -11,6 +35,35 @@ PODS:
     - DoubleConversion
     - glog
   - glog (0.3.5)
+  - GoogleAppMeasurement (6.0.3):
+    - GoogleUtilities/AppDelegateSwizzler (~> 6.0)
+    - GoogleUtilities/MethodSwizzler (~> 6.0)
+    - GoogleUtilities/Network (~> 6.0)
+    - "GoogleUtilities/NSData+zlib (~> 6.0)"
+    - nanopb (~> 0.3)
+  - GoogleUtilities/AppDelegateSwizzler (6.2.3):
+    - GoogleUtilities/Environment
+    - GoogleUtilities/Logger
+    - GoogleUtilities/Network
+  - GoogleUtilities/Environment (6.2.3)
+  - GoogleUtilities/Logger (6.2.3):
+    - GoogleUtilities/Environment
+  - GoogleUtilities/MethodSwizzler (6.2.3):
+    - GoogleUtilities/Logger
+  - GoogleUtilities/Network (6.2.3):
+    - GoogleUtilities/Logger
+    - "GoogleUtilities/NSData+zlib"
+    - GoogleUtilities/Reachability
+  - "GoogleUtilities/NSData+zlib (6.2.3)"
+  - GoogleUtilities/Reachability (6.2.3):
+    - GoogleUtilities/Logger
+  - GoogleUtilities/UserDefaults (6.2.3):
+    - GoogleUtilities/Logger
+  - nanopb (0.3.901):
+    - nanopb/decode (= 0.3.901)
+    - nanopb/encode (= 0.3.901)
+  - nanopb/decode (0.3.901)
+  - nanopb/encode (0.3.901)
   - RCTRestart (0.0.12):
     - React
   - RCTSystemSetting (1.7.2):
@@ -101,6 +154,15 @@ PODS:
     - React
   - RNDeviceInfo (2.2.2):
     - React
+  - RNFirebase (5.5.6):
+    - Firebase/Core
+    - React
+    - RNFirebase/Crashlytics (= 5.5.6)
+  - RNFirebase/Crashlytics (5.5.6):
+    - Crashlytics
+    - Fabric
+    - Firebase/Core
+    - React
   - RNGestureHandler (1.3.0):
     - React
   - RNKeychain (3.1.3):
@@ -143,6 +205,7 @@ DEPENDENCIES:
   - ReactNativePermissions (from `../node_modules/react-native-permissions`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
+  - RNFirebase (from `../node_modules/react-native-firebase/ios`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNKeychain (from `../node_modules/react-native-keychain`)
   - RNSVG (from `../node_modules/react-native-svg`)
@@ -152,6 +215,15 @@ DEPENDENCIES:
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - boost-for-react-native
+    - Crashlytics
+    - Fabric
+    - Firebase
+    - FirebaseAnalytics
+    - FirebaseCore
+    - FirebaseInstanceID
+    - GoogleAppMeasurement
+    - GoogleUtilities
+    - nanopb
 
 EXTERNAL SOURCES:
   DoubleConversion:
@@ -216,6 +288,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/async-storage"
   RNDeviceInfo:
     :path: "../node_modules/react-native-device-info"
+  RNFirebase:
+    :path: "../node_modules/react-native-firebase/ios"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
   RNKeychain:
@@ -229,9 +303,18 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
+  Crashlytics: 2dfd686bcb918dc10ee0e76f7f853fe42c7bd552
   DoubleConversion: 5805e889d232975c086db112ece9ed034df7a0b2
+  Fabric: 706c8b8098fff96c33c0db69cbf81f9c551d0d74
+  Firebase: 9445469655a98e9010737f4bc4720e5bda465873
+  FirebaseAnalytics: 69fe25866d2ec87c6f02d72c3c9a82bce9c065a0
+  FirebaseCore: 7ea99e200f0024262650be56623fbe6a7bef1707
+  FirebaseInstanceID: 9782fcfb89e4d7da76cc28eac4b8543dc7be4a4b
   Folly: 30e7936e1c45c08d884aa59369ed951a8e68cf51
   glog: 1f3da668190260b06b429bb211bfbee5cd790c28
+  GoogleAppMeasurement: 1e45fa601e6280c180880d57010390f6679cd971
+  GoogleUtilities: d2b0e277a95962e09bb27f5cd42f5f0b6a506c7d
+  nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
   RCTRestart: 59fa9d918cb1ea27676a73168757ca13153126ea
   RCTSystemSetting: 9279ff44c49bb4fb0a5d335a0851852c8f3eda99
   React: 4b3c068e793e96672dcd186a2b572fac43e4b031
@@ -260,6 +343,7 @@ SPEC CHECKSUMS:
   ReactNativePermissions: f0aec11433d43d45953c678b6982921d83ad94c8
   RNCAsyncStorage: 2808c378f6a70f22f66eeb6c11a8d69f326dd795
   RNDeviceInfo: a88be26a64ada7cbc2bc0ebbd1662d340304874e
+  RNFirebase: ac0de8b24c6f91ae9459575491ed6a77327619c6
   RNGestureHandler: 5329a942fce3d41c68b84c2c2276ce06a696d8b0
   RNKeychain: c658833a9cb2cbcba6423bdd6e16cce59e27da0e
   RNSVG: 90c76b7cf235654d45e54655b6c189ea4041057c
