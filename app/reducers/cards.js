@@ -79,12 +79,19 @@ const initialState = {
 			active: true,
 			name: 'Parking',
 			component: 'ParkingCard'
+		},
+		occuspace: {
+			id: 'occuspace',
+			active: true,
+			name: 'Availability',
+			component: 'occuspaceCard'
 		}
 	},
 
 	// Only cards that show up by default
 	// on first launch should appear here.
 	cardOrder: [
+		'occuspace',
 		'shuttle',
 		'parking',
 		'dining',

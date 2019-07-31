@@ -48,12 +48,14 @@ function* watchData() {
 			yield put({ type: 'UPDATE_SCHEDULE' })
 			yield put({ type: 'UPDATE_STUDENT_PROFILE' })
 			yield put({ type: 'SYNC_USER_PROFILE' })
+			yield put({ type: 'UPDATE_OCCUSPACE_DATA' })
 		} catch (err) {
 			console.log(err)
 		}
 		yield delay(DATA_SAGA_TTL)
 	}
 }
+
 
 function* updateShuttleMaster() {
 	const { lastUpdated, routes, stops } = yield select(getShuttle)
@@ -126,9 +128,9 @@ function* updateSpecialEvents() {
 	if (timeDiff > ttl && Array.isArray(saved)) {
 		const specialEvents = yield call(SpecialEventsService.FetchSpecialEvents)
 
-		if (specialEvents &&
-			specialEvents['start-time'] <= nowTime &&
-			specialEvents['end-time'] >= nowTime) {
+		if (specialEvents
+			&& specialEvents['start-time'] <= nowTime
+			&& specialEvents['end-time'] >= nowTime) {
 			// Inside active specialEvents window
 			prefetchSpecialEventsImages(specialEvents)
 			if (cards.specialEvents.autoActivated === false) {

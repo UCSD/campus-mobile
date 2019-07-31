@@ -14,6 +14,7 @@ import StudentIDCardContainer from '../studentId/StudentIDCardContainer'
 import FinalsCard from '../schedule/FinalsCard'
 import ScheduleCardContainer from '../schedule/ScheduleCardContainer'
 import ParkingCardContainer from '../parking/ParkingCardContainer'
+import OccuspaceCardContainer from '../occuspace/OccuspaceCardContainer'
 import { platformAndroid, gracefulFatalReset } from '../../util/general'
 import logger from '../../util/logger'
 
@@ -41,9 +42,9 @@ export class Home extends React.Component {
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
-		if (this.props.cards !== nextProps.cards ||
-			this.props.cardOrder !== nextProps.cardOrder ||
-			this.props.user.isLoggedIn !== nextProps.user.isLoggedIn) {
+		if (this.props.cards !== nextProps.cards
+			|| this.props.cardOrder !== nextProps.cardOrder
+			|| this.props.user.isLoggedIn !== nextProps.user.isLoggedIn) {
 			return true
 		} else {
 			return false
@@ -51,8 +52,8 @@ export class Home extends React.Component {
 	}
 
 	componentDidUpdate(prevProps) {
-		if (!prevProps.user.invalidSavedCredentials &&
-			this.props.user.invalidSavedCredentials) {
+		if (!prevProps.user.invalidSavedCredentials
+			&& this.props.user.invalidSavedCredentials) {
 			Alert.alert(
 				'Logged Out.',
 				'You have been logged out because your credentials could not be verified. Please try to log in again.',
@@ -89,9 +90,9 @@ export class Home extends React.Component {
 					if (this.props.cards[card].authenticated) {
 						if (!this.props.user.isLoggedIn) {
 							return
-						} else if (this.props.cards[card].classifications &&
-                                   this.props.cards[card].classifications.student &&
-                                   !this.props.user.profile.classifications.student) {
+						} else if (this.props.cards[card].classifications
+                                   && this.props.cards[card].classifications.student
+                                   && !this.props.user.profile.classifications.student) {
 							return
 						}
 					}
@@ -129,6 +130,9 @@ export class Home extends React.Component {
 							break
 						case 'parking':
 							activeCards.push(<ParkingCardContainer key="parking" />)
+							break
+						case 'occuspace':
+							activeCards.push(<OccuspaceCardContainer key="occuspace" />)
 							break
 						default:
 							return gracefulFatalReset(new Error('Invalid card in state: ', card))

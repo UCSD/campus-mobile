@@ -37,6 +37,7 @@
 		2DF0FFEE2056DD460020B375 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3EA31DF850E9000B6D8A /* libReact.a */; };
 		2EC41A447BCE495DBB047E49 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DC265D548CBE410D93CFB8DB /* Ionicons.ttf */; };
 		330478A2741E403296E72257 /* libRCTRestart.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DA0A90092F6143FD9A55C1C9 /* libRCTRestart.a */; };
+		347D49B222BAA42A0008F6D9 /* libART.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 347D498422BAA41E0008F6D9 /* libART.a */; };
 		361344A133BE41A4AA3C4637 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7B00B28711D44FBF87709AA6 /* EvilIcons.ttf */; };
 		37D3F36A04EB4215BDBD8B6B /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 230FAC3D7C9F494BA604EC42 /* Feather.ttf */; };
 		512E3F5B94B54A9DAAA3CC9C /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A8BC55F615424915A9F6F5F0 /* Zocial.ttf */; };
@@ -208,6 +209,20 @@
 			proxyType = 2;
 			remoteGlobalIDString = 9936F32F1F5F2E5B0010BF04;
 			remoteInfo = "privatedata-tvOS";
+		};
+		347D498322BAA41E0008F6D9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 347D497E22BAA41E0008F6D9 /* ART.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0CF68AC11AF0540F00FF9E5C;
+			remoteInfo = ART;
+		};
+		347D498522BAA41E0008F6D9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 347D497E22BAA41E0008F6D9 /* ART.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 323A12871E5F266B004975B8;
+			remoteInfo = "ART-tvOS";
 		};
 		3DAD3E831DF850E9000B6D8A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -426,6 +441,7 @@
 		2D02E47B1E0B4A5D006451C7 /* CampusMobile-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CampusMobile-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* CampusMobile-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CampusMobile-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		347D497E22BAA41E0008F6D9 /* ART.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ART.xcodeproj; path = "../node_modules/react-native/Libraries/ART/ART.xcodeproj"; sourceTree = "<group>"; };
 		4C7F904038AC2FF034DDC578 /* Pods-CampusMobile.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CampusMobile.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CampusMobile/Pods-CampusMobile.debug.xcconfig"; sourceTree = "<group>"; };
 		4FB0331FACC14A1BAB9F1D71 /* LRDRCTSimpleToast.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = LRDRCTSimpleToast.xcodeproj; path = "../node_modules/react-native-simple-toast/ios/LRDRCTSimpleToast.xcodeproj"; sourceTree = "<group>"; };
 		53776327E44C4CDEBD97AD0E /* libLRDRCTSimpleToast.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libLRDRCTSimpleToast.a; sourceTree = "<group>"; };
@@ -647,6 +663,15 @@
 				842AEF96081751E0E2FA43DF /* libPods-CampusMobile.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		347D497F22BAA41E0008F6D9 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				347D498422BAA41E0008F6D9 /* libART.a */,
+				347D498622BAA41E0008F6D9 /* libART-tvOS.a */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		5E91572E1DD0AC6500FF2AA8 /* Products */ = {
@@ -1190,6 +1215,20 @@
 			fileType = archive.ar;
 			path = "libprivatedata-tvOS.a";
 			remoteRef = 2DF0FFEC2056DD460020B375 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		347D498422BAA41E0008F6D9 /* libART.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libART.a;
+			remoteRef = 347D498322BAA41E0008F6D9 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		347D498622BAA41E0008F6D9 /* libART-tvOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libART-tvOS.a";
+			remoteRef = 347D498522BAA41E0008F6D9 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		3DAD3E841DF850E9000B6D8A /* libRCTImage-tvOS.a */ = {
