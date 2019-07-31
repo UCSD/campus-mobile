@@ -8,6 +8,7 @@ import {
 } from 'react-navigation'
 import { MenuProvider } from 'react-native-popup-menu'
 import { connect } from 'react-redux'
+
 import { platformAndroid } from '../util/general'
 import css from '../styles/css'
 import COLOR from '../styles/ColorConstants'
@@ -44,6 +45,7 @@ import WebReg from '../views/schedule/webreg/WebReg'
 import CourseSearch from '../views/schedule/webreg/CourseSearch'
 import CourseView from '../views/schedule/webreg/CourseView'
 import CourseSectionView from '../views/schedule/webreg/CourseSectionView'
+import ManageOccuspaceLocations from '../views/occuspace/ManageOccuspaceLocations'
 
 const campusLogoImage = require('../assets/images/UCSanDiegoLogo-nav.png')
 
@@ -240,6 +242,12 @@ let MainStack = createStackNavigator(
 			screen: CourseSectionView,
 			navigationOptions: {
 				header: null,
+			}
+		},
+		ManageOccuspaceLocations: {
+			screen: ManageOccuspaceLocations,
+			navigationOptions: {
+				title: 'Manage Locations'
 			}
 		}
 	},

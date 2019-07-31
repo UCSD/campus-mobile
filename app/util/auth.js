@@ -4,13 +4,17 @@ import { delay } from 'redux-saga'
 import {
 	SSO_REFRESH_MAX_RETRIES,
 	SSO_REFRESH_RETRY_INCREMENT,
-	SSO_REFRESH_RETRY_MULTIPLIER
+	SSO_REFRESH_RETRY_MULTIPLIER,
+	MOBILE_PUBLIC_TOKEN_MAX_RETRIES,
+	MOBILE_PUBLIC_TOKEN_RETRY_INCREMENT,
+	MOBILE_PUBLIC_TOKEN_RETRY_MULTIPLIER
 } from '../AppSettings'
 
 const forge = require('node-forge')
 
 const { pki } = forge
 const accessTokenSiteName = 'https://ucsd.edu'
+const publicTokenSiteName = 'https://ucsd.edu/public'
 
 // A "private" internal function that lets us
 // send a fetchrequest with the correct
@@ -104,6 +108,17 @@ module.exports = {
 			.setGenericPassword(user, pass)
 			.then(() => (true))
 	},
+	/**
+	 * Stores mobile api credentials in the keychain
+	 * @param {String} consumer key
+	 * @param {String} consumer secret
+	 * @returns {boolean} True if keychain was stored
+	 */
+	storeMobileCreds(key, secret) {
+		return Keychain
+			.setInternetCredentials('mobileapi', key, secret)
+			.then(() => (true))
+	},
 
 	/**
 	 * Retrieves user credentials in the keychain
@@ -113,6 +128,18 @@ module.exports = {
 	retrieveUserCreds() {
 		return Keychain
 			.getGenericPassword()
+			.then(credentials => (credentials))
+			.catch(error => (error))
+	},
+
+	/**
+	 * Retrieves mobile api credentials in the keychain
+	 * @returns {Object} Object containing key and secret
+	 * or an error if something went wrong
+	 */
+	retrieveMobileCreds() {
+		return Keychain
+			.getInternetCredentials('mobileapi')
 			.then(credentials => (credentials))
 			.catch(error => (error))
 	},
@@ -139,6 +166,17 @@ module.exports = {
 	},
 
 	/**
+	 * Stores public access token in the keychain
+	 * @param {String} token Access token to store
+	 * @returns {boolean} True if keychain was stored
+	 */
+	storePublicAccessToken(token) {
+		return Keychain
+			.setInternetCredentials(publicTokenSiteName, 'publicAccessToken', token)
+			.then(() => (true))
+	},
+
+	/**
 	 * Retrieves access token in the keychain
 	 * @returns {Object} Object containing access token
 	 * or an error if something went wrong
@@ -146,6 +184,18 @@ module.exports = {
 	retrieveAccessToken() {
 		return Keychain
 			.getInternetCredentials(accessTokenSiteName)
+			.then(credentials => (credentials.password))
+			.catch(error => (error))
+	},
+
+	/**
+	 * Retrieves public access token in the keychain
+	 * @returns {Object} Object containing access token
+	 * or an error if something went wrong
+	 */
+	retrievePublicAccessToken() {
+		return Keychain
+			.getInternetCredentials(publicTokenSiteName)
 			.then(credentials => (credentials.password))
 			.catch(error => (error))
 	},
@@ -159,7 +209,91 @@ module.exports = {
 			.resetInternetCredentials(accessTokenSiteName)
 			.then(() => (true))
 	},
+	/**
+	 * Deletes public access token in the keychain
+	 * @returns {boolean} True once keychain is reset
+	 */
+	destroyPublicAccessToken() {
+		return Keychain
+			.resetInternetCredentials(publicTokenSiteName)
+			.then(() => (true))
+	},
+	/**
+	 * Makes an authorized request using an access token.
+	 * If the response is a 401 Unauthorized, this function
+	 * attempts to retry a predetermined amount of times.
+	 * If no successful response is received by the last
+	 * attempt, this function sets an AUTH_HTTP error in
+	 * state.requestErrors.
+	 * @param {String} endpoint URL of API endpoint
+	 * @param {Object} payload JSON data to POST to endpoint
+	 * @returns {Object} Data from server
+	 * or returns an error if HTTP resonse isn't 200
+	 */
+	* authorizedPublicFetch(endpoint, payload) {
+		yield put({ type: 'AUTH_HTTP_REQUEST' })
 
+		// Check to see if we aren't in an error state
+		const userState = state => (state.user)
+		const { appUpdateRequired } = yield select(userState)
+		if (appUpdateRequired) {
+			const e = new Error('App update required.')
+			yield put({ type: 'AUTH_HTTP_FAILURE', e })
+			throw e
+		}
+
+
+		let accessToken = yield Keychain
+			.getInternetCredentials(publicTokenSiteName)
+			.then(credentials => (credentials.password))
+
+		try {
+			let endpointResponse
+			if (payload) endpointResponse = yield authorizedPostRequest(endpoint, accessToken, payload)
+			else endpointResponse = yield authorizedFetchRequest(endpoint, accessToken)
+
+			// Refresh token if invalidToken and retry request
+			if (endpointResponse.invalidToken) {
+				for (
+					let i = 0, remainingRetries = MOBILE_PUBLIC_TOKEN_MAX_RETRIES;
+					remainingRetries > 0;
+					remainingRetries--, i++
+				) {
+					// Attempt to get a new access token
+					yield put({ type: 'UPDATE_MOBILE_AUTH_TOKEN' })
+
+					// Delay next authorized fetch attempt
+					let multiplier = MOBILE_PUBLIC_TOKEN_RETRY_MULTIPLIER * i
+					if (multiplier < 1) multiplier = 1
+					yield delay(MOBILE_PUBLIC_TOKEN_RETRY_INCREMENT * multiplier)
+
+					accessToken = yield Keychain
+						.getInternetCredentials(publicTokenSiteName)
+						.then(credentials => (credentials.password))
+
+					endpointResponse = yield authorizedFetchRequest(endpoint, accessToken)
+
+					if (!endpointResponse.invalidToken) {
+						yield put({ type: 'AUTH_HTTP_SUCCESS' })
+						return endpointResponse
+					}
+				}
+
+				const e = new Error('Unable to re-authorize application')
+				throw e
+			} else {
+				yield put({ type: 'AUTH_HTTP_SUCCESS' })
+				return endpointResponse
+			}
+		} catch (error) {
+			if (error.message === 'Unable to re-authorize application') {
+				// We were unable to get an authorized response.
+
+				yield put({ type: 'AUTH_HTTP_FAILURE', error })
+			}
+			throw error
+		}
+	},
 	/**
 	 * Makes an authorized request using an access token.
 	 * If the response is a 401 Unauthorized, this function
@@ -256,10 +390,10 @@ module.exports = {
 		}
 	},
 
-	ucsdPublicKey: '-----BEGIN PUBLIC KEY-----\n' +
-		'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDJD70ejMwsmes6ckmxkNFgKley\n' +
-		'gfN/OmwwPSZcpB/f5IdTUy2gzPxZ/iugsToE+yQ+ob4evmFWhtRjNUXY+lkKUXdi\n' +
-		'hqGFS5sSnu19JYhIxeYj3tGyf0Ms+I0lu/MdRLuTMdBRbCkD3kTJmTqACq+MzQ9G\n' +
-		'CaCUGqS6FN1nNKARGwIDAQAB\n' +
-		'-----END PUBLIC KEY-----'
+	ucsdPublicKey: '-----BEGIN PUBLIC KEY-----\n'
+		+ 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDJD70ejMwsmes6ckmxkNFgKley\n'
+		+ 'gfN/OmwwPSZcpB/f5IdTUy2gzPxZ/iugsToE+yQ+ob4evmFWhtRjNUXY+lkKUXdi\n'
+		+ 'hqGFS5sSnu19JYhIxeYj3tGyf0Ms+I0lu/MdRLuTMdBRbCkD3kTJmTqACq+MzQ9G\n'
+		+ 'CaCUGqS6FN1nNKARGwIDAQAB\n'
+		+ '-----END PUBLIC KEY-----'
 }
