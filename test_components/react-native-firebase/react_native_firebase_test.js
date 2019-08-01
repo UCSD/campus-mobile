@@ -8,6 +8,7 @@ export default class react_native_firebase_test extends React.Component {
 			.then((fcmToken) => {
 				if (fcmToken) {
 					/** Subscribe to topics **/
+					console.log(fcmToken)
 					this.setState({ token: fcmToken })
 				}
 			})
