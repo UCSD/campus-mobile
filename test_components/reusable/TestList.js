@@ -31,11 +31,19 @@ const renderItem = item => (
 
 const data = [
 	{
+		moduleName: 'bugsnag-react-native',
+		moduleLink: 'https://github.com/bugsnag/bugsnag-react-native',
+		moduleVersion: '2.22.4',
+		moduleVersionLink: 'https://github.com/bugsnag/bugsnag-react-native/releases/tag/v2.22.4',
+		moduleStatus: 'TBD',
+		routeName: 'bugsnag_react_native'
+	},
+	{
 		moduleName: 'react-native-firebase',
 		moduleLink: 'https://github.com/invertase/react-native-firebase',
 		moduleVersion: '5.5.6',
 		moduleVersionLink: 'https://github.com/invertase/react-native-firebase/releases/tag/v5.5.6',
-		moduleStatus: 'TBD',
+		moduleStatus: 'PASS',
 		routeName: 'react_native_firebase'
 	},
 	{

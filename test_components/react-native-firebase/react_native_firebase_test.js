@@ -28,19 +28,6 @@ export default class react_native_firebase_test extends React.Component {
 			})
 	}
 
-	// checkPermission = () => {
-	// 	firebase.messaging().hasPermission()
-	// 		.then((enabled) => {
-	// 			if (enabled) {
-	// 				// user has permissions
-	// 				this.getNotificationToken()
-	// 			} else {
-	// 				// user doesn't have permission
-	// 				this.getPermission()
-	// 			}
-	// 		})
-	// }
-
 	render() {
 		const Analytics = firebase.analytics()
 		Analytics.setAnalyticsCollectionEnabled(true)
