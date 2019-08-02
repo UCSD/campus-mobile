@@ -6,7 +6,7 @@ const bugsnag = new Client('api key')
 
 export default class bugsnag_react_native_test extends React.Component {
 	sendReport = () => {
-		bugsnag.notify(new Error('error'))
+		bugsnag.notify(new Error('upgrade test error'))
 	}
 
 	render() {
