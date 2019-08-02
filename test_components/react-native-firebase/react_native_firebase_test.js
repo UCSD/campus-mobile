@@ -1,6 +1,8 @@
 import React from 'react'
-import { View, StyleSheet, Text, Button } from 'react-native'
+import { View, StyleSheet, Text, Button, Platform } from 'react-native'
 import firebase from 'react-native-firebase'
+import Permissions from 'react-native-permissions'
+
 
 export default class react_native_firebase_test extends React.Component {
 	getNotificationToken = () => {
@@ -14,6 +16,31 @@ export default class react_native_firebase_test extends React.Component {
 			})
 	}
 
+	getPermission = () => {
+		firebase.messaging().requestPermission()
+			.then(() => {
+				// User has authorised
+				this.getNotificationToken()
+			})
+			.catch((error) => {
+				// User has rejected permissions
+				console.log('permission was rejected')
+			})
+	}
+
+	// checkPermission = () => {
+	// 	firebase.messaging().hasPermission()
+	// 		.then((enabled) => {
+	// 			if (enabled) {
+	// 				// user has permissions
+	// 				this.getNotificationToken()
+	// 			} else {
+	// 				// user doesn't have permission
+	// 				this.getPermission()
+	// 			}
+	// 		})
+	// }
+
 	render() {
 		const Analytics = firebase.analytics()
 		Analytics.setAnalyticsCollectionEnabled(true)
@@ -26,7 +53,7 @@ export default class react_native_firebase_test extends React.Component {
 		return (
 			<View style={css.dependency_output}>
 				<Button
-					onPress={this.getNotificationToken}
+					onPress={this.getPermission}
 					title="get token"
 					color="#841584"
 				/>
