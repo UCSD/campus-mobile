@@ -5,10 +5,8 @@ import logger from 'redux-logger'
 import { createFilter } from 'redux-persist-transform-filter'
 import createSagaMiddleware from 'redux-saga'
 
-// import rootReducer from '../react-redux/Reducers/index'
-
 import rootReducer from '../../app/reducers/index'
-import mySaga from '../redux-saga/saga'
+import rootSaga from '../../app/sagas/rootSaga'
 
 
 // you want to remove some keys before you save
@@ -44,6 +42,6 @@ const persistor = persistStore(store, null,(err, restoredState) => { store.getSt
 
 const storeAndPersistor = { store, persistor }
 
-sagaMiddleware.run(mySaga)
+sagaMiddleware.run(rootSaga)
 
 export default storeAndPersistor
