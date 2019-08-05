@@ -1,7 +1,6 @@
 import React from 'react'
-import { View, StyleSheet, Text, Button, Platform } from 'react-native'
+import { View, StyleSheet, Text, Button } from 'react-native'
 import firebase from 'react-native-firebase'
-import Permissions from 'react-native-permissions'
 
 
 export default class react_native_firebase_test extends React.Component {
