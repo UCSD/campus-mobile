@@ -1,24 +1,38 @@
 import { createStore, applyMiddleware } from 'redux'
 import { persistStore, persistCombineReducers } from 'redux-persist'
-import storage from 'redux-persist/lib/storage' // defaults to localStorage for web
+import AsyncStorage from '@react-native-community/async-storage'
 import logger from 'redux-logger'
-import { createBlacklistFilter } from 'redux-persist-transform-filter'
+import { createFilter } from 'redux-persist-transform-filter'
 import createSagaMiddleware from 'redux-saga'
 
-import rootReducer from '../react-redux/Reducers/index'
+// import rootReducer from '../react-redux/Reducers/index'
+
+import rootReducer from '../../app/reducers/index'
 import mySaga from '../redux-saga/saga'
 
 
 // you want to remove some keys before you save
-const saveSubsetBlacklistFilter = createBlacklistFilter(
-	'CounterReducer',
-	['count']
+const saveMapFilter = createFilter(
+	'map',
+	['history']
+)
+// empty vehicles
+const saveShuttleFilter = createFilter(
+	'shuttle',
+	[
+		'toggles',
+		'routes',
+		'stops',
+		'closestStop',
+		'lastUpdated',
+		'savedStops',
+	]
 )
 
 const persistConfig = {
-	key: 'root',
-	storage,
-	transforms: [saveSubsetBlacklistFilter]
+	key: 'home',
+	storage: AsyncStorage,
+	transforms: [saveMapFilter, saveShuttleFilter]
 }
 const sagaMiddleware = createSagaMiddleware()
 
