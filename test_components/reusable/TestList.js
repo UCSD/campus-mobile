@@ -31,11 +31,19 @@ const renderItem = item => (
 
 const data = [
 	{
+		moduleName: 'keyboard-aware-scroll-view',
+		moduleLink: 'https://github.com/APSL/react-native-keyboard-aware-scroll-view',
+		moduleVersion: '0.8.0',
+		moduleVersionLink: 'https://github.com/APSL/react-native-keyboard-aware-scroll-view/releases/tag/v0.8.0',
+		moduleStatus: 'PASS',
+		routeName: 'react_native_keyboard_aware_scroll_view'
+	},
+	{
 		moduleName: 'bugsnag-react-native',
 		moduleLink: 'https://github.com/bugsnag/bugsnag-react-native',
 		moduleVersion: '2.22.4',
 		moduleVersionLink: 'https://github.com/bugsnag/bugsnag-react-native/releases/tag/v2.22.4',
-		moduleStatus: 'TBD',
+		moduleStatus: 'PASS',
 		routeName: 'bugsnag_react_native'
 	},
 	{

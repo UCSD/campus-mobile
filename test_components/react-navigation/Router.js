@@ -41,6 +41,7 @@ import react_native_simple_toast_test from '../react-native-simple-toast/react_n
 import react_native_permissions_test from '../react-native-permissions/react_native_permissions_test'
 import react_native_firebase_test from '../react-native-firebase/react_native_firebase_test'
 import bugsnag_react_native_test from '../bugsnag-react-native/bugsnag_react_native_test'
+import react_native_keyboard_aware_scroll_view_test from '../react-native-keyboard-aware-scroll-view/react_native_keyboard_aware_scroll_view_test'
 
 let MainStack = createStackNavigator(
 	{
@@ -175,6 +176,10 @@ let MainStack = createStackNavigator(
 		bugsnag_react_native: {
 			screen: bugsnag_react_native_test,
 			navigationOptions: { title: 'bugsnag-react-native-test' }
+		},
+		react_native_keyboard_aware_scroll_view: {
+			screen: react_native_keyboard_aware_scroll_view_test,
+			navigationOptions: { title: 'react-native-keyboard-aware-scroll-view-test' }
 		}
 	},
 	{
