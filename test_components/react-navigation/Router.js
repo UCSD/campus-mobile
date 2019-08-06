@@ -42,6 +42,7 @@ import react_native_permissions_test from '../react-native-permissions/react_nat
 import react_native_firebase_test from '../react-native-firebase/react_native_firebase_test'
 import bugsnag_react_native_test from '../bugsnag-react-native/bugsnag_react_native_test'
 import react_native_keyboard_aware_scroll_view_test from '../react-native-keyboard-aware-scroll-view/react_native_keyboard_aware_scroll_view_test'
+import react_native_progress_test from '../react-native-progress/react_native_progress_test'
 
 let MainStack = createStackNavigator(
 	{
@@ -180,6 +181,10 @@ let MainStack = createStackNavigator(
 		react_native_keyboard_aware_scroll_view: {
 			screen: react_native_keyboard_aware_scroll_view_test,
 			navigationOptions: { title: 'react-native-keyboard-aware-scroll-view-test' }
+		},
+		react_native_progress: {
+			screen: react_native_progress_test,
+			navigationOptions: { title: 'react-native-progress-test' }
 		}
 	},
 	{

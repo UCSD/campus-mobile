@@ -31,6 +31,14 @@ const renderItem = item => (
 
 const data = [
 	{
+		moduleName: 'react-native-progress',
+		moduleLink: 'https://github.com/oblador/react-native-progress',
+		moduleVersion: '3.6.0',
+		moduleVersionLink: 'https://github.com/oblador/react-native-progress/releases/tag/v3.6.0',
+		moduleStatus: 'PASS',
+		routeName: 'react_native_progress'
+	},
+	{
 		moduleName: 'keyboard-aware-scroll-view',
 		moduleLink: 'https://github.com/APSL/react-native-keyboard-aware-scroll-view',
 		moduleVersion: '0.8.0',
