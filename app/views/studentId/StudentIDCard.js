@@ -1,7 +1,6 @@
 import React from 'react'
-import { View, Text, ActivityIndicator } from 'react-native'
+import { View, Text, ActivityIndicator, Modal } from 'react-native'
 import Barcode from 'react-native-barcode-builder'
-import Modal from 'react-native-modal'
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import AvatarIcon from 'react-native-vector-icons/Entypo'
 import Card from '../common/Card'
@@ -63,8 +62,8 @@ const StudentIDCard = ({
 					</View>
 					<Modal
 						style={css.sid_modal}
-						isVisible={barcodeModalVisible}
-						backdropOpacity={0.3}
+						visible={barcodeModalVisible}
+						transparent={true}
 					>
 						<Touchable
 							style={css.sid_modal_close}
