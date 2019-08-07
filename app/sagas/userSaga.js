@@ -33,7 +33,7 @@ function* doLogin(action) {
 		if (!password || password.length === 0) {
 			const e = new Error('Please type in your password.')
 			e.name = 'emptyPasswordError'
-			yield call(delay, 0)
+			yield delay( 0)
 			throw e
 		}
 		const passwordEncrypted = yield auth.encryptStringWithKey(password)
@@ -41,7 +41,7 @@ function* doLogin(action) {
 
 		const { response, timeout } = yield race({
 			response: call(ssoService.retrieveAccessToken, loginInfo),
-			timeout: call(delay, SSO_TTL)
+			timeout: delay( SSO_TTL)
 		})
 
 		if (timeout) {
