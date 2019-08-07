@@ -8,7 +8,6 @@ import {
 } from 'react-native'
 import { connect } from 'react-redux'
 import MapView from 'react-native-maps'
-import { checkGooglePlayServices, openGooglePlayUpdate } from 'react-native-google-api-availability-bridge'
 import Toast from 'react-native-simple-toast'
 
 import SearchResultsBar from './SearchResultsBar'
@@ -44,14 +43,6 @@ export class Map extends React.Component {
 	}
 
 	componentWillMount() {
-		if (platformAndroid()) {
-			checkGooglePlayServices((result) => {
-				if (result === 'update') {
-					this.setState({ updatedGoogle: false })
-				}
-			})
-		}
-
 		if (this.props.toggles) {
 			Object.keys(this.props.toggles).forEach((route) => {
 				if (this.props.toggles[route]) {

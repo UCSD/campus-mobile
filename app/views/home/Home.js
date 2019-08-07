@@ -1,7 +1,6 @@
 import React from 'react'
 import { ScrollView, Alert } from 'react-native'
 import { connect } from 'react-redux'
-import { checkGooglePlayServices } from 'react-native-google-api-availability-bridge'
 
 import WeatherCardContainer from '../weather/WeatherCardContainer'
 import ShuttleCardContainer from '../shuttle/ShuttleCardContainer'
@@ -142,15 +141,7 @@ export class Home extends React.Component {
 		}
 		return activeCards
 	}
-
-	updateGooglePlay = () => {
-		checkGooglePlayServices((result) => {
-			if (result === 'update') {
-				this.setState({ updatedGoogle: false }) // eslint-disable-line
-			}
-		})
-	}
-
+	
 	render() {
 		return (
 			<ScrollView
