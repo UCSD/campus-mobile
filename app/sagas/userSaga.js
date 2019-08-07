@@ -3,9 +3,9 @@ import {
 	put,
 	takeLatest,
 	race,
-	select
+	select,
+	delay
 } from 'redux-saga/effects'
-import { delay } from 'redux-saga'
 import { Alert } from 'react-native'
 import firebase from 'react-native-firebase'
 

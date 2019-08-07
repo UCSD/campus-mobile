@@ -2,10 +2,9 @@ import {
 	call,
 	put,
 	race,
-	takeLatest
+	takeLatest,
+	delay
 } from 'redux-saga/effects'
-import { delay } from 'redux-saga'
-
 
 import mobileAuthService from '../services/mobileAuthService'
 import auth from '../util/auth'
@@ -26,7 +25,7 @@ function* updateMobileAuthToken() {
 		// fetch token using encrypted credentials
 		const { response, timeout } = yield race({
 			response: call(mobileAuthService.retrieveAccessToken, authInfo),
-			timeout: call(delay, PUBLIC_MOBILE_AUTH_TIMEOUT)
+			timeout: delay( PUBLIC_MOBILE_AUTH_TIMEOUT)
 		})
 		// check if the request timed out or if there were other errors
 		if (timeout) {

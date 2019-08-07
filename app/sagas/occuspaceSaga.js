@@ -1,5 +1,5 @@
-import { put, call, takeLatest, select, race } from 'redux-saga/effects'
-import { delay } from 'redux-saga'
+import { put, call, takeLatest, select, race, delay } from 'redux-saga/effects'
+
 import OccuspaceService from '../services/occuspaceService'
 import logger from '../util/logger'
 import { OCCUSPACE_FETCH_TIMEOUT } from '../AppSettings'
@@ -15,7 +15,7 @@ function* updateOccuspaceData() {
 		// new data being fetched
 		const { response, timeout } = yield race({
 			response: call(OccuspaceService.FetchOccuspace),
-			timeout: call(delay, OCCUSPACE_FETCH_TIMEOUT)
+			timeout: delay( OCCUSPACE_FETCH_TIMEOUT)
 		})
 
 		if (timeout) {

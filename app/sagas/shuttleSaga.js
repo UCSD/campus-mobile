@@ -1,10 +1,10 @@
-import { delay } from 'redux-saga'
 import {
 	call,
 	fork,
 	put,
 	select,
-	takeLatest
+	takeLatest,
+	delay
 } from 'redux-saga/effects'
 import { fetchShuttleArrivalsByStop, fetchVehiclesByRoute } from '../services/shuttleService'
 import { SHUTTLE_API_TTL } from '../AppSettings'

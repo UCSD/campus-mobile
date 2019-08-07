@@ -1,6 +1,4 @@
-
-import { delay } from 'redux-saga'
-import { put, call, select } from 'redux-saga/effects'
+import { put, call, select, delay } from 'redux-saga/effects'
 import { Image } from 'react-native'
 
 import WeatherService from '../services/weatherService'

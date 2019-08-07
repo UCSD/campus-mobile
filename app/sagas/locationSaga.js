@@ -1,6 +1,4 @@
-
-import { delay } from 'redux-saga'
-import { put, call, select } from 'redux-saga/effects'
+import { put, call, select, delay } from 'redux-saga/effects'
 import Permissions from 'react-native-permissions'
 
 import * as LocationService from '../services/locationService'

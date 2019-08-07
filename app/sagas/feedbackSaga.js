@@ -2,9 +2,9 @@ import {
 	call,
 	put,
 	takeLatest,
-	race
+	race,
+	delay
 } from 'redux-saga/effects'
-import { delay } from 'redux-saga'
 import FeedbackService from '../services/feedbackService'
 import { HTTP_REQUEST_TTL } from '../AppSettings'
 import logger from '../util/logger'
@@ -21,7 +21,7 @@ function* postFeedback(action) {
 	try {
 		const { response, timeout } = yield race({
 			response: call(FeedbackService.FetchFeedback, action.feedback),
-			timeout: call(delay, HTTP_REQUEST_TTL)
+			timeout: delay( HTTP_REQUEST_TTL)
 		})
 
 		if (timeout) {

@@ -1,5 +1,4 @@
-import { put, takeLatest, call, select, race } from 'redux-saga/effects'
-import { delay } from 'redux-saga'
+import { put, takeLatest, call, select, race, delay } from 'redux-saga/effects'
 import logger from '../util/logger'
 import DiningService from '../services/diningService'
 import { DINING_API_TTL, DINING_MENU_API_TTL, HTTP_REQUEST_TTL } from '../AppSettings'
@@ -78,7 +77,7 @@ function* fetchDiningMenu(id) {
 	try {
 		const { response, timeout } = yield race({
 			response: call(DiningService.FetchDiningMenu, id),
-			timeout: call(delay, HTTP_REQUEST_TTL)
+			timeout: delay( HTTP_REQUEST_TTL)
 		})
 
 		if (timeout) {
