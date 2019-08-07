@@ -6,8 +6,8 @@ import {
 
 import NavigationService from './NavigationService'
 import TestList from '../reusable/TestList'
-import css from '../../styles/css'
-import COLOR from '../../styles/ColorConstants'
+import css from '../../app/styles/css'
+import COLOR from '../../app/styles/ColorConstants'
 
 import node_forge_test from '../node-forge/node_forge_test'
 import dateformat_test from '../dateformat/dateformat_test'
