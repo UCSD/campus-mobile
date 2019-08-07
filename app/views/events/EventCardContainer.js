@@ -1,0 +1,38 @@
+import React from 'react'
+import { connect } from 'react-redux'
+import moment from 'moment'
+import DataListCard from '../common/DataListCard'
+import { militaryToAMPM } from '../../util/general'
+
+export const EventCardContainer = ({ eventsData }) => {
+	let data = null
+	if (Array.isArray(eventsData)) {
+		const parsedEventsData = eventsData.slice()
+		parsedEventsData.forEach((element, index) => {
+			parsedEventsData[index] = {
+				...element,
+				subtext: moment(element.eventdate).format('MMM Do') + ', ' + militaryToAMPM(element.starttime) + ' - ' + militaryToAMPM(element.endtime),
+				image: element.imagethumb
+			}
+		})
+		data = parsedEventsData
+	}
+	return (
+		<DataListCard
+			id="events"
+			title="Events"
+			data={data}
+			item="EventItem"
+		/>
+	)
+}
+
+EventCardContainer.defaultProps = {
+	eventsData: null
+}
+
+const mapStateToProps = state => (
+	{ eventsData: state.events.data }
+)
+
+export default connect(mapStateToProps)(EventCardContainer)
