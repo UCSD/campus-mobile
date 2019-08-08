@@ -193,7 +193,6 @@ let MainStack = createStackNavigator(
 			screen: WebReg,
 			navigationOptions: {
 				// title: 'Registration',
-				header: null,
 			}
 		},
 		LoginScreen: {
