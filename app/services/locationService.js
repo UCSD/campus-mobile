@@ -1,11 +1,13 @@
+import Geolocation from '@react-native-community/geolocation'
+
 const positionOptions = {
 	enableHighAccuracy: false,
 	timeout: 5000,
 }
 
-export function getPosition() {
+export default function getPosition() {
 	return new Promise((resolve, reject) => {
-		navigator.geolocation.getCurrentPosition(
+		Geolocation.getCurrentPosition(
 			(position) => {
 				resolve(position)
 			},
@@ -14,10 +16,5 @@ export function getPosition() {
 			},
 			positionOptions
 		)
-	})
-}
-
-export function getPermission() {
-	return new Promise((resolve, reject) => {
 	})
 }

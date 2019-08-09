@@ -25,12 +25,6 @@ export class Home extends React.Component {
 		}
 	}
 
-	componentWillMount() {
-		if (platformAndroid()) {
-			this.updateGooglePlay()
-		}
-	}
-
 	componentDidMount() {
 		logger.ga('View Loaded: Home')
 		this._cards = []
@@ -141,7 +135,7 @@ export class Home extends React.Component {
 		}
 		return activeCards
 	}
-	
+
 	render() {
 		return (
 			<ScrollView
