@@ -1,7 +1,7 @@
 import { put, call, select, delay } from 'redux-saga/effects'
 import Permissions from 'react-native-permissions'
 
-import * as LocationService from '../services/locationService'
+import { getPosition } from '../services/locationService'
 import { getDistance } from '../util/map'
 import AppSettings from '../AppSettings'
 
@@ -14,7 +14,8 @@ function* watchLocation() {
 			const location = yield select(getLocation)
 
 			if (location.permission === 'authorized' && location.position && location.position.coords) {
-				const position = yield call(LocationService.getPosition)
+				yield console.log(getPosition)
+				const position = yield call(getPosition)
 				yield put({ type: 'SET_POSITION', position })
 				const closestStop = yield call(getClosestStop, position)
 				yield put({ type: 'SET_CLOSEST_STOP', closestStop })
