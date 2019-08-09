@@ -54,7 +54,7 @@ export class Messaging extends Component {
 						style={{ color: DGREY }}
 					/>
 				</View>
-				<View  style={{ flexDirection: 'column', justifyContent: 'center', flex: 1 }}>
+				<View style={{ flexDirection: 'column', justifyContent: 'center', flex: 1 }}>
 					<Text style={css.notifications_timestamp_text}>{timeString}</Text>
 					<Text style={css.notifications_title_text}>{title}</Text>
 					<View style={css.notifications_body_text_container}>
@@ -104,7 +104,7 @@ export class Messaging extends Component {
 				onRefresh={() => updateMessages(new Date().getTime())}
 				refreshing={isLoading}
 				renderItem={this.renderItem}
-				keyExtractor={(item, index) => item.id}
+				keyExtractor={(item, index) => item.messageId}
 				onEndReachedThreshold={0.5}
 				ListFooterComponent={(isLoading && nextTimestamp) ? <ActivityIndicator size="large" animating /> : null}
 				onEndReached={(info) => {
