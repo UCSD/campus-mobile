@@ -14,7 +14,6 @@ function* watchLocation() {
 			const location = yield select(getLocation)
 
 			if (location.permission === 'authorized' && location.position && location.position.coords) {
-				yield console.log(getPosition)
 				const position = yield call(getPosition)
 				yield put({ type: 'SET_POSITION', position })
 				const closestStop = yield call(getClosestStop, position)
