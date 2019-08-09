@@ -1,4 +1,4 @@
-import { createStore, applyMiddleware } from 'redux'
+import { createStore, applyMiddleware, compose } from 'redux'
 import { persistStore, persistCombineReducers } from 'redux-persist'
 import AsyncStorage from '@react-native-community/async-storage'
 import logger from 'redux-logger'
@@ -32,11 +32,20 @@ const persistConfig = {
 	storage: AsyncStorage,
 	transforms: [saveMapFilter, saveShuttleFilter]
 }
+// custom composer for redux devtools
+const composeWithTools = 
+	typeof window === 'object' && 
+	window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ? 
+		window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({}) : compose
+
+
 const sagaMiddleware = createSagaMiddleware()
+
+const enhancer =  composeWithTools(applyMiddleware(sagaMiddleware, logger))
 
 const persistedReducer = persistCombineReducers(persistConfig, rootReducer)
 
-const store = createStore(persistedReducer, applyMiddleware(sagaMiddleware, logger))
+const store = createStore(persistedReducer, enhancer)
 
 const persistor = persistStore(store, null,(err, restoredState) => { store.getState() })
 
