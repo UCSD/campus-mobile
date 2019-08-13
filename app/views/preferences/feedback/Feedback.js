@@ -7,9 +7,9 @@ import {
 	Alert,
 	TouchableWithoutFeedback,
 	TouchableOpacity,
-	ScrollView
+	ScrollView,
+	KeyboardAvoidingView
 } from 'react-native'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { connect } from 'react-redux'
 import Toast from 'react-native-simple-toast'
 import { hideKeyboard } from '../../../util/general'
@@ -84,7 +84,7 @@ export class FeedbackView extends Component {
 
 	_renderFormView() {
 		return (
-			<KeyboardAwareScrollView>
+			<KeyboardAvoidingView style={css.main} behavior="padding" enabled>
 				<TouchableWithoutFeedback onPress={() => hideKeyboard()}>
 					<View style={css.feedback_container}>
 						<Text style={css.feedback_label}>
@@ -129,7 +129,7 @@ export class FeedbackView extends Component {
 						</TouchableOpacity>
 					</View>
 				</TouchableWithoutFeedback>
-			</KeyboardAwareScrollView>
+			</KeyboardAvoidingView>
 		)
 	}
 
