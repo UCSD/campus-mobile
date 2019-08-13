@@ -318,7 +318,7 @@ function* uploadUserProfile() {
 		// subscribes to firebase topics that have been synced from the server
 		yield put({ type: 'REFRESH_TOPIC_SUBSCRIPTIONS' })
 	} catch (error) {
-		yield put({ type: 'POST_PROFILE_FAILURE' })
+		yield put({ type: 'POST_PROFILE_FAILURE', error })
 		logger.trackException(error)
 	}
 }
