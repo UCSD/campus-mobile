@@ -78,10 +78,7 @@ import com.android.build.OutputFile
 
 
 project.ext.react = [
-    entryFile: "index.js",
-    /*part of the reacte-native-date-picker fix*/
-    inputExcludes: ["android/**", "ios/**"]
-    /*part of the reacte-native-date-picker fix*/
+    entryFile: "index.js"
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
@@ -172,9 +169,6 @@ android {
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.facebook.react:react-native:+"  // From node_modules
-    // Android fix for react-native-datepicker
-    // https://github.com/xgfe/react-native-datepicker/issues/315
-    implementation 'com.github.Ibotta:Supported-Picker-Dialogs:1.0.1'
 
     implementation "com.google.android.gms:play-services-base:16.1.0"
     implementation "com.google.firebase:firebase-core:16.0.9"

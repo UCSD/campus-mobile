@@ -18,7 +18,6 @@ import react_native_animatable_test from '../react-native-animatable/react_nativ
 import animated_circular_progress_test from '../animated-circular-progress/animated_circular_progress_test'
 import react_native_svg_test from '../react-native-svg/react_native_svg_test'
 import react_native_barcode_builder_test from '../react-native-barcode-builder/react_native_barcode_builder_test'
-import react_native_datepicker_test from '../react-native-datepicker/react_native_datepicker_test'
 import react_native_popup_menu_test from '../react-native-popup-menu/react_native_popup_menu_test'
 import react_native_sortable_list_test from '../react-native-sortable-list/react_native_sortable_list_test'
 import react_navigation_header_buttons_test from '../react-navigation-header-buttons/react_navigation_header_buttons_test'
@@ -89,10 +88,6 @@ let MainStack = createStackNavigator(
 		react_native_barcode_builder: {
 			screen: react_native_barcode_builder_test,
 			navigationOptions: { title: 'react-native-barcode-builder' }
-		},
-		react_native_datepicker: {
-			screen: react_native_datepicker_test,
-			navigationOptions: { title: 'react-native-datepicker' }
 		},
 		react_native_popup_menu: {
 			screen: react_native_popup_menu_test,

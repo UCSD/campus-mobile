@@ -264,14 +264,6 @@ const data = [
 		routeName: 'react_native_barcode_builder'
 	},
 	{
-		moduleName: 'react-native-datepicker',
-		moduleLink: 'https://github.com/xgfe/react-native-datepicker',
-		moduleVersion: '1.7.0',
-		moduleVersionLink: 'https://github.com/xgfe/react-native-datepicker/releases/tag/v1.7.0',
-		moduleStatus: 'PASS',
-		routeName: 'react_native_datepicker'
-	},
-	{
 		moduleName: 'react-native-popup-menu',
 		moduleLink: 'https://github.com/instea/react-native-popup-menu',
 		moduleVersion: '0.15.5',
