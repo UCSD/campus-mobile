@@ -6,7 +6,7 @@ import React from 'react'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 
-import storeAndPersistor from '../test_components/redux-persist/configureStore'
+import storeAndPersistor from './configureStore'
 import Router from './navigation/Router'
 
 
