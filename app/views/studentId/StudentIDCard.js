@@ -61,31 +61,32 @@ const StudentIDCard = ({
 						</View>
 					</View>
 					<Modal
-						style={css.sid_modal}
 						visible={barcodeModalVisible}
 						transparent={true}
 					>
-						<Touchable
-							style={css.sid_modal_close}
-							onPress={toggleModal}
-						>
-							<MCIcon
-								size={36}
-								name="close-circle-outline"
-								style={css.sid_modal_close_icon}
-							/>
-						</Touchable>
+						<View style={css.sid_modal}>
+							<Touchable
+								style={css.sid_modal_close}
+								onPress={toggleModal}
+							>
+								<MCIcon
+									size={36}
+									name="close-circle-outline"
+									style={css.sid_modal_close_icon}
+								/>
+							</Touchable>
 
-						<View style={css.sid_modal_barcode}>
-							<Barcode
-								format="codabar"
-								value={studentProfile.barcode.data.barCode.toString()}
-								height={largeBarcodeWidth * 25}
-								width={largeBarcodeWidth}
-							/>
-							<Text style={css.sid_modal_barcode_id}>
-								{studentProfile.barcode.data.barCode.toString()}
-							</Text>
+							<View style={css.sid_modal_barcode}>
+								<Barcode
+									format="codabar"
+									value={studentProfile.barcode.data.barCode.toString()}
+									height={largeBarcodeWidth * 25}
+									width={largeBarcodeWidth}
+								/>
+								<Text style={css.sid_modal_barcode_id}>
+									{studentProfile.barcode.data.barCode.toString()}
+								</Text>
+							</View>
 						</View>
 					</Modal>
 				</View>

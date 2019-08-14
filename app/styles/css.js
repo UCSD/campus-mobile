@@ -405,7 +405,7 @@ const css = StyleSheet.create({
 	sid_loadingContainer: { alignItems: 'center', justifyContent: 'center', paddingHorizontal: 10, paddingVertical: 40 },
 	sid_errorContainer: { alignItems: 'center', justifyContent: 'center', paddingHorizontal: 10, paddingVertical: 40 },
 	// Barcode Modal
-	sid_modal: { margin: 40, backgroundColor: COLOR.WHITE },
+	sid_modal: { flex: 1, justifyContent: 'center', margin: 40, backgroundColor: COLOR.WHITE },
 	sid_modal_close: { position: 'absolute', bottom: 16, right: 16 },
 	sid_modal_close_icon: { color: COLOR.PRIMARY },
 	sid_avatar_icon_container: { justifyContent: 'center', alignItems: 'center' },
