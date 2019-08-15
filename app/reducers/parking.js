@@ -2,7 +2,7 @@ const initialState = {
 	isChecked: [true, true, true, false, false],
 	selectedSpots: ['S', 'B', 'A'],
 	parkingData: [],
-	selectedLots: ['Osler'],
+	selectedLots: ['Osler', 'Moores Cancer Center'],
 	showWarning: false,
 	lastUpdated: null,
 }

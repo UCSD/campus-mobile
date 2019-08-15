@@ -50,7 +50,7 @@ module.exports = {
 	/* TTLs */
 	LOCATION_TTL: 15000, // 15 seconds
 	SHUTTLE_API_TTL: 15000, // 15 seconds
-	DATA_SAGA_TTL: 10000, // 10 seconds
+	DATA_SAGA_TTL: 60000, // 60 seconds
 	SCHEDULE_TTL: 300000,  // 5 minutes
 	PARKING_API_TTL: 300000,	// 5 minutes
 	WEATHER_API_TTL: 1800000, // 30 minutes
