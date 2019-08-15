@@ -2,7 +2,7 @@ const initialState = {
 	isChecked: [true, true, true, false, false],
 	selectedSpots: ['S', 'B', 'A'],
 	parkingData: [],
-	selectedLots: ['Osler', 'Moores Cancer Center'],
+	selectedLots: ['Osler', 'Sixth College & Pepper Canyon', 'Moores Cancer Center', 'Lot 782', 'Lot 386'],
 	showWarning: false,
 	lastUpdated: null,
 }
