@@ -9,7 +9,7 @@ import css from '../../styles/css'
 const DiningNutrition = ({ navigation }) => {
 	const { params } = navigation.state
 	const { menuItem, disclaimer, disclaimerEmail } = params
-	logger.ga('View Loaded: Dining Nutrition: ' + menuItem.name )
+	logger.trackScreen('View Loaded: Dining Nutrition: ' + menuItem.name )
 
 	return (
 		<ScrollView style={css.scroll_default} contentContainerStyle={css.main_full}>

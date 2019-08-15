@@ -18,12 +18,12 @@ module.exports = {
 		console.log(msg)
 	},
 
-	/** Send a trackScreenView message to Google Analytics **/
-	ga(msg) {
+	/** Send a trackScreenView message to Analytics service **/
+	trackScreen(msg) {
 		Analytics.setCurrentScreen(msg)
 	},
 
-	/** Sends a trackEvent message to Firebase Analytics **/
+	/** Sends a trackEvent message to Analytics service **/
 	trackEvent(category, action) {
 		Analytics.logEvent(category, action)
 	},

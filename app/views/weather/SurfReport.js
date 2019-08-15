@@ -40,7 +40,7 @@ const mapMonths = [
 
 class SurfReport extends React.Component {
 	componentDidMount() {
-		logger.ga('View Loaded: Surf Report')
+		logger.trackScreen('View Loaded: Surf Report')
 	}
 
 	render() {

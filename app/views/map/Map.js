@@ -53,7 +53,7 @@ export class Map extends React.Component {
 	}
 
 	componentDidMount() {
-		logger.ga('View mounted: Full Map View')
+		logger.trackScreen('View mounted: Full Map View')
 		BackHandler.addEventListener('hardwareBackPress', this.pressIcon)
 	}
 

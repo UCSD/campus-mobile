@@ -11,7 +11,7 @@ import COLOR from '../../styles/ColorConstants'
 
 class ShuttleStopContainer extends React.Component {
 	componentDidMount() {
-		logger.ga('View Mounted: Shuttle Stop')
+		logger.trackScreen('View Mounted: Shuttle Stop')
 	}
 
 	render() {

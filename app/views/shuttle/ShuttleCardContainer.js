@@ -69,7 +69,7 @@ export class ShuttleCardContainer extends React.Component {
 
 	addStop = (stopID, stopName) => {
 		const { navigation } = this.props
-		logger.ga('Shuttle: Added stop "' + stopName + '"')
+		logger.trackScreen('Shuttle: Added stop "' + stopName + '"')
 		Toast.showWithGravity('Stop added.', Toast.SHORT, Toast.CENTER)
 		this.props.addStop(stopID)
 		navigation.popToTop()

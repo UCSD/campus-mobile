@@ -42,7 +42,7 @@ class SpecialEventsView extends Component {
 	}
 
 	componentDidMount() {
-		logger.ga('View Loaded: SpecialEventsView')
+		logger.trackScreen('View Loaded: SpecialEventsView')
 	}
 
 	handleFullPress = () => {

@@ -1,6 +1,6 @@
 const initialState = {
 	data: [],
-	selectedLocations: ['Price Center'],
+	selectedLocations: ['Price Center', 'Geisel Library', 'Rimac Gym', 'Biomedical Library', 'Main Gym', 'Parking Offices'],
 	lastUpdated: null
 }
 // selectedLocations is an array that holds all the occuspace locations that are currently selected

@@ -20,7 +20,7 @@ const NewsDetail = ({ navigation }) => {
 	const { params } = navigation.state
 	const { data } = params
 
-	logger.ga('View Loaded: News Detail: ' + data.title)
+	logger.trackScreen('View Loaded: News Detail: ' + data.title)
 
 	return (
 		<ScrollView style={css.scroll_default} contentContainerStyle={css.main_full}>
