@@ -24,7 +24,7 @@ class SpecialEventsDetailView extends React.Component {
 		const { navigation } = this.props
 		const { data } = navigation.state.params
 
-		logger.ga('View Loaded: SpecialEvents Detail: ' + data['talk-title'])
+		logger.trackScreen('View Loaded: SpecialEvents Detail: ' + data['talk-title'])
 	}
 
 	render() {

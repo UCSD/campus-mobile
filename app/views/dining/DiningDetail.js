@@ -19,7 +19,7 @@ class DiningDetail extends React.Component {
 
 	componentDidMount() {
 		this.props.getMenuItems(this.props.navigation.state.params.data.id)
-		logger.ga('View Mounted: Dining Detail')
+		logger.trackScreen('View Mounted: Dining Detail')
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {

@@ -26,7 +26,7 @@ export class Home extends React.Component {
 	}
 
 	componentDidMount() {
-		logger.ga('View Loaded: Home')
+		logger.trackScreen('View Loaded: Home')
 		this._cards = []
 
 		if (this._scrollview) {

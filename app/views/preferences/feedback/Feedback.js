@@ -19,7 +19,7 @@ import { APP_NAME, REQUEST_POST_TTL } from '../../../AppSettings'
 
 export class FeedbackView extends Component {
 	componentDidMount() {
-		logger.ga('View Loaded: Feedback')
+		logger.trackScreen('View Loaded: Feedback')
 
 		// if we're mounting and we're somehow still in the
 		// process of POSTing, check if we've timed out.

@@ -18,7 +18,7 @@ class FullSchedule extends React.Component {
 	}
 
 	componentDidMount() {
-		logger.ga('View Loaded: Classes (View All)')
+		logger.trackScreen('View Loaded: Classes (View All)')
 	}
 
 	getScheduleArray = (scheduleObject) => {

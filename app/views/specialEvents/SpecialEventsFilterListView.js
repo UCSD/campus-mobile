@@ -5,7 +5,7 @@ import MultiSelect from './MultiSelect'
 
 class SpecialEventsMyScheduleView extends Component {
 	componentDidMount() {
-		logger.ga('View Loaded: SpecialEventsFilterListView')
+		logger.trackScreen('View Loaded: SpecialEventsFilterListView')
 	}
 
 	handleFilterSelect = (labels) => {
