@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>BugsnagAPIKey</key>
+	<string>BUGSNAG_KEY_PH</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -22,6 +24,8 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -35,26 +39,40 @@
 				<key>NSExceptionAllowsInsecureHTTPLoads</key>
 				<true/>
 			</dict>
+			<key>studentevents.ucsd.edu</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+				<key>NSExceptionMinimumTLSVersion</key>
+				<string>TLSv1.0</string>
+				<key>NSExceptionRequiresForwardSecrecy</key>
+				<false/>
+			</dict>
+			<key>ucsdnews.ucsd.edu</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+				<key>NSExceptionMinimumTLSVersion</key>
+				<string>TLSv1.0</string>
+				<key>NSExceptionRequiresForwardSecrecy</key>
+				<false/>
+			</dict>
 		</dict>
 	</dict>
 	<key>NSAppleMusicUsageDescription</key>
-	<string>Some description</string>
+	<string>$(PRODUCT_NAME) Apple music use.</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>Some description</string>
+	<string>$(PRODUCT_NAME) bluetooth use.</string>
 	<key>NSCalendarsUsageDescription</key>
-	<string>Some description</string>
-	<key>NSCameraUsageDescription</key>
-	<string>Some description</string>
+	<string>$(PRODUCT_NAME) calendar use.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>Allowing location access while using the app allows cards to display information relevant to your location.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Allowing location access allows cards to display information relevant to your location.</string>
 	<key>NSMotionUsageDescription</key>
-	<string>Some description</string>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Some description</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Some description</string>
+	<string>$(PRODUCT_NAME) motion use.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>Some description</string>
+	<string>$(PRODUCT_NAME) speech recognition use.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Entypo.ttf</string>
@@ -82,10 +100,6 @@
 	<key>UIStatusBarStyle</key>
 	<string>UIStatusBarStyleLightContent</string>
 	<key>UISupportedInterfaceOrientations</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-	</array>
-	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
