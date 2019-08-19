@@ -21,7 +21,8 @@
     "eslint-all": "./node_modules/.bin/eslint . --max-warnings=0",
     "campus-prod-ci": "node scripts/replace-all prod ci",
     "campus-qa-ci": "node scripts/replace-all qa ci",
-    "generate-docs": "./node_modules/.bin/jsdoc -c jsdoc.conf.json"
+    "generate-docs": "./node_modules/.bin/jsdoc -c jsdoc.conf.json",
+    "postinstall": "npm i jetifier && npx jetify"
   },
   "dependencies": {
     "@react-native-community/async-storage": "1.5.1",
