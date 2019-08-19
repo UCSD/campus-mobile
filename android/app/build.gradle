@@ -165,6 +165,8 @@ android {
         }
     }
 }
+// temporary fix until https://github.com/kmagiera/react-native-gesture-handler/issues/685 is solved
+preBuild.doFirst { ant.replaceregexp(match:'android.support.v4.util.Pools;', replace:'androidx.core.util.Pools;', flags:'g', byline:true) { fileset(dir: '../../node_modules/react-native-gesture-handler/android/src/main/java/com/swmansion/gesturehandler/react/', includes: '*.java') }}
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
