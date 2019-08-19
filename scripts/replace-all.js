@@ -11,6 +11,9 @@ if (ENV_TYPE === 'ci') {
 	Object.keys(APP_CONFIG).forEach((key) => {
 		process.env[key] = APP_CONFIG[key]
 	})
+
+	console.log('$$$ process.env.APP_VERSION: ' + process.env.APP_VERSION)
+
 	myEnv = process.env
 } else {
 	const tempEnv = require(os.homedir() + '/.campusmobile/config.js') // eslint-disable-line
