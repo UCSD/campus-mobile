@@ -74,6 +74,8 @@
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>$(PRODUCT_NAME) speech recognition use.</string>
 	<key>UIAppFonts</key>
+	<key>NSContactsUsageDescription</key>
+	<string>$(PRODUCT_NAME) contacts use.</string>
 	<array>
 		<string>Entypo.ttf</string>
 		<string>EvilIcons.ttf</string>
