@@ -73,9 +73,9 @@
 	<string>$(PRODUCT_NAME) motion use.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>$(PRODUCT_NAME) speech recognition use.</string>
-	<key>UIAppFonts</key>
 	<key>NSContactsUsageDescription</key>
 	<string>$(PRODUCT_NAME) contacts use.</string>
+	<key>UIAppFonts</key>
 	<array>
 		<string>Entypo.ttf</string>
 		<string>EvilIcons.ttf</string>
