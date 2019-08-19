@@ -1,4 +1,4 @@
-package com.campusmobile;
+package edu.ucsd;
 
 import android.app.Application;
 

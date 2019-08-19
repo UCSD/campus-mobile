@@ -1,4 +1,4 @@
-package com.campusmobile;
+package edu.ucsd;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
