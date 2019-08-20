@@ -3,34 +3,34 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>204227644417-badlapi7e50isd0bsghdtcl6k3o1d7u5.apps.googleusercontent.com</string>
+	<string>GS_IOS_CLIENT_ID_PH</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.204227644417-badlapi7e50isd0bsghdtcl6k3o1d7u5</string>
+	<string>GS_IOS_REVERSED_CLIENT_ID_PH</string>
 	<key>API_KEY</key>
-	<string>AIzaSyDWEx4YhK8RcoiBizBCymKVAjahP0LCmcU</string>
+	<string>GS_IOS_API_KEY_PH</string>
 	<key>GCM_SENDER_ID</key>
-	<string>204227644417</string>
+	<string>GS_PROJECT_NUMBER_PH</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>edu.ucsd.ucsandiego</string>
+	<string>GS_IOS_BUNDLE_ID_PH</string>
 	<key>PROJECT_ID</key>
-	<string>uc-san-diego-qa</string>
+	<string>GS_PROJECT_ID_PH</string>
 	<key>STORAGE_BUCKET</key>
-	<string>uc-san-diego-qa.appspot.com</string>
+	<string>GS_STORAGE_BUCKET_PH</string>
 	<key>IS_ADS_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_ANALYTICS_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_APPINVITE_ENABLED</key>
-	<true></true>
+	<false/>
 	<key>IS_GCM_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_SIGNIN_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:204227644417:ios:cd9429451b823426</string>
+	<string>1:1:ios:1</string>
 	<key>DATABASE_URL</key>
-	<string>https://uc-san-diego-qa.firebaseio.com</string>
+	<string>GS_FIREBASE_URL_PH</string>
 </dict>
 </plist>
