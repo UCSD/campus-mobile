@@ -1,6 +1,5 @@
 import * as Keychain from 'react-native-keychain'
-import { put, select } from 'redux-saga/effects'
-import { delay } from 'redux-saga'
+import { put, select, delay } from 'redux-saga/effects'
 import {
 	SSO_REFRESH_MAX_RETRIES,
 	SSO_REFRESH_RETRY_INCREMENT,
