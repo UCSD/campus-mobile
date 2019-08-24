@@ -13,11 +13,7 @@ import Course from './mockData/Course.json'
 const { width } = Dimensions.get('screen')
 
 export default class CourseTableView extends Component {
-	constructor() {
-		super()
-	}
-
-	renderPrereq() {
+	renderPrereq = () => {
 		const { cellWrapperStyle, cellContainerStyle, expandIconStyle, prereqTextStyle } = styles
 		return (
 			<TouchableWithoutFeedback >
@@ -49,6 +45,7 @@ export default class CourseTableView extends Component {
 							console.log('LE', index)
 							return <CourseTableComponent course={Course} lecIdx={index} />
 						}
+						return null
 					})
 				}
 			</View>

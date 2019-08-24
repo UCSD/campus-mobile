@@ -6,7 +6,8 @@ const initialState = {
 	filterVisible: false,
 	termSwitcherVisible: false,
 	termSelectorVisible: false,
-	filterVal: [false, false, false]
+	filterVal: [false, false, false],
+	homeIndex: 0,
 }
 
 function schedule(state = initialState, action) {
@@ -19,6 +20,9 @@ function schedule(state = initialState, action) {
 			return newState
 		case 'SET_SCHEDULE_TERM':
 			newState.currentTerm = action.term
+			return newState
+		case 'SET_HOME_INDEX':
+			newState.homeIndex = action.homeIndex
 			return newState
 		case 'CLEAR_SCHEDULE_DATA':
 			return initialState

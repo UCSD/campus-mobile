@@ -1,9 +1,8 @@
 import React from 'react'
-import { StatusBar, View } from 'react-native'
-import { SafeAreaView } from 'react-navigation'
+import { View } from 'react-native'
 import { connect } from 'react-redux'
 import { myIndexOf } from '../../../util/schedule'
-import css from '../../../styles/css'
+// import css from '../../../styles/css'
 
 // PAGES
 import HomePage from './HomePage'
@@ -17,6 +16,12 @@ import { terms } from './mockData/TermMockData.json'
 const INITIAL_TERMS = [...terms]
 
 class WebReg extends React.Component {
+	static navigationOptions = ({ navigation }) => ({
+		headerLeft: null,
+		headerRight: null,
+		headerTitle: <SearchHeader />
+	})
+
 	constructor(props) {
 		super()
 
@@ -24,19 +29,11 @@ class WebReg extends React.Component {
 		0 - HomePage
 		1 - SearchPage
 		*/
-		this.state = {
-			bodyIndex: 0,
-		}
-		this.setBodyToRender = this.setBodyToRender.bind(this)
 	}
 
 	componentWillMount() {
 		this.props.populateClassArray()
 		this.props.selectCourse(null, null)
-	}
-
-	setBodyToRender(index) {
-		this.setState({ bodyIndex: index })
 	}
 
 	handleSelectSwitcher = (choice) => {
@@ -62,7 +59,23 @@ class WebReg extends React.Component {
 	}
 
 	constructArr() {
-		const { selectedTerm } = this.props
+		let selectedTerm
+		// Mockdata: added default value to avoid error
+		const { selectedTerm: selected } = this.props
+		if (selected === null) {
+			 selectedTerm = {
+				'term_name': 'Spring 2019',
+				'term_code': 'SP19'
+			}
+		}
+		if (['term_name', 'term_code'].map(i => selected[i]).some(e => e === null)) {
+			selectedTerm = {
+				'term_name': 'Spring 2019',
+				'term_code': 'SP19'
+			}
+		} else {
+			selectedTerm = selected
+		}
 		const result = [selectedTerm]
 		for (let i = 0; i < INITIAL_TERMS.length; i++) {
 			if (INITIAL_TERMS[i].term_code !== selectedTerm.term_code) {
@@ -122,7 +135,7 @@ class WebReg extends React.Component {
 	}
 
 	_renderBody() {
-		switch (this.state.bodyIndex) {
+		switch (this.props.homeIndex) {
 			case 0: return (<HomePage
 				initialTerms={INITIAL_TERMS}
 				onParent={(event)	=> {
@@ -149,37 +162,14 @@ class WebReg extends React.Component {
 
 	render() {
 		return (
-			<SafeAreaView flex style={{ backgroundColor: 'white' }}>
-				<StatusBar
-					barStyle="dark-content"
-				// backgroundColor={COLOR.PRIMARY}
-				/>
-				<SearchHeader
+			<View flex>
+				{/* <SearchHeader
 					initialTerms={INITIAL_TERMS}
 					bodyIndex={this.state.bodyIndex}
-					setBodyToRender={this.setBodyToRender}
-					onLayoutHeader={(event) => {
-						const { layout } = event.nativeEvent
-						this.headerH = layout.height
-						this.headerX = layout.x
-						this.headerY = layout.y
-					}}
-					onLayoutTermSwicher={(event) => {
-						const { layout } = event.nativeEvent
-						this.termSwicherW = layout.width
-						this.termSwicherX = layout.x
-						this.termSwicherY = layout.y
-					}}
-					onSearchBar={(event) => {
-						const { layout } = event.nativeEvent
-						this.searchBarW = layout.width
-						this.searchBarX = layout.x
-						this.searchBarY = layout.y
-					}}
-				/>
+				/> */}
 				{this._renderBody()}
 				{this.showModal()}
-			</SafeAreaView>
+			</View>
 		)
 	}
 }
@@ -204,6 +194,7 @@ const mapStateToProps = state => ({
 	termSwitcherVisible: state.webreg.termSwitcherVisible,
 	termSelectorVisible: state.webreg.termSelectorVisible,
 	fullScheduleData: state.schedule.data,
+	homeIndex: state.webreg.homeIndex,
 })
 
 

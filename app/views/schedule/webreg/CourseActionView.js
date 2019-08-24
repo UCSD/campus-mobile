@@ -1,117 +1,123 @@
 import React from 'react'
-import { View, Text, Dimensions, TouchableOpacity } from 'react-native'
-import HeaderRow from './HeaderRow'
-import SectionRow from './SectionRow'
+import { View, Text, Dimensions, TouchableOpacity, Alert } from 'react-native'
+import { withNavigation } from 'react-navigation'
 // import { getScreenWidth } from '../../../util/general'
 
 const { width } = Dimensions.get('screen')
-
-const CourseActionView = ({ course, sectCode, style }) => {
-	const {
-		cellWrapperStyle,
-		cellContainerStyle,
-		buttonContainerStyle,
-		buttonStyle,
-		borderStyle,
-		borderReverseStyle,
-		buttonTextStyle,
-		selectorStyle,
-		selectorButtonStyle
-	} = styles
-	const buttons = ['View Sections', 'Remove', ['P/NP', 'Letter'], 'Enroll']
-	const leftStyle = {
-		borderTopLeftRadius: 4,
-		borderBottomLeftRadius: 4,
-	}
-	const rightStyle = {
-		borderTopRightRadius: 4,
-		borderBottomRightRadius: 4,
-	}
-	return (
-		<View style={[cellWrapperStyle, style, { paddingTop: 7, paddingBottom: 14 }]}>
-			<View style={cellContainerStyle}>
-				<HeaderRow
-					course={course}
-					type="sectionId"
-					style={{ paddingBottom: 6 }}
-					largeText={true}
-				/>
-				{course.sections.map((section) => {
-					const sectionStyle = {
-						paddingTop: section.type === 'FINAL' ? 3 : 0,
-						paddingBottom: 1
-					}
-					const isEnrolled = section.type !== 'DI' || section.sectCode === sectCode
-					return isEnrolled && (
-						<SectionRow data={section} style={sectionStyle} largeText={true} />
-					)
-				})}
-				<View style={buttonContainerStyle}>
-					{buttons.map((label, index) => {
-						switch (index) {
-							case 0: case 1:
-								return (
-									<TouchableOpacity style={[buttonStyle, borderStyle]}>
-										<Text style={buttonTextStyle}>{label}</Text>
-									</TouchableOpacity>
-								)
-							case 2:
-								return (
-									<View style={selectorStyle}>
-										<TouchableOpacity style={[selectorButtonStyle, borderStyle, leftStyle]}>
-											<Text style={buttonTextStyle}>{label[0]}</Text>
-										</TouchableOpacity>
-										<TouchableOpacity style={[selectorButtonStyle, borderReverseStyle, rightStyle]}>
-											<Text style={[buttonTextStyle, { color: '#fff' }]}>{label[1]}</Text>
-										</TouchableOpacity>
-									</View>
-								)
-							case 3:
-								return (
-									<TouchableOpacity style={[buttonStyle, borderReverseStyle]}>
-										<Text style={[buttonTextStyle, { color: '#fff' }]}>{label}</Text>
-									</TouchableOpacity>
-								)
-							default: return null
-						}
-					})}
-				</View>
-			</View>
-		</View>
-	)
+const buttons = ['Plan', 'Remove', ['P/NP', 'Letter'], 'Enroll']
+const leftStyle = {
+	borderTopLeftRadius: 4,
+	borderBottomLeftRadius: 4,
 }
+const rightStyle = {
+	borderTopRightRadius: 4,
+	borderBottomRightRadius: 4,
+}
+class CourseActionView extends React.Component {
+	onBtnClicked = (title, msg) => {
+		Alert.alert(
+			title,
+			msg,
+			[
+				{ text: 'Send Email Verification', onPress: () => console.log('email') },
+				{ text: 'Back to WebReg',
+					onPress: () => {
+						this.props.navigation.navigate('WebReg')
+						console.log('back')
+					},
+					style: 'cancel'
+				},
+			],
+		)
+	}
 
-export default CourseActionView
+	onPlanClicked = () => {
+		this.onBtnClicked('Course added to plan', 'CSE 12: added to Fall 2019 plan')
+	}
+
+	onRemoveClicked = () => {
+		Alert.alert(
+			'Remove course from plan?',
+			'the action cannot be undone',
+			[
+				{ text: 'Cancel', onPress: () => console.log('cancel'), style: 'cancel' },
+				{ text: 'Remove',
+					onPress: () => {
+						this.onBtnClicked('Course removed from plan', 'CSE 12: removed from Fall 2019 plan')
+					},
+					style: 'destructive'
+				},
+			],
+		)
+	}
+
+	onEnrollClicked = () => {
+		this.onBtnClicked('Course enrolled', 'CSE 12: added to Fall 2019 plan')
+	}
+
+	render() {
+		const { style } = this.props
+		const {
+			cellWrapperStyle,
+			buttonStyle,
+			borderStyle,
+			borderReverseStyle,
+			buttonTextStyle,
+			selectorStyle,
+			selectorButtonStyle
+		} = styles
+
+		return (
+			<View style={[cellWrapperStyle, style, { paddingTop: 7, paddingBottom: 14 }]}>
+				{buttons.map((label, index) => {
+					switch (index) {
+						case 0: case 1:
+							return (
+								<TouchableOpacity
+									style={[buttonStyle, borderStyle]}
+									onPress={index === 0 ? this.onPlanClicked : this.onRemoveClicked}
+								>
+									<Text style={buttonTextStyle}>{label}</Text>
+								</TouchableOpacity>
+							)
+						case 2:
+							return (
+								<View style={selectorStyle}>
+									<TouchableOpacity style={[selectorButtonStyle, borderStyle, leftStyle]}>
+										<Text style={buttonTextStyle}>{label[0]}</Text>
+									</TouchableOpacity>
+									<TouchableOpacity style={[selectorButtonStyle, borderReverseStyle, rightStyle]}>
+										<Text style={[buttonTextStyle, { color: '#fff' }]}>{label[1]}</Text>
+									</TouchableOpacity>
+								</View>
+							)
+						case 3:
+							return (
+								<TouchableOpacity
+									style={[buttonStyle, borderReverseStyle]}
+									onPress={this.onEnrollClicked}
+								>
+									<Text style={[buttonTextStyle, { color: '#fff' }]}>{label}</Text>
+								</TouchableOpacity>
+							)
+						default: return null
+					}
+				})}
+			</View>
+		)
+	}
+}
 
 const styles = {
 	cellWrapperStyle: {
-		width: width - 32,
-		alignSelf: 'center',
-		flexDirection: 'row',
-		justifyContent: 'center',
-		alignItems: 'center',
-		backgroundColor: '#FBFBFB',
-		borderRadius: 10,
-		shadowColor: '#000',
-		shadowOffset: {
-			width: 0,
-			height: 2
-		},
-		shadowRadius: 5,
-		shadowOpacity: 0.1
-	},
-	cellContainerStyle: {
-		width: '83%',
-		flexDirection: 'column',
-		alignItems: 'center',
-		right: 3
-	},
-	buttonContainerStyle: {
-		width: '105%',
-		marginVertical: 4,
+		width,
+		paddingHorizontal: width * 0.1,
 		flexDirection: 'row',
 		flexWrap: 'wrap',
-		justifyContent: 'space-between'
+		justifyContent: 'space-between',
+		alignSelf: 'center',
+		alignItems: 'center',
+		backgroundColor: '#FBFBFB',
 	},
 	buttonStyle: {
 		width: '46%',
@@ -152,3 +158,5 @@ const styles = {
 		alignItems: 'center'
 	}
 }
+
+export default withNavigation(CourseActionView)
