@@ -1,6 +1,5 @@
 import React from 'react'
 import { Animated, StyleSheet, Easing, Platform } from 'react-native'
-import { SafeAreaView } from 'react-navigation'
 
 export const OPEN_ANIM_DURATION = 225
 export const CLOSE_ANIM_DURATION = 195
@@ -47,8 +46,8 @@ export const computePosition2 = (layouts) => {
 
 export const computePosition = (layouts) => {
 	const { windowLayout, optionsLayout } = layouts
-	const { height: wHeight, width: wWidth } = windowLayout
-	const { height: oHeight, width: oWidth } = optionsLayout
+	const { width: wWidth } = windowLayout
+	const { width: oWidth } = optionsLayout
 	const
 		top  = 0,
 		left = wWidth - oWidth,

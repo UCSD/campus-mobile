@@ -45,6 +45,7 @@ export default class CourseTableView extends Component {
 							console.log('LE', index)
 							return <CourseTableComponent course={Course} lecIdx={index} />
 						}
+						return null
 					})
 				}
 			</View>

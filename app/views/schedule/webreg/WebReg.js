@@ -2,7 +2,7 @@ import React from 'react'
 import { View } from 'react-native'
 import { connect } from 'react-redux'
 import { myIndexOf } from '../../../util/schedule'
-import css from '../../../styles/css'
+// import css from '../../../styles/css'
 
 // PAGES
 import HomePage from './HomePage'
@@ -59,7 +59,23 @@ class WebReg extends React.Component {
 	}
 
 	constructArr() {
-		const { selectedTerm } = this.props
+		let selectedTerm
+		// Mockdata: added default value to avoid error
+		const { selectedTerm: selected } = this.props
+		if (selected === null) {
+			 selectedTerm = {
+				'term_name': 'Spring 2019',
+				'term_code': 'SP19'
+			}
+		}
+		if (['term_name', 'term_code'].map(i => selected[i]).some(e => e === null)) {
+			selectedTerm = {
+				'term_name': 'Spring 2019',
+				'term_code': 'SP19'
+			}
+		} else {
+			selectedTerm = selected
+		}
 		const result = [selectedTerm]
 		for (let i = 0; i < INITIAL_TERMS.length; i++) {
 			if (INITIAL_TERMS[i].term_code !== selectedTerm.term_code) {

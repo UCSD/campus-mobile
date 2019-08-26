@@ -70,12 +70,13 @@ const styles = StyleSheet.create({
 	backButtonStyle: {
 		flex: 0.14,
 		justifyContent: 'center',
-		alignItems: 'center',
+		alignItems: 'center'
 	},
 	rightButtonStyle: {
 		flex: 0.14,
 		justifyContent: 'center',
 		alignItems: 'center',
+		zIndex: 1000,
 	},
 })
 

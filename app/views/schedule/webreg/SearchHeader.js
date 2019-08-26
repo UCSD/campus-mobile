@@ -163,7 +163,7 @@ class SearchHeader extends React.Component {
 					</Text>
 				</Animated.View>
 				<Animated.View
-					style={{ ...searchBarStyle, width: searchBarWidth, marginHorizontal: 10 }}
+					style={{ ...searchBarStyle, width: searchBarWidth, marginRight: 10 }}
 				>
 					<TouchableWithoutFeedback onPress={this.onSearchIconPress}>
 						<Icon name="search" size={24} />
@@ -261,13 +261,13 @@ const styles = StyleSheet.create({
 	leftStyle: {
 		width: '14%',
 		justifyContent: 'center',
-		alignItems: 'center',
+		alignItems: 'center'
 	},
 	midStyle: {
 		// flex: 0.72,
 		flexDirection: 'row',
 		justifyContent: 'center',
-		alignItems: 'center',
+		alignItems: 'center'
 	},
 	searchBarStyle: {
 		// flex: 0.72,

@@ -225,17 +225,23 @@ let MainStack = createStackNavigator(
 				return { title }
 			}
 		},
-		// CourseSearch: {
-		// 	screen: CourseSearch,
-		// 	navigationOptions: {
-		// 		header: null,
-		// 	},
-		// },
+		CourseSearch: {
+			screen: CourseSearch,
+			navigationOptions: {
+				header: null,
+			},
+		},
 		CourseView: {
 			screen: CourseView,
+			navigationOptions: {
+				header: null,
+			}
 		},
 		CourseSectionView: {
 			screen: CourseSectionView,
+			navigationOptions: {
+				header: null,
+			}
 		},
 		ManageOccuspaceLocations: {
 			screen: ManageOccuspaceLocations,

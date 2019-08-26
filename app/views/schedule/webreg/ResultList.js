@@ -2,10 +2,9 @@ import React from 'react'
 import { Text, View, FlatList, TouchableOpacity } from 'react-native'
 import { withNavigation } from 'react-navigation'
 import { connect } from 'react-redux'
-import CourseCell from './CourseCell'
+import CourseHeader from './CourseCell'
 import Data from './mockData/mockData.json'
 import NavigationService from '../../../navigation/NavigationService'
-import COLOR from '../../../styles/ColorConstants'
 
 class ResultList extends React.Component {
 	constructor(props) {
@@ -26,22 +25,21 @@ class ResultList extends React.Component {
 	renderItem = ({ item }) => (
 		<TouchableOpacity
 			onPress={this.onCoursePressed}
-			activeOpacity={0.5}
 		>
-			<CourseCell
+			<CourseHeader
 				course={item}
 				term=""
-				style={{ zIndex: 0, paddingLeft: 24 }}
+				style={{ zIndex: 0 }}
 			/>
 		</TouchableOpacity>
 	)
 
-	renderSeparator = () => (<View style={{ height: 1, backgroundColor: COLOR.MGREY }} />)
+	renderSeparator = () => (<View style={{ height: 15 }} />)
 
 	render() {
 		const { emptyFontStyle, emptyViewStyle } = styles
 
-		if ( this.props.input.length !== 0) {
+		if ( this.props.input.length != 0) {
 			return (
 				<FlatList
 					data={Data}

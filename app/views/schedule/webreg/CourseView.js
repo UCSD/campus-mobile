@@ -1,18 +1,24 @@
 import React from 'react'
+import { StatusBar } from 'react-native'
+import { SafeAreaView } from 'react-navigation'
 import CourseTableView from './CourseTableView'
 import CourseHeader from './CourseHeader'
+import Course from './mockData/Course.json'
 
-class CourseView extends React.Component {
-	static navigationOptions = ({ navigation }) => ({
-		headerLeft: null,
-		headerRight: null,
-		headerTitle: <CourseHeader  />
-	})
+const CourseView = () => (
+	<SafeAreaView style={styles.containerStyle}>
+		<StatusBar
+			barStyle="dark-content"
+		/>
+		<CourseHeader course={Course} />
+		<CourseTableView style={{ marginTop: 16 }} />
+	</SafeAreaView>
+)
 
-	render() {
-		return (
-			<CourseTableView style={{ marginTop: 16 }} />
-		)
+const styles = {
+	containerStyle: {
+		flex: 1,
+		backgroundColor: '#fff'
 	}
 }
 

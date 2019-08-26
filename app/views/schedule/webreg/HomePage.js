@@ -1,7 +1,6 @@
 import {
 	View,
 	Text,
-	Dimensions,
 	Alert,
 	TouchableOpacity,
 	Animated,
@@ -10,20 +9,19 @@ import {
 import React from 'react'
 import { connect } from 'react-redux'
 import Icon from 'react-native-vector-icons/MaterialIcons'
-import {
-	Menu,
-	MenuOptions,
-	MenuOption,
-	MenuTrigger,
-	renderers
-} from 'react-native-popup-menu'
-import SlideInMenu from './common/SlideInMenu'
+// import {
+// 	Menu,
+// 	MenuOptions,
+// 	MenuOption,
+// 	MenuTrigger,
+// 	renderers
+// } from 'react-native-popup-menu'
+// import SlideInMenu from './common/SlideInMenu'
 import NavigationService from '../../../navigation/NavigationService'
 import { deviceIphoneX, platformIOS, getScreenWidth, getScreenHeight } from '../../../util/general'
-import { myIndexOf } from '../../../util/schedule'
 import auth from '../../../util/auth'
 import css from '../../../styles/css'
-import DropDown from './DropDown'
+// import DropDown from './DropDown'
 import ClassCalendar from './ClassCalendar'
 import FinalCalendar from './FinalCalendar'
 import CourseList from './CourseList'
@@ -43,26 +41,28 @@ const showAppTime = () => {
 	)
 }
 
-const renderMenu = () => (
-	<Menu	style={{ borderWidth: 3 }} renderer={SlideInMenu} >
-		<MenuTrigger text="Open menu" />
+/* Slide in menu from right */
+// const renderMenu = () => (
+// 	<Menu	style={{ borderWidth: 3 }} renderer={SlideInMenu} >
+// 		<MenuTrigger text="Open menu" />
+//
+// 		<MenuOptions optionsContainerStyle={{ borderWidth: 3, padding: 0, marginTop: 0 }}>
+// 			<View>
+// 				<Text>Some text, you can also add {'\n'} some padding or wrapping if you like</Text>
+// 				<MenuOption onSelect={() => alert('Save')} text="Save" />
+// 				<MenuOption onSelect={() => alert('Delete')}>
+// 					<Text style={{ color: 'red' }}>Delete</Text>
+// 				</MenuOption>
+// 				<MenuOption
+// 					onSelect={() => alert('Not called')}
+// 					disabled={true}
+// 					text="Disabled"
+// 				/>
+// 			</View>
+// 		</MenuOptions>
+// 	</Menu>
+// )
 
-		<MenuOptions optionsContainerStyle={{ borderWidth: 3, padding: 0, marginTop: 0 }}>
-			<View>
-				<Text>Some text, you can also add {'\n'} some padding or wrapping if you like</Text>
-				<MenuOption onSelect={() => alert('Save')} text="Save" />
-				<MenuOption onSelect={() => alert('Delete')}>
-					<Text style={{ color: 'red' }}>Delete</Text>
-				</MenuOption>
-				<MenuOption
-					onSelect={() => alert('Not called')}
-					disabled={true}
-					text="Disabled"
-				/>
-			</View>
-		</MenuOptions>
-	</Menu>
-)
 const getDeviceType = () => {
 	/*
 	 * 0 - Android,
@@ -262,7 +262,7 @@ class HomePage extends React.Component {
 						style={webreg_homepage_term_container}
 						onLayout={(event) => { this.props.onSelector(event) }}
 					>
-						<Text style={webreg_homepage_term_text}>{this.props.selectedTerm.term_name}</Text>
+						<Text style={webreg_homepage_term_text}>{this.props.selectedTerm && this.props.selectedTerm.term_name}</Text>
 					</View>
 					<View style={webreg_homepage_icon_container_style}>
 						<Icon

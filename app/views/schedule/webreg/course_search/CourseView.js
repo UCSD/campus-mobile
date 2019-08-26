@@ -1,9 +1,9 @@
 import React from 'react'
 import { View } from 'react-native'
-import CourseTableView from './CourseTableView'
+import CourseTableView from '../CourseTableView'
 import CourseDetailView from './CourseDetailView'
 import CourseActionView from './CourseActionView'
-import CourseHeader from './CourseHeader'
+import CourseHeader from '../CourseHeader'
 import Course from './Course.json'
 
 const CourseView = () => (
