@@ -3,6 +3,7 @@ import { View } from 'react-native'
 import { withNavigation } from 'react-navigation'
 import { connect } from 'react-redux'
 import ResultList from './ResultList'
+import CourseRes from './mockData/CourseSearch.json'
 
 class CourseSearch extends React.Component {
 	componentDidMount = () => {
@@ -13,7 +14,7 @@ class CourseSearch extends React.Component {
 	render() {
 		return (
 			<View flex style={{ backgroundColor: 'white' }}>
-				<ResultList />
+				<ResultList data={CourseRes}/>
 			</View>
 		)
 	}

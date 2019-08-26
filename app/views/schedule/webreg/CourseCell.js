@@ -3,36 +3,24 @@ import React from 'react'
 import CourseTitle from './common/CourseTitle'
 
 
-const CourseCell = ({ course = { unit: -1, courseCode: 'undefined', title: 'undefined' }, term }) =>
-	 (
+const CourseCell = ({ course = { SUBJ_CODE: 'undefined', CRSE_CODE: 'undefined', CRSE_TITLE: 'undefined', UNIT_TO: '0' }, term, style }) =>
+	(
 		<CourseTitle
-			unit={course.unit}
-			code={course.courseCode}
-			title={course.courseName}
+			unit={course.UNIT_TO}
+			code={`${course.SUBJ_CODE}${course.CRSE_CODE}`}
+			title={course.CRSE_TITLE}
 			containerStyle={styles.containerStyle}
 			term={term}
 		/>
 	)
 
-
 const styles = {
 	containerStyle: {
+		height: 60,
+		paddingHorizontal: '6%',
 		alignSelf: 'center',
-		flexDirection: 'row',
-		alignItems: 'center',
-		shadowColor: '#000',
-		shadowOffset: {
-			width: 0,
-			height: 1,
-		},
-		shadowOpacity: 0.1,
-		shadowRadius: 2,
-		width: '88%',
-		borderRadius: 10,
-		backgroundColor: '#FBFBFB',
-		paddingTop: 3,
-		paddingLeft: 6,
-		paddingBottom: 3
+		borderBottomWidth: 1,
+		borderColor: '#EAEAEA',
 	},
 }
 

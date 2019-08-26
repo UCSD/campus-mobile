@@ -1,0 +1,171 @@
+[
+	{
+		"UNIT_TO": 4.0,
+		"SUBJ_CODE": "CSE ",
+		"UNIT_INC": 0.0,
+		"CRSE_TITLE": "Fluency/Information Technology",
+		"UNIT_FROM": 4.0,
+		"CRSE_CODE": "3"
+	},
+	{
+		"UNIT_TO": 4.0,
+		"SUBJ_CODE": "CSE ",
+		"UNIT_INC": 0.0,
+		"CRSE_TITLE": "Introduction to Programming I ",
+		"UNIT_FROM": 4.0,
+		"CRSE_CODE": "5A"
+	},
+	{
+		"UNIT_TO": 4.0,
+		"SUBJ_CODE": "CSE ",
+		"UNIT_INC": 0.0,
+		"CRSE_TITLE": "Intro/Computer Sci: Java (I)",
+		"UNIT_FROM": 4.0,
+		"CRSE_CODE": "8A"
+	},
+	{
+		"UNIT_TO": 4.0,
+		"SUBJ_CODE": "CSE ",
+		"UNIT_INC": 0.0,
+		"CRSE_TITLE": "Intro/Computer Sci. Java (II) ",
+		"UNIT_FROM": 4.0,
+		"CRSE_CODE": "8B"
+	},
+	{
+		"UNIT_TO": 4.0,
+		"SUBJ_CODE": "CSE ",
+		"UNIT_INC": 0.0,
+		"CRSE_TITLE": "Intr/Computer Sci&Obj-Ori:Java",
+		"UNIT_FROM": 4.0,
+		"CRSE_CODE": "11"
+	},
+	{
+		"UNIT_TO": 4.0,
+		"SUBJ_CODE": "CSE ",
+		"UNIT_INC": 0.0,
+		"CRSE_TITLE": "Basic Data Struct & OO Design ",
+		"UNIT_FROM": 4.0,
+		"CRSE_CODE": "12"
+	},
+	{
+		"UNIT_TO": 2.0,
+		"SUBJ_CODE": "CSE ",
+		"UNIT_INC": 0.0,
+		"CRSE_TITLE": "Software Tools&Techniques Lab ",
+		"UNIT_FROM": 2.0,
+		"CRSE_CODE": "15L"
+	},
+	{
+		"UNIT_TO": 4.0,
+		"SUBJ_CODE": "CSE ",
+		"UNIT_INC": 0.0,
+		"CRSE_TITLE": "Intro/Discrete Mathematics",
+		"UNIT_FROM": 4.0,
+		"CRSE_CODE": "20"
+	},
+	{
+		"UNIT_TO": 4.0,
+		"SUBJ_CODE": "CSE ",
+		"UNIT_INC": 0.0,
+		"CRSE_TITLE": "Math/Algorithm&Systems Analys ",
+		"UNIT_FROM": 4.0,
+		"CRSE_CODE": " 21"
+	},
+	{
+		"UNIT_TO": 4.0,
+		"SUBJ_CODE": "CSE ",
+		"UNIT_INC": 0.0,
+		"CRSE_TITLE": "Computer Organiz&Systms Progrm",
+		"UNIT_FROM": 4.0,
+		"CRSE_CODE": "30"
+	},
+	{
+		"UNIT_TO": 2.0,
+		"SUBJ_CODE": "CSE ",
+		"UNIT_INC": 0.0,
+		"CRSE_TITLE": "Bldg & Programming Elct Device",
+		"UNIT_FROM": 2.0,
+		"CRSE_CODE": "42"
+	},
+	{
+		"UNIT_TO": 1.0,
+		"SUBJ_CODE": "CSE ",
+		"UNIT_INC": 0.0,
+		"CRSE_TITLE": "Freshman Seminar",
+		"UNIT_FROM": 1.0,
+		"CRSE_CODE": "87"
+	},
+	{
+		"UNIT_TO": 2.0,
+		"SUBJ_CODE": "CSE ",
+		"UNIT_INC": 0.0,
+		"CRSE_TITLE": "Tutor Apprentice",
+		"UNIT_FROM": 2.0,
+		"CRSE_CODE": "95"
+	},
+	{
+		"UNIT_TO": 4.0,
+		"SUBJ_CODE": "CSE ",
+		"UNIT_INC": 0.0,
+		"CRSE_TITLE": "Advanced Data Structures",
+		"UNIT_FROM": 4.0,
+		"CRSE_CODE": "100 "
+	},
+	{
+		"UNIT_TO": 4.0,
+		"SUBJ_CODE": "CSE ",
+		"UNIT_INC": 0.0,
+		"CRSE_TITLE": "Design & Analysis of Algorithm",
+		"UNIT_FROM": 4.0,
+		"CRSE_CODE": "101"
+	},
+	{
+		"UNIT_TO": 4.0,
+		"SUBJ_CODE": "CSE ",
+		"UNIT_INC": 0.0,
+		"CRSE_TITLE": "Practical Intro/Prob & Stats",
+		"UNIT_FROM": 4.0,
+		"CRSE_CODE": "103"
+	},
+	{
+		"UNIT_TO": 4.0,
+		"SUBJ_CODE": "CSE ",
+		"UNIT_INC": 0.0,
+		"CRSE_TITLE": "Theory of Computation ",
+		"UNIT_FROM": 4.0,
+		"CRSE_CODE": "105"
+	},
+	{
+		"UNIT_TO": 4.0,
+		"SUBJ_CODE": "CSE ",
+		"UNIT_INC": 0.0,
+		"CRSE_TITLE": "Discrete/Cont Optimization",
+		"UNIT_FROM": 4.0,
+		"CRSE_CODE": "106"
+	},
+	{
+		"UNIT_TO": 4.0,
+		"SUBJ_CODE": "CSE ",
+		"UNIT_INC": 0.0,
+		"CRSE_TITLE": "Intro to Modern Cryptography",
+		"UNIT_FROM": 4.0,
+		"CRSE_CODE": "107"
+	},
+	{
+		"UNIT_TO": 4.0,
+		"SUBJ_CODE": "CSE ",
+		"UNIT_INC": 0.0,
+		"CRSE_TITLE": "Software Engineering",
+		"UNIT_FROM": 4.0,
+		"CRSE_CODE": "110"
+	},
+	{
+		"UNIT_TO": 4.0,
+		"SUBJ_CODE": "CSE ",
+		"UNIT_INC": 0.0,
+		"CRSE_TITLE": "Princ/Computer Operating Systm",
+		"UNIT_FROM": 4.0,
+		"CRSE_CODE": "120"
+	}
+]
+	
