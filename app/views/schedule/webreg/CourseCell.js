@@ -3,13 +3,13 @@ import React from 'react'
 import CourseTitle from './common/CourseTitle'
 
 
-const CourseCell = ({ course = { unit: -1, courseCode: 'undefined', title: 'undefined' }, term }) =>
+const CourseCell = ({ course = { unit: -1, courseCode: 'undefined', title: 'undefined' }, term, style }) =>
 	 (
 		<CourseTitle
 			unit={course.unit}
 			code={course.courseCode}
 			title={course.courseName}
-			containerStyle={styles.containerStyle}
+			containerStyle={[styles.containerStyle, style]}
 			term={term}
 		/>
 	)
@@ -20,19 +20,10 @@ const styles = {
 		alignSelf: 'center',
 		flexDirection: 'row',
 		alignItems: 'center',
-		shadowColor: '#000',
-		shadowOffset: {
-			width: 0,
-			height: 1,
-		},
-		shadowOpacity: 0.1,
-		shadowRadius: 2,
-		width: '88%',
 		borderRadius: 10,
-		backgroundColor: '#FBFBFB',
-		paddingTop: 3,
-		paddingLeft: 6,
-		paddingBottom: 3
+		// backgroundColor: '#FBFBFB',
+		paddingVertical: 6,
+		paddingHorizontal: 6,
 	},
 }
 
