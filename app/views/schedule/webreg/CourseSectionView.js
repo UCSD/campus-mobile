@@ -14,10 +14,10 @@ class CourseSectionView extends React.Component {
 	})
 
 	render() {
-		const { course, diCode, leIdx } = this.props.navigation.state.params
+		const { course, index } = this.props.navigation.state.params
 		return (
 			<SafeAreaView style={styles.containerStyle}>
-				<CourseDetailView course={course} diCode={diCode} leIdx={leIdx} />
+				<CourseDetailView course={course} diIndex={index} />
 				<CourseCalender />
 				<CourseActionView style={{ position: 'absolute', bottom: 22 }} />
 			</SafeAreaView>
@@ -28,7 +28,8 @@ class CourseSectionView extends React.Component {
 const styles = {
 	containerStyle: {
 		flex: 1,
-		backgroundColor: '#fff'
+		backgroundColor: '#fff',
+		paddingTop: 15,
 	}
 }
 

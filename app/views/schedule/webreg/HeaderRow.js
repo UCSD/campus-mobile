@@ -1,10 +1,11 @@
 import React from 'react'
 import {
-  View,
-  Text,
-  TouchableOpacity
+	View,
+	Text,
+	TouchableOpacity
 } from 'react-native'
-const renderSideBar = (course, type, largeText) => {
+
+const renderSideBar = (course, type, largeText, sectionId ) => {
 	const {
 		smallTextStyle,
 		largeTextStyle,
@@ -15,12 +16,13 @@ const renderSideBar = (course, type, largeText) => {
 	} = styles
 	const textStyle = largeText ? largeTextStyle : smallTextStyle
 	const buttonTextStyle = largeText ? largeButtonTextStyle : smallButtonTextStyle
+	
 	switch (type) {
 		case 'sectionId':
 			return (
 				<View style={{ flexDirection: 'row' }}>
 					<Text style={[textStyle, { color: '#7D7D7D' }]}>Section ID </Text>
-					<Text style={[textStyle, { color: '#000' }]}>{course.sectionId}</Text>
+					<Text style={[textStyle, { color: '#000' }]}>{sectionId}</Text>
 				</View>
 			)
 		case 'buttons':
@@ -46,7 +48,7 @@ const renderSideBar = (course, type, largeText) => {
 	}
 }
 
-const HeaderRow = ({ course, style, type, largeText }) => {
+const HeaderRow = ({ course, style, type, largeText, sectionId }) => {
 	const {
 		containerStyle,
 		smallTextStyle,
@@ -57,10 +59,10 @@ const HeaderRow = ({ course, style, type, largeText }) => {
 	return (
 		<View style={[containerStyle, style]}>
 			<Text style={largeText ? largeTextStyle : smallTextStyle}>
-				{course.instructor}
+				{course.PERSON_FULL_NAME}
 			</Text>
 			<View style={buttonContainerStyle}>
-				{renderSideBar(course, type, largeText)}
+				{renderSideBar(course, type, largeText, sectionId)}
 			</View>
 		</View>
 	)
