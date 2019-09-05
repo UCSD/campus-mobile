@@ -274,6 +274,8 @@ const css = StyleSheet.create({
 	webreg_common_name_container: { flex: 0.86, flexDirection: 'column', },
 	webreg_common_code: { fontWeight: '700', fontSize: 18, backgroundColor: 'transparent' },
 	webreg_common_title: { fontWeight: '400', fontSize: 14, backgroundColor: 'transparent' },
+	webreg_common_term_container: { position: 'absolute', top: 0, right: 0 },
+	webreg_common_term: { color: '#AAAAAA' },
 	webreg_common_action_button_container: { flex: 1, flexDirection: 'row', justifyContent: 'space-evenly', paddingHorizontal: 8, paddingVertical: 8 },
 	webreg_common_action_button_text: { textAlign: 'center', fontSize: 16, },
 	webreg_common_grade_option_button_container: { flex: 1, flexDirection: 'row' },

@@ -14,7 +14,6 @@ import SectionRow from './SectionRow'
 import StatusBar from './StatusBar'
 import ExpandArrow from './icons8-expand-arrow-filled-500.png'
 
-
 const { width } = Dimensions.get('screen')
 const AnimatedIcon = Animated.createAnimatedComponent(Icon)
 
@@ -28,35 +27,27 @@ class CourseTableView extends Component {
 		this.state = {
 			expanded: false,
 			/* Add custom animation and color changes */
-			animatedHeight: new Animated.Value(0),
 			animatedColor: new Animated.Value(0),
+			animatedHeight: new Animated.Value(0),
 			spinValue: new Animated.Value(0),
 			/* Min and Max height of course table */
 			minHeight: 0,
 			maxHeight: 0,
 			spin: '180deg',
 			/* Keep track of the progress of animated value by adding a listener */
-			progress: 0,
 			/* Lecture style that will be added the animiated value once
 			   our component has mounted */
 			lectureStyle: {
 				overflow: 'hidden'
 			}
 		}
-		this._onPress = this._onPress.bind(this)
-		this._setMaxHeight = this._setMaxHeight.bind(this)
-		this._setMinHeight = this._setMinHeight.bind(this)
-		this.toggle = this.toggle.bind(this)
-		this.state.animatedHeight.addListener((progress) => {
-			this.setState({ progress })
-		})
 	}
 
-	_setLectureStyle() {
+	_setLectureStyle = () => {
 		this.setState({ lectureStyle: [{ ...this.state.lectureStyle }, { height: this.state.animatedHeight }] })
 	}
 
-	_setMaxHeight(event) {
+	_setMaxHeight = (event) => {
 		this.setState({
 			maxHeight: event.nativeEvent.layout.height
 		})
@@ -64,20 +55,21 @@ class CourseTableView extends Component {
 		this._setLectureStyle()
 	}
 
-	_setMinHeight(event) {
+	_setMinHeight = (event) => {
 		const { height } = event.nativeEvent.layout
 		// Should set the minHeight to be the height of container plus
 		// its margin to bottom card
 		this.setState({
-			minHeight: height + 7,
+			minHeight: height + 1,
+			animatedHeight: new Animated.Value(height + 1)
 		})
-		this.state.animatedHeight.setValue(height + 7)
+		// this.state.animatedHeight.setValue(height + 7)
 	}
 
 	/**
 	 * Toggle the discussion sections in a course table.
 	 */
-	toggle() {
+	toggle = () => {
 		const initialValue = this.state.expanded ? this.state.maxHeight : this.state.minHeight
 		const finalValue = this.state.expanded ? this.state.minHeight : this.state.maxHeight
 
@@ -145,27 +137,18 @@ class CourseTableView extends Component {
 		}
 	}
 
-	_onPress = () => {
-		this.setState(prevState => ({
-			expanded: !prevState.expanded
-		}))
-	}
-
-	renderLecture(course, section) {
+	renderLecture = (section) => {
 		const { cellWrapperStyle, cellContainerStyle, dotStyle, expandIconStyle } = styles
-		const { expanded } = this.state
 
 		return (
 			<TouchableWithoutFeedback
-				onPress={() => {
-					this.toggle()
-				}}
 				onLayout={this._setMinHeight}
+				onPress={this.toggle}
 			>
-				<View style={[cellWrapperStyle, { paddingTop: 4, paddingBottom: 7 }]}>
+				<View style={[cellWrapperStyle]}>
 					<View style={dotStyle} />
-					<View style={cellContainerStyle}>
-						<HeaderRow course={course} />
+					<View style={[cellContainerStyle, { paddingTop: 5, paddingBottom: 10 }]}>
+						<HeaderRow course={section} />
 						<SectionRow data={section} />
 					</View>
 					<AnimatedIcon
@@ -179,15 +162,16 @@ class CourseTableView extends Component {
 		)
 	}
 
-	renderEnrollment(course, section, lectureIdx) {
+	renderDiscussion = (section, index) => {
+		const { course } = this.props
 		const { cellWrapperStyle, cellContainerStyle, navIconStyle } = styles
 		return (
 			<TouchableWithoutFeedback
-				onPress={() => this.props.navigation.navigate('CourseSectionView', { course, diCode: section.sectCode, leIdx: lectureIdx })}
+				onPress={() => this.props.navigation.navigate('CourseSectionView', { course, index })}
 			>
 				<View style={cellWrapperStyle}>
-					<View style={cellContainerStyle}>
-						<SectionRow data={section} style={{ paddingBottom: 3 }} />
+					<View style={[cellContainerStyle, { paddingVertical: 2 }]}>
+						<SectionRow data={section} style={{ paddingTop: 3 }} />
 						<StatusBar data={section} />
 					</View>
 					<Image source={ExpandArrow} style={navIconStyle} />
@@ -196,13 +180,13 @@ class CourseTableView extends Component {
 		)
 	}
 
-	renderAdditionalMeeting(section) {
+	renderFinal = (section) => {
 		const { cellWrapperStyle, cellContainerStyle, dotStyle } = styles
 		return (
 			<TouchableWithoutFeedback>
-				<View style={cellWrapperStyle}>
+				<View style={[cellWrapperStyle]}>
 					<View style={dotStyle} />
-					<View style={cellContainerStyle}>
+					<View style={[cellContainerStyle, { borderBottomWidth: 0 }]}>
 						<SectionRow data={section} />
 					</View>
 				</View>
@@ -210,41 +194,37 @@ class CourseTableView extends Component {
 		)
 	}
 
+
 	render() {
-		const { lecIdx, course } = this.props
-		let lectureNum = 0
-		let finalIdx = 0
-		console.log(course);
+		const { course } = this.props
+		const leAndDi = course.slice(0, course.length - 1)
+		const final = course[course.length - 1]
+
+
 		return (
-			<View style={{ marginBottom: 30 }}>
-				<Animated.View
-					style={{ overflow: 'hidden', height: this.state.animatedHeight }}
-				>
-					<View style={{ overflow: 'hidden' }} onLayout={this._setMaxHeight}>
+			<View style={styles.containerStyle}>
+				<Animated.View style={{ overflow: 'hidden', height: this.state.animatedHeight }}>
+					<View onLayout={this._setMaxHeight}>
 						{
-							course.sections.map((sect, index) => {
-								console.log(index, lecIdx, lectureNum)
-								if (index >= lecIdx && lectureNum <= 1) {
-									switch (sect.type) {
-										case 'LE':
-											lectureNum += 1
-											if (lectureNum <= 1) {
-												return this.renderLecture(course, sect)
-											}
-											return
-										case 'DI':
-											return this.renderEnrollment(course, sect, lecIdx)
-										default:
-											finalIdx = index
-											return
-									}
+							leAndDi.map((section, index) => {
+								switch (section.FK_CDI_INSTR_TYPE) {
+									case 'LE':
+										if (section.FK_SPM_SPCL_MTG_CD === 'FI') {
+											return this.renderFinal(section)
+										}
+										return this.renderLecture(section)
+									case 'DI':
+										return this.renderDiscussion(section, index)
+									default:
+										break
 								}
+								return null
 							})
 						}
 					</View>
 				</Animated.View>
-				{this.renderAdditionalMeeting(course.sections[finalIdx])}
-			</View>
+				{this.renderFinal(final)}
+			</View >
 		)
 	}
 }
@@ -254,7 +234,12 @@ const styles = {
 		flexDirection: 'column',
 		justifyContent: 'flex-start',
 		alignItems: 'center',
-		overflow: 'hidden'
+		overflow: 'hidden',
+		backgroundColor: '#FBFBFB',
+		borderRadius: 10,
+		borderWidth: 1,
+		borderColor: 'rgba(0, 0, 0, 0.1)',
+		marginBottom: 12,
 	},
 	cellWrapperStyle: {
 		width: width - 32,
@@ -262,21 +247,14 @@ const styles = {
 		flexDirection: 'row',
 		justifyContent: 'center',
 		alignItems: 'center',
-		marginBottom: 6,
-		backgroundColor: '#FBFBFB',
-		borderRadius: 10,
-		shadowColor: '#000',
-		shadowOffset: {
-			width: 0,
-			height: 2
-		},
-		shadowRadius: 5,
-		shadowOpacity: 0.1,
 	},
 	cellContainerStyle: {
 		width: '73%',
 		flexDirection: 'column',
 		right: 3,
+		borderBottomWidth: 1,
+		borderColor: 'rgba(190, 190, 190, 0.5)',
+		// paddingBottom: 6,
 	},
 	expandIconStyle: {
 		position: 'absolute',
@@ -303,4 +281,4 @@ const styles = {
 }
 
 
-export default withNavigation(CourseTableView);
+export default withNavigation(CourseTableView)

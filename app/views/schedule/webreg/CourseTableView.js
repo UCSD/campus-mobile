@@ -7,8 +7,6 @@ import {
 } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import CourseTableComponent from './CourseTableComponent'
-import Course from './mockData/Course.json'
-
 
 const { width } = Dimensions.get('screen')
 
@@ -28,26 +26,22 @@ export default class CourseTableView extends Component {
 	}
 
 	render() {
+		const { data } = this.props
+		console.log(data)
 		const { containerStyle } = styles
+		let currCourse = []
 		return (
-			<View
-				style={
-					[
-						containerStyle,
-						this.props.style,
-					]
-				}
-			>
+			<View style={[containerStyle, this.props.style]}>
 				{this.renderPrereq()}
-				{
-					Course.sections.map((sect, index) => {
-						if (sect.type === 'LE') {
-							console.log('LE', index)
-							return <CourseTableComponent course={Course} lecIdx={index} />
-						}
-						return null
-					})
-				}
+				{data.map((sect) => {
+					currCourse.push(sect)
+					if (sect.FK_SPM_SPCL_MTG_CD === 'FI') {
+						const courseSect = <CourseTableComponent course={currCourse} />
+						currCourse = []
+						return courseSect
+					}
+					return null
+				})}
 			</View>
 		)
 	}
@@ -61,7 +55,7 @@ const styles = {
 		overflow: 'hidden'
 	},
 	cellWrapperStyle: {
-		width: width - 32,
+		width: width - 30,
 		alignSelf: 'center',
 		flexDirection: 'row',
 		justifyContent: 'center',
@@ -69,13 +63,8 @@ const styles = {
 		marginBottom: 6,
 		backgroundColor: '#FBFBFB',
 		borderRadius: 10,
-		shadowColor: '#000',
-		shadowOffset: {
-			width: 0,
-			height: 2
-		},
-		shadowRadius: 5,
-		shadowOpacity: 0.1,
+		borderWidth: 1,
+		borderColor: 'rgba(0, 0, 0, 0.1)'
 	},
 	cellContainerStyle: {
 		width: '73%',
