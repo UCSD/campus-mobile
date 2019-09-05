@@ -8,7 +8,7 @@ import css from '../../../styles/css'
 
 
 const { width } = Dimensions.get('window')
-const duration = 5000
+const duration = 2000
 const AnimatedText = Animated.createAnimatedComponent(Text)
 const AnimatedTouchableOpacity = Animated.createAnimatedComponent(TouchableOpacity)
 const AnimatedTouchablWithoutFeedback = Animated.createAnimatedComponent(TouchableWithoutFeedback)
@@ -148,7 +148,7 @@ class SearchHeader extends React.Component {
 		})
 		const activeBtnOpacity = this.state.layoutAnim.interpolate({
 			inputRange: [0, 0.8, 1],
-			outputRange: [0, 0, 1]
+			outputRange: [0, 1, 1]
 		})
 
 		let button = (
@@ -240,7 +240,8 @@ class SearchHeader extends React.Component {
 						{
 							position: 'absolute',
 							left: '15%',
-							opacity: activeBtnOpacity
+							opacity: activeBtnOpacity,
+							// borderWidth: 3
 						}
 					]}
 				>
@@ -400,7 +401,7 @@ const styles = StyleSheet.create({
 		width: '100%',
 		// marginTop: 15,
 		// marginBottom: 15,
-		justifyContent: 'center',
+		justifyContent: 'flex-start',
 		alignItems: 'center',
 	},
 	termTextStyle: {
