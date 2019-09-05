@@ -2,7 +2,6 @@ import React from 'react'
 
 import CourseTitle from './common/CourseTitle'
 
-
 const CourseCell = ({ course = { SUBJ_CODE: 'undefined', CRSE_CODE: 'undefined', CRSE_TITLE: 'undefined', UNIT_TO: '0' }, term, style }) =>
 	(
 		<CourseTitle

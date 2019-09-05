@@ -12,6 +12,27 @@ class ResultList extends React.Component {
 
 	keyExtractor = item => item.courseCode;
 
+	filterCheck = (data) => {
+		const { filterVal } = this.props
+		return (!filterVal[0] && parseInt(data.CRSE_CODE) < 100) ||
+			(!filterVal[1] && parseInt(data.CRSE_CODE) >= 100 && parseInt(data.CRSE_CODE) < 200) ||
+			(!filterVal[2] && parseInt(data.CRSE_CODE) >= 200)
+	}
+
+	inputCheck = (data) => {
+		const firstDigit = this.props.input.match(/\d/)
+		const splitIndex = this.props.input.indexOf(firstDigit)
+		let subject = ''
+		let code = ''
+		if (splitIndex !== -1) {
+			subject = this.props.input.substring(0, splitIndex).trim()
+			code = this.props.input.substring(splitIndex).trim()
+		} else {
+			subject = this.props.input.trim()
+		}
+		return (!subject || data.SUBJ_CODE.includes(subject.toUpperCase())) && (!code || data.CRSE_CODE.includes(code))
+	}
+
 	renderItem = ({ item, index }) => (
 		<TouchableOpacity
 			onPress={() => this.onCoursePressed(index)}
@@ -26,20 +47,30 @@ class ResultList extends React.Component {
 
 	render() {
 		const { data } = this.props
+		// TODO - Mock Filter Behavior. Need modification with real data
+		const renderedData = []
+		for (let i = 0; i < data.length; i++) {
+			if (this.filterCheck(data[i]) && this.inputCheck(data[i])) {
+				renderedData.push(data[i])
+			}
+		}
+		// TODO - End Mock Filter
+
 		const { emptyFontStyle, emptyViewStyle, searchHeader, searchHeaderFont } = styles
 		const header = (
 			<View style={searchHeader}>
-				<Text style={searchHeaderFont}>Found {data.length} courses matching &quot;{this.props.input}&quot;</Text>
+				<Text style={searchHeaderFont}>Found {renderedData.length} courses matching &quot;{this.props.input}&quot;</Text>
 			</View>
 		)
 
 		if (this.props.input.length !== 0) {
 			return (
 				<FlatList
-					data={data}
+					data={renderedData}
 					keyExtractor={this.keyExtractor}
 					ListHeaderComponent={header}
 					renderItem={this.renderItem}
+					extraData={this.state}
 				/>
 			)
 		} else {
@@ -76,6 +107,9 @@ const styles = {
 	}
 }
 
-const mapStateToProps = state => ({ input: state.webreg.searchInput })
+const mapStateToProps = state => ({
+	input: state.webreg.searchInput,
+	filterVal: state.webreg.filterVal
+})
 
 export default withNavigation(connect(mapStateToProps)(ResultList))
