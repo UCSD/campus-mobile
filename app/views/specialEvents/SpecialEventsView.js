@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { View, Text, ScrollView } from 'react-native'
 import { connect } from 'react-redux'
-import HeaderButtons from 'react-navigation-header-buttons'
+import { HeaderButtons, Item }from 'react-navigation-header-buttons'
 import moment from 'moment'
 import css from '../../styles/css'
 import logger from '../../util/logger'
@@ -17,8 +17,9 @@ class SpecialEventsView extends Component {
 			title,
 			headerRight: (
 				(!personal) ? (
-					<HeaderButtons color={COLOR.WHITE}>
-						<HeaderButtons.Item
+					<HeaderButtons >
+						<Item
+							color={COLOR.WHITE}
 							title="Filter"
 							onPress={() => { navigation.navigate('SpecialEventsFilters', { title }) }}
 						/>
