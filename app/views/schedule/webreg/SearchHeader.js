@@ -330,6 +330,7 @@ class SearchHeader extends React.Component {
 						ref={(ref) => { this.input = ref }}
 						style={inputStyle}
 						value={input}
+						autoCapitalize="none"
 						placeholder={this.props.homeIndex ? 'Search by course code' : ''}
 						onChangeText={this.onChangeText}
 						autoCorrect={false}

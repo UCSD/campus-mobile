@@ -69,7 +69,7 @@ class Filter extends React.Component {
 			>
 				<View>
 					{this.filterOptions.map((option, index) => (
-						<View style={optionContainerStyle}>
+						<View key={option} style={optionContainerStyle}>
 							<Text style={optionStyle}>{option}</Text>
 							<Switch
 								trackColor={{ true: COLOR.GREEN, false: COLOR.WHITE }}
