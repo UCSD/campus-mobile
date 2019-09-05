@@ -5,21 +5,17 @@ import {
 	StyleSheet
 } from 'react-native'
 import { withNavigation } from 'react-navigation'
+import { connect } from 'react-redux'
 import Icon from 'react-native-vector-icons/MaterialIcons'
-import CourseCell from './CourseCell'
+import CourseTitle from './common/CourseTitle'
 
 
 class CourseHeader extends React.Component {
-	constructor(props) {
-		super(props)
-		this.onBackButtonPress = this.onBackButtonPress.bind(this)
-	}
-
-	onBackButtonPress() {
+	onBackButtonPress = () => {
 		this.props.navigation.goBack()
 	}
 
-	_renderBackButton() {
+	_renderBackButton = () => {
 		const { backButtonStyle } = styles
 
 		return (
@@ -27,45 +23,42 @@ class CourseHeader extends React.Component {
 				style={backButtonStyle}
 				onPress={this.onBackButtonPress}
 			>
-				<Icon name="navigate-before" size={24} />
+				<Icon name="navigate-before" size={24} color="#ffffff" />
 			</TouchableOpacity>
 		)
 	}
 
 	render() {
-		const { headerContainerStyle } = styles
+		const { course } = this.props
+		const { headerContainerStyle, rightButtonStyle } = styles
 
 		return (
 			<View
-				style={[headerContainerStyle, this.props.style]}
+				style={headerContainerStyle}
 			>
 				{this._renderBackButton()}
-				<CourseCell course={this.props.course} style={{ flex: 0.72 }} />
-				<View style={styles.rightButtonStyle} />
+				<CourseTitle
+					unit={course.UNIT_TO}
+					code={`${course.SUBJ_CODE}${course.CRSE_CODE}`}
+					title={course.CRSE_TITLE}
+					containerStyle={{ flex: 0.72 }}
+					fontColor={{ color: '#ffffff' }}
+					term={this.props.selectedTerm.term_code}
+				/>
+				<View style={rightButtonStyle} />
 			</View>
 		)
 	}
 }
 
 const styles = StyleSheet.create({
-
 	headerContainerStyle: {
 		flexDirection: 'row',
 		width: '100%',
-		// marginTop: 15,
 		justifyContent: 'center',
 		alignItems: 'center',
-		shadowColor: '#000',
-		shadowOffset: {
-			width: 0,
-			height: 1,
-		},
-		shadowOpacity: 0.1,
-		shadowRadius: 2,
-	},
-	termTextStyle: {
-		color: '#7D7D7D',
-		fontSize: 15
+		backgroundColor: '#034263',
+		paddingBottom: 5,
 	},
 	backButtonStyle: {
 		flex: 0.14,
@@ -80,5 +73,7 @@ const styles = StyleSheet.create({
 	},
 })
 
-
-export default withNavigation(CourseHeader)
+const mapStateToProps = state => ({
+	selectedTerm: state.schedule.selectedTerm
+})
+export default withNavigation(connect(mapStateToProps)(CourseHeader))

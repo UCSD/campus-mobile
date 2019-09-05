@@ -233,15 +233,9 @@ let MainStack = createStackNavigator(
 		},
 		CourseView: {
 			screen: CourseView,
-			navigationOptions: {
-				header: null,
-			}
 		},
 		CourseSectionView: {
 			screen: CourseSectionView,
-			navigationOptions: {
-				header: null,
-			}
 		},
 		ManageOccuspaceLocations: {
 			screen: ManageOccuspaceLocations,
@@ -251,7 +245,7 @@ let MainStack = createStackNavigator(
 		}
 	},
 	{
-		initialRouteName: 'MainTabs',
+		initialRouteName: 'WebReg',
 		defaultNavigationOptions: {
 			headerStyle: css.nav,
 			headerTitleStyle: css.navTitle,

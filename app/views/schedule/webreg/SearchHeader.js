@@ -8,6 +8,10 @@ import css from '../../../styles/css'
 
 
 const { width } = Dimensions.get('window')
+const duration = 5000
+const AnimatedText = Animated.createAnimatedComponent(Text)
+const AnimatedTouchableOpacity = Animated.createAnimatedComponent(TouchableOpacity)
+const AnimatedTouchablWithoutFeedback = Animated.createAnimatedComponent(TouchableWithoutFeedback)
 
 class SearchHeader extends React.Component {
 	constructor(props) {
@@ -31,6 +35,14 @@ class SearchHeader extends React.Component {
 	}
 
 	onFocus() {
+		Animated.timing(
+			this.state.layoutAnim,
+			{
+				toValue: 1,
+				duration
+			}
+		).start()
+		this.props.setHomeIndex(1)
 		this.props.selectCourse(null, null)
 	}
 
@@ -43,11 +55,12 @@ class SearchHeader extends React.Component {
 		if (input) {
 			this.props.updateInput(input)
 			this.props.setHomeIndex(1)
+			this.setState({ input: '' })
 		}
 	}
 
 	onFilterPress() {
-		this.props.showFilter(true)
+		this.props.showFilter(!this.props.filterVisible)
 		Keyboard.dismiss()
 	}
 
@@ -61,7 +74,7 @@ class SearchHeader extends React.Component {
 			this.state.layoutAnim,
 			{
 				toValue: 1,
-				duration: 5000,
+				duration
 			}
 		).start()
 		this.props.setHomeIndex(1)
@@ -73,10 +86,11 @@ class SearchHeader extends React.Component {
 			this.state.layoutAnim,
 			{
 				toValue: 0,
-				duration: 5000,
+				duration
 			}
 		).start()
 		this.props.setHomeIndex(0)
+		this.props.showFilter(false)
 		this.reset()
 		Keyboard.dismiss()
 	}
@@ -103,7 +117,7 @@ class SearchHeader extends React.Component {
 			return (
 				<TouchableOpacity
 					activeOpacity={1}
-					onPress={this.onTermSwitcherPress}
+					// onPress={this.onTermSwitcherPress}
 					style={switcherContainerStyle}
 				>
 					<Text style={termTextStyle}>{selectedTerm.term_code}</Text>
@@ -112,29 +126,141 @@ class SearchHeader extends React.Component {
 			)
 		}
 
-		return <View />
+		return (
+			<View />
+		)
 	}
 
 	_renderLeft() {
-		const { leftStyle } = styles
+		const { leftStyle, backStyle } = styles
+
+		const leftContainerWidth = this.state.layoutAnim.interpolate({
+			inputRange: [0, 1],
+			outputRange: ['20%', '15%']
+		})
+		const backTextOpacity = this.state.layoutAnim.interpolate({
+			inputRange: [0, 0.8, 1],
+			outputRange: [0, 0, 1]
+		})
+		const defaultBtnOpacity = this.state.layoutAnim.interpolate({
+			inputRange: [0, 0.8, 1],
+			outputRange: [1, 0, 0]
+		})
+		const activeBtnOpacity = this.state.layoutAnim.interpolate({
+			inputRange: [0, 0.8, 1],
+			outputRange: [0, 0, 1]
+		})
+
+		let button = (
+			<TouchableOpacity
+				style={[
+					leftStyle,
+					{
+						position: 'absolute',
+						left: 0
+
+					}
+				]}
+				onPress={this.onBackButtonPress}
+			>
+				<Animated.View
+					style={{
+						opacity: backTextOpacity
+					}}
+				>
+					<Icon
+						name="chevron-left"
+						color={COLOR.WHITE}
+						size={35}
+					/>
+				</Animated.View>
+				<AnimatedText
+					style={[
+						backStyle,
+						{
+							opacity: backTextOpacity
+						}
+					]}
+				>
+					Back
+				</AnimatedText>
+			</TouchableOpacity>
+		)
 
 		if (this.props.homeIndex === 1) {
-			return (
+			button = (
 				<TouchableOpacity
-					style={leftStyle}
+					style={[
+						leftStyle,
+						{
+							position: 'absolute',
+							left: '15%',
+						}
+					]}
 					onPress={this.onCollapseButtonPress}
 				>
-					<Icon name="navigate-next" color={COLOR.WHITE} size={24} />
+					<Icon name="chevron-right" color={COLOR.WHITE} size={35} />
 				</TouchableOpacity>
 			)
 		}
-		return (
-			<TouchableOpacity
-				style={leftStyle}
+
+		const defaultButton = (
+			<AnimatedTouchableOpacity
+				style={[
+					leftStyle,
+					{
+						position: 'absolute',
+						left: 0,
+						opacity: defaultBtnOpacity
+					}
+				]}
+				activeOpacity={0.7}
 				onPress={this.onBackButtonPress}
 			>
-				<Icon name="navigate-before" color={COLOR.WHITE} size={24} />
-			</TouchableOpacity>
+				<Icon
+					name="chevron-left"
+					color={COLOR.WHITE}
+					size={35}
+				/>
+				<AnimatedText
+					style={backStyle}
+				>
+					Back
+				</AnimatedText>
+			</AnimatedTouchableOpacity>
+		)
+
+		const activeButton = (
+			<TouchableWithoutFeedback
+				onPress={this.onCollapseButtonPress}
+			>
+				<Animated.View
+					style={[
+						leftStyle,
+						{
+							position: 'absolute',
+							left: '15%',
+							opacity: activeBtnOpacity
+						}
+					]}
+				>
+					<Icon name="chevron-right" color={COLOR.WHITE} size={35} />
+				</Animated.View>
+			</TouchableWithoutFeedback>
+		)
+
+		return (
+			<Animated.View
+				style={{
+					...leftStyle,
+					width: leftContainerWidth,
+					// borderWidth: 3
+					// width: '20%'
+				}}
+			>
+				{defaultButton}
+				{activeButton}
+			</Animated.View>
 		)
 	}
 
@@ -144,42 +270,78 @@ class SearchHeader extends React.Component {
 
 		const midContainerWidth = this.state.layoutAnim.interpolate({
 			inputRange: [0, 1],
-			outputRange: ['86%', '72%']
+			outputRange: ['80%', '70%']
 		})
 		const titleWidth = this.state.layoutAnim.interpolate({
 			inputRange: [0, 1],
-			outputRange: ['86%', '0%']
+			outputRange: ['80%', '0%']
+		})
+		const titleLeft = this.state.layoutAnim.interpolate({
+			inputRange: [0, 1],
+			outputRange: ['38%', '48%']
+		})
+		const titleColor = this.state.layoutAnim.interpolate({
+			inputRange: [0, 0.2, 1],
+			outputRange: ['#000000', '#000000', '#FFFFFF']
+		})
+		const titleOpacity = this.state.layoutAnim.interpolate({
+			inputRange: [0, 0.1, 1],
+			outputRange: [1, 1, 0]
 		})
 		const searchBarWidth = this.state.layoutAnim.interpolate({
 			inputRange: [0, 1],
-			outputRange: ['14%', '100%']
+			outputRange: ['20%', '100%']
 		})
 
 		return (
-			<Animated.View style={{ ...midStyle, width: midContainerWidth }}>
-				<Animated.View style={{ width: titleWidth }}>
-					<Text style={{ ...css.navTitle, color: COLOR.WHITE, marginTop: 5 }}>
-						{' Webreg'}
-					</Text>
+			<Animated.View
+				style={[
+					midStyle,
+					{
+						// borderWidth: 3,
+						width: midContainerWidth
+					}]}
+			>
+				<Animated.View
+					style={{
+						// width: titleWidth,
+						position: 'absolute',
+						left: titleLeft
+					}}
+				>
+					<AnimatedText
+						style={[
+							css.navTitle,
+							{
+								color: COLOR.WHITE,
+								opacity: titleOpacity,
+								marginTop: -15,
+							}
+						]}
+					>
+						{'Webreg'}
+					</AnimatedText>
 				</Animated.View>
 				<Animated.View
-					style={{ ...searchBarStyle, width: searchBarWidth, marginRight: 10 }}
+					style={{ ...searchBarStyle, width: searchBarWidth, marginRight: this.props.homeIndex ? 0 : 10 }}
 				>
-					<TouchableWithoutFeedback onPress={this.onSearchIconPress}>
-						<Icon name="search" size={24} />
-					</TouchableWithoutFeedback>
+					{this._renderTermSwicher()}
 					<TextInput
 						ref={(ref) => { this.input = ref }}
 						style={inputStyle}
 						value={input}
-						placeholder="Search by course code"
+						placeholder={this.props.homeIndex ? 'Search by course code' : ''}
 						onChangeText={this.onChangeText}
 						autoCorrect={false}
 						returnKeyType="go"
 						onFocus={this.onFocus}
 						onSubmitEditing={this.onSubmit}
 					/>
-					{/* {this._renderTermSwicher()} */}
+					<TouchableWithoutFeedback
+						onPress={() => (this.props.homeIndex && this.state.input ? this.setState({ input: '' }) : this.onSearchIconPress)}
+					>
+						<Icon name={this.props.homeIndex && this.state.input ? 'close' : 'search'} size={24} style={{ paddingVertical: 4 }} />
+					</TouchableWithoutFeedback>
 				</Animated.View>
 			</Animated.View>
 		)
@@ -190,31 +352,18 @@ class SearchHeader extends React.Component {
 
 		const rightContainerWidth = this.state.layoutAnim.interpolate({
 			inputRange: [0, 1],
-			outputRange: ['0%', '14%']
+			outputRange: ['0%', '15%']
 		})
-
-		let rightBody = (
-			<TouchableOpacity
-				onPress={this.onFilterPress}
-			>
-				<Icon name="filter-list" color={COLOR.WHITE} size={24} />
-			</TouchableOpacity>
-		)
-		if (this.props.homeIndex) {
-			rightBody = (
-				<TouchableOpacity
-					onPress={this.onFilterPress}
-				>
-					<Icon name="filter-list" color={COLOR.WHITE} size={24} />
-				</TouchableOpacity>
-			)
-		}
 
 		return (
 			<Animated.View
 				style={{ ...rightStyle, width: rightContainerWidth }}
 			>
-				{rightBody}
+				<TouchableOpacity
+					onPress={this.onFilterPress}
+				>
+					<Icon name="tune" color={COLOR.WHITE} size={30} />
+				</TouchableOpacity>
 			</Animated.View>
 		)
 	}
@@ -237,7 +386,13 @@ class SearchHeader extends React.Component {
 const styles = StyleSheet.create({
 	switcherContainerStyle: {
 		alignItems: 'center',
-		flexDirection: 'row'
+		borderRightWidth: 1,
+		borderRightColor: COLOR.DGREY,
+		flexDirection: 'row',
+	},
+	backStyle: {
+		color: COLOR.WHITE,
+		fontSize: 18
 	},
 	headerContainerStyle: {
 		flexDirection: 'row',
@@ -246,45 +401,37 @@ const styles = StyleSheet.create({
 		// marginBottom: 15,
 		justifyContent: 'center',
 		alignItems: 'center',
-		shadowColor: '#000',
-		shadowOffset: {
-			width: 0,
-			height: 1,
-		},
-		shadowOpacity: 0.1,
-		shadowRadius: 2,
 	},
 	termTextStyle: {
 		color: '#7D7D7D',
 		fontSize: 15
 	},
 	leftStyle: {
-		width: '14%',
 		justifyContent: 'center',
-		alignItems: 'center'
+		alignItems: 'center',
+		flexDirection: 'row',
 	},
 	midStyle: {
 		// flex: 0.72,
 		flexDirection: 'row',
-		justifyContent: 'center',
+		justifyContent: 'flex-end',
 		alignItems: 'center'
 	},
 	searchBarStyle: {
 		// flex: 0.72,
 		flexDirection: 'row',
 		alignItems: 'center',
-		borderWidth: 1,
+		borderWidth: 0,
 		borderColor: '#194160',
 		borderRadius: 20,
 		paddingHorizontal: 5,
-		paddingVertical: 3,
 		backgroundColor: '#F1F1F1'
 	},
 	inputStyle: {
 		flex: 1,
 		fontSize: 15,
 		paddingLeft: 5,
-		paddingRight: 5
+		paddingRight: 5,
 	},
 	rightStyle: {
 		// flex: 0.14,
@@ -334,6 +481,7 @@ const mapStateToProps = state => ({
 	selectedTerm: state.schedule.selectedTerm,
 	searchInput: state.webreg.searchInput,
 	homeIndex: state.webreg.homeIndex,
+	filterVisible: state.webreg.filterVisible,
 })
 
 export default withNavigation(connect(mapStateToProps, mapDispatchToProps)(SearchHeader))

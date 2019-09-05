@@ -1,30 +1,35 @@
 import React from 'react'
-import { StatusBar } from 'react-native'
 import { SafeAreaView } from 'react-navigation'
 import CourseDetailView from './CourseDetailView'
 import CourseActionView from './CourseActionView'
 import CourseHeader from './CourseHeader'
 import CourseCalender from './ClassCalendar'
+import Data from './mockData/CourseSearchResult.json'
 
-const CourseSectionView = ({ navigation }) => {
-	const { course, diCode, leIdx } = navigation.state.params
-	return (
-		<SafeAreaView style={styles.containerStyle}>
-			<StatusBar
-				barStyle="dark-content"
-			/>
-			<CourseHeader course={course} />
-			<CourseDetailView course={course} diCode={diCode} leIdx={leIdx} style={{ marginTop: 16 }} />
-			<CourseCalender />
-			<CourseActionView style={{ position: 'absolute', bottom: 22 }} />
-		</SafeAreaView>
-	)
+class CourseSectionView extends React.Component {
+	static navigationOptions = ({ navigation }) => ({
+		headerLeft: null,
+		headerRight: null,
+		headerTitle: <CourseHeader course={Data} />
+	})
+
+	render() {
+		const { course, index } = this.props.navigation.state.params
+		return (
+			<SafeAreaView style={styles.containerStyle}>
+				<CourseDetailView course={course} diIndex={index} />
+				<CourseCalender />
+				<CourseActionView style={{ position: 'absolute', bottom: 22 }} />
+			</SafeAreaView>
+		)
+	}
 }
 
 const styles = {
 	containerStyle: {
 		flex: 1,
-		backgroundColor: '#fff'
+		backgroundColor: '#fff',
+		paddingTop: 15,
 	}
 }
 

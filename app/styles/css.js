@@ -48,7 +48,7 @@ const css = StyleSheet.create({
 	messaging_container: { flex: 1, paddingBottom: platformIOS() ? LAYOUT.NAVIGATOR_HEIGHT : 0 },
 	// Navigator
 	nav: { backgroundColor: COLOR.PRIMARY, height: LAYOUT.NAVIGATOR_HEIGHT, marginTop: deviceIphoneX() ? -13 : 0 },
-	navTitle: { flex: 1, fontSize: 24, fontWeight: '300', textAlign: 'center', alignSelf: 'center', marginTop: deviceIphoneX() ? 0 : -3 },
+	navTitle: { position: 'absolute', flex: 1, fontSize: 24, fontWeight: '300', textAlign: 'center', alignSelf: 'center', marginTop: deviceIphoneX() ? 0 : -3 },
 	navCampusLogoTitle: { flex: 1, resizeMode: 'contain', height: 26, alignSelf: 'center', marginTop: platformAndroid() ? 6 : 0 },
 	navButtonTextIOS: { color: COLOR.WHITE, fontWeight: '300', fontSize: 18, height: 24 },
 	navButtonTextAndroid: { color: COLOR.WHITE, marginTop: -8, fontWeight: '300', fontSize: 18 },
@@ -274,6 +274,8 @@ const css = StyleSheet.create({
 	webreg_common_name_container: { flex: 0.86, flexDirection: 'column', },
 	webreg_common_code: { fontWeight: '700', fontSize: 18, backgroundColor: 'transparent' },
 	webreg_common_title: { fontWeight: '400', fontSize: 14, backgroundColor: 'transparent' },
+	webreg_common_term_container: { position: 'absolute', top: 0, right: 0 },
+	webreg_common_term: { color: '#AAAAAA' },
 	webreg_common_action_button_container: { flex: 1, flexDirection: 'row', justifyContent: 'space-evenly', paddingHorizontal: 8, paddingVertical: 8 },
 	webreg_common_action_button_text: { textAlign: 'center', fontSize: 16, },
 	webreg_common_grade_option_button_container: { flex: 1, flexDirection: 'row' },

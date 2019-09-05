@@ -9,17 +9,17 @@ const renderBar = (data) => {
 		rightBarStyle
 	} = styles
 
-	const { availSeats, waitlistCount, totalSeats } = data
+	const { AVAIL_SEAT, COUNT_ON_WAITLIST, SCTN_ENRLT_QTY } = data
 
-	if (availSeats > 0 || waitlistCount > 0) {
-		const percentage = ((Math.max(availSeats, waitlistCount) / totalSeats) * 100)
+	if (AVAIL_SEAT > 0 || COUNT_ON_WAITLIST > 0) {
+		const percentage = ((Math.max(AVAIL_SEAT, COUNT_ON_WAITLIST) / SCTN_ENRLT_QTY) * 100)
 		const leftStyle = {
 			width: (100 - percentage) + '%',
 			marginRight: 1
 		}
 		const rightStyle = {
 			width: percentage + '%',
-			backgroundColor: waitlistCount > 0 ? '#D27070' : '#C4C4C4',
+			backgroundColor: COUNT_ON_WAITLIST > 0 ? '#D27070' : '#C4C4C4',
 		}
 		return (
 			<View style={barContainerStyle}>
@@ -42,15 +42,15 @@ const StatusBar = ({ data, style }) => {
 		labelsConatainerStyle,
 		textStyle
 	} = styles
-	const { availSeats, waitlistCount, totalSeats } = data
+	const { AVAIL_SEAT, COUNT_ON_WAITLIST, SCTN_ENRLT_QTY } = data
 
 	return (
 		<View style={[containerStyle, style]}>
 			<View style={labelsConatainerStyle}>
-				<Text style={[textStyle, { color: '#034263' }]}>Available {availSeats}</Text>
-				<Text style={[textStyle, { color: '#7D7D7D' }]}>Total {totalSeats}</Text>
-				<Text style={[textStyle, { color: waitlistCount > 0 ? '#D27070' : '#C4C4C4' }]}>
-					{waitlistCount > 0 ? 'Waitlist ' + waitlistCount : 'Enrolled ' + (totalSeats - availSeats)}
+				<Text style={[textStyle, { color: '#034263' }]}>Available {AVAIL_SEAT}</Text>
+				<Text style={[textStyle, { color: '#7D7D7D' }]}>Total {SCTN_ENRLT_QTY}</Text>
+				<Text style={[textStyle, { color: COUNT_ON_WAITLIST > 0 ? '#D27070' : '#C4C4C4' }]}>
+					{COUNT_ON_WAITLIST > 0 ? 'Waitlist ' + COUNT_ON_WAITLIST : 'Enrolled ' + (SCTN_ENRLT_QTY - AVAIL_SEAT)}
 				</Text>
 			</View>
 			{renderBar(data)}

@@ -101,7 +101,7 @@ class HomePage extends React.Component {
 		if (this.state.display_type === 'Calendar') {
 			return (
 				<View style={{ flex: 1 }}>
-					<Button onPress={() => auth.retrieveAccessToken().then(credentials => console.log(credentials))} title="Get Access Token" />
+					{/* <Button onPress={() => auth.retrieveAccessToken().then(credentials => console.log(credentials))} title="Get Access Token" /> */}
 					<ClassCalendar device={device} />
 				</View>
 			)

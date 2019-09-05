@@ -6,30 +6,27 @@ import StatusBar from './StatusBar'
 
 const { width } = Dimensions.get('screen')
 
-const CourseDetailView = ({ course, diCode, leIdx, style }) => {
+const CourseDetailView = ({ course, diIndex, style }) => {
 	const { cellWrapperStyle, cellContainerStyle } = styles
-	let lectureNum = 0
 
 	return (
 		<View style={[cellWrapperStyle, { paddingVertical: 7 }, style]}>
 			<View style={cellContainerStyle}>
-				<HeaderRow course={course} type="sectionId" style={{ paddingBottom: 6 }} />
-				{course.sections.map((section, index) => {
-					if (index >= leIdx) {
+				<HeaderRow course={course[0]} type="sectionId" style={{ paddingBottom: 6 }} sectionId={course[diIndex].SECTION_NUMBER} />
+				{course.map((section, index) => {
+					if (index === diIndex || section.FK_CDI_INSTR_TYPE === 'LE') {
 						const sectionStyle = {
-							paddingTop: section.type === 'FINAL' ? 3 : 0,
+							paddingTop: section.FK_SPM_SPCL_MTG_CD === 'FI' ? 3 : 0,
 							paddingBottom: 1
 						}
-						if (section.type === 'LE') {
-							lectureNum += 1
-						}
-						const isEnrolled = lectureNum <= 1 && (section.sectCode === diCode || section.type === 'LE' || section.type === 'FINAL')
-						return isEnrolled && (
+						return (
 							<SectionRow data={section} style={sectionStyle} />
 						)
+					} else {
+						return null
 					}
 				})}
-				<StatusBar data={course.sections[1]} style={{ paddingTop: 2 }} />
+				<StatusBar data={course[diIndex]} style={{ paddingTop: 2 }} />
 			</View>
 		</View>
 	)
@@ -44,13 +41,9 @@ const styles = {
 		alignItems: 'center',
 		backgroundColor: '#FBFBFB',
 		borderRadius: 10,
-		shadowColor: '#000',
-		shadowOffset: {
-			width: 0,
-			height: 2
-		},
-		shadowRadius: 5,
-		shadowOpacity: 0.1
+		borderWidth: 1,
+		borderColor: 'rgba(0, 0, 0, 0.1)',
+		marginBottom: 12,
 	},
 	cellContainerStyle: {
 		width: '73%',

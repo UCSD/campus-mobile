@@ -1,5 +1,5 @@
 import React from 'react'
-import { View } from 'react-native'
+import { View, Animated } from 'react-native'
 import { connect } from 'react-redux'
 import { myIndexOf } from '../../../util/schedule'
 // import css from '../../../styles/css'
@@ -12,8 +12,11 @@ import SearchHeader from './SearchHeader'
 import DropDown from './DropDown'
 import Filter from './Filter'
 import { terms } from './mockData/TermMockData.json'
+import { getScreenWidth } from '../../../util/general'
 
 const INITIAL_TERMS = [...terms]
+const duration = 500
+const WINDOW_WIDTH = getScreenWidth()
 
 class WebReg extends React.Component {
 	static navigationOptions = ({ navigation }) => ({
@@ -24,16 +27,30 @@ class WebReg extends React.Component {
 
 	constructor(props) {
 		super()
-
+		this.state = {
+			layoutAnim: new Animated.Value(0),
+		}
 		/*
-		0 - HomePage
-		1 - SearchPage
-		*/
+		 0 - HomePage
+		 1 - SearchPage
+		 */
 	}
 
 	componentWillMount() {
 		this.props.populateClassArray()
 		this.props.selectCourse(null, null)
+	}
+
+	componentDidUpdate(prevProps) {
+		if (prevProps.filterVisible !== this.props.filterVisible) {
+			Animated.timing(
+				this.state.layoutAnim,
+				{
+					toValue: this.props.filterVisible ? 1 : 0,
+					duration
+				}
+			).start()
+		}
 	}
 
 	handleSelectSwitcher = (choice) => {
@@ -85,17 +102,26 @@ class WebReg extends React.Component {
 		return result
 	}
 
-	showModal() {
-		if (this.props.filterVisible) {
-			return (
-				<Filter style={{
+	showFilter() {
+		const filterY = this.state.layoutAnim.interpolate({
+			inputRange: [0, 1],
+			outputRange: [-133, 0]
+		})
+
+		return (
+			<Animated.View
+				style={{
 					position: 'absolute',
-					top: this.headerY + this.headerH + 2,
-					right: 0,
+					transform: [{ translateY: filterY }],
+					width: WINDOW_WIDTH,
 				}}
-				/>
-			)
-		}
+			>
+				<Filter />
+			</Animated.View>
+		)
+	}
+
+	showModal() {
 		if (this.props.termSwitcherVisible) {
 			return (
 				<DropDown
@@ -135,6 +161,11 @@ class WebReg extends React.Component {
 	}
 
 	_renderBody() {
+		const filterHeight = this.state.layoutAnim.interpolate({
+			inputRange: [0, 1],
+			outputRange: [0, 133]
+		})
+
 		switch (this.props.homeIndex) {
 			case 0: return (<HomePage
 				initialTerms={INITIAL_TERMS}
@@ -155,7 +186,13 @@ class WebReg extends React.Component {
 					this.selectorWidth = layout.width
 				}}
 			/>)
-			case 1: return <CourseSearch />
+			case 1:
+				return (
+					<View style={{ flex: 1 }}>
+						<Animated.View style={{ height: filterHeight }} />
+						<CourseSearch />
+					</View>
+				)
 			default: <View />
 		}
 	}
@@ -169,6 +206,7 @@ class WebReg extends React.Component {
 				/> */}
 				{this._renderBody()}
 				{this.showModal()}
+				{this.showFilter()}
 			</View>
 		)
 	}
