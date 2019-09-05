@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Animated, Text } from 'react-native'
+import { View, Animated } from 'react-native'
 import { connect } from 'react-redux'
 import { myIndexOf } from '../../../util/schedule'
 // import css from '../../../styles/css'
@@ -29,7 +29,6 @@ class WebReg extends React.Component {
 		super()
 		this.state = {
 			layoutAnim: new Animated.Value(0),
-			expanded: false,
 		}
 		/*
 		 0 - HomePage
@@ -44,9 +43,6 @@ class WebReg extends React.Component {
 
 	componentDidUpdate(prevProps) {
 		if (prevProps.filterVisible !== this.props.filterVisible) {
-			if (prevProps.filterVisible) {
-				this.state.expanded = false
-			}
 			Animated.timing(
 				this.state.layoutAnim,
 				{
@@ -107,45 +103,22 @@ class WebReg extends React.Component {
 	}
 
 	showFilter() {
-		if (this.props.filterVisible) {
-			if (!this.state.expanded) {
-				this.setState({ expanded: true })
-			}
-			const modalY = new Animated.Value(-133)
-			Animated.timing(modalY, {
-				duration,
-				toValue: 0
-			}).start()
-			return (
-				<Animated.View
-					style={{
-						position: 'absolute',
-						transform: [{ translateY: modalY }],
-						width: WINDOW_WIDTH,
-					}}
-				>
-					<Filter />
-				</Animated.View>
-			)
-		} else if (this.state.expanded) {
-			const modalY = new Animated.Value(0)
-			Animated.timing(modalY, {
-				duration,
-				toValue: -133
-			}).start()
-			this.state.expanded = false
-			return (
-				<Animated.View
-					style={{
-						position: 'absolute',
-						transform: [{ translateY: modalY }],
-						width: WINDOW_WIDTH,
-					}}
-				>
-					<Filter />
-				</Animated.View>
-			)
-		}
+		const filterY = this.state.layoutAnim.interpolate({
+			inputRange: [0, 1],
+			outputRange: [-133, 0]
+		})
+
+		return (
+			<Animated.View
+				style={{
+					position: 'absolute',
+					transform: [{ translateY: filterY }],
+					width: WINDOW_WIDTH,
+				}}
+			>
+				<Filter />
+			</Animated.View>
+		)
 	}
 
 	showModal() {
