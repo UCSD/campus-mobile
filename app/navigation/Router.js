@@ -251,7 +251,7 @@ let MainStack = createStackNavigator(
 		}
 	},
 	{
-		initialRouteName: 'MainTabs',
+		initialRouteName: 'WebReg',
 		defaultNavigationOptions: {
 			headerStyle: css.nav,
 			headerTitleStyle: css.navTitle,

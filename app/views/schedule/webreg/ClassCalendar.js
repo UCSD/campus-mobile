@@ -102,6 +102,7 @@ class ClassCalendar extends React.Component {
 					}
 				} else {
 					res.push(<CalendarCard
+						key={i.toString() + index.toString()}
 						color={COLOR_LIST[color % COLOR_LIST.length]}
 						name={name}
 						location={location}
@@ -181,12 +182,14 @@ class ClassCalendar extends React.Component {
 						</View>
 						{
 							days.map((item, index) => (
-								<View style={{
-									flex: 1 / 7,
-									flexDirection: 'column',
-									alignItems: 'stretch',
-									justifyContent: 'center'
-								}}
+								<View
+									key={item}
+									style={{
+										flex: 1 / 7,
+										flexDirection: 'column',
+										alignItems: 'stretch',
+										justifyContent: 'center'
+									}}
 								>
 									{hours.map((hour, i) => (
 										<View style={[timeRowStyle, { borderBottomWidth: i === 14 ? 1 : 0 }]} key={hour}>
@@ -236,7 +239,7 @@ const styles = {
 	},
 	dayTextStyle: {
 		fontFamily: 'Helvetica Neue',
-		textColor: 'black',
+		color: 'black',
 		paddingTop: 16,
 		paddingBottom: 16,
 		fontSize: 10
@@ -254,7 +257,7 @@ const styles = {
 	},
 	timeTextStyle: {
 		fontFamily: 'Helvetica Neue',
-		textColor: 'black',
+		color: 'black',
 		fontSize: 10
 	}
 }

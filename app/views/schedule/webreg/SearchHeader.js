@@ -8,6 +8,7 @@ import css from '../../../styles/css'
 
 
 const { width } = Dimensions.get('window')
+const duration = 5000
 
 class SearchHeader extends React.Component {
 	constructor(props) {
@@ -31,6 +32,14 @@ class SearchHeader extends React.Component {
 	}
 
 	onFocus() {
+		Animated.timing(
+			this.state.layoutAnim,
+			{
+				toValue: 1,
+				duration
+			}
+		).start()
+		this.props.setHomeIndex(1)
 		this.props.selectCourse(null, null)
 	}
 
@@ -43,11 +52,12 @@ class SearchHeader extends React.Component {
 		if (input) {
 			this.props.updateInput(input)
 			this.props.setHomeIndex(1)
+			this.setState({ input: '' })
 		}
 	}
 
 	onFilterPress() {
-		this.props.showFilter(true)
+		this.props.showFilter(!this.props.filterVisible)
 		Keyboard.dismiss()
 	}
 
@@ -61,7 +71,7 @@ class SearchHeader extends React.Component {
 			this.state.layoutAnim,
 			{
 				toValue: 1,
-				duration: 5000,
+				duration
 			}
 		).start()
 		this.props.setHomeIndex(1)
@@ -73,10 +83,11 @@ class SearchHeader extends React.Component {
 			this.state.layoutAnim,
 			{
 				toValue: 0,
-				duration: 5000,
+				duration
 			}
 		).start()
 		this.props.setHomeIndex(0)
+		this.props.showFilter(false)
 		this.reset()
 		Keyboard.dismiss()
 	}
@@ -103,7 +114,7 @@ class SearchHeader extends React.Component {
 			return (
 				<TouchableOpacity
 					activeOpacity={1}
-					onPress={this.onTermSwitcherPress}
+					// onPress={this.onTermSwitcherPress}
 					style={switcherContainerStyle}
 				>
 					<Text style={termTextStyle}>{selectedTerm.term_code}</Text>
@@ -112,29 +123,46 @@ class SearchHeader extends React.Component {
 			)
 		}
 
-		return <View />
+		return (
+			<View />
+		)
 	}
 
 	_renderLeft() {
-		const { leftStyle } = styles
+		const { leftStyle, backStyle } = styles
 
-		if (this.props.homeIndex === 1) {
-			return (
-				<TouchableOpacity
-					style={leftStyle}
-					onPress={this.onCollapseButtonPress}
-				>
-					<Icon name="navigate-next" color={COLOR.WHITE} size={24} />
-				</TouchableOpacity>
-			)
-		}
-		return (
+		const leftContainerWidth = this.state.layoutAnim.interpolate({
+			inputRange: [0, 1],
+			outputRange: ['20%', '15%']
+		})
+
+		let button = (
 			<TouchableOpacity
 				style={leftStyle}
 				onPress={this.onBackButtonPress}
 			>
-				<Icon name="navigate-before" color={COLOR.WHITE} size={24} />
+				<Icon name="chevron-left" color={COLOR.WHITE} size={35} />
+				<Text style={backStyle}>Back</Text>
 			</TouchableOpacity>
+		)
+
+		if (this.props.homeIndex === 1) {
+			button = (
+				<TouchableOpacity
+					style={leftStyle}
+					onPress={this.onCollapseButtonPress}
+				>
+					<Icon name="chevron-right" color={COLOR.WHITE} size={35} />
+				</TouchableOpacity>
+			)
+		}
+
+		return (
+			<Animated.View
+				style={{ ...leftStyle, width: leftContainerWidth }}
+			>
+				{button}
+			</Animated.View>
 		)
 	}
 
@@ -144,15 +172,15 @@ class SearchHeader extends React.Component {
 
 		const midContainerWidth = this.state.layoutAnim.interpolate({
 			inputRange: [0, 1],
-			outputRange: ['86%', '72%']
+			outputRange: ['80%', '70%']
 		})
 		const titleWidth = this.state.layoutAnim.interpolate({
 			inputRange: [0, 1],
-			outputRange: ['86%', '0%']
+			outputRange: ['80%', '0%']
 		})
 		const searchBarWidth = this.state.layoutAnim.interpolate({
 			inputRange: [0, 1],
-			outputRange: ['14%', '100%']
+			outputRange: ['20%', '100%']
 		})
 
 		return (
@@ -163,23 +191,25 @@ class SearchHeader extends React.Component {
 					</Text>
 				</Animated.View>
 				<Animated.View
-					style={{ ...searchBarStyle, width: searchBarWidth, marginRight: 10 }}
+					style={{ ...searchBarStyle, width: searchBarWidth, marginRight: this.props.homeIndex ? 0 : 10 }}
 				>
-					<TouchableWithoutFeedback onPress={this.onSearchIconPress}>
-						<Icon name="search" size={24} />
-					</TouchableWithoutFeedback>
+					{this._renderTermSwicher()}
 					<TextInput
 						ref={(ref) => { this.input = ref }}
 						style={inputStyle}
 						value={input}
-						placeholder="Search by course code"
+						placeholder={this.props.homeIndex ? 'Search by course code' : ''}
 						onChangeText={this.onChangeText}
 						autoCorrect={false}
 						returnKeyType="go"
 						onFocus={this.onFocus}
 						onSubmitEditing={this.onSubmit}
 					/>
-					{/* {this._renderTermSwicher()} */}
+					<TouchableWithoutFeedback
+						onPress={() => (this.props.homeIndex && this.state.input ? this.setState({ input: '' }) : this.onSearchIconPress)}
+					>
+						<Icon name={this.props.homeIndex && this.state.input ? 'close' : 'search'} size={24} style={{ paddingVertical: 4 }} />
+					</TouchableWithoutFeedback>
 				</Animated.View>
 			</Animated.View>
 		)
@@ -190,31 +220,18 @@ class SearchHeader extends React.Component {
 
 		const rightContainerWidth = this.state.layoutAnim.interpolate({
 			inputRange: [0, 1],
-			outputRange: ['0%', '14%']
+			outputRange: ['0%', '15%']
 		})
-
-		let rightBody = (
-			<TouchableOpacity
-				onPress={this.onFilterPress}
-			>
-				<Icon name="filter-list" color={COLOR.WHITE} size={24} />
-			</TouchableOpacity>
-		)
-		if (this.props.homeIndex) {
-			rightBody = (
-				<TouchableOpacity
-					onPress={this.onFilterPress}
-				>
-					<Icon name="filter-list" color={COLOR.WHITE} size={24} />
-				</TouchableOpacity>
-			)
-		}
 
 		return (
 			<Animated.View
 				style={{ ...rightStyle, width: rightContainerWidth }}
 			>
-				{rightBody}
+				<TouchableOpacity
+					onPress={this.onFilterPress}
+				>
+					<Icon name="tune" color={COLOR.WHITE} size={30} />
+				</TouchableOpacity>
 			</Animated.View>
 		)
 	}
@@ -237,7 +254,13 @@ class SearchHeader extends React.Component {
 const styles = StyleSheet.create({
 	switcherContainerStyle: {
 		alignItems: 'center',
-		flexDirection: 'row'
+		borderRightWidth: 1,
+		borderRightColor: COLOR.DGREY,
+		flexDirection: 'row',
+	},
+	backStyle: {
+		color: COLOR.WHITE,
+		fontSize: 18
 	},
 	headerContainerStyle: {
 		flexDirection: 'row',
@@ -246,22 +269,15 @@ const styles = StyleSheet.create({
 		// marginBottom: 15,
 		justifyContent: 'center',
 		alignItems: 'center',
-		shadowColor: '#000',
-		shadowOffset: {
-			width: 0,
-			height: 1,
-		},
-		shadowOpacity: 0.1,
-		shadowRadius: 2,
 	},
 	termTextStyle: {
 		color: '#7D7D7D',
 		fontSize: 15
 	},
 	leftStyle: {
-		width: '14%',
 		justifyContent: 'center',
-		alignItems: 'center'
+		alignItems: 'center',
+		flexDirection: 'row',
 	},
 	midStyle: {
 		// flex: 0.72,
@@ -273,18 +289,17 @@ const styles = StyleSheet.create({
 		// flex: 0.72,
 		flexDirection: 'row',
 		alignItems: 'center',
-		borderWidth: 1,
+		borderWidth: 0,
 		borderColor: '#194160',
 		borderRadius: 20,
 		paddingHorizontal: 5,
-		paddingVertical: 3,
 		backgroundColor: '#F1F1F1'
 	},
 	inputStyle: {
 		flex: 1,
 		fontSize: 15,
 		paddingLeft: 5,
-		paddingRight: 5
+		paddingRight: 5,
 	},
 	rightStyle: {
 		// flex: 0.14,
@@ -334,6 +349,7 @@ const mapStateToProps = state => ({
 	selectedTerm: state.schedule.selectedTerm,
 	searchInput: state.webreg.searchInput,
 	homeIndex: state.webreg.homeIndex,
+	filterVisible: state.webreg.filterVisible,
 })
 
 export default withNavigation(connect(mapStateToProps, mapDispatchToProps)(SearchHeader))

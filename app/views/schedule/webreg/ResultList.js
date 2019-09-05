@@ -39,7 +39,7 @@ class ResultList extends React.Component {
 	render() {
 		const { emptyFontStyle, emptyViewStyle } = styles
 
-		if ( this.props.input.length != 0) {
+		if ( this.props.input.length !== 0) {
 			return (
 				<FlatList
 					data={Data}
