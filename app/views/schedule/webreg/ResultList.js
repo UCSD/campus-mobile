@@ -30,7 +30,8 @@ class ResultList extends React.Component {
 		} else {
 			subject = this.props.input.trim()
 		}
-		return (!subject || data.SUBJ_CODE.includes(subject.toUpperCase())) && (!code || data.CRSE_CODE.includes(code))
+		return (!subject || data.SUBJ_CODE.includes(subject.toUpperCase())) &&
+			(!code || data.CRSE_CODE.includes(code.toUpperCase()))
 	}
 
 	renderItem = ({ item, index }) => (
