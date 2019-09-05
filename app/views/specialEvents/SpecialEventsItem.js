@@ -81,12 +81,12 @@ const CircleBorder = () => (
 
 const removeSession = (remove, id, title) => {
 	remove(id)
-	logger.trackEvent('Special Events', 'Session Removed: ' + title)
+		logger.trackEvent('SpecialEvents', { SessionRemoved: title })
 }
 
 const addSession = (add, id, title) => {
 	add(id)
-	logger.trackEvent('Special Events', 'Session Added: ' + title)
+	logger.trackEvent('SpecialEvents', { SessionAdded: title })
 }
 
 const wrappedSpecialEventsItem = withNavigation(SpecialEventsItem)

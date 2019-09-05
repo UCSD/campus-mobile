@@ -17,7 +17,7 @@ class SpecialEventsView extends Component {
 			title,
 			headerRight: (
 				(!personal) ? (
-					<HeaderButtons >
+					<HeaderButtons>
 						<Item
 							color={COLOR.WHITE}
 							title="Filter"
