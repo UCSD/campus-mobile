@@ -22,6 +22,8 @@
 	<false/>
 	<key>IS_ANALYTICS_ENABLED</key>
 	<false/>
+	<key>FIREBASE_ANALYTICS_COLLECTION_ENABLED</key>
+	<true/>
 	<key>IS_APPINVITE_ENABLED</key>
 	<false/>
 	<key>IS_GCM_ENABLED</key>

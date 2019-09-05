@@ -4,8 +4,6 @@ import { Client } from 'bugsnag-react-native'
 const bugsnag = new Client()
 
 const Analytics = firebase.analytics()
-// turn off automatic screen recording
-Analytics.setAnalyticsCollectionEnabled(false)
 
 /**
  * A module containing logging helper functions
