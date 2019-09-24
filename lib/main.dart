@@ -1,37 +1,24 @@
 //This will be the style guide used for this project
 //https://github.com/flutter/flutter/wiki/Style-guide-for-Flutter-repo
-
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import 'cards/weather.dart';
-import 'placeholder_widget.dart';
-import 'profile_view.dart';
+import 'package:campus_mobile/ui/views/home.dart';
+import 'package:campus_mobile/ui/widgets/cards/weather.dart';
+import 'package:campus_mobile/ui/views/map.dart';
+import 'package:campus_mobile/ui/views/notifications.dart';
+import 'package:campus_mobile/ui/views/profile.dart';
+import 'package:campus_mobile/ui/theme/app_theme.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  MaterialColor ucsdPrimaryBlue = MaterialColor(
-    0xFF034263,
-    <int, Color>{
-      50: Color(0xFF034263),
-      100: Color(0xFF034263),
-      200: Color(0xFF034263),
-      300: Color(0xFF034263),
-      400: Color(0xFF034263),
-      500: Color(0xFF034263),
-      600: Color(0xFF034263),
-      700: Color(0xFF034263),
-      800: Color(0xFF034263),
-      900: Color(0xFF034263),
-    },
-  );
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'UC San Diego',
       theme: ThemeData(
-        primarySwatch: ucsdPrimaryBlue,
+        primarySwatch: ColorPrimary,
       ),
       home: Home(),
     );
@@ -45,8 +32,8 @@ class HomeState extends State<Home> {
 
   final List<Widget> _children = <Widget>[
     Weather(),
-    PlaceholderWidget(Colors.deepOrange), // map
-    PlaceholderWidget(Colors.blue), // messages
+    Map(Colors.deepOrange), // map
+    Notifications(Colors.blue), // notifications
     Profile(), // profile
   ];
 

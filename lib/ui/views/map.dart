@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 
-class PlaceholderWidget extends StatelessWidget {
+class Map extends StatelessWidget {
   final Color color;
 
-  PlaceholderWidget(this.color);
+  Map(this.color);
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      child: Text(
+          'Map'
+      ),
       color: color,
     );
   }
