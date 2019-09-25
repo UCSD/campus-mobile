@@ -1,17 +1,71 @@
 import 'package:flutter/material.dart';
 
-class Home extends StatelessWidget {
-    final Color color;
+import 'package:campus_mobile/ui/widgets/cards/weather.dart';
+import 'package:campus_mobile/ui/views/map.dart';
+import 'package:campus_mobile/ui/views/notifications.dart';
+import 'package:campus_mobile/ui/views/profile.dart';
 
-    Home(this.color);
+class HomeState extends State<Home> {
+    int _selectedIndex = 0;
+    static const TextStyle optionStyle =
+    TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.black);
+
+    final List<Widget> _children = <Widget>[
+        Weather(),
+        Map(Colors.deepOrange), // map
+        Notifications(Colors.blue), // notifications
+        Profile(), // profile
+    ];
+
+    Weather weatherCard;
+
+    void _onItemTapped(int index) {
+        setState(() {
+            _selectedIndex = index;
+        });
+    }
 
     @override
     Widget build(BuildContext context) {
-        return Container(
-            child: Text(
-                'Home'
+        return Scaffold(
+            appBar: AppBar(
+                title: Center(
+                    child: Image.asset(
+                        'assets/images/UCSanDiegoLogo-nav.png',
+                        width: 200,
+                    ),
+                ),
             ),
-            color: color,
+            body: _children[_selectedIndex],
+            bottomNavigationBar: BottomNavigationBar(
+                items: const <BottomNavigationBarItem>[
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.home),
+                        title: Text('Home'),
+                    ),
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.map),
+                        title: Text('Map'),
+                    ),
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.notifications),
+                        title: Text('Messages'),
+                    ),
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.person),
+                        title: Text('Profile'),
+                    ),
+                ],
+                currentIndex: _selectedIndex,
+                selectedItemColor: Colors.blue[900],
+                unselectedItemColor: Colors.grey[500],
+                onTap: _onItemTapped,
+            ),
         );
     }
+}
+
+class Home extends StatefulWidget {
+    @override
+    HomeState createState() => new HomeState();
 }
