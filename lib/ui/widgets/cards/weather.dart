@@ -50,8 +50,7 @@ Future<Map> fetchPost() async {
 }
 
 Widget buildDailyForecast(AsyncSnapshot snapshot, int pos) {
-  return Container(
-    width: 80,
+  return Expanded(
     child: Column(
       children: <Widget>[
         Text(getDayOfWeek(snapshot.data['daily']['data'][pos]['time'])),
