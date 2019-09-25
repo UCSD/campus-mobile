@@ -11,15 +11,13 @@ class Router {
     static Route<dynamic> generateRoute(RouteSettings settings) {
         switch (settings.name) {
             case RoutePaths.Home:
-                return MaterialPageRoute(builder: (_) => Home(Colors.P));
+                return MaterialPageRoute(builder: (_) => Home());
             case RoutePaths.Map:
                 return MaterialPageRoute(builder: (_) => Map(Colors.deepOrange));
             case RoutePaths.Notifications:
                 return MaterialPageRoute(builder: (_) => Notifications(Colors.blue));
             case RoutePaths.Profile:
                 return MaterialPageRoute(builder: (_) => Profile());
-
         }
     }
 }
-
