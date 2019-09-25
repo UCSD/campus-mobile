@@ -1,4 +1,4 @@
-package com.example.campus_mobile;
+package edu.ucsd;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;
