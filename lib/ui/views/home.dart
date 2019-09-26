@@ -1,7 +1,7 @@
 import 'package:campus_mobile/ui/widgets/cards/news_list.dart';
 import 'package:flutter/material.dart';
 
-import 'package:campus_mobile/ui/widgets/cards/weather.dart';
+import 'package:campus_mobile/core/viewmodels/weather.dart';
 import 'package:campus_mobile/ui/views/map.dart';
 import 'package:campus_mobile/ui/views/notifications.dart';
 import 'package:campus_mobile/ui/views/profile.dart';
