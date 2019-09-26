@@ -1,28 +1,69 @@
+import 'dart:convert';
+
+import 'package:campus_mobile/core/models/news_model.dart';
 import 'package:campus_mobile/ui/theme/text_styles.dart';
 import 'package:flutter/material.dart';
 
 class NewsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Column(
-        children: <Widget>[
-          Container(
-            child: Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Text(
-                'News',
-                style: headerStyle,
-              ),
-            ),
-            alignment: Alignment.centerLeft,
-          ),
-          buildNewsCard(),
-          buildNewsCard(),
-          buildNewsCard(),
-        ],
-      ),
-    );
+    return FutureBuilder<dynamic>(
+        future: getNews(),
+        builder: (BuildContext context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.hasError) {
+              return Text(snapshot.error.toString());
+            }
+
+            // loop thru list
+            for (var i in snapshot.data) {
+              try {
+                var json = jsonEncode(i.toString());
+
+                var jsonDecoded = jsonDecode(json);
+//                print(jsonDecoded);
+//                print('****************************************');
+              } catch (e) {
+                print(e);
+              }
+            }
+            return new Container(
+              child: Text('Here'),
+            );
+          } else {
+            return new Container(
+              child: Text('Connection state not done'),
+            );
+          }
+        });
+//    return Card(
+//      child: Column(
+//        children: <Widget>[
+//          Container(
+//            child: Padding(
+//              padding: const EdgeInsets.all(15.0),
+//              child: Text(
+//                'News',
+//                style: headerStyle,
+//              ),
+//            ),
+//            alignment: Alignment.centerLeft,
+//          ),
+//          buildNewsCard(),
+//        ],
+//      ),
+//    );
+  }
+
+  Future<List<dynamic>> getNews() async {
+    var newsModel = await NewsModel().getNews();
+
+    return newsModel;
+  }
+
+  Future<Container> buildNewsList() async {
+    var news = await getNews();
+    print(news);
   }
 
   Container buildNewsCard() {
