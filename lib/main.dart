@@ -3,7 +3,7 @@
 
 import 'package:flutter/material.dart';
 
-import 'cards/weather.dart';
+import 'core/viewmodels/weather.dart';
 import 'placeholder_widget.dart';
 import 'profile_view.dart';
 
