@@ -7,19 +7,13 @@ const String WEATHER_ICON_BASE_URL =
     'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/images/v1/weather-icons/';
 
 class Weather extends StatefulWidget {
-  WeatherService weatherService = _WeatherState()._weatherService;
-
   @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    return _WeatherState();
-  }
+  _WeatherState createState() => _WeatherState();
 }
 
 class _WeatherState extends State<Weather> {
-  WeatherService _weatherService = WeatherService();
-  Future<Map> data;
-
+  final WeatherService _weatherService = WeatherService();
+  Future _data;
   initState() {
     super.initState();
     _updateData();
@@ -28,7 +22,7 @@ class _WeatherState extends State<Weather> {
   _updateData() {
     if (!_weatherService.isLoading) {
       setState(() {
-        data = _weatherService.fetchPost();
+        _data = _weatherService.fetchPost();
       });
     }
   }
@@ -36,16 +30,17 @@ class _WeatherState extends State<Weather> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Map>(
-      future: data,
+      future: _data,
       builder: (context, snapshot) {
-        print(snapshot.connectionState);
         return CardContainer(
-          reload: null,
+          /// TODO: need to hook up hidden to state using provider
+          hidden: false,
+          reload: () => _updateData(),
           isLoading: _weatherService.isLoading,
           title: buildTitle(snapshot),
           errorText: _weatherService.error,
           children: <Widget>[
-            buildWeeklyForcast(snapshot),
+            buildWeeklyForecast(snapshot),
           ],
         );
       },
@@ -83,7 +78,7 @@ class _WeatherState extends State<Weather> {
     }
   }
 
-  Widget buildWeeklyForcast(AsyncSnapshot snapshot) {
+  Widget buildWeeklyForecast(AsyncSnapshot snapshot) {
     if (snapshot.hasData) {
       return Container(
         child: Row(
@@ -97,6 +92,7 @@ class _WeatherState extends State<Weather> {
         ),
       );
     }
+    return Container();
   }
 
   Widget buildDailyForecast(AsyncSnapshot snapshot, int pos) {
