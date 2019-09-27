@@ -1,79 +1,108 @@
 import 'package:flutter/material.dart';
 
-class CardContainer extends StatefulWidget {
-  CardContainer(
+class CardContainer extends StatelessWidget {
+  const CardContainer(
       {Key key,
       @required this.title,
       @required this.isLoading,
       @required this.reload,
       @required this.errorText,
       @required this.children,
+      @required this.hidden,
       this.overFlowMenu})
       : super(key: key);
 
   /// required parameters
-  Widget title;
-  bool isLoading;
-  Function reload;
-  List<Widget> children;
-  String errorText;
+  final Widget title;
+  final bool isLoading;
+  final bool hidden;
+  final Function reload;
+  final List<Widget> children;
+  final String errorText;
 
   /// optional parameters
-  Map<String, Function> overFlowMenu;
+  final Map<String, Function> overFlowMenu;
 
-  @override
-  _CardContainerState createState() => _CardContainerState();
-}
-
-class _CardContainerState extends State<CardContainer> {
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Column(
-        children: <Widget>[
-          ListTile(
-            title: widget.title,
-            trailing: ButtonTheme.bar(
-              // make buttons use the appropriate styles for cards
-              child: ButtonBar(
-                mainAxisSize: MainAxisSize.min,
-                children: buildMenu({
-                  'refresh': widget.reload,
-                  'hide': () {/* insert hide function*/}
-                }),
+    if (!hidden) {
+      return Card(
+        child: Column(
+          children: <Widget>[
+            ListTile(
+              title: title,
+              trailing: ButtonTheme.bar(
+                // make buttons use the appropriate styles for cards
+                child: ButtonBar(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    buildMenu({
+                      'reload': reload,
+                      'hide': () {/* insert hide function*/}
+                    })
+                  ],
+                ),
               ),
             ),
-          ),
-          Row(
-            children: buildBody(),
-          ),
-        ],
-      ),
-    );
+            Row(
+              children: buildBody(),
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+            ),
+          ],
+        ),
+      );
+    }
+    return Container();
   }
 
   List<Widget> buildBody() {
-    if (widget.errorText != null) {
-      return [Text(widget.errorText)];
-    } else if (widget.isLoading) {
+    if (errorText != null) {
+      return [Text(errorText)];
+    } else if (isLoading) {
       return [Center(child: CircularProgressIndicator())];
     } else {
-      return widget.children;
+      return children;
     }
   }
 
-  List<Widget> buildMenu(Map<String, Function> menuOptions) {
-    List<Widget> menu = List<Widget>();
+  Widget buildMenu(Map<String, Function> menuOptions) {
+    List<DropdownMenuItem<String>> menu = List<DropdownMenuItem<String>>();
     menuOptions.forEach((menuOption, func) {
-      Widget item = FlatButton(
+      Widget item = DropdownMenuItem<String>(
+        value: menuOption,
         child: Text(
           menuOption,
           textAlign: TextAlign.center,
         ),
-        onPressed: func,
       );
       menu.add(item);
     });
-    return menu;
+    return DropdownButton(
+      items: menu,
+      icon: Icon(Icons.more_vert),
+      onChanged: (String selectedMenuItem) =>
+          onMenuItemPressed(selectedMenuItem),
+    );
+  }
+
+  void onMenuItemPressed(String selectedMenuItem) {
+    switch (selectedMenuItem) {
+      case 'reload':
+        {
+          reload();
+        }
+        break;
+      case 'hide':
+        {
+          //TODO
+          //insert code to hide card here
+        }
+        break;
+      default:
+        {
+          // do nothing for now
+        }
+    }
   }
 }
