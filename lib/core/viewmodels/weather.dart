@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:campus_mobile/core/services/weather.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import '../../components/card.dart';
 
 const String WEATHER_ICON_BASE_URL =
@@ -39,9 +40,7 @@ class _WeatherState extends State<Weather> {
           isLoading: _weatherService.isLoading,
           title: buildTitle(snapshot),
           errorText: _weatherService.error,
-          children: <Widget>[
-            buildWeeklyForecast(snapshot),
-          ],
+          child: buildCardContent(snapshot),
         );
       },
     );
@@ -78,21 +77,29 @@ class _WeatherState extends State<Weather> {
     }
   }
 
-  Widget buildWeeklyForecast(AsyncSnapshot snapshot) {
+  Column buildCardContent(AsyncSnapshot snapshot) {
     if (snapshot.hasData) {
-      return Container(
-        child: Row(
-          children: <Widget>[
-            buildDailyForecast(snapshot, 0),
-            buildDailyForecast(snapshot, 1),
-            buildDailyForecast(snapshot, 2),
-            buildDailyForecast(snapshot, 3),
-            buildDailyForecast(snapshot, 4),
-          ],
-        ),
-      );
+      return Column(children: <Widget>[
+        buildCurrentWeather(snapshot),
+        buildWeeklyForecast(snapshot),
+        buildActionButton(),
+      ]);
     }
-    return Container();
+    return Column();
+  }
+
+  Widget buildWeeklyForecast(AsyncSnapshot snapshot) {
+    return Container(
+      child: Row(
+        children: <Widget>[
+          buildDailyForecast(snapshot, 0),
+          buildDailyForecast(snapshot, 1),
+          buildDailyForecast(snapshot, 2),
+          buildDailyForecast(snapshot, 3),
+          buildDailyForecast(snapshot, 4),
+        ],
+      ),
+    );
   }
 
   Widget buildDailyForecast(AsyncSnapshot snapshot, int pos) {
@@ -117,17 +124,52 @@ class _WeatherState extends State<Weather> {
     );
   }
 
+  Widget buildCurrentWeather(AsyncSnapshot snapshot) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              (snapshot.data['currently']['temperature']).round().toString() +
+                  '\u00B0' +
+                  'in San Diego',
+              textAlign: TextAlign.start,
+            ),
+            Text(
+              snapshot.data['currently']['summary'],
+              textAlign: TextAlign.start,
+            ),
+          ],
+        ),
+        Image.network(
+          WEATHER_ICON_BASE_URL + snapshot.data['currently']['icon'] + '.png',
+          width: 100,
+        ),
+      ],
+    );
+  }
+
   Widget buildTitle(AsyncSnapshot snapshot) {
-    if (snapshot.hasData) {
-      return ListTile(
-        title: Text(
-            (snapshot.data['currently']['temperature']).round().toString() +
-                '\u00B0'),
-        subtitle: Text(snapshot.data['currently']['summary']),
-        trailing: Image.network(WEATHER_ICON_BASE_URL +
-            snapshot.data['currently']['icon'] +
-            '.png'),
-      );
-    }
+    return Text(
+      "Weather",
+      textAlign: TextAlign.left,
+    );
+  }
+
+  Widget buildActionButton() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        FlatButton(
+          child: Text(
+            'Surf Report',
+          ),
+          onPressed: () {/*TODO navigate to surf view*/},
+        )
+      ],
+    );
   }
 }

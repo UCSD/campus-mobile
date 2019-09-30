@@ -7,7 +7,7 @@ class CardContainer extends StatelessWidget {
       @required this.isLoading,
       @required this.reload,
       @required this.errorText,
-      @required this.children,
+      @required this.child,
       @required this.hidden,
       this.overFlowMenu})
       : super(key: key);
@@ -17,7 +17,7 @@ class CardContainer extends StatelessWidget {
   final bool isLoading;
   final bool hidden;
   final Function reload;
-  final List<Widget> children;
+  final Widget child;
   final String errorText;
 
   /// optional parameters
@@ -45,8 +45,7 @@ class CardContainer extends StatelessWidget {
               ),
             ),
             Row(
-              children: buildBody(),
-              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [buildBody()],
               mainAxisAlignment: MainAxisAlignment.center,
             ),
           ],
@@ -56,13 +55,13 @@ class CardContainer extends StatelessWidget {
     return Container();
   }
 
-  List<Widget> buildBody() {
+  Widget buildBody() {
     if (errorText != null) {
-      return [Text(errorText)];
+      return Text(errorText);
     } else if (isLoading) {
-      return [Center(child: CircularProgressIndicator())];
+      return Center(child: CircularProgressIndicator());
     } else {
-      return children;
+      return child;
     }
   }
 
