@@ -13,9 +13,9 @@ class Router {
             case RoutePaths.Home:
                 return MaterialPageRoute(builder: (_) => Home());
             case RoutePaths.Map:
-                return MaterialPageRoute(builder: (_) => Map(Colors.deepOrange));
+                return MaterialPageRoute(builder: (_) => Map());
             case RoutePaths.Notifications:
-                return MaterialPageRoute(builder: (_) => Notifications(Colors.blue));
+                return MaterialPageRoute(builder: (_) => Notifications());
             case RoutePaths.Profile:
                 return MaterialPageRoute(builder: (_) => Profile());
         }
