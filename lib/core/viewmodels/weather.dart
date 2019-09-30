@@ -126,10 +126,8 @@ class _WeatherState extends State<Weather> {
 
   Widget buildCurrentWeather(AsyncSnapshot snapshot) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
               (snapshot.data['currently']['temperature']).round().toString() +
@@ -160,8 +158,6 @@ class _WeatherState extends State<Weather> {
 
   Widget buildActionButton() {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         FlatButton(
           child: Text(
