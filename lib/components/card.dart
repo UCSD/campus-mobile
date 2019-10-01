@@ -58,7 +58,7 @@ class CardContainer extends StatelessWidget {
     if (errorText != null) {
       return Text(errorText);
     } else if (isLoading) {
-      return CircularProgressIndicator();
+      return Center(child: CircularProgressIndicator());
     } else {
       return child;
     }

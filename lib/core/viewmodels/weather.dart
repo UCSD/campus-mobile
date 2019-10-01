@@ -33,14 +33,17 @@ class _WeatherState extends State<Weather> {
     return FutureBuilder<Map>(
       future: _data,
       builder: (context, snapshot) {
-        return CardContainer(
-          /// TODO: need to hook up hidden to state using provider
-          hidden: false,
-          reload: () => _updateData(),
-          isLoading: _weatherService.isLoading,
-          title: buildTitle(snapshot),
-          errorText: _weatherService.error,
-          child: buildCardContent(snapshot),
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: CardContainer(
+            /// TODO: need to hook up hidden to state using provider
+            hidden: false,
+            reload: () => _updateData(),
+            isLoading: _weatherService.isLoading,
+            title: buildTitle(snapshot),
+            errorText: _weatherService.error,
+            child: buildCardContent(snapshot),
+          ),
         );
       },
     );
@@ -128,30 +131,25 @@ class _WeatherState extends State<Weather> {
   }
 
   Widget buildCurrentWeather(AsyncSnapshot snapshot) {
-    return Row(
-      children: <Widget>[
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                (snapshot.data['currently']['temperature']).round().toString() +
-                    '\u00B0' +
-                    'in San Diego',
-                textAlign: TextAlign.start,
-              ),
-              Text(
-                snapshot.data['currently']['summary'],
-                textAlign: TextAlign.start,
-              ),
-            ],
+    return ListTile(
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            (snapshot.data['currently']['temperature']).round().toString() +
+                '\u00B0' +
+                ' in San Diego',
+            textAlign: TextAlign.start,
           ),
-        ),
-        Image.network(
-          WEATHER_ICON_BASE_URL + snapshot.data['currently']['icon'] + '.png',
-          width: 100,
-        ),
-      ],
+        ],
+      ),
+      subtitle: Text(
+        snapshot.data['currently']['summary'],
+        textAlign: TextAlign.start,
+      ),
+      trailing: Image.network(
+        WEATHER_ICON_BASE_URL + snapshot.data['currently']['icon'] + '.png',
+      ),
     );
   }
 
@@ -164,6 +162,7 @@ class _WeatherState extends State<Weather> {
 
   Widget buildActionButton() {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
         FlatButton(
           child: Text(
