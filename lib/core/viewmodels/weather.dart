@@ -77,13 +77,15 @@ class _WeatherState extends State<Weather> {
     }
   }
 
-  Column buildCardContent(AsyncSnapshot snapshot) {
+  Widget buildCardContent(AsyncSnapshot snapshot) {
     if (snapshot.hasData) {
-      return Column(children: <Widget>[
-        buildCurrentWeather(snapshot),
-        buildWeeklyForecast(snapshot),
-        buildActionButton(),
-      ]);
+      return Flexible(
+        child: Column(children: <Widget>[
+          buildCurrentWeather(snapshot),
+          buildWeeklyForecast(snapshot),
+          buildActionButton(),
+        ]),
+      );
     }
     return Column();
   }
@@ -104,22 +106,23 @@ class _WeatherState extends State<Weather> {
 
   Widget buildDailyForecast(AsyncSnapshot snapshot, int pos) {
     return Container(
-      width: 80,
-      child: Column(
-        children: <Widget>[
-          Text(getDayOfWeek(snapshot.data['daily']['data'][pos]['time'])),
-          Image.network(WEATHER_ICON_BASE_URL +
-              snapshot.data['daily']['data'][pos]['icon'] +
-              '.png'),
-          Text(snapshot.data['daily']['data'][pos]['temperatureHigh']
-                  .round()
-                  .toString() +
-              '\u00B0'),
-          Text(snapshot.data['daily']['data'][pos]['temperatureLow']
-                  .round()
-                  .toString() +
-              '\u00B0'),
-        ],
+      child: Expanded(
+        child: Column(
+          children: <Widget>[
+            Text(getDayOfWeek(snapshot.data['daily']['data'][pos]['time'])),
+            Image.network(WEATHER_ICON_BASE_URL +
+                snapshot.data['daily']['data'][pos]['icon'] +
+                '.png'),
+            Text(snapshot.data['daily']['data'][pos]['temperatureHigh']
+                    .round()
+                    .toString() +
+                '\u00B0'),
+            Text(snapshot.data['daily']['data'][pos]['temperatureLow']
+                    .round()
+                    .toString() +
+                '\u00B0'),
+          ],
+        ),
       ),
     );
   }
@@ -127,19 +130,22 @@ class _WeatherState extends State<Weather> {
   Widget buildCurrentWeather(AsyncSnapshot snapshot) {
     return Row(
       children: <Widget>[
-        Column(
-          children: <Widget>[
-            Text(
-              (snapshot.data['currently']['temperature']).round().toString() +
-                  '\u00B0' +
-                  'in San Diego',
-              textAlign: TextAlign.start,
-            ),
-            Text(
-              snapshot.data['currently']['summary'],
-              textAlign: TextAlign.start,
-            ),
-          ],
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                (snapshot.data['currently']['temperature']).round().toString() +
+                    '\u00B0' +
+                    'in San Diego',
+                textAlign: TextAlign.start,
+              ),
+              Text(
+                snapshot.data['currently']['summary'],
+                textAlign: TextAlign.start,
+              ),
+            ],
+          ),
         ),
         Image.network(
           WEATHER_ICON_BASE_URL + snapshot.data['currently']['icon'] + '.png',
