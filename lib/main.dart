@@ -70,6 +70,7 @@ class _BottomNavigationBarExampleState
       ),
       body: currentTab[provider.currentIndex],
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         currentIndex: provider.currentIndex,
         onTap: (index) {
           provider.currentIndex = index;
