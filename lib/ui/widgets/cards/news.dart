@@ -4,7 +4,7 @@ import 'package:campus_mobile/core/models/news_model.dart';
 import 'package:campus_mobile/ui/theme/text_styles.dart';
 import 'package:flutter/material.dart';
 
-class NewsList extends StatelessWidget {
+class News extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<dynamic>(

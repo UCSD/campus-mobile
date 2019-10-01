@@ -5,7 +5,7 @@
 *.log
 *.pyc
 *.swp
-.DS_Store
+*.DS_Store
 .atom/
 .buildlog/
 .history
@@ -23,20 +23,17 @@
 # Flutter/Dart/Pub related
 **/doc/api/
 .dart_tool/
-.flutter-plugins
-.packages
+*.flutter-plugins
+*.packages
 .pub-cache/
 .pub/
 build/
 
 # Android related
-**/android/**/gradle-wrapper.jar
 **/android/**/*.keystore
 **/android/.gradle
 **/android/app/src/main/java/io/
 **/android/captures/
-**/android/gradlew
-**/android/gradlew.bat
 **/android/local.properties
 **/android/key.properties
 **/android/**/GeneratedPluginRegistrant.java
