@@ -43,6 +43,7 @@ class _WeatherState extends State<Weather> {
             title: buildTitle(snapshot),
             errorText: _weatherService.error,
             child: buildCardContent(snapshot),
+            actionButtons: [buildActionButton()],
           ),
         );
       },
@@ -86,7 +87,6 @@ class _WeatherState extends State<Weather> {
         child: Column(children: <Widget>[
           buildCurrentWeather(snapshot),
           buildWeeklyForecast(snapshot),
-          buildActionButton(),
         ]),
       );
     }
@@ -161,16 +161,11 @@ class _WeatherState extends State<Weather> {
   }
 
   Widget buildActionButton() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: <Widget>[
-        FlatButton(
-          child: Text(
-            'Surf Report',
-          ),
-          onPressed: () {/*TODO navigate to surf view*/},
-        )
-      ],
+    return FlatButton(
+      child: Text(
+        'Surf Report',
+      ),
+      onPressed: () {/*TODO navigate to surf view*/},
     );
   }
 }

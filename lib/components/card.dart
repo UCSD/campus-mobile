@@ -9,7 +9,8 @@ class CardContainer extends StatelessWidget {
       @required this.errorText,
       @required this.child,
       @required this.hidden,
-      this.overFlowMenu})
+      this.overFlowMenu,
+      this.actionButtons})
       : super(key: key);
 
   /// required parameters
@@ -22,6 +23,7 @@ class CardContainer extends StatelessWidget {
 
   /// optional parameters
   final Map<String, Function> overFlowMenu;
+  final List<Widget> actionButtons;
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +49,11 @@ class CardContainer extends StatelessWidget {
             Row(
               children: [buildBody()],
             ),
+            actionButtons != null
+                ? Row(
+                    children: actionButtons,
+                  )
+                : Container()
           ],
         ),
       );
@@ -78,7 +85,11 @@ class CardContainer extends StatelessWidget {
     });
     return DropdownButton(
       items: menu,
-      icon: Icon(Icons.more_vert),
+      icon: Flexible(
+        child: Center(
+          child: Icon(Icons.more_vert),
+        ),
+      ),
       onChanged: (String selectedMenuItem) =>
           onMenuItemPressed(selectedMenuItem),
     );
