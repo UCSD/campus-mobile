@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:campus_mobile/ui/router.dart';
 import 'package:campus_mobile/ui/theme/app_theme.dart';
-
 import 'package:campus_mobile/ui/views/home.dart';
 import 'package:campus_mobile/ui/views/map.dart';
 import 'package:campus_mobile/ui/views/notifications.dart';
@@ -55,11 +54,17 @@ class _BottomNavigationBarExampleState
   Widget build(BuildContext context) {
     var provider = Provider.of<BottomNavigationBarProvider>(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Center(
-          child: Image.asset(
-            'assets/images/UCSanDiegoLogo-nav.png',
-            width: 200,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(42),
+        child: AppBar(
+          title: Container(
+            padding: EdgeInsets.only(top: 4),
+            child: Center(
+              child: Image.asset(
+                'assets/images/UCSanDiegoLogo-nav.png',
+                height: 28,
+              ),
+            ),
           ),
         ),
       ),
@@ -96,50 +101,11 @@ class _BottomNavigationBarExampleState
   }
 }
 
-
-
-
 class BottomNavigationBarProvider with ChangeNotifier {
   int _currentIndex = 0;
-
   get currentIndex => _currentIndex;
-
   set currentIndex(int index) {
     _currentIndex = index;
     notifyListeners();
   }
 }
-
-
-
-
-
-
-
-
-//This will be the style guide used for this project
-//https://github.com/flutter/flutter/wiki/Style-guide-for-Flutter-repo
-
-//import 'package:flutter/material.dart';
-//
-//import 'package:provider/provider.dart';
-//import 'package:campus_mobile/provider.dart';
-//import 'package:campus_mobile/core/constants/app_constants.dart';
-//import 'package:campus_mobile/ui/router.dart';
-//import 'package:campus_mobile/ui/theme/app_theme.dart';
-//
-//void main() => runApp(MyApp());
-//
-//class MyApp extends StatelessWidget {
-//
-//
-//  @override
-//  Widget build(BuildContext context) {
-//      return MaterialApp(
-//
-//        initialRoute: RoutePaths.Home,
-//
-//      ),
-//    );
-//  }
-//}
