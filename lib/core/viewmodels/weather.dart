@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:campus_mobile/core/services/weather.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import '../../components/card.dart';
+import '../../ui/widgets/cards/card_container.dart';
 
 const String WEATHER_ICON_BASE_URL =
     'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/images/v1/weather-icons/';
@@ -33,18 +33,15 @@ class _WeatherState extends State<Weather> {
     return FutureBuilder<Map>(
       future: _data,
       builder: (context, snapshot) {
-        return Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: CardContainer(
-            /// TODO: need to hook up hidden to state using provider
-            hidden: false,
-            reload: () => _updateData(),
-            isLoading: _weatherService.isLoading,
-            title: buildTitle(snapshot),
-            errorText: _weatherService.error,
-            child: buildCardContent(snapshot),
-            actionButtons: [buildActionButton()],
-          ),
+        return CardContainer(
+          /// TODO: need to hook up hidden to state using provider
+          hidden: false,
+          reload: () => _updateData(),
+          isLoading: _weatherService.isLoading,
+          title: buildTitle(snapshot),
+          errorText: _weatherService.error,
+          child: buildCardContent(snapshot),
+          actionButtons: [buildActionButton()],
         );
       },
     );
