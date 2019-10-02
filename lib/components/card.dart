@@ -30,6 +30,7 @@ class CardContainer extends StatelessWidget {
     if (!hidden) {
       return Card(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             ListTile(
               title: title,
@@ -47,6 +48,7 @@ class CardContainer extends StatelessWidget {
               ),
             ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [buildBody()],
             ),
             actionButtons != null
@@ -65,7 +67,7 @@ class CardContainer extends StatelessWidget {
     if (errorText != null) {
       return Text(errorText);
     } else if (isLoading) {
-      return Center(child: CircularProgressIndicator());
+      return CircularProgressIndicator();
     } else {
       return child;
     }
