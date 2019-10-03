@@ -1,6 +1,5 @@
-import 'package:campus_mobile/ui/widgets/cards/news.dart';
 import 'package:flutter/material.dart';
-
+import 'package:campus_mobile/core/viewmodels/news_view_model.dart';
 import 'package:campus_mobile/core/viewmodels/weather.dart';
 import 'package:campus_mobile/ui/views/map.dart';
 import 'package:campus_mobile/ui/views/notifications.dart';
@@ -18,7 +17,7 @@ class _HomeState extends State<Home> {
     return ListView(
       children: <Widget>[
         Weather(),
-        //News(),
+        NewsCard(),
         BaselineCard(),
       ],
     );

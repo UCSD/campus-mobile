@@ -42,7 +42,7 @@ class CardContainer extends StatelessWidget {
                     buildMenu({
                       'reload': reload,
                       'hide': () {/* insert hide function*/}
-                    })
+                    }),
                   ],
                 ),
               ),

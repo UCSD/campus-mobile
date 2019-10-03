@@ -129,16 +129,11 @@ class _WeatherState extends State<Weather> {
 
   Widget buildCurrentWeather(AsyncSnapshot snapshot) {
     return ListTile(
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            (snapshot.data['currently']['temperature']).round().toString() +
-                '\u00B0' +
-                ' in San Diego',
-            textAlign: TextAlign.start,
-          ),
-        ],
+      title: Text(
+        (snapshot.data['currently']['temperature']).round().toString() +
+            '\u00B0' +
+            ' in San Diego',
+        textAlign: TextAlign.start,
       ),
       subtitle: Text(
         snapshot.data['currently']['summary'],
