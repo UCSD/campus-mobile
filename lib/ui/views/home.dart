@@ -5,6 +5,7 @@ import 'package:campus_mobile/core/viewmodels/weather.dart';
 import 'package:campus_mobile/ui/views/map.dart';
 import 'package:campus_mobile/ui/views/notifications.dart';
 import 'package:campus_mobile/ui/views/profile.dart';
+import 'package:campus_mobile/core/viewmodels/baseline.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -17,7 +18,8 @@ class _HomeState extends State<Home> {
     return ListView(
       children: <Widget>[
         Weather(),
-        News(),
+        //News(),
+        BaselineCard(),
       ],
     );
   }
