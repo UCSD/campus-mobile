@@ -1,28 +1,33 @@
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class NetworkHelper {
   NetworkHelper(this.url);
 
+  bool _isLoading = false;
+  http.Response _response;
+  String _error;
   final String url;
 
-  Future<dynamic> getData() async {
-    print('get data networking');
-    http.Response response = await http.get(url);
-
-    if (response.statusCode == 200) {
-      print('response from server');
-      String data = response.body;
-
-      try {
-        var json = jsonDecode(data);
-        return json;
-      } catch (e) {
-        print(e);
-      }
+  Future<dynamic> fetchData() async {
+    _error = null;
+    _isLoading = true;
+    _response = await http.get(url);
+    if (_response.statusCode == 200) {
+      // If server returns an OK response, return the body
+      _isLoading = false;
+      _error = null;
+      return _response.body;
     } else {
-      print(response.statusCode);
-      return '';
+      _error = _response.body;
+      _isLoading = false;
+
+      ///TODO: log this as a bug because the response was bad
+      // If that response was not OK, throw an error.
+      throw Exception('Failed to load post');
     }
   }
+
+  String get error => _error;
+  http.Response get response => _response;
+  bool get isLoading => _isLoading;
 }
