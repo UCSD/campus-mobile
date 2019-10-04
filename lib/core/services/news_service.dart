@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:campus_mobile/core/models/news_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -10,11 +9,11 @@ class NewsService {
   String _error;
   NewsModel _newsModel;
 
-  Future<List<NewsModel>> fetchData() async {
+  Future<NewsModel> fetchData() async {
     _error = null;
     _isLoading = true;
     _response = await http.get(
-        'https://2jjml3hf27.execute-api.us-west-2.amazonaws.com/prod/events/student');
+        'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/allstories.json');
 
     if (_response.statusCode == 200) {
       // If server returns an OK response, parse the JSON.
@@ -22,7 +21,7 @@ class NewsService {
       _error = null;
       try {
         _lastUpdated = DateTime.now();
-        return newsModelFromJson(_response.body);
+        return newsModelFromJson(_response.body.toString());
       } catch (e) {
         ///TODO: log this as a bug because the json parsing has failed
         print(e);
@@ -40,12 +39,8 @@ class NewsService {
   }
 
   http.Response get response => _response;
-
   String get error => _error;
-
   NewsModel get newsModel => _newsModel;
-
   bool get isLoading => _isLoading;
-
   DateTime get lastUpdated => _lastUpdated;
 }
