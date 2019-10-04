@@ -4,72 +4,58 @@
 
 import 'dart:convert';
 
-List<NewsModel> newsModelFromJson(String str) =>
-    List<NewsModel>.from(json.decode(str).map((x) => NewsModel.fromJson(x)));
+NewsModel newsModelFromJson(String str) => NewsModel.fromJson(json.decode(str));
 
-String newsModelToJson(List<NewsModel> data) =>
-    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String newsModelToJson(NewsModel data) => json.encode(data.toJson());
 
 class NewsModel {
-  DateTime eventDate;
-  String startTime;
-  String endTime;
-  String description;
-  String shortDescription;
-  String imageThumb;
-  String imageHQ;
-  String contactInfo;
-  String contactPhone;
-  String url;
-  List<String> tags;
+  List<Item> items;
 
   NewsModel({
-    this.eventDate,
-    this.startTime,
-    this.endTime,
-    this.description,
-    this.shortDescription,
-    this.imageThumb,
-    this.imageHQ,
-    this.contactInfo,
-    this.contactPhone,
-    this.url,
-    this.tags,
+    this.items,
   });
 
   factory NewsModel.fromJson(Map<String, dynamic> json) => NewsModel(
-        eventDate: json["eventdate"] == null
+        items: json["items"] == null
             ? null
-            : DateTime.parse(json["eventdate"]),
-        startTime: json["starttime"] == null ? null : json["starttime"],
-        endTime: json["endtime"] == null ? null : json["endtime"],
-        description: json["description"] == null ? null : json["description"],
-        shortDescription:
-            json["shortdescription"] == null ? null : json["shortdescription"],
-        imageThumb: json["imagethumb"] == null ? null : json["imagethumb"],
-        imageHQ: json["imagehq"] == null ? null : json["imagehq"],
-        contactInfo: json["contact_info"] == null ? null : json["contact_info"],
-        contactPhone:
-            json["contact_phone"] == null ? null : json["contact_phone"],
-        url: json["url"] == null ? null : json["url"],
-        tags: json["tags"] == null
-            ? null
-            : List<String>.from(json["tags"].map((x) => x)),
+            : List<Item>.from(json["items"].map((x) => Item.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
-        "eventdate": eventDate == null
+        "items": items == null
             ? null
-            : "${eventDate.year.toString().padLeft(4, '0')}-${eventDate.month.toString().padLeft(2, '0')}-${eventDate.day.toString().padLeft(2, '0')}",
-        "starttime": startTime == null ? null : startTime,
-        "endtime": endTime == null ? null : endTime,
+            : List<dynamic>.from(items.map((x) => x.toJson())),
+      };
+}
+
+class Item {
+  DateTime date;
+  String title;
+  String description;
+  String link;
+  String image;
+
+  Item({
+    this.date,
+    this.title,
+    this.description,
+    this.link,
+    this.image,
+  });
+
+  factory Item.fromJson(Map<String, dynamic> json) => Item(
+        date: json["date"] == null ? null : DateTime.parse(json["date"]),
+        title: json["title"] == null ? null : json["title"],
+        description: json["description"] == null ? null : json["description"],
+        link: json["link"] == null ? null : json["link"],
+        image: json["image"] == null ? null : json["image"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "date": date == null ? null : date.toIso8601String(),
+        "title": title == null ? null : title,
         "description": description == null ? null : description,
-        "shortdescription": shortDescription == null ? null : shortDescription,
-        "imagethumb": imageThumb == null ? null : imageThumb,
-        "imagehq": imageHQ == null ? null : imageHQ,
-        "contact_info": contactInfo == null ? null : contactInfo,
-        "contact_phone": contactPhone == null ? null : contactPhone,
-        "url": url == null ? null : url,
-        "tags": tags == null ? null : List<dynamic>.from(tags.map((x) => x)),
+        "link": link == null ? null : link,
+        "image": image == null ? null : image,
       };
 }
