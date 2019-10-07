@@ -57,6 +57,7 @@ class _BottomNavigationBarExampleState
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(42),
         child: AppBar(
+          centerTitle: true,
           title: Container(
             padding: EdgeInsets.only(top: 4),
             child: Center(
