@@ -75,13 +75,15 @@ class _EventsViewModelState extends State<EventsViewModel> {
     );
   }
 
-  Widget buildActionButton() {
-    return FlatButton(
+  List<Widget> buildActionButtons() {
+    List<Widget> actionButtons = List<Widget>();
+    actionButtons.add(FlatButton(
       child: Text(
         'View All',
       ),
       onPressed: () {/*TODO navigate to view with full news list*/},
-    );
+    ));
+    return actionButtons;
   }
 
   @override
@@ -97,6 +99,7 @@ class _EventsViewModelState extends State<EventsViewModel> {
           title: buildTitle("Events"),
           errorText: _eventsService.error,
           child: buildEventsCard(snapshot),
+          actionButtons: buildActionButtons(),
         );
       },
     );

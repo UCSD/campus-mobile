@@ -75,13 +75,15 @@ class _NewsState extends State<NewsCard> {
     );
   }
 
-  Widget buildActionButton() {
-    return FlatButton(
+  List<Widget> buildActionButtons() {
+    List<Widget> actionButtons = List<Widget>();
+    actionButtons.add(FlatButton(
       child: Text(
         'View All',
       ),
       onPressed: () {/*TODO navigate to view with full news list*/},
-    );
+    ));
+    return actionButtons;
   }
 
   @override
@@ -97,6 +99,7 @@ class _NewsState extends State<NewsCard> {
           title: buildTitle("News"),
           errorText: _newsService.error,
           child: buildNewsCard(snapshot),
+          actionButtons: buildActionButtons(),
         );
       },
     );
