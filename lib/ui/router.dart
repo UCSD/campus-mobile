@@ -22,9 +22,8 @@ class Router {
       case RoutePaths.Profile:
         return MaterialPageRoute(builder: (_) => Profile());
       case RoutePaths.NewsViewAll:
-        print('got here');
-        Future<NewsModel> data = settings.arguments as Future<NewsModel>;
-        return MaterialPageRoute(builder: (_) => NewsList(data: data));
+        Future<NewsModel> _data = settings.arguments as Future<NewsModel>;
+        return MaterialPageRoute(builder: (_) => NewsList(data: _data));
       case RoutePaths.BaseLineView:
         return MaterialPageRoute(builder: (_) => BaselineView());
     }

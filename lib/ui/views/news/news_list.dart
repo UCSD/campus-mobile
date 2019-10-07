@@ -30,15 +30,15 @@ class NewsList extends StatelessWidget {
       /// are rendered
       var size;
       if (listSize == null)
-        size = newsTiles.length;
+        size = listOfNews.length;
       else
         size = listSize;
-
       for (int i = 0; i < size; i++) {
         final Item item = listOfNews[i];
         final tile = buildNewsTile(item.title, item.description, item.image);
         newsTiles.add(tile);
       }
+
       return listSize != null
           ? Flexible(
               child: Column(
@@ -48,9 +48,10 @@ class NewsList extends StatelessWidget {
               ),
             )
           : ContainerView(
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                children: newsTiles,
+              child: ListView(
+                children:
+                    ListTile.divideTiles(tiles: newsTiles, context: context)
+                        .toList(),
               ),
             );
     } else {

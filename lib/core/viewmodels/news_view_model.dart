@@ -48,7 +48,6 @@ class _NewsState extends State<NewsCard> {
         'View All',
       ),
       onPressed: () {
-        print('pushed onto navigations');
         Navigator.pushNamed(context, RoutePaths.NewsViewAll, arguments: _data);
       },
     ));
