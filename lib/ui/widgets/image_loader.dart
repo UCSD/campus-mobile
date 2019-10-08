@@ -4,7 +4,12 @@ class ImageLoader extends StatelessWidget {
   final String url;
   final double width;
   final double height;
-  ImageLoader({@required this.url, this.width = 100.0, this.height = 100.0});
+  final bool fullSize;
+  ImageLoader(
+      {@required this.url,
+      this.width = 100.0,
+      this.height = 100.0,
+      this.fullSize = false});
   @override
   Widget build(BuildContext context) {
     return url.isEmpty
@@ -14,8 +19,8 @@ class ImageLoader extends StatelessWidget {
           )
         : Image.network(
             url,
-            width: width,
-            height: height,
+            width: fullSize ? null : width,
+            height: fullSize ? null : height,
             loadingBuilder: (BuildContext context, Widget child,
                 ImageChunkEvent loadingProgress) {
               if (loadingProgress == null) return child;
