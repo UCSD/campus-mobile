@@ -26,8 +26,8 @@ class Router {
       case RoutePaths.Profile:
         return MaterialPageRoute(builder: (_) => Profile());
       case RoutePaths.NewsViewAll:
-        Future<NewsModel> _data = settings.arguments as Future<NewsModel>;
-        return MaterialPageRoute(builder: (_) => NewsList(data: _data));
+        NewsModel data = settings.arguments as NewsModel;
+        return MaterialPageRoute(builder: (_) => NewsList(data: data));
       case RoutePaths.EventsViewAll:
         List<EventModel> _data = settings.arguments as List<EventModel>;
         return MaterialPageRoute(builder: (_) => EventsList(data: _data));

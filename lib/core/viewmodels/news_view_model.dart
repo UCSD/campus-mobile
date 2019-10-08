@@ -28,10 +28,14 @@ class _NewsState extends State<NewsCard> {
   }
 
   Widget buildNewsCard(AsyncSnapshot snapshot) {
-    return NewsList(
-      data: _data,
-      listSize: 3,
-    );
+    if (snapshot.hasData) {
+      return NewsList(
+        data: snapshot.data,
+        listSize: 3,
+      );
+    } else {
+      return Container();
+    }
   }
 
   Widget buildTitle(String title) {
@@ -41,14 +45,14 @@ class _NewsState extends State<NewsCard> {
     );
   }
 
-  List<Widget> buildActionButtons() {
+  List<Widget> buildActionButtons(NewsModel data) {
     List<Widget> actionButtons = List<Widget>();
     actionButtons.add(FlatButton(
       child: Text(
         'View All',
       ),
       onPressed: () {
-        Navigator.pushNamed(context, RoutePaths.NewsViewAll, arguments: _data);
+        Navigator.pushNamed(context, RoutePaths.NewsViewAll, arguments: data);
       },
     ));
     return actionButtons;
@@ -67,7 +71,7 @@ class _NewsState extends State<NewsCard> {
           title: buildTitle("News"),
           errorText: _newsService.error,
           child: buildNewsCard(snapshot),
-          actionButtons: buildActionButtons(),
+          actionButtons: buildActionButtons(snapshot.data),
         );
       },
     );
