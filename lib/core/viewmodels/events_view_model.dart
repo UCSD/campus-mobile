@@ -4,6 +4,7 @@ import 'package:campus_mobile/core/models/events_model.dart';
 import 'package:campus_mobile/core/services/event_service.dart';
 import 'package:campus_mobile/ui/widgets/image_loader.dart';
 import 'package:campus_mobile/core/constants/app_constants.dart';
+import 'package:campus_mobile/ui/views/events/events_list.dart';
 
 class EventsViewModel extends StatefulWidget {
   @override
@@ -28,29 +29,16 @@ class _EventsViewModelState extends State<EventsViewModel> {
   }
 
   Widget buildEventsCard(AsyncSnapshot snapshot) {
-    return buildEventsList(snapshot, 3);
-  }
-
-  Widget buildEventsList(AsyncSnapshot snapshot, int listSize) {
     if (snapshot.hasData) {
-      final List<EventModel> data = snapshot.data;
-      final List<Widget> eventTiles = List<Widget>();
-      //data.length instead of 3
-      for (int i = 0; i < listSize; i++) {
-        final EventModel item = data[i];
-        final tile = buildEventTile(
-            item.shortDescription, item.description, item.imageThumb);
-        eventTiles.add(tile);
-      }
-      return Flexible(
-        child: Column(
-          children: ListTile.divideTiles(tiles: eventTiles, context: context)
-              .toList(),
-        ),
-      );
+      return buildEventsList(snapshot, 3);
     } else {
       return Container();
     }
+  }
+
+  Widget buildEventsList(AsyncSnapshot snapshot, int listSize) {
+    final List<EventModel> data = snapshot.data;
+    return EventsList(data: data, listSize: 3);
   }
 
   Widget buildTitle(String title) {
@@ -76,15 +64,14 @@ class _EventsViewModelState extends State<EventsViewModel> {
     );
   }
 
-  List<Widget> buildActionButtons() {
+  List<Widget> buildActionButtons(List<EventModel> data) {
     List<Widget> actionButtons = List<Widget>();
     actionButtons.add(FlatButton(
       child: Text(
         'View All',
       ),
       onPressed: () {
-        Navigator.pushNamed(context, RoutePaths.EventsViewAll,
-            arguments: _data);
+        Navigator.pushNamed(context, RoutePaths.EventsViewAll, arguments: data);
       },
     ));
     return actionButtons;
@@ -103,7 +90,7 @@ class _EventsViewModelState extends State<EventsViewModel> {
           title: buildTitle("Events"),
           errorText: _eventsService.error,
           child: buildEventsCard(snapshot),
-          actionButtons: buildActionButtons(),
+          actionButtons: buildActionButtons(snapshot.data),
         );
       },
     );

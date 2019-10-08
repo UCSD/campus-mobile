@@ -8,4 +8,5 @@ class RoutePaths {
   static const String BaseLineView = 'baseline/baselineview';
   static const String EventsViewAll = 'events/eventslist';
   static const String NewsDetailView = 'news/news_detail_view';
+  static const String EventDetailView = 'events/event_detail_view';
 }
