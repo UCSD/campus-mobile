@@ -111,10 +111,12 @@ class Weather extends StatelessWidget {
                       children: <Widget>[
                         FlatButton(
                           child: const Text('Surf Report'),
+                          textColor: Theme.of(context).buttonColor,
                           onPressed: () {/* ... */},
                         ),
                         FlatButton(
                           child: Icon(Icons.more_vert),
+                          textColor: Theme.of(context).buttonColor,
                           onPressed: () {/* ... */},
                         ),
                       ],

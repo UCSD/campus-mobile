@@ -105,7 +105,7 @@ void doLogin(String email, String password) async {
         .toString();
 
     // TODO: is ecpEndpoint used?
-    
+
     // structure of call is correct
     final Map<String, String> headers = {
       'Content-Type': 'text/xml; charset=utf-8',
@@ -171,8 +171,8 @@ class _LoginState extends State<Login> {
                       doLogin(_emailTextFieldController.text,
                           _passwordTextFieldController.text);
                     },
-                    color: Color(0xFF034263),
-                    textColor: Colors.white,
+                    color: Theme.of(context).buttonColor,
+                    textColor: Theme.of(context).accentColor,
                   ),
                 ),
               ],

@@ -1,10 +1,10 @@
-import 'package:campus_mobile/ui/widgets/cards/news_list.dart';
-import 'package:flutter/material.dart';
-
-import 'package:campus_mobile/ui/widgets/cards/weather.dart';
+import 'package:campus_mobile/ui/theme/app_theme.dart';
 import 'package:campus_mobile/ui/views/map.dart';
 import 'package:campus_mobile/ui/views/notifications.dart';
 import 'package:campus_mobile/ui/views/profile.dart';
+import 'package:campus_mobile/ui/widgets/cards/news_list.dart';
+import 'package:campus_mobile/ui/widgets/cards/weather.dart';
+import 'package:flutter/material.dart';
 
 class HomeState extends State<Home> {
   int _selectedIndex = 0;
@@ -35,6 +35,7 @@ class HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: ColorPrimary,
         title: Center(
           child: Image.asset(
             'assets/images/UCSanDiegoLogo-nav.png',
@@ -63,7 +64,7 @@ class HomeState extends State<Home> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue[900],
+        selectedItemColor: IconTheme.of(context).color,
         unselectedItemColor: Colors.grey[500],
         onTap: _onItemTapped,
       ),
