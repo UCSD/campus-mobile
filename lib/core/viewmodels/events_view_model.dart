@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:campus_mobile/core/models/events_model.dart';
 import 'package:campus_mobile/core/services/event_service.dart';
 import 'package:campus_mobile/ui/widgets/image_loader.dart';
+import 'package:campus_mobile/core/constants/app_constants.dart';
 
 class EventsViewModel extends StatefulWidget {
   @override
@@ -81,7 +82,10 @@ class _EventsViewModelState extends State<EventsViewModel> {
       child: Text(
         'View All',
       ),
-      onPressed: () {/*TODO navigate to view with full news list*/},
+      onPressed: () {
+        Navigator.pushNamed(context, RoutePaths.EventsViewAll,
+            arguments: _data);
+      },
     ));
     return actionButtons;
   }

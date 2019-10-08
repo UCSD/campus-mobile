@@ -1,4 +1,6 @@
+import 'package:campus_mobile/core/models/events_model.dart';
 import 'package:campus_mobile/core/models/news_model.dart';
+import 'package:campus_mobile/core/viewmodels/events_view_model.dart';
 import 'package:campus_mobile/ui/views/news/news_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -9,6 +11,7 @@ import 'package:campus_mobile/ui/views/map.dart';
 import 'package:campus_mobile/ui/views/notifications.dart';
 import 'package:campus_mobile/ui/views/profile.dart';
 import 'package:campus_mobile/ui/views/baseline/baseline_view.dart';
+import 'package:campus_mobile/ui/views/events/events_list.dart';
 
 class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -24,6 +27,10 @@ class Router {
       case RoutePaths.NewsViewAll:
         Future<NewsModel> _data = settings.arguments as Future<NewsModel>;
         return MaterialPageRoute(builder: (_) => NewsList(data: _data));
+      case RoutePaths.EventsViewAll:
+        Future<List<EventModel>> _data =
+            settings.arguments as Future<List<EventModel>>;
+        return MaterialPageRoute(builder: (_) => EventsList(data: _data));
       case RoutePaths.BaseLineView:
         return MaterialPageRoute(builder: (_) => BaselineView());
     }

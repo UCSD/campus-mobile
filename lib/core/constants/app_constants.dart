@@ -6,4 +6,5 @@ class RoutePaths {
   static const String Profile = 'profile';
   static const String NewsViewAll = 'news/newslist';
   static const String BaseLineView = 'baseline/baselineview';
+  static const String EventsViewAll = 'events/eventslist';
 }
