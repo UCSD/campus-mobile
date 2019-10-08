@@ -24,6 +24,7 @@ class EventDetailView extends StatelessWidget {
         ),
       ),
       Text(data.title),
+      Text(data.startTime + "-" + data.endTime),
       Text(data.description)
     ];
   }

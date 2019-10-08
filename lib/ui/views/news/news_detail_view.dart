@@ -24,6 +24,7 @@ class NewsDetailView extends StatelessWidget {
         ),
       ),
       Text(data.title),
+      Text(data.date.toIso8601String()),
       Text(data.description)
     ];
   }
