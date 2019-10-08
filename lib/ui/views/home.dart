@@ -1,11 +1,8 @@
-import 'package:flutter/material.dart';
+import 'package:campus_mobile/core/viewmodels/baseline.dart';
+import 'package:campus_mobile/core/viewmodels/events_view_model.dart';
 import 'package:campus_mobile/core/viewmodels/news_view_model.dart';
 import 'package:campus_mobile/core/viewmodels/weather.dart';
-import 'package:campus_mobile/ui/views/map.dart';
-import 'package:campus_mobile/ui/views/notifications.dart';
-import 'package:campus_mobile/ui/views/profile.dart';
-import 'package:campus_mobile/core/viewmodels/events_view_model.dart';
-import 'package:campus_mobile/core/viewmodels/baseline.dart';
+import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
   @override
