@@ -1,8 +1,8 @@
 import 'package:campus_mobile/core/models/availability_model.dart';
+import 'package:campus_mobile/core/services/availability_service.dart';
 import 'package:campus_mobile/ui/widgets/cards/card_container.dart';
 import 'package:flutter/material.dart';
 import 'package:campus_mobile/core/constants/app_constants.dart';
-import 'package:campus_mobile/core/services/networking.dart';
 
 class AvailabilityCard extends StatefulWidget {
   @override
@@ -10,9 +10,14 @@ class AvailabilityCard extends StatefulWidget {
 }
 
 class _AvailabilityCardState extends State<AvailabilityCard> {
-  final NetworkHelper _availabilityService =
-      NetworkHelper("https://api-qa.ucsd.edu:8243/occuspace/v1.0/busyness");
+  final AvailabilityService _availabilityService = AvailabilityService();
   Future<List<AvailabilityModel>> _data;
+
+  initState() {
+    super.initState();
+    _updateData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<AvailabilityModel>>(
@@ -34,23 +39,16 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
 
   Widget buildAvailabilityCard(AsyncSnapshot snapshot) {
     if (snapshot.hasData) {
-      print(snapshot.data);
       return Container(child: Text('this worked'));
     } else {
-      return Container(
-        child: Text("error"),
-      );
+      return Container();
     }
   }
 
   void _updateData() {
-    final Map<String, String> headers = {
-      "accept": ":application/json",
-      "Authorization": "Bearer " + "\$MOBILE_PUBLIC_BEARER_TOKEN",
-    };
     if (!_availabilityService.isLoading) {
       setState(() {
-        _data = _availabilityService.authorizedFetch(headers);
+        _data = _availabilityService.fetchData();
       });
     }
   }
