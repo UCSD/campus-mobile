@@ -22,21 +22,21 @@ class CampusMobile extends StatelessWidget {
       title: 'UC San Diego',
       theme: ThemeData(
         primarySwatch: ColorPrimary,
-        accentColor: Color(0xFFFFFFFF),
+        accentColor: lightAccentColor,
         brightness: Brightness.light,
-        buttonColor: Color(0xFF034263),
-        iconTheme: IconThemeData(
-          color: Colors.blue[900],
-        ),
+        buttonColor: lightButtonColor,
+        textTheme: lightThemeText,
+        iconTheme: lightIconTheme,
+        appBarTheme: lightAppBarTheme,
       ),
       darkTheme: ThemeData(
         primarySwatch: ColorPrimary,
-        accentColor: ColorPrimary,
+        accentColor: darkAccentColor,
         brightness: Brightness.dark,
-        buttonColor: Color(0xFFFFFFFF),
-        iconTheme: IconThemeData(
-          color: Color(0xFFFFFFFF),
-        ),
+        buttonColor: darkButtonColor,
+        textTheme: darkThemeText,
+        iconTheme: darkIconTheme,
+        appBarTheme: darkAppBarTheme,
       ),
       home: ChangeNotifierProvider<BottomNavigationBarProvider>(
         child: BottomNavigationBarExample(),

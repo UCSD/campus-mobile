@@ -172,7 +172,7 @@ class _LoginState extends State<Login> {
                           _passwordTextFieldController.text);
                     },
                     color: Theme.of(context).buttonColor,
-                    textColor: Theme.of(context).accentColor,
+                    textColor: Theme.of(context).textTheme.button.color,
                   ),
                 ),
               ],
