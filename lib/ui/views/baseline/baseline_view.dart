@@ -6,9 +6,7 @@ class BaselineView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ContainerView(
       child: Center(
-        child: Container(
-          child: Text('BaseLine View'),
-        ),
+        child: Text('BaseLine View'),
       ),
     );
   }

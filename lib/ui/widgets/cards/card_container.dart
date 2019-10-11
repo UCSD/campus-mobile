@@ -66,7 +66,10 @@ class CardContainer extends StatelessWidget {
     } else if (isLoading) {
       return CircularProgressIndicator();
     } else {
-      return child;
+      return Container(
+        constraints: BoxConstraints(maxHeight: 216),
+        child: child,
+      );
     }
   }
 

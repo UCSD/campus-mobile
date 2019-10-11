@@ -4,7 +4,6 @@ import 'package:campus_mobile/ui/widgets/availability/availability_display.dart'
 import 'package:campus_mobile/ui/widgets/cards/card_container.dart';
 import 'package:flutter/material.dart';
 import 'package:campus_mobile/core/constants/app_constants.dart';
-import 'package:campus_mobile/ui/widgets/cards/scroll_view.dart';
 
 class AvailabilityCard extends StatefulWidget {
   @override

@@ -11,37 +11,42 @@ class AvailabilityDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 275,
-      child: Column(
-        children: [buildLocationTitle(), buildAvailabilityBars()],
-      ),
-    );
+    return buildAvailabilityBars(context);
   }
 
   Widget buildLocationTitle() {
     return Text(model.locationName);
   }
 
-  Widget buildAvailabilityBars() {
+  Widget buildAvailabilityBars(BuildContext context) {
     List<Widget> locations = List<Widget>();
     if (model.subLocations.isNotEmpty) {
       for (AvailabilityModel subLocation in model.subLocations) {
         locations.add(
           ListTile(
               title: Text(subLocation.locationName),
-              trailing: LinearProgressIndicator(
+              subtitle: LinearProgressIndicator(
                   value: subLocation.busyness.toDouble())),
         );
       }
     } else {
       locations.add(ListTile(
         title: Text(model.locationName),
-        trailing: LinearProgressIndicator(
-          value: model.busyness.toDouble(),
-        ),
+        subtitle: LinearProgressIndicator(value: model.busyness.toDouble()),
       ));
     }
-    return Column(children: locations);
+    locations =
+        ListTile.divideTiles(tiles: locations, context: context).toList();
+    locations.insert(
+        0,
+        ListTile(
+          title: Row(
+            children: [
+              Expanded(child: buildLocationTitle()),
+            ],
+          ),
+        ));
+
+    return ListView(children: locations);
   }
 }
