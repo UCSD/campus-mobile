@@ -4,7 +4,11 @@ import 'package:campus_mobile_beta/ui/widgets/availability/availability_display.
 import 'package:campus_mobile_beta/ui/widgets/cards/card_container.dart';
 import 'package:campus_mobile_beta/ui/widgets/dots_indicator.dart';
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 import 'package:campus_mobile_beta/core/constants/app_constants.dart';
+=======
+import 'package:campus_mobile/core/constants/app_constants.dart';
+>>>>>>> ec52d45... build out basics of availability card and tie in data
 
 class AvailabilityCard extends StatefulWidget {
   @override

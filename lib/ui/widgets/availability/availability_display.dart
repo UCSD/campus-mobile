@@ -27,16 +27,24 @@ class AvailabilityDisplay extends StatelessWidget {
           ListTile(
               title: Text(subLocation.locationName),
               subtitle: LinearProgressIndicator(
+<<<<<<< HEAD
                 value: 1 - ((subLocation.busyness) / 100).toDouble(),
                 backgroundColor: Colors.grey,
                 valueColor: AlwaysStoppedAnimation<Color>(ColorPrimary),
               )),
+=======
+                  value: subLocation.busyness.toDouble())),
+>>>>>>> ec52d45... build out basics of availability card and tie in data
         );
       }
     } else {
       locations.add(ListTile(
         title: Text(model.locationName),
+<<<<<<< HEAD
         subtitle: LinearProgressIndicator(value: 1 - model.busyness.toDouble()),
+=======
+        subtitle: LinearProgressIndicator(value: model.busyness.toDouble()),
+>>>>>>> ec52d45... build out basics of availability card and tie in data
       ));
     }
     locations =
