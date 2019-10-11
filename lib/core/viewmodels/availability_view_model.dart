@@ -1,8 +1,10 @@
 import 'package:campus_mobile/core/models/availability_model.dart';
 import 'package:campus_mobile/core/services/availability_service.dart';
+import 'package:campus_mobile/ui/widgets/availability/availability_display.dart';
 import 'package:campus_mobile/ui/widgets/cards/card_container.dart';
 import 'package:flutter/material.dart';
 import 'package:campus_mobile/core/constants/app_constants.dart';
+import 'package:campus_mobile/ui/widgets/cards/scroll_view.dart';
 
 class AvailabilityCard extends StatefulWidget {
   @override
@@ -39,7 +41,17 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
 
   Widget buildAvailabilityCard(AsyncSnapshot snapshot) {
     if (snapshot.hasData) {
-      return Container(child: Text('this worked'));
+      print('went here');
+      List<AvailabilityModel> data = snapshot.data;
+      List<Widget> locationsList = List<Widget>();
+      for (AvailabilityModel model in data) {
+        locationsList.add(AvailabilityDisplay(
+          model: model,
+        ));
+      }
+      return PageView(
+        children: locationsList,
+      );
     } else {
       return Container();
     }

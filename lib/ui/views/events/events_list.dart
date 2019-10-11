@@ -34,12 +34,9 @@ class EventsList extends StatelessWidget {
     }
 
     return listSize != null
-        ? Flexible(
-            child: Column(
-              children:
-                  ListTile.divideTiles(tiles: eventTiles, context: context)
-                      .toList(),
-            ),
+        ? Column(
+            children: ListTile.divideTiles(tiles: eventTiles, context: context)
+                .toList(),
           )
         : ContainerView(
             child: ListView(

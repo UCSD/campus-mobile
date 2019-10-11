@@ -47,10 +47,7 @@ class CardContainer extends StatelessWidget {
                 ),
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [buildBody()],
-            ),
+            buildBody(),
             actionButtons != null
                 ? Row(
                     children: actionButtons,

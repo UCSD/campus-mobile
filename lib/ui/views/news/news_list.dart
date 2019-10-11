@@ -35,11 +35,9 @@ class NewsList extends StatelessWidget {
     }
 
     return listSize != null
-        ? Flexible(
-            child: Column(
-              children: ListTile.divideTiles(tiles: newsTiles, context: context)
-                  .toList(),
-            ),
+        ? Column(
+            children: ListTile.divideTiles(tiles: newsTiles, context: context)
+                .toList(),
           )
         : ContainerView(
             child: ListView(

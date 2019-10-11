@@ -80,12 +80,10 @@ class _WeatherState extends State<Weather> {
 
   Widget buildCardContent(AsyncSnapshot snapshot) {
     if (snapshot.hasData) {
-      return Flexible(
-        child: Column(children: <Widget>[
-          buildCurrentWeather(snapshot),
-          buildWeeklyForecast(snapshot),
-        ]),
-      );
+      return Column(children: <Widget>[
+        buildCurrentWeather(snapshot),
+        buildWeeklyForecast(snapshot),
+      ]);
     }
     return Column();
   }
