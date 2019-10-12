@@ -9,7 +9,11 @@ class AvailabilityService {
   final NetworkHelper _networkHelper = NetworkHelper();
   final Map<String, String> headers = {
     "accept": ":application/json",
+<<<<<<< HEAD
     "Authorization": "Bearer " + "MOBILE_PUBLIC_BEARER_TOKEN",
+=======
+    "Authorization": "Bearer " + "$MOBILE_PUBLIC_BEARER_TOKEN",
+>>>>>>> 70386e4... try ci replacement script for bearer token
   };
   final String endpoint =
       "https://api-qa.ucsd.edu:8243/occuspace/v1.0/busyness";
