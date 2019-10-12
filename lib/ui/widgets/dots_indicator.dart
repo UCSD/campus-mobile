@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 /// code from: https://gist.github.com/collinjackson/4fddbfa2830ea3ac033e34622f278824
+=======
+>>>>>>> 31b47f5... integrate dots indicator for availability card
 import 'package:flutter/material.dart';
 import 'dart:math';
 
