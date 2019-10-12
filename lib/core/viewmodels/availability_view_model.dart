@@ -2,6 +2,7 @@ import 'package:campus_mobile/core/models/availability_model.dart';
 import 'package:campus_mobile/core/services/availability_service.dart';
 import 'package:campus_mobile/ui/widgets/availability/availability_display.dart';
 import 'package:campus_mobile/ui/widgets/cards/card_container.dart';
+import 'package:campus_mobile/ui/widgets/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:campus_mobile/core/constants/app_constants.dart';
 
@@ -13,6 +14,7 @@ class AvailabilityCard extends StatefulWidget {
 class _AvailabilityCardState extends State<AvailabilityCard> {
   final AvailabilityService _availabilityService = AvailabilityService();
   Future<List<AvailabilityModel>> _data;
+  final _controller = new PageController();
 
   initState() {
     super.initState();
@@ -48,8 +50,24 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
           model: model,
         ));
       }
-      return PageView(
-        children: locationsList,
+
+      return Column(
+        children: <Widget>[
+          Flexible(
+            child: PageView(
+              controller: _controller,
+              children: locationsList,
+            ),
+          ),
+          DotsIndicator(
+            controller: _controller,
+            itemCount: data.length,
+            onPageSelected: (int index) {
+              _controller.animateToPage(index,
+                  duration: Duration(seconds: 1), curve: Curves.ease);
+            },
+          ),
+        ],
       );
     } else {
       return Container();
