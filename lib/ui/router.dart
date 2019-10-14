@@ -1,5 +1,6 @@
 import 'package:campus_mobile/core/models/events_model.dart';
 import 'package:campus_mobile/core/models/news_model.dart';
+import 'package:campus_mobile/core/models/availability_model.dart';
 import 'package:campus_mobile/ui/views/events/event_detail_view.dart';
 import 'package:campus_mobile/ui/views/news/news_list.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,7 @@ import 'package:campus_mobile/ui/views/profile.dart';
 import 'package:campus_mobile/ui/views/baseline/baseline_view.dart';
 import 'package:campus_mobile/ui/views/events/events_list.dart';
 import 'package:campus_mobile/ui/views/news/news_detail_view.dart';
+import 'package:campus_mobile/ui/views/availability/manange_availability_view.dart';
 
 class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -40,6 +42,11 @@ class Router {
       case RoutePaths.EventDetailView:
         EventModel data = settings.arguments as EventModel;
         return MaterialPageRoute(builder: (_) => EventDetailView(data: data));
+      case RoutePaths.ManageAvailabilityView:
+        List<AvailabilityModel> data =
+            settings.arguments as List<AvailabilityModel>;
+        return MaterialPageRoute(
+            builder: (_) => ManageAvailabilityView(data: data));
     }
   }
 }

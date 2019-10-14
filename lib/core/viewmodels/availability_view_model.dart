@@ -42,7 +42,6 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
 
   Widget buildAvailabilityCard(AsyncSnapshot snapshot) {
     if (snapshot.hasData) {
-      print('went here');
       List<AvailabilityModel> data = snapshot.data;
       List<Widget> locationsList = List<Widget>();
       for (AvailabilityModel model in data) {
@@ -86,10 +85,11 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
     List<Widget> actionButtons = List<Widget>();
     actionButtons.add(FlatButton(
       child: Text(
-        'View All',
+        'Manage Locations',
       ),
       onPressed: () {
-        Navigator.pushNamed(context, RoutePaths.BaseLineView);
+        Navigator.pushNamed(context, RoutePaths.ManageAvailabilityView,
+            arguments: data);
       },
     ));
     return actionButtons;
