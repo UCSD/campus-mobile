@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 import 'package:campus_mobile_beta/ui/widgets/container_view.dart';
 import 'package:campus_mobile_beta/core/models/availability_model.dart';
+=======
+import 'package:campus_mobile/ui/widgets/container_view.dart';
+import 'package:campus_mobile/core/models/availability_model.dart';
+>>>>>>> 9fd3b7b... add manage location view for availability card and adjust colors
 
 class ManageAvailabilityView extends StatelessWidget {
   const ManageAvailabilityView({Key key, @required this.data})
