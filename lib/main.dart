@@ -4,6 +4,8 @@ import 'package:campus_mobile_beta/ui/views/home.dart';
 import 'package:campus_mobile_beta/ui/views/map.dart';
 import 'package:campus_mobile_beta/ui/views/notifications.dart';
 import 'package:campus_mobile_beta/ui/views/profile.dart';
+import 'package:campus_mobile_beta/ui/widgets/navigation/app_bar.dart';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -60,26 +62,7 @@ class _BottomNavigationBarExampleState
   Widget build(BuildContext context) {
     var provider = Provider.of<BottomNavigationBarProvider>(context);
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(42),
-        child: AppBar(
-          primary: true,
-          centerTitle: true,
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                'assets/images/UCSanDiegoLogo-nav.png',
-                fit: BoxFit.contain,
-                height: 32,
-              ),
-              Container(
-                  padding: const EdgeInsets.all(8.0), child: Text('YourAppTitle'))
-            ],
-
-          ),
-        ),
-      ),
+      appBar: CMAppBar(),
       body: currentTab[provider.currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
