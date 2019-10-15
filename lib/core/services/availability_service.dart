@@ -1,12 +1,6 @@
 import 'dart:async';
-<<<<<<< HEAD
 import 'package:campus_mobile_beta/core/models/availability_model.dart';
 import 'package:campus_mobile_beta/core/services/networking.dart';
-=======
-
-import 'package:campus_mobile/core/models/availability_model.dart';
-import 'package:campus_mobile/core/services/networking.dart';
->>>>>>> 41519e4... implement links card
 
 class AvailabilityService {
   bool _isLoading = false;
@@ -15,15 +9,7 @@ class AvailabilityService {
   final NetworkHelper _networkHelper = NetworkHelper();
   final Map<String, String> headers = {
     "accept": ":application/json",
-<<<<<<< HEAD
-<<<<<<< HEAD
     "Authorization": "Bearer " + "MOBILE_PUBLIC_BEARER_TOKEN",
-=======
-    "Authorization": "Bearer " + "$MOBILE_PUBLIC_BEARER_TOKEN",
->>>>>>> 70386e4... try ci replacement script for bearer token
-=======
-    "Authorization": "Bearer " + "MOBILE_PUBLIC_BEARER_TOKEN",
->>>>>>> 41519e4... implement links card
   };
   final String endpoint =
       "https://api-qa.ucsd.edu:8243/occuspace/v1.0/busyness";

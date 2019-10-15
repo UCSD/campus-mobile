@@ -1,8 +1,8 @@
-import 'package:campus_mobile/core/constants/app_constants.dart';
-import 'package:campus_mobile/core/models/links_model.dart';
-import 'package:campus_mobile/core/services/links_service.dart';
-import 'package:campus_mobile/ui/views/links/links_list.dart';
-import 'package:campus_mobile/ui/widgets/cards/card_container.dart';
+import 'package:campus_mobile_beta/core/constants/app_constants.dart';
+import 'package:campus_mobile_beta/core/models/links_model.dart';
+import 'package:campus_mobile_beta/core/services/links_service.dart';
+import 'package:campus_mobile_beta/ui/views/links/links_list.dart';
+import 'package:campus_mobile_beta/ui/widgets/cards/card_container.dart';
 import 'package:flutter/material.dart';
 
 class LinksCard extends StatefulWidget {
