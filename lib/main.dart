@@ -62,7 +62,18 @@ class _BottomNavigationBarExampleState
   Widget build(BuildContext context) {
     var provider = Provider.of<BottomNavigationBarProvider>(context);
     return Scaffold(
-      appBar: CMAppBar(),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(42),
+        child: AppBar(
+          primary: true,
+          centerTitle: true,
+          title: Image.asset(
+            'assets/images/UCSanDiegoLogo-nav.png',
+            fit: BoxFit.contain,
+            height: 28,
+          ),
+        ),
+      ),
       body: currentTab[provider.currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
