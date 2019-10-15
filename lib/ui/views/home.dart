@@ -1,9 +1,10 @@
+import 'package:campus_mobile/core/viewmodels/availability_view_model.dart';
 import 'package:campus_mobile/core/viewmodels/baseline.dart';
 import 'package:campus_mobile/core/viewmodels/events_view_model.dart';
+import 'package:campus_mobile/core/viewmodels/links_view_model.dart';
 import 'package:campus_mobile/core/viewmodels/news_view_model.dart';
 import 'package:campus_mobile/core/viewmodels/parking_view_model.dart';
 import 'package:campus_mobile/core/viewmodels/weather.dart';
-import 'package:campus_mobile/core/viewmodels/availability_view_model.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
@@ -21,6 +22,7 @@ class _HomeState extends State<Home> {
         EventsViewModel(),
         AvailabilityCard(),
         ParkingCard(),
+		LinksCard(),
         BaselineCard(),
       ],
     );
