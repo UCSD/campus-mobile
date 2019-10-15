@@ -1,21 +1,20 @@
 import 'dart:async';
 
-import 'package:campus_mobile/core/models/availability_model.dart';
+import 'package:campus_mobile/core/models/links_model.dart';
 import 'package:campus_mobile/core/services/networking.dart';
 
-class AvailabilityService {
+class LinksService {
   bool _isLoading = false;
   DateTime _lastUpdated;
   String _error;
   final NetworkHelper _networkHelper = NetworkHelper();
   final Map<String, String> headers = {
     "accept": ":application/json",
-    "Authorization": "Bearer " + "MOBILE_PUBLIC_BEARER_TOKEN",
   };
   final String endpoint =
-      "https://api-qa.ucsd.edu:8243/occuspace/v1.0/busyness";
+      "https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/quick_links/ucsd-quicklinks-v3.json";
 
-  Future<List<AvailabilityModel>> fetchData() async {
+  Future<List<LinksModel>> fetchData() async {
     _error = null;
     _isLoading = true;
     try {
@@ -24,13 +23,13 @@ class AvailabilityService {
           await _networkHelper.authorizedFetch(endpoint, headers);
 
       /// parse data
-      final data = availabilityModelFromJson(_response);
+      final data = linksFromJson(_response);
       _isLoading = false;
       return data;
     } catch (e) {
       _error = e.toString();
       _isLoading = false;
-      return List<AvailabilityModel>();
+      return List<LinksModel>();
     }
   }
 
