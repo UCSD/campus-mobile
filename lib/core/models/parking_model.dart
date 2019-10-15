@@ -1,4 +1,16 @@
-class Parking {
+// To parse this JSON data, do
+//
+//     final parking = parkingFromJson(jsonString);
+
+import 'dart:convert';
+
+List<ParkingModel> parkingFromJson(String str) => List<ParkingModel>.from(
+    json.decode(str).map((x) => ParkingModel.fromJson(x)));
+
+String parkingToJson(List<ParkingModel> data) =>
+    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+
+class ParkingModel {
   String locationId;
   String locationName;
   String locationContext;
@@ -9,7 +21,7 @@ class Parking {
   int total;
   int open;
 
-  Parking({
+  ParkingModel({
     this.locationId,
     this.locationName,
     this.locationContext,
@@ -20,6 +32,38 @@ class Parking {
     this.total,
     this.open,
   });
+  factory ParkingModel.fromJson(Map<String, dynamic> json) => ParkingModel(
+        locationId: json["LocationId"] == null ? null : json["LocationId"],
+        locationName:
+            json["LocationName"] == null ? null : json["LocationName"],
+        locationContext:
+            json["LocationContext"] == null ? null : json["LocationContext"],
+        locationProvider:
+            json["LocationProvider"] == null ? null : json["LocationProvider"],
+        availability: json["Availability"] == null
+            ? null
+            : Availability.fromJson(json["Availability"]),
+        lastUpdated: json["LastUpdated"] == null
+            ? null
+            : DateTime.parse(json["LastUpdated"]),
+        availabilityType:
+            json["AvailabilityType"] == null ? null : json["AvailabilityType"],
+        total: json["Total"] == null ? null : json["Total"],
+        open: json["Open"] == null ? null : json["Open"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "LocationId": locationId == null ? null : locationId,
+        "LocationName": locationName == null ? null : locationName,
+        "LocationContext": locationContext == null ? null : locationContext,
+        "LocationProvider": locationProvider == null ? null : locationProvider,
+        "Availability": availability == null ? null : availability.toJson(),
+        "LastUpdated":
+            lastUpdated == null ? null : lastUpdated.toIso8601String(),
+        "AvailabilityType": availabilityType == null ? null : availabilityType,
+        "Total": total == null ? null : total,
+        "Open": open == null ? null : open,
+      };
 }
 
 class Availability {
