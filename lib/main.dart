@@ -1,104 +1,118 @@
-//This will be the style guide used for this project
-//https://github.com/flutter/flutter/wiki/Style-guide-for-Flutter-repo
+import 'package:campus_mobile_beta/ui/router.dart';
+import 'package:campus_mobile_beta/ui/theme/app_theme.dart';
+import 'package:campus_mobile_beta/ui/views/home.dart';
+import 'package:campus_mobile_beta/ui/views/map.dart';
+import 'package:campus_mobile_beta/ui/views/notifications.dart';
+import 'package:campus_mobile_beta/ui/views/profile.dart';
+import 'package:campus_mobile_beta/ui/widgets/navigation/app_bar.dart';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import 'cards/weather.dart';
-import 'placeholder_widget.dart';
-import 'profile_view.dart';
+void main() => runApp(CampusMobile());
 
-void main() => runApp(MyApp());
-
-class MyApp extends StatelessWidget {
-  MaterialColor ucsdPrimaryBlue = MaterialColor(
-    0xFF034263,
-    <int, Color>{
-      50: Color(0xFF034263),
-      100: Color(0xFF034263),
-      200: Color(0xFF034263),
-      300: Color(0xFF034263),
-      400: Color(0xFF034263),
-      500: Color(0xFF034263),
-      600: Color(0xFF034263),
-      700: Color(0xFF034263),
-      800: Color(0xFF034263),
-      900: Color(0xFF034263),
-    },
-  );
-
+class CampusMobile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'UC San Diego',
       theme: ThemeData(
-        primarySwatch: ucsdPrimaryBlue,
+        primarySwatch: ColorPrimary,
+        accentColor: lightAccentColor,
+        brightness: Brightness.light,
+        buttonColor: lightButtonColor,
+        textTheme: lightThemeText,
+        iconTheme: lightIconTheme,
+        appBarTheme: lightAppBarTheme,
       ),
-      home: Home(),
+      darkTheme: ThemeData(
+        primarySwatch: ColorPrimary,
+        accentColor: darkAccentColor,
+        brightness: Brightness.dark,
+        buttonColor: darkButtonColor,
+        textTheme: darkThemeText,
+        iconTheme: darkIconTheme,
+        appBarTheme: darkAppBarTheme,
+      ),
+      home: ChangeNotifierProvider<BottomNavigationBarProvider>(
+        child: BottomNavigationBarExample(),
+        builder: (BuildContext context) => BottomNavigationBarProvider(),
+      ),
+      onGenerateRoute: Router.generateRoute,
     );
   }
 }
 
-class HomeState extends State<Home> {
-  int _selectedIndex = 0;
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.black);
+class BottomNavigationBarExample extends StatefulWidget {
+  @override
+  _BottomNavigationBarExampleState createState() =>
+      _BottomNavigationBarExampleState();
+}
 
-  final List<Widget> _children = <Widget>[
-    Weather(),
-    PlaceholderWidget(Colors.deepOrange), // map
-    PlaceholderWidget(Colors.blue), // messages
-    Profile(), // profile
+class _BottomNavigationBarExampleState
+    extends State<BottomNavigationBarExample> {
+  var currentTab = [
+    Home(),
+    Map(),
+    Notifications(),
+    Profile(),
   ];
-
-  Weather weatherCard;
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<BottomNavigationBarProvider>(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Center(
-          child: Image.asset(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(42),
+        child: AppBar(
+          primary: true,
+          centerTitle: true,
+          title: Image.asset(
             'assets/images/UCSanDiegoLogo-nav.png',
-            width: 200,
+            fit: BoxFit.contain,
+            height: 28,
           ),
         ),
       ),
-      body: _children[_selectedIndex],
+      body: currentTab[provider.currentIndex],
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
+        type: BottomNavigationBarType.fixed,
+        currentIndex: provider.currentIndex,
+        onTap: (index) {
+          provider.currentIndex = index;
+        },
+        items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            title: Text('Home'),
+            icon: new Icon(Icons.home),
+            title: new Text('Home'),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.map),
-            title: Text('Map'),
+            icon: new Icon(Icons.map),
+            title: new Text('Map'),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
-            title: Text('Messages'),
+            icon: new Icon(Icons.notifications),
+            title: new Text('Notifications'),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            title: Text('Profile'),
+            icon: new Icon(Icons.person),
+            title: new Text('User Profile'),
           ),
         ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue[900],
-        unselectedItemColor: Colors.grey[500],
-        onTap: _onItemTapped,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        selectedItemColor: IconTheme.of(context).color,
+        unselectedItemColor: Colors.grey.shade500,
       ),
     );
   }
 }
 
-class Home extends StatefulWidget {
-  @override
-  HomeState createState() => new HomeState();
+class BottomNavigationBarProvider with ChangeNotifier {
+  int _currentIndex = 0;
+  get currentIndex => _currentIndex;
+  set currentIndex(int index) {
+    _currentIndex = index;
+    notifyListeners();
+  }
 }
