@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:campus_mobile/core/models/parking_model.dart';
 import 'package:campus_mobile/core/services/networking.dart';
 
@@ -11,7 +12,7 @@ class ParkingService {
     "accept": ":application/json",
   };
   final String endpoint =
-      "https://b2waxbcovi.execute-api.us-west-2.amazonaws.com/prod/parking/v1.1/status";
+      "https://ucsd-mobile-dev.s3-us-west-1.amazonaws.com/mock-apis/parking/mock_parking_data.json";
 
   Future<List<ParkingModel>> fetchData() async {
     _error = null;
@@ -21,7 +22,7 @@ class ParkingService {
       String _response = await _networkHelper.fetchData(endpoint);
 
       /// parse data
-      final data = parkingFromJson(_response);
+      final data = parkingModelFromJson(_response);
       _isLoading = false;
       return data;
     } catch (e) {

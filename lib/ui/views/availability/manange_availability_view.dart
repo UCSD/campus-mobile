@@ -32,7 +32,6 @@ class ManageAvailabilityView extends StatelessWidget {
   List<Widget> createList(BuildContext context) {
     List<Widget> list = List<Widget>();
     for (AvailabilityModel model in data) {
-      print(model.locationId.toString());
       list.add(ListTile(
         key: Key(model.locationId.toString()),
         title: Text(model.locationName),
