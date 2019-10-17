@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:campus_mobile/core/models/parking_model.dart';
-import 'package:campus_mobile/core/services/networking.dart';
+import 'package:campus_mobile_beta/core/models/parking_model.dart';
+import 'package:campus_mobile_beta/core/services/networking.dart';
 
 class ParkingService {
   bool _isLoading = false;

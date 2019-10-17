@@ -1,12 +1,6 @@
 import 'dart:async';
-<<<<<<< HEAD
 import 'package:campus_mobile_beta/core/models/availability_model.dart';
 import 'package:campus_mobile_beta/core/services/networking.dart';
-=======
-
-import 'package:campus_mobile/core/models/availability_model.dart';
-import 'package:campus_mobile/core/services/networking.dart';
->>>>>>> 41519e4... implement links card
 
 class AvailabilityService {
   bool _isLoading = false;

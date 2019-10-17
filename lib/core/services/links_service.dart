@@ -1,12 +1,7 @@
 import 'dart:async';
 
-<<<<<<< HEAD
 import 'package:campus_mobile_beta/core/models/links_model.dart';
 import 'package:campus_mobile_beta/core/services/networking.dart';
-=======
-import 'package:campus_mobile/core/models/links_model.dart';
-import 'package:campus_mobile/core/services/networking.dart';
->>>>>>> 41519e4... implement links card
 
 class LinksService {
   bool _isLoading = false;
