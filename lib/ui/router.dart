@@ -3,7 +3,7 @@ import 'package:campus_mobile_beta/core/models/availability_model.dart';
 import 'package:campus_mobile_beta/core/models/events_model.dart';
 import 'package:campus_mobile_beta/core/models/links_model.dart';
 import 'package:campus_mobile_beta/core/models/news_model.dart';
-import 'package:campus_mobile_beta/ui/views/availability/manange_availability_view.dart';
+import 'package:campus_mobile_beta/ui/views/availability/manage_availability_view.dart';
 import 'package:campus_mobile_beta/ui/views/baseline/baseline_view.dart';
 import 'package:campus_mobile_beta/ui/views/events/event_detail_view.dart';
 import 'package:campus_mobile_beta/ui/views/events/events_list.dart';
