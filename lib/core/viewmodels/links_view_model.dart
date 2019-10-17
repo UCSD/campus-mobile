@@ -48,7 +48,10 @@ class _LinksCardState extends State<LinksCard> {
 
   Widget buildLinksCard(AsyncSnapshot snapshot) {
     if (snapshot.hasData) {
-      return LinksList(data: snapshot.data);
+      return LinksList(
+        data: snapshot.data,
+        listSize: 4,
+      );
     } else {
       return Container();
     }

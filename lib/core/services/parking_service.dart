@@ -1,35 +1,34 @@
 import 'dart:async';
-import 'package:campus_mobile_beta/core/models/availability_model.dart';
+import 'dart:convert';
+import 'package:campus_mobile_beta/core/models/parking_model.dart';
 import 'package:campus_mobile_beta/core/services/networking.dart';
 
-class AvailabilityService {
+class ParkingService {
   bool _isLoading = false;
   DateTime _lastUpdated;
   String _error;
   final NetworkHelper _networkHelper = NetworkHelper();
   final Map<String, String> headers = {
     "accept": ":application/json",
-    "Authorization": "Bearer " + "d409dd63-f8da-362d-b337-c506eac2c994",
   };
   final String endpoint =
-      "https://api-qa.ucsd.edu:8243/occuspace/v1.0/busyness";
+      "https://ucsd-mobile-dev.s3-us-west-1.amazonaws.com/mock-apis/parking/mock_parking_data.json";
 
-  Future<List<AvailabilityModel>> fetchData() async {
+  Future<List<ParkingModel>> fetchData() async {
     _error = null;
     _isLoading = true;
     try {
       /// fetch data
-      String _response =
-          await _networkHelper.authorizedFetch(endpoint, headers);
+      String _response = await _networkHelper.fetchData(endpoint);
 
       /// parse data
-      final data = availabilityModelFromJson(_response);
+      final data = parkingModelFromJson(_response);
       _isLoading = false;
       return data;
     } catch (e) {
       _error = e.toString();
       _isLoading = false;
-      return List<AvailabilityModel>();
+      return List<ParkingModel>();
     }
   }
 
