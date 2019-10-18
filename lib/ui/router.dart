@@ -1,10 +1,12 @@
 import 'package:campus_mobile_beta/core/constants/app_constants.dart';
 import 'package:campus_mobile_beta/core/models/availability_model.dart';
+import 'package:campus_mobile_beta/core/models/dining_model.dart';
 import 'package:campus_mobile_beta/core/models/events_model.dart';
 import 'package:campus_mobile_beta/core/models/links_model.dart';
 import 'package:campus_mobile_beta/core/models/news_model.dart';
 import 'package:campus_mobile_beta/ui/views/availability/manage_availability_view.dart';
 import 'package:campus_mobile_beta/ui/views/baseline/baseline_view.dart';
+import 'package:campus_mobile_beta/ui/views/dining/dining_list.dart';
 import 'package:campus_mobile_beta/ui/views/events/event_detail_view.dart';
 import 'package:campus_mobile_beta/ui/views/events/events_list.dart';
 import 'package:campus_mobile_beta/ui/views/home.dart';
@@ -51,6 +53,9 @@ class Router {
       case RoutePaths.LinksViewAll:
         List<LinksModel> data = settings.arguments as List<LinksModel>;
         return MaterialPageRoute(builder: (_) => LinksList(data: data));
+      case RoutePaths.DiningViewAll:
+        List<DiningModel> data = settings.arguments as List<DiningModel>;
+        return MaterialPageRoute(builder: (_) => DiningList(data: data));
     }
   }
 }

@@ -12,4 +12,5 @@ class RoutePaths {
   static const String LinksViewAll = 'links/links_list';
   static const String ManageAvailabilityView =
       'availability/manage_locations_view';
+  static const String DiningViewAll = 'dining/dining_list_view';
 }

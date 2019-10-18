@@ -1,4 +1,5 @@
 import 'package:campus_mobile_beta/core/viewmodels/baseline.dart';
+import 'package:campus_mobile_beta/core/viewmodels/dining_view_model.dart';
 import 'package:campus_mobile_beta/core/viewmodels/events_view_model.dart';
 import 'package:campus_mobile_beta/core/viewmodels/news_view_model.dart';
 import 'package:campus_mobile_beta/core/viewmodels/weather.dart';
@@ -23,6 +24,7 @@ class _HomeState extends State<Home> {
         AvailabilityCard(),
         ParkingCard(),
         LinksCard(),
+        DiningCard(),
         BaselineCard(),
       ],
     );
