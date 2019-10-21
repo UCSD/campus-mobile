@@ -19,10 +19,17 @@ class LinksList extends StatelessWidget {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return ContainerView(
-      child: buildList(),
+  Widget buildLinkTile(LinksModel data, BuildContext context) {
+    return ListTile(
+      onTap: () {
+        //TODO navigate to correct url
+      },
+      leading: Icon(data.icon),
+      title: Text(
+        data.name,
+        textAlign: TextAlign.start,
+      ),
+      trailing: Icon(Icons.arrow_right),
     );
   }
 }

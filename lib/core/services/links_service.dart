@@ -12,7 +12,7 @@ class LinksService {
     "accept": ":application/json",
   };
   final String endpoint =
-      "https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/quick_links/ucsd-quicklinks-v3.json";
+      "https://tbk5wko7a9.execute-api.us-west-1.amazonaws.com/dev/msm-linksservice/v1";
 
   Future<List<LinksModel>> fetchData() async {
     _error = null;
@@ -23,7 +23,7 @@ class LinksService {
           await _networkHelper.authorizedFetch(endpoint, headers);
 
       /// parse data
-      final data = linksFromJson(_response);
+      final data = linksModelFromJson(_response);
       _isLoading = false;
       return data;
     } catch (e) {
