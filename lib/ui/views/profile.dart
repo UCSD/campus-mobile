@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:campus_mobile/ui/widgets/cards/login.dart';
+import 'package:campus_mobile_beta/ui/widgets/cards/login.dart';
 
 class Profile extends StatelessWidget {
   @override

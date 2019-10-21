@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:campus_mobile/core/models/news_model.dart';
+import 'package:campus_mobile_beta/core/models/news_model.dart';
 import 'package:http/http.dart' as http;
 
 class NewsService {

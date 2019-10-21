@@ -1,6 +1,6 @@
-import 'package:campus_mobile/ui/widgets/cards/card_container.dart';
+import 'package:campus_mobile_beta/ui/widgets/cards/card_container.dart';
 import 'package:flutter/material.dart';
-import 'package:campus_mobile/core/constants/app_constants.dart';
+import 'package:campus_mobile_beta/core/constants/app_constants.dart';
 
 class BaselineCard extends StatefulWidget {
   @override

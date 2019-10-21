@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:campus_mobile/ui/widgets/image_loader.dart';
-import 'package:campus_mobile/core/models/events_model.dart';
-import 'package:campus_mobile/ui/widgets/container_view.dart';
-import 'package:campus_mobile/core/constants/app_constants.dart';
+import 'package:campus_mobile_beta/ui/widgets/image_loader.dart';
+import 'package:campus_mobile_beta/core/models/events_model.dart';
+import 'package:campus_mobile_beta/ui/widgets/container_view.dart';
+import 'package:campus_mobile_beta/core/constants/app_constants.dart';
 
 class EventsList extends StatelessWidget {
   const EventsList({Key key, @required this.data, this.listSize})

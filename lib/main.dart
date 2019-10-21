@@ -1,21 +1,17 @@
-import 'package:campus_mobile/ui/router.dart';
-import 'package:campus_mobile/ui/theme/app_theme.dart';
-import 'package:campus_mobile/ui/views/home.dart';
-import 'package:campus_mobile/ui/views/map.dart';
-import 'package:campus_mobile/ui/views/notifications.dart';
-import 'package:campus_mobile/ui/views/profile.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_analytics/observer.dart';
+import 'package:campus_mobile_beta/ui/router.dart';
+import 'package:campus_mobile_beta/ui/theme/app_theme.dart';
+import 'package:campus_mobile_beta/ui/views/home.dart';
+import 'package:campus_mobile_beta/ui/views/map.dart';
+import 'package:campus_mobile_beta/ui/views/notifications.dart';
+import 'package:campus_mobile_beta/ui/views/profile.dart';
+import 'package:campus_mobile_beta/ui/widgets/navigation/app_bar.dart';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 void main() => runApp(CampusMobile());
 
 class CampusMobile extends StatelessWidget {
-  static FirebaseAnalytics analytics = FirebaseAnalytics();
-  static FirebaseAnalyticsObserver observer =
-      FirebaseAnalyticsObserver(analytics: analytics);
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -43,9 +39,6 @@ class CampusMobile extends StatelessWidget {
         builder: (BuildContext context) => BottomNavigationBarProvider(),
       ),
       onGenerateRoute: Router.generateRoute,
-      navigatorObservers: [
-        FirebaseAnalyticsObserver(analytics: analytics),
-      ],
     );
   }
 }
@@ -72,15 +65,12 @@ class _BottomNavigationBarExampleState
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(42),
         child: AppBar(
+          primary: true,
           centerTitle: true,
-          title: Container(
-            padding: EdgeInsets.only(top: 4),
-            child: Center(
-              child: Image.asset(
-                'assets/images/UCSanDiegoLogo-nav.png',
-                height: 28,
-              ),
-            ),
+          title: Image.asset(
+            'assets/images/UCSanDiegoLogo-nav.png',
+            fit: BoxFit.contain,
+            height: 28,
           ),
         ),
       ),

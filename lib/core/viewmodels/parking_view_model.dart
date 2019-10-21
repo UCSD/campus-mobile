@@ -1,10 +1,10 @@
-import 'package:campus_mobile/core/models/parking_model.dart';
-import 'package:campus_mobile/ui/widgets/cards/card_container.dart';
+import 'package:campus_mobile_beta/core/models/parking_model.dart';
+import 'package:campus_mobile_beta/ui/widgets/cards/card_container.dart';
 import 'package:flutter/material.dart';
-import 'package:campus_mobile/core/constants/app_constants.dart';
-import 'package:campus_mobile/core/services/parking_service.dart';
-import 'package:campus_mobile/ui/widgets/parking/parking_display.dart';
-import 'package:campus_mobile/ui/widgets/dots_indicator.dart';
+import 'package:campus_mobile_beta/core/constants/app_constants.dart';
+import 'package:campus_mobile_beta/core/services/parking_service.dart';
+import 'package:campus_mobile_beta/ui/widgets/parking/parking_display.dart';
+import 'package:campus_mobile_beta/ui/widgets/dots_indicator.dart';
 
 class ParkingCard extends StatefulWidget {
   @override

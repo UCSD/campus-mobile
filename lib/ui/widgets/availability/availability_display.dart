@@ -1,5 +1,5 @@
-import 'package:campus_mobile/core/models/availability_model.dart';
-import 'package:campus_mobile/ui/theme/app_theme.dart';
+import 'package:campus_mobile_beta/ui/theme/app_theme.dart';
+import 'package:campus_mobile_beta/core/models/availability_model.dart';
 import 'package:flutter/material.dart';
 
 class AvailabilityDisplay extends StatelessWidget {
@@ -25,12 +25,13 @@ class AvailabilityDisplay extends StatelessWidget {
       for (AvailabilityModel subLocation in model.subLocations) {
         locations.add(
           ListTile(
-              title: Text(subLocation.locationName),
-              subtitle: LinearProgressIndicator(
-                value: 1 - ((subLocation.busyness) / 100).toDouble(),
-                backgroundColor: Colors.grey,
-                valueColor: AlwaysStoppedAnimation<Color>(ColorPrimary),
-              )),
+            title: Text(subLocation.locationName),
+            subtitle: LinearProgressIndicator(
+              value: 1 - ((subLocation.busyness) / 100).toDouble(),
+              backgroundColor: Colors.grey,
+              valueColor: AlwaysStoppedAnimation<Color>(ColorPrimary),
+            )
+          ),
         );
       }
     } else {

@@ -1,10 +1,10 @@
-import 'package:campus_mobile/core/models/availability_model.dart';
-import 'package:campus_mobile/core/services/availability_service.dart';
-import 'package:campus_mobile/ui/widgets/availability/availability_display.dart';
-import 'package:campus_mobile/ui/widgets/cards/card_container.dart';
-import 'package:campus_mobile/ui/widgets/dots_indicator.dart';
+import 'package:campus_mobile_beta/core/models/availability_model.dart';
+import 'package:campus_mobile_beta/core/services/availability_service.dart';
+import 'package:campus_mobile_beta/ui/widgets/availability/availability_display.dart';
+import 'package:campus_mobile_beta/ui/widgets/cards/card_container.dart';
+import 'package:campus_mobile_beta/ui/widgets/dots_indicator.dart';
 import 'package:flutter/material.dart';
-import 'package:campus_mobile/core/constants/app_constants.dart';
+import 'package:campus_mobile_beta/core/constants/app_constants.dart';
 
 class AvailabilityCard extends StatefulWidget {
   @override

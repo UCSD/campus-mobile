@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:campus_mobile/core/models/data.dart';
+import 'package:campus_mobile_beta/core/models/data.dart';
 
 /// The service responsible for networking requests
 class Api {

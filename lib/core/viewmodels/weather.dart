@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:campus_mobile/core/services/weather.dart';
+import 'package:campus_mobile_beta/core/services/weather.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import '../../ui/widgets/cards/card_container.dart';

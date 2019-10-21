@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:campus_mobile/core/models/links_model.dart';
-import 'package:campus_mobile/core/services/networking.dart';
+import 'package:campus_mobile_beta/core/models/links_model.dart';
+import 'package:campus_mobile_beta/core/services/networking.dart';
 
 class LinksService {
   bool _isLoading = false;

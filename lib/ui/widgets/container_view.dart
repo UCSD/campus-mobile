@@ -14,7 +14,7 @@ class ContainerView extends StatelessWidget {
         preferredSize: Size.fromHeight(42),
         child: AppBar(
           title: Container(
-            padding: EdgeInsets.only(top: 4),
+            padding: EdgeInsets.only(top: 14),
             child: Center(
               child: Image.asset(
                 'assets/images/UCSanDiegoLogo-nav.png',
