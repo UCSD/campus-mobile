@@ -9,7 +9,6 @@ class DiningService {
   final NetworkHelper _networkHelper = NetworkHelper();
   final Map<String, String> headers = {
     "accept": ":application/json",
-    "Authorization": "Bearer " + "d409dd63-f8da-362d-b337-c506eac2c994",
   };
   final String endpoint =
       "https://pg83tslbyi.execute-api.us-west-2.amazonaws.com/prod/v3/dining/locations";

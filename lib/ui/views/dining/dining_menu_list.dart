@@ -5,8 +5,8 @@ import 'package:campus_mobile_beta/core/models/dining_model.dart';
 import 'package:campus_mobile_beta/ui/widgets/container_view.dart';
 import 'package:campus_mobile_beta/core/constants/app_constants.dart';
 
-class DiningList extends StatelessWidget {
-  const DiningList({Key key, @required this.data, this.listSize})
+class DiningMenuList extends StatelessWidget {
+  const DiningMenuList({Key key, @required this.data, this.listSize})
       : super(key: key);
 
   final List<DiningModel> data;

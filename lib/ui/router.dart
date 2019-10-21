@@ -6,6 +6,7 @@ import 'package:campus_mobile_beta/core/models/links_model.dart';
 import 'package:campus_mobile_beta/core/models/news_model.dart';
 import 'package:campus_mobile_beta/ui/views/availability/manage_availability_view.dart';
 import 'package:campus_mobile_beta/ui/views/baseline/baseline_view.dart';
+import 'package:campus_mobile_beta/ui/views/dining/dining_detail_view.dart';
 import 'package:campus_mobile_beta/ui/views/dining/dining_list.dart';
 import 'package:campus_mobile_beta/ui/views/events/event_detail_view.dart';
 import 'package:campus_mobile_beta/ui/views/events/events_list.dart';
@@ -56,6 +57,9 @@ class Router {
       case RoutePaths.DiningViewAll:
         List<DiningModel> data = settings.arguments as List<DiningModel>;
         return MaterialPageRoute(builder: (_) => DiningList(data: data));
+      case RoutePaths.DiningDetailView:
+        DiningModel data = settings.arguments as DiningModel;
+        return MaterialPageRoute(builder: (_) => DiningDetailView(data: data));
     }
   }
 }

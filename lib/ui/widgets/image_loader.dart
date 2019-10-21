@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class ImageLoader extends StatelessWidget {
   final String url;
@@ -12,32 +14,23 @@ class ImageLoader extends StatelessWidget {
       this.fullSize = false});
   @override
   Widget build(BuildContext context) {
+    if (url.isEmpty) {
+      return Container();
+    }
+    Widget image;
+    try {
+      image = CachedNetworkImage(
+        imageUrl: url,
+        placeholder: (context, url) => CircularProgressIndicator(),
+        errorWidget: (context, url, error) => Icon(Icons.error),
+      );
+    } catch (e) {
+      image = Icon(Icons.error);
+    }
+
     return Row(
       mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        url.isEmpty
-            ? Container(
-                width: 0,
-                height: 0,
-              )
-            : Image.network(
-                url,
-                width: fullSize ? null : width,
-                height: fullSize ? null : height,
-                loadingBuilder: (BuildContext context, Widget child,
-                    ImageChunkEvent loadingProgress) {
-                  if (loadingProgress == null) return child;
-                  return Center(
-                    child: CircularProgressIndicator(
-                      value: loadingProgress.expectedTotalBytes != null
-                          ? loadingProgress.cumulativeBytesLoaded /
-                              loadingProgress.expectedTotalBytes
-                          : null,
-                    ),
-                  );
-                },
-              ),
-      ],
+      children: [image],
     );
   }
 }
