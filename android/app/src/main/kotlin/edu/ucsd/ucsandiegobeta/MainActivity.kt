@@ -1,4 +1,4 @@
-package com.example.campus_mobile_beta
+package edu.ucsd.ucsandiegobeta
 
 import android.os.Bundle
 
