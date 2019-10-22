@@ -1,5 +1,6 @@
 import 'package:campus_mobile_beta/core/constants/app_constants.dart';
 import 'package:campus_mobile_beta/core/models/availability_model.dart';
+import 'package:campus_mobile_beta/core/models/dining_menu_items_model.dart';
 import 'package:campus_mobile_beta/core/models/dining_model.dart';
 import 'package:campus_mobile_beta/core/models/events_model.dart';
 import 'package:campus_mobile_beta/core/models/links_model.dart';
@@ -17,6 +18,7 @@ import 'package:campus_mobile_beta/ui/views/news/news_detail_view.dart';
 import 'package:campus_mobile_beta/ui/views/news/news_list.dart';
 import 'package:campus_mobile_beta/ui/views/notifications.dart';
 import 'package:campus_mobile_beta/ui/views/profile.dart';
+import 'package:campus_mobile_beta/ui/views/dining/nutrtion_facts_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -60,6 +62,10 @@ class Router {
       case RoutePaths.DiningDetailView:
         DiningModel data = settings.arguments as DiningModel;
         return MaterialPageRoute(builder: (_) => DiningDetailView(data: data));
+      case RoutePaths.DiningNutritionView:
+        MenuItem data = settings.arguments as MenuItem;
+        return MaterialPageRoute(
+            builder: (_) => NutritionFactsView(data: data));
     }
   }
 }

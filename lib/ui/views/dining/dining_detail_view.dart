@@ -1,18 +1,17 @@
-import 'package:campus_mobile_beta/core/models/dining_model.dart';
 import 'package:campus_mobile_beta/core/models/dining_model.dart' as prefix0;
 import 'package:campus_mobile_beta/ui/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:campus_mobile_beta/ui/widgets/container_view.dart';
 import 'package:campus_mobile_beta/ui/widgets/image_loader.dart';
+import 'package:campus_mobile_beta/ui/views/dining/dining_menu_list.dart';
 
 class DiningDetailView extends StatelessWidget {
   const DiningDetailView({Key key, @required this.data}) : super(key: key);
-  final DiningModel data;
+  final prefix0.DiningModel data;
   @override
   Widget build(BuildContext context) {
     return ContainerView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: ListView(
         children: buildDetailView(),
       ),
     );
@@ -37,6 +36,7 @@ class DiningDetailView extends StatelessWidget {
       buildHours(),
       buildPaymentOptions(),
       buildPictures(),
+      DiningMenuList(id: data.id),
     ];
   }
 
