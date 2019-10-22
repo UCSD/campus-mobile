@@ -52,7 +52,7 @@ class LinksList extends StatelessWidget {
       onTap: () {
         //TODO navigate to correct url
       },
-      leading: ImageLoader(url: data.icon),
+      leading: Icon(data.icon),
       title: Text(
         data.name,
         textAlign: TextAlign.start,
