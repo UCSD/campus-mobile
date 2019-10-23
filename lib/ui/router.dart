@@ -13,7 +13,7 @@ import 'package:campus_mobile_beta/ui/views/events/event_detail_view.dart';
 import 'package:campus_mobile_beta/ui/views/events/events_list.dart';
 import 'package:campus_mobile_beta/ui/views/home.dart';
 import 'package:campus_mobile_beta/ui/views/links/links_list.dart';
-import 'package:campus_mobile_beta/ui/views/map.dart';
+import 'package:campus_mobile_beta/ui/views/map.dart' as prefix0;
 import 'package:campus_mobile_beta/ui/views/news/news_detail_view.dart';
 import 'package:campus_mobile_beta/ui/views/news/news_list.dart';
 import 'package:campus_mobile_beta/ui/views/notifications.dart';
@@ -28,7 +28,7 @@ class Router {
       case RoutePaths.Home:
         return MaterialPageRoute(builder: (_) => Home());
       case RoutePaths.Map:
-        return MaterialPageRoute(builder: (_) => Map());
+        return MaterialPageRoute(builder: (_) => prefix0.Map());
       case RoutePaths.Notifications:
         return MaterialPageRoute(builder: (_) => Notifications());
       case RoutePaths.Profile:
@@ -63,9 +63,17 @@ class Router {
         DiningModel data = settings.arguments as DiningModel;
         return MaterialPageRoute(builder: (_) => DiningDetailView(data: data));
       case RoutePaths.DiningNutritionView:
-        MenuItem data = settings.arguments as MenuItem;
+        Map<String, Object> arguments = settings.arguments;
+        MenuItem data = arguments['data'] as MenuItem;
+        String disclaimer = arguments['disclaimer'] as String;
+        String disclaimerEmail = arguments['disclaimerEmail'] as String;
+        print(disclaimerEmail);
         return MaterialPageRoute(
-            builder: (_) => NutritionFactsView(data: data));
+            builder: (_) => NutritionFactsView(
+                  data: data,
+                  disclaimer: disclaimer,
+                  disclaimerEmail: disclaimerEmail,
+                ));
     }
   }
 }
