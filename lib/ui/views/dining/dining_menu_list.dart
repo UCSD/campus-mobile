@@ -1,5 +1,4 @@
 import 'package:campus_mobile_beta/core/models/dining_menu_items_model.dart';
-import 'package:campus_mobile_beta/ui/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:campus_mobile_beta/core/constants/app_constants.dart';
 import 'package:campus_mobile_beta/core/services/dining_service.dart';
@@ -35,9 +34,10 @@ class _DiningMenuListState extends State<DiningMenuList> {
       builder: (context, snapshot) {
         return snapshot.hasData
             ? Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   buildFilterButtons(),
-                  buildDiningMenuList(snapshot),
+                  buildDiningMenuList(snapshot, context),
                 ],
               )
             : Column();
@@ -45,31 +45,51 @@ class _DiningMenuListState extends State<DiningMenuList> {
     );
   }
 
-  Widget buildDiningMenuList(AsyncSnapshot snapshot) {
+  Widget buildDiningMenuList(AsyncSnapshot snapshot, BuildContext context) {
     DiningMenuItemsModel menu = snapshot.data;
     List<MenuItem> menuList = menu.menuItems;
     List<Widget> list = List<Widget>();
-    for (MenuItem item in menuList) {
-      list.add(ListTile(
-        leading: Text(
-          item.name,
-          style: TextStyle(color: ColorPrimary),
-        ),
-        title: Text(item.price),
-        onTap: () {
-          ///TODO navigate to nutrition page for this item
-          Navigator.pushNamed(context, RoutePaths.DiningNutritionView,
-              arguments: item);
-        },
-      ));
+    if (menuList != null) {
+      for (MenuItem item in menuList) {
+        list.add(GestureDetector(
+          child: RichText(
+            textAlign: TextAlign.start,
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: item.name,
+                  style:
+                      TextStyle(color: Theme.of(context).textTheme.body1.color),
+                ),
+                TextSpan(
+                  text: " (${item.price})",
+                  style:
+                      TextStyle(color: Theme.of(context).textTheme.body1.color),
+                )
+              ],
+            ),
+          ),
+          onTap: () {
+            ///TODO navigate to nutrition page for this item
+            Navigator.pushNamed(context, RoutePaths.DiningNutritionView,
+                arguments: {
+                  "data": item,
+                  "disclaimer": menu.disclaimer,
+                  "disclaimerEmail": menu.disclaimerEmail
+                });
+          },
+        ));
+      }
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: list,
+      );
+    } else {
+      return Container();
     }
-    return menuList.isEmpty
-        ? Column()
-        : Column(
-            children: list,
-          );
   }
 
+  ///TODO build buttons to filter food items
   Widget buildFilterButtons() {
     return Row();
   }
