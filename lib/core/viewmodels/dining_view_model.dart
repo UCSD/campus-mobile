@@ -68,7 +68,7 @@ class _DiningState extends State<DiningCard> {
           hidden: false,
           reload: () => _updateData(),
           isLoading: _diningService.isLoading,
-          title: buildTitle("News"),
+          title: buildTitle("Dining"),
           errorText: _diningService.error,
           child: buildNewsCard(snapshot),
           actionButtons: buildActionButtons(snapshot.data),
