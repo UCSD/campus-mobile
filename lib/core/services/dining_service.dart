@@ -8,9 +8,6 @@ class DiningService {
   DateTime _lastUpdated;
   String _error;
   final NetworkHelper _networkHelper = NetworkHelper();
-  final Map<String, String> headers = {
-    "accept": ":application/json",
-  };
   final String baseEndpoint =
       "https://pg83tslbyi.execute-api.us-west-2.amazonaws.com/prod/v3/dining/";
 
@@ -19,8 +16,8 @@ class DiningService {
     _isLoading = true;
     try {
       /// fetch data
-      String _response = await _networkHelper.authorizedFetch(
-          baseEndpoint + 'locations', headers);
+      String _response =
+          await _networkHelper.fetchData(baseEndpoint + 'locations');
 
       /// parse data
       final data = diningModelFromJson(_response);
@@ -38,8 +35,8 @@ class DiningService {
     _isLoading = true;
     try {
       /// fetch data
-      String _response = await _networkHelper.authorizedFetch(
-          baseEndpoint + 'menu/' + id, headers);
+      String _response =
+          await _networkHelper.fetchData(baseEndpoint + 'menu/' + id);
 
       /// parse data
       final data = diningMenuItemsModelFromJson(_response);
