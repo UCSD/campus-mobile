@@ -12,35 +12,35 @@ class DiningDetailView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ContainerView(
       child: ListView(
-        children: buildDetailView(),
+        children: buildDetailView(context),
       ),
     );
   }
 
-  List<Widget> buildDetailView() {
+  List<Widget> buildDetailView(BuildContext context) {
     return [
       Text(
         data.name,
         textAlign: TextAlign.start,
-        style: TextStyle(color: ColorPrimary, fontSize: 20.0),
+        style: TextStyle(
+            color: Theme.of(context).textTheme.title.color,
+            fontSize: Theme.of(context).textTheme.title.fontSize),
       ),
       Text(
         data.description,
         textAlign: TextAlign.start,
+        style: TextStyle(
+            color: Theme.of(context).textTheme.subtitle.color,
+            fontSize: Theme.of(context).textTheme.subtitle.fontSize),
       ),
-      Text(
-        "Hours",
-        textAlign: TextAlign.start,
-        style: TextStyle(fontWeight: FontWeight.bold),
-      ),
-      buildHours(),
-      buildPaymentOptions(),
+      buildHours(context),
+      buildPaymentOptions(context),
       buildPictures(),
       DiningMenuList(id: data.id),
     ];
   }
 
-  Widget buildHours() {
+  Widget buildHours(BuildContext context) {
     Widget monday = Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -59,7 +59,7 @@ class DiningDetailView extends StatelessWidget {
         Text('Tuesday: '),
         Row(
           children: <Widget>[
-            Text(data.regularHours.mon),
+            Text(data.regularHours.tue),
             buildGreenDot(),
           ],
         )
@@ -71,7 +71,7 @@ class DiningDetailView extends StatelessWidget {
         Text('Wednesday: '),
         Row(
           children: <Widget>[
-            Text(data.regularHours.mon),
+            Text(data.regularHours.wed),
             buildGreenDot(),
           ],
         )
@@ -83,7 +83,7 @@ class DiningDetailView extends StatelessWidget {
         Text('Thursday: '),
         Row(
           children: <Widget>[
-            Text(data.regularHours.mon),
+            Text(data.regularHours.thu),
             buildGreenDot(),
           ],
         )
@@ -95,7 +95,7 @@ class DiningDetailView extends StatelessWidget {
         Text('Friday: '),
         Row(
           children: <Widget>[
-            Text(data.regularHours.mon),
+            Text(data.regularHours.fri),
             buildGreenDot(),
           ],
         )
@@ -107,7 +107,7 @@ class DiningDetailView extends StatelessWidget {
         Text('Satuday: '),
         Row(
           children: <Widget>[
-            Text(data.regularHours.mon),
+            Text(data.regularHours.sat),
             buildGreenDot(),
           ],
         )
@@ -119,13 +119,19 @@ class DiningDetailView extends StatelessWidget {
         Text('Sunday: '),
         Row(
           children: <Widget>[
-            Text(data.regularHours.mon),
+            Text(data.regularHours.sun),
             buildGreenDot(),
           ],
         )
       ],
     );
-    return Column(children: [
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Text(
+        "Hours:",
+        textAlign: TextAlign.start,
+        style:
+            TextStyle(fontWeight: Theme.of(context).textTheme.title.fontWeight),
+      ),
       monday,
       tuesday,
       wednesday,
@@ -136,22 +142,22 @@ class DiningDetailView extends StatelessWidget {
     ]);
   }
 
-  Widget buildPaymentOptions() {
+  Widget buildPaymentOptions(BuildContext context) {
     String options = data.paymentOptions.join(', ');
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "Payment Options: ",
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        Flexible(
-          child: Text(
-            options,
-            softWrap: true,
+    return RichText(
+      text: TextSpan(
+        style: TextStyle(
+            fontSize: Theme.of(context).textTheme.body1.fontSize,
+            color: Theme.of(context).textTheme.body1.color),
+        children: [
+          TextSpan(
+            text: "Payment Options:\n",
+            style: TextStyle(
+                fontWeight: Theme.of(context).textTheme.subtitle.fontWeight),
           ),
-        )
-      ],
+          TextSpan(text: options),
+        ],
+      ),
     );
   }
 
