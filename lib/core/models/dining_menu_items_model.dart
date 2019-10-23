@@ -100,8 +100,8 @@ class Nutrition {
   String totalCarbohydrateDv;
   String dietaryFiber;
   String dietaryFiberDv;
-  String sugars;
-  String sugarsDv;
+  String sugar;
+  String sugarDv;
   String protein;
   String proteinDv;
   String ingredients;
@@ -124,8 +124,8 @@ class Nutrition {
     this.totalCarbohydrateDv,
     this.dietaryFiber,
     this.dietaryFiberDv,
-    this.sugars,
-    this.sugarsDv,
+    this.sugar,
+    this.sugarDv,
     this.protein,
     this.proteinDv,
     this.ingredients,
@@ -158,8 +158,8 @@ class Nutrition {
             json["dietaryFiber"] == null ? null : json["dietaryFiber"],
         dietaryFiberDv:
             json["dietaryFiber_DV"] == null ? null : json["dietaryFiber_DV"],
-        sugars: json["sugars"] == null ? null : json["sugars"],
-        sugarsDv: json["sugars_DV"] == null ? null : json["sugars_DV"],
+        sugar: json["sugars"] == null ? null : json["sugars"],
+        sugarDv: json["sugars_DV"] == null ? null : json["sugars_DV"],
         protein: json["protein"] == null ? null : json["protein"],
         proteinDv: json["protein_DV"] == null ? null : json["protein_DV"],
         ingredients: json["ingredients"] == null ? null : json["ingredients"],
@@ -185,8 +185,8 @@ class Nutrition {
             totalCarbohydrateDv == null ? null : totalCarbohydrateDv,
         "dietaryFiber": dietaryFiber == null ? null : dietaryFiber,
         "dietaryFiber_DV": dietaryFiberDv == null ? null : dietaryFiberDv,
-        "sugars": sugars == null ? null : sugars,
-        "sugars_DV": sugarsDv == null ? null : sugarsDv,
+        "sugar": sugar == null ? null : sugar,
+        "sugar_DV": sugarDv == null ? null : sugarDv,
         "protein": protein == null ? null : protein,
         "protein_DV": proteinDv == null ? null : proteinDv,
         "ingredients": ingredients == null ? null : ingredients,
