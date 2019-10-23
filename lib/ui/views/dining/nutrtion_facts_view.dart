@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:campus_mobile_beta/core/models/dining_menu_items_model.dart';
+import 'package:campus_mobile_beta/ui/widgets/container_view.dart';
 
 class NutritionFactsView extends StatelessWidget {
-  const NutritionFactsView({Key key, @required this.data}) : super(key: key);
+  const NutritionFactsView(
+      {Key key, @required this.data, this.disclaimer, this.disclaimerEmail})
+      : super(key: key);
   final MenuItem data;
+  final String disclaimer;
+  final String disclaimerEmail;
   @override
   Widget build(BuildContext context) {
-    return nutrientWidget();
+    return ContainerView(child: nutrientWidget(context));
   }
 
-  Widget nutrientWidget() {
+  Widget nutrientWidget(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(1.0),
       decoration: BoxDecoration(
@@ -17,14 +22,64 @@ class NutritionFactsView extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(2.0),
         color: Colors.white,
-        child: Column(
+        child: ListView(
           children: <Widget>[
-            nutriHeader(
-                calories: data.nutrition.calories,
-                servingSize: data.nutrition.servingSize),
+            buildTitle(data.name, context),
+            nutrientHeader(data.nutrition.calories, data.nutrition.servingSize),
+            nutrientValues(nutrientData: data.nutrition.toJson()),
+            footerCalories(2000),
+            buildText(data.nutrition.ingredients, data.nutrition.allergens),
+            disclaimerEmail != null ? buildEmailButton(context) : Container(),
           ],
         ),
       ),
+    );
+  }
+
+  Widget buildTitle(String name, BuildContext context) {
+    return Text(
+      name,
+      style: TextStyle(
+        fontSize: 20.0,
+        fontWeight: FontWeight.w400,
+        color: Theme.of(context).textTheme.title.color,
+      ),
+    );
+  }
+
+  Widget buildText(String ingredients, String allergens) {
+    return RichText(
+      text: TextSpan(
+        style: TextStyle(fontSize: 14.0, color: Colors.black),
+        children: [
+          TextSpan(
+            text: "Ingredients: ",
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          ),
+          TextSpan(text: ingredients),
+          TextSpan(
+            text: "\n\nAllergens: ",
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          ),
+          TextSpan(text: allergens),
+          TextSpan(
+            text: "\n\nDisclaimer: ",
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          ),
+          TextSpan(text: disclaimer),
+        ],
+      ),
+    );
+  }
+
+  Widget buildEmailButton(BuildContext context) {
+    return FlatButton(
+      child: Text('Contact Nutrition Team'),
+      onPressed: () {
+        ///TODO open up email with disclaimerEmail as the recipient
+      },
+      color: Theme.of(context).buttonColor,
+      textColor: Theme.of(context).textTheme.button.color,
     );
   }
 }
@@ -33,20 +88,35 @@ Widget nutrientValues({nutrientData}) {
   //final n = (1.3456).toStringAsFixed(2);
   //final s = double.parse("1.2345");
   final nutrientTypes = [
-    {"nutrient": "FAT", "name": "Total Fat", "sub": false, "dly": 65.0},
-    {"nutrient": "SATFAT", "name": "Saturated Fat", "sub": true, "dly": 20.0},
-    {"nutrient": "TRANSFAT", "name": "Trans Fat", "sub": true, "dly": null},
-    {"nutrient": "CHOLE", "name": "Cholesterol", "sub": false, "dly": 300.0},
-    {"nutrient": "NA", "name": "Sodium", "sub": false, "dly": 2400.0},
+    {"nutrient": "totalFat", "name": "Total Fat", "sub": false, "dly": 65.0},
     {
-      "nutrient": "CHOCDF",
-      "name": "Total Carbohidrate",
+      "nutrient": "saturatedFat",
+      "name": "Saturated Fat",
+      "sub": true,
+      "dly": 20.0
+    },
+    {"nutrient": "transFat", "name": "Trans Fat", "sub": true, "dly": null},
+    {
+      "nutrient": "cholesterol",
+      "name": "Cholesterol",
+      "sub": false,
+      "dly": 300.0
+    },
+    {"nutrient": "sodium", "name": "Sodium", "sub": false, "dly": 2400.0},
+    {
+      "nutrient": "totalCarbohydrate",
+      "name": "Total Carbohydrate",
       "sub": false,
       "dly": 300.0,
     },
-    {"nutrient": "FIBTG", "name": "Dietary Fiber", "sub": true, "dly": 25.0},
-    {"nutrient": "SUGAR", "name": "Sugars", "sub": true, "dly": null},
-    {"nutrient": "PROCNT", "name": "Protein", "sub": false, "dly": 50.0},
+    {
+      "nutrient": "dietaryFiber",
+      "name": "Dietary Fiber",
+      "sub": true,
+      "dly": 25.0
+    },
+    {"nutrient": "sugar", "name": "Sugar", "sub": true, "dly": null},
+    {"nutrient": "protein", "name": "Protein", "sub": false, "dly": 50.0},
   ];
 
   return Column(
@@ -54,68 +124,29 @@ Widget nutrientValues({nutrientData}) {
     children: nutrientTypes
         .map((d) => nutrientLiner(
               nutrientName: d["name"],
-              qty: nutrientData["${d["nutrient"]}"]["amount"],
-              ptg: d["dly"] != null
-                  ? ((nutrientData["${d["nutrient"]}"]["amount"] * 100) /
-                          d["dly"])
-                      .toStringAsFixed(2)
-                  : "-",
+              qty: nutrientData["${d["nutrient"]}"],
+              ptg: nutrientData["${d["nutrient"]}" + "_DV"] != null
+                  ? nutrientData["${d["nutrient"]}" + "_DV"]
+                  : "",
               sub: d["sub"],
-              unit: nutrientData["${d["nutrient"]}"]["unit"],
-              showp: d["dly"] != null ? true : false,
+              showPercent: d["dly"] != null ? true : false,
             ))
         .toList(),
   );
 }
 
-Widget vitaminValues({nutrientData}) {
-  //final n = (1.3456).toStringAsFixed(2);
-  //final s = double.parse("1.2345");
-  final nutrientTypes = [
-    {"nutrient": "THIA", "name": "Thiamin", "sub": false, "dly": 1.5},
-    {"nutrient": "K", "name": "Potassium", "sub": false, "dly": 3500.0},
-    {"nutrient": "VITB6A", "name": "Vitamin B6", "sub": false, "dly": 2.0},
-    {"nutrient": "VITA_IU", "name": "Vitamin A", "sub": false, "dly": 5000},
-    {"nutrient": "VITD", "name": "Vitamin D", "sub": false, "dly": 400},
-    {"nutrient": "VITK1", "name": "Vitamin K ", "sub": false, "dly": 80},
-  ];
-  final vitaminLine = Container(
-      margin: EdgeInsetsDirectional.only(start: 1.0, end: 1.0),
-      height: 4.0,
-      color: Colors.black);
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: <Widget>[vitaminLine] +
-        nutrientTypes
-            .map((d) => vitaminLiner(
-                  nutrientName: d["name"],
-                  qty: nutrientData["${d["nutrient"]}"]["amount"],
-                  ptg: d["dly"] != null
-                      ? ((nutrientData["${d["nutrient"]}"]["amount"] * 100) /
-                              d["dly"])
-                          .toStringAsFixed(2)
-                      : "-",
-                  unit: nutrientData["${d["nutrient"]}"]["unit"],
-                  showp: d["dly"] != null ? true : false,
-                ))
-            .toList(),
-  );
-}
-
-Widget nutriHeader({calories, servingSize, servings}) {
+Widget nutrientHeader(String calories, String servingSize) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: <Widget>[
       Text(
         "Nutrition Facts",
         textAlign: TextAlign.left,
-        style: TextStyle(
-            color: Colors.black, fontSize: 40.0, fontWeight: FontWeight.w700),
+        style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.w700),
       ),
       Text(
         "Serving Size $servingSize",
-        style: TextStyle(
-            fontSize: 14.0, color: Colors.black, fontWeight: FontWeight.w400),
+        style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400),
       ),
       Container(
         margin: EdgeInsetsDirectional.only(start: 1.0, end: 1.0),
@@ -124,37 +155,32 @@ Widget nutriHeader({calories, servingSize, servings}) {
       ),
       Text(
         "Ammount Per Serving",
-        style: TextStyle(
-            fontSize: 10.0, color: Colors.black, fontWeight: FontWeight.w800),
+        style: TextStyle(fontSize: 10.0, fontWeight: FontWeight.w800),
       ),
       Container(
         margin: EdgeInsetsDirectional.only(start: 1.0, end: 1.0),
         height: 1.0,
-        color: Colors.black,
       ),
       Row(children: <Widget>[
         Text(
           "Calories",
-          style: TextStyle(
-              fontSize: 15.0, color: Colors.black, fontWeight: FontWeight.w900),
+          style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w900),
         ),
         Text(
           " $calories",
-          style: TextStyle(
-              fontSize: 15.0, color: Colors.black, fontWeight: FontWeight.w500),
+          style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w500),
         ),
       ]),
       Container(
-          margin: EdgeInsetsDirectional.only(start: 1.0, end: 1.0),
-          height: 3.0,
-          color: Colors.black),
+        margin: EdgeInsetsDirectional.only(start: 1.0, end: 1.0),
+        height: 3.0,
+      ),
       Container(
         alignment: Alignment.topRight,
         child: Text(
           "% Daily Value*",
           textAlign: TextAlign.right,
-          style: TextStyle(
-              fontSize: 15.0, color: Colors.black, fontWeight: FontWeight.w600),
+          style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w600),
         ),
       )
     ],
@@ -166,8 +192,7 @@ Widget nutrientLiner({
   @required qty,
   ptg,
   sub: false,
-  unit: "g",
-  showp: true,
+  showPercent: true,
 }) {
   final textSize = 15.0;
   final textWeight1 = FontWeight.w900;
@@ -191,7 +216,7 @@ Widget nutrientLiner({
                   fontWeight: (sub) ? textWeight2 : textWeight1),
             ),
             Text(
-              "  ${qty}${unit}",
+              "  $qty",
               style: TextStyle(
                   fontSize: textSize,
                   color: Colors.black,
@@ -199,7 +224,7 @@ Widget nutrientLiner({
             ),
             Expanded(
                 child: Text(
-              (((ptg == null) || !showp) ? "" : "${ptg}%"),
+              (((ptg == null) || !showPercent) ? "" : "$ptg"),
               textAlign: TextAlign.right,
               style: TextStyle(
                 fontSize: textSize,
@@ -212,55 +237,7 @@ Widget nutrientLiner({
       ]));
 }
 
-Widget vitaminLiner({
-  @required nutrientName,
-  @required qty,
-  ptg,
-  showQty: false,
-  unit: "g",
-  showp: true,
-}) {
-  final textSize = 15.0;
-  final textWeight = FontWeight.w500;
-  return Container(
-      padding: EdgeInsetsDirectional.only(start: 1.0, end: 1.0),
-      child: Column(children: <Widget>[
-        Container(
-            margin: EdgeInsetsDirectional.only(start: 1.0, end: 1.0),
-            height: 1.0,
-            color: Colors.black),
-        Row(
-          children: <Widget>[
-            Text(
-              nutrientName,
-              style: TextStyle(
-                  fontSize: textSize,
-                  color: Colors.black,
-                  fontWeight: textWeight),
-            ),
-            Text(
-              (showQty) ? "  ${qty}${unit}" : "",
-              style: TextStyle(
-                  fontSize: textSize,
-                  color: Colors.black,
-                  fontWeight: textWeight),
-            ),
-            Expanded(
-                child: Text(
-              (((ptg == null) || !showp) ? "" : "${ptg}%"),
-              textAlign: TextAlign.right,
-              style: TextStyle(
-                fontSize: textSize,
-                color: Colors.black,
-                fontWeight: textWeight,
-              ),
-            )),
-          ],
-        )
-      ]));
-}
-
-Widget footerCalories({caloriesNum: 2000}) {
+Widget footerCalories(int calories) {
   return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -270,7 +247,7 @@ Widget footerCalories({caloriesNum: 2000}) {
           color: Colors.black,
         ),
         Text(
-          "Percent Daily Values are based on a ${caloriesNum} calories diet.",
+          "Percent Daily Values are based on a $calories calories diet.",
           style: TextStyle(
               fontSize: 10.0, color: Colors.black, fontWeight: FontWeight.w400),
         )
