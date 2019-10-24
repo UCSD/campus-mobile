@@ -9,7 +9,7 @@ class AvailabilityService {
   final NetworkHelper _networkHelper = NetworkHelper();
   final Map<String, String> headers = {
     "accept": ":application/json",
-    "Authorization": "Bearer " + "d409dd63-f8da-362d-b337-c506eac2c994",
+    "Authorization": "Bearer " + "c1cea1fd-e7d5-3635-ab66-306342310463",
   };
   final String endpoint =
       "https://api-qa.ucsd.edu:8243/occuspace/v1.0/busyness";
