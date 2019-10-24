@@ -17,12 +17,12 @@ class ParkingDisplay extends StatelessWidget {
         buildLocationTitle(),
         buildLocationContext(),
         buildSpotsAvailableText(),
-        buildAllParkingAvailabilty(),
+        buildAllParkingAvailability(),
       ],
     );
   }
 
-  Widget buildAllParkingAvailabilty() {
+  Widget buildAllParkingAvailability() {
     List<Widget> listOfCircularParkingInfo = List<Widget>();
     listOfCircularParkingInfo
         .add(buildCircularParkingInfo(model.availability.a));
