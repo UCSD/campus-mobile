@@ -29,6 +29,7 @@ class CardContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     if (!hidden) {
       return Card(
+        semanticContainer: false,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
@@ -64,10 +65,11 @@ class CardContainer extends StatelessWidget {
     if (errorText != null) {
       return Text(errorText);
     } else if (isLoading) {
-      return CircularProgressIndicator();
+      return Container(
+          height: 224, width: 224, child: CircularProgressIndicator());
     } else {
       return Container(
-        constraints: BoxConstraints(maxHeight: 224),
+        constraints: BoxConstraints(maxHeight: 224, maxWidth: 406),
         child: child,
       );
     }
@@ -87,11 +89,8 @@ class CardContainer extends StatelessWidget {
     });
     return DropdownButton(
       items: menu,
-      icon: Flexible(
-        child: Center(
-          child: Icon(Icons.more_vert),
-        ),
-      ),
+      underline: Container(),
+      icon: Icon(Icons.more_vert),
       onChanged: (String selectedMenuItem) =>
           onMenuItemPressed(selectedMenuItem),
     );
