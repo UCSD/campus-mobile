@@ -63,7 +63,12 @@ class NewsList extends StatelessWidget {
         textAlign: TextAlign.start,
         overflow: TextOverflow.ellipsis,
       ),
-      trailing: ImageLoader(url: newsItem.image),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          ImageLoader(url: newsItem.image),
+        ],
+      ),
     );
   }
 }

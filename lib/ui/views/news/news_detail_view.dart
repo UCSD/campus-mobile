@@ -17,11 +17,9 @@ class NewsDetailView extends StatelessWidget {
 
   List<Widget> buildDetailView() {
     return [
-      Center(
-        child: ImageLoader(
-          url: data.image,
-          fullSize: true,
-        ),
+      ImageLoader(
+        url: data.image,
+        fullSize: true,
       ),
       Text(data.title),
       Text(data.date.toIso8601String()),

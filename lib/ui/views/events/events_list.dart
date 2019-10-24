@@ -63,7 +63,12 @@ class EventsList extends StatelessWidget {
         textAlign: TextAlign.start,
         overflow: TextOverflow.ellipsis,
       ),
-      trailing: ImageLoader(url: data.imageThumb),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          ImageLoader(url: data.imageThumb),
+        ],
+      ),
     );
   }
 }
