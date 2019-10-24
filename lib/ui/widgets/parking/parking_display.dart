@@ -35,16 +35,18 @@ class ParkingDisplay extends StatelessWidget {
     listOfCircularParkingInfo
         .add(buildCircularParkingInfo(model.availability.v));
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: listOfCircularParkingInfo,
     );
   }
 
   Widget buildCircularParkingInfo(SpotType spot) {
     return spot != null
-        ? Expanded(
-            child: Column(
-              children: <Widget>[
-                Stack(
+        ? Column(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Stack(
                   alignment: Alignment.center,
                   children: [
                     CircularProgressIndicator(
@@ -58,12 +60,15 @@ class ParkingDisplay extends StatelessWidget {
                     ),
                   ],
                 ),
-                CircleAvatar(
+              ),
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: CircleAvatar(
                   backgroundColor: spot.color,
                   child: spot.type,
-                )
-              ],
-            ),
+                ),
+              )
+            ],
           )
         : Container();
   }
