@@ -29,7 +29,7 @@ dependencies:
   pointycastle: 1.0.1
   provider: 3.1.0
   xml: 3.5.0
-  dots_indicator: ^1.0.0
+  cached_network_image: 1.1.2+1
 
 dev_dependencies:
   flutter_test:
