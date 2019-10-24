@@ -18,7 +18,7 @@ import 'package:campus_mobile_beta/ui/views/news/news_detail_view.dart';
 import 'package:campus_mobile_beta/ui/views/news/news_list.dart';
 import 'package:campus_mobile_beta/ui/views/notifications.dart';
 import 'package:campus_mobile_beta/ui/views/profile.dart';
-import 'package:campus_mobile_beta/ui/views/dining/nutrtion_facts_view.dart';
+import 'package:campus_mobile_beta/ui/views/dining/nutrition_facts_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
