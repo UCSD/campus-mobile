@@ -1,7 +1,7 @@
 import 'package:campus_mobile_beta/core/models/links_model.dart';
 import 'package:campus_mobile_beta/ui/widgets/container_view.dart';
-import 'package:campus_mobile_beta/ui/widgets/image_loader.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LinksList extends StatelessWidget {
   const LinksList({Key key, @required this.data, this.listSize})
@@ -49,8 +49,16 @@ class LinksList extends StatelessWidget {
 
   Widget buildLinkTile(LinksModel data, BuildContext context) {
     return ListTile(
-      onTap: () {
-        //TODO navigate to correct url
+      onTap: () async {
+        if (await canLaunch(data.url)) {
+          await launch(data.url);
+        } else {
+          Scaffold.of(context).removeCurrentSnackBar();
+          Scaffold.of(context).showSnackBar(SnackBar(
+            content: Text('Could not open URL.'),
+            behavior: SnackBarBehavior.floating,
+          ));
+        }
       },
       leading: Icon(data.icon),
       title: Text(
