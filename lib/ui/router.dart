@@ -57,10 +57,12 @@ class Router {
         List<LinksModel> data = settings.arguments as List<LinksModel>;
         return MaterialPageRoute(builder: (_) => LinksList(data: data));
       case RoutePaths.DiningViewAll:
-        List<DiningModel> data = settings.arguments as List<DiningModel>;
-        return MaterialPageRoute(builder: (_) => DiningList(data: data));
+        Future<List<DiningModel>> _data =
+            settings.arguments as Future<List<DiningModel>>;
+        return MaterialPageRoute(builder: (_) => DiningList(data: _data));
       case RoutePaths.DiningDetailView:
-        DiningModel data = settings.arguments as DiningModel;
+      case RoutePaths.DiningDetailView:
+        Future<DiningModel> data = settings.arguments as Future<DiningModel>;
         return MaterialPageRoute(builder: (_) => DiningDetailView(data: data));
       case RoutePaths.DiningNutritionView:
         Map<String, Object> arguments = settings.arguments;
