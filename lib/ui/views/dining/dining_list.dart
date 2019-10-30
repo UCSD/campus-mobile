@@ -1,20 +1,27 @@
-import 'package:campus_mobile_beta/ui/theme/app_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:campus_mobile_beta/ui/widgets/image_loader.dart';
 import 'package:campus_mobile_beta/core/models/dining_model.dart';
 import 'package:campus_mobile_beta/ui/widgets/container_view.dart';
 import 'package:campus_mobile_beta/core/constants/app_constants.dart';
 
 class DiningList extends StatelessWidget {
-  const DiningList({Key key, @required this.data, this.listSize})
-      : super(key: key);
+  const DiningList({
+    Key key,
+    @required this.data,
+    this.listSize,
+  }) : super(key: key);
 
-  final List<DiningModel> data;
+  final Future<List<DiningModel>> data;
   final int listSize;
 
   @override
   Widget build(BuildContext context) {
-    return buildDiningList(data, context);
+    return FutureBuilder<List<DiningModel>>(
+        future: data,
+        builder: (context, snapshot) {
+          return snapshot.hasData
+              ? buildDiningList(snapshot.data, context)
+              : CircularProgressIndicator();
+        });
   }
 
   Widget buildDiningList(List<DiningModel> listOfDiners, BuildContext context) {
@@ -99,7 +106,7 @@ class DiningList extends StatelessWidget {
     return ListTile(
       onTap: () {
         Navigator.pushNamed(context, RoutePaths.DiningDetailView,
-            arguments: data);
+            arguments: Future<DiningModel>(() => data));
       },
       title: Text(
         data.name,
@@ -107,10 +114,21 @@ class DiningList extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
       ),
       subtitle: getHoursForToday(data.regularHours),
-      trailing: Icon(
-        Icons.directions_walk,
-        color: ColorPrimary,
-      ),
+      trailing: buildIconWithDistance(data.distance),
+    );
+  }
+
+  Widget buildIconWithDistance(double distance) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Icon(
+          Icons.directions_walk,
+        ),
+        Text(
+          distance != null ? distance.toStringAsPrecision(3) : '--',
+        ),
+      ],
     );
   }
 }
