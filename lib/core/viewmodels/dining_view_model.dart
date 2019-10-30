@@ -54,7 +54,7 @@ class _DiningState extends State<DiningCard> {
   Widget buildDiningCard(AsyncSnapshot snapshot) {
     if (snapshot.hasData) {
       return DiningList(
-        data: snapshot.data,
+        data: _data,
         listSize: 3,
       );
     } else {
@@ -76,7 +76,8 @@ class _DiningState extends State<DiningCard> {
         'View All',
       ),
       onPressed: () {
-        Navigator.pushNamed(context, RoutePaths.DiningViewAll, arguments: data);
+        Navigator.pushNamed(context, RoutePaths.DiningViewAll,
+            arguments: _data);
       },
     ));
     return actionButtons;
