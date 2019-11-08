@@ -12,6 +12,7 @@ class SpecialEventsViewModel extends StatefulWidget {
 class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
   final SpecialEventsService _specialEventsService = SpecialEventsService();
   Future<SpecialEventsModel> _data;
+  String CurrentDateSelection = "2018-09-23";
 
   initState() {
     super.initState();
@@ -49,19 +50,48 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
     if (snapshot.hasData) {
       final SpecialEventsModel data = snapshot.data;
       List<String> uids = selectEvents(data);
-      return new Expanded(
+      return new Column(children: <Widget>[
+        SizedBox(
+            height: 50,
+            child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: buildDateWidgets(data.dates))),
+        SizedBox(
+          height: 450,
           child: ListView.builder(
               itemCount: uids.length,
               itemBuilder: (BuildContext ctxt, int index) =>
-                  buildEventWidget(ctxt, data, uids[index])));
+                  buildEventWidget(ctxt, data, uids[index])),
+        ),
+      ]);
     } else {
       return Container();
     }
   }
 
+  List<Widget> buildDateWidgets(List<DateTime> dates) {
+    List<Widget> dateButtonList = new List<Widget>();
+    dates.forEach((f) => dateButtonList.add(FlatButton(
+          color: Colors.white,
+          textColor: Colors.black,
+          disabledColor: Colors.grey,
+          disabledTextColor: Colors.black,
+          padding: EdgeInsets.all(8.0),
+          splashColor: Colors.blueAccent,
+          onPressed: () {
+            _updateData();
+          },
+          child: Text(
+            new DateFormat("MMMd").format(f),
+            //style: TextStyle(fontSize: 10.0),
+          ),
+        )));
+    return dateButtonList;
+  }
+
   List<String> selectEvents(SpecialEventsModel data) {
-    String dateSelected = "2018-09-23"; //TODO v2 make this dynamic
-    return data.dateItems[dateSelected];
+    //String dateSelected = "2018-09-23"; //TODO v2 make this dynamic
+    return data.dateItems[CurrentDateSelection];
   }
 
   Widget buildEventWidget(
@@ -88,7 +118,7 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
     return Text(new DateFormat.jm().format(dateTime));
   }
 
-  Widget titleWidget(Schedule event){
+  Widget titleWidget(Schedule event) {
     return Text(event.talkTitle);
   }
 
@@ -100,13 +130,15 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
     );
   }
 
-  Widget buildTrailing(Schedule event){
-    bool isGoing = true; //TODO add personal event list after state management is done
-    if(isGoing){
-      return Icon(Icons.star, color: Colors.yellow , size: 54, semanticLabel: 'Starred' );
-    }
-    else
-    return Icon(Icons.star_border, color: Colors.yellow , size: 54, semanticLabel: 'Not Starred' );
+  Widget buildTrailing(Schedule event) {
+    bool isGoing =
+        true; //TODO add personal event list after state management is done
+    if (isGoing) {
+      return Icon(Icons.star,
+          color: Colors.yellow, size: 54, semanticLabel: 'Going');
+    } else
+      return Icon(Icons.star_border,
+          color: Colors.yellow, size: 54, semanticLabel: 'Not Going');
   }
 }
 
