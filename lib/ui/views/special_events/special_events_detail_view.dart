@@ -15,10 +15,10 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
   String currentDateSelection = "2018-09-22";
 
   bool isFull = true;
-  
+
   //This will need to be stored in state so that its not reset everytime!
-  Map<String,bool> myEventList;
-  
+  Map<String, bool> myEventList;
+
   initState() {
     super.initState();
     _updateData();
@@ -54,10 +54,10 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
   Widget buildEventsCard(AsyncSnapshot<SpecialEventsModel> snapshot) {
     if (snapshot.hasData) {
       final SpecialEventsModel data = snapshot.data;
-      
+
       //initialize myEvents list if its null
       if (myEventList == null) {
-        myEventList = new Map<String,bool>();
+        myEventList = new Map<String, bool>();
         data.uids.forEach((f) => myEventList[f] = false);
       }
 
@@ -108,7 +108,16 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
   }
 
   List<String> selectEvents(SpecialEventsModel data) {
-    return data.dateItems[currentDateSelection];
+    List<String> itemsForDate = data.dateItems[currentDateSelection];
+    if (isFull)
+      return itemsForDate;
+    else {
+      List<String> myItemsForDate = new List<String>();
+      itemsForDate.forEach((f) => {
+            if (myEventList[f] == true) {myItemsForDate.add(f)} //TODO Ask about this one
+          });
+      return myItemsForDate;
+    }
   }
 
   Widget buildEventWidget(
@@ -147,14 +156,14 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
   }
 
   //Add event from myList
-  void isGoing(String uid){
+  void isGoing(String uid) {
     myEventList[uid] = true;
     _updateData();
     //return false;
   }
 
   //Remove event from myList
-  void notGoing(String uid){
+  void notGoing(String uid) {
     myEventList[uid] = false;
     _updateData();
   }
