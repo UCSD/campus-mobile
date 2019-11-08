@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'package:campus_mobile_experimental/core/services/weather.dart';
+import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+
 import '../../ui/widgets/cards/card_container.dart';
 
 const String WEATHER_ICON_BASE_URL =
@@ -155,7 +157,12 @@ class _WeatherState extends State<Weather> {
       child: Text(
         'Surf Report',
       ),
-      onPressed: () {/*TODO navigate to surf view*/},
+      onPressed: () {
+        Navigator.pushNamed(
+          context,
+          RoutePaths.SurfView,
+        );
+      },
     );
   }
 }

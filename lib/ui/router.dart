@@ -19,6 +19,7 @@ import 'package:campus_mobile_experimental/ui/views/news/news_list.dart';
 import 'package:campus_mobile_experimental/ui/views/notifications.dart';
 import 'package:campus_mobile_experimental/ui/views/profile.dart';
 import 'package:campus_mobile_experimental/ui/views/dining/nutrition_facts_view.dart';
+import 'package:campus_mobile_experimental/core/viewmodels/surf_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -74,6 +75,8 @@ class Router {
                   disclaimer: disclaimer,
                   disclaimerEmail: disclaimerEmail,
                 ));
+      case RoutePaths.SurfView:
+        return MaterialPageRoute(builder: (_) => SurfView());
     }
   }
 }
