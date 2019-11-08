@@ -13,9 +13,12 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
   final SpecialEventsService _specialEventsService = SpecialEventsService();
   Future<SpecialEventsModel> _data;
   String currentDateSelection = "2018-09-22";
-  //This will need to be stored in state
-  List<bool> myEventList;
 
+  bool isFull = true;
+  
+  //This will need to be stored in state so that its not reset everytime!
+  Map<String,bool> myEventList;
+  
   initState() {
     super.initState();
     _updateData();
@@ -51,8 +54,11 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
   Widget buildEventsCard(AsyncSnapshot<SpecialEventsModel> snapshot) {
     if (snapshot.hasData) {
       final SpecialEventsModel data = snapshot.data;
-      if(myEventList == null){
-        myEventList = new List<bool>.filled(data.uids.length, false);
+      
+      //initialize myEvents list if its null
+      if (myEventList == null) {
+        myEventList = new Map<String,bool>();
+        data.uids.forEach((f) => myEventList[f] = false);
       }
 
       List<String> uids = selectEvents(data);
@@ -140,51 +146,76 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
     );
   }
 
-  Widget buildTrailing(Schedule event) {
-    bool isGoing =
-        true; //TODO add personal event list after state management is done
-    if (isGoing) {
-      return Icon(Icons.star,
-          color: Colors.yellow, size: 54, semanticLabel: 'Going');
-    } else
-      return Icon(Icons.star_border,
-          color: Colors.yellow, size: 54, semanticLabel: 'Not Going');
+  //Add event from myList
+  void isGoing(String uid){
+    myEventList[uid] = true;
+    _updateData();
+    //return false;
   }
-}
 
-Widget buildBottomBar(BuildContext context){
-  return Row(
-          children: <Widget>[
-            Container(
-                height: 67,
-                width: MediaQuery.of(context).size.width / 2,
-                child: FlatButton(
-                  color: Colors.white,
-                  textColor: Colors.black,
-                  disabledColor: Colors.grey,
-                  disabledTextColor: Colors.black,
-                  //padding: EdgeInsets.all(8.0),
-                  splashColor: Colors.blueAccent,
-                  focusColor: Colors.blue,
-                  child: Text('Full Schedule'),
-                  onPressed: () {},
-                )),
-            Container(
-                height: 67,
-                width: MediaQuery.of(context).size.width / 2,
-                child: FlatButton(
-                  color: Colors.white,
-                  textColor: Colors.black,
-                  disabledColor: Colors.grey,
-                  disabledTextColor: Colors.black,
-                  padding: EdgeInsets.all(8.0),
-                  splashColor: Colors.blueAccent,
-                  focusColor: Colors.blue,
-                  child: Text('My Schedule'),
-                  onPressed: () {},
-                ))
-          ],
-        );
+  //Remove event from myList
+  void notGoing(String uid){
+    myEventList[uid] = false;
+    _updateData();
+  }
+
+  Widget buildTrailing(Schedule event) {
+    if (myEventList[event.id]) {
+      return GestureDetector(
+          onTap: () {
+            notGoing(event.id);
+          },
+          child: Icon(Icons.star,
+              color: Colors.yellow, size: 54, semanticLabel: 'Going'));
+    } else
+      return GestureDetector(
+          onTap: () {
+            isGoing(event.id);
+          },
+          child: Icon(Icons.star_border,
+              color: Colors.yellow, size: 54, semanticLabel: 'Not Going'));
+  }
+
+  Widget buildBottomBar(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        Container(
+            height: 67,
+            width: MediaQuery.of(context).size.width / 2,
+            child: FlatButton(
+              color: Colors.white,
+              textColor: Colors.black,
+              disabledColor: Colors.grey,
+              disabledTextColor: Colors.black,
+              //padding: EdgeInsets.all(8.0),
+              splashColor: Colors.blueAccent,
+              focusColor: Colors.blue,
+              child: Text('Full Schedule'),
+              onPressed: () {
+                isFull = true;
+                _updateData();
+              },
+            )),
+        Container(
+            height: 67,
+            width: MediaQuery.of(context).size.width / 2,
+            child: FlatButton(
+              color: Colors.white,
+              textColor: Colors.black,
+              disabledColor: Colors.grey,
+              disabledTextColor: Colors.black,
+              padding: EdgeInsets.all(8.0),
+              splashColor: Colors.blueAccent,
+              focusColor: Colors.blue,
+              child: Text('My Schedule'),
+              onPressed: () {
+                isFull = false;
+                _updateData();
+              },
+            ))
+      ],
+    );
+  }
 }
 
 //Helper class to convert RGB to ARGB for flutter
