@@ -1,7 +1,7 @@
-import 'package:campus_mobile_beta/core/models/special_events_model.dart';
-import 'package:campus_mobile_beta/core/services/special_events_service.dart';
+import 'package:campus_mobile_experimental/core/models/special_events_model.dart';
+import 'package:campus_mobile_experimental/core/services/special_events_service.dart';
 import 'package:flutter/material.dart';
-import 'package:campus_mobile_beta/ui/widgets/container_view.dart';
+import 'package:campus_mobile_experimental/ui/widgets/container_view.dart';
 import 'package:intl/intl.dart';
 
 class SpecialEventsViewModel extends StatefulWidget {

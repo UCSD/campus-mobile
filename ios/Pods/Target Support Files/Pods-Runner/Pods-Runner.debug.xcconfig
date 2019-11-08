@@ -1,9 +1,8 @@
-FRAMEWORK_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/../.symlinks/flutter/ios" "${PODS_ROOT}/FirebaseAnalytics/Frameworks" "${PODS_ROOT}/GoogleAppMeasurement/Frameworks"
-GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1 $(inherited) PB_FIELD_32BIT=1 PB_NO_PACKED_STRUCTS=1 PB_ENABLE_MALLOC=1
-HEADER_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/Firebase" "${PODS_ROOT}/Headers/Public/FirebaseCore" "${PODS_ROOT}/Headers/Public/FirebaseInstanceID" "${PODS_ROOT}/Headers/Public/GoogleUtilities" "${PODS_ROOT}/Headers/Public/firebase_analytics" "${PODS_ROOT}/Headers/Public/firebase_core" "${PODS_ROOT}/Headers/Public/nanopb" "${PODS_ROOT}/Headers/Public/path_provider" $(inherited) ${PODS_ROOT}/Firebase/CoreOnly/Sources
+FRAMEWORK_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/FMDB" "${PODS_CONFIGURATION_BUILD_DIR}/path_provider" "${PODS_CONFIGURATION_BUILD_DIR}/sqflite" "${PODS_CONFIGURATION_BUILD_DIR}/url_launcher" "${PODS_ROOT}/../.symlinks/flutter/ios"
+GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
+HEADER_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/FMDB/FMDB.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/path_provider/path_provider.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/sqflite/sqflite.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/url_launcher/url_launcher.framework/Headers"
 LD_RUNPATH_SEARCH_PATHS = $(inherited) '@executable_path/Frameworks' '@loader_path/Frameworks'
-LIBRARY_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCore" "${PODS_CONFIGURATION_BUILD_DIR}/FirebaseInstanceID" "${PODS_CONFIGURATION_BUILD_DIR}/GoogleUtilities" "${PODS_CONFIGURATION_BUILD_DIR}/firebase_analytics" "${PODS_CONFIGURATION_BUILD_DIR}/firebase_core" "${PODS_CONFIGURATION_BUILD_DIR}/nanopb" "${PODS_CONFIGURATION_BUILD_DIR}/path_provider"
-OTHER_LDFLAGS = $(inherited) -ObjC -l"FirebaseCore" -l"FirebaseInstanceID" -l"GoogleUtilities" -l"c++" -l"firebase_analytics" -l"firebase_core" -l"nanopb" -l"path_provider" -l"sqlite3" -l"z" -framework "FIRAnalyticsConnector" -framework "FirebaseAnalytics" -framework "FirebaseCoreDiagnostics" -framework "Flutter" -framework "Foundation" -framework "GoogleAppMeasurement" -framework "Security" -framework "StoreKit" -framework "SystemConfiguration"
+OTHER_LDFLAGS = $(inherited) -l"sqlite3" -framework "FMDB" -framework "Flutter" -framework "path_provider" -framework "sqflite" -framework "url_launcher"
 PODS_BUILD_DIR = ${BUILD_DIR}
 PODS_CONFIGURATION_BUILD_DIR = ${PODS_BUILD_DIR}/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)
 PODS_PODFILE_DIR_PATH = ${SRCROOT}/.

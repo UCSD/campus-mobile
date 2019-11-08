@@ -1,6 +1,6 @@
-import 'package:campus_mobile_beta/core/constants/app_constants.dart';
-import 'package:campus_mobile_beta/ui/views/special_events/banner_container.dart';
-import 'package:campus_mobile_beta/ui/widgets/image_loader.dart';
+import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
+import 'package:campus_mobile_experimental/ui/views/special_events/banner_container.dart';
+import 'package:campus_mobile_experimental/ui/widgets/image_loader.dart';
 import 'package:flutter/material.dart';
 
 class BannerCard extends StatefulWidget {
