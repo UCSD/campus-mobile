@@ -6,7 +6,7 @@ import 'package:campus_mobile_beta/core/viewmodels/weather.dart';
 import 'package:campus_mobile_beta/core/viewmodels/availability_view_model.dart';
 import 'package:campus_mobile_beta/core/viewmodels/links_view_model.dart';
 import 'package:campus_mobile_beta/core/viewmodels/parking_view_model.dart';
-import 'package:campus_mobile_beta/ui/views/special_events/banner.dart';
+import 'package:campus_mobile_beta/ui/views/special_events/banner_view_model.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {

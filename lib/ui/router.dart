@@ -29,7 +29,7 @@ class Router {
       case RoutePaths.Home:
         return MaterialPageRoute(builder: (_) => Home());
       case RoutePaths.SpecialEventsDetailView:
-        return MaterialPageRoute(builder: (_) => SpecialEventsDetailView());
+        return MaterialPageRoute(builder: (_) => SpecialEventsViewModel());
       case RoutePaths.Map:
         return MaterialPageRoute(builder: (_) => prefix0.Map());
       case RoutePaths.Notifications:
