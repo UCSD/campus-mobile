@@ -86,7 +86,7 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
   List<Widget> buildDateWidgets(List<DateTime> dates) {
     dateButtonList = new List<Widget>();
     dates.forEach((f) => dateButtonList.add(FlatButton(
-          color: Colors.white,
+          color: isSelectedDate(f) ? Colors.blue : Colors.white,
           textColor: Colors.black,
           disabledColor: Colors.grey,
           disabledTextColor: Colors.black,
@@ -107,6 +107,14 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
     return dateButtonList;
   }
 
+//Helper function to check which date button is active while re rendering
+  bool isSelectedDate(DateTime dateTime){
+    String newDateKey = dateTime
+                .toIso8601String()
+                .substring(0, dateTime.toIso8601String().indexOf("T"));
+    return(newDateKey == currentDateSelection);
+  }
+
   List<String> selectEvents(SpecialEventsModel data) {
     List<String> itemsForDate = data.dateItems[currentDateSelection];
     if (isFull)
@@ -114,7 +122,8 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
     else {
       List<String> myItemsForDate = new List<String>();
       itemsForDate.forEach((f) => {
-            if (myEventList[f] == true) {myItemsForDate.add(f)} //TODO Ask about this one
+            if (myEventList[f] == true)
+              {myItemsForDate.add(f)} //TODO Ask about this one
           });
       return myItemsForDate;
     }
@@ -192,7 +201,7 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
             height: 67,
             width: MediaQuery.of(context).size.width / 2,
             child: FlatButton(
-              color: Colors.white,
+              color: isFull ? Colors.blue : Colors.white,
               textColor: Colors.black,
               disabledColor: Colors.grey,
               disabledTextColor: Colors.black,
@@ -209,7 +218,7 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
             height: 67,
             width: MediaQuery.of(context).size.width / 2,
             child: FlatButton(
-              color: Colors.white,
+              color: isFull ? Colors.white : Colors.blue,
               textColor: Colors.black,
               disabledColor: Colors.grey,
               disabledTextColor: Colors.black,
