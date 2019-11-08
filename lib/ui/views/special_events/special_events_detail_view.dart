@@ -12,7 +12,7 @@ class SpecialEventsViewModel extends StatefulWidget {
 class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
   final SpecialEventsService _specialEventsService = SpecialEventsService();
   Future<SpecialEventsModel> _data;
-  String CurrentDateSelection = "2018-09-23";
+  String currentDateSelection = "2018-09-23";
 
   initState() {
     super.initState();
@@ -57,7 +57,7 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
                 scrollDirection: Axis.horizontal,
                 children: buildDateWidgets(data.dates))),
         SizedBox(
-          height: 450,
+          height: 500,
           child: ListView.builder(
               itemCount: uids.length,
               itemBuilder: (BuildContext ctxt, int index) =>
@@ -68,9 +68,9 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
       return Container();
     }
   }
-
+  List<Widget> dateButtonList;
   List<Widget> buildDateWidgets(List<DateTime> dates) {
-    List<Widget> dateButtonList = new List<Widget>();
+    dateButtonList = new List<Widget>();
     dates.forEach((f) => dateButtonList.add(FlatButton(
           color: Colors.white,
           textColor: Colors.black,
@@ -78,8 +78,12 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
           disabledTextColor: Colors.black,
           padding: EdgeInsets.all(8.0),
           splashColor: Colors.blueAccent,
+          focusColor: Colors.blue,
           onPressed: () {
+            String newDateKey = f.toIso8601String().substring(0, f.toIso8601String().indexOf("T"));
+            currentDateSelection = newDateKey;
             _updateData();
+
           },
           child: Text(
             new DateFormat("MMMd").format(f),
@@ -89,9 +93,13 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
     return dateButtonList;
   }
 
+  // void highlightButton(int key){
+  //     dateButtonList[key].
+  // }
+
   List<String> selectEvents(SpecialEventsModel data) {
     //String dateSelected = "2018-09-23"; //TODO v2 make this dynamic
-    return data.dateItems[CurrentDateSelection];
+    return data.dateItems[currentDateSelection];
   }
 
   Widget buildEventWidget(
