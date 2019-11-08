@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final specialEventsModel = specialEventsModelFromJson(jsonString);
-
 import 'dart:convert';
 
 SpecialEventsModel specialEventsModelFromJson(String str) => SpecialEventsModel.fromJson(json.decode(str));
@@ -22,7 +18,7 @@ class SpecialEventsModel {
     Map<String, List<String>> dateItems;
     List<String> labels;
     Map<String, List<String>> labelItems;
-    String labelThemes;
+    Map<String, String> labelThemes;
 
     SpecialEventsModel({
         this.name,
@@ -41,7 +37,8 @@ class SpecialEventsModel {
         this.labelThemes,
     });
 
-    factory SpecialEventsModel.fromJson(Map<String, dynamic> json) => SpecialEventsModel(
+    factory SpecialEventsModel.fromJson(Map<String, dynamic> json){
+      return SpecialEventsModel(
         name: json["name"] == null ? null : json["name"],
         location: json["location"] == null ? null : json["location"],
         startTime: json["start-time"] == null ? null : json["start-time"],
@@ -55,10 +52,12 @@ class SpecialEventsModel {
         dateItems: json["date-items"] == null ? null : Map.from(json["date-items"]).map((k, v) => MapEntry<String, List<String>>(k, List<String>.from(v.map((x) => x)))),
         labels: json["labels"] == null ? null : List<String>.from(json["labels"].map((x) => x)),
         labelItems: json["label-items"] == null ? null : Map.from(json["label-items"]).map((k, v) => MapEntry<String, List<String>>(k, List<String>.from(v.map((x) => x)))),
-        labelThemes: json["label-themes"] == null ? null :json["label-themes"],
-    );
+        labelThemes: json["label-themes"] == null ? null : Map.from(json["label-themes"]).map((k, v) => MapEntry<String, String>(k, v)),
+      );
+    }
 
-    Map<String, dynamic> toJson() => {
+    Map<String, dynamic> toJson() {
+      return {
         "name": name == null ? null : name,
         "location": location == null ? null : location,
         "start-time": startTime == null ? null : startTime,
@@ -72,41 +71,9 @@ class SpecialEventsModel {
         "date-items": dateItems == null ? null : Map.from(dateItems).map((k, v) => MapEntry<String, dynamic>(k, List<dynamic>.from(v.map((x) => x)))),
         "labels": labels == null ? null : List<dynamic>.from(labels.map((x) => x)),
         "label-items": labelItems == null ? null : Map.from(labelItems).map((k, v) => MapEntry<String, dynamic>(k, List<dynamic>.from(v.map((x) => x)))),
-        "label-themes": labelThemes == null ? null : labelThemes,
-    };
-}
-
-class LabelThemes {
-    String muirArtsCultureFun;
-    String rooseveltCommunityInvolvement;
-    String muirCommunityInvolvement;
-    String rooseveltArtsCultureFun;
-    String sixthArtsCultureFun;
-    String artsCultureFun;
-    String sixthCommunityInvolvement;
-    String communityInvolvement;
-
-    LabelThemes({
-        this.muirArtsCultureFun,
-        this.rooseveltCommunityInvolvement,
-        this.muirCommunityInvolvement,
-        this.rooseveltArtsCultureFun,
-        this.sixthArtsCultureFun,
-        this.artsCultureFun,
-        this.sixthCommunityInvolvement,
-        this.communityInvolvement,
-    });
-
-    factory LabelThemes.fromJson(Map<String, dynamic> json) => LabelThemes(
-        muirArtsCultureFun: json["Muir,Arts, Culture & Fun!"] == null ? null : json["Muir,Arts, Culture & Fun!"],
-        rooseveltCommunityInvolvement: json["Roosevelt, Community Involvement"] == null ? null : json["Roosevelt, Community Involvement"],
-        muirCommunityInvolvement: json["Muir,Community Involvement"] == null ? null : json["Muir,Community Involvement"],
-        rooseveltArtsCultureFun: json["Roosevelt, Arts, Culture & Fun!"] == null ? null : json["Roosevelt, Arts, Culture & Fun!"],
-        sixthArtsCultureFun: json["Sixth,Arts, Culture & Fun!"] == null ? null : json["Sixth,Arts, Culture & Fun!"],
-        artsCultureFun: json["Arts, Culture & Fun!"] == null ? null : json["Arts, Culture & Fun!"],
-        sixthCommunityInvolvement: json["Sixth,Community Involvement"] == null ? null : json["Sixth,Community Involvement"],
-        communityInvolvement: json["Community Involvement"] == null ? null : json["Community Involvement"],
-    );
+        "label-themes": labelThemes == null ? null : Map.from(labelThemes).map((k, v) => MapEntry<String, String>(k, v)),
+      };
+    }
 }
 
 class Schedule {
@@ -148,7 +115,8 @@ class Schedule {
         this.url,
     });
 
-    factory Schedule.fromJson(Map<String, dynamic> json) => Schedule(
+    factory Schedule.fromJson(Map<String, dynamic> json) {
+      return Schedule(
         id: json["id"] == null ? null : json["id"],
         startTime: json["start-time"] == null ? null : json["start-time"],
         endTime: json["end-time"] == null ? null : json["end-time"],
@@ -166,14 +134,15 @@ class Schedule {
         contactInfo: json["contact_info"] == null ? null : json["contact_info"],
         contactPhone: json["contact_phone"] == null ? null : json["contact_phone"],
         url: json["url"] == null ? null : json["url"],
-    );
+      );
+    }
 
     Map<String, dynamic> toJson() => {
         "id": id == null ? null : id,
         "start-time": startTime == null ? null : startTime,
         "end-time": endTime == null ? null : endTime,
-        "talk-type": talkType == null ? null : talkTypeValues.reverse[talkType],
-        "top-label": topLabel == null ? null : topLabelValues.reverse[topLabel],
+        "talk-type": talkType == null ? null : talkType,
+        "top-label": topLabel == null ? null : topLabel,
         "label": label == null ? null : label,
         "label-theme": labelTheme == null ? null : labelTheme,
         "location": location == null ? null : location,
@@ -187,30 +156,4 @@ class Schedule {
         "contact_phone": contactPhone == null ? null : contactPhone,
         "url": url == null ? null : url,
     };
-}
-
-enum TalkType { DEFAULT }
-
-final talkTypeValues = EnumValues({
-    "Default": TalkType.DEFAULT
-});
-
-enum TopLabel { YES }
-
-final topLabelValues = EnumValues({
-    "Yes": TopLabel.YES
-});
-
-class EnumValues<T> {
-    Map<String, T> map;
-    Map<T, String> reverseMap;
-
-    EnumValues(this.map);
-
-    Map<T, String> get reverse {
-        if (reverseMap == null) {
-            reverseMap = map.map((k, v) => new MapEntry(v, k));
-        }
-        return reverseMap;
-    }
 }
