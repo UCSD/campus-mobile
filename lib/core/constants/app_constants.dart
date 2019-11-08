@@ -10,10 +10,10 @@ class RoutePaths {
   static const String NewsDetailView = 'news/news_detail_view';
   static const String EventDetailView = 'events/event_detail_view';
   static const String LinksViewAll = 'links/links_list';
-  static const String ManageAvailabilityView =
-      'availability/manage_locations_view';
+  static const String ManageAvailabilityView = 'availability/manage_locations_view';
   static const String DiningViewAll = 'dining/dining_list_view';
   static const String DiningDetailView = 'dining/dining_detail_view';
   static const String DiningNutritionView = 'dining/dining_nutrition_view';
   static const String SurfView = 'surfing/surf_view';
+  static const String SpecialEventsDetailView = 'special_events/special_events_detail_view';
 }

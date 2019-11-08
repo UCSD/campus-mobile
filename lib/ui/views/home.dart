@@ -6,6 +6,7 @@ import 'package:campus_mobile_experimental/core/viewmodels/weather.dart';
 import 'package:campus_mobile_experimental/core/viewmodels/availability_view_model.dart';
 import 'package:campus_mobile_experimental/core/viewmodels/links_view_model.dart';
 import 'package:campus_mobile_experimental/core/viewmodels/parking_view_model.dart';
+import 'package:campus_mobile_experimental/ui/views/special_events/banner_view_model.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
@@ -18,6 +19,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return ListView(
       children: <Widget>[
+        BannerCard(),
         Weather(),
         NewsCard(),
         EventsViewModel(),

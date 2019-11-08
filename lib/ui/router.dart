@@ -20,6 +20,7 @@ import 'package:campus_mobile_experimental/ui/views/notifications.dart';
 import 'package:campus_mobile_experimental/ui/views/profile.dart';
 import 'package:campus_mobile_experimental/ui/views/dining/nutrition_facts_view.dart';
 import 'package:campus_mobile_experimental/core/viewmodels/surf_view_model.dart';
+import 'package:campus_mobile_experimental/ui/views/special_events/special_events_detail_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -28,6 +29,8 @@ class Router {
     switch (settings.name) {
       case RoutePaths.Home:
         return MaterialPageRoute(builder: (_) => Home());
+      case RoutePaths.SpecialEventsDetailView:
+        return MaterialPageRoute(builder: (_) => SpecialEventsViewModel());
       case RoutePaths.Map:
         return MaterialPageRoute(builder: (_) => prefix0.Map());
       case RoutePaths.Notifications:
