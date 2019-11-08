@@ -1,10 +1,10 @@
-import 'package:campus_mobile_beta/ui/widgets/cards/card_container.dart';
+import 'package:campus_mobile_experimental/ui/widgets/cards/card_container.dart';
 import 'package:flutter/material.dart';
-import 'package:campus_mobile_beta/core/models/events_model.dart';
-import 'package:campus_mobile_beta/core/services/event_service.dart';
-import 'package:campus_mobile_beta/ui/widgets/image_loader.dart';
-import 'package:campus_mobile_beta/core/constants/app_constants.dart';
-import 'package:campus_mobile_beta/ui/views/events/events_list.dart';
+import 'package:campus_mobile_experimental/core/models/events_model.dart';
+import 'package:campus_mobile_experimental/core/services/event_service.dart';
+import 'package:campus_mobile_experimental/ui/widgets/image_loader.dart';
+import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
+import 'package:campus_mobile_experimental/ui/views/events/events_list.dart';
 
 class EventsViewModel extends StatefulWidget {
   @override

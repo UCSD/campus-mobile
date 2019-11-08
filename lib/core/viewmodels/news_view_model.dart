@@ -1,9 +1,9 @@
-import 'package:campus_mobile_beta/core/models/news_model.dart';
-import 'package:campus_mobile_beta/core/constants/app_constants.dart';
+import 'package:campus_mobile_experimental/core/models/news_model.dart';
+import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:campus_mobile_beta/core/services/news_service.dart';
-import 'package:campus_mobile_beta/ui/widgets/cards/card_container.dart';
-import 'package:campus_mobile_beta/ui/views/news/news_list.dart';
+import 'package:campus_mobile_experimental/core/services/news_service.dart';
+import 'package:campus_mobile_experimental/ui/widgets/cards/card_container.dart';
+import 'package:campus_mobile_experimental/ui/views/news/news_list.dart';
 
 class NewsCard extends StatefulWidget {
   @override

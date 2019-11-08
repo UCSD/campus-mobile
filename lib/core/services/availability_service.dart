@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'package:campus_mobile_beta/core/models/availability_model.dart';
-import 'package:campus_mobile_beta/core/services/networking.dart';
+import 'package:campus_mobile_experimental/core/models/availability_model.dart';
+import 'package:campus_mobile_experimental/core/services/networking.dart';
 
 class AvailabilityService {
   bool _isLoading = false;

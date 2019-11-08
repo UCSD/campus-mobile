@@ -1,5 +1,5 @@
-import 'package:campus_mobile_beta/core/models/parking_model.dart';
-import 'package:campus_mobile_beta/ui/theme/app_theme.dart';
+import 'package:campus_mobile_experimental/core/models/parking_model.dart';
+import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class ParkingDisplay extends StatelessWidget {

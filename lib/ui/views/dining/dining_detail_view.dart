@@ -1,9 +1,9 @@
-import 'package:campus_mobile_beta/core/models/dining_model.dart' as prefix0;
-import 'package:campus_mobile_beta/ui/theme/app_theme.dart';
+import 'package:campus_mobile_experimental/core/models/dining_model.dart' as prefix0;
+import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:campus_mobile_beta/ui/widgets/container_view.dart';
-import 'package:campus_mobile_beta/ui/widgets/image_loader.dart';
-import 'package:campus_mobile_beta/ui/views/dining/dining_menu_list.dart';
+import 'package:campus_mobile_experimental/ui/widgets/container_view.dart';
+import 'package:campus_mobile_experimental/ui/widgets/image_loader.dart';
+import 'package:campus_mobile_experimental/ui/views/dining/dining_menu_list.dart';
 
 class DiningDetailView extends StatelessWidget {
   const DiningDetailView({Key key, @required this.data}) : super(key: key);

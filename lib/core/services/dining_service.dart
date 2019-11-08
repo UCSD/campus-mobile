@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'package:campus_mobile_beta/core/models/dining_menu_items_model.dart';
-import 'package:campus_mobile_beta/core/models/dining_model.dart';
-import 'package:campus_mobile_beta/core/services/networking.dart';
+import 'package:campus_mobile_experimental/core/models/dining_menu_items_model.dart';
+import 'package:campus_mobile_experimental/core/models/dining_model.dart';
+import 'package:campus_mobile_experimental/core/services/networking.dart';
 
 class DiningService {
   bool _isLoading = false;

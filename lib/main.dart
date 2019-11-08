@@ -1,10 +1,10 @@
-import 'package:campus_mobile_beta/ui/router.dart';
-import 'package:campus_mobile_beta/ui/theme/app_theme.dart';
-import 'package:campus_mobile_beta/ui/views/home.dart';
-import 'package:campus_mobile_beta/ui/views/map.dart';
-import 'package:campus_mobile_beta/ui/views/notifications.dart';
-import 'package:campus_mobile_beta/ui/views/profile.dart';
-import 'package:campus_mobile_beta/ui/widgets/navigation/app_bar.dart';
+import 'package:campus_mobile_experimental/ui/router.dart';
+import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
+import 'package:campus_mobile_experimental/ui/views/home.dart';
+import 'package:campus_mobile_experimental/ui/views/map.dart';
+import 'package:campus_mobile_experimental/ui/views/notifications.dart';
+import 'package:campus_mobile_experimental/ui/views/profile.dart';
+import 'package:campus_mobile_experimental/ui/widgets/navigation/app_bar.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

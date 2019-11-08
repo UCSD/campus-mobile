@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:campus_mobile_beta/ui/widgets/container_view.dart';
-import 'package:campus_mobile_beta/core/models/availability_model.dart';
+import 'package:campus_mobile_experimental/ui/widgets/container_view.dart';
+import 'package:campus_mobile_experimental/core/models/availability_model.dart';
 
 class ManageAvailabilityView extends StatelessWidget {
   const ManageAvailabilityView({Key key, @required this.data})

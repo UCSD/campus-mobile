@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:campus_mobile_beta/core/models/news_model.dart';
-import 'package:campus_mobile_beta/ui/widgets/container_view.dart';
-import 'package:campus_mobile_beta/ui/widgets/image_loader.dart';
+import 'package:campus_mobile_experimental/core/models/news_model.dart';
+import 'package:campus_mobile_experimental/ui/widgets/container_view.dart';
+import 'package:campus_mobile_experimental/ui/widgets/image_loader.dart';
 
 class NewsDetailView extends StatelessWidget {
   const NewsDetailView({Key key, @required this.data}) : super(key: key);

@@ -3,7 +3,7 @@
 //     final diningModel = diningModelFromJson(jsonString);
 
 import 'dart:convert';
-import 'package:campus_mobile_beta/ui/widgets/image_loader.dart';
+import 'package:campus_mobile_experimental/ui/widgets/image_loader.dart';
 
 List<DiningModel> diningModelFromJson(String str) => List<DiningModel>.from(
     json.decode(str).map((x) => DiningModel.fromJson(x)));

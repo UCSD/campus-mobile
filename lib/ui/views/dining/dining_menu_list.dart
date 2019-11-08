@@ -1,7 +1,7 @@
-import 'package:campus_mobile_beta/core/models/dining_menu_items_model.dart';
+import 'package:campus_mobile_experimental/core/models/dining_menu_items_model.dart';
 import 'package:flutter/material.dart';
-import 'package:campus_mobile_beta/core/constants/app_constants.dart';
-import 'package:campus_mobile_beta/core/services/dining_service.dart';
+import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
+import 'package:campus_mobile_experimental/core/services/dining_service.dart';
 
 class DiningMenuList extends StatefulWidget {
   final String id;

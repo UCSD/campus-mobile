@@ -1,9 +1,9 @@
-import 'package:campus_mobile_beta/core/models/dining_model.dart';
-import 'package:campus_mobile_beta/core/services/dining_service.dart';
-import 'package:campus_mobile_beta/ui/widgets/cards/card_container.dart';
+import 'package:campus_mobile_experimental/core/models/dining_model.dart';
+import 'package:campus_mobile_experimental/core/services/dining_service.dart';
+import 'package:campus_mobile_experimental/ui/widgets/cards/card_container.dart';
 import 'package:flutter/material.dart';
-import 'package:campus_mobile_beta/core/constants/app_constants.dart';
-import 'package:campus_mobile_beta/ui/views/dining/dining_list.dart';
+import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
+import 'package:campus_mobile_experimental/ui/views/dining/dining_list.dart';
 
 class DiningCard extends StatefulWidget {
   @override

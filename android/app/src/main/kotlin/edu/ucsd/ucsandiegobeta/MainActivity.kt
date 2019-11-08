@@ -1,4 +1,4 @@
-package edu.ucsd.ucsandiegobeta
+package edu.ucsd.ucsandiegoexperimental
 
 import android.os.Bundle
 

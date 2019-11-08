@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:campus_mobile_beta/ui/widgets/image_loader.dart';
-import 'package:campus_mobile_beta/core/models/news_model.dart';
-import 'package:campus_mobile_beta/ui/widgets/container_view.dart';
-import 'package:campus_mobile_beta/core/constants/app_constants.dart';
+import 'package:campus_mobile_experimental/ui/widgets/image_loader.dart';
+import 'package:campus_mobile_experimental/core/models/news_model.dart';
+import 'package:campus_mobile_experimental/ui/widgets/container_view.dart';
+import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 
 class NewsList extends StatelessWidget {
   const NewsList({Key key, @required this.data, this.listSize})
