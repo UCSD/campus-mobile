@@ -12,7 +12,9 @@ class SpecialEventsViewModel extends StatefulWidget {
 class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
   final SpecialEventsService _specialEventsService = SpecialEventsService();
   Future<SpecialEventsModel> _data;
-  String currentDateSelection = "2018-09-23";
+  String currentDateSelection = "2018-09-22";
+  //This will need to be stored in state
+  List<bool> myEventList;
 
   initState() {
     super.initState();
@@ -49,6 +51,10 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
   Widget buildEventsCard(AsyncSnapshot<SpecialEventsModel> snapshot) {
     if (snapshot.hasData) {
       final SpecialEventsModel data = snapshot.data;
+      if(myEventList == null){
+        myEventList = new List<bool>.filled(data.uids.length, false);
+      }
+
       List<String> uids = selectEvents(data);
       return new Column(children: <Widget>[
         SizedBox(
@@ -63,11 +69,13 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
               itemBuilder: (BuildContext ctxt, int index) =>
                   buildEventWidget(ctxt, data, uids[index])),
         ),
+        buildBottomBar(context),
       ]);
     } else {
       return Container();
     }
   }
+
   List<Widget> dateButtonList;
   List<Widget> buildDateWidgets(List<DateTime> dates) {
     dateButtonList = new List<Widget>();
@@ -80,25 +88,20 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
           splashColor: Colors.blueAccent,
           focusColor: Colors.blue,
           onPressed: () {
-            String newDateKey = f.toIso8601String().substring(0, f.toIso8601String().indexOf("T"));
+            String newDateKey = f
+                .toIso8601String()
+                .substring(0, f.toIso8601String().indexOf("T"));
             currentDateSelection = newDateKey;
             _updateData();
-
           },
           child: Text(
             new DateFormat("MMMd").format(f),
-            //style: TextStyle(fontSize: 10.0),
           ),
         )));
     return dateButtonList;
   }
 
-  // void highlightButton(int key){
-  //     dateButtonList[key].
-  // }
-
   List<String> selectEvents(SpecialEventsModel data) {
-    //String dateSelected = "2018-09-23"; //TODO v2 make this dynamic
     return data.dateItems[currentDateSelection];
   }
 
@@ -107,7 +110,6 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
     Schedule event = data.schedule[uid];
     return ListTile(
       contentPadding: EdgeInsets.all(0),
-      //dense: true,
       leading: timeWidget(event),
       title: titleWidget(event),
       subtitle: buildSubtitle(event),
@@ -119,7 +121,7 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
   //             width: 1,
   //             height: 50,
   //             color: Colors.grey,
-  //           ),
+  //           ), TODO Add line ?
 
   Widget timeWidget(Schedule event) {
     var dateTime = new DateTime.fromMillisecondsSinceEpoch(event.startTime);
@@ -148,6 +150,41 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
       return Icon(Icons.star_border,
           color: Colors.yellow, size: 54, semanticLabel: 'Not Going');
   }
+}
+
+Widget buildBottomBar(BuildContext context){
+  return Row(
+          children: <Widget>[
+            Container(
+                height: 67,
+                width: MediaQuery.of(context).size.width / 2,
+                child: FlatButton(
+                  color: Colors.white,
+                  textColor: Colors.black,
+                  disabledColor: Colors.grey,
+                  disabledTextColor: Colors.black,
+                  //padding: EdgeInsets.all(8.0),
+                  splashColor: Colors.blueAccent,
+                  focusColor: Colors.blue,
+                  child: Text('Full Schedule'),
+                  onPressed: () {},
+                )),
+            Container(
+                height: 67,
+                width: MediaQuery.of(context).size.width / 2,
+                child: FlatButton(
+                  color: Colors.white,
+                  textColor: Colors.black,
+                  disabledColor: Colors.grey,
+                  disabledTextColor: Colors.black,
+                  padding: EdgeInsets.all(8.0),
+                  splashColor: Colors.blueAccent,
+                  focusColor: Colors.blue,
+                  child: Text('My Schedule'),
+                  onPressed: () {},
+                ))
+          ],
+        );
 }
 
 //Helper class to convert RGB to ARGB for flutter
