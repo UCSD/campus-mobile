@@ -5,6 +5,7 @@ import 'package:campus_mobile_beta/ui/widgets/cards/card_container.dart';
 import 'package:campus_mobile_beta/ui/widgets/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:campus_mobile_beta/core/constants/app_constants.dart';
+import 'package:provider/provider.dart';
 
 class AvailabilityCard extends StatefulWidget {
   @override
@@ -12,37 +13,30 @@ class AvailabilityCard extends StatefulWidget {
 }
 
 class _AvailabilityCardState extends State<AvailabilityCard> {
-  final AvailabilityService _availabilityService = AvailabilityService();
-  Future<List<AvailabilityModel>> _data;
-  final _controller = new PageController();
+  final _controller = PageController();
+  AvailabilityService _availabilityService;
 
   initState() {
     super.initState();
-    _updateData();
+    _availabilityService = Provider.of<AvailabilityService>(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<AvailabilityModel>>(
-      future: _data,
-      builder: (context, snapshot) {
-        return CardContainer(
-          /// TODO: need to hook up hidden to state using provider
-          hidden: false,
-          reload: () => _updateData(),
-          isLoading: _availabilityService.isLoading,
-          title: Text('Availability'),
-          errorText: _availabilityService.error,
-          child: buildAvailabilityCard(snapshot),
-          actionButtons: buildActionButtons(snapshot.data),
-        );
-      },
+    return CardContainer(
+      /// TODO: need to hook up hidden to state using provider
+      hidden: false,
+      reload: () => _updateData(_availabilityService),
+      isLoading: _availabilityService.isLoading,
+      title: Text('Availability'),
+      errorText: _availabilityService.error,
+      child: buildAvailabilityCard(_availabilityService.data),
+      actionButtons: buildActionButtons(_availabilityService.data),
     );
   }
 
-  Widget buildAvailabilityCard(AsyncSnapshot snapshot) {
-    if (snapshot.hasData) {
-      List<AvailabilityModel> data = snapshot.data;
+  Widget buildAvailabilityCard(List<AvailabilityModel> data) {
+    if (data.length > 0) {
       List<Widget> locationsList = List<Widget>();
       for (AvailabilityModel model in data) {
         locationsList.add(AvailabilityDisplay(
@@ -73,11 +67,9 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
     }
   }
 
-  void _updateData() {
-    if (!_availabilityService.isLoading) {
-      setState(() {
-        _data = _availabilityService.fetchData();
-      });
+  void _updateData(AvailabilityService service) {
+    if (!service.isLoading) {
+      service.fetchData();
     }
   }
 
