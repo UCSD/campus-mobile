@@ -13,6 +13,7 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
   final SpecialEventsService _specialEventsService = SpecialEventsService();
   Future<SpecialEventsModel> _data;
   String currentDateSelection = "2018-09-22";
+  var appBarTitleText = new Text("LOADING");
 
   bool isFull = true;
 
@@ -34,8 +35,8 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
 
   @override
   Widget build(BuildContext context) {
-    return ContainerView(
-        child: Column(children: <Widget>[buildDetailView(context)]));
+    return addScaffoldToChild(
+        Column(children: <Widget>[buildDetailView(context)]));
   }
 
   Widget buildDetailView(BuildContext context) {
@@ -51,10 +52,23 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
     );
   }
 
+  Widget addScaffoldToChild(Widget child) {
+    //appBarTitleText = new Text(name);
+    return new Scaffold(
+      appBar: PreferredSize(
+          preferredSize: Size.fromHeight(42),
+          child: AppBar(
+            title: Center(child: appBarTitleText), // Dynamically changed
+          )),
+      body: child,
+    );
+  }
+
+//TODO - Scaffold and filter
   Widget buildEventsCard(AsyncSnapshot<SpecialEventsModel> snapshot) {
     if (snapshot.hasData) {
       final SpecialEventsModel data = snapshot.data;
-
+      appBarTitleText = new Text(data.name);
       //initialize myEvents list if its null
       if (myEventList == null) {
         myEventList = new Map<String, bool>();
@@ -62,7 +76,7 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
       }
 
       List<String> uids = selectEvents(data);
-      return new Column(children: <Widget>[
+      return Column(children: <Widget>[
         SizedBox(
             height: 50,
             child: ListView(
@@ -108,11 +122,11 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
   }
 
 //Helper function to check which date button is active while re rendering
-  bool isSelectedDate(DateTime dateTime){
+  bool isSelectedDate(DateTime dateTime) {
     String newDateKey = dateTime
-                .toIso8601String()
-                .substring(0, dateTime.toIso8601String().indexOf("T"));
-    return(newDateKey == currentDateSelection);
+        .toIso8601String()
+        .substring(0, dateTime.toIso8601String().indexOf("T"));
+    return (newDateKey == currentDateSelection);
   }
 
   List<String> selectEvents(SpecialEventsModel data) {
@@ -122,8 +136,7 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
     else {
       List<String> myItemsForDate = new List<String>();
       itemsForDate.forEach((f) => {
-            if (myEventList[f] == true)
-              {myItemsForDate.add(f)} //TODO Ask about this one
+            if (myEventList[f] == true) {myItemsForDate.add(f)}
           });
       return myItemsForDate;
     }
