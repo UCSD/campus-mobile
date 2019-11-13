@@ -17,8 +17,10 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
   AvailabilityService _availabilityService;
   bool hidden;
 
-  initState() {
-    super.initState();
+  void _updateData() {
+    if (!_availabilityService.isLoading) {
+      _availabilityService.fetchData();
+    }
   }
 
   @override
@@ -43,7 +45,7 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
   }
 
   Widget buildAvailabilityCard(List<AvailabilityModel> data) {
-    if (data.length > 0) {
+    if (data != null && data.length > 0) {
       List<Widget> locationsList = List<Widget>();
       for (AvailabilityModel model in data) {
         locationsList.add(AvailabilityDisplay(
@@ -71,12 +73,6 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
       );
     } else {
       return Container();
-    }
-  }
-
-  void _updateData() {
-    if (!_availabilityService.isLoading) {
-      _availabilityService.fetchData();
     }
   }
 

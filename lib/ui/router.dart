@@ -21,6 +21,8 @@ import 'package:campus_mobile_beta/ui/views/profile.dart';
 import 'package:campus_mobile_beta/ui/views/dining/nutrition_facts_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
+import 'package:campus_mobile_beta/core/services/event_service.dart';
 
 class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -37,8 +39,9 @@ class Router {
         NewsModel data = settings.arguments as NewsModel;
         return MaterialPageRoute(builder: (_) => NewsList(data: data));
       case RoutePaths.EventsViewAll:
-        List<EventModel> _data = settings.arguments as List<EventModel>;
-        return MaterialPageRoute(builder: (_) => EventsList(data: _data));
+        return MaterialPageRoute(
+            builder: (context) =>
+                EventsList(data: Provider.of<EventsService>(context).data));
       case RoutePaths.BaseLineView:
         return MaterialPageRoute(builder: (_) => BaselineView());
       case RoutePaths.NewsDetailView:
