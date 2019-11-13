@@ -15,5 +15,8 @@ class RoutePaths {
   static const String DiningViewAll = 'dining/dining_list_view';
   static const String DiningDetailView = 'dining/dining_detail_view';
   static const String DiningNutritionView = 'dining/dining_nutrition_view';
-  static const String SpecialEventsDetailView = 'special_events/special_events_detail_view';
+  static const String SpecialEventsDetailView =
+      'special_events/special_events_detail_view';
+  static const String SpecialEventsFilterView =
+      'special_events/special_events_filter_view';
 }

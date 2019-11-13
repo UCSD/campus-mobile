@@ -1,12 +1,22 @@
+import 'package:campus_mobile_beta/core/constants/app_constants.dart';
 import 'package:campus_mobile_beta/core/models/special_events_model.dart';
 import 'package:campus_mobile_beta/core/services/special_events_service.dart';
 import 'package:flutter/material.dart';
-import 'package:campus_mobile_beta/ui/widgets/container_view.dart';
 import 'package:intl/intl.dart';
 
 class SpecialEventsViewModel extends StatefulWidget {
   @override
   _SpecialEventsViewModelState createState() => _SpecialEventsViewModelState();
+}
+
+// Variables map to pass data between filter page and this page
+class FilterArguments {
+  Map<int, bool> selected;
+  List<String> filters;
+  String title;
+  Map<String, String> labelThemes;
+
+  FilterArguments(this.selected, this.filters, this.title, this.labelThemes);
 }
 
 class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
@@ -15,7 +25,8 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
   String currentDateSelection = "2018-09-22";
   var appBarTitleText = new Text("LOADING");
 
-  bool isFull = true;
+  FilterArguments filterArguments;
+  bool isFull = true; // Toggle true for full schedule / false for my Schedule
 
   //This will need to be stored in state so that its not reset everytime!
   Map<String, bool> myEventList;
@@ -35,8 +46,7 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
 
   @override
   Widget build(BuildContext context) {
-    return addScaffoldToChild(
-        Column(children: <Widget>[buildDetailView(context)]));
+    return buildDetailView(context);
   }
 
   Widget buildDetailView(BuildContext context) {
@@ -52,31 +62,59 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
     );
   }
 
+// Helper function that adds dynamic scaffold and filter button
   Widget addScaffoldToChild(Widget child) {
     //appBarTitleText = new Text(name);
     return new Scaffold(
       appBar: PreferredSize(
-          preferredSize: Size.fromHeight(42),
-          child: AppBar(
-            title: Center(child: appBarTitleText), // Dynamically changed
-          )),
+        preferredSize: Size.fromHeight(42),
+        child:
+            AppBar(title: Center(child: appBarTitleText), // Dynamically changed
+                actions: <Widget>[
+              FlatButton(
+                child: Text(
+                  "Filter",
+                  style: TextStyle(color: Colors.white),
+                ),
+                onPressed: () {
+                  Navigator.pushNamed(
+                      context, RoutePaths.SpecialEventsFilterView, arguments: {
+                    "selectFilter": _selectFilter,
+                    "filterArguments": filterArguments
+                  });
+                },
+              )
+            ]),
+      ),
       body: child,
     );
   }
 
-//TODO - Scaffold and filter
+  _selectFilter() {
+    _updateData();
+  }
+
   Widget buildEventsCard(AsyncSnapshot<SpecialEventsModel> snapshot) {
     if (snapshot.hasData) {
       final SpecialEventsModel data = snapshot.data;
       appBarTitleText = new Text(data.name);
-      //initialize myEvents list if its null
+
+      //Initialized filters if not yet initialized
+      if (filterArguments == null) {
+        Map<int, bool> selected = new Map<int, bool>();
+        int filtersLength = data.labels.length;
+        for (int i = 0; i < filtersLength; i++) selected[i] = false;
+        filterArguments = new FilterArguments(selected, data.labels, data.name, data.labelThemes);
+      }
+
+      //Initialize myEvents list if its null
       if (myEventList == null) {
         myEventList = new Map<String, bool>();
         data.uids.forEach((f) => myEventList[f] = false);
       }
 
       List<String> uids = selectEvents(data);
-      return Column(children: <Widget>[
+      return addScaffoldToChild(Column(children: <Widget>[
         SizedBox(
             height: 50,
             child: ListView(
@@ -90,7 +128,7 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
                   buildEventWidget(ctxt, data, uids[index])),
         ),
         buildBottomBar(context),
-      ]);
+      ]));
     } else {
       return Container();
     }
@@ -136,7 +174,7 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
     else {
       List<String> myItemsForDate = new List<String>();
       itemsForDate.forEach((f) => {
-            if (myEventList[f] == true) {myItemsForDate.add(f)}
+            if (myEventList[f]) {myItemsForDate.add(f)}
           });
       return myItemsForDate;
     }
