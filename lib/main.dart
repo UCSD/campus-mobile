@@ -15,8 +15,16 @@ void main() => runApp(CampusMobile());
 class CampusMobile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<AvailabilityService>(
-      builder: (context) => AvailabilityService(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<BottomNavigationBarProvider>(
+          child: BottomNavigationBarExample(),
+          builder: (BuildContext context) => BottomNavigationBarProvider(),
+        ),
+        ChangeNotifierProvider<AvailabilityService>(
+          builder: (context) => AvailabilityService(),
+        ),
+      ],
       child: MaterialApp(
         title: 'UC San Diego',
         theme: ThemeData(
@@ -37,10 +45,7 @@ class CampusMobile extends StatelessWidget {
           iconTheme: darkIconTheme,
           appBarTheme: darkAppBarTheme,
         ),
-        home: ChangeNotifierProvider<BottomNavigationBarProvider>(
-          child: BottomNavigationBarExample(),
-          builder: (BuildContext context) => BottomNavigationBarProvider(),
-        ),
+        home: BottomNavigationBarExample(),
         onGenerateRoute: Router.generateRoute,
       ),
     );
