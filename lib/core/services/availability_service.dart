@@ -12,6 +12,9 @@ class AvailabilityService extends ChangeNotifier {
   String _error;
   List<AvailabilityModel> _data;
 
+  /// add state related things for view model here
+  /// add any type of data manipulation here so it can be accessed via provider
+
   List<AvailabilityModel> get data => _data;
 
   final NetworkHelper _networkHelper = NetworkHelper();

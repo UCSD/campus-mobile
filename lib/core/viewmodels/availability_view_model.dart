@@ -15,9 +15,16 @@ class AvailabilityCard extends StatefulWidget {
 class _AvailabilityCardState extends State<AvailabilityCard> {
   final _controller = PageController();
   AvailabilityService _availabilityService;
+  bool hidden;
 
   initState() {
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
     _availabilityService = Provider.of<AvailabilityService>(context);
   }
 
@@ -26,7 +33,7 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
     return CardContainer(
       /// TODO: need to hook up hidden to state using provider
       hidden: false,
-      reload: () => _updateData(_availabilityService),
+      reload: () => _updateData(),
       isLoading: _availabilityService.isLoading,
       title: Text('Availability'),
       errorText: _availabilityService.error,
@@ -67,9 +74,9 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
     }
   }
 
-  void _updateData(AvailabilityService service) {
-    if (!service.isLoading) {
-      service.fetchData();
+  void _updateData() {
+    if (!_availabilityService.isLoading) {
+      _availabilityService.fetchData();
     }
   }
 
