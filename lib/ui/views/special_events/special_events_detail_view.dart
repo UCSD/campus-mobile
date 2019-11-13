@@ -68,26 +68,32 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
     return new Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(42),
-        child:
-            AppBar(title: Center(child: appBarTitleText), // Dynamically changed
-                actions: <Widget>[
-              FlatButton(
-                child: Text(
-                  "Filter",
-                  style: TextStyle(color: Colors.white),
-                ),
-                onPressed: () {
-                  Navigator.pushNamed(
-                      context, RoutePaths.SpecialEventsFilterView, arguments: {
-                    "selectFilter": _selectFilter,
-                    "filterArguments": filterArguments
-                  });
-                },
-              )
-            ]),
+        child: AppBar(
+            title: Center(child: appBarTitleText), // Dynamically changed
+            actions: <Widget>[isFull ? filterButtonEnabled() : Container()]),
       ),
       body: child,
     );
+  }
+
+  Widget filterButtonEnabled() {
+    return FlatButton(
+      child: Text(
+        "Filter",
+        style: TextStyle(color: Colors.white),
+      ),
+      onPressed: () {
+        Navigator.pushNamed(context, RoutePaths.SpecialEventsFilterView,
+            arguments: {
+              "selectFilter": _selectFilter,
+              "filterArguments": filterArguments
+            });
+      },
+    );
+  }
+
+  Widget filterButtonDisabled() {
+    return Container(child: Opacity(opacity: 0.0, child: Text("Filter")));
   }
 
   _selectFilter() {
@@ -104,7 +110,8 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
         Map<int, bool> selected = new Map<int, bool>();
         int filtersLength = data.labels.length;
         for (int i = 0; i < filtersLength; i++) selected[i] = false;
-        filterArguments = new FilterArguments(selected, data.labels, data.name, data.labelThemes);
+        filterArguments = new FilterArguments(
+            selected, data.labels, data.name, data.labelThemes);
       }
 
       //Initialize myEvents list if its null
@@ -120,8 +127,11 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
             child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: buildDateWidgets(data.dates))),
+        isFull? (filtersApplied() ? addFiltersWidget() : Container()): Container(),
         SizedBox(
-          height: 500,
+          height: filtersApplied()
+              ? 475
+              : 500, //TODO probably a better way to do this ...
           child: ListView.builder(
               itemCount: uids.length,
               itemBuilder: (BuildContext ctxt, int index) =>
@@ -132,6 +142,22 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
     } else {
       return Container();
     }
+  }
+
+  Widget addFiltersWidget() {
+    String filters;
+    for (int i = 0; i < filterArguments.filters.length; i++) {
+      if (filterArguments.selected[i]) {
+        if (filters == null)
+          filters = "Filters: " + filterArguments.filters[i];
+        else
+          filters = filters + "," + filterArguments.filters[i];
+      }
+    }
+    return SizedBox(
+        height: 25,
+        child: new SingleChildScrollView(
+            scrollDirection: Axis.horizontal, child: Text(filters,style: TextStyle(color: Colors.blue),)));
   }
 
   List<Widget> dateButtonList;
@@ -167,17 +193,51 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
     return (newDateKey == currentDateSelection);
   }
 
+// Helper method that selects events to display based on filters and myschedule selection
   List<String> selectEvents(SpecialEventsModel data) {
     List<String> itemsForDate = data.dateItems[currentDateSelection];
-    if (isFull)
-      return itemsForDate;
-    else {
+
+    if (isFull) {
+      if (filtersApplied())
+        return applyFilters(itemsForDate, data);
+      else
+        return itemsForDate; // No filters applied
+    } else {
       List<String> myItemsForDate = new List<String>();
       itemsForDate.forEach((f) => {
             if (myEventList[f]) {myItemsForDate.add(f)}
           });
       return myItemsForDate;
     }
+  }
+
+  // Helper method to check if any filters have been apllied
+  bool filtersApplied() {
+    for (int i = 0; i < filterArguments.filters.length; i++) {
+      if (filterArguments.selected[i]) return true;
+    }
+    return false;
+  }
+
+  // Makes new list of event UIDs after appliying fliters and maintains order
+  List<String> applyFilters(List<String> events, SpecialEventsModel data) {
+    List<String> filteredEvents = new List<String>();
+    for (int i = 0; i < events.length; i++) {
+      String filter = getLabel(events[i], data);
+      int filterKey = data.labels.indexOf(filter);
+      if (filterArguments.selected[filterKey]) {
+        filteredEvents.add(events[i]);
+      }
+    }
+    return filteredEvents;
+  }
+
+  //Helper function to get label given UID as string
+  String getLabel(String uid, SpecialEventsModel data) {
+    for (int i = 0; i < data.labels.length; i++) {
+      if (data.labelItems[data.labels[i]].contains(uid)) return data.labels[i];
+    }
+    return null;
   }
 
   Widget buildEventWidget(
