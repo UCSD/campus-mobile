@@ -23,6 +23,7 @@ import 'package:campus_mobile_experimental/core/viewmodels/surf_view_model.dart'
 import 'package:campus_mobile_experimental/ui/views/special_events/special_events_detail_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:campus_mobile_experimental/ui/views/special_events/special_events_filter_view.dart';
 
 class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -31,6 +32,14 @@ class Router {
         return MaterialPageRoute(builder: (_) => Home());
       case RoutePaths.SpecialEventsDetailView:
         return MaterialPageRoute(builder: (_) => SpecialEventsViewModel());
+      case RoutePaths.SpecialEventsFilterView:
+        Map<String, Object> arguments = settings.arguments;
+        Function selectFilter = arguments['selectFilter'] as Function;
+        FilterArguments filterArguments =
+            arguments['filterArguments'] as FilterArguments;
+        return MaterialPageRoute(
+            builder: (_) => SpecialEventsFilterView(
+                filterArguments: filterArguments, selectFilter: selectFilter));
       case RoutePaths.Map:
         return MaterialPageRoute(builder: (_) => prefix0.Map());
       case RoutePaths.Notifications:

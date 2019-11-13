@@ -27,7 +27,6 @@ class BannerContainer extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               buildBody(),
-              //TODO - Add base widget saying 'See full Schedule'
             ],
           ),
         ),
@@ -61,7 +60,7 @@ class BannerContainer extends StatelessWidget {
       alignment: Alignment.topRight,
       child: GestureDetector(
           onTap: () {
-            print("onTap CANCELL CALLED.");
+            //TODO - hide widget on cancel
           },
           child: Row(
             mainAxisSize: MainAxisSize.min,
