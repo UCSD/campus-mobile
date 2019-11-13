@@ -33,70 +33,65 @@ class _SurfViewModel extends State<SurfView> {
       builder: (context, snapshot) {
         return ContainerView(
             child: snapshot.hasData
-                ? surfReport(snapshot.data)
+                ? surfReport(snapshot.data, context)
                 : CircularProgressIndicator());
       },
     );
   }
 
-  Widget surfReport(SurfModel data) {
+  Widget surfReport(SurfModel data, BuildContext context) {
     return ListView(
       children: <Widget>[
+        ImageLoader(
+          url:
+              'https://raw.githubusercontent.com/UCSD/campus-mobile/master/app/assets/images/surf_report_header.jpg',
+          fullSize: true,
+        ),
+        Container(
+          padding: EdgeInsets.only(
+            left: 10,
+            right: 10,
+          ),
+          child: Text(
+            'Surf Report for ${getDate()}',
+            style: TextStyle(fontSize: 30, color: Colors.blue[700]),
+          ),
+        ),
+        Container(
+          padding: EdgeInsets.only(
+            left: 10,
+            right: 10,
+          ),
+          child: Text(
+            data.forecast,
+            style: TextStyle(fontSize: 20),
+          ),
+        ),
         Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            ImageLoader(
-              url:
-                  'https://raw.githubusercontent.com/UCSD/campus-mobile/master/app/assets/images/surf_report_header.jpg',
-              fullSize: true,
-            ),
-            Container(
-              padding: EdgeInsets.only(
-                left: 10,
-                right: 10,
-              ),
-              child: Text(
-                'Surf Report for ${getDate()}',
-                style: TextStyle(fontSize: 30, color: Colors.blue[700]),
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.only(
-                left: 10,
-                right: 10,
-              ),
-              child: Text(
-                data.forecast,
-                style: TextStyle(fontSize: 20),
-              ),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                for (int i = 0; i < data.spots.length; i++) oneSpot(data, i),
-              ],
-            ),
-          ],
-        )
+          children: makeAllSpotsForecast(data, context),
+        ),
       ],
     );
   }
 
-  Column oneSpot(SurfModel data, int spotNum) {
-    return Column(
-      children: <Widget>[
-        ListTile(
-          title: Text(
-            data.spots[spotNum].title,
-            style: TextStyle(fontSize: 27),
-          ),
-          subtitle: Text(
-            'Surf Height: ${data.spots[spotNum].surfMin}-${data.spots[spotNum].surfMax}ft',
-            style: TextStyle(fontSize: 22),
-          ),
-        ),
-        Divider(),
-      ],
+  List<Widget> makeAllSpotsForecast(SurfModel data, BuildContext context) {
+    List<Widget> list = List<Widget>();
+    for (int i = 0; i < data.spots.length; i++) {
+      list.add(oneSpot(data, i));
+    }
+    return ListTile.divideTiles(tiles: list, context: context).toList();
+  }
+
+  Widget oneSpot(SurfModel data, int spotNum) {
+    return ListTile(
+      title: Text(
+        data.spots[spotNum].title,
+        style: TextStyle(fontSize: 27),
+      ),
+      subtitle: Text(
+        'Surf Height: ${data.spots[spotNum].surfMin}-${data.spots[spotNum].surfMax}ft',
+        style: TextStyle(fontSize: 22),
+      ),
     );
   }
 
