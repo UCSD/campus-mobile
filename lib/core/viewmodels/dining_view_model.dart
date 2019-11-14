@@ -4,8 +4,8 @@ import 'package:campus_mobile_experimental/ui/widgets/cards/card_container.dart'
 import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/ui/views/dining/dining_list.dart';
-import 'package:campus_mobile_experimental/core/services/location_service.dart';
 import 'package:campus_mobile_experimental/core/models/coordinates_model.dart';
+import 'package:provider/provider.dart';
 import 'dart:math' show cos, sqrt, asin;
 
 class DiningCard extends StatefulWidget {
@@ -16,11 +16,18 @@ class DiningCard extends StatefulWidget {
 class _DiningState extends State<DiningCard> {
   final DiningService _diningService = DiningService();
   Future<List<DiningModel>> _data;
-  final LocationService _locationService = LocationService();
+  Coordinates _location;
 
   initState() {
     super.initState();
     _updateData();
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    _location = Provider.of<Coordinates>(context);
   }
 
   populateDistances(Coordinates userLocation) {
@@ -89,21 +96,17 @@ class _DiningState extends State<DiningCard> {
     return FutureBuilder<List<DiningModel>>(
       future: _data,
       builder: (context, snapshot) {
-        return StreamBuilder<Coordinates>(
-            stream: _locationService.locationStream,
-            builder: (context, locationData) {
-              if (locationData.hasData) populateDistances(locationData.data);
-              return CardContainer(
-                /// TODO: need to hook up hidden to state using provider
-                hidden: false,
-                reload: () => _updateData(),
-                isLoading: _diningService.isLoading,
-                title: buildTitle("Dining"),
-                errorText: _diningService.error,
-                child: buildDiningCard(snapshot),
-                actionButtons: buildActionButtons(snapshot.data),
-              );
-            });
+        if (_location != null) populateDistances(_location);
+        return CardContainer(
+          /// TODO: need to hook up hidden to state using provider
+          hidden: false,
+          reload: () => _updateData(),
+          isLoading: _diningService.isLoading,
+          title: buildTitle("Dining"),
+          errorText: _diningService.error,
+          child: buildDiningCard(snapshot),
+          actionButtons: buildActionButtons(snapshot.data),
+        );
       },
     );
   }
