@@ -31,7 +31,7 @@
             android:resource="@mipmap/ic_launcher_sil" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="GOOGLE_MAPS_API_KEY_PH"/>
+            android:value="AIzaSyAwHFV7LL99A-PXa7J1k7H1MhT4_RUgZtk"/>
         <meta-data android:name="firebase_analytics_collection_enabled" android:value="true" />
     </application>
 </manifest>
