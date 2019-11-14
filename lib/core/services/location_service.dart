@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:campus_mobile_experimental/core/models/dining_model.dart';
+import 'package:campus_mobile_experimental/core/models/coordinates_model.dart';
 import 'package:flutter/services.dart';
 import 'package:location/location.dart';
 

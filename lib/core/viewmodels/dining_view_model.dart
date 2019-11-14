@@ -4,7 +4,8 @@ import 'package:campus_mobile_experimental/ui/widgets/cards/card_container.dart'
 import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/ui/views/dining/dining_list.dart';
-import 'package:campus_mobile_experimental/core/services/locationService.dart';
+import 'package:campus_mobile_experimental/core/services/location_service.dart';
+import 'package:campus_mobile_experimental/core/models/coordinates_model.dart';
 import 'dart:math' show cos, sqrt, asin;
 
 class DiningCard extends StatefulWidget {

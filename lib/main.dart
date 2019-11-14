@@ -11,7 +11,7 @@ class CampusMobile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: changeNotifierProviders,
+      providers: providers,
       child: MaterialApp(
         title: 'UC San Diego',
         theme: ThemeData(
