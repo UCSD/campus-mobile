@@ -7,47 +7,56 @@ import 'package:campus_mobile_experimental/ui/views/dining/dining_menu_list.dart
 
 class DiningDetailView extends StatelessWidget {
   const DiningDetailView({Key key, @required this.data}) : super(key: key);
-  final prefix0.DiningModel data;
+  final Future<prefix0.DiningModel> data;
   @override
   Widget build(BuildContext context) {
-    return ContainerView(
-      child: ListView(
-        children: buildDetailView(context),
-      ),
-    );
+    return FutureBuilder<prefix0.DiningModel>(
+        future: data,
+        builder: (context, snapshot) {
+          return ContainerView(
+            child: snapshot.hasData
+                ? ListView(
+                    children: buildDetailView(context, snapshot.data),
+                  )
+                : CircularProgressIndicator(),
+          );
+        });
   }
 
-  List<Widget> buildDetailView(BuildContext context) {
+  List<Widget> buildDetailView(
+      BuildContext context, prefix0.DiningModel model) {
     return [
       Text(
-        data.name,
+        model.name,
         textAlign: TextAlign.start,
         style: TextStyle(
             color: Theme.of(context).textTheme.title.color,
             fontSize: Theme.of(context).textTheme.title.fontSize),
       ),
       Text(
-        data.description,
+        model.description,
         textAlign: TextAlign.start,
         style: TextStyle(
             color: Theme.of(context).textTheme.subtitle.color,
             fontSize: Theme.of(context).textTheme.subtitle.fontSize),
       ),
-      buildHours(context),
-      buildPaymentOptions(context),
-      buildPictures(),
-      DiningMenuList(id: data.id),
+      buildHours(context, model),
+      buildPaymentOptions(context, model),
+      buildPictures(model),
+      DiningMenuList(
+        id: model.id,
+      ),
     ];
   }
 
-  Widget buildHours(BuildContext context) {
+  Widget buildHours(BuildContext context, prefix0.DiningModel model) {
     Widget monday = Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text('Monday: '),
         Row(
           children: <Widget>[
-            Text(data.regularHours.mon),
+            Text(model.regularHours.mon),
             buildGreenDot(),
           ],
         )
@@ -59,7 +68,7 @@ class DiningDetailView extends StatelessWidget {
         Text('Tuesday: '),
         Row(
           children: <Widget>[
-            Text(data.regularHours.tue),
+            Text(model.regularHours.tue),
             buildGreenDot(),
           ],
         )
@@ -71,7 +80,7 @@ class DiningDetailView extends StatelessWidget {
         Text('Wednesday: '),
         Row(
           children: <Widget>[
-            Text(data.regularHours.wed),
+            Text(model.regularHours.wed),
             buildGreenDot(),
           ],
         )
@@ -83,7 +92,7 @@ class DiningDetailView extends StatelessWidget {
         Text('Thursday: '),
         Row(
           children: <Widget>[
-            Text(data.regularHours.thu),
+            Text(model.regularHours.thu),
             buildGreenDot(),
           ],
         )
@@ -95,7 +104,7 @@ class DiningDetailView extends StatelessWidget {
         Text('Friday: '),
         Row(
           children: <Widget>[
-            Text(data.regularHours.fri),
+            Text(model.regularHours.fri),
             buildGreenDot(),
           ],
         )
@@ -107,7 +116,7 @@ class DiningDetailView extends StatelessWidget {
         Text('Satuday: '),
         Row(
           children: <Widget>[
-            Text(data.regularHours.sat),
+            Text(model.regularHours.sat),
             buildGreenDot(),
           ],
         )
@@ -119,7 +128,7 @@ class DiningDetailView extends StatelessWidget {
         Text('Sunday: '),
         Row(
           children: <Widget>[
-            Text(data.regularHours.sun),
+            Text(model.regularHours.sun),
             buildGreenDot(),
           ],
         )
@@ -142,8 +151,8 @@ class DiningDetailView extends StatelessWidget {
     ]);
   }
 
-  Widget buildPaymentOptions(BuildContext context) {
-    String options = data.paymentOptions.join(', ');
+  Widget buildPaymentOptions(BuildContext context, prefix0.DiningModel model) {
+    String options = model.paymentOptions.join(', ');
     return RichText(
       text: TextSpan(
         style: TextStyle(
@@ -161,9 +170,9 @@ class DiningDetailView extends StatelessWidget {
     );
   }
 
-  Widget buildPictures() {
+  Widget buildPictures(prefix0.DiningModel model) {
     List<ImageLoader> images = List<ImageLoader>();
-    for (prefix0.Image item in data.images) {
+    for (prefix0.Image item in model.images) {
       images.add(ImageLoader(
         url: item.small,
       ));

@@ -22,11 +22,12 @@ class DiningModel {
   String persistentMenu;
   List<String> paymentOptions;
   List<Image> images;
-  Coords coords;
+  Coordinates coordinates;
   RegularHours regularHours;
   List<SpecialHour> specialHours;
   String url;
   String menuWebsite;
+  double distance;
 
   DiningModel({
     this.id,
@@ -39,7 +40,7 @@ class DiningModel {
     this.persistentMenu,
     this.paymentOptions,
     this.images,
-    this.coords,
+    this.coordinates,
     this.regularHours,
     this.specialHours,
     this.url,
@@ -62,7 +63,9 @@ class DiningModel {
         images: json["images"] == null
             ? null
             : List<Image>.from(json["images"].map((x) => Image.fromJson(x))),
-        coords: json["coords"] == null ? null : Coords.fromJson(json["coords"]),
+        coordinates: json["coords"] == null
+            ? null
+            : Coordinates.fromJson(json["coords"]),
         regularHours: json["regularHours"] == null
             ? null
             : RegularHours.fromJson(json["regularHours"]),
@@ -89,28 +92,29 @@ class DiningModel {
         "images": images == null
             ? null
             : List<dynamic>.from(images.map((x) => x.toJson())),
-        "coords": coords == null ? null : coords.toJson(),
+        "coords": coordinates == null ? null : coordinates.toJson(),
         "regularHours": regularHours == null ? null : regularHours.toJson(),
         "specialHours": specialHours == null
             ? null
             : List<dynamic>.from(specialHours.map((x) => x.toJson())),
         "url": url == null ? null : url,
         "menuWebsite": menuWebsite == null ? null : menuWebsite,
+        "distance": distance == null ? null : distance,
       };
 }
 
-class Coords {
-  String lat;
-  String lon;
+class Coordinates {
+  double lat;
+  double lon;
 
-  Coords({
+  Coordinates({
     this.lat,
     this.lon,
   });
 
-  factory Coords.fromJson(Map<String, dynamic> json) => Coords(
-        lat: json["lat"] == null ? null : json["lat"],
-        lon: json["lon"] == null ? null : json["lon"],
+  factory Coordinates.fromJson(Map<String, dynamic> json) => Coordinates(
+        lat: json["lat"] == null ? null : double.parse(json["lat"]),
+        lon: json["lon"] == null ? null : double.parse(json["lon"]),
       );
 
   Map<String, dynamic> toJson() => {
