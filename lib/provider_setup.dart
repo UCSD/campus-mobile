@@ -3,6 +3,7 @@ import 'package:campus_mobile_experimental/core/services/bottom_navigation_bar_s
 import 'package:campus_mobile_experimental/core/services/event_service.dart';
 import 'package:campus_mobile_experimental/core/services/location_service.dart';
 import 'package:campus_mobile_experimental/core/models/coordinates_model.dart';
+import 'package:campus_mobile_experimental/ui/widgets/navigation/app_bar.dart';
 import 'package:provider/provider.dart';
 
 List<SingleChildCloneableWidget> providers = [
@@ -17,5 +18,8 @@ List<SingleChildCloneableWidget> providers = [
   ),
   StreamProvider<Coordinates>(
     builder: (_) => LocationService().locationStream,
+  ),
+  ChangeNotifierProvider<CustomAppBar>(
+    builder: (_) => CustomAppBar(),
   ),
 ];
