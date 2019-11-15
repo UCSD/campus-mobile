@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:campus_mobile_experimental/core/models/dining_model.dart';
+import 'package:campus_mobile_experimental/core/models/coordinates_model.dart';
 import 'package:flutter/services.dart';
 import 'package:location/location.dart';
 
@@ -10,8 +10,7 @@ class LocationService {
 
   StreamController<Coordinates> _locationController =
       StreamController<Coordinates>.broadcast();
-  Stream<Coordinates> get locationStream =>
-      _locationController.stream.asBroadcastStream();
+  Stream<Coordinates> get locationStream => _locationController.stream;
 
   LocationService() {
     _init();
@@ -20,7 +19,7 @@ class LocationService {
   _init() async {
     /// create the settings for location access
     await _locationService.changeSettings(
-        accuracy: LocationAccuracy.BALANCED, distanceFilter: 10);
+        accuracy: LocationAccuracy.HIGH, distanceFilter: 100);
 
     try {
       /// check to see if gps service is enabled on device
