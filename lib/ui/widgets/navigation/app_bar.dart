@@ -17,3 +17,14 @@ class CMAppBar extends StatelessWidget {
     );
   }
 }
+
+class CustomAppBar extends ChangeNotifier {
+  CMAppBar appBar;
+  CustomAppBar() {
+    makeAppBar();
+  }
+  makeAppBar() {
+    appBar = CMAppBar();
+    notifyListeners();
+  }
+}
