@@ -27,7 +27,7 @@ class _HomeState extends State<Home> {
         ParkingCard(),
         LinksCard(),
         DiningCard(),
-        BaselineCard(),
+        /// BaselineCard(),
       ],
     );
   }
