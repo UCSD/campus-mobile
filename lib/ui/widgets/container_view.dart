@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:campus_mobile_experimental/ui/widgets/navigation/app_bar.dart';
 
 class ContainerView extends StatelessWidget {
   const ContainerView({
@@ -11,19 +13,8 @@ class ContainerView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(42),
-        child: AppBar(
-          title: Container(
-            padding: EdgeInsets.only(top: 14),
-            child: Center(
-              child: Image.asset(
-                'assets/images/UCSanDiegoLogo-nav.png',
-                height: 28,
-              ),
-            ),
-          ),
-        ),
-      ),
+          preferredSize: Size.fromHeight(42),
+          child: Provider.of<CustomAppBar>(context).appBar),
       body: child,
     );
   }
