@@ -1,14 +1,14 @@
+import 'package:campus_mobile_experimental/core/services/availability_service.dart';
 import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/ui/widgets/container_view.dart';
 import 'package:campus_mobile_experimental/core/models/availability_model.dart';
+import 'package:provider/provider.dart';
 
 class ManageAvailabilityView extends StatelessWidget {
-  const ManageAvailabilityView({Key key, @required this.data})
-      : super(key: key);
-
-  final List<AvailabilityModel> data;
+  AvailabilityService _availabilityService;
   @override
   Widget build(BuildContext context) {
+    _availabilityService = Provider.of<AvailabilityService>(context);
     return ContainerView(
       child: buildLocationsList(context),
     );
@@ -25,13 +25,15 @@ class ManageAvailabilityView extends StatelessWidget {
     if (newIndex > oldIndex) {
       newIndex -= 1;
     }
-    final AvailabilityModel item = data.removeAt(oldIndex);
-    data.insert(newIndex, item);
+    List<AvailabilityModel> newOrder = _availabilityService.data;
+    AvailabilityModel item = newOrder.removeAt(oldIndex);
+    newOrder.insert(newIndex, item);
+    _availabilityService.data = newOrder;
   }
 
   List<Widget> createList(BuildContext context) {
     List<Widget> list = List<Widget>();
-    for (AvailabilityModel model in data) {
+    for (AvailabilityModel model in _availabilityService.data) {
       list.add(ListTile(
         key: Key(model.locationId.toString()),
         title: Text(model.locationName),

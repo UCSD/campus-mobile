@@ -11,6 +11,11 @@ class AvailabilityService extends ChangeNotifier {
   String _error;
   List<AvailabilityModel> _data;
 
+  set data(List<AvailabilityModel> value) {
+    _data = value;
+    notifyListeners();
+  }
+
   /// add state related things for view model here
   /// add any type of data manipulation here so it can be accessed via provider
 

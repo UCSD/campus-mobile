@@ -83,8 +83,7 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
         'Manage Locations',
       ),
       onPressed: () {
-        Navigator.pushNamed(context, RoutePaths.ManageAvailabilityView,
-            arguments: data);
+        Navigator.pushNamed(context, RoutePaths.ManageAvailabilityView);
       },
     ));
     return actionButtons;
