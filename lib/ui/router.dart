@@ -73,8 +73,7 @@ class Router {
         List<LinksModel> data = settings.arguments as List<LinksModel>;
         return MaterialPageRoute(builder: (_) => LinksList(data: data));
       case RoutePaths.DiningViewAll:
-        Future<List<DiningModel>> _data =
-            settings.arguments as Future<List<DiningModel>>;
+        List<DiningModel> _data = settings.arguments as List<DiningModel>;
         return MaterialPageRoute(builder: (_) => DiningList(data: _data));
       case RoutePaths.DiningDetailView:
       case RoutePaths.DiningDetailView:

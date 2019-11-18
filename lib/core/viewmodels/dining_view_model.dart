@@ -14,13 +14,14 @@ class DiningCard extends StatefulWidget {
 }
 
 class _DiningState extends State<DiningCard> {
-  final DiningService _diningService = DiningService();
-  Future<List<DiningModel>> _data;
+  DiningService _diningService;
   Coordinates _location;
+  bool hidden;
 
-  initState() {
-    super.initState();
-    _updateData();
+  _updateData() async {
+    if (!_diningService.isLoading) {
+      _diningService.fetchData();
+    }
   }
 
   @override
@@ -28,25 +29,18 @@ class _DiningState extends State<DiningCard> {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
     _location = Provider.of<Coordinates>(context);
+
+    _diningService = Provider.of<DiningService>(context);
+    populateDistances(_location, _diningService.data);
   }
 
-  populateDistances(Coordinates userLocation) {
-    _data.then((listOfDiningHalls) {
-      for (DiningModel model in listOfDiningHalls) {
-        if (model.coordinates != null) {
-          model.distance = calculateDistance(userLocation.lat, userLocation.lon,
-                  model.coordinates.lat, model.coordinates.lon) *
-              0.00062137;
-        }
+  populateDistances(Coordinates userLocation, List<DiningModel> data) {
+    for (DiningModel model in data) {
+      if (model.coordinates != null) {
+        model.distance = calculateDistance(userLocation.lat, userLocation.lon,
+                model.coordinates.lat, model.coordinates.lon) *
+            0.00062137;
       }
-    });
-  }
-
-  _updateData() async {
-    if (!_diningService.isLoading) {
-      setState(() {
-        _data = _diningService.fetchData();
-      });
     }
   }
 
@@ -59,10 +53,10 @@ class _DiningState extends State<DiningCard> {
     return 12742 * asin(sqrt(a));
   }
 
-  Widget buildDiningCard(AsyncSnapshot snapshot) {
-    if (snapshot.hasData) {
+  Widget buildDiningCard(List<DiningModel> data) {
+    if (data.length > 0) {
       return DiningList(
-        data: _data,
+        data: data,
         listSize: 3,
       );
     } else {
@@ -84,8 +78,7 @@ class _DiningState extends State<DiningCard> {
         'View All',
       ),
       onPressed: () {
-        Navigator.pushNamed(context, RoutePaths.DiningViewAll,
-            arguments: _data);
+        Navigator.pushNamed(context, RoutePaths.DiningViewAll, arguments: data);
       },
     ));
     return actionButtons;
@@ -93,21 +86,15 @@ class _DiningState extends State<DiningCard> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<DiningModel>>(
-      future: _data,
-      builder: (context, snapshot) {
-        if (_location != null) populateDistances(_location);
-        return CardContainer(
-          /// TODO: need to hook up hidden to state using provider
-          hidden: false,
-          reload: () => _updateData(),
-          isLoading: _diningService.isLoading,
-          title: buildTitle("Dining"),
-          errorText: _diningService.error,
-          child: buildDiningCard(snapshot),
-          actionButtons: buildActionButtons(snapshot.data),
-        );
-      },
+    return CardContainer(
+      /// TODO: need to hook up hidden to state using provider
+      hidden: false,
+      reload: () => _updateData(),
+      isLoading: _diningService.isLoading,
+      title: buildTitle("Dining"),
+      errorText: _diningService.error,
+      child: buildDiningCard(_diningService.data),
+      actionButtons: buildActionButtons(_diningService.data),
     );
   }
 }
