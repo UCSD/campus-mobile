@@ -1,19 +1,28 @@
-import 'dart:async';
 import 'package:campus_mobile_experimental/core/models/dining_menu_items_model.dart';
 import 'package:campus_mobile_experimental/core/models/dining_model.dart';
 import 'package:campus_mobile_experimental/core/services/networking.dart';
+import 'package:flutter/material.dart';
 
-class DiningService {
+class DiningService extends ChangeNotifier {
+  DiningService() {
+    fetchData();
+  }
+
   bool _isLoading = false;
   DateTime _lastUpdated;
   String _error;
+  List<DiningModel> _data;
+  DiningMenuItemsModel _menuData;
+
+  List<DiningModel> get data => _data;
   final NetworkHelper _networkHelper = NetworkHelper();
   final String baseEndpoint =
       "https://pg83tslbyi.execute-api.us-west-2.amazonaws.com/prod/v3/dining/";
 
-  Future<List<DiningModel>> fetchData() async {
+  fetchData() async {
     _error = null;
     _isLoading = true;
+    notifyListeners();
     try {
       /// fetch data
       String _response =
@@ -22,15 +31,17 @@ class DiningService {
       /// parse data
       final data = diningModelFromJson(_response);
       _isLoading = false;
-      return data;
+
+      _data = data;
+      notifyListeners();
     } catch (e) {
       _error = e.toString();
       _isLoading = false;
-      return List<DiningModel>();
+      notifyListeners();
     }
   }
 
-  Future<DiningMenuItemsModel> fetchMenu(String id) async {
+  fetchMenu(String id) async {
     _error = null;
     _isLoading = true;
     try {
@@ -40,12 +51,12 @@ class DiningService {
 
       /// parse data
       final data = diningMenuItemsModelFromJson(_response);
-      _isLoading = false;
-      return data;
+      _menuData = data;
+      notifyListeners();
     } catch (e) {
       _error = e.toString();
       _isLoading = false;
-      return DiningMenuItemsModel();
+      notifyListeners();
     }
   }
 
@@ -55,5 +66,5 @@ class DiningService {
 
   DateTime get lastUpdated => _lastUpdated;
 
-  NetworkHelper get availabilityService => _networkHelper;
+  DiningMenuItemsModel get menuData => _menuData;
 }

@@ -10,18 +10,14 @@ class DiningList extends StatelessWidget {
     this.listSize,
   }) : super(key: key);
 
-  final Future<List<DiningModel>> data;
+  final List<DiningModel> data;
   final int listSize;
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<DiningModel>>(
-        future: data,
-        builder: (context, snapshot) {
-          return snapshot.hasData
-              ? buildDiningList(snapshot.data, context)
-              : CircularProgressIndicator();
-        });
+    return data.length > 0
+        ? buildDiningList(data, context)
+        : CircularProgressIndicator();
   }
 
   Widget buildDiningList(List<DiningModel> listOfDiners, BuildContext context) {
