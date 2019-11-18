@@ -66,10 +66,7 @@ class Router {
         EventModel data = settings.arguments as EventModel;
         return MaterialPageRoute(builder: (_) => EventDetailView(data: data));
       case RoutePaths.ManageAvailabilityView:
-        List<AvailabilityModel> data =
-            settings.arguments as List<AvailabilityModel>;
-        return MaterialPageRoute(
-            builder: (_) => ManageAvailabilityView(data: data));
+        return MaterialPageRoute(builder: (_) => ManageAvailabilityView());
       case RoutePaths.LinksViewAll:
         List<LinksModel> data = settings.arguments as List<LinksModel>;
         return MaterialPageRoute(builder: (_) => LinksList(data: data));
