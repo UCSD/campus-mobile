@@ -26,6 +26,7 @@ import 'package:flutter/widgets.dart';
 import 'package:campus_mobile_experimental/ui/views/special_events/special_events_filter_view.dart';
 import 'package:provider/provider.dart';
 import 'package:campus_mobile_experimental/core/services/event_service.dart';
+import 'package:campus_mobile_experimental/ui/views/parking/manage_parking_view.dart';
 
 class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -93,6 +94,8 @@ class Router {
                 ));
       case RoutePaths.SurfView:
         return MaterialPageRoute(builder: (_) => SurfView());
+      case RoutePaths.ManageParkingView:
+        return MaterialPageRoute(builder: (_) => ManageParkingView());
     }
   }
 }
