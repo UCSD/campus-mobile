@@ -5,6 +5,7 @@ import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/services/parking_service.dart';
 import 'package:campus_mobile_experimental/ui/widgets/parking/parking_display.dart';
 import 'package:campus_mobile_experimental/ui/widgets/dots_indicator.dart';
+import 'package:provider/provider.dart';
 
 class ParkingCard extends StatefulWidget {
   @override
@@ -12,39 +13,39 @@ class ParkingCard extends StatefulWidget {
 }
 
 class _ParkingCardState extends State<ParkingCard> {
-  final ParkingService _parkingService = ParkingService();
-  Future<List<ParkingModel>> _data;
+  ParkingService _parkingService;
   final _controller = new PageController();
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    _parkingService = Provider.of<ParkingService>(context);
+  }
+
   Widget build(BuildContext context) {
-    return FutureBuilder<List<ParkingModel>>(
-      future: _data,
-      builder: (context, snapshot) {
-        return CardContainer(
-          title: Text("Parking"),
-          isLoading: false,
-          reload: () => _updateData(),
-          errorText: null,
-          child: buildParkingCard(snapshot),
-          hidden: false,
-          overFlowMenu: {'print hi': () => print('hi')},
-          actionButtons: buildActionButtons(),
-        );
-      },
+    return CardContainer(
+      title: Text("Parking"),
+      isLoading: false,
+      reload: () => _updateData(),
+      errorText: _parkingService.error,
+      child: buildParkingCard(_parkingService.data),
+      hidden: false,
+      overFlowMenu: {'print hi': () => print('hi')},
+      actionButtons: buildActionButtons(),
     );
   }
 
   void _updateData() {
     if (!_parkingService.isLoading) {
-      setState(() {
-        _data = _parkingService.fetchData();
-      });
+      _parkingService.fetchData();
     }
   }
 
-  Widget buildParkingCard(AsyncSnapshot snapshot) {
-    if (snapshot.hasData) {
+  Widget buildParkingCard(List<ParkingModel> data) {
+    if (data != null && data.length > 0) {
       List<Widget> parkingDisplays = List<Widget>();
-      for (ParkingModel model in snapshot.data) {
+      for (ParkingModel model in data) {
         parkingDisplays.add(ParkingDisplay(model: model));
       }
 
@@ -71,11 +72,6 @@ class _ParkingCardState extends State<ParkingCard> {
     }
   }
 
-  initState() {
-    super.initState();
-    _updateData();
-  }
-
   List<Widget> buildActionButtons() {
     List<Widget> actionButtons = List<Widget>();
     actionButtons.add(FlatButton(
@@ -83,7 +79,7 @@ class _ParkingCardState extends State<ParkingCard> {
         'View All',
       ),
       onPressed: () {
-        Navigator.pushNamed(context, RoutePaths.BaseLineView);
+        Navigator.pushNamed(context, RoutePaths.ManageParkingView);
       },
     ));
     return actionButtons;
