@@ -1,14 +1,14 @@
+import 'package:campus_mobile_experimental/core/models/parking_model.dart';
+import 'package:campus_mobile_experimental/core/services/parking_service.dart';
 import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/ui/widgets/container_view.dart';
-import 'package:campus_mobile_experimental/core/models/availability_model.dart';
+import 'package:provider/provider.dart';
 
-class ManageAvailabilityView extends StatelessWidget {
-  const ManageAvailabilityView({Key key, @required this.data})
-      : super(key: key);
-
-  final List<AvailabilityModel> data;
+class ManageParkingView extends StatelessWidget {
+  ParkingService _parkingService;
   @override
   Widget build(BuildContext context) {
+    _parkingService = Provider.of<ParkingService>(context);
     return ContainerView(
       child: buildLocationsList(context),
     );
@@ -25,24 +25,21 @@ class ManageAvailabilityView extends StatelessWidget {
     if (newIndex > oldIndex) {
       newIndex -= 1;
     }
-    final AvailabilityModel item = data.removeAt(oldIndex);
-    data.insert(newIndex, item);
+    List<ParkingModel> newOrder = _parkingService.data;
+    ParkingModel item = newOrder.removeAt(oldIndex);
+    newOrder.insert(newIndex, item);
+    _parkingService.data = newOrder;
   }
 
   List<Widget> createList(BuildContext context) {
     List<Widget> list = List<Widget>();
-    for (AvailabilityModel model in data) {
+    for (ParkingModel model in _parkingService.data) {
       list.add(ListTile(
         key: Key(model.locationId.toString()),
         title: Text(model.locationName),
         trailing: Icon(Icons.reorder),
       ));
     }
-
-    /// ListTile.divideTiles(tiles: list, context: context).toList()
-    /// the line above doesn't work because ReorderableListView requires that all
-    /// elements have a unique key but when we run ListTile.divideTiles it
-    /// it returns a list of widgets that do not have a key
     return list;
   }
 }

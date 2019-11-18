@@ -5,6 +5,7 @@ import 'package:campus_mobile_experimental/core/services/event_service.dart';
 import 'package:campus_mobile_experimental/core/services/location_service.dart';
 import 'package:campus_mobile_experimental/core/models/coordinates_model.dart';
 import 'package:campus_mobile_experimental/ui/widgets/navigation/app_bar.dart';
+import 'package:campus_mobile_experimental/core/services/parking_service.dart';
 import 'package:provider/provider.dart';
 
 List<SingleChildCloneableWidget> providers = [
@@ -25,5 +26,8 @@ List<SingleChildCloneableWidget> providers = [
   ),
   ChangeNotifierProvider<DiningService>(
     builder: (_) => DiningService(),
+  ),
+  ChangeNotifierProvider<ParkingService>(
+    builder: (_) => ParkingService(),
   ),
 ];
