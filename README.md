@@ -1,24 +1,20 @@
-## UC San Diego Preview
+## UC San Diego - Experimental
 
-The UC San Diego Preview app showcases what's in the works for the UC San Diego mobile app.
+UC San Diego - Experimental is the rolling release of the UC San Diego Mobile app. This rolling release is for users interested in developing for, and experimenting with, the absolute latest version of the UC San Diego Mobile app.
 
-All new features and enhancements are prototyped and tested in collaboration with the UC San Diego student body.
+This version is intended for developers and designers and is absolutely, 100% NOT recommended for daily use. Rolling releases are not subject to the rigorous testing of the regular production release. Many things may (and probably are) only partially complete and are likely broken. 
 
-If your feature or enhancement is selected as a possible release candidate, due to its sheer awesomeness or immediate need, it will go through an additional vetting process.
-
-When successful, your feature or enhancement will be published to the UC San Diego mobile app for its 30,000 users to experience, and you will be added as a collaborator on https://mobile.ucsd.edu/.
+If your feature or enhancement is selected as a possible release candidate, due to its sheer awesomeness or immediate need, it will go through an additional vetting process. Who knows? Your idea could be included in the next production release and help students navigate their UC San Diego experience for many classes to come. And give you a nice feather in your cap to show potential employers. If successful, your feature or enhancement will be published to the UC San Diego mobile app for its 30,000 users to experience, and you will be added as a collaborator on [mobile.ucsd.edu](https://mobile.ucsd.edu/).
 
 We look forward to helping you become a published app developer!
-
-For questions, please contact us at [mobile@ucsd.edu](mailto:mobile@ucsd.edu)
 
 
 ## How to Contribute
 
-#### 1. Clone the `campus-mobile-flutter` project
+#### 1. Clone the `campus-mobile-experimental` project
 ```
-git clone git@github.com:c3bryant/campus-mobile-flutter.git
-cd campus-mobile-flutter
+git clone git@github.com:c3bryant/campus-mobile-experimental.git
+cd campus-mobile-experimental
 ```
 
 
