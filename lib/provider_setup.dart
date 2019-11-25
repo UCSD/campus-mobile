@@ -1,3 +1,4 @@
+import 'package:campus_mobile_experimental/core/services/authentication_service.dart';
 import 'package:campus_mobile_experimental/core/services/availability_service.dart';
 import 'package:campus_mobile_experimental/core/services/bottom_navigation_bar_service.dart';
 import 'package:campus_mobile_experimental/core/services/dining_service.dart';
@@ -29,5 +30,8 @@ List<SingleChildCloneableWidget> providers = [
   ),
   ChangeNotifierProvider<ParkingService>(
     builder: (_) => ParkingService(),
+  ),
+  ChangeNotifierProvider<AuthenticationService>(
+    builder: (_) => AuthenticationService(),
   ),
 ];
