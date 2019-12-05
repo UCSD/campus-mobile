@@ -11,25 +11,26 @@ class Maps extends StatefulWidget {
 
 class _MapsState extends State<Maps> {
   final MapSearchService _mapSearchService = MapSearchService();
-  GoogleMapController mapController;
-  Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
-  List<MapSearchModel> data;
+  GoogleMapController _mapController;
+  Map<MarkerId, Marker> _markers = <MarkerId, Marker>{};
+  List<MapSearchModel> _data;
 
   final LatLng _center = const LatLng(32.8911637, -117.2428029);
 
   void _onMapCreated(GoogleMapController controller) {
-    mapController = controller;
+    _mapController = controller;
   }
 
   void _addMarker(String text) async {
-    data = await _mapSearchService.fetchMenu(text);
+    _data = await _mapSearchService.fetchMenu(text);
     final Marker marker = Marker(
-      markerId: MarkerId(data[0].mkrMarkerid.toString()),
-      position: LatLng(data[0].mkrLat, data[0].mkrLong),
-      infoWindow: InfoWindow(title: data[0].title),
+      markerId: MarkerId(_data[0].mkrMarkerid.toString()),
+      position: LatLng(_data[0].mkrLat, _data[0].mkrLong),
+      infoWindow: InfoWindow(title: _data[0].title),
     );
     setState(() {
-      markers[MarkerId(data[0].mkrMarkerid.toString())] = marker;
+      _markers[marker.markerId] = marker;
+      _mapController.animateCamera(CameraUpdate.newLatLng(marker.position));
     });
   }
 
@@ -38,7 +39,7 @@ class _MapsState extends State<Maps> {
     return Stack(
       children: <Widget>[
         GoogleMap(
-          markers: Set<Marker>.of(markers.values),
+          markers: Set<Marker>.of(_markers.values),
           myLocationEnabled: true,
           myLocationButtonEnabled: false,
           onMapCreated: _onMapCreated,

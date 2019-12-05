@@ -49,7 +49,7 @@ class Router {
         Function _addMarker = settings.arguments as Function;
         return MaterialPageRoute(
             builder: (_) => MapSearch(
-                  test: _addMarker,
+                  queryInput: _addMarker,
                 ));
       case RoutePaths.Notifications:
         return MaterialPageRoute(builder: (_) => Notifications());

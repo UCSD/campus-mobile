@@ -2,8 +2,8 @@ import 'package:campus_mobile_experimental/ui/widgets/container_view.dart';
 import 'package:flutter/material.dart';
 
 class MapSearch extends StatefulWidget {
-  final Function test;
-  const MapSearch({Key key, this.test}) : super(key: key);
+  final Function queryInput;
+  const MapSearch({Key key, this.queryInput}) : super(key: key);
   @override
   _MapSearchState createState() => _MapSearchState();
 }
@@ -38,7 +38,7 @@ class _MapSearchState extends State<MapSearch> {
                       },
                       onSubmitted: (text) {
                         //send back text to map.dart
-                        widget.test(text);
+                        widget.queryInput(text);
                         Navigator.pop(context);
                       },
                       autofocus: true,
@@ -75,22 +75,34 @@ class _MapSearchState extends State<MapSearch> {
                   LabeledIconButton(
                     icon: Icons.local_parking,
                     text: 'Parking',
-                    onPressed: () {},
+                    onPressed: () {
+                      widget.queryInput('Parking');
+                      Navigator.pop(context);
+                    },
                   ),
                   LabeledIconButton(
                     icon: Icons.local_drink,
                     text: 'Hydration',
-                    onPressed: () {},
+                    onPressed: () {
+                      widget.queryInput('Hydration');
+                      Navigator.pop(context);
+                    },
                   ),
                   LabeledIconButton(
                     icon: Icons.local_post_office,
                     text: 'Mail',
-                    onPressed: () {},
+                    onPressed: () {
+                      widget.queryInput('Mail');
+                      Navigator.pop(context);
+                    },
                   ),
                   LabeledIconButton(
                     icon: Icons.local_atm,
                     text: 'ATM',
-                    onPressed: () {},
+                    onPressed: () {
+                      widget.queryInput('ATM');
+                      Navigator.pop(context);
+                    },
                   ),
                 ],
               ),
