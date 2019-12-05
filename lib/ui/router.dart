@@ -44,9 +44,13 @@ class Router {
             builder: (_) => SpecialEventsFilterView(
                 filterArguments: filterArguments, selectFilter: selectFilter));
       case RoutePaths.Map:
-        return MaterialPageRoute(builder: (_) => prefix0.Map());
+        return MaterialPageRoute(builder: (_) => prefix0.Maps());
       case RoutePaths.MapSearch:
-        return MaterialPageRoute(builder: (_) => MapSearch());
+        Function _addMarker = settings.arguments as Function;
+        return MaterialPageRoute(
+            builder: (_) => MapSearch(
+                  test: _addMarker,
+                ));
       case RoutePaths.Notifications:
         return MaterialPageRoute(builder: (_) => Notifications());
       case RoutePaths.Profile:

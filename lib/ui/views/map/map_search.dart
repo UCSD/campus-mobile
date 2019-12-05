@@ -2,6 +2,8 @@ import 'package:campus_mobile_experimental/ui/widgets/container_view.dart';
 import 'package:flutter/material.dart';
 
 class MapSearch extends StatefulWidget {
+  final Function test;
+  const MapSearch({Key key, this.test}) : super(key: key);
   @override
   _MapSearchState createState() => _MapSearchState();
 }
@@ -33,6 +35,11 @@ class _MapSearchState extends State<MapSearch> {
                     child: TextField(
                       onChanged: (value) {
                         setState(() {});
+                      },
+                      onSubmitted: (text) {
+                        //send back text to map.dart
+                        widget.test(text);
+                        Navigator.pop(context);
                       },
                       autofocus: true,
                       controller: _searchBarController,
