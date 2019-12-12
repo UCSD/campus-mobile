@@ -10,6 +10,13 @@ class MapSearch extends StatefulWidget {
 
 class _MapSearchState extends State<MapSearch> {
   TextEditingController _searchBarController = TextEditingController();
+  List<String> recentSearches = [];
+
+  /*
+  IMPORTANT NOTE: Search history still needs to be hooked up so it can
+  be conserved over navigation and app restarts.
+  TODO: Hook up search history [recentSearches] to Provider (when implemented)
+  */
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +45,8 @@ class _MapSearchState extends State<MapSearch> {
                       },
                       onSubmitted: (text) {
                         //send back text to map.dart
-                        widget.queryInput(text);
+                        recentSearches.add(text);
+                        widget.queryInput(text, _searchBarController);
                         Navigator.pop(context);
                       },
                       autofocus: true,
@@ -76,7 +84,9 @@ class _MapSearchState extends State<MapSearch> {
                     icon: Icons.local_parking,
                     text: 'Parking',
                     onPressed: () {
-                      widget.queryInput('Parking');
+                      _searchBarController.text = 'Parking';
+                      recentSearches.add('Parking');
+                      widget.queryInput('Parking', _searchBarController);
                       Navigator.pop(context);
                     },
                   ),
@@ -84,7 +94,9 @@ class _MapSearchState extends State<MapSearch> {
                     icon: Icons.local_drink,
                     text: 'Hydration',
                     onPressed: () {
-                      widget.queryInput('Hydration');
+                      _searchBarController.text = 'Hydration';
+                      recentSearches.add('Hydration');
+                      widget.queryInput('Hydration', _searchBarController);
                       Navigator.pop(context);
                     },
                   ),
@@ -92,7 +104,9 @@ class _MapSearchState extends State<MapSearch> {
                     icon: Icons.local_post_office,
                     text: 'Mail',
                     onPressed: () {
-                      widget.queryInput('Mail');
+                      _searchBarController.text = 'Mail';
+                      recentSearches.add('Mail');
+                      widget.queryInput('Mail', _searchBarController);
                       Navigator.pop(context);
                     },
                   ),
@@ -100,7 +114,9 @@ class _MapSearchState extends State<MapSearch> {
                     icon: Icons.local_atm,
                     text: 'ATM',
                     onPressed: () {
-                      widget.queryInput('ATM');
+                      _searchBarController.text = 'ATM';
+                      recentSearches.add('ATM');
+                      widget.queryInput('ATM', _searchBarController);
                       Navigator.pop(context);
                     },
                   ),
@@ -108,6 +124,42 @@ class _MapSearchState extends State<MapSearch> {
               ),
             ),
           ),
+          Card(
+              margin: EdgeInsets.all(5),
+              child: recentSearches.isEmpty
+                  ? Container(
+                      width: double.infinity,
+                      height: 50,
+                      child: Center(child: Text('You have no recent searches')),
+                    )
+                  : ListView.separated(
+                      separatorBuilder: (context, index) => Divider(height: 0),
+                      itemCount: recentSearches.length,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          contentPadding:
+                              EdgeInsets.symmetric(horizontal: 15, vertical: 0),
+                          leading: Icon(Icons.history),
+                          title: Text(recentSearches[index]),
+                          trailing: IconButton(
+                            iconSize: 20,
+                            icon: Icon(Icons.cancel),
+                            onPressed: () {
+                              setState(() {
+                                recentSearches.remove(recentSearches[index]);
+                              });
+                            },
+                          ),
+                          onTap: () {
+                            _searchBarController.text = recentSearches[index];
+                            widget.queryInput(
+                                recentSearches[index], _searchBarController);
+                            Navigator.pop(context);
+                          },
+                        );
+                      },
+                    )),
         ],
       ),
     );
@@ -136,10 +188,7 @@ class LabeledIconButton extends StatelessWidget {
           ),
         ),
         SizedBox(height: 6),
-        Text(
-          text,
-          //style: TextStyle(color: Colors.black54),
-        ),
+        Text(text),
       ],
     );
   }

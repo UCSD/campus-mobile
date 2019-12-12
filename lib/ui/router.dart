@@ -4,6 +4,7 @@ import 'package:campus_mobile_experimental/core/models/dining_menu_items_model.d
 import 'package:campus_mobile_experimental/core/models/dining_model.dart';
 import 'package:campus_mobile_experimental/core/models/events_model.dart';
 import 'package:campus_mobile_experimental/core/models/links_model.dart';
+import 'package:campus_mobile_experimental/core/models/map_search_model.dart';
 import 'package:campus_mobile_experimental/core/models/news_model.dart';
 import 'package:campus_mobile_experimental/core/services/event_service.dart';
 import 'package:campus_mobile_experimental/core/viewmodels/surf_view_model.dart';
@@ -17,6 +18,7 @@ import 'package:campus_mobile_experimental/ui/views/events/events_list.dart';
 import 'package:campus_mobile_experimental/ui/views/home.dart';
 import 'package:campus_mobile_experimental/ui/views/links/links_list.dart';
 import 'package:campus_mobile_experimental/ui/views/map/map.dart' as prefix0;
+import 'package:campus_mobile_experimental/ui/views/map/map_location_list.dart';
 import 'package:campus_mobile_experimental/ui/views/map/map_search.dart';
 import 'package:campus_mobile_experimental/ui/views/news/news_detail_view.dart';
 import 'package:campus_mobile_experimental/ui/views/news/news_list.dart';
@@ -46,10 +48,19 @@ class Router {
       case RoutePaths.Map:
         return MaterialPageRoute(builder: (_) => prefix0.Maps());
       case RoutePaths.MapSearch:
-        Function _addMarker = settings.arguments as Function;
+        Function _getData = settings.arguments as Function;
         return MaterialPageRoute(
             builder: (_) => MapSearch(
-                  queryInput: _addMarker,
+                  queryInput: _getData,
+                ));
+      case RoutePaths.MapLocationList:
+        Map<String, Object> arguments = settings.arguments;
+        Function addMarker = arguments['addMarker'] as Function;
+        List<MapSearchModel> data = arguments['data'] as List<MapSearchModel>;
+        return MaterialPageRoute(
+            builder: (_) => MapLocationList(
+                  data: data,
+                  addMarker: addMarker,
                 ));
       case RoutePaths.Notifications:
         return MaterialPageRoute(builder: (_) => Notifications());
