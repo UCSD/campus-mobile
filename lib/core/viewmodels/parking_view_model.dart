@@ -1,8 +1,8 @@
+import 'package:campus_mobile_experimental/core/data_providers/parking_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/parking_model.dart';
 import 'package:campus_mobile_experimental/ui/widgets/cards/card_container.dart';
 import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
-import 'package:campus_mobile_experimental/core/services/parking_service.dart';
 import 'package:campus_mobile_experimental/ui/widgets/parking/parking_display.dart';
 import 'package:campus_mobile_experimental/ui/widgets/dots_indicator.dart';
 import 'package:provider/provider.dart';
@@ -13,23 +13,23 @@ class ParkingCard extends StatefulWidget {
 }
 
 class _ParkingCardState extends State<ParkingCard> {
-  ParkingService _parkingService;
+  ParkingDataProvider _parkingDataProvider;
   final _controller = new PageController();
 
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
-    _parkingService = Provider.of<ParkingService>(context);
+    _parkingDataProvider = Provider.of<ParkingDataProvider>(context);
   }
 
   Widget build(BuildContext context) {
     return CardContainer(
       title: Text("Parking"),
-      isLoading: false,
+      isLoading: _parkingDataProvider.isLoading,
       reload: () => _updateData(),
-      errorText: _parkingService.error,
-      child: buildParkingCard(_parkingService.data),
+      errorText: _parkingDataProvider.error,
+      child: buildParkingCard(_parkingDataProvider.parkingModels),
       hidden: false,
       overFlowMenu: {'print hi': () => print('hi')},
       actionButtons: buildActionButtons(),
@@ -37,8 +37,8 @@ class _ParkingCardState extends State<ParkingCard> {
   }
 
   void _updateData() {
-    if (!_parkingService.isLoading) {
-      _parkingService.fetchData();
+    if (!_parkingDataProvider.isLoading) {
+      _parkingDataProvider.fetchParkingLots();
     }
   }
 
