@@ -23,7 +23,7 @@ class AvailabilityService extends ChangeNotifier {
 
   final NetworkHelper _networkHelper = NetworkHelper();
   final Map<String, String> headers = {
-    "accept": ":application/json",
+    "accept": "application/json",
     "Authorization": "Bearer " + "7e0ed6a9-86a7-3349-86a2-b4aa035ab8bb",
   };
   final String endpoint =

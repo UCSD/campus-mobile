@@ -9,7 +9,7 @@ class LinksService {
   String _error;
   final NetworkHelper _networkHelper = NetworkHelper();
   final Map<String, String> headers = {
-    "accept": ":application/json",
+    "accept": "application/json",
   };
   final String endpoint =
       "https://tbk5wko7a9.execute-api.us-west-1.amazonaws.com/dev/msm-linksservice/v1";
