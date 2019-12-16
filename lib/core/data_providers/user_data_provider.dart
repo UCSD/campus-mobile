@@ -65,6 +65,7 @@ class UserDataProvider extends ChangeNotifier {
     notifyListeners();
     _authenticationModel = AuthenticationModel.fromJson({});
     _userProfileModel = UserProfileModel.fromJson({});
+    _isLoading = false;
     notifyListeners();
   }
 
