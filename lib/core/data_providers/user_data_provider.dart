@@ -59,6 +59,15 @@ class UserDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void logout() async {
+    _error = null;
+    _isLoading = true;
+    notifyListeners();
+    _authenticationModel = AuthenticationModel.fromJson({});
+    _userProfileModel = UserProfileModel.fromJson({});
+    notifyListeners();
+  }
+
   ///FETCH USER PROFILE FROM SERVER
   void getUserProfile() async {
     _error = null;

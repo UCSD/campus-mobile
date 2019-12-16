@@ -21,6 +21,49 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+    return _userDataProvider.isLoggedIn
+        ? buildLoggedInWidget(context)
+        : buildLoginWidget();
+  }
+
+  Widget buildLoggedInWidget(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                'You are logged in as: ',
+                style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold),
+              ),
+              createUserProfileTile(context),
+            ]),
+      ),
+    );
+  }
+
+  Widget createUserProfileTile(BuildContext context) {
+    return ListTile(
+      leading: Icon(
+        Icons.check_circle,
+        color: Colors.green,
+      ),
+      title: Text(
+        _userDataProvider.userProfileModel.username,
+        style: TextStyle(fontSize: 17),
+      ),
+      trailing: OutlineButton(
+        child: Text('logout'),
+        onPressed: () => _userDataProvider.logout(),
+      ),
+    );
+  }
+
+  Widget buildLoginWidget() {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
