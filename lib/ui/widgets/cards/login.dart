@@ -21,9 +21,14 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    return _userDataProvider.isLoggedIn
-        ? buildLoggedInWidget(context)
-        : buildLoginWidget();
+    if (!_userDataProvider.isLoading) {
+      if (_userDataProvider.isLoggedIn) {
+        return buildLoggedInWidget(context);
+      } else {
+        return buildLoginWidget();
+      }
+    }
+    return Center(child: CircularProgressIndicator());
   }
 
   Widget buildLoggedInWidget(BuildContext context) {
@@ -40,20 +45,22 @@ class _LoginState extends State<Login> {
                     fontSize: 20,
                     fontWeight: FontWeight.bold),
               ),
-              createUserProfileTile(context),
+              buildUserProfileTile(context),
             ]),
       ),
     );
   }
 
-  Widget createUserProfileTile(BuildContext context) {
+  Widget buildUserProfileTile(BuildContext context) {
     return ListTile(
       leading: Icon(
         Icons.check_circle,
         color: Colors.green,
       ),
       title: Text(
-        _userDataProvider.userProfileModel.username,
+        _userDataProvider.userProfileModel.username != null
+            ? _userDataProvider.userProfileModel.username
+            : "",
         style: TextStyle(fontSize: 17),
       ),
       trailing: OutlineButton(
