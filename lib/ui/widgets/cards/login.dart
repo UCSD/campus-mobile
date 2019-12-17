@@ -28,7 +28,10 @@ class _LoginState extends State<Login> {
         return buildLoginWidget();
       }
     }
-    return Center(child: CircularProgressIndicator());
+
+    return Container(
+        constraints: BoxConstraints(maxWidth: 100, maxHeight: 100),
+        child: Center(child: CircularProgressIndicator()));
   }
 
   Widget buildLoggedInWidget(BuildContext context) {
