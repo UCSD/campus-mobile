@@ -1,6 +1,6 @@
+import 'package:campus_mobile_experimental/core/data_providers/availability_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/parking_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
-import 'package:campus_mobile_experimental/core/services/availability_service.dart';
 import 'package:campus_mobile_experimental/core/services/bottom_navigation_bar_service.dart';
 import 'package:campus_mobile_experimental/core/services/dining_service.dart';
 import 'package:campus_mobile_experimental/core/services/event_service.dart';
@@ -44,8 +44,14 @@ List<SingleChildCloneableWidget> dependentServices = [
     builder: (_, userDataProvider, parkingDataProvider) =>
         parkingDataProvider..userDataProvider = userDataProvider,
   ),
-  ChangeNotifierProvider<AvailabilityService>(
-    builder: (_) => AvailabilityService(),
+  ChangeNotifierProxyProvider<UserDataProvider, AvailabilityDataProvider>(
+    initialBuilder: (_) {
+      var availabilityDataProvider = AvailabilityDataProvider();
+      availabilityDataProvider.fetchAvailability();
+      return availabilityDataProvider;
+    },
+    builder: (_, userDataProvider, availabilityDataProvider) =>
+        availabilityDataProvider..userDataProvider = userDataProvider,
   ),
 ];
 List<SingleChildCloneableWidget> uiConsumableProviders = [];
