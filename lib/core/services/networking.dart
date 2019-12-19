@@ -47,14 +47,6 @@ class NetworkHelper {
     }
   }
 
-  dynamic checkAndEncode(
-      Map<String, String> headers, Map<String, dynamic> body) {
-    if (headers['Content-Type'] == 'application/json') {
-      return jsonEncode(body);
-    }
-    return body;
-  }
-
   Future<dynamic> authorizedPost(
       String url, Map<String, String> headers, dynamic body) async {
     Dio dio = new Dio();
