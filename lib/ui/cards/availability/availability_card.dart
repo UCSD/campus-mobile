@@ -1,5 +1,5 @@
+import 'package:campus_mobile_experimental/core/data_providers/availability_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/availability_model.dart';
-import 'package:campus_mobile_experimental/core/services/availability_service.dart';
 import 'package:campus_mobile_experimental/ui/widgets/availability/availability_display.dart';
 import 'package:campus_mobile_experimental/ui/widgets/cards/card_container.dart';
 import 'package:campus_mobile_experimental/ui/widgets/dots_indicator.dart';
@@ -14,12 +14,11 @@ class AvailabilityCard extends StatefulWidget {
 
 class _AvailabilityCardState extends State<AvailabilityCard> {
   final _controller = PageController();
-  AvailabilityService _availabilityService;
-  bool hidden;
+  AvailabilityDataProvider _availabilityDataProvider;
 
   void _updateData() {
-    if (!_availabilityService.isLoading) {
-      _availabilityService.fetchData();
+    if (!_availabilityDataProvider.isLoading) {
+      _availabilityDataProvider.fetchAvailability();
     }
   }
 
@@ -27,7 +26,7 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
-    _availabilityService = Provider.of<AvailabilityService>(context);
+    _availabilityDataProvider = Provider.of<AvailabilityDataProvider>(context);
   }
 
   @override
@@ -36,11 +35,12 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
       /// TODO: need to hook up hidden to state using provider
       hidden: false,
       reload: () => _updateData(),
-      isLoading: _availabilityService.isLoading,
+      isLoading: _availabilityDataProvider.isLoading,
       title: Text('Availability'),
-      errorText: _availabilityService.error,
-      child: buildAvailabilityCard(_availabilityService.data),
-      actionButtons: buildActionButtons(_availabilityService.data),
+      errorText: _availabilityDataProvider.error,
+      child:
+          buildAvailabilityCard(_availabilityDataProvider.availabilityModels),
+      actionButtons: buildActionButtons(),
     );
   }
 
@@ -76,7 +76,7 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
     }
   }
 
-  List<Widget> buildActionButtons(List<AvailabilityModel> data) {
+  List<Widget> buildActionButtons() {
     List<Widget> actionButtons = List<Widget>();
     actionButtons.add(FlatButton(
       child: Text(
