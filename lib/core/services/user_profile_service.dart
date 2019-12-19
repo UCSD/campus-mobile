@@ -19,7 +19,6 @@ class UserProfileService {
       return true;
     } catch (e) {
       _error = e.toString();
-      print(_error);
       return false;
     }
   }
@@ -35,7 +34,7 @@ class UserProfileService {
         _isLoading = false;
         return true;
       } else {
-        print(response.toString());
+        throw (response.toString());
       }
     } catch (e) {
       _error = e.toString();
