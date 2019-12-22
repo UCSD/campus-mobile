@@ -10,9 +10,31 @@ class Messages extends StatefulWidget{
 }
 
 class _MessagesState extends State<Messages>{
+  final MessageService _messageService = MessageService();
+  //Future<MessageModel> _data;
+  
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+   // _updateMessageData();
+  }
+
+  /*_updateMessageData() {
+    if(!_messageService.isLoading){
+      setState((){
+        _data = _messageService.fetchData();
+      });
+    }
+  }*/
+  
+
+
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+    return  Text('yo');
   }
 
 }
