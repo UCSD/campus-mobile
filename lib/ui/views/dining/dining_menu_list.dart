@@ -1,52 +1,29 @@
 import 'package:campus_mobile_experimental/core/models/dining_menu_items_model.dart';
 import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
-import 'package:campus_mobile_experimental/core/services/dining_service.dart';
+import 'package:provider/provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/dining_data_proivder.dart';
 
-class DiningMenuList extends StatefulWidget {
+class DiningMenuList extends StatelessWidget {
+  DiningMenuList({Key key, @required this.id}) : super(key: key);
   final String id;
-  const DiningMenuList({Key key, @required this.id}) : super(key: key);
-  @override
-  _DiningMenuListState createState() => _DiningMenuListState();
-}
-
-class _DiningMenuListState extends State<DiningMenuList> {
-  final DiningService _diningService = DiningService();
-  Future<DiningMenuItemsModel> _data;
-
-  initState() {
-    super.initState();
-    _updateData();
-  }
-
-  _updateData() {
-    if (!_diningService.isLoading) {
-      setState(() {
-        _data = _diningService.fetchMenu(this.widget.id);
-      });
-    }
-  }
+  DiningMenuItemsModel _data;
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<DiningMenuItemsModel>(
-      future: _data,
-      builder: (context, snapshot) {
-        return snapshot.hasData
-            ? Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  buildFilterButtons(),
-                  buildDiningMenuList(snapshot, context),
-                ],
-              )
-            : Column();
-      },
+    _data = Provider.of<DiningDataProvider>(context, listen: false)
+        .getMenuData(this.id);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        buildFilterButtons(),
+        buildDiningMenuList(context),
+      ],
     );
   }
 
-  Widget buildDiningMenuList(AsyncSnapshot snapshot, BuildContext context) {
-    DiningMenuItemsModel menu = snapshot.data;
+  Widget buildDiningMenuList(BuildContext context) {
+    DiningMenuItemsModel menu = _data;
     List<MenuItem> menuList = menu.menuItems;
     List<Widget> list = List<Widget>();
     if (menuList != null) {
@@ -70,7 +47,6 @@ class _DiningMenuListState extends State<DiningMenuList> {
             ),
           ),
           onTap: () {
-            ///TODO navigate to nutrition page for this item
             Navigator.pushNamed(context, RoutePaths.DiningNutritionView,
                 arguments: {
                   "data": item,

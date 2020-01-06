@@ -7,13 +7,13 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-List<ParkingModel> parkingModelFromJson(String str) => List<ParkingModel>.from(
-    json.decode(str).map((x) => ParkingModel.fromJson(x)));
+List<DiningModel> parkingModelFromJson(String str) => List<DiningModel>.from(
+    json.decode(str).map((x) => DiningModel.fromJson(x)));
 
-String parkingModelToJson(List<ParkingModel> data) =>
+String parkingModelToJson(List<DiningModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-class ParkingModel {
+class DiningModel {
   String locationId;
   String locationName;
   String locationContext;
@@ -22,7 +22,7 @@ class ParkingModel {
   Availability availability;
   DateTime lastUpdated;
 
-  ParkingModel({
+  DiningModel({
     this.locationId,
     this.locationName,
     this.locationContext,
@@ -32,7 +32,7 @@ class ParkingModel {
     this.lastUpdated,
   });
 
-  factory ParkingModel.fromJson(Map<String, dynamic> json) => ParkingModel(
+  factory DiningModel.fromJson(Map<String, dynamic> json) => DiningModel(
         locationId: json["LocationId"] == null ? null : json["LocationId"],
         locationName:
             json["LocationName"] == null ? null : json["LocationName"],

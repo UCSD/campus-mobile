@@ -3,7 +3,7 @@ import 'package:campus_mobile_experimental/core/models/coordinates_model.dart';
 import 'package:flutter/services.dart';
 import 'package:location/location.dart';
 
-class LocationService {
+class LocationDataProvider {
   final Location _locationService = new Location();
   bool _permission = false;
   String error;
@@ -12,7 +12,7 @@ class LocationService {
       StreamController<Coordinates>.broadcast();
   Stream<Coordinates> get locationStream => _locationController.stream;
 
-  LocationService() {
+  LocationDataProvider() {
     _init();
   }
 

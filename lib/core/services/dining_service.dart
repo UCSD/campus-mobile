@@ -1,9 +1,8 @@
 import 'package:campus_mobile_experimental/core/models/dining_menu_items_model.dart';
 import 'package:campus_mobile_experimental/core/models/dining_model.dart';
 import 'package:campus_mobile_experimental/core/services/networking.dart';
-import 'package:flutter/material.dart';
 
-class DiningService extends ChangeNotifier {
+class DiningService {
   DiningService() {
     fetchData();
   }
@@ -14,15 +13,13 @@ class DiningService extends ChangeNotifier {
   List<DiningModel> _data;
   DiningMenuItemsModel _menuData;
 
-  List<DiningModel> get data => _data;
   final NetworkHelper _networkHelper = NetworkHelper();
   final String baseEndpoint =
       "https://pg83tslbyi.execute-api.us-west-2.amazonaws.com/prod/v3/dining/";
 
-  fetchData() async {
+  Future<bool> fetchData() async {
     _error = null;
     _isLoading = true;
-    notifyListeners();
     try {
       /// fetch data
       String _response =
@@ -33,15 +30,15 @@ class DiningService extends ChangeNotifier {
       _isLoading = false;
 
       _data = data;
-      notifyListeners();
+      return true;
     } catch (e) {
       _error = e.toString();
       _isLoading = false;
-      notifyListeners();
+      return false;
     }
   }
 
-  fetchMenu(String id) async {
+  Future<bool> fetchMenu(String id) async {
     _error = null;
     _isLoading = true;
     try {
@@ -52,11 +49,11 @@ class DiningService extends ChangeNotifier {
       /// parse data
       final data = diningMenuItemsModelFromJson(_response);
       _menuData = data;
-      notifyListeners();
+      return true;
     } catch (e) {
       _error = e.toString();
       _isLoading = false;
-      notifyListeners();
+      return false;
     }
   }
 
@@ -65,6 +62,8 @@ class DiningService extends ChangeNotifier {
   String get error => _error;
 
   DateTime get lastUpdated => _lastUpdated;
+
+  List<DiningModel> get data => _data;
 
   DiningMenuItemsModel get menuData => _menuData;
 }

@@ -9,7 +9,7 @@ class ParkingDataProvider extends ChangeNotifier {
     _isLoading = false;
 
     ///INITIALIZE SERVICES
-    _parkingService = ParkingService();
+    _parkingService = DiningService();
   }
 
   ///STATES
@@ -18,11 +18,11 @@ class ParkingDataProvider extends ChangeNotifier {
   String _error;
 
   ///MODELS
-  Map<String, ParkingModel> _parkingModels;
+  Map<String, DiningModel> _parkingModels;
   UserDataProvider _userDataProvider;
 
   ///SERVICES
-  ParkingService _parkingService;
+  DiningService _parkingService;
 
   /// FETCH PARKING LOT DATA AND SYNC THE ORDER IF USER IS LOGGED IN
   /// TODO: make sure to remove any lots the user has selected and are no longer available
@@ -31,9 +31,9 @@ class ParkingDataProvider extends ChangeNotifier {
     _error = null;
 
     /// creating  new map ensures we remove all unsupported lots
-    Map<String, ParkingModel> newMapOfLots = Map<String, ParkingModel>();
+    Map<String, DiningModel> newMapOfLots = Map<String, DiningModel>();
     if (await _parkingService.fetchParkingLotData()) {
-      for (ParkingModel model in _parkingService.data) {
+      for (DiningModel model in _parkingService.data) {
         newMapOfLots[model.locationName] = model;
       }
 
@@ -41,8 +41,9 @@ class ParkingDataProvider extends ChangeNotifier {
       _parkingModels = newMapOfLots;
 
       /// if the user is logged in we want to sync the order of parking lots amongst all devices
-
-      reorderLots(_userDataProvider.userProfileModel.selectedLots);
+      if (_userDataProvider != null) {
+        reorderLots(_userDataProvider.userProfileModel.selectedLots);
+      }
       _lastUpdated = DateTime.now();
     } else {
       ///TODO: determine what error to show to the user
@@ -56,14 +57,14 @@ class ParkingDataProvider extends ChangeNotifier {
   ///THIS IS A UTILITY FUNCTION THAT SHOULD BE EXPORTED TO BE USED FOR ANY OBJECT TYPE <T>
   ///WILL TAKE A Map<String,T> Data and List<String> THAT WILL REPRESENT THE ORDER OF ITEMS
   ///RETURNED BY THIS METHOD.
-  List<ParkingModel> makeOrderedList(List<String> order) {
+  List<DiningModel> makeOrderedList(List<String> order) {
     if (order == null) {
       return _parkingModels.values.toList();
     }
 
     ///create an empty list that will be returned
-    List<ParkingModel> orderedListOfLots = List<ParkingModel>();
-    Map<String, ParkingModel> tempMap = Map<String, ParkingModel>();
+    List<DiningModel> orderedListOfLots = List<DiningModel>();
+    Map<String, DiningModel> tempMap = Map<String, DiningModel>();
     tempMap.addAll(_parkingModels);
 
     /// remove lots as we add them to the ordered list
@@ -86,7 +87,7 @@ class ParkingDataProvider extends ChangeNotifier {
   }
 
   ///ADD A PARKING LOT IF IT HAS NOT ALREADY BEEN ADDED
-  void addLot(ParkingModel model) {
+  void addLot(DiningModel model) {
     if (!_userDataProvider.userProfileModel.selectedLots
         .contains(model.locationName)) {
       _userDataProvider.userProfileModel.selectedLots.add(model.locationName);
@@ -94,7 +95,7 @@ class ParkingDataProvider extends ChangeNotifier {
   }
 
   ///REMOVE PARKING LOT
-  void removeLot(ParkingModel model) {
+  void removeLot(DiningModel model) {
     _userDataProvider.userProfileModel.selectedLots.remove(model.locationName);
   }
 
@@ -119,7 +120,7 @@ class ParkingDataProvider extends ChangeNotifier {
   DateTime get lastUpdated => _lastUpdated;
 
   ///RETURNS A List<ParkingModels> IN THE CORRECT ORDER
-  List<ParkingModel> get parkingModels {
+  List<DiningModel> get parkingModels {
     ///check if we have an offline _parkingModel
     if (_parkingModels != null) {
       ///check if we have an offline _userProfileModel
@@ -128,6 +129,6 @@ class ParkingDataProvider extends ChangeNotifier {
       }
       return _parkingModels.values.toList();
     }
-    return List<ParkingModel>();
+    return List<DiningModel>();
   }
 }

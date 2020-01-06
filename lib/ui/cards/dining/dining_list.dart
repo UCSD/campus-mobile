@@ -2,19 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/core/models/dining_model.dart';
 import 'package:campus_mobile_experimental/ui/widgets/container_view.dart';
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
+import 'package:provider/provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/dining_data_proivder.dart';
 
 class DiningList extends StatelessWidget {
   const DiningList({
     Key key,
-    @required this.data,
     this.listSize,
   }) : super(key: key);
 
-  final List<DiningModel> data;
   final int listSize;
 
   @override
   Widget build(BuildContext context) {
+    List<DiningModel> data =
+        Provider.of<DiningDataProvider>(context).diningModels;
     return data.length > 0
         ? buildDiningList(data, context)
         : CircularProgressIndicator();

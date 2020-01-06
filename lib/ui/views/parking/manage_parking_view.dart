@@ -25,11 +25,11 @@ class ManageParkingView extends StatelessWidget {
     if (newIndex > oldIndex) {
       newIndex -= 1;
     }
-    List<ParkingModel> newOrder = parkingDataProvider.parkingModels;
-    ParkingModel item = newOrder.removeAt(oldIndex);
+    List<DiningModel> newOrder = parkingDataProvider.parkingModels;
+    DiningModel item = newOrder.removeAt(oldIndex);
     newOrder.insert(newIndex, item);
     List<String> orderedLocationNames = List<String>();
-    for (ParkingModel item in newOrder) {
+    for (DiningModel item in newOrder) {
       orderedLocationNames.add(item.locationName);
     }
     parkingDataProvider.reorderLots(orderedLocationNames);
@@ -37,7 +37,7 @@ class ManageParkingView extends StatelessWidget {
 
   List<Widget> createList(BuildContext context) {
     List<Widget> list = List<Widget>();
-    for (ParkingModel model in parkingDataProvider.parkingModels) {
+    for (DiningModel model in parkingDataProvider.parkingModels) {
       list.add(ListTile(
         key: Key(model.locationId.toString()),
         title: Text(model.locationName),

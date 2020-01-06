@@ -42,10 +42,10 @@ class _ParkingCardState extends State<ParkingCard> {
     }
   }
 
-  Widget buildParkingCard(List<ParkingModel> data) {
+  Widget buildParkingCard(List<DiningModel> data) {
     if (data != null && data.length > 0) {
       List<Widget> parkingDisplays = List<Widget>();
-      for (ParkingModel model in data) {
+      for (DiningModel model in data) {
         parkingDisplays.add(ParkingDisplay(model: model));
       }
 
