@@ -103,8 +103,10 @@ class DiningList extends StatelessWidget {
   Widget buildDiningTile(DiningModel data, BuildContext context) {
     return ListTile(
       onTap: () {
-        Provider.of<DiningDataProvider>(context, listen: false)
-            .fetchDiningMenu(data.id);
+        if (data.id != null) {
+          Provider.of<DiningDataProvider>(context, listen: false)
+              .fetchDiningMenu(data.id);
+        }
         Navigator.pushNamed(context, RoutePaths.DiningDetailView,
             arguments: data);
       },

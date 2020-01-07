@@ -13,12 +13,11 @@ class DiningCard extends StatelessWidget {
       hidden: false,
       reload: () => Provider.of<DiningDataProvider>(context, listen: false)
           .fetchDiningLocations(),
-      isLoading:
-          Provider.of<DiningDataProvider>(context, listen: true).isLoading,
+      isLoading: Provider.of<DiningDataProvider>(context).isLoading,
       title: buildTitle("Dining"),
-      errorText: Provider.of<DiningDataProvider>(context, listen: true).error,
+      errorText: Provider.of<DiningDataProvider>(context).error,
       child: buildDiningCard(
-          Provider.of<DiningDataProvider>(context, listen: true).diningModels),
+          Provider.of<DiningDataProvider>(context).diningModels),
       actionButtons: buildActionButtons(context),
     );
   }

@@ -29,18 +29,16 @@ class DiningDataProvider extends ChangeNotifier {
   DiningService _diningService;
 
   void fetchDiningMenu(String menuId) async {
-    if (menuId != null) {
-      _isLoading = true;
-      _error = null;
-      notifyListeners();
-      if (await _diningService.fetchMenu(menuId)) {
-        _diningMenuItemModels[menuId] = _diningService.menuData;
-      } else {
-        _error = _diningService.error;
-      }
-      _isLoading = false;
-      notifyListeners();
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
+    if (await _diningService.fetchMenu(menuId)) {
+      _diningMenuItemModels[menuId] = _diningService.menuData;
+    } else {
+      _error = _diningService.error;
     }
+    _isLoading = false;
+    notifyListeners();
   }
 
   void fetchDiningLocations() async {
@@ -115,6 +113,8 @@ class DiningDataProvider extends ChangeNotifier {
   String get error => _error;
   DateTime get lastUpdated => _lastUpdated;
 
+  /// Returns menu data for given id
+  /// Fetches menu if not already downloaded
   DiningMenuItemsModel getMenuData(String id) {
     if (id != null) {
       if (_diningMenuItemModels[id] != null) {
