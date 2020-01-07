@@ -73,14 +73,13 @@ class Router {
       case RoutePaths.DiningViewAll:
         return MaterialPageRoute(builder: (_) => DiningList());
       case RoutePaths.DiningDetailView:
-        Future<DiningModel> data = settings.arguments as Future<DiningModel>;
+        DiningModel data = settings.arguments as DiningModel;
         return MaterialPageRoute(builder: (_) => DiningDetailView(data: data));
       case RoutePaths.DiningNutritionView:
         Map<String, Object> arguments = settings.arguments;
         MenuItem data = arguments['data'] as MenuItem;
         String disclaimer = arguments['disclaimer'] as String;
         String disclaimerEmail = arguments['disclaimerEmail'] as String;
-        print(disclaimerEmail);
         return MaterialPageRoute(
             builder: (_) => NutritionFactsView(
                   data: data,

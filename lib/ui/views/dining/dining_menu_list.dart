@@ -7,23 +7,25 @@ import 'package:campus_mobile_experimental/core/data_providers/dining_data_proiv
 class DiningMenuList extends StatelessWidget {
   DiningMenuList({Key key, @required this.id}) : super(key: key);
   final String id;
-  DiningMenuItemsModel _data;
 
   @override
   Widget build(BuildContext context) {
-    _data = Provider.of<DiningDataProvider>(context, listen: false)
-        .getMenuData(this.id);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        buildFilterButtons(),
-        buildDiningMenuList(context),
-      ],
+    return Center(
+      child: Provider.of<DiningDataProvider>(context).isLoading
+          ? CircularProgressIndicator()
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                buildFilterButtons(),
+                buildDiningMenuList(context),
+              ],
+            ),
     );
   }
 
   Widget buildDiningMenuList(BuildContext context) {
-    DiningMenuItemsModel menu = _data;
+    DiningMenuItemsModel menu =
+        Provider.of<DiningDataProvider>(context, listen: false).getMenuData(id);
     List<MenuItem> menuList = menu.menuItems;
     List<Widget> list = List<Widget>();
     if (menuList != null) {

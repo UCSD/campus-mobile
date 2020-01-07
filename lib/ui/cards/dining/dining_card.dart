@@ -11,7 +11,8 @@ class DiningCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return CardContainer(
       hidden: false,
-      reload: () => Provider.of<DiningDataProvider>(context, listen: false),
+      reload: () => Provider.of<DiningDataProvider>(context, listen: false)
+          .fetchDiningLocations(),
       isLoading:
           Provider.of<DiningDataProvider>(context, listen: true).isLoading,
       title: buildTitle("Dining"),

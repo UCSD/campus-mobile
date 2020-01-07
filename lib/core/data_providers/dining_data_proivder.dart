@@ -29,15 +29,18 @@ class DiningDataProvider extends ChangeNotifier {
   DiningService _diningService;
 
   void fetchDiningMenu(String menuId) async {
-    _isLoading = true;
-    _error = null;
-    notifyListeners();
-    if (await _diningService.fetchMenu(menuId)) {
-      _diningMenuItemModels[menuId] = _diningService.menuData;
-    } else {
-      _error = _diningService.error;
+    if (menuId != null) {
+      _isLoading = true;
+      _error = null;
+      notifyListeners();
+      if (await _diningService.fetchMenu(menuId)) {
+        _diningMenuItemModels[menuId] = _diningService.menuData;
+      } else {
+        _error = _diningService.error;
+      }
+      _isLoading = false;
+      notifyListeners();
     }
-    notifyListeners();
   }
 
   void fetchDiningLocations() async {
@@ -88,7 +91,6 @@ class DiningDataProvider extends ChangeNotifier {
                   model.coordinates.lat, model.coordinates.lon) *
               0.00062137;
           model.distance = distance;
-          print(distance);
         }
       }
     }
@@ -114,8 +116,12 @@ class DiningDataProvider extends ChangeNotifier {
   DateTime get lastUpdated => _lastUpdated;
 
   DiningMenuItemsModel getMenuData(String id) {
-    if (_diningMenuItemModels != null && _diningMenuItemModels[id] != null) {
-      return _diningMenuItemModels[id];
+    if (id != null) {
+      if (_diningMenuItemModels[id] != null) {
+        return _diningMenuItemModels[id];
+      } else {
+        fetchDiningMenu(id);
+      }
     }
     return DiningMenuItemsModel();
   }
