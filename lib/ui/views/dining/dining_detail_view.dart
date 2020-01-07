@@ -1,5 +1,5 @@
-import 'package:campus_mobile_experimental/core/models/dining_model.dart' as prefix0;
-import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
+import 'package:campus_mobile_experimental/core/models/dining_model.dart'
+    as prefix0;
 import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/ui/widgets/container_view.dart';
 import 'package:campus_mobile_experimental/ui/widgets/image_loader.dart';
@@ -50,6 +50,7 @@ class DiningDetailView extends StatelessWidget {
   }
 
   Widget buildHours(BuildContext context, prefix0.DiningModel model) {
+    print(model.toJson());
     Widget monday = Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -116,7 +117,9 @@ class DiningDetailView extends StatelessWidget {
         Text('Satuday: '),
         Row(
           children: <Widget>[
-            Text(model.regularHours.sat),
+            model.regularHours.sat != null
+                ? Text(model.regularHours.sat)
+                : Text('Closed'),
             buildGreenDot(),
           ],
         )
@@ -128,7 +131,9 @@ class DiningDetailView extends StatelessWidget {
         Text('Sunday: '),
         Row(
           children: <Widget>[
-            Text(model.regularHours.sun),
+            model.regularHours.sun != null
+                ? Text(model.regularHours.sun)
+                : Text('Closed'),
             buildGreenDot(),
           ],
         )
@@ -172,10 +177,12 @@ class DiningDetailView extends StatelessWidget {
 
   Widget buildPictures(prefix0.DiningModel model) {
     List<ImageLoader> images = List<ImageLoader>();
-    for (prefix0.Image item in model.images) {
-      images.add(ImageLoader(
-        url: item.small,
-      ));
+    if (model.images != null) {
+      for (prefix0.Image item in model.images) {
+        images.add(ImageLoader(
+          url: item.small,
+        ));
+      }
     }
     return Center(
       child: Container(

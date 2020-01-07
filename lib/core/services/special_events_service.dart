@@ -8,7 +8,7 @@ class SpecialEventsService {
   String _error;
   final NetworkHelper _networkHelper = NetworkHelper();
   final Map<String, String> headers = {
-    "accept": ":application/json",
+    "accept": "application/json",
   };
   final String endpoint =
       "https://2wxnokqsz2.execute-api.us-west-2.amazonaws.com/dev/GetActiveSpecialEvent";
