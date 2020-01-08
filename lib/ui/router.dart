@@ -66,8 +66,7 @@ class Router {
       case RoutePaths.ManageAvailabilityView:
         return MaterialPageRoute(builder: (_) => ManageAvailabilityView());
       case RoutePaths.LinksViewAll:
-        List<LinksModel> data = settings.arguments as List<LinksModel>;
-        return MaterialPageRoute(builder: (_) => LinksList(data: data));
+        return MaterialPageRoute(builder: (_) => LinksList());
       case RoutePaths.DiningViewAll:
         return MaterialPageRoute(builder: (_) => DiningList());
       case RoutePaths.DiningDetailView:
