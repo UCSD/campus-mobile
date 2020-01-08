@@ -8,7 +8,7 @@ class ParkingDisplay extends StatelessWidget {
     @required this.model,
   }) : super(key: key);
 
-  final DiningModel model;
+  final ParkingModel model;
 
   @override
   Widget build(BuildContext context) {

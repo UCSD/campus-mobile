@@ -32,9 +32,6 @@ class UserDataProvider extends ChangeNotifier {
   AuthenticationService _authenticationService;
   UserProfileService _userProfileService;
 
-  ///TODO: move remote config file
-  final String _endpoint = 'https://api-qa.ucsd.edu:8243/mp-registration/1.0.0';
-
   ///authenticate a user given an email and password
   ///upon logging in we should make sure that users upload the correct
   ///ucsdaffiliation and classification
