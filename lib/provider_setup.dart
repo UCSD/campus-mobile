@@ -23,7 +23,12 @@ List<SingleChildCloneableWidget> independentServices = [
     builder: (_) => UserDataProvider(),
   ),
   ChangeNotifierProvider<EventsDataProvider>(
-    builder: (_) => EventsDataProvider(),
+    builder: (_) {
+      EventsDataProvider _eventsDataProvider = EventsDataProvider();
+      _eventsDataProvider.fetchEvents();
+      return _eventsDataProvider;
+    },
+  ),
   ChangeNotifierProvider<LinksDataProvider>(
     builder: (_) {
       LinksDataProvider _linksDataProvider = LinksDataProvider();

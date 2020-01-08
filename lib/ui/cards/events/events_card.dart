@@ -8,12 +8,7 @@ import 'package:provider/provider.dart';
 
 class EventsCard extends StatelessWidget {
   Widget buildEventsCard(List<EventModel> data) {
-    if (data != null && data.length > 0) {
-      return EventsList(listSize: 3);
-    } else {
-      /// no news could be fetched here
-      return Container();
-    }
+    return EventsList(listSize: 3);
   }
 
   List<Widget> buildActionButtons(BuildContext context, List<EventModel> data) {
