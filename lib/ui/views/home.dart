@@ -1,4 +1,4 @@
-import 'package:campus_mobile_experimental/core/viewmodels/events_view_model.dart';
+import 'package:campus_mobile_experimental/ui/cards/events/events_card.dart';
 import 'package:campus_mobile_experimental/core/viewmodels/news_view_model.dart';
 import 'package:campus_mobile_experimental/core/viewmodels/weather.dart';
 import 'package:campus_mobile_experimental/ui/cards/availability/availability_card.dart';
@@ -21,7 +21,7 @@ class _HomeState extends State<Home> {
         BannerCard(),
         Weather(),
         NewsCard(),
-        EventsViewModel(),
+        EventsCard(),
         AvailabilityCard(),
         ParkingCard(),
         LinksCard(),

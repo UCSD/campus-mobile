@@ -1,5 +1,6 @@
 import 'package:campus_mobile_experimental/core/data_providers/availability_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/dining_data_proivder.dart';
+import 'package:campus_mobile_experimental/core/data_providers/events_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/location_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/parking_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
@@ -21,8 +22,8 @@ List<SingleChildCloneableWidget> independentServices = [
   ChangeNotifierProvider<UserDataProvider>(
     builder: (_) => UserDataProvider(),
   ),
-  ChangeNotifierProvider<EventsService>(
-    builder: (_) => EventsService(),
+  ChangeNotifierProvider<EventsDataProvider>(
+    builder: (_) => EventsDataProvider(),
   ),
   StreamProvider<Coordinates>(
     builder: (_) => LocationDataProvider().locationStream,

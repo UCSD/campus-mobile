@@ -1,42 +1,22 @@
+import 'package:campus_mobile_experimental/core/data_providers/events_data_provider.dart';
 import 'package:campus_mobile_experimental/ui/widgets/cards/card_container.dart';
 import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/core/models/events_model.dart';
-import 'package:campus_mobile_experimental/core/services/event_service.dart';
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/ui/views/events/events_list.dart';
 import 'package:provider/provider.dart';
 
-class EventsViewModel extends StatefulWidget {
-  @override
-  _EventsViewModelState createState() => _EventsViewModelState();
-}
-
-class _EventsViewModelState extends State<EventsViewModel> {
-  EventsService _eventsService;
-
-  @override
-  void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
-    super.didChangeDependencies();
-    _eventsService = Provider.of<EventsService>(context);
-  }
-
-  _updateData() {
-    if (!_eventsService.isLoading) {
-      _eventsService.fetchData();
-    }
-  }
-
+class EventsCard extends StatelessWidget {
   Widget buildEventsCard(List<EventModel> data) {
     if (data != null && data.length > 0) {
-      return EventsList(data: data, listSize: 3);
+      return EventsList(listSize: 3);
     } else {
       /// no news could be fetched here
       return Container();
     }
   }
 
-  List<Widget> buildActionButtons(List<EventModel> data) {
+  List<Widget> buildActionButtons(BuildContext context, List<EventModel> data) {
     List<Widget> actionButtons = List<Widget>();
     actionButtons.add(FlatButton(
       child: Text(
@@ -54,12 +34,15 @@ class _EventsViewModelState extends State<EventsViewModel> {
     return CardContainer(
       /// TODO: need to hook up hidden to state using provider
       hidden: false,
-      reload: () => _updateData(),
-      isLoading: _eventsService.isLoading,
+      reload: () =>
+          Provider.of<EventsDataProvider>(context, listen: false).fetchEvents(),
+      isLoading: Provider.of<EventsDataProvider>(context).isLoading,
       title: Text("Events"),
-      errorText: _eventsService.error,
-      child: buildEventsCard(_eventsService.data),
-      actionButtons: buildActionButtons(_eventsService.data),
+      errorText: Provider.of<EventsDataProvider>(context).error,
+      child: buildEventsCard(
+          Provider.of<EventsDataProvider>(context).eventsModels),
+      actionButtons: buildActionButtons(
+          context, Provider.of<EventsDataProvider>(context).eventsModels),
     );
   }
 }
