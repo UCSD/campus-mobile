@@ -1,46 +1,39 @@
 import 'dart:async';
 import 'package:campus_mobile_experimental/core/models/news_model.dart';
-import 'package:http/http.dart' as http;
+import 'package:campus_mobile_experimental/core/services/networking.dart';
 
 class NewsService {
   bool _isLoading = false;
   DateTime _lastUpdated;
-  http.Response _response;
   String _error;
-  NewsModel _newsModel;
-
-  Future<NewsModel> fetchData() async {
+  final NetworkHelper _networkHelper = NetworkHelper();
+  final Map<String, String> headers = {
+    "accept": "application/json",
+  };
+  final String endpoint =
+      'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/allstories.json';
+  NewsModel _newsModels = NewsModel();
+  Future<bool> fetchData() async {
     _error = null;
     _isLoading = true;
-    _response = await http.get(
-        'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/allstories.json');
+    try {
+      /// fetch data
+      String _response =
+          await _networkHelper.authorizedFetch(endpoint, headers);
 
-    if (_response.statusCode == 200) {
-      // If server returns an OK response, parse the JSON.
+      /// parse data
+      _newsModels = newsModelFromJson(_response);
       _isLoading = false;
-      _error = null;
-      try {
-        _lastUpdated = DateTime.now();
-        return newsModelFromJson(_response.body.toString());
-      } catch (e) {
-        ///TODO: log this as a bug because the json parsing has failed
-        print(e);
-        _error = e;
-        throw Exception('Failed to load post');
-      }
-    } else {
-      _error = _response.body;
+      return true;
+    } catch (e) {
+      _error = e.toString();
       _isLoading = false;
-
-      ///TODO: log this as a bug because the response was bad
-      // If that response was not OK, throw an error.
-      throw Exception('Failed to load post');
+      return false;
     }
   }
 
-  http.Response get response => _response;
   String get error => _error;
-  NewsModel get newsModel => _newsModel;
+  NewsModel get newsModels => _newsModels;
   bool get isLoading => _isLoading;
   DateTime get lastUpdated => _lastUpdated;
 }

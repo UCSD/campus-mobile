@@ -10,7 +10,7 @@ class EventsDataProvider extends ChangeNotifier {
     ///INITIALIZE SERVICES
     _eventsService = EventsService();
 
-    List<EventModel> _eventsModels = List<EventModel>();
+    _eventsModels = List<EventModel>();
   }
 
   ///STATES

@@ -1,5 +1,5 @@
 import 'package:campus_mobile_experimental/ui/cards/events/events_card.dart';
-import 'package:campus_mobile_experimental/core/viewmodels/news_view_model.dart';
+import 'package:campus_mobile_experimental/ui/cards/news/news_card.dart';
 import 'package:campus_mobile_experimental/core/viewmodels/weather.dart';
 import 'package:campus_mobile_experimental/ui/cards/availability/availability_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/links/links_card.dart';

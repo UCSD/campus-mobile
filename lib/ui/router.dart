@@ -51,7 +51,7 @@ class Router {
         return MaterialPageRoute(builder: (_) => Profile());
       case RoutePaths.NewsViewAll:
         NewsModel data = settings.arguments as NewsModel;
-        return MaterialPageRoute(builder: (_) => NewsList(data: data));
+        return MaterialPageRoute(builder: (_) => NewsList());
       case RoutePaths.EventsViewAll:
         return MaterialPageRoute(builder: (context) => EventsList());
       case RoutePaths.BaseLineView:

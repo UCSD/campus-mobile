@@ -3,6 +3,7 @@ import 'package:campus_mobile_experimental/core/data_providers/dining_data_proiv
 import 'package:campus_mobile_experimental/core/data_providers/events_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/links_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/location_data_provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/news_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/parking_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/services/bottom_navigation_bar_service.dart';
@@ -27,6 +28,13 @@ List<SingleChildCloneableWidget> independentServices = [
       EventsDataProvider _eventsDataProvider = EventsDataProvider();
       _eventsDataProvider.fetchEvents();
       return _eventsDataProvider;
+    },
+  ),
+  ChangeNotifierProvider<NewsDataProvider>(
+    builder: (_) {
+      NewsDataProvider _newsDataProvider = NewsDataProvider();
+      _newsDataProvider.fetchNews();
+      return _newsDataProvider;
     },
   ),
   ChangeNotifierProvider<LinksDataProvider>(
