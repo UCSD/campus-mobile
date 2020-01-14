@@ -1,6 +1,6 @@
 import 'package:campus_mobile_experimental/core/data_providers/availability_data_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:campus_mobile_experimental/ui/widgets/container_view.dart';
+import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
 import 'package:campus_mobile_experimental/core/models/availability_model.dart';
 import 'package:provider/provider.dart';
 

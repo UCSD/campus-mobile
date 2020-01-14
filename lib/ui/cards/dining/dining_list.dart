@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/core/models/dining_model.dart';
-import 'package:campus_mobile_experimental/ui/widgets/container_view.dart';
+import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:provider/provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/dining_data_proivder.dart';

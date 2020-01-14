@@ -1,8 +1,8 @@
 import 'package:campus_mobile_experimental/core/data_providers/availability_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/availability_model.dart';
-import 'package:campus_mobile_experimental/ui/widgets/availability/availability_display.dart';
-import 'package:campus_mobile_experimental/ui/widgets/cards/card_container.dart';
-import 'package:campus_mobile_experimental/ui/widgets/dots_indicator.dart';
+import 'package:campus_mobile_experimental/ui/cards/availability/availability_display.dart';
+import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
+import 'package:campus_mobile_experimental/ui/reusable_widgets/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:provider/provider.dart';
@@ -38,42 +38,38 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
       isLoading: _availabilityDataProvider.isLoading,
       title: Text('Availability'),
       errorText: _availabilityDataProvider.error,
-      child:
+      child: () =>
           buildAvailabilityCard(_availabilityDataProvider.availabilityModels),
       actionButtons: buildActionButtons(),
     );
   }
 
   Widget buildAvailabilityCard(List<AvailabilityModel> data) {
-    if (data != null && data.length > 0) {
-      List<Widget> locationsList = List<Widget>();
-      for (AvailabilityModel model in data) {
-        locationsList.add(AvailabilityDisplay(
-          model: model,
-        ));
-      }
-
-      return Column(
-        children: <Widget>[
-          Flexible(
-            child: PageView(
-              controller: _controller,
-              children: locationsList,
-            ),
-          ),
-          DotsIndicator(
-            controller: _controller,
-            itemCount: data.length,
-            onPageSelected: (int index) {
-              _controller.animateToPage(index,
-                  duration: Duration(seconds: 1), curve: Curves.ease);
-            },
-          ),
-        ],
-      );
-    } else {
-      return Container();
+    List<Widget> locationsList = List<Widget>();
+    for (AvailabilityModel model in data) {
+      locationsList.add(AvailabilityDisplay(
+        model: model,
+      ));
     }
+
+    return Column(
+      children: <Widget>[
+        Flexible(
+          child: PageView(
+            controller: _controller,
+            children: locationsList,
+          ),
+        ),
+        DotsIndicator(
+          controller: _controller,
+          itemCount: data.length,
+          onPageSelected: (int index) {
+            _controller.animateToPage(index,
+                duration: Duration(seconds: 1), curve: Curves.ease);
+          },
+        ),
+      ],
+    );
   }
 
   List<Widget> buildActionButtons() {

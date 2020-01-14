@@ -1,6 +1,6 @@
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:campus_mobile_experimental/ui/widgets/cards/card_container.dart';
+import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
 import 'package:campus_mobile_experimental/ui/views/news/news_list.dart';
 import 'package:provider/provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/news_data_provider.dart';
@@ -42,7 +42,7 @@ class NewsCard extends StatelessWidget {
       isLoading: Provider.of<NewsDataProvider>(context).isLoading,
       title: buildTitle("News"),
       errorText: Provider.of<NewsDataProvider>(context).error,
-      child: buildNewsCard(),
+      child: () => buildNewsCard(),
       actionButtons: buildActionButtons(context),
     );
   }

@@ -18,7 +18,7 @@ class CardContainer extends StatelessWidget {
   final bool isLoading;
   final bool hidden;
   final Function reload;
-  final Widget child;
+  final Widget Function() child;
   final String errorText;
 
   /// optional parameters
@@ -70,7 +70,7 @@ class CardContainer extends StatelessWidget {
     } else {
       return Container(
         constraints: BoxConstraints(maxHeight: 224, maxWidth: 406),
-        child: child,
+        child: child(),
       );
     }
   }

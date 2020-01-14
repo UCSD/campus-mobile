@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:campus_mobile_experimental/ui/widgets/navigation/app_bar.dart';
+import 'package:campus_mobile_experimental/core/navigation/top_navigation_bar/app_bar.dart';
 
 class ContainerView extends StatelessWidget {
   const ContainerView({

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:campus_mobile_experimental/core/services/bottom_navigation_bar_service.dart';
-import 'package:campus_mobile_experimental/ui/views/home.dart';
-import 'package:campus_mobile_experimental/ui/views/map.dart' as prefix0;
-import 'package:campus_mobile_experimental/ui/views/notifications.dart';
-import 'package:campus_mobile_experimental/ui/views/profile.dart';
+import 'package:campus_mobile_experimental/ui/views/home/home.dart';
+import 'package:campus_mobile_experimental/ui/views/map/map.dart' as prefix0;
+import 'package:campus_mobile_experimental/ui/views/notifications/notifications.dart';
+import 'package:campus_mobile_experimental/ui/views/profile/profile.dart';
 
 class BottomTabBar extends StatefulWidget {
   @override

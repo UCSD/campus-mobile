@@ -1,42 +1,18 @@
+import 'package:campus_mobile_experimental/core/data_providers/surf_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/surf_model.dart';
-import 'package:campus_mobile_experimental/core/services/surf_service.dart';
-import 'package:campus_mobile_experimental/ui/widgets/container_view.dart';
-import 'package:campus_mobile_experimental/ui/widgets/image_loader.dart';
+import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
+import 'package:campus_mobile_experimental/ui/reusable_widgets/image_loader.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class SurfView extends StatefulWidget {
-  @override
-  _SurfViewModel createState() => _SurfViewModel();
-}
-
-class _SurfViewModel extends State<SurfView> {
-  final SurfService _surfService = SurfService();
-  Future<SurfModel> _data;
-  @override
-  void initState() {
-    _updateData();
-    super.initState();
-  }
-
-  _updateData() {
-    if (!_surfService.isLoading) {
-      setState(() {
-        _data = _surfService.fetchData();
-      });
-    }
-  }
-
+class SurfView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: _data,
-      builder: (context, snapshot) {
-        return ContainerView(
-            child: snapshot.hasData
-                ? surfReport(snapshot.data, context)
-                : CircularProgressIndicator());
-      },
-    );
+    return ContainerView(
+        child: Provider.of<SurfDataProvider>(context).isLoading
+            ? CircularProgressIndicator()
+            : surfReport(
+                Provider.of<SurfDataProvider>(context).surfModel, context));
   }
 
   Widget surfReport(SurfModel data, BuildContext context) {

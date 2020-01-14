@@ -1,41 +1,47 @@
 import 'dart:async';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:campus_mobile_experimental/core/models/weather_model.dart';
+import 'package:campus_mobile_experimental/core/services/networking.dart';
 
-const String WEATHER_ICON_BASE_URL =
-    'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/images/v1/weather-icons/';
+const String endpoint =
+    'https://w3wyps9yje.execute-api.us-west-2.amazonaws.com/prod/forecast';
 
 class WeatherService {
-  bool isLoading = false;
-  DateTime lastUpdated = DateTime.now();
-  http.Response response;
-  String error;
+  bool _isLoading = false;
+  DateTime _lastUpdated;
+  String _error;
+  final NetworkHelper _networkHelper = NetworkHelper();
+  final Map<String, String> headers = {
+    "accept": "application/json",
+  };
 
-  Future<Map> fetchPost() async {
-    error = null;
-    isLoading = true;
-    response = await http.get(
-        'https://w3wyps9yje.execute-api.us-west-2.amazonaws.com/prod/forecast');
+  WeatherModel _weatherModel = WeatherModel();
 
-    if (response.statusCode == 200) {
-      // If server returns an OK response, parse the JSON.
-      isLoading = false;
-      error = null;
-      try {
-        return jsonDecode(response.body);
-      } catch (e) {
-        ///TODO: log this as a bug because the json parsing has failed
-        print(e);
-        error = e;
-        throw Exception('Failed to load post');
-      }
-    } else {
-      error = response.body;
-      isLoading = false;
+  Future<bool> fetchData() async {
+    _error = null;
+    _isLoading = true;
+    try {
+      /// fetch data
+      String _response =
+          await _networkHelper.authorizedFetch(endpoint, headers);
 
-      ///TODO: log this as a bug because the response was bad
-      // If that response was not OK, throw an error.
-      throw Exception('Failed to load post');
+      /// parse data
+      _weatherModel = weatherModelFromJson(_response);
+      _isLoading = false;
+      return true;
+    } catch (e) {
+      _error = e.toString();
+      _isLoading = false;
+      return false;
     }
   }
+
+  bool get isLoading => _isLoading;
+
+  String get error => _error;
+
+  DateTime get lastUpdated => _lastUpdated;
+
+  NetworkHelper get availabilityService => _networkHelper;
+
+  WeatherModel get weatherModel => _weatherModel;
 }

@@ -1,6 +1,6 @@
 import 'package:campus_mobile_experimental/ui/cards/events/events_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/news/news_card.dart';
-import 'package:campus_mobile_experimental/core/viewmodels/weather.dart';
+import 'package:campus_mobile_experimental/ui/cards/weather/weather_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/availability/availability_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/links/links_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/dining/dining_card.dart';
@@ -19,7 +19,7 @@ class _HomeState extends State<Home> {
     return ListView(
       children: <Widget>[
         BannerCard(),
-        Weather(),
+        WeatherCard(),
         NewsCard(),
         EventsCard(),
         AvailabilityCard(),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:campus_mobile_experimental/ui/widgets/container_view.dart';
+import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
 
 class BaselineView extends StatelessWidget {
   @override

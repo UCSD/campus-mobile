@@ -1,5 +1,5 @@
 import 'package:campus_mobile_experimental/core/data_providers/events_data_provider.dart';
-import 'package:campus_mobile_experimental/ui/widgets/cards/card_container.dart';
+import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
 import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/core/models/events_model.dart';
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
@@ -34,7 +34,7 @@ class EventsCard extends StatelessWidget {
       isLoading: Provider.of<EventsDataProvider>(context).isLoading,
       title: Text("Events"),
       errorText: Provider.of<EventsDataProvider>(context).error,
-      child: buildEventsCard(
+      child: () => buildEventsCard(
           Provider.of<EventsDataProvider>(context).eventsModels),
       actionButtons: buildActionButtons(
           context, Provider.of<EventsDataProvider>(context).eventsModels),
