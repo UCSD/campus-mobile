@@ -36,13 +36,7 @@ class Router {
       case RoutePaths.SpecialEventsDetailView:
         return MaterialPageRoute(builder: (_) => SpecialEventsViewModel());
       case RoutePaths.SpecialEventsFilterView:
-        Map<String, Object> arguments = settings.arguments;
-        Function selectFilter = arguments['selectFilter'] as Function;
-        FilterArguments filterArguments =
-            arguments['filterArguments'] as FilterArguments;
-        return MaterialPageRoute(
-            builder: (_) => SpecialEventsFilterView(
-                filterArguments: filterArguments, selectFilter: selectFilter));
+        return MaterialPageRoute(builder: (_) => SpecialEventsFilterView());
       case RoutePaths.Map:
         return MaterialPageRoute(builder: (_) => prefix0.Map());
       case RoutePaths.Notifications:

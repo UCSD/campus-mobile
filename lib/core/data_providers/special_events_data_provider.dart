@@ -10,12 +10,17 @@ class SpecialEventsDataProvider extends ChangeNotifier {
     ///INITIALIZE SERVICES
     _specialEventsService = SpecialEventsService();
     _specialEventsModel = SpecialEventsModel();
+    _filters = Map<String, bool>();
+    _myEventsList = Map<String, bool>();
   }
 
   ///STATES
   bool _isLoading;
   DateTime _lastUpdated;
   String _error;
+  Map<String, bool> _filters;
+
+  Map<String, bool> _myEventsList;
 
   ///MODELS
   SpecialEventsModel _specialEventsModel;
@@ -23,13 +28,14 @@ class SpecialEventsDataProvider extends ChangeNotifier {
   ///SERVICES
   SpecialEventsService _specialEventsService;
 
-  void fetchWeather() async {
+  void fetchData() async {
     _isLoading = true;
     _error = null;
     notifyListeners();
     if (await _specialEventsService.fetchData()) {
       _specialEventsModel = _specialEventsService.specialEventsModel;
       _lastUpdated = DateTime.now();
+      populateFilters();
     } else {
       ///TODO: determine what error to show to the user
       _error = _specialEventsService.error;
@@ -38,9 +44,40 @@ class SpecialEventsDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void populateFilters() {
+    Map<String, bool> filterMap = Map<String, bool>();
+    for (String label in _specialEventsModel.labels) {
+      filterMap[label] = false;
+    }
+    _filters = filterMap;
+    notifyListeners();
+  }
+
+  void addToMyEvents(String event) {
+    _myEventsList[event] = true;
+    notifyListeners();
+  }
+
+  void removeFromMyEvents(String event) {
+    _myEventsList[event] = false;
+    notifyListeners();
+  }
+
+  void addFilter(String filter) {
+    _filters[filter] = true;
+    notifyListeners();
+  }
+
+  void removeFilter(String filter) {
+    _filters[filter] = false;
+    notifyListeners();
+  }
+
   ///SIMPLE GETTERS
+  Map<String, bool> get myEventsList => _myEventsList;
   bool get isLoading => _isLoading;
   String get error => _error;
   DateTime get lastUpdated => _lastUpdated;
-  SpecialEventsModel get weatherModel => _specialEventsModel;
+  SpecialEventsModel get specialEventsModel => _specialEventsModel;
+  Map<String, bool> get filters => _filters;
 }

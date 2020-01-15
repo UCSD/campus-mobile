@@ -13,7 +13,7 @@ class SpecialEventsService {
     "accept": "application/json",
   };
   final String endpoint =
-      "https://2wxnokqsz2.execute-api.us-west-2.amazonaws.com/dev/GetActiveSpecialEvent";
+      "https://ucsd-mobile-dev.s3-us-west-1.amazonaws.com/mock-apis/special-events/welcome-week-always-on.json";
 
   Future<bool> fetchData() async {
     _error = null;
@@ -24,7 +24,7 @@ class SpecialEventsService {
           await _networkHelper.authorizedFetch(endpoint, headers);
 
       /// parse data
-      _specialEventsModel = specialEventsModelFromJson(_response);
+      _specialEventsModel = specialEventsModelFromJson(_response.toString());
       _isLoading = false;
       return true;
     } catch (e) {

@@ -5,6 +5,7 @@ import 'package:campus_mobile_experimental/core/data_providers/links_data_provid
 import 'package:campus_mobile_experimental/core/data_providers/location_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/news_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/parking_data_provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/special_events_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/surf_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/weather_data_provider.dart';
@@ -30,6 +31,14 @@ List<SingleChildCloneableWidget> independentServices = [
       SurfDataProvider _surfDataProvider = SurfDataProvider();
       _surfDataProvider.fetchSurfData();
       return _surfDataProvider;
+    },
+  ),
+  ChangeNotifierProvider<SpecialEventsDataProvider>(
+    builder: (_) {
+      SpecialEventsDataProvider _specialEventsDataProvider =
+          SpecialEventsDataProvider();
+      _specialEventsDataProvider.fetchData();
+      return _specialEventsDataProvider;
     },
   ),
   ChangeNotifierProvider<EventsDataProvider>(

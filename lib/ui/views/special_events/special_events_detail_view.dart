@@ -1,8 +1,10 @@
+import 'package:campus_mobile_experimental/core/data_providers/special_events_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/special_events_model.dart';
-import 'package:campus_mobile_experimental/core/services/special_events_service.dart';
+import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
 import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class SpecialEventsViewModel extends StatefulWidget {
   @override
@@ -20,46 +22,36 @@ class FilterArguments {
 }
 
 class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
-  final SpecialEventsService _specialEventsService = SpecialEventsService();
-  Future<SpecialEventsModel> _data;
   String currentDateSelection = "2018-09-22";
   var appBarTitleText = new Text("LOADING");
-
-  FilterArguments filterArguments;
   bool isFull = true; // Toggle true for full schedule / false for my Schedule
 
   //This will need to be stored in state so that its not reset everytime!
   Map<String, bool> myEventList;
 
-  initState() {
-    super.initState();
-    _updateData();
-  }
-
-  _updateData() {
-    if (!_specialEventsService.isLoading) {
-      setState(() {
-        _data = _specialEventsService.fetchData();
-      });
-    }
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    myEventList = Provider.of<SpecialEventsDataProvider>(context).myEventsList;
   }
 
   @override
   Widget build(BuildContext context) {
+    if (Provider.of<SpecialEventsDataProvider>(context).error != null) {
+      return Center(
+          child: ContainerView(
+              child:
+                  Text(Provider.of<SpecialEventsDataProvider>(context).error)));
+    } else if (Provider.of<SpecialEventsDataProvider>(context).isLoading) {
+      return ContainerView(child: Center(child: CircularProgressIndicator()));
+    }
     return buildDetailView(context);
   }
 
   Widget buildDetailView(BuildContext context) {
-    return FutureBuilder<SpecialEventsModel>(
-      future: _data,
-      builder: (context, specEventsSnap) {
-        if (specEventsSnap.connectionState == ConnectionState.none ||
-            specEventsSnap.hasData == null) {
-          return Container();
-        }
-        return buildEventsCard(specEventsSnap);
-      },
-    );
+    return buildEventsCard(
+        Provider.of<SpecialEventsDataProvider>(context).specialEventsModel);
   }
 
 // Helper function that adds dynamic scaffold and filter button
@@ -83,11 +75,7 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
         style: TextStyle(color: Colors.white),
       ),
       onPressed: () {
-        Navigator.pushNamed(context, RoutePaths.SpecialEventsFilterView,
-            arguments: {
-              "selectFilter": _selectFilter,
-              "filterArguments": filterArguments
-            });
+        Navigator.pushNamed(context, RoutePaths.SpecialEventsFilterView);
       },
     );
   }
@@ -96,68 +84,55 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
     return Container(child: Opacity(opacity: 0.0, child: Text("Filter")));
   }
 
-  _selectFilter() {
-    _updateData();
-  }
+  _selectFilter() {}
 
-  Widget buildEventsCard(AsyncSnapshot<SpecialEventsModel> snapshot) {
-    if (snapshot.hasData) {
-      final SpecialEventsModel data = snapshot.data;
-      appBarTitleText = new Text(data.name);
+  Widget buildEventsCard(SpecialEventsModel data) {
+    appBarTitleText = new Text(data.name);
 
-      //Initialized filters if not yet initialized
-      if (filterArguments == null) {
-        Map<int, bool> selected = new Map<int, bool>();
-        int filtersLength = data.labels.length;
-        for (int i = 0; i < filtersLength; i++) selected[i] = false;
-        filterArguments = new FilterArguments(
-            selected, data.labels, data.name, data.labelThemes);
-      }
-
-      //Initialize myEvents list if its null
-      if (myEventList == null) {
-        myEventList = new Map<String, bool>();
-        data.uids.forEach((f) => myEventList[f] = false);
-      }
-
-      List<String> uids = selectEvents(data);
-      return addScaffoldToChild(Column(children: <Widget>[
-        SizedBox(
-            height: 50,
-            child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: buildDateWidgets(data.dates))),
-        isFull? (filtersApplied() ? addFiltersWidget() : Container()): Container(),
-        SizedBox(
-          height: filtersApplied()
-              ? 475
-              : 500, //TODO probably a better way to do this ...
-          child: ListView.builder(
-              itemCount: uids.length,
-              itemBuilder: (BuildContext ctxt, int index) =>
-                  buildEventWidget(ctxt, data, uids[index])),
-        ),
-        buildBottomBar(context),
-      ]));
-    } else {
-      return Container();
-    }
+    List<String> uids = selectEvents(data);
+    return addScaffoldToChild(Column(children: <Widget>[
+      SizedBox(
+          height: 50,
+          child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: buildDateWidgets(data.dates))),
+      isFull
+          ? (filtersApplied() ? addFiltersWidget() : Container())
+          : Container(),
+      SizedBox(
+        height: filtersApplied()
+            ? 475
+            : 500, //TODO probably a better way to do this ...
+        child: ListView.builder(
+            itemCount: uids.length,
+            itemBuilder: (BuildContext ctxt, int index) =>
+                buildEventWidget(ctxt, data, uids[index])),
+      ),
+      buildBottomBar(context),
+    ]));
   }
 
   Widget addFiltersWidget() {
     String filters;
-    for (int i = 0; i < filterArguments.filters.length; i++) {
-      if (filterArguments.selected[i]) {
-        if (filters == null)
-          filters = "Filters: " + filterArguments.filters[i];
-        else
-          filters = filters + "," + filterArguments.filters[i];
+    Map<String, bool> filterMap =
+        Provider.of<SpecialEventsDataProvider>(context).filters;
+    filterMap.forEach((String key, bool val) {
+      if (val) {
+        if (filters == null) {
+          filters = "Filters: " + key;
+        } else {
+          filters = filters + "," + key;
+        }
       }
-    }
+    });
     return SizedBox(
         height: 25,
         child: new SingleChildScrollView(
-            scrollDirection: Axis.horizontal, child: Text(filters,style: TextStyle(color: Colors.blue),)));
+            scrollDirection: Axis.horizontal,
+            child: Text(
+              filters,
+              style: TextStyle(color: Colors.blue),
+            )));
   }
 
   List<Widget> dateButtonList;
@@ -175,8 +150,9 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
             String newDateKey = f
                 .toIso8601String()
                 .substring(0, f.toIso8601String().indexOf("T"));
-            currentDateSelection = newDateKey;
-            _updateData();
+            setState(() {
+              currentDateSelection = newDateKey;
+            });
           },
           child: Text(
             new DateFormat("MMMd").format(f),
@@ -213,19 +189,19 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
 
   // Helper method to check if any filters have been apllied
   bool filtersApplied() {
-    for (int i = 0; i < filterArguments.filters.length; i++) {
-      if (filterArguments.selected[i]) return true;
-    }
-    return false;
+    Map<String, bool> filterMap =
+        Provider.of<SpecialEventsDataProvider>(context).filters;
+    return filterMap.containsValue(true);
   }
 
   // Makes new list of event UIDs after appliying fliters and maintains order
   List<String> applyFilters(List<String> events, SpecialEventsModel data) {
     List<String> filteredEvents = new List<String>();
+    Map<String, bool> filterMap =
+        Provider.of<SpecialEventsDataProvider>(context).filters;
     for (int i = 0; i < events.length; i++) {
       String filter = getLabel(events[i], data);
-      int filterKey = data.labels.indexOf(filter);
-      if (filterArguments.selected[filterKey]) {
+      if (filterMap[filter]) {
         filteredEvents.add(events[i]);
       }
     }
@@ -277,19 +253,18 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
 
   //Add event from myList
   void isGoing(String uid) {
-    myEventList[uid] = true;
-    _updateData();
-    //return false;
+    Provider.of<SpecialEventsDataProvider>(context, listen: false)
+        .addToMyEvents(uid);
   }
 
   //Remove event from myList
   void notGoing(String uid) {
-    myEventList[uid] = false;
-    _updateData();
+    Provider.of<SpecialEventsDataProvider>(context, listen: false)
+        .removeFromMyEvents(uid);
   }
 
   Widget buildTrailing(Schedule event) {
-    if (myEventList[event.id]) {
+    if (myEventList[event.id] != null && myEventList[event.id]) {
       return GestureDetector(
           onTap: () {
             notGoing(event.id);
@@ -321,8 +296,9 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
               focusColor: Colors.blue,
               child: Text('Full Schedule'),
               onPressed: () {
-                isFull = true;
-                _updateData();
+                setState(() {
+                  isFull = true;
+                });
               },
             )),
         Container(
@@ -338,8 +314,9 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
               focusColor: Colors.blue,
               child: Text('My Schedule'),
               onPressed: () {
-                isFull = false;
-                _updateData();
+                setState(() {
+                  isFull = true;
+                });
               },
             ))
       ],
