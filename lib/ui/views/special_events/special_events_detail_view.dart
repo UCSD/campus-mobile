@@ -315,7 +315,7 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
               child: Text('My Schedule'),
               onPressed: () {
                 setState(() {
-                  isFull = true;
+                  isFull = false;
                 });
               },
             ))
