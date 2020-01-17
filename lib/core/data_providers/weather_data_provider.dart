@@ -1,5 +1,5 @@
 import 'package:campus_mobile_experimental/core/models/weather_model.dart';
-import 'package:campus_mobile_experimental/core/services/weather.dart';
+import 'package:campus_mobile_experimental/core/services/weather_service.dart';
 import 'package:flutter/material.dart';
 
 class WeatherDataProvider extends ChangeNotifier {
