@@ -1,22 +1,28 @@
+import 'package:campus_mobile_experimental/core/data_providers/news_data_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:campus_mobile_experimental/ui/widgets/image_loader.dart';
+import 'package:campus_mobile_experimental/ui/reusable_widgets/image_loader.dart';
 import 'package:campus_mobile_experimental/core/models/news_model.dart';
-import 'package:campus_mobile_experimental/ui/widgets/container_view.dart';
+import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
+import 'package:provider/provider.dart';
 
 class NewsList extends StatelessWidget {
-  const NewsList({Key key, @required this.data, this.listSize})
-      : super(key: key);
+  const NewsList({Key key, this.listSize}) : super(key: key);
 
-  final NewsModel data;
   final int listSize;
 
   @override
   Widget build(BuildContext context) {
-    return buildNewsList(context);
+    if (Provider.of<NewsDataProvider>(context).isLoading) {
+      return Center(child: CircularProgressIndicator());
+    }
+    return buildNewsList(
+      context,
+      Provider.of<NewsDataProvider>(context).newsModels,
+    );
   }
 
-  Widget buildNewsList(BuildContext context) {
+  Widget buildNewsList(BuildContext context, NewsModel data) {
     final List<Item> listOfNews = data.items;
     final List<Widget> newsTiles = List<Widget>();
 

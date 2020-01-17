@@ -1,42 +1,17 @@
+import 'package:campus_mobile_experimental/core/data_providers/special_events_data_provider.dart';
 import 'package:campus_mobile_experimental/ui/views/special_events/special_events_detail_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 
-class SpecialEventsFilterView extends StatefulWidget {
-  @override
-  _SpecialEventsFilterViewState createState() =>
-      _SpecialEventsFilterViewState();
-
-  const SpecialEventsFilterView(
-      {Key key, @required this.selectFilter, this.filterArguments})
-      : super(key: key);
-  final Function selectFilter;
-  final FilterArguments filterArguments;
-}
-
-class _SpecialEventsFilterViewState extends State<SpecialEventsFilterView> {
-  FilterArguments filterArguments;
-  Function selectFilter;
-
+class SpecialEventsFilterView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final String title = widget.filterArguments.title;
-    filterArguments = widget.filterArguments;
-    selectFilter = widget.selectFilter;
-
-    return addScaffold(context, title);
-  }
-
-  initState() {
-    super.initState();
-    _updateData(-1);
-  }
-
-  _updateData(int index) {
-    if (index != -1)
-      setState(() {
-        filterArguments.selected[index] = !filterArguments.selected[index];
-      });
+    return addScaffold(
+        context,
+        Provider.of<SpecialEventsDataProvider>(context)
+            .specialEventsModel
+            .name);
   }
 
   Widget addScaffold(context, String title) {
@@ -46,7 +21,8 @@ class _SpecialEventsFilterViewState extends State<SpecialEventsFilterView> {
       ),
       body: Center(
         child: new ListView.builder(
-          itemCount: filterArguments.filters.length,
+          itemCount:
+              Provider.of<SpecialEventsDataProvider>(context).filters.length,
           itemBuilder: (BuildContext ctxt, int index) =>
               makeFiltersList(ctxt, index),
         ),
@@ -54,28 +30,35 @@ class _SpecialEventsFilterViewState extends State<SpecialEventsFilterView> {
     );
   }
 
-  Widget makeFiltersList(BuildContext ctxt, int index) {
-    List<String> filtersList = filterArguments.filters;
+  Widget makeFiltersList(BuildContext context, int index) {
+    List<String> filtersList =
+        Provider.of<SpecialEventsDataProvider>(context).filters.keys.toList();
+    Color labelTheme = HexColor(Provider.of<SpecialEventsDataProvider>(context)
+        .specialEventsModel
+        .labelThemes[filtersList[index]]);
     return new Card(
         child: GestureDetector(
       onTap: () {
-        _updateData(index);
+        if (Provider.of<SpecialEventsDataProvider>(context)
+            .filters[filtersList[index]]) {
+          Provider.of<SpecialEventsDataProvider>(context)
+              .removeFilter(filtersList[index]);
+        } else {
+          Provider.of<SpecialEventsDataProvider>(context)
+              .addFilter(filtersList[index]);
+        }
       },
       child: ListTile(
-        leading:
-            isSelected(index) ? selectedCircle(index) : unselectedCircle(index),
+        leading: Provider.of<SpecialEventsDataProvider>(context)
+                .filters[filtersList[index]]
+            ? selectedCircle(labelTheme)
+            : unselectedCircle(labelTheme),
         title: Text(filtersList[index]),
       ),
     ));
   }
 
-  bool isSelected(int index) {
-    return filterArguments.selected[index];
-  }
-
-  Widget selectedCircle(int index) {
-    Color labelTheme =
-        HexColor(filterArguments.labelThemes[filterArguments.filters[index]]);
+  Widget selectedCircle(Color labelTheme) {
     return new Container(
         padding: new EdgeInsets.all(2.0),
         width: 25.0,
@@ -92,9 +75,7 @@ class _SpecialEventsFilterViewState extends State<SpecialEventsFilterView> {
         ));
   }
 
-  Widget unselectedCircle(int index) {
-    Color labelTheme =
-        HexColor(filterArguments.labelThemes[filterArguments.filters[index]]);
+  Widget unselectedCircle(Color labelTheme) {
     return new Container(
         width: 25.0,
         height: 25.0,

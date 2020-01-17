@@ -1,5 +1,6 @@
 import 'package:campus_mobile_experimental/core/models/availability_model.dart';
 import 'package:campus_mobile_experimental/core/services/networking.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 class AvailabilityService extends ChangeNotifier {
@@ -11,11 +12,6 @@ class AvailabilityService extends ChangeNotifier {
   String _error;
   List<AvailabilityModel> _data;
 
-  set data(List<AvailabilityModel> value) {
-    _data = value;
-    notifyListeners();
-  }
-
   /// add state related things for view model here
   /// add any type of data manipulation here so it can be accessed via provider
 
@@ -23,13 +19,13 @@ class AvailabilityService extends ChangeNotifier {
 
   final NetworkHelper _networkHelper = NetworkHelper();
   final Map<String, String> headers = {
-    "accept": ":application/json",
+    "accept": "application/json",
     "Authorization": "Bearer " + "7e0ed6a9-86a7-3349-86a2-b4aa035ab8bb",
   };
   final String endpoint =
       "https://api-qa.ucsd.edu:8243/occuspace/v1.0/busyness";
 
-  fetchData() async {
+  Future<bool> fetchData() async {
     _error = null;
     _isLoading = true;
     notifyListeners();
@@ -43,11 +39,36 @@ class AvailabilityService extends ChangeNotifier {
       _isLoading = false;
 
       _data = data;
-      notifyListeners();
+      return true;
     } catch (e) {
+      /// if the authorized fetch failed we know we have to refresh the
+      /// token for this service
+      if (e.response.statusCode == 401) {
+        if (await getNewToken()) {
+          return await fetchData();
+        }
+      }
       _error = e.toString();
       _isLoading = false;
-      notifyListeners();
+      return false;
+    }
+  }
+
+  Future<bool> getNewToken() async {
+    final String tokenEndpoint = "https://api-qa.ucsd.edu:8243/token";
+    final Map<String, String> tokenHeaders = {
+      "content-type": 'application/x-www-form-urlencoded',
+      "Authorization":
+          "Basic WUNaMXlLTW9wMjNxcGtvUFQ1aDYzdHB5bm9rYTpQNnFCbWNIRFc5azNJME56S3hHSm5QTTQzV0lh"
+    };
+    try {
+      var response = await _networkHelper.authorizedPost(
+          tokenEndpoint, tokenHeaders, "grant_type=client_credentials");
+      headers["Authorization"] = "Bearer " + response["access_token"];
+      return true;
+    } catch (e) {
+      _error = e.toString();
+      return false;
     }
   }
 
@@ -56,6 +77,4 @@ class AvailabilityService extends ChangeNotifier {
   String get error => _error;
 
   DateTime get lastUpdated => _lastUpdated;
-
-  NetworkHelper get availabilityService => _networkHelper;
 }

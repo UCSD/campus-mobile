@@ -1,19 +1,22 @@
+import 'package:campus_mobile_experimental/core/data_providers/events_data_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:campus_mobile_experimental/ui/widgets/image_loader.dart';
+import 'package:campus_mobile_experimental/ui/reusable_widgets/image_loader.dart';
 import 'package:campus_mobile_experimental/core/models/events_model.dart';
-import 'package:campus_mobile_experimental/ui/widgets/container_view.dart';
+import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
+import 'package:provider/provider.dart';
 
 class EventsList extends StatelessWidget {
-  const EventsList({Key key, @required this.data, this.listSize})
-      : super(key: key);
+  const EventsList({Key key, this.listSize}) : super(key: key);
 
-  final List<EventModel> data;
   final int listSize;
 
   @override
   Widget build(BuildContext context) {
-    return buildEventsList(data, context);
+    return Provider.of<EventsDataProvider>(context).isLoading
+        ? Center(child: CircularProgressIndicator())
+        : buildEventsList(
+            Provider.of<EventsDataProvider>(context).eventsModels, context);
   }
 
   Widget buildEventsList(List<EventModel> listOfEvents, BuildContext context) {

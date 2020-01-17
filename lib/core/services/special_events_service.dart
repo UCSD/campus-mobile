@@ -7,13 +7,15 @@ class SpecialEventsService {
   DateTime _lastUpdated;
   String _error;
   final NetworkHelper _networkHelper = NetworkHelper();
+  SpecialEventsModel _specialEventsModel = SpecialEventsModel();
+
   final Map<String, String> headers = {
-    "accept": ":application/json",
+    "accept": "application/json",
   };
   final String endpoint =
-      "https://2wxnokqsz2.execute-api.us-west-2.amazonaws.com/dev/GetActiveSpecialEvent";
+      "https://ucsd-mobile-dev.s3-us-west-1.amazonaws.com/mock-apis/special-events/welcome-week-always-on.json";
 
-  Future<SpecialEventsModel> fetchData() async {
+  Future<bool> fetchData() async {
     _error = null;
     _isLoading = true;
     try {
@@ -22,13 +24,13 @@ class SpecialEventsService {
           await _networkHelper.authorizedFetch(endpoint, headers);
 
       /// parse data
-      final specialEventsModel = specialEventsModelFromJson(_response);
+      _specialEventsModel = specialEventsModelFromJson(_response.toString());
       _isLoading = false;
-      return specialEventsModel;
+      return true;
     } catch (e) {
       _error = e.toString();
       _isLoading = false;
-      return SpecialEventsModel();
+      return false;
     }
   }
 
@@ -38,5 +40,5 @@ class SpecialEventsService {
 
   DateTime get lastUpdated => _lastUpdated;
 
-  NetworkHelper get availabilityService => _networkHelper;
+  SpecialEventsModel get specialEventsModel => _specialEventsModel;
 }

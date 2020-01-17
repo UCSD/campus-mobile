@@ -1,7 +1,7 @@
 import 'package:campus_mobile_experimental/core/models/events_model.dart';
 import 'package:flutter/material.dart';
-import 'package:campus_mobile_experimental/ui/widgets/container_view.dart';
-import 'package:campus_mobile_experimental/ui/widgets/image_loader.dart';
+import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
+import 'package:campus_mobile_experimental/ui/reusable_widgets/image_loader.dart';
 
 class EventDetailView extends StatelessWidget {
   const EventDetailView({Key key, @required this.data}) : super(key: key);

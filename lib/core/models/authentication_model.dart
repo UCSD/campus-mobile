@@ -29,7 +29,7 @@ class AuthenticationModel {
         pid: json["pid"] == null ? null : json["pid"],
         ucsdaffiliation:
             json["ucsdaffiliation"] == null ? null : json["ucsdaffiliation"],
-        expiration: json["expiration"] == null ? null : json["expiration"],
+        expiration: json["expiration"] == null ? 0 : json["expiration"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -38,4 +38,19 @@ class AuthenticationModel {
         "ucsdaffiliation": ucsdaffiliation == null ? null : ucsdaffiliation,
         "expiration": expiration == null ? null : expiration,
       };
+
+  /// Checks if the token we got back is expired
+  bool isLoggedIn(DateTime lastUpdated) {
+    if (lastUpdated == null) {
+      return false;
+    }
+    if (expiration == null) {
+      return false;
+    }
+    if (DateTime.now()
+        .isAfter(lastUpdated.add(Duration(seconds: expiration)))) {
+      return false;
+    }
+    return true;
+  }
 }

@@ -9,12 +9,13 @@ class LinksService {
   String _error;
   final NetworkHelper _networkHelper = NetworkHelper();
   final Map<String, String> headers = {
-    "accept": ":application/json",
+    "accept": "application/json",
   };
   final String endpoint =
       "https://tbk5wko7a9.execute-api.us-west-1.amazonaws.com/dev/msm-linksservice/v1";
+  List<LinksModel> _linksModels = List<LinksModel>();
 
-  Future<List<LinksModel>> fetchData() async {
+  Future<bool> fetchData() async {
     _error = null;
     _isLoading = true;
     try {
@@ -23,13 +24,13 @@ class LinksService {
           await _networkHelper.authorizedFetch(endpoint, headers);
 
       /// parse data
-      final data = linksModelFromJson(_response);
+      _linksModels = linksModelFromJson(_response);
       _isLoading = false;
-      return data;
+      return true;
     } catch (e) {
       _error = e.toString();
       _isLoading = false;
-      return List<LinksModel>();
+      return false;
     }
   }
 
@@ -40,4 +41,6 @@ class LinksService {
   DateTime get lastUpdated => _lastUpdated;
 
   NetworkHelper get availabilityService => _networkHelper;
+
+  List<LinksModel> get linksModels => _linksModels;
 }

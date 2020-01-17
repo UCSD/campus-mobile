@@ -1,18 +1,16 @@
 import 'package:campus_mobile_experimental/core/models/authentication_model.dart';
 import 'package:campus_mobile_experimental/core/services/networking.dart';
-import 'package:flutter/material.dart';
 import 'package:pointycastle/asymmetric/oaep.dart';
 import 'package:pointycastle/pointycastle.dart' as pc;
 import 'dart:typed_data';
 import 'package:encrypt/encrypt.dart';
 import 'dart:convert';
 
-class AuthenticationService extends ChangeNotifier {
+class AuthenticationService {
   AuthenticationService();
-  bool _isLoading = false;
-  DateTime _lastUpdated;
   String _error;
   AuthenticationModel _data;
+  DateTime _lastUpdated;
 
   /// add state related things for view model here
   /// add any type of data manipulation here so it can be accessed via provider
@@ -23,10 +21,8 @@ class AuthenticationService extends ChangeNotifier {
   final String AUTH_SERVICE_API_KEY =
       'eKFql1kJAj53iyU2fNKyH4jI2b7t70MZ5YbAuPBZ';
 
-  login(String email, String password) async {
+  Future<bool> login(String email, String password) async {
     _error = null;
-    _isLoading = true;
-    notifyListeners();
     print("SSO login initiated for user: $email");
 
     // TODO: import assets/public_key.txt
@@ -55,28 +51,24 @@ class AuthenticationService extends ChangeNotifier {
       };
 
       /// fetch data
-      String response =
-          await _networkHelper.authorizedPost(endpoint, authServiceHeaders);
+      var response = await _networkHelper.authorizedPost(
+          endpoint, authServiceHeaders, null);
 
       /// parse data
-      final authenticationModel = authenticationModelFromJson(response);
-      print(authenticationModel.toJson().toString());
-      _isLoading = false;
-
-      _data = data;
-      notifyListeners();
+      final authenticationModel = AuthenticationModel.fromJson(response);
+      _data = authenticationModel;
+      _lastUpdated = DateTime.now();
+      return true;
     } catch (e) {
+      ///TODO: handle errors thrown by the network class for different types of error responses
       _error = e.toString();
-      _isLoading = false;
-      notifyListeners();
+      print("authentication error:" + _error);
+      return false;
     }
   }
 
-  bool get isLoading => _isLoading;
+  DateTime get lastUpdated => _lastUpdated;
   AuthenticationModel get data => _data;
   String get error => _error;
-
-  DateTime get lastUpdated => _lastUpdated;
-
   NetworkHelper get availabilityService => _networkHelper;
 }
