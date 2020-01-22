@@ -24,7 +24,6 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
 
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
     _availabilityDataProvider = Provider.of<AvailabilityDataProvider>(context);
   }

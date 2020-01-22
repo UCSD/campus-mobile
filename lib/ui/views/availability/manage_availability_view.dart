@@ -46,11 +46,6 @@ class ManageAvailabilityView extends StatelessWidget {
         trailing: Icon(Icons.reorder),
       ));
     }
-
-    /// ListTile.divideTiles(tiles: list, context: context).toList()
-    /// the line above doesn't work because ReorderableListView requires that all
-    /// elements have a unique key but when we run ListTile.divideTiles it
-    /// it returns a list of widgets that do not have a key
     return list;
   }
 }
