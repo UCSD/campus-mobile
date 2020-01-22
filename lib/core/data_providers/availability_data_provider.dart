@@ -7,7 +7,7 @@ class AvailabilityDataProvider extends ChangeNotifier {
   AvailabilityDataProvider() {
     /// DEFAULT STATES
     _isLoading = false;
-
+    _isHidden = false;
     /// TODO: initialize services here
     _availabilityService = AvailabilityService();
   }
@@ -17,6 +17,9 @@ class AvailabilityDataProvider extends ChangeNotifier {
   bool _isLoading;
   DateTime _lastUpdated;
   String _error;
+  bool _isHidden;
+
+
 
   /// MODELS
   /// TODO: add models that will be needed in this data provider
@@ -101,10 +104,19 @@ class AvailabilityDataProvider extends ChangeNotifier {
     _userDataProvider = value;
   }
 
+  ///Use to hide and show cards
+  void toggleHide() {
+    _isHidden = !_isHidden;
+    print("toggleHide: $_isHidden");
+    notifyListeners();
+  }
+
+
   /// SIMPLE GETTERS
   bool get isLoading => _isLoading;
   String get error => _error;
   DateTime get lastUpdated => _lastUpdated;
+  bool get isHidden => _isHidden;
 
   List<AvailabilityModel> get availabilityModels {
     if (_availabilityModels != null) {

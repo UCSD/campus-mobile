@@ -17,6 +17,7 @@ import 'package:campus_mobile_experimental/ui/views/map/map.dart' as prefix0;
 import 'package:campus_mobile_experimental/ui/views/news/news_detail_view.dart';
 import 'package:campus_mobile_experimental/ui/views/news/news_list.dart';
 import 'package:campus_mobile_experimental/ui/views/notifications/notifications.dart';
+import 'package:campus_mobile_experimental/ui/views/profile/cards_view.dart';
 import 'package:campus_mobile_experimental/ui/views/profile/profile.dart';
 import 'package:campus_mobile_experimental/ui/views/dining/nutrition_facts_view.dart';
 import 'package:campus_mobile_experimental/ui/views/surf/surf_report_view.dart';
@@ -81,6 +82,8 @@ class Router {
         return MaterialPageRoute(builder: (_) => SurfView());
       case RoutePaths.ManageParkingView:
         return MaterialPageRoute(builder: (_) => ManageParkingView());
+      case RoutePaths.CardsView:
+        return MaterialPageRoute(builder: (_) => CardsView());
     }
   }
 }

@@ -32,7 +32,8 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
   Widget build(BuildContext context) {
     return CardContainer(
       /// TODO: need to hook up hidden to state using provider
-      hidden: false,
+      hidden: _availabilityDataProvider.isHidden,
+      hide: () => _availabilityDataProvider.toggleHide(),
       reload: () => _updateData(),
       isLoading: _availabilityDataProvider.isLoading,
       title: Text('Availability'),

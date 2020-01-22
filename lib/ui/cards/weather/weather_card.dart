@@ -15,7 +15,8 @@ class WeatherCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return CardContainer(
       /// TODO: need to hook up hidden to state using provider
-      hidden: false,
+      hidden: Provider.of<WeatherDataProvider>(context).isHidden,
+      hide: () => Provider.of<WeatherDataProvider>(context, listen: false).toggleHide(),
       reload: () => Provider.of<WeatherDataProvider>(context, listen: false)
           .fetchWeather(),
       isLoading: Provider.of<WeatherDataProvider>(context).isLoading,

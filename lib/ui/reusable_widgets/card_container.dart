@@ -9,6 +9,7 @@ class CardContainer extends StatelessWidget {
       @required this.errorText,
       @required this.child,
       @required this.hidden,
+      @required this.hide,
       this.overFlowMenu,
       this.actionButtons})
       : super(key: key);
@@ -17,6 +18,7 @@ class CardContainer extends StatelessWidget {
   final Widget title;
   final bool isLoading;
   final bool hidden;
+  final Function hide;
   final Function reload;
   final Widget Function() child;
   final String errorText;
@@ -42,7 +44,7 @@ class CardContainer extends StatelessWidget {
                   children: [
                     buildMenu({
                       'reload': reload,
-                      'hide': () {/* insert hide function*/}
+                      'hide': hide,
                     }),
                   ],
                 ),
@@ -105,8 +107,7 @@ class CardContainer extends StatelessWidget {
         break;
       case 'hide':
         {
-          //TODO
-          //insert code to hide card here
+          hide();
         }
         break;
       default:
