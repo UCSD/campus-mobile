@@ -6,7 +6,6 @@ class WeatherDataProvider extends ChangeNotifier {
   WeatherDataProvider() {
     ///DEFAULT STATES
     _isLoading = false;
-    _isHidden = false;
 
     ///INITIALIZE SERVICES
     _weatherService = WeatherService();
@@ -17,8 +16,6 @@ class WeatherDataProvider extends ChangeNotifier {
   bool _isLoading;
   DateTime _lastUpdated;
   String _error;
-  bool _isHidden;
-
 
   ///MODELS
   WeatherModel _weatherModel;
@@ -41,17 +38,9 @@ class WeatherDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  ///Use to hide and show cards
-  void toggleHide() {
-    _isHidden = !_isHidden;
-    print("toggleHide: $_isHidden");
-    notifyListeners();
-  }
-
   ///SIMPLE GETTERS
   bool get isLoading => _isLoading;
   String get error => _error;
   DateTime get lastUpdated => _lastUpdated;
-  bool get isHidden => _isHidden;
   WeatherModel get weatherModel => _weatherModel;
 }

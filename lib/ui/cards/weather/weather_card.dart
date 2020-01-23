@@ -1,4 +1,5 @@
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
+import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/weather_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -15,8 +16,9 @@ class WeatherCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return CardContainer(
       /// TODO: need to hook up hidden to state using provider
-      hidden: Provider.of<WeatherDataProvider>(context).isHidden,
-      hide: () => Provider.of<WeatherDataProvider>(context, listen: false).toggleHide(),
+      active: Provider.of<UserDataProvider>(context).cardStates['weather'],
+      hide: () => Provider.of<UserDataProvider>(context, listen: false)
+          .toggleCard('weather'),
       reload: () => Provider.of<WeatherDataProvider>(context, listen: false)
           .fetchWeather(),
       isLoading: Provider.of<WeatherDataProvider>(context).isLoading,
