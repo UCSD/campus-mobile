@@ -1,4 +1,5 @@
 import 'package:campus_mobile_experimental/core/data_providers/availability_data_provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/class_schedule_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/dining_data_proivder.dart';
 import 'package:campus_mobile_experimental/core/data_providers/events_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/links_data_provider.dart';
@@ -60,6 +61,14 @@ List<SingleChildCloneableWidget> independentServices = [
       NewsDataProvider _newsDataProvider = NewsDataProvider();
       _newsDataProvider.fetchNews();
       return _newsDataProvider;
+    },
+  ),
+  ChangeNotifierProvider<ClassScheduleDataProvider>(
+    builder: (_) {
+      ClassScheduleDataProvider _classScheduleDataProvider =
+          ClassScheduleDataProvider();
+      _classScheduleDataProvider.fetchData();
+      return _classScheduleDataProvider;
     },
   ),
   ChangeNotifierProvider<LinksDataProvider>(

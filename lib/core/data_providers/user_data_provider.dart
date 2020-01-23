@@ -25,7 +25,8 @@ class UserDataProvider extends ChangeNotifier {
       'weather': true,
       'events': true,
       'special_events': true,
-      'news': true
+      'news': true,
+      'schedule': true
     };
     _cardOrder = [
       'special_events',
@@ -35,7 +36,8 @@ class UserDataProvider extends ChangeNotifier {
       'dining',
       'news',
       'events',
-      'links'
+      'links',
+      'schedule',
     ];
   }
 

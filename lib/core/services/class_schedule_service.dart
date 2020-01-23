@@ -1,19 +1,15 @@
-import 'package:campus_mobile_experimental/core/models/events_model.dart';
+import 'package:campus_mobile_experimental/core/models/class_schedule_model.dart';
 import 'package:campus_mobile_experimental/core/services/networking.dart';
 
-class EventsService {
+class ClassScheduleService {
   final String endpoint =
-      'https://2jjml3hf27.execute-api.us-west-2.amazonaws.com/prod/events/student';
+      'https://ucsd-mobile-dev.s3-us-west-1.amazonaws.com/mock-apis/academic/MyAcademicHistory-studentdemo.json';
   bool _isLoading = false;
   DateTime _lastUpdated;
   String _error;
-  List<EventModel> _data;
+  ClassScheduleModel _data;
 
   final NetworkHelper _networkHelper = NetworkHelper();
-
-  EventsService() {
-    fetchData();
-  }
 
   Future<bool> fetchData() async {
     _error = null;
@@ -23,7 +19,7 @@ class EventsService {
       String _response = await _networkHelper.fetchData(endpoint);
 
       /// parse data
-      final data = eventsModelFromJson(_response);
+      final data = classScheduleModelFromJson(_response);
       _isLoading = false;
       _data = data;
       return true;
@@ -35,7 +31,7 @@ class EventsService {
   }
 
   String get error => _error;
-  List<EventModel> get eventsModels => _data;
+  ClassScheduleModel get classScheduleModel => _data;
   bool get isLoading => _isLoading;
   DateTime get lastUpdated => _lastUpdated;
 }
