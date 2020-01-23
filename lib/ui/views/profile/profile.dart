@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/ui/views/profile/login.dart';
+import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 
 class Profile extends StatelessWidget {
   @override
@@ -19,7 +20,9 @@ class Profile extends StatelessWidget {
             child: ListTile(
               leading: Icon(Icons.menu),
               title: Text('Cards'),
-              onTap: () {},
+              onTap: () {
+                Navigator.pushNamed(context, RoutePaths.CardsView);
+              },
             ),
           ),
           Card(

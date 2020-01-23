@@ -1,4 +1,5 @@
 import 'package:campus_mobile_experimental/core/data_providers/parking_data_provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/parking_model.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +31,8 @@ class _ParkingCardState extends State<ParkingCard> {
       reload: () => _updateData(),
       errorText: _parkingDataProvider.error,
       child: () => buildParkingCard(_parkingDataProvider.parkingModels),
-      hidden: false,
+      active: Provider.of<UserDataProvider>(context).cardStates['parking'],
+      hide: () => Provider.of<UserDataProvider>(context).toggleCard('parking'),
       overFlowMenu: {'print hi': () => print('hi')},
       actionButtons: buildActionButtons(),
     );

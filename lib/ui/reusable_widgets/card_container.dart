@@ -8,7 +8,8 @@ class CardContainer extends StatelessWidget {
       @required this.reload,
       @required this.errorText,
       @required this.child,
-      @required this.hidden,
+      @required this.active,
+      @required this.hide,
       this.overFlowMenu,
       this.actionButtons})
       : super(key: key);
@@ -16,7 +17,8 @@ class CardContainer extends StatelessWidget {
   /// required parameters
   final Widget title;
   final bool isLoading;
-  final bool hidden;
+  final bool active;
+  final Function hide;
   final Function reload;
   final Widget Function() child;
   final String errorText;
@@ -27,7 +29,7 @@ class CardContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!hidden) {
+    if (active) {
       return Card(
         semanticContainer: false,
         child: Column(
@@ -42,7 +44,7 @@ class CardContainer extends StatelessWidget {
                   children: [
                     buildMenu({
                       'reload': reload,
-                      'hide': () {/* insert hide function*/}
+                      'hide': hide,
                     }),
                   ],
                 ),
@@ -105,8 +107,7 @@ class CardContainer extends StatelessWidget {
         break;
       case 'hide':
         {
-          //TODO
-          //insert code to hide card here
+          hide();
         }
         break;
       default:

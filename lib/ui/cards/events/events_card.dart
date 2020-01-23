@@ -1,4 +1,5 @@
 import 'package:campus_mobile_experimental/core/data_providers/events_data_provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
 import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/core/models/events_model.dart';
@@ -28,7 +29,8 @@ class EventsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return CardContainer(
       /// TODO: need to hook up hidden to state using provider
-      hidden: false,
+      active: Provider.of<UserDataProvider>(context).cardStates['events'],
+      hide: () => Provider.of<UserDataProvider>(context).toggleCard('events'),
       reload: () =>
           Provider.of<EventsDataProvider>(context, listen: false).fetchEvents(),
       isLoading: Provider.of<EventsDataProvider>(context).isLoading,
