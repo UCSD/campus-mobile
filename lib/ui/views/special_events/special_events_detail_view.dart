@@ -11,16 +11,6 @@ class SpecialEventsViewModel extends StatefulWidget {
   _SpecialEventsViewModelState createState() => _SpecialEventsViewModelState();
 }
 
-// Variables map to pass data between filter page and this page
-class FilterArguments {
-  Map<int, bool> selected;
-  List<String> filters;
-  String title;
-  Map<String, String> labelThemes;
-
-  FilterArguments(this.selected, this.filters, this.title, this.labelThemes);
-}
-
 class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
   String currentDateSelection = "2018-09-22";
   var appBarTitleText = new Text("LOADING");
@@ -83,8 +73,6 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
   Widget filterButtonDisabled() {
     return Container(child: Opacity(opacity: 0.0, child: Text("Filter")));
   }
-
-  _selectFilter() {}
 
   Widget buildEventsCard(SpecialEventsModel data) {
     appBarTitleText = new Text(data.name);

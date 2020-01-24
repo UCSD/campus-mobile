@@ -70,7 +70,7 @@ class SpecialEventsDataProvider extends ChangeNotifier {
 
   void removeFilter(String filter) {
     _filters[filter] = false;
-    notifyListeners();
+    notifyListeners();//re-renders UI
   }
 
   ///SIMPLE GETTERS
