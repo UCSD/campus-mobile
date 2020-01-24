@@ -17,6 +17,26 @@ class UserDataProvider extends ChangeNotifier {
     ///in most classes the model data can remain null
     _authenticationModel = AuthenticationModel.fromJson({});
     _userProfileModel = UserProfileModel.fromJson({});
+    _cardStates = {
+      'dining': true,
+      'links': true,
+      'availability': true,
+      'parking': true,
+      'weather': true,
+      'events': true,
+      'special_events': true,
+      'news': true
+    };
+    _cardOrder = [
+      'special_events',
+      'weather',
+      'availability',
+      'parking',
+      'dining',
+      'news',
+      'events',
+      'links'
+    ];
   }
 
   ///STATES
@@ -31,9 +51,9 @@ class UserDataProvider extends ChangeNotifier {
   ///SERVICES
   AuthenticationService _authenticationService;
   UserProfileService _userProfileService;
+  Map<String, bool> _cardStates;
 
-  ///TODO: move remote config file
-  final String _endpoint = 'https://api-qa.ucsd.edu:8243/mp-registration/1.0.0';
+  List<String> _cardOrder;
 
   ///authenticate a user given an email and password
   ///upon logging in we should make sure that users upload the correct
@@ -59,6 +79,16 @@ class UserDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void toggleCard(String card) {
+    _cardStates[card] = !_cardStates[card];
+    notifyListeners();
+  }
+
+  void reorderCards(List<String> order) {
+    _cardOrder = order;
+    notifyListeners();
+  }
+
   void logout() async {
     _error = null;
     _isLoading = true;
@@ -75,7 +105,6 @@ class UserDataProvider extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     if (_authenticationModel.isLoggedIn(_authenticationService.lastUpdated)) {
-      ///TODO:
       /// we fetch the user data now
       final Map<String, String> headers = {
         'Authorization': 'Bearer ' + _authenticationModel.accessToken
@@ -123,4 +152,6 @@ class UserDataProvider extends ChangeNotifier {
   bool get isLoggedIn => _authenticationModel.isLoggedIn(_lastUpdated);
   bool get isLoading => _isLoading;
   DateTime get lastUpdated => _lastUpdated;
+  Map<String, bool> get cardStates => _cardStates;
+  List<String> get cardOrder => _cardOrder;
 }

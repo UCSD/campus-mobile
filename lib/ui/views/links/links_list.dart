@@ -1,18 +1,20 @@
 import 'package:campus_mobile_experimental/core/models/links_model.dart';
-import 'package:campus_mobile_experimental/ui/widgets/container_view.dart';
+import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:provider/provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/links_data_provider.dart';
 
 class LinksList extends StatelessWidget {
-  const LinksList({Key key, @required this.data, this.listSize})
-      : super(key: key);
-
-  final List<LinksModel> data;
+  const LinksList({Key key, this.listSize}) : super(key: key);
   final int listSize;
 
   @override
   Widget build(BuildContext context) {
-    return buildLinksList(data, context);
+    return Provider.of<LinksDataProvider>(context).isLoading
+        ? Center(child: CircularProgressIndicator())
+        : buildLinksList(
+            Provider.of<LinksDataProvider>(context).linksModels, context);
   }
 
   Widget buildLinksList(

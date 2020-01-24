@@ -1,12 +1,12 @@
 import 'package:campus_mobile_experimental/core/models/parking_model.dart';
 import 'package:campus_mobile_experimental/core/services/networking.dart';
 
-class DiningService {
-  DiningService() {
+class ParkingService {
+  ParkingService() {
     fetchParkingLotData();
   }
   bool _isLoading = false;
-  List<DiningModel> _data;
+  List<ParkingModel> _data;
   DateTime _lastUpdated;
   String _error;
   final NetworkHelper _networkHelper = NetworkHelper();
@@ -35,7 +35,7 @@ class DiningService {
     }
   }
 
-  List<DiningModel> get data => _data;
+  List<ParkingModel> get data => _data;
   bool get isLoading => _isLoading;
   String get error => _error;
   DateTime get lastUpdated => _lastUpdated;

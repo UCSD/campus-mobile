@@ -1,7 +1,7 @@
-import 'package:campus_mobile_experimental/ui/router.dart';
+import 'package:campus_mobile_experimental/core/navigation/router.dart';
 import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
-import 'package:campus_mobile_experimental/core/viewmodels/bottom_navigation_bar_model.dart';
-import 'package:campus_mobile_experimental/provider_setup.dart';
+import 'package:campus_mobile_experimental/core/navigation/bottom_tab_bar/bottom_navigation_bar_model.dart';
+import 'package:campus_mobile_experimental/core/data_providers/provider_setup.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

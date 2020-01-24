@@ -1,26 +1,20 @@
 import 'package:campus_mobile_experimental/core/models/dining_model.dart'
     as prefix0;
 import 'package:flutter/material.dart';
-import 'package:campus_mobile_experimental/ui/widgets/container_view.dart';
-import 'package:campus_mobile_experimental/ui/widgets/image_loader.dart';
+import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
+import 'package:campus_mobile_experimental/ui/reusable_widgets/image_loader.dart';
 import 'package:campus_mobile_experimental/ui/views/dining/dining_menu_list.dart';
 
 class DiningDetailView extends StatelessWidget {
   const DiningDetailView({Key key, @required this.data}) : super(key: key);
-  final Future<prefix0.DiningModel> data;
+  final prefix0.DiningModel data;
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<prefix0.DiningModel>(
-        future: data,
-        builder: (context, snapshot) {
-          return ContainerView(
-            child: snapshot.hasData
-                ? ListView(
-                    children: buildDetailView(context, snapshot.data),
-                  )
-                : CircularProgressIndicator(),
-          );
-        });
+    return ContainerView(
+      child: ListView(
+        children: buildDetailView(context, data),
+      ),
+    );
   }
 
   List<Widget> buildDetailView(
@@ -50,7 +44,6 @@ class DiningDetailView extends StatelessWidget {
   }
 
   Widget buildHours(BuildContext context, prefix0.DiningModel model) {
-    print(model.toJson());
     Widget monday = Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -177,28 +170,29 @@ class DiningDetailView extends StatelessWidget {
 
   Widget buildPictures(prefix0.DiningModel model) {
     List<ImageLoader> images = List<ImageLoader>();
-    if (model.images != null) {
+    if (model.images != null && model.images.length > 0) {
       for (prefix0.Image item in model.images) {
         images.add(ImageLoader(
           url: item.small,
         ));
       }
-    }
-    return Center(
-      child: Container(
-        height: 100,
-        child: ListView.separated(
-          itemCount: images.length,
-          itemBuilder: (BuildContext context, int index) {
-            return images[index];
-          },
-          separatorBuilder: (BuildContext context, int index) {
-            return Container(width: 10);
-          },
-          scrollDirection: Axis.horizontal,
+      return Center(
+        child: Container(
+          height: 100,
+          child: ListView.separated(
+            itemCount: images.length,
+            itemBuilder: (BuildContext context, int index) {
+              return images[index];
+            },
+            separatorBuilder: (BuildContext context, int index) {
+              return Container(width: 10);
+            },
+            scrollDirection: Axis.horizontal,
+          ),
         ),
-      ),
-    );
+      );
+    }
+    return Container(height: 10);
   }
 
   Widget buildGreenDot() {

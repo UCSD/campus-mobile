@@ -1,6 +1,7 @@
 import 'package:campus_mobile_experimental/core/data_providers/dining_data_proivder.dart';
+import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/dining_model.dart';
-import 'package:campus_mobile_experimental/ui/widgets/cards/card_container.dart';
+import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
 import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:provider/provider.dart';
@@ -10,26 +11,23 @@ class DiningCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
-      hidden: false,
-      reload: () => Provider.of<DiningDataProvider>(context, listen: false),
-      isLoading:
-          Provider.of<DiningDataProvider>(context, listen: true).isLoading,
+      active: Provider.of<UserDataProvider>(context).cardStates['dining'],
+      hide: () => Provider.of<UserDataProvider>(context).toggleCard('dining'),
+      reload: () => Provider.of<DiningDataProvider>(context, listen: false)
+          .fetchDiningLocations(),
+      isLoading: Provider.of<DiningDataProvider>(context).isLoading,
       title: buildTitle("Dining"),
-      errorText: Provider.of<DiningDataProvider>(context, listen: true).error,
-      child: buildDiningCard(
-          Provider.of<DiningDataProvider>(context, listen: true).diningModels),
+      errorText: Provider.of<DiningDataProvider>(context).error,
+      child: () => buildDiningCard(
+          Provider.of<DiningDataProvider>(context).diningModels),
       actionButtons: buildActionButtons(context),
     );
   }
 
   Widget buildDiningCard(List<DiningModel> data) {
-    if (data.length > 0) {
-      return DiningList(
-        listSize: 3,
-      );
-    } else {
-      return Container();
-    }
+    return DiningList(
+      listSize: 3,
+    );
   }
 
   Widget buildTitle(String title) {

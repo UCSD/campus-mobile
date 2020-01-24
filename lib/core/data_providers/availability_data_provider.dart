@@ -106,9 +106,7 @@ class AvailabilityDataProvider extends ChangeNotifier {
   String get error => _error;
   DateTime get lastUpdated => _lastUpdated;
 
-  ///RETURNS A List<ParkingModels> IN THE CORRECT ORDER
   List<AvailabilityModel> get availabilityModels {
-    ///check if we have an offline _parkingModel
     if (_availabilityModels != null) {
       ///check if we have an offline _userProfileModel
       if (_userDataProvider.userProfileModel != null) {

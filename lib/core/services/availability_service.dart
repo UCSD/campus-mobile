@@ -3,10 +3,8 @@ import 'package:campus_mobile_experimental/core/services/networking.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
-class AvailabilityService extends ChangeNotifier {
-  AvailabilityService() {
-    fetchData();
-  }
+class AvailabilityService {
+  AvailabilityService() {}
   bool _isLoading = false;
   DateTime _lastUpdated;
   String _error;
@@ -28,7 +26,6 @@ class AvailabilityService extends ChangeNotifier {
   Future<bool> fetchData() async {
     _error = null;
     _isLoading = true;
-    notifyListeners();
     try {
       /// fetch data
       String _response =

@@ -37,6 +37,7 @@ class DiningDataProvider extends ChangeNotifier {
     } else {
       _error = _diningService.error;
     }
+    _isLoading = false;
     notifyListeners();
   }
 
@@ -88,7 +89,6 @@ class DiningDataProvider extends ChangeNotifier {
                   model.coordinates.lat, model.coordinates.lon) *
               0.00062137;
           model.distance = distance;
-          print(distance);
         }
       }
     }
@@ -113,9 +113,15 @@ class DiningDataProvider extends ChangeNotifier {
   String get error => _error;
   DateTime get lastUpdated => _lastUpdated;
 
+  /// Returns menu data for given id
+  /// Fetches menu if not already downloaded
   DiningMenuItemsModel getMenuData(String id) {
-    if (_diningMenuItemModels != null && _diningMenuItemModels[id] != null) {
-      return _diningMenuItemModels[id];
+    if (id != null) {
+      if (_diningMenuItemModels[id] != null) {
+        return _diningMenuItemModels[id];
+      } else {
+        fetchDiningMenu(id);
+      }
     }
     return DiningMenuItemsModel();
   }

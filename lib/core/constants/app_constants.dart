@@ -4,6 +4,8 @@ class RoutePaths {
   static const String Map = 'map';
   static const String Notifications = 'notifications';
   static const String Profile = 'profile';
+  static const String CardsView = 'profile/cards_view';
+
   static const String NewsViewAll = 'news/newslist';
   static const String BaseLineView = 'baseline/baselineview';
   static const String EventsViewAll = 'events/eventslist';
@@ -21,4 +23,5 @@ class RoutePaths {
       'special_events/special_events_detail_view';
   static const String SpecialEventsFilterView =
       'special_events/special_events_filter_view';
+
 }
