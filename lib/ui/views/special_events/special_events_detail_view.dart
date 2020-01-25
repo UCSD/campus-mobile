@@ -87,9 +87,7 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
           ? (filtersApplied() ? addFiltersWidget() : Container())
           : Container(),
       SizedBox(
-        height: filtersApplied()
-            ? 475
-            : 500,
+        height: filtersApplied() ? 475 : 500,
         child: ListView.builder(
             itemCount: uids.length,
             itemBuilder: (BuildContext ctxt, int index) =>
@@ -167,10 +165,8 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
         return itemsForDate; // No filters applied
     } else {
       List<String> myItemsForDate = new List<String>();
-      //myEventList  = Provider.of<SpecialEventsDataProvider>(context).myEventsList;
-      print(Provider.of<SpecialEventsDataProvider>(context).myEventsList.isEmpty);
       itemsForDate.forEach((f) => {
-            if (myEventList[f]==true) {myItemsForDate.add(f)}
+            if (myEventList[f] == true) {myItemsForDate.add(f)}
           });
       return myItemsForDate;
     }
@@ -214,6 +210,9 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
       title: titleWidget(event),
       subtitle: buildSubtitle(event),
       trailing: buildTrailing(event),
+      onTap: () {
+        Navigator.pushNamed(context, RoutePaths.SpecialEventsInfoView);
+      },
     );
   }
 

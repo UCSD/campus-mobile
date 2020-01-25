@@ -23,5 +23,6 @@ class RoutePaths {
       'special_events/special_events_detail_view';
   static const String SpecialEventsFilterView =
       'special_events/special_events_filter_view';
-
+  static const String SpecialEventsInfoView =
+      'special_events/special_events_info_view';
 }
