@@ -16,7 +16,6 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
   var appBarTitleText = new Text("LOADING");
   bool isFull = true; // Toggle true for full schedule / false for my Schedule
 
-  //This will need to be stored in state so that its not reset everytime!
   Map<String, bool> myEventList;
 
   @override
@@ -90,7 +89,7 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
       SizedBox(
         height: filtersApplied()
             ? 475
-            : 500, //TODO probably a better way to do this ...
+            : 500,
         child: ListView.builder(
             itemCount: uids.length,
             itemBuilder: (BuildContext ctxt, int index) =>
@@ -168,8 +167,10 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
         return itemsForDate; // No filters applied
     } else {
       List<String> myItemsForDate = new List<String>();
+      //myEventList  = Provider.of<SpecialEventsDataProvider>(context).myEventsList;
+      print(Provider.of<SpecialEventsDataProvider>(context).myEventsList.isEmpty);
       itemsForDate.forEach((f) => {
-            if (myEventList[f]) {myItemsForDate.add(f)}
+            if (myEventList[f]==true) {myItemsForDate.add(f)}
           });
       return myItemsForDate;
     }
@@ -215,12 +216,6 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
       trailing: buildTrailing(event),
     );
   }
-
-  // Container(
-  //             width: 1,
-  //             height: 50,
-  //             color: Colors.grey,
-  //           ), TODO Add line ?
 
   Widget timeWidget(Schedule event) {
     var dateTime = new DateTime.fromMillisecondsSinceEpoch(event.startTime);
