@@ -21,18 +21,19 @@ class MessagesDataProvider extends ChangeNotifier {
   /// MODELS
   /// TODO: add models that will be needed in this data provider
   List<Message> _messages;
-  List<Message> _privateMessages;
+  //List<Message> _privateMessages;
   UserDataProvider _userDataProvider;
 
-  ///
   /// DATA PROVIDERS
   /// TODO: add data providers that will be needed if this is a dependent data provider
   /// create setters for each of these providers
 
   /// SERVICES
   /// TODO: split fetchMessages() into fetchPrivateMessages() and fetchPublicMessages()
+  /// if functionality is split in the API
   MessageService _messageService;
 
+  //Fetch messages
   void fetchMessages() async {
     _isLoading = true;
     _error = null;
@@ -55,7 +56,10 @@ class MessagesDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-
+  //TODO: Need to fix ordering of messages, dependent on API feedback
+  List<Message>makeOrderedMessagesList(List<String>topics){
+    return List<Message>();
+  }
 
   ///This setter is only used in provider to supply and updated UserDataProvider object
   set userDataProvider(UserDataProvider value) {
@@ -73,10 +77,10 @@ class MessagesDataProvider extends ChangeNotifier {
       if (_userDataProvider.userProfileModel != null) {
         //Return private and public messages in chronological order here
         //Make new method for makeOrderedList
-        return makeOrderedList(
-            _userDataProvider.userProfileModel.selectedOccuspaceLocations);
+        return makeOrderedMessagesList(
+            _userDataProvider.userProfileModel.subscribedTopics);
       }
-      return messages;
+      return _messages;
     }
     return List<Message>();
   }
