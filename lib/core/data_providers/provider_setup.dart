@@ -13,28 +13,29 @@ import 'package:campus_mobile_experimental/core/services/bottom_navigation_bar_s
 import 'package:campus_mobile_experimental/core/models/coordinates_model.dart';
 import 'package:campus_mobile_experimental/core/navigation/top_navigation_bar/app_bar.dart';
 import 'package:provider/provider.dart';
+import 'package:provider/single_child_widget.dart';
 
-List<SingleChildCloneableWidget> providers = [
+List<SingleChildWidget> providers = [
   ...independentServices,
   ...dependentServices,
   ...uiConsumableProviders,
 ];
-List<SingleChildCloneableWidget> independentServices = [
+List<SingleChildWidget> independentServices = [
   ChangeNotifierProvider<BottomNavigationBarProvider>(
-    builder: (_) => BottomNavigationBarProvider(),
+    create: (_) => BottomNavigationBarProvider(),
   ),
   ChangeNotifierProvider<UserDataProvider>(
-    builder: (_) => UserDataProvider(),
+    create: (_) => UserDataProvider(),
   ),
   ChangeNotifierProvider<SurfDataProvider>(
-    builder: (_) {
+    create: (_) {
       SurfDataProvider _surfDataProvider = SurfDataProvider();
       _surfDataProvider.fetchSurfData();
       return _surfDataProvider;
     },
   ),
   ChangeNotifierProvider<SpecialEventsDataProvider>(
-    builder: (_) {
+    create: (_) {
       SpecialEventsDataProvider _specialEventsDataProvider =
           SpecialEventsDataProvider();
       _specialEventsDataProvider.fetchData();
@@ -42,68 +43,67 @@ List<SingleChildCloneableWidget> independentServices = [
     },
   ),
   ChangeNotifierProvider<EventsDataProvider>(
-    builder: (_) {
+    create: (_) {
       EventsDataProvider _eventsDataProvider = EventsDataProvider();
       _eventsDataProvider.fetchEvents();
       return _eventsDataProvider;
     },
   ),
   ChangeNotifierProvider<WeatherDataProvider>(
-    builder: (_) {
+    create: (_) {
       WeatherDataProvider _weatherDataProvider = WeatherDataProvider();
       _weatherDataProvider.fetchWeather();
       return _weatherDataProvider;
     },
   ),
   ChangeNotifierProvider<NewsDataProvider>(
-    builder: (_) {
+    create: (_) {
       NewsDataProvider _newsDataProvider = NewsDataProvider();
       _newsDataProvider.fetchNews();
       return _newsDataProvider;
     },
   ),
   ChangeNotifierProvider<LinksDataProvider>(
-    builder: (_) {
+    create: (_) {
       LinksDataProvider _linksDataProvider = LinksDataProvider();
       _linksDataProvider.fetchLinks();
       return _linksDataProvider;
     },
   ),
   StreamProvider<Coordinates>(
-    builder: (_) => LocationDataProvider().locationStream,
+    create: (_) => LocationDataProvider().locationStream,
   ),
   ChangeNotifierProvider<CustomAppBar>(
-    builder: (_) => CustomAppBar(),
+    create: (_) => CustomAppBar(),
   ),
 ];
-List<SingleChildCloneableWidget> dependentServices = [
-  ChangeNotifierProxyProvider<Coordinates, DiningDataProvider>(
-      initialBuilder: (_) {
+List<SingleChildWidget> dependentServices = [
+  ChangeNotifierProxyProvider<Coordinates, DiningDataProvider>(create: (_) {
     var diningDataProvider = DiningDataProvider();
     diningDataProvider.fetchDiningLocations();
     return diningDataProvider;
-  }, builder: (_, coordinates, diningDataProvider) {
+  }, update: (_, coordinates, diningDataProvider) {
     diningDataProvider..coordinates = coordinates;
     diningDataProvider.populateDistances();
     return diningDataProvider;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, ParkingDataProvider>(
-    initialBuilder: (_) {
+    create: (_) {
       var parkingDataProvider = ParkingDataProvider();
       parkingDataProvider.fetchParkingLots();
       return parkingDataProvider;
     },
-    builder: (_, userDataProvider, parkingDataProvider) =>
+    update: (_, userDataProvider, parkingDataProvider) =>
         parkingDataProvider..userDataProvider = userDataProvider,
   ),
   ChangeNotifierProxyProvider<UserDataProvider, AvailabilityDataProvider>(
-    initialBuilder: (_) {
+    create: (_) {
       var availabilityDataProvider = AvailabilityDataProvider();
       availabilityDataProvider.fetchAvailability();
       return availabilityDataProvider;
     },
-    builder: (_, userDataProvider, availabilityDataProvider) =>
+    update: (_, userDataProvider, availabilityDataProvider) =>
         availabilityDataProvider..userDataProvider = userDataProvider,
   ),
 ];
-List<SingleChildCloneableWidget> uiConsumableProviders = [];
+List<SingleChildWidget> uiConsumableProviders = [];

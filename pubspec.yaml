@@ -27,7 +27,7 @@ dependencies:
   http: 0.12.0+2
   path_provider: 1.1.2
   pointycastle: 1.0.1
-  provider: 3.1.0
+  provider: 4.0.2
   xml: 3.5.0
   cached_network_image: 1.1.2+1
   dots_indicator: 1.0.0

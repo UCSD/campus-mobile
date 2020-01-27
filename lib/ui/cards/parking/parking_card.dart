@@ -28,20 +28,14 @@ class _ParkingCardState extends State<ParkingCard> {
     return CardContainer(
       title: Text("Parking"),
       isLoading: _parkingDataProvider.isLoading,
-      reload: () => _updateData(),
+      reload: () => _parkingDataProvider.fetchParkingLots(),
       errorText: _parkingDataProvider.error,
       child: () => buildParkingCard(_parkingDataProvider.parkingModels),
       active: Provider.of<UserDataProvider>(context).cardStates['parking'],
-      hide: () => Provider.of<UserDataProvider>(context).toggleCard('parking'),
-      overFlowMenu: {'print hi': () => print('hi')},
+      hide: () => Provider.of<UserDataProvider>(context, listen: false)
+          .toggleCard('parking'),
       actionButtons: buildActionButtons(),
     );
-  }
-
-  void _updateData() {
-    if (!_parkingDataProvider.isLoading) {
-      _parkingDataProvider.fetchParkingLots();
-    }
   }
 
   Widget buildParkingCard(List<ParkingModel> data) {
