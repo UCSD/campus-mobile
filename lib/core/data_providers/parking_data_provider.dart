@@ -29,6 +29,7 @@ class ParkingDataProvider extends ChangeNotifier {
   void fetchParkingLots() async {
     _isLoading = true;
     _error = null;
+    notifyListeners();
 
     /// creating  new map ensures we remove all unsupported lots
     Map<String, ParkingModel> newMapOfLots = Map<String, ParkingModel>();

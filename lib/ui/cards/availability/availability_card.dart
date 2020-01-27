@@ -17,12 +17,6 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
   final _controller = PageController();
   AvailabilityDataProvider _availabilityDataProvider;
 
-  void _updateData() {
-    if (!_availabilityDataProvider.isLoading) {
-      _availabilityDataProvider.fetchAvailability();
-    }
-  }
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -32,11 +26,10 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
-      /// TODO: need to hook up hidden to state using provider
       active: Provider.of<UserDataProvider>(context).cardStates['availability'],
-      hide: () =>
-          Provider.of<UserDataProvider>(context).toggleCard('availability'),
-      reload: () => _updateData(),
+      hide: () => Provider.of<UserDataProvider>(context, listen: false)
+          .toggleCard('availability'),
+      reload: () => _availabilityDataProvider.fetchAvailability(),
       isLoading: _availabilityDataProvider.isLoading,
       title: Text('Availability'),
       errorText: _availabilityDataProvider.error,
