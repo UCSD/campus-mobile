@@ -13,7 +13,8 @@ class LastUpdatedWidget extends StatelessWidget {
     return Container(
       child: Text(
         'Last updated: ' + determineText(time),
-        style: TextStyle(color: Colors.grey),
+        style: TextStyle(
+            color: Colors.grey, fontStyle: FontStyle.italic, fontSize: 16),
       ),
     );
   }

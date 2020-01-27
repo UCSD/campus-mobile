@@ -12,7 +12,7 @@ String classScheduleModelToJson(ClassScheduleModel data) =>
 
 class ClassScheduleModel {
   Metadata metadata;
-  List<Data> data;
+  List<ClassData> data;
 
   ClassScheduleModel({
     this.metadata,
@@ -22,7 +22,8 @@ class ClassScheduleModel {
   factory ClassScheduleModel.fromJson(Map<String, dynamic> json) =>
       ClassScheduleModel(
         metadata: Metadata.fromJson(json["metadata"]),
-        data: List<Data>.from(json["data"].map((x) => Data.fromJson(x))),
+        data: List<ClassData>.from(
+            json["data"].map((x) => ClassData.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -31,7 +32,7 @@ class ClassScheduleModel {
       };
 }
 
-class Data {
+class ClassData {
   String termCode;
   String subjectCode;
   String courseCode;
@@ -44,7 +45,7 @@ class Data {
   String repeatCode;
   List<SectionData> sectionData;
 
-  Data({
+  ClassData({
     this.termCode,
     this.subjectCode,
     this.courseCode,
@@ -58,7 +59,7 @@ class Data {
     this.sectionData,
   });
 
-  factory Data.fromJson(Map<String, dynamic> json) => Data(
+  factory ClassData.fromJson(Map<String, dynamic> json) => ClassData(
         termCode: json["term_code"],
         subjectCode: json["subject_code"],
         courseCode: json["course_code"],

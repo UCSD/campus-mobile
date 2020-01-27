@@ -84,12 +84,12 @@ class DiningList extends StatelessWidget {
         break;
       case 6:
         {
-          return Text(hours.sat);
+          return Text(hours.sat != null ? hours.sat : 'closed');
         }
         break;
       case 7:
         {
-          return Text(hours.sun);
+          return Text(hours.sun != null ? hours.sun : 'closed');
         }
         break;
 

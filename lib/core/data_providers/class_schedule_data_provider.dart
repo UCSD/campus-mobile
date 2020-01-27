@@ -38,6 +38,23 @@ class ClassScheduleDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  List<SectionData> createListOFSectionData(ClassScheduleModel model) {
+    List<SectionData> sectionDataList = List<SectionData>();
+    for (ClassData classData in model.data) {
+      for (SectionData sectionData in classData.sectionData) {
+        sectionDataList.add(sectionData);
+
+        ///TODO only add non final sections
+        ///sort in chronological order
+      }
+    }
+  }
+
+  /// get the next class that the student has coming up
+  ClassData getNextClass() {
+    return ClassData();
+  }
+
   ///SIMPLE GETTERS
   bool get isLoading => _isLoading;
   String get error => _error;
