@@ -1,7 +1,9 @@
 class RoutePaths {
   static const String Home = '/';
   static const String Onboarding = 'onboarding';
-  static const String Map = 'map';
+  static const String Map = 'map/map';
+  static const String MapSearch = 'map/map_search';
+  static const String MapLocationList = 'map/map_location_list';
   static const String Notifications = 'notifications';
   static const String Profile = 'profile';
   static const String CardsView = 'profile/cards_view';
