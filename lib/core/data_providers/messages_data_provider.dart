@@ -40,10 +40,8 @@ class MessagesDataProvider extends ChangeNotifier {
 
     notifyListeners();
     if (await _messageService.fetchData()) {
-      for (MessageElement message in _messageService.messagingModels.messages) {
-        _messages.add(message);
-      }
-
+      print(_messageService.messagingModels.toJson());
+      _messages = _messageService.messagingModels.messages;
       _lastUpdated = DateTime.now();
     } else {
       ///TODO: determine what error to show to the user

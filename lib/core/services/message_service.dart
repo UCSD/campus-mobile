@@ -7,11 +7,13 @@ import 'package:campus_mobile_experimental/core/services/networking.dart';
 class MessageService {
   Map<String, String> headers = {
     "accept": "application/json",
-    "Authorization": "Bearer " + "605e5b2a-5e62-38c6-8f4e-fdecec507e5f",
+    "Authorization": "Bearer " + "51686170-aeaa-3537-99b3-56128633b4bd",
   };
 
-  final String endpoint =
-      'https://api-qa.ucsd.edu:8243/mp-mymessages/1.0.0';
+  final String mymessages_endpoint =
+      'https://api-qa.ucsd.edu:8243/mp-mymessages/1.0.0/messages?start=0';
+  final String topics_endpoint = 
+      'https://bvgjvzaakl.execute-api.us-west-2.amazonaws.com/dev/topics?topics=all,freefood&start=0';
   bool _isLoading = false;
   DateTime _lastUpdated;
   String _error;
@@ -25,12 +27,13 @@ class MessageService {
 
     try {
       /// fetch data
-      String _response = await _networkHelper.authorizedFetch(endpoint, headers);
+      String _response = await _networkHelper.authorizedFetch(mymessages_endpoint, headers);
 
       /// parse data
       final data = messagesFromJson(_response);
       _isLoading = false;
       _data = data;
+    
       return true;
     } catch (e) {
       /// if the authorized fetch failed we know we have to refresh the
