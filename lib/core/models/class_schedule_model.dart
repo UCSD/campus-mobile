@@ -98,6 +98,10 @@ class SectionData {
   String room;
   String instructorName;
   String specialMtgCode;
+  String subjectCode;
+  String courseCode;
+  String courseTitle;
+  String gradeOption;
 
   SectionData({
     this.section,
