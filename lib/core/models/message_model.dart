@@ -1,30 +1,54 @@
 // To parse this JSON data, do
 //
-//     final messagingModel = messagingModelFromJson(jsonString);
+//     final messages = messagesFromJson(jsonString);
 
 import 'dart:convert';
 
-MessagingModel messagingModelFromJson(String str) => MessagingModel.fromJson(json.decode(str));
+Messages messagesFromJson(String str) => Messages.fromJson(json.decode(str));
 
-String messagingModelToJson(MessagingModel data) => json.encode(data.toJson());
+String messagesToJson(Messages data) => json.encode(data.toJson());
 
-class MessagingModel {
-    List<Message> messages;
-    int next;
+class Messages {
+    List<MessageElement> messages;
 
-    MessagingModel({
+    Messages({
         this.messages,
-        this.next,
     });
 
-    factory MessagingModel.fromJson(Map<String, dynamic> json) => MessagingModel(
-        messages: List<Message>.from(json["messages"].map((x) => Message.fromJson(x))),
-        next: json["next"],
+    factory Messages.fromJson(Map<String, dynamic> json) => Messages(
+        messages: List<MessageElement>.from(json["messages"].map((x) => MessageElement.fromJson(x))),
     );
 
     Map<String, dynamic> toJson() => {
         "messages": List<dynamic>.from(messages.map((x) => x.toJson())),
-        "next": next,
+    };
+}
+
+class MessageElement {
+    String sender;
+    Message message;
+    String messageId;
+    int timestamp;
+
+    MessageElement({
+        this.sender,
+        this.message,
+        this.messageId,
+        this.timestamp,
+    });
+
+    factory MessageElement.fromJson(Map<String, dynamic> json) => MessageElement(
+        sender: json["sender"],
+        message: Message.fromJson(json["message"]),
+        messageId: json["messageId"],
+        timestamp: json["timestamp"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "sender": sender,
+        "message": message.toJson(),
+        "messageId": messageId,
+        "timestamp": timestamp,
     };
 }
 
@@ -42,13 +66,13 @@ class Message {
     factory Message.fromJson(Map<String, dynamic> json) => Message(
         message: json["message"],
         title: json["title"],
-        data: Data.fromJson(json["data"]),
+        data: json["data"] == null ? null : Data.fromJson(json["data"]),
     );
 
     Map<String, dynamic> toJson() => {
         "message": message,
         "title": title,
-        "data": data.toJson(),
+        "data": data == null ? null : data.toJson(),
     };
 }
 

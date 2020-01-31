@@ -20,7 +20,7 @@ class MessagesDataProvider extends ChangeNotifier {
 
   /// MODELS
   /// TODO: add models that will be needed in this data provider
-  List<Message> _messages;
+  List<MessageElement> _messages;
   //List<Message> _privateMessages;
   UserDataProvider _userDataProvider;
 
@@ -39,11 +39,8 @@ class MessagesDataProvider extends ChangeNotifier {
     _error = null;
 
     notifyListeners();
-    /// creating  new map ensures we remove all unsupported lots
-    //Map<String, MessagingModel> newMapOfLots =
-        //Map<String, MessagingModel>();
     if (await _messageService.fetchData()) {
-      for (Message message in _messageService.messagingModels.messages) {
+      for (MessageElement message in _messageService.messagingModels.messages) {
         _messages.add(message);
       }
 
@@ -57,8 +54,8 @@ class MessagesDataProvider extends ChangeNotifier {
   }
 
   //TODO: Need to fix ordering of messages, dependent on API feedback
-  List<Message>makeOrderedMessagesList(List<String>topics){
-    return List<Message>();
+  List<MessageElement>makeOrderedMessagesList(){
+    return List<MessageElement>();
   }
 
   ///This setter is only used in provider to supply and updated UserDataProvider object
@@ -71,17 +68,17 @@ class MessagesDataProvider extends ChangeNotifier {
   String get error => _error;
   DateTime get lastUpdated => _lastUpdated;
 
-  List<Message> get messages {
+  List<MessageElement> get messages {
     if (_messages != null) {
       ///check if we have an offline _userProfileModel
-      if (_userDataProvider.userProfileModel != null) {
+      /*if (_userDataProvider.userProfileModel != null) {
         //Return private and public messages in chronological order here
         //Make new method for makeOrderedList
-        return makeOrderedMessagesList(
-            _userDataProvider.userProfileModel.subscribedTopics);
-      }
+        return makeOrderedMessagesList();
+      }*/
       return _messages;
     }
-    return List<Message>();
+    return List<MessageElement>();
   }
+  
 }

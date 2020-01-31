@@ -7,7 +7,7 @@ import 'package:campus_mobile_experimental/core/services/networking.dart';
 class MessageService {
   Map<String, String> headers = {
     "accept": "application/json",
-    "Authorization": "Bearer " + "\\REPLACE AUTH",
+    "Authorization": "Bearer " + "605e5b2a-5e62-38c6-8f4e-fdecec507e5f",
   };
 
   final String endpoint =
@@ -15,7 +15,7 @@ class MessageService {
   bool _isLoading = false;
   DateTime _lastUpdated;
   String _error;
-  MessagingModel _data;
+  Messages _data;
 
   final NetworkHelper _networkHelper = NetworkHelper();
 
@@ -28,13 +28,14 @@ class MessageService {
       String _response = await _networkHelper.authorizedFetch(endpoint, headers);
 
       /// parse data
-      final data = messagingModelFromJson(_response);
+      final data = messagesFromJson(_response);
       _isLoading = false;
       _data = data;
       return true;
     } catch (e) {
       /// if the authorized fetch failed we know we have to refresh the
       /// token for this service
+      print("error fetching the data");
       if (e.response.statusCode == 401) {
         if (await getNewToken()) {
           return await fetchData();
@@ -51,7 +52,7 @@ class MessageService {
     final Map<String, String> tokenHeaders = {
       "content-type": 'application/x-www-form-urlencoded',
       "Authorization":
-          "Basic \\REPLACE AUTH"
+          "Basic //REPLACE HERE"
     };
     try {
       var response = await _networkHelper.authorizedPost(
@@ -65,7 +66,7 @@ class MessageService {
   }
 
   String get error => _error;
-  MessagingModel get messagingModels => _data;
+  Messages get messagingModels => _data;
   bool get isLoading => _isLoading;
   DateTime get lastUpdated => _lastUpdated;
 }
