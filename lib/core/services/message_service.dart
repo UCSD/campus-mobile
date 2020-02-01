@@ -7,11 +7,11 @@ import 'package:campus_mobile_experimental/core/services/networking.dart';
 class MessageService {
   Map<String, String> headers = {
     "accept": "application/json",
-    "Authorization": "Bearer " + "51686170-aeaa-3537-99b3-56128633b4bd",
+    "Authorization": "Bearer " + "fe1456ae-8c1c-31f3-baac-c70cef73c655",
   };
 
   final String mymessages_endpoint =
-      'https://api-qa.ucsd.edu:8243/mp-mymessages/1.0.0/messages?start=0';
+      'https://api-qa.ucsd.edu:8243/mp-mymessages/1.0.0/messages?start=';
   final String topics_endpoint = 
       'https://bvgjvzaakl.execute-api.us-west-2.amazonaws.com/dev/topics?topics=all,freefood&start=0';
   bool _isLoading = false;
@@ -21,19 +21,19 @@ class MessageService {
 
   final NetworkHelper _networkHelper = NetworkHelper();
 
-  Future<bool> fetchData() async {
+  Future<bool> fetchData(timestamp) async {
     _error = null;
     _isLoading = true;
 
     try {
       /// fetch data
-      String _response = await _networkHelper.authorizedFetch(mymessages_endpoint, headers);
+      String _response = await _networkHelper.authorizedFetch(mymessages_endpoint + timestamp.toString(), headers);
 
       /// parse data
       final data = messagesFromJson(_response);
       _isLoading = false;
       _data = data;
-    
+      print(_response);
       return true;
     } catch (e) {
       /// if the authorized fetch failed we know we have to refresh the
@@ -41,7 +41,7 @@ class MessageService {
       print("error fetching the data");
       if (e.response.statusCode == 401) {
         if (await getNewToken()) {
-          return await fetchData();
+          return await fetchData(timestamp);
         }
       }
       _error = e.toString();

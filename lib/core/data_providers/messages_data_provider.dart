@@ -38,14 +38,40 @@ class MessagesDataProvider extends ChangeNotifier {
     _isLoading = true;
     _error = null;
 
+    _messages = List<MessageElement>();
+
+    int timestamp = 0;
+    int returnedTimestamp = 1;
+
     notifyListeners();
-    if (await _messageService.fetchData()) {
+    /*
+    if (await _messageService.fetchData(0)) {
       print(_messageService.messagingModels.toJson());
       _messages = _messageService.messagingModels.messages;
       _lastUpdated = DateTime.now();
     } else {
       ///TODO: determine what error to show to the user
       _error = _messageService.error;
+    }
+    */
+
+    while(true){
+      if(await _messageService.fetchData(timestamp)){
+        returnedTimestamp = _messageService.messagingModels.messages[_messageService.messagingModels.messages.length - 1].timestamp;
+        print(returnedTimestamp);
+        if(timestamp != returnedTimestamp){
+          _messages.addAll(_messageService.messagingModels.messages);
+          _lastUpdated = DateTime.now();
+          timestamp = returnedTimestamp;
+        }
+        else{
+          break;
+        }
+      }
+      else{
+        _error = _messageService.error;
+        break;
+      }
     }
     _isLoading = false;
     notifyListeners();
