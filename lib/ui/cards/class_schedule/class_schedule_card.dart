@@ -155,27 +155,6 @@ class ClassScheduleCard extends StatelessWidget {
   }
 
   Widget buildGradeEvaluationRow(String gradeEvaluation) {
-    switch (gradeEvaluation) {
-      case 'L':
-        {
-          gradeEvaluation = 'Letter Grade';
-          break;
-        }
-      case 'P':
-        {
-          gradeEvaluation = 'Pass/No Pass';
-          break;
-        }
-      case 'S':
-        {
-          gradeEvaluation = 'Sat/Unsat';
-          break;
-        }
-      default:
-        {
-          gradeEvaluation = 'Other';
-        }
-    }
     return Padding(
       padding: const EdgeInsets.only(left: 4.0),
       child: Row(

@@ -85,7 +85,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
         sectionData.subjectCode = classData.subjectCode;
         sectionData.courseCode = classData.courseCode;
         sectionData.courseTitle = classData.courseTitle;
-        sectionData.gradeOption = classData.gradeOption;
+        sectionData.gradeOption = buildGradeEvaluation(classData.gradeOption);
         String day = 'OTHER';
         if (sectionData.days != null) {
           day = sectionData.days;
@@ -112,6 +112,27 @@ class ClassScheduleDataProvider extends ChangeNotifier {
       return -1;
     }
     return 1;
+  }
+
+  buildGradeEvaluation(String gradeEvaluation) {
+    switch (gradeEvaluation) {
+      case 'L':
+        {
+          return 'Letter Grade';
+        }
+      case 'P':
+        {
+          return 'Pass/No Pass';
+        }
+      case 'S':
+        {
+          return 'Sat/Unsat';
+        }
+      default:
+        {
+          return 'Other';
+        }
+    }
   }
 
   DateTime _getStartTime(String time) {
@@ -198,6 +219,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
   }
 
   ///SIMPLE GETTERS
+  Map<String, List<SectionData>> get enrolledClasses => _enrolledClasses;
   bool get isLoading => _isLoading;
   String get error => _error;
   DateTime get lastUpdated => _lastUpdated;
