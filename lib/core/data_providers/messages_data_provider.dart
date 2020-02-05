@@ -7,6 +7,7 @@ class MessagesDataProvider extends ChangeNotifier {
   MessagesDataProvider() {
     /// DEFAULT STATES
     _isLoading = false;
+    _messages = List<MessageElement>();
 
     /// TODO: initialize services here
     _messageService = MessageService();
@@ -38,48 +39,63 @@ class MessagesDataProvider extends ChangeNotifier {
     _isLoading = true;
     _error = null;
 
-    _messages = List<MessageElement>();
-
     int timestamp = 0;
     int returnedTimestamp = 1;
 
     notifyListeners();
-    /*
-    if (await _messageService.fetchData(0)) {
-      print(_messageService.messagingModels.toJson());
-      _messages = _messageService.messagingModels.messages;
-      _lastUpdated = DateTime.now();
-    } else {
-      ///TODO: determine what error to show to the user
-      _error = _messageService.error;
-    }
-    */
 
-    while(true){
-      if(await _messageService.fetchData(timestamp)){
-        returnedTimestamp = _messageService.messagingModels.messages[_messageService.messagingModels.messages.length - 1].timestamp;
-        print(returnedTimestamp);
-        if(timestamp != returnedTimestamp){
-          _messages.addAll(_messageService.messagingModels.messages);
-          _lastUpdated = DateTime.now();
-          timestamp = returnedTimestamp;
+    if(_userDataProvider.isLoggedIn){
+      while(true){
+        if(await _messageService.fetchMyMessagesData(timestamp)){
+          returnedTimestamp = _messageService.messagingModels.messages[_messageService.messagingModels.messages.length - 1].timestamp;
+          print(returnedTimestamp);
+          if(timestamp != returnedTimestamp){
+            _messages.addAll(_messageService.messagingModels.messages);
+            _lastUpdated = DateTime.now();
+            timestamp = returnedTimestamp;
+          }
+          else{
+            break;
+          }
         }
         else{
+          _error = _messageService.error;
           break;
         }
       }
-      else{
-        _error = _messageService.error;
-        break;
+    }
+    else{
+      while(true){
+        if(await _messageService.fetchTopicData(timestamp)){
+          returnedTimestamp = _messageService.messagingModels.messages[_messageService.messagingModels.messages.length - 1].timestamp;
+          print(returnedTimestamp);
+          if(timestamp != returnedTimestamp){
+            _messages.addAll(_messageService.messagingModels.messages);
+            _lastUpdated = DateTime.now();
+            timestamp = returnedTimestamp;
+          }
+          else{
+            break;
+          }
+        }
+        else{
+          _error = _messageService.error;
+          break;
+        }
       }
     }
+
     _isLoading = false;
     notifyListeners();
   }
 
   //TODO: Need to fix ordering of messages, dependent on API feedback
   List<MessageElement>makeOrderedMessagesList(){
-    return List<MessageElement>();
+    List<MessageElement>temp = List<MessageElement>();
+    temp = _messages;
+    temp.sort((a,b) => b.timestamp.compareTo(a.timestamp));
+    _messages = temp;
+    return _messages;
   }
 
   ///This setter is only used in provider to supply and updated UserDataProvider object
@@ -100,7 +116,7 @@ class MessagesDataProvider extends ChangeNotifier {
         //Make new method for makeOrderedList
         return makeOrderedMessagesList();
       }*/
-      return _messages;
+      return makeOrderedMessagesList();
     }
     return List<MessageElement>();
   }

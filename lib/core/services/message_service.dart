@@ -7,13 +7,13 @@ import 'package:campus_mobile_experimental/core/services/networking.dart';
 class MessageService {
   Map<String, String> headers = {
     "accept": "application/json",
-    "Authorization": "Bearer " + "fe1456ae-8c1c-31f3-baac-c70cef73c655",
+    "Authorization": "Bearer " + "86bd2fe8-9d62-3f8d-9133-359395c73b70",
   };
 
   final String mymessages_endpoint =
       'https://api-qa.ucsd.edu:8243/mp-mymessages/1.0.0/messages?start=';
   final String topics_endpoint = 
-      'https://bvgjvzaakl.execute-api.us-west-2.amazonaws.com/dev/topics?topics=all,freefood&start=0';
+      'https://bvgjvzaakl.execute-api.us-west-2.amazonaws.com/dev/topics?topics=all,freefood&start=';
   bool _isLoading = false;
   DateTime _lastUpdated;
   String _error;
@@ -21,7 +21,7 @@ class MessageService {
 
   final NetworkHelper _networkHelper = NetworkHelper();
 
-  Future<bool> fetchData(timestamp) async {
+  Future<bool> fetchMyMessagesData(timestamp) async {
     _error = null;
     _isLoading = true;
 
@@ -41,7 +41,7 @@ class MessageService {
       print("error fetching the data");
       if (e.response.statusCode == 401) {
         if (await getNewToken()) {
-          return await fetchData(timestamp);
+          return await fetchMyMessagesData(timestamp);
         }
       }
       _error = e.toString();
@@ -49,6 +49,37 @@ class MessageService {
       return false;
     }
   }
+
+  Future<bool> fetchTopicData(timestamp) async {
+    _error = null;
+    _isLoading = true;
+
+    try {
+      /// fetch data
+      String _response = await _networkHelper.fetchData(topics_endpoint + timestamp.toString());
+
+      /// parse data
+      final data = messagesFromJson(_response);
+      _isLoading = false;
+      _data = data;
+      print(_response);
+      return true;
+    } catch (e) {
+      /// if the authorized fetch failed we know we have to refresh the
+      /// token for this service
+      print("error fetching the data");
+      if (e.response.statusCode == 401) {
+        if (await getNewToken()) {
+          return await fetchTopicData(timestamp);
+        }
+      }
+      _error = e.toString();
+      _isLoading = false;
+      return false;
+    }
+  }
+
+  
 
   Future<bool> getNewToken() async {
     final String tokenEndpoint = "https://api-qa.ucsd.edu:8243/token";

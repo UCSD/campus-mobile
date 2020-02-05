@@ -2,15 +2,16 @@ import 'package:campus_mobile_experimental/core/models/message_model.dart';
 import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/core/data_providers/messages_data_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:campus_mobile_experimental/core/data_providers/messages_data_provider.dart';
-import 'package:intl/intl.dart';
+import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 
 class NotificationsDetailView extends StatelessWidget{
   MessagesDataProvider _messagesDataProvider;
+  UserDataProvider _userDataProvider;
   
   @override
   Widget build(BuildContext context) {
     _messagesDataProvider = Provider.of<MessagesDataProvider>(context);
+    _userDataProvider = Provider.of<UserDataProvider>(context);
     List<MessageElement> data = _messagesDataProvider.messages;
 
     return RefreshIndicator(
@@ -30,7 +31,7 @@ class NotificationsDetailView extends StatelessWidget{
         leading: FlutterLogo(size: 20),
         title: Column(children: <Widget>[
           Text(
-            readTimestamp(data.timestamp),
+            _readTimestamp(data.timestamp),
             style: TextStyle(
               fontSize: 10,
               color: Colors.grey)
@@ -49,7 +50,7 @@ class NotificationsDetailView extends StatelessWidget{
     ];
   }
 
-  String readTimestamp(int timestamp) {
+  String _readTimestamp(int timestamp) {
     var now = new DateTime.now();
     var date = new DateTime.fromMillisecondsSinceEpoch(timestamp);
     var diff = now.difference(date);
@@ -78,6 +79,8 @@ class NotificationsDetailView extends StatelessWidget{
 
   Future<Null> _handleRefresh() async {
     await Future.delayed(Duration(seconds: 5), () {
+      //if(_userDataProvider.isLoggedIn){}
+      //else{}
       _messagesDataProvider.fetchMessages();
     });
   }
