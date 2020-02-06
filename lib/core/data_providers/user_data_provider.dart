@@ -147,7 +147,7 @@ class UserDataProvider extends ChangeNotifier {
 
   ///GETTERS FOR MODELS
   UserProfileModel get userProfileModel => _userProfileModel;
-  AuthenticationModel get data => _authenticationModel;
+  AuthenticationModel get authenticationModel => _authenticationModel;
 
   ///GETTERS FOR STATES
   String get error => _error;

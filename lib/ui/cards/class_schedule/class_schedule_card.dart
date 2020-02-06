@@ -29,7 +29,8 @@ class ClassScheduleCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
-      active: Provider.of<UserDataProvider>(context).cardStates['schedule'],
+      active: Provider.of<UserDataProvider>(context).cardStates['schedule'] &&
+          Provider.of<UserDataProvider>(context).isLoggedIn,
       hide: () => Provider.of<UserDataProvider>(context).toggleCard('schedule'),
       reload: () =>
           Provider.of<ClassScheduleDataProvider>(context, listen: false)

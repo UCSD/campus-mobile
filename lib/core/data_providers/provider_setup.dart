@@ -63,14 +63,6 @@ List<SingleChildCloneableWidget> independentServices = [
       return _newsDataProvider;
     },
   ),
-  ChangeNotifierProvider<ClassScheduleDataProvider>(
-    builder: (_) {
-      ClassScheduleDataProvider _classScheduleDataProvider =
-          ClassScheduleDataProvider();
-      _classScheduleDataProvider.fetchData();
-      return _classScheduleDataProvider;
-    },
-  ),
   ChangeNotifierProvider<LinksDataProvider>(
     builder: (_) {
       LinksDataProvider _linksDataProvider = LinksDataProvider();
@@ -105,6 +97,15 @@ List<SingleChildCloneableWidget> dependentServices = [
     builder: (_, userDataProvider, parkingDataProvider) =>
         parkingDataProvider..userDataProvider = userDataProvider,
   ),
+  ChangeNotifierProxyProvider<UserDataProvider, ClassScheduleDataProvider>(
+      initialBuilder: (_) {
+    var classDataProvider = ClassScheduleDataProvider();
+    return classDataProvider;
+  }, builder: (_, userDataProvider, classScheduleDataProvider) {
+    classScheduleDataProvider..userDataProvider = userDataProvider;
+    classScheduleDataProvider.fetchData();
+    return classScheduleDataProvider;
+  }),
   ChangeNotifierProxyProvider<UserDataProvider, AvailabilityDataProvider>(
     initialBuilder: (_) {
       var availabilityDataProvider = AvailabilityDataProvider();

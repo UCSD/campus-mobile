@@ -43,7 +43,7 @@ class ClassList extends StatelessWidget {
     return Container(
       color: Colors.white,
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(12.0),
         child: Text(
           weekday,
           style: TextStyle(fontSize: 20.0),
@@ -63,16 +63,16 @@ class ClassList extends StatelessWidget {
                   Text(
                     sectionData.subjectCode + ' ' + sectionData.courseCode,
                     style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 17.0),
                   ),
                   Text(
                     sectionData.courseTitle,
-                    style: TextStyle(fontSize: 16.0),
+                    style: TextStyle(fontSize: 17.0),
                   ),
                   Text(sectionData.instructorName,
-                      style: TextStyle(fontSize: 16.0)),
+                      style: TextStyle(fontSize: 17.0)),
                   Padding(
-                    padding: const EdgeInsets.only(top: 6.0),
+                    padding: const EdgeInsets.only(top: 5.0),
                     child: Row(children: [
                       Text(sectionData.meetingType + ' '),
                       TimeRangeWidget(

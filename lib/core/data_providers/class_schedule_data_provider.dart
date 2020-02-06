@@ -1,3 +1,5 @@
+import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
+import 'package:campus_mobile_experimental/core/models/academic_term_model.dart';
 import 'package:campus_mobile_experimental/core/models/class_schedule_model.dart';
 import 'package:campus_mobile_experimental/core/services/class_schedule_service.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +24,6 @@ class ClassScheduleDataProvider extends ChangeNotifier {
 
     ///INITIALIZE SERVICES
     _classScheduleService = ClassScheduleService();
-    _classScheduleModel = ClassScheduleModel();
   }
 
   ///STATES
@@ -36,6 +37,8 @@ class ClassScheduleDataProvider extends ChangeNotifier {
   ///MODELS
   ClassScheduleModel _classScheduleModel;
   Map<String, List<SectionData>> _enrolledClasses;
+  AcademicTermModel _academicTermModel;
+  UserDataProvider _userDataProvider;
 
   ///SERVICES
   ClassScheduleService _classScheduleService;
@@ -44,8 +47,42 @@ class ClassScheduleDataProvider extends ChangeNotifier {
     _isLoading = true;
     _error = null;
     notifyListeners();
-    if (await _classScheduleService.fetchData()) {
-      _classScheduleModel = _classScheduleService.classScheduleModel;
+    if (await _classScheduleService.fetchAcademicTerm() &&
+        _userDataProvider.isLoggedIn) {
+      _academicTermModel = _classScheduleService.academicTermModel;
+      final Map<String, String> headers = {
+        'Authorization':
+            'Bearer ${_userDataProvider?.authenticationModel?.accessToken}'
+      };
+
+      /// erase old model
+      _classScheduleModel = ClassScheduleModel();
+
+      /// fetch grad courses
+      if (await _classScheduleService.fetchGRCourses(
+          headers, _academicTermModel.termCode)) {
+        _classScheduleModel = _classScheduleService.GRdata;
+      } else {
+        _error = _classScheduleService.error.toString();
+      }
+
+      /// fetch undergrad courses
+      if (await _classScheduleService.fetchUNCourses(
+          headers, _academicTermModel.termCode)) {
+        if (_classScheduleModel.data != null) {
+          _classScheduleModel.data.addAll(_classScheduleService.UNdata.data);
+        } else {
+          _classScheduleModel = _classScheduleService.UNdata;
+        }
+        _error = null;
+      } else {
+        _error = _classScheduleService.error.toString();
+        _isLoading = false;
+        notifyListeners();
+
+        /// short circuit
+        return;
+      }
 
       /// remove all old classes
       _enrolledClasses = {
@@ -90,7 +127,11 @@ class ClassScheduleDataProvider extends ChangeNotifier {
         if (sectionData.days != null) {
           day = sectionData.days;
         }
-        _enrolledClasses[day].add(sectionData);
+
+        /// only add sections that ar enot finals
+        if (sectionData.specialMtgCode != 'FI') {
+          _enrolledClasses[day].add(sectionData);
+        }
       }
     }
 
@@ -216,6 +257,10 @@ class ClassScheduleDataProvider extends ChangeNotifier {
     }
     listToReturn.addAll(classes[today]);
     return listToReturn;
+  }
+
+  set userDataProvider(UserDataProvider value) {
+    _userDataProvider = value;
   }
 
   ///SIMPLE GETTERS
