@@ -14,6 +14,7 @@ class RoutePaths {
   static const String NewsDetailView = 'news/news_detail_view';
   static const String EventDetailView = 'events/event_detail_view';
   static const String LinksViewAll = 'links/links_list';
+  static const String ClassScheduleViewAll = 'class/classList';
   static const String ManageAvailabilityView =
       'availability/manage_locations_view';
   static const String ManageParkingView = 'parking/manage_parking_view';
@@ -25,5 +26,4 @@ class RoutePaths {
       'special_events/special_events_detail_view';
   static const String SpecialEventsFilterView =
       'special_events/special_events_filter_view';
-
 }

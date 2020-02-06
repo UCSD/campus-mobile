@@ -1,5 +1,4 @@
 import 'package:campus_mobile_experimental/core/models/events_model.dart';
-import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/core/services/networking.dart';
 
 class EventsService {

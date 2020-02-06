@@ -1,4 +1,5 @@
 import 'package:campus_mobile_experimental/core/data_providers/availability_data_provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/class_schedule_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/dining_data_proivder.dart';
 import 'package:campus_mobile_experimental/core/data_providers/events_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/links_data_provider.dart';
@@ -96,6 +97,15 @@ List<SingleChildWidget> dependentServices = [
     update: (_, userDataProvider, parkingDataProvider) =>
         parkingDataProvider..userDataProvider = userDataProvider,
   ),
+  ChangeNotifierProxyProvider<UserDataProvider, ClassScheduleDataProvider>(
+      create: (_) {
+    var classDataProvider = ClassScheduleDataProvider();
+    return classDataProvider;
+  }, update: (_, userDataProvider, classScheduleDataProvider) {
+    classScheduleDataProvider..userDataProvider = userDataProvider;
+    classScheduleDataProvider.fetchData();
+    return classScheduleDataProvider;
+  }),
   ChangeNotifierProxyProvider<UserDataProvider, AvailabilityDataProvider>(
     create: (_) {
       var availabilityDataProvider = AvailabilityDataProvider();
