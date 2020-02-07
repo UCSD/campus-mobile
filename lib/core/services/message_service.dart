@@ -33,7 +33,7 @@ class MessageService {
       final data = messagesFromJson(_response);
       _isLoading = false;
       _data = data;
-      print(_response);
+      //print(_response);
       return true;
     } catch (e) {
       /// if the authorized fetch failed we know we have to refresh the
@@ -62,7 +62,7 @@ class MessageService {
       final data = messagesFromJson(_response);
       _isLoading = false;
       _data = data;
-      print(_response);
+      //print(_response);
       return true;
     } catch (e) {
       /// if the authorized fetch failed we know we have to refresh the

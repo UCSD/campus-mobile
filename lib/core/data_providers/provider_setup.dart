@@ -108,14 +108,14 @@ List<SingleChildCloneableWidget> dependentServices = [
   ),
   ChangeNotifierProxyProvider<UserDataProvider, MessagesDataProvider>(
     initialBuilder: (_) {
-      var messageDataProvider = MessagesDataProvider();
-      //Change fetchAvailability() to fetchPublicMessages()
-      messageDataProvider.fetchMessages(); 
+      var messageDataProvider = MessagesDataProvider(); 
       return messageDataProvider;
     },
-    builder: (_, userDataProvider, messageDataProvider) =>
-        messageDataProvider..userDataProvider = userDataProvider,
-        //Make call to fetchPrivateMessages()
+    builder: (_, userDataProvider, messageDataProvider) {
+        messageDataProvider..userDataProvider = userDataProvider;
+        messageDataProvider.fetchMessages();
+        return messageDataProvider;
+    }
   ),
 ];
 List<SingleChildCloneableWidget> uiConsumableProviders = [];

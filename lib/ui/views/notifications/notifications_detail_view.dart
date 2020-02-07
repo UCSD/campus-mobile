@@ -5,21 +5,33 @@ import 'package:provider/provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 
 class NotificationsDetailView extends StatelessWidget{
-  MessagesDataProvider _messagesDataProvider;
-  UserDataProvider _userDataProvider;
+  NotificationsDetailView(List<MessageElement> data,Function reload){
+    _data = data;
+    _reload = reload;
+    //print(_data);
+  }
+
+  List<MessageElement> _data;
+  Function _reload;
   
   @override
   Widget build(BuildContext context) {
-    _messagesDataProvider = Provider.of<MessagesDataProvider>(context);
-    _userDataProvider = Provider.of<UserDataProvider>(context);
-    List<MessageElement> data = _messagesDataProvider.messages;
+    ScrollController _scrollController = ScrollController();
+    _scrollController.addListener(() {
+      if (_scrollController.position.maxScrollExtent ==
+        _scrollController.position.pixels) {
+        _reload();
+      }
+    });
 
+    //print(_data);
     return RefreshIndicator(
       child: ListView.builder(
+          controller: _scrollController,
           physics: const AlwaysScrollableScrollPhysics(),
-          itemCount: data.length,
+          itemCount: _data.length,
           itemBuilder: (BuildContext context, int index) {
-            return Column(children: _buildMessage(context, data[index]));
+            return Column(children: _buildMessage(context, _data[index]));
           }
       ), 
       onRefresh: _handleRefresh);
@@ -78,11 +90,8 @@ class NotificationsDetailView extends StatelessWidget{
   }
 
   Future<Null> _handleRefresh() async {
-    await Future.delayed(Duration(seconds: 5), () {
-      //if(_userDataProvider.isLoggedIn){}
-      //else{}
-      _messagesDataProvider.fetchMessages();
-    });
+    print("called");
+    _reload();
   }
 
 }

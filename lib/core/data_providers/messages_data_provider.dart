@@ -18,6 +18,7 @@ class MessagesDataProvider extends ChangeNotifier {
   bool _isLoading;
   DateTime _lastUpdated;
   String _error;
+  int previousTimestamp;
 
   /// MODELS
   /// TODO: add models that will be needed in this data provider
@@ -39,62 +40,68 @@ class MessagesDataProvider extends ChangeNotifier {
     _isLoading = true;
     _error = null;
 
-    int timestamp = 0;
-    int returnedTimestamp = 1;
-
+    print("called fetch");
     notifyListeners();
 
-    if(_userDataProvider.isLoggedIn){
-      while(true){
-        if(await _messageService.fetchMyMessagesData(timestamp)){
-          returnedTimestamp = _messageService.messagingModels.messages[_messageService.messagingModels.messages.length - 1].timestamp;
-          print(returnedTimestamp);
-          if(timestamp != returnedTimestamp){
-            _messages.addAll(_messageService.messagingModels.messages);
-            _lastUpdated = DateTime.now();
-            timestamp = returnedTimestamp;
-          }
-          else{
-            break;
-          }
-        }
-        else{
-          _error = _messageService.error;
-          break;
-        }
-      }
+    if(_userDataProvider != null && _userDataProvider.isLoggedIn){
+      retrieveMoreMyMessages();
     }
     else{
-      while(true){
-        if(await _messageService.fetchTopicData(timestamp)){
-          returnedTimestamp = _messageService.messagingModels.messages[_messageService.messagingModels.messages.length - 1].timestamp;
-          print(returnedTimestamp);
-          if(timestamp != returnedTimestamp){
-            _messages.addAll(_messageService.messagingModels.messages);
-            _lastUpdated = DateTime.now();
-            timestamp = returnedTimestamp;
-          }
-          else{
-            break;
-          }
-        }
-        else{
-          _error = _messageService.error;
-          break;
-        }
-      }
+      retrieveMoreTopicMessages();
     }
 
     _isLoading = false;
     notifyListeners();
   }
 
+  void retrieveMoreMyMessages() async {
+    int returnedTimestamp;
+    int timestamp = previousTimestamp;
+
+    if(await _messageService.fetchMyMessagesData(timestamp)){
+        returnedTimestamp = _messageService.messagingModels.messages[_messageService.messagingModels.messages.length - 1].timestamp;
+        print(returnedTimestamp);
+        List<MessageElement>temp = _messageService.messagingModels.messages;
+        if(timestamp != 0){
+          temp.removeAt(0);
+        }
+        _messages.addAll(temp);
+        _lastUpdated = DateTime.now();
+        previousTimestamp = returnedTimestamp;
+      }
+      else{
+        _error = _messageService.error;
+      }
+  }
+
+  void retrieveMoreTopicMessages() async {
+    int returnedTimestamp;
+    int timestamp = previousTimestamp;
+
+    if(await _messageService.fetchTopicData(timestamp)){
+        returnedTimestamp = _messageService.messagingModels.messages[_messageService.messagingModels.messages.length - 1].timestamp;
+        print(returnedTimestamp);
+        List<MessageElement>temp = _messageService.messagingModels.messages;
+        if(timestamp != 0){
+          temp.removeAt(0);
+        }
+        _messages.addAll(temp);
+        _lastUpdated = DateTime.now();
+        previousTimestamp = returnedTimestamp;
+      }
+      else{
+        _error = _messageService.error;
+      }
+  }
+
   //TODO: Need to fix ordering of messages, dependent on API feedback
   List<MessageElement>makeOrderedMessagesList(){
-    List<MessageElement>temp = List<MessageElement>();
-    temp = _messages;
-    temp.sort((a,b) => b.timestamp.compareTo(a.timestamp));
-    _messages = temp;
+    Map<String,MessageElement>uniqueMessages = Map<String,MessageElement>();
+    uniqueMessages = Map.fromIterable(_messages, key: (message) => message.messageId, value: (message) => message);
+    _messages.clear();
+    uniqueMessages.forEach((k,v) => _messages.add(v));
+    _messages.sort((a,b) => b.timestamp.compareTo(a.timestamp));
+    print("Size of _messages: " + _messages.length.toString());
     return _messages;
   }
 
@@ -110,12 +117,6 @@ class MessagesDataProvider extends ChangeNotifier {
 
   List<MessageElement> get messages {
     if (_messages != null) {
-      ///check if we have an offline _userProfileModel
-      /*if (_userDataProvider.userProfileModel != null) {
-        //Return private and public messages in chronological order here
-        //Make new method for makeOrderedList
-        return makeOrderedMessagesList();
-      }*/
       return makeOrderedMessagesList();
     }
     return List<MessageElement>();
