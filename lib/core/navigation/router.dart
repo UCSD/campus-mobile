@@ -40,7 +40,8 @@ class Router {
       case RoutePaths.SpecialEventsFilterView:
         return MaterialPageRoute(builder: (_) => SpecialEventsFilterView());
       case RoutePaths.SpecialEventsInfoView:
-        return MaterialPageRoute(builder: (_) => SpecialEventsInfoView());
+        String uid = settings.arguments;
+        return MaterialPageRoute(builder: (_) => SpecialEventsInfoView(argument: uid));
       case RoutePaths.Map:
         return MaterialPageRoute(builder: (_) => prefix0.Map());
       case RoutePaths.Notifications:

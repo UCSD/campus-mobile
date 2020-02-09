@@ -20,7 +20,6 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
 
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
     myEventList = Provider.of<SpecialEventsDataProvider>(context).myEventsList;
   }
@@ -211,7 +210,8 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
       subtitle: buildSubtitle(event),
       trailing: buildTrailing(event),
       onTap: () {
-        Navigator.pushNamed(context, RoutePaths.SpecialEventsInfoView);
+        Navigator.pushNamed(context, RoutePaths.SpecialEventsInfoView,
+            arguments: uid);
       },
     );
   }
