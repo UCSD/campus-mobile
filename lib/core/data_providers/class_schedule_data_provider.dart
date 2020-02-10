@@ -21,6 +21,16 @@ class ClassScheduleDataProvider extends ChangeNotifier {
       'SU': List<SectionData>(),
       'OTHER': List<SectionData>(),
     };
+    _finals = {
+      'MO': List<SectionData>(),
+      'TU': List<SectionData>(),
+      'WE': List<SectionData>(),
+      'TH': List<SectionData>(),
+      'FR': List<SectionData>(),
+      'SA': List<SectionData>(),
+      'SU': List<SectionData>(),
+      'OTHER': List<SectionData>(),
+    };
 
     ///INITIALIZE SERVICES
     _classScheduleService = ClassScheduleService();
@@ -37,6 +47,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
   ///MODELS
   ClassScheduleModel _classScheduleModel;
   Map<String, List<SectionData>> _enrolledClasses;
+  Map<String, List<SectionData>> _finals;
   AcademicTermModel _academicTermModel;
   UserDataProvider _userDataProvider;
 
@@ -95,6 +106,18 @@ class ClassScheduleDataProvider extends ChangeNotifier {
         'SU': List<SectionData>(),
         'OTHER': List<SectionData>(),
       };
+
+      _finals = {
+        'MO': List<SectionData>(),
+        'TU': List<SectionData>(),
+        'WE': List<SectionData>(),
+        'TH': List<SectionData>(),
+        'FR': List<SectionData>(),
+        'SA': List<SectionData>(),
+        'SU': List<SectionData>(),
+        'OTHER': List<SectionData>(),
+      };
+
       _createMapOfClasses();
       _lastUpdated = DateTime.now();
     } else {
@@ -128,9 +151,10 @@ class ClassScheduleDataProvider extends ChangeNotifier {
           day = sectionData.days;
         }
 
-        /// only add sections that ar enot finals
         if (sectionData.specialMtgCode != 'FI') {
           _enrolledClasses[day].add(sectionData);
+        } else if (sectionData.specialMtgCode == 'FI') {
+          _finals[day].add(sectionData);
         }
       }
     }
@@ -138,6 +162,10 @@ class ClassScheduleDataProvider extends ChangeNotifier {
     /// chronologically sort classes for each day
     for (List<SectionData> listOfClasses in _enrolledClasses.values.toList()) {
       listOfClasses.sort((a, b) => _compare(a, b));
+    }
+
+    for (List<SectionData> listOfFinals in _finals.values.toList()) {
+      listOfFinals.sort((a, b) => _compare(a, b));
     }
   }
 
@@ -210,29 +238,6 @@ class ClassScheduleDataProvider extends ChangeNotifier {
     return mapToReturn;
   }
 
-  /// returns map of [String, List<SectionData>]
-  /// only finals are returned in this map
-  Map<String, List<SectionData>> get finals {
-    Map<String, List<SectionData>> mapToReturn = {
-      'MO': List<SectionData>(),
-      'TU': List<SectionData>(),
-      'WE': List<SectionData>(),
-      'TH': List<SectionData>(),
-      'FR': List<SectionData>(),
-      'SA': List<SectionData>(),
-      'SU': List<SectionData>(),
-      'OTHER': List<SectionData>(),
-    };
-    _enrolledClasses.forEach((key, value) {
-      for (SectionData sectionData in value) {
-        if (sectionData.specialMtgCode == 'FI') {
-          mapToReturn[key].add(sectionData);
-        }
-      }
-    });
-    return mapToReturn;
-  }
-
   List<SectionData> get upcomingCourses {
     /// get weekday and return [List<SectionData>] associated with current weekday
     List<SectionData> listToReturn = List<SectionData>();
@@ -264,6 +269,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
   }
 
   ///SIMPLE GETTERS
+  Map<String, List<SectionData>> get finals => _finals;
   Map<String, List<SectionData>> get enrolledClasses => _enrolledClasses;
   bool get isLoading => _isLoading;
   String get error => _error;
