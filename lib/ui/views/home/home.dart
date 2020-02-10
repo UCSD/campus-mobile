@@ -1,6 +1,7 @@
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/ui/cards/class_schedule/class_schedule_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/events/events_card.dart';
+import 'package:campus_mobile_experimental/ui/cards/finals/finals_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/news/news_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/weather/weather_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/availability/availability_card.dart';
@@ -55,6 +56,8 @@ class _HomeState extends State<Home> {
         case 'schedule':
           orderedCards.add(ClassScheduleCard());
           break;
+        case 'finals':
+          orderedCards.add(FinalsCard());
       }
     }
     return orderedCards;
