@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 class SpecialEventsInfoView extends StatelessWidget {
   final String argument;
   const SpecialEventsInfoView({Key key, this.argument}) : super(key: key);
+  //final Map<String, bool> myEventList;
   @override
   Widget build(BuildContext context) {
     return addScaffold(
@@ -20,6 +21,7 @@ class SpecialEventsInfoView extends StatelessWidget {
   Widget addScaffold(context, String title, uid) {
     SpecialEventsModel data =
         Provider.of<SpecialEventsDataProvider>(context).specialEventsModel;
+    
     Schedule event = data.schedule[uid];
     return Scaffold(
         appBar: AppBar(
@@ -29,7 +31,7 @@ class SpecialEventsInfoView extends StatelessWidget {
           child: ListView(children: <Widget>[
             ListTile(
               title: buildHeader(event),
-              trailing: Text('Icon'),
+              trailing:  buildTrailing(event, context),
             ),
             ListTile(
               title: buildEventTitle(event),
@@ -95,6 +97,37 @@ Widget buildHostTile(Schedule event) {
           text: event.speakerShortdesc,
           style: TextStyle(color: ColorSecondary)));
 }
+
+  //Add event from myList
+  void isGoing(BuildContext context, String uid) {
+    Provider.of<SpecialEventsDataProvider>(context, listen: false)
+        .addToMyEvents(uid);
+  }
+
+  //Remove event from myList
+  void notGoing(BuildContext context, String uid) {
+    Provider.of<SpecialEventsDataProvider>(context, listen: false)
+        .removeFromMyEvents(uid);
+  }
+
+  Widget buildTrailing(Schedule event, BuildContext context) {
+    Map<String, bool> myEventList;
+    myEventList = Provider.of<SpecialEventsDataProvider>(context).myEventsList;
+    if (myEventList[event.id] != null && myEventList[event.id]) {
+      return GestureDetector(
+          onTap: () {
+            notGoing(context, event.id);
+          },
+          child: Icon(Icons.star,
+              color: Colors.yellow, size: 54, semanticLabel: 'Going'));
+    } else
+      return GestureDetector(
+          onTap: () {
+            isGoing(context, event.id);
+          },
+          child: Icon(Icons.star_border,
+              color: Colors.yellow, size: 54, semanticLabel: 'Not Going'));
+  }
 
 Widget buildLocationTile(Schedule event) {
   DateTime date = new DateTime.fromMillisecondsSinceEpoch(event.startTime);
