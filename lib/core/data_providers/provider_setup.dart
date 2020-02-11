@@ -3,15 +3,16 @@ import 'package:campus_mobile_experimental/core/data_providers/dining_data_proiv
 import 'package:campus_mobile_experimental/core/data_providers/events_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/links_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/location_data_provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/maps_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/news_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/parking_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/special_events_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/surf_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/weather_data_provider.dart';
-import 'package:campus_mobile_experimental/core/services/bottom_navigation_bar_service.dart';
 import 'package:campus_mobile_experimental/core/models/coordinates_model.dart';
 import 'package:campus_mobile_experimental/core/navigation/top_navigation_bar/app_bar.dart';
+import 'package:campus_mobile_experimental/core/services/bottom_navigation_bar_service.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
@@ -86,6 +87,14 @@ List<SingleChildWidget> dependentServices = [
     diningDataProvider..coordinates = coordinates;
     diningDataProvider.populateDistances();
     return diningDataProvider;
+  }),
+  ChangeNotifierProxyProvider<Coordinates, MapsDataProvider>(create: (_) {
+    var mapsDataProvider = MapsDataProvider();
+    return mapsDataProvider;
+  }, update: (_, coordinates, mapsDataProvider) {
+    mapsDataProvider.coordinates = coordinates;
+    mapsDataProvider.populateDistances();
+    return mapsDataProvider;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, ParkingDataProvider>(
     create: (_) {

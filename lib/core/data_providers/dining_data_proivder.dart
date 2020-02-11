@@ -1,9 +1,10 @@
+import 'dart:math';
+
 import 'package:campus_mobile_experimental/core/models/coordinates_model.dart';
 import 'package:campus_mobile_experimental/core/models/dining_menu_items_model.dart';
 import 'package:campus_mobile_experimental/core/models/dining_model.dart';
 import 'package:campus_mobile_experimental/core/services/dining_service.dart';
 import 'package:flutter/material.dart';
-import 'dart:math' show cos, sqrt, asin;
 
 class DiningDataProvider extends ChangeNotifier {
   DiningDataProvider() {
@@ -94,13 +95,14 @@ class DiningDataProvider extends ChangeNotifier {
     }
   }
 
-  num calculateDistance(double lat1, double lon1, double lat2, double lon2) {
-    var p = 0.017453292519943295;
-    var c = cos;
-    var a = 0.5 -
-        c((lat2 - lat1) * p) / 2 +
-        c(lat1 * p) * c(lat2 * p) * (1 - c((lon2 - lon1) * p)) / 2;
-    return 12742 * asin(sqrt(a));
+  num calculateDistance(double lat1, double lng1, double lat2, double lng2) {
+    num centralAngle = pi *
+        (acos(sin(lat1) * sin(lat2) +
+            cos(lat1) * cos(lat2) * cos((lng1 - lng2).abs()))) /
+        180; // Central angle in radians
+    return 6371.0088 *
+        centralAngle /
+        1.609; //6371.0088 is mean earth radius // Divided by 1.609 to convert to miles
   }
 
   ///This setter is only used in provider to supply an updated Coordinates object

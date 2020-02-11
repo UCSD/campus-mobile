@@ -24,6 +24,7 @@ class MapSearchModel {
   String access;
   String url;
   int mkrMarkerid;
+  double distance;
 
   MapSearchModel({
     this.title,

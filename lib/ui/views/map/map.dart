@@ -1,9 +1,9 @@
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
+import 'package:campus_mobile_experimental/core/data_providers/maps_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/map_search_model.dart';
-import 'package:campus_mobile_experimental/core/services/map_search_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:location/location.dart';
+import 'package:provider/provider.dart';
 
 class Maps extends StatefulWidget {
   @override
@@ -11,53 +11,38 @@ class Maps extends StatefulWidget {
 }
 
 class _MapsState extends State<Maps> {
-  final MapSearchService _mapSearchService = MapSearchService();
   GoogleMapController _mapController;
-  Map<MarkerId, Marker> _markers = <MarkerId, Marker>{};
-  List<MapSearchModel> _data;
-  TextEditingController _searchBarController;
-  bool _isSearching = false;
-  var location = new Location();
 
-  final LatLng _center = const LatLng(32.8911637, -117.2428029);
+  LatLng _center = const LatLng(32.8801, -117.2341);
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    if (Provider.of<MapsDataProvider>(context).markers.isNotEmpty &&
+        _mapController != null) {
+      _mapController.animateCamera(CameraUpdate.newLatLng(
+          Provider.of<MapsDataProvider>(context)
+              .markers
+              .values
+              .toList()[0]
+              .position));
+    }
+    if (Provider.of<MapsDataProvider>(context).coordinates != null) {
+      _center = LatLng(Provider.of<MapsDataProvider>(context).coordinates.lat,
+          Provider.of<MapsDataProvider>(context).coordinates.lon);
+    }
+  }
 
   void _onMapCreated(GoogleMapController controller) {
     _mapController = controller;
   }
 
-  void _getData(String text, TextEditingController searchController) async {
-    _searchBarController = searchController;
-    _markers.clear();
-    _isSearching = true;
-    _data = await _mapSearchService.fetchMenu(text);
-    setState(() {
-      _isSearching = false;
-    });
-    if (_data.isNotEmpty) {
-      _addMarker(0);
-    } else {
-      Scaffold.of(context).showSnackBar(
-          SnackBar(content: Text('No results found for your search.')));
-    }
-  }
-
-  void _addMarker(int listIndex) {
-    final Marker marker = Marker(
-      markerId: MarkerId(_data[listIndex].mkrMarkerid.toString()),
-      position: LatLng(_data[listIndex].mkrLat, _data[listIndex].mkrLong),
-      infoWindow: InfoWindow(title: _data[listIndex].title),
-    );
-    setState(() {
-      _markers.clear();
-      _markers[marker.markerId] = marker;
-      _mapController.animateCamera(CameraUpdate.newLatLng(marker.position));
-    });
-  }
-
   List<Widget> createTiles(BuildContext context) {
     List<Widget> list = List<Widget>();
     int listIndex = 0;
-    for (var i in _data) {
+    for (MapSearchModel i
+        in Provider.of<MapsDataProvider>(context).mapSearchModels) {
       list.add(aLocation(i, context, listIndex++));
     }
     return ListTile.divideTiles(tiles: list, context: context).toList();
@@ -66,13 +51,32 @@ class _MapsState extends State<Maps> {
   Widget aLocation(MapSearchModel data, BuildContext context, int index) {
     return ListTile(
       leading: Icon(Icons.location_on),
-      title: Text(data.title),
-      trailing: Text(' mi'),
+      title: Text(
+        data.title,
+      ),
+      trailing: Text(
+        data.distance != null
+            ? data.distance.toStringAsPrecision(3) + ' mi'
+            : '--',
+        style: TextStyle(color: Colors.blue[600]),
+      ),
       onTap: () {
-        _addMarker(index);
+        Provider.of<MapsDataProvider>(context, listen: false).addMarker(index);
         Navigator.pop(context);
       },
     );
+  }
+
+  Widget noResults() {
+    if (Provider.of<MapsDataProvider>(context).noResults) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Scaffold.of(context)
+          ..removeCurrentSnackBar()
+          ..showSnackBar(
+              SnackBar(content: Text('No results found for your search.')));
+      });
+    }
+    return Container();
   }
 
   @override
@@ -80,7 +84,8 @@ class _MapsState extends State<Maps> {
     return Stack(
       children: <Widget>[
         GoogleMap(
-          markers: Set<Marker>.of(_markers.values),
+          markers: Set<Marker>.of(
+              Provider.of<MapsDataProvider>(context).markers.values),
           myLocationEnabled: true,
           myLocationButtonEnabled: false,
           onMapCreated: _onMapCreated,
@@ -95,18 +100,20 @@ class _MapsState extends State<Maps> {
             margin: EdgeInsets.all(5),
             child: RawMaterialButton(
               onPressed: () {
-                Navigator.pushNamed(context, RoutePaths.MapSearch,
-                    arguments: _getData);
+                Navigator.pushNamed(context, RoutePaths.MapSearch);
               },
               child: Row(
                 children: <Widget>[
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 9),
-                    child: _isSearching
-                        ? Container(
-                            height: 25,
-                            width: 25,
-                            child: CircularProgressIndicator())
+                    padding: const EdgeInsets.symmetric(horizontal: 9),
+                    child: Provider.of<MapsDataProvider>(context).isLoading
+                        ? Padding(
+                            padding: const EdgeInsets.all(2.5),
+                            child: Container(
+                                height: 25,
+                                width: 25,
+                                child: CircularProgressIndicator()),
+                          )
                         : Icon(
                             Icons.search,
                             size: 30,
@@ -115,7 +122,8 @@ class _MapsState extends State<Maps> {
                   Expanded(
                     child: TextField(
                       enabled: false,
-                      controller: _searchBarController,
+                      controller: Provider.of<MapsDataProvider>(context)
+                          .searchBarController,
                       style: TextStyle(fontSize: 20),
                       decoration: InputDecoration(
                         border: InputBorder.none,
@@ -140,15 +148,18 @@ class _MapsState extends State<Maps> {
               ),
               backgroundColor: Colors.lightBlue,
               onPressed: () {
-                setState(() {
-                  _mapController.animateCamera(
-                      CameraUpdate.newLatLng(_center)); //TODO: Goto my location
-                });
+                _mapController.animateCamera(CameraUpdate.newLatLng(LatLng(
+                    Provider.of<MapsDataProvider>(context, listen: false)
+                        .coordinates
+                        .lat,
+                    Provider.of<MapsDataProvider>(context, listen: false)
+                        .coordinates
+                        .lon)));
               },
             ),
           ),
         ),
-        _markers.isNotEmpty
+        Provider.of<MapsDataProvider>(context).markers.isNotEmpty
             ? Align(
                 alignment: Alignment.bottomCenter,
                 child: RaisedButton(
@@ -160,7 +171,15 @@ class _MapsState extends State<Maps> {
                         children: <Widget>[
                           Container(
                             height: 50,
-                            child: Text('More Results'),
+                            alignment: Alignment.center,
+                            child: Text(
+                              'More Results',
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          Divider(
+                            height: 0,
                           ),
                           Expanded(
                             child: ListView(
@@ -170,8 +189,6 @@ class _MapsState extends State<Maps> {
                         ],
                       ),
                     );
-//                    Navigator.pushNamed(context, RoutePaths.MapLocationList,
-//                        arguments: {'data': _data, 'addMarker': _addMarker});
                   },
                   color: Theme.of(context).buttonColor,
                   child: Text(
@@ -181,9 +198,7 @@ class _MapsState extends State<Maps> {
                   ),
                 ),
               )
-            : Container(
-                height: 0,
-              )
+            : noResults(),
       ],
     );
   }

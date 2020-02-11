@@ -1,23 +1,14 @@
+import 'package:campus_mobile_experimental/core/data_providers/maps_data_provider.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class MapSearch extends StatefulWidget {
-  final Function queryInput;
-  const MapSearch({Key key, this.queryInput}) : super(key: key);
   @override
   _MapSearchState createState() => _MapSearchState();
 }
 
 class _MapSearchState extends State<MapSearch> {
-  TextEditingController _searchBarController = TextEditingController();
-  List<String> recentSearches = [];
-
-  /*
-  IMPORTANT NOTE: Search history still needs to be hooked up so it can
-  be conserved over navigation and app restarts.
-  TODO: Hook up search history [recentSearches] to Provider (when implemented)
-  */
-
   @override
   Widget build(BuildContext context) {
     return ContainerView(
@@ -40,17 +31,25 @@ class _MapSearchState extends State<MapSearch> {
                   ),
                   Expanded(
                     child: TextField(
-                      onChanged: (value) {
-                        setState(() {});
+                      onChanged: (text) {
+                        setState(
+                            () {}); // Sets state so that the X on the right will show up
                       },
                       onSubmitted: (text) {
-                        //send back text to map.dart
-                        recentSearches.add(text);
-                        widget.queryInput(text, _searchBarController);
+                        if (Provider.of<MapsDataProvider>(context,
+                                listen: false)
+                            .searchBarController
+                            .text
+                            .isNotEmpty) {
+                          // Don't fetch on empty text field
+                          Provider.of<MapsDataProvider>(context, listen: false)
+                              .fetchLocations(); // Text doesn't need to be sent over because it's already in the controller
+                        }
                         Navigator.pop(context);
                       },
                       autofocus: true,
-                      controller: _searchBarController,
+                      controller: Provider.of<MapsDataProvider>(context)
+                          .searchBarController,
                       style: TextStyle(fontSize: 20),
                       decoration: InputDecoration(
                         border: InputBorder.none,
@@ -59,11 +58,21 @@ class _MapSearchState extends State<MapSearch> {
                       ),
                     ),
                   ),
-                  _searchBarController.text.isNotEmpty
+                  Provider.of<MapsDataProvider>(context)
+                          .searchBarController
+                          .text
+                          .isNotEmpty
                       ? IconButton(
                           icon: Icon(Icons.clear),
                           onPressed: () {
-                            _searchBarController.clear();
+                            Provider.of<MapsDataProvider>(context,
+                                    listen: false)
+                                .searchBarController
+                                .clear();
+                            Provider.of<MapsDataProvider>(context,
+                                    listen: false)
+                                .markers
+                                .clear();
                             setState(() {});
                           },
                         )
@@ -84,9 +93,11 @@ class _MapSearchState extends State<MapSearch> {
                     icon: Icons.local_parking,
                     text: 'Parking',
                     onPressed: () {
-                      _searchBarController.text = 'Parking';
-                      recentSearches.add('Parking');
-                      widget.queryInput('Parking', _searchBarController);
+                      Provider.of<MapsDataProvider>(context, listen: false)
+                          .searchBarController
+                          .text = 'Parking';
+                      Provider.of<MapsDataProvider>(context, listen: false)
+                          .fetchLocations();
                       Navigator.pop(context);
                     },
                   ),
@@ -94,9 +105,11 @@ class _MapSearchState extends State<MapSearch> {
                     icon: Icons.local_drink,
                     text: 'Hydration',
                     onPressed: () {
-                      _searchBarController.text = 'Hydration';
-                      recentSearches.add('Hydration');
-                      widget.queryInput('Hydration', _searchBarController);
+                      Provider.of<MapsDataProvider>(context, listen: false)
+                          .searchBarController
+                          .text = 'Hydration';
+                      Provider.of<MapsDataProvider>(context, listen: false)
+                          .fetchLocations();
                       Navigator.pop(context);
                     },
                   ),
@@ -104,9 +117,11 @@ class _MapSearchState extends State<MapSearch> {
                     icon: Icons.local_post_office,
                     text: 'Mail',
                     onPressed: () {
-                      _searchBarController.text = 'Mail';
-                      recentSearches.add('Mail');
-                      widget.queryInput('Mail', _searchBarController);
+                      Provider.of<MapsDataProvider>(context, listen: false)
+                          .searchBarController
+                          .text = 'Mail';
+                      Provider.of<MapsDataProvider>(context, listen: false)
+                          .fetchLocations();
                       Navigator.pop(context);
                     },
                   ),
@@ -114,9 +129,11 @@ class _MapSearchState extends State<MapSearch> {
                     icon: Icons.local_atm,
                     text: 'ATM',
                     onPressed: () {
-                      _searchBarController.text = 'ATM';
-                      recentSearches.add('ATM');
-                      widget.queryInput('ATM', _searchBarController);
+                      Provider.of<MapsDataProvider>(context, listen: false)
+                          .searchBarController
+                          .text = 'ATM';
+                      Provider.of<MapsDataProvider>(context, listen: false)
+                          .fetchLocations();
                       Navigator.pop(context);
                     },
                   ),
@@ -124,42 +141,66 @@ class _MapSearchState extends State<MapSearch> {
               ),
             ),
           ),
-          Card(
-              margin: EdgeInsets.all(5),
-              child: recentSearches.isEmpty
-                  ? Container(
-                      width: double.infinity,
-                      height: 50,
-                      child: Center(child: Text('You have no recent searches')),
-                    )
-                  : ListView.separated(
+          Provider.of<MapsDataProvider>(context).searchHistory.isEmpty
+              ? Card(
+                  margin: EdgeInsets.all(5),
+                  child: Container(
+                    width: double.infinity,
+                    height: 50,
+                    child: Center(child: Text('You have no recent searches')),
+                  ),
+                )
+              : Flexible(
+                  child: Card(
+                    margin: EdgeInsets.all(5),
+                    child: ListView.separated(
                       separatorBuilder: (context, index) => Divider(height: 0),
-                      itemCount: recentSearches.length,
+                      itemCount: Provider.of<MapsDataProvider>(context)
+                          .searchHistory
+                          .length,
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
                         return ListTile(
                           contentPadding:
                               EdgeInsets.symmetric(horizontal: 15, vertical: 0),
                           leading: Icon(Icons.history),
-                          title: Text(recentSearches[index]),
+                          title: Text(Provider.of<MapsDataProvider>(context)
+                              .searchHistory
+                              .reversed
+                              .toList()[index]),
                           trailing: IconButton(
                             iconSize: 20,
                             icon: Icon(Icons.cancel),
                             onPressed: () {
-                              setState(() {
-                                recentSearches.remove(recentSearches[index]);
-                              });
+                              Provider.of<MapsDataProvider>(context,
+                                      listen: false)
+                                  .removeFromSearchHistory(
+                                      Provider.of<MapsDataProvider>(context,
+                                              listen: false)
+                                          .searchHistory
+                                          .reversed
+                                          .toList()[index]);
                             },
                           ),
                           onTap: () {
-                            _searchBarController.text = recentSearches[index];
-                            widget.queryInput(
-                                recentSearches[index], _searchBarController);
+                            Provider.of<MapsDataProvider>(context,
+                                    listen: false)
+                                .searchBarController
+                                .text = Provider.of<MapsDataProvider>(context,
+                                    listen: false)
+                                .searchHistory
+                                .reversed
+                                .toList()[index];
+                            Provider.of<MapsDataProvider>(context,
+                                    listen: false)
+                                .fetchLocations();
                             Navigator.pop(context);
                           },
                         );
                       },
-                    )),
+                    ),
+                  ),
+                )
         ],
       ),
     );
