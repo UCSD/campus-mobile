@@ -28,7 +28,6 @@ class CampusMobile extends StatelessWidget {
           textTheme: lightThemeText,
           iconTheme: lightIconTheme,
           appBarTheme: lightAppBarTheme,
-          bottomAppBarTheme: bottomLightAppBarTheme,
         ),
         darkTheme: ThemeData(
           primarySwatch: ColorPrimary,
@@ -38,7 +37,6 @@ class CampusMobile extends StatelessWidget {
           textTheme: darkThemeText,
           iconTheme: darkIconTheme,
           appBarTheme: darkAppBarTheme,
-          bottomAppBarTheme: bottomDarkAppBarTheme,
         ),
         home: BottomTabBar(observer),
         onGenerateRoute: Router.generateRoute,

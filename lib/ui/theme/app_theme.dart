@@ -44,14 +44,6 @@ const AppBarTheme darkAppBarTheme = AppBarTheme(
   color: Color(0xFF034262),
 );
 
-const BottomAppBarTheme bottomLightAppBarTheme = BottomAppBarTheme(
-  color: Color(0xFF034262),
-);
-
-const BottomAppBarTheme bottomDarkAppBarTheme = BottomAppBarTheme(
-  color: Color(0xFF034262),
-);
-
 //Icon color for light theme
 const IconThemeData lightIconTheme = IconThemeData(
   color: Color(0xFF0D47A1),

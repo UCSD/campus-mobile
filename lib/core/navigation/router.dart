@@ -137,6 +137,10 @@ class Router {
         return MaterialPageRoute(
             builder: (_) => ClassList(),
             settings: RouteSettings(name: RoutePaths.ClassScheduleViewAll));
+      default:
+        return MaterialPageRoute(
+            builder: (_) => Home(),
+            settings: RouteSettings(name: RoutePaths.Home));
     }
   }
 }
