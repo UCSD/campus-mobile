@@ -15,13 +15,21 @@ import 'package:campus_mobile_experimental/core/models/coordinates_model.dart';
 import 'package:campus_mobile_experimental/core/navigation/top_navigation_bar/app_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
+import 'package:firebase_analytics/observer.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+
+final FirebaseAnalytics analytics = FirebaseAnalytics();
+final FirebaseAnalyticsObserver observer =
+    FirebaseAnalyticsObserver(analytics: analytics);
 
 List<SingleChildWidget> providers = [
   ...independentServices,
   ...dependentServices,
   ...uiConsumableProviders,
 ];
+
 List<SingleChildWidget> independentServices = [
+  Provider.value(value: observer),
   ChangeNotifierProvider<BottomNavigationBarProvider>(
     create: (_) => BottomNavigationBarProvider(),
   ),
