@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "913067495333",
+    "firebase_url": "https://campus-mobile-flutter.firebaseio.com",
+    "project_id": "campus-mobile-flutter",
+    "storage_bucket": "campus-mobile-flutter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:913067495333:android:c83b6a310ff4513c9c624c",
+        "android_client_info": {
+          "package_name": "edu.ucsd.campusmobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "913067495333-6f92sa993o7lij2d68kfrvbjdq3shk89.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPaxypd9nnUvizFs9BPgF5Cqxikhe969c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "913067495333-6f92sa993o7lij2d68kfrvbjdq3shk89.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "913067495333-6svvlu36r9nu25vls4p350sb6ntiva6l.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "edu.ucsd.campusmobile"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

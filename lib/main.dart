@@ -4,10 +4,16 @@ import 'package:campus_mobile_experimental/core/navigation/bottom_tab_bar/bottom
 import 'package:campus_mobile_experimental/core/data_providers/provider_setup.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_analytics/observer.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 
 void main() => runApp(CampusMobile());
 
 class CampusMobile extends StatelessWidget {
+  static FirebaseAnalytics analytics = FirebaseAnalytics();
+  static FirebaseAnalyticsObserver observer =
+      FirebaseAnalyticsObserver(analytics: analytics);
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -32,8 +38,11 @@ class CampusMobile extends StatelessWidget {
           iconTheme: darkIconTheme,
           appBarTheme: darkAppBarTheme,
         ),
-        home: BottomTabBar(),
+        home: BottomTabBar(observer),
         onGenerateRoute: Router.generateRoute,
+        navigatorObservers: [
+          observer,
+        ],
       ),
     );
   }

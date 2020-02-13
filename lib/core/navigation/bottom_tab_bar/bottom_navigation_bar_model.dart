@@ -1,27 +1,56 @@
+import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:campus_mobile_experimental/core/services/bottom_navigation_bar_service.dart';
 import 'package:campus_mobile_experimental/ui/views/home/home.dart';
 import 'package:campus_mobile_experimental/ui/views/map/map.dart' as prefix0;
 import 'package:campus_mobile_experimental/ui/views/notifications/notifications.dart';
 import 'package:campus_mobile_experimental/ui/views/profile/profile.dart';
 
 class BottomTabBar extends StatefulWidget {
-  @override
-  _BottomTabBarState createState() => _BottomTabBarState();
-}
+  BottomTabBar(this.observer);
 
-class _BottomTabBarState extends State<BottomTabBar> {
-  var currentTab = [
+  final FirebaseAnalyticsObserver observer;
+
+  static const String routeName = '/tab';
+
+  final currentTab = [
     Home(),
     prefix0.Maps(),
     Notifications(),
     Profile(),
   ];
 
+  final List<String> tabNames = ['home', 'maps', 'notifications', 'profile'];
+
+  @override
+  State<StatefulWidget> createState() => _BottomTabBarState(observer);
+}
+
+class _BottomTabBarState extends State<BottomTabBar>
+    with SingleTickerProviderStateMixin, RouteAware {
+  _BottomTabBarState(this.observer);
+
+  final FirebaseAnalyticsObserver observer;
+  int selectedIndex = 0;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    observer.subscribe(this, ModalRoute.of(context));
+  }
+
+  @override
+  void dispose() {
+    observer.unsubscribe(this);
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    var provider = Provider.of<BottomNavigationBarProvider>(context);
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(42),
@@ -35,12 +64,14 @@ class _BottomTabBarState extends State<BottomTabBar> {
           ),
         ),
       ),
-      body: currentTab[provider.currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        currentIndex: provider.currentIndex,
+        currentIndex: selectedIndex,
         onTap: (index) {
-          provider.currentIndex = index;
+          setState(() {
+            selectedIndex = index;
+            _sendCurrentTabToAnalytics();
+          });
         },
         items: [
           BottomNavigationBarItem(
@@ -65,6 +96,23 @@ class _BottomTabBarState extends State<BottomTabBar> {
         selectedItemColor: IconTheme.of(context).color,
         unselectedItemColor: Colors.grey.shade500,
       ),
+      body: widget.currentTab[selectedIndex],
+    );
+  }
+
+  @override
+  void didPush() {
+    _sendCurrentTabToAnalytics();
+  }
+
+  @override
+  void didPopNext() {
+    _sendCurrentTabToAnalytics();
+  }
+
+  void _sendCurrentTabToAnalytics() {
+    observer.analytics.setCurrentScreen(
+      screenName: '${BottomTabBar.routeName}/${widget.tabNames[selectedIndex]}',
     );
   }
 }
