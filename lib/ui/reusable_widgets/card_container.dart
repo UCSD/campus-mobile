@@ -30,30 +30,33 @@ class CardContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (active) {
-      return Card(
-        semanticContainer: false,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            ListTile(
-              title: title,
-              trailing: ButtonBar(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  buildMenu({
-                    'reload': reload,
-                    'hide': hide,
-                  }),
-                ],
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4.0),
+        child: Card(
+          semanticContainer: false,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              ListTile(
+                title: title,
+                trailing: ButtonBar(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    buildMenu({
+                      'reload': reload,
+                      'hide': hide,
+                    }),
+                  ],
+                ),
               ),
-            ),
-            buildBody(),
-            actionButtons != null
-                ? Row(
-                    children: actionButtons,
-                  )
-                : Container()
-          ],
+              buildBody(),
+              actionButtons != null
+                  ? Row(
+                      children: actionButtons,
+                    )
+                  : Container()
+            ],
+          ),
         ),
       );
     }
