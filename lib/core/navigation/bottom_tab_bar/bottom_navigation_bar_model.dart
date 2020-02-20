@@ -12,12 +12,14 @@ class BottomTabBar extends StatefulWidget {
 
   static const String routeName = '/tab';
 
-  final currentTab = [
+  final currentTabs = [
     Home(),
     prefix0.Maps(),
     Notifications(),
     Profile(),
   ];
+
+  int selectedIndex = 0;
 
   final List<String> tabNames = ['home', 'maps', 'notifications', 'profile'];
 
@@ -30,7 +32,6 @@ class _BottomTabBarState extends State<BottomTabBar>
   _BottomTabBarState(this.observer);
 
   final FirebaseAnalyticsObserver observer;
-  int selectedIndex = 0;
 
   @override
   void didChangeDependencies() {
@@ -64,12 +65,13 @@ class _BottomTabBarState extends State<BottomTabBar>
           ),
         ),
       ),
+      body: IndexedStack(
+          index: widget.selectedIndex, children: widget.currentTabs),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        currentIndex: selectedIndex,
         onTap: (index) {
           setState(() {
-            selectedIndex = index;
+            widget.selectedIndex = index;
             _sendCurrentTabToAnalytics();
           });
         },
@@ -96,7 +98,6 @@ class _BottomTabBarState extends State<BottomTabBar>
         selectedItemColor: IconTheme.of(context).color,
         unselectedItemColor: Colors.grey.shade500,
       ),
-      body: widget.currentTab[selectedIndex],
     );
   }
 
@@ -112,7 +113,8 @@ class _BottomTabBarState extends State<BottomTabBar>
 
   void _sendCurrentTabToAnalytics() {
     observer.analytics.setCurrentScreen(
-      screenName: '${BottomTabBar.routeName}/${widget.tabNames[selectedIndex]}',
+      screenName:
+          '${BottomTabBar.routeName}/${widget.tabNames[widget.selectedIndex]}',
     );
   }
 }

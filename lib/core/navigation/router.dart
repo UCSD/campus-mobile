@@ -2,31 +2,29 @@ import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/dining_menu_items_model.dart';
 import 'package:campus_mobile_experimental/core/models/dining_model.dart';
 import 'package:campus_mobile_experimental/core/models/events_model.dart';
-import 'package:campus_mobile_experimental/core/models/map_search_model.dart';
 import 'package:campus_mobile_experimental/core/models/news_model.dart';
+import 'package:campus_mobile_experimental/ui/cards/dining/dining_list.dart';
 import 'package:campus_mobile_experimental/ui/views/availability/manage_availability_view.dart';
 import 'package:campus_mobile_experimental/ui/views/class_schedule/class_list.dart';
 import 'package:campus_mobile_experimental/ui/views/dining/dining_detail_view.dart';
-import 'package:campus_mobile_experimental/ui/cards/dining/dining_list.dart';
+import 'package:campus_mobile_experimental/ui/views/dining/nutrition_facts_view.dart';
 import 'package:campus_mobile_experimental/ui/views/events/event_detail_view.dart';
 import 'package:campus_mobile_experimental/ui/views/events/events_list.dart';
 import 'package:campus_mobile_experimental/ui/views/home/home.dart';
 import 'package:campus_mobile_experimental/ui/views/links/links_list.dart';
 import 'package:campus_mobile_experimental/ui/views/map/map.dart' as prefix0;
-import 'package:campus_mobile_experimental/ui/views/map/map_location_list.dart';
-import 'package:campus_mobile_experimental/ui/views/map/map_search.dart';
+import 'package:campus_mobile_experimental/ui/views/map/map_search_view.dart';
 import 'package:campus_mobile_experimental/ui/views/news/news_detail_view.dart';
 import 'package:campus_mobile_experimental/ui/views/news/news_list.dart';
 import 'package:campus_mobile_experimental/ui/views/notifications/notifications.dart';
+import 'package:campus_mobile_experimental/ui/views/parking/manage_parking_view.dart';
 import 'package:campus_mobile_experimental/ui/views/profile/cards_view.dart';
 import 'package:campus_mobile_experimental/ui/views/profile/profile.dart';
-import 'package:campus_mobile_experimental/ui/views/dining/nutrition_facts_view.dart';
-import 'package:campus_mobile_experimental/ui/views/surf/surf_report_view.dart';
 import 'package:campus_mobile_experimental/ui/views/special_events/special_events_detail_view.dart';
+import 'package:campus_mobile_experimental/ui/views/special_events/special_events_filter_view.dart';
+import 'package:campus_mobile_experimental/ui/views/surf/surf_report_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:campus_mobile_experimental/ui/views/special_events/special_events_filter_view.dart';
-import 'package:campus_mobile_experimental/ui/views/parking/manage_parking_view.dart';
 
 class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -48,23 +46,7 @@ class Router {
             builder: (_) => prefix0.Maps(),
             settings: RouteSettings(name: RoutePaths.Map));
       case RoutePaths.MapSearch:
-        Function _getData = settings.arguments as Function;
-        return MaterialPageRoute(
-            builder: (_) => MapSearch(
-                  queryInput: _getData,
-                ),
-            settings: RouteSettings(name: RoutePaths.MapSearch));
-      case RoutePaths.MapLocationList:
-        Map<String, Object> arguments = settings.arguments;
-        Function addMarker = arguments['addMarker'] as Function;
-        List<MapSearchModel> data = arguments['data'] as List<MapSearchModel>;
-        return MaterialPageRoute(
-            builder: (_) => MapLocationList(
-                  data: data,
-                  addMarker: addMarker,
-                ),
-            settings: RouteSettings(name: RoutePaths.MapLocationList));
-
+        return MaterialPageRoute(builder: (_) => MapSearchView());
       case RoutePaths.Notifications:
         return MaterialPageRoute(
             builder: (_) => Notifications(),
