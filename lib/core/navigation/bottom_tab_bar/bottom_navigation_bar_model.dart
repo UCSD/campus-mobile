@@ -35,7 +35,7 @@ class _BottomTabBarState extends State<BottomTabBar> {
           ),
         ),
       ),
-      body: currentTab[provider.currentIndex],
+      body: IndexedStack(index: provider.currentIndex, children: currentTab),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: provider.currentIndex,

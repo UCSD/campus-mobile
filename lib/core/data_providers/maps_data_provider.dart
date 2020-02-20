@@ -30,6 +30,7 @@ class MapsDataProvider extends ChangeNotifier {
   Coordinates _coordinates;
   Map<MarkerId, Marker> _markers = Map<MarkerId, Marker>();
   TextEditingController _searchBarController = TextEditingController();
+  GoogleMapController _mapController;
 
   List<String> _searchHistory = List<String>();
 
@@ -45,7 +46,15 @@ class MapsDataProvider extends ChangeNotifier {
     );
     _markers.clear();
     _markers[marker.markerId] = marker;
+    updateMapPosition();
     notifyListeners();
+  }
+
+  void updateMapPosition() {
+    if (_markers.isNotEmpty && _mapController != null) {
+      _mapController.animateCamera(
+          CameraUpdate.newLatLng(_markers.values.toList()[0].position));
+    }
   }
 
   void reorderLocations() {
@@ -125,6 +134,7 @@ class MapsDataProvider extends ChangeNotifier {
   Coordinates get coordinates => _coordinates;
   TextEditingController get searchBarController => _searchBarController;
   bool get noResults => _noResults;
+  GoogleMapController get mapController => _mapController;
 
   ///Setters
   set coordinates(Coordinates value) {
@@ -135,5 +145,9 @@ class MapsDataProvider extends ChangeNotifier {
   set searchBarController(TextEditingController value) {
     _searchBarController = value;
     notifyListeners();
+  }
+
+  set mapController(GoogleMapController value) {
+    _mapController = value;
   }
 }

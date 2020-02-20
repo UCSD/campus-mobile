@@ -13,7 +13,7 @@ import 'package:campus_mobile_experimental/ui/views/events/events_list.dart';
 import 'package:campus_mobile_experimental/ui/views/home/home.dart';
 import 'package:campus_mobile_experimental/ui/views/links/links_list.dart';
 import 'package:campus_mobile_experimental/ui/views/map/map.dart' as prefix0;
-import 'package:campus_mobile_experimental/ui/views/map/map_search.dart';
+import 'package:campus_mobile_experimental/ui/views/map/map_search_view.dart';
 import 'package:campus_mobile_experimental/ui/views/news/news_detail_view.dart';
 import 'package:campus_mobile_experimental/ui/views/news/news_list.dart';
 import 'package:campus_mobile_experimental/ui/views/notifications/notifications.dart';
@@ -38,7 +38,7 @@ class Router {
       case RoutePaths.Map:
         return MaterialPageRoute(builder: (_) => prefix0.Maps());
       case RoutePaths.MapSearch:
-        return MaterialPageRoute(builder: (_) => MapSearch());
+        return MaterialPageRoute(builder: (_) => MapSearchView());
       case RoutePaths.Notifications:
         return MaterialPageRoute(builder: (_) => Notifications());
       case RoutePaths.Profile:
