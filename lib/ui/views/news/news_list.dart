@@ -1,9 +1,9 @@
+import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/news_data_provider.dart';
-import 'package:flutter/material.dart';
-import 'package:campus_mobile_experimental/ui/reusable_widgets/image_loader.dart';
 import 'package:campus_mobile_experimental/core/models/news_model.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
-import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
+import 'package:campus_mobile_experimental/ui/reusable_widgets/image_loader.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class NewsList extends StatelessWidget {
@@ -41,7 +41,9 @@ class NewsList extends StatelessWidget {
     }
 
     return listSize != null
-        ? Column(
+        ? ListView(
+            primary: false,
+            shrinkWrap: true,
             children: ListTile.divideTiles(tiles: newsTiles, context: context)
                 .toList(),
           )
@@ -55,6 +57,7 @@ class NewsList extends StatelessWidget {
 
   Widget buildNewsTile(Item newsItem, BuildContext context) {
     return ListTile(
+      isThreeLine: true,
       onTap: () {
         Navigator.pushNamed(context, RoutePaths.NewsDetailView,
             arguments: newsItem);
@@ -62,12 +65,14 @@ class NewsList extends StatelessWidget {
       title: Text(
         newsItem.title,
         textAlign: TextAlign.start,
-        overflow: TextOverflow.ellipsis,
+        //overflow: TextOverflow.visible,
+        style: TextStyle(fontSize: 18.0),
       ),
       subtitle: Text(
         newsItem.description,
         textAlign: TextAlign.start,
         overflow: TextOverflow.ellipsis,
+        style: TextStyle(fontSize: 16.0),
       ),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,

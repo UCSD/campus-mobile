@@ -1,3 +1,4 @@
+import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/availability_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/availability_model.dart';
@@ -5,7 +6,6 @@ import 'package:campus_mobile_experimental/ui/cards/availability/availability_di
 import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/dots_indicator.dart';
 import 'package:flutter/material.dart';
-import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:provider/provider.dart';
 
 class AvailabilityCard extends StatefulWidget {
@@ -31,7 +31,7 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
           .toggleCard('availability'),
       reload: () => _availabilityDataProvider.fetchAvailability(),
       isLoading: _availabilityDataProvider.isLoading,
-      title: Text('Availability'),
+      titleText: 'Availability',
       errorText: _availabilityDataProvider.error,
       child: () =>
           buildAvailabilityCard(_availabilityDataProvider.availabilityModels),

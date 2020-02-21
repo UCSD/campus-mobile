@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
+import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
+import 'package:campus_mobile_experimental/core/data_providers/dining_data_proivder.dart';
 import 'package:campus_mobile_experimental/core/models/dining_model.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
-import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:campus_mobile_experimental/core/data_providers/dining_data_proivder.dart';
 
 class DiningList extends StatelessWidget {
   const DiningList({
@@ -40,7 +40,9 @@ class DiningList extends StatelessWidget {
     }
 
     return listSize != null
-        ? Column(
+        ? ListView(
+            primary: false,
+            shrinkWrap: true,
             children: ListTile.divideTiles(tiles: diningTiles, context: context)
                 .toList(),
           )

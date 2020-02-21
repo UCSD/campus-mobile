@@ -1,9 +1,9 @@
+import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/events_data_provider.dart';
-import 'package:flutter/material.dart';
-import 'package:campus_mobile_experimental/ui/reusable_widgets/image_loader.dart';
 import 'package:campus_mobile_experimental/core/models/events_model.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
-import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
+import 'package:campus_mobile_experimental/ui/reusable_widgets/image_loader.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class EventsList extends StatelessWidget {
@@ -37,7 +37,9 @@ class EventsList extends StatelessWidget {
     }
 
     return listSize != null
-        ? Column(
+        ? ListView(
+            primary: false,
+            shrinkWrap: true,
             children: ListTile.divideTiles(tiles: eventTiles, context: context)
                 .toList(),
           )
@@ -52,6 +54,7 @@ class EventsList extends StatelessWidget {
 
   Widget buildEventTile(EventModel data, BuildContext context) {
     return ListTile(
+      isThreeLine: true,
       onTap: () {
         Navigator.pushNamed(context, RoutePaths.EventDetailView,
             arguments: data);
@@ -59,16 +62,38 @@ class EventsList extends StatelessWidget {
       title: Text(
         data.title,
         textAlign: TextAlign.start,
-        overflow: TextOverflow.ellipsis,
+        //overflow: TextOverflow.visible,
+        style: TextStyle(fontSize: 18.0),
       ),
-      subtitle: Text(
-        data.description,
-        textAlign: TextAlign.start,
-        overflow: TextOverflow.ellipsis,
-      ),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
+      subtitle: subtitle(data),
+//      subtitle: Text(
+//        data.description,
+//        textAlign: TextAlign.start,
+//        overflow: TextOverflow.ellipsis,
+//        style: TextStyle(fontSize: 16.0),
+//      ),
+//      trailing: Row(
+//        mainAxisSize: MainAxisSize.min,
+//        children: <Widget>[
+//          ImageLoader(url: data.imageThumb),
+//        ],
+//      ),
+    );
+  }
+
+  Widget subtitle(EventModel data) {
+    return Container(
+      height: 50,
+      child: Row(
         children: <Widget>[
+          Flexible(
+            child: Text(
+              data.description,
+              textAlign: TextAlign.start,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontSize: 16.0),
+            ),
+          ),
           ImageLoader(url: data.imageThumb),
         ],
       ),
