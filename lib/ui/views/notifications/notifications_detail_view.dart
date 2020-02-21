@@ -3,24 +3,38 @@ import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/core/data_providers/messages_data_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
+import 'dart:async';
 
 class NotificationsDetailView extends StatelessWidget{
-  NotificationsDetailView(List<MessageElement> data,Function reload){
+  NotificationsDetailView(List<MessageElement> data){
     _data = data;
-    _reload = reload;
-    //print(_data);
   }
 
   List<MessageElement> _data;
-  Function _reload;
+  MessagesDataProvider _messagesDataProvider;
+  UserDataProvider _userDataProvider;
+
+  void _updateData(){
+    if(!_messagesDataProvider.isLoading){
+      print("called");
+      if(_userDataProvider != null && _userDataProvider.isLoggedIn){
+        _messagesDataProvider.retrieveMoreMyMessages();
+      }
+      else{
+        _messagesDataProvider.retrieveMoreTopicMessages();
+      }
+    }
+  }
   
   @override
   Widget build(BuildContext context) {
+    _messagesDataProvider = Provider.of<MessagesDataProvider>(context);
+    _userDataProvider = Provider.of<UserDataProvider>(context);
     ScrollController _scrollController = ScrollController();
     _scrollController.addListener(() {
       if (_scrollController.position.maxScrollExtent ==
         _scrollController.position.pixels) {
-        _reload();
+        _updateData();
       }
     });
 
@@ -40,7 +54,11 @@ class NotificationsDetailView extends StatelessWidget{
   List<Widget> _buildMessage(BuildContext context, MessageElement data){
     return [
       ListTile(
-        leading: FlutterLogo(size: 20),
+        leading: Icon(
+          Icons.info,
+          color: Colors.grey,
+          size: 30
+        ),
         title: Column(children: <Widget>[
           Text(
             _readTimestamp(data.timestamp),
@@ -68,8 +86,22 @@ class NotificationsDetailView extends StatelessWidget{
     var diff = now.difference(date);
     var time = '';
 
-    if (diff.inHours < 24) {
-      time = diff.inHours.toString() + ' HOURS AGO';
+
+    if(diff.inMinutes < 60){
+      if(diff.inMinutes.floor() == 1){
+        time = diff.inMinutes.toString() + ' MINUTE AGO';
+      }
+      else{
+        time = diff.inMinutes.toString() + ' MINUTES AGO';
+      }
+    }
+    else if (diff.inHours < 24) {
+      if(diff.inHours.floor() == 1){
+        time = diff.inHours.toString() + ' HOUR AGO';
+      }
+      else{
+        time = diff.inHours.toString() + ' HOURS AGO';
+      }
     } else if (diff.inDays > 0 && diff.inDays < 7) {
       if (diff.inDays == 1) {
         time = diff.inDays.toString() + ' DAY AGO';
@@ -77,7 +109,7 @@ class NotificationsDetailView extends StatelessWidget{
         time = diff.inDays.toString() + ' DAYS AGO';
       }
     } else if (diff.inDays >= 7 && diff.inDays < 365) {
-      if (diff.inDays == 7) {
+      if (diff.inDays.floor() == 7) {
         time = (diff.inDays / 7).floor().toString() + ' WEEK AGO';
       } else {
         time = (diff.inDays / 7).floor().toString() + ' WEEKS AGO';
@@ -90,8 +122,10 @@ class NotificationsDetailView extends StatelessWidget{
   }
 
   Future<Null> _handleRefresh() async {
-    print("called");
-    _reload();
+    print("called handleRefresh");
+    await Future.delayed(const Duration(seconds: 2),(){
+      _messagesDataProvider.refreshMessages();
+    });
   }
 
 }

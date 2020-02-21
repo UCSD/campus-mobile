@@ -7,7 +7,7 @@ import 'package:campus_mobile_experimental/core/services/networking.dart';
 class MessageService {
   Map<String, String> headers = {
     "accept": "application/json",
-    "Authorization": "Bearer " + "86bd2fe8-9d62-3f8d-9133-359395c73b70",
+    "Authorization": "Bearer " + "14595f17-ade9-3c9c-82b2-4c2f41a85366",
   };
 
   final String mymessages_endpoint =
@@ -33,7 +33,8 @@ class MessageService {
       final data = messagesFromJson(_response);
       _isLoading = false;
       _data = data;
-      //print(_response);
+      print("IMPORTANT RESPONSE: ");
+      print(_response);
       return true;
     } catch (e) {
       /// if the authorized fetch failed we know we have to refresh the
@@ -62,7 +63,8 @@ class MessageService {
       final data = messagesFromJson(_response);
       _isLoading = false;
       _data = data;
-      //print(_response);
+      print("IMPORTANT RESPONSE: ");
+      print(_response);
       return true;
     } catch (e) {
       /// if the authorized fetch failed we know we have to refresh the

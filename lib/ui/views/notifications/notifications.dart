@@ -11,13 +11,7 @@ class Notifications extends StatefulWidget {
 
 class _NotificationsState extends State<Notifications>{
   MessagesDataProvider _messagesDataProvider;
-
-  void _updateData(){
-    if(!_messagesDataProvider.isLoading){
-      print("called");
-      _messagesDataProvider.fetchMessages();
-    }
-  }
+  List<MessageElement> _data;
 
   @override
   void didChangeDependencies(){
@@ -27,13 +21,14 @@ class _NotificationsState extends State<Notifications>{
 
   @override
   Widget build(BuildContext context) {
-    List<MessageElement> data = _messagesDataProvider.messages;
+    _data = _messagesDataProvider.messages;
     //print("right now");
 
     return Column(children: <Widget>[
+      
       Expanded(
         flex: 1, 
-        child: NotificationsDetailView(data,_updateData)
+        child: NotificationsDetailView(_data)
         )
       ],
     );
