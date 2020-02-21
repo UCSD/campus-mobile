@@ -19,8 +19,6 @@ class BottomTabBar extends StatefulWidget {
     Profile(),
   ];
 
-  int selectedIndex = 0;
-
   final List<String> tabNames = ['home', 'maps', 'notifications', 'profile'];
 
   @override
@@ -32,6 +30,7 @@ class _BottomTabBarState extends State<BottomTabBar>
   _BottomTabBarState(this.observer);
 
   final FirebaseAnalyticsObserver observer;
+  int selectedIndex = 0;
 
   @override
   void didChangeDependencies() {
@@ -52,6 +51,7 @@ class _BottomTabBarState extends State<BottomTabBar>
 
   @override
   Widget build(BuildContext context) {
+    print(selectedIndex);
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(42),
@@ -65,16 +65,16 @@ class _BottomTabBarState extends State<BottomTabBar>
           ),
         ),
       ),
-      body: IndexedStack(
-          index: widget.selectedIndex, children: widget.currentTabs),
+      body: IndexedStack(index: selectedIndex, children: widget.currentTabs),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         onTap: (index) {
           setState(() {
-            widget.selectedIndex = index;
+            selectedIndex = index;
             _sendCurrentTabToAnalytics();
           });
         },
+        currentIndex: selectedIndex,
         items: [
           BottomNavigationBarItem(
             icon: new Icon(Icons.home),
@@ -113,8 +113,7 @@ class _BottomTabBarState extends State<BottomTabBar>
 
   void _sendCurrentTabToAnalytics() {
     observer.analytics.setCurrentScreen(
-      screenName:
-          '${BottomTabBar.routeName}/${widget.tabNames[widget.selectedIndex]}',
+      screenName: '${BottomTabBar.routeName}/${widget.tabNames[selectedIndex]}',
     );
   }
 }
