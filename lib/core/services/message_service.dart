@@ -12,7 +12,7 @@ class MessageService {
 
   final String mymessages_endpoint =
       'https://api-qa.ucsd.edu:8243/mp-mymessages/1.0.0/messages?start=';
-  final String topics_endpoint = 
+  final String topics_endpoint =
       'https://bvgjvzaakl.execute-api.us-west-2.amazonaws.com/dev/topics?topics=all,freefood&start=';
   bool _isLoading = false;
   DateTime _lastUpdated;
@@ -27,20 +27,19 @@ class MessageService {
 
     try {
       /// fetch data
-      String _response = await _networkHelper.authorizedFetch(mymessages_endpoint + timestamp.toString(), headers);
+      String _response = await _networkHelper.authorizedFetch(
+          mymessages_endpoint + timestamp.toString(), headers);
 
       /// parse data
       final data = messagesFromJson(_response);
       _isLoading = false;
       _data = data;
-      print("IMPORTANT RESPONSE: ");
-      print(_response);
       return true;
     } catch (e) {
       /// if the authorized fetch failed we know we have to refresh the
       /// token for this service
       print("error fetching the data");
-      if (e.response.statusCode == 401) {
+      if (e.response?.statusCode == 401) {
         if (await getNewToken()) {
           return await fetchMyMessagesData(timestamp);
         }
@@ -57,14 +56,13 @@ class MessageService {
 
     try {
       /// fetch data
-      String _response = await _networkHelper.fetchData(topics_endpoint + timestamp.toString());
+      String _response = await _networkHelper
+          .fetchData(topics_endpoint + timestamp.toString());
 
       /// parse data
       final data = messagesFromJson(_response);
       _isLoading = false;
       _data = data;
-      print("IMPORTANT RESPONSE: ");
-      print(_response);
       return true;
     } catch (e) {
       /// if the authorized fetch failed we know we have to refresh the
@@ -81,14 +79,11 @@ class MessageService {
     }
   }
 
-  
-
   Future<bool> getNewToken() async {
     final String tokenEndpoint = "https://api-qa.ucsd.edu:8243/token";
     final Map<String, String> tokenHeaders = {
       "content-type": 'application/x-www-form-urlencoded',
-      "Authorization":
-          "Basic //REPLACE HERE"
+      "Authorization": "Basic //REPLACE HERE"
     };
     try {
       var response = await _networkHelper.authorizedPost(

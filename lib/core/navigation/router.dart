@@ -41,7 +41,7 @@ class Router {
       case RoutePaths.Map:
         return MaterialPageRoute(builder: (_) => prefix0.Map());
       case RoutePaths.Notifications:
-        return MaterialPageRoute(builder: (_) => Notifications());
+        return MaterialPageRoute(builder: (_) => NotificationsTabView());
       case RoutePaths.Profile:
         return MaterialPageRoute(builder: (_) => Profile());
       case RoutePaths.NewsViewAll:

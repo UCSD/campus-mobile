@@ -15,7 +15,7 @@ class _BottomTabBarState extends State<BottomTabBar> {
   var currentTab = [
     Home(),
     prefix0.Map(),
-    Notifications(),
+    NotificationsTabView(),
     Profile(),
   ];
 
