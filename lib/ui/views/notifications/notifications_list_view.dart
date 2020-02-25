@@ -69,7 +69,15 @@ class NotificationsListView extends StatelessWidget {
     var diff = now.difference(date);
     var time = '';
 
-    if (diff.inMinutes < 60) {
+    if(diff.inSeconds < 60){
+      if(diff.inSeconds.floor() == 1){
+        time = diff.inMinutes.toString() + ' SECOND AGO';
+      }
+      else{
+        time = diff.inMinutes.toString() + ' SECONDS AGO';
+      }
+    }
+    else if(diff.inMinutes < 60) {
       if (diff.inMinutes.floor() == 1) {
         time = diff.inMinutes.toString() + ' MINUTE AGO';
       } else {
@@ -101,7 +109,7 @@ class NotificationsListView extends StatelessWidget {
   }
 
   Future<Null> _handleRefresh(BuildContext context) async {
-    await Future.delayed(const Duration(seconds: 2), () {
+    await Future.delayed(const Duration(seconds: 3), () {
       Provider.of<MessagesDataProvider>(context).fetchMessages();
     });
   }

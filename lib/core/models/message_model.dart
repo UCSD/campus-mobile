@@ -10,18 +10,22 @@ String messagesToJson(Messages data) => json.encode(data.toJson());
 
 class Messages {
   List<MessageElement> messages;
+  int next;
 
   Messages({
     this.messages,
+    this.next
   });
 
   factory Messages.fromJson(Map<String, dynamic> json) => Messages(
         messages: List<MessageElement>.from(
             json["messages"].map((x) => MessageElement.fromJson(x))),
+        next: json["next"] == null ? null : json["next"],
       );
 
   Map<String, dynamic> toJson() => {
         "messages": List<dynamic>.from(messages.map((x) => x.toJson())),
+        "next": next == null ? null : next,
       };
 }
 

@@ -27,6 +27,7 @@ class MessagesDataProvider extends ChangeNotifier {
 
   //Fetch messages
   void fetchMessages() async {
+    
     _isLoading = true;
     _error = null;
     notifyListeners();
@@ -44,6 +45,7 @@ class MessagesDataProvider extends ChangeNotifier {
   }
 
   void retrieveMoreMyMessages() async {
+    
     _isLoading = true;
     _error = null;
 
@@ -53,10 +55,12 @@ class MessagesDataProvider extends ChangeNotifier {
     int timestamp = _previousTimestamp;
 
     if (await _messageService.fetchMyMessagesData(timestamp)) {
+      
       List<MessageElement> temp = _messageService.messagingModels.messages;
       _messages.addAll(temp);
       makeOrderedMessagesList();
-      returnedTimestamp = _messages[_messages.length - 1].timestamp;
+      
+      returnedTimestamp = _messageService.messagingModels.next == null ? 0 : _messageService.messagingModels.next;
       _lastUpdated = DateTime.now();
       _previousTimestamp = returnedTimestamp;
     } else {
@@ -68,6 +72,7 @@ class MessagesDataProvider extends ChangeNotifier {
   }
 
   void retrieveMoreTopicMessages() async {
+    
     _isLoading = true;
     _error = null;
 
@@ -77,10 +82,12 @@ class MessagesDataProvider extends ChangeNotifier {
     int timestamp = _previousTimestamp;
 
     if (await _messageService.fetchTopicData(timestamp)) {
+      
       List<MessageElement> temp = _messageService.messagingModels.messages;
       _messages.addAll(temp);
       makeOrderedMessagesList();
-      returnedTimestamp = _messages[_messages.length - 1].timestamp;
+      
+      returnedTimestamp = _messageService.messagingModels.next == null ? 0 : _messageService.messagingModels.next;
       _lastUpdated = DateTime.now();
       _previousTimestamp = returnedTimestamp;
     } else {
