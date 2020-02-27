@@ -31,7 +31,7 @@ class CardContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     if (active) {
       return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4.0),
+        padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 5),
         child: Card(
           semanticContainer: false,
           child: Column(

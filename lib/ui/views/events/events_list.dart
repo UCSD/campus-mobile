@@ -64,23 +64,12 @@ class EventsList extends StatelessWidget {
         child: Text(
           data.title,
           textAlign: TextAlign.start,
-          //overflow: TextOverflow.visible,
+          overflow: TextOverflow.ellipsis,
+          maxLines: 2,
           style: TextStyle(fontSize: 16.0),
         ),
       ),
       subtitle: subtitle(data),
-//      subtitle: Text(
-//        data.description,
-//        textAlign: TextAlign.start,
-//        overflow: TextOverflow.ellipsis,
-//        style: TextStyle(fontSize: 16.0),
-//      ),
-//      trailing: Row(
-//        mainAxisSize: MainAxisSize.min,
-//        children: <Widget>[
-//          ImageLoader(url: data.imageThumb),
-//        ],
-//      ),
     );
   }
 
@@ -98,7 +87,11 @@ class EventsList extends StatelessWidget {
               style: TextStyle(fontSize: 16.0),
             ),
           ),
-          ImageLoader(url: data.imageThumb),
+          SizedBox(width: 4),
+          ImageLoader(
+            url: data.imageThumb,
+            fullSize: true,
+          ),
         ],
       ),
     );

@@ -68,23 +68,12 @@ class NewsList extends StatelessWidget {
         child: Text(
           newsItem.title,
           textAlign: TextAlign.start,
-          //overflow: TextOverflow.visible,
+          overflow: TextOverflow.ellipsis,
+          maxLines: 2,
           style: TextStyle(fontSize: 16.0),
         ),
       ),
       subtitle: subtitle(newsItem),
-//      Text(
-//        newsItem.description,
-//        textAlign: TextAlign.start,
-//        overflow: TextOverflow.ellipsis,
-//        style: TextStyle(fontSize: 16.0),
-//      ),
-//      trailing: Row(
-//        mainAxisSize: MainAxisSize.min,
-//        children: <Widget>[
-//          ImageLoader(url: newsItem.image),
-//        ],
-//      ),
     );
   }
 
@@ -116,7 +105,11 @@ class NewsList extends StatelessWidget {
               ],
             ),
           ),
-          ImageLoader(url: data.image),
+          SizedBox(width: 4),
+          ImageLoader(
+            url: data.image,
+            fullSize: true,
+          ),
         ],
       ),
     );
