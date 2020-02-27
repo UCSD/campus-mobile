@@ -18,9 +18,7 @@ class NewsCard extends StatelessWidget {
     actionButtons.add(FlatButton(
       child: Text(
         'View All',
-        style: TextStyle(color: Theme.of(context).textTheme.button.color),
       ),
-      color: Theme.of(context).buttonColor,
       onPressed: () {
         Navigator.pushNamed(context, RoutePaths.NewsViewAll);
       },

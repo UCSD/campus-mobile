@@ -59,11 +59,14 @@ class EventsList extends StatelessWidget {
         Navigator.pushNamed(context, RoutePaths.EventDetailView,
             arguments: data);
       },
-      title: Text(
-        data.title,
-        textAlign: TextAlign.start,
-        //overflow: TextOverflow.visible,
-        style: TextStyle(fontSize: 18.0),
+      title: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 3.0),
+        child: Text(
+          data.title,
+          textAlign: TextAlign.start,
+          //overflow: TextOverflow.visible,
+          style: TextStyle(fontSize: 16.0),
+        ),
       ),
       subtitle: subtitle(data),
 //      subtitle: Text(
@@ -91,6 +94,7 @@ class EventsList extends StatelessWidget {
               data.description,
               textAlign: TextAlign.start,
               overflow: TextOverflow.ellipsis,
+              maxLines: 2,
               style: TextStyle(fontSize: 16.0),
             ),
           ),
