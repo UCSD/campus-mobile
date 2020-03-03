@@ -80,7 +80,7 @@ class CardContainer extends StatelessWidget {
           height: 224, width: 224, child: CircularProgressIndicator());
     } else {
       return Container(
-        constraints: BoxConstraints(maxHeight: 320, maxWidth: 406),
+        constraints: BoxConstraints(maxHeight: 350, maxWidth: 406),
         child: child(),
       );
     }

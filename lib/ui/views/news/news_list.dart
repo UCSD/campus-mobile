@@ -96,11 +96,8 @@ class NewsList extends StatelessWidget {
                 SizedBox(
                   height: 5,
                 ),
-                Container(
-                  child: Text(
-                    DateFormat.yMMMMd().format(data.date.toLocal()),
-                    style: TextStyle(color: Colors.blue),
-                  ),
+                Text(
+                  DateFormat.yMMMMd().format(data.date.toLocal()),
                 ),
               ],
             ),

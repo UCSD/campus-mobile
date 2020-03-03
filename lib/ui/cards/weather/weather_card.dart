@@ -61,7 +61,7 @@ class WeatherCard extends StatelessWidget {
   }
 
   Widget buildCardContent(WeatherModel data) {
-    return Column(children: <Widget>[
+    return ListView(shrinkWrap: true, primary: false, children: <Widget>[
       buildCurrentWeather(data.currentWeather),
       buildWeeklyForecast(data.weeklyForecast),
     ]);
