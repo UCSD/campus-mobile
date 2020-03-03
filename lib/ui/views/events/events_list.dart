@@ -3,6 +3,7 @@ import 'package:campus_mobile_experimental/core/data_providers/events_data_provi
 import 'package:campus_mobile_experimental/core/models/events_model.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/image_loader.dart';
+import 'package:campus_mobile_experimental/ui/reusable_widgets/time_range_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -91,13 +92,12 @@ class EventsList extends StatelessWidget {
                   style: TextStyle(fontSize: 16.0),
                 ),
                 SizedBox(height: 5),
-                Text(
-                  DateFormat.MMMMd().format(data.eventDate.toLocal()) +
-                      ', ' +
-                      data.startTime +
-                      ' - ' +
-                      data.endTime,
-                  style: TextStyle(color: Colors.blue),
+                Row(
+                  children: <Widget>[
+                    Text(DateFormat.MMMMd().format(data.eventDate.toLocal()) +
+                        ', '),
+                    TimeRangeWidget(time: data.startTime + ' - ' + data.endTime)
+                  ],
                 ),
               ],
             ),
