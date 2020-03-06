@@ -1,33 +1,32 @@
 import 'package:campus_mobile_experimental/core/data_providers/availability_data_provider.dart';
-import 'package:campus_mobile_experimental/core/data_providers/class_schedule_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/dining_data_proivder.dart';
 import 'package:campus_mobile_experimental/core/data_providers/events_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/links_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/location_data_provider.dart';
-import 'package:campus_mobile_experimental/core/data_providers/maps_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/news_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/parking_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/special_events_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/surf_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/weather_data_provider.dart';
+import 'package:campus_mobile_experimental/core/services/bottom_navigation_bar_service.dart';
 import 'package:campus_mobile_experimental/core/models/coordinates_model.dart';
 import 'package:campus_mobile_experimental/core/navigation/top_navigation_bar/app_bar.dart';
-import 'package:campus_mobile_experimental/core/services/bottom_navigation_bar_service.dart';
 import 'package:provider/provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/messages_data_provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
-
-final FirebaseAnalytics analytics = FirebaseAnalytics();
-final FirebaseAnalyticsObserver observer =
-    FirebaseAnalyticsObserver(analytics: analytics);
 
 List<SingleChildWidget> providers = [
   ...independentServices,
   ...dependentServices,
   ...uiConsumableProviders,
 ];
+
+final FirebaseAnalytics analytics = FirebaseAnalytics();
+final FirebaseAnalyticsObserver observer =
+FirebaseAnalyticsObserver(analytics: analytics);
 
 List<SingleChildWidget> independentServices = [
   Provider.value(value: observer),
@@ -88,22 +87,15 @@ List<SingleChildWidget> independentServices = [
   ),
 ];
 List<SingleChildWidget> dependentServices = [
-  ChangeNotifierProxyProvider<Coordinates, DiningDataProvider>(create: (_) {
+  ChangeNotifierProxyProvider<Coordinates, DiningDataProvider>(
+      create: (_) {
     var diningDataProvider = DiningDataProvider();
     diningDataProvider.fetchDiningLocations();
     return diningDataProvider;
   }, update: (_, coordinates, diningDataProvider) {
-    diningDataProvider..coordinates = coordinates;
+    diningDataProvider.coordinates = coordinates;
     diningDataProvider.populateDistances();
     return diningDataProvider;
-  }),
-  ChangeNotifierProxyProvider<Coordinates, MapsDataProvider>(create: (_) {
-    var mapsDataProvider = MapsDataProvider();
-    return mapsDataProvider;
-  }, update: (_, coordinates, mapsDataProvider) {
-    mapsDataProvider.coordinates = coordinates;
-    mapsDataProvider.populateDistances();
-    return mapsDataProvider;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, ParkingDataProvider>(
     create: (_) {
@@ -111,26 +103,30 @@ List<SingleChildWidget> dependentServices = [
       parkingDataProvider.fetchParkingLots();
       return parkingDataProvider;
     },
-    update: (_, userDataProvider, parkingDataProvider) =>
-        parkingDataProvider..userDataProvider = userDataProvider,
-  ),
-  ChangeNotifierProxyProvider<UserDataProvider, ClassScheduleDataProvider>(
-      create: (_) {
-    var classDataProvider = ClassScheduleDataProvider();
-    return classDataProvider;
-  }, update: (_, userDataProvider, classScheduleDataProvider) {
-    classScheduleDataProvider..userDataProvider = userDataProvider;
-    classScheduleDataProvider.fetchData();
-    return classScheduleDataProvider;
-  }),
+    update: (_, userDataProvider, parkingDataProvider) {
+      parkingDataProvider.userDataProvider = userDataProvider;
+      return parkingDataProvider;
+    }),
   ChangeNotifierProxyProvider<UserDataProvider, AvailabilityDataProvider>(
     create: (_) {
       var availabilityDataProvider = AvailabilityDataProvider();
       availabilityDataProvider.fetchAvailability();
       return availabilityDataProvider;
     },
-    update: (_, userDataProvider, availabilityDataProvider) =>
-        availabilityDataProvider..userDataProvider = userDataProvider,
+    update: (_, userDataProvider, availabilityDataProvider) {
+    availabilityDataProvider.userDataProvider = userDataProvider;
+    return availabilityDataProvider;
+    }),
+  ChangeNotifierProxyProvider<UserDataProvider, MessagesDataProvider>(
+      create: (_) {
+      var messageDataProvider = MessagesDataProvider(); 
+      return messageDataProvider;
+    },
+    update: (_, userDataProvider, messageDataProvider) {
+        messageDataProvider.userDataProvider = userDataProvider;
+        messageDataProvider.fetchMessages();
+        return messageDataProvider;
+    }
   ),
 ];
 List<SingleChildWidget> uiConsumableProviders = [];
