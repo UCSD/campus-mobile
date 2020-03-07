@@ -32,7 +32,7 @@ class MessagesDataProvider extends ChangeNotifier {
     _error = null;
     notifyListeners();
     _messages.clear();
-    _previousTimestamp = 0;
+    _previousTimestamp = DateTime.now().millisecondsSinceEpoch;
 
     if (_userDataProvider != null && _userDataProvider.isLoggedIn) {
       retrieveMoreMyMessages();

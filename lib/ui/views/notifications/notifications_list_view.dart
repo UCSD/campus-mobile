@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/core/data_providers/messages_data_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'dart:async';
 
 class NotificationsListView extends StatelessWidget {
@@ -11,6 +13,7 @@ class NotificationsListView extends StatelessWidget {
       if (Provider.of<UserDataProvider>(context) != null &&
           Provider.of<UserDataProvider>(context).isLoggedIn) {
         Provider.of<MessagesDataProvider>(context).retrieveMoreMyMessages();
+        print("pagination here");
       } else {
         Provider.of<MessagesDataProvider>(context).retrieveMoreTopicMessages();
       }
@@ -23,7 +26,9 @@ class NotificationsListView extends StatelessWidget {
     _scrollController.addListener(() {
       if (_scrollController.position.maxScrollExtent ==
           _scrollController.position.pixels) {
+        //double previousMaxScroll = _scrollController.position.pixels;
         _updateData(context);
+        _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
       }
     });
 
@@ -57,7 +62,18 @@ class NotificationsListView extends StatelessWidget {
           ],
           crossAxisAlignment: CrossAxisAlignment.start,
         ),
-        subtitle: Text(data.message.message, style: TextStyle(fontSize: 12.5)),
+        subtitle: Linkify(
+          text: data.message.message,
+          onOpen: (link) async {
+            if (await canLaunch(link.url)) {
+                await launch(link.url);
+            } else {
+                throw 'Could not launch $link';
+            }
+          },
+          options: LinkifyOptions(humanize: false),
+          style: TextStyle(fontSize: 12.5)
+        )
       ),
       Divider()
     ];
