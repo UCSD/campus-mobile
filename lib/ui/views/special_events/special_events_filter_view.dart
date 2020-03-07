@@ -1,5 +1,5 @@
 import 'package:campus_mobile_experimental/core/data_providers/special_events_data_provider.dart';
-import 'package:campus_mobile_experimental/ui/views/special_events/special_events_detail_view.dart';
+import 'package:campus_mobile_experimental/ui/reusable_widgets/HexColor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';

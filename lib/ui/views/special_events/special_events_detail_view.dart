@@ -1,5 +1,6 @@
 import 'package:campus_mobile_experimental/core/data_providers/special_events_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/special_events_model.dart';
+import 'package:campus_mobile_experimental/ui/reusable_widgets/HexColor.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
 import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
@@ -12,9 +13,8 @@ class SpecialEventsViewModel extends StatefulWidget {
 }
 
 class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
-  String currentDateSelection = "2018-09-22";
   var appBarTitleText = new Text("LOADING");
-  bool isFull = true; // Toggle true for full schedule / false for my Schedule
+  SpecialEventsDataProvider dataProvider;
 
   Map<String, bool> myEventList;
 
@@ -26,31 +26,29 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
 
   @override
   Widget build(BuildContext context) {
-    if (Provider.of<SpecialEventsDataProvider>(context).error != null) {
-      return Center(
-          child: ContainerView(
-              child:
-                  Text(Provider.of<SpecialEventsDataProvider>(context).error)));
-    } else if (Provider.of<SpecialEventsDataProvider>(context).isLoading) {
+    dataProvider = Provider.of<SpecialEventsDataProvider>(context);
+    if (dataProvider.error != null) {
+      return Center(child: ContainerView(child: Text(dataProvider.error)));
+    } else if (dataProvider.isLoading) {
       return ContainerView(child: Center(child: CircularProgressIndicator()));
     }
     return buildDetailView(context);
   }
 
   Widget buildDetailView(BuildContext context) {
-    return buildEventsCard(
-        Provider.of<SpecialEventsDataProvider>(context).specialEventsModel);
+    return buildEventsCard(dataProvider.specialEventsModel);
   }
 
-// Helper function that adds dynamic scaffold and filter button
+  // Helper function that adds dynamic scaffold and filter button
   Widget addScaffoldToChild(Widget child) {
-    //appBarTitleText = new Text(name);
     return new Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(42),
         child: AppBar(
             title: Center(child: appBarTitleText), // Dynamically changed
-            actions: <Widget>[isFull ? filterButtonEnabled() : Container()]),
+            actions: <Widget>[
+              dataProvider.isFull ? filterButtonEnabled() : Container()
+            ]),
       ),
       body: child,
     );
@@ -75,18 +73,18 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
   Widget buildEventsCard(SpecialEventsModel data) {
     appBarTitleText = new Text(data.name);
 
-    List<String> uids = selectEvents(data);
+    List<String> uids = dataProvider.selectEvents();
     return addScaffoldToChild(Column(children: <Widget>[
       SizedBox(
           height: 50,
           child: ListView(
               scrollDirection: Axis.horizontal,
               children: buildDateWidgets(data.dates))),
-      isFull
-          ? (filtersApplied() ? addFiltersWidget() : Container())
+      dataProvider.isFull
+          ? (dataProvider.filtersApplied ? addFiltersWidget() : Container())
           : Container(),
       SizedBox(
-        height: filtersApplied() ? 475 : 500,
+        height: dataProvider.filtersApplied ? 475 : 500,
         child: ListView.builder(
             itemCount: uids.length,
             itemBuilder: (BuildContext ctxt, int index) =>
@@ -98,8 +96,7 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
 
   Widget addFiltersWidget() {
     String filters;
-    Map<String, bool> filterMap =
-        Provider.of<SpecialEventsDataProvider>(context).filters;
+    Map<String, bool> filterMap = dataProvider.filters;
     filterMap.forEach((String key, bool val) {
       if (val) {
         if (filters == null) {
@@ -135,7 +132,7 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
                 .toIso8601String()
                 .substring(0, f.toIso8601String().indexOf("T"));
             setState(() {
-              currentDateSelection = newDateKey;
+              dataProvider.setDateString(newDateKey);
             });
           },
           child: Text(
@@ -150,54 +147,7 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
     String newDateKey = dateTime
         .toIso8601String()
         .substring(0, dateTime.toIso8601String().indexOf("T"));
-    return (newDateKey == currentDateSelection);
-  }
-
-// Helper method that selects events to display based on filters and myschedule selection
-  List<String> selectEvents(SpecialEventsModel data) {
-    List<String> itemsForDate = data.dateItems[currentDateSelection];
-
-    if (isFull) {
-      if (filtersApplied())
-        return applyFilters(itemsForDate, data);
-      else
-        return itemsForDate; // No filters applied
-    } else {
-      List<String> myItemsForDate = new List<String>();
-      itemsForDate.forEach((f) => {
-            if (myEventList[f] == true) {myItemsForDate.add(f)}
-          });
-      return myItemsForDate;
-    }
-  }
-
-  // Helper method to check if any filters have been apllied
-  bool filtersApplied() {
-    Map<String, bool> filterMap =
-        Provider.of<SpecialEventsDataProvider>(context).filters;
-    return filterMap.containsValue(true);
-  }
-
-  // Makes new list of event UIDs after appliying fliters and maintains order
-  List<String> applyFilters(List<String> events, SpecialEventsModel data) {
-    List<String> filteredEvents = new List<String>();
-    Map<String, bool> filterMap =
-        Provider.of<SpecialEventsDataProvider>(context).filters;
-    for (int i = 0; i < events.length; i++) {
-      String filter = getLabel(events[i], data);
-      if (filterMap[filter]) {
-        filteredEvents.add(events[i]);
-      }
-    }
-    return filteredEvents;
-  }
-
-  //Helper function to get label given UID as string
-  String getLabel(String uid, SpecialEventsModel data) {
-    for (int i = 0; i < data.labels.length; i++) {
-      if (data.labelItems[data.labels[i]].contains(uid)) return data.labels[i];
-    }
-    return null;
+    return (newDateKey == dataProvider.currentDateSelection);
   }
 
   Widget buildEventWidget(
@@ -269,7 +219,7 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
             height: 67,
             width: MediaQuery.of(context).size.width / 2,
             child: FlatButton(
-              color: isFull ? Colors.blue : Colors.white,
+              color: dataProvider.isFull ? Colors.blue : Colors.white,
               textColor: Colors.black,
               disabledColor: Colors.grey,
               disabledTextColor: Colors.black,
@@ -279,7 +229,7 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
               child: Text('Full Schedule'),
               onPressed: () {
                 setState(() {
-                  isFull = true;
+                  dataProvider.switchToFullSchedule();
                 });
               },
             )),
@@ -287,7 +237,7 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
             height: 67,
             width: MediaQuery.of(context).size.width / 2,
             child: FlatButton(
-              color: isFull ? Colors.white : Colors.blue,
+              color: dataProvider.isFull ? Colors.white : Colors.blue,
               textColor: Colors.black,
               disabledColor: Colors.grey,
               disabledTextColor: Colors.black,
@@ -297,24 +247,11 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
               child: Text('My Schedule'),
               onPressed: () {
                 setState(() {
-                  isFull = false;
+                  dataProvider.switchToMySchedule();
                 });
               },
             ))
       ],
     );
   }
-}
-
-//Helper class to convert RGB to ARGB for flutter
-class HexColor extends Color {
-  static int _getColorFromHex(String hexColor) {
-    hexColor = hexColor.toUpperCase().replaceAll("#", "");
-    if (hexColor.length == 6) {
-      hexColor = "FF" + hexColor;
-    }
-    return int.parse(hexColor, radix: 16);
-  }
-
-  HexColor(final String hexColor) : super(_getColorFromHex(hexColor));
 }

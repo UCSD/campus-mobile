@@ -1,5 +1,6 @@
 import 'package:campus_mobile_experimental/core/data_providers/special_events_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/special_events_model.dart';
+import 'package:campus_mobile_experimental/ui/reusable_widgets/HexColor.dart';
 import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -138,18 +139,4 @@ Widget buildLocationTile(Schedule event) {
   return RichText(
       text:
           TextSpan(text: locDateString, style: TextStyle(color: Colors.grey)));
-}
-
-//Helper class to convert RGB to ARGB for flutter
-//TODO - Add to like a shared library
-class HexColor extends Color {
-  static int _getColorFromHex(String hexColor) {
-    hexColor = hexColor.toUpperCase().replaceAll("#", "");
-    if (hexColor.length == 6) {
-      hexColor = "FF" + hexColor;
-    }
-    return int.parse(hexColor, radix: 16);
-  }
-
-  HexColor(final String hexColor) : super(_getColorFromHex(hexColor));
 }
