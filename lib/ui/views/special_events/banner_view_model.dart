@@ -23,7 +23,7 @@ class _BannerCardState extends State<BannerCard> {
   Widget buildBannerView() {
     return GestureDetector(
         onTap: () {
-          Navigator.pushNamed(context, RoutePaths.SpecialEventsDetailView);
+          Navigator.pushNamed(context, RoutePaths.SpecialEventsListView);
         },
         child: ImageLoader(
           url:
@@ -32,9 +32,3 @@ class _BannerCardState extends State<BannerCard> {
         ));
   }
 }
-
-// void navigateToSpecialEvents() async {
-//   bool result = await Navigator.push(context,
-//     MaterialPageRoute(builder: (context) => Text("DATA!!!!"))
-//     );
-// }

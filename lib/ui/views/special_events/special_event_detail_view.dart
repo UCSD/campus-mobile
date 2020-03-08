@@ -7,9 +7,9 @@ import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-class SpecialEventsInfoView extends StatelessWidget {
+class SpecialEventsDetailView extends StatelessWidget {
   final String argument;
-  const SpecialEventsInfoView({Key key, this.argument}) : super(key: key);
+  const SpecialEventsDetailView({Key key, this.argument}) : super(key: key);
   //final Map<String, bool> myEventList;
   @override
   Widget build(BuildContext context) {
@@ -22,8 +22,9 @@ class SpecialEventsInfoView extends StatelessWidget {
   Widget addScaffold(context, String title, uid) {
     SpecialEventsModel data =
         Provider.of<SpecialEventsDataProvider>(context).specialEventsModel;
-    
+
     Schedule event = data.schedule[uid];
+    print(event);
     return Scaffold(
         appBar: AppBar(
           title: Text(title),
@@ -32,7 +33,7 @@ class SpecialEventsInfoView extends StatelessWidget {
           child: ListView(children: <Widget>[
             ListTile(
               title: buildHeader(event),
-              trailing:  buildTrailing(event, context),
+              trailing: buildTrailing(event, context),
             ),
             ListTile(
               title: buildEventTitle(event),
@@ -55,6 +56,12 @@ class SpecialEventsInfoView extends StatelessWidget {
   }
 
   Widget buildHeader(Schedule event) {
+    print("HERE \n\n\n\n");
+
+    print(event);
+
+    //Color labelTheme = HexColor._getColorFromHex(event.labelTheme);
+    //String tmp = event.labelTheme;
     Color labelTheme = HexColor(event.labelTheme);
     // epoch time diff in Milliseconds -> to minutes
     num time = (event.endTime - event.startTime) / (1000 * 60);
@@ -99,41 +106,30 @@ Widget buildHostTile(Schedule event) {
           style: TextStyle(color: ColorSecondary)));
 }
 
-  //Add event from myList
-  void isGoing(BuildContext context, String uid) {
-    Provider.of<SpecialEventsDataProvider>(context, listen: false)
-        .addToMyEvents(uid);
-  }
-
-  //Remove event from myList
-  void notGoing(BuildContext context, String uid) {
-    Provider.of<SpecialEventsDataProvider>(context, listen: false)
-        .removeFromMyEvents(uid);
-  }
-
-  Widget buildTrailing(Schedule event, BuildContext context) {
-    Map<String, bool> myEventList;
-    myEventList = Provider.of<SpecialEventsDataProvider>(context).myEventsList;
-    if (myEventList[event.id] != null && myEventList[event.id]) {
-      return GestureDetector(
-          onTap: () {
-            notGoing(context, event.id);
-          },
-          child: Icon(Icons.star,
-              color: Colors.yellow, size: 54, semanticLabel: 'Going'));
-    } else
-      return GestureDetector(
-          onTap: () {
-            isGoing(context, event.id);
-          },
-          child: Icon(Icons.star_border,
-              color: Colors.yellow, size: 54, semanticLabel: 'Not Going'));
-  }
+Widget buildTrailing(Schedule event, BuildContext context) {
+  Map<String, bool> myEventList;
+  myEventList = Provider.of<SpecialEventsDataProvider>(context).myEventsList;
+  if (myEventList[event.id] != null && myEventList[event.id]) {
+    return GestureDetector(
+        onTap: () {
+          Provider.of<SpecialEventsDataProvider>(context)
+              .removeFromMyEvents(event.id);
+        },
+        child: Icon(Icons.star,
+            color: Colors.yellow, size: 54, semanticLabel: 'Going'));
+  } else
+    return GestureDetector(
+        onTap: () {
+          Provider.of<SpecialEventsDataProvider>(context)
+              .addToMyEvents(event.id);
+        },
+        child: Icon(Icons.star_border,
+            color: Colors.yellow, size: 54, semanticLabel: 'Not Going'));
+}
 
 Widget buildLocationTile(Schedule event) {
   DateTime date = new DateTime.fromMillisecondsSinceEpoch(event.startTime);
   String time = DateFormat.jm().format(date);
-  //String dateString = (DateFormat('yMMMd').format(date));
   String dateString = (DateFormat("MMM d'th' y").format(date));
   String locDateString = event.location + " - " + dateString + ", " + time;
   return RichText(

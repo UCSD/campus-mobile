@@ -17,6 +17,7 @@ class SpecialEventsDataProvider extends ChangeNotifier {
   ///STATES
   bool _isLoading;
   bool _isFull;
+  Text _appBarTitleText;
   int _numFiltersApplied;
   bool _filtersApplied;
   DateTime _lastUpdated;
@@ -34,6 +35,7 @@ class SpecialEventsDataProvider extends ChangeNotifier {
 
   void fetchData() async {
     _isLoading = true;
+    _appBarTitleText = new Text("LOADING");
     _error = null;
     notifyListeners();
     if (await _specialEventsService.fetchData()) {
@@ -41,7 +43,6 @@ class SpecialEventsDataProvider extends ChangeNotifier {
       _lastUpdated = DateTime.now();
       populateFilters();
     } else {
-      ///TODO: determine what error to show to the user
       _error = _specialEventsService.error;
     }
     _isLoading = false;
@@ -102,6 +103,19 @@ class SpecialEventsDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setTitleText(String name) {
+    _appBarTitleText = new Text(name);
+    notifyListeners();
+  }
+
+  //Helper function to check which date button is active while re rendering
+  bool isSelectedDate(DateTime dateTime) {
+    String newDateKey = dateTime
+        .toIso8601String()
+        .substring(0, dateTime.toIso8601String().indexOf("T"));
+    return (newDateKey == _currentDateSelection);
+  }
+
   List<String> selectEvents() {
     List<String> itemsForDate =
         _specialEventsModel.dateItems[_currentDateSelection];
@@ -145,6 +159,7 @@ class SpecialEventsDataProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   bool get isFull => _isFull;
   bool get filtersApplied => _filtersApplied;
+  Text get appBarTitleText => _appBarTitleText;
   String get error => _error;
   String get currentDateSelection => _currentDateSelection;
   DateTime get lastUpdated => _lastUpdated;

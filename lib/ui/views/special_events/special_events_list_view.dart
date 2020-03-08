@@ -7,13 +7,12 @@ import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-class SpecialEventsViewModel extends StatefulWidget {
+class SpecialEventsListView extends StatefulWidget {
   @override
-  _SpecialEventsViewModelState createState() => _SpecialEventsViewModelState();
+  _SpecialEventsListViewState createState() => _SpecialEventsListViewState();
 }
 
-class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
-  var appBarTitleText = new Text("LOADING");
+class _SpecialEventsListViewState extends State<SpecialEventsListView> {
   SpecialEventsDataProvider dataProvider;
 
   Map<String, bool> myEventList;
@@ -45,7 +44,8 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(42),
         child: AppBar(
-            title: Center(child: appBarTitleText), // Dynamically changed
+            title: Center(
+                child: dataProvider.appBarTitleText), // Dynamically changed
             actions: <Widget>[
               dataProvider.isFull ? filterButtonEnabled() : Container()
             ]),
@@ -71,7 +71,7 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
   }
 
   Widget buildEventsCard(SpecialEventsModel data) {
-    appBarTitleText = new Text(data.name);
+    dataProvider.setTitleText(data.name);
 
     List<String> uids = dataProvider.selectEvents();
     return addScaffoldToChild(Column(children: <Widget>[
@@ -120,7 +120,7 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
   List<Widget> buildDateWidgets(List<DateTime> dates) {
     dateButtonList = new List<Widget>();
     dates.forEach((f) => dateButtonList.add(FlatButton(
-          color: isSelectedDate(f) ? Colors.blue : Colors.white,
+          color: dataProvider.isSelectedDate(f) ? Colors.blue : Colors.white,
           textColor: Colors.black,
           disabledColor: Colors.grey,
           disabledTextColor: Colors.black,
@@ -142,14 +142,6 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
     return dateButtonList;
   }
 
-//Helper function to check which date button is active while re rendering
-  bool isSelectedDate(DateTime dateTime) {
-    String newDateKey = dateTime
-        .toIso8601String()
-        .substring(0, dateTime.toIso8601String().indexOf("T"));
-    return (newDateKey == dataProvider.currentDateSelection);
-  }
-
   Widget buildEventWidget(
       BuildContext ctxt, SpecialEventsModel data, String uid) {
     Schedule event = data.schedule[uid];
@@ -160,7 +152,7 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
       subtitle: buildSubtitle(event),
       trailing: buildTrailing(event),
       onTap: () {
-        Navigator.pushNamed(context, RoutePaths.SpecialEventsInfoView,
+        Navigator.pushNamed(context, RoutePaths.SpecialEventsDetailView,
             arguments: uid);
       },
     );
@@ -183,30 +175,18 @@ class _SpecialEventsViewModelState extends State<SpecialEventsViewModel> {
     );
   }
 
-  //Add event from myList
-  void isGoing(String uid) {
-    Provider.of<SpecialEventsDataProvider>(context, listen: false)
-        .addToMyEvents(uid);
-  }
-
-  //Remove event from myList
-  void notGoing(String uid) {
-    Provider.of<SpecialEventsDataProvider>(context, listen: false)
-        .removeFromMyEvents(uid);
-  }
-
   Widget buildTrailing(Schedule event) {
     if (myEventList[event.id] != null && myEventList[event.id]) {
       return GestureDetector(
           onTap: () {
-            notGoing(event.id);
+            dataProvider.removeFromMyEvents(event.id);
           },
           child: Icon(Icons.star,
               color: Colors.yellow, size: 54, semanticLabel: 'Going'));
     } else
       return GestureDetector(
           onTap: () {
-            isGoing(event.id);
+            dataProvider.addToMyEvents(event.id);
           },
           child: Icon(Icons.star_border,
               color: Colors.yellow, size: 54, semanticLabel: 'Not Going'));
