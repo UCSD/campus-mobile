@@ -63,6 +63,8 @@
 	<string>$(PRODUCT_NAME) Apple music use.</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>$(PRODUCT_NAME) bluetooth use.</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>$(PRODUCT_NAME) bluetooth use.</string>
 	<key>NSCalendarsUsageDescription</key>
 	<string>$(PRODUCT_NAME) calendar use.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>

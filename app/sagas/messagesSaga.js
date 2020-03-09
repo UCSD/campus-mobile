@@ -49,8 +49,9 @@ function* registerToken(action) {
 		try {
 			yield put({ type: 'POST_TOKEN_REQUEST' })
 
+			const uniqueId = Device.getUniqueId()
 			const { response, timeout } = yield race({
-				response: call(MessagesService.PostPushToken, token, Device.getUniqueID()),
+				response: call(MessagesService.PostPushToken, token, uniqueId),
 				timeout: delay( MESSAGING_TTL)
 			})
 

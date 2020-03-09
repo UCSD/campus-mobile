@@ -4,26 +4,30 @@ const { FEEDBACK_URL } = require('../AppSettings')
 
 const FeedbackService = {
 	FetchFeedback(feedback) {
+		const brand = Device.getBrand()
+		const model = Device.getModel()
+		const deviceId = Device.getDeviceId()
+		const systemName = Device.getSystemName()
+		const systemVersion = Device.getSystemVersion()
+		const bundleId = Device.getBundleId()
+		const version = Device.getVersion()
+		const buildNumber = Device.getBuildNumber()
+
+
 		const formData = new FormData()
 		formData.append('element_1', feedback.comment)
 		formData.append('element_2', feedback.name)
 		formData.append('element_3', feedback.email)
 		formData.append(
 			'element_4',
-			'Device Manufacturer: ' + Device.getManufacturer() + '\n' +
-			'Device Brand: ' + Device.getBrand() + '\n' +
-			'Device Model: ' + Device.getModel() + '\n' +
-			'Device ID: ' + Device.getDeviceId() + '\n' +
-			'System Name: ' + Device.getSystemName() + '\n' +
-			'System Version: ' + Device.getSystemVersion() + '\n' +
-			'Bundle ID: ' + Device.getBundleId() + '\n' +
-			'App Version: ' + Device.getVersion() + '\n' +
-			'Build Number: ' + Device.getBuildNumber() + '\n' +
-			'Device Name: ' + Device.getDeviceName() + '\n' +
-			'User Agent: ' + Device.getUserAgent() + '\n' +
-			'Device Locale: ' + Device.getDeviceLocale() + '\n' +
-			'Device Country: ' + Device.getDeviceCountry() + '\n' +
-			'Timezone: ' + Device.getTimezone()
+			'\nDevice Brand: ' + brand
+			+ '\nDevice Model: ' + model
+			+ '\nDevice ID: ' + deviceId
+			+ '\nSystem Name: ' + systemName
+			+ '\nSystem Version: ' + systemVersion
+			+ '\nBundle ID: ' + bundleId
+			+ '\nApp Version: ' + version
+			+ '\nBuild Number: ' + buildNumber
 		)
 		formData.append('form_id','175631')
 		formData.append('submit_form','1')
