@@ -8,7 +8,7 @@ function promotions(state = initialState, action) {
 
 	switch (action.type) {
 		case 'SET_PROMOTION': {
-			newState.data = action.specialEvents
+			newState.data = action.promotions
 			newState.lastUpdated = new Date().getTime()
 			return newState
 		}
