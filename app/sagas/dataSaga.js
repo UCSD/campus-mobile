@@ -30,6 +30,7 @@ const getCards = state => (state.cards)
 const getShuttle = state => (state.shuttle)
 const getUserData = state => (state.user)
 const getParkingData = state => (state.parking)
+const getPromotions = state => (state.promotions)
 
 function* watchData() {
 	while (true) {
@@ -37,6 +38,7 @@ function* watchData() {
 			yield call(updateWeather)
 			yield call(updateSurf)
 			yield call(updateSpecialEvents)
+			yield call(updatePromotions)
 			yield call(updateLinks)
 			yield call(updateParking)
 			yield call(updateEvents)
@@ -130,7 +132,7 @@ function* updateSpecialEvents() {
 			specialEvents['start-time'] <= nowTime &&
 			specialEvents['end-time'] >= nowTime) {
 			// Inside active specialEvents window
-			prefetchSpecialEventsImages(specialEvents)
+			prefetchImages(specialEvents)
 			if (cards.specialEvents.autoActivated === false) {
 				// Initialize SpecialEvents for first time use
 				// wipe saved data
@@ -167,6 +169,44 @@ function* updateSpecialEvents() {
 	}
 }
 
+function* updatePromotions() {
+	const { lastUpdated, saved } = yield select(getPromotions)
+	const { cards } = yield select(getCards)
+	const nowTime = new Date().getTime()
+	const timeDiff = nowTime - lastUpdated
+	const ttl = SPECIAL_EVENTS_TTL
+
+	if (timeDiff > ttl && Array.isArray(saved)) {
+		const promotions = yield call(PromotionsService.FetchPromtions)
+
+		if (promotions &&
+			promotions['start-time'] <= nowTime &&
+			promotions['end-time'] >= nowTime) {
+			// Inside active specialEvents window
+			prefetchImages(promotions)
+
+			if (cards.specialEvents.autoActivated === false) {
+				yield put({ type: 'SET_PROMOTION', promotions })
+				// set active and autoActivated to true
+				yield put({ type: 'UPDATE_CARD_STATE', id: 'promotions', state: true })
+				yield put({ type: 'UPDATE_AUTOACTIVATED_STATE', id: 'promotions', state: true })
+				yield put({ type: 'SHOW_CARD', id: 'promotions' })
+			} else if (cards.promotions.active) {
+				yield put({ type: 'SET_PROMOTION', promotions })
+			}
+		} else {
+			// Outside active specialEvents window
+			// Set Special Events to null
+			yield put({ type: 'SET_PROMOTION', specialEvents: null })
+
+
+			// set active and autoactivated to false
+			yield put({ type: 'UPDATE_CARD_STATE', id: 'promotions', state: false })
+			yield put({ type: 'UPDATE_AUTOACTIVATED_STATE', id: 'promotions', state: false })
+			yield put({ type: 'HIDE_CARD', id: 'promotions' })
+		}
+	}
+}
 function* updateLinks() {
 	const { lastUpdated, data } = yield select(getLinks)
 	const nowTime = new Date().getTime()
@@ -257,7 +297,7 @@ function savedExists(scheduleIds, savedArray) {
 	return existsArray
 }
 
-function prefetchSpecialEventsImages(specialEvents) {
+function prefetchImages(specialEvents) {
 	if (specialEvents.logo) {
 		Image.prefetch(specialEvents.logo)
 	}
