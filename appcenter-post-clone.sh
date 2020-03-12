@@ -4,6 +4,7 @@ echo "#### appcenter-post-clone START ####"
 
 # Install our version of Node
 set -ex
+node -v
 brew uninstall node@6
 NODE_VERSION="9.4.0"
 curl "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}.pkg" > "$HOME/Downloads/node-installer.pkg"
