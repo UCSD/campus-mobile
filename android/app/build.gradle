@@ -181,6 +181,7 @@ android {
 preBuild.doFirst { ant.replaceregexp(match:'android.support.v4.util.Pools;', replace:'androidx.core.util.Pools;', flags:'g', byline:true) { fileset(dir: '../../node_modules/react-native-gesture-handler/android/src/main/java/com/swmansion/gesturehandler/react/', includes: '*.java') }}
 
 dependencies {
+    implementation project(':bugsnag-react-native')
 	implementation fileTree(dir: "libs", include: ["*.jar"])
 	implementation "com.facebook.react:react-native:+"  // From node_modules
 
