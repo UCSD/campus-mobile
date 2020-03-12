@@ -1,5 +1,12 @@
 const initialState = {
 	cards: {
+		promotions: {
+			id: 'promotions',
+			active: false,
+			autoActivated: false,
+			name: 'Promotions',
+			component: 'PromotionsCard'
+		},
 		specialEvents: {
 			id: 'specialEvents',
 			active: false,
