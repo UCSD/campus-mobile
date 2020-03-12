@@ -20,7 +20,7 @@ export const PromotionsCard = ({ navigation, promoFeed, hideCard }) => (
 					}
 				}
 			}}
-			onClose={() => hideCard('specialEvents')}
+			onClose={() => hideCard('promotions')}
 		/>
 	</View>
 )
