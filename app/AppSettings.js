@@ -26,7 +26,7 @@ module.exports = {
 	// OTHER
 	NEWS_API_URL: 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/allstories.json',
 	EVENTS_API_URL: 'https://2jjml3hf27.execute-api.us-west-2.amazonaws.com/prod/events/student',
-	PROMOTIONS_API_URL: 'https://ucsd-its-wts-dev.s3-us-west-1.amazonaws.com/now_ucsandiego/v1/promos/mobile-app-promo-banner-qa.json',	// Point to PROD before launch
+	PROMOTIONS_API_URL: 'https://ucsd-its-wts-dev.s3-us-west-1.amazonaws.com/now_ucsandiego/v1/mobile-app-promo-banner.json',
 	SPECIAL_EVENT_API_URL: 'https://2jjml3hf27.execute-api.us-west-2.amazonaws.com/prod/events/special',
 	WEATHER_API_URL: 'https://w3wyps9yje.execute-api.us-west-2.amazonaws.com/prod/forecast?',
 	SURF_API_URL: 'https://kusyfng6mg.execute-api.us-west-2.amazonaws.com/prod/v1/surf',
