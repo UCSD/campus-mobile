@@ -3,6 +3,7 @@ import { Image } from 'react-native'
 
 import WeatherService from '../services/weatherService'
 import SpecialEventsService from '../services/specialEventsService'
+import PromotionsService from '../services/promotionsService'
 import LinksService from '../services/quicklinksService'
 import EventService from '../services/eventService'
 import NewsService from '../services/newsService'
@@ -12,6 +13,7 @@ import {
 	WEATHER_API_TTL,
 	SURF_API_TTL,
 	SPECIAL_EVENTS_TTL,
+	PROMOTIONS_API_TTL,
 	QUICKLINKS_API_TTL,
 	EVENTS_API_TTL,
 	NEWS_API_TTL,
@@ -170,22 +172,37 @@ function* updateSpecialEvents() {
 }
 
 function* updatePromotions() {
-	const { lastUpdated, saved } = yield select(getPromotions)
+
+	console.log('updatePromotions----------------------------')
+
+	const { lastUpdated } = yield select(getPromotions)
 	const { cards } = yield select(getCards)
 	const nowTime = new Date().getTime()
 	const timeDiff = nowTime - lastUpdated
-	const ttl = SPECIAL_EVENTS_TTL
+	const ttl = PROMOTIONS_API_TTL
 
-	if (timeDiff > ttl && Array.isArray(saved)) {
-		const promotions = yield call(PromotionsService.FetchPromtions)
+
+	console.log(lastUpdated)
+	console.log(cards)
+	console.log(nowTime)
+	console.log(timeDiff)
+	console.log(ttl)
+
+
+
+	if (timeDiff > ttl) {
+		const promotions = yield call(PromotionsService.FetchPromotions)
+
+		console.log('promotions---------------------')
+		console.log(promotions)
 
 		if (promotions &&
 			promotions['start-time'] <= nowTime &&
 			promotions['end-time'] >= nowTime) {
-			// Inside active specialEvents window
+			// Inside active promotions window
 			prefetchImages(promotions)
 
-			if (cards.specialEvents.autoActivated === false) {
+			if (cards.promotions.autoActivated === false) {
 				yield put({ type: 'SET_PROMOTION', promotions })
 				// set active and autoActivated to true
 				yield put({ type: 'UPDATE_CARD_STATE', id: 'promotions', state: true })
@@ -195,12 +212,11 @@ function* updatePromotions() {
 				yield put({ type: 'SET_PROMOTION', promotions })
 			}
 		} else {
-			// Outside active specialEvents window
-			// Set Special Events to null
-			yield put({ type: 'SET_PROMOTION', specialEvents: null })
+			// Outside active promotions window
+			// Set promotions to null
+			yield put({ type: 'SET_PROMOTION', promotions: null })
 
-
-			// set active and autoactivated to false
+			// Set active and autoactivated to false
 			yield put({ type: 'UPDATE_CARD_STATE', id: 'promotions', state: false })
 			yield put({ type: 'UPDATE_AUTOACTIVATED_STATE', id: 'promotions', state: false })
 			yield put({ type: 'HIDE_CARD', id: 'promotions' })
