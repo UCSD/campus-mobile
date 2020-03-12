@@ -12,6 +12,7 @@ import linksReducer from './links'
 import routesReducer from './routes'
 import scheduleReducer from './schedule'
 import specialEventsReducer from './specialEvents'
+import promotionsReducer from './promotions'
 import feedbackReducer from './feedback'
 import requestStatusesReducer from './requestStatuses'
 import requestErrorsReducer from './requestErrors'
@@ -36,6 +37,7 @@ const rootReducer = {
 	links: linksReducer,
 	routes: routesReducer,
 	specialEvents: specialEventsReducer,
+	promotions: promotionsReducer,
 	schedule: scheduleReducer,
 	feedback: feedbackReducer,
 	requestStatuses: requestStatusesReducer,
