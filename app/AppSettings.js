@@ -53,6 +53,7 @@ module.exports = {
 	SHUTTLE_API_TTL: 15000, // 15 seconds
 	DATA_SAGA_TTL: 60000, // 60 seconds
 	PARKING_API_TTL: 300000,	// 5 minutes
+	PROMOTIONS_API_TTL: 300000, // 5 minutes
 	SCHEDULE_TTL: 1800000, // 30 minutes
 	WEATHER_API_TTL: 1800000, // 30 minutes
 	SURF_API_TTL: 1800000, // 30 minutes
