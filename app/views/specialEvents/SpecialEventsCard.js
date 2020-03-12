@@ -23,6 +23,7 @@ export const SpecialEventsCard = ({ navigation, specialEvents, saved, hideCard }
 				}
 			}}
 			onClose={() => hideCard('specialEvents')}
+			allowClose={true}
 		/>
 	</View>
 )

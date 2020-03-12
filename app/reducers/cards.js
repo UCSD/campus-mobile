@@ -4,7 +4,7 @@ const initialState = {
 			id: 'promotions',
 			active: false,
 			autoActivated: false,
-			name: 'Promotions',
+			name: 'Notices', // Formerly `Promotions`
 			component: 'PromotionsCard'
 		},
 		specialEvents: {

@@ -21,6 +21,7 @@ export const PromotionsCard = ({ navigation, promoFeed, hideCard }) => (
 				}
 			}}
 			onClose={() => hideCard('promotions')}
+			allowClose={false}
 		/>
 	</View>
 )

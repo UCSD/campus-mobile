@@ -7,22 +7,23 @@ import SafeImage from './SafeImage'
 import Touchable from '../common/Touchable'
 import css from '../../styles/css'
 
-const BannerCard = ({ showButton, title, image, onPress, onClose }) => (
+const BannerCard = ({ showButton, title, image, onPress, onClose, allowClose }) => (
 	<Card>
-		<Touchable
-			onPress={() => onClose()}
-			style={css.bc_closeContainer}
-		>
-			<Text style={css.bc_closeText}>Close</Text>
-			<Icon
-				size={13}
-				name="md-close-circle"
-				style={css.bc_closeIcon}
-			/>
-		</Touchable>
-		<Touchable
-			onPress={() => onPress()}
-		>
+		{(allowClose ? (
+			<Touchable
+				onPress={() => onClose()}
+				style={css.bc_closeContainer}
+			>
+				<Text style={css.bc_closeText}>Close</Text>
+				<Icon
+					size={13}
+					name="md-close-circle"
+					style={css.bc_closeIcon}
+				/>
+			</Touchable>
+		) : null )}
+
+		<Touchable onPress={() => onPress()}>
 			{image ? (
 				<SafeImage
 					source={{ uri: image }}

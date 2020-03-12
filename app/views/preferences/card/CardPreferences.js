@@ -81,14 +81,19 @@ class CardPreferences extends Component {
 					data={this.state.cardObject}
 					order={this.props.cardOrder}
 					renderRow={
-						({ data, active, disabled }) => (
-							// Mildly confusing, but active prop from
-							// renderRow means the row has been grabbed
-							<CardPreferencesItem
-								data={data}
-								active={active}
-							/>
-						)
+						({ data, active, disabled }) => {
+							// Notices card is to remain enabled until further notice
+							if (data.name !== 'Notices') {
+								return (
+									<CardPreferencesItem
+										data={data}
+										active={active}
+									/>
+								)
+							} else {
+								return null
+							}
+						}
 					}
 					onActivateRow={key => this.toggleScroll()}
 					onChangeOrder={(nextOrder) => { this._order = nextOrder }}
