@@ -1,9 +1,9 @@
 import 'package:campus_mobile_experimental/core/models/dining_model.dart'
     as prefix0;
-import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/image_loader.dart';
 import 'package:campus_mobile_experimental/ui/views/dining/dining_menu_list.dart';
+import 'package:flutter/material.dart';
 
 class DiningDetailView extends StatelessWidget {
   const DiningDetailView({Key key, @required this.data}) : super(key: key);
@@ -11,8 +11,15 @@ class DiningDetailView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ContainerView(
-      child: ListView(
-        children: buildDetailView(context, data),
+      child: ListView.separated(
+        itemCount: buildDetailView(context, data).length,
+        separatorBuilder: (context, index) {
+          return SizedBox(height: 8);
+        },
+        padding: const EdgeInsets.all(8),
+        itemBuilder: (context, index) {
+          return buildDetailView(context, data)[index];
+        },
       ),
     );
   }
@@ -23,16 +30,13 @@ class DiningDetailView extends StatelessWidget {
       Text(
         model.name,
         textAlign: TextAlign.start,
-        style: TextStyle(
-            color: Theme.of(context).textTheme.title.color,
-            fontSize: Theme.of(context).textTheme.title.fontSize),
+        style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 26),
       ),
       Text(
         model.description,
         textAlign: TextAlign.start,
         style: TextStyle(
-            color: Theme.of(context).textTheme.subtitle.color,
-            fontSize: Theme.of(context).textTheme.subtitle.fontSize),
+            color: Theme.of(context).textTheme.subtitle.color, fontSize: 15),
       ),
       buildHours(context, model),
       buildPaymentOptions(context, model),
@@ -107,7 +111,7 @@ class DiningDetailView extends StatelessWidget {
     Widget saturday = Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text('Satuday: '),
+        Text('Saturday: '),
         Row(
           children: <Widget>[
             model.regularHours.sat != null
@@ -136,15 +140,21 @@ class DiningDetailView extends StatelessWidget {
       Text(
         "Hours:",
         textAlign: TextAlign.start,
-        style:
-            TextStyle(fontWeight: Theme.of(context).textTheme.title.fontWeight),
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
       ),
+      SizedBox(height: 6),
       monday,
+      SizedBox(height: 10),
       tuesday,
+      SizedBox(height: 10),
       wednesday,
+      SizedBox(height: 10),
       thursday,
+      SizedBox(height: 10),
       friday,
+      SizedBox(height: 10),
       saturday,
+      SizedBox(height: 10),
       sunday
     ]);
   }

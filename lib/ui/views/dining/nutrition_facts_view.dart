@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/core/models/dining_menu_items_model.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
+import 'package:flutter/material.dart';
 
 class NutritionFactsView extends StatelessWidget {
   const NutritionFactsView(

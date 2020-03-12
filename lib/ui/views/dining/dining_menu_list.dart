@@ -1,8 +1,8 @@
+import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
+import 'package:campus_mobile_experimental/core/data_providers/dining_data_proivder.dart';
 import 'package:campus_mobile_experimental/core/models/dining_menu_items_model.dart';
 import 'package:flutter/material.dart';
-import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:provider/provider.dart';
-import 'package:campus_mobile_experimental/core/data_providers/dining_data_proivder.dart';
 
 class DiningMenuList extends StatelessWidget {
   DiningMenuList({Key key, @required this.id}) : super(key: key);
@@ -17,7 +17,7 @@ class DiningMenuList extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 buildFilterButtons(),
-                buildDiningMenuList(context),
+                Container(child: buildDiningMenuList(context)),
               ],
             ),
     );
@@ -37,11 +37,13 @@ class DiningMenuList extends StatelessWidget {
               children: [
                 TextSpan(
                   text: item.name,
-                  style:
-                      TextStyle(color: Theme.of(context).textTheme.body1.color),
+                  style: TextStyle(
+                    color: Theme.of(context).buttonColor,
+                    fontSize: 18,
+                  ),
                 ),
                 TextSpan(
-                  text: " (${item.price})",
+                  text: " (\$${item.price})",
                   style:
                       TextStyle(color: Theme.of(context).textTheme.body1.color),
                 )
@@ -58,9 +60,16 @@ class DiningMenuList extends StatelessWidget {
           },
         ));
       }
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: list,
+      return ListView.separated(
+        shrinkWrap: true,
+        primary: false,
+        itemBuilder: (context, index) {
+          return list[index];
+        },
+        separatorBuilder: (context, index) {
+          return Divider(height: 8);
+        },
+        itemCount: list.length,
       );
     } else {
       return Container();
