@@ -9,6 +9,7 @@ import QuicklinksCardContainer from '../quicklinks/QuicklinksCardContainer'
 import NewsCardContainer from '../news/NewsCardContainer'
 import DiningCardContainer from '../dining/DiningCardContainer'
 import SpecialEventsCardContainer from '../specialEvents/SpecialEventsCardContainer'
+import PromotionsCard from '../promotions/PromotionsCard'
 import StudentIDCardContainer from '../studentId/StudentIDCardContainer'
 import FinalsCard from '../schedule/FinalsCard'
 import ScheduleCardContainer from '../schedule/ScheduleCardContainer'
@@ -91,6 +92,9 @@ export class Home extends React.Component {
 					}
 
 					switch (card) {
+						case 'promotions':
+							activeCards.push(<PromotionsCard key="promotions" />)
+							break
 						case 'specialEvents':
 							activeCards.push(<SpecialEventsCardContainer key="specialEvents" />)
 							break
