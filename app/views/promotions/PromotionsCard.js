@@ -4,7 +4,7 @@ import { withNavigation } from 'react-navigation'
 import { openURL } from '../../util/general'
 import BannerCard from '../common/BannerCard'
 
-export const PromotionsCard = ({ navigation, promoFeed, saved, hideCard }) => (
+export const PromotionsCard = ({ navigation, promoFeed, hideCard }) => (
 	<View>
 		<BannerCard
 			showButton={!(promoFeed['event-type'] === 'Promo Banner')}
