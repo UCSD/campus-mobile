@@ -180,60 +180,112 @@ class _CheckBoxButtonState extends State<CheckBoxButton> {
   bool _isGoing = false;
   Color _buttonColor = Colors.white;
   Color _borderColor = Color(0xFF034161);
-  Color _focusColor = Colors.grey;
   Color _textColor = Color(0xFF034161);
 
   @override
   Widget build(BuildContext context) {
+    print("border color " + _borderColor.toString());
     return Container(
       height: 20,
-      width: 110,
-      padding: EdgeInsets.only(right: 10.0),
-      child: FlatButton(
-        color: _buttonColor,
-        focusColor: _focusColor,
-        shape: RoundedRectangleBorder(
-          side: BorderSide(color: _borderColor),
-          borderRadius: BorderRadius.circular(3.0),
+      width: 100,
+      decoration: BoxDecoration(
+        border: Border.all(
+          width: 1.0,
+          color: _borderColor,
         ),
-        onPressed: (){
-          _toggleGoing();
-        }, 
-        child: Row(
-          children: <Widget>[
-            _isGoing ? 
-            Stack(
+        borderRadius: BorderRadius.all(
+          Radius.circular(2.0),
+        ),
+      ),
+      margin: EdgeInsets.only(right: 10.0),
+      child: Material(
+        color: _buttonColor,
+        child: InkWell(
+          onTap: () {
+            print("im going");
+            _toggleGoing();
+          },
+          child: Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                Center(
-                child: Container(
-                  width: 10.0,
+                SizedBox(
                   height: 10.0,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(1.0)),
-                    color: Colors.white,
-                  ),
-                )),
-                Center(
-                  child: Icon(
-                    Icons.check,
-                    size: 10.0,
-                    color: Colors.green,
-                ))
-              ]
-            ):  
-            Icon(
-              Icons.check_box_outline_blank,
-              size: 13.0,
-              color: _borderColor,
-            ),
-            Text(
-              "I'm Going!",
-              style: TextStyle(color: _textColor, fontSize: 10)
-            ),
-          ],
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  width: 8.0,
+                  child: Transform.scale(
+                    scale: 0.5,
+                    child: Checkbox(
+                      checkColor: Colors.green,
+                      activeColor: Colors.white,
+                      value: _isGoing,
+                      onChanged: (bool val) {
+                        _toggleGoing();
+                      },
+                    )
+                  )
+                ),
+                Text(
+                  "I'm Going!",
+                  style: TextStyle(color: _textColor, fontSize: 10)
+                ),
+              ],
+            )
+          ),
+            // child: CheckboxListTile(
+            //   onChanged: (bool val) {
+            //     _toggleGoing();
+            //   },
+            //   title: Text("I'm Going!"),
+            //   controlAffinity: ListTileControlAffinity.leading,
+            // )
         )
       )
+      
+      // child: FlatButton(
+      //   color: _buttonColor,
+      //   focusColor: _focusColor,
+      //   shape: RoundedRectangleBorder(
+      //     side: BorderSide(color: _borderColor),
+      //     borderRadius: BorderRadius.circular(3.0),
+      //   ),
+      //   onPressed: (){
+      //     _toggleGoing();
+      //   }, 
+          
+        // child: Row(
+        //   children: <Widget>[
+        //     _isGoing ? 
+        //     Stack(
+        //       children: <Widget>[
+        //         Center(
+        //         child: Container(
+        //           width: 10.0,
+        //           height: 10.0,
+        //           decoration: BoxDecoration(
+        //             borderRadius: BorderRadius.all(Radius.circular(1.0)),
+        //             color: Colors.white,
+        //           ),
+        //         )),
+        //         Center(
+        //           child: Icon(
+        //             Icons.check,
+        //             size: 10.0,
+        //             color: Colors.green,
+        //         ))
+        //       ]
+        //     ):  
+        //     Icon(
+        //       Icons.check_box_outline_blank,
+        //       size: 13.0,
+        //       color: _borderColor,
+        //     ),
+        //     Text(
+        //       "I'm Going!",
+        //       style: TextStyle(color: _textColor, fontSize: 10)
+        //     ),
+        //   ],
+        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        // )
     );
   }
 
@@ -243,15 +295,11 @@ class _CheckBoxButtonState extends State<CheckBoxButton> {
       if (_isGoing) {
         _buttonColor = Colors.green;
         _borderColor = Colors.green;
-        _focusColor = Color(0x00468b);
         _textColor = Colors.white;
       } else {
-        log(_isGoing.toString());
         _buttonColor = Colors.white;
         _borderColor = Color(0xFF034161);
-        _focusColor = Colors.grey;
         _textColor = Color(0xFF034161);
-        log(_textColor.toString());
       }
     });
   }
