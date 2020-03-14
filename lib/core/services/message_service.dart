@@ -7,7 +7,7 @@ import 'package:campus_mobile_experimental/core/services/networking.dart';
 class MessageService {
   Map<String, String> headers = {
     "accept": "application/json",
-    "Authorization": "Bearer " + "0375e8d2-055a-38ec-9102-b8c194a72edf",
+    "Authorization": "Bearer " + "df59d7fa-6373-31ba-85f8-65a11b4fb4fe",
   };
 
   final String mymessages_endpoint =

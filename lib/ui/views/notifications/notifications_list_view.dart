@@ -7,31 +7,50 @@ import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:async';
 
-class NotificationsListView extends StatelessWidget {
-  void _updateData(BuildContext context) {
+class NotificationsListView extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _NotificationsListViewState();
+}
+
+class _NotificationsListViewState extends State<NotificationsListView>{
+
+  @override
+  void initState(){
+    super.initState();
+
+    _scrollController.addListener((){
+      if(_scrollController.position.maxScrollExtent <= _scrollController.offset){
+        _updateData(context);
+      }
+    });
+  }
+
+  @override
+  void dispose(){
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  ScrollController _scrollController = new ScrollController();
+  bool isPerformingRequest = false;
+
+  void _updateData (BuildContext context) async {
     if (!Provider.of<MessagesDataProvider>(context).isLoading) {
       if (Provider.of<UserDataProvider>(context) != null &&
           Provider.of<UserDataProvider>(context).isLoggedIn) {
+        setState(() => isPerformingRequest = true);
         Provider.of<MessagesDataProvider>(context).retrieveMoreMyMessages();
-        print("pagination here");
+        setState(() => isPerformingRequest = false);
       } else {
+        setState(() => isPerformingRequest = true);
         Provider.of<MessagesDataProvider>(context).retrieveMoreTopicMessages();
+        setState(() => isPerformingRequest = false);
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    ScrollController _scrollController = ScrollController();
-    _scrollController.addListener(() {
-      if (_scrollController.position.maxScrollExtent ==
-          _scrollController.position.pixels) {
-        //double previousMaxScroll = _scrollController.position.pixels;
-        _updateData(context);
-        _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
-      }
-    });
-
     //print(_data);
     return RefreshIndicator(
         child: ListView.builder(
@@ -42,9 +61,10 @@ class NotificationsListView extends StatelessWidget {
             itemBuilder: (BuildContext context, int index) {
               return Column(
                   children: _buildMessage(
-                      context,
-                      Provider.of<MessagesDataProvider>(context)
-                          .messages[index]));
+                    context,
+                    Provider.of<MessagesDataProvider>(context).messages[index]
+                  )
+              );
             }),
         onRefresh: () => _handleRefresh(context));
   }
