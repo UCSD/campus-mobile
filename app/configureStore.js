@@ -1,5 +1,5 @@
 import { createStore, applyMiddleware, compose } from 'redux'
-import { persistStore, persistCombineReducers } from 'redux-persist'
+import { persistStore, persistCombineReducers, createMigrate } from 'redux-persist'
 import AsyncStorage from '@react-native-community/async-storage'
 import { createFilter } from 'redux-persist-transform-filter'
 import createSagaMiddleware from 'redux-saga'
@@ -27,10 +27,22 @@ const saveShuttleFilter = createFilter(
 	]
 )
 
+const migrations = {
+	0: state => ({
+		...state,
+		promotion: undefined
+	}),
+	1: state => ({
+		...state,
+		specialEvents: undefined
+	})
+}
+
 const persistConfig = {
 	key: 'home',
 	storage: AsyncStorage,
-	transforms: [saveMapFilter, saveShuttleFilter]
+	transforms: [saveMapFilter, saveShuttleFilter],
+	migrate: createMigrate(migrations, { debug: false })
 }
 // custom composer for redux devtools
 const composeWithTools = 
