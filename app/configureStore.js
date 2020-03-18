@@ -35,7 +35,24 @@ const migrations = {
 	1: state => ({
 		...state,
 		specialEvents: undefined
-	})
+	}),
+	2: (state) => {
+		if (state.cards.cards) {
+			if (!state.cards.cards.promotions) {
+				state.cards.cards = {
+					...state.cards.cards,
+					promotions: {
+						id: 'promotions',
+						active: true,
+						autoActivated: false,
+						name: 'Notices',
+						component: 'PromotionsCard'
+					}
+				}
+			}
+		}
+		return state
+	}
 }
 
 const persistConfig = {
