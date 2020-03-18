@@ -75,8 +75,14 @@ export class Home extends React.Component {
 
 	_getCards = () => {
 		const activeCards = []
-
 		if (Array.isArray(this.props.cardOrder)) {
+			// The promotions card is to remain at the top of the card stack until further notice
+			// Add the promotions card to the top of the card stack if it exists in cardOrder and is active
+			const promotionsCardIndex = this.props.cardOrder.findIndex(promoIndex => promoIndex === 'promotions')
+			if (promotionsCardIndex >= 0 && this.props.cards.promotions.active) {
+				activeCards.push(<PromotionsCardContainer key="promotions" />)
+			}
+
 			this.props.cardOrder.forEach((card) => {
 				if (this.props.cards[card].active) {
 					// Skip cards if they require authentication
@@ -93,7 +99,8 @@ export class Home extends React.Component {
 
 					switch (card) {
 						case 'promotions':
-							activeCards.push(<PromotionsCardContainer key="promotions" />)
+							// The promotions card is to remain at the top of the card stack until further notice
+							// See `promotionsCardIndex`
 							break
 						case 'specialEvents':
 							activeCards.push(<SpecialEventsCardContainer key="specialEvents" />)

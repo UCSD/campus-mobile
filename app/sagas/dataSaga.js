@@ -130,9 +130,9 @@ function* updateSpecialEvents() {
 	if (timeDiff > ttl && Array.isArray(saved)) {
 		const specialEvents = yield call(SpecialEventsService.FetchSpecialEvents)
 
-		if (specialEvents &&
-			specialEvents['start-time'] <= nowTime &&
-			specialEvents['end-time'] >= nowTime) {
+		if (specialEvents
+			&& specialEvents['start-time'] <= nowTime
+			&& specialEvents['end-time'] >= nowTime) {
 			// Inside active specialEvents window
 			prefetchImages(specialEvents)
 			if (cards.specialEvents.autoActivated === false) {
@@ -172,33 +172,18 @@ function* updateSpecialEvents() {
 }
 
 function* updatePromotions() {
-
-	console.log('updatePromotions----------------------------')
-
 	const { lastUpdated } = yield select(getPromotions)
 	const { cards } = yield select(getCards)
 	const nowTime = new Date().getTime()
 	const timeDiff = nowTime - lastUpdated
 	const ttl = PROMOTIONS_API_TTL
 
-
-	console.log(lastUpdated)
-	console.log(cards)
-	console.log(nowTime)
-	console.log(timeDiff)
-	console.log(ttl)
-
-
-
 	if (timeDiff > ttl) {
 		const promotions = yield call(PromotionsService.FetchPromotions)
 
-		console.log('promotions---------------------')
-		console.log(promotions)
-
-		if (promotions &&
-			promotions['start-time'] <= nowTime &&
-			promotions['end-time'] >= nowTime) {
+		if (promotions
+			&& promotions['start-time'] <= nowTime
+			&& promotions['end-time'] >= nowTime) {
 			// Inside active promotions window
 			prefetchImages(promotions)
 
