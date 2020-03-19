@@ -30,7 +30,7 @@ const saveShuttleFilter = createFilter(
 const migrations = {
 	0: state => ({
 		...state,
-		promotion: undefined
+		promotions: undefined
 	}),
 	1: state => ({
 		...state,
@@ -43,7 +43,7 @@ const migrations = {
 					...state.cards.cards,
 					promotions: {
 						id: 'promotions',
-						active: true,
+						active: false,
 						autoActivated: false,
 						name: 'Notices',
 						component: 'PromotionsCard'
@@ -56,6 +56,7 @@ const migrations = {
 }
 
 const persistConfig = {
+	version: 2,
 	key: 'home',
 	storage: AsyncStorage,
 	transforms: [saveMapFilter, saveShuttleFilter],
