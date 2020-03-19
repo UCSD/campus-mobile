@@ -42,7 +42,7 @@ class NutritionFactsView extends StatelessWidget {
       style: TextStyle(
         fontSize: 20.0,
         fontWeight: FontWeight.w400,
-        color: Theme.of(context).textTheme.title.color,
+        color: Theme.of(context).primaryColor,
       ),
     );
   }

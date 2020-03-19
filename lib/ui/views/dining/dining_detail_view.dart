@@ -31,7 +31,7 @@ class DiningDetailView extends StatelessWidget {
       Text(
         model.name,
         textAlign: TextAlign.start,
-        style: TextStyle(color: Colors.white, fontSize: 26),
+        style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 26),
       ),
       Text(
         model.description,
