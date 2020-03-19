@@ -102,7 +102,7 @@ class DiningList extends StatelessWidget {
                 (match) => "${match.group(0)}:")
             .replaceAllMapped(
                 //Add space around hyphen
-                RegExp(r"[-]"),
+                RegExp(r"-"),
                 (match) => " ${match.group(0)} "));
   }
 
