@@ -31,7 +31,7 @@ class DiningDetailView extends StatelessWidget {
       Text(
         model.name,
         textAlign: TextAlign.start,
-        style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 26),
+        style: TextStyle(color: Colors.white, fontSize: 26),
       ),
       Text(
         model.description,
@@ -202,7 +202,11 @@ class HoursOfDay extends StatelessWidget {
     int start = int.parse(times[0]);
     int end = int.parse(times[1]);
     if (end < start) end += 2300; //If time goes into next day, prevent wrap
-    int timeNow = int.parse('${DateTime.now().hour}${DateTime.now().minute}');
+    int timeNow;
+    if (DateTime.now().minute.toString().length == 1)
+      timeNow = int.parse('${DateTime.now().hour}0${DateTime.now().minute}');
+    else
+      timeNow = int.parse('${DateTime.now().hour}${DateTime.now().minute}');
     if (timeNow >= start && timeNow < end)
       color = Colors.green;
     else
