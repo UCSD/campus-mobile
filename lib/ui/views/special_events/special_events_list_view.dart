@@ -7,39 +7,23 @@ import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-class SpecialEventsListView extends StatefulWidget {
-  @override
-  _SpecialEventsListViewState createState() => _SpecialEventsListViewState();
-}
-
-class _SpecialEventsListViewState extends State<SpecialEventsListView> {
-  SpecialEventsDataProvider dataProvider;
-
-  Map<String, bool> myEventList;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    myEventList = Provider.of<SpecialEventsDataProvider>(context).myEventsList;
-  }
-
+class SpecialEventsListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    dataProvider = Provider.of<SpecialEventsDataProvider>(context);
+    SpecialEventsDataProvider dataProvider =
+        Provider.of<SpecialEventsDataProvider>(context);
     if (dataProvider.error != null) {
       return Center(child: ContainerView(child: Text(dataProvider.error)));
     } else if (dataProvider.isLoading) {
       return ContainerView(child: Center(child: CircularProgressIndicator()));
     }
-    return buildDetailView(context);
-  }
-
-  Widget buildDetailView(BuildContext context) {
-    return buildEventsCard(dataProvider.specialEventsModel);
+    return buildEventsCard(context);
   }
 
   // Helper function that adds dynamic scaffold and filter button
-  Widget addScaffoldToChild(Widget child) {
+  Widget addScaffoldToChild(Widget child, BuildContext context) {
+    SpecialEventsDataProvider dataProvider =
+        Provider.of<SpecialEventsDataProvider>(context);
     return new Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(42),
@@ -47,14 +31,14 @@ class _SpecialEventsListViewState extends State<SpecialEventsListView> {
             title: Center(
                 child: dataProvider.appBarTitleText), // Dynamically changed
             actions: <Widget>[
-              dataProvider.isFull ? filterButtonEnabled() : Container()
+              dataProvider.isFull ? filterButtonEnabled(context) : Container()
             ]),
       ),
       body: child,
     );
   }
 
-  Widget filterButtonEnabled() {
+  Widget filterButtonEnabled(BuildContext context) {
     return FlatButton(
       child: Text(
         "Filter",
@@ -70,33 +54,43 @@ class _SpecialEventsListViewState extends State<SpecialEventsListView> {
     return Container(child: Opacity(opacity: 0.0, child: Text("Filter")));
   }
 
-  Widget buildEventsCard(SpecialEventsModel data) {
-    dataProvider.setTitleText(data.name);
+  Widget buildEventsCard(BuildContext context) {
+    SpecialEventsDataProvider dataProvider =
+        Provider.of<SpecialEventsDataProvider>(context);
+    SpecialEventsModel data = dataProvider.specialEventsModel;
 
     List<String> uids = dataProvider.selectEvents();
-    return addScaffoldToChild(Column(children: <Widget>[
-      SizedBox(
-          height: 50,
-          child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: buildDateWidgets(data.dates))),
-      dataProvider.isFull
-          ? (dataProvider.filtersApplied ? addFiltersWidget() : Container())
-          : Container(),
-      SizedBox(
-        height: dataProvider.filtersApplied ? 475 : 500,
-        child: ListView.builder(
-            itemCount: uids.length,
-            itemBuilder: (BuildContext ctxt, int index) =>
-                buildEventWidget(ctxt, data, uids[index])),
-      ),
-      buildBottomBar(context),
-    ]));
+    return addScaffoldToChild(
+        Column(
+          children: <Widget>[
+            SizedBox(
+                height: 50,
+                child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: buildDateWidgets(data.dates, context))),
+            dataProvider.isFull
+                ? (dataProvider.filtersApplied
+                    ? addFiltersWidget(context)
+                    : Container())
+                : Container(),
+            SizedBox(
+              height: dataProvider.filtersApplied ? 475 : 500,
+              child: ListView.builder(
+                  itemCount: uids.length,
+                  itemBuilder: (BuildContext ctxt, int index) =>
+                      buildEventWidget(ctxt, data, uids[index])),
+            ),
+            buildBottomBar(context),
+          ],
+        ),
+        context);
   }
 
-  Widget addFiltersWidget() {
+  Widget addFiltersWidget(BuildContext context) {
     String filters;
-    Map<String, bool> filterMap = dataProvider.filters;
+    Map<String, bool> filterMap =
+        Provider.of<SpecialEventsDataProvider>(context).filters;
+
     filterMap.forEach((String key, bool val) {
       if (val) {
         if (filters == null) {
@@ -116,9 +110,10 @@ class _SpecialEventsListViewState extends State<SpecialEventsListView> {
             )));
   }
 
-  List<Widget> dateButtonList;
-  List<Widget> buildDateWidgets(List<DateTime> dates) {
-    dateButtonList = new List<Widget>();
+  List<Widget> buildDateWidgets(List<DateTime> dates, BuildContext context) {
+    SpecialEventsDataProvider dataProvider =
+        Provider.of<SpecialEventsDataProvider>(context);
+    List<Widget> dateButtonList = new List<Widget>();
     dates.forEach((f) => dateButtonList.add(FlatButton(
           color: dataProvider.isSelectedDate(f) ? Colors.blue : Colors.white,
           textColor: Colors.black,
@@ -131,9 +126,7 @@ class _SpecialEventsListViewState extends State<SpecialEventsListView> {
             String newDateKey = f
                 .toIso8601String()
                 .substring(0, f.toIso8601String().indexOf("T"));
-            setState(() {
-              dataProvider.setDateString(newDateKey);
-            });
+            dataProvider.setDateString(newDateKey);
           },
           child: Text(
             new DateFormat("MMMd").format(f),
@@ -150,9 +143,9 @@ class _SpecialEventsListViewState extends State<SpecialEventsListView> {
       leading: timeWidget(event),
       title: titleWidget(event),
       subtitle: buildSubtitle(event),
-      trailing: buildTrailing(event),
+      trailing: buildTrailing(event, ctxt),
       onTap: () {
-        Navigator.pushNamed(context, RoutePaths.SpecialEventsDetailView,
+        Navigator.pushNamed(ctxt, RoutePaths.SpecialEventsDetailView,
             arguments: uid);
       },
     );
@@ -175,7 +168,10 @@ class _SpecialEventsListViewState extends State<SpecialEventsListView> {
     );
   }
 
-  Widget buildTrailing(Schedule event) {
+  Widget buildTrailing(Schedule event, BuildContext context) {
+    SpecialEventsDataProvider dataProvider =
+        Provider.of<SpecialEventsDataProvider>(context);
+    Map<String, bool> myEventList = dataProvider.myEventsList;
     if (myEventList[event.id] != null && myEventList[event.id]) {
       return GestureDetector(
           onTap: () {
@@ -193,44 +189,40 @@ class _SpecialEventsListViewState extends State<SpecialEventsListView> {
   }
 
   Widget buildBottomBar(BuildContext context) {
+    SpecialEventsDataProvider dataProvider =
+        Provider.of<SpecialEventsDataProvider>(context);
     return Row(
       children: <Widget>[
         Container(
-            height: 67,
-            width: MediaQuery.of(context).size.width / 2,
-            child: FlatButton(
-              color: dataProvider.isFull ? Colors.blue : Colors.white,
-              textColor: Colors.black,
-              disabledColor: Colors.grey,
-              disabledTextColor: Colors.black,
-              //padding: EdgeInsets.all(8.0),
-              splashColor: Colors.blueAccent,
-              focusColor: Colors.blue,
-              child: Text('Full Schedule'),
-              onPressed: () {
-                setState(() {
-                  dataProvider.switchToFullSchedule();
-                });
-              },
-            )),
+          height: 67,
+          width: MediaQuery.of(context).size.width / 2,
+          child: FlatButton(
+            color: dataProvider.isFull ? Colors.blue : Colors.white,
+            textColor: Colors.black,
+            disabledColor: Colors.grey,
+            disabledTextColor: Colors.black,
+            //padding: EdgeInsets.all(8.0),
+            splashColor: Colors.blueAccent,
+            focusColor: Colors.blue,
+            child: Text('Full Schedule'),
+            onPressed: () => dataProvider.switchToFullSchedule(),
+          ),
+        ),
         Container(
-            height: 67,
-            width: MediaQuery.of(context).size.width / 2,
-            child: FlatButton(
-              color: dataProvider.isFull ? Colors.white : Colors.blue,
-              textColor: Colors.black,
-              disabledColor: Colors.grey,
-              disabledTextColor: Colors.black,
-              padding: EdgeInsets.all(8.0),
-              splashColor: Colors.blueAccent,
-              focusColor: Colors.blue,
-              child: Text('My Schedule'),
-              onPressed: () {
-                setState(() {
-                  dataProvider.switchToMySchedule();
-                });
-              },
-            ))
+          height: 67,
+          width: MediaQuery.of(context).size.width / 2,
+          child: FlatButton(
+            color: dataProvider.isFull ? Colors.white : Colors.blue,
+            textColor: Colors.black,
+            disabledColor: Colors.grey,
+            disabledTextColor: Colors.black,
+            padding: EdgeInsets.all(8.0),
+            splashColor: Colors.blueAccent,
+            focusColor: Colors.blue,
+            child: Text('My Schedule'),
+            onPressed: () => dataProvider.switchToMySchedule(),
+          ),
+        )
       ],
     );
   }

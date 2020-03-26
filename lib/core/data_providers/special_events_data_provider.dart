@@ -40,6 +40,7 @@ class SpecialEventsDataProvider extends ChangeNotifier {
     notifyListeners();
     if (await _specialEventsService.fetchData()) {
       _specialEventsModel = _specialEventsService.specialEventsModel;
+      setTitleText(_specialEventsModel.name);
       _lastUpdated = DateTime.now();
       populateFilters();
     } else {
