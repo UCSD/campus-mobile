@@ -143,7 +143,7 @@ class _NotificationsListViewState extends State<NotificationsListView> {
 
   Future<Null> _handleRefresh(BuildContext context) async {
     await Future.delayed(const Duration(seconds: 3), () {
-      Provider.of<MessagesDataProvider>(context).fetchMessages();
+      Provider.of<MessagesDataProvider>(context, listen: false).fetchMessages();
     });
   }
 }
