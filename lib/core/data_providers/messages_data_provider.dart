@@ -31,7 +31,7 @@ class MessagesDataProvider extends ChangeNotifier {
     _error = null;
     notifyListeners();
     _messages.clear();
-    _previousTimestamp = 0;
+    _previousTimestamp = DateTime.now().millisecondsSinceEpoch;
 
     if (_userDataProvider != null && _userDataProvider.isLoggedIn) {
       retrieveMoreMyMessages();
@@ -86,13 +86,12 @@ class MessagesDataProvider extends ChangeNotifier {
     int timestamp = _previousTimestamp;
 
     if (await _messageService.fetchTopicData(timestamp)) {
+      
       List<MessageElement> temp = _messageService.messagingModels.messages;
       _messages.addAll(temp);
       makeOrderedMessagesList();
-
-      returnedTimestamp = _messageService.messagingModels.next == null
-          ? 0
-          : _messageService.messagingModels.next;
+      
+      returnedTimestamp = _messageService.messagingModels.next == null ? 0 : _messageService.messagingModels.next;
       _lastUpdated = DateTime.now();
       _previousTimestamp = returnedTimestamp;
     } else {
