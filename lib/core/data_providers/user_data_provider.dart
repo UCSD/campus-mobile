@@ -3,6 +3,12 @@ import 'package:campus_mobile_experimental/core/models/user_profile_model.dart';
 import 'package:campus_mobile_experimental/core/services/authentication_service.dart';
 import 'package:campus_mobile_experimental/core/services/user_profile_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:pointycastle/asymmetric/oaep.dart';
+import 'package:pointycastle/pointycastle.dart' as pc;
+import 'dart:typed_data';
+import 'package:encrypt/encrypt.dart';
+import 'dart:convert';
 
 class UserDataProvider extends ChangeNotifier {
   UserDataProvider() {
@@ -12,6 +18,7 @@ class UserDataProvider extends ChangeNotifier {
     ///INITIALIZE SERVICES
     _authenticationService = AuthenticationService();
     _userProfileService = UserProfileService();
+    storage = FlutterSecureStorage();
 
     ///default authentication model is needed in this class to check login state
     ///in most classes the model data can remain null
@@ -51,6 +58,7 @@ class UserDataProvider extends ChangeNotifier {
   ///MODELS
   AuthenticationModel _authenticationModel;
   UserProfileModel _userProfileModel;
+  FlutterSecureStorage storage;
 
   ///SERVICES
   AuthenticationService _authenticationService;
@@ -59,17 +67,68 @@ class UserDataProvider extends ChangeNotifier {
 
   List<String> _cardOrder;
 
+  ///Save encrypted password to device
+  void saveEncryptedPasswordToDevice(String encryptedPassword) {
+    storage.write(key: 'encrypted_password', value: encryptedPassword);
+  }
+
+  ///Get encrypted password that has been saved to device
+  Future<String> getEncryptedPasswordFromDevice() {
+    return storage.read(key: 'encrypted_password');
+  }
+
+  ///Save email to device
+  void saveUsernameToDevice(String username) {
+    storage.write(key: 'username', value: username);
+  }
+
+  ///Get email from device
+  Future<String> getUsernameFromDevice() {
+    return storage.read(key: 'username');
+  }
+
+  void deleteUsernameFromDevice() {
+    storage.delete(key: 'username');
+  }
+
+  void deletePasswordFromDevice() {
+    storage.delete(key: 'password');
+  }
+
   ///authenticate a user given an email and password
   ///upon logging in we should make sure that users upload the correct
   ///ucsdaffiliation and classification
   void login(String email, String password) async {
+    // TODO: import assets/public_key.txt
+    final String pkString = '-----BEGIN PUBLIC KEY-----\n' +
+        'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDJD70ejMwsmes6ckmxkNFgKley\n' +
+        'gfN/OmwwPSZcpB/f5IdTUy2gzPxZ/iugsToE+yQ+ob4evmFWhtRjNUXY+lkKUXdi\n' +
+        'hqGFS5sSnu19JYhIxeYj3tGyf0Ms+I0lu/MdRLuTMdBRbCkD3kTJmTqACq+MzQ9G\n' +
+        'CaCUGqS6FN1nNKARGwIDAQAB\n' +
+        '-----END PUBLIC KEY-----';
+
+    final rsaParser = RSAKeyParser();
+    final pc.RSAPublicKey publicKey = rsaParser.parse(pkString);
+    var cipher = OAEPEncoding(pc.AsymmetricBlockCipher('RSA'));
+    pc.AsymmetricKeyParameter<pc.RSAPublicKey> keyParametersPublic =
+        new pc.PublicKeyParameter(publicKey);
+    cipher.init(true, keyParametersPublic);
+    Uint8List output = cipher.process(utf8.encode(password));
+    var base64EncodedText = base64.encode(output);
+    final String base64EncodedWithEncryptedPassword =
+        base64.encode(utf8.encode(email + ':' + base64EncodedText));
+
     _error = null;
     _isLoading = true;
     notifyListeners();
 
-    bool response = await _authenticationService.login(email, password);
+    bool response =
+        await _authenticationService.login(base64EncodedWithEncryptedPassword);
     if (response) {
       _authenticationModel = _authenticationService.data;
+      print(_authenticationModel.toJson());
+      saveUsernameToDevice(email);
+      saveEncryptedPasswordToDevice(base64EncodedText);
       getUserProfile();
       _lastUpdated = DateTime.now();
     } else {
@@ -78,6 +137,9 @@ class UserDataProvider extends ChangeNotifier {
       /// TODO: make sure this is the correct error message to show the user in the AuthenticationService class
       /// this is the error we will display to the user
       _error = _authenticationService.error;
+
+      ///reset all auth settings if login was unsuccessful
+      _authenticationModel = AuthenticationModel.fromJson({});
     }
     _isLoading = false;
     notifyListeners();
@@ -104,6 +166,7 @@ class UserDataProvider extends ChangeNotifier {
   }
 
   ///FETCH USER PROFILE FROM SERVER
+  ///TODO: check to see if user profile is blank, if it is then upload current profile to cloud
   void getUserProfile() async {
     _error = null;
     _isLoading = true;
@@ -145,6 +208,43 @@ class UserDataProvider extends ChangeNotifier {
     _userProfileModel = profile;
     _isLoading = false;
     notifyListeners();
+  }
+
+  ///Uses saved refresh token to reauthenticate user
+  ///Invokes [reauthenticate] on failure
+  ///TODO: check if we need to change the loading boolean since this is a silent login mechanism
+  void refreshToken() async {
+    _error = null;
+    if (await _authenticationService
+        .refreshAccessToken(_authenticationModel.refreshToken)) {
+      _authenticationModel = _authenticationService.data;
+    } else {
+      ///TODO: check if the error is the refresh token is expired
+      ///if it is then use stored credentials to get new access token
+      _error = _authenticationService.error;
+
+      ///TODO figure out what message is returned for expired refresh token
+      if (_error == 'The given refresh token was invalid') {
+        ///Try to use user's credentials to login again
+        await reauthenticate();
+      }
+    }
+    notifyListeners();
+  }
+
+  ///Uses saved credentials to reauthenticate user
+  ///Invokes [logout] on failure
+  void reauthenticate() async {
+    String email = await getUsernameFromDevice();
+    String encryptedPassword = await getEncryptedPasswordFromDevice();
+    final String base64EncodedWithEncryptedPassword =
+        base64.encode(utf8.encode(email + ':' + encryptedPassword));
+    if (await _authenticationService
+        .login(base64EncodedWithEncryptedPassword)) {
+      _authenticationModel = _authenticationService.data;
+    } else {
+      logout();
+    }
   }
 
   ///GETTERS FOR MODELS

@@ -1,4 +1,5 @@
 import 'package:campus_mobile_experimental/core/data_providers/availability_data_provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/class_schedule_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/dining_data_proivder.dart';
 import 'package:campus_mobile_experimental/core/data_providers/events_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/links_data_provider.dart';
@@ -26,7 +27,7 @@ List<SingleChildWidget> providers = [
 
 final FirebaseAnalytics analytics = FirebaseAnalytics();
 final FirebaseAnalyticsObserver observer =
-FirebaseAnalyticsObserver(analytics: analytics);
+    FirebaseAnalyticsObserver(analytics: analytics);
 
 List<SingleChildWidget> independentServices = [
   Provider.value(value: observer),
@@ -87,8 +88,7 @@ List<SingleChildWidget> independentServices = [
   ),
 ];
 List<SingleChildWidget> dependentServices = [
-  ChangeNotifierProxyProvider<Coordinates, DiningDataProvider>(
-      create: (_) {
+  ChangeNotifierProxyProvider<Coordinates, DiningDataProvider>(create: (_) {
     var diningDataProvider = DiningDataProvider();
     diningDataProvider.fetchDiningLocations();
     return diningDataProvider;
@@ -97,36 +97,41 @@ List<SingleChildWidget> dependentServices = [
     diningDataProvider.populateDistances();
     return diningDataProvider;
   }),
+  ChangeNotifierProxyProvider<UserDataProvider, ClassScheduleDataProvider>(
+      create: (_) {
+    var classDataProvider = ClassScheduleDataProvider();
+    return classDataProvider;
+  }, update: (_, userDataProvider, classScheduleDataProvider) {
+    classScheduleDataProvider..userDataProvider = userDataProvider;
+    classScheduleDataProvider.fetchData();
+    return classScheduleDataProvider;
+  }),
   ChangeNotifierProxyProvider<UserDataProvider, ParkingDataProvider>(
-    create: (_) {
-      var parkingDataProvider = ParkingDataProvider();
-      parkingDataProvider.fetchParkingLots();
-      return parkingDataProvider;
-    },
-    update: (_, userDataProvider, parkingDataProvider) {
-      parkingDataProvider.userDataProvider = userDataProvider;
-      return parkingDataProvider;
-    }),
+      create: (_) {
+    var parkingDataProvider = ParkingDataProvider();
+    parkingDataProvider.fetchParkingLots();
+    return parkingDataProvider;
+  }, update: (_, userDataProvider, parkingDataProvider) {
+    parkingDataProvider.userDataProvider = userDataProvider;
+    return parkingDataProvider;
+  }),
   ChangeNotifierProxyProvider<UserDataProvider, AvailabilityDataProvider>(
-    create: (_) {
-      var availabilityDataProvider = AvailabilityDataProvider();
-      availabilityDataProvider.fetchAvailability();
-      return availabilityDataProvider;
-    },
-    update: (_, userDataProvider, availabilityDataProvider) {
+      create: (_) {
+    var availabilityDataProvider = AvailabilityDataProvider();
+    availabilityDataProvider.fetchAvailability();
+    return availabilityDataProvider;
+  }, update: (_, userDataProvider, availabilityDataProvider) {
     availabilityDataProvider.userDataProvider = userDataProvider;
     return availabilityDataProvider;
-    }),
+  }),
   ChangeNotifierProxyProvider<UserDataProvider, MessagesDataProvider>(
       create: (_) {
-      var messageDataProvider = MessagesDataProvider(); 
-      return messageDataProvider;
-    },
-    update: (_, userDataProvider, messageDataProvider) {
-        messageDataProvider.userDataProvider = userDataProvider;
-        messageDataProvider.fetchMessages();
-        return messageDataProvider;
-    }
-  ),
+    var messageDataProvider = MessagesDataProvider();
+    return messageDataProvider;
+  }, update: (_, userDataProvider, messageDataProvider) {
+    messageDataProvider.userDataProvider = userDataProvider;
+    messageDataProvider.fetchMessages();
+    return messageDataProvider;
+  }),
 ];
 List<SingleChildWidget> uiConsumableProviders = [];

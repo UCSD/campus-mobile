@@ -7,12 +7,14 @@ import 'dart:async';
 
 class NotificationsListView extends StatelessWidget {
   void _updateData(BuildContext context) {
-    if (!Provider.of<MessagesDataProvider>(context).isLoading) {
-      if (Provider.of<UserDataProvider>(context) != null &&
-          Provider.of<UserDataProvider>(context).isLoggedIn) {
-        Provider.of<MessagesDataProvider>(context).retrieveMoreMyMessages();
+    if (!Provider.of<MessagesDataProvider>(context, listen: false).isLoading) {
+      if (Provider.of<UserDataProvider>(context, listen: false) != null &&
+          Provider.of<UserDataProvider>(context, listen: false).isLoggedIn) {
+        Provider.of<MessagesDataProvider>(context, listen: false)
+            .retrieveMoreMyMessages();
       } else {
-        Provider.of<MessagesDataProvider>(context).retrieveMoreTopicMessages();
+        Provider.of<MessagesDataProvider>(context, listen: false)
+            .retrieveMoreTopicMessages();
       }
     }
   }
@@ -69,15 +71,13 @@ class NotificationsListView extends StatelessWidget {
     var diff = now.difference(date);
     var time = '';
 
-    if(diff.inSeconds < 60){
-      if(diff.inSeconds.floor() == 1){
+    if (diff.inSeconds < 60) {
+      if (diff.inSeconds.floor() == 1) {
         time = diff.inMinutes.toString() + ' SECOND AGO';
-      }
-      else{
+      } else {
         time = diff.inMinutes.toString() + ' SECONDS AGO';
       }
-    }
-    else if(diff.inMinutes < 60) {
+    } else if (diff.inMinutes < 60) {
       if (diff.inMinutes.floor() == 1) {
         time = diff.inMinutes.toString() + ' MINUTE AGO';
       } else {
@@ -110,7 +110,7 @@ class NotificationsListView extends StatelessWidget {
 
   Future<Null> _handleRefresh(BuildContext context) async {
     await Future.delayed(const Duration(seconds: 3), () {
-      Provider.of<MessagesDataProvider>(context).fetchMessages();
+      Provider.of<MessagesDataProvider>(context, listen: false).fetchMessages();
     });
   }
 }

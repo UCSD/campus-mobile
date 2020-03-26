@@ -37,17 +37,14 @@ class CardContainer extends StatelessWidget {
           children: <Widget>[
             ListTile(
               title: title,
-              trailing: ButtonBarTheme(
-                // make buttons use the appropriate styles for cards
-                child: ButtonBar(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    buildMenu({
-                      'reload': reload,
-                      'hide': hide,
-                    }),
-                  ],
-                ),
+              trailing: ButtonBar(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  buildMenu({
+                    'reload': reload,
+                    'hide': hide,
+                  }),
+                ],
               ),
             ),
             buildBody(),

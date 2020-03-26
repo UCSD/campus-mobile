@@ -5,11 +5,6 @@ import 'package:campus_mobile_experimental/core/models/message_model.dart';
 import 'package:campus_mobile_experimental/core/services/networking.dart';
 
 class MessageService {
-  Map<String, String> headers = {
-    "accept": "application/json",
-    "Authorization": "Bearer " + "f5dd14d5-fcb2-30d1-9388-9e5dcd1d89ec",
-  };
-
   final String mymessages_endpoint =
       'https://api-qa.ucsd.edu:8243/mp-mymessages/1.0.0/messages?start=';
   final String topics_endpoint =
@@ -21,14 +16,15 @@ class MessageService {
 
   final NetworkHelper _networkHelper = NetworkHelper();
 
-  Future<bool> fetchMyMessagesData(timestamp) async {
+  Future<bool> fetchMyMessagesData(
+      timestamp, Map<String, String> authHeaders) async {
     _error = null;
     _isLoading = true;
 
     try {
       /// fetch data
       String _response = await _networkHelper.authorizedFetch(
-          mymessages_endpoint + timestamp.toString(), headers);
+          mymessages_endpoint + timestamp.toString(), authHeaders);
 
       /// parse data
       final data = messagesFromJson(_response);
@@ -39,11 +35,7 @@ class MessageService {
       /// if the authorized fetch failed we know we have to refresh the
       /// token for this service
       print("error fetching the data");
-      if (e.response?.statusCode == 401) {
-        if (await getNewToken()) {
-          return await fetchMyMessagesData(timestamp);
-        }
-      }
+      if (e.response?.statusCode == 401) {}
       _error = e.toString();
       _isLoading = false;
       return false;
@@ -68,30 +60,13 @@ class MessageService {
       /// if the authorized fetch failed we know we have to refresh the
       /// token for this service
       print("error fetching the data");
-      if (e.response.statusCode == 401) {
-        if (await getNewToken()) {
-          return await fetchTopicData(timestamp);
-        }
-      }
+//      if (e.response.statusCode == 401) {
+//        if (await getNewToken()) {
+//          return await fetchTopicData(timestamp);
+//        }
+//      }
       _error = e.toString();
       _isLoading = false;
-      return false;
-    }
-  }
-
-  Future<bool> getNewToken() async {
-    final String tokenEndpoint = "https://api-qa.ucsd.edu:8243/token";
-    final Map<String, String> tokenHeaders = {
-      "content-type": 'application/x-www-form-urlencoded',
-      "Authorization": "Basic //REPLACE HERE"
-    };
-    try {
-      var response = await _networkHelper.authorizedPost(
-          tokenEndpoint, tokenHeaders, "grant_type=client_credentials");
-      headers["Authorization"] = "Bearer " + response["access_token"];
-      return true;
-    } catch (e) {
-      _error = e.toString();
       return false;
     }
   }
