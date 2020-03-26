@@ -3,32 +3,56 @@ import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/core/data_providers/messages_data_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'dart:async';
 
-class NotificationsListView extends StatelessWidget {
-  void _updateData(BuildContext context) {
+class NotificationsListView extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _NotificationsListViewState();
+}
+
+class _NotificationsListViewState extends State<NotificationsListView> {
+  @override
+  void initState() {
+    super.initState();
+
+    _scrollController.addListener(() {
+      if (_scrollController.position.maxScrollExtent <=
+          _scrollController.offset) {
+        _updateData(context);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  ScrollController _scrollController = new ScrollController();
+  bool isPerformingRequest = false;
+
+  void _updateData(BuildContext context) async {
     if (!Provider.of<MessagesDataProvider>(context, listen: false).isLoading) {
       if (Provider.of<UserDataProvider>(context, listen: false) != null &&
           Provider.of<UserDataProvider>(context, listen: false).isLoggedIn) {
+        setState(() => isPerformingRequest = true);
         Provider.of<MessagesDataProvider>(context, listen: false)
             .retrieveMoreMyMessages();
+        setState(() => isPerformingRequest = false);
       } else {
+        setState(() => isPerformingRequest = true);
         Provider.of<MessagesDataProvider>(context, listen: false)
             .retrieveMoreTopicMessages();
+        setState(() => isPerformingRequest = false);
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    ScrollController _scrollController = ScrollController();
-    _scrollController.addListener(() {
-      if (_scrollController.position.maxScrollExtent ==
-          _scrollController.position.pixels) {
-        _updateData(context);
-      }
-    });
-
     //print(_data);
     return RefreshIndicator(
         child: ListView.builder(
@@ -49,18 +73,27 @@ class NotificationsListView extends StatelessWidget {
   List<Widget> _buildMessage(BuildContext context, MessageElement data) {
     return [
       ListTile(
-        leading: Icon(Icons.info, color: Colors.grey, size: 30),
-        title: Column(
-          children: <Widget>[
-            Text(_readTimestamp(data.timestamp),
-                style: TextStyle(fontSize: 10, color: Colors.grey)),
-            Text(data.message.title),
-            Padding(padding: const EdgeInsets.all(3.5))
-          ],
-          crossAxisAlignment: CrossAxisAlignment.start,
-        ),
-        subtitle: Text(data.message.message, style: TextStyle(fontSize: 12.5)),
-      ),
+          leading: Icon(Icons.info, color: Colors.grey, size: 30),
+          title: Column(
+            children: <Widget>[
+              Text(_readTimestamp(data.timestamp),
+                  style: TextStyle(fontSize: 10, color: Colors.grey)),
+              Text(data.message.title),
+              Padding(padding: const EdgeInsets.all(3.5))
+            ],
+            crossAxisAlignment: CrossAxisAlignment.start,
+          ),
+          subtitle: Linkify(
+              text: data.message.message,
+              onOpen: (link) async {
+                if (await canLaunch(link.url)) {
+                  await launch(link.url);
+                } else {
+                  throw 'Could not launch $link';
+                }
+              },
+              options: LinkifyOptions(humanize: false),
+              style: TextStyle(fontSize: 12.5))),
       Divider()
     ];
   }
@@ -110,7 +143,7 @@ class NotificationsListView extends StatelessWidget {
 
   Future<Null> _handleRefresh(BuildContext context) async {
     await Future.delayed(const Duration(seconds: 3), () {
-      Provider.of<MessagesDataProvider>(context, listen: false).fetchMessages();
+      Provider.of<MessagesDataProvider>(context).fetchMessages();
     });
   }
 }
