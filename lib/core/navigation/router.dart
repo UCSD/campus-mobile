@@ -20,8 +20,9 @@ import 'package:campus_mobile_experimental/ui/views/notifications/notifications_
 import 'package:campus_mobile_experimental/ui/views/profile/cards_view.dart';
 import 'package:campus_mobile_experimental/ui/views/profile/profile.dart';
 import 'package:campus_mobile_experimental/ui/views/dining/nutrition_facts_view.dart';
+import 'package:campus_mobile_experimental/ui/views/special_events/special_event_detail_view.dart';
+import 'package:campus_mobile_experimental/ui/views/special_events/special_events_list_view.dart';
 import 'package:campus_mobile_experimental/ui/views/surf/surf_report_view.dart';
-import 'package:campus_mobile_experimental/ui/views/special_events/special_events_detail_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:campus_mobile_experimental/ui/views/special_events/special_events_filter_view.dart';
@@ -34,10 +35,13 @@ class Router {
     switch (settings.name) {
       case RoutePaths.Home:
         return MaterialPageRoute(builder: (_) => Home());
-      case RoutePaths.SpecialEventsDetailView:
-        return MaterialPageRoute(builder: (_) => SpecialEventsViewModel());
+      case RoutePaths.SpecialEventsListView:
+        return MaterialPageRoute(builder: (_) => SpecialEventsListView());
       case RoutePaths.SpecialEventsFilterView:
         return MaterialPageRoute(builder: (_) => SpecialEventsFilterView());
+      case RoutePaths.SpecialEventsDetailView:
+        String uid = settings.arguments;
+        return MaterialPageRoute(builder: (_) => SpecialEventsDetailView(argument: uid));
       case RoutePaths.Map:
         return MaterialPageRoute(builder: (_) => prefix0.Map());
       case RoutePaths.Notifications:
