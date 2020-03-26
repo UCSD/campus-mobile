@@ -1,96 +1,72 @@
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
+import 'package:campus_mobile_experimental/core/models/availability_model.dart';
 import 'package:campus_mobile_experimental/core/models/dining_menu_items_model.dart';
 import 'package:campus_mobile_experimental/core/models/dining_model.dart';
 import 'package:campus_mobile_experimental/core/models/events_model.dart';
+import 'package:campus_mobile_experimental/core/models/links_model.dart';
 import 'package:campus_mobile_experimental/core/models/news_model.dart';
-import 'package:campus_mobile_experimental/ui/cards/dining/dining_list.dart';
 import 'package:campus_mobile_experimental/ui/views/availability/manage_availability_view.dart';
-import 'package:campus_mobile_experimental/ui/views/class_schedule/class_list.dart';
+import 'package:campus_mobile_experimental/ui/views/baseline/baseline_view.dart';
 import 'package:campus_mobile_experimental/ui/views/dining/dining_detail_view.dart';
-import 'package:campus_mobile_experimental/ui/views/dining/nutrition_facts_view.dart';
+import 'package:campus_mobile_experimental/ui/cards/dining/dining_list.dart';
 import 'package:campus_mobile_experimental/ui/views/events/event_detail_view.dart';
 import 'package:campus_mobile_experimental/ui/views/events/events_list.dart';
 import 'package:campus_mobile_experimental/ui/views/home/home.dart';
 import 'package:campus_mobile_experimental/ui/views/links/links_list.dart';
 import 'package:campus_mobile_experimental/ui/views/map/map.dart' as prefix0;
-import 'package:campus_mobile_experimental/ui/views/map/map_search_view.dart';
 import 'package:campus_mobile_experimental/ui/views/news/news_detail_view.dart';
 import 'package:campus_mobile_experimental/ui/views/news/news_list.dart';
-import 'package:campus_mobile_experimental/ui/views/notifications/notifications.dart';
-import 'package:campus_mobile_experimental/ui/views/parking/manage_parking_view.dart';
+import 'package:campus_mobile_experimental/ui/views/notifications/notifications_list_view.dart';
 import 'package:campus_mobile_experimental/ui/views/profile/cards_view.dart';
 import 'package:campus_mobile_experimental/ui/views/profile/profile.dart';
-import 'package:campus_mobile_experimental/ui/views/special_events/special_events_detail_view.dart';
-import 'package:campus_mobile_experimental/ui/views/special_events/special_events_filter_view.dart';
+import 'package:campus_mobile_experimental/ui/views/dining/nutrition_facts_view.dart';
 import 'package:campus_mobile_experimental/ui/views/surf/surf_report_view.dart';
+import 'package:campus_mobile_experimental/ui/views/special_events/special_events_detail_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:campus_mobile_experimental/ui/views/special_events/special_events_filter_view.dart';
+import 'package:provider/provider.dart';
+import 'package:campus_mobile_experimental/core/services/event_service.dart';
+import 'package:campus_mobile_experimental/ui/views/parking/manage_parking_view.dart';
 
 class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case RoutePaths.Home:
-        return MaterialPageRoute(
-            builder: (_) => Home(),
-            settings: RouteSettings(name: RoutePaths.Home));
+        return MaterialPageRoute(builder: (_) => Home());
       case RoutePaths.SpecialEventsDetailView:
-        return MaterialPageRoute(
-            builder: (_) => SpecialEventsViewModel(),
-            settings: RouteSettings(name: RoutePaths.SpecialEventsDetailView));
+        return MaterialPageRoute(builder: (_) => SpecialEventsViewModel());
       case RoutePaths.SpecialEventsFilterView:
-        return MaterialPageRoute(
-            builder: (_) => SpecialEventsFilterView(),
-            settings: RouteSettings(name: RoutePaths.SpecialEventsFilterView));
+        return MaterialPageRoute(builder: (_) => SpecialEventsFilterView());
       case RoutePaths.Map:
-        return MaterialPageRoute(
-            builder: (_) => prefix0.Maps(),
-            settings: RouteSettings(name: RoutePaths.Map));
-      case RoutePaths.MapSearch:
-        return MaterialPageRoute(builder: (_) => MapSearchView());
+        return MaterialPageRoute(builder: (_) => prefix0.Map());
       case RoutePaths.Notifications:
-        return MaterialPageRoute(
-            builder: (_) => Notifications(),
-            settings: RouteSettings(name: RoutePaths.Notifications));
+        return MaterialPageRoute(builder: (_) => NotificationsListView());
       case RoutePaths.Profile:
-        return MaterialPageRoute(
-            builder: (_) => Profile(),
-            settings: RouteSettings(name: RoutePaths.Profile));
+        return MaterialPageRoute(builder: (_) => Profile());
       case RoutePaths.NewsViewAll:
         NewsModel data = settings.arguments as NewsModel;
-        return MaterialPageRoute(
-            builder: (_) => NewsList(),
-            settings: RouteSettings(name: RoutePaths.NewsViewAll));
+        return MaterialPageRoute(builder: (_) => NewsList());
       case RoutePaths.EventsViewAll:
-        return MaterialPageRoute(
-            builder: (context) => EventsList(),
-            settings: RouteSettings(name: RoutePaths.EventsViewAll));
+        return MaterialPageRoute(builder: (context) => EventsList());
+      case RoutePaths.BaseLineView:
+        return MaterialPageRoute(builder: (_) => BaselineView());
       case RoutePaths.NewsDetailView:
         Item newsItem = settings.arguments as Item;
         return MaterialPageRoute(
-            builder: (_) => NewsDetailView(data: newsItem),
-            settings: RouteSettings(name: RoutePaths.NewsDetailView));
+            builder: (_) => NewsDetailView(data: newsItem));
       case RoutePaths.EventDetailView:
         EventModel data = settings.arguments as EventModel;
-        return MaterialPageRoute(
-            builder: (_) => EventDetailView(data: data),
-            settings: RouteSettings(name: RoutePaths.EventDetailView));
+        return MaterialPageRoute(builder: (_) => EventDetailView(data: data));
       case RoutePaths.ManageAvailabilityView:
-        return MaterialPageRoute(
-            builder: (_) => ManageAvailabilityView(),
-            settings: RouteSettings(name: RoutePaths.ManageAvailabilityView));
+        return MaterialPageRoute(builder: (_) => ManageAvailabilityView());
       case RoutePaths.LinksViewAll:
-        return MaterialPageRoute(
-            builder: (_) => LinksList(),
-            settings: RouteSettings(name: RoutePaths.LinksViewAll));
+        return MaterialPageRoute(builder: (_) => LinksList());
       case RoutePaths.DiningViewAll:
-        return MaterialPageRoute(
-            builder: (_) => DiningList(),
-            settings: RouteSettings(name: RoutePaths.DiningViewAll));
+        return MaterialPageRoute(builder: (_) => DiningList());
       case RoutePaths.DiningDetailView:
         DiningModel data = settings.arguments as DiningModel;
-        return MaterialPageRoute(
-            builder: (_) => DiningDetailView(data: data),
-            settings: RouteSettings(name: RoutePaths.DiningDetailView));
+        return MaterialPageRoute(builder: (_) => DiningDetailView(data: data));
       case RoutePaths.DiningNutritionView:
         Map<String, Object> arguments = settings.arguments;
         MenuItem data = arguments['data'] as MenuItem;
@@ -101,28 +77,13 @@ class Router {
                   data: data,
                   disclaimer: disclaimer,
                   disclaimerEmail: disclaimerEmail,
-                ),
-            settings: RouteSettings(name: RoutePaths.DiningNutritionView));
+                ));
       case RoutePaths.SurfView:
-        return MaterialPageRoute(
-            builder: (_) => SurfView(),
-            settings: RouteSettings(name: RoutePaths.SurfView));
+        return MaterialPageRoute(builder: (_) => SurfView());
       case RoutePaths.ManageParkingView:
-        return MaterialPageRoute(
-            builder: (_) => ManageParkingView(),
-            settings: RouteSettings(name: RoutePaths.ManageParkingView));
+        return MaterialPageRoute(builder: (_) => ManageParkingView());
       case RoutePaths.CardsView:
-        return MaterialPageRoute(
-            builder: (_) => CardsView(),
-            settings: RouteSettings(name: RoutePaths.CardsView));
-      case RoutePaths.ClassScheduleViewAll:
-        return MaterialPageRoute(
-            builder: (_) => ClassList(),
-            settings: RouteSettings(name: RoutePaths.ClassScheduleViewAll));
-      default:
-        return MaterialPageRoute(
-            builder: (_) => Home(),
-            settings: RouteSettings(name: RoutePaths.Home));
+        return MaterialPageRoute(builder: (_) => CardsView());
     }
   }
 }

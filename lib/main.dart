@@ -32,7 +32,7 @@ class CampusMobile extends StatelessWidget {
           iconTheme: darkIconTheme,
           appBarTheme: darkAppBarTheme,
         ),
-        home: BottomTabBar(observer),
+        home: BottomTabBar(),
         onGenerateRoute: Router.generateRoute,
         navigatorObservers: [
           observer,
