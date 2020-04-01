@@ -1,7 +1,5 @@
 import 'package:campus_mobile_experimental/core/models/availability_model.dart';
 import 'package:campus_mobile_experimental/core/services/networking.dart';
-import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 
 class AvailabilityService {
   AvailabilityService() {}

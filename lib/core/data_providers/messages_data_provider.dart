@@ -68,7 +68,9 @@ class MessagesDataProvider extends ChangeNotifier {
       _previousTimestamp = returnedTimestamp;
     } else {
       if (_messageService.error ==
-          'DioError [DioErrorType.RESPONSE]: Http status error [401]') {}
+          'DioError [DioErrorType.RESPONSE]: Http status error [401]') {
+        _userDataProvider.refreshToken();
+      }
       _error = _messageService.error;
     }
 
@@ -86,12 +88,13 @@ class MessagesDataProvider extends ChangeNotifier {
     int timestamp = _previousTimestamp;
 
     if (await _messageService.fetchTopicData(timestamp)) {
-      
       List<MessageElement> temp = _messageService.messagingModels.messages;
       _messages.addAll(temp);
       makeOrderedMessagesList();
-      
-      returnedTimestamp = _messageService.messagingModels.next == null ? 0 : _messageService.messagingModels.next;
+
+      returnedTimestamp = _messageService.messagingModels.next == null
+          ? 0
+          : _messageService.messagingModels.next;
       _lastUpdated = DateTime.now();
       _previousTimestamp = returnedTimestamp;
     } else {

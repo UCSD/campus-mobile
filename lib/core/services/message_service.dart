@@ -32,10 +32,6 @@ class MessageService {
       _data = data;
       return true;
     } catch (e) {
-      /// if the authorized fetch failed we know we have to refresh the
-      /// token for this service
-      print("error fetching the data");
-      if (e.response?.statusCode == 401) {}
       _error = e.toString();
       _isLoading = false;
       return false;
@@ -57,14 +53,6 @@ class MessageService {
       _data = data;
       return true;
     } catch (e) {
-      /// if the authorized fetch failed we know we have to refresh the
-      /// token for this service
-      print("error fetching the data");
-//      if (e.response.statusCode == 401) {
-//        if (await getNewToken()) {
-//          return await fetchTopicData(timestamp);
-//        }
-//      }
       _error = e.toString();
       _isLoading = false;
       return false;
