@@ -4,6 +4,8 @@ import 'package:campus_mobile_experimental/core/services/authentication_service.
 import 'package:campus_mobile_experimental/core/services/user_profile_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:pointycastle/asymmetric/oaep.dart';
 import 'package:pointycastle/pointycastle.dart' as pc;
 import 'dart:typed_data';
@@ -67,6 +69,24 @@ class UserDataProvider extends ChangeNotifier {
 
   List<String> _cardOrder;
 
+  ///Update the authentication model saved in state and save the model in persistent storage
+  void updateAuthenticationModel(AuthenticationModel model) {
+    _authenticationModel = model;
+    _authenticationModel.save();
+  }
+
+  void loadSavedData() async {
+    Hive.registerAdapter(AuthenticationModelAdapter());
+    var box = await Hive.openBox<AuthenticationModel>('AuthenticationModel');
+    //check to see if we have added the authentication model into the box already
+    if (box.get('AuthenticationModel') == null) {
+      await box.add(AuthenticationModel.fromJson({}));
+    }
+    updateAuthenticationModel(
+      AuthenticationModel.fromJson({}),
+    );
+  }
+
   ///Save encrypted password to device
   void saveEncryptedPasswordToDevice(String encryptedPassword) {
     storage.write(key: 'encrypted_password', value: encryptedPassword);
@@ -129,6 +149,7 @@ class UserDataProvider extends ChangeNotifier {
       print(_authenticationModel.toJson());
       saveUsernameToDevice(email);
       saveEncryptedPasswordToDevice(base64EncodedText);
+      updateAuthenticationModel(_authenticationModel);
       getUserProfile();
       _lastUpdated = DateTime.now();
     } else {
@@ -159,7 +180,7 @@ class UserDataProvider extends ChangeNotifier {
     _error = null;
     _isLoading = true;
     notifyListeners();
-    _authenticationModel = AuthenticationModel.fromJson({});
+    updateAuthenticationModel(AuthenticationModel.fromJson({}));
     _userProfileModel = UserProfileModel.fromJson({});
     _isLoading = false;
     notifyListeners();
@@ -217,7 +238,7 @@ class UserDataProvider extends ChangeNotifier {
     _error = null;
     if (await _authenticationService
         .refreshAccessToken(_authenticationModel.refreshToken)) {
-      _authenticationModel = _authenticationService.data;
+      updateAuthenticationModel(_authenticationService.data);
     } else {
       ///TODO: check if the error is the refresh token is expired
       ///if it is then use stored credentials to get new access token
@@ -241,7 +262,7 @@ class UserDataProvider extends ChangeNotifier {
         base64.encode(utf8.encode(email + ':' + encryptedPassword));
     if (await _authenticationService
         .login(base64EncodedWithEncryptedPassword)) {
-      _authenticationModel = _authenticationService.data;
+      updateAuthenticationModel(_authenticationService.data);
     } else {
       logout();
     }

@@ -3,6 +3,9 @@
 //     final authenticationModel = authenticationModelFromJson(jsonString);
 
 import 'dart:convert';
+import 'package:hive/hive.dart';
+
+part 'authentication_model.g.dart';
 
 AuthenticationModel authenticationModelFromJson(String str) =>
     AuthenticationModel.fromJson(json.decode(str));
@@ -10,11 +13,17 @@ AuthenticationModel authenticationModelFromJson(String str) =>
 String authenticationModelToJson(AuthenticationModel data) =>
     json.encode(data.toJson());
 
-class AuthenticationModel {
+@HiveType(typeId: 1)
+class AuthenticationModel extends HiveObject {
+  @HiveField(0)
   String accessToken;
+  @HiveField(1)
   String refreshToken;
+  @HiveField(2)
   String pid;
+  @HiveField(3)
   String ucsdaffiliation;
+  @HiveField(4)
   int expiration;
 
   AuthenticationModel({
