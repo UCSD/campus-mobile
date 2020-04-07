@@ -6,6 +6,8 @@ import 'package:campus_mobile_experimental/core/models/dining_model.dart';
 import 'package:campus_mobile_experimental/core/services/dining_service.dart';
 import 'package:flutter/material.dart';
 
+enum Meal { breakfast, lunch, dinner }
+
 class DiningDataProvider extends ChangeNotifier {
   DiningDataProvider() {
     ///DEFAULT STATES
@@ -27,6 +29,7 @@ class DiningDataProvider extends ChangeNotifier {
   Coordinates _coordinates;
 
   List<bool> filtersSelected = [false, false, false];
+  Meal mealTime = Meal.breakfast;
 
   ///SERVICES
   DiningService _diningService;

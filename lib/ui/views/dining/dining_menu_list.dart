@@ -18,12 +18,7 @@ class _DiningMenuListState extends State<DiningMenuList> {
     return Center(
       child: Provider.of<DiningDataProvider>(context).isLoading
           ? CircularProgressIndicator()
-          : Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(child: buildDiningMenuList(context)),
-              ],
-            ),
+          : buildDiningMenuList(context),
     );
   }
 
@@ -43,6 +38,16 @@ class _DiningMenuListState extends State<DiningMenuList> {
     if (Provider.of<DiningDataProvider>(context, listen: false)
         .filtersSelected[2]) {
       filters.add('GF');
+    }
+    switch (Provider.of<DiningDataProvider>(context, listen: false).mealTime) {
+      case Meal.breakfast:
+        filters.add('Breakfast');
+        break;
+      case Meal.lunch:
+        filters.add('Lunch');
+        break;
+      case Meal.dinner:
+        filters.add('Dinner');
     }
     List<MenuItem> menuList =
         Provider.of<DiningDataProvider>(context, listen: false)
@@ -85,6 +90,7 @@ class _DiningMenuListState extends State<DiningMenuList> {
         return Column(
           children: <Widget>[
             buildFilterButtons(context),
+            buildMealButtons(context),
             SizedBox(height: 10),
             Center(child: Text('No items match your filter.')),
           ],
@@ -93,6 +99,7 @@ class _DiningMenuListState extends State<DiningMenuList> {
       return Column(
         children: <Widget>[
           buildFilterButtons(context),
+          buildMealButtons(context),
           SizedBox(height: 10),
           ListView.separated(
             shrinkWrap: true,
@@ -114,7 +121,6 @@ class _DiningMenuListState extends State<DiningMenuList> {
     }
   }
 
-  ///TODO build buttons to filter food items
   Widget buildFilterButtons(BuildContext context) {
     return Center(
       child: ToggleButtons(
@@ -138,6 +144,77 @@ class _DiningMenuListState extends State<DiningMenuList> {
           });
         },
       ),
+    );
+  }
+
+  Widget buildMealButtons(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        LabeledRadio(
+          title: 'Breakfast',
+          value: Meal.breakfast,
+          groupValue: Provider.of<DiningDataProvider>(context).mealTime,
+          onChanged: (Meal value) {
+            setState(() {
+              Provider.of<DiningDataProvider>(context, listen: false).mealTime =
+                  value;
+            });
+          },
+        ),
+        LabeledRadio(
+          title: 'Lunch',
+          value: Meal.lunch,
+          groupValue: Provider.of<DiningDataProvider>(context).mealTime,
+          onChanged: (Meal value) {
+            setState(() {
+              Provider.of<DiningDataProvider>(context, listen: false).mealTime =
+                  value;
+            });
+          },
+        ),
+        LabeledRadio(
+          title: 'Dinner',
+          value: Meal.dinner,
+          groupValue: Provider.of<DiningDataProvider>(context).mealTime,
+          onChanged: (Meal value) {
+            setState(() {
+              Provider.of<DiningDataProvider>(context, listen: false).mealTime =
+                  value;
+            });
+          },
+        )
+      ],
+    );
+  }
+}
+
+class LabeledRadio extends StatelessWidget {
+  final String title;
+  final Meal value;
+  final Meal groupValue;
+  final Function onChanged;
+
+  const LabeledRadio(
+      {Key key, this.title, this.value, this.groupValue, this.onChanged})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        Radio(
+          value: value,
+          groupValue: groupValue,
+          onChanged: onChanged,
+          activeColor: Theme.of(context).buttonColor,
+        ),
+        Text(
+          title,
+          style: TextStyle(fontSize: 16),
+        ),
+        SizedBox(width: 20)
+      ],
     );
   }
 }
