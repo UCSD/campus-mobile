@@ -4,8 +4,6 @@
 
 import 'dart:convert';
 
-import 'dart:convert';
-
 ClassScheduleModel classScheduleModelFromJson(String str) =>
     ClassScheduleModel.fromJson(json.decode(str));
 

@@ -35,7 +35,13 @@ List<SingleChildWidget> independentServices = [
     create: (_) => BottomNavigationBarProvider(),
   ),
   ChangeNotifierProvider<UserDataProvider>(
-    create: (_) => UserDataProvider(),
+    create: (_) {
+      var _userDataProvider = UserDataProvider();
+      _userDataProvider
+          .loadSavedData()
+          .whenComplete(() => _userDataProvider.getUserProfile());
+      return _userDataProvider;
+    },
   ),
   ChangeNotifierProvider<SurfDataProvider>(
     create: (_) {

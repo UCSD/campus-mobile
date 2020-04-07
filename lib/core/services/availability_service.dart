@@ -38,7 +38,7 @@ class AvailabilityService {
     } catch (e) {
       /// if the authorized fetch failed we know we have to refresh the
       /// token for this service
-      if (e.response.statusCode == 401) {
+      if (e.response != null && e.response.statusCode == 401) {
         if (await getNewToken()) {
           return await fetchData();
         }

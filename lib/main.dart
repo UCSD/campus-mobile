@@ -4,8 +4,16 @@ import 'package:campus_mobile_experimental/core/navigation/bottom_tab_bar/bottom
 import 'package:campus_mobile_experimental/core/data_providers/provider_setup.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:path_provider/path_provider.dart';
 
-void main() => runApp(CampusMobile());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final appDocumentDir = await getApplicationDocumentsDirectory();
+  Hive.init(appDocumentDir.path);
+  runApp(CampusMobile());
+}
 
 class CampusMobile extends StatelessWidget {
   @override

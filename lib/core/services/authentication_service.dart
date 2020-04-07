@@ -49,8 +49,7 @@ class AuthenticationService {
 
   Future<bool> refreshAccessToken(String refreshToken) async {
     _error = null;
-    //TODO: upload consumer secret and key to lambda or remote config and remove from code here
-    final tokenHeaders = {'refreshToken': refreshToken};
+    final tokenHeaders = {'refresh_token': refreshToken};
     try {
       var response = await _networkHelper.authorizedPost(
           refreshTokenEndpoint, tokenHeaders, null);
@@ -59,6 +58,7 @@ class AuthenticationService {
       }
       final authenticationModel = AuthenticationModel.fromJson(response);
       _data = authenticationModel;
+      _lastUpdated = DateTime.now();
       return true;
     } catch (e) {
       ///TODO: check to see if error returned means the refresh token is expired
