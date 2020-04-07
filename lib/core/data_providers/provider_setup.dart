@@ -37,9 +37,9 @@ List<SingleChildWidget> independentServices = [
   ChangeNotifierProvider<UserDataProvider>(
     create: (_) {
       var _userDataProvider = UserDataProvider();
-      _userDataProvider.loadSavedData();
-      _userDataProvider.refreshToken();
-      _userDataProvider.getUserProfile();
+      _userDataProvider
+          .loadSavedData()
+          .whenComplete(() => _userDataProvider.getUserProfile());
       return _userDataProvider;
     },
   ),

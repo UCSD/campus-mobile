@@ -11,7 +11,7 @@ import 'package:path_provider/path_provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final appDocumentDir = await getApplicationDocumentsDirectory();
-  Hive.initFlutter();
+  Hive.init(appDocumentDir.path);
   runApp(CampusMobile());
 }
 

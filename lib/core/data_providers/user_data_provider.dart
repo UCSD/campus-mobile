@@ -5,7 +5,6 @@ import 'package:campus_mobile_experimental/core/services/user_profile_service.da
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive/hive.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:pointycastle/asymmetric/oaep.dart';
 import 'package:pointycastle/pointycastle.dart' as pc;
 import 'dart:typed_data';
@@ -22,8 +21,7 @@ class UserDataProvider extends ChangeNotifier {
     _userProfileService = UserProfileService();
     storage = FlutterSecureStorage();
 
-    ///default authentication model is needed in this class to check login state
-    ///in most classes the model data can remain null
+    ///default authentication model and profile is needed in this class
     _authenticationModel = AuthenticationModel.fromJson({});
     _userProfileModel = UserProfileModel.fromJson({});
     _cardStates = {
@@ -70,21 +68,26 @@ class UserDataProvider extends ChangeNotifier {
   List<String> _cardOrder;
 
   ///Update the authentication model saved in state and save the model in persistent storage
-  void updateAuthenticationModel(AuthenticationModel model) {
+  Future updateAuthenticationModel(AuthenticationModel model) async {
     _authenticationModel = model;
-    _authenticationModel.save();
+    var box = await Hive.openBox<AuthenticationModel>('AuthenticationModel');
+    await box.put('AuthenticationModel', model);
+    _lastUpdated = DateTime.now();
   }
 
-  void loadSavedData() async {
+  ///Load data from persistent storage
+  ///Will create persistent storage if  no data is found
+  Future loadSavedData() async {
     Hive.registerAdapter(AuthenticationModelAdapter());
     var box = await Hive.openBox<AuthenticationModel>('AuthenticationModel');
+    AuthenticationModel temp = AuthenticationModel.fromJson({});
     //check to see if we have added the authentication model into the box already
     if (box.get('AuthenticationModel') == null) {
-      await box.add(AuthenticationModel.fromJson({}));
+      await box.put('AuthenticationModel', temp);
     }
-    updateAuthenticationModel(
-      AuthenticationModel.fromJson({}),
-    );
+    temp = box.get('AuthenticationModel');
+    _authenticationModel = temp;
+    await refreshToken();
   }
 
   ///Save encrypted password to device
@@ -115,10 +118,8 @@ class UserDataProvider extends ChangeNotifier {
     storage.delete(key: 'password');
   }
 
-  ///authenticate a user given an email and password
-  ///upon logging in we should make sure that users upload the correct
-  ///ucsdaffiliation and classification
-  void login(String email, String password) async {
+  ///Encrypt given username and password and store on device
+  void encryptLoginInfo(String username, String password) {
     // TODO: import assets/public_key.txt
     final String pkString = '-----BEGIN PUBLIC KEY-----\n' +
         'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDJD70ejMwsmes6ckmxkNFgKley\n' +
@@ -135,33 +136,38 @@ class UserDataProvider extends ChangeNotifier {
     cipher.init(true, keyParametersPublic);
     Uint8List output = cipher.process(utf8.encode(password));
     var base64EncodedText = base64.encode(output);
-    final String base64EncodedWithEncryptedPassword =
-        base64.encode(utf8.encode(email + ':' + base64EncodedText));
+    saveUsernameToDevice(username);
+    saveEncryptedPasswordToDevice(base64EncodedText);
+  }
 
+  ///logs user in with saved credentials on device
+  ///if this login mechanism fails then the user is logged out
+  Future silentLogin() async {
+    String username = await getUsernameFromDevice();
+    String encryptedPassword = await getEncryptedPasswordFromDevice();
+    if (username != null && encryptedPassword != null) {
+      final String base64EncodedWithEncryptedPassword =
+          base64.encode(utf8.encode(username + ':' + encryptedPassword));
+      if (await _authenticationService
+          .login(base64EncodedWithEncryptedPassword)) {
+        updateAuthenticationModel(_authenticationService.data);
+      } else {
+        logout();
+        _error = _authenticationService.error;
+      }
+    }
+  }
+
+  ///authenticate a user given an email and password
+  ///upon logging in we should make sure that users upload the correct
+  ///ucsdaffiliation and classification
+  void login(String username, String password) async {
+    encryptLoginInfo(username, password);
     _error = null;
     _isLoading = true;
     notifyListeners();
-
-    bool response =
-        await _authenticationService.login(base64EncodedWithEncryptedPassword);
-    if (response) {
-      _authenticationModel = _authenticationService.data;
-      print(_authenticationModel.toJson());
-      saveUsernameToDevice(email);
-      saveEncryptedPasswordToDevice(base64EncodedText);
-      updateAuthenticationModel(_authenticationModel);
-      getUserProfile();
-      _lastUpdated = DateTime.now();
-    } else {
-      /// here we know that the authentication failed but we still have access to stale data because it has not been overwritten
-      /// however if this failure occurs on the first attempt then our data model will have a default expiration of 0
-      /// TODO: make sure this is the correct error message to show the user in the AuthenticationService class
-      /// this is the error we will display to the user
-      _error = _authenticationService.error;
-
-      ///reset all auth settings if login was unsuccessful
-      _authenticationModel = AuthenticationModel.fromJson({});
-    }
+    await silentLogin();
+    await getUserProfile();
     _isLoading = false;
     notifyListeners();
   }
@@ -176,19 +182,24 @@ class UserDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  ///Logs out user
+  ///Resets all authentication data and all userProfile data
   void logout() async {
     _error = null;
     _isLoading = true;
     notifyListeners();
     updateAuthenticationModel(AuthenticationModel.fromJson({}));
     _userProfileModel = UserProfileModel.fromJson({});
+    deletePasswordFromDevice();
+    deleteUsernameFromDevice();
+    var box = await Hive.openBox<AuthenticationModel>('AuthenticationModel');
+    await box.clear();
     _isLoading = false;
     notifyListeners();
   }
 
   ///FETCH USER PROFILE FROM SERVER
-  ///TODO: check to see if user profile is blank, if it is then upload current profile to cloud
-  void getUserProfile() async {
+  Future getUserProfile() async {
     _error = null;
     _isLoading = true;
     notifyListeners();
@@ -199,8 +210,14 @@ class UserDataProvider extends ChangeNotifier {
       };
       if (await _userProfileService.downloadUserProfile(headers)) {
         _userProfileModel = _userProfileService.userProfileModel;
-        print('downlaoded user profile: ');
-        print(_userProfileService.userProfileModel.toJson().toString());
+
+        /// if the user profile has no ucsd affiliation then we know the user is new
+        /// so create a new profile and upload to DB using [postUserProfile]
+        if (_userProfileModel.ucsdaffiliation == null) {
+          await createNewUser();
+        }
+      } else {
+        _error = _userProfileService.error;
       }
     } else {
       _error = 'not logged in';
@@ -209,19 +226,45 @@ class UserDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  ///Create a new user profile based on SSO info
+  Future createNewUser() async {
+    _userProfileModel
+      ..username = await getUsernameFromDevice()
+      ..ucsdaffiliation = _authenticationModel.ucsdaffiliation
+      ..pid = _authenticationModel.pid;
+
+    ///TODO: make sure that all student affiliation are caught in this if check
+    if (_userProfileModel.ucsdaffiliation == 'U') {
+      _userProfileModel.classifications =
+          Classifications.fromJson({'student': true});
+    }
+    await postUserProfile(_userProfileModel);
+  }
+
   /// UPLOAD USER PROFILE TO SERVER
-  void postUserProfile(UserProfileModel profile) async {
+  Future postUserProfile(UserProfileModel profile) async {
     _error = null;
     _isLoading = true;
     notifyListeners();
+
+    /// check if user is logged in
     if (_authenticationModel.isLoggedIn(_authenticationService.lastUpdated)) {
       final Map<String, String> headers = {
         'Authorization': "Bearer " + _authenticationModel.accessToken
       };
-      if (await _userProfileService.uploadUserProfile(
-          headers, profile.toJson())) {
+
+      /// we only want to push data that is not null
+      var tempJson = Map<String, dynamic>();
+      for (var key in profile.toJson().keys) {
+        if (profile.toJson()[key] != null) {
+          tempJson[key] = profile.toJson()[key];
+        }
+      }
+      if (await _userProfileService.uploadUserProfile(headers, tempJson)) {
         _error = null;
         _isLoading = false;
+      } else {
+        _error = _userProfileService.error;
       }
     } else {
       _error = 'not logged in';
@@ -232,40 +275,22 @@ class UserDataProvider extends ChangeNotifier {
   }
 
   ///Uses saved refresh token to reauthenticate user
-  ///Invokes [reauthenticate] on failure
+  ///Invokes [silentLogin] on failure
   ///TODO: check if we need to change the loading boolean since this is a silent login mechanism
-  void refreshToken() async {
+  Future refreshToken() async {
     _error = null;
     if (await _authenticationService
         .refreshAccessToken(_authenticationModel.refreshToken)) {
-      updateAuthenticationModel(_authenticationService.data);
+      await updateAuthenticationModel(_authenticationService.data);
     } else {
-      ///TODO: check if the error is the refresh token is expired
-      ///if it is then use stored credentials to get new access token
+      ///if the token passed from the device was empty then [_error] will be populated with 'The given refresh token was invalid'
+      ///if the token passed from the device was malformed or expired then [_error] will be populated with 'invalid_grant'
       _error = _authenticationService.error;
 
-      ///TODO figure out what message is returned for expired refresh token
-      if (_error == 'The given refresh token was invalid') {
-        ///Try to use user's credentials to login again
-        await reauthenticate();
-      }
+      ///Try to use user's credentials to login again
+      await silentLogin();
     }
     notifyListeners();
-  }
-
-  ///Uses saved credentials to reauthenticate user
-  ///Invokes [logout] on failure
-  void reauthenticate() async {
-    String email = await getUsernameFromDevice();
-    String encryptedPassword = await getEncryptedPasswordFromDevice();
-    final String base64EncodedWithEncryptedPassword =
-        base64.encode(utf8.encode(email + ':' + encryptedPassword));
-    if (await _authenticationService
-        .login(base64EncodedWithEncryptedPassword)) {
-      updateAuthenticationModel(_authenticationService.data);
-    } else {
-      logout();
-    }
   }
 
   ///GETTERS FOR MODELS
