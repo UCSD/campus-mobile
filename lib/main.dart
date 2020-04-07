@@ -7,11 +7,26 @@ import 'package:provider/provider.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final appDocumentDir = await getApplicationDocumentsDirectory();
-  Hive.init(appDocumentDir.path);
+
+  /// initialize hive storage
+  Hive.initFlutter('.');
+
+  /// this will clear out any old signed in users
+  final prefs = await SharedPreferences.getInstance();
+  if (prefs.getBool('first_run') ?? true) {
+    FlutterSecureStorage storage = FlutterSecureStorage();
+
+    /// delete any saved data
+    await Hive.deleteFromDisk();
+    await storage.deleteAll();
+    prefs.setBool('first_run', false);
+  }
+
   runApp(CampusMobile());
 }
 
