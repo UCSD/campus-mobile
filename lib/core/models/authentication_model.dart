@@ -34,16 +34,21 @@ class AuthenticationModel extends HiveObject {
     this.expiration,
   });
 
-  factory AuthenticationModel.fromJson(Map<String, dynamic> json) =>
-      AuthenticationModel(
-        accessToken: json["access_token"] == null ? null : json["access_token"],
-        refreshToken:
-            json["refresh_token"] == null ? null : json["refresh_token"],
-        pid: json["pid"] == null ? null : json["pid"],
-        ucsdaffiliation:
-            json["ucsdaffiliation"] == null ? null : json["ucsdaffiliation"],
-        expiration: json["expiration"] == null ? 0 : json["expiration"],
-      );
+  factory AuthenticationModel.fromJson(Map<String, dynamic> json) {
+    ///this if statement is added so refresh token data can be used
+    if (json['expires_in'] != null) {
+      json['expiration'] = json['expires_in'];
+    }
+    return AuthenticationModel(
+      accessToken: json["access_token"] == null ? null : json["access_token"],
+      refreshToken:
+          json["refresh_token"] == null ? null : json["refresh_token"],
+      pid: json["pid"] == null ? null : json["pid"],
+      ucsdaffiliation:
+          json["ucsdaffiliation"] == null ? null : json["ucsdaffiliation"],
+      expiration: json["expiration"] == null ? 0 : json["expiration"],
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         "access_token": accessToken == null ? null : accessToken,
