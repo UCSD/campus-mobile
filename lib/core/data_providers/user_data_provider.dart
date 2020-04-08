@@ -281,6 +281,13 @@ class UserDataProvider extends ChangeNotifier {
     _error = null;
     if (await _authenticationService
         .refreshAccessToken(_authenticationModel.refreshToken)) {
+      /// this is only added to refresh token method because the response for the refresh token does not include
+      /// pid and ucsdaffiliation fields
+      if (_authenticationModel.pid != null) {
+        AuthenticationModel finalModel = _authenticationService.data;
+        finalModel.pid = _authenticationModel.pid;
+        finalModel.ucsdaffiliation = _authenticationModel.ucsdaffiliation;
+      }
       await updateAuthenticationModel(_authenticationService.data);
     } else {
       ///if the token passed from the device was empty then [_error] will be populated with 'The given refresh token was invalid'

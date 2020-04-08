@@ -37,6 +37,9 @@ List<SingleChildWidget> independentServices = [
   ChangeNotifierProvider<UserDataProvider>(
     create: (_) {
       var _userDataProvider = UserDataProvider();
+
+      /// try to load any persistent saved data
+      /// once loaded from memory get the user's online profile
       _userDataProvider
           .loadSavedData()
           .whenComplete(() => _userDataProvider.getUserProfile());

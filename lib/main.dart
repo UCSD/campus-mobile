@@ -13,6 +13,12 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  initializeStorage();
+
+  runApp(CampusMobile());
+}
+
+void initializeStorage() async {
   /// initialize hive storage
   Hive.initFlutter('.');
 
@@ -26,8 +32,6 @@ void main() async {
     await storage.deleteAll();
     prefs.setBool('first_run', false);
   }
-
-  runApp(CampusMobile());
 }
 
 class CampusMobile extends StatelessWidget {
