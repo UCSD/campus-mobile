@@ -1,39 +1,44 @@
 {
   "project_info": {
-    "project_number": "GS_PROJECT_NUMBER_PH",
-    "firebase_url": "GS_FIREBASE_URL_PH",
-    "project_id": "GS_PROJECT_ID_PH",
-    "storage_bucket": "GS_STORAGE_BUCKET_PH"
+    "project_number": "913067495333",
+    "firebase_url": "https://campus-mobile-flutter.firebaseio.com",
+    "project_id": "campus-mobile-flutter",
+    "storage_bucket": "campus-mobile-flutter.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1:android:1",
+        "mobilesdk_app_id": "1:913067495333:android:c83b6a310ff4513c9c624c",
         "android_client_info": {
-          "package_name": "edu.ucsd"
+          "package_name": "edu.ucsd.campusmobile"
         }
       },
       "oauth_client": [
         {
-          "client_id": "GS_ANDROID_CLIENT_ID_PH",
+          "client_id": "913067495333-6f92sa993o7lij2d68kfrvbjdq3shk89.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "GS_ANDROID_API_KEY_PH"
+          "current_key": "AIzaSyAPaxypd9nnUvizFs9BPgF5Cqxikhe969c"
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 1
+          "other_platform_oauth_client": [
+            {
+              "client_id": "913067495333-6f92sa993o7lij2d68kfrvbjdq3shk89.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "913067495333-6svvlu36r9nu25vls4p350sb6ntiva6l.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "edu.ucsd.campusmobile"
+              }
+            }
+          ]
         }
       }
     }

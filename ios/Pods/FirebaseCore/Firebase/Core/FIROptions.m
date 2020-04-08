@@ -17,6 +17,7 @@
 #import "Private/FIRErrors.h"
 #import "Private/FIRLogger.h"
 #import "Private/FIROptionsInternal.h"
+#import "Private/FIRVersion.h"
 
 // Keys for the strings in the plist file.
 NSString *const kFIRAPIKey = @"API_KEY";
@@ -39,12 +40,13 @@ NSString *const kFIRIsAnalyticsCollectionDeactivated = @"FIREBASE_ANALYTICS_COLL
 NSString *const kFIRIsAnalyticsEnabled = @"IS_ANALYTICS_ENABLED";
 NSString *const kFIRIsSignInEnabled = @"IS_SIGNIN_ENABLED";
 
-// Library version ID.
-NSString *const kFIRLibraryVersionID =
-    @"5"     // Major version (one or more digits)
-    @"00"    // Minor version (exactly 2 digits)
-    @"04"    // Build number (exactly 2 digits)
-    @"000";  // Fixed "000"
+// Library version ID formatted like:
+// @"5"     // Major version (one or more digits)
+// @"04"    // Minor version (exactly 2 digits)
+// @"01"    // Build number (exactly 2 digits)
+// @"000";  // Fixed "000"
+NSString *kFIRLibraryVersionID;
+
 // Plist file name.
 NSString *const kServiceInfoFileName = @"GoogleService-Info";
 // Plist file type.
@@ -85,7 +87,6 @@ NSString *const kFIRExceptionBadModification =
 @implementation FIROptions {
   /// Backing variable for self.analyticsOptionsDictionary.
   NSDictionary *_analyticsOptionsDictionary;
-  dispatch_once_t _createAnalyticsOptionsDictionaryOnce;
 }
 
 static FIROptions *sDefaultOptions = nil;
@@ -111,17 +112,9 @@ static NSDictionary *sDefaultOptionsDictionary = nil;
 
 + (void)initialize {
   // Report FirebaseCore version for useragent string
-  NSRange major = NSMakeRange(0, 1);
-  NSRange minor = NSMakeRange(1, 2);
-  NSRange patch = NSMakeRange(3, 2);
-  [FIRApp
-      registerLibrary:@"fire-ios"
-          withVersion:[NSString stringWithFormat:@"%@.%d.%d",
-                                                 [kFIRLibraryVersionID substringWithRange:major],
-                                                 [[kFIRLibraryVersionID substringWithRange:minor]
-                                                     intValue],
-                                                 [[kFIRLibraryVersionID substringWithRange:patch]
-                                                     intValue]]];
+  [FIRApp registerLibrary:@"fire-ios"
+              withVersion:[NSString stringWithUTF8String:FIRCoreVersionString]];
+
   NSDictionary<NSString *, id> *info = [[NSBundle mainBundle] infoDictionary];
   NSString *xcodeVersion = info[@"DTXcodeBuild"];
   NSString *sdkVersion = info[@"DTSDKBuild"];
@@ -186,6 +179,7 @@ static NSDictionary *sDefaultOptionsDictionary = nil;
   if (newOptions) {
     newOptions.optionsDictionary = self.optionsDictionary;
     newOptions.deepLinkURLScheme = self.deepLinkURLScheme;
+    newOptions.appGroupID = self.appGroupID;
     newOptions.editingLocked = self.isEditingLocked;
     newOptions.usingOptionsFromDefaultPlist = self.usingOptionsFromDefaultPlist;
   }
@@ -297,6 +291,16 @@ static NSDictionary *sDefaultOptionsDictionary = nil;
 }
 
 - (NSString *)libraryVersionID {
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    // The unit tests are set up to catch anything that does not properly convert.
+    NSString *version = [NSString stringWithUTF8String:FIRCoreVersionString];
+    NSArray *components = [version componentsSeparatedByString:@"."];
+    NSString *major = [components objectAtIndex:0];
+    NSString *minor = [NSString stringWithFormat:@"%02d", [[components objectAtIndex:1] intValue]];
+    NSString *patch = [NSString stringWithFormat:@"%02d", [[components objectAtIndex:2] intValue]];
+    kFIRLibraryVersionID = [NSString stringWithFormat:@"%@%@%@000", major, minor, patch];
+  });
   return kFIRLibraryVersionID;
 }
 
@@ -337,10 +341,15 @@ static NSDictionary *sDefaultOptionsDictionary = nil;
   _optionsDictionary[kFIRBundleID] = [bundleID copy];
 }
 
+- (void)setAppGroupID:(NSString *)appGroupID {
+  [self checkEditingLocked];
+  _appGroupID = [appGroupID copy];
+}
+
 #pragma mark - Internal instance methods
 
 - (NSDictionary *)analyticsOptionsDictionaryWithInfoDictionary:(NSDictionary *)infoDictionary {
-  dispatch_once(&_createAnalyticsOptionsDictionaryOnce, ^{
+  if (_analyticsOptionsDictionary == nil) {
     NSMutableDictionary *tempAnalyticsOptions = [[NSMutableDictionary alloc] init];
     NSArray *measurementKeys = @[
       kFIRIsMeasurementEnabled, kFIRIsAnalyticsCollectionEnabled,
@@ -353,8 +362,8 @@ static NSDictionary *sDefaultOptionsDictionary = nil;
       }
       tempAnalyticsOptions[key] = value;
     }
-    self->_analyticsOptionsDictionary = tempAnalyticsOptions;
-  });
+    _analyticsOptionsDictionary = tempAnalyticsOptions;
+  }
   return _analyticsOptionsDictionary;
 }
 
@@ -385,12 +394,12 @@ static NSDictionary *sDefaultOptionsDictionary = nil;
     }
 
     // Fall back to the default app's collection switch when the key is not in the dictionary.
-    return [FIRApp defaultApp].automaticDataCollectionEnabled;
+    return [FIRApp defaultApp].isDataCollectionDefaultEnabled;
   }
   return [value boolValue];
 }
 
-- (BOOL)isAnalyticsCollectionExpicitlySet {
+- (BOOL)isAnalyticsCollectionExplicitlySet {
   // If it's de-activated, it classifies as explicity set. If not, it's not a good enough indication
   // that the developer wants FirebaseAnalytics enabled so continue checking.
   if (self.isAnalyticsCollectionDeactivated) {
