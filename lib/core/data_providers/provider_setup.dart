@@ -111,8 +111,10 @@ List<SingleChildWidget> dependentServices = [
     var classDataProvider = ClassScheduleDataProvider();
     return classDataProvider;
   }, update: (_, userDataProvider, classScheduleDataProvider) {
-    classScheduleDataProvider..userDataProvider = userDataProvider;
-    classScheduleDataProvider.fetchData();
+    classScheduleDataProvider.userDataProvider = userDataProvider;
+    if (userDataProvider.isLoggedIn) {
+      classScheduleDataProvider.fetchData();
+    }
     return classScheduleDataProvider;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, ParkingDataProvider>(
