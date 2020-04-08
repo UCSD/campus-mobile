@@ -16,7 +16,7 @@ class AvailabilityService {
   final NetworkHelper _networkHelper = NetworkHelper();
   final Map<String, String> headers = {
     "accept": "application/json",
-    "Authorization": "Bearer " + "7e0ed6a9-86a7-3349-86a2-b4aa035ab8bb",
+    "Authorization": "PUBLIC_AUTH_SERVICE_API_KEY_PH",
   };
   final String endpoint =
       "https://api-qa.ucsd.edu:8243/occuspace/v1.0/busyness";
@@ -53,8 +53,7 @@ class AvailabilityService {
     final String tokenEndpoint = "https://api-qa.ucsd.edu:8243/token";
     final Map<String, String> tokenHeaders = {
       "content-type": 'application/x-www-form-urlencoded',
-      "Authorization":
-          "Basic WUNaMXlLTW9wMjNxcGtvUFQ1aDYzdHB5bm9rYTpQNnFCbWNIRFc5azNJME56S3hHSm5QTTQzV0lh"
+      "Authorization": "PUBLIC_AUTH_SERVICE_TOKEN_API_KEY_PH"
     };
     try {
       var response = await _networkHelper.authorizedPost(
