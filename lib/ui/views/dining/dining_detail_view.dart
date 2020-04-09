@@ -5,6 +5,7 @@ import 'package:campus_mobile_experimental/ui/reusable_widgets/image_loader.dart
 import 'package:campus_mobile_experimental/ui/reusable_widgets/time_range_widget.dart';
 import 'package:campus_mobile_experimental/ui/views/dining/dining_menu_list.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DiningDetailView extends StatelessWidget {
   const DiningDetailView({Key key, @required this.data}) : super(key: key);
@@ -42,6 +43,35 @@ class DiningDetailView extends StatelessWidget {
       buildHours(context, model),
       buildPaymentOptions(context, model),
       buildPictures(model),
+      FlatButton(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text(
+              'Directions',
+              style: TextStyle(
+                fontSize: 25,
+                color: Theme.of(context).primaryColor,
+              ),
+            ),
+            Column(
+              children: <Widget>[
+                Icon(
+                  Icons.directions_walk,
+                  size: 30,
+                  color: Theme.of(context).primaryColor,
+                ),
+                Text(model.distance.toStringAsPrecision(3)),
+              ],
+            ),
+          ],
+        ),
+        onPressed: () {
+          launch(
+              'https://www.google.com/maps/dir/?api=1&destination=${model.coordinates.lat},${model.coordinates.lon}&travelmode=walking');
+        },
+      ),
+      Divider(),
       DiningMenuList(
         id: model.id,
       ),
