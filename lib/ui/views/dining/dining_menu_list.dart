@@ -49,11 +49,11 @@ class _DiningMenuListState extends State<DiningMenuList> {
       case Meal.dinner:
         filters.add('Dinner');
     }
-    List<MenuItem> menuList =
-        Provider.of<DiningDataProvider>(context, listen: false)
-            .getMenuItems(widget.id, filters);
-    List<Widget> list = List<Widget>();
-    if (menuList != null) {
+    if (menu.menuItems != null) {
+      List<MenuItem> menuList =
+          Provider.of<DiningDataProvider>(context, listen: false)
+              .getMenuItems(widget.id, filters);
+      List<Widget> list = List<Widget>();
       if (menuList.length > 0) {
         for (MenuItem item in menuList) {
           list.add(GestureDetector(
