@@ -12,14 +12,16 @@ import 'package:campus_mobile_experimental/core/data_providers/weather_data_prov
 import 'package:campus_mobile_experimental/core/services/bottom_navigation_bar_service.dart';
 import 'package:campus_mobile_experimental/core/models/coordinates_model.dart';
 import 'package:campus_mobile_experimental/core/navigation/top_navigation_bar/app_bar.dart';
-import 'package:provider/provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/messages_data_provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/free_food_data_provider.dart';
+import 'package:provider/provider.dart';
 
 List<SingleChildCloneableWidget> providers = [
   ...independentServices,
   ...dependentServices,
   ...uiConsumableProviders,
 ];
+
 List<SingleChildCloneableWidget> independentServices = [
   ChangeNotifierProvider<BottomNavigationBarProvider>(
     builder: (_) => BottomNavigationBarProvider(),
@@ -70,6 +72,13 @@ List<SingleChildCloneableWidget> independentServices = [
       return _linksDataProvider;
     },
   ),
+  ChangeNotifierProvider<FreeFoodDataProvider>(
+    builder: (_) {
+      FreeFoodDataProvider _freeFoodDataProvider = FreeFoodDataProvider();
+      _freeFoodDataProvider.fetchCount();
+      return _freeFoodDataProvider;
+    },
+  ),
   StreamProvider<Coordinates>(
     builder: (_) => LocationDataProvider().locationStream,
   ),
@@ -77,6 +86,7 @@ List<SingleChildCloneableWidget> independentServices = [
     builder: (_) => CustomAppBar(),
   ),
 ];
+
 List<SingleChildCloneableWidget> dependentServices = [
   ChangeNotifierProxyProvider<Coordinates, DiningDataProvider>(
       initialBuilder: (_) {

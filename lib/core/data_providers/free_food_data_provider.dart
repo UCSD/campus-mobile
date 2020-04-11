@@ -1,42 +1,79 @@
-// import 'package:campus_mobile_experimental/core/models/links_model.dart';
-// import 'package:campus_mobile_experimental/core/services/free_food_service.dart';
-// import 'package:flutter/material.dart';
+import 'package:campus_mobile_experimental/core/models/free_food_model.dart';
+import 'package:campus_mobile_experimental/core/services/free_food_service.dart';
+import 'package:flutter/material.dart';
 
-// class FreefoodDataProvider extends ChangeNotifier {
-//   FreefoodDataProvider() {
-//     ///DEFAULT STATES
-//     _isLoading = false;
+class FreeFoodDataProvider extends ChangeNotifier {
+  FreeFoodDataProvider() {
+    ///DEFAULT STATES
+    _isLoading = false;
 
-//     ///INITIALIZE SERVICES
-//   }
+    ///INITIALIZE SERVICES
+    _freeFoodService = FreeFoodService();
+    _freeFoodModel = FreeFoodModel();
+  }
 
-//   ///STATES
-//   bool _isLoading;
-//   DateTime _lastUpdated;
-//   String _error;
+  ///STATES
+  bool _isLoading;
+  DateTime _lastUpdated;
+  String _error;
 
-//   ///MODELS
-//   List<LinksModel> _linksModels;
+  ///MODELS
+  FreeFoodModel _freeFoodModel;
 
-//   ///SERVICES
-//   LinksService _linksService;
+  ///SERVICES
+  FreeFoodService _freeFoodService;
 
-//   void fetchLinks() async {
-//     _isLoading = true;
-//     _error = null;
-//     notifyListeners();
-//     if (await _linksService.fetchData()) {
-//       _linksModels = _linksService.linksModels;
-//       _lastUpdated = DateTime.now();
-//     } else {
-//       _error = _linksService.error;
-//     }
-//     _isLoading = false;
-//     notifyListeners();
-//   }
+  void fetchCount() async {
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
+    if (await _freeFoodService.fetchData()) {
+      _freeFoodModel = _freeFoodService.freeFoodModel;
+      _lastUpdated = DateTime.now();
+    } else {
+      _error = _freeFoodService.error;
+    }
+    _isLoading = false;
+    notifyListeners();
+  }
 
-//   ///SIMPLE GETTERS
-//   bool get isLoading => _isLoading;
-//   String get error => _error;
-//   DateTime get lastUpdated => _lastUpdated;
-// }
+   void decrementCount(String id) async {
+    _isLoading = true;
+    _error = null;
+
+    notifyListeners();
+
+    if (await _freeFoodService.decrementCount(id)) {
+      _freeFoodModel = _freeFoodService.freeFoodModel;
+      _lastUpdated = DateTime.now();
+    } else {
+      _error = _freeFoodService.error;
+    }
+
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  void incrementCount(String id) async {
+    _isLoading = true;
+    _error = null;
+
+    notifyListeners();
+
+    if (await _freeFoodService.incrementCount(id)) {
+      _freeFoodModel = _freeFoodService.freeFoodModel;
+      _lastUpdated = DateTime.now();
+    } else {
+      _error = _freeFoodService.error;
+    }
+
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  ///SIMPLE GETTERS
+  bool get isLoading => _isLoading;
+  String get error => _error;
+  DateTime get lastUpdated => _lastUpdated;
+  FreeFoodModel get freeFoodModel => _freeFoodModel;
+}
