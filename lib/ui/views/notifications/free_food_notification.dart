@@ -21,12 +21,12 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     _freeFoodDataProvider = Provider.of<FreeFoodDataProvider>(context);
+        print(_freeFoodDataProvider.freeFoodModel.body.count);
   }
 
   @override
   Widget build(BuildContext context) {
     FreeFoodModel model = _freeFoodDataProvider.freeFoodModel;
-    print(_freeFoodDataProvider.freeFoodModel.body.count);
     return Container(
       margin: EdgeInsets.only(top: 10.0),
       child: Row(
@@ -117,12 +117,14 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
         _buttonColor = Colors.green;
         _borderColor = Colors.green;
         _textColor = Colors.white;
-        _freeFoodDataProvider.incrementCount("1");
+        _freeFoodDataProvider.decrementCount("1");
+        _freeFoodDataProvider.fetchCount();
       } else {
         _buttonColor = Colors.white;
         _borderColor = Color(0xFF034161);
         _textColor = Color(0xFF034161);
-        _freeFoodDataProvider.decrementCount("1");
+        _freeFoodDataProvider.incrementCount("1");
+        _freeFoodDataProvider.fetchCount();
       }
     });
   }
