@@ -233,10 +233,13 @@ class UserDataProvider extends ChangeNotifier {
       ..ucsdaffiliation = _authenticationModel.ucsdaffiliation
       ..pid = _authenticationModel.pid;
 
-    ///TODO: make sure that all student affiliation are caught in this if check
-    if (_userProfileModel.ucsdaffiliation == 'U') {
+    final pattern = RegExp('[BGJMU]');
+    if (_userProfileModel.ucsdaffiliation.contains(pattern)) {
       _userProfileModel.classifications =
           Classifications.fromJson({'student': true});
+    } else {
+      _userProfileModel.classifications =
+          Classifications.fromJson({'student': false});
     }
     await postUserProfile(_userProfileModel);
   }

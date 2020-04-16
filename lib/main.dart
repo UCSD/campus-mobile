@@ -13,7 +13,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  initializeStorage();
+  await initializeStorage();
 
   runApp(CampusMobile());
 }
