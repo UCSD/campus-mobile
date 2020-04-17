@@ -1,6 +1,6 @@
-## UC San Diego - Experimental
+## UC San Diego - Experimental Webreg
 
-UC San Diego - Experimental is the rolling release of the UC San Diego Mobile app. This rolling release is for users interested in developing for, and experimenting with, the absolute latest version of the UC San Diego Mobile app.
+UC San Diego - Experimental Webreg is the rolling release of the UC San Diego Mobile app with Webreg. This rolling release is for users interested in developing for, and experimenting with, the absolute latest version of the UC San Diego Mobile app.
 
 This version is intended for developers and designers and is absolutely, 100% NOT recommended for daily use. Rolling releases are not subject to the rigorous testing of the regular production release. Many things may (and probably are) only partially complete and are likely broken. 
 
@@ -34,19 +34,19 @@ Whenever you want to update your fork with the latest upstream changes, you'll n
 git fetch upstream
 ```
 
-Your local `experimental` branch is now up-to-date with any changes upstream.
+Your local `experimental-webreg` branch is now up-to-date with any changes upstream.
 
 ### Doing Your Work
 
 
 #### Create a Feature Branch
-When you begin working on a new feature or bugfix, it is important that you create a new branch. Not only is it proper git workflow, but it also keeps your changes organized and separated from the `experimental` branch so that you can easily submit and manage multiple pull requests for every task you complete.
+When you begin working on a new feature or bugfix, it is important that you create a new branch. Not only is it proper git workflow, but it also keeps your changes organized and separated from the `experimental-webreg` branch so that you can easily submit and manage multiple pull requests for every task you complete.
 
 To create a new branch and start working on it:
 
 ```shell
-# Checkout the experimental branch
-git checkout experimental
+# Checkout the experimental-webreg branch
+git checkout experimental-webreg
 
 # Create and switch to a new branch named newfeature
 git checkout -b newfeature
