@@ -64,14 +64,11 @@ git commit -m "Add environment variable replacement"
 
 # Push your code
 git push -u origin newfeature
-
-# Create and switch to a new branch named newfeature
-git checkout -b newfeature
 ```
 
 
 ### Submitting a Pull Request
 
-Once you've committed and pushed your feature branch `newfeature` to GitHub, go to the page for your fork on GitHub, select branch 'newfeature' and click the 'New pull request' button.
+Once you've committed and pushed your feature branch `newfeature` to GitHub, go to the page for your fork on GitHub, select branch `newfeature` and click the 'New pull request' button.
 
 If you need to make future updates to your pull request, push the updates to your feature branch `newfeature` on GitHub. Your pull request will automatically track the changes on your feature branch and update.
