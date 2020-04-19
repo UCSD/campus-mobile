@@ -1,15 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:campus_mobile_experimental/core/models/free_food_model.dart';
 import 'package:campus_mobile_experimental/core/data_providers/free_food_data_provider.dart';
-import 'dart:developer';
 import 'package:provider/provider.dart';
 
 class FreeFoodNotification extends StatefulWidget {
+  /// required parameters
+  final String messageId;
+
+  const FreeFoodNotification(
+      { Key key,
+        @required this.messageId,
+      }
+  ) : super(key: key);
+
   @override
-  _CheckBoxButtonState createState() => _CheckBoxButtonState();
+  _CheckBoxButtonState createState() => _CheckBoxButtonState(messageId);
 }
 
 class _CheckBoxButtonState extends State<FreeFoodNotification> {
+  String messageId;
+  _CheckBoxButtonState(messageId) {
+    this.messageId = messageId;
+  }
+
   FreeFoodDataProvider _freeFoodDataProvider;
 
   bool _isGoing = false;
@@ -21,12 +33,10 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     _freeFoodDataProvider = Provider.of<FreeFoodDataProvider>(context);
-        print(_freeFoodDataProvider.freeFoodModel.body.count);
   }
 
   @override
   Widget build(BuildContext context) {
-    FreeFoodModel model = _freeFoodDataProvider.freeFoodModel;
     return Container(
       margin: EdgeInsets.only(top: 10.0),
       child: Row(
@@ -34,7 +44,7 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
           Column(
             children: <Widget>[
               Text(
-                '${model.body.count} students are going',
+                '${_freeFoodDataProvider.count(messageId)} students are going',
                 style: TextStyle(fontSize: 10, color: Colors.green)),
               Container(
                 margin: EdgeInsets.only(top: 2.0),
@@ -60,7 +70,7 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
 
   Widget _checkBoxButton() {
     return Container(
-      height: 20,
+      height: 23,
       width: 100,
       decoration: BoxDecoration(
         border: Border.all(
@@ -76,7 +86,6 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
         color: _buttonColor,
         child: InkWell(
           onTap: () {
-            print("im going");
             _toggleGoing();
           },
           child: Center(
@@ -112,20 +121,18 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
 
   void _toggleGoing() {
     setState(() {
-      _isGoing = !_isGoing;
       if (_isGoing) {
-        _buttonColor = Colors.green;
-        _borderColor = Colors.green;
-        _textColor = Colors.white;
-        _freeFoodDataProvider.decrementCount("1");
-        _freeFoodDataProvider.fetchCount();
-      } else {
         _buttonColor = Colors.white;
         _borderColor = Color(0xFF034161);
         _textColor = Color(0xFF034161);
-        _freeFoodDataProvider.incrementCount("1");
-        _freeFoodDataProvider.fetchCount();
+        _freeFoodDataProvider.decrementCount(messageId);
+      } else {
+        _buttonColor = Colors.green;
+        _borderColor = Colors.green;
+        _textColor = Colors.white;
+        _freeFoodDataProvider.incrementCount(messageId);
       }
+      _isGoing = !_isGoing;
     });
   }
 }

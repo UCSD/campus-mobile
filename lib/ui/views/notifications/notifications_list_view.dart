@@ -4,6 +4,7 @@ import 'package:campus_mobile_experimental/core/data_providers/messages_data_pro
 import 'package:provider/provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/ui/views/notifications/free_food_notification.dart';
+import 'package:campus_mobile_experimental/core/data_providers/free_food_data_provider.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:async';
@@ -53,7 +54,7 @@ class NotificationsListView extends StatelessWidget {
   }
 
   List<Widget> _buildMessage(BuildContext context, MessageElement data) {
-    bool _isFreeFood = data.message.message.contains('Free'); 
+    FreeFoodDataProvider freefoodProvider = Provider.of<FreeFoodDataProvider>(context);
     return [
       ListTile(
         leading: Icon(Icons.info, color: Colors.grey, size: 30),
@@ -80,8 +81,9 @@ class NotificationsListView extends StatelessWidget {
               options: LinkifyOptions(humanize: false),
               style: TextStyle(fontSize: 12.5)
             ),
-            FreeFoodNotification()
-            // _isFreeFood ? _freeFoodNotification() : SizedBox()
+            freefoodProvider.isFreeFood(data.messageId)
+              ? FreeFoodNotification(messageId: data.messageId)
+              : SizedBox(),
           ]
         )
       ),
@@ -139,117 +141,4 @@ class NotificationsListView extends StatelessWidget {
       Provider.of<MessagesDataProvider>(context).fetchMessages();
     });
   }
-
-  // Widget _freeFoodNotification() {
-  //   return Container(
-  //     margin: EdgeInsets.only(top: 10.0),
-  //     child: Row(
-  //       children: <Widget>[
-  //         Column(
-  //           children: <Widget>[
-  //             Text(
-  //               "45 students are going",
-  //               style: TextStyle(fontSize: 10, color: Colors.green)),
-  //             Container(
-  //               margin: EdgeInsets.only(top: 2.0),
-  //               child: Row(
-  //                 children: <Widget>[
-  //                   Icon(Icons.report, color: Colors.grey, size: 10),
-  //                   Text(
-  //                     "There may not be enough food",
-  //                     style: TextStyle(fontSize: 9)
-  //                   )
-  //                 ],
-  //               )
-  //             )
-  //           ],
-  //           crossAxisAlignment: CrossAxisAlignment.start,
-  //         ),
-  //         CheckBoxButton()
-  //       ],
-  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //     )
-  //   );
-  // }
 }
-
-// class CheckBoxButton extends StatefulWidget {
-//   @override
-//   _CheckBoxButtonState createState() => _CheckBoxButtonState();
-// }
-
-// class _CheckBoxButtonState extends State<CheckBoxButton> {
-//   bool _isGoing = false;
-//   Color _buttonColor = Colors.white;
-//   Color _borderColor = Color(0xFF034161);
-//   Color _textColor = Color(0xFF034161);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     print("border color " + _borderColor.toString());
-//     return Container(
-//       height: 20,
-//       width: 100,
-//       decoration: BoxDecoration(
-//         border: Border.all(
-//           width: 1.0,
-//           color: _borderColor,
-//         ),
-//         borderRadius: BorderRadius.all(
-//           Radius.circular(2.0),
-//         ),
-//       ),
-//       margin: EdgeInsets.only(right: 10.0),
-//       child: Material(
-//         color: _buttonColor,
-//         child: InkWell(
-//           onTap: () {
-//             print("im going");
-//             _toggleGoing();
-//           },
-//           child: Center(
-//             child: Row(
-//               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//               children: <Widget>[
-//                 SizedBox(
-//                   height: 10.0,
-//                   width: 8.0,
-//                   child: Transform.scale(
-//                     scale: 0.5,
-//                     child: Checkbox(
-//                       checkColor: Colors.green,
-//                       activeColor: Colors.white,
-//                       value: _isGoing,
-//                       onChanged: (bool val) {
-//                         _toggleGoing();
-//                       },
-//                     )
-//                   )
-//                 ),
-//                 Text(
-//                   "I'm Going!",
-//                   style: TextStyle(color: _textColor, fontSize: 10)
-//                 ),
-//               ],
-//             )
-//           ),
-//         )
-//       )
-//     );
-//   }
-
-//   void _toggleGoing() {
-//     setState(() {
-//       _isGoing = !_isGoing;
-//       if (_isGoing) {
-//         _buttonColor = Colors.green;
-//         _borderColor = Colors.green;
-//         _textColor = Colors.white;
-//       } else {
-//         _buttonColor = Colors.white;
-//         _borderColor = Color(0xFF034161);
-//         _textColor = Color(0xFF034161);
-//       }
-//     });
-//   }
-// }

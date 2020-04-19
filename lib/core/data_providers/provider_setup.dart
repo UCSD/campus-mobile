@@ -72,19 +72,19 @@ List<SingleChildCloneableWidget> independentServices = [
       return _linksDataProvider;
     },
   ),
-  ChangeNotifierProvider<FreeFoodDataProvider>(
-    builder: (_) {
-      FreeFoodDataProvider _freeFoodDataProvider = FreeFoodDataProvider();
-      _freeFoodDataProvider.fetchCount();
-      return _freeFoodDataProvider;
-    },
-  ),
   StreamProvider<Coordinates>(
     builder: (_) => LocationDataProvider().locationStream,
   ),
   ChangeNotifierProvider<CustomAppBar>(
     builder: (_) => CustomAppBar(),
   ),
+  // ChangeNotifierProvider<FreeFoodDataProvider>(
+  //   builder: (_) {
+  //     FreeFoodDataProvider _freeFoodDataProvider = FreeFoodDataProvider();
+  //     _freeFoodDataProvider.fetchCount("1");
+  //     return _freeFoodDataProvider;
+  //   }
+  // ),
 ];
 
 List<SingleChildCloneableWidget> dependentServices = [
@@ -126,6 +126,17 @@ List<SingleChildCloneableWidget> dependentServices = [
         messageDataProvider.fetchMessages();
         return messageDataProvider;
     }
+  ),
+  ChangeNotifierProxyProvider<MessagesDataProvider, FreeFoodDataProvider>(
+    initialBuilder: (_) {
+      var freefoodDataProvider = FreeFoodDataProvider();
+      return freefoodDataProvider;
+    },
+    builder: (_, messageDataProvider, freefoodDataProvider) {
+      freefoodDataProvider..messageDataProvider = messageDataProvider;
+      freefoodDataProvider.parseMessages();
+      return freefoodDataProvider;
+    },
   ),
 ];
 List<SingleChildCloneableWidget> uiConsumableProviders = [];
