@@ -1,3 +1,4 @@
+import 'package:campus_mobile_experimental/core/data_providers/push_notifications_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/authentication_model.dart';
 import 'package:campus_mobile_experimental/core/models/user_profile_model.dart';
 import 'package:campus_mobile_experimental/core/services/authentication_service.dart';
@@ -63,6 +64,8 @@ class UserDataProvider extends ChangeNotifier {
   ///SERVICES
   AuthenticationService _authenticationService;
   UserProfileService _userProfileService;
+  PushNotificationDataProvider _pushNotificationDataProvider;
+
   Map<String, bool> _cardStates;
 
   List<String> _cardOrder;
@@ -151,6 +154,8 @@ class UserDataProvider extends ChangeNotifier {
       if (await _authenticationService
           .login(base64EncodedWithEncryptedPassword)) {
         updateAuthenticationModel(_authenticationService.data);
+        _pushNotificationDataProvider
+            .registerDevice(_authenticationService.data.accessToken);
       } else {
         logout();
         _error = _authenticationService.error;
@@ -188,6 +193,8 @@ class UserDataProvider extends ChangeNotifier {
     _error = null;
     _isLoading = true;
     notifyListeners();
+    _pushNotificationDataProvider
+        .unregisterDevice(_authenticationModel.accessToken);
     updateAuthenticationModel(AuthenticationModel.fromJson({}));
     _userProfileModel = UserProfileModel.fromJson({});
     deletePasswordFromDevice();
@@ -301,6 +308,10 @@ class UserDataProvider extends ChangeNotifier {
       await silentLogin();
     }
     notifyListeners();
+  }
+
+  set pushNotificationDataProvider(PushNotificationDataProvider value) {
+    _pushNotificationDataProvider = value;
   }
 
   ///GETTERS FOR MODELS

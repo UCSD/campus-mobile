@@ -68,4 +68,28 @@ class NetworkHelper {
       return null;
     }
   }
+
+  Future<dynamic> authorizedDelete(
+      String url, Map<String, String> headers) async {
+    Dio dio = new Dio();
+    dio.options.connectTimeout = 10000;
+    dio.options.receiveTimeout = 10000;
+    dio.options.headers = headers;
+    try {
+      final _response = await dio.delete(url);
+      if (_response.statusCode == 200) {
+        // If server returns an OK response, return the body
+        return _response.data;
+      } else {
+        ///TODO: log this as a bug because the response was bad
+        // If that response was not OK, throw an error.
+        throw Exception('Failed to delete data: ' + _response.data);
+      }
+    } on TimeoutException catch (e) {
+      // Display an alert, no internet
+    } catch (err) {
+      print(err);
+      return null;
+    }
+  }
 }
