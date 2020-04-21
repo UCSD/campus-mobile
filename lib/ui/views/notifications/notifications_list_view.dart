@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/core/data_providers/messages_data_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
+import 'package:campus_mobile_experimental/ui/views/notifications/free_food_notification.dart';
+import 'package:campus_mobile_experimental/core/data_providers/free_food_data_provider.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:async';
+import 'dart:developer';
 
 class NotificationsListView extends StatefulWidget {
   @override
@@ -71,29 +74,39 @@ class _NotificationsListViewState extends State<NotificationsListView> {
   }
 
   List<Widget> _buildMessage(BuildContext context, MessageElement data) {
+    FreeFoodDataProvider freefoodProvider = Provider.of<FreeFoodDataProvider>(context);
     return [
       ListTile(
-          leading: Icon(Icons.info, color: Colors.grey, size: 30),
-          title: Column(
-            children: <Widget>[
-              Text(_readTimestamp(data.timestamp),
-                  style: TextStyle(fontSize: 10, color: Colors.grey)),
-              Text(data.message.title),
-              Padding(padding: const EdgeInsets.all(3.5))
-            ],
-            crossAxisAlignment: CrossAxisAlignment.start,
-          ),
-          subtitle: Linkify(
+        leading: Icon(Icons.info, color: Colors.grey, size: 30),
+        title: Column(
+          children: <Widget>[
+            Text(_readTimestamp(data.timestamp),
+                style: TextStyle(fontSize: 10, color: Colors.grey)),
+            Text(data.message.title),
+            Padding(padding: const EdgeInsets.all(3.5))
+          ],
+          crossAxisAlignment: CrossAxisAlignment.start,
+        ),
+        subtitle: Column(
+          children: <Widget>[
+            Linkify(
               text: data.message.message,
               onOpen: (link) async {
                 if (await canLaunch(link.url)) {
-                  await launch(link.url);
+                    await launch(link.url);
                 } else {
-                  throw 'Could not launch $link';
+                    throw 'Could not launch $link';
                 }
               },
               options: LinkifyOptions(humanize: false),
-              style: TextStyle(fontSize: 12.5))),
+              style: TextStyle(fontSize: 12.5)
+            ),
+            freefoodProvider.isFreeFood(data.messageId)
+              ? FreeFoodNotification(messageId: data.messageId)
+              : SizedBox(),
+          ]
+        )
+      ),
       Divider()
     ];
   }

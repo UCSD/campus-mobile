@@ -13,11 +13,12 @@ import 'package:campus_mobile_experimental/core/data_providers/weather_data_prov
 import 'package:campus_mobile_experimental/core/services/bottom_navigation_bar_service.dart';
 import 'package:campus_mobile_experimental/core/models/coordinates_model.dart';
 import 'package:campus_mobile_experimental/core/navigation/top_navigation_bar/app_bar.dart';
-import 'package:provider/provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/messages_data_provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:campus_mobile_experimental/core/data_providers/free_food_data_provider.dart';
+import 'package:provider/provider.dart';
 
 List<SingleChildWidget> providers = [
   ...independentServices,
@@ -95,6 +96,13 @@ List<SingleChildWidget> independentServices = [
   ChangeNotifierProvider<CustomAppBar>(
     create: (_) => CustomAppBar(),
   ),
+  // ChangeNotifierProvider<FreeFoodDataProvider>(
+  //   builder: (_) {
+  //     FreeFoodDataProvider _freeFoodDataProvider = FreeFoodDataProvider();
+  //     _freeFoodDataProvider.fetchCount("1");
+  //     return _freeFoodDataProvider;
+  //   }
+  // ),
 ];
 List<SingleChildWidget> dependentServices = [
   ChangeNotifierProxyProvider<Coordinates, DiningDataProvider>(create: (_) {
@@ -127,7 +135,7 @@ List<SingleChildWidget> dependentServices = [
     return parkingDataProvider;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, AvailabilityDataProvider>(
-      create: (_) {
+    create: (_) {
     var availabilityDataProvider = AvailabilityDataProvider();
     availabilityDataProvider.fetchAvailability();
     return availabilityDataProvider;
@@ -136,13 +144,24 @@ List<SingleChildWidget> dependentServices = [
     return availabilityDataProvider;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, MessagesDataProvider>(
-      create: (_) {
-    var messageDataProvider = MessagesDataProvider();
-    return messageDataProvider;
-  }, update: (_, userDataProvider, messageDataProvider) {
-    messageDataProvider.userDataProvider = userDataProvider;
-    messageDataProvider.fetchMessages();
-    return messageDataProvider;
+    create: (_) {
+      var messageDataProvider = MessagesDataProvider();
+      return messageDataProvider;
+    }, update: (_, userDataProvider, messageDataProvider) {
+      messageDataProvider.userDataProvider = userDataProvider;
+      messageDataProvider.fetchMessages();
+      return messageDataProvider;
   }),
+  ChangeNotifierProxyProvider<MessagesDataProvider, FreeFoodDataProvider>(
+    create: (_) {
+      var freefoodDataProvider = FreeFoodDataProvider();
+      return freefoodDataProvider;
+    },
+    update: (_, messageDataProvider, freefoodDataProvider) {
+      freefoodDataProvider..messageDataProvider = messageDataProvider;
+      freefoodDataProvider.parseMessages();
+      return freefoodDataProvider;
+    },
+  ),
 ];
 List<SingleChildWidget> uiConsumableProviders = [];
