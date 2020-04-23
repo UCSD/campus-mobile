@@ -1,41 +1,42 @@
 {
   "project_info": {
-    "project_number": "913067495333",
-    "firebase_url": "https://campus-mobile-flutter.firebaseio.com",
-    "project_id": "campus-mobile-flutter",
-    "storage_bucket": "campus-mobile-flutter.appspot.com"
+    "project_number": "204227644417",
+    "firebase_url": "https://uc-san-diego-qa.firebaseio.com",
+    "project_id": "uc-san-diego-qa",
+    "storage_bucket": "uc-san-diego-qa.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:913067495333:android:c83b6a310ff4513c9c624c",
+        "mobilesdk_app_id": "1:204227644417:android:5fa94cd3be6fc552",
         "android_client_info": {
-          "package_name": "edu.ucsd.campusmobile"
+          "package_name": "edu.ucsd"
         }
       },
       "oauth_client": [
         {
-          "client_id": "913067495333-6f92sa993o7lij2d68kfrvbjdq3shk89.apps.googleusercontent.com",
+          "client_id": "204227644417-oqlb6sl6pc2pdhkfr405cvab42ssa495.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAPaxypd9nnUvizFs9BPgF5Cqxikhe969c"
+          "current_key": "AIzaSyCYGAotK1qASH4R70ix_x0iT6_Utd707-E"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "913067495333-6f92sa993o7lij2d68kfrvbjdq3shk89.apps.googleusercontent.com",
+              "client_id": "204227644417-oqlb6sl6pc2pdhkfr405cvab42ssa495.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "913067495333-6svvlu36r9nu25vls4p350sb6ntiva6l.apps.googleusercontent.com",
+              "client_id": "204227644417-badlapi7e50isd0bsghdtcl6k3o1d7u5.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "edu.ucsd.campusmobile"
+                "bundle_id": "edu.ucsd.ucsandiego",
+                "app_store_id": "318646412"
               }
             }
           ]
