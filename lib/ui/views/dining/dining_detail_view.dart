@@ -228,19 +228,40 @@ class HoursOfDay extends StatelessWidget {
 
   Widget buildGreenDot(String hours) {
     MaterialColor color;
-    List<String> times = hours.split('-');
-    int start = int.parse(times[0]);
-    int end = int.parse(times[1]);
-    if (end < start) end += 2300; //If time goes into next day, prevent wrap
-    int timeNow;
-    if (DateTime.now().minute.toString().length == 1)
-      timeNow = int.parse('${DateTime.now().hour}0${DateTime.now().minute}');
-    else
-      timeNow = int.parse('${DateTime.now().hour}${DateTime.now().minute}');
-    if (timeNow >= start && timeNow < end)
-      color = Colors.green;
-    else
-      color = Colors.red;
+    if (RegExp(r"\b[0-9]{2}").allMatches(hours).length != 2) {
+      //If the hours are a special string (not a time)
+      /*If there are new strings that get returned instead of a time,
+      put the strings here. This is a weird way to do it, but
+      we're not in control of the API, so we have to manually determine
+      if this means the establishment is open or not. The 'Closed' case is
+      of my doing however because sometimes the API straight up doesn't have
+      anything to return on certain days so I just set it to 'Closed'.*/
+      switch (hours) {
+        case 'Closed':
+          color = Colors.red;
+          break;
+        case 'Closed-Closed':
+          color = Colors.red;
+          break;
+        case 'Open 24/7':
+          color = Colors.green;
+          break;
+      }
+    } else {
+      List<String> times = hours.split('-');
+      int start = int.parse(times[0]);
+      int end = int.parse(times[1]);
+      if (end < start) end += 2300; //If time goes into next day, prevent wrap
+      int timeNow;
+      if (DateTime.now().minute.toString().length == 1)
+        timeNow = int.parse('${DateTime.now().hour}0${DateTime.now().minute}');
+      else
+        timeNow = int.parse('${DateTime.now().hour}${DateTime.now().minute}');
+      if (timeNow >= start && timeNow < end)
+        color = Colors.green;
+      else
+        color = Colors.red;
+    }
     return Container(
       width: 10,
       height: 10,
