@@ -34,11 +34,11 @@
 **/android/**/gradle-wrapper.jar
 **/android/.gradle
 **/android/captures/
-**/android/gradlew
 **/android/gradlew.bat
 **/android/local.properties
 **/android/**/GeneratedPluginRegistrant.java
 *.keystore
+!gradle-wrapper.jar
 
 # iOS/XCode related
 **/ios/**/*.mode1v3
