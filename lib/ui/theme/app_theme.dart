@@ -70,7 +70,12 @@ const TextTheme darkThemeText = TextTheme(
 
 //Button color for themes
 const Color lightButtonColor = Color(0xFF034263);
+const Color lightButtonTextColor = Color(0xFFFFFFFF);
+const Color lightButtonBorderColor = Color(0xFFFFFFFF);
 const Color darkButtonColor = Color(0xFFFFFFFF);
+
+///Text Field colors for themes
+const Color lightTextFieldBorderColor = Color(0xFFFFFFFF);
 
 //Accent colors for themes
 const Color lightAccentColor = Color(0xFFAFA9A0);

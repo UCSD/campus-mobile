@@ -2,14 +2,15 @@ import 'package:campus_mobile_experimental/core/navigation/router.dart';
 import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 import 'package:campus_mobile_experimental/core/navigation/bottom_tab_bar/bottom_navigation_bar_model.dart';
 import 'package:campus_mobile_experimental/core/data_providers/provider_setup.dart';
+import 'package:campus_mobile_experimental/ui/views/onboarding/onboarding_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+bool showOnboardingScreen = true;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -22,16 +23,27 @@ void initializeStorage() async {
   /// initialize hive storage
   Hive.initFlutter('.');
 
-  /// this will clear out any old signed in users
-  final prefs = await SharedPreferences.getInstance();
-  if (prefs.getBool('first_run') ?? true) {
+  if (await isFirstRun()) {
     FlutterSecureStorage storage = FlutterSecureStorage();
 
     /// delete any saved data
     await Hive.deleteFromDisk();
     await storage.deleteAll();
-    prefs.setBool('first_run', false);
+    setFirstRun();
+  } else {
+    showOnboardingScreen = false;
   }
+}
+
+Future<bool> isFirstRun() async {
+  final prefs = await SharedPreferences.getInstance();
+  return (prefs.getBool('first_run') ?? true);
+}
+
+void setFirstRun() async {
+  final prefs = await SharedPreferences.getInstance();
+  prefs.setBool('first_run', false);
+  showOnboardingScreen = true;
 }
 
 class CampusMobile extends StatelessWidget {

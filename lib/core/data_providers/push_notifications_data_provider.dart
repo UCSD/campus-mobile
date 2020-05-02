@@ -146,7 +146,7 @@ class PushNotificationDataProvider {
   Future<bool> unregisterDevice(String accessToken) async {
     // Get the token for this device
     String fcmToken = await _fcm.getToken();
-    if (fcmToken.isNotEmpty) {
+    if (fcmToken.isNotEmpty && (accessToken?.isNotEmpty ?? false)) {
       Map<String, String> headers = {'Authorization': 'Bearer ' + accessToken};
       if ((await _notificationService.deletePushToken(headers, fcmToken))) {
         return true;

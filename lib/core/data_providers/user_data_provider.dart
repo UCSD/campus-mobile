@@ -147,7 +147,7 @@ class UserDataProvider extends ChangeNotifier {
 
   ///logs user in with saved credentials on device
   ///if this login mechanism fails then the user is logged out
-  Future silentLogin() async {
+  Future<bool> silentLogin() async {
     String username = await getUsernameFromDevice();
     String encryptedPassword = await getEncryptedPasswordFromDevice();
     if (username != null && encryptedPassword != null) {
@@ -158,25 +158,32 @@ class UserDataProvider extends ChangeNotifier {
         updateAuthenticationModel(_authenticationService.data);
         _pushNotificationDataProvider
             .registerDevice(_authenticationService.data.accessToken);
+        return true;
       } else {
         logout();
         _error = _authenticationService.error;
+        return false;
       }
     }
+    return false;
   }
 
   ///authenticate a user given an email and password
   ///upon logging in we should make sure that users upload the correct
   ///ucsdaffiliation and classification
-  void login(String username, String password) async {
+  Future<bool> login(String username, String password) async {
     encryptLoginInfo(username, password);
+    bool returnVlaue = false;
     _error = null;
     _isLoading = true;
     notifyListeners();
-    await silentLogin();
-    await getUserProfile();
+    if (await silentLogin()) {
+      await getUserProfile();
+      returnVlaue = true;
+    }
     _isLoading = false;
     notifyListeners();
+    return returnVlaue;
   }
 
   void toggleCard(String card) {
