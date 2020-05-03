@@ -34,6 +34,11 @@ class AuthenticationService {
       var response = await _networkHelper.authorizedPost(
           endpoint, authServiceHeaders, null);
 
+      /// check to see if response has an error
+      if (response['errorMessage'] != null) {
+        throw (response['errorMessage']);
+      }
+
       /// parse data
       final authenticationModel = AuthenticationModel.fromJson(response);
       _data = authenticationModel;

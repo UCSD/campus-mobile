@@ -26,7 +26,7 @@ class OnboardingScreen extends StatelessWidget {
               ),
             ),
             Text(
-              'Enter your login for a personlized experience.',
+              'Enter your login for a personalized experience.',
               style: TextStyle(color: Colors.white, fontSize: 25),
               textAlign: TextAlign.center,
             ),
