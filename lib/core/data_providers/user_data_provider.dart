@@ -26,29 +26,29 @@ class UserDataProvider extends ChangeNotifier {
     _authenticationModel = AuthenticationModel.fromJson({});
     _userProfileModel = UserProfileModel.fromJson({});
     _cardStates = {
-      'dining': true,
-      'links': true,
       'availability': true,
-      'parking': true,
-      'weather': true,
       'events': true,
-      'special_events': true,
+      'links': true,
       'news': true,
-      'schedule': true,
+      'parking': true,
+      'special_events': true,
+      'weather': true,
+      'dining': true,
       'finals': true,
       'scanner': true,
+      'schedule': true,
     };
     _cardOrder = [
-      'special_events',
-      'schedule',
+//      'availability',
+//      'dining',
+//      'events',
+//      'links',
+//      'news',
+//      'parking',
+//      'weather',
+//      'special_events',
       'finals',
-      'weather',
-      'availability',
-      'parking',
-      'dining',
-      'news',
-      'events',
-      'links',
+      'schedule',
       'scanner',
     ];
   }
@@ -147,7 +147,7 @@ class UserDataProvider extends ChangeNotifier {
 
   ///logs user in with saved credentials on device
   ///if this login mechanism fails then the user is logged out
-  Future silentLogin() async {
+  Future<bool> silentLogin() async {
     String username = await getUsernameFromDevice();
     String encryptedPassword = await getEncryptedPasswordFromDevice();
     if (username != null && encryptedPassword != null) {
@@ -158,25 +158,35 @@ class UserDataProvider extends ChangeNotifier {
         updateAuthenticationModel(_authenticationService.data);
         _pushNotificationDataProvider
             .registerDevice(_authenticationService.data.accessToken);
+        return true;
       } else {
         logout();
         _error = _authenticationService.error;
+        return false;
       }
     }
+    return false;
   }
 
   ///authenticate a user given an email and password
   ///upon logging in we should make sure that users upload the correct
   ///ucsdaffiliation and classification
-  void login(String username, String password) async {
-    encryptLoginInfo(username, password);
-    _error = null;
-    _isLoading = true;
-    notifyListeners();
-    await silentLogin();
-    await getUserProfile();
-    _isLoading = false;
-    notifyListeners();
+  Future<bool> login(String username, String password) async {
+    bool returnVal = false;
+    if ((username?.isNotEmpty ?? false) && (password?.isNotEmpty ?? false)) {
+      encryptLoginInfo(username, password);
+      _error = null;
+      _isLoading = true;
+      notifyListeners();
+      if (await silentLogin()) {
+        print('logged in');
+        await getUserProfile();
+        returnVal = true;
+      }
+      _isLoading = false;
+      notifyListeners();
+    }
+    return returnVal;
   }
 
   void toggleCard(String card) {

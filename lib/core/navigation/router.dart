@@ -17,6 +17,8 @@ import 'package:campus_mobile_experimental/ui/views/map/map.dart' as prefix0;
 import 'package:campus_mobile_experimental/ui/views/news/news_detail_view.dart';
 import 'package:campus_mobile_experimental/ui/views/news/news_list.dart';
 import 'package:campus_mobile_experimental/ui/views/notifications/notifications_list_view.dart';
+import 'package:campus_mobile_experimental/ui/views/onboarding/onboarding_login.dart';
+import 'package:campus_mobile_experimental/ui/views/onboarding/onboarding_screen.dart';
 import 'package:campus_mobile_experimental/ui/views/profile/cards_view.dart';
 import 'package:campus_mobile_experimental/ui/views/profile/profile.dart';
 import 'package:campus_mobile_experimental/ui/views/dining/nutrition_facts_view.dart';
@@ -31,9 +33,17 @@ import 'package:provider/provider.dart';
 import 'package:campus_mobile_experimental/core/services/event_service.dart';
 import 'package:campus_mobile_experimental/ui/views/parking/manage_parking_view.dart';
 
+import 'bottom_tab_bar/bottom_navigation_bar_model.dart';
+
 class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case RoutePaths.BottomNavigationBar:
+        return MaterialPageRoute(builder: (_) => BottomTabBar());
+      case RoutePaths.Onboarding:
+        return MaterialPageRoute(builder: (_) => OnboardingScreen());
+      case RoutePaths.OnboardingLogin:
+        return MaterialPageRoute(builder: (_) => OnboardingLogin());
       case RoutePaths.Home:
         return MaterialPageRoute(builder: (_) => Home());
       case RoutePaths.SpecialEventsListView:
@@ -42,7 +52,8 @@ class Router {
         return MaterialPageRoute(builder: (_) => SpecialEventsFilterView());
       case RoutePaths.SpecialEventsDetailView:
         String uid = settings.arguments;
-        return MaterialPageRoute(builder: (_) => SpecialEventsDetailView(argument: uid));
+        return MaterialPageRoute(
+            builder: (_) => SpecialEventsDetailView(argument: uid));
       case RoutePaths.Map:
         return MaterialPageRoute(builder: (_) => prefix0.Map());
       case RoutePaths.Notifications:

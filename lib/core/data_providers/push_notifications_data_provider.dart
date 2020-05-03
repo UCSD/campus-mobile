@@ -106,9 +106,6 @@ class PushNotificationDataProvider {
   Future<bool> registerDevice(String accessToken) async {
     if (_error == null) {
       String deviceId = _deviceData['deviceId'];
-      print('device Id: ');
-      print(deviceId);
-      print(_deviceData);
       if (deviceId == null) {
         _error = 'Failed to get device ID';
         return false;
@@ -116,7 +113,7 @@ class PushNotificationDataProvider {
         // Get the token for this device
         String fcmToken = await _fcm.getToken();
         print('token is: ' + fcmToken);
-        if (fcmToken.isNotEmpty) {
+        if (fcmToken.isNotEmpty && (accessToken?.isNotEmpty ?? false)) {
           Map<String, String> headers = {
             'Authorization': 'Bearer ' + accessToken
           };
@@ -140,7 +137,7 @@ class PushNotificationDataProvider {
   Future<bool> unregisterDevice(String accessToken) async {
     // Get the token for this device
     String fcmToken = await _fcm.getToken();
-    if (fcmToken.isNotEmpty) {
+    if (fcmToken.isNotEmpty && (accessToken?.isNotEmpty ?? false)) {
       Map<String, String> headers = {'Authorization': 'Bearer ' + accessToken};
       if ((await _notificationService.deletePushToken(headers, fcmToken))) {
         return true;
