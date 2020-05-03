@@ -59,7 +59,7 @@ class CampusMobile extends StatelessWidget {
           iconTheme: darkIconTheme,
           appBarTheme: darkAppBarTheme,
         ),
-        home: BottomTabBar(),
+        home: PushNotificationWrapper(child: BottomTabBar()),
         onGenerateRoute: Router.generateRoute,
         navigatorObservers: [
           observer,

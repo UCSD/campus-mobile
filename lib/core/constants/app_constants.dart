@@ -29,3 +29,10 @@ class RoutePaths {
   static const String SpecialEventsDetailView =
       'special_events/special_events_detail_view';
 }
+
+class NavigationConstants {
+  static const HomeTab = 0;
+  static const MapTab = 1;
+  static const NotificationsTab = 2;
+  static const ProfileTab = 3;
+}

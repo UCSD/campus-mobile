@@ -5,6 +5,7 @@ import 'package:campus_mobile_experimental/core/models/dining_model.dart';
 import 'package:campus_mobile_experimental/core/models/events_model.dart';
 import 'package:campus_mobile_experimental/core/models/links_model.dart';
 import 'package:campus_mobile_experimental/core/models/news_model.dart';
+import 'package:campus_mobile_experimental/core/navigation/bottom_tab_bar/bottom_navigation_bar_model.dart';
 import 'package:campus_mobile_experimental/ui/views/availability/manage_availability_view.dart';
 import 'package:campus_mobile_experimental/ui/views/baseline/baseline_view.dart';
 import 'package:campus_mobile_experimental/ui/views/dining/dining_detail_view.dart';
@@ -33,6 +34,8 @@ import 'package:campus_mobile_experimental/ui/views/parking/manage_parking_view.
 class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case 'BottomTabBar':
+        return MaterialPageRoute(builder: (_) => BottomTabBar());
       case RoutePaths.Home:
         return MaterialPageRoute(builder: (_) => Home());
       case RoutePaths.SpecialEventsListView:
@@ -41,7 +44,8 @@ class Router {
         return MaterialPageRoute(builder: (_) => SpecialEventsFilterView());
       case RoutePaths.SpecialEventsDetailView:
         String uid = settings.arguments;
-        return MaterialPageRoute(builder: (_) => SpecialEventsDetailView(argument: uid));
+        return MaterialPageRoute(
+            builder: (_) => SpecialEventsDetailView(argument: uid));
       case RoutePaths.Map:
         return MaterialPageRoute(builder: (_) => prefix0.Map());
       case RoutePaths.Notifications:
