@@ -48,8 +48,9 @@ class ScannerCard extends StatelessWidget {
   }
 
   String getActionButtonText(BuildContext context) {
-    return Provider.of<UserDataProvider>(context, listen: false).isLoggedIn ?
-      ButtonText.ScanNow : ButtonText.SignIn;
+    return Provider.of<UserDataProvider>(context, listen: false).isLoggedIn
+        ? ButtonText.ScanNow
+        : ButtonText.SignIn;
   }
 
   getActionButtonNavigateRoute(BuildContext context) {
@@ -58,10 +59,9 @@ class ScannerCard extends StatelessWidget {
         context,
         RoutePaths.ScannerView,
       );
-    }
-    else {
+    } else {
       Provider.of<BottomNavigationBarProvider>(context, listen: false)
-          .updateCurrentIndex(NavigationConstants.ProfileTab, NavigationConstants.ScannerLogin);
+          .currentIndex = NavigationConstants.ProfileTab;
     }
   }
 }
