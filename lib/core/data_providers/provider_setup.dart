@@ -1,4 +1,5 @@
 import 'package:campus_mobile_experimental/core/data_providers/availability_data_provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/barcode_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/class_schedule_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/dining_data_proivder.dart';
 import 'package:campus_mobile_experimental/core/data_providers/events_data_provider.dart';
@@ -146,6 +147,14 @@ List<SingleChildWidget> dependentServices = [
     messageDataProvider.userDataProvider = userDataProvider;
     messageDataProvider.fetchMessages();
     return messageDataProvider;
+  }),
+  ChangeNotifierProxyProvider<UserDataProvider, BarcodeDataProvider>(
+      create: (_) {
+        var barcodeDataProvider = BarcodeDataProvider();
+        return barcodeDataProvider;
+      }, update: (_, userDataProvider, barcodeDataProvider) {
+    barcodeDataProvider.userDataProvider = userDataProvider;
+    return barcodeDataProvider;
   }),
 ];
 List<SingleChildWidget> uiConsumableProviders = [];
