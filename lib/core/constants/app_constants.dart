@@ -59,3 +59,14 @@ class NavigationConstants {
   static const NotificationsTab = 2;
   static const ProfileTab = 3;
 }
+class ButtonText {
+  static const SubmitButtonActive = 'Submit';
+  static const SubmitButtonInactive = 'Sending';
+  static const SubmitButtonTryAgain = "Try again";
+  static const SubmitButtonReceived = "Received";
+}
+
+class Plugins {
+  static const FrontCamera = "FRONT CAMERA";
+}
+}
