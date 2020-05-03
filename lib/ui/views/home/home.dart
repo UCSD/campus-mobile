@@ -3,6 +3,7 @@ import 'package:campus_mobile_experimental/ui/cards/class_schedule/class_schedul
 import 'package:campus_mobile_experimental/ui/cards/events/events_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/finals/finals_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/news/news_card.dart';
+import 'package:campus_mobile_experimental/ui/cards/scanner/scanner_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/weather/weather_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/availability/availability_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/links/links_card.dart';
@@ -58,6 +59,9 @@ class _HomeState extends State<Home> {
           break;
         case 'finals':
           orderedCards.add(FinalsCard());
+          break;
+        case 'scanner':
+          orderedCards.add(ScannerCard());
       }
     }
     return orderedCards;
