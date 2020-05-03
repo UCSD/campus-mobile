@@ -1,5 +1,6 @@
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
+import 'package:campus_mobile_experimental/core/services/bottom_navigation_bar_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
@@ -38,14 +39,30 @@ class ScannerCard extends StatelessWidget {
   Widget buildActionButton(BuildContext context) {
     return FlatButton(
       child: Text(
-        'Scan QR Code',
+        getActionButtonText(context),
       ),
       onPressed: () {
-        Navigator.pushNamed(
-          context,
-          RoutePaths.ScannerView,
-        );
+        getActionButtonNavigateRoute(context);
       },
     );
+  }
+
+  String getActionButtonText(BuildContext context) {
+    return Provider.of<UserDataProvider>(context, listen: false).isLoggedIn ?
+      ButtonText.ScanNow : ButtonText.SignIn;
+  }
+
+  getActionButtonNavigateRoute(BuildContext context) {
+    var profileTabIndex = 3;
+    if (Provider.of<UserDataProvider>(context, listen: false).isLoggedIn) {
+      Navigator.pushNamed(
+        context,
+        RoutePaths.ScannerView,
+      );
+    }
+    else {
+      Provider.of<BottomNavigationBarProvider>(context, listen: false)
+          .updateCurrentIndex(profileTabIndex, NavigationConstants.ScannerLogin);
+    }
   }
 }

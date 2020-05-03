@@ -1,4 +1,3 @@
-import 'package:backtoschool/services/network.dart';
 import 'package:campus_mobile_experimental/core/services/networking.dart';
 
 class BarcodeService {
