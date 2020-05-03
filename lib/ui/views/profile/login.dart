@@ -1,6 +1,7 @@
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -110,9 +111,12 @@ class _LoginState extends State<Login> {
                     onPressed: _userDataProvider.isLoading
                         ? null
                         : () {
-                            _userDataProvider.login(
-                                _emailTextFieldController.text,
-                                _passwordTextFieldController.text);
+                            _userDataProvider
+                                .login(_emailTextFieldController.text,
+                                    _passwordTextFieldController.text)
+                                .then((isLoggedIn) {
+                              showAlertDialog(context);
+                            });
                           },
                     color: Theme.of(context).buttonColor,
                     textColor: Theme.of(context).textTheme.button.color,
@@ -121,10 +125,48 @@ class _LoginState extends State<Login> {
               ],
             ),
             SizedBox(height: 10),
-            Center(child: Text('Need help logging in?')),
+            Center(
+                child: GestureDetector(
+              child: Text('Need help logging in?'),
+              onTap: () async {
+                String link =
+                    'https://acms.ucsd.edu/students/accounts-and-passwords/index.html';
+                if (await canLaunch(link)) {
+                  await launch(link);
+                }
+              },
+            )),
           ],
         ),
       ),
+    );
+  }
+
+  Widget showAlertDialog(BuildContext context) {
+    // set up the button
+    Widget okButton = FlatButton(
+      child: Text("OK"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Sorry, unable to sign you in"),
+      content: Text(
+          "Be sure you are using the correct credentials; TritonLink login if you are a student, SSO if you are Faculty/Staff."),
+      actions: [
+        okButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 }
