@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/ui/views/profile/login.dart';
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Profile extends StatelessWidget {
   @override
@@ -13,7 +14,7 @@ class Profile extends StatelessWidget {
             child: ListTile(
               leading: Icon(Icons.notifications),
               title: Text('Notifications'),
-              onTap: () {},
+              onTap: () { handleNotificationsTap(context); },
             ),
           ),
           Card(
@@ -29,7 +30,7 @@ class Profile extends StatelessWidget {
             child: ListTile(
               leading: Icon(Icons.feedback),
               title: Text('Feedback'),
-              onTap: () {},
+              onTap: handleFeedbackTap,
             ),
           ),
           Card(
@@ -42,5 +43,28 @@ class Profile extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  handleNotificationsTap(BuildContext context) {
+    Navigator.pushNamed(context, RoutePaths.NotificationsSettingsView);
+  }
+
+  handleFeedbackTap() async {
+    const feedbackUrl = "https://eforms.ucsd.edu/view.php?id=175631";
+    openLink(feedbackUrl);
+  }
+
+  handlePrivacyTap() async {
+    const privacyUrl = "https://mobile.ucsd.edu/privacy-policy.html";
+    openLink(privacyUrl);
+  }
+
+  openLink(String url) async {
+    if (await canLaunch(url)) {
+      launch(url);
+    }
+    else {
+      // can't launch url, there is some error
+    }
   }
 }

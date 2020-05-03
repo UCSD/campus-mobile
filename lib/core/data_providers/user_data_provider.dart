@@ -49,6 +49,16 @@ class UserDataProvider extends ChangeNotifier {
       'events',
       'links',
     ];
+    _notificationsSettingsStates = {
+      'campusAnnouncements': true,
+      'freeFood': true,
+      'shuttle': true
+    };
+    _notificationsSettings = [
+      'campusAnnouncements',
+      'freeFood',
+      'shuttle'
+    ];
   }
 
   ///STATES
@@ -67,8 +77,10 @@ class UserDataProvider extends ChangeNotifier {
   PushNotificationDataProvider _pushNotificationDataProvider;
 
   Map<String, bool> _cardStates;
+  Map<String, bool> _notificationsSettingsStates;
 
   List<String> _cardOrder;
+  List<String> _notificationsSettings;
 
   ///Update the authentication model saved in state and save the model in persistent storage
   Future updateAuthenticationModel(AuthenticationModel model) async {
@@ -179,6 +191,12 @@ class UserDataProvider extends ChangeNotifier {
 
   void toggleCard(String card) {
     _cardStates[card] = !_cardStates[card];
+    notifyListeners();
+  }
+
+  void toggleNotifications(String topic) {
+    _notificationsSettingsStates[topic] = !_notificationsSettingsStates[topic];
+    //todo: hookup topic subscription
     notifyListeners();
   }
 
@@ -325,4 +343,6 @@ class UserDataProvider extends ChangeNotifier {
   DateTime get lastUpdated => _lastUpdated;
   Map<String, bool> get cardStates => _cardStates;
   List<String> get cardOrder => _cardOrder;
+  Map<String, bool> get notificationsSettingsStates => _notificationsSettingsStates;
+  List<String> get notificationsSettings => _notificationsSettings;
 }
