@@ -53,7 +53,6 @@ class ScannerCard extends StatelessWidget {
   }
 
   getActionButtonNavigateRoute(BuildContext context) {
-    var profileTabIndex = 3;
     if (Provider.of<UserDataProvider>(context, listen: false).isLoggedIn) {
       Navigator.pushNamed(
         context,
@@ -62,7 +61,7 @@ class ScannerCard extends StatelessWidget {
     }
     else {
       Provider.of<BottomNavigationBarProvider>(context, listen: false)
-          .updateCurrentIndex(profileTabIndex, NavigationConstants.ScannerLogin);
+          .updateCurrentIndex(NavigationConstants.ProfileTab, NavigationConstants.ScannerLogin);
     }
   }
 }
