@@ -26,30 +26,30 @@ class UserDataProvider extends ChangeNotifier {
     _authenticationModel = AuthenticationModel.fromJson({});
     _userProfileModel = UserProfileModel.fromJson({});
     _cardStates = {
-      'dining': true,
-      'links': true,
       'availability': true,
-      'parking': true,
-      'weather': true,
       'events': true,
-      'special_events': true,
+      'links': true,
       'news': true,
-      'schedule': true,
+      'parking': true,
+      'special_events': true,
+      'weather': true,
+      'dining': true,
+
       'finals': true,
       'scanner': true,
     };
     _cardOrder = [
-      'special_events',
-      'schedule',
+//      'availability',
+//      'dining',
+//      'events',
+//      'links',
+//      'news',
+//      'parking',
+//      'weather',
+//      'special_events',
+
       'finals',
-      'weather',
-      'availability',
-      'parking',
-      'dining',
-      'news',
-      'events',
-      'links',
-      'scanner',
+      'schedule',
     ];
   }
 

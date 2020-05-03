@@ -30,30 +30,30 @@ class _HomeState extends State<Home> {
     List<Widget> orderedCards = List<Widget>();
     for (String card in order) {
       switch (card) {
-        case 'special_events':
-          orderedCards.add(BannerCard());
-          break;
-        case 'weather':
-          orderedCards.add(WeatherCard());
-          break;
-        case 'availability':
-          orderedCards.add(AvailabilityCard());
-          break;
-        case 'parking':
-          orderedCards.add(ParkingCard());
-          break;
-        case 'dining':
-          orderedCards.add(DiningCard());
-          break;
-        case 'news':
-          orderedCards.add(NewsCard());
-          break;
-        case 'events':
-          orderedCards.add(EventsCard());
-          break;
-        case 'links':
-          orderedCards.add(LinksCard());
-          break;
+//        case 'special_events':
+//          orderedCards.add(BannerCard());
+//          break;
+//        case 'weather':
+//          orderedCards.add(WeatherCard());
+//          break;
+//        case 'availability':
+//          orderedCards.add(AvailabilityCard());
+//          break;
+//        case 'parking':
+//          orderedCards.add(ParkingCard());
+//          break;
+//        case 'dining':
+//          orderedCards.add(DiningCard());
+//          break;
+//        case 'news':
+//          orderedCards.add(NewsCard());
+//          break;
+//        case 'events':
+//          orderedCards.add(EventsCard());
+//          break;
+//        case 'links':
+//          orderedCards.add(LinksCard());
+//          break;
         case 'schedule':
           orderedCards.add(ClassScheduleCard());
           break;
