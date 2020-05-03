@@ -62,11 +62,18 @@ class NavigationConstants {
 class ButtonText {
   static const SubmitButtonActive = 'Submit';
   static const SubmitButtonInactive = 'Sending';
-  static const SubmitButtonTryAgain = "Try again";
-  static const SubmitButtonReceived = "Received";
+  static const SubmitButtonTryAgain = 'Try again';
+  static const SubmitButtonReceived = 'Received';
+  static const ScanNow = 'Scan Now';
+  static const SignIn = 'Sign In';
 }
 
 class Plugins {
-  static const FrontCamera = "FRONT CAMERA";
+  static const FrontCamera = 'FRONT CAMERA';
 }
-}
+
+class NavigationConstants {
+  static const None = 'none';
+  static const IconTap = 'icontTap';
+  static const ScannerLogin = 'scannerLogin';
+}}

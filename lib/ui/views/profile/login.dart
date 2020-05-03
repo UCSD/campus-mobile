@@ -1,5 +1,6 @@
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
+import 'package:campus_mobile_experimental/core/services/bottom_navigation_bar_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -13,18 +14,27 @@ class _LoginState extends State<Login> {
   final _emailTextFieldController = TextEditingController();
   final _passwordTextFieldController = TextEditingController();
   UserDataProvider _userDataProvider;
+  BottomNavigationBarProvider _bottomNavigationBarProvider;
 
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
     _userDataProvider = Provider.of<UserDataProvider>(context);
+    _bottomNavigationBarProvider = Provider.of<BottomNavigationBarProvider>(context);
   }
 
   @override
   Widget build(BuildContext context) {
     if (!_userDataProvider.isLoading) {
-      if (_userDataProvider.isLoggedIn) {
+      if (_userDataProvider.isLoggedIn &&
+          _bottomNavigationBarProvider.indexChangeSource == NavigationConstants.ScannerLogin) {
+          Navigator.pushNamed(
+            context,
+            RoutePaths.ScannerView,
+          );
+        return buildLoggedInWidget(context);
+      } else if (_userDataProvider.isLoggedIn) {
         return buildLoggedInWidget(context);
       } else {
         return buildLoginWidget();
