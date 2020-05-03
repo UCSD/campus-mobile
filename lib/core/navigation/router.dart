@@ -5,6 +5,7 @@ import 'package:campus_mobile_experimental/core/models/dining_model.dart';
 import 'package:campus_mobile_experimental/core/models/events_model.dart';
 import 'package:campus_mobile_experimental/core/models/links_model.dart';
 import 'package:campus_mobile_experimental/core/models/news_model.dart';
+import 'package:campus_mobile_experimental/core/navigation/bottom_tab_bar/bottom_navigation_bar_model.dart';
 import 'package:campus_mobile_experimental/ui/views/availability/manage_availability_view.dart';
 import 'package:campus_mobile_experimental/ui/views/baseline/baseline_view.dart';
 import 'package:campus_mobile_experimental/ui/views/dining/dining_detail_view.dart';
