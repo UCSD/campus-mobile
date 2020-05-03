@@ -48,4 +48,8 @@ class NavigationConstants {
   static const None = 'none';
   static const IconTap = 'icontTap';
   static const ScannerLogin = 'scannerLogin';
+  static const HomeTab = 0;
+  static const MapTab = 1;
+  static const NotificationsTab = 2;
+  static const ProfileTab = 3;
 }
