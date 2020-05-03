@@ -2,7 +2,9 @@ import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class OnboardingLogin extends StatefulWidget {
   @override
@@ -86,6 +88,8 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                             if (isLoggedIn) {
                               Navigator.pushNamedAndRemoveUntil(context,
                                   RoutePaths.BottomNavigationBar, (_) => false);
+                            } else {
+                              showAlertDialog(context);
                             }
                           });
                         },
@@ -102,9 +106,12 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                   'Need help logging in?',
                   style: TextStyle(color: lightButtonTextColor),
                 ),
-                onTap: () {
-                  /// TODO
-                  /// navigate user to external link that helps them log in
+                onTap: () async {
+                  String link =
+                      'https://acms.ucsd.edu/students/accounts-and-passwords/index.html';
+                  if (await canLaunch(link)) {
+                    await launch(link);
+                  }
                 },
               ),
               GestureDetector(
@@ -122,6 +129,34 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget showAlertDialog(BuildContext context) {
+    // set up the button
+    Widget okButton = FlatButton(
+      child: Text("OK"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Sorry, unable to sign you in"),
+      content: Text(
+          "Be sure you are using the correct credentials; TritonLink login if you are a student, SSO if you are Faculty/Staff."),
+      actions: [
+        okButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 }

@@ -172,18 +172,21 @@ class UserDataProvider extends ChangeNotifier {
   ///upon logging in we should make sure that users upload the correct
   ///ucsdaffiliation and classification
   Future<bool> login(String username, String password) async {
-    encryptLoginInfo(username, password);
-    bool returnVlaue = false;
-    _error = null;
-    _isLoading = true;
-    notifyListeners();
-    if (await silentLogin()) {
-      await getUserProfile();
-      returnVlaue = true;
+    bool returnVal = false;
+    if ((username?.isNotEmpty ?? false) && (password?.isNotEmpty ?? false)) {
+      encryptLoginInfo(username, password);
+      _error = null;
+      _isLoading = true;
+      notifyListeners();
+      if (await silentLogin()) {
+        print('logged in');
+        await getUserProfile();
+        returnVal = true;
+      }
+      _isLoading = false;
+      notifyListeners();
     }
-    _isLoading = false;
-    notifyListeners();
-    return returnVlaue;
+    return returnVal;
   }
 
   void toggleCard(String card) {
