@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:campus_mobile_experimental/core/models/notices_model.dart';
 import 'package:campus_mobile_experimental/core/services/networking.dart';
