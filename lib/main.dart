@@ -10,6 +10,8 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+import 'core/constants/app_constants.dart';
+
 bool showOnboardingScreen = true;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -71,7 +73,7 @@ class CampusMobile extends StatelessWidget {
           iconTheme: darkIconTheme,
           appBarTheme: darkAppBarTheme,
         ),
-        initialRoute: showOnboardingScreen ? 'onboarding' : '/',
+        initialRoute: showOnboardingScreen ? RoutePaths.Onboarding : RoutePaths.BottomNavigationBar,
         onGenerateRoute: Router.generateRoute,
         navigatorObservers: [
           observer,
