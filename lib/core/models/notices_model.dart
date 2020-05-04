@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final linksModel = linksModelFromJson(jsonString);
-
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
