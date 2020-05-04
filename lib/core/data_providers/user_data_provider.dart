@@ -179,7 +179,6 @@ class UserDataProvider extends ChangeNotifier {
       _isLoading = true;
       notifyListeners();
       if (await silentLogin()) {
-        print('logged in');
         await getUserProfile();
         returnVal = true;
       }
