@@ -34,8 +34,8 @@ class UserDataProvider extends ChangeNotifier {
       'special_events': true,
       'weather': true,
       'dining': true,
-
       'finals': true,
+      'scanner': true,
       'schedule': true,
     };
     _cardOrder = [
@@ -47,9 +47,9 @@ class UserDataProvider extends ChangeNotifier {
 //      'parking',
 //      'weather',
 //      'special_events',
-
       'finals',
       'schedule',
+      'scanner',
     ];
   }
 
