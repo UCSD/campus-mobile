@@ -10,6 +10,8 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+import 'core/constants/app_constants.dart';
+
 bool showOnboardingScreen = true;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
