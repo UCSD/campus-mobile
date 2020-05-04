@@ -7,8 +7,8 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <application
-        android:name="io.flutter.app.FlutterApplication"
-        android:label="UC San Diego"
+        android:name=".Application"
+        android:label="UC San Diego Experimental"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
@@ -24,6 +24,10 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="FLUTTER_NOTIFICATION_CLICK" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <meta-data
