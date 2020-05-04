@@ -1,16 +1,14 @@
+import 'package:campus_mobile_experimental/core/navigation/push_notification_wrapper.dart';
 import 'package:campus_mobile_experimental/core/navigation/router.dart';
 import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 import 'package:campus_mobile_experimental/core/navigation/bottom_tab_bar/bottom_navigation_bar_model.dart';
 import 'package:campus_mobile_experimental/core/data_providers/provider_setup.dart';
-import 'package:campus_mobile_experimental/ui/views/onboarding/onboarding_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
-import 'core/constants/app_constants.dart';
 
 bool showOnboardingScreen = true;
 void main() async {

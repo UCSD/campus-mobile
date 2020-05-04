@@ -39,7 +39,6 @@ android {
 
     defaultConfig {
         applicationId "edu.ucsd"
-        minSdkVersion 18
         minSdkVersion 21
         targetSdkVersion 28
         versionCode flutterVersionCode.toInteger()

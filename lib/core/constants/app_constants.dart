@@ -59,6 +59,7 @@ class NavigationConstants {
   static const NotificationsTab = 2;
   static const ProfileTab = 3;
 }
+
 class ButtonText {
   static const SubmitButtonActive = 'Submit';
   static const SubmitButtonInactive = 'Sending';
@@ -71,9 +72,3 @@ class ButtonText {
 class Plugins {
   static const FrontCamera = 'FRONT CAMERA';
 }
-
-class NavigationConstants {
-  static const None = 'none';
-  static const IconTap = 'icontTap';
-  static const ScannerLogin = 'scannerLogin';
-}}

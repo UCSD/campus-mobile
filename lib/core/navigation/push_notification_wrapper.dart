@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class PushNotificationWrapper extends StatelessWidget {
-  PushNotificationWrapper({Widget child});
-  Widget child;
+  PushNotificationWrapper({Widget this.child});
+  final Widget child;
   @override
   Widget build(BuildContext context) {
     Provider.of<PushNotificationDataProvider>(context)

@@ -37,19 +37,8 @@ List<SingleChildWidget> independentServices = [
   ChangeNotifierProvider<BottomNavigationBarProvider>(
     create: (_) => BottomNavigationBarProvider(),
   ),
-  ChangeNotifierProvider<UserDataProvider>(
-    create: (_) {
-      var _userDataProvider = UserDataProvider();
-      _userDataProvider.pushNotificationDataProvider =
-          PushNotificationDataProvider();
-
-      /// try to load any persistent saved data
-      /// once loaded from memory get the user's online profile
-      _userDataProvider
-          .loadSavedData()
-          .whenComplete(() => _userDataProvider.getUserProfile());
-      return _userDataProvider;
-    },
+  ChangeNotifierProvider<PushNotificationDataProvider>(
+    create: (_) => PushNotificationDataProvider(),
   ),
   ChangeNotifierProvider<SurfDataProvider>(
     create: (_) {
@@ -118,6 +107,21 @@ List<SingleChildWidget> dependentServices = [
     diningDataProvider.populateDistances();
     return diningDataProvider;
   }),
+  ChangeNotifierProxyProvider<PushNotificationDataProvider, UserDataProvider>(
+      create: (_) {
+    var _userDataProvider = UserDataProvider();
+
+    /// try to load any persistent saved data
+    /// once loaded from memory get the user's online profile
+    _userDataProvider
+        .loadSavedData()
+        .whenComplete(() => _userDataProvider.getUserProfile());
+    return _userDataProvider;
+  }, update: (_, pushNotificationDataProvider, _userDataProvider) {
+    _userDataProvider.pushNotificationDataProvider =
+        pushNotificationDataProvider;
+    return _userDataProvider;
+  }),
   ChangeNotifierProxyProvider<UserDataProvider, ClassScheduleDataProvider>(
       create: (_) {
     var classDataProvider = ClassScheduleDataProvider();
@@ -158,9 +162,9 @@ List<SingleChildWidget> dependentServices = [
   }),
   ChangeNotifierProxyProvider<UserDataProvider, BarcodeDataProvider>(
       create: (_) {
-        var barcodeDataProvider = BarcodeDataProvider();
-        return barcodeDataProvider;
-      }, update: (_, userDataProvider, barcodeDataProvider) {
+    var barcodeDataProvider = BarcodeDataProvider();
+    return barcodeDataProvider;
+  }, update: (_, userDataProvider, barcodeDataProvider) {
     barcodeDataProvider.userDataProvider = userDataProvider;
     return barcodeDataProvider;
   }),
