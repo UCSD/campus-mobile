@@ -34,8 +34,14 @@ class BarcodeDataProvider extends ChangeNotifier {
   BarcodeService _barcodeService;
 
   void onQRViewCreated(QRViewController controller) {
+
     this._controller = controller;
     controller.scannedDataStream.listen((scanData) {
+
+      print("QR TEXT::::::::");
+      print(_qrText);
+
+
       if (_qrText != scanData) {
         _qrText = scanData;
         _timeScanned = DateTime.now().millisecondsSinceEpoch;

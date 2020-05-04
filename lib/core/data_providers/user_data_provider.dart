@@ -295,10 +295,10 @@ class UserDataProvider extends ChangeNotifier {
         .refreshAccessToken(_authenticationModel.refreshToken)) {
       /// this is only added to refresh token method because the response for the refresh token does not include
       /// pid and ucsdaffiliation fields
-      if (_authenticationModel.pid != null) {
+      if (_authenticationModel.ucsdaffiliation != null) {
         AuthenticationModel finalModel = _authenticationService.data;
-        finalModel.pid = _authenticationModel.pid;
         finalModel.ucsdaffiliation = _authenticationModel.ucsdaffiliation;
+        finalModel.pid = _authenticationModel.pid;
       }
       await updateAuthenticationModel(_authenticationService.data);
     } else {
