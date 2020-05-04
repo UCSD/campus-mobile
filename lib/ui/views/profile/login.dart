@@ -116,7 +116,9 @@ class _LoginState extends State<Login> {
                                 .login(_emailTextFieldController.text,
                                     _passwordTextFieldController.text)
                                 .then((isLoggedIn) {
-                              showAlertDialog(context);
+                              if (!isLoggedIn) {
+                                showAlertDialog(context);
+                              }
                             });
                           },
                     color: Theme.of(context).buttonColor,
