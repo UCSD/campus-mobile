@@ -41,7 +41,7 @@ class _BottomTabBarState extends State<BottomTabBar> {
         type: BottomNavigationBarType.fixed,
         currentIndex: provider.currentIndex,
         onTap: (index) {
-          provider.updateCurrentIndex(index, NavigationConstants.IconTap);
+          provider.currentIndex = index;
         },
         items: [
           BottomNavigationBarItem(

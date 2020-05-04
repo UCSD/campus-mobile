@@ -34,7 +34,7 @@ class UserDataProvider extends ChangeNotifier {
       'special_events': true,
       'weather': true,
       'dining': true,
-
+      'schedule': true,
       'finals': true,
       'scanner': true,
     };
@@ -186,6 +186,7 @@ class UserDataProvider extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
+    print('logged in');
     return returnVal;
   }
 
@@ -213,6 +214,7 @@ class UserDataProvider extends ChangeNotifier {
     deleteUsernameFromDevice();
     var box = await Hive.openBox<AuthenticationModel>('AuthenticationModel');
     await box.clear();
+    print('logged out');
     _isLoading = false;
     notifyListeners();
   }

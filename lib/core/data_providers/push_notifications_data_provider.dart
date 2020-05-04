@@ -5,7 +5,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class PushNotificationDataProvider {
+class PushNotificationDataProvider extends ChangeNotifier {
   PushNotificationDataProvider() {
     ///INITIALIZE SERVICES
     _notificationService = NotificationService();
@@ -154,6 +154,14 @@ class PushNotificationDataProvider {
     } else {
       _error = 'Failed to delete firebase token.';
       return false;
+    }
+  }
+
+  subscribeToTopics(List<String> topics) {
+    for (String topic in topics) {
+      if ((topic ?? "").isNotEmpty) {
+        _fcm.subscribeToTopic(topic);
+      }
     }
   }
 
