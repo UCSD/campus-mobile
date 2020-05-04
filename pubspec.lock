@@ -555,6 +555,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.5"
+  qr_code_scanner:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: "fix/ios-crash-on-not-correct-code"
+      resolved-ref: "7e5a098be84b2487febe48f2d858eb4c38056aee"
+      url: "https://github.com/kamilpowalowski/qr_code_scanner.git"
+    source: git
+    version: "0.0.12"
   quiver:
     dependency: transitive
     description:
