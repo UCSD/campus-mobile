@@ -1,8 +1,11 @@
+import 'package:campus_mobile_experimental/core/data_providers/notices_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
+import 'package:campus_mobile_experimental/core/models/notices_model.dart';
 import 'package:campus_mobile_experimental/ui/cards/class_schedule/class_schedule_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/events/events_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/finals/finals_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/news/news_card.dart';
+import 'package:campus_mobile_experimental/ui/cards/notices/notices_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/scanner/scanner_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/weather/weather_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/availability/availability_card.dart';
@@ -22,11 +25,27 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      children: createList(Provider.of<UserDataProvider>(context).cardOrder),
+      children: createList(context),
     );
   }
 
-  List<Widget> createList(List<String> order) {
+  List<Widget> createList(BuildContext context) {
+    // ordered cards
+    List<Widget> orderedCards = getOrderedCardsList(Provider.of<UserDataProvider>(context).cardOrder);
+    List<Widget> noticesCards = getNoticesCardsList(Provider.of<NoticesDataProvider>(context).noticesModel);
+
+    return noticesCards + orderedCards;
+  }
+
+  List<Widget> getNoticesCardsList(List<NoticesModel> notices) {
+    List<Widget> noticesCards = List<Widget>();
+    for (NoticesModel notice in notices) {
+      noticesCards.add(NoticesCard(notice: notice));
+    }
+    return noticesCards;
+  }
+
+  List<Widget> getOrderedCardsList(List<String> order) {
     List<Widget> orderedCards = List<Widget>();
     for (String card in order) {
       switch (card) {
