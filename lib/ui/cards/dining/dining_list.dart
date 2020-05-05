@@ -61,38 +61,56 @@ class DiningList extends StatelessWidget {
     String dayHours;
     switch (weekday) {
       case 1:
-        dayHours = hours.mon;
+        if (hours.mon != null)
+          dayHours = hours.mon;
+        else
+          return Text('Closed');
         break;
       case 2:
-        dayHours = hours.tue;
+        if (hours.tue != null)
+          dayHours = hours.tue;
+        else
+          return Text('Closed');
         break;
       case 3:
-        dayHours = hours.wed;
+        if (hours.wed != null)
+          dayHours = hours.wed;
+        else
+          return Text('Closed');
         break;
       case 4:
-        dayHours = hours.thu;
+        if (hours.thu != null)
+          dayHours = hours.thu;
+        else
+          return Text('Closed');
         break;
       case 5:
-        dayHours = hours.fri;
+        if (hours.fri != null)
+          dayHours = hours.fri;
+        else
+          return Text('Closed');
         break;
       case 6:
         if (hours.sat != null)
           dayHours = hours.sat;
         else
-          return Text('closed');
+          return Text('Closed');
         break;
       case 7:
         if (hours.sun != null)
           dayHours = hours.sun;
         else
-          return Text('closed');
+          return Text('Closed');
         break;
       default:
         {
-          return Text('closed');
+          return Text('Closed');
         }
     }
-    if (RegExp(r"\b[0-9]{2}").allMatches(dayHours).length != 2)
+    if (RegExp(r"\b[0-9]{2}").allMatches(dayHours).length != 2) if (dayHours ==
+        'Closed-Closed')
+      return Text('Closed');
+    else
       return Text(dayHours);
     return TimeRangeWidget(
         time: dayHours

@@ -43,39 +43,69 @@ class DiningDetailView extends StatelessWidget {
       buildHours(context, model),
       buildPaymentOptions(context, model),
       buildPictures(model),
-      FlatButton(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Text(
-              'Directions',
-              style: TextStyle(
-                fontSize: 25,
+      buildDirectionsButton(context, model),
+      Divider(),
+      buildWebsiteButton(context, model),
+      buildMenu(context, model),
+    ];
+  }
+
+  Widget buildDirectionsButton(
+      BuildContext context, prefix0.DiningModel model) {
+    return FlatButton(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Text(
+            'Directions',
+            style: TextStyle(
+              fontSize: 25,
+              color: Theme.of(context).primaryColor,
+            ),
+          ),
+          Column(
+            children: <Widget>[
+              Icon(
+                Icons.directions_walk,
+                size: 30,
                 color: Theme.of(context).primaryColor,
               ),
-            ),
-            Column(
-              children: <Widget>[
-                Icon(
-                  Icons.directions_walk,
-                  size: 30,
-                  color: Theme.of(context).primaryColor,
-                ),
-                Text(model.distance.toStringAsPrecision(3)),
-              ],
-            ),
-          ],
-        ),
+              Text(model.distance.toStringAsPrecision(3)),
+            ],
+          ),
+        ],
+      ),
+      onPressed: () {
+        launch(
+            'https://www.google.com/maps/dir/?api=1&destination=${model.coordinates.lat},${model.coordinates.lon}&travelmode=walking');
+      },
+    );
+  }
+
+  Widget buildWebsiteButton(BuildContext context, prefix0.DiningModel model) {
+    if (model.url != null && model.url != '') {
+      return RaisedButton(
+        child: Text('Visit Website'),
+        textColor: Theme.of(context).textTheme.button.color,
         onPressed: () {
-          launch(
-              'https://www.google.com/maps/dir/?api=1&destination=${model.coordinates.lat},${model.coordinates.lon}&travelmode=walking');
+          launch(model.url);
         },
-      ),
-      Divider(),
-      DiningMenuList(
-        id: model.id,
-      ),
-    ];
+      );
+    } else
+      return Container();
+  }
+
+  Widget buildMenu(BuildContext context, prefix0.DiningModel model) {
+    if (model.menuWebsite != null && model.menuWebsite != '') {
+      return RaisedButton(
+        child: Text('View Menu'),
+        textColor: Theme.of(context).textTheme.button.color,
+        onPressed: () {
+          launch(model.menuWebsite);
+        },
+      );
+    } else
+      return DiningMenuList(id: model.id);
   }
 
   Widget buildHours(BuildContext context, prefix0.DiningModel model) {
@@ -86,8 +116,6 @@ class DiningDetailView extends StatelessWidget {
         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
       ),
       Divider(height: 6),
-      HoursOfDay(model: model, weekday: 0),
-      Divider(height: 10),
       HoursOfDay(model: model, weekday: 1),
       Divider(height: 10),
       HoursOfDay(model: model, weekday: 2),
@@ -99,6 +127,8 @@ class DiningDetailView extends StatelessWidget {
       HoursOfDay(model: model, weekday: 5),
       Divider(height: 10),
       HoursOfDay(model: model, weekday: 6),
+      Divider(height: 10),
+      HoursOfDay(model: model, weekday: 7),
       Divider(height: 10),
     ]);
   }
@@ -160,37 +190,45 @@ class HoursOfDay extends StatelessWidget {
     String theDay;
     String theHours;
     switch (weekday) {
-      case 0:
-        theDay = 'Sunday';
-        theHours =
-            model.regularHours.sun == null ? 'Closed' : model.regularHours.sun;
-        break;
       case 1:
         theDay = 'Monday';
-        theHours = model.regularHours.mon;
+        theHours =
+            model.regularHours.mon == null ? 'Closed' : model.regularHours.mon;
         break;
       case 2:
         theDay = 'Tuesday';
-        theHours = model.regularHours.tue;
+        theHours =
+            model.regularHours.tue == null ? 'Closed' : model.regularHours.tue;
         break;
       case 3:
         theDay = 'Wednesday';
-        theHours = model.regularHours.wed;
+        theHours =
+            model.regularHours.wed == null ? 'Closed' : model.regularHours.wed;
         break;
       case 4:
         theDay = 'Thursday';
-        theHours = model.regularHours.thu;
+        theHours =
+            model.regularHours.thu == null ? 'Closed' : model.regularHours.thu;
         break;
       case 5:
         theDay = 'Friday';
-        theHours = model.regularHours.fri;
+        theHours =
+            model.regularHours.fri == null ? 'Closed' : model.regularHours.fri;
         break;
       case 6:
         theDay = 'Saturday';
         theHours =
             model.regularHours.sat == null ? 'Closed' : model.regularHours.sat;
         break;
+      case 7:
+        theDay = 'Sunday';
+        theHours =
+            model.regularHours.sun == null ? 'Closed' : model.regularHours.sun;
+        break;
     }
+    /*As of 05/05/2020, API may return 'Closed-Closed' as a value. If it does,
+    correct it to look right.*/
+    if (theHours == 'Closed-Closed') theHours = 'Closed';
     return Stack(
       children: [
         Text('$theDay: '),
@@ -234,18 +272,16 @@ class HoursOfDay extends StatelessWidget {
       put the strings here. This is a weird way to do it, but
       we're not in control of the API, so we have to manually determine
       if this means the establishment is open or not. The 'Closed' case is
-      of my doing however because sometimes the API straight up doesn't have
-      anything to return on certain days so I just set it to 'Closed'.*/
+      of my doing however as that simply denotes the establishment is closed.*/
       switch (hours) {
         case 'Closed':
-          color = Colors.red;
-          break;
-        case 'Closed-Closed':
           color = Colors.red;
           break;
         case 'Open 24/7':
           color = Colors.green;
           break;
+        default:
+          return Container();
       }
     } else {
       List<String> times = hours.split('-');
