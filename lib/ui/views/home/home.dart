@@ -46,6 +46,9 @@ class _HomeState extends State<Home> {
 
   List<Widget> getOrderedCardsList(List<String> order) {
     List<Widget> orderedCards = List<Widget>();
+
+    orderedCards.add(ScannerCard()); // not hideable and not reorderable
+
     for (String card in order) {
       switch (card) {
 //        case 'special_events':
@@ -78,8 +81,6 @@ class _HomeState extends State<Home> {
         case 'finals':
           orderedCards.add(FinalsCard());
           break;
-        case 'scanner':
-          orderedCards.add(ScannerCard());
       }
     }
     return orderedCards;

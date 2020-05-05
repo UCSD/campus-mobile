@@ -11,7 +11,8 @@ class CardContainer extends StatelessWidget {
       @required this.active,
       @required this.hide,
       this.overFlowMenu,
-      this.actionButtons})
+      this.actionButtons,
+      this.hideMenu})
       : super(key: key);
 
   /// required parameters
@@ -25,6 +26,7 @@ class CardContainer extends StatelessWidget {
 
   /// optional parameters
   final Map<String, Function> overFlowMenu;
+  final bool hideMenu;
   final List<Widget> actionButtons;
 
   @override
@@ -37,15 +39,7 @@ class CardContainer extends StatelessWidget {
           children: <Widget>[
             ListTile(
               title: title,
-              trailing: ButtonBar(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  buildMenu({
-                    'reload': reload,
-                    'hide': hide,
-                  }),
-                ],
-              ),
+              trailing: buildMenu(),
             ),
             buildBody(),
             actionButtons != null
@@ -74,7 +68,22 @@ class CardContainer extends StatelessWidget {
     }
   }
 
-  Widget buildMenu(Map<String, Function> menuOptions) {
+  Widget buildMenu() {
+    if (hideMenu != null && hideMenu) {
+      return null;
+    }
+    return ButtonBar(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        buildMenuOptions({
+          'reload': reload,
+          'hide': hide,
+        }),
+      ],
+    );
+  }
+
+  Widget buildMenuOptions(Map<String, Function> menuOptions) {
     List<DropdownMenuItem<String>> menu = List<DropdownMenuItem<String>>();
     menuOptions.forEach((menuOption, func) {
       Widget item = DropdownMenuItem<String>(
