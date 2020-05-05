@@ -53,11 +53,8 @@ class BarcodeDataProvider extends ChangeNotifier {
       pid = _userDataProvider.authenticationModel.pid;
     }
     return {
-      'userId': await _userDataProvider.getUsernameFromDevice(),
       'barcode': _qrText,
-      'uscdaffiliation': _userDataProvider.authenticationModel.ucsdaffiliation,
-      'scannedDate': _timeScanned.toString(),
-      'pid': pid
+      'ucsdaffiliation': _userDataProvider.authenticationModel.ucsdaffiliation
     };
   }
 
@@ -76,6 +73,7 @@ class BarcodeDataProvider extends ChangeNotifier {
       if (results) {
         _submitState = ButtonText.SubmitButtonReceived;
       } else {
+        await _userDataProvider.refreshToken();
         _submitState = ButtonText.SubmitButtonTryAgain;
       }
       _isLoading = false;

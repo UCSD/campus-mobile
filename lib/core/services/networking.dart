@@ -51,7 +51,7 @@ class NetworkHelper {
     dio.options.headers = headers;
     try {
       final _response = await dio.post(url, data: body);
-      if (_response.statusCode == 200) {
+      if (_response.statusCode == 200 || _response.statusCode == 201) {
         // If server returns an OK response, return the body
         return _response.data;
       } else {
