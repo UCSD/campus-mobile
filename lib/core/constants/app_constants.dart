@@ -31,4 +31,25 @@ class RoutePaths {
       'special_events/special_events_filter_view';
   static const String SpecialEventsDetailView =
       'special_events/special_events_detail_view';
+  static const String ScannerView = 'scanner/scanner_view';
+}
+
+class ButtonText {
+  static const SubmitButtonActive = 'Submit';
+  static const SubmitButtonInactive = 'Sending';
+  static const SubmitButtonTryAgain = 'Try again';
+  static const SubmitButtonReceived = 'Received';
+  static const ScanNow = 'Scan Now';
+  static const SignIn = 'Sign In';
+}
+
+class Plugins {
+  static const FrontCamera = 'FRONT CAMERA';
+}
+
+class NavigationConstants {
+  static const HomeTab = 0;
+  static const MapTab = 1;
+  static const NotificationsTab = 2;
+  static const ProfileTab = 3;
 }
