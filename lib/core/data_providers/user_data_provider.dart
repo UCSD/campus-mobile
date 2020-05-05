@@ -35,7 +35,6 @@ class UserDataProvider extends ChangeNotifier {
       'weather': true,
       'dining': true,
       'finals': true,
-      'scanner': true,
       'schedule': true,
       'my_chart': true
     };
@@ -50,7 +49,6 @@ class UserDataProvider extends ChangeNotifier {
 //      'special_events',
       'finals',
       'schedule',
-      'scanner',
       'my_chart'
     ];
   }
