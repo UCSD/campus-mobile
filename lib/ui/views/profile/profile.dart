@@ -37,7 +37,7 @@ class Profile extends StatelessWidget {
             child: ListTile(
               leading: Icon(Icons.lock),
               title: Text('Privacy Policy'),
-              onTap: () {},
+              onTap: handlePrivacyTap,
             ),
           ),
         ],

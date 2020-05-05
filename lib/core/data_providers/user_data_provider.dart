@@ -47,11 +47,10 @@ class UserDataProvider extends ChangeNotifier {
 //      'news',
 //      'parking',
 //      'weather',
-
-      'special_events',
+//      'special_events',
+      'my_chart',
       'finals',
       'schedule',
-      'my_chart'
     ];
     _notificationsSettingsStates = {
       'campusAnnouncements': true,

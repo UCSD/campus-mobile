@@ -52,9 +52,9 @@ class _HomeState extends State<Home> {
 
     for (String card in order) {
       switch (card) {
-        case 'special_events':
-          orderedCards.add(BannerCard());
-          break;
+//        case 'special_events':
+//          orderedCards.add(BannerCard());
+//          break;
 //        case 'weather':
 //          orderedCards.add(WeatherCard());
 //          break;
@@ -76,14 +76,14 @@ class _HomeState extends State<Home> {
 //        case 'links':
 //          orderedCards.add(LinksCard());
 //          break;
-        case 'schedule':
-          orderedCards.add(ClassScheduleCard());
+        case 'my_chart':
+          orderedCards.add(MyChartCard());
           break;
         case 'finals':
           orderedCards.add(FinalsCard());
           break;
-        case 'my_chart':
-          orderedCards.add(MyChartCard());
+        case 'schedule':
+          orderedCards.add(ClassScheduleCard());
           break;
       }
     }

@@ -7,7 +7,7 @@ class BarcodeService {
 
   final NetworkHelper _networkHelper = NetworkHelper();
   final String _endpoint =
-      'https://api-qa.ucsd.edu:8243/qrscanner/1.0.0/barcode';
+      'https://api.ucsd.edu:8243/qrscanner/1.0.0/barcode';
 
   Future<bool> uploadResults(
       Map<String, String> headers, Map<String, dynamic> body) async {
