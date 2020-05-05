@@ -42,90 +42,102 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Image.asset(
-            'assets/images/UCSanDiegoLogo-nav.png',
-            fit: BoxFit.contain,
-            height: 50,
+          Flexible(
+            child: Image.asset(
+              'assets/images/UCSanDiegoLogo-nav.png',
+              fit: BoxFit.contain,
+              height: 50,
+            ),
           ),
           SizedBox(height: 100),
-          Container(
-            color: lightTextFieldBorderColor,
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: 'User ID',
-                contentPadding: EdgeInsets.only(left: 10),
+          Flexible(
+            child: Container(
+              color: lightTextFieldBorderColor,
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: 'User ID',
+                  contentPadding: EdgeInsets.only(left: 10),
+                ),
+                keyboardType: TextInputType.emailAddress,
+                controller: _emailTextFieldController,
               ),
-              keyboardType: TextInputType.emailAddress,
-              controller: _emailTextFieldController,
             ),
           ),
           SizedBox(height: 10),
-          Container(
-            color: lightTextFieldBorderColor,
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: 'Password',
-                contentPadding: EdgeInsets.only(left: 10),
+          Flexible(
+            child: Container(
+              color: lightTextFieldBorderColor,
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: 'Password',
+                  contentPadding: EdgeInsets.only(left: 10),
+                ),
+                obscureText: true,
+                controller: _passwordTextFieldController,
               ),
-              obscureText: true,
-              controller: _passwordTextFieldController,
             ),
           ),
           SizedBox(height: 10),
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: OutlineButton(
-                  borderSide: BorderSide(color: lightButtonBorderColor),
-                  child: Text('Sign In'),
-                  onPressed: _userDataProvider.isLoading
-                      ? null
-                      : () {
-                          _userDataProvider
-                              .login(_emailTextFieldController.text,
-                                  _passwordTextFieldController.text)
-                              .then((isLoggedIn) {
-                            if (isLoggedIn) {
-                              Navigator.pushNamedAndRemoveUntil(context,
-                                  RoutePaths.BottomNavigationBar, (_) => false);
-                            } else {
-                              showAlertDialog(context);
-                            }
-                          });
-                        },
-                  textColor: lightButtonTextColor,
+          Flexible(
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  child: OutlineButton(
+                    borderSide: BorderSide(color: lightButtonBorderColor),
+                    child: Text('Sign In'),
+                    onPressed: _userDataProvider.isLoading
+                        ? null
+                        : () {
+                            _userDataProvider
+                                .login(_emailTextFieldController.text,
+                                    _passwordTextFieldController.text)
+                                .then((isLoggedIn) {
+                              if (isLoggedIn) {
+                                Navigator.pushNamedAndRemoveUntil(
+                                    context,
+                                    RoutePaths.BottomNavigationBar,
+                                    (_) => false);
+                              } else {
+                                showAlertDialog(context);
+                              }
+                            });
+                          },
+                    textColor: lightButtonTextColor,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           SizedBox(height: 10),
-          Row(
-            children: [
-              GestureDetector(
-                child: Text(
-                  'Need help logging in?',
-                  style: TextStyle(color: lightButtonTextColor),
+          Flexible(
+            child: Row(
+              children: [
+                GestureDetector(
+                  child: Text(
+                    'Need help logging in?',
+                    style: TextStyle(color: lightButtonTextColor),
+                  ),
+                  onTap: () async {
+                    String link =
+                        'https://acms.ucsd.edu/students/accounts-and-passwords/index.html';
+                    if (await canLaunch(link)) {
+                      await launch(link);
+                    }
+                  },
                 ),
-                onTap: () async {
-                  String link =
-                      'https://acms.ucsd.edu/students/accounts-and-passwords/index.html';
-                  if (await canLaunch(link)) {
-                    await launch(link);
-                  }
-                },
-              ),
-              GestureDetector(
-                child: Text(
-                  'Skip',
-                  style: TextStyle(color: lightButtonTextColor),
-                ),
-                onTap: () {
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, RoutePaths.BottomNavigationBar, (_) => false);
-                },
-              )
-            ],
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                GestureDetector(
+                  child: Text(
+                    'Skip',
+                    style: TextStyle(color: lightButtonTextColor),
+                  ),
+                  onTap: () {
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, RoutePaths.BottomNavigationBar, (_) => false);
+                  },
+                )
+              ],
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            ),
           ),
         ],
       ),
