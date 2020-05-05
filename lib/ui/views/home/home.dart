@@ -52,9 +52,9 @@ class _HomeState extends State<Home> {
 
     for (String card in order) {
       switch (card) {
-//        case 'special_events':
-//          orderedCards.add(BannerCard());
-//          break;
+        case 'special_events':
+          orderedCards.add(BannerCard());
+          break;
 //        case 'weather':
 //          orderedCards.add(WeatherCard());
 //          break;
