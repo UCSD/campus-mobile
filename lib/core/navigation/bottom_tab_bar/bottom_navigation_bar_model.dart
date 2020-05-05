@@ -1,4 +1,5 @@
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
+import 'package:campus_mobile_experimental/core/navigation/push_notification_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:campus_mobile_experimental/core/services/bottom_navigation_bar_service.dart';
@@ -36,7 +37,7 @@ class _BottomTabBarState extends State<BottomTabBar> {
           ),
         ),
       ),
-      body: currentTab[provider.currentIndex],
+      body: PushNotificationWrapper(child: currentTab[provider.currentIndex]),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: provider.currentIndex,
