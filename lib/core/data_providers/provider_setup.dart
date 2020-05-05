@@ -133,6 +133,14 @@ List<SingleChildWidget> dependentServices = [
     }
     return classScheduleDataProvider;
   }),
+  ChangeNotifierProxyProvider<UserDataProvider, BarcodeDataProvider>(
+      create: (_) {
+    var barcodeDataProvider = BarcodeDataProvider();
+    return barcodeDataProvider;
+  }, update: (_, userDataProvider, barcodeDataProvider) {
+    barcodeDataProvider.userDataProvider = userDataProvider;
+    return barcodeDataProvider;
+  }),
   ChangeNotifierProxyProvider<UserDataProvider, ParkingDataProvider>(
       create: (_) {
     var parkingDataProvider = ParkingDataProvider();
