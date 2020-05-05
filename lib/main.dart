@@ -1,7 +1,6 @@
-import 'package:campus_mobile_experimental/core/navigation/push_notification_wrapper.dart';
+import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/navigation/router.dart';
 import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
-import 'package:campus_mobile_experimental/core/navigation/bottom_tab_bar/bottom_navigation_bar_model.dart';
 import 'package:campus_mobile_experimental/core/data_providers/provider_setup.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -71,7 +70,9 @@ class CampusMobile extends StatelessWidget {
           iconTheme: darkIconTheme,
           appBarTheme: darkAppBarTheme,
         ),
-        initialRoute: showOnboardingScreen ? RoutePaths.Onboarding : RoutePaths.BottomNavigationBar,
+        initialRoute: showOnboardingScreen
+            ? RoutePaths.Onboarding
+            : RoutePaths.BottomNavigationBar,
         onGenerateRoute: Router.generateRoute,
         navigatorObservers: [
           observer,

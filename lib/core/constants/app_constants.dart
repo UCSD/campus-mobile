@@ -52,23 +52,3 @@ class NavigationConstants {
   static const NotificationsTab = 2;
   static const ProfileTab = 3;
 }
-
-class NavigationConstants {
-  static const HomeTab = 0;
-  static const MapTab = 1;
-  static const NotificationsTab = 2;
-  static const ProfileTab = 3;
-}
-
-class ButtonText {
-  static const SubmitButtonActive = 'Submit';
-  static const SubmitButtonInactive = 'Sending';
-  static const SubmitButtonTryAgain = 'Try again';
-  static const SubmitButtonReceived = 'Received';
-  static const ScanNow = 'Scan Now';
-  static const SignIn = 'Sign In';
-}
-
-class Plugins {
-  static const FrontCamera = 'FRONT CAMERA';
-}
