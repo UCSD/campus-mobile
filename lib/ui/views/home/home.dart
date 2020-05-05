@@ -76,7 +76,7 @@ class _HomeState extends State<Home> {
 //        case 'links':
 //          orderedCards.add(LinksCard());
 //          break;
-        case 'my_chart':
+        case 'MyStudentChart':
           orderedCards.add(MyChartCard());
           break;
 //        case 'finals':
