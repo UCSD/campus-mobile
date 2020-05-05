@@ -54,7 +54,7 @@ class BarcodeDataProvider extends ChangeNotifier {
     }
     return {
       'barcode': _qrText,
-      'uscdaffiliation': _userDataProvider.authenticationModel.ucsdaffiliation
+      'ucsdaffiliation': _userDataProvider.authenticationModel.ucsdaffiliation
     };
   }
 
