@@ -3,7 +3,7 @@ import 'package:campus_mobile_experimental/core/services/networking.dart';
 
 class NotificationService {
   final NetworkHelper _networkHelper = NetworkHelper();
-  final String _endpoint = 'https://api-qa.ucsd.edu:8243/mp-registration/1.0.0';
+  final String _endpoint = 'https://api.ucsd.edu:8243/mp-registration/1.0.0';
   bool _isLoading = false;
   DateTime _lastUpdated;
   String _error;

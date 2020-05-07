@@ -4,12 +4,10 @@ import 'package:campus_mobile_experimental/core/services/networking.dart';
 import 'package:flutter/cupertino.dart';
 
 class ClassScheduleService {
-  final String mockEndpoint =
-      'https://ucsd-mobile-dev.s3-us-west-1.amazonaws.com/mock-apis/academic/MyAcademicHistory-studentdemo.json';
   final String academicTermEndpoint =
       'https://btgre7sss6.execute-api.us-west-2.amazonaws.com/prod/v1/term/current';
   final String myAcademicHistoryApiEndpoint =
-      'https://api-qa.ucsd.edu:8243/student/my/academic_history/v1/class_list';
+      'https://api.ucsd.edu:8243/student/my/academic_history/v1/class_list';
   bool _isLoading = false;
   DateTime _lastUpdated;
   String _error;

@@ -10,13 +10,13 @@ class Profile extends StatelessWidget {
       child: ListView(
         children: <Widget>[
           Login(),
-          Card(
-            child: ListTile(
-              leading: Icon(Icons.notifications),
-              title: Text('Notifications'),
-              onTap: () { handleNotificationsTap(context); },
-            ),
-          ),
+//          Card(
+//            child: ListTile(
+//              leading: Icon(Icons.notifications),
+//              title: Text('Notifications'),
+//              onTap: () { handleNotificationsTap(context); },
+//            ),
+//          ),
           Card(
             child: ListTile(
               leading: Icon(Icons.menu),
@@ -37,7 +37,7 @@ class Profile extends StatelessWidget {
             child: ListTile(
               leading: Icon(Icons.lock),
               title: Text('Privacy Policy'),
-              onTap: () {},
+              onTap: handlePrivacyTap,
             ),
           ),
         ],

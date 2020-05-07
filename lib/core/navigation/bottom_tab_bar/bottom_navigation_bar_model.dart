@@ -16,7 +16,7 @@ class BottomTabBar extends StatefulWidget {
 class _BottomTabBarState extends State<BottomTabBar> {
   var currentTab = [
     Home(),
-    prefix0.Map(),
+//    prefix0.Map(),
     NotificationsListView(),
     Profile(),
   ];
@@ -49,10 +49,10 @@ class _BottomTabBarState extends State<BottomTabBar> {
             icon: new Icon(Icons.home),
             title: new Text('Home'),
           ),
-          BottomNavigationBarItem(
-            icon: new Icon(Icons.map),
-            title: new Text('Map'),
-          ),
+//          BottomNavigationBarItem(
+//            icon: new Icon(Icons.map),
+//            title: new Text('Map'),
+//          ),
           BottomNavigationBarItem(
             icon: new Icon(Icons.notifications),
             title: new Text('Notifications'),

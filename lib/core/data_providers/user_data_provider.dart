@@ -37,7 +37,7 @@ class UserDataProvider extends ChangeNotifier {
       'schedule': true,
       'finals': true,
       'schedule': true,
-      'my_chart': true
+      'MyStudentChart': true
     };
     _cardOrder = [
 //      'availability',
@@ -47,11 +47,10 @@ class UserDataProvider extends ChangeNotifier {
 //      'news',
 //      'parking',
 //      'weather',
-
-      'special_events',
-      'finals',
-      'schedule',
-      'my_chart'
+//      'special_events',
+      'MyStudentChart',
+//      'finals',
+//      'schedule',
     ];
     _notificationsSettingsStates = {
       'campusAnnouncements': true,
