@@ -35,17 +35,18 @@ class _NotificationsListViewState extends State<NotificationsListView> {
   bool isPerformingRequest = false;
 
   void _updateData(BuildContext context) async {
+    var clearMessages = false;
     if (!Provider.of<MessagesDataProvider>(context, listen: false).isLoading) {
       if (Provider.of<UserDataProvider>(context, listen: false) != null &&
           Provider.of<UserDataProvider>(context, listen: false).isLoggedIn) {
         setState(() => isPerformingRequest = true);
         Provider.of<MessagesDataProvider>(context, listen: false)
-            .retrieveMoreMyMessages();
+            .retrieveMoreMyMessages(clearMessages);
         setState(() => isPerformingRequest = false);
       } else {
         setState(() => isPerformingRequest = true);
         Provider.of<MessagesDataProvider>(context, listen: false)
-            .retrieveMoreTopicMessages();
+            .retrieveMoreTopicMessages(clearMessages);
         setState(() => isPerformingRequest = false);
       }
     }
