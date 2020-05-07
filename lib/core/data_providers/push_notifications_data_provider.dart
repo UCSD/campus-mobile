@@ -9,11 +9,14 @@ class PushNotificationDataProvider extends ChangeNotifier {
   PushNotificationDataProvider() {
     ///INITIALIZE SERVICES
     _notificationService = NotificationService();
+    deviceInfoPlugin = DeviceInfoPlugin();
+    _fcm = FirebaseMessaging();
+    initState();
   }
 
   ///Models
-  final FirebaseMessaging _fcm = FirebaseMessaging();
-  static final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
+  FirebaseMessaging _fcm;
+  DeviceInfoPlugin deviceInfoPlugin;
   Map<String, dynamic> _deviceData = <String, dynamic>{};
 
   ///STATES
@@ -23,18 +26,21 @@ class PushNotificationDataProvider extends ChangeNotifier {
   ///SERVICES
   NotificationService _notificationService;
 
+  initState() async {
+    if (Platform.isAndroid) {
+      _deviceData = _readAndroidBuildData(await deviceInfoPlugin.androidInfo);
+    } else if (Platform.isIOS) {
+      _deviceData = _readIosDeviceInfo(await deviceInfoPlugin.iosInfo);
+      _fcm.requestNotificationPermissions(const IosNotificationSettings(
+          sound: true, badge: true, alert: true, provisional: true));
+      _fcm.onIosSettingsRegistered.listen((IosNotificationSettings settings) {
+        print("Settings registered: $settings");
+      });
+    }
+  }
+
   Future<void> initPlatformState(BuildContext context) async {
     try {
-      if (Platform.isAndroid) {
-        _deviceData = _readAndroidBuildData(await deviceInfoPlugin.androidInfo);
-      } else if (Platform.isIOS) {
-        _deviceData = _readIosDeviceInfo(await deviceInfoPlugin.iosInfo);
-        _fcm.requestNotificationPermissions(const IosNotificationSettings(
-            sound: true, badge: true, alert: true, provisional: true));
-        _fcm.onIosSettingsRegistered.listen((IosNotificationSettings settings) {
-          print("Settings registered: $settings");
-        });
-      }
       _fcm.configure(
         onMessage: (Map<String, dynamic> message) async {
           print("onMessage: $message");
@@ -110,33 +116,31 @@ class PushNotificationDataProvider extends ChangeNotifier {
   }
 
   Future<bool> registerDevice(String accessToken) async {
-    if (_error == null) {
-      String deviceId = _deviceData['deviceId'];
-      if (deviceId == null) {
-        _error = 'Failed to get device ID';
-        return false;
-      } else {
-        // Get the token for this device
-        String fcmToken = await _fcm.getToken();
-        print('token is: ' + fcmToken);
-        if (fcmToken.isNotEmpty && (accessToken?.isNotEmpty ?? false)) {
-          Map<String, String> headers = {
-            'Authorization': 'Bearer ' + accessToken
-          };
-          Map<String, String> body = {'deviceId': deviceId, 'token': fcmToken};
-          if ((await _notificationService.postPushToken(headers, body))) {
-            return true;
-          } else {
-            _error = _notificationService.error;
-            return false;
-          }
+    String deviceId = _deviceData['deviceId'];
+    print('device id');
+    print(deviceId);
+    if (deviceId == null) {
+      _error = 'Failed to get device ID';
+      return false;
+    } else {
+      // Get the token for this device
+      String fcmToken = await _fcm.getToken();
+      print('token is: ' + fcmToken);
+      if (fcmToken.isNotEmpty && (accessToken?.isNotEmpty ?? false)) {
+        Map<String, String> headers = {
+          'Authorization': 'Bearer ' + accessToken
+        };
+        Map<String, String> body = {'deviceId': deviceId, 'token': fcmToken};
+        if ((await _notificationService.postPushToken(headers, body))) {
+          return true;
         } else {
-          _error = 'Failed to get firebase token.';
+          _error = _notificationService.error;
           return false;
         }
+      } else {
+        _error = 'Failed to get firebase token.';
+        return false;
       }
-    } else {
-      return false;
     }
   }
 
