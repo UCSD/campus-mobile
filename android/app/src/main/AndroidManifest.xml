@@ -28,7 +28,7 @@
         </activity>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAwHFV7LL99A-PXa7J1k7H1MhT4_RUgZtk"/>
+            android:value="AIzaSyCCQZfcvW7pLI9bOgu4iYxji7f9csl_ovg"/>
         <meta-data android:name="firebase_analytics_collection_enabled" android:value="true" />
     </application>
 </manifest>

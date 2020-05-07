@@ -12,7 +12,7 @@ class NoticesService {
     "accept": "application/json",
   };
   final String endpoint =
-      "https://tbk5wko7a9.execute-api.us-west-1.amazonaws.com/dev/msm-linksservice/v1";
+      "https://ucsd-its-wts.s3-us-west-2.amazonaws.com/replatform/v1/notices/mobile-app-notice-banners.json";
   List<NoticesModel> _noticesModel = List<NoticesModel>();
 
   Future<bool> fetchData() async {
@@ -20,14 +20,16 @@ class NoticesService {
     _isLoading = true;
     try {
       /// fetch data
-//      String _response =
-//          await _networkHelper.authorizedFetch(endpoint, headers);
-//
-//      /// parse data
-//      _noticesModel = noticesModelFromJson(_response);
+      String _response =
+          await _networkHelper.authorizedFetch(endpoint, headers);
+
+      /// parse data
+      _noticesModel = noticesModelFromJson(_response);
       _isLoading = false;
+
       // todo: remove dummy data and call notices endpoint when available
-      _noticesModel = noticesModelFromJson('[{"notice-title": "Coronavirus Information","notice-banner-image": "https://mobile.ucsd.edu/feeds/_resources/media/promo-banners/covid-19-app-20-03-04.png","notice-banner-link": "https://go.ucsd.edu/38nb0Pf"}]');
+      //_noticesModel = noticesModelFromJson('[{"notice-title": "Coronavirus Information","notice-banner-image": "https://mobile.ucsd.edu/feeds/_resources/media/promo-banners/covid-19-app-20-03-04.png","notice-banner-link": "https://go.ucsd.edu/38nb0Pf"}]');
+
       return true;
     } catch (e) {
       _error = e.toString();
