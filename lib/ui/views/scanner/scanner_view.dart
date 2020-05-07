@@ -1,3 +1,4 @@
+import 'package:campus_mobile_experimental/core/constants/scanner_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/barcode_data_provider.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
 import 'package:flutter/material.dart';
@@ -55,7 +56,7 @@ class _QRViewExampleState extends State<ScannerView> {
                     _barcodeDataProvider.qrText.isNotEmpty
                         ? Text(_barcodeDataProvider.qrText,
                             style: TextStyle(fontSize: 20))
-                        : Text("Please scan a test kit.",
+                        : Text(ScannerConstants.scannerViewPrompt,
                             style: TextStyle(fontSize: 20)),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
