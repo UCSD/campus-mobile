@@ -69,7 +69,7 @@ class MyChartCard extends StatelessWidget {
   }
 
   void handleTap() {
-    String myChartUrl = 'https://mystudentchart.ucsd.edu/shs/';
+    String myChartUrl = 'https://mystudentchart.ucsd.edu/shs/Authentication/Saml/Login?IdP=UCSD%20STUDENT%20AD%20LOGIN';
     openLink(myChartUrl);
   }
 
