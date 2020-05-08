@@ -1,3 +1,4 @@
+import 'package:campus_mobile_experimental/core/constants/notifications_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/message_model.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ class MessagesDataProvider extends ChangeNotifier {
     _isLoading = false;
     _messages = List<MessageElement>();
     _messageService = MessageService();
+    _statusText = NotificationsConstants.statusFetching;
   }
 
   /// STATES
@@ -18,6 +20,7 @@ class MessagesDataProvider extends ChangeNotifier {
   DateTime _lastUpdated;
   String _error;
   int _previousTimestamp;
+  String _statusText;
 
   /// MODELS
   List<MessageElement> _messages;
@@ -28,6 +31,7 @@ class MessagesDataProvider extends ChangeNotifier {
   //Fetch messages
   void fetchMessages() async {
     _isLoading = true;
+    _statusText = NotificationsConstants.statusFetching;
     _error = null;
     notifyListeners();
     _previousTimestamp = DateTime.now().millisecondsSinceEpoch;
@@ -72,6 +76,7 @@ class MessagesDataProvider extends ChangeNotifier {
         _userDataProvider.refreshToken();
       }
       _error = _messageService.error;
+      _statusText = NotificationsConstants.statusFetchProblem;
     }
 
     _isLoading = false;
@@ -120,6 +125,12 @@ class MessagesDataProvider extends ChangeNotifier {
     } else {
       _messages.addAll(newMessages);
     }
+
+    if (_messages.length == 0) {
+      _statusText = NotificationsConstants.statusNoMessages;
+    } else {
+      _statusText = NotificationsConstants.statusNone;
+    }
   }
 
   ///This setter is only used in provider to supply and updated UserDataProvider object
@@ -131,6 +142,7 @@ class MessagesDataProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String get error => _error;
   DateTime get lastUpdated => _lastUpdated;
+  String get statusText => _statusText;
 
   List<MessageElement> get messages {
     if (_messages != null) {
