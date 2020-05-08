@@ -1,4 +1,5 @@
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
+import 'package:campus_mobile_experimental/core/constants/scanner_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/services/bottom_navigation_bar_service.dart';
 import 'package:flutter/material.dart';
@@ -47,7 +48,7 @@ class ScannerCard extends StatelessWidget {
           ),
         ),
         Text(
-          'Scan Your COVID-19 Test Kit.',
+          ScannerConstants.scannerCardPrompt,
           textAlign: TextAlign.left,
         )
       ],
