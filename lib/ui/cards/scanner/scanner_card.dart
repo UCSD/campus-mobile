@@ -33,24 +33,31 @@ class ScannerCard extends StatelessWidget {
   }
 
   Widget buildCardContent(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Container(
-          child: Image.asset(
-            'assets/images/QRScanIcon.png',
-            fit: BoxFit.contain,
-            height: 56,
-          ),
-          padding: EdgeInsets.only(
-            left: 10,
-            right: 10,
-          ),
+    return GestureDetector(
+      onTap: () {
+        print("tappy tap tap");
+        getActionButtonNavigateRoute(context);
+      },
+      behavior: HitTestBehavior.translucent,
+        child: Row(
+          children: <Widget>[
+            Container(
+              child: Image.asset(
+                'assets/images/QRScanIcon.png',
+                fit: BoxFit.contain,
+                height: 56,
+              ),
+              padding: EdgeInsets.only(
+                left: 10,
+                right: 10,
+              ),
+            ),
+            Text(
+              getCardContentText(context),
+              textAlign: TextAlign.left,
+            )
+          ],
         ),
-        Text(
-          'Scan Your COVID-19 Test Kit.',
-          textAlign: TextAlign.left,
-        )
-      ],
     );
   }
 
@@ -63,6 +70,12 @@ class ScannerCard extends StatelessWidget {
         getActionButtonNavigateRoute(context);
       },
     );
+  }
+
+  String getCardContentText(BuildContext context) {
+    return Provider.of<UserDataProvider>(context, listen: false).isLoggedIn
+        ? 'Scan Your COVID-19 Test Kit.'
+        : ButtonText.SignIn + ' Scan Your COVID-19 Test Kit.';
   }
 
   String getActionButtonText(BuildContext context) {

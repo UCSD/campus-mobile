@@ -34,24 +34,30 @@ class MyChartCard extends StatelessWidget {
   }
 
   Widget buildCardContent(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Container(
-          child: Image.asset(
-            'assets/images/MyChartLogo.png',
-            fit: BoxFit.contain,
-            height: 56,
+    return GestureDetector(
+      onTap: () {
+        handleTap();
+      },
+      behavior: HitTestBehavior.translucent,
+      child: Row(
+        children: <Widget>[
+          Container(
+            child: Image.asset(
+              'assets/images/MyChartLogo.png',
+              fit: BoxFit.contain,
+              height: 56,
+            ),
+            padding: EdgeInsets.only(
+              left: 10,
+              right: 10,
+            ),
           ),
-          padding: EdgeInsets.only(
-            left: 10,
-            right: 10,
-          ),
-        ),
-        Text(
-          'Your secure online health connection.',
-          textAlign: TextAlign.left,
-        )
-      ],
+          Text(
+            'Your secure online health connection.',
+            textAlign: TextAlign.left,
+          )
+        ],
+      ),
     );
   }
 
