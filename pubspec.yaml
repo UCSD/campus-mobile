@@ -48,8 +48,8 @@ dependencies:
   device_info: 0.4.2+1
   qr_code_scanner:
     git:
-      url: https://github.com/kamilpowalowski/qr_code_scanner.git
-      ref: fix/ios-crash-on-not-correct-code
+      url: https://github.com/ucsd/qr_code_scanner.git
+      ref: master
 
 dev_dependencies:
   flutter_test:
