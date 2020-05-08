@@ -55,20 +55,32 @@ class _NotificationsListViewState extends State<NotificationsListView> {
   @override
   Widget build(BuildContext context) {
     //print(_data);
-    return RefreshIndicator(
-        child: ListView.builder(
-            controller: _scrollController,
-            physics: const AlwaysScrollableScrollPhysics(),
-            itemCount:
-                Provider.of<MessagesDataProvider>(context).messages.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Column(
-                  children: _buildMessage(
-                      context,
-                      Provider.of<MessagesDataProvider>(context)
-                          .messages[index]));
-            }),
-        onRefresh: () => _handleRefresh(context));
+    return Column(children: [
+      Padding(padding: const EdgeInsets.all(3.5)),
+      Text(Provider.of<MessagesDataProvider>(context).statusText),
+      Expanded(
+      flex: 1, child:
+      RefreshIndicator(
+        child: buildListView(context),
+        onRefresh: () => _handleRefresh(context))
+      )
+    ]);
+  }
+
+  Widget buildListView(BuildContext context) {
+    return ListView.builder(
+        controller: _scrollController,
+        physics: const AlwaysScrollableScrollPhysics(),
+        itemCount:
+        Provider.of<MessagesDataProvider>(context).messages.length,
+        itemBuilder: (BuildContext context, int index) {
+          return Column(
+              children: _buildMessage(
+                  context,
+                  Provider.of<MessagesDataProvider>(context)
+                      .messages[index]));
+        });
+    ;
   }
 
   List<Widget> _buildMessage(BuildContext context, MessageElement data) {
@@ -142,9 +154,7 @@ class _NotificationsListViewState extends State<NotificationsListView> {
     return time;
   }
 
-  Future<Null> _handleRefresh(BuildContext context) async {
-    await Future.delayed(const Duration(seconds: 3), () {
-      Provider.of<MessagesDataProvider>(context, listen: false).fetchMessages();
-    });
+  _handleRefresh(BuildContext context) async {
+    Provider.of<MessagesDataProvider>(context, listen: false).fetchMessages();
   }
 }
