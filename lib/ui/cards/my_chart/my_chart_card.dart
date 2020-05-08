@@ -65,7 +65,7 @@ class MyChartCard extends StatelessWidget {
     List<Widget> actionButtons = List<Widget>();
     actionButtons.add(FlatButton(
       child: Text(
-        'Sign In Now',
+        'Log in to MyStudentChart',
       ),
       onPressed: () {
         handleTap();
