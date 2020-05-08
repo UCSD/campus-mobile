@@ -49,11 +49,14 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
           ),
           SizedBox(height: 100),
           Container(
-            color: lightTextFieldBorderColor,
+            color: Theme.of(context).accentColor,
             child: TextField(
               decoration: InputDecoration(
                 hintText: 'User ID',
                 contentPadding: EdgeInsets.only(left: 10),
+                hintStyle: Theme.of(context).textTheme.body1,
+                fillColor: Theme.of(context).accentColor,
+                filled: true
               ),
               keyboardType: TextInputType.emailAddress,
               controller: _emailTextFieldController,
@@ -61,11 +64,14 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
           ),
           SizedBox(height: 10),
           Container(
-            color: lightTextFieldBorderColor,
+            color: Theme.of(context).accentColor,
             child: TextField(
               decoration: InputDecoration(
                 hintText: 'Password',
                 contentPadding: EdgeInsets.only(left: 10),
+                  hintStyle: Theme.of(context).textTheme.body1,
+                  fillColor: Theme.of(context).accentColor,
+                  filled: true
               ),
               obscureText: true,
               controller: _passwordTextFieldController,
