@@ -31,7 +31,7 @@ class ClassScheduleCard extends StatelessWidget {
     return CardContainer(
       active: Provider.of<UserDataProvider>(context).cardStates['schedule'] &&
           Provider.of<UserDataProvider>(context).isLoggedIn,
-      hide: () => Provider.of<UserDataProvider>(context).toggleCard('schedule'),
+      hide: () => Provider.of<UserDataProvider>(context, listen: false).toggleCard('schedule'),
       reload: () =>
           Provider.of<ClassScheduleDataProvider>(context, listen: false)
               .fetchData(),

@@ -14,7 +14,7 @@ class FinalsCard extends StatelessWidget {
     return CardContainer(
       active: Provider.of<UserDataProvider>(context).cardStates['finals'] &&
           Provider.of<UserDataProvider>(context).isLoggedIn,
-      hide: () => Provider.of<UserDataProvider>(context).toggleCard('finals'),
+      hide: () => Provider.of<UserDataProvider>(context, listen: false).toggleCard('finals'),
       reload: () =>
           Provider.of<ClassScheduleDataProvider>(context, listen: false)
               .fetchData(),
