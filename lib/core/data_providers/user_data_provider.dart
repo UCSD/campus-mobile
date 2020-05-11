@@ -49,8 +49,8 @@ class UserDataProvider extends ChangeNotifier {
 //      'weather',
 //      'special_events',
       'MyStudentChart',
-//      'finals',
-//      'schedule',
+      'finals',
+      'schedule',
     ];
     _notificationsSettingsStates = {
       'campusAnnouncements': true,
@@ -168,6 +168,7 @@ class UserDataProvider extends ChangeNotifier {
           base64.encode(utf8.encode(username + ':' + encryptedPassword));
       if (await _authenticationService
           .login(base64EncodedWithEncryptedPassword)) {
+
         updateAuthenticationModel(_authenticationService.data);
         _pushNotificationDataProvider
             .registerDevice(_authenticationService.data.accessToken);

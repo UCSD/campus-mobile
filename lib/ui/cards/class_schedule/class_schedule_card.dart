@@ -15,15 +15,14 @@ import 'package:provider/provider.dart';
 class ClassScheduleCard extends StatelessWidget {
   List<Widget> buildActionButtons(BuildContext context) {
     List<Widget> actionButtons = List<Widget>();
-//    TODO: Fixme - reported broken in testing
-//    actionButtons.add(FlatButton(
-//      child: Text(
-//        'View All',
-//      ),
-//      onPressed: () {
-//        Navigator.pushNamed(context, RoutePaths.ClassScheduleViewAll);
-//      },
-//    ));
+    actionButtons.add(FlatButton(
+      child: Text(
+        'View All',
+      ),
+      onPressed: () {
+        Navigator.pushNamed(context, RoutePaths.ClassScheduleViewAll);
+      },
+    ));
     return actionButtons;
   }
 

@@ -1,8 +1,5 @@
 import 'package:campus_mobile_experimental/core/models/authentication_model.dart';
 import 'package:campus_mobile_experimental/core/services/networking.dart';
-import 'dart:convert';
-
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class AuthenticationService {
   AuthenticationService();

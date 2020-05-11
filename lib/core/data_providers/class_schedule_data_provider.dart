@@ -118,7 +118,12 @@ class ClassScheduleDataProvider extends ChangeNotifier {
         'OTHER': List<SectionData>(),
       };
 
-      _createMapOfClasses();
+      try {
+        _createMapOfClasses();
+      } catch (e) {
+        _error = e.toString();
+      }
+
       _lastUpdated = DateTime.now();
     } else {
       ///TODO: determine what error to show to the user
@@ -149,12 +154,16 @@ class ClassScheduleDataProvider extends ChangeNotifier {
         String day = 'OTHER';
         if (sectionData.days != null) {
           day = sectionData.days;
+        } else {
+          continue;
         }
 
-        if (sectionData.specialMtgCode != 'FI') {
-          _enrolledClasses[day].add(sectionData);
-        } else if (sectionData.specialMtgCode == 'FI') {
-          _finals[day].add(sectionData);
+        if (sectionData.enrollStatus == 'EN') {
+          if (sectionData.specialMtgCode != 'FI') {
+            _enrolledClasses[day].add(sectionData);
+          } else if (sectionData.specialMtgCode == 'FI') {
+            _finals[day].add(sectionData);
+          }
         }
       }
     }
@@ -171,6 +180,9 @@ class ClassScheduleDataProvider extends ChangeNotifier {
 
   /// comparator that sorts according to start time of class
   int _compare(SectionData a, SectionData b) {
+    if (a?.time == null || b?.time == null) {
+      return 0;
+    }
     DateTime aStartTime = _getStartTime(a.time);
     DateTime bStartTime = _getStartTime(b.time);
 
@@ -226,7 +238,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
       'FR': List<SectionData>(),
       'SA': List<SectionData>(),
       'SU': List<SectionData>(),
-      'OTHER': List<SectionData>(),
+      // 'OTHER': List<SectionData>(),
     };
     _enrolledClasses.forEach((key, value) {
       for (SectionData sectionData in value) {
