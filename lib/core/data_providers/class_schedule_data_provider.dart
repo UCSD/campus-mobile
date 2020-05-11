@@ -227,29 +227,6 @@ class ClassScheduleDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// returns a map of [String, List<SectionData>]
-  /// finals are removed from this map
-  Map<String, List<SectionData>> get classes {
-    Map<String, List<SectionData>> mapToReturn = {
-      'MO': List<SectionData>(),
-      'TU': List<SectionData>(),
-      'WE': List<SectionData>(),
-      'TH': List<SectionData>(),
-      'FR': List<SectionData>(),
-      'SA': List<SectionData>(),
-      'SU': List<SectionData>(),
-      // 'OTHER': List<SectionData>(),
-    };
-    _enrolledClasses.forEach((key, value) {
-      for (SectionData sectionData in value) {
-        if (sectionData.specialMtgCode == "") {
-          mapToReturn[key].add(sectionData);
-        }
-      }
-    });
-    return mapToReturn;
-  }
-
   List<SectionData> get upcomingCourses {
     /// get weekday and return [List<SectionData>] associated with current weekday
     List<SectionData> listToReturn = List<SectionData>();
@@ -262,7 +239,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
 
     /// if no classes are scheduled for today then find the next day with classes
     int daysToAdd = 1;
-    while (classes[today].isEmpty) {
+    while (_enrolledClasses[today].isEmpty) {
       today = DateFormat('EEEE')
           .format(DateTime.now().add(Duration(days: daysToAdd)))
           .toString()
@@ -272,7 +249,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
           .format(DateTime.now().add(Duration(days: daysToAdd)));
       daysToAdd += 1;
     }
-    listToReturn.addAll(classes[today]);
+    listToReturn.addAll(_enrolledClasses[today]);
     return listToReturn;
   }
 
