@@ -117,8 +117,12 @@ class ClassScheduleDataProvider extends ChangeNotifier {
         'SU': List<SectionData>(),
         'OTHER': List<SectionData>(),
       };
+      try {
+        _createMapOfClasses();
+      } catch (e) {
+        _error = e.toString();
+      }
 
-      _createMapOfClasses();
       _lastUpdated = DateTime.now();
     } else {
       ///TODO: determine what error to show to the user
@@ -171,6 +175,9 @@ class ClassScheduleDataProvider extends ChangeNotifier {
 
   /// comparator that sorts according to start time of class
   int _compare(SectionData a, SectionData b) {
+    if (a == null || b == null) {
+      return 0;
+    }
     DateTime aStartTime = _getStartTime(a.time);
     DateTime bStartTime = _getStartTime(b.time);
 
