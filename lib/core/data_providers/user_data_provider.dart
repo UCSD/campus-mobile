@@ -242,7 +242,7 @@ class UserDataProvider extends ChangeNotifier {
     deleteUsernameFromDevice();
     var box = await Hive.openBox<AuthenticationModel>('AuthenticationModel');
     await box.clear();
-    //deactivateStudentCards();
+    deactivateStudentCards();
     print('logged out');
     _isLoading = false;
     notifyListeners();
