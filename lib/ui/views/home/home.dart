@@ -31,8 +31,10 @@ class _HomeState extends State<Home> {
   }
 
   List<Widget> createList(BuildContext context) {
-    List<Widget> orderedCards = getOrderedCardsList(Provider.of<UserDataProvider>(context).cardOrder);
-    List<Widget> noticesCards = getNoticesCardsList(Provider.of<NoticesDataProvider>(context).noticesModel);
+    List<Widget> orderedCards =
+        getOrderedCardsList(Provider.of<UserDataProvider>(context).cardOrder);
+    List<Widget> noticesCards = getNoticesCardsList(
+        Provider.of<NoticesDataProvider>(context).noticesModel);
 
     return noticesCards + orderedCards;
   }
