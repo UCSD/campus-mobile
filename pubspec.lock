@@ -559,9 +559,9 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "fix/ios-crash-on-not-correct-code"
-      resolved-ref: "7e5a098be84b2487febe48f2d858eb4c38056aee"
-      url: "https://github.com/kamilpowalowski/qr_code_scanner.git"
+      ref: master
+      resolved-ref: "9489b0f6afaee34460d67a95ba12d96a550bc230"
+      url: "https://github.com/ucsd/qr_code_scanner.git"
     source: git
     version: "0.0.12"
   quiver:

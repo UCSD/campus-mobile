@@ -128,7 +128,7 @@ List<SingleChildWidget> dependentServices = [
     return classDataProvider;
   }, update: (_, userDataProvider, classScheduleDataProvider) {
     classScheduleDataProvider.userDataProvider = userDataProvider;
-    if (userDataProvider.isLoggedIn) {
+    if (userDataProvider.isLoggedIn && !classScheduleDataProvider.isLoading) {
       classScheduleDataProvider.fetchData();
     }
     return classScheduleDataProvider;
@@ -167,14 +167,6 @@ List<SingleChildWidget> dependentServices = [
     messageDataProvider.userDataProvider = userDataProvider;
     messageDataProvider.fetchMessages();
     return messageDataProvider;
-  }),
-  ChangeNotifierProxyProvider<UserDataProvider, BarcodeDataProvider>(
-      create: (_) {
-    var barcodeDataProvider = BarcodeDataProvider();
-    return barcodeDataProvider;
-  }, update: (_, userDataProvider, barcodeDataProvider) {
-    barcodeDataProvider.userDataProvider = userDataProvider;
-    return barcodeDataProvider;
   }),
 ];
 List<SingleChildWidget> uiConsumableProviders = [];
