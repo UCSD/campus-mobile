@@ -82,7 +82,11 @@ class UserDataProvider extends ChangeNotifier {
   List<String> _notificationsSettings;
 
   activateStudentCards() {
-    _cardOrder.insertAll(0, _studentCards.toList());
+    int index = _cardOrder.indexOf('MyStudentChart');
+    if (index == -1) {
+      index = 0;
+    }
+    _cardOrder.insertAll(index, _studentCards.toList());
   }
 
   deactivateStudentCards() {
