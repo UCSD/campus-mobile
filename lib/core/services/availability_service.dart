@@ -19,7 +19,7 @@ class AvailabilityService {
     "Authorization": "PUBLIC_AUTH_SERVICE_API_KEY_PH",
   };
   final String endpoint =
-      "https://api-qa.ucsd.edu:8243/occuspace/v1.0/busyness";
+      "https://api.ucsd.edu:8243/occuspace/v1.0/busyness";
 
   Future<bool> fetchData() async {
     _error = null;
@@ -50,7 +50,7 @@ class AvailabilityService {
   }
 
   Future<bool> getNewToken() async {
-    final String tokenEndpoint = "https://api-qa.ucsd.edu:8243/token";
+    final String tokenEndpoint = "https://api.ucsd.edu:8243/token";
     final Map<String, String> tokenHeaders = {
       "content-type": 'application/x-www-form-urlencoded',
       "Authorization": "PUBLIC_AUTH_SERVICE_TOKEN_API_KEY_PH"

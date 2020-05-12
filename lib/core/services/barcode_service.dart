@@ -6,8 +6,7 @@ class BarcodeService {
   String _error;
 
   final NetworkHelper _networkHelper = NetworkHelper();
-  final String _endpoint =
-      'https://api-qa.ucsd.edu:8243/qrscanner/1.0.0/barcode';
+  final String _endpoint = 'https://api.ucsd.edu:8243/scandata/1.0.0/scanData';
 
   Future<bool> uploadResults(
       Map<String, String> headers, Map<String, dynamic> body) async {
@@ -23,10 +22,12 @@ class BarcodeService {
         throw (response.toString());
       }
     } catch (e) {
+      /// if the authorized fetch failed we know we have to refresh the
+      /// token for this service
       _error = e.toString();
       _isLoading = false;
+      return false;
     }
-    return false;
   }
 
   String get error => _error;

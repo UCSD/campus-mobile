@@ -18,6 +18,7 @@ import 'package:campus_mobile_experimental/ui/views/map/map.dart' as prefix0;
 import 'package:campus_mobile_experimental/ui/views/news/news_detail_view.dart';
 import 'package:campus_mobile_experimental/ui/views/news/news_list.dart';
 import 'package:campus_mobile_experimental/ui/views/notifications/notifications_list_view.dart';
+import 'package:campus_mobile_experimental/ui/views/notifications/notifications_settings.dart';
 import 'package:campus_mobile_experimental/ui/views/onboarding/onboarding_login.dart';
 import 'package:campus_mobile_experimental/ui/views/onboarding/onboarding_screen.dart';
 import 'package:campus_mobile_experimental/ui/views/profile/cards_view.dart';
@@ -101,6 +102,8 @@ class Router {
         return MaterialPageRoute(builder: (_) => ManageParkingView());
       case RoutePaths.CardsView:
         return MaterialPageRoute(builder: (_) => CardsView());
+      case RoutePaths.NotificationsSettingsView:
+        return MaterialPageRoute(builder: (_) => NotificationsSettingsView());
       case RoutePaths.ScannerView:
         return MaterialPageRoute(builder: (_) => ScannerView());
     }

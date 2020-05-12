@@ -9,6 +9,7 @@ class RoutePaths {
   static const String Notifications = 'notifications';
   static const String Profile = 'profile';
   static const String CardsView = 'profile/cards_view';
+  static const String NotificationsSettingsView = 'notifications/notifications_settings';
 
   static const String NewsViewAll = 'news/newslist';
   static const String BaseLineView = 'baseline/baselineview';
@@ -48,7 +49,7 @@ class Plugins {
 
 class NavigationConstants {
   static const HomeTab = 0;
-  static const MapTab = 1;
-  static const NotificationsTab = 2;
-  static const ProfileTab = 3;
+//  static const MapTab = 1;
+  static const NotificationsTab = 1;
+  static const ProfileTab = 2;
 }

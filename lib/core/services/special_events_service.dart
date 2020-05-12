@@ -13,7 +13,7 @@ class SpecialEventsService {
     "accept": "application/json",
   };
   final String endpoint =
-      "https://ucsd-mobile-dev.s3-us-west-1.amazonaws.com/mock-apis/special-events/welcome-week-always-on.json";
+      "https://2jjml3hf27.execute-api.us-west-2.amazonaws.com/prod/events/v1.1/special";
 
   Future<bool> fetchData() async {
     _error = null;

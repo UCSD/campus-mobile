@@ -1,4 +1,5 @@
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
+import 'package:campus_mobile_experimental/core/constants/scanner_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/services/bottom_navigation_bar_service.dart';
 import 'package:flutter/material.dart';
@@ -13,27 +14,45 @@ class ScannerCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
-      active: Provider.of<UserDataProvider>(context).cardStates['scanner'],
-      hide: () => Provider.of<UserDataProvider>(context, listen: false)
-          .toggleCard('scanner'),
+      active: true,
+      hide: () => null,
       reload: () => null,
       isLoading: false,
       title: buildTitle(),
-      errorText: '',
+      errorText: null,
       child: () => buildCardContent(context),
       actionButtons: [buildActionButton(context)],
+      hideMenu: true,
     );
   }
 
   Widget buildTitle() {
     return Text(
-      "Scanner",
+      "QR Scanner",
       textAlign: TextAlign.left,
     );
   }
 
   Widget buildCardContent(BuildContext context) {
-    return Column();
+    return Row(
+      children: <Widget>[
+        Container(
+          child: Image.asset(
+            'assets/images/QRScanIcon.png',
+            fit: BoxFit.contain,
+            height: 56,
+          ),
+          padding: EdgeInsets.only(
+            left: 10,
+            right: 10,
+          ),
+        ),
+        Text(
+          ScannerConstants.scannerCardPrompt,
+          textAlign: TextAlign.left,
+        )
+      ],
+    );
   }
 
   Widget buildActionButton(BuildContext context) {

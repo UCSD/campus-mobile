@@ -14,9 +14,9 @@ class MyChartCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
-      active: Provider.of<UserDataProvider>(context).cardStates['my_chart'],
+      active: Provider.of<UserDataProvider>(context).cardStates['MyStudentChart'],
       hide: () => Provider.of<UserDataProvider>(context, listen: false)
-          .toggleCard('my_chart'),
+          .toggleCard('MyStudentChart'),
       reload: () => null,
       isLoading: false,
       title: buildTitle(),
@@ -28,7 +28,7 @@ class MyChartCard extends StatelessWidget {
 
   Widget buildTitle() {
     return Text(
-      "MyUCSDChart",
+      "MyStudentChart",
       textAlign: TextAlign.left,
     );
   }

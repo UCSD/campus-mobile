@@ -8,8 +8,8 @@ class NetworkHelper {
 
   Future<dynamic> fetchData(String url) async {
     Dio dio = new Dio();
-    dio.options.connectTimeout = 10000;
-    dio.options.receiveTimeout = 10000;
+    dio.options.connectTimeout = 20000;
+    dio.options.receiveTimeout = 20000;
     dio.options.responseType = ResponseType.plain;
     final _response = await dio.get(url);
 
@@ -26,8 +26,8 @@ class NetworkHelper {
   Future<dynamic> authorizedFetch(
       String url, Map<String, String> headers) async {
     Dio dio = new Dio();
-    dio.options.connectTimeout = 10000;
-    dio.options.receiveTimeout = 10000;
+    dio.options.connectTimeout = 20000;
+    dio.options.receiveTimeout = 20000;
     dio.options.responseType = ResponseType.plain;
     dio.options.headers = headers;
     final _response = await dio.get(
@@ -46,12 +46,12 @@ class NetworkHelper {
   Future<dynamic> authorizedPost(
       String url, Map<String, String> headers, dynamic body) async {
     Dio dio = new Dio();
-    dio.options.connectTimeout = 10000;
-    dio.options.receiveTimeout = 10000;
+    dio.options.connectTimeout = 20000;
+    dio.options.receiveTimeout = 20000;
     dio.options.headers = headers;
     try {
       final _response = await dio.post(url, data: body);
-      if (_response.statusCode == 200) {
+      if (_response.statusCode == 200 || _response.statusCode == 201) {
         // If server returns an OK response, return the body
         return _response.data;
       } else {
@@ -72,8 +72,8 @@ class NetworkHelper {
   Future<dynamic> authorizedDelete(
       String url, Map<String, String> headers) async {
     Dio dio = new Dio();
-    dio.options.connectTimeout = 10000;
-    dio.options.receiveTimeout = 10000;
+    dio.options.connectTimeout = 20000;
+    dio.options.receiveTimeout = 20000;
     dio.options.headers = headers;
     try {
       final _response = await dio.delete(url);

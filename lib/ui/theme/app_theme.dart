@@ -78,7 +78,7 @@ const Color darkButtonColor = Color(0xFFFFFFFF);
 const Color lightTextFieldBorderColor = Color(0xFFFFFFFF);
 
 //Accent colors for themes
-const Color lightAccentColor = Color(0xFFAFA9A0);
+const Color lightAccentColor = Color(0xFFFFFFFF);
 const Color darkAccentColor = Color(0xFFAFA9A0);
 
 // Testing
