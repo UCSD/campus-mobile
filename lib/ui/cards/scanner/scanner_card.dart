@@ -74,8 +74,8 @@ class ScannerCard extends StatelessWidget {
 
   String getCardContentText(BuildContext context) {
     return Provider.of<UserDataProvider>(context, listen: false).isLoggedIn
-        ? 'Scan Your COVID-19 Test Kit.'
-        : ButtonText.SignIn + ' Scan Your COVID-19 Test Kit.';
+        ? ButtonText.ScanNowFull
+        : ButtonText.SignInFull;
   }
 
   String getActionButtonText(BuildContext context) {

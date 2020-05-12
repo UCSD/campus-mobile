@@ -34,8 +34,8 @@ class UserDataProvider extends ChangeNotifier {
       'special_events': true,
       'weather': true,
       'dining': true,
-      'finals': false,
-      'schedule': false,
+      'Finals': false,
+      'Classes': false,
       'MyStudentChart': true
     };
     _cardOrder = [
@@ -50,7 +50,7 @@ class UserDataProvider extends ChangeNotifier {
       'MyStudentChart',
     ];
 
-    _studentCards = ['finals', 'schedule'];
+    _studentCards = ['Finals', 'Classes'];
     _notificationsSettingsStates = {
       'campusAnnouncements': true,
       'freeFood': true,
@@ -82,15 +82,16 @@ class UserDataProvider extends ChangeNotifier {
   List<String> _notificationsSettings;
 
   activateStudentCards() {
-    int index = _cardOrder.indexOf('MyStudentChart');
-    if (index == -1) {
-      index = 0;
+    int index = _cardOrder.indexOf('MyStudentChart') + 1;
+    for (String card in _studentCards) {
+      _cardStates[card] = true;
     }
     _cardOrder.insertAll(index, _studentCards.toList());
   }
 
   deactivateStudentCards() {
     for (String card in _studentCards) {
+      _cardStates[card] = false;
       _cardOrder.remove(card);
     }
   }

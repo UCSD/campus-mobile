@@ -81,10 +81,10 @@ class _HomeState extends State<Home> {
         case 'MyStudentChart':
           orderedCards.add(MyChartCard());
           break;
-        case 'finals':
+        case 'Finals':
           orderedCards.add(FinalsCard());
           break;
-        case 'schedule':
+        case 'Classes':
           orderedCards.add(ClassScheduleCard());
           break;
       }

@@ -12,10 +12,10 @@ class FinalsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
-      active: Provider.of<UserDataProvider>(context).cardStates['finals'] &&
+      active: Provider.of<UserDataProvider>(context).cardStates['Finals'] &&
           Provider.of<UserDataProvider>(context).isLoggedIn,
       hide: () => Provider.of<UserDataProvider>(context, listen: false)
-          .toggleCard('finals'),
+          .toggleCard('Finals'),
       reload: () {
         Provider.of<ClassScheduleDataProvider>(context, listen: false)
             .fetchData();
