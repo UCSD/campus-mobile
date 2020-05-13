@@ -235,7 +235,7 @@ SPEC CHECKSUMS:
   location: 3a2eed4dd2fab25e7b7baf2a9efefe82b512d740
   MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb
   nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
-  path_provider: fb74bd0465e96b594bb3b5088ee4a4e7bb1f2a9d
+  path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
   path_provider_macos: f760a3c5b04357c380e2fddb6f9db6f3015897e0
   PromisesObjC: c119f3cd559f50b7ae681fa59dc1acd19173b7e6
   Protobuf: 176220c526ad8bd09ab1fb40a978eac3fef665f7
