@@ -15,24 +15,23 @@ import 'package:provider/provider.dart';
 class ClassScheduleCard extends StatelessWidget {
   List<Widget> buildActionButtons(BuildContext context) {
     List<Widget> actionButtons = List<Widget>();
-//    TODO: Fixme - reported broken in testing
-//    actionButtons.add(FlatButton(
-//      child: Text(
-//        'View All',
-//      ),
-//      onPressed: () {
-//        Navigator.pushNamed(context, RoutePaths.ClassScheduleViewAll);
-//      },
-//    ));
+    actionButtons.add(FlatButton(
+      child: Text(
+        'View All',
+      ),
+      onPressed: () {
+        Navigator.pushNamed(context, RoutePaths.ClassScheduleViewAll);
+      },
+    ));
     return actionButtons;
   }
 
   @override
   Widget build(BuildContext context) {
     return CardContainer(
-      active: Provider.of<UserDataProvider>(context).cardStates['schedule'] &&
+      active: Provider.of<UserDataProvider>(context).cardStates['Classes'] &&
           Provider.of<UserDataProvider>(context).isLoggedIn,
-      hide: () => Provider.of<UserDataProvider>(context).toggleCard('schedule'),
+      hide: () => Provider.of<UserDataProvider>(context, listen: false).toggleCard('Classes'),
       reload: () =>
           Provider.of<ClassScheduleDataProvider>(context, listen: false)
               .fetchData(),
