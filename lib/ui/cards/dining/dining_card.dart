@@ -1,5 +1,5 @@
+import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/dining_data_proivder.dart';
-import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/dining_model.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
 import 'package:flutter/material.dart';
@@ -11,8 +11,9 @@ class DiningCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
-      active: Provider.of<UserDataProvider>(context).cardStates['dining'],
-      hide: () => Provider.of<UserDataProvider>(context).toggleCard('dining'),
+      active: Provider.of<CardsDataProvider>(context).cardStates['dining'],
+      hide: () => Provider.of<CardsDataProvider>(context, listen: false)
+          .toggleCard('dining'),
       reload: () => Provider.of<DiningDataProvider>(context, listen: false)
           .fetchDiningLocations(),
       isLoading: Provider.of<DiningDataProvider>(context).isLoading,
