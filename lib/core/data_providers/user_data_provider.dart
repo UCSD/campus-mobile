@@ -53,6 +53,21 @@ class UserDataProvider extends ChangeNotifier {
 
   List<String> _notificationsSettings;
 
+  activateStudentCards() {
+    int index = _cardOrder.indexOf('MyStudentChart') + 1;
+    for (String card in _studentCards) {
+      _cardStates[card] = true;
+    }
+    _cardOrder.insertAll(index, _studentCards.toList());
+  }
+
+  deactivateStudentCards() {
+    for (String card in _studentCards) {
+      _cardStates[card] = false;
+      _cardOrder.remove(card);
+    }
+  }
+
   ///Update the authentication model saved in state and save the model in persistent storage
   Future updateAuthenticationModel(AuthenticationModel model) async {
     _authenticationModel = model;
@@ -136,6 +151,7 @@ class UserDataProvider extends ChangeNotifier {
           base64.encode(utf8.encode(username + ':' + encryptedPassword));
       if (await _authenticationService
           .login(base64EncodedWithEncryptedPassword)) {
+
         updateAuthenticationModel(_authenticationService.data);
         _pushNotificationDataProvider
             .registerDevice(_authenticationService.data.accessToken);
@@ -161,6 +177,9 @@ class UserDataProvider extends ChangeNotifier {
       notifyListeners();
       if (await silentLogin()) {
         await getUserProfile();
+        if (_userProfileModel.classifications.student) {
+          activateStudentCards();
+        }
         returnVal = true;
       }
       _isLoading = false;
@@ -190,6 +209,7 @@ class UserDataProvider extends ChangeNotifier {
     deleteUsernameFromDevice();
     var box = await Hive.openBox<AuthenticationModel>('AuthenticationModel');
     await box.clear();
+    deactivateStudentCards();
     print('logged out');
     _isLoading = false;
     notifyListeners();

@@ -39,7 +39,9 @@ class ButtonText {
   static const SubmitButtonInactive = 'Sending';
   static const SubmitButtonTryAgain = 'Try again';
   static const SubmitButtonReceived = 'Received';
+  static const ScanNowFull = 'Scan Your COVID-19 Test Kit.';
   static const ScanNow = 'Scan Now';
+  static const SignInFull = 'Sign In to Scan Your COVID-19 Test Kit.';
   static const SignIn = 'Sign In';
 }
 
