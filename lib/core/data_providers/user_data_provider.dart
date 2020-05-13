@@ -25,32 +25,7 @@ class UserDataProvider extends ChangeNotifier {
     ///default authentication model and profile is needed in this class
     _authenticationModel = AuthenticationModel.fromJson({});
     _userProfileModel = UserProfileModel.fromJson({});
-    _cardStates = {
-      'availability': true,
-      'events': true,
-      'links': true,
-      'news': true,
-      'parking': true,
-      'special_events': true,
-      'weather': true,
-      'dining': true,
-      'Finals': false,
-      'Classes': false,
-      'MyStudentChart': true
-    };
-    _cardOrder = [
-//      'availability',
-//      'dining',
-//      'events',
-//      'links',
-//      'news',
-//      'parking',
-//      'weather',
-//      'special_events',
-      'MyStudentChart',
-    ];
 
-    _studentCards = ['Finals', 'Classes'];
     _notificationsSettingsStates = {
       'campusAnnouncements': true,
       'freeFood': true,
@@ -74,27 +49,9 @@ class UserDataProvider extends ChangeNotifier {
   UserProfileService _userProfileService;
   PushNotificationDataProvider _pushNotificationDataProvider;
 
-  Map<String, bool> _cardStates;
   Map<String, bool> _notificationsSettingsStates;
 
-  List<String> _cardOrder;
-  List<String> _studentCards;
   List<String> _notificationsSettings;
-
-  activateStudentCards() {
-    int index = _cardOrder.indexOf('MyStudentChart') + 1;
-    for (String card in _studentCards) {
-      _cardStates[card] = true;
-    }
-    _cardOrder.insertAll(index, _studentCards.toList());
-  }
-
-  deactivateStudentCards() {
-    for (String card in _studentCards) {
-      _cardStates[card] = false;
-      _cardOrder.remove(card);
-    }
-  }
 
   ///Update the authentication model saved in state and save the model in persistent storage
   Future updateAuthenticationModel(AuthenticationModel model) async {
@@ -179,7 +136,6 @@ class UserDataProvider extends ChangeNotifier {
           base64.encode(utf8.encode(username + ':' + encryptedPassword));
       if (await _authenticationService
           .login(base64EncodedWithEncryptedPassword)) {
-
         updateAuthenticationModel(_authenticationService.data);
         _pushNotificationDataProvider
             .registerDevice(_authenticationService.data.accessToken);
@@ -205,9 +161,6 @@ class UserDataProvider extends ChangeNotifier {
       notifyListeners();
       if (await silentLogin()) {
         await getUserProfile();
-        if (_userProfileModel.classifications.student) {
-          activateStudentCards();
-        }
         returnVal = true;
       }
       _isLoading = false;
@@ -217,19 +170,9 @@ class UserDataProvider extends ChangeNotifier {
     return returnVal;
   }
 
-  void toggleCard(String card) {
-    _cardStates[card] = !_cardStates[card];
-    notifyListeners();
-  }
-
   void toggleNotifications(String topic) {
     _notificationsSettingsStates[topic] = !_notificationsSettingsStates[topic];
     //todo: hookup topic subscription
-    notifyListeners();
-  }
-
-  void reorderCards(List<String> order) {
-    _cardOrder = order;
     notifyListeners();
   }
 
@@ -247,7 +190,6 @@ class UserDataProvider extends ChangeNotifier {
     deleteUsernameFromDevice();
     var box = await Hive.openBox<AuthenticationModel>('AuthenticationModel');
     await box.clear();
-    deactivateStudentCards();
     print('logged out');
     _isLoading = false;
     notifyListeners();
@@ -371,8 +313,6 @@ class UserDataProvider extends ChangeNotifier {
   bool get isLoggedIn => _authenticationModel.isLoggedIn(_lastUpdated);
   bool get isLoading => _isLoading;
   DateTime get lastUpdated => _lastUpdated;
-  Map<String, bool> get cardStates => _cardStates;
-  List<String> get cardOrder => _cardOrder;
   Map<String, bool> get notificationsSettingsStates =>
       _notificationsSettingsStates;
   List<String> get notificationsSettings => _notificationsSettings;

@@ -28,7 +28,7 @@ dependencies:
   flutter_linkify: 3.1.0
   shared_preferences: 0.5.6+3
   firebase_messaging: 6.0.13
-  device_info: 0.4.2+1
+  device_info: 0.4.2+2
   qr_code_scanner:
     git:
       url: https://github.com/ucsd/qr_code_scanner.git

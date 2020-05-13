@@ -1,6 +1,4 @@
-import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
-import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
-import 'package:campus_mobile_experimental/core/services/bottom_navigation_bar_service.dart';
+import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
@@ -14,8 +12,9 @@ class MyChartCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
-      active: Provider.of<UserDataProvider>(context).cardStates['MyStudentChart'],
-      hide: () => Provider.of<UserDataProvider>(context, listen: false)
+      active:
+          Provider.of<CardsDataProvider>(context).cardStates['MyStudentChart'],
+      hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard('MyStudentChart'),
       reload: () => null,
       isLoading: false,
@@ -82,8 +81,7 @@ class MyChartCard extends StatelessWidget {
   openLink(String url) async {
     if (await canLaunch(url)) {
       launch(url);
-    }
-    else {
+    } else {
       // can't launch url, there is some error
     }
   }

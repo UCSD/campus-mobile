@@ -4,13 +4,24 @@ import 'package:campus_mobile_experimental/core/services/bottom_navigation_bar_s
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class PushNotificationWrapper extends StatelessWidget {
+class PushNotificationWrapper extends StatefulWidget {
   PushNotificationWrapper({Widget this.child});
   final Widget child;
+
   @override
-  Widget build(BuildContext context) {
+  _PushNotificationWrapperState createState() =>
+      _PushNotificationWrapperState();
+}
+
+class _PushNotificationWrapperState extends State<PushNotificationWrapper> {
+  @override
+  void didChangeDependencies() {
     Provider.of<PushNotificationDataProvider>(context)
         .initPlatformState(context);
-    return child;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return widget.child;
   }
 }
