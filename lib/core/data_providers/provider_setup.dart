@@ -1,5 +1,6 @@
 import 'package:campus_mobile_experimental/core/data_providers/availability_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/barcode_data_provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/class_schedule_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/dining_data_proivder.dart';
 import 'package:campus_mobile_experimental/core/data_providers/events_data_provider.dart';
@@ -121,6 +122,16 @@ List<SingleChildWidget> dependentServices = [
     _userDataProvider.pushNotificationDataProvider =
         pushNotificationDataProvider;
     return _userDataProvider;
+  }),
+  ChangeNotifierProxyProvider<UserDataProvider, CardsDataProvider>(create: (_) {
+    var cardsDataProvider = CardsDataProvider();
+    return cardsDataProvider;
+  }, update: (_, userDataProvider, cardsDataProvider) {
+    if (userDataProvider.isLoggedIn &&
+        userDataProvider.userProfileModel.classifications.student) {
+      cardsDataProvider.activateStudentCards();
+    }
+    return cardsDataProvider;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, ClassScheduleDataProvider>(
       create: (_) {
