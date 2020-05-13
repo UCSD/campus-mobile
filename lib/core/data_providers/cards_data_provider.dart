@@ -55,6 +55,7 @@ class CardsDataProvider extends ChangeNotifier {
   deactivateStudentCards() {
     for (String card in _studentCards) {
       _cardOrder.remove(card);
+      _cardStates[card] = false;
     }
     notifyListeners();
   }

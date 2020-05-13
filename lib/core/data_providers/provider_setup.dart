@@ -128,8 +128,10 @@ List<SingleChildWidget> dependentServices = [
     return cardsDataProvider;
   }, update: (_, userDataProvider, cardsDataProvider) {
     if (userDataProvider.isLoggedIn &&
-        userDataProvider.userProfileModel.classifications.student) {
+        (userDataProvider.userProfileModel.classifications?.student ?? false)) {
       cardsDataProvider.activateStudentCards();
+    } else {
+      cardsDataProvider.deactivateStudentCards();
     }
     return cardsDataProvider;
   }),
