@@ -43,6 +43,7 @@ class DiningDetailView extends StatelessWidget {
       buildHours(context, model),
       buildPaymentOptions(context, model),
       buildPictures(model),
+      Divider(),
       buildDirectionsButton(context, model),
       Divider(),
       buildWebsiteButton(context, model),
@@ -52,36 +53,37 @@ class DiningDetailView extends StatelessWidget {
 
   Widget buildDirectionsButton(
       BuildContext context, prefix0.DiningModel model) {
-    return FlatButton(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Text(
-            'Directions',
-            style: TextStyle(
-              fontSize: 25,
-              color: Theme.of(context).primaryColor,
-            ),
-          ),
-          Column(
-            children: <Widget>[
-              Icon(
-                Icons.directions_walk,
-                size: 30,
+    if (model.distance != null)
+      return FlatButton(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text(
+              'Directions',
+              style: TextStyle(
+                fontSize: 25,
                 color: Theme.of(context).primaryColor,
               ),
-              model.distance != null
-                  ? Text(model.distance.toStringAsPrecision(3))
-                  : Text('--'),
-            ],
-          ),
-        ],
-      ),
-      onPressed: () {
-        launch(
-            'https://www.google.com/maps/dir/?api=1&destination=${model.coordinates.lat},${model.coordinates.lon}&travelmode=walking');
-      },
-    );
+            ),
+            Column(
+              children: <Widget>[
+                Icon(
+                  Icons.directions_walk,
+                  size: 30,
+                  color: Theme.of(context).primaryColor,
+                ),
+                Text(model.distance.toStringAsPrecision(3)),
+              ],
+            ),
+          ],
+        ),
+        onPressed: () {
+          launch(
+              'https://www.google.com/maps/dir/?api=1&destination=${model.coordinates.lat},${model.coordinates.lon}&travelmode=walking');
+        },
+      );
+    else
+      return Center(child: Text('Directions not available.'));
   }
 
   Widget buildWebsiteButton(BuildContext context, prefix0.DiningModel model) {
@@ -98,7 +100,7 @@ class DiningDetailView extends StatelessWidget {
   }
 
   Widget buildMenu(BuildContext context, prefix0.DiningModel model) {
-    if (model.menuWebsite != null && model.menuWebsite != '') {
+    if (model.menuWebsite != null && model.menuWebsite.isNotEmpty) {
       return RaisedButton(
         child: Text('View Menu'),
         textColor: Theme.of(context).textTheme.button.color,
@@ -107,7 +109,9 @@ class DiningDetailView extends StatelessWidget {
         },
       );
     } else
-      return DiningMenuList(id: model.id);
+      return DiningMenuList(
+        model: model,
+      );
   }
 
   Widget buildHours(BuildContext context, prefix0.DiningModel model) {

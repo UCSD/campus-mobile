@@ -15,7 +15,6 @@ class NutritionFactsView extends StatelessWidget {
   }
 
   Widget nutrientWidget(BuildContext context) {
-    print(data.tags);
     return Container(
       padding: EdgeInsets.all(1.0),
       decoration: BoxDecoration(

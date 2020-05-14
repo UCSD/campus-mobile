@@ -1,12 +1,13 @@
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/dining_data_proivder.dart';
 import 'package:campus_mobile_experimental/core/models/dining_menu_items_model.dart';
+import 'package:campus_mobile_experimental/core/models/dining_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class DiningMenuList extends StatefulWidget {
-  DiningMenuList({Key key, @required this.id}) : super(key: key);
-  final String id;
+  DiningMenuList({Key key, @required this.model}) : super(key: key);
+  final DiningModel model;
 
   @override
   _DiningMenuListState createState() => _DiningMenuListState();
@@ -25,7 +26,7 @@ class _DiningMenuListState extends State<DiningMenuList> {
   Widget buildDiningMenuList(BuildContext context) {
     DiningMenuItemsModel menu =
         Provider.of<DiningDataProvider>(context, listen: false)
-            .getMenuData(widget.id);
+            .getMenuData(widget.model.id);
     List<String> filters = List<String>();
     if (Provider.of<DiningDataProvider>(context, listen: false)
         .filtersSelected[0]) {
@@ -52,7 +53,7 @@ class _DiningMenuListState extends State<DiningMenuList> {
     if (menu.menuItems != null) {
       List<MenuItem> menuList =
           Provider.of<DiningDataProvider>(context, listen: false)
-              .getMenuItems(widget.id, filters);
+              .getMenuItems(widget.model.id, filters);
       List<Widget> list = List<Widget>();
       if (menuList.length > 0) {
         for (MenuItem item in menuList) {
@@ -114,11 +115,14 @@ class _DiningMenuListState extends State<DiningMenuList> {
           ),
         ],
       );
-    } else {
+    } else if (widget.model.url != null && widget.model.url.isNotEmpty) {
+      return Center(
+        child: Text('Menu not directly available. Try checking their website.'),
+      );
+    } else
       return Center(
         child: Text('Menu not available.'),
       );
-    }
   }
 
   Widget buildFilterButtons(BuildContext context) {
