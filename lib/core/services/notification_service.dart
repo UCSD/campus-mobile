@@ -9,12 +9,17 @@ class NotificationService {
   String _error;
 
   Future<bool> postPushToken(Map<String, String> headers, body) async {
-    String response = await _networkHelper.authorizedPost(
-        _endpoint + '/register', headers, body);
-    if (response == 'Success') {
-      return true;
-    } else {
-      _error = response;
+    try {
+      String response = await _networkHelper.authorizedPost(
+          _endpoint + '/register', headers, body);
+      if (response == 'Success') {
+        return true;
+      } else {
+        _error = response;
+        return false;
+      }
+    } catch (e) {
+      _error = e.toString();
       return false;
     }
   }
@@ -22,12 +27,17 @@ class NotificationService {
   Future<bool> deletePushToken(
       Map<String, String> headers, String token) async {
     token = Uri.encodeComponent(token);
-    String response = await _networkHelper.authorizedDelete(
-        _endpoint + '/token/' + token, headers);
-    if (response == 'Success') {
-      return true;
-    } else {
-      _error = response;
+    try {
+      String response = await _networkHelper.authorizedDelete(
+          _endpoint + '/token/' + token, headers);
+      if (response == 'Success') {
+        return true;
+      } else {
+        _error = response;
+        return false;
+      }
+    } catch (e) {
+      _error = e.toString();
       return false;
     }
   }
