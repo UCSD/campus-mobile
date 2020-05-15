@@ -11,9 +11,7 @@ class BarcodeDataProvider extends ChangeNotifier {
 
     ///INITIALIZE SERVICES
     _barcodeService = BarcodeService();
-    _cameraState = Plugins.FrontCamera;
-    _submitState = ButtonText.SubmitButtonActive;
-    _qrText = "";
+    initState();
   }
 
   ///STATES
@@ -33,7 +31,14 @@ class BarcodeDataProvider extends ChangeNotifier {
   ///SERVICES
   BarcodeService _barcodeService;
 
+  void initState() {
+    _cameraState = Plugins.FrontCamera;
+    _submitState = ButtonText.SubmitButtonActive;
+    _qrText = "";
+  }
+
   void onQRViewCreated(QRViewController controller) {
+    initState();
     this._controller = controller;
     controller.scannedDataStream.listen((scanData) {
       if (_qrText != scanData) {
@@ -43,6 +48,7 @@ class BarcodeDataProvider extends ChangeNotifier {
         notifyListeners();
       }
     });
+    notifyListeners();
   }
 
   Future<Map<String, dynamic>> createUserData() async {
