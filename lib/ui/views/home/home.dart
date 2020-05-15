@@ -31,8 +31,10 @@ class _HomeState extends State<Home> {
   }
 
   List<Widget> createList(BuildContext context) {
-    List<Widget> orderedCards = getOrderedCardsList(Provider.of<UserDataProvider>(context).cardOrder);
-    List<Widget> noticesCards = getNoticesCardsList(Provider.of<NoticesDataProvider>(context).noticesModel);
+    List<Widget> orderedCards =
+        getOrderedCardsList(Provider.of<UserDataProvider>(context).cardOrder);
+    List<Widget> noticesCards = getNoticesCardsList(
+        Provider.of<NoticesDataProvider>(context).noticesModel);
 
     return noticesCards + orderedCards;
   }
@@ -48,7 +50,7 @@ class _HomeState extends State<Home> {
   List<Widget> getOrderedCardsList(List<String> order) {
     List<Widget> orderedCards = List<Widget>();
 
-    orderedCards.add(ScannerCard()); // not hideable and not reorderable
+    orderedCards.insert(0, ScannerCard());
 
     for (String card in order) {
       switch (card) {
@@ -79,12 +81,12 @@ class _HomeState extends State<Home> {
         case 'MyStudentChart':
           orderedCards.add(MyChartCard());
           break;
-//        case 'finals':
-//          orderedCards.add(FinalsCard());
-//          break;
-//        case 'schedule':
-//          orderedCards.add(ClassScheduleCard());
-//          break;
+        case 'finals':
+          orderedCards.add(FinalsCard());
+          break;
+        case 'schedule':
+          orderedCards.add(ClassScheduleCard());
+          break;
       }
     }
     return orderedCards;

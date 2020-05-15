@@ -34,9 +34,8 @@ class UserDataProvider extends ChangeNotifier {
       'special_events': true,
       'weather': true,
       'dining': true,
-      'schedule': true,
-      'finals': true,
-      'schedule': true,
+      'finals': false,
+      'schedule': false,
       'MyStudentChart': true
     };
     _cardOrder = [
@@ -49,19 +48,15 @@ class UserDataProvider extends ChangeNotifier {
 //      'weather',
 //      'special_events',
       'MyStudentChart',
-//      'finals',
-//      'schedule',
     ];
+
+    _studentCards = ['finals', 'schedule'];
     _notificationsSettingsStates = {
       'campusAnnouncements': true,
       'freeFood': true,
       'shuttle': true
     };
-    _notificationsSettings = [
-      'campusAnnouncements',
-      'freeFood',
-      'shuttle'
-    ];
+    _notificationsSettings = ['campusAnnouncements', 'freeFood', 'shuttle'];
   }
 
   ///STATES
@@ -83,7 +78,22 @@ class UserDataProvider extends ChangeNotifier {
   Map<String, bool> _notificationsSettingsStates;
 
   List<String> _cardOrder;
+  List<String> _studentCards;
   List<String> _notificationsSettings;
+
+  activateStudentCards() {
+    int index = _cardOrder.indexOf('MyStudentChart');
+    if (index == -1) {
+      index = 0;
+    }
+    _cardOrder.insertAll(index, _studentCards.toList());
+  }
+
+  deactivateStudentCards() {
+    for (String card in _studentCards) {
+      _cardOrder.remove(card);
+    }
+  }
 
   ///Update the authentication model saved in state and save the model in persistent storage
   Future updateAuthenticationModel(AuthenticationModel model) async {
@@ -193,6 +203,9 @@ class UserDataProvider extends ChangeNotifier {
       notifyListeners();
       if (await silentLogin()) {
         await getUserProfile();
+        if (_userProfileModel.classifications.student) {
+          activateStudentCards();
+        }
         returnVal = true;
       }
       _isLoading = false;
@@ -232,6 +245,7 @@ class UserDataProvider extends ChangeNotifier {
     deleteUsernameFromDevice();
     var box = await Hive.openBox<AuthenticationModel>('AuthenticationModel');
     await box.clear();
+    deactivateStudentCards();
     print('logged out');
     _isLoading = false;
     notifyListeners();
@@ -357,6 +371,7 @@ class UserDataProvider extends ChangeNotifier {
   DateTime get lastUpdated => _lastUpdated;
   Map<String, bool> get cardStates => _cardStates;
   List<String> get cardOrder => _cardOrder;
-  Map<String, bool> get notificationsSettingsStates => _notificationsSettingsStates;
+  Map<String, bool> get notificationsSettingsStates =>
+      _notificationsSettingsStates;
   List<String> get notificationsSettings => _notificationsSettings;
 }
