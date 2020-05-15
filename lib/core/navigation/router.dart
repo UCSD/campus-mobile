@@ -8,6 +8,7 @@ import 'package:campus_mobile_experimental/core/models/news_model.dart';
 import 'package:campus_mobile_experimental/core/navigation/bottom_tab_bar/bottom_navigation_bar_model.dart';
 import 'package:campus_mobile_experimental/ui/views/availability/manage_availability_view.dart';
 import 'package:campus_mobile_experimental/ui/views/baseline/baseline_view.dart';
+import 'package:campus_mobile_experimental/ui/views/class_schedule/class_list.dart';
 import 'package:campus_mobile_experimental/ui/views/dining/dining_detail_view.dart';
 import 'package:campus_mobile_experimental/ui/cards/dining/dining_list.dart';
 import 'package:campus_mobile_experimental/ui/views/events/event_detail_view.dart';
@@ -18,6 +19,7 @@ import 'package:campus_mobile_experimental/ui/views/map/map.dart' as prefix0;
 import 'package:campus_mobile_experimental/ui/views/news/news_detail_view.dart';
 import 'package:campus_mobile_experimental/ui/views/news/news_list.dart';
 import 'package:campus_mobile_experimental/ui/views/notifications/notifications_list_view.dart';
+import 'package:campus_mobile_experimental/ui/views/notifications/notifications_settings.dart';
 import 'package:campus_mobile_experimental/ui/views/onboarding/onboarding_login.dart';
 import 'package:campus_mobile_experimental/ui/views/onboarding/onboarding_screen.dart';
 import 'package:campus_mobile_experimental/ui/views/profile/cards_view.dart';
@@ -101,8 +103,12 @@ class Router {
         return MaterialPageRoute(builder: (_) => ManageParkingView());
       case RoutePaths.CardsView:
         return MaterialPageRoute(builder: (_) => CardsView());
+      case RoutePaths.NotificationsSettingsView:
+        return MaterialPageRoute(builder: (_) => NotificationsSettingsView());
       case RoutePaths.ScannerView:
         return MaterialPageRoute(builder: (_) => ScannerView());
+      case RoutePaths.ClassScheduleViewAll:
+        return MaterialPageRoute(builder: (_) => ClassList());
     }
   }
 }

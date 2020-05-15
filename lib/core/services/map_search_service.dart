@@ -10,7 +10,7 @@ class MapSearchService {
   List<MapSearchModel> _results = List<MapSearchModel>();
   final NetworkHelper _networkHelper = NetworkHelper();
   final String baseEndpoint =
-      "https://003qx07f60.execute-api.us-west-1.amazonaws.com/dev/msm-searchservice/v1/mapsearch";
+      "https://xgu9qa7gx4.execute-api.us-west-2.amazonaws.com/prod/v2/map/search";
 
   Future<bool> fetchLocations(String location) async {
     _error = null;

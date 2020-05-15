@@ -25,35 +25,13 @@ class UserDataProvider extends ChangeNotifier {
     ///default authentication model and profile is needed in this class
     _authenticationModel = AuthenticationModel.fromJson({});
     _userProfileModel = UserProfileModel.fromJson({});
-    _cardStates = {
-      'availability': true,
-      'events': true,
-      'links': true,
-      'news': true,
-      'parking': true,
-      'special_events': true,
-      'weather': true,
-      'dining': true,
-      'schedule': true,
-      'finals': true,
-      'scanner': true,
-      'schedule': true,
-      'my_chart': true
+
+    _notificationsSettingsStates = {
+      'campusAnnouncements': true,
+      'freeFood': true,
+      'shuttle': true
     };
-    _cardOrder = [
-//      'availability',
-//      'dining',
-//      'events',
-//      'links',
-//      'news',
-//      'parking',
-//      'weather',
-//      'special_events',
-      'finals',
-      'schedule',
-      'scanner',
-      'my_chart'
-    ];
+    _notificationsSettings = ['campusAnnouncements', 'freeFood', 'shuttle'];
   }
 
   ///STATES
@@ -71,9 +49,9 @@ class UserDataProvider extends ChangeNotifier {
   UserProfileService _userProfileService;
   PushNotificationDataProvider _pushNotificationDataProvider;
 
-  Map<String, bool> _cardStates;
+  Map<String, bool> _notificationsSettingsStates;
 
-  List<String> _cardOrder;
+  List<String> _notificationsSettings;
 
   ///Update the authentication model saved in state and save the model in persistent storage
   Future updateAuthenticationModel(AuthenticationModel model) async {
@@ -192,13 +170,9 @@ class UserDataProvider extends ChangeNotifier {
     return returnVal;
   }
 
-  void toggleCard(String card) {
-    _cardStates[card] = !_cardStates[card];
-    notifyListeners();
-  }
-
-  void reorderCards(List<String> order) {
-    _cardOrder = order;
+  void toggleNotifications(String topic) {
+    _notificationsSettingsStates[topic] = !_notificationsSettingsStates[topic];
+    //todo: hookup topic subscription
     notifyListeners();
   }
 
@@ -339,6 +313,7 @@ class UserDataProvider extends ChangeNotifier {
   bool get isLoggedIn => _authenticationModel.isLoggedIn(_lastUpdated);
   bool get isLoading => _isLoading;
   DateTime get lastUpdated => _lastUpdated;
-  Map<String, bool> get cardStates => _cardStates;
-  List<String> get cardOrder => _cardOrder;
+  Map<String, bool> get notificationsSettingsStates =>
+      _notificationsSettingsStates;
+  List<String> get notificationsSettings => _notificationsSettings;
 }

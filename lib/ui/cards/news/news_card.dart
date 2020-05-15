@@ -1,5 +1,5 @@
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
-import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
 import 'package:campus_mobile_experimental/ui/views/news/news_list.dart';
@@ -37,8 +37,9 @@ class NewsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return CardContainer(
       /// TODO: need to hook up hidden to state using provider
-      active: Provider.of<UserDataProvider>(context).cardStates['news'],
-      hide: () => Provider.of<UserDataProvider>(context).toggleCard('news'),
+      active: Provider.of<CardsDataProvider>(context).cardStates['news'],
+      hide: () => Provider.of<CardsDataProvider>(context, listen: false)
+          .toggleCard('news'),
       reload: () =>
           Provider.of<NewsDataProvider>(context, listen: false).fetchNews(),
       isLoading: Provider.of<NewsDataProvider>(context).isLoading,

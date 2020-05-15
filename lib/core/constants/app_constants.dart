@@ -9,6 +9,7 @@ class RoutePaths {
   static const String Notifications = 'notifications';
   static const String Profile = 'profile';
   static const String CardsView = 'profile/cards_view';
+  static const String NotificationsSettingsView = 'notifications/notifications_settings';
 
   static const String NewsViewAll = 'news/newslist';
   static const String BaseLineView = 'baseline/baselineview';
@@ -38,7 +39,9 @@ class ButtonText {
   static const SubmitButtonInactive = 'Sending';
   static const SubmitButtonTryAgain = 'Try again';
   static const SubmitButtonReceived = 'Received';
+  static const ScanNowFull = 'Scan Your COVID-19 Test Kit.';
   static const ScanNow = 'Scan Now';
+  static const SignInFull = 'Sign In to Scan Your COVID-19 Test Kit.';
   static const SignIn = 'Sign In';
 }
 
@@ -48,7 +51,7 @@ class Plugins {
 
 class NavigationConstants {
   static const HomeTab = 0;
-  static const MapTab = 1;
-  static const NotificationsTab = 2;
-  static const ProfileTab = 3;
+//  static const MapTab = 1;
+  static const NotificationsTab = 1;
+  static const ProfileTab = 2;
 }

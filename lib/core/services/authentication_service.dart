@@ -1,8 +1,5 @@
 import 'package:campus_mobile_experimental/core/models/authentication_model.dart';
 import 'package:campus_mobile_experimental/core/services/networking.dart';
-import 'dart:convert';
-
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class AuthenticationService {
   AuthenticationService();
@@ -15,12 +12,12 @@ class AuthenticationService {
 
   final NetworkHelper _networkHelper = NetworkHelper();
   final String endpoint =
-      "https://3hepzvdimd.execute-api.us-west-2.amazonaws.com/dev/v1/access-profile";
+      "https://c12cf2xke8.execute-api.us-west-2.amazonaws.com/prod/v1.1/access-profile";
   final String AUTH_SERVICE_API_KEY =
       'AUTH_SERVICE_API_KEY_PH';
 
   final String refreshTokenEndpoint =
-      'https://3hepzvdimd.execute-api.us-west-2.amazonaws.com/dev/v1/access-profile/refresh';
+      'https://c12cf2xke8.execute-api.us-west-2.amazonaws.com/prod/v1.1/access-profile/refresh';
 
   Future<bool> login(String base64EncodedWithEncryptedPassword) async {
     _error = null;

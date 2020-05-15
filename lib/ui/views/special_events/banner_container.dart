@@ -1,4 +1,4 @@
-import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -44,7 +44,7 @@ class BannerContainer extends StatelessWidget {
     } else if (isLoading) {
       return Container(
           height: 224, width: 224, child: CircularProgressIndicator());
-    } else if (Provider.of<UserDataProvider>(context)
+    } else if (Provider.of<CardsDataProvider>(context)
         .cardStates['special_events']) {
       return Container(
         constraints: BoxConstraints(maxHeight: 224, maxWidth: 406),
@@ -62,7 +62,7 @@ class BannerContainer extends StatelessWidget {
       alignment: Alignment.topRight,
       child: GestureDetector(
           onTap: () {
-            Provider.of<UserDataProvider>(context, listen: false)
+            Provider.of<CardsDataProvider>(context, listen: false)
                 .toggleCard('special_events');
           },
           child: Row(

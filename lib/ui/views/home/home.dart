@@ -1,5 +1,5 @@
+import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/notices_data_provider.dart';
-import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/notices_model.dart';
 import 'package:campus_mobile_experimental/ui/cards/class_schedule/class_schedule_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/events/events_card.dart';
@@ -31,8 +31,10 @@ class _HomeState extends State<Home> {
   }
 
   List<Widget> createList(BuildContext context) {
-    List<Widget> orderedCards = getOrderedCardsList(Provider.of<UserDataProvider>(context).cardOrder);
-    List<Widget> noticesCards = getNoticesCardsList(Provider.of<NoticesDataProvider>(context).noticesModel);
+    List<Widget> orderedCards =
+        getOrderedCardsList(Provider.of<CardsDataProvider>(context).cardOrder);
+    List<Widget> noticesCards = getNoticesCardsList(
+        Provider.of<NoticesDataProvider>(context).noticesModel);
 
     return noticesCards + orderedCards;
   }
@@ -47,6 +49,9 @@ class _HomeState extends State<Home> {
 
   List<Widget> getOrderedCardsList(List<String> order) {
     List<Widget> orderedCards = List<Widget>();
+
+    orderedCards.insert(0, ScannerCard());
+
     for (String card in order) {
       switch (card) {
 //        case 'special_events':
@@ -73,17 +78,14 @@ class _HomeState extends State<Home> {
 //        case 'links':
 //          orderedCards.add(LinksCard());
 //          break;
-        case 'schedule':
-          orderedCards.add(ClassScheduleCard());
+        case 'MyStudentChart':
+          orderedCards.add(MyChartCard());
           break;
         case 'finals':
           orderedCards.add(FinalsCard());
           break;
-        case 'scanner':
-          orderedCards.add(ScannerCard());
-          break;
-        case 'my_chart':
-          orderedCards.add(MyChartCard());
+        case 'schedule':
+          orderedCards.add(ClassScheduleCard());
           break;
       }
     }
