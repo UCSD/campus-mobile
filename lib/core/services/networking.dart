@@ -51,8 +51,6 @@ class NetworkHelper {
     dio.options.receiveTimeout = 20000;
     dio.options.headers = headers;
     final _response = await dio.post(url, data: body);
-    print('response is:');
-    print(_response.toString());
     if (_response.statusCode == 200 || _response.statusCode == 201) {
       // If server returns an OK response, return the body
       return _response.data;
