@@ -73,7 +73,11 @@ class BarcodeDataProvider extends ChangeNotifier {
       if (results) {
         _submitState = ButtonText.SubmitButtonReceived;
       } else {
-        await _userDataProvider.refreshToken();
+        if (_barcodeService.error.contains(ErrorConstants.invalidBearerToken)) {
+          await _userDataProvider.refreshToken();
+        } else {
+          _error = _barcodeService.error;
+        }
         _submitState = ButtonText.SubmitButtonTryAgain;
       }
       _isLoading = false;
