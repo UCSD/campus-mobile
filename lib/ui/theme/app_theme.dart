@@ -57,14 +57,15 @@ const IconThemeData darkIconTheme = IconThemeData(
 //Colors for text on buttons using light theme
 const TextTheme lightThemeText = TextTheme(
   button: TextStyle(
-    color: Color(0xFFFFFFFF),
+    color: lightTextColor,
   ),
 );
+
 
 //Colors for text on buttons using dark theme
 const TextTheme darkThemeText = TextTheme(
   button: TextStyle(
-    color: Color(0xFF006A96),
+    color: darkTextColor,
   ),
 );
 
@@ -74,12 +75,21 @@ const Color lightButtonTextColor = Color(0xFFFFFFFF);
 const Color lightButtonBorderColor = Color(0xFFFFFFFF);
 const Color darkButtonColor = Color(0xFFFFFFFF);
 
+//Colors
+const Color lightTextColor = Color(0xFFFFFFFF);
+const Color darkTextColor = Color(0xFF006A96);
+
+
+
 ///Text Field colors for themes
 const Color lightTextFieldBorderColor = Color(0xFFFFFFFF);
 
 //Accent colors for themes
 const Color lightAccentColor = Color(0xFFFFFFFF);
 const Color darkAccentColor = Color(0xFFAFA9A0);
+
+const debugHeader = TextStyle(color: lightTextColor, fontSize: 14.0);
+const debugRow = TextStyle(color: lightTextColor, fontSize: 12.0);
 
 // Testing
 const Color c1 = Color.fromARGB(255, 255, 0, 0);
