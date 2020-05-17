@@ -85,6 +85,10 @@ class BarcodeDataProvider extends ChangeNotifier {
     _controller.dispose();
   }
 
+  clearQrText() {
+    _qrText = '';
+  }
+
   ///SIMPLE GETTERS
   bool get isLoading => _isLoading;
   String get error => _error;

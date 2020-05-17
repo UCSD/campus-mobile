@@ -90,6 +90,7 @@ class _QRViewExampleState extends State<ScannerView> {
   @override
   void dispose() {
     _barcodeDataProvider.disposeController();
+    _barcodeDataProvider.clearQrText();
     super.dispose();
   }
 }
