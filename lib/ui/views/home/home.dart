@@ -1,5 +1,5 @@
+import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/notices_data_provider.dart';
-import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/notices_model.dart';
 import 'package:campus_mobile_experimental/ui/cards/class_schedule/class_schedule_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/events/events_card.dart';
@@ -32,7 +32,7 @@ class _HomeState extends State<Home> {
 
   List<Widget> createList(BuildContext context) {
     List<Widget> orderedCards =
-        getOrderedCardsList(Provider.of<UserDataProvider>(context).cardOrder);
+        getOrderedCardsList(Provider.of<CardsDataProvider>(context).cardOrder);
     List<Widget> noticesCards = getNoticesCardsList(
         Provider.of<NoticesDataProvider>(context).noticesModel);
 

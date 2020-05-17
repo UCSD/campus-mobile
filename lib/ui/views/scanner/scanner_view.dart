@@ -1,3 +1,4 @@
+import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/constants/scanner_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/barcode_data_provider.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
@@ -67,7 +68,10 @@ class _QRViewExampleState extends State<ScannerView> {
                           child: FlatButton(
                             disabledTextColor: Colors.black,
                             disabledColor: Color.fromRGBO(218, 218, 218, 1.0),
-                            onPressed: _barcodeDataProvider.qrText.isNotEmpty
+                            onPressed: _barcodeDataProvider.qrText.isNotEmpty &&
+                                    !_barcodeDataProvider.isLoading &&
+                                    _barcodeDataProvider.submitState !=
+                                        ButtonText.SubmitButtonReceived
                                 ? () => _barcodeDataProvider.submitBarcode()
                                 : null,
                             child: Text(_barcodeDataProvider.submitState,

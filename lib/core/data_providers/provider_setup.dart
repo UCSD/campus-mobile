@@ -1,5 +1,6 @@
 import 'package:campus_mobile_experimental/core/data_providers/availability_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/barcode_data_provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/class_schedule_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/dining_data_proivder.dart';
 import 'package:campus_mobile_experimental/core/data_providers/events_data_provider.dart';
@@ -122,13 +123,25 @@ List<SingleChildWidget> dependentServices = [
         pushNotificationDataProvider;
     return _userDataProvider;
   }),
+  ChangeNotifierProxyProvider<UserDataProvider, CardsDataProvider>(create: (_) {
+    var cardsDataProvider = CardsDataProvider();
+    return cardsDataProvider;
+  }, update: (_, userDataProvider, cardsDataProvider) {
+    if (userDataProvider.isLoggedIn &&
+        (userDataProvider.userProfileModel.classifications?.student ?? false)) {
+      cardsDataProvider.activateStudentCards();
+    } else {
+      cardsDataProvider.deactivateStudentCards();
+    }
+    return cardsDataProvider;
+  }),
   ChangeNotifierProxyProvider<UserDataProvider, ClassScheduleDataProvider>(
       create: (_) {
     var classDataProvider = ClassScheduleDataProvider();
     return classDataProvider;
   }, update: (_, userDataProvider, classScheduleDataProvider) {
     classScheduleDataProvider.userDataProvider = userDataProvider;
-    if (userDataProvider.isLoggedIn) {
+    if (userDataProvider.isLoggedIn && !classScheduleDataProvider.isLoading) {
       classScheduleDataProvider.fetchData();
     }
     return classScheduleDataProvider;
@@ -167,14 +180,6 @@ List<SingleChildWidget> dependentServices = [
     messageDataProvider.userDataProvider = userDataProvider;
     messageDataProvider.fetchMessages();
     return messageDataProvider;
-  }),
-  ChangeNotifierProxyProvider<UserDataProvider, BarcodeDataProvider>(
-      create: (_) {
-    var barcodeDataProvider = BarcodeDataProvider();
-    return barcodeDataProvider;
-  }, update: (_, userDataProvider, barcodeDataProvider) {
-    barcodeDataProvider.userDataProvider = userDataProvider;
-    return barcodeDataProvider;
   }),
 ];
 List<SingleChildWidget> uiConsumableProviders = [];

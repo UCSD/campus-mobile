@@ -1,5 +1,6 @@
+import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
+import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/class_schedule_data_provider.dart';
-import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/class_schedule_model.dart';
 import 'package:campus_mobile_experimental/ui/cards/class_schedule/upcoming_courses_list.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/time_range_widget.dart';
@@ -8,31 +9,28 @@ import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.da
 import 'package:campus_mobile_experimental/ui/reusable_widgets/last_updated_widget.dart';
 import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class ClassScheduleCard extends StatelessWidget {
   List<Widget> buildActionButtons(BuildContext context) {
     List<Widget> actionButtons = List<Widget>();
-//    TODO: Fixme - reported broken in testing
-//    actionButtons.add(FlatButton(
-//      child: Text(
-//        'View All',
-//      ),
-//      onPressed: () {
-//        Navigator.pushNamed(context, RoutePaths.ClassScheduleViewAll);
-//      },
-//    ));
+    actionButtons.add(FlatButton(
+      child: Text(
+        'View All',
+      ),
+      onPressed: () {
+        Navigator.pushNamed(context, RoutePaths.ClassScheduleViewAll);
+      },
+    ));
     return actionButtons;
   }
 
   @override
   Widget build(BuildContext context) {
     return CardContainer(
-      active: Provider.of<UserDataProvider>(context).cardStates['schedule'] &&
-          Provider.of<UserDataProvider>(context).isLoggedIn,
-      hide: () => Provider.of<UserDataProvider>(context).toggleCard('schedule'),
+      active: Provider.of<CardsDataProvider>(context).cardStates['schedule'],
+      hide: () => Provider.of<CardsDataProvider>(context, listen: false)
+          .toggleCard('schedule'),
       reload: () =>
           Provider.of<ClassScheduleDataProvider>(context, listen: false)
               .fetchData(),
