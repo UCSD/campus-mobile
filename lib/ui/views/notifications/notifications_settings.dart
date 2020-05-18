@@ -1,4 +1,4 @@
-import 'package:campus_mobile_experimental/core/data_providers/availability_data_provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/push_notifications_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 import 'package:flutter/material.dart';
@@ -6,10 +6,8 @@ import 'package:provider/provider.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
 
 class NotificationsSettingsView extends StatelessWidget {
-  UserDataProvider _userDataProvider;
   @override
   Widget build(BuildContext context) {
-    _userDataProvider = Provider.of<UserDataProvider>(context);
     return ContainerView(
       child: buildSettingsList(context),
     );
@@ -23,15 +21,18 @@ class NotificationsSettingsView extends StatelessWidget {
 
   List<Widget> createList(BuildContext context) {
     List<Widget> list = List<Widget>();
-    for (String topic in _userDataProvider.notificationsSettings) {
+    for (String topic in Provider.of<UserDataProvider>(context)
+        .userProfileModel
+        .subscribedTopics) {
       list.add(ListTile(
-        //leading: Icon(Icons.reorder),
         key: Key(topic),
-        title: Text(getTopicName(topic)),
+        title: Text(getTopicName(context, topic)),
         trailing: Switch(
-          value: _userDataProvider.notificationsSettingsStates[topic],
+          value: Provider.of<PushNotificationDataProvider>(context)
+              .topicSubscriptionState[topic],
           onChanged: (_) {
-            _userDataProvider.toggleNotifications(topic);
+            Provider.of<UserDataProvider>(context, listen: false)
+                .toggleNotifications(topic);
           },
           activeColor: ColorPrimary,
         ),
@@ -40,8 +41,8 @@ class NotificationsSettingsView extends StatelessWidget {
     return list;
   }
 
-  String getTopicName(String topic) {
-    // todo: return something friendlier from metadata
-    return topic;
+  String getTopicName(BuildContext context, String topicId) {
+    return Provider.of<PushNotificationDataProvider>(context)
+        .getTopicName(topicId);
   }
 }

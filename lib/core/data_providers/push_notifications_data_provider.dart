@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:campus_mobile_experimental/core/models/topics_model.dart';
 import 'package:campus_mobile_experimental/core/services/notification_service.dart';
 import 'package:device_info/device_info.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -18,6 +19,10 @@ class PushNotificationDataProvider extends ChangeNotifier {
   FirebaseMessaging _fcm;
   DeviceInfoPlugin deviceInfoPlugin;
   Map<String, dynamic> _deviceData = <String, dynamic>{};
+  // All topic data
+  List<TopicsModel> _topicsModel;
+  // Map topic id to activation state
+  Map<String, bool> _topicSubscriptionState = <String, bool>{};
 
   ///STATES
   DateTime _lastUpdated;
@@ -27,6 +32,7 @@ class PushNotificationDataProvider extends ChangeNotifier {
   NotificationService _notificationService;
 
   initState() async {
+    fetchTopicsList();
     if (Platform.isAndroid) {
       _deviceData = _readAndroidBuildData(await deviceInfoPlugin.androidInfo);
     } else if (Platform.isIOS) {
@@ -63,6 +69,22 @@ class PushNotificationDataProvider extends ChangeNotifier {
       );
     } on PlatformException {
       _error = 'Failed to get platform info.';
+    }
+  }
+
+  /// fetches topics from endpoint
+  /// deletes topics that are no longer supported
+  /// transfers over previous subscriptions as well
+  void fetchTopicsList() async {
+    Map<String, bool> newTopics = <String, bool>{};
+    if (await _notificationService.fetchTopics()) {
+      for (TopicsModel model in _notificationService.topicsModel) {
+        for (Topic topic in model.topics) {
+          newTopics[topic.topicId] =
+              _topicSubscriptionState[topic.topicId] ?? false;
+        }
+      }
+      _topicSubscriptionState = newTopics;
     }
   }
 
@@ -161,15 +183,84 @@ class PushNotificationDataProvider extends ChangeNotifier {
     }
   }
 
-  subscribeToTopics(List<String> topics) {
+  void toggleNotificationsForTopic(String topic) {
+    _topicSubscriptionState[topic] = !_topicSubscriptionState[topic];
+    if (_topicSubscriptionState[topic]) {
+      _subscribeToTopics([topic]);
+    } else {
+      _unsubscribeToTopics([topic]);
+    }
+    notifyListeners();
+  }
+
+  void _subscribeToTopics(List<String> topics) {
     for (String topic in topics) {
       if ((topic ?? "").isNotEmpty) {
+        _topicSubscriptionState[topic] = true;
         _fcm.subscribeToTopic(topic);
       }
     }
   }
 
+  void _unsubscribeToTopics(List<String> topics) {
+    for (String topic in topics) {
+      if ((topic ?? "").isNotEmpty) {
+        _topicSubscriptionState[topic] = false;
+        _fcm.unsubscribeFromTopic(topic);
+      }
+    }
+  }
+
+  /// get the topic name given the topic id
+  String getTopicName(String topicId) {
+    for (TopicsModel model in _topicsModel) {
+      for (Topic topic in model.topics) {
+        if (topic.topicId == topicId) {
+          return topic.topicMetadata.name;
+        }
+      }
+    }
+  }
+
+  /// get student only topics
+  List<String> studentTopics() {
+    List<String> topicsToReturn = List<String>();
+    for (TopicsModel model in _notificationService.topicsModel) {
+      if (model.audienceId == 'student') {
+        for (Topic topic in model.topics) {
+          topicsToReturn.add(topic.topicId);
+        }
+        return topicsToReturn;
+      }
+    }
+  }
+
+  /// get all public topics
+  List<String> publicTopics() {
+    List<String> topicsToReturn = List<String>();
+    for (TopicsModel model in _notificationService.topicsModel) {
+      if (model.audienceId == 'all') {
+        for (Topic topic in model.topics) {
+          topicsToReturn.add(topic.topicId);
+        }
+        return topicsToReturn;
+      }
+    }
+  }
+
+  /// get all subscribed subscribed topics
+  List<String> subscribedTopics() {
+    List<String> topicsToReturn = List<String>();
+    for (String topic in _topicSubscriptionState.keys) {
+      if (_topicSubscriptionState[topic]) {
+        topicsToReturn.add(topic);
+      }
+    }
+    return topicsToReturn;
+  }
+
   ///SIMPLE GETTERS
   String get error => _error;
   DateTime get lastUpdated => _lastUpdated;
+  Map<String, bool> get topicSubscriptionState => _topicSubscriptionState;
 }

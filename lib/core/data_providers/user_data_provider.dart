@@ -25,13 +25,6 @@ class UserDataProvider extends ChangeNotifier {
     ///default authentication model and profile is needed in this class
     _authenticationModel = AuthenticationModel.fromJson({});
     _userProfileModel = UserProfileModel.fromJson({});
-
-    _notificationsSettingsStates = {
-      'campusAnnouncements': true,
-      'freeFood': true,
-      'shuttle': true
-    };
-    _notificationsSettings = ['campusAnnouncements', 'freeFood', 'shuttle'];
   }
 
   ///STATES
@@ -49,10 +42,6 @@ class UserDataProvider extends ChangeNotifier {
   UserProfileService _userProfileService;
   PushNotificationDataProvider _pushNotificationDataProvider;
 
-  Map<String, bool> _notificationsSettingsStates;
-
-  List<String> _notificationsSettings;
-
   ///Update the authentication model saved in state and save the model in persistent storage
   Future updateAuthenticationModel(AuthenticationModel model) async {
     _authenticationModel = model;
@@ -61,19 +50,36 @@ class UserDataProvider extends ChangeNotifier {
     _lastUpdated = DateTime.now();
   }
 
+  Future updateUserProfileModel(UserProfileModel model) async {
+    _userProfileModel = model;
+    var box = await Hive.box<UserProfileModel>('UserProfileModel');
+    await box.put('UserProfileModel', model);
+    _lastUpdated = DateTime.now();
+  }
+
   ///Load data from persistent storage
-  ///Will create persistent storage if  no data is found
+  ///Will create persistent storage if no data is found
   Future loadSavedData() async {
     Hive.registerAdapter(AuthenticationModelAdapter());
-    var box = await Hive.openBox<AuthenticationModel>('AuthenticationModel');
+    var authBox =
+        await Hive.openBox<AuthenticationModel>('AuthenticationModel');
     AuthenticationModel temp = AuthenticationModel.fromJson({});
     //check to see if we have added the authentication model into the box already
-    if (box.get('AuthenticationModel') == null) {
-      await box.put('AuthenticationModel', temp);
+    if (authBox.get('AuthenticationModel') == null) {
+      await authBox.put('AuthenticationModel', temp);
     }
-    temp = box.get('AuthenticationModel');
+    temp = authBox.get('AuthenticationModel');
     _authenticationModel = temp;
     await refreshToken();
+
+    Hive.registerAdapter(UserProfileModelAdapter());
+    var userBox = await Hive.box<UserProfileModel>('UserProfileModel');
+    UserProfileModel tempUserProfile = UserProfileModel.fromJson({});
+    if (userBox.get('UserProfileModel') == null) {
+      await userBox.put('UserProfileModel', tempUserProfile);
+    }
+    tempUserProfile = userBox.get('UserProfileModel');
+    _userProfileModel = tempUserProfile;
   }
 
   ///Save encrypted password to device
@@ -170,9 +176,16 @@ class UserDataProvider extends ChangeNotifier {
     return returnVal;
   }
 
+  /// Remove topic from [_userProfileModel.subscribedTopics]
+  /// Use [_pushNotificationDataProvider] to un/subscribe device from push notifications
   void toggleNotifications(String topic) {
-    _notificationsSettingsStates[topic] = !_notificationsSettingsStates[topic];
-    //todo: hookup topic subscription
+    if (_userProfileModel.subscribedTopics.contains(topic)) {
+      _userProfileModel.subscribedTopics.remove(topic);
+    } else {
+      _userProfileModel.subscribedTopics.add(topic);
+    }
+    postUserProfile(_userProfileModel);
+    _pushNotificationDataProvider.toggleNotificationsForTopic(topic);
     notifyListeners();
   }
 
@@ -185,7 +198,7 @@ class UserDataProvider extends ChangeNotifier {
     _pushNotificationDataProvider
         .unregisterDevice(_authenticationModel.accessToken);
     updateAuthenticationModel(AuthenticationModel.fromJson({}));
-    _userProfileModel = UserProfileModel.fromJson({});
+    updateUserProfileModel(UserProfileModel.fromJson({}));
     deletePasswordFromDevice();
     deleteUsernameFromDevice();
     var box = await Hive.openBox<AuthenticationModel>('AuthenticationModel');
@@ -206,12 +219,16 @@ class UserDataProvider extends ChangeNotifier {
         'Authorization': 'Bearer ' + _authenticationModel.accessToken
       };
       if (await _userProfileService.downloadUserProfile(headers)) {
-        _userProfileModel = _userProfileService.userProfileModel;
-
         /// if the user profile has no ucsd affiliation then we know the user is new
         /// so create a new profile and upload to DB using [postUserProfile]
-        if (_userProfileModel.ucsdaffiliation == null) {
-          await createNewUser();
+        if (_userProfileService.userProfileModel.ucsdaffiliation == null) {
+          await createNewUser(_userProfileService.userProfileModel);
+        }
+
+        /// turn on all saved push notifications preferences for user
+        for (String topic
+            in _userProfileService.userProfileModel.subscribedTopics) {
+          _pushNotificationDataProvider.toggleNotificationsForTopic(topic);
         }
       } else {
         _error = _userProfileService.error;
@@ -223,22 +240,26 @@ class UserDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  ///Create a new user profile based on SSO info
-  Future createNewUser() async {
-    _userProfileModel
+  /// Create a new user profile based on SSO info
+  /// Subscribe students to student topics
+  /// Subscribe users to public topics
+  Future createNewUser(UserProfileModel profile) async {
+    profile
       ..username = await getUsernameFromDevice()
       ..ucsdaffiliation = _authenticationModel.ucsdaffiliation
       ..pid = _authenticationModel.pid;
 
     final pattern = RegExp('[BGJMU]');
-    if (_userProfileModel.ucsdaffiliation.contains(pattern)) {
-      _userProfileModel.classifications =
-          Classifications.fromJson({'student': true});
+    if (profile.ucsdaffiliation.contains(pattern)) {
+      profile.classifications = Classifications.fromJson({'student': true});
+      profile.subscribedTopics
+          .addAll(_pushNotificationDataProvider.studentTopics());
     } else {
-      _userProfileModel.classifications =
-          Classifications.fromJson({'student': false});
+      profile.classifications = Classifications.fromJson({'student': false});
     }
-    await postUserProfile(_userProfileModel);
+    profile.subscribedTopics
+        .addAll(_pushNotificationDataProvider.publicTopics());
+    await postUserProfile(profile);
   }
 
   /// UPLOAD USER PROFILE TO SERVER
@@ -246,6 +267,9 @@ class UserDataProvider extends ChangeNotifier {
     _error = null;
     _isLoading = true;
     notifyListeners();
+
+    /// save settings to local storage
+    updateUserProfileModel(profile);
 
     /// check if user is logged in
     if (_authenticationModel.isLoggedIn(_authenticationService.lastUpdated)) {
@@ -269,7 +293,6 @@ class UserDataProvider extends ChangeNotifier {
     } else {
       _error = 'not logged in';
     }
-    _userProfileModel = profile;
     _isLoading = false;
     notifyListeners();
   }
@@ -304,6 +327,14 @@ class UserDataProvider extends ChangeNotifier {
     _pushNotificationDataProvider = value;
   }
 
+  List<String> get subscribedTopics {
+    if (isLoggedIn) {
+      return _userProfileModel.subscribedTopics;
+    } else {
+      return _pushNotificationDataProvider.subscribedTopics();
+    }
+  }
+
   ///GETTERS FOR MODELS
   UserProfileModel get userProfileModel => _userProfileModel;
   AuthenticationModel get authenticationModel => _authenticationModel;
@@ -313,7 +344,4 @@ class UserDataProvider extends ChangeNotifier {
   bool get isLoggedIn => _authenticationModel.isLoggedIn(_lastUpdated);
   bool get isLoading => _isLoading;
   DateTime get lastUpdated => _lastUpdated;
-  Map<String, bool> get notificationsSettingsStates =>
-      _notificationsSettingsStates;
-  List<String> get notificationsSettings => _notificationsSettings;
 }
