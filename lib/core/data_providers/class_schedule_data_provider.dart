@@ -117,7 +117,6 @@ class ClassScheduleDataProvider extends ChangeNotifier {
         'SU': List<SectionData>(),
         'OTHER': List<SectionData>(),
       };
-
       try {
         _createMapOfClasses();
       } catch (e) {
