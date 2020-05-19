@@ -264,17 +264,6 @@ class PushNotificationDataProvider extends ChangeNotifier {
     }
   }
 
-  /// get all subscribed subscribed topics
-  List<String> subscribedTopics() {
-    List<String> topicsToReturn = List<String>();
-    for (String topic in _topicSubscriptionState.keys) {
-      if (_topicSubscriptionState[topic]) {
-        topicsToReturn.add(topic);
-      }
-    }
-    return topicsToReturn;
-  }
-
   ///SIMPLE GETTERS
   String get error => _error;
   DateTime get lastUpdated => _lastUpdated;
