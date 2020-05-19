@@ -40,6 +40,7 @@ List<SingleChildWidget> independentServices = [
   ),
   ChangeNotifierProvider<PushNotificationDataProvider>(
     create: (_) => PushNotificationDataProvider(),
+    lazy: false,
   ),
   ChangeNotifierProvider<SurfDataProvider>(
     create: (_) {
