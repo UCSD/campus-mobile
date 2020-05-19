@@ -19,18 +19,18 @@ class PushNotificationDataProvider extends ChangeNotifier {
   FirebaseMessaging _fcm;
   DeviceInfoPlugin deviceInfoPlugin;
   Map<String, dynamic> _deviceData = <String, dynamic>{};
-  // All topic data
-  List<TopicsModel> _topicsModel;
-  // Map topic id to activation state
-  Map<String, bool> _topicSubscriptionState = <String, bool>{};
 
   ///STATES
   DateTime _lastUpdated;
   String _error;
+  List<TopicsModel> _topicsModel;
+  Map<String, bool> _topicSubscriptionState = <String, bool>{};
 
   ///SERVICES
   NotificationService _notificationService;
 
+  /// invokes correct method to receive device info
+  /// invokes [fetchTopicsList]
   initState() async {
     fetchTopicsList();
     if (Platform.isAndroid) {
@@ -45,6 +45,8 @@ class PushNotificationDataProvider extends ChangeNotifier {
     }
   }
 
+  /// configures the [_fcm] object to recive push notifications
+  /// TODO: deep linking also belongs here
   Future<void> initPlatformState(BuildContext context) async {
     try {
       _fcm.configure(
@@ -85,9 +87,15 @@ class PushNotificationDataProvider extends ChangeNotifier {
         }
       }
       _topicSubscriptionState = newTopics;
+      _topicsModel = _notificationService.topicsModel;
+    } else {
+      _error = 'failed to fetch topics';
     }
+    notifyListeners();
   }
 
+  /// reads android device info
+  /// returns info as a Map
   Map<String, dynamic> _readAndroidBuildData(AndroidDeviceInfo build) {
     return <String, dynamic>{
       'version.securityPatch': build.version.securityPatch,
@@ -120,6 +128,8 @@ class PushNotificationDataProvider extends ChangeNotifier {
     };
   }
 
+  /// reads ios device info
+  /// returns info as a Map
   Map<String, dynamic> _readIosDeviceInfo(IosDeviceInfo data) {
     return <String, dynamic>{
       'name': data.name,
@@ -137,6 +147,7 @@ class PushNotificationDataProvider extends ChangeNotifier {
     };
   }
 
+  /// registers device to receive push notifications
   Future<bool> registerDevice(String accessToken) async {
     String deviceId = _deviceData['deviceId'];
     print('device id');
@@ -166,6 +177,7 @@ class PushNotificationDataProvider extends ChangeNotifier {
     }
   }
 
+  /// unregisters device from receiving push notifications
   Future<bool> unregisterDevice(String accessToken) async {
     // Get the token for this device
     String fcmToken = await _fcm.getToken();
@@ -193,6 +205,8 @@ class PushNotificationDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// iterates through passed in topics list
+  /// invokes [unsubscribeFromTopic] on firebase object [_fcm]
   void _subscribeToTopics(List<String> topics) {
     for (String topic in topics) {
       if ((topic ?? "").isNotEmpty) {
@@ -202,6 +216,8 @@ class PushNotificationDataProvider extends ChangeNotifier {
     }
   }
 
+  /// iterates through passed in topics list
+  /// invokes [unsubscribeFromTopic] on firebase object [_fcm]
   void _unsubscribeToTopics(List<String> topics) {
     for (String topic in topics) {
       if ((topic ?? "").isNotEmpty) {
@@ -238,7 +254,7 @@ class PushNotificationDataProvider extends ChangeNotifier {
   /// get all public topics
   List<String> publicTopics() {
     List<String> topicsToReturn = List<String>();
-    for (TopicsModel model in _notificationService.topicsModel) {
+    for (TopicsModel model in _topicsModel) {
       if (model.audienceId == 'all') {
         for (Topic topic in model.topics) {
           topicsToReturn.add(topic.topicId);
