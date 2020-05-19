@@ -21,9 +21,8 @@ class NotificationsSettingsView extends StatelessWidget {
 
   List<Widget> createList(BuildContext context) {
     List<Widget> list = List<Widget>();
-    for (String topic in Provider.of<UserDataProvider>(context)
-        .userProfileModel
-        .subscribedTopics) {
+    List<String> topicsAvailable = getTopics(context);
+    for (String topic in topicsAvailable) {
       list.add(ListTile(
         key: Key(topic),
         title: Text(getTopicName(context, topic)),
@@ -39,6 +38,18 @@ class NotificationsSettingsView extends StatelessWidget {
       ));
     }
     return list;
+  }
+
+  List<String> getTopics(BuildContext context) {
+    UserDataProvider _userDataProvider = Provider.of<UserDataProvider>(context);
+    PushNotificationDataProvider _pushNotificationDataProvider =
+        Provider.of<PushNotificationDataProvider>(context);
+    if (_userDataProvider.userProfileModel.classifications.student) {
+      return _pushNotificationDataProvider.publicTopics() +
+          _pushNotificationDataProvider.studentTopics();
+    } else {
+      return _pushNotificationDataProvider.publicTopics();
+    }
   }
 
   String getTopicName(BuildContext context, String topicId) {
