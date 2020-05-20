@@ -92,7 +92,8 @@ class MessagesDataProvider extends ChangeNotifier {
     int returnedTimestamp;
     int timestamp = _previousTimestamp;
 
-    if (await _messageService.fetchTopicData(timestamp)) {
+    if (await _messageService.fetchTopicData(
+        timestamp, _userDataProvider.subscribedTopics)) {
       List<MessageElement> temp = _messageService.messagingModels.messages;
       updateMessages(temp, clearMessages);
       makeOrderedMessagesList();

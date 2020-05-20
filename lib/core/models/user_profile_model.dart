@@ -48,14 +48,14 @@ class UserProfileModel extends HiveObject {
             json["latestTimeStamp"] == null ? null : json["latestTimeStamp"],
         pid: json["pid"] == null ? null : json["pid"],
         selectedLots: json["selectedLots"] == null
-            ? null
+            ? List<String>()
             : List<String>.from(json["selectedLots"].map((x) => x)),
         selectedOccuspaceLocations: json["selectedOccuspaceLocations"] == null
-            ? null
+            ? List<String>()
             : List<String>.from(
                 json["selectedOccuspaceLocations"].map((x) => x)),
         subscribedTopics: json["subscribedTopics"] == null
-            ? null
+            ? List<String>()
             : List<String>.from(json["subscribedTopics"].map((x) => x)),
         ucsdaffiliation:
             json["ucsdaffiliation"] == null ? null : json["ucsdaffiliation"],

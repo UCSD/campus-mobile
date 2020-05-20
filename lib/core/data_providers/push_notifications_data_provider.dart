@@ -91,6 +91,7 @@ class PushNotificationDataProvider extends ChangeNotifier {
     } else {
       _error = 'failed to fetch topics';
     }
+    print(_topicSubscriptionState);
     notifyListeners();
   }
 
@@ -196,11 +197,12 @@ class PushNotificationDataProvider extends ChangeNotifier {
   }
 
   void toggleNotificationsForTopic(String topic) {
-    _topicSubscriptionState[topic] = !_topicSubscriptionState[topic];
-    if (_topicSubscriptionState[topic]) {
-      _subscribeToTopics([topic]);
-    } else {
+    if (_topicSubscriptionState[topic] ?? true) {
+      _topicSubscriptionState[topic] = false;
       _unsubscribeToTopics([topic]);
+    } else {
+      _topicSubscriptionState[topic] = true;
+      _subscribeToTopics([topic]);
     }
     notifyListeners();
   }
@@ -239,8 +241,11 @@ class PushNotificationDataProvider extends ChangeNotifier {
   }
 
   /// get student only topics
-  List<String> studentTopics() {
+  Future<List<String>> studentTopics() async {
     List<String> topicsToReturn = List<String>();
+    if (_topicsModel == null) {
+      await fetchTopicsList();
+    }
     for (TopicsModel model in _notificationService.topicsModel) {
       if (model.audienceId == 'student') {
         for (Topic topic in model.topics) {
@@ -249,11 +254,15 @@ class PushNotificationDataProvider extends ChangeNotifier {
         return topicsToReturn;
       }
     }
+    return topicsToReturn;
   }
 
   /// get all public topics
-  List<String> publicTopics() {
+  Future<List<String>> publicTopics() async {
     List<String> topicsToReturn = List<String>();
+    if (_topicsModel == null) {
+      await fetchTopicsList();
+    }
     for (TopicsModel model in _topicsModel) {
       if (model.audienceId == 'all') {
         for (Topic topic in model.topics) {
@@ -262,6 +271,7 @@ class PushNotificationDataProvider extends ChangeNotifier {
         return topicsToReturn;
       }
     }
+    return topicsToReturn;
   }
 
   ///SIMPLE GETTERS

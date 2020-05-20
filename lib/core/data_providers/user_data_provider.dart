@@ -82,7 +82,7 @@ class UserDataProvider extends ChangeNotifier {
     }
     temp = authBox.get('AuthenticationModel');
     _authenticationModel = temp;
-    refreshToken();
+    await refreshToken();
   }
 
   /// Load [UserProfileModel] from persistent storage
@@ -190,6 +190,9 @@ class UserDataProvider extends ChangeNotifier {
       notifyListeners();
       if (await _silentLogin()) {
         await fetchUserProfile();
+
+        /// turn on all saved push notifications preferences for user
+        _subscribeToPushNotificationTopics(userProfileModel.subscribedTopics);
         returnVal = true;
       }
       _isLoading = false;
@@ -250,14 +253,13 @@ class UserDataProvider extends ChangeNotifier {
         /// so create a new profile and upload to DB using [postUserProfile]
         UserProfileModel newModel = _userProfileService.userProfileModel;
         if (newModel.ucsdaffiliation == null) {
+          print('creating new profle ....');
+          print(newModel);
           newModel = await _createNewUser(newModel);
           await postUserProfile(newModel);
         } else {
           await updateUserProfileModel(newModel);
         }
-
-        /// turn on all saved push notifications preferences for user
-        _subscribeToPushNotificationTopics(newModel);
       } else {
         _error = _userProfileService.error;
       }
@@ -268,11 +270,13 @@ class UserDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Given a [UserProfileModel] which holds a list of [subscribedTopics]
+  /// Given a list of topics
   /// invoke [_pushNotificationDataProvider.toggleNotificationsForTopic] on each of the topics
-  void _subscribeToPushNotificationTopics(UserProfileModel newModel) {
+  void _subscribeToPushNotificationTopics(List<String> topics) {
     /// turn on all saved push notifications preferences for user
-    for (String topic in newModel.subscribedTopics) {
+    print('topics');
+    print(topics);
+    for (String topic in topics) {
       _pushNotificationDataProvider.toggleNotificationsForTopic(topic);
     }
   }
@@ -287,20 +291,21 @@ class UserDataProvider extends ChangeNotifier {
       profile.username = await _getUsernameFromDevice();
       profile.ucsdaffiliation = _authenticationModel.ucsdaffiliation;
       profile.pid = _authenticationModel.pid;
-      profile.subscribedTopics = _pushNotificationDataProvider.publicTopics();
+      profile.subscribedTopics =
+          await _pushNotificationDataProvider.publicTopics();
       final pattern = RegExp('[BGJMU]');
       if ((profile.ucsdaffiliation ?? "").contains(pattern)) {
         profile
           ..classifications = Classifications.fromJson({'student': true})
           ..subscribedTopics
-              .addAll(_pushNotificationDataProvider.studentTopics());
+              .addAll(await _pushNotificationDataProvider.studentTopics());
       } else {
         profile.classifications = Classifications.fromJson({'student': false});
       }
     } catch (e) {
       print(e.toString());
     }
-    _subscribeToPushNotificationTopics(profile);
+    _subscribeToPushNotificationTopics(profile.subscribedTopics);
     return profile;
   }
 
@@ -312,7 +317,9 @@ class UserDataProvider extends ChangeNotifier {
     notifyListeners();
 
     /// save settings to local storage
-    updateUserProfileModel(profile);
+    await updateUserProfileModel(profile);
+    print('uploading profile');
+    print(profile.toJson());
 
     /// check if user is logged in
     if (_authenticationModel.isLoggedIn(_authenticationService.lastUpdated)) {
