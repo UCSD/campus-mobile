@@ -1,7 +1,5 @@
 import 'package:campus_mobile_experimental/core/models/availability_model.dart';
 import 'package:campus_mobile_experimental/core/services/networking.dart';
-import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 
 class AvailabilityService {
   AvailabilityService() {}
@@ -18,10 +16,10 @@ class AvailabilityService {
   final NetworkHelper _networkHelper = NetworkHelper();
   final Map<String, String> headers = {
     "accept": "application/json",
-    "Authorization": "Bearer " + "7e0ed6a9-86a7-3349-86a2-b4aa035ab8bb",
+    "Authorization": "PUBLIC_AUTH_SERVICE_API_KEY_PH",
   };
   final String endpoint =
-      "https://api-qa.ucsd.edu:8243/occuspace/v1.0/busyness";
+      "https://api.ucsd.edu:8243/occuspace/v1.0/busyness";
 
   Future<bool> fetchData() async {
     _error = null;
@@ -40,7 +38,7 @@ class AvailabilityService {
     } catch (e) {
       /// if the authorized fetch failed we know we have to refresh the
       /// token for this service
-      if (e.response.statusCode == 401) {
+      if (e.response != null && e.response.statusCode == 401) {
         if (await getNewToken()) {
           return await fetchData();
         }
@@ -52,11 +50,10 @@ class AvailabilityService {
   }
 
   Future<bool> getNewToken() async {
-    final String tokenEndpoint = "https://api-qa.ucsd.edu:8243/token";
+    final String tokenEndpoint = "https://api.ucsd.edu:8243/token";
     final Map<String, String> tokenHeaders = {
       "content-type": 'application/x-www-form-urlencoded',
-      "Authorization":
-          "Basic WUNaMXlLTW9wMjNxcGtvUFQ1aDYzdHB5bm9rYTpQNnFCbWNIRFc5azNJME56S3hHSm5QTTQzV0lh"
+      "Authorization": "PUBLIC_AUTH_SERVICE_TOKEN_API_KEY_PH"
     };
     try {
       var response = await _networkHelper.authorizedPost(

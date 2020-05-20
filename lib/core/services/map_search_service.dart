@@ -7,26 +7,33 @@ class MapSearchService {
   bool _isLoading = false;
   DateTime _lastUpdated;
   String _error;
+  List<MapSearchModel> _results = List<MapSearchModel>();
   final NetworkHelper _networkHelper = NetworkHelper();
   final String baseEndpoint =
-      "https://003qx07f60.execute-api.us-west-1.amazonaws.com/dev/msm-searchservice/v1/mapsearch";
+      "https://xgu9qa7gx4.execute-api.us-west-2.amazonaws.com/prod/v2/map/search";
 
-  Future<List<MapSearchModel>> fetchMenu(String location) async {
+  Future<bool> fetchLocations(String location) async {
     _error = null;
     _isLoading = true;
     try {
       /// fetch data
       String _response = await _networkHelper
           .fetchData(baseEndpoint + '?query=' + location + '&region=0');
-
-      /// parse data
-      final data = mapSearchModelFromJson(_response);
+      if (_response != 'null') {
+        /// parse data
+        final data = mapSearchModelFromJson(_response);
+        _results = data;
+      } else {
+        _results = List<MapSearchModel>();
+        _isLoading = false;
+        return false;
+      }
       _isLoading = false;
-      return data;
+      return true;
     } catch (e) {
       _error = e.toString();
       _isLoading = false;
-      return List<MapSearchModel>();
+      return false;
     }
   }
 
@@ -36,5 +43,5 @@ class MapSearchService {
 
   DateTime get lastUpdated => _lastUpdated;
 
-  NetworkHelper get availabilityService => _networkHelper;
+  List<MapSearchModel> get results => _results;
 }

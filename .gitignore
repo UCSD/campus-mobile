@@ -21,6 +21,7 @@
 #.vscode/
 
 # Flutter/Dart/Pub related
+.flutter-plugins-dependencies
 **/doc/api/
 .dart_tool/
 .flutter-plugins
@@ -37,6 +38,7 @@
 **/android/gradlew.bat
 **/android/local.properties
 **/android/**/GeneratedPluginRegistrant.java
+*.keystore
 
 # iOS/XCode related
 **/ios/**/*.mode1v3

@@ -1,5 +1,5 @@
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
-import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/weather_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/weather_model.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
@@ -14,9 +14,8 @@ class WeatherCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
-      /// TODO: need to hook up hidden to state using provider
-      active: Provider.of<UserDataProvider>(context).cardStates['weather'],
-      hide: () => Provider.of<UserDataProvider>(context, listen: false)
+      active: Provider.of<CardsDataProvider>(context).cardStates['weather'],
+      hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard('weather'),
       reload: () => Provider.of<WeatherDataProvider>(context, listen: false)
           .fetchWeather(),

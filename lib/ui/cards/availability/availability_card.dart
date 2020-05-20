@@ -1,6 +1,6 @@
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/availability_data_provider.dart';
-import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/availability_model.dart';
 import 'package:campus_mobile_experimental/ui/cards/availability/availability_display.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
@@ -26,8 +26,9 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
-      active: Provider.of<UserDataProvider>(context).cardStates['availability'],
-      hide: () => Provider.of<UserDataProvider>(context, listen: false)
+      active:
+          Provider.of<CardsDataProvider>(context).cardStates['availability'],
+      hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard('availability'),
       reload: () => _availabilityDataProvider.fetchAvailability(),
       isLoading: _availabilityDataProvider.isLoading,

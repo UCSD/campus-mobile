@@ -1,6 +1,6 @@
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
+import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/class_schedule_data_provider.dart';
-import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/class_schedule_model.dart';
 import 'package:campus_mobile_experimental/ui/cards/class_schedule/upcoming_courses_list.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
@@ -27,14 +27,14 @@ class ClassScheduleCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
-      active: Provider.of<UserDataProvider>(context).cardStates['schedule'] &&
-          Provider.of<UserDataProvider>(context).isLoggedIn,
-      hide: () => Provider.of<UserDataProvider>(context).toggleCard('schedule'),
+      active: Provider.of<CardsDataProvider>(context).cardStates['schedule'],
+      hide: () => Provider.of<CardsDataProvider>(context, listen: false)
+          .toggleCard('schedule'),
       reload: () =>
           Provider.of<ClassScheduleDataProvider>(context, listen: false)
               .fetchData(),
       isLoading: Provider.of<ClassScheduleDataProvider>(context).isLoading,
-      titleText: "Schedule",
+      titleText: "Classes",
       errorText: Provider.of<ClassScheduleDataProvider>(context).error,
       child: () => buildClassScheduleCard(
         Provider.of<ClassScheduleDataProvider>(context).upcomingCourses,
