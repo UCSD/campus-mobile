@@ -154,7 +154,7 @@ class DiningList extends StatelessWidget {
           color: Theme.of(context).primaryColor,
         ),
         Text(
-          distance != null ? distance.toStringAsPrecision(3) : '--',
+          distance != null ? (distance.toStringAsPrecision(3) + ' mi') : '--',
           style: TextStyle(color: Theme.of(context).primaryColor),
         ),
       ],

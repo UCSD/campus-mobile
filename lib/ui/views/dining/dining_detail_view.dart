@@ -72,7 +72,7 @@ class DiningDetailView extends StatelessWidget {
                   size: 30,
                   color: Theme.of(context).primaryColor,
                 ),
-                Text(model.distance.toStringAsPrecision(3)),
+                Text(model.distance.toStringAsPrecision(3) + ' mi'),
               ],
             ),
           ],

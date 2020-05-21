@@ -92,8 +92,7 @@ class DiningDataProvider extends ChangeNotifier {
       for (DiningModel model in _diningModels.values.toList()) {
         if (model.coordinates != null) {
           var distance = calculateDistance(_coordinates.lat, _coordinates.lon,
-                  model.coordinates.lat, model.coordinates.lon) *
-              0.00062137;
+              model.coordinates.lat, model.coordinates.lon);
           model.distance = distance;
         }
       }
