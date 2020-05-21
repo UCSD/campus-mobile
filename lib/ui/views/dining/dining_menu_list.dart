@@ -133,7 +133,8 @@ class _DiningMenuListState extends State<DiningMenuList> {
         selectedColor: Theme.of(context).textTheme.button.color,
         fillColor: Theme.of(context).buttonColor,
         borderRadius: BorderRadius.circular(10),
-        constraints: BoxConstraints.expand(width: 120, height: 38),
+        constraints: BoxConstraints.expand(
+            width: (MediaQuery.of(context).size.width - 40) * .33, height: 38),
         children: <Widget>[
           Text('Vegetarian'),
           Text('Vegan'),
@@ -152,43 +153,46 @@ class _DiningMenuListState extends State<DiningMenuList> {
   }
 
   Widget buildMealButtons(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        LabeledRadio(
-          title: 'Breakfast',
-          value: Meal.breakfast,
-          groupValue: Provider.of<DiningDataProvider>(context).mealTime,
-          onChanged: (Meal value) {
-            setState(() {
-              Provider.of<DiningDataProvider>(context, listen: false).mealTime =
-                  value;
-            });
-          },
-        ),
-        LabeledRadio(
-          title: 'Lunch',
-          value: Meal.lunch,
-          groupValue: Provider.of<DiningDataProvider>(context).mealTime,
-          onChanged: (Meal value) {
-            setState(() {
-              Provider.of<DiningDataProvider>(context, listen: false).mealTime =
-                  value;
-            });
-          },
-        ),
-        LabeledRadio(
-          title: 'Dinner',
-          value: Meal.dinner,
-          groupValue: Provider.of<DiningDataProvider>(context).mealTime,
-          onChanged: (Meal value) {
-            setState(() {
-              Provider.of<DiningDataProvider>(context, listen: false).mealTime =
-                  value;
-            });
-          },
-        )
-      ],
+    return Container(
+      width: MediaQuery.of(context).size.width * .90,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          LabeledRadio(
+            title: 'Breakfast',
+            value: Meal.breakfast,
+            groupValue: Provider.of<DiningDataProvider>(context).mealTime,
+            onChanged: (Meal value) {
+              setState(() {
+                Provider.of<DiningDataProvider>(context, listen: false)
+                    .mealTime = value;
+              });
+            },
+          ),
+          LabeledRadio(
+            title: 'Lunch',
+            value: Meal.lunch,
+            groupValue: Provider.of<DiningDataProvider>(context).mealTime,
+            onChanged: (Meal value) {
+              setState(() {
+                Provider.of<DiningDataProvider>(context, listen: false)
+                    .mealTime = value;
+              });
+            },
+          ),
+          LabeledRadio(
+            title: 'Dinner',
+            value: Meal.dinner,
+            groupValue: Provider.of<DiningDataProvider>(context).mealTime,
+            onChanged: (Meal value) {
+              setState(() {
+                Provider.of<DiningDataProvider>(context, listen: false)
+                    .mealTime = value;
+              });
+            },
+          ),
+        ],
+      ),
     );
   }
 }
@@ -205,20 +209,26 @@ class LabeledRadio extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Radio(
-          value: value,
-          groupValue: groupValue,
-          onChanged: onChanged,
-          activeColor: Theme.of(context).buttonColor,
-        ),
-        Text(
-          title,
-          style: TextStyle(fontSize: 16),
-        ),
-        SizedBox(width: 20)
-      ],
+    return Expanded(
+      child: Row(
+        children: <Widget>[
+          Radio(
+            value: value,
+            groupValue: groupValue,
+            onChanged: onChanged,
+            activeColor: Theme.of(context).buttonColor,
+          ),
+          Flexible(
+            child: Container(
+              child: Text(
+                title,
+                style: TextStyle(fontSize: 16),
+                overflow: TextOverflow.clip,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
