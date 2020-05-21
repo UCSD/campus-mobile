@@ -39,9 +39,8 @@ class PushNotificationDataProvider extends ChangeNotifier {
       _deviceData = _readIosDeviceInfo(await deviceInfoPlugin.iosInfo);
       _fcm.requestNotificationPermissions(const IosNotificationSettings(
           sound: true, badge: true, alert: true, provisional: true));
-      _fcm.onIosSettingsRegistered.listen((IosNotificationSettings settings) {
-        print("Settings registered: $settings");
-      });
+      _fcm.onIosSettingsRegistered
+          .listen((IosNotificationSettings settings) {});
     }
   }
 
@@ -91,7 +90,6 @@ class PushNotificationDataProvider extends ChangeNotifier {
     } else {
       _error = 'failed to fetch topics';
     }
-    print(_topicSubscriptionState);
     notifyListeners();
   }
 
@@ -151,15 +149,12 @@ class PushNotificationDataProvider extends ChangeNotifier {
   /// registers device to receive push notifications
   Future<bool> registerDevice(String accessToken) async {
     String deviceId = _deviceData['deviceId'];
-    print('device id');
-    print(deviceId);
     if (deviceId == null) {
       _error = 'Failed to get device ID';
       return false;
     } else {
       // Get the token for this device
       String fcmToken = await _fcm.getToken();
-      print('token is: ' + fcmToken);
       if (fcmToken.isNotEmpty && (accessToken?.isNotEmpty ?? false)) {
         Map<String, String> headers = {
           'Authorization': 'Bearer ' + accessToken
@@ -193,6 +188,13 @@ class PushNotificationDataProvider extends ChangeNotifier {
     } else {
       _error = 'Failed to delete firebase token.';
       return false;
+    }
+  }
+
+  void unsubscribeFromAllTopics() {
+    _unsubscribeToTopics(_topicSubscriptionState.keys.toList());
+    for (String topic in _topicSubscriptionState.keys) {
+      topicSubscriptionState[topic] = false;
     }
   }
 

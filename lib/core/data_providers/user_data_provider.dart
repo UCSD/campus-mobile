@@ -88,15 +88,12 @@ class UserDataProvider extends ChangeNotifier {
   /// Load [UserProfileModel] from persistent storage
   /// Will create persistent storage if no data is found
   Future _loadSavedUserProfile() async {
-    print('loading saved user profile...');
     Hive.registerAdapter(UserProfileModelAdapter());
     var userBox = await Hive.openBox<UserProfileModel>('UserProfileModel');
     UserProfileModel tempUserProfile =
         await _createNewUser(UserProfileModel.fromJson({}));
     if (userBox.get('UserProfileModel') == null) {
       await userBox.put('UserProfileModel', tempUserProfile);
-    } else {
-      print(userBox.get('UserProfileModel').toJson());
     }
     tempUserProfile = userBox.get('UserProfileModel');
     _userProfileModel = tempUserProfile;
@@ -198,7 +195,6 @@ class UserDataProvider extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
-    print('logged in');
     return returnVal;
   }
 
@@ -225,12 +221,11 @@ class UserDataProvider extends ChangeNotifier {
     _pushNotificationDataProvider
         .unregisterDevice(_authenticationModel.accessToken);
     updateAuthenticationModel(AuthenticationModel.fromJson({}));
-    updateUserProfileModel(UserProfileModel.fromJson({}));
+    updateUserProfileModel(await _createNewUser(UserProfileModel.fromJson({})));
     _deletePasswordFromDevice();
     _deleteUsernameFromDevice();
     var box = await Hive.openBox<AuthenticationModel>('AuthenticationModel');
     await box.clear();
-    print('logged out');
     _isLoading = false;
     notifyListeners();
   }
@@ -253,8 +248,6 @@ class UserDataProvider extends ChangeNotifier {
         /// so create a new profile and upload to DB using [postUserProfile]
         UserProfileModel newModel = _userProfileService.userProfileModel;
         if (newModel.ucsdaffiliation == null) {
-          print('creating new profle ....');
-          print(newModel);
           newModel = await _createNewUser(newModel);
           await postUserProfile(newModel);
         } else {
@@ -271,11 +264,11 @@ class UserDataProvider extends ChangeNotifier {
   }
 
   /// Given a list of topics
+  /// invoke [_pushNotificationDataProvider.unsubscribeFromAllTopics()]
   /// invoke [_pushNotificationDataProvider.toggleNotificationsForTopic] on each of the topics
   void _subscribeToPushNotificationTopics(List<String> topics) {
     /// turn on all saved push notifications preferences for user
-    print('topics');
-    print(topics);
+    _pushNotificationDataProvider.unsubscribeFromAllTopics();
     for (String topic in topics) {
       _pushNotificationDataProvider.toggleNotificationsForTopic(topic);
     }
@@ -318,8 +311,6 @@ class UserDataProvider extends ChangeNotifier {
 
     /// save settings to local storage
     await updateUserProfileModel(profile);
-    print('uploading profile');
-    print(profile.toJson());
 
     /// check if user is logged in
     if (_authenticationModel.isLoggedIn(_authenticationService.lastUpdated)) {
