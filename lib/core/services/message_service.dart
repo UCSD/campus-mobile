@@ -8,7 +8,7 @@ class MessageService {
   final String mymessages_endpoint =
       'https://api.ucsd.edu:8243/mp-mymessages/1.0.0/messages?start=';
   final String topics_endpoint =
-      'https://h6rc133pbh.execute-api.us-west-2.amazonaws.com/prod/topics?topics=all,freefood&start=';
+      'https://h6rc133pbh.execute-api.us-west-2.amazonaws.com/prod/topics?';
   bool _isLoading = false;
   DateTime _lastUpdated;
   String _error;
@@ -42,10 +42,12 @@ class MessageService {
     _error = null;
     _isLoading = true;
 
+    String topicsEndpoint = 'topics=' + topics.join(',');
+    String timestampEndpoint = '&start=' + timestamp.toString();
     try {
       /// fetch data
       String _response = await _networkHelper
-          .fetchData(topics_endpoint + timestamp.toString());
+          .fetchData(topics_endpoint + topicsEndpoint + timestampEndpoint);
 
       /// parse data
       final data = messagesFromJson(_response);
