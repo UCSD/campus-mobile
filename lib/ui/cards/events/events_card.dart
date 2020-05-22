@@ -1,11 +1,10 @@
+import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/events_data_provider.dart';
-import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
-import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
-import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/core/models/events_model.dart';
-import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
+import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
 import 'package:campus_mobile_experimental/ui/views/events/events_list.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class EventsCard extends StatelessWidget {
@@ -35,7 +34,7 @@ class EventsCard extends StatelessWidget {
       reload: () =>
           Provider.of<EventsDataProvider>(context, listen: false).fetchEvents(),
       isLoading: Provider.of<EventsDataProvider>(context).isLoading,
-      title: Text("Events"),
+      titleText: "Events",
       errorText: Provider.of<EventsDataProvider>(context).error,
       child: () => buildEventsCard(
           Provider.of<EventsDataProvider>(context).eventsModels),

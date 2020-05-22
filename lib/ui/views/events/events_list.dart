@@ -1,9 +1,11 @@
+import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/events_data_provider.dart';
-import 'package:flutter/material.dart';
-import 'package:campus_mobile_experimental/ui/reusable_widgets/image_loader.dart';
 import 'package:campus_mobile_experimental/core/models/events_model.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
-import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
+import 'package:campus_mobile_experimental/ui/reusable_widgets/image_loader.dart';
+import 'package:campus_mobile_experimental/ui/reusable_widgets/time_range_widget.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class EventsList extends StatelessWidget {
@@ -37,7 +39,9 @@ class EventsList extends StatelessWidget {
     }
 
     return listSize != null
-        ? Column(
+        ? ListView(
+            primary: false,
+            shrinkWrap: true,
             children: ListTile.divideTiles(tiles: eventTiles, context: context)
                 .toList(),
           )
@@ -52,24 +56,57 @@ class EventsList extends StatelessWidget {
 
   Widget buildEventTile(EventModel data, BuildContext context) {
     return ListTile(
+      isThreeLine: true,
       onTap: () {
         Navigator.pushNamed(context, RoutePaths.EventDetailView,
             arguments: data);
       },
-      title: Text(
-        data.title,
-        textAlign: TextAlign.start,
-        overflow: TextOverflow.ellipsis,
+      title: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 3.0),
+        child: Text(
+          data.title,
+          textAlign: TextAlign.start,
+          overflow: TextOverflow.ellipsis,
+          maxLines: 2,
+          style: TextStyle(fontSize: 16.0),
+        ),
       ),
-      subtitle: Text(
-        data.description,
-        textAlign: TextAlign.start,
-        overflow: TextOverflow.ellipsis,
-      ),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
+      subtitle: subtitle(data),
+    );
+  }
+
+  Widget subtitle(EventModel data) {
+    return Container(
+      height: 60,
+      child: Row(
         children: <Widget>[
-          ImageLoader(url: data.imageThumb),
+          Flexible(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  data.description,
+                  textAlign: TextAlign.start,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                  style: TextStyle(fontSize: 16.0),
+                ),
+                SizedBox(height: 5),
+                Row(
+                  children: <Widget>[
+                    Text(DateFormat.MMMMd().format(data.eventDate.toLocal()) +
+                        ', '),
+                    TimeRangeWidget(time: data.startTime + ' - ' + data.endTime)
+                  ],
+                ),
+              ],
+            ),
+          ),
+          SizedBox(width: 4),
+          ImageLoader(
+            url: data.imageThumb,
+            fullSize: true,
+          ),
         ],
       ),
     );

@@ -22,7 +22,7 @@ class CardsDataProvider extends ChangeNotifier {
     _studentCards = ['finals', 'schedule'];
     _cardOrder = [
 //      'availability',
-//      'dining',
+      'dining',
 //      'events',
 //      'links',
 //      'news',

@@ -1,11 +1,11 @@
+import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/dining_data_proivder.dart';
 import 'package:campus_mobile_experimental/core/models/dining_model.dart';
+import 'package:campus_mobile_experimental/ui/cards/dining/dining_list.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
 import 'package:flutter/material.dart';
-import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:provider/provider.dart';
-import 'package:campus_mobile_experimental/ui/cards/dining/dining_list.dart';
 
 class DiningCard extends StatelessWidget {
   @override
@@ -17,7 +17,7 @@ class DiningCard extends StatelessWidget {
       reload: () => Provider.of<DiningDataProvider>(context, listen: false)
           .fetchDiningLocations(),
       isLoading: Provider.of<DiningDataProvider>(context).isLoading,
-      title: buildTitle("Dining"),
+      titleText: "Dining",
       errorText: Provider.of<DiningDataProvider>(context).error,
       child: () => buildDiningCard(
           Provider.of<DiningDataProvider>(context).diningModels),

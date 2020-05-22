@@ -18,17 +18,10 @@ class MyChartCard extends StatelessWidget {
           .toggleCard('MyStudentChart'),
       reload: () => null,
       isLoading: false,
-      title: buildTitle(),
+      titleText: "MyStudentChart",
       errorText: null,
       child: () => buildCardContent(context),
       actionButtons: buildActionButtons(context),
-    );
-  }
-
-  Widget buildTitle() {
-    return Text(
-      "MyStudentChart",
-      textAlign: TextAlign.left,
     );
   }
 
@@ -74,7 +67,8 @@ class MyChartCard extends StatelessWidget {
   }
 
   void handleTap() {
-    String myChartUrl = 'https://mystudentchart.ucsd.edu/shs/Authentication/Saml/Login?IdP=UCSD%20STUDENT%20AD%20LOGIN';
+    String myChartUrl =
+        'https://mystudentchart.ucsd.edu/shs/Authentication/Saml/Login?IdP=UCSD%20STUDENT%20AD%20LOGIN';
     openLink(myChartUrl);
   }
 

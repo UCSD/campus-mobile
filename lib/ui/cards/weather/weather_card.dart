@@ -1,12 +1,11 @@
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/weather_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/weather_model.dart';
+import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
-
 import 'package:provider/provider.dart';
-import 'package:campus_mobile_experimental/core/data_providers/weather_data_provider.dart';
 
 const String WEATHER_ICON_BASE_URL =
     'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/images/v1/weather-icons/';
@@ -21,7 +20,7 @@ class WeatherCard extends StatelessWidget {
       reload: () => Provider.of<WeatherDataProvider>(context, listen: false)
           .fetchWeather(),
       isLoading: Provider.of<WeatherDataProvider>(context).isLoading,
-      title: buildTitle(),
+      titleText: 'Weather',
       errorText: Provider.of<WeatherDataProvider>(context).error,
       child: () => buildCardContent(
           Provider.of<WeatherDataProvider>(context).weatherModel),
@@ -61,7 +60,7 @@ class WeatherCard extends StatelessWidget {
   }
 
   Widget buildCardContent(WeatherModel data) {
-    return Column(children: <Widget>[
+    return ListView(shrinkWrap: true, primary: false, children: <Widget>[
       buildCurrentWeather(data.currentWeather),
       buildWeeklyForecast(data.weeklyForecast),
     ]);
@@ -109,13 +108,6 @@ class WeatherCard extends StatelessWidget {
       trailing: Image.network(
         WEATHER_ICON_BASE_URL + data.icon + '.png',
       ),
-    );
-  }
-
-  Widget buildTitle() {
-    return Text(
-      "Weather",
-      textAlign: TextAlign.left,
     );
   }
 

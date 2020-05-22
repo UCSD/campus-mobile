@@ -1,11 +1,11 @@
+import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/parking_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/parking_model.dart';
-import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
-import 'package:flutter/material.dart';
-import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/ui/cards/parking/parking_display.dart';
+import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/dots_indicator.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ParkingCard extends StatefulWidget {
@@ -25,7 +25,7 @@ class _ParkingCardState extends State<ParkingCard> {
 
   Widget build(BuildContext context) {
     return CardContainer(
-      title: Text("Parking"),
+      titleText: "Parking",
       isLoading: _parkingDataProvider.isLoading,
       reload: () => _parkingDataProvider.fetchParkingLots(),
       errorText: _parkingDataProvider.error,
