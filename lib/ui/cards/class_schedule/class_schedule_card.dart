@@ -3,10 +3,9 @@ import 'package:campus_mobile_experimental/core/data_providers/cards_data_provid
 import 'package:campus_mobile_experimental/core/data_providers/class_schedule_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/class_schedule_model.dart';
 import 'package:campus_mobile_experimental/ui/cards/class_schedule/upcoming_courses_list.dart';
-import 'package:campus_mobile_experimental/ui/reusable_widgets/time_range_widget.dart';
-
 import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/last_updated_widget.dart';
+import 'package:campus_mobile_experimental/ui/reusable_widgets/time_range_widget.dart';
 import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -35,7 +34,7 @@ class ClassScheduleCard extends StatelessWidget {
           Provider.of<ClassScheduleDataProvider>(context, listen: false)
               .fetchData(),
       isLoading: Provider.of<ClassScheduleDataProvider>(context).isLoading,
-      title: Text("Classes"),
+      titleText: "Classes",
       errorText: Provider.of<ClassScheduleDataProvider>(context).error,
       child: () => buildClassScheduleCard(
         Provider.of<ClassScheduleDataProvider>(context).upcomingCourses,

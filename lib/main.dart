@@ -54,6 +54,7 @@ class CampusMobile extends StatelessWidget {
         title: 'UC San Diego',
         theme: ThemeData(
           primarySwatch: ColorPrimary,
+          primaryColor: lightPrimaryColor,
           accentColor: lightAccentColor,
           brightness: Brightness.light,
           buttonColor: lightButtonColor,
@@ -63,6 +64,7 @@ class CampusMobile extends StatelessWidget {
         ),
         darkTheme: ThemeData(
           primarySwatch: ColorPrimary,
+          primaryColor: darkPrimaryColor,
           accentColor: darkAccentColor,
           brightness: Brightness.dark,
           buttonColor: darkButtonColor,

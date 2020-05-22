@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 
 class CardContainer extends StatelessWidget {
-  const CardContainer(
-      {Key key,
-      @required this.title,
-      @required this.isLoading,
-      @required this.reload,
-      @required this.errorText,
-      @required this.child,
-      @required this.active,
-      @required this.hide,
-      this.overFlowMenu,
-      this.actionButtons,
-      this.hideMenu})
-      : super(key: key);
+  const CardContainer({
+    Key key,
+    @required this.titleText,
+    @required this.isLoading,
+    @required this.reload,
+    @required this.errorText,
+    @required this.child,
+    @required this.active,
+    @required this.hide,
+    this.overFlowMenu,
+    this.actionButtons,
+    this.hideMenu,
+  }) : super(key: key);
 
   /// required parameters
-  final Widget title;
+  final String titleText;
   final bool isLoading;
   final bool active;
   final Function hide;
@@ -32,22 +32,39 @@ class CardContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (active) {
-      return Card(
-        semanticContainer: false,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            ListTile(
-              title: title,
-              trailing: buildMenu(),
-            ),
-            buildBody(),
-            actionButtons != null
-                ? Row(
-                    children: actionButtons,
-                  )
-                : Container()
-          ],
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 5),
+        child: Card(
+          semanticContainer: false,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              ListTile(
+                title: Text(
+                  titleText,
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 20.0,
+                  ),
+                ),
+                trailing: ButtonBar(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    buildMenu(),
+                  ],
+                ),
+              ),
+              buildBody(),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 6),
+                child: actionButtons != null
+                    ? Row(
+                        children: actionButtons,
+                      )
+                    : Container(),
+              ),
+            ],
+          ),
         ),
       );
     }
@@ -62,14 +79,14 @@ class CardContainer extends StatelessWidget {
           height: 224, width: 224, child: CircularProgressIndicator());
     } else {
       return Container(
-        constraints: BoxConstraints(maxHeight: 224, maxWidth: 406),
+        constraints: BoxConstraints(maxHeight: 350, maxWidth: 406),
         child: child(),
       );
     }
   }
 
   Widget buildMenu() {
-    if (hideMenu != null && hideMenu) {
+    if (hideMenu ?? false) {
       return null;
     }
     return ButtonBar(

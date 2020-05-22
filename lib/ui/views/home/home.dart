@@ -66,9 +66,9 @@ class _HomeState extends State<Home> {
 //        case 'parking':
 //          orderedCards.add(ParkingCard());
 //          break;
-//        case 'dining':
-//          orderedCards.add(DiningCard());
-//          break;
+        case 'dining':
+          orderedCards.add(DiningCard());
+          break;
 //        case 'news':
 //          orderedCards.add(NewsCard());
 //          break;

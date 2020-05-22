@@ -18,18 +18,11 @@ class ScannerCard extends StatelessWidget {
       hide: () => null,
       reload: () => null,
       isLoading: false,
-      title: buildTitle(),
+      titleText: "QR Scanner",
       errorText: null,
       child: () => buildCardContent(context),
       actionButtons: [buildActionButton(context)],
       hideMenu: true,
-    );
-  }
-
-  Widget buildTitle() {
-    return Text(
-      "QR Scanner",
-      textAlign: TextAlign.left,
     );
   }
 
@@ -40,25 +33,25 @@ class ScannerCard extends StatelessWidget {
         getActionButtonNavigateRoute(context);
       },
       behavior: HitTestBehavior.translucent,
-        child: Row(
-          children: <Widget>[
-            Container(
-              child: Image.asset(
-                'assets/images/QRScanIcon.png',
-                fit: BoxFit.contain,
-                height: 56,
-              ),
-              padding: EdgeInsets.only(
-                left: 10,
-                right: 10,
-              ),
+      child: Row(
+        children: <Widget>[
+          Container(
+            child: Image.asset(
+              'assets/images/QRScanIcon.png',
+              fit: BoxFit.contain,
+              height: 56,
             ),
-            Text(
-              getCardContentText(context),
-              textAlign: TextAlign.left,
-            )
-          ],
-        ),
+            padding: EdgeInsets.only(
+              left: 10,
+              right: 10,
+            ),
+          ),
+          Text(
+            getCardContentText(context),
+            textAlign: TextAlign.left,
+          )
+        ],
+      ),
     );
   }
 

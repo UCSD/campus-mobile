@@ -1,9 +1,10 @@
+import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/news_data_provider.dart';
-import 'package:flutter/material.dart';
-import 'package:campus_mobile_experimental/ui/reusable_widgets/image_loader.dart';
 import 'package:campus_mobile_experimental/core/models/news_model.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
-import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
+import 'package:campus_mobile_experimental/ui/reusable_widgets/image_loader.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class NewsList extends StatelessWidget {
@@ -41,7 +42,9 @@ class NewsList extends StatelessWidget {
     }
 
     return listSize != null
-        ? Column(
+        ? ListView(
+            primary: false,
+            shrinkWrap: true,
             children: ListTile.divideTiles(tiles: newsTiles, context: context)
                 .toList(),
           )
@@ -55,24 +58,55 @@ class NewsList extends StatelessWidget {
 
   Widget buildNewsTile(Item newsItem, BuildContext context) {
     return ListTile(
+      isThreeLine: true,
       onTap: () {
         Navigator.pushNamed(context, RoutePaths.NewsDetailView,
             arguments: newsItem);
       },
-      title: Text(
-        newsItem.title,
-        textAlign: TextAlign.start,
-        overflow: TextOverflow.ellipsis,
+      title: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 3.0),
+        child: Text(
+          newsItem.title,
+          textAlign: TextAlign.start,
+          overflow: TextOverflow.ellipsis,
+          maxLines: 2,
+          style: TextStyle(fontSize: 16.0),
+        ),
       ),
-      subtitle: Text(
-        newsItem.description,
-        textAlign: TextAlign.start,
-        overflow: TextOverflow.ellipsis,
-      ),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
+      subtitle: subtitle(newsItem),
+    );
+  }
+
+  Widget subtitle(Item data) {
+    return Container(
+      height: 60,
+      child: Row(
         children: <Widget>[
-          ImageLoader(url: newsItem.image),
+          Flexible(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  data.description,
+                  textAlign: TextAlign.start,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                  style: TextStyle(fontSize: 16.0),
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  DateFormat.yMMMMd().format(data.date.toLocal()),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(width: 4),
+          ImageLoader(
+            url: data.image,
+            fullSize: true,
+          ),
         ],
       ),
     );
