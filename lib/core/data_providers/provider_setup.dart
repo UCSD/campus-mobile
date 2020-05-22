@@ -40,6 +40,7 @@ List<SingleChildWidget> independentServices = [
   ),
   ChangeNotifierProvider<PushNotificationDataProvider>(
     create: (_) => PushNotificationDataProvider(),
+    lazy: false,
   ),
   ChangeNotifierProvider<SurfDataProvider>(
     create: (_) {
@@ -116,7 +117,7 @@ List<SingleChildWidget> dependentServices = [
     /// once loaded from memory get the user's online profile
     _userDataProvider
         .loadSavedData()
-        .whenComplete(() => _userDataProvider.getUserProfile());
+        .whenComplete(() => _userDataProvider.fetchUserProfile());
     return _userDataProvider;
   }, update: (_, pushNotificationDataProvider, _userDataProvider) {
     _userDataProvider.pushNotificationDataProvider =

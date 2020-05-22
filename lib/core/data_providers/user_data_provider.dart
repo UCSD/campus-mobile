@@ -25,13 +25,6 @@ class UserDataProvider extends ChangeNotifier {
     ///default authentication model and profile is needed in this class
     _authenticationModel = AuthenticationModel.fromJson({});
     _userProfileModel = UserProfileModel.fromJson({});
-
-    _notificationsSettingsStates = {
-      'campusAnnouncements': true,
-      'freeFood': true,
-      'shuttle': true
-    };
-    _notificationsSettings = ['campusAnnouncements', 'freeFood', 'shuttle'];
   }
 
   ///STATES
@@ -49,11 +42,8 @@ class UserDataProvider extends ChangeNotifier {
   UserProfileService _userProfileService;
   PushNotificationDataProvider _pushNotificationDataProvider;
 
-  Map<String, bool> _notificationsSettingsStates;
-
-  List<String> _notificationsSettings;
-
-  ///Update the authentication model saved in state and save the model in persistent storage
+  /// Update the [AuthenticationModel] stored in state
+  /// overwrite the [AuthenticationModel] in persistent storage with the model passed in
   Future updateAuthenticationModel(AuthenticationModel model) async {
     _authenticationModel = model;
     var box = await Hive.openBox<AuthenticationModel>('AuthenticationModel');
@@ -61,51 +51,88 @@ class UserDataProvider extends ChangeNotifier {
     _lastUpdated = DateTime.now();
   }
 
-  ///Load data from persistent storage
-  ///Will create persistent storage if  no data is found
+  /// Update the [UserProfileModel] stored in state
+  /// overwrite the [UserProfileModel] in persistent storage with the model passed in
+  Future updateUserProfileModel(UserProfileModel model) async {
+    _userProfileModel = model;
+    var box = await Hive.box<UserProfileModel>('UserProfileModel');
+    await box.put('UserProfileModel', model);
+    _lastUpdated = DateTime.now();
+  }
+
+  /// Load data from persistent storage by invoking the following methods:
+  /// [_loadSavedAuthenticationModel]
+  /// [_loadSavedUserProfile]
   Future loadSavedData() async {
+    await _loadSavedAuthenticationModel();
+
+    await _loadSavedUserProfile();
+  }
+
+  /// Load [AuthenticationModel] from persistent storage
+  /// Will create persistent storage if no data is found
+  Future _loadSavedAuthenticationModel() async {
     Hive.registerAdapter(AuthenticationModelAdapter());
-    var box = await Hive.openBox<AuthenticationModel>('AuthenticationModel');
+    var authBox =
+        await Hive.openBox<AuthenticationModel>('AuthenticationModel');
     AuthenticationModel temp = AuthenticationModel.fromJson({});
     //check to see if we have added the authentication model into the box already
-    if (box.get('AuthenticationModel') == null) {
-      await box.put('AuthenticationModel', temp);
+    if (authBox.get('AuthenticationModel') == null) {
+      await authBox.put('AuthenticationModel', temp);
     }
-    temp = box.get('AuthenticationModel');
+    temp = authBox.get('AuthenticationModel');
     _authenticationModel = temp;
     await refreshToken();
   }
 
-  ///Save encrypted password to device
-  void saveEncryptedPasswordToDevice(String encryptedPassword) {
+  /// Load [UserProfileModel] from persistent storage
+  /// Will create persistent storage if no data is found
+  Future _loadSavedUserProfile() async {
+    Hive.registerAdapter(UserProfileModelAdapter());
+    var userBox = await Hive.openBox<UserProfileModel>('UserProfileModel');
+    UserProfileModel tempUserProfile =
+        await _createNewUser(UserProfileModel.fromJson({}));
+    if (userBox.get('UserProfileModel') == null) {
+      await userBox.put('UserProfileModel', tempUserProfile);
+    }
+    tempUserProfile = userBox.get('UserProfileModel');
+    _userProfileModel = tempUserProfile;
+    _subscribeToPushNotificationTopics(_userProfileModel.subscribedTopics);
+    notifyListeners();
+  }
+
+  /// Save encrypted password to device
+  void _saveEncryptedPasswordToDevice(String encryptedPassword) {
     storage.write(key: 'encrypted_password', value: encryptedPassword);
   }
 
-  ///Get encrypted password that has been saved to device
-  Future<String> getEncryptedPasswordFromDevice() {
+  /// Get encrypted password that has been saved to device
+  Future<String> _getEncryptedPasswordFromDevice() {
     return storage.read(key: 'encrypted_password');
   }
 
-  ///Save email to device
-  void saveUsernameToDevice(String username) {
+  /// Save username to device
+  void _saveUsernameToDevice(String username) {
     storage.write(key: 'username', value: username);
   }
 
-  ///Get email from device
-  Future<String> getUsernameFromDevice() {
+  /// Get username from device
+  Future<String> _getUsernameFromDevice() {
     return storage.read(key: 'username');
   }
 
-  void deleteUsernameFromDevice() {
+  /// Delete username from device
+  void _deleteUsernameFromDevice() {
     storage.delete(key: 'username');
   }
 
-  void deletePasswordFromDevice() {
+  /// Delete password from device
+  void _deletePasswordFromDevice() {
     storage.delete(key: 'password');
   }
 
-  ///Encrypt given username and password and store on device
-  void encryptLoginInfo(String username, String password) {
+  /// Encrypt given username and password and store on device
+  void _encryptLoginInfo(String username, String password) {
     // TODO: import assets/public_key.txt
     final String pkString = '-----BEGIN PUBLIC KEY-----\n' +
         'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDJD70ejMwsmes6ckmxkNFgKley\n' +
@@ -122,15 +149,15 @@ class UserDataProvider extends ChangeNotifier {
     cipher.init(true, keyParametersPublic);
     Uint8List output = cipher.process(utf8.encode(password));
     var base64EncodedText = base64.encode(output);
-    saveUsernameToDevice(username);
-    saveEncryptedPasswordToDevice(base64EncodedText);
+    _saveUsernameToDevice(username);
+    _saveEncryptedPasswordToDevice(base64EncodedText);
   }
 
-  ///logs user in with saved credentials on device
-  ///if this login mechanism fails then the user is logged out
-  Future<bool> silentLogin() async {
-    String username = await getUsernameFromDevice();
-    String encryptedPassword = await getEncryptedPasswordFromDevice();
+  /// Logs user in with saved credentials on device
+  /// If this login mechanism fails then the user is logged out
+  Future<bool> _silentLogin() async {
+    String username = await _getUsernameFromDevice();
+    String encryptedPassword = await _getEncryptedPasswordFromDevice();
     if (username != null && encryptedPassword != null) {
       final String base64EncodedWithEncryptedPassword =
           base64.encode(utf8.encode(username + ':' + encryptedPassword));
@@ -149,35 +176,45 @@ class UserDataProvider extends ChangeNotifier {
     return false;
   }
 
-  ///authenticate a user given an email and password
-  ///upon logging in we should make sure that users upload the correct
-  ///ucsdaffiliation and classification
+  /// Authenticate a user given an username and password
+  /// Upon logging in we should make sure that users has an account
+  /// If the user doesn't have an account one will be made by invoking [_createNewUser]
   Future<bool> login(String username, String password) async {
     bool returnVal = false;
     if ((username?.isNotEmpty ?? false) && (password?.isNotEmpty ?? false)) {
-      encryptLoginInfo(username, password);
+      _encryptLoginInfo(username, password);
       _error = null;
       _isLoading = true;
       notifyListeners();
-      if (await silentLogin()) {
-        await getUserProfile();
+      if (await _silentLogin()) {
+        await fetchUserProfile();
+
+        /// turn on all saved push notifications preferences for user
+        _subscribeToPushNotificationTopics(userProfileModel.subscribedTopics);
         returnVal = true;
       }
       _isLoading = false;
       notifyListeners();
     }
-    print('logged in');
     return returnVal;
   }
 
+  /// Remove topic from [_userProfileModel.subscribedTopics]
+  /// Use [_pushNotificationDataProvider] to un/subscribe device from push notifications
   void toggleNotifications(String topic) {
-    _notificationsSettingsStates[topic] = !_notificationsSettingsStates[topic];
-    //todo: hookup topic subscription
+    if (_userProfileModel.subscribedTopics.contains(topic)) {
+      _userProfileModel.subscribedTopics.remove(topic);
+    } else {
+      _userProfileModel.subscribedTopics.add(topic);
+    }
+    postUserProfile(_userProfileModel);
+    _pushNotificationDataProvider.toggleNotificationsForTopic(topic);
     notifyListeners();
   }
 
-  ///Logs out user
-  ///Resets all authentication data and all userProfile data
+  /// Logs out user
+  /// Unregisters device from direct push notification using [_pushNotificationDataProvider]
+  /// Resets all [AuthenticationModel] and [UserProfileModel] data from persistent storage
   void logout() async {
     _error = null;
     _isLoading = true;
@@ -185,18 +222,20 @@ class UserDataProvider extends ChangeNotifier {
     _pushNotificationDataProvider
         .unregisterDevice(_authenticationModel.accessToken);
     updateAuthenticationModel(AuthenticationModel.fromJson({}));
-    _userProfileModel = UserProfileModel.fromJson({});
-    deletePasswordFromDevice();
-    deleteUsernameFromDevice();
+    updateUserProfileModel(await _createNewUser(UserProfileModel.fromJson({})));
+    _deletePasswordFromDevice();
+    _deleteUsernameFromDevice();
     var box = await Hive.openBox<AuthenticationModel>('AuthenticationModel');
     await box.clear();
-    print('logged out');
     _isLoading = false;
     notifyListeners();
   }
 
-  ///FETCH USER PROFILE FROM SERVER
-  Future getUserProfile() async {
+  /// Fetch the [UserProfileModel] from the server if the user is logged in
+  /// if the user has no profile in the db then we create on by invoking [_createNewUser]
+  /// invoke [postUserProfile] once user profile is created
+  /// if user has a profile then we invoke [updateUserProfileModel]
+  Future fetchUserProfile() async {
     _error = null;
     _isLoading = true;
     notifyListeners();
@@ -206,12 +245,14 @@ class UserDataProvider extends ChangeNotifier {
         'Authorization': 'Bearer ' + _authenticationModel.accessToken
       };
       if (await _userProfileService.downloadUserProfile(headers)) {
-        _userProfileModel = _userProfileService.userProfileModel;
-
         /// if the user profile has no ucsd affiliation then we know the user is new
         /// so create a new profile and upload to DB using [postUserProfile]
-        if (_userProfileModel.ucsdaffiliation == null) {
-          await createNewUser();
+        UserProfileModel newModel = _userProfileService.userProfileModel;
+        if (newModel.ucsdaffiliation == null) {
+          newModel = await _createNewUser(newModel);
+          await postUserProfile(newModel);
+        } else {
+          await updateUserProfileModel(newModel);
         }
       } else {
         _error = _userProfileService.error;
@@ -223,29 +264,53 @@ class UserDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  ///Create a new user profile based on SSO info
-  Future createNewUser() async {
-    _userProfileModel
-      ..username = await getUsernameFromDevice()
-      ..ucsdaffiliation = _authenticationModel.ucsdaffiliation
-      ..pid = _authenticationModel.pid;
-
-    final pattern = RegExp('[BGJMU]');
-    if (_userProfileModel.ucsdaffiliation.contains(pattern)) {
-      _userProfileModel.classifications =
-          Classifications.fromJson({'student': true});
-    } else {
-      _userProfileModel.classifications =
-          Classifications.fromJson({'student': false});
+  /// Given a list of topics
+  /// invoke [_pushNotificationDataProvider.unsubscribeFromAllTopics()]
+  /// invoke [_pushNotificationDataProvider.toggleNotificationsForTopic] on each of the topics
+  void _subscribeToPushNotificationTopics(List<String> topics) {
+    /// turn on all saved push notifications preferences for user
+    _pushNotificationDataProvider.unsubscribeFromAllTopics();
+    for (String topic in topics) {
+      _pushNotificationDataProvider.toggleNotificationsForTopic(topic);
     }
-    await postUserProfile(_userProfileModel);
   }
 
-  /// UPLOAD USER PROFILE TO SERVER
+  /// Create a new user profile based on SSO info
+  /// Subscribe students to student topics by appending to [profile]'s [subscribedTopics] list
+  /// Subscribe users to public topics appending to [profile]'s [subscribedTopics] list
+  /// invokes [_subscribeToPushNotificationTopics] to subscribe user to topics
+  /// returns newly created [UserProfileModel]
+  Future<UserProfileModel> _createNewUser(UserProfileModel profile) async {
+    try {
+      profile.username = await _getUsernameFromDevice();
+      profile.ucsdaffiliation = _authenticationModel.ucsdaffiliation;
+      profile.pid = _authenticationModel.pid;
+      profile.subscribedTopics =
+          await _pushNotificationDataProvider.publicTopics();
+      final pattern = RegExp('[BGJMU]');
+      if ((profile.ucsdaffiliation ?? "").contains(pattern)) {
+        profile
+          ..classifications = Classifications.fromJson({'student': true})
+          ..subscribedTopics
+              .addAll(await _pushNotificationDataProvider.studentTopics());
+      } else {
+        profile.classifications = Classifications.fromJson({'student': false});
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+    return profile;
+  }
+
+  /// Invoke [updateUserProfileModel] with user profile that was passed in
+  /// If user is logged in upload [UserProfileModel] to DB
   Future postUserProfile(UserProfileModel profile) async {
     _error = null;
     _isLoading = true;
     notifyListeners();
+
+    /// save settings to local storage
+    await updateUserProfileModel(profile);
 
     /// check if user is logged in
     if (_authenticationModel.isLoggedIn(_authenticationService.lastUpdated)) {
@@ -269,14 +334,12 @@ class UserDataProvider extends ChangeNotifier {
     } else {
       _error = 'not logged in';
     }
-    _userProfileModel = profile;
     _isLoading = false;
     notifyListeners();
   }
 
-  ///Uses saved refresh token to reauthenticate user
-  ///Invokes [silentLogin] on failure
-  ///TODO: check if we need to change the loading boolean since this is a silent login mechanism
+  /// Use saved [AuthenticationModel] to refesh access token
+  /// Invokes [_silentLogin] on failure
   Future refreshToken() async {
     _error = null;
     if (await _authenticationService
@@ -295,7 +358,7 @@ class UserDataProvider extends ChangeNotifier {
       _error = _authenticationService.error;
 
       ///Try to use user's credentials to login again
-      await silentLogin();
+      await _silentLogin();
     }
     notifyListeners();
   }
@@ -303,6 +366,8 @@ class UserDataProvider extends ChangeNotifier {
   set pushNotificationDataProvider(PushNotificationDataProvider value) {
     _pushNotificationDataProvider = value;
   }
+
+  List<String> get subscribedTopics => _userProfileModel.subscribedTopics;
 
   ///GETTERS FOR MODELS
   UserProfileModel get userProfileModel => _userProfileModel;
@@ -313,7 +378,4 @@ class UserDataProvider extends ChangeNotifier {
   bool get isLoggedIn => _authenticationModel.isLoggedIn(_lastUpdated);
   bool get isLoading => _isLoading;
   DateTime get lastUpdated => _lastUpdated;
-  Map<String, bool> get notificationsSettingsStates =>
-      _notificationsSettingsStates;
-  List<String> get notificationsSettings => _notificationsSettings;
 }
