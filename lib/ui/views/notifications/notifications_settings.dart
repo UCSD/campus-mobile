@@ -9,17 +9,14 @@ class NotificationsSettingsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ContainerView(
-      child: FutureBuilder(
-        future: getTopics(context),
-        builder: buildSettingsList,
-      ),
+      child: buildSettingsList(context, getTopics(context)),
     );
   }
 
-  Widget buildSettingsList(BuildContext context, AsyncSnapshot topicsData) {
-    return topicsData.hasData
-        ? ListView(children: createList(context, topicsData.data))
-        : CircularProgressIndicator();
+  Widget buildSettingsList(BuildContext context, List<String> topicsData) {
+    return (topicsData ?? []).isNotEmpty
+        ? ListView(children: createList(context, topicsData))
+        : Center(child: CircularProgressIndicator());
   }
 
   List<Widget> createList(BuildContext context, List<String> topicsAvailable) {
@@ -34,9 +31,6 @@ class NotificationsSettingsView extends StatelessWidget {
           onChanged: (_) {
             Provider.of<UserDataProvider>(context, listen: false)
                 .toggleNotifications(topic);
-            print(Provider.of<PushNotificationDataProvider>(context,
-                    listen: false)
-                .topicSubscriptionState);
           },
           activeColor: ColorPrimary,
         ),
@@ -45,15 +39,15 @@ class NotificationsSettingsView extends StatelessWidget {
     return list;
   }
 
-  Future<List<String>> getTopics(BuildContext context) async {
+  List<String> getTopics(BuildContext context) {
     UserDataProvider _userDataProvider = Provider.of<UserDataProvider>(context);
     PushNotificationDataProvider _pushNotificationDataProvider =
         Provider.of<PushNotificationDataProvider>(context);
-    if (_userDataProvider.userProfileModel.classifications.student) {
-      return await _pushNotificationDataProvider.publicTopics() +
-          await _pushNotificationDataProvider.studentTopics();
+    if (_userDataProvider.userProfileModel.classifications?.student ?? false) {
+      return _pushNotificationDataProvider.publicTopics() +
+          _pushNotificationDataProvider.studentTopics();
     } else {
-      return await _pushNotificationDataProvider.publicTopics();
+      return _pushNotificationDataProvider.publicTopics();
     }
   }
 

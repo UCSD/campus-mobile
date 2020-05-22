@@ -76,7 +76,7 @@ class PushNotificationDataProvider extends ChangeNotifier {
   /// fetches topics from endpoint
   /// deletes topics that are no longer supported
   /// transfers over previous subscriptions as well
-  void fetchTopicsList() async {
+  Future fetchTopicsList() async {
     Map<String, bool> newTopics = <String, bool>{};
     if (await _notificationService.fetchTopics()) {
       for (TopicsModel model in _notificationService.topicsModel) {
@@ -243,12 +243,9 @@ class PushNotificationDataProvider extends ChangeNotifier {
   }
 
   /// get student only topics
-  Future<List<String>> studentTopics() async {
+  List<String> studentTopics() {
     List<String> topicsToReturn = List<String>();
-    if (_topicsModel == null) {
-      await fetchTopicsList();
-    }
-    for (TopicsModel model in _notificationService.topicsModel) {
+    for (TopicsModel model in _notificationService.topicsModel ?? []) {
       if (model.audienceId == 'student') {
         for (Topic topic in model.topics) {
           topicsToReturn.add(topic.topicId);
@@ -260,12 +257,9 @@ class PushNotificationDataProvider extends ChangeNotifier {
   }
 
   /// get all public topics
-  Future<List<String>> publicTopics() async {
+  List<String> publicTopics() {
     List<String> topicsToReturn = List<String>();
-    if (_topicsModel == null) {
-      await fetchTopicsList();
-    }
-    for (TopicsModel model in _topicsModel) {
+    for (TopicsModel model in _topicsModel ?? []) {
       if (model.audienceId == 'all') {
         for (Topic topic in model.topics) {
           topicsToReturn.add(topic.topicId);

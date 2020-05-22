@@ -97,6 +97,7 @@ class UserDataProvider extends ChangeNotifier {
     }
     tempUserProfile = userBox.get('UserProfileModel');
     _userProfileModel = tempUserProfile;
+    _subscribeToPushNotificationTopics(_userProfileModel.subscribedTopics);
     notifyListeners();
   }
 
@@ -298,7 +299,6 @@ class UserDataProvider extends ChangeNotifier {
     } catch (e) {
       print(e.toString());
     }
-    _subscribeToPushNotificationTopics(profile.subscribedTopics);
     return profile;
   }
 
