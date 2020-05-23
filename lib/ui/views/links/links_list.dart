@@ -37,7 +37,7 @@ class LinksList extends StatelessWidget {
 
     return listSize != null
         ? ListView(
-            primary: false,
+            physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             children: ListTile.divideTiles(tiles: eventTiles, context: context)
                 .toList(),

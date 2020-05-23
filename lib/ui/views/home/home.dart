@@ -13,6 +13,7 @@ import 'package:campus_mobile_experimental/ui/cards/availability/availability_ca
 import 'package:campus_mobile_experimental/ui/cards/links/links_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/dining/dining_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/parking/parking_card.dart';
+import 'package:campus_mobile_experimental/ui/theme/app_layout.dart';
 import 'package:campus_mobile_experimental/ui/views/special_events/banner_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -25,8 +26,12 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: createList(context),
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: cardMargin, vertical: 0.0),
+      child: ListView(
+        padding: EdgeInsets.only(top: cardMargin + 2.0, right: 0.0, bottom: 0.0, left: 0.0),
+        children: createList(context),
+      ),
     );
   }
 
@@ -54,6 +59,24 @@ class _HomeState extends State<Home> {
 
     for (String card in order) {
       switch (card) {
+        case 'MyStudentChart':
+          orderedCards.add(MyChartCard());
+          break;
+        case 'finals':
+          orderedCards.add(FinalsCard());
+          break;
+        case 'schedule':
+          orderedCards.add(ClassScheduleCard());
+          break;
+//        case 'dining':
+//          orderedCards.add(DiningCard());
+//          break;
+        case 'events':
+          orderedCards.add(EventsCard());
+          break;
+        case 'news':
+          orderedCards.add(NewsCard());
+          break;
 //        case 'special_events':
 //          orderedCards.add(BannerCard());
 //          break;
@@ -66,27 +89,10 @@ class _HomeState extends State<Home> {
 //        case 'parking':
 //          orderedCards.add(ParkingCard());
 //          break;
-        case 'dining':
-          orderedCards.add(DiningCard());
-          break;
-//        case 'news':
-//          orderedCards.add(NewsCard());
-//          break;
-//        case 'events':
-//          orderedCards.add(EventsCard());
-//          break;
 //        case 'links':
 //          orderedCards.add(LinksCard());
 //          break;
-        case 'MyStudentChart':
-          orderedCards.add(MyChartCard());
-          break;
-        case 'finals':
-          orderedCards.add(FinalsCard());
-          break;
-        case 'schedule':
-          orderedCards.add(ClassScheduleCard());
-          break;
+
       }
     }
     return orderedCards;

@@ -60,10 +60,14 @@ class WeatherCard extends StatelessWidget {
   }
 
   Widget buildCardContent(WeatherModel data) {
-    return ListView(shrinkWrap: true, primary: false, children: <Widget>[
-      buildCurrentWeather(data.currentWeather),
-      buildWeeklyForecast(data.weeklyForecast),
-    ]);
+    return ListView(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      children: <Widget>[
+        buildCurrentWeather(data.currentWeather),
+        buildWeeklyForecast(data.weeklyForecast),
+      ]
+    );
   }
 
   Widget buildWeeklyForecast(WeeklyForecast weeklyForecast) {

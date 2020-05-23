@@ -25,6 +25,7 @@ class EventDetailView extends StatelessWidget {
           fullSize: true,
         ),
       ),
+      Divider(),
       Text(
         data.title,
         textAlign: TextAlign.center,
@@ -34,7 +35,7 @@ class EventDetailView extends StatelessWidget {
       Text(
         data.location,
         textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 20),
+        style: TextStyle(fontSize: 16),
       ),
       TimeRangeWidget(time: data.startTime + ' - ' + data.endTime),
       Divider(),
@@ -42,14 +43,14 @@ class EventDetailView extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: Text(
           data.description,
-          style: TextStyle(fontSize: 18),
+          style: TextStyle(fontSize: 16),
         ),
       ),
-      FlatButton(
-          child: Text('Learn More'),
-          onPressed: () {
-            launch(data.url);
-          })
+//      FlatButton(
+//          child: Text('Learn More'),
+//          onPressed: () {
+//            launch(data.url);
+//          })
     ];
   }
 }

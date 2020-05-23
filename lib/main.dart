@@ -55,7 +55,7 @@ class CampusMobile extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: ColorPrimary,
           primaryColor: lightPrimaryColor,
-          accentColor: lightAccentColor,
+          accentColor: darkAccentColor,
           brightness: Brightness.light,
           buttonColor: lightButtonColor,
           textTheme: lightThemeText,
@@ -65,7 +65,7 @@ class CampusMobile extends StatelessWidget {
         darkTheme: ThemeData(
           primarySwatch: ColorPrimary,
           primaryColor: darkPrimaryColor,
-          accentColor: darkAccentColor,
+          accentColor: lightAccentColor,
           brightness: Brightness.dark,
           buttonColor: darkButtonColor,
           textTheme: darkThemeText,

@@ -1,5 +1,6 @@
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/notices_model.dart';
+import 'package:campus_mobile_experimental/ui/theme/app_layout.dart';
 import 'package:campus_mobile_experimental/ui/views/special_events/banner_container.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/image_loader.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,7 @@ class NoticesCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      margin: EdgeInsets.only(top: 0.0, right: 0.0, bottom: cardMargin, left: 0.0),
       child: buildBannerView(notice),
     );
   }
