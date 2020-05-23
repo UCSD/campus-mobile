@@ -104,7 +104,6 @@ class _DiningMenuListState extends State<DiningMenuList> {
           SizedBox(height: 10),
           ListView.separated(
             shrinkWrap: true,
-            primary: false,
             itemBuilder: (context, index) {
               return list[index];
             },

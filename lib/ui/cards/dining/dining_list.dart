@@ -1,10 +1,12 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/dining_data_proivder.dart';
 import 'package:campus_mobile_experimental/core/models/dining_model.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/time_range_widget.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class DiningList extends StatelessWidget {
   const DiningList({
@@ -42,7 +44,7 @@ class DiningList extends StatelessWidget {
 
     return listSize != null
         ? ListView(
-            primary: false,
+            physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             children: ListTile.divideTiles(tiles: diningTiles, context: context)
                 .toList(),
@@ -138,26 +140,32 @@ class DiningList extends StatelessWidget {
         data.name,
         textAlign: TextAlign.start,
         //overflow: TextOverflow.ellipsis,
-        style: TextStyle(fontSize: 20, color: Theme.of(context).primaryColor),
+        style: TextStyle(fontSize: 18, color: Theme.of(context).primaryColor),
       ),
       subtitle: getHoursForToday(data.regularHours),
-      trailing: buildIconWithDistance(data.distance, context),
+      trailing: buildIconWithDistance(data, context),
     );
   }
 
-  Widget buildIconWithDistance(double distance, BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Icon(
-          Icons.directions_walk,
-          color: Theme.of(context).primaryColor,
-        ),
-        Text(
-          distance != null ? (distance.toStringAsPrecision(3) + ' mi') : '--',
-          style: TextStyle(color: Theme.of(context).primaryColor),
-        ),
-      ],
+  Widget buildIconWithDistance(DiningModel data, BuildContext context) {
+    return FlatButton(
+      onPressed: () {
+        launch(
+            'https://www.google.com/maps/dir/?api=1&travelmode=walking&destination=${data.coordinates.lat},${data.coordinates.lon}');
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.directions_walk,
+            color: Theme.of(context).primaryColor,
+          ),
+          Text(
+            data.distance != null ? (num.parse(data.distance.toStringAsFixed(1)).toString() + ' mi') : '--',
+            style: TextStyle(color: Theme.of(context).primaryColor),
+          ),
+        ],
+      ),
     );
   }
 }

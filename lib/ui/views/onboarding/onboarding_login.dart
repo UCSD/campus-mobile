@@ -54,11 +54,15 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
             child: Container(
               color: Theme.of(context).accentColor, // lightTextFieldBorderColor,
               child: TextField(
+                style: TextStyle(
+                    textBaseline: TextBaseline.alphabetic,
+                    color: Colors.black
+                ),
                 decoration: InputDecoration(
-                  hintText: 'User ID',
+                  hintText: 'Email',
                   contentPadding: EdgeInsets.only(left: 10),
-                  hintStyle: Theme.of(context).textTheme.body1,
-                  fillColor: Theme.of(context).accentColor,
+                  hintStyle: TextStyle(height:1.0, color: darkAccentColor),
+                  fillColor: Colors.white,
                   filled: true,
                 ),
                 keyboardType: TextInputType.emailAddress,
@@ -71,11 +75,15 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
             child: Container(
               color: Theme.of(context).accentColor, // lightTextFieldBorderColor,
               child: TextField(
+                style: TextStyle(
+                  textBaseline: TextBaseline.alphabetic,
+                  color: Colors.black,
+                ),
                 decoration: InputDecoration(
                   hintText: 'Password',
                   contentPadding: EdgeInsets.only(left: 10),
-                  hintStyle: Theme.of(context).textTheme.body1,
-                  fillColor: Theme.of(context).accentColor,
+                  hintStyle: TextStyle(color: darkAccentColor, height: 1.0),
+                  fillColor: Colors.white,
                   filled: true
                 ),
                 obscureText: true,
