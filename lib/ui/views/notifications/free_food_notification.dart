@@ -17,13 +17,14 @@ class FreeFoodNotification extends StatefulWidget {
 }
 
 class _CheckBoxButtonState extends State<FreeFoodNotification> {
-  String messageId;
   _CheckBoxButtonState(messageId) {
     this.messageId = messageId;
   }
 
   FreeFoodDataProvider _freeFoodDataProvider;
+  String messageId;
 
+  bool _isLoading = false;
   bool _isGoing = false;
   Color _buttonColor = Colors.white;
   Color _borderColor = Color(0xFF034161);
@@ -33,10 +34,12 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     _freeFoodDataProvider = Provider.of<FreeFoodDataProvider>(context);
+    _isLoading = _freeFoodDataProvider.isLoading(messageId);
   }
 
   @override
   Widget build(BuildContext context) {
+    var isOverCount = _freeFoodDataProvider.isOverCount(messageId);
     return Container(
       margin: EdgeInsets.only(top: 10.0),
       child: Row(
@@ -45,8 +48,12 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
             children: <Widget>[
               Text(
                 '${_freeFoodDataProvider.count(messageId)} students are going',
-                style: TextStyle(fontSize: 10, color: Colors.green)),
-              Container(
+                style: TextStyle(
+                  fontSize: 10,
+                  color: isOverCount ? Colors.red : Colors.green
+                )
+              ),
+              isOverCount ? Container(
                 margin: EdgeInsets.only(top: 2.0),
                 child: Row(
                   children: <Widget>[
@@ -57,7 +64,8 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
                     )
                   ],
                 )
-              )
+              ) 
+              : Container()
             ],
             crossAxisAlignment: CrossAxisAlignment.start,
           ),
@@ -82,40 +90,50 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
         ),
       ),
       margin: EdgeInsets.only(right: 10.0),
-      child: Material(
-        color: _buttonColor,
-        child: InkWell(
-          onTap: () {
-            _toggleGoing();
-          },
-          child: Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                SizedBox(
-                  height: 10.0,
-                  width: 8.0,
-                  child: Transform.scale(
-                    scale: 0.5,
-                    child: Checkbox(
-                      checkColor: Colors.green,
-                      activeColor: Colors.white,
-                      value: _isGoing,
-                      onChanged: (bool val) {
-                        _toggleGoing();
-                      },
-                    )
-                  )
-                ),
-                Text(
-                  "I'm Going!",
-                  style: TextStyle(color: _textColor, fontSize: 10)
-                ),
-              ],
+      child: _isLoading ? 
+        Center(
+          child: Container(
+            height: 12,
+            width: 12,
+            child: CircularProgressIndicator(
+              strokeWidth: 1.5,
             )
-          ),
+          )
+        ) :
+        Material(
+          color: _buttonColor,
+          child: InkWell(
+            onTap: () {
+              _toggleGoing();
+            },
+            child: Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  SizedBox(
+                    height: 10.0,
+                    width: 8.0,
+                    child: Transform.scale(
+                      scale: 0.5,
+                      child: Checkbox(
+                        checkColor: Colors.green,
+                        activeColor: Colors.white,
+                        value: _isGoing,
+                        onChanged: (bool val) {
+                          _toggleGoing();
+                        },
+                      )
+                    )
+                  ),
+                  Text(
+                    "I'm Going!",
+                    style: TextStyle(color: _textColor, fontSize: 10)
+                  ),
+                ],
+              )
+            ),
+          )
         )
-      )
     );
   }
 

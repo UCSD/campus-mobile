@@ -47,8 +47,8 @@ dependencies:
 
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
+  # flutter_test:
+  #   sdk: flutter
   hive_generator: 0.7.0+2
   build_runner: 1.8.1
 

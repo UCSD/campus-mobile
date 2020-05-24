@@ -26,16 +26,20 @@ class FreeFoodModel {
 
 class Body {
     int count;
+    int maxCount;
 
     Body({
         this.count,
+        this.maxCount
     });
 
     factory Body.fromJson(Map<String, dynamic> json) => Body(
         count: json["count"],
+        maxCount: json["maxCount"],
     );
 
     Map<String, dynamic> toJson() => {
         "count": count,
+        "maxCount": maxCount,
     };
 }
