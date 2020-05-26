@@ -78,7 +78,10 @@ class FinalsCard extends StatelessWidget {
         child: LastUpdatedWidget(time: lastUpdated),
       ),
     );
-    return ListView(children: listToReturn);
+    return ListView(
+        physics: NeverScrollableScrollPhysics(),
+        children: listToReturn,
+    );
   }
 
   Widget buildClassTitle(String title) {
@@ -102,13 +105,15 @@ class FinalsCard extends StatelessWidget {
   Widget buildTimeRow(String time) {
     return Row(
       children: <Widget>[
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            TimeRangeWidget(
-              time: time,
-            ),
-          ],
+        Flexible(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              TimeRangeWidget(
+                time: time,
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -117,11 +122,13 @@ class FinalsCard extends StatelessWidget {
   Widget buildLocationRow(String location) {
     return Row(
       children: <Widget>[
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(location),
-          ],
+        Flexible(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(location),
+            ],
+          ),
         ),
       ],
     );

@@ -12,7 +12,6 @@ class NewsDetailView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ContainerView(
       child: ListView(
-        primary: false,
         padding: const EdgeInsets.all(8.0),
         children: buildDetailView(context),
       ),
@@ -33,17 +32,17 @@ class NewsDetailView extends StatelessWidget {
           fontSize: 26,
         ),
       ),
-      SizedBox(height: 10),
+      SizedBox(height: 4),
       Text(
         DateFormat.yMMMMd().format(data.date),
         style: TextStyle(fontSize: 16),
       ),
-      SizedBox(height: 10),
+      SizedBox(height: 20),
       Text(
         data.description,
-        style: TextStyle(fontSize: 20),
+        style: TextStyle(fontSize: 18),
       ),
-      SizedBox(height: 10),
+      SizedBox(height: 20),
       Center(
         child: Container(
           height: 40,
@@ -55,28 +54,11 @@ class NewsDetailView extends StatelessWidget {
             },
             child: Text(
               'Continue Reading',
-              style: TextStyle(color: Theme.of(context).textTheme.button.color),
+              style: TextStyle(fontSize: 18, color: Theme.of(context).textTheme.button.color),
             ),
           ),
         ),
       ),
-      SizedBox(height: 10),
-      Center(
-        child: Container(
-          height: 40,
-          width: double.infinity,
-          child: FlatButton(
-            color: Theme.of(context).buttonColor,
-            onPressed: () {
-              launch(data.link);
-            },
-            child: Text(
-              'Share Article',
-              style: TextStyle(color: Theme.of(context).textTheme.button.color),
-            ),
-          ),
-        ),
-      )
     ];
   }
 }

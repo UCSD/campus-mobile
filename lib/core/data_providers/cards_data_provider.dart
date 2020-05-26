@@ -21,15 +21,15 @@ class CardsDataProvider extends ChangeNotifier {
     };
     _studentCards = ['finals', 'schedule'];
     _cardOrder = [
-//      'availability',
-      'dining',
-//      'events',
-//      'links',
-//      'news',
-//      'parking',
-//      'weather',
+      'MyStudentChart',
+//      'dining',
+      'events',
+      'news',
 //      'special_events',
-      'MyStudentChart'
+//      'parking',
+//      'availability',
+//      'weather',
+//      'links',
     ];
   }
 

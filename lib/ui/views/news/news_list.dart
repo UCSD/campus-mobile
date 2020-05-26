@@ -43,7 +43,7 @@ class NewsList extends StatelessWidget {
 
     return listSize != null
         ? ListView(
-            primary: false,
+            physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             children: ListTile.divideTiles(tiles: newsTiles, context: context)
                 .toList(),
@@ -70,7 +70,7 @@ class NewsList extends StatelessWidget {
           textAlign: TextAlign.start,
           overflow: TextOverflow.ellipsis,
           maxLines: 2,
-          style: TextStyle(fontSize: 16.0),
+          style: TextStyle(fontSize: 18.0),
         ),
       ),
       subtitle: subtitle(newsItem),
@@ -91,7 +91,6 @@ class NewsList extends StatelessWidget {
                   textAlign: TextAlign.start,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,
-                  style: TextStyle(fontSize: 16.0),
                 ),
                 SizedBox(
                   height: 5,
