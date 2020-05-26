@@ -149,5 +149,6 @@ class MapsDataProvider extends ChangeNotifier {
 
   set mapController(GoogleMapController value) {
     _mapController = value;
+    notifyListeners();
   }
 }
