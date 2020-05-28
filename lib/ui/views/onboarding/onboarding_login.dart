@@ -2,7 +2,6 @@ import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -18,20 +17,30 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
 
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
     _userDataProvider = Provider.of<UserDataProvider>(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: ColorPrimary,
-      body: _userDataProvider.isLoading
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
-          : buildLoginWidget(),
+    return Theme(
+      data: ThemeData(
+        primarySwatch: ColorPrimary,
+        primaryColor: darkPrimaryColor,
+        accentColor: darkAccentColor,
+        brightness: Brightness.dark,
+        buttonColor: darkButtonColor,
+        textTheme: darkThemeText,
+        iconTheme: darkIconTheme,
+      ),
+      child: Scaffold(
+        backgroundColor: ColorPrimary,
+        body: _userDataProvider.isLoading
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : buildLoginWidget(),
+      ),
     );
   }
 
@@ -51,44 +60,29 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
           ),
           SizedBox(height: 100),
           Flexible(
-            child: Container(
-              color: Theme.of(context).accentColor, // lightTextFieldBorderColor,
-              child: TextField(
-                style: TextStyle(
-                    textBaseline: TextBaseline.alphabetic,
-                    color: Colors.black
-                ),
-                decoration: InputDecoration(
-                  hintText: 'Email',
-                  contentPadding: EdgeInsets.only(left: 10),
-                  hintStyle: TextStyle(height:1.0, color: darkAccentColor),
-                  fillColor: Colors.white,
-                  filled: true,
-                ),
-                keyboardType: TextInputType.emailAddress,
-                controller: _emailTextFieldController,
+            child: TextField(
+              decoration: InputDecoration(
+                hintText: 'User ID',
+                contentPadding: EdgeInsets.only(left: 10),
+                hintStyle: darkThemeText.bodyText2,
+                fillColor: darkAccentColor,
+                filled: true,
               ),
+              keyboardType: TextInputType.emailAddress,
+              controller: _emailTextFieldController,
             ),
           ),
           SizedBox(height: 10),
           Flexible(
-            child: Container(
-              color: Theme.of(context).accentColor, // lightTextFieldBorderColor,
-              child: TextField(
-                style: TextStyle(
-                  textBaseline: TextBaseline.alphabetic,
-                  color: Colors.black,
-                ),
-                decoration: InputDecoration(
+            child: TextField(
+              decoration: InputDecoration(
                   hintText: 'Password',
                   contentPadding: EdgeInsets.only(left: 10),
-                  hintStyle: TextStyle(color: darkAccentColor, height: 1.0),
-                  fillColor: Colors.white,
-                  filled: true
-                ),
-                obscureText: true,
-                controller: _passwordTextFieldController,
-              ),
+                  hintStyle: darkThemeText.bodyText2,
+                  fillColor: darkAccentColor,
+                  filled: true),
+              obscureText: true,
+              controller: _passwordTextFieldController,
             ),
           ),
           SizedBox(height: 10),
