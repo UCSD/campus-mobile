@@ -1,10 +1,16 @@
 import 'dart:io';
+import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
+import 'package:campus_mobile_experimental/core/data_providers/messages_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/topics_model.dart';
+import 'package:campus_mobile_experimental/core/services/bottom_navigation_bar_service.dart';
 import 'package:campus_mobile_experimental/core/services/notification_service.dart';
 import 'package:device_info/device_info.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:provider/provider.dart';
+import 'package:provider/provider.dart';
 
 class PushNotificationDataProvider extends ChangeNotifier {
   PushNotificationDataProvider() {
@@ -44,28 +50,34 @@ class PushNotificationDataProvider extends ChangeNotifier {
     }
   }
 
-  /// configures the [_fcm] object to recive push notifications
+  /// configures the [_fcm] object to receive push notifications
   /// TODO: deep linking also belongs here
   Future<void> initPlatformState(BuildContext context) async {
     try {
       _fcm.configure(
         onMessage: (Map<String, dynamic> message) async {
-          print("onMessage: $message");
+          Provider.of<MessagesDataProvider>(context, listen: false)
+              .fetchMessages();
         },
-        //onBackgroundMessage: myBackgroundMessageHandler,
         onLaunch: (Map<String, dynamic> message) async {
-          print("onLaunch: $message");
+          Provider.of<MessagesDataProvider>(context, listen: false)
+              .fetchMessages();
 
-          /// navigate to routeName or home if no route was specified
-          Navigator.of(context)
-              .pushNamed(message["routeName"] ?? 'BottomTabBar');
+          ///switch to the notifications tab
+          Provider.of<BottomNavigationBarProvider>(context, listen: false)
+              .currentIndex = NavigationConstants.NotificationsTab;
         },
         onResume: (Map<String, dynamic> message) async {
-          print("onResume: $message");
+          Provider.of<MessagesDataProvider>(context, listen: false)
+              .fetchMessages();
+
+          ///switch to the notifications tab
+          Provider.of<BottomNavigationBarProvider>(context, listen: false)
+              .currentIndex = NavigationConstants.NotificationsTab;
 
           /// navigate to routeName or home if no route was specified
-          Navigator.of(context)
-              .pushNamed(message["routeName"] ?? 'BottomTabBar');
+          Navigator.of(context).pushNamed(
+              message["routeName"] ?? RoutePaths.BottomNavigationBar);
         },
       );
     } on PlatformException {
