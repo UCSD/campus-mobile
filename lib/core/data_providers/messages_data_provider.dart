@@ -13,6 +13,7 @@ class MessagesDataProvider extends ChangeNotifier {
     _messages = List<MessageElement>();
     _messageService = MessageService();
     _statusText = NotificationsConstants.statusFetching;
+    _hasMoreMessagesToLoad = false;
   }
 
   /// STATES
@@ -21,6 +22,7 @@ class MessagesDataProvider extends ChangeNotifier {
   String _error;
   int _previousTimestamp;
   String _statusText;
+  bool _hasMoreMessagesToLoad;
 
   /// MODELS
   List<MessageElement> _messages;
@@ -29,25 +31,31 @@ class MessagesDataProvider extends ChangeNotifier {
   MessageService _messageService;
 
   //Fetch messages
-  void fetchMessages() async {
+  Future<List<MessageElement>> fetchMessages(bool clearMessages) async {
     _isLoading = true;
-    _statusText = NotificationsConstants.statusFetching;
     _error = null;
     notifyListeners();
-    _previousTimestamp = DateTime.now().millisecondsSinceEpoch;
-    var clearMessages = true;
-
-    if (_userDataProvider != null && _userDataProvider.isLoggedIn) {
-      retrieveMoreMyMessages(clearMessages);
-    } else {
-      retrieveMoreTopicMessages(clearMessages);
+    if (clearMessages) {
+      _clearMessages();
     }
-
-    _isLoading = false;
-    notifyListeners();
+    if (_userDataProvider != null && _userDataProvider.isLoggedIn) {
+      var returnVal = await retrieveMoreMyMessages();
+      _isLoading = false;
+      return returnVal;
+    } else {
+      var returnVal = await retrieveMoreTopicMessages();
+      _isLoading = false;
+      return returnVal;
+    }
   }
 
-  void retrieveMoreMyMessages(bool clearMessages) async {
+  void _clearMessages() {
+    _messages = List<MessageElement>();
+    _hasMoreMessagesToLoad = false;
+    _previousTimestamp = DateTime.now().millisecondsSinceEpoch;
+  }
+
+  Future<List<MessageElement>> retrieveMoreMyMessages() async {
     _isLoading = true;
     _error = null;
 
@@ -62,53 +70,93 @@ class MessagesDataProvider extends ChangeNotifier {
     };
     if (await _messageService.fetchMyMessagesData(timestamp, headers)) {
       List<MessageElement> temp = _messageService.messagingModels.messages;
-      updateMessages(temp, clearMessages);
+      updateMessages(temp);
       makeOrderedMessagesList();
 
       returnedTimestamp = _messageService.messagingModels.next == null
           ? 0
           : _messageService.messagingModels.next;
+      // this is to check if we can no more message to paginate through
+      if (_previousTimestamp == returnedTimestamp || returnedTimestamp == 0) {
+        _hasMoreMessagesToLoad = false;
+      } else {
+        _hasMoreMessagesToLoad = true;
+      }
       _lastUpdated = DateTime.now();
       _previousTimestamp = returnedTimestamp;
+      _isLoading = false;
+      notifyListeners();
+      temp.removeLast();
+      return temp;
     } else {
       if (_messageService.error ==
           'DioError [DioErrorType.RESPONSE]: Http status error [401]') {
-        _userDataProvider.refreshToken();
+        await _userDataProvider.refreshToken();
+        headers["Authorization"] =
+            "Bearer " + _userDataProvider.authenticationModel.accessToken;
+        if (await _messageService.fetchMyMessagesData(timestamp, headers)) {
+          List<MessageElement> temp = _messageService.messagingModels.messages;
+          updateMessages(temp);
+          makeOrderedMessagesList();
+
+          returnedTimestamp = _messageService.messagingModels.next == null
+              ? 0
+              : _messageService.messagingModels.next;
+          // this is to check if we can no more message to paginate through
+          if (_previousTimestamp == returnedTimestamp ||
+              returnedTimestamp == 0) {
+            _hasMoreMessagesToLoad = false;
+          } else {
+            _hasMoreMessagesToLoad = true;
+          }
+          _lastUpdated = DateTime.now();
+          _previousTimestamp = returnedTimestamp;
+        } else {
+          _error = _messageService.error;
+          _statusText = NotificationsConstants.statusFetchProblem;
+        }
       }
       _error = _messageService.error;
       _statusText = NotificationsConstants.statusFetchProblem;
+      _isLoading = false;
+      notifyListeners();
+      return List<MessageElement>();
     }
-
-    _isLoading = false;
-    notifyListeners();
   }
 
-  void retrieveMoreTopicMessages(bool clearMessages) async {
+  Future<List<MessageElement>> retrieveMoreTopicMessages() async {
     _isLoading = true;
     _error = null;
 
     notifyListeners();
 
     int returnedTimestamp;
-    int timestamp = _previousTimestamp;
 
     if (await _messageService.fetchTopicData(
-        timestamp, _userDataProvider.subscribedTopics)) {
+        _previousTimestamp, _userDataProvider.subscribedTopics)) {
       List<MessageElement> temp = _messageService.messagingModels.messages;
-      updateMessages(temp, clearMessages);
+      updateMessages(temp);
       makeOrderedMessagesList();
 
-      returnedTimestamp = _messageService.messagingModels.next == null
-          ? 0
-          : _messageService.messagingModels.next;
+      returnedTimestamp = _messageService.messagingModels.next ?? 0;
+      // this is to check if we can no more message to paginate through
+      if (_previousTimestamp == returnedTimestamp || returnedTimestamp == 0) {
+        _hasMoreMessagesToLoad = false;
+      } else {
+        _hasMoreMessagesToLoad = true;
+      }
       _lastUpdated = DateTime.now();
       _previousTimestamp = returnedTimestamp;
+      _isLoading = false;
+      notifyListeners();
+      temp.removeLast();
+      return temp;
     } else {
       _error = _messageService.error;
+      _isLoading = false;
+      notifyListeners();
+      return List<MessageElement>();
     }
-
-    _isLoading = false;
-    notifyListeners();
   }
 
   void makeOrderedMessagesList() {
@@ -120,13 +168,8 @@ class MessagesDataProvider extends ChangeNotifier {
     _messages.sort((a, b) => b.timestamp.compareTo(a.timestamp));
   }
 
-  updateMessages(List<MessageElement> newMessages, bool clearMessages) {
-    if (clearMessages) {
-      _messages = newMessages;
-    } else {
-      _messages.addAll(newMessages);
-    }
-
+  updateMessages(List<MessageElement> newMessages) {
+    _messages.addAll(newMessages);
     if (_messages.length == 0) {
       _statusText = NotificationsConstants.statusNoMessages;
     } else {
@@ -144,6 +187,7 @@ class MessagesDataProvider extends ChangeNotifier {
   String get error => _error;
   DateTime get lastUpdated => _lastUpdated;
   String get statusText => _statusText;
+  bool get hasMoreMessagesToLoad => _hasMoreMessagesToLoad;
 
   List<MessageElement> get messages {
     if (_messages != null) {

@@ -192,7 +192,7 @@ List<SingleChildWidget> dependentServices = [
     return messageDataProvider;
   }, update: (_, userDataProvider, messageDataProvider) {
     messageDataProvider.userDataProvider = userDataProvider;
-    messageDataProvider.fetchMessages();
+    messageDataProvider.fetchMessages(true);
     return messageDataProvider;
   }),
 ];

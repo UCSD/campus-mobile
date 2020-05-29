@@ -1,90 +1,46 @@
+import 'package:campus_mobile_experimental/core/constants/notifications_constants.dart';
 import 'package:campus_mobile_experimental/core/models/message_model.dart';
 import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/core/data_providers/messages_data_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'dart:async';
+import 'package:pagination_view/pagination_view.dart';
 
-class NotificationsListView extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => _NotificationsListViewState();
-}
-
-class _NotificationsListViewState extends State<NotificationsListView> {
-  @override
-  void initState() {
-    super.initState();
-
-    _scrollController.addListener(() {
-      if (_scrollController.position.maxScrollExtent <=
-          _scrollController.offset) {
-        _updateData(context);
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  ScrollController _scrollController = new ScrollController();
-  bool isPerformingRequest = false;
-
-  void _updateData(BuildContext context) async {
-    var clearMessages = false;
-    if (!Provider.of<MessagesDataProvider>(context, listen: false).isLoading) {
-      if (Provider.of<UserDataProvider>(context, listen: false) != null &&
-          Provider.of<UserDataProvider>(context, listen: false).isLoggedIn) {
-        setState(() => isPerformingRequest = true);
-        Provider.of<MessagesDataProvider>(context, listen: false)
-            .retrieveMoreMyMessages(clearMessages);
-        setState(() => isPerformingRequest = false);
-      } else {
-        setState(() => isPerformingRequest = true);
-        Provider.of<MessagesDataProvider>(context, listen: false)
-            .retrieveMoreTopicMessages(clearMessages);
-        setState(() => isPerformingRequest = false);
-      }
-    }
-  }
-
+class NotificationsListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    //print(_data);
-    return Column(children: [
-      Padding(padding: const EdgeInsets.all(3.5)),
-      Text(Provider.of<MessagesDataProvider>(context).statusText),
-      Expanded(
-      flex: 1, child:
-      RefreshIndicator(
-        child: buildListView(context),
-        onRefresh: () => _handleRefresh(context))
-      )
-    ]);
+    return buildListView(context);
   }
 
   Widget buildListView(BuildContext context) {
-    return ListView.builder(
-        controller: _scrollController,
-        physics: const AlwaysScrollableScrollPhysics(),
-        itemCount:
-        Provider.of<MessagesDataProvider>(context).messages.length,
-        itemBuilder: (BuildContext context, int index) {
-          return Column(
-              children: _buildMessage(
-                  context,
-                  Provider.of<MessagesDataProvider>(context)
-                      .messages[index]));
-        });
-    ;
+    return PaginationView<MessageElement>(
+      itemBuilder: _buildMessage,
+      paginationViewType: PaginationViewType.listView,
+      pageFetch: (_) =>
+          Provider.of<MessagesDataProvider>(context, listen: false)
+              .fetchMessages(false),
+      pageRefresh: (_) =>
+          Provider.of<MessagesDataProvider>(context, listen: false)
+              .fetchMessages(true),
+      pullToRefresh: true,
+      onError: (dynamic error) => Center(
+        child: Text(NotificationsConstants.statusFetchProblem),
+      ),
+      onEmpty: Center(
+        child: Text(NotificationsConstants.statusNoMessages),
+      ),
+      bottomLoader: Center(
+        child: CircularProgressIndicator(),
+      ),
+      initialLoader: Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
   }
 
-  List<Widget> _buildMessage(BuildContext context, MessageElement data) {
-    return [
+  Widget _buildMessage(BuildContext context, MessageElement data, int index) {
+    return Column(children: [
       ListTile(
           leading: Icon(Icons.info, color: Colors.grey, size: 30),
           title: Column(
@@ -108,7 +64,7 @@ class _NotificationsListViewState extends State<NotificationsListView> {
               options: LinkifyOptions(humanize: false),
               style: TextStyle(fontSize: 12.5))),
       Divider()
-    ];
+    ]);
   }
 
   String _readTimestamp(int timestamp) {
@@ -152,9 +108,5 @@ class _NotificationsListViewState extends State<NotificationsListView> {
     }
 
     return time;
-  }
-
-  _handleRefresh(BuildContext context) async {
-    Provider.of<MessagesDataProvider>(context, listen: false).fetchMessages();
   }
 }
