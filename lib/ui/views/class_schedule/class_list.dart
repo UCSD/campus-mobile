@@ -103,7 +103,7 @@ class ClassList extends StatelessWidget {
       case 'WE':
         return 'Wednesday';
       case 'TH':
-        return 'Thrusday';
+        return 'Thursday';
       case 'FR':
         return 'Friday';
       case 'SA':
