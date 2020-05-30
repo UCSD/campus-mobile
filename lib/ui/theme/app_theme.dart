@@ -69,6 +69,7 @@ const TextTheme darkThemeText = TextTheme(
   button: TextStyle(color: darkTextColor),
 );
 
+
 //Button color for themes
 const Color lightButtonColor = Color(0xFF034263);
 const Color lightButtonTextColor = Color(0xFF000000);
@@ -79,16 +80,12 @@ const Color darkButtonColor = Color(0xFFFFFFFF);
 const Color lightTextColor = Color(0xFFFFFFFF);
 const Color darkTextColor = Color(0xFF006A96);
 
-// secondaryHeaderColor
-const Color secondaryHeaderColor = Colors.red;
-
-
-///Text Field colors for themes
+//Text Field colors for themes
 const Color lightTextFieldBorderColor = Color(0xFFFFFFFF);
 
 //Accent colors for themes
 const Color lightAccentColor = Color(0xFFFFFFFF);
-const Color darkAccentColor = Color(0xFFEEEEEE);
+const Color darkAccentColor = Color(0xFF333333);
 
 const debugHeader = TextStyle(color: lightTextColor, fontSize: 14.0);
 const debugRow = TextStyle(color: lightTextColor, fontSize: 12.0);

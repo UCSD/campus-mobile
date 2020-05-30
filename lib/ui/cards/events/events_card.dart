@@ -35,7 +35,7 @@ class EventsCard extends StatelessWidget {
           Provider.of<EventsDataProvider>(context, listen: false).fetchEvents(),
       isLoading: Provider.of<EventsDataProvider>(context).isLoading,
       titleText: "Events",
-      errorText: Provider.of<EventsDataProvider>(context).error,
+      errorText: "No events found.",
       child: () => buildEventsCard(
           Provider.of<EventsDataProvider>(context).eventsModels),
       actionButtons: buildActionButtons(

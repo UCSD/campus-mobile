@@ -35,7 +35,7 @@ class CardContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     if (active) {
       return Card(
-        margin: EdgeInsets.only(top: 0.0, right: 0.0, bottom: cardMargin, left: 0.0),
+        margin: EdgeInsets.only(top: 0.0, right: 0.0, bottom: cardMargin * 1.5, left: 0.0),
         semanticContainer: false,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,

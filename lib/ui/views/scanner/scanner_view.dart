@@ -50,20 +50,19 @@ class _QRViewExampleState extends State<ScannerView> {
           ),
           Expanded(
             child: Container(
-              constraints: BoxConstraints.expand(),
-//              color: Theme.of(context).accentColor,
+              color: Colors.white,
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
                     _barcodeDataProvider.qrText.isNotEmpty
                       ? Text(
                         _barcodeDataProvider.qrText,
-                        style: Theme.of(context).textTheme.headline6,
+                        style: TextStyle( color: Colors.black, fontSize: 18.0 ),
                         textAlign: TextAlign.center,
                       )
                       : Text(
                         ScannerConstants.scannerViewPrompt,
-                        style: Theme.of(context).textTheme.headline6,
+                      style: TextStyle( color: Colors.black, fontSize: 18.0 ),
                         textAlign: TextAlign.center,
                       ),
                     Column(
@@ -73,7 +72,7 @@ class _QRViewExampleState extends State<ScannerView> {
                         Container(
                           margin: EdgeInsets.all(8.0),
                           child: FlatButton(
-                            disabledTextColor: Colors.black54,
+                            disabledTextColor: Colors.black,
                             disabledColor: Color.fromRGBO(218, 218, 218, 1.0),
                             onPressed: _barcodeDataProvider.qrText.isNotEmpty &&
                                     !_barcodeDataProvider.isLoading &&
