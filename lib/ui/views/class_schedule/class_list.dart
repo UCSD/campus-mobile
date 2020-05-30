@@ -2,6 +2,7 @@ import 'package:campus_mobile_experimental/core/data_providers/class_schedule_da
 import 'package:campus_mobile_experimental/core/models/class_schedule_model.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/time_range_widget.dart';
+import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
@@ -25,7 +26,7 @@ class ClassList extends StatelessWidget {
             .enrolledClasses[key]
             .isNotEmpty) {
           list.add(SliverStickyHeader(
-            header: buildWeekDayHeader(key),
+            header: buildWeekDayHeader(context, key),
             sliver: SliverList(
               delegate: SliverChildBuilderDelegate(
                       (context, index) => buildClass(
@@ -43,15 +44,18 @@ class ClassList extends StatelessWidget {
     return CustomScrollView(slivers: list);
   }
 
-  Widget buildWeekDayHeader(String weekday) {
+  Widget buildWeekDayHeader(BuildContext context, String weekday) {
     weekday = abbrevToFullWeekday(weekday);
     return Container(
-      color: Colors.white,
+      color: Theme.of(context).secondaryHeaderColor,
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Text(
           weekday,
-          style: TextStyle(fontSize: 20.0),
+          style: TextStyle(
+              fontSize: 20.0,
+              color: Colors.white,
+          ),
         ),
       ),
     );

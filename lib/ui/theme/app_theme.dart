@@ -35,16 +35,16 @@ const MaterialColor ColorSecondary = MaterialColor(
 );
 
 const Color lightPrimaryColor = Color(0xFF182B49);
-const Color darkPrimaryColor = Colors.white;
+const Color darkPrimaryColor = Color(0xFF333333);
 
 //Color for the top App Bar on light theme
 const AppBarTheme lightAppBarTheme = AppBarTheme(
-  color: Color(0xFF034262),
+  color: ColorPrimary
 );
 
 //Color for the top App Bar on dark theme
 const AppBarTheme darkAppBarTheme = AppBarTheme(
-  color: Color(0xFF034262),
+  color: ColorPrimary,
 );
 
 //Icon color for light theme
@@ -64,17 +64,14 @@ const TextTheme lightThemeText = TextTheme(
   ),
 );
 
-
 //Colors for text on buttons using dark theme
 const TextTheme darkThemeText = TextTheme(
-  button: TextStyle(
-    color: darkTextColor,
-  ),
+  button: TextStyle(color: darkTextColor),
 );
 
 //Button color for themes
 const Color lightButtonColor = Color(0xFF034263);
-const Color lightButtonTextColor = Color(0xFFFFFFFF);
+const Color lightButtonTextColor = Color(0xFF000000);
 const Color lightButtonBorderColor = Color(0xFFFFFFFF);
 const Color darkButtonColor = Color(0xFFFFFFFF);
 
@@ -82,6 +79,8 @@ const Color darkButtonColor = Color(0xFFFFFFFF);
 const Color lightTextColor = Color(0xFFFFFFFF);
 const Color darkTextColor = Color(0xFF006A96);
 
+// secondaryHeaderColor
+const Color secondaryHeaderColor = Colors.red;
 
 
 ///Text Field colors for themes
@@ -89,7 +88,7 @@ const Color lightTextFieldBorderColor = Color(0xFFFFFFFF);
 
 //Accent colors for themes
 const Color lightAccentColor = Color(0xFFFFFFFF);
-const Color darkAccentColor = Color(0xFFAFA9A0);
+const Color darkAccentColor = Color(0xFFEEEEEE);
 
 const debugHeader = TextStyle(color: lightTextColor, fontSize: 14.0);
 const debugRow = TextStyle(color: lightTextColor, fontSize: 12.0);
