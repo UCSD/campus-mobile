@@ -37,7 +37,7 @@ class FinalsCard extends StatelessWidget {
       case 'WE':
         return 'Wednesday';
       case 'TH':
-        return 'Thrusday';
+        return 'Thursday';
       case 'FR':
         return 'Friday';
       case 'SA':
@@ -79,7 +79,9 @@ class FinalsCard extends StatelessWidget {
       ),
     );
     return ListView(
-        physics: NeverScrollableScrollPhysics(),
+      // TODO: Resolve #709
+      // Re-enable scrolling if content overflows space
+//        physics: NeverScrollableScrollPhysics(),
         children: listToReturn,
     );
   }
