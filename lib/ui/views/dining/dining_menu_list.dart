@@ -103,6 +103,7 @@ class _DiningMenuListState extends State<DiningMenuList> {
           buildMealButtons(context),
           SizedBox(height: 10),
           ListView.separated(
+            physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemBuilder: (context, index) {
               return list[index];
