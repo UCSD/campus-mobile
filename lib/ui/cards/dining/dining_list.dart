@@ -1,3 +1,4 @@
+import 'package:campus_mobile_experimental/ui/theme/app_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -61,6 +62,7 @@ class DiningList extends StatelessWidget {
   Widget getHoursForToday(RegularHours hours) {
     int weekday = DateTime.now().weekday;
     String dayHours;
+
     switch (weekday) {
       case 1:
         if (hours.mon != null)
@@ -105,25 +107,27 @@ class DiningList extends StatelessWidget {
           return Text('Closed');
         break;
       default:
-        {
-          return Text('Closed');
-        }
+        return Text('Closed');
+        break;
     }
-    if (RegExp(r"\b[0-9]{2}").allMatches(dayHours).length != 2) if (dayHours ==
-        'Closed-Closed')
-      return Text('Closed');
-    else
-      return Text(dayHours);
+    if (RegExp(r"\b[0-9]{2}").allMatches(dayHours).length != 2) {
+      if (dayHours == 'Closed-Closed') {
+        return Text('Closed');
+      } else {
+        return Text(dayHours);
+      }
+    }
+
     return TimeRangeWidget(
-        time: dayHours
+      time: dayHours.replaceAllMapped(
+        //Add colon in between each time
+          RegExp(r"\b[0-9]{2}"),
+            (match) => "${match.group(0)}:")
             .replaceAllMapped(
-                //Add colon in between each time
-                RegExp(r"\b[0-9]{2}"),
-                (match) => "${match.group(0)}:")
-            .replaceAllMapped(
-                //Add space around hyphen
-                RegExp(r"-"),
-                (match) => " ${match.group(0)} "));
+        //Add space around hyphen
+          RegExp(r"-"),
+            (match) => " ${match.group(0)} ")
+    );
   }
 
   Widget buildDiningTile(DiningModel data, BuildContext context) {
