@@ -21,7 +21,7 @@ class OnboardingScreen extends StatelessWidget {
                     fit: BoxFit.contain,
                     height: 50,
                   ),
-                  SizedBox(height: 40),
+                  SizedBox(height: 80),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 26.0),
                     child: Text(
