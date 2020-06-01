@@ -57,11 +57,11 @@ class PushNotificationDataProvider extends ChangeNotifier {
       _fcm.configure(
         onMessage: (Map<String, dynamic> message) async {
           Provider.of<MessagesDataProvider>(context, listen: false)
-              .fetchMessages(false);
+              .fetchMessages(true);
         },
         onLaunch: (Map<String, dynamic> message) async {
           Provider.of<MessagesDataProvider>(context, listen: false)
-              .fetchMessages(false);
+              .fetchMessages(true);
 
           ///switch to the notifications tab
           Provider.of<BottomNavigationBarProvider>(context, listen: false)
@@ -69,7 +69,7 @@ class PushNotificationDataProvider extends ChangeNotifier {
         },
         onResume: (Map<String, dynamic> message) async {
           Provider.of<MessagesDataProvider>(context, listen: false)
-              .fetchMessages(false);
+              .fetchMessages(true);
 
           ///switch to the notifications tab
           Provider.of<BottomNavigationBarProvider>(context, listen: false)

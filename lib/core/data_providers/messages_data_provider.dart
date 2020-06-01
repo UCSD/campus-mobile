@@ -14,6 +14,18 @@ class MessagesDataProvider extends ChangeNotifier {
     _messageService = MessageService();
     _statusText = NotificationsConstants.statusFetching;
     _hasMoreMessagesToLoad = false;
+    _scrollController = ScrollController();
+    _scrollController
+      ..addListener(() {
+        var triggerFetchMoreSize =
+            0.9 * _scrollController.position.maxScrollExtent;
+
+        if (_scrollController.position.pixels > triggerFetchMoreSize) {
+          if (!_isLoading && _hasMoreMessagesToLoad) {
+            fetchMessages(false);
+          }
+        }
+      });
   }
 
   /// STATES
@@ -23,6 +35,7 @@ class MessagesDataProvider extends ChangeNotifier {
   int _previousTimestamp;
   String _statusText;
   bool _hasMoreMessagesToLoad;
+  ScrollController _scrollController;
 
   /// MODELS
   List<MessageElement> _messages;
@@ -31,7 +44,7 @@ class MessagesDataProvider extends ChangeNotifier {
   MessageService _messageService;
 
   //Fetch messages
-  Future<List<MessageElement>> fetchMessages(bool clearMessages) async {
+  Future<bool> fetchMessages(bool clearMessages) async {
     _isLoading = true;
     _error = null;
     notifyListeners();
@@ -55,7 +68,7 @@ class MessagesDataProvider extends ChangeNotifier {
     _previousTimestamp = DateTime.now().millisecondsSinceEpoch;
   }
 
-  Future<List<MessageElement>> retrieveMoreMyMessages() async {
+  Future<bool> retrieveMoreMyMessages() async {
     _isLoading = true;
     _error = null;
 
@@ -86,8 +99,7 @@ class MessagesDataProvider extends ChangeNotifier {
       _previousTimestamp = returnedTimestamp;
       _isLoading = false;
       notifyListeners();
-      temp.removeLast();
-      return temp;
+      return true;
     } else {
       if (_messageService.error ==
           'DioError [DioErrorType.RESPONSE]: Http status error [401]') {
@@ -111,6 +123,9 @@ class MessagesDataProvider extends ChangeNotifier {
           }
           _lastUpdated = DateTime.now();
           _previousTimestamp = returnedTimestamp;
+          _isLoading = false;
+          notifyListeners();
+          return true;
         } else {
           _error = _messageService.error;
           _statusText = NotificationsConstants.statusFetchProblem;
@@ -120,11 +135,11 @@ class MessagesDataProvider extends ChangeNotifier {
       _statusText = NotificationsConstants.statusFetchProblem;
       _isLoading = false;
       notifyListeners();
-      return List<MessageElement>();
+      return false;
     }
   }
 
-  Future<List<MessageElement>> retrieveMoreTopicMessages() async {
+  Future<bool> retrieveMoreTopicMessages() async {
     _isLoading = true;
     _error = null;
 
@@ -149,13 +164,12 @@ class MessagesDataProvider extends ChangeNotifier {
       _previousTimestamp = returnedTimestamp;
       _isLoading = false;
       notifyListeners();
-      temp.removeLast();
-      return temp;
+      return true;
     } else {
       _error = _messageService.error;
       _isLoading = false;
       notifyListeners();
-      return List<MessageElement>();
+      return false;
     }
   }
 
@@ -188,6 +202,7 @@ class MessagesDataProvider extends ChangeNotifier {
   DateTime get lastUpdated => _lastUpdated;
   String get statusText => _statusText;
   bool get hasMoreMessagesToLoad => _hasMoreMessagesToLoad;
+  ScrollController get scrollController => _scrollController;
 
   List<MessageElement> get messages {
     if (_messages != null) {

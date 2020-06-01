@@ -30,10 +30,6 @@ dependencies:
   firebase_messaging: 6.0.13
   device_info: 0.4.2+2
   package_info: 0.4.0+18
-  pagination_view:
-    git:
-      url: https://github.com/excogitatr/pagination_view.git
-      ref: master
   qr_code_scanner:
     git:
       url: https://github.com/ucsd/qr_code_scanner.git

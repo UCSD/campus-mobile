@@ -5,66 +5,86 @@ import 'package:campus_mobile_experimental/core/data_providers/messages_data_pro
 import 'package:provider/provider.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:pagination_view/pagination_view.dart';
 
 class NotificationsListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return buildListView(context);
-  }
-
-  Widget buildListView(BuildContext context) {
-    return PaginationView<MessageElement>(
-      itemBuilder: _buildMessage,
-      paginationViewType: PaginationViewType.listView,
-      pageFetch: (_) =>
-          Provider.of<MessagesDataProvider>(context, listen: false)
-              .fetchMessages(false),
-      pageRefresh: (_) =>
-          Provider.of<MessagesDataProvider>(context, listen: false)
-              .fetchMessages(true),
-      pullToRefresh: true,
-      onError: (dynamic error) => Center(
-        child: Text(NotificationsConstants.statusFetchProblem),
-      ),
-      onEmpty: Center(
-        child: Text(NotificationsConstants.statusNoMessages),
-      ),
-      bottomLoader: Center(
-        child: CircularProgressIndicator(),
-      ),
-      initialLoader: Center(
-        child: CircularProgressIndicator(),
-      ),
+    return RefreshIndicator(
+      child: buildListView(context),
+      onRefresh: () => Provider.of<MessagesDataProvider>(context, listen: false)
+          .fetchMessages(true),
     );
   }
 
-  Widget _buildMessage(BuildContext context, MessageElement data, int index) {
-    return Column(children: [
-      ListTile(
-          leading: Icon(Icons.info, color: Colors.grey, size: 30),
-          title: Column(
-            children: <Widget>[
-              Text(_readTimestamp(data.timestamp),
-                  style: TextStyle(fontSize: 10, color: Colors.grey)),
-              Text(data.message.title),
-              Padding(padding: const EdgeInsets.all(3.5))
-            ],
-            crossAxisAlignment: CrossAxisAlignment.start,
-          ),
-          subtitle: Linkify(
-              text: data.message.message,
-              onOpen: (link) async {
-                if (await canLaunch(link.url)) {
-                  await launch(link.url);
-                } else {
-                  throw 'Could not launch $link';
-                }
-              },
-              options: LinkifyOptions(humanize: false),
-              style: TextStyle(fontSize: 12.5))),
-      Divider()
-    ]);
+  Widget buildListView(BuildContext context) {
+    if (Provider.of<MessagesDataProvider>(context).messages.length == 0) {
+      if (Provider.of<MessagesDataProvider>(context).error == null) {
+        return _buildLoadingIndicator();
+      } else {
+        return _buildErrorText();
+      }
+    }
+    return ListView.separated(
+      itemBuilder: _buildMessage,
+      controller: Provider.of<MessagesDataProvider>(context).scrollController,
+      itemCount: Provider.of<MessagesDataProvider>(context).messages.length,
+      separatorBuilder: (BuildContext context, int index) => Divider(),
+    );
+  }
+
+  Widget _buildLoadingIndicator() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        CircularProgressIndicator(),
+      ],
+    );
+  }
+
+  Widget _buildErrorText() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Text(NotificationsConstants.statusFetchProblem),
+      ],
+    );
+  }
+
+  Widget _buildMessage(BuildContext context, int index) {
+    MessageElement data =
+        Provider.of<MessagesDataProvider>(context).messages[index];
+    if (index ==
+        Provider.of<MessagesDataProvider>(context).messages.length - 1) {
+      if (Provider.of<MessagesDataProvider>(context).hasMoreMessagesToLoad) {
+        return _buildLoadingIndicator();
+      } else {
+        return Container();
+      }
+    }
+    return ListTile(
+      leading: Icon(Icons.info, color: Colors.grey, size: 30),
+      title: Column(
+        children: <Widget>[
+          Text(_readTimestamp(data.timestamp),
+              style: TextStyle(fontSize: 10, color: Colors.grey)),
+          Text(data.message.title),
+          Padding(padding: const EdgeInsets.all(3.5))
+        ],
+        crossAxisAlignment: CrossAxisAlignment.start,
+      ),
+      subtitle: Linkify(
+        text: data.message.message,
+        onOpen: (link) async {
+          if (await canLaunch(link.url)) {
+            await launch(link.url);
+          } else {
+            throw 'Could not launch $link';
+          }
+        },
+        options: LinkifyOptions(humanize: false),
+        style: TextStyle(fontSize: 12.5),
+      ),
+    );
   }
 
   String _readTimestamp(int timestamp) {
@@ -106,7 +126,6 @@ class NotificationsListView extends StatelessWidget {
     } else {
       time = ((diff.inDays / 7).floor() / 52).floor().toString() + ' YEAR AGO';
     }
-
     return time;
   }
 }
