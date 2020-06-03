@@ -139,6 +139,10 @@ List<SingleChildWidget> dependentServices = [
       }),
   ChangeNotifierProxyProvider<UserDataProvider, CardsDataProvider>(create: (_) {
     var cardsDataProvider = CardsDataProvider();
+    cardsDataProvider
+      ..loadCardOrder()
+      ..loadCardStates();
+
     return cardsDataProvider;
   }, update: (_, userDataProvider, cardsDataProvider) {
     if (userDataProvider.isLoggedIn &&
