@@ -2,6 +2,7 @@ import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/constants/scanner_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/barcode_data_provider.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
+import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
@@ -49,16 +50,21 @@ class _QRViewExampleState extends State<ScannerView> {
           ),
           Expanded(
             child: Container(
-              constraints: BoxConstraints.expand(),
-              color: Theme.of(context).accentColor,
+              color: Colors.white,
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
                     _barcodeDataProvider.qrText.isNotEmpty
-                        ? Text(_barcodeDataProvider.qrText,
-                            style: Theme.of(context).textTheme.title)
-                        : Text(ScannerConstants.scannerViewPrompt,
-                        style: Theme.of(context).textTheme.title),
+                      ? Text(
+                        _barcodeDataProvider.qrText,
+                        style: TextStyle( color: Colors.black, fontSize: 18.0 ),
+                        textAlign: TextAlign.center,
+                      )
+                      : Text(
+                        ScannerConstants.scannerViewPrompt,
+                      style: TextStyle( color: Colors.black, fontSize: 18.0 ),
+                        textAlign: TextAlign.center,
+                      ),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -74,10 +80,9 @@ class _QRViewExampleState extends State<ScannerView> {
                                         ButtonText.SubmitButtonReceived
                                 ? () => _barcodeDataProvider.submitBarcode()
                                 : null,
-                            child: Text(_barcodeDataProvider.submitState,
-                                style: Theme.of(context).textTheme.button),
-                            color: Theme.of(context).buttonColor,
-                            textColor: Theme.of(context).textTheme.button.color,
+                            child: Text(_barcodeDataProvider.submitState),
+                            color: ColorPrimary,
+                            textColor: lightTextColor,
                           ),
                         ),
                       ],

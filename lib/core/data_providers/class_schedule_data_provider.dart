@@ -157,12 +157,10 @@ class ClassScheduleDataProvider extends ChangeNotifier {
           continue;
         }
 
-        if (sectionData.enrollStatus == 'EN') {
-          if (sectionData.specialMtgCode != 'FI') {
-            _enrolledClasses[day].add(sectionData);
-          } else if (sectionData.specialMtgCode == 'FI') {
-            _finals[day].add(sectionData);
-          }
+        if (sectionData.specialMtgCode != 'FI') {
+          _enrolledClasses[day].add(sectionData);
+        } else if (sectionData.specialMtgCode == 'FI') {
+          _finals[day].add(sectionData);
         }
       }
     }

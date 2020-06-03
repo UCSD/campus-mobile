@@ -29,7 +29,6 @@ class NutritionFactsView extends StatelessWidget {
             nutrientValues(nutrientData: data.nutrition.toJson()),
             footerCalories(2000),
             buildText(data.nutrition.ingredients, data.nutrition.allergens),
-            disclaimerEmail != null ? buildEmailButton(context) : Container(),
           ],
         ),
       ),
@@ -69,17 +68,6 @@ class NutritionFactsView extends StatelessWidget {
           TextSpan(text: disclaimer),
         ],
       ),
-    );
-  }
-
-  Widget buildEmailButton(BuildContext context) {
-    return FlatButton(
-      child: Text('Contact Nutrition Team'),
-      onPressed: () {
-        ///TODO open up email with disclaimerEmail as the recipient
-      },
-      color: Theme.of(context).buttonColor,
-      textColor: Theme.of(context).textTheme.button.color,
     );
   }
 }

@@ -68,9 +68,9 @@ class _HomeState extends State<Home> {
         case 'schedule':
           orderedCards.add(ClassScheduleCard());
           break;
-//        case 'dining':
-//          orderedCards.add(DiningCard());
-//          break;
+        case 'dining':
+          orderedCards.add(DiningCard());
+          break;
         case 'events':
           orderedCards.add(EventsCard());
           break;
