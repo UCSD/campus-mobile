@@ -35,10 +35,12 @@ class CardContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     if (active) {
       return Card(
-        margin: EdgeInsets.only(top: 0.0, right: 0.0, bottom: cardMargin * 1.5, left: 0.0),
+        margin: EdgeInsets.only(
+            top: 0.0, right: 0.0, bottom: cardMargin * 1.5, left: 0.0),
         semanticContainer: false,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+        child: ListView(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
           children: <Widget>[
             ListTile(
               title: Text(
@@ -86,8 +88,8 @@ class CardContainer extends StatelessWidget {
       }
     } else if (isLoading) {
       return Container(
+        constraints: BoxConstraints(minHeight: cardMinHeight),
         width: double.infinity,
-        height: 200.0,
         child: Center(
           child: Container(
               height: 32, width: 32, child: CircularProgressIndicator()),
@@ -96,8 +98,6 @@ class CardContainer extends StatelessWidget {
     } else {
       return Container(
         width: double.infinity,
-//        height: 200.0,
-        constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 340),
         child: child(),
       );
     }
