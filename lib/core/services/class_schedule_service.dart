@@ -7,7 +7,7 @@ class ClassScheduleService {
   final String academicTermEndpoint =
       'https://btgre7sss6.execute-api.us-west-2.amazonaws.com/prod/v1/term/current';
   final String myAcademicHistoryApiEndpoint =
-      'https://api.ucsd.edu:8243/student/my/academic_history/v1/class_list';
+      'https://api-qa.ucsd.edu:8243/student/my/academic_history/v1/class_list';
   bool _isLoading = false;
   DateTime _lastUpdated;
   String _error;
