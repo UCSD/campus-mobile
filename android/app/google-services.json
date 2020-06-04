@@ -1,38 +1,38 @@
 {
   "project_info": {
-    "project_number": "444046920085",
-    "firebase_url": "https://uc-san-diego.firebaseio.com",
-    "project_id": "uc-san-diego",
-    "storage_bucket": "uc-san-diego.appspot.com"
+    "project_number": "204227644417",
+    "firebase_url": "https://uc-san-diego-qa.firebaseio.com",
+    "project_id": "uc-san-diego-qa",
+    "storage_bucket": "uc-san-diego-qa.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:444046920085:android:5fa94cd3be6fc552",
+        "mobilesdk_app_id": "1:204227644417:android:5fa94cd3be6fc552",
         "android_client_info": {
           "package_name": "edu.ucsd"
         }
       },
       "oauth_client": [
         {
-          "client_id": "444046920085-oep6l2mih0m0l5bqk5k8c9i3d5i02eoo.apps.googleusercontent.com",
+          "client_id": "204227644417-oqlb6sl6pc2pdhkfr405cvab42ssa495.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCewpcPZBcdl_C8jh3qSYpmyESsNh7p2rc"
+          "current_key": "AIzaSyCYGAotK1qASH4R70ix_x0iT6_Utd707-E"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "444046920085-oep6l2mih0m0l5bqk5k8c9i3d5i02eoo.apps.googleusercontent.com",
+              "client_id": "204227644417-oqlb6sl6pc2pdhkfr405cvab42ssa495.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "444046920085-2s4n918v7st3r58kmcpplkjdvmqmtgdj.apps.googleusercontent.com",
+              "client_id": "204227644417-badlapi7e50isd0bsghdtcl6k3o1d7u5.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
                 "bundle_id": "edu.ucsd.ucsandiego",
