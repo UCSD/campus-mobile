@@ -1,5 +1,6 @@
 import 'package:campus_mobile_experimental/core/constants/notifications_constants.dart';
 import 'package:campus_mobile_experimental/core/models/message_model.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/core/data_providers/messages_data_provider.dart';
 import 'package:provider/provider.dart';
@@ -82,7 +83,11 @@ class NotificationsListView extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Text(NotificationsConstants.statusNoMessages),
+        Flexible(
+          child: Text(
+            NotificationsConstants.statusNoMessages,
+          ),
+        ),
       ],
     );
   }
