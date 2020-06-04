@@ -1,41 +1,42 @@
 {
   "project_info": {
-    "project_number": "913067495333",
-    "firebase_url": "https://campus-mobile-flutter.firebaseio.com",
-    "project_id": "campus-mobile-flutter",
-    "storage_bucket": "campus-mobile-flutter.appspot.com"
+    "project_number": "444046920085",
+    "firebase_url": "https://uc-san-diego.firebaseio.com",
+    "project_id": "uc-san-diego",
+    "storage_bucket": "uc-san-diego.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:913067495333:android:c83b6a310ff4513c9c624c",
+        "mobilesdk_app_id": "1:444046920085:android:5fa94cd3be6fc552",
         "android_client_info": {
-          "package_name": "edu.ucsd.campusmobile"
+          "package_name": "edu.ucsd"
         }
       },
       "oauth_client": [
         {
-          "client_id": "913067495333-6f92sa993o7lij2d68kfrvbjdq3shk89.apps.googleusercontent.com",
+          "client_id": "444046920085-oep6l2mih0m0l5bqk5k8c9i3d5i02eoo.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAPaxypd9nnUvizFs9BPgF5Cqxikhe969c"
+          "current_key": "AIzaSyCewpcPZBcdl_C8jh3qSYpmyESsNh7p2rc"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "913067495333-6f92sa993o7lij2d68kfrvbjdq3shk89.apps.googleusercontent.com",
+              "client_id": "444046920085-oep6l2mih0m0l5bqk5k8c9i3d5i02eoo.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "913067495333-6svvlu36r9nu25vls4p350sb6ntiva6l.apps.googleusercontent.com",
+              "client_id": "444046920085-2s4n918v7st3r58kmcpplkjdvmqmtgdj.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "edu.ucsd.campusmobile"
+                "bundle_id": "edu.ucsd.ucsandiego",
+                "app_store_id": "318646412"
               }
             }
           ]

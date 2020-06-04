@@ -1,11 +1,15 @@
 import 'package:campus_mobile_experimental/core/data_providers/availability_data_provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/barcode_data_provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/class_schedule_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/dining_data_proivder.dart';
 import 'package:campus_mobile_experimental/core/data_providers/events_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/links_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/location_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/news_data_provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/notices_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/parking_data_provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/push_notifications_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/special_events_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/surf_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
@@ -35,17 +39,9 @@ List<SingleChildWidget> independentServices = [
   ChangeNotifierProvider<BottomNavigationBarProvider>(
     create: (_) => BottomNavigationBarProvider(),
   ),
-  ChangeNotifierProvider<UserDataProvider>(
-    create: (_) {
-      var _userDataProvider = UserDataProvider();
-
-      /// try to load any persistent saved data
-      /// once loaded from memory get the user's online profile
-      _userDataProvider
-          .loadSavedData()
-          .whenComplete(() => _userDataProvider.getUserProfile());
-      return _userDataProvider;
-    },
+  ChangeNotifierProvider<PushNotificationDataProvider>(
+    create: (_) => PushNotificationDataProvider(),
+    lazy: false,
   ),
   ChangeNotifierProvider<SurfDataProvider>(
     create: (_) {
@@ -96,13 +92,13 @@ List<SingleChildWidget> independentServices = [
   ChangeNotifierProvider<CustomAppBar>(
     create: (_) => CustomAppBar(),
   ),
-  // ChangeNotifierProvider<FreeFoodDataProvider>(
-  //   builder: (_) {
-  //     FreeFoodDataProvider _freeFoodDataProvider = FreeFoodDataProvider();
-  //     _freeFoodDataProvider.fetchCount("1");
-  //     return _freeFoodDataProvider;
-  //   }
-  // ),
+  ChangeNotifierProvider<NoticesDataProvider>(
+    create: (_) {
+      NoticesDataProvider _noticesDataProvider = NoticesDataProvider();
+      _noticesDataProvider.fetchNotices();
+      return _noticesDataProvider;
+    },
+  ),
 ];
 List<SingleChildWidget> dependentServices = [
   ChangeNotifierProxyProvider<Coordinates, DiningDataProvider>(create: (_) {
@@ -114,16 +110,51 @@ List<SingleChildWidget> dependentServices = [
     diningDataProvider.populateDistances();
     return diningDataProvider;
   }),
+  ChangeNotifierProxyProvider<PushNotificationDataProvider, UserDataProvider>(
+      create: (_) {
+    var _userDataProvider = UserDataProvider();
+
+    /// try to load any persistent saved data
+    /// once loaded from memory get the user's online profile
+    _userDataProvider
+        .loadSavedData()
+        .whenComplete(() => _userDataProvider.fetchUserProfile());
+    return _userDataProvider;
+  }, update: (_, pushNotificationDataProvider, _userDataProvider) {
+    _userDataProvider.pushNotificationDataProvider =
+        pushNotificationDataProvider;
+    return _userDataProvider;
+  }),
+  ChangeNotifierProxyProvider<UserDataProvider, CardsDataProvider>(create: (_) {
+    var cardsDataProvider = CardsDataProvider();
+    return cardsDataProvider;
+  }, update: (_, userDataProvider, cardsDataProvider) {
+    if (userDataProvider.isLoggedIn &&
+        (userDataProvider.userProfileModel.classifications?.student ?? false)) {
+      cardsDataProvider.activateStudentCards();
+    } else {
+      cardsDataProvider.deactivateStudentCards();
+    }
+    return cardsDataProvider;
+  }),
   ChangeNotifierProxyProvider<UserDataProvider, ClassScheduleDataProvider>(
       create: (_) {
     var classDataProvider = ClassScheduleDataProvider();
     return classDataProvider;
   }, update: (_, userDataProvider, classScheduleDataProvider) {
     classScheduleDataProvider.userDataProvider = userDataProvider;
-    if (userDataProvider.isLoggedIn) {
+    if (userDataProvider.isLoggedIn && !classScheduleDataProvider.isLoading) {
       classScheduleDataProvider.fetchData();
     }
     return classScheduleDataProvider;
+  }),
+  ChangeNotifierProxyProvider<UserDataProvider, BarcodeDataProvider>(
+      create: (_) {
+    var barcodeDataProvider = BarcodeDataProvider();
+    return barcodeDataProvider;
+  }, update: (_, userDataProvider, barcodeDataProvider) {
+    barcodeDataProvider.userDataProvider = userDataProvider;
+    return barcodeDataProvider;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, ParkingDataProvider>(
       create: (_) {

@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="edu.ucsd.ucsandiegoexperimental">
+    package="edu.ucsd">
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="UC San Diego Experimental"
+        android:label="UC San Diego"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
@@ -28,7 +28,7 @@
         </activity>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAwHFV7LL99A-PXa7J1k7H1MhT4_RUgZtk"/>
+            android:value="AIzaSyCCQZfcvW7pLI9bOgu4iYxji7f9csl_ovg"/>
         <meta-data android:name="firebase_analytics_collection_enabled" android:value="true" />
     </application>
 </manifest>

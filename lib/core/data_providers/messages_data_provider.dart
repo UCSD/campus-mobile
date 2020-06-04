@@ -1,3 +1,4 @@
+import 'package:campus_mobile_experimental/core/constants/notifications_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/message_model.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ class MessagesDataProvider extends ChangeNotifier {
     _isLoading = false;
     _messages = List<MessageElement>();
     _messageService = MessageService();
+    _statusText = NotificationsConstants.statusFetching;
   }
 
   /// STATES
@@ -18,6 +20,7 @@ class MessagesDataProvider extends ChangeNotifier {
   DateTime _lastUpdated;
   String _error;
   int _previousTimestamp;
+  String _statusText;
 
   /// MODELS
   List<MessageElement> _messages;
@@ -28,22 +31,23 @@ class MessagesDataProvider extends ChangeNotifier {
   //Fetch messages
   void fetchMessages() async {
     _isLoading = true;
+    _statusText = NotificationsConstants.statusFetching;
     _error = null;
     notifyListeners();
-    _messages.clear();
     _previousTimestamp = DateTime.now().millisecondsSinceEpoch;
+    var clearMessages = true;
 
     if (_userDataProvider != null && _userDataProvider.isLoggedIn) {
-      retrieveMoreMyMessages();
+      retrieveMoreMyMessages(clearMessages);
     } else {
-      retrieveMoreTopicMessages();
+      retrieveMoreTopicMessages(clearMessages);
     }
 
     _isLoading = false;
     notifyListeners();
   }
 
-  void retrieveMoreMyMessages() async {
+  void retrieveMoreMyMessages(bool clearMessages) async {
     _isLoading = true;
     _error = null;
 
@@ -58,7 +62,7 @@ class MessagesDataProvider extends ChangeNotifier {
     };
     if (await _messageService.fetchMyMessagesData(timestamp, headers)) {
       List<MessageElement> temp = _messageService.messagingModels.messages;
-      _messages.addAll(temp);
+      updateMessages(temp, clearMessages);
       makeOrderedMessagesList();
 
       returnedTimestamp = _messageService.messagingModels.next == null
@@ -72,13 +76,14 @@ class MessagesDataProvider extends ChangeNotifier {
         _userDataProvider.refreshToken();
       }
       _error = _messageService.error;
+      _statusText = NotificationsConstants.statusFetchProblem;
     }
 
     _isLoading = false;
     notifyListeners();
   }
 
-  void retrieveMoreTopicMessages() async {
+  void retrieveMoreTopicMessages(bool clearMessages) async {
     _isLoading = true;
     _error = null;
 
@@ -87,9 +92,10 @@ class MessagesDataProvider extends ChangeNotifier {
     int returnedTimestamp;
     int timestamp = _previousTimestamp;
 
-    if (await _messageService.fetchTopicData(timestamp)) {
+    if (await _messageService.fetchTopicData(
+        timestamp, _userDataProvider.subscribedTopics)) {
       List<MessageElement> temp = _messageService.messagingModels.messages;
-      _messages.addAll(temp);
+      updateMessages(temp, clearMessages);
       makeOrderedMessagesList();
 
       returnedTimestamp = _messageService.messagingModels.next == null
@@ -114,6 +120,20 @@ class MessagesDataProvider extends ChangeNotifier {
     _messages.sort((a, b) => b.timestamp.compareTo(a.timestamp));
   }
 
+  updateMessages(List<MessageElement> newMessages, bool clearMessages) {
+    if (clearMessages) {
+      _messages = newMessages;
+    } else {
+      _messages.addAll(newMessages);
+    }
+
+    if (_messages.length == 0) {
+      _statusText = NotificationsConstants.statusNoMessages;
+    } else {
+      _statusText = NotificationsConstants.statusNone;
+    }
+  }
+
   ///This setter is only used in provider to supply and updated UserDataProvider object
   set userDataProvider(UserDataProvider value) {
     _userDataProvider = value;
@@ -123,6 +143,7 @@ class MessagesDataProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String get error => _error;
   DateTime get lastUpdated => _lastUpdated;
+  String get statusText => _statusText;
 
   List<MessageElement> get messages {
     if (_messages != null) {

@@ -19,22 +19,27 @@ class ClassList extends StatelessWidget {
     Provider.of<ClassScheduleDataProvider>(context)
         .enrolledClasses
         .keys
-        .forEach((key) {
-      list.add(SliverStickyHeader(
-        header: buildWeekDayHeader(key),
-        sliver: SliverList(
-          delegate: SliverChildBuilderDelegate(
-              (context, index) => buildClass(
-                  Provider.of<ClassScheduleDataProvider>(context)
+        .forEach(
+          (key) {
+        if (Provider.of<ClassScheduleDataProvider>(context)
+            .enrolledClasses[key]
+            .isNotEmpty) {
+          list.add(SliverStickyHeader(
+            header: buildWeekDayHeader(key),
+            sliver: SliverList(
+              delegate: SliverChildBuilderDelegate(
+                      (context, index) => buildClass(
+                      Provider.of<ClassScheduleDataProvider>(context)
+                          .enrolledClasses[key]
+                          .elementAt(index)),
+                  childCount: Provider.of<ClassScheduleDataProvider>(context)
                       .enrolledClasses[key]
-                      .elementAt(index)),
-              childCount: Provider.of<ClassScheduleDataProvider>(context)
-                  .enrolledClasses[key]
-                  .length),
-        ),
-      ));
-    });
-
+                      .length),
+            ),
+          ));
+        }
+      },
+    );
     return CustomScrollView(slivers: list);
   }
 
@@ -105,8 +110,8 @@ class ClassList extends StatelessWidget {
         return 'Saturday';
       case 'SU':
         return 'Sunday';
-      case 'Other':
-        return 'Other';
+//      case 'Other':
+//        return 'Other';
       default:
         return 'Other';
     }

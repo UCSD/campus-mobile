@@ -1,11 +1,11 @@
-import 'package:campus_mobile_experimental/core/data_providers/parking_data_provider.dart';
-import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
-import 'package:campus_mobile_experimental/core/models/parking_model.dart';
-import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
-import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
+import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/parking_data_provider.dart';
+import 'package:campus_mobile_experimental/core/models/parking_model.dart';
 import 'package:campus_mobile_experimental/ui/cards/parking/parking_display.dart';
+import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/dots_indicator.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ParkingCard extends StatefulWidget {
@@ -19,20 +19,19 @@ class _ParkingCardState extends State<ParkingCard> {
 
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
     _parkingDataProvider = Provider.of<ParkingDataProvider>(context);
   }
 
   Widget build(BuildContext context) {
     return CardContainer(
-      title: Text("Parking"),
+      titleText: "Parking",
       isLoading: _parkingDataProvider.isLoading,
       reload: () => _parkingDataProvider.fetchParkingLots(),
       errorText: _parkingDataProvider.error,
       child: () => buildParkingCard(_parkingDataProvider.parkingModels),
-      active: Provider.of<UserDataProvider>(context).cardStates['parking'],
-      hide: () => Provider.of<UserDataProvider>(context, listen: false)
+      active: Provider.of<CardsDataProvider>(context).cardStates['parking'],
+      hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard('parking'),
       actionButtons: buildActionButtons(),
     );

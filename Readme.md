@@ -1,6 +1,6 @@
-## UC San Diego - Experimental Free Food
+## UC San Diego - Experimental
 
-UC San Diego - Experimental is the rolling release of the UC San Diego Mobile app featuring Basic Needs Free Food Availability. This rolling release is for users interested in developing for, and experimenting with, the absolute latest version of the UC San Diego Mobile app.
+UC San Diego - Experimental is the rolling release of the UC San Diego Mobile app. This rolling release is for users interested in developing for, and experimenting with, the absolute latest version of the UC San Diego Mobile app.
 
 This version is intended for developers and designers and is absolutely, 100% NOT recommended for daily use. Rolling releases are not subject to the rigorous testing of the regular production release. Many things may (and probably are) only partially complete and are likely broken. 
 
@@ -13,7 +13,7 @@ We look forward to helping you become a published app developer!
 
 ### Creating a Fork
 
-From the [Campus Mobile GitHub](https://github.com/UCSD/campus-mobile) page click the "Fork" button. Next, use your favorite git client or command line to clone the repo:
+From the [Campus Mobile GitHub repo](https://github.com/UCSD/campus-mobile) click the "Fork" button. Next, use your favorite git client or command line to clone the repo:
 
 ```shell
 # Clone your fork to your local machine
@@ -34,41 +34,96 @@ Whenever you want to update your fork with the latest upstream changes, you'll n
 git fetch upstream
 ```
 
-Your local `experimental-freefood` branch is now up-to-date with any changes upstream.
+Now you are ready to checkout your local `experimental` branch and merge in any changes from the upstream repo's `experimental` branch:
+```shell
+# Checkout your master branch and merge upstream
+git checkout experimental
+git merge upstream/experimental
+```
+
+Your local `experimental` branch is now up-to-date with any changes upstream.
 
 ### Doing Your Work
 
 
 #### Create a Feature Branch
-When you begin working on a new feature or bugfix, it is important that you create a new branch. Not only is it proper git workflow, but it also keeps your changes organized and separated from the `experimental-freefood` branch so that you can easily submit and manage multiple pull requests for every task you complete.
+When you begin working on a new feature or bugfix, it is important that you create a new branch. Not only is it proper git workflow, but it also keeps your changes organized and separated from the `experimental` branch so that you can easily submit and manage multiple pull requests for every task you complete.
 
 To create a new branch and start working on it:
 
 ```shell
-# Checkout the experimental-freefood branch
-git checkout experimental-freefood
+# Checkout the experimental branch
+git checkout experimental
 
-# Create and switch to a new branch named newfeature
+# Create and checkout a branch named newfeature
 git checkout -b newfeature
 ```
 
 You are now ready to begin developing your new feature. Commit your code often, using present-tense and concise verbiage explaining the work completed.
 
-Here is an example of how to commit and push code for your newfeature.
+Example: Add, commit, and push your new feature:
 ```shell
-# Add your code
-git add lib/Main.dart
+# Show the state of staged and unstaged files you created or updated
+git status
+
+# Add files to include in your newfeature
+git add lib/core/push_notifications_in_app.dart
 
 # Commit your code
-git commit -m "Add environment variable replacement"
+git commit -m "Add in-app push notifications"
 
 # Push your code
 git push -u origin newfeature
+
 ```
 
 
 ### Submitting a Pull Request
 
-Once you've committed and pushed your feature branch `newfeature` to GitHub, go to the page for your fork on GitHub, select branch `newfeature` and click the 'New pull request' button.
+#### Update your feature branch
+From the time you created your new feature branch `newfeature`, to submitting a pull request, it is likely that your branch 
+
+Branch `upstream/experimental` is updated often. Prior to submitting a pull request, update your `newfeature` branch from `upstream/experimental` so that merging it will be a simple process which won't require any conflict resolution work.
+```shell
+# Fetch upstream experimental and merge with your local experimental branch
+git fetch upstream
+git checkout experimental
+git merge upstream/experimental
+
+# If there were any new commits, merge them from `experimental` and update your branch
+git checkout newfeature
+git merge experimental
+git push origin newfeature
+```
+
+
+#### Submitting
+With your feature branch updated, you are ready to push 
+
+Once you've committed and pushed your feature branch `newfeature` to GitHub, go to the page for your fork on GitHub, select branch 'newfeature' and click the 'New pull request' button.
 
 If you need to make future updates to your pull request, push the updates to your feature branch `newfeature` on GitHub. Your pull request will automatically track the changes on your feature branch and update.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

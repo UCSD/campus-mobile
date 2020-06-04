@@ -7,11 +7,14 @@ import 'package:campus_mobile_experimental/core/services/networking.dart';
 
 class MessageService {
   final String mymessages_endpoint =
-      'https://api-qa.ucsd.edu:8243/mp-mymessages/1.0.0/messages?start=';
+  //     'https://api-qa.ucsd.edu:8243/mp-mymessages/1.0.0/messages?start=';
 
+  // final String topics_endpoint =
+  //     // 'https://bvgjvzaakl.execute-api.us-west-2.amazonaws.com/dev/topics?topics=all,freefood&start=';
+  //     'https://bvgjvzaakl.execute-api.us-west-2.amazonaws.com/dev/topics/v2?topics=all,freefood&start=';
+      'https://api.ucsd.edu:8243/mp-mymessages/1.0.0/messages?start=';
   final String topics_endpoint =
-      // 'https://bvgjvzaakl.execute-api.us-west-2.amazonaws.com/dev/topics?topics=all,freefood&start=';
-      'https://bvgjvzaakl.execute-api.us-west-2.amazonaws.com/dev/topics/v2?topics=all,freefood&start=';
+      'https://h6rc133pbh.execute-api.us-west-2.amazonaws.com/prod/topics?';
   bool _isLoading = false;
   DateTime _lastUpdated;
   String _error;
@@ -20,7 +23,7 @@ class MessageService {
   final NetworkHelper _networkHelper = NetworkHelper();
 
   Future<bool> fetchMyMessagesData(
-      timestamp, Map<String, String> authHeaders) async {
+      int timestamp, Map<String, String> authHeaders) async {
     _error = null;
     _isLoading = true;
 
@@ -41,14 +44,16 @@ class MessageService {
     }
   }
 
-  Future<bool> fetchTopicData(timestamp) async {
+  Future<bool> fetchTopicData(int timestamp, List<String> topics) async {
     _error = null;
     _isLoading = true;
 
+    String topicsEndpoint = 'topics=' + topics.join(',');
+    String timestampEndpoint = '&start=' + timestamp.toString();
     try {
       /// fetch data
       String _response = await _networkHelper
-          .fetchData(topics_endpoint + timestamp.toString());
+          .fetchData(topics_endpoint + topicsEndpoint + timestampEndpoint);
 
       /// parse data
       final data = messagesFromJson(_response);

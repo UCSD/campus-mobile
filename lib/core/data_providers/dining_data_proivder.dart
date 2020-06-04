@@ -1,10 +1,12 @@
-import 'dart:math';
+import 'dart:math' show acos, cos, pi, sin;
 
 import 'package:campus_mobile_experimental/core/models/coordinates_model.dart';
 import 'package:campus_mobile_experimental/core/models/dining_menu_items_model.dart';
 import 'package:campus_mobile_experimental/core/models/dining_model.dart';
 import 'package:campus_mobile_experimental/core/services/dining_service.dart';
 import 'package:flutter/material.dart';
+
+enum Meal { breakfast, lunch, dinner }
 
 class DiningDataProvider extends ChangeNotifier {
   DiningDataProvider() {
@@ -25,6 +27,9 @@ class DiningDataProvider extends ChangeNotifier {
   Map<String, DiningMenuItemsModel> _diningMenuItemModels =
       Map<String, DiningMenuItemsModel>();
   Coordinates _coordinates;
+
+  List<bool> filtersSelected = [false, false, false];
+  Meal mealTime = Meal.breakfast;
 
   ///SERVICES
   DiningService _diningService;
@@ -87,8 +92,7 @@ class DiningDataProvider extends ChangeNotifier {
       for (DiningModel model in _diningModels.values.toList()) {
         if (model.coordinates != null) {
           var distance = calculateDistance(_coordinates.lat, _coordinates.lon,
-                  model.coordinates.lat, model.coordinates.lon) *
-              0.00062137;
+              model.coordinates.lat, model.coordinates.lon);
           model.distance = distance;
         }
       }
@@ -126,6 +130,32 @@ class DiningDataProvider extends ChangeNotifier {
       }
     }
     return DiningMenuItemsModel();
+  }
+
+  List<MenuItem> getMenuItems(String id, List<String> filters) {
+    List<MenuItem> menuItems;
+    if (_diningMenuItemModels[id] == null) {
+      return null;
+    } else {
+      menuItems = _diningMenuItemModels[id].menuItems;
+    }
+    List<MenuItem> filteredMenuItems = List<MenuItem>();
+    if (filters != null) {
+      for (var menuItem in menuItems) {
+        int matched = 0;
+        for (int i = 0; i < filters.length; i++) {
+          if (menuItem.tags.contains(filters[i])) {
+            matched++;
+          }
+        }
+        if (matched == filters.length) {
+          filteredMenuItems.add(menuItem);
+        }
+      }
+    } else {
+      return menuItems;
+    }
+    return filteredMenuItems;
   }
 
   ///RETURNS A List<diningModels> sorted by distance

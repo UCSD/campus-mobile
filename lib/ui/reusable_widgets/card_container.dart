@@ -1,21 +1,24 @@
+import 'package:campus_mobile_experimental/ui/theme/app_layout.dart';
+import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class CardContainer extends StatelessWidget {
-  const CardContainer(
-      {Key key,
-      @required this.title,
-      @required this.isLoading,
-      @required this.reload,
-      @required this.errorText,
-      @required this.child,
-      @required this.active,
-      @required this.hide,
-      this.overFlowMenu,
-      this.actionButtons})
-      : super(key: key);
+  const CardContainer({
+    Key key,
+    @required this.titleText,
+    @required this.isLoading,
+    @required this.reload,
+    @required this.errorText,
+    @required this.child,
+    @required this.active,
+    @required this.hide,
+    this.overFlowMenu,
+    this.actionButtons,
+    this.hideMenu,
+  }) : super(key: key);
 
   /// required parameters
-  final Widget title;
+  final String titleText;
   final bool isLoading;
   final bool active;
   final Function hide;
@@ -25,34 +28,42 @@ class CardContainer extends StatelessWidget {
 
   /// optional parameters
   final Map<String, Function> overFlowMenu;
+  final bool hideMenu;
   final List<Widget> actionButtons;
 
   @override
   Widget build(BuildContext context) {
     if (active) {
       return Card(
+        margin: EdgeInsets.only(top: 0.0, right: 0.0, bottom: cardMargin, left: 0.0),
         semanticContainer: false,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             ListTile(
-              title: title,
+              title: Text(
+                titleText,
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 20.0,
+                ),
+              ),
               trailing: ButtonBar(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  buildMenu({
-                    'reload': reload,
-                    'hide': hide,
-                  }),
+                  buildMenu(),
                 ],
               ),
             ),
-            buildBody(),
-            actionButtons != null
-                ? Row(
-                    children: actionButtons,
-                  )
-                : Container()
+            buildBody(context),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 0),
+              child: actionButtons != null
+                  ? Row(
+                      children: actionButtons,
+                    )
+                  : Container(),
+            ),
           ],
         ),
       );
@@ -60,21 +71,44 @@ class CardContainer extends StatelessWidget {
     return Container();
   }
 
-  Widget buildBody() {
+  Widget buildBody(context) {
     if (errorText != null) {
       return Text(errorText);
     } else if (isLoading) {
       return Container(
-          height: 224, width: 224, child: CircularProgressIndicator());
+        width: double.infinity,
+        height: 200.0,
+        child: Center(
+          child: Container(
+              height: 32, width: 32, child: CircularProgressIndicator()),
+        ),
+      );
     } else {
       return Container(
-        constraints: BoxConstraints(maxHeight: 224, maxWidth: 406),
+        width: double.infinity,
+//        height: 200.0,
+        constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 340),
         child: child(),
       );
     }
   }
 
-  Widget buildMenu(Map<String, Function> menuOptions) {
+  Widget buildMenu() {
+    if (hideMenu ?? false) {
+      return null;
+    }
+    return ButtonBar(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        buildMenuOptions({
+          'reload': reload,
+          'hide': hide,
+        }),
+      ],
+    );
+  }
+
+  Widget buildMenuOptions(Map<String, Function> menuOptions) {
     List<DropdownMenuItem<String>> menu = List<DropdownMenuItem<String>>();
     menuOptions.forEach((menuOption, func) {
       Widget item = DropdownMenuItem<String>(

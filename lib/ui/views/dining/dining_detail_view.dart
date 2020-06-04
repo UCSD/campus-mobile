@@ -1,9 +1,11 @@
 import 'package:campus_mobile_experimental/core/models/dining_model.dart'
     as prefix0;
-import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/image_loader.dart';
+import 'package:campus_mobile_experimental/ui/reusable_widgets/time_range_widget.dart';
 import 'package:campus_mobile_experimental/ui/views/dining/dining_menu_list.dart';
+import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DiningDetailView extends StatelessWidget {
   const DiningDetailView({Key key, @required this.data}) : super(key: key);
@@ -11,8 +13,15 @@ class DiningDetailView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ContainerView(
-      child: ListView(
-        children: buildDetailView(context, data),
+      child: ListView.separated(
+        itemCount: buildDetailView(context, data).length,
+        separatorBuilder: (context, index) {
+          return SizedBox(height: 8);
+        },
+        padding: const EdgeInsets.all(8),
+        itemBuilder: (context, index) {
+          return buildDetailView(context, data)[index];
+        },
       ),
     );
   }
@@ -23,129 +32,110 @@ class DiningDetailView extends StatelessWidget {
       Text(
         model.name,
         textAlign: TextAlign.start,
-        style: TextStyle(
-            color: Theme.of(context).textTheme.title.color,
-            fontSize: Theme.of(context).textTheme.title.fontSize),
+        style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 26),
       ),
       Text(
         model.description,
         textAlign: TextAlign.start,
         style: TextStyle(
-            color: Theme.of(context).textTheme.subtitle.color,
-            fontSize: Theme.of(context).textTheme.subtitle.fontSize),
+            color: Theme.of(context).textTheme.subtitle.color, fontSize: 15),
       ),
       buildHours(context, model),
       buildPaymentOptions(context, model),
       buildPictures(model),
-      DiningMenuList(
-        id: model.id,
-      ),
+      Divider(),
+      buildDirectionsButton(context, model),
+      Divider(),
+      buildWebsiteButton(context, model),
+      buildMenu(context, model),
     ];
   }
 
+  Widget buildDirectionsButton(
+      BuildContext context, prefix0.DiningModel model) {
+    if (model.distance != null)
+      return FlatButton(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text(
+              'Directions',
+              style: TextStyle(
+                fontSize: 25,
+                color: Theme.of(context).primaryColor,
+              ),
+            ),
+            Column(
+              children: <Widget>[
+                Icon(
+                  Icons.directions_walk,
+                  size: 30,
+                  color: Theme.of(context).primaryColor,
+                ),
+                Text(num.parse(model.distance.toStringAsFixed(1)).toString() + ' mi'),
+              ],
+            ),
+          ],
+        ),
+        onPressed: () {
+          launch(
+              'https://www.google.com/maps/dir/?api=1&destination=${model.coordinates.lat},${model.coordinates.lon}&travelmode=walking');
+        },
+      );
+    else
+      return Center(child: Text('Directions not available.'));
+  }
+
+  Widget buildWebsiteButton(BuildContext context, prefix0.DiningModel model) {
+    if (model.url != null && model.url != '') {
+      return RaisedButton(
+        child: Text('Visit Website'),
+        textColor: Theme.of(context).textTheme.button.color,
+        onPressed: () {
+          launch(model.url);
+        },
+      );
+    } else
+      return Container();
+  }
+
+  Widget buildMenu(BuildContext context, prefix0.DiningModel model) {
+    if (model.menuWebsite != null && model.menuWebsite.isNotEmpty) {
+      return RaisedButton(
+        child: Text('View Menu'),
+        textColor: Theme.of(context).textTheme.button.color,
+        onPressed: () {
+          launch(model.menuWebsite);
+        },
+      );
+    } else
+      return DiningMenuList(
+        model: model,
+      );
+  }
+
   Widget buildHours(BuildContext context, prefix0.DiningModel model) {
-    Widget monday = Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text('Monday: '),
-        Row(
-          children: <Widget>[
-            Text(model.regularHours.mon),
-            buildGreenDot(),
-          ],
-        )
-      ],
-    );
-    Widget tuesday = Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text('Tuesday: '),
-        Row(
-          children: <Widget>[
-            Text(model.regularHours.tue),
-            buildGreenDot(),
-          ],
-        )
-      ],
-    );
-    Widget wednesday = Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text('Wednesday: '),
-        Row(
-          children: <Widget>[
-            Text(model.regularHours.wed),
-            buildGreenDot(),
-          ],
-        )
-      ],
-    );
-    Widget thursday = Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text('Thursday: '),
-        Row(
-          children: <Widget>[
-            Text(model.regularHours.thu),
-            buildGreenDot(),
-          ],
-        )
-      ],
-    );
-    Widget friday = Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text('Friday: '),
-        Row(
-          children: <Widget>[
-            Text(model.regularHours.fri),
-            buildGreenDot(),
-          ],
-        )
-      ],
-    );
-    Widget saturday = Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text('Satuday: '),
-        Row(
-          children: <Widget>[
-            model.regularHours.sat != null
-                ? Text(model.regularHours.sat)
-                : Text('Closed'),
-            buildGreenDot(),
-          ],
-        )
-      ],
-    );
-    Widget sunday = Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text('Sunday: '),
-        Row(
-          children: <Widget>[
-            model.regularHours.sun != null
-                ? Text(model.regularHours.sun)
-                : Text('Closed'),
-            buildGreenDot(),
-          ],
-        )
-      ],
-    );
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text(
         "Hours:",
         textAlign: TextAlign.start,
-        style:
-            TextStyle(fontWeight: Theme.of(context).textTheme.title.fontWeight),
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
       ),
-      monday,
-      tuesday,
-      wednesday,
-      thursday,
-      friday,
-      saturday,
-      sunday
+      Divider(height: 6),
+      HoursOfDay(model: model, weekday: 1),
+      Divider(height: 10),
+      HoursOfDay(model: model, weekday: 2),
+      Divider(height: 10),
+      HoursOfDay(model: model, weekday: 3),
+      Divider(height: 10),
+      HoursOfDay(model: model, weekday: 4),
+      Divider(height: 10),
+      HoursOfDay(model: model, weekday: 5),
+      Divider(height: 10),
+      HoursOfDay(model: model, weekday: 6),
+      Divider(height: 10),
+      HoursOfDay(model: model, weekday: 7),
+      Divider(height: 10),
     ]);
   }
 
@@ -159,8 +149,7 @@ class DiningDetailView extends StatelessWidget {
         children: [
           TextSpan(
             text: "Payment Options:\n",
-            style: TextStyle(
-                fontWeight: Theme.of(context).textTheme.subtitle.fontWeight),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
           TextSpan(text: options),
         ],
@@ -194,12 +183,131 @@ class DiningDetailView extends StatelessWidget {
     }
     return Container(height: 10);
   }
+}
 
-  Widget buildGreenDot() {
+class HoursOfDay extends StatelessWidget {
+  final int weekday;
+  final prefix0.DiningModel model;
+
+  const HoursOfDay({Key key, this.weekday, this.model}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    String theDay;
+    String theHours;
+    switch (weekday) {
+      case 1:
+        theDay = 'Monday';
+        theHours =
+            model.regularHours.mon == null ? 'Closed' : model.regularHours.mon;
+        break;
+      case 2:
+        theDay = 'Tuesday';
+        theHours =
+            model.regularHours.tue == null ? 'Closed' : model.regularHours.tue;
+        break;
+      case 3:
+        theDay = 'Wednesday';
+        theHours =
+            model.regularHours.wed == null ? 'Closed' : model.regularHours.wed;
+        break;
+      case 4:
+        theDay = 'Thursday';
+        theHours =
+            model.regularHours.thu == null ? 'Closed' : model.regularHours.thu;
+        break;
+      case 5:
+        theDay = 'Friday';
+        theHours =
+            model.regularHours.fri == null ? 'Closed' : model.regularHours.fri;
+        break;
+      case 6:
+        theDay = 'Saturday';
+        theHours =
+            model.regularHours.sat == null ? 'Closed' : model.regularHours.sat;
+        break;
+      case 7:
+        theDay = 'Sunday';
+        theHours =
+            model.regularHours.sun == null ? 'Closed' : model.regularHours.sun;
+        break;
+    }
+    /*As of 05/05/2020, API may return 'Closed-Closed' as a value. If it does,
+    correct it to look right.*/
+    if (theHours == 'Closed-Closed') theHours = 'Closed';
+    return Stack(
+      children: [
+        Text('$theDay: '),
+        Flex(
+          direction: Axis.horizontal,
+          children: <Widget>[
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  RegExp(r"\b[0-9]{2}").allMatches(theHours).length != 2
+                      ? Text(theHours)
+                      : TimeRangeWidget(
+                          time: theHours
+                              .replaceAllMapped(
+                                  //Add colon in between each time
+                                  RegExp(r"\b[0-9]{2}"),
+                                  (match) => "${match.group(0)}:")
+                              .replaceAllMapped(
+                                  //Add space around hyphen
+                                  RegExp(r"-"),
+                                  (match) => " ${match.group(0)} ")),
+                  SizedBox(width: 4),
+                  weekday == DateTime.now().weekday
+                      ? buildGreenDot(theHours)
+                      : Container(width: 10),
+                ],
+              ),
+            ),
+          ],
+        )
+      ],
+    );
+  }
+
+  Widget buildGreenDot(String hours) {
+    MaterialColor color;
+    if (RegExp(r"\b[0-9]{2}").allMatches(hours).length != 2) {
+      //If the hours are a special string (not a time)
+      /*If there are new strings that get returned instead of a time,
+      put the strings here. This is a weird way to do it, but
+      we're not in control of the API, so we have to manually determine
+      if this means the establishment is open or not. The 'Closed' case is
+      of my doing however as that simply denotes the establishment is closed.*/
+      switch (hours) {
+        case 'Closed':
+          color = Colors.red;
+          break;
+        case 'Open 24/7':
+          color = Colors.green;
+          break;
+        default:
+          return Container();
+      }
+    } else {
+      List<String> times = hours.split('-');
+      int start = int.parse(times[0]);
+      int end = int.parse(times[1]);
+      if (end < start) end += 2300; //If time goes into next day, prevent wrap
+      int timeNow;
+      if (DateTime.now().minute.toString().length == 1)
+        timeNow = int.parse('${DateTime.now().hour}0${DateTime.now().minute}');
+      else
+        timeNow = int.parse('${DateTime.now().hour}${DateTime.now().minute}');
+      if (timeNow >= start && timeNow < end)
+        color = Colors.green;
+      else
+        color = Colors.red;
+    }
     return Container(
       width: 10,
       height: 10,
-      decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.green),
+      decoration: BoxDecoration(shape: BoxShape.circle, color: color),
     );
   }
 }

@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/core/models/dining_menu_items_model.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
+import 'package:flutter/material.dart';
 
 class NutritionFactsView extends StatelessWidget {
   const NutritionFactsView(
@@ -40,9 +40,9 @@ class NutritionFactsView extends StatelessWidget {
     return Text(
       name,
       style: TextStyle(
-        fontSize: 20.0,
+        fontSize: 30.0,
         fontWeight: FontWeight.w400,
-        color: Theme.of(context).textTheme.title.color,
+        color: Color(0xFF182B49),
       ),
     );
   }
@@ -142,11 +142,13 @@ Widget nutrientHeader(String calories, String servingSize) {
       Text(
         "Nutrition Facts",
         textAlign: TextAlign.left,
-        style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.w700),
+        style: TextStyle(
+            fontSize: 40.0, fontWeight: FontWeight.w700, color: Colors.black),
       ),
       Text(
         "Serving Size $servingSize",
-        style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400),
+        style: TextStyle(
+            fontSize: 14.0, fontWeight: FontWeight.w400, color: Colors.black),
       ),
       Container(
         margin: EdgeInsetsDirectional.only(start: 1.0, end: 1.0),
@@ -155,7 +157,8 @@ Widget nutrientHeader(String calories, String servingSize) {
       ),
       Text(
         "Ammount Per Serving",
-        style: TextStyle(fontSize: 10.0, fontWeight: FontWeight.w800),
+        style: TextStyle(
+            fontSize: 10.0, fontWeight: FontWeight.w800, color: Colors.black),
       ),
       Container(
         margin: EdgeInsetsDirectional.only(start: 1.0, end: 1.0),
@@ -164,11 +167,13 @@ Widget nutrientHeader(String calories, String servingSize) {
       Row(children: <Widget>[
         Text(
           "Calories",
-          style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w900),
+          style: TextStyle(
+              fontSize: 15.0, fontWeight: FontWeight.w900, color: Colors.black),
         ),
         Text(
           " $calories",
-          style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w500),
+          style: TextStyle(
+              fontSize: 15.0, fontWeight: FontWeight.w500, color: Colors.black),
         ),
       ]),
       Container(
@@ -180,7 +185,8 @@ Widget nutrientHeader(String calories, String servingSize) {
         child: Text(
           "% Daily Value*",
           textAlign: TextAlign.right,
-          style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w600),
+          style: TextStyle(
+              fontSize: 15.0, fontWeight: FontWeight.w600, color: Colors.black),
         ),
       )
     ],

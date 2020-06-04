@@ -38,18 +38,33 @@ android {
     }
 
     defaultConfig {
-        applicationId "edu.ucsd.campusmobile"
-        minSdkVersion 18
+        applicationId "edu.ucsd"
+        minSdkVersion 21
         targetSdkVersion 28
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        if (project.hasProperty('MYAPP_RELEASE_STORE_FILE')) {
+            release {
+                storeFile file(MYAPP_RELEASE_STORE_FILE)
+                storePassword MYAPP_RELEASE_STORE_PASSWORD
+                keyAlias MYAPP_RELEASE_KEY_ALIAS
+                keyPassword MYAPP_RELEASE_KEY_PASSWORD
+            }
+        }
+    }
+
     buildTypes {
-        release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
+        if (project.hasProperty('MYAPP_RELEASE_STORE_FILE')) {
+            release {
+                signingConfig signingConfigs.release
+            }
+        }
+
+        debug {
             signingConfig signingConfigs.debug
         }
     }
@@ -64,5 +79,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    implementation 'com.google.firebase:firebase-analytics:17.2.2'
+    implementation 'com.google.firebase:firebase-analytics:17.3.0'
+    implementation 'com.google.firebase:firebase-messaging:20.1.5'
+
 }

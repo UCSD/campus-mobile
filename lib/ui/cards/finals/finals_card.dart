@@ -1,10 +1,9 @@
+import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/class_schedule_data_provider.dart';
-import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/class_schedule_model.dart';
-import 'package:campus_mobile_experimental/ui/reusable_widgets/time_range_widget.dart';
-
 import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/last_updated_widget.dart';
+import 'package:campus_mobile_experimental/ui/reusable_widgets/time_range_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -12,14 +11,14 @@ class FinalsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
-      active: Provider.of<UserDataProvider>(context).cardStates['finals'] &&
-          Provider.of<UserDataProvider>(context).isLoggedIn,
-      hide: () => Provider.of<UserDataProvider>(context).toggleCard('finals'),
+      active: Provider.of<CardsDataProvider>(context).cardStates['finals'],
+      hide: () => Provider.of<CardsDataProvider>(context, listen: false)
+          .toggleCard('finals'),
       reload: () =>
           Provider.of<ClassScheduleDataProvider>(context, listen: false)
               .fetchData(),
       isLoading: Provider.of<ClassScheduleDataProvider>(context).isLoading,
-      title: Text("Finals"),
+      titleText: "Finals",
       errorText: Provider.of<ClassScheduleDataProvider>(context).error,
       child: () => buildFinalsCard(
           Provider.of<ClassScheduleDataProvider>(context).finals,
@@ -79,7 +78,10 @@ class FinalsCard extends StatelessWidget {
         child: LastUpdatedWidget(time: lastUpdated),
       ),
     );
-    return ListView(children: listToReturn);
+    return ListView(
+        physics: NeverScrollableScrollPhysics(),
+        children: listToReturn,
+    );
   }
 
   Widget buildClassTitle(String title) {
@@ -103,13 +105,15 @@ class FinalsCard extends StatelessWidget {
   Widget buildTimeRow(String time) {
     return Row(
       children: <Widget>[
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            TimeRangeWidget(
-              time: time,
-            ),
-          ],
+        Flexible(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              TimeRangeWidget(
+                time: time,
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -118,11 +122,13 @@ class FinalsCard extends StatelessWidget {
   Widget buildLocationRow(String location) {
     return Row(
       children: <Widget>[
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(location),
-          ],
+        Flexible(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(location),
+            ],
+          ),
         ),
       ],
     );
