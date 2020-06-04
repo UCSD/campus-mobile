@@ -1,3 +1,5 @@
+import 'package:campus_mobile_experimental/core/models/parking_model.dart';
+
 class RoutePaths {
   static const String Home = '/';
   static const String BottomNavigationBar = 'bottom_navigation_bar';
@@ -60,4 +62,22 @@ class NavigationConstants {
   static const MapTab = 1;
   static const NotificationsTab = 2;
   static const ProfileTab = 3;
+}
+
+/// Maps Card IDs to Card titles
+class CardTitleConstants {
+  static const titleMap = {
+    'availability': 'Availability',
+    'events': 'Events',
+    'links': 'Links',
+    'news': 'News',
+    'parking': 'Parking',
+    'special_events': 'Special Events',
+    'weather': 'Weather',
+    'dining': 'Dining',
+    'MyStudentChart': 'MyStudentChart',
+    'finals': 'Finals',
+    'schedule': 'Schedule',
+    'qr_scanner': 'QR Scanner'
+  };
 }

@@ -1,3 +1,4 @@
+import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/class_schedule_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/class_schedule_model.dart';
@@ -7,18 +8,20 @@ import 'package:campus_mobile_experimental/ui/reusable_widgets/time_range_widget
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+const String cardId = 'finals';
+
 class FinalsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
-      active: Provider.of<CardsDataProvider>(context).cardStates['finals'],
+      active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
-          .toggleCard('finals'),
+          .toggleCard(cardId),
       reload: () =>
           Provider.of<ClassScheduleDataProvider>(context, listen: false)
               .fetchData(),
       isLoading: Provider.of<ClassScheduleDataProvider>(context).isLoading,
-      titleText: "Finals",
+      titleText: CardTitleConstants.titleMap[cardId],
       errorText: Provider.of<ClassScheduleDataProvider>(context).error,
       child: () => buildFinalsCard(
           Provider.of<ClassScheduleDataProvider>(context).finals,

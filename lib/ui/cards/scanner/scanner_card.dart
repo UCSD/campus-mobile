@@ -1,5 +1,4 @@
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
-import 'package:campus_mobile_experimental/core/constants/scanner_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/services/bottom_navigation_bar_service.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +6,8 @@ import 'package:flutter/rendering.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
 
 import 'package:provider/provider.dart';
+
+const String cardId = 'qr_scanner';
 
 class ScannerCard extends StatelessWidget {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
@@ -18,7 +19,7 @@ class ScannerCard extends StatelessWidget {
       hide: () => null,
       reload: () => null,
       isLoading: false,
-      titleText: "QR Scanner",
+      titleText: CardTitleConstants.titleMap[cardId],
       errorText: null,
       child: () => buildCardContent(context),
       actionButtons: [buildActionButton(context)],
@@ -29,7 +30,6 @@ class ScannerCard extends StatelessWidget {
   Widget buildCardContent(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        print("tappy tap tap");
         getActionButtonNavigateRoute(context);
       },
       behavior: HitTestBehavior.translucent,

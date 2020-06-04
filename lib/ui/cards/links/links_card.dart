@@ -6,19 +6,21 @@ import 'package:campus_mobile_experimental/ui/views/links/links_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+const String cardId = 'links';
+
 class LinksCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
-      titleText: 'Links',
+      titleText: CardTitleConstants.titleMap[cardId],
       isLoading: Provider.of<LinksDataProvider>(context).isLoading,
       reload: () =>
           Provider.of<LinksDataProvider>(context, listen: false).fetchLinks(),
       errorText: Provider.of<LinksDataProvider>(context).error,
       child: () => buildLinksCard(),
-      active: Provider.of<CardsDataProvider>(context).cardStates['links'],
+      active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
-          .toggleCard('links'),
+          .toggleCard(cardId),
       actionButtons: buildActionButtons(context),
     );
   }

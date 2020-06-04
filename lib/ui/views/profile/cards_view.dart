@@ -1,3 +1,4 @@
+import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +42,7 @@ class CardsView extends StatelessWidget {
       list.add(ListTile(
         leading: Icon(Icons.reorder),
         key: Key(card),
-        title: Text(card),
+        title: Text(CardTitleConstants.titleMap[card]),
         trailing: Switch(
           value: _cardsDataProvider.cardStates[card],
           onChanged: (_) {

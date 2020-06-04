@@ -8,6 +8,8 @@ import 'package:campus_mobile_experimental/ui/reusable_widgets/dots_indicator.da
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+const cardId = 'availability';
+
 class AvailabilityCard extends StatefulWidget {
   @override
   _AvailabilityCardState createState() => _AvailabilityCardState();
@@ -26,13 +28,12 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
-      active:
-          Provider.of<CardsDataProvider>(context).cardStates['availability'],
+      active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
-          .toggleCard('availability'),
+          .toggleCard(cardId),
       reload: () => _availabilityDataProvider.fetchAvailability(),
       isLoading: _availabilityDataProvider.isLoading,
-      titleText: 'Availability',
+      titleText: CardTitleConstants.titleMap[cardId],
       errorText: _availabilityDataProvider.error,
       child: () =>
           buildAvailabilityCard(_availabilityDataProvider.availabilityModels),

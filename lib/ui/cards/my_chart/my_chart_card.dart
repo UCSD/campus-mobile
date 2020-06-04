@@ -1,3 +1,4 @@
+import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -6,19 +7,18 @@ import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.da
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class MyChartCard extends StatelessWidget {
-  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+const String cardId = 'MyStudentChart';
 
+class MyChartCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
-      active:
-          Provider.of<CardsDataProvider>(context).cardStates['MyStudentChart'],
+      active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
-          .toggleCard('MyStudentChart'),
+          .toggleCard(cardId),
       reload: () => null,
       isLoading: false,
-      titleText: "MyStudentChart",
+      titleText: CardTitleConstants.titleMap[cardId],
       errorText: null,
       child: () => buildCardContent(context),
       actionButtons: buildActionButtons(context),
