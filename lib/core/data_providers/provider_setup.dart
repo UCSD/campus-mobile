@@ -187,13 +187,16 @@ List<SingleChildWidget> dependentServices = [
     return availabilityDataProvider;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, MessagesDataProvider>(
-      create: (_) {
-    var messageDataProvider = MessagesDataProvider();
-    return messageDataProvider;
-  }, update: (_, userDataProvider, messageDataProvider) {
-    messageDataProvider.userDataProvider = userDataProvider;
-    messageDataProvider.fetchMessages(true);
-    return messageDataProvider;
-  }),
+    create: (_) {
+      var messageDataProvider = MessagesDataProvider();
+      return messageDataProvider;
+    },
+    lazy: false,
+    update: (_, userDataProvider, messageDataProvider) {
+      messageDataProvider.userDataProvider = userDataProvider;
+      messageDataProvider.fetchMessages(true);
+      return messageDataProvider;
+    },
+  ),
 ];
 List<SingleChildWidget> uiConsumableProviders = [];
