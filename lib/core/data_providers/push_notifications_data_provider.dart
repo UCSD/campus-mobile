@@ -75,8 +75,7 @@ class PushNotificationDataProvider extends ChangeNotifier {
 
           /// navigate to routeName or home if no route was specified
           Navigator.of(context).pushNamedAndRemoveUntil(
-              message["routeName"] ?? RoutePaths.BottomNavigationBar,
-              (Route<dynamic> route) => false);
+              RoutePaths.BottomNavigationBar, (Route<dynamic> route) => false);
         },
       );
     } on PlatformException {
