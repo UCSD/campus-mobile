@@ -8,7 +8,7 @@ class MessageService {
   final String mymessages_endpoint =
       'https://api.ucsd.edu:8243/mp-mymessages/1.0.0/messages?start=';
   final String topics_endpoint =
-      'https://bvgjvzaakl.execute-api.us-west-2.amazonaws.com/dev/topics/v2?';
+      'https://h6rc133pbh.execute-api.us-west-2.amazonaws.com/prod/topics?';
   bool _isLoading = false;
   DateTime _lastUpdated;
   String _error;
