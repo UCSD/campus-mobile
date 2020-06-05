@@ -12,12 +12,12 @@ class AuthenticationService {
 
   final NetworkHelper _networkHelper = NetworkHelper();
   final String endpoint =
-      "https://c12cf2xke8.execute-api.us-west-2.amazonaws.com/prod/v1.1/access-profile";
+      "https://3hepzvdimd.execute-api.us-west-2.amazonaws.com/dev/v1/access-profile";
   final String AUTH_SERVICE_API_KEY =
-      'AUTH_SERVICE_API_KEY_PH';
+      'eKFql1kJAj53iyU2fNKyH4jI2b7t70MZ5YbAuPBZ';
 
   final String refreshTokenEndpoint =
-      'https://c12cf2xke8.execute-api.us-west-2.amazonaws.com/prod/v1.1/access-profile/refresh';
+      'https://3hepzvdimd.execute-api.us-west-2.amazonaws.com/dev/v1/access-profile/refresh';
 
   Future<bool> login(String base64EncodedWithEncryptedPassword) async {
     _error = null;
