@@ -19,12 +19,40 @@ class NotificationsListView extends StatelessWidget {
   Widget buildListView(BuildContext context) {
     if (Provider.of<MessagesDataProvider>(context).messages.length == 0) {
       if (Provider.of<MessagesDataProvider>(context).error == null) {
-        return _buildLoadingIndicator();
+        if (Provider.of<MessagesDataProvider>(context).isLoading) {
+          return ListView.separated(
+            physics: AlwaysScrollableScrollPhysics(),
+            itemBuilder: (BuildContext context, int index) =>
+                _buildLoadingIndicator(),
+            controller:
+                Provider.of<MessagesDataProvider>(context).scrollController,
+            itemCount: 1,
+            separatorBuilder: (BuildContext context, int index) => Divider(),
+          );
+        } else {
+          return ListView.separated(
+            physics: AlwaysScrollableScrollPhysics(),
+            itemBuilder: (BuildContext context, int index) =>
+                _buildNoMessagesText(),
+            controller:
+                Provider.of<MessagesDataProvider>(context).scrollController,
+            itemCount: 1,
+            separatorBuilder: (BuildContext context, int index) => Divider(),
+          );
+        }
       } else {
-        return _buildErrorText();
+        return ListView.separated(
+          physics: AlwaysScrollableScrollPhysics(),
+          itemBuilder: (BuildContext context, int index) => _buildErrorText(),
+          controller:
+              Provider.of<MessagesDataProvider>(context).scrollController,
+          itemCount: 1,
+          separatorBuilder: (BuildContext context, int index) => Divider(),
+        );
       }
     }
     return ListView.separated(
+      physics: AlwaysScrollableScrollPhysics(),
       itemBuilder: _buildMessage,
       controller: Provider.of<MessagesDataProvider>(context).scrollController,
       itemCount: Provider.of<MessagesDataProvider>(context).messages.length,
@@ -46,6 +74,19 @@ class NotificationsListView extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Text(NotificationsConstants.statusFetchProblem),
+      ],
+    );
+  }
+
+  Widget _buildNoMessagesText() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Flexible(
+          child: Text(
+            NotificationsConstants.statusNoMessages,
+          ),
+        ),
       ],
     );
   }
@@ -94,11 +135,7 @@ class NotificationsListView extends StatelessWidget {
     var time = '';
 
     if (diff.inSeconds < 60) {
-      if (diff.inSeconds.floor() == 1) {
-        time = diff.inMinutes.toString() + ' SECOND AGO';
-      } else {
-        time = diff.inMinutes.toString() + ' SECONDS AGO';
-      }
+      time = 'A FEW MOMENTS AGO';
     } else if (diff.inMinutes < 60) {
       if (diff.inMinutes.floor() == 1) {
         time = diff.inMinutes.toString() + ' MINUTE AGO';

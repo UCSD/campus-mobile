@@ -9,8 +9,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:provider/provider.dart';
-import 'package:provider/provider.dart';
 
 class PushNotificationDataProvider extends ChangeNotifier {
   PushNotificationDataProvider() {
@@ -75,9 +73,9 @@ class PushNotificationDataProvider extends ChangeNotifier {
           Provider.of<BottomNavigationBarProvider>(context, listen: false)
               .currentIndex = NavigationConstants.NotificationsTab;
 
-          /// navigate to routeName or home if no route was specified
-          Navigator.of(context).pushNamed(
-              message["routeName"] ?? RoutePaths.BottomNavigationBar);
+          /// navigate to notifciations tab
+          Navigator.of(context).pushNamedAndRemoveUntil(
+              RoutePaths.BottomNavigationBar, (Route<dynamic> route) => false);
         },
       );
     } on PlatformException {

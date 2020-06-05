@@ -103,6 +103,7 @@ class _DiningMenuListState extends State<DiningMenuList> {
           buildMealButtons(context),
           SizedBox(height: 10),
           ListView.separated(
+            physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemBuilder: (context, index) {
               return list[index];
@@ -152,46 +153,43 @@ class _DiningMenuListState extends State<DiningMenuList> {
   }
 
   Widget buildMealButtons(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width * .90,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          LabeledRadio(
-            title: 'Breakfast',
-            value: Meal.breakfast,
-            groupValue: Provider.of<DiningDataProvider>(context).mealTime,
-            onChanged: (Meal value) {
-              setState(() {
-                Provider.of<DiningDataProvider>(context, listen: false)
-                    .mealTime = value;
-              });
-            },
-          ),
-          LabeledRadio(
-            title: 'Lunch',
-            value: Meal.lunch,
-            groupValue: Provider.of<DiningDataProvider>(context).mealTime,
-            onChanged: (Meal value) {
-              setState(() {
-                Provider.of<DiningDataProvider>(context, listen: false)
-                    .mealTime = value;
-              });
-            },
-          ),
-          LabeledRadio(
-            title: 'Dinner',
-            value: Meal.dinner,
-            groupValue: Provider.of<DiningDataProvider>(context).mealTime,
-            onChanged: (Meal value) {
-              setState(() {
-                Provider.of<DiningDataProvider>(context, listen: false)
-                    .mealTime = value;
-              });
-            },
-          ),
-        ],
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: <Widget>[
+        LabeledRadio(
+          title: 'Breakfast',
+          value: Meal.breakfast,
+          groupValue: Provider.of<DiningDataProvider>(context).mealTime,
+          onChanged: (Meal value) {
+            setState(() {
+              Provider.of<DiningDataProvider>(context, listen: false).mealTime =
+                  value;
+            });
+          },
+        ),
+        LabeledRadio(
+          title: 'Lunch',
+          value: Meal.lunch,
+          groupValue: Provider.of<DiningDataProvider>(context).mealTime,
+          onChanged: (Meal value) {
+            setState(() {
+              Provider.of<DiningDataProvider>(context, listen: false).mealTime =
+                  value;
+            });
+          },
+        ),
+        LabeledRadio(
+          title: 'Dinner',
+          value: Meal.dinner,
+          groupValue: Provider.of<DiningDataProvider>(context).mealTime,
+          onChanged: (Meal value) {
+            setState(() {
+              Provider.of<DiningDataProvider>(context, listen: false).mealTime =
+                  value;
+            });
+          },
+        ),
+      ],
     );
   }
 }
@@ -208,22 +206,20 @@ class LabeledRadio extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
+    return Container(
       child: Row(
         children: <Widget>[
           Radio(
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             value: value,
             groupValue: groupValue,
             onChanged: onChanged,
             activeColor: Theme.of(context).buttonColor,
           ),
-          Flexible(
-            child: Container(
-              child: Text(
-                title,
-                style: TextStyle(fontSize: 16),
-                overflow: TextOverflow.clip,
-              ),
+          Container(
+            child: Text(
+              title,
+              style: TextStyle(fontSize: 16),
             ),
           ),
         ],
