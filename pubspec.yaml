@@ -17,7 +17,7 @@ dependencies:
   url_launcher: 5.2.5
   intl: 0.16.0
   location: 2.3.5
-  google_maps_flutter: 0.5.11
+  google_maps_flutter: 0.5.28+1
   dio: 3.0.7
   flutter_sticky_header: 0.4.0
   firebase_core: 0.4.0+9
