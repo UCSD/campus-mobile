@@ -55,7 +55,12 @@ class UserDataProvider extends ChangeNotifier {
   /// overwrite the [UserProfileModel] in persistent storage with the model passed in
   Future updateUserProfileModel(UserProfileModel model) async {
     _userProfileModel = model;
-    var box = await Hive.box<UserProfileModel>('UserProfileModel');
+    var box;
+    try {
+      box = await Hive.box<UserProfileModel>('UserProfileModel');
+    } catch (e) {
+      box = await Hive.openBox<UserProfileModel>('UserProfileModel');
+    }
     await box.put('UserProfileModel', model);
     _lastUpdated = DateTime.now();
   }
