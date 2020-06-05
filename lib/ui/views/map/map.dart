@@ -33,6 +33,8 @@ class Maps extends StatelessWidget {
               Provider.of<MapsDataProvider>(context).markers.values),
           myLocationEnabled: true,
           myLocationButtonEnabled: false,
+          mapToolbarEnabled: false,
+          zoomControlsEnabled: false,
           onMapCreated: (controller) {
             Provider.of<MapsDataProvider>(context, listen: false)
                 .mapController = controller;
