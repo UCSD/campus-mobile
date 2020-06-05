@@ -133,11 +133,7 @@ class NotificationsListView extends StatelessWidget {
     var time = '';
 
     if (diff.inSeconds < 60) {
-      if (diff.inSeconds.floor() == 1) {
-        time = diff.inMinutes.toString() + ' SECOND AGO';
-      } else {
-        time = diff.inMinutes.toString() + ' SECONDS AGO';
-      }
+      time = 'A FEW MOMENTS AGO';
     } else if (diff.inMinutes < 60) {
       if (diff.inMinutes.floor() == 1) {
         time = diff.inMinutes.toString() + ' MINUTE AGO';
