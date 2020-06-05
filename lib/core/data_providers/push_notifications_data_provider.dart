@@ -73,7 +73,7 @@ class PushNotificationDataProvider extends ChangeNotifier {
           Provider.of<BottomNavigationBarProvider>(context, listen: false)
               .currentIndex = NavigationConstants.NotificationsTab;
 
-          /// navigate to routeName or home if no route was specified
+          /// navigate to notifciations tab
           Navigator.of(context).pushNamedAndRemoveUntil(
               RoutePaths.BottomNavigationBar, (Route<dynamic> route) => false);
         },

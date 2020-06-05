@@ -17,27 +17,29 @@ class NotificationsListView extends StatelessWidget {
   }
 
   Widget buildListView(BuildContext context) {
-    if (Provider.of<MessagesDataProvider>(context).isLoading) {
-      return ListView.separated(
-        physics: AlwaysScrollableScrollPhysics(),
-        itemBuilder: (BuildContext context, int index) =>
-            _buildLoadingIndicator(),
-        controller: Provider.of<MessagesDataProvider>(context).scrollController,
-        itemCount: 1,
-        separatorBuilder: (BuildContext context, int index) => Divider(),
-      );
-    }
     if (Provider.of<MessagesDataProvider>(context).messages.length == 0) {
       if (Provider.of<MessagesDataProvider>(context).error == null) {
-        return ListView.separated(
-          physics: AlwaysScrollableScrollPhysics(),
-          itemBuilder: (BuildContext context, int index) =>
-              _buildNoMessagesText(),
-          controller:
-              Provider.of<MessagesDataProvider>(context).scrollController,
-          itemCount: 1,
-          separatorBuilder: (BuildContext context, int index) => Divider(),
-        );
+        if (Provider.of<MessagesDataProvider>(context).isLoading) {
+          return ListView.separated(
+            physics: AlwaysScrollableScrollPhysics(),
+            itemBuilder: (BuildContext context, int index) =>
+                _buildLoadingIndicator(),
+            controller:
+                Provider.of<MessagesDataProvider>(context).scrollController,
+            itemCount: 1,
+            separatorBuilder: (BuildContext context, int index) => Divider(),
+          );
+        } else {
+          return ListView.separated(
+            physics: AlwaysScrollableScrollPhysics(),
+            itemBuilder: (BuildContext context, int index) =>
+                _buildNoMessagesText(),
+            controller:
+                Provider.of<MessagesDataProvider>(context).scrollController,
+            itemCount: 1,
+            separatorBuilder: (BuildContext context, int index) => Divider(),
+          );
+        }
       } else {
         return ListView.separated(
           physics: AlwaysScrollableScrollPhysics(),
