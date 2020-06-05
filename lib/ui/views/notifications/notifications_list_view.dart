@@ -1,6 +1,5 @@
 import 'package:campus_mobile_experimental/core/constants/notifications_constants.dart';
 import 'package:campus_mobile_experimental/core/models/message_model.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/core/data_providers/messages_data_provider.dart';
 import 'package:provider/provider.dart';
@@ -30,27 +29,15 @@ class NotificationsListView extends StatelessWidget {
     }
     if (Provider.of<MessagesDataProvider>(context).messages.length == 0) {
       if (Provider.of<MessagesDataProvider>(context).error == null) {
-        if (Provider.of<MessagesDataProvider>(context).isLoading) {
-          return ListView.separated(
-            physics: AlwaysScrollableScrollPhysics(),
-            itemBuilder: (BuildContext context, int index) =>
-                _buildLoadingIndicator(),
-            controller:
-                Provider.of<MessagesDataProvider>(context).scrollController,
-            itemCount: 1,
-            separatorBuilder: (BuildContext context, int index) => Divider(),
-          );
-        } else {
-          return ListView.separated(
-            physics: AlwaysScrollableScrollPhysics(),
-            itemBuilder: (BuildContext context, int index) =>
-                _buildNoMessagesText(),
-            controller:
-                Provider.of<MessagesDataProvider>(context).scrollController,
-            itemCount: 1,
-            separatorBuilder: (BuildContext context, int index) => Divider(),
-          );
-        }
+        return ListView.separated(
+          physics: AlwaysScrollableScrollPhysics(),
+          itemBuilder: (BuildContext context, int index) =>
+              _buildNoMessagesText(),
+          controller:
+              Provider.of<MessagesDataProvider>(context).scrollController,
+          itemCount: 1,
+          separatorBuilder: (BuildContext context, int index) => Divider(),
+        );
       } else {
         return ListView.separated(
           physics: AlwaysScrollableScrollPhysics(),
