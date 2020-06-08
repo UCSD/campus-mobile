@@ -7,7 +7,7 @@ import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.da
 
 import 'package:provider/provider.dart';
 
-const String cardId = 'qr_scanner';
+const String cardId = 'QRScanner';
 
 class ScannerCard extends StatelessWidget {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
