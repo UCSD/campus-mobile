@@ -33,7 +33,7 @@ class CardsView extends StatelessWidget {
     for (String item in newOrder) {
       orderList.add(item);
     }
-    _cardsDataProvider.reorderCards(orderList);
+    _cardsDataProvider.updateCardOrder(orderList);
   }
 
   List<Widget> createList(BuildContext context) {
