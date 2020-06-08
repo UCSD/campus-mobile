@@ -1,5 +1,6 @@
 import 'package:campus_mobile_experimental/core/models/dining_menu_items_model.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
+import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class NutritionFactsView extends StatelessWidget {
@@ -16,21 +17,15 @@ class NutritionFactsView extends StatelessWidget {
 
   Widget nutrientWidget(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(1.0),
-      decoration: BoxDecoration(
-          border: new Border.all(color: Colors.black, width: 2.0)),
-      child: Container(
-        padding: EdgeInsets.all(2.0),
-        color: Colors.white,
-        child: ListView(
-          children: <Widget>[
-            buildTitle(data.name, context),
-            nutrientHeader(data.nutrition.calories, data.nutrition.servingSize),
-            nutrientValues(nutrientData: data.nutrition.toJson()),
-            footerCalories(2000),
-            buildText(data.nutrition.ingredients, data.nutrition.allergens),
-          ],
-        ),
+      padding: EdgeInsets.all(2.0),
+      child: ListView(
+        children: <Widget>[
+          buildTitle(data.name, context),
+          nutrientHeader(context, data.nutrition.calories, data.nutrition.servingSize),
+          nutrientValues(context, nutrientData: data.nutrition.toJson()),
+          footerCalories(context, 2000),
+          buildText(context, data.nutrition.ingredients, data.nutrition.allergens),
+        ],
       ),
     );
   }
@@ -41,29 +36,28 @@ class NutritionFactsView extends StatelessWidget {
       style: TextStyle(
         fontSize: 30.0,
         fontWeight: FontWeight.w400,
-        color: Color(0xFF182B49),
       ),
     );
   }
 
-  Widget buildText(String ingredients, String allergens) {
+  Widget buildText(BuildContext context, ingredients, String allergens) {
     return RichText(
       text: TextSpan(
-        style: TextStyle(fontSize: 14.0, color: Colors.black),
+        style: TextStyle(fontSize: 14.0, color: Theme.of(context).accentColor),
         children: [
           TextSpan(
             text: "Ingredients: ",
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+            style: TextStyle(fontWeight: FontWeight.bold),
           ),
           TextSpan(text: ingredients),
           TextSpan(
             text: "\n\nAllergens: ",
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+            style: TextStyle(fontWeight: FontWeight.bold),
           ),
           TextSpan(text: allergens),
           TextSpan(
             text: "\n\nDisclaimer: ",
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+            style: TextStyle(fontWeight: FontWeight.bold),
           ),
           TextSpan(text: disclaimer),
         ],
@@ -72,7 +66,7 @@ class NutritionFactsView extends StatelessWidget {
   }
 }
 
-Widget nutrientValues({nutrientData}) {
+Widget nutrientValues(BuildContext context, {nutrientData}) {
   //final n = (1.3456).toStringAsFixed(2);
   //final s = double.parse("1.2345");
   final nutrientTypes = [
@@ -111,6 +105,7 @@ Widget nutrientValues({nutrientData}) {
     crossAxisAlignment: CrossAxisAlignment.start,
     children: nutrientTypes
         .map((d) => nutrientLiner(
+              context: context,
               nutrientName: d["name"],
               qty: nutrientData["${d["nutrient"]}"],
               ptg: nutrientData["${d["nutrient"]}" + "_DV"] != null
@@ -123,7 +118,7 @@ Widget nutrientValues({nutrientData}) {
   );
 }
 
-Widget nutrientHeader(String calories, String servingSize) {
+Widget nutrientHeader(BuildContext context, calories, String servingSize) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: <Widget>[
@@ -131,42 +126,44 @@ Widget nutrientHeader(String calories, String servingSize) {
         "Nutrition Facts",
         textAlign: TextAlign.left,
         style: TextStyle(
-            fontSize: 40.0, fontWeight: FontWeight.w700, color: Colors.black),
+            fontSize: 40.0, fontWeight: FontWeight.w700),
       ),
       Text(
         "Serving Size $servingSize",
         style: TextStyle(
-            fontSize: 14.0, fontWeight: FontWeight.w400, color: Colors.black),
+            fontSize: 14.0, fontWeight: FontWeight.w400),
       ),
       Container(
         margin: EdgeInsetsDirectional.only(start: 1.0, end: 1.0),
         height: 5.0,
-        color: Colors.black,
+        color: Theme.of(context).accentColor,
       ),
       Text(
         "Ammount Per Serving",
         style: TextStyle(
-            fontSize: 10.0, fontWeight: FontWeight.w800, color: Colors.black),
+            fontSize: 10.0, fontWeight: FontWeight.w800),
       ),
       Container(
         margin: EdgeInsetsDirectional.only(start: 1.0, end: 1.0),
         height: 1.0,
+        color: Theme.of(context).accentColor,
       ),
       Row(children: <Widget>[
         Text(
           "Calories",
           style: TextStyle(
-              fontSize: 15.0, fontWeight: FontWeight.w900, color: Colors.black),
+              fontSize: 15.0, fontWeight: FontWeight.w900),
         ),
         Text(
           " $calories",
           style: TextStyle(
-              fontSize: 15.0, fontWeight: FontWeight.w500, color: Colors.black),
+              fontSize: 15.0, fontWeight: FontWeight.w500),
         ),
       ]),
       Container(
         margin: EdgeInsetsDirectional.only(start: 1.0, end: 1.0),
         height: 3.0,
+        color: Theme.of(context).accentColor,
       ),
       Container(
         alignment: Alignment.topRight,
@@ -174,7 +171,7 @@ Widget nutrientHeader(String calories, String servingSize) {
           "% Daily Value*",
           textAlign: TextAlign.right,
           style: TextStyle(
-              fontSize: 15.0, fontWeight: FontWeight.w600, color: Colors.black),
+              fontSize: 15.0, fontWeight: FontWeight.w600),
         ),
       )
     ],
@@ -184,6 +181,7 @@ Widget nutrientHeader(String calories, String servingSize) {
 Widget nutrientLiner({
   @required nutrientName,
   @required qty,
+  @required context,
   ptg,
   sub: false,
   showPercent: true,
@@ -199,21 +197,20 @@ Widget nutrientLiner({
         Container(
             margin: EdgeInsetsDirectional.only(start: 1.0, end: 1.0),
             height: 1.0,
-            color: Colors.black),
+            color: Theme.of(context).accentColor,
+        ),
         Row(
           children: <Widget>[
             Text(
               nutrientName,
               style: TextStyle(
                   fontSize: textSize,
-                  color: Colors.black,
                   fontWeight: (sub) ? textWeight2 : textWeight1),
             ),
             Text(
               "  $qty",
               style: TextStyle(
                   fontSize: textSize,
-                  color: Colors.black,
                   fontWeight: textWeight2),
             ),
             Expanded(
@@ -222,7 +219,6 @@ Widget nutrientLiner({
               textAlign: TextAlign.right,
               style: TextStyle(
                 fontSize: textSize,
-                color: Colors.black,
                 fontWeight: textWeight1,
               ),
             )),
@@ -231,19 +227,17 @@ Widget nutrientLiner({
       ]));
 }
 
-Widget footerCalories(int calories) {
+Widget footerCalories(BuildContext context, calories) {
   return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Container(
-          margin: EdgeInsetsDirectional.only(start: 1.0, end: 1.0),
           height: 5.0,
-          color: Colors.black,
+          color: Theme.of(context).accentColor,
         ),
         Text(
           "Percent Daily Values are based on a $calories calories diet.",
-          style: TextStyle(
-              fontSize: 10.0, color: Colors.black, fontWeight: FontWeight.w400),
+          style: TextStyle(fontSize: 10.0),
         )
       ]);
 }

@@ -144,7 +144,7 @@ class DiningList extends StatelessWidget {
         data.name,
         textAlign: TextAlign.start,
         //overflow: TextOverflow.ellipsis,
-        style: TextStyle(fontSize: 18, color: Theme.of(context).primaryColor),
+        style: TextStyle(fontSize: 18),
       ),
       subtitle: getHoursForToday(data.regularHours),
       trailing: buildIconWithDistance(data, context),
@@ -160,13 +160,11 @@ class DiningList extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Icon(
-            Icons.directions_walk,
-            color: Theme.of(context).primaryColor,
-          ),
+          Icon(Icons.directions_walk),
           Text(
-            data.distance != null ? (num.parse(data.distance.toStringAsFixed(1)).toString() + ' mi') : '--',
-            style: TextStyle(color: Theme.of(context).primaryColor),
+            data.distance != null ?
+              (num.parse(data.distance.toStringAsFixed(1)).toString() + ' mi')
+              : '--',
           ),
         ],
       ),
