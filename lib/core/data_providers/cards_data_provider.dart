@@ -159,10 +159,19 @@ class CardsDataProvider extends ChangeNotifier {
   }
 
   activateStudentCards() {
-    int index = _cardOrder.indexOf('MyStudentChart') + 1;
-    _cardOrder.insertAll(index, _studentCards.toList());
     for (String card in _studentCards) {
-      _cardStates[card] = true;
+      if (_availableCards[card] != null) {
+        if (_availableCards[card].cardActive) {
+          _cardStates[card] = true;
+          _cardOrder.insert(0, card);
+        } else {
+          _cardStates[card] = false;
+          _cardOrder.remove(card);
+        }
+      } else {
+        _cardStates[card] = true;
+        _cardOrder.insert(0, card);
+      }
     }
     updateCardOrder(_cardOrder);
     updateCardStates(
