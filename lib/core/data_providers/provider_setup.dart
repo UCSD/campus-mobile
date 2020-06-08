@@ -39,6 +39,7 @@ List<SingleChildWidget> independentServices = [
   Provider.value(value: observer),
   ChangeNotifierProvider<BottomNavigationBarProvider>(
     create: (_) => BottomNavigationBarProvider(),
+    lazy: false,
   ),
   ChangeNotifierProvider<PushNotificationDataProvider>(
     create: (_) => PushNotificationDataProvider(),
@@ -121,19 +122,21 @@ List<SingleChildWidget> dependentServices = [
   }),
   ChangeNotifierProxyProvider<PushNotificationDataProvider, UserDataProvider>(
       create: (_) {
-    var _userDataProvider = UserDataProvider();
+        var _userDataProvider = UserDataProvider();
 
-    /// try to load any persistent saved data
-    /// once loaded from memory get the user's online profile
-    _userDataProvider
-        .loadSavedData()
-        .whenComplete(() => _userDataProvider.fetchUserProfile());
-    return _userDataProvider;
-  }, update: (_, pushNotificationDataProvider, _userDataProvider) {
-    _userDataProvider.pushNotificationDataProvider =
-        pushNotificationDataProvider;
-    return _userDataProvider;
-  }),
+        /// try to load any persistent saved data
+        /// once loaded from memory get the user's online profile
+        _userDataProvider
+            .loadSavedData()
+            .whenComplete(() => _userDataProvider.fetchUserProfile());
+        return _userDataProvider;
+      },
+      lazy: false,
+      update: (_, pushNotificationDataProvider, _userDataProvider) {
+        _userDataProvider.pushNotificationDataProvider =
+            pushNotificationDataProvider;
+        return _userDataProvider;
+      }),
   ChangeNotifierProxyProvider<UserDataProvider, CardsDataProvider>(create: (_) {
     var cardsDataProvider = CardsDataProvider();
     return cardsDataProvider;
@@ -184,13 +187,16 @@ List<SingleChildWidget> dependentServices = [
     return availabilityDataProvider;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, MessagesDataProvider>(
-      create: (_) {
-    var messageDataProvider = MessagesDataProvider();
-    return messageDataProvider;
-  }, update: (_, userDataProvider, messageDataProvider) {
-    messageDataProvider.userDataProvider = userDataProvider;
-    messageDataProvider.fetchMessages();
-    return messageDataProvider;
-  }),
+    create: (_) {
+      var messageDataProvider = MessagesDataProvider();
+      return messageDataProvider;
+    },
+    lazy: false,
+    update: (_, userDataProvider, messageDataProvider) {
+      messageDataProvider.userDataProvider = userDataProvider;
+      messageDataProvider.fetchMessages(true);
+      return messageDataProvider;
+    },
+  ),
 ];
 List<SingleChildWidget> uiConsumableProviders = [];
