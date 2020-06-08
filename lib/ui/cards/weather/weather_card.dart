@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 
+const String cardId = 'weather';
 const String WEATHER_ICON_BASE_URL =
     'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/images/v1/weather-icons/';
 
@@ -14,13 +15,13 @@ class WeatherCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
-      active: Provider.of<CardsDataProvider>(context).cardStates['weather'],
+      active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
-          .toggleCard('weather'),
+          .toggleCard(cardId),
       reload: () => Provider.of<WeatherDataProvider>(context, listen: false)
           .fetchWeather(),
       isLoading: Provider.of<WeatherDataProvider>(context).isLoading,
-      titleText: 'Weather',
+      titleText: CardTitleConstants.titleMap[cardId],
       errorText: Provider.of<WeatherDataProvider>(context).error,
       child: () => buildCardContent(
           Provider.of<WeatherDataProvider>(context).weatherModel),
@@ -61,13 +62,12 @@ class WeatherCard extends StatelessWidget {
 
   Widget buildCardContent(WeatherModel data) {
     return ListView(
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      children: <Widget>[
-        buildCurrentWeather(data.currentWeather),
-        buildWeeklyForecast(data.weeklyForecast),
-      ]
-    );
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        children: <Widget>[
+          buildCurrentWeather(data.currentWeather),
+          buildWeeklyForecast(data.weeklyForecast),
+        ]);
   }
 
   Widget buildWeeklyForecast(WeeklyForecast weeklyForecast) {

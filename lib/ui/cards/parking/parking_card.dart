@@ -8,6 +8,8 @@ import 'package:campus_mobile_experimental/ui/reusable_widgets/dots_indicator.da
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+const String cardId = 'parking';
+
 class ParkingCard extends StatefulWidget {
   @override
   _ParkingCardState createState() => _ParkingCardState();
@@ -25,14 +27,14 @@ class _ParkingCardState extends State<ParkingCard> {
 
   Widget build(BuildContext context) {
     return CardContainer(
-      titleText: "Parking",
+      titleText: CardTitleConstants.titleMap[cardId],
       isLoading: _parkingDataProvider.isLoading,
       reload: () => _parkingDataProvider.fetchParkingLots(),
       errorText: _parkingDataProvider.error,
       child: () => buildParkingCard(_parkingDataProvider.parkingModels),
-      active: Provider.of<CardsDataProvider>(context).cardStates['parking'],
+      active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
-          .toggleCard('parking'),
+          .toggleCard(cardId),
       actionButtons: buildActionButtons(),
     );
   }

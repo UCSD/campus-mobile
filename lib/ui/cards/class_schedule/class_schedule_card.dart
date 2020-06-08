@@ -10,6 +10,8 @@ import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+const String cardId = 'schedule';
+
 class ClassScheduleCard extends StatelessWidget {
   List<Widget> buildActionButtons(BuildContext context) {
     List<Widget> actionButtons = List<Widget>();
@@ -27,14 +29,14 @@ class ClassScheduleCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
-      active: Provider.of<CardsDataProvider>(context).cardStates['schedule'],
+      active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
-          .toggleCard('schedule'),
+          .toggleCard(cardId),
       reload: () =>
           Provider.of<ClassScheduleDataProvider>(context, listen: false)
               .fetchData(),
       isLoading: Provider.of<ClassScheduleDataProvider>(context).isLoading,
-      titleText: "Classes",
+      titleText: CardTitleConstants.titleMap[cardId],
       errorText: Provider.of<ClassScheduleDataProvider>(context).error,
       child: () => buildClassScheduleCard(
         Provider.of<ClassScheduleDataProvider>(context).upcomingCourses,
