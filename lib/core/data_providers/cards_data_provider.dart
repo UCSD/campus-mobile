@@ -60,7 +60,7 @@ class CardsDataProvider extends ChangeNotifier {
             _cardOrder.remove(card);
           }
           // check to see if card is not active
-          else if (!_availableCards[card].cardActive) {
+          else if (!(_availableCards[card].cardActive ?? false)) {
             _cardOrder.remove(card);
           }
         }
@@ -72,7 +72,7 @@ class CardsDataProvider extends ChangeNotifier {
             _cardStates.remove(card);
           }
           // check to see if card is not active
-          else if (!_availableCards[card].cardActive) {
+          else if (!(_availableCards[card].cardActive ?? false)) {
             _cardStates.remove(card);
           }
         }
@@ -80,7 +80,8 @@ class CardsDataProvider extends ChangeNotifier {
         // add new cards to the top of the list
         for (String card in _availableCards.keys) {
           if (_studentCards.contains(card)) continue;
-          if (!_cardOrder.contains(card) && _availableCards[card].cardActive) {
+          if (!_cardOrder.contains(card) &&
+              (_availableCards[card].cardActive ?? false)) {
             _cardOrder.insert(0, card);
           }
           // keep all new cards activated by default
