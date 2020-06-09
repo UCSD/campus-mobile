@@ -81,7 +81,7 @@ class CardsDataProvider extends ChangeNotifier {
         for (String card in _availableCards.keys) {
           if (_studentCards.contains(card)) continue;
           if (!_cardOrder.contains(card) && _availableCards[card].cardActive) {
-            _cardOrder.insert(_cardOrder.length, card);
+            _cardOrder.insert(0, card);
           }
           // keep all new cards activated by default
           if (!_cardStates.containsKey(card)) {
