@@ -77,7 +77,7 @@ class CardsDataProvider extends ChangeNotifier {
           }
         }
 
-        // add new cards to the bottom of the list
+        // add new cards to the top of the list
         for (String card in _availableCards.keys) {
           if (_studentCards.contains(card)) continue;
           if (!_cardOrder.contains(card) && _availableCards[card].cardActive) {
