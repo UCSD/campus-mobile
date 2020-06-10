@@ -43,20 +43,24 @@ class EventsList extends StatelessWidget {
       eventTiles.add(tile);
     }
 
-    return listSize != null
-        ? ListView(
-            physics: NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            children: ListTile.divideTiles(tiles: eventTiles, context: context)
-                .toList(),
-          )
-        : ContainerView(
-            child: ListView(
-              children:
-                  ListTile.divideTiles(tiles: eventTiles, context: context)
-                      .toList(),
-            ),
-          );
+    if (listSize != null) {
+      return ListView(
+        physics: NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        children:
+            ListTile.divideTiles(tiles: eventTiles, context: context).toList(),
+      );
+    } else {
+      return ContainerView(
+        child: listOfEvents.isEmpty
+            ? Center(child: Text('No events found.'))
+            : ListView(
+                children:
+                    ListTile.divideTiles(tiles: eventTiles, context: context)
+                        .toList(),
+              ),
+      );
+    }
   }
 
   Widget buildEventTile(EventModel data, BuildContext context) {
