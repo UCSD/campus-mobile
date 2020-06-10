@@ -39,6 +39,8 @@ class CardsView extends StatelessWidget {
   List<Widget> createList(BuildContext context) {
     List<Widget> list = List<Widget>();
     for (String card in _cardsDataProvider.cardOrder) {
+      if (card == 'QRScanner') continue;
+      if (CardTitleConstants.titleMap[card] == null) continue;
       list.add(ListTile(
         leading: Icon(Icons.reorder),
         key: Key(card),

@@ -137,22 +137,26 @@ List<SingleChildWidget> dependentServices = [
             pushNotificationDataProvider;
         return _userDataProvider;
       }),
-  ChangeNotifierProxyProvider<UserDataProvider, CardsDataProvider>(create: (_) {
-    var cardsDataProvider = CardsDataProvider();
-    cardsDataProvider
-      ..loadCardOrder()
-      ..loadCardStates();
-
-    return cardsDataProvider;
-  }, update: (_, userDataProvider, cardsDataProvider) {
-    if (userDataProvider.isLoggedIn &&
-        (userDataProvider.userProfileModel.classifications?.student ?? false)) {
-      cardsDataProvider.activateStudentCards();
-    } else {
-      cardsDataProvider.deactivateStudentCards();
-    }
-    return cardsDataProvider;
-  }),
+  ChangeNotifierProxyProvider<UserDataProvider, CardsDataProvider>(
+      create: (_) {
+        var cardsDataProvider = CardsDataProvider();
+        cardsDataProvider
+          ..loadCardOrder()
+          ..loadCardStates()
+          ..updateAvailableCards();
+        return cardsDataProvider;
+      },
+      lazy: false,
+      update: (_, userDataProvider, cardsDataProvider) {
+        if (userDataProvider.isLoggedIn &&
+            (userDataProvider.userProfileModel.classifications?.student ??
+                false)) {
+          cardsDataProvider.activateStudentCards();
+        } else {
+          cardsDataProvider.deactivateStudentCards();
+        }
+        return cardsDataProvider;
+      }),
   ChangeNotifierProxyProvider<UserDataProvider, ClassScheduleDataProvider>(
       create: (_) {
     var classDataProvider = ClassScheduleDataProvider();

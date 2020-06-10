@@ -1,9 +1,7 @@
-import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
-import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
-import 'package:campus_mobile_experimental/core/services/barcode_service.dart';
+import 'package:campus_mobile_experimental/core/models/cards_model.dart';
+import 'package:campus_mobile_experimental/core/services/cards_service.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class CardsDataProvider extends ChangeNotifier {
   CardsDataProvider() {
@@ -41,8 +39,67 @@ class CardsDataProvider extends ChangeNotifier {
   List<String> _cardOrder;
   Map<String, bool> _cardStates;
   List<String> _studentCards;
+  Map<String, CardsModel> _availableCards;
 
-  ///SERVICES
+  ///Services
+  final CardsService _cardsService = CardsService();
+
+  void updateAvailableCards() async {
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
+    if (await _cardsService.fetchCards()) {
+      _availableCards = _cardsService.cardsModel;
+      _lastUpdated = DateTime.now();
+      if (_availableCards.isNotEmpty) {
+        // remove all inactive or non-existent cards from [_cardOrder]
+        var tempCardOrder = List.from(_cardOrder);
+        for (String card in tempCardOrder) {
+          // check to see if card no longer exists
+          if (_availableCards[card] == null) {
+            _cardOrder.remove(card);
+          }
+          // check to see if card is not active
+          else if (!(_availableCards[card].cardActive ?? false)) {
+            _cardOrder.remove(card);
+          }
+        }
+        // remove all inactive or non-existent cards from [_cardStates]
+        var tempCardStates = Map.from(_cardStates);
+        for (String card in tempCardStates.keys) {
+          // check to see if card no longer exists
+          if (_availableCards[card] == null) {
+            _cardStates.remove(card);
+          }
+          // check to see if card is not active
+          else if (!(_availableCards[card].cardActive ?? false)) {
+            _cardStates.remove(card);
+          }
+        }
+
+        // add new cards to the top of the list
+        for (String card in _availableCards.keys) {
+          if (_studentCards.contains(card)) continue;
+          if (!_cardOrder.contains(card) &&
+              (_availableCards[card].cardActive ?? false)) {
+            _cardOrder.insert(0, card);
+          }
+          // keep all new cards activated by default
+          if (!_cardStates.containsKey(card)) {
+            _cardStates[card] = true;
+          }
+        }
+        updateCardOrder(_cardOrder);
+        updateCardStates(
+            _cardStates.keys.where((card) => _cardStates[card]).toList());
+      }
+    } else {
+      ///TODO: determine what error to show to the user
+      _error = _cardsService.error;
+    }
+    _isLoading = false;
+    notifyListeners();
+  }
 
   /// Update the [_cardOrder] stored in state
   /// overwrite the [_cardOrder] in persistent storage with the model passed in
