@@ -11,13 +11,10 @@ class AuthenticationService {
   /// add any type of data manipulation here so it can be accessed via provider
 
   final NetworkHelper _networkHelper = NetworkHelper();
-  final String endpoint =
-      "https://c12cf2xke8.execute-api.us-west-2.amazonaws.com/prod/v1.1/access-profile";
+  final String AUTH_SERVICE_API_URL =
+      "https://3hepzvdimd.execute-api.us-west-2.amazonaws.com/dev/v1.1/access-profile";
   final String AUTH_SERVICE_API_KEY =
       'AUTH_SERVICE_API_KEY_PH';
-
-  final String refreshTokenEndpoint =
-      'https://c12cf2xke8.execute-api.us-west-2.amazonaws.com/prod/v1.1/access-profile/refresh';
 
   Future<bool> login(String base64EncodedWithEncryptedPassword) async {
     _error = null;
@@ -29,7 +26,7 @@ class AuthenticationService {
 
       /// fetch data
       var response = await _networkHelper.authorizedPost(
-          endpoint, authServiceHeaders, null);
+          AUTH_SERVICE_API_URL, authServiceHeaders, null);
 
       /// check to see if response has an error
       if (response['errorMessage'] != null) {
@@ -54,7 +51,7 @@ class AuthenticationService {
     final tokenHeaders = {'refresh_token': refreshToken};
     try {
       var response = await _networkHelper.authorizedPost(
-          refreshTokenEndpoint, tokenHeaders, null);
+          AUTH_SERVICE_API_URL + '/refresh', tokenHeaders, null);
       if (response['error'] != null) {
         throw (response['error']);
       }

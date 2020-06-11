@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>444046920085-2s4n918v7st3r58kmcpplkjdvmqmtgdj.apps.googleusercontent.com</string>
+	<string>204227644417-badlapi7e50isd0bsghdtcl6k3o1d7u5.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.444046920085-2s4n918v7st3r58kmcpplkjdvmqmtgdj</string>
+	<string>com.googleusercontent.apps.204227644417-badlapi7e50isd0bsghdtcl6k3o1d7u5</string>
 	<key>API_KEY</key>
-	<string>AIzaSyAOzBjyk4uvZM1OMIL6fo8cPBdq-xFM16c</string>
+	<string>AIzaSyDWEx4YhK8RcoiBizBCymKVAjahP0LCmcU</string>
 	<key>GCM_SENDER_ID</key>
-	<string>444046920085</string>
+	<string>204227644417</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>edu.ucsd.ucsandiego</string>
 	<key>PROJECT_ID</key>
-	<string>uc-san-diego</string>
+	<string>uc-san-diego-qa</string>
 	<key>STORAGE_BUCKET</key>
-	<string>uc-san-diego.appspot.com</string>
+	<string>uc-san-diego-qa.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,8 +29,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:444046920085:ios:cd9429451b823426</string>
+	<string>1:204227644417:ios:cd9429451b823426</string>
 	<key>DATABASE_URL</key>
-	<string>https://uc-san-diego.firebaseio.com</string>
+	<string>https://uc-san-diego-qa.firebaseio.com</string>
 </dict>
 </plist>
