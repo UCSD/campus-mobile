@@ -162,6 +162,7 @@ class CardsDataProvider extends ChangeNotifier {
   activateStudentCards() {
     int index = _cardOrder.indexOf('MyStudentChart') + 1;
     _cardOrder.insertAll(index, _studentCards.toList());
+    _cardOrder = List.from(_cardOrder.toSet().toList());
     for (String card in _studentCards) {
       _cardStates[card] = true;
     }
