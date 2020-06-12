@@ -104,8 +104,13 @@ class CardsDataProvider extends ChangeNotifier {
   /// Update the [_cardOrder] stored in state
   /// overwrite the [_cardOrder] in persistent storage with the model passed in
   Future updateCardOrder(List<String> newOrder) async {
+    var box;
+    try {
+      box = await Hive.box('cardOrder');
+    } catch (e) {
+      box = await Hive.openBox('cardOrder');
+    }
     _cardOrder = newOrder;
-    var box = await Hive.openBox('cardOrder');
     await box.put('cardOrder', _cardOrder);
     _lastUpdated = DateTime.now();
     notifyListeners();
@@ -146,7 +151,12 @@ class CardsDataProvider extends ChangeNotifier {
     for (String activeCard in activeCards) {
       _cardStates[activeCard] = true;
     }
-    var box = await Hive.openBox('cardStates');
+    var box;
+    try {
+      box = await Hive.box('cardStates');
+    } catch (e) {
+      box = await Hive.openBox('cardStates');
+    }
     await box.put('cardStates', activeCards);
     _lastUpdated = DateTime.now();
     notifyListeners();
