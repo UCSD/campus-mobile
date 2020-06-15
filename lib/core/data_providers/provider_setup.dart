@@ -141,8 +141,7 @@ List<SingleChildWidget> dependentServices = [
       create: (_) {
         var cardsDataProvider = CardsDataProvider();
         cardsDataProvider
-          ..loadCardOrder()
-          ..loadCardStates()
+          ..loadSavedData()
           ..updateAvailableCards();
         return cardsDataProvider;
       },

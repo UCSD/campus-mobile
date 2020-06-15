@@ -14,13 +14,12 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await initializeStorage();
-
   runApp(CampusMobile());
 }
 
 void initializeStorage() async {
   /// initialize hive storage
-  Hive.initFlutter('.');
+  await Hive.initFlutter('.');
 
   if (await isFirstRun()) {
     FlutterSecureStorage storage = FlutterSecureStorage();

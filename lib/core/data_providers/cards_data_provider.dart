@@ -40,6 +40,8 @@ class CardsDataProvider extends ChangeNotifier {
   Map<String, bool> _cardStates;
   List<String> _studentCards;
   Map<String, CardsModel> _availableCards;
+  Box _cardOrderBox;
+  Box _cardStateBox;
 
   ///Services
   final CardsService _cardsService = CardsService();
@@ -101,45 +103,49 @@ class CardsDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future loadSavedData() async {
+    await _loadCardOrder();
+    await _loadCardStates();
+  }
+
   /// Update the [_cardOrder] stored in state
   /// overwrite the [_cardOrder] in persistent storage with the model passed in
   Future updateCardOrder(List<String> newOrder) async {
-    var box;
     try {
-      box = await Hive.box('cardOrder');
+      await _cardOrderBox.put('cardOrder', newOrder);
     } catch (e) {
-      box = await Hive.openBox('cardOrder');
+      _cardOrderBox = await Hive.openBox('cardOrder');
+      await _cardOrderBox.put('cardOrder', newOrder);
     }
     _cardOrder = newOrder;
-    await box.put('cardOrder', _cardOrder);
     _lastUpdated = DateTime.now();
     notifyListeners();
   }
 
   /// Load [_cardOrder] from persistent storage
   /// Will create persistent storage if no data is found
-  Future loadCardOrder() async {
-    var box = await Hive.openBox('cardOrder');
-    if (box.get('cardOrder') == null) {
-      await box.put('cardOrder', _cardOrder);
+  Future _loadCardOrder() async {
+    _cardOrderBox = await Hive.openBox('cardOrder');
+    if (_cardOrderBox.get('cardOrder') == null) {
+      await _cardOrderBox.put('cardOrder', _cardOrder);
     }
-    _cardOrder = box.get('cardOrder');
+    _cardOrder = _cardOrderBox.get('cardOrder');
     notifyListeners();
   }
 
   /// Load [_cardStates] from persistent storage
   /// Will create persistent storage if no data is found
-  Future loadCardStates() async {
-    var box = await Hive.openBox('cardStates');
+  Future _loadCardStates() async {
+    _cardStateBox = await Hive.openBox('cardStates');
     // if no data was found then create the data and save it
     // by default all cards will be on
-    if (box.get('cardStates') == null) {
-      await box.put('cardStates',
+    if (_cardStateBox.get('cardStates') == null) {
+      await _cardStateBox.put('cardStates',
           _cardStates.keys.where((card) => _cardStates[card]).toList());
     } else {
       _deactivateAllCards();
     }
-    for (String activeCard in box.get('cardStates')) {
+    for (String activeCard in _cardStateBox.get('cardStates')) {
       _cardStates[activeCard] = true;
     }
     notifyListeners();
@@ -151,13 +157,12 @@ class CardsDataProvider extends ChangeNotifier {
     for (String activeCard in activeCards) {
       _cardStates[activeCard] = true;
     }
-    var box;
     try {
-      box = await Hive.box('cardStates');
+      _cardStateBox.put('cardStates', activeCards);
     } catch (e) {
-      box = await Hive.openBox('cardStates');
+      _cardStateBox = await Hive.openBox('cardStates');
+      _cardStateBox.put('cardStates', activeCards);
     }
-    await box.put('cardStates', activeCards);
     _lastUpdated = DateTime.now();
     notifyListeners();
   }
