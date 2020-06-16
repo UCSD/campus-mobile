@@ -9,7 +9,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-bool showOnboardingScreen = true;
+bool showOnboardingScreen = false;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -29,19 +29,19 @@ void initializeStorage() async {
     await Hive.deleteFromDisk();
     await storage.deleteAll();
     setFirstRun();
-  } else {
-    showOnboardingScreen = false;
   }
 }
 
 Future<bool> isFirstRun() async {
   final prefs = await SharedPreferences.getInstance();
+  showOnboardingScreen = (prefs.getBool('showOnboardingScreen') ?? false);
   return (prefs.getBool('first_run') ?? true);
 }
 
 void setFirstRun() async {
   final prefs = await SharedPreferences.getInstance();
   prefs.setBool('first_run', false);
+  prefs.setBool('showOnboardingScreen', true);
   showOnboardingScreen = true;
 }
 
