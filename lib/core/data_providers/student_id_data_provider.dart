@@ -53,4 +53,9 @@ class StudentIdDataProvider extends ChangeNotifier {
   StudentIdPhotoModel get studentIdPhotoModel => _studentIdPhotoModel;
   StudentIdProfileModel get studentIdProfileModel => _studentIdProfileModel;
   int get selectedCourse => _selectedCourse;
+
+  //Peter G.
+   void setUserDataProvider(UserDataProvider dataProvider){
+     _userDataProvider = dataProvider;
+   }
 }
