@@ -1,19 +1,22 @@
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
+import 'package:campus_mobile_experimental/core/data_providers/provider_setup.dart';
 import 'package:campus_mobile_experimental/core/navigation/router.dart';
 import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
-import 'package:campus_mobile_experimental/core/data_providers/provider_setup.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 bool showOnboardingScreen = true;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await initializeStorage();
+
+  FlutterError.onError = Crashlytics.instance.recordFlutterError;
 
   runApp(CampusMobile());
 }
