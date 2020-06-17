@@ -92,8 +92,8 @@ class CardsDataProvider extends ChangeNotifier {
           }
         }
         updateCardOrder(_cardOrder);
-        updateCardStates(
-            _cardStates.keys.where((card) => _cardStates[card]).toList());
+//        updateCardStates(
+//            _cardStates.keys.where((card) => _cardStates[card]).toList());
       }
     } else {
       ///TODO: determine what error to show to the user
@@ -171,18 +171,23 @@ class CardsDataProvider extends ChangeNotifier {
     for (String card in _cardStates.keys) {
       _cardStates[card] = false;
     }
+    _cardOrder = box.get('cardOrder');
     notifyListeners();
   }
 
   activateStudentCards() {
     int index = _cardOrder.indexOf('MyStudentChart') + 1;
     _cardOrder.insertAll(index, _studentCards.toList());
+
+    // TODO: test w/o this
+    _cardOrder = List.from(_cardOrder.toSet().toList());
     for (String card in _studentCards) {
       _cardStates[card] = true;
     }
     updateCardOrder(_cardOrder);
-    updateCardStates(
-        _cardStates.keys.where((card) => _cardStates[card]).toList());
+//    updateCardStates(
+//        _cardStates.keys.where((card) => _cardStates[card]).toList());
+    notifyListeners();
   }
 
   deactivateStudentCards() {
@@ -191,14 +196,21 @@ class CardsDataProvider extends ChangeNotifier {
       _cardStates[card] = false;
     }
     updateCardOrder(_cardOrder);
-    updateCardStates(
-        _cardStates.keys.where((card) => _cardStates[card]).toList());
+//    updateCardStates(
+//        _cardStates.keys.where((card) => _cardStates[card]).toList());
+    notifyListeners();
+  }
+
+  void reorderCards(List<String> order) {
+    _cardOrder = order;
+    notifyListeners();
   }
 
   void toggleCard(String card) {
     _cardStates[card] = !_cardStates[card];
-    updateCardStates(
-        _cardStates.keys.where((card) => _cardStates[card]).toList());
+//    updateCardStates(
+//        _cardStates.keys.where((card) => _cardStates[card]).toList());
+    notifyListeners();
   }
 
   ///SIMPLE GETTERS
