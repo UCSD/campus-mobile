@@ -92,8 +92,8 @@ class CardsDataProvider extends ChangeNotifier {
           }
         }
         updateCardOrder(_cardOrder);
-//        updateCardStates(
-//            _cardStates.keys.where((card) => _cardStates[card]).toList());
+        updateCardStates(
+            _cardStates.keys.where((card) => _cardStates[card]).toList());
       }
     } else {
       ///TODO: determine what error to show to the user
@@ -140,6 +140,7 @@ class CardsDataProvider extends ChangeNotifier {
     // if no data was found then create the data and save it
     // by default all cards will be on
     if (_cardStateBox.get('cardStates') == null) {
+      print(cardStates.keys.where((card) => _cardStates[card]).toList());
       await _cardStateBox.put('cardStates',
           _cardStates.keys.where((card) => _cardStates[card]).toList());
     } else {
@@ -171,8 +172,6 @@ class CardsDataProvider extends ChangeNotifier {
     for (String card in _cardStates.keys) {
       _cardStates[card] = false;
     }
-    _cardOrder = box.get('cardOrder');
-    notifyListeners();
   }
 
   activateStudentCards() {
@@ -185,9 +184,8 @@ class CardsDataProvider extends ChangeNotifier {
       _cardStates[card] = true;
     }
     updateCardOrder(_cardOrder);
-//    updateCardStates(
-//        _cardStates.keys.where((card) => _cardStates[card]).toList());
-    notifyListeners();
+    updateCardStates(
+        _cardStates.keys.where((card) => _cardStates[card]).toList());
   }
 
   deactivateStudentCards() {
@@ -196,9 +194,8 @@ class CardsDataProvider extends ChangeNotifier {
       _cardStates[card] = false;
     }
     updateCardOrder(_cardOrder);
-//    updateCardStates(
-//        _cardStates.keys.where((card) => _cardStates[card]).toList());
-    notifyListeners();
+    updateCardStates(
+        _cardStates.keys.where((card) => _cardStates[card]).toList());
   }
 
   void reorderCards(List<String> order) {
@@ -208,9 +205,8 @@ class CardsDataProvider extends ChangeNotifier {
 
   void toggleCard(String card) {
     _cardStates[card] = !_cardStates[card];
-//    updateCardStates(
-//        _cardStates.keys.where((card) => _cardStates[card]).toList());
-    notifyListeners();
+    updateCardStates(
+        _cardStates.keys.where((card) => _cardStates[card]).toList());
   }
 
   ///SIMPLE GETTERS
