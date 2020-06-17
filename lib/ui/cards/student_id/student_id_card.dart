@@ -17,8 +17,7 @@ class StudentIdCard extends StatelessWidget {
     return CardContainer(
       /// TODO: need to hook up hidden to state using provider
       active: Provider.of<UserDataProvider>(context).cardStates['student_id'],
-      hide: () => Provider.of<UserDataProvider>(context, listen: false)
-          .toggleCard('student_id'),
+      hide: () => Provider.of<UserDataProvider>(context, listen: false).toggleCard('student_id'),
       reload: () => Provider.of<StudentIdDataProvider>(context, listen: false)
           .fetchWeather(),
       isLoading: Provider.of<StudentIdDataProvider>(context).isLoading,

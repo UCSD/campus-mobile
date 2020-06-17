@@ -28,18 +28,48 @@ class StudentIdDataProvider extends ChangeNotifier {
   StudentIdPhotoModel _studentIdPhotoModel;
   StudentIdProfileModel _studentIdProfileModel;
 
-
+  ///Additional Provider
   UserDataProvider _userDataProvider;
 
   ///SERVICES
   StudentIdService _studentIdService;
 
+  //Fetch Information From Models
   void fetchData() async {
     _isLoading = true;
     _error = null;
     notifyListeners();
 
-    print("fetchData-----------");
+    /// Verify that user is logged in
+    if(_userDataProvider.isLoggedIn){
+
+      //Initialize header
+      final Map<String, String> header = {
+        'Authorization':
+            'Bearer ${_userDataProvider?.authenticationModel?.accessToken}'
+      };
+
+      // Fetch Barcode
+      if(await _studentIdService.fetchStudentIdBarcode(header)){
+        _studentIdBarcodeModel = _studentIdService.studentIdBarcodeModel;
+      }else{
+
+        /// Error Handling
+        _error = _studentIdService.error.toString();
+        _isLoading = false;
+        notifyListeners();
+
+        /// Short Circuit
+        return;
+      }
+    }else{
+      _error = _studentIdService.error.toString();
+      _isLoading = false;
+      notifyListeners();
+
+      /// Short Circuit
+      return;
+    }
 
   }
 
@@ -54,8 +84,7 @@ class StudentIdDataProvider extends ChangeNotifier {
   StudentIdProfileModel get studentIdProfileModel => _studentIdProfileModel;
   int get selectedCourse => _selectedCourse;
 
-  //Peter G.
-   void setUserDataProvider(UserDataProvider dataProvider){
-     _userDataProvider = dataProvider;
-   }
+
+  ///Simple Setters
+  set userDataProvider(UserDataProvider value) => _userDataProvider = value;
 }

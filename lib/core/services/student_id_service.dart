@@ -21,7 +21,8 @@ class StudentIdService {
 
   final NetworkHelper _networkHelper = NetworkHelper();
 
-  Future<bool> fetchStudentIdBarcode(Map<String, String> headers, String term) async {
+  //Removed term (not used)
+  Future<bool> fetchStudentIdBarcode(Map<String, String> headers) async {
     _error = null;
     _isLoading = true;
     try {
@@ -112,4 +113,6 @@ class StudentIdService {
   StudentIdProfileModel get studentIdProfileModel => _studentIdProfileModel;
   bool get isLoading => _isLoading;
   DateTime get lastUpdated => _lastUpdated;
+
+
 }

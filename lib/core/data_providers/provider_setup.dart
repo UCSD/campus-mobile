@@ -192,9 +192,13 @@ List<SingleChildWidget> dependentServices = [
         return studentIdDataProvider;
       },
       update: (_, userDataProvider, studentIdDataProvider) {
-        //Peter G. (Work around setter)
-        studentIdDataProvider.setUserDataProvider(userDataProvider);
-        studentIdDataProvider.fetchData();
+        studentIdDataProvider.userDataProvider = userDataProvider;
+
+        //Verify that the user is logged in
+        if(userDataProvider.isLoggedIn && !studentIdDataProvider.isLoading) {
+          studentIdDataProvider.fetchData();
+        }
+
         return studentIdDataProvider;
       }
   ),
