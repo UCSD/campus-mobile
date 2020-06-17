@@ -78,8 +78,12 @@ class CardContainer extends StatelessWidget {
       } else if (titleText == 'Events') {
         return Text('No events found.');
       } else if (titleText == 'Finals') {
-        return Text('No finals found.');
-      } else if (titleText == 'Classes') {
+        // TODO: Resolve alignment issues on cards without action buttons
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 42.0),
+          child: Text('No finals found.'),
+        );
+      } else if (titleText == 'Schedule') {
         return Text('No classes found.');
       } else {
         return Text('An error occurred, please try again.');
