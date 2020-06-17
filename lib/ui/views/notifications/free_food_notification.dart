@@ -19,6 +19,7 @@ class FreeFoodNotification extends StatefulWidget {
 class _CheckBoxButtonState extends State<FreeFoodNotification> {
   _CheckBoxButtonState(messageId) {
     this.messageId = messageId;
+    
   }
 
   FreeFoodDataProvider _freeFoodDataProvider;
@@ -35,6 +36,16 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
     super.didChangeDependencies();
     _freeFoodDataProvider = Provider.of<FreeFoodDataProvider>(context);
     _isLoading = _freeFoodDataProvider.isLoading(messageId);
+    _isGoing = _freeFoodDataProvider.registeredEvents.contains(messageId);
+    if (_isGoing) {
+        _buttonColor = Colors.green;
+        _borderColor = Colors.green;
+        _textColor = Colors.white;
+      } else {
+        _buttonColor = Colors.white;
+        _borderColor = Color(0xFF034161);
+        _textColor = Color(0xFF034161);
+      }
   }
 
   @override

@@ -3,6 +3,7 @@ import 'package:campus_mobile_experimental/core/models/free_food_model.dart';
 import 'package:campus_mobile_experimental/core/models/message_model.dart';
 import 'package:campus_mobile_experimental/core/services/free_food_service.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'dart:collection';
 
 class FreeFoodDataProvider extends ChangeNotifier {
@@ -17,11 +18,13 @@ class FreeFoodDataProvider extends ChangeNotifier {
     ///INITIALIZE VALUES
     _messageToCount = new HashMap<String, int>();
     _messageToMaxCount = new HashMap<String, int>();
+    _registeredEvents = new List<String>();
   }
 
   ///VALUES
   HashMap<String, int> _messageToCount;
   HashMap<String, int> _messageToMaxCount;
+  List<String> _registeredEvents;
 
   ///STATES
   bool _isLoading;
@@ -39,11 +42,30 @@ class FreeFoodDataProvider extends ChangeNotifier {
   void parseMessages() {
     List<MessageElement> messages = _messageDataProvider.messages;
     messages.forEach((m) async {
-      if(m.audience != null && m.audience.topics.contains("freefood")) {
+      if(m.audience != null
+        &&(m.audience.topics.contains("freefood")
+        || m.audience.topics.contains("testFreeFood"))) {
         fetchCount(m.messageId);
         fetchMaxCount(m.messageId);
       }
     });
+  }
+
+  Future loadRegisteredEvents() async {
+    var box = await Hive.openBox('freefoodRegisteredEvents');
+    if (box.get('freefoodRegisteredEvents') == null) {
+      await box.put('freefoodRegisteredEvents', _registeredEvents);
+    }
+    _registeredEvents = box.get('freefoodRegisteredEvents');
+    notifyListeners();
+  }
+
+  Future updateRegisteredEvents(List<String> messageIds) async {
+    _registeredEvents = messageIds;
+    var box = await Hive.openBox('freefoodRegisteredEvents');
+    await box.put('freefoodRegisteredEvents', _registeredEvents);
+    _lastUpdated = DateTime.now();
+    notifyListeners();
   }
 
   void fetchCount(String id) async {
@@ -92,6 +114,9 @@ class FreeFoodDataProvider extends ChangeNotifier {
 
     notifyListeners();
 
+    _registeredEvents.remove(id);
+    await updateRegisteredEvents(_registeredEvents);
+
     if (await _freeFoodService.decrementCount(id)) {
       _freeFoodModel = _freeFoodService.freeFoodModel;
       _lastUpdated = DateTime.now();
@@ -111,6 +136,9 @@ class FreeFoodDataProvider extends ChangeNotifier {
     _error = null;
 
     notifyListeners();
+
+    _registeredEvents.add(id);
+    await updateRegisteredEvents(_registeredEvents);
 
     if (await _freeFoodService.incrementCount(id)) {
       _freeFoodModel = _freeFoodService.freeFoodModel;
@@ -144,6 +172,7 @@ class FreeFoodDataProvider extends ChangeNotifier {
   String get error => _error;
   DateTime get lastUpdated => _lastUpdated;
   FreeFoodModel get freeFoodModel => _freeFoodModel;
+  List<String> get registeredEvents => _registeredEvents;
 
   bool isLoading(String id) => id == _curId;
 }

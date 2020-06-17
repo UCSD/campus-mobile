@@ -186,6 +186,9 @@ List<SingleChildWidget> dependentServices = [
   ChangeNotifierProxyProvider<MessagesDataProvider, FreeFoodDataProvider>(
     create: (_) {
       var freefoodDataProvider = FreeFoodDataProvider();
+      freefoodDataProvider
+        ..loadRegisteredEvents();
+
       return freefoodDataProvider;
     },
     update: (_, messageDataProvider, freefoodDataProvider) {
