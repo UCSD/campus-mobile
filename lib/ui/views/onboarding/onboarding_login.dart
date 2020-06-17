@@ -29,7 +29,9 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
       backgroundColor: ColorPrimary,
       body: _userDataProvider.isLoading
           ? Center(
-        child: CircularProgressIndicator(),
+        child: CircularProgressIndicator(
+          valueColor: new AlwaysStoppedAnimation<Color>(lightAccentColor),
+        ),
       )
           : buildLoginWidget(),
     );
