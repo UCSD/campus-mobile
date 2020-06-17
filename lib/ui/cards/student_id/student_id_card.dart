@@ -6,6 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
 
 import 'package:provider/provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/student_id_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/weather_data_provider.dart';
 
 const String WEATHER_ICON_BASE_URL =
