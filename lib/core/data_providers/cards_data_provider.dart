@@ -18,8 +18,9 @@ class CardsDataProvider extends ChangeNotifier {
       'dining': true,
       'MyStudentChart': true
     };
-    _studentCards = ['finals', 'schedule'];
+    _studentCards = ['student_id', 'finals', 'schedule'];
     _cardOrder = [
+      'student_id',
       'MyStudentChart',
       'dining',
       'events',

@@ -20,6 +20,7 @@ class StudentIdCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("start of build");
     return CardContainer(
       /// TODO: need to hook up hidden to state using provider
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
