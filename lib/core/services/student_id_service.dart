@@ -43,7 +43,8 @@ class StudentIdService {
     }
   }
 
-  Future<bool> fetchStudentIdName(Map<String, String> headers, String term) async {
+  //Removed term (not used)
+  Future<bool> fetchStudentIdName(Map<String, String> headers) async {
     _error = null;
     _isLoading = true;
     try {
@@ -64,7 +65,8 @@ class StudentIdService {
     }
   }
 
-  Future<bool> fetchStudentIdPhoto(Map<String, String> headers, String term) async {
+  //Removed term (not used)
+  Future<bool> fetchStudentIdPhoto(Map<String, String> headers) async {
     _error = null;
     _isLoading = true;
     try {
@@ -85,18 +87,19 @@ class StudentIdService {
     }
   }
 
-  Future<bool> fetchStudentIdProfile(Map<String, String> headers, String term) async {
+  /// Removed term (not used)
+  Future<bool> fetchStudentIdProfile(Map<String, String> headers) async {
     _error = null;
     _isLoading = true;
     try {
       /// fetch data
       String _response = await _networkHelper.authorizedFetch(
-          MY_STUDENT_PROFILE_API_URL + '/photo',
+          MY_STUDENT_PROFILE_API_URL + '/profile',
           headers
       );
 
       /// parse data
-      _studentIdPhotoModel = studentIdPhotoModelFromJson(_response);
+      _studentIdProfileModel = studentIdProfileModelFromJson(_response);
       _isLoading = false;
       return true;
     } catch (e) {

@@ -53,7 +53,6 @@ class StudentIdDataProvider extends ChangeNotifier {
       if(await _studentIdService.fetchStudentIdBarcode(header)){
         _studentIdBarcodeModel = _studentIdService.studentIdBarcodeModel;
       }else{
-
         /// Error Handling
         _error = _studentIdService.error.toString();
         _isLoading = false;
@@ -62,6 +61,46 @@ class StudentIdDataProvider extends ChangeNotifier {
         /// Short Circuit
         return;
       }
+      
+      /// Fetch Name
+      if(await _studentIdService.fetchStudentIdName(header)){
+        _studentIdNameModel = _studentIdService.studentIdNameModel;
+      }else{
+        /// Error Handling
+        _error = _studentIdService.error.toString();
+        _isLoading = false;
+        notifyListeners();
+
+        /// Short Circuit
+        return;
+      }
+      
+      /// Fetch Photo
+      if(await _studentIdService.fetchStudentIdPhoto(header)){
+        _studentIdPhotoModel = _studentIdService.studentIdPhotoModel;
+      }else{
+        /// Error Handling
+        _error = _studentIdService.error.toString();
+        _isLoading = false;
+        notifyListeners();
+
+        /// Short Circuit
+        return;
+      }
+
+      // Fetch Profile
+      if(await _studentIdService.fetchStudentIdProfile(header)){
+        _studentIdProfileModel = _studentIdService.studentIdProfileModel;
+      }else{
+        /// Error Handling
+        _error = _studentIdService.error.toString();
+        _isLoading = false;
+        notifyListeners();
+
+        /// Short Circuit
+        return;
+      }
+
     }else{
       _error = _studentIdService.error.toString();
       _isLoading = false;
