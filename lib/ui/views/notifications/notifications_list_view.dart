@@ -157,22 +157,25 @@ class NotificationsListView extends StatelessWidget {
       ),
       subtitle: Column(
         children: <Widget>[
-          Linkify(
-            text: data.message.message,
-            onOpen: (link) async {
-              if (await canLaunch(link.url)) {
-                await launch(link.url);
-              } else {
-                throw 'Could not launch $link';
-              }
-            },
-            options: LinkifyOptions(humanize: false),
-            style: TextStyle(fontSize: 12.5),
+          Align(
+            alignment: Alignment.topLeft,
+            child: Linkify(
+              text: data.message.message,
+              onOpen: (link) async {
+                if (await canLaunch(link.url)) {
+                  await launch(link.url);
+                } else {
+                  throw 'Could not launch $link';
+                }
+              },
+              options: LinkifyOptions(humanize: false),
+              style: TextStyle(fontSize: 12.5),
+            ),
           ),
           freefoodProvider.isFreeFood(data.messageId)
           ? FreeFoodNotification(messageId: data.messageId)
-          : SizedBox(),
-        ]
+          : Container(),
+        ],
       ),
     );
   }
