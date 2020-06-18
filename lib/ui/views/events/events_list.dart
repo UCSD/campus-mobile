@@ -32,26 +32,35 @@ class EventsList extends StatelessWidget {
       size = listOfEvents.length;
     else
       size = listSize;
+
+    /// check to see if we have at least 3 events
+    if (size > listOfEvents.length) {
+      size = listOfEvents.length;
+    }
     for (int i = 0; i < size; i++) {
       final EventModel item = listOfEvents[i];
       final tile = buildEventTile(item, context);
       eventTiles.add(tile);
     }
 
-    return listSize != null
-        ? ListView(
-            physics: NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            children: ListTile.divideTiles(tiles: eventTiles, context: context)
-                .toList(),
-          )
-        : ContainerView(
-            child: ListView(
-              children:
-                  ListTile.divideTiles(tiles: eventTiles, context: context)
-                      .toList(),
-            ),
-          );
+    if (listSize != null) {
+      return ListView(
+        physics: NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        children:
+            ListTile.divideTiles(tiles: eventTiles, context: context).toList(),
+      );
+    } else {
+      return ContainerView(
+        child: listOfEvents.isEmpty
+            ? Center(child: Text('No events found.'))
+            : ListView(
+                children:
+                    ListTile.divideTiles(tiles: eventTiles, context: context)
+                        .toList(),
+              ),
+      );
+    }
   }
 
   Widget buildEventTile(EventModel data, BuildContext context) {

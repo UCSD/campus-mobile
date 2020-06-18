@@ -46,6 +46,13 @@ class PushNotificationDataProvider extends ChangeNotifier {
       _fcm.onIosSettingsRegistered
           .listen((IosNotificationSettings settings) {});
     }
+
+    ///listen for token changes and register user
+    _fcm.onTokenRefresh.listen(
+      (token) {
+        registerDevice(token);
+      },
+    );
   }
 
   /// configures the [_fcm] object to receive push notifications

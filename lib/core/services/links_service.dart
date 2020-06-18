@@ -12,7 +12,8 @@ class LinksService {
     "accept": "application/json",
   };
   final String endpoint =
-      "https://tbk5wko7a9.execute-api.us-west-1.amazonaws.com/dev/msm-linksservice/v1";
+      "https://ucsd-its-wts-dev.s3-us-west-1.amazonaws.com/replatform/v1/links.json";
+
   List<LinksModel> _linksModels = List<LinksModel>();
 
   Future<bool> fetchData() async {
