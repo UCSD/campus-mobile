@@ -35,8 +35,10 @@ class StudentIdCard extends StatelessWidget {
           Provider.of<StudentIdDataProvider>(context).studentIdBarcodeModel,
           Provider.of<StudentIdDataProvider>(context).studentIdNameModel,
           Provider.of<StudentIdDataProvider>(context).studentIdPhotoModel,
-          Provider.of<StudentIdDataProvider>(context).studentIdProfileModel),
+          Provider.of<StudentIdDataProvider>(context).studentIdProfileModel,
+          context),
     );
+
   }
 
   Widget buildTitle() {
@@ -47,9 +49,15 @@ class StudentIdCard extends StatelessWidget {
   }
 
   Widget buildCardContent(StudentIdBarcodeModel barcodeModel, StudentIdNameModel nameModel, StudentIdPhotoModel photoModel,
-                            StudentIdProfileModel profileModel) {
+                            StudentIdProfileModel profileModel, BuildContext context) {
     return Column(children: <Widget>[
-      Text('Student ID Card content'),
+      Text(nameModel.firstName + " " + nameModel.lastName),
+      Text(profileModel.collegeCurrent),
+      Text(profileModel.ugPrimaryMajorCurrent),
+      Text(barcodeModel.barCode.toString()), // TODO: NEED UTILITY FOR CONVERTING THIS INTEGER TO A BARCODE
+      Text(photoModel.photoUrl) // TODO: NEED TO FIGURE OUT HOW TO RENDER PHOTO FROM URL
     ]);
   }
+
+
 }
