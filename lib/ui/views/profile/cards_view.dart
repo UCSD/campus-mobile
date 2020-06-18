@@ -1,3 +1,4 @@
+import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 import 'package:flutter/material.dart';
@@ -15,9 +16,10 @@ class CardsView extends StatelessWidget {
   }
 
   Widget buildCardsList(BuildContext context) {
-    return ReorderableListView(
+    // TODO: Resolve cardOrder issues from 62-808
+    return /*Reorderable*/ListView(
       children: createList(context),
-      onReorder: _onReorder,
+//      onReorder: _onReorder,
     );
   }
 
@@ -32,16 +34,18 @@ class CardsView extends StatelessWidget {
     for (String item in newOrder) {
       orderList.add(item);
     }
-    _cardsDataProvider.reorderCards(orderList);
+    _cardsDataProvider.updateCardOrder(orderList);
   }
 
   List<Widget> createList(BuildContext context) {
     List<Widget> list = List<Widget>();
     for (String card in _cardsDataProvider.cardOrder) {
+      if (card == 'QRScanner') continue;
+      if (CardTitleConstants.titleMap[card] == null) continue;
       list.add(ListTile(
-        leading: Icon(Icons.reorder),
+//        leading: Icon(Icons.reorder),
         key: Key(card),
-        title: Text(card),
+        title: Text(CardTitleConstants.titleMap[card]),
         trailing: Switch(
           value: _cardsDataProvider.cardStates[card],
           onChanged: (_) {

@@ -24,8 +24,6 @@ class EventsDataProvider extends ChangeNotifier {
   ///SERVICES
   EventsService _eventsService;
 
-  /// FETCH PARKING LOT DATA AND SYNC THE ORDER IF USER IS LOGGED IN
-  /// TODO: make sure to remove any lots the user has selected and are no longer available
   void fetchEvents() async {
     _isLoading = true;
     _error = null;
@@ -33,6 +31,11 @@ class EventsDataProvider extends ChangeNotifier {
     if (await _eventsService.fetchData()) {
       _eventsModels = _eventsService.eventsModels;
       _lastUpdated = DateTime.now();
+
+      /// check to see if the events feed returns nothing back
+      if (_eventsModels.isEmpty) {
+        _error = 'No events found.';
+      }
     } else {
       ///TODO: determine what error to show to the user
       _error = _eventsService.error;

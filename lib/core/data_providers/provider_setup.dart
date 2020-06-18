@@ -6,6 +6,7 @@ import 'package:campus_mobile_experimental/core/data_providers/dining_data_proiv
 import 'package:campus_mobile_experimental/core/data_providers/events_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/links_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/location_data_provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/messages_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/news_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/notices_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/parking_data_provider.dart';
@@ -14,15 +15,16 @@ import 'package:campus_mobile_experimental/core/data_providers/special_events_da
 import 'package:campus_mobile_experimental/core/data_providers/surf_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/weather_data_provider.dart';
-import 'package:campus_mobile_experimental/core/services/bottom_navigation_bar_service.dart';
 import 'package:campus_mobile_experimental/core/models/coordinates_model.dart';
 import 'package:campus_mobile_experimental/core/navigation/top_navigation_bar/app_bar.dart';
-import 'package:campus_mobile_experimental/core/data_providers/messages_data_provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:campus_mobile_experimental/core/data_providers/free_food_data_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:campus_mobile_experimental/core/services/bottom_navigation_bar_service.dart';
+
+import 'maps_data_provider.dart';
 
 List<SingleChildWidget> providers = [
   ...independentServices,
@@ -38,6 +40,7 @@ List<SingleChildWidget> independentServices = [
   Provider.value(value: observer),
   ChangeNotifierProvider<BottomNavigationBarProvider>(
     create: (_) => BottomNavigationBarProvider(),
+    lazy: false,
   ),
   ChangeNotifierProvider<PushNotificationDataProvider>(
     create: (_) => PushNotificationDataProvider(),
@@ -110,33 +113,51 @@ List<SingleChildWidget> dependentServices = [
     diningDataProvider.populateDistances();
     return diningDataProvider;
   }),
+  ChangeNotifierProxyProvider<Coordinates, MapsDataProvider>(create: (_) {
+    var mapsDataProvider = MapsDataProvider();
+    return mapsDataProvider;
+  }, update: (_, coordinates, mapsDataProvider) {
+    mapsDataProvider.coordinates = coordinates;
+    mapsDataProvider.populateDistances();
+    return mapsDataProvider;
+  }),
   ChangeNotifierProxyProvider<PushNotificationDataProvider, UserDataProvider>(
       create: (_) {
-    var _userDataProvider = UserDataProvider();
+        var _userDataProvider = UserDataProvider();
 
-    /// try to load any persistent saved data
-    /// once loaded from memory get the user's online profile
-    _userDataProvider
-        .loadSavedData()
-        .whenComplete(() => _userDataProvider.fetchUserProfile());
-    return _userDataProvider;
-  }, update: (_, pushNotificationDataProvider, _userDataProvider) {
-    _userDataProvider.pushNotificationDataProvider =
-        pushNotificationDataProvider;
-    return _userDataProvider;
-  }),
-  ChangeNotifierProxyProvider<UserDataProvider, CardsDataProvider>(create: (_) {
-    var cardsDataProvider = CardsDataProvider();
-    return cardsDataProvider;
-  }, update: (_, userDataProvider, cardsDataProvider) {
-    if (userDataProvider.isLoggedIn &&
-        (userDataProvider.userProfileModel.classifications?.student ?? false)) {
-      cardsDataProvider.activateStudentCards();
-    } else {
-      cardsDataProvider.deactivateStudentCards();
-    }
-    return cardsDataProvider;
-  }),
+        /// try to load any persistent saved data
+        /// once loaded from memory get the user's online profile
+        _userDataProvider
+            .loadSavedData()
+            .whenComplete(() => _userDataProvider.fetchUserProfile());
+        return _userDataProvider;
+      },
+      lazy: false,
+      update: (_, pushNotificationDataProvider, _userDataProvider) {
+        _userDataProvider.pushNotificationDataProvider =
+            pushNotificationDataProvider;
+        return _userDataProvider;
+      }),
+  ChangeNotifierProxyProvider<UserDataProvider, CardsDataProvider>(
+      create: (_) {
+        var cardsDataProvider = CardsDataProvider();
+        cardsDataProvider
+          ..updateAvailableCards()
+          ..loadCardOrder();
+//          ..loadCardStates()
+        return cardsDataProvider;
+      },
+      lazy: false,
+      update: (_, userDataProvider, cardsDataProvider) {
+        if (userDataProvider.isLoggedIn &&
+            (userDataProvider.userProfileModel.classifications?.student ??
+                false)) {
+          cardsDataProvider.activateStudentCards();
+        } else {
+          cardsDataProvider.deactivateStudentCards();
+        }
+        return cardsDataProvider;
+      }),
   ChangeNotifierProxyProvider<UserDataProvider, ClassScheduleDataProvider>(
       create: (_) {
     var classDataProvider = ClassScheduleDataProvider();
@@ -178,11 +199,14 @@ List<SingleChildWidget> dependentServices = [
     create: (_) {
       var messageDataProvider = MessagesDataProvider();
       return messageDataProvider;
-    }, update: (_, userDataProvider, messageDataProvider) {
+    },
+    lazy: false,
+    update: (_, userDataProvider, messageDataProvider) {
       messageDataProvider.userDataProvider = userDataProvider;
-      messageDataProvider.fetchMessages();
+      messageDataProvider.fetchMessages(true);
       return messageDataProvider;
-  }),
+    },
+  ),
   ChangeNotifierProxyProvider<MessagesDataProvider, FreeFoodDataProvider>(
     create: (_) {
       var freefoodDataProvider = FreeFoodDataProvider();

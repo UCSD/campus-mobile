@@ -7,6 +7,8 @@ import 'package:campus_mobile_experimental/ui/views/events/events_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+const String cardId = 'events';
+
 class EventsCard extends StatelessWidget {
   Widget buildEventsCard(List<EventModel> data) {
     return EventsList(listSize: 3);
@@ -28,13 +30,13 @@ class EventsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
-      active: Provider.of<CardsDataProvider>(context).cardStates['events'],
+      active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
-          .toggleCard('events'),
+          .toggleCard(cardId),
       reload: () =>
           Provider.of<EventsDataProvider>(context, listen: false).fetchEvents(),
       isLoading: Provider.of<EventsDataProvider>(context).isLoading,
-      titleText: "Events",
+      titleText: CardTitleConstants.titleMap[cardId],
       errorText: Provider.of<EventsDataProvider>(context).error,
       child: () => buildEventsCard(
           Provider.of<EventsDataProvider>(context).eventsModels),

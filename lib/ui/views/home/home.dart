@@ -29,7 +29,8 @@ class _HomeState extends State<Home> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: cardMargin, vertical: 0.0),
       child: ListView(
-        padding: EdgeInsets.only(top: cardMargin + 2.0, right: 0.0, bottom: 0.0, left: 0.0),
+        padding: EdgeInsets.only(
+            top: cardMargin + 2.0, right: 0.0, bottom: 0.0, left: 0.0),
         children: createList(context),
       ),
     );
@@ -55,10 +56,11 @@ class _HomeState extends State<Home> {
   List<Widget> getOrderedCardsList(List<String> order) {
     List<Widget> orderedCards = List<Widget>();
 
-    orderedCards.insert(0, ScannerCard());
-
     for (String card in order) {
       switch (card) {
+        case 'QRScanner':
+          orderedCards.insert(0, ScannerCard());
+          break;
         case 'MyStudentChart':
           orderedCards.add(MyChartCard());
           break;
@@ -68,9 +70,9 @@ class _HomeState extends State<Home> {
         case 'schedule':
           orderedCards.add(ClassScheduleCard());
           break;
-//        case 'dining':
-//          orderedCards.add(DiningCard());
-//          break;
+        case 'dining':
+          orderedCards.add(DiningCard());
+          break;
         case 'events':
           orderedCards.add(EventsCard());
           break;

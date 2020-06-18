@@ -16,7 +16,6 @@ class TimeRangeWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
         getStartTime(context) + ' - ' + getStopTime(context),
-        textAlign: TextAlign.center,
     );
   }
 

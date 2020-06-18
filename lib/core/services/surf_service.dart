@@ -11,7 +11,7 @@ class SurfService {
   SurfModel _surfModel = SurfModel();
 
   final String endpoint =
-      "https://7stc0zwsa8.execute-api.us-west-1.amazonaws.com/dev/msm-surfservice/v1/surfforecast";
+      "https://0yi5xwy0v7.execute-api.us-west-2.amazonaws.com/dev/v1/surf";
 
   Future<bool> fetchData() async {
     _error = null;

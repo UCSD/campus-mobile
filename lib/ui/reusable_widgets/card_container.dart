@@ -35,7 +35,7 @@ class CardContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     if (active) {
       return Card(
-        margin: EdgeInsets.only(top: 0.0, right: 0.0, bottom: cardMargin, left: 0.0),
+        margin: EdgeInsets.only(top: 0.0, right: 0.0, bottom: cardMargin * 1.5, left: 0.0),
         semanticContainer: false,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -73,7 +73,21 @@ class CardContainer extends StatelessWidget {
 
   Widget buildBody(context) {
     if (errorText != null) {
-      return Text(errorText);
+      if (titleText == 'News') {
+        return Text('No articles found.');
+      } else if (titleText == 'Events') {
+        return Text('No events found.');
+      } else if (titleText == 'Finals') {
+        // TODO: Resolve alignment issues on cards without action buttons
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 42.0),
+          child: Text('No finals found.'),
+        );
+      } else if (titleText == 'Schedule') {
+        return Text('No classes found.');
+      } else {
+        return Text('An error occurred, please try again.');
+      }
     } else if (isLoading) {
       return Container(
         width: double.infinity,

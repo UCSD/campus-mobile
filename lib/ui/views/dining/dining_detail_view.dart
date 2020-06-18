@@ -32,13 +32,12 @@ class DiningDetailView extends StatelessWidget {
       Text(
         model.name,
         textAlign: TextAlign.start,
-        style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 26),
+        style: TextStyle(fontSize: 26),
       ),
       Text(
         model.description,
         textAlign: TextAlign.start,
-        style: TextStyle(
-            color: Theme.of(context).textTheme.subtitle.color, fontSize: 15),
+        style: TextStyle(fontSize: 15),
       ),
       buildHours(context, model),
       buildPaymentOptions(context, model),
@@ -60,17 +59,13 @@ class DiningDetailView extends StatelessWidget {
           children: <Widget>[
             Text(
               'Directions',
-              style: TextStyle(
-                fontSize: 25,
-                color: Theme.of(context).primaryColor,
-              ),
+              style: TextStyle(fontSize: 25),
             ),
             Column(
               children: <Widget>[
                 Icon(
                   Icons.directions_walk,
                   size: 30,
-                  color: Theme.of(context).primaryColor,
                 ),
                 Text(num.parse(model.distance.toStringAsFixed(1)).toString() + ' mi'),
               ],
