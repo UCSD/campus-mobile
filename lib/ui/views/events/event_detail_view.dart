@@ -33,12 +33,21 @@ class EventDetailView extends StatelessWidget {
         style: Theme.of(context).textTheme.title,
       ),
       Divider(),
-      Text(
-        data.location,
+      Linkify(
+        onOpen: (link) async {
+          if (await canLaunch(link.url)) {
+            await launch(link.url);
+          } else {
+            throw 'Could not launch $link';
+          }
+        },
+        text: data.location,
         textAlign: TextAlign.center,
         style: TextStyle(fontSize: 16),
+        options: LinkifyOptions(humanize: false),
       ),
-      TimeRangeWidget(time: data.startTime + ' - ' + data.endTime),
+      Center(
+          child: TimeRangeWidget(time: data.startTime + ' - ' + data.endTime)),
       Divider(),
       Padding(
         padding: const EdgeInsets.all(8.0),
