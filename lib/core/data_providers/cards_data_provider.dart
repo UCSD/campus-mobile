@@ -140,7 +140,6 @@ class CardsDataProvider extends ChangeNotifier {
     // if no data was found then create the data and save it
     // by default all cards will be on
     if (_cardStateBox.get('cardStates') == null) {
-      print(cardStates.keys.where((card) => _cardStates[card]).toList());
       await _cardStateBox.put('cardStates',
           _cardStates.keys.where((card) => _cardStates[card]).toList());
     } else {
