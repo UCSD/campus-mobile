@@ -49,6 +49,7 @@ class NewsDetailView extends StatelessWidget {
         },
         text: data.description,
         style: TextStyle(fontSize: 18),
+        options: LinkifyOptions(humanize: false),
       ),
       SizedBox(height: 20),
       Center(
