@@ -11,6 +11,7 @@ import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.da
 
 import 'package:provider/provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/student_id_data_provider.dart';
+import 'package:barcode_flutter/barcode_flutter.dart';
 
 
 
@@ -21,6 +22,7 @@ class StudentIdCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print("start of build");
+
     return CardContainer(
       /// TODO: need to hook up hidden to state using provider
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
@@ -70,10 +72,59 @@ class StudentIdCard extends StatelessWidget {
           ),
           //Text(profileModel.collegeCurrent),
           //Text(profileModel.ugPrimaryMajorCurrent),
-          Text(
-              barcodeModel.barCode.toString()), // TODO: NEED UTILITY FOR CONVERTING THIS INTEGER TO A BARCODE
+          returnBarcodeContainer(barcodeModel.barCode.toString()),
+         /* Text(
+              barcodeModel.barCode.toString()),*/ // TODO: NEED UTILITY FOR CONVERTING THIS INTEGER TO A BARCODE
       ]),
     ]);
   }
 
+  returnBarcodeContainer(String cardNumber) {
+
+    final barcodeWithText = BarCodeItem(
+        description: "(tap for easier scanning)",
+        image: BarCodeImage(
+          params: CodabarBarCodeParams(
+            "A" + cardNumber + "B",
+            withText: true,
+            barHeight: 20,
+            lineWidth: 1.2,
+            //  barHeight: SizeConfig.safeBlockVertical * 8,
+          ),
+        ));
+
+    return Column(
+    children: <Widget>[
+    Align(
+    alignment: Alignment.centerLeft,
+    child: Text(
+    barcodeWithText.description,
+    textAlign: TextAlign.left,
+    style: TextStyle(
+    fontWeight: FontWeight.bold,
+    fontSize: 10.0,
+    color: Colors.black45,
+    ),
+    ),
+    ),
+    Center(
+    child: Container(
+   // padding: const EdgeInsets.all(10.0),
+    child: barcodeWithText.image,
+    ),
+    )
+    ],
+    );
+  }
+
+}
+
+class BarCodeItem {
+  String description;
+  BarCodeImage image;
+
+  BarCodeItem({
+    this.image,
+    this.description,
+  });
 }
