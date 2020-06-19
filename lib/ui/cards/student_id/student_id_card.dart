@@ -1,3 +1,6 @@
+//import 'dart:io';
+// import 'dart:js';
+
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
@@ -18,6 +21,27 @@ import 'package:barcode_flutter/barcode_flutter.dart';
 class StudentIdCard extends StatelessWidget {
 
   String cardId = "student_id";
+  var barcodeImage;
+  createAlertDialog(BuildContext context, Column image){
+    return showDialog(
+      context: context,
+      builder: (context){
+        return AlertDialog(
+          title: Text("Student ID"),
+          content: Container(
+            child: image,
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text("X"),
+              onPressed:(){
+                Navigator.of(context).pop();
+              }
+            )
+          ],
+        );
+      });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,59 +89,106 @@ class StudentIdCard extends StatelessWidget {
           bottom: 225,
         ),
       ),
-      Column(children: <Widget>[
-          Text(
-            nameModel.firstName + " " + nameModel.lastName,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+        Text(
+          (nameModel.firstName + " " + nameModel.lastName).trim(),
+         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+         textAlign: TextAlign.left,
+        ),
+        Text(
+        profileModel.collegeCurrent.trim(),
+        style: TextStyle(color: Colors.grey, fontSize: 16),
+        textAlign: TextAlign.left,
+        ),
+      Text(
+        profileModel.ugPrimaryMajorCurrent.trim(),
+        style: TextStyle(color: Colors.grey, fontSize: 16),
+        textAlign: TextAlign.left,
+      ),
+          Padding(
+          padding: EdgeInsets.only(top: 20),
           ),
           //Text(profileModel.collegeCurrent),
           //Text(profileModel.ugPrimaryMajorCurrent),
-          returnBarcodeContainer(barcodeModel.barCode.toString()),
+
+            FlatButton(
+           child: returnBarcodeContainer(barcodeModel.barCode.toString(), false),
+              onPressed:(){
+                createAlertDialog(context, returnBarcodeContainer(barcodeModel.barCode.toString(), true));
+              },
+            ),
          /* Text(
               barcodeModel.barCode.toString()),*/ // TODO: NEED UTILITY FOR CONVERTING THIS INTEGER TO A BARCODE
       ]),
     ]);
   }
 
-  returnBarcodeContainer(String cardNumber) {
+  returnBarcodeContainer(String cardNumber, bool rotated) {
+    var barcodeWithText;
+    if(rotated){
+      barcodeWithText = BarCodeItem(
+          description: "",
+          image: BarCodeImage(
+            params: CodabarBarCodeParams(
+              "A" + cardNumber + "B",
+              lineWidth: 2.4,
+              withText: true,
+            ),
+          ));
+    }else {
+      barcodeWithText = BarCodeItem(
+          description: "(tap for easier scanning)",
+          image: BarCodeImage(
+            params: CodabarBarCodeParams(
+              "A" + cardNumber + "B",
+              withText: true,
+              barHeight: 20,
+              lineWidth: 1.0,
+              //  barHeight: SizeConfig.safeBlockVertical * 8,
+            ),
+          ));
+    }
 
-    final barcodeWithText = BarCodeItem(
-        description: "(tap for easier scanning)",
-        image: BarCodeImage(
-          params: CodabarBarCodeParams(
-            "A" + cardNumber + "B",
-            withText: true,
-            barHeight: 20,
-            lineWidth: 1.2,
-            //  barHeight: SizeConfig.safeBlockVertical * 8,
+    barcodeImage = barcodeWithText.image;
+
+    if(rotated){
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.all(25),
           ),
-        ));
+          RotatedBox(
+            quarterTurns: 1,
+                child: Container(
+                        child: barcodeWithText.image,
+                      ),
+              ),
 
-    return Column(
-    children: <Widget>[
-    Align(
-    alignment: Alignment.centerLeft,
-    child: Text(
-    barcodeWithText.description,
-    textAlign: TextAlign.left,
-    style: TextStyle(
-    fontWeight: FontWeight.bold,
-    fontSize: 10.0,
-    color: Colors.black45,
-    ),
-    ),
-    ),
-    Center(
-    child: Container(
-   // padding: const EdgeInsets.all(10.0),
-    child: barcodeWithText.image,
-    ),
-    )
-    ],
-    );
+        ]);
+    }else {
+      return Column(
+          children: <Widget>[
+            Text(
+              barcodeWithText.description,
+              textAlign: TextAlign.left,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 10.0,
+                color: Colors.black45,
+              ),
+            ),
+            Container(
+              child: barcodeWithText.image,
+            ),
+          ]);
+    }
+  }
   }
 
-}
+
 
 class BarCodeItem {
   String description;
