@@ -100,7 +100,6 @@ class StudentIdDataProvider extends ChangeNotifier {
         /// Short Circuit
         return;
       }
-
     }else{
       _error = _studentIdService.error.toString();
       _isLoading = false;
@@ -109,7 +108,8 @@ class StudentIdDataProvider extends ChangeNotifier {
       /// Short Circuit
       return;
     }
-
+    _isLoading = false;
+    notifyListeners();
   }
 
 

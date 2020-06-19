@@ -52,8 +52,8 @@ class StudentIdCard extends StatelessWidget {
                             StudentIdProfileModel profileModel, BuildContext context) {
     return Column(children: <Widget>[
       Text(nameModel.firstName + " " + nameModel.lastName),
-      Text(profileModel.collegeCurrent),
-      Text(profileModel.ugPrimaryMajorCurrent),
+      //Text(profileModel.collegeCurrent),
+      //Text(profileModel.ugPrimaryMajorCurrent),
       Text(barcodeModel.barCode.toString()), // TODO: NEED UTILITY FOR CONVERTING THIS INTEGER TO A BARCODE
       Text(photoModel.photoUrl) // TODO: NEED TO FIGURE OUT HOW TO RENDER PHOTO FROM URL
     ]);

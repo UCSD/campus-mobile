@@ -8,8 +8,8 @@ import 'package:campus_mobile_experimental/core/services/networking.dart';
 import 'package:flutter/cupertino.dart';
 
 class StudentIdService {
-  final String MY_STUDENT_PROFILE_API_URL = 'https://api.ucsd.edu:8243/student/my/v1';
-  final String MY_STUDENT_CONTACT_API_URL = 'https://api.ucsd.edu:8243/student/my/student_contact_info/v1';
+  final String MY_STUDENT_PROFILE_API_URL = 'https://api-qa.ucsd.edu:8243/student/my/v1';
+  final String MY_STUDENT_CONTACT_API_URL = 'https://api-qa.ucsd.edu:8243/student/my/student_contact_info/v1';
 
   bool _isLoading = false;
   DateTime _lastUpdated;
