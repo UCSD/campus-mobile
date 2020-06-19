@@ -72,6 +72,7 @@ class StudentIdCard extends StatelessWidget {
           //Text(profileModel.ugPrimaryMajorCurrent),
           Text(
               barcodeModel.barCode.toString()), // TODO: NEED UTILITY FOR CONVERTING THIS INTEGER TO A BARCODE
+        Text(profileModel.ugPrimaryMajorCurrent)
       ]),
     ]);
   }
