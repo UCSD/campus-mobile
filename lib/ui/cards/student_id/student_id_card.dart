@@ -52,27 +52,39 @@ class StudentIdCard extends StatelessWidget {
                             StudentIdProfileModel profileModel, BuildContext context) {
     return Row(children: <Widget>[
       Container(
-        child: Image.network(
-          photoModel.photoUrl,
-          fit: BoxFit.contain,
-          height: 125,
+        child: Column(
+          children: <Widget>[
+            Image.network(
+              photoModel.photoUrl,
+              fit: BoxFit.contain,
+              height: 125,
+            ),
+            SizedBox(height: 10),
+            Text(profileModel.classificationType),
+          ],
         ),
         padding: EdgeInsets.only(
           left: 10,
           right: 20,
-          bottom: 225,
         ),
       ),
       Column(children: <Widget>[
           Text(
             nameModel.firstName + " " + nameModel.lastName,
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            textAlign: TextAlign.left,
           ),
-          //Text(profileModel.collegeCurrent),
-          //Text(profileModel.ugPrimaryMajorCurrent),
-          Text(
-              barcodeModel.barCode.toString()), // TODO: NEED UTILITY FOR CONVERTING THIS INTEGER TO A BARCODE
-        Text(profileModel.ugPrimaryMajorCurrent)
+        SizedBox(height: 5),
+        Text(
+              profileModel.collegeCurrent,
+              style: TextStyle(color: Colors.black.withOpacity(0.6)),
+              textAlign: TextAlign.left,
+        ),
+        SizedBox(height: 5),
+        Text(
+            profileModel.ugPrimaryMajorCurrent,
+            textAlign: TextAlign.left,
+        )
       ]),
     ]);
   }
