@@ -50,14 +50,30 @@ class StudentIdCard extends StatelessWidget {
 
   Widget buildCardContent(StudentIdBarcodeModel barcodeModel, StudentIdNameModel nameModel, StudentIdPhotoModel photoModel,
                             StudentIdProfileModel profileModel, BuildContext context) {
-    return Column(children: <Widget>[
-      Text(nameModel.firstName + " " + nameModel.lastName),
-      //Text(profileModel.collegeCurrent),
-      //Text(profileModel.ugPrimaryMajorCurrent),
-      Text(barcodeModel.barCode.toString()), // TODO: NEED UTILITY FOR CONVERTING THIS INTEGER TO A BARCODE
-      Text(photoModel.photoUrl) // TODO: NEED TO FIGURE OUT HOW TO RENDER PHOTO FROM URL
+    return Row(children: <Widget>[
+      Container(
+        child: Image.network(
+          photoModel.photoUrl,
+          fit: BoxFit.contain,
+          height: 125,
+        ),
+        padding: EdgeInsets.only(
+          left: 10,
+          right: 20,
+          bottom: 225,
+        ),
+      ),
+      Column(children: <Widget>[
+          Text(
+            nameModel.firstName + " " + nameModel.lastName,
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          ),
+          //Text(profileModel.collegeCurrent),
+          //Text(profileModel.ugPrimaryMajorCurrent),
+          Text(
+              barcodeModel.barCode.toString()), // TODO: NEED UTILITY FOR CONVERTING THIS INTEGER TO A BARCODE
+      ]),
     ]);
   }
-
 
 }
