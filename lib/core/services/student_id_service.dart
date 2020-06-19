@@ -91,14 +91,11 @@ class StudentIdService {
   Future<bool> fetchStudentIdProfile(Map<String, String> headers) async {
     _error = null;
     _isLoading = true;
-    try {
+     try {
       /// fetch data
-      String _response = await _networkHelper.fetchData(
-          "https://ucsd-mobile-dev.s3-us-west-1.amazonaws.com/mock-apis/academic/MyStudentProfile_mock.json"
-      );
-
-      /// parse data
-      print(_response);
+      String _response = await _networkHelper.authorizedFetch(
+          MY_STUDENT_PROFILE_API_URL + '/profile',
+          headers);
       _studentIdProfileModel = studentIdProfileModelFromJson(_response);
       _isLoading = false;
       return true;
