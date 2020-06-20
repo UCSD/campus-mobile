@@ -9,7 +9,7 @@ import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 
 class ManageAvailabilityView extends StatelessWidget {
   AvailabilityDataProvider _availabilityDataProvider;
-  UserDataProvider _userDataProvider;
+
   @override
   Widget build(BuildContext context) {
     _availabilityDataProvider = Provider.of<AvailabilityDataProvider>(context);
@@ -35,7 +35,9 @@ class ManageAvailabilityView extends StatelessWidget {
     newOrder.insert(newIndex, item);
     List<String> orderedLocationNames = List<String>();
     for (AvailabilityModel item in newOrder) {
-      orderedLocationNames.add(item.locationName);
+      if(item != null) {
+        orderedLocationNames.add(item.locationName);
+      }
     }
     _availabilityDataProvider.reorderLocations(orderedLocationNames);
   }
@@ -44,21 +46,28 @@ class ManageAvailabilityView extends StatelessWidget {
     List<Widget> list = List<Widget>();
     for (AvailabilityModel model
         in _availabilityDataProvider.availabilityModels) {
-      list.add(ListTile(
-        key: Key(model.locationId.toString()),
-        title: Text(model.locationName,
-        style: TextStyle(fontSize: 22,
-        color: ColorPrimary),),
-        leading: Icon(Icons.reorder,
-        color: ColorPrimary,),
-        trailing: Switch(
-          value: Provider.of<AvailabilityDataProvider>(context)
-              .locationViewState[model.locationName],
-          activeColor: ColorPrimary,
-          onChanged: (_) {
-              _availabilityDataProvider.toggleLocation(model.locationName);},
-        ),
-      ));
+
+      if(model != null){
+//        print("This is the model");
+//        print(model.locationName);
+//        for (AvailabilityModel sub in model.subLocations){ print(sub.toJson());}
+        list.add(ListTile(
+          key: Key(model.locationId.toString()),
+          title: Text(model.locationName,
+            style: TextStyle(fontSize: 22,
+                color: ColorPrimary),),
+          leading: Icon(Icons.reorder,
+            color: ColorPrimary,),
+          trailing: Switch(
+            value: Provider.of<AvailabilityDataProvider>(context)
+                .locationViewState[model.locationName],
+            activeColor: ColorPrimary,
+            onChanged: (_) {
+              _availabilityDataProvider.toggleLocation(model.locationName);
+            },
+          ),
+        ));
+      }
     }
     return list;
   }

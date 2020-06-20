@@ -56,7 +56,8 @@ class AvailabilityDataProvider extends ChangeNotifier {
           _locationViewState[model.locationName] = false;
         }
       }
-
+      print(_userDataProvider.userProfileModel.selectedOccuspaceLocations);
+      print(_locationViewState);
       ///replace old list of lots with new one
       _availabilityModels = newMapOfLots;
 
@@ -111,7 +112,7 @@ class AvailabilityDataProvider extends ChangeNotifier {
     } else {
       _locationViewState[location] = true;
       _userDataProvider.userProfileModel.selectedOccuspaceLocations.add(location);
-      _userDataProvider.postUserProfile(_userDataProvider.userProfileModel);
+//      _userDataProvider.postUserProfile(_userDataProvider.userProfileModel);
 //      _seeLocation([location]);
     }
     notifyListeners();
