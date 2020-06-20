@@ -5,8 +5,6 @@ import 'package:campus_mobile_experimental/core/models/student_id_photo_model.da
 import 'package:campus_mobile_experimental/core/models/student_id_profile_model.dart';
 import 'package:campus_mobile_experimental/core/services/student_id_service.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-
 class StudentIdDataProvider extends ChangeNotifier {
   StudentIdDataProvider() {
     ///DEFAULT STATES
@@ -43,13 +41,13 @@ class StudentIdDataProvider extends ChangeNotifier {
     /// Verify that user is logged in
     if(_userDataProvider.isLoggedIn){
 
-      //Initialize header
+      /// Initialize header
       final Map<String, String> header = {
         'Authorization':
             'Bearer ${_userDataProvider?.authenticationModel?.accessToken}'
       };
 
-      // Fetch Barcode
+      /// Fetch Barcode
       if(await _studentIdService.fetchStudentIdBarcode(header)){
         _studentIdBarcodeModel = _studentIdService.studentIdBarcodeModel;
       }else{
