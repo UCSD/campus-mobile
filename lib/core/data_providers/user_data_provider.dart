@@ -286,6 +286,7 @@ class UserDataProvider extends ChangeNotifier {
   /// invokes [_subscribeToPushNotificationTopics] to subscribe user to topics
   /// returns newly created [UserProfileModel]
   Future<UserProfileModel> _createNewUser(UserProfileModel profile) async {
+    await _pushNotificationDataProvider.fetchTopicsList();
     try {
       profile.username = await _getUsernameFromDevice();
       profile.ucsdaffiliation = _authenticationModel.ucsdaffiliation;
