@@ -1,11 +1,15 @@
 import 'package:campus_mobile_experimental/core/data_providers/availability_data_provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
+import 'package:campus_mobile_experimental/ui/theme/app_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
 import 'package:campus_mobile_experimental/core/models/availability_model.dart';
 import 'package:provider/provider.dart';
+import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 
 class ManageAvailabilityView extends StatelessWidget {
   AvailabilityDataProvider _availabilityDataProvider;
+  UserDataProvider _userDataProvider;
   @override
   Widget build(BuildContext context) {
     _availabilityDataProvider = Provider.of<AvailabilityDataProvider>(context);
@@ -42,10 +46,17 @@ class ManageAvailabilityView extends StatelessWidget {
         in _availabilityDataProvider.availabilityModels) {
       list.add(ListTile(
         key: Key(model.locationId.toString()),
-        title: Text(model.locationName),
-        leading: Icon(Icons.reorder),
+        title: Text(model.locationName,
+        style: TextStyle(fontSize: 22,
+        color: ColorPrimary),),
+        leading: Icon(Icons.reorder,
+        color: ColorPrimary,),
         trailing: Switch(
-          value: true,
+          value: Provider.of<AvailabilityDataProvider>(context)
+              .locationViewState[model.locationName],
+          activeColor: ColorPrimary,
+          onChanged: (_) {
+              _availabilityDataProvider.toggleLocation(model.locationName);},
         ),
       ));
     }

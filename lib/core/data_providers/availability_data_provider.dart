@@ -18,6 +18,7 @@ class AvailabilityDataProvider extends ChangeNotifier {
   bool _isLoading;
   DateTime _lastUpdated;
   String _error;
+  Map<String, bool> _locationViewState = <String, bool>{};
 
   /// MODELS
   /// TODO: add models that will be needed in this data provider
@@ -44,6 +45,16 @@ class AvailabilityDataProvider extends ChangeNotifier {
     if (await _availabilityService.fetchData()) {
       for (AvailabilityModel model in _availabilityService.data) {
         newMapOfLots[model.locationName] = model;
+        if (_userDataProvider.userProfileModel.selectedOccuspaceLocations == null){
+          locationViewState[model.locationName] == true;
+        }
+        else if (_userDataProvider.userProfileModel.selectedOccuspaceLocations
+        .contains(model.locationName)){
+          _locationViewState[model.locationName] = true;
+        }
+        else {
+          _locationViewState[model.locationName] = false;
+        }
       }
 
       ///replace old list of lots with new one
@@ -92,6 +103,32 @@ class AvailabilityDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void toggleLocation(String location) {
+    if (_locationViewState[location] ?? true) {
+      _locationViewState[location] = false;
+      _userDataProvider.userProfileModel.selectedOccuspaceLocations.remove(location);
+//      _hideLocation([location]);
+    } else {
+      _locationViewState[location] = true;
+      _userDataProvider.userProfileModel.selectedOccuspaceLocations.add(location);
+      _userDataProvider.postUserProfile(_userDataProvider.userProfileModel);
+//      _seeLocation([location]);
+    }
+    notifyListeners();
+  }
+
+//  void _seeLocation(List<String> locations) {
+//    for (String location in locations) {
+//      _locationViewState[location] = true;
+//    }
+//  }
+//
+//  void _hideLocation(List<String> locations) {
+//    for (String location in locations) {
+//      _locationViewState[location] = false;
+//    }
+//  }
+
   ///UPLOAD SELECTED LOCATIONS IN THE CORRECT ORDER TO THE DATABASE
   ///IF NOT LOGGED IN THEN SAVE LOCATIONS TO LOCAL PROFILE
   uploadAvailabilityData(List<String> locations) {
@@ -111,6 +148,7 @@ class AvailabilityDataProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String get error => _error;
   DateTime get lastUpdated => _lastUpdated;
+  Map<String, bool> get locationViewState => _locationViewState;
 
   List<AvailabilityModel> get availabilityModels {
     if (_availabilityModels != null) {
@@ -122,5 +160,14 @@ class AvailabilityDataProvider extends ChangeNotifier {
       return _availabilityModels.values.toList();
     }
     return List<AvailabilityModel>();
+  }
+
+  /// get all locations
+  List<String> locations() {
+    List<String> locationsToReturn = List<String>();
+    for (AvailabilityModel model in _availabilityModels ?? []) {
+      locationsToReturn.add(model.locationName);
+    }
+    return locationsToReturn;
   }
 }

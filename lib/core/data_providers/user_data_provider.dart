@@ -11,7 +11,7 @@ import 'package:pointycastle/pointycastle.dart' as pc;
 import 'dart:typed_data';
 import 'package:encrypt/encrypt.dart';
 import 'dart:convert';
-
+import 'package:campus_mobile_experimental/core/data_providers/availability_data_provider.dart';
 class UserDataProvider extends ChangeNotifier {
   UserDataProvider() {
     ///DEFAULT STATES
@@ -41,6 +41,7 @@ class UserDataProvider extends ChangeNotifier {
   AuthenticationService _authenticationService;
   UserProfileService _userProfileService;
   PushNotificationDataProvider _pushNotificationDataProvider;
+  AvailabilityDataProvider _availabilityDataProvider;
 
   /// Update the [AuthenticationModel] stored in state
   /// overwrite the [AuthenticationModel] in persistent storage with the model passed in
@@ -217,6 +218,19 @@ class UserDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+//  /// Remove topic from [_userProfileModel.subscribedTopics]
+//  /// Use [_pushNotificationDataProvider] to un/subscribe device from push notifications
+//  void toggleLocationViews(String location) {
+//    if (_userProfileModel.selectedOccuspaceLocations.contains(location)) {
+//      _userProfileModel.selectedOccuspaceLocations.remove(location);
+//    } else {
+//      _userProfileModel.selectedOccuspaceLocations.add(location);
+//    }
+//    postUserProfile(_userProfileModel);
+//    _availabilityDataProvider.toggleLocation(location);
+//    notifyListeners();
+//  }
+
   /// Logs out user
   /// Unregisters device from direct push notification using [_pushNotificationDataProvider]
   /// Resets all [AuthenticationModel] and [UserProfileModel] data from persistent storage
@@ -292,6 +306,7 @@ class UserDataProvider extends ChangeNotifier {
       profile.pid = _authenticationModel.pid;
       profile.subscribedTopics =
           await _pushNotificationDataProvider.publicTopics();
+
       final pattern = RegExp('[BGJMU]');
       if ((profile.ucsdaffiliation ?? "").contains(pattern)) {
         profile
