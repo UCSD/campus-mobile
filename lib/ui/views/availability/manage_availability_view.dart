@@ -43,7 +43,10 @@ class ManageAvailabilityView extends StatelessWidget {
       list.add(ListTile(
         key: Key(model.locationId.toString()),
         title: Text(model.locationName),
-        trailing: Icon(Icons.reorder),
+        leading: Icon(Icons.reorder),
+        trailing: Switch(
+          value: true,
+        ),
       ));
     }
     return list;
