@@ -30,7 +30,7 @@ class StudentIdCard extends StatelessWidget {
             ),
             actions: <Widget>[
               FlatButton(
-                  child: Text("X"),
+                  child: Icon(Icons.close),
                   onPressed: () {
                     Navigator.of(context).pop();
                   })
@@ -127,7 +127,7 @@ class StudentIdCard extends StatelessWidget {
           Container(
             padding: new EdgeInsets.only(right: cardMargin),
             child: Text(
-              profileModel.ugPrimaryMajorCurrent ,
+              profileModel.ugPrimaryMajorCurrent,
               style: TextStyle( fontSize: 16),
               textAlign: TextAlign.left,
               softWrap: false,
@@ -143,6 +143,7 @@ class StudentIdCard extends StatelessWidget {
 
           FlatButton(
             child: returnBarcodeContainer(barcodeModel.barCode.toString(), false, context),
+            padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
             onPressed: () {
               createAlertDialog(context,
                   returnBarcodeContainer(barcodeModel.barCode.toString(), true, context));
@@ -180,7 +181,8 @@ class StudentIdCard extends StatelessWidget {
               lineWidth: SizeConfig.safeBlockHorizontal * .23,
               //  barHeight: SizeConfig.safeBlockVertical * 8,
             ),
-          ));
+          ),
+        );
     }
 
     barcodeImage = barcodeWithText.image;
