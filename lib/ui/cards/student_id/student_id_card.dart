@@ -30,7 +30,7 @@ class StudentIdCard extends StatelessWidget {
             ),
             actions: <Widget>[
               FlatButton(
-                  child: Text("X"),
+                  child: Icon(Icons.close),
                   onPressed: () {
                     Navigator.of(context).pop();
                   })
