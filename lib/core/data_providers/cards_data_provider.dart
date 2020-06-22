@@ -1,3 +1,4 @@
+import 'package:campus_mobile_experimental/core/constants/data_persistence_constants.dart';
 import 'package:campus_mobile_experimental/core/models/cards_model.dart';
 import 'package:campus_mobile_experimental/core/services/cards_service.dart';
 import 'package:flutter/material.dart';
@@ -47,6 +48,7 @@ class CardsDataProvider extends ChangeNotifier {
   final CardsService _cardsService = CardsService();
 
   void updateAvailableCards() async {
+    print('updating available cards');
     _isLoading = true;
     _error = null;
     notifyListeners();
@@ -112,10 +114,10 @@ class CardsDataProvider extends ChangeNotifier {
   /// overwrite the [_cardOrder] in persistent storage with the model passed in
   Future updateCardOrder(List<String> newOrder) async {
     try {
-      await _cardOrderBox.put('cardOrder', newOrder);
+      await _cardOrderBox.put(DataPersistence.cardOrder, newOrder);
     } catch (e) {
-      _cardOrderBox = await Hive.openBox('cardOrder');
-      await _cardOrderBox.put('cardOrder', newOrder);
+      _cardOrderBox = await Hive.openBox(DataPersistence.cardOrder);
+      await _cardOrderBox.put(DataPersistence.cardOrder, newOrder);
     }
     _cardOrder = newOrder;
     _lastUpdated = DateTime.now();
@@ -125,27 +127,28 @@ class CardsDataProvider extends ChangeNotifier {
   /// Load [_cardOrder] from persistent storage
   /// Will create persistent storage if no data is found
   Future _loadCardOrder() async {
-    _cardOrderBox = await Hive.openBox('cardOrder');
-    if (_cardOrderBox.get('cardOrder') == null) {
-      await _cardOrderBox.put('cardOrder', _cardOrder);
+    _cardOrderBox = await Hive.openBox(DataPersistence.cardOrder);
+    if (_cardOrderBox.get(DataPersistence.cardOrder) == null) {
+      await _cardOrderBox.put(DataPersistence.cardOrder, _cardOrder);
     }
-    _cardOrder = _cardOrderBox.get('cardOrder');
+    _cardOrder = _cardOrderBox.get(DataPersistence.cardOrder);
     notifyListeners();
   }
 
   /// Load [_cardStates] from persistent storage
   /// Will create persistent storage if no data is found
   Future _loadCardStates() async {
-    _cardStateBox = await Hive.openBox('cardStates');
+    _cardStateBox = await Hive.openBox(DataPersistence.cardStates);
     // if no data was found then create the data and save it
     // by default all cards will be on
-    if (_cardStateBox.get('cardStates') == null) {
-      await _cardStateBox.put('cardStates',
+    print(_cardStateBox.get(DataPersistence.cardStates).toString());
+    if (_cardStateBox.get(DataPersistence.cardStates) == null) {
+      await _cardStateBox.put(DataPersistence.cardStates,
           _cardStates.keys.where((card) => _cardStates[card]).toList());
     } else {
       _deactivateAllCards();
     }
-    for (String activeCard in _cardStateBox.get('cardStates')) {
+    for (String activeCard in _cardStateBox.get(DataPersistence.cardStates)) {
       _cardStates[activeCard] = true;
     }
     notifyListeners();
@@ -158,10 +161,10 @@ class CardsDataProvider extends ChangeNotifier {
       _cardStates[activeCard] = true;
     }
     try {
-      _cardStateBox.put('cardStates', activeCards);
+      _cardStateBox.put(DataPersistence.cardStates, activeCards);
     } catch (e) {
-      _cardStateBox = await Hive.openBox('cardStates');
-      _cardStateBox.put('cardStates', activeCards);
+      _cardStateBox = await Hive.openBox(DataPersistence.cardStates);
+      _cardStateBox.put(DataPersistence.cardStates, activeCards);
     }
     _lastUpdated = DateTime.now();
     notifyListeners();
