@@ -15,11 +15,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 
-class StudentIdCard extends StatelessWidget {
+class StudentIdCard extends StatefulWidget {
+  @override
+  _StudentIdCardState createState() => _StudentIdCardState();
+}
+
+class _StudentIdCardState extends State<StudentIdCard> {
   String cardId = "student_id";
-  var barcodeImage;
 
   createAlertDialog(BuildContext context, Column image) {
+
+    /// Pop up expanded barcode
     return showDialog(
         context: context,
         builder: (context) {
@@ -41,10 +47,11 @@ class StudentIdCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SizeConfig().init(context);
+
+    /// Scaling utility
+    SizeConfig().initialize(context);
 
     return CardContainer(
-      /// TODO: need to hook up hidden to state using provider
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
@@ -75,11 +82,10 @@ class StudentIdCard extends StatelessWidget {
       StudentIdPhotoModel photoModel,
       StudentIdProfileModel profileModel,
       BuildContext context) {
-    return Row(
-        children: <Widget>[
-          Padding(
-           padding: EdgeInsets.only(left: cardMargin * 1.5),
-          ),
+    return Row(children: <Widget>[
+      Padding(
+        padding: EdgeInsets.only(left: cardMargin * 1.5),
+      ),
       Container(
         child: Column(
           children: <Widget>[
@@ -98,95 +104,100 @@ class StudentIdCard extends StatelessWidget {
         ),
       ),
       Expanded(
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-        Container(
-          padding: new EdgeInsets.only(right: cardMargin),
-          child: Text(
-              (nameModel.firstName + " " + nameModel.lastName),
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-              textAlign: TextAlign.left,
-              softWrap: false,
-            maxLines: 1,
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                padding: new EdgeInsets.only(right: cardMargin),
+                child: Text(
+                  (nameModel.firstName + " " + nameModel.lastName),
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  textAlign: TextAlign.left,
+                  softWrap: false,
+                  maxLines: 1,
                 ),
-        ),
-          SizedBox(height: 5),
-          Container(
-            padding: new EdgeInsets.only(right: cardMargin),
-            child: Text(
-              profileModel.collegeCurrent,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(color: Colors.grey, fontSize: 16),
-              textAlign: TextAlign.left,
-              softWrap: false,
-              maxLines: 1,
-            ),
-          ),
-          SizedBox(height: 5),
-
-          Container(
-            padding: new EdgeInsets.only(right: cardMargin),
-            child: Text(
-              profileModel.ugPrimaryMajorCurrent,
-              style: TextStyle( fontSize: 16),
-              textAlign: TextAlign.left,
-              softWrap: false,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: 15),
-          ),
-          //Text(profileModel.collegeCurrent),
-          //Text(profileModel.ugPrimaryMajorCurrent),
-
-          FlatButton(
-            child: returnBarcodeContainer(barcodeModel.barCode.toString(), false, context),
-            padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
-            onPressed: () {
-              createAlertDialog(context,
-                  returnBarcodeContainer(barcodeModel.barCode.toString(), true, context));
-            },
-          ),
-          /* Text(
-                barcodeModel.barCode.toString()),*/
-          // TODO: NEED UTILITY FOR CONVERTING THIS INTEGER TO A BARCODE
-        ]),
+              ),
+              SizedBox(height: 5),
+              Container(
+                padding: new EdgeInsets.only(right: cardMargin),
+                child: Text(
+                  profileModel.collegeCurrent,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(color: Colors.grey, fontSize: 16),
+                  textAlign: TextAlign.left,
+                  softWrap: false,
+                  maxLines: 1,
+                ),
+              ),
+              SizedBox(height: 5),
+              Container(
+                padding: new EdgeInsets.only(right: cardMargin),
+                child: Text(
+                  profileModel.ugPrimaryMajorCurrent,
+                  style: TextStyle(fontSize: 16),
+                  textAlign: TextAlign.left,
+                  softWrap: false,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 15),
+              ),
+              FlatButton(
+                child: returnBarcodeContainer(
+                    barcodeModel.barCode.toString(), false, context),
+                padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
+                onPressed: () {
+                  createAlertDialog(
+                      context,
+                      returnBarcodeContainer(
+                          barcodeModel.barCode.toString(), true, context));
+                },
+              ),
+            ]),
       ),
     ]);
   }
 
-  returnBarcodeContainer(String cardNumber, bool rotated, BuildContext context) {
+  /// Barcode setup
+  returnBarcodeContainer(
+      String cardNumber, bool rotated, BuildContext context) {
+
+    /// Barcode item to return
     var barcodeWithText;
-    SizeConfig().init(context);
+    SizeConfig().initialize(context);
+
+    /// Expanded barcode
     if (rotated) {
-      barcodeWithText = BarCodeItem(
-          description: "",
+      barcodeWithText = BarcodeDisplay(
+          barcodeRendering: "",
           image: BarCodeImage(
             params: CodabarBarCodeParams(
               "A" + cardNumber + "B",
-              lineWidth:SizeConfig.safeBlockVertical * .25 ,
+              lineWidth: SizeConfig.safeBlockVertical * .25,
               withText: true,
             ),
           ));
-    } else {
-      barcodeWithText = BarCodeItem(
-          description: "(tap for easier scanning)",
-          image: BarCodeImage(
-            params: CodabarBarCodeParams(
-              "A" + cardNumber + "B",
-              withText: true,
-              barHeight: 50,
-              lineWidth: SizeConfig.safeBlockHorizontal * .23,
-              //  barHeight: SizeConfig.safeBlockVertical * 8,
-            ),
+    }
+    /// Default barcode
+    else {
+      barcodeWithText = BarcodeDisplay(
+        barcodeRendering: "(tap for easier scanning)",
+        image: BarCodeImage(
+          params: CodabarBarCodeParams(
+            "A" + cardNumber + "B",
+            withText: true,
+            barHeight: 50,
+            lineWidth: SizeConfig.safeBlockHorizontal * .23,
+            //  barHeight: SizeConfig.safeBlockVertical * 8,
           ),
-        );
+        ),
+      );
     }
 
-    barcodeImage = barcodeWithText.image;
-
+    /// Expanded barcode
     if (rotated) {
       return Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -201,10 +212,12 @@ class StudentIdCard extends StatelessWidget {
               ),
             ),
           ]);
-    } else {
+    }
+    /// Default barcode
+    else {
       return Column(children: <Widget>[
         Text(
-          barcodeWithText.description,
+          barcodeWithText.barcodeRendering,
           textAlign: TextAlign.left,
           style: TextStyle(
             fontWeight: FontWeight.bold,
@@ -220,44 +233,43 @@ class StudentIdCard extends StatelessWidget {
   }
 }
 
-class BarCodeItem {
-  String description;
+class BarcodeDisplay {
+  String barcodeRendering;
   BarCodeImage image;
 
-  BarCodeItem({
+  /// Default constructor
+  BarcodeDisplay({
     this.image,
-    this.description,
+    this.barcodeRendering,
   });
 }
 
 //Image Scaling
-
 class SizeConfig {
   static MediaQueryData _mediaQueryData;
   static double screenWidth;
   static double screenHeight;
-  static double blockSizeHorizontal;
-  static double blockSizeVertical;
 
   static double _safeAreaHorizontal;
   static double _safeAreaVertical;
   static double safeBlockHorizontal;
   static double safeBlockVertical;
 
-  void init(BuildContext context) {
+  void initialize(BuildContext context) {
+
+    /// Query current device display
     _mediaQueryData = MediaQuery.of(context);
     screenWidth = _mediaQueryData.size.width;
     screenHeight = _mediaQueryData.size.height;
-    blockSizeHorizontal = screenWidth / 100;
-    blockSizeVertical = screenHeight / 100;
 
-    _safeAreaHorizontal = _mediaQueryData.padding.left +
-        _mediaQueryData.padding.right;
-    _safeAreaVertical = _mediaQueryData.padding.top +
-        _mediaQueryData.padding.bottom;
-    safeBlockHorizontal = (screenWidth -
-        _safeAreaHorizontal) / 100;
-    safeBlockVertical = (screenHeight -
-        _safeAreaVertical) / 100;
+    /// Calculate safe blocks
+    _safeAreaHorizontal =
+        _mediaQueryData.padding.left + _mediaQueryData.padding.right;
+    _safeAreaVertical =
+        _mediaQueryData.padding.top + _mediaQueryData.padding.bottom;
+
+    final gridBlocks = 100;
+    safeBlockHorizontal = (screenWidth - _safeAreaHorizontal) / gridBlocks;
+    safeBlockVertical = (screenHeight - _safeAreaVertical) / gridBlocks;
   }
 }
