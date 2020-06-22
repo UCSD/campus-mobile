@@ -141,6 +141,7 @@ class StudentIdCard extends StatelessWidget {
 
           FlatButton(
             child: returnBarcodeContainer(barcodeModel.barCode.toString(), false, context),
+            padding: EdgeInsets.all(0),
             onPressed: () {
               createAlertDialog(context,
                   returnBarcodeContainer(barcodeModel.barCode.toString(), true, context));
@@ -169,10 +170,10 @@ class StudentIdCard extends StatelessWidget {
       barcodeWithText = BarcodeWidget(
       barcode: Barcode.codabar(),
     data: "A" + cardNumber + "B",
-    width: SizeConfig.safeBlockHorizontal * 70 ,
+    width: SizeConfig.safeBlockHorizontal * 50 ,
     height: 50,
         style: TextStyle(
-            letterSpacing: SizeConfig.safeBlockHorizontal * 1.5
+            letterSpacing: SizeConfig.safeBlockHorizontal * 1
         ),
     );
     }
@@ -197,7 +198,13 @@ class StudentIdCard extends StatelessWidget {
 
       Column(children: <Widget>[
         Text(
-          "(tap for easier scanning)"
+          "(tap for easier scanning)",
+          textAlign: TextAlign.left,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 10.0,
+            color: Colors.black45,
+        ),
         ),
         Container(
           child: barcodeWithText,
