@@ -15,16 +15,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 
-class StudentIdCard extends StatelessWidget {
+class StudentIdCard extends StatefulWidget {
+  @override
+  _StudentIdCardState createState() => _StudentIdCardState();
+}
+
+class _StudentIdCardState extends State<StudentIdCard> {
   String cardId = "student_id";
-  var barcodeImage;
 
   createAlertDialog(BuildContext context, Column image) {
     return showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text("Student ID"),
+            backgroundColor: Colors.white,
+            title: Text(
+              "Student ID",
+              style: TextStyle(color: Colors.black),
+            ),
             content: Container(
               child: image,
             ),
@@ -41,10 +49,9 @@ class StudentIdCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SizeConfig().init(context);
+    ScalingUtility().init(context);
 
     return CardContainer(
-      /// TODO: need to hook up hidden to state using provider
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
@@ -66,6 +73,7 @@ class StudentIdCard extends StatelessWidget {
     return Text(
       "Student ID",
       textAlign: TextAlign.left,
+      style: TextStyle(),
     );
   }
 
@@ -85,9 +93,9 @@ class StudentIdCard extends StatelessWidget {
             Image.network(
               photoModel.photoUrl,
               fit: BoxFit.contain,
-              height: 125,
+              height: ScalingUtility.safeBlockVertical * 14,
             ),
-            SizedBox(height: 10),
+            SizedBox(height: ScalingUtility.safeBlockVertical * 1.25),
             Text(profileModel.classificationType),
           ],
         ),
@@ -136,7 +144,8 @@ class StudentIdCard extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top: 15),
+                padding: EdgeInsets.only(top: ScalingUtility.safeBlockVertical * .6),
+
               ),
               FlatButton(
                 child: returnBarcodeContainer(
@@ -154,25 +163,34 @@ class StudentIdCard extends StatelessWidget {
     ]);
   }
 
+  /// Determine barcode to display
   returnBarcodeContainer(
       String cardNumber, bool rotated, BuildContext context) {
     var barcodeWithText;
-    SizeConfig().init(context);
+
+    /// Initialize sizing
+    ScalingUtility().init(context);
     if (rotated) {
       barcodeWithText = BarcodeWidget(
         barcode: Barcode.codabar(),
         data: cardNumber,
-        width: SizeConfig.safeBlockVertical * 60,
+        width: ScalingUtility.safeBlockVertical * 45,
         height: 80,
-        style: TextStyle(letterSpacing: SizeConfig.safeBlockVertical * 3),
+        style: TextStyle(
+            letterSpacing: ScalingUtility.safeBlockVertical * 3,
+            color: Colors.white,
+            fontSize: 1),
       );
     } else {
       barcodeWithText = BarcodeWidget(
         barcode: Barcode.codabar(),
         data: cardNumber,
-        width: SizeConfig.safeBlockHorizontal * 50,
-        height: 50,
-        style: TextStyle(letterSpacing: SizeConfig.safeBlockHorizontal * 1.5),
+        width: ScalingUtility.safeBlockHorizontal * 50,
+        height: 40,
+        style: TextStyle(
+            letterSpacing: ScalingUtility.safeBlockHorizontal * 1.5,
+            fontSize: 1,
+            color: Colors.white),
       );
     }
 
@@ -180,13 +198,26 @@ class StudentIdCard extends StatelessWidget {
       return Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(25),
-            ),
+
             RotatedBox(
               quarterTurns: 1,
-              child: Container(
-                child: barcodeWithText,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+
+                  Container(
+                    padding: EdgeInsets.only(left: ScalingUtility.safeBlockVertical * 10),
+                    child: barcodeWithText,
+                    color: Colors.white,
+                  ),
+                  Text(
+                    cardNumber,
+                    style: TextStyle(
+
+                        color: Colors.black,
+                        letterSpacing: ScalingUtility.safeBlockVertical * 2.25),
+                  )
+                ],
               ),
             ),
           ]);
@@ -198,25 +229,42 @@ class StudentIdCard extends StatelessWidget {
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 10.0,
-            color: Colors.black45,
+            color: decideColor(Theme.of(context)),
           ),
         ),
         Container(
+          padding: addPadding(Theme.of(context)),
+          color: Colors.white,
           child: barcodeWithText,
+        ),
+        Text(
+          cardNumber,
+          style: TextStyle(letterSpacing: ScalingUtility.safeBlockHorizontal * 1.5),
         ),
       ]);
     }
   }
 }
 
+/// Determine padding of barcode with theme
+EdgeInsets addPadding(ThemeData currentTheme) {
+  return currentTheme.brightness == Brightness.dark
+      ? EdgeInsets.all(5)
+      : EdgeInsets.all(0);
+}
+
+/// Determine the background color of barcode with theme
+Color decideColor(ThemeData currentTheme) {
+  return currentTheme.brightness == Brightness.dark
+      ? Colors.white
+      : Colors.black45;
+}
 //Image Scaling
 
-class SizeConfig {
+class ScalingUtility {
   static MediaQueryData _mediaQueryData;
   static double screenWidth;
   static double screenHeight;
-  static double blockSizeHorizontal;
-  static double blockSizeVertical;
 
   static double _safeAreaHorizontal;
   static double _safeAreaVertical;
@@ -224,12 +272,12 @@ class SizeConfig {
   static double safeBlockVertical;
 
   void init(BuildContext context) {
+    /// Find screen size
     _mediaQueryData = MediaQuery.of(context);
     screenWidth = _mediaQueryData.size.width;
     screenHeight = _mediaQueryData.size.height;
-    blockSizeHorizontal = screenWidth / 100;
-    blockSizeVertical = screenHeight / 100;
 
+    /// Calculate safe area
     _safeAreaHorizontal =
         _mediaQueryData.padding.left + _mediaQueryData.padding.right;
     _safeAreaVertical =
