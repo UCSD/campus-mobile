@@ -75,11 +75,10 @@ class StudentIdCard extends StatelessWidget {
       StudentIdPhotoModel photoModel,
       StudentIdProfileModel profileModel,
       BuildContext context) {
-    return Row(
-        children: <Widget>[
-          Padding(
-           padding: EdgeInsets.only(left: cardMargin * 1.5),
-          ),
+    return Row(children: <Widget>[
+      Padding(
+        padding: EdgeInsets.only(left: cardMargin * 1.5),
+      ),
       Container(
         child: Column(
           children: <Widget>[
@@ -98,89 +97,87 @@ class StudentIdCard extends StatelessWidget {
         ),
       ),
       Expanded(
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-        Container(
-          padding: new EdgeInsets.only(right: cardMargin),
-          child: Text(
-              (nameModel.firstName + " " + nameModel.lastName),
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-              textAlign: TextAlign.left,
-              softWrap: false,
-            maxLines: 1,
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                padding: new EdgeInsets.only(right: cardMargin),
+                child: Text(
+                  (nameModel.firstName + " " + nameModel.lastName),
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  textAlign: TextAlign.left,
+                  softWrap: false,
+                  maxLines: 1,
                 ),
-        ),
-          SizedBox(height: 5),
-          Container(
-            padding: new EdgeInsets.only(right: cardMargin),
-            child: Text(
-              profileModel.collegeCurrent,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(color: Colors.grey, fontSize: 16),
-              textAlign: TextAlign.left,
-              softWrap: false,
-              maxLines: 1,
-            ),
-          ),
-          SizedBox(height: 5),
-
-          Container(
-            padding: new EdgeInsets.only(right: cardMargin),
-            child: Text(
-              profileModel.ugPrimaryMajorCurrent ,
-              style: TextStyle( fontSize: 16),
-              textAlign: TextAlign.left,
-              softWrap: false,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: 15),
-          ),
-
-          FlatButton(
-            child: returnBarcodeContainer(barcodeModel.barCode.toString(), false, context),
-            padding: EdgeInsets.all(0),
-            onPressed: () {
-              createAlertDialog(context,
-                  returnBarcodeContainer(barcodeModel.barCode.toString(), true, context));
-            },
-          ),
-        ]),
+              ),
+              SizedBox(height: 5),
+              Container(
+                padding: new EdgeInsets.only(right: cardMargin),
+                child: Text(
+                  profileModel.collegeCurrent,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(color: Colors.grey, fontSize: 16),
+                  textAlign: TextAlign.left,
+                  softWrap: false,
+                  maxLines: 1,
+                ),
+              ),
+              SizedBox(height: 5),
+              Container(
+                padding: new EdgeInsets.only(right: cardMargin),
+                child: Text(
+                  profileModel.ugPrimaryMajorCurrent,
+                  style: TextStyle(fontSize: 16),
+                  textAlign: TextAlign.left,
+                  softWrap: false,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 15),
+              ),
+              FlatButton(
+                child: returnBarcodeContainer(
+                    barcodeModel.barCode.toString(), false, context),
+                padding: EdgeInsets.all(0),
+                onPressed: () {
+                  createAlertDialog(
+                      context,
+                      returnBarcodeContainer(
+                          barcodeModel.barCode.toString(), true, context));
+                },
+              ),
+            ]),
       ),
     ]);
   }
 
-  returnBarcodeContainer(String cardNumber, bool rotated, BuildContext context) {
+  returnBarcodeContainer(
+      String cardNumber, bool rotated, BuildContext context) {
     var barcodeWithText;
     SizeConfig().init(context);
     if (rotated) {
-
-     barcodeWithText = BarcodeWidget(
-       barcode: Barcode.codabar(),
-       data: cardNumber,
-       width: SizeConfig.safeBlockVertical * 60 ,
-       height: 80,
-       style: TextStyle(
-         letterSpacing: SizeConfig.safeBlockVertical * 3
-       ),
-     );
+      barcodeWithText = BarcodeWidget(
+        barcode: Barcode.codabar(),
+        data: cardNumber,
+        width: SizeConfig.safeBlockVertical * 60,
+        height: 80,
+        style: TextStyle(letterSpacing: SizeConfig.safeBlockVertical * 3),
+      );
     } else {
       barcodeWithText = BarcodeWidget(
-      barcode: Barcode.codabar(),
-    data:  cardNumber ,
-    width: SizeConfig.safeBlockHorizontal * 50 ,
-    height: 50,
-        style: TextStyle(
-            letterSpacing: SizeConfig.safeBlockHorizontal * 1.5
-        ),
-    );
+        barcode: Barcode.codabar(),
+        data: cardNumber,
+        width: SizeConfig.safeBlockHorizontal * 50,
+        height: 50,
+        style: TextStyle(letterSpacing: SizeConfig.safeBlockHorizontal * 1.5),
+      );
     }
 
     if (rotated) {
-      return
-      Column(
+      return Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Padding(
@@ -194,9 +191,7 @@ class StudentIdCard extends StatelessWidget {
             ),
           ]);
     } else {
-      return
-
-      Column(children: <Widget>[
+      return Column(children: <Widget>[
         Text(
           "(tap for easier scanning)",
           textAlign: TextAlign.left,
@@ -204,7 +199,7 @@ class StudentIdCard extends StatelessWidget {
             fontWeight: FontWeight.bold,
             fontSize: 10.0,
             color: Colors.black45,
-        ),
+          ),
         ),
         Container(
           child: barcodeWithText,
@@ -213,7 +208,6 @@ class StudentIdCard extends StatelessWidget {
     }
   }
 }
-
 
 //Image Scaling
 
@@ -236,13 +230,11 @@ class SizeConfig {
     blockSizeHorizontal = screenWidth / 100;
     blockSizeVertical = screenHeight / 100;
 
-    _safeAreaHorizontal = _mediaQueryData.padding.left +
-        _mediaQueryData.padding.right;
-    _safeAreaVertical = _mediaQueryData.padding.top +
-        _mediaQueryData.padding.bottom;
-    safeBlockHorizontal = (screenWidth -
-        _safeAreaHorizontal) / 100;
-    safeBlockVertical = (screenHeight -
-        _safeAreaVertical) / 100;
+    _safeAreaHorizontal =
+        _mediaQueryData.padding.left + _mediaQueryData.padding.right;
+    _safeAreaVertical =
+        _mediaQueryData.padding.top + _mediaQueryData.padding.bottom;
+    safeBlockHorizontal = (screenWidth - _safeAreaHorizontal) / 100;
+    safeBlockVertical = (screenHeight - _safeAreaVertical) / 100;
   }
 }
