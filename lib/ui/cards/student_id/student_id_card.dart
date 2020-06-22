@@ -1,7 +1,7 @@
 //import 'dart:io';
 // import 'dart:js';
 
-import 'package:barcode_flutter/barcode_flutter.dart';
+import 'package:barcode_widget/barcode_widget.dart';
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/student_id_data_provider.dart';
@@ -138,8 +138,6 @@ class StudentIdCard extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(top: 15),
           ),
-          //Text(profileModel.collegeCurrent),
-          //Text(profileModel.ugPrimaryMajorCurrent),
 
           FlatButton(
             child: returnBarcodeContainer(barcodeModel.barCode.toString(), false, context),
@@ -148,9 +146,6 @@ class StudentIdCard extends StatelessWidget {
                   returnBarcodeContainer(barcodeModel.barCode.toString(), true, context));
             },
           ),
-          /* Text(
-                barcodeModel.barCode.toString()),*/
-          // TODO: NEED UTILITY FOR CONVERTING THIS INTEGER TO A BARCODE
         ]),
       ),
     ]);
@@ -160,33 +155,31 @@ class StudentIdCard extends StatelessWidget {
     var barcodeWithText;
     SizeConfig().init(context);
     if (rotated) {
-      barcodeWithText = BarCodeItem(
-          description: "",
-          image: BarCodeImage(
-            params: CodabarBarCodeParams(
-              "A" + cardNumber + "B",
-              lineWidth:SizeConfig.safeBlockVertical * .25 ,
-              withText: true,
-            ),
-          ));
+
+     barcodeWithText = BarcodeWidget(
+       barcode: Barcode.codabar(),
+       data: "A" + cardNumber + "B",
+       width: SizeConfig.safeBlockVertical * 60 ,
+       height: 80,
+       style: TextStyle(
+         letterSpacing: SizeConfig.safeBlockVertical * 2.5
+       ),
+     );
     } else {
-      barcodeWithText = BarCodeItem(
-          description: "(tap for easier scanning)",
-          image: BarCodeImage(
-            params: CodabarBarCodeParams(
-              "A" + cardNumber + "B",
-              withText: true,
-              barHeight: 50,
-              lineWidth: SizeConfig.safeBlockHorizontal * .23,
-              //  barHeight: SizeConfig.safeBlockVertical * 8,
-            ),
-          ));
+      barcodeWithText = BarcodeWidget(
+      barcode: Barcode.codabar(),
+    data: "A" + cardNumber + "B",
+    width: SizeConfig.safeBlockHorizontal * 70 ,
+    height: 50,
+        style: TextStyle(
+            letterSpacing: SizeConfig.safeBlockHorizontal * 1.5
+        ),
+    );
     }
 
-    barcodeImage = barcodeWithText.image;
-
     if (rotated) {
-      return Column(
+      return
+      Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Padding(
@@ -195,38 +188,25 @@ class StudentIdCard extends StatelessWidget {
             RotatedBox(
               quarterTurns: 1,
               child: Container(
-                child: barcodeWithText.image,
+                child: barcodeWithText,
               ),
             ),
           ]);
     } else {
-      return Column(children: <Widget>[
+      return
+
+      Column(children: <Widget>[
         Text(
-          barcodeWithText.description,
-          textAlign: TextAlign.left,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 10.0,
-            color: Colors.black45,
-          ),
+          "(tap for easier scanning)"
         ),
         Container(
-          child: barcodeWithText.image,
+          child: barcodeWithText,
         ),
       ]);
     }
   }
 }
 
-class BarCodeItem {
-  String description;
-  BarCodeImage image;
-
-  BarCodeItem({
-    this.image,
-    this.description,
-  });
-}
 
 //Image Scaling
 
