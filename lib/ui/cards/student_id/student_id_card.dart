@@ -159,21 +159,21 @@ class StudentIdCard extends StatelessWidget {
 
      barcodeWithText = BarcodeWidget(
        barcode: Barcode.codabar(),
-       data: "A" + cardNumber + "B",
+       data: cardNumber,
        width: SizeConfig.safeBlockVertical * 60 ,
        height: 80,
        style: TextStyle(
-         letterSpacing: SizeConfig.safeBlockVertical * 2.5
+         letterSpacing: SizeConfig.safeBlockVertical * 3
        ),
      );
     } else {
       barcodeWithText = BarcodeWidget(
       barcode: Barcode.codabar(),
-    data: "A" + cardNumber + "B",
+    data:  cardNumber ,
     width: SizeConfig.safeBlockHorizontal * 50 ,
     height: 50,
         style: TextStyle(
-            letterSpacing: SizeConfig.safeBlockHorizontal * 1
+            letterSpacing: SizeConfig.safeBlockHorizontal * 1.5
         ),
     );
     }
