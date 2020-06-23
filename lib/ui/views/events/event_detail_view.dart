@@ -76,10 +76,14 @@ class EventDetailView extends StatelessWidget {
                   ),
                   color: Theme.of(context).buttonColor,
                   onPressed: () async {
-                    if (await canLaunch(data.url)) {
-                      await launch(data.url);
-                    } else {
-                      throw 'Could not launch ${data.url}';
+                    try {
+                      if (await canLaunch(data.url)) {
+                        await launch(data.url);
+                      } else {
+                        throw 'Could not launch ${data.url}';
+                      }
+                    } catch (e) {
+                      print(e);
                     }
                   }),
             )
