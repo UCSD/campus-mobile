@@ -113,16 +113,17 @@ class _StudentIdCardState extends State<StudentIdCard> {
                 Container(
                   padding: new EdgeInsets.only(
                       right: ScalingUtility.safeBlockHorizontal * cardMargin),
-                  child: Text(
+                  child: FittedBox(
+                    child:Text(
                     (nameModel.firstName + " " + nameModel.lastName),
-                    overflow: TextOverflow.ellipsis,
+//                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: ScalingUtility.safeBlockHorizontal * 4.5),
+                        fontSize: getFontSize(nameModel.firstName + " " + nameModel.lastName)),
                     textAlign: TextAlign.left,
-                    softWrap: false,
+                    softWrap: true,
                     maxLines: 1,
-                  ),
+                  ),),
                 ),
                 SizedBox(height: ScalingUtility.safeBlockVertical * .5),
                 Container(
@@ -290,6 +291,13 @@ class _StudentIdCardState extends State<StudentIdCard> {
       ]);
     }
   }
+}
+
+double getFontSize(String input) {
+  double base = 16;
+  if(input.length >= 21) {
+     return (base - (0.25 * (input.length-12)));
+   }
 }
 
 /// Determine padding of barcode with theme
