@@ -23,6 +23,7 @@ import 'package:campus_mobile_experimental/ui/views/notifications/notifications_
 import 'package:campus_mobile_experimental/ui/views/onboarding/onboarding_login.dart';
 import 'package:campus_mobile_experimental/ui/views/onboarding/onboarding_screen.dart';
 import 'package:campus_mobile_experimental/ui/views/parking/manage_parking_view.dart';
+import 'package:campus_mobile_experimental/ui/views/parking/parking_view.dart';
 import 'package:campus_mobile_experimental/ui/views/profile/cards_view.dart';
 import 'package:campus_mobile_experimental/ui/views/profile/profile.dart';
 import 'package:campus_mobile_experimental/ui/views/scanner/scanner_view.dart';
@@ -108,6 +109,9 @@ class Router {
         return MaterialPageRoute(builder: (_) => ScannerView());
       case RoutePaths.ClassScheduleViewAll:
         return MaterialPageRoute(builder: (_) => ClassList());
+      case RoutePaths.Parking:
+        return MaterialPageRoute(
+            builder: (_) => ParkingWebViewContainer('https://google.com'));
     }
   }
 }

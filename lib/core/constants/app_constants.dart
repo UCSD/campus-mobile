@@ -35,6 +35,7 @@ class RoutePaths {
   static const String SpecialEventsDetailView =
       'special_events/special_events_detail_view';
   static const String ScannerView = 'scanner/scanner_view';
+  static const String Parking = "parking/parking_view";
 }
 
 class ButtonText {
