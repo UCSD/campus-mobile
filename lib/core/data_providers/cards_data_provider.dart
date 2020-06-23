@@ -48,7 +48,6 @@ class CardsDataProvider extends ChangeNotifier {
   final CardsService _cardsService = CardsService();
 
   void updateAvailableCards() async {
-    print('updating available cards');
     _isLoading = true;
     _error = null;
     notifyListeners();
@@ -141,7 +140,6 @@ class CardsDataProvider extends ChangeNotifier {
     _cardStateBox = await Hive.openBox(DataPersistence.cardStates);
     // if no data was found then create the data and save it
     // by default all cards will be on
-    print(_cardStateBox.get(DataPersistence.cardStates).toString());
     if (_cardStateBox.get(DataPersistence.cardStates) == null) {
       await _cardStateBox.put(DataPersistence.cardStates,
           _cardStates.keys.where((card) => _cardStates[card]).toList());
