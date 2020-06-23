@@ -43,21 +43,18 @@ class AvailabilityDataProvider extends ChangeNotifier {
     Map<String, AvailabilityModel> newMapOfLots =
         Map<String, AvailabilityModel>();
     if (await _availabilityService.fetchData()) {
-      for (AvailabilityModel model in _availabilityService.data) {
-        newMapOfLots[model.locationName] = model;
-        if (_userDataProvider.userProfileModel.selectedOccuspaceLocations == null){
-          locationViewState[model.locationName] == true;
-        }
-        else if (_userDataProvider.userProfileModel.selectedOccuspaceLocations
-        .contains(model.locationName)){
-          _locationViewState[model.locationName] = true;
-        }
-        else {
-          _locationViewState[model.locationName] = false;
-        }
-      }
       print(_userDataProvider.userProfileModel.selectedOccuspaceLocations);
       print(_locationViewState);
+      for (AvailabilityModel model in _availabilityService.data) {
+        newMapOfLots[model.locationName] = model;
+        if (_userDataProvider.userProfileModel.selectedOccuspaceLocations.isEmpty){
+          locationViewState[model.locationName] = true;
+        }
+        else{_locationViewState[model.locationName] =
+            _userDataProvider.userProfileModel.selectedOccuspaceLocations
+            .contains(model.locationName);}
+      }
+
       ///replace old list of lots with new one
       _availabilityModels = newMapOfLots;
 
@@ -117,18 +114,6 @@ class AvailabilityDataProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
-
-//  void _seeLocation(List<String> locations) {
-//    for (String location in locations) {
-//      _locationViewState[location] = true;
-//    }
-//  }
-//
-//  void _hideLocation(List<String> locations) {
-//    for (String location in locations) {
-//      _locationViewState[location] = false;
-//    }
-//  }
 
   ///UPLOAD SELECTED LOCATIONS IN THE CORRECT ORDER TO THE DATABASE
   ///IF NOT LOGGED IN THEN SAVE LOCATIONS TO LOCAL PROFILE

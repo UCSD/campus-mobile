@@ -306,7 +306,6 @@ class UserDataProvider extends ChangeNotifier {
       profile.pid = _authenticationModel.pid;
       profile.subscribedTopics =
           await _pushNotificationDataProvider.publicTopics();
-
       final pattern = RegExp('[BGJMU]');
       if ((profile.ucsdaffiliation ?? "").contains(pattern)) {
         profile
