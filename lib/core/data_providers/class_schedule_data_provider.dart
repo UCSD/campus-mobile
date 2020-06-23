@@ -9,6 +9,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
   ClassScheduleDataProvider() {
     ///DEFAULT STATES
     _isLoading = false;
+    _lastUpdated = DateTime.now();
     _selectedCourse = 0;
     nextDayWithClass = 'Monday';
     _enrolledClasses = {
