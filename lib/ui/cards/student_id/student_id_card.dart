@@ -261,8 +261,9 @@ class _StudentIdCardState extends State<StudentIdCard> {
                         cardNumber,
                         style: TextStyle(
                             color: Colors.black,
+                            fontSize: ScalingUtility.safeBlockHorizontal * 4,
                             letterSpacing:
-                                ScalingUtility.safeBlockHorizontal * 4),
+                                ScalingUtility.safeBlockHorizontal * 3),
                       )
                     ],
                   ),
