@@ -3,6 +3,7 @@ import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.da
 import 'package:campus_mobile_experimental/ui/reusable_widgets/image_loader.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/time_range_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class EventDetailView extends StatelessWidget {
@@ -32,17 +33,34 @@ class EventDetailView extends StatelessWidget {
         style: Theme.of(context).textTheme.title,
       ),
       Divider(),
-      Text(
-        data.location,
+      Linkify(
+        onOpen: (link) async {
+          if (await canLaunch(link.url)) {
+            await launch(link.url);
+          } else {
+            throw 'Could not launch $link';
+          }
+        },
+        text: data.location,
         textAlign: TextAlign.center,
         style: TextStyle(fontSize: 16),
+        options: LinkifyOptions(humanize: false),
       ),
-      TimeRangeWidget(time: data.startTime + ' - ' + data.endTime),
+      Center(
+          child: TimeRangeWidget(time: data.startTime + ' - ' + data.endTime)),
       Divider(),
       Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Text(
-          data.description,
+        child: Linkify(
+          onOpen: (link) async {
+            if (await canLaunch(link.url)) {
+              await launch(link.url);
+            } else {
+              throw 'Could not launch $link';
+            }
+          },
+          options: LinkifyOptions(humanize: false),
+          text: data.description,
           style: TextStyle(fontSize: 16),
         ),
       ),
