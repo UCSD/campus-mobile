@@ -218,19 +218,6 @@ class UserDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-//  /// Remove topic from [_userProfileModel.subscribedTopics]
-//  /// Use [_pushNotificationDataProvider] to un/subscribe device from push notifications
-//  void toggleLocationViews(String location) {
-//    if (_userProfileModel.selectedOccuspaceLocations.contains(location)) {
-//      _userProfileModel.selectedOccuspaceLocations.remove(location);
-//    } else {
-//      _userProfileModel.selectedOccuspaceLocations.add(location);
-//    }
-//    postUserProfile(_userProfileModel);
-//    _availabilityDataProvider.toggleLocation(location);
-//    notifyListeners();
-//  }
-
   /// Logs out user
   /// Unregisters device from direct push notification using [_pushNotificationDataProvider]
   /// Resets all [AuthenticationModel] and [UserProfileModel] data from persistent storage

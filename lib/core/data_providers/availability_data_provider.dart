@@ -43,13 +43,15 @@ class AvailabilityDataProvider extends ChangeNotifier {
     Map<String, AvailabilityModel> newMapOfLots =
         Map<String, AvailabilityModel>();
     if (await _availabilityService.fetchData()) {
-      print(_userDataProvider.userProfileModel.selectedOccuspaceLocations);
-      print(_locationViewState);
+      /// setting the LocationViewState based on user data
       for (AvailabilityModel model in _availabilityService.data) {
         newMapOfLots[model.locationName] = model;
+        /// if the user is logged out and has not put any preferences,
+        /// show all locations by default
         if (_userDataProvider.userProfileModel.selectedOccuspaceLocations.isEmpty){
           locationViewState[model.locationName] = true;
         }
+        /// otherwise, LocationViewState should be true for all selectedOccuspaceLocations
         else{_locationViewState[model.locationName] =
             _userDataProvider.userProfileModel.selectedOccuspaceLocations
             .contains(model.locationName);}
@@ -101,16 +103,14 @@ class AvailabilityDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// add or remove location availability display from card based on user selection
   void toggleLocation(String location) {
     if (_locationViewState[location] ?? true) {
       _locationViewState[location] = false;
       _userDataProvider.userProfileModel.selectedOccuspaceLocations.remove(location);
-//      _hideLocation([location]);
     } else {
       _locationViewState[location] = true;
       _userDataProvider.userProfileModel.selectedOccuspaceLocations.add(location);
-//      _userDataProvider.postUserProfile(_userDataProvider.userProfileModel);
-//      _seeLocation([location]);
     }
     notifyListeners();
   }
