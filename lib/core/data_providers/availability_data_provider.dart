@@ -84,6 +84,20 @@ class AvailabilityDataProvider extends ChangeNotifier {
     orderedListOfLots.addAll(tempMap.values);
     return orderedListOfLots;
   }
+/*
+  void getEstimated() {
+
+      for (AvailabilityModel model in _availabilityModels.values.toList()) {
+
+          var distance = calculatePercentage(model.estimated, model.estimated,
+              model.coordinates.lat, model.coordinates.lon);
+          model.distance = distance;
+
+
+    }
+  }
+
+ */
 
   void reorderLocations(List<String> order) {
     ///edit the profile and upload user selected lots
