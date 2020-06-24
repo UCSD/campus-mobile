@@ -25,7 +25,7 @@ class UpcomingCoursesList extends StatelessWidget {
   Widget buildTile(
       int index, int selectedCourse, SectionData data, BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(3),
+      padding: const EdgeInsets.only(top: 4.0, right: 8.0),
       child: Container(
         constraints: BoxConstraints.tightFor(height: 65),
         decoration: createBorder(),
