@@ -39,7 +39,8 @@ class _StudentIdCardState extends State<StudentIdCard> {
             ),
             actions: <Widget>[
               FlatButton(
-                  child: Icon(Icons.close),
+                  child: Icon(Icons.close,
+                  color: Colors.black,),
                   onPressed: () {
                     Navigator.of(context).pop();
                   })
@@ -102,7 +103,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
                     height: ScalingUtility.safeBlockVertical * 14,
                   ),
                   SizedBox(
-                    height: ScalingUtility.safeBlockVertical * 2,
+                    height: ScalingUtility.safeBlockVertical * 1.5,
                   )
                 ],
               ),
@@ -116,7 +117,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
                       right: ScalingUtility.safeBlockHorizontal * cardMargin),
                   child: FittedBox(
                     child:Text(
-                      (nameModel.firstName + " " + nameModel.lastName),
+                      (nameModel.firstName + " " + nameModel.lastName ),
 //                    overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
@@ -295,9 +296,9 @@ class _StudentIdCardState extends State<StudentIdCard> {
 }
 
 double getFontSize(String input, String textField) {
-  double base = ScalingUtility.safeBlockHorizontal * 4;
+  double base = ScalingUtility.safeBlockHorizontal * 3.5;
   if(input.length >= 21) {
-    return (base - (0.25 * (input.length-12)));
+    return (base - (0.25 * (input.length-18)));
   }
 
   if(textField == "name"){
