@@ -117,18 +117,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
                       right: ScalingUtility.safeBlockHorizontal * cardMargin),
                   child: FittedBox(
                     child:Text(
-<<<<<<< HEAD
-                    (nameModel.firstName + " " + nameModel.lastName),
-//                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: getFontSize(nameModel.firstName + " " + nameModel.lastName)),
-                    textAlign: TextAlign.left,
-                    softWrap: true,
-                    maxLines: 1,
-                  ),),
-=======
-                      (nameModel.firstName + " " + nameModel.lastName ),
+                      (nameModel.firstName + " " + nameModel.lastName),
 //                    overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
@@ -137,7 +126,6 @@ class _StudentIdCardState extends State<StudentIdCard> {
                       softWrap: true,
                       maxLines: 1,
                     ),),
->>>>>>> student-id-card
                 ),
                 SizedBox(height: ScalingUtility.safeBlockVertical * .5),
                 Container(
@@ -310,7 +298,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
 double getFontSize(String input, String textField) {
   double base = ScalingUtility.safeBlockHorizontal * 3.5;
   if(input.length >= 21) {
-    return (base - (0.25 * (input.length-18)));
+    return (base - (0.175 * (input.length-18)));
   }
 
   if(textField == "name"){
