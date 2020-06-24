@@ -120,7 +120,6 @@ class _StudentIdCardState extends State<StudentIdCard> {
                   child: FittedBox(
                     child: Text(
                       (nameModel.firstName + " " + nameModel.lastName),
-//                    overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: getFontSize(
@@ -138,7 +137,6 @@ class _StudentIdCardState extends State<StudentIdCard> {
                       right: ScalingUtility.horizontalSafeBlock * cardMargin),
                   child: Text(
                     profileModel.collegeCurrent,
-                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                         color: Colors.grey,
                         fontSize: getFontSize(
@@ -160,7 +158,6 @@ class _StudentIdCardState extends State<StudentIdCard> {
                     textAlign: TextAlign.left,
                     softWrap: false,
                     maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 Padding(
