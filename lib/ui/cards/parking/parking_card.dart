@@ -7,17 +7,22 @@ import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.da
 import 'package:campus_mobile_experimental/ui/reusable_widgets/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 const String cardId = 'parking';
 
 class ParkingCard extends StatefulWidget {
+  final url = "https://google.com";
+  ParkingCard();
   @override
-  _ParkingCardState createState() => _ParkingCardState();
+  _ParkingCardState createState() => _ParkingCardState(this.url);
 }
 
 class _ParkingCardState extends State<ParkingCard> {
+  final _url;
+  _ParkingCardState(this._url);
   ParkingDataProvider _parkingDataProvider;
-  final _controller = new PageController();
+  // final _controller = new PageController();
 
   @override
   void didChangeDependencies() {
@@ -50,19 +55,17 @@ class _ParkingCardState extends State<ParkingCard> {
     return Column(
       children: <Widget>[
         Flexible(
-          child: PageView(
-            controller: _controller,
-            children: parkingDisplays,
-          ),
+          child: WebView(
+              javascriptMode: JavascriptMode.unrestricted, initialUrl: _url),
         ),
-        DotsIndicator(
-          controller: _controller,
-          itemCount: parkingDisplays.length,
-          onPageSelected: (int index) {
-            _controller.animateToPage(index,
-                duration: Duration(seconds: 1), curve: Curves.ease);
-          },
-        ),
+        // DotsIndicator(
+        //   controller: _controller,
+        //   itemCount: parkingDisplays.length,
+        //   onPageSelected: (int index) {
+        //     _controller.animateToPage(index,
+        //         duration: Duration(seconds: 1), curve: Curves.ease);
+        //   },
+        // ),
       ],
     );
   }
@@ -74,7 +77,7 @@ class _ParkingCardState extends State<ParkingCard> {
         'View All',
       ),
       onPressed: () {
-        Navigator.pushNamed(context, RoutePaths.ManageParkingView);
+        Navigator.pushNamed(context, RoutePaths.Parking);
       },
     ));
     return actionButtons;
