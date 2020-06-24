@@ -1,3 +1,4 @@
+
 //import 'dart:io';
 // import 'dart:js';
 
@@ -38,7 +39,8 @@ class _StudentIdCardState extends State<StudentIdCard> {
             ),
             actions: <Widget>[
               FlatButton(
-                  child: Icon(Icons.close),
+                  child: Icon(Icons.close,
+                  color: Colors.black,),
                   onPressed: () {
                     Navigator.of(context).pop();
                   })
@@ -101,7 +103,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
                     height: ScalingUtility.safeBlockVertical * 14,
                   ),
                   SizedBox(
-                    height: ScalingUtility.safeBlockVertical * 2,
+                    height: ScalingUtility.safeBlockVertical * 1.5,
                   )
                 ],
               ),
@@ -115,6 +117,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
                       right: ScalingUtility.safeBlockHorizontal * cardMargin),
                   child: FittedBox(
                     child:Text(
+<<<<<<< HEAD
                     (nameModel.firstName + " " + nameModel.lastName),
 //                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
@@ -124,6 +127,17 @@ class _StudentIdCardState extends State<StudentIdCard> {
                     softWrap: true,
                     maxLines: 1,
                   ),),
+=======
+                      (nameModel.firstName + " " + nameModel.lastName ),
+//                    overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: getFontSize(nameModel.firstName + " " + nameModel.lastName, "name")),
+                      textAlign: TextAlign.left,
+                      softWrap: true,
+                      maxLines: 1,
+                    ),),
+>>>>>>> student-id-card
                 ),
                 SizedBox(height: ScalingUtility.safeBlockVertical * .5),
                 Container(
@@ -134,7 +148,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                         color: Colors.grey,
-                        fontSize: ScalingUtility.safeBlockHorizontal * 4),
+                        fontSize:getFontSize(profileModel.collegeCurrent, "college") ),
                     textAlign: TextAlign.left,
                     softWrap: false,
                     maxLines: 1,
@@ -147,7 +161,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
                   child: Text(
                     profileModel.ugPrimaryMajorCurrent,
                     style: TextStyle(
-                        fontSize: ScalingUtility.safeBlockHorizontal * 4),
+                        fontSize: getFontSize(profileModel.ugPrimaryMajorCurrent, "major")),
                     textAlign: TextAlign.left,
                     softWrap: false,
                     maxLines: 1,
@@ -156,7 +170,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
                 ),
                 Padding(
                   padding:
-                      EdgeInsets.all(ScalingUtility.safeBlockVertical * .9),
+                  EdgeInsets.all(ScalingUtility.safeBlockVertical * .9),
                 ),
                 FlatButton(
                   child: returnBarcodeContainer(
@@ -197,7 +211,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
                     style: TextStyle(
                         fontSize: ScalingUtility.safeBlockHorizontal * 3,
                         letterSpacing:
-                            ScalingUtility.safeBlockHorizontal * 1.5),
+                        ScalingUtility.safeBlockHorizontal * 1.5),
                   ),
                 ),
               ],
@@ -249,7 +263,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
                 children: <Widget>[
                   Padding(
                     padding:
-                        EdgeInsets.all(ScalingUtility.safeBlockVertical * 7.5),
+                    EdgeInsets.all(ScalingUtility.safeBlockVertical * 7.5),
                   ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -264,7 +278,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
                             color: Colors.black,
                             fontSize: ScalingUtility.safeBlockHorizontal * 4,
                             letterSpacing:
-                                ScalingUtility.safeBlockHorizontal * 3),
+                            ScalingUtility.safeBlockHorizontal * 3),
                       )
                     ],
                   ),
@@ -293,11 +307,18 @@ class _StudentIdCardState extends State<StudentIdCard> {
   }
 }
 
-double getFontSize(String input) {
-  double base = 16;
+double getFontSize(String input, String textField) {
+  double base = ScalingUtility.safeBlockHorizontal * 3.5;
   if(input.length >= 21) {
-     return (base - (0.25 * (input.length-12)));
-   }
+    return (base - (0.25 * (input.length-18)));
+  }
+
+  if(textField == "name"){
+    base = ScalingUtility.safeBlockHorizontal * 5;
+    return base;
+  }
+
+  return base;
 }
 
 /// Determine padding of barcode with theme
@@ -344,3 +365,4 @@ class ScalingUtility {
     safeBlockVertical = (screenHeight - _safeAreaVertical) / 100;
   }
 }
+
