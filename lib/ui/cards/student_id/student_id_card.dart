@@ -342,7 +342,7 @@ Color decideColor(ThemeData currentTheme) {
 
 //Image Scaling
 class ScalingUtility {
-  static MediaQueryData _queryData;
+  MediaQueryData _queryData;
   static double horizontalSafeBlock;
   static double verticalSafeBlock;
 
