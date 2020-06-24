@@ -1,4 +1,3 @@
-
 //import 'dart:io';
 // import 'dart:js';
 
@@ -24,6 +23,7 @@ class StudentIdCard extends StatefulWidget {
 class _StudentIdCardState extends State<StudentIdCard> {
   String cardId = "student_id";
 
+  /// Pop up barcode
   createAlertDialog(BuildContext context, Column image) {
     return showDialog(
         context: context,
@@ -39,8 +39,10 @@ class _StudentIdCardState extends State<StudentIdCard> {
             ),
             actions: <Widget>[
               FlatButton(
-                  child: Icon(Icons.close,
-                  color: Colors.black,),
+                  child: Icon(
+                    Icons.close,
+                    color: Colors.black,
+                  ),
                   onPressed: () {
                     Navigator.of(context).pop();
                   })
@@ -51,7 +53,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
 
   @override
   Widget build(BuildContext context) {
-    ScalingUtility().init(context);
+    ScalingUtility().getCurrentMeasurements(context);
 
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
@@ -76,7 +78,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
       "Student ID",
       textAlign: TextAlign.left,
       style: TextStyle(
-        fontSize: ScalingUtility.safeBlockHorizontal * 2,
+        fontSize: ScalingUtility.horizontalSafeBlock * 2,
       ),
     );
   }
@@ -100,10 +102,10 @@ class _StudentIdCardState extends State<StudentIdCard> {
                   Image.network(
                     photoModel.photoUrl,
                     fit: BoxFit.contain,
-                    height: ScalingUtility.safeBlockVertical * 14,
+                    height: ScalingUtility.verticalSafeBlock * 14,
                   ),
                   SizedBox(
-                    height: ScalingUtility.safeBlockVertical * 1.5,
+                    height: ScalingUtility.verticalSafeBlock * 1.5,
                   )
                 ],
               ),
@@ -114,42 +116,47 @@ class _StudentIdCardState extends State<StudentIdCard> {
                   Widget>[
                 Container(
                   padding: new EdgeInsets.only(
-                      right: ScalingUtility.safeBlockHorizontal * cardMargin),
+                      right: ScalingUtility.horizontalSafeBlock * cardMargin),
                   child: FittedBox(
-                    child:Text(
+                    child: Text(
                       (nameModel.firstName + " " + nameModel.lastName),
 //                    overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: getFontSize(nameModel.firstName + " " + nameModel.lastName, "name")),
+                          fontSize: getFontSize(
+                              nameModel.firstName + " " + nameModel.lastName,
+                              "name")),
                       textAlign: TextAlign.left,
                       softWrap: true,
                       maxLines: 1,
-                    ),),
+                    ),
+                  ),
                 ),
-                SizedBox(height: ScalingUtility.safeBlockVertical * .5),
+                SizedBox(height: ScalingUtility.verticalSafeBlock * .5),
                 Container(
                   padding: new EdgeInsets.only(
-                      right: ScalingUtility.safeBlockHorizontal * cardMargin),
+                      right: ScalingUtility.horizontalSafeBlock * cardMargin),
                   child: Text(
                     profileModel.collegeCurrent,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                         color: Colors.grey,
-                        fontSize:getFontSize(profileModel.collegeCurrent, "college") ),
+                        fontSize: getFontSize(
+                            profileModel.collegeCurrent, "college")),
                     textAlign: TextAlign.left,
                     softWrap: false,
                     maxLines: 1,
                   ),
                 ),
-                SizedBox(height: ScalingUtility.safeBlockVertical * .5),
+                SizedBox(height: ScalingUtility.verticalSafeBlock * .5),
                 Container(
                   padding: new EdgeInsets.only(
-                      right: ScalingUtility.safeBlockHorizontal * cardMargin),
+                      right: ScalingUtility.horizontalSafeBlock * cardMargin),
                   child: Text(
                     profileModel.ugPrimaryMajorCurrent,
                     style: TextStyle(
-                        fontSize: getFontSize(profileModel.ugPrimaryMajorCurrent, "major")),
+                        fontSize: getFontSize(
+                            profileModel.ugPrimaryMajorCurrent, "major")),
                     textAlign: TextAlign.left,
                     softWrap: false,
                     maxLines: 1,
@@ -158,7 +165,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
                 ),
                 Padding(
                   padding:
-                  EdgeInsets.all(ScalingUtility.safeBlockVertical * .9),
+                      EdgeInsets.all(ScalingUtility.verticalSafeBlock * .9),
                 ),
                 FlatButton(
                   child: returnBarcodeContainer(
@@ -180,11 +187,11 @@ class _StudentIdCardState extends State<StudentIdCard> {
               alignment: Alignment.bottomLeft,
               child: Padding(
                 padding: EdgeInsets.only(
-                    left: ScalingUtility.safeBlockHorizontal * cardMargin),
+                    left: ScalingUtility.horizontalSafeBlock * cardMargin),
                 child: Text(
                   profileModel.classificationType,
                   style: TextStyle(
-                      fontSize: ScalingUtility.safeBlockHorizontal * 3.5),
+                      fontSize: ScalingUtility.horizontalSafeBlock * 3.5),
                 ),
               ),
             ),
@@ -192,14 +199,14 @@ class _StudentIdCardState extends State<StudentIdCard> {
               children: <Widget>[
                 Padding(
                   padding: EdgeInsets.only(
-                      left: (ScalingUtility.safeBlockHorizontal * 11.225) +
-                          addPaddingForBarcode(Theme.of(context))),
+                      left: (ScalingUtility.horizontalSafeBlock * 11.225) +
+                          realignText(Theme.of(context))),
                   child: Text(
                     barcodeModel.barCode.toString(),
                     style: TextStyle(
-                        fontSize: ScalingUtility.safeBlockHorizontal * 3,
+                        fontSize: ScalingUtility.horizontalSafeBlock * 3,
                         letterSpacing:
-                        ScalingUtility.safeBlockHorizontal * 1.5),
+                            ScalingUtility.horizontalSafeBlock * 1.5),
                   ),
                 ),
               ],
@@ -216,15 +223,15 @@ class _StudentIdCardState extends State<StudentIdCard> {
     var barcodeWithText;
 
     /// Initialize sizing
-    ScalingUtility().init(context);
+    ScalingUtility().getCurrentMeasurements(context);
     if (rotated) {
       barcodeWithText = BarcodeWidget(
         barcode: Barcode.codabar(),
         data: cardNumber,
-        width: ScalingUtility.safeBlockVertical * 45,
+        width: ScalingUtility.verticalSafeBlock * 45,
         height: 80,
         style: TextStyle(
-            letterSpacing: ScalingUtility.safeBlockVertical * 3,
+            letterSpacing: ScalingUtility.verticalSafeBlock * 3,
             color: Colors.white,
             fontSize: 0),
       );
@@ -232,10 +239,10 @@ class _StudentIdCardState extends State<StudentIdCard> {
       barcodeWithText = BarcodeWidget(
         barcode: Barcode.codabar(),
         data: cardNumber,
-        width: ScalingUtility.safeBlockHorizontal * 50,
-        height: ScalingUtility.safeBlockVertical * 4.45,
+        width: ScalingUtility.horizontalSafeBlock * 50,
+        height: ScalingUtility.verticalSafeBlock * 4.45,
         style: TextStyle(
-            letterSpacing: ScalingUtility.safeBlockHorizontal * 1.5,
+            letterSpacing: ScalingUtility.horizontalSafeBlock * 1.5,
             fontSize: 0,
             color: Colors.white),
       );
@@ -251,7 +258,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
                 children: <Widget>[
                   Padding(
                     padding:
-                    EdgeInsets.all(ScalingUtility.safeBlockVertical * 7.5),
+                        EdgeInsets.all(ScalingUtility.verticalSafeBlock * 7.5),
                   ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -264,9 +271,9 @@ class _StudentIdCardState extends State<StudentIdCard> {
                         cardNumber,
                         style: TextStyle(
                             color: Colors.black,
-                            fontSize: ScalingUtility.safeBlockHorizontal * 4,
+                            fontSize: ScalingUtility.horizontalSafeBlock * 4,
                             letterSpacing:
-                            ScalingUtility.safeBlockHorizontal * 3),
+                                ScalingUtility.horizontalSafeBlock * 3),
                       )
                     ],
                   ),
@@ -281,12 +288,12 @@ class _StudentIdCardState extends State<StudentIdCard> {
           textAlign: TextAlign.left,
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: ScalingUtility.safeBlockHorizontal * 2.5,
+            fontSize: ScalingUtility.horizontalSafeBlock * 2.5,
             color: decideColor(Theme.of(context)),
           ),
         ),
         Container(
-          padding: addPadding(Theme.of(context)),
+          padding: addBorder(Theme.of(context)),
           color: Colors.white,
           child: barcodeWithText,
         ),
@@ -295,62 +302,60 @@ class _StudentIdCardState extends State<StudentIdCard> {
   }
 }
 
+/// Determine the font size for user's textFields
 double getFontSize(String input, String textField) {
-  double base = ScalingUtility.safeBlockHorizontal * 3.5;
-  if(input.length >= 21) {
-    return (base - (0.175 * (input.length-18)));
+  /// Base font size
+  double base = ScalingUtility.horizontalSafeBlock * 3.5;
+
+  /// If threshold is passed, shrink text
+  if (input.length >= 21) {
+    return (base - (0.175 * (input.length - 18)));
   }
 
-  if(textField == "name"){
-    base = ScalingUtility.safeBlockHorizontal * 5;
+  //// The name should be large than subheadings
+  if (textField == "name") {
+    base = ScalingUtility.horizontalSafeBlock * 5;
     return base;
   }
 
   return base;
 }
 
-/// Determine padding of barcode with theme
-EdgeInsets addPadding(ThemeData currentTheme) {
+/// Determine the padding for a border around barcode
+EdgeInsets addBorder(ThemeData currentTheme) {
   return currentTheme.brightness == Brightness.dark
       ? EdgeInsets.all(5)
       : EdgeInsets.all(0);
 }
 
-double addPaddingForBarcode(ThemeData currentTheme) {
+/// Determine the padding for the text to realign
+double realignText(ThemeData currentTheme) {
   return currentTheme.brightness == Brightness.dark ? 7 : 0;
 }
 
-/// Determine the background color of barcode with theme
+/// Determine the  color of hint above the barcode
 Color decideColor(ThemeData currentTheme) {
   return currentTheme.brightness == Brightness.dark
       ? Colors.white
       : Colors.black45;
 }
+
 //Image Scaling
-
 class ScalingUtility {
-  static MediaQueryData _mediaQueryData;
-  static double screenWidth;
-  static double screenHeight;
+  static MediaQueryData _queryData;
+  static double horizontalSafeBlock;
+  static double verticalSafeBlock;
 
-  static double _safeAreaHorizontal;
-  static double _safeAreaVertical;
-  static double safeBlockHorizontal;
-  static double safeBlockVertical;
-
-  void init(BuildContext context) {
+  void getCurrentMeasurements(BuildContext context) {
     /// Find screen size
-    _mediaQueryData = MediaQuery.of(context);
-    screenWidth = _mediaQueryData.size.width;
-    screenHeight = _mediaQueryData.size.height;
+    _queryData = MediaQuery.of(context);
 
-    /// Calculate safe area
-    _safeAreaHorizontal =
-        _mediaQueryData.padding.left + _mediaQueryData.padding.right;
-    _safeAreaVertical =
-        _mediaQueryData.padding.top + _mediaQueryData.padding.bottom;
-    safeBlockHorizontal = (screenWidth - _safeAreaHorizontal) / 100;
-    safeBlockVertical = (screenHeight - _safeAreaVertical) / 100;
+    /// Calculate blocks accounting for notches and home bar
+    horizontalSafeBlock = (_queryData.size.width -
+            (_queryData.padding.left + _queryData.padding.right)) /
+        100;
+    verticalSafeBlock = (_queryData.size.height -
+            (_queryData.padding.top + _queryData.padding.bottom)) /
+        100;
   }
 }
-
