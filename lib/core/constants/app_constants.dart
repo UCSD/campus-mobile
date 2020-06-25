@@ -67,17 +67,12 @@ class NavigationConstants {
 /// Maps Card IDs to Card titles
 class CardTitleConstants {
   static const titleMap = {
-//    'availability': 'Availability',
-    'events': 'Events',
-//    'links': 'Links',
-    'news': 'News',
-//    'parking': 'Parking',
-//    'special_events': 'Special Events',
-//    'weather': 'Weather',
-    'dining': 'Dining',
+    'QRScanner': 'QR Scanner',
     'MyStudentChart': 'MyStudentChart',
     'finals': 'Finals',
-    'schedule': 'Schedule',
-    'QRScanner': 'QR Scanner'
+    'schedule': 'Classes',
+    'dining': 'Dining',
+    'events': 'Events',
+    'news': 'News',
   };
 }
