@@ -16,6 +16,7 @@ void main() async {
 
   await initializeStorage();
 
+  Crashlytics.instance.enableInDevMode = true;
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
 
   runApp(CampusMobile());
