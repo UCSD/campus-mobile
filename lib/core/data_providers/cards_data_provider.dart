@@ -11,11 +11,16 @@ class CardsDataProvider extends ChangeNotifier {
     _isLoading = false;
     _cardStates = {};
     _cardOrder = [];
+    _studentCards = ['finals', 'schedule'];
+
     for (String card in CardTitleConstants.titleMap.keys.toList()) {
       _cardStates[card] = true;
       _cardOrder.add(card);
     }
-    _studentCards = ['finals', 'schedule'];
+
+    /// temporary fix that prevents the student cards from causing issues on launch
+    _cardOrder.removeWhere((element) => _studentCards.contains(element));
+    _cardStates.removeWhere((key, value) => _studentCards.contains(key));
   }
 
   ///STATES
