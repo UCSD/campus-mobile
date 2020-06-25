@@ -10,7 +10,8 @@
         android:name="io.flutter.app.FlutterApplication"
         android:label="UC San Diego"
         android:allowBackup="false"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round">
         <activity
             android:name=".MainActivity"
             android:theme="@style/LaunchTheme"
@@ -30,6 +31,11 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCCQZfcvW7pLI9bOgu4iYxji7f9csl_ovg"/>
-        <meta-data android:name="firebase_analytics_collection_enabled" android:value="true" />
+        <meta-data
+            android:name="firebase_analytics_collection_enabled"
+            android:value="true" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@mipmap/ic_launcher_sil" />
     </application>
 </manifest>
