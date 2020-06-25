@@ -28,14 +28,21 @@ class CardsView extends StatelessWidget {
       newIndex -= 1;
     }
     List<String> newOrder = _cardsDataProvider.cardOrder;
-    newOrder.remove('QRScanner');
+    List<String> toRemove = List<String>();
+    toRemove.add('QRScanner');
+    for (String card in newOrder) {
+      if (CardTitleConstants.titleMap[card] == null) {
+        toRemove.add(card);
+      }
+    }
+    newOrder.removeWhere((element) => toRemove.contains(element));
     String item = newOrder.removeAt(oldIndex);
     newOrder.insert(newIndex, item);
     List<String> orderList = List<String>();
     for (String item in newOrder) {
       orderList.add(item);
     }
-    orderList.insert(0, 'QRScanner');
+    orderList.addAll(toRemove.toList());
     _cardsDataProvider.updateCardOrder(orderList);
   }
 

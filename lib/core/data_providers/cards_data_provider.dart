@@ -1,3 +1,4 @@
+import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/constants/data_persistence_constants.dart';
 import 'package:campus_mobile_experimental/core/models/cards_model.dart';
 import 'package:campus_mobile_experimental/core/services/cards_service.dart';
@@ -8,29 +9,13 @@ class CardsDataProvider extends ChangeNotifier {
   CardsDataProvider() {
     ///DEFAULT STATES
     _isLoading = false;
-    _cardStates = {
-      'availability': true,
-      'events': true,
-      'links': true,
-      'news': true,
-      'parking': true,
-      'special_events': true,
-      'weather': true,
-      'dining': true,
-      'MyStudentChart': true
-    };
+    _cardStates = {};
+    _cardOrder = [];
+    for (String card in CardTitleConstants.titleMap.keys.toList()) {
+      _cardStates[card] = true;
+      _cardOrder.add(card);
+    }
     _studentCards = ['finals', 'schedule'];
-    _cardOrder = [
-      'MyStudentChart',
-      'dining',
-      'events',
-      'news',
-//      'special_events',
-//      'parking',
-//      'availability',
-//      'weather',
-//      'links',
-    ];
   }
 
   ///STATES

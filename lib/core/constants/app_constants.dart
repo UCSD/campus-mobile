@@ -67,13 +67,13 @@ class NavigationConstants {
 /// Maps Card IDs to Card titles
 class CardTitleConstants {
   static const titleMap = {
-    'availability': 'Availability',
+//    'availability': 'Availability',
     'events': 'Events',
-    'links': 'Links',
+//    'links': 'Links',
     'news': 'News',
-    'parking': 'Parking',
-    'special_events': 'Special Events',
-    'weather': 'Weather',
+//    'parking': 'Parking',
+//    'special_events': 'Special Events',
+//    'weather': 'Weather',
     'dining': 'Dining',
     'MyStudentChart': 'MyStudentChart',
     'finals': 'Finals',
