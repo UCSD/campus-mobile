@@ -24,7 +24,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
   String cardId = "student_id";
 
   /// Pop up barcode
-  createAlertDialog(BuildContext context, Column image) {
+  createAlertDialog(BuildContext context, Column image, String cardNumber, bool rotated) {
     return showDialog(
         context: context,
         builder: (context) {
@@ -35,7 +35,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
               style: TextStyle(color: Colors.black),
             ),
             content: Container(
-              child: image,
+              child: checkForRotation(image, context, cardNumber, rotated),
             ),
             actions: <Widget>[
               FlatButton(
@@ -49,6 +49,15 @@ class _StudentIdCardState extends State<StudentIdCard> {
             ],
           );
         });
+  }
+
+  Column checkForRotation(Column image, BuildContext context, String cardNumber, bool rotated){
+    if(
+    MediaQuery.of(context).orientation == Orientation.landscape
+    ){
+     return  returnBarcodeContainer(cardNumber, rotated, context);
+    }
+    return image;
   }
 
   @override
@@ -208,7 +217,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
                                   context,
                                   returnBarcodeContainer(
                                       barcodeModel.barCode.toString(), true,
-                                      context));
+                                      context), barcodeModel.toString(), true);
                             },
                           ),
                         ]),
@@ -330,7 +339,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
                             context,
                             returnBarcodeContainer(
                                 barcodeModel.barCode.toString(), true,
-                                context));
+                                context), barcodeModel.barCode.toString(), true);
                       },
                     ),
                   ]),
@@ -393,9 +402,9 @@ class _StudentIdCardState extends State<StudentIdCard> {
                         cardNumber,
                         style: TextStyle(
                             color: Colors.black,
-                            fontSize: ScalingUtility.horizontalSafeBlock * 4,
+                            fontSize: fontSizeForTablet(),
                             letterSpacing:
-                            ScalingUtility.horizontalSafeBlock * 3),
+                            letterSpacingForTablet()),
                       )
                     ],
                   ),
@@ -421,6 +430,23 @@ class _StudentIdCardState extends State<StudentIdCard> {
         ),
       ]);
     }
+  }
+
+  double letterSpacingForTablet() {
+    if(MediaQuery.of(context).orientation == Orientation.landscape){
+      return  ScalingUtility.horizontalSafeBlock * 1;
+
+    }
+   return  ScalingUtility.horizontalSafeBlock * 3;
+  }
+
+  double fontSizeForTablet(){
+
+    if(MediaQuery.of(context).orientation == Orientation.landscape){
+      return   ScalingUtility.horizontalSafeBlock * 2;
+    }
+    return ScalingUtility.horizontalSafeBlock * 4;
+
   }
 
   returnBarcodeContainerTablet(String cardNumber, bool rotated,
@@ -475,9 +501,9 @@ class _StudentIdCardState extends State<StudentIdCard> {
                         cardNumber,
                         style: TextStyle(
                             color: Colors.black,
-                            fontSize: SizeConfig.safeBlockHorizontal * 4,
+                            fontSize: getRotatedPopUpFontSize(),
                             letterSpacing:
-                            SizeConfig.safeBlockHorizontal * 3),
+                            letterSpacing()),
                       )
                     ],
                   ),
@@ -505,6 +531,10 @@ class _StudentIdCardState extends State<StudentIdCard> {
     }
   }
 
+  double letterSpacing() => MediaQuery.of(context).orientation == Orientation.landscape ? SizeConfig.safeBlockHorizontal * 1 : SizeConfig.safeBlockHorizontal * 3;
+
+  double getRotatedPopUpFontSize() => MediaQuery.of(context).orientation == Orientation.landscape ? SizeConfig.safeBlockHorizontal * 2 : SizeConfig.safeBlockHorizontal * 4;
+
   /// Determine the font size for user's textFields
   double getFontSize(String input, String textField) {
     /// Base font size
@@ -526,7 +556,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
 
   double TabletFontSize(String input, String textField) {
     /// Base font size
-    double base = ScalingUtility.horizontalSafeBlock * 3;
+    double base = letterSpacingForTablet();
 
     /// If threshold is passed, shrink text
     if (input.length >= 21) {
