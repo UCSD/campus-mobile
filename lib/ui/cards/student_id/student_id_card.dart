@@ -118,7 +118,6 @@ class _StudentIdCardState extends State<StudentIdCard> {
         .of(context)
         .size
         .width < 600) {
-      print("smaller device");
       return (
           Row(children: <Widget>[
             Column(
@@ -260,7 +259,6 @@ class _StudentIdCardState extends State<StudentIdCard> {
           ]));
     }
     else {
-      print("larger device");
       return (
           Row(children: <Widget>[
             Padding(
