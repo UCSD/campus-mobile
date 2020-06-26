@@ -29,7 +29,9 @@ class CardsView extends StatelessWidget {
     }
     List<String> newOrder = _cardsDataProvider.cardOrder;
     List<String> toRemove = List<String>();
-    toRemove.add('QRScanner');
+    if (_cardsDataProvider.cardOrder.contains('QRScanner')) {
+      toRemove.add('QRScanner');
+    }
     for (String card in newOrder) {
       if (CardTitleConstants.titleMap[card] == null) {
         toRemove.add(card);
