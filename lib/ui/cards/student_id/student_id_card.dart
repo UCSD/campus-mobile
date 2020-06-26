@@ -283,7 +283,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
                         (nameModel.firstName + " " + nameModel.lastName),
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: getTabletFontSize(
+                            fontSize: TabletFontSize(
                                 nameModel.firstName + " " + nameModel.lastName,
                                 "name")),
                         textAlign: TextAlign.left,
@@ -298,7 +298,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
                         profileModel.collegeCurrent,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(color: Colors.grey,
-                            fontSize: getTabletFontSize(
+                            fontSize: TabletFontSize(
                                 profileModel.collegeCurrent, "college")),
                         textAlign: TextAlign.left,
                         softWrap: false,
@@ -310,7 +310,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
                       padding: new EdgeInsets.only(right: cardMargin),
                       child: Text(
                         profileModel.ugPrimaryMajorCurrent,
-                        style: TextStyle(fontSize: getTabletFontSize(
+                        style: TextStyle(fontSize: TabletFontSize(
                             profileModel.ugPrimaryMajorCurrent, "major")),
                         textAlign: TextAlign.left,
                         softWrap: false,
@@ -524,9 +524,9 @@ class _StudentIdCardState extends State<StudentIdCard> {
     return base;
   }
 
-  double getTabletFontSize(String input, String textField) {
+  double TabletFontSize(String input, String textField) {
     /// Base font size
-    double base = SizeConfig.safeBlockHorizontal * 3;
+    double base = ScalingUtility.horizontalSafeBlock * 3;
 
     /// If threshold is passed, shrink text
     if (input.length >= 21) {
@@ -535,11 +535,11 @@ class _StudentIdCardState extends State<StudentIdCard> {
 
     //// The name should be large than subheadings
     if (textField == "name") {
-      base = SizeConfig.safeBlockHorizontal * 3.4;
+      base = ScalingUtility.horizontalSafeBlock * 3.4;
       return base;
     }
     else {
-      base = SizeConfig.safeBlockVertical*1.5625;
+      base = ScalingUtility.horizontalSafeBlock*1.5625;
       return base;
     }
   }
