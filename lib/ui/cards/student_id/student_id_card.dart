@@ -525,6 +525,12 @@ class _StudentIdCardState extends State<StudentIdCard> {
           color: Colors.white,
           child: barcodeWithText,
         ),
+          Text(cardNumber,
+    style: TextStyle(
+    fontSize: ScalingUtility.horizontalSafeBlock * 1.25,
+    letterSpacing:
+    ScalingUtility.horizontalSafeBlock * .5),
+    ),
       ]);
     }
   }
