@@ -118,7 +118,7 @@ class StudentIdCard extends StatelessWidget {
                 child: Text(
                   profileModel.collegeCurrent,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(color: Colors.grey, fontSize: 16),
+                  style: TextStyle(color: Colors.grey, fontSize: getFontSize(profileModel.collegeCurrent, "college")),
                   textAlign: TextAlign.left,
                   softWrap: false,
                   maxLines: 1,
@@ -129,7 +129,7 @@ class StudentIdCard extends StatelessWidget {
                 padding: new EdgeInsets.only(right: cardMargin),
                 child: Text(
                   profileModel.ugPrimaryMajorCurrent,
-                  style: TextStyle(fontSize: 16),
+                  style: TextStyle(fontSize: getFontSize(profileModel.ugPrimaryMajorCurrent,"major")),
                   textAlign: TextAlign.left,
                   softWrap: false,
                   maxLines: 1,
@@ -172,7 +172,7 @@ class StudentIdCard extends StatelessWidget {
         barcode: Barcode.codabar(),
         data: cardNumber,
         width: SizeConfig.safeBlockHorizontal * 50,
-        height: 50,
+        height: 40,
         style: TextStyle(letterSpacing: SizeConfig.safeBlockHorizontal * 1.5, fontSize: 0, color: Colors.white),
       );
     }
@@ -221,7 +221,7 @@ class StudentIdCard extends StatelessWidget {
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 10.0,
-            color: Colors.black45,
+            color: decideColor(Theme.of(context)),
           ),
         ),
         Container(
@@ -244,17 +244,25 @@ class StudentIdCard extends StatelessWidget {
 
     //// The name should be large than subheadings
     if (textField == "name") {
-      base = SizeConfig.safeBlockHorizontal * 3.25;
+      base = SizeConfig.safeBlockHorizontal * 3.4;
       return base;
     }
-
-    return base;
+    else {
+      base = SizeConfig.safeBlockVertical*1.5625;
+      return base;
+    }
   }
 
   EdgeInsets addBorder(ThemeData currentTheme) {
     return currentTheme.brightness == Brightness.dark
         ? EdgeInsets.all(5)
         : EdgeInsets.all(0);
+  }
+
+  Color decideColor(ThemeData currentTheme) {
+    return currentTheme.brightness == Brightness.dark
+        ? Colors.white
+        : Colors.black45;
   }
 }
 
