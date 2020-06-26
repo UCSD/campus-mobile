@@ -467,7 +467,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
       barcodeWithText = BarcodeWidget(
         barcode: Barcode.codabar(),
         data: cardNumber,
-        width: SizeConfig.safeBlockHorizontal * 50,
+        width: SizeConfig.safeBlockHorizontal * 20,
         height: 40,
         style: TextStyle(letterSpacing: SizeConfig.safeBlockHorizontal * 1.5,
             fontSize: 0,
@@ -565,11 +565,11 @@ class _StudentIdCardState extends State<StudentIdCard> {
 
     //// The name should be large than subheadings
     if (textField == "name") {
-      base = ScalingUtility.horizontalSafeBlock * 3.4;
+      base = ScalingUtility.horizontalSafeBlock * 1.75;
       return base;
     }
     else {
-      base = ScalingUtility.horizontalSafeBlock*1.5625;
+      base = ScalingUtility.horizontalSafeBlock*1.25;
       return base;
     }
   }
