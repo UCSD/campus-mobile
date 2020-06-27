@@ -18,6 +18,7 @@ class AvailabilityDataProvider extends ChangeNotifier {
   bool _isLoading;
   DateTime _lastUpdated;
   String _error;
+  Map<String, bool> _locationViewState = <String, bool>{};
 
   /// MODELS
   /// TODO: add models that will be needed in this data provider
@@ -42,8 +43,18 @@ class AvailabilityDataProvider extends ChangeNotifier {
     Map<String, AvailabilityModel> newMapOfLots =
         Map<String, AvailabilityModel>();
     if (await _availabilityService.fetchData()) {
+      /// setting the LocationViewState based on user data
       for (AvailabilityModel model in _availabilityService.data) {
         newMapOfLots[model.locationName] = model;
+        /// if the user is logged out and has not put any preferences,
+        /// show all locations by default
+        if (_userDataProvider.userProfileModel.selectedOccuspaceLocations.isEmpty){
+          locationViewState[model.locationName] = true;
+        }
+        /// otherwise, LocationViewState should be true for all selectedOccuspaceLocations
+        else{_locationViewState[model.locationName] =
+            _userDataProvider.userProfileModel.selectedOccuspaceLocations
+            .contains(model.locationName);}
       }
 
       ///replace old list of lots with new one
@@ -92,6 +103,18 @@ class AvailabilityDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// add or remove location availability display from card based on user selection
+  void toggleLocation(String location) {
+    if (_locationViewState[location] ?? true) {
+      _locationViewState[location] = false;
+      _userDataProvider.userProfileModel.selectedOccuspaceLocations.remove(location);
+    } else {
+      _locationViewState[location] = true;
+      _userDataProvider.userProfileModel.selectedOccuspaceLocations.add(location);
+    }
+    notifyListeners();
+  }
+
   ///UPLOAD SELECTED LOCATIONS IN THE CORRECT ORDER TO THE DATABASE
   ///IF NOT LOGGED IN THEN SAVE LOCATIONS TO LOCAL PROFILE
   uploadAvailabilityData(List<String> locations) {
@@ -111,6 +134,7 @@ class AvailabilityDataProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String get error => _error;
   DateTime get lastUpdated => _lastUpdated;
+  Map<String, bool> get locationViewState => _locationViewState;
 
   List<AvailabilityModel> get availabilityModels {
     if (_availabilityModels != null) {
@@ -122,5 +146,14 @@ class AvailabilityDataProvider extends ChangeNotifier {
       return _availabilityModels.values.toList();
     }
     return List<AvailabilityModel>();
+  }
+
+  /// get all locations
+  List<String> locations() {
+    List<String> locationsToReturn = List<String>();
+    for (AvailabilityModel model in _availabilityModels ?? []) {
+      locationsToReturn.add(model.locationName);
+    }
+    return locationsToReturn;
   }
 }

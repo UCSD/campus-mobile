@@ -11,7 +11,7 @@ import 'package:pointycastle/pointycastle.dart' as pc;
 import 'dart:typed_data';
 import 'package:encrypt/encrypt.dart';
 import 'dart:convert';
-
+import 'package:campus_mobile_experimental/core/data_providers/availability_data_provider.dart';
 class UserDataProvider extends ChangeNotifier {
   UserDataProvider() {
     ///DEFAULT STATES
@@ -41,6 +41,7 @@ class UserDataProvider extends ChangeNotifier {
   AuthenticationService _authenticationService;
   UserProfileService _userProfileService;
   PushNotificationDataProvider _pushNotificationDataProvider;
+  AvailabilityDataProvider _availabilityDataProvider;
 
   /// Update the [AuthenticationModel] stored in state
   /// overwrite the [AuthenticationModel] in persistent storage with the model passed in
