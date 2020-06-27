@@ -21,18 +21,30 @@ class AvailabilityDisplay extends StatelessWidget {
 
   Widget buildLocationTitle() {
     return ListTile(
-        title: Text(model.locationName),
+        title: Text(
+          model.locationName,
+          style: TextStyle(
+            color: Colors.blueGrey[900],
+            fontSize: 20,
+          ),
+        ),
         subtitle: Row(
           children: <Widget>[
+            Text(
+              model.isOpen ? "Open" : "Closed",
+              style: TextStyle(
+                color: Colors.black,
+              ),
+            ),
             Container(
+              width: 10,
+              height: 10,
+              margin: EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: model.isOpen ? Colors.green : Colors.red,
                 shape: BoxShape.circle,
               ),
             ),
-            Text(
-              model.isOpen ? "Open" : "Closed",
-            )
           ],
         ));
   }
@@ -42,29 +54,53 @@ class AvailabilityDisplay extends StatelessWidget {
 
     if (model.subLocations.isNotEmpty) {
       for (AvailabilityModel subLocation in model.subLocations) {
-        num percentage = 1 - ((subLocation.busyness) / 100).toDouble();
         locations.add(
           ListTile(
-              title: Text(subLocation.locationName),
-              //subtitle: Text(percentage.toString() * 100 + "%"),
-              subtitle: LinearProgressIndicator(
-                value: percentage,
+              title: Text(subLocation.locationName,
+                  style: TextStyle(
+                    fontSize: 17,
+                  )),
+              subtitle: Column(children: <Widget>[
+                Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      (100 * percentAvailability(subLocation))
+                          .toInt()
+                          .toString() +
+                          '% Availability',
+                      style: TextStyle(color: Colors.black),
+                      //textAlign: TextAlign.right,
+                    )),
+                LinearProgressIndicator(
+                  value: percentAvailability(subLocation),
 
-                // backgroundColor: setIndicatorColor(percent),
-                backgroundColor: Colors.grey,
-                valueColor: AlwaysStoppedAnimation<Color>(
-                    setIndicatorColor(percentage)),
-              )),
+                  // backgroundColor: setIndicatorColor(percent),
+                  backgroundColor: Colors.grey,
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                      setIndicatorColor(percentAvailability(subLocation))),
+                )
+              ])),
         );
       }
     } else {
       locations.add(ListTile(
-        title: Text(model.locationName),
-        subtitle: LinearProgressIndicator(
-          value: 1 - model.busyness.toDouble(), 
-          valueColor: setIndicatorColor(1 - model.busyness.toDouble())
-        ),
-      ));
+          title: Text(model.locationName),
+          subtitle: Column(children: <Widget>[
+            Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  (100 * percentAvailability(model)).toInt().toString() +
+                      '% Availability',
+                  style: TextStyle(color: Colors.black),
+                  //textAlign: TextAlign.right,
+                )),
+            LinearProgressIndicator(
+                value: percentAvailability(model),
+                backgroundColor: Colors.grey,
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  setIndicatorColor(percentAvailability(model)),
+                ))
+          ])));
     }
     locations =
         ListTile.divideTiles(tiles: locations, context: context).toList();
@@ -79,6 +115,18 @@ class AvailabilityDisplay extends StatelessWidget {
         ));
 
     return ListView(children: locations);
+  }
+
+  num percentAvailability(AvailabilityModel location) {
+    num percentAvailable =
+        1 - ((location.busyness) / location.estimated).toDouble();
+    if (model.isOpen == false) {
+      percentAvailable = 0.0;
+    } else if (location.isOpen == false) {
+      percentAvailable = 0.0;
+    }
+
+    return percentAvailable;
   }
 
   setIndicatorColor(num percentage) {
