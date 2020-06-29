@@ -65,21 +65,24 @@ class AvailabilityDisplay extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     child: Text(
                       (100 * percentAvailability(subLocation))
-                          .toInt()
-                          .toString() +
+                              .toInt()
+                              .toString() +
                           '% Availability',
                       style: TextStyle(color: Colors.black),
                       //textAlign: TextAlign.right,
                     )),
-                LinearProgressIndicator(
-                  value: percentAvailability(subLocation),
-
-                  // backgroundColor: setIndicatorColor(percent),
-                  backgroundColor: Colors.grey,
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                      setIndicatorColor(percentAvailability(subLocation))),
-                )
-              ])),
+                SizedBox(
+                  height: 325,
+                  width: 12,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(4),
+                    child: LinearProgressIndicator(
+                      value: percentAvailability(subLocation),
+                      backgroundColor: Colors.grey,
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                          setIndicatorColor(percentAvailability(subLocation))),
+                    )),
+                ) ])),
         );
       }
     } else {
