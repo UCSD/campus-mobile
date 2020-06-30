@@ -131,7 +131,7 @@ class AvailabilityDisplay extends StatelessWidget {
   num percentAvailability(AvailabilityModel location) {
     num percentAvailable = 0.0;
 
-    if(location.estimated != 0.0) {
+    if(location.estimated != 0.0 && (location.busyness <= location.estimated)) {
       percentAvailable =
           1 - ((location.busyness) / location.estimated).toDouble();
     }
