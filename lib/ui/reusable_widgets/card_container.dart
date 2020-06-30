@@ -72,12 +72,14 @@ class CardContainer extends StatelessWidget {
   }
 
   Widget buildBody(context) {
+
     if (errorText != null) {
       if (titleText == 'News') {
         return Text('No articles found.');
       } else if (titleText == 'Events') {
         return Text('No events found.');
-      } else if (titleText == 'Finals') {
+      }
+      else if (titleText == 'Finals') {
         // TODO: Resolve alignment issues on cards without action buttons
         return Padding(
           padding: const EdgeInsets.only(bottom: 42.0),
@@ -98,6 +100,15 @@ class CardContainer extends StatelessWidget {
         ),
       );
     } else {
+
+      if(titleText == "Student ID"){
+        return Container(
+          width: double.infinity,
+//        height: 200.0,
+          constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 180),
+          child: child(),
+        );
+      }
       return Container(
         width: double.infinity,
 //        height: 200.0,

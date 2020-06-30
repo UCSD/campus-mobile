@@ -12,6 +12,7 @@ import 'package:campus_mobile_experimental/core/data_providers/notices_data_prov
 import 'package:campus_mobile_experimental/core/data_providers/parking_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/push_notifications_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/special_events_data_provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/student_id_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/surf_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/weather_data_provider.dart';
@@ -185,6 +186,22 @@ List<SingleChildWidget> dependentServices = [
     parkingDataProvider.userDataProvider = userDataProvider;
     return parkingDataProvider;
   }),
+  ChangeNotifierProxyProvider<UserDataProvider, StudentIdDataProvider>(
+      create: (_) {
+        var studentIdDataProvider = StudentIdDataProvider();
+        return studentIdDataProvider;
+      },
+      update: (_, userDataProvider, studentIdDataProvider) {
+        studentIdDataProvider.userDataProvider = userDataProvider;
+
+        //Verify that the user is logged in
+        if(userDataProvider.isLoggedIn && !studentIdDataProvider.isLoading) {
+          studentIdDataProvider.fetchData();
+        }
+
+        return studentIdDataProvider;
+      }
+  ),
   ChangeNotifierProxyProvider<UserDataProvider, AvailabilityDataProvider>(
       create: (_) {
     var availabilityDataProvider = AvailabilityDataProvider();

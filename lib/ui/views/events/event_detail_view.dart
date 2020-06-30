@@ -64,11 +64,30 @@ class EventDetailView extends StatelessWidget {
           style: TextStyle(fontSize: 16),
         ),
       ),
-//      FlatButton(
-//          child: Text('Learn More'),
-//          onPressed: () {
-//            launch(data.url);
-//          })
+      data.url != null && data.url.isNotEmpty
+          ? Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: FlatButton(
+                  child: Text(
+                    'Learn More',
+                    style: TextStyle(
+                        fontSize: 16,
+                        color: Theme.of(context).textTheme.button.color),
+                  ),
+                  color: Theme.of(context).buttonColor,
+                  onPressed: () async {
+                    try {
+                      if (await canLaunch(data.url)) {
+                        await launch(data.url);
+                      } else {
+                        throw 'Could not launch ${data.url}';
+                      }
+                    } catch (e) {
+                      print(e);
+                    }
+                  }),
+            )
+          : Container(),
     ];
   }
 }

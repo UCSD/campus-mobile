@@ -56,7 +56,7 @@ class _QRViewExampleState extends State<ScannerView> {
                   children: <Widget>[
                     _barcodeDataProvider.qrText.isNotEmpty
                       ? Text(
-                        _barcodeDataProvider.qrText,
+                        ScannerConstants.scannerSubmitPrompt,
                         style: TextStyle( color: Colors.black, fontSize: 18.0 ),
                         textAlign: TextAlign.center,
                       )
