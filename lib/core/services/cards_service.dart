@@ -3,7 +3,7 @@ import 'package:campus_mobile_experimental/core/services/networking.dart';
 
 class CardsService {
   final String cardListEndpoint =
-      'https://mobile.ucsd.edu/replatform/v1/qa/cardActivationControl.json';
+      'https://mobile.ucsd.edu/replatform/v1/qa/cards.json';
   bool _isLoading = false;
   DateTime _lastUpdated;
   String _error;
