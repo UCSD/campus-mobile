@@ -54,7 +54,7 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
     }
 
     return Column(
-      children: <Widget>[
+        children: <Widget>[
         Flexible(
           child: PageView(
             controller: _controller,

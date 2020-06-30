@@ -28,7 +28,7 @@ class AvailabilityDisplay extends StatelessWidget {
             fontSize: 20,
           ),
         ),
-        contentPadding: EdgeInsets.all(3.0),
+        contentPadding: EdgeInsets.all(0),
         subtitle: Row(
           children: <Widget>[
             Text(
@@ -76,7 +76,7 @@ class AvailabilityDisplay extends StatelessWidget {
                   height: 12,
                   width: 325,
                   child: ClipRRect(
-                      borderRadius: BorderRadius.circular(4),
+                      borderRadius: BorderRadius.circular(15),
                       child: LinearProgressIndicator(
                         value: percentAvailability(subLocation),
                         backgroundColor: Colors.grey,
@@ -104,7 +104,7 @@ class AvailabilityDisplay extends StatelessWidget {
                 height: 12,
                 width: 325,
                 child: ClipRRect(
-                    borderRadius: BorderRadius.circular(4),
+                    borderRadius: BorderRadius.circular(15),
                     child: LinearProgressIndicator(
                         value: percentAvailability(model),
                         backgroundColor: Colors.grey,
@@ -125,7 +125,7 @@ class AvailabilityDisplay extends StatelessWidget {
           ),
         ));
 
-    return ListView(children: locations);
+    return Scrollbar(child: ListView(children: locations),);
   }
 
   num percentAvailability(AvailabilityModel location) {
