@@ -26,7 +26,7 @@ class CardsDataProvider extends ChangeNotifier {
       'news',
 //      'special_events',
 //      'parking',
-      'availability',
+     'availability',
 //      'weather',
 //      'links',
     ];
