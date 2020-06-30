@@ -19,7 +19,7 @@ class AvailabilityService {
     "Authorization": "PUBLIC_AUTH_SERVICE_API_KEY_PH",
   };
   final String endpoint =
-      "https://ucsd-mobile-dev.s3-us-west-1.amazonaws.com/mock-apis/occuspace/availability-mock-api.json";
+      "https://ucsd-mobile-dev.s3-us-west-1.amazonaws.com/mock-apis/occuspace/availability-mock-api-v2.json";
 
   Future<bool> fetchData() async {
     _error = null;

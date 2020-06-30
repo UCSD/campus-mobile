@@ -72,17 +72,19 @@ class AvailabilityDisplay extends StatelessWidget {
                       //textAlign: TextAlign.right,
                     )),
                 SizedBox(
-                  height: 325,
-                  width: 12,
+                  height: 12,
+                  width: 325,
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(4),
-                    child: LinearProgressIndicator(
-                      value: percentAvailability(subLocation),
-                      backgroundColor: Colors.grey,
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                          setIndicatorColor(percentAvailability(subLocation))),
-                    )),
-                ) ])),
+                      borderRadius: BorderRadius.circular(4),
+                      child: LinearProgressIndicator(
+                        value: percentAvailability(subLocation),
+                        backgroundColor: Colors.grey,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                            setIndicatorColor(
+                                percentAvailability(subLocation))),
+                      )),
+                )
+              ])),
         );
       }
     } else {
@@ -97,12 +99,17 @@ class AvailabilityDisplay extends StatelessWidget {
                   style: TextStyle(color: Colors.black),
                   //textAlign: TextAlign.right,
                 )),
-            LinearProgressIndicator(
-                value: percentAvailability(model),
-                backgroundColor: Colors.grey,
-                valueColor: AlwaysStoppedAnimation<Color>(
-                  setIndicatorColor(percentAvailability(model)),
-                ))
+            SizedBox(
+                height: 12,
+                width: 325,
+                child: ClipRRect(
+                    borderRadius: BorderRadius.circular(4),
+                    child: LinearProgressIndicator(
+                        value: percentAvailability(model),
+                        backgroundColor: Colors.grey,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          setIndicatorColor(percentAvailability(model)),
+                        ))))
           ])));
     }
     locations =
