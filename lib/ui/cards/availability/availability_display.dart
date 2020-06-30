@@ -89,8 +89,8 @@ class AvailabilityDisplay extends StatelessWidget {
       }
     } else {
       locations.add(ListTile(
-          title: Text(model.locationName),
-          subtitle: Column(children: <Widget>[
+         // title: Text(model.locationName),
+          title: Column(children: <Widget>[
             Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -128,8 +128,12 @@ class AvailabilityDisplay extends StatelessWidget {
   }
 
   num percentAvailability(AvailabilityModel location) {
-    num percentAvailable =
-        1 - ((location.busyness) / location.estimated).toDouble();
+    num percentAvailable;
+
+    if(location.estimated != 0) {
+      percentAvailable =
+          1 - ((location.busyness) / location.estimated).toDouble();
+    }
     if (model.isOpen == false) {
       percentAvailable = 0.0;
     } else if (location.isOpen == false) {
