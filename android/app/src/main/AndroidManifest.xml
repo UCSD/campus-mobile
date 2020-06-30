@@ -36,7 +36,7 @@
             android:value="true" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/ic_notif_test_v2" />
+            android:resource="@drawable/ic_notif_round" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
