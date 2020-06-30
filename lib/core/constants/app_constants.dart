@@ -78,6 +78,7 @@ class CardTitleConstants {
     'MyStudentChart': 'MyStudentChart',
     'finals': 'Finals',
     'schedule': 'Schedule',
-    'QRScanner': 'QR Scanner'
+    'QRScanner': 'QR Scanner',
+    'student_id': 'Student ID'
   };
 }
