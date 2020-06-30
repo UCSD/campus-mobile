@@ -28,6 +28,7 @@ class AvailabilityDisplay extends StatelessWidget {
             fontSize: 20,
           ),
         ),
+        contentPadding: EdgeInsets.all(3.0),
         subtitle: Row(
           children: <Widget>[
             Text(
@@ -37,9 +38,9 @@ class AvailabilityDisplay extends StatelessWidget {
               ),
             ),
             Container(
-              width: 10,
-              height: 10,
-              margin: EdgeInsets.all(10),
+              width: 12,
+              height: 12,
+              margin: EdgeInsets.all(5),
               decoration: BoxDecoration(
                 color: model.isOpen ? Colors.green : Colors.red,
                 shape: BoxShape.circle,
@@ -128,9 +129,9 @@ class AvailabilityDisplay extends StatelessWidget {
   }
 
   num percentAvailability(AvailabilityModel location) {
-    num percentAvailable;
+    num percentAvailable = 0.0;
 
-    if(location.estimated != 0) {
+    if(location.estimated != 0.0) {
       percentAvailable =
           1 - ((location.busyness) / location.estimated).toDouble();
     }
