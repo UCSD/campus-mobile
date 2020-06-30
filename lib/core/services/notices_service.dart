@@ -12,7 +12,7 @@ class NoticesService {
     "accept": "application/json",
   };
   final String endpoint =
-      "https://ucsd-its-wts-dev.s3-us-west-1.amazonaws.com/replatform/v1/notices/mobile-app-notice-banners.json";
+      'https://mobile.ucsd.edu/replatform/v1/qa/notices.json';
   List<NoticesModel> _noticesModel = List<NoticesModel>();
 
   Future<bool> fetchData() async {
