@@ -14,7 +14,12 @@ app.get("/parking", (req, res) => {
   else app.locals.lot = undefined;
 
   if (req.query.spots) {
-    const spotTypes = req.query.spots.split(",");
+    str = req.query.spots;
+    const spotTypes = str.split(",");
+
+    console.log(spotTypes.length)
+
+    app.locals.numSpots = spotTypes.length;
 
     if (spotTypes[0]) {
       app.locals.spot0 = spotTypes[0];
