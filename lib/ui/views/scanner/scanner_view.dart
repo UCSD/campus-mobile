@@ -46,50 +46,51 @@ class _QRViewExampleState extends State<ScannerView> {
                 cutOutSize: 300,
               ),
             ),
-            flex: 4,
           ),
-          Expanded(
+          ConstrainedBox(
+            constraints: BoxConstraints.loose(Size(MediaQuery.of(context).size.width, 0.2 * MediaQuery.of(context).size.height)),
             child: Container(
               color: Colors.white,
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    _barcodeDataProvider.qrText.isNotEmpty
-                      ? Text(
-                        ScannerConstants.scannerSubmitPrompt,
+              child: SingleChildScrollView(
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      _barcodeDataProvider.qrText.isNotEmpty
+                        ? Text(
+                          ScannerConstants.scannerSubmitPrompt,
+                          style: TextStyle( color: Colors.black, fontSize: 18.0 ),
+                          textAlign: TextAlign.center,
+                        )
+                        : Text(
+                          ScannerConstants.scannerViewPrompt,
                         style: TextStyle( color: Colors.black, fontSize: 18.0 ),
-                        textAlign: TextAlign.center,
-                      )
-                      : Text(
-                        ScannerConstants.scannerViewPrompt,
-                      style: TextStyle( color: Colors.black, fontSize: 18.0 ),
-                        textAlign: TextAlign.center,
-                      ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: <Widget>[
-                        Container(
-                          margin: EdgeInsets.all(8.0),
-                          child: FlatButton(
-                            disabledTextColor: Colors.black,
-                            disabledColor: Color.fromRGBO(218, 218, 218, 1.0),
-                            onPressed: _barcodeDataProvider.qrText.isNotEmpty &&
-                                    !_barcodeDataProvider.isLoading &&
-                                    _barcodeDataProvider.submitState !=
-                                        ButtonText.SubmitButtonReceived
-                                ? () => _barcodeDataProvider.submitBarcode()
-                                : null,
-                            child: Text(_barcodeDataProvider.submitState),
-                            color: ColorPrimary,
-                            textColor: lightTextColor,
-                          ),
+                          textAlign: TextAlign.center,
                         ),
-                      ],
-                    ),
-                  ]),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
+                          Container(
+                            margin: EdgeInsets.all(8.0),
+                            child: FlatButton(
+                              disabledTextColor: Colors.black,
+                              disabledColor: Color.fromRGBO(218, 218, 218, 1.0),
+                              onPressed: _barcodeDataProvider.qrText.isNotEmpty &&
+                                      !_barcodeDataProvider.isLoading &&
+                                      _barcodeDataProvider.submitState !=
+                                          ButtonText.SubmitButtonReceived
+                                  ? () => _barcodeDataProvider.submitBarcode()
+                                  : null,
+                              child: Text(_barcodeDataProvider.submitState),
+                              color: ColorPrimary,
+                              textColor: lightTextColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ]),
+              ),
             ),
-            flex: 1,
           )
         ],
       ),
