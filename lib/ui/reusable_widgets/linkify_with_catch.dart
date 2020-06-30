@@ -10,8 +10,10 @@ reported to user. This should be used in place of the Linkify widget.
 class LinkifyWithCatch extends StatelessWidget {
   final String text;
   final TextStyle style;
+  final TextAlign textAlign;
 
-  const LinkifyWithCatch({Key key, @required this.text, @required this.style})
+  const LinkifyWithCatch(
+      {Key key, @required this.text, this.style, this.textAlign})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -31,6 +33,7 @@ class LinkifyWithCatch extends StatelessWidget {
       },
       options: LinkifyOptions(humanize: false),
       text: text,
+      textAlign: textAlign,
       style: style,
     );
   }

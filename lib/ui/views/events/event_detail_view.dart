@@ -36,6 +36,7 @@ class EventDetailView extends StatelessWidget {
       LinkifyWithCatch(
         text: data.location,
         style: TextStyle(fontSize: 16),
+        textAlign: TextAlign.center,
       ),
       Center(
           child: TimeRangeWidget(time: data.startTime + ' - ' + data.endTime)),
