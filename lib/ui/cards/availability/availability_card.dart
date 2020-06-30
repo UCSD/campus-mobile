@@ -44,7 +44,7 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
   Widget buildAvailabilityCard(List<AvailabilityModel> data) {
     List<Widget> locationsList = List<Widget>();
     for (AvailabilityModel model in data) {
-      if(model != null){
+      if (model != null) {
         if (_availabilityDataProvider.locationViewState[model.locationName]) {
           locationsList.add(AvailabilityDisplay(
             model: model,
@@ -54,7 +54,7 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
     }
 
     return Column(
-        children: <Widget>[
+      children: <Widget>[
         Flexible(
           child: PageView(
             controller: _controller,

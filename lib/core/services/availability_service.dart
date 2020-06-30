@@ -26,8 +26,7 @@ class AvailabilityService {
     _isLoading = true;
     try {
       /// fetch data
-      String _response =
-        await _networkHelper.fetchData(endpoint);
+      String _response = await _networkHelper.fetchData(endpoint);
 
       /// parse data
       final data = availabilityModelFromJson(_response);

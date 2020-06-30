@@ -35,7 +35,7 @@ class ManageAvailabilityView extends StatelessWidget {
     newOrder.insert(newIndex, item);
     List<String> orderedLocationNames = List<String>();
     for (AvailabilityModel item in newOrder) {
-      if(item != null) {
+      if (item != null) {
         orderedLocationNames.add(item.locationName);
       }
     }
@@ -46,18 +46,17 @@ class ManageAvailabilityView extends StatelessWidget {
     List<Widget> list = List<Widget>();
     for (AvailabilityModel model
         in _availabilityDataProvider.availabilityModels) {
-
-      if(model != null){
-//        print("This is the model");
-//        print(model.locationName);
-//        for (AvailabilityModel sub in model.subLocations){ print(sub.toJson());}
+      if (model != null) {
         list.add(ListTile(
           key: Key(model.locationId.toString()),
-          title: Text(model.locationName,
-            style: TextStyle(fontSize: 22,
-                color: ColorPrimary),),
-          leading: Icon(Icons.reorder,
-            color: ColorPrimary,),
+          title: Text(
+            model.locationName,
+            style: TextStyle(fontSize: 22, color: ColorPrimary),
+          ),
+          leading: Icon(
+            Icons.reorder,
+            color: ColorPrimary,
+          ),
           trailing: Switch(
             value: Provider.of<AvailabilityDataProvider>(context)
                 .locationViewState[model.locationName],

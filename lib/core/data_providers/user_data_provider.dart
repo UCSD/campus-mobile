@@ -12,6 +12,7 @@ import 'dart:typed_data';
 import 'package:encrypt/encrypt.dart';
 import 'dart:convert';
 import 'package:campus_mobile_experimental/core/data_providers/availability_data_provider.dart';
+
 class UserDataProvider extends ChangeNotifier {
   UserDataProvider() {
     ///DEFAULT STATES
@@ -378,11 +379,15 @@ class UserDataProvider extends ChangeNotifier {
 
   ///GETTERS FOR MODELS
   UserProfileModel get userProfileModel => _userProfileModel;
+
   AuthenticationModel get authenticationModel => _authenticationModel;
 
   ///GETTERS FOR STATES
   String get error => _error;
+
   bool get isLoggedIn => _authenticationModel.isLoggedIn(_lastUpdated);
+
   bool get isLoading => _isLoading;
+
   DateTime get lastUpdated => _lastUpdated;
 }

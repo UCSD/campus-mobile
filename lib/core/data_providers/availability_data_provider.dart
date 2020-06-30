@@ -46,15 +46,20 @@ class AvailabilityDataProvider extends ChangeNotifier {
       /// setting the LocationViewState based on user data
       for (AvailabilityModel model in _availabilityService.data) {
         newMapOfLots[model.locationName] = model;
+
         /// if the user is logged out and has not put any preferences,
         /// show all locations by default
-        if (_userDataProvider.userProfileModel.selectedOccuspaceLocations.isEmpty){
+        if (_userDataProvider
+            .userProfileModel.selectedOccuspaceLocations.isEmpty) {
           locationViewState[model.locationName] = true;
         }
+
         /// otherwise, LocationViewState should be true for all selectedOccuspaceLocations
-        else{_locationViewState[model.locationName] =
-            _userDataProvider.userProfileModel.selectedOccuspaceLocations
-            .contains(model.locationName);}
+        else {
+          _locationViewState[model.locationName] = _userDataProvider
+              .userProfileModel.selectedOccuspaceLocations
+              .contains(model.locationName);
+        }
       }
 
       ///replace old list of lots with new one
@@ -95,20 +100,6 @@ class AvailabilityDataProvider extends ChangeNotifier {
     orderedListOfLots.addAll(tempMap.values);
     return orderedListOfLots;
   }
-/*
-  void getEstimated() {
-
-      for (AvailabilityModel model in _availabilityModels.values.toList()) {
-
-          var distance = calculatePercentage(model.estimated, model.estimated,
-              model.coordinates.lat, model.coordinates.lon);
-          model.distance = distance;
-
-
-    }
-  }
-
- */
 
   void reorderLocations(List<String> order) {
     ///edit the profile and upload user selected lots
@@ -121,10 +112,12 @@ class AvailabilityDataProvider extends ChangeNotifier {
   void toggleLocation(String location) {
     if (_locationViewState[location] ?? true) {
       _locationViewState[location] = false;
-      _userDataProvider.userProfileModel.selectedOccuspaceLocations.remove(location);
+      _userDataProvider.userProfileModel.selectedOccuspaceLocations
+          .remove(location);
     } else {
       _locationViewState[location] = true;
-      _userDataProvider.userProfileModel.selectedOccuspaceLocations.add(location);
+      _userDataProvider.userProfileModel.selectedOccuspaceLocations
+          .add(location);
     }
     notifyListeners();
   }
@@ -146,8 +139,11 @@ class AvailabilityDataProvider extends ChangeNotifier {
 
   /// SIMPLE GETTERS
   bool get isLoading => _isLoading;
+
   String get error => _error;
+
   DateTime get lastUpdated => _lastUpdated;
+
   Map<String, bool> get locationViewState => _locationViewState;
 
   List<AvailabilityModel> get availabilityModels {
