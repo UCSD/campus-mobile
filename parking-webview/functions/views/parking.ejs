@@ -10,21 +10,35 @@
 </head>
 
 <body>
-    <% if(lot) {%>
-    <h1><%= lot %></h1>
+    <% if(lotName) {%>
+    <h1><%= lotName %></h1>
+    <center><p><%= lotContext %></p></center>
+    <center>
+        <p class="total_spots"><%= totalSpaces %></p>
+    </center>
     <%} else {%>
     <h1>No lot specified</h1>
     <%}%>
-    <script> 
-        document.documentElement.style.setProperty('--numComponents', <%= numSpots %>)</script>
+    <% if(numSpots && numSpots >= 1) {%>
+    <script> document.documentElement.style.setProperty('--numComponents', <%= numSpots %>)</script>
     <div class="row">
         <div class="column">
             <span class="s_spot">S</span>
         </div>
+        <% if(numSpots >= 2) {%>
         <div class="column">
             <span class="s_spot">S</span>
         </div>
+        <%}%>
+        <% if(numSpots >= 2) {%>
+        <div class="column">
+            <span class="s_spot">S</span>
+        </div>
+        <%}%>
     </div>
+    <%} else {%>
+        <center>No Spot Types Provided</center>
+        <%}%>
 
 </body>
 
