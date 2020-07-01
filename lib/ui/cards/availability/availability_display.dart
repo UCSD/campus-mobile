@@ -23,19 +23,12 @@ class AvailabilityDisplay extends StatelessWidget {
     return ListTile(
         title: Text(
           model.locationName,
-         /* style: TextStyle(
-            color: Colors.blueGrey[900],
-            fontSize: 20,
-          ),*/
         ),
         contentPadding: EdgeInsets.all(0),
         subtitle: Row(
           children: <Widget>[
             Text(
               model.isOpen ? "Open" : "Closed",
-              /*style: TextStyle(
-                color: Colors.black,
-              ),*/
             ),
             Container(
               width: 12,
@@ -69,26 +62,24 @@ class AvailabilityDisplay extends StatelessWidget {
                               .toInt()
                               .toString() +
                           '% Availability',
-                     // style: TextStyle(color: Colors.black),
+                      // style: TextStyle(color: Colors.black),
                     )),
-               Align(
+                Align(
                   alignment: Alignment.centerLeft,
-                child:
-                SizedBox(
-                  height: 12,
-                  width: 325,
-                  child: ClipRRect(
-                      borderRadius: BorderRadius.circular(15),
-                      child:
-                      LinearProgressIndicator(
-                        value: percentAvailability(subLocation),
-                        backgroundColor: Colors.grey[200],
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                            setIndicatorColor(
-                                percentAvailability(subLocation))),
-                      ))),
+                  child: SizedBox(
+                      height: 12,
+                      width: 325,
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: LinearProgressIndicator(
+                            value: percentAvailability(subLocation),
+                            backgroundColor: Colors.grey[200],
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                setIndicatorColor(
+                                    percentAvailability(subLocation))),
+                          ))),
                 )
-                ])),
+              ])),
         );
       }
     } else {
@@ -101,22 +92,20 @@ class AvailabilityDisplay extends StatelessWidget {
               (100 * percentAvailability(model)).toInt().toString() +
                   '% Availability',
               //style: TextStyle(color: Colors.black),
-
             )),
-          Align(
-              alignment: Alignment.centerLeft,
-              child:
-        SizedBox(
-            height: 12,
-            width: 325,
-            child: ClipRRect(
-                borderRadius: BorderRadius.circular(15),
-                child:LinearProgressIndicator(
-                    value: percentAvailability(model),
-                    backgroundColor: Colors.grey[200],
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      setIndicatorColor(percentAvailability(model)),
-                    )))))
+        Align(
+            alignment: Alignment.centerLeft,
+            child: SizedBox(
+                height: 12,
+                width: 325,
+                child: ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child: LinearProgressIndicator(
+                        value: percentAvailability(model),
+                        backgroundColor: Colors.grey[200],
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          setIndicatorColor(percentAvailability(model)),
+                        )))))
       ])));
     }
     locations =
