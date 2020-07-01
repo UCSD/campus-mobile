@@ -12,7 +12,9 @@
 <body>
     <% if(lotName) {%>
     <h1><%= lotName %></h1>
-    <center><p><%= lotContext %></p></center>
+    <center>
+        <p><%= lotContext %></p>
+    </center>
     <center>
         <p class="total_spots"><%= totalSpaces %></p>
     </center>
@@ -22,18 +24,12 @@
     <% if(numSpots && numSpots >= 1) {%>
     <script> document.documentElement.style.setProperty('--numComponents', <%= numSpots %>)</script>
     <div class="row">
-        <div class="column">
-            <span class="s_spot">S</span>
-        </div>
+        <%- include('partials/parkingComponent', {spotTypeContext: spot0}) %>
         <% if(numSpots >= 2) {%>
-        <div class="column">
-            <span class="s_spot">S</span>
-        </div>
+        <%- include('partials/parkingComponent', {spotTypeContext: spot1}) %>
         <%}%>
-        <% if(numSpots >= 2) {%>
-        <div class="column">
-            <span class="s_spot">S</span>
-        </div>
+        <% if(numSpots >= 3) {%>
+        <%- include('partials/parkingComponent', {spotTypeContext: spot2}) %>
         <%}%>
     </div>
     <%} else {%>

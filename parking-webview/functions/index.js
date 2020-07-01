@@ -8,9 +8,9 @@ app.set("view engine", "ejs");
 
 // Automatically allow cross-origin requests
 app.use(cors({ origin: true }));
-//localhost:5000/parking?lot=P406&spots=A,B,S
+// http://localhost:5000/parking?lot=P406&spots=A,B,S
 app.get("/parking", function (req, res) {
-  let loc = app.locals
+  let loc = app.locals; //shorthand
   loc.lotName = undefined;
   loc.lotContext = undefined;
   loc.totalSpaces = undefined;
@@ -28,14 +28,10 @@ app.get("/parking", function (req, res) {
   var client = new HttpClient();
   client.get(url, (response) => {
     var lotInfo = JSON.parse(response);
+    const availability = Object.entries(lotInfo["Availability"]);
     loc.lotName = lotInfo["LocationName"];
     loc.lotContext = lotInfo["LocationContext"];
-    var availability = lotInfo["Availability"];
-    console.log(availability);
-
-    var totalSpots = 0;
-
-    loc.totalSpaces = 0;
+    // var availability = lotInfo["Availability"];
 
     if (!req.query.spots) {
       res.render("parking");
@@ -43,13 +39,31 @@ app.get("/parking", function (req, res) {
     str = req.query.spots;
     const spotTypes = str.split(",");
 
-    console.log(spotTypes.length);
-
     loc.numSpots = spotTypes.length;
 
     if (spotTypes[0]) loc.spot0 = spotTypes[0];
     if (spotTypes[1]) loc.spot1 = spotTypes[1];
     if (spotTypes[2]) loc.spot2 = spotTypes[2];
+
+    var totalSpots = 0;
+    var lotData = {};
+    var availableData = {};
+    for (const [spotType, data] of availability) {
+      //Iterate through all spot types in this parking lot data
+      console.log(spotType);
+      if (spotTypes.includes(spotType)) {
+        //User has selected this spot type and there are spots of these type in this lot
+
+        totalSpots += parseInt(data["Total"]);
+        // loc.data[spotType] = data;
+        // console.log(data);
+        lotData[spotType] = parseInt(data["Open"]);
+      } else {
+        //User has not selected this spot type
+      }
+    }
+    loc.totalSpacesData = lotData;
+    loc.totalSpaces = totalSpots;
 
     res.render("parking");
   });
