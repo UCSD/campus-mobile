@@ -51,7 +51,8 @@ class ManageAvailabilityView extends StatelessWidget {
           key: Key(model.locationId.toString()),
           title: Text(
             model.locationName,
-            style: TextStyle(fontSize: 22, color: ColorPrimary),
+          //  style: TextStyle(fontSize: 22, color: ColorPrimary),
+            style: TextStyle(fontSize: 22, color: Theme.of(context).textTheme.button.color),
           ),
           leading: Icon(
             Icons.reorder,
@@ -60,7 +61,8 @@ class ManageAvailabilityView extends StatelessWidget {
           trailing: Switch(
             value: Provider.of<AvailabilityDataProvider>(context)
                 .locationViewState[model.locationName],
-            activeColor: ColorPrimary,
+            activeColor: Theme.of(context).textTheme.button.color,
+            // activeColor: ColorPrimary,
             onChanged: (_) {
               _availabilityDataProvider.toggleLocation(model.locationName);
             },
@@ -70,4 +72,10 @@ class ManageAvailabilityView extends StatelessWidget {
     }
     return list;
   }
+/*
+  Color decideColor(ThemeData currentTheme) {
+    return currentTheme.brightness == Brightness.dark
+        ? Colors.white
+        : Colors.black45;
+  } */
 }
