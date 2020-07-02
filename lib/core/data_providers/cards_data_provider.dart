@@ -10,12 +10,19 @@ class CardsDataProvider extends ChangeNotifier {
     ///DEFAULT STATES
     _isLoading = false;
     _cardStates = {};
-    _cardOrder = [];
+    _cardOrder = [
+      'QRScanner',
+      'MyStudentChart',
+      'finals',
+      'schedule',
+      'dining',
+      'events',
+      'news',
+    ];
     _studentCards = ['finals', 'schedule'];
 
     for (String card in CardTitleConstants.titleMap.keys.toList()) {
       _cardStates[card] = true;
-      _cardOrder.add(card);
     }
 
     /// temporary fix that prevents the student cards from causing issues on launch
