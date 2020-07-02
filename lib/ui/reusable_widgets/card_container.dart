@@ -100,7 +100,6 @@ class CardContainer extends StatelessWidget {
         ),
       );
     } else {
-
       if(titleText == "Student ID"){
         return Container(
           width: double.infinity,
@@ -108,7 +107,15 @@ class CardContainer extends StatelessWidget {
           constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 180),
           child: child(),
         );
+
       }
+      else if(titleText == "Finals"){
+        return ConstrainedBox(
+          constraints: BoxConstraints.loose(Size(MediaQuery.of(context).size.width,0.8 * MediaQuery.of(context).size.height)),
+            child: child()
+        );
+      }
+
       return Container(
         width: double.infinity,
 //        height: 200.0,
