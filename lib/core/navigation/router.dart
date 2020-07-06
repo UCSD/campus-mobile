@@ -7,6 +7,7 @@ import 'package:campus_mobile_experimental/core/navigation/bottom_tab_bar/bottom
 import 'package:campus_mobile_experimental/ui/cards/dining/dining_list.dart';
 import 'package:campus_mobile_experimental/ui/views/availability/manage_availability_view.dart';
 import 'package:campus_mobile_experimental/ui/views/baseline/baseline_view.dart';
+import 'package:campus_mobile_experimental/ui/views/bluetooth/bluetooth_logger_view.dart';
 import 'package:campus_mobile_experimental/ui/views/class_schedule/class_list.dart';
 import 'package:campus_mobile_experimental/ui/views/dining/dining_detail_view.dart';
 import 'package:campus_mobile_experimental/ui/views/dining/nutrition_facts_view.dart';
@@ -104,6 +105,8 @@ class Router {
         return MaterialPageRoute(builder: (_) => CardsView());
       case RoutePaths.NotificationsSettingsView:
         return MaterialPageRoute(builder: (_) => NotificationsSettingsView());
+      case RoutePaths.BluetoothLoggerView:
+        return MaterialPageRoute(builder: (_) => BluetoothLoggerView());
       case RoutePaths.ScannerView:
         return MaterialPageRoute(builder: (_) => ScannerView());
       case RoutePaths.ClassScheduleViewAll:

@@ -26,6 +26,8 @@
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Allow access to BT.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>UC San Diego mobile would like access to the camera. The app needs access to scan QR Codes.</string>
 	<key>NSLocationAlwaysUsageDescription</key>

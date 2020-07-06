@@ -300,6 +300,15 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_blue:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: "63a10025a00c670f696a9b9ca7b42258f68d1626"
+      url: "git://github.com/pauldemarco/flutter_blue.git"
+    source: git
+    version: "0.7.2"
   flutter_cache_manager:
     dependency: transitive
     description:
@@ -604,6 +613,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.4.0"
+  protobuf:
+    dependency: transitive
+    description:
+      name: protobuf
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   provider:
     dependency: "direct main"
     description:

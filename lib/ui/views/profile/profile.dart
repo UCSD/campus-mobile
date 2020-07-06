@@ -42,6 +42,13 @@ class Profile extends StatelessWidget {
               onTap: handlePrivacyTap,
             ),
           ),
+          Card(
+            child: ListTile(
+              leading: Icon(Icons.bluetooth),
+              title: Text('Bluetooth Logger'),
+              onTap:() {handleBluetoothTap(context);},
+            ),
+          ),
         ],
       ),
     );
@@ -50,7 +57,9 @@ class Profile extends StatelessWidget {
   handleNotificationsTap(BuildContext context) {
     Navigator.pushNamed(context, RoutePaths.NotificationsSettingsView);
   }
-
+  handleBluetoothTap(BuildContext context) {
+    Navigator.pushNamed(context, RoutePaths.BluetoothLoggerView);
+  }
   handleFeedbackTap() async {
     const feedbackUrl = "https://eforms.ucsd.edu/view.php?id=175631";
     openLink(feedbackUrl);
@@ -68,4 +77,6 @@ class Profile extends StatelessWidget {
       // can't launch url, there is some error
     }
   }
+
+
 }
