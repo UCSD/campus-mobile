@@ -87,7 +87,6 @@ class _BluetoothLoggerViewState extends State<BluetoothLoggerView> {
         final String key = _randomValue();
         final String value = r.device.id.toString();
 
-        print('${r.device.id} found! rssi: ${r.rssi}');
         if(! secondList.contains('ID: ${r.device.id}' + "\nDevice name: " + (r.device.name != "" ? r.device.name : "Unknown" )+ "\n")){
           secondList.add('ID: ${r.device.id}'  + "\nDevice name: " +( r.device.name != "" ? r.device.name : "Unknown" )+  "\n");
 
@@ -150,8 +149,10 @@ ran = 0;
           test: (e) => e is PlatformException
       ).catchError((e) => print("$e"));
     }
-    thirdList.add(" Latitude: " + position.latitude.toString() + " Longitude: " + position.longitude.toString()+ "\n");
+    int lastScanIndex = thirdList.indexWhere((note) => note.startsWith('Scan'));
+    thirdList.insert(lastScanIndex+1," Latitude: " + position.latitude.toString() + " Longitude: " + position.longitude.toString()+ "\n");
     print(" Latitude: " + position.latitude.toString() + " Longitude: " + position.longitude.toString()+ "\n");
+    print(thirdList.toString());
 
   }
  // void _logLocation() async {
@@ -281,7 +282,7 @@ ran = 0;
   }
 
   buildThirdList(int index) {
-   return (thirdList[index].runtimeType == String && thirdList[index].contains("Timestamp:")  ?  Text(thirdList[index], style: TextStyle(fontWeight: FontWeight.bold)): Text(thirdList[index].toString()));
+   return (thirdList[index].runtimeType == String && (thirdList[index].contains("Timestamp:") || thirdList[index].contains("Latitude"))  ?  Text(thirdList[index], style: TextStyle(fontWeight: FontWeight.bold)): Text(thirdList[index].toString()));
 
   }
 
