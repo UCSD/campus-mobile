@@ -1,4 +1,5 @@
 
+import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 import 'dart:math';
@@ -31,11 +32,22 @@ class _BluetoothLoggerViewState extends State<BluetoothLoggerView> {
   static List thirdList = [];
   static List toAdd = [];
   static List deviceServices = [];
+  StreamSubscription<LocationData> _locationSubscription;
+  LocationData _currentLocation;
+  var _locationService = new Location();
 
 
   @override
   void initState() {
+
     super.initState();
+    _locationSubscription = _locationService
+        .onLocationChanged()
+        .listen((LocationData currentLocation) async {
+      setState(() {
+        _currentLocation = currentLocation;
+      });
+    });
   }
 
   Future<Null> _readAll() async {
@@ -91,8 +103,8 @@ class _BluetoothLoggerViewState extends State<BluetoothLoggerView> {
       }
       toAdd.add("Scan number: $_scanNumber Timestamp: " + DateTime.fromMillisecondsSinceEpoch(DateTime.now().millisecondsSinceEpoch).toString() + '\n');
       if(toAdd.length > 4 && ran == 0) {
-        _logLocation();
         ran++;
+        _logLocation();
         toAdd.add("value");
       }
       thirdList.insertAll(0, toAdd);
@@ -121,36 +133,25 @@ ran = 0;
 
 
   void _logLocation() async {
-    final Location _locationService = new Location();
-    LocationData _locationData = await _locationService.getLocation();
+    var location = Location();
+    location.changeSettings(accuracy: LocationAccuracy.LOW);
+    LocationData position;
 
-    bool _permission = false;
+    bool hasPermission = await location.hasPermission() && await location.serviceEnabled();
 
-    try {
-      /// check to see if gps service is enabled on device
-      bool serviceStatus = await _locationService.serviceEnabled();
-      if (serviceStatus) {
-        /// check to see if permission has been granted to the app
-        _permission = await _locationService.requestPermission();
-        if (_permission) {
-          _permission = true;
-        }
-      } else {
-        /// request the user to turn on gps
-        bool serviceStatusResult = await _locationService.requestService();
-        if (serviceStatusResult) {
-          _permission = true;
-        }
-      }
-    } on PlatformException catch (e) {
-      if (e.code == 'PERMISSION_DENIED') {
-        _permission = false;
-        return;
-      } else if (e.code == 'SERVICE_STATUS_ERROR') {
-        return;
+    if (Platform.isAndroid) {
+      if (!hasPermission) {
+        hasPermission = await location.requestPermission() && await location.requestService();
       }
     }
-    thirdList.add(" Latitude: " + _locationData.latitude.toString() + " Longitude: " + _locationData.longitude.toString()+ "\n");
+    if (hasPermission) {
+      position = await location.getLocation().catchError(
+              (e) => print("Unable to find your position."),
+          test: (e) => e is PlatformException
+      ).catchError((e) => print("$e"));
+    }
+    thirdList.add(" Latitude: " + position.latitude.toString() + " Longitude: " + position.longitude.toString()+ "\n");
+    print(" Latitude: " + position.latitude.toString() + " Longitude: " + position.longitude.toString()+ "\n");
 
   }
  // void _logLocation() async {
