@@ -76,6 +76,10 @@ const Color lightButtonTextColor = Color(0xFF000000);
 const Color lightButtonBorderColor = Color(0xFFFFFFFF);
 const Color darkButtonColor = Color(0xFFFFFFFF);
 
+//Toggle Switch color for themes
+const Color lightToggleColor = Color(0xFF034263);
+const Color darkToggleColor = Color(0xFFFFFFFF);
+
 //Colors
 const Color lightTextColor = Color(0xFFFFFFFF);
 const Color darkTextColor = Color(0xFF006A96);
