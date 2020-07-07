@@ -62,6 +62,7 @@ class CampusMobile extends StatelessWidget {
           accentColor: darkAccentColor,
           brightness: Brightness.light,
           buttonColor: lightButtonColor,
+//          toggleableActiveColor: toggleColor,
           textTheme: lightThemeText,
           iconTheme: lightIconTheme,
           appBarTheme: lightAppBarTheme,

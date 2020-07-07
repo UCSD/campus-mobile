@@ -17,7 +17,7 @@ class AvailabilityService {
   final Map<String, String> headers = {
     "accept": "application/json",
   };
-  final String endpoint = "https://api-qa.ucsd.edu:8243/occuspace/v1.0/busyness";
+  final String endpoint = "https://ucsd-mobile-dev.s3-us-west-1.amazonaws.com/mock-apis/occuspace/availability-mock-api.json";
 
   Future<bool> fetchData() async {
     _error = null;
