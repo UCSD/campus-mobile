@@ -10,7 +10,6 @@ class CardsDataProvider extends ChangeNotifier {
     _cardStates = {
       'availability': true,
       'events': true,
-      'links': true,
       'news': true,
       'parking': true,
       'special_events': true,
@@ -20,16 +19,15 @@ class CardsDataProvider extends ChangeNotifier {
     };
     _studentCards = ['student_id', 'finals', 'schedule'];
     _cardOrder = [
-      'student_id',
+//      'special_events',
       'MyStudentChart',
       'dining',
+      'availability',
+//      'shuttle',
+//      'parking',
       'events',
       'news',
-//      'special_events',
-//      'parking',
-      'availability',
 //      'weather',
-//      'links',
     ];
   }
 
