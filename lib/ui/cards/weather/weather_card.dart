@@ -104,6 +104,7 @@ class WeatherCard extends StatelessWidget {
     return Container(
         child: Row(
         children: <Widget>[
+          Image.network(WEATHER_ICON_BASE_URL + data.icon + '.png', width: 110, height: 110,),
           Expanded(
             child: ListTile(
               title: Text(
@@ -116,7 +117,6 @@ class WeatherCard extends StatelessWidget {
               ),
             ),
           ),
-          Image.network(WEATHER_ICON_BASE_URL + data.icon + '.png', width: 110, height: 110,),
         ],
       ),
     );
