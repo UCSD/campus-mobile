@@ -377,7 +377,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
       );
     }
 
-    if (rotated) {
+    if (rotated){
       return Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
