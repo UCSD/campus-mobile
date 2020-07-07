@@ -50,11 +50,9 @@ class LocationDataProvider {
 
   _enableListener() {
     if (_permission) {
-      print("PERMISSION IS TRUE");
       _locationService.onLocationChanged.listen((locationData) {
         if (locationData != null) {
           error = null;
-          print("latitude: " + locationData.latitude.toString() + ", longitude: " + locationData.longitude.toString());
           _locationController.add(Coordinates(
             lat: locationData.latitude,
             lon: locationData.longitude,
@@ -63,9 +61,5 @@ class LocationDataProvider {
         }
       });
     }
-    else {
-      print("PERMISSION IS FALSE");
-    }
-
   }
 }
