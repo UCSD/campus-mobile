@@ -13,13 +13,15 @@ class CardsDataProvider extends ChangeNotifier {
     _cardOrder = [
       'QRScanner',
       'MyStudentChart',
+      'student_id',
       'finals',
       'schedule',
       'dining',
+      'availability',
       'events',
       'news',
     ];
-    _studentCards = ['finals', 'schedule'];
+    _studentCards = ['student_id', 'finals', 'schedule'];
 
     for (String card in CardTitleConstants.titleMap.keys.toList()) {
       _cardStates[card] = true;

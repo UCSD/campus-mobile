@@ -44,9 +44,13 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
   Widget buildAvailabilityCard(List<AvailabilityModel> data) {
     List<Widget> locationsList = List<Widget>();
     for (AvailabilityModel model in data) {
-      locationsList.add(AvailabilityDisplay(
-        model: model,
-      ));
+      if (model != null) {
+        if (_availabilityDataProvider.locationViewState[model.locationName]) {
+          locationsList.add(AvailabilityDisplay(
+            model: model,
+          ));
+        }
+      }
     }
 
     return Column(
@@ -59,7 +63,7 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
         ),
         DotsIndicator(
           controller: _controller,
-          itemCount: data.length,
+          itemCount: locationsList.length,
           onPageSelected: (int index) {
             _controller.animateToPage(index,
                 duration: Duration(seconds: 1), curve: Curves.ease);

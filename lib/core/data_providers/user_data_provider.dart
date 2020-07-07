@@ -11,6 +11,7 @@ import 'package:pointycastle/pointycastle.dart' as pc;
 import 'dart:typed_data';
 import 'package:encrypt/encrypt.dart';
 import 'dart:convert';
+import 'package:campus_mobile_experimental/core/data_providers/availability_data_provider.dart';
 
 class UserDataProvider extends ChangeNotifier {
   UserDataProvider() {
@@ -41,6 +42,7 @@ class UserDataProvider extends ChangeNotifier {
   AuthenticationService _authenticationService;
   UserProfileService _userProfileService;
   PushNotificationDataProvider _pushNotificationDataProvider;
+  AvailabilityDataProvider _availabilityDataProvider;
 
   /// Update the [AuthenticationModel] stored in state
   /// overwrite the [AuthenticationModel] in persistent storage with the model passed in
@@ -286,6 +288,7 @@ class UserDataProvider extends ChangeNotifier {
   /// invokes [_subscribeToPushNotificationTopics] to subscribe user to topics
   /// returns newly created [UserProfileModel]
   Future<UserProfileModel> _createNewUser(UserProfileModel profile) async {
+    await _pushNotificationDataProvider.fetchTopicsList();
     try {
       profile.username = await _getUsernameFromDevice();
       profile.ucsdaffiliation = _authenticationModel.ucsdaffiliation;
@@ -376,11 +379,15 @@ class UserDataProvider extends ChangeNotifier {
 
   ///GETTERS FOR MODELS
   UserProfileModel get userProfileModel => _userProfileModel;
+
   AuthenticationModel get authenticationModel => _authenticationModel;
 
   ///GETTERS FOR STATES
   String get error => _error;
+
   bool get isLoggedIn => _authenticationModel.isLoggedIn(_lastUpdated);
+
   bool get isLoading => _isLoading;
+
   DateTime get lastUpdated => _lastUpdated;
 }

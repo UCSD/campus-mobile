@@ -32,9 +32,14 @@ class ClassScheduleCard extends StatelessWidget {
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
-      reload: () =>
-          Provider.of<ClassScheduleDataProvider>(context, listen: false)
-              .fetchData(),
+      reload: () {
+        if (Provider.of<ClassScheduleDataProvider>(context, listen: false).isLoading){
+          return null;
+        }
+        else{
+          Provider.of<ClassScheduleDataProvider>(context, listen: false).fetchData();
+        }
+      },
       isLoading: Provider.of<ClassScheduleDataProvider>(context).isLoading,
       titleText: CardTitleConstants.titleMap[cardId],
       errorText: Provider.of<ClassScheduleDataProvider>(context).error,
@@ -50,29 +55,44 @@ class ClassScheduleCard extends StatelessWidget {
 
   Widget buildClassScheduleCard(List<SectionData> courseData,
       int selectedCourse, DateTime lastUpdated, String nextDayWithClasses) {
-    return Row(
-      children: <Widget>[
-        Column(
-          children: [
-            buildWeekdayText(nextDayWithClasses),
-            buildClassTitle(courseData[selectedCourse].subjectCode +
-                ' ' +
-                courseData[selectedCourse].courseCode),
-            buildClassType(courseData[selectedCourse].meetingType),
-            buildTimeRow(courseData[selectedCourse].time),
-            buildLocationRow(courseData[selectedCourse].building +
-                ' ' +
-                courseData[selectedCourse].room),
-            buildGradeEvaluationRow(courseData[selectedCourse].gradeOption),
-            Padding(
-              padding: const EdgeInsets.only(left: 4.0, top: 4.0),
-              child: LastUpdatedWidget(time: lastUpdated),
+    return Padding(
+      padding: const EdgeInsets.only(left: 4.0, top: 4.0),
+      child: Row(
+        children: <Widget>[
+          Flexible(
+            flex: 5,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: Column(
+                children: [
+                  buildWeekdayText(nextDayWithClasses),
+                  buildClassTitle(courseData[selectedCourse].subjectCode +
+                      ' ' +
+                      courseData[selectedCourse].courseCode),
+                  buildClassType(courseData[selectedCourse].meetingType),
+                  buildTimeRow(courseData[selectedCourse].time),
+                  buildLocationRow(courseData[selectedCourse].building +
+                      ' ' +
+                      courseData[selectedCourse].room),
+                  buildGradeEvaluationRow(courseData[selectedCourse].gradeOption),
+                  Flexible(
+                    flex: 2,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 4.0, top: 24.0),
+                      child: LastUpdatedWidget(time: lastUpdated),
+                    ),
+                  ),
+                ],
+                crossAxisAlignment: CrossAxisAlignment.start,
+              ),
             ),
-          ],
-          crossAxisAlignment: CrossAxisAlignment.start,
-        ),
-        Flexible(child: UpcomingCoursesList()),
-      ],
+          ),
+          Flexible(
+              flex: 2,
+              child: UpcomingCoursesList(),
+          ),
+        ],
+      ),
     );
   }
 
