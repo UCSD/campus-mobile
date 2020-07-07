@@ -13,7 +13,10 @@ class LinkifyWithCatch extends StatelessWidget {
   final TextAlign textAlign;
 
   const LinkifyWithCatch(
-      {Key key, @required this.text, this.style, this.textAlign})
+      {Key key,
+      @required this.text,
+      this.style,
+      this.textAlign = TextAlign.start})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
