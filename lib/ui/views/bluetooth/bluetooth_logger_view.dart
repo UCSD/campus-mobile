@@ -1,45 +1,38 @@
-
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
 import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_blue/flutter_blue.dart';
-import 'package:location/location.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
+import 'package:location/location.dart';
 
 class BluetoothLoggerView extends StatefulWidget {
-
-
   @override
   State<StatefulWidget> createState() => _BluetoothLoggerViewState();
 }
 
 class _BluetoothLoggerViewState extends State<BluetoothLoggerView> {
-
   final _storage = FlutterSecureStorage();
   List<_SecItem> _items = [];
   int _counter = 0;
   int _scanNumber = 0;
   List<Widget> list = List<Widget>();
-  double  _cupertinoSliderValue = 2.0;
+  double _cupertinoSliderValue = 2.0;
 
-  static Map<String, String > allValues = {};
+  static Map<String, String> allValues = {};
   static List secondList = [];
   static List thirdList = [];
   static List toAdd = [];
-  static List deviceServices = [];
+ // static List deviceServices = [];
   StreamSubscription<LocationData> _locationSubscription;
   LocationData _currentLocation;
   var _locationService = new Location();
 
-
   @override
   void initState() {
-
     super.initState();
     _locationSubscription = _locationService
         .onLocationChanged()
@@ -53,9 +46,8 @@ class _BluetoothLoggerViewState extends State<BluetoothLoggerView> {
   Future<Null> _readAll() async {
     final all = await _storage.readAll();
 
-    _items = all.keys
-        .map((key) => _SecItem(key, all[key]))
-        .toList(growable: false);
+    _items =
+        all.keys.map((key) => _SecItem(key, all[key])).toList(growable: false);
     print('Secure storage item count is ${_items.length}');
   }
 
@@ -72,49 +64,82 @@ class _BluetoothLoggerViewState extends State<BluetoothLoggerView> {
     _readAll();
 
     FlutterBlue flutterBlue = FlutterBlue.instance;
+
+    // Instances to keep track of scan # and current run
     _scanNumber++;
     int ran = 0;
-    flutterBlue.startScan(timeout: Duration(seconds: (_cupertinoSliderValue.toInt() == 2 ? 2 : _cupertinoSliderValue.toInt())), allowDuplicates: false);
-   // thirdList.insert(0 , "Scan number: ${_scanNumber++} Timestamp: " + DateTime.fromMillisecondsSinceEpoch(DateTime.now().millisecondsSinceEpoch).toString() + '\n');
+
+    flutterBlue.startScan(
+        timeout: Duration(
+            seconds: (_cupertinoSliderValue.toInt() == 2
+                ? 2
+                : _cupertinoSliderValue.toInt())),
+        allowDuplicates: false);
     toAdd.clear();
     flutterBlue.scanResults.listen((results) async {
+
+      //Reset rendering lists as necessary
       secondList.clear();
-      for(int i = 0; i < toAdd.length ; i++){
+      for (int i = 0; i < toAdd.length; i++) {
         thirdList.removeAt(0);
       }
       toAdd.clear();
+
+
       for (ScanResult r in results) {
         final String key = _randomValue();
         final String value = r.device.id.toString();
 
-        if(! secondList.contains('ID: ${r.device.id}' + "\nDevice name: " + (r.device.name != "" ? r.device.name : "Unknown" )+ "\n")){
-          secondList.add('ID: ${r.device.id}'  + "\nDevice name: " +( r.device.name != "" ? r.device.name : "Unknown" )+  "\n");
-
+        // Add to current scan log
+        if (!secondList.contains('ID: ${r.device.id}' +
+            "\nDevice name: " +
+            (r.device.name != "" ? r.device.name : "Unknown") +
+            "\n")) {
+          secondList.add('ID: ${r.device.id}' +
+              "\nDevice name: " +
+              (r.device.name != "" ? r.device.name : "Unknown") +
+              "\n");
         }
 
-        if(! toAdd.contains('ID: ${r.device.id}' + "\nDevice name: " + (r.device.name != "" ? r.device.name : "Unknown" )+ "\n")  ){
-          toAdd.add('ID: ${r.device.id}'  + "\nDevice name: " +( r.device.name != "" ? r.device.name : "Unknown" )+  "\n");
-           // (wip) servicesList(r);
+        // Add to device log
+        if (!toAdd.contains('ID: ${r.device.id}' +
+            "\nDevice name: " +
+            (r.device.name != "" ? r.device.name : "Unknown") +
+            "\n")) {
+          toAdd.add('ID: ${r.device.id}' +
+              "\nDevice name: " +
+              (r.device.name != "" ? r.device.name : "Unknown") +
+              "\n");
         }
 
         _storage.write(key: key, value: value);
-        _storage.deleteAll();
+       // _storage.deleteAll(); ENABLE FOR FASTER SCAN
       }
-      toAdd.add("Scan number: $_scanNumber Timestamp: " + DateTime.fromMillisecondsSinceEpoch(DateTime.now().millisecondsSinceEpoch).toString() + '\n');
-      if(toAdd.length > 4 && ran == 0) {
+
+      // Log scan number
+      toAdd.add("Scan number: $_scanNumber Timestamp: " +
+          DateTime.fromMillisecondsSinceEpoch(
+                  DateTime.now().millisecondsSinceEpoch)
+              .toString() +
+          '\n');
+
+      // Only log gps when threshold is met and has not been logged yet
+      if (toAdd.length > 4 && ran == 0) {
         ran++;
         _logLocation();
         toAdd.add("value");
       }
+
+      // Update list render
       thirdList.insertAll(0, toAdd);
+
+      // Rebuild
       setState(() {
         _counter = results.length;
       });
     });
 
-ran = 0;
-//flutterBlue.stopScan();
-  }
+    ran = 0;}
 
   // TODO: List devices' services (wip)
 /* servicesList(ScanResult r) async
@@ -130,57 +155,48 @@ ran = 0;
   await r.device.disconnect();
   }*/
 
-
   void _logLocation() async {
+
+    // Instantiate location services
     var location = Location();
     location.changeSettings(accuracy: LocationAccuracy.LOW);
     LocationData position;
 
+    // Check Permissions
     bool hasPermission = await location.hasPermission() && await location.serviceEnabled();
-
     if (Platform.isAndroid) {
       if (!hasPermission) {
-        hasPermission = await location.requestPermission() && await location.requestService();
+        hasPermission = await location.requestPermission() &&
+            await location.requestService();
       }
     }
     if (hasPermission) {
-      position = await location.getLocation().catchError(
-              (e) => print("Unable to find your position."),
-          test: (e) => e is PlatformException
-      ).catchError((e) => print("$e"));
+      position = await location
+          .getLocation()
+          .catchError((e) => print("Unable to find your position."),
+              test: (e) => e is PlatformException)
+          .catchError((e) => print("$e"));
     }
+
+    // Find last instance of scan log
     int lastScanIndex = thirdList.indexWhere((note) => note.startsWith('Scan'));
-    thirdList.insert(lastScanIndex+1," Latitude: " + position.latitude.toString() + " Longitude: " + position.longitude.toString()+ "\n");
-    print(" Latitude: " + position.latitude.toString() + " Longitude: " + position.longitude.toString()+ "\n");
-    print(thirdList.toString());
 
+    // Add location logging to rendered list
+    thirdList.insert(
+        lastScanIndex + 1,
+        " Latitude: " +
+            position.latitude.toString() +
+            " Longitude: " +
+            position.longitude.toString() +
+            "\n");
+   /* print(" Latitude: " +
+        position.latitude.toString() +
+        " Longitude: " +
+        position.longitude.toString() +
+        "\n"); DEBUG STATEMENT*/
+    //print(thirdList.toString()); DEBUG STATEMENT
   }
- // void _logLocation() async {
-   /* Location location = new Location();
 
-    bool _serviceEnabled;
-    PermissionStatus _permissionGranted;
-    LocationData _locationData;
-
-    _serviceEnabled = await location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await location.requestService();
-      if (!_serviceEnabled) {
-        return;
-      }
-    }
-
-    _permissionGranted = await location.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await location.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) {
-        return;
-      }
-    }
-
-    _locationData = await location.getLocation();
-    print("Logging location since > 3 BT devices detected : " + _locationData.toString());*/
- // }
 
   @override
   Widget build(BuildContext context) {
@@ -207,9 +223,10 @@ ran = 0;
             children: <Widget>[
               buildSlider(context),
               FlatButton(
-                child:
-                    Text("Scanning duration: "+  _cupertinoSliderValue.toInt().toString()+"s"),
-                onPressed: (){},
+                child: Text("Scanning duration: " +
+                    _cupertinoSliderValue.toInt().toString() +
+                    "s"),
+                onPressed: () {},
               )
             ],
           ),
@@ -221,10 +238,8 @@ ran = 0;
                   children: <Widget>[
                     Text(
                       "IDs and Names",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold
-                      ),
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     Card(
                       child: Container(
@@ -232,12 +247,9 @@ ran = 0;
                         child: ListView.builder(
                             itemCount: secondList.length,
                             shrinkWrap: true,
-                            itemBuilder: (context, index){
-                              return Text(
-                                  secondList[index]
-                              );
-                            }
-                        ),
+                            itemBuilder: (context, index) {
+                              return Text(secondList[index]);
+                            }),
                       ),
                     ),
                   ],
@@ -249,24 +261,18 @@ ran = 0;
                   children: <Widget>[
                     Text(
                       "Scan Log",
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold
-                      ),
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     Card(
                       child: Container(
                         height: 500,
                         child: ListView.builder(
-
                             itemCount: thirdList.length,
                             shrinkWrap: true,
-                            itemBuilder: (context, index){
-                              return
-                                  buildThirdList(index)
-                              ;
-                            }
-                        ),
+                            itemBuilder: (context, index) {
+                              return buildThirdList(index);
+                            }),
                       ),
                     ),
                   ],
@@ -274,70 +280,69 @@ ran = 0;
               ),
             ],
           ),
-
         ],
       ),
-
     );
   }
 
   buildThirdList(int index) {
-   return (thirdList[index].runtimeType == String && (thirdList[index].contains("Timestamp:") || thirdList[index].contains("Latitude"))  ?  Text(thirdList[index], style: TextStyle(fontWeight: FontWeight.bold)): Text(thirdList[index].toString()));
 
+    // Bold scan numbers
+    return (thirdList[index].runtimeType == String &&
+            (thirdList[index].contains("Timestamp:") ||
+                thirdList[index].contains("Latitude"))
+        ? Text(thirdList[index], style: TextStyle(fontWeight: FontWeight.bold))
+        : Text(thirdList[index].toString()));
   }
 
-
-
-  /*void _displayDevices() async{
-    // Read all values
-    allValues = await _storage.readAll();
-
-  }*/
-
   Widget fillList() {
-
-    allValues.forEach((key, value){
-      list.add(
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-                    (context, index) => writeBluetoothDevice(key, value)
-            ),
-          )
-      );
-
+    allValues.forEach((key, value) {
+      list.add(SliverList(
+        delegate: SliverChildBuilderDelegate(
+            (context, index) => writeBluetoothDevice(key, value)),
+      ));
     });
 
-    return CustomScrollView( slivers: list, shrinkWrap: true,);
-
-
+    return CustomScrollView(
+      slivers: list,
+      shrinkWrap: true,
+    );
   }
 
   Widget buildSlider(BuildContext context) {
-    if(Platform.isIOS){
+    if (Platform.isIOS) {
       return CupertinoSlider(
         //activeColor: Theme.of(context).primaryColor,
         max: 200.0,
         min: 0.0,
         value: _cupertinoSliderValue.toDouble(),
         divisions: 5,
-        onChanged: (double newValue){
-         setState(() {
+        onChanged: (double newValue) {
+          setState(() {
             _cupertinoSliderValue = newValue;
           });
         },
       );
-    }else{
-      return Slider();
+    } else {
+      return Slider(
+        max: 200.0,
+        min: 0.0,
+        value: _cupertinoSliderValue.toDouble(),
+        divisions: 5,
+        onChanged: (double newValue) {
+          setState(() {
+            _cupertinoSliderValue = newValue;
+          });
+        },
+      );
     }
   }
 }
 
-
-
-
-Widget writeBluetoothDevice(String key, String value){
+Widget writeBluetoothDevice(String key, String value) {
   return Text(value);
 }
+
 class _SecItem {
   _SecItem(this.key, this.value);
 
