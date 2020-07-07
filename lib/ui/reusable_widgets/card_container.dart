@@ -60,8 +60,8 @@ class CardContainer extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 0),
               child: actionButtons != null
                   ? Row(
-                      children: actionButtons,
-                    )
+                children: actionButtons,
+              )
                   : Container(),
             ),
           ],
