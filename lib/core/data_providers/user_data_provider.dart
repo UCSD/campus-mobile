@@ -59,7 +59,7 @@ class UserDataProvider extends ChangeNotifier {
     _userProfileModel = model;
     var box;
     try {
-      box = await Hive.box<UserProfileModel>('UserProfileModel');
+      box = Hive.box<UserProfileModel>('UserProfileModel');
     } catch (e) {
       box = await Hive.openBox<UserProfileModel>('UserProfileModel');
     }
