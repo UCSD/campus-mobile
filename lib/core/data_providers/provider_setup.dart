@@ -141,21 +141,22 @@ List<SingleChildWidget> dependentServices = [
   ChangeNotifierProxyProvider<UserDataProvider, CardsDataProvider>(
       create: (_) {
         var cardsDataProvider = CardsDataProvider();
-        cardsDataProvider
-          ..updateAvailableCards()
-          ..loadCardOrder();
-//          ..loadCardStates()
         return cardsDataProvider;
       },
       lazy: false,
       update: (_, userDataProvider, cardsDataProvider) {
-        if (userDataProvider.isLoggedIn &&
-            (userDataProvider.userProfileModel.classifications?.student ??
-                false)) {
-          cardsDataProvider.activateStudentCards();
-        } else {
-          cardsDataProvider.deactivateStudentCards();
-        }
+        cardsDataProvider
+          ..loadSavedData().then((value) {
+            cardsDataProvider.updateAvailableCards();
+            if (userDataProvider.isLoggedIn &&
+                (userDataProvider.userProfileModel.classifications?.student ??
+                    false)) {
+              cardsDataProvider.activateStudentCards();
+            } else {
+              /// this is getting called before loadSaved data is complete
+              cardsDataProvider.deactivateStudentCards();
+            }
+          });
         return cardsDataProvider;
       }),
   ChangeNotifierProxyProvider<UserDataProvider, ClassScheduleDataProvider>(
