@@ -26,6 +26,8 @@ class _BluetoothLoggerViewState extends State<BluetoothLoggerView> {
   static List secondList = [];
   static List thirdList = [];
   static List toAdd = [];
+
+
  // static List deviceServices = [];
   StreamSubscription<LocationData> _locationSubscription;
   LocationData _currentLocation;
@@ -200,6 +202,13 @@ class _BluetoothLoggerViewState extends State<BluetoothLoggerView> {
 
   @override
   Widget build(BuildContext context) {
+
+    //Start dynamic resizing
+    MediaQueryData queryData = MediaQuery.of(context);
+    double verticalSafeBlock = (queryData.size.height -
+        (queryData.padding.top + queryData.padding.bottom)) /
+        100;
+    double cardHeight = verticalSafeBlock * 60;
     return Scaffold(
       appBar: AppBar(
         title: Text("Bluetooth Logger"),
@@ -243,7 +252,7 @@ class _BluetoothLoggerViewState extends State<BluetoothLoggerView> {
                     ),
                     Card(
                       child: Container(
-                        height: 500,
+                        height: cardHeight,
                         child: ListView.builder(
                             itemCount: secondList.length,
                             shrinkWrap: true,
@@ -266,7 +275,7 @@ class _BluetoothLoggerViewState extends State<BluetoothLoggerView> {
                     ),
                     Card(
                       child: Container(
-                        height: 500,
+                        height: cardHeight,
                         child: ListView.builder(
                             itemCount: thirdList.length,
                             shrinkWrap: true,
