@@ -20,6 +20,7 @@ class CardsDataProvider extends ChangeNotifier {
       'availability',
       'events',
       'news',
+      'weather',
     ];
     _studentCards = ['student_id', 'finals', 'schedule'];
 

@@ -76,5 +76,6 @@ class CardTitleConstants {
     'availability': 'Availability',
     'events': 'Events',
     'news': 'News',
+    'weather': 'Weather',
   };
 }
