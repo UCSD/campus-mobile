@@ -19,42 +19,44 @@ class LocationDataProvider {
   _init() async {
     /// create the settings for location access
     await _locationService.changeSettings(
-        accuracy: LocationAccuracy.HIGH, distanceFilter: 100);
-
-    try {
+        accuracy: LocationAccuracy.high, distanceFilter: 100);
       /// check to see if gps service is enabled on device
       bool serviceStatus = await _locationService.serviceEnabled();
-      if (serviceStatus) {
+      if (!serviceStatus) {
         /// check to see if permission has been granted to the app
-        _permission = await _locationService.requestPermission();
+        _permission = await _locationService.requestService();
         if (_permission) {
           _enableListener();
         }
       } else {
-        /// request the user to turn on gps
-        bool serviceStatusResult = await _locationService.requestService();
-        if (serviceStatusResult) {
-          _init();
+        _permission = true;
+        _enableListener();
         }
+        /// request the user to turn on gps
+      PermissionStatus permissionGranted = await  _locationService.hasPermission();
+      if (permissionGranted == PermissionStatus.denied) {
+          permissionGranted = await _locationService.requestPermission();
+          if(permissionGranted != PermissionStatus.granted) {
+            _permission = false;
+          }
+          else {
+            _enableListener();
+          }
       }
-    } on PlatformException catch (e) {
-      if (e.code == 'PERMISSION_DENIED') {
-        _permission = false;
-        error = e.message;
-      } else if (e.code == 'SERVICE_STATUS_ERROR') {
-        error = e.message;
-      }
+
+
     }
-  }
+
 
   _enableListener() {
     if (_permission) {
-      _locationService.onLocationChanged().listen((locationData) {
+      _locationService.onLocationChanged.listen((locationData) {
         if (locationData != null) {
           error = null;
           _locationController.add(Coordinates(
             lat: locationData.latitude,
             lon: locationData.longitude,
+
           ));
         }
       });

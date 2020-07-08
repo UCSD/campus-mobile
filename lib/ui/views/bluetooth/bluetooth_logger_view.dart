@@ -37,7 +37,7 @@ class _BluetoothLoggerViewState extends State<BluetoothLoggerView> {
   void initState() {
     super.initState();
     _locationSubscription = _locationService
-        .onLocationChanged()
+        .onLocationChanged
         .listen((LocationData currentLocation) async {
       setState(() {
         _currentLocation = currentLocation;
@@ -159,27 +159,30 @@ class _BluetoothLoggerViewState extends State<BluetoothLoggerView> {
 
   void _logLocation() async {
 
-    // Instantiate location services
+    //initialize location and permissions to be checked
     var location = Location();
-    location.changeSettings(accuracy: LocationAccuracy.LOW);
-    LocationData position;
+    location.changeSettings(accuracy: LocationAccuracy.low);
+    PermissionStatus hasPermission;
+    bool _serviceEnabled;
 
-    // Check Permissions
-    bool hasPermission = await location.hasPermission() && await location.serviceEnabled();
-    if (Platform.isAndroid) {
-      if (!hasPermission) {
-        hasPermission = await location.requestPermission() &&
-            await location.requestService();
+    // check if gps service is enabled
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        return;
       }
     }
-    if (hasPermission) {
-      position = await location
-          .getLocation()
-          .catchError((e) => print("Unable to find your position."),
-              test: (e) => e is PlatformException)
-          .catchError((e) => print("$e"));
+    //check if permission is granted
+    hasPermission = await location.hasPermission();
+    if (hasPermission == PermissionStatus.denied) {
+      hasPermission = await location.requestPermission();
+      if (hasPermission != PermissionStatus.granted) {
+        return;
+      }
     }
-
+    //once permissions are verified, get location asynchronously
+    _currentLocation = await location.getLocation();
     // Find last instance of scan log
     int lastScanIndex = thirdList.indexWhere((note) => note.startsWith('Scan'));
 
@@ -187,9 +190,9 @@ class _BluetoothLoggerViewState extends State<BluetoothLoggerView> {
     thirdList.insert(
         lastScanIndex + 1,
         " Latitude: " +
-            position.latitude.toString() +
+            _currentLocation.latitude.toString() +
             " Longitude: " +
-            position.longitude.toString() +
+            _currentLocation.longitude.toString() +
             "\n");
    /* print(" Latitude: " +
         position.latitude.toString() +
