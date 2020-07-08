@@ -121,6 +121,8 @@ PODS:
     - GoogleUtilities/Logger
   - location (0.0.1):
     - Flutter
+  - location_web (0.0.1):
+    - Flutter
   - MTBBarcodeScanner (5.0.11)
   - nanopb (1.30905.0):
     - nanopb/decode (= 1.30905.0)
@@ -163,6 +165,7 @@ DEPENDENCIES:
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
   - google_maps_flutter (from `.symlinks/plugins/google_maps_flutter/ios`)
   - location (from `.symlinks/plugins/location/ios`)
+  - location_web (from `.symlinks/plugins/location_web/ios`)
   - package_info (from `.symlinks/plugins/package_info/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - path_provider_macos (from `.symlinks/plugins/path_provider_macos/ios`)
@@ -220,6 +223,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/google_maps_flutter/ios"
   location:
     :path: ".symlinks/plugins/location/ios"
+  location_web:
+    :path: ".symlinks/plugins/location_web/ios"
   package_info:
     :path: ".symlinks/plugins/package_info/ios"
   path_provider:
@@ -267,6 +272,7 @@ SPEC CHECKSUMS:
   GoogleMaps: f79af95cb24d869457b1f961c93d3ce8b2f3b848
   GoogleUtilities: 39530bc0ad980530298e9c4af8549e991fd033b1
   location: 3a2eed4dd2fab25e7b7baf2a9efefe82b512d740
+  location_web: b94e7433cfe28c0f7c8923c2ee482824b32e55a7
   MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb
   nanopb: c43f40fadfe79e8b8db116583945847910cbabc9
   package_info: 873975fc26034f0b863a300ad47e7f1ac6c7ec62
