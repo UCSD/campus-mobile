@@ -1,4 +1,5 @@
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
+import 'package:campus_mobile_experimental/core/constants/data_persistence_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/provider_setup.dart';
 import 'package:campus_mobile_experimental/core/navigation/router.dart';
 import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
@@ -24,14 +25,22 @@ void main() async {
 
 void initializeStorage() async {
   /// initialize hive storage
-  Hive.initFlutter('.');
+  await Hive.initFlutter('.');
 
   if (await isFirstRun()) {
     FlutterSecureStorage storage = FlutterSecureStorage();
 
-    /// delete any saved data
-    await Hive.deleteFromDisk();
+    /// open all boxes
+    await (await Hive.openBox(DataPersistence.cardStates)).deleteFromDisk();
+    await (await Hive.openBox(DataPersistence.cardOrder)).deleteFromDisk();
+    await (await Hive.openBox(DataPersistence.AuthenticationModel))
+        .deleteFromDisk();
+    await (await Hive.openBox(DataPersistence.UserProfileModel))
+        .deleteFromDisk();
+
+    /// delete all saved data
     await storage.deleteAll();
+
     setFirstRun();
   }
 }
