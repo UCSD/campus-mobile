@@ -1,0 +1,80 @@
+<!-- views/parking.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- <link href="parking.css" rel="stylesheet" type="text/css" /> -->
+    <title>Parking Card</title>
+    <style>
+        h1 {
+            text-align: center;
+        }
+
+        .s_spot {
+            align-self: center;
+            height: 2em;
+            width: 2em;
+            background-color: #bbb;
+            border-radius: 50%;
+            display: inline-block;
+            text-align: center;
+            font-size: 2em;
+        }
+
+        :root {
+            --numComponents: 1;
+        }
+
+        .row {
+            width: 100%;
+            background-color: blue;
+        }
+
+        .column {
+            background-color: aqua;
+            border-color: black;
+            float: left;
+            width: calc(100% / var(--numComponents));
+        }
+
+        /* Clear floats after the columns */
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+    </style>
+</head>
+
+<body>
+    <% if(lotName) {%>
+    <h1><%= lotName %></h1>
+    <center>
+        <p><%= lotContext %></p>
+    </center>
+    <center>
+        <p class="total_spots"><%= totalSpaces %></p>
+    </center>
+    <%} else {%>
+    <h1>No lot specified</h1>
+    <%}%>
+    <% if(numSpots && numSpots >= 1) {%>
+    <script> document.documentElement.style.setProperty('--numComponents', <%= numSpots %>)</script>
+    <div class="row">
+        <%- include('partials/parkingComponent', {spotTypeContext: spot0}) %>
+        <% if(numSpots >= 2) {%>
+        <%- include('partials/parkingComponent', {spotTypeContext: spot1}) %>
+        <%}%>
+        <% if(numSpots >= 3) {%>
+        <%- include('partials/parkingComponent', {spotTypeContext: spot2}) %>
+        <%}%>
+    </div>
+    <%} else {%>
+        <center>No Spot Types Provided</center>
+        <%}%>
+
+</body>
+
+</html>

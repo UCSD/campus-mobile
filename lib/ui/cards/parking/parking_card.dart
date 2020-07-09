@@ -11,11 +11,13 @@ import 'package:provider/provider.dart';
 const String cardId = 'parking';
 
 class ParkingCard extends StatefulWidget {
+  ParkingCard();
   @override
   _ParkingCardState createState() => _ParkingCardState();
 }
 
 class _ParkingCardState extends State<ParkingCard> {
+  _ParkingCardState();
   ParkingDataProvider _parkingDataProvider;
   final _controller = new PageController();
 
@@ -50,11 +52,10 @@ class _ParkingCardState extends State<ParkingCard> {
     return Column(
       children: <Widget>[
         Flexible(
-          child: PageView(
-            controller: _controller,
-            children: parkingDisplays,
-          ),
-        ),
+            child: PageView(
+          controller: _controller,
+          children: parkingDisplays,
+        )),
         DotsIndicator(
           controller: _controller,
           itemCount: parkingDisplays.length,
@@ -74,7 +75,7 @@ class _ParkingCardState extends State<ParkingCard> {
         'View All',
       ),
       onPressed: () {
-        Navigator.pushNamed(context, RoutePaths.ManageParkingView);
+        Navigator.pushNamed(context, RoutePaths.Parking);
       },
     ));
     return actionButtons;
