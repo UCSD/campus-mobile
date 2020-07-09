@@ -202,6 +202,7 @@ class _BluetoothLoggerViewState extends State<BluetoothLoggerView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text("Bluetooth Logger"),
       ),
       body: Column(

@@ -49,6 +49,13 @@ class Profile extends StatelessWidget {
               onTap:() {handleBluetoothTap(context);},
             ),
           ),
+          Card(
+            child: ListTile(
+              leading: Icon(Icons.bluetooth_audio),
+              title: Text('Bluetooth Beacon Testing'),
+              onTap:() {handleBeaconTap(context);},
+            ),
+          ),
         ],
       ),
     );
@@ -59,6 +66,9 @@ class Profile extends StatelessWidget {
   }
   handleBluetoothTap(BuildContext context) {
     Navigator.pushNamed(context, RoutePaths.BluetoothLoggerView);
+  }
+  handleBeaconTap(BuildContext context) {
+    Navigator.pushNamed(context, RoutePaths.BeaconView);
   }
   handleFeedbackTap() async {
     const feedbackUrl = "https://eforms.ucsd.edu/view.php?id=175631";

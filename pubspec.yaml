@@ -38,6 +38,8 @@ dependencies:
     git:
       url: https://github.com/ucsd/qr_code_scanner.git
       ref: master
+  beacon_broadcast: ^0.2.1
+  uuid: ^2.2.0
 
 dev_dependencies:
   flutter_test:
