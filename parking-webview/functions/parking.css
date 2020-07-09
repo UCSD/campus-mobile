@@ -33,29 +33,3 @@ h1 {
   display: table;
   clear: both;
 }
-
-.progress-circle {
-  font-size: 20px;
-  margin: 20px;
-  position: relative; /* so that children can be absolutely positioned */
-  padding: 0;
-  width: 5em;
-  height: 5em;
-  background-color: #f2e9e1;
-  border-radius: 50%;
-  line-height: 5em;
-}
-
-.progress-circle:after {
-  border: none;
-  position: absolute;
-  top: 0.35em;
-  left: 0.35em;
-  text-align: center;
-  display: block;
-  border-radius: 50%;
-  width: 4.3em;
-  height: 4.3em;
-  background-color: white;
-  content: " ";
-}
