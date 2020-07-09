@@ -145,12 +145,10 @@ class ClassScheduleDataProvider extends ChangeNotifier {
         enrolledCourses.add(classData);
       }
     }
-    print(_error);
 
     if(enrolledCourses.isEmpty) {
       _error = "No enrolled courses found.";
       _isLoading = false;
-      print(_error);
       notifyListeners();
     }
 
