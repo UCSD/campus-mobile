@@ -12,10 +12,7 @@ class Messages {
   List<MessageElement> messages;
   int next;
 
-  Messages({
-    this.messages,
-    this.next
-  });
+  Messages({this.messages, this.next});
 
   factory Messages.fromJson(Map<String, dynamic> json) => Messages(
         messages: List<MessageElement>.from(
@@ -45,36 +42,39 @@ class MessageElement {
   });
 
   factory MessageElement.fromJson(Map<String, dynamic> json) => MessageElement(
-    sender: json["sender"],
-    message: Message.fromJson(json["message"]),
-    messageId: json["messageId"],
-    audience: Audience.fromJson(json["audience"]),
-    timestamp: json["timestamp"],
-  );
+        sender: json["sender"],
+        message: Message.fromJson(json["message"]),
+        messageId: json["messageId"],
+        audience: Audience.fromJson(json["audience"]),
+        timestamp: json["timestamp"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "sender": sender,
-    "message": message.toJson(),
-    "messageId": messageId,
-    "audience": audience == null ? null : audience.toJson(),
-    "timestamp": timestamp,
-  };
+        "sender": sender,
+        "message": message.toJson(),
+        "messageId": messageId,
+        "audience": audience == null ? null : audience.toJson(),
+        "timestamp": timestamp,
+      };
 }
 
 class Audience {
-    List<String> topics;
+  List<String> topics;
 
-    Audience({
-        this.topics,
-    });
+  Audience({
+    this.topics,
+  });
 
-    factory Audience.fromJson(Map<String, dynamic> json) => Audience(
-        topics: json["topics"] == null ? null : List<String>.from(json["topics"].map((x) => x)),
-    );
+  factory Audience.fromJson(Map<String, dynamic> json) => Audience(
+        topics: json["topics"] == null
+            ? null
+            : List<String>.from(json["topics"].map((x) => x)),
+      );
 
-    Map<String, dynamic> toJson() => {
-        "topics": topics == null ? null : List<dynamic>.from(topics.map((x) => x)),
-    };
+  Map<String, dynamic> toJson() => {
+        "topics":
+            topics == null ? null : List<dynamic>.from(topics.map((x) => x)),
+      };
 }
 
 class Message {

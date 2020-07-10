@@ -42,9 +42,10 @@ class FreeFoodDataProvider extends ChangeNotifier {
   void parseMessages() {
     List<MessageElement> messages = _messageDataProvider.messages;
     messages.forEach((m) async {
-      if(m.audience != null
-        &&(m.audience.topics.contains("freefood")
-        || m.audience.topics.contains("testFreeFood"))) {
+      if (m.audience != null &&
+              (m.audience.topics.contains("freefood") ||
+                  m.audience.topics.contains("testFreeFood")) ||
+          m.audience.topics.contains("freeFood")) {
         fetchCount(m.messageId);
         fetchMaxCount(m.messageId);
       }
@@ -107,7 +108,7 @@ class FreeFoodDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-   void decrementCount(String id) async {
+  void decrementCount(String id) async {
     _isLoading = true;
     _curId = id;
     _error = null;
@@ -154,13 +155,15 @@ class FreeFoodDataProvider extends ChangeNotifier {
   }
 
   int count(String messageId) => _messageToCount[messageId];
-  
+
   bool isOverCount(String messageId) {
-    if(_messageToCount.containsKey(messageId) && _messageToMaxCount.containsKey(messageId)) {
+    if (_messageToCount.containsKey(messageId) &&
+        _messageToMaxCount.containsKey(messageId)) {
       return _messageToCount[messageId] > _messageToMaxCount[messageId];
     }
     return false;
   }
+
   bool isFreeFood(String messageId) => _messageToCount.containsKey(messageId);
 
   /// SETTER

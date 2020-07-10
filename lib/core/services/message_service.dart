@@ -46,6 +46,7 @@ class MessageService {
 
     String topicsEndpoint = 'topics=' + topics.join(',');
     String timestampEndpoint = '&start=' + timestamp.toString();
+
     try {
       /// fetch data
       String _response = await _networkHelper

@@ -12,15 +12,15 @@ class FreeFoodService {
 
   final NetworkHelper _networkHelper = NetworkHelper();
 
-  FreeFoodService() {
-  }
+  FreeFoodService() {}
 
   Future<bool> fetchData(String id) async {
     _error = null;
     _isLoading = true;
     try {
       /// fetch data
-      String _response = await _networkHelper.fetchData(base_endpoint + 'count/' + id);
+      String _response =
+          await _networkHelper.fetchData(base_endpoint + 'count/' + id);
 
       /// parse data
       final data = freeFoodModelFromJson(_response);
@@ -39,7 +39,8 @@ class FreeFoodService {
     _isLoading = true;
     try {
       /// fetch data
-      String _response = await _networkHelper.fetchData(base_endpoint + 'maxcount/' + id);
+      String _response =
+          await _networkHelper.fetchData(base_endpoint + 'maxcount/' + id);
 
       /// parse data
       final data = freeFoodModelFromJson(_response);
@@ -80,7 +81,8 @@ class FreeFoodService {
     _isLoading = true;
     try {
       /// fetch data
-      String _response = await _networkHelper.fetchData(base_endpoint + 'decrement/' + id);
+      String _response =
+          await _networkHelper.fetchData(base_endpoint + 'decrement/' + id);
 
       /// parse data
       final data = freeFoodModelFromJson(_response);
@@ -99,7 +101,8 @@ class FreeFoodService {
     _isLoading = true;
     try {
       /// fetch data
-      String _response = await _networkHelper.fetchData(base_endpoint + 'increment/' + id);
+      String _response =
+          await _networkHelper.fetchData(base_endpoint + 'increment/' + id);
 
       /// parse data
       final data = freeFoodModelFromJson(_response);

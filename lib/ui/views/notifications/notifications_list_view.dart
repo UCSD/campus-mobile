@@ -11,7 +11,7 @@ import 'package:url_launcher/url_launcher.dart';
 class NotificationsListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
+   return RefreshIndicator(
       child: buildListView(context),
       onRefresh: () => Provider.of<MessagesDataProvider>(context, listen: false)
           .fetchMessages(true),
@@ -63,12 +63,14 @@ class NotificationsListView extends StatelessWidget {
   }
 
   Widget _buildLoadingIndicator() {
-    return Row(
+    return Padding(
+    padding: EdgeInsets.only(top: 10.0),
+    child: Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         CircularProgressIndicator(),
       ],
-    );
+    ));
   }
 
   Widget _buildErrorText() {

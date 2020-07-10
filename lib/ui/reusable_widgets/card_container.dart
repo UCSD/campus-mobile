@@ -35,7 +35,8 @@ class CardContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     if (active) {
       return Card(
-        margin: EdgeInsets.only(top: 0.0, right: 0.0, bottom: cardMargin * 1.5, left: 0.0),
+        margin: EdgeInsets.only(
+            top: 0.0, right: 0.0, bottom: cardMargin * 1.5, left: 0.0),
         semanticContainer: false,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -98,6 +99,14 @@ class CardContainer extends StatelessWidget {
         ),
       );
     } else {
+      if (titleText == "Student ID") {
+        return Container(
+          width: double.infinity,
+//        height: 200.0,
+          constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 180),
+          child: child(),
+        );
+      }
       return Container(
         width: double.infinity,
 //        height: 200.0,
