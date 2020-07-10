@@ -146,6 +146,12 @@ class ClassScheduleDataProvider extends ChangeNotifier {
       }
     }
 
+    if(enrolledCourses.isEmpty) {
+      _error = "No enrolled courses found.";
+      _isLoading = false;
+      notifyListeners();
+    }
+
     for (ClassData classData in enrolledCourses) {
       for (SectionData sectionData in classData.sectionData) {
         /// copy over info from [ClassData] object and put into [SectionData] object
