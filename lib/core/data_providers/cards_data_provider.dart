@@ -23,7 +23,7 @@ class CardsDataProvider extends ChangeNotifier {
       'weather',
     ];
     _studentCards = ['student_id', 'finals', 'schedule'];
-
+   // _staffCards = ['staff_id']
     for (String card in CardTitleConstants.titleMap.keys.toList()) {
       _cardStates[card] = true;
     }
