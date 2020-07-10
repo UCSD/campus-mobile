@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:beacon_broadcast/beacon_broadcast.dart';
 import 'package:uuid/uuid.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BeaconView extends StatefulWidget {
   @override
@@ -10,17 +13,19 @@ class BeaconView extends StatefulWidget {
 class _BeaconViewState extends State<BeaconView> {
 
   var _isTransmissionSupported;
-  var _isAdvertisingSubscription;
   var _isAdvertising;
   String broadcastingState = "Currently not broadcasting";
   BeaconBroadcast beaconBroadcast;
-  var beaconUuid = "null";
+  var beaconUuid = 'null';
+  Duration uuidDuration;
+  var uuidTimer;
 
   @override
   void initState () {
     super.initState();
-    print("Entered broadcasting section");
+    print("Enter beacon");
 
+    checkTime();
     beaconBroadcast = BeaconBroadcast();
     beaconBroadcast.checkTransmissionSupported().then((isTransmissionSupported) {
       setState(() {
@@ -28,12 +33,36 @@ class _BeaconViewState extends State<BeaconView> {
       });
     });
 
-    _isAdvertisingSubscription =
-        beaconBroadcast.getAdvertisingStateChange().listen((isAdvertising) {
-          setState(() {
-            _isAdvertising = isAdvertising;
-          });
-        });
+    beaconBroadcast.getAdvertisingStateChange().listen((isAdvertising) {
+      setState(() {
+        _isAdvertising = isAdvertising;
+      });
+    });
+    
+    //uuidTimer = Timer.periodic(Duration(seconds: 1), (Timer t) => changeUUID());
+  }
+
+  @override
+  void dispose() async {
+    super.dispose();
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('uuid', beaconUuid);
+    //uuidTimer.cancel();
+    print("Exit beacon");
+  }
+
+  void checkTime () async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    beaconUuid = prefs.get('uuid') ?? "null";
+    var previousTime =  prefs.get('previousTime') ?? DateTime(1990).toString();
+    var difference = DateTime.now().difference(DateTime.parse(previousTime)).inSeconds;
+    print(difference);
+    if (difference > 10) {
+      beaconUuid = Uuid().v4();
+      prefs.setString('previousTime', DateTime.now().toString());
+    }
+
   }
 
   void startBroadcast () {
@@ -41,7 +70,6 @@ class _BeaconViewState extends State<BeaconView> {
     //if (isBroadcasting)
     //  return;
 
-    beaconUuid = Uuid().v4();
     beaconBroadcast
         .setUUID(beaconUuid)
         .setMajorId(1)
@@ -66,6 +94,12 @@ class _BeaconViewState extends State<BeaconView> {
       broadcastingState = "Currently not broadcasting";
       beaconUuid = "null";
     });
+  }
+
+  void changeUUID () {
+    beaconUuid = Uuid().v4();
+    print(beaconUuid);
+    setState(() {});
   }
 
   @override
