@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:campus_mobile_experimental/core/data_providers/bluetooth_singleton.dart';
+import 'package:campus_mobile_experimental/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,8 +12,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:location/location.dart';
 
 class BluetoothLoggerView extends StatefulWidget {
+  var bluetoothScan = BluetoothSingleton();
   @override
-  State<StatefulWidget> createState() => _BluetoothLoggerViewState();
+  State<StatefulWidget> createState() => _BluetoothLoggerViewState(bluetoothScan);
 }
 
 class _BluetoothLoggerViewState extends State<BluetoothLoggerView> {
@@ -21,11 +24,13 @@ class _BluetoothLoggerViewState extends State<BluetoothLoggerView> {
   int _scanNumber = 0;
   List<Widget> list = List<Widget>();
   double _cupertinoSliderValue = 2.0;
+  BluetoothSingleton bluetoothSingleton;
 
   static Map<String, String> allValues = {};
   static List secondList = [];
   static List thirdList = [];
   static List toAdd = [];
+  StreamSubscription subscription ;
 
 
  // static List deviceServices = [];
@@ -33,8 +38,11 @@ class _BluetoothLoggerViewState extends State<BluetoothLoggerView> {
   LocationData _currentLocation;
   var _locationService = new Location();
 
+  _BluetoothLoggerViewState(BluetoothSingleton bluetoothScan);
+
   @override
   void initState() {
+    bluetoothSingleton = widget.bluetoothScan;
     super.initState();
     _locationSubscription = _locationService
         .onLocationChanged
@@ -65,21 +73,21 @@ class _BluetoothLoggerViewState extends State<BluetoothLoggerView> {
   void _incrementCounter() {
     _readAll();
 
-    FlutterBlue flutterBlue = FlutterBlue.instance;
 
     // Instances to keep track of scan # and current run
     _scanNumber++;
     int ran = 0;
 
-    flutterBlue.startScan(
-        timeout: Duration(
-            seconds: (_cupertinoSliderValue.toInt() == 2
-                ? 2
-                : _cupertinoSliderValue.toInt())),
-        allowDuplicates: false);
-    toAdd.clear();
-    flutterBlue.scanResults.listen((results) async {
+    FlutterBlue currentInstance = bluetoothSingleton.flutterBlueInstance;
+    currentInstance.stopScan();
 
+    //bluetoothScan.enableListener();
+    //bluetoothScan.flutterBlueInstance
+    bluetoothSingleton.pauseScan();
+    bluetoothSingleton.ongoingScanner.cancel();
+    currentInstance.startScan(timeout: Duration(seconds: _cupertinoSliderValue.toInt()), allowDuplicates: false);
+toAdd.clear();
+    subscription = currentInstance.scanResults.listen((results) async {
       //Reset rendering lists as necessary
       secondList.clear();
       for (int i = 0; i < toAdd.length; i++) {
@@ -140,7 +148,8 @@ class _BluetoothLoggerViewState extends State<BluetoothLoggerView> {
         _counter = results.length;
       });
     });
-
+    bluetoothSingleton.flutterBlueInstance.stopScan();
+   //bluetoothScan.resumeScan(2);
     ran = 0;}
 
   // TODO: List devices' services (wip)
@@ -325,7 +334,7 @@ class _BluetoothLoggerViewState extends State<BluetoothLoggerView> {
     if (Platform.isIOS) {
       return CupertinoSlider(
         //activeColor: Theme.of(context).primaryColor,
-        max: 200.0,
+        max: 52.0,
         min: 0.0,
         value: _cupertinoSliderValue.toDouble(),
         divisions: 5,
@@ -337,7 +346,7 @@ class _BluetoothLoggerViewState extends State<BluetoothLoggerView> {
       );
     } else {
       return Slider(
-        max: 200.0,
+        max: 50.0,
         min: 0.0,
         value: _cupertinoSliderValue.toDouble(),
         divisions: 5,
@@ -348,6 +357,13 @@ class _BluetoothLoggerViewState extends State<BluetoothLoggerView> {
         },
       );
     }
+  }
+  @override
+  void dispose() {
+    super.dispose();
+
+    subscription.cancel();
+    bluetoothSingleton.resumeScan(2);
   }
 }
 

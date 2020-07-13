@@ -1,5 +1,6 @@
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/constants/data_persistence_constants.dart';
+import 'package:campus_mobile_experimental/core/data_providers/bluetooth_singleton.dart';
 import 'package:campus_mobile_experimental/core/data_providers/provider_setup.dart';
 import 'package:campus_mobile_experimental/core/navigation/router.dart';
 import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
@@ -12,16 +13,22 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 bool showOnboardingScreen = false;
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await initializeStorage();
-
+   startBluetooth();
   Crashlytics.instance.enableInDevMode = true;
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
 
   runApp(CampusMobile());
 }
+
+  void startBluetooth() async {
+    var bluetoothInstance =  BluetoothSingleton();
+    bluetoothInstance.init();
+  }
 
 void initializeStorage() async {
   /// initialize hive storage

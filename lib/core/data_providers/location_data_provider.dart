@@ -13,6 +13,7 @@ class LocationDataProvider {
   Stream<Coordinates> get locationStream => _locationController.stream;
 
   LocationDataProvider() {
+    locationStream;
     _init();
   }
 
@@ -62,4 +63,5 @@ class LocationDataProvider {
       });
     }
   }
+
 }
