@@ -31,8 +31,7 @@ class _StaffIdCardState extends State<StaffIdCard> {
     );
   }
 
-  final _url =
-      "https://mobile.ucsd.edu/replatform/v1/qa/webview/staff_id_webapp.html";
+  final _url = "https://cwo-test.ucsd.edu/WebCards/staff_id.html";
 
   Widget buildCardContent(BuildContext context) {
     return Column(
