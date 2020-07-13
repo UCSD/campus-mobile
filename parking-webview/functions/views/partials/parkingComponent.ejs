@@ -3,18 +3,18 @@
     <br>
     <% if(totalSpacesData[spotTypeContext]){ %>
     <div class="progressdiv" data-percent=<%= totalSpacesData[spotTypeContext]%>>
-        <svg class="progress" width="178" height="178" viewport="0 0 100 100" version="1.1"
+        <svg class="progress" version="1.1"
             xmlns="http://www.w3.org/2000/svg">
-            <circle r="80" cx="89" cy="89" fill="transparent" stroke-dasharray="502.4" stroke-dashoffset="0"></circle>
-            <circle class="bar" r="80" cx="89" cy="89" fill="transparent" stroke-dasharray="502.4"
+            <circle fill="transparent" stroke-dasharray="502.4" stroke-dashoffset="0"></circle>
+            <circle class="bar" fill="transparent" stroke-dasharray="502.4"
                 stroke-dashoffset="0"></circle>
         </svg></div>
     <% } else{ %>
     <div class="progressdiv" data-percent="NA">
         <svg class="progress" width="178" height="178" viewport="0 0 100 100" version="1.1"
             xmlns="http://www.w3.org/2000/svg">
-            <circle r="80" cx="89" cy="89" fill="transparent" stroke-dasharray="502.4" stroke-dashoffset="0"></circle>
-            <circle class="bar" r="80" cx="89" cy="89" fill="transparent" stroke-dasharray="502.4"
+            <circle fill="transparent" stroke-dasharray="502.4" stroke-dashoffset="0"></circle>
+            <circle class="bar" fill="transparent" stroke-dasharray="502.4"
                 stroke-dashoffset="0"></circle>
         </svg></div>
     <% } %>

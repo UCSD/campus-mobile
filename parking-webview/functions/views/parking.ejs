@@ -29,11 +29,9 @@
 
         .row {
             width: 100%;
-            background-color: blue;
         }
 
         .column {
-            background-color: aqua;
             border-color: black;
             float: left;
             width: calc(100% / var(--numComponents));
@@ -51,17 +49,25 @@
             margin: 0 auto;
             overflow: hidden;
             transform: rotate(-90deg) rotateX(180deg);
+            width: 30vw;
+            height: 30vw;
         }
 
         .progress circle {
             stroke-dashoffset: 0;
             transition: stroke-dashoffset 1s ease;
             stroke: #a02e2e;
-            stroke-width: 10px;
+            stroke-width: 1em;
+            r: 10vw;
+            cx: 15vw;
+            cy: 15vw;
         }
 
         .progress .bar {
             stroke: #ffffff;
+            r: 10vw;
+            cx: 15vw;
+            cy: 15vw;
         }
 
         .progressdiv {
@@ -72,7 +78,7 @@
             position: absolute;
             top: 50%;
             left: 50%;
-            font-size: 35px;
+            font-size: 6vw;
             transform: translate(-50%, -50%);
             content: attr(data-percent)"%";
         }
