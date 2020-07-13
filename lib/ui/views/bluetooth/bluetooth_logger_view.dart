@@ -360,10 +360,11 @@ toAdd.clear();
   }
   @override
   void dispose() {
+    _locationSubscription.cancel();
     super.dispose();
 
     subscription.cancel();
-    bluetoothSingleton.resumeScan(2);
+    bluetoothSingleton.resumeScan(15);
   }
 }
 

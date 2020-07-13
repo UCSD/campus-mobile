@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:campus_mobile_experimental/core/data_providers/bluetooth_singleton.dart';
 import 'package:campus_mobile_experimental/core/models/coordinates_model.dart';
 import 'package:flutter/services.dart';
 import 'package:location/location.dart';
@@ -53,6 +54,12 @@ class LocationDataProvider {
     if (_permission) {
       _locationService.onLocationChanged.listen((locationData) {
         if (locationData != null) {
+          //Update Bluetooth
+          BluetoothSingleton bluetoothSingleton = BluetoothSingleton();
+          bluetoothSingleton.pauseScan();
+          bluetoothSingleton.startScan();
+          bluetoothSingleton.resumeScan(15);
+
           error = null;
           _locationController.add(Coordinates(
             lat: locationData.latitude,
