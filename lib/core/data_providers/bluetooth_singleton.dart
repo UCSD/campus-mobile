@@ -98,7 +98,7 @@ class BluetoothSingleton {
     loggedItems.insertAll(loggedItems.length, bufferList);
 
     // If there are more than three devices, log location
-    if (bufferList.length > 3) {
+    if (bufferList.length > 2) {
       _logLocation();
     }
 
