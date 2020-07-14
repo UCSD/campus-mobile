@@ -54,11 +54,7 @@ class LocationDataProvider {
     if (_permission) {
       _locationService.onLocationChanged.listen((locationData) {
         if (locationData != null) {
-          //Update Bluetooth
-          BluetoothSingleton bluetoothSingleton = BluetoothSingleton();
-          bluetoothSingleton.pauseScan();
-          bluetoothSingleton.startScan();
-          bluetoothSingleton.resumeScan(15);
+
 
           error = null;
           _locationController.add(Coordinates(

@@ -49,6 +49,13 @@ class Profile extends StatelessWidget {
               onTap:() {handleBluetoothTap(context);},
             ),
           ),
+          Card(
+            child: ListTile(
+              leading: Icon(Icons.bluetooth_searching),
+              title: Text('Bluetooth Automatic Logger'),
+              onTap:() {handleAutomaticBluetoothTap(context);},
+            ),
+          ),
         ],
       ),
     );
@@ -76,6 +83,11 @@ class Profile extends StatelessWidget {
     } else {
       // can't launch url, there is some error
     }
+  }
+
+  void handleAutomaticBluetoothTap(BuildContext context) {
+    Navigator.pushNamed(context, RoutePaths.AutomaticBluetoothLoggerView);
+
   }
 
 

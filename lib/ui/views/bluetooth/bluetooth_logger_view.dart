@@ -3,10 +3,8 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:campus_mobile_experimental/core/data_providers/bluetooth_singleton.dart';
-import 'package:campus_mobile_experimental/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:location/location.dart';
@@ -30,7 +28,7 @@ class _BluetoothLoggerViewState extends State<BluetoothLoggerView> {
   static List secondList = [];
   static List thirdList = [];
   static List toAdd = [];
-  StreamSubscription subscription ;
+  StreamSubscription<List<ScanResult>> subscription ;
 
 
  // static List deviceServices = [];
@@ -203,12 +201,6 @@ toAdd.clear();
             " Longitude: " +
             _currentLocation.longitude.toString() +
             "\n");
-   /* print(" Latitude: " +
-        position.latitude.toString() +
-        " Longitude: " +
-        position.longitude.toString() +
-        "\n"); DEBUG STATEMENT*/
-    //print(thirdList.toString()); DEBUG STATEMENT
   }
 
 
@@ -360,11 +352,12 @@ toAdd.clear();
   }
   @override
   void dispose() {
+    bluetoothSingleton.pauseScan();
+    bluetoothSingleton.flutterBlueInstance.stopScan();
     _locationSubscription.cancel();
-    super.dispose();
-
     subscription.cancel();
-    bluetoothSingleton.resumeScan(15);
+    super.dispose();
+    bluetoothSingleton.resumeScan(2);
   }
 }
 
