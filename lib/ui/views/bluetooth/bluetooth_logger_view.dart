@@ -10,7 +10,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:location/location.dart';
 
 class BluetoothLoggerView extends StatefulWidget {
-  var bluetoothScan = BluetoothSingleton();
+  final BluetoothSingleton bluetoothScan = BluetoothSingleton();
   @override
   State<StatefulWidget> createState() => _BluetoothLoggerViewState(bluetoothScan);
 }

@@ -1,12 +1,11 @@
 
 import 'dart:async';
-
 import 'package:campus_mobile_experimental/core/data_providers/bluetooth_singleton.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AutomaticBluetoothLoggerView extends StatefulWidget{
-  var bluetoothSingleton = BluetoothSingleton();
+  final BluetoothSingleton bluetoothSingleton = BluetoothSingleton();
     @override
     State<StatefulWidget> createState() => _AutomaticBluetoothLoggerViewState(bluetoothSingleton);
   }
