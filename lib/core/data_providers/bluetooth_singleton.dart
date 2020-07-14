@@ -1,29 +1,30 @@
 import 'dart:async';
+
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:location/location.dart';
 
-class BluetoothSingleton{
-  
+class BluetoothSingleton {
   // Internal Declaration
-  static final BluetoothSingleton _bluetoothSingleton =  BluetoothSingleton._internal();
-  
+  static final BluetoothSingleton _bluetoothSingleton =
+      BluetoothSingleton._internal();
+
   //Flutter blue instance for scanning
   FlutterBlue flutterBlueInstance = FlutterBlue.instance;
-  
+
   // Will add at the end, slows down scans
   final _storage = FlutterSecureStorage();
-  
+
   // Constant for scans
   final int scanDuration = 2; //Seconds
   final waitTime = 15; // Seconds
 
   // Tracker to enable location listener
   int enable = 0;
-  
+
   // Allows for continuous scan
   Timer ongoingScanner;
-  
+
   // Lists for displaying scan results
   List loggedItems = [];
   static List bufferList = [];
@@ -33,130 +34,136 @@ class BluetoothSingleton{
   LocationData _currentLocation;
 
   //flutterBlueInstance.scan(timeout: Duration(seconds: scanDuration), allowDuplicates: false)
-  factory BluetoothSingleton(){
-   // bluetoothStream();
-  return _bluetoothSingleton;
+  factory BluetoothSingleton() {
+    // bluetoothStream();
+    return _bluetoothSingleton;
   }
-
 
   init() {
-    
     // Set the minimum change to activate a new scan.
-    location.changeSettings(accuracy: LocationAccuracy.low, distanceFilter: 200.0);
-    
+    location.changeSettings(
+        accuracy: LocationAccuracy.low, distanceFilter: 200.0);
+
     // Enable location listening
     _logLocation();
-    
-    // Enable continuous scan 
-   enableListener();
-  }
 
+    // Enable continuous scan
+    enableListener();
+  }
 
   /// This function starts continuous scan (on app open)
   enableListener() {
-    
     //Start the initial scan
     startScan();
-    
+
     // Enable timer, must wait duration before next method execution
-    ongoingScanner = new Timer.periodic(Duration(seconds: waitTime),  (Timer t) => startScan());
+    ongoingScanner = new Timer.periodic(
+        Duration(seconds: waitTime), (Timer t) => startScan());
   }
 
   // Start a bluetooth scan of 2 second duration and listen to results
-  startScan(){
-     flutterBlueInstance.startScan( timeout: Duration(seconds: 2), allowDuplicates: false);
+  startScan() {
+    flutterBlueInstance.startScan(
+        timeout: Duration(seconds: 2), allowDuplicates: false);
 
-     // Process the scan results (synchronously)
-     flutterBlueInstance.scanResults.listen((results) {
-      for(ScanResult scanResult in results){
-
+    // Process the scan results (synchronously)
+    flutterBlueInstance.scanResults.listen((results) {
+      for (ScanResult scanResult in results) {
         //PARSE FOR FRONTEND DISPLAY
         if (!bufferList.contains('ID: ${scanResult.device.id}' +
-       "\nDevice name: " +
-       (scanResult.device.name != "" ? scanResult.device.name : "Unknown") +
-       "\n")) {
-       bufferList.add('ID: ${scanResult.device.id}' +
-       "\nDevice name: " +
-       (scanResult.device.name != "" ? scanResult.device.name : "Unknown") +
-       "\n");
-       }
+            "\nDevice name: " +
+            (scanResult.device.name != ""
+                ? scanResult.device.name
+                : "Unknown") +
+            "\n")) {
+          bufferList.add('ID: ${scanResult.device.id}' +
+              "\nDevice name: " +
+              (scanResult.device.name != ""
+                  ? scanResult.device.name
+                  : "Unknown") +
+              "\n");
+        }
 
         // Print to terminal for actual scan
         print('ID: ${scanResult.device.id}' +
             "\nDevice name: " +
-            (scanResult.device.name != "" ? scanResult.device.name : "Unknown") +
+            (scanResult.device.name != ""
+                ? scanResult.device.name
+                : "Unknown") +
             "\n");
       }
     });
 
-     // Add the processed buffer to overall log
-     loggedItems.insertAll(loggedItems.length , bufferList);
+    // Add the processed buffer to overall log
+    loggedItems.insertAll(loggedItems.length, bufferList);
 
-     // If there are more than three devices, log location
-     if(bufferList.length > 3){
-       _logLocation();
-     }
+    // If there are more than three devices, log location
+    if (bufferList.length > 3) {
+      _logLocation();
+    }
 
+    // Add time stamp for differentiation
+    loggedItems.add("TIMESTAMP: " +
+        DateTime.fromMillisecondsSinceEpoch(
+                DateTime.now().millisecondsSinceEpoch)
+            .toString() +
+        '\n');
 
-     // Add time stamp for differentiation
-     loggedItems.add("TIMESTAMP: "+
-         DateTime.fromMillisecondsSinceEpoch(
-             DateTime.now().millisecondsSinceEpoch)
-             .toString() +
-         '\n');
-
-     // Close on going scan in case it has not time out
+    // Close on going scan in case it has not time out
     flutterBlueInstance.stopScan();
 
     // Clear previous scan results
-     bufferList.clear();
-}
-
+    bufferList.clear();
+  }
 
 // Cancel ongoing scans to start a new one
-  pauseScan(){
+  pauseScan() {
     ongoingScanner.cancel();
     flutterBlueInstance.stopScan();
   }
 
   // Start a new scan with the given changes (For triggered scans or disposing a page)
-  resumeScan(int scanTime){
+  resumeScan(int scanTime) {
     // Stop any ongoing scan
-  pauseScan();
+    pauseScan();
 
-  // Set off an immediate scan
-  startNewScan(scanTime);
+    // Set off an immediate scan
+    startNewScan(scanTime);
 
-  // Trigger a continuous scan
-   ongoingScanner = new Timer.periodic(Duration(seconds: waitTime), (Timer t) => startNewScan(scanTime));
-
+    // Trigger a continuous scan
+    ongoingScanner = new Timer.periodic(
+        Duration(seconds: waitTime), (Timer t) => startNewScan(scanTime));
   }
 
   // Helper method to set up a modified scan (will be deleted for production)
-  startNewScan(int scanTime){
-
+  startNewScan(int scanTime) {
     // Start scan with specified duration
-    flutterBlueInstance.startScan( timeout: Duration(seconds: scanTime), allowDuplicates: false);
+    flutterBlueInstance.startScan(
+        timeout: Duration(seconds: scanTime), allowDuplicates: false);
 
     // Process scan results
     flutterBlueInstance.scanResults.listen((results) {
-      for(ScanResult scanResult in results){
-
+      for (ScanResult scanResult in results) {
         // Print to terminal ACTUAL scan result
         print('ID: ${scanResult.device.id}' +
             "\nDevice name: " +
-            (scanResult.device.name != "" ? scanResult.device.name : "Unknown") +
+            (scanResult.device.name != ""
+                ? scanResult.device.name
+                : "Unknown") +
             "\n");
-
 
         //PARSE FOR FRONT END DISPLAY (avoids overwhelming data)
         if (!bufferList.contains('ID: ${scanResult.device.id}' +
             "\nDevice name: " +
-            (scanResult.device.name != "" ? scanResult.device.name : "Unknown") +
+            (scanResult.device.name != ""
+                ? scanResult.device.name
+                : "Unknown") +
             "\n")) {
           bufferList.add('ID: ${scanResult.device.id}' +
               "\nDevice name: " +
-              (scanResult.device.name != "" ? scanResult.device.name : "Unknown") +
+              (scanResult.device.name != ""
+                  ? scanResult.device.name
+                  : "Unknown") +
               "\n");
         }
       }
@@ -166,14 +173,14 @@ class BluetoothSingleton{
     loggedItems.addAll(bufferList);
 
     // Add time stamp
-    loggedItems.add("TIMESTAMP: "+
+    loggedItems.add("TIMESTAMP: " +
         DateTime.fromMillisecondsSinceEpoch(
-            DateTime.now().millisecondsSinceEpoch)
+                DateTime.now().millisecondsSinceEpoch)
             .toString() +
         '\n');
 
     //If more than three devices are detected, log location
-    if(bufferList.length > 2){
+    if (bufferList.length > 2) {
       _logLocation();
     }
 
@@ -184,10 +191,8 @@ class BluetoothSingleton{
     bufferList.clear();
   }
 
-
   // Used to log current user location or enable the location change listener
   void _logLocation() async {
-
     // Set up new location object to get current location
     location = Location();
     location.changeSettings(accuracy: LocationAccuracy.low);
@@ -212,7 +217,7 @@ class BluetoothSingleton{
     }
 
     // If this is our fist run, enable the location listener
-    if(enable < 1){
+    if (enable < 1) {
       enableLocationListening();
     }
 
@@ -220,13 +225,11 @@ class BluetoothSingleton{
     _currentLocation = await location.getLocation();
 
     // Add location logging to rendered list
-    loggedItems.add(
-        " LATITUDE: " +
-            _currentLocation.latitude.toString() +
-            " LONGITUDE: " +
-            _currentLocation.longitude.toString() +
-            "\n");
-
+    loggedItems.add(" LATITUDE: " +
+        _currentLocation.latitude.toString() +
+        " LONGITUDE: " +
+        _currentLocation.longitude.toString() +
+        "\n");
   }
 
   // Internal constructor
@@ -235,9 +238,8 @@ class BluetoothSingleton{
   // Listens for location changes and ensures it is larger than 200 meters
   void enableLocationListening() {
     location.onLocationChanged.listen((event) {
-
       // 200 meter threshold
-      if(event.heading > 200){
+      if (event.heading > 200) {
         flutterBlueInstance.stopScan();
         ongoingScanner.cancel();
         pauseScan();
@@ -246,5 +248,4 @@ class BluetoothSingleton{
       }
     });
   }
-
 }

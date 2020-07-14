@@ -1,38 +1,51 @@
-
 import 'dart:async';
+
 import 'package:campus_mobile_experimental/core/data_providers/bluetooth_singleton.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class AutomaticBluetoothLoggerView extends StatefulWidget{
+class AutomaticBluetoothLoggerView extends StatefulWidget {
+  // Instantiate bluetooth singleton
   final BluetoothSingleton bluetoothSingleton = BluetoothSingleton();
-    @override
-    State<StatefulWidget> createState() => _AutomaticBluetoothLoggerViewState(bluetoothSingleton);
-  }
 
-class _AutomaticBluetoothLoggerViewState extends  State<AutomaticBluetoothLoggerView>{
+  @override
+  State<StatefulWidget> createState() =>
+      _AutomaticBluetoothLoggerViewState(bluetoothSingleton);
+}
+
+class _AutomaticBluetoothLoggerViewState
+    extends State<AutomaticBluetoothLoggerView> {
+  // Instances of the singleton and its listener
   BluetoothSingleton bluetoothSingleton;
   StreamSubscription subscription;
+
+  // List for rendering the ongoing log
   List loggedItems = [];
+
   _AutomaticBluetoothLoggerViewState(BluetoothSingleton bluetoothScan);
 
-  void initState(){
+  // Set the state when a new scan occurs
+  void initState() {
     bluetoothSingleton = widget.bluetoothSingleton;
     super.initState();
-    subscription = bluetoothSingleton.flutterBlueInstance.scanResults.listen((event) async {
+    subscription = bluetoothSingleton.flutterBlueInstance.scanResults
+        .listen((event) async {
       setState(() {
         loggedItems = bluetoothSingleton.loggedItems;
       });
     });
   }
+
+  // build Card container to hold log display
   @override
   Widget build(BuildContext context) {
     //Start dynamic resizing
     MediaQueryData queryData = MediaQuery.of(context);
     double verticalSafeBlock = (queryData.size.height -
-        (queryData.padding.top + queryData.padding.bottom)) /
+            (queryData.padding.top + queryData.padding.bottom)) /
         100;
     double cardHeight = verticalSafeBlock * 90;
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Automatic Bluetooth Logger"),
@@ -49,7 +62,7 @@ class _AutomaticBluetoothLoggerViewState extends  State<AutomaticBluetoothLogger
                     Text(
                       "Devices Scanned",
                       style:
-                      TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     Card(
                       child: Container(
@@ -65,31 +78,31 @@ class _AutomaticBluetoothLoggerViewState extends  State<AutomaticBluetoothLogger
                   ],
                 ),
               ),
-
             ],
           ),
         ],
       ),
     );
-
   }
 
+  // Bold location and timestamp to differentiate scans
   Text buildText(int index) {
-    if(loggedItems[index].toString().contains("LATITUDE") || loggedItems[index].toString().contains("TIMESTAMP")){
-      return Text(loggedItems[index],
-        style: TextStyle(
-          fontWeight: FontWeight.bold
-        ),
+    if (loggedItems[index].toString().contains("LATITUDE") ||
+        loggedItems[index].toString().contains("TIMESTAMP")) {
+      return Text(
+        loggedItems[index],
+        style: TextStyle(fontWeight: FontWeight.bold),
       );
     }
 
+    // Return normal text for device display
     return Text(loggedItems[index]);
   }
+
+  // Detach the listener to avoid calling setState()
   @override
   void dispose() {
-    // TODO: implement dispose
     subscription.cancel();
     super.dispose();
   }
 }
-

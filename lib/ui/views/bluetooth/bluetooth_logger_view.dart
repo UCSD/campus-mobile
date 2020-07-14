@@ -10,40 +10,54 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:location/location.dart';
 
 class BluetoothLoggerView extends StatefulWidget {
+  // Instantiate Bluetooth Singleton
   final BluetoothSingleton bluetoothScan = BluetoothSingleton();
+
   @override
-  State<StatefulWidget> createState() => _BluetoothLoggerViewState(bluetoothScan);
+  State<StatefulWidget> createState() =>
+      _BluetoothLoggerViewState(bluetoothScan);
 }
 
 class _BluetoothLoggerViewState extends State<BluetoothLoggerView> {
+
+  // Instantiate the secure storage (will slow down scan)
   final _storage = FlutterSecureStorage();
+
+  // List for secure storage
   List<_SecItem> _items = [];
+
+  // Counter for bluetooth devices found
   int _counter = 0;
   int _scanNumber = 0;
-  List<Widget> list = List<Widget>();
+
+  // Default slider value
   double _cupertinoSliderValue = 2.0;
+
+  // Reference to bluetoothSingleton
   BluetoothSingleton bluetoothSingleton;
 
-  static Map<String, String> allValues = {};
-  static List secondList = [];
-  static List thirdList = [];
-  static List toAdd = [];
-  StreamSubscription<List<ScanResult>> subscription ;
+  // Lists for rendering devices
+  static List currentScanList = [];
+  static List ongoingLog = [];
+  static List ongoingLogBuffer = [];
 
+  // Reference to listener
+  StreamSubscription<List<ScanResult>> subscription;
 
- // static List deviceServices = [];
+  // static List deviceServices = [];
   StreamSubscription<LocationData> _locationSubscription;
+
+  // Location instances
   LocationData _currentLocation;
   var _locationService = new Location();
-
   _BluetoothLoggerViewState(BluetoothSingleton bluetoothScan);
 
+  // State set when location changes
   @override
   void initState() {
     bluetoothSingleton = widget.bluetoothScan;
     super.initState();
-    _locationSubscription = _locationService
-        .onLocationChanged
+    _locationSubscription = _locationService.onLocationChanged
         .listen((LocationData currentLocation) async {
       setState(() {
         _currentLocation = currentLocation;
@@ -51,6 +65,7 @@ class _BluetoothLoggerViewState extends State<BluetoothLoggerView> {
     });
   }
 
+  // Method to process storage
   Future<Null> _readAll() async {
     final all = await _storage.readAll();
 
@@ -68,87 +83,102 @@ class _BluetoothLoggerViewState extends State<BluetoothLoggerView> {
     return String.fromCharCodes(codeUnits);
   }
 
+  // Method to start scan and process lists
   void _incrementCounter() {
     _readAll();
 
-
     // Instances to keep track of scan # and current run
     _scanNumber++;
+
+    // Counter variable prevent multiple logging
     int ran = 0;
 
+    // Get reference to the bluetooth scan
     FlutterBlue currentInstance = bluetoothSingleton.flutterBlueInstance;
-    currentInstance.stopScan();
 
-    //bluetoothScan.enableListener();
-    //bluetoothScan.flutterBlueInstance
+    //Stop ongoing scan
+    currentInstance.stopScan();
     bluetoothSingleton.pauseScan();
     bluetoothSingleton.ongoingScanner.cancel();
-    currentInstance.startScan(timeout: Duration(seconds: _cupertinoSliderValue.toInt()), allowDuplicates: false);
-toAdd.clear();
+
+    // Start a new scan with slider value
+    currentInstance.startScan(
+        timeout: Duration(seconds: _cupertinoSliderValue.toInt()),
+        allowDuplicates: false);
+
+    // Clear the buffer of previously scanned devices
+    ongoingLogBuffer.clear();
+
+    // Listen to results asynchronously
     subscription = currentInstance.scanResults.listen((results) async {
+
       //Reset rendering lists as necessary
-      secondList.clear();
-      for (int i = 0; i < toAdd.length; i++) {
-        thirdList.removeAt(0);
+      currentScanList.clear();
+
+      // Remove buffer from ongoing log if not final scan
+      for (int i = 0; i < ongoingLogBuffer.length; i++) {
+        ongoingLog.removeAt(0);
       }
-      toAdd.clear();
+      ongoingLogBuffer.clear();
 
 
+      // Process scan results
       for (ScanResult r in results) {
         final String key = _randomValue();
         final String value = r.device.id.toString();
 
         // Add to current scan log
-        if (!secondList.contains('ID: ${r.device.id}' +
+        if (!currentScanList.contains('ID: ${r.device.id}' +
             "\nDevice name: " +
             (r.device.name != "" ? r.device.name : "Unknown") +
             "\n")) {
-          secondList.add('ID: ${r.device.id}' +
+          currentScanList.add('ID: ${r.device.id}' +
               "\nDevice name: " +
               (r.device.name != "" ? r.device.name : "Unknown") +
               "\n");
         }
 
         // Add to device log
-        if (!toAdd.contains('ID: ${r.device.id}' +
+        if (!ongoingLogBuffer.contains('ID: ${r.device.id}' +
             "\nDevice name: " +
             (r.device.name != "" ? r.device.name : "Unknown") +
             "\n")) {
-          toAdd.add('ID: ${r.device.id}' +
+          ongoingLogBuffer.add('ID: ${r.device.id}' +
               "\nDevice name: " +
               (r.device.name != "" ? r.device.name : "Unknown") +
               "\n");
         }
 
+        // Write to secure storage
         _storage.write(key: key, value: value);
-       // _storage.deleteAll(); ENABLE FOR FASTER SCAN
       }
 
       // Log scan number
-      toAdd.add("Scan number: $_scanNumber Timestamp: " +
+      ongoingLogBuffer.add("Scan number: $_scanNumber Timestamp: " +
           DateTime.fromMillisecondsSinceEpoch(
                   DateTime.now().millisecondsSinceEpoch)
               .toString() +
           '\n');
 
       // Only log gps when threshold is met and has not been logged yet
-      if (toAdd.length > 4 && ran == 0) {
+      if (ongoingLogBuffer.length > 4 && ran == 0) {
         ran++;
         _logLocation();
-        toAdd.add("value");
       }
 
       // Update list render
-      thirdList.insertAll(0, toAdd);
+      ongoingLog.insertAll(0, ongoingLogBuffer);
 
       // Rebuild
       setState(() {
         _counter = results.length;
       });
     });
+    
+    // Stop any non timed out scan
     bluetoothSingleton.flutterBlueInstance.stopScan();
-   //bluetoothScan.resumeScan(2);
-    ran = 0;}
+    ran = 0;
+  }
 
   // TODO: List devices' services (wip)
 /* servicesList(ScanResult r) async
@@ -164,8 +194,9 @@ toAdd.clear();
   await r.device.disconnect();
   }*/
 
+// Log the location of the user
   void _logLocation() async {
-
+    
     //initialize location and permissions to be checked
     var location = Location();
     location.changeSettings(accuracy: LocationAccuracy.low);
@@ -191,10 +222,10 @@ toAdd.clear();
     //once permissions are verified, get location asynchronously
     _currentLocation = await location.getLocation();
     // Find last instance of scan log
-    int lastScanIndex = thirdList.indexWhere((note) => note.startsWith('Scan'));
+    int lastScanIndex = ongoingLog.indexWhere((note) => note.startsWith('Scan'));
 
     // Add location logging to rendered list
-    thirdList.insert(
+    ongoingLog.insert(
         lastScanIndex + 1,
         " Latitude: " +
             _currentLocation.latitude.toString() +
@@ -203,14 +234,13 @@ toAdd.clear();
             "\n");
   }
 
-
+  // Build the front end display
   @override
   Widget build(BuildContext context) {
-
     //Start dynamic resizing
     MediaQueryData queryData = MediaQuery.of(context);
     double verticalSafeBlock = (queryData.size.height -
-        (queryData.padding.top + queryData.padding.bottom)) /
+            (queryData.padding.top + queryData.padding.bottom)) /
         100;
     double cardHeight = verticalSafeBlock * 60;
     return Scaffold(
@@ -258,10 +288,10 @@ toAdd.clear();
                       child: Container(
                         height: cardHeight,
                         child: ListView.builder(
-                            itemCount: secondList.length,
+                            itemCount: currentScanList.length,
                             shrinkWrap: true,
                             itemBuilder: (context, index) {
-                              return Text(secondList[index]);
+                              return Text(currentScanList[index]);
                             }),
                       ),
                     ),
@@ -281,10 +311,10 @@ toAdd.clear();
                       child: Container(
                         height: cardHeight,
                         child: ListView.builder(
-                            itemCount: thirdList.length,
+                            itemCount: ongoingLog.length,
                             shrinkWrap: true,
                             itemBuilder: (context, index) {
-                              return buildThirdList(index);
+                              return buildongoingScan(index);
                             }),
                       ),
                     ),
@@ -298,30 +328,17 @@ toAdd.clear();
     );
   }
 
-  buildThirdList(int index) {
-
+  // Adds bold text to differentiate between list
+  buildongoingScan(int index) {
     // Bold scan numbers
-    return (thirdList[index].runtimeType == String &&
-            (thirdList[index].contains("Timestamp:") ||
-                thirdList[index].contains("Latitude"))
-        ? Text(thirdList[index], style: TextStyle(fontWeight: FontWeight.bold))
-        : Text(thirdList[index].toString()));
+    return (ongoingLog[index].runtimeType == String &&
+            (ongoingLog[index].contains("Timestamp:") ||
+                ongoingLog[index].contains("Latitude"))
+        ? Text(ongoingLog[index], style: TextStyle(fontWeight: FontWeight.bold))
+        : Text(ongoingLog[index].toString()));
   }
 
-  Widget fillList() {
-    allValues.forEach((key, value) {
-      list.add(SliverList(
-        delegate: SliverChildBuilderDelegate(
-            (context, index) => writeBluetoothDevice(key, value)),
-      ));
-    });
-
-    return CustomScrollView(
-      slivers: list,
-      shrinkWrap: true,
-    );
-  }
-
+  // Build slider to set different scan duration
   Widget buildSlider(BuildContext context) {
     if (Platform.isIOS) {
       return CupertinoSlider(
@@ -350,6 +367,8 @@ toAdd.clear();
       );
     }
   }
+
+  // disconnect listeners
   @override
   void dispose() {
     bluetoothSingleton.pauseScan();
@@ -361,10 +380,7 @@ toAdd.clear();
   }
 }
 
-Widget writeBluetoothDevice(String key, String value) {
-  return Text(value);
-}
-
+// Helper class to log  items
 class _SecItem {
   _SecItem(this.key, this.value);
 
