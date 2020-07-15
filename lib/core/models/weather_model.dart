@@ -51,8 +51,8 @@ class Weather {
   String icon;
   int nearestStormDistance;
   int nearestStormBearing;
-  double precipIntensity;
-  double precipProbability;
+  int precipIntensity;
+  int precipProbability;
   String precipType;
   double temperature;
   double apparentTemperature;
@@ -96,8 +96,8 @@ class Weather {
         icon: json["icon"],
         nearestStormDistance: json["nearestStormDistance"],
         nearestStormBearing: json["nearestStormBearing"],
-        precipIntensity: json["precipIntensity"].toDouble(),
-        precipProbability: json["precipProbability"].toDouble(),
+        precipIntensity: json["precipIntensity"],
+        precipProbability: json["precipProbability"],
         precipType: json["precipType"],
         temperature: json["temperature"].toDouble(),
         apparentTemperature: json["apparentTemperature"].toDouble(),
@@ -192,7 +192,7 @@ class Forecast {
   double cloudCover;
   int uvIndex;
   int uvIndexTime;
-  int visibility;
+  double visibility;
   double ozone;
   double temperatureMin;
   int temperatureMinTime;
@@ -275,7 +275,7 @@ class Forecast {
         cloudCover: json["cloudCover"].toDouble(),
         uvIndex: json["uvIndex"],
         uvIndexTime: json["uvIndexTime"],
-        visibility: json["visibility"],
+        visibility: json["visibility"].toDouble(),
         ozone: json["ozone"].toDouble(),
         temperatureMin: json["temperatureMin"].toDouble(),
         temperatureMinTime: json["temperatureMinTime"],

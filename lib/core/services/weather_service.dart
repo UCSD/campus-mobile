@@ -30,6 +30,7 @@ class WeatherService {
       return true;
     } catch (e) {
       _error = e.toString();
+      /// **********
       _isLoading = false;
       return false;
     }

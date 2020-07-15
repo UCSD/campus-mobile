@@ -33,7 +33,7 @@ class CardContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (active) {
+    if (active != null && active) {
       return Card(
         margin: EdgeInsets.only(
             top: 0.0, right: 0.0, bottom: cardMargin * 1.5, left: 0.0),
@@ -84,7 +84,7 @@ class CardContainer extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 42.0),
           child: Text('No finals found.'),
         );
-      } else if (titleText == 'Schedule') {
+      } else if (titleText == 'Classes') {
         return Text('No classes found.');
       } else {
         return Text('An error occurred, please try again.');

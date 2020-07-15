@@ -1,6 +1,11 @@
+import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:flutter/material.dart';
 
 class CMAppBar extends StatelessWidget {
+  CMAppBar({
+    this.title,
+  });
+  String title;
   @override
   Widget build(BuildContext context) {
     return PreferredSize(
@@ -8,11 +13,13 @@ class CMAppBar extends StatelessWidget {
       child: AppBar(
         primary: true,
         centerTitle: true,
-        title: Image.asset(
-          'assets/images/UCSanDiegoLogo-nav.png',
-          fit: BoxFit.contain,
-          height: 28,
-        ),
+        title: title == null
+            ? Image.asset(
+                'assets/images/UCSanDiegoLogo-nav.png',
+                fit: BoxFit.contain,
+                height: 28,
+              )
+            : Text(title),
       ),
     );
   }
@@ -20,11 +27,18 @@ class CMAppBar extends StatelessWidget {
 
 class CustomAppBar extends ChangeNotifier {
   CMAppBar appBar;
+  String title;
   CustomAppBar() {
     makeAppBar();
   }
   makeAppBar() {
-    appBar = CMAppBar();
-    notifyListeners();
+    appBar = CMAppBar(
+      title: title,
+    );
+  }
+
+  changeTitle(String newTitle) {
+    title = RouteTitles.titleMap[newTitle];
+    makeAppBar();
   }
 }
