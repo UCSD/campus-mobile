@@ -55,27 +55,6 @@ class FreeFoodService {
     }
   }
 
-  // Future<bool> setMaxCount(String id) async {
-  //   _error = null;
-  //   _isLoading = true;
-  //   print("in fetch max count " + id);
-  //   try {
-  //     /// fetch data
-  //     String _response = await _networkHelper.fetchData(base_endpoint + 'setmaxcount/' + id);
-  //     print("response" + _response.toString());
-
-  //     /// parse data
-  //     final data = freeFoodModelFromJson(_response);
-  //     _isLoading = false;
-  //     _data = data;
-  //     return true;
-  //   } catch (e) {
-  //     _error = e.toString();
-  //     _isLoading = false;
-  //     return false;
-  //   }
-  // }
-
   Future<bool> decrementCount(String id) async {
     _error = null;
     _isLoading = true;

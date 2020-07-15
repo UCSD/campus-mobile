@@ -49,19 +49,28 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
   @override
   Widget build(BuildContext context) {
     var isOverCount = _freeFoodDataProvider.isOverCount(messageId);
+    var currCount = _freeFoodDataProvider.count(messageId);
+    var countText = currCount > 1
+        ? '$currCount students are going'
+        : '$currCount student is going';
+
     return Container(
         margin: EdgeInsets.only(top: 10.0),
         child: Row(
           children: <Widget>[
-            Column(
-              children: <Widget>[
-                Text(
-                    '${_freeFoodDataProvider.count(messageId)} students are going',
-                    style: TextStyle(
-                        fontSize: 10,
-                        color: isOverCount ? Colors.red : Colors.green)),
-                isOverCount
-                    ? Container(
+            Container(
+              height: 25,
+              width: 150,
+              child: AnimatedCrossFade(
+                duration: Duration(milliseconds: 300),
+                crossFadeState: isOverCount
+                    ? CrossFadeState.showFirst
+                    : CrossFadeState.showSecond,
+                firstChild: Column(
+                  children: <Widget>[
+                    Text(countText,
+                        style: TextStyle(fontSize: 10, color: Colors.red)),
+                    Container(
                         margin: EdgeInsets.only(top: 2.0),
                         child: Row(
                           children: <Widget>[
@@ -69,10 +78,16 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
                             Text("There may not be enough food",
                                 style: TextStyle(fontSize: 9))
                           ],
-                        ))
-                    : Container()
-              ],
-              crossAxisAlignment: CrossAxisAlignment.start,
+                        )),
+                  ],
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                ),
+                secondChild: Align(
+                  alignment: Alignment.topLeft,
+                  child: Text(countText,
+                      style: TextStyle(fontSize: 10, color: Colors.green)),
+                ),
+              ),
             ),
             _checkBoxButton()
           ],
