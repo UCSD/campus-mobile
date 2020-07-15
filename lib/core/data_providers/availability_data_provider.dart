@@ -112,13 +112,11 @@ class AvailabilityDataProvider extends ChangeNotifier {
   void toggleLocation(String location) {
     if (_locationViewState[location] ?? true) {
       _locationViewState[location] = false;
-      _userDataProvider
-          .updateUserProfileModel(_userDataProvider.userProfileModel);
     } else {
       _locationViewState[location] = true;
-      _userDataProvider
-          .updateUserProfileModel(_userDataProvider.userProfileModel);
     }
+    _userDataProvider
+        .updateUserProfileModel(_userDataProvider.userProfileModel);
     notifyListeners();
   }
 
