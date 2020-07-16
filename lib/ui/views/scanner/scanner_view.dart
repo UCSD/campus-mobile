@@ -56,22 +56,22 @@ class _QRViewExampleState extends State<ScannerView> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
                       _barcodeDataProvider.qrText.isNotEmpty
-                        ? Padding(
-                          padding: const EdgeInsets.only(top: 20.0, bottom: 4.0),
-                          child: Text(
-                            ScannerConstants.scannerSubmitPrompt,
-                            style: TextStyle( color: Colors.black, fontSize: 18.0 ),
-                            textAlign: TextAlign.center,
-                          ),
-                        )
-                        : Padding(
-                          padding: const EdgeInsets.only(top:20.0, bottom: 4.0),
-                          child: Text(
-                            ScannerConstants.scannerViewPrompt,
+                          ? Padding(
+                        padding: const EdgeInsets.only(top: 20.0, bottom: 4.0),
+                        child: Text(
+                          ScannerConstants.scannerSubmitPrompt,
                           style: TextStyle( color: Colors.black, fontSize: 18.0 ),
-                            textAlign: TextAlign.center,
-                          ),
+                          textAlign: TextAlign.center,
                         ),
+                      )
+                          : Padding(
+                        padding: const EdgeInsets.only(top:20.0, bottom: 4.0),
+                        child: Text(
+                          ScannerConstants.scannerViewPrompt,
+                          style: TextStyle( color: Colors.black, fontSize: 18.0 ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -84,9 +84,9 @@ class _QRViewExampleState extends State<ScannerView> {
                                 disabledTextColor: Colors.black,
                                 disabledColor: Color.fromRGBO(218, 218, 218, 1.0),
                                 onPressed: _barcodeDataProvider.qrText.isNotEmpty &&
-                                        !_barcodeDataProvider.isLoading &&
-                                        _barcodeDataProvider.submitState !=
-                                            ButtonText.SubmitButtonReceived
+                                    !_barcodeDataProvider.isLoading &&
+                                    _barcodeDataProvider.submitState !=
+                                        ButtonText.SubmitButtonReceived
                                     ? () => _barcodeDataProvider.submitBarcode()
                                     : null,
                                 child: Text(_barcodeDataProvider.submitState),
