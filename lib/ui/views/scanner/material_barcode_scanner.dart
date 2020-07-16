@@ -189,12 +189,10 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
       if(barcodes.isNotEmpty) {
         _cameraController.stopImageStream();
         setState(() {
-          print("here");
           _hasScanned = true;
           _barcode = barcodes[0].rawValue;
         });
 
-        print(_hasScanned);
         print(_barcode);
       }
       //print("HERE");
