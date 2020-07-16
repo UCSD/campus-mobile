@@ -43,11 +43,13 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
   final BarcodeDetector _barcodeDetector =
   FirebaseVision.instance.barcodeDetector();
   bool _hasScanned = false;
+  String _barcode;
 
   @override
   void initState() {
     super.initState();
-    bool _hasBarcode = false;
+    _hasScanned;
+    _barcode;
     SystemChrome.setEnabledSystemUIOverlays(<SystemUiOverlay>[]);
     SystemChrome.setPreferredOrientations(
       <DeviceOrientation>[DeviceOrientation.portraitUp],
@@ -167,9 +169,6 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
     final MediaQueryData data = MediaQuery.of(context);
 
     _cameraController.startImageStream((CameraImage availableImage) async {
-      if (isDetecting) {
-        //print("detecting");
-      }
 
       isDetecting = true;
 
@@ -189,6 +188,14 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
       final List<Barcode> barcodes = await _barcodeDetector.detectInImage(visionImage);
       if(barcodes.isNotEmpty) {
         _cameraController.stopImageStream();
+        setState(() {
+          print("here");
+          _hasScanned = true;
+          _barcode = barcodes[0].rawValue;
+        });
+
+        print(_hasScanned);
+        print(_barcode);
       }
       //print("HERE");
       //print(barcodes.toString());
@@ -248,7 +255,7 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
 
         if (_currentState != AnimationState.barcodeFound) {
           _closeWindow = true;
-          _scannerHint = 'Loading Information...';
+          _scannerHint = 'Submit Barcode';
           _switchAnimationState(AnimationState.barcodeFound);
           setState(() {
             _hasScanned = true;
@@ -343,6 +350,9 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
     return maxLogicalHeight / logicalHeight;
   }
 
+  Widget buildBottomView(BuildContext context) {
+
+  }
 
 
   @override
@@ -410,10 +420,10 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
               right: 0.0,
               height: 56,
               child: Container(
-                color: kShrinePink50,
+                color: Color(0xFF182B49),
                 child: Center(
                   child: Text(
-                    _scannerHint ?? 'Point your camera at a barcode',
+                    !_hasScanned ? 'Point camera at barcode' : _barcode,
                     style: Theme.of(context).textTheme.button,
                   ),
                 ),
@@ -426,28 +436,13 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
               ),
             ),
             AppBar(
+              title:Text("Test Kit Scanner"),
+              backgroundColor: Colors.transparent,
               leading: IconButton(
                 icon: const Icon(Icons.close, color: Colors.white),
                 onPressed: () => Navigator.of(context).pop(),
               ),
-              backgroundColor: Colors.transparent,
               elevation: 0.0,
-              actions: <Widget>[
-                IconButton(
-                  icon: const Icon(
-                    Icons.flash_off,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {},
-                ),
-                IconButton(
-                  icon: const Icon(
-                    Icons.help_outline,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {},
-                ),
-              ],
             ),
           ],
         ),

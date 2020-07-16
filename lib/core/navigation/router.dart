@@ -27,7 +27,6 @@ import 'package:campus_mobile_experimental/ui/views/parking/manage_parking_view.
 import 'package:campus_mobile_experimental/ui/views/profile/cards_view.dart';
 import 'package:campus_mobile_experimental/ui/views/profile/profile.dart';
 import 'package:campus_mobile_experimental/ui/views/scanner/material_barcode_scanner.dart';
-import 'package:campus_mobile_experimental/ui/views/scanner/scanner_view.dart';
 import 'package:campus_mobile_experimental/ui/views/special_events/special_event_detail_view.dart';
 import 'package:campus_mobile_experimental/ui/views/special_events/special_events_filter_view.dart';
 import 'package:campus_mobile_experimental/ui/views/special_events/special_events_list_view.dart';
