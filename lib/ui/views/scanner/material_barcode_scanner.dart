@@ -44,7 +44,7 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
   final BarcodeDetector _barcodeDetector =
   FirebaseVision.instance.barcodeDetector();
   bool _hasScanned = false;
-  String _barcode;
+  String _barcode = "";
 
   @override
   void initState() {
@@ -156,8 +156,8 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
   Future<void> _openCamera(CameraDescription camera) async {
     final ResolutionPreset preset =
     defaultTargetPlatform == TargetPlatform.android
-        ? ResolutionPreset.medium
-        : ResolutionPreset.medium;
+        ? ResolutionPreset.high
+        : ResolutionPreset.high;
 
     _cameraController = CameraController(camera, preset);
     await _cameraController.initialize();
@@ -415,7 +415,7 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
           Align(
             alignment:FractionalOffset.bottomCenter,
             child: ConstrainedBox(
-                constraints: BoxConstraints.loose(Size(MediaQuery.of(context).size.width, 0.3 * MediaQuery.of(context).size.height)),
+                constraints: BoxConstraints.loose(Size(MediaQuery.of(context).size.width, 0.2 * MediaQuery.of(context).size.height)),
                 child: Container(
                   color: Colors.white,
                   child: SingleChildScrollView(
@@ -426,7 +426,7 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
                               ? Padding(
                             padding: const EdgeInsets.only(top: 20.0, bottom: 4.0),
                             child: Text(
-                              "Submit",
+                              "Ready to submit.",
                               style: TextStyle( color: Colors.black, fontSize: 18.0 ),
                               textAlign: TextAlign.center,
                             ),
@@ -494,9 +494,9 @@ class WindowPainter extends CustomPainter {
 
     final Rect windowRect = Rect.fromLTRB(
       center.dx - windowHalfWidth,
-      center.dy - windowHalfHeight,
+      center.dy - windowHalfHeight/0.5,
       center.dx + windowHalfWidth,
-      center.dy + windowHalfHeight,
+      center.dy + windowHalfHeight/1.5,
     );
 
     final Rect left =
@@ -593,9 +593,9 @@ class RectangleOutlinePainter extends CustomPainter {
 
     final Rect rect = Rect.fromLTRB(
       center.dx - halfWidth,
-      center.dy - halfHeight,
+      center.dy - halfHeight/0.5,
       center.dx + halfWidth,
-      center.dy + halfHeight,
+      center.dy + halfHeight/1.5,
     );
 
     canvas.drawRect(rect, paint);
