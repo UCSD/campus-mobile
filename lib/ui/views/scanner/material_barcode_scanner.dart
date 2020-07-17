@@ -73,7 +73,7 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
       _animationPainter = null;
     });
 
-    _animationController?.dispose();
+    //_animationController?.dispose();
     _animationController = AnimationController(duration: duration, vsync: this);
   }
 
@@ -184,26 +184,37 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
           rotation: ImageRotation.rotation90
       );
 
-      final FirebaseVisionImage visionImage = FirebaseVisionImage.fromBytes(availableImage.planes[0].bytes, metadata);      print(visionImage.toString());
+      final FirebaseVisionImage visionImage = FirebaseVisionImage.fromBytes(availableImage.planes[0].bytes, metadata);
       //print(visionImage.toString());
+      print(visionImage.toString());
       final List<Barcode> barcodes = await _barcodeDetector.detectInImage(visionImage);
-      if(barcodes.isNotEmpty) {
-        _cameraController.stopImageStream();
-        setState(() {
-          _hasScanned = true;
-          _barcode = barcodes[0].rawValue;
-        });
+      if(barcodes.isNotEmpty && _cameraController != null) {
+        //_cameraController.stopImageStream();
+        print(barcodes.toString());
+        for(int i = 0 ; i < barcodes.length ; i++) {
+          if(barcodes[i].rawValue is String && !barcodes[i].rawValue.contains("typeNumber")) {
+            //_handleResult(barcodes:barcodes, data: data, imageSize: new Size(availableImage.height.toDouble(),availableImage.width.toDouble()));
+            print("BARCODE VAL: " + barcodes[0].rawValue);
+            print("BARCODE TYPE: " + barcodes[0].valueType.toString());
+            setState(() {
+              _hasScanned = true;
+              _barcode = barcodes[0].rawValue;
+            });
+            try{
+              _cameraController.stopImageStream();
+            }
+            on CameraException catch(e) {
+              return;
+            }
+          }
+        }
 
-        print(_barcode);
+        return;
       }
       //print("HERE");
       //print(barcodes.toString());
-      _handleResult(barcodes:barcodes, data: data, imageSize: new Size(availableImage.height.toDouble(),availableImage.width.toDouble()));
       //print("successful scan");
-      for(Barcode barcode in barcodes) {
-        //print("here");
-        print(barcode.rawValue);
-      }
+      return;
     });
   }
 
@@ -219,7 +230,8 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
     @required MediaQueryData data,
     @required Size imageSize,
   }) {
-    if (!_cameraController.value.isStreamingImages) {
+    print(barcodes[0].rawValue);
+    if (_cameraController != null && !_cameraController.value.isStreamingImages) {
       return;
     }
     final EdgeInsets padding = data.padding;
@@ -243,33 +255,38 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
       center.dy + halfHeight,
     );
 
-    for (Barcode barcode in barcodes) {
-      print(barcode.toString());
-      final Rect intersection = validRect.intersect(barcode.boundingBox);
-
-      final bool doesContain = intersection == barcode.boundingBox;
-
-      if (doesContain) {
-        _cameraController.stopImageStream().then((_) => _takePicture());
-
-        if (_currentState != AnimationState.barcodeFound) {
-          _closeWindow = true;
-          _scannerHint = 'Submit Barcode';
-          _switchAnimationState(AnimationState.barcodeFound);
-          setState(() {
-            _hasScanned = true;
-          });
-        }
-        return;
-      } else if (barcode.boundingBox.overlaps(validRect)) {
-        if (_currentState != AnimationState.barcodeNear) {
-          _scannerHint = 'Move closer to the barcode';
-          _switchAnimationState(AnimationState.barcodeNear);
-          setState(() {});
-        }
-        return;
-      }
-    }
+//    for (Barcode barcode in barcodes) {
+//      print(barcode.rawValue);
+//      final Rect intersection = validRect.intersect(barcode.boundingBox);
+//
+//      final bool doesContain = intersection == barcode.boundingBox;
+//
+//      if (doesContain) {
+//        try{
+//          _cameraController.stopImageStream().then((_) => _takePicture());
+//        }
+//        on CameraException{
+//          print("here");
+//        }
+//
+//        if (_currentState != AnimationState.barcodeFound) {
+////          _closeWindow = true;
+////          _scannerHint = 'Submit Barcode';
+////          _switchAnimationState(AnimationState.barcodeFound);
+//          setState(() {
+//            _hasScanned = true;
+//          });
+//        }
+//        return;
+//      } else if (barcode.boundingBox.overlaps(validRect)) {
+//        if (_currentState != AnimationState.barcodeNear) {
+//          //_scannerHint = 'Move closer to the barcode';
+//          //_switchAnimationState(AnimationState.barcodeNear);
+//          setState(() {});
+//        }
+//        //return;
+//      }
+//    }
 
     if (_barcodeNearAnimationInProgress) {
       return;
@@ -315,7 +332,7 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
       print(e);
     }
 
-    _cameraController.dispose();
+    //_cameraController.dispose();
     _cameraController = null;
 
     setState(() {
@@ -348,11 +365,6 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
 
     return maxLogicalHeight / logicalHeight;
   }
-
-  Widget buildBottomView(BuildContext context) {
-
-  }
-
 
   @override
   Widget build(BuildContext context) {
@@ -426,7 +438,7 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
                               ? Padding(
                             padding: const EdgeInsets.only(top: 20.0, bottom: 4.0),
                             child: Text(
-                              "Ready to submit.",
+                              _barcode,
                               style: TextStyle( color: Colors.black, fontSize: 18.0 ),
                               textAlign: TextAlign.center,
                             ),
@@ -450,7 +462,9 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
                                   child: FlatButton(
                                     disabledTextColor: Colors.black,
                                     disabledColor: Color.fromRGBO(218, 218, 218, 1.0),
-                                    onPressed: (){},
+                                    onPressed: (){
+                                      print("PRESSED");
+                                    },
                                     child: Text("Submit"),
                                     color: ColorPrimary,
                                     textColor: lightTextColor,
