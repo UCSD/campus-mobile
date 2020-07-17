@@ -3,8 +3,7 @@ import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-final _url = "https://reactauthtest-e9a4e.web.app/";
-
+final _url = "https://cqeg04fl07.execute-api.us-west-2.amazonaws.com/parking";
 class ParkingDisplay extends StatelessWidget {
   const ParkingDisplay({
     Key key,
@@ -15,16 +14,31 @@ class ParkingDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  WebView(javascriptMode: JavascriptMode.unrestricted, initialUrl: _url);}
-    // return Column(
-    //   children: [
-    //     buildLocationTitle(),
-    //     buildLocationContext(),
-    //     buildSpotsAvailableText(),
-    //     buildAllParkingAvailability(),
-    //   ],
-    // );
+    //TODO
+    const spotTypesQueryString = "spots=A,B,S";
+    var lotQueryString = "lot=" + model.locationId;
+    const themeQueryString = "";
+
+    var url = _url +
+        "?" +
+        lotQueryString +
+        "&" +
+        spotTypesQueryString +
+        "&" +
+        themeQueryString;
+
+    return WebView(
+        javascriptMode: JavascriptMode.unrestricted, initialUrl: url);
   }
+  // return Column(
+  //   children: [
+  //     buildLocationTitle(),
+  //     buildLocationContext(),
+  //     buildSpotsAvailableText(),
+  //     buildAllParkingAvailability(),
+  //   ],
+  // );
+}
 
 //   Widget buildAllParkingAvailability() {
 //     List<Widget> listOfCircularParkingInfo = List<Widget>();
