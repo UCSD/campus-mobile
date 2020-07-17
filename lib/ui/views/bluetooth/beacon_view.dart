@@ -13,17 +13,14 @@ class BeaconView extends StatefulWidget {
 class _BeaconViewState extends State<BeaconView> {
 
   var _isTransmissionSupported;
-  var _isAdvertising;
-  String broadcastingState = "Currently not broadcasting";
+  var _isAdvertising = false;
+  var _isAdvertisingSubscription;
   BeaconBroadcast beaconBroadcast;
   var beaconUuid = 'null';
-  Duration uuidDuration;
-  var uuidTimer;
 
   @override
   void initState () {
     super.initState();
-    print("Enter beacon");
 
     checkTime();
     beaconBroadcast = BeaconBroadcast();
@@ -33,13 +30,11 @@ class _BeaconViewState extends State<BeaconView> {
       });
     });
 
-    beaconBroadcast.getAdvertisingStateChange().listen((isAdvertising) {
+    _isAdvertisingSubscription = beaconBroadcast.getAdvertisingStateChange().listen((isAdvertising) {
       setState(() {
         _isAdvertising = isAdvertising;
       });
     });
-    
-    //uuidTimer = Timer.periodic(Duration(seconds: 1), (Timer t) => changeUUID());
   }
 
   @override
@@ -48,8 +43,8 @@ class _BeaconViewState extends State<BeaconView> {
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('uuid', beaconUuid);
-    //uuidTimer.cancel();
-    print("Exit beacon");
+    _isAdvertisingSubscription.cancel();
+    beaconBroadcast.stop();
   }
 
   void checkTime () async {
@@ -59,46 +54,32 @@ class _BeaconViewState extends State<BeaconView> {
     var difference = DateTime.now().difference(DateTime.parse(previousTime)).inSeconds;
     print(difference);
     if (difference > 10) {
-      beaconUuid = Uuid().v4();
+      changeUUID();
       prefs.setString('previousTime', DateTime.now().toString());
     }
 
   }
 
-  void startBroadcast () {
-    //start beacon broadcasting
-    //if (isBroadcasting)
-    //  return;
+  void _startBroadcast () {
+    if (_isAdvertising)
+      return null;
 
     beaconBroadcast
-        .setUUID(beaconUuid)
-        .setMajorId(1)
-        .setMinorId(100)
-        .setIdentifier('com.example.myDevice')
-        .setLayout(BeaconBroadcast.ALTBEACON_LAYOUT)
-        .start();
+      .setUUID(beaconUuid)
+      .setMajorId(1)
+      .setMinorId(100)
+      .setIdentifier('com.example.myDevice')
+      .setLayout(BeaconBroadcast.ALTBEACON_LAYOUT)
+      .start();
 
     print(beaconUuid);
-    setState(() {
-      broadcastingState = "Currently broadcasting";
-    });
   }
 
-  void stopBroadcast () {
-    // stop beacon broadcasting
-    //if (!isBroadcasting)
-    //  return;
-
-    beaconBroadcast.stop();
-    setState(() {
-      broadcastingState = "Currently not broadcasting";
-      beaconUuid = "null";
-    });
-  }
+  void _stopBroadcast () => beaconBroadcast.stop();
 
   void changeUUID () {
     beaconUuid = Uuid().v4();
-    print(beaconUuid);
+    beaconUuid = "00000000" + beaconUuid.substring(8);
     setState(() {});
   }
 
@@ -116,13 +97,13 @@ class _BeaconViewState extends State<BeaconView> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               RaisedButton (
-                onPressed: startBroadcast,
+                onPressed: _startBroadcast,
                 child: Text ("Start Broadcasting",
                   style: TextStyle (color: Colors.white),
                 ),
               ),
               RaisedButton (
-                onPressed: stopBroadcast,
+                onPressed: _stopBroadcast,
                 child: Text ("Stop Broadcasting",
                   style: TextStyle (color: Colors.white),
                 ),
