@@ -169,7 +169,7 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
         ? ResolutionPreset.high
         : ResolutionPreset.high;
 
-    _cameraController = CameraController(camera, preset);
+    _cameraController = CameraController(camera, preset,enableAudio: false);
     await _cameraController.initialize();
     _previewSize = _cameraController.value.previewSize;
     setState(() {});
