@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:ui' show lerpDouble;
 
+import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,9 @@ import 'package:path_provider/path_provider.dart';
 import 'colors.dart';
 import 'scanner_utils.dart';
 import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
+import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
+import 'package:campus_mobile_experimental/core/services/barcode_service.dart';
+
 
 enum AnimationState { search, barcodeNear, barcodeFound, endSearch }
 
@@ -45,12 +49,18 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
   FirebaseVision.instance.barcodeDetector();
   bool _hasScanned = false;
   String _barcode = "";
+  UserDataProvider _userDataProvider;
+  BarcodeService _barcodeService;
+  bool _submitted = false;
+  String _result = "";
 
   @override
   void initState() {
     super.initState();
     _hasScanned;
     _barcode;
+    _userDataProvider = UserDataProvider();
+    _barcodeService = BarcodeService();
     SystemChrome.setEnabledSystemUIOverlays(<SystemUiOverlay>[]);
     SystemChrome.setPreferredOrientations(
       <DeviceOrientation>[DeviceOrientation.portraitUp],
@@ -200,6 +210,7 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
               _hasScanned = true;
               _barcode = barcodes[0].rawValue;
             });
+            _barcodeDetector.close();
             try{
               _cameraController.stopImageStream();
             }
@@ -302,7 +313,12 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
   @override
   void dispose() {
     _currentState = AnimationState.endSearch;
-    _cameraController?.stopImageStream();
+    try{
+      _cameraController.stopImageStream();
+    }
+    on CameraException {
+
+    }
     _cameraController?.dispose();
     _animationController?.dispose();
     _barcodeDetector.close();
@@ -366,6 +382,41 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
     return maxLogicalHeight / logicalHeight;
   }
 
+  Future<Map<String, dynamic>> createUserData() async {
+    print("affiliation: " + _userDataProvider.authenticationModel.ucsdaffiliation.toString());
+    return {
+      'barcode': _barcode,
+      'ucsdaffiliation': _userDataProvider.authenticationModel.ucsdaffiliation
+    };
+  }
+
+  void submitBarcode() async {
+      print("in submit");
+      var userData = await createUserData();
+      print("here");
+      print(userData.toString());
+//      var headers = {
+//        "Content-Type": "application/json",
+//        'Authorization':
+//        'Bearer ${_userDataProvider.authenticationModel.accessToken}'
+//      };
+//      var results = await _barcodeService.uploadResults(headers, userData);
+//      if (results) {
+//        _result = ButtonText.SubmitButtonReceived;
+//        _submitted = true;
+//      } else {
+//        if (_barcodeService.error.contains(ErrorConstants.invalidBearerToken)) {
+//          await _userDataProvider.refreshToken();
+//        } else {
+//          _result = _barcodeService.error;
+//        }
+//        _result = ButtonText.SubmitButtonTryAgain;
+//        _submitted = true;
+//      }
+     setState(() {});
+  }
+
+
   @override
   Widget build(BuildContext context) {
     Widget background;
@@ -397,7 +448,11 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
         backgroundColor: Color(0xFF182B49),
         leading: IconButton(
           icon: const Icon(Icons.close, color: Colors.white),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () {
+            _barcodeDetector.close();
+            _cameraController.stopImageStream();
+            Navigator.of(context).pop();
+          },
         ),
         elevation: 0.0,
       ),
@@ -464,6 +519,7 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
                                     disabledColor: Color.fromRGBO(218, 218, 218, 1.0),
                                     onPressed: (){
                                       print("PRESSED");
+                                      submitBarcode();
                                     },
                                     child: Text("Submit"),
                                     color: ColorPrimary,
