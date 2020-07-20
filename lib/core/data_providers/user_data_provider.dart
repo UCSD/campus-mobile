@@ -295,12 +295,18 @@ class UserDataProvider extends ChangeNotifier {
       profile.pid = _authenticationModel.pid;
       profile.subscribedTopics =
           await _pushNotificationDataProvider.publicTopics();
-      final pattern = RegExp('[BGJMU]');
-      if ((profile.ucsdaffiliation ?? "").contains(pattern)) {
+      final studentPattern = RegExp('[BGJMU]');
+      final staffPattern = RegExp('[E]');
+      if ((profile.ucsdaffiliation ?? "").contains(studentPattern)) {
         profile
           ..classifications = Classifications.fromJson({'student': true})
           ..subscribedTopics
               .addAll(await _pushNotificationDataProvider.studentTopics());
+      } else if ((profile.ucsdaffiliation ?? "").contains(staffPattern)) {
+        profile
+          ..classifications = Classifications.fromJson({'staff': true})
+          ..subscribedTopics
+              .addAll(await _pushNotificationDataProvider.staffTopics());
       } else {
         profile.classifications = Classifications.fromJson({'student': false});
       }
