@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -14,6 +15,11 @@ class BluetoothSingleton {
 
   // Will add at the end, slows down scans
   final _storage = FlutterSecureStorage();
+
+  // Holders for location
+  double previousLatitude = 0;
+  double previousLongitude = 0;
+
 
   // Constant for scans
   final int scanDuration = 2; //Seconds
@@ -42,7 +48,7 @@ class BluetoothSingleton {
   init() {
     // Set the minimum change to activate a new scan.
     location.changeSettings(
-        accuracy: LocationAccuracy.low, distanceFilter: 200.0);
+        accuracy: LocationAccuracy.low);
 
     // Enable location listening
     _logLocation();
@@ -53,12 +59,12 @@ class BluetoothSingleton {
 
   /// This function starts continuous scan (on app open)
   enableListener() {
-    //Start the initial scan
-    startScan();
 
+    //Start the initial scan
+    Timer.run(() {startScan();});
     // Enable timer, must wait duration before next method execution
     ongoingScanner = new Timer.periodic(
-        Duration(seconds: waitTime), (Timer t) => startScan());
+        Duration(minutes: waitTime), (Timer t) => startScan());
   }
 
   // Start a bluetooth scan of 2 second duration and listen to results
@@ -139,7 +145,7 @@ class BluetoothSingleton {
   startNewScan(int scanTime) {
     // Start scan with specified duration
     flutterBlueInstance.startScan(
-        timeout: Duration(seconds: scanTime), allowDuplicates: false);
+        timeout: Duration(minutes: scanTime), allowDuplicates: false);
 
     // Process scan results
     flutterBlueInstance.scanResults.listen((results) {
@@ -238,8 +244,19 @@ class BluetoothSingleton {
   // Listens for location changes and ensures it is larger than 200 meters
   void enableLocationListening() {
     location.onLocationChanged.listen((event) {
+      double currentLongitude = _currentLocation.longitude;
+      double currentLatitude = _currentLocation.latitude;
+
+      if(previousLatitude == 0 && previousLongitude == 0){
+        previousLatitude = _currentLocation.latitude;
+        previousLongitude = _currentLocation.longitude;
+      }
       // 200 meter threshold
-      if (event.heading > 200) {
+      if (distanceFromLastLocation(previousLongitude, previousLatitude, currentLongitude, currentLatitude) >= 200) {
+
+        previousLatitude = 0;
+        previousLongitude= 0;
+
         flutterBlueInstance.stopScan();
         ongoingScanner.cancel();
         pauseScan();
@@ -248,4 +265,11 @@ class BluetoothSingleton {
       }
     });
   }
+
+
+  // Distance formula
+  double distanceFromLastLocation(double prevLong, double prevLat, double curLong, double curLat){
+    return sqrt(pow(curLong - prevLong, 2) - pow(curLat - prevLat, 2));
+  }
+
 }

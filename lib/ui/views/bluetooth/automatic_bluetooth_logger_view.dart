@@ -24,10 +24,18 @@ class _AutomaticBluetoothLoggerViewState
 
   _AutomaticBluetoothLoggerViewState(BluetoothSingleton bluetoothScan);
 
+
   // Set the state when a new scan occurs
   void initState() {
     bluetoothSingleton = widget.bluetoothSingleton;
     super.initState();
+    if(bluetoothSingleton.loggedItems.length > 0){
+        Timer.periodic(Duration(seconds: 3), (timer) {setState(() {
+          loggedItems = bluetoothSingleton.loggedItems;
+          print("TIMER WENT OFF");
+          build(context);
+        }); });
+    }
     subscription = bluetoothSingleton.flutterBlueInstance.scanResults
         .listen((event) async {
       setState(() {
