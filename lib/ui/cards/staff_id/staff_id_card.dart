@@ -31,16 +31,30 @@ class _StaffIdCardState extends State<StaffIdCard> {
     );
   }
 
-  final _url = "https://stage-cwo-test.ucsd.edu/WebCards/staff_id.html";
+  //final _url = "https://stage-cwo-test.ucsd.edu/WebCards/staff_id.html";
+  final _url = "file:///Users/kevindesilva/Downloads/staff_id%20(1).html";
 
   Widget buildCardContent(BuildContext context) {
     return Column(
       children: <Widget>[
         Flexible(
-          child: WebView(
-              javascriptMode: JavascriptMode.unrestricted, initialUrl: _url),
-        ),
+            child: WebView(
+          javascriptMode: JavascriptMode.unrestricted,
+          initialUrl: _url,
+          javascriptChannels: <JavascriptChannel>[
+            _printJavascriptChannel(context),
+          ].toSet(),
+        )),
       ],
+    );
+  }
+
+  JavascriptChannel _printJavascriptChannel(BuildContext context) {
+    return JavascriptChannel(
+      name: 'Print',
+      onMessageReceived: (JavascriptMessage message) {
+        print(message.message);
+      },
     );
   }
 }
