@@ -45,8 +45,7 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
   AnimationState _currentState = AnimationState.search;
   CustomPainter _animationPainter;
   int _animationStart = DateTime.now().millisecondsSinceEpoch;
-  final BarcodeDetector _barcodeDetector =
-  FirebaseVision.instance.barcodeDetector();
+  final BarcodeDetector _barcodeDetector = FirebaseVision.instance.barcodeDetector();
   bool _hasScanned = false;
   String _barcode = "";
   UserDataProvider _userDataProvider;
@@ -167,7 +166,7 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
     final ResolutionPreset preset =
     defaultTargetPlatform == TargetPlatform.android
         ? ResolutionPreset.high
-        : ResolutionPreset.high;
+        : ResolutionPreset.medium;
 
     _cameraController = CameraController(camera, preset,enableAudio: false);
     await _cameraController.initialize();
@@ -178,55 +177,54 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
   Future<void> _startStreamingImagesToScanner(int sensorOrientation) async {
     bool isDetecting = false;
     final MediaQueryData data = MediaQuery.of(context);
-
     _cameraController.startImageStream((CameraImage availableImage) async {
 
       isDetecting = true;
+        final FirebaseVisionImageMetadata metadata = FirebaseVisionImageMetadata(
+            rawFormat: availableImage.format.raw,
+            size: Size(availableImage.width.toDouble(),availableImage.height.toDouble()),
+            planeData: availableImage.planes.map((currentPlane) => FirebaseVisionImagePlaneMetadata(
+                bytesPerRow: currentPlane.bytesPerRow,
+                height: currentPlane.height,
+                width: currentPlane.width
+            )).toList(),
+            rotation: ImageRotation.rotation90
+        );
 
-      final FirebaseVisionImageMetadata metadata = FirebaseVisionImageMetadata(
-          rawFormat: availableImage.format.raw,
-          size: Size(availableImage.width.toDouble(),availableImage.height.toDouble()),
-          planeData: availableImage.planes.map((currentPlane) => FirebaseVisionImagePlaneMetadata(
-              bytesPerRow: currentPlane.bytesPerRow,
-              height: currentPlane.height,
-              width: currentPlane.width
-          )).toList(),
-          rotation: ImageRotation.rotation90
-      );
-
-      final FirebaseVisionImage visionImage = FirebaseVisionImage.fromBytes(availableImage.planes[0].bytes, metadata);
-      //print(visionImage.toString());
-      print(visionImage.toString());
-      final List<Barcode> barcodes = await _barcodeDetector.detectInImage(visionImage);
-      if(barcodes.isNotEmpty && _cameraController != null) {
-        //_cameraController.stopImageStream();
-        print(barcodes.toString());
-        for(int i = 0 ; i < barcodes.length ; i++) {
-          if(barcodes[i].rawValue is String && !barcodes[i].rawValue.contains("typeNumber")) {
-            //_handleResult(barcodes:barcodes, data: data, imageSize: new Size(availableImage.height.toDouble(),availableImage.width.toDouble()));
-            print("BARCODE VAL: " + barcodes[0].rawValue);
-            print("BARCODE TYPE: " + barcodes[0].valueType.toString());
-            setState(() {
-              _hasScanned = true;
-              _barcode = barcodes[0].rawValue;
-            });
-            _barcodeDetector.close();
-            try{
-              _cameraController.stopImageStream();
-            }
-            on CameraException catch(e) {
-              return;
+        final FirebaseVisionImage visionImage = FirebaseVisionImage.fromBytes(availableImage.planes[0].bytes, metadata);
+        //print(visionImage.toString());
+        print(visionImage.toString());
+        final List<Barcode> barcodes = await _barcodeDetector.detectInImage(visionImage);
+        if(barcodes.isNotEmpty && _cameraController != null) {
+          //_cameraController.stopImageStream();
+          print(barcodes.toString());
+          for(int i = 0 ; i < barcodes.length ; i++) {
+            if(barcodes[i].rawValue is String && !barcodes[i].rawValue.contains("typeNumber")) {
+              //_handleResult(barcodes:barcodes, data: data, imageSize: new Size(availableImage.height.toDouble(),availableImage.width.toDouble()));
+              print("BARCODE VAL: " + barcodes[0].rawValue);
+              print("BARCODE TYPE: " + barcodes[0].valueType.toString());
+              setState(() {
+                _hasScanned = true;
+                _barcode = barcodes[i].rawValue;
+              });
+              _barcodeDetector.close();
+              try{
+                _cameraController.stopImageStream();
+              }
+              on CameraException catch(e) {
+                return;
+              }
+              break;
             }
           }
-        }
 
+          return;
+        }
+        //print("HERE");
+        //print(barcodes.toString());
+        //print("successful scan");
         return;
-      }
-      //print("HERE");
-      //print(barcodes.toString());
-      //print("successful scan");
-      return;
-    });
+      });
   }
 
 
