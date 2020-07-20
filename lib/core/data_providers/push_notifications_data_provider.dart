@@ -273,6 +273,20 @@ class PushNotificationDataProvider extends ChangeNotifier {
     return topicsToReturn;
   }
 
+  /// get staff only topics
+  List<String> staffTopics() {
+    List<String> topicsToReturn = List<String>();
+    for (TopicsModel model in _notificationService.topicsModel ?? []) {
+      if (model.audienceId == 'staff') {
+        for (Topic topic in model.topics) {
+          topicsToReturn.add(topic.topicId);
+        }
+        return topicsToReturn;
+      }
+    }
+    return topicsToReturn;
+  }
+
   /// get all public topics
   List<String> publicTopics() {
     List<String> topicsToReturn = List<String>();
