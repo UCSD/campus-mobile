@@ -15,7 +15,7 @@ class ParkingDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //TODO
-    const spotTypesQueryString = "spots=A,B,S";
+    const spotTypesQueryString = "spots=A,B,S"; // Hardcoded for testing, will be passed in ;
     var lotQueryString = "lot=" + model.locationId;
     const themeQueryString = "";
 

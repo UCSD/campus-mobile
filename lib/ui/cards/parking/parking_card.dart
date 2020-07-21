@@ -75,7 +75,7 @@ class _ParkingCardState extends State<ParkingCard> {
         'Manage Lots',
       ),
       onPressed: () {
-        Navigator.pushNamed(context, RoutePaths.ParkingLotsView);
+        Navigator.pushNamed(context, RoutePaths.ManageParkingView);
       },
     ));
     actionButtons.add(FlatButton(
