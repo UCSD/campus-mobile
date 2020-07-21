@@ -33,29 +33,20 @@ class _StaffIdCardState extends State<StaffIdCard> {
   }
 
   //final _url = "https://stage-cwo-test.ucsd.edu/WebCards/staff_id.html";
-  final _url = "file:///Users/sonikaram/Downloads/staff_id%20(1).html";
+  //final _url = "file:///Users/kevindesilva/Downloads/staff_id%20(1).html";
+  final _url = "https://cwo-test.ucsd.edu/WebCards/staff_id.html";
 
   Widget buildCardContent(BuildContext context) {
+    var nameQueryString = "name=Kevin";
+    var url = _url + "?" + nameQueryString;
     return Column(
       children: <Widget>[
         Flexible(
             child: WebView(
           javascriptMode: JavascriptMode.unrestricted,
-          initialUrl: _url,
-          javascriptChannels: <JavascriptChannel>[
-            _printJavascriptChannel(context),
-          ].toSet(),
+          initialUrl: url,
         )),
       ],
-    );
-  }
-
-  JavascriptChannel _printJavascriptChannel(BuildContext context) {
-    return JavascriptChannel(
-      name: 'Print',
-      onMessageReceived: (JavascriptMessage message) {
-        print(message.message);
-      },
     );
   }
 }
