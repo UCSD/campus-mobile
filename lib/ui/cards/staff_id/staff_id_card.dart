@@ -37,8 +37,16 @@ class _StaffIdCardState extends State<StaffIdCard> {
   final _url = "https://cwo-test.ucsd.edu/WebCards/staff_id.html";
 
   Widget buildCardContent(BuildContext context) {
-    var nameQueryString = "name=Kevin";
-    var url = _url + "?" + nameQueryString;
+    var nameQueryString = "name=Joe%20Employee";
+    var affiliationQueryString = "affiliation=Staff";
+    var idNumQueryString = "id=1111111111111";
+    var url = _url +
+        "?" +
+        nameQueryString +
+        "&" +
+        affiliationQueryString +
+        "&" +
+        idNumQueryString;
     return Column(
       children: <Widget>[
         Flexible(
