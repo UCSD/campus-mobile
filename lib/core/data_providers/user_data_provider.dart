@@ -192,6 +192,7 @@ class UserDataProvider extends ChangeNotifier {
       _encryptLoginInfo(username, password);
       _error = null;
       _isLoading = true;
+      updateAuthenticationModel(AuthenticationModel.fromJson({}));
       notifyListeners();
       if (await _silentLogin()) {
         await fetchUserProfile();
