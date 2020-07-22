@@ -38,7 +38,15 @@ class _StaffIdCardState extends State<StaffIdCard> {
 
   Widget buildCardContent(BuildContext context) {
     var nameQueryString = "name=Joe%20Employee";
-    var url = _url + "?" + nameQueryString;
+    var affiliationQueryString = "affiliation=Staff";
+    var idNumQueryString = "id=1111111111111";
+    var url = _url +
+        "?" +
+        nameQueryString +
+        "&" +
+        affiliationQueryString +
+        "&" +
+        idNumQueryString;
     return Column(
       children: <Widget>[
         Flexible(
