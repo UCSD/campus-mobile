@@ -11,7 +11,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-bool showOnboardingScreen = false;
+bool isFirstRunFlag = false;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -26,8 +26,9 @@ void main() async {
 void initializeStorage() async {
   /// initialize hive storage
   await Hive.initFlutter('.');
+  isFirstRunFlag = await isFirstRun();
 
-  if (await isFirstRun()) {
+  if (isFirstRunFlag) {
     FlutterSecureStorage storage = FlutterSecureStorage();
 
     /// open all boxes
@@ -47,15 +48,13 @@ void initializeStorage() async {
 
 Future<bool> isFirstRun() async {
   final prefs = await SharedPreferences.getInstance();
-  showOnboardingScreen = (prefs.getBool('showOnboardingScreen') ?? false);
   return (prefs.getBool('first_run') ?? true);
 }
 
 void setFirstRun() async {
   final prefs = await SharedPreferences.getInstance();
   prefs.setBool('first_run', false);
-  prefs.setBool('showOnboardingScreen', true);
-  showOnboardingScreen = true;
+  isFirstRunFlag = true;
 }
 
 class CampusMobile extends StatelessWidget {
@@ -85,7 +84,7 @@ class CampusMobile extends StatelessWidget {
           iconTheme: darkIconTheme,
           appBarTheme: darkAppBarTheme,
         ),
-        initialRoute: showOnboardingScreen
+        initialRoute: isFirstRunFlag
             ? RoutePaths.Onboarding
             : RoutePaths.BottomNavigationBar,
         onGenerateRoute: Router.generateRoute,
