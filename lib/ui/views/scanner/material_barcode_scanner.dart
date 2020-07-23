@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 
 import 'colors.dart';
 import 'scanner_utils.dart';
@@ -61,7 +62,6 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
     print("now in barcode scanner");
     _hasScanned;
     _barcode;
-    _userDataProvider = UserDataProvider();
     print(_userDataProvider.authenticationModel.ucsdaffiliation);
     print(_authenticationModel.ucsdaffiliation);
     _barcodeService = BarcodeService();
