@@ -1,11 +1,8 @@
-import 'dart:convert';
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
-import 'package:campus_mobile_experimental/ui/theme/app_layout.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -33,9 +30,13 @@ class _StaffIdCardState extends State<StaffIdCard> {
   }
 
   final _url = "https://cwo-test.ucsd.edu/WebCards/staff_id.html";
-  UserDataProvider _userDataProvider = UserDataProvider();
+
+  UserDataProvider _userDataProvider;
+  set userDataProvider(UserDataProvider value) => _userDataProvider = value;
 
   Widget buildCardContent(BuildContext context) {
+    _userDataProvider = Provider.of<UserDataProvider>(context);
+
     /// Verify that user is logged in
     if (_userDataProvider.isLoggedIn) {
       /// Initialize header
@@ -46,15 +47,16 @@ class _StaffIdCardState extends State<StaffIdCard> {
     }
     var tokenQueryString =
         "token=" + '${_userDataProvider.authenticationModel.accessToken}';
-    print(tokenQueryString);
-    var url = _url + "?" + tokenQueryString; // +
+    var url = _url + "?" + tokenQueryString;
+
     return Column(
       children: <Widget>[
         Flexible(
-            child: WebView(
-          javascriptMode: JavascriptMode.unrestricted,
-          initialUrl: url,
-        )),
+          child: WebView(
+            javascriptMode: JavascriptMode.unrestricted,
+            initialUrl: url,
+          ),
+        ),
       ],
     );
   }
