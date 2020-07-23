@@ -12,10 +12,7 @@ class Messages {
   List<MessageElement> messages;
   int next;
 
-  Messages({
-    this.messages,
-    this.next
-  });
+  Messages({this.messages, this.next});
 
   factory Messages.fromJson(Map<String, dynamic> json) => Messages(
         messages: List<MessageElement>.from(

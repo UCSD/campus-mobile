@@ -46,7 +46,8 @@ class Item {
   factory Item.fromJson(Map<String, dynamic> json) => Item(
         date: json["date"] == null ? null : DateTime.parse(json["date"]),
         title: json["title"] == null ? null : json["title"],
-        description: json["description"] == null ? null : json["description"].trim(),
+        description:
+            json["description"] == null ? null : json["description"].trim(),
         link: json["link"] == null ? null : json["link"],
         image: json["image"] == null ? null : json["image"],
       );

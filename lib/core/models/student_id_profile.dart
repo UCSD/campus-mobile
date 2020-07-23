@@ -4,38 +4,41 @@
 
 import 'dart:convert';
 
-StudentIdProfileModel studentIdProfileModelFromJson(String str) => StudentIdProfileModel.fromJson(json.decode(str));
+StudentIdProfileModel studentIdProfileModelFromJson(String str) =>
+    StudentIdProfileModel.fromJson(json.decode(str));
 
-String studentIdProfileModelToJson(StudentIdProfileModel data) => json.encode(data.toJson());
+String studentIdProfileModelToJson(StudentIdProfileModel data) =>
+    json.encode(data.toJson());
 
 class StudentIdProfileModel {
-    String studentPid;
-    String termYear;
-    String studentLevelCurrent;
-    String collegeCurrent;
-    String ugPrimaryMajorCurrent;
-    dynamic graduatePrimaryMajorCurrent;
-    int athleteCurrentCount;
-    String cardNumber;
-    String barcode;
-    String classificationType;
-    int issueNumber;
+  String studentPid;
+  String termYear;
+  String studentLevelCurrent;
+  String collegeCurrent;
+  String ugPrimaryMajorCurrent;
+  dynamic graduatePrimaryMajorCurrent;
+  int athleteCurrentCount;
+  String cardNumber;
+  String barcode;
+  String classificationType;
+  int issueNumber;
 
-    StudentIdProfileModel({
-        this.studentPid,
-        this.termYear,
-        this.studentLevelCurrent,
-        this.collegeCurrent,
-        this.ugPrimaryMajorCurrent,
-        this.graduatePrimaryMajorCurrent,
-        this.athleteCurrentCount,
-        this.cardNumber,
-        this.barcode,
-        this.classificationType,
-        this.issueNumber,
-    });
+  StudentIdProfileModel({
+    this.studentPid,
+    this.termYear,
+    this.studentLevelCurrent,
+    this.collegeCurrent,
+    this.ugPrimaryMajorCurrent,
+    this.graduatePrimaryMajorCurrent,
+    this.athleteCurrentCount,
+    this.cardNumber,
+    this.barcode,
+    this.classificationType,
+    this.issueNumber,
+  });
 
-    factory StudentIdProfileModel.fromJson(Map<String, dynamic> json) => StudentIdProfileModel(
+  factory StudentIdProfileModel.fromJson(Map<String, dynamic> json) =>
+      StudentIdProfileModel(
         studentPid: json["Student_PID"],
         termYear: json["Term_Year"],
         studentLevelCurrent: json["Student_Level_Current"],
@@ -47,9 +50,9 @@ class StudentIdProfileModel {
         barcode: json["Barcode"],
         classificationType: json["Classification_Type"],
         issueNumber: json["Issue_Number"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "Student_PID": studentPid,
         "Term_Year": termYear,
         "Student_Level_Current": studentLevelCurrent,
@@ -61,5 +64,5 @@ class StudentIdProfileModel {
         "Barcode": barcode,
         "Classification_Type": classificationType,
         "Issue_Number": issueNumber,
-    };
+      };
 }

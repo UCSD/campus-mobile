@@ -4,30 +4,33 @@
 
 import 'dart:convert';
 
-StudentIdNameModel studentIdNameModelFromJson(String str) => StudentIdNameModel.fromJson(json.decode(str));
+StudentIdNameModel studentIdNameModelFromJson(String str) =>
+    StudentIdNameModel.fromJson(json.decode(str));
 
-String studentIdNameModelToJson(StudentIdNameModel data) => json.encode(data.toJson());
+String studentIdNameModelToJson(StudentIdNameModel data) =>
+    json.encode(data.toJson());
 
 class StudentIdNameModel {
-    String studentId;
-    String firstName;
-    String middleName;
-    String lastName;
-    String lastUpdatedBy;
-    int internalId;
-    dynamic lastUpdatedDate;
+  String studentId;
+  String firstName;
+  String middleName;
+  String lastName;
+  String lastUpdatedBy;
+  int internalId;
+  dynamic lastUpdatedDate;
 
-    StudentIdNameModel({
-        this.studentId,
-        this.firstName,
-        this.middleName,
-        this.lastName,
-        this.lastUpdatedBy,
-        this.internalId,
-        this.lastUpdatedDate,
-    });
+  StudentIdNameModel({
+    this.studentId,
+    this.firstName,
+    this.middleName,
+    this.lastName,
+    this.lastUpdatedBy,
+    this.internalId,
+    this.lastUpdatedDate,
+  });
 
-    factory StudentIdNameModel.fromJson(Map<String, dynamic> json) => StudentIdNameModel(
+  factory StudentIdNameModel.fromJson(Map<String, dynamic> json) =>
+      StudentIdNameModel(
         studentId: json["studentId"],
         firstName: json["firstName"],
         middleName: json["middleName"],
@@ -35,9 +38,9 @@ class StudentIdNameModel {
         lastUpdatedBy: json["lastUpdatedBy"],
         internalId: json["internalId"],
         lastUpdatedDate: json["lastUpdatedDate"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "studentId": studentId,
         "firstName": firstName,
         "middleName": middleName,
@@ -45,5 +48,5 @@ class StudentIdNameModel {
         "lastUpdatedBy": lastUpdatedBy,
         "internalId": internalId,
         "lastUpdatedDate": lastUpdatedDate,
-    };
+      };
 }

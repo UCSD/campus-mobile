@@ -15,7 +15,7 @@ class TimeRangeWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-        getStartTime(context) + ' - ' + getStopTime(context),
+      getStartTime(context) + ' - ' + getStopTime(context),
     );
   }
 
