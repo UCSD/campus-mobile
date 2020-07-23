@@ -9,6 +9,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
   ClassScheduleDataProvider() {
     ///DEFAULT STATES
     _isLoading = false;
+    _lastUpdated = DateTime.now();
     _selectedCourse = 0;
     nextDayWithClass = 'Monday';
     _enrolledClasses = {
@@ -55,77 +56,83 @@ class ClassScheduleDataProvider extends ChangeNotifier {
   ClassScheduleService _classScheduleService;
 
   void fetchData() async {
-    _isLoading = true;
-    _error = null;
-    notifyListeners();
-    if (await _classScheduleService.fetchAcademicTerm() &&
-        _userDataProvider.isLoggedIn) {
-      _academicTermModel = _classScheduleService.academicTermModel;
-      final Map<String, String> headers = {
-        'Authorization':
-            'Bearer ${_userDataProvider?.authenticationModel?.accessToken}'
-      };
+    if (!_isLoading) {
+      _isLoading = true;
+      _error = null;
+      notifyListeners();
+      if (await _classScheduleService.fetchAcademicTerm() &&
+          _userDataProvider.isLoggedIn) {
+        _academicTermModel = _classScheduleService.academicTermModel;
+        final Map<String, String> headers = {
+          'Authorization':
+          'Bearer ${_userDataProvider?.authenticationModel?.accessToken}'
+        };
 
-      /// erase old model
-      _classScheduleModel = ClassScheduleModel();
+        /// erase old model
+        _classScheduleModel = ClassScheduleModel();
 
-      /// fetch grad courses
-      if (await _classScheduleService.fetchGRCourses(
-          headers, _academicTermModel.termCode)) {
-        _classScheduleModel = _classScheduleService.GRdata;
-      } else {
-        _error = _classScheduleService.error.toString();
-      }
-
-      /// fetch undergrad courses
-      if (await _classScheduleService.fetchUNCourses(
-          headers, _academicTermModel.termCode)) {
-        if (_classScheduleModel.data != null) {
-          _classScheduleModel.data.addAll(_classScheduleService.UNdata.data);
+        /// fetch grad courses
+        if (await _classScheduleService.fetchGRCourses(
+            headers, _academicTermModel.termCode)) {
+          _classScheduleModel = _classScheduleService.GRdata;
         } else {
-          _classScheduleModel = _classScheduleService.UNdata;
+          _error = _classScheduleService.error.toString();
         }
-        _error = null;
+
+        /// fetch undergrad courses
+        if (await _classScheduleService.fetchUNCourses(
+            headers, _academicTermModel.termCode)) {
+          if (_classScheduleModel.data != null) {
+            _classScheduleModel.data.addAll(_classScheduleService.UNdata.data);
+          } else {
+            _classScheduleModel = _classScheduleService.UNdata;
+          }
+          _error = null;
+        } else {
+          _error = _classScheduleService.error.toString();
+          _isLoading = false;
+          notifyListeners();
+
+          /// short circuit
+          return;
+        }
+
+        /// remove all old classes
+        _enrolledClasses = {
+          'MO': List<SectionData>(),
+          'TU': List<SectionData>(),
+          'WE': List<SectionData>(),
+          'TH': List<SectionData>(),
+          'FR': List<SectionData>(),
+          'SA': List<SectionData>(),
+          'SU': List<SectionData>(),
+          'OTHER': List<SectionData>(),
+        };
+
+        _finals = {
+          'MO': List<SectionData>(),
+          'TU': List<SectionData>(),
+          'WE': List<SectionData>(),
+          'TH': List<SectionData>(),
+          'FR': List<SectionData>(),
+          'SA': List<SectionData>(),
+          'SU': List<SectionData>(),
+          'OTHER': List<SectionData>(),
+        };
+        try {
+          _createMapOfClasses();
+        } catch (e) {
+          _error = e.toString();
+        }
+
+        _lastUpdated = DateTime.now();
       } else {
-        _error = _classScheduleService.error.toString();
-        _isLoading = false;
-        notifyListeners();
-
-        /// short circuit
-        return;
+        ///TODO: determine what error to show to the user
+        _error = _classScheduleService.error;
       }
-
-      /// remove all old classes
-      _enrolledClasses = {
-        'MO': List<SectionData>(),
-        'TU': List<SectionData>(),
-        'WE': List<SectionData>(),
-        'TH': List<SectionData>(),
-        'FR': List<SectionData>(),
-        'SA': List<SectionData>(),
-        'SU': List<SectionData>(),
-        'OTHER': List<SectionData>(),
-      };
-
-      _finals = {
-        'MO': List<SectionData>(),
-        'TU': List<SectionData>(),
-        'WE': List<SectionData>(),
-        'TH': List<SectionData>(),
-        'FR': List<SectionData>(),
-        'SA': List<SectionData>(),
-        'SU': List<SectionData>(),
-        'OTHER': List<SectionData>(),
-      };
-
-      _createMapOfClasses();
-      _lastUpdated = DateTime.now();
-    } else {
-      ///TODO: determine what error to show to the user
-      _error = _classScheduleService.error;
+      _isLoading = false;
+      notifyListeners();
     }
-    _isLoading = false;
-    notifyListeners();
   }
 
   void _createMapOfClasses() {
@@ -139,6 +146,12 @@ class ClassScheduleDataProvider extends ChangeNotifier {
       }
     }
 
+    if(enrolledCourses.isEmpty) {
+      _error = "No enrolled courses found.";
+      _isLoading = false;
+      notifyListeners();
+    }
+
     for (ClassData classData in enrolledCourses) {
       for (SectionData sectionData in classData.sectionData) {
         /// copy over info from [ClassData] object and put into [SectionData] object
@@ -149,6 +162,8 @@ class ClassScheduleDataProvider extends ChangeNotifier {
         String day = 'OTHER';
         if (sectionData.days != null) {
           day = sectionData.days;
+        } else {
+          continue;
         }
 
         if (sectionData.specialMtgCode != 'FI') {
@@ -171,6 +186,9 @@ class ClassScheduleDataProvider extends ChangeNotifier {
 
   /// comparator that sorts according to start time of class
   int _compare(SectionData a, SectionData b) {
+    if (a?.time == null || b?.time == null) {
+      return 0;
+    }
     DateTime aStartTime = _getStartTime(a.time);
     DateTime bStartTime = _getStartTime(b.time);
 
@@ -215,29 +233,6 @@ class ClassScheduleDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// returns a map of [String, List<SectionData>]
-  /// finals are removed from this map
-  Map<String, List<SectionData>> get classes {
-    Map<String, List<SectionData>> mapToReturn = {
-      'MO': List<SectionData>(),
-      'TU': List<SectionData>(),
-      'WE': List<SectionData>(),
-      'TH': List<SectionData>(),
-      'FR': List<SectionData>(),
-      'SA': List<SectionData>(),
-      'SU': List<SectionData>(),
-      'OTHER': List<SectionData>(),
-    };
-    _enrolledClasses.forEach((key, value) {
-      for (SectionData sectionData in value) {
-        if (sectionData.specialMtgCode == "") {
-          mapToReturn[key].add(sectionData);
-        }
-      }
-    });
-    return mapToReturn;
-  }
-
   List<SectionData> get upcomingCourses {
     /// get weekday and return [List<SectionData>] associated with current weekday
     List<SectionData> listToReturn = List<SectionData>();
@@ -250,7 +245,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
 
     /// if no classes are scheduled for today then find the next day with classes
     int daysToAdd = 1;
-    while (classes[today].isEmpty) {
+    while (_enrolledClasses[today].isEmpty) {
       today = DateFormat('EEEE')
           .format(DateTime.now().add(Duration(days: daysToAdd)))
           .toString()
@@ -260,7 +255,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
           .format(DateTime.now().add(Duration(days: daysToAdd)));
       daysToAdd += 1;
     }
-    listToReturn.addAll(classes[today]);
+    listToReturn.addAll(_enrolledClasses[today]);
     return listToReturn;
   }
 

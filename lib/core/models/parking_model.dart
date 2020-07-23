@@ -82,8 +82,8 @@ class Availability {
     Availability availability = Availability(
       accessible: json["Accessible"] == null
           ? null
-          : SpotType.fromJson(
-              json["Accessible"], Colors.blue, Icon(Icons.accessible)),
+          : SpotType.fromJson(json["Accessible"], Colors.blue,
+              Icon(Icons.accessible, color: Colors.white)),
       a: json["A"] == null
           ? null
           : SpotType.fromJson(json["A"], Colors.red,

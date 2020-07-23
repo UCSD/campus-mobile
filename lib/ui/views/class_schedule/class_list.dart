@@ -2,6 +2,7 @@ import 'package:campus_mobile_experimental/core/data_providers/class_schedule_da
 import 'package:campus_mobile_experimental/core/models/class_schedule_model.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/time_range_widget.dart';
+import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
@@ -19,34 +20,42 @@ class ClassList extends StatelessWidget {
     Provider.of<ClassScheduleDataProvider>(context)
         .enrolledClasses
         .keys
-        .forEach((key) {
-      list.add(SliverStickyHeader(
-        header: buildWeekDayHeader(key),
-        sliver: SliverList(
-          delegate: SliverChildBuilderDelegate(
-              (context, index) => buildClass(
-                  Provider.of<ClassScheduleDataProvider>(context)
+        .forEach(
+          (key) {
+        if (Provider.of<ClassScheduleDataProvider>(context)
+            .enrolledClasses[key]
+            .isNotEmpty) {
+          list.add(SliverStickyHeader(
+            header: buildWeekDayHeader(context, key),
+            sliver: SliverList(
+              delegate: SliverChildBuilderDelegate(
+                      (context, index) => buildClass(
+                      Provider.of<ClassScheduleDataProvider>(context)
+                          .enrolledClasses[key]
+                          .elementAt(index)),
+                  childCount: Provider.of<ClassScheduleDataProvider>(context)
                       .enrolledClasses[key]
-                      .elementAt(index)),
-              childCount: Provider.of<ClassScheduleDataProvider>(context)
-                  .enrolledClasses[key]
-                  .length),
-        ),
-      ));
-    });
-
+                      .length),
+            ),
+          ));
+        }
+      },
+    );
     return CustomScrollView(slivers: list);
   }
 
-  Widget buildWeekDayHeader(String weekday) {
+  Widget buildWeekDayHeader(BuildContext context, String weekday) {
     weekday = abbrevToFullWeekday(weekday);
     return Container(
-      color: Colors.white,
+      color: Theme.of(context).secondaryHeaderColor,
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Text(
           weekday,
-          style: TextStyle(fontSize: 20.0),
+          style: TextStyle(
+              fontSize: 20.0,
+              color: Colors.white,
+          ),
         ),
       ),
     );
@@ -98,15 +107,15 @@ class ClassList extends StatelessWidget {
       case 'WE':
         return 'Wednesday';
       case 'TH':
-        return 'Thrusday';
+        return 'Thursday';
       case 'FR':
         return 'Friday';
       case 'SA':
         return 'Saturday';
       case 'SU':
         return 'Sunday';
-      case 'Other':
-        return 'Other';
+//      case 'Other':
+//        return 'Other';
       default:
         return 'Other';
     }

@@ -3,7 +3,7 @@ import 'package:campus_mobile_experimental/core/models/weather_model.dart';
 import 'package:campus_mobile_experimental/core/services/networking.dart';
 
 const String endpoint =
-    'https://w3wyps9yje.execute-api.us-west-2.amazonaws.com/prod/forecast';
+    'https://gglfnarjhf.execute-api.us-west-2.amazonaws.com/dev/';
 
 class WeatherService {
   bool _isLoading = false;
@@ -30,6 +30,7 @@ class WeatherService {
       return true;
     } catch (e) {
       _error = e.toString();
+      /// **********
       _isLoading = false;
       return false;
     }

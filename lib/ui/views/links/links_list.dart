@@ -1,9 +1,9 @@
+import 'package:campus_mobile_experimental/core/data_providers/links_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/links_model.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:provider/provider.dart';
-import 'package:campus_mobile_experimental/core/data_providers/links_data_provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LinksList extends StatelessWidget {
   const LinksList({Key key, this.listSize}) : super(key: key);
@@ -36,7 +36,9 @@ class LinksList extends StatelessWidget {
     }
 
     return listSize != null
-        ? Column(
+        ? ListView(
+            physics: NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
             children: ListTile.divideTiles(tiles: eventTiles, context: context)
                 .toList(),
           )

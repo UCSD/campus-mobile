@@ -16,18 +16,15 @@ class AvailabilityService {
   final NetworkHelper _networkHelper = NetworkHelper();
   final Map<String, String> headers = {
     "accept": "application/json",
-    "Authorization": "PUBLIC_AUTH_SERVICE_API_KEY_PH",
   };
-  final String endpoint =
-      "https://api.ucsd.edu:8243/occuspace/v1.0/busyness";
+  final String endpoint = "https://api-qa.ucsd.edu:8243/occuspace/v1.0/busyness";
 
   Future<bool> fetchData() async {
     _error = null;
     _isLoading = true;
     try {
       /// fetch data
-      String _response =
-          await _networkHelper.authorizedFetch(endpoint, headers);
+      String _response = await _networkHelper.authorizedFetch(endpoint, headers);
 
       /// parse data
       final data = availabilityModelFromJson(_response);
@@ -50,10 +47,10 @@ class AvailabilityService {
   }
 
   Future<bool> getNewToken() async {
-    final String tokenEndpoint = "https://api.ucsd.edu:8243/token";
+    final String tokenEndpoint = "https://api-qa.ucsd.edu:8243/token";
     final Map<String, String> tokenHeaders = {
       "content-type": 'application/x-www-form-urlencoded',
-      "Authorization": "PUBLIC_AUTH_SERVICE_TOKEN_API_KEY_PH"
+      "Authorization": "Basic WUNaMXlLTW9wMjNxcGtvUFQ1aDYzdHB5bm9rYTpQNnFCbWNIRFc5azNJME56S3hHSm5QTTQzV0lh"
     };
     try {
       var response = await _networkHelper.authorizedPost(

@@ -13,7 +13,7 @@ class SpecialEventsService {
     "accept": "application/json",
   };
   final String endpoint =
-      "https://2jjml3hf27.execute-api.us-west-2.amazonaws.com/prod/events/v1.1/special";
+      "https://2wxnokqsz2.execute-api.us-west-2.amazonaws.com/dev/GetActiveSpecialEvent/v2";
 
   Future<bool> fetchData() async {
     _error = null;

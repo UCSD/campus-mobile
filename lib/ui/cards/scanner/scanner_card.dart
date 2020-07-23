@@ -1,5 +1,4 @@
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
-import 'package:campus_mobile_experimental/core/constants/scanner_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/services/bottom_navigation_bar_service.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +6,8 @@ import 'package:flutter/rendering.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
 
 import 'package:provider/provider.dart';
+
+const String cardId = 'QRScanner';
 
 class ScannerCard extends StatelessWidget {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
@@ -18,7 +19,7 @@ class ScannerCard extends StatelessWidget {
       hide: () => null,
       reload: () => null,
       isLoading: false,
-      title: buildTitle(),
+      titleText: CardTitleConstants.titleMap[cardId],
       errorText: null,
       child: () => buildCardContent(context),
       actionButtons: [buildActionButton(context)],
@@ -26,32 +27,31 @@ class ScannerCard extends StatelessWidget {
     );
   }
 
-  Widget buildTitle() {
-    return Text(
-      "QR Scanner",
-      textAlign: TextAlign.left,
-    );
-  }
-
   Widget buildCardContent(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Container(
-          child: Image.asset(
-            'assets/images/QRScanIcon.png',
-            fit: BoxFit.contain,
-            height: 56,
+    return GestureDetector(
+      onTap: () {
+        getActionButtonNavigateRoute(context);
+      },
+      behavior: HitTestBehavior.translucent,
+      child: Row(
+        children: <Widget>[
+          Container(
+            child: Image.asset(
+              'assets/images/QRScanIcon.png',
+              fit: BoxFit.contain,
+              height: 56,
+            ),
+            padding: EdgeInsets.only(
+              left: 10,
+              right: 10,
+            ),
           ),
-          padding: EdgeInsets.only(
-            left: 10,
-            right: 10,
-          ),
-        ),
-        Text(
-          ScannerConstants.scannerCardPrompt,
-          textAlign: TextAlign.left,
-        )
-      ],
+          Text(
+            getCardContentText(context),
+            textAlign: TextAlign.left,
+          )
+        ],
+      ),
     );
   }
 
@@ -64,6 +64,12 @@ class ScannerCard extends StatelessWidget {
         getActionButtonNavigateRoute(context);
       },
     );
+  }
+
+  String getCardContentText(BuildContext context) {
+    return Provider.of<UserDataProvider>(context, listen: false).isLoggedIn
+        ? ButtonText.ScanNowFull
+        : ButtonText.SignInFull;
   }
 
   String getActionButtonText(BuildContext context) {

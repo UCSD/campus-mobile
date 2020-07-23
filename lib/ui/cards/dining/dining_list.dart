@@ -1,9 +1,13 @@
+import 'package:campus_mobile_experimental/ui/theme/app_layout.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
+import 'package:campus_mobile_experimental/core/data_providers/dining_data_proivder.dart';
 import 'package:campus_mobile_experimental/core/models/dining_model.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
-import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
-import 'package:provider/provider.dart';
-import 'package:campus_mobile_experimental/core/data_providers/dining_data_proivder.dart';
+import 'package:campus_mobile_experimental/ui/reusable_widgets/time_range_widget.dart';
 
 class DiningList extends StatelessWidget {
   const DiningList({
@@ -40,7 +44,9 @@ class DiningList extends StatelessWidget {
     }
 
     return listSize != null
-        ? Column(
+        ? ListView(
+            physics: NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
             children: ListTile.divideTiles(tiles: diningTiles, context: context)
                 .toList(),
           )
@@ -55,49 +61,73 @@ class DiningList extends StatelessWidget {
 
   Widget getHoursForToday(RegularHours hours) {
     int weekday = DateTime.now().weekday;
+    String dayHours;
+
     switch (weekday) {
       case 1:
-        {
-          return Text(hours.mon);
-        }
+        if (hours.mon != null)
+          dayHours = hours.mon;
+        else
+          return Text('Closed');
         break;
-
       case 2:
-        {
-          return Text(hours.tue);
-        }
+        if (hours.tue != null)
+          dayHours = hours.tue;
+        else
+          return Text('Closed');
         break;
       case 3:
-        {
-          return Text(hours.wed);
-        }
+        if (hours.wed != null)
+          dayHours = hours.wed;
+        else
+          return Text('Closed');
         break;
       case 4:
-        {
-          return Text(hours.thu);
-        }
+        if (hours.thu != null)
+          dayHours = hours.thu;
+        else
+          return Text('Closed');
         break;
       case 5:
-        {
-          return Text(hours.fri);
-        }
+        if (hours.fri != null)
+          dayHours = hours.fri;
+        else
+          return Text('Closed');
         break;
       case 6:
-        {
-          return Text(hours.sat != null ? hours.sat : 'closed');
-        }
+        if (hours.sat != null)
+          dayHours = hours.sat;
+        else
+          return Text('Closed');
         break;
       case 7:
-        {
-          return Text(hours.sun != null ? hours.sun : 'closed');
-        }
+        if (hours.sun != null)
+          dayHours = hours.sun;
+        else
+          return Text('Closed');
         break;
-
       default:
-        {
-          return Text('closed');
-        }
+        return Text('Closed');
+        break;
     }
+    if (RegExp(r"\b[0-9]{2}").allMatches(dayHours).length != 2) {
+      if (dayHours == 'Closed-Closed') {
+        return Text('Closed');
+      } else {
+        return Text(dayHours);
+      }
+    }
+
+    return TimeRangeWidget(
+      time: dayHours.replaceAllMapped(
+        //Add colon in between each time
+          RegExp(r"\b[0-9]{2}"),
+            (match) => "${match.group(0)}:")
+            .replaceAllMapped(
+        //Add space around hyphen
+          RegExp(r"-"),
+            (match) => " ${match.group(0)} ")
+    );
   }
 
   Widget buildDiningTile(DiningModel data, BuildContext context) {
@@ -113,24 +143,31 @@ class DiningList extends StatelessWidget {
       title: Text(
         data.name,
         textAlign: TextAlign.start,
-        overflow: TextOverflow.ellipsis,
+        //overflow: TextOverflow.ellipsis,
+        style: TextStyle(fontSize: 18),
       ),
       subtitle: getHoursForToday(data.regularHours),
-      trailing: buildIconWithDistance(data.distance),
+      trailing: buildIconWithDistance(data, context),
     );
   }
 
-  Widget buildIconWithDistance(double distance) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Icon(
-          Icons.directions_walk,
-        ),
-        Text(
-          distance != null ? distance.toStringAsPrecision(3) : '--',
-        ),
-      ],
+  Widget buildIconWithDistance(DiningModel data, BuildContext context) {
+    return FlatButton(
+      onPressed: () {
+        launch(
+            'https://www.google.com/maps/dir/?api=1&travelmode=walking&destination=${data.coordinates.lat},${data.coordinates.lon}');
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Icon(Icons.directions_walk),
+          Text(
+            data.distance != null ?
+              (num.parse(data.distance.toStringAsFixed(1)).toString() + ' mi')
+              : '--',
+          ),
+        ],
+      ),
     );
   }
 }

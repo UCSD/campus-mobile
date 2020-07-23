@@ -13,7 +13,7 @@ We look forward to helping you become a published app developer!
 
 ### Creating a Fork
 
-From the [Campus Mobile GitHub](https://github.com/UCSD/campus-mobile) page click the "Fork" button. Next, use your favorite git client or command line to clone the repo:
+From the [Campus Mobile GitHub repo](https://github.com/UCSD/campus-mobile) click the "Fork" button. Next, use your favorite git client or command line to clone the repo:
 
 ```shell
 # Clone your fork to your local machine
@@ -34,6 +34,13 @@ Whenever you want to update your fork with the latest upstream changes, you'll n
 git fetch upstream
 ```
 
+Now you are ready to checkout your local `experimental` branch and merge in any changes from the upstream repo's `experimental` branch:
+```shell
+# Checkout your master branch and merge upstream
+git checkout experimental
+git merge upstream/experimental
+```
+
 Your local `experimental` branch is now up-to-date with any changes upstream.
 
 ### Doing Your Work
@@ -48,27 +55,76 @@ To create a new branch and start working on it:
 # Checkout the experimental branch
 git checkout experimental
 
-# Create and switch to a new branch named newfeature
+# Create and checkout a branch named newfeature
 git checkout -b newfeature
 ```
 
 You are now ready to begin developing your new feature. Commit your code often, using present-tense and concise verbiage explaining the work completed.
 
-Here is an example of how to commit and push code for your newfeature.
+Example: Add, commit, and push your new feature:
 ```shell
-# Add your code
-git add lib/Main.dart
+# Show the state of staged and unstaged files you created or updated
+git status
+
+# Add files to include in your newfeature
+git add lib/core/push_notifications_in_app.dart
 
 # Commit your code
-git commit -m "Add environment variable replacement"
+git commit -m "Add in-app push notifications"
 
 # Push your code
 git push -u origin newfeature
+
 ```
 
 
 ### Submitting a Pull Request
 
-Once you've committed and pushed your feature branch `newfeature` to GitHub, go to the page for your fork on GitHub, select branch `newfeature` and click the 'New pull request' button.
+#### Update your feature branch
+From the time you created your new feature branch `newfeature`, to submitting a pull request, it is likely that your branch 
+
+Branch `upstream/experimental` is updated often. Prior to submitting a pull request, update your `newfeature` branch from `upstream/experimental` so that merging it will be a simple process which won't require any conflict resolution work.
+```shell
+# Fetch upstream experimental and merge with your local experimental branch
+git fetch upstream
+git checkout experimental
+git merge upstream/experimental
+
+# If there were any new commits, merge them from `experimental` and update your branch
+git checkout newfeature
+git merge experimental
+git push origin newfeature
+```
+
+
+#### Submitting
+With your feature branch updated, you are ready to push 
+
+Once you've committed and pushed your feature branch `newfeature` to GitHub, go to the page for your fork on GitHub, select branch 'newfeature' and click the 'New pull request' button.
 
 If you need to make future updates to your pull request, push the updates to your feature branch `newfeature` on GitHub. Your pull request will automatically track the changes on your feature branch and update.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

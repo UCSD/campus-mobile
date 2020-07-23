@@ -1,12 +1,14 @@
+import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/availability_data_provider.dart';
-import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/availability_model.dart';
 import 'package:campus_mobile_experimental/ui/cards/availability/availability_display.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/dots_indicator.dart';
 import 'package:flutter/material.dart';
-import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:provider/provider.dart';
+
+const cardId = 'availability';
 
 class AvailabilityCard extends StatefulWidget {
   @override
@@ -26,12 +28,12 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
-      active: Provider.of<UserDataProvider>(context).cardStates['availability'],
-      hide: () => Provider.of<UserDataProvider>(context, listen: false)
-          .toggleCard('availability'),
+      active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
+      hide: () => Provider.of<CardsDataProvider>(context, listen: false)
+          .toggleCard(cardId),
       reload: () => _availabilityDataProvider.fetchAvailability(),
       isLoading: _availabilityDataProvider.isLoading,
-      title: Text('Availability'),
+      titleText: CardTitleConstants.titleMap[cardId],
       errorText: _availabilityDataProvider.error,
       child: () =>
           buildAvailabilityCard(_availabilityDataProvider.availabilityModels),
@@ -42,9 +44,13 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
   Widget buildAvailabilityCard(List<AvailabilityModel> data) {
     List<Widget> locationsList = List<Widget>();
     for (AvailabilityModel model in data) {
-      locationsList.add(AvailabilityDisplay(
-        model: model,
-      ));
+      if (model != null) {
+        if (_availabilityDataProvider.locationViewState[model.locationName]) {
+          locationsList.add(AvailabilityDisplay(
+            model: model,
+          ));
+        }
+      }
     }
 
     return Column(
@@ -57,7 +63,7 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
         ),
         DotsIndicator(
           controller: _controller,
-          itemCount: data.length,
+          itemCount: locationsList.length,
           onPageSelected: (int index) {
             _controller.animateToPage(index,
                 duration: Duration(seconds: 1), curve: Curves.ease);

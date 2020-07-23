@@ -1,22 +1,24 @@
+import 'package:campus_mobile_experimental/ui/theme/app_layout.dart';
+import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class CardContainer extends StatelessWidget {
-  const CardContainer(
-      {Key key,
-      @required this.title,
-      @required this.isLoading,
-      @required this.reload,
-      @required this.errorText,
-      @required this.child,
-      @required this.active,
-      @required this.hide,
-      this.overFlowMenu,
-      this.actionButtons,
-      this.hideMenu})
-      : super(key: key);
+  const CardContainer({
+    Key key,
+    @required this.titleText,
+    @required this.isLoading,
+    @required this.reload,
+    @required this.errorText,
+    @required this.child,
+    @required this.active,
+    @required this.hide,
+    this.overFlowMenu,
+    this.actionButtons,
+    this.hideMenu,
+  }) : super(key: key);
 
   /// required parameters
-  final Widget title;
+  final String titleText;
   final bool isLoading;
   final bool active;
   final Function hide;
@@ -31,22 +33,37 @@ class CardContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (active) {
+    if (active != null && active) {
       return Card(
+        margin: EdgeInsets.only(top: 0.0, right: 0.0, bottom: cardMargin * 1.5, left: 0.0),
         semanticContainer: false,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             ListTile(
-              title: title,
-              trailing: buildMenu(),
+              title: Text(
+                titleText,
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 20.0,
+                ),
+              ),
+              trailing: ButtonBar(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  buildMenu(),
+                ],
+              ),
             ),
-            buildBody(),
-            actionButtons != null
-                ? Row(
-                    children: actionButtons,
-                  )
-                : Container()
+            buildBody(context),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 0),
+              child: actionButtons != null
+                  ? Row(
+                children: actionButtons,
+              )
+                  : Container(),
+            ),
           ],
         ),
       );
@@ -54,22 +71,55 @@ class CardContainer extends StatelessWidget {
     return Container();
   }
 
-  Widget buildBody() {
+  Widget buildBody(context) {
+
     if (errorText != null) {
-      return Text(errorText);
+      if (titleText == 'News') {
+        return Text('No articles found.');
+      } else if (titleText == 'Events') {
+        return Text('No events found.');
+      }
+      else if (titleText == 'Finals') {
+        // TODO: Resolve alignment issues on cards without action buttons
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 42.0),
+          child: Text('No finals found.'),
+        );
+      } else if (titleText == 'Classes') {
+        return Text('No classes found.');
+      } else {
+        return Text('An error occurred, please try again.');
+      }
     } else if (isLoading) {
       return Container(
-          height: 224, width: 224, child: CircularProgressIndicator());
+        width: double.infinity,
+        height: 200.0,
+        child: Center(
+          child: Container(
+              height: 32, width: 32, child: CircularProgressIndicator()),
+        ),
+      );
     } else {
+
+      if(titleText == "Student ID"){
+        return Container(
+          width: double.infinity,
+//        height: 200.0,
+          constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 180),
+          child: child(),
+        );
+      }
       return Container(
-        constraints: BoxConstraints(maxHeight: 224, maxWidth: 406),
+        width: double.infinity,
+//        height: 200.0,
+        constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 340),
         child: child(),
       );
     }
   }
 
   Widget buildMenu() {
-    if (hideMenu != null && hideMenu) {
+    if (hideMenu ?? false) {
       return null;
     }
     return ButtonBar(

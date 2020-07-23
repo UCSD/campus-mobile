@@ -10,13 +10,15 @@ class Profile extends StatelessWidget {
       child: ListView(
         children: <Widget>[
           Login(),
-//          Card(
-//            child: ListTile(
-//              leading: Icon(Icons.notifications),
-//              title: Text('Notifications'),
-//              onTap: () { handleNotificationsTap(context); },
-//            ),
-//          ),
+          Card(
+            child: ListTile(
+              leading: Icon(Icons.notifications),
+              title: Text('Notifications'),
+              onTap: () {
+                handleNotificationsTap(context);
+              },
+            ),
+          ),
           Card(
             child: ListTile(
               leading: Icon(Icons.menu),
@@ -62,8 +64,7 @@ class Profile extends StatelessWidget {
   openLink(String url) async {
     if (await canLaunch(url)) {
       launch(url);
-    }
-    else {
+    } else {
       // can't launch url, there is some error
     }
   }
