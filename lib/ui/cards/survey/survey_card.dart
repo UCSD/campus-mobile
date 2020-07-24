@@ -30,7 +30,8 @@ class _SurveyCardState extends State<SurveyCard> {
     );
   }
 
-  final _url = "https://cwo-test.ucsd.edu/WebCards/student_survey.html";
+  final _url =
+      "https://mobile.ucsd.edu/replatform/v1/qa/webview/student_survey.html";
 
   Widget buildCardContent(BuildContext context) {
     return Column(
