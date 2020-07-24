@@ -15,7 +15,7 @@ class ParkingService {
   };
 
   final String endpoint =
-      "https://ucsd-mobile-dev.s3-us-west-1.amazonaws.com/mock-apis/parking/mock_parking_data.json";
+      "https://parking-spot-types.s3-us-west-2.amazonaws.com/parking_lots.json";
 
   Future<bool> fetchParkingLotData() async {
     _error = null;
