@@ -4,6 +4,7 @@ import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class OnboardingLogin extends StatefulWidget {
@@ -29,10 +30,10 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
       backgroundColor: ColorPrimary,
       body: _userDataProvider.isLoading
           ? Center(
-        child: CircularProgressIndicator(
-          valueColor: new AlwaysStoppedAnimation<Color>(lightAccentColor),
-        ),
-      )
+              child: CircularProgressIndicator(
+                valueColor: new AlwaysStoppedAnimation<Color>(lightAccentColor),
+              ),
+            )
           : buildLoginWidget(),
     );
   }
@@ -54,12 +55,12 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
             SizedBox(height: 80),
             Flexible(
               child: Container(
-                color: Theme.of(context).accentColor, // lightTextFieldBorderColor,
+                color:
+                    Theme.of(context).accentColor, // lightTextFieldBorderColor,
                 child: TextField(
                   style: TextStyle(
                       textBaseline: TextBaseline.alphabetic,
-                      color: Colors.black
-                  ),
+                      color: Colors.black),
                   decoration: InputDecoration(
                     hintText: 'Email',
                     border: OutlineInputBorder(
@@ -83,7 +84,8 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
             SizedBox(height: 10),
             Flexible(
               child: Container(
-                color: Theme.of(context).accentColor, // lightTextFieldBorderColor,
+                color:
+                    Theme.of(context).accentColor, // lightTextFieldBorderColor,
                 child: TextField(
                   style: TextStyle(
                     textBaseline: TextBaseline.alphabetic,
@@ -102,8 +104,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                       contentPadding: EdgeInsets.only(left: 10),
                       hintStyle: TextStyle(color: darkAccentColor),
                       fillColor: Colors.white,
-                      filled: true
-                  ),
+                      filled: true),
                   obscureText: true,
                   controller: _passwordTextFieldController,
                 ),
@@ -123,20 +124,23 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                       onPressed: _userDataProvider.isLoading
                           ? null
                           : () {
-                        _userDataProvider
-                            .login(_emailTextFieldController.text,
-                            _passwordTextFieldController.text)
-                            .then((isLoggedIn) {
-                          if (isLoggedIn) {
-                            Navigator.pushNamedAndRemoveUntil(
-                                context,
-                                RoutePaths.BottomNavigationBar,
-                                    (_) => false);
-                          } else {
-                            showAlertDialog(context);
-                          }
-                        });
-                      },
+                              _userDataProvider
+                                  .login(_emailTextFieldController.text,
+                                      _passwordTextFieldController.text)
+                                  .then((isLoggedIn) async {
+                                if (isLoggedIn) {
+                                  Navigator.pushNamedAndRemoveUntil(
+                                      context,
+                                      RoutePaths.BottomNavigationBar,
+                                      (_) => false);
+                                  final prefs =
+                                      await SharedPreferences.getInstance();
+                                  prefs.setBool('showOnboardingScreen', false);
+                                } else {
+                                  showAlertDialog(context);
+                                }
+                              });
+                            },
                       textColor: lightButtonTextColor,
                     ),
                   ),
@@ -166,8 +170,8 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                       style: TextStyle(color: Colors.white),
                     ),
                     onTap: () {
-                      Navigator.pushNamedAndRemoveUntil(
-                          context, RoutePaths.BottomNavigationBar, (_) => false);
+                      Navigator.pushNamedAndRemoveUntil(context,
+                          RoutePaths.BottomNavigationBar, (_) => false);
                     },
                   )
                 ],

@@ -2,6 +2,7 @@ import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/debug/build_info.dart';
 import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class OnboardingScreen extends StatelessWidget {
   @override
@@ -38,7 +39,8 @@ class OnboardingScreen extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 40.0),
                     child: GestureDetector(
                       onTap: () {
-                        Navigator.pushNamed(context, RoutePaths.OnboardingLogin);
+                        Navigator.pushNamed(
+                            context, RoutePaths.OnboardingLogin);
                       },
                       child: Text(
                         "Let's do it.",
@@ -52,9 +54,11 @@ class OnboardingScreen extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(top: 25.0),
                     child: GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamedAndRemoveUntil(
-                            context, RoutePaths.BottomNavigationBar, (_) => false);
+                      onTap: () async {
+                        Navigator.pushNamedAndRemoveUntil(context,
+                            RoutePaths.BottomNavigationBar, (_) => false);
+                        final prefs = await SharedPreferences.getInstance();
+                        prefs.setBool('showOnboardingScreen', false);
                       },
                       child: Text(
                         "Skip for now.",

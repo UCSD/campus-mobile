@@ -33,9 +33,10 @@ class CardContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (active) {
+    if (active != null && active) {
       return Card(
-        margin: EdgeInsets.only(top: 0.0, right: 0.0, bottom: cardMargin * 1.5, left: 0.0),
+        margin: EdgeInsets.only(
+            top: 0.0, right: 0.0, bottom: cardMargin * 1.5, left: 0.0),
         semanticContainer: false,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -83,7 +84,7 @@ class CardContainer extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 42.0),
           child: Text('No finals found.'),
         );
-      } else if (titleText == 'Schedule') {
+      } else if (titleText == 'Classes') {
         return Text('No classes found.');
       } else {
         return Text('An error occurred, please try again.');
@@ -98,6 +99,14 @@ class CardContainer extends StatelessWidget {
         ),
       );
     } else {
+      if (titleText == "Student ID") {
+        return Container(
+          width: double.infinity,
+//        height: 200.0,
+          constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 180),
+          child: child(),
+        );
+      }
       return Container(
         width: double.infinity,
 //        height: 200.0,

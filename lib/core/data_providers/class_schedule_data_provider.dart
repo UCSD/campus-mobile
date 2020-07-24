@@ -56,81 +56,83 @@ class ClassScheduleDataProvider extends ChangeNotifier {
   ClassScheduleService _classScheduleService;
 
   void fetchData() async {
-    _isLoading = true;
-    _error = null;
-    notifyListeners();
-    if (await _classScheduleService.fetchAcademicTerm() &&
-        _userDataProvider.isLoggedIn) {
-      _academicTermModel = _classScheduleService.academicTermModel;
-      final Map<String, String> headers = {
-        'Authorization':
-            'Bearer ${_userDataProvider?.authenticationModel?.accessToken}'
-      };
+    if (!_isLoading) {
+      _isLoading = true;
+      _error = null;
+      notifyListeners();
+      if (await _classScheduleService.fetchAcademicTerm() &&
+          _userDataProvider.isLoggedIn) {
+        _academicTermModel = _classScheduleService.academicTermModel;
+        final Map<String, String> headers = {
+          'Authorization':
+          'Bearer ${_userDataProvider?.authenticationModel?.accessToken}'
+        };
 
-      /// erase old model
-      _classScheduleModel = ClassScheduleModel();
+        /// erase old model
+        _classScheduleModel = ClassScheduleModel();
 
-      /// fetch grad courses
-      if (await _classScheduleService.fetchGRCourses(
-          headers, _academicTermModel.termCode)) {
-        _classScheduleModel = _classScheduleService.GRdata;
-      } else {
-        _error = _classScheduleService.error.toString();
-      }
-
-      /// fetch undergrad courses
-      if (await _classScheduleService.fetchUNCourses(
-          headers, _academicTermModel.termCode)) {
-        if (_classScheduleModel.data != null) {
-          _classScheduleModel.data.addAll(_classScheduleService.UNdata.data);
+        /// fetch grad courses
+        if (await _classScheduleService.fetchGRCourses(
+            headers, _academicTermModel.termCode)) {
+          _classScheduleModel = _classScheduleService.GRdata;
         } else {
-          _classScheduleModel = _classScheduleService.UNdata;
+          _error = _classScheduleService.error.toString();
         }
-        _error = null;
+
+        /// fetch undergrad courses
+        if (await _classScheduleService.fetchUNCourses(
+            headers, _academicTermModel.termCode)) {
+          if (_classScheduleModel.data != null) {
+            _classScheduleModel.data.addAll(_classScheduleService.UNdata.data);
+          } else {
+            _classScheduleModel = _classScheduleService.UNdata;
+          }
+          _error = null;
+        } else {
+          _error = _classScheduleService.error.toString();
+          _isLoading = false;
+          notifyListeners();
+
+          /// short circuit
+          return;
+        }
+
+        /// remove all old classes
+        _enrolledClasses = {
+          'MO': List<SectionData>(),
+          'TU': List<SectionData>(),
+          'WE': List<SectionData>(),
+          'TH': List<SectionData>(),
+          'FR': List<SectionData>(),
+          'SA': List<SectionData>(),
+          'SU': List<SectionData>(),
+          'OTHER': List<SectionData>(),
+        };
+
+        _finals = {
+          'MO': List<SectionData>(),
+          'TU': List<SectionData>(),
+          'WE': List<SectionData>(),
+          'TH': List<SectionData>(),
+          'FR': List<SectionData>(),
+          'SA': List<SectionData>(),
+          'SU': List<SectionData>(),
+          'OTHER': List<SectionData>(),
+        };
+        try {
+          _createMapOfClasses();
+        } catch (e) {
+          _error = e.toString();
+        }
+
+        _lastUpdated = DateTime.now();
       } else {
-        _error = _classScheduleService.error.toString();
-        _isLoading = false;
-        notifyListeners();
-
-        /// short circuit
-        return;
+        ///TODO: determine what error to show to the user
+        _error = _classScheduleService.error;
       }
-
-      /// remove all old classes
-      _enrolledClasses = {
-        'MO': List<SectionData>(),
-        'TU': List<SectionData>(),
-        'WE': List<SectionData>(),
-        'TH': List<SectionData>(),
-        'FR': List<SectionData>(),
-        'SA': List<SectionData>(),
-        'SU': List<SectionData>(),
-        'OTHER': List<SectionData>(),
-      };
-
-      _finals = {
-        'MO': List<SectionData>(),
-        'TU': List<SectionData>(),
-        'WE': List<SectionData>(),
-        'TH': List<SectionData>(),
-        'FR': List<SectionData>(),
-        'SA': List<SectionData>(),
-        'SU': List<SectionData>(),
-        'OTHER': List<SectionData>(),
-      };
-      try {
-        _createMapOfClasses();
-      } catch (e) {
-        _error = e.toString();
-      }
-
-      _lastUpdated = DateTime.now();
-    } else {
-      ///TODO: determine what error to show to the user
-      _error = _classScheduleService.error;
+      _isLoading = false;
+      notifyListeners();
     }
-    _isLoading = false;
-    notifyListeners();
   }
 
   void _createMapOfClasses() {
@@ -142,6 +144,12 @@ class ClassScheduleDataProvider extends ChangeNotifier {
       if (classData.enrollmentStatus == 'EN') {
         enrolledCourses.add(classData);
       }
+    }
+
+    if(enrolledCourses.isEmpty) {
+      _error = "No enrolled courses found.";
+      _isLoading = false;
+      notifyListeners();
     }
 
     for (ClassData classData in enrolledCourses) {
