@@ -31,18 +31,21 @@ class MessageElement {
   Message message;
   String messageId;
   int timestamp;
+  Audience audience;
 
   MessageElement({
     this.sender,
     this.message,
     this.messageId,
     this.timestamp,
+    this.audience,
   });
 
   factory MessageElement.fromJson(Map<String, dynamic> json) => MessageElement(
         sender: json["sender"],
         message: Message.fromJson(json["message"]),
         messageId: json["messageId"],
+        audience: Audience.fromJson(json["audience"]),
         timestamp: json["timestamp"],
       );
 
@@ -50,7 +53,27 @@ class MessageElement {
         "sender": sender,
         "message": message.toJson(),
         "messageId": messageId,
+        "audience": audience == null ? null : audience.toJson(),
         "timestamp": timestamp,
+      };
+}
+
+class Audience {
+  List<String> topics;
+
+  Audience({
+    this.topics,
+  });
+
+  factory Audience.fromJson(Map<String, dynamic> json) => Audience(
+        topics: json["topics"] == null
+            ? null
+            : List<String>.from(json["topics"].map((x) => x)),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "topics":
+            topics == null ? null : List<dynamic>.from(topics.map((x) => x)),
       };
 }
 

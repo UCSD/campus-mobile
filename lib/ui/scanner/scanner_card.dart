@@ -46,9 +46,11 @@ class ScannerCard extends StatelessWidget {
               right: 10,
             ),
           ),
-          Text(
-            getCardContentText(context),
-            textAlign: TextAlign.left,
+          Flexible(
+            child: Text(
+              getCardContentText(context),
+              textAlign: TextAlign.left,
+            ),
           )
         ],
       ),

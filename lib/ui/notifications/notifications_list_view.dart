@@ -1,6 +1,8 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
-import 'package:campus_mobile_experimental/core/models/messages.dart';
+import 'package:campus_mobile_experimental/core/models/notifications.dart';
 import 'package:campus_mobile_experimental/core/providers/messages.dart';
+import 'package:campus_mobile_experimental/core/providers/notifications_freefood.dart';
+import 'package:campus_mobile_experimental/ui/notifications/notifications_freefood.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:provider/provider.dart';
@@ -80,6 +82,44 @@ class NotificationsListView extends StatelessWidget {
     );
   }
 
+  // List<Widget> _buildMessage(BuildContext context, MessageElement data) {
+  //   FreeFoodDataProvider freefoodProvider = Provider.of<FreeFoodDataProvider>(context);
+  //   return [
+  //     ListTile(
+  //       leading: Icon(Icons.info, color: Colors.grey, size: 30),
+  //       title: Column(
+  //         children: <Widget>[
+  //           Text(_readTimestamp(data.timestamp),
+  //               style: TextStyle(fontSize: 10, color: Colors.grey)),
+  //           Text(data.message.title),
+  //           Padding(padding: const EdgeInsets.all(3.5))
+  //         ],
+  //         crossAxisAlignment: CrossAxisAlignment.start,
+  //       ),
+  //       subtitle: Column(
+  //         children: <Widget>[
+  //           Linkify(
+  //             text: data.message.message,
+  //             onOpen: (link) async {
+  //               if (await canLaunch(link.url)) {
+  //                   await launch(link.url);
+  //               } else {
+  //                   throw 'Could not launch $link';
+  //               }
+  //             },
+  //             options: LinkifyOptions(humanize: false),
+  //             style: TextStyle(fontSize: 12.5)
+  //           ),
+  //           freefoodProvider.isFreeFood(data.messageId)
+  //             ? FreeFoodNotification(messageId: data.messageId)
+  //             : SizedBox(),
+  //         ]
+  //       )
+  //     ),
+  //     Divider()
+  //   ];
+  // }
+
   Widget _buildNoMessagesText() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -96,6 +136,9 @@ class NotificationsListView extends StatelessWidget {
   Widget _buildMessage(BuildContext context, int index) {
     MessageElement data =
         Provider.of<MessagesDataProvider>(context).messages[index];
+    FreeFoodDataProvider freefoodProvider =
+        Provider.of<FreeFoodDataProvider>(context);
+
     if (index ==
         Provider.of<MessagesDataProvider>(context).messages.length - 1) {
       if (Provider.of<MessagesDataProvider>(context).hasMoreMessagesToLoad) {
@@ -115,17 +158,27 @@ class NotificationsListView extends StatelessWidget {
         ],
         crossAxisAlignment: CrossAxisAlignment.start,
       ),
-      subtitle: Linkify(
-        text: data.message.message,
-        onOpen: (link) async {
-          if (await canLaunch(link.url)) {
-            await launch(link.url);
-          } else {
-            throw 'Could not launch $link';
-          }
-        },
-        options: LinkifyOptions(humanize: false),
-        style: TextStyle(fontSize: 12.5),
+      subtitle: Column(
+        children: <Widget>[
+          Align(
+            alignment: Alignment.topLeft,
+            child: Linkify(
+              text: data.message.message,
+              onOpen: (link) async {
+                if (await canLaunch(link.url)) {
+                  await launch(link.url);
+                } else {
+                  throw 'Could not launch $link';
+                }
+              },
+              options: LinkifyOptions(humanize: false),
+              style: TextStyle(fontSize: 12.5),
+            ),
+          ),
+          freefoodProvider.isFreeFood(data.messageId)
+              ? FreeFoodNotification(messageId: data.messageId)
+              : Container(),
+        ],
       ),
     );
   }

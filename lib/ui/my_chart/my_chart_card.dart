@@ -43,9 +43,11 @@ class MyChartCard extends StatelessWidget {
               right: 10,
             ),
           ),
-          Text(
-            'Your secure online health connection.',
-            textAlign: TextAlign.left,
+          Flexible(
+            child: Text(
+              'Your secure online health connection.',
+              textAlign: TextAlign.left,
+            ),
           )
         ],
       ),
