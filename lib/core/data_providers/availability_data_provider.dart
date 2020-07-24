@@ -112,13 +112,11 @@ class AvailabilityDataProvider extends ChangeNotifier {
   void toggleLocation(String location) {
     if (_locationViewState[location] ?? true) {
       _locationViewState[location] = false;
-      _userDataProvider.userProfileModel.selectedOccuspaceLocations
-          .remove(location);
     } else {
       _locationViewState[location] = true;
-      _userDataProvider.userProfileModel.selectedOccuspaceLocations
-          .add(location);
     }
+    _userDataProvider
+        .updateUserProfileModel(_userDataProvider.userProfileModel);
     notifyListeners();
   }
 

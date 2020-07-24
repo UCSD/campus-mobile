@@ -1,9 +1,9 @@
 import 'package:campus_mobile_experimental/core/models/events_model.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/image_loader.dart';
+import 'package:campus_mobile_experimental/ui/reusable_widgets/linkify_with_catch.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/time_range_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class EventDetailView extends StatelessWidget {
@@ -33,61 +33,55 @@ class EventDetailView extends StatelessWidget {
         style: Theme.of(context).textTheme.title,
       ),
       Divider(),
-      Linkify(
-        onOpen: (link) async {
-          if (await canLaunch(link.url)) {
-            await launch(link.url);
-          } else {
-            throw 'Could not launch $link';
-          }
-        },
+      LinkifyWithCatch(
         text: data.location,
-        textAlign: TextAlign.center,
         style: TextStyle(fontSize: 16),
-        options: LinkifyOptions(humanize: false),
+        textAlign: TextAlign.center,
       ),
       Center(
           child: TimeRangeWidget(time: data.startTime + ' - ' + data.endTime)),
       Divider(),
       Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Linkify(
-          onOpen: (link) async {
-            if (await canLaunch(link.url)) {
-              await launch(link.url);
-            } else {
-              throw 'Could not launch $link';
-            }
-          },
-          options: LinkifyOptions(humanize: false),
+        child: LinkifyWithCatch(
           text: data.description,
           style: TextStyle(fontSize: 16),
         ),
       ),
       data.url != null && data.url.isNotEmpty
-          ? Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: FlatButton(
-                  child: Text(
-                    'Learn More',
-                    style: TextStyle(
-                        fontSize: 16,
-                        color: Theme.of(context).textTheme.button.color),
-                  ),
-                  color: Theme.of(context).buttonColor,
-                  onPressed: () async {
-                    try {
-                      if (await canLaunch(data.url)) {
-                        await launch(data.url);
-                      } else {
-                        throw 'Could not launch ${data.url}';
-                      }
-                    } catch (e) {
-                      print(e);
-                    }
-                  }),
-            )
+          ? LearnMoreButton(link: data.url)
           : Container(),
     ];
+  }
+}
+
+class LearnMoreButton extends StatelessWidget {
+  const LearnMoreButton({Key key, @required this.link}) : super(key: key);
+  final String link;
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: FlatButton(
+          child: Text(
+            'Learn More',
+            style: TextStyle(
+                fontSize: 16, color: Theme.of(context).textTheme.button.color),
+          ),
+          color: Theme.of(context).buttonColor,
+          onPressed: () async {
+            try {
+              if (await canLaunch(link)) {
+                await launch(link);
+              } else {
+                throw 'Could not launch $link';
+              }
+            } catch (e) {
+              Scaffold.of(context).showSnackBar(SnackBar(
+                content: Text('Could not open.'),
+              ));
+            }
+          }),
+    );
   }
 }

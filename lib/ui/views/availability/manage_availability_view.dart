@@ -31,13 +31,19 @@ class ManageAvailabilityView extends StatelessWidget {
     }
     List<AvailabilityModel> newOrder =
         _availabilityDataProvider.availabilityModels;
+    List<AvailabilityModel> toRemove = List<AvailabilityModel>();
+
+    for (AvailabilityModel item in newOrder) {
+      if (_availabilityDataProvider.availabilityModels == null) {
+        toRemove.add(item);
+      }
+    }
+    newOrder.removeWhere((element) => toRemove.contains(element));
     AvailabilityModel item = newOrder.removeAt(oldIndex);
     newOrder.insert(newIndex, item);
     List<String> orderedLocationNames = List<String>();
     for (AvailabilityModel item in newOrder) {
-      if (item != null) {
-        orderedLocationNames.add(item.locationName);
-      }
+      orderedLocationNames.add(item.locationName);
     }
     _availabilityDataProvider.reorderLocations(orderedLocationNames);
   }
@@ -58,7 +64,7 @@ class ManageAvailabilityView extends StatelessWidget {
           trailing: Switch(
             value: Provider.of<AvailabilityDataProvider>(context)
                 .locationViewState[model.locationName],
-            activeColor: Theme.of(context).textTheme.button.color,
+            activeColor: Theme.of(context).buttonColor,
             onChanged: (_) {
               _availabilityDataProvider.toggleLocation(model.locationName);
             },

@@ -13,7 +13,6 @@ class ClassScheduleService {
   String _error;
   ClassScheduleModel _UNdata = ClassScheduleModel();
   ClassScheduleModel _GRdata = ClassScheduleModel();
-
   AcademicTermModel _academicTermModel;
 
   final NetworkHelper _networkHelper = NetworkHelper();
