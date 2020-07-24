@@ -17,9 +17,9 @@ class CardsView extends StatelessWidget {
 
   Widget buildCardsList(BuildContext context) {
     // TODO: Resolve cardOrder issues from 62-808
-    return /*Reorderable*/ListView(
+    return ReorderableListView(
       children: createList(context),
-//      onReorder: _onReorder,
+      onReorder: _onReorder,
     );
   }
 
@@ -28,12 +28,23 @@ class CardsView extends StatelessWidget {
       newIndex -= 1;
     }
     List<String> newOrder = _cardsDataProvider.cardOrder;
+    List<String> toRemove = List<String>();
+    if (_cardsDataProvider.cardOrder.contains('QRScanner')) {
+      toRemove.add('QRScanner');
+    }
+    for (String card in newOrder) {
+      if (CardTitleConstants.titleMap[card] == null) {
+        toRemove.add(card);
+      }
+    }
+    newOrder.removeWhere((element) => toRemove.contains(element));
     String item = newOrder.removeAt(oldIndex);
     newOrder.insert(newIndex, item);
     List<String> orderList = List<String>();
     for (String item in newOrder) {
       orderList.add(item);
     }
+    orderList.addAll(toRemove.toList());
     _cardsDataProvider.updateCardOrder(orderList);
   }
 
@@ -43,7 +54,7 @@ class CardsView extends StatelessWidget {
       if (card == 'QRScanner') continue;
       if (CardTitleConstants.titleMap[card] == null) continue;
       list.add(ListTile(
-//        leading: Icon(Icons.reorder),
+        leading: Icon(Icons.reorder),
         key: Key(card),
         title: Text(CardTitleConstants.titleMap[card]),
         trailing: Switch(

@@ -17,9 +17,14 @@ class FinalsCard extends StatelessWidget {
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
-      reload: () =>
-          Provider.of<ClassScheduleDataProvider>(context, listen: false)
-              .fetchData(),
+      reload: () {
+        if (Provider.of<ClassScheduleDataProvider>(context, listen: false).isLoading){
+          return null;
+        }
+        else{
+          Provider.of<ClassScheduleDataProvider>(context, listen: false).fetchData();
+        }
+      },
       isLoading: Provider.of<ClassScheduleDataProvider>(context).isLoading,
       titleText: CardTitleConstants.titleMap[cardId],
       errorText: Provider.of<ClassScheduleDataProvider>(context).error,
@@ -77,7 +82,7 @@ class FinalsCard extends StatelessWidget {
         ListTile.divideTiles(tiles: listToReturn, context: context).toList();
     listToReturn.add(
       Padding(
-        padding: const EdgeInsets.only(left: 8.0, top: 4.0),
+        padding: const EdgeInsets.only(left: 16.0, bottom: 8.0),
         child: LastUpdatedWidget(time: lastUpdated),
       ),
     );
