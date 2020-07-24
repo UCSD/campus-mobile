@@ -29,11 +29,9 @@
 
         .row {
             width: 100%;
-            background-color: blue;
         }
 
         .column {
-            background-color: aqua;
             border-color: black;
             float: left;
             width: calc(100% / var(--numComponents));
@@ -44,6 +42,45 @@
             content: "";
             display: table;
             clear: both;
+        }
+
+        .progress {
+            display: block;
+            margin: 0 auto;
+            overflow: hidden;
+            transform: rotate(-90deg) rotateX(180deg);
+            width: 30vw;
+            height: 30vw;
+        }
+
+        .progress circle {
+            stroke-dashoffset: 0;
+            transition: stroke-dashoffset 1s ease;
+            stroke: #a02e2e;
+            stroke-width: 1em;
+            r: 10vw;
+            cx: 15vw;
+            cy: 15vw;
+        }
+
+        .progress .bar {
+            stroke: #ffffff;
+            r: 10vw;
+            cx: 15vw;
+            cy: 15vw;
+        }
+
+        .progressdiv {
+            position: relative;
+        }
+
+        .progressdiv:after {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            font-size: 6vw;
+            transform: translate(-50%, -50%);
+            content: attr(data-percent)"%";
         }
     </style>
 </head>
@@ -75,6 +112,24 @@
         <center>No Spot Types Provided</center>
         <%}%>
 
+        <script>
+                (function () {
+                    window.onload = function () {
+                        var totalProgress, progress;
+                        const circles = document.querySelectorAll('.progress');
+                        for (var i = 0; i < circles.length; i++) {
+                            totalProgress = circles[i].querySelector('circle').getAttribute('stroke-dasharray');
+                            progress = circles[i].parentElement.getAttribute('data-percent');
+                            if (progress == 'NA') {
+                                //If NA means no spots of this type
+                                circles[i].querySelector('.bar').style['stroke-dashoffset'] = 0;
+                            } else {
+                                circles[i].querySelector('.bar').style['stroke-dashoffset'] = totalProgress * progress / 100;
+                            }
+                        }
+                    }
+                })();
+        </script>
 </body>
 
 </html>

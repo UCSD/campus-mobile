@@ -24,6 +24,7 @@ import 'package:campus_mobile_experimental/ui/views/notifications/notifications_
 import 'package:campus_mobile_experimental/ui/views/onboarding/onboarding_login.dart';
 import 'package:campus_mobile_experimental/ui/views/onboarding/onboarding_screen.dart';
 import 'package:campus_mobile_experimental/ui/views/parking/manage_parking_view.dart';
+import 'package:campus_mobile_experimental/ui/views/parking/spot_types_view.dart';
 import 'package:campus_mobile_experimental/ui/views/profile/cards_view.dart';
 import 'package:campus_mobile_experimental/ui/views/profile/profile.dart';
 import 'package:campus_mobile_experimental/ui/views/scanner/scanner_view.dart';
@@ -136,6 +137,11 @@ class Router {
           return ScannerView();
         });
       case RoutePaths.ClassScheduleViewAll:
+        return MaterialPageRoute(builder: (_) => ClassList());
+      // case RoutePaths.ParkingLotsView:
+        // return MaterialPageRoute(builder: (_) => ParkingLotsView());
+      case RoutePaths.SpotTypesView:
+        return MaterialPageRoute(builder: (_) => SpotTypesView());
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return ClassList();

@@ -2,22 +2,21 @@
 <div class="column">
     <br>
     <% if(totalSpacesData[spotTypeContext]){ %>
-    <p><%= totalSpacesData[spotTypeContext]%></p>
+    <div class="progressdiv" data-percent=<%= totalSpacesData[spotTypeContext]%>>
+        <svg class="progress" version="1.1"
+            xmlns="http://www.w3.org/2000/svg">
+            <circle fill="transparent" stroke-dasharray="502.4" stroke-dashoffset="0"></circle>
+            <circle class="bar" fill="transparent" stroke-dasharray="502.4"
+                stroke-dashoffset="0"></circle>
+        </svg></div>
     <% } else{ %>
-    <p>NA</p>
+    <div class="progressdiv" data-percent="NA">
+        <svg class="progress" width="178" height="178" viewport="0 0 100 100" version="1.1"
+            xmlns="http://www.w3.org/2000/svg">
+            <circle fill="transparent" stroke-dasharray="502.4" stroke-dashoffset="0"></circle>
+            <circle class="bar" fill="transparent" stroke-dasharray="502.4"
+                stroke-dashoffset="0"></circle>
+        </svg></div>
     <% } %>
-    <div class="radial-progress">
-        <div class="circle">
-            <div class="mask full">
-                <div class="fill"></div>
-            </div>
-            <div class="mask half">
-                <div class="fill"></div>
-                <div class="fill fix"></div>
-            </div>
-            <div class="shadow"></div>
-        </div>
-        <div class="inset"></div>
-    </div>
     <center><span class="s_spot"><%= spotTypeContext %></span></center>
 </div>

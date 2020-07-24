@@ -1,12 +1,13 @@
-import 'package:campus_mobile_experimental/core/models/parking_model.dart';
+import 'package:campus_mobile_experimental/core/models/spot_types_model.dart';
 import 'package:campus_mobile_experimental/core/services/networking.dart';
+import 'dart:convert';
 
-class ParkingService {
-  ParkingService() {
-    fetchParkingLotData();
+class SpotTypesService {
+  SpotTypesService() {
+    fetchSpotTypesData();
   }
   bool _isLoading = false;
-  List<ParkingModel> _data;
+  Map<String, String> _data;
   DateTime _lastUpdated;
   String _error;
   final NetworkHelper _networkHelper = NetworkHelper();
@@ -14,18 +15,17 @@ class ParkingService {
     "accept": "application/json",
   };
 
-  final String endpoint =
-      "https://parking-spot-types.s3-us-west-2.amazonaws.com/parking_lots.json";
+  SpotTypeModel _spotTypeModel = SpotTypeModel();
 
-  Future<bool> fetchParkingLotData() async {
+  final String endpoint =
+      "https://cqeg04fl07.execute-api.us-west-2.amazonaws.com/spot-types";
+  Future<bool> fetchSpotTypesData() async {
     _error = null;
     _isLoading = true;
     try {
       /// fetch data
       String _response = await _networkHelper.fetchData(endpoint);
-
-      /// parse data
-      _data = parkingModelFromJson(_response);
+      _spotTypeModel = spotTypeModelFromJson(_response);
       _isLoading = false;
       return true;
     } catch (e) {
@@ -35,8 +35,9 @@ class ParkingService {
     }
   }
 
-  List<ParkingModel> get data => _data;
+  Map<String, String> get data => _data;
   bool get isLoading => _isLoading;
   String get error => _error;
   DateTime get lastUpdated => _lastUpdated;
+  SpotTypeModel get spotTypeModel => _spotTypeModel;
 }

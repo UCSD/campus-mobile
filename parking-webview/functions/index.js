@@ -62,7 +62,9 @@ app.get("/parking", function (req, res) {
         totalSpots += parseInt(data["Total"]);
         // loc.data[spotType] = data;
         // console.log(data);
-        lotData[spotType] = parseInt(data["Open"]);
+        lotData[spotType] = Math.floor(
+          (100 * parseInt(data["Open"])) / parseInt(data["Total"])
+        );
       } else {
         //User has not selected this spot type
       }

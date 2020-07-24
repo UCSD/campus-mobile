@@ -72,10 +72,18 @@ class _ParkingCardState extends State<ParkingCard> {
     List<Widget> actionButtons = List<Widget>();
     actionButtons.add(FlatButton(
       child: Text(
-        'View All',
+        'Manage Lots',
       ),
       onPressed: () {
-        Navigator.pushNamed(context, RoutePaths.Parking);
+        Navigator.pushNamed(context, RoutePaths.ManageParkingView);
+      },
+    ));
+    actionButtons.add(FlatButton(
+      child: Text(
+        'Manage Spots',
+      ),
+      onPressed: () {
+        Navigator.pushNamed(context, RoutePaths.SpotTypesView);
       },
     ));
     return actionButtons;

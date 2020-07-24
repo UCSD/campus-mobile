@@ -41,6 +41,8 @@ class ParkingDataProvider extends ChangeNotifier {
       ///replace old list of lots with new one
       _parkingModels = newMapOfLots;
 
+      //TODO Add user selected spots
+      
       /// if the user is logged in we want to sync the order of parking lots amongst all devices
       if (_userDataProvider != null) {
         reorderLots(_userDataProvider.userProfileModel.selectedLots);
