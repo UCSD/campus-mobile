@@ -1,11 +1,16 @@
 import 'dart:async';
+import 'dart:collection';
 import 'dart:math';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:location/location.dart';
 
 class BluetoothSingleton {
+  // Hashmap to track time stamps
+  HashMap<String, BluetoothDeviceProfile> scannedObjects = new HashMap();
+
   // Internal Declaration
   static final BluetoothSingleton _bluetoothSingleton =
       BluetoothSingleton._internal();
@@ -150,6 +155,16 @@ class BluetoothSingleton {
     // Process scan results
     flutterBlueInstance.scanResults.listen((results) {
       for (ScanResult scanResult in results) {
+        print(scanResult.advertisementData.manufacturerData);
+        scannedObjects.update(scanResult.device.id.toString(), (value) {
+          value.continuousDuration = true;
+          return value;
+        },
+          ifAbsent: () => new BluetoothDeviceProfile(scanResult.device.id.toString(), scanResult.rssi, "", new List<TimeOfDay>.from({TimeOfDay.now()}), true)
+        );
+
+
+
         // Print to terminal ACTUAL scan result
         print('ID: ${scanResult.device.id}' +
             "\nDevice name: " +
@@ -271,5 +286,18 @@ class BluetoothSingleton {
   double distanceFromLastLocation(double prevLong, double prevLat, double curLong, double curLat){
     return sqrt(pow(curLong - prevLong, 2) - pow(curLat - prevLat, 2));
   }
+
+}
+
+
+// Helper Class
+class BluetoothDeviceProfile{
+  String uuid;
+  int rssi;
+  String deviceType;
+  List<TimeOfDay> timeStamps;
+  bool continuousDuration;
+
+  BluetoothDeviceProfile(this.uuid,  this.rssi,  this.deviceType, this.timeStamps,  this.continuousDuration);
 
 }
