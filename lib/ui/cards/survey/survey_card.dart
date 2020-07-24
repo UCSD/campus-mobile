@@ -51,7 +51,6 @@ class _SurveyCardState extends State<SurveyCard> {
     return JavascriptChannel(
       name: 'CampusMobile',
       onMessageReceived: (JavascriptMessage message) {
-        print(message.message);
         openLink(message.message);
       },
     );

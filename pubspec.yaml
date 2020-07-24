@@ -1,6 +1,6 @@
 name: campus_mobile_experimental
 description: A new Flutter project.
-version: 7.2.3+811
+version: 7.2.5+813
 
 environment:
   sdk: ">=2.6.0 <3.0.0"
@@ -39,8 +39,8 @@ dependencies:
       ref: master
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
+  # flutter_test:
+  #   sdk: flutter
   hive_generator: 0.7.0+2
   build_runner: 1.8.1
 

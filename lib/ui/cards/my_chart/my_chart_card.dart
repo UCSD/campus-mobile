@@ -1,9 +1,8 @@
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
+import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
-
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -44,9 +43,11 @@ class MyChartCard extends StatelessWidget {
               right: 10,
             ),
           ),
-          Text(
-            'Your secure online health connection.',
-            textAlign: TextAlign.left,
+          Flexible(
+            child: Text(
+              'Your secure online health connection.',
+              textAlign: TextAlign.left,
+            ),
           )
         ],
       ),
@@ -80,6 +81,3 @@ class MyChartCard extends StatelessWidget {
     }
   }
 }
-
-
-
