@@ -8,6 +8,7 @@ import 'package:campus_mobile_experimental/ui/cards/my_chart/my_chart_card.dart'
 import 'package:campus_mobile_experimental/ui/cards/news/news_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/notices/notices_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/scanner/scanner_card.dart';
+import 'package:campus_mobile_experimental/ui/cards/survey/survey_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/student_id/student_id_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/weather/weather_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/availability/availability_card.dart';
@@ -61,6 +62,9 @@ class _HomeState extends State<Home> {
       switch (card) {
         case 'QRScanner':
           orderedCards.insert(0, ScannerCard());
+          break;
+        case 'student_survey':
+          orderedCards.add(SurveyCard());
           break;
         case 'MyStudentChart':
           orderedCards.add(MyChartCard());
