@@ -65,29 +65,34 @@ class _ScannerState extends State<Scanner> {
       ),
       body: Container(
         color: ColorPrimary,
-        child: Column(
-          children: <Widget>[
-            !_hasScanned
-            ? Center(
-              child: OutlineButton(
-                borderSide: BorderSide(color: Colors.white),
-                onPressed: scan,
-                child: Text("Start scan.", style: TextStyle(color: Colors.white)),
-              ),
-            )
-            : Center(
-              child: OutlineButton(
-              onPressed: scan,
-              child: Text(_barcode, style: TextStyle(color: Colors.white)),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              !_hasScanned
+              ? Center(
+                child: OutlineButton(
+                  borderSide: BorderSide(color: Colors.white),
+                  onPressed: scan,
+                  child: Text("Start scan.", style: TextStyle(color: Colors.white)),
                 ),
-              ),
-          ],
+              )
+              : Center(
+                child: OutlineButton(
+                onPressed: scan,
+                child: Text(_barcode, style: TextStyle(color: Colors.white)),
+                  ),
+                ),
+            ],
+          ),
         ),
       )
    );
   }
 
   Future scan() async {
+    print("HERE");
     try {
       var options = ScanOptions(
         strings: {
@@ -107,12 +112,12 @@ class _ScannerState extends State<Scanner> {
       var result = await BarcodeScanner.scan(options: options);
       print("after result");
       print(result.rawContent);
-      if(result.rawContent != null && result.rawContent.isNotEmpty) {
+      //if(result.rawContent != null && result.rawContent.isNotEmpty) {
       setState(() {
         scanResult = result;
         _barcode = result.rawContent;
         _hasScanned = true;
-      }); }
+      }); //}
       print("barcode: " + _barcode);
       print("has scanned " + _hasScanned.toString());
     } on PlatformException catch (e) {
