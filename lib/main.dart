@@ -1,8 +1,7 @@
-import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
-import 'package:campus_mobile_experimental/core/constants/data_persistence_constants.dart';
-import 'package:campus_mobile_experimental/core/data_providers/provider_setup.dart';
-import 'package:campus_mobile_experimental/core/navigation/router.dart';
-import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
+import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/app_provider.dart';
+import 'package:campus_mobile_experimental/app_router.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
