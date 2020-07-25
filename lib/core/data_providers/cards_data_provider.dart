@@ -175,15 +175,10 @@ class CardsDataProvider extends ChangeNotifier {
   }
 
   activateStudentCards() {
-    int index = _cardOrder.indexOf('MyStudentChart') + 1;
-    _cardOrder.insertAll(index, _studentCards.toList());
-
     // TODO: test w/o this
-    _cardOrder = List.from(_cardOrder.toSet().toList());
     for (String card in _studentCards) {
       _cardStates[card] = true;
     }
-    updateCardOrder(_cardOrder);
     updateCardStates(
         _cardStates.keys.where((card) => _cardStates[card]).toList());
   }
