@@ -32,7 +32,7 @@ class ManageParkingView extends StatelessWidget {
     for (ParkingModel item in newOrder) {
       orderedLocationNames.add(item.locationName);
     }
-    parkingDataProvider.reorderLots(orderedLocationNames);
+    // parkingDataProvider.reorderLots(orderedLocationNames);
   }
 
   List<Widget> createList(BuildContext context) {

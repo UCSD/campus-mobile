@@ -1,4 +1,4 @@
-import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
+// import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/parking_model.dart';
 import 'package:campus_mobile_experimental/core/services/parking_service.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +19,7 @@ class ParkingDataProvider extends ChangeNotifier {
 
   ///MODELS
   Map<String, ParkingModel> _parkingModels;
-  UserDataProvider _userDataProvider;
+  // UserDataProvider _userDataProvider;
 
   ///SERVICES
   ParkingService _parkingService;
@@ -44,9 +44,9 @@ class ParkingDataProvider extends ChangeNotifier {
       //TODO Add user selected spots
       
       /// if the user is logged in we want to sync the order of parking lots amongst all devices
-      if (_userDataProvider != null) {
-        reorderLots(_userDataProvider.userProfileModel.selectedLots);
-      }
+      // if (_userDataProvider != null) {
+      //   reorderLots(_userDataProvider.userProfileModel.selectedLots);
+      // }
       _lastUpdated = DateTime.now();
     } else {
       ///TODO: determine what error to show to the user
@@ -82,40 +82,40 @@ class ParkingDataProvider extends ChangeNotifier {
 
   ///REORDER THE LOTS GIVEN AN ARRAY OF STRINGS CONTAINING LOT NAMES
   ///UPLOAD CHANGES TO DB IF LOGGED IN OTHER WISE SAVE IT LOCALLY
-  void reorderLots(List<String> order) {
-    ///edit the profile and upload user selected lots
-    _userDataProvider.userProfileModel.selectedLots = order;
-    _userDataProvider.postUserProfile(_userDataProvider.userProfileModel);
-    notifyListeners();
-  }
+  // void reorderLots(List<String> order) {
+  //   ///edit the profile and upload user selected lots
+  //   _userDataProvider.userProfileModel.selectedLots = order;
+  //   _userDataProvider.postUserProfile(_userDataProvider.userProfileModel);
+  //   notifyListeners();
+  // }
 
   ///ADD A PARKING LOT IF IT HAS NOT ALREADY BEEN ADDED
-  void addLot(ParkingModel model) {
-    if (!_userDataProvider.userProfileModel.selectedLots
-        .contains(model.locationName)) {
-      _userDataProvider.userProfileModel.selectedLots.add(model.locationName);
-    }
-  }
+  // void addLot(ParkingModel model) {
+  //   if (!_userDataProvider.userProfileModel.selectedLots
+  //       .contains(model.locationName)) {
+  //     _userDataProvider.userProfileModel.selectedLots.add(model.locationName);
+  //   }
+  // }
 
-  ///REMOVE PARKING LOT
-  void removeLot(ParkingModel model) {
-    _userDataProvider.userProfileModel.selectedLots.remove(model.locationName);
-  }
+  // ///REMOVE PARKING LOT
+  // void removeLot(ParkingModel model) {
+  //   _userDataProvider.userProfileModel.selectedLots.remove(model.locationName);
+  // }
 
-  ///UPLOAD SELECTED LOTS IN THE CORRECT ORDER TO THE DATABASE
-  ///IF NOT LOGGED IN THEN SAVE LOTS TO LOCAL PROFILE
-  uploadParkingLotData(List<String> lots) {
-    var userProfile = _userDataProvider.userProfileModel;
+  // ///UPLOAD SELECTED LOTS IN THE CORRECT ORDER TO THE DATABASE
+  // ///IF NOT LOGGED IN THEN SAVE LOTS TO LOCAL PROFILE
+  // uploadParkingLotData(List<String> lots) {
+  //   var userProfile = _userDataProvider.userProfileModel;
 
-    ///set the local user profile to the given lots
-    userProfile.selectedLots = lots;
-    _userDataProvider.postUserProfile(userProfile);
-  }
+  //   ///set the local user profile to the given lots
+  //   userProfile.selectedLots = lots;
+  //   _userDataProvider.postUserProfile(userProfile);
+  // }
 
-  ///This setter is only used in provider to supply and updated UserDataProvider object
-  set userDataProvider(UserDataProvider value) {
-    _userDataProvider = value;
-  }
+  // ///This setter is only used in provider to supply and updated UserDataProvider object
+  // set userDataProvider(UserDataProvider value) {
+  //   _userDataProvider = value;
+  // }
 
   ///SIMPLE GETTERS
   bool get isLoading => _isLoading;
@@ -127,9 +127,9 @@ class ParkingDataProvider extends ChangeNotifier {
     ///check if we have an offline _parkingModel
     if (_parkingModels != null) {
       ///check if we have an offline _userProfileModel
-      if (_userDataProvider.userProfileModel != null) {
-        return makeOrderedList(_userDataProvider.userProfileModel.selectedLots);
-      }
+      // if (_userDataProvider.userProfileModel != null) {
+      //   return makeOrderedList(_userDataProvider.userProfileModel.selectedLots);
+      // }
       return _parkingModels.values.toList();
     }
     return List<ParkingModel>();

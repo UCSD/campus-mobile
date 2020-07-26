@@ -24,10 +24,10 @@ class _ParkingCardState extends State<ParkingCard> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _parkingDataProvider = Provider.of<ParkingDataProvider>(context);
   }
 
   Widget build(BuildContext context) {
+    _parkingDataProvider = Provider.of<ParkingDataProvider>(context);
     return CardContainer(
       titleText: CardTitleConstants.titleMap[cardId],
       isLoading: _parkingDataProvider.isLoading,

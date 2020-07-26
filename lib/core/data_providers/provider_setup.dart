@@ -186,27 +186,25 @@ List<SingleChildWidget> dependentServices = [
     parkingDataProvider.fetchParkingLots();
     return parkingDataProvider;
   }, update: (_, userDataProvider, parkingDataProvider) {
-    parkingDataProvider.userDataProvider = userDataProvider;
+    //   parkingDataProvider.userDataProvider = userDataProvider;
     return parkingDataProvider;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, StudentIdDataProvider>(
       create: (_) {
-        var studentIdDataProvider = StudentIdDataProvider();
-        return studentIdDataProvider;
-      },
-      update: (_, userDataProvider, studentIdDataProvider) {
-        studentIdDataProvider.userDataProvider = userDataProvider;
+    var studentIdDataProvider = StudentIdDataProvider();
+    return studentIdDataProvider;
+  }, update: (_, userDataProvider, studentIdDataProvider) {
+    studentIdDataProvider.userDataProvider = userDataProvider;
 
-        //Verify that the user is logged in
-        if(userDataProvider.isLoggedIn && !studentIdDataProvider.isLoading) {
-          studentIdDataProvider.fetchData();
-        }
+    //Verify that the user is logged in
+    if (userDataProvider.isLoggedIn && !studentIdDataProvider.isLoading) {
+      studentIdDataProvider.fetchData();
+    }
 
-        return studentIdDataProvider;
-      }
-  ),
+    return studentIdDataProvider;
+  }),
   ChangeNotifierProxyProvider<UserDataProvider, AvailabilityDataProvider>(
-    create: (_) {
+      create: (_) {
     var availabilityDataProvider = AvailabilityDataProvider();
     availabilityDataProvider.fetchAvailability();
     return availabilityDataProvider;
@@ -237,8 +235,7 @@ List<SingleChildWidget> dependentServices = [
   ChangeNotifierProxyProvider<MessagesDataProvider, FreeFoodDataProvider>(
     create: (_) {
       var freefoodDataProvider = FreeFoodDataProvider();
-      freefoodDataProvider
-        ..loadRegisteredEvents();
+      freefoodDataProvider..loadRegisteredEvents();
 
       return freefoodDataProvider;
     },

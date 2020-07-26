@@ -8,20 +8,18 @@ import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.da
 
 class SpotTypesView extends StatelessWidget {
   SpotTypesDataProvider _spotTypesDataProvider;
-  UserDataProvider _userDataProvider;
+  // UserDataProvider _userDataProvider;
   @override
   Widget build(BuildContext context) {
     _spotTypesDataProvider = Provider.of<SpotTypesDataProvider>(context);
-    _userDataProvider = Provider.of<UserDataProvider>(context);
-    _spotTypesDataProvider.fetchSpotTypes();
-    _userDataProvider.fetchUserProfile();
+    // _userDataProvider = Provider.of<UserDataProvider>(context);
     return ContainerView(
-      child: createListWidget(context),
+      child: createListWidget(_spotTypesDataProvider.spotTypeModel),
     );
   }
 
-  Widget createListWidget(BuildContext context) {
-    return ListView(children: createList(context));
+  Widget createListWidget(SpotTypeModel model) {
+    return ListView(children: createList(model));
   }
 
   Widget _buildLoadingIndicator() {
@@ -33,10 +31,10 @@ class SpotTypesView extends StatelessWidget {
     );
   }
 
-  List<Widget> createList(BuildContext context) {
+  List<Widget> createList(SpotTypeModel model) {
     List<Widget> list = List<Widget>();
     // _spotTypesDataProvider.fetchSpotTypes();
-    for (Spot data in _spotTypesDataProvider.spotTypeModel.spots) {
+    for (Spot data in model.spots) {
       print(data.spotKey);
       list.add(ListTile(
         leading: Container(
