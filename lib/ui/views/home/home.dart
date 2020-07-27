@@ -8,6 +8,7 @@ import 'package:campus_mobile_experimental/ui/cards/my_chart/my_chart_card.dart'
 import 'package:campus_mobile_experimental/ui/cards/news/news_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/notices/notices_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/scanner/scanner_card.dart';
+import 'package:campus_mobile_experimental/ui/cards/student_info/student_info.dart';
 import 'package:campus_mobile_experimental/ui/cards/student_id/student_id_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/weather/weather_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/availability/availability_card.dart';
@@ -64,6 +65,9 @@ class _HomeState extends State<Home> {
           break;
         case 'MyStudentChart':
           orderedCards.add(MyChartCard());
+          break;
+        case 'student_info':
+          orderedCards.add(StudentInfoCard());
           break;
         case 'finals':
           orderedCards.add(FinalsCard());
