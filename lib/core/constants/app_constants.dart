@@ -103,6 +103,7 @@ class CardTitleConstants {
   static const titleMap = {
     'QRScanner': 'QR Scanner',
     'MyStudentChart': 'MyStudentChart',
+    'staff_info': 'Staff Info',
     'student_id': 'Student ID',
     'finals': 'Finals',
     'schedule': 'Classes',
