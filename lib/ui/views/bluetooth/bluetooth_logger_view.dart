@@ -99,7 +99,7 @@ class _BluetoothLoggerViewState extends State<BluetoothLoggerView> {
     //Stop ongoing scan
     currentInstance.stopScan();
     bluetoothSingleton.pauseScan();
-    bluetoothSingleton.ongoingScanner.cancel();
+  //  bluetoothSingleton.ongoingScanner.cancel();
 
     // Start a new scan with slider value
     currentInstance.startScan(

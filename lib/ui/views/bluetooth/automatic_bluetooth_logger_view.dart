@@ -52,7 +52,7 @@ class _AutomaticBluetoothLoggerViewState
     double verticalSafeBlock = (queryData.size.height -
             (queryData.padding.top + queryData.padding.bottom)) /
         100;
-    double cardHeight = verticalSafeBlock * 90;
+    double cardHeight = verticalSafeBlock * 85;
 
     return Scaffold(
       appBar: AppBar(
