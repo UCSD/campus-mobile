@@ -69,7 +69,6 @@ class _StaffInfoCardState extends State<StaffInfoCard> {
     return JavascriptChannel(
       name: 'CampusMobile',
       onMessageReceived: (JavascriptMessage message) {
-        print(message.message);
         openLink(message.message);
       },
     );
