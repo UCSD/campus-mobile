@@ -53,9 +53,11 @@ packages:
   barcode_scan:
     dependency: "direct main"
     description:
-      name: barcode_scan
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: master
+      resolved-ref: "08eda5400d5576508959310fc4f1003fbb3ae320"
+      url: "https://github.com/gmihir/flutter_barcode_reader"
+    source: git
     version: "3.0.1"
   barcode_widget:
     dependency: "direct main"
