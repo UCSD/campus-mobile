@@ -5,6 +5,7 @@ import 'package:campus_mobile_experimental/ui/cards/class_schedule/class_schedul
 import 'package:campus_mobile_experimental/ui/cards/events/events_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/finals/finals_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/my_chart/my_chart_card.dart';
+import 'package:campus_mobile_experimental/ui/cards/staff/staff_info_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/news/news_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/notices/notices_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/scanner/scanner_card.dart';
@@ -66,6 +67,8 @@ class _HomeState extends State<Home> {
         case 'MyStudentChart':
           orderedCards.add(MyChartCard());
           break;
+        case 'staff_info':
+          orderedCards.add(StaffInfoCard());
         case 'student_info':
           orderedCards.add(StudentInfoCard());
           break;

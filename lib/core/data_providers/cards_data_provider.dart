@@ -13,8 +13,9 @@ class CardsDataProvider extends ChangeNotifier {
     _cardOrder = [
       'QRScanner',
       'MyStudentChart',
+      'staff_info',
       'student_info'
-          'student_id',
+      'student_id',
       'finals',
       'schedule',
       'dining',
@@ -23,7 +24,9 @@ class CardsDataProvider extends ChangeNotifier {
       'news',
       'weather',
     ];
-    _studentCards = ['student_info', 'student_id', 'finals', 'schedule'];
+    
+    _studentCards = ['staff_info', 'student_id', 'finals', 'schedule'];
+    _studentCards = ['staff_info', 'student_info', 'student_id', 'finals', 'schedule'];
 
     for (String card in CardTitleConstants.titleMap.keys.toList()) {
       _cardStates[card] = true;
