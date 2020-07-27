@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:html';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -25,8 +26,11 @@ class BluetoothSingleton {
   double previousLatitude = 0;
   double previousLongitude = 0;
 
+  int uniqueIdThreshold = 0;
+
+
   // Dwell time threshold (10 minutes -> 600 seconds;
-  int dwellTimeThreshold = 600;
+  int dwellTimeThreshold = 200;
 
   // Constant for scans
   final int scanDuration = 2; //Seconds
@@ -78,7 +82,6 @@ class BluetoothSingleton {
   startScan() {
     flutterBlueInstance.startScan(
         timeout: Duration(seconds: 2), allowDuplicates: false);
-    int uniqueIdThreshold = 0;
 
     // Process the scan results (synchronously)
     flutterBlueInstance.scanResults.listen((results) {
@@ -86,14 +89,9 @@ class BluetoothSingleton {
         scannedObjects.update(scanResult.device.id.toString(), (value) {
           value.continuousDuration = true;
           value.rssi = scanResult.rssi;
-          value.dwellTime += (dwellTimeThreshold/waitTime) ;
-          if(value.dwellTime >= dwellTimeThreshold){
-            uniqueIdThreshold += 1; // Add the # of unique devices detected
-          }
           if(scanResult.advertisementData.txPowerLevel != null ) {
            value.txPowerLevel = scanResult.advertisementData.txPowerLevel;
           }
-          value.timeStamps.add(TimeOfDay.now());
           return value;
         },
             ifAbsent: () => new BluetoothDeviceProfile(scanResult.device.id.toString(), scanResult.rssi, "", new List<TimeOfDay>.from({TimeOfDay.now()}), true, scanResult.advertisementData.txPowerLevel)
@@ -110,16 +108,26 @@ class BluetoothSingleton {
           if(element.contains(toFind)){
             repeatedDevice = true;
           }
-          print("++ "  + element + " ++");
         });
         //PARSE FOR FRONTEND DISPLAY
         if (!repeatedDevice) {
+          scannedObjects[scanResult.device.id.toString()].dwellTime += (waitTime);
+          if(scannedObjects[scanResult.device.id.toString()].dwellTime >= dwellTimeThreshold){
+            uniqueIdThreshold += 1; // Add the # of unique devices detected
+          }
           bufferList.add('ID: ${scanResult.device.id}' +
               "\nDevice name: " +
               (scanResult.device.name != ""
                   ? scanResult.device.name
                   : "Unknown") +
-              "\n" + "RSSI: "+ scanResult.rssi.toString() + " Dwell time: " + scannedObjects[scanResult.device.id.toString()].dwellTime.toString() );
+              "\n" + "RSSI: "+ scanResult.rssi.toString() + " Dwell time: " + scannedObjects[scanResult.device.id.toString()].dwellTime.toString() + "\n");
+          bufferList.add("TEST");
+          scanResult.device.discoverServices().then((value) => value.forEach((element) {
+            bufferList.add(element);
+          }));
+          scanResult.advertisementData.serviceUuids.forEach((element) {
+              bufferList.add(element.toString());
+          });
 
         }
       }
@@ -138,9 +146,10 @@ class BluetoothSingleton {
 
     // Add the processed buffer to overall log
     loggedItems.insertAll(loggedItems.length, bufferList);
-
+    loggedItems.add(uniqueIdThreshold.toString());
     // If there are more than three devices, log location
     if (uniqueIdThreshold >= 5) {
+      loggedItems.add( "LOCATION LOGGED");
       _logLocation();
     }
 
@@ -237,10 +246,6 @@ class BluetoothSingleton {
 
 
 
-    //If more than three devices are detected, log location
-    if (scannedObjects.length > 4) {
-      _logLocation();
-    }
 
     // Stop any scan not yet timed out
     flutterBlueInstance.stopScan();
@@ -272,11 +277,6 @@ class BluetoothSingleton {
       if (hasPermission != PermissionStatus.granted) {
         return;
       }
-    }
-
-    // If this is our fist run, enable the location listener
-    if (enable < 1) {
-      enableLocationListening();
     }
 
     //once permissions are verified, get location asynchronously

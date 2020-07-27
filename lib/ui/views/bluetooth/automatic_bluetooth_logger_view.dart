@@ -32,7 +32,6 @@ class _AutomaticBluetoothLoggerViewState
     if(bluetoothSingleton.loggedItems.length > 0){
         Timer.periodic(Duration(seconds: 3), (timer) {setState(() {
           loggedItems = bluetoothSingleton.loggedItems;
-          print("TIMER WENT OFF");
           build(context);
         }); });
     }
