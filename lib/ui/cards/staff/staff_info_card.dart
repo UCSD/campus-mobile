@@ -31,6 +31,11 @@ class _StaffInfoCardState extends State<StaffInfoCard> {
     );
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
+
   final _url =
       "https://mobile.ucsd.edu/replatform/v1/qa/webview/staff_info.html";
 
