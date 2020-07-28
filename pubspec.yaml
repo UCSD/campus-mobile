@@ -35,7 +35,7 @@ dependencies:
   barcode_widget: ^1.3.0
   qr_code_scanner:
     git:
-      url: https://github.com/ucsd/qr_code_scanner.git
+      url: https://github.com/gmihir/qr_code_scanner.git
       ref: master
 
 dev_dependencies:

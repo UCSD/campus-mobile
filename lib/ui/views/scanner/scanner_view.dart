@@ -6,7 +6,7 @@ import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:qr_code_scanner/qr_scanner_overlay_shape.dart';
+//import 'package:qr_code_scanner/qr_scanner_overlay_shape.dart';
 
 class ScannerView extends StatefulWidget {
   const ScannerView({
@@ -59,7 +59,7 @@ class _QRViewExampleState extends State<ScannerView> {
                         ? Padding(
                           padding: const EdgeInsets.only(top: 20.0, bottom: 4.0),
                           child: Text(
-                            ScannerConstants.scannerSubmitPrompt,
+                            _barcodeDataProvider.qrText, // for testing
                             style: TextStyle( color: Colors.black, fontSize: 18.0 ),
                             textAlign: TextAlign.center,
                           ),
