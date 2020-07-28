@@ -1,17 +1,18 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
+import 'package:campus_mobile_experimental/core/data_providers/availability_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/push_notifications_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/authentication_model.dart';
 import 'package:campus_mobile_experimental/core/models/user_profile_model.dart';
 import 'package:campus_mobile_experimental/core/services/authentication_service.dart';
 import 'package:campus_mobile_experimental/core/services/user_profile_service.dart';
+import 'package:encrypt/encrypt.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive/hive.dart';
 import 'package:pointycastle/asymmetric/oaep.dart';
 import 'package:pointycastle/pointycastle.dart' as pc;
-import 'dart:typed_data';
-import 'package:encrypt/encrypt.dart';
-import 'dart:convert';
-import 'package:campus_mobile_experimental/core/data_providers/availability_data_provider.dart';
 
 class UserDataProvider extends ChangeNotifier {
   UserDataProvider() {
@@ -295,14 +296,23 @@ class UserDataProvider extends ChangeNotifier {
       profile.pid = _authenticationModel.pid;
       profile.subscribedTopics =
           await _pushNotificationDataProvider.publicTopics();
-      final pattern = RegExp('[BGJMU]');
-      if ((profile.ucsdaffiliation ?? "").contains(pattern)) {
+
+      final studentPattern = RegExp('[BGJMU]');
+      final staffPattern = RegExp('[E]');
+
+      if ((profile.ucsdaffiliation ?? "").contains(studentPattern)) {
         profile
-          ..classifications = Classifications.fromJson({'student': true})
+          ..classifications =
+              Classifications.fromJson({'student': true, 'staff': false})
           ..subscribedTopics
               .addAll(await _pushNotificationDataProvider.studentTopics());
+      } else if ((profile.ucsdaffiliation ?? "").contains(staffPattern)) {
+        profile
+          ..classifications =
+              Classifications.fromJson({'staff': true, 'student': false});
       } else {
-        profile.classifications = Classifications.fromJson({'student': false});
+        profile.classifications =
+            Classifications.fromJson({'student': false, 'staff': false});
       }
     } catch (e) {
       print(e.toString());

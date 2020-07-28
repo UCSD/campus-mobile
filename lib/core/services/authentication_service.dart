@@ -15,7 +15,7 @@ class AuthenticationService {
   final String refreshTokenEndpoint =
       'https://c12cf2xke8.execute-api.us-west-2.amazonaws.com/prod/v1.1/access-profile/refresh';
   final String AUTH_SERVICE_API_URL =
-      "https://3hepzvdimd.execute-api.us-west-2.amazonaws.com/dev/v1/access-profile";
+      "https://3hepzvdimd.execute-api.us-west-2.amazonaws.com/dev/v1.1/access-profile";
   final String AUTH_SERVICE_API_KEY =
       'eKFql1kJAj53iyU2fNKyH4jI2b7t70MZ5YbAuPBZ';
 
