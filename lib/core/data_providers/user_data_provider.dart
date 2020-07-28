@@ -260,8 +260,12 @@ class UserDataProvider extends ChangeNotifier {
           newModel = await _createNewUser(newModel);
           await postUserProfile(newModel);
         } else {
+          newModel.username = await _getUsernameFromDevice();
           newModel.ucsdaffiliation = _authenticationModel.ucsdaffiliation;
           newModel.pid = _authenticationModel.pid;
+          newModel.subscribedTopics =
+              _pushNotificationDataProvider.publicTopics();
+
           final studentPattern = RegExp('[BGJMU]');
           final staffPattern = RegExp('[E]');
 
@@ -270,13 +274,13 @@ class UserDataProvider extends ChangeNotifier {
               ..classifications =
                   Classifications.fromJson({'student': true, 'staff': false})
               ..subscribedTopics
-                  .addAll(await _pushNotificationDataProvider.studentTopics());
+                  .addAll(_pushNotificationDataProvider.studentTopics());
           } else if ((newModel.ucsdaffiliation ?? "").contains(staffPattern)) {
             newModel
               ..classifications =
                   Classifications.fromJson({'staff': true, 'student': false})
               ..subscribedTopics
-                  .addAll(await _pushNotificationDataProvider.staffTopics());
+                  .addAll(_pushNotificationDataProvider.staffTopics());
           } else {
             newModel.classifications =
                 Classifications.fromJson({'student': false, 'staff': false});
@@ -315,8 +319,7 @@ class UserDataProvider extends ChangeNotifier {
       profile.username = await _getUsernameFromDevice();
       profile.ucsdaffiliation = _authenticationModel.ucsdaffiliation;
       profile.pid = _authenticationModel.pid;
-      profile.subscribedTopics =
-          await _pushNotificationDataProvider.publicTopics();
+      profile.subscribedTopics = _pushNotificationDataProvider.publicTopics();
 
       final studentPattern = RegExp('[BGJMU]');
       final staffPattern = RegExp('[E]');
@@ -326,13 +329,13 @@ class UserDataProvider extends ChangeNotifier {
           ..classifications =
               Classifications.fromJson({'student': true, 'staff': false})
           ..subscribedTopics
-              .addAll(await _pushNotificationDataProvider.studentTopics());
+              .addAll(_pushNotificationDataProvider.studentTopics());
       } else if ((profile.ucsdaffiliation ?? "").contains(staffPattern)) {
         profile
           ..classifications =
               Classifications.fromJson({'staff': true, 'student': false})
           ..subscribedTopics
-              .addAll(await _pushNotificationDataProvider.staffTopics());
+              .addAll(_pushNotificationDataProvider.staffTopics());
       } else {
         profile.classifications =
             Classifications.fromJson({'student': false, 'staff': false});
