@@ -75,17 +75,17 @@ class BarcodeDataProvider extends ChangeNotifier {
         'Authorization':
             'Bearer ${_userDataProvider.authenticationModel.accessToken}'
       };
-//      var results = await _barcodeService.uploadResults(headers, userData);
-//      if (results) {
-//        _submitState = ButtonText.SubmitButtonReceived;
-//      } else {
-//        if (_barcodeService.error.contains(ErrorConstants.invalidBearerToken)) {
-//          await _userDataProvider.refreshToken();
-//        } else {
-//          _error = _barcodeService.error;
-//        }
-//        _submitState = ButtonText.SubmitButtonTryAgain;
-//      }
+      var results = await _barcodeService.uploadResults(headers, userData);
+      if (results) {
+        _submitState = ButtonText.SubmitButtonReceived;
+      } else {
+        if (_barcodeService.error.contains(ErrorConstants.invalidBearerToken)) {
+          await _userDataProvider.refreshToken();
+        } else {
+          _error = _barcodeService.error;
+        }
+        _submitState = ButtonText.SubmitButtonTryAgain;
+      }
       _isLoading = false;
       notifyListeners();
     }
