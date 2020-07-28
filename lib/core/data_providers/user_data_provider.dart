@@ -261,6 +261,24 @@ class UserDataProvider extends ChangeNotifier {
           await postUserProfile(newModel);
         } else {
           newModel.ucsdaffiliation = _authenticationModel.ucsdaffiliation;
+          newModel.pid = _authenticationModel.pid;
+          final studentPattern = RegExp('[BGJMU]');
+          final staffPattern = RegExp('[E]');
+
+          if ((newModel.ucsdaffiliation ?? "").contains(studentPattern)) {
+            newModel
+              ..classifications =
+                  Classifications.fromJson({'student': true, 'staff': false})
+              ..subscribedTopics
+                  .addAll(await _pushNotificationDataProvider.studentTopics());
+          } else if ((newModel.ucsdaffiliation ?? "").contains(staffPattern)) {
+            newModel
+              ..classifications =
+                  Classifications.fromJson({'staff': true, 'student': false});
+          } else {
+            newModel.classifications =
+                Classifications.fromJson({'student': false, 'staff': false});
+          }
           await updateUserProfileModel(newModel);
         }
       } else {
