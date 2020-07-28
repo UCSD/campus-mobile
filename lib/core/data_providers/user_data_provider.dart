@@ -260,6 +260,7 @@ class UserDataProvider extends ChangeNotifier {
           newModel = await _createNewUser(newModel);
           await postUserProfile(newModel);
         } else {
+          newModel.ucsdaffiliation = _authenticationModel.ucsdaffiliation;
           await updateUserProfileModel(newModel);
         }
       } else {
