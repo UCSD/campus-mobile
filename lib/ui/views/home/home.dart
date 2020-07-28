@@ -10,9 +10,9 @@ import 'package:campus_mobile_experimental/ui/cards/my_chart/my_chart_card.dart'
 import 'package:campus_mobile_experimental/ui/cards/news/news_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/notices/notices_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/scanner/scanner_card.dart';
-import 'package:campus_mobile_experimental/ui/cards/staff/staff_info_card.dart';
+import 'package:campus_mobile_experimental/ui/cards/staff_info/staff_info_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/student_id/student_id_card.dart';
-import 'package:campus_mobile_experimental/ui/cards/student_info/student_info.dart';
+import 'package:campus_mobile_experimental/ui/cards/student_info/student_info_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/weather/weather_card.dart';
 import 'package:campus_mobile_experimental/ui/theme/app_layout.dart';
 import 'package:flutter/material.dart';

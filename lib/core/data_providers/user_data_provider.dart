@@ -274,7 +274,9 @@ class UserDataProvider extends ChangeNotifier {
           } else if ((newModel.ucsdaffiliation ?? "").contains(staffPattern)) {
             newModel
               ..classifications =
-                  Classifications.fromJson({'staff': true, 'student': false});
+                  Classifications.fromJson({'staff': true, 'student': false})
+              ..subscribedTopics
+                  .addAll(await _pushNotificationDataProvider.staffTopics());
           } else {
             newModel.classifications =
                 Classifications.fromJson({'student': false, 'staff': false});
@@ -328,7 +330,9 @@ class UserDataProvider extends ChangeNotifier {
       } else if ((profile.ucsdaffiliation ?? "").contains(staffPattern)) {
         profile
           ..classifications =
-              Classifications.fromJson({'staff': true, 'student': false});
+              Classifications.fromJson({'staff': true, 'student': false})
+          ..subscribedTopics
+              .addAll(await _pushNotificationDataProvider.staffTopics());
       } else {
         profile.classifications =
             Classifications.fromJson({'student': false, 'staff': false});
