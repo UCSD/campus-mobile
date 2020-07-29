@@ -14,6 +14,7 @@ class StaffIdCard extends StatefulWidget {
 
 class _StaffIdCardState extends State<StaffIdCard> {
   String cardId = "staff_id";
+  WebViewController _webViewController;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +22,7 @@ class _StaffIdCardState extends State<StaffIdCard> {
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
-      reload: () => null,
+      reload: () => reloadWebView(),
       isLoading: false,
       titleText: CardTitleConstants.titleMap[cardId],
       errorText: null,
@@ -29,7 +30,12 @@ class _StaffIdCardState extends State<StaffIdCard> {
     );
   }
 
-  final _url = "https://cwo-test.ucsd.edu/WebCards/staff_id.html";
+  final _url = "https://mobile.ucsd.edu/replatform/v1/qa/webview/staff_id.html";
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
 
   UserDataProvider _userDataProvider;
   set userDataProvider(UserDataProvider value) => _userDataProvider = value;
@@ -55,9 +61,16 @@ class _StaffIdCardState extends State<StaffIdCard> {
           child: WebView(
             javascriptMode: JavascriptMode.unrestricted,
             initialUrl: url,
+            onWebViewCreated: (controller) {
+              _webViewController = controller;
+            },
           ),
         ),
       ],
     );
+  }
+
+  void reloadWebView() {
+    _webViewController?.reload();
   }
 }
