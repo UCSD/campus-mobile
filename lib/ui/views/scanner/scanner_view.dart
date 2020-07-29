@@ -6,7 +6,6 @@ import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-//import 'package:qr_code_scanner/qr_scanner_overlay_shape.dart';
 
 class ScannerView extends StatefulWidget {
   const ScannerView({
