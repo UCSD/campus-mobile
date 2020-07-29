@@ -1,5 +1,4 @@
 import 'package:campus_mobile_experimental/ui/theme/app_layout.dart';
-import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class CardContainer extends StatelessWidget {
@@ -98,18 +97,23 @@ class CardContainer extends StatelessWidget {
               height: 32, width: 32, child: CircularProgressIndicator()),
         ),
       );
-    } else {
-      if (titleText == "Student ID" || titleText == "Staff ID") {
-        return Container(
-          width: double.infinity,
-//        height: 200.0,
-          constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 180),
-          child: child(),
-        );
-      }
+    } else if (titleText == "Staff Information" ||
+        titleText == "Student Information") {
+      return Container(
+        width: double.infinity,
+        constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 200),
+        child: child(),
+      );
+    } else if (titleText == "Student ID" || titleText == "Staff ID") {
       return Container(
         width: double.infinity,
 //        height: 200.0,
+        constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 180),
+        child: child(),
+      );
+    } else {
+      return Container(
+        width: double.infinity,
         constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 340),
         child: child(),
       );

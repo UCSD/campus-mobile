@@ -1,9 +1,9 @@
 import 'package:campus_mobile_experimental/core/data_providers/push_notifications_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
+import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
 import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
 
 class NotificationsSettingsView extends StatelessWidget {
   @override
@@ -46,6 +46,10 @@ class NotificationsSettingsView extends StatelessWidget {
     if (_userDataProvider.userProfileModel.classifications?.student ?? false) {
       return _pushNotificationDataProvider.publicTopics() +
           _pushNotificationDataProvider.studentTopics();
+    } else if (_userDataProvider.userProfileModel.classifications?.staff ??
+        false) {
+      return _pushNotificationDataProvider.publicTopics() +
+          _pushNotificationDataProvider.staffTopics();
     } else {
       return _pushNotificationDataProvider.publicTopics();
     }
