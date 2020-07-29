@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/messages_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/topics_model.dart';
@@ -264,6 +265,20 @@ class PushNotificationDataProvider extends ChangeNotifier {
     List<String> topicsToReturn = List<String>();
     for (TopicsModel model in _notificationService.topicsModel ?? []) {
       if (model.audienceId == 'student') {
+        for (Topic topic in model.topics) {
+          topicsToReturn.add(topic.topicId);
+        }
+        return topicsToReturn;
+      }
+    }
+    return topicsToReturn;
+  }
+
+  /// get staff only topics
+  List<String> staffTopics() {
+    List<String> topicsToReturn = List<String>();
+    for (TopicsModel model in _notificationService.topicsModel ?? []) {
+      if (model.audienceId == 'staff') {
         for (Topic topic in model.topics) {
           topicsToReturn.add(topic.topicId);
         }

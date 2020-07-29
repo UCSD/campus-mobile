@@ -1,21 +1,21 @@
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-class StaffInfoCard extends StatefulWidget {
-  StaffInfoCard();
+class StudentInfoCard extends StatefulWidget {
+  StudentInfoCard();
   @override
-  _StaffInfoCardState createState() => _StaffInfoCardState();
+  _StudentInfoCardState createState() => _StudentInfoCardState();
 }
 
-class _StaffInfoCardState extends State<StaffInfoCard> {
-  String cardId = "staff_info";
+class _StudentInfoCardState extends State<StudentInfoCard> {
+  String cardId = "student_info";
+  WebViewController _webViewController;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class _StaffInfoCardState extends State<StaffInfoCard> {
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
-      reload: () => null,
+      reload: () => reloadWebView(),
       isLoading: false,
       titleText: CardTitleConstants.titleMap[cardId],
       errorText: null,
@@ -31,13 +31,13 @@ class _StaffInfoCardState extends State<StaffInfoCard> {
     );
   }
 
+  final _url =
+      "https://mobile.ucsd.edu/replatform/v1/qa/webview/student_info.html";
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
   }
-
-  final _url =
-      "https://mobile.ucsd.edu/replatform/v1/qa/webview/staff_info.html";
 
   UserDataProvider _userDataProvider;
   set userDataProvider(UserDataProvider value) => _userDataProvider = value;
@@ -45,6 +45,7 @@ class _StaffInfoCardState extends State<StaffInfoCard> {
   Widget buildCardContent(BuildContext context) {
     _userDataProvider = Provider.of<UserDataProvider>(context);
 
+    /// Verify that user is logged in
     if (_userDataProvider.isLoggedIn) {
       /// Initialize header
       final Map<String, String> header = {
@@ -55,13 +56,15 @@ class _StaffInfoCardState extends State<StaffInfoCard> {
     var tokenQueryString =
         "token=" + '${_userDataProvider.authenticationModel.accessToken}';
     var url = _url + "?" + tokenQueryString;
-
     return Column(
       children: <Widget>[
         Flexible(
             child: WebView(
           javascriptMode: JavascriptMode.unrestricted,
           initialUrl: url,
+          onWebViewCreated: (controller) {
+            _webViewController = controller;
+          },
           javascriptChannels: <JavascriptChannel>[
             _printJavascriptChannel(context),
           ].toSet(),
@@ -85,5 +88,9 @@ class _StaffInfoCardState extends State<StaffInfoCard> {
     } else {
       //can't launch url, there is some error
     }
+  }
+
+  void reloadWebView() {
+    _webViewController?.reload();
   }
 }
