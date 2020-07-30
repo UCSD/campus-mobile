@@ -36,7 +36,7 @@ class _CampusInfoCardState extends State<CampusInfoCard> {
   }
 
   final _url =
-      "https://mobile.ucsd.edu/replatform/v1/qa/webview/staff_info.html";
+      "https://mobile.ucsd.edu/replatform/v1/qa/webview/campus_info.html";
 
   Widget buildCardContent(BuildContext context) {
     return Column(
