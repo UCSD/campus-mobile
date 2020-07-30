@@ -106,8 +106,8 @@ class Router {
         return MaterialPageRoute(builder: (_) => CardsView());
       case RoutePaths.NotificationsSettingsView:
         return MaterialPageRoute(builder: (_) => NotificationsSettingsView());
-      case RoutePaths.BluetoothLoggerView:
-        return MaterialPageRoute(builder: (_) => BluetoothLoggerView());
+      //case RoutePaths.BluetoothLoggerView:
+        //return MaterialPageRoute(builder: (_) => BluetoothLoggerView());
       case RoutePaths.AutomaticBluetoothLoggerView:
         return MaterialPageRoute(builder: (_) => AutomaticBluetoothLoggerView());
       case RoutePaths.ScannerView:

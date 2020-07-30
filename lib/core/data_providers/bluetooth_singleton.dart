@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:collection';
-import 'dart:html';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -86,67 +85,23 @@ class BluetoothSingleton {
     // Process the scan results (synchronously)
     flutterBlueInstance.scanResults.listen((results) {
       for (ScanResult scanResult in results) {
-        scannedObjects.update(scanResult.device.id.toString(), (value) {
-          value.continuousDuration = true;
-          value.rssi = scanResult.rssi;
-          if(scanResult.advertisementData.txPowerLevel != null ) {
-           value.txPowerLevel = scanResult.advertisementData.txPowerLevel;
-          }
-          return value;
-        },
-            ifAbsent: () => new BluetoothDeviceProfile(scanResult.device.id.toString(), scanResult.rssi, "", new List<TimeOfDay>.from({TimeOfDay.now()}), true, scanResult.advertisementData.txPowerLevel)
-        );
 
-        bool repeatedDevice = false;
-        bufferList.forEach((element) {
-          String toFind = 'ID: ${scanResult.device.id}' +
-              "\nDevice name: " +
-              (scanResult.device.name != ""
-              ? scanResult.device.name
-              : "Unknown") +
-          "\n";
-          if(element.contains(toFind)){
-            repeatedDevice = true;
-          }
-        });
+        //Create BT Objects to render + check continuity
+        identifyDevices(scanResult);
+
+        bool repeatedDevice = checkForDuplicates(scanResult);
+
         //PARSE FOR FRONTEND DISPLAY
-        if (!repeatedDevice) {
-          scannedObjects[scanResult.device.id.toString()].dwellTime += (waitTime);
-          if(scannedObjects[scanResult.device.id.toString()].dwellTime >= dwellTimeThreshold){
-            uniqueIdThreshold += 1; // Add the # of unique devices detected
-          }
-          bufferList.add('ID: ${scanResult.device.id}' +
-              "\nDevice name: " +
-              (scanResult.device.name != ""
-                  ? scanResult.device.name
-                  : "Unknown") +
-              "\n" + "RSSI: "+ scanResult.rssi.toString() + " Dwell time: " + scannedObjects[scanResult.device.id.toString()].dwellTime.toString() + "\n");
-          bufferList.add("TEST");
-          scanResult.device.discoverServices().then((value) => value.forEach((element) {
-            bufferList.add(element);
-          }));
-          scanResult.advertisementData.serviceUuids.forEach((element) {
-              bufferList.add(element.toString());
-          });
+        frontEndFilter(repeatedDevice, scanResult);
 
-        }
-      }
-    });
+      }});
 
     // Remove objects that are no longer continuous found
-    List<String> objectsToRemove = [];
-    scannedObjects.forEach((key, value) {
-      if(!value.continuousDuration){
-        objectsToRemove.add(key);
-      }
-    });
-    objectsToRemove.forEach((element) {
-      scannedObjects.remove(element);
-    });
+    removeNoncontinuousDevices();
 
     // Add the processed buffer to overall log
     loggedItems.insertAll(loggedItems.length, bufferList);
-    loggedItems.add(uniqueIdThreshold.toString());
+    
     // If there are more than three devices, log location
     if (uniqueIdThreshold >= 5) {
       loggedItems.add( "LOCATION LOGGED");
@@ -167,14 +122,98 @@ class BluetoothSingleton {
     bufferList.clear();
   }
 
-// Cancel ongoing scans to start a new one
-  pauseScan() {
-    ongoingScanner.cancel();
-    flutterBlueInstance.stopScan();
+  void identifyDevices(ScanResult scanResult) {
+    scannedObjects.update(scanResult.device.id.toString(), (value) {
+      value.continuousDuration = true;
+      value.rssi = scanResult.rssi;
+      if (scanResult.advertisementData.txPowerLevel != null) {
+        value.txPowerLevel = scanResult.advertisementData.txPowerLevel;
+      }
+      return value;
+    },
+        ifAbsent: () => new BluetoothDeviceProfile(
+            scanResult.device.id.toString(), scanResult.rssi, "",
+            new List<TimeOfDay>.from({TimeOfDay.now()}), true,
+            scanResult.advertisementData.txPowerLevel)
+    );
   }
 
+  bool checkForDuplicates(ScanResult scanResult) {
+    bool repeatedDevice = false;
+    bufferList.forEach((element) {
+      String toFind = 'ID: ${scanResult.device.id}' +
+          "\nDevice name: " +
+          (scanResult.device.name != ""
+              ? scanResult.device.name
+              : "Unknown") +
+          "\n";
+      if (element.contains(toFind)) {
+        repeatedDevice = true;
+      }
+    });
+    return repeatedDevice;
+  }
+
+  void removeNoncontinuousDevices() {
+    List<String> objectsToRemove = [];
+    scannedObjects.forEach((key, value) {
+      if(!value.continuousDuration){
+        objectsToRemove.add(key);
+      }
+    });
+    objectsToRemove.forEach((element) {
+      scannedObjects.remove(element);
+    });
+  }
+
+  void frontEndFilter(bool repeatedDevice, ScanResult scanResult) {
+    if (!repeatedDevice) {
+      scannedObjects[scanResult.device.id.toString()].dwellTime +=
+      (waitTime);
+      if (scannedObjects[scanResult.device.id.toString()].dwellTime >=
+          dwellTimeThreshold) {
+        uniqueIdThreshold += 1; // Add the # of unique devices detected
+      }
+      bufferList.add('ID: ${scanResult.device.id}' +
+          "\nDevice name: " +
+          (scanResult.device.name != ""
+              ? scanResult.device.name
+              : "Unknown") +
+          "\n" + "RSSI: " + scanResult.rssi.toString() + " Dwell time: " +
+          scannedObjects[scanResult.device.id.toString()].dwellTime
+              .toString() + "\n");
+    
+      extractBTServices(scanResult);
+    }
+  }
+
+  void extractBTServices(ScanResult scanResult) async {
+    scanResult.device.connect().then((value) {
+      scanResult.device.discoverServices().then((value) {
+        bufferList.add("SERVICES");
+        value.forEach((element) {
+         // element.includedServices.forEach((element) {element.characteristics.forEach((element) {element.toString();});});
+          bufferList.add(element.toString());
+          bufferList.add("\n");
+
+        });
+      });
+      bufferList.add("SERVICE UUIDs");
+      scanResult.advertisementData.serviceUuids.forEach((element) {
+        bufferList.add(element.toString());
+      });
+      bufferList.add("\n");
+    });
+  }
+
+// Cancel ongoing scans to start a new one
+  /*pauseScan() {
+    ongoingScanner.cancel();
+    flutterBlueInstance.stopScan();
+  }*/
+
   // Start a new scan with the given changes (For triggered scans or disposing a page)
-  resumeScan(int scanTime) {
+  /*resumeScan(int scanTime) {
     // Stop any ongoing scan
     pauseScan();
 
@@ -184,10 +223,10 @@ class BluetoothSingleton {
     // Trigger a continuous scan
     ongoingScanner = new Timer.periodic(
         Duration(seconds: waitTime), (Timer t) => startNewScan(scanTime));
-  }
+  }*/
 
   // Helper method to set up a modified scan (will be deleted for production)
-  startNewScan(int scanTime) {
+ /* startNewScan(int scanTime) {
     // Start scan with specified duration
     flutterBlueInstance.startScan(
         timeout: Duration(minutes: scanTime), allowDuplicates: false);
@@ -196,16 +235,7 @@ class BluetoothSingleton {
     flutterBlueInstance.scanResults.listen((results) {
       for (ScanResult scanResult in results) {
         print(scanResult.advertisementData.manufacturerData);
-        scannedObjects.update(scanResult.device.id.toString(), (value) {
-          value.continuousDuration = true;
-          value.rssi = scanResult.rssi;
-          if(scanResult.advertisementData.txPowerLevel != null ) {
-            value.txPowerLevel = scanResult.advertisementData.txPowerLevel;
-          }
-          return value;
-        },
-          ifAbsent: () => new BluetoothDeviceProfile(scanResult.device.id.toString(), scanResult.rssi, "", new List<TimeOfDay>.from({TimeOfDay.now()}), true, scanResult.advertisementData.txPowerLevel)
-        );
+        identifyDevices(scanResult);
 
 
 
@@ -252,7 +282,7 @@ class BluetoothSingleton {
 
     // Clear the previous scan results
     bufferList.clear();
-  }
+  }*/
 
   // Used to log current user location or enable the location change listener
   void _logLocation() async {
@@ -294,7 +324,7 @@ class BluetoothSingleton {
   BluetoothSingleton._internal();
 
   // Listens for location changes and ensures it is larger than 200 meters
-  void enableLocationListening() {
+ /* void enableLocationListening() {
     location.onLocationChanged.listen((event) {
       double currentLongitude = _currentLocation.longitude;
       double currentLatitude = _currentLocation.latitude;
@@ -316,13 +346,13 @@ class BluetoothSingleton {
         enable++;
       }
     });
-  }
+  }*/
 
 
   // Distance formula
-  double distanceFromLastLocation(double prevLong, double prevLat, double curLong, double curLat){
+ /* double distanceFromLastLocation(double prevLong, double prevLat, double curLong, double curLat){
     return sqrt(pow(curLong - prevLong, 2) - pow(curLat - prevLat, 2));
-  }
+  }*/
 
 }
 
