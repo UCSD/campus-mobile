@@ -15,6 +15,7 @@ import 'package:campus_mobile_experimental/ui/cards/staff_info/staff_info_card.d
 import 'package:campus_mobile_experimental/ui/cards/student_id/student_id_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/student_info/student_info_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/weather/weather_card.dart';
+import 'package:campus_mobile_experimental/ui/cards/campus_info/campus_info_card.dart';
 import 'package:campus_mobile_experimental/ui/theme/app_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -67,6 +68,9 @@ class _HomeState extends State<Home> {
           break;
         case 'staff_info':
           orderedCards.add(StaffInfoCard());
+          break;
+        case 'campus_info':
+          orderedCards.add(CampusInfoCard());
           break;
         case 'student_info':
           orderedCards.add(StudentInfoCard());
