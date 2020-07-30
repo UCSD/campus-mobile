@@ -10,6 +10,7 @@ import 'package:campus_mobile_experimental/ui/cards/my_chart/my_chart_card.dart'
 import 'package:campus_mobile_experimental/ui/cards/news/news_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/notices/notices_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/scanner/scanner_card.dart';
+import 'package:campus_mobile_experimental/ui/cards/staff_id/staff_id_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/staff_info/staff_info_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/student_id/student_id_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/student_info/student_info_card.dart';
@@ -88,6 +89,15 @@ class _HomeState extends State<Home> {
         case 'news':
           orderedCards.add(NewsCard());
           break;
+        case 'student_id':
+          orderedCards.add(StudentIdCard());
+          break;
+        case 'staff_id':
+          orderedCards.add(StaffIdCard());
+          break;
+//        case 'special_events':
+//          orderedCards.add(BannerCard());
+//          break;
         case 'weather':
           orderedCards.add(WeatherCard());
           break;

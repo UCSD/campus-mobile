@@ -13,9 +13,10 @@ class CardsDataProvider extends ChangeNotifier {
     _cardOrder = [
       'QRScanner',
       'MyStudentChart',
+      'student_id',
+      'staff_id',
       'staff_info',
-      'student_info'
-          'student_id',
+      'student_info',
       'finals',
       'schedule',
       'dining',
@@ -29,6 +30,7 @@ class CardsDataProvider extends ChangeNotifier {
 
     _staffCards = [
       'staff_info',
+      'staff_id',
     ];
 
     for (String card in CardTitleConstants.titleMap.keys.toList()) {

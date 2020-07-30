@@ -96,6 +96,7 @@ class CardTitleConstants {
     'staff_info': 'Staff Information',
     'student_info': 'Student Information',
     'student_id': 'Student ID',
+    'staff_id': 'Staff ID',
     'finals': 'Finals',
     'schedule': 'Classes',
     'dining': 'Dining',
