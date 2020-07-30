@@ -94,6 +94,7 @@ class CardTitleConstants {
     'QRScanner': 'QR Scanner',
     'MyStudentChart': 'MyStudentChart',
     'staff_info': 'Staff Information',
+    'campus_info': "Campus Information",
     'student_info': 'Student Information',
     'student_id': 'Student ID',
     'staff_id': 'Staff ID',

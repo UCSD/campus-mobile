@@ -164,6 +164,12 @@ List<SingleChildWidget> dependentServices = [
             } else {
               cardsDataProvider.deactivateStaffCards();
             }
+
+            if (userDataProvider.isLoggedIn) {
+              cardsDataProvider.deactivateSignedOutCards();
+            } else {
+              cardsDataProvider.activateSignedOutCards();
+            }
           });
         return cardsDataProvider;
       }),
