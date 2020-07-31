@@ -36,7 +36,7 @@ dependencies:
     git: git://github.com/pauldemarco/flutter_blue.git
   qr_code_scanner:
     git:
-      url: https://github.com/ucsd/qr_code_scanner.git
+      url: https://github.com/gmihir/qr_code_scanner.git
       ref: master
   beacon_broadcast: ^0.2.1
   uuid: ^2.2.0

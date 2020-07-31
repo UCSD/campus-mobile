@@ -77,6 +77,13 @@ class BluetoothSingleton {
         Duration(seconds: waitTime), (Timer t) => startScan());
   }
 
+  //Parse advertisement data
+  String calculateHexFromArray(decimalArray) {
+    String uuid = '';
+    decimalArray.forEach((i) => {uuid += i.toRadixString(16).padLeft(2, '0')});
+    String uuid1 = uuid.substring(4, uuid.length - 12);
+    return uuid1.toUpperCase();
+  }
   // Start a bluetooth scan of 2 second duration and listen to results
   startScan() {
     flutterBlueInstance.startScan(
@@ -85,6 +92,11 @@ class BluetoothSingleton {
     // Process the scan results (synchronously)
     flutterBlueInstance.scanResults.listen((results) {
       for (ScanResult scanResult in results) {
+        String calculatedUUID;
+
+        scanResult.advertisementData.manufacturerData.forEach((item, hexcodeAsArray) => {
+        calculatedUUID = ("calculated UUID String : " + calculateHexFromArray(hexcodeAsArray))
+      });
 
         //Create BT Objects to render + check continuity
         identifyDevices(scanResult);
@@ -92,7 +104,7 @@ class BluetoothSingleton {
         bool repeatedDevice = checkForDuplicates(scanResult);
 
         //PARSE FOR FRONTEND DISPLAY
-        frontEndFilter(repeatedDevice, scanResult);
+        frontEndFilter(repeatedDevice, scanResult, calculatedUUID);
 
       }});
 
@@ -166,7 +178,7 @@ class BluetoothSingleton {
     });
   }
 
-  void frontEndFilter(bool repeatedDevice, ScanResult scanResult) {
+  void frontEndFilter(bool repeatedDevice, ScanResult scanResult, String calculatedUUID) {
     if (!repeatedDevice) {
       scannedObjects[scanResult.device.id.toString()].dwellTime +=
       (waitTime);
@@ -181,9 +193,9 @@ class BluetoothSingleton {
               : "Unknown") +
           "\n" + "RSSI: " + scanResult.rssi.toString() + " Dwell time: " +
           scannedObjects[scanResult.device.id.toString()].dwellTime
-              .toString() + "\n");
+              .toString() + " " + (calculatedUUID != null ? calculatedUUID : "") + " " + " Power level: ${scanResult.advertisementData.txPowerLevel.toString()}" +"\n");
     
-      extractBTServices(scanResult);
+     // extractBTServices(scanResult);
     }
   }
 

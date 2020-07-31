@@ -674,10 +674,10 @@ packages:
     description:
       path: "."
       ref: master
-      resolved-ref: "9489b0f6afaee34460d67a95ba12d96a550bc230"
-      url: "https://github.com/ucsd/qr_code_scanner.git"
+      resolved-ref: c6dd0c61031e8762cab5083c76b32c1bb7198c6d
+      url: "https://github.com/gmihir/qr_code_scanner.git"
     source: git
-    version: "0.0.12"
+    version: "0.0.13"
   quiver:
     dependency: transitive
     description:
