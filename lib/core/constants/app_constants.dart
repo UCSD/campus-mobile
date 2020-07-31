@@ -11,7 +11,7 @@ class RoutePaths {
   static const String Notifications = 'notifications';
   static const String Profile = 'profile';
   static const String CardsView = 'profile/cards_view';
-  //static const String BluetoothLoggerView = 'profile/bluetooth_logger_view';
+  static const String BeaconView = 'profile/beacon_view';
   static const String AutomaticBluetoothLoggerView = 'profile/automatic_bluetooth_logger_view';
   static const String NotificationsSettingsView =
       'notifications/notifications_settings';
@@ -77,6 +77,10 @@ class CardTitleConstants {
     'dining': 'Dining',
     'availability': 'Availability',
     'events': 'Events',
+    'links': 'Links',
     'news': 'News',
+    'parking': 'Parking',
+    'special_events': 'Special Events',
+    'weather': 'Weather',
   };
 }

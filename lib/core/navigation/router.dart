@@ -9,6 +9,7 @@ import 'package:campus_mobile_experimental/ui/views/availability/manage_availabi
 import 'package:campus_mobile_experimental/ui/views/baseline/baseline_view.dart';
 import 'package:campus_mobile_experimental/ui/views/bluetooth/automatic_bluetooth_logger_view.dart';
 import 'package:campus_mobile_experimental/ui/views/bluetooth/bluetooth_logger_view.dart';
+import 'package:campus_mobile_experimental/ui/views/bluetooth/beacon_view.dart';
 import 'package:campus_mobile_experimental/ui/views/class_schedule/class_list.dart';
 import 'package:campus_mobile_experimental/ui/views/dining/dining_detail_view.dart';
 import 'package:campus_mobile_experimental/ui/views/dining/nutrition_facts_view.dart';
@@ -114,6 +115,9 @@ class Router {
         return MaterialPageRoute(builder: (_) => ScannerView());
       case RoutePaths.ClassScheduleViewAll:
         return MaterialPageRoute(builder: (_) => ClassList());
+      case RoutePaths.BeaconView:
+        return MaterialPageRoute(builder: (_) => BeaconView());
+
     }
   }
 }
