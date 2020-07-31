@@ -192,7 +192,7 @@ class BluetoothSingleton {
               : "Unknown") +
           "\n" + "RSSI: " + scanResult.rssi.toString() + " Dwell time: " +
           scannedObjects[scanResult.device.id.toString()].dwellTime
-              .toString() + " " + (calculatedUUID != null ? calculatedUUID : "") + " " + " Distance(m): ${getDistance(scanResult.rssi)}" +"\n");
+              .toString() + " " + (calculatedUUID != null ? calculatedUUID : "") + " " + " Distance(ft): ${getDistance(scanResult.rssi)}" +"\n");
     
      // extractBTServices(scanResult);
     }
@@ -335,10 +335,10 @@ class BluetoothSingleton {
     var txPower = -59; //hardcoded for now
     var ratio = (rssi*1.0)/txPower;
     if(ratio < 1.0) {
-      return math.pow(ratio,10);
+      return (math.pow(ratio,10)*3.28084); //multiply by 3.. for meters to feet conversion
     }
     else {
-      return (0.89976*math.pow(ratio,7.7095) + 0.111); //https://stackoverflow.com/questions/20416218/understanding-ibeacon-distancing/20434019#20434019
+      return ((0.89976*math.pow(ratio,7.7095) + 0.111)*3.28084); //https://haddadi.github.io/papers/UBICOMP2016iBeacon.pdf
     }
   }
 
