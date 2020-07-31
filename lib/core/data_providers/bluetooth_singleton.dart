@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
-import 'dart:math';
-
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -193,7 +192,7 @@ class BluetoothSingleton {
               : "Unknown") +
           "\n" + "RSSI: " + scanResult.rssi.toString() + " Dwell time: " +
           scannedObjects[scanResult.device.id.toString()].dwellTime
-              .toString() + " " + (calculatedUUID != null ? calculatedUUID : "") + " " + " Power level: ${scanResult.advertisementData.txPowerLevel.toString()}" +"\n");
+              .toString() + " " + (calculatedUUID != null ? calculatedUUID : "") + " " + " Distance(m): ${getDistance(scanResult.rssi)}" +"\n");
     
      // extractBTServices(scanResult);
     }
@@ -330,6 +329,17 @@ class BluetoothSingleton {
         " LONGITUDE: " +
         _currentLocation.longitude.toString() +
         "\n");
+  }
+
+  double getDistance(int rssi) {
+    var txPower = -59; //hardcoded for now
+    var ratio = (rssi*1.0)/txPower;
+    if(ratio < 1.0) {
+      return math.pow(ratio,10);
+    }
+    else {
+      return (0.89976*math.pow(ratio,7.7095) + 0.111); //https://stackoverflow.com/questions/20416218/understanding-ibeacon-distancing/20434019#20434019
+    }
   }
 
   // Internal constructor
