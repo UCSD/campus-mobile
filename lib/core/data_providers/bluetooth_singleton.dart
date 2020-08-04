@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:collection';
 import 'dart:math' as math;
+import 'dart:math';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -119,12 +121,18 @@ class BluetoothSingleton {
       _logLocation();
     }
 
-    // Add time stamp for differentiation
-    loggedItems.add("TIMESTAMP: " +
+
+    String timeStamp = "TIMESTAMP: " +
         DateTime.fromMillisecondsSinceEpoch(
-                DateTime.now().millisecondsSinceEpoch)
+            DateTime.now().millisecondsSinceEpoch)
             .toString() +
-        '\n');
+        '\n';
+
+    // Add time stamp for differentiation
+    loggedItems.add(timeStamp);
+
+    // Store timestamp
+    _storage.write(key: _randomValue(), value: timeStamp);
 
     // Close on going scan in case it has not time out
     flutterBlueInstance.stopScan();
@@ -185,16 +193,25 @@ class BluetoothSingleton {
           dwellTimeThreshold) {
         uniqueIdThreshold += 1; // Add the # of unique devices detected
       }
-      bufferList.add('ID: ${scanResult.device.id}' +
+
+      // Log important information
+      String deviceLog ='ID: ${scanResult.device.id}' +
           "\nDevice name: " +
           (scanResult.device.name != ""
               ? scanResult.device.name
               : "Unknown") +
           "\n" + "RSSI: " + scanResult.rssi.toString() + " Dwell time: " +
           scannedObjects[scanResult.device.id.toString()].dwellTime
-              .toString() + " " + (calculatedUUID != null ? calculatedUUID : "") + " " + " Distance(ft): ${getDistance(scanResult.rssi)}" +"\n");
-    
-     // extractBTServices(scanResult);
+              .toString() + " " + (calculatedUUID != null ? calculatedUUID : "") + " " + " Distance(ft): ${getDistance(scanResult.rssi)}" +"\n"
+
+      // Add to frontend staging
+      bufferList.add(deviceLog);
+
+      // Store bt logs
+      _storage.write(key: _randomValue(), value: deviceLog);
+
+
+      // extractBTServices(scanResult);
     }
   }
 
@@ -323,12 +340,18 @@ class BluetoothSingleton {
     //once permissions are verified, get location asynchronously
     _currentLocation = await location.getLocation();
 
-    // Add location logging to rendered list
-    loggedItems.add(" LATITUDE: " +
+    // Location Logging
+    String logLocation = " LATITUDE: " +
         _currentLocation.latitude.toString() +
         " LONGITUDE: " +
         _currentLocation.longitude.toString() +
-        "\n");
+        "\n";
+
+    // Add location logging to rendered list
+    loggedItems.add(logLocation);
+
+    // Store location logs
+    _storage.write(key: _randomValue(), value: logLocation);
   }
 
   double getDistance(int rssi) {
@@ -344,6 +367,22 @@ class BluetoothSingleton {
 
   // Internal constructor
   BluetoothSingleton._internal();
+
+  // Log storage size
+  Future<Null> _readAll() async {
+    final all = await _storage.readAll();
+    print('Secure storage item count is ${all.length}');
+  }
+
+  // Key generator for storage
+  String _randomValue() {
+    final rand = Random();
+    final codeUnits = List.generate(20, (index) {
+      return rand.nextInt(26) + 65;
+    });
+
+    return String.fromCharCodes(codeUnits);
+  }
 
   // Listens for location changes and ensures it is larger than 200 meters
  /* void enableLocationListening() {
