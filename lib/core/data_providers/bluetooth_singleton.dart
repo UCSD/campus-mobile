@@ -27,6 +27,7 @@ class BluetoothSingleton {
   double previousLongitude = 0;
 
   int uniqueIdThreshold = 0;
+  int distanceThreshold = 10; // default in ZenHub
 
 
   // Dwell time threshold (10 minutes -> 600 seconds;
@@ -202,7 +203,7 @@ class BluetoothSingleton {
               : "Unknown") +
           "\n" + "RSSI: " + scanResult.rssi.toString() + " Dwell time: " +
           scannedObjects[scanResult.device.id.toString()].dwellTime
-              .toString() + " " + (calculatedUUID != null ? calculatedUUID : "") + " " + " Distance(ft): ${getDistance(scanResult.rssi)}" +"\n"
+              .toString() + " " + (calculatedUUID != null ? calculatedUUID : "") + " " + " Distance(ft): ${getDistance(scanResult.rssi)}" + "\n";
 
       // Add to frontend staging
       bufferList.add(deviceLog);
@@ -354,15 +355,19 @@ class BluetoothSingleton {
     _storage.write(key: _randomValue(), value: logLocation);
   }
 
-  double getDistance(int rssi) {
+  String getDistance(int rssi) {
+    double distance;
     var txPower = -59; //hardcoded for now
     var ratio = (rssi*1.0)/txPower;
     if(ratio < 1.0) {
-      return (math.pow(ratio,10)*3.28084); //multiply by 3.. for meters to feet conversion
+      distance =  (math.pow(ratio,10)*3.28084); //multiply by 3.. for meters to feet conversion
     }
     else {
-      return ((0.89976*math.pow(ratio,7.7095) + 0.111)*3.28084); //https://haddadi.github.io/papers/UBICOMP2016iBeacon.pdf
+      distance =  ((0.89976*math.pow(ratio,7.7095) + 0.111)*3.28084); //https://haddadi.github.io/papers/UBICOMP2016iBeacon.pdf
     }
+    bool withinThreshold = distance <= distanceThreshold.toDouble();
+
+    return(distance.toString() + " (${withinThreshold})");
   }
 
   // Internal constructor
