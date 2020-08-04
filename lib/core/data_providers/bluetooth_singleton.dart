@@ -190,8 +190,10 @@ class BluetoothSingleton {
     if (!repeatedDevice) {
       scannedObjects[scanResult.device.id.toString()].dwellTime +=
       (waitTime);
+      scannedObjects[scanResult.device.id.toString()].distance = getDistance(scanResult.rssi);
       if (scannedObjects[scanResult.device.id.toString()].dwellTime >=
-          dwellTimeThreshold) {
+          dwellTimeThreshold && scannedObjects[scanResult.device.id.toString()].distance <=
+          distanceThreshold) {
         uniqueIdThreshold += 1; // Add the # of unique devices detected
       }
 
@@ -355,19 +357,15 @@ class BluetoothSingleton {
     _storage.write(key: _randomValue(), value: logLocation);
   }
 
-  String getDistance(int rssi) {
-    double distance;
+  double getDistance(int rssi) {
     var txPower = -59; //hardcoded for now
     var ratio = (rssi*1.0)/txPower;
     if(ratio < 1.0) {
-      distance =  (math.pow(ratio,10)*3.28084); //multiply by 3.. for meters to feet conversion
+      return (math.pow(ratio,10)*3.28084); //multiply by 3.. for meters to feet conversion
     }
     else {
-      distance =  ((0.89976*math.pow(ratio,7.7095) + 0.111)*3.28084); //https://haddadi.github.io/papers/UBICOMP2016iBeacon.pdf
+      return ((0.89976*math.pow(ratio,7.7095) + 0.111)*3.28084); //https://haddadi.github.io/papers/UBICOMP2016iBeacon.pdf
     }
-    bool withinThreshold = distance <= distanceThreshold.toDouble();
-
-    return(distance.toString() + " (${withinThreshold})");
   }
 
   // Internal constructor
