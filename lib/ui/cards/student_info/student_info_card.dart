@@ -31,6 +31,8 @@ class _StudentInfoCardState extends State<StudentInfoCard> {
     );
   }
 
+  double _contentHeight = 0;
+
   final _url =
       "https://mobile.ucsd.edu/replatform/v1/qa/webview/student_info.html";
 
@@ -56,28 +58,41 @@ class _StudentInfoCardState extends State<StudentInfoCard> {
     var tokenQueryString =
         "token=" + '${_userDataProvider.authenticationModel.accessToken}';
     var url = _url + "?" + tokenQueryString;
-    return Column(
-      children: <Widget>[
-        Flexible(
-            child: WebView(
+    return Container(
+        height: _contentHeight,
+        child: WebView(
           javascriptMode: JavascriptMode.unrestricted,
           initialUrl: url,
           onWebViewCreated: (controller) {
             _webViewController = controller;
           },
           javascriptChannels: <JavascriptChannel>[
+            _heightJavascriptChannel(context),
             _printJavascriptChannel(context),
           ].toSet(),
-        )),
-      ],
-    );
+        ));
   }
 
+  //Channel to obtain links and open them in new browser
   JavascriptChannel _printJavascriptChannel(BuildContext context) {
     return JavascriptChannel(
       name: 'CampusMobile',
       onMessageReceived: (JavascriptMessage message) {
         openLink(message.message);
+      },
+    );
+  }
+
+  //Channel to obtain body height via Jquery and assign it as the height of the container
+  JavascriptChannel _heightJavascriptChannel(BuildContext context) {
+    return JavascriptChannel(
+      name: 'GetHeight',
+      onMessageReceived: (JavascriptMessage message) {
+        print(message.message); //print messages to check, remove if not needed
+        setState(() {
+          _contentHeight = double.parse(message.message);
+          print(_contentHeight); //print messages to check, remove if not needed
+        });
       },
     );
   }
