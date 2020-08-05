@@ -34,6 +34,9 @@ class BluetoothSingleton {
   int uniqueIdThreshold = 0;
   int distanceThreshold = 10; // default in ZenHub
 
+  // Keep track of devices that meet our requirements
+  int uniqueDevices = 0;
+
 
   // Dwell time threshold (10 minutes -> 600 seconds;
   int dwellTimeThreshold = 200;
@@ -62,8 +65,10 @@ class BluetoothSingleton {
     return _bluetoothSingleton;
   }
 
-  init()  {
-    getData();
+  init()  async {
+
+    await getData();
+
     // Set the minimum change to activate a new scan.
     location.changeSettings(
         accuracy: LocationAccuracy.low);
@@ -90,11 +95,11 @@ class BluetoothSingleton {
     String _response = await _networkHelper.fetchData(bluetoothConstantsEndpoint);
     print(_response);
     final _json = json.decode(_response);
-    uniqueIdThreshold = _json["uniqueDevices"];
-    distanceThreshold = _json["distanceThreshold"];
-    dwellTimeThreshold = _json["dwellTimeThreshold"];
-    scanDuration = _json["scanDuration"];
-    waitTime = _json["waitTime"];
+    uniqueIdThreshold = int.parse(_json["uniqueDevices"]);
+    distanceThreshold = int.parse(_json["distanceThreshold"]);
+    dwellTimeThreshold = int.parse(_json["dwellTimeThreshold"]);
+    scanDuration = int.parse(_json["scanDuration"]);
+    waitTime = int.parse(_json["waitTime"]);
   }
 
 
@@ -137,9 +142,13 @@ class BluetoothSingleton {
     loggedItems.insertAll(loggedItems.length, bufferList);
     
     // If there are more than three devices, log location
-    if (uniqueIdThreshold >= 5) {
+    if (uniqueDevices >= uniqueIdThreshold) {
       loggedItems.add( "LOCATION LOGGED");
       _logLocation();
+
+      // Reset dwell times
+      resetDevices();
+      uniqueDevices = 0;
     }
 
 
@@ -158,9 +167,22 @@ class BluetoothSingleton {
     // Close on going scan in case it has not time out
     flutterBlueInstance.stopScan();
 
+
     // Clear previous scan results
     bufferList.clear();
   }
+
+  // Reset device dwell time when used to track user's location
+  void resetDevices(){
+    scannedObjects.forEach((key, value) {
+      if(value.timeThresholdMet){
+        value.timeThresholdMet = false;
+        value.dwellTime = 0;
+      }
+
+    });
+  }
+
 
   void identifyDevices(ScanResult scanResult) {
     scannedObjects.update(scanResult.device.id.toString(), (value) {
@@ -214,7 +236,7 @@ class BluetoothSingleton {
       if (scannedObjects[scanResult.device.id.toString()].dwellTime >=
           dwellTimeThreshold && scannedObjects[scanResult.device.id.toString()].distance <=
           distanceThreshold) {
-        uniqueIdThreshold += 1; // Add the # of unique devices detected
+        uniqueDevices+= 1; // Add the # of unique devices detected
       }
 
       // Log important information
@@ -407,36 +429,6 @@ class BluetoothSingleton {
     return String.fromCharCodes(codeUnits);
   }
 
-  // Listens for location changes and ensures it is larger than 200 meters
- /* void enableLocationListening() {
-    location.onLocationChanged.listen((event) {
-      double currentLongitude = _currentLocation.longitude;
-      double currentLatitude = _currentLocation.latitude;
-
-      if(previousLatitude == 0 && previousLongitude == 0){
-        previousLatitude = _currentLocation.latitude;
-        previousLongitude = _currentLocation.longitude;
-      }
-      // 200 meter threshold
-      if (distanceFromLastLocation(previousLongitude, previousLatitude, currentLongitude, currentLatitude) >= 200) {
-
-        previousLatitude = 0;
-        previousLongitude= 0;
-
-        flutterBlueInstance.stopScan();
-        ongoingScanner.cancel();
-        pauseScan();
-        resumeScan(2);
-        enable++;
-      }
-    });
-  }*/
-
-
-  // Distance formula
- /* double distanceFromLastLocation(double prevLong, double prevLat, double curLong, double curLat){
-    return sqrt(pow(curLong - prevLong, 2) - pow(curLat - prevLat, 2));
-  }*/
 
 }
 
