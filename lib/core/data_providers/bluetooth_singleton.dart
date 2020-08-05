@@ -2,11 +2,13 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:math' as math;
 import 'dart:math';
+import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:location/location.dart';
+import 'package:campus_mobile_experimental/core/services/networking.dart';
 
 class BluetoothSingleton {
   // Hashmap to track time stamps
@@ -23,6 +25,9 @@ class BluetoothSingleton {
   final _storage = FlutterSecureStorage();
 
   // Holders for location
+  final NetworkHelper _networkHelper = NetworkHelper();
+  String bluetoothConstantsEndpoint = "https://ucsd-its-wts-dev.s3-us-west-1.amazonaws.com/replatform/v1/bluetooth_constants.json";
+
   double previousLatitude = 0;
   double previousLongitude = 0;
 
@@ -34,8 +39,8 @@ class BluetoothSingleton {
   int dwellTimeThreshold = 200;
 
   // Constant for scans
-  final int scanDuration = 2; //Seconds
-  final waitTime = 15; // Seconds
+  int scanDuration = 2; //Seconds
+  var waitTime = 15; // Seconds
 
   // Tracker to enable location listener
   int enable = 0;
@@ -57,7 +62,8 @@ class BluetoothSingleton {
     return _bluetoothSingleton;
   }
 
-  init() {
+  init()  {
+    getData();
     // Set the minimum change to activate a new scan.
     location.changeSettings(
         accuracy: LocationAccuracy.low);
@@ -78,6 +84,20 @@ class BluetoothSingleton {
     ongoingScanner = new Timer.periodic(
         Duration(seconds: waitTime), (Timer t) => startScan());
   }
+
+
+  Future<void> getData() async {
+    String _response = await _networkHelper.fetchData(bluetoothConstantsEndpoint);
+    print(_response);
+    final _json = json.decode(_response);
+    uniqueIdThreshold = _json["uniqueDevices"];
+    distanceThreshold = _json["distanceThreshold"];
+    dwellTimeThreshold = _json["dwellTimeThreshold"];
+    scanDuration = _json["scanDuration"];
+    waitTime = _json["waitTime"];
+  }
+
+
 
   //Parse advertisement data
   String calculateHexFromArray(decimalArray) {
@@ -437,3 +457,4 @@ class BluetoothDeviceProfile{
   BluetoothDeviceProfile(this.uuid,  this.rssi,  this.deviceType, this.timeStamps,  this.continuousDuration, this.measuredPower);
 
 }
+
