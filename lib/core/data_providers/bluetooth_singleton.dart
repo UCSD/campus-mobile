@@ -203,12 +203,7 @@ class BluetoothSingleton {
   bool checkForDuplicates(ScanResult scanResult) {
     bool repeatedDevice = false;
     bufferList.forEach((element) {
-      String toFind = 'ID: ${scanResult.device.id}' +
-          "\nDevice name: " +
-          (scanResult.device.name != ""
-              ? scanResult.device.name
-              : "Unknown") +
-          "\n";
+      String toFind = 'ID: ${scanResult.device.id}';
       if (element.contains(toFind)) {
         repeatedDevice = true;
       }
@@ -241,10 +236,6 @@ class BluetoothSingleton {
 
       // Log important information
       String deviceLog ='ID: ${scanResult.device.id}' +
-          "\nDevice name: " +
-          (scanResult.device.name != ""
-              ? scanResult.device.name
-              : "Unknown") +
           "\n" + "RSSI: " + scanResult.rssi.toString() + " Dwell time: " +
           scannedObjects[scanResult.device.id.toString()].dwellTime
               .toString() + " " + (calculatedUUID != null ? calculatedUUID : "") + " " + " Distance(ft): ${getDistance(scanResult.rssi)}" + "\n";
