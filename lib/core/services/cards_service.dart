@@ -1,9 +1,5 @@
 import 'package:campus_mobile_experimental/core/models/cards_model.dart';
-import 'package:campus_mobile_experimental/core/models/user_profile_model.dart';
 import 'package:campus_mobile_experimental/core/services/networking.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:provider/provider.dart';
-import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 
 
 class CardsService {
@@ -29,7 +25,6 @@ class CardsService {
       //form query string with ucsd affiliation
       cardListEndpoint += "?ucsdaffiliation=${ucsdAffiliation}";
       /// fetch data
-      print(cardListEndpoint);
       String _response = await _networkHelper.fetchData(cardListEndpoint);
       /// parse data
       _cardsModel = cardsModelFromJson(_response);
