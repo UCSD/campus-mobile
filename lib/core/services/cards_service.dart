@@ -22,10 +22,14 @@ class CardsService {
         'https://rj786p8erh.execute-api.us-west-2.amazonaws.com/qa/defaultcards';
     _error = null;
     _isLoading = true;
+    if(ucsdAffiliation == null) {
+      ucsdAffiliation = "";
+    }
     try {
       //form query string with ucsd affiliation
       cardListEndpoint += "?ucsdaffiliation=${ucsdAffiliation}";
       /// fetch data
+      print(cardListEndpoint);
       String _response = await _networkHelper.fetchData(cardListEndpoint);
       /// parse data
       _cardsModel = cardsModelFromJson(_response);
