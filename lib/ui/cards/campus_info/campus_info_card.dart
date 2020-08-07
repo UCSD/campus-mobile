@@ -2,7 +2,6 @@ import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -24,7 +23,6 @@ class _CampusInfoCardState extends State<CampusInfoCard> {
     // TODO: implement initState
     super.initState();
     _isDarkMode = false;
-    //SchedulerBinding.instance.addPostFrameCallback((_) => checkTheme(context));
   }
 
 
