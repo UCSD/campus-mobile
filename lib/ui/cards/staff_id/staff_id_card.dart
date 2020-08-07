@@ -30,7 +30,7 @@ class _StaffIdCardState extends State<StaffIdCard> {
     );
   }
 
-  final _url = "file:///Users/mihirgupta/Downloads/staff_id.htm";
+  final _url = "https://cwo-test.ucsd.edu/WebCards/staff_id_new.html";
 
   @override
   void didChangeDependencies() {
@@ -55,6 +55,8 @@ class _StaffIdCardState extends State<StaffIdCard> {
     var tokenQueryString =
         "token=" + '${_userDataProvider.authenticationModel.accessToken}';
     var url = _url + "?" + tokenQueryString;
+
+
 
     return Column(
       children: <Widget>[
