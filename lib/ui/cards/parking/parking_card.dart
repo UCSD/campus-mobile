@@ -45,7 +45,9 @@ class _ParkingCardState extends State<ParkingCard> {
     List<Widget> parkingDisplays = List<Widget>();
     for (ParkingModel model in data) {
       if (model != null) {
-        parkingDisplays.add(ParkingDisplay(model: model));
+        if (_parkingDataProvider.parkingViewState[model.locationName]) {
+          parkingDisplays.add(ParkingDisplay(model: model));
+        }
       }
     }
 

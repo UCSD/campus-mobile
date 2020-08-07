@@ -21,6 +21,7 @@ app.get("/parking", function (req, res) {
   loc.spot0 = undefined;
   loc.spot1 = undefined;
   loc.spot2 = undefined;
+  loc.isHistoric = false;
   if (!req.query.lot) {
     res.render("parking");
   }
@@ -36,12 +37,14 @@ app.get("/parking", function (req, res) {
     const availability = Object.entries(lotInfo["Availability"]);
     loc.lotName = lotInfo["LocationName"];
     loc.lotContext = lotInfo["LocationContext"];
-    // var availability = lotInfo["Availability"];
+    lotInfo["LocationProvider"] == "Historic"
+      ? (loc.isHistoric = true)
+      : (loc.isHistoric = false);
 
     if (!req.query.spots) {
       res.render("parking");
     }
-    str = req.query.spots;
+    let str = req.query.spots;
     const spotTypes = str.split(",");
 
     loc.numSpots = spotTypes.length;

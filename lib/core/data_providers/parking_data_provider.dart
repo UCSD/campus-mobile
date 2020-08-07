@@ -19,7 +19,7 @@ class ParkingDataProvider extends ChangeNotifier {
 
   ///MODELS
   Map<String, ParkingModel> _parkingModels;
-  // UserDataProvider _userDataProvider;
+  Map<String, bool> _parkingViewState = <String, bool>{};
 
   ///SERVICES
   ParkingService _parkingService;
@@ -36,13 +36,15 @@ class ParkingDataProvider extends ChangeNotifier {
     if (await _parkingService.fetchParkingLotData()) {
       for (ParkingModel model in _parkingService.data) {
         newMapOfLots[model.locationName] = model;
+
+        _parkingViewState[model.locationName] = true;
       }
 
       ///replace old list of lots with new one
       _parkingModels = newMapOfLots;
 
       //TODO Add user selected spots
-      
+
       /// if the user is logged in we want to sync the order of parking lots amongst all devices
       // if (_userDataProvider != null) {
       //   reorderLots(_userDataProvider.userProfileModel.selectedLots);
@@ -55,67 +57,6 @@ class ParkingDataProvider extends ChangeNotifier {
     _isLoading = false;
     notifyListeners();
   }
-
-  ///TODO: MOVE TO UTILITY FOLDER/FILE WHEN CREATED
-  ///THIS IS A UTILITY FUNCTION THAT SHOULD BE EXPORTED TO BE USED FOR ANY OBJECT TYPE <T>
-  ///WILL TAKE A Map<String,T> Data and List<String> THAT WILL REPRESENT THE ORDER OF ITEMS
-  ///RETURNED BY THIS METHOD.
-  List<ParkingModel> makeOrderedList(List<String> order) {
-    if (order == null) {
-      return _parkingModels.values.toList();
-    }
-
-    ///create an empty list that will be returned
-    List<ParkingModel> orderedListOfLots = List<ParkingModel>();
-    Map<String, ParkingModel> tempMap = Map<String, ParkingModel>();
-    tempMap.addAll(_parkingModels);
-
-    /// remove lots as we add them to the ordered list
-    for (String lotName in order) {
-      orderedListOfLots.add(tempMap.remove(lotName));
-    }
-
-    /// add remaining lots
-    orderedListOfLots.addAll(tempMap.values);
-    return orderedListOfLots;
-  }
-
-  ///REORDER THE LOTS GIVEN AN ARRAY OF STRINGS CONTAINING LOT NAMES
-  ///UPLOAD CHANGES TO DB IF LOGGED IN OTHER WISE SAVE IT LOCALLY
-  // void reorderLots(List<String> order) {
-  //   ///edit the profile and upload user selected lots
-  //   _userDataProvider.userProfileModel.selectedLots = order;
-  //   _userDataProvider.postUserProfile(_userDataProvider.userProfileModel);
-  //   notifyListeners();
-  // }
-
-  ///ADD A PARKING LOT IF IT HAS NOT ALREADY BEEN ADDED
-  // void addLot(ParkingModel model) {
-  //   if (!_userDataProvider.userProfileModel.selectedLots
-  //       .contains(model.locationName)) {
-  //     _userDataProvider.userProfileModel.selectedLots.add(model.locationName);
-  //   }
-  // }
-
-  // ///REMOVE PARKING LOT
-  // void removeLot(ParkingModel model) {
-  //   _userDataProvider.userProfileModel.selectedLots.remove(model.locationName);
-  // }
-
-  // ///UPLOAD SELECTED LOTS IN THE CORRECT ORDER TO THE DATABASE
-  // ///IF NOT LOGGED IN THEN SAVE LOTS TO LOCAL PROFILE
-  // uploadParkingLotData(List<String> lots) {
-  //   var userProfile = _userDataProvider.userProfileModel;
-
-  //   ///set the local user profile to the given lots
-  //   userProfile.selectedLots = lots;
-  //   _userDataProvider.postUserProfile(userProfile);
-  // }
-
-  // ///This setter is only used in provider to supply and updated UserDataProvider object
-  // set userDataProvider(UserDataProvider value) {
-  //   _userDataProvider = value;
-  // }
 
   ///SIMPLE GETTERS
   bool get isLoading => _isLoading;
@@ -134,4 +75,16 @@ class ParkingDataProvider extends ChangeNotifier {
     }
     return List<ParkingModel>();
   }
+
+  /// add or remove location availability display from card based on user selection
+  void toggleLot(String location) {
+    if (_parkingViewState[location] ?? true) {
+      _parkingViewState[location] = false;
+    } else {
+      _parkingViewState[location] = true;
+    }
+    notifyListeners();
+  }
+
+  Map<String, bool> get parkingViewState => _parkingViewState;
 }
