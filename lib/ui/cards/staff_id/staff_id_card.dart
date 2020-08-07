@@ -15,6 +15,7 @@ class StaffIdCard extends StatefulWidget {
 class _StaffIdCardState extends State<StaffIdCard> {
   String cardId = "staff_id";
   WebViewController _webViewController;
+  String url;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +23,9 @@ class _StaffIdCardState extends State<StaffIdCard> {
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
-      reload: () => reloadWebView(),
+      reload: () {
+        reloadWebView();
+      },
       isLoading: false,
       titleText: CardTitleConstants.titleMap[cardId],
       errorText: null,
@@ -30,7 +33,7 @@ class _StaffIdCardState extends State<StaffIdCard> {
     );
   }
 
-  final _url = "https://cwo-test.ucsd.edu/WebCards/staff_id_new.html";
+  String _url = "https://cwo-test.ucsd.edu/WebCards/staff_id_new.html";
 
   @override
   void didChangeDependencies() {
@@ -51,12 +54,16 @@ class _StaffIdCardState extends State<StaffIdCard> {
             'Bearer ${_userDataProvider?.authenticationModel?.accessToken}'
       };
     }
-    print(_userDataProvider.authenticationModel.accessToken);
     var tokenQueryString =
         "token=" + '${_userDataProvider.authenticationModel.accessToken}';
-    var url = _url + "?" + tokenQueryString;
+     url = _url + "?" + tokenQueryString;
 
-
+    if(Theme.of(context).brightness == Brightness.dark) {
+      url += "&darkmode=true";
+    }
+    else {
+      url += "&darkmode=false";
+    }
 
     return Column(
       children: <Widget>[
@@ -74,6 +81,12 @@ class _StaffIdCardState extends State<StaffIdCard> {
   }
 
   void reloadWebView() {
-    _webViewController?.reload();
+    if(Theme.of(context).brightness == Brightness.dark) {
+      url += "&darkmode=true";
+    }
+    else {
+      url += "&darkmode=false";
+    }
+    _webViewController.loadUrl(url);
   }
 }

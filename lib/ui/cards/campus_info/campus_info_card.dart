@@ -61,7 +61,6 @@ class _CampusInfoCardState extends State<CampusInfoCard> {
       else {
         _url += "?darkmode=false";
       }
-      print(_url);
   }
 
   Widget buildCardContent(BuildContext context) {
