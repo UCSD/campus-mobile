@@ -18,6 +18,19 @@ class _StaffInfoCardState extends State<StaffInfoCard> {
   WebViewController _webViewController;
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+  }
+
+  void checkTheme(BuildContext context) {
+    if(Theme.of(context).brightness == Brightness.dark) {
+      _url = "file:///Users/mihirgupta/Downloads/campus_info.htm";
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
@@ -36,8 +49,8 @@ class _StaffInfoCardState extends State<StaffInfoCard> {
     super.didChangeDependencies();
   }
 
-  final _url =
-      "https://mobile.ucsd.edu/replatform/v1/qa/webview/staff_info.html";
+  String _url =
+      "file:///Users/mihirgupta/Downloads/staff_info.htm";
 
   UserDataProvider _userDataProvider;
   set userDataProvider(UserDataProvider value) => _userDataProvider = value;

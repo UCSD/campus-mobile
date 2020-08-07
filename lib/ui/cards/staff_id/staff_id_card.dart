@@ -30,7 +30,7 @@ class _StaffIdCardState extends State<StaffIdCard> {
     );
   }
 
-  final _url = "https://mobile.ucsd.edu/replatform/v1/qa/webview/staff_id.html";
+  final _url = "file:///Users/mihirgupta/Downloads/staff_id.htm";
 
   @override
   void didChangeDependencies() {
@@ -51,6 +51,7 @@ class _StaffIdCardState extends State<StaffIdCard> {
             'Bearer ${_userDataProvider?.authenticationModel?.accessToken}'
       };
     }
+    print(_userDataProvider.authenticationModel.accessToken);
     var tokenQueryString =
         "token=" + '${_userDataProvider.authenticationModel.accessToken}';
     var url = _url + "?" + tokenQueryString;
