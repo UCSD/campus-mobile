@@ -1,11 +1,14 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:math' as math;
 import 'dart:math';
-
+import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:location/location.dart';
+import 'package:campus_mobile_experimental/core/services/networking.dart';
 
 class BluetoothSingleton {
   // Hashmap to track time stamps
@@ -22,18 +25,25 @@ class BluetoothSingleton {
   final _storage = FlutterSecureStorage();
 
   // Holders for location
+  final NetworkHelper _networkHelper = NetworkHelper();
+  String bluetoothConstantsEndpoint = "https://ucsd-its-wts-dev.s3-us-west-1.amazonaws.com/replatform/v1/bluetooth_constants.json";
+
   double previousLatitude = 0;
   double previousLongitude = 0;
 
   int uniqueIdThreshold = 0;
+  int distanceThreshold = 10; // default in ZenHub
+
+  // Keep track of devices that meet our requirements
+  int uniqueDevices = 0;
 
 
   // Dwell time threshold (10 minutes -> 600 seconds;
   int dwellTimeThreshold = 200;
 
   // Constant for scans
-  final int scanDuration = 2; //Seconds
-  final waitTime = 15; // Seconds
+  int scanDuration = 2; //Seconds
+  var waitTime = 15; // Seconds
 
   // Tracker to enable location listener
   int enable = 0;
@@ -55,7 +65,15 @@ class BluetoothSingleton {
     return _bluetoothSingleton;
   }
 
-  init() {
+  init()  async {
+    _storage.readAll().then((value) {
+      value.forEach((key, value) {
+        print(value);
+      });
+    });
+
+    await getData();
+
     // Set the minimum change to activate a new scan.
     location.changeSettings(
         accuracy: LocationAccuracy.low);
@@ -76,6 +94,20 @@ class BluetoothSingleton {
     ongoingScanner = new Timer.periodic(
         Duration(seconds: waitTime), (Timer t) => startScan());
   }
+
+
+  Future<void> getData() async {
+    String _response = await _networkHelper.fetchData(bluetoothConstantsEndpoint);
+    print(_response);
+    final _json = json.decode(_response);
+    uniqueIdThreshold = int.parse(_json["uniqueDevices"]);
+    distanceThreshold = int.parse(_json["distanceThreshold"]);
+    dwellTimeThreshold = int.parse(_json["dwellTimeThreshold"]);
+    scanDuration = int.parse(_json["scanDuration"]);
+    waitTime = int.parse(_json["waitTime"]);
+  }
+
+
 
   //Parse advertisement data
   String calculateHexFromArray(decimalArray) {
@@ -115,24 +147,47 @@ class BluetoothSingleton {
     loggedItems.insertAll(loggedItems.length, bufferList);
     
     // If there are more than three devices, log location
-    if (uniqueIdThreshold >= 5) {
+    if (uniqueDevices >= uniqueIdThreshold) {
       loggedItems.add( "LOCATION LOGGED");
       _logLocation();
+
+      // Reset dwell times
+      resetDevices();
+      uniqueDevices = 0;
     }
 
-    // Add time stamp for differentiation
-    loggedItems.add("TIMESTAMP: " +
+
+    String timeStamp = "TIMESTAMP: " +
         DateTime.fromMillisecondsSinceEpoch(
-                DateTime.now().millisecondsSinceEpoch)
+            DateTime.now().millisecondsSinceEpoch)
             .toString() +
-        '\n');
+        '\n';
+
+    // Add time stamp for differentiation
+    loggedItems.add(timeStamp);
+
+    // Store timestamp
+    _storage.write(key: _randomValue(), value: timeStamp);
 
     // Close on going scan in case it has not time out
     flutterBlueInstance.stopScan();
 
+
     // Clear previous scan results
     bufferList.clear();
   }
+
+  // Reset device dwell time when used to track user's location
+  void resetDevices(){
+    scannedObjects.forEach((key, value) {
+      if(value.timeThresholdMet){
+        value.timeThresholdMet = false;
+        value.dwellTime = 0;
+      }
+
+    });
+  }
+
 
   void identifyDevices(ScanResult scanResult) {
     scannedObjects.update(scanResult.device.id.toString(), (value) {
@@ -153,12 +208,7 @@ class BluetoothSingleton {
   bool checkForDuplicates(ScanResult scanResult) {
     bool repeatedDevice = false;
     bufferList.forEach((element) {
-      String toFind = 'ID: ${scanResult.device.id}' +
-          "\nDevice name: " +
-          (scanResult.device.name != ""
-              ? scanResult.device.name
-              : "Unknown") +
-          "\n";
+      String toFind = 'ID: ${scanResult.device.id}';
       if (element.contains(toFind)) {
         repeatedDevice = true;
       }
@@ -182,20 +232,29 @@ class BluetoothSingleton {
     if (!repeatedDevice) {
       scannedObjects[scanResult.device.id.toString()].dwellTime +=
       (waitTime);
+      scannedObjects[scanResult.device.id.toString()].distance = getDistance(scanResult.rssi);
       if (scannedObjects[scanResult.device.id.toString()].dwellTime >=
-          dwellTimeThreshold) {
-        uniqueIdThreshold += 1; // Add the # of unique devices detected
+          dwellTimeThreshold && scannedObjects[scanResult.device.id.toString()].distance <=
+          distanceThreshold) {
+        uniqueDevices+= 1; // Add the # of unique devices detected
       }
-      bufferList.add('ID: ${scanResult.device.id}' +
-          "\nDevice name: " +
-          (scanResult.device.name != ""
-              ? scanResult.device.name
-              : "Unknown") +
+
+      // Log important information
+      String deviceLog ='ID: ${scanResult.device.id}' +
           "\n" + "RSSI: " + scanResult.rssi.toString() + " Dwell time: " +
           scannedObjects[scanResult.device.id.toString()].dwellTime
-              .toString() + " " + (calculatedUUID != null ? calculatedUUID : "") + " " + " Power level: ${scanResult.advertisementData.txPowerLevel.toString()}" +"\n");
-    
-     // extractBTServices(scanResult);
+              .toString() + " " + (calculatedUUID != null ? calculatedUUID : "") + " " + " Distance(ft): ${getDistance(scanResult.rssi)}" + "\n" + DateTime.fromMillisecondsSinceEpoch(
+          DateTime.now().millisecondsSinceEpoch)
+          .toString() ;
+
+      // Add to frontend staging
+      bufferList.add(deviceLog);
+
+      // Store bt logs
+      _storage.write(key: _randomValue(), value: deviceLog);
+
+
+      // extractBTServices(scanResult);
     }
   }
 
@@ -324,47 +383,50 @@ class BluetoothSingleton {
     //once permissions are verified, get location asynchronously
     _currentLocation = await location.getLocation();
 
-    // Add location logging to rendered list
-    loggedItems.add(" LATITUDE: " +
+    // Location Logging
+    String logLocation = " LATITUDE: " +
         _currentLocation.latitude.toString() +
         " LONGITUDE: " +
         _currentLocation.longitude.toString() +
-        "\n");
+        "\n";
+
+    // Add location logging to rendered list
+    loggedItems.add(logLocation);
+
+    // Store location logs
+    _storage.write(key: _randomValue(), value: logLocation);
+  }
+
+  double getDistance(int rssi) {
+    var txPower = -59; //hardcoded for now
+    var ratio = (rssi*1.0)/txPower;
+    if(ratio < 1.0) {
+      return (math.pow(ratio,10)*3.28084); //multiply by 3.. for meters to feet conversion
+    }
+    else {
+      return ((0.89976*math.pow(ratio,7.7095) + 0.111)*3.28084); //https://haddadi.github.io/papers/UBICOMP2016iBeacon.pdf
+    }
   }
 
   // Internal constructor
   BluetoothSingleton._internal();
 
-  // Listens for location changes and ensures it is larger than 200 meters
- /* void enableLocationListening() {
-    location.onLocationChanged.listen((event) {
-      double currentLongitude = _currentLocation.longitude;
-      double currentLatitude = _currentLocation.latitude;
+  // Log storage size
+  Future<Null> _readAll() async {
+    final all = await _storage.readAll();
+    print('Secure storage item count is ${all.length}');
+  }
 
-      if(previousLatitude == 0 && previousLongitude == 0){
-        previousLatitude = _currentLocation.latitude;
-        previousLongitude = _currentLocation.longitude;
-      }
-      // 200 meter threshold
-      if (distanceFromLastLocation(previousLongitude, previousLatitude, currentLongitude, currentLatitude) >= 200) {
-
-        previousLatitude = 0;
-        previousLongitude= 0;
-
-        flutterBlueInstance.stopScan();
-        ongoingScanner.cancel();
-        pauseScan();
-        resumeScan(2);
-        enable++;
-      }
+  // Key generator for storage
+  String _randomValue() {
+    final rand = Random();
+    final codeUnits = List.generate(20, (index) {
+      return rand.nextInt(26) + 65;
     });
-  }*/
 
+    return String.fromCharCodes(codeUnits);
+  }
 
-  // Distance formula
- /* double distanceFromLastLocation(double prevLong, double prevLat, double curLong, double curLat){
-    return sqrt(pow(curLong - prevLong, 2) - pow(curLat - prevLat, 2));
-  }*/
 
 }
 
@@ -385,3 +447,4 @@ class BluetoothDeviceProfile{
   BluetoothDeviceProfile(this.uuid,  this.rssi,  this.deviceType, this.timeStamps,  this.continuousDuration, this.measuredPower);
 
 }
+
