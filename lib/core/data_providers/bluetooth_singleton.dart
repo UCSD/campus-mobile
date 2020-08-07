@@ -109,8 +109,13 @@ class BluetoothSingleton {
   String calculateHexFromArray(decimalArray) {
     String uuid = '';
     decimalArray.forEach((i) => {uuid += i.toRadixString(16).padLeft(2, '0')});
-    String uuid1 = uuid.substring(4, uuid.length - 12);
-    return uuid1.toUpperCase();
+    try {
+      String uuid1 = uuid.substring(4, uuid.length - 12);
+      return uuid1.toUpperCase();
+    } catch (Exception) {
+      return uuid;
+    }
+
   }
   // Start a bluetooth scan of 2 second duration and listen to results
   startScan() {
@@ -124,7 +129,7 @@ class BluetoothSingleton {
 
         scanResult.advertisementData.manufacturerData.forEach((item, hexcodeAsArray) => {
         calculatedUUID = ("calculated UUID String : " + calculateHexFromArray(hexcodeAsArray))
-        });
+      });
 
         //Create BT Objects to render + check continuity
         identifyDevices(scanResult);
@@ -133,53 +138,53 @@ class BluetoothSingleton {
 
         //PARSE FOR FRONTEND DISPLAY
         frontEndFilter(repeatedDevice, scanResult, calculatedUUID);
-        print ("Scanned device " + scanResult.device.id.toString());
 
       }});
 
     // Remove objects that are no longer continuous found
     removeNoncontinuousDevices();
 
-    processScannedResults();
+    processDevices();
   }
 
-  void processScannedResults() async {
-    print("Processing Data");
+  Future<void> processDevices() async {
 
-    await getBTServices().then((value) {
-      // Add the processed buffer to overall log
-      loggedItems.insertAll(loggedItems.length, bufferList);
-
-      // If there are more than three devices, log location
-      if (uniqueDevices >= uniqueIdThreshold) {
-        loggedItems.add( "LOCATION LOGGED");
-        _logLocation();
-
-        // Reset dwell times
-        resetDevices();
-        uniqueDevices = 0;
-      }
-
-
-      String timeStamp = "TIMESTAMP: " +
-          DateTime.fromMillisecondsSinceEpoch(
-              DateTime.now().millisecondsSinceEpoch)
-              .toString() +
-          '\n';
-
-      // Add time stamp for differentiation
-      loggedItems.add(timeStamp);
-
-      // Store timestamp
-      _storage.write(key: _randomValue(), value: timeStamp);
-
-      // Close on going scan in case it has not time out
-      flutterBlueInstance.stopScan();
-
-
-      // Clear previous scan results
-      bufferList.clear();
+    scannedDevices.forEach((scanResult) async {
+      await connectToDevice(scanResult);
     });
+
+    // Add the processed buffer to overall log
+    loggedItems.insertAll(loggedItems.length, bufferList);
+
+    // If there are more than three devices, log location
+    if (uniqueDevices >= uniqueIdThreshold) {
+      loggedItems.add( "LOCATION LOGGED");
+      _logLocation();
+
+      // Reset dwell times
+      resetDevices();
+      uniqueDevices = 0;
+    }
+
+
+    String timeStamp = "TIMESTAMP: " +
+        DateTime.fromMillisecondsSinceEpoch(
+            DateTime.now().millisecondsSinceEpoch)
+            .toString() +
+        '\n';
+
+    // Add time stamp for differentiation
+    loggedItems.add(timeStamp);
+
+    // Store timestamp
+    _storage.write(key: _randomValue(), value: timeStamp);
+
+    // Close on going scan in case it has not time out
+    flutterBlueInstance.stopScan();
+
+
+    // Clear previous scan results
+    bufferList.clear();
   }
 
   // Reset device dwell time when used to track user's location
@@ -193,6 +198,12 @@ class BluetoothSingleton {
     });
   }
 
+  void connectToDevice(ScanResult scanResult) async {
+    scanResult.device.connect(autoConnect: false).timeout(Duration(seconds: 2), onTimeout: () {
+      bufferList.add("\nConnection to " + scanResult.device.id.toString() + "timed out");
+      scanResult.device.disconnect();
+    }).then((value) => bufferList.add("Connection to " + scanResult.device.id.toString() + "success"));
+  }
 
   void identifyDevices(ScanResult scanResult) {
     scannedObjects.update(scanResult.device.id.toString(), (value) {
@@ -245,7 +256,7 @@ class BluetoothSingleton {
       }
 
       // Log important information
-      String deviceLog = 'ID: ${scanResult.device.id}' +
+      String deviceLog ='ID: ${scanResult.device.id}' +
           "\n" + "RSSI: " + scanResult.rssi.toString() + " Dwell time: " +
           scannedObjects[scanResult.device.id.toString()].dwellTime
               .toString() + " " + (calculatedUUID != null ? calculatedUUID : "") + " " + " Distance(ft): ${getDistance(scanResult.rssi)}" + "\n";
@@ -255,26 +266,11 @@ class BluetoothSingleton {
       scannedDevices.add(scanResult);
 
       // Store bt logs
-      _storage.write(key: _randomValue(), value: deviceLog);
+      //_storage.write(key: _randomValue(), value: deviceLog);
 
 
       // extractBTServices(scanResult);
     }
-  }
-
-  Future<void> getBTServices() async {
-    scannedDevices.forEach((element) async {
-      if (element.advertisementData.connectable == false) {
-        print("Can't connect to device");
-      } else {
-        await element.device.connect(autoConnect: false).timeout(Duration (seconds: 5), onTimeout: () {
-          print("Connection to " + element.device.id.toString() + "timed out");
-          element.device.disconnect();
-        }).then((value) {
-          print("Connection to " + element.device.id.toString() + "successful");
-        });
-      }
-    });
   }
 
   void extractBTServices(ScanResult scanResult) async {
