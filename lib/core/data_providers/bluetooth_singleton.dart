@@ -16,7 +16,7 @@ class BluetoothSingleton {
 
   // Internal Declaration
   static final BluetoothSingleton _bluetoothSingleton =
-      BluetoothSingleton._internal();
+  BluetoothSingleton._internal();
 
   //Flutter blue instance for scanning
   FlutterBlue flutterBlueInstance = FlutterBlue.instance;
@@ -128,8 +128,8 @@ class BluetoothSingleton {
         String calculatedUUID;
 
         scanResult.advertisementData.manufacturerData.forEach((item, hexcodeAsArray) => {
-        calculatedUUID = ("calculated UUID String : " + calculateHexFromArray(hexcodeAsArray))
-      });
+          calculatedUUID = ("calculated UUID String : " + calculateHexFromArray(hexcodeAsArray))
+        });
 
         //Create BT Objects to render + check continuity
         identifyDevices(scanResult);
@@ -148,43 +148,53 @@ class BluetoothSingleton {
   }
 
   Future<void> processDevices() async {
+    bool done;
+    done =  connectDevices();
 
-    scannedDevices.forEach((scanResult) async {
-      await connectToDevice(scanResult);
-    });
+    if (done) {
+      // Add the processed buffer to overall log
+      loggedItems.insertAll(loggedItems.length, bufferList);
 
-    // Add the processed buffer to overall log
-    loggedItems.insertAll(loggedItems.length, bufferList);
+      // If there are more than three devices, log location
+      if (uniqueDevices >= uniqueIdThreshold) {
+        loggedItems.add("LOCATION LOGGED");
+        _logLocation();
 
-    // If there are more than three devices, log location
-    if (uniqueDevices >= uniqueIdThreshold) {
-      loggedItems.add( "LOCATION LOGGED");
-      _logLocation();
+        // Reset dwell times
+        resetDevices();
+        uniqueDevices = 0;
+      }
 
-      // Reset dwell times
-      resetDevices();
-      uniqueDevices = 0;
+
+      String timeStamp = "TIMESTAMP: " +
+          DateTime.fromMillisecondsSinceEpoch(
+              DateTime
+                  .now()
+                  .millisecondsSinceEpoch)
+              .toString() +
+          '\n';
+
+      // Add time stamp for differentiation
+      loggedItems.add(timeStamp);
+
+      // Store timestamp
+      _storage.write(key: _randomValue(), value: timeStamp);
+
+      // Close on going scan in case it has not time out
+      flutterBlueInstance.stopScan();
+
+
+      // Clear previous scan results
+      bufferList.clear();
+      scannedDevices.clear();
     }
+  }
 
-
-    String timeStamp = "TIMESTAMP: " +
-        DateTime.fromMillisecondsSinceEpoch(
-            DateTime.now().millisecondsSinceEpoch)
-            .toString() +
-        '\n';
-
-    // Add time stamp for differentiation
-    loggedItems.add(timeStamp);
-
-    // Store timestamp
-    _storage.write(key: _randomValue(), value: timeStamp);
-
-    // Close on going scan in case it has not time out
-    flutterBlueInstance.stopScan();
-
-
-    // Clear previous scan results
-    bufferList.clear();
+  bool connectDevices()  {
+    scannedDevices.forEach((scanResult)  {
+      connectToDevice(scanResult);
+    });
+    return true;
   }
 
   // Reset device dwell time when used to track user's location
@@ -198,11 +208,21 @@ class BluetoothSingleton {
     });
   }
 
-  void connectToDevice(ScanResult scanResult) async {
-    scanResult.device.connect(autoConnect: false).timeout(Duration(seconds: 2), onTimeout: () {
+  Future<bool> connectToDevice(ScanResult scanResult) async {
+
+    Future<bool> returnValue;
+    await scanResult.device.connect(autoConnect: false).timeout(Duration(seconds: 2), onTimeout: (){
       bufferList.add("\nConnection to " + scanResult.device.id.toString() + "timed out");
+      returnValue = Future.value(false);
       scanResult.device.disconnect();
-    }).then((value) => bufferList.add("Connection to " + scanResult.device.id.toString() + "success"));
+    }).then((data) {
+      if(returnValue == null)
+      {
+        bufferList.add("\nConnection to " + scanResult.device.id.toString() + "successful");
+        returnValue = Future.value(true);
+      }
+    });
+    return returnValue;
   }
 
   void identifyDevices(ScanResult scanResult) {
@@ -278,7 +298,7 @@ class BluetoothSingleton {
       scanResult.device.discoverServices().then((value) {
         bufferList.add("SERVICES");
         value.forEach((element) {
-         // element.includedServices.forEach((element) {element.characteristics.forEach((element) {element.toString();});});
+          // element.includedServices.forEach((element) {element.characteristics.forEach((element) {element.toString();});});
           bufferList.add(element.toString());
           bufferList.add("\n");
 
@@ -312,7 +332,7 @@ class BluetoothSingleton {
   }*/
 
   // Helper method to set up a modified scan (will be deleted for production)
- /* startNewScan(int scanTime) {
+  /* startNewScan(int scanTime) {
     // Start scan with specified duration
     flutterBlueInstance.startScan(
         timeout: Duration(minutes: scanTime), allowDuplicates: false);
