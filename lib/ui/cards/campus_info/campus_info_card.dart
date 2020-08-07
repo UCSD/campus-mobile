@@ -54,7 +54,7 @@ class _CampusInfoCardState extends State<CampusInfoCard> {
 
 
    checkTheme(BuildContext context) {
-      _url = "https://cwo-test.ucsd.edu/WebCards/campus_info_darkmode.html";
+      _url = "https://cwo-test.ucsd.edu/WebCards/campus_info.html";
       if(Theme.of(context).brightness == Brightness.dark) {
         _url += "?darkmode=true";
       }
