@@ -66,6 +66,11 @@ class BluetoothSingleton {
   }
 
   init()  async {
+    _storage.readAll().then((value) {
+      value.forEach((key, value) {
+        print(value);
+      });
+    });
 
     await getData();
 
@@ -238,7 +243,9 @@ class BluetoothSingleton {
       String deviceLog ='ID: ${scanResult.device.id}' +
           "\n" + "RSSI: " + scanResult.rssi.toString() + " Dwell time: " +
           scannedObjects[scanResult.device.id.toString()].dwellTime
-              .toString() + " " + (calculatedUUID != null ? calculatedUUID : "") + " " + " Distance(ft): ${getDistance(scanResult.rssi)}" + "\n";
+              .toString() + " " + (calculatedUUID != null ? calculatedUUID : "") + " " + " Distance(ft): ${getDistance(scanResult.rssi)}" + "\n" + DateTime.fromMillisecondsSinceEpoch(
+          DateTime.now().millisecondsSinceEpoch)
+          .toString() ;
 
       // Add to frontend staging
       bufferList.add(deviceLog);
