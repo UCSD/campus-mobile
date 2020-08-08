@@ -17,7 +17,7 @@ class _StudentInfoCardState extends State<StudentInfoCard> {
   String cardId = "student_info";
   WebViewController _webViewController;
   bool _isDarkMode;
-  String _url;
+  String url;
 
   @override
   void initState() {
@@ -32,7 +32,6 @@ class _StudentInfoCardState extends State<StudentInfoCard> {
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       reload: () {
-        checkTheme(context);
         reloadWebView();
       },
       isLoading: false,
@@ -46,22 +45,11 @@ class _StudentInfoCardState extends State<StudentInfoCard> {
   void didChangeDependencies() {
     super.didChangeDependencies();
   }
-
-  checkTheme(BuildContext context) {
-    _url = "https://cwo-test.ucsd.edu/WebCards/student_info_new.html";
-    if (Theme.of(context).brightness == Brightness.dark) {
-      _url += "?darkmode=true";
-    } else {
-      _url += "?darkmode=false";
-    }
-    print(_url);
-  }
-
   UserDataProvider _userDataProvider;
   set userDataProvider(UserDataProvider value) => _userDataProvider = value;
+  String _url = "https://cwo-test.ucsd.edu/WebCards/student_info_new.html";
 
   Widget buildCardContent(BuildContext context) {
-    checkTheme(context);
     _userDataProvider = Provider.of<UserDataProvider>(context);
 
     /// Verify that user is logged in
@@ -74,7 +62,15 @@ class _StudentInfoCardState extends State<StudentInfoCard> {
     }
     var tokenQueryString =
         "token=" + '${_userDataProvider.authenticationModel.accessToken}';
-    var url = _url + "?" + tokenQueryString;
+    url = _url + "?" + tokenQueryString;
+
+    if(Theme.of(context).brightness == Brightness.dark) {
+      url += "&darkmode=true";
+    }
+    else {
+      url += "&darkmode=false";
+    }
+
     return Column(
       children: <Widget>[
         Flexible(
@@ -110,7 +106,13 @@ class _StudentInfoCardState extends State<StudentInfoCard> {
   }
 
   void reloadWebView() {
-    checkTheme(context);
-    _webViewController?.reload();
+    if(Theme.of(context).brightness == Brightness.dark) {
+      url += "&darkmode=true";
+    }
+    else {
+      url += "&darkmode=false";
+    }
+
+    _webViewController.loadUrl(url);
   }
 }

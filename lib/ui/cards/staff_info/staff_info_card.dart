@@ -26,7 +26,6 @@ class _StaffInfoCardState extends State<StaffInfoCard> {
     _isDarkMode = false;
   }
 
-  String _url = "https://cwo-test.ucsd.edu/WebCards/staff_info_new.html";
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +54,7 @@ class _StaffInfoCardState extends State<StaffInfoCard> {
 
   UserDataProvider _userDataProvider;
   set userDataProvider(UserDataProvider value) => _userDataProvider = value;
+  String _url = "https://cwo-test.ucsd.edu/WebCards/staff_info_new.html";
 
   Widget buildCardContent(BuildContext context) {
     _userDataProvider = Provider.of<UserDataProvider>(context);
@@ -68,7 +68,7 @@ class _StaffInfoCardState extends State<StaffInfoCard> {
     }
     var tokenQueryString =
         "token=" + '${_userDataProvider.authenticationModel.accessToken}';
-    var url = _url + "?" + tokenQueryString;
+    url = _url + "?" + tokenQueryString;
 
     if (Theme.of(context).brightness == Brightness.dark) {
       url += "&darkmode=true";
@@ -116,6 +116,6 @@ class _StaffInfoCardState extends State<StaffInfoCard> {
     } else {
       url += "&darkmode=false";
     }
-    _webViewController?.reload();
+    _webViewController.loadUrl(url);
   }
 }
