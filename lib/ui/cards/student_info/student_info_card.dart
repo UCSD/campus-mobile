@@ -16,6 +16,14 @@ class StudentInfoCard extends StatefulWidget {
 class _StudentInfoCardState extends State<StudentInfoCard> {
   String cardId = "student_info";
   WebViewController _webViewController;
+  bool _isDarkMode;
+  String _url;
+
+  @override
+  void initState() {
+    super.initState();
+    _isDarkMode = false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +31,10 @@ class _StudentInfoCardState extends State<StudentInfoCard> {
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
-      reload: () => reloadWebView(),
+      reload: () {
+        checkTheme(context);
+        reloadWebView();
+      },
       isLoading: false,
       titleText: CardTitleConstants.titleMap[cardId],
       errorText: null,
@@ -31,18 +42,26 @@ class _StudentInfoCardState extends State<StudentInfoCard> {
     );
   }
 
-  final _url =
-      "https://mobile.ucsd.edu/replatform/v1/qa/webview/student_info.html";
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+  }
+
+  checkTheme(BuildContext context) {
+    _url = "https://cwo-test.ucsd.edu/WebCards/student_info_new.html";
+    if (Theme.of(context).brightness == Brightness.dark) {
+      _url += "?darkmode=true";
+    } else {
+      _url += "?darkmode=false";
+    }
+    print(_url);
   }
 
   UserDataProvider _userDataProvider;
   set userDataProvider(UserDataProvider value) => _userDataProvider = value;
 
   Widget buildCardContent(BuildContext context) {
+    checkTheme(context);
     _userDataProvider = Provider.of<UserDataProvider>(context);
 
     /// Verify that user is logged in
@@ -91,6 +110,7 @@ class _StudentInfoCardState extends State<StudentInfoCard> {
   }
 
   void reloadWebView() {
+    checkTheme(context);
     _webViewController?.reload();
   }
 }

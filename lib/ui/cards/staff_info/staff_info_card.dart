@@ -16,27 +16,37 @@ class StaffInfoCard extends StatefulWidget {
 class _StaffInfoCardState extends State<StaffInfoCard> {
   String cardId = "staff_info";
   WebViewController _webViewController;
+  bool _isDarkMode;
+  String _url;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
+    _isDarkMode = false;
   }
 
-  void checkTheme(BuildContext context) {
-    if(Theme.of(context).brightness == Brightness.dark) {
-      _url = "file:///Users/mihirgupta/Downloads/campus_info.htm";
+  checkTheme(BuildContext context) {
+    _url = "https://cwo-test.ucsd.edu/WebCards/staff_info_new.html";
+    if (Theme.of(context).brightness == Brightness.dark) {
+      _url += "?darkmode=true";
+    } else {
+      _url += "?darkmode=false";
     }
+    print(_url);
   }
 
   @override
   Widget build(BuildContext context) {
+    checkTheme(context);
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
-      reload: () => reloadWebView(),
+      reload: () {
+        checkTheme(context);
+        reloadWebView();
+      },
       isLoading: false,
       titleText: CardTitleConstants.titleMap[cardId],
       errorText: null,
@@ -49,8 +59,8 @@ class _StaffInfoCardState extends State<StaffInfoCard> {
     super.didChangeDependencies();
   }
 
-  String _url =
-      "file:///Users/mihirgupta/Downloads/staff_info.htm";
+  //String _url = "https://cwo-test.ucsd.edu/WebCards/staff_info_new.html";
+  //"file:///Users/mihirgupta/Downloads/staff_info.htm";
 
   UserDataProvider _userDataProvider;
   set userDataProvider(UserDataProvider value) => _userDataProvider = value;
@@ -104,6 +114,7 @@ class _StaffInfoCardState extends State<StaffInfoCard> {
   }
 
   void reloadWebView() {
+    checkTheme(context);
     _webViewController?.reload();
   }
 }
