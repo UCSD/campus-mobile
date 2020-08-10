@@ -13,21 +13,23 @@ class StaffInfoCard extends StatefulWidget {
   _StaffInfoCardState createState() => _StaffInfoCardState();
 }
 
-class _StaffInfoCardState extends State<StaffInfoCard> {
+class _StaffInfoCardState extends State<StaffInfoCard> with WidgetsBindingObserver {
   String cardId = "staff_info";
   WebViewController _webViewController;
   String url;
   Brightness brightness;
 
+  @override
   void initState() {
     super.initState();
-    final window = WidgetsBinding.instance.window;
-    window.onPlatformBrightnessChanged = () {
-      brightness = window.platformBrightness;
-      reloadOnThemeChanged(brightness);
-    };
+      WidgetsBinding.instance.addObserver(this);
   }
 
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +38,7 @@ class _StaffInfoCardState extends State<StaffInfoCard> {
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       reload: () {
-        reloadOnThemeChanged(brightness);
+        reloadWebView();
       },
       isLoading: false,
       titleText: CardTitleConstants.titleMap[cardId],
@@ -70,12 +72,14 @@ class _StaffInfoCardState extends State<StaffInfoCard> {
     var tokenQueryString =
         "token=" + '${_userDataProvider.authenticationModel.accessToken}';
     url = _url + "?" + tokenQueryString;
-
     if (Theme.of(context).brightness == Brightness.dark) {
       url += "&darkmode=true";
     } else {
       url += "&darkmode=false";
     }
+    print(Theme.of(context).brightness);
+    print(url);
+    reloadWebView();
 
     return Column(
       children: <Widget>[
@@ -84,6 +88,7 @@ class _StaffInfoCardState extends State<StaffInfoCard> {
           javascriptMode: JavascriptMode.unrestricted,
           initialUrl: url,
           onWebViewCreated: (controller) {
+            print("webview url: " + url);
             _webViewController = controller;
           },
           javascriptChannels: <JavascriptChannel>[
@@ -117,7 +122,10 @@ class _StaffInfoCardState extends State<StaffInfoCard> {
     } else {
       url += "&darkmode=false";
     }
-    _webViewController.loadUrl(url);
+    if(_webViewController != null) {
+      _webViewController?.loadUrl(url);
+
+    }
   }
 
   void reloadOnThemeChanged(Brightness brightness) {
@@ -130,6 +138,9 @@ class _StaffInfoCardState extends State<StaffInfoCard> {
     else {
       url += "false";
     }
-    _webViewController?.loadUrl(url);
+    if(_webViewController != null) {
+      _webViewController?.loadUrl(url);
+
+    }
   }
 }

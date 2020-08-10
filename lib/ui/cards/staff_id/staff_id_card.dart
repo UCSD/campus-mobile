@@ -12,19 +12,21 @@ class StaffIdCard extends StatefulWidget {
   _StaffIdCardState createState() => _StaffIdCardState();
 }
 
-class _StaffIdCardState extends State<StaffIdCard> {
+class _StaffIdCardState extends State<StaffIdCard> with WidgetsBindingObserver{
   String cardId = "staff_id";
   WebViewController _webViewController;
   String url;
 
+  @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
 
-    final window = WidgetsBinding.instance.window;
-    window.onPlatformBrightnessChanged = () {
-      final brightness = window.platformBrightness;
-      reloadOnThemeChanged(brightness);
-    };
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 
   @override
@@ -75,6 +77,8 @@ class _StaffIdCardState extends State<StaffIdCard> {
       url += "&darkmode=false";
     }
 
+    reloadWebView();
+
     return Column(
       children: <Widget>[
         Flexible(
@@ -98,7 +102,9 @@ class _StaffIdCardState extends State<StaffIdCard> {
       url += "&darkmode=false";
     }
     print(url);
-    _webViewController.loadUrl(url);
+    if(_webViewController != null) {
+      _webViewController.loadUrl(url);
+    }
   }
 
   void reloadOnThemeChanged(Brightness brightness) {

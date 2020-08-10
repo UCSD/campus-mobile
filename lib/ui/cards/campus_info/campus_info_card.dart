@@ -6,29 +6,29 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-class CampusInfoCard extends StatefulWidget {
+class CampusInfoCard extends StatefulWidget{
   CampusInfoCard();
   @override
   _CampusInfoCardState createState() => _CampusInfoCardState();
 }
 
-class _CampusInfoCardState extends State<CampusInfoCard> {
+class _CampusInfoCardState extends State<CampusInfoCard> with WidgetsBindingObserver {
   String cardId = "campus_info";
   WebViewController _webViewController;
   bool _isDarkMode;
   String _url;
 
+  @override
   void initState() {
     super.initState();
-
-    final window = WidgetsBinding.instance.window;
-    window.onPlatformBrightnessChanged = () {
-      final brightness = window.platformBrightness;
-      reloadOnThemeChanged(brightness);
-    };
+    WidgetsBinding.instance.addObserver(this);
   }
 
-
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +62,7 @@ class _CampusInfoCardState extends State<CampusInfoCard> {
       else {
         _url += "?darkmode=false";
       }
+      reloadWebView();
   }
 
   Widget buildCardContent(BuildContext context) {
@@ -101,8 +102,9 @@ class _CampusInfoCardState extends State<CampusInfoCard> {
   }
 
   void reloadWebView() {
-    checkTheme(context);
-    _webViewController?.loadUrl(_url);
+    if(_webViewController != null && _url != null) {
+      _webViewController?.loadUrl(_url);
+    }
   }
 
   void reloadOnThemeChanged(Brightness brightness) {
