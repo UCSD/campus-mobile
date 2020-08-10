@@ -15,7 +15,6 @@ class CampusInfoCard extends StatefulWidget{
 class _CampusInfoCardState extends State<CampusInfoCard> with WidgetsBindingObserver {
   String cardId = "campus_info";
   WebViewController _webViewController;
-  bool _isDarkMode;
   String _url;
 
   @override
@@ -105,18 +104,5 @@ class _CampusInfoCardState extends State<CampusInfoCard> with WidgetsBindingObse
     if(_webViewController != null && _url != null) {
       _webViewController?.loadUrl(_url);
     }
-  }
-
-  void reloadOnThemeChanged(Brightness brightness) {
-    _url = _url.substring(0, _url.indexOf("darkmode")-1);
-    _url += "?darkmode=";
-    if(brightness == Brightness.dark) {
-      _url += "true";
-    }
-    else {
-      _url += "false";
-    }
-    print(_url);
-    _webViewController?.loadUrl(_url);
   }
 }

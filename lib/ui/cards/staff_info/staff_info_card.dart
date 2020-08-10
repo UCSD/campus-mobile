@@ -22,7 +22,7 @@ class _StaffInfoCardState extends State<StaffInfoCard> with WidgetsBindingObserv
   @override
   void initState() {
     super.initState();
-      WidgetsBinding.instance.addObserver(this);
+      WidgetsBinding.instance.addObserver(this); // observer for theme change, widget rebuilt on change
   }
 
   @override
@@ -57,7 +57,7 @@ class _StaffInfoCardState extends State<StaffInfoCard> with WidgetsBindingObserv
 
   UserDataProvider _userDataProvider;
   set userDataProvider(UserDataProvider value) => _userDataProvider = value;
-  String _url = "https://cwo-test.ucsd.edu/WebCards/staff_info_new.html";
+  String fileURL = "https://cwo-test.ucsd.edu/WebCards/staff_info_new.html";
 
   Widget buildCardContent(BuildContext context) {
     _userDataProvider = Provider.of<UserDataProvider>(context);
@@ -71,14 +71,12 @@ class _StaffInfoCardState extends State<StaffInfoCard> with WidgetsBindingObserv
     }
     var tokenQueryString =
         "token=" + '${_userDataProvider.authenticationModel.accessToken}';
-    url = _url + "?" + tokenQueryString;
+    url = fileURL + "?" + tokenQueryString;
     if (Theme.of(context).brightness == Brightness.dark) {
       url += "&darkmode=true";
     } else {
       url += "&darkmode=false";
     }
-    print(Theme.of(context).brightness);
-    print(url);
     reloadWebView();
 
     return Column(
@@ -88,7 +86,6 @@ class _StaffInfoCardState extends State<StaffInfoCard> with WidgetsBindingObserv
           javascriptMode: JavascriptMode.unrestricted,
           initialUrl: url,
           onWebViewCreated: (controller) {
-            print("webview url: " + url);
             _webViewController = controller;
           },
           javascriptChannels: <JavascriptChannel>[
@@ -121,22 +118,6 @@ class _StaffInfoCardState extends State<StaffInfoCard> with WidgetsBindingObserv
       url += "&darkmode=true";
     } else {
       url += "&darkmode=false";
-    }
-    if(_webViewController != null) {
-      _webViewController?.loadUrl(url);
-
-    }
-  }
-
-  void reloadOnThemeChanged(Brightness brightness) {
-    print("here");
-    url = url.substring(0, url.indexOf("darkmode")-1);
-    url += "&darkmode=";
-    if(brightness == Brightness.dark) {
-      url += "true";
-    }
-    else {
-      url += "false";
     }
     if(_webViewController != null) {
       _webViewController?.loadUrl(url);

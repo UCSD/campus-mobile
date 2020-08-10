@@ -20,7 +20,7 @@ class _StaffIdCardState extends State<StaffIdCard> with WidgetsBindingObserver{
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance.addObserver(this); // observer for theme change, widget rebuilt on theme change
   }
 
   @override
@@ -45,7 +45,7 @@ class _StaffIdCardState extends State<StaffIdCard> with WidgetsBindingObserver{
     );
   }
 
-  String _url = "https://cwo-test.ucsd.edu/WebCards/staff_id_new.html";
+  String fileURL = "https://cwo-test.ucsd.edu/WebCards/staff_id_new.html";
 
   @override
   void didChangeDependencies() {
@@ -68,7 +68,7 @@ class _StaffIdCardState extends State<StaffIdCard> with WidgetsBindingObserver{
     }
     var tokenQueryString =
         "token=" + '${_userDataProvider.authenticationModel.accessToken}';
-     url = _url + "?" + tokenQueryString;
+     url = fileURL + "?" + tokenQueryString;
 
     if(Theme.of(context).brightness == Brightness.dark) {
       url += "&darkmode=true";
@@ -101,21 +101,8 @@ class _StaffIdCardState extends State<StaffIdCard> with WidgetsBindingObserver{
     else {
       url += "&darkmode=false";
     }
-    print(url);
     if(_webViewController != null) {
       _webViewController.loadUrl(url);
     }
-  }
-
-  void reloadOnThemeChanged(Brightness brightness) {
-    url = url.substring(0, url.indexOf("darkmode")-1);
-    url += "&darkmode=";
-    if(brightness == Brightness.dark) {
-      url += "true";
-    }
-    else {
-      url += "false";
-    }
-    _webViewController.loadUrl(url);
   }
 }

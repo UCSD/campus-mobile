@@ -21,7 +21,7 @@ class _StudentInfoCardState extends State<StudentInfoCard> with WidgetsBindingOb
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance.addObserver(this); // observer for theme change, widget rebuilt on change
   }
 
   @override
@@ -52,7 +52,7 @@ class _StudentInfoCardState extends State<StudentInfoCard> with WidgetsBindingOb
   }
   UserDataProvider _userDataProvider;
   set userDataProvider(UserDataProvider value) => _userDataProvider = value;
-  String _url = "https://cwo-test.ucsd.edu/WebCards/student_info_new.html";
+  String fileURL = "https://cwo-test.ucsd.edu/WebCards/student_info_new.html";
 
   Widget buildCardContent(BuildContext context) {
     _userDataProvider = Provider.of<UserDataProvider>(context);
@@ -67,14 +67,16 @@ class _StudentInfoCardState extends State<StudentInfoCard> with WidgetsBindingOb
     }
     var tokenQueryString =
         "token=" + '${_userDataProvider.authenticationModel.accessToken}';
-    url = _url + "?" + tokenQueryString;
+    url = fileURL + "?" + tokenQueryString;
 
+    // form URL according to current application theme
     if(Theme.of(context).brightness == Brightness.dark) {
       url += "&darkmode=true";
     }
     else {
       url += "&darkmode=false";
     }
+    //reload webview when widget is rebuilt
     reloadWebView();
     return Column(
       children: <Widget>[
@@ -122,16 +124,5 @@ class _StudentInfoCardState extends State<StudentInfoCard> with WidgetsBindingOb
       _webViewController.loadUrl(url);
     }
   }
-
-  void reloadOnThemeChanged(Brightness brightness) {
-    url = url.substring(0, url.indexOf("darkmode")-1);
-    url += "&darkmode=";
-    if(brightness == Brightness.dark) {
-      url += "true";
-    }
-    else {
-      url += "false";
-    }
-    _webViewController.loadUrl(url);
-  }
+  
 }
