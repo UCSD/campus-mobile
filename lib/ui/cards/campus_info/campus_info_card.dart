@@ -18,11 +18,14 @@ class _CampusInfoCardState extends State<CampusInfoCard> {
   bool _isDarkMode;
   String _url;
 
-  @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    _isDarkMode = false;
+
+    final window = WidgetsBinding.instance.window;
+    window.onPlatformBrightnessChanged = () {
+      final brightness = window.platformBrightness;
+      reloadOnThemeChanged(brightness);
+    };
   }
 
 
@@ -99,6 +102,19 @@ class _CampusInfoCardState extends State<CampusInfoCard> {
 
   void reloadWebView() {
     checkTheme(context);
+    _webViewController?.loadUrl(_url);
+  }
+
+  void reloadOnThemeChanged(Brightness brightness) {
+    _url = _url.substring(0, _url.indexOf("darkmode")-1);
+    _url += "?darkmode=";
+    if(brightness == Brightness.dark) {
+      _url += "true";
+    }
+    else {
+      _url += "false";
+    }
+    print(_url);
     _webViewController?.loadUrl(_url);
   }
 }

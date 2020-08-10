@@ -16,13 +16,16 @@ class StudentInfoCard extends StatefulWidget {
 class _StudentInfoCardState extends State<StudentInfoCard> {
   String cardId = "student_info";
   WebViewController _webViewController;
-  bool _isDarkMode;
   String url;
 
-  @override
   void initState() {
     super.initState();
-    _isDarkMode = false;
+
+    final window = WidgetsBinding.instance.window;
+    window.onPlatformBrightnessChanged = () {
+      final brightness = window.platformBrightness;
+      reloadOnThemeChanged(brightness);
+    };
   }
 
   @override
@@ -113,6 +116,18 @@ class _StudentInfoCardState extends State<StudentInfoCard> {
       url += "&darkmode=false";
     }
 
+    _webViewController.loadUrl(url);
+  }
+
+  void reloadOnThemeChanged(Brightness brightness) {
+    url = url.substring(0, url.indexOf("darkmode")-1);
+    url += "&darkmode=";
+    if(brightness == Brightness.dark) {
+      url += "true";
+    }
+    else {
+      url += "false";
+    }
     _webViewController.loadUrl(url);
   }
 }

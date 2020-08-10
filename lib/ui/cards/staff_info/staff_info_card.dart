@@ -16,14 +16,16 @@ class StaffInfoCard extends StatefulWidget {
 class _StaffInfoCardState extends State<StaffInfoCard> {
   String cardId = "staff_info";
   WebViewController _webViewController;
-  bool _isDarkMode;
   String url;
+  Brightness brightness;
 
-  @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    _isDarkMode = false;
+    final window = WidgetsBinding.instance.window;
+    window.onPlatformBrightnessChanged = () {
+      brightness = window.platformBrightness;
+      reloadOnThemeChanged(brightness);
+    };
   }
 
 
@@ -34,8 +36,7 @@ class _StaffInfoCardState extends State<StaffInfoCard> {
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       reload: () {
-        ;
-        reloadWebView();
+        reloadOnThemeChanged(brightness);
       },
       isLoading: false,
       titleText: CardTitleConstants.titleMap[cardId],
@@ -117,5 +118,18 @@ class _StaffInfoCardState extends State<StaffInfoCard> {
       url += "&darkmode=false";
     }
     _webViewController.loadUrl(url);
+  }
+
+  void reloadOnThemeChanged(Brightness brightness) {
+    print("here");
+    url = url.substring(0, url.indexOf("darkmode")-1);
+    url += "&darkmode=";
+    if(brightness == Brightness.dark) {
+      url += "true";
+    }
+    else {
+      url += "false";
+    }
+    _webViewController?.loadUrl(url);
   }
 }

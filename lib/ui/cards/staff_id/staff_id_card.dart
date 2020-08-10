@@ -17,6 +17,16 @@ class _StaffIdCardState extends State<StaffIdCard> {
   WebViewController _webViewController;
   String url;
 
+  void initState() {
+    super.initState();
+
+    final window = WidgetsBinding.instance.window;
+    window.onPlatformBrightnessChanged = () {
+      final brightness = window.platformBrightness;
+      reloadOnThemeChanged(brightness);
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
     return CardContainer(
@@ -86,6 +96,19 @@ class _StaffIdCardState extends State<StaffIdCard> {
     }
     else {
       url += "&darkmode=false";
+    }
+    print(url);
+    _webViewController.loadUrl(url);
+  }
+
+  void reloadOnThemeChanged(Brightness brightness) {
+    url = url.substring(0, url.indexOf("darkmode")-1);
+    url += "&darkmode=";
+    if(brightness == Brightness.dark) {
+      url += "true";
+    }
+    else {
+      url += "false";
     }
     _webViewController.loadUrl(url);
   }
