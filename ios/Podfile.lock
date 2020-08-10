@@ -21,8 +21,6 @@ PODS:
   - firebase_core (0.0.1):
     - Firebase/Core
     - Flutter
-  - firebase_core_web (0.1.0):
-    - Flutter
   - firebase_crashlytics (0.0.1):
     - Crashlytics
     - Fabric
@@ -69,8 +67,6 @@ PODS:
     - GoogleUtilities/UserDefaults (~> 6.7)
     - Protobuf (>= 3.9.2, ~> 3.9)
   - Flutter (1.0.0)
-  - flutter_plugin_android_lifecycle (0.0.1):
-    - Flutter
   - flutter_secure_storage (3.3.1):
     - Flutter
   - FMDB (2.7.5):
@@ -123,18 +119,12 @@ PODS:
     - Flutter
   - path_provider (0.0.1):
     - Flutter
-  - path_provider_macos (0.0.1):
-    - Flutter
   - PromisesObjC (1.2.9)
   - Protobuf (3.12.0)
   - qr_code_scanner (0.0.2):
     - Flutter
     - MTBBarcodeScanner
   - shared_preferences (0.0.1):
-    - Flutter
-  - shared_preferences_macos (0.0.1):
-    - Flutter
-  - shared_preferences_web (0.0.1):
     - Flutter
   - sqflite (0.0.1):
     - Flutter
@@ -148,21 +138,16 @@ DEPENDENCIES:
   - device_info (from `.symlinks/plugins/device_info/ios`)
   - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
-  - firebase_core_web (from `.symlinks/plugins/firebase_core_web/ios`)
   - firebase_crashlytics (from `.symlinks/plugins/firebase_crashlytics/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - Flutter (from `Flutter`)
-  - flutter_plugin_android_lifecycle (from `.symlinks/plugins/flutter_plugin_android_lifecycle/ios`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
   - google_maps_flutter (from `.symlinks/plugins/google_maps_flutter/ios`)
   - location (from `.symlinks/plugins/location/ios`)
   - package_info (from `.symlinks/plugins/package_info/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
-  - path_provider_macos (from `.symlinks/plugins/path_provider_macos/ios`)
   - qr_code_scanner (from `.symlinks/plugins/qr_code_scanner/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
-  - shared_preferences_macos (from `.symlinks/plugins/shared_preferences_macos/ios`)
-  - shared_preferences_web (from `.symlinks/plugins/shared_preferences_web/ios`)
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
   - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
   - webview_flutter (from `.symlinks/plugins/webview_flutter/ios`)
@@ -195,16 +180,12 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_analytics/ios"
   firebase_core:
     :path: ".symlinks/plugins/firebase_core/ios"
-  firebase_core_web:
-    :path: ".symlinks/plugins/firebase_core_web/ios"
   firebase_crashlytics:
     :path: ".symlinks/plugins/firebase_crashlytics/ios"
   firebase_messaging:
     :path: ".symlinks/plugins/firebase_messaging/ios"
   Flutter:
     :path: Flutter
-  flutter_plugin_android_lifecycle:
-    :path: ".symlinks/plugins/flutter_plugin_android_lifecycle/ios"
   flutter_secure_storage:
     :path: ".symlinks/plugins/flutter_secure_storage/ios"
   google_maps_flutter:
@@ -215,16 +196,10 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/package_info/ios"
   path_provider:
     :path: ".symlinks/plugins/path_provider/ios"
-  path_provider_macos:
-    :path: ".symlinks/plugins/path_provider_macos/ios"
   qr_code_scanner:
     :path: ".symlinks/plugins/qr_code_scanner/ios"
   shared_preferences:
     :path: ".symlinks/plugins/shared_preferences/ios"
-  shared_preferences_macos:
-    :path: ".symlinks/plugins/shared_preferences_macos/ios"
-  shared_preferences_web:
-    :path: ".symlinks/plugins/shared_preferences_web/ios"
   sqflite:
     :path: ".symlinks/plugins/sqflite/ios"
   url_launcher:
@@ -239,7 +214,6 @@ SPEC CHECKSUMS:
   Firebase: ed042590caa0029392257529a8003c25ee82bc18
   firebase_analytics: 045e7ebe7b8a4d27357168072868ff082dca15a6
   firebase_core: dc539d4bdc69894823e4a6e557034a9e48960f21
-  firebase_core_web: d501d8b946b60c8af265428ce483b0fff5ad52d1
   firebase_crashlytics: bd8c58df07f107cb7e1a20cb190b9a468e0a69fd
   firebase_messaging: cffb57ce40958c6204f03fb0c81713e4cd1e240c
   FirebaseAnalytics: 5fa308e1b13f838d0f6dc74719ac2a72e8c5afc4
@@ -249,7 +223,6 @@ SPEC CHECKSUMS:
   FirebaseInstanceID: 358d5cb393d2750a745569ede06827c35aea530b
   FirebaseMessaging: bdd4d573eab37ebee29bad4e7c4b0ef18fa1a952
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
-  flutter_plugin_android_lifecycle: dc0b544e129eebb77a6bfb1239d4d1c673a60a35
   flutter_secure_storage: 7953c38a04c3fdbb00571bcd87d8e3b5ceb9daec
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   google_maps_flutter: df4e7de95264aa0a2f11aac0fc7e313acb8ffc7e
@@ -262,17 +235,14 @@ SPEC CHECKSUMS:
   nanopb: c43f40fadfe79e8b8db116583945847910cbabc9
   package_info: 873975fc26034f0b863a300ad47e7f1ac6c7ec62
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
-  path_provider_macos: f760a3c5b04357c380e2fddb6f9db6f3015897e0
   PromisesObjC: b48e0338dbbac2207e611750777895f7a5811b75
   Protobuf: 2793fcd0622a00b546c60e7cbbcc493e043e9bb9
   qr_code_scanner: 16107718bdad7d708cdf6a5eacdca24b56cdf471
   shared_preferences: 430726339841afefe5142b9c1f50cb6bd7793e01
-  shared_preferences_macos: f3f29b71ccbb56bf40c9dd6396c9acf15e214087
-  shared_preferences_web: 141cce0c3ed1a1c5bf2a0e44f52d31eeb66e5ea9
   sqflite: 4001a31ff81d210346b500c55b17f4d6c7589dd0
   url_launcher: a1c0cc845906122c4784c542523d8cacbded5626
   webview_flutter: d2b4d6c66968ad042ad94cbb791f5b72b4678a96
 
-PODFILE CHECKSUM: 1b66dae606f75376c5f2135a8290850eeb09ae83
+PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
 
 COCOAPODS: 1.9.3
