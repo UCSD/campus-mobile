@@ -125,6 +125,7 @@ class BluetoothSingleton {
     // Process the scan results (synchronously)
     flutterBlueInstance.scanResults.listen((results) {
       for (ScanResult scanResult in results) {
+        
         String calculatedUUID;
 
         scanResult.advertisementData.manufacturerData.forEach((item, hexcodeAsArray) => {
@@ -138,7 +139,7 @@ class BluetoothSingleton {
 
         //PARSE FOR FRONTEND DISPLAY
         frontEndFilter(repeatedDevice, scanResult, calculatedUUID);
-
+       // connectToDevice(scanResult);
       }});
 
     // Remove objects that are no longer continuous found
@@ -148,8 +149,8 @@ class BluetoothSingleton {
   }
 
   Future<void> processDevices()  async{
-    bool done;
-    done =  connectDevices();
+    bool done = true;
+   // done =  connectDevices();
 
     if(done) {
       // Add the processed buffer to overall log
@@ -207,16 +208,21 @@ class BluetoothSingleton {
     });
   }
 
-  void connectToDevice(ScanResult scanResult)  {
+  void connectToDevice(ScanResult scanResult) async {
     try {
-      scanResult.device.connect(autoConnect: false).timeout(
-          Duration(seconds: 2), onTimeout: () {
-        bufferList.add(
-            "\nConnection to " + scanResult.device.id.toString() + "timed out");
-        scanResult.device.disconnect();
-      }).then((value) =>
-          bufferList.add(
-              "Connection to " + scanResult.device.id.toString() + "success"));
+      scanResult.device.connect().then((value) {
+        scanResult.device.discoverServices().then((value){
+          value.forEach((element) {
+
+            /*element.characteristics.forEach((element) {
+              element.descriptors.forEach((element) {
+                bufferList.add(element.read());
+              });
+            });*/
+          });
+        });
+      });
+      scanResult.device.disconnect();
     }catch(Exception){
 
     }
@@ -285,8 +291,8 @@ class BluetoothSingleton {
       // Store bt logs
       //_storage.write(key: _randomValue(), value: deviceLog);
 
-
-      // extractBTServices(scanResult);
+     // connectToDevice(scanResult);
+       extractBTServices(scanResult);
     }
   }
 
@@ -295,18 +301,15 @@ class BluetoothSingleton {
       scanResult.device.discoverServices().then((value) {
         bufferList.add("SERVICES");
         value.forEach((element) {
-          // element.includedServices.forEach((element) {element.characteristics.forEach((element) {element.toString();});});
-          bufferList.add(element.toString());
-          bufferList.add("\n");
-
+          element.
+          element.characteristics.forEach((element) {
+            element.descriptors.forEach((element) {
+              print(element.characteristicUuid);
+              });
+            });
+          });
         });
       });
-      bufferList.add("SERVICE UUIDs");
-      scanResult.advertisementData.serviceUuids.forEach((element) {
-        bufferList.add(element.toString());
-      });
-      bufferList.add("\n");
-    });
   }
 
 // Cancel ongoing scans to start a new one
