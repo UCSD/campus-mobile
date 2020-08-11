@@ -45,7 +45,7 @@ class OnboardingScreen extends StatelessWidget {
                             context, RoutePaths.OnboardingLogin);
                       },
                       child: Text(
-                        "Let's do it.",
+                        "Let's do it",
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 22,
@@ -64,7 +64,7 @@ class OnboardingScreen extends StatelessWidget {
                         prefs.setBool('showOnboardingScreen', false);
                       },
                       child: Text(
-                        "Skip for now.",
+                        "Get Started",
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 22,
