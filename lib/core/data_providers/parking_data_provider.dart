@@ -7,6 +7,7 @@ class ParkingDataProvider extends ChangeNotifier {
   ParkingDataProvider() {
     ///DEFAULT STATES
     _isLoading = false;
+    selected = 0;
 
     ///INITIALIZE SERVICES
     _parkingService = ParkingService();
@@ -16,6 +17,8 @@ class ParkingDataProvider extends ChangeNotifier {
   bool _isLoading;
   DateTime _lastUpdated;
   String _error;
+  int selected; //Keep less than 10
+  final MAX_SELECTED = 10;
 
   ///MODELS
   Map<String, ParkingModel> _parkingModels;
@@ -37,7 +40,12 @@ class ParkingDataProvider extends ChangeNotifier {
       for (ParkingModel model in _parkingService.data) {
         newMapOfLots[model.locationName] = model;
 
-        _parkingViewState[model.locationName] = true;
+        if (selected <= MAX_SELECTED) {
+          _parkingViewState[model.locationName] = true;
+          ++selected;
+        }else{
+          _parkingViewState[model.locationName] = false;
+        }
       }
 
       ///replace old list of lots with new one
@@ -76,12 +84,17 @@ class ParkingDataProvider extends ChangeNotifier {
     return List<ParkingModel>();
   }
 
-  /// add or remove location availability display from card based on user selection
+// add or remove location availability display from card based on user selection, Limit to MAX_SELECTED
   void toggleLot(String location) {
-    if (_parkingViewState[location] ?? true) {
-      _parkingViewState[location] = false;
+    if (selected <= MAX_SELECTED) {
+      _parkingViewState[location] = !_parkingViewState[location];
+      _parkingViewState[location] ? selected++ : selected--;
     } else {
-      _parkingViewState[location] = true;
+      //prevent select
+      if (_parkingViewState[location]) {
+        selected--;
+        _parkingViewState[location] = !_parkingViewState[location];
+      }
     }
     notifyListeners();
   }
