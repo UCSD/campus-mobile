@@ -27,7 +27,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // ColorPrimary, //Colors.white,
+      backgroundColor: lightPrimaryColor, // ColorPrimary, //Colors.white,
       body: _userDataProvider.isLoading
           ? Center(
               child: CircularProgressIndicator(
@@ -50,7 +50,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                 'assets/images/UCSanDiegoLogo-nav.png',
                 fit: BoxFit.contain,
                 height: 50,
-                color: ColorPrimary,
+                color: Colors.white,
               ),
             ),
             SizedBox(height: 100.0),
@@ -67,21 +67,21 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                           textBaseline: TextBaseline.alphabetic,
                           color: Colors.black),
                       decoration: InputDecoration(
-                        hintText: 'Email',
+                        hintText: 'UCSD Email',
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
+                          /*borderSide: BorderSide(
                             color: Colors.black,
-                          ),
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          ),*/
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
+                          /*borderSide: BorderSide(
                             color: Colors.black,
-                          ),
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          ),*/
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
                         ),
                         contentPadding: EdgeInsets.only(left: 10),
-                        hintStyle: TextStyle(color: Colors.grey),
+                        hintStyle: TextStyle(color: ColorPrimary),
                         fillColor: Colors.white,
                         filled: true,
                       ),
@@ -107,16 +107,16 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                       borderSide: BorderSide(
                         color: Colors.black,
                       ),
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      borderRadius: BorderRadius.all(Radius.circular(5)),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
                         color: Colors.black,
                       ),
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      borderRadius: BorderRadius.all(Radius.circular(5)),
                     ),
                     contentPadding: EdgeInsets.only(left: 10),
-                    hintStyle: TextStyle(color: Colors.grey),
+                    hintStyle: TextStyle(color: ColorPrimary),
                     fillColor: Colors.white,
                     filled: true,
                   ),
@@ -134,10 +134,12 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                       Expanded(
                           child: FlatButton(
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5.0)),
+                          borderRadius: BorderRadius.circular(5.0),
+                          side: BorderSide(color: Colors.white),
+                        ),
                         color: ColorPrimary,
                         textColor: lightButtonTextColor,
-                        // child: OutlineButton(
+                        //child: OutlineButton(
                         //borderSide: BorderSide(color: ColorPrimary),
                         child: Text(
                           'Log in',
@@ -180,7 +182,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                   GestureDetector(
                     child: Text(
                       'Need help logging in?',
-                      style: TextStyle(color: ColorPrimary, fontSize: 12),
+                      style: TextStyle(color: Colors.white, fontSize: 12),
                     ),
                     onTap: () async {
                       String link =
@@ -193,7 +195,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                   GestureDetector(
                     child: Text(
                       'Skip',
-                      style: TextStyle(color: ColorPrimary, fontSize: 12),
+                      style: TextStyle(color: Colors.white, fontSize: 12),
                     ),
                     onTap: () {
                       Navigator.pushNamedAndRemoveUntil(context,
