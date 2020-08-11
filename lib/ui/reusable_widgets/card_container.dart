@@ -104,20 +104,20 @@ class CardContainer extends StatelessWidget {
         width: double.infinity,
         constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 120),
         child: child(),
-      );
-    } else if (titleText == "Student ID" || titleText == "Staff ID") {
-      return Container(
-        width: double.infinity,
-//        height: 200.0,
-       // constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 180),
-        child: child(),
-      );
-    } else if (titleText == "Classes") {
-      return Container(
-        width: double.infinity,
-        constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 200),
-        child: child(),
       ); }
+//     else if (titleText == "Student ID" || titleText == "Staff ID") {
+////      return Container(
+////        width: double.infinity,
+//////        height: 200.0,
+////       // constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 180),
+////        child: child(),
+////      );
+////    } else if (titleText == "Classes") {
+////      return Container(
+////        width: double.infinity,
+////        //constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 200),
+////        child: child(),
+////      ); }
     else {
       return Container(
         width: double.infinity,
