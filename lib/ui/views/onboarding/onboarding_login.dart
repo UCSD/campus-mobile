@@ -27,7 +27,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorPrimary,
+      backgroundColor: Colors.white, // ColorPrimary, //Colors.white,
       body: _userDataProvider.isLoading
           ? Center(
               child: CircularProgressIndicator(
@@ -41,7 +41,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
   Widget buildLoginWidget() {
     return Center(
       child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: 360),
+        constraints: BoxConstraints(maxWidth: 300),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -50,111 +50,137 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                 'assets/images/UCSanDiegoLogo-nav.png',
                 fit: BoxFit.contain,
                 height: 50,
+                color: ColorPrimary,
               ),
             ),
-            SizedBox(height: 80),
-            Flexible(
-              child: Container(
-                color:
-                    Theme.of(context).accentColor, // lightTextFieldBorderColor,
-                child: TextField(
-                  style: TextStyle(
-                      textBaseline: TextBaseline.alphabetic,
-                      color: Colors.black),
-                  decoration: InputDecoration(
-                    hintText: 'Email',
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide.none,
-                      borderRadius: BorderRadius.all(Radius.circular(0.0)),
+            SizedBox(height: 100.0),
+            Padding(
+                padding: EdgeInsets.only(top: 0.0),
+                child: Flexible(
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(100)),
+                        color: Theme.of(context)
+                            .accentColor), //lightTextFieldBorderColor,
+                    child: TextField(
+                      style: TextStyle(
+                          textBaseline: TextBaseline.alphabetic,
+                          color: Colors.black),
+                      decoration: InputDecoration(
+                        hintText: 'Email',
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.black,
+                          ),
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.black,
+                          ),
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                        ),
+                        contentPadding: EdgeInsets.only(left: 10),
+                        hintStyle: TextStyle(color: Colors.grey),
+                        fillColor: Colors.white,
+                        filled: true,
+                      ),
+                      keyboardType: TextInputType.emailAddress,
+                      controller: _emailTextFieldController,
                     ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide.none,
-                      borderRadius: BorderRadius.all(Radius.circular(0.0)),
-                    ),
-                    contentPadding: EdgeInsets.only(left: 10),
-                    hintStyle: TextStyle(color: darkAccentColor),
-                    fillColor: Colors.white,
-                    filled: true,
                   ),
-                  keyboardType: TextInputType.emailAddress,
-                  controller: _emailTextFieldController,
-                ),
-              ),
-            ),
-            SizedBox(height: 10),
+                )),
+            SizedBox(height: 15),
             Flexible(
               child: Container(
-                color:
-                    Theme.of(context).accentColor, // lightTextFieldBorderColor,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(100)),
+                    color: Theme.of(context).accentColor),
                 child: TextField(
                   style: TextStyle(
                     textBaseline: TextBaseline.alphabetic,
                     color: Colors.black,
                   ),
                   decoration: InputDecoration(
-                      hintText: 'Password',
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.all(Radius.circular(0.0)),
+                    hintText: 'Password',
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.black,
                       ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.all(Radius.circular(0.0)),
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.black,
                       ),
-                      contentPadding: EdgeInsets.only(left: 10),
-                      hintStyle: TextStyle(color: darkAccentColor),
-                      fillColor: Colors.white,
-                      filled: true),
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                    ),
+                    contentPadding: EdgeInsets.only(left: 10),
+                    hintStyle: TextStyle(color: Colors.grey),
+                    fillColor: Colors.white,
+                    filled: true,
+                  ),
                   obscureText: true,
                   controller: _passwordTextFieldController,
                 ),
               ),
             ),
-            SizedBox(height: 20),
-            Flexible(
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: OutlineButton(
-                      borderSide: BorderSide(color: lightButtonBorderColor),
-                      child: Text(
-                        'Sign In',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      onPressed: _userDataProvider.isLoading
-                          ? null
-                          : () {
-                              _userDataProvider
-                                  .login(_emailTextFieldController.text,
-                                      _passwordTextFieldController.text)
-                                  .then((isLoggedIn) async {
-                                if (isLoggedIn) {
-                                  Navigator.pushNamedAndRemoveUntil(
-                                      context,
-                                      RoutePaths.BottomNavigationBar,
-                                      (_) => false);
-                                  final prefs =
-                                      await SharedPreferences.getInstance();
-                                  prefs.setBool('showOnboardingScreen', false);
-                                } else {
-                                  showAlertDialog(context);
-                                }
-                              });
-                            },
-                      textColor: lightButtonTextColor,
-                    ),
+            SizedBox(height: 40),
+            Padding(
+                padding: EdgeInsets.only(top: 30.0),
+                child: Flexible(
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                          child: FlatButton(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5.0)),
+                        color: ColorPrimary,
+                        textColor: lightButtonTextColor,
+                        // child: OutlineButton(
+                        //borderSide: BorderSide(color: ColorPrimary),
+                        child: Text(
+                          'Log in',
+                          style: TextStyle(
+                            color: Colors.white,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                        onPressed: _userDataProvider.isLoading
+                            ? null
+                            : () {
+                                _userDataProvider
+                                    .login(_emailTextFieldController.text,
+                                        _passwordTextFieldController.text)
+                                    .then((isLoggedIn) async {
+                                  if (isLoggedIn) {
+                                    Navigator.pushNamedAndRemoveUntil(
+                                        context,
+                                        RoutePaths.BottomNavigationBar,
+                                        (_) => false);
+                                    final prefs =
+                                        await SharedPreferences.getInstance();
+                                    prefs.setBool(
+                                        'showOnboardingScreen', false);
+                                  } else {
+                                    showAlertDialog(context);
+                                  }
+                                });
+                              },
+
+                        // ),
+                      )),
+                    ],
                   ),
-                ],
-              ),
-            ),
-            SizedBox(height: 10),
+                )),
+            SizedBox(height: 5),
             Flexible(
               child: Row(
                 children: [
                   GestureDetector(
                     child: Text(
                       'Need help logging in?',
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: ColorPrimary, fontSize: 12),
                     ),
                     onTap: () async {
                       String link =
@@ -167,7 +193,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                   GestureDetector(
                     child: Text(
                       'Skip',
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: ColorPrimary, fontSize: 12),
                     ),
                     onTap: () {
                       Navigator.pushNamedAndRemoveUntil(context,

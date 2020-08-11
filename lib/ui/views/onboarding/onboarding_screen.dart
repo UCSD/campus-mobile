@@ -8,8 +8,8 @@ class OnboardingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorPrimary,
-      body: Center(
+      backgroundColor: Colors.grey,
+      body: Container(
         child: Column(
           children: <Widget>[
             Expanded(
@@ -22,23 +22,25 @@ class OnboardingScreen extends StatelessWidget {
                     fit: BoxFit.contain,
                     height: 50,
                   ),
-                  SizedBox(height: 80),
-                  Padding(
+                  // SizedBox(height: 80),
+                  /*  Padding(
                     padding: const EdgeInsets.only(bottom: 26.0),
                     child: Text(
                       'Hello.',
                       style: TextStyle(color: Colors.white, fontSize: 26),
                     ),
-                  ),
+                  ),*/
                   Text(
                     'Enter your login for a personalized experience.',
                     style: TextStyle(color: Colors.white, fontSize: 18),
                     textAlign: TextAlign.center,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 40.0),
-                    child: GestureDetector(
-                      onTap: () {
+                  Expanded(
+                      child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: RaisedButton(
+                      color: ColorPrimary,
+                      onPressed: () {
                         Navigator.pushNamed(
                             context, RoutePaths.OnboardingLogin);
                       },
@@ -50,11 +52,12 @@ class OnboardingScreen extends StatelessWidget {
                             decoration: TextDecoration.underline),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 25.0),
-                    child: GestureDetector(
-                      onTap: () async {
+                  )),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: RaisedButton(
+                      color: ColorPrimary,
+                      onPressed: () async {
                         Navigator.pushNamedAndRemoveUntil(context,
                             RoutePaths.BottomNavigationBar, (_) => false);
                         final prefs = await SharedPreferences.getInstance();
@@ -73,7 +76,7 @@ class OnboardingScreen extends StatelessWidget {
               ),
               flex: 2,
             ),
-            DebugBuildInfo(),
+            //DebugBuildInfo(),
           ],
         ),
       ),
