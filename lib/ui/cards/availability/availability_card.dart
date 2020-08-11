@@ -62,6 +62,9 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
             children: locationsList,
           ),
         ),
+        SizedBox(
+          height: 15,
+        ),
         Container(
           height: 15,
           child: DotsIndicator(
