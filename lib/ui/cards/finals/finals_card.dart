@@ -91,6 +91,7 @@ class FinalsCard extends StatelessWidget {
       // Re-enable scrolling if content overflows space
 //        physics: NeverScrollableScrollPhysics(),
         children: listToReturn,
+        shrinkWrap: true,
     );
   }
 
