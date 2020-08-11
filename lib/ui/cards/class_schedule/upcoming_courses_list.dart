@@ -19,7 +19,14 @@ class UpcomingCoursesList extends StatelessWidget {
     List<Widget> listOfCourses = List.generate(data.length, (int index) {
       return buildTile(index, selectedCourse, data[index], context);
     });
-    return ListView(children: listOfCourses, shrinkWrap: true,);
+    return Container(
+        constraints:
+            BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.3),
+        //height: MediaQuery.of(context).size.height,
+        child: ListView(
+          children: listOfCourses,
+          shrinkWrap: true,
+        ));
   }
 
   Widget buildTile(
