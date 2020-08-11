@@ -18,7 +18,7 @@ class ParkingDataProvider extends ChangeNotifier {
   DateTime _lastUpdated;
   String _error;
   int selected; //Keep less than 10
-  final MAX_SELECTED = 10;
+  static const MAX_SELECTED = 10;
 
   ///MODELS
   Map<String, ParkingModel> _parkingModels;

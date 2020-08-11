@@ -1,5 +1,4 @@
 import 'package:campus_mobile_experimental/core/data_providers/spot_types_data_provider.dart';
-import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/spot_types_model.dart';
 import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 import 'package:flutter/material.dart';
@@ -7,36 +6,25 @@ import 'package:provider/provider.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
 
 class SpotTypesView extends StatelessWidget {
-  SpotTypesDataProvider _spotTypesDataProvider;
-  // UserDataProvider _userDataProvider;
+  SpotTypesDataProvider spotTypesDataProvider;
   @override
   Widget build(BuildContext context) {
-    _spotTypesDataProvider = Provider.of<SpotTypesDataProvider>(context);
-    // _userDataProvider = Provider.of<UserDataProvider>(context);
+    spotTypesDataProvider = Provider.of<SpotTypesDataProvider>(context);
     return ContainerView(
-      child: createListWidget(_spotTypesDataProvider.spotTypeModel),
+      child: createListWidget(context),
     );
   }
 
-  Widget createListWidget(SpotTypeModel model) {
-    return ListView(children: createList(model));
+  Widget createListWidget(BuildContext context) {
+    return ListView(children: createList(context));
   }
 
-  Widget _buildLoadingIndicator() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        CircularProgressIndicator(),
-      ],
-    );
-  }
-
-  List<Widget> createList(SpotTypeModel model) {
+  List<Widget> createList(BuildContext context) {
     List<Widget> list = List<Widget>();
-    // _spotTypesDataProvider.fetchSpotTypes();
-    for (Spot data in model.spots) {
+    for (Spot data in spotTypesDataProvider.spotTypeModel.spots) {
       print(data.spotKey);
       list.add(ListTile(
+        key: Key(data.spotKey.toString()),
         leading: Container(
             width: 35, // TODO add responsive units
             height: 35,
@@ -44,19 +32,17 @@ class SpotTypesView extends StatelessWidget {
                 shape: BoxShape.circle,
                 image: new DecorationImage(
                     fit: BoxFit.fill,
-                    image:
-                        new NetworkImage("https://i.imgur.com/wQYnFtM.jpg")))),
-//        leading: Icon(Icons.reorder),
-        key: Key(data.spotKey),
+                    image: new NetworkImage(
+                        "https://i.imgur.com/wQYnFtM.jpg")))), //TODO
         title: Text(data.name),
-        // trailing: Switch(
-        //   value: _userDataProvider
-        //       .userProfileModel.selectedParkingSpots[data.spotKey],
-        //   onChanged: (_) {
-        //     _userDataProvider.toggleSpotTypeSelection(data.spotKey);
-        //   },
-          // activeColor: ColorPrimary,
-        // ),
+        trailing: Switch(
+          value: Provider.of<SpotTypesDataProvider>(context)
+              .spotTypesState[data.spotKey],
+          onChanged: (_) {
+            spotTypesDataProvider.toggleSpotSelection(data.spotKey);
+          },
+          activeColor: ColorPrimary,
+        ),
       ));
     }
     return list;
