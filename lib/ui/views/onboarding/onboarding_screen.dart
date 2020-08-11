@@ -57,11 +57,16 @@ class OnboardingScreen extends StatelessWidget {
                     alignment: Alignment.bottomCenter,
                     child: RaisedButton(
                       color: ColorPrimary,
+//                      onPressed: () async {
+//                        Navigator.pushNamedAndRemoveUntil(context,
+//                            RoutePaths.BottomNavigationBar, (_) => false);
+//                        final prefs = await SharedPreferences.getInstance();
+//                        prefs.setBool('showOnboardingScreen', false);
+//                      },
                       onPressed: () async {
-                        Navigator.pushNamedAndRemoveUntil(context,
-                            RoutePaths.BottomNavigationBar, (_) => false);
+                        Navigator.pushNamed(
+                            context, RoutePaths.OnboardingAffiliations);
                         final prefs = await SharedPreferences.getInstance();
-                        prefs.setBool('showOnboardingScreen', false);
                       },
                       child: Text(
                         "Get Started",
