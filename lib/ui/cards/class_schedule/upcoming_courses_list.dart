@@ -22,7 +22,6 @@ class UpcomingCoursesList extends StatelessWidget {
     return Container(
         constraints:
             BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.3),
-        //height: MediaQuery.of(context).size.height,
         child: ListView(
           children: listOfCourses,
           shrinkWrap: true,

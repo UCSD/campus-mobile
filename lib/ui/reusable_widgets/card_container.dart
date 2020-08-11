@@ -99,29 +99,21 @@ class CardContainer extends StatelessWidget {
       );
     } else if (titleText == "COVID-19 Info" ||
         titleText == "COVID-19 Info" ||
-        titleText == "Campus Information") {
+        titleText == "Campus Information") { // web cards are still sized with static values
       return Container(
         width: double.infinity,
         constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 120),
         child: child(),
       ); }
-//     else if (titleText == "Student ID" || titleText == "Staff ID") {
-////      return Container(
-////        width: double.infinity,
-//////        height: 200.0,
-////       // constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 180),
-////        child: child(),
-////      );
-////    } else if (titleText == "Classes") {
-////      return Container(
-////        width: double.infinity,
-////        //constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 200),
-////        child: child(),
-////      ); }
+    else if (titleText == "Staff ID"){ // web cards are still sized with static values
+      return Container(
+        width: double.infinity,
+        constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 190),
+        child: child(),
+      ); }
     else {
       return Container(
         width: double.infinity,
-       //constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 340),
         child: child(),
       );
     }

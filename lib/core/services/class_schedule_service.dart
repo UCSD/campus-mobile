@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 
 class ClassScheduleService {
   final String academicTermEndpoint =
-      'https://ucsd-mobile-dev.s3-us-west-1.amazonaws.com/mock-apis/academic/SP20.json';
+      'https://btgre7sss6.execute-api.us-west-2.amazonaws.com/prod/v1/term/current';
   final String myAcademicHistoryApiEndpoint =
       'https://api-qa.ucsd.edu:8243/student/my/academic_history/v1/class_list';
   bool _isLoading = false;
