@@ -56,7 +56,7 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
     return Column(
       children: <Widget>[
         Container(
-          height: 250,
+          height: 200,
           child: PageView(
             controller: _controller,
             children: locationsList,
