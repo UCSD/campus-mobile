@@ -29,43 +29,56 @@ class _OnboardingScreen extends State<OnboardingScreen> {
           pageSnapping: true,
           controller: _controller,
           children: [
-            Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Expanded(
-                    child: Container(
+            Stack(children: <Widget>[
+              Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    // Expanded(
+                    Container(
+                      height: MediaQuery.of(context).size.height / 2 - 50,
                       color: Colors.purple,
                     ),
-                  ),
-                  Expanded(
-                      child: Container(
-                    width: 350,
-                    color: Colors.white,
-                    child: Center(
-                        child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                          Text(
-                            "Make the most out of your CAMPUS CONNECTIONS",
-                            style: TextStyle(
-                                color: ColorPrimary,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 25),
-                            textAlign: TextAlign.center,
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 10),
-                          ),
-                          Text(
-                            "your trusted, on-the-go, location-based campus resource for all things Triton.",
-                            style: TextStyle(
-                                color: ColorPrimary.withOpacity(0.7),
-                                fontSize: 18),
-                            textAlign: TextAlign.center,
-                          ),
-                        ])),
-                  ))
-                ]),
+                    //),
+                    Expanded(
+                        child: Container(
+                      width: 350,
+                      color: Colors.white,
+                      child: Center(
+                          child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                            Text(
+                              "Make the most out of your CAMPUS CONNECTIONS",
+                              style: TextStyle(
+                                  color: ColorPrimary,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 25),
+                              textAlign: TextAlign.center,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 10),
+                            ),
+                            Text(
+                              "your trusted, on-the-go, location-based campus resource for all things Triton.",
+                              style: TextStyle(
+                                  color: ColorPrimary.withOpacity(0.7),
+                                  fontSize: 18),
+                              textAlign: TextAlign.center,
+                            ),
+                          ])),
+                    ))
+                  ]),
+              Container(
+                  // alignment: Alignment.centerLeft,
+                  padding: new EdgeInsets.only(left: 15.0, top: 110.0),
+                  child: new Container(
+                      height: 300.0,
+                      width: 200.0,
+                      child: new Card(
+                        color: Colors.red,
+                        elevation: 8.0,
+                      )))
+            ]),
             Container(
                 color: Colors.orange,
                 child: Center(
@@ -97,7 +110,7 @@ class _OnboardingScreen extends State<OnboardingScreen> {
           },
         ),
         Container(
-          height: 80,
+          height: 60,
           color: Colors.white,
         ),
         Container(
