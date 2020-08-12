@@ -224,7 +224,7 @@ packages:
       name: dots_indicator
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0"
+    version: "1.2.0"
   encrypt:
     dependency: "direct main"
     description:
