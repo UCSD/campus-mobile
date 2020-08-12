@@ -2,6 +2,7 @@ import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/debug/build_info.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/dots_indicator.dart';
 import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
+import 'package:campus_mobile_experimental/ui/views/onboarding/onboarding_affiliations.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -126,9 +127,8 @@ class _OnboardingScreen extends State<OnboardingScreen> {
                       child: FlatButton(
                     color: ColorPrimary,
                     onPressed: () {
-                      Navigator.pushNamed(
-                          context, RoutePaths.OnboardingAffiliations);
-                    },
+                      Navigator.of(context).push(_routeToAffiliations());
+                      },
                     child: Text(
                       "Get Started",
                       style: TextStyle(
@@ -141,7 +141,7 @@ class _OnboardingScreen extends State<OnboardingScreen> {
                     child: FlatButton(
                       color: ColorPrimary,
                       onPressed: () {
-                        Navigator.of(context).push(_createRoute());
+                        Navigator.of(context).push(_routeToLogin());
                       },
                       child: Text(
                         "Log In",
@@ -196,10 +196,29 @@ class _OnboardingScreen extends State<OnboardingScreen> {
           */
   }
 
-  Route _createRoute() {
+  Route _routeToLogin() {
     return PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) => OnboardingLogin(),
-      transitionDuration: Duration(milliseconds: 500),
+      transitionDuration: Duration(milliseconds: 400),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        var begin = Offset(0.0, 1.0);
+        var end = Offset.zero;
+        var curve = Curves.ease;
+
+        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
+    );
+  }
+
+  Route _routeToAffiliations() {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => OnboardingAffiliations(),
+      transitionDuration: Duration(milliseconds: 400),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         var begin = Offset(0.0, 1.0);
         var end = Offset.zero;
