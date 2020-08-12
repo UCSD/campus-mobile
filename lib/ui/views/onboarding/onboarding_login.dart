@@ -45,166 +45,156 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Flexible(
-              child: Image.asset(
-                'assets/images/UCSanDiegoLogo-nav.png',
-                fit: BoxFit.contain,
-                height: 50,
-                color: Colors.white,
-              ),
+            Image.asset(
+              'assets/images/UCSanDiegoLogo-nav.png',
+              fit: BoxFit.contain,
+              height: 50,
+              color: Colors.white,
             ),
             SizedBox(height: 100.0),
             Padding(
                 padding: EdgeInsets.only(top: 0.0),
-                child: Flexible(
-                  child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(100)),
-                        color: Theme.of(context)
-                            .accentColor), //lightTextFieldBorderColor,
-                    child: TextField(
-                      style: TextStyle(
-                          textBaseline: TextBaseline.alphabetic,
-                          color: Colors.black),
-                      decoration: InputDecoration(
-                        hintText: 'UCSD Email',
-                        focusedBorder: OutlineInputBorder(
-                          /*borderSide: BorderSide(
-                            color: Colors.black,
-                          ),*/
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          /*borderSide: BorderSide(
-                            color: Colors.black,
-                          ),*/
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                        ),
-                        contentPadding: EdgeInsets.only(left: 10),
-                        hintStyle: TextStyle(color: ColorPrimary),
-                        fillColor: Colors.white,
-                        filled: true,
+                child: Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(100)),
+                      color: Theme.of(context)
+                          .accentColor), //lightTextFieldBorderColor,
+                  child: TextField(
+                    style: TextStyle(
+                        textBaseline: TextBaseline.alphabetic,
+                        color: Colors.black),
+                    decoration: InputDecoration(
+                      hintText: 'UCSD Email',
+                      focusedBorder: OutlineInputBorder(
+                        /*borderSide: BorderSide(
+                          color: Colors.black,
+                        ),*/
+                        borderRadius: BorderRadius.all(Radius.circular(5)),
                       ),
-                      keyboardType: TextInputType.emailAddress,
-                      controller: _emailTextFieldController,
+                      enabledBorder: OutlineInputBorder(
+                        /*borderSide: BorderSide(
+                          color: Colors.black,
+                        ),*/
+                        borderRadius: BorderRadius.all(Radius.circular(5)),
+                      ),
+                      contentPadding: EdgeInsets.only(left: 10),
+                      hintStyle: TextStyle(color: ColorPrimary),
+                      fillColor: Colors.white,
+                      filled: true,
                     ),
+                    keyboardType: TextInputType.emailAddress,
+                    controller: _emailTextFieldController,
                   ),
                 )),
             SizedBox(height: 15),
-            Flexible(
-              child: Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(100)),
-                    color: Theme.of(context).accentColor),
-                child: TextField(
-                  style: TextStyle(
-                    textBaseline: TextBaseline.alphabetic,
-                    color: Colors.black,
-                  ),
-                  decoration: InputDecoration(
-                    hintText: 'Password',
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.black,
-                      ),
-                      borderRadius: BorderRadius.all(Radius.circular(5)),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.black,
-                      ),
-                      borderRadius: BorderRadius.all(Radius.circular(5)),
-                    ),
-                    contentPadding: EdgeInsets.only(left: 10),
-                    hintStyle: TextStyle(color: ColorPrimary),
-                    fillColor: Colors.white,
-                    filled: true,
-                  ),
-                  obscureText: true,
-                  controller: _passwordTextFieldController,
+            Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(100)),
+                  color: Theme.of(context).accentColor),
+              child: TextField(
+                style: TextStyle(
+                  textBaseline: TextBaseline.alphabetic,
+                  color: Colors.black,
                 ),
+                decoration: InputDecoration(
+                  hintText: 'Password',
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.black,
+                    ),
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.black,
+                    ),
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                  ),
+                  contentPadding: EdgeInsets.only(left: 10),
+                  hintStyle: TextStyle(color: ColorPrimary),
+                  fillColor: Colors.white,
+                  filled: true,
+                ),
+                obscureText: true,
+                controller: _passwordTextFieldController,
               ),
             ),
             SizedBox(height: 40),
             Padding(
                 padding: EdgeInsets.only(top: 30.0),
-                child: Flexible(
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                          child: FlatButton(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                          side: BorderSide(color: Colors.white),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                        child: FlatButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                        side: BorderSide(color: Colors.white),
+                      ),
+                      color: ColorPrimary,
+                      textColor: lightButtonTextColor,
+                      //child: OutlineButton(
+                      //borderSide: BorderSide(color: ColorPrimary),
+                      child: Text(
+                        'Log in',
+                        style: TextStyle(
+                          color: Colors.white,
+                          decoration: TextDecoration.underline,
                         ),
-                        color: ColorPrimary,
-                        textColor: lightButtonTextColor,
-                        //child: OutlineButton(
-                        //borderSide: BorderSide(color: ColorPrimary),
-                        child: Text(
-                          'Log in',
-                          style: TextStyle(
-                            color: Colors.white,
-                            decoration: TextDecoration.underline,
-                          ),
-                        ),
-                        onPressed: _userDataProvider.isLoading
-                            ? null
-                            : () {
-                                _userDataProvider
-                                    .login(_emailTextFieldController.text,
-                                        _passwordTextFieldController.text)
-                                    .then((isLoggedIn) async {
-                                  if (isLoggedIn) {
-                                    Navigator.pushNamedAndRemoveUntil(
-                                        context,
-                                        RoutePaths.BottomNavigationBar,
-                                        (_) => false);
-                                    final prefs =
-                                        await SharedPreferences.getInstance();
-                                    prefs.setBool(
-                                        'showOnboardingScreen', false);
-                                  } else {
-                                    showAlertDialog(context);
-                                  }
-                                });
-                              },
+                      ),
+                      onPressed: _userDataProvider.isLoading
+                          ? null
+                          : () {
+                              _userDataProvider
+                                  .login(_emailTextFieldController.text,
+                                      _passwordTextFieldController.text)
+                                  .then((isLoggedIn) async {
+                                if (isLoggedIn) {
+                                  Navigator.pushNamedAndRemoveUntil(
+                                      context,
+                                      RoutePaths.BottomNavigationBar,
+                                      (_) => false);
+                                  final prefs =
+                                      await SharedPreferences.getInstance();
+                                  prefs.setBool(
+                                      'showOnboardingScreen', false);
+                                } else {
+                                  showAlertDialog(context);
+                                }
+                              });
+                            },
 
-                        // ),
-                      )),
-                    ],
-                  ),
+                      // ),
+                    )),
+                  ],
                 )),
             SizedBox(height: 5),
-            Flexible(
-              child: Row(
-                children: [
-                  GestureDetector(
-                    child: Text(
-                      'Need help logging in?',
-                      style: TextStyle(color: Colors.white, fontSize: 12),
-                    ),
-                    onTap: () async {
-                      String link =
-                          'https://acms.ucsd.edu/students/accounts-and-passwords/index.html';
-                      if (await canLaunch(link)) {
-                        await launch(link);
-                      }
-                    },
+            Row(
+              children: [
+                GestureDetector(
+                  child: Text(
+                    'Need help logging in?',
+                    style: TextStyle(color: Colors.white, fontSize: 12),
                   ),
-                  GestureDetector(
-                    child: Text(
-                      'Skip',
-                      style: TextStyle(color: Colors.white, fontSize: 12),
-                    ),
-                    onTap: () {
-                      Navigator.pushNamedAndRemoveUntil(context,
-                          RoutePaths.BottomNavigationBar, (_) => false);
-                    },
-                  )
-                ],
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              ),
+                  onTap: () async {
+                    String link =
+                        'https://acms.ucsd.edu/students/accounts-and-passwords/index.html';
+                    if (await canLaunch(link)) {
+                      await launch(link);
+                    }
+                  },
+                ),
+                GestureDetector(
+                  child: Text(
+                    'Skip',
+                    style: TextStyle(color: Colors.white, fontSize: 12),
+                  ),
+                  onTap: () {
+                    Navigator.pushNamedAndRemoveUntil(context,
+                        RoutePaths.BottomNavigationBar, (_) => false);
+                  },
+                )
+              ],
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
             ),
           ],
         ),
