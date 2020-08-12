@@ -1,3 +1,4 @@
+import 'package:campus_mobile_experimental/core/data_providers/parking_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/spot_types_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/spot_types_model.dart';
 import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
@@ -6,10 +7,10 @@ import 'package:provider/provider.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
 
 class SpotTypesView extends StatelessWidget {
-  SpotTypesDataProvider spotTypesDataProvider;
+  ParkingDataProvider spotTypesDataProvider;
   @override
   Widget build(BuildContext context) {
-    spotTypesDataProvider = Provider.of<SpotTypesDataProvider>(context);
+    spotTypesDataProvider = Provider.of<ParkingDataProvider>(context);
     return ContainerView(
       child: createListWidget(context),
     );
@@ -36,7 +37,7 @@ class SpotTypesView extends StatelessWidget {
                         "https://i.imgur.com/wQYnFtM.jpg")))), //TODO
         title: Text(data.name),
         trailing: Switch(
-          value: Provider.of<SpotTypesDataProvider>(context)
+          value: Provider.of<ParkingDataProvider>(context)
               .spotTypesState[data.spotKey],
           onChanged: (_) {
             spotTypesDataProvider.toggleSpotSelection(data.spotKey);

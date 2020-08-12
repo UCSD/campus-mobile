@@ -90,9 +90,18 @@
             content: attr(data-percent)"%";
         }
     </style>
+    <% if(typeof(cardWidth) != "undefined") {%>
+    <script>
+        function resizeWindow() {
+            window.resizeTo(<%= cardWidth %>, <%= cardHeight %>);
+        }
+        window.onload = resizeWindow;
+        window.onresize = resizeWindow;
+    </script>
+    <% } %>
 </head>
 
-<% if(lotName) {%>
+<% if(typeof(lotName) != "undefined") {%>
 
 <body>
     <div id="wrapper">
@@ -104,7 +113,7 @@
         <center>
             <p class="total_spots"><%= totalSpaces %></p>
         </center>
-        <% if(isHistoric) {%>
+        <% if(typeof(isHistoric) != "undefined") {%>
         <center>
             <b>⚠ No Live Data. Estimated availability shown. </b>
         </center>
@@ -112,7 +121,7 @@
         <% }else {%>
         <h1>No lot specified</h1>
         <%}%>
-            <% if(numSpots && numSpots >= 1) {%>
+            <% if(typeof(numSpots) != "undefined" && numSpots >= 1) {%>
         <script> document.documentElement.style.setProperty('--numComponents', <%= numSpots %>)</script>
         <div class="row">
             <%- include('partials/parkingComponent', {spotTypeContext: spot0}) %>

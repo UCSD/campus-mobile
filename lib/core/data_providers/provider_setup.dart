@@ -12,7 +12,6 @@ import 'package:campus_mobile_experimental/core/data_providers/notices_data_prov
 import 'package:campus_mobile_experimental/core/data_providers/parking_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/push_notifications_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/special_events_data_provider.dart';
-import 'package:campus_mobile_experimental/core/data_providers/spot_types_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/student_id_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/surf_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
@@ -184,6 +183,7 @@ List<SingleChildWidget> dependentServices = [
       create: (_) {
     var parkingDataProvider = ParkingDataProvider();
     parkingDataProvider.fetchParkingLots();
+    parkingDataProvider.fetchSpotTypes();
     return parkingDataProvider;
   }, update: (_, userDataProvider, parkingDataProvider) {
     //   parkingDataProvider.userDataProvider = userDataProvider;
@@ -211,14 +211,6 @@ List<SingleChildWidget> dependentServices = [
   }, update: (_, userDataProvider, availabilityDataProvider) {
     availabilityDataProvider.userDataProvider = userDataProvider;
     return availabilityDataProvider;
-  }),
-  ChangeNotifierProxyProvider<UserDataProvider, SpotTypesDataProvider>(
-      create: (_) {
-    var spotTypeDataProvider = SpotTypesDataProvider();
-    spotTypeDataProvider..fetchSpotTypes();
-    return spotTypeDataProvider;
-  }, update: (_, userDataProvider, spotTypesDataProvider) {
-    return spotTypesDataProvider;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, MessagesDataProvider>(
     create: (_) {

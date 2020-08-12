@@ -1,5 +1,4 @@
 const serverless = require("serverless-http");
-const functions = require("firebase-functions");
 const express = require("express");
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 const app = express();
@@ -13,15 +12,6 @@ app.set("view engine", "ejs");
 // https://cqeg04fl07.execute-api.us-west-2.amazonaws.com/parking?lot=P406&spots=A,B,S
 // http://localhost:5000/parking?lot=P406&spots=A,B,S
 app.get("/parking", function (req, res) {
-  let loc = app.locals; //shorthand
-  loc.lotName = undefined;
-  loc.lotContext = undefined;
-  loc.totalSpaces = undefined;
-  loc.numSpots = undefined;
-  loc.spot0 = undefined;
-  loc.spot1 = undefined;
-  loc.spot2 = undefined;
-  loc.isHistoric = false;
   if (!req.query.lot) {
     res.render("parking");
   }
@@ -29,33 +19,34 @@ app.get("/parking", function (req, res) {
   const url =
     "https://4pefyt8qv7.execute-api.us-west-2.amazonaws.com/dev/parking/v1.1/status/" +
     lotID;
-  //multiple
-  //for each lot
   var client = new HttpClient();
   client.get(url, (response) => {
     var lotInfo = JSON.parse(response);
     const availability = Object.entries(lotInfo["Availability"]);
-    loc.lotName = lotInfo["LocationName"];
-    loc.lotContext = lotInfo["LocationContext"];
+    const lotName = lotInfo["LocationName"];
+    const lotContext = lotInfo["LocationContext"];
+    var isHistoric;
     lotInfo["LocationProvider"] == "Historic"
-      ? (loc.isHistoric = true)
-      : (loc.isHistoric = false);
+      ? (isHistoric = true)
+      : (isHistoric = false);
 
-    if (!req.query.spots) {
-      res.render("parking");
-    }
+    // if (!req.query.spots) {
+    //   res.render("parking");
+    // }
     let str = req.query.spots;
     const spotTypes = str.split(",");
 
-    loc.numSpots = spotTypes.length;
+    const numSpots = spotTypes.length;
 
-    if (spotTypes[0]) loc.spot0 = spotTypes[0];
-    if (spotTypes[1]) loc.spot1 = spotTypes[1];
-    if (spotTypes[2]) loc.spot2 = spotTypes[2];
+    var spot0, spot1, spot2
+
+    if (spotTypes[0]) spot0 = spotTypes[0];
+    if (spotTypes[1]) spot1 = spotTypes[1];
+    if (spotTypes[2]) spot2 = spotTypes[2];
 
     var totalSpots = 0;
     var lotData = {};
-    var availableData = {};
+    // var availableData = {};
     for (const [spotType, data] of availability) {
       //Iterate through all spot types in this parking lot data
       console.log(spotType);
@@ -63,8 +54,7 @@ app.get("/parking", function (req, res) {
         //User has selected this spot type and there are spots of these type in this lot
 
         totalSpots += parseInt(data["Total"]);
-        // loc.data[spotType] = data;
-        // console.log(data);
+
         lotData[spotType] = Math.floor(
           (100 * parseInt(data["Open"])) / parseInt(data["Total"])
         );
@@ -72,10 +62,24 @@ app.get("/parking", function (req, res) {
         //User has not selected this spot type
       }
     }
-    loc.totalSpacesData = lotData;
-    loc.totalSpaces = totalSpots;
+    totalSpacesData = lotData;
+    const totalSpaces = totalSpots;
 
-    res.render("parking");
+    const cardWidth = req.query.width ? parseInt(req.query.width) : 200;
+    const cardHeight = req.query.height ? parseInt(req.query.height) : 200;
+
+    res.render("parking", {
+      lotName: lotName ? lotName : undefined,
+      lotContext: lotContext ? lotContext : undefined,
+      totalSpaces: totalSpaces ? totalSpaces : undefined,
+      numSpots: numSpots ? numSpots : undefined,
+      spot0: spot0 ? spot0 : undefined,
+      spot1: spot1 ? spot1 : undefined,
+      spot2: spot2 ? spot2 : undefined,
+      isHistoric: isHistoric ? isHistoric : undefined,
+      cardWidth: cardWidth ? cardWidth : undefined,
+      cardHeight: cardHeight ? cardHeight : undefined,
+    });
   });
 });
 
@@ -92,5 +96,5 @@ var HttpClient = function () {
     anHttpRequest.send(null);
   };
 };
-//module.exports.handler = serverless(app);
-exports.app = functions.https.onRequest(app);
+module.exports.handler = serverless(app);
+// exports.app = functions.https.onRequest(app);
