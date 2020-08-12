@@ -138,13 +138,13 @@ class _OnboardingAffiliationsState extends State<OnboardingAffiliations> {
                     height: 50,
                     child: FlatButton(
                         color: darkButtonColor,
-                        disabledColor: ColorPrimary,
+                        disabledColor: Color(0xFF13223A),
                         disabledTextColor: Colors.grey,
                         textColor: ColorPrimary ,
                         shape: ContinuousRectangleBorder(
                             side: BorderSide(
-                                color: darkButtonColor,
-                                width: readyToProceed ? 1 : 0,
+                                color: readyToProceed ? darkButtonColor : ColorPrimary,
+                                width: 1,
                                 style: BorderStyle.solid)
                         ),
                         onPressed: !readyToProceed ? null : () async {
