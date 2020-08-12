@@ -37,9 +37,12 @@ class _OnboardingScreen extends State<OnboardingScreen> {
                   children: <Widget>[
                     // Expanded(
                     Container(
-                      height: MediaQuery.of(context).size.height / 2 - 50,
-                      color: Colors.purple,
-                    ),
+                        height: MediaQuery.of(context).size.height / 2 - 50,
+                        decoration: new BoxDecoration(
+                            image: DecorationImage(
+                          image: AssetImage('assets/images/students.png'),
+                          fit: BoxFit.fill,
+                        ))),
                     //),
                     Expanded(
                         child: Container(
@@ -71,15 +74,17 @@ class _OnboardingScreen extends State<OnboardingScreen> {
                     ))
                   ]),
               Container(
-                  // alignment: Alignment.centerLeft,
-                  padding: new EdgeInsets.only(left: 15.0, top: 110.0),
-                  child: new Container(
-                      height: 300.0,
-                      width: 200.0,
-                      child: new Card(
-                        color: Colors.red,
-                        elevation: 8.0,
-                      )))
+                // alignment: Alignment.centerLeft,
+                padding: EdgeInsets.only(left: 15.0, top: 140.0),
+                child: Container(
+                    height: 290.0,
+                    width: 180.0,
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                      image: AssetImage('assets/images/app_preview.png'),
+                      fit: BoxFit.fill,
+                    ))),
+              )
             ]),
             Container(
                 color: Colors.orange,
@@ -198,14 +203,16 @@ class _OnboardingScreen extends State<OnboardingScreen> {
 
   Route _createRoute() {
     return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => OnboardingLogin(),
+      pageBuilder: (context, animation, secondaryAnimation) =>
+          OnboardingLogin(),
       transitionDuration: Duration(milliseconds: 500),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         var begin = Offset(0.0, 1.0);
         var end = Offset.zero;
         var curve = Curves.ease;
 
-        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
         return SlideTransition(
           position: animation.drive(tween),
