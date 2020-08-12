@@ -72,10 +72,10 @@ class _OnboardingScreen extends State<OnboardingScreen> {
               RaisedButton(
                 color: ColorPrimary,
                 onPressed: () {
-                  Navigator.pushNamed(context, RoutePaths.OnboardingLogin);
+                  Navigator.pushNamed(context, RoutePaths.OnboardingAffiliations);
                 },
                 child: Text(
-                  "Let's do it.",
+                  "Get Started",
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 22,
@@ -84,14 +84,11 @@ class _OnboardingScreen extends State<OnboardingScreen> {
               ),
               RaisedButton(
                 color: ColorPrimary,
-                onPressed: () async {
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, RoutePaths.BottomNavigationBar, (_) => false);
-                  final prefs = await SharedPreferences.getInstance();
-                  prefs.setBool('showOnboardingScreen', false);
+                onPressed: () {
+                  Navigator.pushNamed(context, RoutePaths.OnboardingLogin);
                 },
                 child: Text(
-                  "Skip for now.",
+                  "Login",
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 22,
