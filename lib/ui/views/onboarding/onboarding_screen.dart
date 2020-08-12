@@ -22,82 +22,164 @@ class _OnboardingScreen extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.grey,
-        body: Column(children: <Widget>[
-          Expanded(
-              child: PageView(
-            pageSnapping: true,
-            controller: _controller,
-            children: [
-              Container(
-                  color: Colors.red,
-                  child: Center(
+      backgroundColor: Colors.white,
+      body: Column(children: <Widget>[
+        Expanded(
+            child: PageView(
+          pageSnapping: true,
+          controller: _controller,
+          children: [
+            Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Expanded(
+                    child: Container(
+                      color: Colors.purple,
+                    ),
+                  ),
+                  Expanded(
+                      child: Container(
+                    width: 350,
+                    color: Colors.white,
+                    child: Center(
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                          Text(
+                            "Make the most out of your CAMPUS CONNECTIONS",
+                            style: TextStyle(
+                                color: ColorPrimary,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 25),
+                            textAlign: TextAlign.center,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 10),
+                          ),
+                          Text(
+                            "your trusted, on-the-go, location-based campus resource for all things Triton.",
+                            style: TextStyle(
+                                color: ColorPrimary.withOpacity(0.7),
+                                fontSize: 18),
+                            textAlign: TextAlign.center,
+                          ),
+                        ])),
+                  ))
+                ]),
+            Container(
+                color: Colors.orange,
+                child: Center(
+                  child: Text(
+                    "page 2",
+                    style: TextStyle(color: Colors.black),
+                  ),
+                )),
+            Container(
+                color: Colors.yellow,
+                child: Center(
+                  child: Text(
+                    "page 3",
+                    style: TextStyle(color: Colors.black),
+                  ),
+                )),
+          ],
+        )),
+        DotsIndicator(
+          color: Colors.grey,
+          controller: _controller,
+          itemCount: 3,
+          onPageSelected: (int index) {
+            _controller.animateToPage(
+              index,
+              duration: Duration(seconds: 1),
+              curve: Curves.ease,
+            );
+          },
+        ),
+        Container(
+          height: 80,
+          color: Colors.white,
+        ),
+        Container(
+            color: ColorPrimary,
+            height: 80,
+            child: Row(
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  Expanded(
+                      child: FlatButton(
+                    color: ColorPrimary,
+                    onPressed: () {
+                      Navigator.pushNamed(
+                          context, RoutePaths.OnboardingAffiliations);
+                    },
                     child: Text(
-                      "page 1",
-                      style: TextStyle(color: Colors.black),
+                      "Get Started",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
+                          decoration: TextDecoration.underline),
                     ),
                   )),
-              Container(
-                  color: Colors.orange,
-                  child: Center(
-                    child: Text(
-                      "page 2",
-                      style: TextStyle(color: Colors.black),
+                  Expanded(
+                    child: FlatButton(
+                      color: ColorPrimary,
+                      onPressed: () {
+                        Navigator.pushNamed(
+                            context, RoutePaths.OnboardingLogin);
+                      },
+                      child: Text(
+                        "Log In",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 22,
+                            decoration: TextDecoration.underline),
+                      ),
                     ),
-                  )),
-              Container(
-                  color: Colors.yellow,
-                  child: Center(
-                    child: Text(
-                      "page 3",
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  )),
-            ],
-          )),
-          DotsIndicator(
-            color: Colors.grey[50],
-            controller: _controller,
-            itemCount: 3,
-            onPageSelected: (int index) {
-              _controller.animateToPage(
-                index,
-                duration: Duration(seconds: 1),
-                curve: Curves.ease,
-              );
-            },
-          ),
+                  )
+                ]))
+      ]),
+    );
+
+    /*
           Container(
             child: Row(children: <Widget>[
-              RaisedButton(
-                color: ColorPrimary,
-                onPressed: () {
-                  Navigator.pushNamed(context, RoutePaths.OnboardingAffiliations);
-                },
-                child: Text(
-                  "Get Started",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 22,
-                      decoration: TextDecoration.underline),
+              Align(
+                  alignment: Alignment.bottomLeft,
+                  child: RaisedButton(
+                    color: ColorPrimary,
+                    onPressed: () {
+                      Navigator.pushNamed(
+                          context, RoutePaths.OnboardingAffiliations);
+                    },
+                    child: Text(
+                      "Get Started",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
+                          decoration: TextDecoration.underline),
+                    ),
+                  )),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: RaisedButton(
+                  color: ColorPrimary,
+                  onPressed: () {
+                    Navigator.pushNamed(context, RoutePaths.OnboardingLogin);
+                  },
+                  child: Text(
+                    "Login",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 22,
+                        decoration: TextDecoration.underline),
+                  ),
                 ),
-              ),
-              RaisedButton(
-                color: ColorPrimary,
-                onPressed: () {
-                  Navigator.pushNamed(context, RoutePaths.OnboardingLogin);
-                },
-                child: Text(
-                  "Login",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 22,
-                      decoration: TextDecoration.underline),
-                ),
-              ),
+              )
             ]),
           )
-        ]));
+          */
   }
 }
 
