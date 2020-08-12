@@ -32,11 +32,11 @@ class _OnboardingScreen extends State<OnboardingScreen> {
           pageSnapping: true,
           controller: _controller,
           children: [
+            ///PAGE 1 CONNECTIONS----------------------------------------------------
             Stack(children: <Widget>[
               Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    // Expanded(
                     Container(
                         height: MediaQuery.of(context).size.height / 2 - 50,
                         decoration: new BoxDecoration(
@@ -44,7 +44,6 @@ class _OnboardingScreen extends State<OnboardingScreen> {
                           image: AssetImage('assets/images/students.png'),
                           fit: BoxFit.fill,
                         ))),
-                    //),
                     Expanded(
                         child: Container(
                       width: 350,
@@ -75,7 +74,6 @@ class _OnboardingScreen extends State<OnboardingScreen> {
                     ))
                   ]),
               Container(
-                // alignment: Alignment.centerLeft,
                 padding: EdgeInsets.only(left: 15.0, top: 140.0),
                 child: Container(
                     height: 290.0,
@@ -87,22 +85,120 @@ class _OnboardingScreen extends State<OnboardingScreen> {
                     ))),
               )
             ]),
-            Container(
-                color: Colors.orange,
-                child: Center(
-                  child: Text(
-                    "page 2",
-                    style: TextStyle(color: Colors.black),
-                  ),
-                )),
-            Container(
-                color: Colors.yellow,
-                child: Center(
-                  child: Text(
-                    "page 3",
-                    style: TextStyle(color: Colors.black),
-                  ),
-                )),
+
+            ///PAGE 2 NEWS---------------------------------------------------------
+            Stack(children: <Widget>[
+              Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                        height: MediaQuery.of(context).size.height / 2 - 50,
+                        decoration: new BoxDecoration(
+                            image: DecorationImage(
+                          image: AssetImage(
+                              'assets/images/onboarding_news_background.png'),
+                          fit: BoxFit.fill,
+                        ))),
+                    Expanded(
+                        child: Container(
+                      width: 350,
+                      color: Colors.white,
+                      child: Center(
+                          child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                            Text(
+                              "Know what's going on",
+                              style: TextStyle(
+                                  color: ColorPrimary,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 25),
+                              textAlign: TextAlign.center,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 15),
+                            ),
+                            Text(
+                              "get campus news, updates, events, and notifcations on the go. Discover all the "
+                              "amazing events and happenings all around campus to keep you connected.",
+                              style: TextStyle(
+                                  color: ColorPrimary.withOpacity(0.7),
+                                  fontSize: 18),
+                              textAlign: TextAlign.center,
+                            ),
+                          ])),
+                    ))
+                  ]),
+              Container(
+                //alignment: Alignment.topRight,
+                padding: EdgeInsets.only(left: 190.0, top: 140.0),
+                child: Container(
+                    height: 290.0,
+                    width: 180.0,
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                      image: AssetImage('assets/images/news_preview.png'),
+                      fit: BoxFit.fill,
+                    ))),
+              )
+            ]),
+
+            ///PAGE 3 MAP----------------------------------------------------------
+            Stack(children: <Widget>[
+              Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                        height: MediaQuery.of(context).size.height / 2 - 50,
+                        decoration: new BoxDecoration(
+                            image: DecorationImage(
+                          image: AssetImage(
+                              'assets/images/onboarding_map_background.png'),
+                          fit: BoxFit.fill,
+                        ))),
+                    Expanded(
+                        child: Container(
+                      width: 350,
+                      color: Colors.white,
+                      child: Center(
+                          child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                            Text(
+                              "Find your way",
+                              style: TextStyle(
+                                  color: ColorPrimary,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 25),
+                              textAlign: TextAlign.center,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 15),
+                            ),
+                            Text(
+                              "Find nearby points of interest or go to our interactive campus map for more details about what's around you",
+                              style: TextStyle(
+                                  color: ColorPrimary.withOpacity(0.7),
+                                  fontSize: 18),
+                              textAlign: TextAlign.center,
+                            ),
+                          ])),
+                    ))
+                  ]),
+              Container(
+                alignment: Alignment.topCenter,
+                padding: EdgeInsets.only(top: 140.0),
+                child: Container(
+                    height: 290.0,
+                    width: 180.0,
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                      image: AssetImage(
+                          'assets/images/onboarding_map_preview.png'),
+                      fit: BoxFit.fill,
+                    ))),
+              )
+            ]),
           ],
         )),
         DotsIndicator(
