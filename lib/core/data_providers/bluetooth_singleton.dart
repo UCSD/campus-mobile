@@ -3,6 +3,8 @@ import 'dart:collection';
 import 'dart:math' as math;
 import 'dart:math';
 import 'dart:convert';
+import 'package:dio/dio.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
@@ -23,10 +25,15 @@ class BluetoothSingleton {
 
   // Will add at the end, slows down scans
   final _storage = FlutterSecureStorage();
-
+  /// Initialize header
+  final Map<String, String> header = {
+    'Authorization':
+    'Bearer b00e7775-3e03-3fd4-af23-7d1e886c6b96'
+  };
   // Holders for location
   final NetworkHelper _networkHelper = NetworkHelper();
   String bluetoothConstantsEndpoint = "https://ucsd-its-wts-dev.s3-us-west-1.amazonaws.com/replatform/v1/bluetooth_constants.json";
+  String bluetoothCharacteristicsEndpoint = "https://api-qa.ucsd.edu:8243/bluetoothdevicecharacteristic/v1.0.0/servicenames/1";
 
   double previousLatitude = 0;
   double previousLongitude = 0;
@@ -43,7 +50,7 @@ class BluetoothSingleton {
 
   // Constant for scans
   int scanDuration = 2; //Seconds
-  var waitTime = 15; // Seconds
+  var waitTime = 15* 2; // Seconds
 
   // Tracker to enable location listener
   int enable = 0;
@@ -60,14 +67,18 @@ class BluetoothSingleton {
   Location location = Location();
   LocationData _currentLocation;
 
+  // Device Types
+  Map<String, dynamic> deviceTypes;
   //flutterBlueInstance.scan(timeout: Duration(seconds: scanDuration), allowDuplicates: false)
   factory BluetoothSingleton() {
     // bluetoothStream();
     return _bluetoothSingleton;
   }
 
-  init()  async {
 
+  init()  async {
+    deviceTypes = await fetchData();
+    print("Device map: ${deviceTypes.toString()}");
     await getData();
 
     // Set the minimum change to activate a new scan.
@@ -148,11 +159,12 @@ class BluetoothSingleton {
     processDevices();
   }
 
-  Future<void> processDevices()  async{
-    bool done = true;
-   // done =  connectDevices();
+  processDevices()  async{
+    List<String> newBufferList;
 
-    if(done) {
+    connectDevices();
+
+
       // Add the processed buffer to overall log
       loggedItems.insertAll(loggedItems.length, bufferList);
 
@@ -187,12 +199,14 @@ class BluetoothSingleton {
 
       // Clear previous scan results
       bufferList.clear();
-    }
+
+      scannedDevices.clear();
+
   }
 
-  bool connectDevices()  {
+  Future<bool> connectDevices() async  {
     scannedDevices.forEach((scanResult)  {
-      connectToDevice(scanResult);
+      extractBTServices(scanResult);
     });
     return true;
   }
@@ -208,25 +222,7 @@ class BluetoothSingleton {
     });
   }
 
-  void connectToDevice(ScanResult scanResult) async {
-    try {
-      scanResult.device.connect().then((value) {
-        scanResult.device.discoverServices().then((value){
-          value.forEach((element) {
-
-            /*element.characteristics.forEach((element) {
-              element.descriptors.forEach((element) {
-                bufferList.add(element.read());
-              });
-            });*/
-          });
-        });
-      });
-      scanResult.device.disconnect();
-    }catch(Exception){
-
-    }
-  }
+  
 
   void identifyDevices(ScanResult scanResult) {
     scannedObjects.update(scanResult.device.id.toString(), (value) {
@@ -285,33 +281,45 @@ class BluetoothSingleton {
               .toString() + " " + (calculatedUUID != null ? calculatedUUID : "") + " " + " Distance(ft): ${getDistance(scanResult.rssi)}" + "\n";
 
       // Add to frontend staging
-      bufferList.add(deviceLog);
-      scannedDevices.add(scanResult);
+      //bufferList.add(deviceLog);
 
+
+        bufferList.add("$deviceLog");
+        scannedDevices.add(scanResult);
+       //device.disconnect();
       // Store bt logs
       //_storage.write(key: _randomValue(), value: deviceLog);
 
      // connectToDevice(scanResult);
-       extractBTServices(scanResult);
+      //if(scanResult.advertisementData.connectable) {
+      //}
     }
   }
 
-  void extractBTServices(ScanResult scanResult) async {
+  Future<String> extractBTServices(ScanResult scanResult) async  {
     scanResult.device.connect().then((value) {
       scanResult.device.discoverServices().then((value) {
-        bufferList.add("SERVICES");
         value.forEach((element) {
-          element.
-          element.characteristics.forEach((element) {
-            element.descriptors.forEach((element) {
-              print(element.characteristicUuid);
+          if (element.uuid.toString().toUpperCase().contains("180A")) {
+            element.characteristics.forEach((element) {
+              if(element.toString().toUpperCase().contains("2A24")){
+              element.read().then((value) {
+                print("Device type: ${ascii.decode(value).toString()}");
+                return "Device type: ${ascii.decode(value).toString()}";
               });
-            });
+              }
+              });
+          }
           });
-        });
-      });
-  }
 
+       });
+    });
+  }
+  Future<Map> fetchData() async{
+    final response = await _networkHelper.authorizedFetch(bluetoothCharacteristicsEndpoint, header);
+
+    return json.decode(response);
+  }
 // Cancel ongoing scans to start a new one
   /*pauseScan() {
     ongoingScanner.cancel();
