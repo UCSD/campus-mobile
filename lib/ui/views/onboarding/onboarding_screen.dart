@@ -1,8 +1,9 @@
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/debug/build_info.dart';
-import 'package:campus_mobile_experimental/ui/reusable_widgets/dots_indicator.dart';
+//import 'package:campus_mobile_experimental/ui/reusable_widgets/dots_indicator.dart';
 import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 import 'package:campus_mobile_experimental/ui/views/onboarding/onboarding_affiliations.dart';
+import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -15,7 +16,19 @@ class OnboardingScreen extends StatefulWidget {
 
 class _OnboardingScreen extends State<OnboardingScreen> {
   final _controller = PageController();
+  double currentIndex = 0;
 
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(() {
+      if(_controller.page.round() != currentIndex) {
+        setState(() {
+          currentIndex = _controller.page;
+        });
+      }
+    });
+  }
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
@@ -202,16 +215,12 @@ class _OnboardingScreen extends State<OnboardingScreen> {
           ],
         )),
         DotsIndicator(
-          color: Colors.grey,
-          controller: _controller,
-          itemCount: 3,
-          onPageSelected: (int index) {
-            _controller.animateToPage(
-              index,
-              duration: Duration(seconds: 1),
-              curve: Curves.ease,
-            );
-          },
+          dotsCount: 3,
+          position: currentIndex,
+          decorator: DotsDecorator(
+            activeColor: ColorPrimary,
+            spacing: EdgeInsets.all(4.0)
+          ),
         ),
         Container(
           height: 60,
