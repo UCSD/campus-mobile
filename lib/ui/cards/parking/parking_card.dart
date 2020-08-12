@@ -21,7 +21,7 @@ class _ParkingCardState extends State<ParkingCard> {
   _ParkingCardState();
   ParkingDataProvider _parkingDataProvider;
   final _controller = new PageController();
-  // WebViewController _controller;
+  WebViewController _webViewController;
 
   @override
   void didChangeDependencies() {
@@ -65,10 +65,20 @@ class _ParkingCardState extends State<ParkingCard> {
           print(url);
           selectedLotsViews.add(WebView(
             initialUrl: url,
+            javascriptMode: JavascriptMode.unrestricted,
+            onWebViewCreated: (controller) {
+              _webViewController = controller;
+            },
+            onPageFinished: (some) async {
+              double height = double.parse(await _webViewController
+                  .evaluateJavascript("window.innerHeight"));
+              print("\n\nHeight - " + height.toString());
+            },
           ));
         }
       }
     }
+
     return Column(
       children: <Widget>[
         Flexible(
