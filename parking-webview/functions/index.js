@@ -4,6 +4,7 @@ var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+// const functions = require("firebase-functions");
 
 app.set("view engine", "ejs");
 
@@ -33,12 +34,12 @@ app.get("/parking", function (req, res) {
     // if (!req.query.spots) {
     //   res.render("parking");
     // }
-    let str = req.query.spots;
+    let str = req.query.spots ? req.query.spots : "";
     const spotTypes = str.split(",");
 
     const numSpots = spotTypes.length;
 
-    var spot0, spot1, spot2
+    var spot0, spot1, spot2;
 
     if (spotTypes[0]) spot0 = spotTypes[0];
     if (spotTypes[1]) spot1 = spotTypes[1];
