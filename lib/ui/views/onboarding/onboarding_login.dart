@@ -27,6 +27,9 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0.0,
+      ),
       backgroundColor: lightPrimaryColor, // ColorPrimary, //Colors.white,
       body: _userDataProvider.isLoading
           ? Center(

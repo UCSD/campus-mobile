@@ -3,6 +3,8 @@ import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'onboarding_login.dart';
+
 
 class OnboardingAffiliations extends StatefulWidget {
   @override
@@ -18,6 +20,9 @@ class _OnboardingAffiliationsState extends State<OnboardingAffiliations> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0.0,
+      ),
       body: Container(
         color: ColorPrimary,
         alignment: Alignment.center,
@@ -144,8 +149,7 @@ class _OnboardingAffiliationsState extends State<OnboardingAffiliations> {
                         ),
                         onPressed: !readyToProceed ? null : () async {
                           if(studentSelected || staffSelected) {
-                            Navigator.pushNamed(
-                                context, RoutePaths.OnboardingLogin);
+                            Navigator.of(context).push(_createRoute());
                           }
                           else {
                             Navigator.pushNamedAndRemoveUntil(context,
@@ -166,6 +170,25 @@ class _OnboardingAffiliationsState extends State<OnboardingAffiliations> {
           ),
         ),
       ),
+    );
+  }
+
+  Route _createRoute() {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => OnboardingLogin(),
+      transitionDuration: Duration(milliseconds: 500),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        var begin = Offset(0.0, 1.0);
+        var end = Offset.zero;
+        var curve = Curves.ease;
+
+        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
     );
   }
 }
