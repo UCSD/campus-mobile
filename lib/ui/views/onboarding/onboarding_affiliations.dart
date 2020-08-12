@@ -48,8 +48,8 @@ class _OnboardingAffiliationsState extends State<OnboardingAffiliations> {
                   width: double.infinity,
                   height: 45,
                   child: FlatButton(
-                    color: studentSelected ? ColorPrimary : darkButtonColor,
-                    textColor: studentSelected ? darkButtonColor : ColorPrimary,
+                    color: studentSelected ? darkButtonColor : ColorPrimary,
+                    textColor: studentSelected ? ColorPrimary : darkButtonColor,
                     shape: ContinuousRectangleBorder(
                         side: BorderSide(
                             color: darkButtonColor,
@@ -77,8 +77,8 @@ class _OnboardingAffiliationsState extends State<OnboardingAffiliations> {
                   width: double.infinity,
                   height: 45,
                   child: FlatButton(
-                      color: staffSelected ? ColorPrimary : darkButtonColor,
-                      textColor: staffSelected ? darkButtonColor : ColorPrimary,
+                      color: staffSelected ? darkButtonColor : ColorPrimary,
+                      textColor: staffSelected ? ColorPrimary : darkButtonColor,
                       shape: ContinuousRectangleBorder(
                           side: BorderSide(
                               color: darkButtonColor,
@@ -106,8 +106,8 @@ class _OnboardingAffiliationsState extends State<OnboardingAffiliations> {
                   width: double.infinity,
                   height: 45,
                   child: FlatButton(
-                      color: visitorSelected ? ColorPrimary : darkButtonColor,
-                      textColor: visitorSelected ? darkButtonColor : ColorPrimary,
+                      color: visitorSelected ? darkButtonColor : ColorPrimary,
+                      textColor: visitorSelected ? ColorPrimary : darkButtonColor,
                       shape: ContinuousRectangleBorder(
                           side: BorderSide(
                               color: darkButtonColor,
@@ -137,10 +137,10 @@ class _OnboardingAffiliationsState extends State<OnboardingAffiliations> {
                     width: double.infinity,
                     height: 50,
                     child: FlatButton(
-                        color: ColorPrimary,
+                        color: darkButtonColor,
                         disabledColor: ColorPrimary,
                         disabledTextColor: Colors.grey,
-                        textColor: darkButtonColor ,
+                        textColor: ColorPrimary ,
                         shape: ContinuousRectangleBorder(
                             side: BorderSide(
                                 color: darkButtonColor,
