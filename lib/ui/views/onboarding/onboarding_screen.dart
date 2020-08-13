@@ -66,68 +66,65 @@ class _OnboardingScreen extends State<OnboardingScreen>
           controller: _controller,
           children: [
             ///PAGE 1 CONNECTIONS----------------------------------------------------
-            Stack(children: <Widget>[
-              Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                        height: MediaQuery.of(context).size.height * .46,
-                        decoration: new BoxDecoration(
-                            image: DecorationImage(
-                          image: AssetImage(
-                              'assets/images/onboarding_connections_background.png'),
-                          fit: BoxFit.fill,
-                        ))),
-                    Expanded(
-                        child: Container(
-                      width: width * 0.9,
-                      color: Colors.white,
-                      child: Center(
-                          child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                            Padding(padding: EdgeInsets.only(top: 40.0)),
-                            Text(
-                              "Make the most out of your CAMPUS CONNECTIONS",
-                              style: TextStyle(
-                                  color: ColorPrimary,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 25),
-                              textAlign: TextAlign.center,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 10),
-                            ),
-                            Text(
-                              "Your trusted, on-the-go, location-based campus resource for all things Triton.",
-                              style: TextStyle(
-                                  color: ColorPrimary.withOpacity(0.7),
-                                  fontSize: 18),
-                              textAlign: TextAlign.center,
-                            ),
-                          ])),
-                    ))
-                  ]),
-              Container(
-                padding: EdgeInsets.only(left: width * 0.03, top: height * 0.2),
-                child: Container(
-                    height: height * 0.35,
-                    width: width * 0.48,
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                      image: AssetImage('assets/images/app_preview.png'),
-                      fit: BoxFit.fill,
-                    ))),
-              )
-            ]),
-
-            ///PAGE 2 NEWS---------------------------------------------------------
             LayoutBuilder(
               builder: (context, constraints) {
                 final Size biggest = constraints.biggest;
                 final double smallLogo = 200;
                 final double bigLogo = 200;
                 return (Stack(children: <Widget>[
+                  Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                            height: MediaQuery.of(context).size.height * .46,
+                            decoration: new BoxDecoration(
+                                image: DecorationImage(
+                              image: AssetImage(
+                                  'assets/images/onboarding_connections_background.png'),
+                              fit: BoxFit.fill,
+                            ))),
+                        Expanded(
+                            child: Container(
+                          width: width * 0.9,
+                          color: Colors.white,
+                          child: Center(
+                              child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                Padding(padding: EdgeInsets.only(top: 40.0)),
+                                Text(
+                                  "Make the most out of your CAMPUS CONNECTIONS",
+                                  style: TextStyle(
+                                      color: ColorPrimary,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 25),
+                                  textAlign: TextAlign.center,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(top: 10),
+                                ),
+                                Text(
+                                  "Your trusted, on-the-go, location-based campus resource for all things Triton.",
+                                  style: TextStyle(
+                                      color: ColorPrimary.withOpacity(0.7),
+                                      fontSize: 18),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ])),
+                        ))
+                      ]),
+                  Container(
+                    padding:
+                        EdgeInsets.only(left: width * 0.03, top: height * 0.2),
+                    child: Container(
+                        height: height * 0.35,
+                        width: width * 0.48,
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                          image: AssetImage('assets/images/app_preview.png'),
+                          fit: BoxFit.fill,
+                        ))),
+                  ),
                   PositionedTransition(
                     rect: RelativeRectTween(
                       begin: RelativeRect.fromSize(
@@ -144,80 +141,82 @@ class _OnboardingScreen extends State<OnboardingScreen>
                         padding: const EdgeInsets.all(8.0),
                         child: FlutterLogo()),
                   ),
-                  Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Container(
-                            height: MediaQuery.of(context).size.height * .46,
-                            decoration: new BoxDecoration(
-                                image: DecorationImage(
-                              image: AssetImage(
-                                  'assets/images/onboarding_affiliation_background.png'),
-                              fit: BoxFit.fill,
-                            ))),
-                        Expanded(
-                            child: Container(
-                          width: width * 0.93,
-                          color: Colors.white,
-                          child: Center(
-                              child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                Padding(padding: EdgeInsets.only(top: 40.0)),
-                                Text(
-                                  "Made for students AND staff",
-                                  style: TextStyle(
-                                      color: ColorPrimary,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 24),
-                                  textAlign: TextAlign.center,
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(top: 10),
-                                ),
-                                Text(
-                                  "Log in now to gain access to personalized information",
-                                  style: TextStyle(
-                                      color: ColorPrimary.withOpacity(0.7),
-                                      fontSize: 20),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ])),
-                        ))
-                      ]),
-                  Column(children: <Widget>[
-                    Container(
-                      //alignment: Alignment.topRight,
-                      padding: EdgeInsets.only(
-                          left: width * 0.026, top: height * 0.22),
-                      child: Container(
-                          height: height * 0.14,
-                          width: width * 0.49,
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                            image:
-                                AssetImage('assets/images/student_profile.png'),
-                            fit: BoxFit.fill,
-                          ))),
-                    ),
-                    Container(
-                      //alignment: Alignment.topRight,
-                      padding: EdgeInsets.only(
-                          left: width * 0.026, top: height * 0.025),
-                      child: Container(
-                          height: height * 0.14,
-                          width: width * 0.49,
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                            image:
-                                AssetImage('assets/images/student_profile.png'),
-                            fit: BoxFit.fill,
-                          ))),
-                    )
-                  ])
                 ]));
               },
             ),
+
+            ///PAGE 2 NEWS---------------------------------------------------------
+            Stack(children: <Widget>[
+              Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                        height: MediaQuery.of(context).size.height * .46,
+                        decoration: new BoxDecoration(
+                            image: DecorationImage(
+                          image: AssetImage(
+                              'assets/images/onboarding_affiliation_background.png'),
+                          fit: BoxFit.fill,
+                        ))),
+                    Expanded(
+                        child: Container(
+                      width: width * 0.93,
+                      color: Colors.white,
+                      child: Center(
+                          child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                            Padding(padding: EdgeInsets.only(top: 40.0)),
+                            Text(
+                              "Made for students AND staff",
+                              style: TextStyle(
+                                  color: ColorPrimary,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 24),
+                              textAlign: TextAlign.center,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 10),
+                            ),
+                            Text(
+                              "Log in now to gain access to personalized information",
+                              style: TextStyle(
+                                  color: ColorPrimary.withOpacity(0.7),
+                                  fontSize: 20),
+                              textAlign: TextAlign.center,
+                            ),
+                          ])),
+                    ))
+                  ]),
+              Column(children: <Widget>[
+                Container(
+                  //alignment: Alignment.topRight,
+                  padding:
+                      EdgeInsets.only(left: width * 0.026, top: height * 0.22),
+                  child: Container(
+                      height: height * 0.14,
+                      width: width * 0.49,
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                        image: AssetImage('assets/images/student_profile.png'),
+                        fit: BoxFit.fill,
+                      ))),
+                ),
+                Container(
+                  //alignment: Alignment.topRight,
+                  padding:
+                      EdgeInsets.only(left: width * 0.026, top: height * 0.025),
+                  child: Container(
+                      height: height * 0.14,
+                      width: width * 0.49,
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                        image: AssetImage('assets/images/student_profile.png'),
+                        fit: BoxFit.fill,
+                      ))),
+                )
+              ]),
+            ]),
 
             ///PAGE 3 MAP----------------------------------------------------------
             Stack(children: <Widget>[
@@ -328,45 +327,6 @@ class _OnboardingScreen extends State<OnboardingScreen>
                 ]))
       ]),
     );
-
-    /*
-          Container(
-            child: Row(children: <Widget>[
-              Align(
-                  alignment: Alignment.bottomLeft,
-                  child: RaisedButton(
-                    color: ColorPrimary,
-                    onPressed: () {
-                      Navigator.pushNamed(
-                          context, RoutePaths.OnboardingAffiliations);
-                    },
-                    child: Text(
-                      "Get Started",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 22,
-                          decoration: TextDecoration.underline),
-                    ),
-                  )),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: RaisedButton(
-                  color: ColorPrimary,
-                  onPressed: () {
-                    Navigator.pushNamed(context, RoutePaths.OnboardingLogin);
-                  },
-                  child: Text(
-                    "Login",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 22,
-                        decoration: TextDecoration.underline),
-                  ),
-                ),
-              )
-            ]),
-          )
-          */
   }
 
   Route _routeToLogin() {
@@ -411,72 +371,3 @@ class _OnboardingScreen extends State<OnboardingScreen>
     );
   }
 }
-
-/*Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Image.asset(
-                  'assets/images/UCSanDiegoLogo-nav.png',
-                  fit: BoxFit.contain,
-                  height: 50,
-                ),
-                // SizedBox(height: 80),
-                /*  Padding(
-                    padding: const EdgeInsets.only(bottom: 26.0),
-                    child: Text(
-                      'Hello.',
-                      style: TextStyle(color: Colors.white, fontSize: 26),
-                    ),
-                  ),*/
-                Text(
-                  'Enter your login for a personalized experience.',
-                  style: TextStyle(color: Colors.white, fontSize: 18),
-                  textAlign: TextAlign.center,
-                ),
-                Expanded(
-                    child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: RaisedButton(
-                    color: ColorPrimary,
-                    onPressed: () {
-                      Navigator.pushNamed(context, RoutePaths.OnboardingLogin);
-                    },
-                    child: Text(
-                      "Let's do it.",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 22,
-                          decoration: TextDecoration.underline),
-                    ),
-                  ),
-                )),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: RaisedButton(
-                    color: ColorPrimary,
-                    onPressed: () async {
-                      Navigator.pushNamedAndRemoveUntil(context,
-                          RoutePaths.BottomNavigationBar, (_) => false);
-                      final prefs = await SharedPreferences.getInstance();
-                      prefs.setBool('showOnboardingScreen', false);
-                    },
-                    child: Text(
-                      "Skip for now.",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 22,
-                          decoration: TextDecoration.underline),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            flex: 2,
-          ),
-          //DebugBuildInfo(),
-        ],
-      ),
-    );
-  }
-  */
