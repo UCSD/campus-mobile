@@ -1,16 +1,14 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:convert';
 import 'dart:math' as math;
 import 'dart:math';
-import 'dart:convert';
-import 'package:dio/dio.dart';
-import 'package:http/http.dart' as http;
-import 'package:flutter/cupertino.dart';
+
+import 'package:campus_mobile_experimental/core/services/networking.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:location/location.dart';
-import 'package:campus_mobile_experimental/core/services/networking.dart';
 
 class BluetoothSingleton {
   // Hashmap to track time stamps
@@ -18,22 +16,25 @@ class BluetoothSingleton {
 
   // Internal Declaration
   static final BluetoothSingleton _bluetoothSingleton =
-  BluetoothSingleton._internal();
+      BluetoothSingleton._internal();
 
   //Flutter blue instance for scanning
   FlutterBlue flutterBlueInstance = FlutterBlue.instance;
 
   // Will add at the end, slows down scans
   final _storage = FlutterSecureStorage();
+
   /// Initialize header
   final Map<String, String> header = {
-    'Authorization':
-    'Bearer b00e7775-3e03-3fd4-af23-7d1e886c6b96'
+    'Authorization': 'Bearer 8e67e165-08ae-382f-87bc-7ec318d0b113'
   };
+
   // Holders for location
   final NetworkHelper _networkHelper = NetworkHelper();
-  String bluetoothConstantsEndpoint = "https://ucsd-its-wts-dev.s3-us-west-1.amazonaws.com/replatform/v1/bluetooth_constants.json";
-  String bluetoothCharacteristicsEndpoint = "https://api-qa.ucsd.edu:8243/bluetoothdevicecharacteristic/v1.0.0/servicenames/1";
+  String bluetoothConstantsEndpoint =
+      "https://ucsd-its-wts-dev.s3-us-west-1.amazonaws.com/replatform/v1/bluetooth_constants.json";
+  String bluetoothCharacteristicsEndpoint =
+      "https://api-qa.ucsd.edu:8243/bluetoothdevicecharacteristic/v1.0.0/servicenames/1";
 
   double previousLatitude = 0;
   double previousLongitude = 0;
@@ -44,13 +45,12 @@ class BluetoothSingleton {
   // Keep track of devices that meet our requirements
   int uniqueDevices = 0;
 
-
   // Dwell time threshold (10 minutes -> 600 seconds;
   int dwellTimeThreshold = 200;
 
   // Constant for scans
   int scanDuration = 2; //Seconds
-  var waitTime = 15* 2; // Seconds
+  var waitTime = 15; // Seconds
 
   // Tracker to enable location listener
   int enable = 0;
@@ -69,21 +69,20 @@ class BluetoothSingleton {
 
   // Device Types
   Map<String, dynamic> deviceTypes;
+
   //flutterBlueInstance.scan(timeout: Duration(seconds: scanDuration), allowDuplicates: false)
   factory BluetoothSingleton() {
     // bluetoothStream();
     return _bluetoothSingleton;
   }
 
-
-  init()  async {
+  init() async {
     deviceTypes = await fetchData();
-    print("Device map: ${deviceTypes.toString()}");
+   // print("Device map: ${deviceTypes.toString()}");
     await getData();
 
     // Set the minimum change to activate a new scan.
-    location.changeSettings(
-        accuracy: LocationAccuracy.low);
+    location.changeSettings(accuracy: LocationAccuracy.low);
 
     // Enable location listening
     _logLocation();
@@ -94,27 +93,26 @@ class BluetoothSingleton {
 
   /// This function starts continuous scan (on app open)
   enableListener() {
-
     //Start the initial scan
-    Timer.run(() {startScan();});
+    Timer.run(() {
+      startScan();
+    });
     // Enable timer, must wait duration before next method execution
     ongoingScanner = new Timer.periodic(
         Duration(seconds: waitTime), (Timer t) => startScan());
   }
 
-
   Future<void> getData() async {
-    String _response = await _networkHelper.fetchData(bluetoothConstantsEndpoint);
-    print(_response);
+    String _response =
+        await _networkHelper.fetchData(bluetoothConstantsEndpoint);
+    //print(_response);
     final _json = json.decode(_response);
     uniqueIdThreshold = int.parse(_json["uniqueDevices"]);
     distanceThreshold = int.parse(_json["distanceThreshold"]);
     dwellTimeThreshold = int.parse(_json["dwellTimeThreshold"]);
     scanDuration = int.parse(_json["scanDuration"]);
-    waitTime = int.parse(_json["waitTime"]);
+    waitTime = int.parse(_json["waitTime"]) * 5;
   }
-
-
 
   //Parse advertisement data
   String calculateHexFromArray(decimalArray) {
@@ -126,8 +124,8 @@ class BluetoothSingleton {
     } catch (Exception) {
       return uuid;
     }
-
   }
+
   // Start a bluetooth scan of 2 second duration and listen to results
   startScan() {
     flutterBlueInstance.startScan(
@@ -136,12 +134,13 @@ class BluetoothSingleton {
     // Process the scan results (synchronously)
     flutterBlueInstance.scanResults.listen((results) {
       for (ScanResult scanResult in results) {
-        
         String calculatedUUID;
 
-        scanResult.advertisementData.manufacturerData.forEach((item, hexcodeAsArray) => {
-          calculatedUUID = ("calculated UUID String : " + calculateHexFromArray(hexcodeAsArray))
-        });
+        scanResult.advertisementData.manufacturerData
+            .forEach((item, hexcodeAsArray) => {
+                  calculatedUUID = ("calculated UUID String : " +
+                      calculateHexFromArray(hexcodeAsArray))
+                });
 
         //Create BT Objects to render + check continuity
         identifyDevices(scanResult);
@@ -150,79 +149,64 @@ class BluetoothSingleton {
 
         //PARSE FOR FRONTEND DISPLAY
         frontEndFilter(repeatedDevice, scanResult, calculatedUUID);
-       // connectToDevice(scanResult);
-      }});
+      }
+    });
 
     // Remove objects that are no longer continuous found
     removeNoncontinuousDevices();
 
-    processDevices();
-  }
+    List<String> newBufferList = [];
+    for (String deviceEntry in bufferList) {
+      newBufferList.add(deviceEntry +
+          ((scannedObjects[deviceEntry.substring(4, 40)].deviceType != "")
+              ? "Device type: ${getAppleClassification(scannedObjects[deviceEntry.substring(4, 40)].deviceType)}"
+              : "Device type: Unavailable") +
+          "\n");
+    }
+    // Add the processed buffer to overall log
+    loggedItems.insertAll(loggedItems.length, newBufferList);
 
-  processDevices()  async{
-    List<String> newBufferList;
+    // If there are more than three devices, log location
+    if (uniqueDevices >= uniqueIdThreshold) {
+      loggedItems.add("LOCATION LOGGED");
+      _logLocation();
 
-    connectDevices();
+      // Reset dwell times
+      resetDevices();
+      uniqueDevices = 0;
+    }
 
+    String timeStamp = "TIMESTAMP: " +
+        DateTime.fromMillisecondsSinceEpoch(
+                DateTime.now().millisecondsSinceEpoch)
+            .toString() +
+        '\n';
 
-      // Add the processed buffer to overall log
-      loggedItems.insertAll(loggedItems.length, bufferList);
+    // Add time stamp for differentiation
+    loggedItems.add(timeStamp);
 
-      // If there are more than three devices, log location
-      if (uniqueDevices >= uniqueIdThreshold) {
-        loggedItems.add("LOCATION LOGGED");
-        _logLocation();
+    // Store timestamp
+    _storage.write(key: _randomValue(), value: timeStamp);
 
-        // Reset dwell times
-        resetDevices();
-        uniqueDevices = 0;
-      }
+    // Close on going scan in case it has not time out
+    flutterBlueInstance.stopScan();
 
+    // Clear previous scan results
+    bufferList.clear();
+    newBufferList.clear();
 
-      String timeStamp = "TIMESTAMP: " +
-          DateTime.fromMillisecondsSinceEpoch(
-              DateTime
-                  .now()
-                  .millisecondsSinceEpoch)
-              .toString() +
-          '\n';
-
-      // Add time stamp for differentiation
-      loggedItems.add(timeStamp);
-
-      // Store timestamp
-      _storage.write(key: _randomValue(), value: timeStamp);
-
-      // Close on going scan in case it has not time out
-      flutterBlueInstance.stopScan();
-
-
-      // Clear previous scan results
-      bufferList.clear();
-
-      scannedDevices.clear();
-
-  }
-
-  Future<bool> connectDevices() async  {
-    scannedDevices.forEach((scanResult)  {
-      extractBTServices(scanResult);
-    });
-    return true;
+    scannedDevices.clear();
   }
 
   // Reset device dwell time when used to track user's location
-  void resetDevices(){
+  void resetDevices() {
     scannedObjects.forEach((key, value) {
-      if(value.timeThresholdMet){
+      if (value.timeThresholdMet) {
         value.timeThresholdMet = false;
         value.dwellTime = 0;
       }
-
     });
   }
-
-  
 
   void identifyDevices(ScanResult scanResult) {
     scannedObjects.update(scanResult.device.id.toString(), (value) {
@@ -234,10 +218,12 @@ class BluetoothSingleton {
       return value;
     },
         ifAbsent: () => new BluetoothDeviceProfile(
-            scanResult.device.id.toString(), scanResult.rssi, "",
-            new List<TimeOfDay>.from({TimeOfDay.now()}), true,
-            scanResult.advertisementData.txPowerLevel)
-    );
+            scanResult.device.id.toString(),
+            scanResult.rssi,
+            "",
+            new List<TimeOfDay>.from({TimeOfDay.now()}),
+            true,
+            scanResult.advertisementData.txPowerLevel));
   }
 
   bool checkForDuplicates(ScanResult scanResult) {
@@ -251,10 +237,26 @@ class BluetoothSingleton {
     return repeatedDevice;
   }
 
+  String getAppleClassification(String manufacturerName) {
+    String deviceType = "";
+    if (manufacturerName.contains("Mac")) {
+      deviceType = "Computer";
+    } else if (manufacturerName.contains("iPhone")) {
+      deviceType = "Phone";
+    } else if (manufacturerName.contains("Audio")) {
+      deviceType = "Audio Output";
+    } else if (manufacturerName.contains("iPad")) {
+      deviceType = "Tablet";
+    } else if (manufacturerName.contains("Watch")) {
+      deviceType = "Watch";
+    }
+    return deviceType;
+  }
+
   void removeNoncontinuousDevices() {
     List<String> objectsToRemove = [];
     scannedObjects.forEach((key, value) {
-      if(!value.continuousDuration){
+      if (!value.continuousDuration) {
         objectsToRemove.add(key);
       }
     });
@@ -263,63 +265,79 @@ class BluetoothSingleton {
     });
   }
 
-  void frontEndFilter(bool repeatedDevice, ScanResult scanResult, String calculatedUUID) {
+  bool eligibleType(String manufacturerName) {
+    return getAppleClassification(manufacturerName) != "" ? true : false;
+  }
+
+  void frontEndFilter(
+      bool repeatedDevice, ScanResult scanResult, String calculatedUUID) {
     if (!repeatedDevice) {
-      scannedObjects[scanResult.device.id.toString()].dwellTime +=
-      (waitTime);
-      scannedObjects[scanResult.device.id.toString()].distance = getDistance(scanResult.rssi);
+      scannedObjects[scanResult.device.id.toString()].dwellTime += (waitTime);
+      scannedObjects[scanResult.device.id.toString()].distance =
+          getDistance(scanResult.rssi);
       if (scannedObjects[scanResult.device.id.toString()].dwellTime >=
-          dwellTimeThreshold && scannedObjects[scanResult.device.id.toString()].distance <=
-          distanceThreshold) {
-        uniqueDevices+= 1; // Add the # of unique devices detected
+              dwellTimeThreshold &&
+          scannedObjects[scanResult.device.id.toString()].distance <=
+              distanceThreshold &&
+          eligibleType(
+              scannedObjects[scanResult.device.id.toString()].deviceType)) {
+        uniqueDevices += 1; // Add the # of unique devices detected
       }
 
       // Log important information
-      String deviceLog ='ID: ${scanResult.device.id}' +
-          "\n" + "RSSI: " + scanResult.rssi.toString() + " Dwell time: " +
-          scannedObjects[scanResult.device.id.toString()].dwellTime
-              .toString() + " " + (calculatedUUID != null ? calculatedUUID : "") + " " + " Distance(ft): ${getDistance(scanResult.rssi)}" + "\n";
+      String deviceLog = 'ID: ${scanResult.device.id}' +
+          "\n" +
+          "RSSI: " +
+          scanResult.rssi.toString() +
+          " Dwell time: " +
+          scannedObjects[scanResult.device.id.toString()].dwellTime.toString() +
+          " " +
+          (calculatedUUID != null ? calculatedUUID : "") +
+          " " +
+          " Distance(ft): ${getDistance(scanResult.rssi)}" +
+          "\n";
 
-      // Add to frontend staging
-      //bufferList.add(deviceLog);
+      bufferList.add("$deviceLog");
 
-
-        bufferList.add("$deviceLog");
-        scannedDevices.add(scanResult);
-       //device.disconnect();
-      // Store bt logs
-      //_storage.write(key: _randomValue(), value: deviceLog);
-
-     // connectToDevice(scanResult);
-      //if(scanResult.advertisementData.connectable) {
-      //}
+      _storage.write(key: _randomValue(), value: deviceLog);
+      // Optimize device connection
+      if (scanResult.advertisementData.connectable &&
+          scannedObjects[scanResult.device.id.toString()].deviceType == "" &&
+          scanResult != null) {
+        extractBTServices(scanResult);
+      }
     }
   }
 
-  Future<String> extractBTServices(ScanResult scanResult) async  {
-    scanResult.device.connect().then((value) {
-      scanResult.device.discoverServices().then((value) {
-        value.forEach((element) {
-          if (element.uuid.toString().toUpperCase().contains("180A")) {
-            element.characteristics.forEach((element) {
-              if(element.toString().toUpperCase().contains("2A24")){
-              element.read().then((value) {
-                print("Device type: ${ascii.decode(value).toString()}");
-                return "Device type: ${ascii.decode(value).toString()}";
+  void extractBTServices(ScanResult scanResult) async {
+    try {
+      scanResult.device.connect().then((value) {
+        scanResult.device.discoverServices().then((value) {
+          value.forEach((element) {
+            if (element.uuid.toString().toUpperCase().contains("180A")) {
+              element.characteristics.forEach((element) {
+                if (element.toString().toUpperCase().contains("2A24")) {
+                  element.read().then((value) {
+                 //   print("Device type: ${ascii.decode(value).toString()}");
+                    scannedObjects[scanResult.device.id.toString()].deviceType =
+                        "Device type: ${ascii.decode(value).toString()}";
+                  });
+                }
               });
-              }
-              });
-          }
+            }
           });
-
-       });
-    });
+        });
+      });
+    } catch (exception) {}
   }
-  Future<Map> fetchData() async{
-    final response = await _networkHelper.authorizedFetch(bluetoothCharacteristicsEndpoint, header);
+
+  Future<Map> fetchData() async {
+    final response = await _networkHelper.authorizedFetch(
+        bluetoothCharacteristicsEndpoint, header);
 
     return json.decode(response);
   }
+
 // Cancel ongoing scans to start a new one
   /*pauseScan() {
     ongoingScanner.cancel();
@@ -442,12 +460,13 @@ class BluetoothSingleton {
 
   double getDistance(int rssi) {
     var txPower = -59; //hardcoded for now
-    var ratio = (rssi*1.0)/txPower;
-    if(ratio < 1.0) {
-      return (math.pow(ratio,10)*3.28084); //multiply by 3.. for meters to feet conversion
-    }
-    else {
-      return ((0.89976*math.pow(ratio,7.7095) + 0.111)*3.28084); //https://haddadi.github.io/papers/UBICOMP2016iBeacon.pdf
+    var ratio = (rssi * 1.0) / txPower;
+    if (ratio < 1.0) {
+      return (math.pow(ratio, 10) *
+          3.28084); //multiply by 3.. for meters to feet conversion
+    } else {
+      return ((0.89976 * math.pow(ratio, 7.7095) + 0.111) *
+          3.28084); //https://haddadi.github.io/papers/UBICOMP2016iBeacon.pdf
     }
   }
 
@@ -469,13 +488,10 @@ class BluetoothSingleton {
 
     return String.fromCharCodes(codeUnits);
   }
-
-
 }
 
-
 // Helper Class
-class BluetoothDeviceProfile{
+class BluetoothDeviceProfile {
   String uuid;
   int rssi;
   String deviceType;
@@ -487,7 +503,6 @@ class BluetoothDeviceProfile{
   double dwellTime = 0;
   bool timeThresholdMet = false;
 
-  BluetoothDeviceProfile(this.uuid,  this.rssi,  this.deviceType, this.timeStamps,  this.continuousDuration, this.measuredPower);
-
+  BluetoothDeviceProfile(this.uuid, this.rssi, this.deviceType, this.timeStamps,
+      this.continuousDuration, this.measuredPower);
 }
-
