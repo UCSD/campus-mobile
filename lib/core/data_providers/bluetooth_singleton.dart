@@ -26,7 +26,7 @@ class BluetoothSingleton {
 
   /// Initialize header
   final Map<String, String> header = {
-    'Authorization': 'Bearer 8e67e165-08ae-382f-87bc-7ec318d0b113'
+    'Authorization': 'Bearer '
   };
 
   // Holders for location
@@ -111,7 +111,7 @@ class BluetoothSingleton {
     distanceThreshold = int.parse(_json["distanceThreshold"]);
     dwellTimeThreshold = int.parse(_json["dwellTimeThreshold"]);
     scanDuration = int.parse(_json["scanDuration"]);
-    waitTime = int.parse(_json["waitTime"]) * 5;
+    waitTime = int.parse(_json["waitTime"]) * 10;
   }
 
   //Parse advertisement data
