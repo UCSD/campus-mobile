@@ -14,8 +14,10 @@ class OnboardingScreen extends StatefulWidget {
   _OnboardingScreen createState() => _OnboardingScreen();
 }
 
-class _OnboardingScreen extends State<OnboardingScreen> {
+class _OnboardingScreen extends State<OnboardingScreen> with SingleTickerProviderStateMixin{
   final _controller = PageController();
+  AnimationController _animationController;
+  Animation<Offset> _offsetAnimation;
   double currentIndex = 0;
 
   @override
@@ -28,7 +30,21 @@ class _OnboardingScreen extends State<OnboardingScreen> {
         });
       }
     });
+
+    _animationController = AnimationController(
+      duration: const Duration(seconds: 100),
+      vsync: this
+    )..repeat(reverse: true);
+
   }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _animationController.dispose();
+    super.dispose();
+  }
+
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
@@ -100,61 +116,84 @@ class _OnboardingScreen extends State<OnboardingScreen> {
             ]),
 
             ///PAGE 2 NEWS---------------------------------------------------------
-            Stack(children: <Widget>[
-              Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+            LayoutBuilder(
+              builder: (context,constraints) {
+                final Size biggest = constraints.biggest;
+                final double smallLogo = 200;
+                final double bigLogo = 200;
+              return(Stack(
                   children: <Widget>[
-                    Container(
-                        height: MediaQuery.of(context).size.height / 2 - 50,
-                        decoration: new BoxDecoration(
-                            image: DecorationImage(
-                          image: AssetImage(
-                              'assets/images/onboarding_news_background.png'),
-                          fit: BoxFit.fill,
-                        ))),
-                    Expanded(
-                        child: Container(
-                      width: 350,
-                      color: Colors.white,
-                      child: Center(
-                          child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                            Text(
-                              "Know what's going on",
-                              style: TextStyle(
-                                  color: ColorPrimary,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 25),
-                              textAlign: TextAlign.center,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 15),
-                            ),
-                            Text(
-                              "get campus news, updates, events, and notifcations on the go. Discover all the "
-                              "amazing events and happenings all around campus to keep you connected.",
-                              style: TextStyle(
-                                  color: ColorPrimary.withOpacity(0.7),
-                                  fontSize: 18),
-                              textAlign: TextAlign.center,
-                            ),
-                          ])),
-                    ))
-                  ]),
-              Container(
-                //alignment: Alignment.topRight,
-                padding: EdgeInsets.only(left: 190.0, top: 140.0),
-                child: Container(
-                    height: 290.0,
-                    width: 180.0,
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                      image: AssetImage('assets/images/news_preview.png'),
-                      fit: BoxFit.fill,
-                    ))),
-              )
-            ]),
+              PositionedTransition(
+              rect: RelativeRectTween(
+                  begin: RelativeRect.fromSize(
+                  Rect.fromLTWH(0, 0, smallLogo, smallLogo), biggest),
+                end: RelativeRect.fromSize(
+                Rect.fromLTWH(biggest.width - bigLogo,
+                biggest.height - bigLogo, bigLogo, bigLogo),
+                biggest),
+                ).animate(CurvedAnimation(
+                parent: _animationController,
+                curve: Curves.elasticInOut,
+                )),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0), child: FlutterLogo()),
+                ),
+                Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                          height: MediaQuery.of(context).size.height / 2 - 50,
+                          decoration: new BoxDecoration(
+                              image: DecorationImage(
+                            image: AssetImage(
+                                'assets/images/onboarding_news_background.png'),
+                            fit: BoxFit.fill,
+                          ))),
+                      Expanded(
+                          child: Container(
+                        width: 350,
+                        color: Colors.white,
+                        child: Center(
+                            child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                              Text(
+                                "Know what's going on",
+                                style: TextStyle(
+                                    color: ColorPrimary,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 25),
+                                textAlign: TextAlign.center,
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: 15),
+                              ),
+                              Text(
+                                "get campus news, updates, events, and notifcations on the go. Discover all the "
+                                "amazing events and happenings all around campus to keep you connected.",
+                                style: TextStyle(
+                                    color: ColorPrimary.withOpacity(0.7),
+                                    fontSize: 18),
+                                textAlign: TextAlign.center,
+                              ),
+                            ])),
+                      ))
+                    ]),
+                Container(
+                  //alignment: Alignment.topRight,
+                  padding: EdgeInsets.only(left: 190.0, top: 140.0),
+                  child: Container(
+                      height: 290.0,
+                      width: 180.0,
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                        image: AssetImage('assets/images/news_preview.png'),
+                        fit: BoxFit.fill,
+                      ))),
+                )
+              ]));
+              },
+            ),
 
             ///PAGE 3 MAP----------------------------------------------------------
             Stack(children: <Widget>[
