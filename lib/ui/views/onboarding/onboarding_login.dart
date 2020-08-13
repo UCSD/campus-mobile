@@ -158,8 +158,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                                       (_) => false);
                                   final prefs =
                                       await SharedPreferences.getInstance();
-                                  prefs.setBool(
-                                      'showOnboardingScreen', false);
+                                  prefs.setBool('showOnboardingScreen', false);
                                 } else {
                                   showAlertDialog(context);
                                 }
@@ -186,7 +185,8 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                     }
                   },
                 ),
-                GestureDetector(
+
+                /* GestureDetector(
                   child: Text(
                     'Skip',
                     style: TextStyle(color: Colors.white, fontSize: 12),
@@ -195,7 +195,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                     Navigator.pushNamedAndRemoveUntil(context,
                         RoutePaths.BottomNavigationBar, (_) => false);
                   },
-                )
+                )*/
               ],
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
             ),
