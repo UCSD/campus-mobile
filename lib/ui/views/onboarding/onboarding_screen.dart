@@ -1,5 +1,6 @@
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/debug/build_info.dart';
+
 //import 'package:campus_mobile_experimental/ui/reusable_widgets/dots_indicator.dart';
 import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 import 'package:campus_mobile_experimental/ui/views/onboarding/onboarding_affiliations.dart';
@@ -14,7 +15,8 @@ class OnboardingScreen extends StatefulWidget {
   _OnboardingScreen createState() => _OnboardingScreen();
 }
 
-class _OnboardingScreen extends State<OnboardingScreen> with SingleTickerProviderStateMixin{
+class _OnboardingScreen extends State<OnboardingScreen>
+    with SingleTickerProviderStateMixin {
   final _controller = PageController();
   AnimationController _animationController;
   Animation<Offset> _offsetAnimation;
@@ -24,18 +26,16 @@ class _OnboardingScreen extends State<OnboardingScreen> with SingleTickerProvide
   void initState() {
     super.initState();
     _controller.addListener(() {
-      if(_controller.page.round() != currentIndex) {
+      if (_controller.page.round() != currentIndex) {
         setState(() {
           currentIndex = _controller.page;
         });
       }
     });
 
-    _animationController = AnimationController(
-      duration: const Duration(seconds: 100),
-      vsync: this
-    )..repeat(reverse: true);
-
+    _animationController =
+        AnimationController(duration: const Duration(seconds: 100), vsync: this)
+          ..repeat(reverse: true);
   }
 
   @override
@@ -70,7 +70,8 @@ class _OnboardingScreen extends State<OnboardingScreen> with SingleTickerProvide
                         height: MediaQuery.of(context).size.height / 2 - 50,
                         decoration: new BoxDecoration(
                             image: DecorationImage(
-                          image: AssetImage('assets/images/students.png'),
+                          image: AssetImage(
+                              'assets/images/onboarding_connections_background.png'),
                           fit: BoxFit.fill,
                         ))),
                     Expanded(
@@ -117,81 +118,96 @@ class _OnboardingScreen extends State<OnboardingScreen> with SingleTickerProvide
 
             ///PAGE 2 NEWS---------------------------------------------------------
             LayoutBuilder(
-              builder: (context,constraints) {
+              builder: (context, constraints) {
                 final Size biggest = constraints.biggest;
                 final double smallLogo = 200;
                 final double bigLogo = 200;
-              return(Stack(
-                  children: <Widget>[
-              PositionedTransition(
-              rect: RelativeRectTween(
-                  begin: RelativeRect.fromSize(
-                  Rect.fromLTWH(0, 0, smallLogo, smallLogo), biggest),
-                end: RelativeRect.fromSize(
-                Rect.fromLTWH(biggest.width - bigLogo,
-                biggest.height - bigLogo, bigLogo, bigLogo),
-                biggest),
-                ).animate(CurvedAnimation(
-                parent: _animationController,
-                curve: Curves.elasticInOut,
-                )),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0), child: FlutterLogo()),
-                ),
-                Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                          height: MediaQuery.of(context).size.height / 2 - 50,
-                          decoration: new BoxDecoration(
+                return (Stack(children: <Widget>[
+                  PositionedTransition(
+                    rect: RelativeRectTween(
+                      begin: RelativeRect.fromSize(
+                          Rect.fromLTWH(0, 0, smallLogo, smallLogo), biggest),
+                      end: RelativeRect.fromSize(
+                          Rect.fromLTWH(biggest.width - bigLogo,
+                              biggest.height - bigLogo, bigLogo, bigLogo),
+                          biggest),
+                    ).animate(CurvedAnimation(
+                      parent: _animationController,
+                      curve: Curves.elasticInOut,
+                    )),
+                    child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: FlutterLogo()),
+                  ),
+                  Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                            height: MediaQuery.of(context).size.height / 2 - 50,
+                            decoration: new BoxDecoration(
+                                image: DecorationImage(
+                              image: AssetImage(
+                                  'assets/images/onboarding_affiliation_background.png'),
+                              fit: BoxFit.fill,
+                            ))),
+                        Expanded(
+                            child: Container(
+                          width: 350,
+                          color: Colors.white,
+                          child: Center(
+                              child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                Text(
+                                  "Made for students AND staff",
+                                  style: TextStyle(
+                                      color: ColorPrimary,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 24),
+                                  textAlign: TextAlign.center,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(top: 15),
+                                ),
+                                Text(
+                                  "Log in now to gain access to personalized information",
+                                  style: TextStyle(
+                                      color: ColorPrimary.withOpacity(0.7),
+                                      fontSize: 20),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ])),
+                        ))
+                      ]),
+                  Column(children: <Widget>[
+                    Container(
+                      //alignment: Alignment.topRight,
+                      padding: EdgeInsets.only(left: 10.0, top: 180.0),
+                      child: Container(
+                          height: 111.0,
+                          width: 184.0,
+                          decoration: BoxDecoration(
                               image: DecorationImage(
-                            image: AssetImage(
-                                'assets/images/onboarding_news_background.png'),
+                            image:
+                                AssetImage('assets/images/student_profile.png'),
                             fit: BoxFit.fill,
                           ))),
-                      Expanded(
-                          child: Container(
-                        width: 350,
-                        color: Colors.white,
-                        child: Center(
-                            child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                              Text(
-                                "Know what's going on",
-                                style: TextStyle(
-                                    color: ColorPrimary,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 25),
-                                textAlign: TextAlign.center,
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(top: 15),
-                              ),
-                              Text(
-                                "get campus news, updates, events, and notifcations on the go. Discover all the "
-                                "amazing events and happenings all around campus to keep you connected.",
-                                style: TextStyle(
-                                    color: ColorPrimary.withOpacity(0.7),
-                                    fontSize: 18),
-                                textAlign: TextAlign.center,
-                              ),
-                            ])),
-                      ))
-                    ]),
-                Container(
-                  //alignment: Alignment.topRight,
-                  padding: EdgeInsets.only(left: 190.0, top: 140.0),
-                  child: Container(
-                      height: 290.0,
-                      width: 180.0,
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                        image: AssetImage('assets/images/news_preview.png'),
-                        fit: BoxFit.fill,
-                      ))),
-                )
-              ]));
+                    ),
+                    Container(
+                      //alignment: Alignment.topRight,
+                      padding: EdgeInsets.only(left: 10.0, top: 20.0),
+                      child: Container(
+                          height: 111.0,
+                          width: 184.0,
+                          decoration: BoxDecoration(
+                              image: DecorationImage(
+                            image:
+                                AssetImage('assets/images/student_profile.png'),
+                            fit: BoxFit.fill,
+                          ))),
+                    )
+                  ])
+                ]));
               },
             ),
 
@@ -204,8 +220,8 @@ class _OnboardingScreen extends State<OnboardingScreen> with SingleTickerProvide
                         height: MediaQuery.of(context).size.height / 2 - 50,
                         decoration: new BoxDecoration(
                             image: DecorationImage(
-                          image: AssetImage(
-                              'assets/images/onboarding_map_background.png'),
+                          image:
+                              AssetImage('assets/images/onboarding_social.png'),
                           fit: BoxFit.fill,
                         ))),
                     Expanded(
@@ -217,7 +233,7 @@ class _OnboardingScreen extends State<OnboardingScreen> with SingleTickerProvide
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                             Text(
-                              "Find your way",
+                              "Know what's going on",
                               style: TextStyle(
                                   color: ColorPrimary,
                                   fontWeight: FontWeight.bold,
@@ -228,25 +244,25 @@ class _OnboardingScreen extends State<OnboardingScreen> with SingleTickerProvide
                               padding: EdgeInsets.only(top: 15),
                             ),
                             Text(
-                              "Find nearby points of interest or go to our interactive campus map for more details about what's around you",
+                              "Connect to the latest university services, news, and information when you need it most",
                               style: TextStyle(
                                   color: ColorPrimary.withOpacity(0.7),
-                                  fontSize: 18),
+                                  fontSize: 20),
                               textAlign: TextAlign.center,
                             ),
                           ])),
                     ))
                   ]),
               Container(
-                alignment: Alignment.topCenter,
-                padding: EdgeInsets.only(top: 140.0),
+                //alignment: Alignment.topCenter,
+                padding: EdgeInsets.only(left: 180.0, top: 70.0),
                 child: Container(
-                    height: 290.0,
-                    width: 180.0,
+                    height: 363.0,
+                    width: 167.0,
                     decoration: BoxDecoration(
                         image: DecorationImage(
                       image: AssetImage(
-                          'assets/images/onboarding_map_preview.png'),
+                          'assets/images/onboarding_news_preview.png'),
                       fit: BoxFit.fill,
                     ))),
               )
@@ -257,9 +273,7 @@ class _OnboardingScreen extends State<OnboardingScreen> with SingleTickerProvide
           dotsCount: 3,
           position: currentIndex,
           decorator: DotsDecorator(
-            activeColor: ColorPrimary,
-            spacing: EdgeInsets.all(4.0)
-          ),
+              activeColor: ColorPrimary, spacing: EdgeInsets.all(4.0)),
         ),
         Container(
           height: 60,
