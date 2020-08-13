@@ -34,8 +34,7 @@ class _OnboardingScreen extends State<OnboardingScreen>
     });
 
     _animationController =
-        AnimationController(duration: const Duration(seconds: 100), vsync: this)
-          ..repeat(reverse: true);
+        AnimationController(duration: const Duration(seconds: 2), vsync: this)..forward();
   }
 
   @override
@@ -69,8 +68,8 @@ class _OnboardingScreen extends State<OnboardingScreen>
             LayoutBuilder(
               builder: (context, constraints) {
                 final Size biggest = constraints.biggest;
-                final double smallLogo = 200;
-                final double bigLogo = 200;
+                final double smallLogo = 400;
+                final double bigLogo = 400;
                 return (Stack(children: <Widget>[
                   Column(
                       mainAxisAlignment: MainAxisAlignment.center,
