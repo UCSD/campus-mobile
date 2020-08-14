@@ -1,0 +1,50 @@
+{
+    "spots": [{
+        "key": "S",
+        "name": "Student",
+        "color": "EEF312",
+        "text": "S"
+    },
+    {
+        "key": "B",
+        "name": "Staff/Graduate Students",
+        "color": "12C517",
+        "text": "B"
+    },
+    {
+        "key": "A",
+        "name": "Faculty and Senior Staff",
+        "color": "EF0707",
+        "text": "A"
+    },
+    {
+        "key": "Accessible",
+        "name": "Accessible",
+        "color": "073FCF",
+        "text": "&#x267f;"
+    },
+    {
+        "key": "V",
+        "name": "Visitor",
+        "color": "1E2128",
+        "text": "V"
+    },
+    {
+        "key": "SR",
+        "name": "Residential Students",
+        "color": "070708",
+        "text": "SR"
+    },
+    {
+        "key": "D",
+        "name": "Discount",
+        "color": "1DDDDA",
+        "text": "D"
+    },
+    {
+        "key": "M",
+        "name": "Motorcycle",
+        "color": "F99405",
+        "text": "M"
+    }]
+}

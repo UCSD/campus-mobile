@@ -19,16 +19,6 @@
             text-align: center;
         }
 
-        .s_spot {
-            align-self: center;
-            height: 2em;
-            width: 2em;
-            background-color: #bbb;
-            border-radius: 50%;
-            display: inline-block;
-            text-align: center;
-            font-size: 2em;
-        }
 
         :root {
             --numComponents: 1;
@@ -90,22 +80,30 @@
             content: attr(data-percent)"%";
         }
     </style>
-    <% if(typeof(cardWidth) != "undefined") {%>
     <script>
-        function resizeWindow() {
-            window.resizeTo(<%= cardWidth %>, <%= cardHeight %>);
-        }
-        window.onload = resizeWindow;
-        window.onresize = resizeWindow;
+        (function () {
+            window.onload = function () {
+                var totalProgress, progress;
+                const circles = document.querySelectorAll('.progress');
+                for (var i = 0; i < circles.length; i++) {
+                    totalProgress = circles[i].querySelector('circle').getAttribute('stroke-dasharray');
+                    progress = circles[i].parentElement.getAttribute('data-percent');
+                    if (progress == 'NA') {
+                        //If NA means no spots of this type
+                        circles[i].querySelector('.bar').style['stroke-dashoffset'] = 0;
+                    } else {
+                        circles[i].querySelector('.bar').style['stroke-dashoffset'] = totalProgress * progress / 100;
+                    }
+                }
+            }
+        })();
     </script>
-    <% } %>
 </head>
 
-<% if(typeof(lotName) != "undefined") {%>
-
 <body>
-    <div id="wrapper">
 
+    <% if(typeof(lotName) != "undefined") {%>
+    <div id="wrapper">
         <h1><%= lotName %></h1>
         <center>
             <p><%= lotContext %></p>
@@ -117,44 +115,21 @@
         <center>
             <b>⚠ No Live Data. Estimated availability shown. </b>
         </center>
-        <% }%>
-        <% }else {%>
+        <% } else {%>
         <h1>No lot specified</h1>
         <%}%>
-            <% if(typeof(numSpots) != "undefined" && numSpots >= 1) {%>
-        <script> document.documentElement.style.setProperty('--numComponents', <%= numSpots %>)</script>
+        
+        <% if(typeof(userSpotData) != "undefined") {%>
         <div class="row">
-            <%- include('partials/parkingComponent', {spotTypeContext: spot0}) %>
-            <% if(numSpots >= 2) {%>
-            <%- include('partials/parkingComponent', {spotTypeContext: spot1}) %>
-            <%}%>
-                        <% if(numSpots >= 3) {%>
-            <%- include('partials/parkingComponent', {spotTypeContext: spot2}) %>
-            <%}%>
-                        </div>
-                        <%} else {%>
-            <center>No Spot Types Provided</center>
-            <%}%>
-                            
-                            <script>
-                                    (function () {
-                                        window.onload = function () {
-                                            var totalProgress, progress;
-                                            const circles = document.querySelectorAll('.progress');
-                                            for (var i = 0; i < circles.length; i++) {
-                                                totalProgress = circles[i].querySelector('circle').getAttribute('stroke-dasharray');
-                                                progress = circles[i].parentElement.getAttribute('data-percent');
-                                                if (progress == 'NA') {
-                                                    //If NA means no spots of this type
-                                                    circles[i].querySelector('.bar').style['stroke-dashoffset'] = 0;
-                                                } else {
-                                                    circles[i].querySelector('.bar').style['stroke-dashoffset'] = totalProgress * progress / 100;
-                                                }
-                                            }
-                                        }
-                                    })();
-                            </script>
+            <% Object.keys(userSpotData).forEach(key => { %>
+                    <%- include('partials/parkingComponent', {spotData: userSpotData[key]}) %>
+            <% }); %>
+        </div>
+        <%} else {%>
+        <center>No Spot Types Provided</center>
+        <%}%>
     </div>
+    <%}%>
 </body>
 
 </html>

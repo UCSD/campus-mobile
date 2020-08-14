@@ -4,7 +4,11 @@ var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-// const functions = require("firebase-functions");
+const functions = require("firebase-functions");
+
+var fs = require("fs");
+
+const spot_type_data = JSON.parse(fs.readFileSync("spot_types.json")).spots;
 
 app.set("view engine", "ejs");
 
@@ -26,60 +30,43 @@ app.get("/parking", function (req, res) {
     const availability = Object.entries(lotInfo["Availability"]);
     const lotName = lotInfo["LocationName"];
     const lotContext = lotInfo["LocationContext"];
+
+    //Helps to add special message warning data is not live.
     var isHistoric;
     lotInfo["LocationProvider"] == "Historic"
       ? (isHistoric = true)
       : (isHistoric = false);
 
-    // if (!req.query.spots) {
-    //   res.render("parking");
-    // }
+    var totalSpacesForThisSelection = 0;
+
+    // Get data (text and color) for spot types from query string
+    var userSpotData = {};
     let str = req.query.spots ? req.query.spots : "";
-    const spotTypes = str.split(",");
-
-    const numSpots = spotTypes.length;
-
-    var spot0, spot1, spot2;
-
-    if (spotTypes[0]) spot0 = spotTypes[0];
-    if (spotTypes[1]) spot1 = spotTypes[1];
-    if (spotTypes[2]) spot2 = spotTypes[2];
-
-    var totalSpots = 0;
-    var lotData = {};
-    // var availableData = {};
-    for (const [spotType, data] of availability) {
-      //Iterate through all spot types in this parking lot data
-      console.log(spotType);
-      if (spotTypes.includes(spotType)) {
-        //User has selected this spot type and there are spots of these type in this lot
-
-        totalSpots += parseInt(data["Total"]);
-
-        lotData[spotType] = Math.floor(
-          (100 * parseInt(data["Open"])) / parseInt(data["Total"])
-        );
-      } else {
-        //User has not selected this spot type
+    const selectedSpotsFromQuery = str.split(",");
+    for (var i = 0; i <= 2; i++) {
+      const selected = selectedSpotsFromQuery[i];
+      if (selected) {
+        const spotTypeData = getSpotTypeDataFromContext(selected);
+        var thisSpotData = {};
+        thisSpotData["text"] = spotTypeData[0];
+        thisSpotData["color"] = spotTypeData[1];
+        thisSpotData["total"] = availability[selected]
+          ? availability[selected]["Total"]
+          : 0;
+        totalSpacesForThisSelection += thisSpotData["total"];
+        thisSpotData["open"] = availability[selected]
+          ? availability[selected]["Open"]
+          : 0;
+        userSpotData[selected] = thisSpotData;
       }
     }
-    totalSpacesData = lotData;
-    const totalSpaces = totalSpots;
-
-    const cardWidth = req.query.width ? parseInt(req.query.width) : 200;
-    const cardHeight = req.query.height ? parseInt(req.query.height) : 200;
 
     res.render("parking", {
       lotName: lotName ? lotName : undefined,
       lotContext: lotContext ? lotContext : undefined,
-      totalSpaces: totalSpaces ? totalSpaces : undefined,
-      numSpots: numSpots ? numSpots : undefined,
-      spot0: spot0 ? spot0 : undefined,
-      spot1: spot1 ? spot1 : undefined,
-      spot2: spot2 ? spot2 : undefined,
+      totalSpaces: totalSpacesForThisSelection,
+      userSpotData: userSpotData,
       isHistoric: isHistoric ? isHistoric : undefined,
-      cardWidth: cardWidth ? cardWidth : undefined,
-      cardHeight: cardHeight ? cardHeight : undefined,
     });
   });
 });
@@ -97,5 +84,15 @@ var HttpClient = function () {
     anHttpRequest.send(null);
   };
 };
-module.exports.handler = serverless(app);
-// exports.app = functions.https.onRequest(app);
+
+//Gets color, key
+function getSpotTypeDataFromContext(spotType) {
+  console.log("Getting data for " + spotType);
+  for (var i = 0; i < spot_type_data.length; i++) {
+    if (spot_type_data[i].key == spotType) {
+      return [spot_type_data[i].icon, spot_type_data[i].color];
+    }
+  }
+}
+// module.exports.handler = serverless(app);
+exports.app = functions.https.onRequest(app);
