@@ -33,7 +33,7 @@ dependencies:
   package_info: 0.4.0+18
   barcode_widget: ^1.3.0
   flutter_blue:
-    git: git://github.com/pauldemarco/flutter_blue.git
+    git: git://github.com/UCSD/flutter_blue.git
   qr_code_scanner:
     git:
       url: https://github.com/gmihir/qr_code_scanner.git

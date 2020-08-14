@@ -294,8 +294,8 @@ class BluetoothSingleton {
           " " +
           (calculatedUUID != null ? calculatedUUID : "") +
           " " +
-          " Distance(ft): ${getDistance(scanResult.rssi)}" +
-          "\n";
+          " Distance(ft): ${getDistance(scanResult.rssi)}\n" +
+          "Raw Data: ${scanResult.advertisementData.rawData}";
 
       bufferList.add("$deviceLog");
 
