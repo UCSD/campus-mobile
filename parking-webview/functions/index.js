@@ -27,6 +27,7 @@ app.get("/parking", function (req, res) {
   var client = new HttpClient();
   client.get(url, (response) => {
     var lotInfo = JSON.parse(response);
+    console.log(lotInfo);
     const availability = lotInfo["Availability"];
     const lotName = lotInfo["LocationName"];
     const lotContext = lotInfo["LocationContext"];
@@ -38,6 +39,7 @@ app.get("/parking", function (req, res) {
       : (isHistoric = false);
 
     var totalSpacesForThisSelection = 0;
+    var numSpotsSelected = 0;
 
     // Get data (text and color) for spot types from query string
     var userSpotData = {};
@@ -47,7 +49,6 @@ app.get("/parking", function (req, res) {
       const selected = selectedSpotsFromQuery[i];
       if (selected) {
         const spotTypeData = getSpotTypeDataFromContext(selected);
-        // console.log(spotTypeData);
         var thisSpotData = {};
         thisSpotData["text"] = spotTypeData[0];
         thisSpotData["color"] = spotTypeData[1];
@@ -59,15 +60,17 @@ app.get("/parking", function (req, res) {
           ? availability[selected]["Open"]
           : 0;
         userSpotData[selected] = thisSpotData;
+        numSpotsSelected++;
       }
     }
 
     res.render("parking", {
-      lotName: lotName ? lotName : undefined,
-      lotContext: lotContext ? lotContext : undefined,
+      lotName: lotName,
+      lotContext: lotContext,
       totalSpaces: totalSpacesForThisSelection,
       userSpotData: userSpotData,
-      isHistoric: isHistoric ? isHistoric : undefined,
+      isHistoric: isHistoric ,
+      numSpotsSelected : numSpotsSelected
     });
   });
 });

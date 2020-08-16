@@ -8,20 +8,8 @@
     <!-- <link href="parking.css" rel="stylesheet" type="text/css" /> -->
     <title>Parking Card</title>
     <style>
-        #wrapper {
-            max-width: 500px;
-            max-height: 500px;
-            margin: 0 auto;
-            display: block;
-        }
-
         h1 {
             text-align: center;
-        }
-
-
-        :root {
-            --numComponents: 1;
         }
 
         .row {
@@ -31,7 +19,7 @@
         .column {
             border-color: black;
             float: left;
-            width: calc(100% / var(--numComponents));
+            width: calc(100% / <%=numSpotsSelected %>);
         }
 
         /* Clear floats after the columns */
@@ -53,7 +41,6 @@
         .progress circle {
             stroke-dashoffset: 0;
             transition: stroke-dashoffset 1s ease;
-            stroke: #a02e2e;
             stroke-width: 1em;
             r: 10vw;
             cx: 15vw;
@@ -61,7 +48,6 @@
         }
 
         .progress .bar {
-            stroke: #ffffff;
             r: 10vw;
             cx: 15vw;
             cy: 15vw;
@@ -101,37 +87,40 @@
 </head>
 
 <body>
+    <div id="parking_card">
 
-    <% if(typeof(lotName) != "undefined") {%>
-    <div id="wrapper">
-        <h1><%= lotName %></h1>
+
+        <% if(typeof(lotName) != "undefined") {%>
+        <h1 class="lot_name"><%= lotName %></h1>
         <center>
-            <p><%= lotContext %></p>
+            <p style="opacity: 0.5;"><%= lotContext %></p>
         </center>
         <center>
-            <p class="total_spots"><%= totalSpaces %></p>
+            <b>
+                <p id="total_spots">~<%= totalSpaces %> Spots Available</p>
+            </b>
         </center>
-        <% if(typeof(isHistoric) != "undefined") {%>
+        <% if(isHistoric) {%>
         <center>
             <b>⚠ No Live Data. Estimated availability shown. </b>
         </center>
-        <% } else {%>
-        <h1>No lot specified</h1>
-        <%}%>
-        
+        <% } else { %>
+        <center><b>&nbsp;</b></center>
+        <% } %>
+
         <% if(typeof(userSpotData) != "undefined") {%>
         <div class="row">
             <% Object.keys(userSpotData).forEach(key => { %>
             <% console.log(key) %>
             <% console.log(userSpotData[key]) %>
-            <%- include('partials/parkingComponent', {spotData: userSpotData[key]}) %>
+            <%- include('partials/parkingComponent', {spotData: userSpotData[key], spotId: key}) %>
             <% }); %>
         </div>
         <%} else {%>
         <center>No Spot Types Provided</center>
         <%}%>
-    </div>
     <%}%>
+    </div>
 </body>
 
 </html>

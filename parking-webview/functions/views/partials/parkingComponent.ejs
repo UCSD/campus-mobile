@@ -1,11 +1,31 @@
 <!-- views/partials/parkingComponent.ejs -->
+<style>
+    .progress .circle {
+        stroke-dashoffset: 0;
+        transition: stroke-dashoffset 1s ease;
+        stroke-width: 2em;
+        r: 10vw;
+        cx: 15vw;
+        cy: 15vw;
+    }
+
+    .progress .bar {
+        r: 10vw;
+        cx: 15vw;
+        cy: 15vw;
+    }
+
+    .<%=spotId %> {
+        stroke: <%=spotData["color"] %>;
+    }
+</style>
 <div class="column">
     <br>
-    <div class="progressdiv" data-percent=<%= spotData["open"]%>>
-        <svg class="progress" version="1.1"
-            xmlns="http://www.w3.org/2000/svg">
-            <circle fill="transparent" stroke-dasharray="502.4" stroke-dashoffset="0"></circle>
-            <circle class="bar" fill="transparent" stroke-dasharray="502.4"
+    <div class="progressdiv" data-percent=<%= Math.floor(100 * ((spotData["open"])/spotData["total"]))%>>
+        <svg class="progress" xmlns="http://www.w3.org/2000/svg">
+            <circle class="<%= spotId %>" fill="transparent" stroke-dasharray="502.4"
+                stroke-dashoffset="0"></circle>
+            <circle class="bar, <%= spotId %>" fill="transparent" stroke-dasharray="502.4"
                 stroke-dashoffset="0"></circle>
         </svg></div>
     <center><span><%= spotData["text"] %></span></center>
