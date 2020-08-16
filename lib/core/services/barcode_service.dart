@@ -15,7 +15,8 @@ class BarcodeService {
     try {
       final response =
           await _networkHelper.authorizedPost(_endpoint, headers, body);
-      if (response != null) {
+      if (response != null &&
+          validateUploadResults(body, response)) {
         _isLoading = false;
         return true;
       } else {
@@ -28,6 +29,10 @@ class BarcodeService {
       _isLoading = false;
       return false;
     }
+  }
+
+  bool validateUploadResults(Map<String, dynamic> submit, Map<String, dynamic> response) {
+    return submit["barcode"] == response["barcode"];
   }
 
   String get error => _error;
