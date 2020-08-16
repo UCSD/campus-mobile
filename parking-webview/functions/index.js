@@ -59,6 +59,19 @@ app.get("/parking", function (req, res) {
         thisSpotData["open"] = availability[selected]
           ? availability[selected]["Open"]
           : 0;
+
+        if (thisSpotData["total"] == 0) {
+          thisSpotData["percent"] = 0;
+          thisSpotData["percentText"] = "NA";
+        } else {
+          var percent = Math.floor(
+            100 *
+              ((thisSpotData["total"] - thisSpotData["open"]) /
+                thisSpotData["total"])
+          );
+          thisSpotData["percent"] = percent;
+          thisSpotData["percentText"] = percent.toString() + "%";
+        }
         userSpotData[selected] = thisSpotData;
         numSpotsSelected++;
       }
@@ -69,8 +82,8 @@ app.get("/parking", function (req, res) {
       lotContext: lotContext,
       totalSpaces: totalSpacesForThisSelection,
       userSpotData: userSpotData,
-      isHistoric: isHistoric ,
-      numSpotsSelected : numSpotsSelected
+      isHistoric: isHistoric,
+      numSpotsSelected: numSpotsSelected,
     });
   });
 });

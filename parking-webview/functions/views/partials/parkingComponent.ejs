@@ -1,32 +1,46 @@
 <!-- views/partials/parkingComponent.ejs -->
 <style>
-    .progress .circle {
-        stroke-dashoffset: 0;
-        transition: stroke-dashoffset 1s ease;
-        stroke-width: 2em;
-        r: 10vw;
-        cx: 15vw;
-        cy: 15vw;
+    .progress {
+        display: block;
+        margin: 0 auto;
+        overflow: visible;
+        transform: rotate(-90deg) rotateX(180deg);
     }
 
-    .progress .bar {
-        r: 10vw;
-        cx: 15vw;
-        cy: 15vw;
-    }
-
-    .<%=spotId %> {
+    #<%= spotId %>progressBarId{
         stroke: <%=spotData["color"] %>;
+    }
+
+    .svgbox {
+        height: 0;
+        width: 100%;
+        padding-top: (svg height / svg width) * width-value;
+        position: relative;
+    }
+
+    .progressdiv:after {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        font-size: 6vw;
+        transform: translate(-50%, -50%);
+        content: attr(data-text);
+    }
+
+    #<%=spotId %>spotIconId {
+        height: 25px;
+        width: 25px;
+        background-color: <%=spotData["color"] %>;
+        border-radius: 50%;
+        display: inline-block;
     }
 </style>
 <div class="column">
     <br>
-    <div class="progressdiv" data-percent=<%= Math.floor(100 * ((spotData["open"])/spotData["total"]))%>>
-        <svg class="progress" xmlns="http://www.w3.org/2000/svg">
-            <circle class="<%= spotId %>" fill="transparent" stroke-dasharray="502.4"
-                stroke-dashoffset="0"></circle>
-            <circle class="bar, <%= spotId %>" fill="transparent" stroke-dasharray="502.4"
-                stroke-dashoffset="0"></circle>
+    <div class="progressdiv" data-percent=<%= spotData["percent"] %> data-text=<%= spotData["percentText"] %>>
+        <svg class="progress"  xmlns="http://www.w3.org/2000/svg">
+            <circle></circle>
+            <circle class="bar" id=<%= spotId+"progressBarId" %>></circle>
         </svg></div>
-    <center><span><%= spotData["text"] %></span></center>
+    <center><span id=<%= spotId+"spotIconId" %>><%= spotData["text"] %></span></center>
 </div>
