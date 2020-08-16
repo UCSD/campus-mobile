@@ -27,7 +27,7 @@ app.get("/parking", function (req, res) {
   var client = new HttpClient();
   client.get(url, (response) => {
     var lotInfo = JSON.parse(response);
-    const availability = Object.entries(lotInfo["Availability"]);
+    const availability = lotInfo["Availability"];
     const lotName = lotInfo["LocationName"];
     const lotContext = lotInfo["LocationContext"];
 
@@ -47,6 +47,7 @@ app.get("/parking", function (req, res) {
       const selected = selectedSpotsFromQuery[i];
       if (selected) {
         const spotTypeData = getSpotTypeDataFromContext(selected);
+        // console.log(spotTypeData);
         var thisSpotData = {};
         thisSpotData["text"] = spotTypeData[0];
         thisSpotData["color"] = spotTypeData[1];
@@ -87,10 +88,9 @@ var HttpClient = function () {
 
 //Gets color, key
 function getSpotTypeDataFromContext(spotType) {
-  console.log("Getting data for " + spotType);
   for (var i = 0; i < spot_type_data.length; i++) {
     if (spot_type_data[i].key == spotType) {
-      return [spot_type_data[i].icon, spot_type_data[i].color];
+      return [spot_type_data[i].text, spot_type_data[i].color];
     }
   }
 }

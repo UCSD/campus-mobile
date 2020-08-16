@@ -122,7 +122,9 @@
         <% if(typeof(userSpotData) != "undefined") {%>
         <div class="row">
             <% Object.keys(userSpotData).forEach(key => { %>
-                    <%- include('partials/parkingComponent', {spotData: userSpotData[key]}) %>
+            <% console.log(key) %>
+            <% console.log(userSpotData[key]) %>
+            <%- include('partials/parkingComponent', {spotData: userSpotData[key]}) %>
             <% }); %>
         </div>
         <%} else {%>
