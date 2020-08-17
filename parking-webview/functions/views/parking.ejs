@@ -86,6 +86,7 @@
             font-size: 6vw;
             transform: translate(-50%, -50%);
             content: attr(data-text);
+
         }
 
         .svgbox {
@@ -104,7 +105,7 @@
         }
 
         #inner_text {
-            line-height: 4vw;
+            line-height: 2vw;
             font-size: 4vw;
         }
     </style>
@@ -114,16 +115,26 @@
                 var totalProgress, progress;
                 const circles = document.querySelectorAll('.progress');
                 for (var i = 0; i < circles.length; i++) {
-                    totalProgress = circles[i].querySelector('circle').getAttribute('stroke-dasharray'); //Gets circumference
-                    console.log(circles[i].querySelector('circle').style['stroke-dasharray']);
-                    progress = circles[i].parentElement.getAttribute('data-percent');
+                    var style = getComputedStyle(circles[i].querySelector('circle'));
+                    //Gets circumference of each circle
+                    totalProgress = parseInt(style.getPropertyValue('stroke-dasharray'));
+                    progress = parseInt(circles[i].parentElement.getAttribute('data-percent'));
+
                     if (progress == 'NA') {
                         //If NA means no spots of this type
                         circles[i].querySelector('.bar').style['stroke-dashoffset'] = 0;
                     } else {
+                        console.log(totalProgress);
+                        console.log((progress) * totalProgress / 100);
                         circles[i].querySelector('.bar').style['stroke-dashoffset'] = totalProgress * progress / 100;
                     }
                 }
+
+                //Set text color
+                const progressDivs = document.querySelectorAll('.progressdiv');
+                progressDivs.forEach(div => {
+                    div.style['color'] = div.getAttribute('data-color');
+                })
             }
         })();
     </script>
@@ -158,8 +169,6 @@
         <% if(typeof(userSpotData) != "undefined") {%>
         <div class="row">
             <% Object.keys(userSpotData).forEach(key => { %>
-            <% console.log(key) %>
-            <% console.log(userSpotData[key]) %>
             <%- include('partials/parkingComponent', {spotData: userSpotData[key], spotId: key}) %>
             <% }); %>
         </div>
