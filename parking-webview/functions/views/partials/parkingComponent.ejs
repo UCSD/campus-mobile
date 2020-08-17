@@ -1,46 +1,24 @@
 <!-- views/partials/parkingComponent.ejs -->
 <style>
-    .progress {
-        display: block;
-        margin: 0 auto;
-        overflow: visible;
-        transform: rotate(-90deg) rotateX(180deg);
-    }
+    /* Put any common CSS properties in parking.ejs, only dynamic ones here */
 
-    #<%= spotId %>progressBarId{
-        stroke: <%=spotData["color"] %>;
-    }
-
-    .svgbox {
-        height: 0;
-        width: 100%;
-        padding-top: (svg height / svg width) * width-value;
-        position: relative;
-    }
-
-    .progressdiv:after {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        font-size: 6vw;
-        transform: translate(-50%, -50%);
-        content: attr(data-text);
+    #<%=spotId %>progressBarId {
+        stroke: <%=spotData["percentColor"] %>;
     }
 
     #<%=spotId %>spotIconId {
-        height: 25px;
-        width: 25px;
         background-color: <%=spotData["color"] %>;
-        border-radius: 50%;
-        display: inline-block;
+        color: <%=spotData["textColor"] %>;
     }
 </style>
 <div class="column">
     <br>
     <div class="progressdiv" data-percent=<%= spotData["percent"] %> data-text=<%= spotData["percentText"] %>>
-        <svg class="progress"  xmlns="http://www.w3.org/2000/svg">
+        <svg class="progress" xmlns="http://www.w3.org/2000/svg">
             <circle></circle>
             <circle class="bar" id=<%= spotId+"progressBarId" %>></circle>
         </svg></div>
-    <center><span id=<%= spotId+"spotIconId" %>><%= spotData["text"] %></span></center>
+    <center><span class="spotIdCommonClass" id=<%= spotId+"spotIconId" %>>
+            <p id="inner_text" style="color:<%=spotId["textColor"]%>"><%= spotData["text"] %></p>
+        </span></center>
 </div>

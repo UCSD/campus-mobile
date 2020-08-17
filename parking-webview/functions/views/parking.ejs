@@ -13,8 +13,21 @@
             --r: 10vw;
         }
 
-        h1 {
-            text-align: center;
+        #lot_name {
+            line-height: 0.5;
+        }
+
+        #lot_context {
+            opacity: 0.5;
+            line-height: 0.5;
+        }
+
+        #total_spots {
+            line-height: 0.5;
+        }
+
+        #is_historic {
+            line-height: 0.1;
         }
 
         .row {
@@ -37,7 +50,7 @@
         .progress {
             display: block;
             margin: 0 auto;
-            overflow: hidden;
+            overflow: visible;
             transform: rotate(-90deg) rotateX(180deg);
             width: 20vw;
             height: 20vw;
@@ -66,7 +79,34 @@
             position: relative;
         }
 
+        .progressdiv:after {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            font-size: 6vw;
+            transform: translate(-50%, -50%);
+            content: attr(data-text);
+        }
 
+        .svgbox {
+            height: 0;
+            width: 100%;
+            padding-top: (svg height / svg width) * width-value;
+            position: relative;
+        }
+
+        .spotIdCommonClass {
+            height: 10vw;
+            width: 10vw;
+            border-radius: 50%;
+            display: inline-block;
+            margin-top: 4vw;
+        }
+
+        #inner_text {
+            line-height: 4vw;
+            font-size: 4vw;
+        }
     </style>
     <script>
         (function () {
@@ -94,22 +134,26 @@
 
 
         <% if(typeof(lotName) != "undefined") {%>
-        <h1 class="lot_name"><%= lotName %></h1>
+        <h1 id="lot_name">
+            <center><%= lotName %></center>
+        </h1>
         <center>
-            <p style="opacity: 0.5;"><%= lotContext %></p>
+            <p id="lot_context"><%= lotContext %></p>
         </center>
         <center>
             <b>
                 <p id="total_spots">~<%= totalSpaces %> Spots Available</p>
             </b>
         </center>
-        <% if(isHistoric) {%>
-        <center>
-            <b>⚠ No Live Data. Estimated availability shown. </b>
-        </center>
-        <% } else { %>
-        <center><b>&nbsp;</b></center>
-        <% } %>
+        <p id="is_historic">
+            <% if(isHistoric ) {%>
+            <center>
+                <b>⚠ No Live Data. Estimated availability shown. </b>
+            </center>
+            <% } else { %>
+            <b>&nbsp;</b>
+            <% } %>
+        </p>
 
         <% if(typeof(userSpotData) != "undefined") {%>
         <div class="row">

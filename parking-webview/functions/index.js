@@ -5,6 +5,9 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 const functions = require("firebase-functions");
+const Entities = require("html-entities").XmlEntities;
+
+const entities = new Entities();
 
 var fs = require("fs");
 
@@ -48,31 +51,9 @@ app.get("/parking", function (req, res) {
     for (var i = 0; i <= 2; i++) {
       const selected = selectedSpotsFromQuery[i];
       if (selected) {
-        const spotTypeData = getSpotTypeDataFromContext(selected);
-        var thisSpotData = {};
-        thisSpotData["text"] = spotTypeData[0];
-        thisSpotData["color"] = spotTypeData[1];
-        thisSpotData["total"] = availability[selected]
-          ? availability[selected]["Total"]
-          : 0;
-        totalSpacesForThisSelection += thisSpotData["total"];
-        thisSpotData["open"] = availability[selected]
-          ? availability[selected]["Open"]
-          : 0;
-
-        if (thisSpotData["total"] == 0) {
-          thisSpotData["percent"] = 0;
-          thisSpotData["percentText"] = "NA";
-        } else {
-          var percent = Math.floor(
-            100 *
-              ((thisSpotData["total"] - thisSpotData["open"]) /
-                thisSpotData["total"])
-          );
-          thisSpotData["percent"] = percent;
-          thisSpotData["percentText"] = percent.toString() + "%";
-        }
+        const thisSpotData = makeSpotData(selected, availability);
         userSpotData[selected] = thisSpotData;
+        totalSpacesForThisSelection += thisSpotData["total"];
         numSpotsSelected++;
       }
     }
@@ -106,9 +87,45 @@ var HttpClient = function () {
 function getSpotTypeDataFromContext(spotType) {
   for (var i = 0; i < spot_type_data.length; i++) {
     if (spot_type_data[i].key == spotType) {
-      return [spot_type_data[i].text, spot_type_data[i].color];
+      return [
+        spot_type_data[i].text,
+        spot_type_data[i].color,
+        spot_type_data[i].text_color,
+      ];
     }
   }
+}
+
+function makeSpotData(selected, availability) {
+  const spotTypeData = getSpotTypeDataFromContext(selected);
+  var thisSpotData = {};
+  thisSpotData["text"] = entities.decode(spotTypeData[0]);
+  console.log("Symbols - ");
+  console.log(thisSpotData["text"]);
+  thisSpotData["color"] = "#" + spotTypeData[1];
+  thisSpotData["textColor"] = "#" + spotTypeData[2];
+  thisSpotData["percentColor"] = "#" + spotTypeData[1]; //TODO
+  thisSpotData["total"] = availability[selected]
+    ? availability[selected]["Total"]
+    : 0;
+
+  thisSpotData["open"] = availability[selected]
+    ? availability[selected]["Open"]
+    : 0;
+
+  if (thisSpotData["total"] == 0) {
+    thisSpotData["percent"] = 0;
+    thisSpotData["percentText"] = "NA";
+  } else {
+    var percent = Math.floor(
+      100 *
+        ((thisSpotData["total"] - thisSpotData["open"]) / thisSpotData["total"])
+    );
+    thisSpotData["percent"] = percent;
+    thisSpotData["percentText"] = percent.toString() + "%";
+  }
+
+  return thisSpotData;
 }
 // module.exports.handler = serverless(app);
 exports.app = functions.https.onRequest(app);
