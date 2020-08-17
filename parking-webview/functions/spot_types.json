@@ -24,35 +24,35 @@
     {
       "key": "Accessible",
       "name": "Accessible",
-      "color": "#073FCF",
+      "color": "073FCF",
       "text": "&#x267f;",
       "text_color": "FFFFFF"
     },
     {
       "key": "V",
       "name": "Visitor",
-      "color": "#1E2128",
+      "color": "1E2128",
       "text": "V",
       "text_color": "FDFFFD"
     },
     {
       "key": "SR",
       "name": "Residential Students",
-      "color": "#070708",
+      "color": "070708",
       "text": "SR",
       "text_color": "F9F705"
     },
     {
       "key": "D",
       "name": "Discount",
-      "color": "#1DDDDA",
+      "color": "1DDDDA",
       "text": "D",
       "text_color": "000000"
     },
     {
       "key": "M",
       "name": "Motorcycle",
-      "color": "#F99405",
+      "color": "F99405",
       "text": "M",
       "text_color": "000000"
     }
