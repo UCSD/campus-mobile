@@ -52,8 +52,8 @@
             margin: 0 auto;
             overflow: visible;
             transform: rotate(-90deg) rotateX(180deg);
-            width: 20vw;
-            height: 20vw;
+            width: calc(2 * var(--r));
+            height: calc(2 * var(--r));
         }
 
         .progress circle {
@@ -61,8 +61,8 @@
             stroke-dashoffset: 0;
             /* Circumference in dash-array*/
             stroke-dasharray: calc(2 * var(--PI) * var(--r));
-            /* transition: stroke-dashoffset 1s ease; */
-            stroke-width: 1vw;
+            transition: stroke-dashoffset 2s ease;
+            stroke-width: 2vw;
             r: var(--r);
             cx: var(--r);
             cy: var(--r);
@@ -70,9 +70,7 @@
         }
 
         .progress .bar {
-            /* r: var(--r);
-            cx: var(--r);
-            cy: var(--r); */
+            stroke: rgb(235, 235, 235);
         }
 
         .progressdiv {
@@ -97,8 +95,8 @@
         }
 
         .spotIdCommonClass {
-            height: 10vw;
-            width: 10vw;
+            height: var(--r);
+            width: var(--r);
             border-radius: 50%;
             display: inline-block;
             margin-top: 4vw;
@@ -110,6 +108,7 @@
         }
     </style>
     <script>
+        // Adds color and stroke to radial progress circle
         (function () {
             window.onload = function () {
                 var totalProgress, progress;
@@ -124,17 +123,9 @@
                         //If NA means no spots of this type
                         circles[i].querySelector('.bar').style['stroke-dashoffset'] = 0;
                     } else {
-                        console.log(totalProgress);
-                        console.log((progress) * totalProgress / 100);
                         circles[i].querySelector('.bar').style['stroke-dashoffset'] = totalProgress * progress / 100;
                     }
                 }
-
-                //Set text color
-                const progressDivs = document.querySelectorAll('.progressdiv');
-                progressDivs.forEach(div => {
-                    div.style['color'] = div.getAttribute('data-color');
-                })
             }
         })();
     </script>

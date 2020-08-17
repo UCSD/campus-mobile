@@ -2,21 +2,24 @@
 <style>
     /* Put any common CSS properties in parking.ejs, only dynamic ones here */
 
-    #<%=spotId %>progressBarId {
-        stroke: <%=spotData["percentColor"] %>;
-    }
-
     #<%=spotId %>spotIconId {
         background-color: <%=spotData["color"] %>;
         color: <%=spotData["textColor"] %>;
     }
+
+    #<%=spotId %>progressId {
+        stroke: <%= spotData["percentColor"] %>
+    }
+    #<%=spotId %>progressDivId {
+        color: <%= spotData["percentColor"] %>
+    }
 </style>
 <div class="column">
     <br>
-    <div class="progressdiv" data-percent=<%= spotData["percent"] %> data-text=<%= spotData["percentText"] %> data-color=<%= spotData["percentColor"] %>>
-        <svg class="progress" xmlns="http://www.w3.org/2000/svg">
+    <div class="progressdiv" id=<%= spotId+"progressDivId" %> data-percent=<%= spotData["percent"] %> data-text=<%= spotData["percentText"] %> data-color=<%= spotData["percentColor"] %>>
+        <svg class="progress" id=<%= spotId+"progressId" %> xmlns="http://www.w3.org/2000/svg">
             <circle></circle>
-            <circle class="bar" id=<%= spotId+"progressBarId" %>></circle>
+            <circle class="bar" id=<%= spotId+"barId" %>></circle>
         </svg></div>
     <center><span class="spotIdCommonClass" id=<%= spotId+"spotIconId" %>>
             <p id="inner_text" style="color:<%=spotId["textColor"]%>"><%= spotData["text"] %></p>

@@ -30,7 +30,6 @@ app.get("/parking", function (req, res) {
   var client = new HttpClient();
   client.get(url, (response) => {
     var lotInfo = JSON.parse(response);
-    console.log(lotInfo);
     const availability = lotInfo["Availability"];
     const lotName = lotInfo["LocationName"];
     const lotContext = lotInfo["LocationContext"];
@@ -100,8 +99,6 @@ function makeSpotData(selected, availability) {
   const spotTypeData = getSpotTypeDataFromContext(selected);
   var thisSpotData = {};
   thisSpotData["text"] = entities.decode(spotTypeData[0]);
-  console.log("Symbols - ");
-  console.log(thisSpotData["text"]);
   thisSpotData["color"] = "#" + spotTypeData[1];
   thisSpotData["textColor"] = "#" + spotTypeData[2];
   thisSpotData["percentColor"] = "#" + spotTypeData[1]; //TODO
