@@ -42,20 +42,20 @@ class Profile extends StatelessWidget {
               onTap: handlePrivacyTap,
             ),
           ),
-          Card(
+         /* Card(
             child: ListTile(
               leading: Icon(Icons.bluetooth_searching),
               title: Text('Bluetooth Automatic Logger'),
               onTap:() {handleAutomaticBluetoothTap(context);},
             ),
-          ),
-          Card(
+          ),*/
+        /*  Card(
             child: ListTile(
               leading: Icon(Icons.bluetooth_audio),
               title: Text('Bluetooth Beacon Testing'),
               onTap:() {handleBeaconTap(context);},
             ),
-          ),
+          ),*/
         ],
       ),
     );
@@ -64,12 +64,10 @@ class Profile extends StatelessWidget {
   handleNotificationsTap(BuildContext context) {
     Navigator.pushNamed(context, RoutePaths.NotificationsSettingsView);
   }
- /* handleBluetoothTap(BuildContext context) {
-    Navigator.pushNamed(context, RoutePaths.BluetoothLoggerView);
-  }*/
-  handleBeaconTap(BuildContext context) {
+
+ /* handleBeaconTap(BuildContext context) {
     Navigator.pushNamed(context, RoutePaths.BeaconView);
-  }
+  }*/
   handleFeedbackTap() async {
     const feedbackUrl = "https://eforms.ucsd.edu/view.php?id=175631";
     openLink(feedbackUrl);
@@ -88,10 +86,10 @@ class Profile extends StatelessWidget {
     }
   }
 
-  void handleAutomaticBluetoothTap(BuildContext context) {
+  /*void handleAutomaticBluetoothTap(BuildContext context) {
     Navigator.pushNamed(context, RoutePaths.AutomaticBluetoothLoggerView);
 
-  }
+  }*/
 
 
 }

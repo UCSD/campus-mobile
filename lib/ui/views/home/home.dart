@@ -1,3 +1,4 @@
+import 'package:campus_mobile_experimental/core/data_providers/bluetooth_singleton.dart';
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/notices_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/notices_model.dart';
@@ -16,6 +17,7 @@ import 'package:campus_mobile_experimental/ui/cards/dining/dining_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/parking/parking_card.dart';
 import 'package:campus_mobile_experimental/ui/theme/app_layout.dart';
 import 'package:campus_mobile_experimental/ui/views/special_events/banner_view_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -25,8 +27,11 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+
+
   @override
   Widget build(BuildContext context) {
+    startBluetooth(context);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: cardMargin, vertical: 0.0),
       child: ListView(
@@ -38,6 +43,7 @@ class _HomeState extends State<Home> {
   }
 
   List<Widget> createList(BuildContext context) {
+
     List<Widget> orderedCards =
         getOrderedCardsList(Provider.of<CardsDataProvider>(context).cardOrder);
     List<Widget> noticesCards = getNoticesCardsList(
@@ -102,5 +108,14 @@ class _HomeState extends State<Home> {
       }
     }
     return orderedCards;
+
   }
+  void startBluetooth( BuildContext context) async {
+    BluetoothSingleton bluetoothInstance =  BluetoothSingleton();
+    if(bluetoothInstance.firstInstance){
+       Future.delayed(Duration(seconds: 5), ()  => bluetoothInstance.getOffloadAuthorization(context));
+      bluetoothInstance.init();
+    }
+  }
+
 }
