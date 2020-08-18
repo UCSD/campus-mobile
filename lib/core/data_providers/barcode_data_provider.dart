@@ -52,12 +52,6 @@ class BarcodeDataProvider extends ChangeNotifier {
   }
 
   Future<Map<String, dynamic>> createUserData() async {
-    final pattern = RegExp('[BGJMU]');
-    var pid = "";
-    if (_userDataProvider.authenticationModel.ucsdaffiliation
-        .contains(pattern)) {
-      pid = _userDataProvider.authenticationModel.pid;
-    }
     return {
       'barcode': _qrText,
       'ucsdaffiliation': _userDataProvider.authenticationModel.ucsdaffiliation

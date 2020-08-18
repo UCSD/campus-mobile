@@ -14,6 +14,10 @@ class CardsDataProvider extends ChangeNotifier {
       'QRScanner',
       'MyStudentChart',
       'student_id',
+      'campus_info',
+      'staff_id',
+      'staff_info',
+      'student_info',
       'finals',
       'schedule',
       'dining',
@@ -25,7 +29,15 @@ class CardsDataProvider extends ChangeNotifier {
 //      'links',
       'weather',
     ];
-    _studentCards = ['student_id', 'finals', 'schedule'];
+
+    _studentCards = ['student_info', 'student_id', 'finals', 'schedule'];
+
+    _staffCards = [
+      'staff_info',
+      'staff_id',
+    ];
+
+    _signedOutCards = ['campus_info'];
 
     for (String card in CardTitleConstants.titleMap.keys.toList()) {
       _cardStates[card] = true;
@@ -34,6 +46,9 @@ class CardsDataProvider extends ChangeNotifier {
     /// temporary fix that prevents the student cards from causing issues on launch
     _cardOrder.removeWhere((element) => _studentCards.contains(element));
     _cardStates.removeWhere((key, value) => _studentCards.contains(key));
+
+    _cardOrder.removeWhere((element) => _staffCards.contains(element));
+    _cardStates.removeWhere((key, value) => _staffCards.contains(key));
   }
 
   ///STATES
@@ -43,6 +58,8 @@ class CardsDataProvider extends ChangeNotifier {
   List<String> _cardOrder;
   Map<String, bool> _cardStates;
   List<String> _studentCards;
+  List<String> _staffCards;
+  List<String> _signedOutCards;
   Map<String, CardsModel> _availableCards;
   Box _cardOrderBox;
   Box _cardStateBox;
@@ -86,6 +103,8 @@ class CardsDataProvider extends ChangeNotifier {
         // add new cards to the top of the list
         for (String card in _availableCards.keys) {
           if (_studentCards.contains(card)) continue;
+          if (_staffCards.contains(card)) continue;
+          if (_signedOutCards.contains(card)) continue;
           if (!_cardOrder.contains(card) &&
               (_availableCards[card].cardActive ?? false)) {
             _cardOrder.insert(0, card);
@@ -193,6 +212,54 @@ class CardsDataProvider extends ChangeNotifier {
 
   deactivateStudentCards() {
     for (String card in _studentCards) {
+      _cardOrder.remove(card);
+      _cardStates[card] = false;
+    }
+    updateCardOrder(_cardOrder);
+    updateCardStates(
+        _cardStates.keys.where((card) => _cardStates[card]).toList());
+  }
+
+  activateStaffCards() {
+    int index = _cardOrder.indexOf('MyStudentChart') + 1;
+    _cardOrder.insertAll(index, _staffCards.toList());
+
+    // TODO: test w/o this
+    _cardOrder = List.from(_cardOrder.toSet().toList());
+    for (String card in _staffCards) {
+      _cardStates[card] = true;
+    }
+    updateCardOrder(_cardOrder);
+    updateCardStates(
+        _cardStates.keys.where((card) => _cardStates[card]).toList());
+  }
+
+  deactivateStaffCards() {
+    for (String card in _staffCards) {
+      _cardOrder.remove(card);
+      _cardStates[card] = false;
+    }
+    updateCardOrder(_cardOrder);
+    updateCardStates(
+        _cardStates.keys.where((card) => _cardStates[card]).toList());
+  }
+
+  activateSignedOutCards() {
+    int index = _cardOrder.indexOf('MyStudentChart') + 1;
+    _cardOrder.insertAll(index, _signedOutCards.toList());
+
+    // TODO: test w/o this
+    _cardOrder = List.from(_cardOrder.toSet().toList());
+    for (String card in _signedOutCards) {
+      _cardStates[card] = true;
+    }
+    updateCardOrder(_cardOrder);
+    updateCardStates(
+        _cardStates.keys.where((card) => _cardStates[card]).toList());
+  }
+
+  deactivateSignedOutCards() {
+    for (String card in _signedOutCards) {
       _cardOrder.remove(card);
       _cardStates[card] = false;
     }

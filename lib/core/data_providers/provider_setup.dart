@@ -4,6 +4,7 @@ import 'package:campus_mobile_experimental/core/data_providers/cards_data_provid
 import 'package:campus_mobile_experimental/core/data_providers/class_schedule_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/dining_data_proivder.dart';
 import 'package:campus_mobile_experimental/core/data_providers/events_data_provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/free_food_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/links_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/location_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/messages_data_provider.dart';
@@ -18,12 +19,11 @@ import 'package:campus_mobile_experimental/core/data_providers/user_data_provide
 import 'package:campus_mobile_experimental/core/data_providers/weather_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/coordinates_model.dart';
 import 'package:campus_mobile_experimental/core/navigation/top_navigation_bar/app_bar.dart';
-import 'package:provider/single_child_widget.dart';
-import 'package:firebase_analytics/observer.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:campus_mobile_experimental/core/data_providers/free_food_data_provider.dart';
-import 'package:provider/provider.dart';
 import 'package:campus_mobile_experimental/core/services/bottom_navigation_bar_service.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
+import 'package:provider/provider.dart';
+import 'package:provider/single_child_widget.dart';
 
 import 'maps_data_provider.dart';
 
@@ -154,8 +154,21 @@ List<SingleChildWidget> dependentServices = [
                     false)) {
               cardsDataProvider.activateStudentCards();
             } else {
-              /// this is getting called before loadSaved data is complete
               cardsDataProvider.deactivateStudentCards();
+            }
+
+            if (userDataProvider.isLoggedIn &&
+                (userDataProvider.userProfileModel.classifications?.staff ??
+                    false)) {
+              cardsDataProvider.activateStaffCards();
+            } else {
+              cardsDataProvider.deactivateStaffCards();
+            }
+
+            if (userDataProvider.isLoggedIn) {
+              cardsDataProvider.deactivateSignedOutCards();
+            } else {
+              cardsDataProvider.activateSignedOutCards();
             }
           });
         return cardsDataProvider;

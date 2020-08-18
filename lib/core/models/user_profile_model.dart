@@ -87,17 +87,21 @@ class UserProfileModel extends HiveObject {
 
 class Classifications {
   bool student;
+  bool staff;
 
   Classifications({
     this.student,
+    this.staff,
   });
 
   factory Classifications.fromJson(Map<String, dynamic> json) =>
       Classifications(
         student: json["student"] == null ? null : json["student"],
+        staff: json["staff"] == null ? null : json["staff"],
       );
 
   Map<String, dynamic> toJson() => {
         "student": student == null ? null : student,
+        "staff": staff == null ? null : staff,
       };
 }

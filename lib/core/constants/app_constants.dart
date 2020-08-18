@@ -1,6 +1,3 @@
-import 'package:campus_mobile_experimental/core/models/parking_model.dart';
-import 'package:campus_mobile_experimental/ui/views/news/news_detail_view.dart';
-
 class RoutePaths {
   static const String Home = '/';
   static const String BottomNavigationBar = 'bottom_navigation_bar';
@@ -92,13 +89,6 @@ class NavigationConstants {
   static const MapTab = 1;
   static const NotificationsTab = 2;
   static const ProfileTab = 3;
-//  static const AvailabilityView = 4;
-//  static const ScheduleView = 5;
-//  static const DiningView = 6;
-//  static const EventsView = 7;
-//  static const NewsDetailView = 8;
-//  static const NotificationsView = 9;
-//  static const ParkingView = 10;
 }
 
 /// Maps Card IDs to Card titles
@@ -106,7 +96,11 @@ class CardTitleConstants {
   static const titleMap = {
     'QRScanner': 'QR Scanner',
     'MyStudentChart': 'MyStudentChart',
+    'staff_info': 'COVID-19 Info',
+    'campus_info': "Campus Information",
+    'student_info': 'COVID-19 Info',
     'student_id': 'Student ID',
+    'staff_id': 'Staff ID',
     'finals': 'Finals',
     'schedule': 'Classes',
     'dining': 'Dining',

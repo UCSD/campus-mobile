@@ -1,17 +1,18 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
+import 'package:campus_mobile_experimental/core/data_providers/availability_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/push_notifications_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/authentication_model.dart';
 import 'package:campus_mobile_experimental/core/models/user_profile_model.dart';
 import 'package:campus_mobile_experimental/core/services/authentication_service.dart';
 import 'package:campus_mobile_experimental/core/services/user_profile_service.dart';
+import 'package:encrypt/encrypt.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive/hive.dart';
 import 'package:pointycastle/asymmetric/oaep.dart';
 import 'package:pointycastle/pointycastle.dart' as pc;
-import 'dart:typed_data';
-import 'package:encrypt/encrypt.dart';
-import 'dart:convert';
-import 'package:campus_mobile_experimental/core/data_providers/availability_data_provider.dart';
 
 class UserDataProvider extends ChangeNotifier {
   UserDataProvider() {
@@ -259,6 +260,31 @@ class UserDataProvider extends ChangeNotifier {
           newModel = await _createNewUser(newModel);
           await postUserProfile(newModel);
         } else {
+          newModel.username = await _getUsernameFromDevice();
+          newModel.ucsdaffiliation = _authenticationModel.ucsdaffiliation;
+          newModel.pid = _authenticationModel.pid;
+          newModel.subscribedTopics =
+              _pushNotificationDataProvider.publicTopics();
+
+          final studentPattern = RegExp('[BGJMU]');
+          final staffPattern = RegExp('[E]');
+
+          if ((newModel.ucsdaffiliation ?? "").contains(studentPattern)) {
+            newModel
+              ..classifications =
+                  Classifications.fromJson({'student': true, 'staff': false})
+              ..subscribedTopics
+                  .addAll(_pushNotificationDataProvider.studentTopics());
+          } else if ((newModel.ucsdaffiliation ?? "").contains(staffPattern)) {
+            newModel
+              ..classifications =
+                  Classifications.fromJson({'staff': true, 'student': false})
+              ..subscribedTopics
+                  .addAll(_pushNotificationDataProvider.staffTopics());
+          } else {
+            newModel.classifications =
+                Classifications.fromJson({'student': false, 'staff': false});
+          }
           await updateUserProfileModel(newModel);
         }
       } else {
@@ -293,16 +319,26 @@ class UserDataProvider extends ChangeNotifier {
       profile.username = await _getUsernameFromDevice();
       profile.ucsdaffiliation = _authenticationModel.ucsdaffiliation;
       profile.pid = _authenticationModel.pid;
-      profile.subscribedTopics =
-          await _pushNotificationDataProvider.publicTopics();
-      final pattern = RegExp('[BGJMU]');
-      if ((profile.ucsdaffiliation ?? "").contains(pattern)) {
+      profile.subscribedTopics = _pushNotificationDataProvider.publicTopics();
+
+      final studentPattern = RegExp('[BGJMU]');
+      final staffPattern = RegExp('[E]');
+
+      if ((profile.ucsdaffiliation ?? "").contains(studentPattern)) {
         profile
-          ..classifications = Classifications.fromJson({'student': true})
+          ..classifications =
+              Classifications.fromJson({'student': true, 'staff': false})
           ..subscribedTopics
-              .addAll(await _pushNotificationDataProvider.studentTopics());
+              .addAll(_pushNotificationDataProvider.studentTopics());
+      } else if ((profile.ucsdaffiliation ?? "").contains(staffPattern)) {
+        profile
+          ..classifications =
+              Classifications.fromJson({'staff': true, 'student': false})
+          ..subscribedTopics
+              .addAll(_pushNotificationDataProvider.staffTopics());
       } else {
-        profile.classifications = Classifications.fromJson({'student': false});
+        profile.classifications =
+            Classifications.fromJson({'student': false, 'staff': false});
       }
     } catch (e) {
       print(e.toString());
