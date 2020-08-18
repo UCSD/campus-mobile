@@ -4,7 +4,7 @@ var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-const functions = require("firebase-functions");
+// const functions = require("firebase-functions");
 const Entities = require("html-entities").XmlEntities;
 
 const entities = new Entities();
@@ -101,7 +101,6 @@ function makeSpotData(selected, availability) {
   thisSpotData["text"] = entities.decode(spotTypeData[0]);
   thisSpotData["color"] = "#" + spotTypeData[1];
   thisSpotData["textColor"] = "#" + spotTypeData[2];
-  thisSpotData["percentColor"] = "#" + spotTypeData[1]; //TODO
   thisSpotData["total"] = availability[selected]
     ? availability[selected]["Total"]
     : 0;
@@ -112,17 +111,27 @@ function makeSpotData(selected, availability) {
 
   if (thisSpotData["total"] == 0) {
     thisSpotData["percent"] = 0;
-    thisSpotData["percentText"] = "NA";
+    thisSpotData["percentText"] = "N/A";
   } else {
-    var percent = Math.floor(
+    thisSpotData["percent"] = Math.floor(
       100 *
         ((thisSpotData["total"] - thisSpotData["open"]) / thisSpotData["total"])
     );
-    thisSpotData["percent"] = percent;
-    thisSpotData["percentText"] = percent.toString() + "%";
+    thisSpotData["percentText"] = thisSpotData["percent"].toString() + "%";
   }
 
+  const percent = thisSpotData["percent"];
+
+  if (percent == 0) {
+    thisSpotData["percentColor"] = "#F0EFF4";
+  } else if (percent < 30) {
+    thisSpotData["percentColor"] = "#EB5757";
+  } else if (percent < 60) {
+    thisSpotData["percentColor"] = "#F2C94C";
+  } else {
+    thisSpotData["percentColor"] = "#27AE60";
+  }
   return thisSpotData;
 }
-// module.exports.handler = serverless(app);
-exports.app = functions.https.onRequest(app);
+module.exports.handler = serverless(app);
+// exports.app = functions.https.onRequest(app);
