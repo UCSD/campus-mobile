@@ -23,7 +23,6 @@ class SpotTypesView extends StatelessWidget {
   List<Widget> createList(BuildContext context) {
     List<Widget> list = List<Widget>();
     for (Spot data in spotTypesDataProvider.spotTypeModel.spots) {
-      print(data.spotKey);
       String color = "0xff" + data.color;
       list.add(ListTile(
         key: Key(data.spotKey.toString()),

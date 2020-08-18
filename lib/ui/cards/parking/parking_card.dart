@@ -56,13 +56,11 @@ class _ParkingCardState extends State<ParkingCard> {
         selectedSpots.add(key);
       }
     });
-    print(selectedSpots);
 
     for (ParkingModel model in _parkingDataProvider.parkingModels) {
       if (model != null) {
         if (_parkingDataProvider.parkingViewState[model.locationName]) {
           final url = makeUrl(model.locationId, selectedSpots);
-          print(url);
           selectedLotsViews.add(WebView(
             initialUrl: url,
             javascriptMode: JavascriptMode.unrestricted,
@@ -72,7 +70,6 @@ class _ParkingCardState extends State<ParkingCard> {
             onPageFinished: (some) async {
               double height = double.parse(await _webViewController
                   .evaluateJavascript("window.innerHeight"));
-              print("\n\nHeight - " + height.toString());
             },
           ));
         }
