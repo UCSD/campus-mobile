@@ -24,17 +24,16 @@ class SpotTypesView extends StatelessWidget {
     List<Widget> list = List<Widget>();
     for (Spot data in spotTypesDataProvider.spotTypeModel.spots) {
       print(data.spotKey);
+      String color = "0xff" + data.color;
       list.add(ListTile(
         key: Key(data.spotKey.toString()),
         leading: Container(
             width: 35, // TODO add responsive units
             height: 35,
             decoration: new BoxDecoration(
-                shape: BoxShape.circle,
-                image: new DecorationImage(
-                    fit: BoxFit.fill,
-                    image: new NetworkImage(
-                        "https://i.imgur.com/wQYnFtM.jpg")))), //TODO
+              shape: BoxShape.circle,
+              color: Color(int.parse(color)),
+            )), //TODO
         title: Text(data.name),
         trailing: Switch(
           value: Provider.of<ParkingDataProvider>(context)
