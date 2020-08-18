@@ -32,7 +32,10 @@ class SpotTypesView extends StatelessWidget {
             decoration: new BoxDecoration(
               shape: BoxShape.circle,
               color: Color(int.parse(color)),
-            )), //TODO
+            ),
+            child: Align(
+                alignment: Alignment.center,
+                child: Text(data.text.toString()))),
         title: Text(data.name),
         trailing: Switch(
           value: Provider.of<ParkingDataProvider>(context)
