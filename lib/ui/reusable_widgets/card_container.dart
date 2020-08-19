@@ -97,8 +97,8 @@ class CardContainer extends StatelessWidget {
               height: 32, width: 32, child: CircularProgressIndicator()),
         ),
       );
-    } else if (titleText == "Staff Information" ||
-        titleText == "Student Information" ||
+    } else if (titleText == "COVID-19 Info" ||
+        titleText == "COVID-19 Info" ||
         titleText == "Campus Information") {
       return Container(
         width: double.infinity,
