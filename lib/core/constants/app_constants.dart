@@ -2,6 +2,7 @@ class RoutePaths {
   static const String Home = '/';
   static const String BottomNavigationBar = 'bottom_navigation_bar';
   static const String Onboarding = 'onboarding';
+  static const String OnboardingInitial = 'onboarding/initial';
   static const String OnboardingLogin = 'onboarding/login';
   static const String OnboardingAffiliations = 'onboarding/affiliations';
   static const String Map = 'map/map';

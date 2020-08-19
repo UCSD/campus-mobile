@@ -22,6 +22,7 @@ import 'package:campus_mobile_experimental/ui/views/news/news_list.dart';
 import 'package:campus_mobile_experimental/ui/views/notifications/notifications_list_view.dart';
 import 'package:campus_mobile_experimental/ui/views/notifications/notifications_settings.dart';
 import 'package:campus_mobile_experimental/ui/views/onboarding/onboarding_affiliations.dart';
+import 'package:campus_mobile_experimental/ui/views/onboarding/onboarding_initial_screen.dart';
 import 'package:campus_mobile_experimental/ui/views/onboarding/onboarding_login.dart';
 import 'package:campus_mobile_experimental/ui/views/onboarding/onboarding_screen.dart';
 import 'package:campus_mobile_experimental/ui/views/parking/manage_parking_view.dart';
@@ -43,6 +44,8 @@ class Router {
     switch (settings.name) {
       case RoutePaths.BottomNavigationBar:
         return MaterialPageRoute(builder: (_) => BottomTabBar());
+      case RoutePaths.OnboardingInitial:
+        return MaterialPageRoute(builder: (_) => OnboardingInitial());
       case RoutePaths.Onboarding:
         return MaterialPageRoute(builder: (_) => OnboardingScreen());
       case RoutePaths.OnboardingAffiliations:

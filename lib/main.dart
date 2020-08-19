@@ -86,7 +86,7 @@ class CampusMobile extends StatelessWidget {
           appBarTheme: darkAppBarTheme,
         ),
         initialRoute: showOnboardingScreen
-            ? RoutePaths.Onboarding
+            ? RoutePaths.OnboardingInitial
             : RoutePaths.BottomNavigationBar,
         onGenerateRoute: Router.generateRoute,
         navigatorObservers: [
