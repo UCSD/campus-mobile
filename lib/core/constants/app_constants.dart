@@ -74,6 +74,7 @@ class ButtonText {
 
 class ErrorConstants {
   static const authorizedPostErrors = 'Failed to upload data: ';
+  static const authorizedPutErrors = 'Failed to update data: ';
   static const invalidBearerToken = 'Invalid bearer token';
 }
 
