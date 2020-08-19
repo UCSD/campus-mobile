@@ -200,7 +200,7 @@ class BluetoothSingleton {
     // If there are more than three devices, log location
     if (uniqueDevices >= uniqueIdThreshold) {
       //loggedItems.add("LOCATION LOGGED");
-      _logLocation();
+    //  _logLocation();
 
       // Reset dwell times
       resetDevices();
@@ -428,6 +428,7 @@ class BluetoothSingleton {
     _storage.write(key: _randomValue(), value: logLocation);
   }
 
+  // Get the rough distance from bt device
   double getDistance(int rssi) {
     var txPower = -59; //hardcoded for now
     var ratio = (rssi * 1.0) / txPower;

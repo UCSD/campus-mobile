@@ -29,6 +29,13 @@ class Profile extends StatelessWidget {
             ),
           ),
           Card(
+             child: ListTile(
+               leading: Icon(Icons.bluetooth),
+               title: Text('Bluetooth'),
+               onTap:(){ Navigator.pushNamed(context, RoutePaths.BluetoothPermissionsView);},
+             ),
+          ),
+          Card(
             child: ListTile(
               leading: Icon(Icons.feedback),
               title: Text('Feedback'),
