@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:math' as math;
 import 'dart:math';
 import 'dart:typed_data';
+import 'dart:io' show Platform;
 
 import 'package:campus_mobile_experimental/core/services/networking.dart';
 import 'package:flutter/material.dart';
@@ -302,8 +303,9 @@ class BluetoothSingleton {
 
       _storage.write(key: _randomValue(), value: deviceLog);
       // Optimize device connection
-      scannedObjects[scanResult.device.id.toString()].deviceType =
-          parseForAppearance(scanResult);
+      if (Platform.isAndroid)
+        scannedObjects[scanResult.device.id.toString()].deviceType =
+            parseForAppearance(scanResult);
 
       if (scanResult.advertisementData.connectable &&
           scannedObjects[scanResult.device.id.toString()].deviceType == "" &&
