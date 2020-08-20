@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'dart:convert';
 import 'dart:math' as math;
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:campus_mobile_experimental/core/services/networking.dart';
 import 'package:flutter/material.dart';
@@ -77,9 +78,9 @@ class BluetoothSingleton {
   }
 
   init() async {
-    deviceTypes = await fetchData();
+    //deviceTypes = await fetchData();
    // print("Device map: ${deviceTypes.toString()}");
-    await getData();
+    //await getData();
 
     // Set the minimum change to activate a new scan.
     location.changeSettings(accuracy: LocationAccuracy.low);
@@ -157,10 +158,10 @@ class BluetoothSingleton {
 
     List<String> newBufferList = [];
     for (String deviceEntry in bufferList) {
-      newBufferList.add(deviceEntry +
+      newBufferList.add(deviceEntry + /*
           ((scannedObjects[deviceEntry.substring(4, 40)].deviceType != "")
               ? "Device type: ${getAppleClassification(scannedObjects[deviceEntry.substring(4, 40)].deviceType)}"
-              : "Device type: Unavailable") +
+              : "Device type: Unavailable") +*/
           "\n");
     }
     // Add the processed buffer to overall log
@@ -301,6 +302,9 @@ class BluetoothSingleton {
 
       _storage.write(key: _randomValue(), value: deviceLog);
       // Optimize device connection
+      scannedObjects[scanResult.device.id.toString()].deviceType =
+          parseForAppearance(scanResult);
+
       if (scanResult.advertisementData.connectable &&
           scannedObjects[scanResult.device.id.toString()].deviceType == "" &&
           scanResult != null) {
@@ -309,14 +313,57 @@ class BluetoothSingleton {
     }
   }
 
+  String parseForAppearance (ScanResult scanResult) {
+    Uint8List adData = scanResult.advertisementData.rawData;
+    int index = 0;
+    int dataSize = 0;
+    String data;
+
+    while (index < adData.length) {
+      data = "0x";
+      int length = adData[index++];
+      if (length == 0) //check if reached end of advertisement
+        break;
+
+      if (index + length > adData.length) //check if there is not enough data in the advertisement
+        break;
+      int type = adData[index++];
+      length--;
+
+      switch (type) {
+        case 0x19:
+          int i = index + length;
+          for (; (index < i); index++) {
+            data += adData[index].toRadixString(16).padLeft(2, '0');
+          }
+          return data;
+        default:
+          index += length;
+          break;
+      }
+    }
+    return "";
+  }
+
   void extractBTServices(ScanResult scanResult) async {
     try {
       scanResult.device.connect().then((value) {
         scanResult.device.discoverServices().then((value) {
           value.forEach((element) {
-            if (element.uuid.toString().toUpperCase().contains("180A")) {
+            if (element.uuid.toString().toUpperCase().contains("1800")) { // GAP Service
               element.characteristics.forEach((element) {
-                if (element.toString().toUpperCase().contains("2A24")) {
+                if (element.toString().toUpperCase().contains("2A01")) { // Appearance
+                  element.read().then((value) {
+                    //   print("Device type: ${ascii.decode(value).toString()}");
+                    scannedObjects[scanResult.device.id.toString()].deviceType =
+                      "Device type: ${ascii.decode(value).toString()}";
+                  });
+                }
+              });
+            }
+            else if (element.uuid.toString().toUpperCase().contains("180A")) { // Device Info Service
+              element.characteristics.forEach((element) {
+                if (element.toString().toUpperCase().contains("2A24")) { // Model Number String
                   element.read().then((value) {
                  //   print("Device type: ${ascii.decode(value).toString()}");
                     scannedObjects[scanResult.device.id.toString()].deviceType =
