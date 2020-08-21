@@ -1,6 +1,7 @@
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
+import 'package:campus_mobile_experimental/ui/theme/darkmode_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -15,7 +16,7 @@ class CampusInfoCard extends StatefulWidget{
 class _CampusInfoCardState extends State<CampusInfoCard> with WidgetsBindingObserver {
   String cardId = "campus_info";
   WebViewController _webViewController;
-  String _url;
+  String _url = "https://cwo-test.ucsd.edu/WebCards/campus_info.html?dummy=true";
 
   @override
   void initState() {
@@ -36,8 +37,7 @@ class _CampusInfoCardState extends State<CampusInfoCard> with WidgetsBindingObse
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       reload: () {
-        checkTheme(context);
-        reloadWebView();
+        reloadWebViewWithTheme(context, _url, _webViewController);
       },
       isLoading: false,
       titleText: CardTitleConstants.titleMap[cardId],
@@ -51,21 +51,8 @@ class _CampusInfoCardState extends State<CampusInfoCard> with WidgetsBindingObse
     super.didChangeDependencies();
   }
 
-
-
-   checkTheme(BuildContext context) {
-      _url = "https://cwo-test.ucsd.edu/WebCards/campus_info.html";
-      if(Theme.of(context).brightness == Brightness.dark) {
-        _url += "?darkmode=true";
-      }
-      else {
-        _url += "?darkmode=false";
-      }
-      reloadWebView();
-  }
-
   Widget buildCardContent(BuildContext context) {
-    checkTheme(context);
+    reloadWebViewWithTheme(context, _url, _webViewController);
     return Column(
       children: <Widget>[
         Flexible(
@@ -97,12 +84,6 @@ class _CampusInfoCardState extends State<CampusInfoCard> with WidgetsBindingObse
       launch(url);
     } else {
       //can't launch url, there is some error
-    }
-  }
-
-  void reloadWebView() {
-    if(_webViewController != null && _url != null) {
-      _webViewController?.loadUrl(_url);
     }
   }
 }
