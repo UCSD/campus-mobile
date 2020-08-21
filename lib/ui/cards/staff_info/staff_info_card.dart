@@ -70,7 +70,7 @@ class _StaffInfoCardState extends State<StaffInfoCard> with WidgetsBindingObserv
     var tokenQueryString =
         "token=" + '${_userDataProvider.authenticationModel.accessToken}';
     url = fileURL + "?" + tokenQueryString;
-    //url = getDarkModeUrl(context, url);
+    
     reloadWebViewWithTheme(context, url, _webViewController);
 
     return Column(
