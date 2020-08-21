@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 import 'package:dots_indicator/dots_indicator.dart';
@@ -17,10 +18,18 @@ class _OnboardingInitialState extends State<OnboardingInitial>
     with TickerProviderStateMixin {
   bool _visible = true;
   bool _tappedScreen = true;
-  bool _visibleBackground = true;
-  bool _animateScreen = false;
   final _controller = PageController();
   double currentIndex = 0;
+
+  nextPage() async {
+    await Future.delayed(Duration(seconds: 2));
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => OnboardingScreen(),
+      ),
+    );
+  }
 
   @override
   void initState() {
@@ -32,6 +41,7 @@ class _OnboardingInitialState extends State<OnboardingInitial>
         });
       }
     });
+    nextPage();
   }
 
   @override
@@ -49,7 +59,6 @@ class _OnboardingInitialState extends State<OnboardingInitial>
                   child:
 
                       ///PAGE 1 CONNECTIONS----------------------------------------------------
-
                       Stack(overflow: Overflow.clip, children: <Widget>[
                 Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -62,38 +71,41 @@ class _OnboardingInitialState extends State<OnboardingInitial>
                                 'assets/images/onboarding_connections_background.png'),
                             fit: BoxFit.fill,
                           ))),
+                      Container(
+                        height: height * 0.056,
+                        color: Colors.white,
+                      ),
                       Expanded(
                           child: Container(
                         width: width * 0.9,
                         color: Colors.white,
-                        child: FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: SizedBox(
-                            child: Center(
-                                child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                  Padding(padding: EdgeInsets.only(top: 40.0)),
-                                  Text(
-                                    "Make the most out of your CAMPUS CONNECTIONS",
-                                    style: TextStyle(
-                                        color: ColorPrimary,
-                                        fontWeight: FontWeight.bold),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 10),
-                                  ),
-                                  Text(
-                                    "Your trusted, on-the-go, location-based campus resource for all things Triton.",
-                                    style: TextStyle(
-                                        color: ColorPrimary.withOpacity(0.7),
-                                        fontSize: 18),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ])),
-                          ),
-                        ),
+                        child: Center(
+                            child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                              AutoSizeText(
+                                "Make the most out of your CAMPUS CONNECTIONS",
+                                maxLines: 2,
+                                minFontSize: 18,
+                                maxFontSize: 25,
+                                style: TextStyle(
+                                    color: ColorPrimary,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 25),
+                                textAlign: TextAlign.center,
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: height * 0.01),
+                              ),
+                              AutoSizeText(
+                                "Your trusted, on-the-go, location-based campus resource for all things Triton.",
+                                maxLines: 2,
+                                style: TextStyle(
+                                    color: ColorPrimary.withOpacity(0.7),
+                                    fontSize: 18),
+                                textAlign: TextAlign.center,
+                              ),
+                            ])),
                       ))
                     ]),
                 Container(
@@ -116,12 +128,12 @@ class _OnboardingInitialState extends State<OnboardingInitial>
                     activeColor: ColorPrimary, spacing: EdgeInsets.all(4.0)),
               ),
               Container(
-                height: 60,
+                height: height * 0.066,
                 color: Colors.white,
               ),
               Container(
                   color: ColorPrimary,
-                  height: 80,
+                  height: height * 0.089,
                   child: Row(
                       mainAxisSize: MainAxisSize.max,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -163,18 +175,21 @@ class _OnboardingInitialState extends State<OnboardingInitial>
           buildRectangleBar1(width, height),
           buildRectangleBar2(width, height),
           buildRectangleBar3(width, height),
-          Container(),
-          GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTap: () {
-              if (_tappedScreen == true) {
-                setState(() {
-                  _visible = !_visible;
-                  Navigator.of(context).push(_createRoute());
-                });
-              }
-            },
-          ),
+
+          ///-------------
+//          Container(),
+//          GestureDetector(
+//            behavior: HitTestBehavior.opaque,
+//            onTap: () {
+//              if (_tappedScreen == true) {
+//                setState(() {
+//                  _visible = !_visible;
+//                  Navigator.of(context).push(_createRoute());
+//                });
+//              }
+//            },
+//          ),
+          ///---------------
         ]));
   }
 
@@ -184,8 +199,8 @@ class _OnboardingInitialState extends State<OnboardingInitial>
         child: Transform.translate(
             offset: Offset(width - 320, -220),
             child: Container(
-              width: 110,
-              height: 560,
+              width: width * 0.266,
+              height: height * 0.625,
               color: Colors.yellow,
             )));
   }
@@ -196,8 +211,8 @@ class _OnboardingInitialState extends State<OnboardingInitial>
         child: Transform.translate(
             offset: Offset(width - 190, -80),
             child: Container(
-              width: 110,
-              height: 560,
+              width: width * 0.266,
+              height: height * 0.625,
               color: Colors.yellow,
             )));
   }
@@ -208,8 +223,8 @@ class _OnboardingInitialState extends State<OnboardingInitial>
         child: Transform.translate(
             offset: Offset(width - 60, -220),
             child: Container(
-              width: 110,
-              height: 560,
+              width: width * 0.266,
+              height: height * 0.625,
               color: Colors.yellow,
             )));
   }

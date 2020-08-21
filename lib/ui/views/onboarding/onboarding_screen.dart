@@ -91,7 +91,8 @@ class _OnboardingScreen extends State<OnboardingScreen>
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-
+    print(width);
+    print(height);
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       backgroundColor: Colors.white,
@@ -108,16 +109,18 @@ class _OnboardingScreen extends State<OnboardingScreen>
                   Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
+                        FractionallySizedBox(
+                          child: Container(
+                              height: MediaQuery.of(context).size.height * .46,
+                              decoration: new BoxDecoration(
+                                  image: DecorationImage(
+                                image: AssetImage(
+                                    'assets/images/onboarding_connections_background.png'),
+                                fit: BoxFit.fill,
+                              ))),
+                        ),
                         Container(
-                            height: MediaQuery.of(context).size.height * .46,
-                            decoration: new BoxDecoration(
-                                image: DecorationImage(
-                              image: AssetImage(
-                                  'assets/images/onboarding_connections_background.png'),
-                              fit: BoxFit.fill,
-                            ))),
-                        Container(
-                          height: 50,
+                          height: height * 0.056,
                           color: Colors.white,
                         ),
                         Expanded(
@@ -140,10 +143,11 @@ class _OnboardingScreen extends State<OnboardingScreen>
                                   textAlign: TextAlign.center,
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(top: 10),
+                                  padding: EdgeInsets.only(top: height * 0.01),
                                 ),
-                                Text(
+                                AutoSizeText(
                                   "Your trusted, on-the-go, location-based campus resource for all things Triton.",
+                                  maxLines: 2,
                                   style: TextStyle(
                                       color: ColorPrimary.withOpacity(0.7),
                                       fontSize: 18),
@@ -179,6 +183,10 @@ class _OnboardingScreen extends State<OnboardingScreen>
                                   'assets/images/onboarding_affiliation_background.png'),
                               fit: BoxFit.fill,
                             ))),
+                        Container(
+                          height: height * 0.056,
+                          color: Colors.white,
+                        ),
                         Expanded(
                             child: Container(
                           width: width * 0.93,
@@ -187,7 +195,6 @@ class _OnboardingScreen extends State<OnboardingScreen>
                               child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
-                                Padding(padding: EdgeInsets.only(top: 40.0)),
                                 Text(
                                   "Made for students AND staff",
                                   style: TextStyle(
@@ -197,10 +204,10 @@ class _OnboardingScreen extends State<OnboardingScreen>
                                   textAlign: TextAlign.center,
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(top: 10),
+                                  padding: EdgeInsets.only(top: height * 0.01),
                                 ),
                                 Text(
-                                  "Log in now to gain access to personalized information",
+                                  "Log in now to gain access to personalized information.",
                                   style: TextStyle(
                                       color: ColorPrimary.withOpacity(0.7),
                                       fontSize: 20),
@@ -254,15 +261,18 @@ class _OnboardingScreen extends State<OnboardingScreen>
                                   'assets/images/onboarding_social.png'),
                               fit: BoxFit.fill,
                             ))),
+                        Container(
+                          height: height * 0.056,
+                          color: Colors.white,
+                        ),
                         Expanded(
                             child: Container(
-                          width: width * 0.93,
+                          width: width * 0.9,
                           color: Colors.white,
                           child: Center(
                               child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
-                                Padding(padding: EdgeInsets.only(top: 40.0)),
                                 Text(
                                   "Know what's going on",
                                   style: TextStyle(
@@ -272,10 +282,10 @@ class _OnboardingScreen extends State<OnboardingScreen>
                                   textAlign: TextAlign.center,
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(top: 10),
+                                  padding: EdgeInsets.only(top: height * 0.01),
                                 ),
                                 Text(
-                                  "Connect to the latest university services, news, and information when you need it most",
+                                  "Connect to the latest university services, news, and information when you need it most.",
                                   style: TextStyle(
                                       color: ColorPrimary.withOpacity(0.7),
                                       fontSize: 20),
@@ -308,12 +318,12 @@ class _OnboardingScreen extends State<OnboardingScreen>
                   activeColor: ColorPrimary, spacing: EdgeInsets.all(4.0)),
             ),
             Container(
-              height: 60,
+              height: height * 0.066,
               color: Colors.white,
             ),
             Container(
                 color: ColorPrimary,
-                height: 80,
+                height: height * 0.089,
                 child: Row(
                     mainAxisSize: MainAxisSize.max,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -412,8 +422,8 @@ class _OnboardingScreen extends State<OnboardingScreen>
         child: Transform.translate(
             offset: Offset(width - 320, -220),
             child: Container(
-              width: 110,
-              height: 560,
+              width: width * 0.266,
+              height: height * 0.625,
               color: Colors.yellow,
             )));
   }
@@ -424,8 +434,8 @@ class _OnboardingScreen extends State<OnboardingScreen>
         child: Transform.translate(
             offset: Offset(width - 190, -80),
             child: Container(
-              width: 110,
-              height: 560,
+              width: width * 0.266,
+              height: height * 0.625,
               color: Colors.yellow,
             )));
   }
@@ -436,8 +446,8 @@ class _OnboardingScreen extends State<OnboardingScreen>
         child: Transform.translate(
             offset: Offset(width - 60, -220),
             child: Container(
-              width: 110,
-              height: 560,
+              width: width * 0.266,
+              height: height * 0.625,
               color: Colors.yellow,
             )));
   }
