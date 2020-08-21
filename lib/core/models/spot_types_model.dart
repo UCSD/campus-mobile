@@ -39,7 +39,7 @@ class Spot {
         name: json["name"] == null ? null : json["name"],
         color: json["color"] == null ? null : json["color"],
         text: json["text"] == null ? null : json["text"],
-        textColor: json["textColor"] == null ? null : json["text_color"],
+        textColor: json["text_color"] == null ? null : json["text_color"],
       );
 
   Map<String, dynamic> toJson() => {
