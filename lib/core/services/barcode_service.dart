@@ -32,7 +32,7 @@ class BarcodeService {
   }
 
   bool validateUploadResults(Map<String, dynamic> submit, Map<String, dynamic> response) {
-    return submit["barcode"] == response["barcode"];
+    return submit["barcode"] == response["SCAN_CODE_ID"];
   }
 
   String get error => _error;
