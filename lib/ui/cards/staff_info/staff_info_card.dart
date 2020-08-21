@@ -2,6 +2,7 @@ import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
+import 'package:campus_mobile_experimental/ui/theme/darkmode_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -38,7 +39,7 @@ class _StaffInfoCardState extends State<StaffInfoCard> with WidgetsBindingObserv
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       reload: () {
-        reloadWebView();
+        reloadWebViewWithTheme(context, url, _webViewController);
       },
       isLoading: false,
       titleText: CardTitleConstants.titleMap[cardId],
@@ -51,9 +52,6 @@ class _StaffInfoCardState extends State<StaffInfoCard> with WidgetsBindingObserv
   void didChangeDependencies() {
     super.didChangeDependencies();
   }
-
-  //String _url = "https://cwo-test.ucsd.edu/WebCards/staff_info_new.html";
-  //"file:///Users/mihirgupta/Downloads/staff_info.htm";
 
   UserDataProvider _userDataProvider;
   set userDataProvider(UserDataProvider value) => _userDataProvider = value;
@@ -72,12 +70,8 @@ class _StaffInfoCardState extends State<StaffInfoCard> with WidgetsBindingObserv
     var tokenQueryString =
         "token=" + '${_userDataProvider.authenticationModel.accessToken}';
     url = fileURL + "?" + tokenQueryString;
-    if (Theme.of(context).brightness == Brightness.dark) {
-      url += "&darkmode=true";
-    } else {
-      url += "&darkmode=false";
-    }
-    reloadWebView();
+    //url = getDarkModeUrl(context, url);
+    reloadWebViewWithTheme(context, url, _webViewController);
 
     return Column(
       children: <Widget>[
@@ -110,18 +104,6 @@ class _StaffInfoCardState extends State<StaffInfoCard> with WidgetsBindingObserv
       launch(url);
     } else {
       //can't launch url, there is some error
-    }
-  }
-
-  void reloadWebView() {
-    if (Theme.of(context).brightness == Brightness.dark) {
-      url += "&darkmode=true";
-    } else {
-      url += "&darkmode=false";
-    }
-    if(_webViewController != null) {
-      _webViewController?.loadUrl(url);
-
     }
   }
 }

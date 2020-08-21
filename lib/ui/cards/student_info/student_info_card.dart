@@ -2,6 +2,7 @@ import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
+import 'package:campus_mobile_experimental/ui/theme/darkmode_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -37,7 +38,7 @@ class _StudentInfoCardState extends State<StudentInfoCard> with WidgetsBindingOb
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       reload: () {
-        reloadWebView();
+        reloadWebViewWithTheme(context, url, _webViewController);
       },
       isLoading: false,
       titleText: CardTitleConstants.titleMap[cardId],
@@ -69,15 +70,8 @@ class _StudentInfoCardState extends State<StudentInfoCard> with WidgetsBindingOb
         "token=" + '${_userDataProvider.authenticationModel.accessToken}';
     url = fileURL + "?" + tokenQueryString;
 
-    // form URL according to current application theme
-    if(Theme.of(context).brightness == Brightness.dark) {
-      url += "&darkmode=true";
-    }
-    else {
-      url += "&darkmode=false";
-    }
-    //reload webview when widget is rebuilt
-    reloadWebView();
+    reloadWebViewWithTheme(context, url, _webViewController);
+
     return Column(
       children: <Widget>[
         Flexible(
@@ -111,18 +105,4 @@ class _StudentInfoCardState extends State<StudentInfoCard> with WidgetsBindingOb
       //can't launch url, there is some error
     }
   }
-
-  void reloadWebView() {
-    if(Theme.of(context).brightness == Brightness.dark) {
-      url += "&darkmode=true";
-    }
-    else {
-      url += "&darkmode=false";
-    }
-
-    if(_webViewController != null) {
-      _webViewController.loadUrl(url);
-    }
-  }
-  
 }

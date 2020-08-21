@@ -2,6 +2,7 @@ import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
+import 'package:campus_mobile_experimental/ui/theme/darkmode_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -36,7 +37,7 @@ class _StaffIdCardState extends State<StaffIdCard> with WidgetsBindingObserver{
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       reload: () {
-        reloadWebView();
+        reloadWebViewWithTheme(context, url, _webViewController);
       },
       isLoading: false,
       titleText: CardTitleConstants.titleMap[cardId],
@@ -70,14 +71,7 @@ class _StaffIdCardState extends State<StaffIdCard> with WidgetsBindingObserver{
         "token=" + '${_userDataProvider.authenticationModel.accessToken}';
      url = fileURL + "?" + tokenQueryString;
 
-    if(Theme.of(context).brightness == Brightness.dark) {
-      url += "&darkmode=true";
-    }
-    else {
-      url += "&darkmode=false";
-    }
-
-    reloadWebView();
+    reloadWebViewWithTheme(context, url, _webViewController);
 
     return Column(
       children: <Widget>[
@@ -92,17 +86,5 @@ class _StaffIdCardState extends State<StaffIdCard> with WidgetsBindingObserver{
         ),
       ],
     );
-  }
-
-  void reloadWebView() {
-    if(Theme.of(context).brightness == Brightness.dark) {
-      url += "&darkmode=true";
-    }
-    else {
-      url += "&darkmode=false";
-    }
-    if(_webViewController != null) {
-      _webViewController.loadUrl(url);
-    }
   }
 }
