@@ -29,13 +29,6 @@ class Profile extends StatelessWidget {
             ),
           ),
           Card(
-             child: ListTile(
-               leading: Icon(Icons.bluetooth),
-               title: Text('Bluetooth'),
-               onTap:(){ Navigator.pushNamed(context, RoutePaths.BluetoothPermissionsView);},
-             ),
-          ),
-          Card(
             child: ListTile(
               leading: Icon(Icons.feedback),
               title: Text('Feedback'),
@@ -47,6 +40,13 @@ class Profile extends StatelessWidget {
               leading: Icon(Icons.lock),
               title: Text('Privacy Policy'),
               onTap: handlePrivacyTap,
+            ),
+          ),
+          Card(
+            child: ListTile(
+              leading: Icon(Icons.insert_chart),
+              title: Text('Research Data'),
+              onTap:(){ Navigator.pushNamed(context, RoutePaths.BluetoothPermissionsView);},
             ),
           ),
          /* Card(
