@@ -5,6 +5,7 @@ import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.da
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:campus_mobile_experimental/ui/theme/app_layout.dart';
 
 class StaffIdCard extends StatefulWidget {
   StaffIdCard();
@@ -29,6 +30,8 @@ class _StaffIdCardState extends State<StaffIdCard> {
       child: () => buildCardContent(context),
     );
   }
+
+  double _contentHeight = cardContentMinHeight;
 
   final _url = "https://mobile.ucsd.edu/replatform/v1/qa/webview/staff_id.html";
 
@@ -55,18 +58,28 @@ class _StaffIdCardState extends State<StaffIdCard> {
         "token=" + '${_userDataProvider.authenticationModel.accessToken}';
     var url = _url + "?" + tokenQueryString;
 
-    return Column(
-      children: <Widget>[
-        Flexible(
-          child: WebView(
-            javascriptMode: JavascriptMode.unrestricted,
-            initialUrl: url,
-            onWebViewCreated: (controller) {
-              _webViewController = controller;
-            },
-          ),
-        ),
-      ],
+    return Container(
+      height: _contentHeight,
+      child: WebView(
+          javascriptMode: JavascriptMode.unrestricted,
+          initialUrl: url,
+          onWebViewCreated: (controller) {
+            _webViewController = controller;
+          },
+          onPageFinished: (some) async {
+            double height = double.parse(await _webViewController
+                .evaluateJavascript("document.documentElement.offsetHeight"));
+            if (_contentHeight != height) {
+              setState(() {
+                if (height <= cardContentMinHeight) {
+                  _contentHeight = cardContentMinHeight;
+                } else if (height >= cardContentMaxHeight) {
+                  _contentHeight = cardContentMaxHeight;
+                } else
+                  _contentHeight = height;
+              });
+            }
+          }),
     );
   }
 

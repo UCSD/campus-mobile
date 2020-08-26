@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:campus_mobile_experimental/ui/theme/app_layout.dart';
 
 class CampusInfoCard extends StatefulWidget {
   CampusInfoCard();
@@ -30,6 +31,8 @@ class _CampusInfoCardState extends State<CampusInfoCard> {
     );
   }
 
+  double _contentHeight = cardContentMinHeight;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -39,10 +42,9 @@ class _CampusInfoCardState extends State<CampusInfoCard> {
       "https://mobile.ucsd.edu/replatform/v1/qa/webview/campus_info.html";
 
   Widget buildCardContent(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Flexible(
-            child: WebView(
+    return Container(
+      height: _contentHeight,
+      child: WebView(
           javascriptMode: JavascriptMode.unrestricted,
           initialUrl: _url,
           onWebViewCreated: (controller) {
@@ -51,8 +53,21 @@ class _CampusInfoCardState extends State<CampusInfoCard> {
           javascriptChannels: <JavascriptChannel>[
             _printJavascriptChannel(context),
           ].toSet(),
-        )),
-      ],
+          onPageFinished: (some) async {
+            double height = double.parse(await _webViewController
+                .evaluateJavascript("document.documentElement.offsetHeight"));
+            if (_contentHeight != double.parse(height.toString())) {
+              setState(() {
+                if (double.parse(height.toString()) <= cardContentMinHeight) {
+                  _contentHeight = cardContentMinHeight;
+                } else if (double.parse(height.toString()) >=
+                    cardContentMaxHeight) {
+                  _contentHeight = cardContentMaxHeight;
+                } else
+                  _contentHeight = double.parse(height.toString());
+              });
+            }
+          }),
     );
   }
 

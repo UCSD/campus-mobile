@@ -72,12 +72,14 @@ class _StudentInfoCardState extends State<StudentInfoCard> {
             onPageFinished: (some) async {
               double height = double.parse(await _webViewController
                   .evaluateJavascript("document.documentElement.offsetHeight"));
-              if (_contentHeight != double.parse(height.toString())) {
+              if (_contentHeight != height) {
                 setState(() {
-                  if (height >= cardContentMinHeight &&
-                      height <= cardContentMaxHeight) {
-                    _contentHeight = double.parse(height.toString());
-                  }
+                  if (height <= cardContentMinHeight) {
+                    _contentHeight = cardContentMinHeight;
+                  } else if (height >= cardContentMaxHeight) {
+                    _contentHeight = cardContentMaxHeight;
+                  } else
+                    _contentHeight = height;
                 });
               }
             }));

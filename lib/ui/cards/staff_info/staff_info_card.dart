@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:campus_mobile_experimental/ui/theme/app_layout.dart';
 
 class StaffInfoCard extends StatefulWidget {
   StaffInfoCard();
@@ -36,6 +37,8 @@ class _StaffInfoCardState extends State<StaffInfoCard> {
     super.didChangeDependencies();
   }
 
+  double _contentHeight = cardContentMinHeight;
+
   final _url =
       "https://mobile.ucsd.edu/replatform/v1/qa/webview/staff_info.html";
 
@@ -56,21 +59,31 @@ class _StaffInfoCardState extends State<StaffInfoCard> {
         "token=" + '${_userDataProvider.authenticationModel.accessToken}';
     var url = _url + "?" + tokenQueryString;
 
-    return Column(
-      children: <Widget>[
-        Flexible(
-            child: WebView(
-          javascriptMode: JavascriptMode.unrestricted,
-          initialUrl: url,
-          onWebViewCreated: (controller) {
-            _webViewController = controller;
-          },
-          javascriptChannels: <JavascriptChannel>[
-            _printJavascriptChannel(context),
-          ].toSet(),
-        )),
-      ],
-    );
+    return Container(
+        height: _contentHeight,
+        child: WebView(
+            javascriptMode: JavascriptMode.unrestricted,
+            initialUrl: url,
+            onWebViewCreated: (controller) {
+              _webViewController = controller;
+            },
+            javascriptChannels: <JavascriptChannel>[
+              _printJavascriptChannel(context),
+            ].toSet(),
+            onPageFinished: (some) async {
+              double height = double.parse(await _webViewController
+                  .evaluateJavascript("document.documentElement.offsetHeight"));
+              if (_contentHeight != height) {
+                setState(() {
+                  if (height <= cardContentMinHeight) {
+                    _contentHeight = cardContentMinHeight;
+                  } else if (height >= cardContentMaxHeight) {
+                    _contentHeight = cardContentMaxHeight;
+                  } else
+                    _contentHeight = height;
+                });
+              }
+            }));
   }
 
   JavascriptChannel _printJavascriptChannel(BuildContext context) {
