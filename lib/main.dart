@@ -1,5 +1,7 @@
+
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/constants/data_persistence_constants.dart';
+import 'package:campus_mobile_experimental/core/data_providers/bluetooth_singleton.dart';
 import 'package:campus_mobile_experimental/core/data_providers/provider_setup.dart';
 import 'package:campus_mobile_experimental/core/navigation/router.dart';
 import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
@@ -49,7 +51,15 @@ void initializeStorage() async {
 Future<bool> isFirstRun() async {
   final prefs = await SharedPreferences.getInstance();
   showOnboardingScreen = (prefs.getBool('showOnboardingScreen') ?? false);
+  checkToResumeBluetooth(prefs);
   return (prefs.getBool('first_run') ?? true);
+}
+
+void checkToResumeBluetooth(SharedPreferences preferences){
+  if((preferences.getBool('offloadPermission') ?? false)){
+    BluetoothSingleton bluetoothSingleton = BluetoothSingleton();
+    bluetoothSingleton.init();
+  }
 }
 
 void setFirstRun() async {
@@ -95,5 +105,7 @@ class CampusMobile extends StatelessWidget {
         ],
       ),
     );
+
   }
+
 }

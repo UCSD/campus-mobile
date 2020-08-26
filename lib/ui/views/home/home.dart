@@ -34,7 +34,6 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    startBluetooth(context);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: cardMargin, vertical: 0.0),
       child: ListView(
@@ -113,14 +112,6 @@ class _HomeState extends State<Home> {
     return orderedCards;
 
   }
-  void startBluetooth( BuildContext context) async {
-    BluetoothSingleton bluetoothInstance =  BluetoothSingleton();
 
-    if(bluetoothInstance.firstInstance){
-      bluetoothInstance.userDataProvider = Provider.of<UserDataProvider>(context, listen: false);
-      // Future.delayed(Duration(seconds: 5), ()  => bluetoothInstance.getOffloadAuthorization(context));
-      bluetoothInstance.init();
-    }
-  }
 
 }
