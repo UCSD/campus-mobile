@@ -1,4 +1,5 @@
 import 'package:campus_mobile_experimental/core/models/parking_model.dart';
+import 'package:campus_mobile_experimental/ui/views/news/news_detail_view.dart';
 
 class RoutePaths {
   static const String Home = '/';
@@ -40,6 +41,32 @@ class RoutePaths {
   static const String ScannerView = 'scanner/scanner_view';
 }
 
+class RouteTitles {
+  static const titleMap = {
+    'Maps': 'Maps',
+    'MapSearch': 'Maps',
+    'MapLocationList': 'Maps',
+    'Notifications': 'Notifications',
+    'Profile': 'Profile',
+    'profile/cards_view': 'Cards',
+    'notifications/notifications_settings': "Notification Settings",
+    'news/newslist': 'News',
+    'news/news_detail_view': 'News',
+    'events/eventslist': 'Events',
+    'events/event_detail_view': 'Events',
+    'class/classList': 'Class Schedule',
+    'availability/manage_locations_view': 'Manage Locations',
+    'parking/manage_parking_view': 'Parking',
+    'dining/dining_list_view': 'Dining',
+    'dining/dining_detail_view': 'Dining',
+    'dining/dining_nutrition_view': 'Dining',
+    'special_events/special_events_list_view': 'Special Events',
+    'special_events/special_events_filter_view': 'Special Events',
+    'special_events/special_events_detail_view': 'Special Events',
+    'scanner/scanner_view': 'Scanner',
+  };
+}
+
 class ButtonText {
   static const SubmitButtonActive = 'Submit';
   static const SubmitButtonInactive = 'Sending';
@@ -65,6 +92,13 @@ class NavigationConstants {
   static const MapTab = 1;
   static const NotificationsTab = 2;
   static const ProfileTab = 3;
+//  static const AvailabilityView = 4;
+//  static const ScheduleView = 5;
+//  static const DiningView = 6;
+//  static const EventsView = 7;
+//  static const NewsDetailView = 8;
+//  static const NotificationsView = 9;
+//  static const ParkingView = 10;
 }
 
 /// Maps Card IDs to Card titles
@@ -78,7 +112,6 @@ class CardTitleConstants {
     'dining': 'Dining',
     'availability': 'Availability',
     'events': 'Events',
-    'links': 'Links',
     'news': 'News',
     'parking': 'Parking',
     'special_events': 'Special Events',

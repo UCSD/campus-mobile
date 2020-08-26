@@ -94,9 +94,9 @@ class _HomeState extends State<Home> {
 //        case 'special_events':
 //          orderedCards.add(BannerCard());
 //          break;
-//        case 'weather':
-//          orderedCards.add(WeatherCard());
-//          break;
+        case 'weather':
+          orderedCards.add(WeatherCard());
+          break;
         case 'availability':
           orderedCards.add(AvailabilityCard());
           break;

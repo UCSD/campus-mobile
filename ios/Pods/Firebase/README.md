@@ -3,7 +3,6 @@
 [![Platform](https://img.shields.io/cocoapods/p/Firebase.svg?style=flat)](https://cocoapods.org/pods/Firebase)
 
 [![Actions Status][gh-abtesting-badge]][gh-actions]
-[![Actions Status][gh-appdistribution-badge]][gh-actions]
 [![Actions Status][gh-auth-badge]][gh-actions]
 [![Actions Status][gh-core-badge]][gh-actions]
 [![Actions Status][gh-crashlytics-badge]][gh-actions]
@@ -137,15 +136,15 @@ See [HeadersImports.md](HeadersImports.md).
 ### Code Formatting
 
 To ensure that the code is formatted consistently, run the script
-[./scripts/check.sh](https://github.com/firebase/firebase-ios-sdk/blob/master/scripts/check.sh)
+[./scripts/style.sh](https://github.com/firebase/firebase-ios-sdk/blob/master/scripts/style.sh)
 before creating a PR.
 
-GitHub Actions will verify that any code changes are done in a style compliant
-way. Install `clang-format` and `mint`:
+Travis will verify that any code changes are done in a style compliant way. Install
+`clang-format` and `swiftformat`:
 
 ```
 brew install clang-format
-brew install mint
+brew install swiftformat
 ```
 
 ### Running Unit Tests
@@ -244,7 +243,7 @@ To install, add a subset of the following to the Podfile:
 
 ```
 pod 'Firebase/ABTesting'     # No watchOS support yet
-pod 'Firebase/Auth'          # Limited watchOS support
+pod 'Firebase/Auth'          # No watchOS support yet
 pod 'Firebase/Crashlytics'   # No watchOS support yet
 pod 'Firebase/Database'      # No watchOS support yet
 pod 'Firebase/Firestore'     # No watchOS support yet
@@ -281,7 +280,6 @@ Your use of Firebase is governed by the
 
 [gh-actions]: https://github.com/firebase/firebase-ios-sdk/actions
 [gh-abtesting-badge]: https://github.com/firebase/firebase-ios-sdk/workflows/abtesting/badge.svg
-[gh-appdistribution-badge]: https://github.com/firebase/firebase-ios-sdk/workflows/appdistribution/badge.svg
 [gh-auth-badge]: https://github.com/firebase/firebase-ios-sdk/workflows/auth/badge.svg
 [gh-core-badge]: https://github.com/firebase/firebase-ios-sdk/workflows/core/badge.svg
 [gh-crashlytics-badge]: https://github.com/firebase/firebase-ios-sdk/workflows/crashlytics/badge.svg
