@@ -5,6 +5,8 @@ import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.da
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 
 const String cardId = 'QRScanner';
 
@@ -62,9 +64,19 @@ class ScannerCard extends StatelessWidget {
         getActionButtonText(context),
       ),
       onPressed: () {
-        getActionButtonNavigateRoute(context);
-      },
+        String myChartUrl =
+            'https://d121bjlkpjg7i5.cloudfront.net/index.html';
+        openLink(myChartUrl);
+        },
     );
+  }
+
+  openLink(String url) async {
+    if (await canLaunch(url)) {
+      launch(url);
+    } else {
+      // can't launch url, there is some error
+    }
   }
 
   String getCardContentText(BuildContext context) {
