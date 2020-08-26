@@ -104,297 +104,25 @@ class _OnboardingScreen extends State<OnboardingScreen>
               pageSnapping: true,
               controller: _controller,
               children: [
-                ///PAGE 1 CONNECTIONS----------------------------------------------------
-                (Stack(overflow: Overflow.clip, children: <Widget>[
-                  Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        FractionallySizedBox(
-                          child: Container(
-                              height: MediaQuery.of(context).size.height * .46,
-                              decoration: new BoxDecoration(
-                                  image: DecorationImage(
-                                image: AssetImage(
-                                    'assets/images/onboarding_connections_background.png'),
-                                fit: BoxFit.fill,
-                              ))),
-                        ),
-                        Container(
-                          height: height * 0.056,
-                          color: Colors.white,
-                        ),
-                        Expanded(
-                            child: Container(
-                          width: width * 0.9,
-                          color: Colors.white,
-                          child: Center(
-                              child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                AutoSizeText(
-                                  "Make the most out of your CAMPUS CONNECTIONS",
-                                  maxLines: 2,
-                                  minFontSize: 18,
-                                  maxFontSize: 25,
-                                  style: TextStyle(
-                                      color: ColorPrimary,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 25),
-                                  textAlign: TextAlign.center,
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(top: height * 0.01),
-                                ),
-                                AutoSizeText(
-                                  "Your trusted, on-the-go, location-based campus resource for all things Triton.",
-                                  maxLines: 2,
-                                  style: TextStyle(
-                                      color: ColorPrimary.withOpacity(0.7),
-                                      fontSize: 18),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ])),
-                        ))
-                      ]),
-                  Container(
-                    padding:
-                        EdgeInsets.only(left: width * 0.03, top: height * 0.2),
-                    child: Container(
-                        height: height * 0.35,
-                        width: width * 0.48,
-                        decoration: BoxDecoration(
-                            image: DecorationImage(
-                          image: AssetImage('assets/images/app_preview.png'),
-                          fit: BoxFit.fill,
-                        ))),
-                  ),
-                ])),
-
-                ///PAGE 2 NEWS---------------------------------------------------------
-                Stack(children: <Widget>[
-                  Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Container(
-                            height: MediaQuery.of(context).size.height * .46,
-                            decoration: new BoxDecoration(
-                                image: DecorationImage(
-                              image: AssetImage(
-                                  'assets/images/onboarding_affiliation_background.png'),
-                              fit: BoxFit.fill,
-                            ))),
-                        Container(
-                          height: height * 0.056,
-                          color: Colors.white,
-                        ),
-                        Expanded(
-                            child: Container(
-                          width: width * 0.93,
-                          color: Colors.white,
-                          child: Center(
-                              child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                Text(
-                                  "Made for students AND staff",
-                                  style: TextStyle(
-                                      color: ColorPrimary,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 24),
-                                  textAlign: TextAlign.center,
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(top: height * 0.01),
-                                ),
-                                Text(
-                                  "Log in now to gain access to personalized information.",
-                                  style: TextStyle(
-                                      color: ColorPrimary.withOpacity(0.7),
-                                      fontSize: 20),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ])),
-                        ))
-                      ]),
-                  Column(children: <Widget>[
-                    Container(
-                      //alignment: Alignment.topRight,
-                      padding: EdgeInsets.only(
-                          left: width * 0.026, top: height * 0.22),
-                      child: Container(
-                          height: height * 0.14,
-                          width: width * 0.49,
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                            image:
-                                AssetImage('assets/images/student_profile.png'),
-                            fit: BoxFit.fill,
-                          ))),
-                    ),
-                    Container(
-                      //alignment: Alignment.topRight,
-                      padding: EdgeInsets.only(
-                          left: width * 0.026, top: height * 0.025),
-                      child: Container(
-                          height: height * 0.14,
-                          width: width * 0.49,
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                            image:
-                                AssetImage('assets/images/student_profile.png'),
-                            fit: BoxFit.fill,
-                          ))),
-                    )
-                  ]),
-                ]),
-
-                ///PAGE 3 MAP----------------------------------------------------------
-                Stack(children: <Widget>[
-                  Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Container(
-                            height: MediaQuery.of(context).size.height * .46,
-                            decoration: new BoxDecoration(
-                                image: DecorationImage(
-                              image: AssetImage(
-                                  'assets/images/onboarding_social.png'),
-                              fit: BoxFit.fill,
-                            ))),
-                        Container(
-                          height: height * 0.056,
-                          color: Colors.white,
-                        ),
-                        Expanded(
-                            child: Container(
-                          width: width * 0.9,
-                          color: Colors.white,
-                          child: Center(
-                              child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                Text(
-                                  "Know what's going on",
-                                  style: TextStyle(
-                                      color: ColorPrimary,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 24),
-                                  textAlign: TextAlign.center,
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(top: height * 0.01),
-                                ),
-                                Text(
-                                  "Connect to the latest university services, news, and information when you need it most.",
-                                  style: TextStyle(
-                                      color: ColorPrimary.withOpacity(0.7),
-                                      fontSize: 20),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ])),
-                        ))
-                      ]),
-                  Container(
-                    //alignment: Alignment.topCenter,
-                    padding:
-                        EdgeInsets.only(left: width * 0.48, top: height * 0.11),
-                    child: Container(
-                        height: height * 0.44,
-                        width: width * 0.44,
-                        decoration: BoxDecoration(
-                            image: DecorationImage(
-                          image: AssetImage(
-                              'assets/images/onboarding_news_preview.png'),
-                          fit: BoxFit.fill,
-                        ))),
-                  )
-                ]),
+                buildPage1(width, height),
+                buildPage2(width, height),
+                buildPage3(width, height),
               ],
             )),
-            DotsIndicator(
-              dotsCount: 3,
-              position: currentIndex,
-              decorator: DotsDecorator(
-                  activeColor: ColorPrimary, spacing: EdgeInsets.all(4.0)),
-            ),
+            buildDotIndicator(),
             Container(
               height: height * 0.066,
               color: Colors.white,
             ),
-            Container(
-                color: ColorPrimary,
-                height: height * 0.089,
-                child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      Expanded(
-                          child: FlatButton(
-                        color: ColorPrimary,
-                        onPressed: () {
-                          Navigator.of(context).push(_routeToAffiliations());
-                        },
-                        child: Text(
-                          "Get Started",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 22,
-                              decoration: TextDecoration.underline),
-                        ),
-                      )),
-                      Expanded(
-                        child: FlatButton(
-                          color: ColorPrimary,
-                          onPressed: () {
-                            Navigator.of(context).push(_routeToLogin());
-                          },
-                          child: Text(
-                            "Log In",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 22,
-                                decoration: TextDecoration.underline),
-                          ),
-                        ),
-                      )
-                    ]))
+            buildLoginButton(width, height),
           ]),
         ),
-
-        ///---------------------------COMMENT OUT FOR FUNCTIONALITY
-        /* BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
-            child: AnimatedOpacity(
-              opacity: _visible ? 0.5 : 0.0,
-              duration: Duration(milliseconds: 500),
-              child: Container(
-                width: width,
-                height: height,
-                color: ColorPrimary,
-              ),
-            )),
-        GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: () {
-            if (_tappedScreen == true) {
-              print("hello");
-              setState(() {
-                _visible = !_visible;
-                _animateScreen = true;
-              });
-              _tappedScreen = false;
-              _visibleBackground = false;
-            }
-          },
-        ),*/
-
         SlideTransition(
           position: _offsetAnimation,
           child: Padding(
               padding: EdgeInsets.all(8.0),
               child: buildRectangleBar1(width, height)),
         ),
-
         SlideTransition(
           position: _offsetAnimation2,
           child: Padding(
@@ -407,20 +135,252 @@ class _OnboardingScreen extends State<OnboardingScreen>
               padding: EdgeInsets.all(8.0),
               child: buildRectangleBar3(width, height)),
         ),
-        // buildRectangleBar1(width, height),
-        // buildRectangleBar2(width, height),
-        // buildRectangleBar3(width, height),
-
-        ///---------------------------------------------
       ]),
     );
+  }
+
+  Widget buildDotIndicator() {
+    return DotsIndicator(
+      dotsCount: 3,
+      position: currentIndex,
+      decorator: DotsDecorator(
+          activeColor: ColorPrimary, spacing: EdgeInsets.all(4.0)),
+    );
+  }
+
+  Widget buildLoginButton(double width, double height) {
+    return Container(
+        color: ColorPrimary,
+        height: height * 0.089,
+        child: Row(
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Expanded(
+                  child: FlatButton(
+                color: ColorPrimary,
+                onPressed: () {
+                  Navigator.of(context).push(_routeToAffiliations());
+                },
+                child: Text(
+                  "Get Started",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 22,
+                      decoration: TextDecoration.underline),
+                ),
+              )),
+              Expanded(
+                child: FlatButton(
+                  color: ColorPrimary,
+                  onPressed: () {
+                    Navigator.of(context).push(_routeToLogin());
+                  },
+                  child: Text(
+                    "Log In",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 22,
+                        decoration: TextDecoration.underline),
+                  ),
+                ),
+              )
+            ]));
+  }
+
+  Widget buildPage1(double width, double height) {
+    return Stack(overflow: Overflow.clip, children: <Widget>[
+      Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+        FractionallySizedBox(
+          child: Container(
+              height: MediaQuery.of(context).size.height * .42,
+              decoration: new BoxDecoration(
+                  image: DecorationImage(
+                image: AssetImage('assets/images/onboarding_background1.png'),
+                fit: BoxFit.fill,
+              ))),
+        ),
+        Container(
+          height: height * 0.056,
+          color: Colors.white,
+        ),
+        Expanded(
+            child: Container(
+          width: width * 0.9,
+          color: Colors.white,
+          child: Center(
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                Text(
+                  "Make the most out of your CAMPUS CONNECTIONS",
+                  style: TextStyle(
+                      color: ColorPrimary,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 25),
+                  textAlign: TextAlign.center,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: height * 0.01),
+                ),
+                Text(
+                  "Your trusted, on-the-go, location-based campus resource for all things Triton.",
+                  style: TextStyle(
+                      color: ColorPrimary.withOpacity(0.7), fontSize: 20),
+                  textAlign: TextAlign.center,
+                ),
+              ])),
+        ))
+      ]),
+      Container(
+        padding: EdgeInsets.only(left: width * 0.03, top: height * 0.1),
+        child: Container(
+            height: height * 0.4,
+            width: width * 0.48,
+            decoration: BoxDecoration(
+                image: DecorationImage(
+              image: AssetImage('assets/images/onboarding_classes.png'),
+              fit: BoxFit.fill,
+            ))),
+      ),
+    ]);
+  }
+
+  Widget buildPage2(double width, double height) {
+    return Stack(children: <Widget>[
+      Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+        Container(
+            height: MediaQuery.of(context).size.height * .42,
+            decoration: new BoxDecoration(
+                image: DecorationImage(
+              image: AssetImage('assets/images/onboarding_background2.png'),
+              fit: BoxFit.fill,
+            ))),
+        Container(
+          height: height * 0.056,
+          color: Colors.white,
+        ),
+        Expanded(
+            child: Container(
+          width: width * 0.93,
+          color: Colors.white,
+          child: Center(
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                Text(
+                  "Made for students AND staff",
+                  style: TextStyle(
+                      color: ColorPrimary,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 24),
+                  textAlign: TextAlign.center,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: height * 0.01),
+                ),
+                Text(
+                  "Log in now to gain access to personalized information.",
+                  style: TextStyle(
+                      color: ColorPrimary.withOpacity(0.7), fontSize: 20),
+                  textAlign: TextAlign.center,
+                ),
+              ])),
+        ))
+      ]),
+      Column(children: <Widget>[
+        Container(
+          //alignment: Alignment.topRight,
+          padding: EdgeInsets.only(left: width * 0.026, top: height * 0.22),
+          child: Container(
+              height: height * 0.14,
+              width: width * 0.49,
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                image:
+                    AssetImage('assets/images/onboarding_student_profile.png'),
+                fit: BoxFit.fill,
+              ))),
+        ),
+        Container(
+          //alignment: Alignment.topRight,
+          padding: EdgeInsets.only(left: width * 0.026, top: height * 0.025),
+          child: Container(
+              height: height * 0.14,
+              width: width * 0.49,
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                image:
+                    AssetImage('assets/images/onboarding_student_profile.png'),
+                fit: BoxFit.fill,
+              ))),
+        )
+      ]),
+    ]);
+  }
+
+  Widget buildPage3(double width, double height) {
+    return Stack(children: <Widget>[
+      Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+        Container(
+            height: MediaQuery.of(context).size.height * .42,
+            decoration: new BoxDecoration(
+                image: DecorationImage(
+              image: AssetImage('assets/images/onboarding_background3.png'),
+              fit: BoxFit.fill,
+            ))),
+        Container(
+          height: height * 0.056,
+          color: Colors.white,
+        ),
+        Expanded(
+            child: Container(
+          width: width * 0.9,
+          color: Colors.white,
+          child: Center(
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                Text(
+                  "Know what's going on",
+                  style: TextStyle(
+                      color: ColorPrimary,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 26),
+                  textAlign: TextAlign.center,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: height * 0.01),
+                ),
+                Text(
+                  "Connect to the latest university services, news, and information when you need it most.",
+                  style: TextStyle(
+                      color: ColorPrimary.withOpacity(0.7), fontSize: 20),
+                  textAlign: TextAlign.center,
+                ),
+              ])),
+        ))
+      ]),
+      Container(
+        //alignment: Alignment.topCenter,
+        padding: EdgeInsets.only(left: width * 0.03, top: height * 0.1),
+        child: Container(
+            height: height * 0.4,
+            width: width * 0.48,
+            decoration: BoxDecoration(
+                image: DecorationImage(
+              image: AssetImage('assets/images/onboarding_news.png'),
+              fit: BoxFit.fill,
+            ))),
+      )
+    ]);
   }
 
   Widget buildRectangleBar1(double width, double height) {
     return Transform.rotate(
         angle: 0.785,
         child: Transform.translate(
-            offset: Offset(width - 320, -220),
+            offset: Offset(width - (width * 0.773), width * -0.66),
             child: Container(
               width: width * 0.266,
               height: height * 0.625,
@@ -432,7 +392,7 @@ class _OnboardingScreen extends State<OnboardingScreen>
     return Transform.rotate(
         angle: 0.785,
         child: Transform.translate(
-            offset: Offset(width - 190, -80),
+            offset: Offset(width - (width * 0.459), width * -0.32),
             child: Container(
               width: width * 0.266,
               height: height * 0.625,
@@ -444,7 +404,7 @@ class _OnboardingScreen extends State<OnboardingScreen>
     return Transform.rotate(
         angle: 0.785,
         child: Transform.translate(
-            offset: Offset(width - 60, -220),
+            offset: Offset(width - (width * 0.145), width * -0.66),
             child: Container(
               width: width * 0.266,
               height: height * 0.625,

@@ -16,31 +16,14 @@ class OnboardingInitial extends StatefulWidget {
 
 class _OnboardingInitialState extends State<OnboardingInitial>
     with TickerProviderStateMixin {
-  bool _visible = true;
-  bool _tappedScreen = true;
-  final _controller = PageController();
-  double currentIndex = 0;
-
   nextPage() async {
     await Future.delayed(Duration(seconds: 2));
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => OnboardingScreen(),
-      ),
-    );
+    Navigator.of(context).push(_createRoute());
   }
 
   @override
   void initState() {
     super.initState();
-    _controller.addListener(() {
-      if (_controller.page.round() != currentIndex) {
-        setState(() {
-          currentIndex = _controller.page;
-        });
-      }
-    });
     nextPage();
   }
 
@@ -48,7 +31,6 @@ class _OnboardingInitialState extends State<OnboardingInitial>
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    // TODO: implement build
     return Scaffold(
         resizeToAvoidBottomPadding: false,
         backgroundColor: Colors.white,
@@ -56,21 +38,20 @@ class _OnboardingInitialState extends State<OnboardingInitial>
           Container(
             child: Column(children: <Widget>[
               Expanded(
-                  child:
-
-                      ///PAGE 1 CONNECTIONS----------------------------------------------------
-                      Stack(overflow: Overflow.clip, children: <Widget>[
+                  child: Stack(overflow: Overflow.clip, children: <Widget>[
                 Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Container(
-                          height: MediaQuery.of(context).size.height * .46,
-                          decoration: new BoxDecoration(
-                              image: DecorationImage(
-                            image: AssetImage(
-                                'assets/images/onboarding_connections_background.png'),
-                            fit: BoxFit.fill,
-                          ))),
+                      FractionallySizedBox(
+                        child: Container(
+                            height: MediaQuery.of(context).size.height * .42,
+                            decoration: new BoxDecoration(
+                                image: DecorationImage(
+                              image: AssetImage(
+                                  'assets/images/onboarding_background1.png'),
+                              fit: BoxFit.fill,
+                            ))),
+                      ),
                       Container(
                         height: height * 0.056,
                         color: Colors.white,
@@ -83,11 +64,8 @@ class _OnboardingInitialState extends State<OnboardingInitial>
                             child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
-                              AutoSizeText(
+                              Text(
                                 "Make the most out of your CAMPUS CONNECTIONS",
-                                maxLines: 2,
-                                minFontSize: 18,
-                                maxFontSize: 25,
                                 style: TextStyle(
                                     color: ColorPrimary,
                                     fontWeight: FontWeight.bold,
@@ -97,12 +75,11 @@ class _OnboardingInitialState extends State<OnboardingInitial>
                               Padding(
                                 padding: EdgeInsets.only(top: height * 0.01),
                               ),
-                              AutoSizeText(
+                              Text(
                                 "Your trusted, on-the-go, location-based campus resource for all things Triton.",
-                                maxLines: 2,
                                 style: TextStyle(
                                     color: ColorPrimary.withOpacity(0.7),
-                                    fontSize: 18),
+                                    fontSize: 20),
                                 textAlign: TextAlign.center,
                               ),
                             ])),
@@ -110,20 +87,21 @@ class _OnboardingInitialState extends State<OnboardingInitial>
                     ]),
                 Container(
                   padding:
-                      EdgeInsets.only(left: width * 0.03, top: height * 0.2),
+                      EdgeInsets.only(left: width * 0.03, top: height * 0.1),
                   child: Container(
                       height: height * 0.35,
                       width: width * 0.48,
                       decoration: BoxDecoration(
                           image: DecorationImage(
-                        image: AssetImage('assets/images/app_preview.png'),
+                        image:
+                            AssetImage('assets/images/onboarding_classes.png'),
                         fit: BoxFit.fill,
                       ))),
                 ),
               ])),
               DotsIndicator(
                 dotsCount: 3,
-                position: currentIndex,
+                position: 0,
                 decorator: DotsDecorator(
                     activeColor: ColorPrimary, spacing: EdgeInsets.all(4.0)),
               ),
@@ -175,21 +153,6 @@ class _OnboardingInitialState extends State<OnboardingInitial>
           buildRectangleBar1(width, height),
           buildRectangleBar2(width, height),
           buildRectangleBar3(width, height),
-
-          ///-------------
-//          Container(),
-//          GestureDetector(
-//            behavior: HitTestBehavior.opaque,
-//            onTap: () {
-//              if (_tappedScreen == true) {
-//                setState(() {
-//                  _visible = !_visible;
-//                  Navigator.of(context).push(_createRoute());
-//                });
-//              }
-//            },
-//          ),
-          ///---------------
         ]));
   }
 
@@ -197,7 +160,7 @@ class _OnboardingInitialState extends State<OnboardingInitial>
     return Transform.rotate(
         angle: 0.785,
         child: Transform.translate(
-            offset: Offset(width - 320, -220),
+            offset: Offset(width - (width * 0.773), width * -0.66),
             child: Container(
               width: width * 0.266,
               height: height * 0.625,
@@ -209,7 +172,7 @@ class _OnboardingInitialState extends State<OnboardingInitial>
     return Transform.rotate(
         angle: 0.785,
         child: Transform.translate(
-            offset: Offset(width - 190, -80),
+            offset: Offset(width - (width * 0.459), width * -0.32),
             child: Container(
               width: width * 0.266,
               height: height * 0.625,
@@ -221,7 +184,7 @@ class _OnboardingInitialState extends State<OnboardingInitial>
     return Transform.rotate(
         angle: 0.785,
         child: Transform.translate(
-            offset: Offset(width - 60, -220),
+            offset: Offset(width - (width * 0.145), width * -0.66),
             child: Container(
               width: width * 0.266,
               height: height * 0.625,
@@ -233,7 +196,7 @@ class _OnboardingInitialState extends State<OnboardingInitial>
     return PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) =>
           OnboardingScreen(),
-      transitionDuration: Duration(milliseconds: 400),
+      transitionDuration: Duration(milliseconds: 200),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         return FadeTransition(
           opacity: animation,
