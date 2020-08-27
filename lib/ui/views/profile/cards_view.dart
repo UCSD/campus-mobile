@@ -29,8 +29,8 @@ class CardsView extends StatelessWidget {
     }
     List<String> newOrder = _cardsDataProvider.cardOrder;
     List<String> toRemove = List<String>();
-    if (_cardsDataProvider.cardOrder.contains('Scanner')) {
-      toRemove.add('Scanner');
+    if (_cardsDataProvider.cardOrder.contains('QRScanner')) {
+      toRemove.add('QRScanner');
     }
     for (String card in newOrder) {
       if (CardTitleConstants.titleMap[card] == null) {
@@ -51,7 +51,7 @@ class CardsView extends StatelessWidget {
   List<Widget> createList(BuildContext context) {
     List<Widget> list = List<Widget>();
     for (String card in _cardsDataProvider.cardOrder) {
-      if (card == 'Scanner') continue;
+      if (card == 'QRScanner') continue;
       if (CardTitleConstants.titleMap[card] == null) continue;
       list.add(ListTile(
         leading: Icon(Icons.reorder),
