@@ -20,7 +20,7 @@ class ParkingDataProvider extends ChangeNotifier {
   bool _isLoading;
   DateTime _lastUpdated;
   String _error;
-  int selected_lots, selected_spots; //Keep less than 10
+  int selected_lots, selected_spots;
   static const MAX_SELECTED_LOTS = 10;
   static const MAX_SELECTED_SPOTS = 3;
   Map<String, bool> _parkingViewState = <String, bool>{};
@@ -122,7 +122,7 @@ class ParkingDataProvider extends ChangeNotifier {
   }
 
   void toggleSpotSelection(String spotKey) {
-    if (selected_spots < MAX_SELECTED_SPOTS) {
+    if (selected_spots <= MAX_SELECTED_SPOTS) {
       _selectedSpotTypesState[spotKey] = !_selectedSpotTypesState[spotKey];
       _selectedSpotTypesState[spotKey] ? selected_spots++ : selected_spots--;
     } else {
