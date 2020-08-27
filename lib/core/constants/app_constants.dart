@@ -57,15 +57,10 @@ class RouteTitles {
     'special_events/special_events_list_view': 'Special Events',
     'special_events/special_events_filter_view': 'Special Events',
     'special_events/special_events_detail_view': 'Special Events',
-    'scanner/scanner_view': 'Scanner',
   };
 }
 
 class ButtonText {
-  static const SubmitButtonActive = 'Submit';
-  static const SubmitButtonInactive = 'Sending';
-  static const SubmitButtonTryAgain = 'Try again';
-  static const SubmitButtonReceived = 'Received';
   static const ScanNowFull = 'Scan Your COVID-19 Test Kit.';
   static const ScanNow = 'Scan Now';
   static const SignInFull = 'Sign In to Scan Your COVID-19 Test Kit.';

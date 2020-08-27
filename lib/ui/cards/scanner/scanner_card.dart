@@ -1,7 +1,5 @@
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
-import 'package:campus_mobile_experimental/core/models/user_profile_model.dart';
-import 'package:campus_mobile_experimental/core/services/user_profile_service.dart';
 import 'package:campus_mobile_experimental/core/services/bottom_navigation_bar_service.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-const String cardId = 'QRScanner';
+const String cardId = 'Scanner';
 
 class ScannerCard extends StatelessWidget {
   @override
