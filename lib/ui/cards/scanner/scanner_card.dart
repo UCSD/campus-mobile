@@ -1,5 +1,7 @@
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
+import 'package:campus_mobile_experimental/core/models/user_profile_model.dart';
+import 'package:campus_mobile_experimental/core/services/user_profile_service.dart';
 import 'package:campus_mobile_experimental/core/services/bottom_navigation_bar_service.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
 import 'package:flutter/material.dart';
@@ -7,12 +9,9 @@ import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-
 const String cardId = 'QRScanner';
 
 class ScannerCard extends StatelessWidget {
-  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-
   @override
   Widget build(BuildContext context) {
     return CardContainer(
@@ -58,16 +57,22 @@ class ScannerCard extends StatelessWidget {
     );
   }
 
+  final _url =
+      'https://ucsd-mobile-dev.s3-us-west-1.amazonaws.com/scanner/scandit-web-sdk/index.html';
+
+  UserProfileService _userProfileService;
+  UserDataProvider _userDataProvider;
+  //UserProfileModel newModel = _userProfileService.userProfileModel;
+
   Widget buildActionButton(BuildContext context) {
+    _userDataProvider = Provider.of<UserDataProvider>(context);
     return FlatButton(
       child: Text(
         getActionButtonText(context),
       ),
       onPressed: () {
-        String myChartUrl =
-            'https://d121bjlkpjg7i5.cloudfront.net/index.html';
-        openLink(myChartUrl);
-        },
+        getActionButtonNavigateRoute(context);
+      },
     );
   }
 
@@ -93,13 +98,27 @@ class ScannerCard extends StatelessWidget {
 
   getActionButtonNavigateRoute(BuildContext context) {
     if (Provider.of<UserDataProvider>(context, listen: false).isLoggedIn) {
-      Navigator.pushNamed(
-        context,
-        RoutePaths.ScannerView,
-      );
+      generateScannerUrl();
     } else {
       Provider.of<BottomNavigationBarProvider>(context, listen: false)
           .currentIndex = NavigationConstants.ProfileTab;
     }
+  }
+
+  generateScannerUrl() {
+    /// Verify that user is logged in
+    if (_userDataProvider.isLoggedIn) {
+      /// Initialize header
+      final Map<String, String> header = {
+        'Authorization':
+            'Bearer ${_userDataProvider?.authenticationModel?.accessToken}'
+      };
+    }
+    var tokenQueryString =
+        "token=" + '${_userDataProvider.authenticationModel.accessToken}';
+    //var affiliationQueryString = "affiliation=" + newModel.ucsdaffiliation;
+    var url = _url + "?" + tokenQueryString; //+ "&" + affiliationQueryString;
+    String myChartUrl = url;
+    openLink(myChartUrl);
   }
 }

@@ -91,7 +91,7 @@ class NavigationConstants {
 /// Maps Card IDs to Card titles
 class CardTitleConstants {
   static const titleMap = {
-    'QRScanner': 'QR Scanner',
+    'QRScanner': 'Scanner',
     'MyStudentChart': 'MyStudentChart',
     'staff_info': 'COVID-19 Info',
     'campus_info': "Campus Information",
