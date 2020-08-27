@@ -7,7 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-const String cardId = 'Scanner';
+const String cardId = 'QRScanner';
 
 class ScannerCard extends StatelessWidget {
   @override

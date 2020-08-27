@@ -60,7 +60,7 @@ class _HomeState extends State<Home> {
 
     for (String card in order) {
       switch (card) {
-        case 'Scanner':
+        case 'QRScanner':
           orderedCards.insert(0, ScannerCard());
           break;
         case 'MyStudentChart':
