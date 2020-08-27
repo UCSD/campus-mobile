@@ -60,9 +60,7 @@ class ScannerCard extends StatelessWidget {
   final _url =
       'https://ucsd-mobile-dev.s3-us-west-1.amazonaws.com/scanner/scandit-web-sdk/index.html';
 
-  UserProfileService _userProfileService;
   UserDataProvider _userDataProvider;
-  //UserProfileModel newModel = _userProfileService.userProfileModel;
 
   Widget buildActionButton(BuildContext context) {
     _userDataProvider = Provider.of<UserDataProvider>(context);
@@ -116,9 +114,11 @@ class ScannerCard extends StatelessWidget {
     }
     var tokenQueryString =
         "token=" + '${_userDataProvider.authenticationModel.accessToken}';
-    //var affiliationQueryString = "affiliation=" + newModel.ucsdaffiliation;
-    var url = _url + "?" + tokenQueryString; //+ "&" + affiliationQueryString;
+    var affiliationQueryString = "affiliation=" +
+        '${_userDataProvider.authenticationModel.ucsdaffiliation}';
+    var url = _url + "?" + tokenQueryString + "&" + affiliationQueryString;
     String myChartUrl = url;
     openLink(myChartUrl);
+    print(myChartUrl);
   }
 }
