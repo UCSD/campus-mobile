@@ -56,7 +56,7 @@ class ScannerCard extends StatelessWidget {
   }
 
   final _url =
-      'https://ucsd-mobile-dev.s3-us-west-1.amazonaws.com/scanner/scandit-web-sdk-mihir/09270945AM/index.html';
+      'https://ucsd-mobile-dev.s3-us-west-1.amazonaws.com/scanner/scandit-web-sdk-mihir/08280936AM/index.html';
 
   UserDataProvider _userDataProvider;
 
@@ -116,7 +116,7 @@ class ScannerCard extends StatelessWidget {
         '${_userDataProvider.authenticationModel.ucsdaffiliation}';
     var url = _url + "?" + tokenQueryString + "&" + affiliationQueryString;
     String myChartUrl = url;
-    openLink(myChartUrl);
+    launch(myChartUrl, forceSafariVC: false, forceWebView: false);
     print(myChartUrl);
   }
 }
