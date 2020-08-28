@@ -1,7 +1,5 @@
 import 'dart:async';
-import 'package:campus_mobile_experimental/core/data_providers/bluetooth_singleton.dart';
 import 'package:campus_mobile_experimental/core/models/coordinates_model.dart';
-import 'package:flutter/services.dart';
 import 'package:location/location.dart';
 
 class LocationDataProvider {
@@ -34,18 +32,6 @@ class LocationDataProvider {
         _permission = true;
         _enableListener();
         }
-
-        /// request the user to turn on gps
-     /* PermissionStatus permissionGranted = await  _locationService.hasPermission();
-      if (permissionGranted == PermissionStatus.denied) {
-          permissionGranted = await _locationService.requestPermission();
-          if(permissionGranted != PermissionStatus.granted) {
-            _permission = false;
-          }
-          else {
-            _enableListener();
-          }
-      }*/
 
 
     }

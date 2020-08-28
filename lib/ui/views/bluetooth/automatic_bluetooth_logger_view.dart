@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:campus_mobile_experimental/core/data_providers/bluetooth_singleton.dart';
+import 'package:campus_mobile_experimental/core/data_providers/proximity_awareness_singleton.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AutomaticBluetoothLoggerView extends StatefulWidget {
   // Instantiate bluetooth singleton
-  final BluetoothSingleton bluetoothSingleton = BluetoothSingleton();
+  final ProximityAwarenessSingleton bluetoothSingleton = ProximityAwarenessSingleton();
 
   @override
   State<StatefulWidget> createState() =>
@@ -16,13 +16,13 @@ class AutomaticBluetoothLoggerView extends StatefulWidget {
 class _AutomaticBluetoothLoggerViewState
     extends State<AutomaticBluetoothLoggerView> {
   // Instances of the singleton and its listener
-  BluetoothSingleton bluetoothSingleton;
+  ProximityAwarenessSingleton bluetoothSingleton;
   StreamSubscription subscription;
 
   // List for rendering the ongoing log
   List loggedItems = [];
 
-  _AutomaticBluetoothLoggerViewState(BluetoothSingleton bluetoothScan);
+  _AutomaticBluetoothLoggerViewState(ProximityAwarenessSingleton bluetoothScan);
 
 
   // Set the state when a new scan occurs

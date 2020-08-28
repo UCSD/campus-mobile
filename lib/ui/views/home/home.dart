@@ -1,6 +1,6 @@
 import 'package:beacon_broadcast/beacon_broadcast.dart';
 import 'package:campus_mobile_experimental/core/data_providers/bluetooth_broadcast_singleton.dart';
-import 'package:campus_mobile_experimental/core/data_providers/bluetooth_singleton.dart';
+import 'package:campus_mobile_experimental/core/data_providers/proximity_awareness_singleton.dart';
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/notices_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
@@ -23,6 +23,7 @@ import 'package:campus_mobile_experimental/ui/views/special_events/banner_view_m
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -34,6 +35,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    checkToResumeBluetooth(context);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: cardMargin, vertical: 0.0),
       child: ListView(
@@ -113,5 +115,21 @@ class _HomeState extends State<Home> {
 
   }
 
+  void checkToResumeBluetooth(BuildContext context) async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
 
+    if(prefs.containsKey("proximityAwarenessEnabled") && prefs.getBool('proximityAwarenessEnabled')){
+      ProximityAwarenessSingleton bluetoothSingleton = ProximityAwarenessSingleton();
+      if(bluetoothSingleton.firstInstance) {
+        bluetoothSingleton.userDataProvider =
+            Provider.of<UserDataProvider>(context, listen: false);
+        bluetoothSingleton.flutterBlueInstance.isScanning.last.then((scanning) {
+          if(!scanning){
+            bluetoothSingleton.init();
+          }
+        });
+
+      }
+    }
+  }
 }
