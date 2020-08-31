@@ -160,7 +160,7 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
 
     // Enable timer, must wait duration before next method execution
     ongoingScanner = new Timer.periodic(
-        Duration(seconds: waitTime* 4), (Timer t) => startScan());
+        Duration(minutes: waitTimegit ), (Timer t) => startScan());
   }
 
   // Start a bluetooth scan of determined second duration and listen to results
@@ -206,7 +206,6 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
   }
 
   void processOffloadingLogs(bool offloadLog, List<Map> newBufferList) {
-    qualifiedDevicesThreshold = 0;
     if (qualifyingDevices >= qualifiedDevicesThreshold) {
       double lat;
       double long;
