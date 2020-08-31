@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 const String cardId = 'parking';
-const _url = "https://cqeg04fl07.execute-api.us-west-2.amazonaws.com/parking";
+const _url = "https://mobile.ucsd.edu/replatform/v1/qa/webview/parking/";
 
 class ParkingCard extends StatefulWidget {
   ParkingCard();
