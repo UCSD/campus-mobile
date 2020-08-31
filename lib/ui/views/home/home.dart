@@ -1,5 +1,4 @@
-import 'package:beacon_broadcast/beacon_broadcast.dart';
-import 'package:campus_mobile_experimental/core/data_providers/bluetooth_broadcast_singleton.dart';
+
 import 'package:campus_mobile_experimental/core/data_providers/proximity_awareness_singleton.dart';
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/notices_data_provider.dart';
@@ -15,11 +14,8 @@ import 'package:campus_mobile_experimental/ui/cards/scanner/scanner_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/student_id/student_id_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/weather/weather_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/availability/availability_card.dart';
-import 'package:campus_mobile_experimental/ui/cards/links/links_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/dining/dining_card.dart';
-import 'package:campus_mobile_experimental/ui/cards/parking/parking_card.dart';
 import 'package:campus_mobile_experimental/ui/theme/app_layout.dart';
-import 'package:campus_mobile_experimental/ui/views/special_events/banner_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -121,8 +117,10 @@ class _HomeState extends State<Home> {
     if(prefs.containsKey("proximityAwarenessEnabled") && prefs.getBool('proximityAwarenessEnabled')){
       ProximityAwarenessSingleton bluetoothSingleton = ProximityAwarenessSingleton();
       if(bluetoothSingleton.firstInstance) {
-        bluetoothSingleton.userDataProvider =
-            Provider.of<UserDataProvider>(context, listen: false);
+        if(bluetoothSingleton.userDataProvider == null) {
+          bluetoothSingleton.userDataProvider =
+              Provider.of<UserDataProvider>(context, listen: false);
+        }
         bluetoothSingleton.flutterBlueInstance.isScanning.last.then((scanning) {
           if(!scanning){
             bluetoothSingleton.init();

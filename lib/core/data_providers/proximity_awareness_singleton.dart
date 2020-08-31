@@ -8,6 +8,7 @@ import 'dart:typed_data';
 import 'package:background_fetch/background_fetch.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/services/networking.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:location/location.dart';
@@ -23,7 +24,7 @@ enum ScannedDevice {
   SCANNED_DEVICE_DETECT_DISTANCE
 }
 
-class ProximityAwarenessSingleton {
+class ProximityAwarenessSingleton extends ChangeNotifier{
 
   // Instance variable for starting beacon singleton
   BeaconSingleton beaconSingleton;
@@ -73,12 +74,14 @@ class ProximityAwarenessSingleton {
   int qualifiedDevicesThreshold = 0;
   int distanceThreshold = 10; // default in ZenHub
   int scanIntervalAllowance = 0;
+  int backgroundScanInterval = 15;
+  int deletionInterval = 30;
 
   // Keep track of devices that meet our requirements
   int qualifyingDevices = 0;
 
   // Dwell time threshold (10 minutes -> 600 seconds;
-  int dwellTimeThreshold = 200;
+  int dwellTimeThreshold = 200; // In seconds
 
   // Default constant for scans
   int scanDuration = 2; //Seconds
@@ -89,7 +92,7 @@ class ProximityAwarenessSingleton {
 
   // Lists for displaying scan results
   List loggedItems = [];
-  static List<List<String>> bufferList = [];
+  static List<List<Object>> bufferList = [];
 
   //initialize location and permissions to be checked
   Location location = Location();
@@ -107,13 +110,14 @@ class ProximityAwarenessSingleton {
 
   // Initial method for scan set up
   init() async {
-    print("SCAN STARTED");
 
-    //Instantiate access token for logged in user
-    offloadDataHeader = {
-      'Authorization':
-          'Bearer ${userDataProvider?.authenticationModel?.accessToken}'
-    };
+    if(userDataProvider.isLoggedIn) {
+      //Instantiate access token for logged in user
+      offloadDataHeader = {
+        'Authorization':
+        'Bearer ${userDataProvider?.authenticationModel?.accessToken}'
+      };
+    }
 
     //Check previous bluetooth setting
     await checkProximityAwarenessEnabled();
@@ -151,13 +155,12 @@ class ProximityAwarenessSingleton {
   /// This function starts continuous scan (when permission is authorized)
   enableScanning() {
     //Start the initial scan
-    Timer.run(() {
-      startScan();
-    });
+    startScan();
+
 
     // Enable timer, must wait duration before next method execution
     ongoingScanner = new Timer.periodic(
-        Duration(seconds: waitTime * 4), (Timer t) => startScan());
+        Duration(seconds: waitTime* 4), (Timer t) => startScan());
   }
 
   // Start a bluetooth scan of determined second duration and listen to results
@@ -203,8 +206,8 @@ class ProximityAwarenessSingleton {
   }
 
   void processOffloadingLogs(bool offloadLog, List<Map> newBufferList) {
+    qualifiedDevicesThreshold = 0;
     if (qualifyingDevices >= qualifiedDevicesThreshold) {
-      offloadLog = true;
       double lat;
       double long;
       //loggedItems.add("LOCATION LOGGED");
@@ -224,30 +227,32 @@ class ProximityAwarenessSingleton {
       Map log = {
         "SOURCE_DEVICE_ADVERTISEMENT_ID": this.advertisementValue,
         "SOURCE": "UCSDMobileApp",
-        "LAT": (lat == null) ? "" : lat.toString(),
-        "LONG": (long == null) ? "" : long.toString(),
+        "LAT": (lat == null) ? 0 : lat,
+        "LONG": (long == null) ? 0 : long,
         "DEVICE_LIST": newBufferList
       };
     
-      //DEBUG
-      print("Access token inside the bt" + offloadDataHeader.toString());
-      
-      sendLogs(offloadLog, log);
+
+      print(log.toString());
+      sendLogs( log);
     
-      // DEBUG
-      print("Device log" + log.toString());
+
     }
   }
-
-  void sendLogs(bool offloadLog, Map log) {
-     if (offloadLog) {
+  void sendLogs(Map log) {
+    print("Entered log dispatch");
       if (userDataProvider.isLoggedIn) {
+        print("ACCES TOKEN:" + offloadDataHeader.toString());
         // Send to offload API
-        _networkHelper.authorizedPost(
-            offloadLoggerEndpoint, offloadDataHeader, log);
+        var response = _networkHelper.authorizedPost(
+            offloadLoggerEndpoint, offloadDataHeader, json.encode(log));
+        response.then((value) => print("Response: " + value.toString()));
       } else {
-        _networkHelper.authorizedPost(offloadLoggerEndpoint, headers, log);
-      }
+
+        var response = _networkHelper.authorizedPost(offloadLoggerEndpoint, headers,json.encode(log) );
+        response.then((value) => print("Response: " + value));
+
+
     }
   }
 
@@ -262,20 +267,20 @@ class ProximityAwarenessSingleton {
 // Identify types of device, currently working for Apple devices and some android
   List<Map> identifyDeviceTypes() {
     List<Map> formattedLists = [];
-    List<List<String>> newBufferList = [];
-    for (List<String> deviceEntry in bufferList) {
+    List<List<Object>> newBufferList = [];
+    for (List<Object> deviceEntry in bufferList) {
       // Handle differences among platform
       if (Platform.isIOS) {
         deviceEntry.insert(
             1,
-            ((scannedObjects[deviceEntry[0].substring(0, 36)].deviceType != "")
-                ? "Device type: ${getAppleClassification(scannedObjects[deviceEntry[0].substring(0, 36)].deviceType)}"
+            ((scannedObjects[(deviceEntry[0].toString().substring(0, 36))].deviceType != "")
+                ? "${getAppleClassification(scannedObjects[deviceEntry[0].toString().substring(0, 36)].deviceType)}"
                 : "Unavailable"));
       } else if (Platform.isAndroid) {
         deviceEntry.insert(
             1,
-            ((scannedObjects[deviceEntry[0].substring(0, 17)].deviceType != "")
-                ? "${getAppleClassification(scannedObjects[deviceEntry[ScannedDevice.SCANNED_DEVICE_ID.index].substring(0, 17)].deviceType)}"
+            ((scannedObjects[deviceEntry[0].toString().substring(0, 17)].deviceType != "")
+                ? "${getAppleClassification(scannedObjects[deviceEntry[ScannedDevice.SCANNED_DEVICE_ID.index].toString().substring(0, 17)].deviceType)}"
                 : "Unavailable"));
       }
 
@@ -284,8 +289,8 @@ class ProximityAwarenessSingleton {
     }
 
     // Format Map for each device
-    for (List<String> deviceEntry in newBufferList) {
-      Map<String, String> deviceLog = {
+    for (List<Object> deviceEntry in newBufferList) {
+      Map<String, Object> deviceLog = {
         "SCANNED_DEVICE_ADVERTISEMENT_ID":
             deviceEntry[ScannedDevice.SCANNED_DEVICE_ADVERTISEMENT_ID.index],
         "SCANNED_DEVICE_ID": deviceEntry[ScannedDevice.SCANNED_DEVICE_ID.index],
@@ -397,7 +402,7 @@ class ProximityAwarenessSingleton {
   void bluetoothLogAnalysis(
       bool repeatedDevice, ScanResult scanResult, String calculatedUUID) {
     if (!repeatedDevice) {
-      scannedObjects[scanResult.device.id.toString()].dwellTime += (waitTime);
+      scannedObjects[scanResult.device.id.toString()].dwellTime += (waitTime*60); //account for seconds
       scannedObjects[scanResult.device.id.toString()].distance =
           getDistance(scanResult.rssi);
       if (scannedObjects[scanResult.device.id.toString()].dwellTime >=
@@ -415,17 +420,16 @@ class ProximityAwarenessSingleton {
       if (calculatedUUID == null) {
         calculatedUUID = "";
       }
-      List<String> actualDeviceLog = [
+      List<Object> actualDeviceLog = [
         deviceLog,
         calculatedUUID.toString(),
         scannedObjects[scanResult.device.id.toString()]
             .timeStamps[0]
             .toString(),
-        scanResult.rssi.toInt().toString(),
+        scanResult.rssi.toInt(),
         scannedObjects[scanResult.device.id.toString()]
             .distance
             .toInt()
-            .toString()
       ];
 
       bufferList.add(actualDeviceLog);
@@ -513,7 +517,6 @@ class ProximityAwarenessSingleton {
         });
       });
     } catch (exception) {
-      print(exception.toString());
     }
   }
 
@@ -579,7 +582,7 @@ class ProximityAwarenessSingleton {
     // Configure BackgroundFetch.
     BackgroundFetch.configure(
         BackgroundFetchConfig(
-          minimumFetchInterval: 15,
+          minimumFetchInterval: backgroundScanInterval,
           forceAlarmManager: false,
           stopOnTerminate: false,
           startOnBoot: true,
@@ -617,12 +620,16 @@ class ProximityAwarenessSingleton {
     final Map<String, String> tokenHeaders = {
       "content-type": 'application/x-www-form-urlencoded',
       "Authorization":
-          "Basic WUNaMXlLTW9wMjNxcGtvUFQ1aDYzdHB5bm9rYTpQNnFCbWNIRFc5azNJME56S3hHSm5QTTQzV0lh"
+          "Basic djJlNEpYa0NJUHZ5akFWT0VRXzRqZmZUdDkwYTp2emNBZGFzZWpmaWZiUDc2VUJjNDNNVDExclVh"
     };
     try {
-      var response = await _networkHelper.authorizedPost(
+;      var response = await _networkHelper.authorizedPost(
           tokenEndpoint, tokenHeaders, "grant_type=client_credentials");
+      print('Response: $response');
+
       headers["Authorization"] = "Bearer " + response["access_token"];
+
+
       return true;
     } catch (e) {
       return false;
@@ -632,12 +639,12 @@ class ProximityAwarenessSingleton {
   Future<Map> fetchData() async {
     final response = await _networkHelper.authorizedFetch(
         bluetoothCharacteristicsEndpoint, headers);
+    print('Response: $response');
 
     return json.decode(response);
   }
 
   void stopScans() {
-    print("SCAN STOPPED");
     ongoingScanner.cancel();
     flutterBlueInstance.stopScan();
     flutterBlueInstance.scanResults.listen((event) {}).cancel();
@@ -647,6 +654,8 @@ class ProximityAwarenessSingleton {
   Future<void> getData() async {
     String _response = await _networkHelper.authorizedFetch(
         bluetoothConstantsEndpoint, headers);
+    print('Response: $_response');
+
     final _json = json.decode(_response);
     qualifiedDevicesThreshold = int.parse(_json["uniqueDevices"]);
     distanceThreshold = int.parse(_json["distanceThreshold"]);
@@ -656,16 +665,18 @@ class ProximityAwarenessSingleton {
     scanIntervalAllowance = int.parse(_json["scanIntervalAllowance"]);
     var jsonArr = _json["deviceCharacteristics"];
     allowableDevices = List.from(jsonArr);
+    backgroundScanInterval = _json["backgroundScanInterval"];
+    deletionInterval = _json["deletionInterval"];
+
   }
   Future extractAPIConstants() async {
     try {
+      await getNewToken();
       deviceTypes = await fetchData();
       // Fetch parameters for scanning
       await getData();
       // Get device constants
-      await getNewToken();
     } catch (Exception) {
-      print(Exception.toString());
     }
   }
 

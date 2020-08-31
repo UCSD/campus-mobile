@@ -38,7 +38,6 @@ init() async {
     advertisingUUID = prefs.get('uuid') ?? "null";
     var previousTime =  prefs.get('previousTime') ?? DateTime(1990).toString();
     var difference = DateTime.now().difference(DateTime.parse(previousTime)).inSeconds;
-    print(difference);
     if (difference > 10) {
       changeUUID();
       prefs.setString('previousTime', DateTime.now().toString());
@@ -48,12 +47,9 @@ init() async {
 
   void changeUUID () {
     advertisingUUID = Uuid().v4();
-    print("UUID SIZE: ${advertisingUUID.length}");
-    print(advertisingUUID);
 
     advertisingUUID = randomUUID();
-    print("UUID SIZE: ${advertisingUUID.length}");
-    print(advertisingUUID);
+
 
   }
 

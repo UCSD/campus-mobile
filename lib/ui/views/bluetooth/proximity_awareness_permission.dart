@@ -144,8 +144,6 @@ class _ProximityAwarenessPermissionState extends State<ProximityAwarenessPermiss
     _bluetoothSingleton = ProximityAwarenessSingleton();
 
     if (permissionGranted ) {
-      _bluetoothSingleton.userDataProvider =
-          Provider.of<UserDataProvider>(context, listen: false);
       // Future.delayed(Duration(seconds: 5), ()  => bluetoothInstance.getOffloadAuthorization(context));
       _bluetoothSingleton.init();
     }

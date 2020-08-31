@@ -51,16 +51,9 @@ void initializeStorage() async {
 Future<bool> isFirstRun() async {
   final prefs = await SharedPreferences.getInstance();
   showOnboardingScreen = (prefs.getBool('showOnboardingScreen') ?? false);
-  checkToResumeBluetooth(prefs);
   return (prefs.getBool('first_run') ?? true);
 }
 
-void checkToResumeBluetooth(SharedPreferences preferences){
-  if((preferences.getBool('proximityAwarenessEnabled') ?? false)){
-    ProximityAwarenessSingleton bluetoothSingleton = ProximityAwarenessSingleton();
-    bluetoothSingleton.init();
-  }
-}
 
 void setFirstRun() async {
   final prefs = await SharedPreferences.getInstance();
