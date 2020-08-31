@@ -56,7 +56,7 @@ class ScannerCard extends StatelessWidget {
   }
 
   final _url =
-      'https://ucsd-mobile-dev.s3-us-west-1.amazonaws.com/scanner/scandit-web-sdk-mihir/09270945AM/index.html';
+      'https://ucsd-mobile-dev.s3-us-west-1.amazonaws.com/scanner/scandit-web-sdk-mihir/08311056AM/index.html';
 
   UserDataProvider _userDataProvider;
 
