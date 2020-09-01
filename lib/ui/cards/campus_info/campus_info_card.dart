@@ -7,16 +7,18 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-class CampusInfoCard extends StatefulWidget{
+class CampusInfoCard extends StatefulWidget {
   CampusInfoCard();
   @override
   _CampusInfoCardState createState() => _CampusInfoCardState();
 }
 
-class _CampusInfoCardState extends State<CampusInfoCard> with WidgetsBindingObserver {
+class _CampusInfoCardState extends State<CampusInfoCard>
+    with WidgetsBindingObserver {
   String cardId = "campus_info";
   WebViewController _webViewController;
-  String _url = "https://cwo-test.ucsd.edu/WebCards/campus_info.html?dummy=true";
+  String _url =
+      "https://mobile.ucsd.edu/replatform/v1/qa/webview/campus_info.html";
 
   @override
   void initState() {

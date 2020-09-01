@@ -13,7 +13,7 @@ class StaffIdCard extends StatefulWidget {
   _StaffIdCardState createState() => _StaffIdCardState();
 }
 
-class _StaffIdCardState extends State<StaffIdCard> with WidgetsBindingObserver{
+class _StaffIdCardState extends State<StaffIdCard> with WidgetsBindingObserver {
   String cardId = "staff_id";
   WebViewController _webViewController;
   String url;
@@ -21,7 +21,8 @@ class _StaffIdCardState extends State<StaffIdCard> with WidgetsBindingObserver{
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this); // observer for theme change, widget rebuilt on theme change
+    WidgetsBinding.instance.addObserver(
+        this); // observer for theme change, widget rebuilt on theme change
   }
 
   @override
@@ -46,7 +47,8 @@ class _StaffIdCardState extends State<StaffIdCard> with WidgetsBindingObserver{
     );
   }
 
-  String fileURL = "https://cwo-test.ucsd.edu/WebCards/staff_id_new.html";
+  String fileURL =
+      "https://mobile.ucsd.edu/replatform/v1/qa/webview/staff_id.html";
 
   @override
   void didChangeDependencies() {
@@ -69,7 +71,7 @@ class _StaffIdCardState extends State<StaffIdCard> with WidgetsBindingObserver{
     }
     var tokenQueryString =
         "token=" + '${_userDataProvider.authenticationModel.accessToken}';
-     url = fileURL + "?" + tokenQueryString;
+    url = fileURL + "?" + tokenQueryString;
 
     reloadWebViewWithTheme(context, url, _webViewController);
 
