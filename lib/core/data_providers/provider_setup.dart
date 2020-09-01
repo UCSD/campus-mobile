@@ -18,11 +18,12 @@ import 'package:campus_mobile_experimental/core/data_providers/user_data_provide
 import 'package:campus_mobile_experimental/core/data_providers/weather_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/coordinates_model.dart';
 import 'package:campus_mobile_experimental/core/navigation/top_navigation_bar/app_bar.dart';
-import 'package:campus_mobile_experimental/core/services/bottom_navigation_bar_service.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_analytics/observer.dart';
-import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
+import 'package:firebase_analytics/observer.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:campus_mobile_experimental/core/data_providers/free_food_data_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:campus_mobile_experimental/core/services/bottom_navigation_bar_service.dart';
 
 import 'maps_data_provider.dart';
 
@@ -204,7 +205,7 @@ List<SingleChildWidget> dependentServices = [
       }
   ),
   ChangeNotifierProxyProvider<UserDataProvider, AvailabilityDataProvider>(
-      create: (_) {
+    create: (_) {
     var availabilityDataProvider = AvailabilityDataProvider();
     availabilityDataProvider.fetchAvailability();
     return availabilityDataProvider;
@@ -222,6 +223,20 @@ List<SingleChildWidget> dependentServices = [
       messageDataProvider.userDataProvider = userDataProvider;
       messageDataProvider.fetchMessages(true);
       return messageDataProvider;
+    },
+  ),
+  ChangeNotifierProxyProvider<MessagesDataProvider, FreeFoodDataProvider>(
+    create: (_) {
+      var freefoodDataProvider = FreeFoodDataProvider();
+      freefoodDataProvider
+        ..loadRegisteredEvents();
+
+      return freefoodDataProvider;
+    },
+    update: (_, messageDataProvider, freefoodDataProvider) {
+      freefoodDataProvider..messageDataProvider = messageDataProvider;
+      freefoodDataProvider.parseMessages();
+      return freefoodDataProvider;
     },
   ),
 ];

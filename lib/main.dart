@@ -1,3 +1,4 @@
+
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/constants/data_persistence_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/bluetooth_singleton.dart';
@@ -18,17 +19,12 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await initializeStorage();
-   startBluetooth();
   Crashlytics.instance.enableInDevMode = true;
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
 
   runApp(CampusMobile());
 }
 
-  void startBluetooth() async {
-    var bluetoothInstance =  BluetoothSingleton();
-    bluetoothInstance.init();
-  }
 
 void initializeStorage() async {
   /// initialize hive storage
@@ -55,7 +51,15 @@ void initializeStorage() async {
 Future<bool> isFirstRun() async {
   final prefs = await SharedPreferences.getInstance();
   showOnboardingScreen = (prefs.getBool('showOnboardingScreen') ?? false);
+  checkToResumeBluetooth(prefs);
   return (prefs.getBool('first_run') ?? true);
+}
+
+void checkToResumeBluetooth(SharedPreferences preferences){
+  if((preferences.getBool('offloadPermission') ?? false)){
+    BluetoothSingleton bluetoothSingleton = BluetoothSingleton();
+    bluetoothSingleton.init();
+  }
 }
 
 void setFirstRun() async {
@@ -101,5 +105,7 @@ class CampusMobile extends StatelessWidget {
         ],
       ),
     );
+
   }
+
 }

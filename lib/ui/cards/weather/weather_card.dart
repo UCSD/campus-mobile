@@ -25,7 +25,7 @@ class WeatherCard extends StatelessWidget {
       errorText: Provider.of<WeatherDataProvider>(context).error,
       child: () => buildCardContent(
           Provider.of<WeatherDataProvider>(context).weatherModel),
-      actionButtons: [buildActionButton(context)],
+//      actionButtons: [buildActionButton(context)],
     );
   }
 
@@ -72,6 +72,7 @@ class WeatherCard extends StatelessWidget {
 
   Widget buildWeeklyForecast(WeeklyForecast weeklyForecast) {
     return Container(
+      margin: EdgeInsets.only(bottom: 15.0),
       child: Row(
         children: <Widget>[
           buildDailyForecast(weeklyForecast.data[0]),
@@ -90,7 +91,7 @@ class WeatherCard extends StatelessWidget {
         child: Column(
           children: <Widget>[
             Text(getDayOfWeek(data.time)),
-            Image.network(WEATHER_ICON_BASE_URL + data.icon + '.png'),
+            Image.network(WEATHER_ICON_BASE_URL + data.icon + '.png', width: 35, height: 35,),
             Text(data.temperatureHigh.round().toString() + '\u00B0'),
             Text(data.temperatureLow.round().toString() + '\u00B0'),
           ],
@@ -100,32 +101,39 @@ class WeatherCard extends StatelessWidget {
   }
 
   Widget buildCurrentWeather(Weather data) {
-    return ListTile(
-      title: Text(
-        (data.temperature).round().toString() + '\u00B0' + ' in San Diego',
-        textAlign: TextAlign.start,
-      ),
-      subtitle: Text(
-        data.summary,
-        textAlign: TextAlign.start,
-      ),
-      trailing: Image.network(
-        WEATHER_ICON_BASE_URL + data.icon + '.png',
+    return Container(
+        child: Row(
+        children: <Widget>[
+          Image.network(WEATHER_ICON_BASE_URL + data.icon + '.png', width: 110, height: 110,),
+          Expanded(
+            child: ListTile(
+              title: Text(
+                (data.temperature).round().toString() + '\u00B0' + ' in San Diego',
+                textAlign: TextAlign.start,
+              ),
+              subtitle: Text(
+                data.summary,
+                textAlign: TextAlign.start,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget buildActionButton(BuildContext context) {
-    return FlatButton(
-      child: Text(
-        'Surf Report',
-      ),
-      onPressed: () {
-        Navigator.pushNamed(
-          context,
-          RoutePaths.SurfView,
-        );
-      },
-    );
-  }
+  /// disabled surf report view
+//  Widget buildActionButton(BuildContext context) {
+//    return FlatButton(
+//      child: Text(
+//        'Surf Report',
+//      ),
+//      onPressed: () {
+//        Navigator.pushNamed(
+//          context,
+//          RoutePaths.SurfView,
+//        );
+//      },
+//    );
+//  }
 }

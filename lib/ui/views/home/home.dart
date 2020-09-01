@@ -1,5 +1,9 @@
+import 'package:beacon_broadcast/beacon_broadcast.dart';
+import 'package:campus_mobile_experimental/core/data_providers/bluetooth_broadcast_singleton.dart';
+import 'package:campus_mobile_experimental/core/data_providers/bluetooth_singleton.dart';
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/notices_data_provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/notices_model.dart';
 import 'package:campus_mobile_experimental/ui/cards/class_schedule/class_schedule_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/events/events_card.dart';
@@ -16,6 +20,7 @@ import 'package:campus_mobile_experimental/ui/cards/dining/dining_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/parking/parking_card.dart';
 import 'package:campus_mobile_experimental/ui/theme/app_layout.dart';
 import 'package:campus_mobile_experimental/ui/views/special_events/banner_view_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -25,6 +30,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -38,6 +45,7 @@ class _HomeState extends State<Home> {
   }
 
   List<Widget> createList(BuildContext context) {
+
     List<Widget> orderedCards =
         getOrderedCardsList(Provider.of<CardsDataProvider>(context).cardOrder);
     List<Widget> noticesCards = getNoticesCardsList(
@@ -86,9 +94,9 @@ class _HomeState extends State<Home> {
 //        case 'special_events':
 //          orderedCards.add(BannerCard());
 //          break;
-//        case 'weather':
-//          orderedCards.add(WeatherCard());
-//          break;
+        case 'weather':
+          orderedCards.add(WeatherCard());
+          break;
         case 'availability':
           orderedCards.add(AvailabilityCard());
           break;
@@ -102,5 +110,8 @@ class _HomeState extends State<Home> {
       }
     }
     return orderedCards;
+
   }
+
+
 }

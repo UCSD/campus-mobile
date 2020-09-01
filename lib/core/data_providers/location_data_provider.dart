@@ -34,8 +34,9 @@ class LocationDataProvider {
         _permission = true;
         _enableListener();
         }
+
         /// request the user to turn on gps
-      PermissionStatus permissionGranted = await  _locationService.hasPermission();
+     /* PermissionStatus permissionGranted = await  _locationService.hasPermission();
       if (permissionGranted == PermissionStatus.denied) {
           permissionGranted = await _locationService.requestPermission();
           if(permissionGranted != PermissionStatus.granted) {
@@ -44,7 +45,7 @@ class LocationDataProvider {
           else {
             _enableListener();
           }
-      }
+      }*/
 
 
     }

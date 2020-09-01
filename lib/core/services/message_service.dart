@@ -1,6 +1,7 @@
 //TODO: NEED AUTH BEARER TOKENS TO TEST ON APP
 
 import 'dart:async';
+import 'dart:convert';
 import 'package:campus_mobile_experimental/core/models/message_model.dart';
 import 'package:campus_mobile_experimental/core/services/networking.dart';
 
@@ -8,7 +9,8 @@ class MessageService {
   final String mymessages_endpoint =
       'https://api-qa.ucsd.edu:8243/mp-mymessages/1.0.0/messages?start=';
   final String topics_endpoint =
-      'https://bvgjvzaakl.execute-api.us-west-2.amazonaws.com/dev/topics?';
+      'https://bvgjvzaakl.execute-api.us-west-2.amazonaws.com/dev/topics/v2?';
+
   bool _isLoading = false;
   DateTime _lastUpdated;
   String _error;
@@ -44,6 +46,7 @@ class MessageService {
 
     String topicsEndpoint = 'topics=' + topics.join(',');
     String timestampEndpoint = '&start=' + timestamp.toString();
+
     try {
       /// fetch data
       String _response = await _networkHelper
