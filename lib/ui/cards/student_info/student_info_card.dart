@@ -14,7 +14,8 @@ class StudentInfoCard extends StatefulWidget {
   _StudentInfoCardState createState() => _StudentInfoCardState();
 }
 
-class _StudentInfoCardState extends State<StudentInfoCard> with WidgetsBindingObserver{
+class _StudentInfoCardState extends State<StudentInfoCard>
+    with WidgetsBindingObserver {
   String cardId = "student_info";
   WebViewController _webViewController;
   String url;
@@ -22,7 +23,8 @@ class _StudentInfoCardState extends State<StudentInfoCard> with WidgetsBindingOb
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this); // observer for theme change, widget rebuilt on change
+    WidgetsBinding.instance.addObserver(
+        this); // observer for theme change, widget rebuilt on change
   }
 
   @override
@@ -51,9 +53,11 @@ class _StudentInfoCardState extends State<StudentInfoCard> with WidgetsBindingOb
   void didChangeDependencies() {
     super.didChangeDependencies();
   }
+
   UserDataProvider _userDataProvider;
   set userDataProvider(UserDataProvider value) => _userDataProvider = value;
-  String fileURL = "https://cwo-test.ucsd.edu/WebCards/student_info_new.html";
+  String fileURL =
+      "https://mobile.ucsd.edu/replatform/v1/qa/webview/student_info.html";
 
   Widget buildCardContent(BuildContext context) {
     _userDataProvider = Provider.of<UserDataProvider>(context);
