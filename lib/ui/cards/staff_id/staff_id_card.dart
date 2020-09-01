@@ -2,6 +2,7 @@ import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
+import 'package:campus_mobile_experimental/ui/cards/student_info/student_info_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -61,26 +62,24 @@ class _StaffIdCardState extends State<StaffIdCard> {
     return Container(
       height: _contentHeight,
       child: WebView(
-          javascriptMode: JavascriptMode.unrestricted,
-          initialUrl: url,
-          onWebViewCreated: (controller) {
-            _webViewController = controller;
-          },
-          onPageFinished: (some) async {
-            double height = double.parse(await _webViewController
-                .evaluateJavascript("document.documentElement.offsetHeight"));
-            if (_contentHeight != height) {
-              setState(() {
-                if (height <= cardContentMinHeight) {
-                  _contentHeight = cardContentMinHeight;
-                } else if (height >= cardContentMaxHeight) {
-                  _contentHeight = cardContentMaxHeight;
-                } else
-                  _contentHeight = height;
-              });
-            }
-          }),
+        javascriptMode: JavascriptMode.unrestricted,
+        initialUrl: url,
+        onWebViewCreated: (controller) {
+          _webViewController = controller;
+        },
+        onPageFinished: _updateContentHeight,
+      ),
     );
+  }
+
+  Future<void> _updateContentHeight(String some) async {
+    var newHeight =
+        await getNewContentHeight(_webViewController, _contentHeight);
+    if (newHeight != _contentHeight) {
+      setState(() {
+        _contentHeight = newHeight;
+      });
+    }
   }
 
   void reloadWebView() {

@@ -2,6 +2,7 @@ import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
+import 'package:campus_mobile_experimental/ui/cards/student_info/student_info_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -60,30 +61,19 @@ class _StaffInfoCardState extends State<StaffInfoCard> {
     var url = _url + "?" + tokenQueryString;
 
     return Container(
-        height: _contentHeight,
-        child: WebView(
-            javascriptMode: JavascriptMode.unrestricted,
-            initialUrl: url,
-            onWebViewCreated: (controller) {
-              _webViewController = controller;
-            },
-            javascriptChannels: <JavascriptChannel>[
-              _printJavascriptChannel(context),
-            ].toSet(),
-            onPageFinished: (some) async {
-              double height = double.parse(await _webViewController
-                  .evaluateJavascript("document.documentElement.offsetHeight"));
-              if (_contentHeight != height) {
-                setState(() {
-                  if (height <= cardContentMinHeight) {
-                    _contentHeight = cardContentMinHeight;
-                  } else if (height >= cardContentMaxHeight) {
-                    _contentHeight = cardContentMaxHeight;
-                  } else
-                    _contentHeight = height;
-                });
-              }
-            }));
+      height: _contentHeight,
+      child: WebView(
+        javascriptMode: JavascriptMode.unrestricted,
+        initialUrl: url,
+        onWebViewCreated: (controller) {
+          _webViewController = controller;
+        },
+        javascriptChannels: <JavascriptChannel>[
+          _printJavascriptChannel(context),
+        ].toSet(),
+        onPageFinished: _updateContentHeight,
+      ),
+    );
   }
 
   JavascriptChannel _printJavascriptChannel(BuildContext context) {
@@ -93,6 +83,16 @@ class _StaffInfoCardState extends State<StaffInfoCard> {
         openLink(message.message);
       },
     );
+  }
+
+  Future<void> _updateContentHeight(String some) async {
+    var newHeight =
+        await getNewContentHeight(_webViewController, _contentHeight);
+    if (newHeight != _contentHeight) {
+      setState(() {
+        _contentHeight = newHeight;
+      });
+    }
   }
 
   openLink(String url) async {
