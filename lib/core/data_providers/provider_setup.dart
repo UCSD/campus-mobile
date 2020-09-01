@@ -148,7 +148,7 @@ List<SingleChildWidget> dependentServices = [
       update: (_, userDataProvider, cardsDataProvider) {
         cardsDataProvider
           ..loadSavedData().then((value) {
-            cardsDataProvider.updateAvailableCards();
+            cardsDataProvider.updateAvailableCards(userDataProvider.authenticationModel.ucsdaffiliation);
             if (userDataProvider.isLoggedIn &&
                 (userDataProvider.userProfileModel.classifications?.student ??
                     false)) {

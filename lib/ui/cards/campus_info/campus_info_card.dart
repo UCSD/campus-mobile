@@ -1,7 +1,7 @@
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
-import 'package:campus_mobile_experimental/ui/cards/student_info/student_info_card.dart';
+import 'package:campus_mobile_experimental/ui/theme/darkmode_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -14,9 +14,24 @@ class CampusInfoCard extends StatefulWidget {
   _CampusInfoCardState createState() => _CampusInfoCardState();
 }
 
-class _CampusInfoCardState extends State<CampusInfoCard> {
+class _CampusInfoCardState extends State<CampusInfoCard>
+    with WidgetsBindingObserver {
   String cardId = "campus_info";
   WebViewController _webViewController;
+  String _url =
+      "https://cwo-test.ucsd.edu/WebCards/campus_info.html?dummy=true";
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +39,9 @@ class _CampusInfoCardState extends State<CampusInfoCard> {
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
-      reload: () => reloadWebView(),
+      reload: () {
+        reloadWebViewWithTheme(context, _url, _webViewController);
+      },
       isLoading: false,
       titleText: CardTitleConstants.titleMap[cardId],
       errorText: null,
@@ -39,10 +56,8 @@ class _CampusInfoCardState extends State<CampusInfoCard> {
     super.didChangeDependencies();
   }
 
-  final _url =
-      "https://mobile.ucsd.edu/replatform/v1/qa/webview/campus_info.html";
-
   Widget buildCardContent(BuildContext context) {
+    reloadWebViewWithTheme(context, _url, _webViewController);
     return Container(
       height: _contentHeight,
       child: WebView(
@@ -84,9 +99,5 @@ class _CampusInfoCardState extends State<CampusInfoCard> {
     } else {
       //can't launch url, there is some error
     }
-  }
-
-  void reloadWebView() {
-    _webViewController?.reload();
   }
 }
