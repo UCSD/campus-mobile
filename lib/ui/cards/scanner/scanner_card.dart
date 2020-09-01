@@ -116,7 +116,7 @@ class ScannerCard extends StatelessWidget {
         '${_userDataProvider.authenticationModel.ucsdaffiliation}';
     var url = _url + "?" + tokenQueryString + "&" + affiliationQueryString;
     String myChartUrl = url;
-    launch(myChartUrl, forceSafariVC: false, forceWebView: false);
+    openLink(myChartUrl);
     print(myChartUrl);
   }
 }
