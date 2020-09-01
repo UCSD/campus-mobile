@@ -199,7 +199,6 @@ List<SingleChildWidget> dependentServices = [
     parkingDataProvider.fetchSpotTypes();
     return parkingDataProvider;
   }, update: (_, userDataProvider, parkingDataProvider) {
-    //   parkingDataProvider.userDataProvider = userDataProvider;
     return parkingDataProvider;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, StudentIdDataProvider>(

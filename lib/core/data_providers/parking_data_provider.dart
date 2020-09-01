@@ -1,4 +1,3 @@
-// import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/parking_model.dart';
 import 'package:campus_mobile_experimental/core/models/spot_types_model.dart';
 import 'package:campus_mobile_experimental/core/services/parking_service.dart';
@@ -60,10 +59,6 @@ class ParkingDataProvider extends ChangeNotifier {
 
       //TODO Add user selected spots
 
-      /// if the user is logged in we want to sync the order of parking lots amongst all devices
-      // if (_userDataProvider != null) {
-      //   reorderLots(_userDataProvider.userProfileModel.selectedLots);
-      // }
       _lastUpdated = DateTime.now();
     } else {
       ///TODO: determine what error to show to the user
@@ -95,12 +90,7 @@ class ParkingDataProvider extends ChangeNotifier {
 
   ///RETURNS A List<ParkingModels> IN THE CORRECT ORDER
   List<ParkingModel> get parkingModels {
-    ///check if we have an offline _parkingModel
     if (_parkingModels != null) {
-      ///check if we have an offline _userProfileModel
-      // if (_userDataProvider.userProfileModel != null) {
-      //   return makeOrderedList(_userDataProvider.userProfileModel.selectedLots);
-      // }
       return _parkingModels.values.toList();
     }
     return List<ParkingModel>();

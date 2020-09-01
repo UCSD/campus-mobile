@@ -138,8 +138,6 @@ class Router {
         });
       case RoutePaths.ClassScheduleViewAll:
         return MaterialPageRoute(builder: (_) => ClassList());
-      // case RoutePaths.ParkingLotsView:
-        // return MaterialPageRoute(builder: (_) => ParkingLotsView());
       case RoutePaths.SpotTypesView:
         return MaterialPageRoute(builder: (_) => SpotTypesView());
         return MaterialPageRoute(builder: (_) {
