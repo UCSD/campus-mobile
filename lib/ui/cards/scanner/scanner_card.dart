@@ -112,11 +112,12 @@ class ScannerCard extends StatelessWidget {
     }
     var tokenQueryString =
         "token=" + '${_userDataProvider.authenticationModel.accessToken}';
+
     var affiliationQueryString = "affiliation=" +
         '${_userDataProvider.authenticationModel.ucsdaffiliation}';
+
     var url = _url + "?" + tokenQueryString + "&" + affiliationQueryString;
-    String myChartUrl = url;
-    openLink(myChartUrl);
-    print(myChartUrl);
+
+    openLink(url);
   }
 }
