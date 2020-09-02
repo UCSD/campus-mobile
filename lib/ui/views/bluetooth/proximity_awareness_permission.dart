@@ -14,7 +14,7 @@ class ProximityAwarenessPermission extends StatefulWidget {
 }
 
 class _ProximityAwarenessPermissionState extends State<ProximityAwarenessPermission> {
-  ProximityAwarenessSingleton _bluetoothSingleton = ProximityAwarenessSingleton();
+  ProximityAwarenessSingleton _bluetoothSingleton;
   SharedPreferences pref;
 
   @override
@@ -112,7 +112,7 @@ class _ProximityAwarenessPermissionState extends State<ProximityAwarenessPermiss
         ),
         Expanded(child: SizedBox()),
         Switch(
-          value: bluetoothStarted(),
+          value: bluetoothStarted(context),
           onChanged: (permissionGranted) {
             startBluetooth(context, permissionGranted);
             setState(() {
@@ -130,19 +130,43 @@ class _ProximityAwarenessPermissionState extends State<ProximityAwarenessPermiss
     );
   }
 
-  bool bluetoothStarted() {
+  bool bluetoothStarted(BuildContext context) {
       if (pref != null &&  pref.containsKey("proximityAwarenessEnabled") &&
           pref.getBool("proximityAwarenessEnabled")) {
         return true;
       }
     else{
-      return _bluetoothSingleton.proximityAwarenessEnabled;
+      if(_bluetoothSingleton != null) {
+        return _bluetoothSingleton.proximityAwarenessEnabled;
+      }
+    }
+    return false;
+  }
+  void checkToResumeBluetooth(BuildContext context) async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    if(prefs.containsKey("proximityAwarenessEnabled") && prefs.getBool('proximityAwarenessEnabled')){
+      print(prefs.getBool("proximityAwarenessEnabled"));
+      ProximityAwarenessSingleton bluetoothSingleton = ProximityAwarenessSingleton();
+      if(bluetoothSingleton.firstInstance) {
+        bluetoothSingleton.firstInstance = false;
+        print("Instance: "+ bluetoothSingleton.firstInstance.toString());
+        if(bluetoothSingleton.userDataProvider == null) {
+          bluetoothSingleton.userDataProvider =
+              Provider.of<UserDataProvider>(context, listen: false);
+        }
+        bluetoothSingleton.init();
+
+
+      }
     }
   }
-
   void startBluetooth(BuildContext context,bool permissionGranted) async {
     _bluetoothSingleton = ProximityAwarenessSingleton();
-
+    if(_bluetoothSingleton.userDataProvider == null) {
+      _bluetoothSingleton.userDataProvider =
+          Provider.of<UserDataProvider>(context, listen: false);
+    }
     if (permissionGranted ) {
       // Future.delayed(Duration(seconds: 5), ()  => bluetoothInstance.getOffloadAuthorization(context));
       _bluetoothSingleton.init();

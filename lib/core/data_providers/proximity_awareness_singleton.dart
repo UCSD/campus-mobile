@@ -160,7 +160,7 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
 
     // Enable timer, must wait duration before next method execution
     ongoingScanner = new Timer.periodic(
-        Duration(minutes: waitTimegit ), (Timer t) => startScan());
+        Duration(minutes: waitTime ), (Timer t) => startScan());
   }
 
   // Start a bluetooth scan of determined second duration and listen to results
@@ -174,7 +174,7 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
         String calculatedUUID;
 
         calculatedUUID = extractAdvertisementUUID(scanResult, calculatedUUID);
-
+        print(calculatedUUID == null ? "none": calculatedUUID + "Name: "+scanResult.device.name);
         //Create BT Objects to check continuity and store data
         identifyDevices(scanResult);
 
@@ -195,7 +195,7 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
     bool offloadLog = false;
     
     // If there are more than three devices, log location
-    processOffloadingLogs(offloadLog, newBufferList);
+    processOffloadingLogs(offloadLog, List.of(newBufferList));
 
     // Close on going scan in case it has not time out
     flutterBlueInstance.stopScan();
@@ -213,11 +213,8 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
       checkLocationPermission();
       location.getLocation().then((value) {
         lat = value.latitude;
-      });
-      location.getLocation().then((value) {
         long = value.longitude;
-      });
-    
+
       // Reset dwell times
       resetDevices();
       qualifyingDevices = 0;
@@ -232,24 +229,24 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
       };
     
 
-      print(log.toString());
+      print("Device logs" + json.encode(log));
       sendLogs( log);
-    
+
+      });
 
     }
   }
   void sendLogs(Map log) {
+
     print("Entered log dispatch");
       if (userDataProvider.isLoggedIn) {
         print("ACCES TOKEN:" + offloadDataHeader.toString());
         // Send to offload API
         var response = _networkHelper.authorizedPost(
             offloadLoggerEndpoint, offloadDataHeader, json.encode(log));
-        response.then((value) => print("Response: " + value.toString()));
       } else {
 
         var response = _networkHelper.authorizedPost(offloadLoggerEndpoint, headers,json.encode(log) );
-        response.then((value) => print("Response: " + value));
 
 
     }

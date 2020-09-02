@@ -115,17 +115,17 @@ class _HomeState extends State<Home> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     if(prefs.containsKey("proximityAwarenessEnabled") && prefs.getBool('proximityAwarenessEnabled')){
+      print(prefs.getBool("proximityAwarenessEnabled"));
       ProximityAwarenessSingleton bluetoothSingleton = ProximityAwarenessSingleton();
       if(bluetoothSingleton.firstInstance) {
+        bluetoothSingleton.firstInstance = false;
+        print("Instance: "+ bluetoothSingleton.firstInstance.toString());
         if(bluetoothSingleton.userDataProvider == null) {
           bluetoothSingleton.userDataProvider =
               Provider.of<UserDataProvider>(context, listen: false);
         }
-        bluetoothSingleton.flutterBlueInstance.isScanning.last.then((scanning) {
-          if(!scanning){
             bluetoothSingleton.init();
-          }
-        });
+
 
       }
     }
