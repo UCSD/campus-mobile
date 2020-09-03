@@ -84,9 +84,28 @@ class _StaffIdCardState extends State<StaffIdCard> with WidgetsBindingObserver {
             onWebViewCreated: (controller) {
               _webViewController = controller;
             },
+            javascriptChannels: <JavascriptChannel>[
+              _myJavascriptChannel(context),
+            ].toSet(),
           ),
         ),
       ],
     );
+  }
+
+  JavascriptChannel _myJavascriptChannel(BuildContext context) {
+    return JavascriptChannel(
+      name: 'CampusMobile',
+      onMessageReceived: (JavascriptMessage message) {
+        if (message.message == 'refreshToken') {
+          _userDataProvider.refreshToken();
+          reloadWebView();
+        }
+      },
+    );
+  }
+
+  void reloadWebView() {
+    _webViewController?.reload();
   }
 }
