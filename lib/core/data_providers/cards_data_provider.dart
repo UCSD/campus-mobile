@@ -64,11 +64,11 @@ class CardsDataProvider extends ChangeNotifier {
   ///Services
   final CardsService _cardsService = CardsService();
 
-  void updateAvailableCards() async {
+  void updateAvailableCards(String ucsdAffiliation) async {
     _isLoading = true;
     _error = null;
     notifyListeners();
-    if (await _cardsService.fetchCards()) {
+    if (await _cardsService.fetchCards(ucsdAffiliation)) {
       _availableCards = _cardsService.cardsModel;
       _lastUpdated = DateTime.now();
       if (_availableCards.isNotEmpty) {
