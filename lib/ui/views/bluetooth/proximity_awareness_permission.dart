@@ -136,9 +136,10 @@ class _ProximityAwarenessPermissionState extends State<ProximityAwarenessPermiss
         return true;
       }
     else{
-      if(_bluetoothSingleton != null) {
+      _bluetoothSingleton = ProximityAwarenessSingleton();
+
         return _bluetoothSingleton.proximityAwarenessEnabled;
-      }
+
     }
     return false;
   }

@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>UC San Diego Mobile uses Bluetooth access to scan for nearby beacons to provide location specific information.</string>
 	<key></key>
 	<string></string>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>

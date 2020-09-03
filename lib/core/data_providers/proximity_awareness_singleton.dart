@@ -25,6 +25,9 @@ enum ScannedDevice {
 }
 
 class ProximityAwarenessSingleton extends ChangeNotifier{
+  bool inBackground = false;
+  // Using secure storage for background scans
+  FlutterSecureStorage storageLog =  FlutterSecureStorage();
 
   // Instance variable for starting beacon singleton
   BeaconSingleton beaconSingleton;
@@ -160,7 +163,7 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
 
     // Enable timer, must wait duration before next method execution
     ongoingScanner = new Timer.periodic(
-        Duration(minutes: waitTime ), (Timer t) => startScan());
+        Duration(seconds: waitTime * 5), (Timer t) => startScan());
   }
 
   // Start a bluetooth scan of determined second duration and listen to results
@@ -174,7 +177,6 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
         String calculatedUUID;
 
         calculatedUUID = extractAdvertisementUUID(scanResult, calculatedUUID);
-        print(calculatedUUID == null ? "none": calculatedUUID + "Name: "+scanResult.device.name);
         //Create BT Objects to check continuity and store data
         identifyDevices(scanResult);
 
@@ -206,6 +208,18 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
   }
 
   void processOffloadingLogs(bool offloadLog, List<Map> newBufferList) {
+    if(inBackground){
+      storageLog.write(key: DateTime.fromMillisecondsSinceEpoch(
+          DateTime.now().millisecondsSinceEpoch)
+          .toString(), value: json.encode({
+        "SOURCE_DEVICE_ADVERTISEMENT_ID": this.advertisementValue,
+        "SOURCE": "UCSDMobileApp",
+        "LAT": 0,
+        "LONG": 0,
+        "DEVICE_LIST": newBufferList
+      }));
+
+    }
     if (qualifyingDevices >= qualifiedDevicesThreshold) {
       double lat;
       double long;
@@ -229,7 +243,6 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
       };
     
 
-      print("Device logs" + json.encode(log));
       sendLogs( log);
 
       });
@@ -238,9 +251,7 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
   }
   void sendLogs(Map log) {
 
-    print("Entered log dispatch");
       if (userDataProvider.isLoggedIn) {
-        print("ACCES TOKEN:" + offloadDataHeader.toString());
         // Send to offload API
         var response = _networkHelper.authorizedPost(
             offloadLoggerEndpoint, offloadDataHeader, json.encode(log));
@@ -253,10 +264,9 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
   }
 
   String extractAdvertisementUUID(ScanResult scanResult, String calculatedUUID) {
-    scanResult.advertisementData.manufacturerData
-        .forEach((item, hexcodeAsArray) => {
-              calculatedUUID = calculateHexFromArray(hexcodeAsArray)
-            });
+    scanResult.advertisementData.manufacturerData.forEach((key, decimalArray) {
+      calculatedUUID = calculateHexFromArray(decimalArray); //https://stackoverflow.com/questions/60902976/flutter-ios-to-ios-broadcast-beacon-not-working
+    });
     return calculatedUUID;
   }
 
@@ -570,7 +580,7 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
 
   // Start a background scan
   void _onBackgroundFetch(String taskID) async {
-    startScan();
+    startBackgroundScan();
     BackgroundFetch.finish(taskID);
   }
   // Set background tasks
@@ -621,7 +631,6 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
     try {
 ;      var response = await _networkHelper.authorizedPost(
           tokenEndpoint, tokenHeaders, "grant_type=client_credentials");
-      print('Response: $response');
 
       headers["Authorization"] = "Bearer " + response["access_token"];
 
@@ -635,7 +644,6 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
   Future<Map> fetchData() async {
     final response = await _networkHelper.authorizedFetch(
         bluetoothCharacteristicsEndpoint, headers);
-    print('Response: $response');
 
     return json.decode(response);
   }
@@ -650,7 +658,6 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
   Future<void> getData() async {
     String _response = await _networkHelper.authorizedFetch(
         bluetoothConstantsEndpoint, headers);
-    print('Response: $_response');
 
     final _json = json.decode(_response);
     qualifiedDevicesThreshold = int.parse(_json["uniqueDevices"]);
@@ -693,6 +700,38 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
     beaconSingleton = BeaconSingleton();
     beaconSingleton.init();
     advertisementValue = beaconSingleton.advertisingUUID;
+  }
+
+  Future<void> startBackgroundScan() async {
+    Map<String, String> previousLogs = await storageLog.readAll();
+    if(previousLogs.isNotEmpty){
+      previousLogs.forEach((key, value) {
+        String lastTimeStamp = key;
+        var response = json.decode(value);
+        advertisementValue = response["SOURCE_DEVICE_ADVERTISEMENT_ID"];
+
+        List<Map> deviceList = List.from(response["DEVICE_LIST"]);
+        for(Map device in deviceList ){
+          scannedObjects.putIfAbsent(device["SCANNED_DEVICE_ID"],() => new BluetoothDeviceProfile(device["SCANNED_DEVICE_ID"], device["SCANNED_DEVICE_DETECT_SIGNAL_STRENGTH"], device["SCANNED_DEVICE_TYPE"], new List<String>.from({
+            device["SCANNED_DEVICE_DETECT_START"]}), true));
+
+          // Calculate dwell time
+          int year = int.parse(device["SCANNED_DEVICE_DETECT_START"].toString().substring(0,4));
+          int month = int.parse(device["SCANNED_DEVICE_DETECT_START"].toString().substring(5,7));
+          int day =int.parse(device["SCANNED_DEVICE_DETECT_START"].toString().substring(8,10));
+          int hour = int.parse(device["SCANNED_DEVICE_DETECT_START"].toString().substring(11,13));
+          int minute = int.parse(device["SCANNED_DEVICE_DETECT_START"].toString().substring(14,16));
+          int seconds = int.parse(device["SCANNED_DEVICE_DETECT_START"].toString().substring(17,19));
+          scannedObjects[device["SCANNED_DEVICE_ID"]].dwellTime = DateTime.now().difference( new DateTime(year, month,  day, hour,minute
+              ,seconds)).inSeconds as double;
+
+        }
+        storageLog.deleteAll();
+        inBackground = true;
+        startScan();
+
+      });
+    }
   }
 }
 
