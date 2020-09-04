@@ -46,6 +46,7 @@ class _ScannerState extends State<Scanner> {
   // ignore: type_annotate_public_apis
   initState() {
     super.initState();
+    _barcodeService = BarcodeService();
     Future.delayed(Duration.zero, () async {
       _numberOfCameras = await BarcodeScanner.numberOfCameras;
       setState(() {});
