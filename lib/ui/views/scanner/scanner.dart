@@ -98,18 +98,28 @@ class _ScannerState extends State<Scanner> {
     });
     return (Column(
       children: [
-        Text(_barcode, style: TextStyle(color: Colors.white)),
+        buildScannedText(),
         Padding(
           padding: const EdgeInsets.only(top: 8.0),
-          child: OutlineButton(
-            borderSide: BorderSide(color: Colors.white),
-            onPressed: submit,
-            child: Text("Submit", style: TextStyle(color: Colors.white)),
-          ),
+          child: buildCorrespondingButton(),
         )
       ],
     ));
   }
+
+  OutlineButton buildCorrespondingButton() {
+    return (_barcode == null || _barcode.isEmpty)? OutlineButton(
+      borderSide: BorderSide(color: Colors.white),
+      onPressed: scan,
+      child: Text("Start scan", style: TextStyle(color: Colors.white)),
+    ):OutlineButton(
+          borderSide: BorderSide(color: Colors.white),
+          onPressed: submit,
+          child: Text("Submit", style: TextStyle(color: Colors.white)),
+        );
+  }
+
+  Text buildScannedText() => (_barcode == null || _barcode.isEmpty)?Text('Nothing has been scanned yet.', style: TextStyle(color: Colors.white)) :Text(_barcode, style: TextStyle(color: Colors.white));
 
   Map<String, dynamic> createUserData() {
     print("affiliation: " + ucsdAffiliation.toString());
@@ -154,18 +164,15 @@ class _ScannerState extends State<Scanner> {
           useAutoFocus: _useAutoFocus,
         ),
       );
-      print("here");
       var result = await BarcodeScanner.scan(options: options);
-      print("after result");
-      print(result.rawContent);
+   
       //if(result.rawContent != null && result.rawContent.isNotEmpty) {
       setState(() {
         scanResult = result;
         _barcode = result.rawContent;
         _hasScanned = true;
       }); //}
-      print("barcode: " + _barcode);
-      print("has scanned " + _hasScanned.toString());
+     
     } on PlatformException catch (e) {
       var result = ScanResult(
         type: ResultType.Error,
