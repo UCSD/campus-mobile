@@ -28,7 +28,6 @@ import 'package:campus_mobile_experimental/ui/views/onboarding/onboarding_screen
 import 'package:campus_mobile_experimental/ui/views/parking/manage_parking_view.dart';
 import 'package:campus_mobile_experimental/ui/views/profile/cards_view.dart';
 import 'package:campus_mobile_experimental/ui/views/profile/profile.dart';
-import 'package:campus_mobile_experimental/ui/views/scanner/scanner_view.dart';
 import 'package:campus_mobile_experimental/ui/views/special_events/special_event_detail_view.dart';
 import 'package:campus_mobile_experimental/ui/views/special_events/special_events_filter_view.dart';
 import 'package:campus_mobile_experimental/ui/views/special_events/special_events_list_view.dart';
@@ -135,11 +134,6 @@ class Router {
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return NotificationsSettingsView();
-        });
-      case RoutePaths.ScannerView:
-        return MaterialPageRoute(builder: (_) {
-          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
-          return ScannerView();
         });
       case RoutePaths.ClassScheduleViewAll:
         return MaterialPageRoute(builder: (_) {
