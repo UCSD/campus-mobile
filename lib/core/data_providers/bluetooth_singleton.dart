@@ -108,7 +108,7 @@ class BluetoothSingleton {
   // Initial method for scan set up
   init() async {
 
-    //Instantiate access token
+    /*//Instantiate access token
     offloadDataHeader = {
       'Authorization':
           'Bearer ${userDataProvider?.authenticationModel?.accessToken}'
@@ -123,7 +123,7 @@ class BluetoothSingleton {
         //Write to bt value
         prefs.setBool("offloadPermission", dataOffloadAuthorized);
       }
-    });
+    });*/
 
     // Only start scanning when permissions granted
     await flutterBlueInstance.isAvailable.then((value) {
@@ -193,12 +193,12 @@ class BluetoothSingleton {
             ),
             _onBackgroundFetch)
         .then((int status) {
-      _storage.write(
+      /*_storage.write(
           key: _randomValue(),
-          value: '[BackgroundFetch] configure success: $status');
+          value: '[BackgroundFetch] configure success: $status');*/
     }).catchError((e) {
-      _storage.write(
-          key: _randomValue(), value: '[BackgroundFetch] configure ERROR: $e');
+      /*_storage.write(
+          key: _randomValue(), value: '[BackgroundFetch] configure ERROR: $e');*/
     });
   }
 
@@ -211,7 +211,7 @@ class BluetoothSingleton {
 
     // Enable timer, must wait duration before next method execution
     ongoingScanner = new Timer.periodic(
-        Duration(minutes: waitTime), (Timer t) => startScan());
+        Duration(seconds: waitTime), (Timer t) => startScan());
   }
 
   //Get constants for scanning
@@ -230,10 +230,25 @@ class BluetoothSingleton {
   }
 
   // Start a bluetooth scan of determined second duration and listen to results
-  startScan() {
+  startScan() async {
+    DateTime time1 = DateTime.now();
+    print("Time 1: $time1");
+    var savedDevices = await _storage.readAll();
+    print("storage size: " + savedDevices.length.toString());
+    savedDevices.forEach((key, value) {
+      //print("Storage Key: $key\nValue: ${value.toString()}");
+
+      scannedObjects.update(key, (v) => new BluetoothDeviceProfile.fromJson(jsonDecode(value)),
+        ifAbsent: () => new BluetoothDeviceProfile.fromJson(jsonDecode(value))
+      );
+
+      //print("HashMapKey: $key\nValue: ${scannedObjects[key].toString()}");
+    });
+    _storage.deleteAll();
+
     flutterBlueInstance.startScan(
         timeout: Duration(seconds: 2), allowDuplicates: false);
-
+    
     // Process the scan results (synchronously)
     flutterBlueInstance.scanResults.listen((results) {
       for (ScanResult scanResult in results) {
@@ -295,9 +310,9 @@ class BluetoothSingleton {
         "btList": newBufferList
       };
 
-      // Send to offload API
+      /*// Send to offload API
       _networkHelper
-          .authorizedPost(offloadLoggerEndpoint, offloadDataHeader, log);
+          .authorizedPost(offloadLoggerEndpoint, offloadDataHeader, log);*/
 
       // DEBUG
       print("Device log" + log.toString());
@@ -307,9 +322,23 @@ class BluetoothSingleton {
     // Close on going scan in case it has not time out
     flutterBlueInstance.stopScan();
 
+    //print("scannedObjects");
+    scannedObjects.forEach((key, value) {
+
+      //print("$key:" + value.toString() + "\n");
+      _storage.write(key: key, value: jsonEncode(value));
+    });
+
+    print("scannedObjects size: " + scannedObjects.length.toString());
+
+
     // Clear previous scan results
     bufferList.clear();
     newBufferList.clear();
+
+    DateTime time2 = DateTime.now();
+    print("Time 2: $time2");
+    print("Scan procedure took: ${time2.difference(time1).inMilliseconds}");
   }
 
 // Identify types of device, currently working for Apple devices and some android
@@ -379,7 +408,7 @@ class BluetoothSingleton {
             scanResult.device.id.toString(),
             scanResult.rssi,
             "",
-            new List<TimeOfDay>.from({TimeOfDay.now()}),
+            new List<String>.from({getCurrentTimeOfDay()}),
             true));
   }
 
@@ -393,6 +422,11 @@ class BluetoothSingleton {
       }
     });
     return repeatedDevice;
+  }
+
+  String getCurrentTimeOfDay() {
+    TimeOfDay currentTime = TimeOfDay.now();
+    return "${currentTime.hour}:${currentTime.minute}";
   }
 
   // Identify the Apple device type
@@ -661,7 +695,7 @@ class BluetoothDeviceProfile {
   String uuid;
   int rssi;
   String deviceType;
-  List<TimeOfDay> timeStamps;
+  List<String> timeStamps; //ask peter bout this
   bool continuousDuration;
   double distance; // Feet
   int txPowerLevel;
@@ -672,4 +706,35 @@ class BluetoothDeviceProfile {
 
   BluetoothDeviceProfile(this.uuid, this.rssi, this.deviceType, this.timeStamps,
       this.continuousDuration);
+
+  BluetoothDeviceProfile.fromJson(Map<String, dynamic> json)
+    : uuid = json['uuid'],
+      rssi = json['rssi'],
+      deviceType = json['deviceType'],
+      timeStamps = json['timeStamps'].cast<String>(),
+      continuousDuration = json['continuousDuration'],
+      distance = json['distance'],
+      txPowerLevel = json['txPowerLevel'],
+      dwellTime = json['dwellTime'],
+      timeThresholdMet = json['timeThresholdMet'],
+      scanIntervalAllowancesUsed = json['scanIntervalAllowancesUsed'];
+
+
+  Map<String, dynamic> toJson() {
+    return {
+      'uuid': uuid,
+      'rssi': rssi,
+      'deviceType': deviceType,
+      'timeStamps': timeStamps,
+      'continuousDuration': continuousDuration,
+      'distance': distance,
+      'txPowerLevel': txPowerLevel,
+      'dwellTime': dwellTime,
+      'timeThresholdMet': timeThresholdMet,
+      'scanIntervalAllowancesUsed': scanIntervalAllowancesUsed
+    };
+  }
+
+
+
 }
