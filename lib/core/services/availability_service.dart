@@ -10,21 +10,22 @@ class AvailabilityService {
 
   /// add state related things for view model here
   /// add any type of data manipulation here so it can be accessed via provider
-
   List<AvailabilityModel> get data => _data;
 
   final NetworkHelper _networkHelper = NetworkHelper();
   final Map<String, String> headers = {
     "accept": "application/json",
   };
-  final String endpoint = "https://api-qa.ucsd.edu:8243/occuspace/v1.0/busyness";
+  final String endpoint =
+      "https://api-qa.ucsd.edu:8243/occuspace/v2.0/busyness";
 
   Future<bool> fetchData() async {
     _error = null;
     _isLoading = true;
     try {
       /// fetch data
-      String _response = await _networkHelper.authorizedFetch(endpoint, headers);
+      String _response =
+          await _networkHelper.authorizedFetch(endpoint, headers);
 
       /// parse data
       final data = availabilityModelFromJson(_response);
@@ -50,7 +51,8 @@ class AvailabilityService {
     final String tokenEndpoint = "https://api-qa.ucsd.edu:8243/token";
     final Map<String, String> tokenHeaders = {
       "content-type": 'application/x-www-form-urlencoded',
-      "Authorization": "Basic WUNaMXlLTW9wMjNxcGtvUFQ1aDYzdHB5bm9rYTpQNnFCbWNIRFc5azNJME56S3hHSm5QTTQzV0lh"
+      "Authorization":
+          "Basic ZnI0MWZGWE9TTXp3N2ZPb21HbUN6ekdBZ29JYTpvTWRHZUQ1X05qM2lQUl9leThmZ0pwNXJ2OEFh"
     };
     try {
       var response = await _networkHelper.authorizedPost(
