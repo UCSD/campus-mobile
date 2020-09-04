@@ -1,9 +1,9 @@
 import 'package:campus_mobile_experimental/core/data_providers/availability_data_provider.dart';
-import 'package:campus_mobile_experimental/core/data_providers/barcode_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/class_schedule_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/dining_data_proivder.dart';
 import 'package:campus_mobile_experimental/core/data_providers/events_data_provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/free_food_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/links_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/location_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/messages_data_provider.dart';
@@ -147,14 +147,27 @@ List<SingleChildWidget> dependentServices = [
       update: (_, userDataProvider, cardsDataProvider) {
         cardsDataProvider
           ..loadSavedData().then((value) {
-            cardsDataProvider.updateAvailableCards();
+            cardsDataProvider.updateAvailableCards(userDataProvider.authenticationModel.ucsdaffiliation);
             if (userDataProvider.isLoggedIn &&
                 (userDataProvider.userProfileModel.classifications?.student ??
                     false)) {
               cardsDataProvider.activateStudentCards();
             } else {
-              /// this is getting called before loadSaved data is complete
               cardsDataProvider.deactivateStudentCards();
+            }
+
+            if (userDataProvider.isLoggedIn &&
+                (userDataProvider.userProfileModel.classifications?.staff ??
+                    false)) {
+              cardsDataProvider.activateStaffCards();
+            } else {
+              cardsDataProvider.deactivateStaffCards();
+            }
+
+            if (userDataProvider.isLoggedIn) {
+              cardsDataProvider.deactivateSignedOutCards();
+            } else {
+              cardsDataProvider.activateSignedOutCards();
             }
           });
         return cardsDataProvider;
@@ -170,14 +183,6 @@ List<SingleChildWidget> dependentServices = [
     }
     return classScheduleDataProvider;
   }),
-  ChangeNotifierProxyProvider<UserDataProvider, BarcodeDataProvider>(
-      create: (_) {
-    var barcodeDataProvider = BarcodeDataProvider();
-    return barcodeDataProvider;
-  }, update: (_, userDataProvider, barcodeDataProvider) {
-    barcodeDataProvider.userDataProvider = userDataProvider;
-    return barcodeDataProvider;
-  }),
   ChangeNotifierProxyProvider<UserDataProvider, ParkingDataProvider>(
       create: (_) {
     var parkingDataProvider = ParkingDataProvider();
@@ -189,20 +194,18 @@ List<SingleChildWidget> dependentServices = [
   }),
   ChangeNotifierProxyProvider<UserDataProvider, StudentIdDataProvider>(
       create: (_) {
-        var studentIdDataProvider = StudentIdDataProvider();
-        return studentIdDataProvider;
-      },
-      update: (_, userDataProvider, studentIdDataProvider) {
-        studentIdDataProvider.userDataProvider = userDataProvider;
+    var studentIdDataProvider = StudentIdDataProvider();
+    return studentIdDataProvider;
+  }, update: (_, userDataProvider, studentIdDataProvider) {
+    studentIdDataProvider.userDataProvider = userDataProvider;
 
-        //Verify that the user is logged in
-        if(userDataProvider.isLoggedIn && !studentIdDataProvider.isLoading) {
-          studentIdDataProvider.fetchData();
-        }
+    //Verify that the user is logged in
+    if (userDataProvider.isLoggedIn && !studentIdDataProvider.isLoading) {
+      studentIdDataProvider.fetchData();
+    }
 
-        return studentIdDataProvider;
-      }
-  ),
+    return studentIdDataProvider;
+  }),
   ChangeNotifierProxyProvider<UserDataProvider, AvailabilityDataProvider>(
       create: (_) {
     var availabilityDataProvider = AvailabilityDataProvider();
@@ -222,6 +225,19 @@ List<SingleChildWidget> dependentServices = [
       messageDataProvider.userDataProvider = userDataProvider;
       messageDataProvider.fetchMessages(true);
       return messageDataProvider;
+    },
+  ),
+  ChangeNotifierProxyProvider<MessagesDataProvider, FreeFoodDataProvider>(
+    create: (_) {
+      var freefoodDataProvider = FreeFoodDataProvider();
+      freefoodDataProvider..loadRegisteredEvents();
+
+      return freefoodDataProvider;
+    },
+    update: (_, messageDataProvider, freefoodDataProvider) {
+      freefoodDataProvider..messageDataProvider = messageDataProvider;
+      freefoodDataProvider.parseMessages();
+      return freefoodDataProvider;
     },
   ),
 ];

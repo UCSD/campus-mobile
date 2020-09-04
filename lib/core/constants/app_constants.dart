@@ -1,6 +1,3 @@
-import 'package:campus_mobile_experimental/core/models/parking_model.dart';
-import 'package:campus_mobile_experimental/ui/views/news/news_detail_view.dart';
-
 class RoutePaths {
   static const String Home = '/';
   static const String BottomNavigationBar = 'bottom_navigation_bar';
@@ -60,15 +57,10 @@ class RouteTitles {
     'special_events/special_events_list_view': 'Special Events',
     'special_events/special_events_filter_view': 'Special Events',
     'special_events/special_events_detail_view': 'Special Events',
-    'scanner/scanner_view': 'Scanner',
   };
 }
 
 class ButtonText {
-  static const SubmitButtonActive = 'Submit';
-  static const SubmitButtonInactive = 'Sending';
-  static const SubmitButtonTryAgain = 'Try again';
-  static const SubmitButtonReceived = 'Received';
   static const ScanNowFull = 'Scan Your COVID-19 Test Kit.';
   static const ScanNow = 'Scan Now';
   static const SignInFull = 'Sign In to Scan Your COVID-19 Test Kit.';
@@ -89,21 +81,18 @@ class NavigationConstants {
   static const MapTab = 1;
   static const NotificationsTab = 2;
   static const ProfileTab = 3;
-//  static const AvailabilityView = 4;
-//  static const ScheduleView = 5;
-//  static const DiningView = 6;
-//  static const EventsView = 7;
-//  static const NewsDetailView = 8;
-//  static const NotificationsView = 9;
-//  static const ParkingView = 10;
 }
 
 /// Maps Card IDs to Card titles
 class CardTitleConstants {
   static const titleMap = {
-    'QRScanner': 'QR Scanner',
+    'QRScanner': 'Scanner',
     'MyStudentChart': 'MyStudentChart',
+    'staff_info': 'COVID-19 Info',
+    'campus_info': "Campus Information",
+    'student_info': 'COVID-19 Info',
     'student_id': 'Student ID',
+    'staff_id': 'Staff ID',
     'finals': 'Finals',
     'schedule': 'Classes',
     'dining': 'Dining',

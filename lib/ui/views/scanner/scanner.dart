@@ -1,15 +1,13 @@
 import 'dart:async';
-import 'dart:io' show Platform;
 
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
+import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
+import 'package:campus_mobile_experimental/core/services/barcode_service.dart';
+import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
-import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:campus_mobile_experimental/core/services/barcode_service.dart';
-
 
 class Scanner extends StatefulWidget {
   @override
@@ -54,48 +52,42 @@ class _ScannerState extends State<Scanner> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title:Text("Test Kit Scanner"),
-        backgroundColor: Color(0xFF182B49),
-        leading: IconButton(
-          icon: const Icon(Icons.chevron_left, color: Colors.white),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        elevation: 0.0,
-      ),
-      body: Container(
-        color: ColorPrimary,
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              !_hasScanned
-              ? buildStartScan()
-              : buildSubmitScan()
-            ],
+        appBar: AppBar(
+          title: Text("Test Kit Scanner"),
+          backgroundColor: Color(0xFF182B49),
+          leading: IconButton(
+            icon: const Icon(Icons.chevron_left, color: Colors.white),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
           ),
+          elevation: 0.0,
         ),
-      )
-   );
+        body: Container(
+          color: ColorPrimary,
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                !_hasScanned ? buildStartScan() : buildSubmitScan()
+              ],
+            ),
+          ),
+        ));
   }
 
   Widget buildStartScan() {
-    return(
-        Center(
-          child: OutlineButton(
-            borderSide: BorderSide(color: Colors.white),
-            onPressed: scan,
-            child: Text("Start scan", style: TextStyle(color: Colors.white)),
-          ),
-        )
-    );
+    return (Center(
+      child: OutlineButton(
+        borderSide: BorderSide(color: Colors.white),
+        onPressed: scan,
+        child: Text("Start scan", style: TextStyle(color: Colors.white)),
+      ),
+    ));
   }
 
   Widget buildSubmitScan() {
@@ -104,53 +96,45 @@ class _ScannerState extends State<Scanner> {
       ucsdAffiliation = _userDataProvider.authenticationModel.ucsdaffiliation;
       accessToken = _userDataProvider.authenticationModel.accessToken;
     });
-    return(
-        Column(
-          children: [
-            Text(_barcode, style: TextStyle(color: Colors.white)),
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: OutlineButton(
-                borderSide: BorderSide(color: Colors.white),
-                onPressed: submit,
-                child: Text("Submit", style: TextStyle(color: Colors.white)),
-              ),
-            )
-          ],
+    return (Column(
+      children: [
+        Text(_barcode, style: TextStyle(color: Colors.white)),
+        Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: OutlineButton(
+            borderSide: BorderSide(color: Colors.white),
+            onPressed: submit,
+            child: Text("Submit", style: TextStyle(color: Colors.white)),
+          ),
         )
-
-        );
+      ],
+    ));
   }
 
-    Map<String,dynamic> createUserData() {
+  Map<String, dynamic> createUserData() {
     print("affiliation: " + ucsdAffiliation.toString());
-    return{
-      'barcode': _barcode,
-      'ucsdaffiliation': ucsdAffiliation
-    };
+    return {'barcode': _barcode, 'ucsdaffiliation': ucsdAffiliation};
   }
 
   Future<void> submit() async {
     print("in submit");
     var headers = {
       "Content-Type": "application/json",
-      'Authorization':
-      'Bearer ${accessToken}'
+      'Authorization': 'Bearer ${accessToken}'
     };
     var data = createUserData();
     print(headers.toString());
     print(data.toString());
-//    var results = await _barcodeService.uploadResults(headers, data);
-//    if (results) {
-//      _submitted = true;
-//    } else {
-//      if (_barcodeService.error.contains(ErrorConstants.invalidBearerToken)) {
-//        await _userDataProvider.refreshToken();
-//      } else {
-//      }
-//      _submitted = true;
-//    }
-//    setState(() {});
+    var results = await _barcodeService.uploadResults(headers, data);
+    if (results) {
+      _submitted = true;
+    } else {
+      if (_barcodeService.error.contains(ErrorConstants.invalidBearerToken)) {
+        await _userDataProvider.refreshToken();
+      } else {}
+      _submitted = true;
+    }
+    setState(() {});
   }
 
   Future scan() async {
