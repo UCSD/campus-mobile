@@ -63,7 +63,7 @@ class _HomeState extends State<Home> {
         case 'QRScanner':
           orderedCards.insert(0, ScannerCard());
           break;
-        case 'MyStudentChart':
+        case 'MyUCSDChart':
           orderedCards.add(MyChartCard());
           break;
         case 'staff_info':

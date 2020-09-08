@@ -6,7 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-const String cardId = 'MyStudentChart';
+const String cardId = 'MyUCSDChart';
 
 class MyChartCard extends StatelessWidget {
   @override
@@ -58,7 +58,7 @@ class MyChartCard extends StatelessWidget {
     List<Widget> actionButtons = List<Widget>();
     actionButtons.add(FlatButton(
       child: Text(
-        'Log in to MyStudentChart',
+        'Log in to MyUCSDChart',
       ),
       onPressed: () {
         handleTap();

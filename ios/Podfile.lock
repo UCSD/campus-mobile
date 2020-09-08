@@ -109,7 +109,6 @@ PODS:
     - GoogleUtilities/Logger
   - location (0.0.1):
     - Flutter
-  - MTBBarcodeScanner (5.0.11)
   - nanopb (1.30905.0):
     - nanopb/decode (= 1.30905.0)
     - nanopb/encode (= 1.30905.0)
@@ -121,9 +120,6 @@ PODS:
     - Flutter
   - PromisesObjC (1.2.9)
   - Protobuf (3.12.0)
-  - qr_code_scanner (0.0.2):
-    - Flutter
-    - MTBBarcodeScanner
   - shared_preferences (0.0.1):
     - Flutter
   - sqflite (0.0.1):
@@ -146,7 +142,6 @@ DEPENDENCIES:
   - location (from `.symlinks/plugins/location/ios`)
   - package_info (from `.symlinks/plugins/package_info/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
-  - qr_code_scanner (from `.symlinks/plugins/qr_code_scanner/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
   - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
@@ -168,7 +163,6 @@ SPEC REPOS:
     - GoogleDataTransport
     - GoogleMaps
     - GoogleUtilities
-    - MTBBarcodeScanner
     - nanopb
     - PromisesObjC
     - Protobuf
@@ -196,8 +190,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/package_info/ios"
   path_provider:
     :path: ".symlinks/plugins/path_provider/ios"
-  qr_code_scanner:
-    :path: ".symlinks/plugins/qr_code_scanner/ios"
   shared_preferences:
     :path: ".symlinks/plugins/shared_preferences/ios"
   sqflite:
@@ -231,13 +223,11 @@ SPEC CHECKSUMS:
   GoogleMaps: f79af95cb24d869457b1f961c93d3ce8b2f3b848
   GoogleUtilities: e121a3867449ce16b0e35ddf1797ea7a389ffdf2
   location: 3a2eed4dd2fab25e7b7baf2a9efefe82b512d740
-  MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb
   nanopb: c43f40fadfe79e8b8db116583945847910cbabc9
   package_info: 873975fc26034f0b863a300ad47e7f1ac6c7ec62
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
   PromisesObjC: b48e0338dbbac2207e611750777895f7a5811b75
   Protobuf: 2793fcd0622a00b546c60e7cbbcc493e043e9bb9
-  qr_code_scanner: 16107718bdad7d708cdf6a5eacdca24b56cdf471
   shared_preferences: 430726339841afefe5142b9c1f50cb6bd7793e01
   sqflite: 4001a31ff81d210346b500c55b17f4d6c7589dd0
   url_launcher: a1c0cc845906122c4784c542523d8cacbded5626

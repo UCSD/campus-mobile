@@ -87,7 +87,7 @@ class NavigationConstants {
 class CardTitleConstants {
   static const titleMap = {
     'QRScanner': 'Scanner',
-    'MyStudentChart': 'MyStudentChart',
+    'MyUCSDChart': 'MyUCSDChart',
     'staff_info': 'COVID-19 Info',
     'campus_info': "Campus Information",
     'student_info': 'COVID-19 Info',

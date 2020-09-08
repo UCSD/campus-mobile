@@ -12,7 +12,7 @@ class CardsDataProvider extends ChangeNotifier {
     _cardStates = {};
     _cardOrder = [
       'QRScanner',
-      'MyStudentChart',
+      'MyUCSDChart',
       'student_id',
       'campus_info',
       'staff_id',
@@ -194,7 +194,7 @@ class CardsDataProvider extends ChangeNotifier {
   }
 
   activateStudentCards() {
-    int index = _cardOrder.indexOf('MyStudentChart') + 1;
+    int index = _cardOrder.indexOf('MyUCSDChart') + 1;
     _cardOrder.insertAll(index, _studentCards.toList());
 
     // TODO: test w/o this
@@ -218,7 +218,7 @@ class CardsDataProvider extends ChangeNotifier {
   }
 
   activateStaffCards() {
-    int index = _cardOrder.indexOf('MyStudentChart') + 1;
+    int index = _cardOrder.indexOf('MyUCSDChart') + 1;
     _cardOrder.insertAll(index, _staffCards.toList());
 
     // TODO: test w/o this
@@ -242,7 +242,7 @@ class CardsDataProvider extends ChangeNotifier {
   }
 
   activateSignedOutCards() {
-    int index = _cardOrder.indexOf('MyStudentChart') + 1;
+    int index = _cardOrder.indexOf('MyUCSDChart') + 1;
     _cardOrder.insertAll(index, _signedOutCards.toList());
 
     // TODO: test w/o this
