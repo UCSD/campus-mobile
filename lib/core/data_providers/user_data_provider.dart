@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:campus_mobile_experimental/core/data_providers/availability_data_provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/push_notifications_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/authentication_model.dart';
 import 'package:campus_mobile_experimental/core/models/user_profile_model.dart';
@@ -193,6 +194,8 @@ class UserDataProvider extends ChangeNotifier {
       _encryptLoginInfo(username, password);
       _error = null;
       _isLoading = true;
+      CardsDataProvider _cardsDataProvider = CardsDataProvider();
+      _cardsDataProvider.updateAvailableCards(_userProfileModel.ucsdaffiliation);
       notifyListeners();
       if (await _silentLogin()) {
         await fetchUserProfile();
@@ -233,9 +236,12 @@ class UserDataProvider extends ChangeNotifier {
     updateUserProfileModel(await _createNewUser(UserProfileModel.fromJson({})));
     _deletePasswordFromDevice();
     _deleteUsernameFromDevice();
+    CardsDataProvider _cardsDataProvider = CardsDataProvider();
+    _cardsDataProvider.updateAvailableCards("");
     var box = await Hive.openBox<AuthenticationModel>('AuthenticationModel');
     await box.clear();
     _isLoading = false;
+
     notifyListeners();
   }
 
