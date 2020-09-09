@@ -29,11 +29,12 @@ class _ScannerState extends State<Scanner> {
   var _autoEnableFlash = false;
   bool _hasScanned = false;
   String _barcode = "";
-  bool _submitted = false;
+  bool _successfulSubmission = false;
   BuildContext scaffoldContext;
   var ucsdAffiliation = "";
   var accessToken = "";
-
+  bool _isLoading = false;
+  bool _successfulResponse = false;
   set userDataProvider(UserDataProvider value) => _userDataProvider = value;
   //all types of barcodes this library supports
   //will only support the required format when released, supports all for testing purposes
@@ -45,6 +46,7 @@ class _ScannerState extends State<Scanner> {
   @override
   // ignore: type_annotate_public_apis
   initState() {
+    _barcodeService= BarcodeService();
     super.initState();
     _barcodeService = BarcodeService();
     Future.delayed(Duration.zero, () async {
@@ -57,7 +59,7 @@ class _ScannerState extends State<Scanner> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Test Kit Scanner"),
+          title: Text("Scanner"),
           backgroundColor: Color(0xFF182B49),
           leading: IconButton(
             icon: const Icon(Icons.chevron_left, color: Colors.white),
@@ -74,7 +76,7 @@ class _ScannerState extends State<Scanner> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                !_hasScanned ? buildStartScan() : buildSubmitScan()
+                !_isLoading? (!_hasScanned ? buildStartScan() : buildSubmitScan()): CircularProgressIndicator()
               ],
             ),
           ),
@@ -99,18 +101,40 @@ class _ScannerState extends State<Scanner> {
     });
     return (Column(
       children: [
-        Text(_barcode, style: TextStyle(color: Colors.white)),
+        buildScannedText(),
         Padding(
           padding: const EdgeInsets.only(top: 8.0),
-          child: OutlineButton(
-            borderSide: BorderSide(color: Colors.white),
-            onPressed: submit,
-            child: Text("Submit", style: TextStyle(color: Colors.white)),
-          ),
+          child: buildCorrespondingButton(),
         )
       ],
     ));
   }
+
+  Widget buildCorrespondingButton() {
+    // 'Cancel' pressed case
+    return (_barcode == null || _barcode.isEmpty)? OutlineButton(
+      borderSide: BorderSide(color: Colors.white),
+      onPressed: scan,
+      child: Text("Start scan", style: TextStyle(color: Colors.white)),
+    ):
+    // Successful submission case
+    (_successfulSubmission? FlatButton(
+      color: Colors.grey,
+      onPressed: null,
+      disabledColor: Colors.grey,
+      child: Text("Received", style: TextStyle(color: Colors.white)),
+    ):
+    // Default submit
+    OutlineButton(
+      borderSide: BorderSide(color: Colors.white),
+      onPressed: submit,
+      disabledTextColor: Colors.white,
+      child: Text("Submit Scan", style: TextStyle(color: Colors.white))));
+  }
+
+  Text buildScannedText() => (_barcode == null || _barcode.isEmpty)?Text('Nothing has been scanned yet.', style: TextStyle(color: Colors.white)) : submissionText();
+
+  Text submissionText() => (!_successfulSubmission && _successfulResponse ?Text("Submission failed, please try again") :Text( (_successfulSubmission && _successfulResponse?"Submission successful \u2713":"Scan successful"), style: TextStyle(color: Colors.white)));
 
   Map<String, dynamic> createUserData() {
     print("affiliation: " + ucsdAffiliation.toString());
@@ -124,18 +148,26 @@ class _ScannerState extends State<Scanner> {
       'Authorization': 'Bearer ${accessToken}'
     };
     var data = createUserData();
-    print(headers.toString());
-    print(data.toString());
+    setState(() {
+      _isLoading = true;
+    });
     var results = await _barcodeService.uploadResults(headers, data);
+
     if (results) {
-      _submitted = true;
+      _isLoading = false;
+      _successfulSubmission = true;
     } else {
+      _successfulSubmission = false;
       if (_barcodeService.error.contains(ErrorConstants.invalidBearerToken)) {
         await _userDataProvider.refreshToken();
-      } else {}
-      _submitted = true;
+      } else {
+
+      }
+      //_submitted = true;
     }
-    setState(() {});
+    setState(() {
+      _successfulResponse = true;
+    });
   }
 
   Future scan() async {
@@ -155,18 +187,14 @@ class _ScannerState extends State<Scanner> {
           useAutoFocus: _useAutoFocus,
         ),
       );
-      print("here");
       var result = await BarcodeScanner.scan(options: options);
-      print("after result");
-      print(result.rawContent);
-      //if(result.rawContent != null && result.rawContent.isNotEmpty) {
+   
       setState(() {
         scanResult = result;
         _barcode = result.rawContent;
         _hasScanned = true;
       }); //}
-      print("barcode: " + _barcode);
-      print("has scanned " + _hasScanned.toString());
+     
     } on PlatformException catch (e) {
       var result = ScanResult(
         type: ResultType.Error,
