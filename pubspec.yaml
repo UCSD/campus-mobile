@@ -13,7 +13,8 @@ dependencies:
   pointycastle: 1.0.1
   provider: 4.0.5
   cached_network_image: 1.1.2+1
-  dots_indicator: 1.0.0
+  dots_indicator: 1.2.0
+  auto_size_text: 2.1.0
   url_launcher: 5.2.5
   webview_flutter: 0.3.22+1
   intl: 0.16.0
