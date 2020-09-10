@@ -56,7 +56,7 @@ class ScannerCard extends StatelessWidget {
   }
 
   final _url =
-      'https://mobile.ucsd.edu/replatform/v1/qa/scanner';
+      'https://mobile.ucsd.edu/replatform/v1/qa/webview/scanner/code128-2d/index.html';
 
   UserDataProvider _userDataProvider;
 
