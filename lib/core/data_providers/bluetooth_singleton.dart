@@ -78,6 +78,7 @@ class BluetoothSingleton {
   // Constant for scans
   int scanDuration = 2; //Seconds
   int waitTime = 15; // Minutes
+  int dwellMinutes = 30;
 
   // Tracker to enable location listener
   int enable = 0;
@@ -211,7 +212,7 @@ class BluetoothSingleton {
 
     // Enable timer, must wait duration before next method execution
     ongoingScanner = new Timer.periodic(
-        Duration(seconds: waitTime), (Timer t) => startScan());
+        Duration(minutes: waitTime), (Timer t) => startScan());
   }
 
   //Get constants for scanning
@@ -386,7 +387,11 @@ class BluetoothSingleton {
   void resetDevices() {
     int currentMinutes = getMinutesTimeOfDay();
     scannedObjects.removeWhere((key, value) {
-      return currentMinutes - value.scanTimeMinutes >= 2 || (currentMinutes + 60) - value.scanTimeMinutes >= 2;
+      if (currentMinutes < value.scanTimeMinutes) {
+        return (currentMinutes + 60) - value.scanTimeMinutes >= 2;
+      }
+      return currentMinutes - value.scanTimeMinutes >= 2;
+      /* || */
     });
       /*if (value.timeThresholdMet) {
         value.timeThresholdMet = false;
