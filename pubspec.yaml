@@ -34,6 +34,10 @@ dependencies:
   device_info: 0.4.2+2
   package_info: 0.4.0+18
   barcode_widget: 1.3.0
+  barcode_scan:
+    git:
+      url: https://github.com/gmihir/flutter_barcode_reader
+      ref: master
 
 dev_dependencies:
   flutter_test:

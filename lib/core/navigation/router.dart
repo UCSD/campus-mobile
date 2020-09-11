@@ -32,6 +32,7 @@ import 'package:campus_mobile_experimental/ui/views/special_events/special_event
 import 'package:campus_mobile_experimental/ui/views/special_events/special_events_filter_view.dart';
 import 'package:campus_mobile_experimental/ui/views/special_events/special_events_list_view.dart';
 import 'package:campus_mobile_experimental/ui/views/surf/surf_report_view.dart';
+import 'package:campus_mobile_experimental/ui/views/scanner/scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -124,6 +125,11 @@ class Router {
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return ManageParkingView();
+        });
+      case RoutePaths.ScannerView:
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+          return Scanner();
         });
       case RoutePaths.CardsView:
         return MaterialPageRoute(builder: (_) {
