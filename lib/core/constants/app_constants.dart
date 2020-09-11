@@ -88,7 +88,8 @@ class NavigationConstants {
 /// Maps Card IDs to Card titles
 class CardTitleConstants {
   static const titleMap = {
-    'QRScanner': 'Scanner',
+    'QRScanner': 'Scanner', // Web Scanner
+    'NativeScanner': 'Scanner',
     'MyStudentChart': 'MyStudentChart',
     'MyUCSDChart': 'MyUCSDChart',
     'staff_info': 'COVID-19 Info',
