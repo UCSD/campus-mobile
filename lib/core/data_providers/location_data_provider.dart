@@ -21,7 +21,7 @@ class LocationDataProvider {
   _init() async {
     /// create the settings for location access
     await _locationService.changeSettings(
-        accuracy: LocationAccuracy.high, distanceFilter: 100);
+        accuracy: LocationAccuracy.HIGH, distanceFilter: 100);
       /// check to see if gps service is enabled on device
       bool serviceStatus = await _locationService.serviceEnabled();
       if (!serviceStatus) {
@@ -53,7 +53,7 @@ class LocationDataProvider {
 
   _enableListener() {
     if (_permission) {
-      _locationService.onLocationChanged.listen((locationData) {
+      _locationService.onLocationChanged().listen((locationData) {
         if (locationData != null) {
 
 

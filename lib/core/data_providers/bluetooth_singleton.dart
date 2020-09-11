@@ -155,10 +155,10 @@ class BluetoothSingleton {
 
 
           // Set the minimum change to activate a new scan.
-          location.changeSettings(accuracy: LocationAccuracy.low);
+          location.changeSettings(accuracy: LocationAccuracy.LOW);
 
           // Enable location listening
-          _logLocation();
+          //_logLocation();
 
           // Enable continuous scan
           enableScanning();
@@ -286,7 +286,7 @@ class BluetoothSingleton {
       double lat;
       double long;
       //loggedItems.add("LOCATION LOGGED");
-      _logLocation();
+      //_logLocation();
       location.getLocation().then((value) {
         lat = value.latitude;
       });
@@ -325,7 +325,7 @@ class BluetoothSingleton {
     //print("scannedObjects");
     scannedObjects.forEach((key, value) {
 
-      //print("$key:" + value.toString() + "\n");
+      print("$key - " + value.scanTimeMinutes.toString() + "\n");
       _storage.write(key: key, value: jsonEncode(value));
     });
 
@@ -384,24 +384,28 @@ class BluetoothSingleton {
 
   // Reset device dwell time when used to track user's location
   void resetDevices() {
-    scannedObjects.forEach((key, value) {
-      if (value.timeThresholdMet) {
+    int currentMinutes = getMinutesTimeOfDay();
+    scannedObjects.removeWhere((key, value) {
+      return currentMinutes - value.scanTimeMinutes >= 2 || (currentMinutes + 60) - value.scanTimeMinutes >= 2;
+    });
+      /*if (value.timeThresholdMet) {
         value.timeThresholdMet = false;
         value.dwellTime = 0;
         value.scanIntervalAllowancesUsed = 0;
         value.distance = 0;
-      }
-    });
+      }*/
   }
 
   //Gather information on device scanned
   void identifyDevices(ScanResult scanResult) {
+    int currentMinutes = getMinutesTimeOfDay();
     scannedObjects.update(scanResult.device.id.toString(), (value) {
       value.continuousDuration = true;
       value.rssi = scanResult.rssi;
       if (scanResult.advertisementData.txPowerLevel != null) {
         value.txPowerLevel = scanResult.advertisementData.txPowerLevel;
       }
+      value.scanTimeMinutes = currentMinutes;
       return value;
     },
         ifAbsent: () => new BluetoothDeviceProfile(
@@ -409,7 +413,8 @@ class BluetoothSingleton {
             scanResult.rssi,
             "",
             new List<String>.from({getCurrentTimeOfDay()}),
-            true));
+            true,
+            currentMinutes));
   }
 
   // Ensure we only process unique devices during one scan
@@ -427,6 +432,11 @@ class BluetoothSingleton {
   String getCurrentTimeOfDay() {
     TimeOfDay currentTime = TimeOfDay.now();
     return "${currentTime.hour}:${currentTime.minute}";
+  }
+
+  int getMinutesTimeOfDay() {
+    TimeOfDay currentTime = TimeOfDay.now();
+    return currentTime.minute;
   }
 
   // Identify the Apple device type
@@ -582,8 +592,8 @@ class BluetoothSingleton {
   void _logLocation() async {
     // Set up new location object to get current location
     location = Location();
-    location.changeSettings(accuracy: LocationAccuracy.low);
-    PermissionStatus hasPermission;
+    location.changeSettings(accuracy: LocationAccuracy.LOW);
+    //PermissionStatus hasPermission;
     bool _serviceEnabled;
 
     // check if gps service is enabled
@@ -595,13 +605,13 @@ class BluetoothSingleton {
       }
     }
     //check if permission is granted
-    hasPermission = await location.hasPermission();
+    /*hasPermission = await location.hasPermission();
     if (hasPermission == PermissionStatus.denied) {
       hasPermission = await location.requestPermission();
       if (hasPermission != PermissionStatus.granted) {
         return;
       }
-    }
+    }*/
 
     //once permissions are verified, get location asynchronously
     _currentLocation = await location.getLocation();
@@ -700,12 +710,13 @@ class BluetoothDeviceProfile {
   double distance; // Feet
   int txPowerLevel;
   double dwellTime = 0;
+  int scanTimeMinutes;
   bool timeThresholdMet = false;
   int scanIntervalAllowancesUsed =  0;
 
 
   BluetoothDeviceProfile(this.uuid, this.rssi, this.deviceType, this.timeStamps,
-      this.continuousDuration);
+      this.continuousDuration, this.scanTimeMinutes);
 
   BluetoothDeviceProfile.fromJson(Map<String, dynamic> json)
     : uuid = json['uuid'],
@@ -716,6 +727,7 @@ class BluetoothDeviceProfile {
       distance = json['distance'],
       txPowerLevel = json['txPowerLevel'],
       dwellTime = json['dwellTime'],
+      scanTimeMinutes = json['scanTimeMinutes'],
       timeThresholdMet = json['timeThresholdMet'],
       scanIntervalAllowancesUsed = json['scanIntervalAllowancesUsed'];
 
@@ -730,6 +742,7 @@ class BluetoothDeviceProfile {
       'distance': distance,
       'txPowerLevel': txPowerLevel,
       'dwellTime': dwellTime,
+      'scanTimeMinutes': scanTimeMinutes,
       'timeThresholdMet': timeThresholdMet,
       'scanIntervalAllowancesUsed': scanIntervalAllowancesUsed
     };
