@@ -50,6 +50,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.14.0"
+  barcode_scan:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: master
+      resolved-ref: "197af71b681341489ce358feb2d0d9592a4e9929"
+      url: "https://github.com/gmihir/flutter_barcode_reader"
+    source: git
+    version: "3.0.1"
   barcode_widget:
     dependency: "direct main"
     description:
@@ -604,6 +613,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.4.0"
+  protobuf:
+    dependency: transitive
+    description:
+      name: protobuf
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   provider:
     dependency: "direct main"
     description:
