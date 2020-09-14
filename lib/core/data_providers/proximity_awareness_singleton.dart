@@ -145,7 +145,7 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
           firstInstance = false;
 
           // Set the minimum change to activate a new scan.
-          location.changeSettings(accuracy: LocationAccuracy.LOW);
+          location.changeSettings(accuracy: LocationAccuracy.low);
 
           // Enable location listening
           checkLocationPermission();
@@ -207,9 +207,11 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
     // Close on going scan in case it has not time out
     flutterBlueInstance.stopScan();
 
+    resetDevices();
     // Write scannedObjects to storage
     if(inBackground) {
       scannedObjects.forEach((key, value) {
+        print("Key: $key - Value: ${value.scanTimeMinutes}");
         _storage.write(key: key, value: jsonEncode(value));
       });
     }
@@ -222,7 +224,7 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
 
 
   void processOffloadingLogs(bool offloadLog, List<Map> newBufferList) {
-    if(inBackground){
+/*    if(inBackground){
       storageLog.write(key: DateTime.fromMillisecondsSinceEpoch(
           DateTime.now().millisecondsSinceEpoch)
           .toString(), value: json.encode({
@@ -233,7 +235,7 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
         "DEVICE_LIST": newBufferList
       }));
 
-    }
+    }*/
     if (qualifyingDevices >= qualifiedDevicesThreshold) {
       double lat;
       double long;
@@ -264,7 +266,6 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
   }
 
   void sendLogs(Map log) {
-
       if (userDataProvider.isLoggedIn) {
         // Send to offload API
         var response = _networkHelper.authorizedPost(
@@ -555,8 +556,8 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
   void checkLocationPermission() async {
     // Set up new location object to get current location
     location = Location();
-    location.changeSettings(accuracy: LocationAccuracy.LOW);
-    bool hasPermission;
+    location.changeSettings(accuracy: LocationAccuracy.low);
+    PermissionStatus hasPermission;
     bool _serviceEnabled;
 
     // check if gps service is enabled
@@ -569,9 +570,9 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
     }
     //check if permission is granted
     hasPermission = await location.hasPermission();
-    if (hasPermission) {
+    if (hasPermission == PermissionStatus.denied) {
       hasPermission = await location.requestPermission();
-      if (!hasPermission ) {
+      if (hasPermission == PermissionStatus.granted) {
         return;
       }
     }
@@ -650,7 +651,7 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
           "Basic djJlNEpYa0NJUHZ5akFWT0VRXzRqZmZUdDkwYTp2emNBZGFzZWpmaWZiUDc2VUJjNDNNVDExclVh"
     };
     try {
-;      var response = await _networkHelper.authorizedPost(
+      var response = await _networkHelper.authorizedPost(
           tokenEndpoint, tokenHeaders, "grant_type=client_credentials");
 
       headers["Authorization"] = "Bearer " + response["access_token"];
