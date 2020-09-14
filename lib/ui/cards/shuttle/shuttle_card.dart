@@ -29,7 +29,7 @@ class _ShuttleCardState extends State<ShuttleCard> {
       titleText: CardTitleConstants.titleMap[cardId],
       errorText: _shuttleCardDataProvider.error,
       child: () =>
-          buildShuttleCard(),
+          buildShuttleCard());
   }
 
 

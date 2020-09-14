@@ -31,8 +31,10 @@ class ShuttleDataProvider extends ChangeNotifier {
     Map<String, ShuttleModel> newMapOfShuttles = Map<String, ShuttleModel>();
 
     // get closest stop to current user
-
-
   }
+
+  bool get isLoading => _isLoading;
+
+  String get error => _error;
 }
 
