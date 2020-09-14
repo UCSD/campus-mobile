@@ -224,18 +224,6 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
 
 
   void processOffloadingLogs(bool offloadLog, List<Map> newBufferList) {
-/*    if(inBackground){
-      storageLog.write(key: DateTime.fromMillisecondsSinceEpoch(
-          DateTime.now().millisecondsSinceEpoch)
-          .toString(), value: json.encode({
-        "SOURCE_DEVICE_ADVERTISEMENT_ID": this.advertisementValue,
-        "SOURCE": "UCSDMobileApp",
-        "LAT": 0,
-        "LONG": 0,
-        "DEVICE_LIST": newBufferList
-      }));
-
-    }*/
     if (qualifyingDevices >= qualifiedDevicesThreshold) {
       double lat;
       double long;
