@@ -10,6 +10,7 @@ import 'package:campus_mobile_experimental/core/data_providers/messages_data_pro
 import 'package:campus_mobile_experimental/core/data_providers/news_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/notices_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/parking_data_provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/proximity_awareness_singleton.dart';
 import 'package:campus_mobile_experimental/core/data_providers/push_notifications_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/special_events_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/student_id_data_provider.dart';
@@ -147,7 +148,8 @@ List<SingleChildWidget> dependentServices = [
       update: (_, userDataProvider, cardsDataProvider) {
         cardsDataProvider
           ..loadSavedData().then((value) {
-            cardsDataProvider.updateAvailableCards(userDataProvider.authenticationModel.ucsdaffiliation);
+            cardsDataProvider.updateAvailableCards(
+                userDataProvider.authenticationModel.ucsdaffiliation);
             if (userDataProvider.isLoggedIn &&
                 (userDataProvider.userProfileModel.classifications?.student ??
                     false)) {
@@ -182,6 +184,16 @@ List<SingleChildWidget> dependentServices = [
       classScheduleDataProvider.fetchData();
     }
     return classScheduleDataProvider;
+  }),
+  ChangeNotifierProxyProvider<UserDataProvider, ProximityAwarenessSingleton>(
+      create: (_) {
+    print("USER DATA SET");
+    var proximityAwarenessSingleton = ProximityAwarenessSingleton();
+    return proximityAwarenessSingleton;
+  }, update: (_, userDataProvider, proximityAwarenessSingleton) {
+    proximityAwarenessSingleton..userDataProvider = userDataProvider;
+    print("USER DATA SET");
+    return proximityAwarenessSingleton;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, ParkingDataProvider>(
       create: (_) {
