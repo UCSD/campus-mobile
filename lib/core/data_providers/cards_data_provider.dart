@@ -12,7 +12,9 @@ class CardsDataProvider extends ChangeNotifier {
     _cardStates = {};
     _cardOrder = [
       'QRScanner',
+      'NativeScanner',
       'MyStudentChart',
+      'MyUCSDChart',
       'student_id',
       'campus_info',
       'staff_id',
@@ -30,6 +32,7 @@ class CardsDataProvider extends ChangeNotifier {
     _studentCards = ['student_info', 'student_id', 'finals', 'schedule'];
 
     _staffCards = [
+      'MyUCSDChart',
       'staff_info',
       'staff_id',
     ];
