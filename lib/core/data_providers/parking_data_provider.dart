@@ -3,6 +3,7 @@ import 'package:campus_mobile_experimental/core/models/spot_types_model.dart';
 import 'package:campus_mobile_experimental/core/services/parking_service.dart';
 import 'package:campus_mobile_experimental/core/services/spot_types_service.dart';
 import 'package:flutter/material.dart';
+import 'package:campus_mobile_experimental/core/constants/default_parking_constants.dart';
 
 class ParkingDataProvider extends ChangeNotifier {
   ParkingDataProvider() {
@@ -45,10 +46,9 @@ class ParkingDataProvider extends ChangeNotifier {
     if (await _parkingService.fetchParkingLotData()) {
       for (ParkingModel model in _parkingService.data) {
         newMapOfLots[model.locationName] = model;
-
-        if (selected_lots <= MAX_SELECTED_LOTS) {
+        if (ParkingDefaults.defaultLots.contains(model.locationId)) {
           _parkingViewState[model.locationName] = true;
-          ++selected_lots;
+          selected_lots++;
         } else {
           _parkingViewState[model.locationName] = false;
         }
@@ -78,7 +78,13 @@ class ParkingDataProvider extends ChangeNotifier {
       _spotTypeModel = _spotTypesService.spotTypeModel;
 
       for (Spot spot in _spotTypeModel.spots) {
-        _selectedSpotTypesState[spot.spotKey] = false;
+        if (ParkingDefaults.defaultSpots.contains(spot.spotKey)) {
+          //add first 10 to default lots selected
+          _selectedSpotTypesState[spot.spotKey] = true;
+          selected_spots++;
+        } else {
+          _selectedSpotTypesState[spot.spotKey] = false;
+        }
       }
     } else {
       _error = _spotTypesService.error;
