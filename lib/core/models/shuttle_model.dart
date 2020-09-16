@@ -5,8 +5,11 @@ import 'dart:ui';
 import 'package:campus_mobile_experimental/core/models/shuttle_stop_model.dart';
 
 List<ShuttleModel> shuttleModelFromJson(String str) =>
-    List<ShuttleModel>.from(
-        json.decode(str).map((x) => ShuttleModel.fromJson(x)));
+
+      json.decode(str).map((x) => ShuttleModel.fromJson(x));
+
+//    List<ShuttleModel>.from(
+//        json.decode(str).map((x) => ShuttleModel.fromJson(x)));
 
 String shuttleModelToJson(List<ShuttleModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
@@ -21,7 +24,7 @@ class ShuttleModel {
   String description;
   String routeType;
   Color color;
-  List<ShuttleStopModel> stops;
+  List<ShuttleStopModel> stops = List<ShuttleStopModel>();
 
   ShuttleModel({
     this.displayOrder,
@@ -36,20 +39,50 @@ class ShuttleModel {
     this.stops
   });
 
-  factory ShuttleModel.fromJson(Map<String, dynamic> json) =>
-      ShuttleModel(
-        displayOrder: json["displayOrder"] == null ? null : json["displayOrder"],
-        url: json["url"] == null ? null : json["lon"],
-        customerRouteId: json["customerRouteId"] == null ? null : json["customerRouteId"],
-        id: json["id"] == null ? null : json["id"],
-        name: json["name"] == null ? null : json["name"],
-        shortName: json["shortName"] == null ? null : json["shortName"],
-        description : json["description"] == null ? null : json["description"],
-        routeType : json["routeType"] == null ? null : json["routeType"],
-        color: json["color"] == null ? null : HexColor(json["color"]),
-        stops : json["stops"] == null ? null : List<ShuttleStopModel>.from(json["stops"].map((x) => ShuttleStopModel.fromJson(x)))
 
-  );
+
+   ShuttleModel.fromJson(Map<String, dynamic> json) {
+    json.forEach((key, value){
+        return(
+            ShuttleModel(
+                displayOrder: value["displayOrder"] == null ? null : value["displayOrder"],
+                url: value["url"] == null ? null : value["lon"],
+                customerRouteId: value["customerRouteId"] == null ? null : value["customerRouteId"],
+                id: value["id"] == null ? null : value["id"],
+                name: value["name"] == null ? null : value["name"],
+                shortName: value["shortName"] == null ? null : value["shortName"],
+                description : value["description"] == null ? null : value["description"],
+                routeType : value["routeType"] == null ? null : value["routeType"],
+                color: value["color"] == null ? null : HexColor(value["color"]),
+                stops : value["stops"] == null ? null : value["stops"].entries.map((entry) {
+                  return(ShuttleStopModel.fromJson(entry.value));
+                }).toList().cast<ShuttleStopModel>())
+        );
+    });
+  }
+
+  List<ShuttleModel> getListOfShuttles(String str) {
+     Map<String, dynamic> list = json.decode(str);
+     List<ShuttleModel> ret = List<ShuttleModel>();
+     list.forEach((key, value){
+      ret.add(
+          ShuttleModel(
+              displayOrder: value["displayOrder"] == null ? null : value["displayOrder"],
+              url: value["url"] == null ? null : value["lon"],
+              customerRouteId: value["customerRouteId"] == null ? null : value["customerRouteId"],
+              id: value["id"] == null ? null : value["id"],
+              name: value["name"] == null ? null : value["name"],
+              shortName: value["shortName"] == null ? null : value["shortName"],
+              description : value["description"] == null ? null : value["description"],
+              routeType : value["routeType"] == null ? null : value["routeType"],
+              color: value["color"] == null ? null : HexColor(value["color"]),
+              stops : value["stops"] == null ? null : value["stops"].entries.map((entry) {
+                return(ShuttleStopModel.fromJson(entry.value));
+              }).toList().cast<ShuttleStopModel>())
+      );
+    });
+    return ret;
+  }
 
   Map<String, dynamic> toJson() => {
     "displayOrder": displayOrder == null ? null : displayOrder,

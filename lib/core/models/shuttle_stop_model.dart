@@ -3,7 +3,7 @@ import 'dart:core';
 
 List<ShuttleStopModel> shuttleStopModelFromJson(String str) =>
     List<ShuttleStopModel>.from(
-        json.decode(str).map((x) => ShuttleStopModel.fromJson(x)));
+        json.decode(str));
 
 String shuttleStopModelToJson(List<ShuttleStopModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
@@ -14,7 +14,7 @@ class ShuttleStopModel {
   int id;
   String name;
   int stopCode;
-  int rtpiNumber;
+  String rtpiNumber;
 
   ShuttleStopModel({
     this.lat,
