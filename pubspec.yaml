@@ -1,6 +1,6 @@
 name: campus_mobile_experimental
 description: A new Flutter project.
-version: 7.2.8+829
+version: 7.2.9+835
 
 environment:
   sdk: ">=2.6.0 <3.0.0"
