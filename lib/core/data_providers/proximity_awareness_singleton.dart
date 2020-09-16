@@ -77,8 +77,8 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
   int qualifiedDevicesThreshold = 0;
   int distanceThreshold = 10; // default in ZenHub
   int scanIntervalAllowance = 0;
-  int backgroundScanInterval = 15;
-  int deletionInterval = 30;
+  int backgroundScanInterval = 15; // Minutes
+  int deletionInterval = 30; // Minutes
 
   // Keep track of devices that meet our requirements
   int qualifyingDevices = 0;
