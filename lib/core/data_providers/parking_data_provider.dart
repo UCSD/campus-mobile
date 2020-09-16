@@ -104,7 +104,7 @@ class ParkingDataProvider extends ChangeNotifier {
 
 // add or remove location availability display from card based on user selection, Limit to MAX_SELECTED
   void toggleLot(String location) {
-    if (selected_lots <= MAX_SELECTED_LOTS) {
+    if (selected_lots < MAX_SELECTED_LOTS) {
       _parkingViewState[location] = !_parkingViewState[location];
       _parkingViewState[location] ? selected_lots++ : selected_lots--;
     } else {
@@ -118,7 +118,7 @@ class ParkingDataProvider extends ChangeNotifier {
   }
 
   void toggleSpotSelection(String spotKey) {
-    if (selected_spots <= MAX_SELECTED_SPOTS) {
+    if (selected_spots < MAX_SELECTED_SPOTS) {
       _selectedSpotTypesState[spotKey] = !_selectedSpotTypesState[spotKey];
       _selectedSpotTypesState[spotKey] ? selected_spots++ : selected_spots--;
     } else {
