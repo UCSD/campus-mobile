@@ -1,0 +1,6 @@
+framework module barcode_scan {
+  umbrella header "barcode_scan-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -1,0 +1,6 @@
+framework module beacon_broadcast {
+  umbrella header "beacon_broadcast-umbrella.h"
+
+  export *
+  module * { export * }
+}

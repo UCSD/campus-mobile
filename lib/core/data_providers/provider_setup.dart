@@ -10,7 +10,7 @@ import 'package:campus_mobile_experimental/core/data_providers/messages_data_pro
 import 'package:campus_mobile_experimental/core/data_providers/news_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/notices_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/parking_data_provider.dart';
-import 'package:campus_mobile_experimental/core/data_providers/proximity_awareness_singleton.dart';
+import 'package:campus_mobile_experimental/core/data_providers/advanced_wayfinding_singleton.dart';
 import 'package:campus_mobile_experimental/core/data_providers/push_notifications_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/special_events_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/student_id_data_provider.dart';
@@ -185,10 +185,10 @@ List<SingleChildWidget> dependentServices = [
     }
     return classScheduleDataProvider;
   }),
-  ChangeNotifierProxyProvider<UserDataProvider, ProximityAwarenessSingleton>(
+  ChangeNotifierProxyProvider<UserDataProvider, AdvancedWayfindingSingleton>(
       create: (_) {
     print("USER DATA SET");
-    var proximityAwarenessSingleton = ProximityAwarenessSingleton();
+    var proximityAwarenessSingleton = AdvancedWayfindingSingleton();
     return proximityAwarenessSingleton;
   }, update: (_, userDataProvider, proximityAwarenessSingleton) {
     proximityAwarenessSingleton..userDataProvider = userDataProvider;

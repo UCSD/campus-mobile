@@ -1,0 +1,6 @@
+framework module flutter_blue {
+  umbrella header "flutter_blue-umbrella.h"
+
+  export *
+  module * { export * }
+}
