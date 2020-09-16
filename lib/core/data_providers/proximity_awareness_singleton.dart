@@ -164,12 +164,17 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
 
     // Enable timer, must wait duration before next method execution
     ongoingScanner = new Timer.periodic(
-        Duration(seconds: waitTime * 5), (Timer t) => startScan());
+        Duration(seconds: waitTime * 4), (Timer t) => startScan());
   }
 
   // Start a bluetooth scan of determined second duration and listen to results
   startScan() async {
-    if(inBackground){
+
+    String previousState = await _storage.read(key: "previousState");
+
+    if (inBackground){
+      await instantiateScannedObjects();
+    } else if (!inBackground && previousState == "background") {
       await instantiateScannedObjects();
     }
 
@@ -193,28 +198,42 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
       }
     });
 
-    // Remove objects that are no longer continuous found (+ grace period)
-    removeNoncontinuousDevices();
-
     // Include device type for threshold
     List<Map> newBufferList = identifyDeviceTypes();
 
     bool offloadLog = false;
-    
+
+    // Remove objects that are no longer continuous found (+ grace period)
+    removeNoncontinuousDevices();
+
     // If there are more than three devices, log location
     processOffloadingLogs(offloadLog, List.of(newBufferList));
 
     // Close on going scan in case it has not time out
     flutterBlueInstance.stopScan();
 
-    resetDevices();
-    // Write scannedObjects to storage
-    if(inBackground) {
-      scannedObjects.forEach((key, value) {
-        print("Key: $key - Value: ${value.scanTimeMinutes}");
-        _storage.write(key: key, value: jsonEncode(value));
-      });
+    //resetDevices();
+    
+    // If scanning from foreground, clear secure storage
+    if (!inBackground) {
+      await _storage.deleteAll();
+      await _storage.write(key: "previousState", value: "foreground");
     }
+    // Otherwise, let next scan know last scan was background
+    else {
+      await _storage.write(key: "previousState", value: "background");
+    }
+
+    // Write timestamp to storage
+    await _storage.write(key: "storageTime", value: getCurrentTimeOfDay());
+
+    // Write scannedObjects to storage
+    scannedObjects.forEach((key, value) {
+      _storage.write(key: key, value: jsonEncode(value));
+    });
+
+    // Reset inBackground
+    inBackground = false;
 
     // Clear previous scan results
     bufferList.clear();
@@ -234,7 +253,6 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
         long = value.longitude;
 
       // Reset dwell times
-      resetDevices();
       qualifyingDevices = 0;
     
       //LOG VALUE
@@ -254,14 +272,13 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
   }
 
   void sendLogs(Map log) {
-      if (userDataProvider.isLoggedIn) {
-        // Send to offload API
-        var response = _networkHelper.authorizedPost(
-            offloadLoggerEndpoint, offloadDataHeader, json.encode(log));
-      } else {
-
-        var response = _networkHelper.authorizedPost(offloadLoggerEndpoint, headers,json.encode(log) );
-
+    if (userDataProvider.isLoggedIn) {
+      // Send to offload API
+      var response = _networkHelper.authorizedPost(
+          offloadLoggerEndpoint, offloadDataHeader, json.encode(log));
+    } else {
+      var response = _networkHelper.authorizedPost(
+          offloadLoggerEndpoint, headers, json.encode(log));
     }
   }
 
@@ -331,6 +348,14 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
     });
   }
 
+  bool checkDeviceDwellTime(BluetoothDeviceProfile device) {
+    int currentMinutes = getMinutesTimeOfDay();
+    if (currentMinutes < device.scanTimeMinutes) {
+      return (currentMinutes + 60) - device.scanTimeMinutes < dwellTimeThreshold;
+    }
+    return currentMinutes - device.scanTimeMinutes < dwellTimeThreshold;
+  }
+
   //Gather information on device scanned
   void identifyDevices(ScanResult scanResult) {
     int currentMinutes = getMinutesTimeOfDay();
@@ -341,6 +366,7 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
         value.txPowerLevel = scanResult.advertisementData.txPowerLevel;
       }
       value.scanTimeMinutes = currentMinutes;
+      value.scanIntervalAllowancesUsed = 0;
       return value;
     },
         ifAbsent: () => new BluetoothDeviceProfile(
@@ -396,7 +422,21 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
 
   //Remove devices that are no longer scanned
   void removeNoncontinuousDevices() {
-    List<String> objectsToRemove = [];
+    print("scanIntervalAllowance: $scanIntervalAllowance");
+    scannedObjects.removeWhere((key, value) {
+      bool isDeviceContinuous = checkDeviceDwellTime(value);
+      if (!isDeviceContinuous &&
+          value.scanIntervalAllowancesUsed >= scanIntervalAllowance) {
+        print("Too many scanIntervals");
+        return true;
+      } else if (!isDeviceContinuous &&
+          value.scanIntervalAllowancesUsed < scanIntervalAllowance) {
+        value.scanIntervalAllowancesUsed++;
+      }
+      return false;
+    });
+
+    /*List<String> objectsToRemove = [];
     scannedObjects.forEach((key, value) {
       if (!value.continuousDuration &&
           value.scanIntervalAllowancesUsed > scanIntervalAllowance) {
@@ -408,7 +448,7 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
     });
     objectsToRemove.forEach((element) {
       scannedObjects.remove(element);
-    });
+    });*/
   }
 
   // Determine if we use the type to log location
@@ -711,14 +751,20 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
     beaconSingleton.init();
     advertisementValue = beaconSingleton.advertisingUUID;
   }
+
   Future instantiateScannedObjects() async {
     var savedDevices = await _storage.readAll();
     print("storage size: " + savedDevices.length.toString());
     savedDevices.forEach((key, value) {
-      scannedObjects.update(key, (v) => new BluetoothDeviceProfile.fromJson(jsonDecode(value)),
-          ifAbsent: () => new BluetoothDeviceProfile.fromJson(jsonDecode(value))
-      );
-
+      print("Key: $key");
+      print("Value: $value");
+      if (key == "previousState") {}
+      else if (key == "storageTime") {}
+      else {
+        scannedObjects.update(key, (v) => new BluetoothDeviceProfile.fromJson(jsonDecode(value)),
+            ifAbsent: () => new BluetoothDeviceProfile.fromJson(jsonDecode(value))
+        );
+      }
     });
     _storage.deleteAll();
   }
