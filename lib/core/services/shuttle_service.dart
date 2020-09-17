@@ -61,7 +61,7 @@ class ShuttleService {
     _isLoading = true;
     try {
       /// fetch data
-      arrivingEndpoint = endpoint + stopId + "/arrivals";
+      arrivingEndpoint = "https://api.jsonbin.io/b/5f63b30265b18913fc4e0776";
       String _response = await _networkHelper.authorizedFetch(arrivingEndpoint, headers);
       /// parse data
       final arrivingData = ArrivingShuttle.fromRawJson(_response);
@@ -70,12 +70,12 @@ class ShuttleService {
     } catch (e) {
       /// if the authorized fetch failed we know we have to refresh the
       /// token for this service
-      if (e.response != null && e.response.statusCode == 401) {
-        if (await getNewToken()) {
-          return await getArrivingInformation(stopId);
-        }
-      }
-      _error = e.toString();
+//      if (e.response != null && e.response.statusCode == 401) {
+//        if (await getNewToken()) {
+//          return await getArrivingInformation(stopId);
+//        }
+//      }
+//      _error = e.toString();
       _isLoading = false;
     }
   }
