@@ -22,11 +22,11 @@ class StudentIdBarcodeModel {
   factory StudentIdBarcodeModel.fromJson(Map<String, dynamic> json) =>
       StudentIdBarcodeModel(
         studentId: json["studentId"],
-        barCode: json["barCode"] == 0 ? null : json["barCode"],
+        barCode: json["barCode"] == null ? 0 : json["barCode"],
       );
 
   Map<String, dynamic> toJson() => {
         "studentId": studentId,
-        "barCode": barCode,
+        "barCode": barCode == null ? 0 : barCode,
       };
 }
