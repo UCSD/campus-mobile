@@ -16,6 +16,7 @@ class ShuttleDataProvider extends ChangeNotifier {
 
     /// TODO: initialize services here
     _shuttleService = ShuttleService();
+    init();
   }
 
   bool _isLoading;
@@ -42,6 +43,7 @@ class ShuttleDataProvider extends ChangeNotifier {
       userLat = event.lat;
       userLong = event.lon;
     });
+    stopsToRender = List<ShuttleStopModel>();
   }
 
   void fetchStops() async {
@@ -95,6 +97,7 @@ class ShuttleDataProvider extends ChangeNotifier {
         }
       }
     }
+    print(closestStop.id);
     stopsToRender.insert(0,closestStop);
   }
 
