@@ -164,10 +164,12 @@ class NotificationsListView extends StatelessWidget {
             child: Linkify(
               text: data.message.message,
               onOpen: (link) async {
-                if (await canLaunch(link.url)) {
-                  await launch(link.url);
-                } else {
-                  throw 'Could not launch $link';
+                try {
+                  await launch(link.url, forceSafariVC: true);
+                } catch (e) {
+                  Scaffold.of(context).showSnackBar(SnackBar(
+                    content: Text('Could not open.'),
+                  ));
                 }
               },
               options: LinkifyOptions(humanize: false),

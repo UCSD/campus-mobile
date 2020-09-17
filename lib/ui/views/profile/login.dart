@@ -134,8 +134,12 @@ class _LoginState extends State<Login> {
               onTap: () async {
                 String link =
                     'https://acms.ucsd.edu/students/accounts-and-passwords/index.html';
-                if (await canLaunch(link)) {
-                  await launch(link);
+                try {
+                  await launch(link, forceSafariVC: true);
+                } catch (e) {
+                  Scaffold.of(context).showSnackBar(SnackBar(
+                    content: Text('Could not open.'),
+                  ));
                 }
               },
             )),

@@ -74,10 +74,6 @@ class MyChartCard extends StatelessWidget {
   }
 
   openLink(String url) async {
-    if (await canLaunch(url)) {
-      launch(url);
-    } else {
-      // can't launch url, there is some error
-    }
+    launch(url, forceSafariVC: true);
   }
 }

@@ -73,14 +73,7 @@ class ScannerCard extends StatelessWidget {
   }
 
   openLink(String url) async {
-//    if (await canLaunch(url)) {
-//      print("Can launch");
-//      launch(url, forceSafariVC: false);
-//    } else {
-//      // can't launch url, there is some error
-//    }
     launch(url, forceSafariVC: true);
-
   }
 
   String getCardContentText(BuildContext context) {
