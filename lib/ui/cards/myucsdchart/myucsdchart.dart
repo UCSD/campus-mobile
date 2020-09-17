@@ -6,9 +6,9 @@ import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-const String cardId = 'MyStudentChart';
+const String cardId = 'MyUCSDChart';
 
-class MyChartCard extends StatelessWidget {
+class MyUCSDChartCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
@@ -58,7 +58,7 @@ class MyChartCard extends StatelessWidget {
     List<Widget> actionButtons = List<Widget>();
     actionButtons.add(FlatButton(
       child: Text(
-        'Log in to MyStudentChart',
+        'Log in to MyUCSDChart',
       ),
       onPressed: () {
         handleTap();
@@ -69,16 +69,15 @@ class MyChartCard extends StatelessWidget {
 
   void handleTap() {
     String myChartUrl =
-        'https://mystudentchart.ucsd.edu/shs/Authentication/Saml/Login?IdP=UCSD%20STUDENT%20AD%20LOGIN';
+        'https://myucsdchart.ucsd.edu/UCSD/Authentication/Login';
     openLink(myChartUrl);
   }
 
   openLink(String url) async {
-    try {
-      launch(url, forceSafariVC: true);
-    }
-    catch(e) {
-      // do nothing
+    if (await canLaunch(url)) {
+      launch(url);
+    } else {
+      // can't launch url, there is some error
     }
   }
 }

@@ -8,6 +8,9 @@ import 'package:campus_mobile_experimental/core/navigation/top_navigation_bar/ap
 import 'package:campus_mobile_experimental/ui/cards/dining/dining_list.dart';
 import 'package:campus_mobile_experimental/ui/views/availability/manage_availability_view.dart';
 import 'package:campus_mobile_experimental/ui/views/baseline/baseline_view.dart';
+import 'package:campus_mobile_experimental/ui/views/bluetooth/automatic_bluetooth_logger_view.dart';
+import 'package:campus_mobile_experimental/ui/views/bluetooth/beacon_view.dart';
+import 'package:campus_mobile_experimental/ui/views/bluetooth/proximity_awareness_permission.dart';
 import 'package:campus_mobile_experimental/ui/views/class_schedule/class_list.dart';
 import 'package:campus_mobile_experimental/ui/views/dining/dining_detail_view.dart';
 import 'package:campus_mobile_experimental/ui/views/dining/nutrition_facts_view.dart';
@@ -32,6 +35,7 @@ import 'package:campus_mobile_experimental/ui/views/special_events/special_event
 import 'package:campus_mobile_experimental/ui/views/special_events/special_events_filter_view.dart';
 import 'package:campus_mobile_experimental/ui/views/special_events/special_events_list_view.dart';
 import 'package:campus_mobile_experimental/ui/views/surf/surf_report_view.dart';
+import 'package:campus_mobile_experimental/ui/views/scanner/scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -125,17 +129,31 @@ class Router {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return ManageParkingView();
         });
+      case RoutePaths.ScannerView:
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+          return Scanner();
+        });
       case RoutePaths.CardsView:
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return CardsView();
         });
       case RoutePaths.NotificationsSettingsView:
+        return MaterialPageRoute(builder: (_) => NotificationsSettingsView());
+     /* case RoutePaths.AutomaticBluetoothLoggerView:
+        return MaterialPageRoute(builder: (_) => AutomaticBluetoothLoggerView());*/
+      case RoutePaths.BluetoothPermissionsView:
+        return MaterialPageRoute(builder: (_) => ProximityAwarenessPermission());
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return NotificationsSettingsView();
         });
       case RoutePaths.ClassScheduleViewAll:
+        return MaterialPageRoute(builder: (_) => ClassList());
+      case RoutePaths.BeaconView:
+        return MaterialPageRoute(builder: (_) => BeaconView());
+
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return ClassList();
