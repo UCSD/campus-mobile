@@ -62,6 +62,11 @@ class Profile extends StatelessWidget {
   }
 
   openLink(String url) async {
-    launch(url, forceSafariVC: true);
+    try {
+      launch(url, forceSafariVC: true);
+    }
+    catch(e) {
+      // do nothing
+    }
   }
 }
