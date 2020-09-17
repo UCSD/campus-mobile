@@ -192,15 +192,6 @@ List<SingleChildWidget> dependentServices = [
     barcodeDataProvider.userDataProvider = userDataProvider;
     return barcodeDataProvider;
   }),
-  ChangeNotifierProxyProvider<UserDataProvider, ParkingDataProvider>(
-      create: (_) {
-    var parkingDataProvider = ParkingDataProvider();
-    parkingDataProvider.fetchParkingLots();
-    parkingDataProvider.fetchSpotTypes();
-    return parkingDataProvider;
-  }, update: (_, userDataProvider, parkingDataProvider) {
-    return parkingDataProvider;
-  }),
   ChangeNotifierProxyProvider<UserDataProvider, StudentIdDataProvider>(
       create: (_) {
     var studentIdDataProvider = StudentIdDataProvider();
@@ -223,6 +214,16 @@ List<SingleChildWidget> dependentServices = [
   }, update: (_, userDataProvider, availabilityDataProvider) {
     availabilityDataProvider.userDataProvider = userDataProvider;
     return availabilityDataProvider;
+  }),
+  ChangeNotifierProxyProvider<UserDataProvider, ParkingDataProvider>(
+      create: (_) {
+    var parkingDataProvider = ParkingDataProvider();
+    parkingDataProvider.fetchParkingLots();
+    parkingDataProvider.fetchSpotTypes();
+    return parkingDataProvider;
+  }, update: (_, userDataProvider, parkingDataProvider) {
+    parkingDataProvider.userDataProvider = userDataProvider;
+    return parkingDataProvider;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, MessagesDataProvider>(
     create: (_) {

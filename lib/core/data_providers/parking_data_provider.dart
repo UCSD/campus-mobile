@@ -1,3 +1,4 @@
+import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/parking_model.dart';
 import 'package:campus_mobile_experimental/core/models/spot_types_model.dart';
 import 'package:campus_mobile_experimental/core/services/parking_service.dart';
@@ -12,10 +13,11 @@ class ParkingDataProvider extends ChangeNotifier {
     selected_lots = 0;
     selected_spots = 0;
 
-    _parkingModels = Map<String, ParkingModel>();
-    _spotTypeModel = SpotTypeModel();
+    _parkingService = ParkingService();
+    _spotTypesService = SpotTypesService();
   }
 
+  UserDataProvider _userDataProvider;
   ///STATES
   bool _isLoading;
   DateTime _lastUpdated;
@@ -31,8 +33,8 @@ class ParkingDataProvider extends ChangeNotifier {
   SpotTypeModel _spotTypeModel;
 
   ///SERVICES
-  final ParkingService _parkingService = ParkingService();
-  final SpotTypesService _spotTypesService = SpotTypesService();
+  ParkingService _parkingService;
+  SpotTypesService _spotTypesService;
 
   /// FETCH PARKING LOT DATA AND SYNC THE ORDER IF USER IS LOGGED IN
   /// TODO: make sure to remove any lots the user has selected and are no longer available
@@ -44,20 +46,31 @@ class ParkingDataProvider extends ChangeNotifier {
     /// creating  new map ensures we remove all unsupported lots
     Map<String, ParkingModel> newMapOfLots = Map<String, ParkingModel>();
     if (await _parkingService.fetchParkingLotData()) {
-      for (ParkingModel model in _parkingService.data) {
-        newMapOfLots[model.locationName] = model;
-        if (ParkingDefaults.defaultLots.contains(model.locationId)) {
-          _parkingViewState[model.locationName] = true;
-          selected_lots++;
-        } else {
-          _parkingViewState[model.locationName] = false;
+      if (_userDataProvider.userProfileModel.selectedParkingLots.isNotEmpty) {
+        _parkingViewState =
+            _userDataProvider.userProfileModel.selectedParkingLots;
+      } else {
+        for (ParkingModel model in _parkingService.data) {
+          if (ParkingDefaults.defaultLots.contains(model.locationId)) {
+            _parkingViewState[model.locationName] = true;
+          } else {
+            _parkingViewState[model.locationName] = false;
+          }
         }
       }
+      for (ParkingModel model in _parkingService.data) {
+        newMapOfLots[model.locationName] = model;
+      }
+
+      //Update number of lots selected
+      _parkingViewState.forEach((key, value) {
+        if (value) {
+          selected_lots++;
+        }
+      });
 
       ///replace old list of lots with new one
       _parkingModels = newMapOfLots;
-
-      //TODO Add user selected spots
 
       _lastUpdated = DateTime.now();
     } else {
@@ -77,15 +90,27 @@ class ParkingDataProvider extends ChangeNotifier {
       _lastUpdated = DateTime.now();
       _spotTypeModel = _spotTypesService.spotTypeModel;
 
-      for (Spot spot in _spotTypeModel.spots) {
-        if (ParkingDefaults.defaultSpots.contains(spot.spotKey)) {
-          //add first 10 to default lots selected
-          _selectedSpotTypesState[spot.spotKey] = true;
-          selected_spots++;
-        } else {
-          _selectedSpotTypesState[spot.spotKey] = false;
+      if (_userDataProvider.userProfileModel.selectedParkingLots.isNotEmpty) {
+        //Load selected spots types from user Profile
+        _selectedSpotTypesState =
+            _userDataProvider.userProfileModel.selectedParkingSpots;
+      } else {
+        //Load default spot types
+        for (Spot spot in _spotTypeModel.spots) {
+          if (ParkingDefaults.defaultSpots.contains(spot.spotKey)) {
+            _selectedSpotTypesState[spot.spotKey] = true;
+          } else {
+            _selectedSpotTypesState[spot.spotKey] = false;
+          }
         }
       }
+
+      //Update number of spots selected
+      _selectedSpotTypesState.forEach((key, value) {
+        if (value) {
+          selected_spots++;
+        }
+      });
     } else {
       _error = _spotTypesService.error;
     }
@@ -114,6 +139,9 @@ class ParkingDataProvider extends ChangeNotifier {
         _parkingViewState[location] = !_parkingViewState[location];
       }
     }
+    _userDataProvider.userProfileModel.selectedParkingLots = _parkingViewState;
+    _userDataProvider
+        .updateUserProfileModel(_userDataProvider.userProfileModel);
     notifyListeners();
   }
 
@@ -128,7 +156,15 @@ class ParkingDataProvider extends ChangeNotifier {
         _selectedSpotTypesState[spotKey] = !_selectedSpotTypesState[spotKey];
       }
     }
+    _userDataProvider.userProfileModel.selectedParkingSpots = _selectedSpotTypesState;
+    _userDataProvider
+        .updateUserProfileModel(_userDataProvider.userProfileModel);
     notifyListeners();
+  }
+
+  ///This setter is only used in provider to supply and updated UserDataProvider object
+  set userDataProvider(UserDataProvider value) {
+    _userDataProvider = value;
   }
 
   ///SIMPLE GETTERS

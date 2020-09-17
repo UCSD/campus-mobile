@@ -12,13 +12,11 @@ const String cardId = 'parking';
 const _url = "https://mobile.ucsd.edu/replatform/v1/qa/webview/parking/";
 
 class ParkingCard extends StatefulWidget {
-  ParkingCard();
   @override
   _ParkingCardState createState() => _ParkingCardState();
 }
 
 class _ParkingCardState extends State<ParkingCard> {
-  _ParkingCardState();
   ParkingDataProvider _parkingDataProvider;
   final _controller = new PageController();
   WebViewController _webViewController;
@@ -26,10 +24,10 @@ class _ParkingCardState extends State<ParkingCard> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    _parkingDataProvider = Provider.of<ParkingDataProvider>(context);
   }
 
   Widget build(BuildContext context) {
-    _parkingDataProvider = Provider.of<ParkingDataProvider>(context);
     return CardContainer(
       titleText: CardTitleConstants.titleMap[cardId],
       isLoading: _parkingDataProvider.isLoading,
@@ -38,7 +36,7 @@ class _ParkingCardState extends State<ParkingCard> {
         _parkingDataProvider.fetchSpotTypes()
       },
       errorText: _parkingDataProvider.error,
-      child: () => buildParkingCard(context),
+      child: () => buildParkingCard(),
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
@@ -46,8 +44,7 @@ class _ParkingCardState extends State<ParkingCard> {
     );
   }
 
-  Widget buildParkingCard(BuildContext context) {
-    _parkingDataProvider = Provider.of<ParkingDataProvider>(context);
+  Widget buildParkingCard() {
     List<WebView> selectedLotsViews = [];
     List<String> selectedSpots = [];
 
