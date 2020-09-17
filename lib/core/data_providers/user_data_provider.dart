@@ -411,12 +411,6 @@ class UserDataProvider extends ChangeNotifier {
     _pushNotificationDataProvider = value;
   }
 
-
-  void toggleSpotTypeSelection(String spotKey) {
-    _userProfileModel.selectedParkingSpots[spotKey] = !_userProfileModel.selectedParkingSpots[spotKey];
-    notifyListeners();
-  }
-
   List<String> get subscribedTopics => _userProfileModel.subscribedTopics;
 
   ///GETTERS FOR MODELS
