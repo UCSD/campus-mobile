@@ -12,6 +12,7 @@ import 'package:campus_mobile_experimental/core/data_providers/notices_data_prov
 import 'package:campus_mobile_experimental/core/data_providers/parking_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/proximity_awareness_singleton.dart';
 import 'package:campus_mobile_experimental/core/data_providers/push_notifications_data_provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/shuttle_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/special_events_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/student_id_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/surf_data_provider.dart';
@@ -75,13 +76,6 @@ List<SingleChildWidget> independentServices = [
       WeatherDataProvider _weatherDataProvider = WeatherDataProvider();
       _weatherDataProvider.fetchWeather();
       return _weatherDataProvider;
-    },
-  ),
-  ChangeNotifierProvider<ShuttleDataProvider>(
-    create: (_) {
-      ShuttleDataProvider _shuttleDataProvider = ShuttleDataProvider();
-      _shuttleDataProvider.fetchStops();
-      return _shuttleDataProvider;
     },
   ),
   ChangeNotifierProvider<NewsDataProvider>(
@@ -234,6 +228,15 @@ List<SingleChildWidget> dependentServices = [
   }, update: (_, userDataProvider, availabilityDataProvider) {
     availabilityDataProvider.userDataProvider = userDataProvider;
     return availabilityDataProvider;
+  }),
+  ChangeNotifierProxyProvider<UserDataProvider, ShuttleDataProvider>(
+      create: (_) {
+        var shuttleDataProvider = ShuttleDataProvider();
+        shuttleDataProvider.fetchStops();
+        return shuttleDataProvider;
+      }, update: (_, userDataProvider, shuttleDataProvider) {
+    shuttleDataProvider.userDataProvider = userDataProvider;
+    return shuttleDataProvider;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, MessagesDataProvider>(
     create: (_) {

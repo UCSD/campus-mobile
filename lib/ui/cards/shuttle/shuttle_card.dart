@@ -17,6 +17,13 @@ class ShuttleCard extends StatefulWidget {
 }
 
 class _ShuttleCardState extends State<ShuttleCard> {
+  ShuttleDataProvider _shuttleCardDataProvider = ShuttleDataProvider();
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _shuttleCardDataProvider = Provider.of<ShuttleDataProvider>(context);
+  }
+
   Widget build(BuildContext context) {
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
@@ -24,11 +31,11 @@ class _ShuttleCardState extends State<ShuttleCard> {
           .toggleCard(cardId),
       reload: () => Provider.of<ShuttleDataProvider>(context, listen: false)
         .fetchStops(),
-      isLoading: Provider.of<ShuttleDataProvider>(context).isLoading,
+      isLoading: _shuttleCardDataProvider.isLoading,
       titleText: CardTitleConstants.titleMap[cardId],
-      errorText: Provider.of<ShuttleDataProvider>(context).error,
+      errorText: _shuttleCardDataProvider.error,
       child: () => buildShuttleCard(
-        Provider.of<ShuttleDataProvider>(context).stopsToRender,
+        _shuttleCardDataProvider.stopsToRender,
       ));
   }
 

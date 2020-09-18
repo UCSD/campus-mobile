@@ -21,7 +21,7 @@ class ShuttleDataProvider extends ChangeNotifier {
 
   bool _isLoading;
   String _error;
-  UserDataProvider _userDataProvider;
+  UserDataProvider userDataProvider;
   ShuttleService _shuttleService;
   Location location;
   ShuttleStopModel closestStop;
@@ -36,7 +36,7 @@ class ShuttleDataProvider extends ChangeNotifier {
 
   init() {
     _locationDataProvider = LocationDataProvider();
-    _userDataProvider = UserDataProvider();
+    userDataProvider = UserDataProvider();
     _shuttleService = ShuttleService();
     location = Location();
     _locationDataProvider.locationStream.listen((event) {
@@ -44,6 +44,7 @@ class ShuttleDataProvider extends ChangeNotifier {
       userLong = event.lon;
     });
     stopsToRender = List<ShuttleStopModel>();
+    listToRender = List<ArrivingShuttle>();
   }
 
   void fetchStops() async {
@@ -62,22 +63,34 @@ class ShuttleDataProvider extends ChangeNotifier {
     print("user latitude: " + userLat.toString());
     print("user longitude: " + userLat.toString());
     print("CLOSEST STOP: " + closestStop.id.toString());
+
+    getUserStops();
+
     // get information about stops in list
-//    getStopInformation();
+    await getStopInformation();
 
     _isLoading = false;
     notifyListeners();
   }
 
+  void getUserStops() {
+    // need to get stops from user in this method
+
+    // need to add stops to the list of stops
+  }
+
   Future<void> getStopInformation() async {
+    print("stops to render length: "+ stopsToRender.length.toString());
     for(ShuttleStopModel stop in stopsToRender) {
       ArrivingShuttle arrivingShuttle = await _shuttleService.getArrivingInformation(stop.id);
       listToRender.add(arrivingShuttle);
     }
+    _isLoading = false;
+    notifyListeners();
   }
 
   Future<void> calculateClosestStop() async {
-//    await checkLocationPermission();
+    await checkLocationPermission();
     await location.getLocation().then((value) {
       userLat = value.latitude;
       userLong = value.longitude;
@@ -102,6 +115,10 @@ class ShuttleDataProvider extends ChangeNotifier {
     }
     print(closestStop.id);
     //stopsToRender.insert(0,closestStop);
+  }
+
+  List<ShuttleModel> getAllActiveStops() {
+    return _shuttleService.data;
   }
 
   double getHaversineDistance(lat1,lon1,lat2,lon2) {
