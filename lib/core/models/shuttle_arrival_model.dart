@@ -1,5 +1,9 @@
 import 'dart:convert';
 
+
+ArrivingShuttle getArrivingShuttles(String str) =>
+    ArrivingShuttle.fromJson(json.decode(str)[0]);
+
 class ArrivingShuttle {
   ArrivingShuttle({
     this.pattern,
@@ -15,7 +19,7 @@ class ArrivingShuttle {
   int secondsToArrival;
   Vehicle vehicle;
 
-  factory ArrivingShuttle.fromRawJson(String str) => ArrivingShuttle.fromJson(json.decode(str));
+
 
   String toRawJson() => json.encode(toJson());
 

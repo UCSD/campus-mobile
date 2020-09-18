@@ -62,9 +62,9 @@ class ShuttleService {
     try {
       /// fetch data
       arrivingEndpoint = "https://api.jsonbin.io/b/5f63b30265b18913fc4e0776";
-      String _response = await _networkHelper.authorizedFetch(arrivingEndpoint, headers);
+      String _response = await _networkHelper.fetchData(arrivingEndpoint);
       /// parse data
-      final arrivingData = ArrivingShuttle.fromRawJson(_response);
+      final arrivingData = getArrivingShuttles(_response);
       _isLoading = false;
       return arrivingData;
     } catch (e) {

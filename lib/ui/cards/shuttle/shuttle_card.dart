@@ -36,6 +36,7 @@ class _ShuttleCardState extends State<ShuttleCard> {
 
   Widget buildShuttleCard() {
 //    print(_shuttleCardDataProvider.stopsToRender);
+    print("Seconds to arrival: " + _shuttleCardDataProvider.listToRender[0].secondsToArrival.toString());
     return(
       Column(
         children: <Widget>[

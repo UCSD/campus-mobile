@@ -43,8 +43,8 @@ class ShuttleDataProvider extends ChangeNotifier {
       userLat = event.lat;
       userLong = event.lon;
     });
-    stopsToRender = List<ShuttleStopModel>(3);
-    listToRender = List<ArrivingShuttle>(3);
+    stopsToRender = List<ShuttleStopModel>();
+    listToRender = List<ArrivingShuttle>();
   }
 
   void fetchStops() async {
@@ -72,15 +72,12 @@ class ShuttleDataProvider extends ChangeNotifier {
 
   Future<void> getStopInformation() async {
     print("stops to render length: "+ stopsToRender.length.toString());
-    int i = 0;
     for(ShuttleStopModel stop in stopsToRender) {
       ArrivingShuttle arrivingShuttle = await _shuttleService.getArrivingInformation(stop.id);
-      listToRender[i] = arrivingShuttle;
-      i++;
-      if(i > 3) {
-        break;
-      }
+      listToRender.add(arrivingShuttle);
     }
+    _isLoading = false;
+    notifyListeners();
   }
 
   Future<void> calculateClosestStop() async {
@@ -105,7 +102,9 @@ class ShuttleDataProvider extends ChangeNotifier {
       }
     }
     print(closestStop.id);
-    stopsToRender[0] = closestStop;
+    if(stopsToRender.isEmpty) {
+      stopsToRender.add(closestStop);
+    }
   }
 
   double getHaversineDistance(lat1,lon1,lat2,lon2) {
