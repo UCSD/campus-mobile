@@ -17,6 +17,7 @@ import 'package:campus_mobile_experimental/core/data_providers/student_id_data_p
 import 'package:campus_mobile_experimental/core/data_providers/surf_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/weather_data_provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/shuttle_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/coordinates_model.dart';
 import 'package:campus_mobile_experimental/core/navigation/top_navigation_bar/app_bar.dart';
 import 'package:campus_mobile_experimental/core/services/bottom_navigation_bar_service.dart';
@@ -74,6 +75,13 @@ List<SingleChildWidget> independentServices = [
       WeatherDataProvider _weatherDataProvider = WeatherDataProvider();
       _weatherDataProvider.fetchWeather();
       return _weatherDataProvider;
+    },
+  ),
+  ChangeNotifierProvider<ShuttleDataProvider>(
+    create: (_) {
+      ShuttleDataProvider _shuttleDataProvider = ShuttleDataProvider();
+      _shuttleDataProvider.fetchStops();
+      return _shuttleDataProvider;
     },
   ),
   ChangeNotifierProvider<NewsDataProvider>(

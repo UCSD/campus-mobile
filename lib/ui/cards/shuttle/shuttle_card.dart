@@ -17,31 +17,30 @@ class ShuttleCard extends StatefulWidget {
 }
 
 class _ShuttleCardState extends State<ShuttleCard> {
-  ShuttleDataProvider _shuttleCardDataProvider = ShuttleDataProvider();
-
   Widget build(BuildContext context) {
-    _shuttleCardDataProvider.fetchStops();
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
-      reload: () => _shuttleCardDataProvider.fetchStops(),
-      isLoading: _shuttleCardDataProvider.isLoading,
+      reload: () => Provider.of<ShuttleDataProvider>(context, listen: false)
+        .fetchStops(),
+      isLoading: Provider.of<ShuttleDataProvider>(context).isLoading,
       titleText: CardTitleConstants.titleMap[cardId],
-      errorText: _shuttleCardDataProvider.error,
-      child: () =>
-          buildShuttleCard());
+      errorText: Provider.of<ShuttleDataProvider>(context).error,
+      child: () => buildShuttleCard(
+        Provider.of<ShuttleDataProvider>(context).stopsToRender,
+      ));
   }
 
 
-  Widget buildShuttleCard() {
+  Widget buildShuttleCard(List<dynamic> stopsToRender) {
 //    print(_shuttleCardDataProvider.stopsToRender);
-    return(
-      Column(
-        children: <Widget>[
-          Text("Hello"),
-        ]
-      )
+    return ListView.builder(
+        padding: const EdgeInsets.all(8),
+        itemCount: stopsToRender.length,
+        itemBuilder: (BuildContext context, int index) {
+          return Text("${stopsToRender[index].id} - ${stopsToRender[index].name}");
+        }
     );
   }
 }

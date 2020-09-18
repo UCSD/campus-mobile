@@ -94,11 +94,14 @@ class ShuttleDataProvider extends ChangeNotifier {
         if(getHaversineDistance(userLat, userLong, stopLat, stopLong) < closestDistance) {
             closestDistance = getHaversineDistance(userLat, userLong, stopLat, stopLong);
             closestStop = shuttleStop;
+            stopsToRender.insert(0, closestStop);
+        } else {
+          stopsToRender.add(shuttleStop);
         }
       }
     }
     print(closestStop.id);
-    stopsToRender.insert(0,closestStop);
+    //stopsToRender.insert(0,closestStop);
   }
 
   double getHaversineDistance(lat1,lon1,lat2,lon2) {
