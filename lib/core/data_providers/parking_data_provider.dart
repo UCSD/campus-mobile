@@ -18,6 +18,7 @@ class ParkingDataProvider extends ChangeNotifier {
   }
 
   UserDataProvider _userDataProvider;
+
   ///STATES
   bool _isLoading;
   DateTime _lastUpdated;
@@ -156,7 +157,8 @@ class ParkingDataProvider extends ChangeNotifier {
         _selectedSpotTypesState[spotKey] = !_selectedSpotTypesState[spotKey];
       }
     }
-    _userDataProvider.userProfileModel.selectedParkingSpots = _selectedSpotTypesState;
+    _userDataProvider.userProfileModel.selectedParkingSpots =
+        _selectedSpotTypesState;
     _userDataProvider
         .updateUserProfileModel(_userDataProvider.userProfileModel);
     notifyListeners();
