@@ -19,8 +19,15 @@ class ShuttleCard extends StatefulWidget {
 class _ShuttleCardState extends State<ShuttleCard> {
   ShuttleDataProvider _shuttleCardDataProvider = ShuttleDataProvider();
 
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _shuttleCardDataProvider = Provider.of<ShuttleDataProvider>(context);
+  }
+
+
   Widget build(BuildContext context) {
-    _shuttleCardDataProvider.fetchStops();
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)

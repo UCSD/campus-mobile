@@ -21,7 +21,7 @@ class ShuttleDataProvider extends ChangeNotifier {
 
   bool _isLoading;
   String _error;
-  UserDataProvider _userDataProvider;
+  UserDataProvider userDataProvider;
   ShuttleService _shuttleService;
   Location location;
   ShuttleStopModel closestStop;
@@ -36,7 +36,7 @@ class ShuttleDataProvider extends ChangeNotifier {
 
   init() {
     _locationDataProvider = LocationDataProvider();
-    _userDataProvider = UserDataProvider();
+    userDataProvider = UserDataProvider();
     _shuttleService = ShuttleService();
     location = Location();
     _locationDataProvider.locationStream.listen((event) {
@@ -63,11 +63,20 @@ class ShuttleDataProvider extends ChangeNotifier {
     print("user latitude: " + userLat.toString());
     print("user longitude: " + userLat.toString());
     print("CLOSEST STOP: " + closestStop.id.toString());
+
+    getUserStops();
+
     // get information about stops in list
     await getStopInformation();
 
     _isLoading = false;
     notifyListeners();
+  }
+
+  void getUserStops() {
+    // need to get stops from user in this method
+
+    // need to add stops to the list of stops
   }
 
   Future<void> getStopInformation() async {
@@ -105,6 +114,10 @@ class ShuttleDataProvider extends ChangeNotifier {
     if(stopsToRender.isEmpty) {
       stopsToRender.add(closestStop);
     }
+  }
+
+  List<ShuttleModel> getAllActiveStops() {
+    return _shuttleService.data;
   }
 
   double getHaversineDistance(lat1,lon1,lat2,lon2) {
