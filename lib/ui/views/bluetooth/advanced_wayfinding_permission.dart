@@ -151,8 +151,6 @@ class _AdvancedWayfindingPermissionState extends State<AdvancedWayfindingPermiss
               Provider.of<UserDataProvider>(context, listen: false);
         }
         bluetoothSingleton.init();
-        print("RESUME BLUETOOTH");
-
       }
     }
   }
@@ -165,7 +163,6 @@ class _AdvancedWayfindingPermissionState extends State<AdvancedWayfindingPermiss
     if (permissionGranted ) {
       // Future.delayed(Duration(seconds: 5), ()  => bluetoothInstance.getOffloadAuthorization(context));
       _bluetoothSingleton.init();
-      print("START BLUETOOTH");
     }
   }
 }

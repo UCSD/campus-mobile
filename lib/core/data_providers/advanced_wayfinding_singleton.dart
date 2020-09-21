@@ -114,7 +114,6 @@ class AdvancedWayfindingSingleton extends ChangeNotifier{
 
   // Initial method for scan set up
   init() async {
-    inBackground = false;
 
     if(userDataProvider.isLoggedIn) {
       //Instantiate access token for logged in user
@@ -169,10 +168,6 @@ class AdvancedWayfindingSingleton extends ChangeNotifier{
 
   // Start a bluetooth scan of determined second duration and listen to results
   startScan() async {
-    if(inBackground){
-      await instantiateScannedObjects();
-    }
-
     flutterBlueInstance.startScan(
         timeout: Duration(seconds: 2), allowDuplicates: false);
     
@@ -207,19 +202,10 @@ class AdvancedWayfindingSingleton extends ChangeNotifier{
     // Close on going scan in case it has not time out
     flutterBlueInstance.stopScan();
 
-    // Write scannedObjects to storage
-    if(inBackground) {
-      scannedObjects.forEach((key, value) {
-        _storage.write(key: key, value: jsonEncode(value));
-      });
-    }
-
     // Clear previous scan results
     bufferList.clear();
     newBufferList.clear();
   }
-
-
 
   void processOffloadingLogs(bool offloadLog, List<Map> newBufferList) {
     if(inBackground){
@@ -333,25 +319,24 @@ class AdvancedWayfindingSingleton extends ChangeNotifier{
 
   // Reset device dwell time when used to track user's location
   void resetDevices() {
-    int currentMinutes = getMinutesTimeOfDay();
-    scannedObjects.removeWhere((key, value) {
-      if (currentMinutes < value.scanTimeMinutes) {
-        return (currentMinutes + 60) - value.scanTimeMinutes >= 2;
+    scannedObjects.forEach((key, value) {
+      if (value.timeThresholdMet) {
+        value.timeThresholdMet = false;
+        value.dwellTime = 0;
+        value.scanIntervalAllowancesUsed = 0;
+        value.distance = 0;
       }
-      return currentMinutes - value.scanTimeMinutes >= 2;
     });
   }
 
   //Gather information on device scanned
   void identifyDevices(ScanResult scanResult) {
-    int currentMinutes = getMinutesTimeOfDay();
     scannedObjects.update(scanResult.device.id.toString(), (value) {
       value.continuousDuration = true;
       value.rssi = scanResult.rssi;
       if (scanResult.advertisementData.txPowerLevel != null) {
         value.txPowerLevel = scanResult.advertisementData.txPowerLevel;
       }
-      value.scanTimeMinutes = currentMinutes;
       return value;
     },
         ifAbsent: () => new BluetoothDeviceProfile(
@@ -363,7 +348,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier{
                       DateTime.now().millisecondsSinceEpoch)
                   .toString()
             }),
-            true, currentMinutes));
+            true));
   }
 
   // Ensure we only process unique devices during one scan
@@ -376,16 +361,6 @@ class AdvancedWayfindingSingleton extends ChangeNotifier{
       }
     });
     return repeatedDevice;
-  }
-
-  String getCurrentTimeOfDay() {
-    TimeOfDay currentTime = TimeOfDay.now();
-    return "${currentTime.hour}:${currentTime.minute}";
-  }
-
-  int getMinutesTimeOfDay() {
-    TimeOfDay currentTime = TimeOfDay.now();
-    return currentTime.minute;
   }
 
   // Identify the Apple device type
@@ -569,7 +544,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier{
     }
     //check if permission is granted
     hasPermission = await location.hasPermission();
-    if (hasPermission != PermissionStatus.granted) {
+    if (hasPermission == PermissionStatus.denied) {
       hasPermission = await location.requestPermission();
       if (hasPermission == PermissionStatus.granted ) {
         return;
@@ -605,8 +580,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier{
 
   // Start a background scan
   void _onBackgroundFetch(String taskID) async {
-    inBackground = true;
-    startScan();
+    startBackgroundScan();
     BackgroundFetch.finish(taskID);
   }
   // Set background tasks
@@ -722,18 +696,35 @@ class AdvancedWayfindingSingleton extends ChangeNotifier{
     beaconSingleton.init();
     advertisementValue = beaconSingleton.advertisingUUID;
   }
-  Future instantiateScannedObjects() async {
-    var savedDevices = await _storage.readAll();
-    print("storage size: " + savedDevices.length.toString());
-    savedDevices.forEach((key, value) {
-      scannedObjects.update(key, (v) => new BluetoothDeviceProfile.fromJson(jsonDecode(value)),
-          ifAbsent: () => new BluetoothDeviceProfile.fromJson(jsonDecode(value))
-      );
-
-    });
-    _storage.deleteAll();
+  Future<void> startBackgroundScan() async {
+    Map<String, String> previousLogs = await storageLog.readAll();
+    if(previousLogs.isNotEmpty){
+      previousLogs.forEach((key, value) {
+        String lastTimeStamp = key;
+        var response = json.decode(value);
+        advertisementValue = response["SOURCE_DEVICE_ADVERTISEMENT_ID"];
+        List<Map> deviceList = List.from(response["DEVICE_LIST"]);
+        for(Map device in deviceList ){
+          scannedObjects.putIfAbsent(device["SCANNED_DEVICE_ID"],() => new BluetoothDeviceProfile(device["SCANNED_DEVICE_ID"], device["SCANNED_DEVICE_DETECT_SIGNAL_STRENGTH"], device["SCANNED_DEVICE_TYPE"], new List<String>.from({
+            device["SCANNED_DEVICE_DETECT_START"]}), true));
+          // Calculate dwell time
+          int year = int.parse(device["SCANNED_DEVICE_DETECT_START"].toString().substring(0,4));
+          int month = int.parse(device["SCANNED_DEVICE_DETECT_START"].toString().substring(5,7));
+          int day =int.parse(device["SCANNED_DEVICE_DETECT_START"].toString().substring(8,10));
+          int hour = int.parse(device["SCANNED_DEVICE_DETECT_START"].toString().substring(11,13));
+          int minute = int.parse(device["SCANNED_DEVICE_DETECT_START"].toString().substring(14,16));
+          int seconds = int.parse(device["SCANNED_DEVICE_DETECT_START"].toString().substring(17,19));
+          scannedObjects[device["SCANNED_DEVICE_ID"]].dwellTime = DateTime.now().difference( new DateTime(year, month,  day, hour,minute
+              ,seconds)).inSeconds as double;
+        }
+        storageLog.deleteAll();
+        inBackground = true;
+        startScan();
+      });
+    }
   }
 }
+
 
 
 // Helper Class
@@ -751,38 +742,5 @@ class BluetoothDeviceProfile {
   int scanIntervalAllowancesUsed = 0;
 
   BluetoothDeviceProfile(this.uuid, this.rssi, this.deviceType, this.timeStamps,
-      this.continuousDuration, this.scanTimeMinutes);
-
-  BluetoothDeviceProfile.fromJson(Map<String, dynamic> json)
-    : uuid = json['uuid'],
-      rssi = json['rssi'],
-      deviceType = json['deviceType'],
-      timeStamps = json['timeStamps'].cast<String>(),
-      continuousDuration = json['continuousDuration'],
-      distance = json['distance'],
-      txPowerLevel = json['txPowerLevel'],
-      dwellTime = json['dwellTime'],
-      scanTimeMinutes = json['scanTimeMinutes'],
-      timeThresholdMet = json['timeThresholdMet'],
-      scanIntervalAllowancesUsed = json['scanIntervalAllowancesUsed'];
-
-
-  Map<String, dynamic> toJson() {
-    return {
-      'uuid': uuid,
-      'rssi': rssi,
-      'deviceType': deviceType,
-      'timeStamps': timeStamps,
-      'continuousDuration': continuousDuration,
-      'distance': distance,
-      'txPowerLevel': txPowerLevel,
-      'dwellTime': dwellTime,
-      'scanTimeMinutes': scanTimeMinutes,
-      'timeThresholdMet': timeThresholdMet,
-      'scanIntervalAllowancesUsed': scanIntervalAllowancesUsed
-    };
-  }
-
-
-
+      this.continuousDuration);
 }
