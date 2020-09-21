@@ -10,7 +10,7 @@ import 'package:campus_mobile_experimental/ui/views/availability/manage_availabi
 import 'package:campus_mobile_experimental/ui/views/baseline/baseline_view.dart';
 import 'package:campus_mobile_experimental/ui/views/bluetooth/automatic_bluetooth_logger_view.dart';
 import 'package:campus_mobile_experimental/ui/views/bluetooth/beacon_view.dart';
-import 'package:campus_mobile_experimental/ui/views/bluetooth/proximity_awareness_permission.dart';
+import 'package:campus_mobile_experimental/ui/views/bluetooth/advanced_wayfinding_permission.dart';
 import 'package:campus_mobile_experimental/ui/views/class_schedule/class_list.dart';
 import 'package:campus_mobile_experimental/ui/views/dining/dining_detail_view.dart';
 import 'package:campus_mobile_experimental/ui/views/dining/nutrition_facts_view.dart';
@@ -144,7 +144,7 @@ class Router {
      /* case RoutePaths.AutomaticBluetoothLoggerView:
         return MaterialPageRoute(builder: (_) => AutomaticBluetoothLoggerView());*/
       case RoutePaths.BluetoothPermissionsView:
-        return MaterialPageRoute(builder: (_) => ProximityAwarenessPermission());
+        return MaterialPageRoute(builder: (_) => AdvancedWayfindingPermission());
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return NotificationsSettingsView();
