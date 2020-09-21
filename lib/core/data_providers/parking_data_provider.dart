@@ -10,8 +10,6 @@ class ParkingDataProvider extends ChangeNotifier {
   ParkingDataProvider() {
     ///DEFAULT STATES
     _isLoading = false;
-    selected_lots = 0;
-    selected_spots = 0;
 
     _parkingService = ParkingService();
     _spotTypesService = SpotTypesService();
@@ -41,6 +39,7 @@ class ParkingDataProvider extends ChangeNotifier {
   /// TODO: make sure to remove any lots the user has selected and are no longer available
   void fetchParkingLots() async {
     _isLoading = true;
+    selected_lots = 0;
     _error = null;
     notifyListeners();
 
@@ -84,6 +83,7 @@ class ParkingDataProvider extends ChangeNotifier {
 
   void fetchSpotTypes() async {
     _isLoading = true;
+    selected_spots = 0;
     _error = null;
     notifyListeners();
 
