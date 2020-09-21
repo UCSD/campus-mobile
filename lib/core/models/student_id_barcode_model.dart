@@ -4,26 +4,29 @@
 
 import 'dart:convert';
 
-StudentIdBarcodeModel studentIdBarcodeModelFromJson(String str) => StudentIdBarcodeModel.fromJson(json.decode(str));
+StudentIdBarcodeModel studentIdBarcodeModelFromJson(String str) =>
+    StudentIdBarcodeModel.fromJson(json.decode(str));
 
-String studentIdBarcodeModelToJson(StudentIdBarcodeModel data) => json.encode(data.toJson());
+String studentIdBarcodeModelToJson(StudentIdBarcodeModel data) =>
+    json.encode(data.toJson());
 
 class StudentIdBarcodeModel {
-    String studentId;
-    int barCode;
+  String studentId;
+  int barCode;
 
-    StudentIdBarcodeModel({
-        this.studentId,
-        this.barCode,
-    });
+  StudentIdBarcodeModel({
+    this.studentId,
+    this.barCode,
+  });
 
-    factory StudentIdBarcodeModel.fromJson(Map<String, dynamic> json) => StudentIdBarcodeModel(
+  factory StudentIdBarcodeModel.fromJson(Map<String, dynamic> json) =>
+      StudentIdBarcodeModel(
         studentId: json["studentId"],
-        barCode: json["barCode"],
-    );
+        barCode: json["barCode"] == null ? 0 : json["barCode"],
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "studentId": studentId,
-        "barCode": barCode,
-    };
+        "barCode": barCode == null ? 0 : barCode,
+      };
 }
