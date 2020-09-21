@@ -1,17 +1,17 @@
 import 'package:campus_mobile_experimental/core/constants/notifications_constants.dart';
-import 'package:campus_mobile_experimental/core/models/message_model.dart';
-import 'package:flutter/material.dart';
-import 'package:campus_mobile_experimental/core/data_providers/messages_data_provider.dart';
-import 'package:campus_mobile_experimental/ui/views/notifications/free_food_notification.dart';
 import 'package:campus_mobile_experimental/core/data_providers/free_food_data_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/messages_data_provider.dart';
+import 'package:campus_mobile_experimental/core/models/message_model.dart';
+import 'package:campus_mobile_experimental/ui/views/notifications/free_food_notification.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class NotificationsListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-   return RefreshIndicator(
+    return RefreshIndicator(
       child: buildListView(context),
       onRefresh: () => Provider.of<MessagesDataProvider>(context, listen: false)
           .fetchMessages(true),
@@ -64,13 +64,13 @@ class NotificationsListView extends StatelessWidget {
 
   Widget _buildLoadingIndicator() {
     return Padding(
-    padding: EdgeInsets.only(top: 10.0),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        CircularProgressIndicator(),
-      ],
-    ));
+        padding: EdgeInsets.only(top: 10.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            CircularProgressIndicator(),
+          ],
+        ));
   }
 
   Widget _buildErrorText() {
@@ -101,10 +101,10 @@ class NotificationsListView extends StatelessWidget {
   //           Linkify(
   //             text: data.message.message,
   //             onOpen: (link) async {
-  //               if (await canLaunch(link.url)) {
-  //                   await launch(link.url);
-  //               } else {
-  //                   throw 'Could not launch $link';
+  //               try {
+  //                 await launch(link.url, forceSafariVC: true);
+  //               } catch (e) {
+  //                 // an error occurred, do nothing
   //               }
   //             },
   //             options: LinkifyOptions(humanize: false),
@@ -136,7 +136,8 @@ class NotificationsListView extends StatelessWidget {
   Widget _buildMessage(BuildContext context, int index) {
     MessageElement data =
         Provider.of<MessagesDataProvider>(context).messages[index];
-    FreeFoodDataProvider freefoodProvider = Provider.of<FreeFoodDataProvider>(context);
+    FreeFoodDataProvider freefoodProvider =
+        Provider.of<FreeFoodDataProvider>(context);
 
     if (index ==
         Provider.of<MessagesDataProvider>(context).messages.length - 1) {
@@ -164,10 +165,10 @@ class NotificationsListView extends StatelessWidget {
             child: Linkify(
               text: data.message.message,
               onOpen: (link) async {
-                if (await canLaunch(link.url)) {
-                  await launch(link.url);
-                } else {
-                  throw 'Could not launch $link';
+                try {
+                  await launch(link.url, forceSafariVC: true);
+                } catch (e) {
+                  // an error occurred, do nothing
                 }
               },
               options: LinkifyOptions(humanize: false),
@@ -175,8 +176,8 @@ class NotificationsListView extends StatelessWidget {
             ),
           ),
           freefoodProvider.isFreeFood(data.messageId)
-          ? FreeFoodNotification(messageId: data.messageId)
-          : Container(),
+              ? FreeFoodNotification(messageId: data.messageId)
+              : Container(),
         ],
       ),
     );

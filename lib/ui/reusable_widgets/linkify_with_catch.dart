@@ -23,11 +23,7 @@ class LinkifyWithCatch extends StatelessWidget {
     return Linkify(
       onOpen: (link) async {
         try {
-          if (await canLaunch(link.url)) {
-            await launch(link.url);
-          } else {
-            throw 'Could not launch $link';
-          }
+          await launch(link.url, forceSafariVC: true);
         } catch (e) {
           Scaffold.of(context).showSnackBar(SnackBar(
             content: Text('Could not open.'),

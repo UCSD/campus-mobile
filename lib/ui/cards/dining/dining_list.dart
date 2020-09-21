@@ -1,13 +1,11 @@
-import 'package:campus_mobile_experimental/ui/theme/app_layout.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
-
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/dining_data_proivder.dart';
 import 'package:campus_mobile_experimental/core/models/dining_model.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/time_range_widget.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DiningList extends StatelessWidget {
   const DiningList({
@@ -119,15 +117,15 @@ class DiningList extends StatelessWidget {
     }
 
     return TimeRangeWidget(
-      time: dayHours.replaceAllMapped(
-        //Add colon in between each time
-          RegExp(r"\b[0-9]{2}"),
-            (match) => "${match.group(0)}:")
+        time: dayHours
             .replaceAllMapped(
-        //Add space around hyphen
-          RegExp(r"-"),
-            (match) => " ${match.group(0)} ")
-    );
+                //Add colon in between each time
+                RegExp(r"\b[0-9]{2}"),
+                (match) => "${match.group(0)}:")
+            .replaceAllMapped(
+                //Add space around hyphen
+                RegExp(r"-"),
+                (match) => " ${match.group(0)} "));
   }
 
   Widget buildDiningTile(DiningModel data, BuildContext context) {
@@ -154,17 +152,23 @@ class DiningList extends StatelessWidget {
   Widget buildIconWithDistance(DiningModel data, BuildContext context) {
     return FlatButton(
       onPressed: () {
-        launch(
-            'https://www.google.com/maps/dir/?api=1&travelmode=walking&destination=${data.coordinates.lat},${data.coordinates.lon}');
+        try {
+          launch(
+              'https://www.google.com/maps/dir/?api=1&travelmode=walking&destination=${data.coordinates.lat},${data.coordinates.lon}',
+              forceSafariVC: true);
+        } catch (e) {
+          // an error occurred, do nothing
+        }
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Icon(Icons.directions_walk),
           Text(
-            data.distance != null ?
-              (num.parse(data.distance.toStringAsFixed(1)).toString() + ' mi')
-              : '--',
+            data.distance != null
+                ? (num.parse(data.distance.toStringAsFixed(1)).toString() +
+                    ' mi')
+                : '--',
           ),
         ],
       ),

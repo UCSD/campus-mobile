@@ -2,7 +2,6 @@ import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -178,10 +177,12 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                     style: TextStyle(color: Colors.white, fontSize: 12),
                   ),
                   onTap: () async {
-                    String link =
-                        'https://acms.ucsd.edu/students/accounts-and-passwords/index.html';
-                    if (await canLaunch(link)) {
-                      await launch(link);
+                    try {
+                      String link =
+                          'https://acms.ucsd.edu/students/accounts-and-passwords/index.html';
+                      await launch(link, forceSafariVC: true);
+                    } catch (e) {
+                      // an error occurred, do nothing
                     }
                   },
                 ),
