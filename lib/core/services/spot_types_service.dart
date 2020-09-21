@@ -7,7 +7,6 @@ class SpotTypesService {
     fetchSpotTypesData();
   }
   bool _isLoading = false;
-  Map<String, String> _data;
   DateTime _lastUpdated;
   String _error;
   final NetworkHelper _networkHelper = NetworkHelper();
@@ -35,7 +34,6 @@ class SpotTypesService {
     }
   }
 
-  Map<String, String> get data => _data;
   bool get isLoading => _isLoading;
   String get error => _error;
   DateTime get lastUpdated => _lastUpdated;

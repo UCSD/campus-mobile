@@ -217,8 +217,6 @@ List<SingleChildWidget> dependentServices = [
   }),
   ChangeNotifierProxyProvider<UserDataProvider, ParkingDataProvider>(
       create: (_) {
-    var userDataProvider = UserDataProvider();
-    userDataProvider.fetchUserProfile();
     var parkingDataProvider = ParkingDataProvider();
     parkingDataProvider.fetchParkingLots();
     parkingDataProvider.fetchSpotTypes();
