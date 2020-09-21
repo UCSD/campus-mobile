@@ -31,7 +31,7 @@ class ShuttleDataProvider extends ChangeNotifier {
   double stopLong;
   double closestDistance = 10000000;
   List<ShuttleStopModel> stopsToRender;
-  List<ArrivingShuttle> listToRender;
+  List<ArrivingShuttle> arrivalsToRender;
   LocationDataProvider _locationDataProvider;
 
   init() {
@@ -44,7 +44,7 @@ class ShuttleDataProvider extends ChangeNotifier {
       userLong = event.lon;
     });
     stopsToRender = List<ShuttleStopModel>();
-    listToRender = List<ArrivingShuttle>();
+    arrivalsToRender = List<ArrivingShuttle>();
   }
 
   void fetchStops() async {
@@ -67,7 +67,7 @@ class ShuttleDataProvider extends ChangeNotifier {
     getUserStops();
 
     // get information about stops in list
-    await getStopInformation();
+    //await getStopInformation();
 
     _isLoading = false;
     notifyListeners();
@@ -79,12 +79,11 @@ class ShuttleDataProvider extends ChangeNotifier {
     // need to add stops to the list of stops
   }
 
-  Future<void> getStopInformation() async {
+  Future<ArrivingShuttle> getStopInformation(ShuttleStopModel stop) async {
     print("stops to render length: "+ stopsToRender.length.toString());
-    for(ShuttleStopModel stop in stopsToRender) {
-      ArrivingShuttle arrivingShuttle = await _shuttleService.getArrivingInformation(stop.id);
-      listToRender.add(arrivingShuttle);
-    }
+    arrivalsToRender.clear();
+    ArrivingShuttle arrivingShuttle = await _shuttleService.getArrivingInformation(stop.id);
+    arrivalsToRender.add(arrivingShuttle);
     _isLoading = false;
     notifyListeners();
   }
