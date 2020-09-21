@@ -91,7 +91,7 @@ class ParkingDataProvider extends ChangeNotifier {
       _lastUpdated = DateTime.now();
       _spotTypeModel = _spotTypesService.spotTypeModel;
 
-      if (_userDataProvider.userProfileModel.selectedParkingLots.isNotEmpty) {
+      if (_userDataProvider.userProfileModel.selectedParkingSpots.isNotEmpty) {
         //Load selected spots types from user Profile
         _selectedSpotTypesState =
             _userDataProvider.userProfileModel.selectedParkingSpots;

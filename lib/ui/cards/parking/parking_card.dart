@@ -1,6 +1,7 @@
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/parking_data_provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/parking_model.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/dots_indicator.dart';
@@ -20,11 +21,13 @@ class _ParkingCardState extends State<ParkingCard> {
   ParkingDataProvider _parkingDataProvider;
   final _controller = new PageController();
   WebViewController _webViewController;
+  UserDataProvider _userDataProvider;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _parkingDataProvider = Provider.of<ParkingDataProvider>(context);
+    _userDataProvider = Provider.of<UserDataProvider>(context);
   }
 
   Widget build(BuildContext context) {
