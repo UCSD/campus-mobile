@@ -139,10 +139,9 @@ class Router {
       case RoutePaths.ClassScheduleViewAll:
         return MaterialPageRoute(builder: (_) => ClassList());
       case RoutePaths.SpotTypesView:
-        return MaterialPageRoute(builder: (_) => SpotTypesView());
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
-          return ClassList();
+          return SpotTypesView();
         });
     }
   }

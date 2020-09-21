@@ -1,6 +1,7 @@
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/parking_data_provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/parking_model.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/dots_indicator.dart';
@@ -12,24 +13,24 @@ const String cardId = 'parking';
 const _url = "https://mobile.ucsd.edu/replatform/v1/qa/webview/parking/";
 
 class ParkingCard extends StatefulWidget {
-  ParkingCard();
   @override
   _ParkingCardState createState() => _ParkingCardState();
 }
 
 class _ParkingCardState extends State<ParkingCard> {
-  _ParkingCardState();
   ParkingDataProvider _parkingDataProvider;
   final _controller = new PageController();
   WebViewController _webViewController;
+  UserDataProvider _userDataProvider;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    _parkingDataProvider = Provider.of<ParkingDataProvider>(context);
+    _userDataProvider = Provider.of<UserDataProvider>(context);
   }
 
   Widget build(BuildContext context) {
-    _parkingDataProvider = Provider.of<ParkingDataProvider>(context);
     return CardContainer(
       titleText: CardTitleConstants.titleMap[cardId],
       isLoading: _parkingDataProvider.isLoading,
@@ -38,7 +39,7 @@ class _ParkingCardState extends State<ParkingCard> {
         _parkingDataProvider.fetchSpotTypes()
       },
       errorText: _parkingDataProvider.error,
-      child: () => buildParkingCard(context),
+      child: () => buildParkingCard(),
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
@@ -46,8 +47,7 @@ class _ParkingCardState extends State<ParkingCard> {
     );
   }
 
-  Widget buildParkingCard(BuildContext context) {
-    _parkingDataProvider = Provider.of<ParkingDataProvider>(context);
+  Widget buildParkingCard() {
     List<WebView> selectedLotsViews = [];
     List<String> selectedSpots = [];
 
