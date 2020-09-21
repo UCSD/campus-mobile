@@ -128,6 +128,13 @@ class ParkingDataProvider extends ChangeNotifier {
     return List<ParkingModel>();
   }
 
+    SpotTypeModel get spotTypeModels {
+    if (_spotTypeModel != null) {
+      return _spotTypeModel;
+    }
+    return SpotTypeModel();
+  }
+
 // add or remove location availability display from card based on user selection, Limit to MAX_SELECTED
   void toggleLot(String location) {
     if (selected_lots < MAX_SELECTED_LOTS) {
@@ -173,7 +180,6 @@ class ParkingDataProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String get error => _error;
   DateTime get lastUpdated => _lastUpdated;
-  SpotTypeModel get spotTypeModel => _spotTypeModel;
   Map<String, bool> get spotTypesState => _selectedSpotTypesState;
   Map<String, bool> get parkingViewState => _parkingViewState;
 }

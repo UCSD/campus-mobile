@@ -1,7 +1,8 @@
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/constants/data_persistence_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/provider_setup.dart';
-import 'package:campus_mobile_experimental/core/navigation/router.dart';
+import 'package:campus_mobile_experimental/core/navigation/router.dart'
+    as campusMobileRouter;
 import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
@@ -88,7 +89,7 @@ class CampusMobile extends StatelessWidget {
         initialRoute: showOnboardingScreen
             ? RoutePaths.Onboarding
             : RoutePaths.BottomNavigationBar,
-        onGenerateRoute: Router.generateRoute,
+        onGenerateRoute: campusMobileRouter.Router.generateRoute,
         navigatorObservers: [
           observer,
         ],
