@@ -167,7 +167,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier{
   }
 
   // Start a bluetooth scan of determined second duration and listen to results
-  startScan() async {
+  startScan()  {
     flutterBlueInstance.startScan(
         timeout: Duration(seconds: 2), allowDuplicates: false);
     
