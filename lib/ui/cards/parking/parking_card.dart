@@ -21,13 +21,11 @@ class _ParkingCardState extends State<ParkingCard> {
   ParkingDataProvider _parkingDataProvider;
   final _controller = new PageController();
   WebViewController _webViewController;
-  UserDataProvider _userDataProvider;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _parkingDataProvider = Provider.of<ParkingDataProvider>(context);
-    _userDataProvider = Provider.of<UserDataProvider>(context);
   }
 
   Widget build(BuildContext context) {
