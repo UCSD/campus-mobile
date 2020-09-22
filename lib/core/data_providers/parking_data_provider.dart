@@ -150,8 +150,7 @@ class ParkingDataProvider extends ChangeNotifier {
       }
     }
     _userDataProvider.userProfileModel.selectedParkingLots = _parkingViewState;
-    _userDataProvider
-        .updateUserProfileModel(_userDataProvider.userProfileModel);
+    _userDataProvider.postUserProfile(_userDataProvider.userProfileModel);
     notifyListeners();
   }
 
@@ -168,8 +167,7 @@ class ParkingDataProvider extends ChangeNotifier {
     }
     _userDataProvider.userProfileModel.selectedParkingSpots =
         _selectedSpotTypesState;
-    _userDataProvider
-        .updateUserProfileModel(_userDataProvider.userProfileModel);
+    _userDataProvider.postUserProfile(_userDataProvider.userProfileModel);
     notifyListeners();
   }
 
