@@ -11,6 +11,7 @@ class ParkingDataProvider extends ChangeNotifier {
     ///DEFAULT STATES
     _isLoadingLots = false;
     _isLoadingSpots = false;
+    _isLoading = false;
 
     _parkingService = ParkingService();
     _spotTypesService = SpotTypesService();
@@ -21,6 +22,7 @@ class ParkingDataProvider extends ChangeNotifier {
   ///STATES
   bool _isLoadingLots;
   bool _isLoadingSpots;
+  bool _isLoading;
   DateTime _lastUpdated;
   String _error;
   int selected_lots, selected_spots;
@@ -37,10 +39,9 @@ class ParkingDataProvider extends ChangeNotifier {
   ParkingService _parkingService;
   SpotTypesService _spotTypesService;
 
-  /// FETCH PARKING LOT DATA AND SYNC THE ORDER IF USER IS LOGGED IN
-  /// TODO: make sure to remove any lots the user has selected and are no longer available
-  void fetchParkingLots() async {
-    _isLoadingLots = true;
+  void fetchParkingData() async {
+    _isLoading = true;
+    selected_spots = 0;
     selected_lots = 0;
     _error = null;
     notifyListeners();
@@ -73,31 +74,19 @@ class ParkingDataProvider extends ChangeNotifier {
 
       ///replace old list of lots with new one
       _parkingModels = newMapOfLots;
-
-      _lastUpdated = DateTime.now();
     } else {
       ///TODO: determine what error to show to the user
       _error = _parkingService.error;
     }
-    _isLoadingLots = false;
-    notifyListeners();
-  }
-
-  void fetchSpotTypes() async {
-    _isLoadingSpots = true;
-    selected_spots = 0;
-    _error = null;
-    notifyListeners();
 
     if (await _spotTypesService.fetchSpotTypesData()) {
-      _lastUpdated = DateTime.now();
-      _spotTypeModel = _spotTypesService.spotTypeModel;
-
       if (_userDataProvider.userProfileModel.selectedParkingSpots.isNotEmpty) {
         //Load selected spots types from user Profile
         _selectedSpotTypesState =
             _userDataProvider.userProfileModel.selectedParkingSpots;
       } else {
+        _spotTypeModel = _spotTypesService.spotTypeModel;
+
         //Load default spot types
         for (Spot spot in _spotTypeModel.spots) {
           if (ParkingDefaults.defaultSpots.contains(spot.spotKey)) {
@@ -118,7 +107,9 @@ class ParkingDataProvider extends ChangeNotifier {
       _error = _spotTypesService.error;
     }
 
-    _isLoadingSpots = false;
+    _lastUpdated = DateTime.now();
+
+    _isLoading = false;
     notifyListeners();
   }
 
@@ -177,7 +168,7 @@ class ParkingDataProvider extends ChangeNotifier {
   }
 
   ///SIMPLE GETTERS
-  bool get isLoading => _isLoadingSpots || _isLoadingLots;
+  bool get isLoading => _isLoading;
   String get error => _error;
   DateTime get lastUpdated => _lastUpdated;
   Map<String, bool> get spotTypesState => _selectedSpotTypesState;

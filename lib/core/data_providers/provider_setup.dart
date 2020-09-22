@@ -221,8 +221,7 @@ List<SingleChildWidget> dependentServices = [
     return parkingDataProvider;
   }, update: (_, userDataProvider, parkingDataProvider) {
     parkingDataProvider.userDataProvider = userDataProvider;
-    parkingDataProvider.fetchSpotTypes();
-    parkingDataProvider.fetchParkingLots();
+    parkingDataProvider.fetchParkingData();
     return parkingDataProvider;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, MessagesDataProvider>(

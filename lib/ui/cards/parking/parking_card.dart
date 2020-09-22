@@ -1,7 +1,6 @@
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/parking_data_provider.dart';
-import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/parking_model.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/dots_indicator.dart';
@@ -20,7 +19,6 @@ class ParkingCard extends StatefulWidget {
 class _ParkingCardState extends State<ParkingCard> {
   ParkingDataProvider _parkingDataProvider;
   final _controller = new PageController();
-  WebViewController _webViewController;
 
   @override
   void didChangeDependencies() {
@@ -32,10 +30,7 @@ class _ParkingCardState extends State<ParkingCard> {
     return CardContainer(
       titleText: CardTitleConstants.titleMap[cardId],
       isLoading: _parkingDataProvider.isLoading,
-      reload: () => {
-        _parkingDataProvider.fetchParkingLots(),
-        _parkingDataProvider.fetchSpotTypes()
-      },
+      reload: () => {_parkingDataProvider.fetchParkingData()},
       errorText: _parkingDataProvider.error,
       child: () => buildParkingCard(),
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
@@ -62,13 +57,8 @@ class _ParkingCardState extends State<ParkingCard> {
           selectedLotsViews.add(WebView(
             initialUrl: url,
             javascriptMode: JavascriptMode.unrestricted,
-            onWebViewCreated: (controller) {
-              _webViewController = controller;
-            },
-            onPageFinished: (some) async {
-              double height = double.parse(await _webViewController
-                  .evaluateJavascript("window.innerHeight"));
-            },
+            onWebViewCreated: (controller) {},
+            onPageFinished: (some) async {},
           ));
         }
       }
