@@ -45,7 +45,7 @@ class Profile extends StatelessWidget {
           Card(
             child: ListTile(
               leading: Icon(Icons.wifi_tethering),
-              title: Text('Proximity Awareness'),
+              title: Text('Advanced Wayfinding'),
               onTap:(){ Navigator.pushNamed(context, RoutePaths.BluetoothPermissionsView);},
             ),
           ),

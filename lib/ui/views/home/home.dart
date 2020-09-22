@@ -1,6 +1,6 @@
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/notices_data_provider.dart';
-import 'package:campus_mobile_experimental/core/data_providers/proximity_awareness_singleton.dart';
+import 'package:campus_mobile_experimental/core/data_providers/advanced_wayfinding_singleton.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/notices_model.dart';
 import 'package:campus_mobile_experimental/ui/cards/availability/availability_card.dart';
@@ -126,12 +126,12 @@ class _HomeState extends State<Home> {
   void checkToResumeBluetooth(BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    if (prefs.containsKey("proximityAwarenessEnabled") &&
-        prefs.getBool('proximityAwarenessEnabled')) {
-      ProximityAwarenessSingleton bluetoothSingleton =
-          ProximityAwarenessSingleton();
-      bluetoothSingleton.proximityAwarenessEnabled =
-          prefs.getBool("proximityAwarenessEnabled");
+    if (prefs.containsKey("advancedWayfindingEnabled") &&
+        prefs.getBool('advancedWayfindingEnabled')) {
+      AdvancedWayfindingSingleton bluetoothSingleton =
+          AdvancedWayfindingSingleton();
+      bluetoothSingleton.advancedWayfindingEnabled =
+          prefs.getBool("advancedWayfindingEnabled");
       if (bluetoothSingleton.firstInstance) {
         bluetoothSingleton.firstInstance = false;
         if (bluetoothSingleton.userDataProvider == null) {

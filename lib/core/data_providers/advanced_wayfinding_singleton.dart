@@ -24,7 +24,7 @@ enum ScannedDevice {
   SCANNED_DEVICE_DETECT_DISTANCE
 }
 
-class ProximityAwarenessSingleton extends ChangeNotifier{
+class AdvancedWayfindingSingleton extends ChangeNotifier{
   bool inBackground = false;
   // Using secure storage for background scans
   FlutterSecureStorage storageLog =  FlutterSecureStorage();
@@ -40,7 +40,7 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
 
   // Booleans for instantiating permissions
   bool firstInstance = true;
-  bool proximityAwarenessEnabled = false;
+  bool advancedWayfindingEnabled = false;
 
   //Access previous bt setting
   SharedPreferences sharedPreferences;
@@ -49,8 +49,8 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
   HashMap<String, BluetoothDeviceProfile> scannedObjects = new HashMap();
 
   // Internal Declaration
-  static final ProximityAwarenessSingleton _bluetoothSingleton =
-      ProximityAwarenessSingleton._internal();
+  static final AdvancedWayfindingSingleton _bluetoothSingleton =
+      AdvancedWayfindingSingleton._internal();
 
   //Flutter blue instance for scanning
   FlutterBlue flutterBlueInstance = FlutterBlue.instance;
@@ -89,6 +89,7 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
   // Default constant for scans
   int scanDuration = 2; //Seconds
   int waitTime = 15; // Minutes
+  int dwellMinutes = 30;
 
   // Allows for continuous scan
   Timer ongoingScanner;
@@ -107,7 +108,7 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
   UserDataProvider userDataProvider;
 
   // Allows singleton functionality
-  factory ProximityAwarenessSingleton() {
+  factory AdvancedWayfindingSingleton() {
     return _bluetoothSingleton;
   }
 
@@ -123,7 +124,7 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
     }
 
     //Check previous bluetooth setting
-    await checkProximityAwarenessEnabled();
+    await checkAdvancedWayfindingEnabled();
 
     // Only start scanning when permissions granted
     await flutterBlueInstance.isAvailable.then((value) {
@@ -154,7 +155,6 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
       });
     });
   }
-
   /// This function starts continuous scan (when permission is authorized)
   enableScanning() {
     //Start the initial scan
@@ -167,10 +167,10 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
   }
 
   // Start a bluetooth scan of determined second duration and listen to results
-  startScan() {
+  startScan()  {
     flutterBlueInstance.startScan(
         timeout: Duration(seconds: 2), allowDuplicates: false);
-
+    
     // Process the scan results (synchronously)
     flutterBlueInstance.scanResults.listen((results) {
       for (ScanResult scanResult in results) {
@@ -223,8 +223,8 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
     if (qualifyingDevices >= qualifiedDevicesThreshold) {
       double lat;
       double long;
-      //loggedItems.add("LOCATION LOGGED");
       checkLocationPermission();
+
       location.getLocation().then((value) {
         lat = value.latitude;
         long = value.longitude;
@@ -242,13 +242,13 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
         "DEVICE_LIST": newBufferList
       };
     
-
       sendLogs( log);
 
       });
 
     }
   }
+
   void sendLogs(Map log) {
 
       if (userDataProvider.isLoggedIn) {
@@ -259,7 +259,6 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
 
         var response = _networkHelper.authorizedPost(offloadLoggerEndpoint, headers,json.encode(log) );
 
-
     }
   }
 
@@ -268,6 +267,7 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
       calculatedUUID = calculateHexFromArray(decimalArray); //https://stackoverflow.com/questions/60902976/flutter-ios-to-ios-broadcast-beacon-not-working
     });
     return calculatedUUID;
+
   }
 
 // Identify types of device, currently working for Apple devices and some android
@@ -546,7 +546,7 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
     hasPermission = await location.hasPermission();
     if (hasPermission == PermissionStatus.denied) {
       hasPermission = await location.requestPermission();
-      if (hasPermission != PermissionStatus.granted) {
+      if (hasPermission == PermissionStatus.granted ) {
         return;
       }
     }
@@ -566,7 +566,7 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
   }
 
   // Internal constructor
-  ProximityAwarenessSingleton._internal();
+  AdvancedWayfindingSingleton._internal();
 
   // Key generator for storage
   String _randomValue() {
@@ -601,12 +601,7 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
         ),
         _onBackgroundFetch)
         .then((int status) {
-      _storage.write(
-          key: _randomValue(),
-          value: '[BackgroundFetch] configure success: $status');
     }).catchError((e) {
-      _storage.write(
-          key: _randomValue(), value: '[BackgroundFetch] configure ERROR: $e');
     });
   }
   //Parse advertisement data
@@ -683,14 +678,14 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
     }
   }
 
-  Future checkProximityAwarenessEnabled() async {
+  Future checkAdvancedWayfindingEnabled() async {
     await SharedPreferences.getInstance().then((value) {
       sharedPreferences = value;
-      if (sharedPreferences.containsKey("proximityAwarenessEnabled")) {
-        proximityAwarenessEnabled = sharedPreferences.getBool("proximityAwarenessEnabled");
+      if (sharedPreferences.containsKey("advancedWayfindingEnabled")) {
+        advancedWayfindingEnabled = sharedPreferences.getBool("advancedWayfindingEnabled");
       } else {
         //Write to bt value
-        sharedPreferences.setBool("proximityAwarenessEnabled", proximityAwarenessEnabled);
+        sharedPreferences.setBool("advancedWayfindingEnabled", advancedWayfindingEnabled);
       }
     });
   }
@@ -701,7 +696,6 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
     beaconSingleton.init();
     advertisementValue = beaconSingleton.advertisingUUID;
   }
-
   Future<void> startBackgroundScan() async {
     Map<String, String> previousLogs = await storageLog.readAll();
     if(previousLogs.isNotEmpty){
@@ -709,12 +703,10 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
         String lastTimeStamp = key;
         var response = json.decode(value);
         advertisementValue = response["SOURCE_DEVICE_ADVERTISEMENT_ID"];
-
         List<Map> deviceList = List.from(response["DEVICE_LIST"]);
         for(Map device in deviceList ){
           scannedObjects.putIfAbsent(device["SCANNED_DEVICE_ID"],() => new BluetoothDeviceProfile(device["SCANNED_DEVICE_ID"], device["SCANNED_DEVICE_DETECT_SIGNAL_STRENGTH"], device["SCANNED_DEVICE_TYPE"], new List<String>.from({
             device["SCANNED_DEVICE_DETECT_START"]}), true));
-
           // Calculate dwell time
           int year = int.parse(device["SCANNED_DEVICE_DETECT_START"].toString().substring(0,4));
           int month = int.parse(device["SCANNED_DEVICE_DETECT_START"].toString().substring(5,7));
@@ -724,16 +716,16 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
           int seconds = int.parse(device["SCANNED_DEVICE_DETECT_START"].toString().substring(17,19));
           scannedObjects[device["SCANNED_DEVICE_ID"]].dwellTime = DateTime.now().difference( new DateTime(year, month,  day, hour,minute
               ,seconds)).inSeconds as double;
-
         }
         storageLog.deleteAll();
         inBackground = true;
         startScan();
-
       });
     }
   }
 }
+
+
 
 // Helper Class
 class BluetoothDeviceProfile {
@@ -745,6 +737,7 @@ class BluetoothDeviceProfile {
   double distance; // Feet
   int txPowerLevel;
   double dwellTime = 0;
+  int scanTimeMinutes;
   bool timeThresholdMet = false;
   int scanIntervalAllowancesUsed = 0;
 
