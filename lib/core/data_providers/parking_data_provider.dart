@@ -86,8 +86,6 @@ class ParkingDataProvider extends ChangeNotifier {
         _selectedSpotTypesState =
             _userDataProvider.userProfileModel.selectedParkingSpots;
       } else {
-        _spotTypeModel = _spotTypesService.spotTypeModel;
-
         //Load default spot types
         for (Spot spot in _spotTypeModel.spots) {
           if (ParkingDefaults.defaultSpots.contains(spot.spotKey)) {
