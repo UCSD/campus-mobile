@@ -1,5 +1,4 @@
 import 'package:campus_mobile_experimental/core/data_providers/availability_data_provider.dart';
-import 'package:campus_mobile_experimental/core/data_providers/barcode_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/class_schedule_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/dining_data_proivder.dart';
@@ -11,6 +10,7 @@ import 'package:campus_mobile_experimental/core/data_providers/messages_data_pro
 import 'package:campus_mobile_experimental/core/data_providers/news_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/notices_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/parking_data_provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/advanced_wayfinding_singleton.dart';
 import 'package:campus_mobile_experimental/core/data_providers/push_notifications_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/special_events_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/student_id_data_provider.dart';
@@ -148,7 +148,8 @@ List<SingleChildWidget> dependentServices = [
       update: (_, userDataProvider, cardsDataProvider) {
         cardsDataProvider
           ..loadSavedData().then((value) {
-            cardsDataProvider.updateAvailableCards();
+            cardsDataProvider.updateAvailableCards(
+                userDataProvider.authenticationModel.ucsdaffiliation);
             if (userDataProvider.isLoggedIn &&
                 (userDataProvider.userProfileModel.classifications?.student ??
                     false)) {
@@ -184,13 +185,15 @@ List<SingleChildWidget> dependentServices = [
     }
     return classScheduleDataProvider;
   }),
-  ChangeNotifierProxyProvider<UserDataProvider, BarcodeDataProvider>(
+  ChangeNotifierProxyProvider<UserDataProvider, AdvancedWayfindingSingleton>(
       create: (_) {
-    var barcodeDataProvider = BarcodeDataProvider();
-    return barcodeDataProvider;
-  }, update: (_, userDataProvider, barcodeDataProvider) {
-    barcodeDataProvider.userDataProvider = userDataProvider;
-    return barcodeDataProvider;
+    print("USER DATA SET");
+    var proximityAwarenessSingleton = AdvancedWayfindingSingleton();
+    return proximityAwarenessSingleton;
+  }, update: (_, userDataProvider, proximityAwarenessSingleton) {
+    proximityAwarenessSingleton..userDataProvider = userDataProvider;
+    print("USER DATA SET");
+    return proximityAwarenessSingleton;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, StudentIdDataProvider>(
       create: (_) {

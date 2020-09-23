@@ -2,13 +2,18 @@ class RoutePaths {
   static const String Home = '/';
   static const String BottomNavigationBar = 'bottom_navigation_bar';
   static const String Onboarding = 'onboarding';
+  static const String OnboardingInitial = 'onboarding/initial';
   static const String OnboardingLogin = 'onboarding/login';
+  static const String OnboardingAffiliations = 'onboarding/affiliations';
   static const String Map = 'map/map';
   static const String MapSearch = 'map/map_search';
   static const String MapLocationList = 'map/map_location_list';
   static const String Notifications = 'notifications';
   static const String Profile = 'profile';
   static const String CardsView = 'profile/cards_view';
+  static const String BeaconView = 'profile/beacon_view';
+  static const String AutomaticBluetoothLoggerView = 'profile/automatic_bluetooth_logger_view';
+  static const String BluetoothPermissionsView = 'profile/bluetooth_permissions_view';
   static const String NotificationsSettingsView =
       'notifications/notifications_settings';
 
@@ -60,15 +65,10 @@ class RouteTitles {
     'special_events/special_events_list_view': 'Special Events',
     'special_events/special_events_filter_view': 'Special Events',
     'special_events/special_events_detail_view': 'Special Events',
-    'scanner/scanner_view': 'Scanner',
   };
 }
 
 class ButtonText {
-  static const SubmitButtonActive = 'Submit';
-  static const SubmitButtonInactive = 'Sending';
-  static const SubmitButtonTryAgain = 'Try again';
-  static const SubmitButtonReceived = 'Received';
   static const ScanNowFull = 'Scan Your COVID-19 Test Kit.';
   static const ScanNow = 'Scan Now';
   static const SignInFull = 'Sign In to Scan Your COVID-19 Test Kit.';
@@ -94,8 +94,10 @@ class NavigationConstants {
 /// Maps Card IDs to Card titles
 class CardTitleConstants {
   static const titleMap = {
-    'QRScanner': 'QR Scanner',
+    'QRScanner': 'Scanner', // Web Scanner
+    'NativeScanner': 'Scanner',
     'MyStudentChart': 'MyStudentChart',
+    'MyUCSDChart': 'MyUCSDChart',
     'staff_info': 'COVID-19 Info',
     'campus_info': "Campus Information",
     'student_info': 'COVID-19 Info',
@@ -107,7 +109,8 @@ class CardTitleConstants {
     'availability': 'Availability',
     'events': 'Events',
     'news': 'News',
-    'weather': 'Weather',
     'parking': 'Parking',
+    'special_events': 'Special Events',
+    'weather': 'Weather',
   };
 }

@@ -1,6 +1,6 @@
 import 'package:campus_mobile_experimental/core/models/notices_model.dart';
-import 'package:campus_mobile_experimental/ui/theme/app_layout.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/image_loader.dart';
+import 'package:campus_mobile_experimental/ui/theme/app_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -33,10 +33,10 @@ class NoticesCard extends StatelessWidget {
   }
 
   openLink(String url) async {
-    if (await canLaunch(url)) {
-      launch(url);
-    } else {
-      // can't launch url, there is some error
+    try {
+      launch(url, forceSafariVC: true);
+    } catch (e) {
+      // an error occurred, do nothing
     }
   }
 }

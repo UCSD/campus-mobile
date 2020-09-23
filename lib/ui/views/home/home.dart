@@ -1,12 +1,17 @@
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/notices_data_provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/advanced_wayfinding_singleton.dart';
+import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/notices_model.dart';
 import 'package:campus_mobile_experimental/ui/cards/availability/availability_card.dart';
+import 'package:campus_mobile_experimental/ui/cards/campus_info/campus_info_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/class_schedule/class_schedule_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/dining/dining_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/events/events_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/finals/finals_card.dart';
-import 'package:campus_mobile_experimental/ui/cards/my_chart/my_chart_card.dart';
+import 'package:campus_mobile_experimental/ui/cards/mystudentchart/mystudentchart.dart';
+import 'package:campus_mobile_experimental/ui/cards/myucsdchart/myucsdchart.dart';
+import 'package:campus_mobile_experimental/ui/cards/native_scanner/native_scanner_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/news/news_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/notices/notices_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/parking/parking_card.dart';
@@ -16,10 +21,12 @@ import 'package:campus_mobile_experimental/ui/cards/staff_info/staff_info_card.d
 import 'package:campus_mobile_experimental/ui/cards/student_id/student_id_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/student_info/student_info_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/weather/weather_card.dart';
-import 'package:campus_mobile_experimental/ui/cards/campus_info/campus_info_card.dart';
 import 'package:campus_mobile_experimental/ui/theme/app_layout.dart';
+import 'package:campus_mobile_experimental/ui/views/special_events/banner_view_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -29,6 +36,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
+    checkToResumeBluetooth(context);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: cardMargin, vertical: 0.0),
       child: ListView(
@@ -64,8 +72,14 @@ class _HomeState extends State<Home> {
         case 'QRScanner':
           orderedCards.insert(0, ScannerCard());
           break;
+        case 'NativeScanner':
+          orderedCards.insert(0, NativeScannerCard());
+          break;
         case 'MyStudentChart':
-          orderedCards.add(MyChartCard());
+          orderedCards.add(MyStudentChartCard());
+          break;
+        case 'MyUCSDChart':
+          orderedCards.add(MyUCSDChartCard());
           break;
         case 'staff_info':
           orderedCards.add(StaffInfoCard());
@@ -100,9 +114,9 @@ class _HomeState extends State<Home> {
         case 'staff_id':
           orderedCards.add(StaffIdCard());
           break;
-//        case 'special_events':
-//          orderedCards.add(BannerCard());
-//          break;
+       case 'special_events':
+         orderedCards.add(BannerCard());
+         break;
        case 'parking':
          orderedCards.add(ParkingCard());
          break;
@@ -115,5 +129,25 @@ class _HomeState extends State<Home> {
       }
     }
     return orderedCards;
+  }
+
+  void checkToResumeBluetooth(BuildContext context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    if (prefs.containsKey("advancedWayfindingEnabled") &&
+        prefs.getBool('advancedWayfindingEnabled')) {
+      AdvancedWayfindingSingleton bluetoothSingleton =
+          AdvancedWayfindingSingleton();
+      bluetoothSingleton.advancedWayfindingEnabled =
+          prefs.getBool("advancedWayfindingEnabled");
+      if (bluetoothSingleton.firstInstance) {
+        bluetoothSingleton.firstInstance = false;
+        if (bluetoothSingleton.userDataProvider == null) {
+          bluetoothSingleton.userDataProvider =
+              Provider.of<UserDataProvider>(context, listen: false);
+        }
+        bluetoothSingleton.init();
+      }
+    }
   }
 }
