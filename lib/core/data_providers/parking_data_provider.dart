@@ -80,6 +80,7 @@ class ParkingDataProvider extends ChangeNotifier {
     }
 
     if (await _spotTypesService.fetchSpotTypesData()) {
+      _spotTypeModel = _spotTypesService.spotTypeModel;
       if (_userDataProvider.userProfileModel.selectedParkingSpots.isNotEmpty) {
         //Load selected spots types from user Profile
         _selectedSpotTypesState =
