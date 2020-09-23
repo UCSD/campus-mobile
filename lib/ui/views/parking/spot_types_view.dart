@@ -5,7 +5,6 @@ import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SpotTypesView extends StatelessWidget {
   ParkingDataProvider spotTypesDataProvider;
@@ -38,7 +37,10 @@ class SpotTypesView extends StatelessWidget {
             child: Align(
                 alignment: Alignment.center,
                 child: data.text.contains("&#x267f;")
-                    ? FaIcon(FontAwesomeIcons.accessibleIcon)
+                    ? Icon(
+                        Icons.accessible,
+                        size: 25.0,
+                      )
                     : Text(
                         data.text,
                         style: TextStyle(color: textColor),

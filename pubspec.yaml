@@ -34,7 +34,6 @@ dependencies:
   package_info: 0.4.0+18
   barcode_widget: 1.3.0
   qr_code_scanner: 0.0.13
-  font_awesome_flutter: 8.8.1
 
 dev_dependencies:
   flutter_test:
