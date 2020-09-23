@@ -1,4 +1,4 @@
-##UC San Diego - Experimental
+## UC San Diego - Experimental
 
 UC San Diego - Experimental is the rolling release of the UC San Diego Mobile app. This rolling release is for users interested in developing for, and experimenting with, the absolute latest version of the UC San Diego Mobile app.
 
@@ -98,8 +98,6 @@ git push origin newfeature
 
 
 #### Submitting
-With your feature branch updated, you are ready to push 
-
 Once you've committed and pushed your feature branch `newfeature` to GitHub, go to the page for your fork on GitHub, select branch 'newfeature' and click the 'New pull request' button.
 
 If you need to make future updates to your pull request, push the updates to your feature branch `newfeature` on GitHub. Your pull request will automatically track the changes on your feature branch and update.
