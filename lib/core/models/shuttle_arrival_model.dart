@@ -3,12 +3,10 @@ import 'dart:convert';
 
 List<ArrivingShuttle> getArrivingShuttles(String str) {
   var shuttles = json.decode(str);
-  print("shuttles");
   List<ArrivingShuttle> arrivingShuttles = List<ArrivingShuttle>();
   shuttles.forEach((shuttle) {
     arrivingShuttles.add(ArrivingShuttle.fromJson(shuttle));
   });
-  print(arrivingShuttles);
   return arrivingShuttles;
 }
 

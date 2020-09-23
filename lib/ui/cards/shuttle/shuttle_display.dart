@@ -16,6 +16,7 @@ class ShuttleDisplay extends StatelessWidget {
   ShuttleDisplay({
     Key key,
     @required this.stop,
+    @required this.arrivingShuttles
   }): super(key: key);
 
   final ShuttleStopModel stop;
@@ -26,8 +27,8 @@ class ShuttleDisplay extends StatelessWidget {
   Widget build(BuildContext context) {
     print("Building ${stop.name}");
 
-    ShuttleDataProvider _shuttleCardDataProvider = Provider.of<ShuttleDataProvider>(context);
-    arrivingShuttles = _shuttleCardDataProvider.arrivalsToRender;
+    //ShuttleDataProvider _shuttleCardDataProvider = Provider.of<ShuttleDataProvider>(context);
+    //arrivingShuttles = _shuttleCardDataProvider.arrivalsToRender;
 
     if (arrivingShuttles == null || arrivingShuttles.isEmpty) {
       return CircularProgressIndicator();
@@ -56,7 +57,7 @@ class ShuttleDisplay extends StatelessWidget {
               ),
             ],
           ),
-          
+
           buildArrivalData()
         ],
       );

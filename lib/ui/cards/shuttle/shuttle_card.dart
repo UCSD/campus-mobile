@@ -23,7 +23,6 @@ class ShuttleCard extends StatefulWidget {
 class _ShuttleCardState extends State<ShuttleCard> {
   ShuttleDataProvider _shuttleCardDataProvider = ShuttleDataProvider();
   PageController _controller = PageController();
-  int currentStopID = -1;
   List<ArrivingShuttle> arrivals;
 
   @override
@@ -42,19 +41,34 @@ class _ShuttleCardState extends State<ShuttleCard> {
       isLoading: _shuttleCardDataProvider.isLoading,
       titleText: CardTitleConstants.titleMap[cardId],
       errorText: _shuttleCardDataProvider.error,
-      child: () => buildShuttleCard(
-        _shuttleCardDataProvider.stopsToRender,
+      child: () => buildShuttleCard(_shuttleCardDataProvider.stopsToRender,
+        _shuttleCardDataProvider.arrivalsToRender
       ));
   }
 
 
-  Widget buildShuttleCard(List<ShuttleStopModel> stopsToRender) {
+  Widget buildShuttleCard(List<ShuttleStopModel> stopsToRender,
+      List<List<ArrivingShuttle>> arrivalsToRender) {
+
+    print(stopsToRender.length);
+    print(arrivalsToRender.length);
+
     List<Widget> renderList = List<Widget>();
-    for (ShuttleStopModel stop in stopsToRender) {
-      if (stop != null) {
-        renderList.add(ShuttleDisplay(stop: stop));
-      }
+    for (int i = 0; i < arrivalsToRender.length; i++) {
+        renderList.add(ShuttleDisplay(stop: stopsToRender[i],
+          arrivingShuttles: arrivalsToRender[i]));
     }
+
+    // Initialize first shuttle display with arrival information
+    if (renderList == null || renderList.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 42.0),
+        child: Text('No finals found.'),
+      );
+    }
+
+
+    //_shuttleCardDataProvider.fetchArrivalInformation(stopsToRender[0]);
 
     return Column(
       children: <Widget>[
@@ -63,7 +77,7 @@ class _ShuttleCardState extends State<ShuttleCard> {
             controller: _controller,
             children: renderList,
             onPageChanged: (index) async {
-              await _shuttleCardDataProvider.fetchArrivalInformation(stopsToRender[index]);
+              //await _shuttleCardDataProvider.fetchArrivalInformation(stopsToRender[index]);
               print(index);
             },
           ),

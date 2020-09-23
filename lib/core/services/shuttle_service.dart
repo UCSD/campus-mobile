@@ -10,7 +10,7 @@ class ShuttleService {
   String _error;
   ShuttleModel _shuttleModel = ShuttleModel();
   List<ShuttleModel> _data = List<ShuttleModel>();
-  UserDataProvider userDataProvider;
+  UserDataProvider _userDataProvider;
   /// add state related things for view model here
   /// add any type of data manipulation here so it can be accessed via provider
 
@@ -21,8 +21,6 @@ class ShuttleService {
   String arrivingEndpoint;
   final Map<String, String> headers = {
     "accept": "application/json",
-    "Authorization":
-    "Bearer "
   };
 
   Future<bool> fetchData() async {
@@ -35,7 +33,9 @@ class ShuttleService {
     try {
       /// fetch data
 //      String _response = await _networkHelper.authorizedFetch(endpoint, headers);
-      String _response = await _networkHelper.fetchData("https://api.jsonbin.io/b/5f6101a07243cd7e823cd3d9");
+      //String _response = await _networkHelper.fetchData("https://api.jsonbin.io/b/5f6101a07243cd7e823cd3d9");
+      String _response = await _networkHelper.fetchData("https://3aibfzk3na.execute-api.us-west-2.amazonaws.com/qa?variant=stops-with-routes");
+
       /// parse data
 //      var data = shuttleModelFromJson(_response);
       var data = _shuttleModel.getListOfShuttles(_response);
@@ -61,8 +61,11 @@ class ShuttleService {
     _isLoading = true;
     try {
       /// fetch data
-      arrivingEndpoint = "https://api.jsonbin.io/b/5f63b30265b18913fc4e0776";
+      arrivingEndpoint = "https://api.jsonbin.io/b/5f6bc8237243cd7e82425eca";
+      //arrivingEndpoint = "https://api-qa.ucsd.edu:8243/shuttles/v1.0.0/stops/${stopId}/arrivals";
+
       String _response = await _networkHelper.fetchData(arrivingEndpoint);
+      //String _response = await _networkHelper.authorizedFetch(arrivingEndpoint, headers);
       /// parse data
       final arrivingData = getArrivingShuttles(_response);
       _isLoading = false;
@@ -70,12 +73,14 @@ class ShuttleService {
     } catch (e) {
       /// if the authorized fetch failed we know we have to refresh the
       /// token for this service
-//      if (e.response != null && e.response.statusCode == 401) {
-//        if (await getNewToken()) {
-//          return await getArrivingInformation(stopId);
-//        }
-//      }
-//      _error = e.toString();
+      /*print("Response: ${e.response}");
+      print("Headers: $headers");
+      if (e.response != null && e.response.statusCode == 401) {
+        if (await getNewToken()) {
+          return await getArrivingInformation(stopId);
+        }
+      }*/
+      _error = e.toString();
       _isLoading = false;
     }
   }
@@ -84,8 +89,9 @@ class ShuttleService {
     final String tokenEndpoint = "https://api-qa.ucsd.edu:8243/token";
     final Map<String, String> tokenHeaders = {
       "content-type": 'application/x-www-form-urlencoded',
-      "Authorization": "Basic WUNaMXlLTW9wMjNxcGtvUFQ1aDYzdHB5bm9rYTpQNnFCbWNIRFc5azNJME56S3hHSm5QTTQzV0lh"
+      "Authorization": "Basic djJlNEpYa0NJUHZ5akFWT0VRXzRqZmZUdDkwYTp2emNBZGFzZWpmaWZiUDc2VUJjNDNNVDExclVh"
     };
+    print("Getting new token");
     try {
       var response = await _networkHelper.authorizedPost(
           tokenEndpoint, tokenHeaders, "grant_type=client_credentials");

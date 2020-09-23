@@ -31,7 +31,7 @@ class ShuttleDataProvider extends ChangeNotifier {
   double stopLong;
   double closestDistance = 10000000;
   List<ShuttleStopModel> stopsToRender;
-  List<ArrivingShuttle> arrivalsToRender;
+  List<List<ArrivingShuttle>> arrivalsToRender;
   LocationDataProvider _locationDataProvider;
 
   init() {
@@ -44,7 +44,7 @@ class ShuttleDataProvider extends ChangeNotifier {
       userLong = event.lon;
     });
     stopsToRender = List<ShuttleStopModel>();
-    arrivalsToRender = List<ArrivingShuttle>();
+    arrivalsToRender = List<List<ArrivingShuttle>>();
   }
 
   void fetchStops() async {
@@ -52,6 +52,7 @@ class ShuttleDataProvider extends ChangeNotifier {
     _error = null;
     notifyListeners();
 
+    stopsToRender.clear();
 
     await _shuttleService.fetchData();
     // create new map of shuttles/stops to display
@@ -64,7 +65,13 @@ class ShuttleDataProvider extends ChangeNotifier {
     print("user longitude: " + userLat.toString());
     print("CLOSEST STOP: " + closestStop.id.toString());
 
-    getUserStops();
+    //getUserStops();
+    //stopsToRender = stopsToRender.take(3);
+    // for debug purposes, we will only have 3 cards
+    // later on, this will be replaced
+    for (int i = 0; i < 3; i++) {
+      arrivalsToRender.add(await fetchArrivalInformation(stopsToRender[i]));
+    }
 
     // get information about stops in list
     //await getStopInformation();
@@ -79,10 +86,9 @@ class ShuttleDataProvider extends ChangeNotifier {
     // need to add stops to the list of stops
   }
 
-  Future<void> fetchArrivalInformation(ShuttleStopModel stop) async {
-    print("stops to render length: "+ stopsToRender.length.toString());
-    arrivalsToRender = await _shuttleService.getArrivingInformation(stop.id);
-    notifyListeners();
+  Future<List<ArrivingShuttle>> fetchArrivalInformation(ShuttleStopModel stop) async {
+    return await _shuttleService.getArrivingInformation(stop.id);
+    //notifyListeners();
   }
 
   Future<void> calculateClosestStop() async {
