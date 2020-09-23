@@ -95,7 +95,7 @@ class UserProfileModel extends HiveObject {
             ? null
             : Map.from(selectedParkingLots
                 .map((x, y) => MapEntry<String, bool>(x, y))),
-        "selectedParkingspots": selectedParkingSpots == null
+        "selectedParkingSpots": selectedParkingSpots == null
             ? null
             : Map.from(selectedParkingSpots
                 .map((x, y) => MapEntry<String, bool>(x, y))),
