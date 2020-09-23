@@ -75,8 +75,6 @@ class _ParkingCardState extends State<ParkingCard> {
           controller: _controller,
           itemCount: selectedLotsViews.length,
           onPageSelected: (int index) {
-            _controller.animateToPage(index,
-                duration: Duration(seconds: 1), curve: Curves.ease);
           },
         ),
       ],
