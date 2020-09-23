@@ -49,21 +49,10 @@ class _ShuttleCardState extends State<ShuttleCard> {
 
 
   Widget buildShuttleCard(List<ShuttleStopModel> stopsToRender) {
-//    print(_shuttleCardDataProvider.stopsToRender);
-
-
     List<Widget> renderList = List<Widget>();
     for (ShuttleStopModel stop in stopsToRender) {
       if (stop != null) {
-        ShuttleDisplay stopPage;
-
-        if (stop.id == currentStopID) {
-          stopPage = ShuttleDisplay(stop: stop,
-              arrivingShuttles: arrivals);
-        } else {
-          stopPage = ShuttleDisplay(stop: stop);
-        }
-        renderList.add(stopPage);
+        renderList.add(ShuttleDisplay(stop: stop));
       }
     }
 
@@ -74,11 +63,8 @@ class _ShuttleCardState extends State<ShuttleCard> {
             controller: _controller,
             children: renderList,
             onPageChanged: (index) async {
-              await _shuttleCardDataProvider.getStopInformation(stopsToRender[index]);
-              arrivals = _shuttleCardDataProvider.arrivalsToRender;
-              setState(() {
-                currentStopID = stopsToRender[index].id;
-              });
+              await _shuttleCardDataProvider.fetchArrivalInformation(stopsToRender[index]);
+              print(index);
             },
           ),
         ),
@@ -91,13 +77,6 @@ class _ShuttleCardState extends State<ShuttleCard> {
           },*//*
         ),*/
       ],
-    );
-    return ListView.builder(
-        padding: const EdgeInsets.all(8),
-        itemCount: stopsToRender.length,
-        itemBuilder: (BuildContext context, int index) {
-          return Text("${stopsToRender[index].id} - ${stopsToRender[index].name}");
-        }
     );
   }
 }

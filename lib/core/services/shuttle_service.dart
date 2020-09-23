@@ -56,7 +56,7 @@ class ShuttleService {
     }
   }
 
-  Future<ArrivingShuttle> getArrivingInformation(stopId) async {
+  Future<List<ArrivingShuttle>> getArrivingInformation(stopId) async {
     _error = null;
     _isLoading = true;
     try {

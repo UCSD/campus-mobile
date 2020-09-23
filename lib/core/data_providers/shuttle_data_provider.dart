@@ -79,12 +79,9 @@ class ShuttleDataProvider extends ChangeNotifier {
     // need to add stops to the list of stops
   }
 
-  Future<ArrivingShuttle> getStopInformation(ShuttleStopModel stop) async {
+  Future<void> fetchArrivalInformation(ShuttleStopModel stop) async {
     print("stops to render length: "+ stopsToRender.length.toString());
-    arrivalsToRender.clear();
-    ArrivingShuttle arrivingShuttle = await _shuttleService.getArrivingInformation(stop.id);
-    arrivalsToRender.add(arrivingShuttle);
-    _isLoading = false;
+    arrivalsToRender = await _shuttleService.getArrivingInformation(stop.id);
     notifyListeners();
   }
 
