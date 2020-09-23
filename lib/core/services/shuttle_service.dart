@@ -61,11 +61,11 @@ class ShuttleService {
     _isLoading = true;
     try {
       /// fetch data
-      arrivingEndpoint = "https://api.jsonbin.io/b/5f6bc8237243cd7e82425eca";
-      //arrivingEndpoint = "https://api-qa.ucsd.edu:8243/shuttles/v1.0.0/stops/${stopId}/arrivals";
+      //arrivingEndpoint = "https://api.jsonbin.io/b/5f6bc8237243cd7e82425eca";
+      arrivingEndpoint = "https://api-qa.ucsd.edu:8243/shuttles/v1.0.0/stops/${stopId}/arrivals";
 
-      String _response = await _networkHelper.fetchData(arrivingEndpoint);
-      //String _response = await _networkHelper.authorizedFetch(arrivingEndpoint, headers);
+      //String _response = await _networkHelper.fetchData(arrivingEndpoint);
+      String _response = await _networkHelper.authorizedFetch(arrivingEndpoint, headers);
       /// parse data
       final arrivingData = getArrivingShuttles(_response);
       _isLoading = false;
@@ -73,13 +73,14 @@ class ShuttleService {
     } catch (e) {
       /// if the authorized fetch failed we know we have to refresh the
       /// token for this service
-      /*print("Response: ${e.response}");
+      print("Response: ${e.response}");
       print("Headers: $headers");
+      print("arrivingEndpoint: $arrivingEndpoint");
       if (e.response != null && e.response.statusCode == 401) {
         if (await getNewToken()) {
           return await getArrivingInformation(stopId);
         }
-      }*/
+      }
       _error = e.toString();
       _isLoading = false;
     }

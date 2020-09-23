@@ -31,6 +31,7 @@ class ShuttleDataProvider extends ChangeNotifier {
   double stopLong;
   double closestDistance = 10000000;
   List<ShuttleStopModel> stopsToRender;
+  Set<int> userStops;
   List<List<ArrivingShuttle>> arrivalsToRender;
   LocationDataProvider _locationDataProvider;
 
@@ -44,6 +45,10 @@ class ShuttleDataProvider extends ChangeNotifier {
       userLong = event.lon;
     });
     stopsToRender = List<ShuttleStopModel>();
+
+    // hardcoded for debugging purposes
+    userStops = {34893, 434353, 4348630};
+
     arrivalsToRender = List<List<ArrivingShuttle>>();
   }
 
@@ -66,10 +71,9 @@ class ShuttleDataProvider extends ChangeNotifier {
     print("CLOSEST STOP: " + closestStop.id.toString());
 
     //getUserStops();
-    //stopsToRender = stopsToRender.take(3);
     // for debug purposes, we will only have 3 cards
     // later on, this will be replaced
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < stopsToRender.length; i++) {
       arrivalsToRender.add(await fetchArrivalInformation(stopsToRender[i]));
     }
 
@@ -109,14 +113,13 @@ class ShuttleDataProvider extends ChangeNotifier {
         if(getHaversineDistance(userLat, userLong, stopLat, stopLong) < closestDistance) {
             closestDistance = getHaversineDistance(userLat, userLong, stopLat, stopLong);
             closestStop = shuttleStop;
-            stopsToRender.insert(0, closestStop);
-        } else {
+        } else if (userStops.contains(shuttleStop.id)){
           stopsToRender.add(shuttleStop);
         }
       }
     }
     print(closestStop.id);
-    //stopsToRender.insert(0,closestStop);
+    stopsToRender.insert(0,closestStop);
   }
 
   List<ShuttleModel> getAllActiveStops() {
