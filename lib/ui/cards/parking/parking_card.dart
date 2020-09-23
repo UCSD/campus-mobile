@@ -2,13 +2,14 @@ import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/parking_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/parking_model.dart';
-import 'package:campus_mobile_experimental/ui/cards/parking/parking_display.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 const String cardId = 'parking';
+const _url = "https://mobile.ucsd.edu/replatform/v1/qa/webview/parking/";
 
 class ParkingCard extends StatefulWidget {
   @override
@@ -29,9 +30,9 @@ class _ParkingCardState extends State<ParkingCard> {
     return CardContainer(
       titleText: CardTitleConstants.titleMap[cardId],
       isLoading: _parkingDataProvider.isLoading,
-      reload: () => _parkingDataProvider.fetchParkingLots(),
+      reload: () => {_parkingDataProvider.fetchParkingData()},
       errorText: _parkingDataProvider.error,
-      child: () => buildParkingCard(_parkingDataProvider.parkingModels),
+      child: () => buildParkingCard(),
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
@@ -39,25 +40,40 @@ class _ParkingCardState extends State<ParkingCard> {
     );
   }
 
-  Widget buildParkingCard(List<ParkingModel> data) {
-    List<Widget> parkingDisplays = List<Widget>();
-    for (ParkingModel model in data) {
+  Widget buildParkingCard() {
+    List<WebView> selectedLotsViews = [];
+    List<String> selectedSpots = [];
+
+    _parkingDataProvider.spotTypesState.forEach((key, value) {
+      if (value) {
+        selectedSpots.add(key);
+      }
+    });
+
+    for (ParkingModel model in _parkingDataProvider.parkingModels) {
       if (model != null) {
-        parkingDisplays.add(ParkingDisplay(model: model));
+        if (_parkingDataProvider.parkingViewState[model.locationName]) {
+          final url = makeUrl(model.locationId, selectedSpots);
+          selectedLotsViews.add(WebView(
+            initialUrl: url,
+            javascriptMode: JavascriptMode.unrestricted,
+            onWebViewCreated: (controller) {},
+            onPageFinished: (some) async {},
+          ));
+        }
       }
     }
 
     return Column(
       children: <Widget>[
         Flexible(
-          child: PageView(
-            controller: _controller,
-            children: parkingDisplays,
-          ),
-        ),
+            child: PageView(
+          controller: _controller,
+          children: selectedLotsViews,
+        )),
         DotsIndicator(
           controller: _controller,
-          itemCount: parkingDisplays.length,
+          itemCount: selectedLotsViews.length,
           onPageSelected: (int index) {
             _controller.animateToPage(index,
                 duration: Duration(seconds: 1), curve: Curves.ease);
@@ -67,14 +83,38 @@ class _ParkingCardState extends State<ParkingCard> {
     );
   }
 
+  String makeUrl(String lotId, List<String> selectedSpots) {
+    var spotTypesQueryString = '';
+
+    selectedSpots.forEach(
+        (spot) => {spotTypesQueryString = '$spotTypesQueryString$spot,'});
+
+    if (spotTypesQueryString != '')
+      spotTypesQueryString = '&spots=$spotTypesQueryString';
+
+    var lotQueryString = 'lot=$lotId';
+
+    var url = '$_url?$lotQueryString$spotTypesQueryString';
+
+    return url;
+  }
+
   List<Widget> buildActionButtons() {
     List<Widget> actionButtons = List<Widget>();
     actionButtons.add(FlatButton(
       child: Text(
-        'View All',
+        'Manage Lots',
       ),
       onPressed: () {
         Navigator.pushNamed(context, RoutePaths.ManageParkingView);
+      },
+    ));
+    actionButtons.add(FlatButton(
+      child: Text(
+        'Manage Spots',
+      ),
+      onPressed: () {
+        Navigator.pushNamed(context, RoutePaths.SpotTypesView);
       },
     ));
     return actionButtons;
