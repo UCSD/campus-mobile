@@ -37,7 +37,9 @@ dependencies:
   barcode_scan: 3.0.1
   background_fetch: 0.6.0
   flutter_blue:
-    git: git://github.com/UCSD/flutter_blue.git
+    git:
+      url: https://github.com/UCSD/flutter_blue.git
+      ref: master
   beacon_broadcast: 0.2.1
   uuid: 2.2.0
 
