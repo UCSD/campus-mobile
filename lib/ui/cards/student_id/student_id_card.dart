@@ -161,12 +161,12 @@ class _StudentIdCardState extends State<StudentIdCard> {
                     padding: new EdgeInsets.only(
                         right: ScalingUtility.horizontalSafeBlock * cardMargin),
                     child: Text(
-                      profileModel.ugPrimaryMajorCurrent == ""
+                      profileModel.graduatePrimaryMajorCurrent != ""
                           ? profileModel.graduatePrimaryMajorCurrent
                           : profileModel.ugPrimaryMajorCurrent,
                       style: TextStyle(
                           fontSize: getFontSize(
-                              profileModel.ugPrimaryMajorCurrent == ""
+                              profileModel.graduatePrimaryMajorCurrent != ""
                                   ? profileModel.graduatePrimaryMajorCurrent
                                   : profileModel.ugPrimaryMajorCurrent,
                               "major")),
@@ -288,12 +288,12 @@ class _StudentIdCardState extends State<StudentIdCard> {
                 Container(
                   padding: new EdgeInsets.only(right: cardMargin),
                   child: Text(
-                    profileModel.ugPrimaryMajorCurrent == ""
+                    profileModel.graduatePrimaryMajorCurrent != ""
                         ? profileModel.graduatePrimaryMajorCurrent
                         : profileModel.ugPrimaryMajorCurrent,
                     style: TextStyle(
                         fontSize: TabletFontSize(
-                            profileModel.ugPrimaryMajorCurrent == ""
+                            profileModel.graduatePrimaryMajorCurrent != ""
                                 ? profileModel.graduatePrimaryMajorCurrent
                                 : profileModel.ugPrimaryMajorCurrent,
                             "major")),
