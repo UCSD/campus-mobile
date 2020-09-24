@@ -339,9 +339,9 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: HEAD
-      resolved-ref: "36a38d5b8814c3b25d9c8034b37c18bbcc92fe2b"
-      url: "git://github.com/UCSD/flutter_blue.git"
+      ref: master
+      resolved-ref: "9b39bc2da969cce3c1c3f50c3e1882059b7bfbcb"
+      url: "https://github.com/UCSD/flutter_blue.git"
     source: git
     version: "0.7.2"
   flutter_cache_manager:
