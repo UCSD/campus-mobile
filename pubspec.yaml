@@ -52,3 +52,6 @@ flutter:
   assets:
     - assets/images/
     - assets/public_key.txt
+
+dependency_overrides:
+  analyzer: 0.39.11
