@@ -195,15 +195,6 @@ List<SingleChildWidget> dependentServices = [
     print("USER DATA SET");
     return proximityAwarenessSingleton;
   }),
-  ChangeNotifierProxyProvider<UserDataProvider, ParkingDataProvider>(
-      create: (_) {
-    var parkingDataProvider = ParkingDataProvider();
-    parkingDataProvider.fetchParkingLots();
-    return parkingDataProvider;
-  }, update: (_, userDataProvider, parkingDataProvider) {
-    parkingDataProvider.userDataProvider = userDataProvider;
-    return parkingDataProvider;
-  }),
   ChangeNotifierProxyProvider<UserDataProvider, StudentIdDataProvider>(
       create: (_) {
     var studentIdDataProvider = StudentIdDataProvider();
@@ -226,6 +217,15 @@ List<SingleChildWidget> dependentServices = [
   }, update: (_, userDataProvider, availabilityDataProvider) {
     availabilityDataProvider.userDataProvider = userDataProvider;
     return availabilityDataProvider;
+  }),
+  ChangeNotifierProxyProvider<UserDataProvider, ParkingDataProvider>(
+      create: (_) {
+    var parkingDataProvider = ParkingDataProvider();
+    return parkingDataProvider;
+  }, update: (_, userDataProvider, parkingDataProvider) {
+    parkingDataProvider.userDataProvider = userDataProvider;
+    parkingDataProvider.fetchParkingData();
+    return parkingDataProvider;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, MessagesDataProvider>(
     create: (_) {
