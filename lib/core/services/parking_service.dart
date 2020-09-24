@@ -15,7 +15,7 @@ class ParkingService {
   };
 
   final String endpoint =
-      "https://parking-spot-types.s3-us-west-2.amazonaws.com/parking_lots.json";
+      "https://mobile.ucsd.edu/replatform/v1/qa/webview/parking/parking_lots.json";
 
   Future<bool> fetchParkingLotData() async {
     _error = null;
