@@ -162,13 +162,13 @@ class _StudentIdCardState extends State<StudentIdCard> {
                         right: ScalingUtility.horizontalSafeBlock * cardMargin),
                     child: Text(
                       profileModel.ugPrimaryMajorCurrent == ""
-                          ? profileModel.ugPrimaryMajorCurrent
-                          : profileModel.graduatePrimaryMajorCurrent,
+                          ? profileModel.graduatePrimaryMajorCurrent
+                          : profileModel.ugPrimaryMajorCurrent,
                       style: TextStyle(
                           fontSize: getFontSize(
                               profileModel.ugPrimaryMajorCurrent == ""
-                                  ? profileModel.ugPrimaryMajorCurrent
-                                  : profileModel.graduatePrimaryMajorCurrent,
+                                  ? profileModel.graduatePrimaryMajorCurrent
+                                  : profileModel.ugPrimaryMajorCurrent,
                               "major")),
                       textAlign: TextAlign.left,
                       softWrap: false,
@@ -289,13 +289,13 @@ class _StudentIdCardState extends State<StudentIdCard> {
                   padding: new EdgeInsets.only(right: cardMargin),
                   child: Text(
                     profileModel.ugPrimaryMajorCurrent == ""
-                        ? profileModel.ugPrimaryMajorCurrent
-                        : profileModel.graduatePrimaryMajorCurrent,
+                        ? profileModel.graduatePrimaryMajorCurrent
+                        : profileModel.ugPrimaryMajorCurrent,
                     style: TextStyle(
                         fontSize: TabletFontSize(
                             profileModel.ugPrimaryMajorCurrent == ""
-                                ? profileModel.ugPrimaryMajorCurrent
-                                : profileModel.graduatePrimaryMajorCurrent,
+                                ? profileModel.graduatePrimaryMajorCurrent
+                                : profileModel.ugPrimaryMajorCurrent,
                             "major")),
                     textAlign: TextAlign.left,
                     softWrap: false,
