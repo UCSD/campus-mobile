@@ -1,9 +1,22 @@
 import 'dart:convert';
 import 'dart:core';
 
-List<ShuttleStopModel> shuttleStopModelFromJson(String str) =>
-    List<ShuttleStopModel>.from(
-        json.decode(str));
+List<ShuttleStopModel> shuttleStopModelFromJson(String str) {
+  Map<String, dynamic> list = json.decode(str);
+  List<ShuttleStopModel> ret = List<ShuttleStopModel>();
+  list.forEach((key, value){
+    ret.add(
+        ShuttleStopModel(
+            lat: value["lat"] == null ? null : value["lat"].toDouble(),
+            lon: value["lon"] == null ? null : value["lon"].toDouble(),
+            id: value["id"] == null ? null : value["id"],
+            name: value["name"] == null ? null : value["name"],
+            stopCode: value["stopCode"] == null ? null : value["stopCode"],
+            rtpiNumber : value["rtpiNumber"] == null ? null : value["rtpiNumber"]
+        ));
+  });
+  return ret;
+}
 
 String shuttleStopModelToJson(List<ShuttleStopModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));

@@ -47,7 +47,7 @@ class ShuttleDataProvider extends ChangeNotifier {
     stopsToRender = List<ShuttleStopModel>();
 
     // hardcoded for debugging purposes
-    userStops = {34893, 434353, 4348630};
+    userStops = {34893, 434353, 4348634};
 
     arrivalsToRender = List<List<ArrivingShuttle>>();
   }
@@ -63,6 +63,8 @@ class ShuttleDataProvider extends ChangeNotifier {
     // create new map of shuttles/stops to display
     print("after fetch");
 
+    getUserStops();
+
     // get closest stop to current user
     await calculateClosestStop();
 
@@ -70,7 +72,7 @@ class ShuttleDataProvider extends ChangeNotifier {
     print("user longitude: " + userLat.toString());
     print("CLOSEST STOP: " + closestStop.id.toString());
 
-    //getUserStops();
+
     // for debug purposes, we will only have 3 cards
     // later on, this will be replaced
     for (int i = 0; i < stopsToRender.length; i++) {
@@ -101,28 +103,25 @@ class ShuttleDataProvider extends ChangeNotifier {
       userLat = value.latitude;
       userLong = value.longitude;
     });
-    print("user lat:" + userLat.toString());
-    print("user long: " + userLong.toString());
-    print("latitude: " + _shuttleService.data[0].stops[0].lat.toString());
-    for(ShuttleModel model in _shuttleService.data) {
-      List<ShuttleStopModel> stops = model.stops;
-      for(ShuttleStopModel shuttleStop in stops) {
-        stopLat = shuttleStop.lat;
-        stopLong = shuttleStop.lon;
 
-        if(getHaversineDistance(userLat, userLong, stopLat, stopLong) < closestDistance) {
-            closestDistance = getHaversineDistance(userLat, userLong, stopLat, stopLong);
-            closestStop = shuttleStop;
-        } else if (userStops.contains(shuttleStop.id)){
-          stopsToRender.add(shuttleStop);
-        }
+    print("Data - ${_shuttleService.data}");
+
+    for(ShuttleStopModel shuttleStop in _shuttleService.data) {
+      stopLat = shuttleStop.lat;
+      stopLong = shuttleStop.lon;
+
+      if(getHaversineDistance(userLat, userLong, stopLat, stopLong) < closestDistance) {
+          closestDistance = getHaversineDistance(userLat, userLong, stopLat, stopLong);
+          closestStop = shuttleStop;
+      } else if (userStops.contains(shuttleStop.id)){
+        stopsToRender.add(shuttleStop);
       }
     }
     print(closestStop.id);
     stopsToRender.insert(0,closestStop);
   }
 
-  List<ShuttleModel> getAllActiveStops() {
+  List<ShuttleStopModel> getAllActiveStops() {
     return _shuttleService.data;
   }
 

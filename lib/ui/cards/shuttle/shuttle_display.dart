@@ -30,7 +30,7 @@ class ShuttleDisplay extends StatelessWidget {
     //ShuttleDataProvider _shuttleCardDataProvider = Provider.of<ShuttleDataProvider>(context);
     //arrivingShuttles = _shuttleCardDataProvider.arrivalsToRender;
 
-    if (arrivingShuttles == null || arrivingShuttles.isEmpty) {
+    if (arrivingShuttles == null) {
       return CircularProgressIndicator();
     }
     else {
@@ -38,13 +38,7 @@ class ShuttleDisplay extends StatelessWidget {
         children: [
           buildInfoRow(),
 
-          Text(arrivingShuttles[0].route.name,
-            style: TextStyle(
-                fontSize: 16
-            ),
-          ),
-
-          buildTimetoArrivalText(),
+          buildNextArrival(),
           Divider(),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -59,6 +53,28 @@ class ShuttleDisplay extends StatelessWidget {
           ),
 
           buildArrivalData()
+        ],
+      );
+    }
+  }
+
+  Widget buildNextArrival() {
+    if (arrivingShuttles.isEmpty || arrivingShuttles == null) {
+      return Text("No shuttles arriving to this stop",
+        style: TextStyle(
+            color: Colors.grey,
+            fontSize: 24
+        ),
+      );
+    } else {
+      return Column(
+        children: [
+          Text(arrivingShuttles[0].route.name,
+            style: TextStyle(
+                fontSize: 16
+            ),
+          ),
+          buildTimetoArrivalText()
         ],
       );
     }
@@ -84,7 +100,7 @@ class ShuttleDisplay extends StatelessWidget {
             minRadius: 40,
             backgroundColor: Colors.pinkAccent,
             foregroundColor: Colors.black,
-            child: Text(arrivingShuttles[0].route.name[0],
+            child: Text("S",/*arrivingShuttles[0].route.name[0],*/
               style: TextStyle(fontSize: 50),
             ),
           ),
