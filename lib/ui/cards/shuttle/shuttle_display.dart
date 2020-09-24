@@ -43,10 +43,13 @@ class ShuttleDisplay extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Text("Next Arrivals",
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                    fontSize: 24
+              Padding(
+                padding: const EdgeInsets.only(left: 16.0),
+                child: Text("Next Arrivals",
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                      fontSize: 24
+                  ),
                 ),
               ),
             ],

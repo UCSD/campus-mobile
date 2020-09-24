@@ -82,14 +82,14 @@ class _ShuttleCardState extends State<ShuttleCard> {
             },
           ),
         ),
-        /*DotsIndicator(
+        DotsIndicator(
           controller: _controller,
           itemCount: renderList.length,
           onPageSelected: (int index) {
             _controller.animateToPage(index,
                 duration: Duration(seconds: 1), curve: Curves.ease);
-          },*//*
-        ),*/
+          },
+        ),
       ],
     );
   }
