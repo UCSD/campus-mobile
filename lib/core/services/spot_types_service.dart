@@ -1,6 +1,5 @@
 import 'package:campus_mobile_experimental/core/models/spot_types_model.dart';
 import 'package:campus_mobile_experimental/core/services/networking.dart';
-import 'dart:convert';
 
 class SpotTypesService {
   SpotTypesService() {
@@ -17,7 +16,7 @@ class SpotTypesService {
   SpotTypeModel _spotTypeModel = SpotTypeModel();
 
   final String endpoint =
-      "https://cqeg04fl07.execute-api.us-west-2.amazonaws.com/spot-types";
+      "https://mobile.ucsd.edu/replatform/v1/qa/webview/parking/spot_types.json";
   Future<bool> fetchSpotTypesData() async {
     _error = null;
     _isLoading = true;
@@ -25,6 +24,7 @@ class SpotTypesService {
       /// fetch data
       String _response = await _networkHelper.fetchData(endpoint);
       _spotTypeModel = spotTypeModelFromJson(_response);
+
       _isLoading = false;
       return true;
     } catch (e) {
