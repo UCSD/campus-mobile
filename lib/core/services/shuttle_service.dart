@@ -35,7 +35,8 @@ class ShuttleService {
       /// fetch data
 //      String _response = await _networkHelper.authorizedFetch(endpoint, headers);
       //String _response = await _networkHelper.fetchData("https://api.jsonbin.io/b/5f6101a07243cd7e823cd3d9");
-      String _response = await _networkHelper.fetchData("https://3aibfzk3na.execute-api.us-west-2.amazonaws.com/qa?variant=no-routes");
+      // String _response = await _networkHelper.fetchData("https://3aibfzk3na.execute-api.us-west-2.amazonaws.com/qa?variant=no-routes");
+      String _response = await _networkHelper.fetchData("https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/shuttle_stops_master_map_no_routes.json");
 
       /// parse data
 //      var data = shuttleModelFromJson(_response);
@@ -63,7 +64,7 @@ class ShuttleService {
     try {
       /// fetch data
       //arrivingEndpoint = "https://api.jsonbin.io/b/5f6bc8237243cd7e82425eca";
-      arrivingEndpoint = "https://api-qa.ucsd.edu:8243/shuttles/v1.0.0/stops/${stopId}/arrivals";
+      arrivingEndpoint = "https://api-qa.ucsd.edu:8243/shuttles/v1.0.0/stops/$stopId/arrivals";
 
       //String _response = await _networkHelper.fetchData(arrivingEndpoint);
       String _response = await _networkHelper.authorizedFetch(arrivingEndpoint, headers);

@@ -3,6 +3,7 @@ import 'package:campus_mobile_experimental/core/data_providers/cards_data_provid
 import 'package:campus_mobile_experimental/core/data_providers/shuttle_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_arrival_model.dart';
+import 'package:campus_mobile_experimental/core/models/shuttle_model.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_stop_model.dart';
 import 'package:campus_mobile_experimental/core/services/bottom_navigation_bar_service.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
@@ -48,7 +49,7 @@ class ShuttleDisplay extends StatelessWidget {
                 child: Text("Next Arrivals",
                   textAlign: TextAlign.left,
                   style: TextStyle(
-                      fontSize: 24
+                      fontSize: 20
                   ),
                 ),
               ),
@@ -63,10 +64,10 @@ class ShuttleDisplay extends StatelessWidget {
 
   Widget buildNextArrival() {
     if (arrivingShuttles.isEmpty || arrivingShuttles == null) {
-      return Text("No shuttles arriving to this stop",
+      return Text("No arrivals found.",
         style: TextStyle(
             color: Colors.grey,
-            fontSize: 24
+            fontSize: 20
         ),
       );
     } else {
@@ -88,7 +89,7 @@ class ShuttleDisplay extends StatelessWidget {
     return Text("Arriving in: $minutesToArrival minutes",
       style: TextStyle(
         color: Colors.grey,
-        fontSize: 24
+        fontSize: 20
       ),
     );
   }
@@ -101,7 +102,7 @@ class ShuttleDisplay extends StatelessWidget {
         children: [
           CircleAvatar(
             minRadius: 40,
-            backgroundColor: Colors.pinkAccent,
+            backgroundColor: Colors.pinkAccent/*Color(HexColor.getColorFromHex(arrivingShuttles[0].pattern.color))*/,
             foregroundColor: Colors.black,
             child: Text("S",/*arrivingShuttles[0].route.name[0],*/
               style: TextStyle(fontSize: 50),
