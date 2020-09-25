@@ -36,7 +36,6 @@ class ShuttleService {
 //      String _response = await _networkHelper.authorizedFetch(endpoint, headers);
       //String _response = await _networkHelper.fetchData("https://api.jsonbin.io/b/5f6101a07243cd7e823cd3d9");
       String _response = await _networkHelper.fetchData("https://3aibfzk3na.execute-api.us-west-2.amazonaws.com/qa?variant=no-routes");
-      print("response" + _response);
 
       /// parse data
 //      var data = shuttleModelFromJson(_response);
@@ -45,7 +44,6 @@ class ShuttleService {
       _isLoading = false;
       return true;
     } catch (e) {
-      print(e.toString());
       /// if the authorized fetch failed we know we have to refresh the
       /// token for this service
 //      if (e.response != null && e.response.statusCode == 401) {

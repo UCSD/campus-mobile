@@ -30,26 +30,24 @@ class ShuttleDataProvider extends ChangeNotifier {
   double stopLat;
   double stopLong;
   double closestDistance = 10000000;
-  List<ShuttleStopModel> stopsToRender;
+  Map<int, ShuttleStopModel> _fetchedStops;
   Set<int> userStops;
-  List<List<ArrivingShuttle>> arrivalsToRender;
+  Map<int, List<ArrivingShuttle>> arrivalsToRender;
   LocationDataProvider _locationDataProvider;
 
   init() {
     _locationDataProvider = LocationDataProvider();
-    userDataProvider = UserDataProvider();
     _shuttleService = ShuttleService();
     location = Location();
     _locationDataProvider.locationStream.listen((event) {
       userLat = event.lat;
       userLong = event.lon;
     });
-    stopsToRender = List<ShuttleStopModel>();
 
     // hardcoded for debugging purposes
     userStops = {34893, 434353, 4348634};
 
-    arrivalsToRender = List<List<ArrivingShuttle>>();
+    arrivalsToRender = Map<int, List<ArrivingShuttle>>();
   }
 
   void fetchStops() async {
@@ -57,28 +55,33 @@ class ShuttleDataProvider extends ChangeNotifier {
     _error = null;
     notifyListeners();
 
-    stopsToRender.clear();
-
-    await _shuttleService.fetchData();
     // create new map of shuttles/stops to display
-    print("after fetch");
+    Map<int, ShuttleStopModel> newMapOfStops = Map<int, ShuttleStopModel>();
+    if (await _shuttleService.fetchData()) {
+      for (ShuttleStopModel model in _shuttleService.data) {
+        newMapOfStops[model.id] = model;
+      }
+      _fetchedStops = newMapOfStops;
 
-    getUserStops();
+      /// if the user is logged in we want to sync the order of parking lots amongst all devices
+      if (userDataProvider != null) {
+        print("user logged in");
+        reorderStops(userDataProvider.userProfileModel.selectedStops);
+      }
+      //getUserStops();
 
-    // get closest stop to current user
-    await calculateClosestStop();
+      // get closest stop to current user
+      await calculateClosestStop();
 
-    print("user latitude: " + userLat.toString());
-    print("user longitude: " + userLat.toString());
-    print("CLOSEST STOP: " + closestStop.id.toString());
+      print("user latitude: " + userLat.toString());
+      print("user longitude: " + userLat.toString());
+      print("CLOSEST STOP: " + closestStop.id.toString());
 
 
-    // for debug purposes, we will only have 3 cards
-    // later on, this will be replaced
-    for (int i = 0; i < stopsToRender.length; i++) {
-      arrivalsToRender.add(await fetchArrivalInformation(stopsToRender[i]));
+      // for debug purposes, we will only have 3 cards
+      // later on, this will be replaced
+      await getArrivalInformation();
     }
-
     // get information about stops in list
     //await getStopInformation();
 
@@ -90,6 +93,25 @@ class ShuttleDataProvider extends ChangeNotifier {
     // need to get stops from user in this method
 
     // need to add stops to the list of stops
+  }
+
+  void reorderStops(List<int> order) {
+    ///edit the profile and upload user selected lots
+    print("reordering lists");
+    userDataProvider.userProfileModel.selectedStops = order;
+    userDataProvider.postUserProfile(userDataProvider.userProfileModel);
+    notifyListeners();
+  }
+
+  Future<void> addStop(int stopID) async {
+    print(stopID);
+    if (!userDataProvider.userProfileModel.selectedStops
+        .contains(stopID)) {
+      userDataProvider.userProfileModel.selectedStops.add(stopID);
+      print("UDP - ${userDataProvider.userProfileModel.selectedStops}");
+      await getArrivalInformation();
+      notifyListeners();
+    }
   }
 
   Future<List<ArrivingShuttle>> fetchArrivalInformation(ShuttleStopModel stop) async {
@@ -104,25 +126,16 @@ class ShuttleDataProvider extends ChangeNotifier {
       userLong = value.longitude;
     });
 
-    print("Data - ${_shuttleService.data}");
-
     for(ShuttleStopModel shuttleStop in _shuttleService.data) {
       stopLat = shuttleStop.lat;
       stopLong = shuttleStop.lon;
 
       if(getHaversineDistance(userLat, userLong, stopLat, stopLong) < closestDistance) {
-          closestDistance = getHaversineDistance(userLat, userLong, stopLat, stopLong);
-          closestStop = shuttleStop;
-      } else if (userStops.contains(shuttleStop.id)){
-        stopsToRender.add(shuttleStop);
+        closestDistance = getHaversineDistance(userLat, userLong, stopLat, stopLong);
+        closestStop = shuttleStop;
       }
     }
     print(closestStop.id);
-    stopsToRender.insert(0,closestStop);
-  }
-
-  List<ShuttleStopModel> getAllActiveStops() {
-    return _shuttleService.data;
   }
 
   double getHaversineDistance(lat1,lon1,lat2,lon2) {
@@ -168,9 +181,27 @@ class ShuttleDataProvider extends ChangeNotifier {
     }
   }
 
-
   bool get isLoading => _isLoading;
-
   String get error => _error;
+
+  List<ShuttleStopModel> get stopsToRender {
+    List<ShuttleStopModel> output = List<ShuttleStopModel>();
+    if (_fetchedStops != null) {
+      if (userDataProvider.userProfileModel != null) {
+        for (int stopID in userDataProvider.userProfileModel.selectedStops) {
+          output.add(_fetchedStops[stopID]);
+        }
+      }
+      output.insert(0, closestStop);
+    }
+    print("stops - $output");
+    return output;
+  }
+
+  Future<void> getArrivalInformation() async {
+    for (ShuttleStopModel stop in stopsToRender) {
+      arrivalsToRender[stop.id] = await fetchArrivalInformation(stop);
+    }
+  }
 }
 

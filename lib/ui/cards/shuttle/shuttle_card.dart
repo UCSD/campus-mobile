@@ -23,6 +23,7 @@ class ShuttleCard extends StatefulWidget {
 class _ShuttleCardState extends State<ShuttleCard> {
   ShuttleDataProvider _shuttleCardDataProvider = ShuttleDataProvider();
   PageController _controller = PageController();
+  TextEditingController _textEditingController = TextEditingController();
   List<ArrivingShuttle> arrivals;
 
   @override
@@ -48,22 +49,22 @@ class _ShuttleCardState extends State<ShuttleCard> {
 
 
   Widget buildShuttleCard(List<ShuttleStopModel> stopsToRender,
-      List<List<ArrivingShuttle>> arrivalsToRender) {
+      Map<int, List<ArrivingShuttle>> arrivalsToRender) {
 
-    print(stopsToRender.length);
-    print(arrivalsToRender.length);
+    print("Stops - ${stopsToRender.length}");
+    print("Arrivals - ${arrivalsToRender.length}");
 
     List<Widget> renderList = List<Widget>();
-    for (int i = 0; i < arrivalsToRender.length; i++) {
+    for (int i = 0; i < stopsToRender.length; i++) {
         renderList.add(ShuttleDisplay(stop: stopsToRender[i],
-          arrivingShuttles: arrivalsToRender[i]));
+          arrivingShuttles: arrivalsToRender[stopsToRender[i].id]));
     }
 
     // Initialize first shuttle display with arrival information
     if (renderList == null || renderList.isEmpty) {
       return Padding(
         padding: const EdgeInsets.only(bottom: 42.0),
-        child: Text('No finals found.'),
+        child: Text('No shuttles found.'),
       );
     }
 
@@ -80,6 +81,22 @@ class _ShuttleCardState extends State<ShuttleCard> {
               //await _shuttleCardDataProvider.fetchArrivalInformation(stopsToRender[index]);
               print(index);
             },
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border.all()
+            ),
+            child: TextField(
+              controller: _textEditingController,
+              onSubmitted: (String value) async {
+                await _shuttleCardDataProvider.addStop(int.parse(value));
+                _textEditingController.text = "";
+                setState(() {});
+              },
+            ),
           ),
         ),
         DotsIndicator(
