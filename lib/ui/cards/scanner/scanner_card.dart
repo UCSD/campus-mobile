@@ -59,7 +59,6 @@ class ScannerCard extends StatelessWidget {
       'https://mobile.ucsd.edu/replatform/v1/qa/webview/scanner-v2/index.html';
 
   UserDataProvider _userDataProvider;
-
   Widget buildActionButton(BuildContext context) {
     _userDataProvider = Provider.of<UserDataProvider>(context);
     return FlatButton(
