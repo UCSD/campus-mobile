@@ -634,10 +634,18 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
 
   // Start a background scan
   void _onBackgroundFetch(String taskID) async {
-    inBackground = true;
-    startScan();
-    BackgroundFetch.finish(taskID);
-  }
+
+    // Start a background scan
+      if(_storage.read(key: "lastBackgroundScan") == null){
+        inBackground = true;
+        startScan();
+        BackgroundFetch.finish(taskID);
+      }else if( DateTime.now().difference(DateTime.parse( _storage.read(key: "lastBackgroundScan") ?? DateTime(1990).toString())).inMinutes > 15){
+        inBackground = true;
+        startScan();
+        BackgroundFetch.finish(taskID);
+      }
+    }
   // Set background tasks
   void backgroundFetchSetUp() {
     // Configure BackgroundFetch.
