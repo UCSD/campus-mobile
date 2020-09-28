@@ -27,7 +27,7 @@ enum ScannedDevice {
 class ProximityAwarenessSingleton extends ChangeNotifier{
   bool inBackground = false;
   // Using secure storage for background scans
-  FlutterSecureStorage storageLog =  FlutterSecureStorage();
+  //FlutterSecureStorage storageLog =  FlutterSecureStorage();
 
   // Instance variable for starting beacon singleton
   BeaconSingleton beaconSingleton;
@@ -422,7 +422,6 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
 
   //Remove devices that are no longer scanned
   void removeNoncontinuousDevices() {
-    print("scanIntervalAllowance: $scanIntervalAllowance");
     scannedObjects.removeWhere((key, value) {
       bool isDeviceContinuous = checkDeviceDwellTime(value);
       if (!isDeviceContinuous &&
@@ -640,7 +639,7 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
         inBackground = true;
         startScan();
         BackgroundFetch.finish(taskID);
-      }else if( DateTime.now().difference(DateTime.parse( _storage.read(key: "lastBackgroundScan") ?? DateTime(1990).toString())).inMinutes > 15){
+      }else if( DateTime.now().difference(DateTime.parse( await _storage.read(key: "lastBackgroundScan") ?? DateTime(1990).toString())).inMinutes > 15){
         inBackground = true;
         startScan();
         BackgroundFetch.finish(taskID);
@@ -762,12 +761,10 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
 
   Future instantiateScannedObjects() async {
     var savedDevices = await _storage.readAll();
-    print("storage size: " + savedDevices.length.toString());
     savedDevices.forEach((key, value) {
-      print("Key: $key");
-      print("Value: $value");
       if (key == "previousState") {}
       else if (key == "storageTime") {}
+      else if (key == "lastBackgroundScan"){}
       else {
         scannedObjects.update(key, (v) => new BluetoothDeviceProfile.fromJson(jsonDecode(value)),
             ifAbsent: () => new BluetoothDeviceProfile.fromJson(jsonDecode(value))
