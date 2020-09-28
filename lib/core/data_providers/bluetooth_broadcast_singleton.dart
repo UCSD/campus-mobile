@@ -37,8 +37,8 @@ init() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     advertisingUUID = prefs.get('uuid') ?? "null";
     var previousTime =  prefs.get('previousTime') ?? DateTime(1990).toString();
-    var difference = DateTime.now().difference(DateTime.parse(previousTime)).inSeconds;
-    if (difference > 10) {
+    var difference = DateTime.now().difference(DateTime.parse(previousTime)).inHours;
+    if (difference >= 24) {
       changeUUID();
       prefs.setString('previousTime', DateTime.now().toString());
     }

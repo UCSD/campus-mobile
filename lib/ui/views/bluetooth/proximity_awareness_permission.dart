@@ -14,12 +14,11 @@ class ProximityAwarenessPermission extends StatefulWidget {
 }
 
 class _ProximityAwarenessPermissionState extends State<ProximityAwarenessPermission> {
-  ProximityAwarenessSingleton _bluetoothSingleton;
+  ProximityAwarenessSingleton _bluetoothSingleton = ProximityAwarenessSingleton();
   SharedPreferences pref;
 
   @override
   Widget build(BuildContext context) {
-     getPreferences();
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(42),
@@ -131,36 +130,7 @@ class _ProximityAwarenessPermissionState extends State<ProximityAwarenessPermiss
   }
 
   bool bluetoothStarted(BuildContext context) {
-      if (pref != null &&  pref.containsKey("proximityAwarenessEnabled") &&
-          pref.getBool("proximityAwarenessEnabled")) {
-        return true;
-      }
-    else{
-      _bluetoothSingleton = ProximityAwarenessSingleton();
-
-        return _bluetoothSingleton.proximityAwarenessEnabled;
-
-    }
-    return false;
-  }
-  void checkToResumeBluetooth(BuildContext context) async{
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    if(prefs.containsKey("proximityAwarenessEnabled") && prefs.getBool('proximityAwarenessEnabled')){
-      print(prefs.getBool("proximityAwarenessEnabled"));
-      ProximityAwarenessSingleton bluetoothSingleton = ProximityAwarenessSingleton();
-      if(bluetoothSingleton.firstInstance) {
-        bluetoothSingleton.firstInstance = false;
-        print("Instance: "+ bluetoothSingleton.firstInstance.toString());
-        if(bluetoothSingleton.userDataProvider == null) {
-          bluetoothSingleton.userDataProvider =
-              Provider.of<UserDataProvider>(context, listen: false);
-        }
-        bluetoothSingleton.init();
-
-
-      }
-    }
+  return _bluetoothSingleton.proximityAwarenessEnabled;
   }
   void startBluetooth(BuildContext context,bool permissionGranted) async {
     _bluetoothSingleton = ProximityAwarenessSingleton();
@@ -170,6 +140,7 @@ class _ProximityAwarenessPermissionState extends State<ProximityAwarenessPermiss
     }
     if (permissionGranted ) {
       // Future.delayed(Duration(seconds: 5), ()  => bluetoothInstance.getOffloadAuthorization(context));
+      print("RAN INIT");
       _bluetoothSingleton.init();
     }
   }
