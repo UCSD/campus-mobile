@@ -1,7 +1,7 @@
 //TODO: NEED AUTH BEARER TOKENS TO TEST ON APP
 
 import 'dart:async';
-import 'dart:convert';
+
 import 'package:campus_mobile_experimental/core/models/message_model.dart';
 import 'package:campus_mobile_experimental/core/services/networking.dart';
 

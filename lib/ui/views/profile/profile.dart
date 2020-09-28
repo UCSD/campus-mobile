@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:campus_mobile_experimental/ui/views/profile/login.dart';
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
+import 'package:campus_mobile_experimental/ui/views/profile/login.dart';
+import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Profile extends StatelessWidget {
@@ -45,7 +45,7 @@ class Profile extends StatelessWidget {
           Card(
             child: ListTile(
               leading: Icon(Icons.wifi_tethering),
-              title: Text('Proximity Awareness'),
+              title: Text('Advanced Wayfinding'),
               onTap:(){ Navigator.pushNamed(context, RoutePaths.BluetoothPermissionsView);},
             ),
           ),
@@ -86,10 +86,10 @@ class Profile extends StatelessWidget {
   }
 
   openLink(String url) async {
-    if (await canLaunch(url)) {
-      launch(url);
-    } else {
-      // can't launch url, there is some error
+    try {
+      launch(url, forceSafariVC: true);
+    } catch (e) {
+      // an error occurred, do nothing
     }
   }
 

@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:campus_mobile_experimental/core/models/topics_model.dart';
 import 'package:campus_mobile_experimental/core/services/networking.dart';
 
@@ -6,8 +7,7 @@ class NotificationService {
   final NetworkHelper _networkHelper = NetworkHelper();
   final String _endpoint = 'https://api-qa.ucsd.edu:8243/mp-registration/1.0.0';
   final String _topicsEndpoint =
-      'https://ucsd-its-wts-dev.s3-us-west-1.amazonaws.com/replatform/v1/topics.json';
-  // 'https://mobile.ucsd.edu/replatform/v1/qa/topics.json';
+      'https://mobile.ucsd.edu/replatform/v1/qa/topics.json';
   bool _isLoading = false;
   DateTime _lastUpdated;
   String _error;

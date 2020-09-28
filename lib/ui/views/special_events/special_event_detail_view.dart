@@ -24,7 +24,6 @@ class SpecialEventsDetailView extends StatelessWidget {
         Provider.of<SpecialEventsDataProvider>(context).specialEventsModel;
 
     Schedule event = data.schedule[uid];
-    print(event);
     return Scaffold(
         appBar: AppBar(
           title: Text(title),
@@ -56,10 +55,6 @@ class SpecialEventsDetailView extends StatelessWidget {
   }
 
   Widget buildHeader(Schedule event) {
-    print("HERE \n\n\n\n");
-
-    print(event);
-
     //Color labelTheme = HexColor._getColorFromHex(event.labelTheme);
     //String tmp = event.labelTheme;
     Color labelTheme = HexColor(event.labelTheme);

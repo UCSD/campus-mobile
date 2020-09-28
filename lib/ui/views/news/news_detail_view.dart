@@ -65,11 +65,7 @@ class ContinueReadingButton extends StatelessWidget {
           color: Theme.of(context).buttonColor,
           onPressed: () async {
             try {
-              if (await canLaunch(link)) {
-                await launch(link);
-              } else {
-                throw 'Could not launch $link';
-              }
+              await launch(link, forceSafariVC: true);
             } catch (e) {
               Scaffold.of(context).showSnackBar(SnackBar(
                 content: Text('Could not open.'),

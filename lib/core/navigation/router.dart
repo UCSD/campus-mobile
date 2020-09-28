@@ -10,7 +10,7 @@ import 'package:campus_mobile_experimental/ui/views/availability/manage_availabi
 import 'package:campus_mobile_experimental/ui/views/baseline/baseline_view.dart';
 import 'package:campus_mobile_experimental/ui/views/bluetooth/automatic_bluetooth_logger_view.dart';
 import 'package:campus_mobile_experimental/ui/views/bluetooth/beacon_view.dart';
-import 'package:campus_mobile_experimental/ui/views/bluetooth/proximity_awareness_permission.dart';
+import 'package:campus_mobile_experimental/ui/views/bluetooth/advanced_wayfinding_permission.dart';
 import 'package:campus_mobile_experimental/ui/views/class_schedule/class_list.dart';
 import 'package:campus_mobile_experimental/ui/views/dining/dining_detail_view.dart';
 import 'package:campus_mobile_experimental/ui/views/dining/nutrition_facts_view.dart';
@@ -24,16 +24,19 @@ import 'package:campus_mobile_experimental/ui/views/news/news_detail_view.dart';
 import 'package:campus_mobile_experimental/ui/views/news/news_list.dart';
 import 'package:campus_mobile_experimental/ui/views/notifications/notifications_list_view.dart';
 import 'package:campus_mobile_experimental/ui/views/notifications/notifications_settings.dart';
+import 'package:campus_mobile_experimental/ui/views/onboarding/onboarding_affiliations.dart';
+import 'package:campus_mobile_experimental/ui/views/onboarding/onboarding_initial_screen.dart';
 import 'package:campus_mobile_experimental/ui/views/onboarding/onboarding_login.dart';
 import 'package:campus_mobile_experimental/ui/views/onboarding/onboarding_screen.dart';
 import 'package:campus_mobile_experimental/ui/views/parking/manage_parking_view.dart';
+import 'package:campus_mobile_experimental/ui/views/parking/spot_types_view.dart';
 import 'package:campus_mobile_experimental/ui/views/profile/cards_view.dart';
 import 'package:campus_mobile_experimental/ui/views/profile/profile.dart';
-import 'package:campus_mobile_experimental/ui/views/scanner/scanner_view.dart';
 import 'package:campus_mobile_experimental/ui/views/special_events/special_event_detail_view.dart';
 import 'package:campus_mobile_experimental/ui/views/special_events/special_events_filter_view.dart';
 import 'package:campus_mobile_experimental/ui/views/special_events/special_events_list_view.dart';
 import 'package:campus_mobile_experimental/ui/views/surf/surf_report_view.dart';
+import 'package:campus_mobile_experimental/ui/views/scanner/scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -45,8 +48,12 @@ class Router {
     switch (settings.name) {
       case RoutePaths.BottomNavigationBar:
         return MaterialPageRoute(builder: (_) => BottomTabBar());
+      case RoutePaths.OnboardingInitial:
+        return MaterialPageRoute(builder: (_) => OnboardingInitial());
       case RoutePaths.Onboarding:
         return MaterialPageRoute(builder: (_) => OnboardingScreen());
+      case RoutePaths.OnboardingAffiliations:
+        return MaterialPageRoute(builder: (_) => OnboardingAffiliations());
       case RoutePaths.OnboardingLogin:
         return MaterialPageRoute(builder: (_) => OnboardingLogin());
       case RoutePaths.Home:
@@ -123,6 +130,11 @@ class Router {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return ManageParkingView();
         });
+      case RoutePaths.ScannerView:
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+          return Scanner();
+        });
       case RoutePaths.CardsView:
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
@@ -130,28 +142,24 @@ class Router {
         });
       case RoutePaths.NotificationsSettingsView:
         return MaterialPageRoute(builder: (_) => NotificationsSettingsView());
-     /* case RoutePaths.AutomaticBluetoothLoggerView:
+      /* case RoutePaths.AutomaticBluetoothLoggerView:
         return MaterialPageRoute(builder: (_) => AutomaticBluetoothLoggerView());*/
       case RoutePaths.BluetoothPermissionsView:
-        return MaterialPageRoute(builder: (_) => ProximityAwarenessPermission());
+        return MaterialPageRoute(
+            builder: (_) => AdvancedWayfindingPermission());
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return NotificationsSettingsView();
         });
-      case RoutePaths.ScannerView:
-        return MaterialPageRoute(builder: (_) {
-          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
-          return ScannerView();
-        });
       case RoutePaths.ClassScheduleViewAll:
         return MaterialPageRoute(builder: (_) => ClassList());
-      case RoutePaths.BeaconView:
-        return MaterialPageRoute(builder: (_) => BeaconView());
-
+      case RoutePaths.SpotTypesView:
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
-          return ClassList();
+          return SpotTypesView();
         });
+      case RoutePaths.BeaconView:
+        return MaterialPageRoute(builder: (_) => BeaconView());
     }
   }
 }

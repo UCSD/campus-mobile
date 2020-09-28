@@ -11,12 +11,16 @@
     <uses-permission android:name="android.permission.BLUETOOTH"/>
 
     <application
-        tools:replace="android:label"
-        android:name="io.flutter.app.FlutterApplication"
+        android:name=".Application"
         android:label="UC San Diego"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round">
+        <meta-data
+            android:name="flutterEmbedding"
+            android:value="2" />
+
+        <!--version--><!-- make sure added-->
         <activity
             android:name=".MainActivity"
             android:theme="@style/LaunchTheme"
@@ -25,12 +29,18 @@
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustResize">
-            <meta-data
-                android:name="io.flutter.app.android.SplashScreenUntilFirstFrame"
-                android:value="true" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="deeplink"
+                    android:path="/"
+                    android:host="ucsd.edu" />
             </intent-filter>
         </activity>
         <meta-data

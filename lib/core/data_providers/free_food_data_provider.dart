@@ -42,7 +42,9 @@ class FreeFoodDataProvider extends ChangeNotifier {
   void parseMessages() {
     List<MessageElement> messages = _messageDataProvider.messages;
     messages.forEach((m) async {
-      if (m.audience != null && m.audience.topics.contains("freeFood")) {
+      if (m.audience != null &&
+          m.audience.topics != null &&
+          m.audience.topics.contains("freeFood")) {
         fetchCount(m.messageId);
         fetchMaxCount(m.messageId);
       }

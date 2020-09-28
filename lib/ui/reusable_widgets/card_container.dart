@@ -1,5 +1,4 @@
 import 'package:campus_mobile_experimental/ui/theme/app_layout.dart';
-import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class CardContainer extends StatelessWidget {
@@ -78,6 +77,11 @@ class CardContainer extends StatelessWidget {
         return Text('No articles found.');
       } else if (titleText == 'Events') {
         return Text('No events found.');
+      } else if (titleText == 'Student ID') {
+        return Padding(
+          padding: const EdgeInsets.only(top: 32.0, bottom: 48.0),
+          child: Text('An error occurred, please try again.'),
+        );
       } else if (titleText == 'Finals') {
         // TODO: Resolve alignment issues on cards without action buttons
         return Padding(
@@ -98,18 +102,24 @@ class CardContainer extends StatelessWidget {
               height: 32, width: 32, child: CircularProgressIndicator()),
         ),
       );
-    } else {
-      if (titleText == "Student ID") {
-        return Container(
-          width: double.infinity,
-//        height: 200.0,
-          constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 180),
-          child: child(),
-        );
-      }
+    } else if (titleText == "COVID-19 Info" ||
+        titleText == "COVID-19 Info" ||
+        titleText == "Campus Information") {
+      return Container(
+        width: double.infinity,
+        constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 200),
+        child: child(),
+      );
+    } else if (titleText == "Student ID" || titleText == "Staff ID") {
       return Container(
         width: double.infinity,
 //        height: 200.0,
+        constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 180),
+        child: child(),
+      );
+    } else {
+      return Container(
+        width: double.infinity,
         constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 340),
         child: child(),
       );

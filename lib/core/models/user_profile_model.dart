@@ -27,17 +27,22 @@ class UserProfileModel extends HiveObject {
   List<String> subscribedTopics;
   String ucsdaffiliation;
   String username;
+  @HiveField(3)
+  Map<String, bool> selectedParkingSpots;
+  @HiveField(4)
+  Map<String, bool> selectedParkingLots;
 
-  UserProfileModel({
-    this.classifications,
-    this.latestTimeStamp,
-    this.pid,
-    this.selectedLots,
-    this.selectedOccuspaceLocations,
-    this.subscribedTopics,
-    this.ucsdaffiliation,
-    this.username,
-  });
+  UserProfileModel(
+      {this.classifications,
+      this.latestTimeStamp,
+      this.pid,
+      this.selectedLots,
+      this.selectedOccuspaceLocations,
+      this.subscribedTopics,
+      this.ucsdaffiliation,
+      this.username,
+      this.selectedParkingSpots,
+      this.selectedParkingLots});
 
   factory UserProfileModel.fromJson(Map<String, dynamic> json) =>
       UserProfileModel(
@@ -60,6 +65,14 @@ class UserProfileModel extends HiveObject {
         ucsdaffiliation:
             json["ucsdaffiliation"] == null ? null : json["ucsdaffiliation"],
         username: json["username"] == null ? null : json["username"],
+        selectedParkingLots: json["selectedParkingLots"] == null
+            ? Map<String, bool>()
+            : Map<String, bool>.from(json["selectedParkingLots"]
+                .map((x, y) => MapEntry<String, bool>(x, y))),
+        selectedParkingSpots: json["selectedParkingSpots"] == null
+            ? Map<String, bool>()
+            : Map<String, bool>.from(json["selectedParkingSpots"]
+                .map((x, y) => MapEntry<String, bool>(x, y))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -78,22 +91,34 @@ class UserProfileModel extends HiveObject {
             : List<dynamic>.from(subscribedTopics.map((x) => x)),
         "ucsdaffiliation": ucsdaffiliation == null ? null : ucsdaffiliation,
         "username": username == null ? null : username,
+        "selectedParkingLots": selectedParkingLots == null
+            ? null
+            : Map.from(selectedParkingLots
+                .map((x, y) => MapEntry<String, bool>(x, y))),
+        "selectedParkingSpots": selectedParkingSpots == null
+            ? null
+            : Map.from(selectedParkingSpots
+                .map((x, y) => MapEntry<String, bool>(x, y))),
       };
 }
 
 class Classifications {
   bool student;
+  bool staff;
 
   Classifications({
     this.student,
+    this.staff,
   });
 
   factory Classifications.fromJson(Map<String, dynamic> json) =>
       Classifications(
         student: json["student"] == null ? null : json["student"],
+        staff: json["staff"] == null ? null : json["staff"],
       );
 
   Map<String, dynamic> toJson() => {
         "student": student == null ? null : student,
+        "staff": staff == null ? null : staff,
       };
 }

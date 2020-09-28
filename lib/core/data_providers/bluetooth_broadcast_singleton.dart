@@ -38,7 +38,7 @@ init() async {
     advertisingUUID = prefs.get('uuid') ?? "null";
     var previousTime =  prefs.get('previousTime') ?? DateTime(1990).toString();
     var difference = DateTime.now().difference(DateTime.parse(previousTime)).inHours;
-    if (difference >= 24) {
+    if (difference > 24) {
       changeUUID();
       prefs.setString('previousTime', DateTime.now().toString());
     }
