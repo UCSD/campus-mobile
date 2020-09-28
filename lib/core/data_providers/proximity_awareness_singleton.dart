@@ -8,6 +8,7 @@ import 'dart:typed_data';
 import 'package:background_fetch/background_fetch.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/services/networking.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -206,8 +207,7 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
     // Remove objects that are no longer continuous found (+ grace period)
     removeNoncontinuousDevices();
 
-    // If there are more than three devices, log location
-    processOffloadingLogs(offloadLog, List.of(newBufferList));
+
 
     // Close on going scan in case it has not time out
     flutterBlueInstance.stopScan();
@@ -222,18 +222,20 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
     // Otherwise, let next scan know last scan was background
     else {
       await _storage.write(key: "previousState", value: "background");
+      await _storage.write(key: "lastBackgroundScan", value: DateTime.now().toString());
     }
 
     // Write timestamp to storage
     await _storage.write(key: "storageTime", value: getCurrentTimeOfDay());
-
+    // If there are more than three devices, log location
+    processOffloadingLogs(offloadLog, List.of(newBufferList));
     // Write scannedObjects to storage
     scannedObjects.forEach((key, value) {
       _storage.write(key: key, value: jsonEncode(value));
     });
 
     // Reset inBackground
-    inBackground = false;
+    //inBackground = false;
 
     // Clear previous scan results
     bufferList.clear();
@@ -243,31 +245,44 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
 
 
   void processOffloadingLogs(bool offloadLog, List<Map> newBufferList) {
-    if (qualifyingDevices >= qualifiedDevicesThreshold) {
-      double lat;
-      double long;
-      checkLocationPermission();
+    qualifiedDevicesThreshold = 0;
+    if(!inBackground){
+      inBackground = false;
+    }
+    if(inBackground) {
+      if (qualifyingDevices >= qualifiedDevicesThreshold) {
+        double lat;
+        double long;
+        checkLocationPermission();
 
-      location.getLocation().then((value) {
-        lat = value.latitude;
-        long = value.longitude;
+        location.getLocation().then((value) {
+          lat = value.latitude;
+          long = value.longitude;
 
-      // Reset dwell times
-      qualifyingDevices = 0;
-    
-      //LOG VALUE
-      Map log = {
-        "SOURCE_DEVICE_ADVERTISEMENT_ID": this.advertisementValue,
-        "SOURCE": "UCSDMobileApp",
-        "LAT": (lat == null) ? 0 : lat,
-        "LONG": (long == null) ? 0 : long,
-        "DEVICE_LIST": newBufferList
-      };
-    
-      sendLogs( log);
+          // Reset dwell times
+          qualifyingDevices = 0;
 
-      });
+          //LOG VALUE
+          Map log = {
+            "Time": DateTime.fromMillisecondsSinceEpoch(
+                DateTime
+                    .now()
+                    .millisecondsSinceEpoch).toString(),
+            "SOURCE_DEVICE_ADVERTISEMENT_ID": this.advertisementValue,
+            "SOURCE": "UCSDMobileApp",
+            "LAT": (lat == null) ? 0 : lat.toString(),
+            "LONG": (long == null) ? 0 : long.toString(),
+            "DEVICE_LIST": newBufferList
+          };
 
+          Dio dio = new Dio();
+           dio.post("https://7pfm2wuasb.execute-api.us-west-2.amazonaws.com/qa/",
+              data: json.encode(log));
+           inBackground = false;
+          // sendLogs( log);
+
+        });
+      }
     }
   }
 
@@ -633,18 +648,17 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
 
   // Start a background scan
   void _onBackgroundFetch(String taskID) async {
-
+    print("IN BACKGROUND FETCH");
+    String lastTimeStamp = await _storage.read(key: "lastBackgroundScan");
+    print("LAST TIME STAMP WAS: $lastTimeStamp");
+    print("Difference in minutes: " +  DateTime.now().difference(DateTime.parse( lastTimeStamp ?? DateTime(1990).toString())).inMinutes.toString());
     // Start a background scan
-      if(_storage.read(key: "lastBackgroundScan") == null){
+      if( DateTime.now().difference(DateTime.parse( await _storage.read(key: "lastBackgroundScan") ?? DateTime(1990).toString())).inMinutes > 15){
         inBackground = true;
         startScan();
-        BackgroundFetch.finish(taskID);
-      }else if( DateTime.now().difference(DateTime.parse( await _storage.read(key: "lastBackgroundScan") ?? DateTime(1990).toString())).inMinutes > 15){
-        inBackground = true;
-        startScan();
-        BackgroundFetch.finish(taskID);
       }
-    }
+      BackgroundFetch.finish(taskID);
+  }
   // Set background tasks
   void backgroundFetchSetUp() {
     // Configure BackgroundFetch.
