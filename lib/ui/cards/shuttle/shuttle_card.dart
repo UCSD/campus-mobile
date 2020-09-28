@@ -1,3 +1,5 @@
+
+
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/shuttle_data_provider.dart';
@@ -44,7 +46,9 @@ class _ShuttleCardState extends State<ShuttleCard> {
       errorText: _shuttleCardDataProvider.error,
       child: () => buildShuttleCard(_shuttleCardDataProvider.stopsToRender,
         _shuttleCardDataProvider.arrivalsToRender
-      ));
+      ),
+      actionButtons: buildActionButtons(),
+    );
   }
 
 
@@ -55,8 +59,13 @@ class _ShuttleCardState extends State<ShuttleCard> {
     print("Arrivals - ${arrivalsToRender.length}");
 
     List<Widget> renderList = List<Widget>();
+
+    if (_shuttleCardDataProvider.closestStop != null) {
+      renderList.add(ShuttleDisplay(stop: _shuttleCardDataProvider.closestStop,
+          arrivingShuttles: arrivalsToRender[_shuttleCardDataProvider.closestStop.id]));
+    }
     for (int i = 0; i < stopsToRender.length; i++) {
-        renderList.add(ShuttleDisplay(stop: stopsToRender[i],
+      renderList.add(ShuttleDisplay(stop: stopsToRender[i],
           arrivingShuttles: arrivalsToRender[stopsToRender[i].id]));
     }
 
@@ -67,9 +76,6 @@ class _ShuttleCardState extends State<ShuttleCard> {
         child: Text('No shuttles found.'),
       );
     }
-
-
-    //_shuttleCardDataProvider.fetchArrivalInformation(stopsToRender[0]);
 
     return Column(
       children: <Widget>[
@@ -99,15 +105,30 @@ class _ShuttleCardState extends State<ShuttleCard> {
             ),
           ),
         ),
-        DotsIndicator(
+        /*DotsIndicator(
           controller: _controller,
           itemCount: renderList.length,
           onPageSelected: (int index) {
             _controller.animateToPage(index,
                 duration: Duration(seconds: 1), curve: Curves.ease);
           },
-        ),
+        ),*/
       ],
     );
+  }
+
+  List<Widget> buildActionButtons() {
+    List<Widget> actionButtons = List<Widget>();
+    actionButtons.add(
+      FlatButton(
+        child: Text(
+          'Manage Shuttle Stops',
+        ),
+        onPressed: () {
+          Navigator.pushNamed(context, RoutePaths.ManageShuttleView);
+        },
+      )
+    );
+    return actionButtons;
   }
 }
