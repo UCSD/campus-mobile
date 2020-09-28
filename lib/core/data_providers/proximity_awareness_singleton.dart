@@ -165,7 +165,7 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
 
     // Enable timer, must wait duration before next method execution
     ongoingScanner = new Timer.periodic(
-        Duration(seconds: waitTime * 4), (Timer t) => startScan());
+        Duration(hours: waitTime * 4), (Timer t) => startScan());
   }
 
   // Start a bluetooth scan of determined second duration and listen to results
