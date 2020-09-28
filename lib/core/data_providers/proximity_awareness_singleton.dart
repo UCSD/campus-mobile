@@ -163,12 +163,11 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
 
     // Enable timer, must wait duration before next method execution
     ongoingScanner = new Timer.periodic(
-        Duration(minutes: 3), (Timer t) => startScan());
+        Duration(minutes: waitTime), (Timer t) => startScan());
   }
 
   // Start a bluetooth scan of determined second duration and listen to results
   startScan() async {
- // print("IN BACKGROUND AT THE BEGINNING IS: " + inBackground.toString());
     String previousState = await _storage.read(key: "previousState");
 
     if (inBackground){
@@ -281,7 +280,7 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
         if(inBackground) {
             new Dio().post(
               "https://7pfm2wuasb.execute-api.us-west-2.amazonaws.com/qa",
-              data: json.encode(testLog)).then((value) => print("RESPONSE IS:" + value.toString()));
+              data: json.encode(testLog));
             inBackground = false;
 
         }
@@ -443,12 +442,10 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
 
   //Remove devices that are no longer scanned
   void removeNoncontinuousDevices() {
-    print("scanIntervalAllowance: $scanIntervalAllowance");
     scannedObjects.removeWhere((key, value) {
       bool isDeviceContinuous = checkDeviceDwellTime(value);
       if (!isDeviceContinuous &&
           value.scanIntervalAllowancesUsed >= scanIntervalAllowance) {
-        print("Too many scanIntervals");
         return true;
       } else if (!isDeviceContinuous &&
           value.scanIntervalAllowancesUsed < scanIntervalAllowance) {
@@ -655,15 +652,9 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
 
   // Start a background scan
   void _onBackgroundFetch(String taskID) async {
-    print("IN BACKGROUND");
     inBackground = true;
     String lastTimeStamp = await _storage.read(key: "lastBackgroundScan");
-    print("LAST TIME STAMP WAS: $lastTimeStamp");
-    print("Difference in minutes: " + DateTime
-        .now()
-        .difference(DateTime.parse(lastTimeStamp))
-        .inMinutes
-        .toString());
+
     // Start a background scan
     if ( lastTimeStamp == null || DateTime
         .now()
@@ -791,10 +782,7 @@ class ProximityAwarenessSingleton extends ChangeNotifier{
 
   Future instantiateScannedObjects() async {
     var savedDevices = await _storage.readAll();
-    print("storage size: " + savedDevices.length.toString());
     savedDevices.forEach((key, value) {
-      print("Key: $key");
-      print("Value: $value");
       if (key == "previousState") {}
       else if(key == "lastBackgroundScan"){}
       else if (key == "storageTime") {}
