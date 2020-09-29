@@ -30,7 +30,7 @@ class ShuttleDataProvider extends ChangeNotifier {
   double stopLat;
   double stopLong;
   double closestDistance = 10000000;
-  Map<int, ShuttleStopModel> _fetchedStops;
+  Map<int, ShuttleStopModel> fetchedStops;
   Set<int> userStops;
   Map<int, List<ArrivingShuttle>> arrivalsToRender;
   LocationDataProvider _locationDataProvider;
@@ -61,7 +61,7 @@ class ShuttleDataProvider extends ChangeNotifier {
       for (ShuttleStopModel model in _shuttleService.data) {
         newMapOfStops[model.id] = model;
       }
-      _fetchedStops = newMapOfStops;
+      fetchedStops = newMapOfStops;
 
       /// if the user is logged in we want to sync the order of parking lots amongst all devices
       if (userDataProvider != null) {
@@ -98,7 +98,7 @@ class ShuttleDataProvider extends ChangeNotifier {
 
     /// remove lots as we add them to the ordered list
     for (int stopID in order) {
-      orderedListOfStops.add(_fetchedStops[stopID]);
+      orderedListOfStops.add(fetchedStops[stopID]);
     }
     return orderedListOfStops;
   }
@@ -198,7 +198,7 @@ class ShuttleDataProvider extends ChangeNotifier {
   }
 
   List<ShuttleStopModel> get stopsToRender {
-    if (_fetchedStops != null) {
+    if (fetchedStops != null) {
       if (userDataProvider.userProfileModel != null)
         return makeOrderedList(userDataProvider.userProfileModel.selectedStops);
     }

@@ -51,7 +51,8 @@ class AddShuttleStopsView extends StatelessWidget {
 
   List<Widget> createList(BuildContext context) {
     List<Widget> list = List<Widget>();
-    for (ShuttleStopModel model in _shuttleDataProvider.stopsToRender) {
+    _shuttleDataProvider.fetchedStops.forEach((key, value) {
+      ShuttleStopModel model = value;
       if (model != null) {
         list.add(ListTile(
           key: Key(model.id.toString()),
@@ -61,17 +62,17 @@ class AddShuttleStopsView extends StatelessWidget {
           leading: Icon(
             Icons.reorder,
           ),
-          /*trailing: Switch(
-            value: Provider.of<ShuttleStopModel>(context)
-                .locationViewState[model.locationName],
+          trailing: Switch(
+            value: _shuttleDataProvider.stopsToRender.contains(value),
             activeColor: Theme.of(context).buttonColor,
             onChanged: (_) {
-              _shuttleDataProvider.toggleLocation(model.locationName);
+              _shuttleDataProvider.stopsToRender.add(value);
             },
-          ),*/
+          ),
         ));
       }
-    }
+    });
+
     return list;
   }
 }

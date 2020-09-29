@@ -9,12 +9,13 @@ import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.da
 import 'package:campus_mobile_experimental/ui/reusable_widgets/dots_indicator.dart';
 import 'package:campus_mobile_experimental/ui/cards/shuttle/shuttle_display.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
+import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 
 class ManageShuttleView extends StatelessWidget {
-  ShuttleDataProvider _shuttleDataProvider;
+  ShuttleDataProvider _shuttleDataProvider = ShuttleDataProvider();
 
   @override
   Widget build(BuildContext context) {
@@ -28,10 +29,19 @@ class ManageShuttleView extends StatelessWidget {
   }
 
   Widget buildLocationsList(BuildContext context) {
-    return ReorderableListView(
-      children: createList(context),
-      onReorder: _onReorder,
-    );
+    if(_shuttleDataProvider.stopsToRender.isEmpty) {
+      return(
+        Center(
+          child: Text("No saved stops.")
+        )
+      );
+    }
+    else {
+      return ReorderableListView(
+        children: createList(context),
+        onReorder: _onReorder,
+      );
+    }
   }
 
   void _onReorder(int oldIndex, int newIndex) {
@@ -58,17 +68,18 @@ class ManageShuttleView extends StatelessWidget {
 
   List<Widget> createList(BuildContext context) {
     List<Widget> list = List<Widget>();
-    for (ShuttleStopModel model in _shuttleDataProvider.stopsToRender) {
-      if (model != null) {
-        list.add(ListTile(
-          key: Key(model.id.toString()),
-          title: Text(
-            model.name,
-          ),
-          leading: Icon(
-            Icons.reorder,
-          ),
-          /*trailing: Switch(
+    print("is called");
+      for (ShuttleStopModel model in _shuttleDataProvider.stopsToRender) {
+        if (model != null) {
+          list.add(ListTile(
+            key: Key(model.id.toString()),
+            title: Text(
+              model.name,
+            ),
+            leading: Icon(
+              Icons.reorder,
+            ),
+            /*trailing: Switch(
             value: Provider.of<ShuttleStopModel>(context)
                 .locationViewState[model.locationName],
             activeColor: Theme.of(context).buttonColor,
@@ -76,9 +87,9 @@ class ManageShuttleView extends StatelessWidget {
               _shuttleDataProvider.toggleLocation(model.locationName);
             },
           ),*/
-        ));
+          ));
+        }
       }
-    }
     return list;
   }
 
@@ -92,7 +103,7 @@ class ManageShuttleView extends StatelessWidget {
             Icons.add,
             color: Colors.white,
           ),
-          backgroundColor: Colors.lightBlue,
+          backgroundColor: ColorPrimary,
           onPressed: () {
             Navigator.pushNamed(context, RoutePaths.AddShuttleStopsView);
           },

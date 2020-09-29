@@ -22,6 +22,7 @@ class ShuttleService {
   String arrivingEndpoint;
   final Map<String, String> headers = {
     "accept": "application/json",
+    "Authorization": "Basic djJlNEpYa0NJUHZ5akFWT0VRXzRqZmZUdDkwYTp2emNBZGFzZWpmaWZiUDc2VUJjNDNNVDExclVh"
   };
 
   Future<bool> fetchData() async {
@@ -65,7 +66,6 @@ class ShuttleService {
       /// fetch data
       //arrivingEndpoint = "https://api.jsonbin.io/b/5f6bc8237243cd7e82425eca";
       arrivingEndpoint = "https://api-qa.ucsd.edu:8243/shuttles/v1.0.0/stops/$stopId/arrivals";
-
       //String _response = await _networkHelper.fetchData(arrivingEndpoint);
       String _response = await _networkHelper.authorizedFetch(arrivingEndpoint, headers);
       /// parse data
