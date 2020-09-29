@@ -113,7 +113,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier{
   }
 
   // Initial method for scan set up
-  init() async {
+  Future<bool> init() async {
 
     if(userDataProvider.isLoggedIn) {
       //Instantiate access token for logged in user
@@ -151,9 +151,12 @@ class AdvancedWayfindingSingleton extends ChangeNotifier{
 
           // Enable continuous scan
           enableScanning();
+
+          return true;
         }
       });
     });
+    return false;
   }
   /// This function starts continuous scan (when permission is authorized)
   enableScanning() {

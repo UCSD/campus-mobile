@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:campus_mobile_experimental/core/data_providers/advanced_wayfinding_singleton.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_blue/flutter_blue.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -16,6 +19,7 @@ class AdvancedWayfindingPermission extends StatefulWidget {
 class _AdvancedWayfindingPermissionState extends State<AdvancedWayfindingPermission> {
   AdvancedWayfindingSingleton _bluetoothSingleton;
   SharedPreferences pref;
+  bool isOn = false;
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +38,8 @@ class _AdvancedWayfindingPermissionState extends State<AdvancedWayfindingPermiss
   }
 
   void getPreferences() async {
+    isOn = await FlutterBlue.instance.state.last == BluetoothState.unauthorized;
+
     SharedPreferences.getInstance().then((value) {
      pref = value;
         });
@@ -114,10 +120,56 @@ class _AdvancedWayfindingPermissionState extends State<AdvancedWayfindingPermiss
         Switch(
           value: bluetoothStarted(context),
           onChanged: (permissionGranted) {
+
+
             startBluetooth(context, permissionGranted);
+            bool forceOff = false;
+            if(!isOn && permissionGranted){
+              forceOff = true;
+              showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (BuildContext context) {
+                    if (Platform.isIOS) {
+                      return CupertinoAlertDialog(
+                        title:
+                        Text("Bluetooth permission must be granted."),
+                        content: Text(
+                            "Please go to the Settings app to enable BT access for UC San Diego."),
+                        actions: <Widget>[
+                          CupertinoDialogAction(
+                            child: Text('Ok'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      );
+                    }
+                    return AlertDialog(
+                      title: Text("Bluetooth permission must be granted."),
+                      content: Text(
+                          "Please go to the Settings app to enable BT access for UC San Diego."),
+                      actions: <Widget>[
+                        FlatButton(
+                          child: Text('OK'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  });
+            }
             setState(() {
-              _bluetoothSingleton.advancedWayfindingEnabled =
-                  !_bluetoothSingleton.advancedWayfindingEnabled;
+              if(forceOff){
+                _bluetoothSingleton.advancedWayfindingEnabled = false;
+
+              }else{
+                _bluetoothSingleton.advancedWayfindingEnabled =
+                !_bluetoothSingleton.advancedWayfindingEnabled;
+              }
+
               if (!_bluetoothSingleton.advancedWayfindingEnabled) {
                 _bluetoothSingleton.stopScans();
               }
@@ -131,10 +183,14 @@ class _AdvancedWayfindingPermissionState extends State<AdvancedWayfindingPermiss
   }
 
   bool bluetoothStarted(BuildContext context) {
+    if(!isOn && _bluetoothSingleton != null &&_bluetoothSingleton.advancedWayfindingEnabled){
+      return false;
+    }
       _bluetoothSingleton = AdvancedWayfindingSingleton();
       return _bluetoothSingleton.advancedWayfindingEnabled;
   }
   void checkToResumeBluetooth(BuildContext context) async{
+
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     if(prefs.containsKey("advancedWayfindingEnabled") && prefs.getBool('advancedWayfindingEnabled')){
@@ -159,7 +215,7 @@ class _AdvancedWayfindingPermissionState extends State<AdvancedWayfindingPermiss
     }
     if (permissionGranted ) {
       // Future.delayed(Duration(seconds: 5), ()  => bluetoothInstance.getOffloadAuthorization(context));
-      _bluetoothSingleton.init();
+    isOn = await _bluetoothSingleton.init();
     }
   }
 }
