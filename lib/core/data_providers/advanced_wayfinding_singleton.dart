@@ -240,6 +240,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
   }
 
   void processOffloadingLogs( List<Map> newBufferList) {
+    //qualifiedDevicesThreshold = 0; // Todo: Comment out to test sending logs to test DB
     if (qualifyingDevices < qualifiedDevicesThreshold) {
       inBackground = false;
     }
@@ -282,7 +283,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
         //   inBackground = false;
         // }
 
-        sendLogs( log);
+       sendLogs( log);
       });
     }
   }
