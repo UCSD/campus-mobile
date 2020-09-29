@@ -1,5 +1,3 @@
-
-
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/shuttle_data_provider.dart';
@@ -13,7 +11,6 @@ import 'package:campus_mobile_experimental/ui/cards/shuttle/shuttle_display.dart
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
-
 
 const String cardId = 'shuttle';
 
@@ -39,33 +36,33 @@ class _ShuttleCardState extends State<ShuttleCard> {
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
-      reload: () => Provider.of<ShuttleDataProvider>(context, listen: false)
-        .fetchStops(),
+      reload: () =>
+          Provider.of<ShuttleDataProvider>(context, listen: false).fetchStops(),
       isLoading: _shuttleCardDataProvider.isLoading,
       titleText: CardTitleConstants.titleMap[cardId],
       errorText: _shuttleCardDataProvider.error,
       child: () => buildShuttleCard(_shuttleCardDataProvider.stopsToRender,
-        _shuttleCardDataProvider.arrivalsToRender
-      ),
+          _shuttleCardDataProvider.arrivalsToRender),
       actionButtons: buildActionButtons(),
     );
   }
 
-
   Widget buildShuttleCard(List<ShuttleStopModel> stopsToRender,
       Map<int, List<ArrivingShuttle>> arrivalsToRender) {
-
     print("Stops - ${stopsToRender.length}");
     print("Arrivals - ${arrivalsToRender.length}");
 
     List<Widget> renderList = List<Widget>();
 
     if (_shuttleCardDataProvider.closestStop != null) {
-      renderList.add(ShuttleDisplay(stop: _shuttleCardDataProvider.closestStop,
-          arrivingShuttles: arrivalsToRender[_shuttleCardDataProvider.closestStop.id]));
+      renderList.add(ShuttleDisplay(
+          stop: _shuttleCardDataProvider.closestStop,
+          arrivingShuttles:
+              arrivalsToRender[_shuttleCardDataProvider.closestStop.id]));
     }
     for (int i = 0; i < stopsToRender.length; i++) {
-      renderList.add(ShuttleDisplay(stop: stopsToRender[i],
+      renderList.add(ShuttleDisplay(
+          stop: stopsToRender[i],
           arrivingShuttles: arrivalsToRender[stopsToRender[i].id]));
     }
 
@@ -92,9 +89,7 @@ class _ShuttleCardState extends State<ShuttleCard> {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Container(
-            decoration: BoxDecoration(
-              border: Border.all()
-            ),
+            decoration: BoxDecoration(border: Border.all()),
             child: TextField(
               controller: _textEditingController,
               onSubmitted: (String value) async {
@@ -119,16 +114,14 @@ class _ShuttleCardState extends State<ShuttleCard> {
 
   List<Widget> buildActionButtons() {
     List<Widget> actionButtons = List<Widget>();
-    actionButtons.add(
-      FlatButton(
-        child: Text(
-          'Manage Shuttle Stops',
-        ),
-        onPressed: () {
-          Navigator.pushNamed(context, RoutePaths.ManageShuttleView);
-        },
-      )
-    );
+    actionButtons.add(FlatButton(
+      child: Text(
+        'Manage Shuttle Stops',
+      ),
+      onPressed: () {
+        Navigator.pushNamed(context, RoutePaths.ManageShuttleView);
+      },
+    ));
     return actionButtons;
   }
 }

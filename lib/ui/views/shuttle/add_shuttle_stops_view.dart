@@ -1,19 +1,13 @@
-import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
-import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/shuttle_data_provider.dart';
-import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_arrival_model.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_stop_model.dart';
-import 'package:campus_mobile_experimental/core/services/bottom_navigation_bar_service.dart';
-import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/dots_indicator.dart';
 import 'package:campus_mobile_experimental/ui/cards/shuttle/shuttle_display.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 
-class ManageShuttleView extends StatelessWidget {
+class AddShuttleStopsView extends StatelessWidget {
   ShuttleDataProvider _shuttleDataProvider;
 
   @override
@@ -21,13 +15,12 @@ class ManageShuttleView extends StatelessWidget {
     _shuttleDataProvider = Provider.of<ShuttleDataProvider>(context);
     return Stack(children: <Widget>[
       ContainerView(
-        child: buildLocationsList(context),
+        child: buildAllLocationsList(context),
       ),
-      buildAddStopsButton(context),
     ]);
   }
 
-  Widget buildLocationsList(BuildContext context) {
+  Widget buildAllLocationsList(BuildContext context) {
     return ReorderableListView(
       children: createList(context),
       onReorder: _onReorder,
@@ -80,24 +73,5 @@ class ManageShuttleView extends StatelessWidget {
       }
     }
     return list;
-  }
-
-  Widget buildAddStopsButton(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 20.0, bottom: 40.0),
-      child: Align(
-        alignment: Alignment.bottomRight,
-        child: FloatingActionButton(
-          child: Icon(
-            Icons.add,
-            color: Colors.white,
-          ),
-          backgroundColor: Colors.lightBlue,
-          onPressed: () {
-            Navigator.pushNamed(context, RoutePaths.AddShuttleStopsView);
-          },
-        ),
-      ),
-    );
   }
 }

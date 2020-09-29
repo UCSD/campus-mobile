@@ -31,6 +31,7 @@ import 'package:campus_mobile_experimental/ui/views/onboarding/onboarding_screen
 import 'package:campus_mobile_experimental/ui/views/parking/manage_parking_view.dart';
 import 'package:campus_mobile_experimental/ui/views/profile/cards_view.dart';
 import 'package:campus_mobile_experimental/ui/views/profile/profile.dart';
+import 'package:campus_mobile_experimental/ui/views/shuttle/add_shuttle_stops_view.dart';
 import 'package:campus_mobile_experimental/ui/views/shuttle/manage_shuttle_view.dart';
 import 'package:campus_mobile_experimental/ui/views/special_events/special_event_detail_view.dart';
 import 'package:campus_mobile_experimental/ui/views/special_events/special_events_filter_view.dart';
@@ -135,6 +136,11 @@ class Router {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return ManageShuttleView();
         });
+      case RoutePaths.AddShuttleStopsView:
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+          return AddShuttleStopsView();
+        });
       case RoutePaths.ScannerView:
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
@@ -147,10 +153,11 @@ class Router {
         });
       case RoutePaths.NotificationsSettingsView:
         return MaterialPageRoute(builder: (_) => NotificationsSettingsView());
-     /* case RoutePaths.AutomaticBluetoothLoggerView:
+      /* case RoutePaths.AutomaticBluetoothLoggerView:
         return MaterialPageRoute(builder: (_) => AutomaticBluetoothLoggerView());*/
       case RoutePaths.BluetoothPermissionsView:
-        return MaterialPageRoute(builder: (_) => ProximityAwarenessPermission());
+        return MaterialPageRoute(
+            builder: (_) => ProximityAwarenessPermission());
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return NotificationsSettingsView();
