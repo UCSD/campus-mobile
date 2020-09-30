@@ -6,6 +6,7 @@ import 'dart:math' as math;
 import 'dart:math';
 import 'dart:typed_data';
 import 'package:background_fetch/background_fetch.dart';
+import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/services/networking.dart';
 import 'package:dio/dio.dart';
@@ -290,14 +291,43 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
 
   void sendLogs(Map log) {
     if (userDataProvider.isLoggedIn) {
+      print("Offload data header: " + offloadDataHeader.toString());
+      if(offloadDataHeader == null){
+        offloadDataHeader = {
+          'Authorization':
+          'Bearer ${userDataProvider?.authenticationModel?.accessToken}'
+        };
+      }
+      print("AFTER GETTING ACCESS TOKEN" + offloadDataHeader.toString());
       // Send to offload API
-      print("Offload data header: $offloadDataHeader");
-      var response = _networkHelper.authorizedPost(
-          offloadLoggerEndpoint, offloadDataHeader, json.encode(log));
-      print(response.toString());
+      try{
+        var response = _networkHelper.authorizedPost(
+            offloadLoggerEndpoint, offloadDataHeader, json.encode(log)).then((value){
+            print("RESPONSE: ${value.toString()}");
+        });
+      }catch (Exception){
+          if(Exception.toString().contains(ErrorConstants.invalidBearerToken)){
+            userDataProvider.refreshToken();
+            offloadDataHeader = {
+              'Authorization':
+              'Bearer ${userDataProvider?.authenticationModel?.accessToken}'
+            };
+            _networkHelper.authorizedPost(
+                offloadLoggerEndpoint, offloadDataHeader, json.encode(log));
+          }
+      }
+
+
     } else {
-      var response = _networkHelper.authorizedPost(
-          offloadLoggerEndpoint, headers, json.encode(log));
+      try {
+        var response = _networkHelper.authorizedPost(
+            offloadLoggerEndpoint, headers, json.encode(log));
+  }catch(Exception) {
+         getNewToken();
+        var response = _networkHelper.authorizedPost(
+            offloadLoggerEndpoint, headers, json.encode(log));
+      }
+
     }
   }
 
