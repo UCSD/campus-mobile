@@ -166,7 +166,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
 
     // Enable timer, must wait duration before next method execution
     ongoingScanner = new Timer.periodic(
-        Duration(seconds: waitTime * 4), (Timer t) => startScan());
+        Duration(minutes: waitTime), (Timer t) => startScan());
   }
 
   // Start a bluetooth scan of determined second duration and listen to results
@@ -241,7 +241,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
   }
 
   void processOffloadingLogs( List<Map> newBufferList) {
-    qualifiedDevicesThreshold = 0; // Todo: Comment out to test sending logs to test DB
+    //qualifiedDevicesThreshold = 0; // Todo: Comment out to test sending logs to test DB
     if (qualifyingDevices < qualifiedDevicesThreshold) {
       inBackground = false;
     }
