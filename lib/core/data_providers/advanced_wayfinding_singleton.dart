@@ -165,18 +165,18 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
 
     // Enable timer, must wait duration before next method execution
     ongoingScanner = new Timer.periodic(
-        Duration(minutes: waitTime), (Timer t) => startScan());
+        Duration(seconds: waitTime * 4), (Timer t) => startScan());
   }
 
   // Start a bluetooth scan of determined second duration and listen to results
   startScan() async {
-    String previousState = await _storage.read(key: "previousState");
-
-    if (inBackground) {
-      await instantiateScannedObjects();
-    } else if (!inBackground && previousState == "background") {
-      await instantiateScannedObjects();
-    }
+       // String previousState = await _storage.read(key: "previousState");
+    //
+    // if (inBackground) {
+    //   await instantiateScannedObjects();
+    // } else if (!inBackground && previousState == "background") {
+    //   await instantiateScannedObjects();
+    // }
 
     flutterBlueInstance.startScan(
         timeout: Duration(seconds: 2), allowDuplicates: false);
@@ -213,25 +213,25 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
     // Close on going scan in case it has not time out
     flutterBlueInstance.stopScan();
 
-    // If scanning from foreground, clear secure storage
-    if (!inBackground) {
-      await _storage.deleteAll();
-      await _storage.write(key: "previousState", value: "foreground");
-    }
-    // Otherwise, let next scan know last scan was background
-    else {
-      await _storage.write(key: "previousState", value: "background");
-      await _storage.write(
-          key: "lastBackgroundScan", value: DateTime.now().toString());
-    }
-
-    // Write timestamp to storage
-    await _storage.write(key: "storageTime", value: getCurrentTimeOfDay());
-
-    // Write scannedObjects to storage
-    scannedObjects.forEach((key, value) {
-      _storage.write(key: key, value: jsonEncode(value));
-    });
+    // // If scanning from foreground, clear secure storage
+    // if (!inBackground) {
+    //   await _storage.deleteAll();
+    //   await _storage.write(key: "previousState", value: "foreground");
+    // }
+    // // Otherwise, let next scan know last scan was background
+    // else {
+    //   await _storage.write(key: "previousState", value: "background");
+    //   await _storage.write(
+    //       key: "lastBackgroundScan", value: DateTime.now().toString());
+    // }
+    //
+    // // Write timestamp to storage
+    // await _storage.write(key: "storageTime", value: getCurrentTimeOfDay());
+    //
+    // // Write scannedObjects to storage
+    // scannedObjects.forEach((key, value) {
+    //   _storage.write(key: key, value: jsonEncode(value));
+    // });
 
 
     // Clear previous scan results
@@ -240,7 +240,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
   }
 
   void processOffloadingLogs( List<Map> newBufferList) {
-    //qualifiedDevicesThreshold = 0; // Todo: Comment out to test sending logs to test DB
+    qualifiedDevicesThreshold = 0; // Todo: Comment out to test sending logs to test DB
     if (qualifyingDevices < qualifiedDevicesThreshold) {
       inBackground = false;
     }
@@ -291,8 +291,10 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
   void sendLogs(Map log) {
     if (userDataProvider.isLoggedIn) {
       // Send to offload API
+      print("Offload data header: $offloadDataHeader");
       var response = _networkHelper.authorizedPost(
           offloadLoggerEndpoint, offloadDataHeader, json.encode(log));
+      print(response.toString());
     } else {
       var response = _networkHelper.authorizedPost(
           offloadLoggerEndpoint, headers, json.encode(log));
