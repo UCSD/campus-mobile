@@ -1,15 +1,12 @@
-import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/location_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_arrival_model.dart';
-import 'package:campus_mobile_experimental/core/models/shuttle_model.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_stop_model.dart';
 import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/core/services/shuttle_service.dart';
 import 'package:location/location.dart';
 import 'dart:math' as Math;
 
-import '../models/shuttle_stop_model.dart';
 import '../models/shuttle_stop_model.dart';
 
 class ShuttleDataProvider extends ChangeNotifier {
@@ -34,7 +31,6 @@ class ShuttleDataProvider extends ChangeNotifier {
   double stopLong;
   double closestDistance = 10000000;
   Map<int, ShuttleStopModel> fetchedStops;
-  Set<int> userStops;
   Map<int, List<ArrivingShuttle>> arrivalsToRender;
   LocationDataProvider _locationDataProvider;
 
@@ -46,9 +42,6 @@ class ShuttleDataProvider extends ChangeNotifier {
       userLat = event.lat;
       userLong = event.lon;
     });
-
-    // hardcoded for debugging purposes
-    userStops = {34893, 434353, 4348634};
 
     arrivalsToRender = Map<int, List<ArrivingShuttle>>();
   }
@@ -79,13 +72,8 @@ class ShuttleDataProvider extends ChangeNotifier {
       print("user longitude: " + userLat.toString());
       print("CLOSEST STOP: " + closestStop.id.toString());
 
-
-      // for debug purposes, we will only have 3 cards
-      // later on, this will be replaced
       await getArrivalInformation();
     }
-    // get information about stops in list
-    //await getStopInformation();
 
     _isLoading = false;
     notifyListeners();
@@ -136,10 +124,8 @@ class ShuttleDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<List<ArrivingShuttle>> fetchArrivalInformation(int stopID) async {
-    return await _shuttleService.getArrivingInformation(stopID);
-    //notifyListeners();
-  }
+  Future<List<ArrivingShuttle>> fetchArrivalInformation(int stopID) async =>
+    await _shuttleService.getArrivingInformation(stopID);
 
   Future<void> calculateClosestStop() async {
     await checkLocationPermission();
@@ -206,10 +192,6 @@ class ShuttleDataProvider extends ChangeNotifier {
   String get error => _error;
 
   ShuttleStopModel get closestStop => _closestStop;
-
-  List<ShuttleStopModel> get listOfFetchedStops {
-    return _shuttleService.data;
-  }
 
   List<ShuttleStopModel> get stopsToRender {
     if (fetchedStops != null) {

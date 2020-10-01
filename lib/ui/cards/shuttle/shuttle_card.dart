@@ -1,10 +1,8 @@
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/shuttle_data_provider.dart';
-import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_arrival_model.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_stop_model.dart';
-import 'package:campus_mobile_experimental/core/services/bottom_navigation_bar_service.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/dots_indicator.dart';
 import 'package:campus_mobile_experimental/ui/cards/shuttle/shuttle_display.dart';
@@ -22,7 +20,6 @@ class ShuttleCard extends StatefulWidget {
 class _ShuttleCardState extends State<ShuttleCard> {
   ShuttleDataProvider _shuttleCardDataProvider = ShuttleDataProvider();
   PageController _controller = PageController();
-  TextEditingController _textEditingController = TextEditingController();
   List<ArrivingShuttle> arrivals;
 
   @override
@@ -81,7 +78,6 @@ class _ShuttleCardState extends State<ShuttleCard> {
             controller: _controller,
             children: renderList,
             onPageChanged: (index) async {
-              //await _shuttleCardDataProvider.fetchArrivalInformation(stopsToRender[index]);
               print(index);
             },
           ),

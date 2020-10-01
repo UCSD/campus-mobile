@@ -1,8 +1,5 @@
 import 'package:campus_mobile_experimental/core/data_providers/shuttle_data_provider.dart';
-import 'package:campus_mobile_experimental/core/models/shuttle_arrival_model.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_stop_model.dart';
-import 'package:campus_mobile_experimental/ui/reusable_widgets/dots_indicator.dart';
-import 'package:campus_mobile_experimental/ui/cards/shuttle/shuttle_display.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

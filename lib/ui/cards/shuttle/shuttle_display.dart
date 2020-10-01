@@ -1,17 +1,9 @@
-import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
-import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
-import 'package:campus_mobile_experimental/core/data_providers/shuttle_data_provider.dart';
-import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_arrival_model.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_model.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_stop_model.dart';
-import 'package:campus_mobile_experimental/core/services/bottom_navigation_bar_service.dart';
-import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
-import 'package:campus_mobile_experimental/ui/reusable_widgets/dots_indicator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:provider/provider.dart';
 
 class ShuttleDisplay extends StatelessWidget {
   ShuttleDisplay({
@@ -28,11 +20,15 @@ class ShuttleDisplay extends StatelessWidget {
   Widget build(BuildContext context) {
     print("Building ${stop.name}");
 
-    //ShuttleDataProvider _shuttleCardDataProvider = Provider.of<ShuttleDataProvider>(context);
-    //arrivingShuttles = _shuttleCardDataProvider.arrivalsToRender;
-
     if (arrivingShuttles == null) {
-      return CircularProgressIndicator();
+      return Container(
+        width: double.infinity,
+        height: 200.0,
+        child: Center(
+          child: Container(
+              height: 32, width: 32, child: CircularProgressIndicator()),
+        ),
+      );
     }
     else {
       return Column(
@@ -143,8 +139,6 @@ class ShuttleDisplay extends StatelessWidget {
     List<Widget> arrivalsToRender = List<Widget>();
     for(int index = 1; index < arrivingShuttles.length && index <= 2; index++) {
       arrivalsToRender.add(buildArrivingShuttle(arrivingShuttles[index]));
-      /*arrivalsToRender.add(Text("Route: ${arrivingShuttles[index].route.name} "
-          "- ${arrivingShuttles[index].secondsToArrival}"));*/
     }
 
     return Column(
@@ -185,14 +179,6 @@ class ShuttleDisplay extends StatelessWidget {
       ],
     );
   }
-/*  Widget buildShuttleDisplay() {
-    return Column(
-      children: [
-        Text("Stop: ${stop.id} - ${stop.name}"),
-        Text(_shuttleCardDataProvider.arrivalsToRender != null ? getArrivingShuttles() : "no arriving shuttle")
-      ],
-    );
-  }*/
 
   String getArrivingShuttles() {
     String str = "";
