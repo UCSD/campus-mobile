@@ -21,7 +21,7 @@ class ShuttleDisplay extends StatelessWidget {
   }): super(key: key);
 
   final ShuttleStopModel stop;
-  List<ArrivingShuttle> arrivingShuttles;
+  final List<ArrivingShuttle> arrivingShuttles;
 
 
   @override
@@ -102,9 +102,11 @@ class ShuttleDisplay extends StatelessWidget {
         children: [
           CircleAvatar(
             minRadius: 40,
-            backgroundColor: Colors.pinkAccent/*Color(HexColor.getColorFromHex(arrivingShuttles[0].pattern.color))*/,
+            backgroundColor: HexColor(arrivingShuttles.isEmpty ?
+              "#B74093" : arrivingShuttles[0].route.color),
             foregroundColor: Colors.black,
-            child: Text("S",/*arrivingShuttles[0].route.name[0],*/
+            child: Text(arrivingShuttles.isEmpty ?
+                "S" : arrivingShuttles[0].route.name[0],
               style: TextStyle(fontSize: 50),
             ),
           ),
@@ -139,7 +141,7 @@ class ShuttleDisplay extends StatelessWidget {
   Widget buildArrivalData() {
 
     List<Widget> arrivalsToRender = List<Widget>();
-    for(int index = 1; index < arrivingShuttles.length; index++) {
+    for(int index = 1; index < arrivingShuttles.length && index <= 2; index++) {
       arrivalsToRender.add(buildArrivingShuttle(arrivingShuttles[index]));
       /*arrivalsToRender.add(Text("Route: ${arrivingShuttles[index].route.name} "
           "- ${arrivingShuttles[index].secondsToArrival}"));*/
@@ -159,9 +161,9 @@ class ShuttleDisplay extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: CircleAvatar(
             minRadius: 20,
-            backgroundColor: Colors.pinkAccent,
+            backgroundColor: HexColor(shuttle.route.color),
             foregroundColor: Colors.black,
-            child: Text(arrivingShuttles[0].route.name[0],
+            child: Text(shuttle.route.name[0],
               style: TextStyle(fontSize: 25),
             ),
           ),

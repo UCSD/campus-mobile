@@ -9,6 +9,9 @@ import 'package:campus_mobile_experimental/core/services/shuttle_service.dart';
 import 'package:location/location.dart';
 import 'dart:math' as Math;
 
+import '../models/shuttle_stop_model.dart';
+import '../models/shuttle_stop_model.dart';
+
 class ShuttleDataProvider extends ChangeNotifier {
   ShuttleDataProvider() {
     /// DEFAULT STATES
@@ -117,13 +120,24 @@ class ShuttleDataProvider extends ChangeNotifier {
         .contains(stopID)) {
       userDataProvider.userProfileModel.selectedStops.add(stopID);
       print("UDP - ${userDataProvider.userProfileModel.selectedStops}");
-      await getArrivalInformation();
-      notifyListeners();
+      arrivalsToRender[stopID] = await fetchArrivalInformation(stopID);
     }
+    print('added');
+    notifyListeners();
   }
 
-  Future<List<ArrivingShuttle>> fetchArrivalInformation(ShuttleStopModel stop) async {
-    return await _shuttleService.getArrivingInformation(stop.id);
+  Future<void> removeStop(int stopID) async {
+    print('remove');
+    if (userDataProvider.userProfileModel.selectedStops
+        .contains(stopID)) {
+      userDataProvider.userProfileModel.selectedStops.remove(stopID);
+      print("UDP - ${userDataProvider.userProfileModel.selectedStops}");
+    }
+    notifyListeners();
+  }
+
+  Future<List<ArrivingShuttle>> fetchArrivalInformation(int stopID) async {
+    return await _shuttleService.getArrivingInformation(stopID);
     //notifyListeners();
   }
 
@@ -205,11 +219,22 @@ class ShuttleDataProvider extends ChangeNotifier {
     return List<ShuttleStopModel>();
   }
 
+  Map<int, ShuttleStopModel> get stopsNotSelected {
+    var output = new Map<int, ShuttleStopModel>.from(fetchedStops);
+    print('stopsToRender length - ${stopsToRender.length}');
+    print(stopsToRender.toString());
+    for (ShuttleStopModel stop in stopsToRender) {
+      output.remove(stop.id);
+    }
+    return output;
+  }
+
   Future<void> getArrivalInformation() async {
     arrivalsToRender[closestStop.id] =
-      await fetchArrivalInformation(closestStop);
+      await fetchArrivalInformation(closestStop.id);
     for (ShuttleStopModel stop in stopsToRender) {
-      arrivalsToRender[stop.id] = await fetchArrivalInformation(stop);
+      print('stop ${stop.id}');
+      arrivalsToRender[stop.id] = await fetchArrivalInformation(stop.id);
     }
   }
 }

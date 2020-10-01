@@ -15,7 +15,7 @@ import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 
 class ManageShuttleView extends StatelessWidget {
-  ShuttleDataProvider _shuttleDataProvider = ShuttleDataProvider();
+  ShuttleDataProvider _shuttleDataProvider;
 
   @override
   Widget build(BuildContext context) {
@@ -79,14 +79,12 @@ class ManageShuttleView extends StatelessWidget {
             leading: Icon(
               Icons.reorder,
             ),
-            /*trailing: Switch(
-            value: Provider.of<ShuttleStopModel>(context)
-                .locationViewState[model.locationName],
-            activeColor: Theme.of(context).buttonColor,
-            onChanged: (_) {
-              _shuttleDataProvider.toggleLocation(model.locationName);
-            },
-          ),*/
+            trailing: IconButton(
+                icon: Icon(Icons.delete_forever),
+                onPressed: () async {
+                  await _shuttleDataProvider.removeStop(model.id);
+                }
+            )
           ));
         }
       }

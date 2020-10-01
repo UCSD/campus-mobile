@@ -7,51 +7,45 @@ import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.da
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class AddShuttleStopsView extends StatelessWidget {
+class AddShuttleStopsView extends StatefulWidget {
+  bool isAddingStop = false;
+
+  @override
+  _AddShuttleStopsViewState createState() => _AddShuttleStopsViewState();
+}
+
+class _AddShuttleStopsViewState extends State<AddShuttleStopsView> {
   ShuttleDataProvider _shuttleDataProvider;
 
   @override
   Widget build(BuildContext context) {
     _shuttleDataProvider = Provider.of<ShuttleDataProvider>(context);
-    return Stack(children: <Widget>[
-      ContainerView(
-        child: buildAllLocationsList(context),
-      ),
-    ]);
+
+    if (widget.isAddingStop) {
+      return Stack(children: <Widget>[
+        ContainerView(
+          child: Center(child: Text("Adding stop...")),
+        ),
+      ]);
+    } else {
+      return Stack(children: <Widget>[
+        ContainerView(
+          child: buildAllLocationsList(context),
+        ),
+      ]);
+    }
   }
 
   Widget buildAllLocationsList(BuildContext context) {
-    return ReorderableListView(
+    return ListView(
       children: createList(context),
-      onReorder: _onReorder,
     );
-  }
-
-  void _onReorder(int oldIndex, int newIndex) {
-    if (newIndex > oldIndex) {
-      newIndex -= 1;
-    }
-    List<ShuttleStopModel> newOrder = _shuttleDataProvider.stopsToRender;
-    List<ShuttleStopModel> toRemove = List<ShuttleStopModel>();
-
-    for (ShuttleStopModel item in newOrder) {
-      if (_shuttleDataProvider.stopsToRender == null) {
-        toRemove.add(item);
-      }
-    }
-    newOrder.removeWhere((element) => toRemove.contains(element));
-    ShuttleStopModel item = newOrder.removeAt(oldIndex);
-    newOrder.insert(newIndex, item);
-    List<int> orderedStopNames = List<int>();
-    for (ShuttleStopModel item in newOrder) {
-      orderedStopNames.add(item.id);
-    }
-    _shuttleDataProvider.reorderStops(orderedStopNames);
   }
 
   List<Widget> createList(BuildContext context) {
     List<Widget> list = List<Widget>();
-    _shuttleDataProvider.fetchedStops.forEach((key, value) {
+
+    _shuttleDataProvider.stopsNotSelected.forEach((key, value) {
       ShuttleStopModel model = value;
       if (model != null) {
         list.add(ListTile(
@@ -59,16 +53,14 @@ class AddShuttleStopsView extends StatelessWidget {
           title: Text(
             model.name,
           ),
-          leading: Icon(
-            Icons.reorder,
-          ),
-          trailing: Switch(
-            value: _shuttleDataProvider.stopsToRender.contains(value),
-            activeColor: Theme.of(context).buttonColor,
-            onChanged: (_) {
-              _shuttleDataProvider.stopsToRender.add(value);
-            },
-          ),
+          onTap: () async {
+            setState(() {
+              widget.isAddingStop = true;
+            });
+            await _shuttleDataProvider.addStop(model.id);
+            widget.isAddingStop = false;
+            Navigator.pop(context);
+          },
         ));
       }
     });

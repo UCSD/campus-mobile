@@ -86,28 +86,14 @@ class _ShuttleCardState extends State<ShuttleCard> {
             },
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Container(
-            decoration: BoxDecoration(border: Border.all()),
-            child: TextField(
-              controller: _textEditingController,
-              onSubmitted: (String value) async {
-                await _shuttleCardDataProvider.addStop(int.parse(value));
-                _textEditingController.text = "";
-                setState(() {});
-              },
-            ),
-          ),
-        ),
-        /*DotsIndicator(
+        DotsIndicator(
           controller: _controller,
           itemCount: renderList.length,
           onPageSelected: (int index) {
             _controller.animateToPage(index,
                 duration: Duration(seconds: 1), curve: Curves.ease);
           },
-        ),*/
+        )
       ],
     );
   }
@@ -119,7 +105,9 @@ class _ShuttleCardState extends State<ShuttleCard> {
         'Manage Shuttle Stops',
       ),
       onPressed: () {
-        Navigator.pushNamed(context, RoutePaths.ManageShuttleView);
+        if (!_shuttleCardDataProvider.isLoading) {
+          Navigator.pushNamed(context, RoutePaths.ManageShuttleView);
+        }
       },
     ));
     return actionButtons;
