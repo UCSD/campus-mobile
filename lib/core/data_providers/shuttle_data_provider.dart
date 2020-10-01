@@ -124,8 +124,13 @@ class ShuttleDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<List<ArrivingShuttle>> fetchArrivalInformation(int stopID) async =>
-    await _shuttleService.getArrivingInformation(stopID);
+  Future<List<ArrivingShuttle>> fetchArrivalInformation(int stopID) async {
+    List<ArrivingShuttle> output =
+      await _shuttleService.getArrivingInformation(stopID);
+
+    output.sort((a, b) => a.secondsToArrival.compareTo(b.secondsToArrival));
+    return output;
+  }
 
   Future<void> calculateClosestStop() async {
     await checkLocationPermission();

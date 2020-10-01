@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class AddShuttleStopsView extends StatefulWidget {
-  bool isAddingStop = false;
 
   @override
   _AddShuttleStopsViewState createState() => _AddShuttleStopsViewState();
@@ -13,12 +12,13 @@ class AddShuttleStopsView extends StatefulWidget {
 
 class _AddShuttleStopsViewState extends State<AddShuttleStopsView> {
   ShuttleDataProvider _shuttleDataProvider;
+  bool isAddingStop = false;
 
   @override
   Widget build(BuildContext context) {
     _shuttleDataProvider = Provider.of<ShuttleDataProvider>(context);
 
-    if (widget.isAddingStop) {
+    if (isAddingStop) {
       return Stack(children: <Widget>[
         ContainerView(
           child: Center(child: Text("Adding stop...")),
@@ -52,10 +52,10 @@ class _AddShuttleStopsViewState extends State<AddShuttleStopsView> {
           ),
           onTap: () async {
             setState(() {
-              widget.isAddingStop = true;
+              isAddingStop = true;
             });
             await _shuttleDataProvider.addStop(model.id);
-            widget.isAddingStop = false;
+            isAddingStop = false;
             Navigator.pop(context);
           },
         ));
