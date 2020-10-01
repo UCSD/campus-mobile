@@ -23,6 +23,7 @@ class CardsDataProvider extends ChangeNotifier {
       'finals',
       'schedule',
       'dining',
+      'parking',
       'availability',
       'events',
       'news',
@@ -50,6 +51,9 @@ class CardsDataProvider extends ChangeNotifier {
 
     _cardOrder.removeWhere((element) => _staffCards.contains(element));
     _cardStates.removeWhere((key, value) => _staffCards.contains(key));
+
+    _cardOrder.removeWhere((element) => _signedOutCards.contains(element));
+    _cardStates.removeWhere((key, value) => _signedOutCards.contains(key));
   }
 
   ///STATES

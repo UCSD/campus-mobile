@@ -67,14 +67,20 @@ class DiningDetailView extends StatelessWidget {
                   Icons.directions_walk,
                   size: 30,
                 ),
-                Text(num.parse(model.distance.toStringAsFixed(1)).toString() + ' mi'),
+                Text(num.parse(model.distance.toStringAsFixed(1)).toString() +
+                    ' mi'),
               ],
             ),
           ],
         ),
         onPressed: () {
-          launch(
-              'https://www.google.com/maps/dir/?api=1&destination=${model.coordinates.lat},${model.coordinates.lon}&travelmode=walking');
+          try {
+            launch(
+                'https://www.google.com/maps/dir/?api=1&destination=${model.coordinates.lat},${model.coordinates.lon}&travelmode=walking',
+                forceSafariVC: true);
+          } catch (e) {
+            // an error occurred, do nothing
+          }
         },
       );
     else
@@ -87,7 +93,11 @@ class DiningDetailView extends StatelessWidget {
         child: Text('Visit Website'),
         textColor: Theme.of(context).textTheme.button.color,
         onPressed: () {
-          launch(model.url);
+          try {
+            launch(model.url, forceSafariVC: true);
+          } catch (e) {
+            // an error occurred, do nothing
+          }
         },
       );
     } else
@@ -100,7 +110,11 @@ class DiningDetailView extends StatelessWidget {
         child: Text('View Menu'),
         textColor: Theme.of(context).textTheme.button.color,
         onPressed: () {
-          launch(model.menuWebsite);
+          try {
+            launch(model.menuWebsite, forceSafariVC: true);
+          } catch (e) {
+            // an error occurred, do nothing
+          }
         },
       );
     } else

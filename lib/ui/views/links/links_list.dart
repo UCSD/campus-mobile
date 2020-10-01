@@ -54,9 +54,9 @@ class LinksList extends StatelessWidget {
   Widget buildLinkTile(LinksModel data, BuildContext context) {
     return ListTile(
       onTap: () async {
-        if (await canLaunch(data.url)) {
-          await launch(data.url);
-        } else {
+        try {
+          await launch(data.url, forceSafariVC: true);
+        } catch (e) {
           Scaffold.of(context).removeCurrentSnackBar();
           Scaffold.of(context).showSnackBar(SnackBar(
             content: Text('Could not open URL.'),

@@ -56,7 +56,7 @@ class ScannerCard extends StatelessWidget {
   }
 
   final _url =
-      'https://mobile.ucsd.edu/replatform/v1/qa/webview/scanner-v2/index.html';
+      'https://mobile.ucsd.edu/replatform/v1/qa/webview/scanner/index.html';
 
   UserDataProvider _userDataProvider;
   Widget buildActionButton(BuildContext context) {
@@ -72,10 +72,10 @@ class ScannerCard extends StatelessWidget {
   }
 
   openLink(String url) async {
-    if (await canLaunch(url)) {
-      launch(url);
-    } else {
-      // can't launch url, there is some error
+    try {
+      launch(url, forceSafariVC: true);
+    } catch (e) {
+      // an error occurred, do nothing
     }
   }
 

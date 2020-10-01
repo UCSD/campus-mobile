@@ -98,8 +98,6 @@ git push origin newfeature
 
 
 #### Submitting
-With your feature branch updated, you are ready to push 
-
 Once you've committed and pushed your feature branch `newfeature` to GitHub, go to the page for your fork on GitHub, select branch 'newfeature' and click the 'New pull request' button.
 
 If you need to make future updates to your pull request, push the updates to your feature branch `newfeature` on GitHub. Your pull request will automatically track the changes on your feature branch and update.

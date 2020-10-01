@@ -20,14 +20,16 @@ class UserProfileModelAdapter extends TypeAdapter<UserProfileModel> {
       selectedLots: (fields[0] as List)?.cast<String>(),
       selectedOccuspaceLocations: (fields[1] as List)?.cast<String>(),
       subscribedTopics: (fields[2] as List)?.cast<String>(),
-      selectedStops: (fields[3] as List)?.cast<int>(),
+      selectedParkingSpots: (fields[3] as Map)?.cast<String, bool>(),
+      selectedParkingLots: (fields[4] as Map)?.cast<String, bool>(),
+      selectedStops: (fields[5] as List)?.cast<int>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, UserProfileModel obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.selectedLots)
       ..writeByte(1)
@@ -35,6 +37,10 @@ class UserProfileModelAdapter extends TypeAdapter<UserProfileModel> {
       ..writeByte(2)
       ..write(obj.subscribedTopics)
       ..writeByte(3)
+      ..write(obj.selectedParkingSpots)
+      ..writeByte(4)
+      ..write(obj.selectedParkingLots)
+      ..writeByte(5)
       ..write(obj.selectedStops);
   }
 

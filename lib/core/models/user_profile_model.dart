@@ -25,21 +25,27 @@ class UserProfileModel extends HiveObject {
   List<String> selectedOccuspaceLocations;
   @HiveField(2)
   List<String> subscribedTopics;
-  @HiveField(3)
-  List<int> selectedStops;
   String ucsdaffiliation;
   String username;
+  @HiveField(3)
+  Map<String, bool> selectedParkingSpots;
+  @HiveField(4)
+  Map<String, bool> selectedParkingLots;
+  @HiveField(5)
+  List<int> selectedStops;
 
   UserProfileModel({
-    this.classifications,
-    this.latestTimeStamp,
-    this.pid,
-    this.selectedLots,
-    this.selectedOccuspaceLocations,
-    this.subscribedTopics,
-    this.selectedStops,
-    this.ucsdaffiliation,
-    this.username,
+      this.classifications,
+      this.latestTimeStamp,
+      this.pid,
+      this.selectedLots,
+      this.selectedOccuspaceLocations,
+      this.subscribedTopics,
+      this.ucsdaffiliation,
+      this.username,
+      this.selectedParkingSpots,
+      this.selectedParkingLots,
+      this.selectedStops
   });
 
   factory UserProfileModel.fromJson(Map<String, dynamic> json) =>
@@ -60,12 +66,20 @@ class UserProfileModel extends HiveObject {
         subscribedTopics: json["subscribedTopics"] == null
             ? List<String>()
             : List<String>.from(json["subscribedTopics"].map((x) => x)),
-        selectedStops: json["selectedStops"] == null
-            ? List<int>()
-            : List<int>.from(json["selectedStops"].map((x) => x)),
         ucsdaffiliation:
             json["ucsdaffiliation"] == null ? null : json["ucsdaffiliation"],
         username: json["username"] == null ? null : json["username"],
+        selectedParkingLots: json["selectedParkingLots"] == null
+            ? Map<String, bool>()
+            : Map<String, bool>.from(json["selectedParkingLots"]
+                .map((x, y) => MapEntry<String, bool>(x, y))),
+        selectedParkingSpots: json["selectedParkingSpots"] == null
+            ? Map<String, bool>()
+            : Map<String, bool>.from(json["selectedParkingSpots"]
+                .map((x, y) => MapEntry<String, bool>(x, y))),
+        selectedStops: json["selectedStops"] == null
+            ? List<int>()
+            : List<int>.from(json["selectedStops"].map((x) => x)),
       );
 
   Map<String, dynamic> toJson() => {
@@ -82,11 +96,19 @@ class UserProfileModel extends HiveObject {
         "subscribedTopics": subscribedTopics == null
             ? null
             : List<dynamic>.from(subscribedTopics.map((x) => x)),
+        "ucsdaffiliation": ucsdaffiliation == null ? null : ucsdaffiliation,
+        "username": username == null ? null : username,
+        "selectedParkingLots": selectedParkingLots == null
+            ? null
+            : Map.from(selectedParkingLots
+                .map((x, y) => MapEntry<String, bool>(x, y))),
+        "selectedParkingSpots": selectedParkingSpots == null
+            ? null
+            : Map.from(selectedParkingSpots
+                .map((x, y) => MapEntry<String, bool>(x, y))),
         "selectedStops": selectedStops == null
             ? null
             : List<dynamic>.from(selectedStops.map((x) => x)),
-        "ucsdaffiliation": ucsdaffiliation == null ? null : ucsdaffiliation,
-        "username": username == null ? null : username,
       };
 }
 

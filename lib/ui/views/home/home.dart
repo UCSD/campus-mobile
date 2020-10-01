@@ -1,6 +1,6 @@
+import 'package:campus_mobile_experimental/core/data_providers/advanced_wayfinding_singleton.dart';
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/notices_data_provider.dart';
-import 'package:campus_mobile_experimental/core/data_providers/proximity_awareness_singleton.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/notices_model.dart';
 import 'package:campus_mobile_experimental/ui/cards/availability/availability_card.dart';
@@ -14,6 +14,7 @@ import 'package:campus_mobile_experimental/ui/cards/myucsdchart/myucsdchart.dart
 import 'package:campus_mobile_experimental/ui/cards/native_scanner/native_scanner_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/news/news_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/notices/notices_card.dart';
+import 'package:campus_mobile_experimental/ui/cards/parking/parking_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/scanner/scanner_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/shuttle/shuttle_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/staff_id/staff_id_card.dart';
@@ -22,6 +23,7 @@ import 'package:campus_mobile_experimental/ui/cards/student_id/student_id_card.d
 import 'package:campus_mobile_experimental/ui/cards/student_info/student_info_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/weather/weather_card.dart';
 import 'package:campus_mobile_experimental/ui/theme/app_layout.dart';
+import 'package:campus_mobile_experimental/ui/views/special_events/banner_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -113,6 +115,12 @@ class _HomeState extends State<Home> {
         case 'staff_id':
           orderedCards.add(StaffIdCard());
           break;
+        case 'special_events':
+          orderedCards.add(BannerCard());
+          break;
+        case 'parking':
+          orderedCards.add(ParkingCard());
+          break;
         case 'weather':
           orderedCards.add(WeatherCard());
           break;
@@ -130,12 +138,12 @@ class _HomeState extends State<Home> {
   void checkToResumeBluetooth(BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    if (prefs.containsKey("proximityAwarenessEnabled") &&
-        prefs.getBool('proximityAwarenessEnabled')) {
-      ProximityAwarenessSingleton bluetoothSingleton =
-          ProximityAwarenessSingleton();
-      bluetoothSingleton.proximityAwarenessEnabled =
-          prefs.getBool("proximityAwarenessEnabled");
+    if (prefs.containsKey("advancedWayfindingEnabled") &&
+        prefs.getBool('advancedWayfindingEnabled')) {
+      AdvancedWayfindingSingleton bluetoothSingleton =
+          AdvancedWayfindingSingleton();
+      bluetoothSingleton.advancedWayfindingEnabled =
+          prefs.getBool("advancedWayfindingEnabled");
       if (bluetoothSingleton.firstInstance) {
         bluetoothSingleton.firstInstance = false;
         if (bluetoothSingleton.userDataProvider == null) {
