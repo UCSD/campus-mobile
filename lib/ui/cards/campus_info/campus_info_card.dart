@@ -17,7 +17,6 @@ class _CampusInfoCardState extends State<CampusInfoCard>
     with WidgetsBindingObserver {
   String cardId = "campus_info";
   WebViewController _webViewController;
-  String url;
 
   @override
   void initState() {
@@ -33,17 +32,22 @@ class _CampusInfoCardState extends State<CampusInfoCard>
 
   @override
   Widget build(BuildContext context) {
+    String webCardURL = getThemeURL(context,
+        'https://mobile.ucsd.edu/replatform/v1/qa/webview/campus_info.html');
+
+    reloadWebViewWithTheme(context, webCardURL, _webViewController);
+
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       reload: () {
-        reloadWebViewWithTheme(context, url, _webViewController);
+        reloadWebViewWithTheme(context, webCardURL, _webViewController);
       },
       isLoading: false,
       titleText: CardTitleConstants.titleMap[cardId],
       errorText: null,
-      child: () => buildCardContent(context),
+      child: () => buildCardContent(context, webCardURL),
     );
   }
 
@@ -52,26 +56,21 @@ class _CampusInfoCardState extends State<CampusInfoCard>
     super.didChangeDependencies();
   }
 
-  String fileURL =
-      "https://mobile.ucsd.edu/replatform/v1/qa/webview/campus_info.html";
-
-  Widget buildCardContent(BuildContext context) {
-    url = fileURL + "?";
-    reloadWebViewWithTheme(context, url, _webViewController);
-
+  Widget buildCardContent(BuildContext context, String webCardURL) {
     return Column(
       children: <Widget>[
         Flexible(
             child: WebView(
+          opaque: false,
           javascriptMode: JavascriptMode.unrestricted,
-          initialUrl: url,
+          initialUrl: webCardURL,
           onWebViewCreated: (controller) {
             _webViewController = controller;
           },
           javascriptChannels: <JavascriptChannel>[
             _printJavascriptChannel(context),
           ].toSet(),
-        ))
+        )),
       ],
     );
   }
