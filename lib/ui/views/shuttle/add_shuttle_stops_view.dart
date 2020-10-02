@@ -21,7 +21,14 @@ class _AddShuttleStopsViewState extends State<AddShuttleStopsView> {
     if (isAddingStop) {
       return Stack(children: <Widget>[
         ContainerView(
-          child: Center(child: Text("Adding stop...")),
+          child: Container(
+            width: double.infinity,
+            height: 200.0,
+            child: Center(
+              child: Container(
+                  height: 32, width: 32, child: CircularProgressIndicator()),
+            ),
+          )
         ),
       ]);
     } else {
