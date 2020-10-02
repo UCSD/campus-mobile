@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:app_settings/app_settings.dart';
 
 // ignore: must_be_immutable
 class AdvancedWayfindingPermission extends StatefulWidget {
@@ -19,7 +20,6 @@ class AdvancedWayfindingPermission extends StatefulWidget {
 class _AdvancedWayfindingPermissionState extends State<AdvancedWayfindingPermission> {
   AdvancedWayfindingSingleton _bluetoothSingleton;
   SharedPreferences pref;
-  bool isOn = false;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,6 @@ class _AdvancedWayfindingPermissionState extends State<AdvancedWayfindingPermiss
   }
 
   void getPreferences() async {
-    isOn = await FlutterBlue.instance.state.last == BluetoothState.unauthorized;
 
     SharedPreferences.getInstance().then((value) {
      pref = value;
@@ -117,76 +116,100 @@ class _AdvancedWayfindingPermissionState extends State<AdvancedWayfindingPermiss
           ),
         ),
         Expanded(child: SizedBox()),
-        Switch(
-          value: bluetoothStarted(context),
-          onChanged: (permissionGranted) {
+        StreamBuilder(
+          stream: FlutterBlue.instance.state,
+          builder: (context,  snapshot){
+            print("Future instance is: " + snapshot.data.toString());
+            if(snapshot.hasData){
+              return Switch(
+                value: bluetoothStarted(context, snapshot),
+                onChanged: (permissionGranted) {
 
+                  startBluetooth(context, permissionGranted);
+                  bool forceOff = false;
+                  if(((snapshot.data as BluetoothState == BluetoothState.unauthorized )  ||(snapshot.data as BluetoothState == BluetoothState.off ) )&& permissionGranted){
+                    forceOff = true;
+                    showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (BuildContext context) {
+                          if (Platform.isIOS) {
+                            return CupertinoAlertDialog(
+                              title: Text("UCSD Mobile would like to use Bluetooth."),
+                              content: Text(
+                                  "This feature use Bluetooth to connect with other devices."),
+                              actions: <Widget>[
+                                FlatButton(
+                                  child: Text('Cancel'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                                FlatButton(
+                                  child: Text('Settings'),
+                                  onPressed: () {
+                                    AppSettings.openAppSettings();
+                                  },
+                                )
+                              ],
+                            );
+                          }
+                          return AlertDialog(
+                            title: Text("UCSD Mobile would like to use Bluetooth."),
+                            content: Text(
+                                "This feature use Bluetooth to connect with other devices."),
+                            actions: <Widget>[
+                              FlatButton(
+                                child: Text('Cancel'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                              FlatButton(
+                                child: Text('Settings'),
+                                onPressed: () {
+                                  AppSettings.openAppSettings();
+                                },
+                              )
+                            ],
+                          );
+                        });
+                  }
+                  setState(() {
+                    if(forceOff){
+                      _bluetoothSingleton.advancedWayfindingEnabled = false;
 
-            startBluetooth(context, permissionGranted);
-            bool forceOff = false;
-            if(!isOn && permissionGranted){
-              forceOff = true;
-              showDialog(
-                  context: context,
-                  barrierDismissible: false,
-                  builder: (BuildContext context) {
-                    if (Platform.isIOS) {
-                      return CupertinoAlertDialog(
-                        title:
-                        Text("Bluetooth permission must be granted."),
-                        content: Text(
-                            "Please go to the Settings app to enable BT access for UC San Diego."),
-                        actions: <Widget>[
-                          CupertinoDialogAction(
-                            child: Text('Ok'),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ],
-                      );
+                    }else{
+                      _bluetoothSingleton.advancedWayfindingEnabled =
+                      !_bluetoothSingleton.advancedWayfindingEnabled;
                     }
-                    return AlertDialog(
-                      title: Text("Bluetooth permission must be granted."),
-                      content: Text(
-                          "Please go to the Settings app to enable BT access for UC San Diego."),
-                      actions: <Widget>[
-                        FlatButton(
-                          child: Text('OK'),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ],
-                    );
+
+                    if (!_bluetoothSingleton.advancedWayfindingEnabled) {
+                      _bluetoothSingleton.stopScans();
+                    }
+                    SharedPreferences.getInstance().then((value) {
+                      value.setBool("advancedWayfindingEnabled", _bluetoothSingleton.advancedWayfindingEnabled);
+                    });
                   });
+                },
+                activeColor: ColorPrimary,
+              );
+            }else{
+              return CircularProgressIndicator();
             }
-            setState(() {
-              if(forceOff){
-                _bluetoothSingleton.advancedWayfindingEnabled = false;
-
-              }else{
-                _bluetoothSingleton.advancedWayfindingEnabled =
-                !_bluetoothSingleton.advancedWayfindingEnabled;
-              }
-
-              if (!_bluetoothSingleton.advancedWayfindingEnabled) {
-                _bluetoothSingleton.stopScans();
-              }
-              pref.setBool("advancedWayfindingEnabled", _bluetoothSingleton.advancedWayfindingEnabled);
-            });
           },
-          activeColor: ColorPrimary,
         ),
+
       ],
     );
   }
 
-  bool bluetoothStarted(BuildContext context) {
-    if(!isOn && _bluetoothSingleton != null &&_bluetoothSingleton.advancedWayfindingEnabled){
-      return false;
+  bool bluetoothStarted(BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+    _bluetoothSingleton = AdvancedWayfindingSingleton();
+
+    if(( snapshot.data as BluetoothState == BluetoothState.unauthorized) || (_bluetoothSingleton != null && !_bluetoothSingleton.advancedWayfindingEnabled)){
+      _bluetoothSingleton.advancedWayfindingEnabled = false;
     }
-      _bluetoothSingleton = AdvancedWayfindingSingleton();
       return _bluetoothSingleton.advancedWayfindingEnabled;
   }
   void checkToResumeBluetooth(BuildContext context) async{
@@ -215,7 +238,7 @@ class _AdvancedWayfindingPermissionState extends State<AdvancedWayfindingPermiss
     }
     if (permissionGranted ) {
       // Future.delayed(Duration(seconds: 5), ()  => bluetoothInstance.getOffloadAuthorization(context));
-    isOn = await _bluetoothSingleton.init();
+      await _bluetoothSingleton.init();
     }
   }
 }

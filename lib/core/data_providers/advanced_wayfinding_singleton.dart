@@ -131,6 +131,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier{
       flutterBlueInstance.state.listen((event) async {
         // Identifies bluetooth as active
         if (event.index == 4) {
+          advancedWayfindingEnabled = true;
           //Use a try catch to avoid fetch errors, will use defaults.
           await extractAPIConstants();
 
