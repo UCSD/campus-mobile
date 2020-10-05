@@ -22,6 +22,7 @@ class CardsDataProvider extends ChangeNotifier {
       'student_info',
       'finals',
       'schedule',
+      'shuttle',
       'dining',
       'parking',
       'availability',
