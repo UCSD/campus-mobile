@@ -239,6 +239,17 @@ List<SingleChildWidget> dependentServices = [
       return messageDataProvider;
     },
   ),
+  // ChangeNotifierProxyProvider<UserDataProvider, FreeFoodDataProvider>(
+  //   create: (_) {
+  //     var freefoodDataProvider = FreeFoodDataProvider();
+
+  //     return freefoodDataProvider;
+  //   },
+  //   update: (_, userDataProvider, freefoodDataProvider) {
+  //     freefoodDataProvider..userDataProvider = userDataProvider;
+  //     return freefoodDataProvider;
+  //   },
+  // ),
   ChangeNotifierProxyProvider<MessagesDataProvider, FreeFoodDataProvider>(
     create: (_) {
       var freefoodDataProvider = FreeFoodDataProvider();
