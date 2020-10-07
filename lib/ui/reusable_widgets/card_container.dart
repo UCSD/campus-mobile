@@ -102,11 +102,10 @@ class CardContainer extends StatelessWidget {
       // web cards are still sized with static values
       return Container(
         width: double.infinity,
-        constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 120),
+        constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 568),
         child: child(),
       );
-    } else if (titleText == "Staff ID") {
-      // web cards are still sized with static values
+    } else if (titleText == "Student ID") {
       return Container(
         width: double.infinity,
         constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 190),
