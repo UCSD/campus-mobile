@@ -56,24 +56,24 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
     return Column(
       children: <Widget>[
         Container(
-          height: 200,
+          height: 250,
           child: PageView(
             controller: _controller,
             children: locationsList,
           ),
         ),
-        SizedBox(
-          height: 15,
-        ),
-        Container(
-          height: 15,
-          child: DotsIndicator(
-            controller: _controller,
-            itemCount: locationsList.length,
-            onPageSelected: (int index) {
-              _controller.animateToPage(index,
-                  duration: Duration(seconds: 1), curve: Curves.ease);
-            },
+        Padding(
+          padding: const EdgeInsets.only(top: 12.0),
+          child: Container(
+            height: 15,
+            child: DotsIndicator(
+              controller: _controller,
+              itemCount: locationsList.length,
+              onPageSelected: (int index) {
+                _controller.animateToPage(index,
+                    duration: Duration(seconds: 1), curve: Curves.ease);
+              },
+            ),
           ),
         ),
       ],

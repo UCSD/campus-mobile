@@ -1,10 +1,9 @@
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/services/bottom_navigation_bar_service.dart';
+import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
-
 import 'package:provider/provider.dart';
 
 const String cardId = 'QRScanner';
@@ -46,9 +45,11 @@ class ScannerCard extends StatelessWidget {
               right: 10,
             ),
           ),
-          Text(
-            getCardContentText(context),
-            textAlign: TextAlign.left,
+          Flexible(
+            child: Text(
+              getCardContentText(context),
+              textAlign: TextAlign.left,
+            ),
           )
         ],
       ),

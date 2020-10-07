@@ -11,6 +11,7 @@ class AuthenticationService {
   /// add any type of data manipulation here so it can be accessed via provider
 
   final NetworkHelper _networkHelper = NetworkHelper();
+
   final String AUTH_SERVICE_API_URL =
       "https://3hepzvdimd.execute-api.us-west-2.amazonaws.com/dev/v1.1/access-profile";
   final String AUTH_SERVICE_API_KEY =
