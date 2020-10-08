@@ -6,6 +6,7 @@ import 'package:campus_mobile_experimental/core/models/news_model.dart';
 import 'package:campus_mobile_experimental/core/navigation/bottom_tab_bar/bottom_navigation_bar_model.dart';
 import 'package:campus_mobile_experimental/core/navigation/top_navigation_bar/app_bar.dart';
 import 'package:campus_mobile_experimental/ui/cards/dining/dining_list.dart';
+import 'package:campus_mobile_experimental/ui/cards/scanner/scanner_view.dart';
 import 'package:campus_mobile_experimental/ui/views/availability/manage_availability_view.dart';
 import 'package:campus_mobile_experimental/ui/views/baseline/baseline_view.dart';
 import 'package:campus_mobile_experimental/ui/views/bluetooth/automatic_bluetooth_logger_view.dart';
@@ -160,6 +161,8 @@ class Router {
         });
       case RoutePaths.BeaconView:
         return MaterialPageRoute(builder: (_) => BeaconView());
+      case RoutePaths.ScanditScanner:
+        return MaterialPageRoute(builder:(_) => ScanditScanner());
     }
   }
 }

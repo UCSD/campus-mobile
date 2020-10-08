@@ -94,7 +94,7 @@ class ScannerCard extends StatelessWidget {
 
   getActionButtonNavigateRoute(BuildContext context) {
     if (Provider.of<UserDataProvider>(context, listen: false).isLoggedIn) {
-      generateScannerUrl();
+      Navigator.pushNamed(context, RoutePaths.ScanditScanner);
     } else {
       Provider.of<BottomNavigationBarProvider>(context, listen: false)
           .currentIndex = NavigationConstants.ProfileTab;
