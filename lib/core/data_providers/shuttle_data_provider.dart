@@ -61,16 +61,16 @@ class ShuttleDataProvider extends ChangeNotifier {
 
       /// if the user is logged in we want to sync the order of parking lots amongst all devices
       if (userDataProvider != null) {
-        print("user logged in");
+        // print("user logged in");
         reorderStops(userDataProvider.userProfileModel.selectedStops);
       }
 
       // get closest stop to current user
       await calculateClosestStop();
 
-      print("user latitude: " + userLat.toString());
-      print("user longitude: " + userLat.toString());
-      print("CLOSEST STOP: " + closestStop.id.toString());
+      // print("user latitude: " + userLat.toString());
+      // print("user longitude: " + userLat.toString());
+      // print("CLOSEST STOP: " + closestStop.id.toString());
 
       await getArrivalInformation();
     }
@@ -96,7 +96,7 @@ class ShuttleDataProvider extends ChangeNotifier {
 
   void reorderStops(List<int> order) {
     ///edit the profile and upload user selected lots
-    print("reordering lists");
+    // print("reordering lists");
     userDataProvider.userProfileModel.selectedStops = order;
     userDataProvider.postUserProfile(userDataProvider.userProfileModel);
     notifyListeners();

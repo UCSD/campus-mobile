@@ -1,3 +1,4 @@
+import 'package:campus_mobile_experimental/core/data_providers/advanced_wayfinding_singleton.dart';
 import 'package:campus_mobile_experimental/core/data_providers/availability_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/class_schedule_data_provider.dart';
@@ -10,7 +11,6 @@ import 'package:campus_mobile_experimental/core/data_providers/messages_data_pro
 import 'package:campus_mobile_experimental/core/data_providers/news_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/notices_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/parking_data_provider.dart';
-import 'package:campus_mobile_experimental/core/data_providers/advanced_wayfinding_singleton.dart';
 import 'package:campus_mobile_experimental/core/data_providers/push_notifications_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/shuttle_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/special_events_data_provider.dart';
@@ -166,12 +166,6 @@ List<SingleChildWidget> dependentServices = [
             } else {
               cardsDataProvider.deactivateStaffCards();
             }
-
-            if (userDataProvider.isLoggedIn) {
-              cardsDataProvider.deactivateSignedOutCards();
-            } else {
-              cardsDataProvider.activateSignedOutCards();
-            }
           });
         return cardsDataProvider;
       }),
@@ -221,10 +215,10 @@ List<SingleChildWidget> dependentServices = [
   }),
   ChangeNotifierProxyProvider<UserDataProvider, ShuttleDataProvider>(
       create: (_) {
-        var shuttleDataProvider = ShuttleDataProvider();
-        shuttleDataProvider.fetchStops();
-        return shuttleDataProvider;
-      }, update: (_, userDataProvider, shuttleDataProvider) {
+    var shuttleDataProvider = ShuttleDataProvider();
+    shuttleDataProvider.fetchStops();
+    return shuttleDataProvider;
+  }, update: (_, userDataProvider, shuttleDataProvider) {
     shuttleDataProvider.userDataProvider = userDataProvider;
     return shuttleDataProvider;
   }),

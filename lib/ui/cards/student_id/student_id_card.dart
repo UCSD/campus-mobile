@@ -99,136 +99,151 @@ class _StudentIdCardState extends State<StudentIdCard> {
       StudentIdProfileModel profileModel,
       BuildContext context) {
     if (MediaQuery.of(context).size.width < 600) {
-      return (Row(children: <Widget>[
-        Column(
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                Padding(
-                    padding: EdgeInsets.only(
-                        left: cardMargin * 1.5, right: cardMargin * 1.5)),
-                Column(
-                  children: <Widget>[
-                    Image.network(
-                      photoModel.photoUrl,
-                      fit: BoxFit.contain,
-                      height: ScalingUtility.verticalSafeBlock * 14,
-                    ),
-                    SizedBox(
-                      height: ScalingUtility.verticalSafeBlock * 1.5,
-                    )
-                  ],
-                ),
-                Padding(
-                    padding: EdgeInsets.only(
-                        left: cardMargin * 1.5, right: cardMargin * 1.5)),
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
-                    Widget>[
-                  Container(
-                    padding: new EdgeInsets.only(
-                        right: ScalingUtility.horizontalSafeBlock * cardMargin),
-                    child: FittedBox(
-                      child: Text(
-                        (nameModel.firstName + " " + nameModel.lastName),
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: getFontSize(
-                                nameModel.firstName + " " + nameModel.lastName,
-                                "name")),
-                        textAlign: TextAlign.left,
-                        softWrap: true,
-                        maxLines: 1,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: ScalingUtility.verticalSafeBlock * .5),
-                  Container(
-                    padding: new EdgeInsets.only(
-                        right: ScalingUtility.horizontalSafeBlock * cardMargin),
-                    child: Text(
-                      profileModel.collegeCurrent,
-                      style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: getFontSize(
-                              profileModel.collegeCurrent, "college")),
-                      textAlign: TextAlign.left,
-                      softWrap: false,
-                      maxLines: 1,
-                    ),
-                  ),
-                  SizedBox(height: ScalingUtility.verticalSafeBlock * .5),
-                  Container(
-                    padding: new EdgeInsets.only(
-                        right: ScalingUtility.horizontalSafeBlock * cardMargin),
-                    child: Text(
-                      profileModel.graduatePrimaryMajorCurrent != ""
-                          ? profileModel.graduatePrimaryMajorCurrent
-                          : profileModel.ugPrimaryMajorCurrent,
-                      style: TextStyle(
-                          fontSize: getFontSize(
-                              profileModel.graduatePrimaryMajorCurrent != ""
-                                  ? profileModel.graduatePrimaryMajorCurrent
-                                  : profileModel.ugPrimaryMajorCurrent,
-                              "major")),
-                      textAlign: TextAlign.left,
-                      softWrap: false,
-                      maxLines: 1,
-                    ),
-                  ),
-                  Padding(
-                    padding:
-                        EdgeInsets.all(ScalingUtility.verticalSafeBlock * .9),
-                  ),
-                  FlatButton(
-                    child: returnBarcodeContainer(
-                        barcodeModel.barCode.toString(), false, context),
-                    padding: EdgeInsets.all(0),
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    onPressed: () {
-                      createAlertDialog(
-                          context,
-                          returnBarcodeContainer(
-                              barcodeModel.barCode.toString(), true, context),
-                          barcodeModel.toString(),
-                          true);
-                    },
-                  ),
-                ]),
-              ],
-            ),
-            Row(children: <Widget>[
-              Align(
-                alignment: Alignment.bottomLeft,
-                child: Padding(
-                  padding: EdgeInsets.only(
-                      left: ScalingUtility.horizontalSafeBlock * cardMargin),
-                  child: Text(
-                    profileModel.classificationType,
-                    style: TextStyle(
-                        fontSize: ScalingUtility.horizontalSafeBlock * 3.5),
-                  ),
-                ),
-              ),
-              Column(
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 16.0),
+        child: (Row(children: <Widget>[
+          Column(
+            children: <Widget>[
+              Row(
                 children: <Widget>[
                   Padding(
-                    padding: EdgeInsets.only(
-                        left: (ScalingUtility.horizontalSafeBlock * 11.225) +
-                            realignText(Theme.of(context))),
-                    child: Text(
-                      barcodeModel.barCode.toString(),
-                      style: TextStyle(
-                          fontSize: ScalingUtility.horizontalSafeBlock * 3,
-                          letterSpacing:
-                              ScalingUtility.horizontalSafeBlock * 1.5),
-                    ),
+                      padding: EdgeInsets.only(
+                          left: cardMargin * 1.5, right: cardMargin * 1.5)),
+                  Column(
+                    children: <Widget>[
+                      Image.network(
+                        photoModel.photoUrl,
+                        fit: BoxFit.contain,
+                        height: ScalingUtility.verticalSafeBlock * 14,
+                      ),
+                      SizedBox(
+                        height: ScalingUtility.verticalSafeBlock * 1.5,
+                      )
+                    ],
                   ),
+                  Padding(
+                      padding: EdgeInsets.only(
+                          left: cardMargin * 1.5, right: cardMargin * 1.5)),
+                  Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Container(
+                          padding: new EdgeInsets.only(
+                              right: ScalingUtility.horizontalSafeBlock *
+                                  cardMargin),
+                          child: FittedBox(
+                            child: Text(
+                              (nameModel.firstName + " " + nameModel.lastName),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: getFontSize(
+                                      nameModel.firstName +
+                                          " " +
+                                          nameModel.lastName,
+                                      "name")),
+                              textAlign: TextAlign.left,
+                              softWrap: true,
+                              maxLines: 1,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: ScalingUtility.verticalSafeBlock * .5),
+                        Container(
+                          padding: new EdgeInsets.only(
+                              right: ScalingUtility.horizontalSafeBlock *
+                                  cardMargin),
+                          child: Text(
+                            profileModel.collegeCurrent,
+                            style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: getFontSize(
+                                    profileModel.collegeCurrent, "college")),
+                            textAlign: TextAlign.left,
+                            softWrap: false,
+                            maxLines: 1,
+                          ),
+                        ),
+                        SizedBox(height: ScalingUtility.verticalSafeBlock * .5),
+                        Container(
+                          padding: new EdgeInsets.only(
+                              right: ScalingUtility.horizontalSafeBlock *
+                                  cardMargin),
+                          child: Text(
+                            profileModel.graduatePrimaryMajorCurrent != ""
+                                ? profileModel.graduatePrimaryMajorCurrent
+                                : profileModel.ugPrimaryMajorCurrent,
+                            style: TextStyle(
+                                fontSize: getFontSize(
+                                    profileModel
+                                                .graduatePrimaryMajorCurrent !=
+                                            ""
+                                        ? profileModel
+                                            .graduatePrimaryMajorCurrent
+                                        : profileModel.ugPrimaryMajorCurrent,
+                                    "major")),
+                            textAlign: TextAlign.left,
+                            softWrap: false,
+                            maxLines: 1,
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(
+                              ScalingUtility.verticalSafeBlock * .9),
+                        ),
+                        FlatButton(
+                          child: returnBarcodeContainer(
+                              barcodeModel.barCode.toString(), false, context),
+                          padding: EdgeInsets.all(0),
+                          materialTapTargetSize:
+                              MaterialTapTargetSize.shrinkWrap,
+                          onPressed: () {
+                            createAlertDialog(
+                                context,
+                                returnBarcodeContainer(
+                                    barcodeModel.barCode.toString(),
+                                    true,
+                                    context),
+                                barcodeModel.toString(),
+                                true);
+                          },
+                        ),
+                      ]),
                 ],
               ),
-            ]),
-          ],
-        ),
-      ]));
+              Row(children: <Widget>[
+                Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                        left: ScalingUtility.horizontalSafeBlock * cardMargin),
+                    child: Text(
+                      profileModel.classificationType,
+                      style: TextStyle(
+                          fontSize: ScalingUtility.horizontalSafeBlock * 3.5),
+                    ),
+                  ),
+                ),
+                Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(
+                          left: (ScalingUtility.horizontalSafeBlock * 11.225) +
+                              realignText(Theme.of(context))),
+                      child: Text(
+                        barcodeModel.barCode.toString(),
+                        style: TextStyle(
+                            fontSize: ScalingUtility.horizontalSafeBlock * 3,
+                            letterSpacing:
+                                ScalingUtility.horizontalSafeBlock * 1.5),
+                      ),
+                    ),
+                  ],
+                ),
+              ]),
+            ],
+          ),
+        ])),
+      );
     } else {
       return (Row(children: <Widget>[
         Padding(
