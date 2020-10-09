@@ -65,7 +65,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
         _academicTermModel = _classScheduleService.academicTermModel;
         final Map<String, String> headers = {
           'Authorization':
-          'Bearer ${_userDataProvider?.authenticationModel?.accessToken}'
+              'Bearer ${_userDataProvider?.authenticationModel?.accessToken}'
         };
 
         /// erase old model
@@ -146,7 +146,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
       }
     }
 
-    if(enrolledCourses.isEmpty) {
+    if (enrolledCourses.isEmpty) {
       _error = "No enrolled courses found.";
       _isLoading = false;
       notifyListeners();
@@ -166,7 +166,8 @@ class ClassScheduleDataProvider extends ChangeNotifier {
           continue;
         }
 
-        if (sectionData.specialMtgCode != 'FI') {
+        if (sectionData.specialMtgCode != 'FI' &&
+            sectionData.specialMtgCode != 'MI') {
           _enrolledClasses[day].add(sectionData);
         } else if (sectionData.specialMtgCode == 'FI') {
           _finals[day].add(sectionData);
