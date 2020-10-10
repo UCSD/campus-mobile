@@ -134,23 +134,6 @@ class _AdvancedWayfindingPermissionState extends State<AdvancedWayfindingPermiss
       _bluetoothSingleton = AdvancedWayfindingSingleton();
       return _bluetoothSingleton.advancedWayfindingEnabled;
   }
-  void checkToResumeBluetooth(BuildContext context) async{
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    if(prefs.containsKey("advancedWayfindingEnabled") && prefs.getBool('advancedWayfindingEnabled')){
-      print(prefs.getBool("advancedWayfindingEnabled"));
-      AdvancedWayfindingSingleton bluetoothSingleton = AdvancedWayfindingSingleton();
-      if(bluetoothSingleton.firstInstance) {
-        bluetoothSingleton.firstInstance = false;
-        print("Instance: "+ bluetoothSingleton.firstInstance.toString());
-        if(bluetoothSingleton.userDataProvider == null) {
-          bluetoothSingleton.userDataProvider =
-              Provider.of<UserDataProvider>(context, listen: false);
-        }
-        bluetoothSingleton.init();
-      }
-    }
-  }
   void startBluetooth(BuildContext context,bool permissionGranted) async {
     _bluetoothSingleton = AdvancedWayfindingSingleton();
     if(_bluetoothSingleton.userDataProvider == null) {
