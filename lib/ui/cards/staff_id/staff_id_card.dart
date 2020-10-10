@@ -16,13 +16,11 @@ class StaffIdCard extends StatefulWidget {
 class _StaffIdCardState extends State<StaffIdCard> with WidgetsBindingObserver {
   String cardId = "staff_id";
   WebViewController _webViewController;
-  String url;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(
-        this); // observer for theme change, widget rebuilt on theme change
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
@@ -33,22 +31,26 @@ class _StaffIdCardState extends State<StaffIdCard> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    String webCardURL =
+        "https://mobile.ucsd.edu/replatform/v1/qa/webview/staff_id.html";
+    _userDataProvider = Provider.of<UserDataProvider>(context);
+    webCardURL +=
+        "?token=" + '${_userDataProvider.authenticationModel.accessToken}';
+    reloadWebViewWithTheme(context, webCardURL, _webViewController);
+
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       reload: () {
-        reloadWebViewWithTheme(context, url, _webViewController);
+        reloadWebViewWithTheme(context, webCardURL, _webViewController);
       },
       isLoading: false,
       titleText: CardTitleConstants.titleMap[cardId],
       errorText: null,
-      child: () => buildCardContent(context),
+      child: () => buildCardContent(context, webCardURL),
     );
   }
-
-  String fileURL =
-      "https://mobile.ucsd.edu/replatform/v1/qa/webview/staff_id.html";
 
   @override
   void didChangeDependencies() {
@@ -58,29 +60,14 @@ class _StaffIdCardState extends State<StaffIdCard> with WidgetsBindingObserver {
   UserDataProvider _userDataProvider;
   set userDataProvider(UserDataProvider value) => _userDataProvider = value;
 
-  Widget buildCardContent(BuildContext context) {
-    _userDataProvider = Provider.of<UserDataProvider>(context);
-
-    /// Verify that user is logged in
-    if (_userDataProvider.isLoggedIn) {
-      /// Initialize header
-      final Map<String, String> header = {
-        'Authorization':
-            'Bearer ${_userDataProvider?.authenticationModel?.accessToken}'
-      };
-    }
-    var tokenQueryString =
-        "token=" + '${_userDataProvider.authenticationModel.accessToken}';
-    url = fileURL + "?" + tokenQueryString;
-
-    reloadWebViewWithTheme(context, url, _webViewController);
-
+  Widget buildCardContent(BuildContext context, String webCardURL) {
     return Column(
       children: <Widget>[
         Flexible(
           child: WebView(
+            opaque: false,
             javascriptMode: JavascriptMode.unrestricted,
-            initialUrl: url,
+            initialUrl: webCardURL,
             onWebViewCreated: (controller) {
               _webViewController = controller;
             },

@@ -12,6 +12,7 @@ import 'package:campus_mobile_experimental/core/data_providers/notices_data_prov
 import 'package:campus_mobile_experimental/core/data_providers/parking_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/advanced_wayfinding_singleton.dart';
 import 'package:campus_mobile_experimental/core/data_providers/push_notifications_data_provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/shuttle_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/special_events_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/student_id_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/surf_data_provider.dart';
@@ -218,6 +219,15 @@ List<SingleChildWidget> dependentServices = [
     availabilityDataProvider.userDataProvider = userDataProvider;
     return availabilityDataProvider;
   }),
+  ChangeNotifierProxyProvider<UserDataProvider, ShuttleDataProvider>(
+      create: (_) {
+        var shuttleDataProvider = ShuttleDataProvider();
+        shuttleDataProvider.fetchStops();
+        return shuttleDataProvider;
+      }, update: (_, userDataProvider, shuttleDataProvider) {
+    shuttleDataProvider.userDataProvider = userDataProvider;
+    return shuttleDataProvider;
+  }),
   ChangeNotifierProxyProvider<UserDataProvider, ParkingDataProvider>(
       create: (_) {
     var parkingDataProvider = ParkingDataProvider();
@@ -239,6 +249,17 @@ List<SingleChildWidget> dependentServices = [
       return messageDataProvider;
     },
   ),
+  // ChangeNotifierProxyProvider<UserDataProvider, FreeFoodDataProvider>(
+  //   create: (_) {
+  //     var freefoodDataProvider = FreeFoodDataProvider();
+
+  //     return freefoodDataProvider;
+  //   },
+  //   update: (_, userDataProvider, freefoodDataProvider) {
+  //     freefoodDataProvider..userDataProvider = userDataProvider;
+  //     return freefoodDataProvider;
+  //   },
+  // ),
   ChangeNotifierProxyProvider<MessagesDataProvider, FreeFoodDataProvider>(
     create: (_) {
       var freefoodDataProvider = FreeFoodDataProvider();
