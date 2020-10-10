@@ -6,8 +6,10 @@ import 'dart:math' as math;
 import 'dart:math';
 import 'dart:typed_data';
 import 'package:background_fetch/background_fetch.dart';
+import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/services/networking.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -24,10 +26,10 @@ enum ScannedDevice {
   SCANNED_DEVICE_DETECT_DISTANCE
 }
 
-class AdvancedWayfindingSingleton extends ChangeNotifier{
+class AdvancedWayfindingSingleton extends ChangeNotifier {
+
+  // Variable holds the current state of scans
   bool inBackground = false;
-  // Using secure storage for background scans
-  FlutterSecureStorage storageLog =  FlutterSecureStorage();
 
   // Instance variable for starting beacon singleton
   BeaconSingleton beaconSingleton;
@@ -77,8 +79,8 @@ class AdvancedWayfindingSingleton extends ChangeNotifier{
   int qualifiedDevicesThreshold = 0;
   int distanceThreshold = 10; // default in ZenHub
   int scanIntervalAllowance = 0;
-  int backgroundScanInterval = 15;
-  int deletionInterval = 30;
+  int backgroundScanInterval = 15; // Minutes
+  int deletionInterval = 30; // Minutes
 
   // Keep track of devices that meet our requirements
   int qualifyingDevices = 0;
@@ -114,12 +116,11 @@ class AdvancedWayfindingSingleton extends ChangeNotifier{
 
   // Initial method for scan set up
   Future<bool> init() async {
-
-    if(userDataProvider.isLoggedIn) {
+    if (userDataProvider.isLoggedIn) {
       //Instantiate access token for logged in user
       offloadDataHeader = {
         'Authorization':
-        'Bearer ${userDataProvider?.authenticationModel?.accessToken}'
+            'Bearer ${userDataProvider?.authenticationModel?.accessToken}'
       };
     }
 
@@ -159,22 +160,30 @@ class AdvancedWayfindingSingleton extends ChangeNotifier{
     });
     return false;
   }
+
   /// This function starts continuous scan (when permission is authorized)
   enableScanning() {
     //Start the initial scan
     startScan();
 
-
     // Enable timer, must wait duration before next method execution
     ongoingScanner = new Timer.periodic(
-        Duration(seconds: waitTime * 5), (Timer t) => startScan());
+        Duration(minutes: waitTime), (Timer t) => startScan());
   }
 
   // Start a bluetooth scan of determined second duration and listen to results
-  startScan()  {
+  startScan() async {
+       // String previousState = await _storage.read(key: "previousState");
+    //
+    // if (inBackground) {
+    //   await instantiateScannedObjects();
+    // } else if (!inBackground && previousState == "background") {
+    //   await instantiateScannedObjects();
+    // }
+
     flutterBlueInstance.startScan(
         timeout: Duration(seconds: 2), allowDuplicates: false);
-    
+
     // Process the scan results (synchronously)
     flutterBlueInstance.scanResults.listen((results) {
       for (ScanResult scanResult in results) {
@@ -198,80 +207,139 @@ class AdvancedWayfindingSingleton extends ChangeNotifier{
     // Include device type for threshold
     List<Map> newBufferList = identifyDeviceTypes();
 
-    bool offloadLog = false;
-    
+    // Remove objects that are no longer continuous found (+ grace period)
+    removeNoncontinuousDevices();
+
     // If there are more than three devices, log location
-    processOffloadingLogs(offloadLog, List.of(newBufferList));
+    processOffloadingLogs(List.of(newBufferList));
 
     // Close on going scan in case it has not time out
     flutterBlueInstance.stopScan();
+
+    // // If scanning from foreground, clear secure storage
+    // if (!inBackground) {
+    //   await _storage.deleteAll();
+    //   await _storage.write(key: "previousState", value: "foreground");
+    // }
+    // // Otherwise, let next scan know last scan was background
+    // else {
+    //   await _storage.write(key: "previousState", value: "background");
+    //   await _storage.write(
+    //       key: "lastBackgroundScan", value: DateTime.now().toString());
+    // }
+    //
+    // // Write timestamp to storage
+    // await _storage.write(key: "storageTime", value: getCurrentTimeOfDay());
+    //
+    // // Write scannedObjects to storage
+    // scannedObjects.forEach((key, value) {
+    //   _storage.write(key: key, value: jsonEncode(value));
+    // });
+
 
     // Clear previous scan results
     bufferList.clear();
     newBufferList.clear();
   }
 
-  void processOffloadingLogs(bool offloadLog, List<Map> newBufferList) {
-    if(inBackground){
-      storageLog.write(key: DateTime.fromMillisecondsSinceEpoch(
-          DateTime.now().millisecondsSinceEpoch)
-          .toString(), value: json.encode({
-        "SOURCE_DEVICE_ADVERTISEMENT_ID": this.advertisementValue,
-        "SOURCE": "UCSDMobileApp",
-        "LAT": 0,
-        "LONG": 0,
-        "DEVICE_LIST": newBufferList
-      }));
-
+  void processOffloadingLogs( List<Map> newBufferList) {
+    //qualifiedDevicesThreshold = 0; // Todo: Comment out to test sending logs to test DB
+    if (qualifyingDevices < qualifiedDevicesThreshold) {
+      inBackground = false;
     }
     if (qualifyingDevices >= qualifiedDevicesThreshold) {
       double lat;
       double long;
       checkLocationPermission();
-
       location.getLocation().then((value) {
         lat = value.latitude;
         long = value.longitude;
 
-      // Reset dwell times
-      resetDevices();
-      qualifyingDevices = 0;
-    
-      //LOG VALUE
-      Map log = {
-        "SOURCE_DEVICE_ADVERTISEMENT_ID": this.advertisementValue,
-        "SOURCE": "UCSDMobileApp",
-        "LAT": (lat == null) ? 0 : lat,
-        "LONG": (long == null) ? 0 : long,
-        "DEVICE_LIST": newBufferList
-      };
-    
-      sendLogs( log);
+        // Reset dwell times
+        resetDevices();
+        qualifyingDevices = 0;
 
+        //LOG VALUE
+        Map log = {
+          "SOURCE_DEVICE_ADVERTISEMENT_ID": this.advertisementValue,
+          "SOURCE": "UCSDMobileApp",
+          "LAT": (lat == null) ? 0 : lat,
+          "LONG": (long == null) ? 0 : long,
+          "DEVICE_LIST": newBufferList
+        };
+
+        // // TODO: Send to test API
+        // Map testLog = {
+        //   "Time": DateTime.fromMillisecondsSinceEpoch(
+        //           DateTime.now().millisecondsSinceEpoch)
+        //       .toString(),
+        //   "SOURCE_DEVICE_ADVERTISEMENT_ID": this.advertisementValue,
+        //   "SOURCE": "UCSDMobileApp",
+        //   "LAT": (lat == null) ? 0 : lat.toString(),
+        //   "LONG": (long == null) ? 0 : long.toString(),
+        //   "DEVICE_LIST": newBufferList
+        // };
+        // if (inBackground) {
+        //   new Dio().post(
+        //       "https://7pfm2wuasb.execute-api.us-west-2.amazonaws.com/qa",
+        //       data: json.encode(testLog));
+        //   inBackground = false;
+        // }
+
+       sendLogs( log);
       });
-
     }
   }
 
   void sendLogs(Map log) {
-
-      if (userDataProvider.isLoggedIn) {
-        // Send to offload API
+    if (userDataProvider.isLoggedIn) {
+      print("Offload data header: " + offloadDataHeader.toString());
+      if(offloadDataHeader == null){
+        offloadDataHeader = {
+          'Authorization':
+          'Bearer ${userDataProvider?.authenticationModel?.accessToken}'
+        };
+      }
+      print("AFTER GETTING ACCESS TOKEN" + offloadDataHeader.toString());
+      // Send to offload API
+      try{
         var response = _networkHelper.authorizedPost(
-            offloadLoggerEndpoint, offloadDataHeader, json.encode(log));
-      } else {
+            offloadLoggerEndpoint, offloadDataHeader, json.encode(log)).then((value){
+            print("RESPONSE: ${value.toString()}");
+        });
+      }catch (Exception){
+          if(Exception.toString().contains(ErrorConstants.invalidBearerToken)){
+            userDataProvider.refreshToken();
+            offloadDataHeader = {
+              'Authorization':
+              'Bearer ${userDataProvider?.authenticationModel?.accessToken}'
+            };
+            _networkHelper.authorizedPost(
+                offloadLoggerEndpoint, offloadDataHeader, json.encode(log));
+          }
+      }
 
-        var response = _networkHelper.authorizedPost(offloadLoggerEndpoint, headers,json.encode(log) );
+
+    } else {
+      try {
+        var response = _networkHelper.authorizedPost(
+            offloadLoggerEndpoint, headers, json.encode(log));
+  }catch(Exception) {
+         getNewToken();
+        var response = _networkHelper.authorizedPost(
+            offloadLoggerEndpoint, headers, json.encode(log));
+      }
 
     }
   }
 
-  String extractAdvertisementUUID(ScanResult scanResult, String calculatedUUID) {
+  String extractAdvertisementUUID(
+      ScanResult scanResult, String calculatedUUID) {
     scanResult.advertisementData.manufacturerData.forEach((key, decimalArray) {
-      calculatedUUID = calculateHexFromArray(decimalArray); //https://stackoverflow.com/questions/60902976/flutter-ios-to-ios-broadcast-beacon-not-working
+      calculatedUUID = calculateHexFromArray(
+          decimalArray); //https://stackoverflow.com/questions/60902976/flutter-ios-to-ios-broadcast-beacon-not-working
     });
     return calculatedUUID;
-
   }
 
 // Identify types of device, currently working for Apple devices and some android
@@ -283,13 +351,17 @@ class AdvancedWayfindingSingleton extends ChangeNotifier{
       if (Platform.isIOS) {
         deviceEntry.insert(
             1,
-            ((scannedObjects[(deviceEntry[0].toString().substring(0, 36))].deviceType != "")
+            ((scannedObjects[(deviceEntry[0].toString().substring(0, 36))]
+                        .deviceType !=
+                    "")
                 ? "${getAppleClassification(scannedObjects[deviceEntry[0].toString().substring(0, 36)].deviceType)}"
                 : "Unavailable"));
       } else if (Platform.isAndroid) {
         deviceEntry.insert(
             1,
-            ((scannedObjects[deviceEntry[0].toString().substring(0, 17)].deviceType != "")
+            ((scannedObjects[deviceEntry[0].toString().substring(0, 17)]
+                        .deviceType !=
+                    "")
                 ? "${getAppleClassification(scannedObjects[deviceEntry[ScannedDevice.SCANNED_DEVICE_ID.index].toString().substring(0, 17)].deviceType)}"
                 : "Unavailable"));
       }
@@ -323,24 +395,35 @@ class AdvancedWayfindingSingleton extends ChangeNotifier{
 
   // Reset device dwell time when used to track user's location
   void resetDevices() {
-    scannedObjects.forEach((key, value) {
-      if (value.timeThresholdMet) {
-        value.timeThresholdMet = false;
-        value.dwellTime = 0;
-        value.scanIntervalAllowancesUsed = 0;
-        value.distance = 0;
+    int currentMinutes = getMinutesTimeOfDay();
+    scannedObjects.removeWhere((key, value) {
+      if (currentMinutes < value.scanTimeMinutes) {
+        return (currentMinutes + 60) - value.scanTimeMinutes >= 2;
       }
+      return currentMinutes - value.scanTimeMinutes >= 2;
     });
+  }
+
+  bool checkDeviceDwellTime(BluetoothDeviceProfile device) {
+    int currentMinutes = getMinutesTimeOfDay();
+    if (currentMinutes < device.scanTimeMinutes) {
+      return (currentMinutes + 60) - device.scanTimeMinutes <
+          dwellTimeThreshold;
+    }
+    return currentMinutes - device.scanTimeMinutes < dwellTimeThreshold;
   }
 
   //Gather information on device scanned
   void identifyDevices(ScanResult scanResult) {
+    int currentMinutes = getMinutesTimeOfDay();
     scannedObjects.update(scanResult.device.id.toString(), (value) {
       value.continuousDuration = true;
       value.rssi = scanResult.rssi;
       if (scanResult.advertisementData.txPowerLevel != null) {
         value.txPowerLevel = scanResult.advertisementData.txPowerLevel;
       }
+      value.scanTimeMinutes = currentMinutes;
+      value.scanIntervalAllowancesUsed = 0;
       return value;
     },
         ifAbsent: () => new BluetoothDeviceProfile(
@@ -352,7 +435,8 @@ class AdvancedWayfindingSingleton extends ChangeNotifier{
                       DateTime.now().millisecondsSinceEpoch)
                   .toString()
             }),
-            true));
+            true,
+            currentMinutes));
   }
 
   // Ensure we only process unique devices during one scan
@@ -365,6 +449,16 @@ class AdvancedWayfindingSingleton extends ChangeNotifier{
       }
     });
     return repeatedDevice;
+  }
+
+  String getCurrentTimeOfDay() {
+    TimeOfDay currentTime = TimeOfDay.now();
+    return "${currentTime.hour}:${currentTime.minute}";
+  }
+
+  int getMinutesTimeOfDay() {
+    TimeOfDay currentTime = TimeOfDay.now();
+    return currentTime.minute;
   }
 
   // Identify the Apple device type
@@ -386,6 +480,18 @@ class AdvancedWayfindingSingleton extends ChangeNotifier{
 
   //Remove devices that are no longer scanned
   void removeNoncontinuousDevices() {
+    scannedObjects.removeWhere((key, value) {
+      bool isDeviceContinuous = checkDeviceDwellTime(value);
+      if (!isDeviceContinuous &&
+          value.scanIntervalAllowancesUsed >= scanIntervalAllowance) {
+        return true;
+      } else if (!isDeviceContinuous &&
+          value.scanIntervalAllowancesUsed < scanIntervalAllowance) {
+        value.scanIntervalAllowancesUsed++;
+      }
+      return false;
+    });
+
     List<String> objectsToRemove = [];
     scannedObjects.forEach((key, value) {
       if (!value.continuousDuration &&
@@ -412,7 +518,8 @@ class AdvancedWayfindingSingleton extends ChangeNotifier{
   void bluetoothLogAnalysis(
       bool repeatedDevice, ScanResult scanResult, String calculatedUUID) {
     if (!repeatedDevice) {
-      scannedObjects[scanResult.device.id.toString()].dwellTime += (waitTime*60); //account for seconds
+      scannedObjects[scanResult.device.id.toString()].dwellTime +=
+          (waitTime * 60); //account for seconds
       scannedObjects[scanResult.device.id.toString()].distance =
           getDistance(scanResult.rssi);
       if (scannedObjects[scanResult.device.id.toString()].dwellTime >=
@@ -437,9 +544,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier{
             .timeStamps[0]
             .toString(),
         scanResult.rssi.toInt(),
-        scannedObjects[scanResult.device.id.toString()]
-            .distance
-            .toInt()
+        scannedObjects[scanResult.device.id.toString()].distance.toInt()
       ];
 
       bufferList.add(actualDeviceLog);
@@ -526,8 +631,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier{
           });
         });
       });
-    } catch (exception) {
-    }
+    } catch (exception) {}
   }
 
   // Used to log current user location or enable the location change listener
@@ -550,7 +654,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier{
     hasPermission = await location.hasPermission();
     if (hasPermission == PermissionStatus.denied) {
       hasPermission = await location.requestPermission();
-      if (hasPermission == PermissionStatus.granted ) {
+      if (hasPermission != PermissionStatus.granted) {
         return;
       }
     }
@@ -584,30 +688,46 @@ class AdvancedWayfindingSingleton extends ChangeNotifier{
 
   // Start a background scan
   void _onBackgroundFetch(String taskID) async {
-    startBackgroundScan();
+    inBackground = true;
+    String lastTimeStamp = await _storage.read(key: "lastBackgroundScan");
+
+    // Start a background scan
+    if (lastTimeStamp == null ||
+        DateTime.now().difference(DateTime.parse(lastTimeStamp)).inMinutes >
+            backgroundScanInterval) {
+      inBackground = true;
+      startScan();
+    }
     BackgroundFetch.finish(taskID);
   }
+
   // Set background tasks
   void backgroundFetchSetUp() {
     // Configure BackgroundFetch.
     BackgroundFetch.configure(
-        BackgroundFetchConfig(
-          minimumFetchInterval: backgroundScanInterval,
-          forceAlarmManager: false,
-          stopOnTerminate: false,
-          startOnBoot: true,
-          enableHeadless: true,
-          requiresBatteryNotLow: false,
-          requiresCharging: false,
-          requiresStorageNotLow: false,
-          requiresDeviceIdle: false,
-          requiredNetworkType: NetworkType.NONE,
-        ),
-        _onBackgroundFetch)
+            BackgroundFetchConfig(
+              minimumFetchInterval: backgroundScanInterval,
+              forceAlarmManager: false,
+              stopOnTerminate: false,
+              startOnBoot: true,
+              enableHeadless: true,
+              requiresBatteryNotLow: false,
+              requiresCharging: false,
+              requiresStorageNotLow: false,
+              requiresDeviceIdle: false,
+              requiredNetworkType: NetworkType.ANY,
+            ),
+            _onBackgroundFetch)
         .then((int status) {
+      _storage.write(
+          key: _randomValue(),
+          value: '[BackgroundFetch] configure success: $status');
     }).catchError((e) {
+      _storage.write(
+          key: _randomValue(), value: '[BackgroundFetch] configure ERROR: $e');
     });
   }
+
   //Parse advertisement data
   String calculateHexFromArray(decimalArray) {
     String uuid = '';
@@ -628,11 +748,10 @@ class AdvancedWayfindingSingleton extends ChangeNotifier{
           "Basic djJlNEpYa0NJUHZ5akFWT0VRXzRqZmZUdDkwYTp2emNBZGFzZWpmaWZiUDc2VUJjNDNNVDExclVh"
     };
     try {
-;      var response = await _networkHelper.authorizedPost(
+      var response = await _networkHelper.authorizedPost(
           tokenEndpoint, tokenHeaders, "grant_type=client_credentials");
 
       headers["Authorization"] = "Bearer " + response["access_token"];
-
 
       return true;
     } catch (e) {
@@ -653,6 +772,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier{
     flutterBlueInstance.scanResults.listen((event) {}).cancel();
     beaconSingleton.beaconBroadcast.stop();
   }
+
   //Get constants for scanning
   Future<void> getData() async {
     String _response = await _networkHelper.authorizedFetch(
@@ -669,8 +789,8 @@ class AdvancedWayfindingSingleton extends ChangeNotifier{
     allowableDevices = List.from(jsonArr);
     backgroundScanInterval = _json["backgroundScanInterval"];
     deletionInterval = _json["deletionInterval"];
-
   }
+
   Future extractAPIConstants() async {
     try {
       await getNewToken();
@@ -678,18 +798,19 @@ class AdvancedWayfindingSingleton extends ChangeNotifier{
       // Fetch parameters for scanning
       await getData();
       // Get device constants
-    } catch (Exception) {
-    }
+    } catch (Exception) {}
   }
 
   Future checkAdvancedWayfindingEnabled() async {
     await SharedPreferences.getInstance().then((value) {
       sharedPreferences = value;
       if (sharedPreferences.containsKey("advancedWayfindingEnabled")) {
-        advancedWayfindingEnabled = sharedPreferences.getBool("advancedWayfindingEnabled");
+        advancedWayfindingEnabled =
+            sharedPreferences.getBool("advancedWayfindingEnabled");
       } else {
         //Write to bt value
-        sharedPreferences.setBool("advancedWayfindingEnabled", advancedWayfindingEnabled);
+        sharedPreferences.setBool(
+            "advancedWayfindingEnabled", advancedWayfindingEnabled);
       }
     });
   }
@@ -700,36 +821,23 @@ class AdvancedWayfindingSingleton extends ChangeNotifier{
     beaconSingleton.init();
     advertisementValue = beaconSingleton.advertisingUUID;
   }
-  Future<void> startBackgroundScan() async {
-    Map<String, String> previousLogs = await storageLog.readAll();
-    if(previousLogs.isNotEmpty){
-      previousLogs.forEach((key, value) {
-        String lastTimeStamp = key;
-        var response = json.decode(value);
-        advertisementValue = response["SOURCE_DEVICE_ADVERTISEMENT_ID"];
-        List<Map> deviceList = List.from(response["DEVICE_LIST"]);
-        for(Map device in deviceList ){
-          scannedObjects.putIfAbsent(device["SCANNED_DEVICE_ID"],() => new BluetoothDeviceProfile(device["SCANNED_DEVICE_ID"], device["SCANNED_DEVICE_DETECT_SIGNAL_STRENGTH"], device["SCANNED_DEVICE_TYPE"], new List<String>.from({
-            device["SCANNED_DEVICE_DETECT_START"]}), true));
-          // Calculate dwell time
-          int year = int.parse(device["SCANNED_DEVICE_DETECT_START"].toString().substring(0,4));
-          int month = int.parse(device["SCANNED_DEVICE_DETECT_START"].toString().substring(5,7));
-          int day =int.parse(device["SCANNED_DEVICE_DETECT_START"].toString().substring(8,10));
-          int hour = int.parse(device["SCANNED_DEVICE_DETECT_START"].toString().substring(11,13));
-          int minute = int.parse(device["SCANNED_DEVICE_DETECT_START"].toString().substring(14,16));
-          int seconds = int.parse(device["SCANNED_DEVICE_DETECT_START"].toString().substring(17,19));
-          scannedObjects[device["SCANNED_DEVICE_ID"]].dwellTime = DateTime.now().difference( new DateTime(year, month,  day, hour,minute
-              ,seconds)).inSeconds as double;
-        }
-        storageLog.deleteAll();
-        inBackground = true;
-        startScan();
-      });
-    }
+
+  Future instantiateScannedObjects() async {
+    var savedDevices = await _storage.readAll();
+    savedDevices.forEach((key, value) {
+      if (key == "previousState") {
+      } else if (key == "lastBackgroundScan") {
+      } else if (key == "storageTime") {
+      } else {
+        scannedObjects.update(
+            key, (v) => new BluetoothDeviceProfile.fromJson(jsonDecode(value)),
+            ifAbsent: () =>
+                new BluetoothDeviceProfile.fromJson(jsonDecode(value)));
+      }
+    });
+    _storage.deleteAll();
   }
 }
-
-
 
 // Helper Class
 class BluetoothDeviceProfile {
@@ -746,5 +854,34 @@ class BluetoothDeviceProfile {
   int scanIntervalAllowancesUsed = 0;
 
   BluetoothDeviceProfile(this.uuid, this.rssi, this.deviceType, this.timeStamps,
-      this.continuousDuration);
+      this.continuousDuration, this.scanTimeMinutes);
+
+  BluetoothDeviceProfile.fromJson(Map<String, dynamic> json)
+      : uuid = json['uuid'],
+        rssi = json['rssi'],
+        deviceType = json['deviceType'],
+        timeStamps = json['timeStamps'].cast<String>(),
+        continuousDuration = json['continuousDuration'],
+        distance = json['distance'],
+        txPowerLevel = json['txPowerLevel'],
+        dwellTime = json['dwellTime'],
+        scanTimeMinutes = json['scanTimeMinutes'],
+        timeThresholdMet = json['timeThresholdMet'],
+        scanIntervalAllowancesUsed = json['scanIntervalAllowancesUsed'];
+
+  Map<String, dynamic> toJson() {
+    return {
+      'uuid': uuid,
+      'rssi': rssi,
+      'deviceType': deviceType,
+      'timeStamps': timeStamps,
+      'continuousDuration': continuousDuration,
+      'distance': distance,
+      'txPowerLevel': txPowerLevel,
+      'dwellTime': dwellTime,
+      'scanTimeMinutes': scanTimeMinutes,
+      'timeThresholdMet': timeThresholdMet,
+      'scanIntervalAllowancesUsed': scanIntervalAllowancesUsed
+    };
+  }
 }

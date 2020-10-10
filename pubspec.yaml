@@ -1,6 +1,6 @@
 name: campus_mobile_experimental
 description: A new Flutter project.
-version: 7.2.11+92
+version: 7.2.12+841
 
 environment:
   sdk: ">=2.6.0 <3.0.0"
@@ -16,7 +16,11 @@ dependencies:
   dots_indicator: 1.2.0
   auto_size_text: 2.1.0
   url_launcher: 5.2.5
-  webview_flutter: 0.3.22+1
+  webview_flutter:
+    git:
+      url: https://github.com/flutter/plugins.git
+      path: packages/webview_flutter
+      ref: 19e8b5e5edf9b97264a260de5555b6cc6b7fc1f8
   intl: 0.16.0
   location: 3.0.2
   app_settings: 4.0.4
@@ -45,10 +49,10 @@ dependencies:
   uuid: 2.2.0
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
   hive_generator: 0.7.1
   build_runner: 1.8.1
+  flutter_test:
+    sdk: flutter
 
 flutter:
   uses-material-design: true
