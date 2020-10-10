@@ -107,12 +107,21 @@ class CardContainer extends StatelessWidget {
         titleText == "Availability" ||
         titleText == "Student ID" ||
         titleText == "Staff ID" ||
+        titleText == "Student ID" ||
         titleText == "Finals") {
       return Container(
         width: double.infinity,
         constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 200),
         child: child(),
       );
+    } else if (titleText == "Parking" &&
+        MediaQuery.of(context).size.width > 600) {
+      return Container(
+        width: double.infinity,
+        constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 800),
+        child: child(),
+      );
+
     } else {
       return Container(
         width: double.infinity,
