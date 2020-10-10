@@ -5,6 +5,7 @@ import 'package:campus_mobile_experimental/core/models/student_id_photo_model.da
 import 'package:campus_mobile_experimental/core/models/student_id_profile_model.dart';
 import 'package:campus_mobile_experimental/core/services/student_id_service.dart';
 import 'package:flutter/material.dart';
+
 class StudentIdDataProvider extends ChangeNotifier {
   StudentIdDataProvider() {
     ///DEFAULT STATES
@@ -39,8 +40,7 @@ class StudentIdDataProvider extends ChangeNotifier {
     notifyListeners();
 
     /// Verify that user is logged in
-    if(_userDataProvider.isLoggedIn){
-
+    if (_userDataProvider.isLoggedIn) {
       /// Initialize header
       final Map<String, String> header = {
         'Authorization':
@@ -48,9 +48,10 @@ class StudentIdDataProvider extends ChangeNotifier {
       };
 
       /// Fetch Barcode
-      if(await _studentIdService.fetchStudentIdBarcode(header)){
+      if (await _studentIdService.fetchStudentIdBarcode(header) &&
+          _studentIdService.studentIdBarcodeModel.barCode != null) {
         _studentIdBarcodeModel = _studentIdService.studentIdBarcodeModel;
-      }else{
+      } else {
         /// Error Handling
         _error = _studentIdService.error.toString();
         _isLoading = false;
@@ -59,11 +60,13 @@ class StudentIdDataProvider extends ChangeNotifier {
         /// Short Circuit
         return;
       }
-      
+
       /// Fetch Name
-      if(await _studentIdService.fetchStudentIdName(header)){
+      if (await _studentIdService.fetchStudentIdName(header) &&
+          _studentIdService.studentIdNameModel.firstName != null &&
+          _studentIdService.studentIdNameModel.lastName != null) {
         _studentIdNameModel = _studentIdService.studentIdNameModel;
-      }else{
+      } else {
         /// Error Handling
         _error = _studentIdService.error.toString();
         _isLoading = false;
@@ -72,11 +75,11 @@ class StudentIdDataProvider extends ChangeNotifier {
         /// Short Circuit
         return;
       }
-      
+
       /// Fetch Photo
-      if(await _studentIdService.fetchStudentIdPhoto(header)){
+      if (await _studentIdService.fetchStudentIdPhoto(header)) {
         _studentIdPhotoModel = _studentIdService.studentIdPhotoModel;
-      }else{
+      } else {
         /// Error Handling
         _error = _studentIdService.error.toString();
         _isLoading = false;
@@ -87,9 +90,9 @@ class StudentIdDataProvider extends ChangeNotifier {
       }
 
       // Fetch Profile
-      if(await _studentIdService.fetchStudentIdProfile(header)){
+      if (await _studentIdService.fetchStudentIdProfile(header)) {
         _studentIdProfileModel = _studentIdService.studentIdProfileModel;
-      }else{
+      } else {
         /// Error Handling
         _error = _studentIdService.error.toString();
         _isLoading = false;
@@ -98,7 +101,7 @@ class StudentIdDataProvider extends ChangeNotifier {
         /// Short Circuit
         return;
       }
-    }else{
+    } else {
       _error = _studentIdService.error.toString();
       _isLoading = false;
       notifyListeners();
@@ -110,7 +113,6 @@ class StudentIdDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-
   ///SIMPLE GETTERS
   bool get isLoading => _isLoading;
   String get error => _error;
@@ -120,7 +122,6 @@ class StudentIdDataProvider extends ChangeNotifier {
   StudentIdPhotoModel get studentIdPhotoModel => _studentIdPhotoModel;
   StudentIdProfileModel get studentIdProfileModel => _studentIdProfileModel;
   int get selectedCourse => _selectedCourse;
-
 
   ///Simple Setters
   set userDataProvider(UserDataProvider value) => _userDataProvider = value;

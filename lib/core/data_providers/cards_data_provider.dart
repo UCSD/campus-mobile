@@ -12,7 +12,9 @@ class CardsDataProvider extends ChangeNotifier {
     _cardStates = {};
     _cardOrder = [
       'QRScanner',
+      'NativeScanner',
       'MyStudentChart',
+      'MyUCSDChart',
       'student_id',
       'campus_info',
       'staff_id',
@@ -21,6 +23,7 @@ class CardsDataProvider extends ChangeNotifier {
       'finals',
       'schedule',
       'dining',
+      'parking',
       'availability',
       'events',
       'news',
@@ -30,6 +33,7 @@ class CardsDataProvider extends ChangeNotifier {
     _studentCards = ['student_info', 'student_id', 'finals', 'schedule'];
 
     _staffCards = [
+      'MyUCSDChart',
       'staff_info',
       'staff_id',
     ];
@@ -46,6 +50,9 @@ class CardsDataProvider extends ChangeNotifier {
 
     _cardOrder.removeWhere((element) => _staffCards.contains(element));
     _cardStates.removeWhere((key, value) => _staffCards.contains(key));
+
+    _cardOrder.removeWhere((element) => _signedOutCards.contains(element));
+    _cardStates.removeWhere((key, value) => _signedOutCards.contains(key));
   }
 
   ///STATES
@@ -64,11 +71,11 @@ class CardsDataProvider extends ChangeNotifier {
   ///Services
   final CardsService _cardsService = CardsService();
 
-  void updateAvailableCards() async {
+  void updateAvailableCards(String ucsdAffiliation) async {
     _isLoading = true;
     _error = null;
     notifyListeners();
-    if (await _cardsService.fetchCards()) {
+    if (await _cardsService.fetchCards(ucsdAffiliation)) {
       _availableCards = _cardsService.cardsModel;
       _lastUpdated = DateTime.now();
       if (_availableCards.isNotEmpty) {

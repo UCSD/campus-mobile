@@ -8,7 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 const String cardId = 'MyStudentChart';
 
-class MyChartCard extends StatelessWidget {
+class MyStudentChartCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
@@ -69,15 +69,15 @@ class MyChartCard extends StatelessWidget {
 
   void handleTap() {
     String myChartUrl =
-        'https://mystudentchart.ucsd.edu/shs/Authentication/Saml/Login?IdP=UCSD%20STUDENT%20AD%20LOGIN';
+        'https://mystudentchart.ucsd.edu/SHS/Authentication/Saml/Login?idp=UCSD_STUDENT_AD_LOGIN';
     openLink(myChartUrl);
   }
 
   openLink(String url) async {
-    if (await canLaunch(url)) {
-      launch(url);
-    } else {
-      // can't launch url, there is some error
+    try {
+      launch(url, forceSafariVC: true);
+    } catch (e) {
+      // an error occurred, do nothing
     }
   }
 }
