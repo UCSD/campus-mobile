@@ -1,12 +1,12 @@
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
+import 'package:campus_mobile_experimental/core/util/webview.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
-import 'package:campus_mobile_experimental/ui/theme/darkmode_helper.dart';
+import 'package:campus_mobile_experimental/ui/theme/app_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:campus_mobile_experimental/ui/theme/app_layout.dart';
 
 class CampusInfoCard extends StatefulWidget {
   CampusInfoCard();
@@ -18,6 +18,7 @@ class _CampusInfoCardState extends State<CampusInfoCard>
     with WidgetsBindingObserver {
   String cardId = "campus_info";
   WebViewController _webViewController;
+  double _contentHeight = cardContentMinHeight;
 
   @override
   void initState() {
@@ -33,8 +34,8 @@ class _CampusInfoCardState extends State<CampusInfoCard>
 
   @override
   Widget build(BuildContext context) {
-    String webCardURL = getThemeURL(context,
-        'https://mobile.ucsd.edu/replatform/v1/qa/webview/campus_info.html');
+    String webCardURL =
+        'https://mobile.ucsd.edu/replatform/v1/qa/webview/campus_info.html';
 
     reloadWebViewWithTheme(context, webCardURL, _webViewController);
 
@@ -52,34 +53,32 @@ class _CampusInfoCardState extends State<CampusInfoCard>
     );
   }
 
-  double _contentHeight = cardContentMinHeight;
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
   }
 
-  Widget buildCardContent(BuildContext context) {
-    reloadWebViewWithTheme(context, _url, _webViewController);
+  Widget buildCardContent(BuildContext context, String webCardURL) {
     return Container(
       height: _contentHeight,
       child: WebView(
+        opaque: false,
         javascriptMode: JavascriptMode.unrestricted,
-        initialUrl: _url,
+        initialUrl: webCardURL,
         onWebViewCreated: (controller) {
           _webViewController = controller;
         },
         javascriptChannels: <JavascriptChannel>[
-          _printJavascriptChannel(context),
+          _campusInfoJavascriptChannel(context),
         ].toSet(),
         onPageFinished: _updateContentHeight,
       ),
     );
   }
 
-  JavascriptChannel _printJavascriptChannel(BuildContext context) {
+  JavascriptChannel _campusInfoJavascriptChannel(BuildContext context) {
     return JavascriptChannel(
-      name: 'CampusMobile',
+      name: 'CampusInfo',
       onMessageReceived: (JavascriptMessage message) {
         openLink(message.message);
       },

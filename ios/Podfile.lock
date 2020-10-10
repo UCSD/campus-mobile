@@ -135,6 +135,7 @@ PODS:
     - Flutter
   - path_provider (0.0.1):
     - Flutter
+  - PromisesObjC (1.2.10)
   - Protobuf (3.11.4)
   - shared_preferences (0.0.1):
     - Flutter
@@ -185,6 +186,7 @@ SPEC REPOS:
     - GoogleDataTransport
     - GoogleMaps
     - GoogleUtilities
+    - MTBBarcodeScanner
     - nanopb
     - PromisesObjC
     - Protobuf
@@ -275,4 +277,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
 
-COCOAPODS: 1.10.0.beta.2
+COCOAPODS: 1.9.3

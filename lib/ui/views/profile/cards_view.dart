@@ -1,7 +1,6 @@
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
-import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -16,7 +15,6 @@ class CardsView extends StatelessWidget {
   }
 
   Widget buildCardsList(BuildContext context) {
-    // TODO: Resolve cardOrder issues from 62-808
     return ReorderableListView(
       children: createList(context),
       onReorder: _onReorder,

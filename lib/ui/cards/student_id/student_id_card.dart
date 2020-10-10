@@ -124,73 +124,90 @@ class _StudentIdCardState extends State<StudentIdCard> {
                   Padding(
                       padding: EdgeInsets.only(
                           left: cardMargin * 1.5, right: cardMargin * 1.5)),
-                  Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
-                      Widget>[
-                    Container(
-                      padding: new EdgeInsets.only(
-                          right: ScalingUtility.horizontalSafeBlock * cardMargin),
-                      child: FittedBox(
-                        child: Text(
-                          (nameModel.firstName + " " + nameModel.lastName),
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: getFontSize(
-                                  nameModel.firstName + " " + nameModel.lastName,
-                                  "name")),
-                          textAlign: TextAlign.left,
-                          softWrap: true,
-                          maxLines: 1,
+                  Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Container(
+                          padding: new EdgeInsets.only(
+                              right: ScalingUtility.horizontalSafeBlock *
+                                  cardMargin),
+                          child: FittedBox(
+                            child: Text(
+                              (nameModel.firstName + " " + nameModel.lastName),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: getFontSize(
+                                      nameModel.firstName +
+                                          " " +
+                                          nameModel.lastName,
+                                      "name")),
+                              textAlign: TextAlign.left,
+                              softWrap: true,
+                              maxLines: 1,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                    SizedBox(height: ScalingUtility.verticalSafeBlock * .5),
-                    Container(
-                      padding: new EdgeInsets.only(
-                          right: ScalingUtility.horizontalSafeBlock * cardMargin),
-                      child: Text(
-                        profileModel.collegeCurrent,
-                        style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: getFontSize(
-                                profileModel.collegeCurrent, "college")),
-                        textAlign: TextAlign.left,
-                        softWrap: false,
-                        maxLines: 1,
-                      ),
-                    ),
-                  SizedBox(height: ScalingUtility.verticalSafeBlock * .5),
-                  Container(
-                    padding: new EdgeInsets.only(
-                        right: ScalingUtility.horizontalSafeBlock * cardMargin),
-                    child: Text(
-                      profileModel.graduatePrimaryMajorCurrent != ""
-                          ? profileModel.graduatePrimaryMajorCurrent
-                          : profileModel.ugPrimaryMajorCurrent,
-                      style: TextStyle(
-                          fontSize: getFontSize(
-                              profileModel.graduatePrimaryMajorCurrent != ""
-                                  ? profileModel.graduatePrimaryMajorCurrent
-                                  : profileModel.ugPrimaryMajorCurrent,
-                              "major")),
-                      textAlign: TextAlign.left,
-                      softWrap: false,
-                      maxLines: 1,
-                    ),
-                    FlatButton(
-                      child: returnBarcodeContainer(
-                          barcodeModel.barCode.toString(), false, context),
-                      padding: EdgeInsets.all(0),
-                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      onPressed: () {
-                        createAlertDialog(
-                            context,
-                            returnBarcodeContainer(
-                                barcodeModel.barCode.toString(), true, context),
-                            barcodeModel.toString(),
-                            true);
-                      },
-                    ),
-                  ]),
+                        SizedBox(height: ScalingUtility.verticalSafeBlock * .5),
+                        Container(
+                          padding: new EdgeInsets.only(
+                              right: ScalingUtility.horizontalSafeBlock *
+                                  cardMargin),
+                          child: Text(
+                            profileModel.collegeCurrent,
+                            style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: getFontSize(
+                                    profileModel.collegeCurrent, "college")),
+                            textAlign: TextAlign.left,
+                            softWrap: false,
+                            maxLines: 1,
+                          ),
+                        ),
+                        SizedBox(height: ScalingUtility.verticalSafeBlock * .5),
+                        Container(
+                          padding: new EdgeInsets.only(
+                              right: ScalingUtility.horizontalSafeBlock *
+                                  cardMargin),
+                          child: Text(
+                            profileModel.graduatePrimaryMajorCurrent != ""
+                                ? profileModel.graduatePrimaryMajorCurrent
+                                : profileModel.ugPrimaryMajorCurrent,
+                            style: TextStyle(
+                                fontSize: getFontSize(
+                                    profileModel
+                                                .graduatePrimaryMajorCurrent !=
+                                            ""
+                                        ? profileModel
+                                            .graduatePrimaryMajorCurrent
+                                        : profileModel.ugPrimaryMajorCurrent,
+                                    "major")),
+                            textAlign: TextAlign.left,
+                            softWrap: false,
+                            maxLines: 1,
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(
+                              ScalingUtility.verticalSafeBlock * .9),
+                        ),
+                        FlatButton(
+                          child: returnBarcodeContainer(
+                              barcodeModel.barCode.toString(), false, context),
+                          padding: EdgeInsets.all(0),
+                          materialTapTargetSize:
+                              MaterialTapTargetSize.shrinkWrap,
+                          onPressed: () {
+                            createAlertDialog(
+                                context,
+                                returnBarcodeContainer(
+                                    barcodeModel.barCode.toString(),
+                                    true,
+                                    context),
+                                barcodeModel.toString(),
+                                true);
+                          },
+                        ),
+                      ]),
                 ],
               ),
               Row(children: <Widget>[

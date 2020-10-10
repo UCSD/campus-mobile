@@ -3,9 +3,9 @@ import 'package:campus_mobile_experimental/core/data_providers/cards_data_provid
 import 'package:campus_mobile_experimental/core/data_providers/shuttle_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_arrival_model.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_stop_model.dart';
+import 'package:campus_mobile_experimental/ui/cards/shuttle/shuttle_display.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/dots_indicator.dart';
-import 'package:campus_mobile_experimental/ui/cards/shuttle/shuttle_display.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
@@ -46,8 +46,8 @@ class _ShuttleCardState extends State<ShuttleCard> {
 
   Widget buildShuttleCard(List<ShuttleStopModel> stopsToRender,
       Map<int, List<ArrivingShuttle>> arrivalsToRender) {
-    print("Stops - ${stopsToRender.length}");
-    print("Arrivals - ${arrivalsToRender.length}");
+    // print("Stops - ${stopsToRender.length}");
+    // print("Arrivals - ${arrivalsToRender.length}");
 
     List<Widget> renderList = List<Widget>();
 
@@ -57,6 +57,7 @@ class _ShuttleCardState extends State<ShuttleCard> {
           arrivingShuttles:
               arrivalsToRender[_shuttleCardDataProvider.closestStop.id]));
     }
+
     for (int i = 0; i < stopsToRender.length; i++) {
       renderList.add(ShuttleDisplay(
           stop: stopsToRender[i],
@@ -78,7 +79,7 @@ class _ShuttleCardState extends State<ShuttleCard> {
             controller: _controller,
             children: renderList,
             onPageChanged: (index) async {
-              print(index);
+              // print(index);
             },
           ),
         ),

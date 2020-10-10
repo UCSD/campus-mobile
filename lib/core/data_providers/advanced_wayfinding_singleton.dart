@@ -5,16 +5,17 @@ import 'dart:io';
 import 'dart:math' as math;
 import 'dart:math';
 import 'dart:typed_data';
+
 import 'package:background_fetch/background_fetch.dart';
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/services/networking.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:location/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'bluetooth_broadcast_singleton.dart';
 
 enum ScannedDevice {
@@ -27,7 +28,6 @@ enum ScannedDevice {
 }
 
 class AdvancedWayfindingSingleton extends ChangeNotifier {
-
   // Variable holds the current state of scans
   bool inBackground = false;
 
@@ -173,7 +173,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
 
   // Start a bluetooth scan of determined second duration and listen to results
   startScan() async {
-       // String previousState = await _storage.read(key: "previousState");
+    // String previousState = await _storage.read(key: "previousState");
     //
     // if (inBackground) {
     //   await instantiateScannedObjects();
@@ -236,13 +236,12 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
     //   _storage.write(key: key, value: jsonEncode(value));
     // });
 
-
     // Clear previous scan results
     bufferList.clear();
     newBufferList.clear();
   }
 
-  void processOffloadingLogs( List<Map> newBufferList) {
+  void processOffloadingLogs(List<Map> newBufferList) {
     //qualifiedDevicesThreshold = 0; // Todo: Comment out to test sending logs to test DB
     if (qualifyingDevices < qualifiedDevicesThreshold) {
       inBackground = false;
@@ -286,7 +285,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
         //   inBackground = false;
         // }
 
-       sendLogs( log);
+        sendLogs(log);
       });
     }
   }
@@ -294,42 +293,41 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
   void sendLogs(Map log) {
     if (userDataProvider.isLoggedIn) {
       print("Offload data header: " + offloadDataHeader.toString());
-      if(offloadDataHeader == null){
+      if (offloadDataHeader == null) {
         offloadDataHeader = {
           'Authorization':
-          'Bearer ${userDataProvider?.authenticationModel?.accessToken}'
+              'Bearer ${userDataProvider?.authenticationModel?.accessToken}'
         };
       }
       print("AFTER GETTING ACCESS TOKEN" + offloadDataHeader.toString());
       // Send to offload API
-      try{
-        var response = _networkHelper.authorizedPost(
-            offloadLoggerEndpoint, offloadDataHeader, json.encode(log)).then((value){
-            print("RESPONSE: ${value.toString()}");
+      try {
+        var response = _networkHelper
+            .authorizedPost(
+                offloadLoggerEndpoint, offloadDataHeader, json.encode(log))
+            .then((value) {
+          print("RESPONSE: ${value.toString()}");
         });
-      }catch (Exception){
-          if(Exception.toString().contains(ErrorConstants.invalidBearerToken)){
-            userDataProvider.refreshToken();
-            offloadDataHeader = {
-              'Authorization':
-              'Bearer ${userDataProvider?.authenticationModel?.accessToken}'
-            };
-            _networkHelper.authorizedPost(
-                offloadLoggerEndpoint, offloadDataHeader, json.encode(log));
-          }
+      } catch (Exception) {
+        if (Exception.toString().contains(ErrorConstants.invalidBearerToken)) {
+          userDataProvider.refreshToken();
+          offloadDataHeader = {
+            'Authorization':
+                'Bearer ${userDataProvider?.authenticationModel?.accessToken}'
+          };
+          _networkHelper.authorizedPost(
+              offloadLoggerEndpoint, offloadDataHeader, json.encode(log));
+        }
       }
-
-
     } else {
       try {
         var response = _networkHelper.authorizedPost(
             offloadLoggerEndpoint, headers, json.encode(log));
-  }catch(Exception) {
-         getNewToken();
+      } catch (Exception) {
+        getNewToken();
         var response = _networkHelper.authorizedPost(
             offloadLoggerEndpoint, headers, json.encode(log));
       }
-
     }
   }
 

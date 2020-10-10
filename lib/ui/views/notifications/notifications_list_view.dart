@@ -29,7 +29,7 @@ class NotificationsListView extends StatelessWidget {
             itemBuilder: (BuildContext context, int index) =>
                 _buildNoMessagesText(),
             controller:
-            Provider.of<MessagesDataProvider>(context).scrollController,
+                Provider.of<MessagesDataProvider>(context).scrollController,
             itemCount: 1,
             separatorBuilder: (BuildContext context, int index) => Divider(),
           );
@@ -39,7 +39,7 @@ class NotificationsListView extends StatelessWidget {
           physics: AlwaysScrollableScrollPhysics(),
           itemBuilder: (BuildContext context, int index) => _buildErrorText(),
           controller:
-          Provider.of<MessagesDataProvider>(context).scrollController,
+              Provider.of<MessagesDataProvider>(context).scrollController,
           itemCount: 1,
           separatorBuilder: (BuildContext context, int index) => Divider(),
         );

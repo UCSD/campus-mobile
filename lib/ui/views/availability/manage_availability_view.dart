@@ -1,11 +1,8 @@
 import 'package:campus_mobile_experimental/core/data_providers/availability_data_provider.dart';
-import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
-import 'package:campus_mobile_experimental/ui/theme/app_styles.dart';
-import 'package:flutter/material.dart';
-import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
 import 'package:campus_mobile_experimental/core/models/availability_model.dart';
+import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 
 class ManageAvailabilityView extends StatelessWidget {
   AvailabilityDataProvider _availabilityDataProvider;
@@ -64,7 +61,7 @@ class ManageAvailabilityView extends StatelessWidget {
           trailing: Switch(
             value: Provider.of<AvailabilityDataProvider>(context)
                 .locationViewState[model.locationName],
-            activeColor: Theme.of(context).buttonColor,
+            activeColor: Theme.of(context).textTheme.button.color,
             onChanged: (_) {
               _availabilityDataProvider.toggleLocation(model.locationName);
             },

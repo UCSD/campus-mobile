@@ -86,15 +86,10 @@ class FinalsCard extends StatelessWidget {
         child: LastUpdatedWidget(time: lastUpdated),
       ),
     );
-    return Container(
-      constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.5),
-      child: ListView(
-        // TODO: Resolve #709
-        // Re-enable scrolling if content overflows space
-//        physics: NeverScrollableScrollPhysics(),
-          children: listToReturn,
-          shrinkWrap: true,
-      ),
+    return ListView(
+      physics: NeverScrollableScrollPhysics(),
+      children: listToReturn,
+      shrinkWrap: true,
     );
   }
 

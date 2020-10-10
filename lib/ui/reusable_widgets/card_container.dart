@@ -101,21 +101,31 @@ class CardContainer extends StatelessWidget {
               height: 32, width: 32, child: CircularProgressIndicator()),
         ),
       );
-    } else if (titleText == "COVID-19 Info" ||
-        titleText == "COVID-19 Info" ||
-        titleText == "Campus Information") { // web cards are still sized with static values
+    } else if (titleText == "Availability") {
+      // web cards are still sized with static values
       return Container(
         width: double.infinity,
-        constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 568),
+        constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 210),
         child: child(),
       );
-    } else if (titleText == "Student ID") {
+    } else if (titleText == "Shuttle") {
+      // web cards are still sized with static values
       return Container(
         width: double.infinity,
-        constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 190),
+        constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 340),
         child: child(),
-      ); }
-    else {
+      );
+    } else if (titleText == "Parking") {
+      double _maxHeight = 320;
+      if (MediaQuery.of(context).size.width > 600) {
+        _maxHeight = 800;
+      }
+      return Container(
+        width: double.infinity,
+        constraints: BoxConstraints(minHeight: 320, maxHeight: _maxHeight),
+        child: child(),
+      );
+    } else {
       return Container(
         width: double.infinity,
         child: child(),

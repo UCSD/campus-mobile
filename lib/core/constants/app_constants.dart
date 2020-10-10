@@ -112,6 +112,7 @@ class CardTitleConstants {
     'staff_id': 'Staff ID',
     'finals': 'Finals',
     'schedule': 'Classes',
+    'shuttle': "Shuttle",
     'dining': 'Dining',
     'availability': 'Availability',
     'events': 'Events',
@@ -119,6 +120,5 @@ class CardTitleConstants {
     'parking': 'Parking',
     'special_events': 'Special Events',
     'weather': 'Weather',
-    'shuttle': "Shuttle"
   };
 }

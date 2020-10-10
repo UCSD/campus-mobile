@@ -1,14 +1,13 @@
 import 'dart:io';
 
+import 'package:app_settings/app_settings.dart';
 import 'package:campus_mobile_experimental/core/data_providers/advanced_wayfinding_singleton.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
-import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:app_settings/app_settings.dart';
 
 // ignore: must_be_immutable
 class AdvancedWayfindingPermission extends StatefulWidget {
@@ -197,7 +196,7 @@ class _AdvancedWayfindingPermissionState
                     });
                   });
                 },
-                activeColor: ColorPrimary,
+                activeColor: Theme.of(context).buttonColor,
               );
             } else {
               return CircularProgressIndicator();

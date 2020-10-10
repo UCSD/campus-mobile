@@ -1,10 +1,10 @@
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
+import 'package:campus_mobile_experimental/core/util/webview.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
-import 'package:campus_mobile_experimental/ui/theme/darkmode_helper.dart';
+import 'package:campus_mobile_experimental/ui/theme/app_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:campus_mobile_experimental/ui/theme/app_layout.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -18,6 +18,7 @@ class _StudentInfoCardState extends State<StudentInfoCard>
     with WidgetsBindingObserver {
   String cardId = "student_info";
   WebViewController _webViewController;
+  double _contentHeight = cardContentMinHeight;
 
   @override
   void initState() {
@@ -52,51 +53,30 @@ class _StudentInfoCardState extends State<StudentInfoCard>
     );
   }
 
-  double _contentHeight = cardContentMinHeight;
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
   }
 
-  UserDataProvider _userDataProvider;
-  set userDataProvider(UserDataProvider value) => _userDataProvider = value;
-
-  String fileURL = "https://cwo-test.ucsd.edu/WebCards/student_info_new.html";
-
-  Widget buildCardContent(BuildContext context) {
-    _userDataProvider = Provider.of<UserDataProvider>(context);
-
-    /// Verify that user is logged in
-    if (_userDataProvider.isLoggedIn) {
-      /// Initialize header
-      final Map<String, String> header = {
-        'Authorization':
-            'Bearer ${_userDataProvider?.authenticationModel?.accessToken}'
-      };
-    }
-    var tokenQueryString =
-        "token=" + '${_userDataProvider.authenticationModel.accessToken}';
-    url = fileURL + "?" + tokenQueryString;
-    reloadWebViewWithTheme(context, url, _webViewController);
-
+  Widget buildCardContent(BuildContext context, String webCardURL) {
     return Container(
         height: _contentHeight,
         child: WebView(
+          opaque: false,
           javascriptMode: JavascriptMode.unrestricted,
           initialUrl: webCardURL,
+          onPageFinished: _updateContentHeight,
           onWebViewCreated: (controller) {
             _webViewController = controller;
           },
           javascriptChannels: <JavascriptChannel>[
-            _printJavascriptChannel(context),
+            _campusMobileJavascriptChannel(context),
           ].toSet(),
-          onPageFinished: _updateContentHeight,
         ));
   }
 
   //Channel to obtain links and open them in new browser
-  JavascriptChannel _printJavascriptChannel(BuildContext context) {
+  JavascriptChannel _campusMobileJavascriptChannel(BuildContext context) {
     return JavascriptChannel(
       name: 'CampusMobile',
       onMessageReceived: (JavascriptMessage message) {
