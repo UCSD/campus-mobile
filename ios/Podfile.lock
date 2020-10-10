@@ -236,7 +236,7 @@ SPEC CHECKSUMS:
   Crashlytics: 9220f5bc89e7a618df411b4f639389dbfb0e03d2
   device_info: d7d233b645a32c40dfdc212de5cf646ca482f175
   Fabric: ea977e3cd9c20425516d3dafd3bf8c941c51223f
-  Firebase: 8db6f2d1b2c5e2984efba4949a145875a8f65fe5
+  Firebase: 658370fa0181826a74b7cfca8d68c5856ca749ae
   firebase_analytics: 045e7ebe7b8a4d27357168072868ff082dca15a6
   firebase_core: dc539d4bdc69894823e4a6e557034a9e48960f21
   firebase_crashlytics: bd8c58df07f107cb7e1a20cb190b9a468e0a69fd
