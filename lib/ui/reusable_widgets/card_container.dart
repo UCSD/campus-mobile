@@ -77,6 +77,11 @@ class CardContainer extends StatelessWidget {
         return Text('No articles found.');
       } else if (titleText == 'Events') {
         return Text('No events found.');
+      } else if (titleText == 'Student ID') {
+        return Padding(
+          padding: const EdgeInsets.only(top: 32.0, bottom: 48.0),
+          child: Text('An error occurred, please try again.'),
+        );
       } else if (titleText == 'Finals') {
         // TODO: Resolve alignment issues on cards without action buttons
         return Padding(
@@ -91,7 +96,6 @@ class CardContainer extends StatelessWidget {
     } else if (isLoading) {
       return Container(
         width: double.infinity,
-        height: 200.0,
         child: Center(
           child: Container(
               height: 32, width: 32, child: CircularProgressIndicator()),

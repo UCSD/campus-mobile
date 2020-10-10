@@ -2,7 +2,6 @@ import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -27,7 +26,10 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorPrimary,
+      appBar: AppBar(
+        elevation: 0.0,
+      ),
+      backgroundColor: lightPrimaryColor, // ColorPrimary, //Colors.white,
       body: _userDataProvider.isLoading
           ? Center(
               child: CircularProgressIndicator(
@@ -41,144 +43,167 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
   Widget buildLoginWidget() {
     return Center(
       child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: 360),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Flexible(
-              child: Image.asset(
+        constraints: BoxConstraints(maxWidth: 300),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Image.asset(
                 'assets/images/UCSanDiegoLogo-nav.png',
                 fit: BoxFit.contain,
                 height: 50,
+                color: Colors.white,
               ),
-            ),
-            SizedBox(height: 80),
-            Flexible(
-              child: Container(
-                color:
-                    Theme.of(context).accentColor, // lightTextFieldBorderColor,
-                child: TextField(
-                  style: TextStyle(
-                      textBaseline: TextBaseline.alphabetic,
-                      color: Colors.black),
-                  decoration: InputDecoration(
-                    hintText: 'Email',
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide.none,
-                      borderRadius: BorderRadius.all(Radius.circular(0.0)),
+              SizedBox(height: 100.0),
+              Padding(
+                  padding: EdgeInsets.only(top: 0.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(100)),
+                        color: Theme.of(context)
+                            .accentColor), //lightTextFieldBorderColor,
+                    child: TextField(
+                      style: TextStyle(
+                          textBaseline: TextBaseline.alphabetic,
+                          color: Colors.black),
+                      decoration: InputDecoration(
+                        hintText: 'UCSD Email',
+                        focusedBorder: OutlineInputBorder(
+                          /*borderSide: BorderSide(
+                            color: Colors.black,
+                          ),*/
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          /*borderSide: BorderSide(
+                            color: Colors.black,
+                          ),*/
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                        ),
+                        contentPadding: EdgeInsets.only(left: 10),
+                        hintStyle: TextStyle(color: ColorPrimary),
+                        fillColor: Colors.white,
+                        filled: true,
+                      ),
+                      keyboardType: TextInputType.emailAddress,
+                      controller: _emailTextFieldController,
                     ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide.none,
-                      borderRadius: BorderRadius.all(Radius.circular(0.0)),
-                    ),
-                    contentPadding: EdgeInsets.only(left: 10),
-                    hintStyle: TextStyle(color: darkAccentColor),
-                    fillColor: Colors.white,
-                    filled: true,
-                  ),
-                  keyboardType: TextInputType.emailAddress,
-                  controller: _emailTextFieldController,
-                ),
-              ),
-            ),
-            SizedBox(height: 10),
-            Flexible(
-              child: Container(
-                color:
-                    Theme.of(context).accentColor, // lightTextFieldBorderColor,
+                  )),
+              SizedBox(height: 15),
+              Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(100)),
+                    color: Theme.of(context).accentColor),
                 child: TextField(
                   style: TextStyle(
                     textBaseline: TextBaseline.alphabetic,
                     color: Colors.black,
                   ),
                   decoration: InputDecoration(
-                      hintText: 'Password',
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.all(Radius.circular(0.0)),
+                    hintText: 'Password',
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.black,
                       ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.all(Radius.circular(0.0)),
+                      borderRadius: BorderRadius.all(Radius.circular(5)),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.black,
                       ),
-                      contentPadding: EdgeInsets.only(left: 10),
-                      hintStyle: TextStyle(color: darkAccentColor),
-                      fillColor: Colors.white,
-                      filled: true),
+                      borderRadius: BorderRadius.all(Radius.circular(5)),
+                    ),
+                    contentPadding: EdgeInsets.only(left: 10),
+                    hintStyle: TextStyle(color: ColorPrimary),
+                    fillColor: Colors.white,
+                    filled: true,
+                  ),
                   obscureText: true,
                   controller: _passwordTextFieldController,
                 ),
               ),
-            ),
-            SizedBox(height: 20),
-            Flexible(
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: OutlineButton(
-                      borderSide: BorderSide(color: lightButtonBorderColor),
-                      child: Text(
-                        'Sign In',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      onPressed: _userDataProvider.isLoading
-                          ? null
-                          : () {
-                              _userDataProvider
-                                  .login(_emailTextFieldController.text,
-                                      _passwordTextFieldController.text)
-                                  .then((isLoggedIn) async {
-                                if (isLoggedIn) {
-                                  Navigator.pushNamedAndRemoveUntil(
-                                      context,
-                                      RoutePaths.BottomNavigationBar,
-                                      (_) => false);
-                                  final prefs =
-                                      await SharedPreferences.getInstance();
-                                  prefs.setBool('showOnboardingScreen', false);
-                                } else {
-                                  showAlertDialog(context);
-                                }
-                              });
-                            },
-                      textColor: lightButtonTextColor,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 10),
-            Flexible(
-              child: Row(
+              SizedBox(height: 40),
+              Padding(
+                  padding: EdgeInsets.only(top: 30.0),
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                          child: FlatButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                          side: BorderSide(color: Colors.white),
+                        ),
+                        color: ColorPrimary,
+                        textColor: lightButtonTextColor,
+                        //child: OutlineButton(
+                        //borderSide: BorderSide(color: ColorPrimary),
+                        child: Text(
+                          'Log in',
+                          style: TextStyle(
+                            color: Colors.white,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                        onPressed: _userDataProvider.isLoading
+                            ? null
+                            : () {
+                                _userDataProvider
+                                    .login(_emailTextFieldController.text,
+                                        _passwordTextFieldController.text)
+                                    .then((isLoggedIn) async {
+                                  if (isLoggedIn) {
+                                    Navigator.pushNamedAndRemoveUntil(
+                                        context,
+                                        RoutePaths.BottomNavigationBar,
+                                        (_) => false);
+                                    final prefs =
+                                        await SharedPreferences.getInstance();
+                                    prefs.setBool(
+                                        'showOnboardingScreen', false);
+                                  } else {
+                                    showAlertDialog(context);
+                                  }
+                                });
+                              },
+
+                        // ),
+                      )),
+                    ],
+                  )),
+              SizedBox(height: 5),
+              Row(
                 children: [
                   GestureDetector(
                     child: Text(
                       'Need help logging in?',
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: Colors.white, fontSize: 12),
                     ),
                     onTap: () async {
-                      String link =
-                          'https://acms.ucsd.edu/students/accounts-and-passwords/index.html';
-                      if (await canLaunch(link)) {
-                        await launch(link);
+                      try {
+                        String link =
+                            'https://acms.ucsd.edu/students/accounts-and-passwords/index.html';
+                        await launch(link, forceSafariVC: true);
+                      } catch (e) {
+                        // an error occurred, do nothing
                       }
                     },
                   ),
-                  GestureDetector(
+
+                  /* GestureDetector(
                     child: Text(
                       'Skip',
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: Colors.white, fontSize: 12),
                     ),
                     onTap: () {
                       Navigator.pushNamedAndRemoveUntil(context,
                           RoutePaths.BottomNavigationBar, (_) => false);
                     },
-                  )
+                  )*/
                 ],
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

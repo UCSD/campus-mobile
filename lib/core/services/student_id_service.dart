@@ -1,15 +1,14 @@
-import 'package:campus_mobile_experimental/core/models/academic_term_model.dart';
-import 'package:campus_mobile_experimental/core/models/class_schedule_model.dart';
 import 'package:campus_mobile_experimental/core/models/student_id_barcode_model.dart';
 import 'package:campus_mobile_experimental/core/models/student_id_name_model.dart';
 import 'package:campus_mobile_experimental/core/models/student_id_photo_model.dart';
 import 'package:campus_mobile_experimental/core/models/student_id_profile_model.dart';
 import 'package:campus_mobile_experimental/core/services/networking.dart';
-import 'package:flutter/cupertino.dart';
 
 class StudentIdService {
-  final String MY_STUDENT_PROFILE_API_URL = 'https://api-qa.ucsd.edu:8243/student/my/v1';
-  final String MY_STUDENT_CONTACT_API_URL = 'https://api-qa.ucsd.edu:8243/student/my/student_contact_info/v1';
+  final String MY_STUDENT_PROFILE_API_URL =
+      'https://api-qa.ucsd.edu:8243/student/my/v1';
+  final String MY_STUDENT_CONTACT_API_URL =
+      'https://api-qa.ucsd.edu:8243/student/my/student_contact_info/v1';
 
   bool _isLoading = false;
   DateTime _lastUpdated;
@@ -28,9 +27,7 @@ class StudentIdService {
     try {
       /// fetch data
       String _response = await _networkHelper.authorizedFetch(
-          MY_STUDENT_CONTACT_API_URL + '/barcode',
-          headers
-      );
+          MY_STUDENT_CONTACT_API_URL + '/barcode', headers);
 
       /// parse data
       _studentIdBarcodeModel = studentIdBarcodeModelFromJson(_response);
@@ -50,9 +47,7 @@ class StudentIdService {
     try {
       /// fetch data
       String _response = await _networkHelper.authorizedFetch(
-          MY_STUDENT_CONTACT_API_URL + '/display_name',
-          headers
-      );
+          MY_STUDENT_CONTACT_API_URL + '/display_name', headers);
 
       /// parse data
       _studentIdNameModel = studentIdNameModelFromJson(_response);
@@ -72,9 +67,7 @@ class StudentIdService {
     try {
       /// fetch data
       String _response = await _networkHelper.authorizedFetch(
-          MY_STUDENT_CONTACT_API_URL + '/photo',
-          headers
-      );
+          MY_STUDENT_CONTACT_API_URL + '/photo', headers);
 
       /// parse data
       _studentIdPhotoModel = studentIdPhotoModelFromJson(_response);
@@ -91,11 +84,11 @@ class StudentIdService {
   Future<bool> fetchStudentIdProfile(Map<String, String> headers) async {
     _error = null;
     _isLoading = true;
-     try {
+    try {
       /// fetch data
       String _response = await _networkHelper.authorizedFetch(
-          MY_STUDENT_PROFILE_API_URL + '/profile',
-          headers);
+          MY_STUDENT_PROFILE_API_URL + '/profile', headers);
+
       _studentIdProfileModel = studentIdProfileModelFromJson(_response);
       _isLoading = false;
       return true;
@@ -113,6 +106,4 @@ class StudentIdService {
   StudentIdProfileModel get studentIdProfileModel => _studentIdProfileModel;
   bool get isLoading => _isLoading;
   DateTime get lastUpdated => _lastUpdated;
-
-
 }

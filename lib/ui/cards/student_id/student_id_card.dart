@@ -158,23 +158,23 @@ class _StudentIdCardState extends State<StudentIdCard> {
                         maxLines: 1,
                       ),
                     ),
-                    SizedBox(height: ScalingUtility.verticalSafeBlock * .5),
-                    Container(
-                      padding: new EdgeInsets.only(
-                          right: ScalingUtility.horizontalSafeBlock * cardMargin),
-                      child: Text(
-                        profileModel.ugPrimaryMajorCurrent,
-                        style: TextStyle(
-                            fontSize: getFontSize(
-                                profileModel.ugPrimaryMajorCurrent, "major")),
-                        textAlign: TextAlign.left,
-                        softWrap: false,
-                        maxLines: 1,
-                      ),
-                    ),
-                    Padding(
-                      padding:
-                          EdgeInsets.all(ScalingUtility.verticalSafeBlock * .9),
+                  SizedBox(height: ScalingUtility.verticalSafeBlock * .5),
+                  Container(
+                    padding: new EdgeInsets.only(
+                        right: ScalingUtility.horizontalSafeBlock * cardMargin),
+                    child: Text(
+                      profileModel.graduatePrimaryMajorCurrent != ""
+                          ? profileModel.graduatePrimaryMajorCurrent
+                          : profileModel.ugPrimaryMajorCurrent,
+                      style: TextStyle(
+                          fontSize: getFontSize(
+                              profileModel.graduatePrimaryMajorCurrent != ""
+                                  ? profileModel.graduatePrimaryMajorCurrent
+                                  : profileModel.ugPrimaryMajorCurrent,
+                              "major")),
+                      textAlign: TextAlign.left,
+                      softWrap: false,
+                      maxLines: 1,
                     ),
                     FlatButton(
                       child: returnBarcodeContainer(
@@ -286,10 +286,15 @@ class _StudentIdCardState extends State<StudentIdCard> {
                 Container(
                   padding: new EdgeInsets.only(right: cardMargin),
                   child: Text(
-                    profileModel.ugPrimaryMajorCurrent,
+                    profileModel.graduatePrimaryMajorCurrent != ""
+                        ? profileModel.graduatePrimaryMajorCurrent
+                        : profileModel.ugPrimaryMajorCurrent,
                     style: TextStyle(
                         fontSize: TabletFontSize(
-                            profileModel.ugPrimaryMajorCurrent, "major")),
+                            profileModel.graduatePrimaryMajorCurrent != ""
+                                ? profileModel.graduatePrimaryMajorCurrent
+                                : profileModel.ugPrimaryMajorCurrent,
+                            "major")),
                     textAlign: TextAlign.left,
                     softWrap: false,
                     maxLines: 1,

@@ -1,5 +1,4 @@
 import 'package:campus_mobile_experimental/core/data_providers/availability_data_provider.dart';
-import 'package:campus_mobile_experimental/core/data_providers/barcode_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/class_schedule_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/dining_data_proivder.dart';
@@ -11,7 +10,9 @@ import 'package:campus_mobile_experimental/core/data_providers/messages_data_pro
 import 'package:campus_mobile_experimental/core/data_providers/news_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/notices_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/parking_data_provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/advanced_wayfinding_singleton.dart';
 import 'package:campus_mobile_experimental/core/data_providers/push_notifications_data_provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/shuttle_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/special_events_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/student_id_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/surf_data_provider.dart';
@@ -148,7 +149,8 @@ List<SingleChildWidget> dependentServices = [
       update: (_, userDataProvider, cardsDataProvider) {
         cardsDataProvider
           ..loadSavedData().then((value) {
-            cardsDataProvider.updateAvailableCards();
+            cardsDataProvider.updateAvailableCards(
+                userDataProvider.authenticationModel.ucsdaffiliation);
             if (userDataProvider.isLoggedIn &&
                 (userDataProvider.userProfileModel.classifications?.student ??
                     false)) {
@@ -184,22 +186,15 @@ List<SingleChildWidget> dependentServices = [
     }
     return classScheduleDataProvider;
   }),
-  ChangeNotifierProxyProvider<UserDataProvider, BarcodeDataProvider>(
+  ChangeNotifierProxyProvider<UserDataProvider, AdvancedWayfindingSingleton>(
       create: (_) {
-    var barcodeDataProvider = BarcodeDataProvider();
-    return barcodeDataProvider;
-  }, update: (_, userDataProvider, barcodeDataProvider) {
-    barcodeDataProvider.userDataProvider = userDataProvider;
-    return barcodeDataProvider;
-  }),
-  ChangeNotifierProxyProvider<UserDataProvider, ParkingDataProvider>(
-      create: (_) {
-    var parkingDataProvider = ParkingDataProvider();
-    parkingDataProvider.fetchParkingLots();
-    return parkingDataProvider;
-  }, update: (_, userDataProvider, parkingDataProvider) {
-    parkingDataProvider.userDataProvider = userDataProvider;
-    return parkingDataProvider;
+    print("USER DATA SET");
+    var proximityAwarenessSingleton = AdvancedWayfindingSingleton();
+    return proximityAwarenessSingleton;
+  }, update: (_, userDataProvider, proximityAwarenessSingleton) {
+    proximityAwarenessSingleton..userDataProvider = userDataProvider;
+    print("USER DATA SET");
+    return proximityAwarenessSingleton;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, StudentIdDataProvider>(
       create: (_) {
@@ -224,6 +219,24 @@ List<SingleChildWidget> dependentServices = [
     availabilityDataProvider.userDataProvider = userDataProvider;
     return availabilityDataProvider;
   }),
+  ChangeNotifierProxyProvider<UserDataProvider, ShuttleDataProvider>(
+      create: (_) {
+        var shuttleDataProvider = ShuttleDataProvider();
+        shuttleDataProvider.fetchStops();
+        return shuttleDataProvider;
+      }, update: (_, userDataProvider, shuttleDataProvider) {
+    shuttleDataProvider.userDataProvider = userDataProvider;
+    return shuttleDataProvider;
+  }),
+  ChangeNotifierProxyProvider<UserDataProvider, ParkingDataProvider>(
+      create: (_) {
+    var parkingDataProvider = ParkingDataProvider();
+    return parkingDataProvider;
+  }, update: (_, userDataProvider, parkingDataProvider) {
+    parkingDataProvider.userDataProvider = userDataProvider;
+    parkingDataProvider.fetchParkingData();
+    return parkingDataProvider;
+  }),
   ChangeNotifierProxyProvider<UserDataProvider, MessagesDataProvider>(
     create: (_) {
       var messageDataProvider = MessagesDataProvider();
@@ -236,6 +249,17 @@ List<SingleChildWidget> dependentServices = [
       return messageDataProvider;
     },
   ),
+  // ChangeNotifierProxyProvider<UserDataProvider, FreeFoodDataProvider>(
+  //   create: (_) {
+  //     var freefoodDataProvider = FreeFoodDataProvider();
+
+  //     return freefoodDataProvider;
+  //   },
+  //   update: (_, userDataProvider, freefoodDataProvider) {
+  //     freefoodDataProvider..userDataProvider = userDataProvider;
+  //     return freefoodDataProvider;
+  //   },
+  // ),
   ChangeNotifierProxyProvider<MessagesDataProvider, FreeFoodDataProvider>(
     create: (_) {
       var freefoodDataProvider = FreeFoodDataProvider();
