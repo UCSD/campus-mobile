@@ -1,6 +1,6 @@
 name: campus_mobile_experimental
 description: A new Flutter project.
-version: 7.2.8+829
+version: 7.2.12+841
 
 environment:
   sdk: ">=2.6.0 <3.0.0"
@@ -37,7 +37,9 @@ dependencies:
   barcode_scan: 3.0.1
   background_fetch: 0.6.0
   flutter_blue:
-    git: git://github.com/UCSD/flutter_blue.git
+    git:
+      url: https://github.com/UCSD/flutter_blue.git
+      ref: master
   beacon_broadcast: 0.2.1
   uuid: 2.2.0
 

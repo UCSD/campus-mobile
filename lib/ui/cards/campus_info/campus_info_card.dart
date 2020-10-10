@@ -17,8 +17,7 @@ class _CampusInfoCardState extends State<CampusInfoCard>
     with WidgetsBindingObserver {
   String cardId = "campus_info";
   WebViewController _webViewController;
-  String _url =
-      "https://mobile.ucsd.edu/replatform/v1/qa/webview/campus_info.html";
+  String url;
 
   @override
   void initState() {
@@ -39,7 +38,7 @@ class _CampusInfoCardState extends State<CampusInfoCard>
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       reload: () {
-        reloadWebViewWithTheme(context, _url, _webViewController);
+        reloadWebViewWithTheme(context, url, _webViewController);
       },
       isLoading: false,
       titleText: CardTitleConstants.titleMap[cardId],
@@ -53,14 +52,19 @@ class _CampusInfoCardState extends State<CampusInfoCard>
     super.didChangeDependencies();
   }
 
+  String fileURL =
+      "https://mobile.ucsd.edu/replatform/v1/qa/webview/campus_info.html";
+
   Widget buildCardContent(BuildContext context) {
-    reloadWebViewWithTheme(context, _url, _webViewController);
+    url = fileURL + "?";
+    reloadWebViewWithTheme(context, url, _webViewController);
+
     return Column(
       children: <Widget>[
         Flexible(
             child: WebView(
           javascriptMode: JavascriptMode.unrestricted,
-          initialUrl: _url,
+          initialUrl: url,
           onWebViewCreated: (controller) {
             _webViewController = controller;
           },
@@ -82,10 +86,10 @@ class _CampusInfoCardState extends State<CampusInfoCard>
   }
 
   openLink(String url) async {
-    if (await canLaunch(url)) {
-      launch(url);
-    } else {
-      //can't launch url, there is some error
+    try {
+      launch(url, forceSafariVC: true);
+    } catch (e) {
+      // an error occurred, do nothing
     }
   }
 }
