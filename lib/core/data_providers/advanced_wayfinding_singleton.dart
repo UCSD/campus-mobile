@@ -115,9 +115,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
   }
 
   // Initial method for scan set up
-  init() async {
-    inBackground = false;
-
+  Future<bool> init() async {
     if (userDataProvider.isLoggedIn) {
       //Instantiate access token for logged in user
       offloadDataHeader = {
@@ -134,6 +132,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
       flutterBlueInstance.state.listen((event) async {
         // Identifies bluetooth as active
         if (event.index == 4) {
+          advancedWayfindingEnabled = true;
           //Use a try catch to avoid fetch errors, will use defaults.
           await extractAPIConstants();
 
@@ -154,9 +153,12 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
 
           // Enable continuous scan
           enableScanning();
+
+          return true;
         }
       });
     });
+    return false;
   }
 
   /// This function starts continuous scan (when permission is authorized)
