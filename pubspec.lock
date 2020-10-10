@@ -149,7 +149,7 @@ packages:
     source: hosted
     version: "1.1.2+1"
   characters:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: characters
       url: "https://pub.dartlang.org"
@@ -226,12 +226,12 @@ packages:
     source: hosted
     version: "1.3.6"
   dartx:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: dartx
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.5.0"
+    version: "0.3.0"
   device_info:
     dependency: "direct main"
     description:
@@ -260,13 +260,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.2.0"
-  fake_async:
-    dependency: transitive
-    description:
-      name: fake_async
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.0"
   file:
     dependency: transitive
     description:
@@ -379,11 +372,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.4.0"
-  flutter_test:
-    dependency: "direct dev"
-    description: flutter
-    source: sdk
-    version: "0.0.0"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -437,7 +425,7 @@ packages:
       name: hive_generator
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.7.1"
+    version: "0.7.0+2"
   html:
     dependency: transitive
     description:
@@ -591,7 +579,7 @@ packages:
       name: path
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.7.0"
+    version: "1.6.4"
   path_provider:
     dependency: "direct main"
     description:
@@ -814,13 +802,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
-  test_api:
-    dependency: transitive
-    description:
-      name: test_api
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.2.17"
   time:
     dependency: transitive
     description:

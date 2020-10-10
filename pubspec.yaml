@@ -48,10 +48,12 @@ dependencies:
   uuid: 2.2.0
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  hive_generator: 0.7.1
+  hive_generator: 0.7.0+2
   build_runner: 1.8.1
+
+dependency_overrides:
+  dartx: 0.3.0
+  characters: 1.0.0
 
 flutter:
   uses-material-design: true
