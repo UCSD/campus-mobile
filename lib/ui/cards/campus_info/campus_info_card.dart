@@ -18,8 +18,6 @@ class _CampusInfoCardState extends State<CampusInfoCard>
     with WidgetsBindingObserver {
   String cardId = "campus_info";
   WebViewController _webViewController;
-  String _url =
-      "https://cwo-test.ucsd.edu/WebCards/campus_info.html?dummy=true";
 
   @override
   void initState() {
@@ -35,17 +33,22 @@ class _CampusInfoCardState extends State<CampusInfoCard>
 
   @override
   Widget build(BuildContext context) {
+    String webCardURL = getThemeURL(context,
+        'https://mobile.ucsd.edu/replatform/v1/qa/webview/campus_info.html');
+
+    reloadWebViewWithTheme(context, webCardURL, _webViewController);
+
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       reload: () {
-        reloadWebViewWithTheme(context, _url, _webViewController);
+        reloadWebViewWithTheme(context, webCardURL, _webViewController);
       },
       isLoading: false,
       titleText: CardTitleConstants.titleMap[cardId],
       errorText: null,
-      child: () => buildCardContent(context),
+      child: () => buildCardContent(context, webCardURL),
     );
   }
 
@@ -94,10 +97,10 @@ class _CampusInfoCardState extends State<CampusInfoCard>
   }
 
   openLink(String url) async {
-    if (await canLaunch(url)) {
-      launch(url);
-    } else {
-      //can't launch url, there is some error
+    try {
+      launch(url, forceSafariVC: true);
+    } catch (e) {
+      // an error occurred, do nothing
     }
   }
 }

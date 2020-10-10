@@ -17,13 +17,11 @@ class StaffIdCard extends StatefulWidget {
 class _StaffIdCardState extends State<StaffIdCard> with WidgetsBindingObserver {
   String cardId = "staff_id";
   WebViewController _webViewController;
-  String url;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(
-        this); // observer for theme change, widget rebuilt on theme change
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
@@ -34,23 +32,26 @@ class _StaffIdCardState extends State<StaffIdCard> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    String webCardURL =
+        "https://mobile.ucsd.edu/replatform/v1/qa/webview/staff_id.html";
+    _userDataProvider = Provider.of<UserDataProvider>(context);
+    webCardURL +=
+        "?token=" + '${_userDataProvider.authenticationModel.accessToken}';
+    reloadWebViewWithTheme(context, webCardURL, _webViewController);
+
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       reload: () {
-        reloadWebViewWithTheme(context, url, _webViewController);
+        reloadWebViewWithTheme(context, webCardURL, _webViewController);
       },
       isLoading: false,
       titleText: CardTitleConstants.titleMap[cardId],
       errorText: null,
-      child: () => buildCardContent(context),
+      child: () => buildCardContent(context, webCardURL),
     );
   }
-
-  double _contentHeight = cardContentMinHeight;
-
-  String fileURL = "https://cwo-test.ucsd.edu/WebCards/staff_id_new.html";
 
   @override
   void didChangeDependencies() {
@@ -98,6 +99,17 @@ class _StaffIdCardState extends State<StaffIdCard> with WidgetsBindingObserver {
         _contentHeight = newHeight;
       });
     }
+
+  JavascriptChannel _myJavascriptChannel(BuildContext context) {
+    return JavascriptChannel(
+      name: 'CampusMobile',
+      onMessageReceived: (JavascriptMessage message) {
+        if (message.message == 'refreshToken') {
+          _userDataProvider.refreshToken();
+          reloadWebView();
+        }
+      },
+    );
   }
 
   void reloadWebView() {

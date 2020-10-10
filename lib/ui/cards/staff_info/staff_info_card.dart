@@ -1,6 +1,5 @@
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
-import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
 import 'package:campus_mobile_experimental/ui/theme/darkmode_helper.dart';
 import 'package:flutter/material.dart';
@@ -19,14 +18,11 @@ class _StaffInfoCardState extends State<StaffInfoCard>
     with WidgetsBindingObserver {
   String cardId = "staff_info";
   WebViewController _webViewController;
-  String url;
-  Brightness brightness;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(
-        this); // observer for theme change, widget rebuilt on change
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
@@ -37,17 +33,22 @@ class _StaffInfoCardState extends State<StaffInfoCard>
 
   @override
   Widget build(BuildContext context) {
+    String webCardURL = getThemeURL(context,
+        'https://mobile.ucsd.edu/replatform/v1/qa/webview/staff_info.html');
+
+    reloadWebViewWithTheme(context, webCardURL, _webViewController);
+
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       reload: () {
-        reloadWebViewWithTheme(context, url, _webViewController);
+        reloadWebViewWithTheme(context, webCardURL, _webViewController);
       },
       isLoading: false,
       titleText: CardTitleConstants.titleMap[cardId],
       errorText: null,
-      child: () => buildCardContent(context),
+      child: () => buildCardContent(context, webCardURL),
     );
   }
 
@@ -114,10 +115,10 @@ class _StaffInfoCardState extends State<StaffInfoCard>
   }
 
   openLink(String url) async {
-    if (await canLaunch(url)) {
-      launch(url);
-    } else {
-      //can't launch url, there is some error
+    try {
+      launch(url, forceSafariVC: true);
+    } catch (e) {
+      // an error occurred, do nothing
     }
   }
 }
