@@ -1,11 +1,12 @@
+import 'dart:math' as Math;
+
 import 'package:campus_mobile_experimental/core/data_providers/location_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_arrival_model.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_stop_model.dart';
-import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/core/services/shuttle_service.dart';
+import 'package:flutter/material.dart';
 import 'package:location/location.dart';
-import 'dart:math' as Math;
 
 import '../models/shuttle_stop_model.dart';
 
@@ -103,30 +104,28 @@ class ShuttleDataProvider extends ChangeNotifier {
   }
 
   Future<void> addStop(int stopID) async {
-    print(stopID);
-    if (!userDataProvider.userProfileModel.selectedStops
-        .contains(stopID)) {
+    // print(stopID);
+    if (!userDataProvider.userProfileModel.selectedStops.contains(stopID)) {
       userDataProvider.userProfileModel.selectedStops.add(stopID);
-      print("UDP - ${userDataProvider.userProfileModel.selectedStops}");
+      // print("UDP - ${userDataProvider.userProfileModel.selectedStops}");
       arrivalsToRender[stopID] = await fetchArrivalInformation(stopID);
     }
-    print('added');
+    // print('added');
     notifyListeners();
   }
 
   Future<void> removeStop(int stopID) async {
-    print('remove');
-    if (userDataProvider.userProfileModel.selectedStops
-        .contains(stopID)) {
+    // print('remove');
+    if (userDataProvider.userProfileModel.selectedStops.contains(stopID)) {
       userDataProvider.userProfileModel.selectedStops.remove(stopID);
-      print("UDP - ${userDataProvider.userProfileModel.selectedStops}");
+      // print("UDP - ${userDataProvider.userProfileModel.selectedStops}");
     }
     notifyListeners();
   }
 
   Future<List<ArrivingShuttle>> fetchArrivalInformation(int stopID) async {
     List<ArrivingShuttle> output =
-      await _shuttleService.getArrivingInformation(stopID);
+        await _shuttleService.getArrivingInformation(stopID);
 
     output.sort((a, b) => a.secondsToArrival.compareTo(b.secondsToArrival));
     return output;
@@ -139,33 +138,35 @@ class ShuttleDataProvider extends ChangeNotifier {
       userLong = value.longitude;
     });
 
-    for(ShuttleStopModel shuttleStop in _shuttleService.data) {
+    for (ShuttleStopModel shuttleStop in _shuttleService.data) {
       stopLat = shuttleStop.lat;
       stopLong = shuttleStop.lon;
 
-      if(getHaversineDistance(userLat, userLong, stopLat, stopLong) < closestDistance) {
-        closestDistance = getHaversineDistance(userLat, userLong, stopLat, stopLong);
+      if (getHaversineDistance(userLat, userLong, stopLat, stopLong) <
+          closestDistance) {
+        closestDistance =
+            getHaversineDistance(userLat, userLong, stopLat, stopLong);
         _closestStop = shuttleStop;
       }
     }
   }
 
-  double getHaversineDistance(lat1,lon1,lat2,lon2) {
+  double getHaversineDistance(lat1, lon1, lat2, lon2) {
     var R = 6371; // Radius of the earth in km
-    var dLat = deg2rad(lat2-lat1);  // deg2rad below
-    var dLon = deg2rad(lon2-lon1);
-    var a =
-        Math.sin(dLat/2) * Math.sin(dLat/2) +
-            Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
-                Math.sin(dLon/2) * Math.sin(dLon/2)
-    ;
-    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    var dLat = deg2rad(lat2 - lat1); // deg2rad below
+    var dLon = deg2rad(lon2 - lon1);
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(deg2rad(lat1)) *
+            Math.cos(deg2rad(lat2)) *
+            Math.sin(dLon / 2) *
+            Math.sin(dLon / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     var d = R * c; // Distance in km
     return d;
   }
 
   double deg2rad(deg) {
-    return deg * (Math.pi/180);
+    return deg * (Math.pi / 180);
   }
 
   Future<void> checkLocationPermission() async {
@@ -208,8 +209,8 @@ class ShuttleDataProvider extends ChangeNotifier {
 
   Map<int, ShuttleStopModel> get stopsNotSelected {
     var output = new Map<int, ShuttleStopModel>.from(fetchedStops);
-    print('stopsToRender length - ${stopsToRender.length}');
-    print(stopsToRender.toString());
+    // print('stopsToRender length - ${stopsToRender.length}');
+    // print(stopsToRender.toString());
     for (ShuttleStopModel stop in stopsToRender) {
       output.remove(stop.id);
     }
@@ -218,11 +219,10 @@ class ShuttleDataProvider extends ChangeNotifier {
 
   Future<void> getArrivalInformation() async {
     arrivalsToRender[closestStop.id] =
-      await fetchArrivalInformation(closestStop.id);
+        await fetchArrivalInformation(closestStop.id);
     for (ShuttleStopModel stop in stopsToRender) {
-      print('stop ${stop.id}');
+      // print('stop ${stop.id}');
       arrivalsToRender[stop.id] = await fetchArrivalInformation(stop.id);
     }
   }
 }
-

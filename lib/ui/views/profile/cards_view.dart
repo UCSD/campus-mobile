@@ -65,7 +65,7 @@ class CardsView extends StatelessWidget {
           onChanged: (_) {
             _cardsDataProvider.toggleCard(card);
           },
-          activeColor: Theme.of(context).textTheme.button.color,
+          activeColor: Theme.of(context).buttonColor,
         ),
       ));
     }
