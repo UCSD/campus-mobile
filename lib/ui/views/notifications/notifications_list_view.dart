@@ -22,22 +22,14 @@ class NotificationsListView extends StatelessWidget {
     if (Provider.of<MessagesDataProvider>(context).messages.length == 0) {
       if (Provider.of<MessagesDataProvider>(context).error == null) {
         if (Provider.of<MessagesDataProvider>(context).isLoading) {
-          return ListView.separated(
-            physics: AlwaysScrollableScrollPhysics(),
-            itemBuilder: (BuildContext context, int index) =>
-                _buildLoadingIndicator(),
-            controller:
-                Provider.of<MessagesDataProvider>(context).scrollController,
-            itemCount: 1,
-            separatorBuilder: (BuildContext context, int index) => Divider(),
-          );
+          // empty notifications view until they load in
         } else {
           return ListView.separated(
             physics: AlwaysScrollableScrollPhysics(),
             itemBuilder: (BuildContext context, int index) =>
                 _buildNoMessagesText(),
             controller:
-                Provider.of<MessagesDataProvider>(context).scrollController,
+            Provider.of<MessagesDataProvider>(context).scrollController,
             itemCount: 1,
             separatorBuilder: (BuildContext context, int index) => Divider(),
           );
@@ -47,7 +39,7 @@ class NotificationsListView extends StatelessWidget {
           physics: AlwaysScrollableScrollPhysics(),
           itemBuilder: (BuildContext context, int index) => _buildErrorText(),
           controller:
-              Provider.of<MessagesDataProvider>(context).scrollController,
+          Provider.of<MessagesDataProvider>(context).scrollController,
           itemCount: 1,
           separatorBuilder: (BuildContext context, int index) => Divider(),
         );
@@ -60,17 +52,6 @@ class NotificationsListView extends StatelessWidget {
       itemCount: Provider.of<MessagesDataProvider>(context).messages.length,
       separatorBuilder: (BuildContext context, int index) => Divider(),
     );
-  }
-
-  Widget _buildLoadingIndicator() {
-    return Padding(
-        padding: EdgeInsets.only(top: 10.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            CircularProgressIndicator(),
-          ],
-        ));
   }
 
   Widget _buildErrorText() {
@@ -139,14 +120,6 @@ class NotificationsListView extends StatelessWidget {
     FreeFoodDataProvider freefoodProvider =
         Provider.of<FreeFoodDataProvider>(context);
 
-    if (index ==
-        Provider.of<MessagesDataProvider>(context).messages.length - 1) {
-      if (Provider.of<MessagesDataProvider>(context).hasMoreMessagesToLoad) {
-        return _buildLoadingIndicator();
-      } else {
-        return Container();
-      }
-    }
     return ListTile(
       leading: Icon(Icons.info, color: Colors.grey, size: 30),
       title: Column(
