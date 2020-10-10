@@ -1,17 +1,15 @@
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/services/bottom_navigation_bar_service.dart';
+import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
-
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 const String cardId = 'QRScanner';
 
 class ScannerCard extends StatelessWidget {
-  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-
   @override
   Widget build(BuildContext context) {
     return CardContainer(
@@ -46,16 +44,23 @@ class ScannerCard extends StatelessWidget {
               right: 10,
             ),
           ),
-          Text(
-            getCardContentText(context),
-            textAlign: TextAlign.left,
+          Flexible(
+            child: Text(
+              getCardContentText(context),
+              textAlign: TextAlign.left,
+            ),
           )
         ],
       ),
     );
   }
 
+  final _url =
+      'https://mobile.ucsd.edu/replatform/v1/qa/webview/scanner/index.html';
+
+  UserDataProvider _userDataProvider;
   Widget buildActionButton(BuildContext context) {
+    _userDataProvider = Provider.of<UserDataProvider>(context);
     return FlatButton(
       child: Text(
         getActionButtonText(context),
@@ -64,6 +69,14 @@ class ScannerCard extends StatelessWidget {
         getActionButtonNavigateRoute(context);
       },
     );
+  }
+
+  openLink(String url) async {
+    try {
+      launch(url, forceSafariVC: true);
+    } catch (e) {
+      // an error occurred, do nothing
+    }
   }
 
   String getCardContentText(BuildContext context) {
@@ -80,13 +93,30 @@ class ScannerCard extends StatelessWidget {
 
   getActionButtonNavigateRoute(BuildContext context) {
     if (Provider.of<UserDataProvider>(context, listen: false).isLoggedIn) {
-      Navigator.pushNamed(
-        context,
-        RoutePaths.ScannerView,
-      );
+      generateScannerUrl();
     } else {
       Provider.of<BottomNavigationBarProvider>(context, listen: false)
           .currentIndex = NavigationConstants.ProfileTab;
     }
+  }
+
+  generateScannerUrl() {
+    /// Verify that user is logged in
+    if (_userDataProvider.isLoggedIn) {
+      /// Initialize header
+      final Map<String, String> header = {
+        'Authorization':
+            'Bearer ${_userDataProvider?.authenticationModel?.accessToken}'
+      };
+    }
+    var tokenQueryString =
+        "token=" + '${_userDataProvider.authenticationModel.accessToken}';
+
+    var affiliationQueryString = "affiliation=" +
+        '${_userDataProvider.authenticationModel.ucsdaffiliation}';
+
+    var url = _url + "?" + tokenQueryString + "&" + affiliationQueryString;
+
+    openLink(url);
   }
 }

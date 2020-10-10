@@ -203,6 +203,7 @@ class MessagesDataProvider extends ChangeNotifier {
   String get statusText => _statusText;
   bool get hasMoreMessagesToLoad => _hasMoreMessagesToLoad;
   ScrollController get scrollController => _scrollController;
+  UserDataProvider get userDataProvider => _userDataProvider;
 
   List<MessageElement> get messages {
     if (_messages != null) {
