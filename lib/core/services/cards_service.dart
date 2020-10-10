@@ -15,7 +15,7 @@ class CardsService {
 
   Future<bool> fetchCards(String ucsdAffiliation) async {
     String cardListEndpoint =
-        'https://rj786p8erh.execute-api.us-west-2.amazonaws.com/qa/defaultcards';
+        'https://api.jsonbin.io/b/5f60fcf2302a837e9566e035';
     _error = null;
     _isLoading = true;
     if(ucsdAffiliation == null) {

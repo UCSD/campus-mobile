@@ -1,11 +1,11 @@
 import 'package:campus_mobile_experimental/core/constants/notifications_constants.dart';
-import 'package:campus_mobile_experimental/core/models/message_model.dart';
-import 'package:flutter/material.dart';
-import 'package:campus_mobile_experimental/core/data_providers/messages_data_provider.dart';
-import 'package:campus_mobile_experimental/ui/views/notifications/free_food_notification.dart';
 import 'package:campus_mobile_experimental/core/data_providers/free_food_data_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/messages_data_provider.dart';
+import 'package:campus_mobile_experimental/core/models/message_model.dart';
+import 'package:campus_mobile_experimental/ui/views/notifications/free_food_notification.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class NotificationsListView extends StatelessWidget {
@@ -54,7 +54,6 @@ class NotificationsListView extends StatelessWidget {
     );
   }
 
-
   Widget _buildErrorText() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -83,10 +82,10 @@ class NotificationsListView extends StatelessWidget {
   //           Linkify(
   //             text: data.message.message,
   //             onOpen: (link) async {
-  //               if (await canLaunch(link.url)) {
-  //                   await launch(link.url);
-  //               } else {
-  //                   throw 'Could not launch $link';
+  //               try {
+  //                 await launch(link.url, forceSafariVC: true);
+  //               } catch (e) {
+  //                 // an error occurred, do nothing
   //               }
   //             },
   //             options: LinkifyOptions(humanize: false),
@@ -117,8 +116,9 @@ class NotificationsListView extends StatelessWidget {
 
   Widget _buildMessage(BuildContext context, int index) {
     MessageElement data =
-    Provider.of<MessagesDataProvider>(context).messages[index];
-    FreeFoodDataProvider freefoodProvider = Provider.of<FreeFoodDataProvider>(context);
+        Provider.of<MessagesDataProvider>(context).messages[index];
+    FreeFoodDataProvider freefoodProvider =
+        Provider.of<FreeFoodDataProvider>(context);
 
     return ListTile(
       leading: Icon(Icons.info, color: Colors.grey, size: 30),
@@ -138,10 +138,10 @@ class NotificationsListView extends StatelessWidget {
             child: Linkify(
               text: data.message.message,
               onOpen: (link) async {
-                if (await canLaunch(link.url)) {
-                  await launch(link.url);
-                } else {
-                  throw 'Could not launch $link';
+                try {
+                  await launch(link.url, forceSafariVC: true);
+                } catch (e) {
+                  // an error occurred, do nothing
                 }
               },
               options: LinkifyOptions(humanize: false),

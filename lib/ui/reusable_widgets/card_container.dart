@@ -77,6 +77,11 @@ class CardContainer extends StatelessWidget {
         return Text('No articles found.');
       } else if (titleText == 'Events') {
         return Text('No events found.');
+      } else if (titleText == 'Student ID') {
+        return Padding(
+          padding: const EdgeInsets.only(top: 32.0, bottom: 48.0),
+          child: Text('An error occurred, please try again.'),
+        );
       } else if (titleText == 'Finals') {
         // TODO: Resolve alignment issues on cards without action buttons
         return Padding(
@@ -98,20 +103,25 @@ class CardContainer extends StatelessWidget {
         ),
       );
     } else if (titleText == "COVID-19 Info" ||
-        titleText == "COVID-19 Info" ||
-        titleText == "Campus Information") {
+        titleText == "Campus Information" ||
+        titleText == "Availability" ||
+        titleText == "Student ID" ||
+        titleText == "Staff ID" ||
+        titleText == "Student ID" ||
+        titleText == "Finals") {
       return Container(
         width: double.infinity,
         constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 200),
         child: child(),
       );
-    } else if (titleText == "Student ID" || titleText == "Staff ID") {
+    } else if (titleText == "Parking" &&
+        MediaQuery.of(context).size.width > 600) {
       return Container(
         width: double.infinity,
-//        height: 200.0,
-        constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 180),
+        constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 800),
         child: child(),
       );
+
     } else {
       return Container(
         width: double.infinity,

@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:campus_mobile_experimental/ui/views/profile/login.dart';
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
+import 'package:campus_mobile_experimental/ui/views/profile/login.dart';
+import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Profile extends StatelessWidget {
@@ -42,6 +42,27 @@ class Profile extends StatelessWidget {
               onTap: handlePrivacyTap,
             ),
           ),
+          Card(
+            child: ListTile(
+              leading: Icon(Icons.wifi_tethering),
+              title: Text('Advanced Wayfinding'),
+              onTap:(){ Navigator.pushNamed(context, RoutePaths.BluetoothPermissionsView);},
+            ),
+          ),
+         /* Card(
+            child: ListTile(
+              leading: Icon(Icons.bluetooth_searching),
+              title: Text('Bluetooth Automatic Logger'),
+              onTap:() {handleAutomaticBluetoothTap(context);},
+            ),
+          ),*/
+        /*  Card(
+            child: ListTile(
+              leading: Icon(Icons.bluetooth_audio),
+              title: Text('Bluetooth Beacon Testing'),
+              onTap:() {handleBeaconTap(context);},
+            ),
+          ),*/
         ],
       ),
     );
@@ -51,6 +72,9 @@ class Profile extends StatelessWidget {
     Navigator.pushNamed(context, RoutePaths.NotificationsSettingsView);
   }
 
+ /* handleBeaconTap(BuildContext context) {
+    Navigator.pushNamed(context, RoutePaths.BeaconView);
+  }*/
   handleFeedbackTap() async {
     const feedbackUrl = "https://eforms.ucsd.edu/view.php?id=175631";
     openLink(feedbackUrl);
@@ -62,10 +86,17 @@ class Profile extends StatelessWidget {
   }
 
   openLink(String url) async {
-    if (await canLaunch(url)) {
-      launch(url);
-    } else {
-      // can't launch url, there is some error
+    try {
+      launch(url, forceSafariVC: true);
+    } catch (e) {
+      // an error occurred, do nothing
     }
   }
+
+  /*void handleAutomaticBluetoothTap(BuildContext context) {
+    Navigator.pushNamed(context, RoutePaths.AutomaticBluetoothLoggerView);
+
+  }*/
+
+
 }

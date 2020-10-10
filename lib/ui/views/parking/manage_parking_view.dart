@@ -32,17 +32,24 @@ class ManageParkingView extends StatelessWidget {
     for (ParkingModel item in newOrder) {
       orderedLocationNames.add(item.locationName);
     }
-    parkingDataProvider.reorderLots(orderedLocationNames);
+    // parkingDataProvider.reorderLots(orderedLocationNames);
   }
 
   List<Widget> createList(BuildContext context) {
     List<Widget> list = List<Widget>();
     for (ParkingModel model in parkingDataProvider.parkingModels) {
       list.add(ListTile(
-        key: Key(model.locationId.toString()),
-        title: Text(model.locationName),
-        trailing: Icon(Icons.reorder),
-      ));
+          key: Key(model.locationId.toString()),
+          title: Text(model.locationName),
+          leading: Icon(Icons.reorder),
+          trailing: Switch(
+            value: Provider.of<ParkingDataProvider>(context)
+                .parkingViewState[model.locationName],
+            activeColor: Theme.of(context).buttonColor,
+            onChanged: (_) {
+              parkingDataProvider.toggleLot(model.locationName);
+            },
+          )));
     }
     return list;
   }

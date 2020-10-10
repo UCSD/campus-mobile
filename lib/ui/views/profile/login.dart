@@ -1,4 +1,3 @@
-import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -132,10 +131,12 @@ class _LoginState extends State<Login> {
                 child: GestureDetector(
               child: Text('Need help logging in?'),
               onTap: () async {
-                String link =
-                    'https://acms.ucsd.edu/students/accounts-and-passwords/index.html';
-                if (await canLaunch(link)) {
-                  await launch(link);
+                try {
+                  String link =
+                      'https://acms.ucsd.edu/students/accounts-and-passwords/index.html';
+                  await launch(link, forceSafariVC: true);
+                } catch (e) {
+                  // an error occurred, do nothing
                 }
               },
             )),
