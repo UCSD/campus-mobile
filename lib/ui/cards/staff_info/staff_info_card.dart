@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:campus_mobile_experimental/ui/theme/app_layout.dart';
 
 class StaffInfoCard extends StatefulWidget {
   StaffInfoCard();
@@ -56,22 +57,41 @@ class _StaffInfoCardState extends State<StaffInfoCard>
     super.didChangeDependencies();
   }
 
-  Widget buildCardContent(BuildContext context, String webCardURL) {
-    return Column(
-      children: <Widget>[
-        Flexible(
-            child: WebView(
-          opaque: false,
-          javascriptMode: JavascriptMode.unrestricted,
-          initialUrl: webCardURL,
-          onWebViewCreated: (controller) {
-            _webViewController = controller;
-          },
-          javascriptChannels: <JavascriptChannel>[
-            _printJavascriptChannel(context),
-          ].toSet(),
-        )),
-      ],
+  double _contentHeight = cardContentMinHeight;
+
+  UserDataProvider _userDataProvider;
+  set userDataProvider(UserDataProvider value) => _userDataProvider = value;
+  String fileURL = "https://cwo-test.ucsd.edu/WebCards/staff_info_new.html";
+
+  Widget buildCardContent(BuildContext context) {
+    _userDataProvider = Provider.of<UserDataProvider>(context);
+
+    if (_userDataProvider.isLoggedIn) {
+      /// Initialize header
+      final Map<String, String> header = {
+        'Authorization':
+            'Bearer ${_userDataProvider?.authenticationModel?.accessToken}'
+      };
+    }
+    var tokenQueryString =
+        "token=" + '${_userDataProvider.authenticationModel.accessToken}';
+    url = fileURL + "?" + tokenQueryString;
+
+    reloadWebViewWithTheme(context, url, _webViewController);
+
+    return Container(
+      height: _contentHeight,
+      child: WebView(
+        javascriptMode: JavascriptMode.unrestricted,
+        initialUrl: url,
+        onWebViewCreated: (controller) {
+          _webViewController = controller;
+        },
+        javascriptChannels: <JavascriptChannel>[
+          _printJavascriptChannel(context),
+        ].toSet(),
+        onPageFinished: _updateContentHeight,
+      ),
     );
   }
 
@@ -82,6 +102,16 @@ class _StaffInfoCardState extends State<StaffInfoCard>
         openLink(message.message);
       },
     );
+  }
+
+  Future<void> _updateContentHeight(String some) async {
+    var newHeight =
+        await getNewContentHeight(_webViewController, _contentHeight);
+    if (newHeight != _contentHeight) {
+      setState(() {
+        _contentHeight = newHeight;
+      });
+    }
   }
 
   openLink(String url) async {

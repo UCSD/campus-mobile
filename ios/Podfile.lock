@@ -135,7 +135,6 @@ PODS:
     - Flutter
   - path_provider (0.0.1):
     - Flutter
-  - PromisesObjC (1.2.10)
   - Protobuf (3.11.4)
   - shared_preferences (0.0.1):
     - Flutter
@@ -186,7 +185,6 @@ SPEC REPOS:
     - GoogleDataTransport
     - GoogleMaps
     - GoogleUtilities
-    - MTBBarcodeScanner
     - nanopb
     - PromisesObjC
     - Protobuf

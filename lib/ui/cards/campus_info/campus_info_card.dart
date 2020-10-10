@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:campus_mobile_experimental/ui/theme/app_layout.dart';
 
 class CampusInfoCard extends StatefulWidget {
   CampusInfoCard();
@@ -51,27 +52,28 @@ class _CampusInfoCardState extends State<CampusInfoCard>
     );
   }
 
+  double _contentHeight = cardContentMinHeight;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
   }
 
-  Widget buildCardContent(BuildContext context, String webCardURL) {
-    return Column(
-      children: <Widget>[
-        Flexible(
-            child: WebView(
-          opaque: false,
-          javascriptMode: JavascriptMode.unrestricted,
-          initialUrl: webCardURL,
-          onWebViewCreated: (controller) {
-            _webViewController = controller;
-          },
-          javascriptChannels: <JavascriptChannel>[
-            _printJavascriptChannel(context),
-          ].toSet(),
-        )),
-      ],
+  Widget buildCardContent(BuildContext context) {
+    reloadWebViewWithTheme(context, _url, _webViewController);
+    return Container(
+      height: _contentHeight,
+      child: WebView(
+        javascriptMode: JavascriptMode.unrestricted,
+        initialUrl: _url,
+        onWebViewCreated: (controller) {
+          _webViewController = controller;
+        },
+        javascriptChannels: <JavascriptChannel>[
+          _printJavascriptChannel(context),
+        ].toSet(),
+        onPageFinished: _updateContentHeight,
+      ),
     );
   }
 
@@ -82,6 +84,16 @@ class _CampusInfoCardState extends State<CampusInfoCard>
         openLink(message.message);
       },
     );
+  }
+
+  Future<void> _updateContentHeight(String some) async {
+    var newHeight =
+        await getNewContentHeight(_webViewController, _contentHeight);
+    if (newHeight != _contentHeight) {
+      setState(() {
+        _contentHeight = newHeight;
+      });
+    }
   }
 
   openLink(String url) async {
