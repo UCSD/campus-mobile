@@ -52,7 +52,7 @@ class AvailabilityService {
     final Map<String, String> tokenHeaders = {
       "content-type": 'application/x-www-form-urlencoded',
       "Authorization":
-          "Basic ZnI0MWZGWE9TTXp3N2ZPb21HbUN6ekdBZ29JYTpvTWRHZUQ1X05qM2lQUl9leThmZ0pwNXJ2OEFh"
+          "Basic djJlNEpYa0NJUHZ5akFWT0VRXzRqZmZUdDkwYTp2emNBZGFzZWpmaWZiUDc2VUJjNDNNVDExclVh"
     };
     try {
       var response = await _networkHelper.authorizedPost(
