@@ -61,7 +61,7 @@ class ManageAvailabilityView extends StatelessWidget {
           trailing: Switch(
             value: Provider.of<AvailabilityDataProvider>(context)
                 .locationViewState[model.locationName],
-            activeColor: Theme.of(context).textTheme.button.color,
+            activeColor: Theme.of(context).buttonColor,
             onChanged: (_) {
               _availabilityDataProvider.toggleLocation(model.locationName);
             },
