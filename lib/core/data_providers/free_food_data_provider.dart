@@ -1,4 +1,5 @@
 import 'package:campus_mobile_experimental/core/data_providers/messages_data_provider.dart';
+import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/free_food_model.dart';
 import 'package:campus_mobile_experimental/core/models/message_model.dart';
 import 'package:campus_mobile_experimental/core/services/free_food_service.dart';
@@ -16,9 +17,7 @@ class FreeFoodDataProvider extends ChangeNotifier {
     _freeFoodModel = FreeFoodModel();
 
     ///INITIALIZE VALUES
-    _messageToCount = new HashMap<String, int>();
-    _messageToMaxCount = new HashMap<String, int>();
-    _registeredEvents = new List<String>();
+    initializeValues();
   }
 
   ///VALUES
@@ -39,7 +38,20 @@ class FreeFoodDataProvider extends ChangeNotifier {
   ///SERVICES
   FreeFoodService _freeFoodService;
 
+  void initializeValues() {
+    _messageToCount = new HashMap<String, int>();
+    _messageToMaxCount = new HashMap<String, int>();
+    _registeredEvents = new List<String>();
+  }
+
+  void removeId(String id) {
+    _messageToCount.remove(id);
+    _messageToMaxCount.remove(id);
+    _registeredEvents.remove(id);
+  }
+
   void parseMessages() {
+    // initializeValues();
     List<MessageElement> messages = _messageDataProvider.messages;
     messages.forEach((m) async {
       if (m.audience != null &&
@@ -80,7 +92,13 @@ class FreeFoodDataProvider extends ChangeNotifier {
       _lastUpdated = DateTime.now();
       _messageToCount[id] = _freeFoodModel.body.count;
     } else {
+      if (_error.contains(ErrorConstants.invalidBearerToken)) {
+        if (await _freeFoodService.getNewToken()) {
+          await fetchCount(id);
+        }
+      }
       _error = _freeFoodService.error;
+      removeId(id);
     }
     _isLoading = false;
     _curId = null;
@@ -99,52 +117,55 @@ class FreeFoodDataProvider extends ChangeNotifier {
       _lastUpdated = DateTime.now();
       _messageToMaxCount[id] = _freeFoodModel.body.maxCount;
     } else {
+      if (_error.contains(ErrorConstants.invalidBearerToken)) {
+        if (await _freeFoodService.getNewToken()) {
+          await fetchMaxCount(id);
+        }
+      }
+
       _error = _freeFoodService.error;
+      // if error, remove the current event from local maps
+      removeId(id);
     }
 
     _isLoading = false;
     _curId = null;
-    notifyListeners();
-  }
-
-  void decrementCount(String id) async {
-    _isLoading = true;
-    _curId = id;
-    _error = null;
-
-    notifyListeners();
-
-    _registeredEvents.remove(id);
-    await updateRegisteredEvents(_registeredEvents);
-
-    if (await _freeFoodService.decrementCount(id)) {
-      _freeFoodModel = _freeFoodService.freeFoodModel;
-      _lastUpdated = DateTime.now();
-    } else {
-      _error = _freeFoodService.error;
-    }
-
-    _isLoading = false;
-    _curId = null;
-    fetchCount(id);
     notifyListeners();
   }
 
   void incrementCount(String id) async {
+    final Map<String, dynamic> body = {'count': '+1'};
+    _registeredEvents.add(id);
+    updateCount(id, body);
+  }
+
+  void decrementCount(String id) async {
+    final Map<String, dynamic> body = {'count': '-1'};
+    _registeredEvents.remove(id);
+    updateCount(id, body);
+  }
+
+  void updateCount(String id, Map<String, dynamic> body) async {
     _isLoading = true;
     _curId = id;
     _error = null;
 
     notifyListeners();
 
-    _registeredEvents.add(id);
     await updateRegisteredEvents(_registeredEvents);
 
-    if (await _freeFoodService.incrementCount(id)) {
+    if (await _freeFoodService.updateCount(id, body)) {
       _freeFoodModel = _freeFoodService.freeFoodModel;
       _lastUpdated = DateTime.now();
     } else {
+      if (_error.contains(ErrorConstants.invalidBearerToken)) {
+        if (await _freeFoodService.getNewToken()) {
+          await updateCount(id, body);
+        }
+      }
+
       _error = _freeFoodService.error;
+      removeId(id);
     }
 
     _isLoading = false;

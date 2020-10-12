@@ -7,12 +7,11 @@ class NoticesService {
   bool _isLoading = false;
   DateTime _lastUpdated;
   String _error;
+
   final NetworkHelper _networkHelper = NetworkHelper();
-  final Map<String, String> headers = {
-    "accept": "application/json",
-  };
   final String endpoint =
       'https://mobile.ucsd.edu/replatform/v1/qa/notices-v2.json';
+
   List<NoticesModel> _noticesModel = List<NoticesModel>();
 
   Future<bool> fetchData() async {
@@ -20,8 +19,7 @@ class NoticesService {
     _isLoading = true;
     try {
       /// fetch data
-      String _response =
-          await _networkHelper.authorizedFetch(endpoint, headers);
+      String _response = await _networkHelper.fetchData(endpoint);
 
       /// parse data
       _noticesModel = noticesModelFromJson(_response);

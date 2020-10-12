@@ -1,7 +1,8 @@
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
+import 'package:campus_mobile_experimental/core/util/webview.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
-import 'package:campus_mobile_experimental/ui/theme/darkmode_helper.dart';
+import 'package:campus_mobile_experimental/ui/theme/app_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -17,6 +18,7 @@ class _StudentInfoCardState extends State<StudentInfoCard>
     with WidgetsBindingObserver {
   String cardId = "student_info";
   WebViewController _webViewController;
+  double _contentHeight = cardContentMinHeight;
 
   @override
   void initState() {
@@ -57,31 +59,40 @@ class _StudentInfoCardState extends State<StudentInfoCard>
   }
 
   Widget buildCardContent(BuildContext context, String webCardURL) {
-    return Column(
-      children: <Widget>[
-        Flexible(
-            child: WebView(
+    return Container(
+        height: _contentHeight,
+        child: WebView(
           opaque: false,
           javascriptMode: JavascriptMode.unrestricted,
           initialUrl: webCardURL,
+          onPageFinished: _updateContentHeight,
           onWebViewCreated: (controller) {
             _webViewController = controller;
           },
           javascriptChannels: <JavascriptChannel>[
-            _printJavascriptChannel(context),
+            _campusMobileJavascriptChannel(context),
           ].toSet(),
-        )),
-      ],
-    );
+        ));
   }
 
-  JavascriptChannel _printJavascriptChannel(BuildContext context) {
+  //Channel to obtain links and open them in new browser
+  JavascriptChannel _campusMobileJavascriptChannel(BuildContext context) {
     return JavascriptChannel(
       name: 'CampusMobile',
       onMessageReceived: (JavascriptMessage message) {
         openLink(message.message);
       },
     );
+  }
+
+  Future<void> _updateContentHeight(String some) async {
+    var newHeight =
+        await getNewContentHeight(_webViewController, _contentHeight);
+    if (newHeight != _contentHeight) {
+      setState(() {
+        _contentHeight = newHeight;
+      });
+    }
   }
 
   openLink(String url) async {

@@ -16,13 +16,13 @@ import 'package:campus_mobile_experimental/ui/cards/news/news_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/notices/notices_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/parking/parking_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/scanner/scanner_card.dart';
+import 'package:campus_mobile_experimental/ui/cards/shuttle/shuttle_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/staff_id/staff_id_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/staff_info/staff_info_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/student_id/student_id_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/student_info/student_info_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/weather/weather_card.dart';
 import 'package:campus_mobile_experimental/ui/theme/app_layout.dart';
-import 'package:campus_mobile_experimental/ui/views/special_events/banner_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -78,53 +78,50 @@ class _HomeState extends State<Home> {
         case 'MyStudentChart':
           orderedCards.add(MyStudentChartCard());
           break;
-        case 'MyUCSDChart':
-          orderedCards.add(MyUCSDChartCard());
-          break;
-        case 'staff_info':
-          orderedCards.add(StaffInfoCard());
-          break;
         case 'campus_info':
           orderedCards.add(CampusInfoCard());
-          break;
-        case 'student_info':
-          orderedCards.add(StudentInfoCard());
-          break;
-        case 'student_id':
-          orderedCards.add(StudentIdCard());
-          break;
-        case 'finals':
-          orderedCards.add(FinalsCard());
-          break;
-        case 'schedule':
-          orderedCards.add(ClassScheduleCard());
           break;
         case 'dining':
           orderedCards.add(DiningCard());
           break;
-        case 'events':
-          orderedCards.add(EventsCard());
-          break;
         case 'news':
           orderedCards.add(NewsCard());
           break;
-        case 'student_id':
-          orderedCards.add(StudentIdCard());
-          break;
-        case 'staff_id':
-          orderedCards.add(StaffIdCard());
-          break;
-        case 'special_events':
-          orderedCards.add(BannerCard());
-          break;
-        case 'parking':
-          orderedCards.add(ParkingCard());
+        case 'events':
+          orderedCards.add(EventsCard());
           break;
         case 'weather':
           orderedCards.add(WeatherCard());
           break;
         case 'availability':
           orderedCards.add(AvailabilityCard());
+          break;
+        case 'schedule':
+          orderedCards.add(ClassScheduleCard());
+          break;
+        case 'finals':
+          orderedCards.add(FinalsCard());
+          break;
+        case 'MyUCSDChart':
+          orderedCards.add(MyUCSDChartCard());
+          break;
+        case 'student_id':
+          orderedCards.add(StudentIdCard());
+          break;
+        case 'staff_info':
+          orderedCards.add(StaffInfoCard());
+          break;
+        case 'student_info':
+          orderedCards.add(StudentInfoCard());
+          break;
+        case 'parking':
+          orderedCards.add(ParkingCard());
+          break;
+        case 'staff_id':
+          orderedCards.add(StaffIdCard());
+          break;
+        case 'shuttle':
+          orderedCards.add(ShuttleCard());
           break;
       }
     }

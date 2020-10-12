@@ -72,6 +72,36 @@ class NetworkHelper {
     }
   }
 
+  Future<dynamic> authorizedPut(
+      String url, Map<String, String> headers, dynamic body) async {
+    Dio dio = new Dio();
+    dio.options.connectTimeout = 20000;
+    dio.options.receiveTimeout = 20000;
+    dio.options.headers = headers;
+    final _response = await dio.put(url, data: body);
+    // print('response in networking' + _response.data);
+
+    if (_response.statusCode == 200 || _response.statusCode == 201) {
+      // If server returns an OK response, return the body
+      return _response.data;
+    } else if (_response.statusCode == 400) {
+      // If that response was not OK, throw an error.
+      String message = _response.data['message'] ?? '';
+      throw Exception(ErrorConstants.authorizedPutErrors + message);
+    } else if (_response.statusCode == 401) {
+      throw Exception(ErrorConstants.authorizedPutErrors +
+          ErrorConstants.invalidBearerToken);
+    } else if (_response.statusCode == 404) {
+      String message = _response.data['message'] ?? '';
+      throw Exception(ErrorConstants.authorizedPutErrors + message);
+    } else if (_response.statusCode == 500) {
+      String message = _response.data['message'] ?? '';
+      throw Exception(ErrorConstants.authorizedPutErrors + message);
+    } else {
+      throw Exception(ErrorConstants.authorizedPutErrors + 'unknown error');
+    }
+  }
+
   Future<dynamic> authorizedDelete(
       String url, Map<String, String> headers) async {
     Dio dio = new Dio();

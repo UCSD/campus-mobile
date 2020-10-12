@@ -39,7 +39,6 @@ class AuthenticationModel extends HiveObject {
     if (json['expires_in'] != null) {
       json['expiration'] = json['expires_in'];
     }
-    print("Access token" + json["access_token"].toString());
     return AuthenticationModel(
       accessToken: json["access_token"] == null ? null : json["access_token"],
       refreshToken:
