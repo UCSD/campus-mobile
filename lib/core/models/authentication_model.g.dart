@@ -8,13 +8,13 @@ part of 'authentication_model.dart';
 
 class AuthenticationModelAdapter extends TypeAdapter<AuthenticationModel> {
   @override
-  final typeId = 1;
+  final int typeId = 1;
 
   @override
   AuthenticationModel read(BinaryReader reader) {
-    var numOfFields = reader.readByte();
-    var fields = <int, dynamic>{
-      for (var i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return AuthenticationModel(
       accessToken: fields[0] as String,
@@ -40,4 +40,14 @@ class AuthenticationModelAdapter extends TypeAdapter<AuthenticationModel> {
       ..writeByte(4)
       ..write(obj.expiration);
   }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is AuthenticationModelAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
 }

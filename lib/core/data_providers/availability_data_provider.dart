@@ -104,7 +104,9 @@ class AvailabilityDataProvider extends ChangeNotifier {
   void reorderLocations(List<String> order) {
     ///edit the profile and upload user selected lots
     _userDataProvider.userProfileModel.selectedOccuspaceLocations = order;
-    _userDataProvider.postUserProfile(_userDataProvider.userProfileModel);
+    // Commented out as this method updates the userDataProvider before it is set up,
+    // posting null userProfile, was causing issues for parking preferences
+    // _userDataProvider.postUserProfile(_userDataProvider.userProfileModel);
     notifyListeners();
   }
 

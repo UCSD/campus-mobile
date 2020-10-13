@@ -16,7 +16,7 @@ class AvailabilityCard extends StatefulWidget {
 }
 
 class _AvailabilityCardState extends State<AvailabilityCard> {
-  final _controller = PageController();
+  PageController _controller = PageController();
   AvailabilityDataProvider _availabilityDataProvider;
 
   @override

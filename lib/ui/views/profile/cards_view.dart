@@ -1,9 +1,8 @@
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
-import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
+import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
 
 class CardsView extends StatelessWidget {
   CardsDataProvider _cardsDataProvider;
@@ -16,7 +15,6 @@ class CardsView extends StatelessWidget {
   }
 
   Widget buildCardsList(BuildContext context) {
-    // TODO: Resolve cardOrder issues from 62-808
     return ReorderableListView(
       children: createList(context),
       onReorder: _onReorder,
@@ -31,6 +29,9 @@ class CardsView extends StatelessWidget {
     List<String> toRemove = List<String>();
     if (_cardsDataProvider.cardOrder.contains('QRScanner')) {
       toRemove.add('QRScanner');
+    }
+    if (_cardsDataProvider.cardOrder.contains('NativeScanner')) {
+      toRemove.add('NativeScanner');
     }
     for (String card in newOrder) {
       if (CardTitleConstants.titleMap[card] == null) {
@@ -52,6 +53,7 @@ class CardsView extends StatelessWidget {
     List<Widget> list = List<Widget>();
     for (String card in _cardsDataProvider.cardOrder) {
       if (card == 'QRScanner') continue;
+      if (card == 'NativeScanner') continue;
       if (CardTitleConstants.titleMap[card] == null) continue;
       list.add(ListTile(
         leading: Icon(Icons.reorder),
@@ -62,7 +64,7 @@ class CardsView extends StatelessWidget {
           onChanged: (_) {
             _cardsDataProvider.toggleCard(card);
           },
-          activeColor: ColorPrimary,
+          activeColor: Theme.of(context).buttonColor,
         ),
       ));
     }

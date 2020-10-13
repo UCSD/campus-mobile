@@ -56,7 +56,7 @@ class ScannerCard extends StatelessWidget {
   }
 
   final _url =
-      'https://mobile.ucsd.edu/replatform/v1/qa/scanner';
+      'https://mobile.ucsd.edu/replatform/v1/qa/webview/scanner/index.html';
 
   UserDataProvider _userDataProvider;
 
@@ -73,10 +73,10 @@ class ScannerCard extends StatelessWidget {
   }
 
   openLink(String url) async {
-    if (await canLaunch(url)) {
-      launch(url);
-    } else {
-      // can't launch url, there is some error
+    try {
+      launch(url, forceSafariVC: true);
+    } catch (e) {
+      // an error occurred, do nothing
     }
   }
 
@@ -102,20 +102,10 @@ class ScannerCard extends StatelessWidget {
   }
 
   generateScannerUrl() {
-    /// Verify that user is logged in
-    if (_userDataProvider.isLoggedIn) {
-      /// Initialize header
-      final Map<String, String> header = {
-        'Authorization':
-            'Bearer ${_userDataProvider?.authenticationModel?.accessToken}'
-      };
-    }
     var tokenQueryString =
         "token=" + '${_userDataProvider.authenticationModel.accessToken}';
-
     var affiliationQueryString = "affiliation=" +
         '${_userDataProvider.authenticationModel.ucsdaffiliation}';
-
     var url = _url + "?" + tokenQueryString + "&" + affiliationQueryString;
 
     openLink(url);
