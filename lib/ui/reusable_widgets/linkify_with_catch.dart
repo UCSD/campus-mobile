@@ -11,12 +11,14 @@ class LinkifyWithCatch extends StatelessWidget {
   final String text;
   final TextStyle style;
   final TextAlign textAlign;
+  final bool looseUrl;
 
   const LinkifyWithCatch(
       {Key key,
       @required this.text,
       this.style,
-      this.textAlign = TextAlign.start})
+      this.textAlign = TextAlign.start,
+      this.looseUrl = false})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -30,7 +32,7 @@ class LinkifyWithCatch extends StatelessWidget {
           ));
         }
       },
-      options: LinkifyOptions(humanize: false),
+      options: LinkifyOptions(humanize: false, looseUrl: looseUrl),
       text: text,
       textAlign: textAlign,
       style: style,

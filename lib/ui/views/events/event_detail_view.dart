@@ -36,6 +36,7 @@ class EventDetailView extends StatelessWidget {
       data.location != null && data.location.isNotEmpty
           ? LinkifyWithCatch(
               text: data.location,
+              looseUrl: true,
               style: TextStyle(fontSize: 16),
               textAlign: TextAlign.center,
             )
