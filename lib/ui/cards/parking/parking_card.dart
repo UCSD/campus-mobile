@@ -2,22 +2,26 @@ import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/parking_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/parking_model.dart';
-import 'package:campus_mobile_experimental/ui/cards/parking/parking_display.dart';
+import 'package:campus_mobile_experimental/core/util/webview.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-const String cardId = 'parking';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class ParkingCard extends StatefulWidget {
   @override
   _ParkingCardState createState() => _ParkingCardState();
 }
 
-class _ParkingCardState extends State<ParkingCard> {
+class _ParkingCardState extends State<ParkingCard> with WidgetsBindingObserver {
+  String cardId = 'parking';
+  WebViewController _webViewController;
   ParkingDataProvider _parkingDataProvider;
   final _controller = new PageController();
+  // double _contentHeight = cardContentMinHeight;
+  String webCardURL =
+      "https://mobile.ucsd.edu/replatform/v1/qa/webview/parking/index.html";
 
   @override
   void didChangeDependencies() {
@@ -25,13 +29,27 @@ class _ParkingCardState extends State<ParkingCard> {
     _parkingDataProvider = Provider.of<ParkingDataProvider>(context);
   }
 
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
   Widget build(BuildContext context) {
+    reloadWebViewWithTheme(context, webCardURL, _webViewController);
+
     return CardContainer(
       titleText: CardTitleConstants.titleMap[cardId],
       isLoading: _parkingDataProvider.isLoading,
-      reload: () => _parkingDataProvider.fetchParkingLots(),
+      reload: () => {_parkingDataProvider.fetchParkingData()},
       errorText: _parkingDataProvider.error,
-      child: () => buildParkingCard(_parkingDataProvider.parkingModels),
+      child: () => buildParkingCard(context),
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
@@ -39,42 +57,89 @@ class _ParkingCardState extends State<ParkingCard> {
     );
   }
 
-  Widget buildParkingCard(List<ParkingModel> data) {
-    List<Widget> parkingDisplays = List<Widget>();
-    for (ParkingModel model in data) {
+  Widget buildParkingCard(BuildContext context) {
+    List<WebView> selectedLotsViews = [];
+    List<String> selectedSpots = [];
+
+    _parkingDataProvider.spotTypesState.forEach((key, value) {
+      if (value) {
+        selectedSpots.add(key);
+      }
+    });
+
+    for (ParkingModel model in _parkingDataProvider.parkingModels) {
       if (model != null) {
-        parkingDisplays.add(ParkingDisplay(model: model));
+        if (_parkingDataProvider.parkingViewState[model.locationName]) {
+          final url =
+              getThemeURL(context, makeUrl(model.locationId, selectedSpots));
+          selectedLotsViews.add(WebView(
+            opaque: false,
+            initialUrl: url,
+            javascriptMode: JavascriptMode.unrestricted,
+            onWebViewCreated: (controller) {
+              _webViewController = controller;
+            },
+            // onPageFinished: _updateContentHeight,
+          ));
+        }
       }
     }
 
     return Column(
       children: <Widget>[
         Flexible(
-          child: PageView(
-            controller: _controller,
-            children: parkingDisplays,
-          ),
-        ),
+            child: PageView(
+          controller: _controller,
+          children: selectedLotsViews,
+        )),
         DotsIndicator(
           controller: _controller,
-          itemCount: parkingDisplays.length,
-          onPageSelected: (int index) {
-            _controller.animateToPage(index,
-                duration: Duration(seconds: 1), curve: Curves.ease);
-          },
+          itemCount: selectedLotsViews.length,
+          onPageSelected: (int index) {},
         ),
       ],
     );
+  }
+
+  // Future<void> _updateContentHeight(String some) async {
+  //   var newHeight =
+  //       await getNewContentHeight(_webViewController, _contentHeight);
+  //   if (newHeight != _contentHeight) {
+  //     setState(() {
+  //       _contentHeight = newHeight;
+  //     });
+  //   }
+  // }
+
+  String makeUrl(String lotId, List<String> selectedSpots) {
+    var spotTypesQueryString = '';
+    selectedSpots.forEach(
+        (spot) => {spotTypesQueryString = '$spotTypesQueryString$spot,'});
+    if (spotTypesQueryString != '') {
+      spotTypesQueryString = '&spots=$spotTypesQueryString';
+    }
+    var lotQueryString = 'lot=$lotId';
+    var url = '$webCardURL?$lotQueryString$spotTypesQueryString';
+
+    return url;
   }
 
   List<Widget> buildActionButtons() {
     List<Widget> actionButtons = List<Widget>();
     actionButtons.add(FlatButton(
       child: Text(
-        'View All',
+        'Manage Lots',
       ),
       onPressed: () {
         Navigator.pushNamed(context, RoutePaths.ManageParkingView);
+      },
+    ));
+    actionButtons.add(FlatButton(
+      child: Text(
+        'Manage Spots',
+      ),
+      onPressed: () {
+        Navigator.pushNamed(context, RoutePaths.SpotTypesView);
       },
     ));
     return actionButtons;

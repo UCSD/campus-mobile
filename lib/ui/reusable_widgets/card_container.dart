@@ -77,6 +77,11 @@ class CardContainer extends StatelessWidget {
         return Text('No articles found.');
       } else if (titleText == 'Events') {
         return Text('No events found.');
+      } else if (titleText == 'Student ID') {
+        return Padding(
+          padding: const EdgeInsets.only(top: 32.0, bottom: 48.0),
+          child: Text('An error occurred, please try again.'),
+        );
       } else if (titleText == 'Finals') {
         // TODO: Resolve alignment issues on cards without action buttons
         return Padding(
@@ -91,31 +96,38 @@ class CardContainer extends StatelessWidget {
     } else if (isLoading) {
       return Container(
         width: double.infinity,
-        height: 200.0,
         child: Center(
           child: Container(
               height: 32, width: 32, child: CircularProgressIndicator()),
         ),
       );
-    } else if (titleText == "COVID-19 Info" ||
-        titleText == "COVID-19 Info" ||
-        titleText == "Campus Information") {
+    } else if (titleText == "Availability") {
+      // web cards are still sized with static values
       return Container(
         width: double.infinity,
-        constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 200),
+        constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 210),
         child: child(),
       );
-    } else if (titleText == "Student ID" || titleText == "Staff ID") {
+    } else if (titleText == "Shuttle") {
+      // web cards are still sized with static values
       return Container(
         width: double.infinity,
-//        height: 200.0,
-        constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 180),
+        constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 340),
+        child: child(),
+      );
+    } else if (titleText == "Parking") {
+      double _maxHeight = 320;
+      if (MediaQuery.of(context).size.width > 600) {
+        _maxHeight = 800;
+      }
+      return Container(
+        width: double.infinity,
+        constraints: BoxConstraints(minHeight: 320, maxHeight: _maxHeight),
         child: child(),
       );
     } else {
       return Container(
         width: double.infinity,
-        constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 340),
         child: child(),
       );
     }

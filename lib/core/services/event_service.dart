@@ -2,7 +2,6 @@ import 'package:campus_mobile_experimental/core/models/events_model.dart';
 import 'package:campus_mobile_experimental/core/services/networking.dart';
 
 class EventsService {
-  // TODO: Fix me
   final String endpoint =
       'https://9tqs71by9h.execute-api.us-west-2.amazonaws.com/qa/v1/events/student';
 

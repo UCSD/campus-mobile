@@ -1,7 +1,7 @@
 import 'package:campus_mobile_experimental/core/data_providers/parking_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/parking_model.dart';
-import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ManageParkingView extends StatelessWidget {
@@ -32,17 +32,24 @@ class ManageParkingView extends StatelessWidget {
     for (ParkingModel item in newOrder) {
       orderedLocationNames.add(item.locationName);
     }
-    parkingDataProvider.reorderLots(orderedLocationNames);
+    // parkingDataProvider.reorderLots(orderedLocationNames);
   }
 
   List<Widget> createList(BuildContext context) {
     List<Widget> list = List<Widget>();
     for (ParkingModel model in parkingDataProvider.parkingModels) {
       list.add(ListTile(
-        key: Key(model.locationId.toString()),
-        title: Text(model.locationName),
-        trailing: Icon(Icons.reorder),
-      ));
+          key: Key(model.locationId.toString()),
+          title: Text(model.locationName),
+          leading: Icon(Icons.reorder),
+          trailing: Switch(
+            value: Provider.of<ParkingDataProvider>(context)
+                .parkingViewState[model.locationName],
+            onChanged: (_) {
+              parkingDataProvider.toggleLot(model.locationName);
+            },
+            activeColor: Theme.of(context).buttonColor,
+          )));
     }
     return list;
   }
