@@ -1,8 +1,8 @@
 import 'package:campus_mobile_experimental/core/models/events_model.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
+import 'package:campus_mobile_experimental/ui/reusable_widgets/event_time.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/image_loader.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/linkify_with_catch.dart';
-import 'package:campus_mobile_experimental/ui/reusable_widgets/time_range_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -22,7 +22,7 @@ class EventDetailView extends StatelessWidget {
     return [
       Center(
         child: ImageLoader(
-          url: data.imageHQ,
+          url: data.imageUrl,
           fullSize: true,
         ),
       ),
@@ -33,13 +33,16 @@ class EventDetailView extends StatelessWidget {
         style: Theme.of(context).textTheme.title,
       ),
       Divider(),
-      LinkifyWithCatch(
-        text: data.location,
-        style: TextStyle(fontSize: 16),
-        textAlign: TextAlign.center,
-      ),
+      data.location != null && data.location.isNotEmpty
+          ? LinkifyWithCatch(
+              text: data.location,
+              style: TextStyle(fontSize: 16),
+              textAlign: TextAlign.center,
+            )
+          : Container(),
       Center(
-          child: TimeRangeWidget(time: data.startTime + ' - ' + data.endTime)),
+        child: EventTime(data: data),
+      ),
       Divider(),
       Padding(
         padding: const EdgeInsets.all(8.0),
@@ -48,8 +51,8 @@ class EventDetailView extends StatelessWidget {
           style: TextStyle(fontSize: 16),
         ),
       ),
-      data.url != null && data.url.isNotEmpty
-          ? LearnMoreButton(link: data.url)
+      data.link != null && data.link.isNotEmpty
+          ? LearnMoreButton(link: data.link)
           : Container(),
     ];
   }
