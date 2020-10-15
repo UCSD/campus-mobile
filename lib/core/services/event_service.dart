@@ -3,7 +3,7 @@ import 'package:campus_mobile_experimental/core/services/networking.dart';
 
 class EventsService {
   final String endpoint =
-      'https://9tqs71by9h.execute-api.us-west-2.amazonaws.com/qa/v1/events/student';
+      'https://api-qa.ucsd.edu:8243/campusevents/1.0.0/events/student';
 
   bool _isLoading = false;
   DateTime _lastUpdated;
@@ -33,11 +33,11 @@ class EventsService {
       _data = data;
       return true;
     } catch (e) {
-//      if (e.response != null && e.response.statusCode == 401) {
-//        if (await getNewToken()) {
-//          return await fetchData();
-//        }
-//      }
+      if (e.response != null && e.response.statusCode == 401) {
+        if (await getNewToken()) {
+          return await fetchData();
+        }
+      }
       _error = e.toString();
       print(_error);
       _isLoading = false;
