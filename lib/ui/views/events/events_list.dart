@@ -3,6 +3,7 @@ import 'package:campus_mobile_experimental/core/data_providers/events_data_provi
 import 'package:campus_mobile_experimental/core/models/events_model.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/event_time.dart';
+import 'package:campus_mobile_experimental/ui/reusable_widgets/image_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -86,6 +87,7 @@ class EventsList extends StatelessWidget {
     return Container(
       height: 60,
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Flexible(
             child: Column(
@@ -103,12 +105,9 @@ class EventsList extends StatelessWidget {
             ),
           ),
           SizedBox(width: 4),
-          /*
           ImageLoader(
             url: data.imageThumb,
-            fullSize: true,
           ),
-           */
         ],
       ),
     );

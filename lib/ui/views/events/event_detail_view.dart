@@ -22,7 +22,7 @@ class EventDetailView extends StatelessWidget {
     return [
       Center(
         child: ImageLoader(
-          url: data.imageUrl,
+          url: data.imageHQ,
           fullSize: true,
         ),
       ),

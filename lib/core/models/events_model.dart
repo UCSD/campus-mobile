@@ -16,7 +16,8 @@ class EventModel {
     this.description,
     this.startDate,
     this.endDate,
-    this.imageUrl,
+    this.imageHQ,
+    this.imageThumb,
     this.link,
     this.id,
     this.tags,
@@ -27,7 +28,8 @@ class EventModel {
   String description;
   DateTime startDate;
   DateTime endDate;
-  String imageUrl;
+  String imageHQ;
+  String imageThumb;
   String link;
   String id;
   List<String> tags;
@@ -38,7 +40,8 @@ class EventModel {
         description: json["description"] == null ? null : json["description"],
         startDate: DateTime.tryParse(json["startDate"]),
         endDate: DateTime.tryParse(json["endDate"]),
-        imageUrl: json["imageURL"] == null ? null : json["imageURL"],
+        imageHQ: json["imageHQ"] == null ? null : json["imageHQ"],
+        imageThumb: json["imageThumb"] == null ? null : json["imageThumb"],
         link: json["link"] == null ? null : json["link"],
         id: json["id"] == null ? null : json["id"],
         tags: json["tags"] == null
@@ -52,7 +55,8 @@ class EventModel {
         "description": description == null ? null : description,
         "startDate": startDate == null ? null : startDate,
         "endDate": endDate == null ? null : endDate,
-        "imageURL": imageUrl == null ? null : imageUrl,
+        "imageHQ": imageHQ == null ? null : imageHQ,
+        "imageThumb": imageThumb == null ? null : imageThumb,
         "link": link == null ? null : link,
         "id": id == null ? null : id,
         "tags": tags == null ? null : List<dynamic>.from(tags.map((x) => x)),
