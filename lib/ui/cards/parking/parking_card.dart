@@ -1,8 +1,9 @@
+import 'dart:io';
+
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/parking_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/parking_model.dart';
-import 'package:campus_mobile_experimental/core/util/webview.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/dots_indicator.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +33,7 @@ class _ParkingCardState extends State<ParkingCard> {
   @override
   void initState() {
     super.initState();
+    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
   }
 
   @override
@@ -40,15 +42,12 @@ class _ParkingCardState extends State<ParkingCard> {
   }
 
   Widget build(BuildContext context) {
-    String webCardURLWithTheme = getThemeURL(context, webCardURL);
-    reloadWebView(webCardURLWithTheme, _webViewController);
-
     return CardContainer(
       titleText: CardTitleConstants.titleMap[cardId],
       isLoading: _parkingDataProvider.isLoading,
       reload: () => {_parkingDataProvider.fetchParkingData()},
       errorText: _parkingDataProvider.error,
-      child: () => buildParkingCard(context, webCardURLWithTheme),
+      child: () => buildParkingCard(context),
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
@@ -56,68 +55,64 @@ class _ParkingCardState extends State<ParkingCard> {
     );
   }
 
-  Widget buildParkingCard(BuildContext context, webCardURLWithTheme) {
-    List<WebView> selectedLotsViews = [];
-    List<String> selectedSpots = [];
+  Widget buildParkingCard(BuildContext context) {
+    try {
+      List<WebView> selectedLotsViews = [];
+      List<String> selectedSpots = [];
 
-    _parkingDataProvider.spotTypesState.forEach((key, value) {
-      if (value) {
-        selectedSpots.add(key);
-      }
-    });
+      _parkingDataProvider.spotTypesState.forEach((key, value) {
+        if (value) {
+          selectedSpots.add(key);
+        }
+      });
 
-    for (ParkingModel model in _parkingDataProvider.parkingModels) {
-      if (model != null) {
-        if (_parkingDataProvider.parkingViewState[model.locationName]) {
-          final url =
-              makeUrl(webCardURLWithTheme, model.locationId, selectedSpots);
+      for (ParkingModel model in _parkingDataProvider.parkingModels) {
+        if (model != null) {
+          if (_parkingDataProvider.parkingViewState[model.locationName]) {
+            final url = makeUrl(model.locationId, selectedSpots);
 
-          selectedLotsViews.add(WebView(
-            opaque: false,
-            initialUrl: url,
-            javascriptMode: JavascriptMode.unrestricted,
-            onWebViewCreated: (controller) {
-              _webViewController = controller;
-            },
-            onPageStarted: (String url) {
-              print('Page started loading: $url');
-            },
-            onPageFinished: (String url) {
-              print('Page finished loading: $url');
-            },
-          ));
+            selectedLotsViews.add(WebView(
+              opaque: false,
+              initialUrl: url,
+              javascriptMode: JavascriptMode.unrestricted,
+              onWebViewCreated: (controller) {
+                _webViewController = controller;
+              },
+              onPageFinished: (String url) {
+                print('Page finished loading: $url');
+              },
+            ));
+          }
         }
       }
-    }
 
-    return Column(
-      children: <Widget>[
-        Flexible(
-            child: PageView(
-          controller: _controller,
-          children: selectedLotsViews,
-        )),
-        DotsIndicator(
-          controller: _controller,
-          itemCount: selectedLotsViews.length,
-          onPageSelected: (int index) {},
+      return Column(
+        children: <Widget>[
+          Flexible(
+              child: PageView(
+            controller: _controller,
+            children: selectedLotsViews,
+          )),
+          DotsIndicator(
+            controller: _controller,
+            itemCount: selectedLotsViews.length,
+            onPageSelected: (int index) {},
+          ),
+        ],
+      );
+    } catch (e) {
+      return Container(
+        width: double.infinity,
+        child: Center(
+          child: Container(
+            child: Text('An error occurred, please try again.'),
+          ),
         ),
-      ],
-    );
+      );
+    }
   }
 
-  // Future<void> _updateContentHeight(String some) async {
-  //   var newHeight =
-  //       await getNewContentHeight(_webViewController, _contentHeight);
-  //   if (newHeight != _contentHeight) {
-  //     setState(() {
-  //       _contentHeight = newHeight;
-  //     });
-  //   }
-  // }
-
-  String makeUrl(
-      String webCardURLWithTheme, String lotId, List<String> selectedSpots) {
+  String makeUrl(String lotId, List<String> selectedSpots) {
     var spotTypesQueryString = '';
     selectedSpots.forEach(
         (spot) => {spotTypesQueryString = '$spotTypesQueryString$spot,'});

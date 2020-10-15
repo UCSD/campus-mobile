@@ -3,8 +3,25 @@ import 'package:campus_mobile_experimental/core/data_providers/cards_data_provid
 import 'package:campus_mobile_experimental/core/data_providers/notices_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/notices_model.dart';
+import 'package:campus_mobile_experimental/ui/cards/availability/availability_card.dart';
+import 'package:campus_mobile_experimental/ui/cards/campus_info/campus_info_card.dart';
+import 'package:campus_mobile_experimental/ui/cards/class_schedule/class_schedule_card.dart';
+import 'package:campus_mobile_experimental/ui/cards/dining/dining_card.dart';
+import 'package:campus_mobile_experimental/ui/cards/events/events_card.dart';
+import 'package:campus_mobile_experimental/ui/cards/finals/finals_card.dart';
+import 'package:campus_mobile_experimental/ui/cards/mystudentchart/mystudentchart.dart';
+import 'package:campus_mobile_experimental/ui/cards/myucsdchart/myucsdchart.dart';
+import 'package:campus_mobile_experimental/ui/cards/native_scanner/native_scanner_card.dart';
+import 'package:campus_mobile_experimental/ui/cards/news/news_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/notices/notices_card.dart';
+import 'package:campus_mobile_experimental/ui/cards/parking/parking_card.dart';
+import 'package:campus_mobile_experimental/ui/cards/scanner/scanner_card.dart';
+import 'package:campus_mobile_experimental/ui/cards/shuttle/shuttle_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/staff_id/staff_id_card.dart';
+import 'package:campus_mobile_experimental/ui/cards/staff_info/staff_info_card.dart';
+import 'package:campus_mobile_experimental/ui/cards/student_id/student_id_card.dart';
+import 'package:campus_mobile_experimental/ui/cards/student_info/student_info_card.dart';
+import 'package:campus_mobile_experimental/ui/cards/weather/weather_card.dart';
 import 'package:campus_mobile_experimental/ui/theme/app_layout.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -52,60 +69,60 @@ class _HomeState extends State<Home> {
 
     for (String card in order) {
       switch (card) {
-        // case 'QRScanner':
-        //   orderedCards.insert(0, ScannerCard());
-        //   break;
-        // case 'NativeScanner':
-        //   orderedCards.insert(0, NativeScannerCard());
-        //   break;
-        // case 'MyStudentChart':
-        //   orderedCards.add(MyStudentChartCard());
-        //   break;
-        // case 'campus_info':
-        //   orderedCards.add(CampusInfoCard());
-        //   break;
-        // case 'dining':
-        //   orderedCards.add(DiningCard());
-        //   break;
-        // case 'news':
-        //   orderedCards.add(NewsCard());
-        //   break;
-        // case 'events':
-        //   orderedCards.add(EventsCard());
-        //   break;
-        // case 'weather':
-        //   orderedCards.add(WeatherCard());
-        //   break;
-        // case 'availability':
-        //   orderedCards.add(AvailabilityCard());
-        //   break;
-        // case 'schedule':
-        //   orderedCards.add(ClassScheduleCard());
-        //   break;
-        // case 'finals':
-        //   orderedCards.add(FinalsCard());
-        //   break;
-        // case 'MyUCSDChart':
-        //   orderedCards.add(MyUCSDChartCard());
-        //   break;
-        // case 'student_id':
-        //   orderedCards.add(StudentIdCard());
-        //   break;
-        // case 'staff_info':
-        //   orderedCards.add(StaffInfoCard());
-        //   break;
-        // case 'student_info':
-        //   orderedCards.add(StudentInfoCard());
-        //   break;
-        // case 'parking':
-        //   orderedCards.add(ParkingCard());
-        //   break;
+        case 'QRScanner':
+          orderedCards.insert(0, ScannerCard());
+          break;
+        case 'NativeScanner':
+          orderedCards.insert(0, NativeScannerCard());
+          break;
+        case 'MyStudentChart':
+          orderedCards.add(MyStudentChartCard());
+          break;
+        case 'campus_info':
+          orderedCards.add(CampusInfoCard());
+          break;
+        case 'dining':
+          orderedCards.add(DiningCard());
+          break;
+        case 'news':
+          orderedCards.add(NewsCard());
+          break;
+        case 'events':
+          orderedCards.add(EventsCard());
+          break;
+        case 'weather':
+          orderedCards.add(WeatherCard());
+          break;
+        case 'availability':
+          orderedCards.add(AvailabilityCard());
+          break;
+        case 'schedule':
+          orderedCards.add(ClassScheduleCard());
+          break;
+        case 'finals':
+          orderedCards.add(FinalsCard());
+          break;
+        case 'MyUCSDChart':
+          orderedCards.add(MyUCSDChartCard());
+          break;
+        case 'student_id':
+          orderedCards.add(StudentIdCard());
+          break;
+        case 'staff_info':
+          orderedCards.add(StaffInfoCard());
+          break;
+        case 'student_info':
+          orderedCards.add(StudentInfoCard());
+          break;
+        case 'parking':
+          orderedCards.add(ParkingCard());
+          break;
         case 'staff_id':
           orderedCards.add(StaffIdCard());
           break;
-        // case 'shuttle':
-        //   orderedCards.add(ShuttleCard());
-        //   break;
+        case 'shuttle':
+          orderedCards.add(ShuttleCard());
+          break;
       }
     }
     return orderedCards;

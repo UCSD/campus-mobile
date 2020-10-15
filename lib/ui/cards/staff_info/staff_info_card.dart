@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
@@ -25,6 +26,7 @@ class _StaffInfoCardState extends State<StaffInfoCard> {
   @override
   void initState() {
     super.initState();
+    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
   }
 
   @override
@@ -34,20 +36,17 @@ class _StaffInfoCardState extends State<StaffInfoCard> {
 
   @override
   Widget build(BuildContext context) {
-    String webCardURLWithTheme = getThemeURL(context, webCardURL);
-    reloadWebView(webCardURLWithTheme, _webViewController);
-
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       reload: () {
-        reloadWebView(webCardURLWithTheme, _webViewController);
+        _webViewController?.reload();
       },
       isLoading: false,
       titleText: CardTitleConstants.titleMap[cardId],
       errorText: null,
-      child: () => buildCardContent(context, webCardURLWithTheme),
+      child: () => buildCardContent(context),
     );
   }
 
@@ -56,7 +55,7 @@ class _StaffInfoCardState extends State<StaffInfoCard> {
     super.didChangeDependencies();
   }
 
-  Widget buildCardContent(BuildContext context, String webCardURL) {
+  Widget buildCardContent(BuildContext context) {
     return Container(
         height: _contentHeight,
         child: WebView(
@@ -69,12 +68,8 @@ class _StaffInfoCardState extends State<StaffInfoCard> {
           javascriptChannels: <JavascriptChannel>[
             _campusMobileJavascriptChannel(context),
           ].toSet(),
-          onPageStarted: (String webCardURL) {
-            print('Page started loading: $webCardURL');
-          },
-          onPageFinished: (String url) {
+          onPageFinished: (_) {
             _updateContentHeight('');
-            print('Page finished loading: $webCardURL');
           },
         ));
   }

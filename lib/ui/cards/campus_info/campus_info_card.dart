@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/core/util/webview.dart';
@@ -23,6 +25,7 @@ class _CampusInfoCardState extends State<CampusInfoCard> {
   @override
   void initState() {
     super.initState();
+    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
   }
 
   @override
@@ -32,20 +35,17 @@ class _CampusInfoCardState extends State<CampusInfoCard> {
 
   @override
   Widget build(BuildContext context) {
-    String webCardURLWithTheme = getThemeURL(context, webCardURL);
-    reloadWebView(webCardURLWithTheme, _webViewController);
-
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       reload: () {
-        reloadWebView(webCardURLWithTheme, _webViewController);
+        _webViewController?.reload();
       },
       isLoading: false,
       titleText: CardTitleConstants.titleMap[cardId],
       errorText: null,
-      child: () => buildCardContent(context, webCardURLWithTheme),
+      child: () => buildCardContent(context),
     );
   }
 
@@ -54,25 +54,21 @@ class _CampusInfoCardState extends State<CampusInfoCard> {
     super.didChangeDependencies();
   }
 
-  Widget buildCardContent(context, webCardURLWithTheme) {
+  Widget buildCardContent(context) {
     return Container(
       height: _contentHeight,
       child: WebView(
         opaque: false,
         javascriptMode: JavascriptMode.unrestricted,
-        initialUrl: webCardURLWithTheme,
+        initialUrl: webCardURL,
         onWebViewCreated: (controller) {
           _webViewController = controller;
         },
         javascriptChannels: <JavascriptChannel>[
           _campusInfoJavascriptChannel(context),
         ].toSet(),
-        onPageStarted: (String webCardURL) {
-          print('Page started loading: $webCardURLWithTheme');
-        },
-        onPageFinished: (String url) {
+        onPageFinished: (_) {
           _updateContentHeight('');
-          print('Page finished loading: $webCardURLWithTheme');
         },
       ),
     );
