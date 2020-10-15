@@ -41,19 +41,17 @@ class EventDetailView extends StatelessWidget {
               textAlign: TextAlign.center,
             )
           : Container(),
-      data.startDate != null && data.endDate != null
-          ? Center(
-              child: EventTime(data: data),
+      Center(child: EventTime(data: data)),
+      Divider(),
+      data.description != null && data.description.isNotEmpty
+          ? Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: LinkifyWithCatch(
+                text: data.description,
+                style: TextStyle(fontSize: 16),
+              ),
             )
           : Container(),
-      Divider(),
-      Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: LinkifyWithCatch(
-          text: data.description,
-          style: TextStyle(fontSize: 16),
-        ),
-      ),
       data.link != null && data.link.isNotEmpty
           ? LearnMoreButton(link: data.link)
           : Container(),
