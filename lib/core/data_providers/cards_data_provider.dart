@@ -31,12 +31,15 @@ class CardsDataProvider extends ChangeNotifier {
       'weather',
     ];
 
-    _studentCards = ['student_info', 'student_id', 'finals', 'schedule'];
+    _studentCards = [
+      // 'student_info',
+      'student_id', 'finals', 'schedule'
+    ];
 
     _staffCards = [
-      'MyUCSDChart',
-      'staff_info',
-      'staff_id',
+      // 'MyUCSDChart',
+      // 'staff_info',
+      // 'staff_id',
     ];
 
     for (String card in CardTitleConstants.titleMap.keys.toList()) {

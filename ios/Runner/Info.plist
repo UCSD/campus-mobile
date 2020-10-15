@@ -74,7 +74,5 @@
 	<false/>
 	<key>com.transistorsoft.fetch</key>
 	<string></string>
-	<key>io.flutter.embedded_views_preview</key>
-	<true/>
 </dict>
 </plist>

@@ -12,7 +12,7 @@ class CardsService {
 
   Future<bool> fetchCards(String ucsdAffiliation) async {
     String cardListEndpoint =
-        'https://rj786p8erh.execute-api.us-west-2.amazonaws.com/qa/defaultcards';
+        'https://rj786p8erh.execute-api.us-west-2.amazonaws.com/qa/defaultcards?ucsdaffiliation=E';
     _error = null;
     _isLoading = true;
     if (ucsdAffiliation == null) {
@@ -20,7 +20,7 @@ class CardsService {
     }
     try {
       //form query string with ucsd affiliation
-      cardListEndpoint += "?ucsdaffiliation=${ucsdAffiliation}";
+      //cardListEndpoint += "?ucsdaffiliation=${ucsdAffiliation}";
 
       /// fetch data
       String _response = await _networkHelper.fetchData(cardListEndpoint);

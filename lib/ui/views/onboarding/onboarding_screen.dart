@@ -1,15 +1,10 @@
 import 'dart:ui';
 
-import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
-import 'package:campus_mobile_experimental/ui/reusable_widgets/debug/build_info.dart';
-
-//import 'package:campus_mobile_experimental/ui/reusable_widgets/dots_indicator.dart';
 import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 import 'package:campus_mobile_experimental/ui/views/onboarding/onboarding_affiliations.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:auto_size_text/auto_size_text.dart';
+
 import 'onboarding_login.dart';
 
 class OnboardingScreen extends StatefulWidget {

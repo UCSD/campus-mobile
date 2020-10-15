@@ -14,13 +14,13 @@ class ParkingCard extends StatefulWidget {
   _ParkingCardState createState() => _ParkingCardState();
 }
 
-class _ParkingCardState extends State<ParkingCard> with WidgetsBindingObserver {
+class _ParkingCardState extends State<ParkingCard> {
   String cardId = 'parking';
   WebViewController _webViewController;
   ParkingDataProvider _parkingDataProvider;
   final _controller = new PageController();
   // double _contentHeight = cardContentMinHeight;
-  String webCardURL =
+  final String webCardURL =
       "https://mobile.ucsd.edu/replatform/v1/qa/webview/parking/index.html";
 
   @override
@@ -32,24 +32,23 @@ class _ParkingCardState extends State<ParkingCard> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
   Widget build(BuildContext context) {
-    reloadWebViewWithTheme(context, webCardURL, _webViewController);
+    String webCardURLWithTheme = getThemeURL(context, webCardURL);
+    reloadWebView(webCardURLWithTheme, _webViewController);
 
     return CardContainer(
       titleText: CardTitleConstants.titleMap[cardId],
       isLoading: _parkingDataProvider.isLoading,
       reload: () => {_parkingDataProvider.fetchParkingData()},
       errorText: _parkingDataProvider.error,
-      child: () => buildParkingCard(context),
+      child: () => buildParkingCard(context, webCardURLWithTheme),
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
@@ -57,7 +56,7 @@ class _ParkingCardState extends State<ParkingCard> with WidgetsBindingObserver {
     );
   }
 
-  Widget buildParkingCard(BuildContext context) {
+  Widget buildParkingCard(BuildContext context, webCardURLWithTheme) {
     List<WebView> selectedLotsViews = [];
     List<String> selectedSpots = [];
 
@@ -71,7 +70,8 @@ class _ParkingCardState extends State<ParkingCard> with WidgetsBindingObserver {
       if (model != null) {
         if (_parkingDataProvider.parkingViewState[model.locationName]) {
           final url =
-              getThemeURL(context, makeUrl(model.locationId, selectedSpots));
+              makeUrl(webCardURLWithTheme, model.locationId, selectedSpots);
+
           selectedLotsViews.add(WebView(
             opaque: false,
             initialUrl: url,
@@ -79,7 +79,12 @@ class _ParkingCardState extends State<ParkingCard> with WidgetsBindingObserver {
             onWebViewCreated: (controller) {
               _webViewController = controller;
             },
-            // onPageFinished: _updateContentHeight,
+            onPageStarted: (String url) {
+              print('Page started loading: $url');
+            },
+            onPageFinished: (String url) {
+              print('Page finished loading: $url');
+            },
           ));
         }
       }
@@ -111,7 +116,8 @@ class _ParkingCardState extends State<ParkingCard> with WidgetsBindingObserver {
   //   }
   // }
 
-  String makeUrl(String lotId, List<String> selectedSpots) {
+  String makeUrl(
+      String webCardURLWithTheme, String lotId, List<String> selectedSpots) {
     var spotTypesQueryString = '';
     selectedSpots.forEach(
         (spot) => {spotTypesQueryString = '$spotTypesQueryString$spot,'});
