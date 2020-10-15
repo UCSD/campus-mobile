@@ -18,9 +18,9 @@ dependencies:
   url_launcher: 5.2.5
   webview_flutter:
     git:
-      url: https://github.com/flutter/plugins.git
       path: packages/webview_flutter
-      ref: 19e8b5e5edf9b97264a260de5555b6cc6b7fc1f8
+      ref: webview-transparent-background
+      url: "git://github.com/crizant/plugins"
   intl: 0.16.0
   location: 3.0.2
   app_settings: 4.0.4
