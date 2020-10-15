@@ -50,8 +50,8 @@ class EventModel {
   Map<String, dynamic> toJson() => {
         "title": title == null ? null : title,
         "description": description == null ? null : description,
-        "startDate": startDate,
-        "endDate": endDate,
+        "startDate": startDate == null ? null : startDate,
+        "endDate": endDate == null ? null : endDate,
         "imageURL": imageUrl == null ? null : imageUrl,
         "link": link == null ? null : link,
         "id": id == null ? null : id,

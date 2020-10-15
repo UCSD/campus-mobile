@@ -41,9 +41,11 @@ class EventDetailView extends StatelessWidget {
               textAlign: TextAlign.center,
             )
           : Container(),
-      Center(
-        child: EventTime(data: data),
-      ),
+      data.startDate != null && data.endDate != null
+          ? Center(
+              child: EventTime(data: data),
+            )
+          : Container(),
       Divider(),
       Padding(
         padding: const EdgeInsets.all(8.0),
