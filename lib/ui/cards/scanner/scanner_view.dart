@@ -27,17 +27,19 @@ class _ScanditScannerState extends State<ScanditScanner> {
   var ucsdAffiliation = "";
   var accessToken = "";
   String _barcode;
+  String _errorText;
   bool isLoading;
   bool successfulSubmission;
 
   @override
   void initState() {
     super.initState();
-    hasScanned = false;
+    hasScanned = true;
     hasSubmitted = false;
-    didError = false;
+    didError = true;
     successfulSubmission = false;
     isLoading = false;
+    _errorText = "Something went wrong, please try again.";
   }
 
   @override
@@ -84,7 +86,7 @@ class _ScanditScannerState extends State<ScanditScanner> {
                   height: 200,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(40),
-                    border: Border.all(color: Colors.teal),
+                    border: Border.all(color: Colors.white),
                   )),
             ),
             Center(child: Text(_message)),
@@ -119,62 +121,13 @@ class _ScanditScannerState extends State<ScanditScanner> {
       );
     }
     else if(successfulSubmission) {
-      return Column(
-        children: [
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.all(32),
-              child: (
-                 Column(
-                   children: <Widget>[
-                     Icon(Icons.check_circle,
-                       color: Colors.green,
-                       size: 60),
-                     Padding(
-                       padding: const EdgeInsets.all(8.0),
-                       child: Text("Scan Submitted", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
-                     ),
-                     Text("Scan sent at: " + DateTime.now().toString(), style: TextStyle(color: ColorPrimary)),
-                   ]
-                 )
-              ),
-            ),
-          ),
-          Align(alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 16.0),
-                child: Text("Next Steps:", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
-              )),
-
-          ListView(
-          shrinkWrap: true,
-          children:<Widget>[
-           ListTile(title: Text(String.fromCharCode(0x2022) + " Proceed to the next step in the testing process")),
-           ListTile(title: Text(String.fromCharCode(0x2022) + " Results are usually available within 24-36 hours.")),
-           ListTile(title: Text(String.fromCharCode(0x2022) + " You can view your results by logging in to MyStudentChart.")),
-           ListTile(title: Text(String.fromCharCode(0x2022) + " If you are experiencing symptoms of COVID-19, stay in your residence and seek guidance from a healthcare provider.")),
-          ],
-        ),
-        ],
-      );
+      return(renderSuccessScreen(context));
     }
     else if(didError) {
-      return(
-          Column(
-              children: <Widget>[
-                Text("Scan failed.")
-              ]
-          )
-      );
+      return(renderFailureScreen(context));
     }
     else {
-      return(
-          Column(
-              children: <Widget>[
-                Text("An error occurred, please try again later.")
-              ]
-          )
-      );
+      return(renderFailureScreen(context));
     }
   }
 
@@ -186,6 +139,110 @@ class _ScanditScannerState extends State<ScanditScanner> {
     });
     print("affiliation: " + ucsdAffiliation.toString());
     return {'barcode': _barcode, 'ucsdaffiliation': ucsdAffiliation};
+  }
+
+  Widget renderFailureScreen(BuildContext context) {
+    return(
+        Column(
+          children: [
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(32),
+                child: (
+                    Column(
+                        children: <Widget>[
+                          ClipOval(
+                            child: Container(
+                              color: Colors.red,
+                              height: 75,
+                              width: 75,
+                              child: Icon(Icons.clear,
+                                  color: Colors.white,
+                                  size: 60),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Text("Submission Failed!", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 16.0),
+                            child: Text(
+                                _errorText,
+                                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 16.0),
+                            child: FlatButton(
+                              onPressed: () {
+                                this.setState(() {
+                                  hasScanned = false;
+                                  hasSubmitted = false;
+                                  didError = false;
+                                  successfulSubmission = false;
+                                  isLoading = false;
+                                });
+                              },
+                              child: Text("Try again"),
+                              color: lightButtonColor,
+                              textColor: Colors.white,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 16.0),
+                            child: Text(
+                                "If this issue persists, please contact a healthcare professional.",
+                                style: TextStyle(fontSize: 15)),
+                          ),
+
+                        ]
+                    )
+                ),
+              ),
+            ),
+          ],
+        ));
+  }
+
+  Widget renderSuccessScreen(BuildContext context) {
+    return Column(
+      children: [
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.all(32),
+            child: (
+                Column(
+                    children: <Widget>[
+                      Icon(Icons.check_circle,
+                          color: Colors.green,
+                          size: 60),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text("Scan Submitted", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+                      ),
+                      Text("Scan sent at: " + DateTime.now().toString(), style: TextStyle(color: ColorPrimary)),
+                    ]
+                )
+            ),
+          ),
+        ),
+        Align(alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 16.0),
+              child: Text("Next Steps:", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
+            )),
+
+        ListView(
+          shrinkWrap: true,
+          children:<Widget>[
+            ListTile(title: Text(String.fromCharCode(0x2022) + " Proceed to the next step in the testing process")),
+            ListTile(title: Text(String.fromCharCode(0x2022) + " Results are usually available within 24-36 hours.")),
+            ListTile(title: Text(String.fromCharCode(0x2022) + " You can view your results by logging in to MyStudentChart.")),
+            ListTile(title: Text(String.fromCharCode(0x2022) + " If you are experiencing symptoms of COVID-19, stay in your residence and seek guidance from a healthcare provider.")),
+          ],
+        ),
+      ],
+    );
   }
 
 
@@ -222,8 +279,10 @@ class _ScanditScannerState extends State<ScanditScanner> {
       });
       if (_barcodeService.error.contains(ErrorConstants.invalidBearerToken)) {
         await _userDataProvider.refreshToken();
-      } else {
-
+      } else if(_barcodeService.error.contains(ErrorConstants.duplicateRecord)){
+        this.setState(() {
+          _errorText = "You have scanned a barcode that has already been scanned. Please scan a different test.";
+        });
       }
       //_submitted = true;
     }

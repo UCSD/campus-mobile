@@ -79,6 +79,7 @@ class ButtonText {
 class ErrorConstants {
   static const authorizedPostErrors = 'Failed to upload data: ';
   static const invalidBearerToken = 'Invalid bearer token';
+  static const duplicateRecord = 'Record already exists.';
 }
 
 class Plugins {
