@@ -895,11 +895,11 @@ packages:
     dependency: "direct main"
     description:
       path: "packages/webview_flutter"
-      ref: "19e8b5e5edf9b97264a260de5555b6cc6b7fc1f8"
-      resolved-ref: "19e8b5e5edf9b97264a260de5555b6cc6b7fc1f8"
-      url: "https://github.com/flutter/plugins.git"
+      ref: webview-transparent-background
+      resolved-ref: add354583f036d1ddbfab769a412eeacf7f13299
+      url: "git://github.com/crizant/plugins"
     source: git
-    version: "0.3.22+1"
+    version: "1.0.2"
   yaml:
     dependency: transitive
     description:
@@ -908,5 +908,6 @@ packages:
     source: hosted
     version: "2.2.1"
 sdks:
-  dart: ">=2.9.0-14.0.dev <3.0.0"
-  flutter: ">=1.16.3 <2.0.0"
+  dart: ">=2.10.0-110 <2.11.0"
+  flutter: ">=1.22.0 <2.0.0"
+
