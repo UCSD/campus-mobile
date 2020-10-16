@@ -41,7 +41,7 @@ class ClassData {
   String termCode;
   String subjectCode;
   String courseCode;
-  int units;
+  double units;
   String courseLevel;
   String gradeOption;
   String grade;

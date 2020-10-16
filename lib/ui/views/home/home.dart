@@ -69,60 +69,60 @@ class _HomeState extends State<Home> {
 
     for (String card in order) {
       switch (card) {
-//        case 'QRScanner':
-//          orderedCards.insert(0, ScannerCard());
-//          break;
-//        case 'NativeScanner':
-//          orderedCards.insert(0, NativeScannerCard());
-//          break;
-//        case 'MyStudentChart':
-//          orderedCards.add(MyStudentChartCard());
-//          break;
-//        case 'campus_info':
-//          orderedCards.add(CampusInfoCard());
-//          break;
-//        case 'dining':
-//          orderedCards.add(DiningCard());
-//          break;
-//        case 'news':
-//          orderedCards.add(NewsCard());
-//          break;
-//        case 'events':
-//          orderedCards.add(EventsCard());
-//          break;
-//        case 'weather':
-//          orderedCards.add(WeatherCard());
-//          break;
-//        case 'availability':
-//          orderedCards.add(AvailabilityCard());
-//          break;
+        case 'QRScanner':
+          orderedCards.insert(0, ScannerCard());
+          break;
+        case 'NativeScanner':
+          orderedCards.insert(0, NativeScannerCard());
+          break;
+        case 'MyStudentChart':
+          orderedCards.add(MyStudentChartCard());
+          break;
+        case 'campus_info':
+          orderedCards.add(CampusInfoCard());
+          break;
+        case 'dining':
+          orderedCards.add(DiningCard());
+          break;
+        case 'news':
+          orderedCards.add(NewsCard());
+          break;
+        case 'events':
+          orderedCards.add(EventsCard());
+          break;
+        case 'weather':
+          orderedCards.add(WeatherCard());
+          break;
+        case 'availability':
+          orderedCards.add(AvailabilityCard());
+          break;
         case 'schedule':
           orderedCards.add(ClassScheduleCard());
           break;
         case 'finals':
           orderedCards.add(FinalsCard());
           break;
-//        case 'MyUCSDChart':
-//          orderedCards.add(MyUCSDChartCard());
-//          break;
-//        case 'student_id':
-//          orderedCards.add(StudentIdCard());
-//          break;
-//        case 'staff_info':
-//          orderedCards.add(StaffInfoCard());
-//          break;
-//        case 'student_info':
-//          orderedCards.add(StudentInfoCard());
-//          break;
-//        case 'parking':
-//          orderedCards.add(ParkingCard());
-//          break;
-//        case 'staff_id':
-//          orderedCards.add(StaffIdCard());
-//          break;
-//        case 'shuttle':
-//          orderedCards.add(ShuttleCard());
-//          break;
+        case 'MyUCSDChart':
+          orderedCards.add(MyUCSDChartCard());
+          break;
+        case 'student_id':
+          orderedCards.add(StudentIdCard());
+          break;
+        case 'staff_info':
+          orderedCards.add(StaffInfoCard());
+          break;
+        case 'student_info':
+          orderedCards.add(StudentInfoCard());
+          break;
+        case 'parking':
+          orderedCards.add(ParkingCard());
+          break;
+        case 'staff_id':
+          orderedCards.add(StaffIdCard());
+          break;
+        case 'shuttle':
+          orderedCards.add(ShuttleCard());
+          break;
       }
     }
     return orderedCards;

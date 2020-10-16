@@ -77,16 +77,17 @@ class ClassScheduleDataProvider extends ChangeNotifier {
         /// erase old model
         _classScheduleModel = ClassScheduleModel();
 
-//        /// fetch grad courses
-//        if (await _classScheduleService.fetchGRCourses(
-//            headers, _academicTermModel.termCode)) {
-//          _classScheduleModel = _classScheduleService.GRdata;
-//        } else {
-//          _error = _classScheduleService.error.toString();
-//        }
+        /// fetch grad courses
+        if (await _classScheduleService.fetchGRCourses(
+            headers, _academicTermModel.termCode)) {
+          _classScheduleModel = _classScheduleService.GRdata;
+        } else {
+          _error = _classScheduleService.error.toString();
+        }
 
         /// fetch undergrad courses
-        if (await _classScheduleService.fetchUNCourses()) {
+        if (await _classScheduleService.fetchUNCourses(
+            headers, _academicTermModel.termCode)) {
           if (_classScheduleModel.data != null) {
             _classScheduleModel.data.addAll(_classScheduleService.UNdata.data);
           } else {
