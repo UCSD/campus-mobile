@@ -189,7 +189,7 @@ packages:
       name: code_builder
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.4.1"
+    version: "3.5.0"
   collection:
     dependency: transitive
     description:
@@ -280,7 +280,7 @@ packages:
       name: firebase
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "7.3.0"
+    version: "7.3.2"
   firebase_analytics:
     dependency: "direct main"
     description:
@@ -368,9 +368,11 @@ packages:
   flutter_scandit_plugin:
     dependency: "direct main"
     description:
-      name: flutter_scandit_plugin
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: master
+      resolved-ref: eb7086df47f900689b540971eccf229f5a7742d5
+      url: "https://github.com/gmihir/flutter_scandit.git"
+    source: git
     version: "1.0.0+2"
   flutter_secure_storage:
     dependency: "direct main"
@@ -451,7 +453,7 @@ packages:
       name: html
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.14.0+3"
+    version: "0.14.0+4"
   http:
     dependency: transitive
     description:
@@ -640,7 +642,7 @@ packages:
       name: plugin_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.2"
+    version: "1.0.3"
   pointycastle:
     dependency: "direct main"
     description:
