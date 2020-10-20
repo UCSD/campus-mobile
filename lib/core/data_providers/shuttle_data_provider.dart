@@ -60,11 +60,7 @@ class ShuttleDataProvider extends ChangeNotifier {
       }
       fetchedStops = newMapOfStops;
 
-      /// if the user is logged in we want to sync the order of parking lots amongst all devices
-      if (userDataProvider != null) {
-        // print("user logged in");
-        reorderStops(userDataProvider.userProfileModel.selectedStops);
-      }
+      reorderStops(userDataProvider.userProfileModel.selectedStops);
 
       // get closest stop to current user
       await calculateClosestStop();
@@ -96,10 +92,12 @@ class ShuttleDataProvider extends ChangeNotifier {
   }
 
   void reorderStops(List<int> order) {
-    ///edit the profile and upload user selected lots
-    // print("reordering lists");
+    /// update userProfileModel with selectedStops
     userDataProvider.userProfileModel.selectedStops = order;
-    userDataProvider.postUserProfile(userDataProvider.userProfileModel);
+    if (userDataProvider.isLoggedIn) {
+      /// post updated userProfileModel for logged-in users
+      userDataProvider.postUserProfile(userDataProvider.userProfileModel);
+    }
     notifyListeners();
   }
 
@@ -170,6 +168,7 @@ class ShuttleDataProvider extends ChangeNotifier {
   }
 
   Future<void> checkLocationPermission() async {
+    print('Location Permission Request: shuttle_data_provider');
     // Set up new location object to get current location
     location = Location();
     location.changeSettings(accuracy: LocationAccuracy.low);

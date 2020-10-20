@@ -34,7 +34,7 @@ class FreeFoodService {
     } catch (e) {
       /// if the authorized fetch failed we know we have to refresh the
       /// token for this service
-      if (e.response != null && e.response.statusCode == 401) {
+      if (e.toString().contains("401")) {
         if (await getNewToken()) {
           return await fetchData(id);
         }
@@ -61,7 +61,7 @@ class FreeFoodService {
     } catch (e) {
       /// if the authorized fetch failed we know we have to refresh the
       /// token for this service
-      if (e.response != null && e.response.statusCode == 401) {
+      if (e.toString().contains("401")) {
         if (await getNewToken()) {
           return await fetchMaxCount(id);
         }
@@ -90,7 +90,7 @@ class FreeFoodService {
     } catch (e) {
       /// if the authorized fetch failed we know we have to refresh the
       /// token for this service
-      if (e.response != null && e.response.statusCode == 401) {
+      if (e.toString().contains("401")) {
         if (await getNewToken()) {
           return await updateCount(id, body);
         }
