@@ -75,14 +75,13 @@ class ShuttleService {
     } catch (e) {
       /// if the authorized fetch failed we know we have to refresh the
       /// token for this service
-      print("Response: ${e.response}");
-      print("Headers: $headers");
-      print("arrivingEndpoint: $arrivingEndpoint");
-      if (e.response != null && e.response.statusCode == 401) {
+
+      if(e.toString().contains("401")) {
         if (await getNewToken()) {
           return await getArrivingInformation(stopId);
         }
       }
+
       _error = e.toString();
       _isLoading = false;
     }

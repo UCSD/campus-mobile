@@ -29,9 +29,9 @@ class _CampusInfoCardState extends State<CampusInfoCard> {
   }
 
   @override
-  void dispose() {
-    super.dispose();
-  }
+  // void dispose() {
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -67,8 +67,8 @@ class _CampusInfoCardState extends State<CampusInfoCard> {
         javascriptChannels: <JavascriptChannel>[
           _campusInfoJavascriptChannel(context),
         ].toSet(),
-        onPageFinished: (_) {
-          _updateContentHeight('');
+        onPageFinished: (_) async {
+          await _updateContentHeight('');
         },
       ),
     );
