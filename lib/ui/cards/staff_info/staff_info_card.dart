@@ -30,11 +30,6 @@ class _StaffInfoCardState extends State<StaffInfoCard> {
   }
 
   @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
@@ -68,8 +63,8 @@ class _StaffInfoCardState extends State<StaffInfoCard> {
           javascriptChannels: <JavascriptChannel>[
             _campusMobileJavascriptChannel(context),
           ].toSet(),
-          onPageFinished: (_) {
-            _updateContentHeight('');
+          onPageFinished: (_) async {
+            await _updateContentHeight('');
           },
         ));
   }

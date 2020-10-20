@@ -36,11 +36,6 @@ class _ParkingCardState extends State<ParkingCard> {
     if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
   Widget build(BuildContext context) {
     return CardContainer(
       titleText: CardTitleConstants.titleMap[cardId],
