@@ -59,10 +59,8 @@ class ShuttleService {
     _isLoading = true;
     try {
       /// fetch data
-      //arrivingEndpoint = "https://api.jsonbin.io/b/5f6bc8237243cd7e82425eca";
       arrivingEndpoint =
           "https://api-qa.ucsd.edu:8243/shuttles/v1.0.0/stops/$stopId/arrivals";
-      //String _response = await _networkHelper.fetchData(arrivingEndpoint);
       String _response =
           await _networkHelper.authorizedFetch(arrivingEndpoint, headers);
 

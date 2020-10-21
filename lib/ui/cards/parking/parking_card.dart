@@ -73,9 +73,6 @@ class _ParkingCardState extends State<ParkingCard> {
               onWebViewCreated: (controller) {
                 _webViewController = controller;
               },
-              onPageFinished: (String url) {
-                print('Page finished loading: $url');
-              },
             ));
           }
         }
