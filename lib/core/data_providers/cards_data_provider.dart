@@ -20,6 +20,7 @@ class CardsDataProvider extends ChangeNotifier {
       'staff_id',
       'staff_info',
       'student_info',
+      'student_survey',
       'finals',
       'schedule',
       'shuttle',
@@ -31,7 +32,13 @@ class CardsDataProvider extends ChangeNotifier {
       'weather',
     ];
 
-    _studentCards = ['student_info', 'student_id', 'finals', 'schedule'];
+    _studentCards = [
+      'student_info',
+      'student_survey',
+      'student_id',
+      'finals',
+      'schedule'
+    ];
 
     _staffCards = [
       'MyUCSDChart',

@@ -21,6 +21,7 @@ import 'package:campus_mobile_experimental/ui/cards/staff_id/staff_id_card.dart'
 import 'package:campus_mobile_experimental/ui/cards/staff_info/staff_info_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/student_id/student_id_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/student_info/student_info_card.dart';
+import 'package:campus_mobile_experimental/ui/cards/survey/survey_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/weather/weather_card.dart';
 import 'package:campus_mobile_experimental/ui/theme/app_layout.dart';
 import 'package:flutter/cupertino.dart';
@@ -77,6 +78,9 @@ class _HomeState extends State<Home> {
           break;
         case 'MyStudentChart':
           orderedCards.add(MyStudentChartCard());
+          break;
+        case 'student_survey':
+          orderedCards.add(SurveyCard());
           break;
         case 'campus_info':
           orderedCards.add(CampusInfoCard());
