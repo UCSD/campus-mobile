@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_scandit_plugin/flutter_scandit_plugin.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 
 class ScanditScanner extends StatefulWidget {
@@ -34,9 +35,9 @@ class _ScanditScannerState extends State<ScanditScanner> {
   @override
   void initState() {
     super.initState();
-    hasScanned = true;
+    hasScanned = false;
     hasSubmitted = false;
-    didError = true;
+    didError = false;
     successfulSubmission = false;
     isLoading = false;
     _errorText = "Something went wrong, please try again.";
@@ -239,6 +240,12 @@ class _ScanditScannerState extends State<ScanditScanner> {
             ListTile(title: Text(String.fromCharCode(0x2022) + " Results are usually available within 24-36 hours.")),
             ListTile(title: Text(String.fromCharCode(0x2022) + " You can view your results by logging in to MyStudentChart.")),
             ListTile(title: Text(String.fromCharCode(0x2022) + " If you are experiencing symptoms of COVID-19, stay in your residence and seek guidance from a healthcare provider.")),
+            ListTile(title: Text(String.fromCharCode(0x2022) + " Help fight COVID-19. Add CA COVID Notify to your phone.",
+                                style: TextStyle(color: Colors.blueAccent, decoration: TextDecoration.underline)),
+              onTap: () {
+                  openLink("https://en.ucsd.edu");
+              }
+            ,),
           ],
         ),
       ],
@@ -281,12 +288,20 @@ class _ScanditScannerState extends State<ScanditScanner> {
         await _userDataProvider.refreshToken();
       } else if(_barcodeService.error.contains(ErrorConstants.duplicateRecord)){
         this.setState(() {
-          _errorText = "You have scanned a barcode that has already been scanned. Please scan a different test.";
+          _errorText = "Submission failed due to barcode already scanned. Please scan another barcode.";
         });
       }
       //_submitted = true;
     }
 
 
+  }
+
+  openLink(String url) async {
+    try {
+      launch(url, forceSafariVC: true);
+    } catch (e) {
+      // an error occurred, do nothing
+    }
   }
 }
