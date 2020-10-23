@@ -19,9 +19,11 @@ class _SurveyCardState extends State<SurveyCard> {
   String cardId = "student_survey";
   double _contentHeight = cardContentMinHeight;
   WebViewController _webViewController;
+//  bool hasSubmitted = false;
 
   @override
   Widget build(BuildContext context) {
+//    if (hasSubmitted == false) {
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
@@ -32,9 +34,12 @@ class _SurveyCardState extends State<SurveyCard> {
       errorText: null,
       child: () => buildCardContent(context),
     );
+//    } else {
+//      return Container();
+//    }
   }
 
-  final _url = "https://eforms.ucsd.edu/view.php?id=537412";
+  final _url = "https://cwo-test.ucsd.edu/WebCards/student_survey.html";
 
 //  final _url =
 //      "https://mobile.ucsd.edu/replatform/v1/qa/webview/student_survey.html";
