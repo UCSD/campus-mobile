@@ -23,7 +23,9 @@ class CardsService {
       cardListEndpoint += "?ucsdaffiliation=${ucsdAffiliation}";
 
       /// fetch data
-      String _response = await _networkHelper.fetchData(cardListEndpoint);
+//      String _response = await _networkHelper.fetchData(cardListEndpoint);
+      String _response = await _networkHelper.fetchData(
+          'https://mobile.ucsd.edu/replatform/v1/qa/cards/student_cards_with_survey.json');
 
       /// parse data
       _cardsModel = cardsModelFromJson(_response);
