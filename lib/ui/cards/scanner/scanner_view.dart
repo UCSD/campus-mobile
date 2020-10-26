@@ -97,9 +97,7 @@ class _ScanditScannerState extends State<ScanditScanner> {
   }
 
   Widget renderSubmissionView() {
-    print("top of rendersubmission method");
     if(isLoading) {
-      print("in isLoading here");
       return (
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -133,12 +131,10 @@ class _ScanditScannerState extends State<ScanditScanner> {
   }
 
   Map<String, dynamic> createUserData() {
-    print("in createuserdata");
     this.setState(() {
       ucsdAffiliation = _userDataProvider.authenticationModel.ucsdaffiliation;
       accessToken = _userDataProvider.authenticationModel.accessToken;
     });
-    print("affiliation: " + ucsdAffiliation.toString());
     return {'barcode': _barcode, 'ucsdaffiliation': ucsdAffiliation};
   }
 
@@ -254,12 +250,10 @@ class _ScanditScannerState extends State<ScanditScanner> {
 
 
   Future<void> _handleBarcodeResult(BarcodeResult result) async {
-    print("SCANNED:" + result.data);
     this.setState(() {
       hasScanned = true;
       _barcode = result.data;
     });
-    print("hasScanned: " + hasScanned.toString());
     var data = createUserData();
     var headers = {
       "Content-Type": "application/json",
@@ -268,9 +262,7 @@ class _ScanditScannerState extends State<ScanditScanner> {
     setState(() {
       isLoading = true;
     });
-    print(data);
     var results = await _barcodeService.uploadResults(headers, data);
-    print(results);
 
     if (results) {
       this.setState(() {
