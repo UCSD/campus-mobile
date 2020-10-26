@@ -838,12 +838,10 @@ packages:
   webview_flutter:
     dependency: "direct main"
     description:
-      path: "packages/webview_flutter"
-      ref: webview-transparent-background
-      resolved-ref: add354583f036d1ddbfab769a412eeacf7f13299
-      url: "git://github.com/crizant/plugins"
-    source: git
-    version: "1.0.2"
+      name: webview_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.4"
   yaml:
     dependency: transitive
     description:

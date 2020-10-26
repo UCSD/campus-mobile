@@ -65,7 +65,7 @@ class _StaffIdCardState extends State<StaffIdCard> {
     return Container(
       height: _contentHeight,
       child: WebView(
-        opaque: false,
+        // opaque: false,
         javascriptMode: JavascriptMode.unrestricted,
         initialUrl: webCardAuthURL,
         // onPageFinished: _updateContentHeight,
