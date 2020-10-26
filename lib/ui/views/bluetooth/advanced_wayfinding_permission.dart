@@ -118,7 +118,6 @@ class _AdvancedWayfindingPermissionState
         StreamBuilder(
           stream: FlutterBlue.instance.state,
           builder: (context, snapshot) {
-            print("Future instance is: " + snapshot.data.toString());
             if (snapshot.hasData) {
               return Switch(
                 value: bluetoothStarted(context, snapshot),
@@ -224,12 +223,10 @@ class _AdvancedWayfindingPermissionState
 
     if (prefs.containsKey("advancedWayfindingEnabled") &&
         prefs.getBool('advancedWayfindingEnabled')) {
-      print(prefs.getBool("advancedWayfindingEnabled"));
       AdvancedWayfindingSingleton bluetoothSingleton =
           AdvancedWayfindingSingleton();
       if (bluetoothSingleton.firstInstance) {
         bluetoothSingleton.firstInstance = false;
-        print("Instance: " + bluetoothSingleton.firstInstance.toString());
         if (bluetoothSingleton.userDataProvider == null) {
           bluetoothSingleton.userDataProvider =
               Provider.of<UserDataProvider>(context, listen: false);

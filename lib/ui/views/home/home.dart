@@ -132,7 +132,7 @@ class _HomeState extends State<Home> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     if (prefs.containsKey("advancedWayfindingEnabled") &&
-        prefs.getBool('advancedWayfindingEnabled')) {
+        prefs.getBool("advancedWayfindingEnabled")) {
       AdvancedWayfindingSingleton bluetoothSingleton =
           AdvancedWayfindingSingleton();
       bluetoothSingleton.advancedWayfindingEnabled =
@@ -143,7 +143,9 @@ class _HomeState extends State<Home> {
           bluetoothSingleton.userDataProvider =
               Provider.of<UserDataProvider>(context, listen: false);
         }
-        bluetoothSingleton.init();
+        if(bluetoothSingleton.advancedWayfindingEnabled) {
+          bluetoothSingleton.init();
+        }
       }
     }
   }

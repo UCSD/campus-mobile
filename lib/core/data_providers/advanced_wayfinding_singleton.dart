@@ -133,6 +133,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
         // Identifies bluetooth as active
         if (event.index == 4) {
           advancedWayfindingEnabled = true;
+          sharedPreferences.setBool("advancedWayfindingEnabled", true);
           //Use a try catch to avoid fetch errors, will use defaults.
           await extractAPIConstants();
 
@@ -173,6 +174,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
 
   // Start a bluetooth scan of determined second duration and listen to results
   startScan() async {
+    print("Scanning..");
     // String previousState = await _storage.read(key: "previousState");
     //
     // if (inBackground) {
@@ -765,7 +767,9 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
   }
 
   void stopScans() {
-    ongoingScanner.cancel();
+    if(ongoingScanner != null){
+      ongoingScanner.cancel();
+    }
     flutterBlueInstance.stopScan();
     flutterBlueInstance.scanResults.listen((event) {}).cancel();
     beaconSingleton.beaconBroadcast.stop();
