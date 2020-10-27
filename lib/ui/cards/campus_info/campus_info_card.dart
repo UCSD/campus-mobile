@@ -29,11 +29,6 @@ class _CampusInfoCardState extends State<CampusInfoCard> {
   }
 
   @override
-  // void dispose() {
-  //   super.dispose();
-  // }
-
-  @override
   Widget build(BuildContext context) {
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],

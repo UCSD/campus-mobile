@@ -1,11 +1,12 @@
-import 'package:campus_mobile_experimental/core/data_providers/messages_data_provider.dart';
+import 'dart:collection';
+
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
+import 'package:campus_mobile_experimental/core/data_providers/messages_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/free_food_model.dart';
 import 'package:campus_mobile_experimental/core/models/message_model.dart';
 import 'package:campus_mobile_experimental/core/services/free_food_service.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'dart:collection';
 
 class FreeFoodDataProvider extends ChangeNotifier {
   FreeFoodDataProvider() {
@@ -80,10 +81,9 @@ class FreeFoodDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void fetchCount(String id) async {
+  Future<void> fetchCount(String id) async {
     _isLoading = true;
     _curId = id;
-    _error = null;
 
     notifyListeners();
 
@@ -105,10 +105,9 @@ class FreeFoodDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void fetchMaxCount(String id) async {
+  Future<void> fetchMaxCount(String id) async {
     _isLoading = true;
     _curId = id;
-    _error = null;
 
     notifyListeners();
 
@@ -145,10 +144,9 @@ class FreeFoodDataProvider extends ChangeNotifier {
     updateCount(id, body);
   }
 
-  void updateCount(String id, Map<String, dynamic> body) async {
+  Future<void> updateCount(String id, Map<String, dynamic> body) async {
     _isLoading = true;
     _curId = id;
-    _error = null;
 
     notifyListeners();
 

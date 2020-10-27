@@ -12,7 +12,6 @@ Future<double> getNewContentHeight(
     WebViewController controller, double oldHeight) async {
   double newHeight = double.parse(
       await controller.evaluateJavascript("document.body.offsetHeight"));
-
   if (oldHeight != newHeight) {
     if (newHeight < cardContentMinHeight) {
       newHeight = cardContentMinHeight;

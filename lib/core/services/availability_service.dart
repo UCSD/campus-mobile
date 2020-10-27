@@ -36,7 +36,7 @@ class AvailabilityService {
     } catch (e) {
       /// if the authorized fetch failed we know we have to refresh the
       /// token for this service
-      if (e.response != null && e.response.statusCode == 401) {
+      if (e.toString().contains("401")) {
         if (await getNewToken()) {
           return await fetchData();
         }
@@ -57,7 +57,9 @@ class AvailabilityService {
     try {
       var response = await _networkHelper.authorizedPost(
           tokenEndpoint, tokenHeaders, "grant_type=client_credentials");
+
       headers["Authorization"] = "Bearer " + response["access_token"];
+
       return true;
     } catch (e) {
       _error = e.toString();

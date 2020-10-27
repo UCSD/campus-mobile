@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/core/data_providers/free_food_data_provider.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class FreeFoodNotification extends StatefulWidget {
@@ -49,10 +49,13 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
   @override
   Widget build(BuildContext context) {
     var isOverCount = _freeFoodDataProvider.isOverCount(messageId);
+
+    // print('messageId "' + messageId + '" isOverCount: ' + isOverCount.toString());
+
     var currCount = _freeFoodDataProvider.count(messageId);
-    var countText = currCount > 1
-        ? '$currCount students are going'
-        : '$currCount student is going';
+    var countText = currCount == 1
+        ? '$currCount student is going'
+        : '$currCount students are going';
 
     return Container(
         margin: EdgeInsets.only(top: 10.0),
