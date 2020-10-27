@@ -19,6 +19,10 @@ dependencies:
   firebase_core: 0.4.4
   firebase_crashlytics: 0.1.3+3
   firebase_messaging: 6.0.13
+  flutter_scandit_plugin:
+    git:
+      url: https://github.com/gmihir/flutter_scandit.git
+      ref: master
   flutter_blue:
     git:
       url: https://github.com/UCSD/flutter_blue.git

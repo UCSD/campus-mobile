@@ -42,6 +42,7 @@ class RoutePaths {
   static const String SpecialEventsDetailView =
       'special_events/special_events_detail_view';
   static const String ScannerView = 'scanner/scanner_view';
+  static const String ScanditScanner = 'scanner/scandit_scanner';
   static const String Parking = "parking/parking_view";
   static const String SpotTypesView = "parking/spot_types_view";
   static const String ParkingLotsView = "parking/parking_lots_view";
@@ -85,6 +86,7 @@ class ErrorConstants {
   static const authorizedPostErrors = 'Failed to upload data: ';
   static const authorizedPutErrors = 'Failed to update data: ';
   static const invalidBearerToken = 'Invalid bearer token';
+  static const duplicateRecord = 'Record already exists.';
 }
 
 class Plugins {

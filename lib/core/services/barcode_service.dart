@@ -32,8 +32,32 @@ class BarcodeService {
     }
   }
 
+
+  /*
+    The following conditions are being checked on the client-side before indicating a successful submission:
+
+      - ScanData API responds with a 200/201 status code (checked in networking.dart)
+      - ScanData API has not thrown an error
+      - The stored value returned by ScanData API matches the value that has actually been scanned
+      - The student has a non-empty Account ID, User ID, or Employee ID
+  */
   bool validateUploadResults(Map<String, dynamic> submit, Map<String, dynamic> response) {
-    return submit["barcode"] == response["SCAN_CODE_ID"];
+    try {
+      return (submit["barcode"] == response["SCAN_CODE_ID"] && !response.containsKey("errorType") && (isValid(response["Account ID"]) || isValid(response["Student ID"]
+      || isValid(response["Employee ID"]))));
+    }
+    catch(e) {
+      return false;
+    }
+  }
+
+  bool isValid(var toCheck) {
+    try {
+      return(toCheck != null && toCheck.toString().isNotEmpty);
+    }
+    catch(e) {
+      return false;
+    }
   }
 
   String get error => _error;

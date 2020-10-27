@@ -69,7 +69,12 @@ class NetworkHelper {
     } else if (_response.statusCode == 500) {
       String message = _response.data['message'] ?? '';
       throw Exception(ErrorConstants.authorizedPostErrors + message);
-    } else {
+    }
+    else if (_response.statusCode == 409) {
+      String message = _response.data['message'] ?? '';
+      throw Exception(ErrorConstants.duplicateRecord + message);
+    }
+    else {
       throw Exception(ErrorConstants.authorizedPostErrors + 'unknown error');
     }
   }
