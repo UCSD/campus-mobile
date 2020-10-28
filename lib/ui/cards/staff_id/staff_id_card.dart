@@ -29,11 +29,6 @@ class _StaffIdCardState extends State<StaffIdCard> {
   }
 
   @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     _userDataProvider = Provider.of<UserDataProvider>(context);
     String webCardAuthURL = webCardURL +
@@ -90,7 +85,7 @@ class _StaffIdCardState extends State<StaffIdCard> {
             _webViewController?.reload();
           }
         } else if (message.message == 'updateHeight') {
-          _updateContentHeight('');
+          await _updateContentHeight('');
         }
       },
     );

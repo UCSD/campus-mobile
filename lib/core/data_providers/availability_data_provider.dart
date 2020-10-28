@@ -1,8 +1,8 @@
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/availability_model.dart';
-import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/core/services/availability_service.dart';
+import 'package:flutter/material.dart';
 
 class AvailabilityDataProvider extends ChangeNotifier {
   AvailabilityDataProvider() {
@@ -72,7 +72,7 @@ class AvailabilityDataProvider extends ChangeNotifier {
     } else {
       if (_error.contains(ErrorConstants.invalidBearerToken)) {
         if (await _availabilityService.getNewToken()) {
-          await fetchAvailability();
+          fetchAvailability();
         }
       }
       _error = _availabilityService.error;

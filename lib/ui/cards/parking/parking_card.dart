@@ -36,11 +36,6 @@ class _ParkingCardState extends State<ParkingCard> {
     if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
   Widget build(BuildContext context) {
     return CardContainer(
       titleText: CardTitleConstants.titleMap[cardId],
@@ -77,9 +72,6 @@ class _ParkingCardState extends State<ParkingCard> {
               javascriptMode: JavascriptMode.unrestricted,
               onWebViewCreated: (controller) {
                 _webViewController = controller;
-              },
-              onPageFinished: (String url) {
-                print('Page finished loading: $url');
               },
             ));
           }

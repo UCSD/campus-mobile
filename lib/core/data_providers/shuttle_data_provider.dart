@@ -65,6 +65,7 @@ class ShuttleDataProvider extends ChangeNotifier {
         reorderStops(userDataProvider.userProfileModel.selectedStops);
       }
 
+
       // get closest stop to current user
       await calculateClosestStop();
 
@@ -95,9 +96,13 @@ class ShuttleDataProvider extends ChangeNotifier {
   }
 
   void reorderStops(List<int> order) {
-    ///edit the profile and upload user selected lots
+
+    /// update userProfileModel with selectedStops
     userDataProvider.userProfileModel.selectedStops = order;
-    userDataProvider.postUserProfile(userDataProvider.userProfileModel);
+    if (userDataProvider.isLoggedIn) {
+      /// post updated userProfileModel for logged-in users
+      userDataProvider.postUserProfile(userDataProvider.userProfileModel);
+    }
     notifyListeners();
   }
 
@@ -168,6 +173,7 @@ class ShuttleDataProvider extends ChangeNotifier {
   }
 
   Future<void> checkLocationPermission() async {
+    print('Location Permission Request: shuttle_data_provider');
     // Set up new location object to get current location
     location = Location();
     location.changeSettings(accuracy: LocationAccuracy.low);
