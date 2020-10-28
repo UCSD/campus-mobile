@@ -40,7 +40,11 @@ dependencies:
   shared_preferences: 0.5.6+3
   url_launcher: 5.2.5
   uuid: 2.2.0
-  webview_flutter: 1.0.4
+  webview_flutter:
+    git:
+      path: packages/webview_flutter
+      ref: webview-transparent-background
+      url: "git://github.com/crizant/plugins"
 
 dev_dependencies:
   hive_generator: 0.8.1

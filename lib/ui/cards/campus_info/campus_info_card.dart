@@ -58,7 +58,7 @@ class _CampusInfoCardState extends State<CampusInfoCard> {
     return Container(
       height: _contentHeight,
       child: WebView(
-        //opaque: false,
+        opaque: false,
         javascriptMode: JavascriptMode.unrestricted,
         initialUrl: webCardURL,
         onWebViewCreated: (controller) {

@@ -138,8 +138,6 @@ List<SingleChildWidget> dependentServices = [
       update: (_, pushNotificationDataProvider, _userDataProvider) {
         _userDataProvider.pushNotificationDataProvider =
             pushNotificationDataProvider;
-        print(
-            "PushNotificationDataProvider triggered an update for UserDataProvider");
         return _userDataProvider;
       }),
   ChangeNotifierProxyProvider<UserDataProvider, CardsDataProvider>(
@@ -169,7 +167,6 @@ List<SingleChildWidget> dependentServices = [
               cardsDataProvider.deactivateStaffCards();
             }
           });
-        print("UserDataProvider triggered an update for CardsDataProvider");
         return cardsDataProvider;
       }),
   ChangeNotifierProxyProvider<UserDataProvider, ClassScheduleDataProvider>(
@@ -181,7 +178,6 @@ List<SingleChildWidget> dependentServices = [
     if (userDataProvider.isLoggedIn && !classScheduleDataProvider.isLoading) {
       classScheduleDataProvider.fetchData();
     }
-    print("UserDataProvider triggered an update for ClassScheduleDataProvider");
     return classScheduleDataProvider;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, AdvancedWayfindingSingleton>(
@@ -192,8 +188,6 @@ List<SingleChildWidget> dependentServices = [
   }, update: (_, userDataProvider, proximityAwarenessSingleton) {
     proximityAwarenessSingleton..userDataProvider = userDataProvider;
     print("USER DATA SET");
-    print(
-        "UserDataProvider triggered an update for AdvancedWayfindingSingleton");
     return proximityAwarenessSingleton;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, StudentIdDataProvider>(
@@ -207,7 +201,6 @@ List<SingleChildWidget> dependentServices = [
     if (userDataProvider.isLoggedIn && !studentIdDataProvider.isLoading) {
       studentIdDataProvider.fetchData();
     }
-    print("UserDataProvider triggered an update for StudentIdDataProvider");
     return studentIdDataProvider;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, AvailabilityDataProvider>(
@@ -217,7 +210,6 @@ List<SingleChildWidget> dependentServices = [
     return availabilityDataProvider;
   }, update: (_, userDataProvider, availabilityDataProvider) {
     availabilityDataProvider.userDataProvider = userDataProvider;
-    print("UserDataProvider triggered an update for AvailabilityDataProvider");
     return availabilityDataProvider;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, ShuttleDataProvider>(
@@ -227,7 +219,6 @@ List<SingleChildWidget> dependentServices = [
     return shuttleDataProvider;
   }, update: (_, userDataProvider, shuttleDataProvider) {
     shuttleDataProvider.userDataProvider = userDataProvider;
-    print("UserDataProvider triggered an update for ShuttleDataProvider");
     return shuttleDataProvider;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, ParkingDataProvider>(
@@ -237,7 +228,6 @@ List<SingleChildWidget> dependentServices = [
   }, update: (_, userDataProvider, parkingDataProvider) {
     parkingDataProvider.userDataProvider = userDataProvider;
     parkingDataProvider.fetchParkingData();
-    print("UserDataProvider triggered an update for ParkingDataProvider");
     return parkingDataProvider;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, MessagesDataProvider>(
@@ -249,7 +239,6 @@ List<SingleChildWidget> dependentServices = [
     update: (_, userDataProvider, messageDataProvider) {
       messageDataProvider.userDataProvider = userDataProvider;
       messageDataProvider.fetchMessages(true);
-      print("UserDataProvider triggered an update for MessagesDataProvider");
       return messageDataProvider;
     },
   ),
@@ -263,8 +252,6 @@ List<SingleChildWidget> dependentServices = [
     update: (_, messageDataProvider, freefoodDataProvider) {
       freefoodDataProvider.messageDataProvider = messageDataProvider;
       freefoodDataProvider.parseMessages();
-      print(
-          "MessagesDataProvider triggered an update for FreeFoodDataProvider");
       return freefoodDataProvider;
     },
   ),
