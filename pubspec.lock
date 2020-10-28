@@ -344,6 +344,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.11"
+  flutter_scandit_plugin:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: master
+      resolved-ref: "1ea579f08b6e276d649faea99451b518cdf799ea"
+      url: "https://github.com/UCSD/flutter_scandit.git"
+    source: git
+    version: "1.0.1"
   flutter_secure_storage:
     dependency: "direct main"
     description:

@@ -83,6 +83,9 @@ PODS:
   - flutter_blue/Protos (0.0.1):
     - Flutter
     - Protobuf (~> 3.11.4)
+  - flutter_scandit_plugin (0.0.1):
+    - Flutter
+    - ScanditBarcodeCapture (~> 6.1)
   - flutter_secure_storage (3.3.1):
     - Flutter
   - google_maps_flutter (0.0.1):
@@ -134,6 +137,9 @@ PODS:
     - Flutter
   - PromisesObjC (1.2.10)
   - Protobuf (3.11.4)
+  - ScanditBarcodeCapture (6.5.0):
+    - ScanditCaptureCore (= 6.5.0)
+  - ScanditCaptureCore (6.5.0)
   - shared_preferences (0.0.1):
     - Flutter
   - SwiftProtobuf (1.12.0)
@@ -154,6 +160,7 @@ DEPENDENCIES:
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - Flutter (from `Flutter`)
   - flutter_blue (from `.symlinks/plugins/flutter_blue/ios`)
+  - flutter_scandit_plugin (from `.symlinks/plugins/flutter_scandit_plugin/ios`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
   - google_maps_flutter (from `.symlinks/plugins/google_maps_flutter/ios`)
   - location (from `.symlinks/plugins/location/ios`)
@@ -182,6 +189,8 @@ SPEC REPOS:
     - nanopb
     - PromisesObjC
     - Protobuf
+    - ScanditBarcodeCapture
+    - ScanditCaptureCore
     - SwiftProtobuf
 
 EXTERNAL SOURCES:
@@ -207,6 +216,8 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_blue:
     :path: ".symlinks/plugins/flutter_blue/ios"
+  flutter_scandit_plugin:
+    :path: ".symlinks/plugins/flutter_scandit_plugin/ios"
   flutter_secure_storage:
     :path: ".symlinks/plugins/flutter_secure_storage/ios"
   google_maps_flutter:
@@ -245,6 +256,7 @@ SPEC CHECKSUMS:
   FirebaseMessaging: fc1f98b4592f8f2ea538169b1c317c6e76f81300
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
   flutter_blue: eeb381dc4727a0954dede73515f683865494b370
+  flutter_scandit_plugin: a8ff046245ccc15961c3ffd8e926c1d3bb54db1e
   flutter_secure_storage: 7953c38a04c3fdbb00571bcd87d8e3b5ceb9daec
   google_maps_flutter: c7f9c73576de1fbe152a227bfd6e6c4ae8088619
   GoogleAppMeasurement: 966e88df9d19c15715137bb2ddaf52373f111436
@@ -258,11 +270,13 @@ SPEC CHECKSUMS:
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
   PromisesObjC: b14b1c6b68e306650688599de8a45e49fae81151
   Protobuf: 176220c526ad8bd09ab1fb40a978eac3fef665f7
+  ScanditBarcodeCapture: 15423e148223696a0bac533b86dbdb404c9a6b62
+  ScanditCaptureCore: c39f0be548c85949909b5b8fedaa1c9c6844367c
   shared_preferences: 430726339841afefe5142b9c1f50cb6bd7793e01
   SwiftProtobuf: 4ef85479c18ca85b5482b343df9c319c62bda699
   url_launcher: a1c0cc845906122c4784c542523d8cacbded5626
   webview_flutter: d2b4d6c66968ad042ad94cbb791f5b72b4678a96
 
-PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
+PODFILE CHECKSUM: a75497545d4391e2d394c3668e20cfb1c2bbd4aa
 
-COCOAPODS: 1.10.0.beta.2
+COCOAPODS: 1.9.3

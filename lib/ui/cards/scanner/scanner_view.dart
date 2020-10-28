@@ -30,6 +30,7 @@ class _ScanditScannerState extends State<ScanditScanner> {
   String _barcode;
   String _errorText;
   bool isLoading;
+  bool isDuplicate;
   bool successfulSubmission;
 
   @override
@@ -40,6 +41,7 @@ class _ScanditScannerState extends State<ScanditScanner> {
     didError = false;
     successfulSubmission = false;
     isLoading = false;
+    isDuplicate = false;
     _errorText = "Something went wrong, please try again.";
   }
 
@@ -150,7 +152,7 @@ class _ScanditScannerState extends State<ScanditScanner> {
                         children: <Widget>[
                           ClipOval(
                             child: Container(
-                              color: Colors.red,
+                              color: isDuplicate ? Colors.orange : Colors.red,
                               height: 75,
                               width: 75,
                               child: Icon(Icons.clear,
@@ -271,6 +273,8 @@ class _ScanditScannerState extends State<ScanditScanner> {
         successfulSubmission = true;
       });
     } else {
+      print(_barcodeService.error);
+      print("error constant: " + ErrorConstants.duplicateRecord);
       this.setState(() {
         successfulSubmission = false;
         didError = true;
@@ -279,8 +283,10 @@ class _ScanditScannerState extends State<ScanditScanner> {
       if (_barcodeService.error.contains(ErrorConstants.invalidBearerToken)) {
         await _userDataProvider.refreshToken();
       } else if(_barcodeService.error.contains(ErrorConstants.duplicateRecord)){
+        print("in correct if");
         this.setState(() {
           _errorText = "Submission failed due to barcode already scanned. Please scan another barcode.";
+          isDuplicate = true;
         });
       }
       //_submitted = true;
