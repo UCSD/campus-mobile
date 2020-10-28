@@ -47,7 +47,7 @@ class ShuttleDataProvider extends ChangeNotifier {
     arrivalsToRender = Map<int, List<ArrivingShuttle>>();
   }
 
-  void fetchStops() async {
+  void fetchStops({bool reloading}) async {
     _isLoading = true;
     _error = null;
     notifyListeners();
@@ -61,8 +61,7 @@ class ShuttleDataProvider extends ChangeNotifier {
       fetchedStops = newMapOfStops;
 
       /// if the user is logged in we want to sync the order of parking lots amongst all devices
-      if (userDataProvider != null) {
-        // print("user logged in");
+      if (userDataProvider != null && !reloading) {
         reorderStops(userDataProvider.userProfileModel.selectedStops);
       }
 
@@ -97,7 +96,6 @@ class ShuttleDataProvider extends ChangeNotifier {
 
   void reorderStops(List<int> order) {
     ///edit the profile and upload user selected lots
-    // print("reordering lists");
     userDataProvider.userProfileModel.selectedStops = order;
     userDataProvider.postUserProfile(userDataProvider.userProfileModel);
     notifyListeners();

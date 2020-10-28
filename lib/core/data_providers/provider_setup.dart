@@ -223,7 +223,7 @@ List<SingleChildWidget> dependentServices = [
   ChangeNotifierProxyProvider<UserDataProvider, ShuttleDataProvider>(
       create: (_) {
     var shuttleDataProvider = ShuttleDataProvider();
-    shuttleDataProvider.fetchStops();
+    shuttleDataProvider.fetchStops(reloading: false);
     return shuttleDataProvider;
   }, update: (_, userDataProvider, shuttleDataProvider) {
     shuttleDataProvider.userDataProvider = userDataProvider;
