@@ -102,20 +102,10 @@ class ScannerCard extends StatelessWidget {
   }
 
   generateScannerUrl() {
-    /// Verify that user is logged in
-    if (_userDataProvider.isLoggedIn) {
-      /// Initialize header
-      final Map<String, String> header = {
-        'Authorization':
-            'Bearer ${_userDataProvider?.authenticationModel?.accessToken}'
-      };
-    }
     var tokenQueryString =
         "token=" + '${_userDataProvider.authenticationModel.accessToken}';
-
     var affiliationQueryString = "affiliation=" +
         '${_userDataProvider.authenticationModel.ucsdaffiliation}';
-
     var url = _url + "?" + tokenQueryString + "&" + affiliationQueryString;
 
     openLink(url);

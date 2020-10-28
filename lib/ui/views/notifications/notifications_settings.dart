@@ -1,7 +1,6 @@
 import 'package:campus_mobile_experimental/core/data_providers/push_notifications_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
-import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -32,7 +31,7 @@ class NotificationsSettingsView extends StatelessWidget {
             Provider.of<UserDataProvider>(context, listen: false)
                 .toggleNotifications(topic);
           },
-          activeColor: ColorPrimary,
+          activeColor: Theme.of(context).buttonColor,
         ),
       ));
     }

@@ -22,15 +22,7 @@ class NotificationsListView extends StatelessWidget {
     if (Provider.of<MessagesDataProvider>(context).messages.length == 0) {
       if (Provider.of<MessagesDataProvider>(context).error == null) {
         if (Provider.of<MessagesDataProvider>(context).isLoading) {
-          return ListView.separated(
-            physics: AlwaysScrollableScrollPhysics(),
-            itemBuilder: (BuildContext context, int index) =>
-                _buildLoadingIndicator(),
-            controller:
-                Provider.of<MessagesDataProvider>(context).scrollController,
-            itemCount: 1,
-            separatorBuilder: (BuildContext context, int index) => Divider(),
-          );
+          // empty notifications view until they load in
         } else {
           return ListView.separated(
             physics: AlwaysScrollableScrollPhysics(),
@@ -62,17 +54,6 @@ class NotificationsListView extends StatelessWidget {
     );
   }
 
-  Widget _buildLoadingIndicator() {
-    return Padding(
-        padding: EdgeInsets.only(top: 10.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            CircularProgressIndicator(),
-          ],
-        ));
-  }
-
   Widget _buildErrorText() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -81,44 +62,6 @@ class NotificationsListView extends StatelessWidget {
       ],
     );
   }
-
-  // List<Widget> _buildMessage(BuildContext context, MessageElement data) {
-  //   FreeFoodDataProvider freefoodProvider = Provider.of<FreeFoodDataProvider>(context);
-  //   return [
-  //     ListTile(
-  //       leading: Icon(Icons.info, color: Colors.grey, size: 30),
-  //       title: Column(
-  //         children: <Widget>[
-  //           Text(_readTimestamp(data.timestamp),
-  //               style: TextStyle(fontSize: 10, color: Colors.grey)),
-  //           Text(data.message.title),
-  //           Padding(padding: const EdgeInsets.all(3.5))
-  //         ],
-  //         crossAxisAlignment: CrossAxisAlignment.start,
-  //       ),
-  //       subtitle: Column(
-  //         children: <Widget>[
-  //           Linkify(
-  //             text: data.message.message,
-  //             onOpen: (link) async {
-  //               try {
-  //                 await launch(link.url, forceSafariVC: true);
-  //               } catch (e) {
-  //                 // an error occurred, do nothing
-  //               }
-  //             },
-  //             options: LinkifyOptions(humanize: false),
-  //             style: TextStyle(fontSize: 12.5)
-  //           ),
-  //           freefoodProvider.isFreeFood(data.messageId)
-  //             ? FreeFoodNotification(messageId: data.messageId)
-  //             : SizedBox(),
-  //         ]
-  //       )
-  //     ),
-  //     Divider()
-  //   ];
-  // }
 
   Widget _buildNoMessagesText() {
     return Row(
@@ -139,14 +82,6 @@ class NotificationsListView extends StatelessWidget {
     FreeFoodDataProvider freefoodProvider =
         Provider.of<FreeFoodDataProvider>(context);
 
-    if (index ==
-        Provider.of<MessagesDataProvider>(context).messages.length - 1) {
-      if (Provider.of<MessagesDataProvider>(context).hasMoreMessagesToLoad) {
-        return _buildLoadingIndicator();
-      } else {
-        return Container();
-      }
-    }
     return ListTile(
       leading: Icon(Icons.info, color: Colors.grey, size: 30),
       title: Column(

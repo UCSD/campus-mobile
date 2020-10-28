@@ -12,8 +12,10 @@ class RoutePaths {
   static const String Profile = 'profile';
   static const String CardsView = 'profile/cards_view';
   static const String BeaconView = 'profile/beacon_view';
-  static const String AutomaticBluetoothLoggerView = 'profile/automatic_bluetooth_logger_view';
-  static const String BluetoothPermissionsView = 'profile/bluetooth_permissions_view';
+  static const String AutomaticBluetoothLoggerView =
+      'profile/automatic_bluetooth_logger_view';
+  static const String BluetoothPermissionsView =
+      'profile/bluetooth_permissions_view';
   static const String NotificationsSettingsView =
       'notifications/notifications_settings';
 
@@ -27,6 +29,8 @@ class RoutePaths {
   static const String ManageAvailabilityView =
       'availability/manage_locations_view';
   static const String ManageParkingView = 'parking/manage_parking_view';
+  static const String ManageShuttleView = 'shuttle/manage_shuttle_view';
+  static const String AddShuttleStopsView = 'shuttle/add_shuttle_stops_view';
   static const String DiningViewAll = 'dining/dining_list_view';
   static const String DiningDetailView = 'dining/dining_detail_view';
   static const String DiningNutritionView = 'dining/dining_nutrition_view';
@@ -59,6 +63,8 @@ class RouteTitles {
     'events/event_detail_view': 'Events',
     'class/classList': 'Class Schedule',
     'availability/manage_locations_view': 'Manage Locations',
+    'shuttle/manage_shuttle_view': 'Manage Shuttle Stops',
+    'shuttle/add_shuttle_stops_view': 'Add Shuttle Stops',
     'parking/manage_parking_view': 'Parking',
     'dining/dining_list_view': 'Dining',
     'dining/dining_detail_view': 'Dining',
@@ -78,6 +84,7 @@ class ButtonText {
 
 class ErrorConstants {
   static const authorizedPostErrors = 'Failed to upload data: ';
+  static const authorizedPutErrors = 'Failed to update data: ';
   static const invalidBearerToken = 'Invalid bearer token';
   static const duplicateRecord = 'Record already exists.';
 }
@@ -107,6 +114,7 @@ class CardTitleConstants {
     'staff_id': 'Staff ID',
     'finals': 'Finals',
     'schedule': 'Classes',
+    'shuttle': "Shuttle",
     'dining': 'Dining',
     'availability': 'Availability',
     'events': 'Events',

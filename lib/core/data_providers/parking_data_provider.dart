@@ -1,10 +1,10 @@
+import 'package:campus_mobile_experimental/core/constants/default_parking_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/parking_model.dart';
 import 'package:campus_mobile_experimental/core/models/spot_types_model.dart';
 import 'package:campus_mobile_experimental/core/services/parking_service.dart';
 import 'package:campus_mobile_experimental/core/services/spot_types_service.dart';
 import 'package:flutter/material.dart';
-import 'package:campus_mobile_experimental/core/constants/default_parking_constants.dart';
 
 class ParkingDataProvider extends ChangeNotifier {
   ParkingDataProvider() {
@@ -46,7 +46,7 @@ class ParkingDataProvider extends ChangeNotifier {
     _error = null;
     notifyListeners();
 
-    /// creating  new map ensures we remove all unsupported lots
+    /// create a new map to ensure we remove all unsupported lots
     Map<String, ParkingModel> newMapOfLots = Map<String, ParkingModel>();
     if (await _parkingService.fetchParkingLotData()) {
       if (_userDataProvider.userProfileModel.selectedParkingLots.isNotEmpty) {
