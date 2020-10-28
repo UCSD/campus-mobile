@@ -6,7 +6,7 @@ import 'package:campus_mobile_experimental/core/models/news_model.dart';
 import 'package:campus_mobile_experimental/core/navigation/bottom_tab_bar/bottom_navigation_bar_model.dart';
 import 'package:campus_mobile_experimental/core/navigation/top_navigation_bar/app_bar.dart';
 import 'package:campus_mobile_experimental/ui/cards/dining/dining_list.dart';
-import 'package:campus_mobile_experimental/ui/cards/native_scanner/scanner_view.dart';
+import 'package:campus_mobile_experimental/ui/views/scanner/scanner_view.dart';
 import 'package:campus_mobile_experimental/ui/views/availability/manage_availability_view.dart';
 import 'package:campus_mobile_experimental/ui/views/baseline/baseline_view.dart';
 import 'package:campus_mobile_experimental/ui/views/bluetooth/advanced_wayfinding_permission.dart';
@@ -32,7 +32,6 @@ import 'package:campus_mobile_experimental/ui/views/parking/manage_parking_view.
 import 'package:campus_mobile_experimental/ui/views/parking/spot_types_view.dart';
 import 'package:campus_mobile_experimental/ui/views/profile/cards_view.dart';
 import 'package:campus_mobile_experimental/ui/views/profile/profile.dart';
-import 'package:campus_mobile_experimental/ui/views/scanner/scanner.dart';
 import 'package:campus_mobile_experimental/ui/views/shuttle/add_shuttle_stops_view.dart';
 import 'package:campus_mobile_experimental/ui/views/shuttle/manage_shuttle_view.dart';
 import 'package:flutter/material.dart';
@@ -127,11 +126,6 @@ class Router {
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return AddShuttleStopsView();
-        });
-      case RoutePaths.ScannerView:
-        return MaterialPageRoute(builder: (_) {
-          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
-          return Scanner();
         });
       case RoutePaths.CardsView:
         return MaterialPageRoute(builder: (_) {
