@@ -202,6 +202,7 @@ List<SingleChildWidget> dependentServices = [
     if (userDataProvider.isLoggedIn && !studentIdDataProvider.isLoading) {
       studentIdDataProvider.fetchData();
     }
+
     return studentIdDataProvider;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, AvailabilityDataProvider>(
@@ -219,7 +220,7 @@ List<SingleChildWidget> dependentServices = [
       create: (_) {
     print("CreateProvider: ShuttleDataProvider");
     var shuttleDataProvider = ShuttleDataProvider();
-    shuttleDataProvider.fetchStops();
+    shuttleDataProvider.fetchStops(reloading: false);
     return shuttleDataProvider;
   }, update: (_, userDataProvider, shuttleDataProvider) {
     print("UpdateProvider: ShuttleDataProvider");
