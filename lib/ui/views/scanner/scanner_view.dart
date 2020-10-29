@@ -1,4 +1,3 @@
-
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/services/barcode_service.dart';
@@ -8,6 +7,7 @@ import 'package:flutter_scandit_plugin/flutter_scandit_plugin.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 
 class ScanditScanner extends StatefulWidget {
@@ -32,6 +32,22 @@ class _ScanditScannerState extends State<ScanditScanner> {
   bool isLoading;
   bool isDuplicate;
   bool successfulSubmission;
+  PermissionStatus _cameraPermissionsStatus = PermissionStatus.undetermined;
+
+  Future _requestCameraPermissions() async {
+    var status = await Permission.camera.status;
+    if (!status.isGranted) {
+      status = await Permission.camera.request();
+    }
+
+    if (_cameraPermissionsStatus != status) {
+      setState(() {
+        _cameraPermissionsStatus = status;
+      });
+    }
+
+  }
+
 
   @override
   void initState() {
@@ -43,6 +59,10 @@ class _ScanditScannerState extends State<ScanditScanner> {
     isLoading = false;
     isDuplicate = false;
     _errorText = "Something went wrong, please try again.";
+
+    WidgetsBinding.instance
+            .addPostFrameCallback((_) => _requestCameraPermissions());
+
   }
 
   @override
@@ -73,29 +93,36 @@ class _ScanditScannerState extends State<ScanditScanner> {
   }
 
   Widget renderScanner() {
-    return(
-        Stack(
-          children: [
-            Scandit(
-                scanned: _handleBarcodeResult,
-                onError: (e) => setState(() => _message = e.message),
-                symbologies: [Symbology.CODE128, Symbology.DATA_MATRIX],
-                onScanditCreated: (controller) => _controller = controller,
-                licenseKey: licenseKey
-            ),
-            Center(
-              child: Container(
-                  width: 300,
-                  height: 200,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(40),
-                    border: Border.all(color: Colors.white),
-                  )),
-            ),
-            Center(child: Text(_message)),
-          ],
-        )
-    );
+    if(_cameraPermissionsStatus == PermissionStatus.granted) {
+        return(
+            Stack(
+              children: [
+                Scandit(
+                    scanned: _handleBarcodeResult,
+                    onError: (e) => setState(() => _message = e.message),
+                    symbologies: [Symbology.CODE128, Symbology.DATA_MATRIX],
+                    onScanditCreated: (controller) => _controller = controller,
+                    licenseKey: licenseKey
+                ),
+                Center(
+                  child: Container(
+                      width: 300,
+                      height: 200,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(40),
+                        border: Border.all(color: Colors.white),
+                      )),
+                ),
+                Center(child: Text(_message)),
+              ],
+            )
+        );
+    }
+    else {
+      return(
+        Center(child: Text("Please allow camera permissions to scan your test kit."),)
+      );
+    }
   }
 
   Widget renderSubmissionView() {
