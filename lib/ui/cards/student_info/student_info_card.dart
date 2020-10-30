@@ -20,7 +20,7 @@ class _StudentInfoCardState extends State<StudentInfoCard> {
   WebViewController _webViewController;
   double _contentHeight = cardContentMinHeight;
   final String webCardURL =
-      'https://mobile.ucsd.edu/replatform/v1/qa/webview/student_info.html';
+      'https://mobile.ucsd.edu/replatform/v1/qa/webview/student_info-v2.html';
 
   @override
   void initState() {
