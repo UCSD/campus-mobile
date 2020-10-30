@@ -4,6 +4,7 @@ import 'package:campus_mobile_experimental/core/services/barcode_service.dart';
 import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_scandit_plugin/flutter_scandit_plugin.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -27,7 +28,22 @@ class _ScanditScannerState extends State<ScanditScanner> {
   String _barcode;
   String _errorText;
   bool isLoading;
+  bool isDuplicate;
   bool successfulSubmission;
+  PermissionStatus _cameraPermissionsStatus = PermissionStatus.undetermined;
+
+  Future _requestCameraPermissions() async {
+    var status = await Permission.camera.status;
+    if (!status.isGranted) {
+      status = await Permission.camera.request();
+    }
+
+    if (_cameraPermissionsStatus != status) {
+      setState(() {
+        _cameraPermissionsStatus = status;
+      });
+    }
+  }
 
   @override
   void initState() {
@@ -37,18 +53,20 @@ class _ScanditScannerState extends State<ScanditScanner> {
     didError = false;
     successfulSubmission = false;
     isLoading = false;
+    isDuplicate = false;
     _errorText = "Something went wrong, please try again.";
+
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => _requestCameraPermissions());
   }
 
   @override
   Widget build(BuildContext context) {
     _userDataProvider = Provider.of<UserDataProvider>(context);
     if (Theme.of(context).platform == TargetPlatform.iOS) {
-      licenseKey =
-          "AU2fEQe3GJryC3IjwChLJrwJnN3yHLIFtgs95dFTiM0/QxWwVlitsD53JQNTYQ+gji+F8/dS2dk8dCZi6GmepNI3rFEdX6Gh3jhnEQNeTOIhfCclYlwl76N9rRL8JTwHFgXWr/wA3HhLMGLvpAugC/iEmRuAbaDjIRBy26AqREVenSNFEvC2YeZd3vATn5ERnlv+Bo0Rnip3P3YIo9YoJ1Z2l1UcSfCb7rEDWaqxF6uRLISW30YQWhsuL3UYnYwV5NgOQO4u3E28r/0/Wmr4RAvmOb/ImZFa+bS5xaEyU9+WraHrs2ZpRA43ilDVIz/W6KGLvv/bMnLAuLo7R46yTmHRt/W5gm0O7YTRs4/fbJQX1+8ZL+2dOWsS8kDZpkWFyKHdxOmUiwd58Ped85D5RZ3Glkpq/zcdnsqixFFYjnZMRaFRhuvID1kV638LIUUf5fmqOBVgF+jU7RwqqJVfFkLT9p3mYupy2QJZg7fb0SeoAbPdCFK74bW2C8uFWJ7uez3QSTGGL0KK68frMNsGEnORj7+HOrjhoFNmPsD0RiW6wWd0zysdv1apaaqatJVyaQr1EeXHdTEETjw7KokTZt4XGgLkXt2l7AzbZPoqUHrHpQpYIEO0d3jM4TZt/nF5F/8/ogSfHusjPduCPBZSG1+vlPjQNOX2VKrMWKdMKZrSx+9ZPLevoa0vNz5BULwvIIq+Izp8B0T4tDmxAgHi3lhHHcrdy0ZMOB7pE7cYG39Tl47ls2Z0J0g/XCjv0KWcNvtqUGWlOPGcJJaCN2jqD2val62JlB9xpre8+vj6WWh8FJrHWPSqmLew";
+      licenseKey = "SCANDIT_NATIVE_LICENSE_IOS_PH";
     } else if (Theme.of(context).platform == TargetPlatform.android) {
-      licenseKey =
-          "AQjvDRq3BRpdD+3ebQZWMDo9qrUDIyNkjQaWW8BJaa1Udw4Edzacue5VRZcvbMrTBw//YrJg0aelZ/E6CHJcFjZsQiYBd71lKCQxx9NgyfEdLR0Db0J/KdsBi7JlC1dP+XDFxImQ4xkN6MsevRHYYF/cVeGeQQ/AZwnCB5s+vqKkJpHiI/6LuZ5u2FxEebASefRiNdUjoQL4fn/Rhk2SVaJOfr//74Em1j+IvsZpHYdlEd1RgtoXvx3SgC6j4Tk6+f+sMEx0G2wbmgWk9V+rce6JB25IjGhdtBsnAfneOLSpZ6vgynhZyMRhLZI0B5nbG9+dgYrCa5RvgZWnc8UN+dgFbtEVI0jQwBb5reFTgcKzPVbsXqSzwmogcTmYvdeGXnIxR708veQ6SbHQlxBOo8tY2Fp77QCEPMi1AeL3ZUXPy9CCK1SDOrkGLFBBlYS8pi0X4i12FU+2aPHVV0405a4bGAqiZB3Rq4uHlTnmwbEBmQNWe55/2NV3SNbAPleWO/EGrZppZYCGS39QSojTZ5/WCMqV95rkcQC6X3CWFYqiZ/Ua2H+ZOQU8Uk0G1mvUOdGIld+zSpujrQLbXYbv5NUSgWyPLxactX3pUbxF2yDZPDvtBYVeLHRsxXjL0n3YT17Mngwk6qs5prK6B3vBhf/BvYGhKgKG/torKe/crfjOXDJAXVsQDYjKfpBFi4EzVaegaGJ0mck44XtIPLXTfdriCTdFrGg+hPX4VglWr/qXsHnU1eyjdAQKL8hJWPeOBhbWZNeOG188F0HZb6DcKdW4P7zRObuSqsiUabN5";
+      licenseKey = "SCANDIT_NATIVE_LICENSE_ANDROID_PH";
     }
     return Scaffold(
       appBar: AppBar(
@@ -63,26 +81,32 @@ class _ScanditScannerState extends State<ScanditScanner> {
   }
 
   Widget renderScanner() {
-    return (Stack(
-      children: [
-        Scandit(
-            scanned: _handleBarcodeResult,
-            onError: (e) => setState(() => _message = e.message),
-            symbologies: [Symbology.CODE128, Symbology.DATA_MATRIX],
-            onScanditCreated: (controller) => _controller = controller,
-            licenseKey: licenseKey),
-        Center(
-          child: Container(
-              width: 300,
-              height: 200,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(40),
-                border: Border.all(color: Colors.white),
-              )),
-        ),
-        Center(child: Text(_message)),
-      ],
-    ));
+    if (_cameraPermissionsStatus == PermissionStatus.granted) {
+      return (Stack(
+        children: [
+          Scandit(
+              scanned: _handleBarcodeResult,
+              onError: (e) => setState(() => _message = e.message),
+              symbologies: [Symbology.CODE128, Symbology.DATA_MATRIX],
+              onScanditCreated: (controller) => _controller = controller,
+              licenseKey: licenseKey),
+          Center(
+            child: Container(
+                width: 300,
+                height: 200,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(40),
+                  border: Border.all(color: Colors.white),
+                )),
+          ),
+          Center(child: Text(_message)),
+        ],
+      ));
+    } else {
+      return (Center(
+        child: Text("Please allow camera permissions to scan your test kit."),
+      ));
+    }
   }
 
   Widget renderSubmissionView() {
@@ -120,15 +144,14 @@ class _ScanditScannerState extends State<ScanditScanner> {
   }
 
   Widget renderFailureScreen(BuildContext context) {
-    return (Column(
-      children: [
-        Center(
-          child: Padding(
-            padding: const EdgeInsets.all(32),
-            child: (Column(children: <Widget>[
+    return (Center(
+      child: Padding(
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            children: <Widget>[
               ClipOval(
                 child: Container(
-                  color: Colors.red,
+                  color: isDuplicate ? Colors.orange : Colors.red,
                   height: 75,
                   width: 75,
                   child: Icon(Icons.clear, color: Colors.white, size: 60),
@@ -169,10 +192,8 @@ class _ScanditScannerState extends State<ScanditScanner> {
                     "If this issue persists, please contact a healthcare professional.",
                     style: TextStyle(fontSize: 15)),
               ),
-            ])),
-          ),
-        ),
-      ],
+            ],
+          )),
     ));
   }
 
@@ -258,6 +279,8 @@ class _ScanditScannerState extends State<ScanditScanner> {
         successfulSubmission = true;
       });
     } else {
+      print(_barcodeService.error);
+      print("error constant: " + ErrorConstants.duplicateRecord);
       this.setState(() {
         successfulSubmission = false;
         didError = true;
@@ -267,9 +290,11 @@ class _ScanditScannerState extends State<ScanditScanner> {
         await _userDataProvider.refreshToken();
       } else if (_barcodeService.error
           .contains(ErrorConstants.duplicateRecord)) {
+        print("in correct if");
         this.setState(() {
           _errorText =
               "Submission failed due to barcode already scanned. Please scan another barcode.";
+          isDuplicate = true;
         });
       }
       //_submitted = true;

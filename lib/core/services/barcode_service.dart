@@ -17,7 +17,6 @@ class BarcodeService {
       await _networkHelper.authorizedPost(_endpoint, headers, body);
       if (response != null &&
           validateUploadResults(body, response)) {
-        print("Submission successful");
         _isLoading = false;
         return true;
       } else {
