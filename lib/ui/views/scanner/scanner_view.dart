@@ -106,8 +106,8 @@ class _ScanditScannerState extends State<ScanditScanner> {
                 ),
                 Center(
                   child: Container(
-                      width: 300,
-                      height: 200,
+                      width: MediaQuery.of(context).size.width * 0.75,
+                      height: MediaQuery.of(context).size.height * 0.25,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(40),
                         border: Border.all(color: Colors.white),
