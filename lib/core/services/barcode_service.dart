@@ -42,8 +42,7 @@ class BarcodeService {
   */
   bool validateUploadResults(Map<String, dynamic> submit, Map<String, dynamic> response) {
     try {
-      return (submit["barcode"] == response["SCAN_CODE_ID"] && !response.containsKey("errorType") && (isValid(response["Account ID"]) || isValid(response["Student ID"]
-      || isValid(response["Employee ID"]))));
+      return (submit["barcode"] == response["SCAN_CODE_ID"]);
     }
     catch(e) {
       return false;
