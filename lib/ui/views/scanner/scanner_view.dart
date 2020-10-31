@@ -247,6 +247,7 @@ class _ScanditScannerState extends State<ScanditScanner> {
                         child: Text("Scan Submitted", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
                       ),
                       Text("Scan sent at: " + DateTime.now().toString(), style: TextStyle(color: ColorPrimary)),
+                      Text("Scanned value: " + _barcode, style: TextStyle(color: ColorPrimary)),
                     ]
                 )
             ),
