@@ -92,8 +92,8 @@ class _ScanditScannerState extends State<ScanditScanner> {
               licenseKey: licenseKey),
           Center(
             child: Container(
-                width: 300,
-                height: 200,
+                width: MediaQuery.of(context).size.width * 0.75,
+                height: MediaQuery.of(context).size.height * 0.25,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(40),
                   border: Border.all(color: Colors.white),
@@ -212,6 +212,8 @@ class _ScanditScannerState extends State<ScanditScanner> {
                         TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
               ),
               Text("Scan sent at: " + DateTime.now().toString(),
+                  style: TextStyle(color: ColorPrimary)),
+              Text("Scanned value: " + _barcode,
                   style: TextStyle(color: ColorPrimary)),
             ])),
           ),
