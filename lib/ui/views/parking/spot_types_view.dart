@@ -1,10 +1,9 @@
 import 'package:campus_mobile_experimental/core/data_providers/parking_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/spot_types_model.dart';
 import 'package:campus_mobile_experimental/ui/reusable_widgets/HexColor.dart';
-import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
+import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:campus_mobile_experimental/ui/reusable_widgets/container_view.dart';
 
 class SpotTypesView extends StatelessWidget {
   ParkingDataProvider spotTypesDataProvider;
@@ -52,7 +51,7 @@ class SpotTypesView extends StatelessWidget {
           onChanged: (_) {
             spotTypesDataProvider.toggleSpotSelection(data.spotKey);
           },
-          activeColor: ColorPrimary,
+          activeColor: Theme.of(context).buttonColor,
         ),
       ));
     }

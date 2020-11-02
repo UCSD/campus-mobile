@@ -1,9 +1,7 @@
 //import 'dart:html';
 
-import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 import 'package:campus_mobile_experimental/core/models/availability_model.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 //import 'package:percent_indicator/percent_indicator.dart';
 
 class AvailabilityDisplay extends StatelessWidget {
@@ -16,31 +14,40 @@ class AvailabilityDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return buildAvailabilityBars(context);
+    return Column(
+      children: <Widget>[
+        buildLocationTitle(),
+        buildAvailabilityBars(context),
+      ],
+    );
   }
 
   Widget buildLocationTitle() {
-    return ListTile(
-        title: Text(
-          model.locationName,
-        ),
-        contentPadding: EdgeInsets.all(0),
-        subtitle: Row(
-          children: <Widget>[
-            Text(
-              model.isOpen ? "Open" : "Closed",
-            ),
-            Container(
-              width: 12,
-              height: 12,
-              margin: EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                color: model.isOpen ? Colors.green : Colors.red,
-                shape: BoxShape.circle,
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 18),
+      child: ListTile(
+          title: Text(
+            model.locationName,
+            style: TextStyle(fontSize: 17),
+          ),
+          contentPadding: EdgeInsets.all(0),
+          subtitle: Row(
+            children: <Widget>[
+              Text(
+                model.isOpen ? "Open" : "Closed",
               ),
-            ),
-          ],
-        ));
+              Container(
+                width: 12,
+                height: 12,
+                margin: EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  color: model.isOpen ? Colors.green : Colors.red,
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ],
+          )),
+    );
   }
 
   Widget buildAvailabilityBars(BuildContext context) {
@@ -110,33 +117,21 @@ class AvailabilityDisplay extends StatelessWidget {
     }
     locations =
         ListTile.divideTiles(tiles: locations, context: context).toList();
-    locations.insert(
-        0,
-        ListTile(
-          title: Row(
-            children: [
-              Expanded(child: buildLocationTitle()),
-            ],
-          ),
-        ));
 
-    return Scrollbar(
-      child: ListView(children: locations),
+    return Flexible(
+      child: Scrollbar(
+        child: ListView(
+          children: locations,
+        ),
+      ),
     );
   }
 
   num percentAvailability(AvailabilityModel location) {
     num percentAvailable = 0.0;
 
-    if (location.estimated != 0.0 &&
-        (location.busyness <= location.estimated)) {
-      percentAvailable =
-          1 - ((location.busyness) / location.estimated).toDouble();
-    }
-    if (model.isOpen == false) {
-      percentAvailable = 0.0;
-    } else if (location.isOpen == false) {
-      percentAvailable = 0.0;
+    if (location.isOpen) {
+      percentAvailable = 1 - location.percent;
     }
 
     return percentAvailable;

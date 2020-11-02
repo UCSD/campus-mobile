@@ -1,10 +1,8 @@
-
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/constants/data_persistence_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/provider_setup.dart';
 import 'package:campus_mobile_experimental/core/navigation/router.dart'
     as campusMobileRouter;
-import 'package:campus_mobile_experimental/core/data_providers/advanced_wayfinding_singleton.dart';
 import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +23,6 @@ void main() async {
 
   runApp(CampusMobile());
 }
-
 
 void initializeStorage() async {
   /// initialize hive storage
@@ -55,7 +52,6 @@ Future<bool> isFirstRun() async {
   return (prefs.getBool('first_run') ?? true);
 }
 
-
 void setFirstRun() async {
   final prefs = await SharedPreferences.getInstance();
   prefs.setBool('first_run', false);
@@ -69,6 +65,7 @@ class CampusMobile extends StatelessWidget {
     return MultiProvider(
       providers: providers,
       child: MaterialApp(
+        debugShowCheckedModeBanner: true,
         title: 'UC San Diego',
         theme: ThemeData(
           primarySwatch: ColorPrimary,
@@ -89,6 +86,7 @@ class CampusMobile extends StatelessWidget {
           textTheme: darkThemeText,
           iconTheme: darkIconTheme,
           appBarTheme: darkAppBarTheme,
+          unselectedWidgetColor: darkAccentColor,
         ),
         initialRoute: showOnboardingScreen
             ? RoutePaths.OnboardingInitial
@@ -99,7 +97,5 @@ class CampusMobile extends StatelessWidget {
         ],
       ),
     );
-
   }
-
 }

@@ -10,21 +10,22 @@ class AvailabilityService {
 
   /// add state related things for view model here
   /// add any type of data manipulation here so it can be accessed via provider
-
   List<AvailabilityModel> get data => _data;
 
   final NetworkHelper _networkHelper = NetworkHelper();
   final Map<String, String> headers = {
     "accept": "application/json",
   };
-  final String endpoint = "https://api-qa.ucsd.edu:8243/occuspace/v1.0/busyness";
+  final String endpoint =
+      "https://api-qa.ucsd.edu:8243/occuspace/v2.0/busyness";
 
   Future<bool> fetchData() async {
     _error = null;
     _isLoading = true;
     try {
       /// fetch data
-      String _response = await _networkHelper.authorizedFetch(endpoint, headers);
+      String _response =
+          await _networkHelper.authorizedFetch(endpoint, headers);
 
       /// parse data
       final data = availabilityModelFromJson(_response);
@@ -35,7 +36,7 @@ class AvailabilityService {
     } catch (e) {
       /// if the authorized fetch failed we know we have to refresh the
       /// token for this service
-      if (e.response != null && e.response.statusCode == 401) {
+      if (e.toString().contains("401")) {
         if (await getNewToken()) {
           return await fetchData();
         }
@@ -50,12 +51,15 @@ class AvailabilityService {
     final String tokenEndpoint = "https://api-qa.ucsd.edu:8243/token";
     final Map<String, String> tokenHeaders = {
       "content-type": 'application/x-www-form-urlencoded',
-      "Authorization": "Basic WUNaMXlLTW9wMjNxcGtvUFQ1aDYzdHB5bm9rYTpQNnFCbWNIRFc5azNJME56S3hHSm5QTTQzV0lh"
+      "Authorization":
+          "Basic djJlNEpYa0NJUHZ5akFWT0VRXzRqZmZUdDkwYTp2emNBZGFzZWpmaWZiUDc2VUJjNDNNVDExclVh"
     };
     try {
       var response = await _networkHelper.authorizedPost(
           tokenEndpoint, tokenHeaders, "grant_type=client_credentials");
+
       headers["Authorization"] = "Bearer " + response["access_token"];
+
       return true;
     } catch (e) {
       _error = e.toString();

@@ -1,7 +1,6 @@
 import 'package:campus_mobile_experimental/core/models/academic_term_model.dart';
 import 'package:campus_mobile_experimental/core/models/class_schedule_model.dart';
 import 'package:campus_mobile_experimental/core/services/networking.dart';
-import 'package:flutter/cupertino.dart';
 
 class ClassScheduleService {
   final String academicTermEndpoint =

@@ -87,10 +87,9 @@ class FinalsCard extends StatelessWidget {
       ),
     );
     return ListView(
-      // TODO: Resolve #709
-      // Re-enable scrolling if content overflows space
-//        physics: NeverScrollableScrollPhysics(),
-        children: listToReturn,
+      physics: NeverScrollableScrollPhysics(),
+      children: listToReturn,
+      shrinkWrap: true,
     );
   }
 
