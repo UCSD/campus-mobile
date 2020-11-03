@@ -105,6 +105,7 @@ class SectionData {
   String meetingType;
   String time;
   String days;
+  String date;
   String building;
   String room;
   String instructorName;
@@ -120,6 +121,7 @@ class SectionData {
     this.meetingType,
     this.time,
     this.days,
+    this.date,
     this.building,
     this.room,
     this.instructorName,
@@ -132,6 +134,7 @@ class SectionData {
         meetingType: json["meeting_type"] == null ? null : json["meeting_type"],
         time: json["time"] == null ? null : json["time"],
         days: json["days"] == null ? null : json["days"],
+        date: json["date"] == null ? null : json["date"],
         building: json["building"] == null ? null : json["building"],
         room: json["room"] == null ? null : json["room"],
         instructorName:
@@ -147,6 +150,7 @@ class SectionData {
         "meeting_type": meetingType == null ? null : meetingType,
         "time": time == null ? null : time,
         "days": days == null ? null : days,
+        "date": date == null ? null : date,
         "building": building == null ? null : building,
         "room": room == null ? null : room,
         "instructor_name": instructorName == null ? null : instructorName,
