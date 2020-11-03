@@ -81,7 +81,7 @@ class NativeScannerCard extends StatelessWidget {
     if (Provider.of<UserDataProvider>(context, listen: false).isLoggedIn) {
       Navigator.pushNamed(
         context,
-          RoutePaths.ScannerView,
+          RoutePaths.ScanditScanner,
       );
     } else {
       Provider.of<BottomNavigationBarProvider>(context, listen: false)

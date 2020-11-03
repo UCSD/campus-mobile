@@ -167,7 +167,7 @@ class Vehicle {
   String heading;
   int speed;
   double headingDegrees;
-  int shapeDistanceTraveled;
+  double shapeDistanceTraveled;
 
   factory Vehicle.fromRawJson(String str) => Vehicle.fromJson(json.decode(str));
 
@@ -184,7 +184,7 @@ class Vehicle {
     heading: json["heading"] == null ? null : json["heading"],
     speed: json["speed"] == null ? null : json["speed"],
     headingDegrees: json["headingDegrees"] == null ? null : json["headingDegrees"].toDouble(),
-    shapeDistanceTraveled: json["shapeDistanceTraveled"] == null ? null : json["shapeDistanceTraveled"],
+    shapeDistanceTraveled: json["shapeDistanceTraveled"] == null ? null : json["shapeDistanceTraveled"].toDouble(),
   );
 
   Map<String, dynamic> toJson() => {

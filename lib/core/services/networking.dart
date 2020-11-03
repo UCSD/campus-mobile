@@ -1,6 +1,7 @@
 import 'dart:async';
-import 'package:dio/dio.dart';
+
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
+import 'package:dio/dio.dart';
 
 class NetworkHelper {
   ///TODO: inside each service that file place a switch statement to handle all
@@ -40,6 +41,7 @@ class NetworkHelper {
     } else {
       ///TODO: log this as a bug because the response was bad
       // If that response was not OK, throw an error.
+
       throw Exception('Failed to fetch data: ' + _response.data);
     }
   }
@@ -67,7 +69,12 @@ class NetworkHelper {
     } else if (_response.statusCode == 500) {
       String message = _response.data['message'] ?? '';
       throw Exception(ErrorConstants.authorizedPostErrors + message);
-    } else {
+    }
+    else if (_response.statusCode == 409) {
+      String message = _response.data['message'] ?? '';
+      throw Exception(ErrorConstants.duplicateRecord + message);
+    }
+    else {
       throw Exception(ErrorConstants.authorizedPostErrors + 'unknown error');
     }
   }

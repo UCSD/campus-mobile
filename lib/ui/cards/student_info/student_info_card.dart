@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
 import 'package:campus_mobile_experimental/core/util/webview.dart';
@@ -5,7 +7,6 @@ import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.da
 import 'package:campus_mobile_experimental/ui/theme/app_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class StudentInfoCard extends StatefulWidget {
@@ -14,42 +15,32 @@ class StudentInfoCard extends StatefulWidget {
   _StudentInfoCardState createState() => _StudentInfoCardState();
 }
 
-class _StudentInfoCardState extends State<StudentInfoCard>
-    with WidgetsBindingObserver {
+class _StudentInfoCardState extends State<StudentInfoCard> {
   String cardId = "student_info";
   WebViewController _webViewController;
   double _contentHeight = cardContentMinHeight;
+  final String webCardURL =
+      'https://mobile.ucsd.edu/replatform/v1/qa/webview/student_info.html';
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
+    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
   }
 
   @override
   Widget build(BuildContext context) {
-    String webCardURL = getThemeURL(context,
-        'https://mobile.ucsd.edu/replatform/v1/qa/webview/student_info.html');
-
-    reloadWebViewWithTheme(context, webCardURL, _webViewController);
-
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       reload: () {
-        reloadWebViewWithTheme(context, webCardURL, _webViewController);
+        _webViewController?.reload();
       },
       isLoading: false,
       titleText: CardTitleConstants.titleMap[cardId],
       errorText: null,
-      child: () => buildCardContent(context, webCardURL),
+      child: () => buildCardContent(context),
     );
   }
 
@@ -58,20 +49,22 @@ class _StudentInfoCardState extends State<StudentInfoCard>
     super.didChangeDependencies();
   }
 
-  Widget buildCardContent(BuildContext context, String webCardURL) {
+  Widget buildCardContent(BuildContext context) {
     return Container(
         height: _contentHeight,
         child: WebView(
           opaque: false,
           javascriptMode: JavascriptMode.unrestricted,
           initialUrl: webCardURL,
-          onPageFinished: _updateContentHeight,
           onWebViewCreated: (controller) {
             _webViewController = controller;
           },
           javascriptChannels: <JavascriptChannel>[
             _campusMobileJavascriptChannel(context),
           ].toSet(),
+          onPageFinished: (_) async {
+            await _updateContentHeight('');
+          },
         ));
   }
 
@@ -92,14 +85,6 @@ class _StudentInfoCardState extends State<StudentInfoCard>
       setState(() {
         _contentHeight = newHeight;
       });
-    }
-  }
-
-  openLink(String url) async {
-    try {
-      launch(url, forceSafariVC: true);
-    } catch (e) {
-      // an error occurred, do nothing
     }
   }
 }
