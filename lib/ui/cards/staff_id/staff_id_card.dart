@@ -20,7 +20,7 @@ class _StaffIdCardState extends State<StaffIdCard> {
   WebViewController _webViewController;
   double _contentHeight = 194.0;
   final String webCardURL =
-      "https://mobile.ucsd.edu/replatform/v1/qa/webview/staff_id.html";
+      "https://mobile.ucsd.edu/replatform/v1/qa/webview/staff_id-v2.html";
 
   @override
   void initState() {

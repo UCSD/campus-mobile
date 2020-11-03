@@ -22,7 +22,7 @@ class _ParkingCardState extends State<ParkingCard> {
   final _controller = new PageController();
   // double _contentHeight = cardContentMinHeight;
   final String webCardURL =
-      "https://mobile.ucsd.edu/replatform/v1/qa/webview/parking/index.html";
+      "https://mobile.ucsd.edu/replatform/v1/qa/webview/parking-v2/index.html";
 
   @override
   void didChangeDependencies() {
