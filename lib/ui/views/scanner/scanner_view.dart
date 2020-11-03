@@ -69,8 +69,12 @@ class _ScanditScannerState extends State<ScanditScanner> {
       licenseKey = "SCANDIT_NATIVE_LICENSE_ANDROID_PH";
     }
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Barcode Scanner"),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(42),
+        child: AppBar(
+          centerTitle: true,
+          title: const Text("Scanner"),
+        ),
       ),
       body: !hasScanned ? renderScanner() : renderSubmissionView(),
       floatingActionButton: IconButton(
@@ -92,10 +96,10 @@ class _ScanditScannerState extends State<ScanditScanner> {
               licenseKey: licenseKey),
           Center(
             child: Container(
-                width: MediaQuery.of(context).size.width * 0.75,
-                height: MediaQuery.of(context).size.height * 0.25,
+                width: MediaQuery.of(context).size.width * 0.9,
+                height: MediaQuery.of(context).size.height * 0.2,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(40),
+                  borderRadius: BorderRadius.circular(5),
                   border: Border.all(color: Colors.white),
                 )),
           ),
