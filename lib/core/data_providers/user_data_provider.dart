@@ -81,7 +81,6 @@ class UserDataProvider extends ChangeNotifier {
   /// Load [AuthenticationModel] from persistent storage
   /// Will create persistent storage if no data is found
   Future _loadSavedAuthenticationModel() async {
-    Hive.registerAdapter(AuthenticationModelAdapter());
     var authBox =
         await Hive.openBox<AuthenticationModel>('AuthenticationModel');
     AuthenticationModel temp = AuthenticationModel.fromJson({});
@@ -97,7 +96,6 @@ class UserDataProvider extends ChangeNotifier {
   /// Load [UserProfileModel] from persistent storage
   /// Will create persistent storage if no data is found
   Future _loadSavedUserProfile() async {
-    Hive.registerAdapter(UserProfileModelAdapter());
     var userBox = await Hive.openBox<UserProfileModel>('UserProfileModel');
     UserProfileModel tempUserProfile =
         await _createNewUser(UserProfileModel.fromJson({}));
@@ -195,7 +193,8 @@ class UserDataProvider extends ChangeNotifier {
       _error = null;
       _isLoading = true;
       CardsDataProvider _cardsDataProvider = CardsDataProvider();
-      _cardsDataProvider.updateAvailableCards(_userProfileModel.ucsdaffiliation);
+      _cardsDataProvider
+          .updateAvailableCards(_userProfileModel.ucsdaffiliation);
       notifyListeners();
       if (await _silentLogin()) {
         await fetchUserProfile();
