@@ -85,9 +85,9 @@ class _LoginState extends State<Login> {
             SizedBox(height: 10),
             TextField(
               decoration: InputDecoration(
-                hintText: 'Email',
+                hintText: 'UCSD Email',
                 border: OutlineInputBorder(),
-                labelText: 'Email',
+                labelText: 'UCSD Email',
               ),
               keyboardType: TextInputType.emailAddress,
               controller: _emailTextFieldController,

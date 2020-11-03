@@ -182,6 +182,8 @@ class ClassScheduleDataProvider extends ChangeNotifier {
     for (List<SectionData> listOfFinals in _finals.values.toList()) {
       listOfFinals.sort((a, b) => _compare(a, b));
     }
+
+
   }
 
   /// comparator that sorts according to start time of class
