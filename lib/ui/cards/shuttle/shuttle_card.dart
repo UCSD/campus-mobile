@@ -34,7 +34,7 @@ class _ShuttleCardState extends State<ShuttleCard> {
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       reload: () =>
-          Provider.of<ShuttleDataProvider>(context, listen: false).fetchStops(),
+          Provider.of<ShuttleDataProvider>(context, listen: false).fetchStops(reloading: true),
       isLoading: _shuttleCardDataProvider.isLoading,
       titleText: CardTitleConstants.titleMap[cardId],
       errorText: _shuttleCardDataProvider.error,

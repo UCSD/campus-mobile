@@ -5,7 +5,6 @@ import 'package:campus_mobile_experimental/core/data_providers/class_schedule_da
 import 'package:campus_mobile_experimental/core/data_providers/dining_data_proivder.dart';
 import 'package:campus_mobile_experimental/core/data_providers/events_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/free_food_data_provider.dart';
-import 'package:campus_mobile_experimental/core/data_providers/links_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/location_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/messages_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/news_data_provider.dart';
@@ -13,9 +12,7 @@ import 'package:campus_mobile_experimental/core/data_providers/notices_data_prov
 import 'package:campus_mobile_experimental/core/data_providers/parking_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/push_notifications_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/shuttle_data_provider.dart';
-import 'package:campus_mobile_experimental/core/data_providers/special_events_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/student_id_data_provider.dart';
-import 'package:campus_mobile_experimental/core/data_providers/surf_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/weather_data_provider.dart';
 import 'package:campus_mobile_experimental/core/models/coordinates_model.dart';
@@ -41,30 +38,22 @@ final FirebaseAnalyticsObserver observer =
 List<SingleChildWidget> independentServices = [
   Provider.value(value: observer),
   ChangeNotifierProvider<BottomNavigationBarProvider>(
-    create: (_) => BottomNavigationBarProvider(),
+    create: (_) {
+      print("CreateProvider: BottomNavigationBarProvider");
+      return BottomNavigationBarProvider();
+    },
     lazy: false,
   ),
   ChangeNotifierProvider<PushNotificationDataProvider>(
-    create: (_) => PushNotificationDataProvider(),
+    create: (_) {
+      print("CreateProvider: PushNotificationDataProvider");
+      return PushNotificationDataProvider();
+    },
     lazy: false,
-  ),
-  ChangeNotifierProvider<SurfDataProvider>(
-    create: (_) {
-      SurfDataProvider _surfDataProvider = SurfDataProvider();
-      _surfDataProvider.fetchSurfData();
-      return _surfDataProvider;
-    },
-  ),
-  ChangeNotifierProvider<SpecialEventsDataProvider>(
-    create: (_) {
-      SpecialEventsDataProvider _specialEventsDataProvider =
-          SpecialEventsDataProvider();
-      _specialEventsDataProvider.fetchData();
-      return _specialEventsDataProvider;
-    },
   ),
   ChangeNotifierProvider<EventsDataProvider>(
     create: (_) {
+      print("CreateProvider: EventsDataProvider");
       EventsDataProvider _eventsDataProvider = EventsDataProvider();
       _eventsDataProvider.fetchEvents();
       return _eventsDataProvider;
@@ -72,6 +61,7 @@ List<SingleChildWidget> independentServices = [
   ),
   ChangeNotifierProvider<WeatherDataProvider>(
     create: (_) {
+      print("CreateProvider: WeatherDataProvider");
       WeatherDataProvider _weatherDataProvider = WeatherDataProvider();
       _weatherDataProvider.fetchWeather();
       return _weatherDataProvider;
@@ -79,26 +69,27 @@ List<SingleChildWidget> independentServices = [
   ),
   ChangeNotifierProvider<NewsDataProvider>(
     create: (_) {
+      print("CreateProvider: NewsDataProvider");
       NewsDataProvider _newsDataProvider = NewsDataProvider();
       _newsDataProvider.fetchNews();
       return _newsDataProvider;
     },
   ),
-  ChangeNotifierProvider<LinksDataProvider>(
+  StreamProvider<Coordinates>(
     create: (_) {
-      LinksDataProvider _linksDataProvider = LinksDataProvider();
-      _linksDataProvider.fetchLinks();
-      return _linksDataProvider;
+      print("CreateProvider: Coordinates (LocationDataProvider)");
+      return LocationDataProvider().locationStream;
     },
   ),
-  StreamProvider<Coordinates>(
-    create: (_) => LocationDataProvider().locationStream,
-  ),
   ChangeNotifierProvider<CustomAppBar>(
-    create: (_) => CustomAppBar(),
+    create: (_) {
+      print("CreateProvider: CustomAppBar");
+      return CustomAppBar();
+    },
   ),
   ChangeNotifierProvider<NoticesDataProvider>(
     create: (_) {
+      print("CreateProvider: NoticesDataProvider");
       NoticesDataProvider _noticesDataProvider = NoticesDataProvider();
       _noticesDataProvider.fetchNotices();
       return _noticesDataProvider;
@@ -107,10 +98,12 @@ List<SingleChildWidget> independentServices = [
 ];
 List<SingleChildWidget> dependentServices = [
   ChangeNotifierProxyProvider<Coordinates, DiningDataProvider>(create: (_) {
+    print("CreateProvider: DiningDataProvider");
     var diningDataProvider = DiningDataProvider();
     diningDataProvider.fetchDiningLocations();
     return diningDataProvider;
   }, update: (_, coordinates, diningDataProvider) {
+    print("UpdateProvider: DiningDataProvider");
     diningDataProvider.coordinates = coordinates;
     diningDataProvider.populateDistances();
     return diningDataProvider;
@@ -119,12 +112,14 @@ List<SingleChildWidget> dependentServices = [
     var mapsDataProvider = MapsDataProvider();
     return mapsDataProvider;
   }, update: (_, coordinates, mapsDataProvider) {
+    print("UpdateProvider: MapsDataProvider");
     mapsDataProvider.coordinates = coordinates;
     mapsDataProvider.populateDistances();
     return mapsDataProvider;
   }),
   ChangeNotifierProxyProvider<PushNotificationDataProvider, UserDataProvider>(
       create: (_) {
+        print("CreateProvider: UserDataProvider");
         var _userDataProvider = UserDataProvider();
 
         /// try to load any persistent saved data
@@ -136,17 +131,20 @@ List<SingleChildWidget> dependentServices = [
       },
       lazy: false,
       update: (_, pushNotificationDataProvider, _userDataProvider) {
+        print("UpdateProvider: UserDataProvider");
         _userDataProvider.pushNotificationDataProvider =
             pushNotificationDataProvider;
         return _userDataProvider;
       }),
   ChangeNotifierProxyProvider<UserDataProvider, CardsDataProvider>(
       create: (_) {
+        print("CreateProvider: CardsDataProvider");
         var cardsDataProvider = CardsDataProvider();
         return cardsDataProvider;
       },
       lazy: false,
       update: (_, userDataProvider, cardsDataProvider) {
+        print("UpdateProvider: CardsDataProvider");
         cardsDataProvider
           ..loadSavedData().then((value) {
             cardsDataProvider.updateAvailableCards(
@@ -171,9 +169,11 @@ List<SingleChildWidget> dependentServices = [
       }),
   ChangeNotifierProxyProvider<UserDataProvider, ClassScheduleDataProvider>(
       create: (_) {
+    print("CreateProvider: ClassScheduleDataProvider");
     var classDataProvider = ClassScheduleDataProvider();
     return classDataProvider;
   }, update: (_, userDataProvider, classScheduleDataProvider) {
+    print("UpdateProvider: ClassScheduleDataProvider");
     classScheduleDataProvider.userDataProvider = userDataProvider;
     if (userDataProvider.isLoggedIn && !classScheduleDataProvider.isLoading) {
       classScheduleDataProvider.fetchData();
@@ -182,21 +182,22 @@ List<SingleChildWidget> dependentServices = [
   }),
   ChangeNotifierProxyProvider<UserDataProvider, AdvancedWayfindingSingleton>(
       create: (_) {
-    print("USER DATA SET");
+    print("CreateProvider: AdvancedWayfindingSingleton");
     var proximityAwarenessSingleton = AdvancedWayfindingSingleton();
     return proximityAwarenessSingleton;
   }, update: (_, userDataProvider, proximityAwarenessSingleton) {
+    print("UpdateProvider: AdvancedWayfindingSingleton");
     proximityAwarenessSingleton..userDataProvider = userDataProvider;
-    print("USER DATA SET");
     return proximityAwarenessSingleton;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, StudentIdDataProvider>(
       create: (_) {
+    print("CreateProvider: StudentIdDataProvider");
     var studentIdDataProvider = StudentIdDataProvider();
     return studentIdDataProvider;
   }, update: (_, userDataProvider, studentIdDataProvider) {
+    print("UpdateProvider: StudentIdDataProvider");
     studentIdDataProvider.userDataProvider = userDataProvider;
-
     //Verify that the user is logged in
     if (userDataProvider.isLoggedIn && !studentIdDataProvider.isLoading) {
       studentIdDataProvider.fetchData();
@@ -206,63 +207,61 @@ List<SingleChildWidget> dependentServices = [
   }),
   ChangeNotifierProxyProvider<UserDataProvider, AvailabilityDataProvider>(
       create: (_) {
+    print("CreateProvider: AvailabilityDataProvider");
     var availabilityDataProvider = AvailabilityDataProvider();
     availabilityDataProvider.fetchAvailability();
     return availabilityDataProvider;
   }, update: (_, userDataProvider, availabilityDataProvider) {
+    print("UpdateProvider: AvailabilityDataProvider");
     availabilityDataProvider.userDataProvider = userDataProvider;
     return availabilityDataProvider;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, ShuttleDataProvider>(
       create: (_) {
+    print("CreateProvider: ShuttleDataProvider");
     var shuttleDataProvider = ShuttleDataProvider();
-    shuttleDataProvider.fetchStops();
+    shuttleDataProvider.fetchStops(reloading: false);
     return shuttleDataProvider;
   }, update: (_, userDataProvider, shuttleDataProvider) {
+    print("UpdateProvider: ShuttleDataProvider");
     shuttleDataProvider.userDataProvider = userDataProvider;
     return shuttleDataProvider;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, ParkingDataProvider>(
       create: (_) {
+    print("CreateProvider: ParkingDataProvider");
     var parkingDataProvider = ParkingDataProvider();
     return parkingDataProvider;
   }, update: (_, userDataProvider, parkingDataProvider) {
+    print("UpdateProvider: ParkingDataProvider");
     parkingDataProvider.userDataProvider = userDataProvider;
     parkingDataProvider.fetchParkingData();
     return parkingDataProvider;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, MessagesDataProvider>(
     create: (_) {
+      print("CreateProvider: MessagesDataProvider");
       var messageDataProvider = MessagesDataProvider();
       return messageDataProvider;
     },
     lazy: false,
     update: (_, userDataProvider, messageDataProvider) {
+      print("UpdateProvider: MessagesDataProvider");
       messageDataProvider.userDataProvider = userDataProvider;
       messageDataProvider.fetchMessages(true);
       return messageDataProvider;
     },
   ),
-  // ChangeNotifierProxyProvider<UserDataProvider, FreeFoodDataProvider>(
-  //   create: (_) {
-  //     var freefoodDataProvider = FreeFoodDataProvider();
-
-  //     return freefoodDataProvider;
-  //   },
-  //   update: (_, userDataProvider, freefoodDataProvider) {
-  //     freefoodDataProvider..userDataProvider = userDataProvider;
-  //     return freefoodDataProvider;
-  //   },
-  // ),
   ChangeNotifierProxyProvider<MessagesDataProvider, FreeFoodDataProvider>(
     create: (_) {
+      print("CreateProvider: FreeFoodDataProvider");
       var freefoodDataProvider = FreeFoodDataProvider();
-      freefoodDataProvider..loadRegisteredEvents();
-
+      freefoodDataProvider.loadRegisteredEvents();
       return freefoodDataProvider;
     },
     update: (_, messageDataProvider, freefoodDataProvider) {
-      freefoodDataProvider..messageDataProvider = messageDataProvider;
+      print("UpdateProvider: FreeFoodDataProvider");
+      freefoodDataProvider.messageDataProvider = messageDataProvider;
       freefoodDataProvider.parseMessages();
       return freefoodDataProvider;
     },

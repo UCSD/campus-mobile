@@ -6,11 +6,11 @@ import 'package:campus_mobile_experimental/core/models/news_model.dart';
 import 'package:campus_mobile_experimental/core/navigation/bottom_tab_bar/bottom_navigation_bar_model.dart';
 import 'package:campus_mobile_experimental/core/navigation/top_navigation_bar/app_bar.dart';
 import 'package:campus_mobile_experimental/ui/cards/dining/dining_list.dart';
+import 'package:campus_mobile_experimental/ui/views/scanner/scanner_view.dart';
 import 'package:campus_mobile_experimental/ui/views/availability/manage_availability_view.dart';
 import 'package:campus_mobile_experimental/ui/views/baseline/baseline_view.dart';
-import 'package:campus_mobile_experimental/ui/views/bluetooth/automatic_bluetooth_logger_view.dart';
-import 'package:campus_mobile_experimental/ui/views/bluetooth/beacon_view.dart';
 import 'package:campus_mobile_experimental/ui/views/bluetooth/advanced_wayfinding_permission.dart';
+import 'package:campus_mobile_experimental/ui/views/bluetooth/beacon_view.dart';
 import 'package:campus_mobile_experimental/ui/views/class_schedule/class_list.dart';
 import 'package:campus_mobile_experimental/ui/views/dining/dining_detail_view.dart';
 import 'package:campus_mobile_experimental/ui/views/dining/nutrition_facts_view.dart';
@@ -34,16 +34,11 @@ import 'package:campus_mobile_experimental/ui/views/profile/cards_view.dart';
 import 'package:campus_mobile_experimental/ui/views/profile/profile.dart';
 import 'package:campus_mobile_experimental/ui/views/shuttle/add_shuttle_stops_view.dart';
 import 'package:campus_mobile_experimental/ui/views/shuttle/manage_shuttle_view.dart';
-import 'package:campus_mobile_experimental/ui/views/special_events/special_event_detail_view.dart';
-import 'package:campus_mobile_experimental/ui/views/special_events/special_events_filter_view.dart';
-import 'package:campus_mobile_experimental/ui/views/special_events/special_events_list_view.dart';
-import 'package:campus_mobile_experimental/ui/views/surf/surf_report_view.dart';
-import 'package:campus_mobile_experimental/ui/views/scanner/scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 
 import 'bottom_tab_bar/bottom_navigation_bar_model.dart';
-import 'package:provider/provider.dart';
 
 class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -60,14 +55,6 @@ class Router {
         return MaterialPageRoute(builder: (_) => OnboardingLogin());
       case RoutePaths.Home:
         return MaterialPageRoute(builder: (_) => Home());
-      case RoutePaths.SpecialEventsListView:
-        return MaterialPageRoute(builder: (_) => SpecialEventsListView());
-      case RoutePaths.SpecialEventsFilterView:
-        return MaterialPageRoute(builder: (_) => SpecialEventsFilterView());
-      case RoutePaths.SpecialEventsDetailView:
-        String uid = settings.arguments;
-        return MaterialPageRoute(
-            builder: (_) => SpecialEventsDetailView(argument: uid));
       case RoutePaths.Map:
         return MaterialPageRoute(builder: (_) => prefix0.Maps());
       case RoutePaths.MapSearch:
@@ -125,8 +112,6 @@ class Router {
                   disclaimer: disclaimer,
                   disclaimerEmail: disclaimerEmail,
                 ));
-      case RoutePaths.SurfView:
-        return MaterialPageRoute(builder: (_) => SurfView());
       case RoutePaths.ManageParkingView:
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
@@ -142,11 +127,6 @@ class Router {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return AddShuttleStopsView();
         });
-      case RoutePaths.ScannerView:
-        return MaterialPageRoute(builder: (_) {
-          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
-          return Scanner();
-        });
       case RoutePaths.CardsView:
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
@@ -154,8 +134,6 @@ class Router {
         });
       case RoutePaths.NotificationsSettingsView:
         return MaterialPageRoute(builder: (_) => NotificationsSettingsView());
-      /* case RoutePaths.AutomaticBluetoothLoggerView:
-        return MaterialPageRoute(builder: (_) => AutomaticBluetoothLoggerView());*/
       case RoutePaths.BluetoothPermissionsView:
         return MaterialPageRoute(
             builder: (_) => AdvancedWayfindingPermission());
@@ -172,6 +150,8 @@ class Router {
         });
       case RoutePaths.BeaconView:
         return MaterialPageRoute(builder: (_) => BeaconView());
+      case RoutePaths.ScanditScanner:
+        return MaterialPageRoute(builder:(_) => ScanditScanner());
     }
   }
 }

@@ -63,44 +63,6 @@ class NotificationsListView extends StatelessWidget {
     );
   }
 
-  // List<Widget> _buildMessage(BuildContext context, MessageElement data) {
-  //   FreeFoodDataProvider freefoodProvider = Provider.of<FreeFoodDataProvider>(context);
-  //   return [
-  //     ListTile(
-  //       leading: Icon(Icons.info, color: Colors.grey, size: 30),
-  //       title: Column(
-  //         children: <Widget>[
-  //           Text(_readTimestamp(data.timestamp),
-  //               style: TextStyle(fontSize: 10, color: Colors.grey)),
-  //           Text(data.message.title),
-  //           Padding(padding: const EdgeInsets.all(3.5))
-  //         ],
-  //         crossAxisAlignment: CrossAxisAlignment.start,
-  //       ),
-  //       subtitle: Column(
-  //         children: <Widget>[
-  //           Linkify(
-  //             text: data.message.message,
-  //             onOpen: (link) async {
-  //               try {
-  //                 await launch(link.url, forceSafariVC: true);
-  //               } catch (e) {
-  //                 // an error occurred, do nothing
-  //               }
-  //             },
-  //             options: LinkifyOptions(humanize: false),
-  //             style: TextStyle(fontSize: 12.5)
-  //           ),
-  //           freefoodProvider.isFreeFood(data.messageId)
-  //             ? FreeFoodNotification(messageId: data.messageId)
-  //             : SizedBox(),
-  //         ]
-  //       )
-  //     ),
-  //     Divider()
-  //   ];
-  // }
-
   Widget _buildNoMessagesText() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
