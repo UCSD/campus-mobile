@@ -86,7 +86,8 @@ class ErrorConstants {
   static const authorizedPostErrors = 'Failed to upload data: ';
   static const authorizedPutErrors = 'Failed to update data: ';
   static const invalidBearerToken = 'Invalid bearer token';
-  static const duplicateRecord = 'DioError [DioErrorType.RESPONSE]: Http status error [409]';
+  static const duplicateRecord =
+      'DioError [DioErrorType.RESPONSE]: Http status error [409]';
 }
 
 class Plugins {
@@ -110,6 +111,7 @@ class CardTitleConstants {
     'staff_info': 'COVID-19 Info',
     'campus_info': "Campus Information",
     'student_info': 'COVID-19 Info',
+    'student_survey': 'Student Survey',
     'student_id': 'Student ID',
     'staff_id': 'Staff ID',
     'finals': 'Finals',

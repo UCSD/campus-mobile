@@ -38,6 +38,7 @@ class StudentIdDataProvider extends ChangeNotifier {
     _isLoading = true;
     _error = null;
     notifyListeners();
+    _userDataProvider.fetchUserProfile();
 
     /// Verify that user is logged in
     if (_userDataProvider.isLoggedIn) {
