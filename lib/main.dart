@@ -1,9 +1,10 @@
-import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
-import 'package:campus_mobile_experimental/core/constants/data_persistence_constants.dart';
-import 'package:campus_mobile_experimental/core/data_providers/provider_setup.dart';
-import 'package:campus_mobile_experimental/core/navigation/router.dart'
+import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/app_provider.dart';
+import 'package:campus_mobile_experimental/app_router.dart'
     as campusMobileRouter;
-import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
+import 'package:campus_mobile_experimental/core/models/authentication.dart';
+import 'package:campus_mobile_experimental/core/models/user_profile.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -11,9 +12,6 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'core/models/authentication_model.dart';
-import 'core/models/user_profile_model.dart';
 
 bool showOnboardingScreen = false;
 

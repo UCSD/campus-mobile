@@ -1,23 +1,22 @@
 import 'package:campus_mobile_experimental/app_networking.dart';
-import 'package:campus_mobile_experimental/core/models/parking_model.dart';
+import 'package:campus_mobile_experimental/core/models/events.dart';
 
-class ParkingService {
-  ParkingService() {
-    fetchParkingLotData();
-  }
+class EventsService {
+  final String endpoint =
+      'https://9tqs71by9h.execute-api.us-west-2.amazonaws.com/qa/v1/events/student';
+
   bool _isLoading = false;
-  List<ParkingModel> _data;
   DateTime _lastUpdated;
   String _error;
+  List<EventModel> _data;
+
   final NetworkHelper _networkHelper = NetworkHelper();
-  final Map<String, String> headers = {
-    "accept": "application/json",
-  };
 
-  final String endpoint =
-      "https://mobile.ucsd.edu/replatform/v1/qa/webview/parking-v2/parking_lots.json";
+  EventsService() {
+    fetchData();
+  }
 
-  Future<bool> fetchParkingLotData() async {
+  Future<bool> fetchData() async {
     _error = null;
     _isLoading = true;
     try {
@@ -25,8 +24,9 @@ class ParkingService {
       String _response = await _networkHelper.fetchData(endpoint);
 
       /// parse data
-      _data = parkingModelFromJson(_response);
+      final data = eventsModelFromJson(_response);
       _isLoading = false;
+      _data = data;
       return true;
     } catch (e) {
       _error = e.toString();
@@ -35,8 +35,8 @@ class ParkingService {
     }
   }
 
-  List<ParkingModel> get data => _data;
-  bool get isLoading => _isLoading;
   String get error => _error;
+  List<EventModel> get eventsModels => _data;
+  bool get isLoading => _isLoading;
   DateTime get lastUpdated => _lastUpdated;
 }

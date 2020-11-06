@@ -1,23 +1,20 @@
-import 'package:campus_mobile_experimental/app_networking.dart';
-import 'package:campus_mobile_experimental/core/models/parking_model.dart';
+import 'dart:async';
 
-class ParkingService {
-  ParkingService() {
-    fetchParkingLotData();
-  }
+import 'package:campus_mobile_experimental/app_networking.dart';
+import 'package:campus_mobile_experimental/core/models/weather.dart';
+
+class WeatherService {
   bool _isLoading = false;
-  List<ParkingModel> _data;
   DateTime _lastUpdated;
   String _error;
+
   final NetworkHelper _networkHelper = NetworkHelper();
-  final Map<String, String> headers = {
-    "accept": "application/json",
-  };
-
   final String endpoint =
-      "https://mobile.ucsd.edu/replatform/v1/qa/webview/parking-v2/parking_lots.json";
+      'https://gglfnarjhf.execute-api.us-west-2.amazonaws.com/dev/';
 
-  Future<bool> fetchParkingLotData() async {
+  WeatherModel _weatherModel = WeatherModel();
+
+  Future<bool> fetchData() async {
     _error = null;
     _isLoading = true;
     try {
@@ -25,7 +22,7 @@ class ParkingService {
       String _response = await _networkHelper.fetchData(endpoint);
 
       /// parse data
-      _data = parkingModelFromJson(_response);
+      _weatherModel = weatherModelFromJson(_response);
       _isLoading = false;
       return true;
     } catch (e) {
@@ -35,8 +32,13 @@ class ParkingService {
     }
   }
 
-  List<ParkingModel> get data => _data;
   bool get isLoading => _isLoading;
+
   String get error => _error;
+
   DateTime get lastUpdated => _lastUpdated;
+
+  NetworkHelper get availabilityService => _networkHelper;
+
+  WeatherModel get weatherModel => _weatherModel;
 }
