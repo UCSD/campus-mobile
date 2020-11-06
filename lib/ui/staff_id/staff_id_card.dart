@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
@@ -16,17 +14,11 @@ class StaffIdCard extends StatefulWidget {
 }
 
 class _StaffIdCardState extends State<StaffIdCard> {
-  String cardId = "staff_id";
   WebViewController _webViewController;
+  String cardId = "staff_id";
   double _contentHeight = 194.0;
-  final String webCardURL =
-      "https://mobile.ucsd.edu/replatform/v1/qa/webview/staff_id-v2.html";
-
-  @override
-  void initState() {
-    super.initState();
-    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
-  }
+  String webCardURL =
+      "https://mobile.ucsd.edu/replatform/v1/qa/webview/staff_id-v3.html";
 
   @override
   Widget build(BuildContext context) {
@@ -56,48 +48,55 @@ class _StaffIdCardState extends State<StaffIdCard> {
   UserDataProvider _userDataProvider;
   set userDataProvider(UserDataProvider value) => _userDataProvider = value;
 
-  Widget buildCardContent(BuildContext context, String webCardAuthURL) {
+  Widget buildCardContent(context, webCardAuthURL) {
     return Container(
       height: _contentHeight,
       child: WebView(
         opaque: false,
         javascriptMode: JavascriptMode.unrestricted,
         initialUrl: webCardAuthURL,
-        // onPageFinished: _updateContentHeight,
         onWebViewCreated: (controller) {
           _webViewController = controller;
         },
         javascriptChannels: <JavascriptChannel>[
-          _campusMobileJavascriptChannel(context),
+          _linksChannel(context),
+          _heightChannel(context),
+          _refreshTokenChannel(context),
         ].toSet(),
       ),
     );
   }
 
-  JavascriptChannel _campusMobileJavascriptChannel(BuildContext context) {
+  JavascriptChannel _linksChannel(BuildContext context) {
     return JavascriptChannel(
-      name: 'CampusMobile',
-      onMessageReceived: (JavascriptMessage message) async {
-        if (message.message == 'refreshToken') {
-          if (Provider.of<UserDataProvider>(context, listen: false)
-              .isLoggedIn) {
-            await _userDataProvider.refreshToken();
-            _webViewController?.reload();
-          }
-        } else if (message.message == 'updateHeight') {
-          await _updateContentHeight('');
-        }
+      name: 'OpenLink',
+      onMessageReceived: (JavascriptMessage message) {
+        openLink(message.message);
       },
     );
   }
 
-  Future<void> _updateContentHeight(String some) async {
-    var newHeight =
-        await getNewContentHeight(_webViewController, _contentHeight);
-    if (newHeight != _contentHeight) {
-      setState(() {
-        _contentHeight = newHeight;
-      });
-    }
+  JavascriptChannel _heightChannel(BuildContext context) {
+    return JavascriptChannel(
+      name: 'SetHeight',
+      onMessageReceived: (JavascriptMessage message) {
+        setState(() {
+          _contentHeight =
+              validateHeight(context, double.tryParse(message.message));
+        });
+      },
+    );
+  }
+
+  JavascriptChannel _refreshTokenChannel(BuildContext context) {
+    return JavascriptChannel(
+      name: 'RefreshToken',
+      onMessageReceived: (JavascriptMessage message) async {
+        if (Provider.of<UserDataProvider>(context, listen: false).isLoggedIn) {
+          await _userDataProvider.refreshToken();
+          _webViewController?.reload();
+        }
+      },
+    );
   }
 }

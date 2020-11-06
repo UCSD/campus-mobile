@@ -22,6 +22,7 @@ import 'package:campus_mobile_experimental/ui/staff_id/staff_id_card.dart';
 import 'package:campus_mobile_experimental/ui/staff_info/staff_info_card.dart';
 import 'package:campus_mobile_experimental/ui/student_id/student_id_card.dart';
 import 'package:campus_mobile_experimental/ui/student_info/student_info_card.dart';
+import 'package:campus_mobile_experimental/ui/survey/survey_card.dart';
 import 'package:campus_mobile_experimental/ui/weather/weather_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -70,7 +71,7 @@ class _HomeState extends State<Home> {
     for (String card in order) {
       switch (card) {
         case 'QRScanner':
-          orderedCards.add(ScannerCard());
+          orderedCards.insert(0, ScannerCard());
           break;
         case 'NativeScanner':
           orderedCards.insert(0, NativeScannerCard());
@@ -78,9 +79,9 @@ class _HomeState extends State<Home> {
         case 'MyStudentChart':
           orderedCards.add(MyStudentChartCard());
           break;
-        // case 'student_survey':
-        //   orderedCards.add(SurveyCard());
-        //   break;
+        case 'student_survey':
+          orderedCards.add(SurveyCard());
+          break;
         case 'campus_info':
           orderedCards.add(CampusInfoCard());
           break;

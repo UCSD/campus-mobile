@@ -17,7 +17,7 @@ class _SurveyCardState extends State<SurveyCard> {
   String cardId = "student_survey";
   WebViewController _webViewController;
   double _contentHeight = cardContentMinHeight;
-  final String webCardURL =
+  String webCardURL =
       "https://mobile.ucsd.edu/replatform/v1/qa/webview/student_survey.html";
 
   @override
@@ -36,41 +36,42 @@ class _SurveyCardState extends State<SurveyCard> {
     );
   }
 
-  Widget buildCardContent(BuildContext context) {
+  Widget buildCardContent(context) {
     return Container(
-        height: _contentHeight,
-        child: WebView(
-          opaque: false,
-          javascriptMode: JavascriptMode.unrestricted,
-          initialUrl: webCardURL,
-          onWebViewCreated: (controller) {
-            _webViewController = controller;
-          },
-          javascriptChannels: <JavascriptChannel>[
-            _campusMobileJavascriptChannel(context),
-          ].toSet(),
-          onPageFinished: (_) async {
-            await _updateContentHeight('');
-          },
-        ));
+      height: _contentHeight,
+      child: WebView(
+        opaque: false,
+        javascriptMode: JavascriptMode.unrestricted,
+        initialUrl: webCardURL,
+        onWebViewCreated: (controller) {
+          _webViewController = controller;
+        },
+        javascriptChannels: <JavascriptChannel>[
+          _linksChannel(context),
+          _heightChannel(context),
+        ].toSet(),
+      ),
+    );
   }
 
-  JavascriptChannel _campusMobileJavascriptChannel(BuildContext context) {
+  JavascriptChannel _linksChannel(BuildContext context) {
     return JavascriptChannel(
-      name: 'CampusMobile',
+      name: 'OpenLink',
       onMessageReceived: (JavascriptMessage message) {
         openLink(message.message);
       },
     );
   }
 
-  Future<void> _updateContentHeight(String some) async {
-    var newHeight =
-        await getNewContentHeight(_webViewController, _contentHeight);
-    if (newHeight != _contentHeight) {
-      setState(() {
-        _contentHeight = newHeight;
-      });
-    }
+  JavascriptChannel _heightChannel(BuildContext context) {
+    return JavascriptChannel(
+      name: 'SetHeight',
+      onMessageReceived: (JavascriptMessage message) {
+        setState(() {
+          _contentHeight =
+              validateHeight(context, double.tryParse(message.message));
+        });
+      },
+    );
   }
 }

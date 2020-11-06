@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
@@ -16,17 +14,11 @@ class CampusInfoCard extends StatefulWidget {
 }
 
 class _CampusInfoCardState extends State<CampusInfoCard> {
-  String cardId = "campus_info";
   WebViewController _webViewController;
-  double _contentHeight = cardContentMinHeight;
-  final String webCardURL =
-      'https://mobile.ucsd.edu/replatform/v1/qa/webview/campus_info-v2.html';
-
-  @override
-  void initState() {
-    super.initState();
-    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
-  }
+  String cardId = "campus_info";
+  double _contentHeight = webViewMinHeight;
+  String webCardURL =
+      'https://mobile.ucsd.edu/replatform/v1/qa/webview/campus_info-v3.html';
 
   @override
   Widget build(BuildContext context) {
@@ -44,11 +36,6 @@ class _CampusInfoCardState extends State<CampusInfoCard> {
     );
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
-
   Widget buildCardContent(context) {
     return Container(
       height: _contentHeight,
@@ -60,31 +47,31 @@ class _CampusInfoCardState extends State<CampusInfoCard> {
           _webViewController = controller;
         },
         javascriptChannels: <JavascriptChannel>[
-          _campusInfoJavascriptChannel(context),
+          _linksChannel(context),
+          _heightChannel(context),
         ].toSet(),
-        onPageFinished: (_) async {
-          await _updateContentHeight('');
-        },
       ),
     );
   }
 
-  JavascriptChannel _campusInfoJavascriptChannel(BuildContext context) {
+  JavascriptChannel _linksChannel(BuildContext context) {
     return JavascriptChannel(
-      name: 'CampusMobile',
+      name: 'OpenLink',
       onMessageReceived: (JavascriptMessage message) {
         openLink(message.message);
       },
     );
   }
 
-  Future<void> _updateContentHeight(String some) async {
-    var newHeight =
-        await getNewContentHeight(_webViewController, _contentHeight);
-    if (newHeight != _contentHeight) {
-      setState(() {
-        _contentHeight = newHeight;
-      });
-    }
+  JavascriptChannel _heightChannel(BuildContext context) {
+    return JavascriptChannel(
+      name: 'SetHeight',
+      onMessageReceived: (JavascriptMessage message) {
+        setState(() {
+          _contentHeight =
+              validateHeight(context, double.tryParse(message.message));
+        });
+      },
+    );
   }
 }

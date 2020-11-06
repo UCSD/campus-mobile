@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/parking_model.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
@@ -16,24 +14,17 @@ class ParkingCard extends StatefulWidget {
 }
 
 class _ParkingCardState extends State<ParkingCard> {
-  String cardId = 'parking';
-  WebViewController _webViewController;
   ParkingDataProvider _parkingDataProvider;
   final _controller = new PageController();
-  // double _contentHeight = cardContentMinHeight;
-  final String webCardURL =
+  WebViewController _webViewController;
+  String cardId = 'parking';
+  String webCardURL =
       "https://mobile.ucsd.edu/replatform/v1/qa/webview/parking-v2/index.html";
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _parkingDataProvider = Provider.of<ParkingDataProvider>(context);
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
   }
 
   Widget build(BuildContext context) {

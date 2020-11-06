@@ -15,6 +15,8 @@ const listTileInnerPadding = 8.0;
 const cardContentMinHeight = 40.0;
 const cardContentMaxHeight = 568.0;
 
+const webViewMinHeight = 20.0;
+
 /// App Theme
 const MaterialColor ColorPrimary = MaterialColor(
   0xFF182B49,
