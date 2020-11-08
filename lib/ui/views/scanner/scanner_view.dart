@@ -32,6 +32,7 @@ class _ScanditScannerState extends State<ScanditScanner> {
   bool isLoading;
   bool isDuplicate;
   bool successfulSubmission;
+  bool isValidBarcode;
   PermissionStatus _cameraPermissionsStatus = PermissionStatus.undetermined;
 
   Future _requestCameraPermissions() async {
@@ -58,6 +59,7 @@ class _ScanditScannerState extends State<ScanditScanner> {
     successfulSubmission = false;
     isLoading = false;
     isDuplicate = false;
+    isValidBarcode = true;
     _errorText = "Something went wrong, please try again.";
 
     WidgetsBinding.instance
@@ -179,7 +181,7 @@ class _ScanditScannerState extends State<ScanditScanner> {
                         children: <Widget>[
                           ClipOval(
                             child: Container(
-                              color: isDuplicate ? Colors.orange : Colors.red,
+                              color: (!isValidBarcode || isDuplicate) ? Colors.orange : Colors.red,
                               height: 75,
                               width: 75,
                               child: Icon(Icons.clear,
@@ -315,6 +317,12 @@ class _ScanditScannerState extends State<ScanditScanner> {
         this.setState(() {
           _errorText = "Submission failed due to barcode already scanned. Please scan another barcode.";
           isDuplicate = true;
+        });
+      }
+      else if(_barcodeService.error.contains(ErrorConstants.invalidMedia)) {
+        this.setState(() {
+          _errorText = "Barcode is not valid. Please scan another barcode.";
+          isValidBarcode = false;
         });
       }
       //_submitted = true;
