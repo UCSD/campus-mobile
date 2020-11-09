@@ -14,13 +14,16 @@ class CardsService {
   };
 
   Future<bool> fetchCards(String ucsdAffiliation) async {
-    String cardListEndpoint =
-        'https://api-qa.ucsd.edu:8243/defaultcards/v1.0.0';
     _error = null;
     _isLoading = true;
+
+    String cardListEndpoint =
+        'https://api-qa.ucsd.edu:8243/defaultcards/v1.0.0/defaultcards/';
+
     if (ucsdAffiliation == null) {
       ucsdAffiliation = "";
     }
+
     try {
       //form query string with ucsd affiliation
       cardListEndpoint += "?ucsdaffiliation=${ucsdAffiliation}";
