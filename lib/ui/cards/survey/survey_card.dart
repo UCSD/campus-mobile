@@ -1,5 +1,7 @@
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/survey_data_provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/util/webview.dart';
 import 'package:campus_mobile_experimental/ui/theme/app_layout.dart';
 import 'package:flutter/material.dart';
@@ -18,12 +20,22 @@ class SurveyCard extends StatefulWidget {
 class _SurveyCardState extends State<SurveyCard> {
   String cardId = "student_survey";
   double _contentHeight = cardContentMinHeight;
+  SurveyDataProvider _surveyDataProvider;
+  UserDataProvider _userDataProvider;
   WebViewController _webViewController;
+  List<String> postMessage;
+  String surveyID;
 //  bool hasSubmitted = false;
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _surveyDataProvider = Provider.of<SurveyDataProvider>(context);
+  }
+
+  @override
   Widget build(BuildContext context) {
-//    if (hasSubmitted == false) {
+//    if (surveyID == userProfile) {
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
@@ -39,12 +51,28 @@ class _SurveyCardState extends State<SurveyCard> {
 //    }
   }
 
+//  final _url = "https://cwo-test.ucsd.edu/WebCards/sample_survey.html";
   final _url = "https://cwo-test.ucsd.edu/WebCards/student_survey.html";
-
 //  final _url =
 //      "https://mobile.ucsd.edu/replatform/v1/qa/webview/student_survey.html";
 
   Widget buildCardContent(BuildContext context) {
+//    return Container(
+//        child: Column(
+//      children: [
+//        Text(activeStatusModel.toString()),
+//        Text(surveyIdModel.toString()),
+//        Text(surveyUrlModel),
+//      ],
+//    ));
+    _surveyDataProvider.surveyModels.forEach((survey) {
+      print("survey active in buildcardcontent: " +
+          survey.surveyActive.toString());
+      if (survey.surveyActive == false) {
+        return buildSubmissionCardContent(context);
+      }
+    });
+
     return Container(
       height: _contentHeight + 50,
       child: WebView(
@@ -64,10 +92,24 @@ class _SurveyCardState extends State<SurveyCard> {
     );
   }
 
+  Widget buildSubmissionCardContent(BuildContext context) {
+    return Container(
+      height: _contentHeight + 50,
+      child: Text("Thank you for submitting this form!"),
+    );
+  }
+
   JavascriptChannel _printJavascriptChannel(BuildContext context) {
     return JavascriptChannel(
       name: 'CampusMobile',
       onMessageReceived: (JavascriptMessage message) {
+        print(message.message);
+        postMessage = message.message.split("###");
+        surveyID = postMessage[1];
+        print(postMessage[1]);
+        Provider.of<SurveyDataProvider>(context, listen: false)
+            .submitSurvey(surveyID);
+        _surveyDataProvider.fetchSurvey();
         openLink(message.message);
       },
     );

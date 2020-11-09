@@ -7,14 +7,14 @@ packages:
       name: _fe_analyzer_shared
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "11.0.0"
+    version: "12.0.0"
   analyzer:
     dependency: transitive
     description:
       name: analyzer
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.40.4"
+    version: "0.40.5"
   app_settings:
     dependency: "direct main"
     description:
@@ -210,7 +210,7 @@ packages:
       name: dart_style
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.3.8"
+    version: "1.3.8+1"
   dartx:
     dependency: transitive
     description:
