@@ -12,6 +12,9 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'core/models/authentication_model.dart';
+import 'core/models/user_profile_model.dart';
+
 bool showOnboardingScreen = false;
 
 void main() async {
@@ -27,6 +30,9 @@ void main() async {
 void initializeStorage() async {
   /// initialize hive storage
   await Hive.initFlutter('.');
+  //register appropriate hive boxes
+  await Hive.registerAdapter(AuthenticationModelAdapter());
+  await Hive.registerAdapter(UserProfileModelAdapter());
 
   if (await isFirstRun()) {
     FlutterSecureStorage storage = FlutterSecureStorage();
