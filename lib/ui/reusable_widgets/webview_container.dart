@@ -1,0 +1,185 @@
+import 'dart:io';
+
+import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
+import 'package:campus_mobile_experimental/core/util/webview.dart';
+import 'package:campus_mobile_experimental/ui/cards/availability/availability_card.dart';
+import 'package:campus_mobile_experimental/ui/theme/app_layout.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+
+class WebViewContainer extends StatefulWidget {
+  const WebViewContainer({
+    Key key,
+    @required this.titleText,
+    @required this.initialUrl,
+    this.overFlowMenu,
+    this.actionButtons,
+    this.hideMenu,
+  }) : super(key: key);
+
+  /// required parameters
+  final String titleText;
+  final String initialUrl;
+
+  /// optional parameters
+  final Map<String, Function> overFlowMenu;
+  final bool hideMenu;
+  final List<Widget> actionButtons;
+
+  @override
+  _CardContainerState createState() => _CardContainerState();
+}
+
+class _CardContainerState extends State<WebViewContainer> {
+  WebViewController _webViewController;
+  double _contentHeight = cardContentMinHeight;
+  bool active;
+  Function hide;
+
+  @override
+  void initState() {
+    super.initState();
+    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+    hide = () => Provider.of<CardsDataProvider>(context, listen: false)
+        .toggleCard(cardId);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    active = Provider.of<CardsDataProvider>(context).cardStates[cardId];
+
+    if (active != null && active) {
+      return Card(
+        margin: EdgeInsets.only(
+            top: 0.0, right: 0.0, bottom: cardMargin * 1.5, left: 0.0),
+        semanticContainer: false,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            ListTile(
+              title: Text(
+                widget.titleText,
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 20.0,
+                ),
+              ),
+              trailing: ButtonBar(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  buildMenu(),
+                ],
+              ),
+            ),
+            buildBody(context),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 0),
+              child: widget.actionButtons != null
+                  ? Row(
+                      children: widget.actionButtons,
+                    )
+                  : Container(),
+            ),
+          ],
+        ),
+      );
+    }
+    return Container();
+  }
+
+  Widget buildBody(context) {
+    return Container(
+      height: _contentHeight,
+      child: WebView(
+        opaque: false,
+        javascriptMode: JavascriptMode.unrestricted,
+        initialUrl: widget.initialUrl,
+        onWebViewCreated: (controller) {
+          _webViewController = controller;
+        },
+        javascriptChannels: <JavascriptChannel>[
+          _campusInfoJavascriptChannel(context),
+        ].toSet(),
+        onPageFinished: (_) async {
+          await _updateContentHeight('');
+        },
+      ),
+    );
+  }
+
+  Widget buildMenu() {
+    if (widget.hideMenu ?? false) {
+      return null;
+    }
+    return ButtonBar(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        buildMenuOptions({
+          'reload': _webViewController?.reload,
+          'hide': hide,
+        }),
+      ],
+    );
+  }
+
+  Widget buildMenuOptions(Map<String, Function> menuOptions) {
+    List<DropdownMenuItem<String>> menu = List<DropdownMenuItem<String>>();
+    menuOptions.forEach((menuOption, func) {
+      Widget item = DropdownMenuItem<String>(
+        value: menuOption,
+        child: Text(
+          menuOption,
+          textAlign: TextAlign.center,
+        ),
+      );
+      menu.add(item);
+    });
+    return DropdownButton(
+      items: menu,
+      underline: Container(),
+      icon: Icon(Icons.more_vert),
+      onChanged: (String selectedMenuItem) =>
+          onMenuItemPressed(selectedMenuItem),
+    );
+  }
+
+  void onMenuItemPressed(String selectedMenuItem) {
+    switch (selectedMenuItem) {
+      case 'reload':
+        {
+          print("reloading ${widget.titleText}");
+          _webViewController?.reload();
+        }
+        break;
+      case 'hide':
+        {
+          hide();
+        }
+        break;
+      default:
+        {
+          // do nothing for now
+        }
+    }
+  }
+
+  JavascriptChannel _campusInfoJavascriptChannel(BuildContext context) {
+    return JavascriptChannel(
+      name: 'CampusMobile',
+      onMessageReceived: (JavascriptMessage message) {
+        openLink(message.message);
+      },
+    );
+  }
+
+  Future<void> _updateContentHeight(String some) async {
+    var newHeight =
+    await getNewContentHeight(_webViewController, _contentHeight);
+    if (newHeight != _contentHeight) {
+      setState(() {
+        _contentHeight = newHeight;
+      });
+    }
+  }
+}
