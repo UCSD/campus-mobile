@@ -15,7 +15,7 @@ class CardsService {
 
   Future<bool> fetchCards(String ucsdAffiliation) async {
     String cardListEndpoint =
-        'https://api-qa.ucsd.edu:8243/defaultcards/v1.0.0';
+        'https://api-qa.ucsd.edu:8243/defaultcards/v1.0.0/defaultcards';
     _error = null;
     _isLoading = true;
     if (ucsdAffiliation == null) {
