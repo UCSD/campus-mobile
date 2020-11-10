@@ -3,7 +3,7 @@ import 'package:campus_mobile_experimental/core/models/events.dart';
 
 class EventsService {
   final String endpoint =
-      'https://9tqs71by9h.execute-api.us-west-2.amazonaws.com/qa/v1/events/student-v2';
+      'https://9tqs71by9h.execute-api.us-west-2.amazonaws.com/qa/v2/events/student';
 
   bool _isLoading = false;
   DateTime _lastUpdated;
@@ -24,7 +24,7 @@ class EventsService {
       String _response = await _networkHelper.fetchData(endpoint);
 
       /// parse data
-      final data = eventsModelFromJson(_response);
+      final data = eventModelFromJson(_response);
       _isLoading = false;
       _data = data;
       return true;
