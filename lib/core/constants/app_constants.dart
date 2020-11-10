@@ -87,6 +87,7 @@ class ErrorConstants {
   static const authorizedPutErrors = 'Failed to update data: ';
   static const invalidBearerToken = 'Invalid bearer token';
   static const duplicateRecord = 'DioError [DioErrorType.RESPONSE]: Http status error [409]';
+  static const invalidMedia = 'DioError [DioErrorType.RESPONSE]: Http status error [415]';
 }
 
 class Plugins {
