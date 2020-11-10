@@ -4,6 +4,7 @@ import 'package:campus_mobile_experimental/core/services/barcode_service.dart';
 import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_scandit_plugin/flutter_scandit_plugin.dart';
+import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -215,6 +216,9 @@ class _ScanditScannerState extends State<ScanditScanner> {
   }
 
   Widget renderSuccessScreen(BuildContext context) {
+    final dateFormat = new DateFormat('dd-MM-yyyy hh:mm:ss a');
+    final String scanTime = dateFormat.format(new DateTime.now());
+
     return Column(
       children: [
         Center(
@@ -228,10 +232,10 @@ class _ScanditScannerState extends State<ScanditScanner> {
                     style:
                         TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
               ),
-              Text("Scan sent at: " + DateTime.now().toString(),
-                  style: TextStyle(color: ColorPrimary)),
+              Text("Scan sent at: " + scanTime,
+                  style: TextStyle(color: Theme.of(context).iconTheme.color)),
               Text("Scanned value: " + _barcode,
-                  style: TextStyle(color: ColorPrimary)),
+                  style: TextStyle(color: Theme.of(context).iconTheme.color)),
             ])),
           ),
         ),
