@@ -1,5 +1,5 @@
+import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/spot_types_model.dart';
-import 'package:campus_mobile_experimental/core/services/networking.dart';
 
 class SpotTypesService {
   SpotTypesService() {
@@ -16,7 +16,7 @@ class SpotTypesService {
   SpotTypeModel _spotTypeModel = SpotTypeModel();
 
   final String endpoint =
-      "https://mobile.ucsd.edu/replatform/v1/qa/webview/parking/spot_types.json";
+      "https://mobile.ucsd.edu/replatform/v1/qa/webview/parking-v2/spot_types.json";
   Future<bool> fetchSpotTypesData() async {
     _error = null;
     _isLoading = true;

@@ -1,5 +1,5 @@
+import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/parking_model.dart';
-import 'package:campus_mobile_experimental/core/services/networking.dart';
 
 class ParkingService {
   ParkingService() {
@@ -15,7 +15,7 @@ class ParkingService {
   };
 
   final String endpoint =
-      "https://mobile.ucsd.edu/replatform/v1/qa/webview/parking/parking_lots.json";
+      "https://mobile.ucsd.edu/replatform/v1/qa/webview/parking-v2/parking_lots.json";
 
   Future<bool> fetchParkingLotData() async {
     _error = null;
