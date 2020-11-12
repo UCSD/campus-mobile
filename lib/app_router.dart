@@ -25,6 +25,7 @@ import 'package:campus_mobile_experimental/ui/onboarding/onboarding_screen.dart'
 import 'package:campus_mobile_experimental/ui/parking/manage_parking_view.dart';
 import 'package:campus_mobile_experimental/ui/parking/spot_types_view.dart';
 import 'package:campus_mobile_experimental/ui/profile/cards.dart';
+import 'package:campus_mobile_experimental/ui/profile/notifications.dart';
 import 'package:campus_mobile_experimental/ui/profile/profile.dart';
 import 'package:campus_mobile_experimental/ui/scanner/scanner_view.dart';
 import 'package:campus_mobile_experimental/ui/shuttle/add_shuttle_stops_view.dart';
@@ -124,7 +125,10 @@ class Router {
           return CardsView();
         });
       case RoutePaths.NotificationsSettingsView:
-        return MaterialPageRoute(builder: (_) => NotificationsListView());
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+          return NotificationsSettingsView();
+        });
       case RoutePaths.BluetoothPermissionsView:
         return MaterialPageRoute(
             builder: (_) => AdvancedWayfindingPermission());
@@ -133,7 +137,10 @@ class Router {
           return NotificationsListView();
         });
       case RoutePaths.ClassScheduleViewAll:
-        return MaterialPageRoute(builder: (_) => ClassList());
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+          return ClassList();
+        });
       case RoutePaths.SpotTypesView:
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
