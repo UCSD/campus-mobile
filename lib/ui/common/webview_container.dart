@@ -34,7 +34,7 @@ class WebViewContainer extends StatefulWidget {
 }
 
 class _CardContainerState extends State<WebViewContainer> {
-  UserDataProvider _userDataProvider;
+  //UserDataProvider _userDataProvider;
   WebViewController _webViewController;
   double _contentHeight = cardContentMinHeight;
   bool active;
@@ -92,20 +92,25 @@ class _CardContainerState extends State<WebViewContainer> {
   }
 
   Widget buildBody(context) {
-    return Container(
-      height: _contentHeight,
-      child: WebView(
-        opaque: false,
-        javascriptMode: JavascriptMode.unrestricted,
-        initialUrl: widget.initialUrl,
-        onWebViewCreated: (controller) {
-          _webViewController = controller;
-        },
-        javascriptChannels: <JavascriptChannel>[
-          _linksChannel(context),
-          _heightChannel(context),
-        ].toSet(),
-      ),
+    return Column(
+      children: [
+        Text(widget.initialUrl),
+        Container(
+          height: _contentHeight,
+          child: WebView(
+            opaque: false,
+            javascriptMode: JavascriptMode.unrestricted,
+            initialUrl: widget.initialUrl,
+            onWebViewCreated: (controller) {
+              _webViewController = controller;
+            },
+            javascriptChannels: <JavascriptChannel>[
+              _linksChannel(context),
+              _heightChannel(context),
+            ].toSet(),
+          ),
+        ),
+      ],
     );
   }
 
