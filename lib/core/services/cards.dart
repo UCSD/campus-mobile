@@ -18,7 +18,7 @@ class CardsService {
     _isLoading = true;
 
     String cardListEndpoint =
-        'https://api-qa.ucsd.edu:8243/defaultcards/v1.0.0/defaultcards/';
+        'https://api-qa.ucsd.edu:8243/defaultcards/v1.0.0/defaultcards';
 
     if (ucsdAffiliation == null) {
       ucsdAffiliation = "";
@@ -37,6 +37,11 @@ class CardsService {
       _isLoading = false;
       return true;
     } catch (e) {
+      if (e.toString().contains("401")) {
+        if (await getNewToken()) {
+          return await fetchCards(ucsdAffiliation);
+        }
+      }
       _error = e.toString();
       _isLoading = false;
       return false;
