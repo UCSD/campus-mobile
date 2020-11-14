@@ -36,9 +36,19 @@ class SurveyDataProvider extends ChangeNotifier {
     _error = null;
     notifyListeners();
     if (await _surveyService.fetchData()) {
-      print("in await");
+      print("in await if statement");
       _surveyModels = _surveyService.surveyModel;
-      _userDataProvider.userProfileModel.surveyCompletion.forEach((id, value) {
+
+      for (String id in _userDataProvider.userProfileModel.surveyCompletion) {
+        for (SurveyModel survey in _surveyModels) {
+          if (survey.surveyId == id) {
+            survey.surveyActive = false;
+          }
+        }
+      }
+
+      /*
+       _userDataProvider.userProfileModel.surveyCompletion.forEach((id, value) {
         _surveyModels.forEach((survey) {
           print(survey);
           print("data survey active: " + survey.surveyActive.toString());
@@ -51,6 +61,8 @@ class SurveyDataProvider extends ChangeNotifier {
           }
         });
       });
+
+       */
       _lastUpdated = DateTime.now();
     } else {
       ///TODO: determine what error to show to the user
@@ -63,10 +75,18 @@ class SurveyDataProvider extends ChangeNotifier {
   ///This method is to upload the completion status of a survey
   void submitSurvey(String surveyID) {
     print("in submit survey");
-    _userDataProvider.userProfileModel.surveyCompletion
-        .addAll({surveyID: true});
+    print("adding this survey: " + surveyID);
+//    _userDataProvider.userProfileModel.surveyCompletion.clear();
+    if (!_userDataProvider.userProfileModel.surveyCompletion
+        .contains(surveyID)) {
+      _userDataProvider.userProfileModel.surveyCompletion.add(surveyID);
+    }
+//    _userDataProvider.userProfileModel.surveyCompletion
+//        .addAll({surveyID: true});
     _userDataProvider.postUserProfile(_userDataProvider.userProfileModel);
     notifyListeners();
+    print("survey completion: ");
+    print(_userDataProvider.userProfileModel.surveyCompletion.toString());
   }
 
   ///SIMPLE GETTERS

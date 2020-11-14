@@ -13,6 +13,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 class SurveyCard extends StatefulWidget {
   SurveyCard();
+
   @override
   _SurveyCardState createState() => _SurveyCardState();
 }
@@ -24,13 +25,18 @@ class _SurveyCardState extends State<SurveyCard> {
   UserDataProvider _userDataProvider;
   WebViewController _webViewController;
   List<String> postMessage;
-  String surveyID;
+  String surveyID = "";
+  bool displayCard = true;
+  int i = 0;
+  String surveyURL;
+
 //  bool hasSubmitted = false;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _surveyDataProvider = Provider.of<SurveyDataProvider>(context);
+    _userDataProvider = Provider.of<UserDataProvider>(context);
   }
 
   @override
@@ -52,50 +58,62 @@ class _SurveyCardState extends State<SurveyCard> {
   }
 
 //  final _url = "https://cwo-test.ucsd.edu/WebCards/sample_survey.html";
-  final _url = "https://cwo-test.ucsd.edu/WebCards/student_survey.html";
+
+  // final _url = "https://cwo-test.ucsd.edu/WebCards/student_survey.html";
+
 //  final _url =
 //      "https://mobile.ucsd.edu/replatform/v1/qa/webview/student_survey.html";
 
   Widget buildCardContent(BuildContext context) {
-//    return Container(
-//        child: Column(
-//      children: [
-//        Text(activeStatusModel.toString()),
-//        Text(surveyIdModel.toString()),
-//        Text(surveyUrlModel),
-//      ],
-//    ));
     _surveyDataProvider.surveyModels.forEach((survey) {
-      print("survey active in buildcardcontent: " +
-          survey.surveyActive.toString());
-      if (survey.surveyActive == false) {
-        return buildSubmissionCardContent(context);
+      if (survey.surveyActive == true) {
+        surveyURL = survey.surveyUrl;
+      }
+
+      if (survey.surveyActive != true &&
+          _userDataProvider.userProfileModel.surveyCompletion
+              .contains(surveyID)) {
+        displayCard = false;
       }
     });
 
-    return Container(
-      height: _contentHeight + 50,
-      child: WebView(
-        opaque: false,
-        javascriptMode: JavascriptMode.unrestricted,
-        initialUrl: _url,
-        onWebViewCreated: (controller) {
-          _webViewController = controller;
-        },
-        javascriptChannels: <JavascriptChannel>[
-          _printJavascriptChannel(context),
-        ].toSet(),
-        onPageFinished: (_) async {
-          await _updateContentHeight('');
-        },
-      ),
-    );
+    if (surveyURL == null) {
+      displayCard = false;
+    }
+
+    if (displayCard == true) {
+      return Container(
+        height: _contentHeight + 50,
+        child: WebView(
+          opaque: false,
+          javascriptMode: JavascriptMode.unrestricted,
+          initialUrl: surveyURL,
+          onWebViewCreated: (controller) {
+            _webViewController = controller;
+          },
+          javascriptChannels: <JavascriptChannel>[
+            _printJavascriptChannel(context),
+          ].toSet(),
+          onPageFinished: (_) async {
+            await _updateContentHeight('');
+          },
+        ),
+      );
+    }
+    //Thank you for submitting text widget
+    return buildSubmissionCardContent(context);
   }
 
   Widget buildSubmissionCardContent(BuildContext context) {
     return Container(
-      height: _contentHeight + 50,
-      child: Text("Thank you for submitting this form!"),
+      height: _contentHeight,
+      child: Text(
+        "Thank you for submitting all the forms!",
+        style: TextStyle(
+          fontSize: 22,
+        ),
+        textAlign: TextAlign.center,
+      ),
     );
   }
 
@@ -107,8 +125,9 @@ class _SurveyCardState extends State<SurveyCard> {
         postMessage = message.message.split("###");
         surveyID = postMessage[1];
         print(postMessage[1]);
-        Provider.of<SurveyDataProvider>(context, listen: false)
-            .submitSurvey(surveyID);
+        _surveyDataProvider.submitSurvey(surveyID);
+//        Provider.of<SurveyDataProvider>(context, listen: false)
+//            .submitSurvey(surveyID);
         _surveyDataProvider.fetchSurvey();
         openLink(message.message);
       },

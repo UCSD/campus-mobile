@@ -23,7 +23,7 @@ class UserProfileModelAdapter extends TypeAdapter<UserProfileModel> {
       selectedParkingSpots: (fields[3] as Map)?.cast<String, bool>(),
       selectedParkingLots: (fields[4] as Map)?.cast<String, bool>(),
       selectedStops: (fields[5] as List)?.cast<int>(),
-      surveyCompletion: (fields[6] as Map)?.cast<String, bool>(),
+      surveyCompletion: (fields[6] as List)?.cast<String>(),
     );
   }
 
