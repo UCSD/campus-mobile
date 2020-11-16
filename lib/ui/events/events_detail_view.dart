@@ -1,8 +1,8 @@
 import 'package:campus_mobile_experimental/core/models/events.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
+import 'package:campus_mobile_experimental/ui/common/event_time.dart';
 import 'package:campus_mobile_experimental/ui/common/image_loader.dart';
 import 'package:campus_mobile_experimental/ui/common/linkify_with_catch.dart';
-import 'package:campus_mobile_experimental/ui/common/time_range_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -33,23 +33,27 @@ class EventDetailView extends StatelessWidget {
         style: Theme.of(context).textTheme.title,
       ),
       Divider(),
-      LinkifyWithCatch(
-        text: data.location,
-        style: TextStyle(fontSize: 16),
-        textAlign: TextAlign.center,
-      ),
-      Center(
-          child: TimeRangeWidget(time: data.startTime + ' - ' + data.endTime)),
+      data.location != null && data.location.isNotEmpty
+          ? LinkifyWithCatch(
+              text: data.location,
+              looseUrl: true,
+              style: TextStyle(fontSize: 16),
+              textAlign: TextAlign.center,
+            )
+          : Container(),
+      Center(child: EventTime(data: data)),
       Divider(),
-      Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: LinkifyWithCatch(
-          text: data.description,
-          style: TextStyle(fontSize: 16),
-        ),
-      ),
-      data.url != null && data.url.isNotEmpty
-          ? LearnMoreButton(link: data.url)
+      data.description != null && data.description.isNotEmpty
+          ? Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: LinkifyWithCatch(
+                text: data.description,
+                style: TextStyle(fontSize: 16),
+              ),
+            )
+          : Container(),
+      data.link != null && data.link.isNotEmpty
+          ? LearnMoreButton(link: data.link)
           : Container(),
     ];
   }

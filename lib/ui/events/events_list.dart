@@ -2,10 +2,9 @@ import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/events.dart';
 import 'package:campus_mobile_experimental/core/providers/events.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
+import 'package:campus_mobile_experimental/ui/common/event_time.dart';
 import 'package:campus_mobile_experimental/ui/common/image_loader.dart';
-import 'package:campus_mobile_experimental/ui/common/time_range_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class EventsList extends StatelessWidget {
@@ -88,6 +87,7 @@ class EventsList extends StatelessWidget {
     return Container(
       height: 60,
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Flexible(
             child: Column(
@@ -100,20 +100,13 @@ class EventsList extends StatelessWidget {
                   maxLines: 2,
                 ),
                 SizedBox(height: 5),
-                Row(
-                  children: <Widget>[
-                    Text(DateFormat.MMMMd().format(data.eventDate.toLocal()) +
-                        ', '),
-                    TimeRangeWidget(time: data.startTime + ' - ' + data.endTime)
-                  ],
-                ),
+                EventTime(data: data),
               ],
             ),
           ),
           SizedBox(width: 4),
           ImageLoader(
             url: data.imageThumb,
-            fullSize: true,
           ),
         ],
       ),
