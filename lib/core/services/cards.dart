@@ -21,12 +21,16 @@ class CardsService {
         'https://api-qa.ucsd.edu:8243/defaultcards/v1.0.0/defaultcards';
 
     if (ucsdAffiliation == null) {
-      ucsdAffiliation = "";
+      cardListEndpoint = "https://api.jsonbin.io/b/5faedc243abee46e24387816";
+    } else if (ucsdAffiliation == "U") {
+      cardListEndpoint = "https://api.jsonbin.io/b/5faeddb2dedba573f2211349";
+    } else if (ucsdAffiliation == "E") {
+      cardListEndpoint = "https://api.jsonbin.io/b/5faeded05be6ec73e94e2591";
     }
 
     try {
       //form query string with ucsd affiliation
-      cardListEndpoint += "?ucsdaffiliation=${ucsdAffiliation}";
+     //cardListEndpoint += "?ucsdaffiliation=${ucsdAffiliation}";
 
       /// fetch data
       String _response =
