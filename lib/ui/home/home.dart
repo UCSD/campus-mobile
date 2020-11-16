@@ -69,12 +69,8 @@ class _HomeState extends State<Home> {
 
   List<Widget> getOrderedCardsList(List<String> order) {
     List<Widget> orderedCards = List<Widget>();
-    Map<String, String> webCards = {
-      'campus_info'    : 'https://mobile.ucsd.edu/replatform/v1/qa/webview/campus_info-v3.html',
-      'student_survey' : 'https://mobile.ucsd.edu/replatform/v1/qa/webview/student_survey.html',
-      'staff_info'     : 'https://mobile.ucsd.edu/replatform/v1/qa/webview/staff_info-v3.html',
-      'student_info'   : 'https://mobile.ucsd.edu/replatform/v1/qa/webview/student_info-v3.html',
-    };
+    Map<String, String> webCards =
+        Provider.of<CardsDataProvider>(context, listen: false).webCards;
 
     for (String card in order) {
       if (!webCards.containsKey(card)) {

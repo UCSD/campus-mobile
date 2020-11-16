@@ -9,6 +9,7 @@ class CardsDataProvider extends ChangeNotifier {
     ///DEFAULT STATES
     _isLoading = false;
     _cardStates = {};
+    _webCards = {};
     _cardOrder = [
       'QRScanner',
       'NativeScanner',
@@ -63,6 +64,7 @@ class CardsDataProvider extends ChangeNotifier {
   String _error;
   List<String> _cardOrder;
   Map<String, bool> _cardStates;
+  Map<String, String> _webCards;
   List<String> _studentCards;
   List<String> _staffCards;
   Map<String, CardsModel> _availableCards;
@@ -105,6 +107,11 @@ class CardsDataProvider extends ChangeNotifier {
           }
         }
 
+        for (String card in _cardStates.keys) {
+          if (_availableCards[card].initialURL != "") {
+            _webCards[card] = _availableCards[card].initialURL;
+          }
+        }
         // add new cards to the top of the list
         for (String card in _availableCards.keys) {
           if (_studentCards.contains(card)) continue;
@@ -266,4 +273,5 @@ class CardsDataProvider extends ChangeNotifier {
 
   Map<String, bool> get cardStates => _cardStates;
   List<String> get cardOrder => _cardOrder;
+  Map<String, String> get webCards => _webCards;
 }
