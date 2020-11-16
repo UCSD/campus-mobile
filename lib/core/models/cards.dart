@@ -14,15 +14,19 @@ String cardsModelToJson(Map<String, CardsModel> data) => json.encode(
 class CardsModel {
   CardsModel({
     this.cardActive,
+    this.initialURL
   });
-
+  
   bool cardActive;
+  String initialURL;
 
   factory CardsModel.fromJson(Map<String, dynamic> json) => CardsModel(
         cardActive: json["cardActive"] == null ? null : json["cardActive"],
+        initialURL: json["initialURL"] == null ? null : json["initialURL"],
       );
 
   Map<String, dynamic> toJson() => {
         "cardActive": cardActive == null ? null : cardActive,
+        "initialURL": initialURL == null ? null : initialURL,
       };
 }
