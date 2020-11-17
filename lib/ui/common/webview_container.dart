@@ -34,9 +34,9 @@ class WebViewContainer extends StatefulWidget {
 }
 
 class _CardContainerState extends State<WebViewContainer> {
-  //UserDataProvider _userDataProvider;
   WebViewController _webViewController;
   double _contentHeight = cardContentMinHeight;
+  String webCardUrl;
   bool active;
   Function hide;
 
@@ -46,6 +46,7 @@ class _CardContainerState extends State<WebViewContainer> {
     if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
     hide = () => Provider.of<CardsDataProvider>(context, listen: false)
         .toggleCard(widget.cardId);
+    webCardUrl = widget.initialUrl;
   }
 
   @override
@@ -100,13 +101,14 @@ class _CardContainerState extends State<WebViewContainer> {
           child: WebView(
             opaque: false,
             javascriptMode: JavascriptMode.unrestricted,
-            initialUrl: widget.initialUrl,
+            initialUrl: webCardUrl,
             onWebViewCreated: (controller) {
               _webViewController = controller;
             },
             javascriptChannels: <JavascriptChannel>[
               _linksChannel(context),
               _heightChannel(context),
+              _refreshTokenChannel(context),
             ].toSet(),
           ),
         ),
@@ -191,15 +193,23 @@ class _CardContainerState extends State<WebViewContainer> {
     );
   }
 
-/*  JavascriptChannel _refreshTokenChannel(BuildContext context) {
+  JavascriptChannel _refreshTokenChannel(BuildContext context) {
     return JavascriptChannel(
       name: 'RefreshToken',
       onMessageReceived: (JavascriptMessage message) async {
         if (Provider.of<UserDataProvider>(context, listen: false).isLoggedIn) {
-          await _userDataProvider.refreshToken();
+          await Provider.of<UserDataProvider>(context, listen: false)
+              .refreshToken();
+
+          String token = Provider.of<UserDataProvider>(context, listen: false).authenticationModel.accessToken;
+          int expire = Provider.of<UserDataProvider>(context, listen: false).authenticationModel.expiration;
+
+          webCardUrl = widget.initialUrl + "?token=$token&expiration=$expire";
+
+          print(webCardUrl);
           _webViewController?.reload();
         }
       },
     );
-  }*/
+  }
 }
