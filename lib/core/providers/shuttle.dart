@@ -1,14 +1,14 @@
 import 'dart:math' as Math;
 
-import 'package:campus_mobile_experimental/core/models/shuttle_arrival_model.dart';
-import 'package:campus_mobile_experimental/core/models/shuttle_stop_model.dart';
+import 'package:campus_mobile_experimental/core/models/shuttle_arrival.dart';
+import 'package:campus_mobile_experimental/core/models/shuttle_stop.dart';
 import 'package:campus_mobile_experimental/core/providers/location.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
-import 'package:campus_mobile_experimental/core/services/shuttle_service.dart';
+import 'package:campus_mobile_experimental/core/services/shuttle.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 
-import '../models/shuttle_stop_model.dart';
+import '../models/shuttle_stop.dart';
 
 class ShuttleDataProvider extends ChangeNotifier {
   ShuttleDataProvider() {
@@ -108,7 +108,8 @@ class ShuttleDataProvider extends ChangeNotifier {
     if (!userDataProvider.userProfileModel.selectedStops.contains(stopID)) {
       userDataProvider.userProfileModel.selectedStops.add(stopID);
       // update userprofilemodel after a stop is added
-      userDataProvider.updateUserProfileModel(userDataProvider.userProfileModel);
+      userDataProvider
+          .updateUserProfileModel(userDataProvider.userProfileModel);
       // print("UDP - ${userDataProvider.userProfileModel.selectedStops}");
       arrivalsToRender[stopID] = await fetchArrivalInformation(stopID);
     }

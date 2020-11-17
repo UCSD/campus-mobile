@@ -1,4 +1,4 @@
-import 'package:campus_mobile_experimental/core/models/shuttle_stop_model.dart';
+import 'package:campus_mobile_experimental/core/models/shuttle_stop.dart';
 import 'package:campus_mobile_experimental/core/providers/shuttle.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:flutter/material.dart';

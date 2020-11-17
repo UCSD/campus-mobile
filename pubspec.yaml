@@ -16,7 +16,6 @@ dependencies:
   encrypt: 4.0.3
   firebase_analytics: 5.0.2
   firebase_core: 0.4.4
-  firebase_crashlytics: 0.1.3+3
   firebase_messaging: 6.0.13
   flutter_scandit_plugin:
     git:
