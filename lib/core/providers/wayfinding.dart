@@ -16,7 +16,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:location/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'bluetooth_broadcast_singleton.dart';
+import 'bluetooth.dart';
 
 enum ScannedDevice {
   SCANNED_DEVICE_ID,
@@ -268,24 +268,6 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
           "LONG": (long == null) ? 0 : long,
           "DEVICE_LIST": newBufferList
         };
-
-        // // TODO: Send to test API
-        // Map testLog = {
-        //   "Time": DateTime.fromMillisecondsSinceEpoch(
-        //           DateTime.now().millisecondsSinceEpoch)
-        //       .toString(),
-        //   "SOURCE_DEVICE_ADVERTISEMENT_ID": this.advertisementValue,
-        //   "SOURCE": "UCSDMobileApp",
-        //   "LAT": (lat == null) ? 0 : lat.toString(),
-        //   "LONG": (long == null) ? 0 : long.toString(),
-        //   "DEVICE_LIST": newBufferList
-        // };
-        // if (inBackground) {
-        //   new Dio().post(
-        //       "https://7pfm2wuasb.execute-api.us-west-2.amazonaws.com/qa",
-        //       data: json.encode(testLog));
-        //   inBackground = false;
-        // }
 
         sendLogs(log);
       });

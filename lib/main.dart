@@ -5,7 +5,6 @@ import 'package:campus_mobile_experimental/app_router.dart'
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/authentication.dart';
 import 'package:campus_mobile_experimental/core/models/user_profile.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive/hive.dart';
@@ -17,11 +16,7 @@ bool isFirstRunFlag = false;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   await initializeStorage();
-  Crashlytics.instance.enableInDevMode = true;
-  FlutterError.onError = Crashlytics.instance.recordFlutterError;
-
   runApp(CampusMobile());
 }
 
