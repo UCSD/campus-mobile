@@ -1,11 +1,12 @@
 import 'package:campus_mobile_experimental/app_networking.dart';
-import 'package:campus_mobile_experimental/core/models/spot_types_model.dart';
+import 'package:campus_mobile_experimental/core/models/parking.dart';
 
-class SpotTypesService {
-  SpotTypesService() {
-    fetchSpotTypesData();
+class ParkingService {
+  ParkingService() {
+    fetchParkingLotData();
   }
   bool _isLoading = false;
+  List<ParkingModel> _data;
   DateTime _lastUpdated;
   String _error;
   final NetworkHelper _networkHelper = NetworkHelper();
@@ -13,18 +14,18 @@ class SpotTypesService {
     "accept": "application/json",
   };
 
-  SpotTypeModel _spotTypeModel = SpotTypeModel();
-
   final String endpoint =
-      "https://mobile.ucsd.edu/replatform/v1/qa/webview/parking-v2/spot_types.json";
-  Future<bool> fetchSpotTypesData() async {
+      "https://mobile.ucsd.edu/replatform/v1/qa/webview/parking-v2/parking_lots.json";
+
+  Future<bool> fetchParkingLotData() async {
     _error = null;
     _isLoading = true;
     try {
       /// fetch data
       String _response = await _networkHelper.fetchData(endpoint);
-      _spotTypeModel = spotTypeModelFromJson(_response);
 
+      /// parse data
+      _data = parkingModelFromJson(_response);
       _isLoading = false;
       return true;
     } catch (e) {
@@ -34,8 +35,8 @@ class SpotTypesService {
     }
   }
 
+  List<ParkingModel> get data => _data;
   bool get isLoading => _isLoading;
   String get error => _error;
   DateTime get lastUpdated => _lastUpdated;
-  SpotTypeModel get spotTypeModel => _spotTypeModel;
 }

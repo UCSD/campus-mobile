@@ -1,6 +1,6 @@
 name: campus_mobile_experimental
 description: A new Flutter project.
-version: 7.2.14+853
+version: 7.2.15+856
 
 environment:
   sdk: ">=2.6.0 <3.0.0"
@@ -16,7 +16,6 @@ dependencies:
   encrypt: 4.0.3
   firebase_analytics: 5.0.2
   firebase_core: 0.4.4
-  firebase_crashlytics: 0.1.3+3
   firebase_messaging: 6.0.13
   flutter_scandit_plugin:
     git:

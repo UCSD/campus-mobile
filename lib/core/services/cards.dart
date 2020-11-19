@@ -18,7 +18,7 @@ class CardsService {
     _isLoading = true;
 
     String cardListEndpoint =
-        'https://api-qa.ucsd.edu:8243/defaultcards/v1.0.0/defaultcards';
+        'https://api-qa.ucsd.edu:8243/defaultcards/v2.0.0/defaultcards';
 
     if (ucsdAffiliation == null) {
       cardListEndpoint = "https://api.jsonbin.io/b/5faedc243abee46e24387816";
