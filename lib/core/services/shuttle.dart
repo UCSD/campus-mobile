@@ -1,6 +1,6 @@
 import 'package:campus_mobile_experimental/app_networking.dart';
-import 'package:campus_mobile_experimental/core/models/shuttle_arrival_model.dart';
-import 'package:campus_mobile_experimental/core/models/shuttle_stop_model.dart';
+import 'package:campus_mobile_experimental/core/models/shuttle_arrival.dart';
+import 'package:campus_mobile_experimental/core/models/shuttle_stop.dart';
 
 class ShuttleService {
   ShuttleService();

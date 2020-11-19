@@ -1,4 +1,4 @@
-import 'package:campus_mobile_experimental/core/models/parking_model.dart';
+import 'package:campus_mobile_experimental/core/models/parking.dart';
 import 'package:campus_mobile_experimental/core/providers/parking.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:flutter/material.dart';

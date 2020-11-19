@@ -5,11 +5,8 @@ PODS:
     - Flutter
   - beacon_broadcast (0.0.1):
     - Flutter
-  - Crashlytics (3.14.0):
-    - Fabric (~> 1.10.2)
   - device_info (0.0.1):
     - Flutter
-  - Fabric (1.10.2)
   - Firebase/Analytics (6.33.0):
     - Firebase/Core
   - Firebase/Core (6.33.0):
@@ -25,11 +22,6 @@ PODS:
     - Firebase/Core
     - Flutter
   - firebase_core (0.0.1):
-    - Firebase/Core
-    - Flutter
-  - firebase_crashlytics (0.0.1):
-    - Crashlytics
-    - Fabric
     - Firebase/Core
     - Flutter
   - firebase_messaging (0.0.1):
@@ -151,7 +143,6 @@ DEPENDENCIES:
   - device_info (from `.symlinks/plugins/device_info/ios`)
   - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
-  - firebase_crashlytics (from `.symlinks/plugins/firebase_crashlytics/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - Flutter (from `Flutter`)
   - flutter_blue (from `.symlinks/plugins/flutter_blue/ios`)
@@ -168,8 +159,6 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
-    - Crashlytics
-    - Fabric
     - Firebase
     - FirebaseAnalytics
     - FirebaseCore
@@ -200,8 +189,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_analytics/ios"
   firebase_core:
     :path: ".symlinks/plugins/firebase_core/ios"
-  firebase_crashlytics:
-    :path: ".symlinks/plugins/firebase_crashlytics/ios"
   firebase_messaging:
     :path: ".symlinks/plugins/firebase_messaging/ios"
   Flutter:
@@ -233,13 +220,10 @@ SPEC CHECKSUMS:
   app_settings: d103828c9f5d515c4df9ee754dabd443f7cedcf3
   background_fetch: 9221ccc02b41aff8a52b2090d9f791c5ed82eaee
   beacon_broadcast: 2c2562111f7b7e0f1ab59487f6bc805805e3c9f3
-  Crashlytics: 9220f5bc89e7a618df411b4f639389dbfb0e03d2
   device_info: d7d233b645a32c40dfdc212de5cf646ca482f175
-  Fabric: ea977e3cd9c20425516d3dafd3bf8c941c51223f
   Firebase: 8db6f2d1b2c5e2984efba4949a145875a8f65fe5
   firebase_analytics: 045e7ebe7b8a4d27357168072868ff082dca15a6
   firebase_core: dc539d4bdc69894823e4a6e557034a9e48960f21
-  firebase_crashlytics: bd8c58df07f107cb7e1a20cb190b9a468e0a69fd
   firebase_messaging: cffb57ce40958c6204f03fb0c81713e4cd1e240c
   FirebaseAnalytics: 5dd088bd2e67bb9d13dbf792d1164ceaf3052193
   FirebaseCore: d889d9e12535b7f36ac8bfbf1713a0836a3012cd
