@@ -10,7 +10,7 @@ class SurveyService {
 
   final NetworkHelper _networkHelper = NetworkHelper();
   final String endpoint =
-      'https://cwo-test.ucsd.edu/_files/one-active-survey.json';
+      'https://cwo-test.ucsd.edu/_files/no-active-survey_test4.json';
   //'https://cwo-test.ucsd.edu/_files/sample-survey-data.json';
 
   List<SurveyModel> _surveyModel = [SurveyModel()];

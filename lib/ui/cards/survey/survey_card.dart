@@ -24,6 +24,7 @@ class _SurveyCardState extends State<SurveyCard> {
   SurveyDataProvider _surveyDataProvider;
   UserDataProvider _userDataProvider;
   WebViewController _webViewController;
+  String surveyIdMessage = "";
   List<String> postMessage;
   String surveyID = "";
   bool displayCard = true;
@@ -52,36 +53,50 @@ class _SurveyCardState extends State<SurveyCard> {
       errorText: null,
       child: () => buildCardContent(context),
     );
-//    } else {
-//      return Container();
-//    }
   }
-
-//  final _url = "https://cwo-test.ucsd.edu/WebCards/sample_survey.html";
-
-  // final _url = "https://cwo-test.ucsd.edu/WebCards/student_survey.html";
 
 //  final _url =
 //      "https://mobile.ucsd.edu/replatform/v1/qa/webview/student_survey.html";
 
   Widget buildCardContent(BuildContext context) {
+    print("survey completion: ");
+    print(_userDataProvider.userProfileModel.surveyCompletion.toString());
     _surveyDataProvider.surveyModels.forEach((survey) {
+      //sets the active survey url and survey id
       if (survey.surveyActive == true) {
         surveyURL = survey.surveyUrl;
+        surveyID = survey.surveyId;
+        print("active survey url: " + surveyURL);
+        print("active survey id: " + surveyID);
       }
 
+      ///IF THE CURRENT SURVEY IS NOT ACTIVE AND COMPLETED
       if (survey.surveyActive != true &&
           _userDataProvider.userProfileModel.surveyCompletion
               .contains(surveyID)) {
+        print("survey card is not displayed");
         displayCard = false;
       }
     });
 
+    ///IF NO SURVEYS ARE ACTIVE
     if (surveyURL == null) {
-      displayCard = false;
+//      displayCard = false;
+      return Container(
+        height: _contentHeight,
+        child: Text(
+          "Survey not available, check back later.",
+          style: TextStyle(
+            fontSize: 22,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      );
     }
 
     if (displayCard == true) {
+      print("survey card is displayed");
+
       return Container(
         height: _contentHeight + 50,
         child: WebView(
@@ -123,9 +138,9 @@ class _SurveyCardState extends State<SurveyCard> {
       onMessageReceived: (JavascriptMessage message) {
         print(message.message);
         postMessage = message.message.split("###");
-        surveyID = postMessage[1];
+        surveyIdMessage = postMessage[1];
         print(postMessage[1]);
-        _surveyDataProvider.submitSurvey(surveyID);
+        _surveyDataProvider.submitSurvey(surveyIdMessage);
 //        Provider.of<SurveyDataProvider>(context, listen: false)
 //            .submitSurvey(surveyID);
         _surveyDataProvider.fetchSurvey();
