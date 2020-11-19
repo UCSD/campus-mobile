@@ -43,7 +43,6 @@ class _CardContainerState extends State<WebViewContainer> {
   @override
   void initState() {
     super.initState();
-    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
     hide = () => Provider.of<CardsDataProvider>(context, listen: false)
         .toggleCard(widget.cardId);
     webCardUrl = widget.initialUrl;
