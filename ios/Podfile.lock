@@ -141,7 +141,7 @@ PODS:
     - Flutter
   - webview_flutter (0.0.1):
     - Flutter
-  - WifiConnection (0.0.1):
+  - wifi_connection (0.0.1):
     - Flutter
 
 DEPENDENCIES:
@@ -164,7 +164,7 @@ DEPENDENCIES:
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
   - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
   - webview_flutter (from `.symlinks/plugins/webview_flutter/ios`)
-  - WifiConnection (from `.symlinks/plugins/WifiConnection/ios`)
+  - wifi_connection (from `.symlinks/plugins/wifi_connection/ios`)
 
 SPEC REPOS:
   trunk:
@@ -226,8 +226,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/url_launcher/ios"
   webview_flutter:
     :path: ".symlinks/plugins/webview_flutter/ios"
-  WifiConnection:
-    :path: ".symlinks/plugins/WifiConnection/ios"
+  wifi_connection:
+    :path: ".symlinks/plugins/wifi_connection/ios"
 
 SPEC CHECKSUMS:
   app_settings: d103828c9f5d515c4df9ee754dabd443f7cedcf3
@@ -267,8 +267,8 @@ SPEC CHECKSUMS:
   SwiftProtobuf: 4ef85479c18ca85b5482b343df9c319c62bda699
   url_launcher: a1c0cc845906122c4784c542523d8cacbded5626
   webview_flutter: d2b4d6c66968ad042ad94cbb791f5b72b4678a96
-  WifiConnection: ae9ab63ba19b81edbf15d0e03511d510f3fd987f
+  wifi_connection: 9c23ee1bfb5fed65448980b3499fc9ff56c9222d
 
 PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
 
-COCOAPODS: 1.10.0.beta.2
+COCOAPODS: 1.10.0
