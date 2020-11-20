@@ -37,6 +37,9 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
   // Advertisement string
   String advertisementValue;
 
+  // Operating system of device
+  String operatingSystem;
+
   // List of devices that can be used towards achieving the threshold
   List allowableDevices = [];
 
@@ -244,7 +247,13 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
   }
 
   void processOffloadingLogs(List<Map> newBufferList) {
-    //qualifiedDevicesThreshold = 0; // Todo: Comment out to test sending logs to test DB
+    if(Platform.isAndroid) {
+      operatingSystem = "Android";
+    }
+    else if(Platform.isIOS) {
+      operatingSystem = "iOS";
+    }
+//    qualifiedDevicesThreshold = 0; // Todo: Comment out to test sending logs to test DB
     if (qualifyingDevices < qualifiedDevicesThreshold) {
       inBackground = false;
     }
@@ -263,7 +272,8 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
         //LOG VALUE
         Map log = {
           "SOURCE_DEVICE_ADVERTISEMENT_ID": this.advertisementValue,
-          "SOURCE": "UCSDMobileApp",
+          "SOURCE": "${operatingSystem}-UCSDMobileApp",
+          "OPERATING_SYSTEM": operatingSystem,
           "LAT": (lat == null) ? 0 : lat,
           "LONG": (long == null) ? 0 : long,
           "DEVICE_LIST": newBufferList
