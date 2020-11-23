@@ -1,6 +1,6 @@
-import 'package:campus_mobile_experimental/core/models/survey_model.dart';
+import 'package:campus_mobile_experimental/core/models/survey.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
-import 'package:campus_mobile_experimental/core/services/survey_service.dart';
+import 'package:campus_mobile_experimental/core/services/survey.dart';
 import 'package:flutter/material.dart';
 
 class SurveyDataProvider extends ChangeNotifier {

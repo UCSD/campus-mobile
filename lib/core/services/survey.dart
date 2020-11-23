@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:campus_mobile_experimental/app_networking.dart';
-import 'package:campus_mobile_experimental/core/models/survey_model.dart';
+import 'package:campus_mobile_experimental/core/models/survey.dart';
 
 class SurveyService {
   bool _isLoading = false;

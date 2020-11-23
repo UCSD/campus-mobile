@@ -1,7 +1,7 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
-import 'package:campus_mobile_experimental/core/providers/survey_data_provider.dart';
+import 'package:campus_mobile_experimental/core/providers/survey.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
 import 'package:flutter/material.dart';
@@ -30,8 +30,6 @@ class _SurveyCardState extends State<SurveyCard> {
   int i = 0;
   String surveyURL;
 
-//  bool hasSubmitted = false;
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -41,7 +39,6 @@ class _SurveyCardState extends State<SurveyCard> {
 
   @override
   Widget build(BuildContext context) {
-//    if (surveyID == userProfile) {
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
@@ -53,9 +50,6 @@ class _SurveyCardState extends State<SurveyCard> {
       child: () => buildCardContent(context),
     );
   }
-
-//  final _url =
-//      "https://mobile.ucsd.edu/replatform/v1/qa/webview/student_survey.html";
 
   Widget buildCardContent(BuildContext context) {
     print("survey completion: ");
@@ -97,7 +91,7 @@ class _SurveyCardState extends State<SurveyCard> {
       print("survey card is displayed");
 
       return Container(
-        height: _contentHeight + 50,
+        height: _contentHeight + 250,
         child: WebView(
           opaque: false,
           javascriptMode: JavascriptMode.unrestricted,
@@ -132,15 +126,13 @@ class _SurveyCardState extends State<SurveyCard> {
     return JavascriptChannel(
       name: 'CampusMobile',
       onMessageReceived: (JavascriptMessage message) {
+        print('JS CampusMobile message received:');
         print(message.message);
         postMessage = message.message.split("###");
         surveyIdMessage = postMessage[1];
         print(postMessage[1]);
         _surveyDataProvider.submitSurvey(surveyIdMessage);
-//        Provider.of<SurveyDataProvider>(context, listen: false)
-//            .submitSurvey(surveyID);
         _surveyDataProvider.fetchSurvey();
-        openLink(message.message);
       },
     );
   }
