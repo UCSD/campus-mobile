@@ -1,5 +1,5 @@
-import 'package:campus_mobile_experimental/core/models/cards_model.dart';
-import 'package:campus_mobile_experimental/core/services/networking.dart';
+import 'package:campus_mobile_experimental/app_networking.dart';
+import 'package:campus_mobile_experimental/core/models/cards.dart';
 
 class CardsService {
   bool _isLoading = false;

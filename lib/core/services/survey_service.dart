@@ -1,7 +1,7 @@
 import 'dart:async';
 
+import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/survey_model.dart';
-import 'package:campus_mobile_experimental/core/services/networking.dart';
 
 class SurveyService {
   bool _isLoading = false;
@@ -9,8 +9,7 @@ class SurveyService {
   String _error;
 
   final NetworkHelper _networkHelper = NetworkHelper();
-  final String endpoint =
-      'https://cwo-test.ucsd.edu/_files/no-active-survey_test4.json';
+  final String endpoint = 'https://cwo-test.ucsd.edu/_files/survey_test1.json';
   //'https://cwo-test.ucsd.edu/_files/sample-survey-data.json';
 
   List<SurveyModel> _surveyModel = [SurveyModel()];
