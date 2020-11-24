@@ -3,11 +3,11 @@ import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/survey.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
+import 'package:campus_mobile_experimental/core/utils/webview.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class SurveyCard extends StatefulWidget {
@@ -43,7 +43,7 @@ class _SurveyCardState extends State<SurveyCard> {
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
-      reload: () => null,
+      reload: () => {_surveyDataProvider.fetchSurvey()},
       isLoading: false,
       titleText: CardTitleConstants.titleMap[cardId],
       errorText: null,
@@ -52,46 +52,25 @@ class _SurveyCardState extends State<SurveyCard> {
   }
 
   Widget buildCardContent(BuildContext context) {
-    print("survey completion: ");
-    print(_userDataProvider.userProfileModel.surveyCompletion.toString());
     _surveyDataProvider.surveyModels.forEach((survey) {
-      //sets the active survey url and survey id
+      /// SET ACTIVE surveyURL AND surveyID
       if (survey.surveyActive == true) {
         surveyURL = survey.surveyUrl;
         surveyID = survey.surveyId;
-        print("active survey url: " + surveyURL);
-        print("active survey id: " + surveyID);
       }
 
-      ///IF THE CURRENT SURVEY IS NOT ACTIVE AND COMPLETED
+      /// IF THE CURRENT SURVEY IS NOT ACTIVE AND COMPLETED
       if (survey.surveyActive != true &&
           _userDataProvider.userProfileModel.surveyCompletion
               .contains(surveyID)) {
-        print("survey card is not displayed");
         displayCard = false;
       }
     });
 
-    ///IF NO SURVEYS ARE ACTIVE
-    if (surveyURL == null) {
-//      displayCard = false;
+    /// IF A SURVEY IS ACTIVE
+    if (displayCard == true && surveyURL != null) {
       return Container(
-        height: _contentHeight,
-        child: Text(
-          "Survey not available, check back later.",
-          style: TextStyle(
-            fontSize: 22,
-          ),
-          textAlign: TextAlign.center,
-        ),
-      );
-    }
-
-    if (displayCard == true) {
-      print("survey card is displayed");
-
-      return Container(
-        height: _contentHeight + 250,
+        height: _contentHeight + 50, // Dynamic height iffy, add some padding
         child: WebView(
           opaque: false,
           javascriptMode: JavascriptMode.unrestricted,
@@ -100,48 +79,60 @@ class _SurveyCardState extends State<SurveyCard> {
             _webViewController = controller;
           },
           javascriptChannels: <JavascriptChannel>[
-            _printJavascriptChannel(context),
+            _surveyChannel(context),
+            _linksChannel(context),
+            _heightChannel(context),
           ].toSet(),
         ),
       );
-    }
-    //Thank you for submitting text widget
-    return buildSubmissionCardContent(context);
-  }
-
-  Widget buildSubmissionCardContent(BuildContext context) {
-    return Container(
-      height: _contentHeight,
-      child: Text(
-        "Thank you for submitting all the forms!",
-        style: TextStyle(
-          fontSize: 22,
+    } else {
+      return Container(
+        height: 150.0,
+        child: Center(
+          child: Text(
+            surveyURL == null
+                ? "No surveys available.\n\nPlease check back later."
+                : "Thank you for completing the survey.",
+            style: TextStyle(
+              fontSize: 16,
+            ),
+            textAlign: TextAlign.center,
+          ),
         ),
-        textAlign: TextAlign.center,
-      ),
-    );
+      );
+    }
   }
 
-  JavascriptChannel _printJavascriptChannel(BuildContext context) {
+  JavascriptChannel _surveyChannel(BuildContext context) {
     return JavascriptChannel(
-      name: 'CampusMobile',
+      name: 'Survey',
       onMessageReceived: (JavascriptMessage message) {
-        print('JS CampusMobile message received:');
-        print(message.message);
         postMessage = message.message.split("###");
         surveyIdMessage = postMessage[1];
-        print(postMessage[1]);
         _surveyDataProvider.submitSurvey(surveyIdMessage);
         _surveyDataProvider.fetchSurvey();
       },
     );
   }
 
-  openLink(String url) async {
-    if (await canLaunch(url)) {
-      launch(url);
-    } else {
-      //can't launch url, there is some error
-    }
+  JavascriptChannel _linksChannel(BuildContext context) {
+    return JavascriptChannel(
+      name: 'OpenLink',
+      onMessageReceived: (JavascriptMessage message) {
+        openLink(message.message);
+      },
+    );
+  }
+
+  JavascriptChannel _heightChannel(BuildContext context) {
+    return JavascriptChannel(
+      name: 'SetHeight',
+      onMessageReceived: (JavascriptMessage message) {
+        setState(() {
+          _contentHeight =
+              validateHeight(context, double.tryParse(message.message));
+        });
+      },
+    );
   }
 }

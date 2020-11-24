@@ -31,12 +31,10 @@ class SurveyDataProvider extends ChangeNotifier {
 
   ///DOWNLOADS SURVEYS AND UPDATES SURVEY MODEL
   void fetchSurvey() async {
-    print("in fetch survey");
     _isLoading = true;
     _error = null;
     notifyListeners();
     if (await _surveyService.fetchData()) {
-      print("in await if statement");
       _surveyModels = _surveyService.surveyModel;
 
       for (String id in _userDataProvider.userProfileModel.surveyCompletion) {
@@ -46,23 +44,6 @@ class SurveyDataProvider extends ChangeNotifier {
           }
         }
       }
-
-      /*
-       _userDataProvider.userProfileModel.surveyCompletion.forEach((id, value) {
-        _surveyModels.forEach((survey) {
-          print(survey);
-          print("data survey active: " + survey.surveyActive.toString());
-          print("data survey id: " + survey.surveyId);
-          print("data survey url: " + survey.surveyUrl);
-
-          if (survey.surveyId == id) {
-            print(survey.surveyId + " survey is not active anymore");
-            survey.surveyActive = false;
-          }
-        });
-      });
-
-       */
       _lastUpdated = DateTime.now();
     } else {
       ///TODO: determine what error to show to the user
@@ -74,19 +55,12 @@ class SurveyDataProvider extends ChangeNotifier {
 
   ///This method is to upload the completion status of a survey
   void submitSurvey(String surveyID) {
-    print("in submit survey");
-    print("adding this survey: " + surveyID);
-//    _userDataProvider.userProfileModel.surveyCompletion.clear();
     if (!_userDataProvider.userProfileModel.surveyCompletion
         .contains(surveyID)) {
       _userDataProvider.userProfileModel.surveyCompletion.add(surveyID);
     }
-//    _userDataProvider.userProfileModel.surveyCompletion
-//        .addAll({surveyID: true});
     _userDataProvider.postUserProfile(_userDataProvider.userProfileModel);
     notifyListeners();
-    print("survey completion: ");
-    print(_userDataProvider.userProfileModel.surveyCompletion.toString());
   }
 
   ///SIMPLE GETTERS

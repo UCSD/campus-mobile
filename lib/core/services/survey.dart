@@ -9,8 +9,8 @@ class SurveyService {
   String _error;
 
   final NetworkHelper _networkHelper = NetworkHelper();
-  final String endpoint = 'https://cwo-test.ucsd.edu/_files/survey_test1.json';
-  //'https://cwo-test.ucsd.edu/_files/sample-survey-data.json';
+  final String endpoint =
+      'https://mobile.ucsd.edu/replatform/v1/qa/webview/survey/active_survey.json';
 
   List<SurveyModel> _surveyModel = [SurveyModel()];
   Future<bool> fetchData() async {
