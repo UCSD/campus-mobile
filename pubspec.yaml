@@ -19,6 +19,8 @@ dependencies:
   firebase_core: 0.4.4
   firebase_crashlytics: 0.1.3+3
   firebase_messaging: 6.0.13
+
+  wifi_connection: 0.0.2-dev.1
   flutter_blue:
     git:
       url: https://github.com/UCSD/flutter_blue.git
@@ -45,7 +47,6 @@ dependencies:
       path: packages/webview_flutter
       ref: webview-transparent-background
       url: "git://github.com/crizant/plugins"
-
 dev_dependencies:
   hive_generator: 0.8.1
   build_runner: 1.10.3

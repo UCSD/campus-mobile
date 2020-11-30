@@ -1,4 +1,4 @@
-import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
+ import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/ui/views/profile/login.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -47,6 +47,13 @@ class Profile extends StatelessWidget {
               leading: Icon(Icons.wifi_tethering),
               title: Text('Advanced Wayfinding'),
               onTap:(){ Navigator.pushNamed(context, RoutePaths.BluetoothPermissionsView);},
+            ),
+          ),
+          Card(
+            child: ListTile(
+              leading: Icon(Icons.wifi),
+              title: Text('Network Issues?'),
+              onTap:(){ Navigator.pushNamed(context, RoutePaths.NetworkAnalysisView);},
             ),
           ),
          /* Card(

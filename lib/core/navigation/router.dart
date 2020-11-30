@@ -19,6 +19,7 @@ import 'package:campus_mobile_experimental/ui/views/home/home.dart';
 import 'package:campus_mobile_experimental/ui/views/links/links_list.dart';
 import 'package:campus_mobile_experimental/ui/views/map/map.dart' as prefix0;
 import 'package:campus_mobile_experimental/ui/views/map/map_search_view.dart';
+import 'package:campus_mobile_experimental/ui/views/network_analysis/network_analysis_view.dart';
 import 'package:campus_mobile_experimental/ui/views/news/news_detail_view.dart';
 import 'package:campus_mobile_experimental/ui/views/news/news_list.dart';
 import 'package:campus_mobile_experimental/ui/views/notifications/notifications_list_view.dart';
@@ -142,6 +143,9 @@ class Router {
       case RoutePaths.BluetoothPermissionsView:
         return MaterialPageRoute(
             builder: (_) => AdvancedWayfindingPermission());
+      case RoutePaths.NetworkAnalysisView:
+        return MaterialPageRoute(
+            builder: (_) => NetworkAnalysisView());
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return NotificationsSettingsView();

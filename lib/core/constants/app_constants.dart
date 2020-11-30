@@ -16,6 +16,8 @@ class RoutePaths {
       'profile/automatic_bluetooth_logger_view';
   static const String BluetoothPermissionsView =
       'profile/bluetooth_permissions_view';
+  static const String NetworkAnalysisView =
+      'profile/network_analysis_view';
   static const String NotificationsSettingsView =
       'notifications/notifications_settings';
 
@@ -109,6 +111,7 @@ class CardTitleConstants {
     'campus_info': "Campus Information",
     'student_info': 'COVID-19 Info',
     'student_id': 'Student ID',
+    'network_analysis' : "Network Analysis",
     'staff_id': 'Staff ID',
     'finals': 'Finals',
     'schedule': 'Classes',

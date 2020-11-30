@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:WifiConnection/WifiConnection.dart';
 import 'package:app_settings/app_settings.dart';
 import 'package:campus_mobile_experimental/core/data_providers/advanced_wayfinding_singleton.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
@@ -10,6 +9,7 @@ import 'package:flutter_blue/flutter_blue.dart';
 import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wifi_connection/WifiConnection.dart';
 
 class NetworkAnalysisView extends StatefulWidget {
   @override
@@ -79,5 +79,9 @@ class _NetworkAnalysisState extends State<NetworkAnalysisView>{
   }
 }
 Future<List<Object>> futureCombo() async{
-  return [ await WifiConnection.wifiInfo, await Location().getLocation()];
+  var location = Location();
+  location.changeSettings(accuracy: LocationAccuracy.low);
+
+  LocationData position;
+  return [ await WifiConnection.wifiInfo, await location.getLocation()];
 }
