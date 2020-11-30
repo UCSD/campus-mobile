@@ -49,6 +49,7 @@ class _CardContainerState extends State<WebViewContainer> {
   @override
   Widget build(BuildContext context) {
     active = Provider.of<CardsDataProvider>(context).cardStates[widget.cardId];
+    checkWebURL();
 
     if (active != null && active) {
       return Card(
@@ -152,8 +153,7 @@ class _CardContainerState extends State<WebViewContainer> {
     switch (selectedMenuItem) {
       case 'reload':
         {
-          print("reloading ${widget.titleText}");
-          _webViewController?.reload();
+          _webViewController?.loadUrl(widget.initialUrl);
         }
         break;
       case 'hide':
@@ -187,5 +187,12 @@ class _CardContainerState extends State<WebViewContainer> {
         });
       },
     );
+  }
+
+  void checkWebURL() async {
+    String currentUrl = await _webViewController?.currentUrl();
+    if (_webViewController != null && widget.initialUrl != currentUrl) {
+      _webViewController?.loadUrl(widget.initialUrl);
+    }
   }
 }
