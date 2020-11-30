@@ -84,18 +84,9 @@ class _HomeState extends State<Home> {
           case 'MyStudentChart':
             orderedCards.add(MyStudentChartCard());
             break;
-          /*case 'student_survey':
+          case 'student_survey':
             orderedCards.add(SurveyCard());
             break;
-          case 'campus_info':
-            orderedCards.add(
-                WebViewContainer(
-                    titleText: CardTitleConstants.titleMap[card],
-                    initialUrl: 'https://mobile.ucsd.edu/replatform/v1/qa/webview/campus_info-v3.html',
-                    cardId: card
-                )
-            );
-            break;*/
           case 'dining':
             orderedCards.add(DiningCard());
             break;
@@ -123,12 +114,6 @@ class _HomeState extends State<Home> {
           case 'student_id':
             orderedCards.add(StudentIdCard());
             break;
-          /*case 'staff_info':
-            orderedCards.add(StaffInfoCard());
-            break;
-          case 'student_info':
-            orderedCards.add(StudentInfoCard());
-            break;*/
           case 'parking':
             orderedCards.add(ParkingCard());
             break;
