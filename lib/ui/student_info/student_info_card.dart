@@ -15,7 +15,6 @@ class StudentInfoCard extends StatefulWidget {
 
 class _StudentInfoCardState extends State<StudentInfoCard>
     with AutomaticKeepAliveClientMixin {
-  @override
   bool get wantKeepAlive => true;
   WebViewController _webViewController;
   String cardId = "student_info";

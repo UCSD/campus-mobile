@@ -15,7 +15,6 @@ class SurveyCard extends StatefulWidget {
 
 class _SurveyCardState extends State<SurveyCard>
     with AutomaticKeepAliveClientMixin {
-  @override
   bool get wantKeepAlive => true;
   String cardId = "student_survey";
   WebViewController _webViewController;
