@@ -15,7 +15,6 @@ class ParkingCard extends StatefulWidget {
 
 class _ParkingCardState extends State<ParkingCard>
     with AutomaticKeepAliveClientMixin {
-  @override
   bool get wantKeepAlive => true;
   ParkingDataProvider _parkingDataProvider;
   final _controller = new PageController();
