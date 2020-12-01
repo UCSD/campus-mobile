@@ -21,11 +21,11 @@ class CardsService {
         'https://api-qa.ucsd.edu:8243/defaultcards/v2.0.0/defaultcards';
 
     if (ucsdAffiliation == null) {
-      cardListEndpoint = "https://api.jsonbin.io/b/5faedc243abee46e24387816";
+      cardListEndpoint = "https://mobile.ucsd.edu/replatform/v1/qa/cards/visitor_cards-v3.json";
     } else if (ucsdAffiliation == "U") {
-      cardListEndpoint = "https://api.jsonbin.io/b/5faeddb2dedba573f2211349";
+      cardListEndpoint = "https://mobile.ucsd.edu/replatform/v1/qa/cards/student_cards-v3.json";
     } else if (ucsdAffiliation == "E") {
-      cardListEndpoint = "https://api.jsonbin.io/b/5faeded05be6ec73e94e2591";
+      cardListEndpoint = "https://mobile.ucsd.edu/replatform/v1/qa/cards/staff_cards-v3.json";
     }
 
     try {
