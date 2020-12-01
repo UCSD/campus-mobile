@@ -18,19 +18,11 @@ class CardsService {
     _isLoading = true;
 
     String cardListEndpoint =
-        'https://api-qa.ucsd.edu:8243/defaultcards/v2.0.0/defaultcards';
-
-    if (ucsdAffiliation == null) {
-      cardListEndpoint = "https://mobile.ucsd.edu/replatform/v1/qa/cards/visitor_cards-v3.json";
-    } else if (ucsdAffiliation == "U") {
-      cardListEndpoint = "https://mobile.ucsd.edu/replatform/v1/qa/cards/student_cards-v3.json";
-    } else if (ucsdAffiliation == "E") {
-      cardListEndpoint = "https://mobile.ucsd.edu/replatform/v1/qa/cards/staff_cards-v3.json";
-    }
+        'https://api-qa.ucsd.edu:8243/defaultcards/v3.0.0/defaultcards';
 
     try {
       //form query string with ucsd affiliation
-     //cardListEndpoint += "?ucsdaffiliation=${ucsdAffiliation}";
+      cardListEndpoint += "?ucsdaffiliation=${ucsdAffiliation}";
 
       /// fetch data
       String _response =
