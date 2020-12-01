@@ -91,26 +91,21 @@ class _CardContainerState extends State<WebViewContainer> {
   }
 
   Widget buildBody(context) {
-    return Column(
-      children: [
-        Text(widget.initialUrl),
-        Container(
-          height: _contentHeight,
-          child: WebView(
-            opaque: false,
-            javascriptMode: JavascriptMode.unrestricted,
-            initialUrl: widget.initialUrl,
-            onWebViewCreated: (controller) {
-              _webViewController = controller;
-            },
-            javascriptChannels: <JavascriptChannel>[
-              _linksChannel(context),
-              _heightChannel(context),
-            ].toSet(),
-          ),
+      return Container(
+        height: _contentHeight,
+        child: WebView(
+          opaque: false,
+          javascriptMode: JavascriptMode.unrestricted,
+          initialUrl: widget.initialUrl,
+          onWebViewCreated: (controller) {
+            _webViewController = controller;
+          },
+          javascriptChannels: <JavascriptChannel>[
+            _linksChannel(context),
+            _heightChannel(context),
+          ].toSet(),
         ),
-      ],
-    );
+      );
   }
 
   Widget buildMenu() {
