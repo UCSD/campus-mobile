@@ -10,7 +10,7 @@ class SurveyDataProvider extends ChangeNotifier {
 
     ///INITIALIZE SERVICES
     _surveyService = SurveyService();
-    _surveyModels = [SurveyModel()];
+    _surveyModel = SurveyModel();
   }
 
   ///STATES
@@ -19,7 +19,7 @@ class SurveyDataProvider extends ChangeNotifier {
   String _error;
 
   ///MODELS
-  List<SurveyModel> _surveyModels;
+  SurveyModel _surveyModel;
   UserDataProvider _userDataProvider;
 
   ///SERVICES
@@ -35,13 +35,11 @@ class SurveyDataProvider extends ChangeNotifier {
     _error = null;
     notifyListeners();
     if (await _surveyService.fetchData()) {
-      _surveyModels = _surveyService.surveyModel;
+      _surveyModel = _surveyService.surveyModel;
 
       for (String id in _userDataProvider.userProfileModel.surveyCompletion) {
-        for (SurveyModel survey in _surveyModels) {
-          if (survey.surveyId == id) {
-            survey.surveyActive = false;
-          }
+        if (_surveyModel.surveyId == id) {
+          _surveyModel.surveyActive = false;
         }
       }
       _lastUpdated = DateTime.now();
@@ -67,5 +65,5 @@ class SurveyDataProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String get error => _error;
   DateTime get lastUpdated => _lastUpdated;
-  List<SurveyModel> get surveyModels => _surveyModels;
+  SurveyModel get surveyModel => _surveyModel;
 }

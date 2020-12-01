@@ -27,8 +27,8 @@ class _SurveyCardState extends State<SurveyCard> {
   List<String> postMessage;
   String surveyID = "";
   bool displayCard = true;
-  int i = 0;
   String surveyURL;
+  bool noActiveSurveys = false;
 
   @override
   void didChangeDependencies() {
@@ -52,22 +52,28 @@ class _SurveyCardState extends State<SurveyCard> {
   }
 
   Widget buildCardContent(BuildContext context) {
-    _surveyDataProvider.surveyModels.forEach((survey) {
-      /// SET ACTIVE surveyURL AND surveyID
-      if (survey.surveyActive == true) {
-        surveyURL = survey.surveyUrl;
-        surveyID = survey.surveyId;
-      }
+    if (_surveyDataProvider.surveyModel.surveyActive == true) {
+      surveyURL = _surveyDataProvider.surveyModel.surveyUrl;
+      surveyID = _surveyDataProvider.surveyModel.surveyId;
+    }
 
-      /// IF THE CURRENT SURVEY IS NOT ACTIVE AND COMPLETED
-      if (survey.surveyActive != true &&
-          _userDataProvider.userProfileModel.surveyCompletion
-              .contains(surveyID)) {
-        displayCard = false;
-      }
-    });
+    if (_surveyDataProvider.surveyModel.surveyActive == true &&
+        _userDataProvider.userProfileModel.surveyCompletion
+            .contains(surveyID)) {
+      displayCard = false;
+    }
 
-    /// IF A SURVEY IS ACTIVE
+    ///IF NO SURVEYS ARE ACTIVE
+    if (surveyURL == null) {
+      return Container(
+        height: _contentHeight + 50,
+        child: Text(
+          "No surveys available.\n\nPlease check back later.",
+          textAlign: TextAlign.center,
+        ),
+      );
+    }
+
     if (displayCard == true && surveyURL != null) {
       return Container(
         height: _contentHeight + 50, // Dynamic height iffy, add some padding
@@ -87,17 +93,10 @@ class _SurveyCardState extends State<SurveyCard> {
       );
     } else {
       return Container(
-        height: 150.0,
-        child: Center(
-          child: Text(
-            surveyURL == null
-                ? "No surveys available.\n\nPlease check back later."
-                : "Thank you for completing the survey.",
-            style: TextStyle(
-              fontSize: 16,
-            ),
-            textAlign: TextAlign.center,
-          ),
+        height: _contentHeight + 50,
+        child: Text(
+          "Thank you for completing the survey.",
+          textAlign: TextAlign.center,
         ),
       );
     }

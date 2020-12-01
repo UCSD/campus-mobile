@@ -12,7 +12,7 @@ class SurveyService {
   final String endpoint =
       'https://mobile.ucsd.edu/replatform/v1/qa/webview/survey/active_survey.json';
 
-  List<SurveyModel> _surveyModel = [SurveyModel()];
+  SurveyModel _surveyModel = SurveyModel();
   Future<bool> fetchData() async {
     print("in survey service");
     print("fetching the data");
@@ -36,7 +36,7 @@ class SurveyService {
   }
 
   String get error => _error;
-  List<SurveyModel> get surveyModel => _surveyModel;
+  SurveyModel get surveyModel => _surveyModel;
   bool get isLoading => _isLoading;
   DateTime get lastUpdated => _lastUpdated;
 }

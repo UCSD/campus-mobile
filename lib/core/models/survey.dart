@@ -4,11 +4,10 @@
 
 import 'dart:convert';
 
-List<SurveyModel> surveyModelFromJson(String str) => List<SurveyModel>.from(
-    json.decode(str).map((x) => SurveyModel.fromJson(x)));
+SurveyModel surveyModelFromJson(String str) =>
+    SurveyModel.fromJson(json.decode(str));
 
-String surveyModelToJson(List<SurveyModel> data) =>
-    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String surveyModelToJson(SurveyModel data) => json.encode(data.toJson());
 
 class SurveyModel {
   SurveyModel({
