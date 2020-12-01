@@ -13,7 +13,10 @@ class StaffInfoCard extends StatefulWidget {
   _StaffInfoCardState createState() => _StaffInfoCardState();
 }
 
-class _StaffInfoCardState extends State<StaffInfoCard> {
+class _StaffInfoCardState extends State<StaffInfoCard>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
   WebViewController _webViewController;
   String cardId = "staff_info";
   double _contentHeight = cardContentMinHeight;
@@ -22,6 +25,7 @@ class _StaffInfoCardState extends State<StaffInfoCard> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)

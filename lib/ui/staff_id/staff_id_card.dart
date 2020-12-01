@@ -13,7 +13,10 @@ class StaffIdCard extends StatefulWidget {
   _StaffIdCardState createState() => _StaffIdCardState();
 }
 
-class _StaffIdCardState extends State<StaffIdCard> {
+class _StaffIdCardState extends State<StaffIdCard>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
   WebViewController _webViewController;
   String cardId = "staff_id";
   double _contentHeight = 194.0;
@@ -22,6 +25,7 @@ class _StaffIdCardState extends State<StaffIdCard> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     _userDataProvider = Provider.of<UserDataProvider>(context);
     String webCardAuthURL = webCardURL +
         "?token=${_userDataProvider.authenticationModel.accessToken}&expiration=${_userDataProvider.authenticationModel.expiration}";
