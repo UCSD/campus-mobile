@@ -107,6 +107,7 @@ class CardsDataProvider extends ChangeNotifier {
           }
         }
 
+        // add active webCards
         for (String card in _cardStates.keys) {
           if (_availableCards[card].initialURL != "") {
             _webCards[card] = _availableCards[card].initialURL;

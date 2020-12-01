@@ -30,10 +30,10 @@ class WebViewContainer extends StatefulWidget {
   final List<Widget> actionButtons;
 
   @override
-  _CardContainerState createState() => _CardContainerState();
+  _WebViewContainerState createState() => _WebViewContainerState();
 }
 
-class _CardContainerState extends State<WebViewContainer> {
+class _WebViewContainerState extends State<WebViewContainer> {
   WebViewController _webViewController;
   double _contentHeight = cardContentMinHeight;
   bool active;
@@ -90,6 +90,7 @@ class _CardContainerState extends State<WebViewContainer> {
     return Container();
   }
 
+  // builds the actual webview widget
   Widget buildBody(context) {
       return Container(
         height: _contentHeight,
@@ -163,6 +164,7 @@ class _CardContainerState extends State<WebViewContainer> {
     }
   }
 
+  // channel for opening links
   JavascriptChannel _linksChannel(BuildContext context) {
     return JavascriptChannel(
       name: 'OpenLink',
@@ -172,6 +174,7 @@ class _CardContainerState extends State<WebViewContainer> {
     );
   }
 
+  // channel for dynamically setting the height of the card
   JavascriptChannel _heightChannel(BuildContext context) {
     return JavascriptChannel(
       name: 'SetHeight',
@@ -184,6 +187,8 @@ class _CardContainerState extends State<WebViewContainer> {
     );
   }
 
+  // this function checks to see if the current url of the state is different
+  // to the webViewController's url, and loads in the new url if so
   void checkWebURL() async {
     String currentUrl = await _webViewController?.currentUrl();
     if (_webViewController != null && widget.initialUrl != currentUrl) {

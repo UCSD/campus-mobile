@@ -125,7 +125,7 @@ class _HomeState extends State<Home> {
             break;
         }
       }
-      else {
+      else {  // dynamically insert webCards into the list
         orderedCards.add(
             WebViewContainer(
                 titleText: CardTitleConstants.titleMap[card],
