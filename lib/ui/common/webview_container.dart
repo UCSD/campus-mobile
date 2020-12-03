@@ -41,6 +41,7 @@ class _WebViewContainerState extends State<WebViewContainer> {
   double _contentHeight = cardContentMinHeight;
   bool active;
   Function hide;
+  String webCardUrl;
 
   @override
   void initState() {
@@ -52,7 +53,19 @@ class _WebViewContainerState extends State<WebViewContainer> {
   @override
   Widget build(BuildContext context) {
     active = Provider.of<CardsDataProvider>(context).cardStates[widget.cardId];
+
+    // check if this webCard needs an auth token
+    if (widget.requireAuth) {
+      _userDataProvider = Provider.of<UserDataProvider>(context);
+      webCardUrl = widget.initialUrl +
+          "?token=${_userDataProvider.authenticationModel.accessToken}&expiration=${_userDataProvider.authenticationModel.expiration}";
+    } else {
+      webCardUrl = widget.initialUrl;
+    }
+
     checkWebURL();
+
+    print("${widget.cardId} - $webCardUrl\n");
 
     if (active != null && active) {
       return Card(
@@ -96,11 +109,11 @@ class _WebViewContainerState extends State<WebViewContainer> {
   // builds the actual webview widget
   Widget buildBody(context) {
       return Container(
-        height: _contentHeight,
+        height: 200, //_contentHeight,
         child: WebView(
           opaque: false,
           javascriptMode: JavascriptMode.unrestricted,
-          initialUrl: widget.initialUrl,
+          initialUrl: webCardUrl,
           onWebViewCreated: (controller) {
             _webViewController = controller;
           },
@@ -153,7 +166,8 @@ class _WebViewContainerState extends State<WebViewContainer> {
     switch (selectedMenuItem) {
       case 'reload':
         {
-          _webViewController?.loadUrl(widget.initialUrl);
+          print("${widget.cardId} - $webCardUrl\n");
+          _webViewController?.loadUrl(webCardUrl);
         }
         break;
       case 'hide':
@@ -207,8 +221,8 @@ class _WebViewContainerState extends State<WebViewContainer> {
   // to the webViewController's url, and loads in the new url if so
   void checkWebURL() async {
     String currentUrl = await _webViewController?.currentUrl();
-    if (_webViewController != null && widget.initialUrl != currentUrl) {
-      _webViewController?.loadUrl(widget.initialUrl);
+    if (_webViewController != null && webCardUrl != currentUrl) {
+      _webViewController?.loadUrl(webCardUrl);
     }
   }
 }
