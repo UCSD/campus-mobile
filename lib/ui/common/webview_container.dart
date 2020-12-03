@@ -14,6 +14,7 @@ class WebViewContainer extends StatefulWidget {
     @required this.titleText,
     @required this.initialUrl,
     @required this.cardId,
+    @required this.requireAuth,
     this.overFlowMenu,
     this.actionButtons,
     this.hideMenu,
@@ -23,6 +24,7 @@ class WebViewContainer extends StatefulWidget {
   final String titleText;
   final String initialUrl;
   final String cardId;
+  final bool requireAuth;
 
   /// optional parameters
   final Map<String, Function> overFlowMenu;

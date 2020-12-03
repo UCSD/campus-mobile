@@ -131,7 +131,8 @@ class _HomeState extends State<Home> {
             WebViewContainer(
                 titleText: CardTitleConstants.titleMap[card],
                 initialUrl: webCards[card].initialURL,
-                cardId: card
+                cardId: card,
+                requireAuth: webCards[card].requireAuth,
             )
         );
       }
