@@ -65,8 +65,6 @@ class _WebViewContainerState extends State<WebViewContainer> {
 
     checkWebURL();
 
-    print("${widget.cardId} - $webCardUrl\n");
-
     if (active != null && active) {
       return Card(
         margin: EdgeInsets.only(
@@ -109,7 +107,7 @@ class _WebViewContainerState extends State<WebViewContainer> {
   // builds the actual webview widget
   Widget buildBody(context) {
       return Container(
-        height: 200, //_contentHeight,
+        height: _contentHeight,
         child: WebView(
           opaque: false,
           javascriptMode: JavascriptMode.unrestricted,
@@ -166,7 +164,6 @@ class _WebViewContainerState extends State<WebViewContainer> {
     switch (selectedMenuItem) {
       case 'reload':
         {
-          print("${widget.cardId} - $webCardUrl\n");
           _webViewController?.loadUrl(webCardUrl);
         }
         break;
