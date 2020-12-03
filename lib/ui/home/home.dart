@@ -1,5 +1,6 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
+import 'package:campus_mobile_experimental/core/models/cards.dart';
 import 'package:campus_mobile_experimental/core/models/notices.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/notices.dart';
@@ -69,7 +70,7 @@ class _HomeState extends State<Home> {
 
   List<Widget> getOrderedCardsList(List<String> order) {
     List<Widget> orderedCards = List<Widget>();
-    Map<String, String> webCards =
+    Map<String, CardsModel> webCards =
         Provider.of<CardsDataProvider>(context, listen: false).webCards;
 
     for (String card in order) {
@@ -129,7 +130,7 @@ class _HomeState extends State<Home> {
         orderedCards.add(
             WebViewContainer(
                 titleText: CardTitleConstants.titleMap[card],
-                initialUrl: webCards[card],
+                initialUrl: webCards[card].initialURL,
                 cardId: card
             )
         );
