@@ -15,22 +15,26 @@ class CardsModel {
   CardsModel({
     this.cardActive,
     this.initialURL,
-    this.isWebCard
+    this.isWebCard,
+    this.requireAuth
   });
   
   bool cardActive;
   String initialURL;
   bool isWebCard;
+  bool requireAuth;
 
   factory CardsModel.fromJson(Map<String, dynamic> json) => CardsModel(
         cardActive: json["cardActive"] == null ? null : json["cardActive"],
         initialURL: json["initialURL"] == null ? null : json["initialURL"],
         isWebCard: json["isWebCard"] == null ? null : json["isWebCard"],
+        requireAuth: json["requireAuth"] == null ? null : json["requireAuth"],
       );
 
   Map<String, dynamic> toJson() => {
         "cardActive": cardActive == null ? null : cardActive,
         "initialURL": initialURL == null ? null : initialURL,
         "isWebCard": isWebCard == null ? null : isWebCard,
+        "requireAuth": requireAuth == null ? null : requireAuth,
       };
 }
