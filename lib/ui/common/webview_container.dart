@@ -34,6 +34,7 @@ class WebViewContainer extends StatefulWidget {
 }
 
 class _WebViewContainerState extends State<WebViewContainer> {
+  UserDataProvider _userDataProvider;
   WebViewController _webViewController;
   double _contentHeight = cardContentMinHeight;
   bool active;
@@ -104,6 +105,7 @@ class _WebViewContainerState extends State<WebViewContainer> {
           javascriptChannels: <JavascriptChannel>[
             _linksChannel(context),
             _heightChannel(context),
+            _refreshTokenChannel(context)
           ].toSet(),
         ),
       );
@@ -183,6 +185,18 @@ class _WebViewContainerState extends State<WebViewContainer> {
           _contentHeight =
               validateHeight(context, double.tryParse(message.message));
         });
+      },
+    );
+  }
+
+  JavascriptChannel _refreshTokenChannel(BuildContext context) {
+    return JavascriptChannel(
+      name: 'RefreshToken',
+      onMessageReceived: (JavascriptMessage message) async {
+        if (Provider.of<UserDataProvider>(context, listen: false).isLoggedIn) {
+          await _userDataProvider.refreshToken();
+          _webViewController?.reload();
+        }
       },
     );
   }
