@@ -116,7 +116,8 @@ class FreeFoodDataProvider extends ChangeNotifier {
       _lastUpdated = DateTime.now();
       _messageToMaxCount[id] = _freeFoodModel.body.maxCount;
     } else {
-      if (_error.contains(ErrorConstants.invalidBearerToken)) {
+      if (_error != null &&
+          _error.contains(ErrorConstants.invalidBearerToken)) {
         if (await _freeFoodService.getNewToken()) {
           await fetchMaxCount(id);
         }
