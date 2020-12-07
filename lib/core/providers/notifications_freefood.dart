@@ -92,12 +92,13 @@ class FreeFoodDataProvider extends ChangeNotifier {
       _lastUpdated = DateTime.now();
       _messageToCount[id] = _freeFoodModel.body.count;
     } else {
-      if (_error.contains(ErrorConstants.invalidBearerToken)) {
+      _error = _freeFoodService.error;
+      if (_error != null &&
+          _error.contains(ErrorConstants.invalidBearerToken)) {
         if (await _freeFoodService.getNewToken()) {
           await fetchCount(id);
         }
       }
-      _error = _freeFoodService.error;
       removeId(id);
     }
     _isLoading = false;
@@ -116,15 +117,13 @@ class FreeFoodDataProvider extends ChangeNotifier {
       _lastUpdated = DateTime.now();
       _messageToMaxCount[id] = _freeFoodModel.body.maxCount;
     } else {
+      _error = _freeFoodService.error;
       if (_error != null &&
           _error.contains(ErrorConstants.invalidBearerToken)) {
         if (await _freeFoodService.getNewToken()) {
           await fetchMaxCount(id);
         }
       }
-
-      _error = _freeFoodService.error;
-      // if error, remove the current event from local maps
       removeId(id);
     }
 
@@ -148,22 +147,20 @@ class FreeFoodDataProvider extends ChangeNotifier {
   Future<void> updateCount(String id, Map<String, dynamic> body) async {
     _isLoading = true;
     _curId = id;
-
     notifyListeners();
-
     await updateRegisteredEvents(_registeredEvents);
 
     if (await _freeFoodService.updateCount(id, body)) {
       _freeFoodModel = _freeFoodService.freeFoodModel;
       _lastUpdated = DateTime.now();
     } else {
-      if (_error.contains(ErrorConstants.invalidBearerToken)) {
+      _error = _freeFoodService.error;
+      if (_error != null &&
+          _error.contains(ErrorConstants.invalidBearerToken)) {
         if (await _freeFoodService.getNewToken()) {
           await updateCount(id, body);
         }
       }
-
-      _error = _freeFoodService.error;
       removeId(id);
     }
 
