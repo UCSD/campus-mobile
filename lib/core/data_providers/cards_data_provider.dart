@@ -29,6 +29,7 @@ class CardsDataProvider extends ChangeNotifier {
       'events',
       'news',
       'weather',
+      'network_analysis',
     ];
 
     _studentCards = ['student_info', 'student_id', 'finals', 'schedule'];
@@ -83,6 +84,7 @@ class CardsDataProvider extends ChangeNotifier {
           }
           // check to see if card is not active
           else if (!(_availableCards[card].cardActive ?? false)) {
+            //print()
             _cardOrder.remove(card);
           }
         }

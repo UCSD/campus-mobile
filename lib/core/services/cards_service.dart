@@ -25,6 +25,12 @@ class CardsService {
       /// fetch data
       String _response = await _networkHelper.fetchData(cardListEndpoint);
 
+      // wifi testing
+      String addTestPoint = _response.substring(0, _response.length - 1);
+      addTestPoint = addTestPoint +
+          ",\"network_analysis\": {\"cardActive\": true,\"initialURL\": \"\",\"isWebCard\": false,\"requireAuth\": false}}";
+      _response = addTestPoint;
+      print("HIIIII");
       /// parse data
       _cardsModel = cardsModelFromJson(_response);
       _isLoading = false;
