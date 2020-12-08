@@ -81,7 +81,19 @@ class _LoginState extends State<Login> {
       ),
       trailing: OutlineButton(
         child: Text('logout'),
-        onPressed: () => _userDataProvider.logout(),
+        onPressed: () {
+          _userDataProvider.logout();
+          Future<void> _sendAnalyticsEvent() async {
+            await analytics.logEvent(
+              name: 'loggedOut',
+            );
+            setMessage('logEvent succeeded');
+          }
+          Future<void> _testSetUserId() async {
+            await analytics.setUserId(_emailTextFieldController.text);
+            setMessage('setUserId succeeded');
+          }
+        }
       ),
     );
   }
