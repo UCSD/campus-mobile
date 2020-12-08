@@ -1,17 +1,29 @@
+import 'package:campus_mobile_experimental/app_provider.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 
 class Login extends StatefulWidget {
   @override
-  _LoginState createState() => _LoginState();
+  _LoginState createState() => _LoginState(analytics);
 }
 
 class _LoginState extends State<Login> {
   final _emailTextFieldController = TextEditingController();
   final _passwordTextFieldController = TextEditingController();
   UserDataProvider _userDataProvider;
+
+  _LoginState(this.analytics);
+  final FirebaseAnalytics analytics;
+  String _message = '';
+
+  void setMessage(String message) {
+    setState(() {
+      _message = message;
+    });
+  }
 
   @override
   void didChangeDependencies() {
@@ -117,6 +129,18 @@ class _LoginState extends State<Login> {
                                 .then((isLoggedIn) {
                               if (!isLoggedIn) {
                                 showAlertDialog(context);
+                              }
+                              else {
+                                Future<void> _sendAnalyticsEvent() async {
+                                  await analytics.logEvent(
+                                    name: 'isLoggedIn',
+                                  );
+                                  setMessage('logEvent succeeded');
+                                }
+                                Future<void> _testSetUserId() async {
+                                  await analytics.setUserId(_emailTextFieldController.text);
+                                  setMessage('setUserId succeeded');
+                                }
                               }
                             });
                           },
