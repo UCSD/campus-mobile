@@ -12,7 +12,7 @@ import 'package:campus_mobile_experimental/ui/cards/finals/finals_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/mystudentchart/mystudentchart.dart';
 import 'package:campus_mobile_experimental/ui/cards/myucsdchart/myucsdchart.dart';
 import 'package:campus_mobile_experimental/ui/cards/native_scanner/native_scanner_card.dart';
-import 'package:campus_mobile_experimental/ui/cards/network_analysis/network_analysis_card.dart';
+import 'package:campus_mobile_experimental/ui/cards/network_analysis/wifi_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/news/news_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/notices/notices_card.dart';
 import 'package:campus_mobile_experimental/ui/cards/parking/parking_card.dart';
@@ -109,8 +109,8 @@ class _HomeState extends State<Home> {
         case 'student_id':
           orderedCards.add(StudentIdCard());
           break;
-        case 'network_analysis':
-          orderedCards.add(NetworkAnalysisCard());
+        case 'speed_test':
+          orderedCards.add(WiFiCard());
           break;
         case 'staff_info':
           orderedCards.add(StaffInfoCard());

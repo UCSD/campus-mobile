@@ -111,7 +111,7 @@ class CardTitleConstants {
     'campus_info': "Campus Information",
     'student_info': 'COVID-19 Info',
     'student_id': 'Student ID',
-    'network_analysis' : "Network Analysis",
+    'speed_test' : "Speed Test",
     'staff_id': 'Staff ID',
     'finals': 'Finals',
     'schedule': 'Classes',

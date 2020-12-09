@@ -28,9 +28,8 @@ class CardsService {
       // wifi testing
       String addTestPoint = _response.substring(0, _response.length - 1);
       addTestPoint = addTestPoint +
-          ",\"network_analysis\": {\"cardActive\": true,\"initialURL\": \"\",\"isWebCard\": false,\"requireAuth\": false}}";
+          ",\"speed_test\": {\"cardActive\": true,\"initialURL\": \"\",\"isWebCard\": false,\"requireAuth\": false}}";
       _response = addTestPoint;
-      print("HIIIII");
       /// parse data
       _cardsModel = cardsModelFromJson(_response);
       _isLoading = false;
