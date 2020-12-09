@@ -108,8 +108,8 @@ class ShuttleDataProvider extends ChangeNotifier {
     if (!userDataProvider.userProfileModel.selectedStops.contains(stopID)) {
       userDataProvider.userProfileModel.selectedStops.add(stopID);
       // update userprofilemodel after a stop is added
-      userDataProvider
-          .updateUserProfileModel(userDataProvider.userProfileModel);
+      // userDataProvider
+      //     .updateUserProfileModel(userDataProvider.userProfileModel);
       // print("UDP - ${userDataProvider.userProfileModel.selectedStops}");
       arrivalsToRender[stopID] = await fetchArrivalInformation(stopID);
     }
