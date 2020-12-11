@@ -1,0 +1,6 @@
+{
+  "scannerTitle": "Scanner",
+  "@scannerTitle": {
+    "description": "Scanner card title"
+  }
+}

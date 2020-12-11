@@ -17,6 +17,10 @@ dependencies:
   firebase_analytics: 5.0.2
   firebase_core: 0.4.4
   firebase_messaging: 6.0.13
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   flutter_scandit_plugin:
     git:
       url: https://github.com/UCSD/flutter_scandit.git
@@ -28,12 +32,10 @@ dependencies:
   flutter_linkify: 3.1.3
   flutter_secure_storage: 3.3.1+1
   flutter_sticky_header: 0.4.0
-  flutter:
-    sdk: flutter
   google_maps_flutter: 1.0.2
   hive_flutter: 0.3.1
   hive: 1.4.4+1
-  intl: 0.16.0
+  intl: 0.16.1
   location: 3.0.2
   package_info: 0.4.0+18
   path_provider: 1.6.8
@@ -56,6 +58,7 @@ dev_dependencies:
     sdk: flutter
 
 flutter:
+  generate: true
   uses-material-design: true
   assets:
     - assets/images/

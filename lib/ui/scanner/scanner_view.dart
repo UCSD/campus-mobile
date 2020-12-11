@@ -3,6 +3,7 @@ import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/barcode.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_scandit_plugin/flutter_scandit_plugin.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -76,7 +77,7 @@ class _ScanditScannerState extends State<ScanditScanner> {
         preferredSize: Size.fromHeight(42),
         child: AppBar(
           centerTitle: true,
-          title: const Text("Scanner"),
+          title: Text(AppLocalizations.of(context).scannerTitle),
         ),
       ),
       body: !hasScanned ? renderScanner() : renderSubmissionView(),
