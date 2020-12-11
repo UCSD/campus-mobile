@@ -35,7 +35,9 @@ class WebViewContainer extends StatefulWidget {
   _WebViewContainerState createState() => _WebViewContainerState();
 }
 
-class _WebViewContainerState extends State<WebViewContainer> {
+class _WebViewContainerState extends State<WebViewContainer>
+    with AutomaticKeepAliveClientMixin {
+  bool get wantKeepAlive => true;
   UserDataProvider _userDataProvider;
   WebViewController _webViewController;
   double _contentHeight = cardContentMinHeight;
@@ -52,6 +54,7 @@ class _WebViewContainerState extends State<WebViewContainer> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     active = Provider.of<CardsDataProvider>(context).cardStates[widget.cardId];
 
     // check if this webCard needs an auth token
@@ -106,22 +109,22 @@ class _WebViewContainerState extends State<WebViewContainer> {
 
   // builds the actual webview widget
   Widget buildBody(context) {
-      return Container(
-        height: _contentHeight,
-        child: WebView(
-          opaque: false,
-          javascriptMode: JavascriptMode.unrestricted,
-          initialUrl: webCardUrl,
-          onWebViewCreated: (controller) {
-            _webViewController = controller;
-          },
-          javascriptChannels: <JavascriptChannel>[
-            _linksChannel(context),
-            _heightChannel(context),
-            _refreshTokenChannel(context)
-          ].toSet(),
-        ),
-      );
+    return Container(
+      height: _contentHeight,
+      child: WebView(
+        opaque: false,
+        javascriptMode: JavascriptMode.unrestricted,
+        initialUrl: webCardUrl,
+        onWebViewCreated: (controller) {
+          _webViewController = controller;
+        },
+        javascriptChannels: <JavascriptChannel>[
+          _linksChannel(context),
+          _heightChannel(context),
+          _refreshTokenChannel(context)
+        ].toSet(),
+      ),
+    );
   }
 
   Widget buildMenu() {
