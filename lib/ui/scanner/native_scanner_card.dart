@@ -9,6 +9,8 @@ import 'package:provider/provider.dart';
 const String cardId = 'NativeScanner';
 
 class NativeScannerCard extends StatelessWidget {
+  UserDataProvider _userDataProvider;
+
   @override
   Widget build(BuildContext context) {
     return CardContainer(
@@ -25,30 +27,55 @@ class NativeScannerCard extends StatelessWidget {
   }
 
   Widget buildCardContent(BuildContext context) {
+    _userDataProvider = Provider.of<UserDataProvider>(context);
+
+    var accessTokenExpiration =
+        _userDataProvider.authenticationModel.expiration;
+    var accessToken = _userDataProvider.authenticationModel.accessToken;
+    var nowTime = (DateTime.now().millisecondsSinceEpoch / 1000).round();
+    var timeDiff = accessTokenExpiration - nowTime;
+    var tokenExpired = timeDiff <= 0 ? true : false;
+
     return GestureDetector(
       onTap: () {
         getActionButtonNavigateRoute(context);
       },
       behavior: HitTestBehavior.translucent,
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          Container(
-            child: Image.asset(
-              'assets/images/QRScanIcon.png',
-              fit: BoxFit.contain,
-              height: 56,
-            ),
-            padding: EdgeInsets.only(
-              left: 10,
-              right: 10,
-            ),
+          Row(
+            children: <Widget>[
+              Container(
+                child: Image.asset(
+                  'assets/images/QRScanIcon.png',
+                  fit: BoxFit.contain,
+                  height: 56,
+                ),
+                padding: EdgeInsets.only(
+                  left: 10,
+                  right: 10,
+                ),
+              ),
+              Flexible(
+                child: Text(
+                  getCardContentText(context),
+                  textAlign: TextAlign.left,
+                ),
+              ),
+            ],
           ),
-          Flexible(
-            child: Text(
-              getCardContentText(context),
-              textAlign: TextAlign.left,
-            ),
-          )
+          Text(
+            '\nLogged in: ' +
+                Provider.of<UserDataProvider>(context, listen: true)
+                    .isLoggedIn
+                    .toString(),
+            textAlign: TextAlign.left,
+          ),
+          Text('Access Token: ' + accessToken.toString(),
+              textAlign: TextAlign.left),
+          Text('Expires in: ' + timeDiff.toString() + 's',
+              textAlign: TextAlign.left),
         ],
       ),
     );

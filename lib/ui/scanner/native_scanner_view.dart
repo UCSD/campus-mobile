@@ -2,12 +2,12 @@ import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/barcode.dart';
+import 'package:campus_mobile_experimental/core/utils/webview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_scandit_plugin/flutter_scandit_plugin.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class ScanditScanner extends StatefulWidget {
   @override
@@ -24,8 +24,6 @@ class _ScanditScannerState extends State<ScanditScanner> {
   BarcodeService _barcodeService = new BarcodeService();
   UserDataProvider _userDataProvider;
   set userDataProvider(UserDataProvider value) => _userDataProvider = value;
-  var ucsdAffiliation = "";
-  var accessToken = "";
   String _barcode;
   String _errorText;
   bool isLoading;
@@ -79,7 +77,7 @@ class _ScanditScannerState extends State<ScanditScanner> {
           title: const Text("Scanner"),
         ),
       ),
-      body: !hasScanned ? renderScanner() : renderSubmissionView(),
+      body: !hasScanned ? renderScanner(context) : renderSubmissionView(),
       floatingActionButton: IconButton(
         onPressed: () {},
         icon: Container(),
@@ -87,12 +85,12 @@ class _ScanditScannerState extends State<ScanditScanner> {
     );
   }
 
-  Widget renderScanner() {
+  Widget renderScanner(BuildContext context) {
     if (_cameraPermissionsStatus == PermissionStatus.granted) {
       return (Stack(
         children: [
           Scandit(
-              scanned: _handleBarcodeResult,
+              scanned: _handleBarcodeSubmission,
               onError: (e) => setState(() => _message = e.message),
               symbologies: [Symbology.CODE128, Symbology.DATA_MATRIX],
               onScanditCreated: (controller) => _controller = controller,
@@ -140,14 +138,6 @@ class _ScanditScannerState extends State<ScanditScanner> {
     } else {
       return (renderFailureScreen(context));
     }
-  }
-
-  Map<String, dynamic> createUserData() {
-    this.setState(() {
-      ucsdAffiliation = _userDataProvider.authenticationModel.ucsdaffiliation;
-      accessToken = _userDataProvider.authenticationModel.accessToken;
-    });
-    return {'barcode': _barcode, 'ucsdaffiliation': ucsdAffiliation};
   }
 
   Widget renderFailureScreen(BuildContext context) {
@@ -278,60 +268,118 @@ class _ScanditScannerState extends State<ScanditScanner> {
     );
   }
 
-  Future<void> _handleBarcodeResult(BarcodeResult result) async {
+  Future<void> _handleBarcodeSubmission(BarcodeResult result) async {
     this.setState(() {
       hasScanned = true;
-      _barcode = result.data;
-    });
-    var data = createUserData();
-    var headers = {
-      "Content-Type": "application/json",
-      'Authorization': 'Bearer ${accessToken}'
-    };
-    setState(() {
+      _barcode = result?.data;
       isLoading = true;
     });
-    var results = await _barcodeService.uploadResults(headers, data);
 
-    if (results) {
-      this.setState(() {
-        isLoading = false;
-        didError = false;
-        successfulSubmission = true;
-      });
-    } else {
-      print(_barcodeService.error);
-      print("error constant: " + ErrorConstants.duplicateRecord);
+    try {
+      var accessTokenExpiration =
+          _userDataProvider?.authenticationModel?.expiration;
+      var accessToken = _userDataProvider?.authenticationModel?.accessToken;
+      var nowTime = (DateTime.now().millisecondsSinceEpoch / 1000).round();
+      var timeDiff = accessTokenExpiration - nowTime;
+      var tokenExpired = timeDiff <= 0 ? true : false;
+      var isLoggedIn =
+          Provider.of<UserDataProvider>(context, listen: false).isLoggedIn;
+      var validToken = false;
+
+      print('Native Scanner Submission Testing');
+      print('-----------------------------------');
+      print('isLoggedIn: ' + isLoggedIn.toString());
+      print('accessToken: ' + accessToken.toString());
+      print('accessTokenExpiration: ' + accessTokenExpiration.toString());
+      print('nowTime: ' + nowTime.toString());
+      print('Token expired: ' + tokenExpired.toString());
+      print('Token expires in ' + timeDiff.toString() + 's');
+
+      if (isLoggedIn) {
+        print('Scan Submission: isLoggedIn=true');
+        if (tokenExpired) {
+          print('Scan Submission: tokenExpired=true');
+          if (await _userDataProvider.silentLogin()) {
+            print('Scan Submission: refreshToken success');
+            var newAccessToken =
+                _userDataProvider?.authenticationModel?.accessToken;
+            print('newAccessToken: ' + newAccessToken);
+            validToken = true;
+          } else {
+            print('Scan Submission: refreshToken failed.');
+          }
+        } else {
+          print('Scan Submission: tokenExpired=false');
+          validToken = true;
+        }
+
+        if (validToken) {
+          print('validToken: true, POSTing to ScanData V2...');
+          var results = await _barcodeService.uploadResults({
+            "Content-Type": "application/json",
+            'Authorization':
+                'Bearer ${_userDataProvider?.authenticationModel?.accessToken}'
+          }, {
+            'barcode': _barcode
+          });
+
+          if (results) {
+            this.setState(() {
+              successfulSubmission = true;
+              didError = false;
+              isLoading = false;
+            });
+          } else {
+            this.setState(() {
+              successfulSubmission = false;
+              didError = true;
+              isLoading = false;
+            });
+
+            if (_barcodeService.error
+                .contains(ErrorConstants.duplicateRecord)) {
+              this.setState(() {
+                _errorText = ScannerConstants.duplicateRecord;
+                isDuplicate = true;
+              });
+            } else if (_barcodeService.error
+                .contains(ErrorConstants.invalidMedia)) {
+              this.setState(() {
+                _errorText = ScannerConstants.invalidMedia;
+                isValidBarcode = false;
+              });
+            } else {
+              this.setState(() {
+                _errorText = ScannerConstants.barcodeError;
+              });
+            }
+          }
+        } else {
+          print('validToken: false, error');
+          this.setState(() {
+            successfulSubmission = false;
+            didError = true;
+            isLoading = false;
+            _errorText = ScannerConstants.invalidToken;
+          });
+        }
+      } else {
+        print('isLoggedIn: false');
+        this.setState(() {
+          successfulSubmission = false;
+          didError = true;
+          isLoading = false;
+          _errorText = ScannerConstants.loggedOut;
+        });
+      }
+    } catch (e) {
+      print('_handleBarcodeSubmission: An error occurred.');
       this.setState(() {
         successfulSubmission = false;
         didError = true;
         isLoading = false;
+        _errorText = ScannerConstants.unknownError;
       });
-      if (_barcodeService.error.contains(ErrorConstants.invalidBearerToken)) {
-        await _userDataProvider.refreshToken();
-      } else if (_barcodeService.error
-          .contains(ErrorConstants.duplicateRecord)) {
-        print("in correct if");
-        this.setState(() {
-          _errorText =
-              "Submission failed due to barcode already scanned. Please scan another barcode.";
-          isDuplicate = true;
-        });
-      } else if (_barcodeService.error.contains(ErrorConstants.invalidMedia)) {
-        this.setState(() {
-          _errorText = "Barcode is not valid. Please scan another barcode.";
-          isValidBarcode = false;
-        });
-      }
-      //_submitted = true;
-    }
-  }
-
-  openLink(String url) async {
-    try {
-      launch(url, forceSafariVC: true);
-    } catch (e) {
-      // an error occurred, do nothing
     }
   }
 }
