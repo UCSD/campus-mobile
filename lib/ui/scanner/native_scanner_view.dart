@@ -278,7 +278,6 @@ class _ScanditScannerState extends State<ScanditScanner> {
     try {
       var accessTokenExpiration =
           _userDataProvider?.authenticationModel?.expiration;
-      var accessToken = _userDataProvider?.authenticationModel?.accessToken;
       var nowTime = (DateTime.now().millisecondsSinceEpoch / 1000).round();
       var timeDiff = accessTokenExpiration - nowTime;
       var tokenExpired = timeDiff <= 0 ? true : false;
@@ -286,35 +285,16 @@ class _ScanditScannerState extends State<ScanditScanner> {
           Provider.of<UserDataProvider>(context, listen: false).isLoggedIn;
       var validToken = false;
 
-      print('Native Scanner Submission Testing');
-      print('-----------------------------------');
-      print('isLoggedIn: ' + isLoggedIn.toString());
-      print('accessToken: ' + accessToken.toString());
-      print('accessTokenExpiration: ' + accessTokenExpiration.toString());
-      print('nowTime: ' + nowTime.toString());
-      print('Token expired: ' + tokenExpired.toString());
-      print('Token expires in ' + timeDiff.toString() + 's');
-
       if (isLoggedIn) {
-        print('Scan Submission: isLoggedIn=true');
         if (tokenExpired) {
-          print('Scan Submission: tokenExpired=true');
           if (await _userDataProvider.silentLogin()) {
-            print('Scan Submission: refreshToken success');
-            var newAccessToken =
-                _userDataProvider?.authenticationModel?.accessToken;
-            print('newAccessToken: ' + newAccessToken);
             validToken = true;
-          } else {
-            print('Scan Submission: refreshToken failed.');
           }
         } else {
-          print('Scan Submission: tokenExpired=false');
           validToken = true;
         }
 
         if (validToken) {
-          print('validToken: true, POSTing to ScanData V2...');
           var results = await _barcodeService.uploadResults({
             "Content-Type": "application/json",
             'Authorization':
@@ -355,7 +335,6 @@ class _ScanditScannerState extends State<ScanditScanner> {
             }
           }
         } else {
-          print('validToken: false, error');
           this.setState(() {
             successfulSubmission = false;
             didError = true;
@@ -364,7 +343,6 @@ class _ScanditScannerState extends State<ScanditScanner> {
           });
         }
       } else {
-        print('isLoggedIn: false');
         this.setState(() {
           successfulSubmission = false;
           didError = true;
@@ -373,7 +351,6 @@ class _ScanditScannerState extends State<ScanditScanner> {
         });
       }
     } catch (e) {
-      print('_handleBarcodeSubmission: An error occurred.');
       this.setState(() {
         successfulSubmission = false;
         didError = true;
