@@ -15,7 +15,8 @@ dependencies:
   dots_indicator: 1.2.0
   encrypt: 4.0.3
   firebase_analytics: 5.0.2
-  firebase_core: 0.4.4
+  firebase_core: 0.5.3
+  firebase_crashlytics: 0.2.4
   firebase_messaging: 6.0.13
   flutter_scandit_plugin:
     git:
