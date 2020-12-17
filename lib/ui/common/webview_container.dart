@@ -58,7 +58,7 @@ class _WebViewContainerState extends State<WebViewContainer> {
     if (widget.requireAuth) {
       _userDataProvider = Provider.of<UserDataProvider>(context);
       webCardUrl = widget.initialUrl +
-          "?token=${_userDataProvider.authenticationModel.accessToken}&expiration=${_userDataProvider.authenticationModel.expiration}";
+          "?expiration=${_userDataProvider.authenticationModel.expiration}#${_userDataProvider.authenticationModel.accessToken}";
     } else {
       webCardUrl = widget.initialUrl;
     }
@@ -106,22 +106,22 @@ class _WebViewContainerState extends State<WebViewContainer> {
 
   // builds the actual webview widget
   Widget buildBody(context) {
-      return Container(
-        height: _contentHeight,
-        child: WebView(
-          opaque: false,
-          javascriptMode: JavascriptMode.unrestricted,
-          initialUrl: webCardUrl,
-          onWebViewCreated: (controller) {
-            _webViewController = controller;
-          },
-          javascriptChannels: <JavascriptChannel>[
-            _linksChannel(context),
-            _heightChannel(context),
-            _refreshTokenChannel(context)
-          ].toSet(),
-        ),
-      );
+    return Container(
+      height: _contentHeight,
+      child: WebView(
+        opaque: false,
+        javascriptMode: JavascriptMode.unrestricted,
+        initialUrl: webCardUrl,
+        onWebViewCreated: (controller) {
+          _webViewController = controller;
+        },
+        javascriptChannels: <JavascriptChannel>[
+          _linksChannel(context),
+          _heightChannel(context),
+          _refreshTokenChannel(context)
+        ].toSet(),
+      ),
+    );
   }
 
   Widget buildMenu() {
