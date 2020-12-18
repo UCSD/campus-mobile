@@ -11,9 +11,10 @@ const buildEnv = process.argv[4]
 const webhookUrl = process.argv[5]
 const fciArtifactLinks = JSON.parse(process.argv[6])
 const buildBranch = process.argv[7]
-const prNumber = process.argv[8]
+const commitHash = process.argv[8]
+const prNumber = process.argv[9]
 
-const buildNotify = async (appVersion, buildNumber, buildEnv, webhookUrl, fciArtifactLinks, buildBranch = 'n/a', commitHash = 'n/a', prNumber = '') => {
+const buildNotify = async (appVersion, buildNumber, buildEnv, webhookUrl, fciArtifactLinks, buildBranch, commitHash, prNumber = '') => {
 	try {
 		const buildTimestamp = moment().format('YYYY-MM-DD h:mm A')
 		const timeout = 15000 // Abort request after 15 seconds
@@ -42,12 +43,12 @@ const buildNotify = async (appVersion, buildNumber, buildEnv, webhookUrl, fciArt
 
 		teamsMessage += '<table border="0" style="margin:16px">'
 		teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>Version:</b></td><td>' + appVersion + '</td></tr>'
-		// teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>Build:</b></td><td>' + buildNumber + '</td></tr>'
 		teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>Env:</b></td><td>' + buildEnv + '</td></tr>'
-		teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>Branch:</b></td><td><a href="https://github.com/UCSD/campus-mobile/tree/' + buildBranch + '">' + buildBranch + '</a></td></tr>'
+
 		if (prNumber) {
 			teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>PR:</b></td><td><a href="https://github.com/UCSD/campus-mobile/pull/' + prNumber + '">' + prNumber + '</a></td></tr>'
 		} else {
+			teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>Branch:</b></td><td><a href="https://github.com/UCSD/campus-mobile/tree/' + buildBranch + '">' + buildBranch + '</a></td></tr>'
 			teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>Commit:</b></td><td><a href="https://github.com/UCSD/campus-mobile/commit/' + commitHash + '">' + commitHash + '</a></td></tr>'
 		}
 		if (buildIpaUrl) {
@@ -88,8 +89,8 @@ const buildNotify = async (appVersion, buildNumber, buildEnv, webhookUrl, fciArt
 }
 
 try {
-	if (appVersion && buildNumber && buildEnv && webhookUrl && fciArtifactLinks && buildBranch) {
-		buildNotify(appVersion, buildNumber, buildEnv, webhookUrl, fciArtifactLinks, buildBranch, prNumber)
+	if (appVersion && buildNumber && buildEnv && webhookUrl && fciArtifactLinks && buildBranch && commitHash) {
+		buildNotify(appVersion, buildNumber, buildEnv, webhookUrl, fciArtifactLinks, buildBranch, commitHash, prNumber)
 	} else {
 		throw 'Error: Environment setup failed. Sample usage: node build_notifier 7.2 870 QA'
 	}
