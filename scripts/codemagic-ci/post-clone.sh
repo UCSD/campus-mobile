@@ -2,15 +2,21 @@
 set -ex
 
 echo "Start: post-clone.sh"
+echo "APP_VERSION: $APP_VERSION"
 
 echo "Installing Node.js..."
 curl "https://nodejs.org/dist/latest/node-${VERSION:-$(wget -qO- https://nodejs.org/dist/latest/ | sed -nE 's|.*>node-(.*)\.pkg</a>.*|\1|p')}.pkg" > "$HOME/Downloads/node-latest.pkg" && sudo installer -store -pkg "$HOME/Downloads/node-latest.pkg" -target "/"
 node --version
 
-echo "Writing app-config.js to scripts/codemagic-ci/"
+echo "Writing app-config.js from \$APP_CONFIG..."
 echo $APP_CONFIG | base64 --decode > ./scripts/codemagic-ci/app-config.js
 
-echo "APP_VERSION: $APP_VERSION"
+echo "./ios/Runner/GoogleService-Info.plist --> $BUILD_ENV"
+echo $FIREBASE_IOS | base64 --decode > ./ios/Runner/GoogleService-Info.plist
+
+echo "./android/app/google-services.json --> $BUILD_ENV"
+echo $FIREBASE_ANDROID | base64 --decode > ./android/app/google-services.json
+
 
 # Set env vars
 echo "Setting build environment: $BUILD_ENV"

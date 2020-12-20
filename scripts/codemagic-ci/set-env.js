@@ -10,41 +10,6 @@ const config = require('./app-config.js')
 const targetEnv = process.argv[2]
 
 
-// File Replacements
-const prodFileReplacements = async (targetEnv) => {
-	try {
-		config.PROD_FILE_REPLACEMENTS.forEach((fileItem, index) => {
-			fs.copyFile(
-				fileItem.PROD,
-				fileItem.PATH,
-				(err) => {
-					if (err) throw err
-					else console.log(fileItem.PATH + ' --> ' + targetEnv)
-				}
-			)
-		})
-	} catch (err) {
-		throw err
-	}
-}
-
-const qaFileReplacements = async (targetEnv) => {
-	try {
-		config.QA_FILE_REPLACEMENTS.forEach((fileItem, index) => {
-			fs.copyFile(
-				fileItem.QA,
-				fileItem.PATH,
-				(err) => {
-					if (err) throw err
-					else console.log(fileItem.PATH + ' --> ' + targetEnv)
-				}
-			)
-		})
-	} catch (err) {
-		throw err
-	}
-}
-
 // Environment Replacements
 const prodEnvReplacements = async (targetEnv) => {
 	try {
@@ -127,14 +92,12 @@ const appVersionReplacements = async (targetEnv, buildIncrement) => {
 try {
 	if (targetEnv === 'PROD') {
 		// appVersionReplacements(targetEnv, 2)
-		// prodFileReplacements(targetEnv)
 		prodEnvReplacements(targetEnv)
 	} else if (targetEnv === 'PROD-TEST') {
 		// appVersionReplacements(targetEnv, 1)
 		prodtestEnvReplacements(targetEnv)
 	} else if (targetEnv === 'QA') {
 		// appVersionReplacements(targetEnv, 0)
-		// qaFileReplacements(targetEnv)
 		qaEnvReplacements(targetEnv)
 	} else {
 		throw 'Sample usage: node set-env PROD|PROD-TEST|QA'
