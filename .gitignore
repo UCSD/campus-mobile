@@ -31,12 +31,16 @@
 pubspec.lock
 /build/
 
+# Codemagic
+app-config.js
+node_modules/
 
 # Android related
 **/android/**/gradle-wrapper.jar
 **/android/.gradle
 **/android/captures/
 **/android/gradlew.bat
+**/android/key.properties
 **/android/local.properties
 **/android/**/GeneratedPluginRegistrant.java
 *.keystore
