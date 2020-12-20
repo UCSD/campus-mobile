@@ -61,7 +61,7 @@ const buildNotify = async (fciProjectId, fciBuildId, appVersion, buildNumber, bu
 			teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>APK:</b></td><td><a href="' + buildApkUrl + '" download style="text-decoration:underline">' + buildApkFile + '</a></td></tr>'
 		}
 		// Build failure
-		if (fciArtifactLinks) {
+		if (!buildIpaUrl && !buildApkUrl) {
 			teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>Build:</b></td><td><span style="color:red">FAILED</span> (<a href="' + fciProjectLink + '" style="text-decoration:underline">detail</a>)</td></tr>'
 		} else {
 			teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>Build:</b></td><td><span style="color:green">SUCCEEDED</span> (<a href="' + fciProjectLink + '" style="text-decoration:underline">detail</a>)</td></tr>'
@@ -120,10 +120,9 @@ try {
 			prNumber
 		)
 	} else {
-		throw 'Error: Environment setup failed. Sample usage: node build_notifier 7.2 870 QA'
+		throw 'Error: Environment parameters invalid.'
 	}
 } catch (err) {
-	console.log('⚠ ERROR: Environment setup failed ⚠')
 	console.log(err)
 	process.exitCode = 1
 }
