@@ -32,7 +32,9 @@ pubspec.lock
 /build/
 
 # Codemagic
-app-config.js
+app-config*.js
+sp-auth*.json
+env-vars*.json
 node_modules/
 
 # Android related
