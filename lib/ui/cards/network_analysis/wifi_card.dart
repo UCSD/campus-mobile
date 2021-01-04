@@ -3,7 +3,7 @@
 
 import 'dart:ffi';
 import 'dart:io';
-import 'package:campus_mobile_experimental/core/data_providers/speed_test_service.dart';
+import 'package:campus_mobile_experimental/core/services/speed_test_service.dart';
 
 import 'package:campus_mobile_experimental/core/data_providers/weather_data_provider.dart';
 import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';

@@ -10,6 +10,7 @@ import 'package:background_fetch/background_fetch.dart';
 import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/services/networking.dart';
+import 'package:campus_mobile_experimental/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -81,6 +82,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
   int scanIntervalAllowance = 0;
   int backgroundScanInterval = 15; // Minutes
   int deletionInterval = 30; // Minutes
+  double milesFromPriceCenter = 5;
 
   // Keep track of devices that meet our requirements
   int qualifyingDevices = 0;
@@ -92,6 +94,12 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
   int scanDuration = 2; //Seconds
   int waitTime = 15; // Minutes
   int dwellMinutes = 30;
+
+  // Coordinates for Price Center
+  double pcLongitude = -117.237006;
+  double pcLatitude = 32.880006;
+  double distanceFromPriceCenter;
+
 
   // Allows for continuous scan
   Timer ongoingScanner;
@@ -173,6 +181,21 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
 
   // Start a bluetooth scan of determined second duration and listen to results
   startScan() async {
+
+    //Ensure that we are still within X miles of Price Center
+    location.getLocation().then((location){
+      distanceFromPriceCenter = getHaversineDistance(pcLatitude, pcLongitude, location.latitude, location.longitude);
+
+      // Convert km to miles
+      distanceFromPriceCenter = distanceFromPriceCenter/1.609;
+
+    });
+
+
+    // prevent scanning if not within boundaries
+    if(distanceFromPriceCenter > milesFromPriceCenter){
+      return;
+    }
     // String previousState = await _storage.read(key: "previousState");
     //
     // if (inBackground) {
@@ -190,6 +213,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
         String calculatedUUID;
 
         calculatedUUID = extractAdvertisementUUID(scanResult, calculatedUUID);
+
         //Create BT Objects to check continuity and store data
         identifyDevices(scanResult);
 
@@ -285,7 +309,8 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
         //   inBackground = false;
         // }
 
-        sendLogs(log);
+        // TODO: Disconnect from api due to need for new api update
+        //sendLogs(log);
       });
     }
   }
@@ -342,6 +367,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
 
 // Identify types of device, currently working for Apple devices and some android
   List<Map> identifyDeviceTypes() {
+    bool iOSDevice = false;
     List<Map> formattedLists = [];
     List<List<Object>> newBufferList = [];
     for (List<Object> deviceEntry in bufferList) {
@@ -354,6 +380,10 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
                     "")
                 ? "${getAppleClassification(scannedObjects[deviceEntry[0].toString().substring(0, 36)].deviceType)}"
                 : "Unavailable"));
+        if(getAppleClassification(scannedObjects[deviceEntry[0].toString().substring(0, 36)].deviceType) != ""){
+          iOSDevice = true;
+        }
+
       } else if (Platform.isAndroid) {
         deviceEntry.insert(
             1,
@@ -362,6 +392,10 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
                     "")
                 ? "${getAppleClassification(scannedObjects[deviceEntry[ScannedDevice.SCANNED_DEVICE_ID.index].toString().substring(0, 17)].deviceType)}"
                 : "Unavailable"));
+        if(getAppleClassification(scannedObjects[deviceEntry[ScannedDevice.SCANNED_DEVICE_ID.index].toString().substring(0, 17)].deviceType) != ""){
+          iOSDevice = true;
+        }
+
       }
 
       // Add identified device to temporary log
@@ -384,7 +418,8 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
         "SCANNED_DEVICE_DETECT_SIGNAL_STRENGTH": deviceEntry[
             ScannedDevice.SCANNED_DEVICE_DETECT_SIGNAL_STRENGTH.index],
         "SCANNED_DEVICE_DETECT_DISTANCE":
-            deviceEntry[ScannedDevice.SCANNED_DEVICE_DETECT_DISTANCE.index]
+            deviceEntry[ScannedDevice.SCANNED_DEVICE_DETECT_DISTANCE.index],
+       "DEVICE_OS" : (iOSDevice ? "iOS" : "non-iOS")
       };
       formattedLists.add(deviceLog);
     }
@@ -835,6 +870,24 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
       }
     });
     _storage.deleteAll();
+  }
+
+  // From shuttle card
+  double getHaversineDistance(lat1, lon1, lat2, lon2) {
+    var R = 6371; // Radius of the earth in km
+    var dLat = deg2rad(lat2 - lat1); // deg2rad below
+    var dLon = deg2rad(lon2 - lon1);
+    var a = math.sin(dLat / 2) * math.sin(dLat / 2) +
+        math.cos(deg2rad(lat1)) *
+            math.cos(deg2rad(lat2)) *
+            math.sin(dLon / 2) *
+            math.sin(dLon / 2);
+    var c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a));
+    var d = R * c; // Distance in km
+    return d;
+  }
+  double deg2rad(deg) {
+    return deg * (math.pi / 180);
   }
 }
 

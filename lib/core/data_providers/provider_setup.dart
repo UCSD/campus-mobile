@@ -12,7 +12,7 @@ import 'package:campus_mobile_experimental/core/data_providers/notices_data_prov
 import 'package:campus_mobile_experimental/core/data_providers/parking_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/push_notifications_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/shuttle_data_provider.dart';
-import 'package:campus_mobile_experimental/core/data_providers/speed_test_service.dart';
+import 'package:campus_mobile_experimental/core/services/speed_test_service.dart';
 import 'package:campus_mobile_experimental/core/data_providers/student_id_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/user_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/weather_data_provider.dart';
