@@ -108,9 +108,8 @@ String signedURL;
     _secondsElapsedUpload = _timer.elapsed.inSeconds;
     double speedInBytes = (bytesDownloaded / _timer.elapsed.inSeconds);
     _speedUpload = _convertToMbps(speedInBytes);
-
     _percentUploaded = bytesDownloaded / totalBytes;
-    print("Percent uploaded: $bytesDownloaded");
+    print("Percent uploaded: $percentUploaded");
     notifyListeners();
   }
 

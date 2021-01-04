@@ -132,7 +132,7 @@ class _WiFiCardState extends State<WiFiCard> {
               borderColor: Colors.black,
               borderWidth: 0.5,
               center: Text(
-                "${((_speedTestService.percentDownloaded * 100)/2  + (_speedTestService.percentUploaded * 100)/2).toStringAsPrecision(3)} %",
+                "${((_speedTestService.percentDownloaded * 100)/2  + (_speedTestService.percentUploaded * 100)/2).toStringAsPrecision(6).substring(0, 4)} %",
                 style: TextStyle(color: Colors.grey),
               ),
               direction: Axis.horizontal,
