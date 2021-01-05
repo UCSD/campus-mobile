@@ -1,0 +1,19 @@
+{
+  "name": "codemagic-ci",
+  "version": "1.0.0",
+  "description": "Build scripts for Codemagic CI/CD",
+  "main": "set-env.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Charles Bryant <c3bryant@ucsd.edu",
+  "license": "ISC",
+  "dependencies": {
+    "abort-controller": "^3.0.0",
+    "download": "^8.0.0",
+    "moment": "^2.29.1",
+    "node-fetch": "^2.6.1",
+    "spsave": "^4.0.0",
+    "xlsx-template": "^1.3.0"
+  }
+}
