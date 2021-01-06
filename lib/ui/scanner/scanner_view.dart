@@ -314,7 +314,7 @@ class _ScanditScannerState extends State<ScanditScanner> {
         print("in correct if");
         this.setState(() {
           _errorText =
-              "Submission failed due to barcode already scanned. Please scan another barcode.";
+              "Submission failed due to barcode already scanned. Please discard this test tube and get another one.";
           isDuplicate = true;
         });
       } else if (_barcodeService.error.contains(ErrorConstants.invalidMedia)) {
