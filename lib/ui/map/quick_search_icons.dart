@@ -17,19 +17,22 @@ class QuickSearchIcons extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            LabeledIconButton(
-              icon: Icons.local_parking,
-              text: 'Parking',
-              onPressed: () {
-                Provider.of<MapsDataProvider>(context, listen: false)
-                    .searchBarController
-                    .text = 'Parking';
-                Provider.of<MapsDataProvider>(context, listen: false)
-                    .fetchLocations();
-                Navigator.pop(context);
-              },
+            Expanded(
+              child: LabeledIconButton(
+                icon: Icons.local_parking,
+                text: 'Parking',
+                onPressed: () {
+                  Provider.of<MapsDataProvider>(context, listen: false)
+                      .searchBarController
+                      .text = 'Parking';
+                  Provider.of<MapsDataProvider>(context, listen: false)
+                      .fetchLocations();
+                  Navigator.pop(context);
+                },
+              ),
             ),
-            LabeledIconButton(
+            Expanded(
+                child: LabeledIconButton(
               icon: Icons.local_drink,
               text: 'Hydration',
               onPressed: () {
@@ -40,8 +43,9 @@ class QuickSearchIcons extends StatelessWidget {
                     .fetchLocations();
                 Navigator.pop(context);
               },
-            ),
-            LabeledIconButton(
+            )),
+            Expanded(
+                child: LabeledIconButton(
               icon: Icons.local_post_office,
               text: 'Mail',
               onPressed: () {
@@ -52,8 +56,9 @@ class QuickSearchIcons extends StatelessWidget {
                     .fetchLocations();
                 Navigator.pop(context);
               },
-            ),
-            LabeledIconButton(
+            )),
+            Expanded(
+                child: LabeledIconButton(
               icon: Icons.local_atm,
               text: 'ATM',
               onPressed: () {
@@ -64,7 +69,20 @@ class QuickSearchIcons extends StatelessWidget {
                     .fetchLocations();
                 Navigator.pop(context);
               },
-            ),
+            )),
+            Expanded(
+                child: LabeledIconButton(
+              icon: Icons.coronavirus_outlined,
+              text: 'COVID Tests',
+              onPressed: () {
+                Provider.of<MapsDataProvider>(context, listen: false)
+                    .searchBarController
+                    .text = 'Mail';
+                Provider.of<MapsDataProvider>(context, listen: false)
+                    .fetchLocations();
+                Navigator.pop(context);
+              },
+            )),
           ],
         ),
       ),
@@ -89,7 +107,7 @@ class LabeledIconButton extends StatelessWidget {
           color: Colors.red,
           child: Icon(
             icon,
-            size: 30,
+            size: 28,
             color: Colors.white,
           ),
         ),
