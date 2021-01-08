@@ -33,6 +33,7 @@ class _ScanditScannerState extends State<ScanditScanner> {
   bool successfulSubmission;
   bool isValidBarcode;
   PermissionStatus _cameraPermissionsStatus = PermissionStatus.undetermined;
+  List<String> scannedCodes = new List<String>();
 
   Future _requestCameraPermissions() async {
     var status = await Permission.camera.status;
@@ -92,7 +93,7 @@ class _ScanditScannerState extends State<ScanditScanner> {
       return (Stack(
         children: [
           Scandit(
-              scanned: _handleBarcodeResult,
+              scanned: _verifyBarcodeScanning,
               onError: (e) => setState(() => _message = e.message),
               symbologies: [Symbology.CODE128, Symbology.DATA_MATRIX],
               onScanditCreated: (controller) => _controller = controller,
@@ -190,6 +191,7 @@ class _ScanditScannerState extends State<ScanditScanner> {
                 child: FlatButton(
                   padding: EdgeInsets.only(left: 32.0, right: 32.0),
                   onPressed: () {
+                    scannedCodes.clear();
                     this.setState(() {
                       hasScanned = false;
                       hasSubmitted = false;
@@ -278,6 +280,31 @@ class _ScanditScannerState extends State<ScanditScanner> {
     );
   }
 
+  void _verifyBarcodeScanning(BarcodeResult result) {
+    scannedCodes.add(result.data);
+    // currently scanning 3 consecutive times
+    if(scannedCodes.length < 3) {
+      _controller.resumeBarcodeScanning();
+    }
+    else {
+      String firstScan = scannedCodes.first;
+      // if all scans are not the same, need to go into error state
+      // otherwise, continue to handle normally
+      if(scannedCodes.every((element) => element == firstScan)) {
+        // ACCEPT STATE
+        _handleBarcodeResult(result);
+      }
+      else {
+        // REJECT STATE
+        this.setState(() {
+          hasScanned = true;
+          didError = true;
+          isLoading = false;
+        });
+      }
+    }
+  }
+
   Future<void> _handleBarcodeResult(BarcodeResult result) async {
     this.setState(() {
       hasScanned = true;
@@ -314,7 +341,7 @@ class _ScanditScannerState extends State<ScanditScanner> {
         print("in correct if");
         this.setState(() {
           _errorText =
-              "Submission failed due to barcode already scanned. Please scan another barcode.";
+          "Submission failed due to barcode already scanned. Please scan another barcode.";
           isDuplicate = true;
         });
       } else if (_barcodeService.error.contains(ErrorConstants.invalidMedia)) {
