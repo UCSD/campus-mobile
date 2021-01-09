@@ -27,7 +27,7 @@ class CardsService {
       /// fetch data
       String _response =
           await _networkHelper.authorizedFetch(cardListEndpoint, headers);
-
+      print(_response);
       /// parse data
       _cardsModel = cardsModelFromJson(_response);
       _isLoading = false;

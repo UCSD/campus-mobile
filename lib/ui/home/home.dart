@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/cards.dart';
 import 'package:campus_mobile_experimental/core/models/notices.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
+import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:campus_mobile_experimental/core/providers/notices.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/providers/wayfinding.dart';
@@ -27,6 +30,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uni_links/uni_links.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -34,6 +38,20 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  StreamSubscription _sub;
+
+  Future<Null> initUniLinks(BuildContext context) async {
+    _sub = getLinksStream().listen((String link) {
+//      Provider.of<MapsDataProvider>(context, listen: false)
+//          .searchBarController
+//          .text = 'Mail';
+//      Provider.of<MapsDataProvider>(context, listen: false)
+//          .fetchLocations();
+//      Navigator.pop(context);
+      print(link);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     checkToResumeBluetooth(context);
