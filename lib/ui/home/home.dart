@@ -54,6 +54,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    initUniLinks(context);
     checkToResumeBluetooth(context);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: cardMargin, vertical: 0.0),
