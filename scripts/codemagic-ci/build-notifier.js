@@ -15,10 +15,10 @@ const INTERNAL_ERROR = { 'error': 'An error occurred.' }
 const generateSmoketest = async () => {
 	try {
 		console.log('Generating smoke test for PR ' + ENV_VARS.prNumber)
-		const spSiteUrl = 'https://ucsdcloud.sharepoint.com/sites/WorkplaceTechnologyServices-CampusMobileBuildsTest/'
-		const spSiteFolder = 'Shared Documents/Campus Mobile Builds Test/Pull Request Testing/'
-		const prSmokeTestTemplateURL = 'https://ucsd-its-wts-dev.s3-us-west-1.amazonaws.com/replatform/v1/testing/PR-Smoke-Test-Template-v1.xlsx'
-		const prSmokeTestFilename = 'PR-' + ENV_VARS.prNumber + '-Smoke-Test.xlsx'
+		const spSiteUrl = 'https://ucsdcloud.sharepoint.com/sites/WorkplaceTechnologyServices-CampusMobileBuilds/'
+		const spSiteFolder = 'Shared Documents/Campus Mobile Builds/Pull Request Testing/'
+		const prSmokeTestTemplateURL = 'https://ucsd-its-wts-dev.s3-us-west-1.amazonaws.com/replatform/v1/testing/PR-Test-Plan-Template-v2.xlsx'
+		const prSmokeTestFilename = 'PR-' + ENV_VARS.prNumber + '-Test-Plan.xlsx'
 		const prSmokeTestUrl = (spSiteUrl + spSiteFolder + prSmokeTestFilename + '?web=1').replace(/ /g, '%20')
 
 		console.log('Downloading PR smoke test template ...')

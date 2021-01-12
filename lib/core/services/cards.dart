@@ -18,11 +18,7 @@ class CardsService {
     _isLoading = true;
 
     String cardListEndpoint =
-        'https://api-qa.ucsd.edu:8243/defaultcards/v2.0.0/defaultcards';
-
-    if (ucsdAffiliation == null) {
-      ucsdAffiliation = "";
-    }
+        'https://api-qa.ucsd.edu:8243/defaultcards/v3.0.0/defaultcards';
 
     try {
       //form query string with ucsd affiliation
