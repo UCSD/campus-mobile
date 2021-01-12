@@ -257,9 +257,7 @@ class _ScanditScannerState extends State<ScanditScanner> {
             ListTile(
                 title: Text(String.fromCharCode(0x2022) +
                     " Results are usually available within 24-36 hours.")),
-            ListTile(
-                title: Text(String.fromCharCode(0x2022) +
-                    " You can view your results by logging in to MyStudentChart.")),
+            ListTile(title: buildChartText(context)),
             ListTile(
                 title: Text(String.fromCharCode(0x2022) +
                     " If you are experiencing symptoms of COVID-19, stay in your residence and seek guidance from a healthcare provider.")),
@@ -302,6 +300,17 @@ class _ScanditScannerState extends State<ScanditScanner> {
           isLoading = false;
         });
       }
+    }
+  }
+
+  Text buildChartText(BuildContext context) {
+    if (_userDataProvider.userProfileModel.classifications?.student ?? false) {
+      return Text(String.fromCharCode(0x2022) +
+          " You can view your results by logging in to MyStudentChart.");
+    } else if (_userDataProvider.userProfileModel.classifications?.staff ??
+        false) {
+      return Text(String.fromCharCode(0x2022) +
+          " You can view your results by logging in to MyUCSDChart.");
     }
   }
 
