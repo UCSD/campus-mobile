@@ -60,6 +60,7 @@ const buildNotify = async () => {
 		const buildTimestamp = moment().format('YYYY-MM-DD h:mm A')
 		const timeout = 15000 // Abort request after 15 seconds
 		const fciProjectLink = 'https://codemagic.io/app/' + ENV_VARS.fciProjectId + '/build/' + ENV_VARS.fciBuildId
+		const buildNumber = parseInt(ENV_VARS.buildNumber) + 1000
 		let buildSuccess = (ENV_VARS.fciBuildStepStatus === 'success') ? true : false
 		let buildApkUrl = ''
 		let buildApkFile = ''
@@ -99,7 +100,7 @@ const buildNotify = async () => {
 		// // Construct build notifier message
 		let teamsMessage = '#### Campus Mobile Build Notifier\n\n'
 		teamsMessage += '<table border="0" style="margin:16px">'
-		teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>Version:</b></td><td>' + ENV_VARS.appVersion + ' (' + ENV_VARS.buildNumber + ')</td></tr>'
+		teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>Version:</b></td><td>' + ENV_VARS.appVersion + ' (' + buildNumber + ')</td></tr>'
 		teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>Environment:</b></td><td>' + ENV_VARS.buildEnv + '</td></tr>'
 
 		if (ENV_VARS.prNumber) {
@@ -128,7 +129,7 @@ const buildNotify = async () => {
 			teamsMessage += '<a href="' + buildApkUrl + '" download><img src="https://mobile.ucsd.edu/_images/apk-download.png" width="172" height="76"></a>'
 		}
 
-		console.log('\nSending Teams notification for v' + ENV_VARS.appVersion + ' (' + ENV_VARS.buildNumber + ')\n')
+		console.log('\nSending Teams notification for v' + ENV_VARS.appVersion + ' (' + buildNumber + ')\n')
 
 		// Send message via Teams webhook integration
 		const abortTimeout = setTimeout(() => { controller.abort() }, timeout)
