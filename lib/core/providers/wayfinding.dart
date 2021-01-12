@@ -514,11 +514,13 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
       scannedObjects[scanResult.device.id.toString()].distance =
           getDistance(scanResult.rssi);
       if (scannedObjects[scanResult.device.id.toString()].dwellTime >=
-              dwellTimeThreshold &&
-          scannedObjects[scanResult.device.id.toString()].distance <=
-              distanceThreshold &&
-          eligibleType(
-              scannedObjects[scanResult.device.id.toString()].deviceType)) {
+              dwellTimeThreshold){
+        // Remove to reinstate thresholds
+        // &&
+          // scannedObjects[scanResult.device.id.toString()].distance <=
+          //     distanceThreshold &&
+          // eligibleType(
+          //     scannedObjects[scanResult.device.id.toString()].deviceType)) {
         qualifyingDevices += 1; // Add the # of unique devices detected
       }
 
