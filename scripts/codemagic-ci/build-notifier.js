@@ -7,25 +7,22 @@ const XlsxTemplate = require('xlsx-template')
 const spsave = require('spsave').spsave
 
 const ENV_VARS = require('./env-vars.json')
-const SP_AUTH = require('./sp-auth.json')
+const SP_CONFIG = require('./sp-config.json')
 
 const controller = new AbortController()
 const INTERNAL_ERROR = { 'error': 'An error occurred.' }
 
-const generateSmoketest = async () => {
+const generateTestPlan = async () => {
 	try {
-		console.log('Generating smoke test for PR ' + ENV_VARS.prNumber)
-		const spSiteUrl = 'https://ucsdcloud.sharepoint.com/sites/WorkplaceTechnologyServices-CampusMobileBuilds/'
-		const spSiteFolder = 'Shared Documents/Campus Mobile Builds/Pull Request Testing/'
-		const prSmokeTestTemplateURL = 'https://ucsd-its-wts-dev.s3-us-west-1.amazonaws.com/replatform/v1/testing/PR-Test-Plan-Template-v2.xlsx'
-		const prSmokeTestFilename = 'PR-' + ENV_VARS.prNumber + '-Test-Plan.xlsx'
-		const prSmokeTestUrl = (spSiteUrl + spSiteFolder + prSmokeTestFilename + '?web=1').replace(/ /g, '%20')
+		console.log('Generating test plan for PR ' + ENV_VARS.prNumber)
+		const prTestPlanFilename = 'PR-' + ENV_VARS.prNumber + '-Test-Plan.xlsx'
+		const prTestPlanUrl = (SP_CONFIG.spSiteUrl + SP_CONFIG.spSiteFolder + prTestPlanFilename + '?web=1').replace(/ /g, '%20')
 
-		console.log('Downloading PR smoke test template ...')
-		fs.writeFileSync(prSmokeTestFilename, await download(prSmokeTestTemplateURL))
+		console.log('Downloading PR test plan template ...')
+		fs.writeFileSync(prTestPlanFilename, await download(SP_CONFIG.prTestPlanTemplateUrl))
 
 		console.log('Making replacements ...')
-		const data = fs.readFileSync(prSmokeTestFilename)
+		const data = fs.readFileSync(prTestPlanFilename)
 		const template = new XlsxTemplate(data)
 		const sheetNumber = 1
 		const values = {
@@ -34,21 +31,21 @@ const generateSmoketest = async () => {
 			BUILD_ENV: ENV_VARS.buildEnv,
 		}
 		template.substitute(sheetNumber, values)
-		fs.writeFileSync(prSmokeTestFilename, Buffer.from(
+		fs.writeFileSync(prTestPlanFilename, Buffer.from(
 			template.generate({type: 'base64'}),
 			'base64'
 		))
 
-		console.log('Uploading smoke test for PR ' + ENV_VARS.prNumber)
-		const coreOptions = { siteUrl: spSiteUrl }
+		console.log('Uploading test plan for PR ' + ENV_VARS.prNumber)
+		const coreOptions = { siteUrl: SP_CONFIG.spSiteUrl }
 		const fileOptions = {
-			folder: spSiteFolder,
-			fileName: prSmokeTestFilename,
-			fileContent: fs.readFileSync(prSmokeTestFilename)
+			folder: SP_CONFIG.spSiteFolder,
+			fileName: prTestPlanFilename,
+			fileContent: fs.readFileSync(prTestPlanFilename)
 		}
-		await spsave(coreOptions, SP_AUTH, fileOptions)
+		await spsave(coreOptions, SP_CONFIG.credentials, fileOptions)
 
-		return prSmokeTestUrl
+		return prTestPlanUrl
 	} catch(err) {
 		console.log(err)
 		return null
@@ -65,21 +62,21 @@ const buildNotify = async () => {
 		let buildApkFile = ''
 		let buildIpaUrl = ''
 		let buildIpaFile = ''
-		let prSmokeTestUrl = ''
-		let prSmokeTestFilename = 'n/a'
+		let prTestPlanUrl = ''
+		let prTestPlanFilename = 'n/a'
 
 		ENV_VARS.appVersion += '.' + ENV_VARS.buildNumber
 		ENV_VARS.commitHash = ENV_VARS.commitHash.substring(0, 7)
 
 		// If build success
 		if (buildSuccess) {
-			// Generate PR smoke test
+			// Generate PR test plan
 			if (ENV_VARS.prNumber) {
-				prSmokeTestUrl = await generateSmoketest()
-				if (!prSmokeTestUrl) {
-					prSmokeTestUrl = 'https://mobile.ucsd.edu/404'
+				prTestPlanUrl = await generateTestPlan()
+				if (!prTestPlanUrl) {
+					prTestPlanUrl = 'https://mobile.ucsd.edu/404'
 				} else {
-					prSmokeTestFilename = prSmokeTestUrl.replace(/(.*?)\//g, '').replace(/\?.*/g, '')
+					prTestPlanFilename = prTestPlanUrl.replace(/(.*?)\//g, '').replace(/\?.*/g, '')
 				}
 			}
 
@@ -105,7 +102,7 @@ const buildNotify = async () => {
 
 		if (ENV_VARS.prNumber) {
 			teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>PR:</b></td><td><a href="https://github.com/UCSD/campus-mobile/pull/' + ENV_VARS.prNumber + '" style="text-decoration:underline">' + ENV_VARS.prNumber + '</a></td></tr>'
-			teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>Testing:</b></td><td><a href="' + prSmokeTestUrl + '" style="text-decoration:underline">' + prSmokeTestFilename + '</a></td></tr>'
+			teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>Testing:</b></td><td><a href="' + prTestPlanUrl + '" style="text-decoration:underline">' + prTestPlanFilename + '</a></td></tr>'
 		} else {
 			teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>Branch:</b></td><td>' + ENV_VARS.buildBranch + '</td></tr>'
 			teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>Commit:</b></td><td><a href="https://github.com/UCSD/campus-mobile/commit/' + ENV_VARS.commitHash + '" style="text-decoration:underline">' + ENV_VARS.commitHash + '</a></td></tr>'
@@ -133,7 +130,7 @@ const buildNotify = async () => {
 
 		// Send message via Teams webhook integration
 		const abortTimeout = setTimeout(() => { controller.abort() }, timeout)
-		const resp = await fetch(ENV_VARS.webhookUrl, {
+		const resp = await fetch(SP_CONFIG.webhookUrl, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
