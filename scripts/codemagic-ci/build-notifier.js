@@ -68,7 +68,6 @@ const buildNotify = async () => {
 		let prSmokeTestUrl = ''
 		let prSmokeTestFilename = 'n/a'
 
-		ENV_VARS.appVersion += '.' + ENV_VARS.buildNumber
 		ENV_VARS.commitHash = ENV_VARS.commitHash.substring(0, 7)
 
 		// If build success
@@ -100,7 +99,7 @@ const buildNotify = async () => {
 		// // Construct build notifier message
 		let teamsMessage = '#### Campus Mobile Build Notifier\n\n'
 		teamsMessage += '<table border="0" style="margin:16px">'
-		teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>Version:</b></td><td>' + ENV_VARS.appVersion + '</td></tr>'
+		teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>Version:</b></td><td>' + ENV_VARS.appVersion + ' (' + ENV_VARS.buildNumber + ')</td></tr>'
 		teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>Environment:</b></td><td>' + ENV_VARS.buildEnv + '</td></tr>'
 
 		if (ENV_VARS.prNumber) {
