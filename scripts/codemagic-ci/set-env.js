@@ -8,7 +8,8 @@ const exec = util.promisify(require('child_process').exec)
 // Config - See README
 const config = require('./app-config.js')
 const targetEnv = process.argv[2]
-
+const appVersion = process.argv[3]
+const buildNumber = process.argv[4]
 
 // Environment Replacements
 const prodEnvReplacements = async (targetEnv) => {
@@ -70,17 +71,16 @@ const qaEnvReplacements = async (targetEnv) => {
 }
 
 // App Version Replacements
-const appVersionReplacements = async (targetEnv, buildIncrement) => {
+const appVersionReplacements = async () => {
 	try {
 		config.APP_VERSION_REPLACEMENTS.forEach((envItem) => {
 			fs.readFile(envItem.PATH, 'utf8', (err, data) => {
-				const [appVersion, appBuildNumber] = envItem.APP_VERSION.split('+')
-				let prodAppBuildNumber = parseInt(appBuildNumber) + buildIncrement
-				const prodAppVersion = appVersion + '+' + prodAppBuildNumber
-				data = data.replace(envItem.APP_VERSION, prodAppVersion)
+				const finalBuildNumber = parseInt(buildNumber) + 1000
+				data = data.replaceAll('MARKETING_VERSION = 1.0.0;', 'MARKETING_VERSION = ' + appVersion + ';')
+				data = data.replaceAll('CURRENT_PROJECT_VERSION = 1;', 'CURRENT_PROJECT_VERSION = ' + finalBuildNumber + ';')
 				fs.writeFile(envItem.PATH, data, 'utf8', (err) => {
 					if (err) throw err
-					else console.log(envItem.PATH + ' --> ' + targetEnv)
+					else console.log(envItem.PATH + ' --> ' + appVersion + ' (' + finalBuildNumber + ')')
 				})
 			})
 		})
@@ -91,13 +91,12 @@ const appVersionReplacements = async (targetEnv, buildIncrement) => {
 
 try {
 	if (targetEnv === 'PROD') {
-		// appVersionReplacements(targetEnv, 2)
+		appVersionReplacements()
 		prodEnvReplacements(targetEnv)
 	} else if (targetEnv === 'PROD-TEST') {
-		// appVersionReplacements(targetEnv, 1)
 		prodtestEnvReplacements(targetEnv)
 	} else if (targetEnv === 'QA') {
-		// appVersionReplacements(targetEnv, 0)
+		appVersionReplacements()
 		qaEnvReplacements(targetEnv)
 	} else {
 		throw 'Sample usage: node set-env PROD|PROD-TEST|QA'
