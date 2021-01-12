@@ -77,7 +77,7 @@ class QuickSearchIcons extends StatelessWidget {
               onPressed: () {
                 Provider.of<MapsDataProvider>(context, listen: false)
                     .searchBarController
-                    .text = 'Mail';
+                    .text = 'COVID Test Kits';
                 Provider.of<MapsDataProvider>(context, listen: false)
                     .fetchLocations();
                 Navigator.pop(context);
