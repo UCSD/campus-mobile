@@ -22,10 +22,10 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>deeplinking.viewVendingMachineMap</string>
+			<string>deeplinking.viewvendingmachinemap</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>campus_mobile</string>
+				<string>campusmobile</string>
 			</array>
 		</dict>
 	</array>

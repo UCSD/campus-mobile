@@ -9,6 +9,7 @@ import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:campus_mobile_experimental/core/providers/notices.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/providers/wayfinding.dart';
+import 'package:campus_mobile_experimental/core/utils/webview.dart';
 import 'package:campus_mobile_experimental/ui/availability/availability_card.dart';
 import 'package:campus_mobile_experimental/ui/classes/classes_card.dart';
 import 'package:campus_mobile_experimental/ui/common/webview_container.dart';
@@ -41,13 +42,8 @@ class _HomeState extends State<Home> {
   StreamSubscription _sub;
 
   Future<Null> initUniLinks(BuildContext context) async {
-    _sub = getLinksStream().listen((String link) {
-//      Provider.of<MapsDataProvider>(context, listen: false)
-//          .searchBarController
-//          .text = 'Mail';
-//      Provider.of<MapsDataProvider>(context, listen: false)
-//          .fetchLocations();
-//      Navigator.pop(context);
+    // deep links are received by this method
+    _sub = getLinksStream().listen((String link) async {
       print(link);
     });
   }
@@ -138,7 +134,7 @@ class _HomeState extends State<Home> {
             break;
         }
       }
-      else {  // dynamically insert webCards into the list
+      else {// dynamically insert webCards into the list
         orderedCards.add(
             WebViewContainer(
                 titleText: webCards[card].titleText,

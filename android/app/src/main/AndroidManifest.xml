@@ -32,8 +32,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data
-                    android:scheme="campus_mobile"
-                    android:host="deeplinking.viewVendingMachineMap" />
+                    android:scheme="campusmobile"
+                    android:host="deeplinking.viewvendingmachinemap" />
             </intent-filter>
             <intent-filter>
                 <action android:name="FLUTTER_NOTIFICATION_CLICK" />
