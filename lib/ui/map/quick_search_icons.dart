@@ -17,61 +17,19 @@ class QuickSearchIcons extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Expanded(
-              child: LabeledIconButton(
-                icon: Icons.local_parking,
-                text: 'Parking',
-                onPressed: () {
-                  Provider.of<MapsDataProvider>(context, listen: false)
-                      .searchBarController
-                      .text = 'Parking';
-                  Provider.of<MapsDataProvider>(context, listen: false)
-                      .fetchLocations();
-                  Navigator.pop(context);
-                },
-              ),
+            LabeledIconButton(
+              icon: Icons.local_parking,
+              text: 'Parking',
+              onPressed: () {
+                Provider.of<MapsDataProvider>(context, listen: false)
+                    .searchBarController
+                    .text = 'Parking';
+                Provider.of<MapsDataProvider>(context, listen: false)
+                    .fetchLocations();
+                Navigator.pop(context);
+              },
             ),
-            Expanded(
-                child: LabeledIconButton(
-              icon: Icons.local_drink,
-              text: 'Hydration',
-              onPressed: () {
-                Provider.of<MapsDataProvider>(context, listen: false)
-                    .searchBarController
-                    .text = 'Hydration';
-                Provider.of<MapsDataProvider>(context, listen: false)
-                    .fetchLocations();
-                Navigator.pop(context);
-              },
-            )),
-            Expanded(
-                child: LabeledIconButton(
-              icon: Icons.local_post_office,
-              text: 'Mail',
-              onPressed: () {
-                Provider.of<MapsDataProvider>(context, listen: false)
-                    .searchBarController
-                    .text = 'Mail';
-                Provider.of<MapsDataProvider>(context, listen: false)
-                    .fetchLocations();
-                Navigator.pop(context);
-              },
-            )),
-            Expanded(
-                child: LabeledIconButton(
-              icon: Icons.local_atm,
-              text: 'ATM',
-              onPressed: () {
-                Provider.of<MapsDataProvider>(context, listen: false)
-                    .searchBarController
-                    .text = 'ATM';
-                Provider.of<MapsDataProvider>(context, listen: false)
-                    .fetchLocations();
-                Navigator.pop(context);
-              },
-            )),
-            Expanded(
-                child: LabeledIconButton(
+            LabeledIconButton(
               icon: Icons.coronavirus_outlined,
               text: 'COVID Tests',
               onPressed: () {
@@ -82,7 +40,31 @@ class QuickSearchIcons extends StatelessWidget {
                     .fetchLocations();
                 Navigator.pop(context);
               },
-            )),
+            ),
+            LabeledIconButton(
+              icon: Icons.local_drink,
+              text: 'Hydration',
+              onPressed: () {
+                Provider.of<MapsDataProvider>(context, listen: false)
+                    .searchBarController
+                    .text = 'Hydration';
+                Provider.of<MapsDataProvider>(context, listen: false)
+                    .fetchLocations();
+                Navigator.pop(context);
+              },
+            ),
+            LabeledIconButton(
+              icon: Icons.local_atm,
+              text: 'ATM',
+              onPressed: () {
+                Provider.of<MapsDataProvider>(context, listen: false)
+                    .searchBarController
+                    .text = 'ATM';
+                Provider.of<MapsDataProvider>(context, listen: false)
+                    .fetchLocations();
+                Navigator.pop(context);
+              },
+            ),
           ],
         ),
       ),
