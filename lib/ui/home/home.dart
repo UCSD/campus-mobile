@@ -43,6 +43,7 @@ class _HomeState extends State<Home> {
 
   Future<Null> initUniLinks(BuildContext context) async {
     // deep links are received by this method
+    // the specific host needs to be added in AndroidManifest.xml and Info.plist
     _sub = getLinksStream().listen((String link) async {
       print(link);
     });
