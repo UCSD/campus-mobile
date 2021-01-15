@@ -90,7 +90,7 @@ class UserDataProvider extends ChangeNotifier {
     }
     temp = authBox.get('AuthenticationModel');
     _authenticationModel = temp;
-    await refreshToken();
+    await silentLogin();
   }
 
   /// Load [UserProfileModel] from persistent storage
@@ -160,29 +160,6 @@ class UserDataProvider extends ChangeNotifier {
     _saveEncryptedPasswordToDevice(base64EncodedText);
   }
 
-  /// Logs user in with saved credentials on device
-  /// If this login mechanism fails then the user is logged out
-  Future<bool> _silentLogin() async {
-    String username = await _getUsernameFromDevice();
-    String encryptedPassword = await _getEncryptedPasswordFromDevice();
-    if (username != null && encryptedPassword != null) {
-      final String base64EncodedWithEncryptedPassword =
-          base64.encode(utf8.encode(username + ':' + encryptedPassword));
-      if (await _authenticationService
-          .login(base64EncodedWithEncryptedPassword)) {
-        updateAuthenticationModel(_authenticationService.data);
-        _pushNotificationDataProvider
-            .registerDevice(_authenticationService.data.accessToken);
-        return true;
-      } else {
-        logout();
-        _error = _authenticationService.error;
-        return false;
-      }
-    }
-    return false;
-  }
-
   /// Authenticate a user given an username and password
   /// Upon logging in we should make sure that users has an account
   /// If the user doesn't have an account one will be made by invoking [_createNewUser]
@@ -196,7 +173,7 @@ class UserDataProvider extends ChangeNotifier {
       _cardsDataProvider
           .updateAvailableCards(_userProfileModel.ucsdaffiliation);
       notifyListeners();
-      if (await _silentLogin()) {
+      if (await silentLogin()) {
         await fetchUserProfile();
 
         /// turn on all saved push notifications preferences for user
@@ -207,6 +184,33 @@ class UserDataProvider extends ChangeNotifier {
       notifyListeners();
     }
     return returnVal;
+  }
+
+  /// Logs user in with saved credentials on device
+  /// If this login mechanism fails then the user is logged out
+  Future<bool> silentLogin() async {
+    String username = await _getUsernameFromDevice();
+    String encryptedPassword = await _getEncryptedPasswordFromDevice();
+    if (username != null && encryptedPassword != null) {
+      final String base64EncodedWithEncryptedPassword =
+          base64.encode(utf8.encode(username + ':' + encryptedPassword));
+      if (await _authenticationService
+          .login(base64EncodedWithEncryptedPassword)) {
+        updateAuthenticationModel(_authenticationService.data);
+        _pushNotificationDataProvider
+            .registerDevice(_authenticationService.data.accessToken);
+        notifyListeners();
+        return true;
+      } else {
+        logout();
+        _error = _authenticationService.error;
+        notifyListeners();
+        return false;
+      }
+    } else {
+      notifyListeners();
+      return false;
+    }
   }
 
   /// Remove topic from [_userProfileModel.subscribedTopics]
@@ -384,31 +388,6 @@ class UserDataProvider extends ChangeNotifier {
       _error = 'not logged in';
     }
     _isLoading = false;
-    notifyListeners();
-  }
-
-  /// Use saved [AuthenticationModel] to refesh access token
-  /// Invokes [_silentLogin] on failure
-  Future refreshToken() async {
-    _error = null;
-    if (await _authenticationService
-        .refreshAccessToken(_authenticationModel.refreshToken)) {
-      /// this is only added to refresh token method because the response for the refresh token does not include
-      /// pid and ucsdaffiliation fields
-      if (_authenticationModel.ucsdaffiliation != null) {
-        AuthenticationModel finalModel = _authenticationService.data;
-        finalModel.ucsdaffiliation = _authenticationModel.ucsdaffiliation;
-        finalModel.pid = _authenticationModel.pid;
-      }
-      await updateAuthenticationModel(_authenticationService.data);
-    } else {
-      ///if the token passed from the device was empty then [_error] will be populated with 'The given refresh token was invalid'
-      ///if the token passed from the device was malformed or expired then [_error] will be populated with 'invalid_grant'
-      _error = _authenticationService.error;
-
-      ///Try to use user's credentials to login again
-      await _silentLogin();
-    }
     notifyListeners();
   }
 

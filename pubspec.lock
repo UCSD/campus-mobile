@@ -7,14 +7,14 @@ packages:
       name: _fe_analyzer_shared
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "12.0.0"
+    version: "14.0.0"
   analyzer:
     dependency: transitive
     description:
       name: analyzer
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.40.6"
+    version: "0.41.1"
   app_settings:
     dependency: "direct main"
     description:
@@ -84,7 +84,7 @@ packages:
       name: build
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.5.1"
+    version: "1.5.2"
   build_config:
     dependency: transitive
     description:
@@ -105,7 +105,7 @@ packages:
       name: build_resolvers
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.4.3"
+    version: "1.4.4"
   build_runner:
     dependency: "direct dev"
     description:
@@ -266,7 +266,7 @@ packages:
       name: firebase
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "7.3.2"
+    version: "7.3.3"
   firebase_analytics:
     dependency: "direct main"
     description:
@@ -738,7 +738,7 @@ packages:
       name: source_gen
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.9.8"
+    version: "0.9.9"
   source_span:
     dependency: transitive
     description:
@@ -794,7 +794,7 @@ packages:
       name: time
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.3.0"
+    version: "1.4.0"
   timing:
     dependency: transitive
     description:
@@ -856,10 +856,10 @@ packages:
     description:
       path: "packages/webview_flutter"
       ref: webview-transparent-background
-      resolved-ref: "904657f7f81acb8b75570d9bddeb80cdc1114469"
+      resolved-ref: "9407b271ed9a58ab0a5d536fc14dd6ffe892c190"
       url: "git://github.com/crizant/plugins"
     source: git
-    version: "1.0.5"
+    version: "1.0.7"
   yaml:
     dependency: transitive
     description:

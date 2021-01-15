@@ -103,7 +103,7 @@ class MessagesDataProvider extends ChangeNotifier {
     } else {
       if (_messageService.error ==
           'DioError [DioErrorType.RESPONSE]: Http status error [401]') {
-        await _userDataProvider.refreshToken();
+        await _userDataProvider.silentLogin();
         headers["Authorization"] =
             "Bearer " + _userDataProvider.authenticationModel.accessToken;
         if (await _messageService.fetchMyMessagesData(timestamp, headers)) {
