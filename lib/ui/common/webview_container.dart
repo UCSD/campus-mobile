@@ -1,12 +1,10 @@
-import 'dart:io';
-
+import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/utils/webview.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:campus_mobile_experimental/app_styles.dart';
 
 class WebViewContainer extends StatefulWidget {
   const WebViewContainer({
@@ -106,22 +104,22 @@ class _WebViewContainerState extends State<WebViewContainer> {
 
   // builds the actual webview widget
   Widget buildBody(context) {
-      return Container(
-        height: _contentHeight,
-        child: WebView(
-          opaque: false,
-          javascriptMode: JavascriptMode.unrestricted,
-          initialUrl: webCardUrl,
-          onWebViewCreated: (controller) {
-            _webViewController = controller;
-          },
-          javascriptChannels: <JavascriptChannel>[
-            _linksChannel(context),
-            _heightChannel(context),
-            _refreshTokenChannel(context)
-          ].toSet(),
-        ),
-      );
+    return Container(
+      height: _contentHeight,
+      child: WebView(
+        opaque: false,
+        javascriptMode: JavascriptMode.unrestricted,
+        initialUrl: webCardUrl,
+        onWebViewCreated: (controller) {
+          _webViewController = controller;
+        },
+        javascriptChannels: <JavascriptChannel>[
+          _linksChannel(context),
+          _heightChannel(context),
+          _refreshTokenChannel(context)
+        ].toSet(),
+      ),
+    );
   }
 
   Widget buildMenu() {
@@ -207,7 +205,7 @@ class _WebViewContainerState extends State<WebViewContainer> {
       name: 'RefreshToken',
       onMessageReceived: (JavascriptMessage message) async {
         if (Provider.of<UserDataProvider>(context, listen: false).isLoggedIn) {
-          await _userDataProvider.refreshToken();
+          await _userDataProvider.silentLogin();
           _webViewController?.reload();
         }
       },
