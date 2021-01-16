@@ -72,15 +72,15 @@ echo $FIREBASE_ANDROID | base64 --decode > ./android/app/google-services.json
 # Set env vars
 echo "Setting build environment: $BUILD_ENV"
 if [ "$BUILD_ENV" == "PROD" ]; then
-    node ./scripts/codemagic-ci/set-env.js PROD
+    node ./scripts/codemagic-ci/set-env.js PROD $APP_VERSION $PROJECT_BUILD_NUMBER
     sh ./scripts/codemagic-ci/verify-env.sh PROD
 elif [ "$BUILD_ENV" == "PROD-TEST" ]; then
-    node ./scripts/codemagic-ci/set-env.js PROD
+    node ./scripts/codemagic-ci/set-env.js PROD $APP_VERSION $PROJECT_BUILD_NUMBER
     sh ./scripts/codemagic-ci/verify-env.sh PROD
     node ./scripts/codemagic-ci/set-env.js PROD-TEST
     sh ./scripts/codemagic-ci/verify-env.sh PROD-TEST
 elif [ "$BUILD_ENV" == "QA" ]; then
-    node ./scripts/codemagic-ci/set-env.js QA
+    node ./scripts/codemagic-ci/set-env.js QA $APP_VERSION $PROJECT_BUILD_NUMBER
     sh ./scripts/codemagic-ci/verify-env.sh QA
 else
     echo "Error: BUILD_ENV not found, exiting."

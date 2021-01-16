@@ -18,7 +18,6 @@ class AuthenticationModelAdapter extends TypeAdapter<AuthenticationModel> {
     };
     return AuthenticationModel(
       accessToken: fields[0] as String,
-      refreshToken: fields[1] as String,
       pid: fields[2] as String,
       ucsdaffiliation: fields[3] as String,
       expiration: fields[4] as int,
@@ -28,11 +27,9 @@ class AuthenticationModelAdapter extends TypeAdapter<AuthenticationModel> {
   @override
   void write(BinaryWriter writer, AuthenticationModel obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.accessToken)
-      ..writeByte(1)
-      ..write(obj.refreshToken)
       ..writeByte(2)
       ..write(obj.pid)
       ..writeByte(3)

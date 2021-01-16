@@ -18,8 +18,9 @@ String authenticationModelToJson(AuthenticationModel data) =>
 class AuthenticationModel extends HiveObject {
   @HiveField(0)
   String accessToken;
-  @HiveField(1)
-  String refreshToken;
+  // Deprecated reserved field number - DO NOT REMOVE
+  // @HiveField(1)
+  // String refreshToken;
   @HiveField(2)
   String pid;
   @HiveField(3)
@@ -29,21 +30,14 @@ class AuthenticationModel extends HiveObject {
 
   AuthenticationModel({
     this.accessToken,
-    this.refreshToken,
     this.pid,
     this.ucsdaffiliation,
     this.expiration,
   });
 
   factory AuthenticationModel.fromJson(Map<String, dynamic> json) {
-    ///this if statement is added so refresh token data can be used
-    if (json['expires_in'] != null) {
-      json['expiration'] = json['expires_in'];
-    }
     return AuthenticationModel(
       accessToken: json["access_token"] == null ? null : json["access_token"],
-      refreshToken:
-          json["refresh_token"] == null ? null : json["refresh_token"],
       pid: json["pid"] == null ? null : json["pid"],
       ucsdaffiliation:
           json["ucsdaffiliation"] == null ? null : json["ucsdaffiliation"],
@@ -53,7 +47,6 @@ class AuthenticationModel extends HiveObject {
 
   Map<String, dynamic> toJson() => {
         "access_token": accessToken == null ? null : accessToken,
-        "refresh_token": refreshToken == null ? null : refreshToken,
         "pid": pid == null ? null : pid,
         "ucsdaffiliation": ucsdaffiliation == null ? null : ucsdaffiliation,
         "expiration": expiration == null ? null : expiration,

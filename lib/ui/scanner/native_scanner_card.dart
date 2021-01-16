@@ -9,6 +9,8 @@ import 'package:provider/provider.dart';
 const String cardId = 'NativeScanner';
 
 class NativeScannerCard extends StatelessWidget {
+  UserDataProvider _userDataProvider;
+
   @override
   Widget build(BuildContext context) {
     return CardContainer(
@@ -25,6 +27,8 @@ class NativeScannerCard extends StatelessWidget {
   }
 
   Widget buildCardContent(BuildContext context) {
+    _userDataProvider = Provider.of<UserDataProvider>(context);
+
     return GestureDetector(
       onTap: () {
         getActionButtonNavigateRoute(context);
@@ -48,7 +52,7 @@ class NativeScannerCard extends StatelessWidget {
               getCardContentText(context),
               textAlign: TextAlign.left,
             ),
-          )
+          ),
         ],
       ),
     );
