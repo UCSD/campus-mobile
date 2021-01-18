@@ -27,6 +27,12 @@ apply plugin: 'kotlin-android'
 apply plugin: 'com.google.firebase.crashlytics'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
 android {
     compileSdkVersion 29
 
@@ -47,25 +53,16 @@ android {
     }
 
     signingConfigs {
-        if (project.hasProperty('MYAPP_RELEASE_STORE_FILE')) {
-            release {
-                storeFile file(MYAPP_RELEASE_STORE_FILE)
-                storePassword MYAPP_RELEASE_STORE_PASSWORD
-                keyAlias MYAPP_RELEASE_KEY_ALIAS
-                keyPassword MYAPP_RELEASE_KEY_PASSWORD
-            }
+        release {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+            storePassword keystoreProperties['storePassword']
         }
     }
-
     buildTypes {
-        if (project.hasProperty('MYAPP_RELEASE_STORE_FILE')) {
-            release {
-                signingConfig signingConfigs.release
-            }
-        }
-
-        debug {
-            signingConfig signingConfigs.debug
+        release {
+            signingConfig signingConfigs.release
         }
     }
 }
