@@ -107,10 +107,8 @@ class ShuttleDataProvider extends ChangeNotifier {
   Future<void> addStop(int stopID) async {
     if (!userDataProvider.userProfileModel.selectedStops.contains(stopID)) {
       userDataProvider.userProfileModel.selectedStops.add(stopID);
-      // update userprofilemodel after a stop is added
-      // userDataProvider
-      //     .updateUserProfileModel(userDataProvider.userProfileModel);
-      // print("UDP - ${userDataProvider.userProfileModel.selectedStops}");
+      // update userprofilemodel locally and in database after a stop is added
+      userDataProvider.postUserProfile(userDataProvider.userProfileModel);
       arrivalsToRender[stopID] = await fetchArrivalInformation(stopID);
     }
     notifyListeners();
@@ -120,6 +118,8 @@ class ShuttleDataProvider extends ChangeNotifier {
     // print('remove');
     if (userDataProvider.userProfileModel.selectedStops.contains(stopID)) {
       userDataProvider.userProfileModel.selectedStops.remove(stopID);
+      // update userprofilemodel locally and in database after a stop is removed
+      userDataProvider.postUserProfile(userDataProvider.userProfileModel);
       // print("UDP - ${userDataProvider.userProfileModel.selectedStops}");
     }
     notifyListeners();
