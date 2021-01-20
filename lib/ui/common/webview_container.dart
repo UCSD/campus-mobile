@@ -210,7 +210,7 @@ class _WebViewContainerState extends State<WebViewContainer>
       name: 'RefreshToken',
       onMessageReceived: (JavascriptMessage message) async {
         if (Provider.of<UserDataProvider>(context, listen: false).isLoggedIn) {
-          await _userDataProvider.refreshToken();
+          await _userDataProvider.silentLogin();
           _webViewController?.reload();
         }
       },
