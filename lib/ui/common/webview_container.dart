@@ -1,10 +1,12 @@
-import 'package:campus_mobile_experimental/app_styles.dart';
+import 'dart:io';
+
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/utils/webview.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
 
 class WebViewContainer extends StatefulWidget {
   const WebViewContainer({
@@ -33,7 +35,9 @@ class WebViewContainer extends StatefulWidget {
   _WebViewContainerState createState() => _WebViewContainerState();
 }
 
-class _WebViewContainerState extends State<WebViewContainer> {
+class _WebViewContainerState extends State<WebViewContainer>
+    with AutomaticKeepAliveClientMixin {
+  bool get wantKeepAlive => true;
   UserDataProvider _userDataProvider;
   WebViewController _webViewController;
   double _contentHeight = cardContentMinHeight;
@@ -50,6 +54,7 @@ class _WebViewContainerState extends State<WebViewContainer> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     active = Provider.of<CardsDataProvider>(context).cardStates[widget.cardId];
 
     // check if this webCard needs an auth token

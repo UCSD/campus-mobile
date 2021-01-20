@@ -13,8 +13,10 @@ class ParkingCard extends StatefulWidget {
   _ParkingCardState createState() => _ParkingCardState();
 }
 
-class _ParkingCardState extends State<ParkingCard> {
+class _ParkingCardState extends State<ParkingCard>
+    with AutomaticKeepAliveClientMixin {
   ParkingDataProvider _parkingDataProvider;
+  bool get wantKeepAlive => true;
   final _controller = new PageController();
   WebViewController _webViewController;
   String cardId = 'parking';
@@ -27,7 +29,9 @@ class _ParkingCardState extends State<ParkingCard> {
     _parkingDataProvider = Provider.of<ParkingDataProvider>(context);
   }
 
+  // ignore: must_call_super
   Widget build(BuildContext context) {
+    //super.build(context);
     return CardContainer(
       titleText: CardTitleConstants.titleMap[cardId],
       isLoading: _parkingDataProvider.isLoading,
