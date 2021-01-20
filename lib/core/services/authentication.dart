@@ -47,27 +47,6 @@ class AuthenticationService {
     }
   }
 
-  Future<bool> refreshAccessToken(String refreshToken) async {
-    _error = null;
-    final tokenHeaders = {'refresh_token': refreshToken};
-    try {
-      var response = await _networkHelper.authorizedPost(
-          AUTH_SERVICE_API_URL + '/refresh', tokenHeaders, null);
-      if (response['error'] != null) {
-        throw (response['error']);
-      }
-      final authenticationModel = AuthenticationModel.fromJson(response);
-      _data = authenticationModel;
-      _lastUpdated = DateTime.now();
-      return true;
-    } catch (e) {
-      ///TODO: check to see if error returned means the refresh token is expired
-      ///if refresh token is expired then try to reauthenticate using login method
-      _error = e.toString();
-      return false;
-    }
-  }
-
   DateTime get lastUpdated => _lastUpdated;
   AuthenticationModel get data => _data;
   String get error => _error;

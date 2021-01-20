@@ -35,7 +35,9 @@ class WebViewContainer extends StatefulWidget {
   _WebViewContainerState createState() => _WebViewContainerState();
 }
 
-class _WebViewContainerState extends State<WebViewContainer> {
+class _WebViewContainerState extends State<WebViewContainer>
+    with AutomaticKeepAliveClientMixin {
+  bool get wantKeepAlive => true;
   UserDataProvider _userDataProvider;
   WebViewController _webViewController;
   double _contentHeight = cardContentMinHeight;
@@ -207,7 +209,7 @@ class _WebViewContainerState extends State<WebViewContainer> {
       name: 'RefreshToken',
       onMessageReceived: (JavascriptMessage message) async {
         if (Provider.of<UserDataProvider>(context, listen: false).isLoggedIn) {
-          await _userDataProvider.refreshToken();
+          await _userDataProvider.silentLogin();
           _webViewController?.reload();
         }
       },
