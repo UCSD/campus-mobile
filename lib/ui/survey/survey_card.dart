@@ -17,11 +17,13 @@ class SurveyCard extends StatefulWidget {
   _SurveyCardState createState() => _SurveyCardState();
 }
 
-class _SurveyCardState extends State<SurveyCard> {
+class _SurveyCardState extends State<SurveyCard>
+    with AutomaticKeepAliveClientMixin {
   String cardId = "student_survey";
   double _contentHeight = webViewMinHeight;
   SurveyDataProvider _surveyDataProvider;
   UserDataProvider _userDataProvider;
+  bool get wantKeepAlive => true;
   WebViewController _webViewController;
   String surveyIdMessage = "";
   List<String> postMessage;
@@ -38,7 +40,9 @@ class _SurveyCardState extends State<SurveyCard> {
   }
 
   @override
+  // ignore: must_call_super
   Widget build(BuildContext context) {
+    //super.build(context);
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
