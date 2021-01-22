@@ -36,12 +36,6 @@ class SurveyDataProvider extends ChangeNotifier {
     notifyListeners();
     if (await _surveyService.fetchData()) {
       _surveyModel = _surveyService.surveyModel;
-
-      for (String id in _userDataProvider.userProfileModel.surveyCompletion) {
-        if (_surveyModel.surveyId == id) {
-          _surveyModel.surveyActive = false;
-        }
-      }
       _lastUpdated = DateTime.now();
     } else {
       ///TODO: determine what error to show to the user
