@@ -81,22 +81,34 @@ class UserDataProvider extends ChangeNotifier {
   /// Load [AuthenticationModel] from persistent storage
   /// Will create persistent storage if no data is found
   Future _loadSavedAuthenticationModel() async {
+    print('UserDataProvider:_loadSavedAuthenticationModel:1');
     var authBox =
         await Hive.openBox<AuthenticationModel>('AuthenticationModel');
+
+    int boxLength = authBox.length;
+    print('UserDataProvider:_loadSavedAuthenticationModel:length: ' +
+        boxLength.toString());
+
     AuthenticationModel temp = AuthenticationModel.fromJson({});
     //check to see if we have added the authentication model into the box already
     if (authBox.get('AuthenticationModel') == null) {
+      print('UserDataProvider:_loadSavedAuthenticationModel:3:auth model null');
       await authBox.put('AuthenticationModel', temp);
+      temp = authBox.get('AuthenticationModel');
+      _authenticationModel = temp;
+    } else {
+      print('UserDataProvider:_loadSavedAuthenticationModel:3:auth not null');
+      await silentLogin();
     }
-    temp = authBox.get('AuthenticationModel');
-    _authenticationModel = temp;
-    await silentLogin();
   }
 
   /// Load [UserProfileModel] from persistent storage
   /// Will create persistent storage if no data is found
   Future _loadSavedUserProfile() async {
+    print('UserDataProvider:_loadSavedUserProfile ------------------- 1');
     var userBox = await Hive.openBox<UserProfileModel>('UserProfileModel');
+
+    // Create new user from temp profile
     UserProfileModel tempUserProfile =
         await _createNewUser(UserProfileModel.fromJson({}));
     if (userBox.get('UserProfileModel') == null) {
@@ -120,11 +132,13 @@ class UserDataProvider extends ChangeNotifier {
 
   /// Save username to device
   void _saveUsernameToDevice(String username) {
+    print('UserDataProvider: _saveUsernameToDevice: ' + username);
     storage.write(key: 'username', value: username);
   }
 
   /// Get username from device
-  Future<String> _getUsernameFromDevice() {
+  Future<String> getUsernameFromDevice() {
+    print('UserDataProvider: getUsernameFromDevice');
     return storage.read(key: 'username');
   }
 
@@ -139,7 +153,7 @@ class UserDataProvider extends ChangeNotifier {
   }
 
   /// Encrypt given username and password and store on device
-  void _encryptLoginInfo(String username, String password) {
+  void _encryptAndSaveCredentials(String username, String password) {
     // TODO: import assets/public_key.txt
     final String pkString = '-----BEGIN PUBLIC KEY-----\n' +
         'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDJD70ejMwsmes6ckmxkNFgKley\n' +
@@ -163,76 +177,97 @@ class UserDataProvider extends ChangeNotifier {
   /// Authenticate a user given an username and password
   /// Upon logging in we should make sure that users has an account
   /// If the user doesn't have an account one will be made by invoking [_createNewUser]
-  Future<bool> login(String username, String password) async {
-    bool returnVal = false;
-    if ((username?.isNotEmpty ?? false) && (password?.isNotEmpty ?? false)) {
-      _encryptLoginInfo(username, password);
-      _error = null;
-      _isLoading = true;
-      CardsDataProvider _cardsDataProvider = CardsDataProvider();
-      _cardsDataProvider
-          .updateAvailableCards(_userProfileModel.ucsdaffiliation);
-      notifyListeners();
-      if (await silentLogin()) {
-        await fetchUserProfile();
+  Future manualLogin(String username, String password) async {
+    print('UserDataProvider:manualLogin:1');
+    _error = null;
+    _isLoading = true;
+    notifyListeners();
 
-        /// turn on all saved push notifications preferences for user
-        _subscribeToPushNotificationTopics(userProfileModel.subscribedTopics);
-        returnVal = true;
+    if (username.isNotEmpty && password.isNotEmpty) {
+      print('UserDataProvider:manualLogin:2');
+      _encryptAndSaveCredentials(username, password);
+
+      if (await silentLogin()) {
+        print('UserDataProvider:manualLogin:silentLogin SUCCESS - 3');
+        print('UserDataProvider:manualLogin:silentLogin SUCCESS:username: ' +
+            await getUsernameFromDevice());
+        _isLoading = false;
+        notifyListeners();
+        return true;
+      } else {
+        print('UserDataProvider:manualLogin:silentLogin FAIL - 4');
+        _error = _authenticationService.error;
+        _isLoading = false;
+        notifyListeners();
+        return false;
       }
-      _isLoading = false;
-      notifyListeners();
     }
-    return returnVal;
+
+    _error = 'Username or password not found';
+    _isLoading = false;
+    notifyListeners();
+    return false;
   }
 
   /// Logs user in with saved credentials on device
   /// If this login mechanism fails then the user is logged out
   Future<bool> silentLogin() async {
-    String username = await _getUsernameFromDevice();
+    print('UserDataProvider:silentLogin ----------------------- 1');
+
+    String username = await getUsernameFromDevice();
     String encryptedPassword = await _getEncryptedPasswordFromDevice();
-    if (username != null && encryptedPassword != null) {
+
+    print('UserDataProvider:silentLogin:username: ' + username);
+
+    /// Allow silentlLogin if username, pw are set, and the user is not logged in
+    if (username != null && encryptedPassword != null && !isLoggedIn) {
+      print('UserDataProvider:silentLogin: user,pw:TRUE; isLoggedIn:FALSE - 2');
+
       final String base64EncodedWithEncryptedPassword =
           base64.encode(utf8.encode(username + ':' + encryptedPassword));
+
       if (await _authenticationService
           .login(base64EncodedWithEncryptedPassword)) {
+        print('UserDataProvider:silentLogin:SUCCESS ----------------------- 3');
+
+        await fetchUserProfile();
+
+        print('UserDataProvider:silentLogin:updateAuthModel --------------- 4');
         updateAuthenticationModel(_authenticationService.data);
+
+        print('UserDataProvider:silentLogin:CardsDataProvider init -------- 5');
+        CardsDataProvider _cardsDataProvider = CardsDataProvider();
+        print('UserDataProvider:silentLogin:Update available cards -------- 6');
+        _cardsDataProvider
+            .updateAvailableCards(_userProfileModel.ucsdaffiliation);
+        print('UserDataProvider:silentLogin:fetchUserProfile -------------- 7');
+
+        print(
+            'UserDataProvider:silentLogin:_subscribeToPushNotificationTopics - 8');
+        _subscribeToPushNotificationTopics(userProfileModel.subscribedTopics);
+        print('UserDataProvider:silentLogin:registerDevice - 9');
         _pushNotificationDataProvider
             .registerDevice(_authenticationService.data.accessToken);
-        notifyListeners();
+        // notifyListeners();
         return true;
-      } else {
-        logout();
-        _error = _authenticationService.error;
-        notifyListeners();
-        return false;
       }
-    } else {
-      notifyListeners();
-      return false;
     }
-  }
 
-  /// Remove topic from [_userProfileModel.subscribedTopics]
-  /// Use [_pushNotificationDataProvider] to un/subscribe device from push notifications
-  void toggleNotifications(String topic) {
-    if (_userProfileModel.subscribedTopics.contains(topic)) {
-      _userProfileModel.subscribedTopics.remove(topic);
-    } else {
-      _userProfileModel.subscribedTopics.add(topic);
-    }
-    postUserProfile(_userProfileModel);
-    _pushNotificationDataProvider.toggleNotificationsForTopic(topic);
-    notifyListeners();
+    print(
+        'UserDataProvider:silentLogin:credentials invalid or silentLogin FAIL - 10');
+    logout();
+    return false;
   }
 
   /// Logs out user
   /// Unregisters device from direct push notification using [_pushNotificationDataProvider]
   /// Resets all [AuthenticationModel] and [UserProfileModel] data from persistent storage
   void logout() async {
+    print('UserDataProvider:logout');
     _error = null;
     _isLoading = true;
     notifyListeners();
+    print('UserDataProvider:logout:notifyListeners:1');
     _pushNotificationDataProvider
         .unregisterDevice(_authenticationModel.accessToken);
     updateAuthenticationModel(AuthenticationModel.fromJson({}));
@@ -245,6 +280,21 @@ class UserDataProvider extends ChangeNotifier {
     await box.clear();
     _isLoading = false;
 
+    print('UserDataProvider:logout:notifyListeners:2');
+    notifyListeners();
+  }
+
+  /// Remove topic from [_userProfileModel.subscribedTopics]
+  /// Use [_pushNotificationDataProvider] to un/subscribe device from push notifications
+  void toggleNotifications(String topic) {
+    print('UserDataProvider:toggleNotifications');
+    if (_userProfileModel.subscribedTopics.contains(topic)) {
+      _userProfileModel.subscribedTopics.remove(topic);
+    } else {
+      _userProfileModel.subscribedTopics.add(topic);
+    }
+    postUserProfile(_userProfileModel);
+    _pushNotificationDataProvider.toggleNotificationsForTopic(topic);
     notifyListeners();
   }
 
@@ -253,27 +303,40 @@ class UserDataProvider extends ChangeNotifier {
   /// invoke [postUserProfile] once user profile is created
   /// if user has a profile then we invoke [updateUserProfileModel]
   Future fetchUserProfile() async {
+    print('UserDataProvider:fetchUserProfile');
     _error = null;
     _isLoading = true;
     notifyListeners();
-    if (_authenticationModel.isLoggedIn(_authenticationService.lastUpdated)) {
+
+    if (isLoggedIn) {
+      print('UserDataProvider:fetchUserProfile:isLoggedIn');
+
       /// we fetch the user data now
       final Map<String, String> headers = {
         'Authorization': 'Bearer ' + _authenticationModel.accessToken
       };
       if (await _userProfileService.downloadUserProfile(headers)) {
+        print('UserDataProvider:fetchUserProfile:isLoggedIn:dloadUserProfile');
+
         /// if the user profile has no ucsd affiliation then we know the user is new
         /// so create a new profile and upload to DB using [postUserProfile]
         UserProfileModel newModel = _userProfileService.userProfileModel;
         if (newModel.ucsdaffiliation == null) {
+          print(
+              'UserDataProvider:fetchUserProfile:isLoggedIn: newModel.ucsdaffiliation not found, creating new user');
           newModel = await _createNewUser(newModel);
           await postUserProfile(newModel);
         } else {
-          newModel.username = await _getUsernameFromDevice();
+          print(
+              'UserDataProvider:fetchUserProfile:isLoggedIn: newModel.ucsdaffiliation found');
+          newModel.username = await getUsernameFromDevice();
           newModel.ucsdaffiliation = _authenticationModel.ucsdaffiliation;
           newModel.pid = _authenticationModel.pid;
           newModel.subscribedTopics =
               _pushNotificationDataProvider.publicTopics();
+
+          print('UserDataProvider:fetchUserProfile:newModel');
+          print(newModel.toJson());
 
           final studentPattern = RegExp('[BGJMU]');
           final staffPattern = RegExp('[E]');
@@ -300,6 +363,7 @@ class UserDataProvider extends ChangeNotifier {
         _error = _userProfileService.error;
       }
     } else {
+      print('UserDataProvider:fetchUserProfile:notLoggedIn');
       _error = 'not logged in';
     }
     _isLoading = false;
@@ -323,9 +387,12 @@ class UserDataProvider extends ChangeNotifier {
   /// invokes [_subscribeToPushNotificationTopics] to subscribe user to topics
   /// returns newly created [UserProfileModel]
   Future<UserProfileModel> _createNewUser(UserProfileModel profile) async {
+    print('UserDataProvider:_createNewUser');
+
+    print('UserDataProvider:_createNewUser:fetchTopicsList');
     await _pushNotificationDataProvider.fetchTopicsList();
     try {
-      profile.username = await _getUsernameFromDevice();
+      profile.username = await getUsernameFromDevice();
       profile.ucsdaffiliation = _authenticationModel.ucsdaffiliation;
       profile.pid = _authenticationModel.pid;
       profile.subscribedTopics = _pushNotificationDataProvider.publicTopics();
@@ -350,6 +417,7 @@ class UserDataProvider extends ChangeNotifier {
             Classifications.fromJson({'student': false, 'staff': false});
       }
     } catch (e) {
+      print('UserDataProvider:_createNewUser:error -------------------- 5:');
       print(e.toString());
     }
     return profile;
@@ -358,6 +426,7 @@ class UserDataProvider extends ChangeNotifier {
   /// Invoke [updateUserProfileModel] with user profile that was passed in
   /// If user is logged in upload [UserProfileModel] to DB
   Future postUserProfile(UserProfileModel profile) async {
+    print('UserDataProvider:postUserProfile ------------ 1');
     _error = null;
     _isLoading = true;
     notifyListeners();
@@ -367,6 +436,7 @@ class UserDataProvider extends ChangeNotifier {
 
     /// check if user is logged in
     if (_authenticationModel.isLoggedIn(_authenticationService.lastUpdated)) {
+      print('UserDataProvider:postUserProfile ------------ 2');
       final Map<String, String> headers = {
         'Authorization': "Bearer " + _authenticationModel.accessToken
       };
@@ -385,8 +455,10 @@ class UserDataProvider extends ChangeNotifier {
         _error = _userProfileService.error;
       }
     } else {
+      print('UserDataProvider:postUserProfile ------------ 3');
       _error = 'not logged in';
     }
+    print('UserDataProvider:postUserProfile ------------ 4');
     _isLoading = false;
     notifyListeners();
   }

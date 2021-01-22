@@ -19,14 +19,15 @@ class UserProfileModel extends HiveObject {
   Classifications classifications;
   int latestTimeStamp;
   String pid;
+  String ucsdaffiliation;
+  String username;
+
   @HiveField(0)
   List<String> selectedLots;
   @HiveField(1)
   List<String> selectedOccuspaceLocations;
   @HiveField(2)
   List<String> subscribedTopics;
-  String ucsdaffiliation;
-  String username;
   @HiveField(3)
   Map<String, bool> selectedParkingSpots;
   @HiveField(4)
@@ -34,8 +35,8 @@ class UserProfileModel extends HiveObject {
   @HiveField(5)
   List<int> selectedStops;
 
-  UserProfileModel({
-      this.classifications,
+  UserProfileModel(
+      {this.classifications,
       this.latestTimeStamp,
       this.pid,
       this.selectedLots,
@@ -45,8 +46,7 @@ class UserProfileModel extends HiveObject {
       this.username,
       this.selectedParkingSpots,
       this.selectedParkingLots,
-      this.selectedStops
-  });
+      this.selectedStops});
 
   factory UserProfileModel.fromJson(Map<String, dynamic> json) =>
       UserProfileModel(

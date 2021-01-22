@@ -122,7 +122,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                   controller: _passwordTextFieldController,
                 ),
               ),
-              SizedBox(height: 40),
+              SizedBox(height: 20),
               Padding(
                   padding: EdgeInsets.only(top: 30.0),
                   child: Row(
@@ -148,9 +148,11 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                             ? null
                             : () {
                                 _userDataProvider
-                                    .login(_emailTextFieldController.text,
+                                    .manualLogin(_emailTextFieldController.text,
                                         _passwordTextFieldController.text)
                                     .then((isLoggedIn) async {
+                                  print('onboarding_login:isLoggedIn: ' +
+                                      isLoggedIn.toString());
                                   if (isLoggedIn) {
                                     Navigator.pushNamedAndRemoveUntil(
                                         context,
@@ -170,13 +172,13 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                       )),
                     ],
                   )),
-              SizedBox(height: 5),
+              SizedBox(height: 10),
               Row(
                 children: [
                   GestureDetector(
                     child: Text(
                       'Need help logging in?',
-                      style: TextStyle(color: Colors.white, fontSize: 12),
+                      style: TextStyle(color: Colors.white, fontSize: 14),
                     ),
                     onTap: () async {
                       try {
@@ -188,17 +190,18 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                       }
                     },
                   ),
-
-                  /* GestureDetector(
+                  GestureDetector(
                     child: Text(
                       'Skip',
-                      style: TextStyle(color: Colors.white, fontSize: 12),
+                      style: TextStyle(color: Colors.white, fontSize: 14),
                     ),
-                    onTap: () {
+                    onTap: () async {
                       Navigator.pushNamedAndRemoveUntil(context,
                           RoutePaths.BottomNavigationBar, (_) => false);
+                      final prefs = await SharedPreferences.getInstance();
+                      prefs.setBool('showOnboardingScreen', false);
                     },
-                  )*/
+                  )
                 ],
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
               ),

@@ -321,6 +321,7 @@ class _ScanditScannerState extends State<ScanditScanner> {
 
       if (isLoggedIn) {
         if (tokenExpired) {
+          print('native_scanner_view: silentLogin --------- 15');
           if (await _userDataProvider.silentLogin()) {
             validToken = true;
           }

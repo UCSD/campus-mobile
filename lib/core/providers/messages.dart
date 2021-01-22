@@ -81,7 +81,14 @@ class MessagesDataProvider extends ChangeNotifier {
       "Authorization":
           "Bearer " + _userDataProvider.authenticationModel.accessToken,
     };
+
+    print('access token: ----------------- ' +
+        _userDataProvider.authenticationModel.accessToken);
+    print(
+        'providers:user:retrieveMoreMyMessages:fetchMyMessagesData-----------------12');
     if (await _messageService.fetchMyMessagesData(timestamp, headers)) {
+      print(
+          'providers:user:retrieveMoreMyMessages:fetchMyMessagesData-----------------13 SUCCESS');
       List<MessageElement> temp = _messageService.messagingModels.messages;
       updateMessages(temp);
       makeOrderedMessagesList();
@@ -100,42 +107,6 @@ class MessagesDataProvider extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
       return true;
-    } else {
-      if (_messageService.error ==
-          'DioError [DioErrorType.RESPONSE]: Http status error [401]') {
-        await _userDataProvider.silentLogin();
-        headers["Authorization"] =
-            "Bearer " + _userDataProvider.authenticationModel.accessToken;
-        if (await _messageService.fetchMyMessagesData(timestamp, headers)) {
-          List<MessageElement> temp = _messageService.messagingModels.messages;
-          updateMessages(temp);
-          makeOrderedMessagesList();
-
-          returnedTimestamp = _messageService.messagingModels.next == null
-              ? 0
-              : _messageService.messagingModels.next;
-          // this is to check if we can no more message to paginate through
-          if (_previousTimestamp == returnedTimestamp ||
-              returnedTimestamp == 0) {
-            _hasMoreMessagesToLoad = false;
-          } else {
-            _hasMoreMessagesToLoad = true;
-          }
-          _lastUpdated = DateTime.now();
-          _previousTimestamp = returnedTimestamp;
-          _isLoading = false;
-          notifyListeners();
-          return true;
-        } else {
-          _error = _messageService.error;
-          _statusText = NotificationsConstants.statusFetchProblem;
-        }
-      }
-      _error = _messageService.error;
-      _statusText = NotificationsConstants.statusFetchProblem;
-      _isLoading = false;
-      notifyListeners();
-      return false;
     }
   }
 

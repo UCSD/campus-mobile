@@ -1,12 +1,10 @@
-import 'dart:io';
-
+import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/utils/webview.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:campus_mobile_experimental/app_styles.dart';
 
 class WebViewContainer extends StatefulWidget {
   const WebViewContainer({
@@ -108,6 +106,7 @@ class _WebViewContainerState extends State<WebViewContainer>
 
   // builds the actual webview widget
   Widget buildBody(context) {
+    print('webview_container:buildBody: ' + webCardUrl);
     return Container(
       height: _contentHeight,
       child: WebView(
@@ -199,6 +198,8 @@ class _WebViewContainerState extends State<WebViewContainer>
         setState(() {
           _contentHeight =
               validateHeight(context, double.tryParse(message.message));
+          print('webview_container:_heightChannel:SetHeight: ' +
+              _contentHeight.toString());
         });
       },
     );
@@ -208,9 +209,22 @@ class _WebViewContainerState extends State<WebViewContainer>
     return JavascriptChannel(
       name: 'RefreshToken',
       onMessageReceived: (JavascriptMessage message) async {
+        print('webview_container:_refreshTokenChannel: accessToken: ' +
+            _userDataProvider?.authenticationModel?.accessToken);
+        print('webview_container:_refreshTokenChannel: isLoggedIn: ' +
+            Provider.of<UserDataProvider>(context, listen: false)
+                .isLoggedIn
+                .toString());
+
         if (Provider.of<UserDataProvider>(context, listen: false).isLoggedIn) {
-          await _userDataProvider.silentLogin();
-          _webViewController?.reload();
+          print(
+              'webview_container:_refreshTokenChannel: User has expired access token, calling silentLogin');
+          if (await _userDataProvider.silentLogin()) {
+            print(
+                'webview_container:_refreshTokenChannel: silentLogin SUCCESS, reloading webview: ' +
+                    webCardUrl);
+            _webViewController?.reload();
+          }
         }
       },
     );

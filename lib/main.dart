@@ -14,62 +14,58 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-bool isFirstRunFlag = false;
+bool showOnboardingScreen;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  await initalizeCrashlytics();
-  await initializeStorage();
+  await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+  await initializeHive();
+  await initializeApp();
+
   runApp(CampusMobile());
 }
 
-void initalizeCrashlytics() async {
-  await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
-}
-
-void initializeStorage() async {
-  /// initialize hive storage
+initializeHive() async {
+  print('main:initializeHive');
   await Hive.initFlutter('.');
+  Hive.registerAdapter(AuthenticationModelAdapter());
+  Hive.registerAdapter(UserProfileModelAdapter());
+}
 
-  //register appropriate hive boxes
-  await Hive.registerAdapter(AuthenticationModelAdapter());
-  await Hive.registerAdapter(UserProfileModelAdapter());
-
-  isFirstRunFlag = await isFirstRun();
-
-  if (isFirstRunFlag) {
-    FlutterSecureStorage storage = FlutterSecureStorage();
-
-    /// open all boxes
-    await (await Hive.openBox(DataPersistence.cardStates)).deleteFromDisk();
-    await (await Hive.openBox(DataPersistence.cardOrder)).deleteFromDisk();
-    await (await Hive.openBox(DataPersistence.AuthenticationModel))
-        .deleteFromDisk();
-    await (await Hive.openBox(DataPersistence.UserProfileModel))
-        .deleteFromDisk();
-
-    /// delete all saved data
-    await storage.deleteAll();
-
-    setFirstRun();
+initializeApp() async {
+  print('main:initializeApp');
+  final prefs = await SharedPreferences.getInstance();
+  if (prefs.getBool('first_run') ?? true) {
+    await clearSecuredStorage();
+    await clearHiveStorage();
+    prefs.setBool('showOnboardingScreen', true);
+    prefs.setBool('first_run', false);
   }
+
+  showOnboardingScreen = prefs.getBool('showOnboardingScreen') ?? true;
+  print('showOnboardingScreen1: ' + showOnboardingScreen.toString());
 }
 
-Future<bool> isFirstRun() async {
-  final prefs = await SharedPreferences.getInstance();
-  return (prefs.getBool('first_run') ?? true);
+clearSecuredStorage() async {
+  print('main:clearSecuredStorage');
+  FlutterSecureStorage storage = FlutterSecureStorage();
+  await storage.deleteAll();
 }
 
-void setFirstRun() async {
-  final prefs = await SharedPreferences.getInstance();
-  prefs.setBool('first_run', false);
-  isFirstRunFlag = true;
+clearHiveStorage() async {
+  await (await Hive.openBox(DataPersistence.cardStates)).deleteFromDisk();
+  await (await Hive.openBox(DataPersistence.cardOrder)).deleteFromDisk();
+  await (await Hive.openBox(DataPersistence.AuthenticationModel))
+      .deleteFromDisk();
+  await (await Hive.openBox(DataPersistence.UserProfileModel)).deleteFromDisk();
 }
 
 class CampusMobile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    print('showOnboardingScreen2: ' + showOnboardingScreen.toString());
+
     return MultiProvider(
       providers: providers,
       child: MaterialApp(
@@ -96,7 +92,7 @@ class CampusMobile extends StatelessWidget {
           appBarTheme: darkAppBarTheme,
           unselectedWidgetColor: darkAccentColor,
         ),
-        initialRoute: isFirstRunFlag
+        initialRoute: showOnboardingScreen
             ? RoutePaths.OnboardingInitial
             : RoutePaths.BottomNavigationBar,
         onGenerateRoute: campusMobileRouter.Router.generateRoute,

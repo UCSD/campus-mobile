@@ -14,6 +14,7 @@ class NotificationService {
   List<TopicsModel> _topicsModel;
 
   Future<bool> fetchTopics() async {
+    print('NotificationService:fetchTopics');
     try {
       String response = await _networkHelper.fetchData(_topicsEndpoint);
       if (response != null) {
@@ -30,6 +31,7 @@ class NotificationService {
   }
 
   Future<bool> postPushToken(Map<String, String> headers, body) async {
+    print('NotificationService:postPushToken');
     try {
       String response = await _networkHelper.authorizedPost(
           _endpoint + '/register', headers, body);
@@ -47,6 +49,7 @@ class NotificationService {
 
   Future<bool> deletePushToken(
       Map<String, String> headers, String token) async {
+    print('NotificationService:deletePushToken');
     token = Uri.encodeComponent(token);
     try {
       String response = await _networkHelper.authorizedDelete(
