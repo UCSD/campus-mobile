@@ -33,7 +33,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data
                     android:scheme="campusmobile"
-                    android:host="deeplinking.viewvendingmachinemap" />
+                    android:host="deeplinking.searchmap" />
             </intent-filter>
             <intent-filter>
                 <action android:name="FLUTTER_NOTIFICATION_CLICK" />

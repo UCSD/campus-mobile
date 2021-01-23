@@ -22,7 +22,7 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>deeplinking.viewvendingmachinemap</string>
+			<string>deeplinking.searchmap</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>campusmobile</string>
