@@ -4,6 +4,7 @@ import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/cards.dart';
 import 'package:campus_mobile_experimental/core/models/notices.dart';
+import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:campus_mobile_experimental/core/providers/notices.dart';
@@ -44,8 +45,21 @@ class _HomeState extends State<Home> {
   Future<Null> initUniLinks(BuildContext context) async {
     // deep links are received by this method
     // the specific host needs to be added in AndroidManifest.xml and Info.plist
+    // currently, this method handles executing custom map query
     _sub = getLinksStream().listen((String link) async {
-      print("Received deeplink for: ${link}");
+      // handling for map query
+      if(link.contains("deeplinking.searchmap")) {
+        var uri = Uri.dataFromString(link);
+        var query = uri.queryParameters['query'];
+        // redirect query to maps tab and search with query
+        Provider.of<MapsDataProvider>(context, listen: false)
+            .searchBarController
+            .text = query;
+        Provider.of<MapsDataProvider>(context, listen: false)
+            .fetchLocations();
+        Provider.of<BottomNavigationBarProvider>(context, listen: false)
+            .currentIndex = NavigatorConstants.MapTab;
+      }
     });
   }
 
