@@ -33,7 +33,7 @@ pubspec.lock
 
 # Codemagic
 app-config*.js
-sp-auth*.json
+sp-config*.json
 env-vars*.json
 node_modules/
 
