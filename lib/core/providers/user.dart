@@ -219,8 +219,8 @@ class UserDataProvider extends ChangeNotifier {
 
     print('UserDataProvider:silentLogin:username: ' + username);
 
-    /// Allow silentlLogin if username, pw are set, and the user is not logged in
-    if (username != null && encryptedPassword != null && !isLoggedIn) {
+    /// Allow silentLogin if username, pw are set, and the user is not logged in
+    if (username != null && encryptedPassword != null) {
       print('UserDataProvider:silentLogin: user,pw:TRUE; isLoggedIn:FALSE - 2');
 
       final String base64EncodedWithEncryptedPassword =
@@ -230,10 +230,10 @@ class UserDataProvider extends ChangeNotifier {
           .login(base64EncodedWithEncryptedPassword)) {
         print('UserDataProvider:silentLogin:SUCCESS ----------------------- 3');
 
-        await fetchUserProfile();
-
         print('UserDataProvider:silentLogin:updateAuthModel --------------- 4');
-        updateAuthenticationModel(_authenticationService.data);
+        await updateAuthenticationModel(_authenticationService.data);
+
+        await fetchUserProfile();
 
         print('UserDataProvider:silentLogin:CardsDataProvider init -------- 5');
         CardsDataProvider _cardsDataProvider = CardsDataProvider();

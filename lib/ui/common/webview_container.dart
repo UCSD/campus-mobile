@@ -216,7 +216,7 @@ class _WebViewContainerState extends State<WebViewContainer>
                 .isLoggedIn
                 .toString());
 
-        if (Provider.of<UserDataProvider>(context, listen: false).isLoggedIn) {
+        if (!Provider.of<UserDataProvider>(context, listen: false).isLoggedIn) {
           print(
               'webview_container:_refreshTokenChannel: User has expired access token, calling silentLogin');
           if (await _userDataProvider.silentLogin()) {
