@@ -4,6 +4,7 @@ import 'package:campus_mobile_experimental/core/services/barcode.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_scandit_plugin/flutter_scandit_plugin.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 
 class ScannerDataProvider extends ChangeNotifier {
   ScannerDataProvider() {
@@ -23,8 +24,6 @@ class ScannerDataProvider extends ChangeNotifier {
   BarcodeService _barcodeService;
   UserDataProvider _userDataProvider;
 
-  var ucsdAffiliation = "";
-  var accessToken = "";
   String _barcode;
   bool isLoading;
   bool _isDuplicate;
@@ -73,9 +72,10 @@ class ScannerDataProvider extends ChangeNotifier {
   }
 
   Map<String, dynamic> createUserData() {
-    ucsdAffiliation = _userDataProvider.authenticationModel.ucsdaffiliation;
-    accessToken = _userDataProvider.authenticationModel.accessToken;
-    return {'barcode': _barcode, 'ucsdaffiliation': ucsdAffiliation};
+    return {
+      'barcode': _barcode,
+      'ucsdaffiliation': _userDataProvider.authenticationModel.ucsdaffiliation
+    };
   }
 
   void verifyBarcodeScanning(BarcodeResult result) {
@@ -102,44 +102,74 @@ class ScannerDataProvider extends ChangeNotifier {
 
   Future<void> handleBarcodeResult(BarcodeResult result) async {
     _hasScanned = true;
-    _barcode = result.data;
-    var data = createUserData();
-    var headers = {
-      "Content-Type": "application/json",
-      'Authorization': 'Bearer ${accessToken}'
-    };
+    _barcode = result?.data;
     isLoading = true;
-    notifyListeners();
-    var results = await _barcodeService.uploadResults(headers, data);
 
-    if (results) {
-      isLoading = false;
-      _didError = false;
-      _successfulSubmission = true;
-      notifyListeners();
-    } else {
-      print(_barcodeService.error);
-      print("error constant: " + ErrorConstants.duplicateRecord);
+    try {
+      var accessTokenExpiration =
+          _userDataProvider?.authenticationModel?.expiration;
+      var nowTime = (DateTime.now().millisecondsSinceEpoch / 1000).round();
+      var timeDiff = accessTokenExpiration - nowTime;
+      var tokenExpired = timeDiff <= 0 ? true : false;
+      var isLoggedIn = _userDataProvider.isLoggedIn;
+      var validToken = false;
+
+      if (isLoggedIn) {
+        if (tokenExpired) {
+          if (await _userDataProvider.silentLogin()) {
+            validToken = true;
+          }
+        } else {
+          validToken = true;
+        }
+
+        if (validToken) {
+          var results = await _barcodeService.uploadResults({
+            "Content-Type": "application/json",
+            'Authorization':
+                'Bearer ${_userDataProvider?.authenticationModel?.accessToken}'
+          }, {
+            'barcode': _barcode
+          });
+
+          if (results) {
+            _successfulSubmission = true;
+            _didError = false;
+            isLoading = false;
+          } else {
+            _successfulSubmission = false;
+            _didError = true;
+            isLoading = false;
+
+            if (_barcodeService.error
+                .contains(ErrorConstants.duplicateRecord)) {
+              errorText = ScannerConstants.duplicateRecord;
+              _isDuplicate = true;
+            } else if (_barcodeService.error
+                .contains(ErrorConstants.invalidMedia)) {
+              errorText = ScannerConstants.invalidMedia;
+              _isValidBarcode = false;
+            } else {
+              errorText = ScannerConstants.barcodeError;
+            }
+          }
+        } else {
+          _successfulSubmission = false;
+          _didError = true;
+          isLoading = false;
+          errorText = ScannerConstants.invalidToken;
+        }
+      } else {
+        _successfulSubmission = false;
+        _didError = true;
+        isLoading = false;
+        errorText = ScannerConstants.loggedOut;
+      }
+    } catch (e) {
       _successfulSubmission = false;
       _didError = true;
       isLoading = false;
-      if (_barcodeService.error.contains(ErrorConstants.invalidBearerToken)) {
-        await _userDataProvider.silentLogin();
-      } else if (_barcodeService.error
-          .contains(ErrorConstants.duplicateRecord)) {
-        errorText =
-            "Submission failed due to barcode already scanned. Please scan another barcode.";
-        _isDuplicate = true;
-        notifyListeners();
-      } else if (_barcodeService.error.contains(ErrorConstants.invalidMedia)) {
-        errorText = "Barcode is not valid. Please scan another barcode.";
-        _isValidBarcode = false;
-        notifyListeners();
-      }
-      //empty the scanned codes after every attempt to upload
-      scannedCodes.clear();
-
-      notifyListeners();
+      errorText = ScannerConstants.unknownError;
     }
   }
 
