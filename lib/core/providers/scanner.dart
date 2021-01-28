@@ -69,6 +69,7 @@ class ScannerDataProvider extends ChangeNotifier {
     if (cameraPermissionsStatus != status) {
       cameraPermissionsStatus = status;
     }
+    notifyListeners();
   }
 
   Map<String, dynamic> createUserData() {
@@ -79,6 +80,8 @@ class ScannerDataProvider extends ChangeNotifier {
   }
 
   void verifyBarcodeScanning(BarcodeResult result) {
+    isLoading = true;
+    notifyListeners();
     scannedCodes.add(result.data);
     // currently scanning 3 consecutive times
     if (scannedCodes.length < 3) {
@@ -171,6 +174,7 @@ class ScannerDataProvider extends ChangeNotifier {
       isLoading = false;
       errorText = ScannerConstants.unknownError;
     }
+    notifyListeners();
   }
 
   /// Simple setters and getters
