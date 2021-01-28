@@ -218,141 +218,7 @@ class _WiFiCardState extends State<WiFiCard> {
               )),
         ),
 
-        //     Padding(
-        //   padding: const EdgeInsets.only(top: 2.0),
-        //   child: Center(
-        //     child: FutureBuilder(
-        //       //future: Future.wait( [WifiConnection.wifiInfo, Location().getLocation()] ),
-        //       future: futureCombo(),
-        //       builder: (context,  snapshot){
-        //         if(snapshot.hasData && snapshot.data[2] == ConnectivityResult.wifi){
-        //
-        //
-        //           if(Platform.isIOS) {
-        //             return Column(
-        //               children: [
-        //                 Padding(
-        //                   padding: const EdgeInsets.only(bottom: 8.0),
-        //                   child: Text("Wifi Information",
-        //                     style: TextStyle(
-        //                         fontWeight: FontWeight.bold,
-        //                         fontSize: 22
-        //                     ),),
-        //                 ),
-        //                 Text("BSSID: ${snapshot.data[0].bssId}"),
-        //                 Text("SSID: ${snapshot.data[0].ssid}"),
-        //                 Text("WiFi IP Address: ${snapshot.data[0].ipAddress}"),
-        //                 Text("MAC Address: ${snapshot.data[0].macAddress}"),
-        //                 Text("Latitude: ${snapshot.data[1].latitude}"),
-        //                 Text("Longitude: ${snapshot.data[1].longitude}"),
-        //                 Text("Time stamp: ${DateTime.fromMillisecondsSinceEpoch(
-        //                     DateTime
-        //                         .now()
-        //                         .millisecondsSinceEpoch).toString()}"),
-        //                 FlatButton(onPressed: () {}, child: Container(
-        //                     color: ThemeData
-        //                         .light()
-        //                         .buttonColor,
-        //                     height: 30,
-        //                     width: 200,
-        //                     child: Center(child: Text("Log Data"))),)
-        //               ],
-        //             );
-        //           }
-        //           else if(Platform.isAndroid){
-        //             return Column(
-        //               children: [
-        //                 Padding(
-        //                   padding: const EdgeInsets.only(bottom: 8.0),
-        //                   child: Text("Wifi Information",
-        //                     style: TextStyle(
-        //                         fontWeight: FontWeight.bold,
-        //                         fontSize: 22
-        //                     ),),
-        //                 ),
-        //                 Text("BSSID: ${snapshot.data[0].bssId}"),
-        //                 Text("SSID: ${snapshot.data[0].ssid}"),
-        //                 Text("WiFi IP Address: ${snapshot.data[0].ipAddress}"),
-        //                 Text("MAC Address: ${snapshot.data[0].macAddress}"),
-        //                 Text("Link speed: ${snapshot.data[0].linkSpeed}" ),
-        //                 Text("Signal Strength: ${snapshot.data[0].signalStrength}" ),
-        //                 Text("Frequency : ${snapshot.data[0].frequency}" ),
-        //                 Text("Network ID: ${snapshot.data[0].networkId}" ),
-        //                 Text("Hidden SSID: ${snapshot.data[0].isHiddenSSid}" ),
-        //                 Text("Router IP: ${snapshot.data[0].routerIp}" ),
-        //                 Text("Channel : ${snapshot.data[0].channel}" ),
-        //                 Text("Latitude: ${snapshot.data[1].latitude}"),
-        //                 Text("Longitude: ${snapshot.data[1].longitude}"),
-        //                 Text("Time stamp: ${DateTime.fromMillisecondsSinceEpoch(
-        //                     DateTime
-        //                         .now()
-        //                         .millisecondsSinceEpoch).toString()}"),
-        //                 FlatButton(onPressed: () {}, child: Container(
-        //                     color: ThemeData
-        //                         .light()
-        //                         .buttonColor,
-        //                     height: 30,
-        //                     width: 200,
-        //                     child: Center(child: Text("Log Data"))),)
-        //               ],
-        //             );
-        //           }
-        //           if(Platform.isAndroid) {
-        //             Map wifiLog = {
-        //               "Platform": "Android",
-        //               "SSID": snapshot.data[0].ssid,
-        //               "BSSID": snapshot.data[0].bssId,
-        //               "IPAddress": snapshot.data[0].ipAddress,
-        //               "MacAddress": snapshot.data[0].macAddress,
-        //               "LinkSpeed": snapshot.data[0].linkSpeed,
-        //               "SignalStrength": snapshot.data[0].signalStrength,
-        //               "Frequency": snapshot.data[0].frequency,
-        //               "NetworkID": snapshot.data[0].networkId,
-        //               "IsHiddenSSID": snapshot.data[0].isHiddenSSid,
-        //               "RouterIP": snapshot.data[0].routerIp,
-        //               "Channel": snapshot.data[0].channel,
-        //               "Latitude": snapshot.data[1].latitude as Double,
-        //               "Longitude": snapshot.data[1].longitude as Double,
-        //               "TimeStamp": DateTime.fromMillisecondsSinceEpoch(
-        //                   DateTime
-        //                       .now()
-        //                       .millisecondsSinceEpoch).toString()
-        //             };
-        //           }else{
-        //             Map wifiLog = {
-        //               "Platform": "iOS",
-        //               "SSID": snapshot.data[0].ssid,
-        //               "BSSID": snapshot.data[0].bssId,
-        //               "IPAddress": snapshot.data[0].ipAddress,
-        //               "MacAddress": snapshot.data[0].macAddress,
-        //               "LinkSpeed": "",
-        //               "SignalStrength": "",
-        //               "Frequency": "",
-        //               "NetworkID": "",
-        //               "IsHiddenSSID": "",
-        //               "RouterIP": "",
-        //               "Channel": "",
-        //               "Latitude": snapshot.data[1].latitude as Double,
-        //               "Longitude": snapshot.data[1].longitude as Double,
-        //               "TimeStamp": DateTime.fromMillisecondsSinceEpoch(
-        //                   DateTime
-        //                       .now()
-        //                       .millisecondsSinceEpoch).toString()
-        //             };
-        //           }
-        //
-        //         }else if(snapshot.hasData){
-        //           return Column(
-        //             children: [
-        //               Center(child: Text("Not connected to WiFi"))
-        //             ],
-        //           );
-        //         }
-        //         return CircularProgressIndicator();
-        //       },
-        //     ),
-        //   ),
-        // ),
+
       ],
     );
   }
@@ -426,6 +292,66 @@ class _WiFiCardState extends State<WiFiCard> {
     );
   }
 
+  Future<bool> sendNetworkDiagnostics() async{
+    bool sentSuccessfully = false;
+
+              List<Object> locationWifiConnectivity = await futureCombo();
+              if(locationWifiConnectivity[2] == ConnectivityResult.wifi) {
+                if(Platform.isAndroid) {
+                  Map wifiLog = {
+                    "Platform": "Android",
+                    "SSID": (locationWifiConnectivity[0] as WifiInfo).ssid,
+                    "BSSID": (locationWifiConnectivity[0] as WifiInfo).bssId,
+                    "IPAddress": (locationWifiConnectivity[0] as WifiInfo).ipAddress,
+                    "MacAddress": (locationWifiConnectivity[0] as WifiInfo).macAddress,
+                    "LinkSpeed": (locationWifiConnectivity[0] as WifiInfo).linkSpeed,
+                    "SignalStrength": (locationWifiConnectivity[0] as WifiInfo).signalStrength,
+                    "Frequency": (locationWifiConnectivity[0] as WifiInfo).frequency,
+                    "NetworkID": (locationWifiConnectivity[0] as WifiInfo).networkId,
+                    "IsHiddenSSID": (locationWifiConnectivity[0] as WifiInfo).isHiddenSSid,
+                    "RouterIP": (locationWifiConnectivity[0] as WifiInfo).routerIp,
+                    "Channel": (locationWifiConnectivity[0] as WifiInfo).channel,
+                    "Latitude": (locationWifiConnectivity[1] as LocationData).latitude as Double,
+                    "Longitude": (locationWifiConnectivity[1] as LocationData).longitude as Double,
+                    "TimeStamp": DateTime.fromMillisecondsSinceEpoch(
+                        DateTime
+                            .now()
+                            .millisecondsSinceEpoch).toString(),
+                    "DownloadSpeed": lastSpeed != null ? lastSpeed.toStringAsPrecision(3) : _speedTestService.speed.toStringAsPrecision(3),
+                    "UploadSpeed": _speedTestService.uploadSpeed.toStringAsPrecision(3),
+                  };
+                }else{
+                  Map wifiLog = {
+                    "Platform": "iOS",
+                    "SSID": (locationWifiConnectivity[0] as WifiInfo).ssid,
+                    "BSSID": (locationWifiConnectivity[0] as WifiInfo).bssId,
+                    "IPAddress": (locationWifiConnectivity[0] as WifiInfo).ipAddress,
+                    "MacAddress":(locationWifiConnectivity[0] as WifiInfo).macAddress,
+                    "LinkSpeed": "",
+                    "SignalStrength": "",
+                    "Frequency": "",
+                    "NetworkID": "",
+                    "IsHiddenSSID": "",
+                    "RouterIP": "",
+                    "Channel": "",
+                    "Latitude": (locationWifiConnectivity[1] as LocationData).latitude as Double,
+                    "Longitude": (locationWifiConnectivity[1] as LocationData).longitude as Double,
+                    "TimeStamp": DateTime.fromMillisecondsSinceEpoch(
+                        DateTime
+                            .now()
+                            .millisecondsSinceEpoch).toString(),
+                    "DownloadSpeed": lastSpeed != null ? lastSpeed.toStringAsPrecision(3) : _speedTestService.speed.toStringAsPrecision(3),
+                    "UploadSpeed": _speedTestService.uploadSpeed.toStringAsPrecision(3),
+                  };
+
+                  //TODO: Send data for submission
+                  sentSuccessfully = true;
+              }
+              }
+
+              return sentSuccessfully; //Due to failed submission or not connected to wifi
+
+  }
   Future<List<Object>> futureCombo() async {
     if (await (Connectivity().checkConnectivity()) != ConnectivityResult.wifi) {
       return [null, null, await (Connectivity().checkConnectivity())];
