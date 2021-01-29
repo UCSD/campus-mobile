@@ -129,7 +129,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                     fillColor: Colors.white,
                     filled: true,
                   ),
-                  obscureText: true,
+                  obscureText: _passwordObscured,
                   controller: _passwordTextFieldController,
                 ),
               ),
