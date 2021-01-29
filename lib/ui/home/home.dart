@@ -14,11 +14,11 @@ import 'package:campus_mobile_experimental/ui/events/events_card.dart';
 import 'package:campus_mobile_experimental/ui/finals/finals_card.dart';
 import 'package:campus_mobile_experimental/ui/my_chart/my_chart_card.dart';
 import 'package:campus_mobile_experimental/ui/myucsdchart/myucsdchart.dart';
-import 'package:campus_mobile_experimental/ui/native_scanner/native_scanner_card.dart';
 import 'package:campus_mobile_experimental/ui/news/news_card.dart';
 import 'package:campus_mobile_experimental/ui/notices/notices_card.dart';
 import 'package:campus_mobile_experimental/ui/parking/parking_card.dart';
-import 'package:campus_mobile_experimental/ui/scanner/scanner_card.dart';
+import 'package:campus_mobile_experimental/ui/scanner/native_scanner_card.dart';
+import 'package:campus_mobile_experimental/ui/scanner/web_scanner_card.dart';
 import 'package:campus_mobile_experimental/ui/shuttle/shuttle_card.dart';
 import 'package:campus_mobile_experimental/ui/student_id/student_id_card.dart';
 import 'package:campus_mobile_experimental/ui/survey/survey_card.dart';
@@ -122,7 +122,7 @@ class _HomeState extends State<Home> {
       else {  // dynamically insert webCards into the list
         orderedCards.add(
             WebViewContainer(
-                titleText: webCards[card].titleText,
+                titleText: CardTitleConstants.titleMap[card],
                 initialUrl: webCards[card].initialURL,
                 cardId: card,
                 requireAuth: webCards[card].requireAuth,

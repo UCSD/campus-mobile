@@ -15,6 +15,7 @@ import 'package:campus_mobile_experimental/core/providers/notifications_freefood
 import 'package:campus_mobile_experimental/core/providers/parking.dart';
 import 'package:campus_mobile_experimental/core/providers/shuttle.dart';
 import 'package:campus_mobile_experimental/core/providers/student_id.dart';
+import 'package:campus_mobile_experimental/core/providers/survey.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/providers/wayfinding.dart';
 import 'package:campus_mobile_experimental/core/providers/weather.dart';
@@ -203,6 +204,17 @@ List<SingleChildWidget> dependentServices = [
     }
 
     return studentIdDataProvider;
+  }),
+  ChangeNotifierProxyProvider<UserDataProvider, SurveyDataProvider>(
+      create: (_) {
+    print("CreateProvider: SurveyDataProvider");
+    var surveyDataProvider = SurveyDataProvider();
+    surveyDataProvider.fetchSurvey();
+    return surveyDataProvider;
+  }, update: (_, userDataProvider, surveyDataProvider) {
+    print("UpdateProvider: SurveyDataProvider");
+    surveyDataProvider.userDataProvider = userDataProvider;
+    return surveyDataProvider;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, AvailabilityDataProvider>(
       create: (_) {
