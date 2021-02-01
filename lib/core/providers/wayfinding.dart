@@ -24,6 +24,8 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
   /// Instance variable for starting beacon singleton
   BeaconSingleton beaconSingleton;
 
+  /// State for background scanning
+  bool inBackground = false;
   /// Advertisement string
   String advertisementValue;
 
@@ -188,10 +190,10 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
       distanceFromPriceCenter = distanceFromPriceCenter / 1.609;
     });
 
-    // prevent scanning if not within boundaries
-    // if (distanceFromPriceCenter > milesFromPriceCenter) {
-    //   return;
-    // }
+    //prevent scanning if not within boundaries
+    if (distanceFromPriceCenter > milesFromPriceCenter) {
+      return;
+    }
 
     flutterBlueInstance.startScan(
         timeout: Duration(seconds: 2), allowDuplicates: false);
@@ -230,6 +232,45 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
     // Close on going scan in case it has not time out
     flutterBlueInstance.stopScan();
 
+    // If scanning from foreground, send logs
+    if (inBackground) {
+      _storage.deleteAll();
+      await _storage.write(
+          key: "lastBackgroundScan", value: DateTime.now().toString());
+      double lat;
+      double long;
+      checkLocationPermission();
+      location.getLocation().then((value) {
+        lat = value.latitude;
+        long = value.longitude;
+
+        // Reset dwell times
+        resetDevices();
+        qualifyingDevices = 0;
+
+        //LOG VALUE
+        Map log = {
+          "SOURCE_DEVICE_ADVERTISEMENT_ID": this.advertisementValue,
+          "SOURCE": "$operatingSystem-UCSDMobileApp",
+          "OPERATING_SYSTEM": operatingSystem,
+          "LAT": (lat == null) ? 0 : lat,
+          "LONG": (long == null) ? 0 : long,
+          "DEVICE_LIST": newBufferList
+        };
+
+
+        // Send logs to API
+        sendLogs(log);
+        return;
+    });
+    }
+
+
+    // Write scannedObjects to storage
+    scannedObjects.forEach((key, value) {
+      _storage.write(key: key, value: jsonEncode(value));
+    });
+
     // Clear previous scan results
     bufferList.clear();
     newBufferList.clear();
@@ -246,7 +287,6 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
     } else if (Platform.isIOS) {
       operatingSystem = "iOS";
     }
-    qualifiedDevicesThreshold = 0;
     if (qualifyingDevices >= qualifiedDevicesThreshold) {
       double lat;
       double long;
@@ -268,21 +308,22 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
           "LONG": (long == null) ? 0 : long,
           "DEVICE_LIST": newBufferList
         };
-        // TODO: Send to test API
-        Map testLog = {
-          "Time": DateTime.fromMillisecondsSinceEpoch(
-                  DateTime.now().millisecondsSinceEpoch)
-              .toString(),
-          "SOURCE_DEVICE_ADVERTISEMENT_ID": this.advertisementValue,
-          "SOURCE": "UCSDMobileApp",
-          "LAT": (lat == null) ? 0 : lat.toString(),
-          "LONG": (long == null) ? 0 : long.toString(),
-          "DEVICE_LIST": newBufferList
-        };
 
-          new Dio().post(
-              "https://7pfm2wuasb.execute-api.us-west-2.amazonaws.com/qa",
-              data: json.encode(testLog));
+        // TODO: Send to test API
+        // Map testLog = {
+        //   "Time": DateTime.fromMillisecondsSinceEpoch(
+        //           DateTime.now().millisecondsSinceEpoch)
+        //       .toString(),
+        //   "SOURCE_DEVICE_ADVERTISEMENT_ID": this.advertisementValue,
+        //   "SOURCE": "UCSDMobileApp",
+        //   "LAT": (lat == null) ? 0 : lat.toString(),
+        //   "LONG": (long == null) ? 0 : long.toString(),
+        //   "DEVICE_LIST": newBufferList
+        // };
+        //
+        //   new Dio().post(
+        //       "https://7pfm2wuasb.execute-api.us-west-2.amazonaws.com/qa",
+        //       data: json.encode(testLog));
 
 
         // Send logs to API
@@ -714,7 +755,9 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
     if (lastTimeStamp == null ||
         DateTime.now().difference(DateTime.parse(lastTimeStamp)).inMinutes >
             backgroundScanInterval) {
+      inBackground = true;
       startScan();
+      inBackground = false;
     }
     BackgroundFetch.finish(taskID);
   }
