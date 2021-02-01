@@ -100,7 +100,7 @@ class ErrorConstants {
 
 class ScannerConstants {
   static const duplicateRecord =
-      'Submission failed due to barcode already scanned. Please scan another barcode.\nCode #1035';
+      'Submission failed due to barcode already scanned. Please discard this test tube and get another one.\nCode #1035';
   static const invalidMedia =
       'Barcode is not valid. Please scan another barcode.\nCode #1036';
   static const barcodeError =
@@ -112,6 +112,12 @@ class ScannerConstants {
       'An error occurred. Please try again.\nCode #1040';
   static const scannerReauthFailure =
       'Your session has expired. Please login to submit a scan.';
+}
+
+class LoginConstants {
+  static const loginFailedTitle = 'Sorry, unable to sign you in.';
+  static const loginFailedDesc =
+      'Be sure you are using the correct credentials; TritonLink login if you are a student, SSO (AD or Active Directory) if you are a Faculty/Staff.';
 }
 
 class Plugins {
