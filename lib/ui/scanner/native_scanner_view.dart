@@ -2,12 +2,12 @@ import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/barcode.dart';
+import 'package:campus_mobile_experimental/core/utils/webview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_scandit_plugin/flutter_scandit_plugin.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class ScanditScanner extends StatefulWidget {
   @override
@@ -24,8 +24,6 @@ class _ScanditScannerState extends State<ScanditScanner> {
   BarcodeService _barcodeService = new BarcodeService();
   UserDataProvider _userDataProvider;
   set userDataProvider(UserDataProvider value) => _userDataProvider = value;
-  var ucsdAffiliation = "";
-  var accessToken = "";
   String _barcode;
   String _errorText;
   bool isLoading;
@@ -33,6 +31,7 @@ class _ScanditScannerState extends State<ScanditScanner> {
   bool successfulSubmission;
   bool isValidBarcode;
   PermissionStatus _cameraPermissionsStatus = PermissionStatus.undetermined;
+  List<String> scannedCodes = new List<String>();
 
   Future _requestCameraPermissions() async {
     var status = await Permission.camera.status;
@@ -79,7 +78,7 @@ class _ScanditScannerState extends State<ScanditScanner> {
           title: const Text("Scanner"),
         ),
       ),
-      body: !hasScanned ? renderScanner() : renderSubmissionView(),
+      body: !hasScanned ? renderScanner(context) : renderSubmissionView(),
       floatingActionButton: IconButton(
         onPressed: () {},
         icon: Container(),
@@ -87,12 +86,12 @@ class _ScanditScannerState extends State<ScanditScanner> {
     );
   }
 
-  Widget renderScanner() {
+  Widget renderScanner(BuildContext context) {
     if (_cameraPermissionsStatus == PermissionStatus.granted) {
       return (Stack(
         children: [
           Scandit(
-              scanned: _handleBarcodeResult,
+              scanned: _verifyBarcodeScanning,
               onError: (e) => setState(() => _message = e.message),
               symbologies: [Symbology.CODE128, Symbology.DATA_MATRIX],
               onScanditCreated: (controller) => _controller = controller,
@@ -142,14 +141,6 @@ class _ScanditScannerState extends State<ScanditScanner> {
     }
   }
 
-  Map<String, dynamic> createUserData() {
-    this.setState(() {
-      ucsdAffiliation = _userDataProvider.authenticationModel.ucsdaffiliation;
-      accessToken = _userDataProvider.authenticationModel.accessToken;
-    });
-    return {'barcode': _barcode, 'ucsdaffiliation': ucsdAffiliation};
-  }
-
   Widget renderFailureScreen(BuildContext context) {
     return (Column(
       children: [
@@ -190,6 +181,7 @@ class _ScanditScannerState extends State<ScanditScanner> {
                 child: FlatButton(
                   padding: EdgeInsets.only(left: 32.0, right: 32.0),
                   onPressed: () {
+                    scannedCodes.clear();
                     this.setState(() {
                       hasScanned = false;
                       hasSubmitted = false;
@@ -255,9 +247,7 @@ class _ScanditScannerState extends State<ScanditScanner> {
             ListTile(
                 title: Text(String.fromCharCode(0x2022) +
                     " Results are usually available within 24-36 hours.")),
-            ListTile(
-                title: Text(String.fromCharCode(0x2022) +
-                    " You can view your results by logging in to MyStudentChart.")),
+            ListTile(title: buildChartText(context)),
             ListTile(
                 title: Text(String.fromCharCode(0x2022) +
                     " If you are experiencing symptoms of COVID-19, stay in your residence and seek guidance from a healthcare provider.")),
@@ -278,60 +268,129 @@ class _ScanditScannerState extends State<ScanditScanner> {
     );
   }
 
+  void _verifyBarcodeScanning(BarcodeResult result) {
+    scannedCodes.add(result.data);
+    // currently scanning 3 consecutive times
+    if (scannedCodes.length < 3) {
+      _controller.resumeBarcodeScanning();
+    } else {
+      String firstScan = scannedCodes.first;
+      // if all scans are not the same, need to go into error state
+      // otherwise, continue to handle normally
+      if (scannedCodes.every((element) => element == firstScan)) {
+        // ACCEPT STATE
+        _handleBarcodeResult(result);
+      } else {
+        // REJECT STATE
+        this.setState(() {
+          hasScanned = true;
+          didError = true;
+          isLoading = false;
+        });
+      }
+    }
+  }
+
+  Text buildChartText(BuildContext context) {
+    if (_userDataProvider.userProfileModel.classifications?.student ?? false) {
+      return Text(String.fromCharCode(0x2022) +
+          " You can view your results by logging in to MyStudentChart.");
+    } else if (_userDataProvider.userProfileModel.classifications?.staff ??
+        false) {
+      return Text(String.fromCharCode(0x2022) +
+          " You can view your results by logging in to MyUCSDChart.");
+    }
+  }
+
   Future<void> _handleBarcodeResult(BarcodeResult result) async {
     this.setState(() {
       hasScanned = true;
-      _barcode = result.data;
-    });
-    var data = createUserData();
-    var headers = {
-      "Content-Type": "application/json",
-      'Authorization': 'Bearer ${accessToken}'
-    };
-    setState(() {
+      _barcode = result?.data;
       isLoading = true;
     });
-    var results = await _barcodeService.uploadResults(headers, data);
 
-    if (results) {
-      this.setState(() {
-        isLoading = false;
-        didError = false;
-        successfulSubmission = true;
-      });
-    } else {
-      print(_barcodeService.error);
-      print("error constant: " + ErrorConstants.duplicateRecord);
+    try {
+      var accessTokenExpiration =
+          _userDataProvider?.authenticationModel?.expiration;
+      var nowTime = (DateTime.now().millisecondsSinceEpoch / 1000).round();
+      var timeDiff = accessTokenExpiration - nowTime;
+      var tokenExpired = timeDiff <= 0 ? true : false;
+      var isLoggedIn =
+          Provider.of<UserDataProvider>(context, listen: false).isLoggedIn;
+      var validToken = false;
+
+      if (isLoggedIn) {
+        if (tokenExpired) {
+          if (await _userDataProvider.silentLogin()) {
+            validToken = true;
+          }
+        } else {
+          validToken = true;
+        }
+
+        if (validToken) {
+          var results = await _barcodeService.uploadResults({
+            "Content-Type": "application/json",
+            'Authorization':
+                'Bearer ${_userDataProvider?.authenticationModel?.accessToken}'
+          }, {
+            'barcode': _barcode
+          });
+
+          if (results) {
+            this.setState(() {
+              successfulSubmission = true;
+              didError = false;
+              isLoading = false;
+            });
+          } else {
+            this.setState(() {
+              successfulSubmission = false;
+              didError = true;
+              isLoading = false;
+            });
+
+            if (_barcodeService.error
+                .contains(ErrorConstants.duplicateRecord)) {
+              this.setState(() {
+                _errorText = ScannerConstants.duplicateRecord;
+                isDuplicate = true;
+              });
+            } else if (_barcodeService.error
+                .contains(ErrorConstants.invalidMedia)) {
+              this.setState(() {
+                _errorText = ScannerConstants.invalidMedia;
+                isValidBarcode = false;
+              });
+            } else {
+              this.setState(() {
+                _errorText = ScannerConstants.barcodeError;
+              });
+            }
+          }
+        } else {
+          this.setState(() {
+            successfulSubmission = false;
+            didError = true;
+            isLoading = false;
+            _errorText = ScannerConstants.invalidToken;
+          });
+        }
+      } else {
+        this.setState(() {
+          successfulSubmission = false;
+          didError = true;
+          isLoading = false;
+          _errorText = ScannerConstants.loggedOut;
+        });
+      }
+    } catch (e) {
       this.setState(() {
         successfulSubmission = false;
         didError = true;
         isLoading = false;
+        _errorText = ScannerConstants.unknownError;
       });
-      if (_barcodeService.error.contains(ErrorConstants.invalidBearerToken)) {
-        await _userDataProvider.refreshToken();
-      } else if (_barcodeService.error
-          .contains(ErrorConstants.duplicateRecord)) {
-        print("in correct if");
-        this.setState(() {
-          _errorText =
-              "Submission failed due to barcode already scanned. Please scan another barcode.";
-          isDuplicate = true;
-        });
-      } else if (_barcodeService.error.contains(ErrorConstants.invalidMedia)) {
-        this.setState(() {
-          _errorText = "Barcode is not valid. Please scan another barcode.";
-          isValidBarcode = false;
-        });
-      }
-      //_submitted = true;
-    }
-  }
-
-  openLink(String url) async {
-    try {
-      launch(url, forceSafariVC: true);
-    } catch (e) {
-      // an error occurred, do nothing
     }
   }
 }

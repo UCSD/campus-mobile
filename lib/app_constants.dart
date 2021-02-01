@@ -96,6 +96,22 @@ class ErrorConstants {
       'DioError [DioErrorType.RESPONSE]: Http status error [415]';
 }
 
+class ScannerConstants {
+  static const duplicateRecord =
+      'Submission failed due to barcode already scanned. Please discard this test tube and get another one.\nCode #1035';
+  static const invalidMedia =
+      'Barcode is not valid. Please scan another barcode.\nCode #1036';
+  static const barcodeError =
+      'An error occurred. Please try again.\nCode #1037';
+  static const invalidToken =
+      'An error occurred. Please try again.\nCode #1038';
+  static const loggedOut = 'An error occurred. Please try again.\nCode #1039';
+  static const unknownError =
+      'An error occurred. Please try again.\nCode #1040';
+  static const scannerReauthFailure =
+      'Your session has expired. Please login to submit a scan.';
+}
+
 class Plugins {
   static const FrontCamera = 'FRONT CAMERA';
 }

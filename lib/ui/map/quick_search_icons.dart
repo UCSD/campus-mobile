@@ -30,24 +30,24 @@ class QuickSearchIcons extends StatelessWidget {
               },
             ),
             LabeledIconButton(
-              icon: Icons.local_drink,
-              text: 'Hydration',
+              icon: Icons.coronavirus_outlined,
+              text: 'COVID Tests',
               onPressed: () {
                 Provider.of<MapsDataProvider>(context, listen: false)
                     .searchBarController
-                    .text = 'Hydration';
+                    .text = 'COVID Test Kits';
                 Provider.of<MapsDataProvider>(context, listen: false)
                     .fetchLocations();
                 Navigator.pop(context);
               },
             ),
             LabeledIconButton(
-              icon: Icons.local_post_office,
-              text: 'Mail',
+              icon: Icons.local_drink,
+              text: 'Hydration',
               onPressed: () {
                 Provider.of<MapsDataProvider>(context, listen: false)
                     .searchBarController
-                    .text = 'Mail';
+                    .text = 'Hydration';
                 Provider.of<MapsDataProvider>(context, listen: false)
                     .fetchLocations();
                 Navigator.pop(context);
@@ -89,7 +89,7 @@ class LabeledIconButton extends StatelessWidget {
           color: Colors.red,
           child: Icon(
             icon,
-            size: 30,
+            size: 28,
             color: Colors.white,
           ),
         ),

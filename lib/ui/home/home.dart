@@ -1,27 +1,26 @@
+import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
+import 'package:campus_mobile_experimental/core/models/cards.dart';
 import 'package:campus_mobile_experimental/core/models/notices.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/notices.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/providers/wayfinding.dart';
 import 'package:campus_mobile_experimental/ui/availability/availability_card.dart';
-import 'package:campus_mobile_experimental/ui/campus_info/campus_info_card.dart';
 import 'package:campus_mobile_experimental/ui/classes/classes_card.dart';
+import 'package:campus_mobile_experimental/ui/common/webview_container.dart';
 import 'package:campus_mobile_experimental/ui/dining/dining_card.dart';
 import 'package:campus_mobile_experimental/ui/events/events_card.dart';
 import 'package:campus_mobile_experimental/ui/finals/finals_card.dart';
 import 'package:campus_mobile_experimental/ui/my_chart/my_chart_card.dart';
 import 'package:campus_mobile_experimental/ui/myucsdchart/myucsdchart.dart';
-import 'package:campus_mobile_experimental/ui/native_scanner/native_scanner_card.dart';
 import 'package:campus_mobile_experimental/ui/news/news_card.dart';
 import 'package:campus_mobile_experimental/ui/notices/notices_card.dart';
 import 'package:campus_mobile_experimental/ui/parking/parking_card.dart';
-import 'package:campus_mobile_experimental/ui/scanner/scanner_card.dart';
+import 'package:campus_mobile_experimental/ui/scanner/native_scanner_card.dart';
+import 'package:campus_mobile_experimental/ui/scanner/web_scanner_card.dart';
 import 'package:campus_mobile_experimental/ui/shuttle/shuttle_card.dart';
-import 'package:campus_mobile_experimental/ui/staff_id/staff_id_card.dart';
-import 'package:campus_mobile_experimental/ui/staff_info/staff_info_card.dart';
 import 'package:campus_mobile_experimental/ui/student_id/student_id_card.dart';
-import 'package:campus_mobile_experimental/ui/student_info/student_info_card.dart';
 import 'package:campus_mobile_experimental/ui/survey/survey_card.dart';
 import 'package:campus_mobile_experimental/ui/weather/weather_card.dart';
 import 'package:flutter/cupertino.dart';
@@ -67,66 +66,68 @@ class _HomeState extends State<Home> {
 
   List<Widget> getOrderedCardsList(List<String> order) {
     List<Widget> orderedCards = List<Widget>();
+    Map<String, CardsModel> webCards =
+        Provider.of<CardsDataProvider>(context, listen: false).webCards;
 
     for (String card in order) {
-      switch (card) {
-        case 'QRScanner':
-          orderedCards.insert(0, ScannerCard());
-          break;
-        case 'NativeScanner':
-          orderedCards.insert(0, NativeScannerCard());
-          break;
-        case 'MyStudentChart':
-          orderedCards.add(MyStudentChartCard());
-          break;
-        case 'student_survey':
-          orderedCards.add(SurveyCard());
-          break;
-        case 'campus_info':
-          orderedCards.add(CampusInfoCard());
-          break;
-        case 'dining':
-          orderedCards.add(DiningCard());
-          break;
-        case 'news':
-          orderedCards.add(NewsCard());
-          break;
-        case 'events':
-          orderedCards.add(EventsCard());
-          break;
-        case 'weather':
-          orderedCards.add(WeatherCard());
-          break;
-        case 'availability':
-          orderedCards.add(AvailabilityCard());
-          break;
-        case 'schedule':
-          orderedCards.add(ClassScheduleCard());
-          break;
-        case 'finals':
-          orderedCards.add(FinalsCard());
-          break;
-        case 'MyUCSDChart':
-          orderedCards.add(MyUCSDChartCard());
-          break;
-        case 'student_id':
-          orderedCards.add(StudentIdCard());
-          break;
-        case 'staff_info':
-          orderedCards.add(StaffInfoCard());
-          break;
-        case 'student_info':
-          orderedCards.add(StudentInfoCard());
-          break;
-        case 'parking':
-          orderedCards.add(ParkingCard());
-          break;
-        case 'staff_id':
-          orderedCards.add(StaffIdCard());
-          break;
-        case 'shuttle':
-          orderedCards.add(ShuttleCard());
-          break;
+      if (!webCards.containsKey(card)) {
+        switch (card) {
+          case 'QRScanner':
+            orderedCards.insert(0, ScannerCard());
+            break;
+          case 'NativeScanner':
+            orderedCards.insert(0, NativeScannerCard());
+            break;
+          case 'MyStudentChart':
+            orderedCards.add(MyStudentChartCard());
+            break;
+          case 'student_survey':
+            orderedCards.add(SurveyCard());
+            break;
+          case 'dining':
+            orderedCards.add(DiningCard());
+            break;
+          case 'news':
+            orderedCards.add(NewsCard());
+            break;
+          case 'events':
+            orderedCards.add(EventsCard());
+            break;
+          case 'weather':
+            orderedCards.add(WeatherCard());
+            break;
+          case 'availability':
+            orderedCards.add(AvailabilityCard());
+            break;
+          case 'schedule':
+            orderedCards.add(ClassScheduleCard());
+            break;
+          case 'finals':
+            orderedCards.add(FinalsCard());
+            break;
+          case 'MyUCSDChart':
+            orderedCards.add(MyUCSDChartCard());
+            break;
+          case 'student_id':
+            orderedCards.add(StudentIdCard());
+            break;
+          case 'parking':
+            orderedCards.add(ParkingCard());
+            break;
+          case 'shuttle':
+            orderedCards.add(ShuttleCard());
+            break;
+        }
+      }
+      else {  // dynamically insert webCards into the list
+        orderedCards.add(
+            WebViewContainer(
+                titleText: CardTitleConstants.titleMap[card],
+                initialUrl: webCards[card].initialURL,
+                cardId: card,
+                requireAuth: webCards[card].requireAuth,
+            )
+        );
       }
     }
     return orderedCards;

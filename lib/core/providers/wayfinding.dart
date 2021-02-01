@@ -247,10 +247,9 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
   }
 
   void processOffloadingLogs(List<Map> newBufferList) {
-    if(Platform.isAndroid) {
+    if (Platform.isAndroid) {
       operatingSystem = "Android";
-    }
-    else if(Platform.isIOS) {
+    } else if (Platform.isIOS) {
       operatingSystem = "iOS";
     }
 //    qualifiedDevicesThreshold = 0; // Todo: Comment out to test sending logs to test DB
@@ -304,7 +303,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
         });
       } catch (Exception) {
         if (Exception.toString().contains(ErrorConstants.invalidBearerToken)) {
-          userDataProvider.refreshToken();
+          userDataProvider.silentLogin();
           offloadDataHeader = {
             'Authorization':
                 'Bearer ${userDataProvider?.authenticationModel?.accessToken}'
@@ -515,11 +514,13 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
       scannedObjects[scanResult.device.id.toString()].distance =
           getDistance(scanResult.rssi);
       if (scannedObjects[scanResult.device.id.toString()].dwellTime >=
-              dwellTimeThreshold &&
-          scannedObjects[scanResult.device.id.toString()].distance <=
-              distanceThreshold &&
-          eligibleType(
-              scannedObjects[scanResult.device.id.toString()].deviceType)) {
+              dwellTimeThreshold){
+        // Remove to reinstate thresholds
+        // &&
+          // scannedObjects[scanResult.device.id.toString()].distance <=
+          //     distanceThreshold &&
+          // eligibleType(
+          //     scannedObjects[scanResult.device.id.toString()].deviceType)) {
         qualifyingDevices += 1; // Add the # of unique devices detected
       }
 
