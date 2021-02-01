@@ -110,7 +110,6 @@ class _LoginState extends State<Login> {
                 labelText: 'Password',
               ),
               obscureText: _passwordObscured,
-              keyboardType: TextInputType.emailAddress,
               controller: _passwordTextFieldController,
             ),
             SizedBox(height: 10),
