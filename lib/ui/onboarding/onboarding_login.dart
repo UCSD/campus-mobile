@@ -220,9 +220,8 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Sorry, unable to sign you in"),
-      content: Text(
-          "Be sure you are using the correct credentials; TritonLink login if you are a student, SSO if you are Faculty/Staff."),
+      title: Text(LoginConstants.loginFailedTitle),
+      content: Text(LoginConstants.loginFailedDesc),
       actions: [
         okButton,
       ],

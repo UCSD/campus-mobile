@@ -1,3 +1,4 @@
+import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -157,9 +158,8 @@ class _LoginState extends State<Login> {
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Sorry, unable to sign you in"),
-      content: Text(
-          "Be sure you are using the correct credentials; TritonLink login if you are a student, SSO if you are Faculty/Staff."),
+      title: Text(LoginConstants.loginFailedTitle),
+      content: Text(LoginConstants.loginFailedDesc),
       actions: [
         okButton,
       ],

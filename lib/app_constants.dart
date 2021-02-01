@@ -112,6 +112,12 @@ class ScannerConstants {
       'Your session has expired. Please login to submit a scan.';
 }
 
+class LoginConstants {
+  static const loginFailedTitle = 'Sorry, unable to sign you in.';
+  static const loginFailedDesc =
+      'Be sure you are using the correct credentials; TritonLink login if you are a student, SSO (AD or Active Directory) if you are a Faculty/Staff.';
+}
+
 class Plugins {
   static const FrontCamera = 'FRONT CAMERA';
 }
