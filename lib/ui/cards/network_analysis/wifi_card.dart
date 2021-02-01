@@ -3,26 +3,22 @@
 
 import 'dart:ffi';
 import 'dart:io';
-import 'package:campus_mobile_experimental/core/data_providers/speed_test_service.dart';
 
+import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
+import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
+import 'package:campus_mobile_experimental/core/data_providers/speed_test_service.dart';
+import 'package:campus_mobile_experimental/core/data_providers/student_id_data_provider.dart';
 import 'package:campus_mobile_experimental/core/data_providers/weather_data_provider.dart';
+import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
 import 'package:campus_mobile_experimental/ui/theme/app_theme.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 import 'package:wifi_connection/WifiConnection.dart';
-import 'package:connectivity/connectivity.dart';
-
-import 'package:campus_mobile_experimental/core/constants/app_constants.dart';
-import 'package:campus_mobile_experimental/core/data_providers/cards_data_provider.dart';
-import 'package:campus_mobile_experimental/core/data_providers/student_id_data_provider.dart';
-
-import 'package:campus_mobile_experimental/ui/reusable_widgets/card_container.dart';
-
-import 'package:flutter/rendering.dart';
-
 import 'package:wifi_connection/WifiInfo.dart';
 
 class WiFiCard extends StatefulWidget {
@@ -39,7 +35,7 @@ class _WiFiCardState extends State<WiFiCard> {
 
   @override
   void initState() {
-    cardState =  TestStatus.initial;
+    cardState = TestStatus.initial;
 
     super.initState();
   }
@@ -74,17 +70,16 @@ class _WiFiCardState extends State<WiFiCard> {
   Widget buildCardContent(BuildContext context) {
     _speedTestService.addListener(() {
       try {
-        if(_speedTestService.timeElapsedDownload + _speedTestService.timeElapsedUpload > 105){
+        if (_speedTestService.timeElapsedDownload +
+                _speedTestService.timeElapsedUpload >
+            105) {
           _speedTestService.cancelDownload();
           _speedTestService.cancelUpload();
           setState(() {
             goodSpeed = false;
             cardState = TestStatus.finished;
           });
-
-        }
-
-        else if(_speedTestService.speedTestDone){
+        } else if (_speedTestService.speedTestDone) {
           setState(() {
             goodSpeed = true;
             cardState = TestStatus.finished;
@@ -93,7 +88,7 @@ class _WiFiCardState extends State<WiFiCard> {
       } catch (e) {}
     });
 
-    switch(cardState){
+    switch (cardState) {
       case TestStatus.initial:
         return initialState();
         break;
@@ -103,12 +98,11 @@ class _WiFiCardState extends State<WiFiCard> {
       case TestStatus.finished:
         return finishedState();
         break;
-
     }
   }
 
   Column speedTest() {
-     return Column(
+    return Column(
       children: [
         Padding(
             padding: const EdgeInsets.all(8.0),
@@ -132,11 +126,13 @@ class _WiFiCardState extends State<WiFiCard> {
               borderColor: Colors.black,
               borderWidth: 0.5,
               center: Text(
-                "${((_speedTestService.percentDownloaded * 100)/2  + (_speedTestService.percentUploaded * 100)/2).toStringAsPrecision(6).substring(0, 4)} %",
+                "${((_speedTestService.percentDownloaded * 100) / 2 + (_speedTestService.percentUploaded * 100) / 2).toStringAsPrecision(6).substring(0, 4)} %",
                 style: TextStyle(color: Colors.grey),
               ),
               direction: Axis.horizontal,
-              value: (_speedTestService.percentDownloaded + _speedTestService.percentUploaded)/2,
+              value: (_speedTestService.percentDownloaded +
+                      _speedTestService.percentUploaded) /
+                  2,
               valueColor: AlwaysStoppedAnimation(lightPrimaryColor)),
         ),
       ],
@@ -177,7 +173,6 @@ class _WiFiCardState extends State<WiFiCard> {
             style: TextStyle(fontSize: 15, color: Colors.grey),
           ),
         ])),
-
         Padding(
           padding: const EdgeInsets.all(4.0),
           child: MaterialButton(
@@ -217,8 +212,6 @@ class _WiFiCardState extends State<WiFiCard> {
                 style: TextStyle(color: Colors.black),
               )),
         ),
-
-
       ],
     );
   }
@@ -292,66 +285,74 @@ class _WiFiCardState extends State<WiFiCard> {
     );
   }
 
-  Future<bool> sendNetworkDiagnostics() async{
+  Future<bool> sendNetworkDiagnostics() async {
     bool sentSuccessfully = false;
 
-              List<Object> locationWifiConnectivity = await futureCombo();
-              if(locationWifiConnectivity[2] == ConnectivityResult.wifi) {
-                if(Platform.isAndroid) {
-                  Map wifiLog = {
-                    "Platform": "Android",
-                    "SSID": (locationWifiConnectivity[0] as WifiInfo).ssid,
-                    "BSSID": (locationWifiConnectivity[0] as WifiInfo).bssId,
-                    "IPAddress": (locationWifiConnectivity[0] as WifiInfo).ipAddress,
-                    "MacAddress": (locationWifiConnectivity[0] as WifiInfo).macAddress,
-                    "LinkSpeed": (locationWifiConnectivity[0] as WifiInfo).linkSpeed,
-                    "SignalStrength": (locationWifiConnectivity[0] as WifiInfo).signalStrength,
-                    "Frequency": (locationWifiConnectivity[0] as WifiInfo).frequency,
-                    "NetworkID": (locationWifiConnectivity[0] as WifiInfo).networkId,
-                    "IsHiddenSSID": (locationWifiConnectivity[0] as WifiInfo).isHiddenSSid,
-                    "RouterIP": (locationWifiConnectivity[0] as WifiInfo).routerIp,
-                    "Channel": (locationWifiConnectivity[0] as WifiInfo).channel,
-                    "Latitude": (locationWifiConnectivity[1] as LocationData).latitude as Double,
-                    "Longitude": (locationWifiConnectivity[1] as LocationData).longitude as Double,
-                    "TimeStamp": DateTime.fromMillisecondsSinceEpoch(
-                        DateTime
-                            .now()
-                            .millisecondsSinceEpoch).toString(),
-                    "DownloadSpeed": lastSpeed != null ? lastSpeed.toStringAsPrecision(3) : _speedTestService.speed.toStringAsPrecision(3),
-                    "UploadSpeed": _speedTestService.uploadSpeed.toStringAsPrecision(3),
-                  };
-                }else{
-                  Map wifiLog = {
-                    "Platform": "iOS",
-                    "SSID": (locationWifiConnectivity[0] as WifiInfo).ssid,
-                    "BSSID": (locationWifiConnectivity[0] as WifiInfo).bssId,
-                    "IPAddress": (locationWifiConnectivity[0] as WifiInfo).ipAddress,
-                    "MacAddress":(locationWifiConnectivity[0] as WifiInfo).macAddress,
-                    "LinkSpeed": "",
-                    "SignalStrength": "",
-                    "Frequency": "",
-                    "NetworkID": "",
-                    "IsHiddenSSID": "",
-                    "RouterIP": "",
-                    "Channel": "",
-                    "Latitude": (locationWifiConnectivity[1] as LocationData).latitude as Double,
-                    "Longitude": (locationWifiConnectivity[1] as LocationData).longitude as Double,
-                    "TimeStamp": DateTime.fromMillisecondsSinceEpoch(
-                        DateTime
-                            .now()
-                            .millisecondsSinceEpoch).toString(),
-                    "DownloadSpeed": lastSpeed != null ? lastSpeed.toStringAsPrecision(3) : _speedTestService.speed.toStringAsPrecision(3),
-                    "UploadSpeed": _speedTestService.uploadSpeed.toStringAsPrecision(3),
-                  };
+    List<Object> locationWifiConnectivity = await futureCombo();
+    if (locationWifiConnectivity[2] == ConnectivityResult.wifi) {
+      if (Platform.isAndroid) {
+        Map wifiLog = {
+          "Platform": "Android",
+          "SSID": (locationWifiConnectivity[0] as WifiInfo).ssid,
+          "BSSID": (locationWifiConnectivity[0] as WifiInfo).bssId,
+          "IPAddress": (locationWifiConnectivity[0] as WifiInfo).ipAddress,
+          "MacAddress": (locationWifiConnectivity[0] as WifiInfo).macAddress,
+          "LinkSpeed": (locationWifiConnectivity[0] as WifiInfo).linkSpeed,
+          "SignalStrength":
+              (locationWifiConnectivity[0] as WifiInfo).signalStrength,
+          "Frequency": (locationWifiConnectivity[0] as WifiInfo).frequency,
+          "NetworkID": (locationWifiConnectivity[0] as WifiInfo).networkId,
+          "IsHiddenSSID":
+              (locationWifiConnectivity[0] as WifiInfo).isHiddenSSid,
+          "RouterIP": (locationWifiConnectivity[0] as WifiInfo).routerIp,
+          "Channel": (locationWifiConnectivity[0] as WifiInfo).channel,
+          "Latitude":
+              (locationWifiConnectivity[1] as LocationData).latitude as Double,
+          "Longitude":
+              (locationWifiConnectivity[1] as LocationData).longitude as Double,
+          "TimeStamp": DateTime.fromMillisecondsSinceEpoch(
+                  DateTime.now().millisecondsSinceEpoch)
+              .toString(),
+          "DownloadSpeed": lastSpeed != null
+              ? lastSpeed.toStringAsPrecision(3)
+              : _speedTestService.speed.toStringAsPrecision(3),
+          "UploadSpeed": _speedTestService.uploadSpeed.toStringAsPrecision(3),
+        };
+      } else {
+        Map wifiLog = {
+          "Platform": "iOS",
+          "SSID": (locationWifiConnectivity[0] as WifiInfo).ssid,
+          "BSSID": (locationWifiConnectivity[0] as WifiInfo).bssId,
+          "IPAddress": (locationWifiConnectivity[0] as WifiInfo).ipAddress,
+          "MacAddress": (locationWifiConnectivity[0] as WifiInfo).macAddress,
+          "LinkSpeed": "",
+          "SignalStrength": "",
+          "Frequency": "",
+          "NetworkID": "",
+          "IsHiddenSSID": "",
+          "RouterIP": "",
+          "Channel": "",
+          "Latitude":
+              (locationWifiConnectivity[1] as LocationData).latitude as Double,
+          "Longitude":
+              (locationWifiConnectivity[1] as LocationData).longitude as Double,
+          "TimeStamp": DateTime.fromMillisecondsSinceEpoch(
+                  DateTime.now().millisecondsSinceEpoch)
+              .toString(),
+          "DownloadSpeed": lastSpeed != null
+              ? lastSpeed.toStringAsPrecision(3)
+              : _speedTestService.speed.toStringAsPrecision(3),
+          "UploadSpeed": _speedTestService.uploadSpeed.toStringAsPrecision(3),
+        };
 
-                  //TODO: Send data for submission
-                  sentSuccessfully = true;
-              }
-              }
+        //TODO: Send data for submission
+        sentSuccessfully = true;
+      }
+    }
 
-              return sentSuccessfully; //Due to failed submission or not connected to wifi
-
+    return sentSuccessfully; //Due to failed submission or not connected to wifi
   }
+
   Future<List<Object>> futureCombo() async {
     if (await (Connectivity().checkConnectivity()) != ConnectivityResult.wifi) {
       return [null, null, await (Connectivity().checkConnectivity())];
@@ -416,8 +417,5 @@ class SizeConfig {
     safeBlockVertical = (screenHeight - _safeAreaVertical) / 100;
   }
 }
-enum TestStatus{
-  initial,
-  running,
-  finished
-}
+
+enum TestStatus { initial, running, finished }

@@ -15,7 +15,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 bool showOnboardingScreen = false;
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.sureInitialized();
 
   await initializeStorage();
   Crashlytics.instance.enableInDevMode = true;
