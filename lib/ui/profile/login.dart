@@ -12,6 +12,7 @@ class _LoginState extends State<Login> {
   final _emailTextFieldController = TextEditingController();
   final _passwordTextFieldController = TextEditingController();
   UserDataProvider _userDataProvider;
+  bool _passwordObscured = true;
 
   @override
   void didChangeDependencies() {
@@ -96,10 +97,19 @@ class _LoginState extends State<Login> {
             TextField(
               decoration: InputDecoration(
                 hintText: 'Password',
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    // Based on passwordObscured state choose the icon
+                    _passwordObscured ? Icons.visibility_off : Icons.visibility,
+                    color: Theme.of(context).primaryColorDark,
+                  ),
+                  onPressed: () => _toggle(),
+                ),
                 border: OutlineInputBorder(),
                 labelText: 'Password',
               ),
-              obscureText: true,
+              obscureText: _passwordObscured,
+              keyboardType: TextInputType.emailAddress,
               controller: _passwordTextFieldController,
             ),
             SizedBox(height: 10),
@@ -144,6 +154,13 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
+  }
+
+  // Toggles the password show status
+  void _toggle() {
+    setState(() {
+      _passwordObscured = !_passwordObscured;
+    });
   }
 
   Widget showAlertDialog(BuildContext context) {

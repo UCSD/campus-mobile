@@ -15,6 +15,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
   final _emailTextFieldController = TextEditingController();
   final _passwordTextFieldController = TextEditingController();
   UserDataProvider _userDataProvider;
+  bool _passwordObscured = true;
 
   @override
   void didChangeDependencies() {
@@ -101,6 +102,16 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                   ),
                   decoration: InputDecoration(
                     hintText: 'Password',
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        // Based on passwordObscured state choose the icon
+                        _passwordObscured
+                            ? Icons.visibility_off
+                            : Icons.visibility,
+                        color: Theme.of(context).primaryColorDark,
+                      ),
+                      onPressed: () => _toggle(),
+                    ),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
                         color: Colors.black,
@@ -118,7 +129,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                     fillColor: Colors.white,
                     filled: true,
                   ),
-                  obscureText: true,
+                  obscureText: _passwordObscured,
                   controller: _passwordTextFieldController,
                 ),
               ),
@@ -207,6 +218,13 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
         ),
       ),
     );
+  }
+
+  // Toggles the password show status
+  void _toggle() {
+    setState(() {
+      _passwordObscured = !_passwordObscured;
+    });
   }
 
   Widget showAlertDialog(BuildContext context) {
