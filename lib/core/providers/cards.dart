@@ -17,7 +17,6 @@ class CardsDataProvider extends ChangeNotifier {
       'MyUCSDChart',
       'student_id',
       'campus_info',
-      'speed_test',
       'staff_id',
       'staff_info',
       'student_info',
@@ -92,8 +91,6 @@ class CardsDataProvider extends ChangeNotifier {
           }
           // check to see if card is not active
           else if (!(_availableCards[card].cardActive ?? false)) {
-
-            //print()
             _cardOrder.remove(card);
           }
         }
@@ -102,12 +99,10 @@ class CardsDataProvider extends ChangeNotifier {
         for (String card in tempCardStates.keys) {
           // check to see if card no longer exists
           if (_availableCards[card] == null) {
-
             _cardStates.remove(card);
           }
           // check to see if card is not active
           else if (!(_availableCards[card].cardActive ?? false)) {
-
             _cardStates.remove(card);
           }
         }
