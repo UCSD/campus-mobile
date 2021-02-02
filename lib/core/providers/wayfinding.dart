@@ -696,7 +696,6 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
 
   // Used to log current user location or enable the location change listener
   void checkLocationPermission() async {
-    print('Location Permission Request: advanced_wayfinding_singleton');
     // Set up new location object to get current location
     location = Location();
     location.changeSettings(accuracy: LocationAccuracy.low);
@@ -852,6 +851,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
     allowableDevices = List.from(jsonArr);
     backgroundScanInterval = _json["backgroundScanInterval"];
     deletionInterval = _json["deletionInterval"];
+    milesFromPriceCenter = _json['milesFromPC'];
   }
 
   Future extractAPIConstants() async {
