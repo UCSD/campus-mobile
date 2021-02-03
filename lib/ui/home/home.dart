@@ -1,4 +1,3 @@
-import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/cards.dart';
 import 'package:campus_mobile_experimental/core/models/notices.dart';
@@ -121,7 +120,7 @@ class _HomeState extends State<Home> {
       } else {
         // dynamically insert webCards into the list
         orderedCards.add(WebViewContainer(
-          titleText: CardTitleConstants.titleMap[card],
+          titleText: webCards[card].titleText,
           initialUrl: webCards[card].initialURL,
           cardId: card,
           requireAuth: webCards[card].requireAuth,

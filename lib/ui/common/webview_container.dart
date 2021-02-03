@@ -1,5 +1,8 @@
+import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
+import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
+import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/utils/webview.dart';
 import 'package:flutter/material.dart';
@@ -119,6 +122,7 @@ class _WebViewContainerState extends State<WebViewContainer>
         javascriptChannels: <JavascriptChannel>[
           _linksChannel(context),
           _heightChannel(context),
+          _mapChannel(context),
           _refreshTokenChannel(context)
         ].toSet(),
       ),
@@ -185,6 +189,7 @@ class _WebViewContainerState extends State<WebViewContainer>
     return JavascriptChannel(
       name: 'OpenLink',
       onMessageReceived: (JavascriptMessage message) {
+        print("in links channel");
         openLink(message.message);
       },
     );
@@ -201,6 +206,22 @@ class _WebViewContainerState extends State<WebViewContainer>
           print('webview_container:_heightChannel:SetHeight: ' +
               _contentHeight.toString());
         });
+      },
+    );
+  }
+
+  // channel for performing a map search based on given query
+  JavascriptChannel _mapChannel(BuildContext context) {
+    return JavascriptChannel(
+      name: 'MapSearch',
+      onMessageReceived: (JavascriptMessage message) {
+        // navigate to map and search with message.message
+        Provider.of<MapsDataProvider>(context, listen: false)
+            .searchBarController
+            .text = message.message;
+        Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
+        Provider.of<BottomNavigationBarProvider>(context, listen: false)
+            .currentIndex = NavigatorConstants.MapTab;
       },
     );
   }
