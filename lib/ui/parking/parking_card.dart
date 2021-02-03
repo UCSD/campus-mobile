@@ -4,21 +4,18 @@ import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/parking.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
 import 'package:campus_mobile_experimental/ui/common/dots_indicator.dart';
+import 'package:campus_mobile_experimental/ui/parking/circular_parking_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 class ParkingCard extends StatefulWidget {
   @override
   _ParkingCardState createState() => _ParkingCardState();
 }
 
-class _ParkingCardState extends State<ParkingCard>
-    with AutomaticKeepAliveClientMixin {
+class _ParkingCardState extends State<ParkingCard> {
   ParkingDataProvider _parkingDataProvider;
-  bool get wantKeepAlive => true;
   final _controller = new PageController();
-  WebViewController _webViewController;
   String cardId = 'parking';
   String webCardURL =
       "https://mobile.ucsd.edu/replatform/v1/qa/webview/parking-v2/index.html";
@@ -29,9 +26,7 @@ class _ParkingCardState extends State<ParkingCard>
     _parkingDataProvider = Provider.of<ParkingDataProvider>(context);
   }
 
-  // ignore: must_call_super
   Widget build(BuildContext context) {
-    //super.build(context);
     return CardContainer(
       titleText: CardTitleConstants.titleMap[cardId],
       isLoading: _parkingDataProvider.isLoading,
@@ -46,70 +41,46 @@ class _ParkingCardState extends State<ParkingCard>
   }
 
   Widget buildParkingCard(BuildContext context) {
-    try {
-      List<WebView> selectedLotsViews = [];
-      List<String> selectedSpots = [];
+    // try {
+    List<Widget> selectedLotsViews = [];
 
-      _parkingDataProvider.spotTypesState.forEach((key, value) {
-        if (value) {
-          selectedSpots.add(key);
-        }
-      });
-
-      for (ParkingModel model in _parkingDataProvider.parkingModels) {
-        if (model != null) {
-          if (_parkingDataProvider.parkingViewState[model.locationName]) {
-            final url = makeUrl(model.locationId, selectedSpots);
-
-            selectedLotsViews.add(WebView(
-              opaque: false,
-              initialUrl: url,
-              javascriptMode: JavascriptMode.unrestricted,
-              onWebViewCreated: (controller) {
-                _webViewController = controller;
-              },
-            ));
-          }
+    for (ParkingModel model in _parkingDataProvider.parkingModels) {
+      if (model != null) {
+        if (_parkingDataProvider.parkingViewState[model.locationId]) {
+          selectedLotsViews.add(CircularParkingIndicators(model: model));
         }
       }
+    }
 
-      return Column(
-        children: <Widget>[
-          Flexible(
-              child: PageView(
+    return Column(
+      children: <Widget>[
+        Expanded(
+          child: PageView(
             controller: _controller,
             children: selectedLotsViews,
-          )),
-          DotsIndicator(
-            controller: _controller,
-            itemCount: selectedLotsViews.length,
-            onPageSelected: (int index) {},
-          ),
-        ],
-      );
-    } catch (e) {
-      return Container(
-        width: double.infinity,
-        child: Center(
-          child: Container(
-            child: Text('An error occurred, please try again.'),
           ),
         ),
-      );
-    }
-  }
-
-  String makeUrl(String lotId, List<String> selectedSpots) {
-    var spotTypesQueryString = '';
-    selectedSpots.forEach(
-        (spot) => {spotTypesQueryString = '$spotTypesQueryString$spot,'});
-    if (spotTypesQueryString != '') {
-      spotTypesQueryString = '&spots=$spotTypesQueryString';
-    }
-    var lotQueryString = 'lot=$lotId';
-    var url = '$webCardURL?$lotQueryString$spotTypesQueryString';
-
-    return url;
+        DotsIndicator(
+          controller: _controller,
+          itemCount: selectedLotsViews.length,
+          onPageSelected: (int index) {
+            _controller.animateToPage(index,
+                duration: Duration(seconds: 1), curve: Curves.decelerate);
+          },
+        ),
+      ],
+    );
+    // } catch (e) {
+    //   print(e);
+    //   return Container(
+    //     width: double.infinity,
+    //     child: Center(
+    //       child: Container(
+    //         child: Text('An error occurred, please try again.'),
+    //       ),
+    //     ),
+    //   );
+    // }
   }
 
   List<Widget> buildActionButtons() {

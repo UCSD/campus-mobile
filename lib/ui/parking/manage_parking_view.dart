@@ -38,15 +38,17 @@ class ManageParkingView extends StatelessWidget {
   List<Widget> createList(BuildContext context) {
     List<Widget> list = List<Widget>();
     for (ParkingModel model in parkingDataProvider.parkingModels) {
+      print(model.locationName);
+      print(parkingDataProvider.parkingViewState[model.locationId]);
+
       list.add(ListTile(
           key: Key(model.locationId.toString()),
           title: Text(model.locationName),
           leading: Icon(Icons.reorder),
           trailing: Switch(
-            value: Provider.of<ParkingDataProvider>(context)
-                .parkingViewState[model.locationName],
+            value: parkingDataProvider.parkingViewState[model.locationId],
             onChanged: (_) {
-              parkingDataProvider.toggleLot(model.locationName);
+              parkingDataProvider.toggleLot(model.locationId);
             },
             activeColor: Theme.of(context).buttonColor,
           )));
