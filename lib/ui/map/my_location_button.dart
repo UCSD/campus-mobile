@@ -14,11 +14,7 @@ class MyLocationButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 10.0, bottom: 70.0),
-      child: Align(
-        alignment: Alignment.bottomRight,
-        child: FloatingActionButton(
+    return FloatingActionButton(
           child: Icon(
             Icons.my_location,
             color: Colors.white,
@@ -33,8 +29,6 @@ class MyLocationButton extends StatelessWidget {
                     .coordinates
                     .lon)));
           },
-        ),
-      ),
     );
   }
 }
