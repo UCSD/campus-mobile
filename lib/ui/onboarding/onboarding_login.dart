@@ -1,32 +1,20 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
-import 'package:campus_mobile_experimental/app_provider.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
 
 class OnboardingLogin extends StatefulWidget {
   @override
-  _OnboardingLoginState createState() => _OnboardingLoginState(analytics);
+  _OnboardingLoginState createState() => _OnboardingLoginState();
 }
 
 class _OnboardingLoginState extends State<OnboardingLogin> {
   final _emailTextFieldController = TextEditingController();
   final _passwordTextFieldController = TextEditingController();
   UserDataProvider _userDataProvider;
-
-  _OnboardingLoginState(this.analytics);
-  final FirebaseAnalytics analytics;
-  String _message = '';
-
-  void setMessage(String message) {
-    setState(() {
-      _message = message;
-    });
-  }
 
   @override
   void didChangeDependencies() {
@@ -172,16 +160,6 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                                         await SharedPreferences.getInstance();
                                     prefs.setBool(
                                         'showOnboardingScreen', false);
-                                    Future<void> _sendAnalyticsEvent() async {
-                                      await analytics.logEvent(
-                                        name: 'isLoggedIn',
-                                      );
-                                      setMessage('logEvent succeeded');
-                                    }
-                                    Future<void> _testSetUserId() async {
-                                      await analytics.setUserId(_emailTextFieldController.text);
-                                      setMessage('setUserId succeeded');
-                                    }
                                   } else {
                                     showAlertDialog(context);
                                   }
