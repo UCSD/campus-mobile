@@ -15,20 +15,21 @@ class MyLocationButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
-          child: Icon(
-            Icons.my_location,
-            color: Colors.white,
-          ),
-          backgroundColor: Colors.lightBlue,
-          onPressed: () {
-            _mapController.animateCamera(CameraUpdate.newLatLng(LatLng(
-                Provider.of<MapsDataProvider>(context, listen: false)
-                    .coordinates
-                    .lat,
-                Provider.of<MapsDataProvider>(context, listen: false)
-                    .coordinates
-                    .lon)));
-          },
+      heroTag: "my_location",
+      child: Icon(
+        Icons.my_location,
+        color: Colors.white,
+      ),
+      backgroundColor: Colors.lightBlue,
+      onPressed: () {
+        _mapController.animateCamera(CameraUpdate.newLatLng(LatLng(
+            Provider.of<MapsDataProvider>(context, listen: false)
+                .coordinates
+                .lat,
+            Provider.of<MapsDataProvider>(context, listen: false)
+                .coordinates
+                .lon)));
+      },
     );
   }
 }

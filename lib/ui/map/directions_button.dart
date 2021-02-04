@@ -15,6 +15,7 @@ class DirectionsButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
+      heroTag: "directions",
       child: Icon(
         Icons.directions_walk,
         color: Colors.lightBlue,
