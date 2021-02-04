@@ -1,3 +1,4 @@
+import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -12,6 +13,7 @@ class _LoginState extends State<Login> {
   final _emailTextFieldController = TextEditingController();
   final _passwordTextFieldController = TextEditingController();
   UserDataProvider _userDataProvider;
+  bool _passwordObscured = true;
 
   @override
   void didChangeDependencies() {
@@ -96,10 +98,18 @@ class _LoginState extends State<Login> {
             TextField(
               decoration: InputDecoration(
                 hintText: 'Password',
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    // Based on passwordObscured state choose the icon
+                    _passwordObscured ? Icons.visibility_off : Icons.visibility,
+                    color: Theme.of(context).primaryColorDark,
+                  ),
+                  onPressed: () => _toggle(),
+                ),
                 border: OutlineInputBorder(),
                 labelText: 'Password',
               ),
-              obscureText: true,
+              obscureText: _passwordObscured,
               controller: _passwordTextFieldController,
             ),
             SizedBox(height: 10),
@@ -146,6 +156,13 @@ class _LoginState extends State<Login> {
     );
   }
 
+  // Toggles the password show status
+  void _toggle() {
+    setState(() {
+      _passwordObscured = !_passwordObscured;
+    });
+  }
+
   Widget showAlertDialog(BuildContext context) {
     // set up the button
     Widget okButton = FlatButton(
@@ -157,9 +174,8 @@ class _LoginState extends State<Login> {
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Sorry, unable to sign you in"),
-      content: Text(
-          "Be sure you are using the correct credentials; TritonLink login if you are a student, SSO if you are Faculty/Staff."),
+      title: Text(LoginConstants.loginFailedTitle),
+      content: Text(LoginConstants.loginFailedDesc),
       actions: [
         okButton,
       ],
