@@ -1,32 +1,32 @@
+import 'dart:async';
+
 import 'package:campus_mobile_experimental/app_networking.dart';
-import 'package:campus_mobile_experimental/core/models/events.dart';
+import 'package:campus_mobile_experimental/core/models/survey.dart';
 
-class EventsService {
-  final String endpoint =
-      'https://yehduhg5p1.execute-api.us-west-2.amazonaws.com/qa/v1/events/student';
-
+class SurveyService {
   bool _isLoading = false;
   DateTime _lastUpdated;
   String _error;
-  List<EventModel> _data;
 
   final NetworkHelper _networkHelper = NetworkHelper();
+  final String endpoint =
+      'https://mobile.ucsd.edu/replatform/v1/qa/webview/survey/active_survey.json';
 
-  EventsService() {
-    fetchData();
-  }
-
+  SurveyModel _surveyModel = SurveyModel();
   Future<bool> fetchData() async {
+    print("in survey service");
+    print("fetching the data");
     _error = null;
     _isLoading = true;
     try {
       /// fetch data
       String _response = await _networkHelper.fetchData(endpoint);
+      print("response:");
+      print(_response);
 
       /// parse data
-      final data = eventModelFromJson(_response);
+      _surveyModel = surveyModelFromJson(_response);
       _isLoading = false;
-      _data = data;
       return true;
     } catch (e) {
       _error = e.toString();
@@ -36,7 +36,7 @@ class EventsService {
   }
 
   String get error => _error;
-  List<EventModel> get eventsModels => _data;
+  SurveyModel get surveyModel => _surveyModel;
   bool get isLoading => _isLoading;
   DateTime get lastUpdated => _lastUpdated;
 }
