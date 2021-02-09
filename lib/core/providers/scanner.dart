@@ -1,10 +1,11 @@
+import 'dart:io' show Platform;
+
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/barcode.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_scandit_plugin/flutter_scandit_plugin.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:provider/provider.dart';
 
 class ScannerDataProvider extends ChangeNotifier {
   ScannerDataProvider() {
@@ -35,7 +36,12 @@ class ScannerDataProvider extends ChangeNotifier {
   List<String> scannedCodes = new List<String>();
 
   void initState() {
-    _licenseKey = 'SCANDIT_NATIVE_LICENSE_PH';
+    if (Platform.isIOS) {
+      _licenseKey = 'SCANDIT_NATIVE_LICENSE_IOS_PH';
+    } else if (Platform.isAndroid) {
+      _licenseKey = 'SCANDIT_NATIVE_LICENSE_ANDROID_PH';
+    }
+
     errorText = "Something went wrong, please try again.";
   }
 
