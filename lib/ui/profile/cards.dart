@@ -54,11 +54,10 @@ class CardsView extends StatelessWidget {
     for (String card in _cardsDataProvider.cardOrder) {
       if (card == 'QRScanner') continue;
       if (card == 'NativeScanner') continue;
-      if (CardTitleConstants.titleMap[card] == null) continue;
       list.add(ListTile(
         leading: Icon(Icons.reorder),
         key: Key(card),
-        title: Text(CardTitleConstants.titleMap[card]),
+        title: Text(_cardsDataProvider.availableCards[card].titleText),
         trailing: Switch(
           value: _cardsDataProvider.cardStates[card],
           onChanged: (_) {
