@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:campus_mobile_experimental/app_provider.dart';
 import 'package:campus_mobile_experimental/core/models/authentication.dart';
 import 'package:campus_mobile_experimental/core/models/user_profile.dart';
 import 'package:campus_mobile_experimental/core/providers/availability.dart';
@@ -14,8 +15,12 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive/hive.dart';
 import 'package:pointycastle/asymmetric/oaep.dart';
 import 'package:pointycastle/pointycastle.dart' as pc;
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:provider/provider.dart';
+
 
 class UserDataProvider extends ChangeNotifier {
+
   UserDataProvider() {
     ///DEFAULT STATES
     _isLoading = false;
@@ -199,6 +204,7 @@ class UserDataProvider extends ChangeNotifier {
         updateAuthenticationModel(_authenticationService.data);
         _pushNotificationDataProvider
             .registerDevice(_authenticationService.data.accessToken);
+        await FirebaseAnalytics().logEvent(name: 'loggedIn');
         notifyListeners();
         return true;
       } else {
@@ -243,6 +249,7 @@ class UserDataProvider extends ChangeNotifier {
     _cardsDataProvider.updateAvailableCards("");
     var box = await Hive.openBox<AuthenticationModel>('AuthenticationModel');
     await box.clear();
+    await FirebaseAnalytics().logEvent(name: 'loggedOut');
     _isLoading = false;
 
     notifyListeners();
