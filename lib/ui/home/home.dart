@@ -52,8 +52,6 @@ class _HomeState extends State<Home> {
     String initialLink = await getInitialLink();
     if(initialLink != null) {
       if(!executedInitialDeeplinkQuery && initialLink != null && initialLink.contains("deeplinking.searchmap")) {
-        print("USING INITIAL LINK");
-        print("EXECUTED QUERY (home.dart: 54: ${executedInitialDeeplinkQuery}");
         var uri = Uri.dataFromString(initialLink);
         var query = uri.queryParameters['query'];
         // redirect query to maps tab and search with query
@@ -64,21 +62,15 @@ class _HomeState extends State<Home> {
             .fetchLocations();
         Provider.of<BottomNavigationBarProvider>(context, listen: false)
             .currentIndex = NavigatorConstants.MapTab;
-//        this.setState(() {
         executedInitialDeeplinkQuery = true;
-//        });
-        print("EXECUTED QUERY (home.dart: 68: ${executedInitialDeeplinkQuery}");
       }
     }
       _sub = getLinksStream().listen((String link) async {
         // handling for map query
-        print("EXECUTED_QUERY (home.dart:76) : ${executedQuery}");
-        print("LINK (home.dart: 77: ${link}");
         if(link.contains("deeplinking.searchmap") && !executedQuery) {
           var uri = Uri.dataFromString(link);
           var query = uri.queryParameters['query'];
           // redirect query to maps tab and search with query
-          print("REDIRECTING TO MAPS AND SEARCHING (home.dart:73)");
           Provider.of<MapsDataProvider>(context, listen: false)
               .searchBarController
               .text = query;
@@ -89,7 +81,6 @@ class _HomeState extends State<Home> {
           this.setState(() {
             executedQuery = true;
           });        }
-        print("EXECUTED_QUERY (home.dart:88) : ${executedQuery}");
       });
 
   }
