@@ -34,6 +34,8 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uni_links/uni_links.dart';
 
+import '../../main.dart';
+
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
@@ -41,15 +43,18 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   StreamSubscription _sub;
+  bool executedQuery = false;
 
   Future<Null> initUniLinks(BuildContext context) async {
     // deep links are received by this method
     // the specific host needs to be added in AndroidManifest.xml and Info.plist
     // currently, this method handles executing custom map query
-    _sub = getLinksStream().listen((String link) async {
-      // handling for map query
-      if(link.contains("deeplinking.searchmap")) {
-        var uri = Uri.dataFromString(link);
+    String initialLink = await getInitialLink();
+    if(initialLink != null) {
+      if(!executedInitialDeeplinkQuery && initialLink != null && initialLink.contains("deeplinking.searchmap")) {
+        print("USING INITIAL LINK");
+        print("EXECUTED QUERY (home.dart: 54: ${executedInitialDeeplinkQuery}");
+        var uri = Uri.dataFromString(initialLink);
         var query = uri.queryParameters['query'];
         // redirect query to maps tab and search with query
         Provider.of<MapsDataProvider>(context, listen: false)
@@ -59,8 +64,34 @@ class _HomeState extends State<Home> {
             .fetchLocations();
         Provider.of<BottomNavigationBarProvider>(context, listen: false)
             .currentIndex = NavigatorConstants.MapTab;
+//        this.setState(() {
+        executedInitialDeeplinkQuery = true;
+//        });
+        print("EXECUTED QUERY (home.dart: 68: ${executedInitialDeeplinkQuery}");
       }
-    });
+    }
+      _sub = getLinksStream().listen((String link) async {
+        // handling for map query
+        print("EXECUTED_QUERY (home.dart:76) : ${executedQuery}");
+        print("LINK (home.dart: 77: ${link}");
+        if(link.contains("deeplinking.searchmap") && !executedQuery) {
+          var uri = Uri.dataFromString(link);
+          var query = uri.queryParameters['query'];
+          // redirect query to maps tab and search with query
+          print("REDIRECTING TO MAPS AND SEARCHING (home.dart:73)");
+          Provider.of<MapsDataProvider>(context, listen: false)
+              .searchBarController
+              .text = query;
+          Provider.of<MapsDataProvider>(context, listen: false)
+              .fetchLocations();
+          Provider.of<BottomNavigationBarProvider>(context, listen: false)
+              .currentIndex = NavigatorConstants.MapTab;
+          this.setState(() {
+            executedQuery = true;
+          });        }
+        print("EXECUTED_QUERY (home.dart:88) : ${executedQuery}");
+      });
+
   }
 
   @override
