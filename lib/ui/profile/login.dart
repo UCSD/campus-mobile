@@ -71,7 +71,7 @@ class _LoginState extends State<Login> {
       ),
       trailing: OutlineButton(
         child: Text('logout'),
-        onPressed: () => _userDataProvider.logout(),
+        onPressed: () =>_userDataProvider.logout(),
       ),
     );
   }
@@ -83,7 +83,10 @@ class _LoginState extends State<Login> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text('Single Sign-On'),
+            Text(
+              'Single Sign-On',
+              style: TextStyle(fontSize: 17),
+            ),
             SizedBox(height: 10),
             TextField(
               decoration: InputDecoration(
@@ -117,7 +120,10 @@ class _LoginState extends State<Login> {
               children: <Widget>[
                 Expanded(
                   child: FlatButton(
-                    child: Text('Sign In'),
+                    child: Text(
+                      'Sign In',
+                      style: TextStyle(fontSize: 17),
+                    ),
                     onPressed: _userDataProvider.isLoading
                         ? null
                         : () {
@@ -136,10 +142,17 @@ class _LoginState extends State<Login> {
                 ),
               ],
             ),
-            SizedBox(height: 10),
             Center(
                 child: GestureDetector(
-              child: Text('Need help logging in?'),
+              child: Container(
+                height: 35,
+                child: Center(
+                  child: Text(
+                    'Need help logging in?',
+                    style: TextStyle(fontSize: 17),
+                  ),
+                ),
+              ),
               onTap: () async {
                 try {
                   String link =
