@@ -43,46 +43,43 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   StreamSubscription _sub;
-  bool executedQuery = false;
 
   Future<Null> initUniLinks(BuildContext context) async {
     // deep links are received by this method
     // the specific host needs to be added in AndroidManifest.xml and Info.plist
     // currently, this method handles executing custom map query
+
+    // Used to handle links on cold app start
     String initialLink = await getInitialLink();
-    if(initialLink != null) {
       if(!executedInitialDeeplinkQuery && initialLink != null && initialLink.contains("deeplinking.searchmap")) {
         var uri = Uri.dataFromString(initialLink);
         var query = uri.queryParameters['query'];
         // redirect query to maps tab and search with query
-        Provider.of<MapsDataProvider>(context, listen: false)
-            .searchBarController
-            .text = query;
-        Provider.of<MapsDataProvider>(context, listen: false)
-            .fetchLocations();
-        Provider.of<BottomNavigationBarProvider>(context, listen: false)
-            .currentIndex = NavigatorConstants.MapTab;
-        executedInitialDeeplinkQuery = true;
+        executeQuery(context,query);
       }
-    }
+
+      // used to handle links while app is in foreground/background
       _sub = getLinksStream().listen((String link) async {
         // handling for map query
-        if(link.contains("deeplinking.searchmap") && !executedQuery) {
+        if(link.contains("deeplinking.searchmap")) {
           var uri = Uri.dataFromString(link);
           var query = uri.queryParameters['query'];
           // redirect query to maps tab and search with query
-          Provider.of<MapsDataProvider>(context, listen: false)
-              .searchBarController
-              .text = query;
-          Provider.of<MapsDataProvider>(context, listen: false)
-              .fetchLocations();
-          Provider.of<BottomNavigationBarProvider>(context, listen: false)
-              .currentIndex = NavigatorConstants.MapTab;
-          this.setState(() {
-            executedQuery = true;
-          });        }
+          executeQuery(context,query);
+        }
       });
 
+  }
+
+  void executeQuery(BuildContext context, String query) {
+    Provider.of<MapsDataProvider>(context, listen: false)
+        .searchBarController
+        .text = query;
+    Provider.of<MapsDataProvider>(context, listen: false)
+        .fetchLocations();
+    Provider.of<BottomNavigationBarProvider>(context, listen: false)
+        .currentIndex = NavigatorConstants.MapTab;
+    executedInitialDeeplinkQuery = true;
   }
 
   @override
