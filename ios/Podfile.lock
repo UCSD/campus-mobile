@@ -126,9 +126,9 @@ PODS:
     - Flutter
   - PromisesObjC (1.2.12)
   - Protobuf (3.11.4)
-  - ScanditBarcodeCapture (6.6.2):
-    - ScanditCaptureCore (= 6.6.2)
-  - ScanditCaptureCore (6.6.2)
+  - ScanditBarcodeCapture (6.6.3):
+    - ScanditCaptureCore (= 6.6.3)
+  - ScanditCaptureCore (6.6.3)
   - shared_preferences (0.0.1):
     - Flutter
   - uni_links (0.0.1):
@@ -252,8 +252,8 @@ SPEC CHECKSUMS:
   permission_handler: ccb20a9fad0ee9b1314a52b70b76b473c5f8dab0
   PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
   Protobuf: 176220c526ad8bd09ab1fb40a978eac3fef665f7
-  ScanditBarcodeCapture: 80517b2725abfa0c8d55ef12e83896e9285d363f
-  ScanditCaptureCore: 86bba3618cbbe7a6d025f1545737c4bb6d63738f
+  ScanditBarcodeCapture: 4bf4801b6a2358be88dda23c604eaf133d53cc94
+  ScanditCaptureCore: 66a461d5a4589845910b71a21b86412e6bb2ae68
   shared_preferences: 430726339841afefe5142b9c1f50cb6bd7793e01
   uni_links: d97da20c7701486ba192624d99bffaaffcfc298a
   url_launcher: a1c0cc845906122c4784c542523d8cacbded5626
