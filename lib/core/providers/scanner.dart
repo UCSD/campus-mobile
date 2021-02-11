@@ -53,6 +53,7 @@ class ScannerDataProvider extends ChangeNotifier {
     isLoading = false;
     _isDuplicate = false;
     _isValidBarcode = true;
+    scannedCodes = new List<String>();
     notifyListeners();
   }
 
@@ -64,6 +65,7 @@ class ScannerDataProvider extends ChangeNotifier {
     isLoading = false;
     _isDuplicate = false;
     _isValidBarcode = true;
+    scannedCodes = new List<String>();
   }
 
   Future requestCameraPermissions() async {
