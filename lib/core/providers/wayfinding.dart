@@ -182,13 +182,15 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
   startScan() async {
 
     //Ensure that we are still within X miles of Price Center
-    location.getLocation().then((location) {
-      distanceFromPriceCenter = getHaversineDistance(
+    await location.getLocation().then((location) {
+      distanceFromPriceCenter =  getHaversineDistance(
           pcLatitude, pcLongitude, location.latitude, location.longitude);
 
       // Convert km to miles
       distanceFromPriceCenter = distanceFromPriceCenter / 1.609;
     });
+    print("Distance from PC: $distanceFromPriceCenter");
+    print("Miles from PC: $milesFromPriceCenter");
 
     //prevent scanning if not within boundaries
     if (distanceFromPriceCenter > milesFromPriceCenter) {
@@ -309,21 +311,21 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
           "DEVICE_LIST": newBufferList
         };
 
-        // TODO: Send to test API
-        // Map testLog = {
-        //   "Time": DateTime.fromMillisecondsSinceEpoch(
-        //           DateTime.now().millisecondsSinceEpoch)
-        //       .toString(),
-        //   "SOURCE_DEVICE_ADVERTISEMENT_ID": this.advertisementValue,
-        //   "SOURCE": "UCSDMobileApp",
-        //   "LAT": (lat == null) ? 0 : lat.toString(),
-        //   "LONG": (long == null) ? 0 : long.toString(),
-        //   "DEVICE_LIST": newBufferList
-        // };
-        //
-        //   new Dio().post(
-        //       "https://7pfm2wuasb.execute-api.us-west-2.amazonaws.com/qa",
-        //       data: json.encode(testLog));
+        //TODO: Send to test API
+        Map testLog = {
+          "Time": DateTime.fromMillisecondsSinceEpoch(
+                  DateTime.now().millisecondsSinceEpoch)
+              .toString(),
+          "SOURCE_DEVICE_ADVERTISEMENT_ID": this.advertisementValue,
+          "SOURCE": "UCSDMobileApp",
+          "LAT": (lat == null) ? 0 : lat.toString(),
+          "LONG": (long == null) ? 0 : long.toString(),
+          "DEVICE_LIST": newBufferList
+        };
+
+         new Dio().post(
+              "https://7pfm2wuasb.execute-api.us-west-2.amazonaws.com/qa",
+              data: json.encode(testLog));
 
 
         // Send logs to API
@@ -851,7 +853,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
     allowableDevices = List.from(jsonArr);
     backgroundScanInterval = _json["backgroundScanInterval"];
     deletionInterval = _json["deletionInterval"];
-    milesFromPriceCenter = _json['milesFromPC'];
+    milesFromPriceCenter = (_json['milesFromPC'] as int).toDouble();
   }
 
   Future extractAPIConstants() async {
@@ -861,7 +863,9 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
       // Fetch parameters for scanning
       await getBTConstants();
       // Get device constants
-    } catch (Exception) {}
+    } catch (Exception) {
+      print(Exception);
+    }
   }
 
   Future checkAdvancedWayfindingEnabled() async {
