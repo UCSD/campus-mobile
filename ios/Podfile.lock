@@ -122,13 +122,13 @@ PODS:
     - Flutter
   - path_provider (0.0.1):
     - Flutter
-  - "permission_handler (5.0.1+1)":
+  - "permission_handler (5.1.0+2)":
     - Flutter
   - PromisesObjC (1.2.12)
   - Protobuf (3.11.4)
-  - ScanditBarcodeCapture (6.6.2):
-    - ScanditCaptureCore (= 6.6.2)
-  - ScanditCaptureCore (6.6.2)
+  - ScanditBarcodeCapture (6.6.3):
+    - ScanditCaptureCore (= 6.6.3)
+  - ScanditCaptureCore (6.6.3)
   - shared_preferences (0.0.1):
     - Flutter
   - url_launcher (0.0.1):
@@ -244,11 +244,11 @@ SPEC CHECKSUMS:
   nanopb: 59317e09cf1f1a0af72f12af412d54edf52603fc
   package_info: 873975fc26034f0b863a300ad47e7f1ac6c7ec62
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
-  permission_handler: eac8e15b4a1a3fba55b761d19f3f4e6b005d15b6
+  permission_handler: ccb20a9fad0ee9b1314a52b70b76b473c5f8dab0
   PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
   Protobuf: 176220c526ad8bd09ab1fb40a978eac3fef665f7
-  ScanditBarcodeCapture: 80517b2725abfa0c8d55ef12e83896e9285d363f
-  ScanditCaptureCore: 86bba3618cbbe7a6d025f1545737c4bb6d63738f
+  ScanditBarcodeCapture: 4bf4801b6a2358be88dda23c604eaf133d53cc94
+  ScanditCaptureCore: 66a461d5a4589845910b71a21b86412e6bb2ae68
   shared_preferences: 430726339841afefe5142b9c1f50cb6bd7793e01
   url_launcher: a1c0cc845906122c4784c542523d8cacbded5626
   webview_flutter: d2b4d6c66968ad042ad94cbb791f5b72b4678a96

@@ -25,6 +25,8 @@ import 'package:firebase_analytics/observer.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
+import 'core/providers/scanner.dart';
+
 List<SingleChildWidget> providers = [
   ...independentServices,
   ...dependentServices,
@@ -277,5 +279,20 @@ List<SingleChildWidget> dependentServices = [
       return freefoodDataProvider;
     },
   ),
+  ChangeNotifierProxyProvider<UserDataProvider, ScannerDataProvider>(
+    create: (_) {
+      var _scannerDataProvider = ScannerDataProvider();
+      _scannerDataProvider.initState();
+      _scannerDataProvider.setDefaultStates();
+      return _scannerDataProvider;
+    },
+    update: (_, _userDataProvider, scannerDataProvider) {
+      scannerDataProvider.userDataProvider = _userDataProvider;
+      scannerDataProvider.initState();
+      scannerDataProvider.setDefaultStates();
+      return scannerDataProvider;
+    },
+    lazy: false,
+  )
 ];
 List<SingleChildWidget> uiConsumableProviders = [];

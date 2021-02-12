@@ -17,9 +17,11 @@ const prodEnvReplacements = async (targetEnv) => {
 		config.PROD_ENV_REPLACEMENTS.forEach((envItem) => {
 			fs.readFile(envItem.PATH, 'utf8', (err, data) => {
 				envItem.QA.forEach((replacement, index) => {
-					// Debug endpoints
-					// console.log('replacement: ' + replacement + ', index: ' + index)
-					data = data.replace(replacement, envItem.PROD[index])
+					if (replacement === '"##BUILD_ENV##"') {
+						data = data.replace(replacement, '"' + targetEnv + '"')
+					} else {
+						data = data.replace(replacement, envItem.PROD[index])
+					}
 				})
 				fs.writeFile(envItem.PATH, data, 'utf8', (err) => {
 					if (err) throw err
@@ -37,7 +39,11 @@ const prodtestEnvReplacements = async (targetEnv) => {
 		config.PRODTEST_ENV_REPLACEMENTS.forEach((envItem) => {
 			fs.readFile(envItem.PATH, 'utf8', (err, data) => {
 				envItem.PROD.forEach((replacement, index) => {
-					data = data.replace(replacement, envItem.QA[index])
+					if (replacement === '"##BUILD_ENV##"') {
+						data = data.replace(replacement, '"' + targetEnv + '"')
+					} else {
+						data = data.replace(replacement, envItem.QA[index])
+					}
 				})
 				fs.writeFile(envItem.PATH, data, 'utf8', (err) => {
 					if (err) throw err
@@ -55,9 +61,11 @@ const qaEnvReplacements = async (targetEnv) => {
 		config.QA_ENV_REPLACEMENTS.forEach((envItem) => {
 			fs.readFile(envItem.PATH, 'utf8', (err, data) => {
 				envItem.QA.forEach((replacement, index) => {
-					// Debug endpoints
-					// console.log('replacement: ' + replacement + ', index: ' + index)
-					data = data.replace(replacement, envItem.PROD[index])
+					if (replacement === '"##BUILD_ENV##"') {
+						data = data.replace(replacement, '"' + targetEnv + '"')
+					} else {
+						data = data.replace(replacement, envItem.PROD[index])
+					}
 				})
 				fs.writeFile(envItem.PATH, data, 'utf8', (err) => {
 					if (err) throw err
