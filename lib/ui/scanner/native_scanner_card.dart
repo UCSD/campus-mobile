@@ -1,5 +1,6 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
+import 'package:campus_mobile_experimental/core/providers/scanner.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
 import 'package:flutter/material.dart';
@@ -83,6 +84,8 @@ class NativeScannerCard extends StatelessWidget {
 
   getActionButtonNavigateRoute(BuildContext context) {
     if (Provider.of<UserDataProvider>(context, listen: false).isLoggedIn) {
+      Provider.of<ScannerDataProvider>(context, listen: false)
+          .setDefaultStates();
       Navigator.pushNamed(
         context,
         RoutePaths.ScanditScanner,
