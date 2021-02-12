@@ -33,11 +33,7 @@ class CardsView extends StatelessWidget {
     if (_cardsDataProvider.cardOrder.contains('NativeScanner')) {
       toRemove.add('NativeScanner');
     }
-    for (String card in newOrder) {
-      if (CardTitleConstants.titleMap[card] == null) {
-        toRemove.add(card);
-      }
-    }
+
     newOrder.removeWhere((element) => toRemove.contains(element));
     String item = newOrder.removeAt(oldIndex);
     newOrder.insert(newIndex, item);
