@@ -20,7 +20,7 @@ class CardsService {
     /// API Manager Service
     try {
       String cardListEndpoint =
-          "https://api-qa.ucsd.edu:8243/defaultcards/v4.0.0/defaultcards?ucsdaffiliation=${ucsdAffiliation}";
+          "https://mobile.ucsd.edu/replatform/v1/qa/webview/mihir-test/student_cards-v4.json";
       String _response =
           await _networkHelper.authorizedFetch(cardListEndpoint, headers);
       _cardsModel = cardsModelFromJson(_response);
