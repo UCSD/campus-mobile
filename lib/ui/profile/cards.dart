@@ -33,11 +33,7 @@ class CardsView extends StatelessWidget {
     if (_cardsDataProvider.cardOrder.contains('NativeScanner')) {
       toRemove.add('NativeScanner');
     }
-    for (String card in newOrder) {
-      if (CardTitleConstants.titleMap[card] == null) {
-        toRemove.add(card);
-      }
-    }
+
     newOrder.removeWhere((element) => toRemove.contains(element));
     String item = newOrder.removeAt(oldIndex);
     newOrder.insert(newIndex, item);
@@ -54,11 +50,10 @@ class CardsView extends StatelessWidget {
     for (String card in _cardsDataProvider.cardOrder) {
       if (card == 'QRScanner') continue;
       if (card == 'NativeScanner') continue;
-      if (CardTitleConstants.titleMap[card] == null) continue;
       list.add(ListTile(
         leading: Icon(Icons.reorder),
         key: Key(card),
-        title: Text(CardTitleConstants.titleMap[card]),
+        title: Text(_cardsDataProvider.availableCards[card].titleText),
         trailing: Switch(
           value: _cardsDataProvider.cardStates[card],
           onChanged: (_) {
