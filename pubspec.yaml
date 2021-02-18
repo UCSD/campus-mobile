@@ -43,7 +43,7 @@ dependencies:
   shared_preferences: 0.5.6+3
   url_launcher: 5.2.5
   uuid: 2.2.0
-  permission_handler: ^5.0.1+2
+  permission_handler: 5.1.0+2
   webview_flutter:
     git:
       path: packages/webview_flutter

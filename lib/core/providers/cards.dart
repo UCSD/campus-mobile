@@ -285,4 +285,5 @@ class CardsDataProvider extends ChangeNotifier {
   Map<String, bool> get cardStates => _cardStates;
   List<String> get cardOrder => _cardOrder;
   Map<String, CardsModel> get webCards => _webCards;
+  Map<String, CardsModel> get availableCards => _availableCards;
 }

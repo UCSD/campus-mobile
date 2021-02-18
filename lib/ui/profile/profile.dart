@@ -1,6 +1,6 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/ui/common/build_info.dart';
 import 'package:campus_mobile_experimental/ui/profile/login.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -53,15 +53,7 @@ class Profile extends StatelessWidget {
               },
             ),
           ),
-          Card(
-            child: ListTile(
-              leading: Icon(Icons.warning),
-              title: Text('Test Crashlytics'),
-              onTap: () {
-                FirebaseCrashlytics.instance.crash();
-              },
-            ),
-          ),
+          BuildInfo(),
         ],
       ),
     );

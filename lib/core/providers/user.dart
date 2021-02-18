@@ -9,6 +9,7 @@ import 'package:campus_mobile_experimental/core/providers/notifications.dart';
 import 'package:campus_mobile_experimental/core/services/authentication.dart';
 import 'package:campus_mobile_experimental/core/services/user.dart';
 import 'package:encrypt/encrypt.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive/hive.dart';
@@ -248,7 +249,8 @@ class UserDataProvider extends ChangeNotifier {
         print('UserDataProvider:silentLogin:registerDevice - 9');
         _pushNotificationDataProvider
             .registerDevice(_authenticationService.data.accessToken);
-        // notifyListeners();
+        await FirebaseAnalytics().logEvent(name: 'loggedIn');
+        notifyListeners();
         return true;
       }
     }
@@ -278,6 +280,7 @@ class UserDataProvider extends ChangeNotifier {
     _cardsDataProvider.updateAvailableCards("");
     var box = await Hive.openBox<AuthenticationModel>('AuthenticationModel');
     await box.clear();
+    await FirebaseAnalytics().logEvent(name: 'loggedOut');
     _isLoading = false;
 
     print('UserDataProvider:logout:notifyListeners:2');

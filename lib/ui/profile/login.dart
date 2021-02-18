@@ -89,7 +89,7 @@ class _LoginState extends State<Login> {
       ),
       trailing: OutlineButton(
         child: Text('logout'),
-        onPressed: () => _userDataProvider.logout(),
+        onPressed: () =>_userDataProvider.logout(),
       ),
     );
   }
