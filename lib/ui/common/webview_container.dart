@@ -111,7 +111,6 @@ class _WebViewContainerState extends State<WebViewContainer>
 
   // builds the actual webview widget
   Widget buildBody(context) {
-    print("webview_container.dart:114");
     return Container(
       height: _contentHeight,
       child: WebView(
@@ -120,7 +119,6 @@ class _WebViewContainerState extends State<WebViewContainer>
         initialUrl: webCardUrl,
         onWebViewCreated: (controller) {
           _webViewController = controller;
-          print("CURRENT_URL: ${_webViewController.currentUrl().toString()}");
         },
         navigationDelegate: null,
         javascriptChannels: <JavascriptChannel>[
@@ -195,8 +193,7 @@ class _WebViewContainerState extends State<WebViewContainer>
       name: 'OpenLink',
       onMessageReceived: (JavascriptMessage message) {
         print("in links channel");
-        print("MESSAGE: ${message}");
-//        openLink(message.message);
+        openLink(message.message);
       },
     );
   }
@@ -243,11 +240,11 @@ class _WebViewContainerState extends State<WebViewContainer>
     );
   }
 
+  // javascript channel for redirecting the user to a new webcard URL
   JavascriptChannel _permanentRedirect(BuildContext context) {
     return JavascriptChannel(
       name: 'Redirect',
       onMessageReceived: (JavascriptMessage message) async {
-        print("IN PERMANENT REDIRECT, MESSAGE: ${message.message}");
         webCardUrl = message.message;
         _webViewController.loadUrl(message.message);
       },
@@ -261,7 +258,6 @@ class _WebViewContainerState extends State<WebViewContainer>
   // to the webViewController's url, and loads in the new url if so
   void checkWebURL() async {
     String currentUrl = await _webViewController?.currentUrl();
-    print("CURRENT_URL (webview_container.dart:249): ${currentUrl}");
     if (_webViewController != null && webCardUrl != currentUrl) {
       _webViewController?.loadUrl(webCardUrl);
     }
