@@ -57,27 +57,17 @@ class ScannerDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void restoreDefaults() {
-    _hasScanned = false;
-    hasSubmitted = false;
-    _didError = false;
-    _successfulSubmission = false;
-    isLoading = false;
-    _isDuplicate = false;
-    _isValidBarcode = true;
-    scannedCodes = new List<String>();
-  }
-
   Future requestCameraPermissions() async {
     var status = await Permission.camera.status;
     if (!status.isGranted) {
       status = await Permission.camera.request();
+      notifyListeners();
     }
 
     if (cameraPermissionsStatus != status) {
       cameraPermissionsStatus = status;
+      notifyListeners();
     }
-    notifyListeners();
   }
 
   Map<String, dynamic> createUserData() {
