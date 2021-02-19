@@ -1,4 +1,3 @@
-import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/cards.dart';
 import 'package:campus_mobile_experimental/core/models/notices.dart';
@@ -10,6 +9,7 @@ import 'package:campus_mobile_experimental/ui/availability/availability_card.dar
 import 'package:campus_mobile_experimental/ui/classes/classes_card.dart';
 import 'package:campus_mobile_experimental/ui/common/webview_container.dart';
 import 'package:campus_mobile_experimental/ui/dining/dining_card.dart';
+import 'package:campus_mobile_experimental/ui/employee_id/employee_id_card.dart';
 import 'package:campus_mobile_experimental/ui/events/events_card.dart';
 import 'package:campus_mobile_experimental/ui/finals/finals_card.dart';
 import 'package:campus_mobile_experimental/ui/my_chart/my_chart_card.dart';
@@ -110,6 +110,9 @@ class _HomeState extends State<Home> {
             break;
           case 'student_id':
             orderedCards.add(StudentIdCard());
+            break;
+          case 'employee_id':
+            orderedCards.add(EmployeeIdCard());
             break;
           case 'parking':
             orderedCards.add(ParkingCard());
