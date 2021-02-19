@@ -3,20 +3,13 @@ PODS:
     - Flutter
   - background_fetch (0.6.0):
     - Flutter
-  - barcode_scan (0.0.1):
-    - Flutter
-    - MTBBarcodeScanner
-    - SwiftProtobuf
   - beacon_broadcast (0.0.1):
     - Flutter
   - connectivity (0.0.1):
     - Flutter
     - Reachability
-  - Crashlytics (3.14.0):
-    - Fabric (~> 1.10.2)
   - device_info (0.0.1):
     - Flutter
-  - Fabric (1.10.2)
   - Firebase/Analytics (6.34.0):
     - Firebase/Core
   - Firebase/Core (6.34.0):
@@ -32,11 +25,6 @@ PODS:
     - Firebase/Core
     - Flutter
   - firebase_core (0.0.1):
-    - Firebase/Core
-    - Flutter
-  - firebase_crashlytics (0.0.1):
-    - Crashlytics
-    - Fabric
     - Firebase/Core
     - Flutter
   - firebase_messaging (0.0.1):
@@ -86,6 +74,9 @@ PODS:
   - flutter_blue/Protos (0.0.1):
     - Flutter
     - Protobuf (~> 3.11.4)
+  - flutter_scandit_plugin (0.0.1):
+    - Flutter
+    - ScanditBarcodeCapture (~> 6.6.0-beta.2)
   - flutter_secure_storage (3.3.1):
     - Flutter
   - google_maps_flutter (0.0.1):
@@ -99,10 +90,10 @@ PODS:
     - nanopb (~> 1.30906.0)
   - GoogleDataTransport (7.5.1):
     - nanopb (~> 1.30906.0)
-  - GoogleMaps (2.7.0):
-    - GoogleMaps/Maps (= 2.7.0)
-  - GoogleMaps/Base (2.7.0)
-  - GoogleMaps/Maps (2.7.0):
+  - GoogleMaps (3.9.0):
+    - GoogleMaps/Maps (= 3.9.0)
+  - GoogleMaps/Base (3.9.0)
+  - GoogleMaps/Maps (3.9.0):
     - GoogleMaps/Base
   - GoogleUtilities/AppDelegateSwizzler (6.7.2):
     - GoogleUtilities/Environment
@@ -125,7 +116,6 @@ PODS:
     - GoogleUtilities/Logger
   - location (0.0.1):
     - Flutter
-  - MTBBarcodeScanner (5.0.11)
   - nanopb (1.30906.0):
     - nanopb/decode (= 1.30906.0)
     - nanopb/encode (= 1.30906.0)
@@ -135,12 +125,16 @@ PODS:
     - Flutter
   - path_provider (0.0.1):
     - Flutter
-  - PromisesObjC (1.2.10)
+  - "permission_handler (5.1.0+2)":
+    - Flutter
+  - PromisesObjC (1.2.12)
   - Protobuf (3.11.4)
   - Reachability (3.2)
+  - ScanditBarcodeCapture (6.6.3):
+    - ScanditCaptureCore (= 6.6.3)
+  - ScanditCaptureCore (6.6.3)
   - shared_preferences (0.0.1):
     - Flutter
-  - SwiftProtobuf (1.12.0)
   - url_launcher (0.0.1):
     - Flutter
   - webview_flutter (0.0.1):
@@ -151,21 +145,21 @@ PODS:
 DEPENDENCIES:
   - app_settings (from `.symlinks/plugins/app_settings/ios`)
   - background_fetch (from `.symlinks/plugins/background_fetch/ios`)
-  - barcode_scan (from `.symlinks/plugins/barcode_scan/ios`)
   - beacon_broadcast (from `.symlinks/plugins/beacon_broadcast/ios`)
   - connectivity (from `.symlinks/plugins/connectivity/ios`)
   - device_info (from `.symlinks/plugins/device_info/ios`)
   - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
-  - firebase_crashlytics (from `.symlinks/plugins/firebase_crashlytics/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - Flutter (from `Flutter`)
   - flutter_blue (from `.symlinks/plugins/flutter_blue/ios`)
+  - flutter_scandit_plugin (from `.symlinks/plugins/flutter_scandit_plugin/ios`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
   - google_maps_flutter (from `.symlinks/plugins/google_maps_flutter/ios`)
   - location (from `.symlinks/plugins/location/ios`)
   - package_info (from `.symlinks/plugins/package_info/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
+  - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
   - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
   - webview_flutter (from `.symlinks/plugins/webview_flutter/ios`)
@@ -173,8 +167,6 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
-    - Crashlytics
-    - Fabric
     - Firebase
     - FirebaseAnalytics
     - FirebaseCore
@@ -186,20 +178,18 @@ SPEC REPOS:
     - GoogleDataTransport
     - GoogleMaps
     - GoogleUtilities
-    - MTBBarcodeScanner
     - nanopb
     - PromisesObjC
     - Protobuf
     - Reachability
-    - SwiftProtobuf
+    - ScanditBarcodeCapture
+    - ScanditCaptureCore
 
 EXTERNAL SOURCES:
   app_settings:
     :path: ".symlinks/plugins/app_settings/ios"
   background_fetch:
     :path: ".symlinks/plugins/background_fetch/ios"
-  barcode_scan:
-    :path: ".symlinks/plugins/barcode_scan/ios"
   beacon_broadcast:
     :path: ".symlinks/plugins/beacon_broadcast/ios"
   connectivity:
@@ -210,14 +200,14 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_analytics/ios"
   firebase_core:
     :path: ".symlinks/plugins/firebase_core/ios"
-  firebase_crashlytics:
-    :path: ".symlinks/plugins/firebase_crashlytics/ios"
   firebase_messaging:
     :path: ".symlinks/plugins/firebase_messaging/ios"
   Flutter:
     :path: Flutter
   flutter_blue:
     :path: ".symlinks/plugins/flutter_blue/ios"
+  flutter_scandit_plugin:
+    :path: ".symlinks/plugins/flutter_scandit_plugin/ios"
   flutter_secure_storage:
     :path: ".symlinks/plugins/flutter_secure_storage/ios"
   google_maps_flutter:
@@ -228,6 +218,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/package_info/ios"
   path_provider:
     :path: ".symlinks/plugins/path_provider/ios"
+  permission_handler:
+    :path: ".symlinks/plugins/permission_handler/ios"
   shared_preferences:
     :path: ".symlinks/plugins/shared_preferences/ios"
   url_launcher:
@@ -240,16 +232,12 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   app_settings: d103828c9f5d515c4df9ee754dabd443f7cedcf3
   background_fetch: 9221ccc02b41aff8a52b2090d9f791c5ed82eaee
-  barcode_scan: a5c27959edfafaa0c771905bad0b29d6d39e4479
   beacon_broadcast: 2c2562111f7b7e0f1ab59487f6bc805805e3c9f3
   connectivity: c4130b2985d4ef6fd26f9702e886bd5260681467
-  Crashlytics: 9220f5bc89e7a618df411b4f639389dbfb0e03d2
   device_info: d7d233b645a32c40dfdc212de5cf646ca482f175
-  Fabric: ea977e3cd9c20425516d3dafd3bf8c941c51223f
   Firebase: c23a36d9e4cdf7877dfcba8dd0c58add66358999
   firebase_analytics: 045e7ebe7b8a4d27357168072868ff082dca15a6
   firebase_core: dc539d4bdc69894823e4a6e557034a9e48960f21
-  firebase_crashlytics: bd8c58df07f107cb7e1a20cb190b9a468e0a69fd
   firebase_messaging: cffb57ce40958c6204f03fb0c81713e4cd1e240c
   FirebaseAnalytics: 3bb096873ee0d7fa4b6c70f5e9166b6da413cc7f
   FirebaseCore: d3a978a3cfa3240bf7e4ba7d137fdf5b22b628ec
@@ -259,26 +247,28 @@ SPEC CHECKSUMS:
   FirebaseMessaging: 5eca4ef173de76253352511aafef774caa1cba2a
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
   flutter_blue: eeb381dc4727a0954dede73515f683865494b370
+  flutter_scandit_plugin: 99b341bc008c38d7a2590ed924e4c106ac76841e
   flutter_secure_storage: 7953c38a04c3fdbb00571bcd87d8e3b5ceb9daec
   google_maps_flutter: c7f9c73576de1fbe152a227bfd6e6c4ae8088619
   GoogleAppMeasurement: a6a3a066369828db64eda428cb2856dc1cdc7c4e
   GoogleDataTransport: f56af7caa4ed338dc8e138a5d7c5973e66440833
-  GoogleMaps: f79af95cb24d869457b1f961c93d3ce8b2f3b848
+  GoogleMaps: 4b5346bddfe6911bb89155d43c903020170523ac
   GoogleUtilities: 7f2f5a07f888cdb145101d6042bc4422f57e70b3
   location: 3a2eed4dd2fab25e7b7baf2a9efefe82b512d740
-  MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb
   nanopb: 59317e09cf1f1a0af72f12af412d54edf52603fc
   package_info: 873975fc26034f0b863a300ad47e7f1ac6c7ec62
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
-  PromisesObjC: b14b1c6b68e306650688599de8a45e49fae81151
+  permission_handler: ccb20a9fad0ee9b1314a52b70b76b473c5f8dab0
+  PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
   Protobuf: 176220c526ad8bd09ab1fb40a978eac3fef665f7
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
+  ScanditBarcodeCapture: 4bf4801b6a2358be88dda23c604eaf133d53cc94
+  ScanditCaptureCore: 66a461d5a4589845910b71a21b86412e6bb2ae68
   shared_preferences: 430726339841afefe5142b9c1f50cb6bd7793e01
-  SwiftProtobuf: 4ef85479c18ca85b5482b343df9c319c62bda699
   url_launcher: a1c0cc845906122c4784c542523d8cacbded5626
   webview_flutter: d2b4d6c66968ad042ad94cbb791f5b72b4678a96
   wifi_connection: 9c23ee1bfb5fed65448980b3499fc9ff56c9222d
 
-PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
+PODFILE CHECKSUM: 1daf15007dd0a90dc4040b8e7d262e09b3f07d09
 
 COCOAPODS: 1.10.0

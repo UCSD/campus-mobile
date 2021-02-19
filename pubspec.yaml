@@ -1,6 +1,6 @@
 name: campus_mobile_experimental
 description: A new Flutter project.
-version: 7.2.13+846
+version: 1.0.0+1
 
 environment:
   sdk: ">=2.6.0 <3.0.0"
@@ -9,7 +9,6 @@ dependencies:
   liquid_progress_indicator: ^0.3.2
   app_settings: 4.0.4
   background_fetch: 0.6.0
-  barcode_scan: 3.0.1
   barcode_widget: 1.5.0
   beacon_broadcast: 0.2.1
   device_info: 0.4.2+8
@@ -18,8 +17,11 @@ dependencies:
   encrypt: 4.0.3
   firebase_analytics: 5.0.2
   firebase_core: 0.4.4
-  firebase_crashlytics: 0.1.3+3
   firebase_messaging: 6.0.13
+  flutter_scandit_plugin:
+    git:
+      url: https://github.com/UCSD/flutter_scandit.git
+      ref: master
 
   wifi_connection: 0.0.2-dev.1
   connectivity: ^2.0.2
@@ -44,6 +46,7 @@ dependencies:
   shared_preferences: 0.5.6+3
   url_launcher: 5.2.5
   uuid: 2.2.0
+  permission_handler: 5.1.0+2
   webview_flutter:
     git:
       path: packages/webview_flutter
