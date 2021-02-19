@@ -49,8 +49,6 @@ class MapsDataProvider extends ChangeNotifier {
     _markers[marker.markerId] = marker;
 
     updateMapPosition();
-    print("MARKER ${marker}");
-    print("MARKER_ID: ${marker.markerId}");
     notifyListeners();
   }
 
@@ -65,8 +63,6 @@ class MapsDataProvider extends ChangeNotifier {
         }
         catch(e) {}
       });
-//      _mapController.animateCamera(
-//          CameraUpdate.newLatLng(_markers.values.toList()[0].position));
     }
   }
 
