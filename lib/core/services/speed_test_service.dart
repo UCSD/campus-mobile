@@ -1,12 +1,17 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:ffi';
 
+import 'package:connectivity/connectivity.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
-//import 'package:internet_speed_test/callbacks_enum.dart';
+import 'package:location/location.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 
-//import 'package:internet_speed_test/internet_speed_test.dart';
+import 'package:wifi_connection/WifiConnection.dart';
+import 'package:wifi_connection/WifiInfo.dart';
+
 class SpeedTestService extends ChangeNotifier {
   SpeedTestService() {
     _networkHelper = Dio();
@@ -28,6 +33,7 @@ class SpeedTestService extends ChangeNotifier {
   bool _speedTestDone = false;
   int _secondsElapsedDownload = 0;
   int _secondsElapsedUpload = 0;
+  bool isUCSDWiFi = true;
 
   String url =
       'https://ucsd-its-wts-dev.s3-us-west-1.amazonaws.com/Services/WifiAnalyzer/webpage_25MB.html';
@@ -43,7 +49,6 @@ String signedURL;
     }
     );
     await uploadSpeedTest();
-    print("$_percentDownloaded + $_percentUploaded");
     if (_percentUploaded == 1.0 && _percentDownloaded == 1.0) {
       _speedTestDone = true;
       notifyListeners();
@@ -68,7 +73,6 @@ String signedURL;
       _timer.start();
       await _networkHelper.put(signedURL, data: formData, onSendProgress:  _progressCallbackUpload, cancelToken:  _cancelTokenDownload);
     } catch (e) {
-      print(e.toString());
     }
     _timer.stop();
     notifyListeners();
@@ -87,7 +91,6 @@ String signedURL;
           onReceiveProgress: _progressCallbackDownload,
           cancelToken: _cancelTokenUpload);
     } catch (e) {
-      print(e.toString());
     }
     _timer.stop();
     notifyListeners();
@@ -146,10 +149,7 @@ String signedURL;
   }
 
   double get speed => _speedDownload;
-  void set speed(double lastSpeed) {
-    _speedDownload = lastSpeed;
-  }
-
+  set speed(double lastSpeed) => _speedDownload = lastSpeed;
   double get uploadSpeed => _speedUpload;
   Stopwatch get timer => _timer;
   double get percentDownloaded => _percentDownloaded;
@@ -157,5 +157,105 @@ String signedURL;
   bool get speedTestDone => _speedTestDone;
   int get timeElapsedDownload => _secondsElapsedDownload;
   int get timeElapsedUpload => _secondsElapsedUpload;
+  bool get isUCSDNetwork => isUCSDWiFi;
+  void connectedToUCSDwifi() async{
+   WifiInfo wiFiInfo = await WifiConnection.wifiInfo;
+   bool lastState = isUCSDWiFi;
+   if(wiFiInfo.ssid.contains("UCSD-PROTECTED") || wiFiInfo.ssid.contains("UCSD-GUEST") ||  wiFiInfo.ssid.contains("ResNet")){
+     isUCSDWiFi = true;
+   }else{
+     isUCSDWiFi = false;
+   }
+   if(lastState != isUCSDWiFi) {
+     notifyListeners();
+   }
+   }
+  // Send WiFi data
+  Future<bool> sendNetworkDiagnostics(int lastSpeed) async {
+    Map wiFiLog;
+    bool sentSuccessfully = false;
 
+    List<Object> locationWifiConnectivity = await futureCombo();
+    if (locationWifiConnectivity[2] == ConnectivityResult.wifi) {
+      if (Platform.isAndroid) {
+        wiFiLog = {
+          "Platform": "Android",
+          "SSID": (locationWifiConnectivity[0] as WifiInfo).ssid,
+          "BSSID": (locationWifiConnectivity[0] as WifiInfo).bssId,
+          "IPAddress": (locationWifiConnectivity[0] as WifiInfo).ipAddress,
+          "MacAddress": (locationWifiConnectivity[0] as WifiInfo).macAddress,
+          "LinkSpeed": (locationWifiConnectivity[0] as WifiInfo).linkSpeed,
+          "SignalStrength":
+          (locationWifiConnectivity[0] as WifiInfo).signalStrength,
+          "Frequency": (locationWifiConnectivity[0] as WifiInfo).frequency,
+          "NetworkID": (locationWifiConnectivity[0] as WifiInfo).networkId,
+          "IsHiddenSSID":
+          (locationWifiConnectivity[0] as WifiInfo).isHiddenSSid,
+          "RouterIP": (locationWifiConnectivity[0] as WifiInfo).routerIp,
+          "Channel": (locationWifiConnectivity[0] as WifiInfo).channel,
+          "Latitude":
+          (locationWifiConnectivity[1] as LocationData).latitude as Double,
+          "Longitude":
+          (locationWifiConnectivity[1] as LocationData).longitude as Double,
+          "TimeStamp": DateTime.fromMillisecondsSinceEpoch(
+              DateTime.now().millisecondsSinceEpoch)
+              .toString(),
+          "DownloadSpeed": lastSpeed != null
+              ? lastSpeed.toStringAsPrecision(3)
+              : speed.toStringAsPrecision(3),
+          "UploadSpeed": uploadSpeed.toStringAsPrecision(3),
+        };
+      } else {
+        print(  uploadSpeed.toStringAsPrecision(3) );
+      wiFiLog = {
+          "Platform": "iOS",
+          "SSID": (locationWifiConnectivity[0] as WifiInfo).ssid,
+          "BSSID": (locationWifiConnectivity[0] as WifiInfo).bssId,
+          "IPAddress": (locationWifiConnectivity[0] as WifiInfo).ipAddress,
+          "MacAddress": (locationWifiConnectivity[0] as WifiInfo).macAddress,
+          "LinkSpeed": "",
+          "SignalStrength": "",
+          "Frequency": "",
+          "NetworkID": "",
+          "IsHiddenSSID": "",
+          "RouterIP": "",
+          "Channel": "",
+          "Latitude":
+          (locationWifiConnectivity[1] as LocationData).latitude ,
+          "Longitude":
+          (locationWifiConnectivity[1] as LocationData).longitude ,
+          "TimeStamp": DateTime.fromMillisecondsSinceEpoch(
+              DateTime.now().millisecondsSinceEpoch)
+              .toString(),
+          "DownloadSpeed": lastSpeed != null
+              ? lastSpeed.toStringAsPrecision(3)
+              : speed.toStringAsPrecision(3),
+          "UploadSpeed": uploadSpeed.toStringAsPrecision(3),
+        };
+      print(json.encode(wiFiLog));
+      }
+      //TODO: Send data for submission
+      sentSuccessfully = true;
+
+
+    }
+
+    return sentSuccessfully; //Due to failed submission or not connected to wifi
+  }
+
+  Future<List<Object>> futureCombo() async {
+    if (await (Connectivity().checkConnectivity()) != ConnectivityResult.wifi) {
+      return [null, null, await (Connectivity().checkConnectivity())];
+    }
+
+    var location = Location();
+    location.changeSettings(accuracy: LocationAccuracy.low);
+
+    LocationData position;
+    return [
+      await WifiConnection.wifiInfo,
+      await location.getLocation(),
+      await (Connectivity().checkConnectivity())
+    ];
+  }
 }

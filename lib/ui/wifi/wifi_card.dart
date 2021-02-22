@@ -1,24 +1,15 @@
-//import 'dart:io';
-// import 'dart:js';
-
-import 'dart:ffi';
-import 'dart:io';
-
 
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/student_id.dart';
 import 'package:campus_mobile_experimental/core/providers/weather.dart';
 import 'package:campus_mobile_experimental/core/services/speed_test_service.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
-import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
-import 'package:location/location.dart';
 import 'package:provider/provider.dart';
-import 'package:wifi_connection/WifiConnection.dart';
-import 'package:wifi_connection/WifiInfo.dart';
+
 
 import '../../app_constants.dart';
 import '../../app_styles.dart';
@@ -45,6 +36,7 @@ class _WiFiCardState extends State<WiFiCard> {
   @override
   Widget build(BuildContext context) {
     _speedTestService = Provider.of<SpeedTestService>(context);
+    _speedTestService.connectedToUCSDwifi();
 
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
@@ -70,9 +62,13 @@ class _WiFiCardState extends State<WiFiCard> {
   }
 
   Widget buildCardContent(BuildContext context) {
+
     _speedTestService.addListener(() {
       try {
-        if (_speedTestService.timeElapsedDownload +
+        if(!_speedTestService.isUCSDNetwork){
+          cardState = TestStatus.unavailable;
+        }
+        else if (_speedTestService.timeElapsedDownload +
                 _speedTestService.timeElapsedUpload >
             20) {
           _speedTestService.cancelDownload();
@@ -90,17 +86,34 @@ class _WiFiCardState extends State<WiFiCard> {
       } catch (e) {}
     });
 
+
     switch (cardState) {
       case TestStatus.initial:
-        return initialState();
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: initialState(),
+        );
         break;
       case TestStatus.running:
-        return speedTest();
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: speedTest(),
+        );
         break;
       case TestStatus.finished:
-        return finishedState();
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: finishedState(),
+        );
+        break;
+      case TestStatus.unavailable:
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: unavailableState(),
+        );
         break;
     }
+     return initialState();
   }
 
   Column speedTest() {
@@ -142,10 +155,6 @@ class _WiFiCardState extends State<WiFiCard> {
   }
 
   Column initialState() {
-    WifiInfo wifiConnection;
-    WifiConnection.wifiInfo.then((value) {
-      wifiConnection = value;
-    });
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -219,6 +228,7 @@ class _WiFiCardState extends State<WiFiCard> {
   }
 
   Column finishedState() {
+    _speedTestService.sendNetworkDiagnostics(lastSpeed);
     return Column(
       children: [
         RichText(
@@ -287,89 +297,31 @@ class _WiFiCardState extends State<WiFiCard> {
     );
   }
 
-  Future<bool> sendNetworkDiagnostics() async {
-    bool sentSuccessfully = false;
-
-    List<Object> locationWifiConnectivity = await futureCombo();
-    if (locationWifiConnectivity[2] == ConnectivityResult.wifi) {
-      if (Platform.isAndroid) {
-        Map wifiLog = {
-          "Platform": "Android",
-          "SSID": (locationWifiConnectivity[0] as WifiInfo).ssid,
-          "BSSID": (locationWifiConnectivity[0] as WifiInfo).bssId,
-          "IPAddress": (locationWifiConnectivity[0] as WifiInfo).ipAddress,
-          "MacAddress": (locationWifiConnectivity[0] as WifiInfo).macAddress,
-          "LinkSpeed": (locationWifiConnectivity[0] as WifiInfo).linkSpeed,
-          "SignalStrength":
-              (locationWifiConnectivity[0] as WifiInfo).signalStrength,
-          "Frequency": (locationWifiConnectivity[0] as WifiInfo).frequency,
-          "NetworkID": (locationWifiConnectivity[0] as WifiInfo).networkId,
-          "IsHiddenSSID":
-              (locationWifiConnectivity[0] as WifiInfo).isHiddenSSid,
-          "RouterIP": (locationWifiConnectivity[0] as WifiInfo).routerIp,
-          "Channel": (locationWifiConnectivity[0] as WifiInfo).channel,
-          "Latitude":
-              (locationWifiConnectivity[1] as LocationData).latitude as Double,
-          "Longitude":
-              (locationWifiConnectivity[1] as LocationData).longitude as Double,
-          "TimeStamp": DateTime.fromMillisecondsSinceEpoch(
-                  DateTime.now().millisecondsSinceEpoch)
-              .toString(),
-          "DownloadSpeed": lastSpeed != null
-              ? lastSpeed.toStringAsPrecision(3)
-              : _speedTestService.speed.toStringAsPrecision(3),
-          "UploadSpeed": _speedTestService.uploadSpeed.toStringAsPrecision(3),
-        };
-      } else {
-        Map wifiLog = {
-          "Platform": "iOS",
-          "SSID": (locationWifiConnectivity[0] as WifiInfo).ssid,
-          "BSSID": (locationWifiConnectivity[0] as WifiInfo).bssId,
-          "IPAddress": (locationWifiConnectivity[0] as WifiInfo).ipAddress,
-          "MacAddress": (locationWifiConnectivity[0] as WifiInfo).macAddress,
-          "LinkSpeed": "",
-          "SignalStrength": "",
-          "Frequency": "",
-          "NetworkID": "",
-          "IsHiddenSSID": "",
-          "RouterIP": "",
-          "Channel": "",
-          "Latitude":
-              (locationWifiConnectivity[1] as LocationData).latitude as Double,
-          "Longitude":
-              (locationWifiConnectivity[1] as LocationData).longitude as Double,
-          "TimeStamp": DateTime.fromMillisecondsSinceEpoch(
-                  DateTime.now().millisecondsSinceEpoch)
-              .toString(),
-          "DownloadSpeed": lastSpeed != null
-              ? lastSpeed.toStringAsPrecision(3)
-              : _speedTestService.speed.toStringAsPrecision(3),
-          "UploadSpeed": _speedTestService.uploadSpeed.toStringAsPrecision(3),
-        };
-
-        //TODO: Send data for submission
-        sentSuccessfully = true;
-      }
-    }
-
-    return sentSuccessfully; //Due to failed submission or not connected to wifi
+  Column unavailableState() {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text("WiFi Speed Test Unavailable",
+            style: TextStyle(
+              fontSize: 25,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text("Please verify you are connected to a UCSD affiliated WiFi",
+            style: TextStyle(
+              fontSize: 13
+            ),
+            textAlign: TextAlign.center,
+          ),
+        )
+      ],
+    );
   }
 
-  Future<List<Object>> futureCombo() async {
-    if (await (Connectivity().checkConnectivity()) != ConnectivityResult.wifi) {
-      return [null, null, await (Connectivity().checkConnectivity())];
-    }
-
-    var location = Location();
-    location.changeSettings(accuracy: LocationAccuracy.low);
-
-    LocationData position;
-    return [
-      await WifiConnection.wifiInfo,
-      await location.getLocation(),
-      await (Connectivity().checkConnectivity())
-    ];
-  }
 }
 
 //Image Scaling
@@ -420,4 +372,4 @@ class SizeConfig {
   }
 }
 
-enum TestStatus { initial, running, finished }
+enum TestStatus { initial, running, finished, unavailable }
