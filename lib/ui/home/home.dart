@@ -1,11 +1,16 @@
+import 'dart:async';
+
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/cards.dart';
 import 'package:campus_mobile_experimental/core/models/notices.dart';
+import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
+import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:campus_mobile_experimental/core/providers/notices.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/providers/wayfinding.dart';
+import 'package:campus_mobile_experimental/core/utils/webview.dart';
 import 'package:campus_mobile_experimental/ui/availability/availability_card.dart';
 import 'package:campus_mobile_experimental/ui/classes/classes_card.dart';
 import 'package:campus_mobile_experimental/ui/common/webview_container.dart';
@@ -27,6 +32,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uni_links/uni_links.dart';
+
+import '../../main.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -34,8 +42,49 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  StreamSubscription _sub;
+
+  Future<Null> initUniLinks(BuildContext context) async {
+    // deep links are received by this method
+    // the specific host needs to be added in AndroidManifest.xml and Info.plist
+    // currently, this method handles executing custom map query
+
+    // Used to handle links on cold app start
+    String initialLink = await getInitialLink();
+      if(!executedInitialDeeplinkQuery && initialLink != null && initialLink.contains("deeplinking.searchmap")) {
+        var uri = Uri.dataFromString(initialLink);
+        var query = uri.queryParameters['query'];
+        // redirect query to maps tab and search with query
+        executeQuery(context,query);
+      }
+
+      // used to handle links while app is in foreground/background
+      _sub = getLinksStream().listen((String link) async {
+        // handling for map query
+        if(link.contains("deeplinking.searchmap")) {
+          var uri = Uri.dataFromString(link);
+          var query = uri.queryParameters['query'];
+          // redirect query to maps tab and search with query
+          executeQuery(context,query);
+        }
+      });
+
+  }
+
+  void executeQuery(BuildContext context, String query) {
+    Provider.of<MapsDataProvider>(context, listen: false)
+        .searchBarController
+        .text = query;
+    Provider.of<MapsDataProvider>(context, listen: false)
+        .fetchLocations();
+    Provider.of<BottomNavigationBarProvider>(context, listen: false)
+        .currentIndex = NavigatorConstants.MapTab;
+    executedInitialDeeplinkQuery = true;
+  }
+
   @override
   Widget build(BuildContext context) {
+    initUniLinks(context);
     checkToResumeBluetooth(context);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: cardMargin, vertical: 0.0),
