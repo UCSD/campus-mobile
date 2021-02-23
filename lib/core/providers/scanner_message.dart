@@ -10,6 +10,9 @@ class ScannerMessageDataProvider extends ChangeNotifier {
 
     ///INITIALIZE SERVICES
     _scannerMessageService = ScannerMessageService();
+
+    ///INITIALIZE MODELS
+    _scannerMessageModel = ScannerMessageModel();
   }
 
   ///STATES
@@ -29,24 +32,24 @@ class ScannerMessageDataProvider extends ChangeNotifier {
     _isLoading = true;
     _error = null;
     notifyListeners();
-
+    print("here: 35");
+    print("isLoggedIn: ${_userDataProvider.isLoggedIn}");
     /// Verify that user is logged in
     if (_userDataProvider.isLoggedIn) {
+      print("inside if");
       /// Initialize header
       final Map<String, String> header = {
         'Authorization':
         'Bearer ${_userDataProvider?.authenticationModel?.accessToken}'
       };
-
-      _scannerMessageService.fetchData(header);
+      print("HERE");
+      await _scannerMessageService.fetchData(header);
       _scannerMessageModel = _scannerMessageService.scannerMessageModel;
-
-
       } else {
         /// Error Handling
           _error = _scannerMessageService.error.toString();
       }
-
+    print("IN PROVIDER: ${_scannerMessageModel.collectionTime}");
     _isLoading = false;
     notifyListeners();
   }
@@ -57,5 +60,6 @@ class ScannerMessageDataProvider extends ChangeNotifier {
   ScannerMessageService get scannerMessageService => _scannerMessageService;
   ScannerMessageModel get scannerMessageModel => _scannerMessageModel;
 
+  set userDataProvider(UserDataProvider value) => _userDataProvider = value;
 
 }
