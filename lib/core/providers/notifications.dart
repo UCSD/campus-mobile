@@ -66,6 +66,8 @@ class PushNotificationDataProvider extends ChangeNotifier {
     try {
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
         /// TODO: Implement foreground messaging via flutter_local_notifications
+        ///
+        /// doing something here for foreground push
         print('FCM: onMessage: foreground message:');
         print(message);
         Provider.of<MessagesDataProvider>(context, listen: false)
