@@ -13,6 +13,7 @@ import 'package:campus_mobile_experimental/core/providers/notices.dart';
 import 'package:campus_mobile_experimental/core/providers/notifications.dart';
 import 'package:campus_mobile_experimental/core/providers/notifications_freefood.dart';
 import 'package:campus_mobile_experimental/core/providers/parking.dart';
+import 'package:campus_mobile_experimental/core/providers/scanner.dart';
 import 'package:campus_mobile_experimental/core/providers/shuttle.dart';
 import 'package:campus_mobile_experimental/core/providers/student_id.dart';
 import 'package:campus_mobile_experimental/core/providers/survey.dart';
@@ -277,5 +278,20 @@ List<SingleChildWidget> dependentServices = [
       return freefoodDataProvider;
     },
   ),
+  ChangeNotifierProxyProvider<UserDataProvider, ScannerDataProvider>(
+    create: (_) {
+      var _scannerDataProvider = ScannerDataProvider();
+      _scannerDataProvider.initState();
+      _scannerDataProvider.setDefaultStates();
+      return _scannerDataProvider;
+    },
+    update: (_, _userDataProvider, scannerDataProvider) {
+      scannerDataProvider.userDataProvider = _userDataProvider;
+      scannerDataProvider.initState();
+      scannerDataProvider.setDefaultStates();
+      return scannerDataProvider;
+    },
+    lazy: false,
+  )
 ];
 List<SingleChildWidget> uiConsumableProviders = [];
