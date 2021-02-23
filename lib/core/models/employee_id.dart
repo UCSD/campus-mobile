@@ -20,37 +20,37 @@ class EmployeeIdModel {
     this.classificationType,
   });
 
-  String employeePreferredDisplayName;
-  String employeeId;
-  String department;
-  String barcode;
-  String photo;
-  String classificationType;
+  dynamic employeePreferredDisplayName;
+  dynamic employeeId;
+  dynamic department;
+  dynamic barcode;
+  dynamic photo;
+  dynamic classificationType;
 
   factory EmployeeIdModel.fromJson(Map<String, dynamic> json) =>
       EmployeeIdModel(
         employeePreferredDisplayName:
             json["Employee Preferred Display Name"] == null
-                ? null
+                ? ""
                 : json["Employee Preferred Display Name"],
-        employeeId: json["Employee ID"] == null ? null : json["Employee ID"],
-        department: json["Department"] == null ? null : json["Department"],
-        barcode: json["Barcode"] == null ? null : json["Barcode"],
-        photo: json["Photo"] == null ? null : json["Photo"],
+        employeeId: json["Employee ID"] == null ? "" : json["Employee ID"],
+        department: json["Department"] == null ? "" : json["Department"],
+        barcode: json["Barcode"] == null ? "" : json["Barcode"],
+        photo: json["Photo"] == null ? "" : json["Photo"],
         classificationType: json["Classification Type"] == null
-            ? null
+            ? "Employee"
             : json["Classification Type"],
       );
 
   Map<String, dynamic> toJson() => {
         "Employee Preferred Display Name": employeePreferredDisplayName == null
-            ? null
+            ? ""
             : employeePreferredDisplayName,
-        "Employee ID": employeeId == null ? null : employeeId,
-        "Department": department == null ? null : department,
-        "Barcode": barcode == null ? null : barcode,
-        "Photo": photo == null ? null : photo,
+        "Employee ID": employeeId == null ? "" : employeeId,
+        "Department": department == null ? "" : department,
+        "Barcode": barcode == null ? "" : barcode,
+        "Photo": photo == null ? "" : photo,
         "Classification Type":
-            classificationType == null ? null : classificationType,
+            classificationType == null ? "Employee" : classificationType,
       };
 }
