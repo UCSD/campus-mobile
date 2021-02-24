@@ -14,15 +14,11 @@ class SurveyService {
 
   SurveyModel _surveyModel = SurveyModel();
   Future<bool> fetchData() async {
-    print("in survey service");
-    print("fetching the data");
     _error = null;
     _isLoading = true;
     try {
       /// fetch data
       String _response = await _networkHelper.fetchData(endpoint);
-      print("response:");
-      print(_response);
 
       /// parse data
       _surveyModel = surveyModelFromJson(_response);

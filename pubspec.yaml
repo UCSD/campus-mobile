@@ -14,9 +14,10 @@ dependencies:
   dio: 3.0.10
   dots_indicator: 1.2.0
   encrypt: 4.0.3
-  firebase_analytics: 5.0.2
-  firebase_core: 0.4.4
-  firebase_messaging: 6.0.13
+  firebase_analytics: ^7.0.1
+  firebase_core: ^0.7.0
+  firebase_crashlytics: ^0.4.0+1
+  firebase_messaging: ^8.0.0-dev.14
   flutter_scandit_plugin:
     git:
       url: https://github.com/UCSD/flutter_scandit.git
@@ -48,7 +49,7 @@ dependencies:
       path: packages/webview_flutter
       ref: webview-transparent-background
       url: "git://github.com/crizant/plugins"
-
+  uni_links: 0.4.0
 dev_dependencies:
   hive_generator: 0.8.1
   build_runner: 1.10.3

@@ -16,7 +16,7 @@ class PushNotificationDataProvider extends ChangeNotifier {
     ///INITIALIZE SERVICES
     _notificationService = NotificationService();
     deviceInfoPlugin = DeviceInfoPlugin();
-    _fcm = FirebaseMessaging();
+    _fcm = FirebaseMessaging.instance;
     initState();
   }
 
@@ -38,49 +38,52 @@ class PushNotificationDataProvider extends ChangeNotifier {
   /// invokes [fetchTopicsList]
   initState() async {
     fetchTopicsList();
+
     if (Platform.isAndroid) {
       _deviceData = _readAndroidBuildData(await deviceInfoPlugin.androidInfo);
     } else if (Platform.isIOS) {
       _deviceData = _readIosDeviceInfo(await deviceInfoPlugin.iosInfo);
-      _fcm.requestNotificationPermissions(const IosNotificationSettings(
-          sound: true, badge: true, alert: true, provisional: true));
-      _fcm.onIosSettingsRegistered
-          .listen((IosNotificationSettings settings) {});
+      // Handled automatically by getToken
+      // _fcm.requestPermission(const IosNotificationSettings(
+      //     sound: true, badge: true, alert: true, provisional: true));
+      // _fcm.onIosSettingsRegistered
+      //     .listen((IosNotificationSettings settings) {});
     }
 
     ///listen for token changes and register user
     _fcm.onTokenRefresh.listen(
       (token) {
+        print('fcm: onTokenRefresh: ' + token);
         registerDevice(token);
       },
     );
   }
 
-  /// configures the [_fcm] object to receive push notifications
+  /// Configures the [_fcm] object to receive push notifications
   Future<void> initPlatformState(BuildContext context) async {
     try {
-      _fcm.configure(
-        onMessage: (Map<String, dynamic> message) async {
-          Provider.of<MessagesDataProvider>(context, listen: false)
-              .fetchMessages(true);
-        },
-        onLaunch: (Map<String, dynamic> message) async {
+      FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+        /// TODO: Implement foreground messaging via flutter_local_notifications
+        print('FCM: onMessage: foreground message:');
+        print(message);
+        Provider.of<MessagesDataProvider>(context, listen: false)
+            .fetchMessages(true);
+      });
+
+      FirebaseMessaging.onMessageOpenedApp.listen(
+        (RemoteMessage message) {
+          print('FCM: onMessageOpenedApp: background message:');
+          print(message);
+
+          /// Fetch in-app messages
           Provider.of<MessagesDataProvider>(context, listen: false)
               .fetchMessages(true);
 
-          ///switch to the notifications tab
+          /// Set tab bar index to the Notifications tab
           Provider.of<BottomNavigationBarProvider>(context, listen: false)
               .currentIndex = NavigatorConstants.NotificationsTab;
-        },
-        onResume: (Map<String, dynamic> message) async {
-          Provider.of<MessagesDataProvider>(context, listen: false)
-              .fetchMessages(true);
 
-          ///switch to the notifications tab
-          Provider.of<BottomNavigationBarProvider>(context, listen: false)
-              .currentIndex = NavigatorConstants.NotificationsTab;
-
-          /// navigate to notifciations tab
+          /// Navigate to Notifications tab
           Navigator.of(context).pushNamedAndRemoveUntil(
               RoutePaths.BottomNavigationBar, (Route<dynamic> route) => false);
         },
@@ -90,11 +93,12 @@ class PushNotificationDataProvider extends ChangeNotifier {
     }
   }
 
-  /// fetches topics from endpoint
-  /// deletes topics that are no longer supported
-  /// transfers over previous subscriptions as well
+  /// Fetches topics from endpoint
+  /// Deletes topics that are no longer supported
+  /// Transfers over previous subscriptions
   Future fetchTopicsList() async {
     Map<String, bool> newTopics = <String, bool>{};
+
     if (await _notificationService.fetchTopics()) {
       for (TopicsModel model in _notificationService.topicsModel) {
         for (Topic topic in model.topics) {
@@ -104,14 +108,11 @@ class PushNotificationDataProvider extends ChangeNotifier {
       }
       _topicSubscriptionState = newTopics;
       _topicsModel = _notificationService.topicsModel;
-    } else {
-      _error = 'failed to fetch topics';
+      notifyListeners();
     }
-    notifyListeners();
   }
 
-  /// reads android device info
-  /// returns info as a Map
+  /// Reads android device info and returns info as a Map
   Map<String, dynamic> _readAndroidBuildData(AndroidDeviceInfo build) {
     return <String, dynamic>{
       'version.securityPatch': build.version.securityPatch,
@@ -144,9 +145,9 @@ class PushNotificationDataProvider extends ChangeNotifier {
     };
   }
 
-  /// reads ios device info
-  /// returns info as a Map
+  /// Reads ios device info returns info as a Map
   Map<String, dynamic> _readIosDeviceInfo(IosDeviceInfo data) {
+    print('FCM: _readIosDeviceInfo');
     return <String, dynamic>{
       'name': data.name,
       'systemName': data.systemName,
@@ -163,8 +164,9 @@ class PushNotificationDataProvider extends ChangeNotifier {
     };
   }
 
-  /// registers device to receive push notifications
+  /// Registers device to receive push notifications
   Future<bool> registerDevice(String accessToken) async {
+    print('FCM: registerDevice');
     String deviceId = _deviceData['deviceId'];
     if (deviceId == null) {
       _error = 'Failed to get device ID';
@@ -178,8 +180,14 @@ class PushNotificationDataProvider extends ChangeNotifier {
         };
         Map<String, String> body = {'deviceId': deviceId, 'token': fcmToken};
         if ((await _notificationService.postPushToken(headers, body))) {
+          print('FCM: registerDevice: Device registered:');
+          print('  deviceId: ' + deviceId);
+          print('  token: ' + fcmToken);
           return true;
         } else {
+          print('FCM: registerDevice: Device not registered:');
+          print('  deviceId: ' + deviceId);
+          print('  token: ' + fcmToken);
           _error = _notificationService.error;
           return false;
         }
@@ -190,15 +198,17 @@ class PushNotificationDataProvider extends ChangeNotifier {
     }
   }
 
-  /// unregisters device from receiving push notifications
+  /// Unregisters device from receiving push notifications
   Future<bool> unregisterDevice(String accessToken) async {
-    // Get the token for this device
+    print('FCM:unregisterDevice');
     String fcmToken = await _fcm.getToken();
     if (fcmToken.isNotEmpty && (accessToken?.isNotEmpty ?? false)) {
       Map<String, String> headers = {'Authorization': 'Bearer ' + accessToken};
       if ((await _notificationService.deletePushToken(headers, fcmToken))) {
+        print('FCM:unregisterDevice:deletePushToken: ' + fcmToken);
         return true;
       } else {
+        print('FCM:unregisterDevice:deletePushToken - FAILED');
         _error = _notificationService.error;
         return false;
       }
@@ -209,6 +219,7 @@ class PushNotificationDataProvider extends ChangeNotifier {
   }
 
   void unsubscribeFromAllTopics() {
+    print('FCM: unsubscribeFromAllTopics');
     _unsubscribeToTopics(_topicSubscriptionState.keys.toList());
     for (String topic in _topicSubscriptionState.keys) {
       topicSubscriptionState[topic] = false;
@@ -217,39 +228,45 @@ class PushNotificationDataProvider extends ChangeNotifier {
 
   void toggleNotificationsForTopic(String topic) {
     if (_topicSubscriptionState[topic] ?? true) {
+      print('FCM: toggleNotificationsForTopic:unsubscribe: ' + topic);
       _topicSubscriptionState[topic] = false;
       _unsubscribeToTopics([topic]);
     } else {
+      print('FCM: toggleNotificationsForTopic:subscribe: ' + topic);
       _topicSubscriptionState[topic] = true;
       _subscribeToTopics([topic]);
     }
     notifyListeners();
   }
 
-  /// iterates through passed in topics list
-  /// invokes [unsubscribeFromTopic] on firebase object [_fcm]
+  /// Iterates through passed in topics list
+  /// Invokes [unsubscribeFromTopic] on firebase object [_fcm]
   void _subscribeToTopics(List<String> topics) {
     for (String topic in topics) {
       if ((topic ?? "").isNotEmpty) {
+        print('FCM: _subscribeToTopics: ' + topic);
         _topicSubscriptionState[topic] = true;
         _fcm.subscribeToTopic(topic);
       }
     }
   }
 
-  /// iterates through passed in topics list
-  /// invokes [unsubscribeFromTopic] on firebase object [_fcm]
+  /// Iterates through passed in topics list
+  /// Invokes [unsubscribeFromTopic] on firebase object [_fcm]
   void _unsubscribeToTopics(List<String> topics) {
+    print('FCM: _unsubscribeToTopics');
     for (String topic in topics) {
       if ((topic ?? "").isNotEmpty) {
+        print('FCM _unsubscribeToTopics: ' + topic);
         _topicSubscriptionState[topic] = false;
         _fcm.unsubscribeFromTopic(topic);
       }
     }
   }
 
-  /// get the topic name given the topic id
+  /// Get the topic name given the topic id
   String getTopicName(String topicId) {
+    print('FCM: getTopicName: ' + topicId);
     for (TopicsModel model in _topicsModel) {
       for (Topic topic in model.topics) {
         if (topic.topicId == topicId) {
@@ -259,8 +276,9 @@ class PushNotificationDataProvider extends ChangeNotifier {
     }
   }
 
-  /// get student only topics
+  /// Get student only topics
   List<String> studentTopics() {
+    print('FCM: studentTopics');
     List<String> topicsToReturn = List<String>();
     for (TopicsModel model in _notificationService.topicsModel ?? []) {
       if (model.audienceId == 'student') {
@@ -273,8 +291,9 @@ class PushNotificationDataProvider extends ChangeNotifier {
     return topicsToReturn;
   }
 
-  /// get staff only topics
+  /// Get staff only topics
   List<String> staffTopics() {
+    print('FCM: staffTopics');
     List<String> topicsToReturn = List<String>();
     for (TopicsModel model in _notificationService.topicsModel ?? []) {
       if (model.audienceId == 'staff') {
@@ -287,8 +306,9 @@ class PushNotificationDataProvider extends ChangeNotifier {
     return topicsToReturn;
   }
 
-  /// get all public topics
+  /// Get all public topics
   List<String> publicTopics() {
+    print('FCM: publicTopics');
     List<String> topicsToReturn = List<String>();
     for (TopicsModel model in _topicsModel ?? []) {
       if (model.audienceId == 'all') {

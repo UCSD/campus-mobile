@@ -17,7 +17,7 @@ class CardsDataProvider extends ChangeNotifier {
       'MyUCSDChart',
       'student_id',
       'campus_info',
-      'staff_id',
+      'employee_id',
       'staff_info',
       'student_info',
       'student_survey',
@@ -43,7 +43,7 @@ class CardsDataProvider extends ChangeNotifier {
     _staffCards = [
       'MyUCSDChart',
       'staff_info',
-      'staff_id',
+      'employee_id',
     ];
 
     for (String card in CardTitleConstants.titleMap.keys.toList()) {
@@ -131,7 +131,6 @@ class CardsDataProvider extends ChangeNotifier {
             _cardStates.keys.where((card) => _cardStates[card]).toList());
       }
     } else {
-      ///TODO: determine what error to show to the user
       _error = _cardsService.error;
     }
     _isLoading = false;
@@ -275,4 +274,5 @@ class CardsDataProvider extends ChangeNotifier {
   Map<String, bool> get cardStates => _cardStates;
   List<String> get cardOrder => _cardOrder;
   Map<String, CardsModel> get webCards => _webCards;
+  Map<String, CardsModel> get availableCards => _availableCards;
 }

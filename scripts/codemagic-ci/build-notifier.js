@@ -62,7 +62,7 @@ const buildNotify = async () => {
 
 		// Build Artifacts
 		if (saveArtifactIpaSuccess) {
-			teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>iOS:</b></td><td>TestFlight ' + ENV_VARS.appVersion + ' (' + finalBuildNumber + ')</td></tr>'
+			teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>iOS:</b></td><td><a href="https://mobile.ucsd.edu/testflight" style="text-decoration:underline">TestFlight ' + ENV_VARS.appVersion + ' (' + finalBuildNumber + ')</a></td></tr>'
 		} else {
 			teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>iOS:</b></td><td><span style="color:#d60000">N/A</span></td></tr>'
 		}
