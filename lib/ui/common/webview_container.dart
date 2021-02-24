@@ -1,5 +1,5 @@
-import 'dart:io';
-
+import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/map.dart';
@@ -8,8 +8,6 @@ import 'package:campus_mobile_experimental/core/utils/webview.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:campus_mobile_experimental/app_styles.dart';
-import 'package:campus_mobile_experimental/app_constants.dart';
 
 class WebViewContainer extends StatefulWidget {
   const WebViewContainer({
@@ -111,6 +109,7 @@ class _WebViewContainerState extends State<WebViewContainer>
 
   // builds the actual webview widget
   Widget buildBody(context) {
+    print('webview_container:buildBody: ' + webCardUrl);
     return Container(
       height: _contentHeight,
       child: WebView(
@@ -190,7 +189,6 @@ class _WebViewContainerState extends State<WebViewContainer>
     return JavascriptChannel(
       name: 'OpenLink',
       onMessageReceived: (JavascriptMessage message) {
-        print("in links channel");
         openLink(message.message);
       },
     );
@@ -218,8 +216,7 @@ class _WebViewContainerState extends State<WebViewContainer>
         Provider.of<MapsDataProvider>(context, listen: false)
             .searchBarController
             .text = message.message;
-        Provider.of<MapsDataProvider>(context, listen: false)
-            .fetchLocations();
+        Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
         Provider.of<BottomNavigationBarProvider>(context, listen: false)
             .currentIndex = NavigatorConstants.MapTab;
       },
@@ -230,9 +227,15 @@ class _WebViewContainerState extends State<WebViewContainer>
     return JavascriptChannel(
       name: 'RefreshToken',
       onMessageReceived: (JavascriptMessage message) async {
-        if (Provider.of<UserDataProvider>(context, listen: false).isLoggedIn) {
-          await _userDataProvider.silentLogin();
-          _webViewController?.reload();
+        if (!Provider.of<UserDataProvider>(context, listen: false).isLoggedIn) {
+          print(
+              'webview_container:_refreshTokenChannel: User has expired access token, calling silentLogin');
+          if (await _userDataProvider.silentLogin()) {
+            print(
+                'webview_container:_refreshTokenChannel: silentLogin SUCCESS, reloading webview: ' +
+                    webCardUrl);
+            _webViewController?.reload();
+          }
         }
       },
     );

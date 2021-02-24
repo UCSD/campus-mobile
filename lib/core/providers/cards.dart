@@ -131,7 +131,6 @@ class CardsDataProvider extends ChangeNotifier {
             _cardStates.keys.where((card) => _cardStates[card]).toList());
       }
     } else {
-      ///TODO: determine what error to show to the user
       _error = _cardsService.error;
     }
     _isLoading = false;

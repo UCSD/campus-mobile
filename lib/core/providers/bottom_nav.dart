@@ -5,6 +5,7 @@ class BottomNavigationBarProvider with ChangeNotifier {
 
   get currentIndex => _currentIndex;
   set currentIndex(int index) {
+    print('Tab: currentIndex: ' + index.toString());
     _currentIndex = index;
     notifyListeners();
   }
