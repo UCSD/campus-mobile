@@ -4,6 +4,7 @@ import 'package:campus_mobile_experimental/core/providers/scanner_message.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/barcode.dart';
 import 'package:campus_mobile_experimental/core/utils/webview.dart';
+import 'package:campus_mobile_experimental/ui/scanner/native_scanner_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_scandit_plugin/flutter_scandit_plugin.dart';
 import 'package:intl/intl.dart';
@@ -209,8 +210,10 @@ class _ScanditScannerState extends State<ScanditScanner> {
   Widget renderSuccessScreen(BuildContext context) {
     final dateFormat = new DateFormat('dd-MM-yyyy hh:mm:ss a');
     final String scanTime = dateFormat.format(new DateTime.now());
-    ScannerMessageDataProvider _scannerMessageDataProvider = ScannerMessageDataProvider();
-    _scannerMessageDataProvider.fetchData();
+
+    // to fetch the most recent scan and display timestamp to user to confirm success
+    Provider.of<ScannerMessageDataProvider>(context, listen: false).fetchData();
+
     return Column(
       children: [
         Center(

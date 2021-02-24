@@ -29,10 +29,14 @@ class ScannerMessageDataProvider extends ChangeNotifier {
   ScannerMessageModel _scannerMessageModel;
 
   void fetchData() async {
+    // forcing fetchData() to be executed async
+    await Future.delayed(Duration.zero);
     _isLoading = true;
     _error = null;
     notifyListeners();
     print("here: 35");
+    print("isLoggedIn");
+    print(_userDataProvider.toString());
     print("isLoggedIn: ${_userDataProvider.isLoggedIn}");
     /// Verify that user is logged in
     if (_userDataProvider.isLoggedIn) {
