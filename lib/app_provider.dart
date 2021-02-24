@@ -14,6 +14,7 @@ import 'package:campus_mobile_experimental/core/providers/notices.dart';
 import 'package:campus_mobile_experimental/core/providers/notifications.dart';
 import 'package:campus_mobile_experimental/core/providers/notifications_freefood.dart';
 import 'package:campus_mobile_experimental/core/providers/parking.dart';
+import 'package:campus_mobile_experimental/core/providers/scanner.dart';
 import 'package:campus_mobile_experimental/core/providers/shuttle.dart';
 import 'package:campus_mobile_experimental/core/providers/student_id.dart';
 import 'package:campus_mobile_experimental/core/providers/survey.dart';
