@@ -164,7 +164,7 @@ String signedURL;
    if(wiFiInfo.ssid.contains("UCSD-PROTECTED") || wiFiInfo.ssid.contains("UCSD-GUEST") ||  wiFiInfo.ssid.contains("ResNet")){
      isUCSDWiFi = true;
    }else{
-     isUCSDWiFi = false;
+     isUCSDWiFi = false; // FALSE
    }
    if(lastState != isUCSDWiFi) {
      notifyListeners();
