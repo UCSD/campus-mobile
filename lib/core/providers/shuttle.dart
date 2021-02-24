@@ -67,11 +67,6 @@ class ShuttleDataProvider extends ChangeNotifier {
 
       // get closest stop to current user
       await calculateClosestStop();
-
-      // print("user latitude: " + userLat.toString());
-      // print("user longitude: " + userLat.toString());
-      // print("CLOSEST STOP: " + closestStop.id.toString());
-
       await getArrivalInformation();
     }
 
@@ -115,12 +110,10 @@ class ShuttleDataProvider extends ChangeNotifier {
   }
 
   Future<void> removeStop(int stopID) async {
-    // print('remove');
     if (userDataProvider.userProfileModel.selectedStops.contains(stopID)) {
       userDataProvider.userProfileModel.selectedStops.remove(stopID);
       // update userprofilemodel locally and in database after a stop is removed
       userDataProvider.postUserProfile(userDataProvider.userProfileModel);
-      // print("UDP - ${userDataProvider.userProfileModel.selectedStops}");
     }
     notifyListeners();
   }
