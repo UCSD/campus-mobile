@@ -26,7 +26,7 @@ class NativeScannerCard extends StatelessWidget {
       errorText: null,
       child: () => buildCardContent(context),
       actionButtons: [buildActionButton(context)],
-      hideMenu: true,
+      hideMenu: false,
     );
   }
 

@@ -137,6 +137,16 @@ class CardContainer extends StatelessWidget {
     if (hideMenu ?? false) {
       return null;
     }
+    else if(titleText == "Scanner") {
+      return ButtonBar(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          buildMenuOptions({
+            'reload': reload,
+          }),
+        ],
+      );
+    }
     return ButtonBar(
       mainAxisSize: MainAxisSize.min,
       children: [
