@@ -19,14 +19,15 @@ class UserProfileModel extends HiveObject {
   Classifications classifications;
   int latestTimeStamp;
   String pid;
+  String ucsdaffiliation;
+  String username;
+
   @HiveField(0)
   List<String> selectedLots;
   @HiveField(1)
   List<String> selectedOccuspaceLocations;
   @HiveField(2)
   List<String> subscribedTopics;
-  String ucsdaffiliation;
-  String username;
   @HiveField(3)
   Map<String, bool> selectedParkingSpots;
   @HiveField(4)

@@ -11,22 +11,28 @@
     <uses-permission android:name="android.permission.BLUETOOTH"/>
 
     <application
-        android:name=".Application"
+        android:name="io.flutter.app.FlutterApplication"
         android:label="UC San Diego"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round">
-        <meta-data
-            android:name="flutterEmbedding"
-            android:value="2" />
         <activity
             android:name=".MainActivity"
-            android:theme="@style/LaunchTheme"
+            android:theme="@style/NormalTheme"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustResize">
+            <!-- Specify that the launch screen should continue being displayed -->
+            <!-- until Flutter renders its first frame. -->
+            <meta-data
+                android:name="io.flutter.embedding.android.SplashScreenDrawable"
+                android:resource="@drawable/launch_background" />
+            <!-- Theme to apply as soon as Flutter begins rendering frames -->
+            <meta-data
+                android:name="io.flutter.embedding.android.NormalTheme"
+                android:resource="@style/NormalTheme" />
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -34,10 +40,6 @@
                 <data
                     android:scheme="campusmobile"
                     android:host="deeplinking.searchmap" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="FLUTTER_NOTIFICATION_CLICK" />
-                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -54,8 +56,11 @@
             </intent-filter>
         </activity>
         <meta-data
+            android:name="flutterEmbedding"
+            android:value="2" />
+        <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCCQZfcvW7pLI9bOgu4iYxji7f9csl_ovg"/>
+            android:value="CAMPUS_MOBILE_MAPS_KEY_ANDROID_PH"/>
         <meta-data
             android:name="firebase_analytics_collection_enabled"
             android:value="true" />

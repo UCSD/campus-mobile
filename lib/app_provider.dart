@@ -4,6 +4,7 @@ import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/classes.dart';
 import 'package:campus_mobile_experimental/core/providers/dining.dart';
+import 'package:campus_mobile_experimental/core/providers/employee_id.dart';
 import 'package:campus_mobile_experimental/core/providers/events.dart';
 import 'package:campus_mobile_experimental/core/providers/location.dart';
 import 'package:campus_mobile_experimental/core/providers/map.dart';
@@ -13,6 +14,7 @@ import 'package:campus_mobile_experimental/core/providers/notices.dart';
 import 'package:campus_mobile_experimental/core/providers/notifications.dart';
 import 'package:campus_mobile_experimental/core/providers/notifications_freefood.dart';
 import 'package:campus_mobile_experimental/core/providers/parking.dart';
+import 'package:campus_mobile_experimental/core/providers/scanner.dart';
 import 'package:campus_mobile_experimental/core/providers/shuttle.dart';
 import 'package:campus_mobile_experimental/core/providers/student_id.dart';
 import 'package:campus_mobile_experimental/core/providers/survey.dart';
@@ -204,8 +206,21 @@ List<SingleChildWidget> dependentServices = [
     if (userDataProvider.isLoggedIn && !studentIdDataProvider.isLoading) {
       studentIdDataProvider.fetchData();
     }
-
     return studentIdDataProvider;
+  }),
+  ChangeNotifierProxyProvider<UserDataProvider, EmployeeIdDataProvider>(
+      create: (_) {
+    print("CreateProvider: EmployeeIdDataProvider");
+    var employeeIdDataProvider = EmployeeIdDataProvider();
+    return employeeIdDataProvider;
+  }, update: (_, userDataProvider, employeeIdDataProvider) {
+    print("UpdateProvider: EmployeeIdDataProvider");
+    employeeIdDataProvider.userDataProvider = userDataProvider;
+    //Verify that the user is logged in
+    if (userDataProvider.isLoggedIn && !employeeIdDataProvider.isLoading) {
+      employeeIdDataProvider.fetchData();
+    }
+    return employeeIdDataProvider;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, SurveyDataProvider>(
       create: (_) {

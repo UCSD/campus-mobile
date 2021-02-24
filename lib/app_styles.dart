@@ -15,7 +15,7 @@ const cardMinHeight = 60.0;
 const listTileInnerPadding = 8.0;
 
 //Card Heights
-const cardContentMinHeight = 40.0;
+const cardContentMinHeight = 80.0;
 const cardContentMaxHeight = 568.0;
 
 const webViewMinHeight = 20.0;

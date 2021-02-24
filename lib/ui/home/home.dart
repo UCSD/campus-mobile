@@ -10,11 +10,12 @@ import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:campus_mobile_experimental/core/providers/notices.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/providers/wayfinding.dart';
-import 'package:campus_mobile_experimental/core/utils/webview.dart';
+import 'package:campus_mobile_experimental/main.dart';
 import 'package:campus_mobile_experimental/ui/availability/availability_card.dart';
 import 'package:campus_mobile_experimental/ui/classes/classes_card.dart';
 import 'package:campus_mobile_experimental/ui/common/webview_container.dart';
 import 'package:campus_mobile_experimental/ui/dining/dining_card.dart';
+import 'package:campus_mobile_experimental/ui/employee_id/employee_id_card.dart';
 import 'package:campus_mobile_experimental/ui/events/events_card.dart';
 import 'package:campus_mobile_experimental/ui/finals/finals_card.dart';
 import 'package:campus_mobile_experimental/ui/my_chart/my_chart_card.dart';
@@ -34,8 +35,6 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uni_links/uni_links.dart';
 
-import '../../main.dart';
-
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
@@ -51,32 +50,32 @@ class _HomeState extends State<Home> {
 
     // Used to handle links on cold app start
     String initialLink = await getInitialLink();
-      if(!executedInitialDeeplinkQuery && initialLink != null && initialLink.contains("deeplinking.searchmap")) {
-        var uri = Uri.dataFromString(initialLink);
+    if (!executedInitialDeeplinkQuery &&
+        initialLink != null &&
+        initialLink.contains("deeplinking.searchmap")) {
+      var uri = Uri.dataFromString(initialLink);
+      var query = uri.queryParameters['query'];
+      // redirect query to maps tab and search with query
+      executeQuery(context, query);
+    }
+
+    // used to handle links while app is in foreground/background
+    _sub = getLinksStream().listen((String link) async {
+      // handling for map query
+      if (link.contains("deeplinking.searchmap")) {
+        var uri = Uri.dataFromString(link);
         var query = uri.queryParameters['query'];
         // redirect query to maps tab and search with query
-        executeQuery(context,query);
+        executeQuery(context, query);
       }
-
-      // used to handle links while app is in foreground/background
-      _sub = getLinksStream().listen((String link) async {
-        // handling for map query
-        if(link.contains("deeplinking.searchmap")) {
-          var uri = Uri.dataFromString(link);
-          var query = uri.queryParameters['query'];
-          // redirect query to maps tab and search with query
-          executeQuery(context,query);
-        }
-      });
-
+    });
   }
 
   void executeQuery(BuildContext context, String query) {
     Provider.of<MapsDataProvider>(context, listen: false)
         .searchBarController
         .text = query;
-    Provider.of<MapsDataProvider>(context, listen: false)
-        .fetchLocations();
+    Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
     Provider.of<BottomNavigationBarProvider>(context, listen: false)
         .currentIndex = NavigatorConstants.MapTab;
     executedInitialDeeplinkQuery = true;
@@ -159,6 +158,9 @@ class _HomeState extends State<Home> {
             break;
           case 'student_id':
             orderedCards.add(StudentIdCard());
+            break;
+          case 'employee_id':
+            orderedCards.add(EmployeeIdCard());
             break;
           case 'parking':
             orderedCards.add(ParkingCard());

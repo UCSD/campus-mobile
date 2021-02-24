@@ -43,8 +43,7 @@ class ShuttleService {
     try {
       /// fetch data
       String arrivingEndpoint =
-          "https://ies4wyrlx9.execute-api.us-west-2.amazonaws.com/prod/v2/stops/$stopId/arrivals";
-
+          "https: //11wl1gc3v9.execute-api.us-west-2.amazonaws.com/qa/stops/$stopId/arrivals";
       String _response = await _networkHelper.fetchData(arrivingEndpoint);
 
       /// parse data

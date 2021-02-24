@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:campus_mobile_experimental/core/models/location.dart';
@@ -120,14 +121,15 @@ class MapsDataProvider extends ChangeNotifier {
   }
 
   Future<void> createPolylines(double destLat, double destLon) async {
-
     clearPolylines();
     polylinePoints = PolylinePoints();
 
     // Generating the list of coordinates to be used for
     // drawing the polylines
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      "GOOGLE_API_KEY_HERE", // Google Maps API Key
+      Platform.isIOS
+          ? "CAMPUS_MOBILE_MAPS_KEY_IOS_PH"
+          : "CAMPUS_MOBILE_MAPS_KEY_ANDROID_PH",
       PointLatLng(_coordinates.lat, _coordinates.lon),
       PointLatLng(destLat, destLon),
       travelMode: TravelMode.walking,

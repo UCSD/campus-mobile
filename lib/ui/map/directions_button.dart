@@ -1,9 +1,8 @@
-import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class DirectionsButton extends StatelessWidget {
   const DirectionsButton({
@@ -26,8 +25,8 @@ class DirectionsButton extends StatelessWidget {
       onPressed: () {
         String locationQuery =
             Provider.of<MapsDataProvider>(context, listen: false)
-            .searchBarController
-            .text;
+                .searchBarController
+                .text;
         if (locationQuery.isNotEmpty) {
           getDirections(context);
         } else {
@@ -38,11 +37,11 @@ class DirectionsButton extends StatelessWidget {
   }
 
   Future<void> getDirections(BuildContext context) async {
-    LatLng currentPin = Provider
-        .of<MapsDataProvider>(context, listen: false)
+    LatLng currentPin = Provider.of<MapsDataProvider>(context, listen: false)
         .markers
         .values
-        .toList()[0].position;
+        .toList()[0]
+        .position;
     double lat = currentPin.latitude;
     double lon = currentPin.longitude;
 
