@@ -46,17 +46,7 @@ class DirectionsButton extends StatelessWidget {
     double lat = currentPin.latitude;
     double lon = currentPin.longitude;
 
-    String googleUrl =
-        'https://www.google.com/maps/dir/?api=1&destination=$lat,$lon&travelmode=walking';
-    String appleUrl =
-        'http://maps.apple.com/?daddr=$lat,$lon&dirflag=w';
-    if (await canLaunch(googleUrl)) {
-      await launch(googleUrl);
-    }
-    else if (await canLaunch(appleUrl)) {
-      await launch(appleUrl);
-    } else {
-      throw 'Could not launch $googleUrl';
-    }
+    Provider.of<MapsDataProvider>(context, listen: false)
+        .createPolylines(lat, lon);
   }
 }

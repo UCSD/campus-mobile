@@ -79,6 +79,8 @@ class Maps extends StatelessWidget {
     return Stack(
       children: <Widget>[
         GoogleMap(
+          polylines: Set<Polyline>.of(
+              Provider.of<MapsDataProvider>(context).polylines.values),
           markers: Set<Marker>.of(
               Provider.of<MapsDataProvider>(context).markers.values),
           myLocationEnabled: true,

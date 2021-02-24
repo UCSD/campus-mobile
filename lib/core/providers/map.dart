@@ -4,6 +4,7 @@ import 'package:campus_mobile_experimental/core/models/location.dart';
 import 'package:campus_mobile_experimental/core/models/map.dart';
 import 'package:campus_mobile_experimental/core/services/map.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MapsDataProvider extends ChangeNotifier {
@@ -33,6 +34,10 @@ class MapsDataProvider extends ChangeNotifier {
   GoogleMapController _mapController;
 
   List<String> _searchHistory = List<String>();
+
+  PolylinePoints polylinePoints;
+  List<LatLng> polylineCoordinates = [];
+  Map<PolylineId, Polyline> polylines = {};
 
   ///SERVICES
   MapSearchService _mapSearchService;
@@ -114,7 +119,47 @@ class MapsDataProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> createPolylines(double destLat, double destLon) async {
 
+    clearPolylines();
+    polylinePoints = PolylinePoints();
+
+    // Generating the list of coordinates to be used for
+    // drawing the polylines
+    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+      "AIzaSyCCQZfcvW7pLI9bOgu4iYxji7f9csl_ovg", // Google Maps API Key
+      PointLatLng(_coordinates.lat, _coordinates.lon),
+      PointLatLng(destLat, destLon),
+      travelMode: TravelMode.walking,
+    );
+
+    // Adding the coordinates to the list
+    if (result.points.isNotEmpty) {
+      result.points.forEach((PointLatLng point) {
+        polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+      });
+    }
+
+    // Defining an ID
+    PolylineId id = PolylineId('poly');
+
+    // Initializing Polyline
+    Polyline polyline = Polyline(
+      polylineId: id,
+      color: Colors.red,
+      points: polylineCoordinates,
+      width: 3,
+    );
+
+    // Adding the polyline to the map
+    polylines[id] = polyline;
+    notifyListeners();
+  }
+
+  void clearPolylines() {
+    polylineCoordinates.clear();
+    polylines.clear();
+  }
 
   num calculateDistance(double lat1, double lng1, double lat2, double lng2) {
     var p = 0.017453292519943295;
