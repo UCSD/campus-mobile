@@ -127,7 +127,7 @@ class MapsDataProvider extends ChangeNotifier {
     // Generating the list of coordinates to be used for
     // drawing the polylines
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      "AIzaSyCCQZfcvW7pLI9bOgu4iYxji7f9csl_ovg", // Google Maps API Key
+      "GOOGLE_API_KEY_HERE", // Google Maps API Key
       PointLatLng(_coordinates.lat, _coordinates.lon),
       PointLatLng(destLat, destLon),
       travelMode: TravelMode.walking,
