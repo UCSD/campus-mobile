@@ -6,8 +6,6 @@ import 'package:hive/hive.dart';
 
 class CardsDataProvider extends ChangeNotifier {
   CardsDataProvider() {
-    print('CardsDataProvider:CardsDataProvider():1');
-
     ///DEFAULT STATES
     _isLoading = false;
     _cardStates = {};
@@ -77,16 +75,13 @@ class CardsDataProvider extends ChangeNotifier {
   final CardsService _cardsService = CardsService();
 
   void updateAvailableCards(String ucsdAffiliation) async {
-    print('CardsDataProvider:updateAvailableCards:1');
     _isLoading = true;
     _error = null;
     notifyListeners();
     if (await _cardsService.fetchCards(ucsdAffiliation)) {
-      print('CardsDataProvider:updateAvailableCards:2');
       _availableCards = _cardsService.cardsModel;
       _lastUpdated = DateTime.now();
       if (_availableCards.isNotEmpty) {
-        print('CardsDataProvider:updateAvailableCards:3');
         // remove all inactive or non-existent cards from [_cardOrder]
         var tempCardOrder = List.from(_cardOrder);
         for (String card in tempCardOrder) {
@@ -134,16 +129,10 @@ class CardsDataProvider extends ChangeNotifier {
         updateCardOrder(_cardOrder);
         updateCardStates(
             _cardStates.keys.where((card) => _cardStates[card]).toList());
-      } else {
-        print('CardsDataProvider:updateAvailableCards:4');
       }
     } else {
-      print('CardsDataProvider:updateAvailableCards:5');
-
-      ///TODO: determine what error to show to the user
       _error = _cardsService.error;
     }
-    print('CardsDataProvider:updateAvailableCards:6');
     _isLoading = false;
     notifyListeners();
   }

@@ -49,7 +49,7 @@ dependencies:
       path: packages/webview_flutter
       ref: webview-transparent-background
       url: "git://github.com/crizant/plugins"
-
+  uni_links: 0.4.0
 dev_dependencies:
   hive_generator: 0.8.1
   build_runner: 1.10.3

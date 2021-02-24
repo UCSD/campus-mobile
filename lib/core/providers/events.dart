@@ -30,7 +30,6 @@ class EventsDataProvider extends ChangeNotifier {
     _error = null;
     notifyListeners();
     if (await _eventsService.fetchData()) {
-      print('EventsDataProvider: fetchEvents: SUCCESS');
       _eventsModels = _eventsService.eventsModels;
       _lastUpdated = DateTime.now();
 
@@ -39,9 +38,6 @@ class EventsDataProvider extends ChangeNotifier {
         _error = 'No events found.';
       }
     } else {
-      print('EventsDataProvider: fetchEvents: ERROR');
-
-      ///TODO: determine what error to show to the user
       _error = _eventsService.error;
     }
     _isLoading = false;

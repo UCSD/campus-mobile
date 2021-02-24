@@ -303,7 +303,6 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
         });
       } catch (Exception) {
         if (Exception.toString().contains(ErrorConstants.invalidBearerToken)) {
-          print('Wayfinding:silentLogin--------------------- 14');
           userDataProvider.silentLogin();
           offloadDataHeader = {
             'Authorization':

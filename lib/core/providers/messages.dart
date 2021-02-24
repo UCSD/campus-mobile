@@ -82,13 +82,7 @@ class MessagesDataProvider extends ChangeNotifier {
           "Bearer " + _userDataProvider.authenticationModel.accessToken,
     };
 
-    print('access token: ----------------- ' +
-        _userDataProvider.authenticationModel.accessToken);
-    print(
-        'providers:user:retrieveMoreMyMessages:fetchMyMessagesData-----------------12');
     if (await _messageService.fetchMyMessagesData(timestamp, headers)) {
-      print(
-          'providers:user:retrieveMoreMyMessages:fetchMyMessagesData-----------------13 SUCCESS');
       List<MessageElement> temp = _messageService.messagingModels.messages;
       updateMessages(temp);
       makeOrderedMessagesList();

@@ -37,8 +37,6 @@ class PushNotificationDataProvider extends ChangeNotifier {
   /// invokes correct method to receive device info
   /// invokes [fetchTopicsList]
   initState() async {
-    print('PushNotificationDataProvider:initState ---------------- 1');
-
     fetchTopicsList();
 
     if (Platform.isAndroid) {
@@ -99,18 +97,15 @@ class PushNotificationDataProvider extends ChangeNotifier {
   /// Deletes topics that are no longer supported
   /// Transfers over previous subscriptions
   Future fetchTopicsList() async {
-    print('FCM: fetchTopicsList -------------------- 1');
     Map<String, bool> newTopics = <String, bool>{};
 
     if (await _notificationService.fetchTopics()) {
-      print('FCM: fetchTopicsList -------------------- 2');
       for (TopicsModel model in _notificationService.topicsModel) {
         for (Topic topic in model.topics) {
           newTopics[topic.topicId] =
               _topicSubscriptionState[topic.topicId] ?? false;
         }
       }
-      print('FCM: fetchTopicsList -------------------- 3');
       _topicSubscriptionState = newTopics;
       _topicsModel = _notificationService.topicsModel;
       notifyListeners();
@@ -119,7 +114,6 @@ class PushNotificationDataProvider extends ChangeNotifier {
 
   /// Reads android device info and returns info as a Map
   Map<String, dynamic> _readAndroidBuildData(AndroidDeviceInfo build) {
-    print('FCM: _readAndroidBuildData');
     return <String, dynamic>{
       'version.securityPatch': build.version.securityPatch,
       'version.sdkInt': build.version.sdkInt,
