@@ -17,7 +17,7 @@ class CardsDataProvider extends ChangeNotifier {
       'MyUCSDChart',
       'student_id',
       'campus_info',
-      'staff_id',
+      'employee_id',
       'staff_info',
       'student_info',
       'student_survey',
@@ -43,7 +43,7 @@ class CardsDataProvider extends ChangeNotifier {
     _staffCards = [
       'MyUCSDChart',
       'staff_info',
-      'staff_id',
+      'employee_id',
     ];
 
     for (String card in CardTitleConstants.titleMap.keys.toList()) {
