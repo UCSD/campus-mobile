@@ -41,10 +41,12 @@ class Maps extends StatelessWidget {
       child: Column(
         children: [
           MyLocationButton(
-              mapController: Provider.of<MapsDataProvider>(context).mapController),
+              mapController:
+                  Provider.of<MapsDataProvider>(context).mapController),
           SizedBox(height: 10),
           DirectionsButton(
-              mapController: Provider.of<MapsDataProvider>(context).mapController),
+              mapController:
+                  Provider.of<MapsDataProvider>(context).mapController),
         ],
       ),
     );
@@ -58,15 +60,14 @@ class Maps extends StatelessWidget {
     // currently, this method handles executing custom map query
     _sub = getLinksStream().listen((String link) async {
       // handling for map query
-      if(link.contains("deeplinking.searchmap")) {
+      if (link.contains("deeplinking.searchmap")) {
         var uri = Uri.dataFromString(link);
         var query = uri.queryParameters['query'];
         // redirect query to maps tab and search with query
         Provider.of<MapsDataProvider>(context, listen: false)
             .searchBarController
             .text = query;
-        Provider.of<MapsDataProvider>(context, listen: false)
-            .fetchLocations();
+        Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
         Provider.of<BottomNavigationBarProvider>(context, listen: false)
             .currentIndex = NavigatorConstants.MapTab;
       }

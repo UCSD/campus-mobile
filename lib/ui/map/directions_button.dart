@@ -26,8 +26,8 @@ class DirectionsButton extends StatelessWidget {
       onPressed: () {
         String locationQuery =
             Provider.of<MapsDataProvider>(context, listen: false)
-            .searchBarController
-            .text;
+                .searchBarController
+                .text;
         if (locationQuery.isNotEmpty) {
           getDirections(context);
         } else {
@@ -38,22 +38,20 @@ class DirectionsButton extends StatelessWidget {
   }
 
   Future<void> getDirections(BuildContext context) async {
-    LatLng currentPin = Provider
-        .of<MapsDataProvider>(context, listen: false)
+    LatLng currentPin = Provider.of<MapsDataProvider>(context, listen: false)
         .markers
         .values
-        .toList()[0].position;
+        .toList()[0]
+        .position;
     double lat = currentPin.latitude;
     double lon = currentPin.longitude;
 
     String googleUrl =
         'https://www.google.com/maps/dir/?api=1&destination=$lat,$lon&travelmode=walking';
-    String appleUrl =
-        'http://maps.apple.com/?daddr=$lat,$lon&dirflag=w';
+    String appleUrl = 'http://maps.apple.com/?daddr=$lat,$lon&dirflag=w';
     if (await canLaunch(googleUrl)) {
       await launch(googleUrl);
-    }
-    else if (await canLaunch(appleUrl)) {
+    } else if (await canLaunch(appleUrl)) {
       await launch(appleUrl);
     } else {
       throw 'Could not launch $googleUrl';
