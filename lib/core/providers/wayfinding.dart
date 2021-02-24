@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:io';
 import 'dart:math' as math;
 import 'dart:math';
@@ -9,11 +10,14 @@ import 'dart:typed_data';
 import 'package:background_fetch/background_fetch.dart';
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_networking.dart';
+import 'package:campus_mobile_experimental/core/models/location.dart';
+import 'package:campus_mobile_experimental/core/providers/location.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:location/location.dart';
+//import 'package:location/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'bluetooth.dart';
@@ -27,8 +31,12 @@ enum ScannedDevice {
   SCANNED_DEVICE_DETECT_DISTANCE
 }
 
-class AdvancedWayfindingSingleton extends ChangeNotifier {
-  // Variable holds the current state of scans
+class AdvancedWayfindingSingleton extends ChangeNotifier{
+//  LocationDataProvider _locationDataProvider;
+
+  Coordinates _coordinates;
+
+   // Variable holds the current state of scans
   bool inBackground = false;
 
   // Instance variable for starting beacon singleton
@@ -104,9 +112,10 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
   static List<List<Object>> bufferList = [];
 
   //initialize location and permissions to be checked
-  Location location = Location();
-
-  // Device Types
+//  Location location = Location();
+    double userLatitude;
+    double userLongitude;
+    // Device Types
   Map<String, dynamic> deviceTypes = {};
 
   // Access user's data to offload data
@@ -130,6 +139,9 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
     //Check previous bluetooth setting
     await checkAdvancedWayfindingEnabled();
 
+    userLongitude = _coordinates.lon;
+    userLatitude = _coordinates.lat;
+
     // Only start scanning when permissions granted
     await flutterBlueInstance.isAvailable.then((value) {
       flutterBlueInstance.state.listen((event) async {
@@ -150,10 +162,10 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
           firstInstance = false;
 
           // Set the minimum change to activate a new scan.
-          location.changeSettings(accuracy: LocationAccuracy.low);
+          //location.changeSettings(accuracy: LocationAccuracy.low);
 
           // Enable location listening
-          checkLocationPermission();
+          //checkLocationPermission();
 
           // Enable continuous scan
           enableScanning();
@@ -172,7 +184,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
 
     // Enable timer, must wait duration before next method execution
     ongoingScanner = new Timer.periodic(
-        Duration(minutes: waitTime), (Timer t) => startScan());
+        Duration(seconds: 15), (Timer t) => startScan());
   }
 
   // Start a bluetooth scan of determined second duration and listen to results
@@ -259,27 +271,35 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
     if (qualifyingDevices >= qualifiedDevicesThreshold) {
       double lat;
       double long;
-      checkLocationPermission();
-      location.getLocation().then((value) {
-        lat = value.latitude;
-        long = value.longitude;
 
-        // Reset dwell times
-        resetDevices();
-        qualifyingDevices = 0;
+      // Reset dwell times
+      resetDevices();
+      qualifyingDevices = 0;
 
-        //LOG VALUE
-        Map log = {
-          "SOURCE_DEVICE_ADVERTISEMENT_ID": this.advertisementValue,
-          "SOURCE": "${operatingSystem}-UCSDMobileApp",
-          "OPERATING_SYSTEM": operatingSystem,
-          "LAT": (lat == null) ? 0 : lat,
-          "LONG": (long == null) ? 0 : long,
-          "DEVICE_LIST": newBufferList
-        };
+      //LOG VALUE
+      Map log = {
+        "SOURCE_DEVICE_ADVERTISEMENT_ID": this.advertisementValue,
+        "SOURCE": "${operatingSystem}-UCSDMobileApp",
+        "OPERATING_SYSTEM": operatingSystem,
+        "LAT": (userLatitude == null) ? 0 : userLatitude,
+        "LONG": (userLongitude == null) ? 0 : userLongitude,
+        "DEVICE_LIST": newBufferList
+      };
+      sendLogs(log);
 
-        sendLogs(log);
-      });
+//      Map testLog = {
+//        "Time": DateTime.fromMillisecondsSinceEpoch(
+//            DateTime.now().millisecondsSinceEpoch)
+//            .toString(),
+//        "SOURCE_DEVICE_ADVERTISEMENT_ID": this.advertisementValue,
+//        "SOURCE": "UCSDMobileApp",
+//        "LAT": (userLatitude == null) ? 0 : userLatitude.toString(),
+//        "LONG": (userLongitude == null) ? 0 : userLongitude.toString(),
+//        "DEVICE_LIST": newBufferList
+//      };
+//      new Dio().post(
+//          "https://7pfm2wuasb.execute-api.us-west-2.amazonaws.com/qa",
+//          data: json.encode(testLog));
     }
   }
 
@@ -628,31 +648,31 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
   }
 
   // Used to log current user location or enable the location change listener
-  void checkLocationPermission() async {
-    print('Location Permission Request: advanced_wayfinding_singleton');
-    // Set up new location object to get current location
-    location = Location();
-    location.changeSettings(accuracy: LocationAccuracy.low);
-    PermissionStatus hasPermission;
-    bool _serviceEnabled;
-
-    // check if gps service is enabled
-    _serviceEnabled = await location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await location.requestService();
-      if (!_serviceEnabled) {
-        return;
-      }
-    }
-    //check if permission is granted
-    hasPermission = await location.hasPermission();
-    if (hasPermission == PermissionStatus.denied) {
-      hasPermission = await location.requestPermission();
-      if (hasPermission != PermissionStatus.granted) {
-        return;
-      }
-    }
-  }
+//  void checkLocationPermission() async {
+//    print('Location Permission Request: advanced_wayfinding_singleton');
+//    // Set up new location object to get current location
+//    location = Location();
+//    location.changeSettings(accuracy: LocationAccuracy.low);
+//    PermissionStatus hasPermission;
+//    bool _serviceEnabled;
+//
+//    // check if gps service is enabled
+//    _serviceEnabled = await location.serviceEnabled();
+//    if (!_serviceEnabled) {
+//      _serviceEnabled = await location.requestService();
+//      if (!_serviceEnabled) {
+//        return;
+//      }
+//    }
+//    //check if permission is granted
+//    hasPermission = await location.hasPermission();
+//    if (hasPermission == PermissionStatus.denied) {
+//      hasPermission = await location.requestPermission();
+//      if (hasPermission != PermissionStatus.granted) {
+//        return;
+//      }
+//    }
+//  }
 
   // Get the rough distance from bt device
   double getDistance(int rssi) {
@@ -833,6 +853,9 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
     });
     _storage.deleteAll();
   }
+  set coordinates(Coordinates value) {
+    _coordinates = value;
+  }
 }
 
 // Helper Class
@@ -880,4 +903,5 @@ class BluetoothDeviceProfile {
       'scanIntervalAllowancesUsed': scanIntervalAllowancesUsed
     };
   }
+
 }

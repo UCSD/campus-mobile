@@ -82,7 +82,7 @@ class _SurveyCardState extends State<SurveyCard>
       return Container(
         height: _contentHeight + 50, // Dynamic height iffy, add some padding
         child: WebView(
-          opaque: false,
+//          opaque: false,
           javascriptMode: JavascriptMode.unrestricted,
           initialUrl: surveyURL,
           onWebViewCreated: (controller) {

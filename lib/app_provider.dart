@@ -180,14 +180,14 @@ List<SingleChildWidget> dependentServices = [
     }
     return classScheduleDataProvider;
   }),
-  ChangeNotifierProxyProvider<UserDataProvider, AdvancedWayfindingSingleton>(
+  ChangeNotifierProxyProvider<Coordinates, AdvancedWayfindingSingleton>(
       create: (_) {
-    print("CreateProvider: AdvancedWayfindingSingleton");
-    var proximityAwarenessSingleton = AdvancedWayfindingSingleton();
-    return proximityAwarenessSingleton;
-  }, update: (_, userDataProvider, proximityAwarenessSingleton) {
+        print("CreateProvider: AdvancedWayfindingSingleton");
+        var proximityAwarenessSingleton = AdvancedWayfindingSingleton();
+        return proximityAwarenessSingleton;
+      }, update: (_, coordinates, proximityAwarenessSingleton) {
     print("UpdateProvider: AdvancedWayfindingSingleton");
-    proximityAwarenessSingleton..userDataProvider = userDataProvider;
+    proximityAwarenessSingleton.coordinates = coordinates;
     return proximityAwarenessSingleton;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, StudentIdDataProvider>(
@@ -227,15 +227,15 @@ List<SingleChildWidget> dependentServices = [
     availabilityDataProvider.userDataProvider = userDataProvider;
     return availabilityDataProvider;
   }),
-  ChangeNotifierProxyProvider<UserDataProvider, ShuttleDataProvider>(
+  ChangeNotifierProxyProvider<Coordinates, ShuttleDataProvider>(
       create: (_) {
     print("CreateProvider: ShuttleDataProvider");
     var shuttleDataProvider = ShuttleDataProvider();
     shuttleDataProvider.fetchStops(reloading: false);
     return shuttleDataProvider;
-  }, update: (_, userDataProvider, shuttleDataProvider) {
+  }, update: (_, coordinates, shuttleDataProvider) {
     print("UpdateProvider: ShuttleDataProvider");
-    shuttleDataProvider.userDataProvider = userDataProvider;
+    shuttleDataProvider.coordinates = coordinates;
     return shuttleDataProvider;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, ParkingDataProvider>(

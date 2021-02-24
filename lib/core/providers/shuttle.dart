@@ -1,5 +1,6 @@
 import 'dart:math' as Math;
 
+import 'package:campus_mobile_experimental/core/models/location.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_arrival.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_stop.dart';
 import 'package:campus_mobile_experimental/core/providers/location.dart';
@@ -16,15 +17,16 @@ class ShuttleDataProvider extends ChangeNotifier {
     _isLoading = false;
 
     /// TODO: initialize services here
-    _shuttleService = ShuttleService();
+//    _shuttleService = ShuttleService();
     init();
   }
 
+  Coordinates _coordinates;
   bool _isLoading;
   String _error;
   UserDataProvider userDataProvider;
   ShuttleService _shuttleService;
-  Location location;
+//  Location location;
   ShuttleStopModel _closestStop;
   double userLat;
   double userLong;
@@ -33,18 +35,11 @@ class ShuttleDataProvider extends ChangeNotifier {
   double closestDistance = 10000000;
   Map<int, ShuttleStopModel> fetchedStops;
   Map<int, List<ArrivingShuttle>> arrivalsToRender;
-  LocationDataProvider _locationDataProvider;
+//  LocationDataProvider _locationDataProvider;
 
-  init() {
-    _locationDataProvider = LocationDataProvider();
-    _shuttleService = ShuttleService();
-    location = Location();
-    _locationDataProvider.locationStream.listen((event) {
-      userLat = event.lat;
-      userLong = event.lon;
-    });
-
-    arrivalsToRender = Map<int, List<ArrivingShuttle>>();
+   init() async{
+     _shuttleService = ShuttleService();
+     arrivalsToRender = Map<int, List<ArrivingShuttle>>();
   }
 
   void fetchStops({bool reloading}) async {
@@ -135,10 +130,10 @@ class ShuttleDataProvider extends ChangeNotifier {
 
   Future<void> calculateClosestStop() async {
     await checkLocationPermission();
-    await location.getLocation().then((value) {
-      userLat = value.latitude;
-      userLong = value.longitude;
-    });
+//    await location.getLocation().then((value) {
+//      userLat = value.latitude;
+//      userLong = value.longitude;
+//    });
 
     for (ShuttleStopModel shuttleStop in _shuttleService.data) {
       stopLat = shuttleStop.lat;
@@ -172,29 +167,37 @@ class ShuttleDataProvider extends ChangeNotifier {
   }
 
   Future<void> checkLocationPermission() async {
-    print('Location Permission Request: shuttle_data_provider');
-    // Set up new location object to get current location
-    location = Location();
-    location.changeSettings(accuracy: LocationAccuracy.low);
-    PermissionStatus hasPermission;
-    bool _serviceEnabled;
-
-    // check if gps service is enabled
-    _serviceEnabled = await location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await location.requestService();
-      if (!_serviceEnabled) {
-        return;
-      }
-    }
-    //check if permission is granted
-    hasPermission = await location.hasPermission();
-    if (hasPermission == PermissionStatus.denied) {
-      hasPermission = await location.requestPermission();
-      if (hasPermission != PermissionStatus.granted) {
-        return;
-      }
-    }
+     if(_coordinates.lon == null){
+       _error = "Please enable location services";
+     }
+     else{
+       userLat = _coordinates.lat;
+       userLong = _coordinates.lon;
+     }
+//       print('Location Permission Request: shuttle_data_provider');
+//       // Set up new location object to get current location
+//       location = Location();
+//       location.changeSettings(accuracy: LocationAccuracy.low);
+//       PermissionStatus hasPermission;
+//       bool _serviceEnabled;
+//
+//       // check if gps service is enabled
+//       _serviceEnabled = await location.serviceEnabled();
+//       if (!_serviceEnabled) {
+//         _serviceEnabled = await location.requestService();
+//         if (!_serviceEnabled) {
+//           return;
+//         }
+//       }
+//       //check if permission is granted
+//       hasPermission = await location.hasPermission();
+//       if (hasPermission == PermissionStatus.denied) {
+//         hasPermission = await location.requestPermission();
+//         if (hasPermission != PermissionStatus.granted) {
+//           return;
+//         }
+//       }
+//     }
   }
 
   bool get isLoading => _isLoading;
@@ -224,5 +227,9 @@ class ShuttleDataProvider extends ChangeNotifier {
     for (ShuttleStopModel stop in stopsToRender) {
       arrivalsToRender[stop.id] = await fetchArrivalInformation(stop.id);
     }
+  }
+
+  set coordinates(Coordinates value) {
+    _coordinates = value;
   }
 }
