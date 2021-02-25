@@ -34,26 +34,19 @@ class ScannerMessageDataProvider extends ChangeNotifier {
     _isLoading = true;
     _error = null;
     notifyListeners();
-    print("here: 35");
-    print("isLoggedIn");
-    print(_userDataProvider.toString());
-    print("isLoggedIn: ${_userDataProvider.isLoggedIn}");
     /// Verify that user is logged in
     if (_userDataProvider.isLoggedIn) {
-      print("inside if");
       /// Initialize header
       final Map<String, String> header = {
         'Authorization':
         'Bearer ${_userDataProvider?.authenticationModel?.accessToken}'
       };
-      print("HERE");
       await _scannerMessageService.fetchData(header);
       _scannerMessageModel = _scannerMessageService.scannerMessageModel;
       } else {
         /// Error Handling
           _error = _scannerMessageService.error.toString();
       }
-    print("IN PROVIDER: ${_scannerMessageModel.collectionTime}");
     _isLoading = false;
     notifyListeners();
   }

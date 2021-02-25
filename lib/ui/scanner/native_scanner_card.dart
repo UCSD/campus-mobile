@@ -11,8 +11,6 @@ import 'package:provider/provider.dart';
 const String cardId = 'NativeScanner';
 
 class NativeScannerCard extends StatelessWidget {
-  UserDataProvider _userDataProvider;
-  ScannerMessageDataProvider _scannerMessageDataProvider = ScannerMessageDataProvider();
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +29,6 @@ class NativeScannerCard extends StatelessWidget {
   }
 
   Widget buildCardContent(BuildContext context) {
-    _userDataProvider = Provider.of<UserDataProvider>(context);
-
     return GestureDetector(
       onTap: () {
         getActionButtonNavigateRoute(context);

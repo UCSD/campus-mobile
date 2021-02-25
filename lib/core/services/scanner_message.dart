@@ -15,7 +15,6 @@ class ScannerMessageService {
   ScannerMessageModel _scannerMessageModel = ScannerMessageModel();
 
   Future<bool> fetchData(Map<String, String> headers) async {
-    print("IN FETCH DATA");
     _error = null;
     _isLoading = true;
     try {
@@ -23,9 +22,7 @@ class ScannerMessageService {
       String _response = await _networkHelper.authorizedFetch(
           endpoint, headers);
       /// parse data
-      print("RESPONSE: ${_response}");
       _scannerMessageModel = scannerMessageModelFromJson(_response);
-      print("IN OBJECT: ${_scannerMessageModel.collectionTime}");
       _isLoading = false;
       return true;
     } catch (e) {
