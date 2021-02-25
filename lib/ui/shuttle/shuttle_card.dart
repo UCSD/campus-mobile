@@ -34,7 +34,7 @@ class _ShuttleCardState extends State<ShuttleCard> {
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       reload: () => Provider.of<ShuttleDataProvider>(context, listen: false)
-          .fetchStops(reloading: true),
+          .fetchStops(true),
       isLoading: _shuttleCardDataProvider.isLoading,
       titleText: CardTitleConstants.titleMap[cardId],
       errorText: _shuttleCardDataProvider.error,
@@ -68,7 +68,7 @@ class _ShuttleCardState extends State<ShuttleCard> {
     if (renderList == null || renderList.isEmpty) {
       return Padding(
         padding: const EdgeInsets.only(bottom: 42.0),
-        child: Text('No shuttles found.'),
+        child: Center(child: Text('No shuttles found. Please add a stop.')),
       );
     }
 
@@ -102,9 +102,7 @@ class _ShuttleCardState extends State<ShuttleCard> {
         'Manage Shuttle Stops',
       ),
       onPressed: () {
-        if (!_shuttleCardDataProvider.isLoading) {
-          Navigator.pushNamed(context, RoutePaths.ManageShuttleView);
-        }
+        Navigator.pushNamed(context, RoutePaths.ManageShuttleView);
       },
     ));
     return actionButtons;
