@@ -1,9 +1,10 @@
 import 'dart:async';
 
 import 'package:campus_mobile_experimental/core/models/location.dart';
+import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 
-class LocationDataProvider {
+class LocationDataProvider extends ChangeNotifier {
   final Location _locationService = new Location();
   bool _permission = false;
   String error;
@@ -13,26 +14,29 @@ class LocationDataProvider {
   Stream<Coordinates> get locationStream => _locationController.stream;
 
   LocationDataProvider() {
-    locationStream;
     _init();
   }
 
   _init() async {
-    /// create the settings for location access
-    await _locationService.changeSettings(
-        accuracy: LocationAccuracy.high, distanceFilter: 100);
+    await _requestPermissions();
+    if (_permission) {
+      /// create the settings for location access
+      await _locationService.changeSettings(
+          accuracy: LocationAccuracy.high, distanceFilter: 100);
+    }
+    notifyListeners();
+  }
 
-    /// check to see if gps service is enabled on device
-    bool serviceStatus = await _locationService.serviceEnabled();
-    if (!serviceStatus) {
-      /// check to see if permission has been granted to the app
-      _permission = await _locationService.requestService();
-      if (_permission) {
+  _requestPermissions() async {
+    PermissionStatus hasPermission;
+    //check if permission is granted
+    hasPermission = await _locationService.hasPermission();
+    if (hasPermission == PermissionStatus.denied) {
+      hasPermission = await _locationService.requestPermission();
+      if (hasPermission == PermissionStatus.granted) {
+        _permission = true;
         _enableListener();
       }
-    } else {
-      _permission = true;
-      _enableListener();
     }
   }
 
