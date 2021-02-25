@@ -20,20 +20,14 @@ class _LoginState extends State<Login> {
     print('_LoginState:didChangeDependencies');
     super.didChangeDependencies();
     _userDataProvider = Provider.of<UserDataProvider>(context);
-    print('_userDataProvider1:');
-    print(_userDataProvider.userProfileModel.toJson());
   }
 
   @override
   Widget build(BuildContext context) {
-    print('_LoginState:build: --------------------- 1');
     if (!_userDataProvider.isLoading) {
-      print('_LoginState:build:isLoading FALSE --------------------- 2');
       if (_userDataProvider.isLoggedIn) {
-        print('_LoginState:build:isLoggedIn TRUE ------------------- 3');
         return buildLoggedInWidget(context);
       } else {
-        print('_LoginState:build: --------------------- 4');
         return buildLoginWidget();
       }
     }
@@ -64,17 +58,9 @@ class _LoginState extends State<Login> {
   }
 
   Widget buildUserProfileTile(BuildContext context) {
-    if (_userDataProvider.userProfileModel.username != null) {
-      print('_LoginState:buildUserProfileTile:username: FOUND');
-    } else {
-      print('_LoginState:buildUserProfileTile:username: NULL');
-    }
-
     var username1 = Provider.of<UserDataProvider>(context, listen: false)
         .userProfileModel
         .username;
-    print('username1:-------------------------');
-    print(username1);
 
     return ListTile(
       leading: Icon(
@@ -89,7 +75,7 @@ class _LoginState extends State<Login> {
       ),
       trailing: OutlineButton(
         child: Text('logout'),
-        onPressed: () =>_userDataProvider.logout(),
+        onPressed: () => _userDataProvider.logout(),
       ),
     );
   }

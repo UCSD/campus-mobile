@@ -82,23 +82,19 @@ class UserDataProvider extends ChangeNotifier {
   /// Load [AuthenticationModel] from persistent storage
   /// Will create persistent storage if no data is found
   Future _loadSavedAuthenticationModel() async {
-    print('UserDataProvider:_loadSavedAuthenticationModel:1');
+    print('UserDataProvider:_loadSavedAuthenticationModel');
     var authBox =
         await Hive.openBox<AuthenticationModel>('AuthenticationModel');
 
     int boxLength = authBox.length;
-    print('UserDataProvider:_loadSavedAuthenticationModel:length: ' +
-        boxLength.toString());
 
     AuthenticationModel temp = AuthenticationModel.fromJson({});
     //check to see if we have added the authentication model into the box already
     if (authBox.get('AuthenticationModel') == null) {
-      print('UserDataProvider:_loadSavedAuthenticationModel:3:auth model null');
       await authBox.put('AuthenticationModel', temp);
       temp = authBox.get('AuthenticationModel');
       _authenticationModel = temp;
     } else {
-      print('UserDataProvider:_loadSavedAuthenticationModel:3:auth not null');
       await silentLogin();
     }
   }
@@ -106,7 +102,7 @@ class UserDataProvider extends ChangeNotifier {
   /// Load [UserProfileModel] from persistent storage
   /// Will create persistent storage if no data is found
   Future _loadSavedUserProfile() async {
-    print('UserDataProvider:_loadSavedUserProfile ------------------- 1');
+    print('UserDataProvider:_loadSavedUserProfile');
     var userBox = await Hive.openBox<UserProfileModel>('UserProfileModel');
 
     // Create new user from temp profile
@@ -133,13 +129,11 @@ class UserDataProvider extends ChangeNotifier {
 
   /// Save username to device
   void _saveUsernameToDevice(String username) {
-    print('UserDataProvider: _saveUsernameToDevice: ' + username);
     storage.write(key: 'username', value: username);
   }
 
   /// Get username from device
   Future<String> getUsernameFromDevice() {
-    print('UserDataProvider: getUsernameFromDevice');
     return storage.read(key: 'username');
   }
 
@@ -179,24 +173,19 @@ class UserDataProvider extends ChangeNotifier {
   /// Upon logging in we should make sure that users has an account
   /// If the user doesn't have an account one will be made by invoking [_createNewUser]
   Future manualLogin(String username, String password) async {
-    print('UserDataProvider:manualLogin:1');
+    print('UserDataProvider:manualLogin');
     _error = null;
     _isLoading = true;
     notifyListeners();
 
     if (username.isNotEmpty && password.isNotEmpty) {
-      print('UserDataProvider:manualLogin:2');
       _encryptAndSaveCredentials(username, password);
 
       if (await silentLogin()) {
-        print('UserDataProvider:manualLogin:silentLogin SUCCESS - 3');
-        print('UserDataProvider:manualLogin:silentLogin SUCCESS:username: ' +
-            await getUsernameFromDevice());
         _isLoading = false;
         notifyListeners();
         return true;
       } else {
-        print('UserDataProvider:manualLogin:silentLogin FAIL - 4');
         _error = _authenticationService.error;
         _isLoading = false;
         notifyListeners();
@@ -213,40 +202,28 @@ class UserDataProvider extends ChangeNotifier {
   /// Logs user in with saved credentials on device
   /// If this login mechanism fails then the user is logged out
   Future<bool> silentLogin() async {
-    print('UserDataProvider:silentLogin ----------------------- 1');
+    print('UserDataProvider:silentLogin');
 
     String username = await getUsernameFromDevice();
     String encryptedPassword = await _getEncryptedPasswordFromDevice();
 
-    print('UserDataProvider:silentLogin:username: ' + username);
-
     /// Allow silentLogin if username, pw are set, and the user is not logged in
     if (username != null && encryptedPassword != null) {
-      print('UserDataProvider:silentLogin: user,pw:TRUE; isLoggedIn:FALSE - 2');
-
       final String base64EncodedWithEncryptedPassword =
           base64.encode(utf8.encode(username + ':' + encryptedPassword));
 
       if (await _authenticationService
           .login(base64EncodedWithEncryptedPassword)) {
-        print('UserDataProvider:silentLogin:SUCCESS ----------------------- 3');
-
-        print('UserDataProvider:silentLogin:updateAuthModel --------------- 4');
+        print('UserDataProvider:silentLogin:SUCCESS');
         await updateAuthenticationModel(_authenticationService.data);
 
         await fetchUserProfile();
 
-        print('UserDataProvider:silentLogin:CardsDataProvider init -------- 5');
         CardsDataProvider _cardsDataProvider = CardsDataProvider();
-        print('UserDataProvider:silentLogin:Update available cards -------- 6');
         _cardsDataProvider
             .updateAvailableCards(_userProfileModel.ucsdaffiliation);
-        print('UserDataProvider:silentLogin:fetchUserProfile -------------- 7');
 
-        print(
-            'UserDataProvider:silentLogin:_subscribeToPushNotificationTopics - 8');
         _subscribeToPushNotificationTopics(userProfileModel.subscribedTopics);
-        print('UserDataProvider:silentLogin:registerDevice - 9');
         _pushNotificationDataProvider
             .registerDevice(_authenticationService.data.accessToken);
         await FirebaseAnalytics().logEvent(name: 'loggedIn');
@@ -256,7 +233,7 @@ class UserDataProvider extends ChangeNotifier {
     }
 
     print(
-        'UserDataProvider:silentLogin:credentials invalid or silentLogin FAIL - 10');
+        'UserDataProvider:silentLogin: credentials invalid or silentLogin FAILED');
     logout();
     return false;
   }
@@ -269,7 +246,6 @@ class UserDataProvider extends ChangeNotifier {
     _error = null;
     _isLoading = true;
     notifyListeners();
-    print('UserDataProvider:logout:notifyListeners:1');
     _pushNotificationDataProvider
         .unregisterDevice(_authenticationModel.accessToken);
     updateAuthenticationModel(AuthenticationModel.fromJson({}));
@@ -283,7 +259,6 @@ class UserDataProvider extends ChangeNotifier {
     await FirebaseAnalytics().logEvent(name: 'loggedOut');
     _isLoading = false;
 
-    print('UserDataProvider:logout:notifyListeners:2');
     notifyListeners();
   }
 

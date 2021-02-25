@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_provider.dart';
 import 'package:campus_mobile_experimental/app_router.dart'
@@ -5,6 +7,8 @@ import 'package:campus_mobile_experimental/app_router.dart'
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/authentication.dart';
 import 'package:campus_mobile_experimental/core/models/user_profile.dart';
+import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
+import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
@@ -13,9 +17,12 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uni_links/uni_links.dart';
 
 bool showOnboardingScreen;
 
+bool isFirstRunFlag = false;
+bool executedInitialDeeplinkQuery = false;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -44,7 +51,6 @@ initializeApp() async {
   }
 
   showOnboardingScreen = prefs.getBool('showOnboardingScreen') ?? true;
-  print('showOnboardingScreen1: ' + showOnboardingScreen.toString());
 }
 
 clearSecuredStorage() async {
@@ -62,10 +68,34 @@ clearHiveStorage() async {
 }
 
 class CampusMobile extends StatelessWidget {
+  StreamSubscription _sub;
+
+  Future<Null> initUniLinks(BuildContext context) async {
+    // deep links are received by this method
+    // the specific host needs to be added in AndroidManifest.xml and Info.plist
+    // currently, this method handles executing custom map query
+    _sub = getLinksStream().listen((String link) async {
+      // handling for map query
+      String initialLink = await getInitialLink();
+      if (initialLink != null) {
+        if (initialLink.contains("deeplinking.searchmap")) {
+          var uri = Uri.dataFromString(initialLink);
+          var query = uri.queryParameters['query'];
+          // redirect query to maps tab and search with query
+          Provider.of<MapsDataProvider>(context, listen: false)
+              .searchBarController
+              .text = query;
+          Provider.of<MapsDataProvider>(context, listen: false)
+              .fetchLocations();
+          Provider.of<BottomNavigationBarProvider>(context, listen: false)
+              .currentIndex = NavigatorConstants.MapTab;
+        }
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    print('showOnboardingScreen2: ' + showOnboardingScreen.toString());
-
     return MultiProvider(
       providers: providers,
       child: MaterialApp(

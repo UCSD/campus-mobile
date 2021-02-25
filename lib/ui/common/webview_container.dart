@@ -189,7 +189,6 @@ class _WebViewContainerState extends State<WebViewContainer>
     return JavascriptChannel(
       name: 'OpenLink',
       onMessageReceived: (JavascriptMessage message) {
-        print("in links channel");
         openLink(message.message);
       },
     );
@@ -203,8 +202,6 @@ class _WebViewContainerState extends State<WebViewContainer>
         setState(() {
           _contentHeight =
               validateHeight(context, double.tryParse(message.message));
-          print('webview_container:_heightChannel:SetHeight: ' +
-              _contentHeight.toString());
         });
       },
     );
@@ -230,13 +227,6 @@ class _WebViewContainerState extends State<WebViewContainer>
     return JavascriptChannel(
       name: 'RefreshToken',
       onMessageReceived: (JavascriptMessage message) async {
-        print('webview_container:_refreshTokenChannel: accessToken: ' +
-            _userDataProvider?.authenticationModel?.accessToken);
-        print('webview_container:_refreshTokenChannel: isLoggedIn: ' +
-            Provider.of<UserDataProvider>(context, listen: false)
-                .isLoggedIn
-                .toString());
-
         if (!Provider.of<UserDataProvider>(context, listen: false).isLoggedIn) {
           print(
               'webview_container:_refreshTokenChannel: User has expired access token, calling silentLogin');
