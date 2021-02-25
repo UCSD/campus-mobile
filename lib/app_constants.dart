@@ -160,7 +160,7 @@ class CardTitleConstants {
     'student_info': 'COVID-19 Info',
     'student_survey': 'Student Survey',
     'student_id': 'Student ID',
-    'staff_id': 'Staff ID',
+    'employee_id': 'Employee ID',
     'finals': 'Finals',
     'schedule': 'Classes',
     'shuttle': "Shuttle",
