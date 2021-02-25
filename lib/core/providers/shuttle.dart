@@ -1,12 +1,11 @@
 import 'dart:math' as Math;
 
+import 'package:campus_mobile_experimental/core/models/location.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_arrival.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_stop.dart';
-import 'package:campus_mobile_experimental/core/providers/location.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/shuttle.dart';
 import 'package:flutter/material.dart';
-import 'package:location/location.dart';
 
 import '../models/shuttle_stop.dart';
 
@@ -24,30 +23,20 @@ class ShuttleDataProvider extends ChangeNotifier {
   String _error;
   UserDataProvider userDataProvider;
   ShuttleService _shuttleService;
-  Location location;
   ShuttleStopModel _closestStop;
-  double userLat;
-  double userLong;
   double stopLat;
   double stopLong;
   double closestDistance = 10000000;
   Map<int, ShuttleStopModel> fetchedStops;
   Map<int, List<ArrivingShuttle>> arrivalsToRender;
-  LocationDataProvider _locationDataProvider;
+  Coordinates _userCoords;
 
   init() {
-    _locationDataProvider = LocationDataProvider();
     _shuttleService = ShuttleService();
-    location = Location();
-    _locationDataProvider.locationStream.listen((event) {
-      userLat = event.lat;
-      userLong = event.lon;
-    });
-
     arrivalsToRender = Map<int, List<ArrivingShuttle>>();
   }
 
-  void fetchStops({bool reloading}) async {
+  void fetchStops(bool reloading) async {
     _isLoading = true;
     _error = null;
     notifyListeners();
@@ -58,6 +47,7 @@ class ShuttleDataProvider extends ChangeNotifier {
       for (ShuttleStopModel model in _shuttleService.data) {
         newMapOfStops[model.id] = model;
       }
+
       fetchedStops = newMapOfStops;
 
       /// if the user is logged in we want to sync the order of parking lots amongst all devices
@@ -66,8 +56,8 @@ class ShuttleDataProvider extends ChangeNotifier {
       }
 
       // get closest stop to current user
-      await calculateClosestStop();
-      await getArrivalInformation();
+      calculateClosestStop();
+      getArrivalInformation();
     }
 
     _isLoading = false;
@@ -118,29 +108,22 @@ class ShuttleDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<List<ArrivingShuttle>> fetchArrivalInformation(int stopID) async {
-    List<ArrivingShuttle> output =
-        await _shuttleService.getArrivingInformation(stopID);
-
-    output.sort((a, b) => a.secondsToArrival.compareTo(b.secondsToArrival));
-    return output;
-  }
-
-  Future<void> calculateClosestStop() async {
-    await checkLocationPermission();
-    await location.getLocation().then((value) {
-      userLat = value.latitude;
-      userLong = value.longitude;
-    });
-
+  void calculateClosestStop() {
+    //make sure we have users location before we do any calculations
+    if (_userCoords == null ||
+        _userCoords.lon == null ||
+        _userCoords.lat == null) {
+      return;
+    }
     for (ShuttleStopModel shuttleStop in _shuttleService.data) {
       stopLat = shuttleStop.lat;
       stopLong = shuttleStop.lon;
 
-      if (getHaversineDistance(userLat, userLong, stopLat, stopLong) <
+      if (getHaversineDistance(
+              _userCoords.lat, _userCoords.lon, stopLat, stopLong) <
           closestDistance) {
-        closestDistance =
-            getHaversineDistance(userLat, userLong, stopLat, stopLong);
+        closestDistance = getHaversineDistance(
+            _userCoords.lat, _userCoords.lon, stopLat, stopLong);
         _closestStop = shuttleStop;
       }
     }
@@ -164,30 +147,22 @@ class ShuttleDataProvider extends ChangeNotifier {
     return deg * (Math.pi / 180);
   }
 
-  Future<void> checkLocationPermission() async {
-    print('Location Permission Request: shuttle_data_provider');
-    // Set up new location object to get current location
-    location = Location();
-    location.changeSettings(accuracy: LocationAccuracy.low);
-    PermissionStatus hasPermission;
-    bool _serviceEnabled;
+  void getArrivalInformation() async {
+    if (_closestStop != null) {
+      arrivalsToRender[_closestStop.id] =
+          await fetchArrivalInformation(_closestStop.id);
+      for (ShuttleStopModel stop in stopsToRender) {
+        arrivalsToRender[stop.id] = await fetchArrivalInformation(stop.id);
+      }
+    }
+  }
 
-    // check if gps service is enabled
-    _serviceEnabled = await location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await location.requestService();
-      if (!_serviceEnabled) {
-        return;
-      }
-    }
-    //check if permission is granted
-    hasPermission = await location.hasPermission();
-    if (hasPermission == PermissionStatus.denied) {
-      hasPermission = await location.requestPermission();
-      if (hasPermission != PermissionStatus.granted) {
-        return;
-      }
-    }
+  Future<List<ArrivingShuttle>> fetchArrivalInformation(int stopID) async {
+    List<ArrivingShuttle> output =
+        await _shuttleService.getArrivingInformation(stopID);
+
+    output.sort((a, b) => a.secondsToArrival.compareTo(b.secondsToArrival));
+    return output;
   }
 
   bool get isLoading => _isLoading;
@@ -211,11 +186,7 @@ class ShuttleDataProvider extends ChangeNotifier {
     return output;
   }
 
-  Future<void> getArrivalInformation() async {
-    arrivalsToRender[closestStop.id] =
-        await fetchArrivalInformation(closestStop.id);
-    for (ShuttleStopModel stop in stopsToRender) {
-      arrivalsToRender[stop.id] = await fetchArrivalInformation(stop.id);
-    }
+  set userCoords(Coordinates value) {
+    _userCoords = value;
   }
 }
