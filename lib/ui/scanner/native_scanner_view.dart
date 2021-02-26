@@ -1,7 +1,9 @@
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/scanner.dart';
+import 'package:campus_mobile_experimental/core/providers/scanner_message.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/utils/webview.dart';
+import 'package:campus_mobile_experimental/ui/scanner/native_scanner_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_scandit_plugin/flutter_scandit_plugin.dart';
 import 'package:intl/intl.dart';
@@ -12,6 +14,7 @@ class ScanditScanner extends StatelessWidget {
   ScannerDataProvider _scannerDataProvider;
   UserDataProvider _userDataProvider;
   set userDataProvider(UserDataProvider value) => _userDataProvider = value;
+  bool hasUpdatedLatestScan = false;
 
   @override
   Widget build(BuildContext context) {
@@ -85,6 +88,7 @@ class ScanditScanner extends StatelessWidget {
         ],
       ));
     } else if (_scannerDataProvider.successfulSubmission) {
+
       return (renderSuccessScreen(context));
     } else if (_scannerDataProvider.didError) {
       return (renderFailureScreen(context));
@@ -154,7 +158,7 @@ class ScanditScanner extends StatelessWidget {
   Widget renderSuccessScreen(BuildContext context) {
     final dateFormat = new DateFormat('dd-MM-yyyy hh:mm:ss a');
     final String scanTime = dateFormat.format(new DateTime.now());
-
+    updateLatestScan(context);
     return Column(
       children: [
         Center(
@@ -224,4 +228,14 @@ class ScanditScanner extends StatelessWidget {
           " You can view your results by logging in to MyUCSDChart.");
     }
   }
+
+  void updateLatestScan(BuildContext context) {
+    if(_scannerDataProvider.successfulSubmission && !hasUpdatedLatestScan) {
+      // to fetch the most recent scan and display timestamp to user to confirm success
+      print("updating");
+      Provider.of<ScannerMessageDataProvider>(context, listen: false).fetchData();
+      hasUpdatedLatestScan = true;
+    }
+  }
+
 }
