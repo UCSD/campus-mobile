@@ -4,6 +4,8 @@ import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/topics.dart';
 import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
 import 'package:campus_mobile_experimental/core/providers/messages.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:campus_mobile_experimental/core/services/notifications.dart';
 import 'package:device_info/device_info.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -38,7 +40,7 @@ class PushNotificationDataProvider extends ChangeNotifier {
   /// invokes [fetchTopicsList]
   initState() async {
     fetchTopicsList();
-
+    //onDidReceiveLocalNotification: onDidReceiveLocalNotification);
     if (Platform.isAndroid) {
       _deviceData = _readAndroidBuildData(await deviceInfoPlugin.androidInfo);
     } else if (Platform.isIOS) {
@@ -59,12 +61,28 @@ class PushNotificationDataProvider extends ChangeNotifier {
     );
   }
 
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
   /// Configures the [_fcm] object to receive push notifications
   Future<void> initPlatformState(BuildContext context) async {
     try {
+      const AndroidInitializationSettings initializationSettingsAndroid =
+          AndroidInitializationSettings(app_icon);
+      // ignore: deprecated_member_use
+      final IOSInitializationSettings initializationSettingsIOS =
+          IOSInitializationSettings();
+      final InitializationSettings initializationSettings =
+          InitializationSettings(
+        android: initializationSettingsAndroid,
+        iOS: initializationSettingsIOS,
+      );
+      await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
         /// TODO: Implement foreground messaging via flutter_local_notifications
-        ///
+        showNotification(message);
+
         /// doing something here for foreground push
         print('FCM: onMessage: foreground message:');
         print(message);
@@ -93,6 +111,23 @@ class PushNotificationDataProvider extends ChangeNotifier {
     } on PlatformException {
       _error = 'Failed to get platform info.';
     }
+  }
+
+  showNotification(RemoteMessage message) async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+            'your channel id', 'your channel name', 'your channel description',
+            importance: Importance.max,
+            priority: Priority.high,
+            showWhen: false);
+    const IOSNotificationDetails();
+    const NotificationDetails platformChannelSpecifics = NotificationDetails(
+        android: androidPlatformChannelSpecifics,
+        iOS: IOSNotificationDetails());
+    //This is where you put info from firebase
+    await flutterLocalNotificationsPlugin.show(
+        0, 'plain title', 'plain body', platformChannelSpecifics,
+        payload: 'item x');
   }
 
   /// Fetches topics from endpoint
