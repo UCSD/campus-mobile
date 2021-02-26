@@ -11,14 +11,14 @@ import 'package:provider/provider.dart';
 const String cardId = 'NativeScanner';
 
 class NativeScannerCard extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return CardContainer(
       active: true,
       hide: () => null,
-      reload: () => Provider.of<ScannerMessageDataProvider>(context, listen: false)
-          .fetchData(),
+      reload: () =>
+          Provider.of<ScannerMessageDataProvider>(context, listen: false)
+              .fetchData(),
       isLoading: Provider.of<ScannerMessageDataProvider>(context).isLoading,
       titleText: CardTitleConstants.titleMap[cardId],
       errorText: null,
@@ -86,29 +86,33 @@ class NativeScannerCard extends StatelessWidget {
   }
 
   Widget getMessageWidget(BuildContext context) {
-    if(Provider.of<UserDataProvider>(context, listen: false).isLoggedIn &&
-        Provider.of<ScannerMessageDataProvider>(context, listen: false).scannerMessageModel.collectionTime != null) {
-      return(
-          Padding(
-            padding: const EdgeInsets.only(top:8.0),
-            child: Text.rich(
+    if (Provider.of<UserDataProvider>(context, listen: false).isLoggedIn) {
+      String myRecentScanTime =
+          Provider.of<ScannerMessageDataProvider>(context, listen: false)
+              .scannerMessageModel
+              .collectionTime;
+      if (myRecentScanTime == "") {
+        myRecentScanTime = ScannerConstants.noRecentScan;
+      }
+      return (Padding(
+        padding: const EdgeInsets.only(top: 8.0),
+        child: Text.rich(
+          TextSpan(
+            children: [
               TextSpan(
-                children: [
-                  TextSpan(
-                    text: "Last scan: ",
-                  ),
-                  TextSpan(
-                    text: Provider.of<ScannerMessageDataProvider>(context,listen: false)
-                        .scannerMessageModel.collectionTime,
-                    style: TextStyle(fontWeight: FontWeight.w600)
-                  ),
-                ],
+                text: "Last scan: ",
               ),
-            ),
-          )
-      );
-    }
-    else {
+              TextSpan(
+                  text: Provider.of<ScannerMessageDataProvider>(context,
+                          listen: false)
+                      .scannerMessageModel
+                      .collectionTime,
+                  style: TextStyle(fontWeight: FontWeight.w600)),
+            ],
+          ),
+        ),
+      ));
+    } else {
       return Container(width: 0, height: 0);
     }
   }

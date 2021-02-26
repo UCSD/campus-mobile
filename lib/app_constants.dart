@@ -110,6 +110,7 @@ class ScannerConstants {
       'An error occurred. Please try again.\nCode #1040';
   static const scannerReauthFailure =
       'Your session has expired. Please login to submit a scan.';
+  static const noRecentScan = 'No scan submitted';
 }
 
 class LoginConstants {
