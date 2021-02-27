@@ -68,8 +68,7 @@ class PushNotificationDataProvider extends ChangeNotifier {
   Future<void> initPlatformState(BuildContext context) async {
     try {
       const AndroidInitializationSettings initializationSettingsAndroid =
-          AndroidInitializationSettings(app_icon);
-      // ignore: deprecated_member_use
+          AndroidInitializationSettings('mipmap/ic_launcher_round');
       final IOSInitializationSettings initializationSettingsIOS =
           IOSInitializationSettings();
       final InitializationSettings initializationSettings =
@@ -80,14 +79,26 @@ class PushNotificationDataProvider extends ChangeNotifier {
       await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-        /// TODO: Implement foreground messaging via flutter_local_notifications
-        showNotification(message);
+        /// foreground messaging via flutter_local_notifications
 
-        /// doing something here for foreground push
+        showNotification(message);
         print('FCM: onMessage: foreground message:');
+        print(message.data);
+        print("Body: " + message.notification.body);
+        print(message.notification.title);
         print(message);
+
+        /// Fetch in-app messages
         Provider.of<MessagesDataProvider>(context, listen: false)
             .fetchMessages(true);
+
+        /// Set tab bar index to the Notifications tab
+        Provider.of<BottomNavigationBarProvider>(context, listen: false)
+            .currentIndex = NavigatorConstants.NotificationsTab;
+
+        /// Navigate to Notifications tab
+        Navigator.of(context).pushNamedAndRemoveUntil(
+            RoutePaths.BottomNavigationBar, (Route<dynamic> route) => false);
       });
 
       FirebaseMessaging.onMessageOpenedApp.listen(
@@ -125,8 +136,8 @@ class PushNotificationDataProvider extends ChangeNotifier {
         android: androidPlatformChannelSpecifics,
         iOS: IOSNotificationDetails());
     //This is where you put info from firebase
-    await flutterLocalNotificationsPlugin.show(
-        0, 'plain title', 'plain body', platformChannelSpecifics,
+    await flutterLocalNotificationsPlugin.show(0, message.notification.title,
+        message.notification.body, platformChannelSpecifics,
         payload: 'item x');
   }
 
