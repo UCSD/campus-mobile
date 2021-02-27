@@ -95,10 +95,6 @@ class PushNotificationDataProvider extends ChangeNotifier {
         /// Set tab bar index to the Notifications tab
         Provider.of<BottomNavigationBarProvider>(context, listen: false)
             .currentIndex = NavigatorConstants.NotificationsTab;
-
-        /// Navigate to Notifications tab
-        Navigator.of(context).pushNamedAndRemoveUntil(
-            RoutePaths.BottomNavigationBar, (Route<dynamic> route) => false);
       });
 
       FirebaseMessaging.onMessageOpenedApp.listen(
