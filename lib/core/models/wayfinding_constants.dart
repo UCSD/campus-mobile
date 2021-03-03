@@ -7,37 +7,43 @@ class WayfindingConstantsModel {
   int backgroundScanInterval;
   int deletionInterval;
   int scanDuration;
-  int waitTime;
-  int dwellTime;
+  int scanWaitTime;
+  int currentDwellTime;
   double milesFromPC;
-  final double pcLongitude = -117.237006;
-  final double pcLatitude = 32.880006;
+  static final double pcLongitude = -117.237006;
+  static final double pcLatitude = 32.880006;
   double userDistanceFromPriceCenter;
   List<String> allowableDevices;
-  List<String> deviceTypes;
+  Map<String, dynamic> deviceTypes;
 
   WayfindingConstantsModel(
-      List<String> allowableDevices,
-      List<String> deviceTypes,
-      int qualifiedDevicesThreshold,
-      int distanceThreshold,
-      int dwellTimeThreshold,
-      int scanDuration,
-      int waitTime,
-      int scanIntervalAllowance,
-      int backgroundScanInterval,
-      int deletionInterval,
-      int milesFromPC
-      ){
-    this.allowableDevices = allowableDevices;
-    this.deviceTypes = deviceTypes;
-    this.qualifiedDevicesThreshold = qualifiedDevicesThreshold;
-    this.distanceThreshold = distanceThreshold;
-    this.dwellTimeThreshold = dwellTimeThreshold;
-    this.scanDuration = scanDuration;
-    this.
+      {this.allowableDevices,
+      this.deviceTypes,
+      this.qualifiedDevicesThreshold,
+      this.distanceThreshold,
+      this.dwellTimeThreshold,
+      this.scanDuration,
+      this.scanWaitTime,
+      this.scanIntervalAllowance,
+      this.backgroundScanInterval,
+      this.deletionInterval,
+      this.milesFromPC});
 
-  }
-
-
+  factory WayfindingConstantsModel.fromJson(
+          Map<String, dynamic> deviceTypesJson,
+          Map<String, dynamic> constantsJson) =>
+      WayfindingConstantsModel(
+          allowableDevices: List.from(constantsJson['deviceCharacteristics']),
+          deviceTypes: deviceTypesJson,
+          qualifiedDevicesThreshold: constantsJson["uniqueDevices"],
+          distanceThreshold: constantsJson["distanceThreshold"],
+          dwellTimeThreshold: constantsJson["dwellTimeThreshold"],
+          scanDuration: constantsJson["scanDuration"],
+          scanWaitTime: constantsJson["waitTime"],
+          scanIntervalAllowance: constantsJson["scanIntervalAllowance"],
+          backgroundScanInterval: constantsJson["backgroundScanInterval"],
+          deletionInterval: constantsJson["deletionInterval"],
+          milesFromPC: constantsJson['milesFromPC'].toDouble());
 }
+
+

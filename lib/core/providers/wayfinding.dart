@@ -817,7 +817,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
     String _response = await _networkHelper.authorizedFetch(
         bluetoothConstantsEndpoint, headers);
 
-    final _json = json.decode(_response);
+    Map _json = json.decode(_response);
     qualifiedDevicesThreshold = int.parse(_json["uniqueDevices"]);
     distanceThreshold = int.parse(_json["distanceThreshold"]);
     dwellTimeThreshold = int.parse(_json["dwellTimeThreshold"]);
