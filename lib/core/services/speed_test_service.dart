@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:ffi';
 
+import 'package:campus_mobile_experimental/app_networking.dart';
+import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,9 +14,12 @@ import 'dart:io';
 import 'package:wifi_connection/WifiConnection.dart';
 import 'package:wifi_connection/WifiInfo.dart';
 
+import '../../app_constants.dart';
+
 class SpeedTestService extends ChangeNotifier {
   SpeedTestService() {
-    _networkHelper = Dio();
+    _networkHelper = NetworkHelper();
+    dio = new Dio();
     _timer = Stopwatch();
     _speedDownload = 0.0;
     _speedUpload = 0.0;
@@ -22,7 +27,8 @@ class SpeedTestService extends ChangeNotifier {
     _percentUploaded = 0.00;
   }
 
-  Dio _networkHelper;
+  NetworkHelper _networkHelper;
+  Dio dio;
   Stopwatch _timer;
   double _speedDownload;
   double _speedUpload;
@@ -34,7 +40,13 @@ class SpeedTestService extends ChangeNotifier {
   int _secondsElapsedDownload = 0;
   int _secondsElapsedUpload = 0;
   bool isUCSDWiFi = true;
+  final Map<String, String> headers = {
+    "accept": "application/json",
+  };
+  Map<String, String> offloadDataHeader;
 
+
+  static const String mobileLoggerApi = 'https://api-qa.ucsd.edu:8243/mobileapplogger/v1.1.0/log?type=wifi';
   String url =
       'https://ucsd-its-wts-dev.s3-us-west-1.amazonaws.com/Services/WifiAnalyzer/webpage_25MB.html';
 
@@ -71,7 +83,7 @@ String signedURL;
     try {
       _cancelTokenDownload = new CancelToken();
       _timer.start();
-      await _networkHelper.put(signedURL, data: formData, onSendProgress:  _progressCallbackUpload, cancelToken:  _cancelTokenDownload);
+      await dio.put(signedURL, data: formData, onSendProgress:  _progressCallbackUpload, cancelToken:  _cancelTokenDownload);
     } catch (e) {
     }
     _timer.stop();
@@ -87,7 +99,7 @@ String signedURL;
     try {
       _cancelTokenUpload = new CancelToken();
       _timer.start();
-      await _networkHelper.download(url, (tempDownload.path),
+      await dio.download(url, (tempDownload.path),
           onReceiveProgress: _progressCallbackDownload,
           cancelToken: _cancelTokenUpload);
     } catch (e) {
@@ -164,14 +176,14 @@ String signedURL;
    if(wiFiInfo.ssid.contains("UCSD-PROTECTED") || wiFiInfo.ssid.contains("UCSD-GUEST") ||  wiFiInfo.ssid.contains("ResNet")){
      isUCSDWiFi = true;
    }else{
-     isUCSDWiFi = false; // FALSE
+     isUCSDWiFi = true; // FALSE
    }
    if(lastState != isUCSDWiFi) {
      notifyListeners();
    }
    }
   // Send WiFi data
-  Future<bool> sendNetworkDiagnostics(int lastSpeed) async {
+  Future<bool> sendNetworkDiagnostics(int lastSpeed, UserDataProvider userDataProvider) async {
     Map wiFiLog;
     bool sentSuccessfully = false;
 
@@ -206,7 +218,6 @@ String signedURL;
           "UploadSpeed": uploadSpeed.toStringAsPrecision(3),
         };
       } else {
-        print(  uploadSpeed.toStringAsPrecision(3) );
       wiFiLog = {
           "Platform": "iOS",
           "SSID": (locationWifiConnectivity[0] as WifiInfo).ssid,
@@ -232,17 +243,78 @@ String signedURL;
               : speed.toStringAsPrecision(3),
           "UploadSpeed": uploadSpeed.toStringAsPrecision(3),
         };
-      print(json.encode(wiFiLog));
       }
       //TODO: Send data for submission
       sentSuccessfully = true;
+      sendLogs(wiFiLog, userDataProvider);
 
 
     }
 
     return sentSuccessfully; //Due to failed submission or not connected to wifi
   }
+  void sendLogs(Map log, UserDataProvider userDataProvider) {
+    offloadDataHeader = {
+      'Authorization':
+      'Bearer ${userDataProvider?.authenticationModel?.accessToken}'
+    };
+    if (userDataProvider.isLoggedIn) {
+      print("Offload data header: " + offloadDataHeader.toString());
+      if (offloadDataHeader == null) {
+        offloadDataHeader = {
+          'Authorization':
+          'Bearer ${userDataProvider?.authenticationModel?.accessToken}'
+        };
+      }
+      print("AFTER GETTING ACCESS TOKEN" + offloadDataHeader.toString());
+      // Send to offload API
+      try {
+        var response = _networkHelper
+            .authorizedPost(
+            mobileLoggerApi, offloadDataHeader, json.encode(log))
+            .then((value) {
+          print("RESPONSE: ${value.toString()}");
+        });
+      } catch (Exception) {
+        if (Exception.toString().contains(ErrorConstants.invalidBearerToken)) {
+          userDataProvider.silentLogin();
+          offloadDataHeader = {
+            'Authorization':
+            'Bearer ${userDataProvider?.authenticationModel?.accessToken}'
+          };
+          _networkHelper.authorizedPost(
+              mobileLoggerApi, offloadDataHeader, json.encode(log));
+        }
+      }
+    } else {
+      try {
+        var response = _networkHelper.authorizedPost(
+            mobileLoggerApi, headers, json.encode(log));
+      } catch (Exception) {
+        getNewToken();
+        var response = _networkHelper.authorizedPost(
+            mobileLoggerApi, headers, json.encode(log));
+      }
+    }
+  }
+  Future<bool> getNewToken() async {
+    final String tokenEndpoint = "https://api-qa.ucsd.edu:8243/token";
+    final Map<String, String> tokenHeaders = {
+      "content-type": 'application/x-www-form-urlencoded',
+      "Authorization":
+      "Basic djJlNEpYa0NJUHZ5akFWT0VRXzRqZmZUdDkwYTp2emNBZGFzZWpmaWZiUDc2VUJjNDNNVDExclVh"
+    };
+    try {
+      var response = await _networkHelper.authorizedPost(
+          tokenEndpoint, tokenHeaders, "grant_type=client_credentials");
 
+      headers["Authorization"] = "Bearer " + response["access_token"];
+
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
   Future<List<Object>> futureCombo() async {
     if (await (Connectivity().checkConnectivity()) != ConnectivityResult.wifi) {
       return [null, null, await (Connectivity().checkConnectivity())];

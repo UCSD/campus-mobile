@@ -1,6 +1,7 @@
 
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/student_id.dart';
+import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/providers/weather.dart';
 import 'package:campus_mobile_experimental/core/services/speed_test_service.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
@@ -25,6 +26,7 @@ class _WiFiCardState extends State<WiFiCard> {
   int lastSpeed;
   bool goodSpeed;
   SpeedTestService _speedTestService;
+  UserDataProvider _userDataProvider;
 
   @override
   void initState() {
@@ -36,6 +38,7 @@ class _WiFiCardState extends State<WiFiCard> {
   @override
   Widget build(BuildContext context) {
     _speedTestService = Provider.of<SpeedTestService>(context);
+    _userDataProvider = Provider.of<UserDataProvider>(context);
     _speedTestService.connectedToUCSDwifi();
 
     return CardContainer(
@@ -70,7 +73,7 @@ class _WiFiCardState extends State<WiFiCard> {
         }
         else if (_speedTestService.timeElapsedDownload +
                 _speedTestService.timeElapsedUpload >
-            20) {
+            2000) {
           _speedTestService.cancelDownload();
           _speedTestService.cancelUpload();
           setState(() {
@@ -228,7 +231,7 @@ class _WiFiCardState extends State<WiFiCard> {
   }
 
   Column finishedState() {
-    _speedTestService.sendNetworkDiagnostics(lastSpeed);
+    _speedTestService.sendNetworkDiagnostics(lastSpeed, _userDataProvider);
     return Column(
       children: [
         RichText(
@@ -302,7 +305,7 @@ class _WiFiCardState extends State<WiFiCard> {
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text("WiFi Speed Test Unavailable",
+          child: Text("Looks like you aren’t on a UCSD network",
             style: TextStyle(
               fontSize: 25,
             ),
@@ -311,7 +314,7 @@ class _WiFiCardState extends State<WiFiCard> {
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text("Please verify you are connected to a UCSD affiliated WiFi",
+          child: Text("Please check your connection and try again.",
             style: TextStyle(
               fontSize: 13
             ),
