@@ -236,7 +236,7 @@ List<SingleChildWidget> dependentServices = [
     print("UpdateProvider: shuttleDataProvider");
     shuttleDataProvider.userCoords = coordinates;
     shuttleDataProvider.userDataProvider = userDataProvider;
-    shuttleDataProvider.fetchStops(false);
+    shuttleDataProvider.fetchStops(true);
     return shuttleDataProvider;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, ParkingDataProvider>(
