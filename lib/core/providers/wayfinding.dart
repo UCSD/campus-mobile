@@ -78,15 +78,12 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
   int deletionInterval = 30; // Minutes
   double milesFromPriceCenter = 5;
   int dwellTimeThreshold = 200; // In seconds (10 minutes -> 600 seconds)
-
   /// Keep track of devices that meet our requirements
   int qualifyingDevices = 0;
-
   /// Default constant for scans
   int scanDuration = 2; //Seconds
   int waitTime = 15; // Minutes
   int dwellMinutes = 30;
-
   /// Coordinates for Price Center
   final double pcLongitude = -117.237006;
   final double pcLatitude = 32.880006;
