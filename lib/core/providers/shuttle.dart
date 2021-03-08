@@ -15,10 +15,11 @@ class ShuttleDataProvider extends ChangeNotifier {
     _isLoading = false;
 
     /// TODO: initialize services here
-    _shuttleService = ShuttleService();
+//    _shuttleService = ShuttleService();
     init();
   }
 
+  Coordinates _coordinates;
   bool _isLoading;
   String _error;
   UserDataProvider userDataProvider;
@@ -188,5 +189,9 @@ class ShuttleDataProvider extends ChangeNotifier {
 
   set userCoords(Coordinates value) {
     _userCoords = value;
+  }
+
+  set coordinates(Coordinates value) {
+    _coordinates = value;
   }
 }
