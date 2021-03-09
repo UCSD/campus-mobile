@@ -1,5 +1,6 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/cards.dart';
+import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/cards.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -70,9 +71,14 @@ class CardsDataProvider extends ChangeNotifier {
   Map<String, CardsModel> _availableCards;
   Box _cardOrderBox;
   Box _cardStateBox;
+  UserDataProvider _userDataProvider;
 
   ///Services
   final CardsService _cardsService = CardsService();
+
+  set userDataProvider(UserDataProvider value) {
+    _userDataProvider = value;
+  }
 
   void updateAvailableCards(String ucsdAffiliation) async {
     _isLoading = true;
@@ -134,6 +140,13 @@ class CardsDataProvider extends ChangeNotifier {
       _error = _cardsService.error;
     }
     _isLoading = false;
+
+    // update user profile
+    _userDataProvider.userProfileModel.cardOrder = _cardOrder;
+    _userDataProvider.userProfileModel.cardStates = _cardStates;
+    _userDataProvider
+        .updateUserProfileModel(_userDataProvider.userProfileModel);
+
     notifyListeners();
   }
 
@@ -147,6 +160,9 @@ class CardsDataProvider extends ChangeNotifier {
   Future updateCardOrder(List<String> newOrder) async {
     try {
       await _cardOrderBox.put(DataPersistence.cardOrder, newOrder);
+      _userDataProvider.userProfileModel.cardOrder = newOrder;
+      _userDataProvider
+          .updateUserProfileModel(_userDataProvider.userProfileModel);
     } catch (e) {
       _cardOrderBox = await Hive.openBox(DataPersistence.cardOrder);
       await _cardOrderBox.put(DataPersistence.cardOrder, newOrder);
