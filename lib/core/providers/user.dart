@@ -46,8 +46,8 @@ class UserDataProvider extends ChangeNotifier {
   AuthenticationService _authenticationService;
   UserProfileService _userProfileService;
   PushNotificationDataProvider _pushNotificationDataProvider;
-  AvailabilityDataProvider _availabilityDataProvider;
   CardsDataProvider _cardsDataProvider;
+  AvailabilityDataProvider _availabilityDataProvider;
 
   /// Update the [AuthenticationModel] stored in state
   /// overwrite the [AuthenticationModel] in persistent storage with the model passed in
@@ -184,6 +184,12 @@ class UserDataProvider extends ChangeNotifier {
       _encryptAndSaveCredentials(username, password);
 
       if (await silentLogin()) {
+        if(_userProfileModel.classifications.student) {
+          _cardsDataProvider.showAllStudentCards();
+        }
+        else if(_userProfileModel.classifications.staff) {
+          _cardsDataProvider.showAllStaffCards();
+        }
         _isLoading = false;
         notifyListeners();
         return true;
@@ -459,6 +465,9 @@ class UserDataProvider extends ChangeNotifier {
 
   AuthenticationModel get authenticationModel => _authenticationModel;
 
+  CardsDataProvider get cardsDataProvider => _cardsDataProvider;
+
+
   ///GETTERS FOR STATES
   String get error => _error;
 
@@ -469,4 +478,7 @@ class UserDataProvider extends ChangeNotifier {
   DateTime get lastUpdated => _lastUpdated;
 
   bool get isInSilentLogin => _isInSilentLogin;
+
+  set cardsDataProvider(CardsDataProvider value) => _cardsDataProvider = value;
+
 }

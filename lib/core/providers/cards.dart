@@ -262,6 +262,25 @@ class CardsDataProvider extends ChangeNotifier {
         _cardStates.keys.where((card) => _cardStates[card]).toList());
   }
 
+  showAllStudentCards() {
+    int index = _cardOrder.indexOf('MyStudentChart') + 1;
+    _cardOrder.insertAll(index, _studentCards.toList());
+
+    // TODO: test w/o this
+    _cardOrder = List.from(_cardOrder.toSet().toList());
+
+
+    for (String card in _studentCards) {
+      _cardStates[card] = true;
+    }
+
+    print("SHOWING ALL STUDENT CARDS + ${_cardStates.toString()}");
+
+    updateCardOrder(_cardOrder);
+    updateCardStates(
+        _cardStates.keys.where((card) => _cardStates[card]).toList());
+  }
+
   deactivateStudentCards() {
     for (String card in _studentCards) {
       _cardOrder.remove(card);
@@ -278,6 +297,23 @@ class CardsDataProvider extends ChangeNotifier {
 
     // TODO: test w/o this
     _cardOrder = List.from(_cardOrder.toSet().toList());
+    // for (String card in _staffCards) {
+    //   _cardStates[card] = true;
+    // }
+    updateCardOrder(_cardOrder);
+    updateCardStates(
+        _cardStates.keys.where((card) => _cardStates[card]).toList());
+  }
+
+  showAllStaffCards() {
+    int index = _cardOrder.indexOf('MyStudentChart') + 1;
+    _cardOrder.insertAll(index, _staffCards.toList());
+
+    // TODO: test w/o this
+    _cardOrder = List.from(_cardOrder.toSet().toList());
+
+    print("SHOWING ALL STAFF CARDS + ${_cardStates.toString()}");
+
     for (String card in _staffCards) {
       _cardStates[card] = true;
     }
