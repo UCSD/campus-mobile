@@ -35,6 +35,7 @@ class UserDataProvider extends ChangeNotifier {
   bool _isLoading;
   DateTime _lastUpdated;
   String _error;
+  bool _isInSilentLogin;
 
   ///MODELS
   AuthenticationModel _authenticationModel;
@@ -204,6 +205,8 @@ class UserDataProvider extends ChangeNotifier {
   /// If this login mechanism fails then the user is logged out
   Future<bool> silentLogin() async {
     print('UserDataProvider:silentLogin');
+    _isInSilentLogin = true;
+    notifyListeners();
 
     String username = await getUsernameFromDevice();
     String encryptedPassword = await _getEncryptedPasswordFromDevice();
@@ -221,13 +224,15 @@ class UserDataProvider extends ChangeNotifier {
         await fetchUserProfile();
 
         CardsDataProvider _cardsDataProvider = CardsDataProvider();
-        _cardsDataProvider
-            .updateAvailableCards(_userProfileModel.ucsdaffiliation);
+        print("SILENT LOGIN CARD ORDER: ");
+        print(_cardsDataProvider.cardOrder.toString());        // _cardsDataProvider
+        //     .updateAvailableCards(_userProfileModel.ucsdaffiliation);
 
         _subscribeToPushNotificationTopics(userProfileModel.subscribedTopics);
         _pushNotificationDataProvider
             .registerDevice(_authenticationService.data.accessToken);
         await FirebaseAnalytics().logEvent(name: 'loggedIn');
+        _isInSilentLogin = false;
         notifyListeners();
         return true;
       }
@@ -399,6 +404,7 @@ class UserDataProvider extends ChangeNotifier {
       print('UserDataProvider:_createNewUser:error -------------------- 5:');
       print(e.toString());
     }
+    print('UserDataProvider:_createNewUser:SUCCESS');
     return profile;
   }
 
@@ -461,4 +467,6 @@ class UserDataProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
 
   DateTime get lastUpdated => _lastUpdated;
+
+  bool get isInSilentLogin => _isInSilentLogin;
 }

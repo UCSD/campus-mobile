@@ -36,6 +36,7 @@ class AuthenticationModel extends HiveObject {
   });
 
   factory AuthenticationModel.fromJson(Map<String, dynamic> json) {
+    print("access token: ${json["access_token"]}");
     return AuthenticationModel(
       accessToken: json["access_token"] == null ? null : json["access_token"],
       pid: json["pid"] == null ? null : json["pid"],

@@ -150,6 +150,7 @@ List<SingleChildWidget> dependentServices = [
       lazy: false,
       update: (_, userDataProvider, cardsDataProvider) {
         print("UpdateProvider: CardsDataProvider");
+        cardsDataProvider.userDataProvider = userDataProvider;
         cardsDataProvider
           ..loadSavedData().then((value) {
             cardsDataProvider.updateAvailableCards(

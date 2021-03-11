@@ -22,6 +22,7 @@ class CardsView extends StatelessWidget {
   }
 
   void _onReorder(int oldIndex, int newIndex) {
+    print("in reorder");
     if (newIndex > oldIndex) {
       newIndex -= 1;
     }
