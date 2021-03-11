@@ -129,6 +129,7 @@ class CardsDataProvider extends ChangeNotifier {
           }
         }
         updateCardOrder(_cardOrder);
+        print("IN UPDATE AVAILABLE CARDS, CARD ORDER MAP: ${_cardStates.toString()}");
         updateCardStates(
             _cardStates.keys.where((card) => _cardStates[card]).toList());
       }
@@ -147,8 +148,8 @@ class CardsDataProvider extends ChangeNotifier {
   }
 
   Future loadSavedData() async {
-    _cardOrderBox = await Hive.openBox(DataPersistence.cardOrder);
-    print("in loadSavedData, current hive:" + _cardOrderBox.get(DataPersistence.cardOrder).toString());
+    _cardStateBox = await Hive.openBox(DataPersistence.cardStates);
+    print("in loadSavedData, current hive states:" + _cardStateBox.get(DataPersistence.cardStates).toString());
     await _loadCardOrder();
     await _loadCardStates();
   }
@@ -159,10 +160,10 @@ class CardsDataProvider extends ChangeNotifier {
     if(_userDataProvider.isInSilentLogin) {
       return;
     }
-    print("IN UPDATE CARD ORDER, CURRENT ORDER IN HIVE: ${_cardOrderBox.get(DataPersistence.cardOrder)}");
+    // print("IN UPDATE CARD ORDER, CURRENT ORDER IN HIVE: ${_cardOrderBox.get(DataPersistence.cardOrder)}");
     try {
       await _cardOrderBox.put(DataPersistence.cardOrder, newOrder);
-      print("IN UPDATE CARD ORDER, ORDER CHANGED IN HIVE TO: ${_cardOrderBox.get(DataPersistence.cardOrder)}");
+      // print("IN UPDATE CARD ORDER, ORDER CHANGED IN HIVE TO: ${_cardOrderBox.get(DataPersistence.cardOrder)}");
       _userDataProvider.userProfileModel.cardOrder = newOrder;
       // await _userDataProvider
       //     .postUserProfile(_userDataProvider.userProfileModel);
@@ -170,8 +171,8 @@ class CardsDataProvider extends ChangeNotifier {
     } catch (e) {
       _cardOrderBox = await Hive.openBox(DataPersistence.cardOrder);
       await _cardOrderBox.put(DataPersistence.cardOrder, newOrder);
-      print(_cardOrderBox.get(DataPersistence.cardOrder));
-      print("in catch");
+      // print(_cardOrderBox.get(DataPersistence.cardOrder));
+      // print("in catch");
     }
     _cardOrder = newOrder;
     _lastUpdated = DateTime.now();
@@ -203,6 +204,7 @@ class CardsDataProvider extends ChangeNotifier {
     // if no data was found then create the data and save it
     // by default all cards will be on
     if (_cardStateBox.get(DataPersistence.cardStates) == null) {
+      print("RESETTING CARDS ORDER");
       await _cardStateBox.put(DataPersistence.cardStates,
           _cardStates.keys.where((card) => _cardStates[card]).toList());
     } else {
@@ -220,11 +222,14 @@ class CardsDataProvider extends ChangeNotifier {
     if(_userDataProvider.isInSilentLogin) {
       return;
     }
+    print("IN UPDATE CARD STATES, NEW STATES: ${activeCards.toString()}");
+    print("IN UPDATE CARD STATES, CURRENT STATES IN HIVE: ${_cardStateBox.get(DataPersistence.cardStates).toString()}");
     for (String activeCard in activeCards) {
       _cardStates[activeCard] = true;
     }
     try {
-      _cardStateBox.put(DataPersistence.cardStates, activeCards);
+      await _cardStateBox.put(DataPersistence.cardStates, activeCards);
+      print("IN UPDATE CARD STATES, UPDATED STATES IN HIVE: ${_cardStateBox.get(DataPersistence.cardStates).toString()}");
       _userDataProvider.userProfileModel.cardStates = _cardStates;
       // _userDataProvider
       //     .postUserProfile(_userDataProvider.userProfileModel);
@@ -248,9 +253,10 @@ class CardsDataProvider extends ChangeNotifier {
 
     // TODO: test w/o this
     _cardOrder = List.from(_cardOrder.toSet().toList());
-    for (String card in _studentCards) {
-      _cardStates[card] = true;
-    }
+
+    // for (String card in _studentCards) {
+    //   _cardStates[card] = true;
+    // }
     updateCardOrder(_cardOrder);
     updateCardStates(
         _cardStates.keys.where((card) => _cardStates[card]).toList());

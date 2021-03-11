@@ -35,7 +35,7 @@ class UserDataProvider extends ChangeNotifier {
   bool _isLoading;
   DateTime _lastUpdated;
   String _error;
-  bool _isInSilentLogin;
+  bool _isInSilentLogin = false;
 
   ///MODELS
   AuthenticationModel _authenticationModel;
