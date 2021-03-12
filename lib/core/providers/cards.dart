@@ -139,10 +139,10 @@ class CardsDataProvider extends ChangeNotifier {
     _isLoading = false;
 
     // update user profile
-    _userDataProvider.userProfileModel.cardOrder = _cardOrder;
-    _userDataProvider.userProfileModel.cardStates = _cardStates;
-    _userDataProvider
-        .updateUserProfileModel(_userDataProvider.userProfileModel);
+    // _userDataProvider.userProfileModel.cardOrder = _cardOrder;
+    // _userDataProvider.userProfileModel.cardStates = _cardStates;
+    // _userDataProvider
+    //     .updateUserProfileModel(_userDataProvider.userProfileModel);
 
     notifyListeners();
   }
@@ -164,7 +164,7 @@ class CardsDataProvider extends ChangeNotifier {
     try {
       await _cardOrderBox.put(DataPersistence.cardOrder, newOrder);
       // print("IN UPDATE CARD ORDER, ORDER CHANGED IN HIVE TO: ${_cardOrderBox.get(DataPersistence.cardOrder)}");
-      _userDataProvider.userProfileModel.cardOrder = newOrder;
+      // _userDataProvider.userProfileModel.cardOrder = newOrder;
       // await _userDataProvider
       //     .postUserProfile(_userDataProvider.userProfileModel);
       print("in try");
@@ -230,7 +230,7 @@ class CardsDataProvider extends ChangeNotifier {
     try {
       await _cardStateBox.put(DataPersistence.cardStates, activeCards);
       print("IN UPDATE CARD STATES, UPDATED STATES IN HIVE: ${_cardStateBox.get(DataPersistence.cardStates).toString()}");
-      _userDataProvider.userProfileModel.cardStates = _cardStates;
+      // _userDataProvider.userProfileModel.cardStates = _cardStates;
       // _userDataProvider
       //     .postUserProfile(_userDataProvider.userProfileModel);
     } catch (e) {

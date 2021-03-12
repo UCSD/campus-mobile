@@ -48,6 +48,7 @@ class CardsView extends StatelessWidget {
 
   List<Widget> createList(BuildContext context) {
     List<Widget> list = List<Widget>();
+    print("CARDS DATA PROVIDER: ${_cardsDataProvider}");
     for (String card in _cardsDataProvider.cardOrder) {
       if (card == 'QRScanner') continue;
       if (card == 'NativeScanner') continue;
