@@ -7,7 +7,6 @@ environment:
 
 dependencies:
   app_settings: 4.0.4
-  background_fetch: 0.6.0
   barcode_widget: 1.5.0
   beacon_broadcast: 0.2.1
   device_info: 0.4.2+8
