@@ -6,7 +6,6 @@ import 'dart:math' as math;
 import 'dart:math';
 import 'dart:typed_data';
 
-import 'package:background_fetch/background_fetch.dart';
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
@@ -143,8 +142,9 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
           // Set up broadcasting for UCSD Identification
           startBeaconBroadcast();
 
-          // Set up background scanning
-          backgroundFetchSetUp();
+          //TODO: Reinstantiate for background AW scanning
+          // // Set up background scanning
+          // backgroundFetchSetUp();
 
           // Set bluetooth singleton as already started
           firstInstance = false;
@@ -679,48 +679,48 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
 
     return String.fromCharCodes(codeUnits);
   }
-
-  // Start a background scan
-  void _onBackgroundFetch(String taskID) async {
-    inBackground = true;
-    String lastTimeStamp = await _storage.read(key: "lastBackgroundScan");
-
-    // Start a background scan
-    if (lastTimeStamp == null ||
-        DateTime.now().difference(DateTime.parse(lastTimeStamp)).inMinutes >
-            backgroundScanInterval) {
-      inBackground = true;
-      startScan();
-    }
-    BackgroundFetch.finish(taskID);
-  }
-
-  // Set background tasks
-  void backgroundFetchSetUp() {
-    // Configure BackgroundFetch.
-    BackgroundFetch.configure(
-            BackgroundFetchConfig(
-              minimumFetchInterval: backgroundScanInterval,
-              forceAlarmManager: false,
-              stopOnTerminate: false,
-              startOnBoot: true,
-              enableHeadless: true,
-              requiresBatteryNotLow: false,
-              requiresCharging: false,
-              requiresStorageNotLow: false,
-              requiresDeviceIdle: false,
-              requiredNetworkType: NetworkType.ANY,
-            ),
-            _onBackgroundFetch)
-        .then((int status) {
-      _storage.write(
-          key: _randomValue(),
-          value: '[BackgroundFetch] configure success: $status');
-    }).catchError((e) {
-      _storage.write(
-          key: _randomValue(), value: '[BackgroundFetch] configure ERROR: $e');
-    });
-  }
+  //TODO: Reinstantiate for background AW scanning
+  // // Start a background scan
+  // void _onBackgroundFetch(String taskID) async {
+  //   inBackground = true;
+  //   String lastTimeStamp = await _storage.read(key: "lastBackgroundScan");
+  //
+  //   // Start a background scan
+  //   if (lastTimeStamp == null ||
+  //       DateTime.now().difference(DateTime.parse(lastTimeStamp)).inMinutes >
+  //           backgroundScanInterval) {
+  //     inBackground = true;
+  //     startScan();
+  //   }
+  //   BackgroundFetch.finish(taskID);
+  // }
+  //
+  // // Set background tasks
+  // void backgroundFetchSetUp() {
+  //   // Configure BackgroundFetch.
+  //   BackgroundFetch.configure(
+  //           BackgroundFetchConfig(
+  //             minimumFetchInterval: backgroundScanInterval,
+  //             forceAlarmManager: false,
+  //             stopOnTerminate: false,
+  //             startOnBoot: true,
+  //             enableHeadless: true,
+  //             requiresBatteryNotLow: false,
+  //             requiresCharging: false,
+  //             requiresStorageNotLow: false,
+  //             requiresDeviceIdle: false,
+  //             requiredNetworkType: NetworkType.ANY,
+  //           ),
+  //           _onBackgroundFetch)
+  //       .then((int status) {
+  //     _storage.write(
+  //         key: _randomValue(),
+  //         value: '[BackgroundFetch] configure success: $status');
+  //   }).catchError((e) {
+  //     _storage.write(
+  //         key: _randomValue(), value: '[BackgroundFetch] configure ERROR: $e');
+  //   });
+  // }
 
   //Parse advertisement data
   String calculateHexFromArray(decimalArray) {
