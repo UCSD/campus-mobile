@@ -149,7 +149,8 @@ class CardsDataProvider extends ChangeNotifier {
 
   Future loadSavedData() async {
     _cardStateBox = await Hive.openBox(DataPersistence.cardStates);
-    print("in loadSavedData, current hive states:" + _cardStateBox.get(DataPersistence.cardStates).toString());
+    _cardOrderBox = await Hive.openBox(DataPersistence.cardOrder);
+    print("in loadSavedData, current hive order:" + _cardOrderBox.get(DataPersistence.cardOrder).toString());
     await _loadCardOrder();
     await _loadCardStates();
   }
@@ -160,10 +161,10 @@ class CardsDataProvider extends ChangeNotifier {
     if(_userDataProvider.isInSilentLogin) {
       return;
     }
-    // print("IN UPDATE CARD ORDER, CURRENT ORDER IN HIVE: ${_cardOrderBox.get(DataPersistence.cardOrder)}");
+    print("IN UPDATE CARD ORDER, CURRENT ORDER IN HIVE: ${_cardOrderBox.get(DataPersistence.cardOrder)}");
     try {
       await _cardOrderBox.put(DataPersistence.cardOrder, newOrder);
-      // print("IN UPDATE CARD ORDER, ORDER CHANGED IN HIVE TO: ${_cardOrderBox.get(DataPersistence.cardOrder)}");
+      print("IN UPDATE CARD ORDER, ORDER CHANGED IN HIVE TO: ${_cardOrderBox.get(DataPersistence.cardOrder)}");
       // _userDataProvider.userProfileModel.cardOrder = newOrder;
       // await _userDataProvider
       //     .postUserProfile(_userDataProvider.userProfileModel);
@@ -197,9 +198,9 @@ class CardsDataProvider extends ChangeNotifier {
   /// Load [_cardStates] from persistent storage
   /// Will create persistent storage if no data is found
   Future _loadCardStates() async {
-    if(_userDataProvider.isInSilentLogin) {
-      return;
-    }
+    // if(_userDataProvider.isInSilentLogin) {
+    //   return;
+    // }
     _cardStateBox = await Hive.openBox(DataPersistence.cardStates);
     // if no data was found then create the data and save it
     // by default all cards will be on
