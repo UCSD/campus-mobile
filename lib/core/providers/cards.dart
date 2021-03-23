@@ -129,7 +129,6 @@ class CardsDataProvider extends ChangeNotifier {
           }
         }
         updateCardOrder(_cardOrder);
-        print("IN UPDATE AVAILABLE CARDS, CARD ORDER MAP: ${_cardStates.toString()}");
         updateCardStates(
             _cardStates.keys.where((card) => _cardStates[card]).toList());
       }
@@ -137,20 +136,12 @@ class CardsDataProvider extends ChangeNotifier {
       _error = _cardsService.error;
     }
     _isLoading = false;
-
-    // update user profile
-    // _userDataProvider.userProfileModel.cardOrder = _cardOrder;
-    // _userDataProvider.userProfileModel.cardStates = _cardStates;
-    // _userDataProvider
-    //     .updateUserProfileModel(_userDataProvider.userProfileModel);
-
     notifyListeners();
   }
 
   Future loadSavedData() async {
     _cardStateBox = await Hive.openBox(DataPersistence.cardStates);
     _cardOrderBox = await Hive.openBox(DataPersistence.cardOrder);
-    print("in loadSavedData, current hive order:" + _cardOrderBox.get(DataPersistence.cardOrder).toString());
     await _loadCardOrder();
     await _loadCardStates();
   }
@@ -161,19 +152,11 @@ class CardsDataProvider extends ChangeNotifier {
     if(_userDataProvider.isInSilentLogin) {
       return;
     }
-    print("IN UPDATE CARD ORDER, CURRENT ORDER IN HIVE: ${_cardOrderBox.get(DataPersistence.cardOrder)}");
     try {
       await _cardOrderBox.put(DataPersistence.cardOrder, newOrder);
-      print("IN UPDATE CARD ORDER, ORDER CHANGED IN HIVE TO: ${_cardOrderBox.get(DataPersistence.cardOrder)}");
-      // _userDataProvider.userProfileModel.cardOrder = newOrder;
-      // await _userDataProvider
-      //     .postUserProfile(_userDataProvider.userProfileModel);
-      print("in try");
     } catch (e) {
       _cardOrderBox = await Hive.openBox(DataPersistence.cardOrder);
       await _cardOrderBox.put(DataPersistence.cardOrder, newOrder);
-      // print(_cardOrderBox.get(DataPersistence.cardOrder));
-      // print("in catch");
     }
     _cardOrder = newOrder;
     _lastUpdated = DateTime.now();
@@ -188,7 +171,6 @@ class CardsDataProvider extends ChangeNotifier {
     }
     _cardOrderBox = await Hive.openBox(DataPersistence.cardOrder);
     if (_cardOrderBox.get(DataPersistence.cardOrder) == null) {
-      print("RESETTING CARD ORDER");
       await _cardOrderBox.put(DataPersistence.cardOrder, _cardOrder);
     }
     _cardOrder = _cardOrderBox.get(DataPersistence.cardOrder);
@@ -198,14 +180,10 @@ class CardsDataProvider extends ChangeNotifier {
   /// Load [_cardStates] from persistent storage
   /// Will create persistent storage if no data is found
   Future _loadCardStates() async {
-    // if(_userDataProvider.isInSilentLogin) {
-    //   return;
-    // }
     _cardStateBox = await Hive.openBox(DataPersistence.cardStates);
     // if no data was found then create the data and save it
     // by default all cards will be on
     if (_cardStateBox.get(DataPersistence.cardStates) == null) {
-      print("RESETTING CARDS ORDER");
       await _cardStateBox.put(DataPersistence.cardStates,
           _cardStates.keys.where((card) => _cardStates[card]).toList());
     } else {
@@ -223,17 +201,11 @@ class CardsDataProvider extends ChangeNotifier {
     if(_userDataProvider.isInSilentLogin) {
       return;
     }
-    print("IN UPDATE CARD STATES, NEW STATES: ${activeCards.toString()}");
-    print("IN UPDATE CARD STATES, CURRENT STATES IN HIVE: ${_cardStateBox.get(DataPersistence.cardStates).toString()}");
     for (String activeCard in activeCards) {
       _cardStates[activeCard] = true;
     }
     try {
       await _cardStateBox.put(DataPersistence.cardStates, activeCards);
-      print("IN UPDATE CARD STATES, UPDATED STATES IN HIVE: ${_cardStateBox.get(DataPersistence.cardStates).toString()}");
-      // _userDataProvider.userProfileModel.cardStates = _cardStates;
-      // _userDataProvider
-      //     .postUserProfile(_userDataProvider.userProfileModel);
     } catch (e) {
       _cardStateBox = await Hive.openBox(DataPersistence.cardStates);
       _cardStateBox.put(DataPersistence.cardStates, activeCards);
@@ -255,9 +227,6 @@ class CardsDataProvider extends ChangeNotifier {
     // TODO: test w/o this
     _cardOrder = List.from(_cardOrder.toSet().toList());
 
-    // for (String card in _studentCards) {
-    //   _cardStates[card] = true;
-    // }
     updateCardOrder(_cardOrder);
     updateCardStates(
         _cardStates.keys.where((card) => _cardStates[card]).toList());
@@ -274,8 +243,6 @@ class CardsDataProvider extends ChangeNotifier {
     for (String card in _studentCards) {
       _cardStates[card] = true;
     }
-
-    print("SHOWING ALL STUDENT CARDS + ${_cardStates.toString()}");
 
     updateCardOrder(_cardOrder);
     updateCardStates(
@@ -298,9 +265,6 @@ class CardsDataProvider extends ChangeNotifier {
 
     // TODO: test w/o this
     _cardOrder = List.from(_cardOrder.toSet().toList());
-    // for (String card in _staffCards) {
-    //   _cardStates[card] = true;
-    // }
     updateCardOrder(_cardOrder);
     updateCardStates(
         _cardStates.keys.where((card) => _cardStates[card]).toList());
@@ -312,8 +276,6 @@ class CardsDataProvider extends ChangeNotifier {
 
     // TODO: test w/o this
     _cardOrder = List.from(_cardOrder.toSet().toList());
-
-    print("SHOWING ALL STAFF CARDS + ${_cardStates.toString()}");
 
     for (String card in _staffCards) {
       _cardStates[card] = true;

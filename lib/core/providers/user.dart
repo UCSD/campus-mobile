@@ -230,7 +230,6 @@ class UserDataProvider extends ChangeNotifier {
         await fetchUserProfile();
 
         CardsDataProvider _cardsDataProvider = CardsDataProvider();
-        print("SILENT LOGIN CARD ORDER: ");
         print(_cardsDataProvider.cardOrder.toString());        // _cardsDataProvider
         //     .updateAvailableCards(_userProfileModel.ucsdaffiliation);
 
