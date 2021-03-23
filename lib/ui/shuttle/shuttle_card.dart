@@ -50,49 +50,65 @@ class _ShuttleCardState extends State<ShuttleCard> {
     // print("Arrivals - ${arrivalsToRender.length}");
 
     List<Widget> renderList = List<Widget>();
+    try {
+      if (_shuttleCardDataProvider.closestStop != null) {
+        print("closest stop:");
+        print(_shuttleCardDataProvider.closestStop);
+        renderList.add(ShuttleDisplay(
+            stop: _shuttleCardDataProvider.closestStop,
+            arrivingShuttles:
+            arrivalsToRender[_shuttleCardDataProvider.closestStop.id]));
+      }
 
-    if (_shuttleCardDataProvider.closestStop != null) {
-      renderList.add(ShuttleDisplay(
-          stop: _shuttleCardDataProvider.closestStop,
-          arrivingShuttles:
-              arrivalsToRender[_shuttleCardDataProvider.closestStop.id]));
-    }
+      for (int i = 0; i < _shuttleCardDataProvider.stopsToRender.length; i++) {
+        print("stops to render:");
+        print(_shuttleCardDataProvider.stopsToRender[i]);
+        renderList.add(ShuttleDisplay(
+            stop: _shuttleCardDataProvider.stopsToRender[i],
+            arrivingShuttles: arrivalsToRender[_shuttleCardDataProvider
+                .stopsToRender[i].id]));
+      }
 
-    for (int i = 0; i < stopsToRender.length; i++) {
-      renderList.add(ShuttleDisplay(
-          stop: stopsToRender[i],
-          arrivingShuttles: arrivalsToRender[stopsToRender[i].id]));
-    }
+      // Initialize first shuttle display with arrival information
+      if (renderList == null || renderList.isEmpty) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 42.0),
+          child: Center(child: Text('No shuttles found. Please add a stop.')),
+        );
+      }
 
-    // Initialize first shuttle display with arrival information
-    if (renderList == null || renderList.isEmpty) {
-      return Padding(
-        padding: const EdgeInsets.only(bottom: 42.0),
-        child: Center(child: Text('No shuttles found. Please add a stop.')),
+      return Column(
+        children: <Widget>[
+          Flexible(
+            child: PageView(
+              controller: _controller,
+              children: renderList,
+              onPageChanged: (index) async {
+                // print(index);
+              },
+            ),
+          ),
+          DotsIndicator(
+            controller: _controller,
+            itemCount: renderList.length,
+            onPageSelected: (int index) {
+              _controller.animateToPage(index,
+                  duration: Duration(seconds: 1), curve: Curves.ease);
+            },
+          )
+        ],
       );
     }
-
-    return Column(
-      children: <Widget>[
-        Flexible(
-          child: PageView(
-            controller: _controller,
-            children: renderList,
-            onPageChanged: (index) async {
-              // print(index);
-            },
+    catch (e) {
+      return Container(
+        width: double.infinity,
+        child: Center(
+          child: Container(
+            child: Text('An error occurred, please try again.' + e.toString()),
           ),
         ),
-        DotsIndicator(
-          controller: _controller,
-          itemCount: renderList.length,
-          onPageSelected: (int index) {
-            _controller.animateToPage(index,
-                duration: Duration(seconds: 1), curve: Curves.ease);
-          },
-        )
-      ],
-    );
+      );
+    }
   }
 
   List<Widget> buildActionButtons() {

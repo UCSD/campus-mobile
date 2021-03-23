@@ -172,7 +172,10 @@ class ShuttleDataProvider extends ChangeNotifier {
   ShuttleStopModel get closestStop => _closestStop;
 
   List<ShuttleStopModel> get stopsToRender {
+    print("fetched stops:");
+    print(fetchedStops);
     if (fetchedStops != null) {
+      print("IN LOOP");
       if (userDataProvider.userProfileModel != null)
         return makeOrderedList(userDataProvider.userProfileModel.selectedStops);
     }
