@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'dart:async';
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/topics.dart';
 import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
@@ -12,6 +12,22 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+
+// class ReceivedNotification {
+//   ReceivedNotification({
+//     @required this.id,
+//     @required this.title,
+//     @required this.body,
+//     @required this.payload,
+//   });
+//
+//   final int id;
+//   final String title;
+//   final String body;
+//   final String payload;
+// }
+//
+// String selectedNotificationPayload;
 
 class PushNotificationDataProvider extends ChangeNotifier {
   PushNotificationDataProvider() {
@@ -68,33 +84,34 @@ class PushNotificationDataProvider extends ChangeNotifier {
   Future<void> initPlatformState(BuildContext context) async {
     try {
       const AndroidInitializationSettings initializationSettingsAndroid =
-          AndroidInitializationSettings('mipmap/ic_launcher_round');
+          AndroidInitializationSettings("@drawable/ic_notif_round");
       final IOSInitializationSettings initializationSettingsIOS =
           IOSInitializationSettings();
       final InitializationSettings initializationSettings =
           InitializationSettings(
-        android: initializationSettingsAndroid,
-        iOS: initializationSettingsIOS,
-      );
-      await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+              android: initializationSettingsAndroid,
+              iOS: initializationSettingsIOS);
+      await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+          onSelectNotification: selectNotification);
+      print(context);
 
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
         /// foreground messaging via flutter_local_notifications
 
-        showNotification(message);
+        showNotification(message, context);
         print('FCM: onMessage: foreground message:');
         print(message.data);
         print("Body: " + message.notification.body);
         print(message.notification.title);
         print(message);
 
-        /// Fetch in-app messages
-        Provider.of<MessagesDataProvider>(context, listen: false)
-            .fetchMessages(true);
-
-        /// Set tab bar index to the Notifications tab
-        Provider.of<BottomNavigationBarProvider>(context, listen: false)
-            .currentIndex = NavigatorConstants.NotificationsTab;
+        // /// Fetch in-app messages
+        // Provider.of<MessagesDataProvider>(context, listen: false)
+        //     .fetchMessages(true);
+        //
+        // /// Set tab bar index to the Notifications tab
+        // Provider.of<BottomNavigationBarProvider>(context, listen: false)
+        //     .currentIndex = NavigatorConstants.NotificationsTab;
       });
 
       FirebaseMessaging.onMessageOpenedApp.listen(
@@ -105,10 +122,16 @@ class PushNotificationDataProvider extends ChangeNotifier {
           /// Fetch in-app messages
           Provider.of<MessagesDataProvider>(context, listen: false)
               .fetchMessages(true);
+          print("context on message opened app ");
+          print(context);
 
           /// Set tab bar index to the Notifications tab
           Provider.of<BottomNavigationBarProvider>(context, listen: false)
               .currentIndex = NavigatorConstants.NotificationsTab;
+
+          print("context of current index after: " +
+              Provider.of<BottomNavigationBarProvider>(context, listen: false)
+                  .currentIndex);
 
           /// Navigate to Notifications tab
           Navigator.of(context).pushNamedAndRemoveUntil(
@@ -120,10 +143,35 @@ class PushNotificationDataProvider extends ChangeNotifier {
     }
   }
 
-  showNotification(RemoteMessage message) async {
+  // Future onSelectNotification(String payload, BuildContext context) async {
+  //   showDialog(
+  //       context: context,
+  //       builder: (_) => new AlertDialog(
+  //           title: const Text("This is my payload"),
+  //           content: new Text("Payload: $payload")));
+  // }
+
+  Future selectNotification(context) async {
+    print("SelectNotification fired");
+    print("context in the  selectNotification function: " + context);
+
+    /// Set tab bar index to the Notifications tab
+    Provider.of<BottomNavigationBarProvider>(context, listen: false)
+        .currentIndex = NavigatorConstants.NotificationsTab;
+
+    /// Navigate to Notifications tab
+    Navigator.of(context).pushNamedAndRemoveUntil(
+        RoutePaths.BottomNavigationBar, (Route<dynamic> route) => false);
+  }
+
+  showNotification(RemoteMessage message, context) async {
+    print("showNotification fired");
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
             'your channel id', 'your channel name', 'your channel description',
+            icon: '@drawable/ic_notif_round',
+            largeIcon:
+                const DrawableResourceAndroidBitmap('@drawable/app_icon'),
             importance: Importance.max,
             priority: Priority.high,
             showWhen: false);
@@ -134,7 +182,8 @@ class PushNotificationDataProvider extends ChangeNotifier {
     //This is where you put info from firebase
     await flutterLocalNotificationsPlugin.show(0, message.notification.title,
         message.notification.body, platformChannelSpecifics,
-        payload: 'item x');
+        payload: 'This is the payload');
+    print(context);
   }
 
   /// Fetches topics from endpoint
