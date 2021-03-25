@@ -1,16 +1,14 @@
-
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/student_id.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/providers/weather.dart';
-import 'package:campus_mobile_experimental/core/services/speed_test_service.dart';
+import 'package:campus_mobile_experimental/core/services/speed_test.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 import 'package:provider/provider.dart';
-
 
 import '../../app_constants.dart';
 import '../../app_styles.dart';
@@ -65,13 +63,11 @@ class _WiFiCardState extends State<WiFiCard> {
   }
 
   Widget buildCardContent(BuildContext context) {
-
     _speedTestService.addListener(() {
       try {
-        if(!_speedTestService.isUCSDNetwork){
+        if (!_speedTestService.isUCSDNetwork) {
           cardState = TestStatus.unavailable;
-        }
-        else if (_speedTestService.timeElapsedDownload +
+        } else if (_speedTestService.timeElapsedDownload +
                 _speedTestService.timeElapsedUpload >
             2000) {
           _speedTestService.cancelDownload();
@@ -88,7 +84,6 @@ class _WiFiCardState extends State<WiFiCard> {
         }
       } catch (e) {}
     });
-
 
     switch (cardState) {
       case TestStatus.initial:
@@ -116,7 +111,7 @@ class _WiFiCardState extends State<WiFiCard> {
         );
         break;
     }
-     return initialState();
+    return initialState();
   }
 
   Column speedTest() {
@@ -158,7 +153,6 @@ class _WiFiCardState extends State<WiFiCard> {
   }
 
   Column initialState() {
-
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -244,11 +238,7 @@ class _WiFiCardState extends State<WiFiCard> {
               )),
           WidgetSpan(
             child: goodSpeed
-                ? Icon(
-                    Icons.thumb_up,
-                    size: 36,
-                    color: Colors.green,
-                  )
+                ? Icon(Icons.thumb_up, size: 36, color: Colors.green)
                 : Icon(Icons.thumb_down, size: 36, color: Colors.red),
           ),
           TextSpan(
@@ -305,7 +295,8 @@ class _WiFiCardState extends State<WiFiCard> {
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text("Looks like you aren’t on a UCSD network",
+          child: Text(
+            "Looks like you aren’t on a UCSD network",
             style: TextStyle(
               fontSize: 25,
             ),
@@ -314,17 +305,15 @@ class _WiFiCardState extends State<WiFiCard> {
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text("Please check your connection and try again.",
-            style: TextStyle(
-              fontSize: 13
-            ),
+          child: Text(
+            "Please check your connection and try again.",
+            style: TextStyle(fontSize: 13),
             textAlign: TextAlign.center,
           ),
         )
       ],
     );
   }
-
 }
 
 //Image Scaling

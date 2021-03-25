@@ -24,7 +24,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
-import 'package:campus_mobile_experimental/core/services/speed_test_service.dart';
+import 'package:campus_mobile_experimental/core/services/speed_test.dart';
 
 List<SingleChildWidget> providers = [
   ...independentServices,
