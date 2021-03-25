@@ -81,8 +81,8 @@ class SpeedTestModel {
   }
 }
 
-SpeedTestModel speedTestModelFromJson(
-    String uploadUrl, String downloadUrl, WifiInfo wifiInfo, bool isUCSDWifi) {
+SpeedTestModel speedTestModelFromJson( WifiInfo wifiInfo,
+     String downloadUrl,String uploadUrl, bool isUCSDWifi) {
   return SpeedTestModel.fromJson(
       wifiInfo, json.decode(downloadUrl), json.decode(uploadUrl), isUCSDWifi);
 }

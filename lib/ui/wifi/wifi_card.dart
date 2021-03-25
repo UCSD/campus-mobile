@@ -1,4 +1,5 @@
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
+import 'package:campus_mobile_experimental/core/providers/speed_test.dart';
 import 'package:campus_mobile_experimental/core/providers/student_id.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/providers/weather.dart';
@@ -23,7 +24,7 @@ class _WiFiCardState extends State<WiFiCard> {
   TestStatus cardState;
   int lastSpeed;
   bool goodSpeed;
-  SpeedTestService _speedTestService;
+  SpeedTestProvider _speedTestProvider;
   UserDataProvider _userDataProvider;
 
   @override
@@ -35,19 +36,17 @@ class _WiFiCardState extends State<WiFiCard> {
 
   @override
   Widget build(BuildContext context) {
-    _speedTestService = Provider.of<SpeedTestService>(context);
-    _userDataProvider = Provider.of<UserDataProvider>(context);
-    _speedTestService.connectedToUCSDwifi();
+    _speedTestProvider = Provider.of<SpeedTestProvider>(context);
+    _speedTestProvider.connectedToUCSDWifi();
 
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
-      reload: () => Provider.of<WeatherDataProvider>(context, listen: false)
-          .fetchWeather(),
-      isLoading: Provider.of<WeatherDataProvider>(context).isLoading,
+      reload: () => Provider.of<SpeedTestProvider>(context, listen: false).resetSpeedTest(),
+      isLoading: Provider.of<SpeedTestProvider>(context).isLoading,
       titleText: CardTitleConstants.titleMap[cardId],
-      errorText: Provider.of<StudentIdDataProvider>(context).error,
+      errorText: Provider.of<SpeedTestProvider>(context).error,
       child: () => buildCardContent(context),
     );
   }
@@ -63,20 +62,20 @@ class _WiFiCardState extends State<WiFiCard> {
   }
 
   Widget buildCardContent(BuildContext context) {
-    _speedTestService.addListener(() {
+    _speedTestProvider.addListener(() {
       try {
-        if (!_speedTestService.isUCSDNetwork) {
+        if (!_speedTestProvider.isUCSDWiFi) {
           cardState = TestStatus.unavailable;
-        } else if (_speedTestService.timeElapsedDownload +
-                _speedTestService.timeElapsedUpload >
+        } else if (_speedTestProvider.timeElapsedDownload +
+                _speedTestProvider.timeElapsedUpload >
             2000) {
-          _speedTestService.cancelDownload();
-          _speedTestService.cancelUpload();
+          _speedTestProvider.cancelDownload();
+          _speedTestProvider.cancelUpload();
           setState(() {
             goodSpeed = false;
             cardState = TestStatus.finished;
           });
-        } else if (_speedTestService.speedTestDone) {
+        } else if (_speedTestProvider.speedTestDone) {
           setState(() {
             goodSpeed = true;
             cardState = TestStatus.finished;
@@ -139,12 +138,12 @@ class _WiFiCardState extends State<WiFiCard> {
               borderColor: Colors.black,
               borderWidth: 0.5,
               center: Text(
-                "${((_speedTestService.percentDownloaded * 100) / 2 + (_speedTestService.percentUploaded * 100) / 2).toStringAsPrecision(6).substring(0, 5)} %",
+                "${((_speedTestProvider.percentDownloaded * 100) / 2 + (_speedTestProvider.percentUploaded * 100) / 2).toStringAsPrecision(6).substring(0, 5)} %",
                 style: TextStyle(color: Colors.grey),
               ),
               direction: Axis.horizontal,
-              value: (_speedTestService.percentDownloaded +
-                      _speedTestService.percentUploaded) /
+              value: (_speedTestProvider.percentDownloaded +
+                      _speedTestProvider.percentUploaded) /
                   2,
               valueColor: AlwaysStoppedAnimation(lightPrimaryColor)),
         ),
@@ -188,7 +187,7 @@ class _WiFiCardState extends State<WiFiCard> {
               onPressed: () {
                 setState(() {
                   cardState = TestStatus.running;
-                  _speedTestService.speedTest();
+                  _speedTestProvider.speedTest();
                 });
               },
               minWidth: 350,
@@ -225,7 +224,7 @@ class _WiFiCardState extends State<WiFiCard> {
   }
 
   Column finishedState() {
-    _speedTestService.sendNetworkDiagnostics(lastSpeed, _userDataProvider);
+    _speedTestProvider.sendNetworkDiagnostics(lastSpeed);
     return Column(
       children: [
         RichText(
@@ -243,7 +242,7 @@ class _WiFiCardState extends State<WiFiCard> {
           ),
           TextSpan(
             text:
-                '\n Your download speed was: ${lastSpeed != null ? lastSpeed.toStringAsPrecision(3) : _speedTestService.speed.toStringAsPrecision(3)} Mbps \n Your upload speed was: ${_speedTestService.uploadSpeed.toStringAsPrecision(3)} Mbps\n',
+                '\n Your download speed was: ${lastSpeed != null ? lastSpeed.toStringAsPrecision(3) : _speedTestProvider.speed.toStringAsPrecision(3)} Mbps \n Your upload speed was: ${_speedTestProvider.uploadSpeed.toStringAsPrecision(3)} Mbps\n',
             style: TextStyle(fontSize: 15, color: Colors.grey),
           )
         ])),
@@ -254,7 +253,7 @@ class _WiFiCardState extends State<WiFiCard> {
               onPressed: () {
                 setState(() {
                   cardState = TestStatus.initial;
-                  _speedTestService.resetSpeedTest();
+                  _speedTestProvider.resetSpeedTest();
                 });
               },
               minWidth: 350,

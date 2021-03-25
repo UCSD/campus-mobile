@@ -14,6 +14,7 @@ import 'package:campus_mobile_experimental/core/providers/notifications.dart';
 import 'package:campus_mobile_experimental/core/providers/notifications_freefood.dart';
 import 'package:campus_mobile_experimental/core/providers/parking.dart';
 import 'package:campus_mobile_experimental/core/providers/shuttle.dart';
+import 'package:campus_mobile_experimental/core/providers/speed_test.dart';
 import 'package:campus_mobile_experimental/core/providers/student_id.dart';
 import 'package:campus_mobile_experimental/core/providers/survey.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
@@ -44,9 +45,6 @@ List<SingleChildWidget> independentServices = [
       return BottomNavigationBarProvider();
     },
     lazy: false,
-  ),
-  ChangeNotifierProvider<SpeedTestService>(
-    create: (_) => SpeedTestService(),
   ),
   ChangeNotifierProvider<PushNotificationDataProvider>(
     create: (_) {
@@ -111,6 +109,20 @@ List<SingleChildWidget> dependentServices = [
     diningDataProvider.coordinates = coordinates;
     diningDataProvider.populateDistances();
     return diningDataProvider;
+  }),
+  ChangeNotifierProxyProvider<Coordinates,  SpeedTestProvider>(create: (_){
+    SpeedTestProvider speedTestProvider = SpeedTestProvider();
+    return speedTestProvider;
+  }, update: (_, coordinates, speedTestProvider){
+    speedTestProvider.coordinates = coordinates;
+    return speedTestProvider;
+  }),
+  ChangeNotifierProxyProvider<UserDataProvider,  SpeedTestProvider>(create: (_){
+    SpeedTestProvider speedTestProvider = SpeedTestProvider();
+    return speedTestProvider;
+  }, update: (_, userDataProvider, speedTestProvider){
+    speedTestProvider.userDataProvider = userDataProvider;
+    return speedTestProvider;
   }),
   ChangeNotifierProxyProvider<Coordinates, MapsDataProvider>(create: (_) {
     var mapsDataProvider = MapsDataProvider();

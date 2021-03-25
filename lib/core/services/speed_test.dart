@@ -1,3 +1,4 @@
+import 'package:campus_mobile_experimental/core/models/speed_test.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:wifi_connection/WifiInfo.dart';
 import 'package:wifi_connection/WifiConnection.dart';
@@ -8,6 +9,7 @@ class SpeedTestService {
   SpeedTestService();
   Connectivity _connectivity = Connectivity();
   final NetworkHelper _networkHelper = NetworkHelper();
+  SpeedTestModel _speedTestModel;
   bool _isLoading = false;
   String _error;
 
@@ -15,23 +17,24 @@ class SpeedTestService {
     _error = null;
     _isLoading = true;
     try {
+      // Get download & upload urls
       String _downloadResponse = await _networkHelper.fetchData(
           "https://api-qa.ucsd.edu:8243/wifi_test/v1.0.0/generateDownloadUrl");
       String _uploadResponse = await _networkHelper.fetchData(
           "https://api-qa.ucsd.edu:8243/wifi_test/v1.0.0/generateUploadUrl?name=temp.html");
 
       /// parse data
-
-      WifiInfo wifiData;
-      fetchNetworkDiagnostics().then(( WifiInfo data) {
-        if (data == null) {
-          // State = not connected to wifi
-        }
-        wifiData = data;
+      await fetchNetworkDiagnostics().then((WifiInfo data) {
+        _speedTestModel = speedTestModelFromJson(
+            data, _downloadResponse, _uploadResponse, data != null);
       });
       _isLoading = false;
       return true;
-    } catch (exception) {}
+    } catch (exception) {
+      _error = exception.toString();
+      _isLoading = false;
+      return false;
+    }
   }
 
   Future<WifiInfo> fetchNetworkDiagnostics() async {
@@ -50,4 +53,8 @@ class SpeedTestService {
 
     return wiFiInfo;
   }
+
+  bool get isLoading => _isLoading;
+  String get error => _error;
+  SpeedTestModel get speedTestModel => _speedTestModel;
 }
