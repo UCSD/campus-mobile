@@ -40,7 +40,7 @@ class _WiFiCardState extends State<WiFiCard> {
   }
   @override
   Widget build(BuildContext context) {
-    _speedTestProvider.connectedToUCSDWifi();
+    //_speedTestProvider.connectedToUCSDWifi();
 
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],

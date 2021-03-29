@@ -28,6 +28,7 @@ class SpeedTestService {
         _speedTestModel = speedTestModelFromJson(
             data, _downloadResponse, _uploadResponse, data != null);
       });
+      print("Download url is: ${speedTestModel.downloadUrl}");
       _isLoading = false;
       return true;
     } catch (exception) {

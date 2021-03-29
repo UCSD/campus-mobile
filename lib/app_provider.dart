@@ -109,14 +109,7 @@ List<SingleChildWidget> dependentServices = [
     diningDataProvider.populateDistances();
     return diningDataProvider;
   }),
-  ChangeNotifierProxyProvider2<Coordinates, UserDataProvider, SpeedTestProvider>(create: (_){
-    SpeedTestProvider speedTestProvider = SpeedTestProvider();
-    return speedTestProvider;
-  }, update: (_, coordinates, userDataProvider, speedTestProvider){
-    speedTestProvider.coordinates = coordinates;
-    speedTestProvider.userDataProvider = userDataProvider;
-    return speedTestProvider;
-  }),
+
   ChangeNotifierProxyProvider<Coordinates, MapsDataProvider>(create: (_) {
     var mapsDataProvider = MapsDataProvider();
     return mapsDataProvider;
@@ -246,6 +239,14 @@ List<SingleChildWidget> dependentServices = [
     print("UpdateProvider: ShuttleDataProvider");
     shuttleDataProvider.userDataProvider = userDataProvider;
     return shuttleDataProvider;
+  }),
+  ChangeNotifierProxyProvider2<Coordinates, UserDataProvider, SpeedTestProvider>(create: (_){
+    SpeedTestProvider speedTestProvider = SpeedTestProvider();
+    return speedTestProvider;
+  }, update: (_, coordinates, userDataProvider, speedTestProvider){
+    speedTestProvider.coordinates = coordinates;
+    speedTestProvider.userDataProvider = userDataProvider;
+    return speedTestProvider;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, ParkingDataProvider>(
       create: (_) {

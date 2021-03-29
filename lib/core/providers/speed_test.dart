@@ -43,6 +43,7 @@ class SpeedTestProvider extends ChangeNotifier {
   SpeedTestProvider() {
     _isLoading = false;
     _speedTestService = SpeedTestService();
+    _speedTestService.fetchSignedUrls();
     init();
   }
 
