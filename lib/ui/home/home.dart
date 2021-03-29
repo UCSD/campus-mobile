@@ -10,10 +10,12 @@ import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:campus_mobile_experimental/core/providers/notices.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/providers/wayfinding.dart';
+import 'package:campus_mobile_experimental/main.dart';
 import 'package:campus_mobile_experimental/ui/availability/availability_card.dart';
 import 'package:campus_mobile_experimental/ui/classes/classes_card.dart';
 import 'package:campus_mobile_experimental/ui/common/webview_container.dart';
 import 'package:campus_mobile_experimental/ui/dining/dining_card.dart';
+import 'package:campus_mobile_experimental/ui/employee_id/employee_id_card.dart';
 import 'package:campus_mobile_experimental/ui/events/events_card.dart';
 import 'package:campus_mobile_experimental/ui/finals/finals_card.dart';
 import 'package:campus_mobile_experimental/ui/my_chart/my_chart_card.dart';
@@ -32,8 +34,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uni_links/uni_links.dart';
-
-import '../../main.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -158,6 +158,9 @@ class _HomeState extends State<Home> {
             break;
           case 'student_id':
             orderedCards.add(StudentIdCard());
+            break;
+          case 'employee_id':
+            orderedCards.add(EmployeeIdCard());
             break;
           case 'parking':
             orderedCards.add(ParkingCard());

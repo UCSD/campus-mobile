@@ -1,5 +1,6 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
+import 'package:campus_mobile_experimental/core/providers/scanner_message.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
 import 'package:flutter/material.dart';
@@ -15,13 +16,14 @@ class ScannerCard extends StatelessWidget {
     return CardContainer(
       active: true,
       hide: () => null,
-      reload: () => null,
-      isLoading: false,
+      reload: () => Provider.of<ScannerMessageDataProvider>(context, listen: false)
+          .fetchData(),
+      isLoading: Provider.of<ScannerMessageDataProvider>(context).isLoading,
       titleText: CardTitleConstants.titleMap[cardId],
       errorText: null,
       child: () => buildCardContent(context),
       actionButtons: [buildActionButton(context)],
-      hideMenu: true,
+      hideMenu: false,
     );
   }
 
@@ -44,12 +46,16 @@ class ScannerCard extends StatelessWidget {
               right: 10,
             ),
           ),
-          Flexible(
-            child: Text(
-              getCardContentText(context),
-              textAlign: TextAlign.left,
-            ),
-          )
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                getCardContentText(context),
+                textAlign: TextAlign.left,
+              ),
+              getMessageWidget(context),
+            ],
+          ),
         ],
       ),
     );
@@ -109,5 +115,33 @@ class ScannerCard extends StatelessWidget {
     var url = _url + "?" + tokenQueryString + "&" + affiliationQueryString;
 
     openLink(url);
+  }
+
+  Widget getMessageWidget(BuildContext context) {
+    if(Provider.of<UserDataProvider>(context, listen: false).isLoggedIn &&
+        Provider.of<ScannerMessageDataProvider>(context, listen: false).scannerMessageModel.collectionTime != null) {
+      return(
+          Padding(
+            padding: const EdgeInsets.only(top:8.0),
+            child: Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(
+                    text: "Last scan: ",
+                  ),
+                  TextSpan(
+                      text: Provider.of<ScannerMessageDataProvider>(context,listen: false)
+                          .scannerMessageModel.collectionTime,
+                      style: TextStyle(fontWeight: FontWeight.w600)
+                  ),
+                ],
+              ),
+            ),
+          )
+      );
+    }
+    else {
+      return Container(width: 0, height: 0);
+    }
   }
 }
