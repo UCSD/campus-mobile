@@ -24,7 +24,7 @@ class _WiFiCardState extends State<WiFiCard> {
   TestStatus cardState;
   int lastSpeed;
   bool goodSpeed;
-  SpeedTestProvider _speedTestProvider;
+  SpeedTestProvider _speedTestProvider = SpeedTestProvider();
   UserDataProvider _userDataProvider;
 
   @override
@@ -33,10 +33,13 @@ class _WiFiCardState extends State<WiFiCard> {
 
     super.initState();
   }
-
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _speedTestProvider = Provider.of<SpeedTestProvider>(context);
+  }
   @override
   Widget build(BuildContext context) {
-    _speedTestProvider = Provider.of<SpeedTestProvider>(context);
     _speedTestProvider.connectedToUCSDWifi();
 
     return CardContainer(
@@ -44,9 +47,9 @@ class _WiFiCardState extends State<WiFiCard> {
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       reload: () => Provider.of<SpeedTestProvider>(context, listen: false).resetSpeedTest(),
-      isLoading: Provider.of<SpeedTestProvider>(context).isLoading,
+      isLoading: _speedTestProvider.isLoading,
       titleText: CardTitleConstants.titleMap[cardId],
-      errorText: Provider.of<SpeedTestProvider>(context).error,
+      errorText: _speedTestProvider.error,
       child: () => buildCardContent(context),
     );
   }

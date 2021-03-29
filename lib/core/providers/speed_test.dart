@@ -64,6 +64,7 @@ class SpeedTestProvider extends ChangeNotifier {
 
   void connectedToUCSDWifi() async {
     bool lastState = isUCSDWiFi;
+    print("UCSD wifi is connected: ${_speedTestModel.isUCSDWifi}");
     if (lastState != _speedTestModel.isUCSDWifi) {
       notifyListeners();
     }

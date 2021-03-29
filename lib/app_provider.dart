@@ -25,7 +25,6 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
-import 'package:campus_mobile_experimental/core/services/speed_test.dart';
 
 List<SingleChildWidget> providers = [
   ...independentServices,
@@ -110,17 +109,11 @@ List<SingleChildWidget> dependentServices = [
     diningDataProvider.populateDistances();
     return diningDataProvider;
   }),
-  ChangeNotifierProxyProvider<Coordinates,  SpeedTestProvider>(create: (_){
+  ChangeNotifierProxyProvider2<Coordinates, UserDataProvider, SpeedTestProvider>(create: (_){
     SpeedTestProvider speedTestProvider = SpeedTestProvider();
     return speedTestProvider;
-  }, update: (_, coordinates, speedTestProvider){
+  }, update: (_, coordinates, userDataProvider, speedTestProvider){
     speedTestProvider.coordinates = coordinates;
-    return speedTestProvider;
-  }),
-  ChangeNotifierProxyProvider<UserDataProvider,  SpeedTestProvider>(create: (_){
-    SpeedTestProvider speedTestProvider = SpeedTestProvider();
-    return speedTestProvider;
-  }, update: (_, userDataProvider, speedTestProvider){
     speedTestProvider.userDataProvider = userDataProvider;
     return speedTestProvider;
   }),
