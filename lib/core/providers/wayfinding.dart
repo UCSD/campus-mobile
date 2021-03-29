@@ -139,8 +139,8 @@ class AdvancedWayfindingSingleton extends ChangeNotifier{
     //Check previous bluetooth setting
     await checkAdvancedWayfindingEnabled();
 
-    userLongitude = _coordinates.lon;
-    userLatitude = _coordinates.lat;
+    userLongitude = (_coordinates == null) ?  null : _coordinates.lon;
+    userLatitude = (_coordinates == null) ?  null : _coordinates.lat;
 
     // Only start scanning when permissions granted
     await flutterBlueInstance.isAvailable.then((value) {
@@ -285,6 +285,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier{
         "LONG": (userLongitude == null) ? 0 : userLongitude,
         "DEVICE_LIST": newBufferList
       };
+      print(log);
       sendLogs(log);
 
 //      Map testLog = {

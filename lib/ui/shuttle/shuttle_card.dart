@@ -52,8 +52,8 @@ class _ShuttleCardState extends State<ShuttleCard> {
     List<Widget> renderList = List<Widget>();
     try {
       if (_shuttleCardDataProvider.closestStop != null) {
-        print("closest stop:");
-        print(_shuttleCardDataProvider.closestStop);
+//        print("closest stop:");
+//        print(_shuttleCardDataProvider.closestStop);
         renderList.add(ShuttleDisplay(
             stop: _shuttleCardDataProvider.closestStop,
             arrivingShuttles:
@@ -61,8 +61,8 @@ class _ShuttleCardState extends State<ShuttleCard> {
       }
 
       for (int i = 0; i < _shuttleCardDataProvider.stopsToRender.length; i++) {
-        print("stops to render:");
-        print(_shuttleCardDataProvider.stopsToRender[i]);
+//        print("arrivals to render:");
+//        print(arrivalsToRender);
         renderList.add(ShuttleDisplay(
             stop: _shuttleCardDataProvider.stopsToRender[i],
             arrivingShuttles: arrivalsToRender[_shuttleCardDataProvider

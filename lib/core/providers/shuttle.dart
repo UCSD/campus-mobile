@@ -59,6 +59,8 @@ class ShuttleDataProvider extends ChangeNotifier {
       // get closest stop to current user
       calculateClosestStop();
       getArrivalInformation();
+      print(stopsToRender);
+      print(arrivalsToRender);
     }
 
     _isLoading = false;
@@ -152,9 +154,9 @@ class ShuttleDataProvider extends ChangeNotifier {
     if (_closestStop != null) {
       arrivalsToRender[_closestStop.id] =
           await fetchArrivalInformation(_closestStop.id);
-      for (ShuttleStopModel stop in stopsToRender) {
-        arrivalsToRender[stop.id] = await fetchArrivalInformation(stop.id);
-      }
+    }
+    for (ShuttleStopModel stop in stopsToRender) {
+      arrivalsToRender[stop.id] = await fetchArrivalInformation(stop.id);
     }
   }
 
@@ -172,15 +174,21 @@ class ShuttleDataProvider extends ChangeNotifier {
   ShuttleStopModel get closestStop => _closestStop;
 
   List<ShuttleStopModel> get stopsToRender {
-    print("fetched stops:");
-    print(fetchedStops);
+    List<ShuttleStopModel> stopsToRenderList = List<ShuttleStopModel>();
     if (fetchedStops != null) {
-      print("IN LOOP");
-      if (userDataProvider.userProfileModel != null)
-        return makeOrderedList(userDataProvider.userProfileModel.selectedStops);
+      if (userDataProvider.userProfileModel != null) {
+      for (int i = 0; i < userDataProvider.userProfileModel.selectedStops.length; i++) {
+        int stopID = userDataProvider.userProfileModel.selectedStops[i];
+        if (stopID != null && fetchedStops[stopID] != null) {
+          stopsToRenderList.add(
+              fetchedStops[stopID]);
+        }
+      }
     }
-    return List<ShuttleStopModel>();
+    }
+    return stopsToRenderList;
   }
+
 
   Map<int, ShuttleStopModel> get stopsNotSelected {
     var output = new Map<int, ShuttleStopModel>.from(fetchedStops);
