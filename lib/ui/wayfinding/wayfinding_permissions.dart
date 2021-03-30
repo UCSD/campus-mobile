@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:campus_mobile_experimental/core/models/location.dart';
 
 // ignore: must_be_immutable
 class AdvancedWayfindingPermission extends StatefulWidget {
@@ -20,6 +21,7 @@ class _AdvancedWayfindingPermissionState
     extends State<AdvancedWayfindingPermission> {
   AdvancedWayfindingSingleton _bluetoothSingleton;
   SharedPreferences pref;
+  Coordinates _coordinates;
 
   @override
   Widget build(BuildContext context) {
@@ -178,6 +180,13 @@ class _AdvancedWayfindingPermissionState
                           );
                         });
                   }
+                  // check if location is available
+                  double userLongitude = (_coordinates == null) ? null : _coordinates.lon;
+                  double userLatitude = (_coordinates == null) ? null : _coordinates.lat;
+                  if (userLatitude == null || userLongitude == null){
+                    print("location off");
+                    forceOff = true;
+                  };
                   setState(() {
                     if (forceOff) {
                       _bluetoothSingleton.advancedWayfindingEnabled = false;
@@ -246,5 +255,8 @@ class _AdvancedWayfindingPermissionState
       // Future.delayed(Duration(seconds: 5), ()  => bluetoothInstance.getOffloadAuthorization(context));
       await _bluetoothSingleton.init();
     }
+  }
+  set coordinates(Coordinates value) {
+    _coordinates = value;
   }
 }

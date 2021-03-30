@@ -14,8 +14,9 @@ import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-//import 'package:location/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:campus_mobile_experimental/core/utils/maps.dart';
+
 
 import 'bluetooth.dart';
 
@@ -113,7 +114,6 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
   static List<List<Object>> bufferList = [];
 
   // initialize location and permissions to be checked
-  //  Location location = Location();
   double userLatitude;
   double userLongitude;
   // Device Types
@@ -170,7 +170,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
           //location.changeSettings(accuracy: LocationAccuracy.low);
 
           // Enable location listening
-          //checkLocationPermission();
+          checkLocationPermission();
 
           // Enable continuous scan
           enableScanning();
@@ -197,19 +197,18 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
   startScan() async {
     //Ensure that we are still within X miles of Price Center
     if (userLongitude != null && userLatitude != null) {
-      // TODO: Refactor getHaversineDistance to /utils/maps
       distanceFromPriceCenter = getHaversineDistance(
           pcLatitude, pcLongitude, userLatitude, userLongitude);
 
       // Convert km to miles
       distanceFromPriceCenter = distanceFromPriceCenter / 1.609;
-    }
-    print("Distance from PC: $distanceFromPriceCenter");
-    print("Miles from PC: $milesFromPriceCenter");
+      print("Distance from PC: $distanceFromPriceCenter");
+      print("Miles from PC: $milesFromPriceCenter");
 
-    //prevent scanning if not within boundaries
-    if (distanceFromPriceCenter > milesFromPriceCenter) {
-      return;
+      //prevent scanning if not within boundaries
+      if (distanceFromPriceCenter > milesFromPriceCenter) {
+        return;
+      }
     }
 
     flutterBlueInstance.startScan(
@@ -695,31 +694,11 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
   }
 
   // Used to log current user location or enable the location change listener
-//  void checkLocationPermission() async {
-//    print('Location Permission Request: advanced_wayfinding_singleton');
-//    // Set up new location object to get current location
-//    location = Location();
-//    location.changeSettings(accuracy: LocationAccuracy.low);
-//    PermissionStatus hasPermission;
-//    bool _serviceEnabled;
-//
-//    // check if gps service is enabled
-//    _serviceEnabled = await location.serviceEnabled();
-//    if (!_serviceEnabled) {
-//      _serviceEnabled = await location.requestService();
-//      if (!_serviceEnabled) {
-//        return;
-//      }
-//    }
-//    //check if permission is granted
-//    hasPermission = await location.hasPermission();
-//    if (hasPermission == PermissionStatus.denied) {
-//      hasPermission = await location.requestPermission();
-//      if (hasPermission != PermissionStatus.granted) {
-//        return;
-//      }
-//    }
-//  }
+  void checkLocationPermission() async {
+    if (userLatitude == null ||  userLongitude == null) {
+      return;
+    }
+  }
 
   // Get the rough distance from bt device
   double getDistance(int rssi) {
@@ -833,7 +812,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
     }
     flutterBlueInstance.stopScan();
     flutterBlueInstance.scanResults.listen((event) {}).cancel();
-    beaconSingleton.beaconBroadcast.stop();
+    if (beaconSingleton != null) {beaconSingleton.beaconBroadcast.stop();}
   }
 
   //Get constants for scanning

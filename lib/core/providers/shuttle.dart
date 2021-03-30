@@ -1,11 +1,10 @@
-import 'dart:math' as Math;
-
 import 'package:campus_mobile_experimental/core/models/location.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_arrival.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_stop.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/shuttle.dart';
 import 'package:flutter/material.dart';
+import 'package:campus_mobile_experimental/core/utils/maps.dart';
 
 import '../models/shuttle_stop.dart';
 
@@ -130,24 +129,6 @@ class ShuttleDataProvider extends ChangeNotifier {
         _closestStop = shuttleStop;
       }
     }
-  }
-
-  double getHaversineDistance(lat1, lon1, lat2, lon2) {
-    var R = 6371; // Radius of the earth in km
-    var dLat = deg2rad(lat2 - lat1); // deg2rad below
-    var dLon = deg2rad(lon2 - lon1);
-    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos(deg2rad(lat1)) *
-            Math.cos(deg2rad(lat2)) *
-            Math.sin(dLon / 2) *
-            Math.sin(dLon / 2);
-    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    var d = R * c; // Distance in km
-    return d;
-  }
-
-  double deg2rad(deg) {
-    return deg * (Math.pi / 180);
   }
 
   void getArrivalInformation() async {
