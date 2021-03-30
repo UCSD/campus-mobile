@@ -242,6 +242,7 @@ List<SingleChildWidget> dependentServices = [
   }),
   ChangeNotifierProxyProvider2<Coordinates, UserDataProvider, SpeedTestProvider>(create: (_){
     SpeedTestProvider speedTestProvider = SpeedTestProvider();
+    speedTestProvider.init();
     return speedTestProvider;
   }, update: (_, coordinates, userDataProvider, speedTestProvider){
     speedTestProvider.coordinates = coordinates;

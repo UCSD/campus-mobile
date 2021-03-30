@@ -17,13 +17,13 @@ class SpeedTestProvider extends ChangeNotifier {
   bool _isUCSDWifi = true;
   Coordinates _coordinates;
   String _error;
-  NetworkHelper _networkHelper;
-  Dio dio;
-  Stopwatch _timer;
+  NetworkHelper _networkHelper = new NetworkHelper();
+  Dio dio = new Dio();
+  Stopwatch _timer = new Stopwatch();
   double _speedDownload;
   double _speedUpload;
-  double _percentDownloaded;
-  double _percentUploaded;
+  double _percentDownloaded = 0.0;
+  double _percentUploaded = 0.0;
   CancelToken _cancelTokenDownload;
   CancelToken _cancelTokenUpload;
   bool _speedTestDone = false;
@@ -32,18 +32,18 @@ class SpeedTestProvider extends ChangeNotifier {
   SpeedTestService _speedTestService;
   SpeedTestModel _speedTestModel;
   bool isUCSDWiFi = true;
+  Map wiFiLog;
   UserDataProvider _userDataProvider;
   final Map<String, String> headers = {
     "accept": "application/json",
   };
   Map<String, String> offloadDataHeader;
-  static const String mobileLoggerApi = 'https://api-qa.ucsd.edu:8243/mobileapplogger/v1.1.0/log?type=wifi';
-
+  String mobileLoggerApi =
+      'https://api-qa.ucsd.edu:8243/mobileapplogger/v1.1.0/log';
 
   SpeedTestProvider() {
     _isLoading = false;
     _speedTestService = SpeedTestService();
-    _speedTestService.fetchSignedUrls();
     init();
   }
 
@@ -52,7 +52,7 @@ class SpeedTestProvider extends ChangeNotifier {
     _coordinates = value;
   }
 
-  set userDataProvider(UserDataProvider userDataProvider){
+  set userDataProvider(UserDataProvider userDataProvider) {
     _userDataProvider = userDataProvider;
   }
 
@@ -61,20 +61,19 @@ class SpeedTestProvider extends ChangeNotifier {
     await _speedTestService.fetchSignedUrls();
     _isLoading = false;
     _speedTestModel = _speedTestService.speedTestModel;
+    connectedToUCSDWifi();
   }
 
   void connectedToUCSDWifi() async {
-    bool lastState = isUCSDWiFi;
-    print("UCSD wifi is connected: ${_speedTestModel.isUCSDWifi}");
-    if (lastState != _speedTestModel.isUCSDWifi) {
-      notifyListeners();
-    }
+    isUCSDWiFi = _speedTestModel.isUCSDWifi;
+    notifyListeners();
   }
 
   void speedTest() async {
-    resetSpeedTest();
+    //resetSpeedTest();
 
     await downloadSpeedTest();
+    _timer.reset();
     await uploadSpeedTest();
     if (_percentUploaded == 1.0 && _percentDownloaded == 1.0) {
       _speedTestDone = true;
@@ -90,12 +89,12 @@ class SpeedTestProvider extends ChangeNotifier {
         {"file": MultipartFile.fromBytes(tempDownload, filename: "temp.html")});
     notifyListeners();
     try {
-      _cancelTokenDownload = new CancelToken();
+      _cancelTokenUpload = new CancelToken();
       _timer.start();
       await dio.put(_speedTestModel.uploadUrl,
           data: formData,
           onSendProgress: _progressCallbackUpload,
-          cancelToken: _cancelTokenDownload);
+          cancelToken: _cancelTokenUpload);
     } catch (e) {}
     _timer.stop();
     notifyListeners();
@@ -108,15 +107,16 @@ class SpeedTestProvider extends ChangeNotifier {
     // _timer.start();
     notifyListeners();
     try {
-      _cancelTokenUpload = new CancelToken();
+      _cancelTokenDownload = new CancelToken();
       _timer.start();
       await dio.download(_speedTestModel.downloadUrl, (tempDownload.path),
           onReceiveProgress: _progressCallbackDownload,
-          cancelToken: _cancelTokenUpload);
+          cancelToken: _cancelTokenDownload);
     } catch (e) {}
     _timer.stop();
     notifyListeners();
   }
+
   _progressCallbackDownload(int bytesDownloaded, int totalBytes) {
     _secondsElapsedDownload = _timer.elapsed.inSeconds;
     double speedInBytes = (bytesDownloaded / _timer.elapsed.inSeconds);
@@ -149,82 +149,85 @@ class SpeedTestProvider extends ChangeNotifier {
     _speedDownload = 0.00;
     _speedUpload = 0.0;
   }
+
   void cancelDownload() {
     try {
       if (_timer.isRunning) {
         _timer.stop();
         _cancelTokenDownload.cancel("cancelled");
       }
-    } catch (e) {
-    }
+    } catch (e) {}
   }
+
   void cancelUpload() {
     try {
       if (_timer.isRunning) {
         _timer.stop();
         _cancelTokenUpload.cancel("cancelled");
       }
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   Future<bool> sendNetworkDiagnostics(int lastSpeed) async {
-    Map wiFiLog;
     bool sentSuccessfully = false;
 
-        wiFiLog = {
-          "Platform": _speedTestModel.platform,
-          "SSID": _speedTestModel.ssid,
-          "BSSID": _speedTestModel.bssid,
-          "IPAddress": _speedTestModel.ipAddress,
-          "MacAddress": _speedTestModel.macAddress,
-          "LinkSpeed": _speedTestModel.linkSpeed,
-          "SignalStrength": _speedTestModel.signalStrength,
-          "Frequency": _speedTestModel.frequency,
-          "NetworkID": _speedTestModel.networkID,
-          "IsHiddenSSID":_speedTestModel.isHiddenSSID,
-          "RouterIP": _speedTestModel.routerIP,
-          "Channel":_speedTestModel.channel,
-          "Latitude": _coordinates.lat,
-          "Longitude": _coordinates.lon,
-          "TimeStamp": _speedTestModel.timeStamp,
-          "DownloadSpeed": lastSpeed != null
-              ? lastSpeed.toStringAsPrecision(3)
-              : _speedDownload.toStringAsPrecision(3),
-          "UploadSpeed": _speedUpload.toStringAsPrecision(3),
-        };
+    wiFiLog = {
+      "Platform": _speedTestModel.platform,
+      "SSID": _speedTestModel.ssid,
+      "BSSID": _speedTestModel.bssid,
+      "IPAddress": _speedTestModel.ipAddress,
+      "MacAddress": _speedTestModel.macAddress,
+      "LinkSpeed": _speedTestModel.linkSpeed,
+      "SignalStrength": _speedTestModel.signalStrength,
+      "Frequency": _speedTestModel.frequency,
+      "NetworkID": _speedTestModel.networkID,
+      "IsHiddenSSID": _speedTestModel.isHiddenSSID,
+      "RouterIP": _speedTestModel.routerIP,
+      "Channel": _speedTestModel.channel,
+      "Latitude": _coordinates.lat,
+      "Longitude": _coordinates.lon,
+      "TimeStamp": _speedTestModel.timeStamp,
+      "DownloadSpeed": lastSpeed != null
+          ? lastSpeed.toStringAsPrecision(3)
+          : _speedDownload.toStringAsPrecision(3),
+      "UploadSpeed": _speedUpload.toStringAsPrecision(3),
+    };
 
-      //TODO: Send data for submission
-      sentSuccessfully = true;
-      sendLogs(wiFiLog);
+    //TODO: Send data for submission
+    sentSuccessfully = true;
+    sendLogs(wiFiLog);
     return sentSuccessfully; //Due to failed submission or not connected to wifi
+  }
 
-}
-  void sendLogs(Map log) {
+  Future<void> sendLogs(Map log) async {
+    mobileLoggerApi =
+        "https://api-qa.ucsd.edu:8243/mobileapplogger/v1.1.0/log" +
+            "?type=WIFI";
     offloadDataHeader = {
       'Authorization':
-      'Bearer ${_userDataProvider?.authenticationModel?.accessToken}'
+          'Bearer ${_userDataProvider?.authenticationModel?.accessToken}'
     };
     if (_userDataProvider.isLoggedIn) {
       if (offloadDataHeader == null) {
         offloadDataHeader = {
           'Authorization':
-          'Bearer ${_userDataProvider?.authenticationModel?.accessToken}'
+              'Bearer ${_userDataProvider?.authenticationModel?.accessToken}'
         };
       }
       // Send to offload API
       try {
         var response = _networkHelper
             .authorizedPost(
-            mobileLoggerApi, offloadDataHeader, json.encode(log))
+                mobileLoggerApi, offloadDataHeader, json.encode(log))
             .then((value) {
+          return value;
         });
       } catch (Exception) {
         if (Exception.toString().contains(ErrorConstants.invalidBearerToken)) {
           _userDataProvider.silentLogin();
           offloadDataHeader = {
             'Authorization':
-            'Bearer ${_userDataProvider?.authenticationModel?.accessToken}'
+                'Bearer ${_userDataProvider?.authenticationModel?.accessToken}'
           };
           _networkHelper.authorizedPost(
               mobileLoggerApi, offloadDataHeader, json.encode(log));
@@ -232,8 +235,12 @@ class SpeedTestProvider extends ChangeNotifier {
       }
     } else {
       try {
-        var response = _networkHelper.authorizedPost(
-            mobileLoggerApi, headers, json.encode(log));
+        await getNewToken();
+        var response = await _networkHelper
+            .authorizedPost(mobileLoggerApi, headers, json.encode(log))
+            .then((value) {
+          return value;
+        });
       } catch (Exception) {
         getNewToken();
         var response = _networkHelper.authorizedPost(
@@ -241,12 +248,78 @@ class SpeedTestProvider extends ChangeNotifier {
       }
     }
   }
+
+  Future<void> reportIssue() async {
+    mobileLoggerApi =
+        "https://api-qa.ucsd.edu:8243/mobileapplogger/v1.1.0/log" +
+            "?type=WIFIREPORT";
+
+    offloadDataHeader = {
+      'Authorization':
+          'Bearer ${_userDataProvider?.authenticationModel?.accessToken}'
+    };
+    wiFiLog = {
+      "userId": (_userDataProvider.userProfileModel.pid) == null ? "" :_userDataProvider.userProfileModel.pid ,
+      "userEmail":(_userDataProvider.userProfileModel.username) == null? "": _userDataProvider.userProfileModel.username+"@ucsd.edu",
+      "Platform": _speedTestModel.platform,
+      "SSID": _speedTestModel.ssid,
+      "BSSID": _speedTestModel.bssid,
+      "IPAddress": _speedTestModel.ipAddress,
+      "MacAddress": _speedTestModel.macAddress,
+      "LinkSpeed": _speedTestModel.linkSpeed,
+      "SignalStrength": _speedTestModel.signalStrength,
+      "Frequency": _speedTestModel.frequency,
+      "NetworkID": _speedTestModel.networkID,
+      "IsHiddenSSID": _speedTestModel.isHiddenSSID,
+      "RouterIP": _speedTestModel.routerIP,
+      "Channel": _speedTestModel.channel,
+      "Latitude": _coordinates.lat,
+      "Longitude": _coordinates.lon,
+      "TimeStamp": _speedTestModel.timeStamp,
+      "DownloadSpeed": wiFiLog['DownloadSpeed'],
+      "UploadSpeed": _speedUpload.toStringAsPrecision(3),
+    };
+    if (_userDataProvider.isLoggedIn) {
+      if (offloadDataHeader == null) {
+        offloadDataHeader = {
+          'Authorization':
+              'Bearer ${_userDataProvider?.authenticationModel?.accessToken}'
+        };
+      }
+      // Send to offload API
+      try {
+        _networkHelper.authorizedPost(
+            mobileLoggerApi, offloadDataHeader, json.encode(wiFiLog));
+      } catch (Exception) {
+        if (Exception.toString().contains(ErrorConstants.invalidBearerToken)) {
+          _userDataProvider.silentLogin();
+          offloadDataHeader = {
+            'Authorization':
+                'Bearer ${_userDataProvider?.authenticationModel?.accessToken}'
+          };
+          _networkHelper.authorizedPost(
+              mobileLoggerApi, offloadDataHeader, json.encode(wiFiLog));
+        }
+      }
+    } else {
+      try {
+        await getNewToken();
+        var response = _networkHelper.authorizedPost(
+            mobileLoggerApi, headers, json.encode(wiFiLog));
+      } catch (Exception) {
+        getNewToken();
+        var response = _networkHelper.authorizedPost(
+            mobileLoggerApi, headers, json.encode(wiFiLog));
+      }
+    }
+  }
+
   Future<bool> getNewToken() async {
     final String tokenEndpoint = "https://api-qa.ucsd.edu:8243/token";
     final Map<String, String> tokenHeaders = {
       "content-type": 'application/x-www-form-urlencoded',
       "Authorization":
-      "Basic djJlNEpYa0NJUHZ5akFWT0VRXzRqZmZUdDkwYTp2emNBZGFzZWpmaWZiUDc2VUJjNDNNVDExclVh"
+          "Basic djJlNEpYa0NJUHZ5akFWT0VRXzRqZmZUdDkwYTp2emNBZGFzZWpmaWZiUDc2VUJjNDNNVDExclVh"
     };
     try {
       var response = await _networkHelper.authorizedPost(

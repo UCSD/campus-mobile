@@ -76,7 +76,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
   String bluetoothCharacteristicsEndpoint =
       "https://api-qa.ucsd.edu:8243/bluetoothdevicecharacteristic/v1.0.0/servicenames/1";
   String offloadLoggerEndpoint =
-      "https://api-qa.ucsd.edu:8243/mobileapplogger/v1.0.0/log";
+      "https://api-qa.ucsd.edu:8243/mobileapplogger/v1.1.0/log";
 
   //Thresholds for logging location
   int qualifiedDevicesThreshold = 0;
@@ -283,7 +283,8 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
     }
   }
 
-  void sendLogs(Map log) {
+  Future<void> sendLogs(Map log) async {
+    offloadLoggerEndpoint = offloadLoggerEndpoint += "?type=WAYFINDING";
     if (userDataProvider.isLoggedIn) {
       print("Offload data header: " + offloadDataHeader.toString());
       if (offloadDataHeader == null) {
@@ -292,7 +293,6 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
               'Bearer ${userDataProvider?.authenticationModel?.accessToken}'
         };
       }
-      print("AFTER GETTING ACCESS TOKEN" + offloadDataHeader.toString());
       // Send to offload API
       try {
         var response = _networkHelper
@@ -314,6 +314,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
       }
     } else {
       try {
+        await getNewToken();
         var response = _networkHelper.authorizedPost(
             offloadLoggerEndpoint, headers, json.encode(log));
       } catch (Exception) {

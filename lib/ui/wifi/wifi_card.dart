@@ -33,20 +33,21 @@ class _WiFiCardState extends State<WiFiCard> {
 
     super.initState();
   }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _speedTestProvider = Provider.of<SpeedTestProvider>(context);
   }
+
   @override
   Widget build(BuildContext context) {
-    //_speedTestProvider.connectedToUCSDWifi();
-
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
-      reload: () => Provider.of<SpeedTestProvider>(context, listen: false).resetSpeedTest(),
+      reload: () => Provider.of<SpeedTestProvider>(context, listen: false)
+          .resetSpeedTest(),
       isLoading: _speedTestProvider.isLoading,
       titleText: CardTitleConstants.titleMap[cardId],
       errorText: _speedTestProvider.error,
@@ -71,7 +72,7 @@ class _WiFiCardState extends State<WiFiCard> {
           cardState = TestStatus.unavailable;
         } else if (_speedTestProvider.timeElapsedDownload +
                 _speedTestProvider.timeElapsedUpload >
-            2000) {
+            15) {
           _speedTestProvider.cancelDownload();
           _speedTestProvider.cancelUpload();
           setState(() {
@@ -274,7 +275,9 @@ class _WiFiCardState extends State<WiFiCard> {
         Padding(
           padding: const EdgeInsets.only(bottom: 12.0),
           child: MaterialButton(
-              onPressed: () {},
+              onPressed: () {
+                _speedTestProvider.reportIssue();
+              },
               minWidth: 350,
               height: 40,
               elevation: 0.0,
