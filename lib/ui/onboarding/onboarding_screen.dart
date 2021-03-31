@@ -187,7 +187,7 @@ class _OnboardingScreen extends State<OnboardingScreen>
       Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
         FractionallySizedBox(
           child: Container(
-              height: MediaQuery.of(context).size.height * .42,
+              height: height * 0.42,
               decoration: new BoxDecoration(
                   image: DecorationImage(
                 image: AssetImage('assets/images/onboarding_background1.png'),
@@ -244,7 +244,7 @@ class _OnboardingScreen extends State<OnboardingScreen>
     return Stack(children: <Widget>[
       Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
         Container(
-            height: MediaQuery.of(context).size.height * .42,
+            height: height * 0.42,
             decoration: new BoxDecoration(
                 image: DecorationImage(
               image: AssetImage('assets/images/onboarding_background2.png'),
@@ -285,20 +285,7 @@ class _OnboardingScreen extends State<OnboardingScreen>
       Column(children: <Widget>[
         Container(
           //alignment: Alignment.topRight,
-          padding: EdgeInsets.only(left: width * 0.026, top: height * 0.22),
-          child: Container(
-              height: height * 0.14,
-              width: width * 0.49,
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                image:
-                    AssetImage('assets/images/onboarding_student_profile.png'),
-                fit: BoxFit.fill,
-              ))),
-        ),
-        Container(
-          //alignment: Alignment.topRight,
-          padding: EdgeInsets.only(left: width * 0.026, top: height * 0.025),
+          padding: EdgeInsets.only(left: width * 0.026, top: height * 0.35),
           child: Container(
               height: height * 0.14,
               width: width * 0.49,
@@ -317,7 +304,7 @@ class _OnboardingScreen extends State<OnboardingScreen>
     return Stack(children: <Widget>[
       Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
         Container(
-            height: MediaQuery.of(context).size.height * .42,
+            height: height * .42,
             decoration: new BoxDecoration(
                 image: DecorationImage(
               image: AssetImage('assets/images/onboarding_background3.png'),

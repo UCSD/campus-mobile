@@ -16,8 +16,6 @@ class RoutePaths {
       'profile/automatic_bluetooth_logger_view';
   static const String BluetoothPermissionsView =
       'profile/bluetooth_permissions_view';
-  static const String NetworkAnalysisView =
-      'profile/network_analysis_view';
   static const String NotificationsSettingsView =
       'notifications/notifications_settings';
 
@@ -112,6 +110,7 @@ class ScannerConstants {
       'An error occurred. Please try again.\nCode #1040';
   static const scannerReauthFailure =
       'Your session has expired. Please login to submit a scan.';
+  static const noRecentScan = 'No scan submitted';
 }
 
 class LoginConstants {
@@ -164,6 +163,7 @@ class CardTitleConstants {
     'student_id': 'Student ID',
     'speed_test' : "Speed Test",
     'staff_id': 'Staff ID',
+    'employee_id': 'Employee ID',
     'finals': 'Finals',
     'schedule': 'Classes',
     'shuttle': "Shuttle",

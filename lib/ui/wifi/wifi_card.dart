@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/speed_test.dart';
 import 'package:campus_mobile_experimental/core/providers/student_id.dart';
@@ -26,6 +28,8 @@ class _WiFiCardState extends State<WiFiCard> {
   bool goodSpeed;
   SpeedTestProvider _speedTestProvider = SpeedTestProvider();
   UserDataProvider _userDataProvider;
+  bool _buttonEnabled = true;
+  Timer buttonTimer;
 
   @override
   void initState() {
@@ -156,6 +160,7 @@ class _WiFiCardState extends State<WiFiCard> {
   }
 
   Column initialState() {
+    if (buttonTimer != null) _buttonEnabled = true;
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -209,7 +214,29 @@ class _WiFiCardState extends State<WiFiCard> {
         Padding(
           padding: const EdgeInsets.only(bottom: 12.0),
           child: MaterialButton(
-              onPressed: () {},
+              disabledColor: Colors.grey,
+              onPressed: _buttonEnabled
+                  ? () {
+                      _speedTestProvider.reportIssue();
+                      return showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              content: Container(
+                                child: Text(
+                                    "Please run speed test to report issue."),
+                              ),
+                              actions: <Widget>[
+                                FlatButton(
+                                    child: Text("Dismiss"),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    })
+                              ],
+                            );
+                          });
+                    }
+                  : null,
               minWidth: 350,
               height: 40,
               elevation: 0.0,
@@ -275,9 +302,36 @@ class _WiFiCardState extends State<WiFiCard> {
         Padding(
           padding: const EdgeInsets.only(bottom: 12.0),
           child: MaterialButton(
-              onPressed: () {
-                _speedTestProvider.reportIssue();
-              },
+              disabledColor: Colors.grey,
+              onPressed: _buttonEnabled
+                  ? () {
+                      _speedTestProvider.reportIssue();
+                      return showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              content: Container(
+                                child: Text(
+                                    "Thank you for helping improve UCSD wireless. Your test results have been sent to IT Services."),
+                              ),
+                              actions: <Widget>[
+                                FlatButton(
+                                    child: Text("Dismiss"),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                      _buttonEnabled = false;
+                                      buttonTimer =
+                                          new Timer(Duration(minutes: 2), () {
+                                        _buttonEnabled = true;
+                                        setState(() {});
+                                      });
+                                      setState(() {});
+                                    })
+                              ],
+                            );
+                          });
+                    }
+                  : null,
               minWidth: 350,
               height: 40,
               elevation: 0.0,

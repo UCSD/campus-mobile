@@ -19,6 +19,7 @@ class CardsDataProvider extends ChangeNotifier {
       'campus_info',
       'speed_test',
       'staff_id',
+      'employee_id',
       'staff_info',
       'student_info',
       'student_survey',
@@ -44,7 +45,7 @@ class CardsDataProvider extends ChangeNotifier {
     _staffCards = [
       'MyUCSDChart',
       'staff_info',
-      'staff_id',
+      'employee_id',
     ];
 
     for (String card in CardTitleConstants.titleMap.keys.toList()) {
@@ -92,8 +93,6 @@ class CardsDataProvider extends ChangeNotifier {
           }
           // check to see if card is not active
           else if (!(_availableCards[card].cardActive ?? false)) {
-
-            //print()
             _cardOrder.remove(card);
           }
         }
@@ -102,12 +101,10 @@ class CardsDataProvider extends ChangeNotifier {
         for (String card in tempCardStates.keys) {
           // check to see if card no longer exists
           if (_availableCards[card] == null) {
-
             _cardStates.remove(card);
           }
           // check to see if card is not active
           else if (!(_availableCards[card].cardActive ?? false)) {
-
             _cardStates.remove(card);
           }
         }
@@ -136,7 +133,6 @@ class CardsDataProvider extends ChangeNotifier {
             _cardStates.keys.where((card) => _cardStates[card]).toList());
       }
     } else {
-      ///TODO: determine what error to show to the user
       _error = _cardsService.error;
     }
     _isLoading = false;

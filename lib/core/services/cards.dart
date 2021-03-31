@@ -20,7 +20,7 @@ class CardsService {
     /// API Manager Service
     try {
       String cardListEndpoint =
-          "https://api-qa.ucsd.edu:8243/defaultcards/v4.0.0/defaultcards?ucsdaffiliation=${ucsdAffiliation}";
+          "https://api-qa.ucsd.edu:8243/defaultcards/v5.0.0/defaultcards?ucsdaffiliation=${ucsdAffiliation}";
       String _response =
           await _networkHelper.authorizedFetch(cardListEndpoint, headers);
       // wifi testing
@@ -28,6 +28,7 @@ class CardsService {
       addTestPoint = addTestPoint +
           ",\"speed_test\": {\"cardActive\": true,\"initialURL\": \"\",\"isWebCard\": false,\"requireAuth\": false,\"titleText\":\"Speed Test\"}}";
       _response = addTestPoint;
+
       _cardsModel = cardsModelFromJson(_response);
       _isLoading = false;
       return true;

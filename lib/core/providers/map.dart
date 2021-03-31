@@ -37,23 +37,32 @@ class MapsDataProvider extends ChangeNotifier {
   ///SERVICES
   MapSearchService _mapSearchService;
 
-  void addMarker(int listIndex) {
+   void addMarker(int listIndex) {
     final Marker marker = Marker(
       markerId: MarkerId(_mapSearchModels[listIndex].mkrMarkerid.toString()),
       position: LatLng(_mapSearchModels[listIndex].mkrLat,
           _mapSearchModels[listIndex].mkrLong),
-      infoWindow: InfoWindow(title: _mapSearchModels[listIndex].title),
+      infoWindow: InfoWindow(title: _mapSearchModels[listIndex].title, snippet: _mapSearchModels[listIndex].description),
+
     );
     _markers.clear();
     _markers[marker.markerId] = marker;
+
     updateMapPosition();
     notifyListeners();
   }
 
   void updateMapPosition() {
     if (_markers.isNotEmpty && _mapController != null) {
-      _mapController.animateCamera(
-          CameraUpdate.newLatLng(_markers.values.toList()[0].position));
+      _mapController
+          .animateCamera(CameraUpdate.newLatLng(_markers.values.toList()[0].position))
+          .then((_) async {
+        await Future.delayed(Duration(seconds: 1));
+        try {
+          _mapController.showMarkerInfoWindow(_markers.values.toList()[0].markerId);
+        }
+        catch(e) {}
+      });
     }
   }
 

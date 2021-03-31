@@ -17,7 +17,7 @@ class _LoginState extends State<Login> {
 
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
+    print('_LoginState:didChangeDependencies');
     super.didChangeDependencies();
     _userDataProvider = Provider.of<UserDataProvider>(context);
   }
@@ -58,6 +58,10 @@ class _LoginState extends State<Login> {
   }
 
   Widget buildUserProfileTile(BuildContext context) {
+    var username1 = Provider.of<UserDataProvider>(context, listen: false)
+        .userProfileModel
+        .username;
+
     return ListTile(
       leading: Icon(
         Icons.check_circle,
@@ -71,7 +75,7 @@ class _LoginState extends State<Login> {
       ),
       trailing: OutlineButton(
         child: Text('logout'),
-        onPressed: () =>_userDataProvider.logout(),
+        onPressed: () => _userDataProvider.logout(),
       ),
     );
   }
@@ -128,7 +132,7 @@ class _LoginState extends State<Login> {
                         ? null
                         : () {
                             _userDataProvider
-                                .login(_emailTextFieldController.text,
+                                .manualLogin(_emailTextFieldController.text,
                                     _passwordTextFieldController.text)
                                 .then((isLoggedIn) {
                               if (!isLoggedIn) {
