@@ -162,7 +162,6 @@ class CardTitleConstants {
     'student_survey': 'Student Survey',
     'student_id': 'Student ID',
     'speed_test' : "Speed Test",
-    'staff_id': 'Staff ID',
     'employee_id': 'Employee ID',
     'finals': 'Finals',
     'schedule': 'Classes',
