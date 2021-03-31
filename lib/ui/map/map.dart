@@ -9,7 +9,7 @@ import 'package:campus_mobile_experimental/ui/map/directions_button.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:uni_links/uni_links.dart';
+import 'package:uni_links2/uni_links.dart';
 
 import '../../app_constants.dart';
 
@@ -58,7 +58,7 @@ class Maps extends StatelessWidget {
     // deep links are received by this method
     // the specific host needs to be added in AndroidManifest.xml and Info.plist
     // currently, this method handles executing custom map query
-    _sub = getLinksStream().listen((String link) async {
+    _sub = linkStream.listen((String link) async {
       // handling for map query
       if (link.contains("deeplinking.searchmap")) {
         var uri = Uri.dataFromString(link);

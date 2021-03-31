@@ -29,7 +29,7 @@ class _OnboardingInitialState extends State<OnboardingInitial>
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
-        resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
         body: Stack(children: <Widget>[
           Container(

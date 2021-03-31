@@ -33,7 +33,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:uni_links/uni_links.dart';
+import 'package:uni_links2/uni_links.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -60,7 +60,7 @@ class _HomeState extends State<Home> {
     }
 
     // used to handle links while app is in foreground/background
-    _sub = getLinksStream().listen((String link) async {
+    _sub = linkStream.listen((String link) async {
       // handling for map query
       if (link.contains("deeplinking.searchmap")) {
         var uri = Uri.dataFromString(link);

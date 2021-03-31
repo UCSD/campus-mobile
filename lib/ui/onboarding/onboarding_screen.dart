@@ -88,7 +88,7 @@ class _OnboardingScreen extends State<OnboardingScreen>
     double height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       body: Stack(children: <Widget>[
         Container(

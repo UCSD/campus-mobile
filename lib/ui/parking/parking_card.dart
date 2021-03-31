@@ -62,7 +62,6 @@ class _ParkingCardState extends State<ParkingCard>
             final url = makeUrl(model.locationId, selectedSpots);
 
             selectedLotsViews.add(WebView(
-              opaque: false,
               initialUrl: url,
               javascriptMode: JavascriptMode.unrestricted,
               onWebViewCreated: (controller) {

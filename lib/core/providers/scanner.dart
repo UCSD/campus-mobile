@@ -31,7 +31,7 @@ class ScannerDataProvider extends ChangeNotifier {
   bool _successfulSubmission;
   bool _isValidBarcode;
   String errorText;
-  PermissionStatus cameraPermissionsStatus = PermissionStatus.undetermined;
+  PermissionStatus cameraPermissionsStatus;
   ScanditController _controller;
   List<String> scannedCodes = new List<String>();
 

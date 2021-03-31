@@ -10,7 +10,6 @@ import 'package:background_fetch/background_fetch.dart';
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -604,7 +603,8 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
   }
 
   String parseForAppearance(ScanResult scanResult) {
-    Uint8List adData = scanResult.advertisementData.rawData;
+    // TODO: Resolve scanResult.advertisementData.rawData;
+    Uint8List adData;
     int index = 0;
     String data;
 

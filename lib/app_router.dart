@@ -60,7 +60,6 @@ class Router {
       case RoutePaths.Profile:
         return MaterialPageRoute(builder: (_) => Profile());
       case RoutePaths.NewsViewAll:
-        NewsModel data = settings.arguments as NewsModel;
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return NewsList();
