@@ -184,9 +184,55 @@ class _AdvancedWayfindingPermissionState
                   double userLongitude = (_coordinates == null) ? null : _coordinates.lon;
                   double userLatitude = (_coordinates == null) ? null : _coordinates.lat;
                   if (userLatitude == null || userLongitude == null){
-                    print("location off");
                     forceOff = true;
-                  };
+                    showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (BuildContext context) {
+                          if (Platform.isIOS) {
+                            return CupertinoAlertDialog(
+                              title: Text(
+                                  "UCSD Mobile would like to use Location."),
+                              content: Text(
+                                  "Please turn on Location."),
+                              actions: <Widget>[
+                                FlatButton(
+                                  child: Text('Cancel'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                                FlatButton(
+                                  child: Text('Settings'),
+                                  onPressed: () {
+                                    AppSettings.openAppSettings();
+                                  },
+                                )
+                              ],
+                            );
+                          }
+                          return AlertDialog(
+                            title: Text(
+                                "UCSD Mobile would like to use Location."),
+                            content: Text(
+                                "Please turn on location."),
+                            actions: <Widget>[
+                              FlatButton(
+                                child: Text('Cancel'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                              FlatButton(
+                                child: Text('Settings'),
+                                onPressed: () {
+                                  AppSettings.openAppSettings();
+                                },
+                              )
+                            ],
+                          );
+                        });
+                  }
                   setState(() {
                     if (forceOff) {
                       _bluetoothSingleton.advancedWayfindingEnabled = false;

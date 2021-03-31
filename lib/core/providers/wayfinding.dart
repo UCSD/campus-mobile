@@ -144,7 +144,9 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
 
     userLongitude = (_coordinates == null) ? null : _coordinates.lon;
     userLatitude = (_coordinates == null) ? null : _coordinates.lat;
-
+    if (userLongitude == null || userLatitude == null){
+      return;
+    }
     // Only start scanning when permissions granted
     await flutterBlueInstance.isAvailable.then((value) {
       flutterBlueInstance.state.listen((event) async {
