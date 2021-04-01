@@ -262,14 +262,24 @@ class _AdvancedWayfindingPermissionState
   }
 
   bool bluetoothStarted(BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+    double userLongitude = (_coordinates == null) ? null : _coordinates.lon;
+    double userLatitude = (_coordinates == null) ? null : _coordinates.lat;
+//    print("latitude: $userLatitude");
+//    print("longitude: $userLongitude");
+//    print("coordinates: $_coordinates");
+    bool locationOn = false;
+    if (userLatitude != null && userLongitude != null) {
+      locationOn = true;
+    }
     _bluetoothSingleton = AdvancedWayfindingSingleton();
 
     if ((snapshot.data as BluetoothState == BluetoothState.unauthorized ||
             snapshot.data as BluetoothState == BluetoothState.off) ||
         (_bluetoothSingleton != null &&
-            !_bluetoothSingleton.advancedWayfindingEnabled)) {
+            !_bluetoothSingleton.advancedWayfindingEnabled) || !locationOn) {
       _bluetoothSingleton.advancedWayfindingEnabled = false;
     }
+
     return _bluetoothSingleton.advancedWayfindingEnabled;
   }
 

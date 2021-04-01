@@ -18,7 +18,6 @@ class ShuttleDataProvider extends ChangeNotifier {
     init();
   }
 
-  Coordinates _coordinates;
   bool _isLoading;
   String _error;
   UserDataProvider userDataProvider;
@@ -58,8 +57,8 @@ class ShuttleDataProvider extends ChangeNotifier {
       // get closest stop to current user
       calculateClosestStop();
       getArrivalInformation();
-      print(stopsToRender);
-      print(arrivalsToRender);
+//      print(stopsToRender);
+//      print(arrivalsToRender);
     }
 
     _isLoading = false;
@@ -183,7 +182,4 @@ class ShuttleDataProvider extends ChangeNotifier {
     _userCoords = value;
   }
 
-  set coordinates(Coordinates value) {
-    _coordinates = value;
-  }
 }
