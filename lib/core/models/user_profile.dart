@@ -85,7 +85,7 @@ class UserProfileModel extends HiveObject {
             : List<int>.from(json["selectedStops"].map((x) => x)),
         surveyCompletion: json["surveyCompletion"] == null
             ? List<String>()
-            : List<String>.from(json["surveyCompletion"].map((x) => x)),
+            : List<String>.from(json["surveyCompletion"].map((x) => x))
       );
 
   Map<String, dynamic> toJson() => {
