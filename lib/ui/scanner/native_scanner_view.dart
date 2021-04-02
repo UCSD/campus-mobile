@@ -1,7 +1,9 @@
+import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/scanner.dart';
 import 'package:campus_mobile_experimental/core/providers/scanner_message.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
+import 'package:campus_mobile_experimental/core/services/barcode.dart';
 import 'package:campus_mobile_experimental/core/utils/webview.dart';
 import 'package:campus_mobile_experimental/ui/scanner/native_scanner_card.dart';
 import 'package:flutter/material.dart';
