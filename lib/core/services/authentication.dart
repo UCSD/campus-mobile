@@ -13,7 +13,7 @@ class AuthenticationService {
   final NetworkHelper _networkHelper = NetworkHelper();
 
   final String AUTH_SERVICE_API_URL =
-      "https://3hepzvdimd.execute-api.us-west-2.amazonaws.com/qa/v2/access-profile";
+      "https://3hepzvdimd.execute-api.us-west-2.amazonaws.com/qa/v2/access-profil";
   final String AUTH_SERVICE_API_KEY =
       'eKFql1kJAj53iyU2fNKyH4jI2b7t70MZ5YbAuPBZ';
 
@@ -26,7 +26,8 @@ class AuthenticationService {
       };
 
       /// fetch data
-      var response = await _networkHelper.authorizedPost(
+      /// MODIFIED TO USE EXPONENTIAL RETRY
+      var response = await _networkHelper.authorizedPublicPost(
           AUTH_SERVICE_API_URL, authServiceHeaders, null);
 
       /// check to see if response has an error

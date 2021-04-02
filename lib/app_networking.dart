@@ -8,6 +8,10 @@ class NetworkHelper {
   ///TODO: different errors thrown by the Dio client DioErrorType.RESPONSE
   const NetworkHelper();
 
+  static const int SSO_REFRESH_MAX_RETRIES = 3;
+  static const int SSO_REFRESH_RETRY_INCREMENT = 5000;
+  static const int SSO_REFRESH_RETRY_MULTIPLIER = 3;
+
   Future<dynamic> fetchData(String url) async {
     Dio dio = new Dio();
     dio.options.connectTimeout = 20000;
@@ -44,6 +48,46 @@ class NetworkHelper {
 
       throw Exception('Failed to fetch data: ' + _response.data);
     }
+  }
+
+  // method for implementing exponential backoff for silentLogin
+  // mimicking existing code from React Native versions of campus-mobile
+  Future<dynamic> authorizedPublicPost(
+      String url, Map<String, String> headers, dynamic body) async {
+      print("SILENTLOGIN: in authorizedPublicPost");
+      int retries = 0;
+      int waitTime = 0;
+      try {
+        var response = await authorizedPost(url, headers, body);
+        return response;
+      }
+      catch(e) {
+        // exponential backoff here
+        // waitTime = SSO_REFRESH_RETRY_INCREMENT;
+        retries++;
+        waitTime = SSO_REFRESH_RETRY_INCREMENT;
+        while(retries <= SSO_REFRESH_MAX_RETRIES) {
+          print("SILENTLOGIN: Retrying in ${waitTime} ms...");
+
+          // wait for the wait time to elapse
+          await Future.delayed(Duration(milliseconds: waitTime));
+
+          // calculate new wait time (not exponential for now, mimicking previous code)
+          waitTime *= SSO_REFRESH_RETRY_MULTIPLIER;
+          // try to log in again
+          try {
+            print("SILENTLOGIN: Retrying now...");
+            var response = await authorizedPost(url, headers, body);
+
+            // no exception thrown, success, return response
+            return response;
+          }
+          catch(e) {
+            // still raising an exception, increment retries and try again
+            retries++;
+          }
+        }
+      }
   }
 
   Future<dynamic> authorizedPost(
