@@ -38,6 +38,8 @@ class SpeedTestService {
       _isLoading = false;
       return true;
     } catch (exception) {
+      // Occurs when there is no connection
+      _speedTestModel = SpeedTestModel.fromJson(null, null, null, false);
       _error = exception.toString();
       _isLoading = false;
       return false;
@@ -52,12 +54,13 @@ class SpeedTestService {
     bool isUCSDWIFI;
     // Check for UCSD wifi
     WifiInfo wiFiInfo = await WifiConnection.wifiInfo.then((value) {
-      if ((!value.ssid.contains("UCSD-PROTECTED")) &&
-          (!value.ssid.contains("UCSD-GUEST")) &&
-          (!value.ssid.contains("ResNet"))) {
-        isUCSDWIFI = false;
-        return null;
-      }
+      //TODO: Uncomment when done testing
+      // if ((!value.ssid.contains("UCSD-PROTECTED")) &&
+      //     (!value.ssid.contains("UCSD-GUEST")) &&
+      //     (!value.ssid.contains("ResNet"))) {
+      //   isUCSDWIFI = false;
+      //   return null;
+      // }
       isUCSDWIFI = true;
       return value;
     });
@@ -80,7 +83,7 @@ class SpeedTestService {
     final Map<String, String> tokenHeaders = {
       "content-type": 'application/x-www-form-urlencoded',
       "Authorization":
-          "Basic djJlNEpYa0NJUHZ5akFWT0VRXzRqZmZUdDkwYTp2emNBZGFzZWpmaWZiUDc2VUJjNDNNVDExclVh"
+      "Basic djJlNEpYa0NJUHZ5akFWT0VRXzRqZmZUdDkwYTp2emNBZGFzZWpmaWZiUDc2VUJjNDNNVDExclVh"
     };
     try {
       var response = await _networkHelper.authorizedPost(
@@ -95,3 +98,4 @@ class SpeedTestService {
     }
   }
 }
+

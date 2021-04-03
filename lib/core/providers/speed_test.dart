@@ -70,15 +70,17 @@ class SpeedTestProvider extends ChangeNotifier {
   }
 
   void speedTest() async {
-    //resetSpeedTest();
 
-    await downloadSpeedTest();
-    _timer.reset();
-    await uploadSpeedTest();
-    if (_percentUploaded == 1.0 && _percentDownloaded == 1.0) {
-      _speedTestDone = true;
-      notifyListeners();
-    }
+    resetSpeedTest();
+    downloadSpeedTest().then((value) {
+      _timer.reset();
+      uploadSpeedTest().then((value) {
+        if (_percentUploaded == 1.0 && _percentDownloaded == 1.0) {
+          _speedTestDone = true;
+          notifyListeners();
+        }
+      });
+    });
   }
 
   Future uploadSpeedTest() async {
@@ -235,16 +237,16 @@ class SpeedTestProvider extends ChangeNotifier {
       }
     } else {
       try {
-        await getNewToken();
-        var response = await _networkHelper
-            .authorizedPost(mobileLoggerApi, headers, json.encode(log))
-            .then((value) {
-          return value;
-        });
+       getNewToken().then((value){
+         _networkHelper
+             .authorizedPost(mobileLoggerApi, headers, json.encode(log));
+       });
       } catch (Exception) {
-        getNewToken();
-        var response = _networkHelper.authorizedPost(
-            mobileLoggerApi, headers, json.encode(log));
+        getNewToken().then((value){
+          _networkHelper.authorizedPost(
+              mobileLoggerApi, headers, json.encode(log));
+        });
+
       }
     }
   }
@@ -259,8 +261,12 @@ class SpeedTestProvider extends ChangeNotifier {
           'Bearer ${_userDataProvider?.authenticationModel?.accessToken}'
     };
     wiFiLog = {
-      "userId": (_userDataProvider.userProfileModel.pid) == null ? "" :_userDataProvider.userProfileModel.pid ,
-      "userEmail":(_userDataProvider.userProfileModel.username) == null? "": _userDataProvider.userProfileModel.username+"@ucsd.edu",
+      "userId": (_userDataProvider.userProfileModel.pid) == null
+          ? ""
+          : _userDataProvider.userProfileModel.pid,
+      "userEmail": (_userDataProvider.userProfileModel.username) == null
+          ? ""
+          : _userDataProvider.userProfileModel.username + "@ucsd.edu",
       "Platform": _speedTestModel.platform,
       "SSID": _speedTestModel.ssid,
       "BSSID": _speedTestModel.bssid,
@@ -303,13 +309,16 @@ class SpeedTestProvider extends ChangeNotifier {
       }
     } else {
       try {
-        await getNewToken();
-        var response = _networkHelper.authorizedPost(
-            mobileLoggerApi, headers, json.encode(wiFiLog));
+        getNewToken().then((value){
+          _networkHelper.authorizedPost(
+              mobileLoggerApi, headers, json.encode(wiFiLog));
+        });
       } catch (Exception) {
-        getNewToken();
-        var response = _networkHelper.authorizedPost(
-            mobileLoggerApi, headers, json.encode(wiFiLog));
+        getNewToken().then((value){
+          var response = _networkHelper.authorizedPost(
+              mobileLoggerApi, headers, json.encode(wiFiLog));
+        });
+
       }
     }
   }
@@ -322,12 +331,13 @@ class SpeedTestProvider extends ChangeNotifier {
           "Basic djJlNEpYa0NJUHZ5akFWT0VRXzRqZmZUdDkwYTp2emNBZGFzZWpmaWZiUDc2VUJjNDNNVDExclVh"
     };
     try {
-      var response = await _networkHelper.authorizedPost(
-          tokenEndpoint, tokenHeaders, "grant_type=client_credentials");
-
-      headers["Authorization"] = "Bearer " + response["access_token"];
-
-      return true;
+      return _networkHelper
+          .authorizedPost(
+              tokenEndpoint, tokenHeaders, "grant_type=client_credentials")
+          .then((response) {
+        headers["Authorization"] = "Bearer " + response["access_token"];
+        return true;
+      });
     } catch (e) {
       return false;
     }

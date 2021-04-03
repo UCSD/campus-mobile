@@ -50,8 +50,7 @@ class _WiFiCardState extends State<WiFiCard> {
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
-      reload: () => Provider.of<SpeedTestProvider>(context, listen: false)
-          .resetSpeedTest(),
+      reload: () => Provider.of<SpeedTestProvider>(context, listen: false).init(),
       isLoading: _speedTestProvider.isLoading,
       titleText: CardTitleConstants.titleMap[cardId],
       errorText: _speedTestProvider.error,
@@ -71,6 +70,7 @@ class _WiFiCardState extends State<WiFiCard> {
 
   Widget buildCardContent(BuildContext context) {
     _speedTestProvider.addListener(() {
+      //TODO: Add print statements to verify not reloading
       try {
         if (!_speedTestProvider.isUCSDWiFi) {
           cardState = TestStatus.unavailable;
@@ -93,6 +93,7 @@ class _WiFiCardState extends State<WiFiCard> {
     });
 
     switch (cardState) {
+      //TODO: Add check to verify not over-checking states
       case TestStatus.initial:
         return Padding(
           padding: const EdgeInsets.all(8.0),
