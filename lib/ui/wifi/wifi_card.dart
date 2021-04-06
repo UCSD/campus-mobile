@@ -70,6 +70,7 @@ class _WiFiCardState extends State<WiFiCard> {
 
   Widget buildCardContent(BuildContext context) {
     _speedTestProvider.addListener(() {
+
       //TODO: Add print statements to verify not reloading
       try {
         if (!_speedTestProvider.isUCSDWiFi) {
@@ -190,67 +191,63 @@ class _WiFiCardState extends State<WiFiCard> {
             style: TextStyle(fontSize: 15, color: Colors.grey),
           ),
         ])),
-        Padding(
-          padding: const EdgeInsets.all(4.0),
-          child: MaterialButton(
-              elevation: 0.0,
-              onPressed: () {
-                setState(() {
-                  cardState = TestStatus.running;
-                  _speedTestProvider.speedTest();
-                });
-              },
-              minWidth: 350,
-              height: 40,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5.0),
-                side: BorderSide(color: Colors.black),
-              ),
-              color: darkAppBarTheme.color,
-              child: Text(
-                "Run Speed Test",
-                style: TextStyle(color: Colors.white),
-              )),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(bottom: 12.0),
-          child: MaterialButton(
-              disabledColor: Colors.grey,
-              onPressed: _buttonEnabled
-                  ? () {
-                      _speedTestProvider.reportIssue();
-                      return showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              content: Container(
-                                child: Text(
-                                    "Please run speed test to report issue."),
-                              ),
-                              actions: <Widget>[
-                                FlatButton(
-                                    child: Text("Dismiss"),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    })
-                              ],
-                            );
-                          });
-                    }
-                  : null,
-              minWidth: 350,
-              height: 40,
-              elevation: 0.0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5.0),
-                side: BorderSide(color: Colors.black),
-              ),
-              color: Colors.grey.shade100,
-              child: Text(
-                "Report Issue",
-                style: TextStyle(color: Colors.black),
-              )),
-        ),
+        MaterialButton(
+          padding:EdgeInsets.all(4.0) ,
+            elevation: 0.0,
+            onPressed: () {
+              setState(() {
+                cardState = TestStatus.running;
+                _speedTestProvider.speedTest();
+              });
+            },
+            minWidth: 350,
+            height: 40,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5.0),
+              side: BorderSide(color: Colors.black),
+            ),
+            color: darkAppBarTheme.color,
+            child: Text(
+              "Run Speed Test",
+              style: TextStyle(color: Colors.white),
+            )),
+        MaterialButton(
+          padding: EdgeInsets.all( 12.0),
+            disabledColor: Colors.grey,
+            onPressed: _buttonEnabled
+                ? () {
+                    _speedTestProvider.reportIssue();
+                    return showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            content: Container(
+                              child: Text(
+                                  "Please run speed test to report issue."),
+                            ),
+                            actions: <Widget>[
+                              FlatButton(
+                                  child: Text("Dismiss"),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  })
+                            ],
+                          );
+                        });
+                  }
+                : null,
+            minWidth: 350,
+            height: 40,
+            elevation: 0.0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5.0),
+              side: BorderSide(color: Colors.black),
+            ),
+            color: Colors.grey.shade100,
+            child: Text(
+              "Report Issue",
+              style: TextStyle(color: Colors.black),
+            )),
       ],
     );
   }
