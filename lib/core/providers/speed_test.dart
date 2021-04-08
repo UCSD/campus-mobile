@@ -62,6 +62,7 @@ class SpeedTestProvider extends ChangeNotifier {
     _isLoading = false;
     _speedTestModel = _speedTestService.speedTestModel;
     connectedToUCSDWifi();
+    resetSpeedTest();
   }
 
   void connectedToUCSDWifi() async {
@@ -150,6 +151,7 @@ class SpeedTestProvider extends ChangeNotifier {
     _percentUploaded = 0.0;
     _speedDownload = 0.00;
     _speedUpload = 0.0;
+    notifyListeners();
   }
 
   void cancelDownload() {
@@ -195,7 +197,6 @@ class SpeedTestProvider extends ChangeNotifier {
       "UploadSpeed": _speedUpload.toStringAsPrecision(3),
     };
 
-    //TODO: Send data for submission
     sentSuccessfully = true;
     sendLogs(wiFiLog);
     return sentSuccessfully; //Due to failed submission or not connected to wifi

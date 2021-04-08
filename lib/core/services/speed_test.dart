@@ -54,13 +54,12 @@ class SpeedTestService {
     bool isUCSDWIFI;
     // Check for UCSD wifi
     WifiInfo wiFiInfo = await WifiConnection.wifiInfo.then((value) {
-      //TODO: Uncomment when done testing
-      // if ((!value.ssid.contains("UCSD-PROTECTED")) &&
-      //     (!value.ssid.contains("UCSD-GUEST")) &&
-      //     (!value.ssid.contains("ResNet"))) {
-      //   isUCSDWIFI = false;
-      //   return null;
-      // }
+      if ((!value.ssid.contains("UCSD-PROTECTED")) &&
+          (!value.ssid.contains("UCSD-GUEST")) &&
+          (!value.ssid.contains("ResNet"))) {
+        isUCSDWIFI = false;
+        return null;
+      }
       isUCSDWIFI = true;
       return value;
     });
