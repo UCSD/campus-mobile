@@ -88,6 +88,9 @@ class NetworkHelper {
           }
         }
       }
+      // if here, silent login has failed
+      // throw exception to inform caller
+      throw new Exception(ErrorConstants.silentLoginFailed);
   }
 
   Future<dynamic> authorizedPost(
