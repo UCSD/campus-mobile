@@ -274,12 +274,13 @@ class PushNotificationDataProvider extends ChangeNotifier {
         }
       }
     }
+    return 'Topic not found';
   }
 
   /// Get student only topics
   List<String> studentTopics() {
     print('FCM: studentTopics');
-    List<String> topicsToReturn = List<String>();
+    List<String> topicsToReturn = [];
     for (TopicsModel model in _notificationService.topicsModel ?? []) {
       if (model.audienceId == 'student') {
         for (Topic topic in model.topics) {
@@ -294,7 +295,7 @@ class PushNotificationDataProvider extends ChangeNotifier {
   /// Get staff only topics
   List<String> staffTopics() {
     print('FCM: staffTopics');
-    List<String> topicsToReturn = List<String>();
+    List<String> topicsToReturn = [];
     for (TopicsModel model in _notificationService.topicsModel ?? []) {
       if (model.audienceId == 'staff') {
         for (Topic topic in model.topics) {
@@ -309,7 +310,7 @@ class PushNotificationDataProvider extends ChangeNotifier {
   /// Get all public topics
   List<String> publicTopics() {
     print('FCM: publicTopics');
-    List<String> topicsToReturn = List<String>();
+    List<String> topicsToReturn = [];
     for (TopicsModel model in _topicsModel ?? []) {
       if (model.audienceId == 'all') {
         for (Topic topic in model.topics) {

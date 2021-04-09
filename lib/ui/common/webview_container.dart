@@ -144,7 +144,7 @@ class _WebViewContainerState extends State<WebViewContainer>
   }
 
   Widget buildMenuOptions(Map<String, Function> menuOptions) {
-    List<DropdownMenuItem<String>> menu = List<DropdownMenuItem<String>>();
+    List<DropdownMenuItem<String>> menu = [];
     menuOptions.forEach((menuOption, func) {
       Widget item = DropdownMenuItem<String>(
         value: menuOption,

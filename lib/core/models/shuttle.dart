@@ -22,7 +22,7 @@ class ShuttleModel {
   String description;
   String routeType;
   Color color;
-  List<ShuttleStopModel> stops = List<ShuttleStopModel>();
+  List<ShuttleStopModel> stops = [];
 
   ShuttleModel(
       {this.displayOrder,
@@ -66,7 +66,7 @@ class ShuttleModel {
 
   List<ShuttleModel> getListOfShuttles(String str) {
     Map<String, dynamic> list = json.decode(str);
-    List<ShuttleModel> ret = List<ShuttleModel>();
+    List<ShuttleModel> ret = [];
     list.forEach((key, value) {
       ret.add(ShuttleModel(
           displayOrder:

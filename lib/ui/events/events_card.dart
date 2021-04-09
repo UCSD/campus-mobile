@@ -1,5 +1,4 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
-import 'package:campus_mobile_experimental/app_router.dart';
 import 'package:campus_mobile_experimental/core/models/events.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/events.dart';
@@ -16,7 +15,7 @@ class EventsCard extends StatelessWidget {
   }
 
   List<Widget> buildActionButtons(BuildContext context, List<EventModel> data) {
-    List<Widget> actionButtons = List<Widget>();
+    List<Widget> actionButtons = [];
     actionButtons.add(TextButton(
       child: Text(
         'View All',

@@ -105,7 +105,7 @@ class _HomeState extends State<Home> {
   }
 
   List<Widget> getNoticesCardsList(List<NoticesModel> notices) {
-    List<Widget> noticesCards = List<Widget>();
+    List<Widget> noticesCards = [];
     for (NoticesModel notice in notices) {
       noticesCards.add(NoticesCard(notice: notice));
     }
@@ -113,7 +113,7 @@ class _HomeState extends State<Home> {
   }
 
   List<Widget> getOrderedCardsList(List<String> order) {
-    List<Widget> orderedCards = List<Widget>();
+    List<Widget> orderedCards = [];
     Map<String, CardsModel> webCards =
         Provider.of<CardsDataProvider>(context, listen: false).webCards;
 

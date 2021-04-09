@@ -80,7 +80,7 @@ class ShuttleDataProvider extends ChangeNotifier {
     }
 
     ///create an empty list that will be returned
-    List<ShuttleStopModel> orderedListOfStops = List<ShuttleStopModel>();
+    List<ShuttleStopModel> orderedListOfStops = [];
 
     /// remove lots as we add them to the ordered list
     for (int stopID in order) {
@@ -200,7 +200,7 @@ class ShuttleDataProvider extends ChangeNotifier {
       if (userDataProvider.userProfileModel != null)
         return makeOrderedList(userDataProvider.userProfileModel.selectedStops);
     }
-    return List<ShuttleStopModel>();
+    return [];
   }
 
   Map<int, ShuttleStopModel> get stopsNotSelected {

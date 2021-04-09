@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class PushNotificationWrapper extends StatefulWidget {
-  PushNotificationWrapper({Widget this.child});
+  PushNotificationWrapper({this.child});
   final Widget child;
 
   @override

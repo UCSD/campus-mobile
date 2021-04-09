@@ -112,7 +112,7 @@ class _ParkingCardState extends State<ParkingCard>
   }
 
   List<Widget> buildActionButtons() {
-    List<Widget> actionButtons = List<Widget>();
+    List<Widget> actionButtons = [];
     actionButtons.add(TextButton(
       child: Text(
         'Manage Lots',

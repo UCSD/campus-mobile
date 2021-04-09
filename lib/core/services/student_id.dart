@@ -5,9 +5,9 @@ import 'package:campus_mobile_experimental/core/models/student_id_photo.dart';
 import 'package:campus_mobile_experimental/core/models/student_id_profile.dart';
 
 class StudentIdService {
-  final String MY_STUDENT_PROFILE_API_URL =
+  final String myStudentProfileApiUrl =
       'https://api-qa.ucsd.edu:8243/student/my/v1';
-  final String MY_STUDENT_CONTACT_API_URL =
+  final String myStudentContactApiUrl =
       'https://api-qa.ucsd.edu:8243/student/my/student_contact_info/v1';
 
   bool _isLoading = false;
@@ -27,7 +27,7 @@ class StudentIdService {
     try {
       /// fetch data
       String _response = await _networkHelper.authorizedFetch(
-          MY_STUDENT_CONTACT_API_URL + '/barcode', headers);
+          myStudentContactApiUrl + '/barcode', headers);
 
       /// parse data
       _studentIdBarcodeModel = studentIdBarcodeModelFromJson(_response);
@@ -47,7 +47,7 @@ class StudentIdService {
     try {
       /// fetch data
       String _response = await _networkHelper.authorizedFetch(
-          MY_STUDENT_CONTACT_API_URL + '/display_name', headers);
+          myStudentContactApiUrl + '/display_name', headers);
 
       /// parse data
       _studentIdNameModel = studentIdNameModelFromJson(_response);
@@ -67,7 +67,7 @@ class StudentIdService {
     try {
       /// fetch data
       String _response = await _networkHelper.authorizedFetch(
-          MY_STUDENT_CONTACT_API_URL + '/photo', headers);
+          myStudentContactApiUrl + '/photo', headers);
 
       /// parse data
       _studentIdPhotoModel = studentIdPhotoModelFromJson(_response);
@@ -87,7 +87,7 @@ class StudentIdService {
     try {
       /// fetch data
       String _response = await _networkHelper.authorizedFetch(
-          MY_STUDENT_PROFILE_API_URL + '/profile', headers);
+          myStudentProfileApiUrl + '/profile', headers);
 
       _studentIdProfileModel = studentIdProfileModelFromJson(_response);
       _isLoading = false;

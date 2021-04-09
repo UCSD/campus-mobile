@@ -3,7 +3,6 @@ import 'dart:typed_data';
 
 import 'package:campus_mobile_experimental/core/models/authentication.dart';
 import 'package:campus_mobile_experimental/core/models/user_profile.dart';
-import 'package:campus_mobile_experimental/core/providers/availability.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/notifications.dart';
 import 'package:campus_mobile_experimental/core/services/authentication.dart';
@@ -45,7 +44,6 @@ class UserDataProvider extends ChangeNotifier {
   AuthenticationService _authenticationService;
   UserProfileService _userProfileService;
   PushNotificationDataProvider _pushNotificationDataProvider;
-  AvailabilityDataProvider _availabilityDataProvider;
 
   /// Update the [AuthenticationModel] stored in state
   /// overwrite the [AuthenticationModel] in persistent storage with the model passed in
@@ -85,8 +83,6 @@ class UserDataProvider extends ChangeNotifier {
     print('UserDataProvider:_loadSavedAuthenticationModel');
     var authBox =
         await Hive.openBox<AuthenticationModel>('AuthenticationModel');
-
-    int boxLength = authBox.length;
 
     AuthenticationModel temp = AuthenticationModel.fromJson({});
     //check to see if we have added the authentication model into the box already

@@ -15,7 +15,7 @@ class ClassList extends StatelessWidget {
   }
 
   Widget buildSchedule(BuildContext context) {
-    List<Widget> list = List<Widget>();
+    List<Widget> list = [];
     Provider.of<ClassScheduleDataProvider>(context)
         .enrolledClasses
         .addAll(Provider.of<ClassScheduleDataProvider>(context).midterms);

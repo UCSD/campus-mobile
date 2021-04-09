@@ -49,7 +49,7 @@ class _ShuttleCardState extends State<ShuttleCard> {
     // print("Stops - ${stopsToRender.length}");
     // print("Arrivals - ${arrivalsToRender.length}");
 
-    List<Widget> renderList = List<Widget>();
+    List<Widget> renderList = [];
 
     if (_shuttleCardDataProvider.closestStop != null) {
       renderList.add(ShuttleDisplay(
@@ -96,7 +96,7 @@ class _ShuttleCardState extends State<ShuttleCard> {
   }
 
   List<Widget> buildActionButtons() {
-    List<Widget> actionButtons = List<Widget>();
+    List<Widget> actionButtons = [];
     actionButtons.add(TextButton(
       child: Text(
         'Manage Shuttle Stops',

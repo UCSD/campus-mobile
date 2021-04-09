@@ -27,7 +27,7 @@ class _DiningMenuListState extends State<DiningMenuList> {
     DiningMenuItemsModel menu =
         Provider.of<DiningDataProvider>(context, listen: false)
             .getMenuData(widget.model.id);
-    List<String> filters = List<String>();
+    List<String> filters = [];
     if (Provider.of<DiningDataProvider>(context, listen: false)
         .filtersSelected[0]) {
       filters.add('VT');
@@ -54,7 +54,7 @@ class _DiningMenuListState extends State<DiningMenuList> {
       List<MenuItem> menuList =
           Provider.of<DiningDataProvider>(context, listen: false)
               .getMenuItems(widget.model.id, filters);
-      List<Widget> list = List<Widget>();
+      List<Widget> list = [];
       if (menuList.length > 0) {
         for (MenuItem item in menuList) {
           list.add(GestureDetector(
@@ -72,7 +72,7 @@ class _DiningMenuListState extends State<DiningMenuList> {
                   TextSpan(
                     text: " (\$${item.price})",
                     style: TextStyle(
-                        color: Theme.of(context).textTheme.body1.color),
+                        color: Theme.of(context).textTheme.bodyText2.color),
                   )
                 ],
               ),

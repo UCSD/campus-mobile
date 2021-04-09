@@ -55,7 +55,7 @@ class MyUCSDChartCard extends StatelessWidget {
   }
 
   List<Widget> buildActionButtons(BuildContext context) {
-    List<Widget> actionButtons = List<Widget>();
+    List<Widget> actionButtons = [];
     actionButtons.add(TextButton(
       child: Text(
         'Log in to MyUCSDChart',

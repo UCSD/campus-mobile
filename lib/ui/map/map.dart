@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
 import 'package:campus_mobile_experimental/core/providers/map.dart';
+import 'package:campus_mobile_experimental/ui/map/directions_button.dart';
 import 'package:campus_mobile_experimental/ui/map/map_search_bar_ph.dart';
 import 'package:campus_mobile_experimental/ui/map/more_results_list.dart';
 import 'package:campus_mobile_experimental/ui/map/my_location_button.dart';
-import 'package:campus_mobile_experimental/ui/map/directions_button.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -36,7 +36,7 @@ class Maps extends StatelessWidget {
     double width = MediaQuery.of(context).size.width;
 
     return Positioned(
-      bottom: width * 0.05,
+      bottom: height * 0.05,
       right: width * 0.05,
       child: Column(
         children: [
