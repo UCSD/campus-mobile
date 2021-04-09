@@ -15,7 +15,7 @@ const String cardId = 'schedule';
 class ClassScheduleCard extends StatelessWidget {
   List<Widget> buildActionButtons(BuildContext context) {
     List<Widget> actionButtons = List<Widget>();
-    actionButtons.add(FlatButton(
+    actionButtons.add(TextButton(
       child: Text(
         'View All',
       ),

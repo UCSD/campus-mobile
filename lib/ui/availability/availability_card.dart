@@ -76,7 +76,7 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
 
   List<Widget> buildActionButtons() {
     List<Widget> actionButtons = List<Widget>();
-    actionButtons.add(FlatButton(
+    actionButtons.add(TextButton(
       child: Text(
         'Manage Locations',
       ),

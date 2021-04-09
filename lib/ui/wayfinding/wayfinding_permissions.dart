@@ -141,13 +141,13 @@ class _AdvancedWayfindingPermissionState
                               content: Text(
                                   "This feature use Bluetooth to connect with other devices."),
                               actions: <Widget>[
-                                FlatButton(
+                                TextButton(
                                   child: Text('Cancel'),
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },
                                 ),
-                                FlatButton(
+                                TextButton(
                                   child: Text('Settings'),
                                   onPressed: () {
                                     AppSettings.openAppSettings();
@@ -162,13 +162,13 @@ class _AdvancedWayfindingPermissionState
                             content: Text(
                                 "This feature use Bluetooth to connect with other devices."),
                             actions: <Widget>[
-                              FlatButton(
+                              TextButton(
                                 child: Text('Cancel'),
                                 onPressed: () {
                                   Navigator.of(context).pop();
                                 },
                               ),
-                              FlatButton(
+                              TextButton(
                                 child: Text('Settings'),
                                 onPressed: () {
                                   AppSettings.openAppSettings();

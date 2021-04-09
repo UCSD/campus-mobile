@@ -151,8 +151,10 @@ class _OnboardingScreen extends State<OnboardingScreen>
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               Expanded(
-                  child: FlatButton(
-                color: ColorPrimary,
+                  child: TextButton(
+                style: TextButton.styleFrom(
+                  primary: ColorPrimary,
+                ),
                 onPressed: () {
                   Navigator.of(context).push(_routeToAffiliations());
                 },
@@ -165,8 +167,10 @@ class _OnboardingScreen extends State<OnboardingScreen>
                 ),
               )),
               Expanded(
-                child: FlatButton(
-                  color: ColorPrimary,
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    primary: ColorPrimary,
+                  ),
                   onPressed: () {
                     Navigator.of(context).push(_routeToLogin());
                   },

@@ -114,8 +114,10 @@ class _OnboardingInitialState extends State<OnboardingInitial>
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
                         Expanded(
-                            child: FlatButton(
-                          color: ColorPrimary,
+                            child: TextButton(
+                          style: TextButton.styleFrom(
+                            primary: ColorPrimary,
+                          ),
                           child: Text(
                             "Get Started",
                             style: TextStyle(
@@ -125,8 +127,10 @@ class _OnboardingInitialState extends State<OnboardingInitial>
                           ),
                         )),
                         Expanded(
-                          child: FlatButton(
-                            color: ColorPrimary,
+                          child: TextButton(
+                            style: TextButton.styleFrom(
+                              primary: ColorPrimary,
+                            ),
                             child: Text(
                               "Log In",
                               style: TextStyle(

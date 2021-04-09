@@ -113,7 +113,7 @@ class _ParkingCardState extends State<ParkingCard>
 
   List<Widget> buildActionButtons() {
     List<Widget> actionButtons = List<Widget>();
-    actionButtons.add(FlatButton(
+    actionButtons.add(TextButton(
       child: Text(
         'Manage Lots',
       ),
@@ -121,7 +121,7 @@ class _ParkingCardState extends State<ParkingCard>
         Navigator.pushNamed(context, RoutePaths.ManageParkingView);
       },
     ));
-    actionButtons.add(FlatButton(
+    actionButtons.add(TextButton(
       child: Text(
         'Manage Spots',
       ),

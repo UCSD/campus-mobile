@@ -16,8 +16,9 @@ class ScannerCard extends StatelessWidget {
     return CardContainer(
       active: true,
       hide: () => null,
-      reload: () => Provider.of<ScannerMessageDataProvider>(context, listen: false)
-          .fetchData(),
+      reload: () =>
+          Provider.of<ScannerMessageDataProvider>(context, listen: false)
+              .fetchData(),
       isLoading: Provider.of<ScannerMessageDataProvider>(context).isLoading,
       titleText: CardTitleConstants.titleMap[cardId],
       errorText: null,
@@ -68,7 +69,7 @@ class ScannerCard extends StatelessWidget {
 
   Widget buildActionButton(BuildContext context) {
     _userDataProvider = Provider.of<UserDataProvider>(context);
-    return FlatButton(
+    return TextButton(
       child: Text(
         getActionButtonText(context),
       ),
@@ -118,29 +119,30 @@ class ScannerCard extends StatelessWidget {
   }
 
   Widget getMessageWidget(BuildContext context) {
-    if(Provider.of<UserDataProvider>(context, listen: false).isLoggedIn &&
-        Provider.of<ScannerMessageDataProvider>(context, listen: false).scannerMessageModel.collectionTime != null) {
-      return(
-          Padding(
-            padding: const EdgeInsets.only(top:8.0),
-            child: Text.rich(
+    if (Provider.of<UserDataProvider>(context, listen: false).isLoggedIn &&
+        Provider.of<ScannerMessageDataProvider>(context, listen: false)
+                .scannerMessageModel
+                .collectionTime !=
+            null) {
+      return (Padding(
+        padding: const EdgeInsets.only(top: 8.0),
+        child: Text.rich(
+          TextSpan(
+            children: [
               TextSpan(
-                children: [
-                  TextSpan(
-                    text: "Last scan: ",
-                  ),
-                  TextSpan(
-                      text: Provider.of<ScannerMessageDataProvider>(context,listen: false)
-                          .scannerMessageModel.collectionTime,
-                      style: TextStyle(fontWeight: FontWeight.w600)
-                  ),
-                ],
+                text: "Last scan: ",
               ),
-            ),
-          )
-      );
-    }
-    else {
+              TextSpan(
+                  text: Provider.of<ScannerMessageDataProvider>(context,
+                          listen: false)
+                      .scannerMessageModel
+                      .collectionTime,
+                  style: TextStyle(fontWeight: FontWeight.w600)),
+            ],
+          ),
+        ),
+      ));
+    } else {
       return Container(width: 0, height: 0);
     }
   }

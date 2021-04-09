@@ -88,7 +88,6 @@ class ScanditScanner extends StatelessWidget {
         ],
       ));
     } else if (_scannerDataProvider.successfulSubmission) {
-
       return (renderSuccessScreen(context));
     } else if (_scannerDataProvider.didError) {
       return (renderFailureScreen(context));
@@ -135,8 +134,13 @@ class ScanditScanner extends StatelessWidget {
               ),
               Padding(
                 padding: EdgeInsets.only(top: 16.0),
-                child: FlatButton(
-                  padding: EdgeInsets.only(left: 32.0, right: 32.0),
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                      padding: EdgeInsets.only(left: 32.0, right: 32.0),
+                      primary: lightButtonColor,
+                      textStyle: TextStyle(
+                        color: Colors.white,
+                      )),
                   onPressed: () {
                     _scannerDataProvider.setDefaultStates();
                   },
@@ -144,8 +148,6 @@ class ScanditScanner extends StatelessWidget {
                     "Try again",
                     style: TextStyle(fontSize: 18.0),
                   ),
-                  color: lightButtonColor,
-                  textColor: Colors.white,
                 ),
               ),
             ])),
@@ -230,12 +232,12 @@ class ScanditScanner extends StatelessWidget {
   }
 
   void updateLatestScan(BuildContext context) {
-    if(_scannerDataProvider.successfulSubmission && !hasUpdatedLatestScan) {
+    if (_scannerDataProvider.successfulSubmission && !hasUpdatedLatestScan) {
       // to fetch the most recent scan and display timestamp to user to confirm success
       print("updating");
-      Provider.of<ScannerMessageDataProvider>(context, listen: false).fetchData();
+      Provider.of<ScannerMessageDataProvider>(context, listen: false)
+          .fetchData();
       hasUpdatedLatestScan = true;
     }
   }
-
 }

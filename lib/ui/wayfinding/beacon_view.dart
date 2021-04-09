@@ -93,14 +93,14 @@ class _BeaconViewState extends State<BeaconView> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              RaisedButton(
+              ElevatedButton(
                 onPressed: _startBroadcast,
                 child: Text(
                   "Start Broadcasting",
                   style: TextStyle(color: Colors.white),
                 ),
               ),
-              RaisedButton(
+              ElevatedButton(
                 onPressed: _stopBroadcast,
                 child: Text(
                   "Stop Broadcasting",

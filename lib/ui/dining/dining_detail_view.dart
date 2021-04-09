@@ -52,7 +52,7 @@ class DiningDetailView extends StatelessWidget {
   Widget buildDirectionsButton(
       BuildContext context, prefix0.DiningModel model) {
     if (model.distance != null)
-      return FlatButton(
+      return TextButton(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[

@@ -45,15 +45,20 @@ class _OnboardingAffiliationsState extends State<OnboardingAffiliations> {
                 child: SizedBox(
                   width: double.infinity,
                   height: 45,
-                  child: FlatButton(
-                      color: studentSelected ? darkButtonColor : ColorPrimary,
-                      textColor:
-                          studentSelected ? ColorPrimary : darkButtonColor,
-                      shape: ContinuousRectangleBorder(
-                          side: BorderSide(
-                              color: darkButtonColor,
-                              width: 1,
-                              style: BorderStyle.solid)),
+                  child: TextButton(
+                      style: TextButton.styleFrom(
+                        primary:
+                            studentSelected ? darkButtonColor : ColorPrimary,
+                        textStyle: TextStyle(
+                          color:
+                              studentSelected ? ColorPrimary : darkButtonColor,
+                        ),
+                        shape: ContinuousRectangleBorder(
+                            side: BorderSide(
+                                color: darkButtonColor,
+                                width: 1,
+                                style: BorderStyle.solid)),
+                      ),
                       onPressed: () {
                         this.setState(() {
                           studentSelected = !studentSelected;
@@ -73,14 +78,18 @@ class _OnboardingAffiliationsState extends State<OnboardingAffiliations> {
                 child: SizedBox(
                   width: double.infinity,
                   height: 45,
-                  child: FlatButton(
-                      color: staffSelected ? darkButtonColor : ColorPrimary,
-                      textColor: staffSelected ? ColorPrimary : darkButtonColor,
-                      shape: ContinuousRectangleBorder(
-                          side: BorderSide(
-                              color: darkButtonColor,
-                              width: 1,
-                              style: BorderStyle.solid)),
+                  child: TextButton(
+                      style: TextButton.styleFrom(
+                        primary: staffSelected ? darkButtonColor : ColorPrimary,
+                        textStyle: TextStyle(
+                          color: staffSelected ? ColorPrimary : darkButtonColor,
+                        ),
+                        shape: ContinuousRectangleBorder(
+                            side: BorderSide(
+                                color: darkButtonColor,
+                                width: 1,
+                                style: BorderStyle.solid)),
+                      ),
                       onPressed: () {
                         this.setState(() {
                           staffSelected = !staffSelected;
@@ -100,15 +109,20 @@ class _OnboardingAffiliationsState extends State<OnboardingAffiliations> {
                 child: SizedBox(
                   width: double.infinity,
                   height: 45,
-                  child: FlatButton(
-                      color: visitorSelected ? darkButtonColor : ColorPrimary,
-                      textColor:
-                          visitorSelected ? ColorPrimary : darkButtonColor,
-                      shape: ContinuousRectangleBorder(
-                          side: BorderSide(
-                              color: darkButtonColor,
-                              width: 1,
-                              style: BorderStyle.solid)),
+                  child: TextButton(
+                      style: TextButton.styleFrom(
+                        primary:
+                            visitorSelected ? darkButtonColor : ColorPrimary,
+                        textStyle: TextStyle(
+                          color:
+                              visitorSelected ? ColorPrimary : darkButtonColor,
+                        ),
+                        shape: ContinuousRectangleBorder(
+                            side: BorderSide(
+                                color: darkButtonColor,
+                                width: 1,
+                                style: BorderStyle.solid)),
+                      ),
                       onPressed: () {
                         this.setState(() {
                           visitorSelected = !visitorSelected;

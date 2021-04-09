@@ -139,15 +139,19 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                   child: Row(
                     children: <Widget>[
                       Expanded(
-                          child: FlatButton(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                          side: BorderSide(color: Colors.white),
+                          child: TextButton(
+                        style: TextButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                            side: BorderSide(color: Colors.white),
+                          ),
+                          primary: ColorPrimary,
+                          textStyle: TextStyle(
+                            color: lightButtonTextColor,
+                          ),
+                          //child: OutlineButton(
+                          //borderSide: BorderSide(color: ColorPrimary),
                         ),
-                        color: ColorPrimary,
-                        textColor: lightButtonTextColor,
-                        //child: OutlineButton(
-                        //borderSide: BorderSide(color: ColorPrimary),
                         child: Text(
                           'Log in',
                           style: TextStyle(
@@ -232,7 +236,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
 
   Widget showAlertDialog(BuildContext context) {
     // set up the button
-    Widget okButton = FlatButton(
+    Widget okButton = TextButton(
       child: Text("OK"),
       onPressed: () {
         Navigator.of(context).pop();

@@ -97,7 +97,7 @@ class _ShuttleCardState extends State<ShuttleCard> {
 
   List<Widget> buildActionButtons() {
     List<Widget> actionButtons = List<Widget>();
-    actionButtons.add(FlatButton(
+    actionButtons.add(TextButton(
       child: Text(
         'Manage Shuttle Stops',
       ),

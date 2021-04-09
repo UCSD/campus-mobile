@@ -73,7 +73,7 @@ class _LoginState extends State<Login> {
             : "",
         style: TextStyle(fontSize: 17),
       ),
-      trailing: OutlineButton(
+      trailing: OutlinedButton(
         child: Text('logout'),
         onPressed: () => _userDataProvider.logout(),
       ),
@@ -123,7 +123,7 @@ class _LoginState extends State<Login> {
             Row(
               children: <Widget>[
                 Expanded(
-                  child: FlatButton(
+                  child: TextButton(
                     child: Text(
                       'Sign In',
                       style: TextStyle(fontSize: 17),
@@ -140,8 +140,12 @@ class _LoginState extends State<Login> {
                               }
                             });
                           },
-                    color: Theme.of(context).buttonColor,
-                    textColor: Theme.of(context).textTheme.button.color,
+                    style: TextButton.styleFrom(
+                      primary: Theme.of(context).buttonColor,
+                      textStyle: TextStyle(
+                        color: Theme.of(context).textTheme.button.color,
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -182,7 +186,7 @@ class _LoginState extends State<Login> {
 
   Widget showAlertDialog(BuildContext context) {
     // set up the button
-    Widget okButton = FlatButton(
+    Widget okButton = TextButton(
       child: Text("OK"),
       onPressed: () {
         Navigator.of(context).pop();

@@ -30,7 +30,7 @@ class EventDetailView extends StatelessWidget {
       Text(
         data.title,
         textAlign: TextAlign.center,
-        style: Theme.of(context).textTheme.title,
+        style: Theme.of(context).textTheme.headline6,
       ),
       Divider(),
       data.location != null && data.location.isNotEmpty
@@ -66,13 +66,15 @@ class LearnMoreButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: FlatButton(
+      child: TextButton(
           child: Text(
             'Learn More',
             style: TextStyle(
                 fontSize: 16, color: Theme.of(context).textTheme.button.color),
           ),
-          color: Theme.of(context).buttonColor,
+          style: TextButton.styleFrom(
+            primary: Theme.of(context).buttonColor,
+          ),
           onPressed: () async {
             try {
               await launch(link, forceSafariVC: true);

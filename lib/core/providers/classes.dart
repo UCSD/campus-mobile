@@ -80,7 +80,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
         /// fetch grad courses
         if (await _classScheduleService.fetchGRCourses(
             headers, _academicTermModel.termCode)) {
-          _classScheduleModel = _classScheduleService.GRdata;
+          _classScheduleModel = _classScheduleService.grData;
         } else {
           _error = _classScheduleService.error.toString();
         }
@@ -89,9 +89,9 @@ class ClassScheduleDataProvider extends ChangeNotifier {
         if (await _classScheduleService.fetchUNCourses(
             headers, _academicTermModel.termCode)) {
           if (_classScheduleModel.data != null) {
-            _classScheduleModel.data.addAll(_classScheduleService.UNdata.data);
+            _classScheduleModel.data.addAll(_classScheduleService.unData.data);
           } else {
-            _classScheduleModel = _classScheduleService.UNdata;
+            _classScheduleModel = _classScheduleService.unData;
           }
           _error = null;
         } else {

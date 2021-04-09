@@ -82,11 +82,13 @@ class LabeledIconButton extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        FlatButton(
-          padding: EdgeInsets.symmetric(vertical: 12.0),
+        TextButton(
           onPressed: onPressed,
-          shape: CircleBorder(),
-          color: Colors.red,
+          style: TextButton.styleFrom(
+            padding: EdgeInsets.symmetric(vertical: 12.0),
+            shape: CircleBorder(),
+            primary: Colors.red, // foreground
+          ),
           child: Icon(
             icon,
             size: 28,

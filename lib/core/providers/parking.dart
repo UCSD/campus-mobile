@@ -25,7 +25,7 @@ class ParkingDataProvider extends ChangeNotifier {
   bool _isLoading;
   DateTime _lastUpdated;
   String _error;
-  int selected_lots, selected_spots;
+  int selectedLots, selectedSpots;
   static const MAX_SELECTED_LOTS = 10;
   static const MAX_SELECTED_SPOTS = 3;
   Map<String, bool> _parkingViewState = <String, bool>{};
@@ -41,8 +41,8 @@ class ParkingDataProvider extends ChangeNotifier {
 
   void fetchParkingData() async {
     _isLoading = true;
-    selected_spots = 0;
-    selected_lots = 0;
+    selectedSpots = 0;
+    selectedLots = 0;
     _error = null;
     notifyListeners();
 
@@ -68,7 +68,7 @@ class ParkingDataProvider extends ChangeNotifier {
       //Update number of lots selected
       _parkingViewState.forEach((key, value) {
         if (value) {
-          selected_lots++;
+          selectedLots++;
         }
       });
 
@@ -99,7 +99,7 @@ class ParkingDataProvider extends ChangeNotifier {
       //Update number of spots selected
       _selectedSpotTypesState.forEach((key, value) {
         if (value) {
-          selected_spots++;
+          selectedSpots++;
         }
       });
     } else {
@@ -129,13 +129,13 @@ class ParkingDataProvider extends ChangeNotifier {
 
 // add or remove location availability display from card based on user selection, Limit to MAX_SELECTED
   void toggleLot(String location) {
-    if (selected_lots < MAX_SELECTED_LOTS) {
+    if (selectedLots < MAX_SELECTED_LOTS) {
       _parkingViewState[location] = !_parkingViewState[location];
-      _parkingViewState[location] ? selected_lots++ : selected_lots--;
+      _parkingViewState[location] ? selectedLots++ : selectedLots--;
     } else {
       //prevent select
       if (_parkingViewState[location]) {
-        selected_lots--;
+        selectedLots--;
         _parkingViewState[location] = !_parkingViewState[location];
       }
     }
@@ -145,13 +145,13 @@ class ParkingDataProvider extends ChangeNotifier {
   }
 
   void toggleSpotSelection(String spotKey) {
-    if (selected_spots < MAX_SELECTED_SPOTS) {
+    if (selectedSpots < MAX_SELECTED_SPOTS) {
       _selectedSpotTypesState[spotKey] = !_selectedSpotTypesState[spotKey];
-      _selectedSpotTypesState[spotKey] ? selected_spots++ : selected_spots--;
+      _selectedSpotTypesState[spotKey] ? selectedSpots++ : selectedSpots--;
     } else {
       //prevent select
       if (_selectedSpotTypesState[spotKey]) {
-        selected_spots--;
+        selectedSpots--;
         _selectedSpotTypesState[spotKey] = !_selectedSpotTypesState[spotKey];
       }
     }

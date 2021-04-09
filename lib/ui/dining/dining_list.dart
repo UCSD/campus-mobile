@@ -150,7 +150,7 @@ class DiningList extends StatelessWidget {
   }
 
   Widget buildIconWithDistance(DiningModel data, BuildContext context) {
-    return FlatButton(
+    return TextButton(
       onPressed: () {
         try {
           launch(
