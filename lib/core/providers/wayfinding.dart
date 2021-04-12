@@ -886,7 +886,15 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
   }
 
   set coordinates(Coordinates value) {
+    print("Coordinates set to: $value");
     _coordinates = value;
+    notifyListeners();
+  }
+
+  get coordinate => _coordinates;
+  set userProvider(UserDataProvider userDataProvider){
+    userDataProvider = userDataProvider;
+
   }
 }
 

@@ -114,6 +114,7 @@ class ShuttleDataProvider extends ChangeNotifier {
     if (_userCoords == null ||
         _userCoords.lon == null ||
         _userCoords.lat == null) {
+      print("returned because coordinates null");
       return;
     }
     for (ShuttleStopModel shuttleStop in _shuttleService.data) {
@@ -179,6 +180,7 @@ class ShuttleDataProvider extends ChangeNotifier {
   }
 
   set userCoords(Coordinates value) {
+    print("Coordinates set to: $value in shuttle provider");
     _userCoords = value;
   }
 

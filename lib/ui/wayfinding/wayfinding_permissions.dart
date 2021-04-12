@@ -45,6 +45,10 @@ class _AdvancedWayfindingPermissionState
     });
   }
 
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _bluetoothSingleton = Provider.of<AdvancedWayfindingSingleton>(context);
+  }
   Widget getPermissionsContainer(BuildContext context) {
     return Column(
       children: <Widget>[
@@ -180,10 +184,12 @@ class _AdvancedWayfindingPermissionState
                           );
                         });
                   }
+                  print(_bluetoothSingleton.coordinate);
                   // check if location is available
-                  double userLongitude = (_coordinates == null) ? null : _coordinates.lon;
-                  double userLatitude = (_coordinates == null) ? null : _coordinates.lat;
+                  double userLongitude = _bluetoothSingleton.coordinate?.lon;
+                  double userLatitude = _bluetoothSingleton.coordinate?.lat;
                   if (userLatitude == null || userLongitude == null){
+                    print("Advanced wayfinding had NULL variables");
                     forceOff = true;
                     showDialog(
                         context: context,
@@ -262,8 +268,8 @@ class _AdvancedWayfindingPermissionState
   }
 
   bool bluetoothStarted(BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-    double userLongitude = (_coordinates == null) ? null : _coordinates.lon;
-    double userLatitude = (_coordinates == null) ? null : _coordinates.lat;
+    double userLongitude = _bluetoothSingleton.coordinate?.lon;
+    double userLatitude = _bluetoothSingleton.coordinate?.lat;
 //    print("latitude: $userLatitude");
 //    print("longitude: $userLongitude");
 //    print("coordinates: $_coordinates");
@@ -271,7 +277,7 @@ class _AdvancedWayfindingPermissionState
     if (userLatitude != null && userLongitude != null) {
       locationOn = true;
     }
-    _bluetoothSingleton = AdvancedWayfindingSingleton();
+    _bluetoothSingleton = Provider.of<AdvancedWayfindingSingleton>(context);
 
     if ((snapshot.data as BluetoothState == BluetoothState.unauthorized ||
             snapshot.data as BluetoothState == BluetoothState.off) ||
@@ -288,13 +294,12 @@ class _AdvancedWayfindingPermissionState
 
     if (prefs.containsKey("advancedWayfindingEnabled") &&
         prefs.getBool('advancedWayfindingEnabled')) {
-      AdvancedWayfindingSingleton bluetoothSingleton =
-          AdvancedWayfindingSingleton();
+      AdvancedWayfindingSingleton bluetoothSingleton = Provider.of<AdvancedWayfindingSingleton>(context);
       if (bluetoothSingleton.firstInstance) {
         bluetoothSingleton.firstInstance = false;
         if (bluetoothSingleton.userDataProvider == null) {
           bluetoothSingleton.userDataProvider =
-              Provider.of<UserDataProvider>(context, listen: false);
+              Provider.of<UserDataProvider>(context);
         }
         bluetoothSingleton.init();
       }
@@ -302,10 +307,10 @@ class _AdvancedWayfindingPermissionState
   }
 
   void startBluetooth(BuildContext context, bool permissionGranted) async {
-    _bluetoothSingleton = AdvancedWayfindingSingleton();
+    _bluetoothSingleton = Provider.of<AdvancedWayfindingSingleton>(context);
     if (_bluetoothSingleton.userDataProvider == null) {
       _bluetoothSingleton.userDataProvider =
-          Provider.of<UserDataProvider>(context, listen: false);
+          Provider.of<UserDataProvider>(context);
     }
     if (permissionGranted) {
       // Future.delayed(Duration(seconds: 5), ()  => bluetoothInstance.getOffloadAuthorization(context));
