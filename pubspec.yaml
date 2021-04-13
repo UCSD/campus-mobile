@@ -24,7 +24,7 @@ dependencies:
       url: https://github.com/UCSD/flutter_scandit.git
       ref: master
 
-  wifi_connection: 0.0.2-dev.1
+  wifi_connection: ^0.0.3
   connectivity: ^2.0.2
   flutter_blue:
     git:
