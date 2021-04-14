@@ -187,8 +187,8 @@ class _HomeState extends State<Home> {
 
     if (prefs.containsKey("advancedWayfindingEnabled") &&
         prefs.getBool("advancedWayfindingEnabled")) {
-      AdvancedWayfindingSingleton bluetoothSingleton =
-          AdvancedWayfindingSingleton();
+      WayfindingProvider bluetoothSingleton =
+          WayfindingProvider();
       bluetoothSingleton.advancedWayfindingEnabled =
           prefs.getBool("advancedWayfindingEnabled");
       if (bluetoothSingleton.firstInstance) {

@@ -1,7 +1,11 @@
 import 'dart:io';
 
+import 'package:app_settings/app_settings.dart';
+import 'package:campus_mobile_experimental/core/providers/wayfinding.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_blue/flutter_blue.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AdvancedWayfindingPermission extends StatefulWidget {
@@ -10,11 +14,13 @@ class AdvancedWayfindingPermission extends StatefulWidget {
       _AdvancedWayfindingPermissionState();
 }
 
-
 class _AdvancedWayfindingPermissionState
     extends State<AdvancedWayfindingPermission> {
+  WayfindingProvider _wayfindingProvider;
+
   @override
   Widget build(BuildContext context) {
+    _wayfindingProvider = Provider.of<WayfindingProvider>(context);
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(42),
@@ -30,16 +36,19 @@ class _AdvancedWayfindingPermissionState
 
   Widget buildBody(BuildContext context) {
     return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           toggleSwitch(context),
-          Center(
-            child: Container(
-              width: 300.0,
+          Container(
+              padding: const EdgeInsets.all(16.0),
+              child: Text("Advanced wayfinding benefits",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.left)),
+          Container(
+              padding: const EdgeInsets.only(left: 16, top: 4, right: 16),
               child: Text(
-                "Advanced wayfinding benefits\n\u2022 Getting directions\n\u2022 Locate areas of interest on campus\n\u2022 Context aware communication with other Bluetooth devices"
-              )
-            ),
-          ),
+                  "\u2022 Getting directions\n\n\u2022 Locate areas of interest on campus\n\n\u2022 Context aware communication with other Bluetooth devices",
+                  style: TextStyle(fontSize: 17)))
           // Align(
           //   alignment: Alignment.centerLeft,
           //   child: Padding(
@@ -93,111 +102,201 @@ class _AdvancedWayfindingPermissionState
           //     ),
           //   ),
           // )
-        ]
-    );
+        ]);
   }
-
 
   Widget toggleSwitch(BuildContext context) {
-    return Text(" ");
-    // return Row(
-    //   children: <Widget>[
-    //     Padding(
-    //       padding: const EdgeInsets.all(16.0),
-    //       child: Text(
-    //         "Enable advanced wayfinding",
-    //         style: TextStyle(fontSize: 17),
-    //       ),
-    //     ),
-    //     Expanded(child: SizedBox()),
-    //     StreamBuilder(
-    //       stream: FlutterBlue.instance.state,
-    //       builder: (context, snapshot) {
-    //         if (snapshot.hasData) {
-    //           return Switch(
-    //             value: bluetoothStarted(context, snapshot),
-    //             onChanged: (permissionGranted) {
-    //               startBluetooth(context, permissionGranted);
-    //               bool forceOff = false;
-    //               if (((snapshot.data as BluetoothState ==
-    //                   BluetoothState.unauthorized) ||
-    //                   (snapshot.data as BluetoothState ==
-    //                       BluetoothState.off)) &&
-    //                   permissionGranted) {
-    //                 forceOff = true;
-    //                 showDialog(
-    //                     context: context,
-    //                     barrierDismissible: false,
-    //                     builder: (BuildContext context) {
-    //                       if (Platform.isIOS) {
-    //                         return CupertinoAlertDialog(
-    //                           title: Text(
-    //                               "UCSD Mobile would like to use Bluetooth."),
-    //                           content: Text(
-    //                               "This feature use Bluetooth to connect with other devices."),
-    //                           actions: <Widget>[
-    //                             FlatButton(
-    //                               child: Text('Cancel'),
-    //                               onPressed: () {
-    //                                 Navigator.of(context).pop();
-    //                               },
-    //                             ),
-    //                             FlatButton(
-    //                               child: Text('Settings'),
-    //                               onPressed: () {
-    //                                 AppSettings.openAppSettings();
-    //                               },
-    //                             )
-    //                           ],
-    //                         );
-    //                       }
-    //                       return AlertDialog(
-    //                         title: Text(
-    //                             "UCSD Mobile would like to use Bluetooth."),
-    //                         content: Text(
-    //                             "This feature use Bluetooth to connect with other devices."),
-    //                         actions: <Widget>[
-    //                           FlatButton(
-    //                             child: Text('Cancel'),
-    //                             onPressed: () {
-    //                               Navigator.of(context).pop();
-    //                             },
-    //                           ),
-    //                           FlatButton(
-    //                             child: Text('Settings'),
-    //                             onPressed: () {
-    //                               AppSettings.openAppSettings();
-    //                             },
-    //                           )
-    //                         ],
-    //                       );
-    //                     });
-    //               }
-    //               setState(() {
-    //                 if (forceOff) {
-    //                   _bluetoothSingleton.advancedWayfindingEnabled = false;
-    //                 } else {
-    //                   _bluetoothSingleton.advancedWayfindingEnabled =
-    //                   !_bluetoothSingleton.advancedWayfindingEnabled;
-    //                 }
-    //
-    //                 if (!_bluetoothSingleton.advancedWayfindingEnabled) {
-    //                   _bluetoothSingleton.stopScans();
-    //                 }
-    //                 SharedPreferences.getInstance().then((value) {
-    //                   value.setBool("advancedWayfindingEnabled",
-    //                       _bluetoothSingleton.advancedWayfindingEnabled);
-    //                 });
-    //               });
-    //             },
-    //             activeColor: Theme.of(context).buttonColor,
-    //           );
-    //         } else {
-    //           return CircularProgressIndicator();
-    //         }
-    //       },
-    //     ),
-    //   ],
-    // );
+    return Row(
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Text(
+            "Enable advanced wayfinding",
+            style: TextStyle(fontSize: 17),
+          ),
+        ),
+        Spacer(),
+        StreamBuilder(
+            stream: FlutterBlue.instance.state,
+            builder: (context, snapshot) {
+              return snapshot.hasData
+                  ? Switch(
+                      value: _wayfindingProvider.permissionState(
+                          context, snapshot),
+                      onChanged: (permissionGranted) {
+                        _wayfindingProvider.startBluetooth(
+                            context, permissionGranted);
+                        if (_wayfindingProvider.forceOff){
+                          showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (BuildContext context) {
+                                if (Platform.isIOS) {
+                                  return CupertinoAlertDialog(
+                                    title: Text(
+                                        "UCSD Mobile would like to use Bluetooth."),
+                                    content: Text(
+                                        "This feature use Bluetooth to connect with other devices."),
+                                    actions: <Widget>[
+                                      FlatButton(
+                                        child: Text('Cancel'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                      FlatButton(
+                                        child: Text('Settings'),
+                                        onPressed: () {
+                                          AppSettings.openAppSettings();
+                                        },
+                                      )
+                                    ],
+                                  );
+                                }
+                                return AlertDialog(
+                                  title: Text(
+                                      "UCSD Mobile would like to use Bluetooth."),
+                                  content: Text(
+                                      "This feature use Bluetooth to connect with other devices."),
+                                  actions: <Widget>[
+                                    FlatButton(
+                                      child: Text('Cancel'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                    FlatButton(
+                                      child: Text('Settings'),
+                                      onPressed: () {
+                                        AppSettings.openAppSettings();
+                                      },
+                                    )
+                                  ],
+                                );
+                              });
+                        }
+                        setState(() {
+                          if (_wayfindingProvider.forceOff) {
+                            _wayfindingProvider.advancedWayfindingEnabled =
+                                false;
+                          } else {
+                            _wayfindingProvider.advancedWayfindingEnabled =
+                                !_wayfindingProvider.advancedWayfindingEnabled;
+                          }
+
+                          if (!_wayfindingProvider.advancedWayfindingEnabled) {
+                            _wayfindingProvider.stopScans();
+                          }
+                          SharedPreferences.getInstance().then((value) {
+                            value.setBool("advancedWayfindingEnabled",
+                                _wayfindingProvider.advancedWayfindingEnabled);
+                          });
+                        });
+                      },
+                      activeColor: Theme.of(context).buttonColor,
+                    )
+                  : CircularProgressIndicator();
+            })
+      ],
+    );
   }
 }
+// return Row(
+//   children: <Widget>[
+//     Padding(
+//       padding: const EdgeInsets.all(16.0),
+//       child: Text(
+//         "Enable advanced wayfinding",
+//         style: TextStyle(fontSize: 17),
+//       ),
+//     ),
+//     Expanded(child: SizedBox()),
+//     StreamBuilder(
+//       stream: FlutterBlue.instance.state,
+//       builder: (context, snapshot) {
+//         if (snapshot.hasData) {
+//           return Switch(
+//             value: bluetoothStarted(context, snapshot),
+//             onChanged: (permissionGranted) {
+//               startBluetooth(context, permissionGranted);
+//               bool forceOff = false;
+//               if (((snapshot.data as BluetoothState ==
+//                   BluetoothState.unauthorized) ||
+//                   (snapshot.data as BluetoothState ==
+//                       BluetoothState.off)) &&
+//                   permissionGranted) {
+//                 forceOff = true;
+//                 showDialog(
+//                     context: context,
+//                     barrierDismissible: false,
+//                     builder: (BuildContext context) {
+//                       if (Platform.isIOS) {
+//                         return CupertinoAlertDialog(
+//                           title: Text(
+//                               "UCSD Mobile would like to use Bluetooth."),
+//                           content: Text(
+//                               "This feature use Bluetooth to connect with other devices."),
+//                           actions: <Widget>[
+//                             FlatButton(
+//                               child: Text('Cancel'),
+//                               onPressed: () {
+//                                 Navigator.of(context).pop();
+//                               },
+//                             ),
+//                             FlatButton(
+//                               child: Text('Settings'),
+//                               onPressed: () {
+//                                 AppSettings.openAppSettings();
+//                               },
+//                             )
+//                           ],
+//                         );
+//                       }
+//                       return AlertDialog(
+//                         title: Text(
+//                             "UCSD Mobile would like to use Bluetooth."),
+//                         content: Text(
+//                             "This feature use Bluetooth to connect with other devices."),
+//                         actions: <Widget>[
+//                           FlatButton(
+//                             child: Text('Cancel'),
+//                             onPressed: () {
+//                               Navigator.of(context).pop();
+//                             },
+//                           ),
+//                           FlatButton(
+//                             child: Text('Settings'),
+//                             onPressed: () {
+//                               AppSettings.openAppSettings();
+//                             },
+//                           )
+//                         ],
+//                       );
+//                     });
+//               }
+//               setState(() {
+//                 if (forceOff) {
+//                   _bluetoothSingleton.advancedWayfindingEnabled = false;
+//                 } else {
+//                   _bluetoothSingleton.advancedWayfindingEnabled =
+//                   !_bluetoothSingleton.advancedWayfindingEnabled;
+//                 }
+//
+//                 if (!_bluetoothSingleton.advancedWayfindingEnabled) {
+//                   _bluetoothSingleton.stopScans();
+//                 }
+//                 SharedPreferences.getInstance().then((value) {
+//                   value.setBool("advancedWayfindingEnabled",
+//                       _bluetoothSingleton.advancedWayfindingEnabled);
+//                 });
+//               });
+//             },
+//             activeColor: Theme.of(context).buttonColor,
+//           );
+//         } else {
+//           return CircularProgressIndicator();
+//         }
+//       },
+//     ),
+//   ],
+// );

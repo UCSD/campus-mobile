@@ -113,7 +113,7 @@ class _WebViewContainerState extends State<WebViewContainer>
     return Container(
       height: _contentHeight,
       child: WebView(
-        opaque: false,
+//        opaque: false,
         javascriptMode: JavascriptMode.unrestricted,
         initialUrl: webCardUrl,
         onWebViewCreated: (controller) {

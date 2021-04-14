@@ -15,11 +15,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:location/location.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'bluetooth.dart';
 
-class AdvancedWayfindingSingleton extends ChangeNotifier {
+class WayfindingProvider extends ChangeNotifier {
   /// Instance variable for starting beacon singleton
   BeaconSingleton beaconSingleton;
 
@@ -38,6 +39,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
   /// Booleans for instantiating permissions
   bool firstInstance = true;
   bool advancedWayfindingEnabled = false;
+  bool forceOff = false;
 
   /// Access previous bt setting/permissions
   SharedPreferences sharedPreferences;
@@ -46,8 +48,8 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
   HashMap<String, BluetoothDeviceProfile> scannedObjects = new HashMap();
 
   // Internal Declaration
-  static final AdvancedWayfindingSingleton _bluetoothSingleton =
-      AdvancedWayfindingSingleton._internal();
+  static final WayfindingProvider _bluetoothSingleton =
+      WayfindingProvider._internal();
 
   /// Flutter blue instance for scanning
   FlutterBlue flutterBlueInstance = FlutterBlue.instance;
@@ -106,7 +108,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
   UserDataProvider userDataProvider;
 
   /// Allows singleton functionality
-  factory AdvancedWayfindingSingleton() {
+  factory WayfindingProvider() {
     return _bluetoothSingleton;
   }
 
@@ -711,7 +713,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
   }
 
   // Internal constructor
-  AdvancedWayfindingSingleton._internal();
+  WayfindingProvider._internal();
 
   // Key generator for storage
   String _randomValue() {
@@ -855,6 +857,48 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
             "advancedWayfindingEnabled", advancedWayfindingEnabled);
       }
     });
+  }
+  bool permissionState(BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+    checkAdvancedWayfindingEnabled();
+    if ((snapshot.data as BluetoothState == BluetoothState.unauthorized ||
+        snapshot.data as BluetoothState == BluetoothState.off) ||
+        (_bluetoothSingleton != null &&
+            !_bluetoothSingleton.advancedWayfindingEnabled)) {
+      _bluetoothSingleton.advancedWayfindingEnabled = false;
+    }
+    return _bluetoothSingleton.advancedWayfindingEnabled;
+  }
+
+  void checkToResumeBluetooth(BuildContext context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    if (prefs.containsKey("advancedWayfindingEnabled") &&
+        prefs.getBool('advancedWayfindingEnabled')) {
+      if (_bluetoothSingleton.firstInstance) {
+        _bluetoothSingleton.firstInstance = false;
+        if (_bluetoothSingleton.userDataProvider == null) {
+          _bluetoothSingleton.userDataProvider =
+              Provider.of<UserDataProvider>(context, listen: false);
+        }
+        _bluetoothSingleton.init();
+      }
+    }
+  }
+
+  void startBluetooth(BuildContext context, bool permissionGranted) async {
+    if (_bluetoothSingleton.userDataProvider == null) {
+      _bluetoothSingleton.userDataProvider =
+          Provider.of<UserDataProvider>(context, listen: false);
+    }
+    print("wayfinging enabled");
+    print(_bluetoothSingleton.advancedWayfindingEnabled);
+    if (permissionGranted) {
+      // Future.delayed(Duration(seconds: 5), ()  => bluetoothInstance.getOffloadAuthorization(context));
+      await _bluetoothSingleton.init();
+      if (!_bluetoothSingleton.advancedWayfindingEnabled){
+        forceOff = true;
+      }
+    }
   }
 
   // Sets up signal broadcasting with a random UUID
