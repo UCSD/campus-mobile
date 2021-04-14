@@ -1,10 +1,8 @@
 name: campus_mobile_experimental
-description: A new Flutter project.
+description: Mobile app platform for campus.
 version: 1.0.0+1
-
 environment:
   sdk: ">=2.7.0 <3.0.0"
-
 dependencies:
   app_settings: 4.1.0
   background_fetch: 0.7.2
@@ -21,7 +19,10 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_scandit_plugin: 1.1.0 # Upgrade https://github.com/UCSD/flutter_scandit.git
-  flutter_blue: 0.8.0 # Upgrade https://github.com/UCSD/flutter_blue.git
+  flutter_blue: # https://github.com/UCSD/flutter_blue/pull/1/commits/7ea92e471e232f9c55977da3dc05e4b6c689069c
+    git:
+      url: https://github.com/UCSD/flutter_blue.git
+      ref: 7ea92e471e232f9c55977da3dc05e4b6c689069c
   flutter_linkify: 5.0.2
   flutter_secure_storage: 4.1.0
   flutter_sticky_header: 0.6.0
@@ -39,13 +40,11 @@ dependencies:
   permission_handler: 6.1.1
   webview_flutter: 2.0.4
   uni_links2: 0.6.0+2
-
 dev_dependencies:
   build_runner: # https://github.com/hivedb/hive/issues/605
   flutter_test:
     sdk: flutter
   hive_generator: # https://github.com/hivedb/hive/issues/605
-
 flutter:
   uses-material-design: true
   assets:
