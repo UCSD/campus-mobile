@@ -213,7 +213,7 @@ class UserDataProvider extends ChangeNotifier {
           base64.encode(utf8.encode(username + ':' + encryptedPassword));
 
       if (await _authenticationService
-          .login(base64EncodedWithEncryptedPassword)) {
+          .silentLogin(base64EncodedWithEncryptedPassword)) {
         print('UserDataProvider:silentLogin:SUCCESS');
         await updateAuthenticationModel(_authenticationService.data);
 

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:dio/dio.dart';
+import 'package:get/get.dart';
 
 class NetworkHelper {
   ///TODO: inside each service that file place a switch statement to handle all
@@ -90,6 +91,7 @@ class NetworkHelper {
       }
       // if here, silent login has failed
       // throw exception to inform caller
+      
       throw new Exception(ErrorConstants.silentLoginFailed);
   }
 

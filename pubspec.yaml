@@ -44,6 +44,7 @@ dependencies:
   url_launcher: 5.2.5
   uuid: 2.2.0
   permission_handler: 5.1.0+2
+  get: 3.26.0
   webview_flutter:
     git:
       path: packages/webview_flutter
