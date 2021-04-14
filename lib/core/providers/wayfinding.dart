@@ -9,6 +9,7 @@ import 'dart:typed_data';
 import 'package:background_fetch/background_fetch.dart';
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_networking.dart';
+import 'package:campus_mobile_experimental/core/models/location.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -43,6 +44,8 @@ class WayfindingProvider extends ChangeNotifier {
 
   /// Access previous bt setting/permissions
   SharedPreferences sharedPreferences;
+
+  Coordinates _coordinates;
 
   /// Hashmap to track bt devices
   HashMap<String, BluetoothDeviceProfile> scannedObjects = new HashMap();
@@ -844,6 +847,18 @@ class WayfindingProvider extends ChangeNotifier {
       print(Exception);
     }
   }
+  set coordinates(Coordinates value) {
+    print("Coordinates set to: $value");
+    _coordinates = value;
+    notifyListeners();
+  }
+
+  get coordinate => _coordinates;
+  set userProvider(UserDataProvider userDataProvider){
+    print("UserProvider set to: ${userDataProvider.isLoggedIn}");
+    userDataProvider = userDataProvider;
+
+  }
 
   Future checkAdvancedWayfindingEnabled() async {
     await SharedPreferences.getInstance().then((value) {
@@ -862,11 +877,13 @@ class WayfindingProvider extends ChangeNotifier {
     checkAdvancedWayfindingEnabled();
     if ((snapshot.data as BluetoothState == BluetoothState.unauthorized ||
         snapshot.data as BluetoothState == BluetoothState.off) ||
-        (_bluetoothSingleton != null &&
-            !_bluetoothSingleton.advancedWayfindingEnabled)) {
-      _bluetoothSingleton.advancedWayfindingEnabled = false;
+        (!advancedWayfindingEnabled)) {
+      advancedWayfindingEnabled = false;
     }
-    return _bluetoothSingleton.advancedWayfindingEnabled;
+    else {
+      advancedWayfindingEnabled = true;
+    }
+    return advancedWayfindingEnabled;
   }
 
   void checkToResumeBluetooth(BuildContext context) async {
@@ -874,29 +891,24 @@ class WayfindingProvider extends ChangeNotifier {
 
     if (prefs.containsKey("advancedWayfindingEnabled") &&
         prefs.getBool('advancedWayfindingEnabled')) {
-      if (_bluetoothSingleton.firstInstance) {
-        _bluetoothSingleton.firstInstance = false;
-        if (_bluetoothSingleton.userDataProvider == null) {
-          _bluetoothSingleton.userDataProvider =
-              Provider.of<UserDataProvider>(context, listen: false);
-        }
-        _bluetoothSingleton.init();
+      if (firstInstance) {
+        firstInstance = false;
+        init();
       }
     }
   }
 
   void startBluetooth(BuildContext context, bool permissionGranted) async {
-    if (_bluetoothSingleton.userDataProvider == null) {
-      _bluetoothSingleton.userDataProvider =
-          Provider.of<UserDataProvider>(context, listen: false);
-    }
-    print("wayfinging enabled");
-    print(_bluetoothSingleton.advancedWayfindingEnabled);
+//    print("wayfinging enabled");
+//    print(advancedWayfindingEnabled);
     if (permissionGranted) {
       // Future.delayed(Duration(seconds: 5), ()  => bluetoothInstance.getOffloadAuthorization(context));
-      await _bluetoothSingleton.init();
-      if (!_bluetoothSingleton.advancedWayfindingEnabled){
+      await init();
+      if (!advancedWayfindingEnabled){
         forceOff = true;
+      }
+      else {
+        forceOff = false;
       }
     }
   }
