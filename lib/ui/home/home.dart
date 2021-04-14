@@ -24,7 +24,6 @@ import 'package:campus_mobile_experimental/ui/news/news_card.dart';
 import 'package:campus_mobile_experimental/ui/notices/notices_card.dart';
 import 'package:campus_mobile_experimental/ui/parking/parking_card.dart';
 import 'package:campus_mobile_experimental/ui/scanner/native_scanner_card.dart';
-import 'package:campus_mobile_experimental/ui/scanner/web_scanner_card.dart';
 import 'package:campus_mobile_experimental/ui/shuttle/shuttle_card.dart';
 import 'package:campus_mobile_experimental/ui/student_id/student_id_card.dart';
 import 'package:campus_mobile_experimental/ui/survey/survey_card.dart';
@@ -120,9 +119,6 @@ class _HomeState extends State<Home> {
     for (String card in order) {
       if (!webCards.containsKey(card)) {
         switch (card) {
-          case 'QRScanner':
-            orderedCards.insert(0, ScannerCard());
-            break;
           case 'NativeScanner':
             orderedCards.insert(0, NativeScannerCard());
             break;
