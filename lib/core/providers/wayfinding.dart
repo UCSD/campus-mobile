@@ -11,6 +11,7 @@ import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/location.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
+import 'package:campus_mobile_experimental/core/services/wayfinding.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
@@ -18,10 +19,13 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:campus_mobile_experimental/core/models/wayfinding_constants.dart';
 
 import 'bluetooth.dart';
 
 class WayfindingProvider extends ChangeNotifier {
+  WayfindingConstantsModel _wayfindingConstantsModel;
+  WayfindingService _wayfindingService;
   /// Instance variable for starting beacon singleton
   BeaconSingleton beaconSingleton;
 
@@ -35,7 +39,7 @@ class WayfindingProvider extends ChangeNotifier {
   String operatingSystem;
 
   /// List of devices that can be used towards achieving the threshold
-  List allowableDevices = [];
+//  List allowableDevices = [];
 
   /// Booleans for instantiating permissions
   bool firstInstance = true;
@@ -75,24 +79,24 @@ class WayfindingProvider extends ChangeNotifier {
   String offloadLoggerEndpoint =
       "https://api-qa.ucsd.edu:8243/mobileapplogger/v1.0.0/log";
 
-  //Thresholds for logging location
-  int qualifiedDevicesThreshold = 0;
-  int distanceThreshold = 10; // default in ZenHub
-  int scanIntervalAllowance = 0;
-  int backgroundScanInterval = 15; // Minutes
-  int deletionInterval = 30; // Minutes
-  double milesFromPriceCenter = 5;
-  int dwellTimeThreshold = 200; // In seconds (10 minutes -> 600 seconds)
-  /// Keep track of devices that meet our requirements
-  int qualifyingDevices = 0;
-  /// Default constant for scans
-  int scanDuration = 2; //Seconds
-  int waitTime = 15; // Minutes
-  int dwellMinutes = 30;
-  /// Coordinates for Price Center
-  final double pcLongitude = -117.237006;
-  final double pcLatitude = 32.880006;
-  double distanceFromPriceCenter;
+//  //Thresholds for logging location
+//  int qualifiedDevicesThreshold = 0;
+//  int distanceThreshold = 10; // default in ZenHub
+//  int scanIntervalAllowance = 0;
+//  int backgroundScanInterval = 15; // Minutes
+//  int deletionInterval = 30; // Minutes
+//  double milesFromPriceCenter = 5;
+//  int dwellTimeThreshold = 200; // In seconds (10 minutes -> 600 seconds)
+//  /// Keep track of devices that meet our requirements
+//  int qualifyingDevices = 0;
+//  /// Default constant for scans
+//  int scanDuration = 2; //Seconds
+//  int waitTime = 15; // Minutes
+//  int dwellMinutes = 30;
+//  /// Coordinates for Price Center
+//  final double pcLongitude = -117.237006;
+//  final double pcLatitude = 32.880006;
+//  double distanceFromPriceCenter;
 
   /// Allows for continuous scan
   Timer ongoingScanner;
@@ -105,7 +109,7 @@ class WayfindingProvider extends ChangeNotifier {
   Location location = Location();
 
   /// Device types list for local caching
-  Map<String, dynamic> deviceTypes = {};
+//  Map<String, dynamic> deviceTypes = {};
 
   /// Access user's profile to offload data
   UserDataProvider userDataProvider;
@@ -140,8 +144,9 @@ class WayfindingProvider extends ChangeNotifier {
           advancedWayfindingEnabled = true;
           sharedPreferences.setBool("advancedWayfindingEnabled", true);
 
-          //If API constant retrieval fails, use defaults
-          await extractAPIConstants();
+          _wayfindingService = WayfindingService();
+          await _wayfindingService.fetchData();
+          _wayfindingConstantsModel = _wayfindingService.wayfindingConstantsModel;
 
           // Set up broadcasting for UCSD App Identification
           startBeaconBroadcast();
@@ -174,7 +179,7 @@ class WayfindingProvider extends ChangeNotifier {
 
     // Enable timer, must wait duration before next method execution
     ongoingScanner = new Timer.periodic(
-        Duration(minutes: waitTime), (Timer t) => startScan());
+        Duration(minutes: _wayfindingConstantsModel.scanWaitTime), (Timer t) => startScan());
   }
 
   /// Scans for BT LE devices and processes them for offloading to API
@@ -183,17 +188,17 @@ class WayfindingProvider extends ChangeNotifier {
   startScan() async {
     //Ensure that we are still within X miles of Price Center
     await location.getLocation().then((location) {
-      distanceFromPriceCenter = getHaversineDistance(
-          pcLatitude, pcLongitude, location.latitude, location.longitude);
+      _wayfindingConstantsModel.userDistanceFromPriceCenter = getHaversineDistance(
+          _wayfindingConstantsModel.pcLatitude, _wayfindingConstantsModel.pcLongitude, location.latitude, location.longitude);
 
       // Convert km to miles
-      distanceFromPriceCenter = distanceFromPriceCenter / 1.609;
+      _wayfindingConstantsModel.userDistanceFromPriceCenter = _wayfindingConstantsModel.userDistanceFromPriceCenter / 1.609;
     });
-    print("Distance from PC: $distanceFromPriceCenter");
-    print("Miles from PC: $milesFromPriceCenter");
+    print("Distance from PC: ${_wayfindingConstantsModel.userDistanceFromPriceCenter}");
+    print("Miles from PC: ${_wayfindingConstantsModel.milesFromPC}");
 
     //prevent scanning if not within boundaries
-    if (distanceFromPriceCenter > milesFromPriceCenter) {
+    if (_wayfindingConstantsModel.userDistanceFromPriceCenter > _wayfindingConstantsModel.milesFromPC) {
       return;
     }
 
@@ -248,7 +253,7 @@ class WayfindingProvider extends ChangeNotifier {
 
         // Reset dwell times
         resetDevices();
-        qualifyingDevices = 0;
+        _wayfindingConstantsModel.qualifyingDevices = 0;
 
         //LOG VALUE
         Map log = {
@@ -286,7 +291,7 @@ class WayfindingProvider extends ChangeNotifier {
     } else if (Platform.isIOS) {
       operatingSystem = "iOS";
     }
-    if (qualifyingDevices >= qualifiedDevicesThreshold) {
+    if (_wayfindingConstantsModel.qualifyingDevices >= _wayfindingConstantsModel.qualifiedDevicesThreshold) {
       double lat;
       double long;
       checkLocationPermission();
@@ -296,7 +301,7 @@ class WayfindingProvider extends ChangeNotifier {
 
         // Reset dwell times
         resetDevices();
-        qualifyingDevices = 0;
+        _wayfindingConstantsModel.qualifyingDevices = 0;
 
         //LOG VALUE
         Map log = {
@@ -449,9 +454,9 @@ class WayfindingProvider extends ChangeNotifier {
     int currentMinutes = getMinutesTimeOfDay();
     if (currentMinutes < device.scanTimeMinutes) {
       return (currentMinutes + 60) - device.scanTimeMinutes <
-          dwellTimeThreshold;
+          _wayfindingConstantsModel.dwellTimeThreshold;
     }
-    return currentMinutes - device.scanTimeMinutes < dwellTimeThreshold;
+    return currentMinutes - device.scanTimeMinutes < _wayfindingConstantsModel.dwellTimeThreshold;
   }
 
   //Gather information on device scanned
@@ -524,10 +529,10 @@ class WayfindingProvider extends ChangeNotifier {
     scannedObjects.removeWhere((key, value) {
       bool isDeviceContinuous = checkDeviceDwellTime(value);
       if (!isDeviceContinuous &&
-          value.scanIntervalAllowancesUsed >= scanIntervalAllowance) {
+          value.scanIntervalAllowancesUsed >= _wayfindingConstantsModel.scanIntervalAllowance) {
         return true;
       } else if (!isDeviceContinuous &&
-          value.scanIntervalAllowancesUsed < scanIntervalAllowance) {
+          value.scanIntervalAllowancesUsed < _wayfindingConstantsModel.scanIntervalAllowance) {
         value.scanIntervalAllowancesUsed++;
       }
       return false;
@@ -536,10 +541,10 @@ class WayfindingProvider extends ChangeNotifier {
     List<String> objectsToRemove = [];
     scannedObjects.forEach((key, value) {
       if (!value.continuousDuration &&
-          value.scanIntervalAllowancesUsed > scanIntervalAllowance) {
+          value.scanIntervalAllowancesUsed > _wayfindingConstantsModel.scanIntervalAllowance) {
         objectsToRemove.add(key);
       } else if (!value.continuousDuration &&
-          value.scanIntervalAllowancesUsed <= scanIntervalAllowance) {
+          value.scanIntervalAllowancesUsed <= _wayfindingConstantsModel.scanIntervalAllowance) {
         value.scanIntervalAllowancesUsed++;
       }
     });
@@ -550,9 +555,9 @@ class WayfindingProvider extends ChangeNotifier {
 
   // Determine if we use the type to log location
   bool eligibleType(String manufacturerName) {
-    return allowableDevices
+    return _wayfindingConstantsModel.allowableDevices
             .contains(getAppleClassification(manufacturerName)) ||
-        allowableDevices.contains(manufacturerName);
+        _wayfindingConstantsModel.allowableDevices.contains(manufacturerName);
   }
 
   // Originally for on screen rendering but also calculates devices that meet our requirements
@@ -560,18 +565,18 @@ class WayfindingProvider extends ChangeNotifier {
       bool repeatedDevice, ScanResult scanResult, String calculatedUUID) {
     if (!repeatedDevice) {
       scannedObjects[scanResult.device.id.toString()].dwellTime +=
-          (waitTime * 60); //account for seconds
+          (_wayfindingConstantsModel.scanWaitTime * 60); //account for seconds
       scannedObjects[scanResult.device.id.toString()].distance =
           getDistance(scanResult.rssi);
       if (scannedObjects[scanResult.device.id.toString()].dwellTime >=
-          dwellTimeThreshold) {
+          _wayfindingConstantsModel.dwellTimeThreshold) {
         // Remove to reinstate thresholds
         // &&
         // scannedObjects[scanResult.device.id.toString()].distance <=
         //     distanceThreshold &&
         // eligibleType(
         //     scannedObjects[scanResult.device.id.toString()].deviceType)) {
-        qualifyingDevices += 1; // Add the # of unique devices detected
+        _wayfindingConstantsModel.qualifyingDevices += 1; // Add the # of unique devices detected
       }
 
       // Log important information
@@ -653,8 +658,8 @@ class WayfindingProvider extends ChangeNotifier {
                   // Appearance
                   characteristic.read().then((deviceType) {
                     scannedObjects[scannedDevice.id.toString()].deviceType =
-                        deviceTypes.containsKey(deviceType.toString())
-                            ? deviceTypes[deviceType.toString()]
+                        _wayfindingConstantsModel.deviceTypes.containsKey(deviceType.toString())
+                            ? _wayfindingConstantsModel.deviceTypes[deviceType.toString()]
                             : " ";
                   });
                 }
@@ -736,7 +741,7 @@ class WayfindingProvider extends ChangeNotifier {
     // Start a background scan
     if (lastTimeStamp == null ||
         DateTime.now().difference(DateTime.parse(lastTimeStamp)).inMinutes >
-            backgroundScanInterval) {
+            _wayfindingConstantsModel.backgroundScanInterval) {
       inBackground = true;
       startScan();
       inBackground = false;
@@ -749,7 +754,7 @@ class WayfindingProvider extends ChangeNotifier {
     // Configure BackgroundFetch.
     BackgroundFetch.configure(
             BackgroundFetchConfig(
-              minimumFetchInterval: backgroundScanInterval,
+              minimumFetchInterval: _wayfindingConstantsModel.backgroundScanInterval,
               forceAlarmManager: false,
               stopOnTerminate: false,
               startOnBoot: true,
@@ -819,36 +824,6 @@ class WayfindingProvider extends ChangeNotifier {
     beaconSingleton?.beaconBroadcast?.stop();
   }
 
-  //Get constants for scanning
-  Future<void> getBTConstants() async {
-    String _response = await _networkHelper.authorizedFetch(
-        bluetoothConstantsEndpoint, headers);
-
-    Map _json = json.decode(_response);
-    qualifiedDevicesThreshold = int.parse(_json["uniqueDevices"]);
-    distanceThreshold = int.parse(_json["distanceThreshold"]);
-    dwellTimeThreshold = int.parse(_json["dwellTimeThreshold"]);
-    scanDuration = int.parse(_json["scanDuration"]);
-    waitTime = int.parse(_json["waitTime"]);
-    scanIntervalAllowance = int.parse(_json["scanIntervalAllowance"]);
-    var jsonArr = _json["deviceCharacteristics"];
-    allowableDevices = List.from(jsonArr);
-    backgroundScanInterval = _json["backgroundScanInterval"];
-    deletionInterval = _json["deletionInterval"];
-    milesFromPriceCenter = (_json['milesFromPC'] as int).toDouble();
-  }
-
-  Future extractAPIConstants() async {
-    try {
-      await getNewToken();
-      deviceTypes = await fetchDeviceTypes();
-      // Fetch parameters for scanning
-      await getBTConstants();
-      // Get device constants
-    } catch (Exception) {
-      print(Exception);
-    }
-  }
   set coordinates(Coordinates value) {
     print("Coordinates set to: $value");
     _coordinates = value;

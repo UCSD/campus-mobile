@@ -10,8 +10,8 @@ class WayfindingConstantsModel {
   int scanWaitTime;
   int currentDwellTime;
   double milesFromPC;
-  static final double pcLongitude = -117.237006;
-  static final double pcLatitude = 32.880006;
+  final double pcLongitude = -117.237006;
+  final double pcLatitude = 32.880006;
   double userDistanceFromPriceCenter;
   List<String> allowableDevices;
   Map<String, dynamic> deviceTypes;
