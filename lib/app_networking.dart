@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class NetworkHelper {
@@ -91,7 +93,23 @@ class NetworkHelper {
       }
       // if here, silent login has failed
       // throw exception to inform caller
-      
+      print("SHOWING DIALOG");
+      // Get.offAndToNamed(RoutePaths.BottomNavigationBar);
+      // Get.until((route) => Get.currentRoute == RoutePaths.Home);
+      AlertDialog dialog = AlertDialog(
+        title: const Text('Error'),
+        content: Text('You have been logged out. Please log back in.'),
+        actions: [
+          FlatButton(
+            onPressed: () {
+              Get.back(closeOverlays: true);
+            },
+            child: const Text('OK'),
+          ),
+        ],
+      );
+      await Get.dialog(dialog);
+      // await Get.defaultDialog(title: "Error", textConfirm: "OK", buttonColor: Colors.white, middleText: "You have been logged out. Please log back in.");
       throw new Exception(ErrorConstants.silentLoginFailed);
   }
 
