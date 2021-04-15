@@ -135,6 +135,7 @@ class WayfindingProvider extends ChangeNotifier {
       flutterBlueInstance.state.listen((event) async {
         // Identifies bluetooth as active
         if (event.index == 4) {
+          print("WAYFINDING IS ON NOW");
           // Set Wayfinding preferences
           advancedWayfindingEnabled = true;
           sharedPreferences.setBool("advancedWayfindingEnabled", true);
@@ -809,12 +810,13 @@ class WayfindingProvider extends ChangeNotifier {
   }
 
   void stopScans() {
+    print("WAYFINDING IS OFF NOW");
     if (ongoingScanner != null) {
       ongoingScanner.cancel();
     }
     flutterBlueInstance.stopScan();
     flutterBlueInstance.scanResults.listen((event) {}).cancel();
-    beaconSingleton.beaconBroadcast.stop();
+    beaconSingleton?.beaconBroadcast?.stop();
   }
 
   //Get constants for scanning
@@ -857,6 +859,7 @@ class WayfindingProvider extends ChangeNotifier {
   set userProvider(UserDataProvider userDataProvider){
     print("UserProvider set to: ${userDataProvider.isLoggedIn}");
     userDataProvider = userDataProvider;
+    notifyListeners();
 
   }
 
@@ -875,14 +878,14 @@ class WayfindingProvider extends ChangeNotifier {
   }
   bool permissionState(BuildContext context, AsyncSnapshot<dynamic> snapshot) {
     checkAdvancedWayfindingEnabled();
-    if ((snapshot.data as BluetoothState == BluetoothState.unauthorized ||
-        snapshot.data as BluetoothState == BluetoothState.off) ||
-        (!advancedWayfindingEnabled)) {
+    if (snapshot.data as BluetoothState == BluetoothState.unauthorized ||
+        snapshot.data as BluetoothState == BluetoothState.off) {
+      forceOff = true;
       advancedWayfindingEnabled = false;
+    }else{
+      forceOff = false;
     }
-    else {
-      advancedWayfindingEnabled = true;
-    }
+    if(advancedWayfindingEnabled) init();
     return advancedWayfindingEnabled;
   }
 
@@ -898,7 +901,10 @@ class WayfindingProvider extends ChangeNotifier {
     }
   }
 
+  /// permissionGranted = true
+  /// forceOff (currently false)
   void startBluetooth(BuildContext context, bool permissionGranted) async {
+    if(forceOff) return;
 //    print("wayfinging enabled");
 //    print(advancedWayfindingEnabled);
     if (permissionGranted) {
@@ -907,9 +913,10 @@ class WayfindingProvider extends ChangeNotifier {
       if (!advancedWayfindingEnabled){
         forceOff = true;
       }
-      else {
-        forceOff = false;
-      }
+      if(advancedWayfindingEnabled) forceOff = false;
+
+    }else{
+      forceOff = false;
     }
   }
 
@@ -954,7 +961,14 @@ class WayfindingProvider extends ChangeNotifier {
   double deg2rad(deg) {
     return deg * (math.pi / 180);
   }
+  void setAWPreference(){
+    SharedPreferences.getInstance().then((value) {
+      value.setBool("advancedWayfindingEnabled", advancedWayfindingEnabled);
+    });
+  }
 }
+
+
 
 enum ScannedDevice {
   SCANNED_DEVICE_ID,
