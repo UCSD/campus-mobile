@@ -118,11 +118,13 @@ class _WebViewContainerState extends State<WebViewContainer>
         onWebViewCreated: (controller) {
           _webViewController = controller;
         },
+        navigationDelegate: null,
         javascriptChannels: <JavascriptChannel>[
           _linksChannel(context),
           _heightChannel(context),
           _mapChannel(context),
-          _refreshTokenChannel(context)
+          _refreshTokenChannel(context),
+          _permanentRedirect(context)
         ].toSet(),
       ),
     );
@@ -239,6 +241,20 @@ class _WebViewContainerState extends State<WebViewContainer>
       },
     );
   }
+
+  // javascript channel for redirecting the user to a new webcard URL
+  JavascriptChannel _permanentRedirect(BuildContext context) {
+    return JavascriptChannel(
+      name: 'Redirect',
+      onMessageReceived: (JavascriptMessage message) async {
+        webCardUrl = message.message;
+        _webViewController.loadUrl(message.message);
+      },
+    );
+  }
+
+
+
 
   // this function checks to see if the current url of the state is different
   // to the webViewController's url, and loads in the new url if so

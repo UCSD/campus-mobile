@@ -24,6 +24,7 @@ dependencies:
       url: https://github.com/UCSD/flutter_blue.git
       ref: master
   flutter_linkify: 5.0.2
+  flutter_local_notifications: 5.0.0+1
   flutter_secure_storage: 4.1.0
   flutter_sticky_header: 0.6.0
   google_maps_flutter: 2.0.3
