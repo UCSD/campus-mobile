@@ -603,8 +603,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
   }
 
   String parseForAppearance(ScanResult scanResult) {
-    // TODO: Resolve scanResult.advertisementData.rawData;
-    Uint8List adData;
+    Uint8List adData = scanResult.advertisementData.rawData;
     int index = 0;
     String data;
 

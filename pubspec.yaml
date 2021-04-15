@@ -19,10 +19,10 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_scandit_plugin: 1.1.0 # Upgrade https://github.com/UCSD/flutter_scandit.git
-  flutter_blue: # https://github.com/UCSD/flutter_blue/pull/1/commits/7ea92e471e232f9c55977da3dc05e4b6c689069c
+  flutter_blue:
     git:
       url: https://github.com/UCSD/flutter_blue.git
-      ref: 7ea92e471e232f9c55977da3dc05e4b6c689069c
+      ref: master
   flutter_linkify: 5.0.2
   flutter_secure_storage: 4.1.0
   flutter_sticky_header: 0.6.0
