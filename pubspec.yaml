@@ -1,10 +1,8 @@
 name: campus_mobile_experimental
 description: A new Flutter project.
 version: 1.0.0+1
-
 environment:
   sdk: ">=2.6.0 <3.0.0"
-
 dependencies:
   app_settings: 4.0.4
   background_fetch: 0.6.0
@@ -29,7 +27,7 @@ dependencies:
   flutter_linkify: 3.1.3
   flutter_local_notifications: ^4.0.1+1
   flutter_secure_storage: 3.3.1+1
-  flutter_sticky_header: 0.4.0
+  flutter_sticky_header: 0.6.0
   flutter:
     sdk: flutter
   google_maps_flutter: 1.0.2
@@ -49,14 +47,13 @@ dependencies:
     git:
       path: packages/webview_flutter
       ref: webview-transparent-background
-      url: "git://github.com/crizant/plugins"
+      url: git://github.com/crizant/plugins
   uni_links: 0.4.0
 dev_dependencies:
   hive_generator: 0.8.1
   build_runner: 1.10.3
   flutter_test:
     sdk: flutter
-
 flutter:
   uses-material-design: true
   assets:
