@@ -25,7 +25,7 @@ class DiningList extends StatelessWidget {
   }
 
   Widget buildDiningList(List<DiningModel> listOfDiners, BuildContext context) {
-    final List<Widget> diningTiles = List<Widget>();
+    final List<Widget> diningTiles = [];
 
     /// check to see if we want to display only a limited number of elements
     /// if no constraint is given on the size of the list then all elements

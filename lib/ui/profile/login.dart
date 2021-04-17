@@ -58,10 +58,6 @@ class _LoginState extends State<Login> {
   }
 
   Widget buildUserProfileTile(BuildContext context) {
-    var username1 = Provider.of<UserDataProvider>(context, listen: false)
-        .userProfileModel
-        .username;
-
     return ListTile(
       leading: Icon(
         Icons.check_circle,

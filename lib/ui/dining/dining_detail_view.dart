@@ -152,8 +152,8 @@ class DiningDetailView extends StatelessWidget {
     return RichText(
       text: TextSpan(
         style: TextStyle(
-            fontSize: Theme.of(context).textTheme.body1.fontSize,
-            color: Theme.of(context).textTheme.body1.color),
+            fontSize: Theme.of(context).textTheme.bodyText2.fontSize,
+            color: Theme.of(context).textTheme.bodyText2.color),
         children: [
           TextSpan(
             text: "Payment Options:\n",
@@ -166,7 +166,7 @@ class DiningDetailView extends StatelessWidget {
   }
 
   Widget buildPictures(prefix0.DiningModel model) {
-    List<ImageLoader> images = List<ImageLoader>();
+    List<ImageLoader> images = [];
     if (model.images != null && model.images.length > 0) {
       for (prefix0.Image item in model.images) {
         images.add(ImageLoader(

@@ -1,5 +1,4 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
-import 'package:campus_mobile_experimental/app_router.dart';
 import 'package:campus_mobile_experimental/core/models/availability.dart';
 import 'package:campus_mobile_experimental/core/providers/availability.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
@@ -43,7 +42,7 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
   }
 
   Widget buildAvailabilityCard(List<AvailabilityModel> data) {
-    List<Widget> locationsList = List<Widget>();
+    List<Widget> locationsList = [];
     for (AvailabilityModel model in data) {
       if (model != null) {
         if (_availabilityDataProvider.locationViewState[model.locationName]) {
@@ -75,7 +74,7 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
   }
 
   List<Widget> buildActionButtons() {
-    List<Widget> actionButtons = List<Widget>();
+    List<Widget> actionButtons = [];
     actionButtons.add(TextButton(
       child: Text(
         'Manage Locations',

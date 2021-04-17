@@ -20,7 +20,7 @@ class SpotTypesView extends StatelessWidget {
   }
 
   List<Widget> createList(BuildContext context) {
-    List<Widget> list = List<Widget>();
+    List<Widget> list = [];
     for (Spot data in spotTypesDataProvider.spotTypeModel.spots) {
       Color iconColor = HexColor(data.color);
       Color textColor = HexColor(data.textColor);

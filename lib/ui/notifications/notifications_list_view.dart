@@ -60,17 +60,6 @@ class NotificationsListView extends StatelessWidget {
     );
   }
 
-  Widget _buildLoadingIndicator() {
-    return Padding(
-        padding: EdgeInsets.only(top: 10.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            CircularProgressIndicator(),
-          ],
-        ));
-  }
-
   Widget _buildErrorText() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,

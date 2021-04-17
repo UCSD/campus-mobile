@@ -149,6 +149,8 @@ class Router {
         return MaterialPageRoute(builder: (_) => BeaconView());
       case RoutePaths.ScanditScanner:
         return MaterialPageRoute(builder: (_) => ScanditScanner());
+      default:
+        return MaterialPageRoute(builder: (_) => Home());
     }
   }
 }

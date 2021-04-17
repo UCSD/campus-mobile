@@ -15,7 +15,7 @@ class MapsDataProvider extends ChangeNotifier {
     ///INITIALIZE SERVICES
     _mapSearchService = MapSearchService();
 
-    _mapSearchModels = List<MapSearchModel>();
+    _mapSearchModels = [];
   }
 
   ///STATES
@@ -25,25 +25,26 @@ class MapsDataProvider extends ChangeNotifier {
   bool _noResults;
 
   ///MODELS
-  List<MapSearchModel> _mapSearchModels = List<MapSearchModel>();
+  List<MapSearchModel> _mapSearchModels = [];
 
   Coordinates _coordinates;
   Map<MarkerId, Marker> _markers = Map<MarkerId, Marker>();
   TextEditingController _searchBarController = TextEditingController();
   GoogleMapController _mapController;
 
-  List<String> _searchHistory = List<String>();
+  List<String> _searchHistory = [];
 
   ///SERVICES
   MapSearchService _mapSearchService;
 
-   void addMarker(int listIndex) {
+  void addMarker(int listIndex) {
     final Marker marker = Marker(
       markerId: MarkerId(_mapSearchModels[listIndex].mkrMarkerid.toString()),
       position: LatLng(_mapSearchModels[listIndex].mkrLat,
           _mapSearchModels[listIndex].mkrLong),
-      infoWindow: InfoWindow(title: _mapSearchModels[listIndex].title, snippet: _mapSearchModels[listIndex].description),
-
+      infoWindow: InfoWindow(
+          title: _mapSearchModels[listIndex].title,
+          snippet: _mapSearchModels[listIndex].description),
     );
     _markers.clear();
     _markers[marker.markerId] = marker;
@@ -55,13 +56,14 @@ class MapsDataProvider extends ChangeNotifier {
   void updateMapPosition() {
     if (_markers.isNotEmpty && _mapController != null) {
       _mapController
-          .animateCamera(CameraUpdate.newLatLng(_markers.values.toList()[0].position))
+          .animateCamera(
+              CameraUpdate.newLatLng(_markers.values.toList()[0].position))
           .then((_) async {
         await Future.delayed(Duration(seconds: 1));
         try {
-          _mapController.showMarkerInfoWindow(_markers.values.toList()[0].markerId);
-        }
-        catch(e) {}
+          _mapController
+              .showMarkerInfoWindow(_markers.values.toList()[0].markerId);
+        } catch (e) {}
       });
     }
   }

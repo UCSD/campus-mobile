@@ -1,9 +1,11 @@
 import 'dart:io';
-
+import 'dart:async';
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/topics.dart';
 import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
 import 'package:campus_mobile_experimental/core/providers/messages.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:campus_mobile_experimental/core/services/notifications.dart';
 import 'package:device_info/device_info.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -19,6 +21,9 @@ class PushNotificationDataProvider extends ChangeNotifier {
     _fcm = FirebaseMessaging.instance;
     initState();
   }
+
+  ///Context as Global Variable
+  BuildContext context;
 
   ///Models
   FirebaseMessaging _fcm;
@@ -38,7 +43,7 @@ class PushNotificationDataProvider extends ChangeNotifier {
   /// invokes [fetchTopicsList]
   initState() async {
     fetchTopicsList();
-
+    //onDidReceiveLocalNotification: onDidReceiveLocalNotification);
     if (Platform.isAndroid) {
       _deviceData = _readAndroidBuildData(await deviceInfoPlugin.androidInfo);
     } else if (Platform.isIOS) {
@@ -59,13 +64,34 @@ class PushNotificationDataProvider extends ChangeNotifier {
     );
   }
 
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
   /// Configures the [_fcm] object to receive push notifications
   Future<void> initPlatformState(BuildContext context) async {
     try {
+      /// Initialize flutter notification settings
+      this.context = context;
+      const AndroidInitializationSettings initializationSettingsAndroid =
+          AndroidInitializationSettings("@drawable/ic_notif_round");
+      final IOSInitializationSettings initializationSettingsIOS =
+          IOSInitializationSettings();
+      final InitializationSettings initializationSettings =
+          InitializationSettings(
+              android: initializationSettingsAndroid,
+              iOS: initializationSettingsIOS);
+      await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+          onSelectNotification: selectNotification);
+
+      /// Foreground messaging
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-        /// TODO: Implement foreground messaging via flutter_local_notifications
         print('FCM: onMessage: foreground message:');
         print(message);
+
+        /// foreground messaging callback via flutter_local_notifications
+        showNotification(message);
+
+        /// Fetch in-app messages
         Provider.of<MessagesDataProvider>(context, listen: false)
             .fetchMessages(true);
       });
@@ -91,6 +117,44 @@ class PushNotificationDataProvider extends ChangeNotifier {
     } on PlatformException {
       _error = 'Failed to get platform info.';
     }
+  }
+
+  ///Handles notification when selected
+  Future selectNotification(String payload) async {
+    /// Fetch in-app messages
+    Provider.of<MessagesDataProvider>(this.context, listen: false)
+        .fetchMessages(true);
+
+    /// Navigate to Notifications tab
+    Navigator.of(this.context).pushNamedAndRemoveUntil(
+        RoutePaths.BottomNavigationBar, (Route<dynamic> route) => false);
+
+    /// Set tab bar index to the Notifications tab
+    Provider.of<BottomNavigationBarProvider>(this.context, listen: false)
+        .currentIndex = NavigatorConstants.NotificationsTab;
+    print("Local Notification Clicked");
+  }
+
+  ///Displays the notification
+  showNotification(RemoteMessage message) async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+            'your channel id', 'your channel name', 'your channel description',
+            icon: '@drawable/ic_notif_round',
+            largeIcon:
+                const DrawableResourceAndroidBitmap('@drawable/app_icon'),
+            importance: Importance.max,
+            priority: Priority.high,
+            showWhen: false);
+    const IOSNotificationDetails();
+    const NotificationDetails platformChannelSpecifics = NotificationDetails(
+        android: androidPlatformChannelSpecifics,
+        iOS: IOSNotificationDetails());
+    //This is where you put info from firebase
+    await flutterLocalNotificationsPlugin.show(0, message.notification.title,
+        message.notification.body, platformChannelSpecifics,
+        payload: 'This is the payload');
+    print("Local Notification Displayed");
   }
 
   /// Fetches topics from endpoint
@@ -274,12 +338,13 @@ class PushNotificationDataProvider extends ChangeNotifier {
         }
       }
     }
+    return 'Topic not found';
   }
 
   /// Get student only topics
   List<String> studentTopics() {
     print('FCM: studentTopics');
-    List<String> topicsToReturn = List<String>();
+    List<String> topicsToReturn = [];
     for (TopicsModel model in _notificationService.topicsModel ?? []) {
       if (model.audienceId == 'student') {
         for (Topic topic in model.topics) {
@@ -294,7 +359,7 @@ class PushNotificationDataProvider extends ChangeNotifier {
   /// Get staff only topics
   List<String> staffTopics() {
     print('FCM: staffTopics');
-    List<String> topicsToReturn = List<String>();
+    List<String> topicsToReturn = [];
     for (TopicsModel model in _notificationService.topicsModel ?? []) {
       if (model.audienceId == 'staff') {
         for (Topic topic in model.topics) {
@@ -309,7 +374,7 @@ class PushNotificationDataProvider extends ChangeNotifier {
   /// Get all public topics
   List<String> publicTopics() {
     print('FCM: publicTopics');
-    List<String> topicsToReturn = List<String>();
+    List<String> topicsToReturn = [];
     for (TopicsModel model in _topicsModel ?? []) {
       if (model.audienceId == 'all') {
         for (Topic topic in model.topics) {

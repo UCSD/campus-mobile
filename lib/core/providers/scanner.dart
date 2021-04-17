@@ -33,7 +33,7 @@ class ScannerDataProvider extends ChangeNotifier {
   String errorText;
   PermissionStatus cameraPermissionsStatus;
   ScanditController _controller;
-  List<String> scannedCodes = new List<String>();
+  List<String> scannedCodes = [];
 
   void initState() {
     if (Platform.isIOS) {
@@ -53,7 +53,7 @@ class ScannerDataProvider extends ChangeNotifier {
     isLoading = false;
     _isDuplicate = false;
     _isValidBarcode = true;
-    scannedCodes = new List<String>();
+    scannedCodes = [];
     notifyListeners();
   }
 

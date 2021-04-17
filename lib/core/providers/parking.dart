@@ -9,8 +9,6 @@ import 'package:flutter/material.dart';
 class ParkingDataProvider extends ChangeNotifier {
   ParkingDataProvider() {
     ///DEFAULT STATES
-    _isLoadingLots = false;
-    _isLoadingSpots = false;
     _isLoading = false;
 
     _parkingService = ParkingService();
@@ -20,8 +18,6 @@ class ParkingDataProvider extends ChangeNotifier {
   UserDataProvider _userDataProvider;
 
   ///STATES
-  bool _isLoadingLots;
-  bool _isLoadingSpots;
   bool _isLoading;
   DateTime _lastUpdated;
   String _error;
@@ -117,7 +113,7 @@ class ParkingDataProvider extends ChangeNotifier {
     if (_parkingModels != null) {
       return _parkingModels.values.toList();
     }
-    return List<ParkingModel>();
+    return [];
   }
 
   SpotTypeModel get spotTypeModel {

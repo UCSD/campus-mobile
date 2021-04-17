@@ -1,9 +1,10 @@
+import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/scanner.dart';
 import 'package:campus_mobile_experimental/core/providers/scanner_message.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
+import 'package:campus_mobile_experimental/core/services/barcode.dart';
 import 'package:campus_mobile_experimental/core/utils/webview.dart';
-import 'package:campus_mobile_experimental/ui/scanner/native_scanner_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_scandit_plugin/flutter_scandit_plugin.dart';
 import 'package:intl/intl.dart';
@@ -229,6 +230,9 @@ class ScanditScanner extends StatelessWidget {
       return Text(String.fromCharCode(0x2022) +
           " You can view your results by logging in to MyUCSDChart.");
     }
+
+    return Text(String.fromCharCode(0x2022) +
+        " You can view your results by logging in to MyChart.");
   }
 
   void updateLatestScan(BuildContext context) {

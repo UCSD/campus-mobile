@@ -60,14 +60,14 @@ class UserProfileModel extends HiveObject {
             json["latestTimeStamp"] == null ? null : json["latestTimeStamp"],
         pid: json["pid"] == null ? null : json["pid"],
         selectedLots: json["selectedLots"] == null
-            ? List<String>()
+            ? []
             : List<String>.from(json["selectedLots"].map((x) => x)),
         selectedOccuspaceLocations: json["selectedOccuspaceLocations"] == null
-            ? List<String>()
+            ? []
             : List<String>.from(
                 json["selectedOccuspaceLocations"].map((x) => x)),
         subscribedTopics: json["subscribedTopics"] == null
-            ? List<String>()
+            ? []
             : List<String>.from(json["subscribedTopics"].map((x) => x)),
         ucsdaffiliation:
             json["ucsdaffiliation"] == null ? null : json["ucsdaffiliation"],
@@ -81,10 +81,10 @@ class UserProfileModel extends HiveObject {
             : Map<String, bool>.from(json["selectedParkingSpots"]
                 .map((x, y) => MapEntry<String, bool>(x, y))),
         selectedStops: json["selectedStops"] == null
-            ? List<int>()
+            ? []
             : List<int>.from(json["selectedStops"].map((x) => x)),
         surveyCompletion: json["surveyCompletion"] == null
-            ? List<String>()
+            ? []
             : List<String>.from(json["surveyCompletion"].map((x) => x)),
       );
 

@@ -42,7 +42,7 @@ class FreeFoodDataProvider extends ChangeNotifier {
   void initializeValues() {
     _messageToCount = new HashMap<String, int>();
     _messageToMaxCount = new HashMap<String, int>();
-    _registeredEvents = new List<String>();
+    _registeredEvents = [];
   }
 
   void removeId(String id) {

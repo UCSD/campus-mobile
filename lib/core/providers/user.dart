@@ -3,7 +3,6 @@ import 'dart:typed_data';
 
 import 'package:campus_mobile_experimental/core/models/authentication.dart';
 import 'package:campus_mobile_experimental/core/models/user_profile.dart';
-import 'package:campus_mobile_experimental/core/providers/availability.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/notifications.dart';
 import 'package:campus_mobile_experimental/core/services/authentication.dart';
@@ -35,6 +34,7 @@ class UserDataProvider extends ChangeNotifier {
   bool _isLoading;
   DateTime _lastUpdated;
   String _error;
+  bool _isInSilentLogin = false;
 
   ///MODELS
   AuthenticationModel _authenticationModel;
@@ -45,7 +45,7 @@ class UserDataProvider extends ChangeNotifier {
   AuthenticationService _authenticationService;
   UserProfileService _userProfileService;
   PushNotificationDataProvider _pushNotificationDataProvider;
-  AvailabilityDataProvider _availabilityDataProvider;
+  CardsDataProvider _cardsDataProvider;
 
   /// Update the [AuthenticationModel] stored in state
   /// overwrite the [AuthenticationModel] in persistent storage with the model passed in
@@ -85,8 +85,6 @@ class UserDataProvider extends ChangeNotifier {
     print('UserDataProvider:_loadSavedAuthenticationModel');
     var authBox =
         await Hive.openBox<AuthenticationModel>('AuthenticationModel');
-
-    int boxLength = authBox.length;
 
     AuthenticationModel temp = AuthenticationModel.fromJson({});
     //check to see if we have added the authentication model into the box already
@@ -182,6 +180,11 @@ class UserDataProvider extends ChangeNotifier {
       _encryptAndSaveCredentials(username, password);
 
       if (await silentLogin()) {
+        if (_userProfileModel.classifications.student) {
+          _cardsDataProvider.showAllStudentCards();
+        } else if (_userProfileModel.classifications.staff) {
+          _cardsDataProvider.showAllStaffCards();
+        }
         _isLoading = false;
         notifyListeners();
         return true;
@@ -203,6 +206,8 @@ class UserDataProvider extends ChangeNotifier {
   /// If this login mechanism fails then the user is logged out
   Future<bool> silentLogin() async {
     print('UserDataProvider:silentLogin');
+    _isInSilentLogin = true;
+    notifyListeners();
 
     String username = await getUsernameFromDevice();
     String encryptedPassword = await _getEncryptedPasswordFromDevice();
@@ -220,13 +225,14 @@ class UserDataProvider extends ChangeNotifier {
         await fetchUserProfile();
 
         CardsDataProvider _cardsDataProvider = CardsDataProvider();
-        _cardsDataProvider
-            .updateAvailableCards(_userProfileModel.ucsdaffiliation);
+        print(_cardsDataProvider.cardOrder.toString()); // _cardsDataProvider
+        //     .updateAvailableCards(_userProfileModel.ucsdaffiliation);
 
         _subscribeToPushNotificationTopics(userProfileModel.subscribedTopics);
         _pushNotificationDataProvider
             .registerDevice(_authenticationService.data.accessToken);
         await FirebaseAnalytics().logEvent(name: 'loggedIn');
+        _isInSilentLogin = false;
         notifyListeners();
         return true;
       }
@@ -398,6 +404,7 @@ class UserDataProvider extends ChangeNotifier {
       print('UserDataProvider:_createNewUser:error -------------------- 5:');
       print(e.toString());
     }
+    print('UserDataProvider:_createNewUser:SUCCESS');
     return profile;
   }
 
@@ -452,6 +459,8 @@ class UserDataProvider extends ChangeNotifier {
 
   AuthenticationModel get authenticationModel => _authenticationModel;
 
+  CardsDataProvider get cardsDataProvider => _cardsDataProvider;
+
   ///GETTERS FOR STATES
   String get error => _error;
 
@@ -460,4 +469,8 @@ class UserDataProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
 
   DateTime get lastUpdated => _lastUpdated;
+
+  bool get isInSilentLogin => _isInSilentLogin;
+
+  set cardsDataProvider(CardsDataProvider value) => _cardsDataProvider = value;
 }
