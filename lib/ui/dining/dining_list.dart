@@ -166,7 +166,7 @@ class DiningList extends StatelessWidget {
           Expanded(
             child: Icon(Icons.directions_walk),
           ),
-          Padding(padding: EdgeInsets.only(bottom: 8.0)),
+          Padding(padding: EdgeInsets.only(bottom: 7.0)),
           Expanded(
             child: Text(
               data.distance != null
