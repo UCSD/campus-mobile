@@ -163,12 +163,17 @@ class DiningList extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Icon(Icons.directions_walk),
-          Text(
-            data.distance != null
-                ? (num.parse(data.distance.toStringAsFixed(1)).toString() +
-                    ' mi')
-                : '--',
+          Expanded(
+            child: Icon(Icons.directions_walk),
+          ),
+          Padding(padding: EdgeInsets.only(bottom: 8.0)),
+          Expanded(
+            child: Text(
+              data.distance != null
+                  ? (num.parse(data.distance.toStringAsFixed(1)).toString() +
+                      ' mi')
+                  : '--',
+            ),
           ),
         ],
       ),
