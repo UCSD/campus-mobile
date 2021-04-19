@@ -82,7 +82,7 @@ PODS:
     - flutter_blue/Protos (= 0.0.1)
   - flutter_blue/Protos (0.0.1):
     - Flutter
-    - Protobuf (~> 3.15.8)
+    - Protobuf (~> 3.11.4)
   - flutter_local_notifications (0.0.1):
     - Flutter
   - flutter_scandit_plugin (0.0.1):
@@ -139,7 +139,7 @@ PODS:
   - "permission_handler (5.1.0+2)":
     - Flutter
   - PromisesObjC (1.2.12)
-  - Protobuf (3.15.8)
+  - Protobuf (3.11.4)
   - ScanditBarcodeCapture (6.7.2):
     - ScanditCaptureCore (= 6.7.2)
   - ScanditCaptureCore (6.7.2)
@@ -260,7 +260,7 @@ SPEC CHECKSUMS:
   FirebaseInstanceID: 5ad92c898e1328b66e8dd58811964d6fe4d334c3
   FirebaseMessaging: 68d1bcb14880189558a8ae57167abe0b7e417232
   Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
-  flutter_blue: 0c6281e67dd48996820a5fd1b98d6d532a1e5efb
+  flutter_blue: eeb381dc4727a0954dede73515f683865494b370
   flutter_local_notifications: 0c0b1ae97e741e1521e4c1629a459d04b9aec743
   flutter_scandit_plugin: a8ff046245ccc15961c3ffd8e926c1d3bb54db1e
   flutter_secure_storage: 7953c38a04c3fdbb00571bcd87d8e3b5ceb9daec
@@ -275,7 +275,7 @@ SPEC CHECKSUMS:
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
   permission_handler: ccb20a9fad0ee9b1314a52b70b76b473c5f8dab0
   PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
-  Protobuf: adb85cd18a15bd1a777c158af9fd6e612a0e6d69
+  Protobuf: 176220c526ad8bd09ab1fb40a978eac3fef665f7
   ScanditBarcodeCapture: e88479352f74eb8af516d4083bb64f7759914e7a
   ScanditCaptureCore: 897eb78ae8f709d941f2a431b8d12c7f773ce773
   shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
