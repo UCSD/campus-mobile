@@ -92,6 +92,8 @@ class CampusMobile extends StatelessWidget {
         }
       }
     });
+    // received deeplink, cancel stream to prevent memory leaks
+    _sub.cancel();
   }
 
   @override

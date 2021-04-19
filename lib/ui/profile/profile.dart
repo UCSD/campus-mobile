@@ -31,6 +31,8 @@ class Profile extends StatelessWidget {
             .currentIndex = NavigatorConstants.MapTab;
       }
     });
+    // received deeplink, cancel stream to prevent memory leaks
+    _sub.cancel();
   }
 
   @override

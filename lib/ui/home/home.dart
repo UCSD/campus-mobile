@@ -66,6 +66,8 @@ class _HomeState extends State<Home> {
         var query = uri.queryParameters['query'];
         // redirect query to maps tab and search with query
         executeQuery(context, query);
+        // received deeplink, cancel stream to prevent memory leaks
+        _sub.cancel();
       }
     });
   }
