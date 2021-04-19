@@ -234,7 +234,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
     });
   }
 
-  Widget showAlertDialog(BuildContext context) {
+  showAlertDialog(BuildContext context) {
     // set up the button
     Widget okButton = TextButton(
       child: Text("OK"),

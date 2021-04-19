@@ -5,7 +5,8 @@ class CMAppBar extends StatelessWidget {
   CMAppBar({
     this.title,
   });
-  String title;
+  final String title;
+
   @override
   Widget build(BuildContext context) {
     return PreferredSize(
