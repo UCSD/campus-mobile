@@ -29,10 +29,11 @@ class Profile extends StatelessWidget {
         Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
         Provider.of<BottomNavigationBarProvider>(context, listen: false)
             .currentIndex = NavigatorConstants.MapTab;
+        // received deeplink, cancel stream to prevent memory leaks
+        _sub.cancel();
       }
     });
-    // received deeplink, cancel stream to prevent memory leaks
-    _sub.cancel();
+
   }
 
   @override

@@ -89,11 +89,12 @@ class CampusMobile extends StatelessWidget {
               .fetchLocations();
           Provider.of<BottomNavigationBarProvider>(context, listen: false)
               .currentIndex = NavigatorConstants.MapTab;
+          // received deeplink, cancel stream to prevent memory leaks
+          _sub.cancel();
         }
       }
     });
-    // received deeplink, cancel stream to prevent memory leaks
-    _sub.cancel();
+
   }
 
   @override
