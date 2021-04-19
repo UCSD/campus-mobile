@@ -1,4 +1,5 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:flutter/material.dart';
 
 class CMAppBar extends StatelessWidget {
@@ -12,6 +13,8 @@ class CMAppBar extends StatelessWidget {
     return PreferredSize(
       preferredSize: Size.fromHeight(42),
       child: AppBar(
+        backgroundColor: ColorPrimary,
+        brightness: Brightness.dark,
         primary: true,
         centerTitle: true,
         title: title == null

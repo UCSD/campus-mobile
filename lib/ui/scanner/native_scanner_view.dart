@@ -24,6 +24,8 @@ class ScanditScanner extends StatelessWidget {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(42),
         child: AppBar(
+          backgroundColor: ColorPrimary,
+          brightness: Brightness.dark,
           centerTitle: true,
           title: const Text("Scanner"),
         ),
