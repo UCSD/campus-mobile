@@ -82,12 +82,12 @@ class NotificationsListView extends StatelessWidget {
     );
   }
 
-  StreamSubscription _sub;
 
   Future<Null> initUniLinks(BuildContext context) async {
     // deep links are received by this method
     // the specific host needs to be added in AndroidManifest.xml and Info.plist
     // currently, this method handles executing custom map query
+    StreamSubscription _sub;
     _sub = linkStream.listen((String link) async {
       // handling for map query
       if (link.contains("deeplinking.searchmap")) {

@@ -68,34 +68,6 @@ clearHiveStorage() async {
 }
 
 class CampusMobile extends StatelessWidget {
-  StreamSubscription _sub;
-
-  Future<Null> initUniLinks(BuildContext context) async {
-    // deep links are received by this method
-    // the specific host needs to be added in AndroidManifest.xml and Info.plist
-    // currently, this method handles executing custom map query
-    _sub = linkStream.listen((String link) async {
-      // handling for map query
-      String initialLink = await getInitialLink();
-      if (initialLink != null) {
-        if (initialLink.contains("deeplinking.searchmap")) {
-          var uri = Uri.dataFromString(initialLink);
-          var query = uri.queryParameters['query'];
-          // redirect query to maps tab and search with query
-          Provider.of<MapsDataProvider>(context, listen: false)
-              .searchBarController
-              .text = query;
-          Provider.of<MapsDataProvider>(context, listen: false)
-              .fetchLocations();
-          Provider.of<BottomNavigationBarProvider>(context, listen: false)
-              .currentIndex = NavigatorConstants.MapTab;
-          // received deeplink, cancel stream to prevent memory leaks
-          _sub.cancel();
-        }
-      }
-    });
-
-  }
 
   @override
   Widget build(BuildContext context) {

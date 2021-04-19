@@ -40,12 +40,13 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  StreamSubscription _sub;
 
   Future<Null> initUniLinks(BuildContext context) async {
+
     // deep links are received by this method
     // the specific host needs to be added in AndroidManifest.xml and Info.plist
     // currently, this method handles executing custom map query
+    StreamSubscription _sub;
 
     // Used to handle links on cold app start
     String initialLink = await getInitialLink();
