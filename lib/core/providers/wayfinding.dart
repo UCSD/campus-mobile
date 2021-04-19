@@ -12,138 +12,112 @@ import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/location.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/wayfinding.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:location/location.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:campus_mobile_experimental/core/models/wayfinding_constants.dart';
 
 import 'bluetooth.dart';
-
+/// A file that handles AdvancedWayfinding feature to scan and identify nearby BT devices.
 class WayfindingProvider extends ChangeNotifier {
+
+  /// A structured model to simplify constants management and UCSD-ITS configurations.
   WayfindingConstantsModel _wayfindingConstantsModel;
+
+  /// A service for fetching UCSD-ITS configurations from network.
   WayfindingService _wayfindingService;
-  /// Instance variable for starting beacon singleton
+
+  /// Responsible for managing the broadcasting of [advertisementValue].
   BeaconSingleton beaconSingleton;
 
-  /// State for background scanning
+  /// Distinguishes running in the background vs having app open.
   bool inBackground = false;
 
-  /// Advertisement string
+  /// Randomized sequence used to differentiate user devices while preserving user privacy.
   String advertisementValue;
 
-  /// Operating system of device
+  /// Identifies devices as Android or iOS.
   String operatingSystem;
 
-  /// List of devices that can be used towards achieving the threshold
-//  List allowableDevices = [];
-
-  /// Booleans for instantiating permissions
+  /// Confirms that this is the first instance of the Wayfinding feature, preventing parallel scanning.
   bool firstInstance = true;
+
+  /// Confirms user's permission selection for AdvancedWayfinding feature.
   bool advancedWayfindingEnabled = false;
+
+  /// Ensures AdvancedWayfinding is disabled when location & BT are unavailable.
   bool forceOff = false;
 
-  /// Access previous bt setting/permissions
+  /// Recalls past user permission selection for AdvancedWayfinding feature.
   SharedPreferences sharedPreferences;
 
+  /// Provides location of device for logging scans.
   Coordinates _coordinates;
 
-  /// Hashmap to track bt devices
+  /// Keeps track of scanned unique BT devices.
   HashMap<String, BluetoothDeviceProfile> scannedObjects = new HashMap();
 
-  // Internal Declaration
-  static final WayfindingProvider _bluetoothSingleton =
-      WayfindingProvider._internal();
-
-  /// Flutter blue instance for scanning
+  /// Instance of FlutterBlue library to handle raw BT processing.
   FlutterBlue flutterBlueInstance = FlutterBlue.instance;
 
-  /// Track background scan timestamps
-  final _storage = FlutterSecureStorage();
+  /// Stores data from background scans to preserve scan continuation.
+  final FlutterSecureStorage _storage = FlutterSecureStorage();
 
-  /// Initialize headers
-  Map<String, String> offloadDataHeader;
-  final Map<String, String> headers = {
+  /// Holds header for mobile logger POST.
+  Map<String, String> loggerHeader;
+  
+  /// Holds header for user token retrieval.
+  final Map<String, String> tokenHeader = {
     "accept": "application/json",
   };
 
-  /// API calls
+  /// Provides specialized support for requests to WSO2 APIs.
   final NetworkHelper _networkHelper = NetworkHelper();
-  String bluetoothConstantsEndpoint =
-      "https://api-qa.ucsd.edu:8243/bluetoothscanningcharacteristics/v1.0/constants";
-  String bluetoothCharacteristicsEndpoint =
-      "https://api-qa.ucsd.edu:8243/bluetoothdevicecharacteristic/v1.0.0/servicenames/1";
-  String offloadLoggerEndpoint =
+
+  /// Endpoint used to send device logs to ITS specified destination.
+  String mobileLoggerEndpoint =
       "https://api-qa.ucsd.edu:8243/mobileapplogger/v1.0.0/log";
 
-//  //Thresholds for logging location
-//  int qualifiedDevicesThreshold = 0;
-//  int distanceThreshold = 10; // default in ZenHub
-//  int scanIntervalAllowance = 0;
-//  int backgroundScanInterval = 15; // Minutes
-//  int deletionInterval = 30; // Minutes
-//  double milesFromPriceCenter = 5;
-//  int dwellTimeThreshold = 200; // In seconds (10 minutes -> 600 seconds)
-//  /// Keep track of devices that meet our requirements
-//  int qualifyingDevices = 0;
-//  /// Default constant for scans
-//  int scanDuration = 2; //Seconds
-//  int waitTime = 15; // Minutes
-//  int dwellMinutes = 30;
-//  /// Coordinates for Price Center
-//  final double pcLongitude = -117.237006;
-//  final double pcLatitude = 32.880006;
-//  double distanceFromPriceCenter;
-
-  /// Allows for continuous scan
+  /// Responsible for recurrent scans after a certain time interval.
   Timer ongoingScanner;
 
-  /// Lists for displaying scan results (only for debugger view)
+  /// Displays BT devices that have been scanned (only for debugger view).
   List loggedItems = [];
-  static List<List<Object>> bufferList = [];
+
+  /// Gives an unfiltered list of scanned devices.
+  static List<List<Object>> unprocessedDevices = [];
 
   /// Initialize location and permissions to be checked
   Location location = Location();
 
-  /// Device types list for local caching
-//  Map<String, dynamic> deviceTypes = {};
-
-  /// Access user's profile to offload data
+  /// Accesses user's profile to retrieve necessary tokens.
   UserDataProvider userDataProvider;
-
-  /// Allows singleton functionality
+  
+  /// Provides sole instance of AdvancedWayfinding feature.
+  static final WayfindingProvider _bluetoothSingleton = WayfindingProvider._internal();
+  
+  /// Constructor for AdvancedWayfinding feature and prevents multiple instances.
   factory WayfindingProvider() {
     return _bluetoothSingleton;
   }
 
-  /// Initializes AdvancedWayfinding Singleton for BT LE scanning
-  ///
-  /// Async method that will only initialize scanning if AW is enabled
+ /// Runs if AdvancedWayfinding was turned on.
   void init() async {
-    //Instantiate access token for a logged in user
-    if (userDataProvider.isLoggedIn) {
-      offloadDataHeader = {
-        'Authorization':
-            'Bearer ${userDataProvider?.authenticationModel?.accessToken}'
-      };
-    }
 
-    //Check previous Wayfinding settings/permissions
-    await checkAdvancedWayfindingEnabled();
-
-    // Only start scanning when permissions granted
+    // Verify that BT module is present in this device.
     await flutterBlueInstance.isAvailable.then((value) {
       flutterBlueInstance.state.listen((event) async {
-        // Identifies bluetooth as active
+
+        // Verify BT is available to start scanning.
         if (event.index == 4) {
-          print("WAYFINDING IS ON NOW");
+
           // Set Wayfinding preferences
           advancedWayfindingEnabled = true;
           sharedPreferences.setBool("advancedWayfindingEnabled", true);
 
+          // Fetch UCSD_ITS scanning configurations.
           _wayfindingService = WayfindingService();
           await _wayfindingService.fetchData();
           _wayfindingConstantsModel = _wayfindingService.wayfindingConstantsModel;
@@ -153,9 +127,6 @@ class WayfindingProvider extends ChangeNotifier {
 
           // Set up background scanning
           backgroundFetchSetUp();
-
-          // Set bluetooth singleton as already started
-          firstInstance = false;
 
           // Set the minimum change to activate a new scan.
           location.changeSettings(accuracy: LocationAccuracy.low);
@@ -170,21 +141,19 @@ class WayfindingProvider extends ChangeNotifier {
     });
   }
 
-  /// Enables periodic scanning
-  ///
-  /// Scan time intervals are determined by previous API call
+  /// Enables periodic scanning based on [_wayfindingConstantsModel.scanWaitTime].
   enableScanning() {
     // Start the initial scan
     startScan();
 
-    // Enable timer, must wait duration before next method execution
+    // Enable timer and  wait duration before starting next scan.
     ongoingScanner = new Timer.periodic(
         Duration(minutes: _wayfindingConstantsModel.scanWaitTime), (Timer t) => startScan());
   }
 
-  /// Scans for BT LE devices and processes them for offloading to API
+  /// Scans for BT LE devices and processes them to send to ITS specified destination.
   ///
-  /// Will short circuit when not within boundaries of UCSD
+  /// Short circuits when not within ITS defined distance of UCSD.
   startScan() async {
     //Ensure that we are still within X miles of Price Center
     await location.getLocation().then((location) {
@@ -277,7 +246,7 @@ class WayfindingProvider extends ChangeNotifier {
     });
 
     // Clear previous scan results
-    bufferList.clear();
+    unprocessedDevices.clear();
     newBufferList.clear();
   }
 
@@ -324,8 +293,8 @@ class WayfindingProvider extends ChangeNotifier {
   void sendLogs(Map log) {
     // Attach token from user if logged in
     if (userDataProvider.isLoggedIn) {
-      if (offloadDataHeader == null) {
-        offloadDataHeader = {
+      if (loggerHeader == null) {
+        loggerHeader = {
           'Authorization':
               'Bearer ${userDataProvider?.authenticationModel?.accessToken}'
         };
@@ -335,29 +304,29 @@ class WayfindingProvider extends ChangeNotifier {
       try {
         _networkHelper
             .authorizedPost(
-                offloadLoggerEndpoint, offloadDataHeader, json.encode(log))
+                mobileLoggerEndpoint, loggerHeader, json.encode(log))
             .then((value) {});
       } catch (Exception) {
         // Silent login if access token is expired
         if (Exception.toString().contains(ErrorConstants.invalidBearerToken)) {
           userDataProvider.silentLogin();
-          offloadDataHeader = {
+          loggerHeader = {
             'Authorization':
                 'Bearer ${userDataProvider?.authenticationModel?.accessToken}'
           };
           _networkHelper.authorizedPost(
-              offloadLoggerEndpoint, offloadDataHeader, json.encode(log));
+              mobileLoggerEndpoint, loggerHeader, json.encode(log));
         }
       }
     } else {
       // Send logs to API for visitors
       try {
         _networkHelper.authorizedPost(
-            offloadLoggerEndpoint, headers, json.encode(log));
+            mobileLoggerEndpoint, tokenHeader, json.encode(log));
       } catch (Exception) {
         getNewToken();
         _networkHelper.authorizedPost(
-            offloadLoggerEndpoint, headers, json.encode(log));
+            mobileLoggerEndpoint, tokenHeader, json.encode(log));
       }
     }
   }
@@ -377,7 +346,7 @@ class WayfindingProvider extends ChangeNotifier {
     bool iOSDevice = false;
     List<Map> formattedLists = [];
     List<List<Object>> newBufferList = [];
-    for (List<Object> deviceEntry in bufferList) {
+    for (List<Object> deviceEntry in unprocessedDevices) {
       // Handle differences among platform
       if (Platform.isIOS) {
         deviceEntry.insert(
@@ -488,7 +457,7 @@ class WayfindingProvider extends ChangeNotifier {
   // Ensure we only process unique devices during one scan
   bool checkForDuplicates(ScanResult scanResult) {
     bool repeatedDevice = false;
-    bufferList.forEach((element) {
+    unprocessedDevices.forEach((element) {
       String toFind = '${scanResult.device.id}';
       if (element.contains(toFind)) {
         repeatedDevice = true;
@@ -595,7 +564,7 @@ class WayfindingProvider extends ChangeNotifier {
         scannedObjects[scanResult.device.id.toString()].distance.toInt()
       ];
 
-      bufferList.add(actualDeviceLog);
+      unprocessedDevices.add(actualDeviceLog);
 
       if (Platform.isAndroid) {
         scannedObjects[scanResult.device.id.toString()].deviceType =
@@ -799,7 +768,7 @@ class WayfindingProvider extends ChangeNotifier {
       var response = await _networkHelper.authorizedPost(
           tokenEndpoint, tokenHeaders, "grant_type=client_credentials");
 
-      headers["Authorization"] = "Bearer " + response["access_token"];
+      tokenHeader["Authorization"] = "Bearer " + response["access_token"];
 
       return true;
     } catch (e) {
@@ -807,12 +776,6 @@ class WayfindingProvider extends ChangeNotifier {
     }
   }
 
-  Future<Map> fetchDeviceTypes() async {
-    final response = await _networkHelper.authorizedFetch(
-        bluetoothCharacteristicsEndpoint, headers);
-
-    return json.decode(response);
-  }
 
   void stopScans() {
     print("WAYFINDING IS OFF NOW");
@@ -883,8 +846,7 @@ class WayfindingProvider extends ChangeNotifier {
 //    print("wayfinging enabled");
 //    print(advancedWayfindingEnabled);
     if (permissionGranted) {
-      // Future.delayed(Duration(seconds: 5), ()  => bluetoothInstance.getOffloadAuthorization(context));
-      await init();
+      init();
       if (!advancedWayfindingEnabled){
         forceOff = true;
       }
