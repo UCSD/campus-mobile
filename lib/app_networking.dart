@@ -53,6 +53,21 @@ class NetworkHelper {
     }
   }
 
+  Widget getSilentLoginDialog() {
+    return AlertDialog(
+      title: const Text(LoginConstants.loginFailedTitle),
+      content: Text(LoginConstants.loginFailedDesc),
+      actions: [
+        FlatButton(
+          onPressed: () {
+            Get.back(closeOverlays: true);
+          },
+          child: const Text('OK'),
+        ),
+      ],
+    );
+  }
+
   // method for implementing exponential backoff for silentLogin
   // mimicking existing code from React Native versions of campus-mobile
   Future<dynamic> authorizedPublicPost(
@@ -96,19 +111,7 @@ class NetworkHelper {
       print("SHOWING DIALOG");
       // Get.offAndToNamed(RoutePaths.BottomNavigationBar);
       // Get.until((route) => Get.currentRoute == RoutePaths.Home);
-      AlertDialog dialog = AlertDialog(
-        title: const Text('Error'),
-        content: Text('You have been logged out. Please log back in.'),
-        actions: [
-          FlatButton(
-            onPressed: () {
-              Get.back(closeOverlays: true);
-            },
-            child: const Text('OK'),
-          ),
-        ],
-      );
-      await Get.dialog(dialog);
+      await Get.dialog(getSilentLoginDialog());
       // await Get.defaultDialog(title: "Error", textConfirm: "OK", buttonColor: Colors.white, middleText: "You have been logged out. Please log back in.");
       throw new Exception(ErrorConstants.silentLoginFailed);
   }
