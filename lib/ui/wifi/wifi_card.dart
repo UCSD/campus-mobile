@@ -50,7 +50,8 @@ class _WiFiCardState extends State<WiFiCard> {
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
-      reload: () => Provider.of<SpeedTestProvider>(context, listen: false).init(),
+      reload: () =>
+          Provider.of<SpeedTestProvider>(context, listen: false).init(),
       isLoading: _speedTestProvider.isLoading,
       titleText: CardTitleConstants.titleMap[cardId],
       errorText: _speedTestProvider.error,
@@ -70,10 +71,11 @@ class _WiFiCardState extends State<WiFiCard> {
 
   Widget buildCardContent(BuildContext context) {
     _speedTestProvider.addListener(() {
-
       //TODO: Add print statements to verify not reloading
       try {
-        if (!_speedTestProvider.isUCSDWiFi) {
+        if (_speedTestProvider.onSimulator) {
+          cardState = TestStatus.simulated;
+        } else if (!_speedTestProvider.isUCSDWiFi) {
           cardState = TestStatus.unavailable;
         } else if (_speedTestProvider.timeElapsedDownload +
                 _speedTestProvider.timeElapsedUpload >
@@ -118,6 +120,10 @@ class _WiFiCardState extends State<WiFiCard> {
           padding: const EdgeInsets.all(8.0),
           child: unavailableState(),
         );
+        break;
+      case TestStatus.simulated:
+        return Padding(
+            padding: const EdgeInsets.all(8.0), child: simulatedState());
         break;
     }
     return initialState();
@@ -192,13 +198,19 @@ class _WiFiCardState extends State<WiFiCard> {
           ),
         ])),
         MaterialButton(
-          padding:EdgeInsets.all(4.0) ,
+            padding: EdgeInsets.all(4.0),
             elevation: 0.0,
             onPressed: () {
-              setState(() {
-                cardState = TestStatus.running;
-                _speedTestProvider.speedTest();
-              });
+              if (_speedTestProvider.onSimulator) {
+                setState(() {
+                  cardState = TestStatus.simulated;
+                });
+              } else {
+                setState(() {
+                  cardState = TestStatus.running;
+                  _speedTestProvider.speedTest();
+                });
+              }
             },
             minWidth: 350,
             height: 40,
@@ -212,7 +224,7 @@ class _WiFiCardState extends State<WiFiCard> {
               style: TextStyle(color: Colors.white),
             )),
         MaterialButton(
-          padding: EdgeInsets.all( 12.0),
+            padding: EdgeInsets.all(12.0),
             disabledColor: Colors.grey,
             onPressed: _buttonEnabled
                 ? () {
@@ -371,6 +383,32 @@ class _WiFiCardState extends State<WiFiCard> {
       ],
     );
   }
+
+  Column simulatedState() {
+    print("WiFi Speed Test feature is only available on physical devices.");
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            "Sorry",
+            style: TextStyle(
+              fontSize: 25,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            "This feature is only available on physical devices.",
+            style: TextStyle(fontSize: 13),
+            textAlign: TextAlign.center,
+          ),
+        )
+      ],
+    );
+  }
 }
 
 //Image Scaling
@@ -421,4 +459,4 @@ class SizeConfig {
   }
 }
 
-enum TestStatus { initial, running, finished, unavailable }
+enum TestStatus { initial, running, finished, unavailable, simulated }

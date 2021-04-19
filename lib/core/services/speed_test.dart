@@ -1,15 +1,39 @@
+import 'dart:io';
+
 import 'package:campus_mobile_experimental/core/models/speed_test.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:device_info/device_info.dart';
 import 'package:wifi_connection/WifiConnection.dart';
 import 'package:wifi_connection/WifiInfo.dart';
 
 import '../../app_networking.dart';
 
 class SpeedTestService {
+  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+
   SpeedTestService();
+  Future<bool> checkSimulation() async {
+    try {
+      if (Platform.isAndroid) {
+        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+        if (!androidInfo.isPhysicalDevice) {
+          return true;
+        }
+      } else if (Platform.isIOS) {
+        IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+        if (!iosInfo.isPhysicalDevice) {
+          return true;
+        }
+      }
+    } catch (exception) {
+      print(exception.toString());
+    }
+    return false;
+  }
 
   Connectivity _connectivity = Connectivity();
   final NetworkHelper _networkHelper = NetworkHelper();
+
   SpeedTestModel _speedTestModel;
   bool _isLoading = false;
   String _error;
@@ -82,7 +106,7 @@ class SpeedTestService {
     final Map<String, String> tokenHeaders = {
       "content-type": 'application/x-www-form-urlencoded',
       "Authorization":
-      "Basic djJlNEpYa0NJUHZ5akFWT0VRXzRqZmZUdDkwYTp2emNBZGFzZWpmaWZiUDc2VUJjNDNNVDExclVh"
+          "Basic djJlNEpYa0NJUHZ5akFWT0VRXzRqZmZUdDkwYTp2emNBZGFzZWpmaWZiUDc2VUJjNDNNVDExclVh"
     };
     try {
       var response = await _networkHelper.authorizedPost(
@@ -97,4 +121,3 @@ class SpeedTestService {
     }
   }
 }
-

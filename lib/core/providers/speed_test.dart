@@ -13,6 +13,7 @@ import '../../app_constants.dart';
 import '../../app_networking.dart';
 
 class SpeedTestProvider extends ChangeNotifier {
+  bool _onSimulator;
   bool _isLoading;
   bool _isUCSDWifi = true;
   Coordinates _coordinates;
@@ -43,7 +44,6 @@ class SpeedTestProvider extends ChangeNotifier {
 
   SpeedTestProvider() {
     _isLoading = false;
-    _speedTestService = SpeedTestService();
     init();
   }
 
@@ -57,6 +57,15 @@ class SpeedTestProvider extends ChangeNotifier {
   }
 
   void init() async {
+    _speedTestService = SpeedTestService();
+
+    if (await _speedTestService.checkSimulation()) {
+      _onSimulator = true;
+      notifyListeners();
+      return;
+    } else {
+      _onSimulator = false;
+    }
     _isLoading = true;
     await _speedTestService.fetchSignedUrls();
     _isLoading = false;
@@ -71,7 +80,6 @@ class SpeedTestProvider extends ChangeNotifier {
   }
 
   void speedTest() async {
-
     resetSpeedTest();
     downloadSpeedTest().then((value) {
       _timer.reset();
@@ -221,7 +229,7 @@ class SpeedTestProvider extends ChangeNotifier {
       try {
         var response = _networkHelper
             .authorizedPost(
-                mobileLoggerApi, offloadDataHeader, json.encode(log))
+                mobileLoggerApi, offloadDataHeader, json.encode(log.toString()))
             .then((value) {
           return value;
         });
@@ -233,21 +241,20 @@ class SpeedTestProvider extends ChangeNotifier {
                 'Bearer ${_userDataProvider?.authenticationModel?.accessToken}'
           };
           _networkHelper.authorizedPost(
-              mobileLoggerApi, offloadDataHeader, json.encode(log));
+              mobileLoggerApi, offloadDataHeader, json.encode(log.toString()));
         }
       }
     } else {
       try {
-       getNewToken().then((value){
-         _networkHelper
-             .authorizedPost(mobileLoggerApi, headers, json.encode(log));
-       });
-      } catch (Exception) {
-        getNewToken().then((value){
+        getNewToken().then((value) {
           _networkHelper.authorizedPost(
-              mobileLoggerApi, headers, json.encode(log));
+              mobileLoggerApi, headers, json.encode(log.toString()));
         });
-
+      } catch (Exception) {
+        getNewToken().then((value) {
+          _networkHelper.authorizedPost(
+              mobileLoggerApi, headers, json.encode(log.toString()));
+        });
       }
     }
   }
@@ -304,22 +311,21 @@ class SpeedTestProvider extends ChangeNotifier {
             'Authorization':
                 'Bearer ${_userDataProvider?.authenticationModel?.accessToken}'
           };
-          _networkHelper.authorizedPost(
-              mobileLoggerApi, offloadDataHeader, json.encode(wiFiLog));
+          _networkHelper.authorizedPost(mobileLoggerApi, offloadDataHeader,
+              json.encode(wiFiLog.toString()));
         }
       }
     } else {
       try {
-        getNewToken().then((value){
+        getNewToken().then((value) {
           _networkHelper.authorizedPost(
-              mobileLoggerApi, headers, json.encode(wiFiLog));
+              mobileLoggerApi, headers, json.encode(wiFiLog.toString()));
         });
       } catch (Exception) {
-        getNewToken().then((value){
+        getNewToken().then((value) {
           var response = _networkHelper.authorizedPost(
-              mobileLoggerApi, headers, json.encode(wiFiLog));
+              mobileLoggerApi, headers, json.encode(wiFiLog.toString()));
         });
-
       }
     }
   }
@@ -356,4 +362,5 @@ class SpeedTestProvider extends ChangeNotifier {
   int get timeElapsedDownload => _secondsElapsedDownload;
   int get timeElapsedUpload => _secondsElapsedUpload;
   bool get isUCSDNetwork => isUCSDWiFi;
+  bool get onSimulator => _onSimulator;
 }

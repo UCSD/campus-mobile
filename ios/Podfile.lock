@@ -61,12 +61,12 @@ PODS:
     - GoogleDataTransport (~> 8.0)
     - nanopb (~> 2.30906.0)
     - PromisesObjC (~> 1.2)
-  - FirebaseInstallations (7.9.0):
+  - FirebaseInstallations (7.10.0):
     - FirebaseCore (~> 7.0)
     - GoogleUtilities/Environment (~> 7.0)
     - GoogleUtilities/UserDefaults (~> 7.0)
     - PromisesObjC (~> 1.2)
-  - FirebaseInstanceID (7.9.0):
+  - FirebaseInstanceID (7.10.0):
     - FirebaseCore (~> 7.0)
     - FirebaseInstallations (~> 7.0)
     - GoogleUtilities/Environment (~> 7.0)
@@ -141,9 +141,9 @@ PODS:
   - PromisesObjC (1.2.12)
   - Protobuf (3.11.4)
   - Reachability (3.2)
-  - ScanditBarcodeCapture (6.6.3):
-    - ScanditCaptureCore (= 6.6.3)
-  - ScanditCaptureCore (6.6.3)
+  - ScanditBarcodeCapture (6.6.4):
+    - ScanditCaptureCore (= 6.6.4)
+  - ScanditCaptureCore (6.6.4)
   - shared_preferences (0.0.1):
     - Flutter
   - uni_links (0.0.1):
@@ -152,7 +152,7 @@ PODS:
     - Flutter
   - webview_flutter (0.0.1):
     - Flutter
-  - wifi_connection (0.0.2):
+  - wifi_connection (0.0.1):
     - Flutter
 
 DEPENDENCIES:
@@ -264,10 +264,10 @@ SPEC CHECKSUMS:
   FirebaseCore: 4d3c72622ce0e2106aaa07bb4b2935ba2c370972
   FirebaseCoreDiagnostics: d50e11039e5984d92c8a512be2395f13df747350
   FirebaseCrashlytics: d31325312c92e2cb2f0386d589b9aa44e303d99b
-  FirebaseInstallations: 5e777e6640fa060405cc7632447b6c5ca5af4742
-  FirebaseInstanceID: 53140c03b9f6136f890d7901399f85a4c90ab2d0
+  FirebaseInstallations: bf2ec8dbf36ff4c91af6b9a003d15855757680c1
+  FirebaseInstanceID: 5ad92c898e1328b66e8dd58811964d6fe4d334c3
   FirebaseMessaging: 68d1bcb14880189558a8ae57167abe0b7e417232
-  Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
+  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
   flutter_blue: eeb381dc4727a0954dede73515f683865494b370
   flutter_scandit_plugin: 99b341bc008c38d7a2590ed924e4c106ac76841e
   flutter_secure_storage: 7953c38a04c3fdbb00571bcd87d8e3b5ceb9daec
@@ -284,13 +284,13 @@ SPEC CHECKSUMS:
   PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
   Protobuf: 176220c526ad8bd09ab1fb40a978eac3fef665f7
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
-  ScanditBarcodeCapture: 4bf4801b6a2358be88dda23c604eaf133d53cc94
-  ScanditCaptureCore: 66a461d5a4589845910b71a21b86412e6bb2ae68
+  ScanditBarcodeCapture: 8de10f1d79cb4c669b75c61ddaed60c7c7daa7f4
+  ScanditCaptureCore: 7118e29ef970e70ca1ea6512fa8414e5a3761497
   shared_preferences: 430726339841afefe5142b9c1f50cb6bd7793e01
   uni_links: d97da20c7701486ba192624d99bffaaffcfc298a
   url_launcher: a1c0cc845906122c4784c542523d8cacbded5626
   webview_flutter: d2b4d6c66968ad042ad94cbb791f5b72b4678a96
-  wifi_connection: cbd6d42bbd0cb9302ea325efe5bd3945576266cc
+  wifi_connection: 9c23ee1bfb5fed65448980b3499fc9ff56c9222d
 
 PODFILE CHECKSUM: b652aab8f496e0b73e65fb9d327673c821cb4dd7
 
