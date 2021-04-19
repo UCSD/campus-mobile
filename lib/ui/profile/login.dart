@@ -77,8 +77,6 @@ class _LoginState extends State<Login> {
   }
 
   Widget buildLoginWidget() {
-    print("TEXT COLOR:");
-    print(Theme.of(context).textTheme.button.color.toString());
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
