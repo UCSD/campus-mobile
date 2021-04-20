@@ -35,7 +35,7 @@ class _OnboardingInitialState extends State<OnboardingInitial>
           Container(
             child: Column(children: <Widget>[
               Expanded(
-                  child: Stack(overflow: Overflow.clip, children: <Widget>[
+                  child: Stack(clipBehavior: Clip.none, children: <Widget>[
                 Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[

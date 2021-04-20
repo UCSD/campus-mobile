@@ -187,7 +187,7 @@ class _OnboardingScreen extends State<OnboardingScreen>
   }
 
   Widget buildPage1(double width, double height) {
-    return Stack(overflow: Overflow.clip, children: <Widget>[
+    return Stack(clipBehavior: Clip.none, children: <Widget>[
       Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
         FractionallySizedBox(
           child: Container(
