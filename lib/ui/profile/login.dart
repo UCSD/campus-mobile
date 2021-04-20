@@ -180,7 +180,7 @@ class _LoginState extends State<Login> {
     });
   }
 
-  Widget showAlertDialog(BuildContext context) {
+  showAlertDialog(BuildContext context) {
     // set up the button
     Widget okButton = TextButton(
       child: Text("OK"),

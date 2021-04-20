@@ -18,7 +18,10 @@ dependencies:
   firebase_messaging: 9.1.1
   flutter:
     sdk: flutter
-  flutter_scandit_plugin: 1.1.0 # Upgrade https://github.com/UCSD/flutter_scandit.git
+  flutter_scandit_plugin:
+    git:
+      url: https://github.com/UCSD/flutter_scandit.git
+      ref: 611bb2975f37121f9d2dfb988c1807b59df8d974
   flutter_blue:
     git:
       url: https://github.com/UCSD/flutter_blue.git
