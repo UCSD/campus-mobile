@@ -55,8 +55,8 @@ class NetworkHelper {
 
   Widget getSilentLoginDialog() {
     return AlertDialog(
-      title: const Text(LoginConstants.loginFailedTitle),
-      content: Text(LoginConstants.loginFailedDesc),
+      title: const Text(LoginConstants.silentLoginFailedTitle),
+      content: Text(LoginConstants.silentLoginFailedDesc),
       actions: [
         FlatButton(
           onPressed: () {
@@ -81,7 +81,6 @@ class NetworkHelper {
       }
       catch(e) {
         // exponential backoff here
-        // waitTime = SSO_REFRESH_RETRY_INCREMENT;
         retries++;
         waitTime = SSO_REFRESH_RETRY_INCREMENT;
         while(retries <= SSO_REFRESH_MAX_RETRIES) {
@@ -108,11 +107,7 @@ class NetworkHelper {
       }
       // if here, silent login has failed
       // throw exception to inform caller
-      print("SHOWING DIALOG");
-      // Get.offAndToNamed(RoutePaths.BottomNavigationBar);
-      // Get.until((route) => Get.currentRoute == RoutePaths.Home);
       await Get.dialog(getSilentLoginDialog());
-      // await Get.defaultDialog(title: "Error", textConfirm: "OK", buttonColor: Colors.white, middleText: "You have been logged out. Please log back in.");
       throw new Exception(ErrorConstants.silentLoginFailed);
   }
 
