@@ -1,5 +1,6 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/cards.dart';
+import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/cards.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -71,6 +72,7 @@ class CardsDataProvider extends ChangeNotifier {
   Map<String, CardsModel> _availableCards;
   Box _cardOrderBox;
   Box _cardStateBox;
+  UserDataProvider _userDataProvider;
 
   ///Services
   final CardsService _cardsService = CardsService();
@@ -139,6 +141,8 @@ class CardsDataProvider extends ChangeNotifier {
   }
 
   Future loadSavedData() async {
+    _cardStateBox = await Hive.openBox(DataPersistence.cardStates);
+    _cardOrderBox = await Hive.openBox(DataPersistence.cardOrder);
     await _loadCardOrder();
     await _loadCardStates();
   }
@@ -146,6 +150,9 @@ class CardsDataProvider extends ChangeNotifier {
   /// Update the [_cardOrder] stored in state
   /// overwrite the [_cardOrder] in persistent storage with the model passed in
   Future updateCardOrder(List<String> newOrder) async {
+    if(_userDataProvider.isInSilentLogin) {
+      return;
+    }
     try {
       await _cardOrderBox.put(DataPersistence.cardOrder, newOrder);
     } catch (e) {
@@ -160,6 +167,9 @@ class CardsDataProvider extends ChangeNotifier {
   /// Load [_cardOrder] from persistent storage
   /// Will create persistent storage if no data is found
   Future _loadCardOrder() async {
+    if(_userDataProvider.isInSilentLogin) {
+      return;
+    }
     _cardOrderBox = await Hive.openBox(DataPersistence.cardOrder);
     if (_cardOrderBox.get(DataPersistence.cardOrder) == null) {
       await _cardOrderBox.put(DataPersistence.cardOrder, _cardOrder);
@@ -189,11 +199,14 @@ class CardsDataProvider extends ChangeNotifier {
   /// Update the [_cardStates] stored in state
   /// overwrite the [_cardStates] in persistent storage with the model passed in
   Future updateCardStates(List<String> activeCards) async {
+    if(_userDataProvider.isInSilentLogin) {
+      return;
+    }
     for (String activeCard in activeCards) {
       _cardStates[activeCard] = true;
     }
     try {
-      _cardStateBox.put(DataPersistence.cardStates, activeCards);
+      await _cardStateBox.put(DataPersistence.cardStates, activeCards);
     } catch (e) {
       _cardStateBox = await Hive.openBox(DataPersistence.cardStates);
       _cardStateBox.put(DataPersistence.cardStates, activeCards);
@@ -214,9 +227,24 @@ class CardsDataProvider extends ChangeNotifier {
 
     // TODO: test w/o this
     _cardOrder = List.from(_cardOrder.toSet().toList());
+
+    updateCardOrder(_cardOrder);
+    updateCardStates(
+        _cardStates.keys.where((card) => _cardStates[card]).toList());
+  }
+
+  showAllStudentCards() {
+    int index = _cardOrder.indexOf('MyStudentChart') + 1;
+    _cardOrder.insertAll(index, _studentCards.toList());
+
+    // TODO: test w/o this
+    _cardOrder = List.from(_cardOrder.toSet().toList());
+
+
     for (String card in _studentCards) {
       _cardStates[card] = true;
     }
+
     updateCardOrder(_cardOrder);
     updateCardStates(
         _cardStates.keys.where((card) => _cardStates[card]).toList());
@@ -238,6 +266,18 @@ class CardsDataProvider extends ChangeNotifier {
 
     // TODO: test w/o this
     _cardOrder = List.from(_cardOrder.toSet().toList());
+    updateCardOrder(_cardOrder);
+    updateCardStates(
+        _cardStates.keys.where((card) => _cardStates[card]).toList());
+  }
+
+  showAllStaffCards() {
+    int index = _cardOrder.indexOf('MyStudentChart') + 1;
+    _cardOrder.insertAll(index, _staffCards.toList());
+
+    // TODO: test w/o this
+    _cardOrder = List.from(_cardOrder.toSet().toList());
+
     for (String card in _staffCards) {
       _cardStates[card] = true;
     }
@@ -266,6 +306,9 @@ class CardsDataProvider extends ChangeNotifier {
     updateCardStates(
         _cardStates.keys.where((card) => _cardStates[card]).toList());
   }
+
+  set userDataProvider(UserDataProvider value) => _userDataProvider = value;
+
 
   ///SIMPLE GETTERS
   bool get isLoading => _isLoading;

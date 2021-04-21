@@ -23,7 +23,6 @@ class CardsService {
           "https://api-qa.ucsd.edu:8243/defaultcards/v5.0.0/defaultcards?ucsdaffiliation=${ucsdAffiliation}";
       String _response =
           await _networkHelper.authorizedFetch(cardListEndpoint, headers);
-
       _cardsModel = cardsModelFromJson(_response);
       _isLoading = false;
       return true;
@@ -59,7 +58,7 @@ class CardsService {
     final Map<String, String> tokenHeaders = {
       "content-type": 'application/x-www-form-urlencoded',
       "Authorization":
-          "Basic djJlNEpYa0NJUHZ5akFWT0VRXzRqZmZUdDkwYTp2emNBZGFzZWpmaWZiUDc2VUJjNDNNVDExclVh"
+      "Basic djJlNEpYa0NJUHZ5akFWT0VRXzRqZmZUdDkwYTp2emNBZGFzZWpmaWZiUDc2VUJjNDNNVDExclVh"
     };
     try {
       var response = await _networkHelper.authorizedPost(
