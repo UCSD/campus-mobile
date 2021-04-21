@@ -88,9 +88,11 @@ class DiningDetailView extends StatelessWidget {
 
   Widget buildWebsiteButton(BuildContext context, prefix0.DiningModel model) {
     if (model.url != null && model.url != '') {
-      return RaisedButton(
-        child: Text('Visit Website'),
-        textColor: Theme.of(context).textTheme.button.color,
+      return ElevatedButton(
+        child: Text('Visit Website',
+            style: TextStyle(
+              color: Theme.of(context).textTheme.button.color,
+            )),
         onPressed: () {
           try {
             launch(model.url, forceSafariVC: true);
@@ -105,9 +107,11 @@ class DiningDetailView extends StatelessWidget {
 
   Widget buildMenu(BuildContext context, prefix0.DiningModel model) {
     if (model.menuWebsite != null && model.menuWebsite.isNotEmpty) {
-      return RaisedButton(
-        child: Text('View Menu'),
-        textColor: Theme.of(context).textTheme.button.color,
+      return ElevatedButton(
+        child: Text('View Menu',
+            style: TextStyle(
+              color: Theme.of(context).textTheme.button.color,
+            )),
         onPressed: () {
           try {
             launch(model.menuWebsite, forceSafariVC: true);

@@ -45,14 +45,10 @@ class _OnboardingAffiliationsState extends State<OnboardingAffiliations> {
                 child: SizedBox(
                   width: double.infinity,
                   height: 45,
-                  child: TextButton(
-                      style: TextButton.styleFrom(
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
                         primary:
                             studentSelected ? darkButtonColor : ColorPrimary,
-                        textStyle: TextStyle(
-                          color:
-                              studentSelected ? ColorPrimary : darkButtonColor,
-                        ),
                         shape: ContinuousRectangleBorder(
                             side: BorderSide(
                                 color: darkButtonColor,
@@ -69,6 +65,9 @@ class _OnboardingAffiliationsState extends State<OnboardingAffiliations> {
                       },
                       child: Text("Student",
                           style: TextStyle(
+                              color: studentSelected
+                                  ? ColorPrimary
+                                  : darkButtonColor,
                               fontSize: 17,
                               decoration: TextDecoration.underline))),
                 ),
@@ -78,12 +77,9 @@ class _OnboardingAffiliationsState extends State<OnboardingAffiliations> {
                 child: SizedBox(
                   width: double.infinity,
                   height: 45,
-                  child: TextButton(
-                      style: TextButton.styleFrom(
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
                         primary: staffSelected ? darkButtonColor : ColorPrimary,
-                        textStyle: TextStyle(
-                          color: staffSelected ? ColorPrimary : darkButtonColor,
-                        ),
                         shape: ContinuousRectangleBorder(
                             side: BorderSide(
                                 color: darkButtonColor,
@@ -94,12 +90,15 @@ class _OnboardingAffiliationsState extends State<OnboardingAffiliations> {
                         this.setState(() {
                           staffSelected = !staffSelected;
                           readyToProceed = staffSelected;
-                          studentSelected = false;
                           visitorSelected = false;
+                          studentSelected = false;
                         });
                       },
                       child: Text("Staff/Faculty",
                           style: TextStyle(
+                              color: staffSelected
+                                  ? ColorPrimary
+                                  : darkButtonColor,
                               fontSize: 17,
                               decoration: TextDecoration.underline))),
                 ),
@@ -109,14 +108,10 @@ class _OnboardingAffiliationsState extends State<OnboardingAffiliations> {
                 child: SizedBox(
                   width: double.infinity,
                   height: 45,
-                  child: TextButton(
-                      style: TextButton.styleFrom(
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
                         primary:
                             visitorSelected ? darkButtonColor : ColorPrimary,
-                        textStyle: TextStyle(
-                          color:
-                              visitorSelected ? ColorPrimary : darkButtonColor,
-                        ),
                         shape: ContinuousRectangleBorder(
                             side: BorderSide(
                                 color: darkButtonColor,
@@ -133,6 +128,9 @@ class _OnboardingAffiliationsState extends State<OnboardingAffiliations> {
                       },
                       child: Text("Visitor",
                           style: TextStyle(
+                              color: visitorSelected
+                                  ? ColorPrimary
+                                  : darkButtonColor,
                               fontSize: 17,
                               decoration: TextDecoration.underline))),
                 ),
@@ -144,18 +142,16 @@ class _OnboardingAffiliationsState extends State<OnboardingAffiliations> {
                   child: SizedBox(
                     width: double.infinity,
                     height: 50,
-                    child: FlatButton(
-                        color: darkButtonColor,
-                        disabledColor: Color(0xFF13223A),
-                        disabledTextColor: Colors.grey,
-                        textColor: ColorPrimary,
-                        shape: ContinuousRectangleBorder(
-                            side: BorderSide(
-                                color: readyToProceed
-                                    ? darkButtonColor
-                                    : ColorPrimary,
-                                width: 1,
-                                style: BorderStyle.solid)),
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: darkButtonColor,
+                          onPrimary: Color(0xFF13223A),
+                          shape: ContinuousRectangleBorder(
+                              side: BorderSide(
+                                  color: darkButtonColor,
+                                  width: 1,
+                                  style: BorderStyle.solid)),
+                        ),
                         onPressed: !readyToProceed
                             ? null
                             : () async {
@@ -173,6 +169,9 @@ class _OnboardingAffiliationsState extends State<OnboardingAffiliations> {
                               },
                         child: Text("Next",
                             style: TextStyle(
+                                color: readyToProceed
+                                    ? ColorPrimary
+                                    : darkButtonColor,
                                 fontSize: 17,
                                 decoration: TextDecoration.underline))),
                   ),
