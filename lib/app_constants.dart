@@ -161,6 +161,7 @@ class CardTitleConstants {
     'student_info': 'COVID-19 Info',
     'student_survey': 'Student Survey',
     'student_id': 'Student ID',
+    'speed_test' : "Speed Test",
     'employee_id': 'Employee ID',
     'finals': 'Finals',
     'schedule': 'Classes',

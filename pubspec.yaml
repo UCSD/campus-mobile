@@ -6,6 +6,7 @@ environment:
   sdk: ">=2.6.0 <3.0.0"
 
 dependencies:
+  liquid_progress_indicator: ^0.3.2
   app_settings: 4.0.4
   background_fetch: 0.6.0
   barcode_widget: 1.5.0
@@ -22,6 +23,9 @@ dependencies:
     git:
       url: https://github.com/UCSD/flutter_scandit.git
       ref: master
+
+  wifi_connection: 0.0.2-dev.1
+  connectivity: ^2.0.2
   flutter_blue:
     git:
       url: https://github.com/UCSD/flutter_blue.git

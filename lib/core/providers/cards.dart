@@ -18,6 +18,7 @@ class CardsDataProvider extends ChangeNotifier {
       'MyUCSDChart',
       'student_id',
       'campus_info',
+      'speed_test',
       'employee_id',
       'staff_info',
       'student_info',

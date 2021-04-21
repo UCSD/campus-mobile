@@ -22,7 +22,7 @@ class CardsService {
       String cardListEndpoint =
           "https://api-qa.ucsd.edu:8243/defaultcards/v5.0.0/defaultcards?ucsdaffiliation=${ucsdAffiliation}";
       String _response =
-      await _networkHelper.authorizedFetch(cardListEndpoint, headers);
+          await _networkHelper.authorizedFetch(cardListEndpoint, headers);
       _cardsModel = cardsModelFromJson(_response);
       _isLoading = false;
       return true;
