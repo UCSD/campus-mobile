@@ -45,9 +45,9 @@ class _OnboardingAffiliationsState extends State<OnboardingAffiliations> {
                 child: SizedBox(
                   width: double.infinity,
                   height: 45,
-                  child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary:
+                  child: TextButton(
+                      style: TextButton.styleFrom(
+                        backgroundColor:
                             studentSelected ? darkButtonColor : ColorPrimary,
                         shape: ContinuousRectangleBorder(
                             side: BorderSide(
@@ -77,9 +77,10 @@ class _OnboardingAffiliationsState extends State<OnboardingAffiliations> {
                 child: SizedBox(
                   width: double.infinity,
                   height: 45,
-                  child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: staffSelected ? darkButtonColor : ColorPrimary,
+                  child: TextButton(
+                      style: TextButton.styleFrom(
+                        backgroundColor:
+                            staffSelected ? darkButtonColor : ColorPrimary,
                         shape: ContinuousRectangleBorder(
                             side: BorderSide(
                                 color: darkButtonColor,
@@ -108,9 +109,9 @@ class _OnboardingAffiliationsState extends State<OnboardingAffiliations> {
                 child: SizedBox(
                   width: double.infinity,
                   height: 45,
-                  child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary:
+                  child: TextButton(
+                      style: TextButton.styleFrom(
+                        backgroundColor:
                             visitorSelected ? darkButtonColor : ColorPrimary,
                         shape: ContinuousRectangleBorder(
                             side: BorderSide(
@@ -142,13 +143,16 @@ class _OnboardingAffiliationsState extends State<OnboardingAffiliations> {
                   child: SizedBox(
                     width: double.infinity,
                     height: 50,
-                    child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: darkButtonColor,
-                          onPrimary: Color(0xFF13223A),
+                    child: TextButton(
+                        style: TextButton.styleFrom(
+                          backgroundColor: readyToProceed
+                              ? darkButtonColor
+                              : Color(0xFF13223A),
                           shape: ContinuousRectangleBorder(
                               side: BorderSide(
-                                  color: darkButtonColor,
+                                  color: readyToProceed
+                                      ? darkButtonColor
+                                      : ColorPrimary,
                                   width: 1,
                                   style: BorderStyle.solid)),
                         ),
@@ -169,9 +173,8 @@ class _OnboardingAffiliationsState extends State<OnboardingAffiliations> {
                               },
                         child: Text("Next",
                             style: TextStyle(
-                                color: readyToProceed
-                                    ? ColorPrimary
-                                    : darkButtonColor,
+                                color:
+                                    readyToProceed ? ColorPrimary : Colors.grey,
                                 fontSize: 17,
                                 decoration: TextDecoration.underline))),
                   ),
