@@ -137,7 +137,7 @@ class _LoginState extends State<Login> {
                             });
                           },
                     style: TextButton.styleFrom(
-                      primary: Theme.of(context).buttonColor,
+                      backgroundColor: Theme.of(context).buttonColor,
                       textStyle: TextStyle(
                         color: Theme.of(context).textTheme.button.color,
                       ),
