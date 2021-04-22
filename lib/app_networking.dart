@@ -123,7 +123,8 @@ class NetworkHelper {
         throw Exception('Failed to delete data: ' + _response.data);
       }
     } on TimeoutException catch (e) {
-      // Display an alert, no internet
+      // Display an alert - i.e. no internet
+      print(e);
     } catch (err) {
       print(err);
       return null;

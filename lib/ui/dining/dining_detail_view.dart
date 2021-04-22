@@ -52,7 +52,7 @@ class DiningDetailView extends StatelessWidget {
   Widget buildDirectionsButton(
       BuildContext context, prefix0.DiningModel model) {
     if (model.distance != null)
-      return FlatButton(
+      return TextButton(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
@@ -88,9 +88,11 @@ class DiningDetailView extends StatelessWidget {
 
   Widget buildWebsiteButton(BuildContext context, prefix0.DiningModel model) {
     if (model.url != null && model.url != '') {
-      return RaisedButton(
-        child: Text('Visit Website'),
-        textColor: Theme.of(context).textTheme.button.color,
+      return ElevatedButton(
+        child: Text('Visit Website',
+            style: TextStyle(
+              color: Theme.of(context).textTheme.button.color,
+            )),
         onPressed: () {
           try {
             launch(model.url, forceSafariVC: true);
@@ -105,9 +107,11 @@ class DiningDetailView extends StatelessWidget {
 
   Widget buildMenu(BuildContext context, prefix0.DiningModel model) {
     if (model.menuWebsite != null && model.menuWebsite.isNotEmpty) {
-      return RaisedButton(
-        child: Text('View Menu'),
-        textColor: Theme.of(context).textTheme.button.color,
+      return ElevatedButton(
+        child: Text('View Menu',
+            style: TextStyle(
+              color: Theme.of(context).textTheme.button.color,
+            )),
         onPressed: () {
           try {
             launch(model.menuWebsite, forceSafariVC: true);
@@ -152,8 +156,8 @@ class DiningDetailView extends StatelessWidget {
     return RichText(
       text: TextSpan(
         style: TextStyle(
-            fontSize: Theme.of(context).textTheme.body1.fontSize,
-            color: Theme.of(context).textTheme.body1.color),
+            fontSize: Theme.of(context).textTheme.bodyText2.fontSize,
+            color: Theme.of(context).textTheme.bodyText2.color),
         children: [
           TextSpan(
             text: "Payment Options:\n",
@@ -166,7 +170,7 @@ class DiningDetailView extends StatelessWidget {
   }
 
   Widget buildPictures(prefix0.DiningModel model) {
-    List<ImageLoader> images = List<ImageLoader>();
+    List<ImageLoader> images = [];
     if (model.images != null && model.images.length > 0) {
       for (prefix0.Image item in model.images) {
         images.add(ImageLoader(

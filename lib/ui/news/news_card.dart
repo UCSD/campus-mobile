@@ -1,5 +1,4 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
-import 'package:campus_mobile_experimental/app_router.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/news.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
@@ -17,8 +16,8 @@ class NewsCard extends StatelessWidget {
   }
 
   List<Widget> buildActionButtons(BuildContext context) {
-    List<Widget> actionButtons = List<Widget>();
-    actionButtons.add(FlatButton(
+    List<Widget> actionButtons = [];
+    actionButtons.add(TextButton(
       child: Text(
         'View All',
       ),

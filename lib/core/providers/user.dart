@@ -3,7 +3,6 @@ import 'dart:typed_data';
 
 import 'package:campus_mobile_experimental/core/models/authentication.dart';
 import 'package:campus_mobile_experimental/core/models/user_profile.dart';
-import 'package:campus_mobile_experimental/core/providers/availability.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/notifications.dart';
 import 'package:campus_mobile_experimental/core/services/authentication.dart';
@@ -47,7 +46,6 @@ class UserDataProvider extends ChangeNotifier {
   UserProfileService _userProfileService;
   PushNotificationDataProvider _pushNotificationDataProvider;
   CardsDataProvider _cardsDataProvider;
-  AvailabilityDataProvider _availabilityDataProvider;
 
   /// Update the [AuthenticationModel] stored in state
   /// overwrite the [AuthenticationModel] in persistent storage with the model passed in
@@ -87,8 +85,6 @@ class UserDataProvider extends ChangeNotifier {
     print('UserDataProvider:_loadSavedAuthenticationModel');
     var authBox =
         await Hive.openBox<AuthenticationModel>('AuthenticationModel');
-
-    int boxLength = authBox.length;
 
     AuthenticationModel temp = AuthenticationModel.fromJson({});
     //check to see if we have added the authentication model into the box already
@@ -184,10 +180,9 @@ class UserDataProvider extends ChangeNotifier {
       _encryptAndSaveCredentials(username, password);
 
       if (await silentLogin()) {
-        if(_userProfileModel.classifications.student) {
+        if (_userProfileModel.classifications.student) {
           _cardsDataProvider.showAllStudentCards();
-        }
-        else if(_userProfileModel.classifications.staff) {
+        } else if (_userProfileModel.classifications.staff) {
           _cardsDataProvider.showAllStaffCards();
         }
         _isLoading = false;
@@ -230,7 +225,7 @@ class UserDataProvider extends ChangeNotifier {
         await fetchUserProfile();
 
         CardsDataProvider _cardsDataProvider = CardsDataProvider();
-        print(_cardsDataProvider.cardOrder.toString());        // _cardsDataProvider
+        print(_cardsDataProvider.cardOrder.toString()); // _cardsDataProvider
         //     .updateAvailableCards(_userProfileModel.ucsdaffiliation);
 
         _subscribeToPushNotificationTopics(userProfileModel.subscribedTopics);
@@ -466,7 +461,6 @@ class UserDataProvider extends ChangeNotifier {
 
   CardsDataProvider get cardsDataProvider => _cardsDataProvider;
 
-
   ///GETTERS FOR STATES
   String get error => _error;
 
@@ -479,5 +473,4 @@ class UserDataProvider extends ChangeNotifier {
   bool get isInSilentLogin => _isInSilentLogin;
 
   set cardsDataProvider(CardsDataProvider value) => _cardsDataProvider = value;
-
 }

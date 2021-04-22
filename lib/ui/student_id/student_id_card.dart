@@ -36,7 +36,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
               child: checkForRotation(image, context, cardNumber, rotated),
             ),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                   child: Icon(
                     Icons.close,
                     color: Colors.black,
@@ -187,12 +187,13 @@ class _StudentIdCardState extends State<StudentIdCard> {
                           padding: EdgeInsets.all(
                               ScalingUtility.verticalSafeBlock * .9),
                         ),
-                        FlatButton(
+                        TextButton(
+                          style: TextButton.styleFrom(
+                            padding: EdgeInsets.all(0),
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
                           child: returnBarcodeContainer(
                               barcodeModel.barCode.toString(), false, context),
-                          padding: EdgeInsets.all(0),
-                          materialTapTargetSize:
-                              MaterialTapTargetSize.shrinkWrap,
                           onPressed: () {
                             createAlertDialog(
                                 context,
@@ -273,7 +274,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
                     (nameModel.firstName + " " + nameModel.lastName),
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: TabletFontSize(
+                        fontSize: tabletFontSize(
                             nameModel.firstName + " " + nameModel.lastName,
                             "name")),
                     textAlign: TextAlign.left,
@@ -289,7 +290,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                         color: Colors.grey,
-                        fontSize: TabletFontSize(
+                        fontSize: tabletFontSize(
                             profileModel.collegeCurrent, "college")),
                     textAlign: TextAlign.left,
                     softWrap: false,
@@ -304,7 +305,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
                         ? profileModel.graduatePrimaryMajorCurrent
                         : profileModel.ugPrimaryMajorCurrent,
                     style: TextStyle(
-                        fontSize: TabletFontSize(
+                        fontSize: tabletFontSize(
                             profileModel.graduatePrimaryMajorCurrent != ""
                                 ? profileModel.graduatePrimaryMajorCurrent
                                 : profileModel.ugPrimaryMajorCurrent,
@@ -318,10 +319,12 @@ class _StudentIdCardState extends State<StudentIdCard> {
                 Padding(
                   padding: EdgeInsets.only(top: 15),
                 ),
-                FlatButton(
+                TextButton(
+                  style: TextButton.styleFrom(
+                    padding: EdgeInsets.all(0),
+                  ),
                   child: returnBarcodeContainerTablet(
                       barcodeModel.barCode.toString(), false, context),
-                  padding: EdgeInsets.all(0),
                   onPressed: () {
                     createAlertDialog(
                         context,
@@ -551,7 +554,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
     return base;
   }
 
-  double TabletFontSize(String input, String textField) {
+  double tabletFontSize(String input, String textField) {
     /// Base font size
     double base = letterSpacingForTablet();
 

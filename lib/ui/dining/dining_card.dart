@@ -1,5 +1,4 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
-import 'package:campus_mobile_experimental/app_router.dart';
 import 'package:campus_mobile_experimental/core/models/dining.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/dining.dart';
@@ -42,8 +41,8 @@ class DiningCard extends StatelessWidget {
   }
 
   List<Widget> buildActionButtons(BuildContext context) {
-    List<Widget> actionButtons = List<Widget>();
-    actionButtons.add(FlatButton(
+    List<Widget> actionButtons = [];
+    actionButtons.add(TextButton(
       child: Text(
         'View All',
       ),

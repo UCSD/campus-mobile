@@ -2,7 +2,7 @@ import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/availability.dart';
 
 class AvailabilityService {
-  AvailabilityService() {}
+  AvailabilityService();
   bool _isLoading = false;
   DateTime _lastUpdated;
   String _error;

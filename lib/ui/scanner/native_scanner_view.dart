@@ -1,11 +1,8 @@
-import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/scanner.dart';
 import 'package:campus_mobile_experimental/core/providers/scanner_message.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
-import 'package:campus_mobile_experimental/core/services/barcode.dart';
 import 'package:campus_mobile_experimental/core/utils/webview.dart';
-import 'package:campus_mobile_experimental/ui/scanner/native_scanner_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_scandit_plugin/flutter_scandit_plugin.dart';
 import 'package:intl/intl.dart';
@@ -27,6 +24,8 @@ class ScanditScanner extends StatelessWidget {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(42),
         child: AppBar(
+          backgroundColor: ColorPrimary,
+          brightness: Brightness.dark,
           centerTitle: true,
           title: const Text("Scanner"),
         ),
@@ -90,7 +89,6 @@ class ScanditScanner extends StatelessWidget {
         ],
       ));
     } else if (_scannerDataProvider.successfulSubmission) {
-
       return (renderSuccessScreen(context));
     } else if (_scannerDataProvider.didError) {
       return (renderFailureScreen(context));
@@ -137,8 +135,13 @@ class ScanditScanner extends StatelessWidget {
               ),
               Padding(
                 padding: EdgeInsets.only(top: 16.0),
-                child: FlatButton(
-                  padding: EdgeInsets.only(left: 32.0, right: 32.0),
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                      padding: EdgeInsets.only(left: 32.0, right: 32.0),
+                      primary: lightButtonColor,
+                      textStyle: TextStyle(
+                        color: Colors.white,
+                      )),
                   onPressed: () {
                     _scannerDataProvider.setDefaultStates();
                   },
@@ -146,8 +149,6 @@ class ScanditScanner extends StatelessWidget {
                     "Try again",
                     style: TextStyle(fontSize: 18.0),
                   ),
-                  color: lightButtonColor,
-                  textColor: Colors.white,
                 ),
               ),
             ])),
@@ -229,15 +230,18 @@ class ScanditScanner extends StatelessWidget {
       return Text(String.fromCharCode(0x2022) +
           " You can view your results by logging in to MyUCSDChart.");
     }
+
+    return Text(String.fromCharCode(0x2022) +
+        " You can view your results by logging in to MyChart.");
   }
 
   void updateLatestScan(BuildContext context) {
-    if(_scannerDataProvider.successfulSubmission && !hasUpdatedLatestScan) {
+    if (_scannerDataProvider.successfulSubmission && !hasUpdatedLatestScan) {
       // to fetch the most recent scan and display timestamp to user to confirm success
       print("updating");
-      Provider.of<ScannerMessageDataProvider>(context, listen: false).fetchData();
+      Provider.of<ScannerMessageDataProvider>(context, listen: false)
+          .fetchData();
       hasUpdatedLatestScan = true;
     }
   }
-
 }

@@ -57,19 +57,19 @@ class _BottomTabBarState extends State<BottomTabBar> {
         items: [
           BottomNavigationBarItem(
             icon: new Icon(Icons.home),
-            title: new Text('Home'),
+            label: 'Home',
           ),
           BottomNavigationBarItem(
             icon: new Icon(Icons.map),
-            title: new Text('Map'),
+            label: 'Map',
           ),
           BottomNavigationBarItem(
             icon: new Icon(Icons.notifications),
-            title: new Text('Notifications'),
+            label: 'Notifications',
           ),
           BottomNavigationBarItem(
             icon: new Icon(Icons.person),
-            title: new Text('User Profile'),
+            label: 'User Profile',
           ),
         ],
         showSelectedLabels: false,

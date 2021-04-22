@@ -130,12 +130,13 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
                             padding: EdgeInsets.all(
                                 ScalingUtility.verticalSafeBlock * .9),
                           ),
-                          FlatButton(
+                          TextButton(
+                            style: TextButton.styleFrom(
+                              padding: EdgeInsets.all(0),
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
                             child: returnBarcodeContainer(
                                 employeeIdModel.barcode, false, context),
-                            padding: EdgeInsets.all(0),
-                            materialTapTargetSize:
-                                MaterialTapTargetSize.shrinkWrap,
                             onPressed: () {
                               createAlertDialog(
                                   context,
@@ -216,7 +217,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
                       employeeIdModel.employeePreferredDisplayName,
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: TabletFontSize(
+                          fontSize: tabletFontSize(
                               employeeIdModel.employeePreferredDisplayName,
                               "name")),
                       textAlign: TextAlign.left,
@@ -233,7 +234,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
                       style: TextStyle(
                           color: Colors.grey,
                           fontSize:
-                              TabletFontSize(employeeIdModel.department, "")),
+                              tabletFontSize(employeeIdModel.department, "")),
                       textAlign: TextAlign.left,
                       softWrap: false,
                       maxLines: 1,
@@ -245,7 +246,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
                     child: Text(
                       "Employee ID " + employeeIdModel.employeeId,
                       style: TextStyle(
-                          fontSize: TabletFontSize(
+                          fontSize: tabletFontSize(
                               "Employee ID " + employeeIdModel.employeeId, "")),
                       textAlign: TextAlign.left,
                       softWrap: false,
@@ -256,10 +257,12 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
                   Padding(
                     padding: EdgeInsets.only(top: 15),
                   ),
-                  FlatButton(
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.all(0),
+                    ),
                     child: returnBarcodeContainerTablet(
                         employeeIdModel.barcode, false, context),
-                    padding: EdgeInsets.all(0),
                     onPressed: () {
                       createAlertDialog(
                           context,
@@ -306,7 +309,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
               child: checkForRotation(image, context, cardNumber, rotated),
             ),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                   child: Icon(
                     Icons.close,
                     color: Colors.black,
@@ -551,7 +554,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
     return base;
   }
 
-  double TabletFontSize(String input, String textField) {
+  double tabletFontSize(String input, String textField) {
     /// Base font size
     double base = letterSpacingForTablet();
 

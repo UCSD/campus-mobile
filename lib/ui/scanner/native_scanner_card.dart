@@ -63,7 +63,7 @@ class NativeScannerCard extends StatelessWidget {
   }
 
   Widget buildActionButton(BuildContext context) {
-    return FlatButton(
+    return TextButton(
       child: Text(
         getActionButtonText(context),
       ),

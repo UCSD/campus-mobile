@@ -88,7 +88,7 @@ class _OnboardingScreen extends State<OnboardingScreen>
     double height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       body: Stack(children: <Widget>[
         Container(
@@ -151,8 +151,10 @@ class _OnboardingScreen extends State<OnboardingScreen>
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               Expanded(
-                  child: FlatButton(
-                color: ColorPrimary,
+                  child: TextButton(
+                style: TextButton.styleFrom(
+                  primary: ColorPrimary,
+                ),
                 onPressed: () {
                   Navigator.of(context).push(_routeToAffiliations());
                 },
@@ -165,8 +167,10 @@ class _OnboardingScreen extends State<OnboardingScreen>
                 ),
               )),
               Expanded(
-                child: FlatButton(
-                  color: ColorPrimary,
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    primary: ColorPrimary,
+                  ),
                   onPressed: () {
                     Navigator.of(context).push(_routeToLogin());
                   },
@@ -183,7 +187,7 @@ class _OnboardingScreen extends State<OnboardingScreen>
   }
 
   Widget buildPage1(double width, double height) {
-    return Stack(overflow: Overflow.clip, children: <Widget>[
+    return Stack(clipBehavior: Clip.none, children: <Widget>[
       Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
         FractionallySizedBox(
           child: Container(

@@ -9,7 +9,7 @@ class NoticesDataProvider extends ChangeNotifier {
 
     ///INITIALIZE SERVICES
     _noticesService = NoticesService();
-    _noticesModel = List<NoticesModel>();
+    _noticesModel = [];
   }
 
   ///STATES
