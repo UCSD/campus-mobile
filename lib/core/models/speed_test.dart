@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:wifi_connection/WifiInfo.dart';
 
 class SpeedTestModel {
@@ -53,8 +52,7 @@ class SpeedTestModel {
       Map<String, dynamic> downloadJson,
       Map<String, dynamic> uploadJson,
       bool isUCSDWifi) {
-
-    if(wifiInfo == null){
+    if (wifiInfo == null) {
       return SpeedTestModel(isUCSDWifi: false);
     }
     return SpeedTestModel(
@@ -63,7 +61,7 @@ class SpeedTestModel {
         downloadUrl: downloadJson["signed_url"],
         platform: Platform.isAndroid ? "Android" : "iOS",
         ssid: wifiInfo.ssid == null ? "" : wifiInfo.ssid,
-        bssid: wifiInfo.bssId == null ? "" : wifiInfo.bssId,
+        bssid: wifiInfo.bssid == null ? "" : wifiInfo.bssid,
         ipAddress: wifiInfo.ipAddress == null ? "" : wifiInfo.ipAddress,
         macAddress: wifiInfo.macAddress == null ? "" : wifiInfo.macAddress,
         linkSpeed: wifiInfo.linkSpeed == null ? "" : wifiInfo.linkSpeed,
@@ -72,7 +70,7 @@ class SpeedTestModel {
         frequency: wifiInfo.frequency == null ? "" : wifiInfo.frequency,
         networkID: wifiInfo.networkId == null ? "" : wifiInfo.networkId,
         isHiddenSSID:
-            wifiInfo.isHiddenSSid == null ? "" : wifiInfo.isHiddenSSid,
+            wifiInfo.isHiddenSSID == null ? "" : wifiInfo.isHiddenSSID,
         routerIP: wifiInfo.routerIp == null ? "" : wifiInfo.routerIp,
         channel: wifiInfo.channel == null ? "" : wifiInfo.channel,
         latitude: 0.0,
@@ -85,8 +83,8 @@ class SpeedTestModel {
   }
 }
 
-SpeedTestModel speedTestModelFromJson( WifiInfo wifiInfo,
-     String downloadUrl,String uploadUrl, bool isUCSDWifi) {
+SpeedTestModel speedTestModelFromJson(
+    WifiInfo wifiInfo, String downloadUrl, String uploadUrl, bool isUCSDWifi) {
   return SpeedTestModel.fromJson(
       wifiInfo, json.decode(downloadUrl), json.decode(uploadUrl), isUCSDWifi);
 }
