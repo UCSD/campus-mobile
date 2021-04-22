@@ -78,9 +78,8 @@ class WayfindingProvider extends ChangeNotifier {
 
   /// Endpoint used to send device logs to ITS specified destination.
   String mobileLoggerEndpoint =
-      "https://api-qa.ucsd.edu:8243/mobileapplogger/v1.0.0/log";
-  String offloadLoggerEndpoint =
       "https://api-qa.ucsd.edu:8243/mobileapplogger/v1.1.0/log?type=WAYFINDING";
+
 
   /// Responsible for recurrent scans after a certain time interval.
   Timer ongoingScanner;
