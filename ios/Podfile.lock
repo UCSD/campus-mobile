@@ -5,6 +5,9 @@ PODS:
     - Flutter
   - beacon_broadcast (0.0.1):
     - Flutter
+  - connectivity (0.0.1):
+    - Flutter
+    - Reachability
   - device_info (0.0.1):
     - Flutter
   - Firebase/Analytics (7.3.0):
@@ -82,6 +85,8 @@ PODS:
   - flutter_blue/Protos (0.0.1):
     - Flutter
     - Protobuf (~> 3.11.4)
+  - flutter_local_notifications (0.0.1):
+    - Flutter
   - flutter_scandit_plugin (0.0.1):
     - Flutter
     - ScanditBarcodeCapture (~> 6.6.0-beta.2)
@@ -137,6 +142,7 @@ PODS:
     - Flutter
   - PromisesObjC (1.2.12)
   - Protobuf (3.11.4)
+  - Reachability (3.2)
   - ScanditBarcodeCapture (6.6.4):
     - ScanditCaptureCore (= 6.6.4)
   - ScanditCaptureCore (6.6.4)
@@ -148,11 +154,14 @@ PODS:
     - Flutter
   - webview_flutter (0.0.1):
     - Flutter
+  - wifi_connection (0.0.1):
+    - Flutter
 
 DEPENDENCIES:
   - app_settings (from `.symlinks/plugins/app_settings/ios`)
   - background_fetch (from `.symlinks/plugins/background_fetch/ios`)
   - beacon_broadcast (from `.symlinks/plugins/beacon_broadcast/ios`)
+  - connectivity (from `.symlinks/plugins/connectivity/ios`)
   - device_info (from `.symlinks/plugins/device_info/ios`)
   - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
@@ -160,6 +169,7 @@ DEPENDENCIES:
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - Flutter (from `Flutter`)
   - flutter_blue (from `.symlinks/plugins/flutter_blue/ios`)
+  - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_scandit_plugin (from `.symlinks/plugins/flutter_scandit_plugin/ios`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
   - google_maps_flutter (from `.symlinks/plugins/google_maps_flutter/ios`)
@@ -171,6 +181,7 @@ DEPENDENCIES:
   - uni_links (from `.symlinks/plugins/uni_links/ios`)
   - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
   - webview_flutter (from `.symlinks/plugins/webview_flutter/ios`)
+  - wifi_connection (from `.symlinks/plugins/wifi_connection/ios`)
 
 SPEC REPOS:
   trunk:
@@ -189,6 +200,7 @@ SPEC REPOS:
     - nanopb
     - PromisesObjC
     - Protobuf
+    - Reachability
     - ScanditBarcodeCapture
     - ScanditCaptureCore
 
@@ -199,6 +211,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/background_fetch/ios"
   beacon_broadcast:
     :path: ".symlinks/plugins/beacon_broadcast/ios"
+  connectivity:
+    :path: ".symlinks/plugins/connectivity/ios"
   device_info:
     :path: ".symlinks/plugins/device_info/ios"
   firebase_analytics:
@@ -213,6 +227,8 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_blue:
     :path: ".symlinks/plugins/flutter_blue/ios"
+  flutter_local_notifications:
+    :path: ".symlinks/plugins/flutter_local_notifications/ios"
   flutter_scandit_plugin:
     :path: ".symlinks/plugins/flutter_scandit_plugin/ios"
   flutter_secure_storage:
@@ -235,11 +251,14 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/url_launcher/ios"
   webview_flutter:
     :path: ".symlinks/plugins/webview_flutter/ios"
+  wifi_connection:
+    :path: ".symlinks/plugins/wifi_connection/ios"
 
 SPEC CHECKSUMS:
   app_settings: d103828c9f5d515c4df9ee754dabd443f7cedcf3
   background_fetch: 9221ccc02b41aff8a52b2090d9f791c5ed82eaee
   beacon_broadcast: 2c2562111f7b7e0f1ab59487f6bc805805e3c9f3
+  connectivity: c4130b2985d4ef6fd26f9702e886bd5260681467
   device_info: d7d233b645a32c40dfdc212de5cf646ca482f175
   Firebase: 26223c695fe322633274198cb19dca8cb7e54416
   firebase_analytics: 41043f6e14fc9bc27c3f05217ab7f2b0ad9b41eb
@@ -255,6 +274,7 @@ SPEC CHECKSUMS:
   FirebaseMessaging: 68d1bcb14880189558a8ae57167abe0b7e417232
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
   flutter_blue: eeb381dc4727a0954dede73515f683865494b370
+  flutter_local_notifications: 0c0b1ae97e741e1521e4c1629a459d04b9aec743
   flutter_scandit_plugin: 99b341bc008c38d7a2590ed924e4c106ac76841e
   flutter_secure_storage: 7953c38a04c3fdbb00571bcd87d8e3b5ceb9daec
   google_maps_flutter: c7f9c73576de1fbe152a227bfd6e6c4ae8088619
@@ -269,12 +289,14 @@ SPEC CHECKSUMS:
   permission_handler: ccb20a9fad0ee9b1314a52b70b76b473c5f8dab0
   PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
   Protobuf: 176220c526ad8bd09ab1fb40a978eac3fef665f7
+  Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   ScanditBarcodeCapture: 8de10f1d79cb4c669b75c61ddaed60c7c7daa7f4
   ScanditCaptureCore: 7118e29ef970e70ca1ea6512fa8414e5a3761497
   shared_preferences: 430726339841afefe5142b9c1f50cb6bd7793e01
   uni_links: d97da20c7701486ba192624d99bffaaffcfc298a
   url_launcher: a1c0cc845906122c4784c542523d8cacbded5626
   webview_flutter: d2b4d6c66968ad042ad94cbb791f5b72b4678a96
+  wifi_connection: 9c23ee1bfb5fed65448980b3499fc9ff56c9222d
 
 PODFILE CHECKSUM: b652aab8f496e0b73e65fb9d327673c821cb4dd7
 

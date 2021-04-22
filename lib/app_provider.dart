@@ -17,6 +17,7 @@ import 'package:campus_mobile_experimental/core/providers/parking.dart';
 import 'package:campus_mobile_experimental/core/providers/scanner_message.dart';
 import 'package:campus_mobile_experimental/core/providers/scanner.dart';
 import 'package:campus_mobile_experimental/core/providers/shuttle.dart';
+import 'package:campus_mobile_experimental/core/providers/speed_test.dart';
 import 'package:campus_mobile_experimental/core/providers/student_id.dart';
 import 'package:campus_mobile_experimental/core/providers/survey.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
@@ -25,6 +26,7 @@ import 'package:campus_mobile_experimental/core/providers/weather.dart';
 import 'package:campus_mobile_experimental/ui/navigator/top.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
@@ -113,6 +115,7 @@ List<SingleChildWidget> dependentServices = [
     diningDataProvider.populateDistances();
     return diningDataProvider;
   }),
+
   ChangeNotifierProxyProvider<Coordinates, MapsDataProvider>(create: (_) {
     var mapsDataProvider = MapsDataProvider();
     return mapsDataProvider;
@@ -150,6 +153,8 @@ List<SingleChildWidget> dependentServices = [
       lazy: false,
       update: (_, userDataProvider, cardsDataProvider) {
         print("UpdateProvider: CardsDataProvider");
+        cardsDataProvider.userDataProvider = userDataProvider;
+        userDataProvider.cardsDataProvider = cardsDataProvider;
         cardsDataProvider
           ..loadSavedData().then((value) {
             cardsDataProvider.updateAvailableCards(
@@ -271,6 +276,15 @@ List<SingleChildWidget> dependentServices = [
     print("UpdateProvider: ShuttleDataProvider");
     shuttleDataProvider.userDataProvider = userDataProvider;
     return shuttleDataProvider;
+  }),
+  ChangeNotifierProxyProvider2<Coordinates, UserDataProvider, SpeedTestProvider>(create: (_){
+    SpeedTestProvider speedTestProvider = SpeedTestProvider();
+    speedTestProvider.init();
+    return speedTestProvider;
+  }, update: (_, coordinates, userDataProvider, speedTestProvider){
+    speedTestProvider.coordinates = coordinates;
+    speedTestProvider.userDataProvider = userDataProvider;
+    return speedTestProvider;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, ParkingDataProvider>(
       create: (_) {

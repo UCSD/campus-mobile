@@ -79,6 +79,8 @@ class WayfindingProvider extends ChangeNotifier {
   /// Endpoint used to send device logs to ITS specified destination.
   String mobileLoggerEndpoint =
       "https://api-qa.ucsd.edu:8243/mobileapplogger/v1.0.0/log";
+  String offloadLoggerEndpoint =
+      "https://api-qa.ucsd.edu:8243/mobileapplogger/v1.1.0/log?type=WAYFINDING";
 
   /// Responsible for recurrent scans after a certain time interval.
   Timer ongoingScanner;
@@ -293,7 +295,7 @@ class WayfindingProvider extends ChangeNotifier {
   /// Sends BT LE logs to API
   ///
   /// Will attach access token if logged in
-  void sendLogs(Map log) {
+  Future<void> sendLogs(Map log) async {
     // Attach token from user if logged in
     if (userDataProvider.isLoggedIn) {
       if (loggerHeader == null) {
@@ -324,6 +326,7 @@ class WayfindingProvider extends ChangeNotifier {
     } else {
       // Send logs to API for visitors
       try {
+         getNewToken();
         _networkHelper.authorizedPost(
             mobileLoggerEndpoint, tokenHeader, json.encode(log));
       } catch (Exception) {
