@@ -28,6 +28,7 @@ import 'package:campus_mobile_experimental/ui/shuttle/shuttle_card.dart';
 import 'package:campus_mobile_experimental/ui/student_id/student_id_card.dart';
 import 'package:campus_mobile_experimental/ui/survey/survey_card.dart';
 import 'package:campus_mobile_experimental/ui/weather/weather_card.dart';
+import 'package:campus_mobile_experimental/ui/wifi/wifi_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -163,6 +164,9 @@ class _HomeState extends State<Home> {
             break;
           case 'parking':
             orderedCards.add(ParkingCard());
+            break;
+          case 'speed_test':
+            orderedCards.add(WiFiCard());
             break;
           case 'shuttle':
             orderedCards.add(ShuttleCard());
