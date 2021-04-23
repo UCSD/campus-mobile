@@ -45,15 +45,16 @@ class _OnboardingAffiliationsState extends State<OnboardingAffiliations> {
                 child: SizedBox(
                   width: double.infinity,
                   height: 45,
-                  child: FlatButton(
-                      color: studentSelected ? darkButtonColor : ColorPrimary,
-                      textColor:
-                          studentSelected ? ColorPrimary : darkButtonColor,
-                      shape: ContinuousRectangleBorder(
-                          side: BorderSide(
-                              color: darkButtonColor,
-                              width: 1,
-                              style: BorderStyle.solid)),
+                  child: TextButton(
+                      style: TextButton.styleFrom(
+                        backgroundColor:
+                            studentSelected ? darkButtonColor : ColorPrimary,
+                        shape: ContinuousRectangleBorder(
+                            side: BorderSide(
+                                color: darkButtonColor,
+                                width: 1,
+                                style: BorderStyle.solid)),
+                      ),
                       onPressed: () {
                         this.setState(() {
                           studentSelected = !studentSelected;
@@ -64,6 +65,9 @@ class _OnboardingAffiliationsState extends State<OnboardingAffiliations> {
                       },
                       child: Text("Student",
                           style: TextStyle(
+                              color: studentSelected
+                                  ? ColorPrimary
+                                  : darkButtonColor,
                               fontSize: 17,
                               decoration: TextDecoration.underline))),
                 ),
@@ -73,24 +77,29 @@ class _OnboardingAffiliationsState extends State<OnboardingAffiliations> {
                 child: SizedBox(
                   width: double.infinity,
                   height: 45,
-                  child: FlatButton(
-                      color: staffSelected ? darkButtonColor : ColorPrimary,
-                      textColor: staffSelected ? ColorPrimary : darkButtonColor,
-                      shape: ContinuousRectangleBorder(
-                          side: BorderSide(
-                              color: darkButtonColor,
-                              width: 1,
-                              style: BorderStyle.solid)),
+                  child: TextButton(
+                      style: TextButton.styleFrom(
+                        backgroundColor:
+                            staffSelected ? darkButtonColor : ColorPrimary,
+                        shape: ContinuousRectangleBorder(
+                            side: BorderSide(
+                                color: darkButtonColor,
+                                width: 1,
+                                style: BorderStyle.solid)),
+                      ),
                       onPressed: () {
                         this.setState(() {
                           staffSelected = !staffSelected;
                           readyToProceed = staffSelected;
-                          studentSelected = false;
                           visitorSelected = false;
+                          studentSelected = false;
                         });
                       },
                       child: Text("Staff/Faculty",
                           style: TextStyle(
+                              color: staffSelected
+                                  ? ColorPrimary
+                                  : darkButtonColor,
                               fontSize: 17,
                               decoration: TextDecoration.underline))),
                 ),
@@ -100,15 +109,16 @@ class _OnboardingAffiliationsState extends State<OnboardingAffiliations> {
                 child: SizedBox(
                   width: double.infinity,
                   height: 45,
-                  child: FlatButton(
-                      color: visitorSelected ? darkButtonColor : ColorPrimary,
-                      textColor:
-                          visitorSelected ? ColorPrimary : darkButtonColor,
-                      shape: ContinuousRectangleBorder(
-                          side: BorderSide(
-                              color: darkButtonColor,
-                              width: 1,
-                              style: BorderStyle.solid)),
+                  child: TextButton(
+                      style: TextButton.styleFrom(
+                        backgroundColor:
+                            visitorSelected ? darkButtonColor : ColorPrimary,
+                        shape: ContinuousRectangleBorder(
+                            side: BorderSide(
+                                color: darkButtonColor,
+                                width: 1,
+                                style: BorderStyle.solid)),
+                      ),
                       onPressed: () {
                         this.setState(() {
                           visitorSelected = !visitorSelected;
@@ -119,6 +129,9 @@ class _OnboardingAffiliationsState extends State<OnboardingAffiliations> {
                       },
                       child: Text("Visitor",
                           style: TextStyle(
+                              color: visitorSelected
+                                  ? ColorPrimary
+                                  : darkButtonColor,
                               fontSize: 17,
                               decoration: TextDecoration.underline))),
                 ),
@@ -130,18 +143,19 @@ class _OnboardingAffiliationsState extends State<OnboardingAffiliations> {
                   child: SizedBox(
                     width: double.infinity,
                     height: 50,
-                    child: FlatButton(
-                        color: darkButtonColor,
-                        disabledColor: Color(0xFF13223A),
-                        disabledTextColor: Colors.grey,
-                        textColor: ColorPrimary,
-                        shape: ContinuousRectangleBorder(
-                            side: BorderSide(
-                                color: readyToProceed
-                                    ? darkButtonColor
-                                    : ColorPrimary,
-                                width: 1,
-                                style: BorderStyle.solid)),
+                    child: TextButton(
+                        style: TextButton.styleFrom(
+                          backgroundColor: readyToProceed
+                              ? darkButtonColor
+                              : Color(0xFF13223A),
+                          shape: ContinuousRectangleBorder(
+                              side: BorderSide(
+                                  color: readyToProceed
+                                      ? darkButtonColor
+                                      : ColorPrimary,
+                                  width: 1,
+                                  style: BorderStyle.solid)),
+                        ),
                         onPressed: !readyToProceed
                             ? null
                             : () async {
@@ -159,6 +173,8 @@ class _OnboardingAffiliationsState extends State<OnboardingAffiliations> {
                               },
                         child: Text("Next",
                             style: TextStyle(
+                                color:
+                                    readyToProceed ? ColorPrimary : Colors.grey,
                                 fontSize: 17,
                                 decoration: TextDecoration.underline))),
                   ),

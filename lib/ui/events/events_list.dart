@@ -21,7 +21,7 @@ class EventsList extends StatelessWidget {
   }
 
   Widget buildEventsList(List<EventModel> listOfEvents, BuildContext context) {
-    final List<Widget> eventTiles = List<Widget>();
+    final List<Widget> eventTiles = [];
 
     /// check to see if we want to display only a limited number of elements
     /// if no constraint is given on the size of the list then all elements

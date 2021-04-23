@@ -2,7 +2,7 @@ import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/notifications_freefood.dart';
 
 class FreeFoodService {
-  final String base_endpoint =
+  final String baseEndpoint =
       'https://api-qa.ucsd.edu:8243/campusevents/1.0.0/';
 
   bool _isLoading = false;
@@ -21,11 +21,9 @@ class FreeFoodService {
     _error = null;
     _isLoading = true;
     try {
-      String _url = base_endpoint + 'events/' + id + '/rsvpCount';
-
       /// fetch data
       var _response = await _networkHelper.authorizedFetch(
-          base_endpoint + 'events/' + id + '/rsvpCount', headers);
+          baseEndpoint + 'events/' + id + '/rsvpCount', headers);
 
       /// parse data
       final data = freeFoodModelFromJson(_response);
@@ -52,7 +50,7 @@ class FreeFoodService {
     _error = null;
     _isLoading = true;
     try {
-      String _url = base_endpoint + 'events/' + id + '/rsvpLimit';
+      String _url = baseEndpoint + 'events/' + id + '/rsvpLimit';
 
       /// fetch data
       var _response = await _networkHelper.authorizedFetch(_url, headers);
@@ -81,7 +79,7 @@ class FreeFoodService {
     _isLoading = true;
 
     try {
-      String _url = base_endpoint + 'events/' + id;
+      String _url = baseEndpoint + 'events/' + id;
 
       /// update count
       var _response = await _networkHelper.authorizedPut(_url, headers, body);

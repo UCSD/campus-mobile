@@ -49,8 +49,7 @@ class UserProfileService {
   ///if attribute does not exists in db then it will be created
   List<Map<String, dynamic>> createAttributeValueJson(
       Map<String, dynamic> json) {
-    List<Map<String, dynamic>> correctlyFormattedData =
-        List<Map<String, dynamic>>();
+    List<Map<String, dynamic>> correctlyFormattedData = [];
     json.forEach((key, value) {
       correctlyFormattedData.add({"attribute": key, "value": value});
     });

@@ -48,7 +48,7 @@ class AvailabilityDisplay extends StatelessWidget {
   }
 
   Widget buildAvailabilityBars(BuildContext context) {
-    List<Widget> locations = List<Widget>();
+    List<Widget> locations = [];
 
     if (model.subLocations.isNotEmpty) {
       for (AvailabilityModel subLocation in model.subLocations) {

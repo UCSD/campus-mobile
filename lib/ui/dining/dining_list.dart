@@ -25,7 +25,7 @@ class DiningList extends StatelessWidget {
   }
 
   Widget buildDiningList(List<DiningModel> listOfDiners, BuildContext context) {
-    final List<Widget> diningTiles = List<Widget>();
+    final List<Widget> diningTiles = [];
 
     /// check to see if we want to display only a limited number of elements
     /// if no constraint is given on the size of the list then all elements
@@ -150,7 +150,7 @@ class DiningList extends StatelessWidget {
   }
 
   Widget buildIconWithDistance(DiningModel data, BuildContext context) {
-    return FlatButton(
+    return TextButton(
       onPressed: () {
         try {
           launch(
@@ -163,12 +163,17 @@ class DiningList extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Icon(Icons.directions_walk),
-          Text(
-            data.distance != null
-                ? (num.parse(data.distance.toStringAsFixed(1)).toString() +
-                    ' mi')
-                : '--',
+          Expanded(
+            child: Icon(Icons.directions_walk),
+          ),
+          Padding(padding: EdgeInsets.only(bottom: 7.0)),
+          Expanded(
+            child: Text(
+              data.distance != null
+                  ? (num.parse(data.distance.toStringAsFixed(1)).toString() +
+                      ' mi')
+                  : '--',
+            ),
           ),
         ],
       ),

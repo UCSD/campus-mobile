@@ -3,7 +3,7 @@ import 'dart:core';
 
 List<ShuttleStopModel> shuttleStopModelFromJson(String str) {
   Map<String, dynamic> list = json.decode(str);
-  List<ShuttleStopModel> ret = List<ShuttleStopModel>();
+  List<ShuttleStopModel> ret = [];
   list.forEach((key, value) {
     ret.add(ShuttleStopModel(
         lat: value["lat"] == null ? null : value["lat"].toDouble(),

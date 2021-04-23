@@ -13,29 +13,29 @@ class ClassScheduleDataProvider extends ChangeNotifier {
     _selectedCourse = 0;
     nextDayWithClass = 'Monday';
     _enrolledClasses = {
-      'MO': List<SectionData>(),
-      'TU': List<SectionData>(),
-      'WE': List<SectionData>(),
-      'TH': List<SectionData>(),
-      'FR': List<SectionData>(),
-      'SA': List<SectionData>(),
-      'SU': List<SectionData>(),
-      'OTHER': List<SectionData>(),
+      'MO': [],
+      'TU': [],
+      'WE': [],
+      'TH': [],
+      'FR': [],
+      'SA': [],
+      'SU': [],
+      'OTHER': [],
     };
     _finals = {
-      'MO': List<SectionData>(),
-      'TU': List<SectionData>(),
-      'WE': List<SectionData>(),
-      'TH': List<SectionData>(),
-      'FR': List<SectionData>(),
-      'SA': List<SectionData>(),
-      'SU': List<SectionData>(),
-      'OTHER': List<SectionData>(),
+      'MO': [],
+      'TU': [],
+      'WE': [],
+      'TH': [],
+      'FR': [],
+      'SA': [],
+      'SU': [],
+      'OTHER': [],
     };
 
     _midterms = {
-      'MI': List<SectionData>(),
-      'OTHER': List<SectionData>(),
+      'MI': [],
+      'OTHER': [],
     };
 
     ///INITIALIZE SERVICES
@@ -80,7 +80,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
         /// fetch grad courses
         if (await _classScheduleService.fetchGRCourses(
             headers, _academicTermModel.termCode)) {
-          _classScheduleModel = _classScheduleService.GRdata;
+          _classScheduleModel = _classScheduleService.grData;
         } else {
           _error = _classScheduleService.error.toString();
         }
@@ -89,9 +89,9 @@ class ClassScheduleDataProvider extends ChangeNotifier {
         if (await _classScheduleService.fetchUNCourses(
             headers, _academicTermModel.termCode)) {
           if (_classScheduleModel.data != null) {
-            _classScheduleModel.data.addAll(_classScheduleService.UNdata.data);
+            _classScheduleModel.data.addAll(_classScheduleService.unData.data);
           } else {
-            _classScheduleModel = _classScheduleService.UNdata;
+            _classScheduleModel = _classScheduleService.unData;
           }
           _error = null;
         } else {
@@ -105,30 +105,30 @@ class ClassScheduleDataProvider extends ChangeNotifier {
 
         /// remove all old classes
         _enrolledClasses = {
-          'MO': List<SectionData>(),
-          'TU': List<SectionData>(),
-          'WE': List<SectionData>(),
-          'TH': List<SectionData>(),
-          'FR': List<SectionData>(),
-          'SA': List<SectionData>(),
-          'SU': List<SectionData>(),
-          'OTHER': List<SectionData>(),
+          'MO': [],
+          'TU': [],
+          'WE': [],
+          'TH': [],
+          'FR': [],
+          'SA': [],
+          'SU': [],
+          'OTHER': [],
         };
 
         _finals = {
-          'MO': List<SectionData>(),
-          'TU': List<SectionData>(),
-          'WE': List<SectionData>(),
-          'TH': List<SectionData>(),
-          'FR': List<SectionData>(),
-          'SA': List<SectionData>(),
-          'SU': List<SectionData>(),
-          'OTHER': List<SectionData>(),
+          'MO': [],
+          'TU': [],
+          'WE': [],
+          'TH': [],
+          'FR': [],
+          'SA': [],
+          'SU': [],
+          'OTHER': [],
         };
 
         _midterms = {
-          'MI': List<SectionData>(),
-          'OTHER': List<SectionData>(),
+          'MI': [],
+          'OTHER': [],
         };
         try {
           _createMapOfClasses();
@@ -147,7 +147,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
   }
 
   void _createMapOfClasses() {
-    List<ClassData> enrolledCourses = List<ClassData>();
+    List<ClassData> enrolledCourses = [];
 
     /// add only enrolled classes because api returns wait-listed and dropped
     /// courses as well
@@ -267,7 +267,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
 
   List<SectionData> get upcomingCourses {
     /// get weekday and return [List<SectionData>] associated with current weekday
-    List<SectionData> listToReturn = List<SectionData>();
+    List<SectionData> listToReturn = [];
     String today = DateFormat('EEEE')
         .format(DateTime.now())
         .toString()
