@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
 import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:campus_mobile_experimental/ui/map/directions_button.dart';
@@ -10,8 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:uni_links2/uni_links.dart';
-
-import '../../app_constants.dart';
 
 class Maps extends StatelessWidget {
   Widget resultsList(BuildContext context) {
@@ -51,7 +50,6 @@ class Maps extends StatelessWidget {
       ),
     );
   }
-
 
   Future<Null> initUniLinks(BuildContext context) async {
     // deep links are received by this method

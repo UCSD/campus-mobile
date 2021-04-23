@@ -8,8 +8,6 @@ import 'package:campus_mobile_experimental/core/services/shuttle.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 
-import '../models/shuttle_stop.dart';
-
 class ShuttleDataProvider extends ChangeNotifier {
   ShuttleDataProvider() {
     /// DEFAULT STATES
