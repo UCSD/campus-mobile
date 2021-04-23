@@ -61,8 +61,10 @@ class ContinueReadingButton extends StatelessWidget {
       child: Container(
         height: 40,
         width: double.infinity,
-        child: FlatButton(
-          color: Theme.of(context).buttonColor,
+        child: TextButton(
+          style: TextButton.styleFrom(
+            primary: Theme.of(context).buttonColor, // foreground
+          ),
           onPressed: () async {
             try {
               await launch(link, forceSafariVC: true);

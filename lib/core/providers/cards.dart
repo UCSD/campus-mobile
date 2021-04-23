@@ -12,12 +12,12 @@ class CardsDataProvider extends ChangeNotifier {
     _cardStates = {};
     _webCards = {};
     _cardOrder = [
-      'QRScanner',
       'NativeScanner',
       'MyStudentChart',
       'MyUCSDChart',
       'student_id',
       'campus_info',
+      'speed_test',
       'employee_id',
       'staff_info',
       'student_info',

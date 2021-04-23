@@ -2,7 +2,7 @@ import 'dart:convert';
 
 List<ArrivingShuttle> getArrivingShuttles(String str) {
   var shuttles = json.decode(str);
-  List<ArrivingShuttle> arrivingShuttles = List<ArrivingShuttle>();
+  List<ArrivingShuttle> arrivingShuttles = [];
   shuttles.forEach((shuttle) {
     arrivingShuttles.add(ArrivingShuttle.fromJson(shuttle));
   });

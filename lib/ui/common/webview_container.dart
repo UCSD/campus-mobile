@@ -113,7 +113,6 @@ class _WebViewContainerState extends State<WebViewContainer>
     return Container(
       height: _contentHeight,
       child: WebView(
-        opaque: false,
         javascriptMode: JavascriptMode.unrestricted,
         initialUrl: webCardUrl,
         onWebViewCreated: (controller) {
@@ -147,7 +146,7 @@ class _WebViewContainerState extends State<WebViewContainer>
   }
 
   Widget buildMenuOptions(Map<String, Function> menuOptions) {
-    List<DropdownMenuItem<String>> menu = List<DropdownMenuItem<String>>();
+    List<DropdownMenuItem<String>> menu = [];
     menuOptions.forEach((menuOption, func) {
       Widget item = DropdownMenuItem<String>(
         value: menuOption,

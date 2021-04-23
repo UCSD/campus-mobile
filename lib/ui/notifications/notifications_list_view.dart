@@ -10,7 +10,7 @@ import 'package:campus_mobile_experimental/ui/notifications/notifications_freefo
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:provider/provider.dart';
-import 'package:uni_links/uni_links.dart';
+import 'package:uni_links2/uni_links.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class NotificationsListView extends StatelessWidget {
@@ -60,17 +60,6 @@ class NotificationsListView extends StatelessWidget {
     );
   }
 
-  Widget _buildLoadingIndicator() {
-    return Padding(
-        padding: EdgeInsets.only(top: 10.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            CircularProgressIndicator(),
-          ],
-        ));
-  }
-
   Widget _buildErrorText() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -93,13 +82,13 @@ class NotificationsListView extends StatelessWidget {
     );
   }
 
-  StreamSubscription _sub;
 
   Future<Null> initUniLinks(BuildContext context) async {
     // deep links are received by this method
     // the specific host needs to be added in AndroidManifest.xml and Info.plist
     // currently, this method handles executing custom map query
-    _sub = getLinksStream().listen((String link) async {
+    StreamSubscription _sub;
+    _sub = linkStream.listen((String link) async {
       // handling for map query
       if (link.contains("deeplinking.searchmap")) {
         var uri = Uri.dataFromString(link);
@@ -111,8 +100,11 @@ class NotificationsListView extends StatelessWidget {
         Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
         Provider.of<BottomNavigationBarProvider>(context, listen: false)
             .currentIndex = NavigatorConstants.MapTab;
+        // received deeplink, cancel stream to prevent memory leaks
+        _sub.cancel();
       }
     });
+
   }
 
   Widget _buildMessage(BuildContext context, int index) {

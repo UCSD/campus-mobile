@@ -1,8 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-
 String noticeTitleKey = "notice-title";
 String noticeBannerImageKey = "notice-banner-image";
 String noticeBannerLinkKey = "notice-banner-link";

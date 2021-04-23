@@ -12,10 +12,9 @@ class AuthenticationService {
 
   final NetworkHelper _networkHelper = NetworkHelper();
 
-  final String AUTH_SERVICE_API_URL =
+  final String authServiceApiUrl =
       "https://3hepzvdimd.execute-api.us-west-2.amazonaws.com/qa/v2/access-profile";
-  final String AUTH_SERVICE_API_KEY =
-      'eKFql1kJAj53iyU2fNKyH4jI2b7t70MZ5YbAuPBZ';
+  final String authServiceApiKey = 'eKFql1kJAj53iyU2fNKyH4jI2b7t70MZ5YbAuPBZ';
 
   Future<bool> silentLogin(String base64EncodedWithEncryptedPassword) async {
     _error = null;
@@ -52,14 +51,14 @@ class AuthenticationService {
     _error = null;
     try {
       final Map<String, String> authServiceHeaders = {
-        'x-api-key': AUTH_SERVICE_API_KEY,
+        'x-api-key': authServiceApiKey,
         'Authorization': base64EncodedWithEncryptedPassword,
       };
 
       /// fetch data
       /// MODIFIED TO USE EXPONENTIAL RETRY
       var response = await _networkHelper.authorizedPost(
-          AUTH_SERVICE_API_URL, authServiceHeaders, null);
+          authServiceApiUrl, authServiceHeaders, null);
 
       /// check to see if response has an error
       if (response['errorMessage'] != null) {

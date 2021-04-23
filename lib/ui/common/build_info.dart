@@ -12,6 +12,7 @@ class _BuildInfoState extends State<BuildInfo> {
     appName: 'Unknown',
     version: 'Unknown',
     buildNumber: 'Unknown',
+    packageName: 'Unknown',
   );
 
   @override

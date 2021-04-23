@@ -28,7 +28,7 @@ class ManageAvailabilityView extends StatelessWidget {
     }
     List<AvailabilityModel> newOrder =
         _availabilityDataProvider.availabilityModels;
-    List<AvailabilityModel> toRemove = List<AvailabilityModel>();
+    List<AvailabilityModel> toRemove = [];
 
     for (AvailabilityModel item in newOrder) {
       if (_availabilityDataProvider.availabilityModels == null) {
@@ -38,7 +38,7 @@ class ManageAvailabilityView extends StatelessWidget {
     newOrder.removeWhere((element) => toRemove.contains(element));
     AvailabilityModel item = newOrder.removeAt(oldIndex);
     newOrder.insert(newIndex, item);
-    List<String> orderedLocationNames = List<String>();
+    List<String> orderedLocationNames = [];
     for (AvailabilityModel item in newOrder) {
       orderedLocationNames.add(item.locationName);
     }
@@ -46,7 +46,7 @@ class ManageAvailabilityView extends StatelessWidget {
   }
 
   List<Widget> createList(BuildContext context) {
-    List<Widget> list = List<Widget>();
+    List<Widget> list = [];
     for (AvailabilityModel model
         in _availabilityDataProvider.availabilityModels) {
       if (model != null) {

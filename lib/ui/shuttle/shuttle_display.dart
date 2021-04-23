@@ -118,7 +118,7 @@ class ShuttleDisplay extends StatelessWidget {
   }
 
   Widget buildArrivalData() {
-    List<Widget> arrivalsToRender = List<Widget>();
+    List<Widget> arrivalsToRender = [];
     for (int index = 1;
         index < arrivingShuttles.length && index <= 2;
         index++) {

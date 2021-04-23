@@ -91,9 +91,9 @@ class ErrorConstants {
   static const authorizedPutErrors = 'Failed to update data: ';
   static const invalidBearerToken = 'Invalid bearer token';
   static const duplicateRecord =
-      'DioError [DioErrorType.RESPONSE]: Http status error [409]';
+      'DioError [DioErrorType.response]: Http status error [409]';
   static const invalidMedia =
-      'DioError [DioErrorType.RESPONSE]: Http status error [415]';
+      'DioError [DioErrorType.response]: Http status error [415]';
   static const silentLoginFailed = "Silent login failed";
 }
 
@@ -155,7 +155,6 @@ class DataPersistence {
 /// Maps Card IDs to Card titles
 class CardTitleConstants {
   static const titleMap = {
-    'QRScanner': 'Scanner', // Web Scanner
     'NativeScanner': 'Scanner',
     'MyStudentChart': 'MyStudentChart',
     'MyUCSDChart': 'MyUCSDChart',
@@ -164,6 +163,7 @@ class CardTitleConstants {
     'student_info': 'COVID-19 Info',
     'student_survey': 'Student Survey',
     'student_id': 'Student ID',
+    'speed_test' : "Speed Test",
     'employee_id': 'Employee ID',
     'finals': 'Finals',
     'schedule': 'Classes',

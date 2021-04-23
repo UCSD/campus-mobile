@@ -136,8 +136,7 @@ class CardContainer extends StatelessWidget {
   Widget buildMenu() {
     if (hideMenu ?? false) {
       return null;
-    }
-    else if(titleText == "Scanner") {
+    } else if (titleText == "Scanner") {
       return ButtonBar(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -159,7 +158,7 @@ class CardContainer extends StatelessWidget {
   }
 
   Widget buildMenuOptions(Map<String, Function> menuOptions) {
-    List<DropdownMenuItem<String>> menu = List<DropdownMenuItem<String>>();
+    List<DropdownMenuItem<String>> menu = [];
     menuOptions.forEach((menuOption, func) {
       Widget item = DropdownMenuItem<String>(
         value: menuOption,
