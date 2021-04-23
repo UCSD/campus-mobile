@@ -343,7 +343,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
     } else {
       // Send logs to API for visitors
       try {
-         getNewToken();
+        getNewToken();
         _networkHelper.authorizedPost(
             offloadLoggerEndpoint, headers, json.encode(log));
       } catch (Exception) {
@@ -726,7 +726,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
     return String.fromCharCodes(codeUnits);
   }
 
-  // Start a background scan
+  // Start Background Scanning
   void _onBackgroundFetch(String taskID) async {
     String lastTimeStamp = await _storage.read(key: "lastBackgroundScan");
 
@@ -767,6 +767,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
           key: _randomValue(), value: '[BackgroundFetch] configure ERROR: $e');
     });
   }
+  // End Background Scanning
 
   //Parse advertisement data
   String calculateHexFromArray(decimalArray) {
