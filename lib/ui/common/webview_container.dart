@@ -113,17 +113,18 @@ class _WebViewContainerState extends State<WebViewContainer>
     return Container(
       height: _contentHeight,
       child: WebView(
-//        opaque: false,
         javascriptMode: JavascriptMode.unrestricted,
         initialUrl: webCardUrl,
         onWebViewCreated: (controller) {
           _webViewController = controller;
         },
+        navigationDelegate: null,
         javascriptChannels: <JavascriptChannel>[
           _linksChannel(context),
           _heightChannel(context),
           _mapChannel(context),
-          _refreshTokenChannel(context)
+          _refreshTokenChannel(context),
+          _permanentRedirect(context)
         ].toSet(),
       ),
     );
@@ -145,7 +146,7 @@ class _WebViewContainerState extends State<WebViewContainer>
   }
 
   Widget buildMenuOptions(Map<String, Function> menuOptions) {
-    List<DropdownMenuItem<String>> menu = List<DropdownMenuItem<String>>();
+    List<DropdownMenuItem<String>> menu = [];
     menuOptions.forEach((menuOption, func) {
       Widget item = DropdownMenuItem<String>(
         value: menuOption,
@@ -237,6 +238,17 @@ class _WebViewContainerState extends State<WebViewContainer>
             _webViewController?.reload();
           }
         }
+      },
+    );
+  }
+
+  // javascript channel for redirecting the user to a new webcard URL
+  JavascriptChannel _permanentRedirect(BuildContext context) {
+    return JavascriptChannel(
+      name: 'Redirect',
+      onMessageReceived: (JavascriptMessage message) async {
+        webCardUrl = message.message;
+        _webViewController.loadUrl(message.message);
       },
     );
   }

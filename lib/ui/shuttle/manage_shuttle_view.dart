@@ -37,7 +37,7 @@ class ManageShuttleView extends StatelessWidget {
       newIndex -= 1;
     }
     List<ShuttleStopModel> newOrder = _shuttleDataProvider.stopsToRender;
-    List<ShuttleStopModel> toRemove = List<ShuttleStopModel>();
+    List<ShuttleStopModel> toRemove = [];
 
     for (ShuttleStopModel item in newOrder) {
       if (_shuttleDataProvider.stopsToRender == null) {
@@ -47,7 +47,7 @@ class ManageShuttleView extends StatelessWidget {
     newOrder.removeWhere((element) => toRemove.contains(element));
     ShuttleStopModel item = newOrder.removeAt(oldIndex);
     newOrder.insert(newIndex, item);
-    List<int> orderedStopNames = List<int>();
+    List<int> orderedStopNames = [];
     for (ShuttleStopModel item in newOrder) {
       orderedStopNames.add(item.id);
     }
@@ -55,7 +55,7 @@ class ManageShuttleView extends StatelessWidget {
   }
 
   List<Widget> createList(BuildContext context) {
-    List<Widget> list = List<Widget>();
+    List<Widget> list = [];
     for (ShuttleStopModel model in _shuttleDataProvider.stopsToRender) {
       if (model != null) {
         list.add(ListTile(

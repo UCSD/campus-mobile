@@ -82,7 +82,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
   String bluetoothCharacteristicsEndpoint =
       "https://api-qa.ucsd.edu:8243/bluetoothdevicecharacteristic/v1.0.0/servicenames/1";
   String offloadLoggerEndpoint =
-      "https://api-qa.ucsd.edu:8243/mobileapplogger/v1.0.0/log";
+      "https://api-qa.ucsd.edu:8243/mobileapplogger/v1.1.0/log?type=WAYFINDING";
 
   //Thresholds for logging location
   int qualifiedDevicesThreshold = 0;
@@ -334,7 +334,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
   /// Sends BT LE logs to API
   ///
   /// Will attach access token if logged in
-  void sendLogs(Map log) {
+  Future<void> sendLogs(Map log) async {
     // Attach token from user if logged in
     if (userDataProvider.isLoggedIn) {
       if (offloadDataHeader == null) {
@@ -365,6 +365,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
     } else {
       // Send logs to API for visitors
       try {
+        getNewToken();
         _networkHelper.authorizedPost(
             offloadLoggerEndpoint, headers, json.encode(log));
       } catch (Exception) {
@@ -728,7 +729,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
     return String.fromCharCodes(codeUnits);
   }
 
-  // Start a background scan
+  // Start Background Scanning
   void _onBackgroundFetch(String taskID) async {
     String lastTimeStamp = await _storage.read(key: "lastBackgroundScan");
 
@@ -769,6 +770,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
           key: _randomValue(), value: '[BackgroundFetch] configure ERROR: $e');
     });
   }
+  // End Background Scanning
 
   //Parse advertisement data
   String calculateHexFromArray(decimalArray) {

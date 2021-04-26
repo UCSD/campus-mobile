@@ -46,27 +46,20 @@ class _ShuttleCardState extends State<ShuttleCard> {
 
   Widget buildShuttleCard(List<ShuttleStopModel> stopsToRender,
       Map<int, List<ArrivingShuttle>> arrivalsToRender) {
-    // print("Stops - ${stopsToRender.length}");
-    // print("Arrivals - ${arrivalsToRender.length}");
-
-    List<Widget> renderList = List<Widget>();
+    List<Widget> renderList = [];
     try {
       if (_shuttleCardDataProvider.closestStop != null) {
-//        print("closest stop:");
-//        print(_shuttleCardDataProvider.closestStop);
         renderList.add(ShuttleDisplay(
             stop: _shuttleCardDataProvider.closestStop,
             arrivingShuttles:
-            arrivalsToRender[_shuttleCardDataProvider.closestStop.id]));
+                arrivalsToRender[_shuttleCardDataProvider.closestStop.id]));
       }
 
       for (int i = 0; i < _shuttleCardDataProvider.stopsToRender.length; i++) {
-//        print("arrivals to render:");
-//        print(arrivalsToRender);
         renderList.add(ShuttleDisplay(
             stop: _shuttleCardDataProvider.stopsToRender[i],
-            arrivingShuttles: arrivalsToRender[_shuttleCardDataProvider
-                .stopsToRender[i].id]));
+            arrivingShuttles: arrivalsToRender[
+                _shuttleCardDataProvider.stopsToRender[i].id]));
       }
 
       // Initialize first shuttle display with arrival information
@@ -98,8 +91,7 @@ class _ShuttleCardState extends State<ShuttleCard> {
           )
         ],
       );
-    }
-    catch (e) {
+    } catch (e) {
       return Container(
         width: double.infinity,
         child: Center(
@@ -112,8 +104,8 @@ class _ShuttleCardState extends State<ShuttleCard> {
   }
 
   List<Widget> buildActionButtons() {
-    List<Widget> actionButtons = List<Widget>();
-    actionButtons.add(FlatButton(
+    List<Widget> actionButtons = [];
+    actionButtons.add(TextButton(
       child: Text(
         'Manage Shuttle Stops',
       ),

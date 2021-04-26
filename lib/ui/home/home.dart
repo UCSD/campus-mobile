@@ -24,16 +24,16 @@ import 'package:campus_mobile_experimental/ui/news/news_card.dart';
 import 'package:campus_mobile_experimental/ui/notices/notices_card.dart';
 import 'package:campus_mobile_experimental/ui/parking/parking_card.dart';
 import 'package:campus_mobile_experimental/ui/scanner/native_scanner_card.dart';
-import 'package:campus_mobile_experimental/ui/scanner/web_scanner_card.dart';
 import 'package:campus_mobile_experimental/ui/shuttle/shuttle_card.dart';
 import 'package:campus_mobile_experimental/ui/student_id/student_id_card.dart';
 import 'package:campus_mobile_experimental/ui/survey/survey_card.dart';
 import 'package:campus_mobile_experimental/ui/weather/weather_card.dart';
+import 'package:campus_mobile_experimental/ui/wifi/wifi_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:uni_links/uni_links.dart';
+import 'package:uni_links2/uni_links.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -41,12 +41,13 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  StreamSubscription _sub;
 
   Future<Null> initUniLinks(BuildContext context) async {
+
     // deep links are received by this method
     // the specific host needs to be added in AndroidManifest.xml and Info.plist
     // currently, this method handles executing custom map query
+    StreamSubscription _sub;
 
     // Used to handle links on cold app start
     String initialLink = await getInitialLink();
@@ -60,13 +61,15 @@ class _HomeState extends State<Home> {
     }
 
     // used to handle links while app is in foreground/background
-    _sub = getLinksStream().listen((String link) async {
+    _sub = linkStream.listen((String link) async {
       // handling for map query
       if (link.contains("deeplinking.searchmap")) {
         var uri = Uri.dataFromString(link);
         var query = uri.queryParameters['query'];
         // redirect query to maps tab and search with query
         executeQuery(context, query);
+        // received deeplink, cancel stream to prevent memory leaks
+        _sub.cancel();
       }
     });
   }
@@ -105,7 +108,7 @@ class _HomeState extends State<Home> {
   }
 
   List<Widget> getNoticesCardsList(List<NoticesModel> notices) {
-    List<Widget> noticesCards = List<Widget>();
+    List<Widget> noticesCards = [];
     for (NoticesModel notice in notices) {
       noticesCards.add(NoticesCard(notice: notice));
     }
@@ -113,16 +116,13 @@ class _HomeState extends State<Home> {
   }
 
   List<Widget> getOrderedCardsList(List<String> order) {
-    List<Widget> orderedCards = List<Widget>();
+    List<Widget> orderedCards = [];
     Map<String, CardsModel> webCards =
         Provider.of<CardsDataProvider>(context, listen: false).webCards;
 
     for (String card in order) {
       if (!webCards.containsKey(card)) {
         switch (card) {
-          case 'QRScanner':
-            orderedCards.insert(0, ScannerCard());
-            break;
           case 'NativeScanner':
             orderedCards.insert(0, NativeScannerCard());
             break;
@@ -164,6 +164,9 @@ class _HomeState extends State<Home> {
             break;
           case 'parking':
             orderedCards.add(ParkingCard());
+            break;
+          case 'speed_test':
+            orderedCards.add(WiFiCard());
             break;
           case 'shuttle':
             orderedCards.add(ShuttleCard());

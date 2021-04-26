@@ -10,8 +10,8 @@ class ClassScheduleService {
   bool _isLoading = false;
   DateTime _lastUpdated;
   String _error;
-  ClassScheduleModel _UNdata = ClassScheduleModel();
-  ClassScheduleModel _GRdata = ClassScheduleModel();
+  ClassScheduleModel _unData = ClassScheduleModel();
+  ClassScheduleModel _grData = ClassScheduleModel();
   AcademicTermModel _academicTermModel;
 
   final NetworkHelper _networkHelper = NetworkHelper();
@@ -26,7 +26,7 @@ class ClassScheduleService {
           headers);
 
       /// parse data
-      _UNdata = classScheduleModelFromJson(_response);
+      _unData = classScheduleModelFromJson(_response);
       _isLoading = false;
       return true;
     } catch (e) {
@@ -46,7 +46,7 @@ class ClassScheduleService {
           headers);
 
       /// parse data
-      _GRdata = classScheduleModelFromJson(_response);
+      _grData = classScheduleModelFromJson(_response);
       _isLoading = false;
       return true;
     } catch (e) {
@@ -71,8 +71,8 @@ class ClassScheduleService {
   }
 
   String get error => _error;
-  ClassScheduleModel get UNdata => _UNdata;
-  ClassScheduleModel get GRdata => _GRdata;
+  ClassScheduleModel get unData => _unData;
+  ClassScheduleModel get grData => _grData;
   AcademicTermModel get academicTermModel => _academicTermModel;
   bool get isLoading => _isLoading;
   DateTime get lastUpdated => _lastUpdated;

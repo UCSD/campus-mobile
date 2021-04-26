@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:app_settings/app_settings.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/providers/wayfinding.dart';
 import 'package:flutter/cupertino.dart';
@@ -30,6 +31,8 @@ class _AdvancedWayfindingPermissionState
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(42),
         child: AppBar(
+          backgroundColor: ColorPrimary,
+          brightness: Brightness.dark,
           primary: true,
           centerTitle: true,
           title: Text("Advanced Wayfinding"),
@@ -147,13 +150,13 @@ class _AdvancedWayfindingPermissionState
                               content: Text(
                                   "This feature use Bluetooth to connect with other devices."),
                               actions: <Widget>[
-                                FlatButton(
+                                TextButton(
                                   child: Text('Cancel'),
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },
                                 ),
-                                FlatButton(
+                                TextButton(
                                   child: Text('Settings'),
                                   onPressed: () {
                                     AppSettings.openAppSettings();
@@ -168,13 +171,13 @@ class _AdvancedWayfindingPermissionState
                             content: Text(
                                 "This feature use Bluetooth to connect with other devices."),
                             actions: <Widget>[
-                              FlatButton(
+                              TextButton(
                                 child: Text('Cancel'),
                                 onPressed: () {
                                   Navigator.of(context).pop();
                                 },
                               ),
-                              FlatButton(
+                              TextButton(
                                 child: Text('Settings'),
                                 onPressed: () {
                                   AppSettings.openAppSettings();

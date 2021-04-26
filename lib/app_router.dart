@@ -60,7 +60,6 @@ class Router {
       case RoutePaths.Profile:
         return MaterialPageRoute(builder: (_) => Profile());
       case RoutePaths.NewsViewAll:
-        NewsModel data = settings.arguments as NewsModel;
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return NewsList();
@@ -150,6 +149,8 @@ class Router {
         return MaterialPageRoute(builder: (_) => BeaconView());
       case RoutePaths.ScanditScanner:
         return MaterialPageRoute(builder: (_) => ScanditScanner());
+      default:
+        return MaterialPageRoute(builder: (_) => Home());
     }
   }
 }

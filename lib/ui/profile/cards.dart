@@ -1,4 +1,3 @@
-import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:flutter/material.dart';
@@ -26,10 +25,7 @@ class CardsView extends StatelessWidget {
       newIndex -= 1;
     }
     List<String> newOrder = _cardsDataProvider.cardOrder;
-    List<String> toRemove = List<String>();
-    if (_cardsDataProvider.cardOrder.contains('QRScanner')) {
-      toRemove.add('QRScanner');
-    }
+    List<String> toRemove = [];
     if (_cardsDataProvider.cardOrder.contains('NativeScanner')) {
       toRemove.add('NativeScanner');
     }
@@ -37,7 +33,7 @@ class CardsView extends StatelessWidget {
     newOrder.removeWhere((element) => toRemove.contains(element));
     String item = newOrder.removeAt(oldIndex);
     newOrder.insert(newIndex, item);
-    List<String> orderList = List<String>();
+    List<String> orderList = [];
     for (String item in newOrder) {
       orderList.add(item);
     }
@@ -46,9 +42,8 @@ class CardsView extends StatelessWidget {
   }
 
   List<Widget> createList(BuildContext context) {
-    List<Widget> list = List<Widget>();
+    List<Widget> list = [];
     for (String card in _cardsDataProvider.cardOrder) {
-      if (card == 'QRScanner') continue;
       if (card == 'NativeScanner') continue;
       list.add(ListTile(
         leading: Icon(Icons.reorder),

@@ -87,7 +87,7 @@ class AvailabilityDataProvider extends ChangeNotifier {
     }
 
     ///create an empty list that will be returned
-    List<AvailabilityModel> orderedListOfLots = List<AvailabilityModel>();
+    List<AvailabilityModel> orderedListOfLots = [];
     Map<String, AvailabilityModel> tempMap = Map<String, AvailabilityModel>();
     tempMap.addAll(_availabilityModels);
 
@@ -155,12 +155,12 @@ class AvailabilityDataProvider extends ChangeNotifier {
       }
       return _availabilityModels.values.toList();
     }
-    return List<AvailabilityModel>();
+    return [];
   }
 
   /// get all locations
   List<String> locations() {
-    List<String> locationsToReturn = List<String>();
+    List<String> locationsToReturn = [];
     for (AvailabilityModel model in _availabilityModels ?? []) {
       locationsToReturn.add(model.locationName);
     }

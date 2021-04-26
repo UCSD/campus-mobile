@@ -1,9 +1,7 @@
-import 'dart:async';
-
-import 'package:flutter/material.dart';
 import 'package:beacon_broadcast/beacon_broadcast.dart';
-import 'package:uuid/uuid.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
 
 class BeaconView extends StatefulWidget {
   @override
@@ -95,14 +93,14 @@ class _BeaconViewState extends State<BeaconView> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              RaisedButton(
+              ElevatedButton(
                 onPressed: _startBroadcast,
                 child: Text(
                   "Start Broadcasting",
                   style: TextStyle(color: Colors.white),
                 ),
               ),
-              RaisedButton(
+              ElevatedButton(
                 onPressed: _stopBroadcast,
                 child: Text(
                   "Stop Broadcasting",

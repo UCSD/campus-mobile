@@ -138,7 +138,7 @@ class DiningDataProvider extends ChangeNotifier {
     } else {
       menuItems = _diningMenuItemModels[id].menuItems;
     }
-    List<MenuItem> filteredMenuItems = List<MenuItem>();
+    List<MenuItem> filteredMenuItems = [];
     if (filters != null) {
       for (var menuItem in menuItems) {
         int matched = 0;
@@ -166,6 +166,6 @@ class DiningDataProvider extends ChangeNotifier {
       }
       return _diningModels.values.toList();
     }
-    return List<DiningModel>();
+    return [];
   }
 }

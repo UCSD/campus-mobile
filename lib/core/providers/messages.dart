@@ -10,7 +10,7 @@ class MessagesDataProvider extends ChangeNotifier {
   MessagesDataProvider() {
     /// DEFAULT STATES
     _isLoading = false;
-    _messages = List<MessageElement>();
+    _messages = [];
     _messageService = MessageService();
     _statusText = NotificationsConstants.statusFetching;
     _hasMoreMessagesToLoad = false;
@@ -63,7 +63,7 @@ class MessagesDataProvider extends ChangeNotifier {
   }
 
   void _clearMessages() {
-    _messages = List<MessageElement>();
+    _messages = [];
     _hasMoreMessagesToLoad = false;
     _previousTimestamp = DateTime.now().millisecondsSinceEpoch;
   }
@@ -102,6 +102,8 @@ class MessagesDataProvider extends ChangeNotifier {
       notifyListeners();
       return true;
     }
+
+    return false;
   }
 
   Future<bool> retrieveMoreTopicMessages() async {
@@ -174,6 +176,6 @@ class MessagesDataProvider extends ChangeNotifier {
     if (_messages != null) {
       return _messages;
     }
-    return List<MessageElement>();
+    return [];
   }
 }

@@ -11,7 +11,7 @@ class MoreResultsList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Align(
       alignment: Alignment.bottomCenter,
-      child: RaisedButton(
+      child: ElevatedButton(
         onPressed: () {
           showModalBottomSheet(
             context: context,
@@ -67,7 +67,9 @@ class MoreResultsList extends StatelessWidget {
             ),
           );
         },
-        color: Theme.of(context).buttonColor,
+        style: ElevatedButton.styleFrom(
+          primary: Theme.of(context).buttonColor,
+        ),
         child: Text(
           'Show More Results',
           style: TextStyle(color: Theme.of(context).textTheme.button.color),

@@ -45,7 +45,7 @@ class _AddShuttleStopsViewState extends State<AddShuttleStopsView> {
   }
 
   List<Widget> createList(BuildContext context) {
-    List<Widget> list = List<Widget>();
+    List<Widget> list = [];
 
     _shuttleDataProvider.stopsNotSelected.forEach((key, value) {
       ShuttleStopModel model = value;

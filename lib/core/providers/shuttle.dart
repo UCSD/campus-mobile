@@ -3,10 +3,8 @@ import 'package:campus_mobile_experimental/core/models/shuttle_arrival.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_stop.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/shuttle.dart';
-import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/core/utils/maps.dart';
-
-import '../models/shuttle_stop.dart';
+import 'package:flutter/material.dart';
 
 class ShuttleDataProvider extends ChangeNotifier {
   ShuttleDataProvider() {
@@ -57,8 +55,6 @@ class ShuttleDataProvider extends ChangeNotifier {
       // get closest stop to current user
       calculateClosestStop();
       getArrivalInformation();
-//      print(stopsToRender);
-//      print(arrivalsToRender);
     }
 
     _isLoading = false;
@@ -71,7 +67,7 @@ class ShuttleDataProvider extends ChangeNotifier {
     }
 
     ///create an empty list that will be returned
-    List<ShuttleStopModel> orderedListOfStops = List<ShuttleStopModel>();
+    List<ShuttleStopModel> orderedListOfStops = [];
 
     /// remove lots as we add them to the ordered list
     for (int stopID in order) {
@@ -158,18 +154,18 @@ class ShuttleDataProvider extends ChangeNotifier {
     List<ShuttleStopModel> stopsToRenderList = List<ShuttleStopModel>();
     if (fetchedStops != null) {
       if (userDataProvider.userProfileModel != null) {
-      for (int i = 0; i < userDataProvider.userProfileModel.selectedStops.length; i++) {
-        int stopID = userDataProvider.userProfileModel.selectedStops[i];
-        if (stopID != null && fetchedStops[stopID] != null) {
-          stopsToRenderList.add(
-              fetchedStops[stopID]);
+        for (int i = 0;
+            i < userDataProvider.userProfileModel.selectedStops.length;
+            i++) {
+          int stopID = userDataProvider.userProfileModel.selectedStops[i];
+          if (stopID != null && fetchedStops[stopID] != null) {
+            stopsToRenderList.add(fetchedStops[stopID]);
+          }
         }
       }
     }
-    }
     return stopsToRenderList;
   }
-
 
   Map<int, ShuttleStopModel> get stopsNotSelected {
     var output = new Map<int, ShuttleStopModel>.from(fetchedStops);
@@ -183,5 +179,4 @@ class ShuttleDataProvider extends ChangeNotifier {
     print("Coordinates set to: $value in shuttle provider");
     _userCoords = value;
   }
-
 }
