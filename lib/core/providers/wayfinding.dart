@@ -114,13 +114,15 @@ class WayfindingProvider extends ChangeNotifier {
         if (event.index == 4) {
           // Set Wayfinding preferences
           advancedWayfindingEnabled = true;
-          sharedPreferences.setBool("advancedWayfindingEnabled", true);
+          sharedPreferences = await SharedPreferences.getInstance();
+           sharedPreferences.setBool("advancedWayfindingEnabled", true);
 
           // Fetch UCSD_ITS scanning configurations.
           _wayfindingService = WayfindingService();
           await _wayfindingService.fetchData();
           _wayfindingConstantsModel =
               _wayfindingService.wayfindingConstantsModel;
+          print("Wayfinding is : ${_wayfindingConstantsModel == null ? "NULL" : "NOT NULL"}");
 
           // Set up broadcasting for UCSD App Identification
           startBeaconBroadcast();

@@ -12,8 +12,6 @@ class WayfindingService {
       "https://api-qa.ucsd.edu:8243/bluetoothscanningcharacteristics/v1.0/constants";
   final String deviceTypesEndpoint =
       "https://api-qa.ucsd.edu:8243/bluetoothdevicecharacteristic/v1.0.0/servicenames/1";
-  final String mobileLoggerEndpoint =
-      "https://api-qa.ucsd.edu:8243/mobileapplogger/v1.0.0/log";
   final Map<String, String> publicHeader = {
     "accept": "application/json",
   };
@@ -41,6 +39,7 @@ class WayfindingService {
       isLoading = false;
       return true;
     } catch (exception) {
+      print("FAILED TO RETRIEVE CONSTANTS");
       error = exception.toString();
       isLoading = false;
       return false;
