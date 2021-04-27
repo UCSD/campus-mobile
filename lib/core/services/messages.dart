@@ -4,9 +4,9 @@ import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/notifications.dart';
 
 class MessageService {
-  final String mymessages_endpoint =
+  final String myMessagesApiUrl =
       'https://api-qa.ucsd.edu:8243/mp-mymessages/1.0.0/messages?start=';
-  final String topics_endpoint =
+  final String topicsApiUrl =
       'https://bvgjvzaakl.execute-api.us-west-2.amazonaws.com/dev/topics?';
 
   bool _isLoading = false;
@@ -24,7 +24,7 @@ class MessageService {
     try {
       /// fetch data
       String _response = await _networkHelper.authorizedFetch(
-          mymessages_endpoint + timestamp.toString(), authHeaders);
+          myMessagesApiUrl + timestamp.toString(), authHeaders);
 
       /// parse data
       final data = messagesFromJson(_response);
@@ -48,7 +48,7 @@ class MessageService {
     try {
       /// fetch data
       String _response = await _networkHelper
-          .fetchData(topics_endpoint + topicsEndpoint + timestampEndpoint);
+          .fetchData(topicsApiUrl + topicsEndpoint + timestampEndpoint);
 
       /// parse data
       final data = messagesFromJson(_response);

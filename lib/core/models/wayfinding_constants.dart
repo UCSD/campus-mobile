@@ -19,6 +19,7 @@ class WayfindingConstantsModel {
   WayfindingConstantsModel(
       {this.allowableDevices,
       this.deviceTypes,
+      this.qualifyingDevices,
       this.qualifiedDevicesThreshold,
       this.distanceThreshold,
       this.dwellTimeThreshold,
@@ -35,15 +36,15 @@ class WayfindingConstantsModel {
       WayfindingConstantsModel(
           allowableDevices: List.from(constantsJson['deviceCharacteristics']),
           deviceTypes: deviceTypesJson,
-          qualifiedDevicesThreshold: constantsJson["uniqueDevices"],
-          distanceThreshold: constantsJson["distanceThreshold"],
-          dwellTimeThreshold: constantsJson["dwellTimeThreshold"],
-          scanDuration: constantsJson["scanDuration"],
-          scanWaitTime: constantsJson["waitTime"],
-          scanIntervalAllowance: constantsJson["scanIntervalAllowance"],
+          qualifyingDevices: 0,
+          qualifiedDevicesThreshold: int.parse(constantsJson["uniqueDevices"]),
+          distanceThreshold: int.parse(constantsJson["distanceThreshold"]),
+          dwellTimeThreshold: int.parse(constantsJson["dwellTimeThreshold"]),
+          scanDuration: int.parse(constantsJson["scanDuration"]),
+          scanWaitTime: int.parse(constantsJson["waitTime"]),
+          scanIntervalAllowance:
+              int.parse(constantsJson["scanIntervalAllowance"]),
           backgroundScanInterval: constantsJson["backgroundScanInterval"],
           deletionInterval: constantsJson["deletionInterval"],
           milesFromPC: constantsJson['milesFromPC'].toDouble());
 }
-
-

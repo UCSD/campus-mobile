@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/location.dart';
 import 'package:campus_mobile_experimental/core/models/speed_test.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
@@ -8,9 +10,6 @@ import 'package:campus_mobile_experimental/core/services/speed_test.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:path_provider/path_provider.dart';
-
-import '../../app_constants.dart';
-import '../../app_networking.dart';
 
 class SpeedTestProvider extends ChangeNotifier {
   bool _onSimulator;

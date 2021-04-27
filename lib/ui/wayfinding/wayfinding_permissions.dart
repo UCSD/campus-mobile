@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:app_settings/app_settings.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
+import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/providers/wayfinding.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +31,8 @@ class _AdvancedWayfindingPermissionState
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(42),
         child: AppBar(
+          backgroundColor: ColorPrimary,
+          brightness: Brightness.dark,
           primary: true,
           centerTitle: true,
           title: Text("Advanced Wayfinding"),

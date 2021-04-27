@@ -52,7 +52,6 @@ android/.project
 android/app/.classpath
 android/app/.project
 android/app/.settings/
-pubspec.lock
 
 # iOS/XCode related
 **/ios/**/*.mode1v3
@@ -82,6 +81,7 @@ pubspec.lock
 **/ios/Flutter/flutter_export_environment.sh
 **/ios/ServiceDefinitions.json
 **/ios/Runner/GeneratedPluginRegistrant.*
+**/ios/Podfile.lock
 
 # Exceptions to above rules.
 !**/ios/**/default.mode1v3

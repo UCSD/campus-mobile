@@ -7,7 +7,7 @@ class ShuttleService {
   bool _isLoading = false;
   DateTime _lastUpdated;
   String _error;
-  List<ShuttleStopModel> _data = List<ShuttleStopModel>();
+  List<ShuttleStopModel> _data = [];
 
   /// add state related things for view model here
   /// add any type of data manipulation here so it can be accessed via provider

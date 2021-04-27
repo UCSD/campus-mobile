@@ -19,7 +19,7 @@ class NotificationsSettingsView extends StatelessWidget {
   }
 
   List<Widget> createList(BuildContext context, List<String> topicsAvailable) {
-    List<Widget> list = List<Widget>();
+    List<Widget> list = [];
     for (String topic in topicsAvailable) {
       list.add(ListTile(
         key: Key(topic),

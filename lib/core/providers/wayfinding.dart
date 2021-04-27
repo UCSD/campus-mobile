@@ -265,8 +265,7 @@ class WayfindingProvider extends ChangeNotifier {
     } else if (Platform.isIOS) {
       operatingSystem = "iOS";
     }
-    if (_wayfindingConstantsModel.qualifyingDevices >=
-        _wayfindingConstantsModel.qualifiedDevicesThreshold) {
+    if (_wayfindingConstantsModel.qualifyingDevices >= _wayfindingConstantsModel.qualifiedDevicesThreshold) {
       double lat;
       double long;
       checkLocationPermission();
@@ -297,6 +296,7 @@ class WayfindingProvider extends ChangeNotifier {
   ///
   /// Will attach access token if logged in
   Future<void> sendLogs(Map log) async {
+
     // Attach token from user if logged in
     if (userDataProvider.isLoggedIn) {
       if (loggerHeader == null) {
@@ -310,7 +310,7 @@ class WayfindingProvider extends ChangeNotifier {
       try {
         _networkHelper
             .authorizedPost(
-                mobileLoggerEndpoint, loggerHeader, json.encode(log))
+                mobileLoggerEndpoint, loggerHeader, json.encode(log.toString()))
             .then((value) {});
       } catch (Exception) {
         // Silent login if access token is expired
@@ -321,19 +321,19 @@ class WayfindingProvider extends ChangeNotifier {
                 'Bearer ${userDataProvider?.authenticationModel?.accessToken}'
           };
           _networkHelper.authorizedPost(
-              mobileLoggerEndpoint, loggerHeader, json.encode(log));
+              mobileLoggerEndpoint, loggerHeader, json.encode(log.toString()));
         }
       }
     } else {
       // Send logs to API for visitors
       try {
-         getNewToken();
+        await getNewToken();
         _networkHelper.authorizedPost(
-            mobileLoggerEndpoint, tokenHeader, json.encode(log));
+            mobileLoggerEndpoint, tokenHeader, json.encode(log.toString()));
       } catch (Exception) {
-        getNewToken();
+        await getNewToken();
         _networkHelper.authorizedPost(
-            mobileLoggerEndpoint, tokenHeader, json.encode(log));
+            mobileLoggerEndpoint, tokenHeader, json.encode(log.toString()));
       }
     }
   }
@@ -718,7 +718,7 @@ class WayfindingProvider extends ChangeNotifier {
     return String.fromCharCodes(codeUnits);
   }
 
-  // Start a background scan
+  // Start Background Scanning
   void _onBackgroundFetch(String taskID) async {
     String lastTimeStamp = await _storage.read(key: "lastBackgroundScan");
 
@@ -760,6 +760,7 @@ class WayfindingProvider extends ChangeNotifier {
           key: _randomValue(), value: '[BackgroundFetch] configure ERROR: $e');
     });
   }
+  // End Background Scanning
 
   //Parse advertisement data
   String calculateHexFromArray(decimalArray) {

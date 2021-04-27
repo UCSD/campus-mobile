@@ -25,7 +25,7 @@ class NewsList extends StatelessWidget {
 
   Widget buildNewsList(BuildContext context, NewsModel data) {
     final List<Item> listOfNews = data.items;
-    final List<Widget> newsTiles = List<Widget>();
+    final List<Widget> newsTiles = [];
 
     /// check to see if we want to display only a limited number of elements
     /// if no constraint is given on the size of the list then all elements

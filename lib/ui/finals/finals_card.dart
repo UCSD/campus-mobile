@@ -62,7 +62,7 @@ class FinalsCard extends StatelessWidget {
 
   Widget buildFinalsCard(Map<String, List<SectionData>> finalsData,
       DateTime lastUpdated, String nextDayWithClasses, BuildContext context) {
-    List<Widget> listToReturn = List<Widget>();
+    List<Widget> listToReturn = [];
     finalsData.forEach((key, value) {
       for (SectionData data in value) {
         listToReturn.add(ListTile(
