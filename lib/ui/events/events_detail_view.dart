@@ -80,7 +80,7 @@ class LearnMoreButton extends StatelessWidget {
             try {
               await launch(link, forceSafariVC: true);
             } catch (e) {
-              Scaffold.of(context).showSnackBar(SnackBar(
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 content: Text('Could not open.'),
               ));
             }
