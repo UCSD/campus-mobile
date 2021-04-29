@@ -46,10 +46,7 @@ dependencies:
   url_launcher: 6.0.3
   uuid: 3.0.4
   webview_flutter: 2.0.4
-  wifi_connection:
-    git:
-      url: https://github.com/UCSD/wifi_connection.git
-      ref: master
+  wifi_connection: 0.0.4
 dev_dependencies:
   build_runner: # https://github.com/hivedb/hive/issues/605
   flutter_test:
