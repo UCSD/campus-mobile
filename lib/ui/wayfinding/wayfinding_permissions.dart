@@ -310,7 +310,7 @@ class _AdvancedWayfindingPermissionState
   }
 
   void startBluetooth(BuildContext context, bool permissionGranted) async {
-    _bluetoothSingleton = Provider.of<AdvancedWayfindingSingleton>(context);
+    _bluetoothSingleton = Provider.of<AdvancedWayfindingSingleton>(context, listen: false);
     if (_bluetoothSingleton.userDataProvider == null) {
       _bluetoothSingleton.userDataProvider =
           Provider.of<UserDataProvider>(context);
