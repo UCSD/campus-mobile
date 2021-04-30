@@ -5,7 +5,7 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 dependencies:
   app_settings: 4.1.0
-  background_fetch: 0.7.2
+  background_fetch: 1.0.0-nullsafety.2
   barcode_widget: 2.0.1
   beacon_broadcast: 0.2.3
   connectivity: 3.0.3
