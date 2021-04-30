@@ -1,9 +1,10 @@
 import 'dart:async';
 
 import 'package:campus_mobile_experimental/core/models/location.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:location/location.dart';
 
-class LocationDataProvider {
+class LocationDataProvider extends ChangeNotifier{
   final Location _locationService = new Location();
   bool _permission = false;
   String error;

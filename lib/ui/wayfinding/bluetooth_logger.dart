@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 
 class AutomaticBluetoothLoggerView extends StatefulWidget {
   // Instantiate bluetooth singleton
-  final AdvancedWayfindingSingleton bluetoothSingleton =
-      AdvancedWayfindingSingleton();
+  final WayfindingProvider bluetoothSingleton =
+      WayfindingProvider();
 
   @override
   State<StatefulWidget> createState() =>
@@ -17,13 +17,13 @@ class AutomaticBluetoothLoggerView extends StatefulWidget {
 class _AutomaticBluetoothLoggerViewState
     extends State<AutomaticBluetoothLoggerView> {
   // Instances of the singleton and its listener
-  AdvancedWayfindingSingleton bluetoothSingleton;
+  WayfindingProvider bluetoothSingleton;
   StreamSubscription subscription;
 
   // List for rendering the ongoing log
   List loggedItems = [];
 
-  _AutomaticBluetoothLoggerViewState(AdvancedWayfindingSingleton bluetoothScan);
+  _AutomaticBluetoothLoggerViewState(WayfindingProvider bluetoothScan);
 
   // Set the state when a new scan occurs
   void initState() {

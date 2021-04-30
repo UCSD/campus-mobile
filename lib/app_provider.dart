@@ -113,7 +113,6 @@ List<SingleChildWidget> dependentServices = [
     diningDataProvider.populateDistances();
     return diningDataProvider;
   }),
-
   ChangeNotifierProxyProvider<Coordinates, MapsDataProvider>(create: (_) {
     var mapsDataProvider = MapsDataProvider();
     return mapsDataProvider;
@@ -188,13 +187,12 @@ List<SingleChildWidget> dependentServices = [
     }
     return classScheduleDataProvider;
   }),
-  ChangeNotifierProxyProvider2<Coordinates, UserDataProvider, AdvancedWayfindingSingleton>(
-      create: (_) {
-        print("CreateProvider: AdvancedWayfindingSingleton");
-        var proximityAwarenessSingleton = AdvancedWayfindingSingleton();
-
-        return proximityAwarenessSingleton;
-      }, update: (_, coordinates, userDataProvider, proximityAwarenessSingleton) {
+  ChangeNotifierProxyProvider2<Coordinates, UserDataProvider,
+      WayfindingProvider>(create: (_) {
+    print("CreateProvider: AdvancedWayfindingSingleton");
+    var proximityAwarenessSingleton = WayfindingProvider();
+    return proximityAwarenessSingleton;
+  }, update: (_, coordinates, userDataProvider, proximityAwarenessSingleton) {
     print("UpdateProvider: AdvancedWayfindingSingleton");
     proximityAwarenessSingleton.coordinates = coordinates;
     proximityAwarenessSingleton.userProvider = userDataProvider;
@@ -275,11 +273,12 @@ List<SingleChildWidget> dependentServices = [
     shuttleDataProvider.fetchStops(true);
     return shuttleDataProvider;
   }),
-  ChangeNotifierProxyProvider2<Coordinates, UserDataProvider, SpeedTestProvider>(create: (_){
+  ChangeNotifierProxyProvider2<Coordinates, UserDataProvider,
+      SpeedTestProvider>(create: (_) {
     SpeedTestProvider speedTestProvider = SpeedTestProvider();
     speedTestProvider.init();
     return speedTestProvider;
-  }, update: (_, coordinates, userDataProvider, speedTestProvider){
+  }, update: (_, coordinates, userDataProvider, speedTestProvider) {
     speedTestProvider.coordinates = coordinates;
     speedTestProvider.userDataProvider = userDataProvider;
     return speedTestProvider;
