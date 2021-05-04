@@ -1,3 +1,5 @@
+
+
 import 'dart:async';
 
 import 'package:campus_mobile_experimental/app_constants.dart';
@@ -47,7 +49,7 @@ class NetworkHelper {
   }
 
   Future<dynamic> authorizedPost(
-      String url, Map<String, String> headers, dynamic body) async {
+      String url, Map<String, String>? headers, dynamic body) async {
     Dio dio = new Dio();
     dio.options.connectTimeout = 20000;
     dio.options.receiveTimeout = 20000;
