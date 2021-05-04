@@ -4,26 +4,26 @@ import 'dart:io';
 import 'package:wifi_connection/WifiInfo.dart';
 
 class SpeedTestModel {
-  bool isUCSDWifi;
-  String uploadUrl;
-  String downloadUrl;
-  String platform;
-  String ssid;
-  String bssid;
-  String ipAddress;
-  String macAddress;
-  String linkSpeed;
-  String signalStrength;
-  String frequency;
-  String networkID;
-  String isHiddenSSID;
-  String routerIP;
-  String channel;
-  double latitude;
-  double longitude;
-  String timeStamp;
-  double downloadSpeed;
-  double uploadSpeed;
+  bool? isUCSDWifi;
+  String? uploadUrl;
+  String? downloadUrl;
+  String? platform;
+  String? ssid;
+  String? bssid;
+  String? ipAddress;
+  String? macAddress;
+  String? linkSpeed;
+  String? signalStrength;
+  String? frequency;
+  String? networkID;
+  String? isHiddenSSID;
+  String? routerIP;
+  String? channel;
+  double? latitude;
+  double? longitude;
+  String? timeStamp;
+  double? downloadSpeed;
+  double? uploadSpeed;
 
   SpeedTestModel(
       {this.isUCSDWifi,
@@ -48,17 +48,17 @@ class SpeedTestModel {
       this.uploadSpeed});
 
   factory SpeedTestModel.fromJson(
-      WifiInfo wifiInfo,
-      Map<String, dynamic> downloadJson,
-      Map<String, dynamic> uploadJson,
+      WifiInfo? wifiInfo,
+      Map<String, dynamic>? downloadJson,
+      Map<String, dynamic>? uploadJson,
       bool isUCSDWifi) {
     if (wifiInfo == null) {
       return SpeedTestModel(isUCSDWifi: false);
     }
     return SpeedTestModel(
         isUCSDWifi: isUCSDWifi,
-        uploadUrl: uploadJson["signed_url"],
-        downloadUrl: downloadJson["signed_url"],
+        uploadUrl: uploadJson!["signed_url"],
+        downloadUrl: downloadJson!["signed_url"],
         platform: Platform.isAndroid ? "Android" : "iOS",
         ssid: wifiInfo.ssid == null ? "" : wifiInfo.ssid,
         bssid: wifiInfo.bssid == null ? "" : wifiInfo.bssid,
@@ -84,7 +84,7 @@ class SpeedTestModel {
 }
 
 SpeedTestModel speedTestModelFromJson(
-    WifiInfo wifiInfo, String downloadUrl, String uploadUrl, bool isUCSDWifi) {
+    WifiInfo? wifiInfo, String downloadUrl, String uploadUrl, bool isUCSDWifi) {
   return SpeedTestModel.fromJson(
       wifiInfo, json.decode(downloadUrl), json.decode(uploadUrl), isUCSDWifi);
 }

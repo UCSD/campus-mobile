@@ -16,9 +16,9 @@ class SurveyModel {
     this.surveyUrl,
   });
 
-  bool surveyActive;
-  String surveyId;
-  String surveyUrl;
+  bool? surveyActive;
+  String? surveyId;
+  String? surveyUrl;
 
   factory SurveyModel.fromJson(Map<String, dynamic> json) => SurveyModel(
         surveyActive: json["survey_active"],

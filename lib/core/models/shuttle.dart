@@ -3,7 +3,7 @@ import 'dart:ui';
 
 import 'package:campus_mobile_experimental/core/models/shuttle_stop.dart';
 
-List<ShuttleModel> shuttleModelFromJson(String str) =>
+List<ShuttleModel>? shuttleModelFromJson(String str) =>
     json.decode(str).map((x) => ShuttleModel.fromJson(x));
 
 //    List<ShuttleModel>.from(
@@ -13,16 +13,16 @@ String shuttleModelToJson(List<ShuttleModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class ShuttleModel {
-  int displayOrder;
-  String url;
-  String customerRouteId;
-  int id;
-  String name;
-  String shortName;
-  String description;
-  String routeType;
-  Color color;
-  List<ShuttleStopModel> stops = [];
+  int? displayOrder;
+  String? url;
+  String? customerRouteId;
+  int? id;
+  String? name;
+  String? shortName;
+  String? description;
+  String? routeType;
+  Color? color;
+  List<ShuttleStopModel>? stops = [];
 
   ShuttleModel(
       {this.displayOrder,
@@ -104,10 +104,10 @@ class ShuttleModel {
         "shortName": shortName == null ? null : shortName,
         "description": description == null ? null : description,
         "routeType": routeType == null ? null : routeType,
-        "color": color == null ? null : '#${color.value.toRadixString(16)}',
+        "color": color == null ? null : '#${color!.value.toRadixString(16)}',
         "stops": stops == null
             ? null
-            : List<dynamic>.from(stops.map((x) => x.toJson()))
+            : List<dynamic>.from(stops!.map((x) => x.toJson()))
       };
 }
 
