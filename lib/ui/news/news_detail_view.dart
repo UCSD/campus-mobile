@@ -61,9 +61,10 @@ class ContinueReadingButton extends StatelessWidget {
       child: Container(
         height: 40,
         width: double.infinity,
-        child: TextButton(
-          style: TextButton.styleFrom(
-            primary: Theme.of(context).buttonColor, // foreground
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            onPrimary: Theme.of(context).primaryColor, // foreground
+            primary: Theme.of(context).buttonColor,
           ),
           onPressed: () async {
             try {
