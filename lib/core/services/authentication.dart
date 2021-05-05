@@ -20,14 +20,14 @@ class AuthenticationService {
     _error = null;
     try {
       final Map<String, String> authServiceHeaders = {
-        'x-api-key': AUTH_SERVICE_API_KEY,
+        'x-api-key': authServiceApiKey,
         'Authorization': base64EncodedWithEncryptedPassword,
       };
 
       /// fetch data
       /// MODIFIED TO USE EXPONENTIAL RETRY
       var response = await _networkHelper.authorizedPublicPost(
-          AUTH_SERVICE_API_URL, authServiceHeaders, null);
+          authServiceApiUrl, authServiceHeaders, null);
 
       /// check to see if response has an error
       if (response['errorMessage'] != null) {
