@@ -143,7 +143,7 @@ const saveArtifact = async (artifactFilename) => {
 		const fileOptions = { folder: ENV_VARS.prNumber ? SP_CONFIG.spPullRequestBuildFolder : SP_CONFIG.spRegressionBuildFolder }
 
 		// Save build artifacts to SP
-		if (artifactFilename === 'app-release.apk') {
+		if (ENV_VARS.buildPlatform === 'ANDROID') {
 			buildArtifacts.buildApkFilepath = '../../build/app/outputs/apk/release/app-release.apk'
 			buildArtifacts.buildApkFinalFilename = ENV_VARS.appVersion + '-' + finalBuildNumber + buildFilenamePrEnvStr + '.apk'
 			buildArtifacts.buildApkFinalUrl = (SP_CONFIG.spSiteUrl + buildFolder + buildArtifacts.buildApkFinalFilename).replace(/ /g, '%20')
@@ -153,7 +153,7 @@ const saveArtifact = async (artifactFilename) => {
 			console.log('Saving artifact `' + fileOptions.fileName + ' to SP...')
 			await spsave(coreOptions, SP_CONFIG.credentials, fileOptions)
 			return true
-		} else if (artifactFilename === 'UC_San_Diego.ipa') {
+		} else if (ENV_VARS.buildPlatform === 'IOS') {
 			buildArtifacts.buildIpaFilepath = '../../build/ios/ipa/UC San Diego.ipa'
 			buildArtifacts.buildIpaFinalFilename = ENV_VARS.appVersion + '-' + finalBuildNumber + buildFilenamePrEnvStr + '.ipa'
 			buildArtifacts.buildIpaFinalUrl = (SP_CONFIG.spSiteUrl + buildFolder + buildArtifacts.buildIpaFinalFilename).replace(/ /g, '%20')
@@ -164,6 +164,7 @@ const saveArtifact = async (artifactFilename) => {
 			await spsave(coreOptions, SP_CONFIG.credentials, fileOptions)
 			return true
 		}
+		return false
 	} catch(err) {
 		console.log(err)
 		return false
