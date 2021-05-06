@@ -1,3 +1,5 @@
+
+
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/dining.dart';
 import 'package:campus_mobile_experimental/core/models/dining_menu.dart';
@@ -8,10 +10,10 @@ class DiningService {
   }
 
   bool _isLoading = false;
-  DateTime _lastUpdated;
-  String _error;
-  List<DiningModel> _data;
-  DiningMenuItemsModel _menuData;
+  DateTime? _lastUpdated;
+  String? _error;
+  List<DiningModel>? _data;
+  DiningMenuItemsModel? _menuData;
 
   final NetworkHelper _networkHelper = NetworkHelper();
   final String baseEndpoint =
@@ -23,7 +25,7 @@ class DiningService {
     try {
       /// fetch data
       String _response =
-          await _networkHelper.fetchData(baseEndpoint + 'locations');
+          await (_networkHelper.fetchData(baseEndpoint + 'locations') as FutureOr<String>);
 
       /// parse data
       final data = diningModelFromJson(_response);
@@ -44,7 +46,7 @@ class DiningService {
     try {
       /// fetch data
       String _response =
-          await _networkHelper.fetchData(baseEndpoint + 'menu/' + id);
+          await (_networkHelper.fetchData(baseEndpoint + 'menu/' + id) as FutureOr<String>);
 
       /// parse data
       final data = diningMenuItemsModelFromJson(_response);
@@ -59,11 +61,11 @@ class DiningService {
 
   bool get isLoading => _isLoading;
 
-  String get error => _error;
+  String? get error => _error;
 
-  DateTime get lastUpdated => _lastUpdated;
+  DateTime? get lastUpdated => _lastUpdated;
 
-  List<DiningModel> get data => _data;
+  List<DiningModel>? get data => _data;
 
-  DiningMenuItemsModel get menuData => _menuData;
+  DiningMenuItemsModel? get menuData => _menuData;
 }

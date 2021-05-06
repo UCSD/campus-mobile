@@ -1,3 +1,5 @@
+
+
 import 'package:campus_mobile_experimental/core/models/parking.dart';
 import 'package:campus_mobile_experimental/core/providers/parking.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
@@ -5,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ManageParkingView extends StatelessWidget {
-  ParkingDataProvider parkingDataProvider;
+  late ParkingDataProvider parkingDataProvider;
   @override
   Widget build(BuildContext context) {
     parkingDataProvider = Provider.of<ParkingDataProvider>(context);
@@ -28,7 +30,7 @@ class ManageParkingView extends StatelessWidget {
     List<ParkingModel> newOrder = parkingDataProvider.parkingModels;
     ParkingModel item = newOrder.removeAt(oldIndex);
     newOrder.insert(newIndex, item);
-    List<String> orderedLocationNames = [];
+    List<String?> orderedLocationNames = [];
     for (ParkingModel item in newOrder) {
       orderedLocationNames.add(item.locationName);
     }
@@ -40,11 +42,11 @@ class ManageParkingView extends StatelessWidget {
     for (ParkingModel model in parkingDataProvider.parkingModels) {
       list.add(ListTile(
           key: Key(model.locationId.toString()),
-          title: Text(model.locationName),
+          title: Text(model.locationName!),
           leading: Icon(Icons.reorder),
           trailing: Switch(
             value: Provider.of<ParkingDataProvider>(context)
-                .parkingViewState[model.locationName],
+                .parkingViewState![model.locationName]!,
             onChanged: (_) {
               parkingDataProvider.toggleLot(model.locationName);
             },

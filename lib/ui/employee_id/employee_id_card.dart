@@ -1,3 +1,5 @@
+
+
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
@@ -24,7 +26,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
     ScalingUtility().getCurrentMeasurements(context);
 
     return CardContainer(
-      active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
+      active: Provider.of<CardsDataProvider>(context).cardStates![cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       reload: () => Provider.of<EmployeeIdDataProvider>(context, listen: false)
@@ -39,7 +41,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
   }
 
   Widget buildCardContent(
-      EmployeeIdModel employeeIdModel, BuildContext context) {
+      EmployeeIdModel? employeeIdModel, BuildContext context) {
     try {
       if (MediaQuery.of(context).size.width < 600) {
         return Padding(
@@ -55,7 +57,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
                     Column(
                       children: <Widget>[
                         Image.network(
-                          employeeIdModel.photo.contains("https")
+                          employeeIdModel!.photo.contains("https")
                               ? employeeIdModel.photo
                               : placeholderPhotoUrl,
                           fit: BoxFit.contain,
@@ -192,7 +194,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
             child: Column(
               children: <Widget>[
                 Image.network(
-                  employeeIdModel.photo.contains("https")
+                  employeeIdModel!.photo.contains("https")
                       ? employeeIdModel.photo
                       : placeholderPhotoUrl,
                   fit: BoxFit.contain,
@@ -295,7 +297,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
 
   /// Pop up barcode
   createAlertDialog(
-      BuildContext context, Column image, String cardNumber, bool rotated) {
+      BuildContext context, Column image, String? cardNumber, bool rotated) {
     return showDialog(
         context: context,
         builder: (context) {
@@ -323,7 +325,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
   }
 
   Column checkForRotation(
-      Column image, BuildContext context, String cardNumber, bool rotated) {
+      Column image, BuildContext context, String? cardNumber, bool rotated) {
     if (MediaQuery.of(context).orientation == Orientation.landscape) {
       return returnBarcodeContainer(cardNumber, rotated, context);
     }
@@ -342,7 +344,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
 
   /// Determine barcode to display
   returnBarcodeContainer(
-      String cardNumber, bool rotated, BuildContext context) {
+      String? cardNumber, bool rotated, BuildContext context) {
     var barcodeWithText;
 
     /// Initialize sizing
@@ -350,7 +352,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
     if (rotated) {
       barcodeWithText = BarcodeWidget(
         barcode: Barcode.codabar(),
-        data: cardNumber,
+        data: cardNumber!,
         width: ScalingUtility.verticalSafeBlock * 45,
         height: 80,
         style: TextStyle(
@@ -361,7 +363,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
     } else {
       barcodeWithText = BarcodeWidget(
         barcode: Barcode.codabar(),
-        data: cardNumber,
+        data: cardNumber!,
         width: ScalingUtility.horizontalSafeBlock * 50,
         height: ScalingUtility.verticalSafeBlock * 4.45,
         style: TextStyle(
@@ -438,13 +440,13 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
   }
 
   returnBarcodeContainerTablet(
-      String cardNumber, bool rotated, BuildContext context) {
+      String? cardNumber, bool rotated, BuildContext context) {
     var barcodeWithText;
     SizeConfig().init(context);
     if (rotated) {
       barcodeWithText = BarcodeWidget(
         barcode: Barcode.codabar(),
-        data: cardNumber,
+        data: cardNumber!,
         width: SizeConfig.safeBlockVertical * 60,
         height: 80,
         style: TextStyle(
@@ -455,7 +457,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
     } else {
       barcodeWithText = BarcodeWidget(
         barcode: Barcode.codabar(),
-        data: cardNumber,
+        data: cardNumber!,
         width: SizeConfig.safeBlockHorizontal * 20,
         height: 40,
         style: TextStyle(
@@ -595,9 +597,9 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
 
 //Image Scaling
 class ScalingUtility {
-  MediaQueryData _queryData;
-  static double horizontalSafeBlock;
-  static double verticalSafeBlock;
+  late MediaQueryData _queryData;
+  static late double horizontalSafeBlock;
+  static late double verticalSafeBlock;
 
   void getCurrentMeasurements(BuildContext context) {
     /// Find screen size
@@ -614,16 +616,16 @@ class ScalingUtility {
 }
 
 class SizeConfig {
-  static MediaQueryData _mediaQueryData;
-  static double screenWidth;
-  static double screenHeight;
-  static double blockSizeHorizontal;
-  static double blockSizeVertical;
+  static late MediaQueryData _mediaQueryData;
+  static late double screenWidth;
+  static late double screenHeight;
+  static double? blockSizeHorizontal;
+  static double? blockSizeVertical;
 
-  static double _safeAreaHorizontal;
-  static double _safeAreaVertical;
-  static double safeBlockHorizontal;
-  static double safeBlockVertical;
+  static late double _safeAreaHorizontal;
+  static late double _safeAreaVertical;
+  static late double safeBlockHorizontal;
+  static late double safeBlockVertical;
 
   void init(BuildContext context) {
     _mediaQueryData = MediaQuery.of(context);

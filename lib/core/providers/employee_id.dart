@@ -1,3 +1,5 @@
+
+
 import 'package:campus_mobile_experimental/core/models/employee_id.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/employee_id.dart';
@@ -13,18 +15,18 @@ class EmployeeIdDataProvider extends ChangeNotifier {
   }
 
   ///STATES
-  bool _isLoading;
-  DateTime _lastUpdated;
-  String _error;
+  bool? _isLoading;
+  DateTime? _lastUpdated;
+  String? _error;
 
   ///MODELS
-  EmployeeIdModel _employeeIdModel;
+  EmployeeIdModel? _employeeIdModel;
 
   ///Additional Provider
-  UserDataProvider _userDataProvider;
+  late UserDataProvider _userDataProvider;
 
   ///SERVICES
-  EmployeeIdService _employeeIdService;
+  late EmployeeIdService _employeeIdService;
 
   void fetchData() async {
     _isLoading = true;
@@ -58,10 +60,10 @@ class EmployeeIdDataProvider extends ChangeNotifier {
   }
 
   ///SIMPLE GETTERS
-  bool get isLoading => _isLoading;
-  String get error => _error;
-  DateTime get lastUpdated => _lastUpdated;
-  EmployeeIdModel get employeeIdModel => _employeeIdModel;
+  bool? get isLoading => _isLoading;
+  String? get error => _error;
+  DateTime? get lastUpdated => _lastUpdated;
+  EmployeeIdModel? get employeeIdModel => _employeeIdModel;
 
   ///Simple Setters
   set userDataProvider(UserDataProvider value) => _userDataProvider = value;

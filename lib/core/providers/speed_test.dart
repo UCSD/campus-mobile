@@ -1,3 +1,5 @@
+
+
 import 'dart:convert';
 import 'dart:io';
 
@@ -12,32 +14,32 @@ import 'package:flutter/cupertino.dart';
 import 'package:path_provider/path_provider.dart';
 
 class SpeedTestProvider extends ChangeNotifier {
-  bool _onSimulator;
-  bool _isLoading;
+  bool? _onSimulator;
+  bool? _isLoading;
   bool _isUCSDWifi = true;
-  Coordinates _coordinates;
-  String _error;
+  late Coordinates _coordinates;
+  String? _error;
   NetworkHelper _networkHelper = new NetworkHelper();
   Dio dio = new Dio();
   Stopwatch _timer = new Stopwatch();
-  double _speedDownload;
-  double _speedUpload;
+  double? _speedDownload;
+  double? _speedUpload;
   double _percentDownloaded = 0.0;
   double _percentUploaded = 0.0;
-  CancelToken _cancelTokenDownload;
-  CancelToken _cancelTokenUpload;
+  CancelToken? _cancelTokenDownload;
+  CancelToken? _cancelTokenUpload;
   bool _speedTestDone = false;
   int _secondsElapsedDownload = 0;
   int _secondsElapsedUpload = 0;
-  SpeedTestService _speedTestService;
-  SpeedTestModel _speedTestModel;
-  bool isUCSDWiFi = true;
-  Map wiFiLog;
-  UserDataProvider _userDataProvider;
+  late SpeedTestService _speedTestService;
+  SpeedTestModel? _speedTestModel;
+  bool? isUCSDWiFi = true;
+  Map? wiFiLog;
+  late UserDataProvider _userDataProvider;
   final Map<String, String> headers = {
     "accept": "application/json",
   };
-  Map<String, String> offloadDataHeader;
+  Map<String, String>? offloadDataHeader;
   String mobileLoggerApi =
       'https://api-qa.ucsd.edu:8243/mobileapplogger/v1.1.0/log';
 
@@ -74,7 +76,7 @@ class SpeedTestProvider extends ChangeNotifier {
   }
 
   void connectedToUCSDWifi() async {
-    isUCSDWiFi = _speedTestModel.isUCSDWifi;
+    isUCSDWiFi = _speedTestModel!.isUCSDWifi;
     notifyListeners();
   }
 
@@ -101,7 +103,7 @@ class SpeedTestProvider extends ChangeNotifier {
     try {
       _cancelTokenUpload = new CancelToken();
       _timer.start();
-      await dio.put(_speedTestModel.uploadUrl,
+      await dio.put(_speedTestModel!.uploadUrl!,
           data: formData,
           onSendProgress: _progressCallbackUpload,
           cancelToken: _cancelTokenUpload);
@@ -119,7 +121,7 @@ class SpeedTestProvider extends ChangeNotifier {
     try {
       _cancelTokenDownload = new CancelToken();
       _timer.start();
-      await dio.download(_speedTestModel.downloadUrl, (tempDownload.path),
+      await dio.download(_speedTestModel!.downloadUrl!, (tempDownload.path),
           onReceiveProgress: _progressCallbackDownload,
           cancelToken: _cancelTokenDownload);
     } catch (e) {}
@@ -165,7 +167,7 @@ class SpeedTestProvider extends ChangeNotifier {
     try {
       if (_timer.isRunning) {
         _timer.stop();
-        _cancelTokenDownload.cancel("cancelled");
+        _cancelTokenDownload!.cancel("cancelled");
       }
     } catch (e) {}
   }
@@ -174,34 +176,34 @@ class SpeedTestProvider extends ChangeNotifier {
     try {
       if (_timer.isRunning) {
         _timer.stop();
-        _cancelTokenUpload.cancel("cancelled");
+        _cancelTokenUpload!.cancel("cancelled");
       }
     } catch (e) {}
   }
 
-  Future<bool> sendNetworkDiagnostics(int lastSpeed) async {
+  Future<bool> sendNetworkDiagnostics(int? lastSpeed) async {
     bool sentSuccessfully = false;
 
     wiFiLog = {
-      "Platform": _speedTestModel.platform,
-      "SSID": _speedTestModel.ssid,
-      "BSSID": _speedTestModel.bssid,
-      "IPAddress": _speedTestModel.ipAddress,
-      "MacAddress": _speedTestModel.macAddress,
-      "LinkSpeed": _speedTestModel.linkSpeed,
-      "SignalStrength": _speedTestModel.signalStrength,
-      "Frequency": _speedTestModel.frequency,
-      "NetworkID": _speedTestModel.networkID,
-      "IsHiddenSSID": _speedTestModel.isHiddenSSID,
-      "RouterIP": _speedTestModel.routerIP,
-      "Channel": _speedTestModel.channel,
+      "Platform": _speedTestModel!.platform,
+      "SSID": _speedTestModel!.ssid,
+      "BSSID": _speedTestModel!.bssid,
+      "IPAddress": _speedTestModel!.ipAddress,
+      "MacAddress": _speedTestModel!.macAddress,
+      "LinkSpeed": _speedTestModel!.linkSpeed,
+      "SignalStrength": _speedTestModel!.signalStrength,
+      "Frequency": _speedTestModel!.frequency,
+      "NetworkID": _speedTestModel!.networkID,
+      "IsHiddenSSID": _speedTestModel!.isHiddenSSID,
+      "RouterIP": _speedTestModel!.routerIP,
+      "Channel": _speedTestModel!.channel,
       "Latitude": _coordinates.lat,
       "Longitude": _coordinates.lon,
-      "TimeStamp": _speedTestModel.timeStamp,
+      "TimeStamp": _speedTestModel!.timeStamp,
       "DownloadSpeed": lastSpeed != null
           ? lastSpeed.toStringAsPrecision(3)
-          : _speedDownload.toStringAsPrecision(3),
-      "UploadSpeed": _speedUpload.toStringAsPrecision(3),
+          : _speedDownload!.toStringAsPrecision(3),
+      "UploadSpeed": _speedUpload!.toStringAsPrecision(3),
     };
 
     sentSuccessfully = true;
@@ -209,7 +211,7 @@ class SpeedTestProvider extends ChangeNotifier {
     return sentSuccessfully; //Due to failed submission or not connected to wifi
   }
 
-  Future<void> sendLogs(Map log) async {
+  Future<void> sendLogs(Map? log) async {
     mobileLoggerApi =
         "https://api-qa.ucsd.edu:8243/mobileapplogger/v1.1.0/log" +
             "?type=WIFI";
@@ -268,29 +270,29 @@ class SpeedTestProvider extends ChangeNotifier {
           'Bearer ${_userDataProvider?.authenticationModel?.accessToken}'
     };
     wiFiLog = {
-      "userId": (_userDataProvider.userProfileModel.pid) == null
+      "userId": (_userDataProvider.userProfileModel!.pid) == null
           ? ""
-          : _userDataProvider.userProfileModel.pid,
-      "userEmail": (_userDataProvider.userProfileModel.username) == null
+          : _userDataProvider.userProfileModel!.pid,
+      "userEmail": (_userDataProvider.userProfileModel!.username) == null
           ? ""
-          : _userDataProvider.userProfileModel.username + "@ucsd.edu",
-      "Platform": _speedTestModel.platform,
-      "SSID": _speedTestModel.ssid,
-      "BSSID": _speedTestModel.bssid,
-      "IPAddress": _speedTestModel.ipAddress,
-      "MacAddress": _speedTestModel.macAddress,
-      "LinkSpeed": _speedTestModel.linkSpeed,
-      "SignalStrength": _speedTestModel.signalStrength,
-      "Frequency": _speedTestModel.frequency,
-      "NetworkID": _speedTestModel.networkID,
-      "IsHiddenSSID": _speedTestModel.isHiddenSSID,
-      "RouterIP": _speedTestModel.routerIP,
-      "Channel": _speedTestModel.channel,
+          : _userDataProvider.userProfileModel!.username! + "@ucsd.edu",
+      "Platform": _speedTestModel!.platform,
+      "SSID": _speedTestModel!.ssid,
+      "BSSID": _speedTestModel!.bssid,
+      "IPAddress": _speedTestModel!.ipAddress,
+      "MacAddress": _speedTestModel!.macAddress,
+      "LinkSpeed": _speedTestModel!.linkSpeed,
+      "SignalStrength": _speedTestModel!.signalStrength,
+      "Frequency": _speedTestModel!.frequency,
+      "NetworkID": _speedTestModel!.networkID,
+      "IsHiddenSSID": _speedTestModel!.isHiddenSSID,
+      "RouterIP": _speedTestModel!.routerIP,
+      "Channel": _speedTestModel!.channel,
       "Latitude": _coordinates.lat,
       "Longitude": _coordinates.lon,
-      "TimeStamp": _speedTestModel.timeStamp,
-      "DownloadSpeed": wiFiLog['DownloadSpeed'],
-      "UploadSpeed": _speedUpload.toStringAsPrecision(3),
+      "TimeStamp": _speedTestModel!.timeStamp,
+      "DownloadSpeed": wiFiLog!['DownloadSpeed'],
+      "UploadSpeed": _speedUpload!.toStringAsPrecision(3),
     };
     if (_userDataProvider.isLoggedIn) {
       if (offloadDataHeader == null) {
@@ -349,17 +351,17 @@ class SpeedTestProvider extends ChangeNotifier {
     }
   }
 
-  bool get isLoading => _isLoading;
-  String get error => _error;
-  double get speed => _speedDownload;
-  set speed(double lastSpeed) => _speedDownload = lastSpeed;
-  double get uploadSpeed => _speedUpload;
+  bool? get isLoading => _isLoading;
+  String? get error => _error;
+  double? get speed => _speedDownload;
+  set speed(double? lastSpeed) => _speedDownload = lastSpeed;
+  double? get uploadSpeed => _speedUpload;
   Stopwatch get timer => _timer;
   double get percentDownloaded => _percentDownloaded;
   double get percentUploaded => _percentUploaded;
   bool get speedTestDone => _speedTestDone;
   int get timeElapsedDownload => _secondsElapsedDownload;
   int get timeElapsedUpload => _secondsElapsedUpload;
-  bool get isUCSDNetwork => isUCSDWiFi;
-  bool get onSimulator => _onSimulator;
+  bool? get isUCSDNetwork => isUCSDWiFi;
+  bool? get onSimulator => _onSimulator;
 }

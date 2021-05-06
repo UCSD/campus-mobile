@@ -1,3 +1,5 @@
+
+
 import 'package:campus_mobile_experimental/core/models/availability.dart';
 import 'package:campus_mobile_experimental/core/providers/availability.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
@@ -5,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ManageAvailabilityView extends StatelessWidget {
-  AvailabilityDataProvider _availabilityDataProvider;
+  late AvailabilityDataProvider _availabilityDataProvider;
 
   @override
   Widget build(BuildContext context) {
@@ -26,41 +28,41 @@ class ManageAvailabilityView extends StatelessWidget {
     if (newIndex > oldIndex) {
       newIndex -= 1;
     }
-    List<AvailabilityModel> newOrder =
+    List<AvailabilityModel?> newOrder =
         _availabilityDataProvider.availabilityModels;
     List<AvailabilityModel> toRemove = [];
 
-    for (AvailabilityModel item in newOrder) {
+    for (AvailabilityModel? item in newOrder) {
       if (_availabilityDataProvider.availabilityModels == null) {
-        toRemove.add(item);
+        toRemove.add(item!);
       }
     }
     newOrder.removeWhere((element) => toRemove.contains(element));
-    AvailabilityModel item = newOrder.removeAt(oldIndex);
+    AvailabilityModel? item = newOrder.removeAt(oldIndex);
     newOrder.insert(newIndex, item);
-    List<String> orderedLocationNames = [];
-    for (AvailabilityModel item in newOrder) {
-      orderedLocationNames.add(item.locationName);
+    List<String?> orderedLocationNames = [];
+    for (AvailabilityModel? item in newOrder) {
+      orderedLocationNames.add(item!.locationName);
     }
     _availabilityDataProvider.reorderLocations(orderedLocationNames);
   }
 
   List<Widget> createList(BuildContext context) {
     List<Widget> list = [];
-    for (AvailabilityModel model
+    for (AvailabilityModel? model
         in _availabilityDataProvider.availabilityModels) {
       if (model != null) {
         list.add(ListTile(
           key: Key(model.locationId.toString()),
           title: Text(
-            model.locationName,
+            model.locationName!,
           ),
           leading: Icon(
             Icons.reorder,
           ),
           trailing: Switch(
             value: Provider.of<AvailabilityDataProvider>(context)
-                .locationViewState[model.locationName],
+                .locationViewState[model.locationName]!,
             activeColor: Theme.of(context).buttonColor,
             onChanged: (_) {
               _availabilityDataProvider.toggleLocation(model.locationName);

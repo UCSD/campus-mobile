@@ -1,3 +1,5 @@
+
+
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/scanner.dart';
 import 'package:campus_mobile_experimental/core/providers/scanner_message.dart';
@@ -10,8 +12,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 class ScanditScanner extends StatelessWidget {
-  ScannerDataProvider _scannerDataProvider;
-  UserDataProvider _userDataProvider;
+  late ScannerDataProvider _scannerDataProvider;
+  late UserDataProvider _userDataProvider;
   set userDataProvider(UserDataProvider value) => _userDataProvider = value;
   bool hasUpdatedLatestScan = false;
 
@@ -30,7 +32,7 @@ class ScanditScanner extends StatelessWidget {
           title: const Text("Scanner"),
         ),
       ),
-      body: !_scannerDataProvider.hasScanned
+      body: !_scannerDataProvider.hasScanned!
           ? renderScanner(context)
           : renderSubmissionView(context),
       floatingActionButton: IconButton(
@@ -51,7 +53,7 @@ class ScanditScanner extends StatelessWidget {
               symbologies: [Symbology.CODE128, Symbology.DATA_MATRIX],
               onScanditCreated: (controller) =>
                   _scannerDataProvider.controller = controller,
-              licenseKey: _scannerDataProvider.licenseKey),
+              licenseKey: _scannerDataProvider.licenseKey!),
           Center(
             child: Container(
                 width: MediaQuery.of(context).size.width * 0.9,
@@ -61,7 +63,7 @@ class ScanditScanner extends StatelessWidget {
                   border: Border.all(color: Colors.white),
                 )),
           ),
-          Center(child: Text(_scannerDataProvider.message)),
+          Center(child: Text(_scannerDataProvider.message!)),
         ],
       ));
     } else {
@@ -88,9 +90,9 @@ class ScanditScanner extends StatelessWidget {
           ),
         ],
       ));
-    } else if (_scannerDataProvider.successfulSubmission) {
+    } else if (_scannerDataProvider.successfulSubmission!) {
       return (renderSuccessScreen(context));
-    } else if (_scannerDataProvider.didError) {
+    } else if (_scannerDataProvider.didError!) {
       return (renderFailureScreen(context));
     } else {
       return (renderFailureScreen(context));
@@ -106,8 +108,8 @@ class ScanditScanner extends StatelessWidget {
             child: (Column(children: <Widget>[
               ClipOval(
                 child: Container(
-                  color: (!_scannerDataProvider.isValidBarcode ||
-                          _scannerDataProvider.isDuplicate)
+                  color: (!_scannerDataProvider.isValidBarcode! ||
+                          _scannerDataProvider.isDuplicate!)
                       ? Colors.orange
                       : Colors.red,
                   height: 75,
@@ -177,7 +179,7 @@ class ScanditScanner extends StatelessWidget {
               ),
               Text("Scan sent at: " + scanTime,
                   style: TextStyle(color: Theme.of(context).iconTheme.color)),
-              Text("Scanned value: " + _scannerDataProvider.barcode,
+              Text("Scanned value: " + _scannerDataProvider.barcode!,
                   style: TextStyle(color: Theme.of(context).iconTheme.color)),
             ])),
           ),
@@ -222,10 +224,10 @@ class ScanditScanner extends StatelessWidget {
   }
 
   Text buildChartText(BuildContext context) {
-    if (_userDataProvider.userProfileModel.classifications?.student ?? false) {
+    if (_userDataProvider.userProfileModel!.classifications?.student ?? false) {
       return Text(String.fromCharCode(0x2022) +
           " You can view your results by logging in to MyStudentChart.");
-    } else if (_userDataProvider.userProfileModel.classifications?.staff ??
+    } else if (_userDataProvider.userProfileModel!.classifications?.staff ??
         false) {
       return Text(String.fromCharCode(0x2022) +
           " You can view your results by logging in to MyUCSDChart.");
@@ -236,7 +238,7 @@ class ScanditScanner extends StatelessWidget {
   }
 
   void updateLatestScan(BuildContext context) {
-    if (_scannerDataProvider.successfulSubmission && !hasUpdatedLatestScan) {
+    if (_scannerDataProvider.successfulSubmission! && !hasUpdatedLatestScan) {
       // to fetch the most recent scan and display timestamp to user to confirm success
       print("updating");
       Provider.of<ScannerMessageDataProvider>(context, listen: false)

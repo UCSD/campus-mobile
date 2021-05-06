@@ -1,3 +1,5 @@
+
+
 import 'dart:io';
 
 import 'package:campus_mobile_experimental/app_networking.dart';
@@ -33,9 +35,9 @@ class SpeedTestService {
   Connectivity _connectivity = Connectivity();
   final NetworkHelper _networkHelper = NetworkHelper();
 
-  SpeedTestModel _speedTestModel;
+  SpeedTestModel? _speedTestModel;
   bool _isLoading = false;
-  String _error;
+  String? _error;
   final Map<String, String> header = {
     "accept": "application/json",
   };
@@ -46,17 +48,17 @@ class SpeedTestService {
     try {
       await getNewToken();
       // Get download & upload urls
-      String _downloadResponse = await _networkHelper.authorizedFetch(
+      String? _downloadResponse = await (_networkHelper.authorizedFetch(
           "https://api-qa.ucsd.edu:8243/wifi_test/v1.0.0/generateDownloadUrl",
-          header);
-      String _uploadResponse = await _networkHelper.authorizedFetch(
+          header) as FutureOr<String?>);
+      String? _uploadResponse = await (_networkHelper.authorizedFetch(
           "https://api-qa.ucsd.edu:8243/wifi_test/v1.0.0/generateUploadUrl?name=temp.html",
-          header);
+          header) as FutureOr<String?>);
 
       /// parse data
-      await fetchNetworkDiagnostics().then((WifiInfo data) {
+      await fetchNetworkDiagnostics().then((WifiInfo? data) {
         _speedTestModel = speedTestModelFromJson(
-            data, _downloadResponse, _uploadResponse, data != null);
+            data, _downloadResponse!, _uploadResponse!, data != null);
       });
       _isLoading = false;
       return true;
@@ -69,17 +71,17 @@ class SpeedTestService {
     }
   }
 
-  Future<WifiInfo> fetchNetworkDiagnostics() async {
+  Future<WifiInfo?> fetchNetworkDiagnostics() async {
     // Check connected to wifi
     if (await _connectivity.checkConnectivity() != ConnectivityResult.wifi) {
       return null;
     }
-    bool isUCSDWIFI;
+    late bool isUCSDWIFI;
     // Check for UCSD wifi
     WifiInfo wiFiInfo = await WifiConnection.wifiInfo.then((value) {
-      if ((!value.ssid.contains("UCSD-PROTECTED")) &&
-          (!value.ssid.contains("UCSD-GUEST")) &&
-          (!value.ssid.contains("ResNet"))) {
+      if ((!value.ssid!.contains("UCSD-PROTECTED")) &&
+          (!value.ssid!.contains("UCSD-GUEST")) &&
+          (!value.ssid!.contains("ResNet"))) {
         isUCSDWIFI = false;
         return null;
       }
@@ -96,9 +98,9 @@ class SpeedTestService {
 
   bool get isLoading => _isLoading;
 
-  String get error => _error;
+  String? get error => _error;
 
-  SpeedTestModel get speedTestModel => _speedTestModel;
+  SpeedTestModel? get speedTestModel => _speedTestModel;
 
   Future<bool> getNewToken() async {
     final String tokenEndpoint = "https://api-qa.ucsd.edu:8243/token";

@@ -1,3 +1,5 @@
+
+
 import 'dart:io';
 
 import 'package:app_settings/app_settings.dart';
@@ -19,8 +21,8 @@ class AdvancedWayfindingPermission extends StatefulWidget {
 
 class _AdvancedWayfindingPermissionState
     extends State<AdvancedWayfindingPermission> {
-  AdvancedWayfindingSingleton _bluetoothSingleton;
-  SharedPreferences pref;
+  AdvancedWayfindingSingleton? _bluetoothSingleton;
+  SharedPreferences? pref;
 
   @override
   Widget build(BuildContext context) {
@@ -123,13 +125,13 @@ class _AdvancedWayfindingPermissionState
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return Switch(
-                value: bluetoothStarted(context, snapshot),
+                value: bluetoothStarted(context, snapshot)!,
                 onChanged: (permissionGranted) {
                   startBluetooth(context, permissionGranted);
                   bool forceOff = false;
-                  if (((snapshot.data as BluetoothState ==
+                  if (((snapshot.data as BluetoothState? ==
                               BluetoothState.unauthorized) ||
-                          (snapshot.data as BluetoothState ==
+                          (snapshot.data as BluetoothState? ==
                               BluetoothState.off)) &&
                       permissionGranted) {
                     forceOff = true;
@@ -183,18 +185,18 @@ class _AdvancedWayfindingPermissionState
                   }
                   setState(() {
                     if (forceOff) {
-                      _bluetoothSingleton.advancedWayfindingEnabled = false;
+                      _bluetoothSingleton!.advancedWayfindingEnabled = false;
                     } else {
-                      _bluetoothSingleton.advancedWayfindingEnabled =
-                          !_bluetoothSingleton.advancedWayfindingEnabled;
+                      _bluetoothSingleton!.advancedWayfindingEnabled =
+                          !_bluetoothSingleton!.advancedWayfindingEnabled!;
                     }
 
-                    if (!_bluetoothSingleton.advancedWayfindingEnabled) {
-                      _bluetoothSingleton.stopScans();
+                    if (!_bluetoothSingleton!.advancedWayfindingEnabled!) {
+                      _bluetoothSingleton!.stopScans();
                     }
                     SharedPreferences.getInstance().then((value) {
                       value.setBool("advancedWayfindingEnabled",
-                          _bluetoothSingleton.advancedWayfindingEnabled);
+                          _bluetoothSingleton!.advancedWayfindingEnabled!);
                     });
                   });
                 },
@@ -209,23 +211,23 @@ class _AdvancedWayfindingPermissionState
     );
   }
 
-  bool bluetoothStarted(BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+  bool? bluetoothStarted(BuildContext context, AsyncSnapshot<dynamic> snapshot) {
     _bluetoothSingleton = AdvancedWayfindingSingleton();
 
-    if ((snapshot.data as BluetoothState == BluetoothState.unauthorized ||
-            snapshot.data as BluetoothState == BluetoothState.off) ||
+    if ((snapshot.data as BluetoothState? == BluetoothState.unauthorized ||
+            snapshot.data as BluetoothState? == BluetoothState.off) ||
         (_bluetoothSingleton != null &&
-            !_bluetoothSingleton.advancedWayfindingEnabled)) {
-      _bluetoothSingleton.advancedWayfindingEnabled = false;
+            !_bluetoothSingleton!.advancedWayfindingEnabled!)) {
+      _bluetoothSingleton!.advancedWayfindingEnabled = false;
     }
-    return _bluetoothSingleton.advancedWayfindingEnabled;
+    return _bluetoothSingleton!.advancedWayfindingEnabled;
   }
 
   void checkToResumeBluetooth(BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     if (prefs.containsKey("advancedWayfindingEnabled") &&
-        prefs.getBool('advancedWayfindingEnabled')) {
+        prefs.getBool('advancedWayfindingEnabled')!) {
       AdvancedWayfindingSingleton bluetoothSingleton =
           AdvancedWayfindingSingleton();
       if (bluetoothSingleton.firstInstance) {
@@ -241,13 +243,13 @@ class _AdvancedWayfindingPermissionState
 
   void startBluetooth(BuildContext context, bool permissionGranted) async {
     _bluetoothSingleton = AdvancedWayfindingSingleton();
-    if (_bluetoothSingleton.userDataProvider == null) {
-      _bluetoothSingleton.userDataProvider =
+    if (_bluetoothSingleton!.userDataProvider == null) {
+      _bluetoothSingleton!.userDataProvider =
           Provider.of<UserDataProvider>(context, listen: false);
     }
     if (permissionGranted) {
       // Future.delayed(Duration(seconds: 5), ()  => bluetoothInstance.getOffloadAuthorization(context));
-      await _bluetoothSingleton.init();
+      await _bluetoothSingleton!.init();
     }
   }
 }

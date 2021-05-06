@@ -1,3 +1,5 @@
+
+
 import 'dart:math' as Math;
 
 import 'package:campus_mobile_experimental/core/models/shuttle_arrival.dart';
@@ -18,20 +20,20 @@ class ShuttleDataProvider extends ChangeNotifier {
     init();
   }
 
-  bool _isLoading;
-  String _error;
-  UserDataProvider userDataProvider;
-  ShuttleService _shuttleService;
-  Location location;
-  ShuttleStopModel _closestStop;
-  double userLat;
-  double userLong;
-  double stopLat;
-  double stopLong;
+  bool? _isLoading;
+  String? _error;
+  UserDataProvider? userDataProvider;
+  late ShuttleService _shuttleService;
+  late Location location;
+  ShuttleStopModel? _closestStop;
+  double? userLat;
+  double? userLong;
+  double? stopLat;
+  double? stopLong;
   double closestDistance = 10000000;
-  Map<int, ShuttleStopModel> fetchedStops;
-  Map<int, List<ArrivingShuttle>> arrivalsToRender;
-  LocationDataProvider _locationDataProvider;
+  Map<int?, ShuttleStopModel>? fetchedStops;
+  Map<int?, List<ArrivingShuttle>>? arrivalsToRender;
+  late LocationDataProvider _locationDataProvider;
 
   init() {
     _locationDataProvider = LocationDataProvider();
@@ -42,16 +44,16 @@ class ShuttleDataProvider extends ChangeNotifier {
       userLong = event.lon;
     });
 
-    arrivalsToRender = Map<int, List<ArrivingShuttle>>();
+    arrivalsToRender = Map<int?, List<ArrivingShuttle>>();
   }
 
-  void fetchStops({bool reloading}) async {
+  void fetchStops({bool? reloading}) async {
     _isLoading = true;
     _error = null;
     notifyListeners();
 
     // create new map of shuttles/stops to display
-    Map<int, ShuttleStopModel> newMapOfStops = Map<int, ShuttleStopModel>();
+    Map<int?, ShuttleStopModel> newMapOfStops = Map<int?, ShuttleStopModel>();
     if (await _shuttleService.fetchData()) {
       for (ShuttleStopModel model in _shuttleService.data) {
         newMapOfStops[model.id] = model;
@@ -59,8 +61,8 @@ class ShuttleDataProvider extends ChangeNotifier {
       fetchedStops = newMapOfStops;
 
       /// if the user is logged in we want to sync the order of parking lots amongst all devices
-      if (userDataProvider != null && !reloading) {
-        reorderStops(userDataProvider.userProfileModel.selectedStops);
+      if (userDataProvider != null && !reloading!) {
+        reorderStops(userDataProvider!.userProfileModel!.selectedStops);
       }
 
       // get closest stop to current user
@@ -72,55 +74,55 @@ class ShuttleDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<ShuttleStopModel> makeOrderedList(List<int> order) {
+  List<ShuttleStopModel?> makeOrderedList(List<int?>? order) {
     if (order == null) {
       return [];
     }
 
     ///create an empty list that will be returned
-    List<ShuttleStopModel> orderedListOfStops = [];
+    List<ShuttleStopModel?> orderedListOfStops = [];
 
     /// remove lots as we add them to the ordered list
-    for (int stopID in order) {
-      orderedListOfStops.add(fetchedStops[stopID]);
+    for (int? stopID in order) {
+      orderedListOfStops.add(fetchedStops![stopID]);
     }
     return orderedListOfStops;
   }
 
-  void reorderStops(List<int> order) {
+  void reorderStops(List<int?>? order) {
     /// update userProfileModel with selectedStops
-    userDataProvider.userProfileModel.selectedStops = order;
-    if (userDataProvider.isLoggedIn) {
+    userDataProvider!.userProfileModel!.selectedStops = order;
+    if (userDataProvider!.isLoggedIn) {
       /// post updated userProfileModel for logged-in users
-      userDataProvider.postUserProfile(userDataProvider.userProfileModel);
+      userDataProvider!.postUserProfile(userDataProvider!.userProfileModel);
     }
     notifyListeners();
   }
 
-  Future<void> addStop(int stopID) async {
-    if (!userDataProvider.userProfileModel.selectedStops.contains(stopID)) {
-      userDataProvider.userProfileModel.selectedStops.add(stopID);
+  Future<void> addStop(int? stopID) async {
+    if (!userDataProvider!.userProfileModel!.selectedStops!.contains(stopID)) {
+      userDataProvider!.userProfileModel!.selectedStops!.add(stopID);
       // update userprofilemodel locally and in database after a stop is added
-      userDataProvider.postUserProfile(userDataProvider.userProfileModel);
-      arrivalsToRender[stopID] = await fetchArrivalInformation(stopID);
+      userDataProvider!.postUserProfile(userDataProvider!.userProfileModel);
+      arrivalsToRender![stopID] = await fetchArrivalInformation(stopID);
     }
     notifyListeners();
   }
 
-  Future<void> removeStop(int stopID) async {
-    if (userDataProvider.userProfileModel.selectedStops.contains(stopID)) {
-      userDataProvider.userProfileModel.selectedStops.remove(stopID);
+  Future<void> removeStop(int? stopID) async {
+    if (userDataProvider!.userProfileModel!.selectedStops!.contains(stopID)) {
+      userDataProvider!.userProfileModel!.selectedStops!.remove(stopID);
       // update userprofilemodel locally and in database after a stop is removed
-      userDataProvider.postUserProfile(userDataProvider.userProfileModel);
+      userDataProvider!.postUserProfile(userDataProvider!.userProfileModel);
     }
     notifyListeners();
   }
 
-  Future<List<ArrivingShuttle>> fetchArrivalInformation(int stopID) async {
+  Future<List<ArrivingShuttle>> fetchArrivalInformation(int? stopID) async {
     List<ArrivingShuttle> output =
         await _shuttleService.getArrivingInformation(stopID);
 
-    output.sort((a, b) => a.secondsToArrival.compareTo(b.secondsToArrival));
+    output.sort((a, b) => a.secondsToArrival!.compareTo(b.secondsToArrival!));
     return output;
   }
 
@@ -146,11 +148,11 @@ class ShuttleDataProvider extends ChangeNotifier {
 
   double getHaversineDistance(lat1, lon1, lat2, lon2) {
     var R = 6371; // Radius of the earth in km
-    var dLat = deg2rad(lat2 - lat1); // deg2rad below
-    var dLon = deg2rad(lon2 - lon1);
+    var dLat = deg2rad(lat2 - lat1)!; // deg2rad below
+    var dLon = deg2rad(lon2 - lon1)!;
     var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos(deg2rad(lat1)) *
-            Math.cos(deg2rad(lat2)) *
+        Math.cos(deg2rad(lat1)!) *
+            Math.cos(deg2rad(lat2)!) *
             Math.sin(dLon / 2) *
             Math.sin(dLon / 2);
     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
@@ -158,7 +160,7 @@ class ShuttleDataProvider extends ChangeNotifier {
     return d;
   }
 
-  double deg2rad(deg) {
+  double? deg2rad(deg) {
     return deg * (Math.pi / 180);
   }
 
@@ -188,32 +190,32 @@ class ShuttleDataProvider extends ChangeNotifier {
     }
   }
 
-  bool get isLoading => _isLoading;
-  String get error => _error;
+  bool? get isLoading => _isLoading;
+  String? get error => _error;
 
-  ShuttleStopModel get closestStop => _closestStop;
+  ShuttleStopModel? get closestStop => _closestStop;
 
-  List<ShuttleStopModel> get stopsToRender {
+  List<ShuttleStopModel?> get stopsToRender {
     if (fetchedStops != null) {
-      if (userDataProvider.userProfileModel != null)
-        return makeOrderedList(userDataProvider.userProfileModel.selectedStops);
+      if (userDataProvider!.userProfileModel != null)
+        return makeOrderedList(userDataProvider!.userProfileModel!.selectedStops);
     }
     return [];
   }
 
   Map<int, ShuttleStopModel> get stopsNotSelected {
-    var output = new Map<int, ShuttleStopModel>.from(fetchedStops);
-    for (ShuttleStopModel stop in stopsToRender) {
-      output.remove(stop.id);
+    var output = new Map<int, ShuttleStopModel>.from(fetchedStops!);
+    for (ShuttleStopModel? stop in stopsToRender) {
+      output.remove(stop!.id);
     }
     return output;
   }
 
   Future<void> getArrivalInformation() async {
-    arrivalsToRender[closestStop.id] =
-        await fetchArrivalInformation(closestStop.id);
-    for (ShuttleStopModel stop in stopsToRender) {
-      arrivalsToRender[stop.id] = await fetchArrivalInformation(stop.id);
+    arrivalsToRender![closestStop!.id] =
+        await fetchArrivalInformation(closestStop!.id);
+    for (ShuttleStopModel? stop in stopsToRender) {
+      arrivalsToRender![stop!.id] = await fetchArrivalInformation(stop.id);
     }
   }
 }

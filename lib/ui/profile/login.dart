@@ -1,3 +1,5 @@
+
+
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +14,7 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   final _emailTextFieldController = TextEditingController();
   final _passwordTextFieldController = TextEditingController();
-  UserDataProvider _userDataProvider;
+  late UserDataProvider _userDataProvider;
   bool _passwordObscured = true;
 
   @override
@@ -24,7 +26,7 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    if (!_userDataProvider.isLoading) {
+    if (!_userDataProvider.isLoading!) {
       if (_userDataProvider.isLoggedIn) {
         return buildLoggedInWidget(context);
       } else {
@@ -64,8 +66,8 @@ class _LoginState extends State<Login> {
         color: Colors.green,
       ),
       title: Text(
-        _userDataProvider.userProfileModel.username != null
-            ? _userDataProvider.userProfileModel.username
+        _userDataProvider.userProfileModel!.username != null
+            ? _userDataProvider.userProfileModel!.username!
             : "",
         style: TextStyle(fontSize: 17),
       ),
@@ -124,7 +126,7 @@ class _LoginState extends State<Login> {
                       'Sign In',
                       style: TextStyle(fontSize: 17),
                     ),
-                    onPressed: _userDataProvider.isLoading
+                    onPressed: _userDataProvider.isLoading!
                         ? null
                         : () {
                             _userDataProvider
@@ -139,7 +141,7 @@ class _LoginState extends State<Login> {
                     style: TextButton.styleFrom(
                       backgroundColor: Theme.of(context).buttonColor,
                       textStyle: TextStyle(
-                        color: Theme.of(context).textTheme.button.color,
+                        color: Theme.of(context).textTheme.button!.color,
                       ),
                     ),
                   ),

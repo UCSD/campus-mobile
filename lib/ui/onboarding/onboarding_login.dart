@@ -1,3 +1,5 @@
+
+
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
@@ -14,7 +16,7 @@ class OnboardingLogin extends StatefulWidget {
 class _OnboardingLoginState extends State<OnboardingLogin> {
   final _emailTextFieldController = TextEditingController();
   final _passwordTextFieldController = TextEditingController();
-  UserDataProvider _userDataProvider;
+  late UserDataProvider _userDataProvider;
   bool _passwordObscured = true;
 
   @override
@@ -31,7 +33,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
         elevation: 0.0,
       ),
       backgroundColor: lightPrimaryColor, // ColorPrimary, //Colors.white,
-      body: _userDataProvider.isLoading
+      body: _userDataProvider.isLoading!
           ? Center(
               child: CircularProgressIndicator(
                 valueColor: new AlwaysStoppedAnimation<Color>(lightAccentColor),
@@ -159,7 +161,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                             decoration: TextDecoration.underline,
                           ),
                         ),
-                        onPressed: _userDataProvider.isLoading
+                        onPressed: _userDataProvider.isLoading!
                             ? null
                             : () {
                                 _userDataProvider

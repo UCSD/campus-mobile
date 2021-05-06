@@ -1,3 +1,5 @@
+
+
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
 import 'package:campus_mobile_experimental/core/providers/scanner.dart';
@@ -87,9 +89,9 @@ class NativeScannerCard extends StatelessWidget {
 
   Widget getMessageWidget(BuildContext context) {
     if (Provider.of<UserDataProvider>(context, listen: false).isLoggedIn) {
-      String myRecentScanTime =
+      String? myRecentScanTime =
           Provider.of<ScannerMessageDataProvider>(context, listen: false)
-              .scannerMessageModel
+              .scannerMessageModel!
               .collectionTime;
       if (myRecentScanTime == "") {
         myRecentScanTime = ScannerConstants.noRecentScan;
@@ -105,7 +107,7 @@ class NativeScannerCard extends StatelessWidget {
               TextSpan(
                   text: Provider.of<ScannerMessageDataProvider>(context,
                           listen: false)
-                      .scannerMessageModel
+                      .scannerMessageModel!
                       .collectionTime,
                   style: TextStyle(fontWeight: FontWeight.w600)),
             ],

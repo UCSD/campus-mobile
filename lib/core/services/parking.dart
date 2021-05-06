@@ -1,3 +1,5 @@
+
+
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/parking.dart';
 
@@ -6,9 +8,9 @@ class ParkingService {
     fetchParkingLotData();
   }
   bool _isLoading = false;
-  List<ParkingModel> _data;
-  DateTime _lastUpdated;
-  String _error;
+  List<ParkingModel>? _data;
+  DateTime? _lastUpdated;
+  String? _error;
   final NetworkHelper _networkHelper = NetworkHelper();
   final Map<String, String> headers = {
     "accept": "application/json",
@@ -22,7 +24,7 @@ class ParkingService {
     _isLoading = true;
     try {
       /// fetch data
-      String _response = await _networkHelper.fetchData(endpoint);
+      String _response = await (_networkHelper.fetchData(endpoint) as FutureOr<String>);
 
       /// parse data
       _data = parkingModelFromJson(_response);
@@ -35,8 +37,8 @@ class ParkingService {
     }
   }
 
-  List<ParkingModel> get data => _data;
+  List<ParkingModel>? get data => _data;
   bool get isLoading => _isLoading;
-  String get error => _error;
-  DateTime get lastUpdated => _lastUpdated;
+  String? get error => _error;
+  DateTime? get lastUpdated => _lastUpdated;
 }

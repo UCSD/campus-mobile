@@ -1,3 +1,5 @@
+
+
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/dining.dart';
 import 'package:campus_mobile_experimental/core/providers/dining.dart';
@@ -9,11 +11,11 @@ import 'package:url_launcher/url_launcher.dart';
 
 class DiningList extends StatelessWidget {
   const DiningList({
-    Key key,
+    Key? key,
     this.listSize,
   }) : super(key: key);
 
-  final int listSize;
+  final int? listSize;
 
   @override
   Widget build(BuildContext context) {
@@ -57,49 +59,49 @@ class DiningList extends StatelessWidget {
           );
   }
 
-  Widget getHoursForToday(RegularHours hours) {
+  Widget getHoursForToday(RegularHours? hours) {
     int weekday = DateTime.now().weekday;
-    String dayHours;
+    String? dayHours;
 
     switch (weekday) {
       case 1:
-        if (hours.mon != null)
+        if (hours!.mon != null)
           dayHours = hours.mon;
         else
           return Text('Closed');
         break;
       case 2:
-        if (hours.tue != null)
+        if (hours!.tue != null)
           dayHours = hours.tue;
         else
           return Text('Closed');
         break;
       case 3:
-        if (hours.wed != null)
+        if (hours!.wed != null)
           dayHours = hours.wed;
         else
           return Text('Closed');
         break;
       case 4:
-        if (hours.thu != null)
+        if (hours!.thu != null)
           dayHours = hours.thu;
         else
           return Text('Closed');
         break;
       case 5:
-        if (hours.fri != null)
+        if (hours!.fri != null)
           dayHours = hours.fri;
         else
           return Text('Closed');
         break;
       case 6:
-        if (hours.sat != null)
+        if (hours!.sat != null)
           dayHours = hours.sat;
         else
           return Text('Closed');
         break;
       case 7:
-        if (hours.sun != null)
+        if (hours!.sun != null)
           dayHours = hours.sun;
         else
           return Text('Closed');
@@ -108,7 +110,7 @@ class DiningList extends StatelessWidget {
         return Text('Closed');
         break;
     }
-    if (RegExp(r"\b[0-9]{2}").allMatches(dayHours).length != 2) {
+    if (RegExp(r"\b[0-9]{2}").allMatches(dayHours!).length != 2) {
       if (dayHours == 'Closed-Closed') {
         return Text('Closed');
       } else {
@@ -133,13 +135,13 @@ class DiningList extends StatelessWidget {
       onTap: () {
         if (data.id != null) {
           Provider.of<DiningDataProvider>(context, listen: false)
-              .fetchDiningMenu(data.id);
+              .fetchDiningMenu(data.id!);
         }
         Navigator.pushNamed(context, RoutePaths.DiningDetailView,
             arguments: data);
       },
       title: Text(
-        data.name,
+        data.name!,
         textAlign: TextAlign.start,
         //overflow: TextOverflow.ellipsis,
         style: TextStyle(fontSize: 18),
@@ -154,7 +156,7 @@ class DiningList extends StatelessWidget {
       onPressed: () {
         try {
           launch(
-              'https://www.google.com/maps/dir/?api=1&travelmode=walking&destination=${data.coordinates.lat},${data.coordinates.lon}',
+              'https://www.google.com/maps/dir/?api=1&travelmode=walking&destination=${data.coordinates!.lat},${data.coordinates!.lon}',
               forceSafariVC: true);
         } catch (e) {
           // an error occurred, do nothing
@@ -170,7 +172,7 @@ class DiningList extends StatelessWidget {
           Expanded(
             child: Text(
               data.distance != null
-                  ? (num.parse(data.distance.toStringAsFixed(1)).toString() +
+                  ? (num.parse(data.distance!.toStringAsFixed(1)).toString() +
                       ' mi')
                   : '--',
             ),

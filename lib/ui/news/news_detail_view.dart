@@ -1,3 +1,5 @@
+
+
 import 'package:campus_mobile_experimental/core/models/news.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:campus_mobile_experimental/ui/common/image_loader.dart';
@@ -7,7 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class NewsDetailView extends StatelessWidget {
-  const NewsDetailView({Key key, @required this.data}) : super(key: key);
+  const NewsDetailView({Key? key, required this.data}) : super(key: key);
   final Item data;
   @override
   Widget build(BuildContext context) {
@@ -28,14 +30,14 @@ class NewsDetailView extends StatelessWidget {
         ),
       ),
       Text(
-        data.title,
+        data.title!,
         style: TextStyle(
           fontSize: 26,
         ),
       ),
       SizedBox(height: 4),
       Text(
-        DateFormat.yMMMMd().format(data.date),
+        DateFormat.yMMMMd().format(data.date!),
         style: TextStyle(fontSize: 16),
       ),
       SizedBox(height: 20),
@@ -52,9 +54,9 @@ class NewsDetailView extends StatelessWidget {
 }
 
 class ContinueReadingButton extends StatelessWidget {
-  final String link;
+  final String? link;
 
-  const ContinueReadingButton({Key key, this.link}) : super(key: key);
+  const ContinueReadingButton({Key? key, this.link}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -67,7 +69,7 @@ class ContinueReadingButton extends StatelessWidget {
           ),
           onPressed: () async {
             try {
-              await launch(link, forceSafariVC: true);
+              await launch(link!, forceSafariVC: true);
             } catch (e) {
               Scaffold.of(context).showSnackBar(SnackBar(
                 content: Text('Could not open.'),
@@ -77,7 +79,7 @@ class ContinueReadingButton extends StatelessWidget {
           child: Text(
             'Continue Reading',
             style: TextStyle(
-                fontSize: 18, color: Theme.of(context).textTheme.button.color),
+                fontSize: 18, color: Theme.of(context).textTheme.button!.color),
           ),
         ),
       ),

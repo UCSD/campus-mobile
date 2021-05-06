@@ -1,3 +1,5 @@
+
+
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/events.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
@@ -10,11 +12,11 @@ import 'package:provider/provider.dart';
 const String cardId = 'events';
 
 class EventsCard extends StatelessWidget {
-  Widget buildEventsCard(List<EventModel> data) {
+  Widget buildEventsCard(List<EventModel>? data) {
     return EventsList(listSize: 3);
   }
 
-  List<Widget> buildActionButtons(BuildContext context, List<EventModel> data) {
+  List<Widget> buildActionButtons(BuildContext context, List<EventModel>? data) {
     List<Widget> actionButtons = [];
     actionButtons.add(TextButton(
       child: Text(
@@ -30,7 +32,7 @@ class EventsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
-      active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
+      active: Provider.of<CardsDataProvider>(context).cardStates![cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       reload: () =>

@@ -1,12 +1,14 @@
+
+
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/cards.dart';
 
 class CardsService {
   bool _isLoading = false;
-  DateTime _lastUpdated;
-  String _error;
+  DateTime? _lastUpdated;
+  String? _error;
 
-  Map<String, CardsModel> _cardsModel;
+  Map<String, CardsModel>? _cardsModel;
 
   final NetworkHelper _networkHelper = NetworkHelper();
   final Map<String, String> headers = {
@@ -23,7 +25,7 @@ class CardsService {
           "https://api-qa.ucsd.edu:8243/defaultcards/v6.0.0/defaultcards?ucsdaffiliation=" +
               ucsdAffiliation;
       String _response =
-          await _networkHelper.authorizedFetch(cardListEndpoint, headers);
+          await (_networkHelper.authorizedFetch(cardListEndpoint, headers) as FutureOr<String>);
       _cardsModel = cardsModelFromJson(_response);
       _isLoading = false;
       return true;
@@ -72,8 +74,8 @@ class CardsService {
     }
   }
 
-  String get error => _error;
-  Map<String, CardsModel> get cardsModel => _cardsModel;
+  String? get error => _error;
+  Map<String, CardsModel>? get cardsModel => _cardsModel;
   bool get isLoading => _isLoading;
-  DateTime get lastUpdated => _lastUpdated;
+  DateTime? get lastUpdated => _lastUpdated;
 }

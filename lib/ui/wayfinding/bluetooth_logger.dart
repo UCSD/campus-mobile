@@ -1,3 +1,5 @@
+
+
 import 'dart:async';
 
 import 'package:campus_mobile_experimental/core/providers/wayfinding.dart';
@@ -17,8 +19,8 @@ class AutomaticBluetoothLoggerView extends StatefulWidget {
 class _AutomaticBluetoothLoggerViewState
     extends State<AutomaticBluetoothLoggerView> {
   // Instances of the singleton and its listener
-  AdvancedWayfindingSingleton bluetoothSingleton;
-  StreamSubscription subscription;
+  late AdvancedWayfindingSingleton bluetoothSingleton;
+  late StreamSubscription subscription;
 
   // List for rendering the ongoing log
   List loggedItems = [];

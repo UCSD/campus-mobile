@@ -1,3 +1,5 @@
+
+
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/student_id_barcode.dart';
 import 'package:campus_mobile_experimental/core/models/student_id_name.dart';
@@ -11,8 +13,8 @@ class StudentIdService {
       'https://api-qa.ucsd.edu:8243/student/my/student_contact_info/v1';
 
   bool _isLoading = false;
-  DateTime _lastUpdated;
-  String _error;
+  DateTime? _lastUpdated;
+  String? _error;
   StudentIdBarcodeModel _studentIdBarcodeModel = StudentIdBarcodeModel();
   StudentIdNameModel _studentIdNameModel = StudentIdNameModel();
   StudentIdPhotoModel _studentIdPhotoModel = StudentIdPhotoModel();
@@ -26,8 +28,8 @@ class StudentIdService {
     _isLoading = true;
     try {
       /// fetch data
-      String _response = await _networkHelper.authorizedFetch(
-          myStudentContactApiUrl + '/barcode', headers);
+      String _response = await (_networkHelper.authorizedFetch(
+          myStudentContactApiUrl + '/barcode', headers) as FutureOr<String>);
 
       /// parse data
       _studentIdBarcodeModel = studentIdBarcodeModelFromJson(_response);
@@ -46,8 +48,8 @@ class StudentIdService {
     _isLoading = true;
     try {
       /// fetch data
-      String _response = await _networkHelper.authorizedFetch(
-          myStudentContactApiUrl + '/display_name', headers);
+      String _response = await (_networkHelper.authorizedFetch(
+          myStudentContactApiUrl + '/display_name', headers) as FutureOr<String>);
 
       /// parse data
       _studentIdNameModel = studentIdNameModelFromJson(_response);
@@ -66,8 +68,8 @@ class StudentIdService {
     _isLoading = true;
     try {
       /// fetch data
-      String _response = await _networkHelper.authorizedFetch(
-          myStudentContactApiUrl + '/photo', headers);
+      String _response = await (_networkHelper.authorizedFetch(
+          myStudentContactApiUrl + '/photo', headers) as FutureOr<String>);
 
       /// parse data
       _studentIdPhotoModel = studentIdPhotoModelFromJson(_response);
@@ -86,8 +88,8 @@ class StudentIdService {
     _isLoading = true;
     try {
       /// fetch data
-      String _response = await _networkHelper.authorizedFetch(
-          myStudentProfileApiUrl + '/profile', headers);
+      String _response = await (_networkHelper.authorizedFetch(
+          myStudentProfileApiUrl + '/profile', headers) as FutureOr<String>);
 
       _studentIdProfileModel = studentIdProfileModelFromJson(_response);
       _isLoading = false;
@@ -99,11 +101,11 @@ class StudentIdService {
     }
   }
 
-  String get error => _error;
+  String? get error => _error;
   StudentIdBarcodeModel get studentIdBarcodeModel => _studentIdBarcodeModel;
   StudentIdNameModel get studentIdNameModel => _studentIdNameModel;
   StudentIdPhotoModel get studentIdPhotoModel => _studentIdPhotoModel;
   StudentIdProfileModel get studentIdProfileModel => _studentIdProfileModel;
   bool get isLoading => _isLoading;
-  DateTime get lastUpdated => _lastUpdated;
+  DateTime? get lastUpdated => _lastUpdated;
 }

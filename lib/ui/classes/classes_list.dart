@@ -1,3 +1,5 @@
+
+
 import 'package:campus_mobile_experimental/core/models/classes.dart';
 import 'package:campus_mobile_experimental/core/providers/classes.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
@@ -17,15 +19,15 @@ class ClassList extends StatelessWidget {
   Widget buildSchedule(BuildContext context) {
     List<Widget> list = [];
     Provider.of<ClassScheduleDataProvider>(context)
-        .enrolledClasses
-        .addAll(Provider.of<ClassScheduleDataProvider>(context).midterms);
+        .enrolledClasses!
+        .addAll(Provider.of<ClassScheduleDataProvider>(context).midterms!);
     Provider.of<ClassScheduleDataProvider>(context)
-        .enrolledClasses
+        .enrolledClasses!
         .keys
         .forEach(
       (key) {
         if (Provider.of<ClassScheduleDataProvider>(context)
-            .enrolledClasses[key]
+            .enrolledClasses![key]!
             .isNotEmpty) {
           list.add(SliverStickyHeader(
             header: buildWeekDayHeader(context, key),
@@ -34,16 +36,16 @@ class ClassList extends StatelessWidget {
                 if (key == 'MI') {
                   return buildMidterm(
                       Provider.of<ClassScheduleDataProvider>(context)
-                          .enrolledClasses[key]
+                          .enrolledClasses![key]!
                           .elementAt(index));
                 }
                 return buildClass(
                     Provider.of<ClassScheduleDataProvider>(context)
-                        .enrolledClasses[key]
+                        .enrolledClasses![key]!
                         .elementAt(index));
               },
                   childCount: Provider.of<ClassScheduleDataProvider>(context)
-                      .enrolledClasses[key]
+                      .enrolledClasses![key]!
                       .length),
             ),
           ));
@@ -100,26 +102,26 @@ class ClassList extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    sectionData.subjectCode + ' ' + sectionData.courseCode,
+                    sectionData.subjectCode! + ' ' + sectionData.courseCode!,
                     style:
                         TextStyle(fontWeight: FontWeight.bold, fontSize: 17.0),
                   ),
                   Text(
-                    sectionData.courseTitle,
+                    sectionData.courseTitle!,
                     style: TextStyle(fontSize: 17.0),
                   ),
-                  Text(sectionData.instructorName,
+                  Text(sectionData.instructorName!,
                       style: TextStyle(fontSize: 17.0)),
                   Padding(
                     padding: const EdgeInsets.only(top: 5.0),
                     child: Row(children: [
-                      Text(sectionData.meetingType + ' '),
+                      Text(sectionData.meetingType! + ' '),
                       TimeRangeWidget(
                         time: sectionData.time,
                       )
                     ]),
                   ),
-                  Text(sectionData.building + ' ' + sectionData.room),
+                  Text(sectionData.building! + ' ' + sectionData.room!),
                   Text(sectionData.gradeOption)
                 ],
               ),
@@ -128,7 +130,7 @@ class ClassList extends StatelessWidget {
         : null;
   }
 
-  String abbrevToFullWeekday(String abbreviation) {
+  String abbrevToFullWeekday(String? abbreviation) {
     switch (abbreviation) {
       case 'MO':
         return 'Monday';
@@ -160,22 +162,22 @@ class ClassList extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    sectionData.subjectCode + ' ' + sectionData.courseCode,
+                    sectionData.subjectCode! + ' ' + sectionData.courseCode!,
                     style:
                         TextStyle(fontWeight: FontWeight.bold, fontSize: 17.0),
                   ),
                   Text(
-                    sectionData.courseTitle,
+                    sectionData.courseTitle!,
                     style: TextStyle(fontSize: 17.0),
                   ),
-                  Text(sectionData.instructorName),
-                  Text(sectionData.building + ' ' + sectionData.room),
+                  Text(sectionData.instructorName!),
+                  Text(sectionData.building! + ' ' + sectionData.room!),
                   Padding(
                     padding: const EdgeInsets.only(top: 5.0),
                     child: Row(children: [
                       Text(abbrevToFullWeekday(sectionData.days) +
                           ", " +
-                          formatDate(sectionData.date) +
+                          formatDate(sectionData.date)! +
                           ' from '),
                       TimeRangeWidget(
                         time: sectionData.time,
@@ -189,7 +191,7 @@ class ClassList extends StatelessWidget {
         : null;
   }
 
-  String formatDate(String date) {
+  String? formatDate(String? date) {
     if (date == null) {
       return null;
     }

@@ -1,3 +1,5 @@
+
+
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/availability.dart';
 import 'package:campus_mobile_experimental/core/providers/availability.dart';
@@ -17,7 +19,7 @@ class AvailabilityCard extends StatefulWidget {
 
 class _AvailabilityCardState extends State<AvailabilityCard> {
   PageController _controller = PageController();
-  AvailabilityDataProvider _availabilityDataProvider;
+  late AvailabilityDataProvider _availabilityDataProvider;
 
   @override
   void didChangeDependencies() {
@@ -28,7 +30,7 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
-      active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
+      active: Provider.of<CardsDataProvider>(context).cardStates![cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       reload: () => _availabilityDataProvider.fetchAvailability(),
@@ -41,11 +43,11 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
     );
   }
 
-  Widget buildAvailabilityCard(List<AvailabilityModel> data) {
+  Widget buildAvailabilityCard(List<AvailabilityModel?> data) {
     List<Widget> locationsList = [];
-    for (AvailabilityModel model in data) {
+    for (AvailabilityModel? model in data) {
       if (model != null) {
-        if (_availabilityDataProvider.locationViewState[model.locationName]) {
+        if (_availabilityDataProvider.locationViewState[model.locationName]!) {
           locationsList.add(AvailabilityDisplay(
             model: model,
           ));

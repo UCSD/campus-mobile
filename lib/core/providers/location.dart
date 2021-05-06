@@ -1,3 +1,5 @@
+
+
 import 'dart:async';
 
 import 'package:campus_mobile_experimental/core/models/location.dart';
@@ -6,7 +8,7 @@ import 'package:location/location.dart';
 class LocationDataProvider {
   final Location _locationService = new Location();
   bool _permission = false;
-  String error;
+  String? error;
 
   StreamController<Coordinates> _locationController =
       StreamController<Coordinates>.broadcast();

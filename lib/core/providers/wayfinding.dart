@@ -1,3 +1,5 @@
+
+
 import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
@@ -20,26 +22,26 @@ import 'bluetooth.dart';
 
 class AdvancedWayfindingSingleton extends ChangeNotifier {
   /// Instance variable for starting beacon singleton
-  BeaconSingleton beaconSingleton;
+  late BeaconSingleton beaconSingleton;
 
   /// State for background scanning
   bool inBackground = false;
 
   /// Advertisement string
-  String advertisementValue;
+  String? advertisementValue;
 
   /// Operating system of device
-  String operatingSystem;
+  String? operatingSystem;
 
   /// List of devices that can be used towards achieving the threshold
   List allowableDevices = [];
 
   /// Booleans for instantiating permissions
   bool firstInstance = true;
-  bool advancedWayfindingEnabled = false;
+  bool? advancedWayfindingEnabled = false;
 
   /// Access previous bt setting/permissions
-  SharedPreferences sharedPreferences;
+  late SharedPreferences sharedPreferences;
 
   /// Hashmap to track bt devices
   HashMap<String, BluetoothDeviceProfile> scannedObjects = new HashMap();
@@ -55,7 +57,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
   final _storage = FlutterSecureStorage();
 
   /// Initialize headers
-  Map<String, String> offloadDataHeader;
+  Map<String, String>? offloadDataHeader;
   final Map<String, String> headers = {
     "accept": "application/json",
   };
@@ -73,8 +75,8 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
   int qualifiedDevicesThreshold = 0;
   int distanceThreshold = 10; // default in ZenHub
   int scanIntervalAllowance = 0;
-  int backgroundScanInterval = 15; // Minutes
-  int deletionInterval = 30; // Minutes
+  int? backgroundScanInterval = 15; // Minutes
+  int? deletionInterval = 30; // Minutes
   double milesFromPriceCenter = 5;
   int dwellTimeThreshold = 200; // In seconds (10 minutes -> 600 seconds)
 
@@ -89,10 +91,10 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
   /// Coordinates for Price Center
   final double pcLongitude = -117.237006;
   final double pcLatitude = 32.880006;
-  double distanceFromPriceCenter;
+  late double distanceFromPriceCenter;
 
   /// Allows for continuous scan
-  Timer ongoingScanner;
+  Timer? ongoingScanner;
 
   /// Lists for displaying scan results (only for debugger view)
   List loggedItems = [];
@@ -102,10 +104,10 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
   Location location = Location();
 
   /// Device types list for local caching
-  Map<String, dynamic> deviceTypes = {};
+  Map<String, dynamic>? deviceTypes = {};
 
   /// Access user's profile to offload data
-  UserDataProvider userDataProvider;
+  UserDataProvider? userDataProvider;
 
   /// Allows singleton functionality
   factory AdvancedWayfindingSingleton() {
@@ -117,7 +119,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
   /// Async method that will only initialize scanning if AW is enabled
   void init() async {
     //Instantiate access token for a logged in user
-    if (userDataProvider.isLoggedIn) {
+    if (userDataProvider!.isLoggedIn) {
       offloadDataHeader = {
         'Authorization':
             'Bearer ${userDataProvider?.authenticationModel?.accessToken}'
@@ -199,7 +201,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
     // Process the scan results (synchronously)
     flutterBlueInstance.scanResults.listen((results) {
       for (ScanResult scanResult in results) {
-        String calculatedUUID;
+        String? calculatedUUID;
 
         // Identify possible advertisement ID
         calculatedUUID = extractAdvertisementUUID(scanResult, calculatedUUID);
@@ -235,8 +237,8 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
       _storage.deleteAll();
       await _storage.write(
           key: "lastBackgroundScan", value: DateTime.now().toString());
-      double lat;
-      double long;
+      double? lat;
+      double? long;
       checkLocationPermission();
       location.getLocation().then((value) {
         lat = value.latitude;
@@ -283,8 +285,8 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
       operatingSystem = "iOS";
     }
     if (qualifyingDevices >= qualifiedDevicesThreshold) {
-      double lat;
-      double long;
+      double? lat;
+      double? long;
       checkLocationPermission();
       location.getLocation().then((value) {
         lat = value.latitude;
@@ -314,7 +316,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
   /// Will attach access token if logged in
   Future<void> sendLogs(Map log) async {
     // Attach token from user if logged in
-    if (userDataProvider.isLoggedIn) {
+    if (userDataProvider!.isLoggedIn) {
       if (offloadDataHeader == null) {
         offloadDataHeader = {
           'Authorization':
@@ -331,7 +333,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
       } catch (Exception) {
         // Silent login if access token is expired
         if (Exception.toString().contains(ErrorConstants.invalidBearerToken)) {
-          userDataProvider.silentLogin();
+          userDataProvider!.silentLogin();
           offloadDataHeader = {
             'Authorization':
                 'Bearer ${userDataProvider?.authenticationModel?.accessToken}'
@@ -355,8 +357,8 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
   }
 
   /// Calculates Advertisement ID if one is available
-  String extractAdvertisementUUID(
-      ScanResult scanResult, String calculatedUUID) {
+  String? extractAdvertisementUUID(
+      ScanResult scanResult, String? calculatedUUID) {
     scanResult.advertisementData.manufacturerData.forEach((key, decimalArray) {
       calculatedUUID = calculateHexFromArray(
           decimalArray); //https://stackoverflow.com/questions/60902976/flutter-ios-to-ios-broadcast-beacon-not-working
@@ -374,30 +376,30 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
       if (Platform.isIOS) {
         deviceEntry.insert(
             1,
-            ((scannedObjects[(deviceEntry[0].toString().substring(0, 36))]
+            ((scannedObjects[(deviceEntry[0].toString().substring(0, 36))]!
                         .deviceType !=
                     "")
-                ? "${getAppleClassification(scannedObjects[deviceEntry[0].toString().substring(0, 36)].deviceType)}"
+                ? "${getAppleClassification(scannedObjects[deviceEntry[0].toString().substring(0, 36)]!.deviceType!)}"
                 : "Unavailable"));
         if (getAppleClassification(
-                scannedObjects[deviceEntry[0].toString().substring(0, 36)]
-                    .deviceType) !=
+                scannedObjects[deviceEntry[0].toString().substring(0, 36)]!
+                    .deviceType!) !=
             "") {
           iOSDevice = true;
         }
       } else if (Platform.isAndroid) {
         deviceEntry.insert(
             1,
-            ((scannedObjects[deviceEntry[0].toString().substring(0, 17)]
+            ((scannedObjects[deviceEntry[0].toString().substring(0, 17)]!
                         .deviceType !=
                     "")
-                ? "${getAppleClassification(scannedObjects[deviceEntry[ScannedDevice.SCANNED_DEVICE_ID.index].toString().substring(0, 17)].deviceType)}"
+                ? "${getAppleClassification(scannedObjects[deviceEntry[ScannedDevice.SCANNED_DEVICE_ID.index].toString().substring(0, 17)]!.deviceType!)}"
                 : "Unavailable"));
         if (getAppleClassification(scannedObjects[
                     deviceEntry[ScannedDevice.SCANNED_DEVICE_ID.index]
                         .toString()
-                        .substring(0, 17)]
-                .deviceType) !=
+                        .substring(0, 17)]!
+                .deviceType!) !=
             "") {
           iOSDevice = true;
         }
@@ -435,20 +437,20 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
   void resetDevices() {
     int currentMinutes = getMinutesTimeOfDay();
     scannedObjects.removeWhere((key, value) {
-      if (currentMinutes < value.scanTimeMinutes) {
-        return (currentMinutes + 60) - value.scanTimeMinutes >= 2;
+      if (currentMinutes < value.scanTimeMinutes!) {
+        return (currentMinutes + 60) - value.scanTimeMinutes! >= 2;
       }
-      return currentMinutes - value.scanTimeMinutes >= 2;
+      return currentMinutes - value.scanTimeMinutes! >= 2;
     });
   }
 
   bool checkDeviceDwellTime(BluetoothDeviceProfile device) {
     int currentMinutes = getMinutesTimeOfDay();
-    if (currentMinutes < device.scanTimeMinutes) {
-      return (currentMinutes + 60) - device.scanTimeMinutes <
+    if (currentMinutes < device.scanTimeMinutes!) {
+      return (currentMinutes + 60) - device.scanTimeMinutes! <
           dwellTimeThreshold;
     }
-    return currentMinutes - device.scanTimeMinutes < dwellTimeThreshold;
+    return currentMinutes - device.scanTimeMinutes! < dwellTimeThreshold;
   }
 
   //Gather information on device scanned
@@ -521,10 +523,10 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
     scannedObjects.removeWhere((key, value) {
       bool isDeviceContinuous = checkDeviceDwellTime(value);
       if (!isDeviceContinuous &&
-          value.scanIntervalAllowancesUsed >= scanIntervalAllowance) {
+          value.scanIntervalAllowancesUsed! >= scanIntervalAllowance) {
         return true;
       } else if (!isDeviceContinuous &&
-          value.scanIntervalAllowancesUsed < scanIntervalAllowance) {
+          value.scanIntervalAllowancesUsed! < scanIntervalAllowance) {
         value.scanIntervalAllowancesUsed++;
       }
       return false;
@@ -532,11 +534,11 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
 
     List<String> objectsToRemove = [];
     scannedObjects.forEach((key, value) {
-      if (!value.continuousDuration &&
-          value.scanIntervalAllowancesUsed > scanIntervalAllowance) {
+      if (!value.continuousDuration! &&
+          value.scanIntervalAllowancesUsed! > scanIntervalAllowance) {
         objectsToRemove.add(key);
-      } else if (!value.continuousDuration &&
-          value.scanIntervalAllowancesUsed <= scanIntervalAllowance) {
+      } else if (!value.continuousDuration! &&
+          value.scanIntervalAllowancesUsed! <= scanIntervalAllowance) {
         value.scanIntervalAllowancesUsed++;
       }
     });
@@ -554,13 +556,13 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
 
   // Originally for on screen rendering but also calculates devices that meet our requirements
   void bluetoothLogAnalysis(
-      bool repeatedDevice, ScanResult scanResult, String calculatedUUID) {
+      bool repeatedDevice, ScanResult scanResult, String? calculatedUUID) {
     if (!repeatedDevice) {
-      scannedObjects[scanResult.device.id.toString()].dwellTime +=
+      scannedObjects[scanResult.device.id.toString()]!.dwellTime +=
           (waitTime * 60); //account for seconds
-      scannedObjects[scanResult.device.id.toString()].distance =
+      scannedObjects[scanResult.device.id.toString()]!.distance =
           getDistance(scanResult.rssi);
-      if (scannedObjects[scanResult.device.id.toString()].dwellTime >=
+      if (scannedObjects[scanResult.device.id.toString()]!.dwellTime! >=
           dwellTimeThreshold) {
         // Remove to reinstate thresholds
         // &&
@@ -580,23 +582,23 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
       List<Object> actualDeviceLog = [
         deviceLog,
         calculatedUUID.toString(),
-        scannedObjects[scanResult.device.id.toString()]
-            .timeStamps[0]
+        scannedObjects[scanResult.device.id.toString()]!
+            .timeStamps![0]
             .toString(),
         scanResult.rssi.toInt(),
-        scannedObjects[scanResult.device.id.toString()].distance.toInt()
+        scannedObjects[scanResult.device.id.toString()]!.distance!.toInt()
       ];
 
       bufferList.add(actualDeviceLog);
 
       if (Platform.isAndroid) {
-        scannedObjects[scanResult.device.id.toString()].deviceType =
+        scannedObjects[scanResult.device.id.toString()]!.deviceType =
             parseForAppearance(scanResult);
       }
       // _storage.write(key: _randomValue(), value: deviceLog);
       // Optimize device connection
       if (scanResult.advertisementData.connectable &&
-          scannedObjects[scanResult.device.id.toString()].deviceType == "" &&
+          scannedObjects[scanResult.device.id.toString()]!.deviceType == "" &&
           scanResult != null) {
         extractBTServices(scanResult);
       }
@@ -604,7 +606,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
   }
 
   String parseForAppearance(ScanResult scanResult) {
-    Uint8List adData = scanResult.advertisementData.rawData;
+    Uint8List adData = scanResult.advertisementData.rawData as Uint8List;
     int index = 0;
     String data;
 
@@ -649,9 +651,9 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
                 if (characteristic.toString().toUpperCase().contains("2A01")) {
                   // Appearance
                   characteristic.read().then((deviceType) {
-                    scannedObjects[scannedDevice.id.toString()].deviceType =
-                        deviceTypes.containsKey(deviceType.toString())
-                            ? deviceTypes[deviceType.toString()]
+                    scannedObjects[scannedDevice.id.toString()]!.deviceType =
+                        deviceTypes!.containsKey(deviceType.toString())
+                            ? deviceTypes![deviceType.toString()]
                             : " ";
                   });
                 }
@@ -662,7 +664,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
                 if (characteristic.toString().toUpperCase().contains("2A24")) {
                   // Device Type Name
                   characteristic.read().then((deviceType) {
-                    scannedObjects[scannedDevice.id.toString()].deviceType =
+                    scannedObjects[scannedDevice.id.toString()]!.deviceType =
                         "${ascii.decode(deviceType).toString()}";
                   });
                 }
@@ -728,12 +730,12 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
 
   // Start Background Scanning
   void _onBackgroundFetch(String taskID) async {
-    String lastTimeStamp = await _storage.read(key: "lastBackgroundScan");
+    String? lastTimeStamp = await _storage.read(key: "lastBackgroundScan");
 
     // Start a background scan
     if (lastTimeStamp == null ||
         DateTime.now().difference(DateTime.parse(lastTimeStamp)).inMinutes >
-            backgroundScanInterval) {
+            backgroundScanInterval!) {
       inBackground = true;
       startScan();
       inBackground = false;
@@ -746,7 +748,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
     // Configure BackgroundFetch.
     BackgroundFetch.configure(
             BackgroundFetchConfig(
-              minimumFetchInterval: backgroundScanInterval,
+              minimumFetchInterval: backgroundScanInterval!,
               forceAlarmManager: false,
               stopOnTerminate: false,
               startOnBoot: true,
@@ -800,7 +802,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
     }
   }
 
-  Future<Map> fetchDeviceTypes() async {
+  Future<Map?> fetchDeviceTypes() async {
     final response = await _networkHelper.authorizedFetch(
         bluetoothCharacteristicsEndpoint, headers);
 
@@ -809,7 +811,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
 
   void stopScans() {
     if (ongoingScanner != null) {
-      ongoingScanner.cancel();
+      ongoingScanner!.cancel();
     }
     flutterBlueInstance.stopScan();
     flutterBlueInstance.scanResults.listen((event) {}).cancel();
@@ -818,8 +820,8 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
 
   //Get constants for scanning
   Future<void> getBTConstants() async {
-    String _response = await _networkHelper.authorizedFetch(
-        bluetoothConstantsEndpoint, headers);
+    String _response = await (_networkHelper.authorizedFetch(
+        bluetoothConstantsEndpoint, headers) as FutureOr<String>);
 
     final _json = json.decode(_response);
     qualifiedDevicesThreshold = int.parse(_json["uniqueDevices"]);
@@ -838,7 +840,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
   Future extractAPIConstants() async {
     try {
       await getNewToken();
-      deviceTypes = await fetchDeviceTypes();
+      deviceTypes = await (fetchDeviceTypes() as FutureOr<Map<String, dynamic>?>);
       // Fetch parameters for scanning
       await getBTConstants();
       // Get device constants
@@ -856,7 +858,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
       } else {
         //Write to bt value
         sharedPreferences.setBool(
-            "advancedWayfindingEnabled", advancedWayfindingEnabled);
+            "advancedWayfindingEnabled", advancedWayfindingEnabled!);
       }
     });
   }
@@ -887,11 +889,11 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
   // From shuttle card
   double getHaversineDistance(lat1, lon1, lat2, lon2) {
     var R = 6371; // Radius of the earth in km
-    var dLat = deg2rad(lat2 - lat1); // deg2rad below
-    var dLon = deg2rad(lon2 - lon1);
+    var dLat = deg2rad(lat2 - lat1)!; // deg2rad below
+    var dLon = deg2rad(lon2 - lon1)!;
     var a = math.sin(dLat / 2) * math.sin(dLat / 2) +
-        math.cos(deg2rad(lat1)) *
-            math.cos(deg2rad(lat2)) *
+        math.cos(deg2rad(lat1)!) *
+            math.cos(deg2rad(lat2)!) *
             math.sin(dLon / 2) *
             math.sin(dLon / 2);
     var c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a));
@@ -899,7 +901,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
     return d;
   }
 
-  double deg2rad(deg) {
+  double? deg2rad(deg) {
     return deg * (math.pi / 180);
   }
 }
@@ -915,17 +917,17 @@ enum ScannedDevice {
 
 // Helper Class
 class BluetoothDeviceProfile {
-  String uuid;
-  int rssi;
-  String deviceType;
-  List<String> timeStamps;
-  bool continuousDuration;
-  double distance; // Feet
-  int txPowerLevel;
-  double dwellTime = 0;
-  int scanTimeMinutes;
-  bool timeThresholdMet = false;
-  int scanIntervalAllowancesUsed = 0;
+  String? uuid;
+  int? rssi;
+  String? deviceType;
+  List<String>? timeStamps;
+  bool? continuousDuration;
+  double? distance; // Feet
+  int? txPowerLevel;
+  double? dwellTime = 0;
+  int? scanTimeMinutes;
+  bool? timeThresholdMet = false;
+  int? scanIntervalAllowancesUsed = 0;
 
   BluetoothDeviceProfile(this.uuid, this.rssi, this.deviceType, this.timeStamps,
       this.continuousDuration, this.scanTimeMinutes);

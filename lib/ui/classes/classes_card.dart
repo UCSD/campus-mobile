@@ -1,3 +1,5 @@
+
+
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/classes.dart';
@@ -29,12 +31,12 @@ class ClassScheduleCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
-      active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
+      active: Provider.of<CardsDataProvider>(context).cardStates![cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       reload: () {
         if (Provider.of<ClassScheduleDataProvider>(context, listen: false)
-            .isLoading) {
+            .isLoading!) {
           return null;
         } else {
           Provider.of<ClassScheduleDataProvider>(context, listen: false)
@@ -46,16 +48,16 @@ class ClassScheduleCard extends StatelessWidget {
       errorText: Provider.of<ClassScheduleDataProvider>(context).error,
       child: () => buildClassScheduleCard(
         Provider.of<ClassScheduleDataProvider>(context).upcomingCourses,
-        Provider.of<ClassScheduleDataProvider>(context).selectedCourse,
+        Provider.of<ClassScheduleDataProvider>(context).selectedCourse!,
         Provider.of<ClassScheduleDataProvider>(context).lastUpdated,
-        Provider.of<ClassScheduleDataProvider>(context).nextDayWithClass,
+        Provider.of<ClassScheduleDataProvider>(context).nextDayWithClass!,
       ),
       actionButtons: buildActionButtons(context),
     );
   }
 
   Widget buildClassScheduleCard(List<SectionData> courseData,
-      int selectedCourse, DateTime lastUpdated, String nextDayWithClasses) {
+      int selectedCourse, DateTime? lastUpdated, String nextDayWithClasses) {
     return Padding(
       padding: const EdgeInsets.only(left: 4.0, top: 4.0),
       child: Row(
@@ -68,14 +70,14 @@ class ClassScheduleCard extends StatelessWidget {
                 child: Column(
                   children: [
                     buildWeekdayText(nextDayWithClasses),
-                    buildClassTitle(courseData[selectedCourse].subjectCode +
+                    buildClassTitle(courseData[selectedCourse].subjectCode! +
                         ' ' +
-                        courseData[selectedCourse].courseCode),
-                    buildClassType(courseData[selectedCourse].meetingType),
+                        courseData[selectedCourse].courseCode!),
+                    buildClassType(courseData[selectedCourse].meetingType!),
                     buildTimeRow(courseData[selectedCourse].time),
-                    buildLocationRow(courseData[selectedCourse].building +
+                    buildLocationRow(courseData[selectedCourse].building! +
                         ' ' +
-                        courseData[selectedCourse].room),
+                        courseData[selectedCourse].room!),
                     buildGradeEvaluationRow(
                         courseData[selectedCourse].gradeOption),
                     Flexible(
@@ -128,7 +130,7 @@ class ClassScheduleCard extends StatelessWidget {
     );
   }
 
-  Widget buildTimeRow(String time) {
+  Widget buildTimeRow(String? time) {
     return Padding(
       padding: const EdgeInsets.only(left: 4.0),
       child: Row(

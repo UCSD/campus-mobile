@@ -1,3 +1,5 @@
+
+
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_arrival.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_stop.dart';
@@ -20,7 +22,7 @@ class ShuttleCard extends StatefulWidget {
 class _ShuttleCardState extends State<ShuttleCard> {
   ShuttleDataProvider _shuttleCardDataProvider = ShuttleDataProvider();
   PageController _controller = PageController();
-  List<ArrivingShuttle> arrivals;
+  List<ArrivingShuttle>? arrivals;
 
   @override
   void didChangeDependencies() {
@@ -30,7 +32,7 @@ class _ShuttleCardState extends State<ShuttleCard> {
 
   Widget build(BuildContext context) {
     return CardContainer(
-      active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
+      active: Provider.of<CardsDataProvider>(context).cardStates![cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       reload: () => Provider.of<ShuttleDataProvider>(context, listen: false)
@@ -44,8 +46,8 @@ class _ShuttleCardState extends State<ShuttleCard> {
     );
   }
 
-  Widget buildShuttleCard(List<ShuttleStopModel> stopsToRender,
-      Map<int, List<ArrivingShuttle>> arrivalsToRender) {
+  Widget buildShuttleCard(List<ShuttleStopModel?> stopsToRender,
+      Map<int?, List<ArrivingShuttle>>? arrivalsToRender) {
     // print("Stops - ${stopsToRender.length}");
     // print("Arrivals - ${arrivalsToRender.length}");
 
@@ -55,13 +57,13 @@ class _ShuttleCardState extends State<ShuttleCard> {
       renderList.add(ShuttleDisplay(
           stop: _shuttleCardDataProvider.closestStop,
           arrivingShuttles:
-              arrivalsToRender[_shuttleCardDataProvider.closestStop.id]));
+              arrivalsToRender![_shuttleCardDataProvider.closestStop!.id]));
     }
 
     for (int i = 0; i < stopsToRender.length; i++) {
       renderList.add(ShuttleDisplay(
           stop: stopsToRender[i],
-          arrivingShuttles: arrivalsToRender[stopsToRender[i].id]));
+          arrivingShuttles: arrivalsToRender![stopsToRender[i]!.id]));
     }
 
     // Initialize first shuttle display with arrival information
@@ -102,7 +104,7 @@ class _ShuttleCardState extends State<ShuttleCard> {
         'Manage Shuttle Stops',
       ),
       onPressed: () {
-        if (!_shuttleCardDataProvider.isLoading) {
+        if (!_shuttleCardDataProvider.isLoading!) {
           Navigator.pushNamed(context, RoutePaths.ManageShuttleView);
         }
       },

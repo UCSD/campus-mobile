@@ -1,3 +1,5 @@
+
+
 import 'dart:async';
 
 import 'package:campus_mobile_experimental/app_networking.dart';
@@ -5,8 +7,8 @@ import 'package:campus_mobile_experimental/core/models/news.dart';
 
 class NewsService {
   bool _isLoading = false;
-  DateTime _lastUpdated;
-  String _error;
+  DateTime? _lastUpdated;
+  String? _error;
 
   final NetworkHelper _networkHelper = NetworkHelper();
   final String endpoint =
@@ -19,7 +21,7 @@ class NewsService {
     _isLoading = true;
     try {
       /// fetch data
-      String _response = await _networkHelper.fetchData(endpoint);
+      String _response = await (_networkHelper.fetchData(endpoint) as FutureOr<String>);
 
       /// parse data
       _newsModels = newsModelFromJson(_response);
@@ -32,8 +34,8 @@ class NewsService {
     }
   }
 
-  String get error => _error;
+  String? get error => _error;
   NewsModel get newsModels => _newsModels;
   bool get isLoading => _isLoading;
-  DateTime get lastUpdated => _lastUpdated;
+  DateTime? get lastUpdated => _lastUpdated;
 }

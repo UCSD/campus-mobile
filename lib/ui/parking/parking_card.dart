@@ -1,3 +1,5 @@
+
+
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/parking.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
@@ -15,10 +17,10 @@ class ParkingCard extends StatefulWidget {
 
 class _ParkingCardState extends State<ParkingCard>
     with AutomaticKeepAliveClientMixin {
-  ParkingDataProvider _parkingDataProvider;
+  late ParkingDataProvider _parkingDataProvider;
   bool get wantKeepAlive => true;
   final _controller = new PageController();
-  WebViewController _webViewController;
+  WebViewController? _webViewController;
   String cardId = 'parking';
   String webCardURL =
       "https://mobile.ucsd.edu/replatform/v1/qa/webview/parking-v2/index.html";
@@ -38,7 +40,7 @@ class _ParkingCardState extends State<ParkingCard>
       reload: () => {_parkingDataProvider.fetchParkingData()},
       errorText: _parkingDataProvider.error,
       child: () => buildParkingCard(context),
-      active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
+      active: Provider.of<CardsDataProvider>(context).cardStates![cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       actionButtons: buildActionButtons(),
@@ -48,9 +50,9 @@ class _ParkingCardState extends State<ParkingCard>
   Widget buildParkingCard(BuildContext context) {
     try {
       List<WebView> selectedLotsViews = [];
-      List<String> selectedSpots = [];
+      List<String?> selectedSpots = [];
 
-      _parkingDataProvider.spotTypesState.forEach((key, value) {
+      _parkingDataProvider.spotTypesState!.forEach((key, value) {
         if (value) {
           selectedSpots.add(key);
         }
@@ -58,7 +60,7 @@ class _ParkingCardState extends State<ParkingCard>
 
       for (ParkingModel model in _parkingDataProvider.parkingModels) {
         if (model != null) {
-          if (_parkingDataProvider.parkingViewState[model.locationName]) {
+          if (_parkingDataProvider.parkingViewState![model.locationName]!) {
             final url = makeUrl(model.locationId, selectedSpots);
 
             selectedLotsViews.add(WebView(
@@ -98,7 +100,7 @@ class _ParkingCardState extends State<ParkingCard>
     }
   }
 
-  String makeUrl(String lotId, List<String> selectedSpots) {
+  String makeUrl(String? lotId, List<String?> selectedSpots) {
     var spotTypesQueryString = '';
     selectedSpots.forEach(
         (spot) => {spotTypesQueryString = '$spotTypesQueryString$spot,'});

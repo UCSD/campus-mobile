@@ -1,3 +1,5 @@
+
+
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/dining.dart';
 import 'package:campus_mobile_experimental/core/models/dining_menu.dart';
@@ -6,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class DiningMenuList extends StatefulWidget {
-  DiningMenuList({Key key, @required this.model}) : super(key: key);
+  DiningMenuList({Key? key, required this.model}) : super(key: key);
   final DiningModel model;
 
   @override
@@ -17,14 +19,14 @@ class _DiningMenuListState extends State<DiningMenuList> {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Provider.of<DiningDataProvider>(context).isLoading
+      child: Provider.of<DiningDataProvider>(context).isLoading!
           ? CircularProgressIndicator()
           : buildDiningMenuList(context),
     );
   }
 
   Widget buildDiningMenuList(BuildContext context) {
-    DiningMenuItemsModel menu =
+    DiningMenuItemsModel? menu =
         Provider.of<DiningDataProvider>(context, listen: false)
             .getMenuData(widget.model.id);
     List<String> filters = [];
@@ -50,10 +52,10 @@ class _DiningMenuListState extends State<DiningMenuList> {
       case Meal.dinner:
         filters.add('Dinner');
     }
-    if (menu.menuItems != null) {
+    if (menu!.menuItems != null) {
       List<MenuItem> menuList =
           Provider.of<DiningDataProvider>(context, listen: false)
-              .getMenuItems(widget.model.id, filters);
+              .getMenuItems(widget.model.id, filters)!;
       List<Widget> list = [];
       if (menuList.length > 0) {
         for (MenuItem item in menuList) {
@@ -72,7 +74,7 @@ class _DiningMenuListState extends State<DiningMenuList> {
                   TextSpan(
                     text: " (\$${item.price})",
                     style: TextStyle(
-                        color: Theme.of(context).textTheme.bodyText2.color),
+                        color: Theme.of(context).textTheme.bodyText2!.color),
                   )
                 ],
               ),
@@ -115,7 +117,7 @@ class _DiningMenuListState extends State<DiningMenuList> {
           ),
         ],
       );
-    } else if (widget.model.url != null && widget.model.url.isNotEmpty) {
+    } else if (widget.model.url != null && widget.model.url!.isNotEmpty) {
       return Center(
         child: Text('Menu not directly available. Try checking their website.'),
       );
@@ -130,7 +132,7 @@ class _DiningMenuListState extends State<DiningMenuList> {
       child: ToggleButtons(
         isSelected: Provider.of<DiningDataProvider>(context).filtersSelected,
         textStyle: TextStyle(fontSize: 18),
-        selectedColor: Theme.of(context).textTheme.button.color,
+        selectedColor: Theme.of(context).textTheme.button!.color,
         fillColor: Theme.of(context).buttonColor,
         borderRadius: BorderRadius.circular(10),
         constraints: BoxConstraints.expand(
@@ -195,13 +197,13 @@ class _DiningMenuListState extends State<DiningMenuList> {
 }
 
 class LabeledRadio extends StatelessWidget {
-  final String title;
-  final Meal value;
-  final Meal groupValue;
-  final Function onChanged;
+  final String? title;
+  final Meal? value;
+  final Meal? groupValue;
+  final Function? onChanged;
 
   const LabeledRadio(
-      {Key key, this.title, this.value, this.groupValue, this.onChanged})
+      {Key? key, this.title, this.value, this.groupValue, this.onChanged})
       : super(key: key);
 
   @override
@@ -213,12 +215,12 @@ class LabeledRadio extends StatelessWidget {
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             value: value,
             groupValue: groupValue,
-            onChanged: onChanged,
+            onChanged: onChanged as void Function(_)?,
             activeColor: Theme.of(context).buttonColor,
           ),
           Container(
             child: Text(
-              title,
+              title!,
               style: TextStyle(fontSize: 16),
             ),
           ),

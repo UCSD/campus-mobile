@@ -1,3 +1,5 @@
+
+
 import 'dart:async';
 
 import 'package:campus_mobile_experimental/app_networking.dart';
@@ -10,21 +12,21 @@ class MessageService {
       'https://bvgjvzaakl.execute-api.us-west-2.amazonaws.com/dev/topics?';
 
   bool _isLoading = false;
-  DateTime _lastUpdated;
-  String _error;
-  Messages _data;
+  DateTime? _lastUpdated;
+  String? _error;
+  Messages? _data;
 
   final NetworkHelper _networkHelper = NetworkHelper();
 
   Future<bool> fetchMyMessagesData(
-      int timestamp, Map<String, String> authHeaders) async {
+      int? timestamp, Map<String, String> authHeaders) async {
     _error = null;
     _isLoading = true;
 
     try {
       /// fetch data
-      String _response = await _networkHelper.authorizedFetch(
-          myMessagesApiUrl + timestamp.toString(), authHeaders);
+      String _response = await (_networkHelper.authorizedFetch(
+          myMessagesApiUrl + timestamp.toString(), authHeaders) as FutureOr<String>);
 
       /// parse data
       final data = messagesFromJson(_response);
@@ -38,7 +40,7 @@ class MessageService {
     }
   }
 
-  Future<bool> fetchTopicData(int timestamp, List<String> topics) async {
+  Future<bool> fetchTopicData(int? timestamp, List<String?> topics) async {
     _error = null;
     _isLoading = true;
 
@@ -47,8 +49,8 @@ class MessageService {
 
     try {
       /// fetch data
-      String _response = await _networkHelper
-          .fetchData(topicsApiUrl + topicsEndpoint + timestampEndpoint);
+      String _response = await (_networkHelper
+          .fetchData(topicsApiUrl + topicsEndpoint + timestampEndpoint) as FutureOr<String>);
 
       /// parse data
       final data = messagesFromJson(_response);
@@ -62,8 +64,8 @@ class MessageService {
     }
   }
 
-  String get error => _error;
-  Messages get messagingModels => _data;
+  String? get error => _error;
+  Messages? get messagingModels => _data;
   bool get isLoading => _isLoading;
-  DateTime get lastUpdated => _lastUpdated;
+  DateTime? get lastUpdated => _lastUpdated;
 }
