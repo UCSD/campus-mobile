@@ -13,6 +13,8 @@ const INTERNAL_TIMEOUT = 20000
 const finalBuildNumber = parseInt(ENV_VARS.buildNumber) + 1000
 const buildArtifacts = {}
 
+ENV_VARS.commitHash = ENV_VARS.commitHash.substring(0, 7)
+
 const buildNotify = async () => {
 	try {
 		const buildTimestamp = moment().format('YYYY-MM-DD h:mm A')
@@ -21,29 +23,37 @@ const buildNotify = async () => {
 		let buildApkFile = ''
 		let buildIpaFile = ''
 		let prAuthor = ''
+		let saveArtifactApkSuccess = false
+		let saveArtifactIpaSuccess = false
+		let testPlanFilename = ''
+		let testPlanUrl = ''
 
-		ENV_VARS.commitHash = ENV_VARS.commitHash.substring(0, 7)
-
-		// Supplemental GitHub API Metadata for PRs
-		if (ENV_VARS.prNumber) {
-			prAuthor = await githubMeta()
-		}
-
-		// Extract APK and IPA artifacts
-		ENV_VARS.fciArtifactLinks.forEach((artifact, index) => {
-			if (artifact.name === 'app-release.apk' && artifact.url) {
-				buildApkFile = artifact.name
-			} else if (artifact.name === 'UC_San_Diego.ipa' && artifact.url) {
-				buildIpaFile = artifact.name
+		// Check build success
+		if (buildSuccess) {
+			// Supplemental GitHub metadata for PRs
+			if (ENV_VARS.prNumber) {
+				prAuthor = await githubMeta()
 			}
-		})
 
-		// Save build artifacts
-		const saveArtifactApkSuccess = await saveArtifact(buildApkFile)
-		const saveArtifactIpaSuccess = await saveArtifact(buildIpaFile)
+			// Extract APK and IPA artifacts
+			ENV_VARS.fciArtifactLinks.forEach((artifact, index) => {
+				if (artifact.name === 'app-release.apk' && artifact.url) {
+					buildApkFile = artifact.name
+				} else if (artifact.name === 'UC_San_Diego.ipa' && artifact.url) {
+					buildIpaFile = artifact.name
+				}
+			})
 
-		// Generate test plan
-		const { testPlanFilename, testPlanUrl } = await generateTestPlan(prAuthor)
+			// Save build artifacts
+			if (ENV_VARS.buildPlatform === 'IOS') {
+				saveArtifactApkSuccess = await saveArtifact(buildApkFile)
+			} else if (ENV_VARS.buildPlatform === 'ANDROID') {
+				saveArtifactIpaSuccess = await saveArtifact(buildIpaFile)
+			}
+
+			// Generate test plan
+			({ testPlanFilename, testPlanUrl } = await generateTestPlan(prAuthor))
+		}
 
 		// Construct build notifier message
 		let teamsMessage = '#### Campus Mobile Build Notifier\n\n'
@@ -74,13 +84,17 @@ const buildNotify = async () => {
 		}
 
 		// Test plan
-		teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>Testing:</b></td><td><a href="' + testPlanUrl + '" style="text-decoration:underline">' + testPlanFilename + '</a></td></tr>'
+		if (testPlanUrl && testPlanFilename) {
+			teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>Testing:</b></td><td><a href="' + testPlanUrl + '" style="text-decoration:underline">' + testPlanFilename + '</a></td></tr>'
+		}
 
 		const successEmojiList = ['🥇','🏆','🎖','🎉','🎊','🚀','🛫','🏋','💪','👏','💯']
 		const failedEmojiList = ['🙀','😱','😵']
 
 		// Build success or failure
-		if (buildSuccess && saveArtifactApkSuccess && saveArtifactIpaSuccess) {
+		if (buildSuccess &&
+			((saveArtifactApkSuccess && ENV_VARS.buildPlatform === 'ANDROID') ||
+			(saveArtifactIpaSuccess && ENV_VARS.buildPlatform === 'IOS'))) {
 			const successEmoji = successEmojiList[Math.floor(Math.random() * successEmojiList.length)]
 			teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>Status:</b></td><td><span style="color:#12a102">BUILD SUCCESS ' + successEmoji + '</span> (<a href="' + fciProjectLink + '" style="text-decoration:underline">detail</a>)</td></tr>'
 		} else {
@@ -166,7 +180,11 @@ const generateTestPlan = async (prAuthor) => {
 			testPlanFilename = 'PR-' + ENV_VARS.prNumber + '-Test-Plan-' + ENV_VARS.appVersion + '-' + ENV_VARS.buildEnv + '-' + finalBuildNumber + '.xlsx'
 			testPlanUrl = (SP_CONFIG.spSiteUrl + SP_CONFIG.spPullRequestTestFolder + testPlanFilename + '?web=1').replace(/ /g, '%20')
 			console.log('  (1/3) Downloading PR test plan template ...')
-			fs.writeFileSync(testPlanFilename, await download(SP_CONFIG.prTestPlanTemplateUrl))
+			if (ENV_VARS.buildPlatform === 'IOS') {
+				fs.writeFileSync(testPlanFilename, await download(SP_CONFIG.prTestPlanTemplateUrlIos))
+			} else if (ENV_VARS.buildPlatform === 'ANDROID') {
+				fs.writeFileSync(testPlanFilename, await download(SP_CONFIG.prTestPlanTemplateUrlAndroid))
+			}
 		} else {
 			console.log('Generating regression test plan for branch ' + ENV_VARS.buildBranch)
 			testPlanFilename = 'Regression-Test-Plan-' + ENV_VARS.appVersion + '-' + ENV_VARS.buildEnv + '-' + finalBuildNumber + '.xlsx'
@@ -174,15 +192,27 @@ const generateTestPlan = async (prAuthor) => {
 			switch(ENV_VARS.buildEnv) {
 				case 'PROD':
 					console.log('  (1/3) Downloading PROD regression test plan template ...')
-					fs.writeFileSync(testPlanFilename, await download(SP_CONFIG.prodRegressionTestPlanTemplateUrl))
+					if (ENV_VARS.buildPlatform === 'IOS') {
+						fs.writeFileSync(testPlanFilename, await download(SP_CONFIG.prodRegressionTestPlanTemplateUrlIos))						
+					} else if (ENV_VARS.buildPlatform === 'ANDROID') {
+						fs.writeFileSync(testPlanFilename, await download(SP_CONFIG.prodRegressionTestPlanTemplateUrlAndroid))
+					}
 					break
 				case 'PROD-TEST':
 					console.log('  (1/3) Downloading PROD-TEST regression test plan template ...')
-					fs.writeFileSync(testPlanFilename, await download(SP_CONFIG.prodtestRegressionTestPlanTemplateUrl))
+					if (ENV_VARS.buildPlatform === 'IOS') {
+						fs.writeFileSync(testPlanFilename, await download(SP_CONFIG.prodtestRegressionTestPlanTemplateUrlIos))						
+					} else if (ENV_VARS.buildPlatform === 'ANDROID') {
+						fs.writeFileSync(testPlanFilename, await download(SP_CONFIG.prodtestRegressionTestPlanTemplateUrlAndroid))
+					}
 					break
 				default:
 					console.log('  (1/3) Downloading QA regression test plan template ...')
-					fs.writeFileSync(testPlanFilename, await download(SP_CONFIG.qaRegressionTestPlanTemplateUrl))
+					if (ENV_VARS.buildPlatform === 'IOS') {
+						fs.writeFileSync(testPlanFilename, await download(SP_CONFIG.qaRegressionTestPlanTemplateUrlIos))						
+					} else if (ENV_VARS.buildPlatform === 'ANDROID') {
+						fs.writeFileSync(testPlanFilename, await download(SP_CONFIG.qaRegressionTestPlanTemplateUrlAndroid))
+					}
 			}
 		}
 

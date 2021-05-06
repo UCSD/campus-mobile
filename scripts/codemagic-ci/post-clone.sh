@@ -51,6 +51,14 @@ else
     exit 1
 fi
 
+# 7. BUILD_PLATFORM
+if [ -n "$BUILD_PLATFORM" ]; then
+    echo "BUILD_PLATFORM: Found"
+else
+    echo "Error: BUILD_PLATFORM not found, exiting."
+    exit 1
+fi
+
 
 
 echo "Installing Node.js ..."
@@ -73,15 +81,15 @@ echo $FIREBASE_ANDROID | base64 --decode > ./android/app/google-services.json
 echo "Setting build environment: $BUILD_ENV"
 if [ "$BUILD_ENV" == "PROD" ]; then
     node ./scripts/codemagic-ci/set-env.js PROD $APP_VERSION $PROJECT_BUILD_NUMBER
-    sh ./scripts/codemagic-ci/verify-env.sh PROD
+    sh ./scripts/codemagic-ci/verify-env.sh PROD $BUILD_PLATFORM
 elif [ "$BUILD_ENV" == "PROD-TEST" ]; then
     node ./scripts/codemagic-ci/set-env.js PROD $APP_VERSION $PROJECT_BUILD_NUMBER
-    sh ./scripts/codemagic-ci/verify-env.sh PROD
+    sh ./scripts/codemagic-ci/verify-env.sh PROD $BUILD_PLATFORM
     node ./scripts/codemagic-ci/set-env.js PROD-TEST
-    sh ./scripts/codemagic-ci/verify-env.sh PROD-TEST
+    sh ./scripts/codemagic-ci/verify-env.sh PROD-TEST $BUILD_PLATFORM
 elif [ "$BUILD_ENV" == "QA" ]; then
     node ./scripts/codemagic-ci/set-env.js QA $APP_VERSION $PROJECT_BUILD_NUMBER
-    sh ./scripts/codemagic-ci/verify-env.sh QA
+    sh ./scripts/codemagic-ci/verify-env.sh QA $BUILD_PLATFORM
 else
     echo "Error: BUILD_ENV not found, exiting."
     echo "End: post-clone.sh"
