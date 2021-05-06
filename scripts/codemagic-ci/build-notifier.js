@@ -20,8 +20,8 @@ const buildNotify = async () => {
 		const buildTimestamp = moment().format('YYYY-MM-DD h:mm A')
 		const fciProjectLink = 'https://codemagic.io/app/' + ENV_VARS.fciProjectId + '/build/' + ENV_VARS.fciBuildId
 		let buildSuccess = (ENV_VARS.fciBuildStepStatus === 'success') ? true : false
-		let buildApkFile = ''
-		let buildIpaFile = ''
+		let buildApkFile = 'app-release.apk'
+		let buildIpaFile = 'UC_San_Diego.ipa'
 		let prAuthor = ''
 		let saveArtifactApkSuccess = false
 		let saveArtifactIpaSuccess = false
@@ -37,15 +37,6 @@ const buildNotify = async () => {
 			if (ENV_VARS.prNumber) {
 				prAuthor = await githubMeta()
 			}
-
-			// Extract APK and IPA artifacts
-			ENV_VARS.fciArtifactLinks.forEach((artifact, index) => {
-				if (artifact.name === 'app-release.apk' && artifact.url) {
-					buildApkFile = artifact.name
-				} else if (artifact.name === 'UC_San_Diego.ipa' && artifact.url) {
-					buildIpaFile = artifact.name
-				}
-			})
 
 			// Save build artifacts
 			if (ENV_VARS.buildPlatform === 'IOS') {
