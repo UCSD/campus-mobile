@@ -40,9 +40,9 @@ const buildNotify = async () => {
 
 			// Save build artifacts
 			if (ENV_VARS.buildPlatform === 'IOS') {
-				saveArtifactApkSuccess = await saveArtifact(buildApkFile)
-			} else if (ENV_VARS.buildPlatform === 'ANDROID') {
 				saveArtifactIpaSuccess = await saveArtifact(buildIpaFile)
+			} else if (ENV_VARS.buildPlatform === 'ANDROID') {
+				saveArtifactApkSuccess = await saveArtifact(buildApkFile)
 			}
 
 			// Generate test plan
