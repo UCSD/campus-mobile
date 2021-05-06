@@ -28,6 +28,9 @@ const buildNotify = async () => {
 		let testPlanFilename = ''
 		let testPlanUrl = ''
 
+		console.log('ENV_VARS.fciBuildStepStatus: ' + ENV_VARS.fciBuildStepStatus)
+		console.log('buildSuccess: ' + buildSuccess)
+		console.log('buildPlatform: ' + ENV_VARS.buildPlatform)
 		// Check build success
 		if (buildSuccess) {
 			// Supplemental GitHub metadata for PRs
@@ -52,8 +55,11 @@ const buildNotify = async () => {
 			}
 
 			// Generate test plan
-			({ testPlanFilename, testPlanUrl } = await generateTestPlan(prAuthor))
+			;({ testPlanFilename, testPlanUrl } = await generateTestPlan(prAuthor))
 		}
+
+		console.log('saveArtifactIpaSuccess: ' + saveArtifactIpaSuccess)
+		console.log('saveArtifactApkSuccess: ' + saveArtifactApkSuccess)
 
 		// Construct build notifier message
 		let teamsMessage = '#### Campus Mobile Build Notifier\n\n'

@@ -59,8 +59,6 @@ else
     exit 1
 fi
 
-
-
 echo "Installing Node.js ..."
 curl "https://nodejs.org/dist/v14.16.0/node-v14.16.0.pkg" > "$HOME/Downloads/node-stable.pkg" && sudo installer -store -pkg "$HOME/Downloads/node-stable.pkg" -target "/"
 node --version
