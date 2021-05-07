@@ -112,7 +112,6 @@ List<SingleChildWidget> dependentServices = [
     diningDataProvider.populateDistances();
     return diningDataProvider;
   }),
-
   ChangeNotifierProxyProvider<Coordinates, MapsDataProvider>(create: (_) {
     var mapsDataProvider = MapsDataProvider();
     return mapsDataProvider;
@@ -154,8 +153,11 @@ List<SingleChildWidget> dependentServices = [
         userDataProvider.cardsDataProvider = cardsDataProvider;
         cardsDataProvider
           ..loadSavedData().then((value) {
+            // Update available cards
             cardsDataProvider.updateAvailableCards(
                 userDataProvider.authenticationModel.ucsdaffiliation);
+
+            // Student card activation
             if (userDataProvider.isLoggedIn &&
                 (userDataProvider.userProfileModel.classifications?.student ??
                     false)) {
@@ -164,6 +166,7 @@ List<SingleChildWidget> dependentServices = [
               cardsDataProvider.deactivateStudentCards();
             }
 
+            // Staff card activation
             if (userDataProvider.isLoggedIn &&
                 (userDataProvider.userProfileModel.classifications?.staff ??
                     false)) {
@@ -272,11 +275,12 @@ List<SingleChildWidget> dependentServices = [
     shuttleDataProvider.userDataProvider = userDataProvider;
     return shuttleDataProvider;
   }),
-  ChangeNotifierProxyProvider2<Coordinates, UserDataProvider, SpeedTestProvider>(create: (_){
+  ChangeNotifierProxyProvider2<Coordinates, UserDataProvider,
+      SpeedTestProvider>(create: (_) {
     SpeedTestProvider speedTestProvider = SpeedTestProvider();
     speedTestProvider.init();
     return speedTestProvider;
-  }, update: (_, coordinates, userDataProvider, speedTestProvider){
+  }, update: (_, coordinates, userDataProvider, speedTestProvider) {
     speedTestProvider.coordinates = coordinates;
     speedTestProvider.userDataProvider = userDataProvider;
     return speedTestProvider;
