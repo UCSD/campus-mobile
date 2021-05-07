@@ -185,6 +185,9 @@ class _LoginState extends State<Login> {
   showAlertDialog(BuildContext context) {
     // set up the button
     Widget okButton = TextButton(
+      style: TextButton.styleFrom(
+        primary: Theme.of(context).buttonColor,
+      ),
       child: Text("OK"),
       onPressed: () {
         Navigator.of(context).pop();
