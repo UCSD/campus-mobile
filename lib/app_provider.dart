@@ -26,6 +26,7 @@ import 'package:campus_mobile_experimental/core/providers/weather.dart';
 import 'package:campus_mobile_experimental/ui/navigator/top.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
+import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
@@ -34,7 +35,7 @@ List<SingleChildWidget> providers = [
   ...dependentServices,
   ...uiConsumableProviders,
 ];
-
+LocationDataProvider locationProvider;
 final FirebaseAnalytics analytics = FirebaseAnalytics();
 final FirebaseAnalyticsObserver observer =
     FirebaseAnalyticsObserver(analytics: analytics);
@@ -82,8 +83,10 @@ List<SingleChildWidget> independentServices = [
   StreamProvider<Coordinates>(
     create: (_) {
       print("CreateProvider: Coordinates (LocationDataProvider)");
-      return LocationDataProvider().locationStream;
+      locationProvider = LocationDataProvider();
+      return locationProvider.locationStream;
     },
+    lazy: false,
   ),
   ChangeNotifierProvider<CustomAppBar>(
     create: (_) {
@@ -112,7 +115,6 @@ List<SingleChildWidget> dependentServices = [
     diningDataProvider.populateDistances();
     return diningDataProvider;
   }),
-
   ChangeNotifierProxyProvider<Coordinates, MapsDataProvider>(create: (_) {
     var mapsDataProvider = MapsDataProvider();
     return mapsDataProvider;
@@ -187,14 +189,14 @@ List<SingleChildWidget> dependentServices = [
     }
     return classScheduleDataProvider;
   }),
-  ChangeNotifierProxyProvider2<Coordinates, UserDataProvider, WayfindingProvider>(
-      create: (_) {
-        print("CreateProvider: AdvancedWayfindingSingleton");
-        var proximityAwarenessSingleton = WayfindingProvider();
-        return proximityAwarenessSingleton;
-      }, update: (_, coordinates, userDataProvider, proximityAwarenessSingleton) {
+  ChangeNotifierProxyProvider2<Coordinates, UserDataProvider,
+      WayfindingProvider>(create: (_) {
+    print("CreateProvider: AdvancedWayfindingSingleton");
+    var proximityAwarenessSingleton = WayfindingProvider();
+    return proximityAwarenessSingleton;
+  }, update: (_, coordinates, userDataProvider, proximityAwarenessSingleton) {
     print("UpdateProvider: AdvancedWayfindingSingleton");
-    proximityAwarenessSingleton.coordinates = coordinates;
+    proximityAwarenessSingleton.coordinateAndLocation(coordinates, locationProvider);
     proximityAwarenessSingleton.userProvider = userDataProvider;
     return proximityAwarenessSingleton;
   }),
@@ -262,22 +264,23 @@ List<SingleChildWidget> dependentServices = [
     availabilityDataProvider.userDataProvider = userDataProvider;
     return availabilityDataProvider;
   }),
-  ChangeNotifierProxyProvider<UserDataProvider, ShuttleDataProvider>(
-      create: (_) {
-    print("CreateProvider: ShuttleDataProvider");
+  ChangeNotifierProxyProvider2<Coordinates, UserDataProvider,
+      ShuttleDataProvider>(create: (_) {
     var shuttleDataProvider = ShuttleDataProvider();
-    shuttleDataProvider.fetchStops(reloading: false);
     return shuttleDataProvider;
-  }, update: (_, userDataProvider, shuttleDataProvider) {
-    print("UpdateProvider: ShuttleDataProvider");
+  }, update: (_, coordinates, userDataProvider, shuttleDataProvider) {
+    print("UpdateProvider: shuttleDataProvider");
+    shuttleDataProvider.userCoords = coordinates;
     shuttleDataProvider.userDataProvider = userDataProvider;
+    shuttleDataProvider.fetchStops(true);
     return shuttleDataProvider;
   }),
-  ChangeNotifierProxyProvider2<Coordinates, UserDataProvider, SpeedTestProvider>(create: (_){
+  ChangeNotifierProxyProvider2<Coordinates, UserDataProvider,
+      SpeedTestProvider>(create: (_) {
     SpeedTestProvider speedTestProvider = SpeedTestProvider();
     speedTestProvider.init();
     return speedTestProvider;
-  }, update: (_, coordinates, userDataProvider, speedTestProvider){
+  }, update: (_, coordinates, userDataProvider, speedTestProvider) {
     speedTestProvider.coordinates = coordinates;
     speedTestProvider.userDataProvider = userDataProvider;
     return speedTestProvider;
