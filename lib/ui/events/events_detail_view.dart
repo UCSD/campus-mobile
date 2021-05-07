@@ -66,20 +66,21 @@ class LearnMoreButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: TextButton(
+      child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            onPrimary: Theme.of(context).primaryColor, // foreground
+            primary: Theme.of(context).buttonColor,
+          ),
           child: Text(
             'Learn More',
             style: TextStyle(
                 fontSize: 16, color: Theme.of(context).textTheme.button.color),
           ),
-          style: TextButton.styleFrom(
-            primary: Theme.of(context).buttonColor,
-          ),
           onPressed: () async {
             try {
               await launch(link, forceSafariVC: true);
             } catch (e) {
-              Scaffold.of(context).showSnackBar(SnackBar(
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 content: Text('Could not open.'),
               ));
             }

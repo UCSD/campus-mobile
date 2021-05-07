@@ -94,6 +94,7 @@ class ErrorConstants {
       'DioError [DioErrorType.response]: Http status error [409]';
   static const invalidMedia =
       'DioError [DioErrorType.response]: Http status error [415]';
+  static const silentLoginFailed = "Silent login failed";
 }
 
 class ScannerConstants {
@@ -114,6 +115,8 @@ class ScannerConstants {
 }
 
 class LoginConstants {
+  static const silentLoginFailedTitle = 'Oops! You\'re not logged in.';
+  static const silentLoginFailedDesc = 'The system has logged you out (probably by mistake). Go to Profile to log back in.';
   static const loginFailedTitle = 'Sorry, unable to sign you in.';
   static const loginFailedDesc =
       'Be sure you are using the correct credentials; TritonLink login if you are a student, SSO (AD or Active Directory) if you are a Faculty/Staff.';

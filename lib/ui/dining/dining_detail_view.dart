@@ -53,6 +53,9 @@ class DiningDetailView extends StatelessWidget {
       BuildContext context, prefix0.DiningModel model) {
     if (model.distance != null)
       return TextButton(
+        style: TextButton.styleFrom(
+          primary: Theme.of(context).buttonColor,
+        ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
@@ -89,10 +92,12 @@ class DiningDetailView extends StatelessWidget {
   Widget buildWebsiteButton(BuildContext context, prefix0.DiningModel model) {
     if (model.url != null && model.url != '') {
       return ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          onPrimary: Theme.of(context).primaryColor, // foreground
+          primary: Theme.of(context).buttonColor,
+        ),
         child: Text('Visit Website',
-            style: TextStyle(
-              color: Theme.of(context).textTheme.button.color,
-            )),
+            style: TextStyle(color: Theme.of(context).textTheme.button.color)),
         onPressed: () {
           try {
             launch(model.url, forceSafariVC: true);
@@ -108,10 +113,14 @@ class DiningDetailView extends StatelessWidget {
   Widget buildMenu(BuildContext context, prefix0.DiningModel model) {
     if (model.menuWebsite != null && model.menuWebsite.isNotEmpty) {
       return ElevatedButton(
-        child: Text('View Menu',
-            style: TextStyle(
-              color: Theme.of(context).textTheme.button.color,
-            )),
+        style: ElevatedButton.styleFrom(
+          onPrimary: Theme.of(context).primaryColor, // foreground
+          primary: Theme.of(context).buttonColor,
+        ),
+        child: Text(
+          'View Menu',
+          style: TextStyle(color: Theme.of(context).textTheme.button.color),
+        ),
         onPressed: () {
           try {
             launch(model.menuWebsite, forceSafariVC: true);
