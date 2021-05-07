@@ -1,8 +1,9 @@
 #!/bin/sh
 set -e
 
+echo "Running verify-env.sh $1"
+
 if [ "$1" == "PROD" ]; then
-    echo "verify-env.sh PROD-----------------------------------------------"
 	qa_slash=$(grep -rio "https.*\/qa" lib | wc -l | sed -e "s/^[ \t]*//")
 	qa_dash=$(grep -rio "https.*-qa" lib | wc -l | sed -e "s/^[ \t]*//")
 	dev_slash=$(grep -rio "https.*\/dev" lib | wc -l | sed -e "s/^[ \t]*//")
@@ -12,7 +13,8 @@ if [ "$1" == "PROD" ]; then
 	background_android=0
 
 	if [ "$2" == "ANDROID" ]; then
-		background_android=$(grep -rio "ACCESS_BACKGROUND_LOCATION" lib | wc -l | sed -e "s/^[ \t]*//")
+		echo "$2: Background location check"
+		background_android=$(grep -rio "ACCESS_BACKGROUND_LOCATION" android | wc -l | sed -e "s/^[ \t]*//")
 	fi
 
 	invalid_count=$((qa_slash + qa_dash + dev_slash + dev_dash + scandit_android + scandit_ios + background_android))
@@ -27,11 +29,12 @@ if [ "$1" == "PROD" ]; then
 		grep -rin "https.*-dev" lib
 		grep -rin "SCANDIT_NATIVE_LICENSE_IOS_PH" lib
 		grep -rin "SCANDIT_NATIVE_LICENSE_ANDROID_PH" lib
-		grep -rin "ACCESS_BACKGROUND_LOCATION" lib
+		if [ "$2" == "ANDROID" ]; then
+			grep -rin "ACCESS_BACKGROUND_LOCATION" android
+		fi
 		exit 1
 	fi
 elif [ "$1" == "PROD-TEST" ]; then
-    echo "verify-env.sh PROD-TEST -----------------------------------------------"
 	topics=$(grep -rio "https.*prod/topics.json" lib | wc -l | sed -e "s/^[ \t]*//")
 
 	invalid_count=$((topics))
@@ -47,13 +50,13 @@ elif [ "$1" == "PROD-TEST" ]; then
 		exit 1
 	fi
 elif [ "$1" == "QA" ]; then
-    echo "verify-env.sh QA-----------------------------------------------"
 	scandit_android=$(grep -rio "SCANDIT_NATIVE_LICENSE_ANDROID_PH" lib | wc -l | sed -e "s/^[ \t]*//")
 	scandit_ios=$(grep -rio "SCANDIT_NATIVE_LICENSE_IOS_PH" lib | wc -l | sed -e "s/^[ \t]*//")
 	background_android=0
 
 	if [ "$2" == "ANDROID" ]; then
-		background_android=$(grep -rio "ACCESS_BACKGROUND_LOCATION" lib | wc -l | sed -e "s/^[ \t]*//")
+		echo "$2: Background location check"
+		background_android=$(grep -rio "ACCESS_BACKGROUND_LOCATION" android | wc -l | sed -e "s/^[ \t]*//")
 	fi
 
 	invalid_count=$((scandit_android + scandit_ios + background_android))
@@ -66,7 +69,9 @@ elif [ "$1" == "QA" ]; then
 		grep -rin "https.*-prod" lib
 		grep -rin "SCANDIT_NATIVE_LICENSE_IOS_PH" lib
 		grep -rin "SCANDIT_NATIVE_LICENSE_ANDROID_PH" lib
-		grep -rin "ACCESS_BACKGROUND_LOCATION" lib
+		if [ "$2" == "ANDROID" ]; then
+			grep -rin "ACCESS_BACKGROUND_LOCATION" android
+		fi
 		exit 1
 	fi
 else
