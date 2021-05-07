@@ -11,47 +11,49 @@ class CardsDataProvider extends ChangeNotifier {
     _isLoading = false;
     _cardStates = {};
     _webCards = {};
+
+    // Default card order for native cards
     _cardOrder = [
       'NativeScanner',
       'MyStudentChart',
       'MyUCSDChart',
-      'student_id',
-      'campus_info',
-      'speed_test',
-      'employee_id',
-      'staff_info',
-      'student_info',
-      'student_survey',
       'finals',
       'schedule',
-      'shuttle',
-      'dining',
-      'parking',
+      'student_survey',
+      'student_id',
+      'employee_id',
+      'speed_test',
       'availability',
+      'dining',
       'events',
+      'shuttle',
+      'parking',
       'news',
       'weather',
     ];
 
+    // Native student cards
     _studentCards = [
-      'student_survey',
-      'student_info',
-      'student_id',
       'finals',
-      'schedule'
+      'schedule',
+      'student_survey',
+      'student_id',
+      'speed_test',
     ];
 
+    // Native staff cards
     _staffCards = [
       'MyUCSDChart',
       'staff_info',
       'employee_id',
+      'speed_test',
     ];
 
     for (String card in CardTitleConstants.titleMap.keys.toList()) {
       _cardStates[card] = true;
     }
 
-    /// temporary fix that prevents the student cards from causing issues on launch
+    /// temporary fix that prevents authenticated cards from causing issues on launch
     _cardOrder.removeWhere((element) => _studentCards.contains(element));
     _cardStates.removeWhere((key, value) => _studentCards.contains(key));
 
@@ -149,7 +151,7 @@ class CardsDataProvider extends ChangeNotifier {
   /// Update the [_cardOrder] stored in state
   /// overwrite the [_cardOrder] in persistent storage with the model passed in
   Future updateCardOrder(List<String> newOrder) async {
-    if(_userDataProvider != null && _userDataProvider.isInSilentLogin) {
+    if (_userDataProvider != null && _userDataProvider.isInSilentLogin) {
       return;
     }
     try {
@@ -166,7 +168,7 @@ class CardsDataProvider extends ChangeNotifier {
   /// Load [_cardOrder] from persistent storage
   /// Will create persistent storage if no data is found
   Future _loadCardOrder() async {
-    if(_userDataProvider != null && _userDataProvider.isInSilentLogin) {
+    if (_userDataProvider != null && _userDataProvider.isInSilentLogin) {
       return;
     }
     _cardOrderBox = await Hive.openBox(DataPersistence.cardOrder);
@@ -198,7 +200,7 @@ class CardsDataProvider extends ChangeNotifier {
   /// Update the [_cardStates] stored in state
   /// overwrite the [_cardStates] in persistent storage with the model passed in
   Future updateCardStates(List<String> activeCards) async {
-    if(_userDataProvider != null && _userDataProvider.isInSilentLogin) {
+    if (_userDataProvider != null && _userDataProvider.isInSilentLogin) {
       return;
     }
     for (String activeCard in activeCards) {
@@ -238,7 +240,6 @@ class CardsDataProvider extends ChangeNotifier {
 
     // TODO: test w/o this
     _cardOrder = List.from(_cardOrder.toSet().toList());
-
 
     for (String card in _studentCards) {
       _cardStates[card] = true;
@@ -307,7 +308,6 @@ class CardsDataProvider extends ChangeNotifier {
   }
 
   set userDataProvider(UserDataProvider value) => _userDataProvider = value;
-
 
   ///SIMPLE GETTERS
   bool get isLoading => _isLoading;
