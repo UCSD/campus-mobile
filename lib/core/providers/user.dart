@@ -225,8 +225,9 @@ class UserDataProvider extends ChangeNotifier {
         await fetchUserProfile();
 
         CardsDataProvider _cardsDataProvider = CardsDataProvider();
-        print(_cardsDataProvider.cardOrder.toString()); // _cardsDataProvider
-        //     .updateAvailableCards(_userProfileModel.ucsdaffiliation);
+        print(_cardsDataProvider.cardOrder.toString());
+        _cardsDataProvider
+            .updateAvailableCards(_userProfileModel.ucsdaffiliation);
 
         _subscribeToPushNotificationTopics(userProfileModel.subscribedTopics);
         _pushNotificationDataProvider
