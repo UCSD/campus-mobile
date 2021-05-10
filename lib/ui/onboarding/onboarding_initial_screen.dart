@@ -120,6 +120,7 @@ class _OnboardingInitialState extends State<OnboardingInitial>
                           style: TextButton.styleFrom(
                             primary: ColorPrimary,
                           ),
+                          onPressed: () { },
                           child: Text(
                             "Get Started",
                             style: TextStyle(
@@ -133,6 +134,7 @@ class _OnboardingInitialState extends State<OnboardingInitial>
                             style: TextButton.styleFrom(
                               primary: ColorPrimary,
                             ),
+                            onPressed: () { },
                             child: Text(
                               "Log In",
                               style: TextStyle(

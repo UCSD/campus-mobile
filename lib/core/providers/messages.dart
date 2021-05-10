@@ -18,7 +18,7 @@ class MessagesDataProvider extends ChangeNotifier {
     _hasMoreMessagesToLoad = false;
     _scrollController = ScrollController();
     _scrollController
-      ..addListener(() {
+      !.addListener(() {
         var triggerFetchMoreSize =
             0.9 * _scrollController!.position.maxScrollExtent;
 

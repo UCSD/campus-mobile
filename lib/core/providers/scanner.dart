@@ -110,7 +110,7 @@ class ScannerDataProvider extends ChangeNotifier {
 
     try {
       int accessTokenExpiration =
-          _userDataProvider?.authenticationModel?.expiration!;
+          _userDataProvider?.authenticationModel?.expiration! as int;
       var nowTime = (DateTime.now().millisecondsSinceEpoch / 1000).round();
       var timeDiff = accessTokenExpiration - nowTime;
       var tokenExpired = timeDiff <= 0 ? true : false;

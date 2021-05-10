@@ -117,7 +117,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
   /// Initializes AdvancedWayfinding Singleton for BT LE scanning
   ///
   /// Async method that will only initialize scanning if AW is enabled
-  void init() async {
+  Future<void> init() async {
     //Instantiate access token for a logged in user
     if (userDataProvider!.isLoggedIn) {
       offloadDataHeader = {
@@ -527,7 +527,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
         return true;
       } else if (!isDeviceContinuous &&
           value.scanIntervalAllowancesUsed! < scanIntervalAllowance) {
-        value.scanIntervalAllowancesUsed++;
+        value.scanIntervalAllowancesUsed = value.scanIntervalAllowancesUsed! + 1;
       }
       return false;
     });
@@ -539,7 +539,7 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
         objectsToRemove.add(key);
       } else if (!value.continuousDuration! &&
           value.scanIntervalAllowancesUsed! <= scanIntervalAllowance) {
-        value.scanIntervalAllowancesUsed++;
+        value.scanIntervalAllowancesUsed = value.scanIntervalAllowancesUsed! + 1;
       }
     });
     objectsToRemove.forEach((element) {
@@ -558,7 +558,8 @@ class AdvancedWayfindingSingleton extends ChangeNotifier {
   void bluetoothLogAnalysis(
       bool repeatedDevice, ScanResult scanResult, String? calculatedUUID) {
     if (!repeatedDevice) {
-      scannedObjects[scanResult.device.id.toString()]!.dwellTime +=
+      scannedObjects[scanResult.device.id.toString()]!.dwellTime =
+          scannedObjects[scanResult.device.id.toString()]!.dwellTime! +
           (waitTime * 60); //account for seconds
       scannedObjects[scanResult.device.id.toString()]!.distance =
           getDistance(scanResult.rssi);

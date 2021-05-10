@@ -93,7 +93,7 @@ class ClassList extends StatelessWidget {
     );
   }
 
-  Widget buildClass(SectionData sectionData) {
+  Widget buildClass(SectionData? sectionData) {
     return sectionData != null
         ? Card(
             child: Padding(
@@ -127,7 +127,7 @@ class ClassList extends StatelessWidget {
               ),
             ),
           )
-        : null;
+        : Card();
   }
 
   String abbrevToFullWeekday(String? abbreviation) {
@@ -153,7 +153,7 @@ class ClassList extends StatelessWidget {
     }
   }
 
-  Widget buildMidterm(SectionData sectionData) {
+  Widget buildMidterm(SectionData? sectionData) {
     return sectionData != null
         ? Card(
             child: Padding(
@@ -188,7 +188,7 @@ class ClassList extends StatelessWidget {
               ),
             ),
           )
-        : null;
+        : Card();
   }
 
   String? formatDate(String? date) {

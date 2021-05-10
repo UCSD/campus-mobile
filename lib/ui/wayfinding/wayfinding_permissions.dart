@@ -129,9 +129,9 @@ class _AdvancedWayfindingPermissionState
                 onChanged: (permissionGranted) {
                   startBluetooth(context, permissionGranted);
                   bool forceOff = false;
-                  if (((snapshot.data as BluetoothState? ==
+                  if ((((snapshot.data as BluetoothState?) ==
                               BluetoothState.unauthorized) ||
-                          (snapshot.data as BluetoothState? ==
+                          ((snapshot.data as BluetoothState?) ==
                               BluetoothState.off)) &&
                       permissionGranted) {
                     forceOff = true;
@@ -214,8 +214,8 @@ class _AdvancedWayfindingPermissionState
   bool? bluetoothStarted(BuildContext context, AsyncSnapshot<dynamic> snapshot) {
     _bluetoothSingleton = AdvancedWayfindingSingleton();
 
-    if ((snapshot.data as BluetoothState? == BluetoothState.unauthorized ||
-            snapshot.data as BluetoothState? == BluetoothState.off) ||
+    if (((snapshot.data as BluetoothState?) == BluetoothState.unauthorized ||
+            (snapshot.data as BluetoothState?) == BluetoothState.off) ||
         (_bluetoothSingleton != null &&
             !_bluetoothSingleton!.advancedWayfindingEnabled!)) {
       _bluetoothSingleton!.advancedWayfindingEnabled = false;

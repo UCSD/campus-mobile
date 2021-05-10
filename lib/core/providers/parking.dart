@@ -9,7 +9,7 @@ import 'package:campus_mobile_experimental/core/services/spot_types.dart';
 import 'package:flutter/material.dart';
 
 class ParkingDataProvider extends ChangeNotifier {
-  ParkingDataProvider() {
+  ParkingDataProvider() : selectedLots = 0, selectedSpots = 0 {
     ///DEFAULT STATES
     _isLoading = false;
 
@@ -23,7 +23,7 @@ class ParkingDataProvider extends ChangeNotifier {
   bool? _isLoading;
   DateTime? _lastUpdated;
   String? _error;
-  int? selectedLots, selectedSpots;
+  int selectedLots, selectedSpots;
   static const MAX_SELECTED_LOTS = 10;
   static const MAX_SELECTED_SPOTS = 3;
   Map<String?, bool>? _parkingViewState = <String?, bool>{};
@@ -127,7 +127,7 @@ class ParkingDataProvider extends ChangeNotifier {
 
 // add or remove location availability display from card based on user selection, Limit to MAX_SELECTED
   void toggleLot(String? location) {
-    if (selectedLots! < MAX_SELECTED_LOTS) {
+    if (selectedLots < MAX_SELECTED_LOTS) {
       _parkingViewState![location] = !_parkingViewState![location]!;
       _parkingViewState![location]! ? selectedLots++ : selectedLots--;
     } else {
@@ -143,7 +143,7 @@ class ParkingDataProvider extends ChangeNotifier {
   }
 
   void toggleSpotSelection(String? spotKey) {
-    if (selectedSpots! < MAX_SELECTED_SPOTS) {
+    if (selectedSpots < MAX_SELECTED_SPOTS) {
       _selectedSpotTypesState![spotKey] = !_selectedSpotTypesState![spotKey]!;
       _selectedSpotTypesState![spotKey]! ? selectedSpots++ : selectedSpots--;
     } else {

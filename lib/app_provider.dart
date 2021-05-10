@@ -82,6 +82,7 @@ List<SingleChildWidget> independentServices = [
     },
   ),
   StreamProvider<Coordinates>(
+    initialData: Coordinates(),
     create: (_) {
       print("CreateProvider: Coordinates (LocationDataProvider)");
       return LocationDataProvider().locationStream;
@@ -196,7 +197,7 @@ List<SingleChildWidget> dependentServices = [
     return proximityAwarenessSingleton;
   }, update: (_, userDataProvider, proximityAwarenessSingleton) {
     print("UpdateProvider: AdvancedWayfindingSingleton");
-    proximityAwarenessSingleton..userDataProvider = userDataProvider;
+    proximityAwarenessSingleton?.userDataProvider = userDataProvider;
     return proximityAwarenessSingleton;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, StudentIdDataProvider?>(

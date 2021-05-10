@@ -37,8 +37,8 @@ class ShuttleModel {
       this.stops});
 
   ShuttleModel.fromJson(Map<String, dynamic> json) {
-    json.forEach((key, value) {
-      return (ShuttleModel(
+    json.forEach((key, value) =>
+       ShuttleModel(
           displayOrder:
               value["displayOrder"] == null ? null : value["displayOrder"],
           url: value["url"] == null ? null : value["lon"],
@@ -60,8 +60,8 @@ class ShuttleModel {
                     return (ShuttleStopModel.fromJson(entry.value));
                   })
                   .toList()
-                  .cast<ShuttleStopModel>()));
-    });
+                  .cast<ShuttleStopModel>())
+    );
   }
 
   List<ShuttleModel> getListOfShuttles(String str) {

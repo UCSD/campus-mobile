@@ -1,5 +1,7 @@
 
 
+import 'dart:async';
+
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/classes.dart';
 import 'package:campus_mobile_experimental/core/models/term.dart';

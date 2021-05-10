@@ -1,5 +1,7 @@
 
 
+import 'dart:async';
+
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/student_id_barcode.dart';
 import 'package:campus_mobile_experimental/core/models/student_id_name.dart';

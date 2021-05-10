@@ -17,10 +17,10 @@ class OnboardingScreen extends StatefulWidget {
 class _OnboardingScreen extends State<OnboardingScreen>
     with TickerProviderStateMixin {
   final _controller = PageController();
-  AnimationController _animationController,
+  late AnimationController _animationController,
       _animationController2,
       _animationController3;
-  Animation<Offset> _offsetAnimation, _offsetAnimation2, _offsetAnimation3;
+  late Animation<Offset> _offsetAnimation, _offsetAnimation2, _offsetAnimation3;
   double? currentIndex = 0;
 
   @override

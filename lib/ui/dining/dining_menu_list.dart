@@ -215,7 +215,7 @@ class LabeledRadio extends StatelessWidget {
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             value: value,
             groupValue: groupValue,
-            onChanged: onChanged as void Function(_)?,
+            onChanged: onChanged as void Function(dynamic)?,
             activeColor: Theme.of(context).buttonColor,
           ),
           Container(

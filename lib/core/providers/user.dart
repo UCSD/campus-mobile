@@ -14,6 +14,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive/hive.dart';
+import 'package:pointycastle/asymmetric/api.dart';
 import 'package:pointycastle/asymmetric/oaep.dart';
 import 'package:pointycastle/pointycastle.dart' as pc;
 

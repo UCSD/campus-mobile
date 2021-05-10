@@ -1,5 +1,6 @@
 
 
+import 'dart:async';
 import 'dart:io';
 
 import 'package:campus_mobile_experimental/app_networking.dart';
@@ -78,7 +79,7 @@ class SpeedTestService {
     }
     late bool isUCSDWIFI;
     // Check for UCSD wifi
-    WifiInfo wiFiInfo = await WifiConnection.wifiInfo.then((value) {
+    WifiInfo? wiFiInfo = await WifiConnection.wifiInfo.then((value) {
       if ((!value.ssid!.contains("UCSD-PROTECTED")) &&
           (!value.ssid!.contains("UCSD-GUEST")) &&
           (!value.ssid!.contains("ResNet"))) {

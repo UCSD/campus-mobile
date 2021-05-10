@@ -227,7 +227,7 @@ class _WiFiCardState extends State<WiFiCard> {
             onPressed: _buttonEnabled
                 ? () {
                     _speedTestProvider.reportIssue();
-                    return showDialog(
+                    showDialog(
                         context: context,
                         builder: (context) {
                           return AlertDialog(
@@ -314,7 +314,7 @@ class _WiFiCardState extends State<WiFiCard> {
               onPressed: _buttonEnabled
                   ? () {
                       _speedTestProvider.reportIssue();
-                      return showDialog(
+                      showDialog(
                           context: context,
                           builder: (context) {
                             return AlertDialog(

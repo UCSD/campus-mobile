@@ -72,11 +72,11 @@ class Router {
           return EventsList();
         });
       case RoutePaths.NewsDetailView:
-        Item? newsItem = settings.arguments as Item?;
+        Item newsItem = settings.arguments as Item;
         return MaterialPageRoute(
             builder: (_) => NewsDetailView(data: newsItem));
       case RoutePaths.EventDetailView:
-        EventModel? data = settings.arguments as EventModel?;
+        EventModel data = settings.arguments as EventModel;
         return MaterialPageRoute(builder: (_) => EventDetailView(data: data));
       case RoutePaths.ManageAvailabilityView:
         return MaterialPageRoute(builder: (_) {
@@ -89,14 +89,14 @@ class Router {
           return DiningList();
         });
       case RoutePaths.DiningDetailView:
-        DiningModel? data = settings.arguments as DiningModel?;
+        DiningModel data = settings.arguments as DiningModel;
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return DiningDetailView(data: data);
         });
       case RoutePaths.DiningNutritionView:
         Map<String, Object> arguments = settings.arguments as Map<String, Object>;
-        MenuItem? data = arguments['data'] as MenuItem?;
+        MenuItem data = arguments['data'] as MenuItem;
         String? disclaimer = arguments['disclaimer'] as String?;
         String? disclaimerEmail = arguments['disclaimerEmail'] as String?;
         return MaterialPageRoute(
