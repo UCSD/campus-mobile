@@ -329,14 +329,14 @@ packages:
       name: firebase_core_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.0"
+    version: "4.0.1"
   firebase_core_web:
     dependency: transitive
     description:
       name: firebase_core_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.2"
+    version: "1.0.3"
   firebase_crashlytics:
     dependency: "direct main"
     description:
@@ -388,7 +388,7 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: master
+      ref: "470b128cd463373d0ec4b668d5b4f449dc728d72"
       resolved-ref: "470b128cd463373d0ec4b668d5b4f449dc728d72"
       url: "https://github.com/UCSD/flutter_blue.git"
     source: git
@@ -425,7 +425,7 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: master
+      ref: "41fb666299ed90d8277c24e0065149e83cd71494"
       resolved-ref: "41fb666299ed90d8277c24e0065149e83cd71494"
       url: "https://github.com/UCSD/flutter_scandit.git"
     source: git
@@ -577,7 +577,7 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: master
+      ref: "9fd5cc0aa1a68d70588741f40bfc6830b46c10c1"
       resolved-ref: "9fd5cc0aa1a68d70588741f40bfc6830b46c10c1"
       url: "https://github.com/UCSD/liquid_progress_indicator.git"
     source: git
@@ -840,7 +840,7 @@ packages:
       name: shelf
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.1"
+    version: "1.1.2"
   shelf_web_socket:
     dependency: transitive
     description:
