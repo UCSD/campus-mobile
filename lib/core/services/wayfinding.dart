@@ -41,7 +41,7 @@ class WayfindingService {
       isLoading = false;
       return true;
     } catch (exception) {
-      print(exception);
+      print("EXCEPTION WAS: $exception");
       error = exception.toString();
       isLoading = false;
       return false;
