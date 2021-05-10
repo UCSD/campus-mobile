@@ -190,14 +190,15 @@ List<SingleChildWidget> dependentServices = [
     }
     return classScheduleDataProvider;
   }),
-  ChangeNotifierProxyProvider<UserDataProvider, AdvancedWayfindingSingleton>(
+  ChangeNotifierProxyProvider2<Coordinates, UserDataProvider, WayfindingProvider>(
       create: (_) {
-    print("CreateProvider: AdvancedWayfindingSingleton");
-    var proximityAwarenessSingleton = AdvancedWayfindingSingleton();
-    return proximityAwarenessSingleton;
-  }, update: (_, userDataProvider, proximityAwarenessSingleton) {
+        print("CreateProvider: AdvancedWayfindingSingleton");
+        var proximityAwarenessSingleton = WayfindingProvider();
+        return proximityAwarenessSingleton;
+      }, update: (_, coordinates, userDataProvider, proximityAwarenessSingleton) {
     print("UpdateProvider: AdvancedWayfindingSingleton");
-    proximityAwarenessSingleton..userDataProvider = userDataProvider;
+    proximityAwarenessSingleton.coordinates = coordinates;
+    proximityAwarenessSingleton.userProvider = userDataProvider;
     return proximityAwarenessSingleton;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, StudentIdDataProvider>(
