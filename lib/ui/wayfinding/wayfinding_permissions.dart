@@ -7,8 +7,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:campus_mobile_experimental/core/models/location.dart';
 
 class AdvancedWayfindingPermission extends StatefulWidget {
   @override
@@ -18,8 +16,6 @@ class AdvancedWayfindingPermission extends StatefulWidget {
 
 class _AdvancedWayfindingPermissionState
     extends State<AdvancedWayfindingPermission> {
-  SharedPreferences pref;
-  Coordinates _coordinates;
   WayfindingProvider _wayfindingProvider;
 
   @override
@@ -42,17 +38,11 @@ class _AdvancedWayfindingPermissionState
           title: Text("Advanced Wayfinding"),
         ),
       ),
-      body: getPermissionsContainer(context),
+      body: buildBody(context),
     );
   }
 
-  void getPreferences() async {
-    SharedPreferences.getInstance().then((value) {
-      pref = value;
-    });
-  }
-
-  Widget getPermissionsContainer(BuildContext context) {
+  Widget buildBody(BuildContext context) {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -86,98 +76,12 @@ class _AdvancedWayfindingPermissionState
             builder: (context, snapshot) {
               return snapshot.hasData
                   ? Switch(
-                      value: _wayfindingProvider.permissionState(
-                          context, snapshot),
-                      onChanged: (permissionGranted) {
-                        _wayfindingProvider.startBluetooth(
-                            context, permissionGranted);
-                        if (_wayfindingProvider.forceOff) {
-                          showDialog(
-                              context: context,
-                              barrierDismissible: false,
-                              builder: (BuildContext context) {
-                                if (Platform.isIOS) {
-                                  return CupertinoAlertDialog(
-                                    title: Text(
-                                        "UCSD Mobile would like to use Bluetooth."),
-                                    content: Text(
-                                        "This feature use Bluetooth to connect with other devices."),
-                                    actions: <Widget>[
-                                      FlatButton(
-                                        child: Text('Cancel'),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                      FlatButton(
-                                        child: Text('Settings'),
-                                        onPressed: () {
-                                          AppSettings.openAppSettings();
-                                        },
-                                      )
-                                    ],
-                                  );
-                                }
-                                return AlertDialog(
-                                  title: Text(
-                                      "UCSD Mobile would like to use Bluetooth."),
-                                  content: Text(
-                                      "This feature use Bluetooth to connect with other devices."),
-                                  actions: <Widget>[
-                                    FlatButton(
-                                      child: Text('Cancel'),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                    FlatButton(
-                                      child: Text('Settings'),
-                                      onPressed: () {
-                                        AppSettings.openAppSettings();
-                                      },
-                                    )
-                                  ],
-                                );
-                              });
-                        }
-                        setState(() {
-                          if (_wayfindingProvider.forceOff) {
-                            _wayfindingProvider.advancedWayfindingEnabled =
-                                false;
-                          } else {
-                            _wayfindingProvider.advancedWayfindingEnabled =
-                                !_wayfindingProvider.advancedWayfindingEnabled;
-                          }
-
-                          return AlertDialog(
-                            title: Text(
-                                "UCSD Mobile would like to use Bluetooth."),
-                            content: Text(
-                                "This feature use Bluetooth to connect with other devices."),
-                            actions: <Widget>[
-                              TextButton(
-                                child: Text('Cancel'),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                              TextButton(
-                                child: Text('Settings'),
-                                onPressed: () {
-                                  AppSettings.openAppSettings();
-                                },
-                              )
-                            ],
-                          );
-                        });
-                  }
-
-                  // check if location is available
-                  double userLongitude = _wayfindingProvider.coordinate?.userLongitude;
-                  double userLatitude = _wayfindingProvider.coordinate?.userLatitude;
-                  if (userLatitude == null || userLongitude == null){
-                    print("Advanced wayfinding had NULL variables");
-                    forceOff = true;
+                value: _wayfindingProvider.permissionState(
+                    context, snapshot),
+                onChanged: (permissionGranted) {
+                  _wayfindingProvider.startBluetooth(
+                      context, permissionGranted);
+                  if (_wayfindingProvider.forceOff) {
                     showDialog(
                         context: context,
                         barrierDismissible: false,
@@ -185,9 +89,9 @@ class _AdvancedWayfindingPermissionState
                           if (Platform.isIOS) {
                             return CupertinoAlertDialog(
                               title: Text(
-                                  "UCSD Mobile would like to use Location."),
+                                  "UCSD Mobile would like to use Bluetooth and location."),
                               content: Text(
-                                  "Please turn on Location."),
+                                  "This feature use Bluetooth and location to connect with other devices."),
                               actions: <Widget>[
                                 FlatButton(
                                   child: Text('Cancel'),
@@ -206,9 +110,9 @@ class _AdvancedWayfindingPermissionState
                           }
                           return AlertDialog(
                             title: Text(
-                                "UCSD Mobile would like to use Location."),
+                                "UCSD Mobile would like to use Bluetooth and location."),
                             content: Text(
-                                "Please turn on location."),
+                                "This feature use Bluetooth and location to connect with other devices."),
                             actions: <Widget>[
                               FlatButton(
                                 child: Text('Cancel'),
@@ -227,21 +131,22 @@ class _AdvancedWayfindingPermissionState
                         });
                   }
                   setState(() {
-                    if (forceOff) {
-                      _bluetoothSingleton.advancedWayfindingEnabled = false;
+                    if (_wayfindingProvider.forceOff) {
+                      _wayfindingProvider.advancedWayfindingEnabled =
+                      false;
                     } else {
-                      _bluetoothSingleton.advancedWayfindingEnabled =
-                          !_bluetoothSingleton.advancedWayfindingEnabled;
+                      _wayfindingProvider.advancedWayfindingEnabled =
+                      !_wayfindingProvider.advancedWayfindingEnabled;
                     }
 
-                          if (!_wayfindingProvider.advancedWayfindingEnabled) {
-                            _wayfindingProvider.stopScans();
-                          }
-                          _wayfindingProvider.setAWPreference();
-                        });
-                      },
-                      activeColor: Theme.of(context).buttonColor,
-                    )
+                    if (!_wayfindingProvider.advancedWayfindingEnabled) {
+                      _wayfindingProvider.stopScans();
+                    }
+                    _wayfindingProvider.setAWPreference();
+                  });
+                },
+                activeColor: Theme.of(context).buttonColor,
+              )
                   : CircularProgressIndicator();
             })
       ],
