@@ -96,6 +96,7 @@ class CardContainer extends StatelessWidget {
     } else if (isLoading) {
       return Container(
         width: double.infinity,
+        constraints: BoxConstraints(minHeight: cardContentMinHeight),
         child: Center(
           child: Container(
               height: 32, width: 32, child: CircularProgressIndicator()),
