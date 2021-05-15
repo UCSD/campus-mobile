@@ -87,7 +87,6 @@ class PushNotificationDataProvider extends ChangeNotifier {
       /// Foreground messaging
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
         print('FCM: onMessage: foreground message:');
-        print(_receivedMessageIds.toString());
         /// foreground messaging callback via flutter_local_notifications
         /// only show message if the message has not been seen before
         if(!_receivedMessageIds.contains(message.messageId)) {
