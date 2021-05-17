@@ -26,6 +26,7 @@ import 'package:campus_mobile_experimental/core/providers/weather.dart';
 import 'package:campus_mobile_experimental/ui/navigator/top.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
+import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
@@ -34,7 +35,7 @@ List<SingleChildWidget> providers = [
   ...dependentServices,
   ...uiConsumableProviders,
 ];
-
+LocationDataProvider locationProvider;
 final FirebaseAnalytics analytics = FirebaseAnalytics();
 final FirebaseAnalyticsObserver observer =
     FirebaseAnalyticsObserver(analytics: analytics);
@@ -82,7 +83,8 @@ List<SingleChildWidget> independentServices = [
   StreamProvider<Coordinates>(
     create: (_) {
       print("CreateProvider: Coordinates (LocationDataProvider)");
-      return LocationDataProvider().locationStream;
+      locationProvider = LocationDataProvider();
+      return locationProvider.locationStream;
     },
     lazy: false,
   ),
@@ -194,7 +196,8 @@ List<SingleChildWidget> dependentServices = [
     return proximityAwarenessSingleton;
   }, update: (_, coordinates, userDataProvider, proximityAwarenessSingleton) {
     print("UpdateProvider: AdvancedWayfindingSingleton");
-    proximityAwarenessSingleton.coordinates = coordinates;
+    proximityAwarenessSingleton.coordinateAndLocation(
+        coordinates, locationProvider);
     proximityAwarenessSingleton.userProvider = userDataProvider;
     return proximityAwarenessSingleton;
   }),

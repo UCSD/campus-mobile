@@ -11,12 +11,14 @@ import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/location.dart';
 import 'package:campus_mobile_experimental/core/models/wayfinding_constants.dart';
+import 'package:campus_mobile_experimental/core/providers/location.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/wayfinding.dart';
 import 'package:campus_mobile_experimental/core/utils/maps.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:location/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'bluetooth.dart';
@@ -64,6 +66,9 @@ class WayfindingProvider extends ChangeNotifier {
 
   /// Provides location of device for logging scans.
   Coordinates _coordinates;
+
+  /// Not directly accessed but used to check permissions
+  LocationDataProvider _locationDataProvider;
 
   /// Keeps track of scanned unique BT devices.
   HashMap<String, BluetoothDeviceProfile> scannedObjects = new HashMap();
@@ -140,8 +145,6 @@ class WayfindingProvider extends ChangeNotifier {
           await _wayfindingService.fetchData();
           _wayfindingConstantsModel =
               _wayfindingService.wayfindingConstantsModel;
-          print(
-              "Wayfinding is : ${_wayfindingConstantsModel == null ? "NULL" : "NOT NULL"}");
 
           // Set up broadcasting for UCSD App Identification
           startBeaconBroadcast();
@@ -790,15 +793,18 @@ class WayfindingProvider extends ChangeNotifier {
     beaconSingleton?.beaconBroadcast?.stop();
   }
 
-  set coordinates(Coordinates value) {
+  void coordinateAndLocation(
+      Coordinates value, LocationDataProvider locationDataProvider) {
+    _locationDataProvider = locationDataProvider;
     // Toggle off 'force off" value
-    if(_coordinates!= null){
+    if (_coordinates != null) {
       forceOff = false;
     }
     _coordinates = value;
     notifyListeners();
   }
 
+  get locationDataProvider => _locationDataProvider;
   get coordinate => _coordinates;
   set userProvider(UserDataProvider userDataProvider) {
     userDataProvider = userDataProvider;
@@ -822,14 +828,15 @@ class WayfindingProvider extends ChangeNotifier {
 
   // Checks bt state of the device
   bool permissionState(BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-    checkAdvancedWayfindingEnabled();
+    // checkAdvancedWayfindingEnabled();
+    checkForceOff(snapshot);
     if (snapshot.data as BluetoothState == BluetoothState.unauthorized ||
-        snapshot.data as BluetoothState == BluetoothState.off) {
-      forceOff = true;
+        snapshot.data as BluetoothState == BluetoothState.off ||
+        forceOff) {
+//      forceOff = true;
       advancedWayfindingEnabled = false;
-    } else {
-      forceOff = false;
     }
+
     if (advancedWayfindingEnabled) init();
     return advancedWayfindingEnabled;
   }
@@ -847,14 +854,30 @@ class WayfindingProvider extends ChangeNotifier {
     }
   }
 
+  void checkForceOff(AsyncSnapshot<dynamic> snapshot) async {
+    if (snapshot.data as BluetoothState == BluetoothState.unauthorized ||
+        snapshot.data as BluetoothState == BluetoothState.off ||
+        !(await locationDataProvider.locationObject.serviceEnabled()) ||
+        (PermissionStatus.granted !=
+            await locationDataProvider.locationObject.hasPermission())) {
+      forceOff = true;
+    } else
+      forceOff = false;
+  }
+
   /// permissionGranted = true
   /// forceOff (currently false)
-  void startBluetooth(BuildContext context, bool permissionGranted) async {
-    if (forceOff) return;
-//    print("wayfinging enabled");
-//    print(advancedWayfindingEnabled);
-    if (permissionGranted)
-    {
+  void startBluetooth(BuildContext context, bool permissionGranted,
+      AsyncSnapshot<dynamic> snapshot) async {
+    checkForceOff(snapshot);
+    if (forceOff) {
+      advancedWayfindingEnabled = false;
+      notifyListeners();
+      print("detected no permission");
+      return;
+    }
+
+    if (permissionGranted) {
       advancedWayfindingEnabled = true;
       init();
       if (!advancedWayfindingEnabled) {
@@ -864,6 +887,7 @@ class WayfindingProvider extends ChangeNotifier {
     } else {
       forceOff = false;
     }
+    notifyListeners();
   }
 
   // Sets up signal broadcasting with a random UUID

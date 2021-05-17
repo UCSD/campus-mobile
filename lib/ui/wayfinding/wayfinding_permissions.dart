@@ -6,6 +6,7 @@ import 'package:campus_mobile_experimental/core/providers/wayfinding.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
+import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 
 class AdvancedWayfindingPermission extends StatefulWidget {
@@ -73,83 +74,342 @@ class _AdvancedWayfindingPermissionState
         Spacer(),
         StreamBuilder(
             stream: FlutterBlue.instance.state,
-            builder: (context, snapshot) {
-              return snapshot.hasData
-                  ? Switch(
-                value: _wayfindingProvider.permissionState(
-                    context, snapshot),
-                onChanged: (permissionGranted) {
-                  _wayfindingProvider.startBluetooth(
-                      context, permissionGranted);
-                  if (_wayfindingProvider.forceOff) {
-                    showDialog(
-                        context: context,
-                        barrierDismissible: false,
-                        builder: (BuildContext context) {
-                          if (Platform.isIOS) {
-                            return CupertinoAlertDialog(
-                              title: Text(
-                                  "UCSD Mobile would like to use Bluetooth and location."),
-                              content: Text(
-                                  "This feature use Bluetooth and location to connect with other devices."),
-                              actions: <Widget>[
-                                FlatButton(
-                                  child: Text('Cancel'),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                                FlatButton(
-                                  child: Text('Settings'),
-                                  onPressed: () {
-                                    AppSettings.openAppSettings();
-                                  },
-                                )
-                              ],
-                            );
-                          }
-                          return AlertDialog(
-                            title: Text(
-                                "UCSD Mobile would like to use Bluetooth and location."),
-                            content: Text(
-                                "This feature use Bluetooth and location to connect with other devices."),
-                            actions: <Widget>[
-                              FlatButton(
-                                child: Text('Cancel'),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                              FlatButton(
-                                child: Text('Settings'),
-                                onPressed: () {
-                                  AppSettings.openAppSettings();
-                                },
-                              )
-                            ],
-                          );
-                        });
-                  }
-                  setState(() {
-                    if (_wayfindingProvider.forceOff) {
-                      _wayfindingProvider.advancedWayfindingEnabled =
-                      false;
-                    } else {
-                      _wayfindingProvider.advancedWayfindingEnabled =
-                      !_wayfindingProvider.advancedWayfindingEnabled;
-                    }
+            builder: (context, streamSnapshot) {
+              return streamSnapshot.hasData
+                  ? FutureBuilder(
+                      future: checkStatuses(_wayfindingProvider
+                          .locationDataProvider.locationObject),
+                      builder: (context, futureSnapshot) {
+                        if (futureSnapshot.hasData) {
+                          return Switch(
+                            value: _wayfindingProvider.permissionState(
+                                context, streamSnapshot),
+                            onChanged: (permissionGranted) {
+                              _wayfindingProvider.startBluetooth(
+                                  context, permissionGranted, streamSnapshot);
+                              if (_wayfindingProvider.forceOff) {
+                                if (streamSnapshot.data as BluetoothState ==
+                                        BluetoothState.unauthorized ||
+                                    streamSnapshot.data as BluetoothState ==
+                                        BluetoothState.off) {
+                                  if ((futureSnapshot.data[1] !=
+                                          PermissionStatus.granted) ||
+                                      !futureSnapshot.data[0]) {
+                                    bluetoothAndLocationMessage();
+                                  } else
+                                    bluetoothMessage();
+                                } else {
+                                  if (futureSnapshot.data[1] !=
+                                      PermissionStatus.granted) {
+                                    locationPermissionMessage();
+                                  }
+                                  if (!futureSnapshot.data[0]) {
+                                    devicelocationMessage();
+                                  }
+                                }
+                              }
+                              setState(() {
+                                if (_wayfindingProvider.forceOff) {
+                                  _wayfindingProvider
+                                      .advancedWayfindingEnabled = false;
+                                } else {
+                                  _wayfindingProvider
+                                          .advancedWayfindingEnabled =
+                                      !_wayfindingProvider
+                                          .advancedWayfindingEnabled;
+                                }
 
-                    if (!_wayfindingProvider.advancedWayfindingEnabled) {
-                      _wayfindingProvider.stopScans();
-                    }
-                    _wayfindingProvider.setAWPreference();
-                  });
-                },
-                activeColor: Theme.of(context).buttonColor,
-              )
+                                if (!_wayfindingProvider
+                                    .advancedWayfindingEnabled) {
+                                  _wayfindingProvider.stopScans();
+                                }
+                                _wayfindingProvider.setAWPreference();
+                              });
+                            },
+                            activeColor: Theme.of(context).buttonColor,
+                          );
+                        } else {
+                          return CircularProgressIndicator();
+                        }
+                      })
                   : CircularProgressIndicator();
             })
       ],
     );
   }
+
+  Future<List> checkStatuses(Location locationObject) async {
+    return Future.wait(
+        [locationObject.serviceEnabled(), locationObject.hasPermission()]);
+  }
+
+  void bluetoothAndLocationMessage() {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          if (Platform.isIOS) {
+            return CupertinoAlertDialog(
+              title:
+                  Text("UCSD Mobile would like to use Bluetooth and location."),
+              content: Text(
+                  "This feature uses Bluetooth and location to connect with other devices."),
+              actions: <Widget>[
+                TextButton(
+                  child: Text('Cancel'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  child: Text('Settings'),
+                  onPressed: () {
+                    AppSettings.openAppSettings();
+                  },
+                )
+              ],
+            );
+          }
+          return AlertDialog(
+            title:
+                Text("UCSD Mobile would like to use Bluetooth and location."),
+            content: Text(
+                "This feature uses Bluetooth and location to connect with other devices."),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: Text('Settings'),
+                onPressed: () {
+                  AppSettings.openAppSettings();
+                },
+              )
+            ],
+          );
+        });
+  }
+
+  void bluetoothMessage() {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          if (Platform.isIOS) {
+            return CupertinoAlertDialog(
+              title: Text("UCSD Mobile would like to use Bluetooth."),
+              content: Text(
+                  "This feature uses Bluetooth to connect with other devices."),
+              actions: <Widget>[
+                TextButton(
+                  child: Text('Cancel'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  child: Text('Settings'),
+                  onPressed: () {
+                    AppSettings.openAppSettings();
+                  },
+                )
+              ],
+            );
+          }
+          return AlertDialog(
+            title: Text("UCSD Mobile would like to use Bluetooth"),
+            content: Text(
+                "This feature uses Bluetooth to connect with other devices."),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: Text('Settings'),
+                onPressed: () {
+                  AppSettings.openAppSettings();
+                },
+              )
+            ],
+          );
+        });
+  }
+
+  void locationPermissionMessage() {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          if (Platform.isIOS) {
+            return CupertinoAlertDialog(
+              title: Text("UCSD Mobile would like to use location."),
+              content: Text(
+                  "This feature use location to connect with other devices."),
+              actions: <Widget>[
+                TextButton(
+                  child: Text('Cancel'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  child: Text('Settings'),
+                  onPressed: () {
+                    AppSettings.openAppSettings();
+                  },
+                )
+              ],
+            );
+          }
+          return AlertDialog(
+            title: Text("UCSD Mobile would like to use location."),
+            content: Text(
+                "This feature use location to connect with other devices."),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: Text('Settings'),
+                onPressed: () {
+                  AppSettings.openAppSettings();
+                },
+              )
+            ],
+          );
+        });
+  }
+
+  void devicelocationMessage() {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          if (Platform.isIOS) {
+            return CupertinoAlertDialog(
+              title:
+                  Text("UCSD Mobile would like to use Bluetooth and location."),
+              content: Text(
+                  "This feature uses Bluetooth and location to connect with other devices."),
+              actions: <Widget>[
+                TextButton(
+                  child: Text('Cancel'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  child: Text('Settings'),
+                  onPressed: () {
+                    AppSettings.openAppSettings();
+                  },
+                )
+              ],
+            );
+          }
+          return AlertDialog(
+            title: Text("UCSD Mobile would like to use device location."),
+            content: Text(
+                "This feature uses device location to connect with other devices."),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: Text('Settings'),
+                onPressed: () {
+                  AppSettings.openAppSettings();
+                },
+              )
+            ],
+          );
+        });
+  }
 }
+
+//              return snapshot.hasData
+//                  ? Switch(
+//                      value: _wayfindingProvider.permissionState(
+//                          context, snapshot),
+//                      onChanged: (permissionGranted) {
+//                        _wayfindingProvider.startBluetooth(
+//                            context, permissionGranted);
+//                        if (_wayfindingProvider.forceOff) {
+//                          showDialog(
+//                              context: context,
+//                              barrierDismissible: false,
+//                              builder: (BuildContext context) {
+//                                if (Platform.isIOS) {
+//                                  return CupertinoAlertDialog(
+//                                    title: Text(
+//                                        "UCSD Mobile would like to use Bluetooth and location."),
+//                                    content: Text(
+//                                        "This feature use Bluetooth and location to connect with other devices."),
+//                                    actions: <Widget>[
+//                                      TextButton(
+//                                        child: Text('Cancel'),
+//                                        onPressed: () {
+//                                          Navigator.of(context).pop();
+//                                        },
+//                                      ),
+//                                      TextButton(
+//                                        child: Text('Settings'),
+//                                        onPressed: () {
+//                                          AppSettings.openAppSettings();
+//                                        },
+//                                      )
+//                                    ],
+//                                  );
+//                                }
+//                                return AlertDialog(
+//                                  title: Text(
+//                                      "UCSD Mobile would like to use Bluetooth and location."),
+//                                  content: Text(
+//                                      "This feature use Bluetooth and location to connect with other devices."),
+//                                  actions: <Widget>[
+//                                    TextButton(
+//                                      child: Text('Cancel'),
+//                                      onPressed: () {
+//                                        Navigator.of(context).pop();
+//                                      },
+//                                    ),
+//                                    TextButton(
+//                                      child: Text('Settings'),
+//                                      onPressed: () {
+//                                        AppSettings.openAppSettings();
+//                                      },
+//                                    )
+//                                  ],
+//                                );
+//                              });
+//                        }
+//                        setState(() {
+//                          if (_wayfindingProvider.forceOff) {
+//                            _wayfindingProvider.advancedWayfindingEnabled =
+//                                false;
+//                          } else {
+//                            _wayfindingProvider.advancedWayfindingEnabled =
+//                                !_wayfindingProvider.advancedWayfindingEnabled;
+//                          }
+//
+//                          if (!_wayfindingProvider.advancedWayfindingEnabled) {
+//                            _wayfindingProvider.stopScans();
+//                          }
+//                          _wayfindingProvider.setAWPreference();
+//                        });
+//                      },
+//                      activeColor: Theme.of(context).buttonColor,
+//                    )
+//                  : CircularProgressIndicator();
