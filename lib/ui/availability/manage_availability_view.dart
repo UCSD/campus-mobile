@@ -4,7 +4,11 @@ import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class ManageAvailabilityView extends StatelessWidget {
+class ManageAvailabilityView extends StatefulWidget {
+  _ManageAvailabilityViewState createState() => _ManageAvailabilityViewState();
+}
+
+class _ManageAvailabilityViewState extends State<ManageAvailabilityView> {
   AvailabilityDataProvider _availabilityDataProvider;
 
   @override
