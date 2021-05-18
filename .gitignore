@@ -28,7 +28,7 @@
 .packages
 .pub-cache/
 .pub/
-/build/
+build/
 
 # Codemagic
 app-config*.js
@@ -44,9 +44,9 @@ node_modules/
 **/android/key.properties
 **/android/local.properties
 **/android/**/GeneratedPluginRegistrant.java
+**/android/**/build/
 *.keystore
 !gradle-wrapper.jar
-
 android/.project
 android/app/.classpath
 android/app/.project
@@ -80,6 +80,7 @@ android/app/.settings/
 **/ios/Flutter/flutter_export_environment.sh
 **/ios/ServiceDefinitions.json
 **/ios/Runner/GeneratedPluginRegistrant.*
+**/ios/**/build/
 
 # Exceptions to above rules.
 !**/ios/**/default.mode1v3
