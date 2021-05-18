@@ -25,9 +25,9 @@ class ClassScheduleService {
     _isLoading = true;
     try {
       /// fetch data
-      String _response = await (_networkHelper.authorizedFetch(
+      String _response = await _networkHelper.authorizedFetch(
           myAcademicHistoryApiEndpoint + '?academic_level=UN&term_code=' + term,
-          headers) as FutureOr<String>);
+          headers);
 
       /// parse data
       _unData = classScheduleModelFromJson(_response);
@@ -45,9 +45,9 @@ class ClassScheduleService {
     _isLoading = true;
     try {
       /// fetch data
-      String _response = await (_networkHelper.authorizedFetch(
+      String _response = _networkHelper.authorizedFetch(
           myAcademicHistoryApiEndpoint + '?academic_level=GR&term_code=' + term,
-          headers) as FutureOr<String>);
+          headers) as String;
 
       /// parse data
       _grData = classScheduleModelFromJson(_response);
@@ -64,7 +64,7 @@ class ClassScheduleService {
     _error = null;
     _isLoading = true;
     try {
-      String _response = await (_networkHelper.fetchData(academicTermEndpoint) as FutureOr<String>);
+      String _response = await _networkHelper.fetchData(academicTermEndpoint);
       _academicTermModel = academicTermModelFromJson(_response);
       return true;
     } catch (e) {

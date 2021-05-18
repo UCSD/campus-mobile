@@ -30,8 +30,8 @@ class StudentIdService {
     _isLoading = true;
     try {
       /// fetch data
-      String _response = await (_networkHelper.authorizedFetch(
-          myStudentContactApiUrl + '/barcode', headers) as FutureOr<String>);
+      String _response = await _networkHelper.authorizedFetch(
+          myStudentContactApiUrl + '/barcode', headers);
 
       /// parse data
       _studentIdBarcodeModel = studentIdBarcodeModelFromJson(_response);
@@ -50,8 +50,8 @@ class StudentIdService {
     _isLoading = true;
     try {
       /// fetch data
-      String _response = await (_networkHelper.authorizedFetch(
-          myStudentContactApiUrl + '/display_name', headers) as FutureOr<String>);
+      String _response = await _networkHelper.authorizedFetch(
+          myStudentContactApiUrl + '/display_name', headers);
 
       /// parse data
       _studentIdNameModel = studentIdNameModelFromJson(_response);
@@ -70,8 +70,8 @@ class StudentIdService {
     _isLoading = true;
     try {
       /// fetch data
-      String _response = await (_networkHelper.authorizedFetch(
-          myStudentContactApiUrl + '/photo', headers) as FutureOr<String>);
+      String _response = await _networkHelper.authorizedFetch(
+          myStudentContactApiUrl + '/photo', headers);
 
       /// parse data
       _studentIdPhotoModel = studentIdPhotoModelFromJson(_response);
@@ -90,8 +90,8 @@ class StudentIdService {
     _isLoading = true;
     try {
       /// fetch data
-      String _response = await (_networkHelper.authorizedFetch(
-          myStudentProfileApiUrl + '/profile', headers) as FutureOr<String>);
+      String _response = await _networkHelper.authorizedFetch(
+          myStudentProfileApiUrl + '/profile', headers);
 
       _studentIdProfileModel = studentIdProfileModelFromJson(_response);
       _isLoading = false;

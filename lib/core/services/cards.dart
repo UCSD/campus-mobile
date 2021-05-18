@@ -17,9 +17,12 @@ class CardsService {
     "accept": "application/json",
   };
 
-  Future<bool> fetchCards(String ucsdAffiliation) async {
+  Future<bool> fetchCards(String? ucsdAffiliation) async {
     _error = null;
     _isLoading = true;
+
+    if (ucsdAffiliation == null)
+      ucsdAffiliation = "";
 
     /// API Manager Service
     try {
@@ -27,7 +30,7 @@ class CardsService {
           "https://api-qa.ucsd.edu:8243/defaultcards/v6.0.0/defaultcards?ucsdaffiliation=" +
               ucsdAffiliation;
       String _response =
-          await (_networkHelper.authorizedFetch(cardListEndpoint, headers) as FutureOr<String>);
+          await _networkHelper.authorizedFetch(cardListEndpoint, headers);
       _cardsModel = cardsModelFromJson(_response);
       _isLoading = false;
       return true;

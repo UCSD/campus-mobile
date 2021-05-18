@@ -27,7 +27,7 @@ class DiningService {
     try {
       /// fetch data
       String _response =
-          await (_networkHelper.fetchData(baseEndpoint + 'locations') as FutureOr<String>);
+          await _networkHelper.fetchData(baseEndpoint + 'locations');
 
       /// parse data
       final data = diningModelFromJson(_response);
@@ -48,7 +48,7 @@ class DiningService {
     try {
       /// fetch data
       String _response =
-          await (_networkHelper.fetchData(baseEndpoint + 'menu/' + id) as FutureOr<String>);
+          await _networkHelper.fetchData(baseEndpoint + 'menu/' + id);
 
       /// parse data
       final data = diningMenuItemsModelFromJson(_response);

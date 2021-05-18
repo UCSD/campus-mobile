@@ -21,7 +21,7 @@ class NewsService {
     _isLoading = true;
     try {
       /// fetch data
-      String _response = await (_networkHelper.fetchData(endpoint) as FutureOr<String>);
+      String _response = await _networkHelper.fetchData(endpoint);
 
       /// parse data
       _newsModels = newsModelFromJson(_response);

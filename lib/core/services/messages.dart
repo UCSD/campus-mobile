@@ -25,8 +25,8 @@ class MessageService {
 
     try {
       /// fetch data
-      String _response = await (_networkHelper.authorizedFetch(
-          myMessagesApiUrl + timestamp.toString(), authHeaders) as FutureOr<String>);
+      String _response = await _networkHelper.authorizedFetch(
+          myMessagesApiUrl + timestamp.toString(), authHeaders);
 
       /// parse data
       final data = messagesFromJson(_response);
@@ -49,8 +49,8 @@ class MessageService {
 
     try {
       /// fetch data
-      String _response = await (_networkHelper
-          .fetchData(topicsApiUrl + topicsEndpoint + timestampEndpoint) as FutureOr<String>);
+      String _response = await _networkHelper
+          .fetchData(topicsApiUrl + topicsEndpoint + timestampEndpoint);
 
       /// parse data
       final data = messagesFromJson(_response);

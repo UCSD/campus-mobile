@@ -29,7 +29,7 @@ class AvailabilityService {
     try {
       /// fetch data
       String _response =
-          await (_networkHelper.authorizedFetch(endpoint, headers) as FutureOr<String>);
+          await (_networkHelper.authorizedFetch(endpoint, headers));
 
       /// parse data
       final data = availabilityModelFromJson(_response);

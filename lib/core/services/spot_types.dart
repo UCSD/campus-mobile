@@ -26,7 +26,7 @@ class SpotTypesService {
     _isLoading = true;
     try {
       /// fetch data
-      String _response = await (_networkHelper.fetchData(endpoint) as FutureOr<String>);
+      String _response = await _networkHelper.fetchData(endpoint);
       _spotTypeModel = spotTypeModelFromJson(_response);
 
       _isLoading = false;

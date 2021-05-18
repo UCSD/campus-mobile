@@ -21,8 +21,8 @@ class EmployeeIdService {
     _isLoading = true;
     try {
       /// fetch data
-      String _response = await (_networkHelper.authorizedFetch(
-          myEmployeeProfileApiUrl, headers) as FutureOr<String>);
+      String _response = await _networkHelper.authorizedFetch(
+          myEmployeeProfileApiUrl, headers);
 
       _employeeIdModel = employeeIdModelFromJson(_response);
       _isLoading = false;

@@ -8,7 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 void reloadWebView(String url, WebViewController controller) {
-  controller?.loadUrl(url);
+  controller.loadUrl(url);
 }
 
 openLink(String url) async {

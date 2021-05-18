@@ -239,8 +239,8 @@ class PushNotificationDataProvider extends ChangeNotifier {
       return false;
     } else {
       // Get the token for this device
-      String fcmToken = await (_fcm.getToken() as FutureOr<String>);
-      if (fcmToken.isNotEmpty && (accessToken?.isNotEmpty ?? false)) {
+      String? fcmToken = await _fcm.getToken();
+      if (fcmToken != null && fcmToken.isNotEmpty && (accessToken?.isNotEmpty ?? false)) {
         Map<String, String> headers = {
           'Authorization': 'Bearer ' + accessToken!
         };
@@ -267,8 +267,8 @@ class PushNotificationDataProvider extends ChangeNotifier {
   /// Unregisters device from receiving push notifications
   Future<bool> unregisterDevice(String? accessToken) async {
     print('FCM:unregisterDevice');
-    String fcmToken = await (_fcm.getToken() as FutureOr<String>);
-    if (fcmToken.isNotEmpty && (accessToken?.isNotEmpty ?? false)) {
+    String? fcmToken = await _fcm.getToken();
+    if (fcmToken != null && fcmToken.isNotEmpty && (accessToken?.isNotEmpty ?? false)) {
       Map<String, String> headers = {'Authorization': 'Bearer ' + accessToken!};
       if ((await _notificationService.deletePushToken(headers, fcmToken))) {
         print('FCM:unregisterDevice:deletePushToken: ' + fcmToken);

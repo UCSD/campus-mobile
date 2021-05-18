@@ -21,8 +21,8 @@ class ScannerMessageService {
     _isLoading = true;
     try {
       /// fetch data
-      String _response = await (_networkHelper.authorizedFetch(
-          endpoint, headers) as FutureOr<String>);
+      String _response = await _networkHelper.authorizedFetch(
+          endpoint, headers);
       /// parse data
       _scannerMessageModel = scannerMessageModelFromJson(_response);
       _isLoading = false;

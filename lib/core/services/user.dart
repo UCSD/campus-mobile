@@ -18,8 +18,8 @@ class UserProfileService {
     _error = null;
     _isLoading = true;
     try {
-      _userProfileModel = userProfileModelFromJson(await (_networkHelper
-          .authorizedFetch(_endpoint + '/profile', headers) as FutureOr<String>));
+      _userProfileModel = userProfileModelFromJson(await _networkHelper
+          .authorizedFetch(_endpoint + '/profile', headers));
       return true;
     } catch (e) {
       _error = e.toString();

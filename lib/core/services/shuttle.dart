@@ -26,8 +26,8 @@ class ShuttleService {
 
     try {
       /// fetch data
-      String _response = await (_networkHelper.fetchData(
-          "https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/shuttle_stops_master_map_no_routes.json") as FutureOr<String>);
+      String _response = await _networkHelper.fetchData(
+          "https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/shuttle_stops_master_map_no_routes.json");
 
       /// parse data
       var data = shuttleStopModelFromJson(_response);
@@ -49,7 +49,7 @@ class ShuttleService {
       String arrivingEndpoint =
           "https://ies4wyrlx9.execute-api.us-west-2.amazonaws.com/prod/v2/stops/$stopId/arrivals";
 
-      String _response = await (_networkHelper.fetchData(arrivingEndpoint) as FutureOr<String>);
+      String _response = await _networkHelper.fetchData(arrivingEndpoint);
 
       /// parse data
       final arrivingData = getArrivingShuttles(_response);

@@ -73,7 +73,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
         _academicTermModel = _classScheduleService.academicTermModel;
         final Map<String, String> headers = {
           'Authorization':
-              'Bearer ${_userDataProvider?.authenticationModel?.accessToken}'
+              'Bearer ${_userDataProvider.authenticationModel?.accessToken}'
         };
 
         /// erase old model
@@ -220,7 +220,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
 
   /// comparator that sorts according to start time of class
   int _compare(SectionData a, SectionData b) {
-    if (a?.time == null || b?.time == null) {
+    if (a.time == null || b.time == null) {
       return 0;
     }
     DateTime aStartTime = _getStartTime(a.time!);

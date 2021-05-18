@@ -72,7 +72,7 @@ class AvailabilityDataProvider extends ChangeNotifier {
           _userDataProvider.userProfileModel!.selectedOccuspaceLocations);
       _lastUpdated = DateTime.now();
     } else {
-      if (_error!.contains(ErrorConstants.invalidBearerToken)) {
+      if (_error != null && _error!.contains(ErrorConstants.invalidBearerToken)) {
         if (await _availabilityService.getNewToken()) {
           fetchAvailability();
         }

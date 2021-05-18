@@ -49,12 +49,12 @@ class SpeedTestService {
     try {
       await getNewToken();
       // Get download & upload urls
-      String? _downloadResponse = await (_networkHelper.authorizedFetch(
+      String? _downloadResponse = await _networkHelper.authorizedFetch(
           "https://api-qa.ucsd.edu:8243/wifi_test/v1.0.0/generateDownloadUrl",
-          header) as FutureOr<String?>);
-      String? _uploadResponse = await (_networkHelper.authorizedFetch(
+          header);
+      String? _uploadResponse = await _networkHelper.authorizedFetch(
           "https://api-qa.ucsd.edu:8243/wifi_test/v1.0.0/generateUploadUrl?name=temp.html",
-          header) as FutureOr<String?>);
+          header);
 
       /// parse data
       await fetchNetworkDiagnostics().then((WifiInfo? data) {

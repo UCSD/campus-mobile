@@ -46,7 +46,7 @@ class StudentIdDataProvider extends ChangeNotifier {
       /// Initialize header
       final Map<String, String> header = {
         'Authorization':
-            'Bearer ${_userDataProvider?.authenticationModel?.accessToken}'
+            'Bearer ${_userDataProvider.authenticationModel?.accessToken}'
       };
 
       /// Fetch Barcode

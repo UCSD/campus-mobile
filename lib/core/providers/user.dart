@@ -65,9 +65,9 @@ class UserDataProvider extends ChangeNotifier {
     _userProfileModel = model;
     var box;
     try {
-      box = Hive.box<UserProfileModel>('UserProfileModel');
+      box = Hive.box<UserProfileModel?>('UserProfileModel');
     } catch (e) {
-      box = await Hive.openBox<UserProfileModel>('UserProfileModel');
+      box = await Hive.openBox<UserProfileModel?>('UserProfileModel');
     }
     await box.put('UserProfileModel', model);
     _lastUpdated = DateTime.now();
@@ -263,7 +263,7 @@ class UserDataProvider extends ChangeNotifier {
     _deleteUsernameFromDevice();
     CardsDataProvider _cardsDataProvider = CardsDataProvider();
     _cardsDataProvider.updateAvailableCards("");
-    var box = await Hive.openBox<AuthenticationModel>('AuthenticationModel');
+    var box = await Hive.openBox<AuthenticationModel?>('AuthenticationModel');
     await box.clear();
     await FirebaseAnalytics().logEvent(name: 'loggedOut');
     _isLoading = false;

@@ -217,13 +217,13 @@ class SpeedTestProvider extends ChangeNotifier {
             "?type=WIFI";
     offloadDataHeader = {
       'Authorization':
-          'Bearer ${_userDataProvider?.authenticationModel?.accessToken}'
+          'Bearer ${_userDataProvider.authenticationModel?.accessToken}'
     };
     if (_userDataProvider.isLoggedIn) {
       if (offloadDataHeader == null) {
         offloadDataHeader = {
           'Authorization':
-              'Bearer ${_userDataProvider?.authenticationModel?.accessToken}'
+              'Bearer ${_userDataProvider.authenticationModel?.accessToken}'
         };
       }
       // Send to offload API
@@ -239,7 +239,7 @@ class SpeedTestProvider extends ChangeNotifier {
           _userDataProvider.silentLogin();
           offloadDataHeader = {
             'Authorization':
-                'Bearer ${_userDataProvider?.authenticationModel?.accessToken}'
+                'Bearer ${_userDataProvider.authenticationModel?.accessToken}'
           };
           _networkHelper.authorizedPost(
               mobileLoggerApi, offloadDataHeader, json.encode(log.toString()));
@@ -267,7 +267,7 @@ class SpeedTestProvider extends ChangeNotifier {
 
     offloadDataHeader = {
       'Authorization':
-          'Bearer ${_userDataProvider?.authenticationModel?.accessToken}'
+          'Bearer ${_userDataProvider.authenticationModel?.accessToken}'
     };
     wiFiLog = {
       "userId": (_userDataProvider.userProfileModel!.pid) == null
@@ -298,7 +298,7 @@ class SpeedTestProvider extends ChangeNotifier {
       if (offloadDataHeader == null) {
         offloadDataHeader = {
           'Authorization':
-              'Bearer ${_userDataProvider?.authenticationModel?.accessToken}'
+              'Bearer ${_userDataProvider.authenticationModel?.accessToken}'
         };
       }
       // Send to offload API
@@ -310,7 +310,7 @@ class SpeedTestProvider extends ChangeNotifier {
           _userDataProvider.silentLogin();
           offloadDataHeader = {
             'Authorization':
-                'Bearer ${_userDataProvider?.authenticationModel?.accessToken}'
+                'Bearer ${_userDataProvider.authenticationModel?.accessToken}'
           };
           _networkHelper.authorizedPost(mobileLoggerApi, offloadDataHeader,
               json.encode(wiFiLog.toString()));

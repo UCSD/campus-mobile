@@ -18,7 +18,7 @@ class NotificationService {
   Future<bool> fetchTopics() async {
     print('NotificationService:fetchTopics');
     try {
-      String? response = await (_networkHelper.fetchData(_topicsEndpoint) as FutureOr<String?>);
+      String? response = await _networkHelper.fetchData(_topicsEndpoint);
       if (response != null) {
         _topicsModel = topicsModelFromJson(response);
         return true;
@@ -35,8 +35,8 @@ class NotificationService {
   Future<bool> postPushToken(Map<String, String> headers, body) async {
     print('NotificationService:postPushToken');
     try {
-      String? response = await (_networkHelper.authorizedPost(
-          _endpoint + '/register', headers, body) as FutureOr<String?>);
+      String? response = await _networkHelper.authorizedPost(
+          _endpoint + '/register', headers, body);
       if (response == 'Success') {
         return true;
       } else {
@@ -54,8 +54,8 @@ class NotificationService {
     print('NotificationService:deletePushToken');
     token = Uri.encodeComponent(token);
     try {
-      String? response = await (_networkHelper.authorizedDelete(
-          _endpoint + '/token/' + token, headers) as FutureOr<String?>);
+      String? response = await _networkHelper.authorizedDelete(
+          _endpoint + '/token/' + token, headers);
       if (response == 'Success') {
         return true;
       } else {

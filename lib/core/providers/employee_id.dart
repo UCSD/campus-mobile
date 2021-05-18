@@ -37,7 +37,7 @@ class EmployeeIdDataProvider extends ChangeNotifier {
     if (_userDataProvider.isLoggedIn) {
       final Map<String, String> header = {
         'Authorization':
-            'Bearer ${_userDataProvider?.authenticationModel?.accessToken}'
+            'Bearer ${_userDataProvider.authenticationModel?.accessToken}'
       };
 
       // Fetch Profile
