@@ -436,7 +436,7 @@ packages:
       name: flutter_secure_storage
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.1.0"
+    version: "4.2.0"
   flutter_sticky_header:
     dependency: "direct main"
     description:
@@ -481,7 +481,7 @@ packages:
       name: google_maps_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.4"
+    version: "2.0.5"
   google_maps_flutter_platform_interface:
     dependency: transitive
     description:

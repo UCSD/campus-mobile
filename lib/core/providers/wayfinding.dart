@@ -232,7 +232,7 @@ class WayfindingProvider extends ChangeNotifier {
         String? calculatedUUID;
 
         // Identify possible advertisement ID
-        calculatedUUID = extractAdvertisementUUID(scanResult, calculatedUUID!);
+        calculatedUUID = extractAdvertisementUUID(scanResult);
 
         //Create BT objects to check continuity and store data
         identifyDevices(scanResult);
@@ -371,8 +371,8 @@ class WayfindingProvider extends ChangeNotifier {
   }
 
   // Calculates Advertisement ID if one is available
-  String extractAdvertisementUUID(
-      ScanResult scanResult, String calculatedUUID) {
+  String extractAdvertisementUUID(ScanResult scanResult) {
+    String calculatedUUID = "";
     scanResult.advertisementData.manufacturerData.forEach((key, decimalArray) {
       calculatedUUID = calculateHexFromArray(
           decimalArray); //https://stackoverflow.com/questions/60902976/flutter-ios-to-ios-broadcast-beacon-not-working
