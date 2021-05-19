@@ -18,9 +18,14 @@
     - Sharepoint integration configuration
     - Value: Encrypted and secured `sp-config.json`
 5. **FIREBASE_IOS**
+    - Firebase config for iOS
     - Value: Encrypted and secured `FIREBASE_IOS_QA.plist` or `FIREBASE_IOS_PROD.plist`
 6. **FIREBASE_ANDROID**
+    - Firebase config for Android
     - Value: Encrypted and secured `FIREBASE_ANDROID_QA.json` or `FIREBASE_ANDROID_PROD.json`
+7. **BUILD_PLATFORM**
+    - Build platform
+    - Accepted: `IOS`, `ANDROID`
 
 
 **_Encrypting Environment Variables_**

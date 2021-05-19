@@ -18,7 +18,7 @@ class ShuttleDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // print("Building ${stop.name}");
-
+    print(arrivingShuttles);
     if (arrivingShuttles == null) {
       return Container(
         width: double.infinity,

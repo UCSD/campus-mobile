@@ -13,36 +13,37 @@ class CardsDataProvider extends ChangeNotifier {
     _isLoading = false;
     _cardStates = {};
     _webCards = {};
+
+    // Default card order for native cards
     _cardOrder = [
       'NativeScanner',
       'MyStudentChart',
       'MyUCSDChart',
-      'student_id',
-      'campus_info',
-      'speed_test',
-      'employee_id',
-      'staff_info',
-      'student_info',
-      'student_survey',
       'finals',
       'schedule',
-      'shuttle',
-      'dining',
-      'parking',
+      'student_survey',
+      'student_id',
+      'employee_id',
+      'speed_test',
       'availability',
+      'dining',
       'events',
+      'shuttle',
+      'parking',
       'news',
       'weather',
+      'speed_test',
     ];
 
+    // Native student cards
     _studentCards = [
-      'student_survey',
-      'student_info',
-      'student_id',
       'finals',
-      'schedule'
+      'schedule',
+      'student_survey',
+      'student_id',
     ];
 
+    // Native staff cards
     _staffCards = [
       'MyUCSDChart',
       'staff_info',
@@ -241,7 +242,6 @@ class CardsDataProvider extends ChangeNotifier {
     // TODO: test w/o this
     _cardOrder = List.from(_cardOrder!.toSet().toList());
 
-
     for (String card in _studentCards) {
       _cardStates![card] = true;
     }
@@ -309,7 +309,6 @@ class CardsDataProvider extends ChangeNotifier {
   }
 
   set userDataProvider(UserDataProvider value) => _userDataProvider = value;
-
 
   ///SIMPLE GETTERS
   bool? get isLoading => _isLoading;

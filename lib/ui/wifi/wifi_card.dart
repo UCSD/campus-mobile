@@ -98,7 +98,7 @@ class _WiFiCardState extends State<WiFiCard> {
       case TestStatus.initial:
         return Padding(
           padding: const EdgeInsets.all(8.0),
-          child: initialState(),
+          child: initialState(context),
         );
         break;
       case TestStatus.running:
@@ -124,7 +124,7 @@ class _WiFiCardState extends State<WiFiCard> {
             padding: const EdgeInsets.all(8.0), child: simulatedState());
         break;
     }
-    return initialState();
+    return initialState(context);
   }
 
   Column speedTest() {
@@ -165,7 +165,7 @@ class _WiFiCardState extends State<WiFiCard> {
     );
   }
 
-  Column initialState() {
+  Column initialState(BuildContext context) {
     if (buttonTimer != null) _buttonEnabled = true;
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -175,7 +175,7 @@ class _WiFiCardState extends State<WiFiCard> {
           TextSpan(
               text: "Test WiFi Speed ",
               style: TextStyle(
-                color: Colors.black,
+                color: Theme.of(context).accentColor,
                 fontSize: 36,
               )),
           WidgetSpan(

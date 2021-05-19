@@ -6,7 +6,10 @@ import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class ManageParkingView extends StatelessWidget {
+class ManageParkingView extends StatefulWidget {
+  _ManageParkingViewState createState() => _ManageParkingViewState();
+}
+class _ManageParkingViewState extends State<ManageParkingView> {
   late ParkingDataProvider parkingDataProvider;
   @override
   Widget build(BuildContext context) {

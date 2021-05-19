@@ -7,7 +7,12 @@ import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class SpotTypesView extends StatelessWidget {
+class SpotTypesView extends StatefulWidget {
+  @override
+  _SpotTypesViewState createState() => _SpotTypesViewState();
+}
+
+class _SpotTypesViewState extends State<SpotTypesView> {
   late ParkingDataProvider spotTypesDataProvider;
   @override
   Widget build(BuildContext context) {

@@ -255,9 +255,6 @@ class _WebViewContainerState extends State<WebViewContainer>
     );
   }
 
-
-
-
   // this function checks to see if the current url of the state is different
   // to the webViewController's url, and loads in the new url if so
   void checkWebURL() async {

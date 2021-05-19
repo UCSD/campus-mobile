@@ -23,7 +23,7 @@ class _ParkingCardState extends State<ParkingCard>
   WebViewController? _webViewController;
   String cardId = 'parking';
   String webCardURL =
-      "https://mobile.ucsd.edu/replatform/v1/qa/webview/parking-v2/index.html";
+      "https://mobile.ucsd.edu/replatform/v1/qa/webview/parking-v3/index.html";
 
   @override
   void didChangeDependencies() {
@@ -116,6 +116,9 @@ class _ParkingCardState extends State<ParkingCard>
   List<Widget> buildActionButtons() {
     List<Widget> actionButtons = [];
     actionButtons.add(TextButton(
+      style: TextButton.styleFrom(
+        primary: Theme.of(context).buttonColor,
+      ),
       child: Text(
         'Manage Lots',
       ),
@@ -124,6 +127,9 @@ class _ParkingCardState extends State<ParkingCard>
       },
     ));
     actionButtons.add(TextButton(
+      style: TextButton.styleFrom(
+        primary: Theme.of(context).buttonColor,
+      ),
       child: Text(
         'Manage Spots',
       ),

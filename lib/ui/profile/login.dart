@@ -72,7 +72,10 @@ class _LoginState extends State<Login> {
         style: TextStyle(fontSize: 17),
       ),
       trailing: OutlinedButton(
-        child: Text('logout'),
+        style: OutlinedButton.styleFrom(
+          primary: Theme.of(context).buttonColor,
+        ),
+        child: Text('Log out'),
         onPressed: () => _userDataProvider.logout(),
       ),
     );
@@ -121,10 +124,15 @@ class _LoginState extends State<Login> {
             Row(
               children: <Widget>[
                 Expanded(
-                  child: TextButton(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: Theme.of(context).buttonColor,
+                    ),
                     child: Text(
                       'Sign In',
-                      style: TextStyle(fontSize: 17),
+                      style: TextStyle(
+                          fontSize: 18,
+                          color: Theme.of(context).textTheme.button!.color),
                     ),
                     onPressed: _userDataProvider.isLoading!
                         ? null
@@ -138,12 +146,6 @@ class _LoginState extends State<Login> {
                               }
                             });
                           },
-                    style: TextButton.styleFrom(
-                      backgroundColor: Theme.of(context).buttonColor,
-                      textStyle: TextStyle(
-                        color: Theme.of(context).textTheme.button!.color,
-                      ),
-                    ),
                   ),
                 ),
               ],
@@ -155,7 +157,7 @@ class _LoginState extends State<Login> {
                 child: Center(
                   child: Text(
                     'Need help logging in?',
-                    style: TextStyle(fontSize: 17),
+                    style: TextStyle(fontSize: 16),
                   ),
                 ),
               ),
@@ -185,6 +187,9 @@ class _LoginState extends State<Login> {
   showAlertDialog(BuildContext context) {
     // set up the button
     Widget okButton = TextButton(
+      style: TextButton.styleFrom(
+        primary: Theme.of(context).buttonColor,
+      ),
       child: Text("OK"),
       onPressed: () {
         Navigator.of(context).pop();

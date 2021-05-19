@@ -23,6 +23,7 @@ class _OnboardingAffiliationsState extends State<OnboardingAffiliations> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
+        brightness: Brightness.dark,
       ),
       body: Container(
         color: ColorPrimary,

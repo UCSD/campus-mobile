@@ -35,13 +35,6 @@ class RoutePaths {
   static const String DiningViewAll = 'dining/dining_list_view';
   static const String DiningDetailView = 'dining/dining_detail_view';
   static const String DiningNutritionView = 'dining/dining_nutrition_view';
-  static const String SurfView = 'surfing/surf_view';
-  static const String SpecialEventsListView =
-      'special_events/special_events_list_view';
-  static const String SpecialEventsFilterView =
-      'special_events/special_events_filter_view';
-  static const String SpecialEventsDetailView =
-      'special_events/special_events_detail_view';
   static const String ScannerView = 'scanner/scanner_view';
   static const String ScanditScanner = 'scanner/scandit_scanner';
   static const String Parking = "parking/parking_view";
@@ -70,9 +63,6 @@ class RouteTitles {
     'dining/dining_list_view': 'Dining',
     'dining/dining_detail_view': 'Dining',
     'dining/dining_nutrition_view': 'Dining',
-    'special_events/special_events_list_view': 'Special Events',
-    'special_events/special_events_filter_view': 'Special Events',
-    'special_events/special_events_detail_view': 'Special Events',
   };
 }
 
@@ -96,6 +86,7 @@ class ErrorConstants {
       'DioError [DioErrorType.response]: Http status error [409]';
   static const invalidMedia =
       'DioError [DioErrorType.response]: Http status error [415]';
+  static const silentLoginFailed = "Silent login failed";
 }
 
 class ScannerConstants {
@@ -116,6 +107,9 @@ class ScannerConstants {
 }
 
 class LoginConstants {
+  static const silentLoginFailedTitle = 'Oops! You\'re not logged in.';
+  static const silentLoginFailedDesc =
+      'The system has logged you out (probably by mistake). Go to Profile to log back in.';
   static const loginFailedTitle = 'Sorry, unable to sign you in.';
   static const loginFailedDesc =
       'Be sure you are using the correct credentials; TritonLink login if you are a student, SSO (AD or Active Directory) if you are a Faculty/Staff.';
@@ -157,12 +151,9 @@ class CardTitleConstants {
     'NativeScanner': 'Scanner',
     'MyStudentChart': 'MyStudentChart',
     'MyUCSDChart': 'MyUCSDChart',
-    'staff_info': 'COVID-19 Info',
-    'campus_info': "Campus Information",
-    'student_info': 'COVID-19 Info',
     'student_survey': 'Student Survey',
     'student_id': 'Student ID',
-    'speed_test' : "Speed Test",
+    'speed_test': "Speed Test",
     'employee_id': 'Employee ID',
     'finals': 'Finals',
     'schedule': 'Classes',
@@ -172,7 +163,6 @@ class CardTitleConstants {
     'events': 'Events',
     'news': 'News',
     'parking': 'Parking',
-    'special_events': 'Special Events',
     'weather': 'Weather',
   };
 }
