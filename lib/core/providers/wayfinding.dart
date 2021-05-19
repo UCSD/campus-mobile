@@ -102,6 +102,8 @@ class WayfindingProvider extends ChangeNotifier {
 
   /// Gives an unfiltered list of scanned devices.
   static List<List<Object>> unprocessedDevices = [];
+  List<Map> displayingDevices = [];
+  var btStream;
 
   // initialize location and permissions to be checked
   double userLatitude;
@@ -123,10 +125,13 @@ class WayfindingProvider extends ChangeNotifier {
 
   /// Runs if AdvancedWayfinding was turned on.
   void init() async {
+    notifyListeners();
+    btStream = Stream<List<Map>>.periodic(Duration(seconds: 1), (x) => displayingDevices);
     checkAdvancedWayfindingEnabled();
     userLongitude = (_coordinates == null) ? null : _coordinates.lon;
     userLatitude = (_coordinates == null) ? null : _coordinates.lat;
     if (userLongitude == null || userLatitude == null) {
+      print("Got null coordinates");
       return;
     }
 
@@ -227,10 +232,10 @@ class WayfindingProvider extends ChangeNotifier {
 
     // Include device type for threshold
     List<Map> processedDevices = identifyDeviceTypes();
-
     // Remove objects that are no longer continuous found (+ grace period)
     removeNoncontinuousDevices();
 
+    displayingDevices = List.of(processedDevices);
     // If there are more than three devices, log location
     processOffloadingLogs(List.of(processedDevices));
 
@@ -676,10 +681,9 @@ class WayfindingProvider extends ChangeNotifier {
   }
 
   // Used to log current user location or enable the location change listener
-  void checkLocationPermission() async {
-    if (userLatitude == null || userLongitude == null) {
-      return;
-    }
+  Future<PermissionStatus> checkLocationPermission() async {
+    return await _locationDataProvider.locationObject.hasPermission();
+
   }
 
   // Get the rough distance from bt device
@@ -784,9 +788,10 @@ class WayfindingProvider extends ChangeNotifier {
   }
 
 // Stops all ongoing processes
-  void stopScans() {
+  void stopScans(){
     if (ongoingScanner != null) {
       ongoingScanner.cancel();
+      ongoingScanner = null;
     }
     flutterBlueInstance.stopScan();
     flutterBlueInstance.scanResults.listen((event) {}).cancel();
@@ -803,6 +808,7 @@ class WayfindingProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+get processedDevices => displayingDevices;
   get coordinate => _coordinates;
   set userProvider(UserDataProvider userDataProvider) {
     userDataProvider = userDataProvider;
