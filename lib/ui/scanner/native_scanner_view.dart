@@ -9,7 +9,11 @@ import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
-class ScanditScanner extends StatelessWidget {
+class ScanditScanner extends StatefulWidget {
+  _ScanditScannerState createState() => _ScanditScannerState();
+}
+
+class _ScanditScannerState extends State<ScanditScanner> {
   ScannerDataProvider _scannerDataProvider;
   UserDataProvider _userDataProvider;
   set userDataProvider(UserDataProvider value) => _userDataProvider = value;

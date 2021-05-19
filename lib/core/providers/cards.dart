@@ -30,6 +30,7 @@ class CardsDataProvider extends ChangeNotifier {
       'parking',
       'news',
       'weather',
+      'speed_test',
     ];
 
     // Native student cards
@@ -38,7 +39,6 @@ class CardsDataProvider extends ChangeNotifier {
       'schedule',
       'student_survey',
       'student_id',
-      'speed_test',
     ];
 
     // Native staff cards
@@ -46,7 +46,6 @@ class CardsDataProvider extends ChangeNotifier {
       'MyUCSDChart',
       'staff_info',
       'employee_id',
-      'speed_test',
     ];
 
     for (String card in CardTitleConstants.titleMap.keys.toList()) {

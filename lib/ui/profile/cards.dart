@@ -3,7 +3,11 @@ import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class CardsView extends StatelessWidget {
+class CardsView extends StatefulWidget {
+  _CardsViewState createState() => _CardsViewState();
+}
+
+class _CardsViewState extends State<CardsView> {
   CardsDataProvider _cardsDataProvider;
   @override
   Widget build(BuildContext context) {
