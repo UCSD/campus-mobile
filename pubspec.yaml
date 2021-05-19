@@ -16,7 +16,7 @@ dependencies:
   firebase_analytics: 8.0.4
   firebase_core: 1.1.1
   firebase_crashlytics: 2.0.3
-  firebase_messaging: 9.1.4
+  firebase_messaging: 10.0.0
   flutter:
     sdk: flutter
   flutter_scandit_plugin:
