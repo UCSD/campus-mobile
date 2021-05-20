@@ -8,7 +8,7 @@ dependencies:
   background_fetch: 1.0.0-nullsafety.2
   barcode_widget: 2.0.1
   beacon_broadcast: 0.3.0-nullsafety.0
-  connectivity: 3.0.3
+  connectivity: 3.0.4
   device_info: 2.0.0
   dio: 4.0.0
   dots_indicator: 2.0.0
