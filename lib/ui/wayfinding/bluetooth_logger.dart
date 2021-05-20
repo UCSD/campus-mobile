@@ -131,9 +131,10 @@ class _AutomaticBluetoothLoggerViewState
         await _wayfindingProvider.flutterBlueInstance.state.first;
     PermissionStatus locationStatus =
         await _wayfindingProvider.checkLocationPermission();
+    bool locationService = await _wayfindingProvider.checkLocationService();
 
     return Text(
-        "OS: ${Platform.isIOS ? "iOS" : "Android"} \nLocation: ${locationStatus.toString()} \nBluetooth: ${bluetoothStatus.toString()} \nAW Enabled: ${_wayfindingProvider.advancedWayfindingEnabled}");
+        "OS: ${Platform.isIOS ? "iOS" : "Android"} \nLocation: ${locationStatus.toString()} \nService enabled: $locationService \nBluetooth: ${bluetoothStatus.toString()} \nAW Enabled: ${_wayfindingProvider.advancedWayfindingEnabled} \nForce off: ${_wayfindingProvider.forceOff}");
   }
   // // Bold location and timestamp to differentiate scans
   Text buildText(int index) {

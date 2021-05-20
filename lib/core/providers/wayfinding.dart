@@ -686,6 +686,10 @@ class WayfindingProvider extends ChangeNotifier {
 
   }
 
+  Future<bool> checkLocationService() async{
+    return await _locationDataProvider.locationObject.serviceEnabled();
+  }
+
   // Get the rough distance from bt device
   double getDistance(int rssi) {
     var txPower = -59; //hardcoded for now
