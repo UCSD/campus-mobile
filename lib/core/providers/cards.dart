@@ -30,7 +30,6 @@ class CardsDataProvider extends ChangeNotifier {
       'parking',
       'news',
       'weather',
-      'speed_test',
     ];
 
     // Native student cards
