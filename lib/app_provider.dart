@@ -156,8 +156,11 @@ List<SingleChildWidget> dependentServices = [
         userDataProvider.cardsDataProvider = cardsDataProvider;
         cardsDataProvider
           ..loadSavedData().then((value) {
+            // Update available cards
             cardsDataProvider.updateAvailableCards(
                 userDataProvider.authenticationModel.ucsdaffiliation);
+
+            // Student card activation
             if (userDataProvider.isLoggedIn &&
                 (userDataProvider.userProfileModel.classifications?.student ??
                     false)) {
@@ -166,6 +169,7 @@ List<SingleChildWidget> dependentServices = [
               cardsDataProvider.deactivateStudentCards();
             }
 
+            // Staff card activation
             if (userDataProvider.isLoggedIn &&
                 (userDataProvider.userProfileModel.classifications?.staff ??
                     false)) {
@@ -198,7 +202,7 @@ List<SingleChildWidget> dependentServices = [
     print("UpdateProvider: AdvancedWayfindingSingleton");
     proximityAwarenessSingleton.coordinateAndLocation(
         coordinates, locationProvider);
-    proximityAwarenessSingleton.userProvider = userDataProvider;
+    proximityAwarenessSingleton.coordinateAndLocation(coordinates, locationProvider);
     return proximityAwarenessSingleton;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, StudentIdDataProvider>(

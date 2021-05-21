@@ -41,9 +41,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
   Future<Null> initUniLinks(BuildContext context) async {
-
     // deep links are received by this method
     // the specific host needs to be added in AndroidManifest.xml and Info.plist
     // currently, this method handles executing custom map query
@@ -190,19 +188,13 @@ class _HomeState extends State<Home> {
 
     if (prefs.containsKey("advancedWayfindingEnabled") &&
         prefs.getBool("advancedWayfindingEnabled")) {
-      WayfindingProvider bluetoothSingleton =
-          WayfindingProvider();
-      bluetoothSingleton.advancedWayfindingEnabled =
-          prefs.getBool("advancedWayfindingEnabled");
-      if (bluetoothSingleton.firstInstance) {
-        bluetoothSingleton.firstInstance = false;
-        if (bluetoothSingleton.userDataProvider == null) {
-          bluetoothSingleton.userDataProvider =
-              Provider.of<UserDataProvider>(context, listen: false);
-        }
-        if (bluetoothSingleton.advancedWayfindingEnabled) {
-          bluetoothSingleton.init();
-        }
+      print("Wayfinding permissions granted");
+      WayfindingProvider bluetoothSingleton = Provider.of<WayfindingProvider>(context, listen: false);
+      bluetoothSingleton.advancedWayfindingEnabled = true;
+      if (bluetoothSingleton.ongoingScanner == null) {
+            print("tried to start scanning...");
+            bluetoothSingleton.init();
+
       }
     }
   }

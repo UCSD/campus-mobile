@@ -17,6 +17,9 @@ class EventsCard extends StatelessWidget {
   List<Widget> buildActionButtons(BuildContext context, List<EventModel> data) {
     List<Widget> actionButtons = [];
     actionButtons.add(TextButton(
+      style: TextButton.styleFrom(
+        primary: Theme.of(context).buttonColor,
+      ),
       child: Text(
         'View All',
       ),

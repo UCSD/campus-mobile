@@ -40,7 +40,7 @@ class AuthenticationModel extends HiveObject {
       accessToken: json["access_token"] == null ? null : json["access_token"],
       pid: json["pid"] == null ? null : json["pid"],
       ucsdaffiliation:
-          json["ucsdaffiliation"] == null ? null : json["ucsdaffiliation"],
+          json["ucsdaffiliation"] == null ? "" : json["ucsdaffiliation"],
       expiration: json["expiration"] == null ? 0 : json["expiration"],
     );
   }
@@ -48,7 +48,7 @@ class AuthenticationModel extends HiveObject {
   Map<String, dynamic> toJson() => {
         "access_token": accessToken == null ? null : accessToken,
         "pid": pid == null ? null : pid,
-        "ucsdaffiliation": ucsdaffiliation == null ? null : ucsdaffiliation,
+        "ucsdaffiliation": ucsdaffiliation == null ? "" : ucsdaffiliation,
         "expiration": expiration == null ? null : expiration,
       };
 

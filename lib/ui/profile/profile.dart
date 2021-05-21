@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uni_links2/uni_links.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/foundation.dart';
 
 class Profile extends StatelessWidget {
 
@@ -82,6 +83,16 @@ class Profile extends StatelessWidget {
               onTap: () {
                 Navigator.pushNamed(
                     context, RoutePaths.BluetoothPermissionsView);
+              },
+            ),
+          ),
+          if(!kReleaseMode) Card(
+            child: ListTile(
+              leading: Icon(Icons.settings_bluetooth),
+              title: Text('Advanced Wayfinding Developer View'),
+              onTap: () {
+                Navigator.pushNamed(
+                    context, RoutePaths.AutomaticBluetoothLoggerView);
               },
             ),
           ),

@@ -29,6 +29,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
+        brightness: Brightness.dark,
       ),
       backgroundColor: lightPrimaryColor, // ColorPrimary, //Colors.white,
       body: _userDataProvider.isLoading
@@ -237,6 +238,9 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
   showAlertDialog(BuildContext context) {
     // set up the button
     Widget okButton = TextButton(
+      style: TextButton.styleFrom(
+        primary: Theme.of(context).buttonColor,
+      ),
       child: Text("OK"),
       onPressed: () {
         Navigator.of(context).pop();
