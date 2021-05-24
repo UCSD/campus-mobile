@@ -93,7 +93,19 @@ class SpeedTestProvider extends ChangeNotifier {
 
   Future uploadSpeedTest() async {
     String path = (await getApplicationDocumentsDirectory()).path;
-    var tempDownload = File(path + "/temp.html").readAsBytesSync();
+    print("in uploadSpeedTest(), filepath: ${path + "/temp.html"}");
+    File temp = File(path + "/temp.html");
+    print("isUCSDWifi: ${isUCSDWiFi}");
+    print("fileExists: ${temp.existsSync()}");
+    if(!isUCSDWiFi || !temp.existsSync()) {
+      // something is wrong, terminate
+      print("something is wrong, terminate");
+      _timer.stop();
+      notifyListeners();
+      return;
+    }
+
+    var tempDownload = temp.readAsBytesSync();
 
     FormData formData = new FormData.fromMap(
         {"file": MultipartFile.fromBytes(tempDownload, filename: "temp.html")});
@@ -113,6 +125,7 @@ class SpeedTestProvider extends ChangeNotifier {
   Future downloadSpeedTest() async {
     String path = (await getApplicationDocumentsDirectory()).path;
     //create file
+    print("in downloadSpeedTest(), filepath: ${path + "/temp.html"}");
     File tempDownload = File(path + "/temp.html");
     // _timer.start();
     notifyListeners();
