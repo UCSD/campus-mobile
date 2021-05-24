@@ -124,7 +124,6 @@ class SpeedTestProvider extends ChangeNotifier {
   Future downloadSpeedTest() async {
     String path = (await getApplicationDocumentsDirectory()).path;
     //create file
-    print("in downloadSpeedTest(), filepath: ${path + "/temp.html"}");
     File tempDownload = File(path + "/temp.html");
     // _timer.start();
     notifyListeners();
