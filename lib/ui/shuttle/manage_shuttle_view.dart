@@ -7,7 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 
-class ManageShuttleView extends StatelessWidget {
+class ManageShuttleView extends StatefulWidget {
+  _ManageShuttleViewState createState() => _ManageShuttleViewState();
+}
+
+class _ManageShuttleViewState extends State<ManageShuttleView> {
   ShuttleDataProvider _shuttleDataProvider;
 
   @override

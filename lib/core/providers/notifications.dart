@@ -34,6 +34,7 @@ class PushNotificationDataProvider extends ChangeNotifier {
   DateTime _lastUpdated;
   String _error;
   List<TopicsModel> _topicsModel;
+  Set<String> _receivedMessageIds = Set();
   Map<String, bool> _topicSubscriptionState = <String, bool>{};
 
   ///SERVICES
@@ -86,10 +87,14 @@ class PushNotificationDataProvider extends ChangeNotifier {
       /// Foreground messaging
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
         print('FCM: onMessage: foreground message:');
-        print(message);
-
         /// foreground messaging callback via flutter_local_notifications
-        showNotification(message);
+        /// only show message if the message has not been seen before
+        if(!_receivedMessageIds.contains(message.messageId)) {
+          showNotification(message);
+        }
+        // add messageId as it has been shown already
+        _receivedMessageIds.add(message.messageId);
+
 
         /// Fetch in-app messages
         Provider.of<MessagesDataProvider>(context, listen: false)
@@ -137,6 +142,7 @@ class PushNotificationDataProvider extends ChangeNotifier {
 
   ///Displays the notification
   showNotification(RemoteMessage message) async {
+    print("in showNotification");
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
             'your channel id', 'your channel name', 'your channel description',
