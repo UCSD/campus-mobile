@@ -93,13 +93,12 @@ class SpeedTestProvider extends ChangeNotifier {
 
   Future uploadSpeedTest() async {
     String path = (await getApplicationDocumentsDirectory()).path;
-    print("in uploadSpeedTest(), filepath: ${path + "/temp.html"}");
     File temp = File(path + "/temp.html");
-    print("isUCSDWifi: ${isUCSDWiFi}");
-    print("fileExists: ${temp.existsSync()}");
+
+    // if not on UCSD wifi OR the file above does not exist,
+    // we should not upload the speed test results
+    // instead, stop the timer and exit the function
     if(!isUCSDWiFi || !temp.existsSync()) {
-      // something is wrong, terminate
-      print("something is wrong, terminate");
       _timer.stop();
       notifyListeners();
       return;
