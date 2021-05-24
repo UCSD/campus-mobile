@@ -162,21 +162,20 @@ class _DiningMenuListState extends State<DiningMenuList> {
           title: 'Breakfast',
           value: Meal.breakfast,
           groupValue: Provider.of<DiningDataProvider>(context).mealTime,
-          onChanged: (Meal value) {
+          onChanged: (Meal? value) =>
             setState(() {
               Provider.of<DiningDataProvider>(context, listen: false).mealTime =
-                  value;
-            });
-          },
+                  value!;
+            })
         ),
         LabeledRadio(
           title: 'Lunch',
           value: Meal.lunch,
           groupValue: Provider.of<DiningDataProvider>(context).mealTime,
-          onChanged: (Meal value) {
+          onChanged: (Meal? value) {
             setState(() {
               Provider.of<DiningDataProvider>(context, listen: false).mealTime =
-                  value;
+                  value!;
             });
           },
         ),
@@ -184,12 +183,11 @@ class _DiningMenuListState extends State<DiningMenuList> {
           title: 'Dinner',
           value: Meal.dinner,
           groupValue: Provider.of<DiningDataProvider>(context).mealTime,
-          onChanged: (Meal value) {
+          onChanged: (Meal? value) =>
             setState(() {
               Provider.of<DiningDataProvider>(context, listen: false).mealTime =
-                  value;
-            });
-          },
+                  value!;
+          })
         ),
       ],
     );
@@ -198,12 +196,12 @@ class _DiningMenuListState extends State<DiningMenuList> {
 
 class LabeledRadio extends StatelessWidget {
   final String? title;
-  final Meal? value;
+  final Meal value;
   final Meal? groupValue;
-  final Function? onChanged;
+  final void Function(Meal?)? onChanged;
 
   const LabeledRadio(
-      {Key? key, this.title, this.value, this.groupValue, this.onChanged})
+      {Key? key, this.title, required this.value, this.groupValue, this.onChanged})
       : super(key: key);
 
   @override
@@ -215,7 +213,7 @@ class LabeledRadio extends StatelessWidget {
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             value: value,
             groupValue: groupValue,
-            onChanged: onChanged as void Function(dynamic)?,
+            onChanged: onChanged,
             activeColor: Theme.of(context).buttonColor,
           ),
           Container(
